@@ -33,9 +33,13 @@ int main(int argc, char **argv)
 
         tempcfg = getenv("VME_SERVER_CFG");
         if (tempcfg)
+        {
             strcpy(srvcfg, tempcfg);
+        }
         else
+        {
             strcpy(srvcfg, "../etc/server.cfg"); // MS2020 add a default...
+        }
 
         log_name = str_dup("./vme.log");
 
@@ -65,9 +69,13 @@ int main(int argc, char **argv)
 
                 case 's':
                     if (*(argv[pos] + 2))
+                    {
                         strcpy(srvcfg, argv[pos] + 2);
+                    }
                     else if (++pos < argc)
+                    {
                         strcpy(srvcfg, argv[pos]);
+                    }
                     else
                     {
                         slog(LOG_OFF, 0, "Full path and file name for the config file expected.");
@@ -101,11 +109,13 @@ int main(int argc, char **argv)
         }
 
         if (pos < argc)
+        {
             if (!isdigit(*argv[pos]))
             {
                 ShowUsage(argv[0]);
                 exit(6);
             }
+        }
 
         g_log_file_fd = freopen(log_name, "w", stderr);
         if (!g_log_file_fd)

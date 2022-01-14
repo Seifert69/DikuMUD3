@@ -73,7 +73,9 @@ int error_rod(struct spec_arg *sarg)
     char filename[256];
 
     if ((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
+    {
         return SFR_SHARE;
+    }
 
     zone = unit_zone(sarg->activator);
 
@@ -110,7 +112,9 @@ int info_rod(struct spec_arg *sarg)
     char filename[256];
 
     if (!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
+    {
         return SFR_SHARE;
+    }
 
     zone = unit_zone(sarg->activator);
 
@@ -158,7 +162,9 @@ int log_object(struct spec_arg *sarg)
         sarg->fptr->data = ip;
     }
     else
+    {
         ip = (ubit8 *)sarg->fptr->data;
+    }
 
     c = OBJ_VALUE(sarg->owner, 0);
 
@@ -194,7 +200,9 @@ int log_object(struct spec_arg *sarg)
                 while (!str_is_empty(g_log_buf[*ip].str))
                 {
                     if (g_log_buf[*ip].level <= lev && g_log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
+                    {
                         cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
+                    }
                     *ip = ((*ip + 1) % MAXLOG);
                 }
                 return SFR_BLOCK;
@@ -206,13 +214,21 @@ int log_object(struct spec_arg *sarg)
             {
                 sarg->arg = skip_spaces(sarg->arg);
                 if (is_abbrev(sarg->arg, "all"))
+                {
                     c = 'a';
+                }
                 else if (is_abbrev(sarg->arg, "extensive"))
+                {
                     c = 'e';
+                }
                 else if (is_abbrev(sarg->arg, "dil"))
+                {
                     c = 'd';
+                }
                 else if (is_abbrev(sarg->arg, "brief"))
+                {
                     c = 'b';
+                }
                 else if (is_abbrev(sarg->arg, "off"))
                 {
                     cact("Ok, log is now off.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR, "log");
@@ -234,11 +250,7 @@ int log_object(struct spec_arg *sarg)
                     act("Current log level is `$2t'.",
                         A_ALWAYS,
                         ch,
-                        c == 'd'   ? "dil"
-                        : c == 'o' ? "off"
-                        : c == 'b' ? "brief"
-                        : c == 'a' ? "all"
-                                   : "extensive",
+                        c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive",
                         cActParameter(),
                         TO_CHAR);
                     return SFR_BLOCK;
@@ -247,10 +259,7 @@ int log_object(struct spec_arg *sarg)
                 act("You will now see the $2t log.",
                     A_ALWAYS,
                     ch,
-                    c == 'd'   ? "dil"
-                    : c == 'b' ? "brief"
-                    : c == 'a' ? "entire"
-                               : "extensive",
+                    c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive",
                     cActParameter(),
                     TO_CHAR);
                 OBJ_VALUE(sarg->owner, 0) = c;
@@ -302,10 +311,14 @@ int admin_obj(struct spec_arg *sarg)
     class extra_descr_data *exdp;
 
     if (sarg->cmd->no != CMD_AUTO_UNKNOWN)
+    {
         return SFR_SHARE;
+    }
 
     if (!IS_PC(sarg->activator))
+    {
         return SFR_SHARE;
+    }
 
     if (str_ccmp(sarg->cmd->cmd_str, "email") == 0)
     {
@@ -321,7 +334,9 @@ int admin_obj(struct spec_arg *sarg)
         zonelist = TRUE;
     }
     else
+    {
         return SFR_SHARE;
+    }
 
     if ((exdp = PC_INFO(sarg->activator).find_raw("$email")) == NULL)
     {
@@ -336,7 +351,9 @@ int admin_obj(struct spec_arg *sarg)
     }
 
     if (zonelist)
+    {
         snprintf(buf, sizeof(buf), "mail zone zonelist %s", exdp->descr.c_str());
+    }
     else if ((zone = unit_zone(sarg->activator)) == NULL)
     {
         send_to_char("You are inside no zone?", sarg->activator);
@@ -353,7 +370,9 @@ int admin_obj(struct spec_arg *sarg)
     }
 
     if (!system_check(sarg->activator, buf))
+    {
         return SFR_BLOCK;
+    }
 
     execute_append(sarg->activator, buf);
 

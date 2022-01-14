@@ -72,9 +72,13 @@ const char *g_compile_time = __TIME__;
 void type_validate_64(void)
 {
     if (sizeof(void *) == 8)
+    {
         slog(LOG_ALL, 0, "Running 64-bit mode");
+    }
     else
+    {
         slog(LOG_ALL, 0, "Running 32-bit mode");
+    }
 
     // If any of these checks fail, update the type-defs so that they match your
     // particular architecture.
@@ -353,15 +357,21 @@ void check_overpopulation_event(void *p1, void *p2)
         while (t)
         {
             if (UNIT_TYPE(t) == UNIT_ST_PC)
+            {
                 break;
+            }
             t = UNIT_IN(t);
         }
         if (t)
+        {
             continue; // If it's inside a player, skip
+        }
 
         i = 0;
-        for (t = UNIT_CONTAINS(u); t; t = t->next) // count top layer
+        for (t = UNIT_CONTAINS(u); t; t = t->next)
+        { // count top layer
             i++;
+        }
 
         if (i >= 50)
         {
@@ -413,7 +423,9 @@ struct timeval timediff(struct timeval *a, struct timeval *b)
         rslt.tv_sec = 0;
     }
     else
+    {
         rslt.tv_sec = tmp.tv_sec - b->tv_sec;
+    }
 
     return rslt;
 }

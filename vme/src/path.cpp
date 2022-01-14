@@ -49,18 +49,30 @@ void create_worldgraph()
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
     {
         for (i = 0; i <= MAX_EXIT; i++)
+        {
             if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
+            {
                 add_edge(ROOM_NUM(u), ROOM_NUM(ROOM_EXIT(u, i)->to_room), 1, WorldGraph);
+            }
+        }
 
         // DIR_ENTER
         for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+        {
             if (IS_ROOM(uu) && IS_SET(UNIT_MANIPULATE(uu), MANIPULATE_ENTER))
+            {
                 add_edge(ROOM_NUM(u), ROOM_NUM(uu), 10, WorldGraph);
+            }
+        }
 
         // DIR_EXIT
         if (UNIT_IN(u) && IS_ROOM(UNIT_IN(u)))
+        {
             if (IS_SET(UNIT_MANIPULATE(UNIT_IN(u)), MANIPULATE_ENTER))
+            {
                 add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), 10, WorldGraph);
+            }
+        }
     }
 
     //	slog (LOG_ALL, 0, "Added %d vertices and %d edges to graph",
@@ -148,18 +160,21 @@ void create_sc_graph(int num_of_sc)
         g_sc_room_ptr.push_back(rmptr);
 
         for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
+        {
             if (ROOM_SC(u) == sc)
             {
                 vd = add_vertex(g_sc_graphs[sc]);
                 g_sc_room_ptr.back().push_back(u);
                 ROOM_NUM(u) = vd;
             }
+        }
 
         boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, g_sc_graphs[sc]);
 
         for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
         {
             for (i = 0; i <= MAX_EXIT; i++)
+            {
                 if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room && (ROOM_SC(u) == sc) && (ROOM_SC(ROOM_EXIT(u, i)->to_room) == sc))
                 {
                     tie(ed, success) = add_edge(ROOM_NUM(u),
@@ -168,21 +183,26 @@ void create_sc_graph(int num_of_sc)
                                                 g_sc_graphs[sc]);
                     dir[ed] = i;
                 }
+            }
             // DIR_ENTER
             for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+            {
                 if (IS_ROOM(uu) && IS_SET(UNIT_MANIPULATE(uu), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(uu) == sc))
                 {
                     tie(ed, success) = add_edge(ROOM_NUM(u), ROOM_NUM(uu), path_weight(u, uu, DIR_ENTER) + 10, g_sc_graphs[sc]);
                     dir[ed] = DIR_ENTER;
                 }
+            }
             // DIR_EXIT
             if (UNIT_IN(u) && IS_ROOM(UNIT_IN(u)))
+            {
                 if (IS_SET(UNIT_MANIPULATE(UNIT_IN(u)), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(UNIT_IN(u)) == sc))
                 {
                     tie(ed, success) =
                         add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), path_weight(u, UNIT_IN(u), DIR_EXIT) + 10, g_sc_graphs[sc]);
                     dir[ed] = DIR_EXIT;
                 }
+            }
         }
     }
     //	for (sc = 0; sc < num_of_sc; sc++)
@@ -199,23 +219,35 @@ int path_weight(unit_data *from, unit_data *to, int dir)
     if (dir <= DIR_SOUTHWEST)
     {
         if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_OPEN_CLOSE))
+        {
             weight += 10;
+        }
 
         if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_LOCKED))
+        {
             weight += 50;
+        }
 
         if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_HIDDEN))
+        {
             weight += 200;
+        }
     }
 
     if ((dir == DIR_EXIT) || (dir == DIR_ENTER))
+    {
         weight += 10;
+    }
 
     if ((ROOM_LANDSCAPE(from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(to) == SECT_WATER_SWIM))
+    {
         weight += 500;
+    }
 
     if ((ROOM_LANDSCAPE(from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(to) == SECT_WATER_SAIL))
+    {
         weight += 5000;
+    }
 
     weight += g_sector_dat.get_path_cost(ROOM_LANDSCAPE(from), ROOM_LANDSCAPE(to));
 
@@ -231,20 +263,30 @@ int move_to(unit_data *from, unit_data *to)
     int i, next;
 
     if (!from)
+    {
         return DIR_IMPOSSIBLE;
+    }
 
     /* Assertion is that both from and to are rooms! */
     if (!IS_ROOM(from) || !IS_ROOM(to))
+    {
         return DIR_IMPOSSIBLE;
+    }
 
     if (from == to)
+    {
         return DIR_HERE;
+    }
 
     if (ROOM_SC(from) != ROOM_SC(to))
+    {
         return DIR_IMPOSSIBLE;
+    }
 
     if (ROOM_WAITD(from) == TRUE)
+    {
         return DIR_TRYAGAIN;
+    }
 
     if (ROOM_PATH(from).size() != num_vertices(g_sc_graphs[ROOM_SC(from)]))
     {
@@ -266,9 +308,13 @@ int move_to(unit_data *from, unit_data *to)
     boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, g_sc_graphs[ROOM_SC(from)]);
     tie(ed, success) = edge(ROOM_NUM(from), next, g_sc_graphs[ROOM_SC(from)]);
     if (success)
+    {
         return (dir[ed]);
+    }
     else
+    {
         return (DIR_IMPOSSIBLE);
+    }
     /*	for (i = 0; i <= MAX_EXIT; i++)
                 if (ROOM_EXIT(from,i) && ROOM_EXIT(from,i)->to_room && ROOM_NUM (ROOM_EXIT (from, i)->to_room) == next)
                         return i;

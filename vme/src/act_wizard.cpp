@@ -161,7 +161,9 @@ void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
     class file_index_type *fi;
 
     if (!IS_PC(ch))
+    {
         return;
+    }
 
     if (str_is_empty(argument))
     {
@@ -177,8 +179,12 @@ void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
     else
     {
         if ((target = find_unit(ch, &argument, 0, FIND_UNIT_WORLD)))
+        {
             if (UNIT_IN(target))
+            {
                 target = UNIT_IN(target);
+            }
+        }
     }
 
     if (!target)
@@ -215,9 +221,13 @@ void do_crash(class unit_data *ch, char *argument, const struct command_info *cm
     }
 
     if (strcmp(argument, "the entire game..."))
+    {
         send_to_char("You must type 'crash the entire game...'<br/>", ch);
+    }
     else
+    {
         assert(FALSE); /* Bye bye */
+    }
 }
 
 void do_execute(class unit_data *ch, char *argument, const struct command_info *cmd)
@@ -225,7 +235,9 @@ void do_execute(class unit_data *ch, char *argument, const struct command_info *
     argument = skip_spaces(argument);
 
     if (!system_check(ch, argument))
+    {
         return;
+    }
 
     execute_append(ch, argument);
     act("Executing $2t.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
@@ -236,7 +248,9 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
     char buf[100];
 
     if (!IS_PC(ch))
+    {
         return;
+    }
 
     if (cmd_is_abbrev(ch, cmd))
     {
@@ -254,12 +268,18 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
     class unit_data *victim;
 
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     if (str_is_empty(argument))
+    {
         victim = ch;
+    }
     else
+    {
         victim = find_unit(ch, &argument, 0, FIND_UNIT_WORLD);
+    }
 
     if (!victim)
     {
@@ -282,9 +302,13 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
     if (victim == ch)
     {
         if (CHAR_IS_SNOOPING(ch))
+        {
             unsnoop(ch, 0); /* Unsnoop just ch himself */
+        }
         else
+        {
             send_to_char("You are already snooping yourself.<br/>", ch);
+        }
         return;
     }
 
@@ -303,7 +327,9 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
     send_to_char("Ok.<br/>", ch);
 
     if (CHAR_IS_SNOOPING(ch))
+    {
         unsnoop(ch, 0); /* Unsnoop just ch himself */
+    }
 
     snoop(ch, victim);
 }
@@ -315,14 +341,20 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
     class unit_data *victim;
 
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     if (str_is_empty(argument))
     {
         if (CHAR_IS_SWITCHED(ch))
+        {
             unswitchbody(ch);
+        }
         else
+        {
             send_to_char("You are already home in your good old body.<br/>", ch);
+        }
         return;
     }
 
@@ -341,7 +373,9 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
     }
 
     if (CHAR_DESCRIPTOR(victim))
+    {
         act("$3n's body is already in use!", A_ALWAYS, ch, cActParameter(), victim, TO_CHAR);
+    }
     else
     {
         send_to_char("Ok.<br/>", ch);
@@ -372,11 +406,13 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
     if ((fi = pc_str_to_file_index(ch, buf)) == NULL)
     {
         for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
+        {
             if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), buf))
             {
                 send_to_char("A player by that name is linkdead in the game.<br/>", ch);
                 return;
             }
+        }
 
         if (player_exists(buf))
         {
@@ -393,10 +429,14 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
             send_to_char("You have loaded the player.<br/>", ch);
 
             if (UNIT_CONTAINS(u))
+            {
                 send_to_char("Inventory loaded.<br/>", ch);
+            }
 
             if (CHAR_LEVEL(u) > CHAR_LEVEL(ch))
+            {
                 slog(LOG_EXTENSIVE, UNIT_MINV(ch), "LEVEL: %s loaded %s when lower level.", UNIT_NAME(ch), UNIT_NAME(u));
+            }
             return;
         }
 
@@ -460,14 +500,22 @@ void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
     arg = one_argument(arg, buf);
 
     if (*buf)
+    {
         lvl = atoi(buf) + 1;
+    }
     else
+    {
         lvl = GOD_LEVEL;
+    }
 
     if (lvl >= CHAR_LEVEL(ch))
+    {
         lvl = CHAR_LEVEL(ch);
+    }
     if (lvl == 0)
+    {
         lvl = 1;
+    }
 
     if (g_wizlock && !*buf)
     {

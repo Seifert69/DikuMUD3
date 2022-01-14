@@ -71,10 +71,14 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
         membug_verify(f->data);
 
         if (u)
+        {
             assert(!u->is_destructed());
+        }
 
         if (f)
+        {
             assert(!f->is_destructed());
+        }
 
         if (f->index == 82)
         {
@@ -119,7 +123,9 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
             parent_index = current_index / 2;
         }
         else
+        {
             break;
+        }
     }
     heap[current_index] = end;
 
@@ -150,8 +156,12 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     else
     {
         for (i = 1; i <= count; i++)
+        {
             if (heap[i]->func == func && heap[i]->arg1 == arg1 && heap[i]->arg2 == arg2)
+            {
                 heap[i]->func = NULL;
+            }
+        }
     }
 }
 
@@ -160,8 +170,12 @@ void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *
     int i;
 
     for (i = 1; i <= count; i++)
+    {
         if ((heap[i]->func == func) && (!arg1 || (heap[i]->arg1 == arg1)) && (!arg2 || (heap[i]->arg2 == arg2)))
+        {
             heap[i]->func = 0;
+        }
+    }
 }
 
 void eventqueue::process(void)
@@ -207,8 +221,12 @@ void eventqueue::process(void)
         while (k <= count)
         {
             if (k < count)
+            {
                 if (heap[k]->when > heap[k + 1]->when)
+                {
                     k++;
+                }
+            }
             if (newtop->when > heap[k]->when)
             {
                 heap[j] = heap[k];
@@ -216,7 +234,9 @@ void eventqueue::process(void)
                 k = 2 * j;
             }
             else
+            {
                 break;
+            }
         }
         heap[j] = newtop;
         if (tmp_event->func)
@@ -255,9 +275,13 @@ void eventqueue::process(void)
                     // But rundil checks too.
 
                     if (prg->fp->tmpl->prgname)
+                    {
                         strcpy(dilname, prg->fp->tmpl->prgname);
+                    }
                     if (prg->fp->tmpl->zone)
+                    {
                         strcpy(dilzname, prg->fp->tmpl->zone->name);
+                    }
                     strcpy(diloname, tmp_event->arg1 ? UNIT_FI_NAME((class unit_data *)(tmp_event->arg1)) : "NO NAME");
                     strcpy(dilozname, tmp_event->arg1 ? UNIT_FI_ZONENAME((class unit_data *)(tmp_event->arg1)) : "NO ZONE");
                 }
@@ -284,6 +308,7 @@ void eventqueue::process(void)
                     if (tfunc == special_event)
                     {
                         if (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL)
+                        {
                             slog(LOG_DIL,
                                  0,
                                  "Process took %1.4f seconds to complete: %s@%s on %s@%s - %s (%d)'",
@@ -294,33 +319,51 @@ void eventqueue::process(void)
                                  dilozname,
                                  g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
                                  ((class unit_fptr *)tmp_event->arg2)->index);
-
+                        }
                         else
+                        {
                             slog(LOG_DIL,
                                  0,
                                  "Internal process took %1.4f seconds to complete: %s (%d)'",
                                  loop_time,
                                  g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
                                  ((class unit_fptr *)tmp_event->arg2)->index);
+                        }
                     }
                     else
                     {
                         if (tfunc == check_reboot_event)
+                        {
                             snprintf(pname, sizeof(pname), "Reboot Event");
+                        }
                         else if (tfunc == affect_beat)
+                        {
                             snprintf(pname, sizeof(pname), "Affect Beat");
+                        }
                         else if (tfunc == delayed_action)
+                        {
                             snprintf(pname, sizeof(pname), "Affect Beat");
+                        }
                         else if (tfunc == check_idle_event)
+                        {
                             snprintf(pname, sizeof(pname), "Check Idle Event");
+                        }
                         else if (tfunc == perform_violence_event)
+                        {
                             snprintf(pname, sizeof(pname), "Violence Event");
+                        }
                         else if (tfunc == weather_and_time_event)
+                        {
                             snprintf(pname, sizeof(pname), "Weather And Time Event");
+                        }
                         else if (tfunc == zone_event)
+                        {
                             snprintf(pname, sizeof(pname), "Zone Reset Event");
+                        }
                         else
+                        {
                             snprintf(pname, sizeof(pname), "UNKNOWN Event");
+                        }
                         slog(LOG_DIL, 0, "Internal Process (%s) Took %1.4f seconds to Complete", pname, loop_time);
                     }
                 }

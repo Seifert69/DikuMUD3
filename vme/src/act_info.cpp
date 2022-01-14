@@ -26,6 +26,7 @@ char *in_string(class unit_data *ch, class unit_data *u)
     char *tmp = in_str;
 
     while ((u = UNIT_IN(u)))
+    {
         if (IS_ROOM(u))
         {
             sprintf(tmp, "<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
@@ -36,6 +37,7 @@ char *in_string(class unit_data *ch, class unit_data *u)
             sprintf(tmp, "%s/", UNIT_SEE_NAME(ch, u));
             TAIL(tmp);
         }
+    }
 
     /*  error(HERE, "Something that is UNIT_IN, not in a room!");*/
     return (NULL);
@@ -62,9 +64,13 @@ void player_where(class unit_data *ch, char *arg)
     if (!any)
     {
         if (str_is_empty(arg))
+        {
             send_to_char("No other visible players in this area.<br/>", ch);
+        }
         else
+        {
             send_to_char("No such player found in this area.<br/>", ch);
+        }
     }
 }
 
@@ -88,14 +94,19 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
         mystr = "<u>Players</u><br/>";
 
         for (d = g_descriptor_list; d; d = d->next)
+        {
             if (d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
                 (d->original == NULL || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
             {
                 nCount++;
-                if (d->original) /* If switched */
+                if (d->original)
+                { /* If switched */
                     snprintf(buf2, sizeof(buf2), " In body of %s", UNIT_NAME(d->character));
+                }
                 else
+                {
                     buf2[0] = '\0';
+                }
 
                 snprintf(buf1,
                          sizeof(buf1),
@@ -106,6 +117,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                          buf2);
                 mystr.append(buf1);
             }
+        }
     }
     else /* Arg was not empty */
     {
@@ -117,7 +129,9 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
             {
                 nCount++;
                 if (nCount++ > 100)
+                {
                     continue;
+                }
 
                 snprintf(buf1,
                          sizeof(buf1),
@@ -132,11 +146,15 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     }
 
     if (mystr.length() < 1)
+    {
         send_to_char("Couldn't find any such thing.<br/>", ch);
+    }
     else
     {
         if (nCount > 100)
+        {
             mystr.append("...<br/>");
+        }
         mystr.append("Found ");
         mystr.append(itoa(nCount));
         mystr.append(" matches<br/>");

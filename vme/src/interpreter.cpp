@@ -155,7 +155,9 @@ void wrong_position(class unit_data *ch)
     };
 
     if (CHAR_POS(ch) < POSITION_STANDING)
+    {
         send_to_char(strings[CHAR_POS(ch)], ch);
+    }
 }
 
 #ifdef DEBUG_HISTORY
@@ -275,10 +277,14 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     assert(IS_CHAR(ch));
 
     if (ch->is_destructed())
+    {
         return;
+    }
 
     if (IS_PC(ch) && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->editing)
+    {
         return;
+    }
 
     if (strlen(cmdArg) > MAX_INPUT_LENGTH)
     {
@@ -331,17 +337,25 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
 #endif
 
     if (is_say)
+    {
         strcpy(excmd, "say");
+    }
     else if (is_emote)
+    {
         strcpy(excmd, "emote");
+    }
     else
+    {
         arg = str_next_word_copy(arg, excmd);
+    }
 
     strcpy(cmd, excmd);
     str_lower(cmd);
 
     if (CHAR_DESCRIPTOR(ch))
+    {
         strcpy(CHAR_DESCRIPTOR(ch)->last_cmd, cmd);
+    }
 
     if (!cmd[0])
     {
@@ -361,7 +375,9 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
         the_cmd.excmdc = str_dup(excmd);
 
         if (send_preprocess(ch, &the_cmd, argstr) == SFR_SHARE)
+        {
             act("$2t is not a known command.", A_ALWAYS, ch, cmd, cActParameter(), TO_CHAR);
+        }
 
         if (the_cmd.cmd_str)
             FREE(the_cmd.cmd_str);
@@ -380,7 +396,9 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
             return;
         }
         else
+        {
             CHAR_COMBAT(ch)->changeSpeed(cmd_ptr->combat_speed);
+        }
     }
 
     if (*cmd)
@@ -415,9 +433,13 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     if (CHAR_LEVEL(CHAR_ORIGINAL(ch)) < cmd_ptr->minimum_level)
     {
         if (cmd_ptr->minimum_level >= 200)
+        {
             send_to_char("Arglebargle, glop-glyf!?!<br/>", ch);
+        }
         else
+        {
             send_to_char("Sorry, this command is not available at your level.<br/>", ch);
+        }
         if (cmd_ptr->excmd)
             FREE(cmd_ptr->excmd);
         if (cmd_ptr->excmdc)
@@ -436,7 +458,9 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     }
 
     if (cmd_ptr->log_level)
+    {
         slog(LOG_ALL, MAX(CHAR_LEVEL(ch), cmd_ptr->log_level), "CMDLOG %s: %s %s", UNIT_NAME(ch), cmd_ptr->cmd_str, argstr);
+    }
 
     if (cmd_ptr->tmpl)
     {
@@ -451,13 +475,19 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
         }
     }
     else if (cmd_ptr->cmd_fptr)
+    {
         ((*cmd_ptr->cmd_fptr)(ch, argstr, cmd_ptr));
+    }
     else
     {
         if (IS_MORTAL(ch))
+        {
             send_to_char("Arglebargle, glop-glyf!?!<br/>", ch);
+        }
         else
+        {
             send_to_char("Sorry, that command is not yet implemented...<br/>", ch);
+        }
     }
     if (cmd_ptr->excmd)
         FREE(cmd_ptr->excmd);
@@ -521,9 +551,13 @@ int function_activate(class unit_data *u, struct spec_arg *sarg)
 #endif
             assert(!sarg->fptr->is_destructed());
             if (g_unit_function_array[sarg->fptr->index].func)
+            {
                 return (*(g_unit_function_array[sarg->fptr->index].func))(sarg);
+            }
             else
+            {
                 slog(LOG_ALL, 0, "Interpreter: Null function call! (%d)", sarg->fptr->index);
+            }
         }
     }
     return SFR_SHARE;
@@ -539,7 +573,9 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
     class unit_fptr *next;
 
     if (g_cServerConfig.isNoSpecials())
+    {
         return SFR_SHARE;
+    }
 
     assert(u);
 
@@ -554,35 +590,51 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
         orgflag = sarg->fptr->flags;
 
         if (u->is_destructed())
+        {
             return SFR_SHARE;
+        }
 
         if (sarg->fptr->is_destructed())
+        {
             continue;
+        }
 
         res = function_activate(u, sarg);
 
         if (u->is_destructed())
+        {
             return SFR_SHARE;
+        }
 
         if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
         {
             int diltick, i;
             diltick = FALSE;
             if (IS_SET(sarg->fptr->flags, SFB_TICK))
+            {
                 diltick = TRUE;
+            }
             else if (sarg->fptr->data)
             {
                 class dilprg *prg = (class dilprg *)sarg->fptr->data;
                 for (i = 0; i < prg->fp->intrcount; i++)
+                {
                     if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
+                    {
                         diltick = TRUE;
+                    }
+                }
             }
             if (diltick)
+            {
                 SetFptrTimer(u, sarg->fptr);
+            }
         }
 
         if (res != SFR_SHARE)
+        {
             return res;
+        }
 
         priority |= IS_SET(sarg->fptr->flags, SFB_PRIORITY);
     }
@@ -615,27 +667,41 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
     class file_index_type *fi;
 
     if (ch && ch->is_destructed())
+    {
         return SFR_SHARE;
+    }
 
     if (extra_target)
     {
         if (extra_target->is_destructed())
+        {
             return SFR_SHARE;
+        }
     }
 
     if (to)
     {
         ch = NULL;
         if ((fi = str_to_file_index(to)))
+        {
             for (tou = g_unit_list; tou; tou = tou->gnext)
+            {
                 if (UNIT_FILE_INDEX(tou) == fi)
+                {
                     ch = tou;
+                }
+            }
+        }
 
         if (ch == NULL)
+        {
             return SFR_SHARE;
+        }
     }
     else if (ch == NULL)
+    {
         return SFR_SHARE;
+    }
 
     sarg->mflags = mflt;
     if (IS_PC(ch) && !UNIT_IN(ch))
@@ -647,26 +713,36 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
     if (IS_ROOM(ch))
     {
         if (UNIT_FUNC(ch) && (unit_function_scan(ch, sarg)) != SFR_SHARE)
+        {
             return SFR_BLOCK;
+        }
 
         for (u = UNIT_CONTAINS(ch); u; u = next)
         {
             next = u->next; /* Next dude trick */
             if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+            {
                 return SFR_BLOCK;
+            }
         }
         return SFR_SHARE;
     }
 
     if (extra_target && !same_surroundings(ch, extra_target))
+    {
         if ((unit_function_scan(extra_target, sarg)) != SFR_SHARE)
+        {
             return SFR_BLOCK;
+        }
+    }
 
     /* special in room? */
     if (UNIT_IN(ch) && UNIT_FUNC(UNIT_IN(ch)))
     {
         if ((unit_function_scan(UNIT_IN(ch), sarg)) != SFR_SHARE)
+        {
             return SFR_BLOCK;
+        }
     }
 
     /* special in inventory or equipment? */
@@ -674,7 +750,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
     {
         next = u->next; /* Next dude trick */
         if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+        {
             return SFR_BLOCK;
+        }
     }
 
     if (UNIT_IN(ch))
@@ -685,7 +763,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
             next = u->next; /* Next dude trick */
 
             if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+            {
                 return SFR_BLOCK;
+            }
 
             if (u != ch)
             {
@@ -695,7 +775,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
                     {
                         nextt = uu->next; /* next dude double trick */
                         if (UNIT_FUNC(uu) && (unit_function_scan(uu, sarg)) != SFR_SHARE)
+                        {
                             return SFR_BLOCK;
+                        }
                     }
                 }
                 else if (IS_CHAR(u))
@@ -705,7 +787,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
                     {
                         nextt = uu->next; /* Next dude trick */
                         if (UNIT_FUNC(uu) && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
+                        {
                             return SFR_BLOCK;
+                        }
                     }
                 }
             }
@@ -718,7 +802,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
             if (UNIT_FUNC(UNIT_IN(UNIT_IN(ch))))
             {
                 if (unit_function_scan(UNIT_IN(UNIT_IN(ch)), sarg) != SFR_SHARE)
+                {
                     return SFR_BLOCK;
+                }
             }
 
             if (UNIT_IN(UNIT_IN(ch)))
@@ -729,10 +815,14 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
 
                     /* No self activation except when dying... */
                     if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+                    {
                         return SFR_BLOCK;
+                    }
 
                     if (!UNIT_IN(UNIT_IN(ch)))
+                    {
                         break;
+                    }
 
                     if (u != UNIT_IN(ch))
                     {
@@ -742,7 +832,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
                             {
                                 nextt = uu->next; /* next dude double trick */
                                 if (UNIT_FUNC(uu) && (unit_function_scan(uu, sarg)) != SFR_SHARE)
+                                {
                                     return SFR_BLOCK;
+                                }
                             }
                         }
                         else if (IS_CHAR(u))
@@ -752,7 +844,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
                             {
                                 nextt = uu->next; /* Next dude trick */
                                 if (UNIT_FUNC(uu) && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
+                                {
                                     return SFR_BLOCK;
+                                }
                             }
                         }
                     }
@@ -886,17 +980,25 @@ int send_ack(class unit_data *activator,
     sarg.target = target;
 
     if (i)
+    {
         sarg.pInt = i;
+    }
     else
+    {
         sarg.pInt = &j;
+    }
 
     sarg.cmd = (struct command_info *)cmd;
     sarg.arg = (char *)arg;
 
     if (to)
+    {
         return basic_special(NULL, &sarg, SFB_PRE, extra_target, to);
+    }
     else
+    {
         return basic_special(activator, &sarg, SFB_PRE, extra_target, to);
+    }
 }
 
 void send_done(class unit_data *activator,
@@ -918,9 +1020,13 @@ void send_done(class unit_data *activator,
     sarg.arg = (char *)arg;
 
     if (to)
+    {
         basic_special(NULL, &sarg, SFB_DONE, extra_target, to);
+    }
     else
+    {
         basic_special(activator, &sarg, SFB_DONE, extra_target, to);
+    }
 }
 
 /* Build the trie here :) */
@@ -929,12 +1035,16 @@ void assign_command_pointers(void)
     struct command_info *cmd;
     g_intr_trie = 0;
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
+    {
         g_intr_trie = add_trienode(cmd->cmd_str, g_intr_trie);
+    }
 
     qsort_triedata(g_intr_trie);
 
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
+    {
         set_triedata(cmd->cmd_str, g_intr_trie, cmd, FALSE);
+    }
 
     g_cmd_follow = (struct command_info *)search_trie("follow", g_intr_trie);
 
@@ -995,7 +1105,9 @@ void interpreter_dil_check(void)
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
     {
         if (cmd->tmpl == NULL)
+        {
             continue;
+        }
 
         if (cmd->tmpl->argc != 1)
         {

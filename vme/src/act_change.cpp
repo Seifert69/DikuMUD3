@@ -18,9 +18,13 @@
 static void chg_wimpy(class unit_data *ch)
 {
     if (IS_SET(CHAR_FLAGS(ch), CHAR_WIMPY))
+    {
         send_to_char("You feel brave again.<br/>", ch);
+    }
     else
+    {
         send_to_char("Ok, you'll flee when death is near.<br/>", ch);
+    }
 
     TOGGLE_BIT(CHAR_FLAGS(ch), CHAR_WIMPY);
 }
@@ -28,9 +32,13 @@ static void chg_wimpy(class unit_data *ch)
 static void chg_expert(class unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_EXPERT))
+    {
         send_to_char("You are now in normal mode.<br/>", ch);
+    }
     else
+    {
         send_to_char("You are now in expert mode.<br/>", ch);
+    }
 
     TOGGLE_BIT(PC_FLAGS(ch), PC_EXPERT);
 }
@@ -38,9 +46,13 @@ static void chg_expert(class unit_data *ch)
 static void chg_brief(class unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_BRIEF))
+    {
         send_to_char("Brief mode off.<br/>", ch);
+    }
     else
+    {
         send_to_char("Brief mode on.<br/>", ch);
+    }
 
     TOGGLE_BIT(PC_FLAGS(ch), PC_BRIEF);
 }
@@ -48,9 +60,13 @@ static void chg_brief(class unit_data *ch)
 static void chg_compact(class unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_COMPACT))
+    {
         send_to_char("You are now in the uncompacted mode.<br/>", ch);
+    }
     else
+    {
         send_to_char("You are now in compact mode.<br/>", ch);
+    }
 
     TOGGLE_BIT(PC_FLAGS(ch), PC_COMPACT);
 }
@@ -58,9 +74,13 @@ static void chg_compact(class unit_data *ch)
 static void chg_peaceful(class unit_data *ch)
 {
     if (IS_SET(CHAR_FLAGS(ch), CHAR_PEACEFUL))
+    {
         send_to_char("They will come in peace and leave in pieces.<br/>", ch);
+    }
     else
+    {
         send_to_char("You will no longer attack aggressors.<br/>", ch);
+    }
 
     TOGGLE_BIT(CHAR_FLAGS(ch), CHAR_PEACEFUL);
 }
@@ -76,17 +96,25 @@ static void chg_inform(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_INFORM);
 
     if (IS_SET(PC_FLAGS(ch), PC_INFORM))
+    {
         send_to_char("You will now get more information.<br/>", ch);
+    }
     else
+    {
         send_to_char("You will now get less information.<br/>", ch);
+    }
 }
 
 static void chg_shout(class unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_NOSHOUT))
+    {
         send_to_char("You can now hear shouts again.<br/>", ch);
+    }
     else
+    {
         send_to_char("From now on, you won't hear shouts.<br/>", ch);
+    }
 
     TOGGLE_BIT(PC_FLAGS(ch), PC_NOSHOUT);
 }
@@ -94,9 +122,13 @@ static void chg_shout(class unit_data *ch)
 static void chg_tell(class unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_NOTELL))
+    {
         send_to_char("You can now hear tells again.<br/>", ch);
+    }
     else
+    {
         send_to_char("From now on, you won't hear tells.<br/>", ch);
+    }
 
     TOGGLE_BIT(PC_FLAGS(ch), PC_NOTELL);
 }
@@ -104,9 +136,13 @@ static void chg_tell(class unit_data *ch)
 static void chg_exits(class unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_EXITS))
+    {
         send_to_char("Exit information disabled.<br/>", ch);
+    }
     else
+    {
         send_to_char("Exit information enabled.<br/>", ch);
+    }
 
     TOGGLE_BIT(PC_FLAGS(ch), PC_EXITS);
 }
@@ -210,9 +246,13 @@ static void chg_telnet(class unit_data *ch)
     PC_SETUP_TELNET(ch) = !PC_SETUP_TELNET(ch);
 
     if (PC_SETUP_TELNET(ch))
+    {
         act("You are now assumed to be using telnet.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
     else
+    {
         act("You are now assumed not to be using telnet.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
@@ -228,9 +268,13 @@ static void chg_character_echo(class unit_data *ch)
     PC_SETUP_ECHO(ch) = !PC_SETUP_ECHO(ch);
 
     if (PC_SETUP_ECHO(ch))
+    {
         act("You will now get all typed characters echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
     else
+    {
         act("You will now receive no echo characters.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
@@ -246,9 +290,13 @@ static void chg_redraw_prompt(class unit_data *ch)
     PC_SETUP_REDRAW(ch) = !PC_SETUP_REDRAW(ch);
 
     if (PC_SETUP_REDRAW(ch))
+    {
         act("You will now get your prompt redrawn.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
     else
+    {
         act("Your prompt will no longer get redrawn.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
@@ -258,9 +306,13 @@ static void chg_echo_say(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_ECHO);
 
     if (IS_SET(PC_FLAGS(ch), PC_ECHO))
+    {
         act("You will now get your communications echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
     else
+    {
         act("You will no longer get your communications echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+    }
 }
 
 void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
@@ -296,7 +348,9 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
 
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     if (str_is_empty(arg))
     {

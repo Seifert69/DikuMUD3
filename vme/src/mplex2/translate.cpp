@@ -66,9 +66,13 @@ void (*control_code[5][256])(class cConHook *con, char **b, ubit8 code);
 void protocol_translate(class cConHook *con, ubit8 code, char **b)
 {
     if (code >= CONTROL_FG_BLACK_CHAR && code <= CONTROL_BG_WHITE_CHAR)
+    {
         code = default_colours[con->m_sSetup.colour_convert][code - CONTROL_FG_BLACK_CHAR];
+    }
     if (control_code[(con)->m_sSetup.emulation][code])
+    {
         (*control_code[(con)->m_sSetup.emulation][code])((con), (b), (code));
+    }
 
     //   PROTOCOL_TRANSLATE(con, code, b);
 }
@@ -117,58 +121,90 @@ void Control_ANSI_Fg(class cConHook *con, char **dest, ubit8 code, int bBold)
     {
         case 'r':
             if (bBold)
+            {
                 Control_ANSI_Fg_Red(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fgb_Red(con, dest, 0);
+            }
             break;
 
         case 'n':
             if (bBold)
+            {
                 Control_ANSI_Fgb_Black(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fg_Black(con, dest, 0);
+            }
             break;
 
         case 'g':
             if (bBold)
+            {
                 Control_ANSI_Fgb_Green(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fg_Green(con, dest, 0);
+            }
             break;
 
         case 'y':
             if (bBold)
+            {
                 Control_ANSI_Fgb_Yellow(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fg_Yellow(con, dest, 0);
+            }
             break;
 
         case 'b':
             if (bBold)
+            {
                 Control_ANSI_Fgb_Blue(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fg_Blue(con, dest, 0);
+            }
             break;
 
         case 'm':
             if (bBold)
+            {
                 Control_ANSI_Fgb_Magenta(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fg_Magenta(con, dest, 0);
+            }
             break;
 
         case 'c':
             if (bBold)
+            {
                 Control_ANSI_Fgb_Cyan(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fg_Cyan(con, dest, 0);
+            }
             break;
 
         case 'w':
             if (bBold)
+            {
                 Control_ANSI_Fgb_White(con, dest, 0);
+            }
             else
+            {
                 Control_ANSI_Fg_White(con, dest, 0);
+            }
             break;
 
         default:
@@ -519,8 +555,12 @@ void translate_init(void)
     int i, j;
 
     for (j = 0; j < 4; j++)
+    {
         for (i = 0; i < 256; i++)
+        {
             control_code[j][i] = NULL;
+        }
+    }
 
     for (j = 0; j < 4; j++)
     {
@@ -580,5 +620,7 @@ void translate_init(void)
     control_code[TERM_ANSI][CONTROL_BG_WHITE_CHAR] = Control_ANSI_Bg_White;
 
     for (i = 0; i < 256; i++)
+    {
         control_code[TERM_INTERNAL][i] = Control_Copy;
+    }
 }

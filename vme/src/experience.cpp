@@ -33,10 +33,14 @@
 int kludge_bonus(int level, int points)
 {
     if (level <= 20)
+    {
         return 0;
+    }
 
     if (level <= 50)
+    {
         return ((5 * (level - 20)) * MIN(100, points)) / 100;
+    }
 
     int b, expected;
 
@@ -69,7 +73,9 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him */
     if (!CHAR_CAN_SEE(att, def))
+    {
         att_dex -= 12;
+    }
 
     if ((def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD)))
     {
@@ -95,13 +101,17 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
                                         IS_PC(def) ? PC_SKI_SKILL(def, SKI_SHIELD) : def_dex,
                                         IS_PC(att) ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
 
-            if (hm >= 0) /* Successful Shield use */
+            if (hm >= 0)
+            { /* Successful Shield use */
                 def_shield_bonus = g_shi_info[OBJ_VALUE(def_shield, 0)].melee + shield_bonus / 2;
+            }
         }
     } /* End of Shield */
 
     if (pDef_shield)
+    {
         *pDef_shield = def_shield;
+    }
 
     return def_shield_bonus;
 }
@@ -127,27 +137,41 @@ int dikuii_spell_bonus(class unit_data *att,
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him */
     if (!CHAR_CAN_SEE(att, def))
+    {
         att_bonus -= 12;
+    }
 
     if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    {
         def_bonus += 10;
+    }
 
     if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
     {
         def_armour_type = OBJ_VALUE(def_armour, 0);
         if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
+        {
             def_bonus += OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
+        }
         else
+        {
             slog(LOG_ALL, 0, "Illegal armour bonus.");
+        }
     }
     else
+    {
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
+    }
 
     if (pDef_armour_type)
+    {
         *pDef_armour_type = def_armour_type;
+    }
 
     if (pDef_armour)
+    {
         *pDef_armour = def_armour;
+    }
 
     att_spl_knowledge = spell_attack_skill(medium, spell_number);
     def_spl_knowledge = spell_defense_skill(def, spell_number);
@@ -161,7 +185,9 @@ int dikuii_spell_bonus(class unit_data *att,
              2 * (att_spl_knowledge - def_spl_knowledge) - def_bonus;
     }
     else
+    {
         hm = (5 * spell_attack_ability(medium, spell_number)) / 2 + 2 * spell_attack_skill(medium, spell_number) - def_bonus;
+    }
 
     return MAX(-50, hm);
 }
@@ -206,16 +232,22 @@ int dikuii_melee_bonus(class unit_data *att,
     else
     {
         if (primary)
+        {
             att_wpn = equipment_type(att, WEAR_WIELD, ITEM_WEAPON);
+        }
         else
+        {
             att_wpn = equipment_type(att, WEAR_HOLD, ITEM_WEAPON);
+        }
 
         if (att_wpn)
         {
             att_wpn_type = OBJ_VALUE(att_wpn, 0); /* [0] is category */
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
             if (is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
+            {
                 att_bonus += OBJ_VALUE(att_wpn, 1) + OBJ_VALUE(att_wpn, 2);
+            }
         }
         else
         {
@@ -229,58 +261,90 @@ int dikuii_melee_bonus(class unit_data *att,
         int dual_skill;
 
         if (IS_PC(att))
+        {
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
+        }
         else
+        {
             dual_skill = CHAR_DEX(att);
+        }
 
         if (primary)
+        {
             att_bonus -= MAX(0, 25 - (dual_skill / 4));
+        }
         else
+        {
             att_bonus -= MAX(0, 50 - (dual_skill / 4));
+        }
     }
 
     def_wpn_knowledge = weapon_defense_skill(def, att_wpn_type);
 
     if (CHAR_FIGHTING(def) != att)
+    {
         def_bonus -= 25;
+    }
 
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him */
     if (!CHAR_CAN_SEE(att, def))
+    {
         def_bonus += 25;
+    }
 
     if (!CHAR_CAN_SEE(def, att))
+    {
         att_bonus += 25;
+    }
 
     /* Slaying Weapons */
     if (att_wpn && OBJ_VALUE(att_wpn, 3) == CHAR_RACE(def))
+    {
         att_bonus += 25;
+    }
 
     if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    {
         def_bonus += 20;
+    }
 
     if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
     {
         def_armour_type = OBJ_VALUE(def_armour, 0);
         if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
+        {
             def_bonus += OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
+        }
         else
+        {
             slog(LOG_ALL, 0, "Illegal armour bonus.");
+        }
     }
     else
+    {
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
+    }
 
     if (pAtt_weapon_type)
+    {
         *pAtt_weapon_type = att_wpn_type;
+    }
 
     if (pAtt_weapon)
+    {
         *pAtt_weapon = att_wpn;
+    }
 
     if (pDef_armour_type)
+    {
         *pDef_armour_type = def_armour_type;
+    }
 
     if (pDef_armour)
+    {
         *pDef_armour = def_armour;
+    }
 
     att_wpn_knowledge += kludge_bonus(CHAR_LEVEL(att), att_wpn_knowledge);
     def_wpn_knowledge += kludge_bonus(CHAR_LEVEL(def), def_wpn_knowledge) / 2;
@@ -288,9 +352,13 @@ int dikuii_melee_bonus(class unit_data *att,
     int att_abil = weapon_attack_ability(att, att_wpn_type);
 
     if (CHAR_AWAKE(def))
+    {
         hm = (5 * (att_abil - def_dex)) / 2 + (2 * (att_wpn_knowledge - def_wpn_knowledge)) + att_bonus - def_bonus;
+    }
     else
+    {
         hm = (5 * att_abil) / 2 + att_bonus + 2 * att_wpn_knowledge + 50;
+    }
 
     // This results in a 5% hm increase per "level"
 
@@ -389,16 +457,24 @@ int spell_bonus(class unit_data *att,
             }
         }
         else
+        {
             slog(LOG_ALL, 0, "Illegal armour bonus.");
+        }
     }
     else
+    {
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
+    }
 
     if (pDef_armour_type)
+    {
         *pDef_armour_type = def_armour_type;
+    }
 
     if (pDef_armour)
+    {
         *pDef_armour = def_armour;
+    }
 
     att_spl_knowledge = spell_attack_skill(medium, spell_number);
     def_spl_knowledge = spell_defense_skill(def, spell_number);
@@ -516,9 +592,13 @@ int melee_bonus(class unit_data *att,
     else
     {
         if (primary)
+        {
             att_wpn = equipment_type(att, WEAR_WIELD, ITEM_WEAPON);
+        }
         else
+        {
             att_wpn = equipment_type(att, WEAR_HOLD, ITEM_WEAPON);
+        }
 
         if (att_wpn)
         {
@@ -558,14 +638,22 @@ int melee_bonus(class unit_data *att,
         int dual_skill;
 
         if (IS_PC(att))
+        {
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
+        }
         else
+        {
             dual_skill = CHAR_DEX(att);
+        }
 
         if (primary)
+        {
             tmp = -MAX(0, 25 - (dual_skill / 4));
+        }
         else
+        {
             tmp = -MAX(0, 50 - (dual_skill / 4));
+        }
 
         att_bonus += tmp;
 
@@ -654,22 +742,34 @@ int melee_bonus(class unit_data *att,
             }
         }
         else
+        {
             slog(LOG_ALL, 0, "Illegal armour bonus.");
+        }
     }
     else
+    {
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
+    }
 
     if (pAtt_weapon_type)
+    {
         *pAtt_weapon_type = att_wpn_type;
+    }
 
     if (pAtt_weapon)
+    {
         *pAtt_weapon = att_wpn;
+    }
 
     if (pDef_armour_type)
+    {
         *pDef_armour_type = def_armour_type;
+    }
 
     if (pDef_armour)
+    {
         *pDef_armour = def_armour;
+    }
 
     int def_dex = effective_dex(def);
     int att_abil = weapon_attack_ability(att, att_wpn_type);
@@ -776,9 +876,13 @@ int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
     dam /= 3;
 
     if (dam <= 0)
+    {
         return 100;
+    }
     else
+    {
         return UNIT_MAX_HIT(def) / dam; /* Rounds to die.... */
+    }
 }
 
 void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
@@ -844,21 +948,37 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
 
     if (rtd <= 1)
+    {
         send_to_char("RUN AWAY!<br/>", ch);
+    }
     else if (rtd <= 2)
+    {
         send_to_char("You ARE mad!<br/>", ch);
+    }
     else if (rtd <= 3)
+    {
         send_to_char("Very risky indeed!<br/>", ch);
+    }
     else if (rtd <= 4)
+    {
         send_to_char("Quite a risk.<br/>", ch);
+    }
     else if (rtd <= 5)
+    {
         send_to_char("Perhaps you would have time to flee.<br/>", ch);
+    }
     else if (rtd <= 7)
+    {
         send_to_char("You got a fair chance of fleeing.<br/>", ch);
+    }
     else if (rtd <= 10)
+    {
         send_to_char("You got a very good chance of fleeing.<br/>", ch);
+    }
     else
+    {
         send_to_char("Plenty of time to flee.<br/>", ch);
+    }
 
     send_done(ch, NULL, vict, rtd, cmd, oarg);
 }

@@ -109,10 +109,14 @@ const char **skill_collection::gettext(void)
 int get_racial_ability(int nRace, int nAbility)
 {
     if ((nRace < 0) or (nRace >= PC_RACE_MAX))
+    {
         return 0;
+    }
 
     if ((nAbility < 0) or (nAbility >= ABIL_TREE_MAX))
+    {
         return 0;
+    }
 
     return g_AbiColl.racial[nRace][nAbility];
 }
@@ -120,10 +124,14 @@ int get_racial_ability(int nRace, int nAbility)
 int get_racial_weapon(int nRace, int nWeapon)
 {
     if ((nRace < 0) or (nRace >= PC_RACE_MAX))
+    {
         return 0;
+    }
 
     if ((nWeapon < 0) or (nWeapon >= WPN_TREE_MAX))
+    {
         return 0;
+    }
 
     return g_WpnColl.racial[nRace][nWeapon];
 }
@@ -131,10 +139,14 @@ int get_racial_weapon(int nRace, int nWeapon)
 int get_racial_skill(int nRace, int nSkill)
 {
     if ((nRace < 0) or (nRace >= PC_RACE_MAX))
+    {
         return 0;
+    }
 
     if ((nSkill < 0) or (nSkill >= SKI_TREE_MAX))
+    {
         return 0;
+    }
 
     return g_SkiColl.racial[nRace][nSkill];
 }
@@ -142,10 +154,14 @@ int get_racial_skill(int nRace, int nSkill)
 int get_racial_spells(int nRace, int nSpell)
 {
     if ((nRace < 0) or (nRace >= PC_RACE_MAX))
+    {
         return 0;
+    }
 
     if ((nSpell < 0) or (nSpell >= SPL_TREE_MAX))
+    {
         return 0;
+    }
 
     return g_SplColl.racial[nRace][nSpell];
 }
@@ -220,11 +236,17 @@ int skillchecksa(class unit_data *u, int skillidx, int abiidx, int difficulty)
     roll = open100();
 
     if (UNIT_TYPE(u) == UNIT_ST_PC)
+    {
         skl = (PC_SKI_SKILL(u, skillidx) * 2 + CHAR_ABILITY(u, abiidx)) / 3; /* 2/3rd skill, 1/3rd ability */
+    }
     else if (UNIT_TYPE(u) == UNIT_ST_NPC)
+    {
         skl = CHAR_ABILITY(u, abiidx);
+    }
     else
+    {
         skl = 0;
+    }
 
     hm = roll + skl - difficulty - 50;
 
@@ -248,15 +270,25 @@ int resistance_skill_check(int att_skill1, int def_skill1, int att_skill2, int d
 int weight_size(int lbs)
 {
     if (lbs <= 5)
+    {
         return SIZ_TINY;
+    }
     else if (lbs <= 40)
+    {
         return SIZ_SMALL;
+    }
     else if (lbs <= 160)
+    {
         return SIZ_MEDIUM;
+    }
     else if (lbs <= 500)
+    {
         return SIZ_LARGE;
+    }
     else
+    {
         return SIZ_HUGE;
+    }
 }
 
 int weapon_fumble(class unit_data *weapon, int roll)
@@ -275,9 +307,13 @@ int chart_damage(int roll, struct damage_chart_element_type *element)
     }
 
     if (roll < element->offset)
+    {
         return 0;
+    }
     else
+    {
         return element->basedam + ((roll - element->offset) / element->alpha);
+    }
 }
 
 /* Size is for natural attacks to limit max damage for such */
@@ -290,7 +326,9 @@ int chart_size_damage(int roll, struct damage_chart_element_type *element, int l
     }
 
     if (roll < element->offset)
+    {
         return 0;
+    }
     else
     {
         switch (weight_size(lbs))
@@ -362,16 +400,22 @@ int weapon_defense_skill(class unit_data *ch, int skill)
     if (IS_PC(ch))
     {
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
+        {
             max = PC_WPN_SKILL(ch, skill) / 2;
+        }
         else
+        {
             max = PC_WPN_SKILL(ch, skill);
+        }
 
         while (!TREE_ISROOT(g_WpnColl.tree, skill))
         {
             skill = TREE_PARENT(g_WpnColl.tree, skill);
 
             if (PC_WPN_SKILL(ch, skill) > max)
+            {
                 max = PC_WPN_SKILL(ch, skill);
+            }
         }
 
         return max;
@@ -379,19 +423,27 @@ int weapon_defense_skill(class unit_data *ch, int skill)
     else /* a NPC */
     {
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
+        {
             skill = TREE_PARENT(g_WpnColl.tree, skill);
+        }
 
         if (TREE_ISROOT(g_WpnColl.tree, skill))
+        {
             max = NPC_WPN_SKILL(ch, skill);
+        }
         else
+        {
             max = NPC_WPN_SKILL(ch, skill) / 2;
+        }
 
         while (!TREE_ISROOT(g_WpnColl.tree, skill))
         {
             skill = TREE_PARENT(g_WpnColl.tree, skill);
 
             if (NPC_WPN_SKILL(ch, skill) > max)
+            {
                 max = NPC_WPN_SKILL(ch, skill);
+            }
         }
 
         return max;
@@ -408,17 +460,23 @@ int weapon_attack_skill(class unit_data *ch, int skill)
         n = PC_WPN_SKILL(ch, skill);
 
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
+        {
             n = MAX(TREE_PARENT(g_WpnColl.tree, skill), n);
+        }
 
         if (n == 0)
+        {
             n = -25;
+        }
 
         return n;
     }
     else
     {
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
+        {
             skill = TREE_PARENT(g_WpnColl.tree, skill);
+        }
 
         return NPC_WPN_SKILL(ch, skill);
     }
@@ -459,34 +517,46 @@ int effective_dex(class unit_data *ch)
         if (IS_OBJ(u) && (OBJ_EQP_POS(u) != 0) && (OBJ_TYPE(u) == ITEM_ARMOR))
         {
             if (OBJ_EQP_POS(u) > WEAR_MAX)
+            {
                 continue; // slog ?
+            }
 
             at = OBJ_VALUE(u, 0);
             if (!is_in(at, ARM_CLOTHES, ARM_PLATE))
+            {
                 continue; // slog ?
+            }
 
             switch (at)
             {
                 case ARM_LEATHER:
                     b = (CHAR_ABILITY(ch, ABIL_STR) + 4 * CHAR_ABILITY(ch, ABIL_DEX)) / 5;
                     if (IS_PC(ch))
+                    {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_LEATHER)) / 2;
+                    }
                     break;
 
                 case ARM_HLEATHER:
                     b = (CHAR_ABILITY(ch, ABIL_STR) + 2 * CHAR_ABILITY(ch, ABIL_DEX)) / 3;
                     if (IS_PC(ch))
+                    {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_HLEATHER)) / 2;
+                    }
                     break;
                 case ARM_CHAIN:
                     b = (2 * CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX)) / 3;
                     if (IS_PC(ch))
+                    {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_CHAIN)) / 2;
+                    }
                     break;
                 case ARM_PLATE:
                     b = CHAR_ABILITY(ch, ABIL_STR);
                     if (IS_PC(ch))
+                    {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_PLATE)) / 2;
+                    }
                     break;
                 default:
                     continue;
@@ -534,7 +604,9 @@ static void profession_read(void)
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
         if (mstmp == NULL)
+        {
             continue;
+        }
 
         str_remspc(pTmp);
 
@@ -547,7 +619,9 @@ static void profession_read(void)
         }
 
         if (pCh == NULL || str_is_empty(pCh))
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "index", 5) == 0)
         {
@@ -561,16 +635,22 @@ static void profession_read(void)
         }
 
         if (idx == -1)
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
             if (g_professions[idx])
+            {
                 free((char *)g_professions[idx]);
+            }
             g_professions[idx] = str_dup(pCh);
         }
         else
+        {
             slog(LOG_ALL, 0, "Profession boot unknown string: %s", pTmp);
+        }
     }
 
     fclose(fl);
@@ -603,7 +683,9 @@ static void race_read(void)
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
         if (mstmp == NULL)
+        {
             continue;
+        }
 
         str_remspc(pTmp);
 
@@ -616,7 +698,9 @@ static void race_read(void)
         }
 
         if (pCh == NULL || str_is_empty(pCh))
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "index", 5) == 0)
         {
@@ -630,7 +714,9 @@ static void race_read(void)
         }
 
         if (idx == -1)
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
@@ -728,7 +814,9 @@ static void race_read(void)
             g_race_info[idx].age_dice.size = atoi(tmp);
         }
         else
+        {
             slog(LOG_ALL, 0, "Race boot unknown string: %s", pTmp);
+        }
     }
 
     fclose(fl);
@@ -754,7 +842,9 @@ static void race_init(void)
 
     g_playerinit_tmpl = find_dil_template("playerinit@basis");
     if (g_playerinit_tmpl == NULL)
+    {
         slog(LOG_ALL, 0, "No 'playerinit@basis' DIL template.");
+    }
     else
     {
         if (g_playerinit_tmpl->argc != 0)
@@ -766,7 +856,9 @@ static void race_init(void)
 
     g_nanny_dil_tmpl = find_dil_template("nanny@basis");
     if (g_nanny_dil_tmpl == NULL)
+    {
         slog(LOG_ALL, 0, "No 'nanny@basis' DIL template.");
+    }
     else
     {
         if ((g_nanny_dil_tmpl->argc != 1) || (g_nanny_dil_tmpl->argt[0] != DILV_SP))
@@ -804,7 +896,9 @@ static void ability_read(void)
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
 
         if (mstmp == NULL)
+        {
             continue;
+        }
 
         str_remspc(pTmp);
 
@@ -819,7 +913,9 @@ static void ability_read(void)
         strip_trailing_blanks(pTmp);
 
         if (pCh == NULL || str_is_empty(pCh))
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "index", 5) == 0)
         {
@@ -833,7 +929,9 @@ static void ability_read(void)
         }
 
         if (idx == -1)
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
@@ -848,13 +946,17 @@ static void ability_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_AbiColl.tree[idx].bAutoTrain = dummy;
+            }
         }
         else if (strncmp(pTmp, "auto teacher no add", 19) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_AbiColl.tree[idx].bAutoTeacherNoAdd = dummy;
+            }
         }
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
@@ -868,9 +970,13 @@ static void ability_read(void)
             int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Abilities: Illegal race in: %s", pTmp);
+            }
             else
+            {
                 g_AbiColl.racial[ridx][idx] = dummy;
+            }
         }
         else if (strncmp(pTmp, "profession ", 11) == 0)
         {
@@ -884,12 +990,18 @@ static void ability_read(void)
             int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Abilities: Illegal profession %s", pTmp);
+            }
             else
+            {
                 g_AbiColl.prof_table[idx].profession_cost[ridx] = dummy;
+            }
         }
         else
+        {
             slog(LOG_ALL, 0, "Ability boot unknown string: %s", pTmp);
+        }
     }
 
     fclose(fl);
@@ -909,16 +1021,22 @@ static void ability_init(void)
         g_AbiColl.text[i] = NULL;
 
         for (int j = 0; j < PC_RACE_MAX; j++)
+        {
             g_AbiColl.racial[j][i] = 0;
+        }
 
         g_AbiColl.prof_table[i].sanity = i;
         g_AbiColl.prof_table[i].min_level = 0;
 
         for (int j = 0; j < ABIL_TREE_MAX; j++)
+        {
             g_AbiColl.prof_table[i].min_abil[j] = 0;
+        }
 
         for (int j = 0; j < PROFESSION_MAX; j++)
+        {
             g_AbiColl.prof_table[i].profession_cost[j] = -7;
+        }
     }
 
     g_AbiColl.tree[ABIL_TREE_MAX].parent = -1;
@@ -965,6 +1083,7 @@ void ability_dump(void)
             }
 
             for (int j = 0; j < ABIL_TREE_MAX; j++)
+            {
                 if (g_AbiColl.prof_table[i].min_abil[j] > 0)
                 {
                     snprintf(buf,
@@ -976,10 +1095,13 @@ void ability_dump(void)
                              g_AbiColl.prof_table[i].min_abil[j]);
                     str.append(buf);
                 }
+            }
         }
         std::sort(vect.begin(), vect.end(), pairISCompare);
         for (auto it = vect.begin(); it != vect.end(); ++it)
+        {
             printf("%s", it->second.c_str());
+        }
     }
     exit(0);
 }
@@ -1011,12 +1133,16 @@ static void weapon_read(void)
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
         if (mstmp == NULL)
+        {
             continue;
+        }
 
         str_remspc(pTmp);
 
         if (str_is_empty(pTmp))
+        {
             continue;
+        }
 
         pCh = strchr(pTmp, '=');
         if (pCh == NULL)
@@ -1050,14 +1176,18 @@ static void weapon_read(void)
         }
 
         if (idx == -1)
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
             if (g_WpnColl.text[idx])
             {
                 if (g_WpnColl.text[idx] && g_WpnColl.text[idx][0])
+                {
                     slog(LOG_ALL, 0, "Weapon boot error: Weapon name alreay assigned as %s and replaced as %s", g_WpnColl.text[idx], pCh);
+                }
                 free((char *)g_WpnColl.text[idx]);
                 g_WpnColl.text[idx] = NULL;
             }
@@ -1067,56 +1197,76 @@ static void weapon_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, SHIELD_M_BLOCK, SHIELD_M_USELESS))
+            {
                 g_wpn_info[idx].shield = dummy;
+            }
         }
         else if (strncmp(pTmp, "sphere", 6) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, WPN_ROOT, WPN_GROUP_MAX - 1))
+            {
                 g_WpnColl.tree[idx].parent = dummy;
+            }
         }
         else if (strncmp(pTmp, "auto train", 10) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_WpnColl.tree[idx].bAutoTrain = dummy;
+            }
         }
         else if (strncmp(pTmp, "auto teacher no add", 19) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_WpnColl.tree[idx].bAutoTeacherNoAdd = dummy;
+            }
         }
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
             dummy = atoi(pCh);
             if (!is_in(dummy, -3, +3))
+            {
                 continue;
+            }
 
             int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Weapons: Illegal race in: %s", pTmp);
+            }
             else
+            {
                 g_WpnColl.racial[ridx][idx] = dummy;
+            }
         }
         else if (strncmp(pTmp, "fumble", 6) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 99))
+            {
                 g_weapon_chart[idx].fumble = dummy;
+            }
         }
         else if (strncmp(pTmp, "hands", 5) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 1, 2))
+            {
                 g_wpn_info[idx].hands = dummy;
+            }
         }
         else if (strncmp(pTmp, "speed", 5) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 12))
+            {
                 g_wpn_info[idx].speed = dummy;
+            }
         }
         else if (strncmp(pTmp, "type", 4) == 0)
         {
@@ -1141,9 +1291,13 @@ static void weapon_read(void)
             int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Weapons: Illegal profession %s", pTmp);
+            }
             else
+            {
                 g_WpnColl.prof_table[idx].profession_cost[ridx] = dummy;
+            }
         }
         else if (strncmp(pTmp, "restrict ", 9) == 0)
         {
@@ -1163,9 +1317,13 @@ static void weapon_read(void)
                 int ridx = search_block(pTmp + 9, g_AbiColl.text, TRUE);
 
                 if (ridx == -1)
+                {
                     slog(LOG_ALL, 0, "Weapons: Illegal restrict %s", pTmp);
+                }
                 else
+                {
                     g_WpnColl.prof_table[idx].min_abil[ridx] = dummy;
+                }
             }
         }
         else if (strncmp(pTmp, "ability", 7) == 0)
@@ -1221,15 +1379,25 @@ static void weapon_read(void)
             }
 
             if (strncmp(pTmp + 7, "clothes", 7) == 0)
+            {
                 idx2 = ARM_CLOTHES;
+            }
             else if (strncmp(pTmp + 7, "sleather", 8) == 0)
+            {
                 idx2 = ARM_LEATHER;
+            }
             else if (strncmp(pTmp + 7, "hleather", 8) == 0)
+            {
                 idx2 = ARM_HLEATHER;
+            }
             else if (strncmp(pTmp + 7, "chain", 5) == 0)
+            {
                 idx2 = ARM_CHAIN;
+            }
             else if (strncmp(pTmp + 7, "plate", 5) == 0)
+            {
                 idx2 = ARM_PLATE;
+            }
             else
             {
                 slog(LOG_ALL, 0, "Weapon init %d: Illegal attack type %s.", idx, pTmp);
@@ -1244,7 +1412,9 @@ static void weapon_read(void)
             }
         }
         else
+        {
             slog(LOG_ALL, 0, "Weapon boot unknown string: [%s]", pTmp);
+        }
     }
 
     fclose(fl);
@@ -1278,25 +1448,35 @@ static void weapon_init(void)
         g_WpnColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
         if (i < WPN_GROUP_MAX)
+        {
             g_WpnColl.tree[i].isleaf = FALSE;
+        }
         else
+        {
             g_WpnColl.tree[i].isleaf = TRUE;
+        }
 
         g_WpnColl.text[i] = str_dup(""); // To manage missing weapons
 
         /* Default to zero */
         for (j = 0; j < PC_RACE_MAX; j++)
+        {
             g_WpnColl.racial[j][i] = 0;
+        }
 
         /* Clear the weapon_prof table */
         g_WpnColl.prof_table[i].sanity = i;
         g_WpnColl.prof_table[i].min_level = 0;
 
         for (int j = 0; j < ABIL_TREE_MAX; j++)
+        {
             g_WpnColl.prof_table[i].min_abil[j] = 0;
+        }
 
         for (int j = 0; j < PROFESSION_MAX; j++)
+        {
             g_WpnColl.prof_table[i].profession_cost[j] = -7;
+        }
 
         if ((i <= LAST_WEAPON) && (g_WpnColl.prof_table[i].sanity != i))
         {
@@ -1322,7 +1502,9 @@ void weapon_dump(void)
         for (int i = WPN_GROUP_MAX; i < WPN_TREE_MAX; i++)
         {
             if (str_is_empty(g_WpnColl.text[i]))
+            {
                 continue;
+            }
 
             str = "";
 
@@ -1381,17 +1563,23 @@ static void skill_init(void)
 
         /* Racial skills are all zero */
         for (int j = 0; j < PC_RACE_MAX; j++)
+        {
             g_SkiColl.racial[j][i] = 0;
+        }
 
         /* Clear the skill_prof table */
         g_SkiColl.prof_table[i].sanity = i;
         g_SkiColl.prof_table[i].min_level = 0;
 
         for (int j = 0; j < ABIL_TREE_MAX; j++)
+        {
             g_SkiColl.prof_table[i].min_abil[j] = 0;
+        }
 
         for (int j = 0; j < PROFESSION_MAX; j++)
+        {
             g_SkiColl.prof_table[i].profession_cost[j] = -7;
+        }
 
         if ((i < LAST_SKILL) && (g_SkiColl.prof_table[i].sanity != i))
         {

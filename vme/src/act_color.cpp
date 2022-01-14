@@ -36,7 +36,9 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     }
 
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     arg = one_argument(arg, buf);
 
@@ -82,7 +84,9 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
                 // s printf (cbuf, "%s%s%s", CONTROL_COLOR_REMOVE, full_name, CONTROL_COLOR_END);
             }
             else
+            {
                 snprintf(cbuf, sizeof(cbuf), "Error: Can not reset %s to default color, report to admin.<br/>", full_name);
+            }
         }
         else
         {
@@ -137,15 +141,21 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 int is_forground(char *cstr)
 {
     if ((strlen(cstr) > 3) || (strlen(cstr) < 2))
+    {
         return FALSE;
+    }
 
     if (cstr[0] != 'c')
+    {
         return FALSE;
+    }
 
     if (strlen(cstr) == 3)
     {
         if (cstr[1] != 'p')
+        {
             return (FALSE);
+        }
         cstr++;
     }
 
@@ -174,10 +184,14 @@ int is_forground(char *cstr)
 int is_background(char *cstr)
 {
     if (strlen(cstr) != 2)
+    {
         return FALSE;
+    }
 
     if (cstr[0] != 'b')
+    {
         return FALSE;
+    }
 
     switch (cstr[1])
     {

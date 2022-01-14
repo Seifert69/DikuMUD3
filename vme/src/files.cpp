@@ -31,13 +31,17 @@ long fsize(FILE *f)
 
     oldpos = ftell(f);
 
-    if (fseek(f, 0L, SEEK_END)) /* Seek to end of file */
+    if (fseek(f, 0L, SEEK_END))
+    { /* Seek to end of file */
         assert(FALSE);
+    }
 
     size = ftell(f);
 
-    if (fseek(f, oldpos, SEEK_SET)) /* Seek to end of file */
+    if (fseek(f, oldpos, SEEK_SET))
+    { /* Seek to end of file */
         assert(FALSE);
+    }
 
     return size;
 }
@@ -48,7 +52,9 @@ ubit1 file_exists(const char *name)
     FILE *fp;
 
     if ((fp = fopen(name, "r")) == NULL)
+    {
         return FALSE;
+    }
 
     fclose(fp);
     return TRUE;
@@ -65,7 +71,9 @@ void touch_file(const char *name)
     FILE *fp;
 
     if (file_exists(name))
+    {
         return;
+    }
 
     if ((fp = fopen(name, "w")) == NULL)
     {
@@ -89,10 +97,14 @@ char *fread_line_commented(FILE *fl, char *buf, int max)
         s = fgets(buf, max, fl);
 
         if (s == NULL)
+        {
             break;
+        }
 
         if (*skip_spaces(buf) != '#')
+        {
             break;
+        }
     }
 
     return s;
@@ -124,16 +136,22 @@ char *fread_string_copy(FILE *fl, char *buf, int max)
         }
 
         for (point = buf + strlen(buf) - 2; point >= buf && isspace(*point); point--)
+        {
             ;
+        }
 
         if ((flag = (*point == '~')))
+        {
             if (*(buf + strlen(buf) - 3) == '\n')
             {
                 *(buf + strlen(buf) - 2) = '\r';
                 *(buf + strlen(buf) - 1) = '\0';
             }
             else
+            {
                 *(buf + strlen(buf) - 2) = '\0';
+            }
+        }
         else
         {
             *(buf + strlen(buf) + 1) = '\0';
@@ -153,9 +171,13 @@ char *fread_string(FILE *fl)
     fread_string_copy(fl, buf, MAX_STRING_LENGTH);
 
     if (strlen(buf) > 0)
+    {
         return str_dup(buf);
+    }
     else
+    {
         return 0;
+    }
 }
 
 /* Read contents of a file, but skip all remark lines and blank lines. */
@@ -178,10 +200,14 @@ int config_file_to_string(const char *name, char *buf, int max_len)
         if (fgets(tmp, sizeof(tmp) - 1, fl))
         {
             if (tmp[0] == '#')
+            {
                 continue;
+            }
 
             if (tmp[0] == 0)
+            {
                 continue;
+            }
 
             if (strlen(buf) + strlen(tmp) + 2 > (ubit32)max_len)
             {
@@ -256,7 +282,9 @@ void fstrcpy(CByteBuffer *pBuf, FILE *f)
     pBuf->Clear();
 
     while ((c = fgetc(f)) && (c != EOF))
+    {
         pBuf->Append8(c);
+    }
 
     pBuf->Append8(0);
 }
@@ -332,9 +360,13 @@ FILE *fopen_cache(const char *name, const char *mode)
     for (i = 0; i < FCACHE_MAX; i++)
     {
         if (fcache[i].hits < fcache[min_i].hits)
+        {
             min_i = i;
+        }
         if (fcache[i].name && !strcmp(name, fcache[i].name))
+        {
             hit_i = i;
+        }
         fcache[i].hits--;
     }
 
@@ -343,35 +375,55 @@ FILE *fopen_cache(const char *name, const char *mode)
         if (fcache[min_i].file)
         {
             if (fclose(fcache[min_i].file) != 0)
+            {
                 error(HERE, "Error on fcache fclose() on file [%s].", fcache[min_i].name);
+            }
             purge++;
         }
         fcache[min_i].name = enl_strcpy(fcache[min_i].name, name, &fcache[min_i].name_s);
         fcache[min_i].hits = 0;
 
         if (strchr(mode, 'w'))
+        {
             fcache[min_i].file = fopen(name, "w+b");
+        }
         else if (strchr(mode, 'a'))
+        {
             fcache[min_i].file = fopen(name, "a+b");
+        }
         else if (strchr(mode, 'r'))
+        {
             fcache[min_i].file = fopen(name, "r+b");
+        }
         else
+        {
             error(HERE, "Bad file mode [%s] for file [%s]", mode, name);
+        }
 
         return fcache[min_i].file;
     }
     else
     {
         if (!fcache[hit_i].file)
+        {
             return NULL;
+        }
         if (strchr(mode, 'w'))
+        {
             fcache[hit_i].file = freopen(name, "w+b", fcache[hit_i].file);
+        }
         else if (strchr(mode, 'a'))
+        {
             fseek(fcache[hit_i].file, 0L, SEEK_END);
+        }
         else if (strchr(mode, 'r'))
+        {
             fseek(fcache[hit_i].file, 0L, SEEK_SET);
+        }
         else
+        {
             error(HERE, "Bad file mode [%s] for file [%s]", mode, name);
+        }
 
         pure_hits++;
 
@@ -441,7 +493,9 @@ int load_string(char *filename, char **file_str)
 
     *file_str = (char *)malloc(statbuf.st_size + 1);
     if (!(*file_str))
+    {
         return (FILE_OUT_OF_MEMORY);
+    }
     temp = *file_str;
     nread = statbuf.st_size;
     while (nread > 0)
@@ -474,10 +528,14 @@ int save_string(char *filename, char **file_str, char *opp)
     char *temp;
     struct stat statbuf;
     if ((opp[0] != 'a') && (opp[0] != 'w'))
+    {
         return (FILE_ILEGAL_OPP);
+    }
 
     if ((file_str == NULL) || (*file_str[0] == 0))
+    {
         return (FILE_NOT_SAVED);
+    }
 
     if (opp[0] == 'w')
     {
@@ -496,7 +554,9 @@ int save_string(char *filename, char **file_str, char *opp)
 #endif
     }
     if (!output)
+    {
         return (FILE_NOT_CREATED);
+    }
     stat(filename, &statbuf);
     nwrite = strlen(*file_str);
     temp = *file_str;
@@ -545,16 +605,24 @@ int store_name_test(char *name)
     int i = 0, ln = 0;
 
     if (str_is_empty(name))
+    {
         return (0);
+    }
 
     ln = strlen(name);
     if (ln > 512)
+    {
         return (0);
+    }
 
     for (i = 0; (i < ln) && ((isalnum(name[i])) || (name[i] == '_') || (name[i] == '.')); i++)
+    {
         ;
+    }
 
     if (i < ln)
+    {
         return (0);
+    }
     return (1);
 }

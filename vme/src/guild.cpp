@@ -40,7 +40,9 @@ struct guild_type
 class extra_descr_data *find_quest(char *word, class unit_data *unit)
 {
     if (!IS_PC(unit) || !word)
+    {
         return NULL;
+    }
 
     return PC_QUEST(unit).find_raw(word);
 }
@@ -53,7 +55,9 @@ int char_guild_level(class unit_data *ch)
     assert(IS_CHAR(ch));
 
     if (IS_NPC(ch))
+    {
         return CHAR_LEVEL(ch);
+    }
 
     if (PC_GUILD(ch) && *PC_GUILD(ch))
     {
@@ -62,8 +66,12 @@ int char_guild_level(class unit_data *ch)
         if (exd)
         {
             for (i = 0; i < exd->names.Length(); i++)
+            {
                 if (isdigit(*exd->names.Name(i)))
+                {
                     return atoi(exd->names.Name(i));
+                }
+            }
         }
     }
 
@@ -78,7 +86,9 @@ void advance_guild_level(class unit_data *ch)
     ubit32 i;
 
     if (!IS_PC(ch))
+    {
         return;
+    }
 
     if (PC_GUILD(ch) && *PC_GUILD(ch))
     {
@@ -87,12 +97,14 @@ void advance_guild_level(class unit_data *ch)
         if (exd)
         {
             for (i = 0; i < exd->names.Length(); i++)
+            {
                 if (isdigit(*exd->names.Name(i)))
                 {
                     lvl++;
                     exd->names.Substitute(i, itoa(lvl));
                     return;
                 }
+            }
         }
     }
 }
@@ -103,13 +115,19 @@ static void free_guild_data(struct guild_type *pGt)
         FREE(pGt->pGuildName);
 
     if (pGt->ppLeaveQuest)
+    {
         free_namelist(pGt->ppLeaveQuest);
+    }
 
     if (pGt->ppEnterQuest)
+    {
         free_namelist(pGt->ppEnterQuest);
+    }
 
     if (pGt->ppExcludeQuest)
+    {
         free_namelist(pGt->ppExcludeQuest);
+    }
 
     FREE(pGt);
 }
@@ -178,9 +196,13 @@ void act_to_guild(const char *msg, char *guild, class unit_data *member, class u
     }
 
     for (d = g_descriptor_list; d; d = d->next)
+    {
         if (descriptor_is_playing(d) && (d->character != nonmember) && IS_PC(d->character) && PC_GUILD(d->character) &&
             strcmp(PC_GUILD(d->character), guild) == 0)
+        {
             act(msg, A_ALWAYS, member, nonmember, d->character, TO_VICT);
+        }
+    }
 }
 
 /* Purpose: To be used as a guild 'block' routine before special commands: */
@@ -209,7 +231,9 @@ int teach_members_only(struct spec_arg *sarg)
             *str = '#';
         }
         else
+        {
             guild = -1;
+        }
 
         if (guild != 0)
         {
@@ -256,14 +280,18 @@ int guard_guild_way(struct spec_arg *sarg)
                 *location = '#';
 
                 if (guild_cmp == 0)
+                {
                     return SFR_SHARE;
+                }
             }
             else
+            {
                 /* Uhm. Well, if you are not a member of *any* guild      */
                 /* you should be able to enter... Well, maybe as a guest? */
                 /* I mean, you need someone to assist you??? Hm? I'm too  */
                 /* lazy to do so now. ANyway it is another fundtion       */
                 return SFR_SHARE;
+            }
         }
 
         *excl = '\0';
@@ -302,14 +330,18 @@ void leave_guild(class unit_data *player)
         exd = find_quest(str_cc("$", PC_GUILD(player)), player);
 
         if (exd && !exd->names.IsName("quitter"))
+        {
             exd->names.AppendName("quitter");
+        }
 
         send_to_char("You are no longer a member of your guild.<br/>", player);
     }
     else
     {
         if ((exd = find_quest(str_cc("$", PC_GUILD(player)), player)))
+        {
             PC_QUEST(player).erase(exd);
+        }
 
         send_to_char("You are no longer a member of your guild, but you are "
                      "welcome back at any time.<br/>",
@@ -328,7 +360,9 @@ void guild_banish_player(class unit_data *ch)
     class extra_descr_data *pExd;
 
     if (!IS_PC(ch))
+    {
         return;
+    }
 
     if (PC_GUILD(ch))
     {
@@ -352,7 +386,9 @@ int can_leave_guild(struct guild_type *pG, class unit_data *master, class unit_d
     currency_t currency = local_currency(master);
 
     if (!IS_PC(ch))
+    {
         return FALSE;
+    }
 
     if (!PC_GUILD(ch) || (strcmp(PC_GUILD(ch), pG->pGuildName) != 0))
     {
@@ -412,13 +448,18 @@ int can_join_guild(struct guild_type *pG, class unit_data *master, class unit_da
     char **p;
 
     if (!IS_PC(ch))
+    {
         return FALSE;
+    }
 
     if (PC_GUILD(ch))
     {
         if (strcmp(pG->pGuildName, PC_GUILD(ch)) == 0)
+        {
             act("$1n says, 'You are already a member, $3n'", A_SOMEONE, master, cActParameter(), ch, TO_ROOM);
+        }
         else
+        {
             act("$1n says, 'You must first break your ties with your current"
                 " guild, $3n'",
                 A_SOMEONE,
@@ -426,6 +467,7 @@ int can_join_guild(struct guild_type *pG, class unit_data *master, class unit_da
                 cActParameter(),
                 ch,
                 TO_ROOM);
+        }
         return FALSE;
     }
 
@@ -492,7 +534,9 @@ int guild_master(struct spec_arg *sarg)
     struct guild_type *pG = (struct guild_type *)sarg->fptr->data;
 
     if (!pG)
+    {
         return SFR_SHARE;
+    }
 
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
@@ -502,10 +546,14 @@ int guild_master(struct spec_arg *sarg)
     }
 
     if (!sarg->activator || !IS_PC(sarg->activator))
+    {
         return SFR_SHARE;
+    }
 
     if (!CHAR_IS_READY(sarg->activator) || !CHAR_IS_READY(sarg->owner))
+    {
         return SFR_SHARE;
+    }
 
     if (strcmp(sarg->cmd->cmd_str, "join") == 0)
     {
@@ -516,7 +564,9 @@ int guild_master(struct spec_arg *sarg)
                 act("$1n says, 'Welcome in our guild, $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
 
                 if (CHAR_LEVEL(sarg->activator) > START_LEVEL)
+                {
                     money_transfer(sarg->activator, sarg->owner, pG->nEnterCost, local_currency(sarg->owner));
+                }
 
                 join_guild(sarg->activator, pG->pGuildName);
             }
@@ -536,7 +586,9 @@ int guild_master(struct spec_arg *sarg)
     else if (is_command(sarg->cmd, "insult"))
     {
         if (find_unit(sarg->activator, &arg, 0, FIND_UNIT_SURRO) != sarg->owner)
+        {
             return SFR_SHARE;
+        }
 
         if (pc_pos != PC_ID(sarg->activator))
         {
@@ -556,7 +608,9 @@ int guild_master(struct spec_arg *sarg)
                 act("$1n says, 'So be it. Buggar ye off, $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
 
                 if (CHAR_LEVEL(sarg->activator) > START_LEVEL)
+                {
                     money_transfer(sarg->activator, sarg->owner, pG->nLeaveCost, local_currency(sarg->owner));
+                }
 
                 leave_guild(sarg->activator);
 
@@ -586,7 +640,9 @@ int guild_basis(struct spec_arg *sarg)
             if (IS_PC(u) && CHAR_FIGHTING(u) == sarg->owner && PC_GUILD(u) && CHAR_CAN_SEE(sarg->owner, u))
             {
                 if (strcmp(PC_GUILD(u), (char *)sarg->fptr->data) == 0)
+                {
                     guild_banish_player(u);
+                }
             }
         }
 
@@ -612,12 +668,16 @@ int guild_title(struct spec_arg *sarg)
     int i, title_no;
 
     if (!is_command(sarg->cmd, "title") || !IS_PC(sarg->activator))
+    {
         return SFR_SHARE;
+    }
 
     c = (char *)sarg->fptr->data;
 
     if (!(c = str_line(c, buf)))
+    {
         return SFR_BLOCK;
+    }
 
     if ((PC_GUILD(sarg->activator) == NULL) || (strcmp(PC_GUILD(sarg->activator), buf) != 0))
     {
@@ -631,26 +691,40 @@ int guild_title(struct spec_arg *sarg)
     for (i = 0;; i++)
     {
         if (!(c = str_line(c, male)))
+        {
             break;
+        }
 
         if (!(c = str_line(c, female)))
+        {
             break;
+        }
 
         if (i == title_no)
+        {
             break;
+        }
     }
 
     if (CHAR_SEX(sarg->activator) == SEX_FEMALE)
+    {
         snprintf(buf, sizeof(buf), female, g_pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+    }
     else
+    {
         snprintf(buf, sizeof(buf), male, g_pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+    }
 
     if (strcmp(buf, UNIT_TITLE_STRING(sarg->activator)) == 0)
     {
         if (c == NULL)
+        {
             act("$1n says, 'You have reached the ultimate title, $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+        }
         else
+        {
             act("$1n says, 'You must first be an older member $3N'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+        }
         return SFR_BLOCK;
     }
 
@@ -684,5 +758,7 @@ void do_guild(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
 
     if (!found)
+    {
         send_to_char("None.<br/>", ch);
+    }
 }

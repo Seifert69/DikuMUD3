@@ -18,8 +18,12 @@ int pay_point_charlie(class unit_data *ch, class unit_data *to)
     if (IS_PC(ch) && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
     {
         if (CHAR_DESCRIPTOR(ch))
+        {
             if (g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(ch)->host))
+            {
                 return TRUE;
+            }
+        }
 
         if (UNIT_FI_ZONE(to) && UNIT_FI_ZONE(to)->payonly)
         {
@@ -49,39 +53,73 @@ static int getkeyword(class unit_data *obj)
     int keyword = -2;
 
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_SHIELD))
+    {
         keyword = WEAR_SHIELD;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_FINGER))
+    {
         keyword = WEAR_FINGER_L;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_NECK))
+    {
         keyword = WEAR_NECK_1;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_WRIST))
+    {
         keyword = WEAR_WRIST_L;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_WAIST))
+    {
         keyword = WEAR_WAIST;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_ARMS))
+    {
         keyword = WEAR_ARMS;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_HANDS))
+    {
         keyword = WEAR_HANDS;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_FEET))
+    {
         keyword = WEAR_FEET;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_LEGS))
+    {
         keyword = WEAR_LEGS;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_ABOUT))
+    {
         keyword = WEAR_ABOUT;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_HEAD))
+    {
         keyword = WEAR_HEAD;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_BODY))
+    {
         keyword = WEAR_BODY;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WIELD))
+    {
         keyword = WEAR_WIELD;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_CHEST))
+    {
         keyword = WEAR_CHEST;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_BACK))
+    {
         keyword = WEAR_BACK;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_EAR))
+    {
         keyword = WEAR_EAR_L;
+    }
     if (UNIT_WEAR(obj, MANIPULATE_WEAR_ANKLE))
+    {
         keyword = WEAR_ANKLE_L;
+    }
 
     return keyword;
 }
@@ -90,23 +128,37 @@ static int getkeyword(class unit_data *obj)
 static const char *wear_size(class unit_data *ch, class unit_data *obj, int var)
 {
     if (UNIT_SIZE(ch) == 0)
+    {
         return "error";
+    }
 
     int percent;
 
     if (UNIT_SIZE(ch) > 0)
+    {
         percent = (100 * UNIT_SIZE(obj)) / UNIT_SIZE(ch);
+    }
     else
+    {
         percent = (100 * UNIT_SIZE(obj));
+    }
 
     if (percent < 100 - var - (100 - var) / 2)
+    {
         return "way too small";
+    }
     else if (percent < (100 - var))
+    {
         return "too small";
+    }
     else if (percent > 100 + var + (100 + var) / 2)
+    {
         return "way too large";
+    }
     else if (percent > (100 + var))
+    {
         return "too large";
+    }
 
     return NULL;
 }
@@ -114,7 +166,9 @@ static const char *wear_size(class unit_data *ch, class unit_data *obj, int var)
 const char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword)
 {
     if (keyword == -1)
+    {
         keyword = getkeyword(obj);
+    }
 
     switch (keyword)
     {
@@ -159,9 +213,13 @@ const char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword
 
         case WEAR_HOLD:
             if (OBJ_TYPE(obj) == ITEM_WEAPON)
+            {
                 return wear_size(ch, obj, 50);
+            }
             else
+            {
                 return NULL;
+            }
 
         case WEAR_SHIELD:
             return wear_size(ch, obj, 50);

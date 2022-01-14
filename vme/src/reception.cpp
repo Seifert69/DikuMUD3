@@ -54,7 +54,9 @@ static void subtract_rent(class unit_data *ch, class unit_data *item, ubit32 pri
             extract_unit(item);
         }
         else
+        {
             money_transfer(ch, NULL, price, DEF_CURRENCY);
+        }
     }
 }
 
@@ -68,13 +70,19 @@ static ubit32 subtract_recurse(class unit_data *ch,
     ubit32 sum = 0;
 
     if (IS_IMMORTAL(ch))
+    {
         return 0;
+    }
 
     if (item == NULL)
+    {
         return 0;
+    }
 
     if (!UNIT_MINV(item))
+    {
         sum += subtract_recurse(ch, UNIT_CONTAINS(item), seconds, fptr);
+    }
 
     sum += subtract_recurse(ch, item->next, seconds, fptr);
 
@@ -92,7 +100,9 @@ static ubit32 subtract_recurse(class unit_data *ch,
         }
 
         if (fptr)
+        {
             (*fptr)(ch, item, price);
+        }
     }
 
     return sum;
@@ -106,8 +116,10 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
 
     assert(IS_PC(ch));
 
-    if (CHAR_DESCRIPTOR(ch) == NULL) /* If loading or similar, dont subtract! */
+    if (CHAR_DESCRIPTOR(ch) == NULL)
+    { /* If loading or similar, dont subtract! */
         return 0;
+    }
 
     if (IS_MORTAL(ch))
     {
@@ -118,7 +130,9 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
             t -= savetime;
 
             if (t > SECS_PER_REAL_MIN * 10)
+            {
                 sum = subtract_recurse(ch, UNIT_CONTAINS(ch), t, subtract_rent);
+            }
         }
     }
 
@@ -134,14 +148,18 @@ void do_rent(class unit_data *ch, char *arg, const struct command_info *cmd)
     sum = subtract_recurse(ch, UNIT_CONTAINS(ch), SECS_PER_REAL_DAY, show_items);
 
     if (!rent_info)
+    {
         send_to_char("You are charged no rent.<br/>", ch);
+    }
     else
+    {
         act("Your inventory costs $2t per day to rent.",
             A_ALWAYS,
             ch,
             money_string(sum, local_currency(ch), FALSE),
             cActParameter(),
             TO_CHAR);
+    }
 }
 
 /* *************************************************************************
@@ -236,9 +254,13 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
     hn.level = level;
 
     if (IS_OBJ(unit))
+    {
         hn.equip = OBJ_EQP_POS(unit);
+    }
     else
+    {
         hn.equip = 0;
+    }
 
     hn.nVersion = 2;
     hn.length = len;
@@ -285,7 +307,9 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
         add_units(pBuf, parent, unit, level, fast);
 
         if (IS_OBJ(tmp_u) || IS_NPC(tmp_u))
+        {
             add_units(pBuf, parent, tmp_u, level + 1, fast);
+        }
 
         unit_to_unit(tmp_u, unit);
 
@@ -297,19 +321,25 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
     }
     else /* UNIT CONTAINS NOTHING */
         if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
-            enlist(pBuf, unit, level, fast);
+    {
+        enlist(pBuf, unit, level, fast);
+    }
 }
 
 void send_saves(class unit_data *parent, class unit_data *unit)
 {
     if (!unit)
+    {
         return;
+    }
 
     send_saves(parent, UNIT_CONTAINS(unit));
     send_saves(parent, unit->next);
 
     if ((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+    {
         send_save_to(parent, unit);
+    }
 }
 
 char *ContentsFileName(const char *pName)
@@ -344,14 +374,18 @@ void basic_save_contents(const char *pFileName, class unit_data *unit, int fast,
     pBuf->Clear();
 
     if (bContainer)
+    {
         send_save_to(unit, unit);
+    }
 
     send_saves(unit, UNIT_CONTAINS(unit));
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 
     if (IS_CHAR(unit))
+    {
         CHAR_DESCRIPTOR(unit) = tmp_descr;
+    }
 
     if (pBuf->GetLength() > 0)
     {
@@ -418,7 +452,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     pFile = fopen(pFileName, "rb");
 
     if (pFile == NULL)
+    {
         return NULL;
+    }
 
     len = fsize(pFile);
     if (len == 0)
@@ -448,14 +484,18 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     for (init = TRUE; InvBuf.GetReadPosition() < InvBuf.GetLength();)
     {
         if (InvBuf.Read((ubit8 *)&ho, sizeof(ho)))
+        {
             break;
+        }
 
         // It's the new version if both are equal to "obsoleted"
         if ((strcmp(ho.zone, "_obsoleted") == 0) && (strcmp(ho.unit, "_obsoleted") == 0))
         {
             // It's a new version
             if (InvBuf.Read((ubit8 *)&hn, sizeof(hn)))
+            {
                 break;
+            }
         }
         else
         {
@@ -502,7 +542,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                 }
 
                 if (pnew->fi == NULL)
+                {
                     pnew->set_fi(g_slime_fi);
+                }
             }
             else
             {
@@ -536,9 +578,13 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
         if (pstack[frame] == NULL)
         {
             if (UNIT_IN(pnew))
+            {
                 pstack[frame] = UNIT_IN(pnew);
+            }
             else
+            {
                 pstack[frame] = g_void_room;
+            }
         }
 
         UNIT_IN(pnew) = NULL;
@@ -563,7 +609,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
             if (hn.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
+            {
                 equip_char(UNIT_IN(pnew), pnew, hn.equip);
+            }
 
             pstack[frame] = pnew;
         }
@@ -609,18 +657,30 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen,
 
     /* find start of difference */
     for (dstart = 0; len && rlen; dstart++, len--, rlen--)
+    {
         if (*(ref + dstart) != *(obj + dstart))
+        {
             break;
+        }
+    }
 
     /* find end of difference */
     for (dend = 0; len && rlen; dend++, len--, rlen--)
+    {
         if (*(rend - dend) != *(oend - dend))
+        {
             break;
+        }
+    }
 
     if ((int)(sizeof(head) + len) > diflen)
+    {
         return -1;
+    }
     else
+    {
         diflen = sizeof(head) + len;
+    }
     head.start = dstart;
 
     head.end = reflen - dend;
@@ -630,7 +690,9 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen,
     memcpy(dif, (char *)&head, sizeof(head));
     dif += sizeof(head);
     if (len)
+    {
         memcpy(dif, (char *)obj + dstart, len);
+    }
     return (diflen);
 }
 
@@ -640,27 +702,41 @@ int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen
     struct diffhead head;
 
     if (diflen < (int)sizeof(head))
+    {
         return -1;
+    }
 
     memcpy((char *)&head, dif, sizeof(head));
     dif += sizeof(head);
     diflen -= sizeof(head);
 
     if ((int)(head.start + diflen + reflen - head.end) > reslen)
+    {
         return -1;
+    }
 
     if (head.reflen != reflen)
+    {
         return -1;
+    }
 
     if (head.crc != crc)
+    {
         return -1;
+    }
 
     if (head.start)
+    {
         memcpy(res, ref, head.start);
+    }
     if (diflen)
+    {
         memcpy(res + head.start, dif, diflen);
+    }
     if (head.end < (int)reflen)
+    {
         memcpy(res + head.start + diflen, ref + head.end, reflen - head.end);
+    }
 
     return (head.start + diflen + reflen - head.end);
 }

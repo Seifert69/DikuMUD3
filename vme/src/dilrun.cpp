@@ -136,16 +136,22 @@ int dil_intr_insert(class dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 
     /* find intnum */
     for (intnum = 0; intnum < p->fp->intrcount; intnum++)
+    {
         if (p->fp->intr[intnum].lab == lab)
         {
             dil_intr_remove(p, intnum);
             break;
         }
+    }
 
     /* find intnum */
     for (intnum = 0; intnum < p->fp->intrcount; intnum++)
+    {
         if (!p->fp->intr[intnum].flags)
+        {
             break;
+        }
+    }
 
     assert(intnum < p->fp->intrcount);
 
@@ -192,7 +198,9 @@ void dil_free_frame(struct dilframe *frame)
 
     /* free variables */
     for (j = 0; j < frame->tmpl->varc; j++)
+    {
         dil_free_var(&frame->vars[j]);
+    }
 
     if (frame->vars)
     {
@@ -424,7 +432,9 @@ int dil_getval(class dilval *v)
 void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab)
 {
     if (sup == NULL)
+    {
         return;
+    }
 
     if (prg->fp->securecount)
     {
@@ -448,13 +458,18 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
     count = 0;
 
     for (i = 0; i < frm->securecount; i++)
+    {
         if (frm->secure[i].sup == sup)
         {
             if (bForeach && frm->secure[i].lab)
+            {
                 continue;
+            }
 
             if (!bForeach && !frm->secure[i].lab)
+            {
                 continue;
+            }
 
             frm->secure[i] = frm->secure[--(frm->securecount)];
             count++;
@@ -468,6 +483,7 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
                 frm->secure = NULL;
             }
         }
+    }
     return count;
 }
 
@@ -497,7 +513,9 @@ void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd)
             if (frm->vars[i].type == DILV_EDP)
             {
                 if (frm->vars[i].val.extraptr == exd)
+                {
                     frm->vars[i].val.extraptr = NULL;
+                }
             }
         }
     }
@@ -508,12 +526,16 @@ void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd)
         if (prg->stack[i]->atyp == DILV_EDPR)
         {
             if (*((class extra_descr_data **)prg->stack[i]->ref) == exd)
+            {
                 prg->stack[i]->ref = NULL;
+            }
         }
         else if (prg->stack[i]->atyp == DILV_EDP)
         {
             if (prg->stack[i]->val.ptr == exd)
+            {
                 prg->stack[i]->val.ptr = NULL;
+            }
         }
     }
 }
@@ -536,14 +558,22 @@ void dil_clear_non_secured(class dilprg *prg)
         for (i = 0; i < frm->tmpl->varc; i++)
         {
             if (frm->vars[i].type == DILV_EDP)
+            {
                 frm->vars[i].val.extraptr = NULL;
+            }
             else if (frm->vars[i].type == DILV_UP)
             {
                 for (j = 0; j < frm->securecount; j++)
+                {
                     if (frm->secure[j].sup == frm->vars[i].val.unitptr)
+                    {
                         break;
+                    }
+                }
                 if (j >= frm->securecount)
+                {
                     frm->vars[i].val.unitptr = NULL;
+                }
             }
         }
     }
@@ -556,8 +586,12 @@ void dil_clear_lost_reference(struct dilframe *frm, void *ptr)
     int i;
 
     for (i = 0; i < frm->tmpl->varc; i++)
+    {
         if (frm->vars[i].val.unitptr == ptr)
+        {
             frm->vars[i].val.unitptr = NULL;
+        }
+    }
 }
 
 /*
@@ -602,13 +636,18 @@ void dil_test_secure(class dilprg *prg, int bForeach)
     struct dilframe *frm;
 
     if (prg->waitcmd <= WAITCMD_STOP)
+    {
         return;
+    }
 
     for (frm = prg->frame; frm <= prg->fp; frm++)
+    {
         for (i = 0; i < frm->securecount; i++)
         {
             if (bForeach && frm->secure[i].lab)
+            {
                 continue;
+            }
             if (scan4_ref(prg->sarg->owner, frm->secure[i].sup) == NULL)
             {
                 if (frm->secure[i].lab)
@@ -620,17 +659,22 @@ void dil_test_secure(class dilprg *prg, int bForeach)
 
                     prg->waitcmd--;
 
-                    if (frm == prg->fp) // See long comment above. Only the active frame changes execution point
+                    if (frm == prg->fp)
+                    { // See long comment above. Only the active frame changes execution point
                         frm->pc = frm->secure[i].lab;
+                    }
                 }
 
                 dil_clear_lost_reference(frm, frm->secure[i].sup);
                 count = dil_sub_secure(frm, frm->secure[i].sup, bForeach);
                 if (count > 0)
+                {
                     i--;
+                }
                 /* Do not return until all have been tested! */
             }
         }
+    }
 }
 
 /* report error in passed type to function */
@@ -676,8 +720,12 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 
         any = FALSE;
         while (cnt--)
+        {
             if (val == va_arg(args, int))
+            {
                 any = TRUE;
+            }
+        }
 
         if (!any)
         {
@@ -697,7 +745,9 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
     va_end(args);
 
     if (ok_sofar)
+    {
         return TRUE;
+    }
 
     /* Type error, clean up  They clean themselves up now... :-/
        while (0 < idx--)
@@ -913,7 +963,9 @@ void DeactivateDil(class unit_data *pc, class dilprg *aprg)
         if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
         {
             if (aprg && (aprg == fptr->data))
+            {
                 continue;
+            }
             prg = (class dilprg *)fptr->data;
             SET_BIT(prg->flags, DILFL_DEACTIVATED);
         }
@@ -936,7 +988,9 @@ int run_dil(struct spec_arg *sarg)
     double ttime;
 
     if (prg == NULL)
+    {
         return SFR_SHARE;
+    }
 
     membug_verify_class(prg);
 
@@ -1020,7 +1074,9 @@ int run_dil(struct spec_arg *sarg)
     /* A MEGA HACK! The DIL activated spells will not be tested for
        secures on first call only, to avoid loosing global pointers */
     if (prg->waitcmd == WAITCMD_MAXINST)
+    {
         dil_test_secure(prg);
+    }
 
     dil_clear_non_secured(prg);
 
@@ -1083,9 +1139,13 @@ int run_dil(struct spec_arg *sarg)
         }
 
         if (bBlock)
+        {
             return SFR_BLOCK;
+        }
         else
+        {
             return SFR_SHARE;
+        }
     }
     else if (prg->waitcmd <= WAITCMD_QUIT)
     {
@@ -1101,9 +1161,13 @@ int run_dil(struct spec_arg *sarg)
         }
 
         if (bBlock)
+        {
             return SFR_BLOCK;
+        }
         else
+        {
             return SFR_SHARE;
+        }
     }
     else if (prg->waitcmd <= WAITCMD_STOP)
     {
@@ -1130,9 +1194,13 @@ int run_dil(struct spec_arg *sarg)
         }
 
         if (bBlock)
+        {
             return SFR_BLOCK;
+        }
         else
+        {
             return SFR_SHARE;
+        }
     }
     else if (prg->waitcmd > WAITCMD_FINISH)
     {
@@ -1154,7 +1222,9 @@ int run_dil(struct spec_arg *sarg)
     }
 
     for (i = 0; i < prg->fp->intrcount; i++)
+    {
         SET_BIT(prg->sarg->fptr->flags, prg->fp->intr[i].flags);
+    }
 
     /* Okay this is the problem:
        Imagine this:
@@ -1180,7 +1250,9 @@ int run_dil(struct spec_arg *sarg)
         {
             /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
             if ((OrgHeartBeat != sarg->fptr->heart_beat) && (sarg->cmd->no != CMD_AUTO_TICK))
+            {
                 ResetFptrTimer(sarg->owner, sarg->fptr);
+            }
         }
         prg->waitcmd = WAITCMD_MAXINST;
 
@@ -1190,9 +1262,13 @@ int run_dil(struct spec_arg *sarg)
     membug_verify(prg);
 
     if (IS_SET(prg->flags, DILFL_CMDBLOCK))
+    {
         return SFR_BLOCK;
+    }
     else
+    {
         return SFR_SHARE;
+    }
 }
 
 int dil_init(struct spec_arg *sarg)
@@ -1200,7 +1276,9 @@ int dil_init(struct spec_arg *sarg)
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
         if (sarg->fptr->data)
+        {
             dil_copy((char *)sarg->fptr->data, sarg->owner);
+        }
         else
         {
             szonelog(UNIT_FI_ZONE(sarg->owner),
@@ -1220,6 +1298,7 @@ static void dil_free_dilargs(struct dilargstype *dilargs)
         FREE(dilargs->name);
 
     for (int i = 0; i < dilargs->no; i++)
+    {
         switch (dilargs->dilarg[i].type)
         {
             case DILV_SP:
@@ -1229,13 +1308,16 @@ static void dil_free_dilargs(struct dilargstype *dilargs)
 
             case DILV_SLP:
                 if (dilargs->dilarg[i].data.stringlist)
+                {
                     free_namelist(dilargs->dilarg[i].data.stringlist);
+                }
                 break;
             case DILV_ILP:
                 if (dilargs->dilarg[i].data.intlist)
                     FREE(dilargs->dilarg[i].data.intlist);
                 break;
         }
+    }
 
     FREE(dilargs);
 }
@@ -1274,8 +1356,12 @@ int dil_direct_init(struct spec_arg *sarg)
         {
             int i;
             for (i = 0; i < dilargs->no; i++)
+            {
                 if (tmpl->argt[i] != dilargs->dilarg[i].type)
+                {
                     break;
+                }
+            }
 
             if (i < dilargs->no)
             {
@@ -1303,17 +1389,23 @@ int dil_direct_init(struct spec_arg *sarg)
                         else if (tmpl->argt[i] == DILV_SLP)
                         {
                             if (prg->fp->vars[i].val.namelist)
+                            {
                                 delete (cNamelist *)prg->fp->vars[i].val.namelist;
+                            }
                             prg->fp->vars[i].val.namelist = new cNamelist((const char **)dilargs->dilarg[i].data.stringlist);
                         }
                         else if (tmpl->argt[i] == DILV_ILP)
                         {
                             if (prg->fp->vars[i].val.intlist)
+                            {
                                 delete (cintlist *)prg->fp->vars[i].val.intlist;
+                            }
                             prg->fp->vars[i].val.intlist = new cintlist();
                             int m;
                             for (m = 1; m <= dilargs->dilarg[i].data.intlist[0]; m++)
+                            {
                                 prg->fp->vars[i].val.intlist->Append((int)dilargs->dilarg[i].data.intlist[m]);
+                            }
                         }
                         else if (tmpl->argt[i] == DILV_INT)
                         {
@@ -1327,7 +1419,9 @@ int dil_direct_init(struct spec_arg *sarg)
         destroy_fptr(sarg->owner, sarg->fptr);
     }
     else
+    {
         dil_free_dilargs(dilargs);
+    }
 
     sarg->fptr->data = NULL;
 
@@ -1410,8 +1504,12 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, cl
             {
                 class dilprg *uprg;
                 if ((uprg = (class dilprg *)f->data))
+                {
                     if (uprg->frame[0].tmpl == tmpl)
+                    {
                         return (NULL);
+                    }
+                }
             }
         }
     }
@@ -1431,7 +1529,9 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, cl
     }
 
     for (int i = 0; i < tmpl->varc; i++)
+    {
         prg->frame->vars[i].type = tmpl->vart[i];
+    }
 
     dil_init_vars(tmpl->varc, prg->frame);
 
@@ -1444,12 +1544,18 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, cl
 
     /* activate on tick SOON! */
     if (IS_SET(tmpl->flags, DILFL_AWARE))
+    {
         fptr = create_fptr(u, SFUN_DIL_INTERNAL, tmpl->priority, PULSE_SEC, SFB_ALL | SFB_AWARE, prg);
+    }
     else
+    {
         fptr = create_fptr(u, SFUN_DIL_INTERNAL, tmpl->priority, PULSE_SEC, SFB_ALL, prg);
+    }
 
     if (pfptr)
+    {
         *pfptr = fptr;
+    }
 
     membug_verify(fptr->data);
     membug_verify(prg);
@@ -1465,8 +1571,12 @@ void dil_activate(class dilprg *prg)
     assert(prg);
 
     for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
+    {
         if (fptr->data == prg)
+        {
             break;
+        }
+    }
 
     assert(fptr);
 
@@ -1496,8 +1606,12 @@ void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr)
     assert(prg);
 
     for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
+    {
         if (fptr->data == prg)
+        {
             break;
+        }
+    }
 
     assert(fptr);
 
@@ -1578,7 +1692,9 @@ class dilprg *dil_copy(char *name, class unit_data *u)
                 args[narg] = strtok(NULL, ",");
 
                 if (args[narg] == NULL)
+                {
                     break;
+                }
             }
         }
     }
@@ -1619,7 +1735,9 @@ class dilprg *dil_copy(char *name, class unit_data *u)
             strip_trailing_spaces(args[i]);
 
             if (str_is_number(args[i]))
+            {
                 continue;
+            }
         }
 
         szonelog(UNIT_FI_ZONE(u),
@@ -1648,7 +1766,9 @@ class dilprg *dil_copy(char *name, class unit_data *u)
                 prg->fp->vars[i].val.integer = atoi(args[i]);
             }
             else
+            {
                 error(HERE, "DIL COPY Arg parse");
+            }
         }
     }
     if (targ)
@@ -1664,9 +1784,15 @@ class unit_fptr *dil_find(const char *name, class unit_data *u)
     if ((tmpl = find_dil_template(name)))
     {
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+        {
             if ((!fptr->is_destructed()) && (fptr->index == SFUN_DIL_INTERNAL))
+            {
                 if ((((class dilprg *)fptr->data)->frame[0].tmpl == tmpl) && ((class dilprg *)fptr->data)->waitcmd > WAITCMD_QUIT)
+                {
                     return fptr;
+                }
+            }
+        }
     }
     return NULL;
 }

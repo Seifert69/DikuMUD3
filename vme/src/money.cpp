@@ -32,22 +32,28 @@ static amount_t adjust_money(amount_t amt, currency_t currency)
     int i;
 
     for (i = 0; i <= MAX_MONEY; i++)
+    {
         if (g_money_types[i].currency == currency)
         {
             /* Calculate remainder of amount */
             amount_t tmp = amt % g_money_types[i].min_value;
 
             if (tmp >= g_money_types[i].min_value / 2)
+            {
                 tmp -= g_money_types[i].min_value; /* Round up value */
+            }
 
             amt -= tmp; /* adjust amount */
 
             /* Zero isn't an acceptable outcome, so make it the minimum */
             if (amt < g_money_types[i].min_value)
+            {
                 amt = g_money_types[i].min_value;
+            }
 
             return amt;
         }
+    }
 
     slog(LOG_OFF, 0, "Illegal currency (%d) used in call of adjust_money()", currency);
 
@@ -77,14 +83,19 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
 
     /* Get an array of all types in this currency */
     for (i = 0; i <= MAX_MONEY; i++)
+    {
         if (g_money_types[i].currency == currency)
+        {
             money_tmp[nr++] = &g_money_types[i];
+        }
+    }
 
     *buf = *tmp = '\0';
 
     amt = adjust_money(amt, currency);
 
     while (nr--)
+    {
         if ((times = (amt / money_tmp[nr]->relative_value)))
         {
             strcat(buf, tmp);
@@ -93,19 +104,26 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
             if (verbose)
             {
                 if (times == 1)
+                {
                     snprintf(tmp,
                              sizeof(tmp),
                              "%s %s, ",
                              strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a",
                              money_tmp[nr]->strings[0]);
+                }
                 else
+                {
                     snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->strings[money_tmp[nr]->pl_idx]);
+                }
             }
-            else /* Short version for lists... */
+            else
+            { /* Short version for lists... */
                 snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->abbrev);
+            }
 
             count++;
         }
+    }
 
     if (count == 0)
     { /* This shouldn't happen (I guess) */
@@ -114,8 +132,10 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
     }
     tmp[strlen(tmp) - 2] = '\0'; /* Cut off last comma */
 
-    if (count > 1) /* Kill buf's last comma and put in `and' */
+    if (count > 1)
+    { /* Kill buf's last comma and put in `and' */
         strcpy(&buf[strlen(buf) - 2], " and ");
+    }
 
     strcat(buf, tmp);
     return buf;
@@ -131,7 +151,9 @@ static amount_t calc_money(amount_t v1, char op, amount_t v2)
     amount_t res = 0;
 
     if (v1 < 0 || v2 < 0)
+    {
         return 0;
+    }
 
     switch (op)
     {
@@ -148,8 +170,10 @@ static amount_t calc_money(amount_t v1, char op, amount_t v2)
             assert(FALSE);
     }
 
-    if (res < 0) /* overflow */
+    if (res < 0)
+    { /* overflow */
         return MAX(v1, v2);
+    }
 
     return res;
 }
@@ -172,10 +196,16 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
 
     /* Set relevant strings as names */
     for (i = 0; g_money_types[MONEY_TYPE(money)].strings[i]; ++i)
+    {
         if (amt == 1 && g_money_types[MONEY_TYPE(money)].pl_idx == i)
+        {
             break;
+        }
         else
+        {
             UNIT_NAMES(money).AppendName(g_money_types[MONEY_TYPE(money)].strings[i]);
+        }
+    }
 
     /* This isn't very pretty, but i couldn't come up with anything better
      * at this hour :-)
@@ -187,8 +217,12 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
         ubit32 j, m = i;
 
         for (j = i; j < UNIT_NAMES(money).Length(); ++j)
+        {
             if (strlen(UNIT_NAMES(money).Name(m)) < strlen(UNIT_NAMES(money).Name(j)))
+            {
                 m = j;
+            }
+        }
 
         if (m != i)
         {
@@ -218,18 +252,19 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
     UNIT_TITLE(money) = (obj_money_string(money, amt));
 
     if (amt == 1)
+    {
         snprintf(tmp, sizeof(tmp), "A single %s has been left here.", money_singularis(money));
+    }
     else
+    {
         snprintf(tmp,
                  sizeof(tmp),
                  "A %s %s has been left here.",
-                 amt == 2      ? "couple of"
-                 : amt < 10    ? "few"
-                 : amt < 100   ? "small pile of"
-                 : amt < 1000  ? "pile of"
-                 : amt < 50000 ? "large pile of"
-                               : "mountain of",
+                 amt == 2 ? "couple of"
+                          : amt < 10 ? "few"
+                                     : amt < 100 ? "small pile of" : amt < 1000 ? "pile of" : amt < 50000 ? "large pile of" : "mountain of",
                  money_pluralis(money));
+    }
 
     UNIT_OUT_DESCR(money) = (tmp);
 
@@ -294,58 +329,76 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
 
         /* Note down money-objects in from, and their values */
         for (tmp = UNIT_CONTAINS(from); tmp; tmp = tmp->next)
+        {
             if (IS_MONEY(tmp) && MONEY_CURRENCY(tmp) == currency)
             {
                 mon_array[MONEY_TYPE(tmp)].have = MONEY_AMOUNT(tmp);
                 mon_array[MONEY_TYPE(tmp)].unit = tmp;
                 mon_array[MONEY_TYPE(tmp)].cur = MONEY_CURRENCY(tmp);
             }
+        }
 
         /* Take as many coins (in number) as possible.
          * Stop when we have one `big' coin too many
          */
         for (i = last = 0; i <= MAX_MONEY && 0 < calc; i++)
+        {
             if (0 < mon_array[i].have)
             {
                 /* Is there more than we need here? */
                 if (calc < calc_money(mon_array[i].have, '*', mon_array[i].value))
+                {
                     /* Yes, take just more than enough */
                     mon_array[i].take = calc / mon_array[i].value + 1;
-                else /* No, take them all */
+                }
+                else
+                { /* No, take them all */
                     mon_array[i].take = mon_array[i].have;
+                }
 
                 last = i; /* Biggest type taken yet */
 
                 /* Update calc with money taken */
                 calc -= calc_money(mon_array[i].take, '*', mon_array[i].value);
             }
+        }
 
         assert(calc <= 0); /* We have enough now; maybe too much */
 
         /* Now try to see if we can put anything back */
         for (i = last; 0 <= i && calc < 0; --i)
-            if (0 < mon_array[i].take) /* Did we take any of these? */
+        {
+            if (0 < mon_array[i].take)
+            { /* Did we take any of these? */
                 /* Put back as many as we can `afford' or have */
                 if (0 < (temp = MIN((-calc) / mon_array[i].value, mon_array[i].take)))
                 {
                     mon_array[i].take -= temp;
                     calc += calc_money(mon_array[i].value, '*', temp);
                 }
+            }
+        }
 
         assert(calc <= 0); /* We still have enough; maybe too much */
 
         /* Now take the money we calculated could be taken */
         for (i = 0; i <= last; i++)
+        {
             if (mon_array[i].take)
             {
                 tmp = split_money(mon_array[i].unit, mon_array[i].take);
                 unit_from_unit(tmp);
 
                 if (to)
+                {
                     unit_to_unit(tmp, to);
+                }
                 else
+                {
                     extract_unit(tmp);
+                }
             }
+        }
 
         /*  If we took too much, give change.
          *  The magic involved here should be invisible to the players...
@@ -358,14 +411,22 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
             {
                 /* Find the coin that needs to be split up */
                 for (i = 0; i <= last; ++i)
+                {
                     if (calc < mon_array[i].value && mon_array[i].take)
+                    {
                         break;
+                    }
+                }
                 assert(0 < i && i <= last);
 
                 /* Get that coin from `to' */
                 for (tmp = UNIT_CONTAINS(to); tmp; tmp = tmp->next)
+                {
                     if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == i)
+                    {
                         break;
+                    }
+                }
                 assert(tmp);
 
                 tmp = split_money(tmp, 1);
@@ -387,22 +448,30 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         amount_t times;
 
         for (i = 0, nr = 0; i <= MAX_MONEY; i++)
+        {
             if (g_money_types[i].currency == currency)
+            {
                 money_tmp[nr++] = &g_money_types[i];
+            }
+        }
 
         for (i = nr - 1; 0 <= i; --i)
+        {
             if (0 < (times = amt / money_tmp[i]->relative_value))
             {
                 amt -= money_tmp[i]->relative_value * times;
                 tmp = make_money(money_tmp[i]->fi, times);
                 unit_to_unit(tmp, to);
             }
+        }
         if (amt)
+        {
             slog(LOG_ALL,
                  0,
                  "Unadjusted or negative amount given as argument"
                  " to money_to_unit() (left: %d)",
                  amt);
+        }
     }
     else
     {
@@ -435,7 +504,7 @@ amount_t unit_holds_total(class unit_data *u, currency_t currency)
     amount_t amt = 0, rec;
 
     if (IS_ROOM(u) || IS_CHAR(u) || (IS_OBJ(u) && OBJ_TYPE(u) == ITEM_CONTAINER))
-
+    {
         for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->next)
         {
             if (IS_MONEY(tmp) && (currency == ANY_CURRENCY || MONEY_CURRENCY(tmp) == currency))
@@ -457,6 +526,7 @@ amount_t unit_holds_total(class unit_data *u, currency_t currency)
                 }
             }
         }
+    }
     return amt;
 }
 
@@ -471,9 +541,15 @@ amount_t char_holds_amount(class unit_data *ch, currency_t currency)
     assert(IS_CHAR(ch));
 
     for (tmp = UNIT_CONTAINS(ch); tmp; tmp = tmp->next)
+    {
         if (IS_MONEY(tmp) && (currency == ANY_CURRENCY || MONEY_CURRENCY(tmp) == currency))
-            if (amt < amt + MONEY_VALUE(tmp)) /* primitive overflow check */
+        {
+            if (amt < amt + MONEY_VALUE(tmp))
+            { /* primitive overflow check */
                 amt += MONEY_VALUE(tmp);
+            }
+        }
+    }
 
     return amt;
 }
@@ -513,8 +589,12 @@ class unit_data *unit_has_money_type(class unit_data *unit, ubit8 type)
     class unit_data *tmp;
 
     for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->next)
+    {
         if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == type)
+        {
             return tmp;
+        }
+    }
 
     return NULL;
 }
@@ -541,7 +621,9 @@ class unit_data *split_money(class unit_data *money, amount_t amt)
         set_money(money, calc_money(MONEY_AMOUNT(money), '-', amt));
 
         if (UNIT_IN(money))
+        {
             intern_unit_to_unit(pnew, UNIT_IN(money), FALSE);
+        }
 
         return pnew;
     }
@@ -560,12 +642,14 @@ void pile_money(class unit_data *money)
     assert(IS_MONEY(money) && unit);
 
     for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->next)
+    {
         if (tmp != money && IS_MONEY(tmp) && MONEY_TYPE(tmp) == MONEY_TYPE(money))
         {
             set_money(money, calc_money(MONEY_AMOUNT(money), '+', MONEY_AMOUNT(tmp)));
             extract_unit(tmp);
             return;
         }
+    }
 }
 
 /*  Round amount down/up to nearest `types' number of coins
@@ -580,18 +664,24 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 
     /* Get an array of all types in this currency */
     for (i = 0; i <= MAX_MONEY; i++)
+    {
         if (g_money_types[i].currency == currency)
+        {
             money_tmp[nr++] = &g_money_types[i];
+        }
+    }
 
     /*  Loop while we have coin-types left,
      *  but don't select a `type' more than `types' times...
      */
     while (nr-- && types)
+    {
         if ((times = (remainder / money_tmp[nr]->relative_value)))
         {
             --types;
             remainder -= money_tmp[nr]->relative_value * times;
         }
+    }
 
     /* After this loop, remainder is guaranteed to be non-negative
      * Its value represents the MOST coins of the top `types' values which can
@@ -599,7 +689,9 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
      * value.  To round up, just take a single coin of last type used.
      */
     if (up && remainder > 0)
+    {
         remainder -= money_tmp[nr + 1]->relative_value;
+    }
 
     return amt - remainder; /* This value IS adjusted! */
 }
@@ -615,12 +707,18 @@ char *obj_money_string(class unit_data *obj, amount_t amt)
     money_tmp = &g_money_types[MONEY_TYPE(obj)];
 
     if (amt == 0)
+    {
         amt = MONEY_AMOUNT(obj);
+    }
 
     if (amt == 1)
+    {
         snprintf(buf, sizeof(buf), "%s %s", strchr("aeiou", *(money_tmp->strings[0])) ? "an" : "a", money_tmp->strings[0]);
+    }
     else
+    {
         snprintf(buf, sizeof(buf), "%d %s", (int)amt, money_tmp->strings[money_tmp->pl_idx]);
+    }
 
     return buf;
 }
@@ -684,10 +782,14 @@ static void set_money_strings(FILE *fl, int idx)
         s = skip_spaces(s);
 
         if ((c = strchr(s, ',')))
+        {
             *(c++) = '\0';
+        }
 
         while (isspace(*(s + strlen(s) - 1)))
+        {
             *(s + strlen(s) - 1) = '\0';
+        }
 
         tmp[i++] = str_dup(s);
 
@@ -703,7 +805,9 @@ static void set_money_strings(FILE *fl, int idx)
 
     CREATE(g_money_types[idx].strings, char *, i + 1);
     for (; 0 <= i; --i)
+    {
         g_money_types[idx].strings[i] = tmp[i];
+    }
 }
 
 static void set_relval(FILE *fl, int idx)
@@ -718,7 +822,9 @@ static void set_relval(FILE *fl, int idx)
     }
 
     if (strchr(buf, '*'))
+    {
         res *= g_money_types[idx - 1].relative_value;
+    }
 
     g_money_types[idx].relative_value = res;
 }
@@ -738,8 +844,12 @@ static char *get_string(FILE *fl, const char *err, ubit8 flag)
     }
 
     if (flag & 1)
+    {
         while (isspace(*(buf + strlen(buf) - 1)))
+        {
             *(buf + strlen(buf) - 1) = '\0';
+        }
+    }
 
     return flag & 2 ? str_dup(buf) : buf;
 }
@@ -798,7 +908,9 @@ void boot_money(void)
 
             sscanf(buf, "%d", &tmp);
             if (0 <= tmp && tmp <= MAX_CURRENCY)
+            {
                 cur_strings[tmp] = get_string(fl, "currency strings", 2);
+            }
             else
             {
                 slog(LOG_OFF, 0, "Illegal index of currency strings. (%d)", tmp);
@@ -852,11 +964,19 @@ done:
         tmp = -1;
 
         for (idx = 0; idx <= MAX_MONEY; ++idx)
+        {
             if (g_money_types[idx].currency == cur)
+            {
                 tmp = (tmp < 0) ? g_money_types[idx].relative_value : MIN(tmp, g_money_types[idx].relative_value);
+            }
+        }
 
         for (idx = 0; idx <= MAX_MONEY; ++idx)
+        {
             if (g_money_types[idx].currency == cur)
+            {
                 g_money_types[idx].min_value = tmp;
+            }
+        }
     }
 }

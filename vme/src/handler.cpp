@@ -32,8 +32,12 @@ class descriptor_data *unit_is_edited(class unit_data *u)
     class descriptor_data *d;
 
     for (d = g_descriptor_list; d; d = d->next)
+    {
         if (d->editing == u)
+        {
             return d;
+        }
+    }
 
     return NULL;
 }
@@ -44,7 +48,9 @@ void insert_in_unit_list(class unit_data *u)
     assert(u->gnext == NULL && u->gprevious == NULL && g_unit_list != u);
 
     if (UNIT_FILE_INDEX(u))
+    {
         UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
+    }
 
     class unit_data *tmp_u;
 
@@ -69,7 +75,9 @@ void insert_in_unit_list(class unit_data *u)
             tmp_u->gprevious = u;
 
             if (tmp_u == g_unit_list)
+            {
                 g_unit_list = u;
+            }
             break;
         }
         case UNIT_ST_NPC:
@@ -78,19 +86,27 @@ void insert_in_unit_list(class unit_data *u)
             {
                 tmp_u = g_unit_list;
                 for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->gnext)
+                {
                     ;
+                }
             }
             else
+            {
                 tmp_u = g_npc_head;
+            }
 
             u->gnext = tmp_u;
             u->gprevious = tmp_u->gprevious;
             if (tmp_u->gprevious)
+            {
                 tmp_u->gprevious->gnext = u;
+            }
             tmp_u->gprevious = u;
 
             if (tmp_u == g_unit_list)
+            {
                 g_unit_list = u;
+            }
             g_npc_head = u;
             break;
         }
@@ -100,19 +116,27 @@ void insert_in_unit_list(class unit_data *u)
             {
                 tmp_u = g_unit_list;
                 for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->gnext)
+                {
                     ;
+                }
             }
             else
+            {
                 tmp_u = g_obj_head;
+            }
 
             u->gnext = tmp_u;
             u->gprevious = tmp_u->gprevious;
             if (tmp_u->gprevious)
+            {
                 tmp_u->gprevious->gnext = u;
+            }
             tmp_u->gprevious = u;
 
             if (tmp_u == g_unit_list)
+            {
                 g_unit_list = u;
+            }
             g_obj_head = u;
             break;
         }
@@ -122,19 +146,27 @@ void insert_in_unit_list(class unit_data *u)
             {
                 tmp_u = g_unit_list;
                 for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->gnext)
+                {
                     ;
+                }
             }
             else
+            {
                 tmp_u = g_room_head;
+            }
 
             u->gnext = tmp_u;
             u->gprevious = tmp_u->gprevious;
             if (tmp_u->gprevious)
+            {
                 tmp_u->gprevious->gnext = u;
+            }
             tmp_u->gprevious = u;
 
             if (tmp_u == g_unit_list)
+            {
                 g_unit_list = u;
+            }
             g_room_head = u;
             break;
         }
@@ -147,21 +179,35 @@ void remove_from_unit_list(class unit_data *unit)
     assert(unit->gprevious || unit->gnext || (g_unit_list == unit));
 
     if (UNIT_FILE_INDEX(unit))
+    {
         UNIT_FILE_INDEX(unit)->fi_unit_list.remove(unit);
+    }
 
     if (g_npc_head == unit)
+    {
         g_npc_head = unit->gnext;
+    }
     if (g_obj_head == unit)
+    {
         g_obj_head = unit->gnext;
+    }
     if (g_room_head == unit)
+    {
         g_room_head = unit->gnext;
+    }
     if (g_unit_list == unit)
+    {
         g_unit_list = unit->gnext;
-    else /* Then this is always true 'if (unit->gprevious)'  */
+    }
+    else
+    { /* Then this is always true 'if (unit->gprevious)'  */
         unit->gprevious->gnext = unit->gnext;
+    }
 
     if (unit->gnext)
+    {
         unit->gnext->gprevious = unit->gprevious;
+    }
 
     unit->gnext = unit->gprevious = NULL;
 }
@@ -171,8 +217,12 @@ class unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
     class unit_fptr *tf;
 
     for (tf = UNIT_FUNC(u); tf; tf = tf->next)
+    {
         if (tf->index == idx)
+        {
             return tf;
+        }
+    }
 
     return NULL;
 }
@@ -257,7 +307,9 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
 
     assert(f);
     if (f->is_destructed())
+    {
         return;
+    }
 
     assert(!f->is_destructed());
 
@@ -287,11 +339,15 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
 
     /* Only unlink function, do not free it! */
     if (UNIT_FUNC(u) == f)
+    {
         UNIT_FUNC(u) = f->next;
+    }
     else
     {
         for (tf = UNIT_FUNC(u); tf && (tf->next != f); tf = tf->next)
+        {
             ;
+        }
         if (tf)
         {
             assert(tf->next == f);
@@ -320,7 +376,9 @@ void stop_following(class unit_data *ch)
     else
     { /* locate follower who is not head of list */
         for (k = CHAR_FOLLOWERS(CHAR_MASTER(ch)); k->next->follower != ch; k = k->next)
+        {
             ;
+        }
         j = k->next;
         k->next = j->next;
         FREE(j);
@@ -341,7 +399,9 @@ void start_following(class unit_data *ch, class unit_data *leader)
 
     REMOVE_BIT(CHAR_FLAGS(ch), CHAR_GROUP);
     if (CHAR_MASTER(ch))
+    {
         stop_following(ch);
+    }
     CHAR_MASTER(ch) = leader;
     CREATE(k, struct char_follow_type, 1);
     k->follower = ch;
@@ -357,7 +417,9 @@ void die_follower(class unit_data *ch)
     struct char_follow_type *j, *k;
 
     if (CHAR_MASTER(ch))
+    {
         stop_following(ch);
+    }
 
     for (k = CHAR_FOLLOWERS(ch); k; k = j)
     {
@@ -418,14 +480,18 @@ void modify_bright(class unit_data *unit, int bright)
 
     UNIT_BRIGHT(unit) += bright;
 
-    if ((in = UNIT_IN(unit))) /* Light up what the unit is inside */
+    if ((in = UNIT_IN(unit)))
+    { /* Light up what the unit is inside */
         UNIT_LIGHTS(in) += bright;
+    }
 
     if (IS_OBJ(unit) && OBJ_EQP_POS(unit))
+    {
         /* The char holding the torch light up the SAME way the torch does! */
         /* this works with the equib/unequib functions. This is NOT a case  */
         /* of transparancy.  */
         modify_bright(in, bright);
+    }
     else if (in && UNIT_IS_TRANSPARENT(in))
     {
         /* the unit is inside a transperant unit, so it lights up too */
@@ -445,13 +511,17 @@ void trans_set(class unit_data *u)
     int sum = 0;
 
     for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->next)
+    {
         sum += UNIT_BRIGHT(u2);
+    }
 
     UNIT_ILLUM(u) = sum;
     UNIT_BRIGHT(u) += sum;
 
     if (UNIT_IN(u))
+    {
         UNIT_LIGHTS(UNIT_IN(u)) += sum;
+    }
 }
 
 void trans_unset(class unit_data *u)
@@ -459,7 +529,9 @@ void trans_unset(class unit_data *u)
     UNIT_BRIGHT(u) -= UNIT_ILLUM(u);
 
     if (UNIT_IN(u))
+    {
         UNIT_LIGHTS(UNIT_IN(u)) -= UNIT_ILLUM(u);
+    }
 
     UNIT_ILLUM(u) = 0;
 }
@@ -471,8 +543,12 @@ class unit_data *equipment(class unit_data *ch, ubit8 pos)
     assert(IS_CHAR(ch));
 
     for (u = UNIT_CONTAINS(ch); u; u = u->next)
+    {
         if (IS_OBJ(u) && pos == OBJ_EQP_POS(u))
+        {
             return u;
+        }
+    }
 
     return NULL;
 }
@@ -486,9 +562,13 @@ class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type)
     obj = equipment(ch, pos);
 
     if (obj && OBJ_TYPE(obj) == type)
+    {
         return obj;
+    }
     else
+    {
         return NULL;
+    }
 }
 
 void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
@@ -503,6 +583,7 @@ void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
     modify_bright(ch, UNIT_BRIGHT(obj)); /* Update light sources */
 
     for (af = UNIT_AFFECTED(obj); af; af = af->next)
+    {
         if (af->id < 0) /* It is a transfer affect! */
         {
             newaf = *af;
@@ -510,6 +591,7 @@ void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
             newaf.duration = -1;  /* Permanent until unequip */
             create_affect(ch, &newaf);
         }
+    }
 }
 
 class unit_data *unequip_object(class unit_data *obj)
@@ -526,6 +608,7 @@ class unit_data *unequip_object(class unit_data *obj)
     modify_bright(ch, -UNIT_BRIGHT(obj)); /* Update light sources */
 
     for (af = UNIT_AFFECTED(obj); af; af = af->next)
+    {
         if (af->id < 0) /* It is a transfer affect! */
         {
             for (caf = UNIT_AFFECTED(ch); caf; caf = caf->next)
@@ -540,6 +623,7 @@ class unit_data *unequip_object(class unit_data *obj)
                 }
             }
         }
+    }
 
     return obj;
 }
@@ -553,8 +637,12 @@ int unit_recursive(class unit_data *from, class unit_data *to)
     class unit_data *u;
 
     for (u = to; u; u = UNIT_IN(u))
+    {
         if (u == from)
+        {
             return TRUE;
+        }
+    }
 
     return FALSE;
 }
@@ -564,6 +652,7 @@ class zone_type *unit_zone(const class unit_data *unit)
     class unit_data *org = (class unit_data *)unit;
 
     for (; unit; unit = UNIT_IN(unit))
+    {
         if (!UNIT_IN(unit))
         {
             //      assert(IS_ROOM(unit));
@@ -574,6 +663,7 @@ class zone_type *unit_zone(const class unit_data *unit)
             }
             return UNIT_FILE_INDEX(unit)->zone;
         }
+    }
 
     slog(LOG_ALL, 0, "ZONE: FATAL(2): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
     return NULL;
@@ -607,13 +697,19 @@ std::string unit_trace_up(class unit_data *unit)
 class unit_data *unit_room(class unit_data *unit)
 {
     if (unit == NULL)
+    {
         return NULL;
+    }
 
     class unit_data *org = unit;
 
     for (; unit; unit = UNIT_IN(unit))
+    {
         if (IS_ROOM(unit))
+        {
             return unit;
+        }
+    }
 
     slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
     return 0;
@@ -640,27 +736,37 @@ void intern_unit_up(class unit_data *unit, ubit1 pile)
         UNIT_BRIGHT(in) -= selfb;
     }
     else if (toin)
+    {
         UNIT_LIGHTS(toin) += bright;
+    }
 
     if (toin && UNIT_IS_TRANSPARENT(toin))
     {
         UNIT_BRIGHT(toin) += selfb;
         UNIT_ILLUM(toin) += selfb;
         if (extin)
+        {
             UNIT_LIGHTS(extin) += selfb;
+        }
     }
 
     if (IS_CHAR(unit))
+    {
         --UNIT_CHARS(UNIT_IN(unit));
+    }
     /*fuck*/
     UNIT_WEIGHT(UNIT_IN(unit)) -= UNIT_WEIGHT(unit);
 
     if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
+    {
         UNIT_CONTAINS(UNIT_IN(unit)) = unit->next;
+    }
     else
     {
         for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit; u = u->next)
+        {
             ;
+        }
         u->next = unit->next;
     }
 
@@ -671,11 +777,15 @@ void intern_unit_up(class unit_data *unit, ubit1 pile)
         unit->next = UNIT_CONTAINS(UNIT_IN(unit));
         UNIT_CONTAINS(UNIT_IN(unit)) = unit;
         if (IS_CHAR(unit))
+        {
             ++UNIT_CHARS(UNIT_IN(unit));
+        }
     }
 
     if (pile && IS_MONEY(unit) && UNIT_IN(unit))
+    {
         pile_money(unit);
+    }
 }
 
 void unit_up(class unit_data *unit)
@@ -686,7 +796,9 @@ void unit_up(class unit_data *unit)
 void unit_from_unit(class unit_data *unit)
 {
     while (UNIT_IN(unit))
+    {
         intern_unit_up(unit, FALSE);
+    }
 }
 
 void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
@@ -710,26 +822,36 @@ void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
         UNIT_ILLUM(to) += selfb;
     }
     else if (in)
+    {
         UNIT_LIGHTS(in) -= bright;
+    }
 
     if (in && UNIT_IS_TRANSPARENT(in))
     {
         UNIT_BRIGHT(in) -= selfb;
         UNIT_ILLUM(in) -= selfb;
         if (extin)
+        {
             UNIT_LIGHTS(extin) -= selfb;
+        }
     }
 
     if (UNIT_IN(unit))
     {
         if (IS_CHAR(unit))
+        {
             --UNIT_CHARS(UNIT_IN(unit));
+        }
         if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
+        {
             UNIT_CONTAINS(UNIT_IN(unit)) = unit->next;
+        }
         else
         {
             for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit; u = u->next)
+            {
                 ;
+            }
             u->next = unit->next;
         }
     }
@@ -739,11 +861,15 @@ void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
     UNIT_CONTAINS(to) = unit;
 
     if (IS_CHAR(unit))
+    {
         ++UNIT_CHARS(UNIT_IN(unit));
+    }
     UNIT_WEIGHT(to) += UNIT_WEIGHT(unit);
 
     if (pile && IS_MONEY(unit))
+    {
         pile_money(unit);
+    }
 }
 
 void unit_down(class unit_data *unit, class unit_data *to)
@@ -761,12 +887,16 @@ void intern_unit_to_unit(class unit_data *unit, class unit_data *to, ubit1 pile)
     }
 
     if (UNIT_IN(to))
+    {
         intern_unit_to_unit(unit, UNIT_IN(to), FALSE);
+    }
 
     intern_unit_down(unit, to, FALSE);
 
     if (pile && IS_MONEY(unit))
+    {
         pile_money(unit);
+    }
 }
 
 void unit_to_unit(class unit_data *unit, class unit_data *to)
@@ -824,11 +954,17 @@ void switchbody(class unit_data *ch, class unit_data *vict)
     CHAR_DESCRIPTOR(ch)->character = vict;
 
     if (IS_PC(ch))
+    {
         CHAR_DESCRIPTOR(ch)->original = ch;
+    }
     if (CHAR_IS_SNOOPING(ch))
+    {
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snooping)->snoop.snoop_by = vict;
+    }
     if (CHAR_IS_SNOOPED(ch))
+    {
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snoop_by)->snoop.snooping = vict;
+    }
 
     CHAR_DESCRIPTOR(vict) = CHAR_DESCRIPTOR(ch);
     CHAR_DESCRIPTOR(ch) = NULL;
@@ -845,10 +981,14 @@ void unswitchbody(class unit_data *npc)
     send_to_char("You return to your original body.<br/>", npc);
 
     if (CHAR_IS_SNOOPING(npc))
+    {
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->snoop.snooping)->snoop.snoop_by = CHAR_ORIGINAL(npc);
+    }
 
     if (CHAR_IS_SNOOPED(npc))
+    {
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->snoop.snoop_by)->snoop.snooping = CHAR_ORIGINAL(npc);
+    }
 
     CHAR_DESCRIPTOR(npc)->character = CHAR_ORIGINAL(npc);
     CHAR_DESCRIPTOR(npc)->original = NULL;
@@ -862,7 +1002,9 @@ void stop_fightfollow(unit_data *unit)
     if (IS_CHAR(unit))
     {
         if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
+        {
             die_follower(unit);
+        }
 
         stop_fighting(unit);
     }
@@ -883,19 +1025,27 @@ void stop_snoopwrite(unit_data *unit)
     if (IS_CHAR(unit))
     {
         if (CHAR_IS_SWITCHED(unit))
+        {
             unswitchbody(unit);
+        }
 
         /* If the PC which is switched is extracted, then unswitch */
         if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+        {
             for (d = g_descriptor_list; d; d = d->next)
+            {
                 if (d->original == unit)
                 {
                     unswitchbody(d->character);
                     break;
                 }
+            }
+        }
 
         if (CHAR_IS_SNOOPING(unit) || CHAR_IS_SNOOPED(unit))
+        {
             unsnoop(unit, 1); /* Remove all snoopers */
+        }
     }
 }
 
@@ -909,7 +1059,9 @@ void extract_unit(class unit_data *unit)
     /* got a recursive call.                         */
 
     if (unit->is_destructed())
+    {
         return;
+    }
 
     /* We can't extract rooms! Sanity, MS 300595, wierd bug... */
     assert(!IS_ROOM(unit));
@@ -930,13 +1082,17 @@ void extract_unit(class unit_data *unit)
     unit->register_destruct();
 
     if (UNIT_IS_EQUIPPED(unit))
+    {
         unequip_object(unit);
+    }
 
     stop_all_special(unit);
     stop_affect(unit);
 
     while (UNIT_CONTAINS(unit))
+    {
         extract_unit(UNIT_CONTAINS(unit));
+    }
 
     /*	void unlink_affect(class unit_affected_type *af);
           while (UNIT_FUNC(unit))
@@ -966,7 +1122,9 @@ void extract_unit(class unit_data *unit)
     }*/
 
     if (UNIT_IN(unit))
+    {
         unit_from_unit(unit);
+    }
 
     if (!IS_PC(unit))
     {
@@ -988,7 +1146,9 @@ void extract_unit(class unit_data *unit)
 void weight_change_unit(class unit_data *unit, int weight)
 {
     for (; unit; unit = UNIT_IN(unit))
+    {
         UNIT_WEIGHT(unit) += weight;
+    }
 }
 
 class extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr)

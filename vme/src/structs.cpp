@@ -105,8 +105,12 @@ room_data::~room_data(void)
     g_world_norooms--;
 
     for (int i = 0; i < MAX_EXIT + 1; i++)
+    {
         if (dir_option[i])
+        {
             delete dir_option[i];
+        }
+    }
 }
 
 obj_data::obj_data(void)
@@ -458,7 +462,9 @@ unit_data *unit_data::copy()
         }
     }
     else
+    {
         assert(FALSE);
+    }
     insert_in_unit_list(u); /* Put unit into the g_unit_list      */
     apply_affect(u);        /* Set all affects that modify      */
     start_all_special(u);
@@ -471,13 +477,21 @@ unit_data *unit_data::copy()
 unit_data *new_unit_data(ubit8 type)
 {
     if (type == UNIT_ST_ROOM)
+    {
         return new EMPLACE(room_data) room_data;
+    }
     else if (type == UNIT_ST_OBJ)
+    {
         return new EMPLACE(obj_data) obj_data;
+    }
     else if (type == UNIT_ST_PC)
+    {
         return new EMPLACE(pc_data) pc_data;
+    }
     else if (type == UNIT_ST_NPC)
+    {
         return new EMPLACE(npc_data) npc_data;
+    }
     else
     {
         assert(FALSE);
@@ -543,20 +557,30 @@ unit_data::~unit_data(void)
     /* that they might want to work on.                                   */
 
     if (IS_OBJ(this))
+    {
         delete U_OBJ(this);
+    }
     else if (IS_ROOM(this))
+    {
         delete U_ROOM(this);
+    }
     else if (IS_CHAR(this))
     {
         if (IS_NPC(this))
+        {
             delete U_NPC(this);
+        }
         else
+        {
             delete U_PC(this);
+        }
 
         delete U_CHAR(this);
     }
     else
+    {
         assert(FALSE);
+    }
 }
 
 void unit_data::set_fi(class file_index_type *f)
@@ -564,7 +588,9 @@ void unit_data::set_fi(class file_index_type *f)
     assert(f);
 
     if (this->fi)
+    {
         slog(LOG_ALL, 0, "ERROR: FI was already set. This shouldn't happen");
+    }
 
     this->fi = f;
     this->fi->no_in_mem++;

@@ -25,17 +25,27 @@ const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "
 char *str_line(const char *str, char *buf)
 {
     if (str == NULL || buf == NULL)
+    {
         return NULL;
+    }
 
     for (; *str == ' ' || *str == '\n' || *str == '\r'; str++)
+    {
         ;
+    }
 
     if (*str == '\0')
+    {
         return NULL;
+    }
 
     for (; (*buf = *str); buf++, str++)
+    {
         if (*str == '\n' || *str == '\r')
+        {
             break;
+        }
+    }
 
     *buf = '\0'; /* Erase last separator */
 
@@ -48,8 +58,12 @@ int str_lower(char *s)
     int l;
 
     for (l = 0; *s; s++, l++)
+    {
         if (isupper(*s))
+        {
             *s = tolower(*s);
+        }
+    }
 
     return l;
 }
@@ -59,8 +73,12 @@ int str_upper(char *s)
     int l;
 
     for (l = 0; *s; s++, l++)
+    {
         if (islower(*s))
+        {
             *s = toupper(*s);
+        }
+    }
 
     return l;
 }
@@ -72,13 +90,21 @@ int str_lower(const char *s, char *d, int nBufSize)
     int l;
 
     for (l = 0; *s && (l < nBufSize); s++, d++, l++)
+    {
         if (isupper(*s))
+        {
             *d = tolower(*s);
+        }
         else
+        {
             *d = *s;
+        }
+    }
 
     if (l < nBufSize)
+    {
         *d = 0;
+    }
     else
     {
         slog(LOG_ALL, 0, "ERROR: str_lower destination buffer too small!");
@@ -94,15 +120,21 @@ char *str_repeatchar(int n, char c)
     static char buf[256];
 
     if (n > 255)
+    {
         n = 255;
+    }
 
     if (n < 0)
+    {
         n = 0;
+    }
 
     buf[n] = '\0';
 
     for (; n;)
+    {
         buf[--n] = c;
+    }
 
     return buf;
 }
@@ -150,16 +182,26 @@ char *ltoa(long n)
 int str_ccmp(const char *s, const char *d)
 {
     if (s == d)
+    {
         return 0;
+    }
 
     if (s == NULL)
+    {
         return -1;
+    }
     else if (d == NULL)
+    {
         return 1;
+    }
 
     for (; tolower(*s) == tolower(*d); s++, d++)
+    {
         if (*s == '\0')
+        {
             return 0;
+        }
+    }
 
     return (tolower(*s) - tolower(*d));
 }
@@ -170,16 +212,26 @@ int str_ccmp(const char *s, const char *d)
 int str_nccmp(const char *s, const char *d, int n)
 {
     if (s == d)
+    {
         return 0;
+    }
 
     if (s == NULL)
+    {
         return -1;
+    }
     else if (d == NULL)
+    {
         return 1;
+    }
 
     for (n--; tolower(*s) == tolower(*d); s++, d++, n--)
+    {
         if (*s == '\0' || n <= 0)
+        {
             return 0;
+        }
+    }
 
     return (tolower(*s) - tolower(*d));
 }
@@ -215,8 +267,12 @@ char *str_str(const char *cs, const char *ct)
         ti = (char *)ct;
 
         while (*si++ == *ti++)
+        {
             if (*ti == '\0')
+            {
                 return (char *)cs;
+            }
+        }
 
     } while (*cs++);
 
@@ -248,10 +304,14 @@ const char *str_cstr(const char *cs, const char *ct)
 char *skip_blanks(const char *string)
 {
     if (string == NULL)
+    {
         return NULL;
+    }
 
     for (; *string && isspace(*string); string++)
+    {
         ;
+    }
 
     return (char *)string;
 }
@@ -260,44 +320,64 @@ char *skip_blanks(const char *string)
 char *skip_spaces(const char *string)
 {
     if (string == NULL)
+    {
         return NULL;
+    }
 
     for (; *string && isaspace(*string); string++)
+    {
         ;
+    }
 
     return (char *)string;
 }
 
 void strip_trailing_blanks(char *str)
 {
-    if (!*str) /* empty string: return at once      */
+    if (!*str)
+    { /* empty string: return at once      */
         return;
+    }
 
-    for (; *str; ++str) /* wind to end of string             */
+    for (; *str; ++str)
+    { /* wind to end of string             */
         ;
+    }
 
-    if (!isspace(*--str)) /* Not a spaceterminated string      */
-        return;           /* This is mainly for `inter-code' strings */
+    if (!isspace(*--str))
+    {           /* Not a spaceterminated string      */
+        return; /* This is mainly for `inter-code' strings */
+    }
 
-    while (isspace(*--str)) /* rewind to last nonspace character */
+    while (isspace(*--str))
+    { /* rewind to last nonspace character */
         ;
+    }
 
     *++str = '\0'; /* step ahead and end string         */
 }
 
 void strip_trailing_spaces(char *str)
 {
-    if (!*str) /* empty string: return at once      */
+    if (!*str)
+    { /* empty string: return at once      */
         return;
+    }
 
-    for (; *str; ++str) /* wind to end of string             */
+    for (; *str; ++str)
+    { /* wind to end of string             */
         ;
+    }
 
-    if (!isaspace(*--str)) /* Not a spaceterminated string      */
-        return;            /* This is mainly for `inter-code' strings */
+    if (!isaspace(*--str))
+    {           /* Not a spaceterminated string      */
+        return; /* This is mainly for `inter-code' strings */
+    }
 
-    while (isaspace(*--str)) /* rewind to last nonspace character */
+    while (isaspace(*--str))
+    { /* rewind to last nonspace character */
         ;
+    }
 
     *++str = '\0'; /* step ahead and end string         */
 }
@@ -306,7 +386,9 @@ void strip_trailing_spaces(char *str)
 ubit1 str_is_empty(const char *arg)
 {
     if (arg == NULL)
+    {
         return TRUE;
+    }
 
     return *(skip_blanks(arg)) == '\0';
 }
@@ -315,12 +397,20 @@ ubit1 str_is_empty(const char *arg)
 ubit1 str_is_number(const char *str)
 {
     if (!*str)
+    {
         return FALSE;
+    }
     if ((*str == '-') || (*str == '+'))
+    {
         str++;
+    }
     for (; *str; str++)
+    {
         if (!isdigit(*str))
+        {
             return FALSE;
+        }
+    }
 
     return TRUE;
 }
@@ -342,7 +432,9 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
     int i, l;
 
     if (list == NULL)
+    {
         return -1;
+    }
 
     /* Make into lower case, and get length of string */
     l = str_lower(oarg, arg, sizeof(arg));
@@ -350,17 +442,27 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
     if (exact)
     {
         for (i = 0; list[i]; i++)
+        {
             if (strcmp(arg, list[i]) == 0)
+            {
                 return i;
+            }
+        }
     }
     else
     {
         if (!l)
+        {
             l = 1; /* Avoid "" to match the first available string */
+        }
 
         for (i = 0; list[i]; i++)
+        {
             if (strncmp(arg, list[i], l) == 0)
+            {
                 return i;
+            }
+        }
     }
 
     return -1;
@@ -379,17 +481,29 @@ int search_block_length(const char *oarg, int length, const char **list, ubit1 e
     if (exact)
     {
         for (i = 0; list[i]; i++)
+        {
             if (!strncmp(arg, list[i], length))
+            {
                 if (list[i][length] <= ' ')
+                {
                     return i;
+                }
+            }
+        }
     }
     else
     {
         if (!length)
+        {
             length = 1; /* Avoid "" to match the first available string */
+        }
         for (i = 0; list[i]; i++)
+        {
             if (!strncmp(arg, list[i], length))
+            {
                 return i;
+            }
+        }
     }
 
     return -1;
@@ -408,7 +522,9 @@ char *str_next_word_copy(const char *argument, char *first_arg)
 
     /* Copy next word and make it lower case */
     for (; *argument > ' '; argument++)
+    {
         *first_arg++ = *argument;
+    }
 
     *first_arg = '\0';
 
@@ -423,7 +539,9 @@ char *str_next_word(const char *argument, char *first_arg)
 
     /* Copy next word and make it lower case */
     for (; *argument > ' '; argument++)
+    {
         *first_arg++ = tolower(*argument);
+    }
 
     *first_arg = '\0';
 
@@ -438,8 +556,9 @@ char *one_argument(const char *argument, char *first_arg)
     assert(argument && first_arg);
 
     do
+    {
         argument = str_next_word(argument, first_arg);
-    while (fill_word(first_arg));
+    } while (fill_word(first_arg));
 
     return (char *)argument;
 }
@@ -448,11 +567,17 @@ char *one_argument(const char *argument, char *first_arg)
 ubit1 is_abbrev(const char *arg1, const char *arg2)
 {
     if (!*arg1)
+    {
         return FALSE;
+    }
 
     for (; *arg1; arg1++, arg2++)
+    {
         if (tolower(*arg1) != tolower(*arg2))
+        {
             return FALSE;
+        }
+    }
 
     return TRUE;
 }
@@ -462,11 +587,17 @@ ubit1 is_abbrev(const char *arg1, const char *arg2)
 ubit1 is_multi_abbrev(const char *arg1, const char *arg2)
 {
     if (!*arg1)
+    {
         return FALSE;
+    }
 
     for (; *arg1 && !isspace(*arg1); arg1++, arg2++)
+    {
         if (tolower(*arg1) != tolower(*arg2))
+        {
             return FALSE;
+        }
+    }
 
     return TRUE;
 }
@@ -501,7 +632,9 @@ int search_block_abbrevs(const char *oarg, const char **list, const char **end)
                 match++;
             }
             else
+            {
                 break;
+            }
         }
         if (match && ps > bestpos)
         {
@@ -557,15 +690,23 @@ void str_substitute(const char *old, const char *newstr, char *str)
     int olen, nlen, slen;
 
     if (!str)
+    {
         return;
+    }
 
     if (!old)
+    {
         return;
+    }
 
     if (!newstr)
+    {
         nlen = 0;
+    }
     else
+    {
         nlen = strlen(newstr);
+    }
 
     olen = strlen(old);
     slen = strlen(str);
@@ -596,7 +737,9 @@ void str_substitute(const std::string &search, const std::string &replace, std::
     size_t pos = 0;
 
     if (search.empty())
+    {
         return;
+    }
 
     while ((pos = subject.find(search, pos)) != std::string::npos)
     {
@@ -611,14 +754,20 @@ void str_rem(char *s, char c)
     int diff;
 
     if (c == '\0')
+    {
         return;
+    }
 
     for (diff = 0; *(s + diff);)
     {
         if (*s == c)
+        {
             diff++;
+        }
         else
+        {
             s++;
+        }
 
         *s = *(s + diff);
     }
@@ -632,9 +781,13 @@ void str_rem_codes(char *s)
     for (diff = 0; *(s + diff);)
     {
         if ((*s < ' ') && (*s != '\n') && (*s != '\r'))
+        {
             diff++;
+        }
         else
+        {
             s++;
+        }
 
         *s = *(s + diff);
     }
@@ -655,7 +808,9 @@ void str_amp_html(const char *s, char *d)
             s++; // Skip &
         }
         else
+        {
             *d++ = *s++;
+        }
     }
     *d = 0;
 }
@@ -677,7 +832,9 @@ void str_nr_brnr(const char *s, char *d)
             s += 2;
         }
         else
+        {
             *d++ = *s++;
+        }
     }
     *d = 0;
 }
@@ -688,6 +845,7 @@ void str_blank_punct(char *s)
     static char c[3] = {' ', ' ', 0};
 
     for (; *s; s++)
+    {
         if (ispunct(*s))
         {
             c[0] = *s;
@@ -695,6 +853,7 @@ void str_blank_punct(char *s)
             str_insert(s + 1, c);
             s += 2;
         }
+    }
 }
 
 /* Remove all multiple space occurences in s */
@@ -703,17 +862,23 @@ void str_remspc(char *s)
     char *cp;
 
     while (*s && (*s != ' ' || *(s + 1) != ' '))
+    {
         s++;
+    }
 
     if (*s == 0)
+    {
         return;
+    }
 
     cp = s;
 
     while (*cp)
     {
         while (*cp == ' ' && *(cp + 1) == ' ')
+        {
             cp++;
+        }
 
         *s++ = *cp++;
     }
@@ -748,12 +913,20 @@ const char *is_name_raw(const char *arg, char const *const *names) // MS2020 con
     for (i = 0; names[i]; i++)
     {
         for (j = 0; names[i][j]; j++)
+        {
             if (tolower(arg[j]) != tolower(names[i][j]))
+            {
                 break;
+            }
+        }
 
         if (!names[i][j])
+        {
             if (!arg[j] || isaspace(arg[j]))
+            {
                 return (arg + j);
+            }
+        }
     }
 
     return NULL;
@@ -775,10 +948,14 @@ const char *is_name_raw(const char *arg, char const *const *names) // MS2020 con
 char *is_name(char *arg, char const *const *names) // MS2020 const char *names[])
 {
     for (; isaspace(*arg); arg++)
+    {
         ;
+    }
 
     if (!*arg)
+    {
         return 0;
+    }
 
     str_remspc(arg);
 
@@ -801,12 +978,16 @@ char **create_namelist(void)
 int len_namelist(const char **namelist)
 {
     if (namelist == NULL)
+    {
         return 0;
+    }
 
     int i;
 
     for (i = 0; namelist[i]; i++)
+    {
         ;
+    }
 
     return i;
 }
@@ -819,7 +1000,9 @@ char **add_name(const char *name, char **namelist)
     assert(name && namelist);
 
     while (namelist[pos])
+    {
         pos++;
+    }
 
     RECREATE(namelist, char *, pos + 2);
 
@@ -858,11 +1041,17 @@ char *str_ccmp_next_word(const char *buf, const char *next_word)
     buf = skip_spaces(buf);
 
     for (; *next_word; next_word++, buf++)
+    {
         if (*next_word != *buf)
+        {
             return NULL;
+        }
+    }
 
-    if (!*buf || isaspace(*buf)) /* Buf must end here or be word separated */
+    if (!*buf || isaspace(*buf))
+    { /* Buf must end here or be word separated */
         return (char *)buf;
+    }
 
     return NULL;
 }
@@ -881,7 +1070,9 @@ void split_fi_ref(const char *str, char *zone, char *name)
     *name = 0;
 
     if (!str)
+    {
         return;
+    }
 
     str = skip_spaces(str);
 
@@ -893,7 +1084,9 @@ void split_fi_ref(const char *str, char *zone, char *name)
 
         l = MIN(strlen(c + 1), FI_MAX_ZONENAME);
         if ((t = strchr(c + 1, ' ')))
+        {
             l = MIN(l, t - (c + 1));
+        }
         strncpy(zone, c + 1, l);
         zone[l] = 0;
         str_lower(zone);
@@ -907,7 +1100,9 @@ void split_fi_ref(const char *str, char *zone, char *name)
 
         l = MIN(strlen(c + 1), FI_MAX_UNITNAME);
         if ((t = strchr(c + 1, ' ')))
+        {
             l = MIN(l, t - (c + 1));
+        }
         strncpy(name, c + 1, l);
         name[l] = 0;
         str_lower(zone);
@@ -950,11 +1145,15 @@ char *catnames(char *s, char **names)
             TAIL(s);
         }
         if (ok)
+        {
             s--; /* remove the comma */
+        }
         strcpy(s, "}");
     }
     else
+    {
         sprintf(s, "NULL");
+    }
 
     TAIL(s);
 
@@ -1084,9 +1283,13 @@ void str_correct_utf8(char *src)
                 s--;
                 *s = '?';
                 if (s >= src)
+                {
                     s--; // end of for means we'll start checking this '?'
+                }
                 if (s >= src)
+                {
                     s--; // so go back yet another char so we'll check the char before '?'
+                }
 
                 // s can become 1 less than src, but for loop above +1 and then it's equal src
                 // MS: Code on the website most definitely seemed wrong
@@ -1115,7 +1318,9 @@ void obs_str_correct_utf8(std::string &src)
         {
             // ignore all odd/control ascii characters.
             if ((src[pos] < 32) && (src[pos] != '\n') && (src[pos] != '\r'))
+            {
                 src[pos] = '?';
+            }
             continue;
         }
         else if ((src[pos] & 0xE0) == 0xC0) // 110x xxxx
@@ -1146,8 +1351,10 @@ void obs_str_correct_utf8(std::string &src)
             src[pos] = '?'; // Must be a UTF8 error of sorts
         }
         else
+        {
             src[pos] = '?'; // Must be a UTF8 error of sorts
-    }                       // end for
+        }
+    } // end for
 }
 
 // This both encodes and prepares string for interpreter.
@@ -1159,7 +1366,9 @@ void obs_str_correct_utf8(std::string &src)
 char *html_encode_utf8(const char *src)
 {
     if (!src)
+    {
         return NULL;
+    }
 
     int nLen = strlen(src);
     std::string sBuffer;
@@ -1168,14 +1377,18 @@ char *html_encode_utf8(const char *src)
 
     // First skip all leading whitespace
     while (isspace(src[pos]))
+    {
         pos++;
+    }
 
     for (; pos < nLen; ++pos)
     {
         if ((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
         {
-            if (src[pos] < 32) // ignore all odd/control ascii characters.
+            if (src[pos] < 32)
+            { // ignore all odd/control ascii characters.
                 continue;
+            }
 
             switch (src[pos])
             {
@@ -1183,7 +1396,9 @@ char *html_encode_utf8(const char *src)
                 { // Trim all whitespace to one space
                     sBuffer.append(" ");
                     while (isspace(src[pos + 1]))
+                    {
                         pos++;
+                    }
                     continue;
                 }
                 case '&':
@@ -1279,7 +1494,9 @@ int my_str_replace_space(char *sbuf)
             char *src = sbuf + 2;
 
             while (isdigit(*src) && rep < (int)sizeof(Buf) - 1)
+            {
                 Buf[rep++] = *src++;
+            }
             Buf[rep] = 0;
 
             char buf2[10];
@@ -1361,7 +1578,9 @@ char *fix_old_codes_to_html(const char *c)
     str_substitute("&[default]", "</div>", buf);
 
     while (my_str_replace_space(buf))
+    {
         ;
+    }
 
     // I'm hoping this is not necessary to change
     // Replace &[name] with <div class='name'>
@@ -1397,14 +1616,18 @@ const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
 
     c = strchr(p, '>');
     if (c == NULL)
+    {
         return p;
+    }
 
     n = c - p + 1; // How many chars including \0
 
     n = std::min(n, nTagMax);
 
     for (int i = 0; i < n; i++)
+    {
         pTag[i] = tolower(*(p + i));
+    }
 
     pTag[n - 1] = 0;
 
@@ -1426,30 +1649,42 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
 
     c = strstr(p, name);
     if (c == NULL)
+    {
         return 0;
+    }
 
     c += strlen(name);
     c = skip_blanks(c); // skip any whitespace before equal
     if (*c != '=')
+    {
         return 0;
+    }
     c++;                // skip equal
     c = skip_blanks(c); // skip any whitespace after equal
 
     if (*c != '\'')
+    {
         return 0;
+    }
 
     c++; // Skip '
 
     const char *ce;
     ce = strchr(c, '\''); // Find the last ' for the value
     if (ce == NULL)
+    {
         return 0;
+    }
 
-    if (ce - c <= 1) // If the string is empty
+    if (ce - c <= 1)
+    { // If the string is empty
         return 0;
+    }
 
-    if (ce - c > nTagMax - 1) // Not enough space
+    if (ce - c > nTagMax - 1)
+    { // Not enough space
         return 0;
+    }
 
     strncpy(pTag, c, ce - c);
     pTag[ce - c] = 0;
@@ -1476,17 +1711,23 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
 
     c = strstr(pOldTag, pAttr);
     if (c == NULL)
+    {
         return 0;
+    }
 
     c += strlen(pAttr);
     c = skip_blanks(c); // skip any whitespace before equal
     if (*c != '=')
+    {
         return 0;
+    }
     c++;                // skip equal
     c = skip_blanks(c); // skip any whitespace after equal
 
     if (*c != '\'')
+    {
         return 0;
+    }
 
     c++; // Skip '
 
@@ -1498,19 +1739,25 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
     const char *ce;
 
     c = strchr(c, '\''); // Find the last ' for the value
-    if (c == NULL)       // Missing ending '
+    if (c == NULL)
+    { // Missing ending '
         return 0;
+    }
 
     c++; // Skip the '
 
     ce = c;
     TAIL(ce); // find the remaineder of the string
 
-    if (ce - c <= 0) // If the string is empty, we are done
+    if (ce - c <= 0)
+    { // If the string is empty, we are done
         return 1;
+    }
 
-    if (strlen(pNewTag) + strlen(c) >= (size_t)nTagMax - 1) // Not enough space
+    if (strlen(pNewTag) + strlen(c) >= (size_t)nTagMax - 1)
+    { // Not enough space
         return 0;
+    }
 
     strcat(pNewTag, c);
 
@@ -1575,7 +1822,9 @@ std::string str_json(const char *lbl, const char *str)
     s.append(": ");
     s.append("\"");
     if (str)
+    {
         s.append(str_json_encode(str));
+    }
     s.append("\"");
 
     return s;
@@ -1596,7 +1845,9 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
     int i;
 
     if ((p1 == NULL) || (p2 == NULL))
+    {
         return 1;
+    }
 
     for (i = 0; i < nMax; i++)
     {
@@ -1605,15 +1856,23 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
             if ((p1[i] == 0) || (p2[i] == 0))
             {
                 if (i < 10)
+                {
                     return 1;
+                }
                 else
+                {
                     return 0;
+                }
             }
             else
+            {
                 return 1;
+            }
         }
-        else if (p1[i] == 0) // They are both zero
+        else if (p1[i] == 0)
+        { // They are both zero
             return 1;
+        }
     }
 
     return 0;

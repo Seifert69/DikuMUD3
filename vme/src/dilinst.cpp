@@ -63,13 +63,19 @@ void dil_stop_special(class unit_data *unt, class dilprg *aprg)
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         {
             if (aprg && (aprg == fptr->data))
+            {
                 continue;
+            }
             else
+            {
                 stop_special(u, fptr);
+            }
         }
 
         if (UNIT_CONTAINS(u))
+        {
             dil_stop_special(UNIT_CONTAINS(u), aprg);
+        }
     }
 }
 
@@ -83,13 +89,19 @@ void dil_start_special(class unit_data *unt, class dilprg *aprg)
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         {
             if (aprg && (aprg == fptr->data))
+            {
                 continue;
+            }
             else
+            {
                 start_special(u, fptr);
+            }
         }
 
         if (UNIT_CONTAINS(u))
+        {
             dil_start_special(UNIT_CONTAINS(u), aprg);
+        }
     }
 }
 
@@ -116,9 +128,13 @@ void dilfi_edit(class dilprg *p)
     if (dil_type_check("beginedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
         if (!IS_PC((class unit_data *)v1->val.ptr))
+        {
             dil_typeerr(p, "not a pc unit");
+        }
         else if (!CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr))
+        {
             dil_typeerr(p, "PC has no descriptor in edit()");
+        }
         else
         {
             CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->postedit = dil_edit_done;
@@ -140,14 +156,18 @@ void dilfi_kedit(class dilprg *p)
     if (dil_type_check("killedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
         if (!IS_PC((class unit_data *)v1->val.ptr))
+        {
             dil_typeerr(p, "not a pc unit");
+        }
         else
         {
             d = CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr);
             if (d)
             {
                 if (d->postedit)
+                {
                     d->postedit(d);
+                }
                 if (d->localstr)
                     FREE(d->localstr);
                 d->localstr = NULL;
@@ -169,7 +189,9 @@ void dilfi_gamestate(class dilprg *p)
     if (dil_type_check("gamestate", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
         if (!IS_PC((class unit_data *)v1->val.ptr))
+        {
             dil_typeerr(p, "gamestate: Not a pc unit");
+        }
         else
         {
             switch (v2->val.num)
@@ -185,7 +207,9 @@ void dilfi_gamestate(class dilprg *p)
                     break;
                 case GS_LINK_DEAD:
                     if (CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr))
+                    {
                         descriptor_close(CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr));
+                    }
                     break;
             }
         }
@@ -277,9 +301,13 @@ void dilfi_pgstr(class dilprg *p)
     if (dil_type_check("pagestring", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
         if (!IS_PC((class unit_data *)v2->val.ptr) && !IS_NPC((class unit_data *)v2->val.ptr))
+        {
             dil_typeerr(p, "not a pc/npc unit");
+        }
         else if (v1->val.ptr && v2->val.ptr)
+        {
             page_string(CHAR_DESCRIPTOR((class unit_data *)v2->val.ptr), (char *)v1->val.ptr);
+        }
     }
     delete v2;
     delete v1;
@@ -293,7 +321,9 @@ void dilfi_setpwd(class dilprg *p)
     if (dil_type_check("setpassword", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_SP))
     {
         if (!IS_PC((class unit_data *)v1->val.ptr))
+        {
             dil_typeerr(p, "Not a pc unit");
+        }
         else if (p->frame[0].tmpl->zone->access > 0)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (setpassword).", p->frame->tmpl->prgname);
@@ -336,8 +366,12 @@ void dilfi_delpc(class dilprg *p)
                 else
                 {
                     for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
+                    {
                         if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), ((char *)v1->val.ptr)))
+                        {
                             extract_unit(tmp);
+                        }
+                    }
                 }
 
                 delete_player((char *)v1->val.ptr);
@@ -374,19 +408,27 @@ void dilfi_foe(class dilprg *p)
         if (v1->val.num)
         {
             for (i = 0; i < p->fp->securecount; i++)
+            {
                 if (p->fp->secure[i].lab == NULL)
                 {
                     dil_sub_secure(p->fp, p->fp->secure[i].sup, TRUE);
                     i--; // Shit
                 }
+            }
 
             if (UNIT_IN(p->sarg->owner))
+            {
                 scan4_unit(p->sarg->owner, v1->val.num);
+            }
             else
+            {
                 scan4_unit_room(p->sarg->owner, v1->val.num);
+            }
 
             for (i = 0; i < g_unit_vector.top; i++)
+            {
                 dil_add_secure(p, UVI(i), NULL);
+            }
 
             // This statement is incorrect in Yamato when a room uses foreach() this
             // will cause the room to get added as one of the items to be looped
@@ -394,7 +436,9 @@ void dilfi_foe(class dilprg *p)
             // dil_add_secure(p, p->sarg->owner, NULL);
 
             if (IS_SET(UNIT_TYPE(p->sarg->owner), v1->val.num))
+            {
                 dil_add_secure(p, p->sarg->owner, NULL);
+            }
         }
     }
     delete v1;
@@ -412,13 +456,16 @@ void dilfi_fon(class dilprg *p)
     p->waitcmd--;
 
     if (v1->type != DILV_UPR)
+    {
         dil_typeerr(p, "foreach - next");
+    }
     else
     {
         dil_test_secure(p, TRUE);
         /* look for NULL references, remove first */
         u = NULL;
         for (i = 0; i < p->fp->securecount; i++)
+        {
             if (!p->fp->secure[i].lab)
             {
                 u = p->fp->secure[i].sup;
@@ -431,6 +478,7 @@ void dilfi_fon(class dilprg *p)
                 }
                 break;
             }
+        }
 
         if (!u)
         {
@@ -517,7 +565,9 @@ void dilfi_stora(class dilprg *p)
                                      p->frame->tmpl->prgname);
                         }
                         else
+                        {
                             store_all_unit((class unit_data *)v1->val.ptr, filename, TRUE);
+                        }
                     }
                     else
                     {
@@ -540,12 +590,14 @@ void dilfi_sbt(class dilprg *p)
     int dif;
 
     if (dil_type_check("setbright", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
+    {
         if (v1->val.ptr)
         {
             dif = v2->val.num - UNIT_BRIGHT((class unit_data *)v1->val.ptr);
 
             modify_bright((class unit_data *)v1->val.ptr, dif);
         }
+    }
 
     delete v1;
     delete v2;
@@ -558,6 +610,7 @@ void dilfi_amod(class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     if (dil_type_check("acc_modify", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
+    {
         if (g_cServerConfig.isAccounting() && v1->val.ptr && IS_PC((class unit_data *)v1->val.ptr))
         {
             if (p->frame[0].tmpl->zone->access != 0)
@@ -568,11 +621,16 @@ void dilfi_amod(class dilprg *p)
             else
             {
                 if (v2->val.num > 0)
+                {
                     account_insert(p->owner, (class unit_data *)v1->val.ptr, v2->val.num);
+                }
                 else if (v2->val.num < 0)
+                {
                     account_withdraw(p->owner, (class unit_data *)v1->val.ptr, -v2->val.num);
+                }
             }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -635,12 +693,14 @@ void dilfi_set_weight(class dilprg *p)
         if (v1->val.ptr)
         {
             if (v2->val.num < UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr))
+            {
                 szonelog(p->frame->tmpl->zone,
                          "DIL '%s' setting unit %s weight to %d less than base weight of %d.",
                          p->frame->tmpl->prgname,
                          UNIT_FI_NAME((class unit_data *)v1->val.ptr),
                          v2->val.num,
                          UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr));
+            }
 
             int dif = v2->val.num - UNIT_WEIGHT((class unit_data *)v1->val.ptr);
 
@@ -682,8 +742,12 @@ void dilfi_chas(class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     if (dil_type_check("change_speed", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
+    {
         if (v1->val.ptr && IS_CHAR((class unit_data *)v1->val.ptr) && CHAR_COMBAT((class unit_data *)v1->val.ptr))
+        {
             CHAR_COMBAT((class unit_data *)v1->val.ptr)->changeSpeed(v2->val.num);
+        }
+    }
     delete v1;
     delete v2;
 }
@@ -703,8 +767,12 @@ void dilfi_rslv(class dilprg *p)
         else
         {
             if (IS_PC((class unit_data *)v1->val.ptr))
+            {
                 if (!IS_IMMORTAL((class unit_data *)v1->val.ptr))
+                {
                     CHAR_LEVEL((class unit_data *)v1->val.ptr) = 1;
+                }
+            }
         }
     }
     delete v1;
@@ -725,8 +793,12 @@ void dilfi_rsvlv(class dilprg *p)
         else
         {
             if (IS_PC((class unit_data *)v1->val.ptr))
+            {
                 if (!IS_IMMORTAL((class unit_data *)v1->val.ptr))
+                {
                     PC_VIRTUAL_LEVEL((class unit_data *)v1->val.ptr) = 1;
+                }
+            }
         }
     }
     delete v1;
@@ -761,6 +833,7 @@ void dilfi_stopf(class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     if (dil_type_check("stop_fighting", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 2, DILV_UP, DILV_NULL))
+    {
         if (v1->val.ptr && IS_CHAR((class unit_data *)v1->val.ptr))
         {
             if (v2->val.ptr && IS_CHAR((class unit_data *)v2->val.ptr))
@@ -772,6 +845,7 @@ void dilfi_stopf(class dilprg *p)
                 stop_fighting((class unit_data *)v1->val.ptr, NULL);
             }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -783,13 +857,19 @@ void dilfi_setf(class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     if (dil_type_check("set_fighting", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && IS_CHAR((class unit_data *)v1->val.ptr) && v2->val.ptr && IS_CHAR((class unit_data *)v2->val.ptr))
         {
             if (CHAR_FIGHTING((class unit_data *)v1->val.ptr))
+            {
                 set_fighting((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr, FALSE);
+            }
             else
+            {
                 set_fighting((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr, TRUE);
+            }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -800,7 +880,9 @@ void dilfi_cli(class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     if (dil_type_check("clear", p, 1, v1, FAIL_NULL, 1, DILV_INT))
+    {
         dil_intr_remove(p, v1->val.num);
+    }
     delete v1;
 }
 
@@ -968,7 +1050,9 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
         CREATE(frm->intr, struct dilintr, rtmpl->intrcount);
     }
     else
+    {
         frm->intr = NULL;
+    }
 
     if (rtmpl->varc)
     {
@@ -980,18 +1064,28 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
             if (i >= rtmpl->argc)
             {
                 if (frm->vars[i].type == DILV_SLP)
+                {
                     frm->vars[i].val.namelist = new cNamelist;
+                }
                 else if (frm->vars[i].type == DILV_ILP)
+                {
                     frm->vars[i].val.intlist = new cintlist;
+                }
                 else
+                {
                     frm->vars[i].val.string = NULL;
+                }
             }
             else
+            {
                 frm->vars[i].val.string = NULL;
+            }
         }
     }
     else
+    {
         frm->vars = NULL;
+    }
 
     ubit8 tmp;
 
@@ -1027,12 +1121,16 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
 
             case DILV_SLP:
                 if (tmp != DILV_NULL)
+                {
                     frm->vars[i].val.namelist = ((cNamelist *)p->stack[-(rtmpl->argc - i)]->val.ptr)->Duplicate();
+                }
                 break;
 
             case DILV_ILP:
                 if (tmp != DILV_NULL)
+                {
                     frm->vars[i].val.intlist = ((cintlist *)p->stack[-(rtmpl->argc - i)]->val.ptr)->Duplicate();
+                }
                 break;
 
             case DILV_EDP:
@@ -1056,7 +1154,9 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
         }
     }
     for (i = 0; i < rtmpl->argc; i++)
+    {
         delete (p->stack.pop());
+    }
 
     frm->stacklen = p->stack.length();
 }
@@ -1093,7 +1193,9 @@ void dilfi_rfunc(class dilprg *p)
                  xrefi);
         p->waitcmd = WAITCMD_STOP;
         for (int i = 0; (i < argcnt); i++)
+        {
             delete (p->stack.pop());
+        }
         return;
     }
     /* expand frame */
@@ -1133,47 +1235,69 @@ void dilfi_rsfunc(class dilprg *p)
                     {
                         case DILV_INT:
                             if (t != DILV_INT)
+                            {
                                 fail = TRUE; /* type error, expect integer */
+                            }
                             break;
                         case DILV_SP:
                             if ((t != DILV_NULL) && (t != DILV_SP))
+                            {
                                 fail = TRUE; /* type error, expect string */
+                            }
                             break;
                         case DILV_UP:
                             if ((t != DILV_NULL) && (t != DILV_UP))
+                            {
                                 fail = TRUE; /* type error, expect unitptr */
+                            }
                             break;
                         case DILV_ZP:
                             if ((t != DILV_NULL) && (t != DILV_ZP))
+                            {
                                 fail = TRUE; /* type error, expect unitptr */
+                            }
                             break;
                         case DILV_CP:
                             if ((t != DILV_NULL) && (t != DILV_CP))
+                            {
                                 fail = TRUE; /* type error, expect unitptr */
+                            }
                             break;
                         case DILV_EDP:
                             if ((t != DILV_NULL) && (t != DILV_EDP))
+                            {
                                 fail = TRUE; /* type error, expect extraptr */
+                            }
                             break;
                         case DILV_SLP:
                             if ((t != DILV_NULL) && (t != DILV_SLP))
+                            {
                                 fail = TRUE; /* type error, expect stringlist */
+                            }
                             break;
                         case DILV_ILP:
                             if ((t != DILV_NULL) && (t != DILV_SLP))
+                            {
                                 fail = TRUE; /* type error, expect stringlist */
+                            }
                             break;
                     }
                 }
             }
             else
+            {
                 fail = TRUE;
+            }
         }
         else
+        {
             fail = TRUE;
+        }
     }
     else
+    {
         fail = TRUE;
+    }
 
     if (fail)
     {
@@ -1187,7 +1311,9 @@ void dilfi_rsfunc(class dilprg *p)
 
         delete v1;
         for (i = 0; (i < argcnt); i++)
+        {
             delete (p->stack.pop());
+        }
     }
     else
     {
@@ -1304,7 +1430,9 @@ void dilfi_ass(class dilprg *p)
                     FREE(*((char **)v1->ref));
             }
             else
+            {
                 dil_typeerr(p, "ordinary string assignment <- hash");
+            }
 
             switch (dil_getval(v2))
             {
@@ -1317,16 +1445,24 @@ void dilfi_ass(class dilprg *p)
 
                 case DILV_HASHSTR:
                     if (v2->ref)
+                    {
                         *((char **)v1->ref) = str_dup(((std::string *)v2->ref)->c_str());
+                    }
                     else
+                    {
                         *((char **)v1->ref) = str_dup("");
+                    }
                     break;
 
                 case DILV_SP:
                     if (v2->val.ptr)
+                    {
                         *((char **)v1->ref) = str_dup((const char *)v2->val.ptr);
+                    }
                     else
+                    {
                         *((char **)v1->ref) = str_dup("");
+                    }
                     break;
 
                 default:
@@ -1357,7 +1493,9 @@ void dilfi_ass(class dilprg *p)
                     ((cNamelist *)v1->ref)->Free();
 
                     if (v2->val.ptr)
+                    {
                         ((cNamelist *)v1->ref)->CopyList((cNamelist *)v2->val.ptr);
+                    }
                     break;
 
                 default:
@@ -1388,7 +1526,9 @@ void dilfi_ass(class dilprg *p)
                     ((cintlist *)v1->ref)->Free();
 
                     if (v2->val.ptr)
+                    {
                         ((cintlist *)v1->ref)->CopyList((cintlist *)v2->val.ptr);
+                    }
                     //         v1->ref=((cintlist *) v2->val.ptr);
                     break;
 
@@ -1536,6 +1676,7 @@ void dilfi_lnk(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("link", p, 2, v1, FAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && v2->val.ptr)
         {
             if (IS_OBJ((class unit_data *)v1->val.ptr) && OBJ_EQP_POS((class unit_data *)v1->val.ptr))
@@ -1549,6 +1690,7 @@ void dilfi_lnk(class dilprg *p)
                 unit_to_unit((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr);
             }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -1562,8 +1704,12 @@ void dilfi_dlc(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("dilcopy", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && v2->val.ptr)
+        {
             dil_copy((char *)v1->val.ptr, (class unit_data *)v2->val.ptr);
+        }
+    }
     delete v1;
     delete v2;
 }
@@ -1577,6 +1723,7 @@ void dilfi_sete(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("sendtext", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && v2->val.ptr && IS_CHAR((class unit_data *)v2->val.ptr))
         {
             if (*((char *)v1->val.ptr) == MULTI_UNIQUE_CHAR && *((char *)v1->val.ptr + 1) == MULTI_PROMPT_CHAR)
@@ -1594,6 +1741,7 @@ void dilfi_sete(class dilprg *p)
                 send_to_char((char *)v1->val.ptr, (class unit_data *)v2->val.ptr);
             }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -1617,7 +1765,9 @@ void dilfi_folo(class dilprg *p)
             if (v1->val.ptr && v2->val.ptr && IS_CHAR((class unit_data *)v1->val.ptr) && IS_CHAR((class unit_data *)v2->val.ptr))
             {
                 if (CHAR_MASTER((class unit_data *)v1->val.ptr))
+                {
                     stop_following((class unit_data *)v1->val.ptr);
+                }
 
                 start_following((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr);
             }
@@ -1637,10 +1787,12 @@ void dilfi_lcri(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("logcrime", p, 3, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_UP, v3, TYPEFAIL_NULL, 1, DILV_INT))
+    {
         if (v1->val.ptr && v2->val.ptr && IS_CHAR((class unit_data *)v1->val.ptr) && IS_CHAR((class unit_data *)v2->val.ptr))
         {
             log_crime((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr, v3->val.num);
         }
+    }
     delete v1;
     delete v2;
     delete v3;
@@ -1658,7 +1810,9 @@ void dilfi_exp(class dilprg *p)
     if (dil_type_check("exp", p, 2, v1, TYPEFAIL_NULL, 1, DILV_INT, v2, FAIL_NULL, 1, DILV_UP))
     {
         if (dil_getval(v1) == DILV_INT)
+        {
             value = v1->val.num;
+        }
 
         if (v2->val.ptr && IS_PC((class unit_data *)v2->val.ptr))
         {
@@ -1685,8 +1839,10 @@ void dilfi_if(class dilprg *p)
     coreptr = bread_ubit32(&(p->fp->pc)); /* else branch */
 
     p->waitcmd--;
-    if (!dil_getbool(v1, p))                       /* might be pointer, but ok! */
+    if (!dil_getbool(v1, p))
+    {                                              /* might be pointer, but ok! */
         p->fp->pc = &(p->fp->tmpl->core[coreptr]); /* choose else branch */
+    }
     delete v1;
 }
 
@@ -1699,6 +1855,7 @@ void dilfi_set(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("set", p, 1, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
         switch (v1->type)
         {
             case DILV_SINT1R:
@@ -1726,6 +1883,7 @@ void dilfi_set(class dilprg *p)
                 dil_typeerr(p, "lvalue set");
                 break;
         }
+    }
     delete v1;
     delete v2;
 }
@@ -1739,6 +1897,7 @@ void dilfi_uset(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("unset", p, 1, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
         switch (v1->type)
         {
             case DILV_FAIL:
@@ -1767,6 +1926,7 @@ void dilfi_uset(class dilprg *p)
                 dil_typeerr(p, "lvalue unset");
                 break;
         }
+    }
     delete v1;
     delete v2;
 }
@@ -1783,8 +1943,12 @@ void dilfi_adl(class dilprg *p)
     {
         case DILV_SLPR:
             if (dil_type_check("addstring", p, 1, v2, FAIL_NULL, 1, DILV_SP))
+            {
                 if (v2->val.ptr)
+                {
                     ((cNamelist *)v1->ref)->dAppendName((char *)v2->val.ptr);
+                }
+            }
             break;
 
         case DILV_FAIL:
@@ -1821,9 +1985,13 @@ void dilfi_inslst(class dilprg *p)
                 if (v1->type == DILV_SLPR)
                 {
                     if (dil_getval(v3) == DILV_INT)
+                    {
                         ((cNamelist *)v1->ref)->InsertName(itoa(v3->val.num), (ubit32)v2->val.num);
+                    }
                     else if (v3->val.ptr)
+                    {
                         ((cNamelist *)v1->ref)->InsertName(((char *)v3->val.ptr), (ubit32)v2->val.num);
+                    }
                 }
                 else if (v1->type == DILV_ILPR)
                 {
@@ -1908,8 +2076,12 @@ void dilfi_sul(class dilprg *p)
 
         case DILV_SLPR:
             if (dil_type_check("substring", p, 1, v2, TYPEFAIL_NULL, 1, DILV_SP))
+            {
                 if (v2->val.ptr)
+                {
                     ((cNamelist *)v1->ref)->RemoveName((char *)v2->val.ptr);
+                }
+            }
             break;
     }
     delete v1;
@@ -1957,6 +2129,7 @@ void dilfi_ade2(class dilprg *p)
                                TYPEFAIL_NULL,
                                1,
                                DILV_SP))
+            {
                 if (v1->ref && v3->val.ptr && v4->val.ptr && (v2->val.ptr || v2->type == DILV_NULL))
                 {
                     // MS2020 XXX BUG HERE
@@ -1965,11 +2138,16 @@ void dilfi_ade2(class dilprg *p)
                     /**((class extra_descr_data **)v1->ref) =
                         (*((class extra_descr_data **)v1->ref))->add((char *)NULL, (char *)v3->val.ptr);*/
                     if (v2->type == DILV_NULL)
+                    {
                         (*((class extra_descr_data **)v1->ref))->names = new cNamelist;
+                    }
                     else
+                    {
                         (*((class extra_descr_data **)v1->ref))->names.CopyList((cNamelist *)v2->val.ptr);
+                    }
                     (*((class extra_descr_data **)v1->ref))->vals.CopyList((cintlist *)v4->val.ptr);
                 }
+            }
 
             break;
     }
@@ -2002,6 +2180,7 @@ void dilfi_ade(class dilprg *p)
 
         case DILV_EDPR:
             if (dil_type_check("addextra", p, 2, v2, TYPEFAIL_NULL, 2, DILV_SLP, DILV_NULL, v3, TYPEFAIL_NULL, 1, DILV_SP))
+            {
                 if (v1->ref && v3->val.ptr && (v2->val.ptr || v2->type == DILV_NULL))
                 {
                     class extra_descr_data *e = new class extra_descr_data((char *)NULL, (char *)v3->val.ptr);
@@ -2010,10 +2189,15 @@ void dilfi_ade(class dilprg *p)
                     /* *((class extra_descr_data **)v1->ref) =
                         (*((class extra_descr_data **)v1->ref))->add((char *)NULL, (char *)v3->val.ptr); */
                     if (v2->type == DILV_NULL)
+                    {
                         (*((class extra_descr_data **)v1->ref))->names = new cNamelist;
+                    }
                     else
+                    {
                         (*((class extra_descr_data **)v1->ref))->names.CopyList((cNamelist *)v2->val.ptr);
+                    }
                 }
+            }
 
             break;
     }
@@ -2043,6 +2227,7 @@ void dilfi_sue(class dilprg *p)
 
         case DILV_EDPR:
             if (dil_type_check("subextra", p, 1, v2, TYPEFAIL_NULL, 1, DILV_SP))
+            {
                 if (v2->val.ptr && v1->ref)
                 {
                     // MS2020 bug, check if exd is NULL
@@ -2070,6 +2255,7 @@ void dilfi_sue(class dilprg *p)
                         // volatile)
                     }
                 }
+            }
             break;
     }
     delete v1;
@@ -2084,6 +2270,7 @@ void dilfi_dst(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("purge", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && !IS_ROOM((class unit_data *)v1->val.ptr))
         {
             if (v1->val.ptr == p->sarg->owner)
@@ -2097,9 +2284,14 @@ void dilfi_dst(class dilprg *p)
                 dil_test_secure(p);
             }
             if (IS_PC((class unit_data *)v1->val.ptr))
+            {
                 if (CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr))
+                {
                     descriptor_close(CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr));
+                }
+            }
         }
+    }
     delete v1;
 }
 
@@ -2112,7 +2304,7 @@ void dilfi_exec(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("exec", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
-
+    {
         if (v1->val.ptr && v2->val.ptr && IS_CHAR((class unit_data *)v2->val.ptr))
         {
             char cmd[MAX_INPUT_LENGTH + 1];
@@ -2154,23 +2346,30 @@ void dilfi_exec(class dilprg *p)
                     {
                         command_interpreter((class unit_data *)v2->val.ptr, cmd);
                         if (p && p->frame)
+                        {
                             dil_test_secure(p);
+                        }
                     }
                 }
                 else
                 {
                     command_interpreter((class unit_data *)v2->val.ptr, cmd);
                     if (p && p->frame)
+                    {
                         dil_test_secure(p);
+                    }
                 }
             }
             else
             {
                 command_interpreter((class unit_data *)v2->val.ptr, cmd);
                 if (p && p->frame)
+                {
                     dil_test_secure(p);
+                }
             }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -2204,7 +2403,9 @@ void dilfi_wit(class dilprg *p)
         else
         {
             if (IS_SET(v1->val.num, p->sarg->mflags) && dil_getbool(v2, p))
+            {
                 p->waitcmd--;
+            }
             else
             {
                 p->fp->pc = oldpc; /* rewind pc to just before command */
@@ -2265,6 +2466,7 @@ void dilfi_act(class dilprg *p)
                        TYPEFAIL_NULL,
                        1,
                        DILV_INT))
+    {
         switch (v6->val.num)
         {
             case TO_CHAR:
@@ -2273,14 +2475,19 @@ void dilfi_act(class dilprg *p)
             case TO_REST:
                 /* these require 1st argument */
                 if (v3->val.ptr)
+                {
                     act((char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num);
+                }
                 break;
 
             case TO_VICT:
             case TO_NOTVICT:
                 if (v5->val.ptr)
+                {
                     act((char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num);
+                }
         }
+    }
     delete v1;
     delete v2;
     delete v3;
@@ -2313,7 +2520,9 @@ void dilfi_on(class dilprg *p)
     brkptr = p->fp->pc + sizeof(ubit32) * (maxlab);
 
     if (dil_getval(v1) != DILV_INT)
+    {
         p->fp->pc = brkptr;
+    }
     else
     {
         if ((v1->val.num >= maxlab) || (v1->val.num < 0))
@@ -2325,9 +2534,13 @@ void dilfi_on(class dilprg *p)
             p->fp->pc += sizeof(ubit32) * (v1->val.num);
             adr = bread_ubit32(&(p->fp->pc));
             if (adr == SKIP)
+            {
                 p->fp->pc = brkptr;
+            }
             else
+            {
                 p->fp->pc = &(p->fp->tmpl->core[adr]);
+            }
         }
     }
     delete v1;
@@ -2343,12 +2556,16 @@ void dilfi_sua(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("subaff", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
         if (v1->val.ptr)
         {
             af = affected_by_spell((class unit_data *)v1->val.ptr, v2->val.num);
             if (af)
+            {
                 destroy_affect(af);
+            }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -2417,6 +2634,7 @@ void dilfi_ada(class dilprg *p)
                        TYPEFAIL_NULL,
                        1,
                        DILV_INT))
+    {
         if ((v1->val.ptr) && is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
             is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
         {
@@ -2444,6 +2662,7 @@ void dilfi_ada(class dilprg *p)
                 create_affect((class unit_data *)v1->val.ptr, &af);
             }
         }
+    }
     delete v1;
     delete v2;
     delete v3;
@@ -2478,11 +2697,13 @@ void dilfi_snd(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("send", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
+    {
         if (v1->val.ptr)
         {
             send_message(p->sarg->owner, (char *)v1->val.ptr);
             dil_test_secure(p);
         }
+    }
     delete v1;
 }
 
@@ -2496,6 +2717,7 @@ void dilfi_snt(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("sendto", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, FAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && v2->val.ptr)
         {
             struct spec_arg sarg;
@@ -2513,6 +2735,7 @@ void dilfi_snt(class dilprg *p)
 
             dil_test_secure(p);
         }
+    }
     delete v1;
     delete v2;
 }
@@ -2528,6 +2751,7 @@ void dilfi_snta(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("sendtoall", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_SP))
+    {
         if (v1->val.ptr && v2->val.ptr)
         {
             class file_index_type *fi;
@@ -2566,6 +2790,7 @@ void dilfi_snta(class dilprg *p)
                 dil_test_secure(p);
             }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -2581,6 +2806,7 @@ void dilfi_sntadil(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("sendtoalldil", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_SP))
+    {
         if (v1->val.ptr && !str_is_empty((char *)v2->val.ptr))
         {
             struct diltemplate *tmpl;
@@ -2591,7 +2817,9 @@ void dilfi_sntadil(class dilprg *p)
             {
                 class dilprg *tp;
                 if (tmpl->nextdude)
+                {
                     slog(LOG_ALL, 0, "INVESTIGATE: DIL sendtoall() we appear to have a nested sendtoall() with nextdude.");
+                }
 
                 for (tp = tmpl->prg_list; tp; tp = tmpl->nextdude)
                 {
@@ -2605,12 +2833,18 @@ void dilfi_sntadil(class dilprg *p)
                            will be null */
 
                         for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->next)
+                        {
                             if (fptr->index == SFUN_DIL_INTERNAL && fptr->data && ((class dilprg *)fptr->data)->fp &&
                                 ((class dilprg *)fptr->data)->fp->tmpl == tmpl)
+                            {
                                 break;
+                            }
+                        }
 
                         if (!fptr)
+                        {
                             continue;
+                        }
 
                         struct spec_arg sarg;
 
@@ -2632,6 +2866,7 @@ void dilfi_sntadil(class dilprg *p)
                 dil_test_secure(p);
             }
         }
+    }
     delete v1;
     delete v2;
 }
@@ -2646,8 +2881,12 @@ void dilfi_log(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("log", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
+    {
         if (v1->val.ptr)
+        {
             szonelog(UNIT_FI_ZONE(p->owner), "%s", (char *)v1->val.ptr);
+        }
+    }
     delete v1;
 }
 
@@ -2662,11 +2901,13 @@ void dilfi_sec(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("secure", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr)
         {
             dil_sub_secure(p->fp, (class unit_data *)v1->val.ptr);
             dil_add_secure(p, (class unit_data *)v1->val.ptr, &(p->fp->tmpl->core[adr]));
         }
+    }
     delete v1;
 }
 
@@ -2678,8 +2919,12 @@ void dilfi_use(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("unsecure", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr)
+        {
             dil_sub_secure(p->fp, (class unit_data *)v1->val.ptr);
+        }
+    }
     delete v1;
 }
 
@@ -2698,12 +2943,14 @@ void dilfi_eqp(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
         if (v1->val.ptr && UNIT_IN((class unit_data *)v1->val.ptr) && IS_CHAR(UNIT_IN((class unit_data *)v1->val.ptr)) &&
             IS_OBJ((class unit_data *)v1->val.ptr) && !equipment(UNIT_IN((class unit_data *)v1->val.ptr), v2->val.num))
         {
             /* Then equip char */
             equip_char(UNIT_IN((class unit_data *)v1->val.ptr), (class unit_data *)v1->val.ptr, v2->val.num);
         }
+    }
     delete v1;
     delete v2;
 }
@@ -2716,8 +2963,12 @@ void dilfi_ueq(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("unequip", p, 1, v1, FAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && IS_OBJ((class unit_data *)v1->val.ptr) && OBJ_EQP_POS((class unit_data *)v1->val.ptr))
+        {
             unequip_object((class unit_data *)v1->val.ptr);
+        }
+    }
     delete v1;
 }
 
@@ -2739,6 +2990,7 @@ void dilfi_pup(class dilprg *p)
     p->waitcmd--;
 
     if (dil_type_check("updatepos", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
+    {
         if (v1->val.ptr && IS_CHAR((class unit_data *)v1->val.ptr))
         {
             update_pos((class unit_data *)v1->val.ptr);
@@ -2748,6 +3000,7 @@ void dilfi_pup(class dilprg *p)
                 dil_test_secure(p);
             }
         }
+    }
     delete v1;
 }
 
@@ -2809,7 +3062,9 @@ class unit_data *hometown_unit(char *str)
 
         split_fi_ref(str, zone, name);
         if ((u = world_room(zone, name)))
+        {
             return u;
+        }
     }
 
     return g_entry_room;

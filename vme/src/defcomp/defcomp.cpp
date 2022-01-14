@@ -126,12 +126,18 @@ int checkcolor(char *cstr)
 int iscomment(char *b)
 {
     while (!isgraph(*b))
+    {
         b++;
+    }
 
     if ((*b == '#') || (*b == '\0') || (*b == '\r') || (*b == '\n'))
+    {
         return (1);
+    }
     else
+    {
         return (0);
+    }
 }
 
 char *convert_line(char *temp, int ln, char *save_buff)
@@ -142,7 +148,9 @@ char *convert_line(char *temp, int ln, char *save_buff)
     int i = 0;
 
     while (!isgraph(*b))
+    {
         b++;
+    }
 
     i = 0;
     while ((isalnum(*b)) || (*b == '_'))
@@ -221,7 +229,9 @@ char *convert_line(char *temp, int ln, char *save_buff)
     if (checkcolor(strval))
     {
         if (save_buff)
+        {
             size = strlen(save_buff) + 1;
+        }
         size += strlen(token) + 1;
         size += strlen(strval) + 1;
         new_buff = new char[size];

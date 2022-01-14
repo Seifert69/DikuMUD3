@@ -31,7 +31,9 @@ void protocol_send_close(cHook *Hook, ubit16 id)
     ubit8 buf[20];
 
     if (!Hook->IsHooked())
+    {
         return;
+    }
 
     memcpy(&(buf[0]), MULTI_TERMINATE, 2);
     memcpy(&(buf[2]), &id, sizeof(id));
@@ -137,7 +139,9 @@ void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, 
     ubit8 *b;
 
     if (!Hook->IsHooked())
+    {
         return;
+    }
 
     if (host)
     {
@@ -177,7 +181,9 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
     assert(id != 0);
 
     if (!Hook->IsHooked())
+    {
         return;
+    }
 
     len = strlen(text) + 1;
 
@@ -193,11 +199,15 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
         {
             c = text[txlen - 1];
             if ((c == '>') || ISNEWL(c))
+            {
                 break;
+            }
         }
 
         if (txlen == 0)
+        {
             txlen = MIN(MAX_TEXT_LEN, len);
+        }
     }
 
     assert(txlen > 0);
@@ -213,7 +223,9 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
     len -= txlen;
 
     if (len > 0)
+    {
         protocol_send_text(Hook, id, &text[txlen], type);
+    }
 #undef MAX_TEXT_LEN
 }
 
@@ -230,7 +242,9 @@ void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *set
     assert(id != 0);
 
     if (!Hook->IsHooked())
+    {
         return;
+    }
 
     len = sizeof(struct terminal_setup_type);
 
@@ -252,7 +266,9 @@ void protocol_send_exchange(cHook *Hook, ubit16 id, const char *mudname)
 
     id = 0;
     if (!Hook->IsHooked())
+    {
         return;
+    }
 
     len = strlen(mudname) + 1;
     slog(LOG_ALL, 0, "Sending Mudname %s, Len %d", mudname, len);
@@ -275,7 +291,9 @@ void protocol_send_color(cHook *Hook, ubit16 id, const char *colorstr)
 
     id = 0;
     if (!Hook->IsHooked())
+    {
         return;
+    }
 
     len = strlen(colorstr) + 1;
     slog(LOG_ALL, 0, "Sending Default Colors to multihost.");
@@ -311,10 +329,14 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, 
     char *data;
 
     if (str)
+    {
         *str = NULL;
+    }
 
     if (!Hook->IsHooked())
+    {
         return 0;
+    }
 
     n = Hook->ReadToQueue();
 
@@ -325,7 +347,9 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, 
     }
 
     if (Hook->qRX.Bytes() < 6)
+    {
         return 0;
+    }
 
     Hook->qRX.Copy((ubit8 *)buf, 6);
 
@@ -348,10 +372,14 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, 
     Hook->qRX.Cut(6);
 
     if (pid)
+    {
         *pid = id;
+    }
 
     if (plen)
+    {
         *plen = len;
+    }
 
     switch (buf[1])
     {
@@ -434,7 +462,9 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, 
         case MULTI_PAGE_CHAR:
         case MULTI_PROMPT_CHAR:
             if (id == 0)
+            {
                 slog(LOG_ALL, 0, "Received text from ID zero!");
+            }
             break; /* Get text */
 
         default:

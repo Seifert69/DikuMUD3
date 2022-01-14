@@ -149,7 +149,9 @@ void dilfe_replace(class dilprg *p)
                                 FREE(buf);*/
                             }
                             else
+                            {
                                 v->type = DILV_FAIL;
+                            }
 
                             break;
                     }
@@ -184,7 +186,9 @@ void dilfe_tolower(class dilprg *p)
             break;
         case DILV_SP:
             if (str_is_empty((char *)v1->val.ptr))
+            {
                 v->val.ptr = NULL;
+            }
             else
             {
                 v->atyp = DILA_EXP;
@@ -219,7 +223,9 @@ void dilfe_toupper(class dilprg *p)
         case DILV_SP:
 
             if (str_is_empty((char *)v1->val.ptr))
+            {
                 v->val.ptr = NULL;
+            }
             else
             {
                 v->atyp = DILA_EXP;
@@ -271,18 +277,26 @@ void dilfe_left(class dilprg *p)
                         break;
                     }
                     if ((int)strlen((char *)v1->val.ptr) < v2->val.num)
+                    {
                         strl = strlen((char *)v1->val.ptr);
+                    }
                     else
+                    {
                         strl = v2->val.num;
+                    }
 
                     if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                    {
                         v->val.ptr = NULL;
+                    }
                     else
                     {
                         v->atyp = DILA_EXP;
                         v->val.ptr = (char *)malloc(strl + 1);
                         for (x = 0; x < strl; x++)
+                        {
                             ((char *)v->val.ptr)[x] = ((char *)v1->val.ptr)[x];
+                        }
                         ((char *)v->val.ptr)[strl] = 0;
                     }
 
@@ -332,18 +346,26 @@ void dilfe_right(class dilprg *p)
                     }
 
                     if ((int)strlen((char *)v1->val.ptr) < v2->val.num)
+                    {
                         strl = strlen((char *)v1->val.ptr);
+                    }
                     else
+                    {
                         strl = v2->val.num;
+                    }
 
                     if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                    {
                         v->val.ptr = NULL;
+                    }
                     else
                     {
                         v->atyp = DILA_EXP;
                         v->val.ptr = malloc(strl + 1);
                         for (x = 0, y = strlen((char *)v1->val.ptr) - strl; x < strl; y++, x++)
+                        {
                             ((char *)v->val.ptr)[x] = ((char *)v1->val.ptr)[y];
+                        }
                         ((char *)v->val.ptr)[strl] = 0;
                     }
 
@@ -403,12 +425,18 @@ void dilfe_mid(class dilprg *p)
                                 break;
                             }
                             else
+                            {
                                 l = v2->val.num;
+                            }
 
                             if ((v2->val.num >= 0) && ((int)strlen((char *)v1->val.ptr) < v3->val.num))
+                            {
                                 r = strlen((char *)v1->val.ptr);
+                            }
                             else
+                            {
                                 r = v3->val.num;
+                            }
 
                             if (r < l)
                             {
@@ -423,13 +451,17 @@ void dilfe_mid(class dilprg *p)
                             strl = (r - l) + 1;
 
                             if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                            {
                                 v->val.ptr = NULL;
+                            }
                             else
                             {
                                 v->atyp = DILA_EXP;
                                 v->val.ptr = malloc(strl + 1);
                                 for (x = 0; l <= r; l++, x++)
+                                {
                                     ((char *)v->val.ptr)[x] = ((char *)v1->val.ptr)[l - 1];
+                                }
                                 ((char *)v->val.ptr)[strl] = 0;
                             }
 
@@ -461,13 +493,19 @@ void dilfe_islt(class dilprg *p)
             break;
         case DILV_UP:
             if (!v1->val.ptr)
+            {
                 v->type = DILV_FAIL;
+            }
             else
             {
                 if (UNIT_IS_LIGHT((class unit_data *)v1->val.ptr))
+                {
                     v->val.num = 1;
+                }
                 else
+                {
                     v->val.num = 0;
+                }
             }
             break;
         default:
@@ -498,7 +536,9 @@ void dilfe_phead(class dilprg *p)
         v->val.ptr = g_unit_list;
     }
     else
+    {
         v->type = DILV_NULL;
+    }
     p->stack.push(v);
 }
 
@@ -512,7 +552,9 @@ void dilfe_ohead(class dilprg *p)
         v->val.ptr = g_obj_head;
     }
     else
+    {
         v->type = DILV_NULL;
+    }
     p->stack.push(v);
 }
 
@@ -526,7 +568,9 @@ void dilfe_nhead(class dilprg *p)
         v->val.ptr = g_npc_head;
     }
     else
+    {
         v->type = DILV_NULL;
+    }
     p->stack.push(v);
 }
 
@@ -540,7 +584,9 @@ void dilfe_rhead(class dilprg *p)
         v->val.ptr = g_room_head;
     }
     else
+    {
         v->type = DILV_NULL;
+    }
     p->stack.push(v);
 }
 
@@ -1018,9 +1064,13 @@ void dilfe_ckpwd(class dilprg *p)
                     if (pwdcompare(crypt((char *)v2->val.ptr, PC_FILENAME((class unit_data *)v1->val.ptr)),
                                    PC_PWD((class unit_data *)v1->val.ptr),
                                    PC_MAX_PASSWORD))
+                    {
                         v->val.num = FALSE;
+                    }
                     else
+                    {
                         v->val.num = TRUE;
+                    }
 
                     break;
                 case DILV_FAIL:
@@ -1063,20 +1113,29 @@ void dilfe_atsp(class dilprg *p)
             {
                 case DILV_UP:
                     if (!v2->val.ptr || !IS_CHAR((class unit_data *)v2->val.ptr))
+                    {
                         v->type = DILV_FAIL;
+                    }
                     else
+                    {
                         switch (dil_getval(v3))
                         {
                             case DILV_UP:
                                 if (!v3->val.ptr)
+                                {
                                     v->type = DILV_FAIL;
+                                }
                                 else
+                                {
                                     switch (dil_getval(v4))
                                     {
                                         case DILV_UP:
                                             if (!v4->val.ptr)
+                                            {
                                                 v->type = DILV_FAIL;
+                                            }
                                             else
+                                            {
                                                 switch (dil_getval(v5))
                                                 {
                                                     case DILV_INT:
@@ -1097,9 +1156,13 @@ void dilfe_atsp(class dilprg *p)
                                                                                   NULL,
                                                                                   0);
                                                                     if (str_is_empty((char *)v6->val.ptr) || ((char *)v6->val.ptr == NULL))
+                                                                    {
                                                                         sa.pEffect = NULL;
+                                                                    }
                                                                     else
+                                                                    {
                                                                         sa.pEffect = str_dup((char *)v6->val.ptr);
+                                                                    }
 
                                                                     /* cast the spell */
                                                                     v->val.num = spell_offensive(&sa, v1->val.num, v5->val.num);
@@ -1127,6 +1190,7 @@ void dilfe_atsp(class dilprg *p)
                                                         v->type = DILV_ERR;
                                                         break;
                                                 }
+                                            }
                                             break;
                                         case DILV_FAIL:
                                         case DILV_NULL:
@@ -1136,6 +1200,7 @@ void dilfe_atsp(class dilprg *p)
                                             v->type = DILV_ERR;
                                             break;
                                     }
+                                }
                                 break;
                             case DILV_FAIL:
                             case DILV_NULL:
@@ -1145,6 +1210,7 @@ void dilfe_atsp(class dilprg *p)
                                 v->type = DILV_ERR;
                                 break;
                         }
+                    }
                     break;
                 default:
                     v->type = DILV_ERR;
@@ -1187,20 +1253,29 @@ void dilfe_cast2(class dilprg *p)
             {
                 case DILV_UP:
                     if (!v2->val.ptr || !IS_CHAR((class unit_data *)v2->val.ptr))
+                    {
                         v->type = DILV_FAIL;
+                    }
                     else
+                    {
                         switch (dil_getval(v3))
                         {
                             case DILV_UP:
                                 if (!v3->val.ptr)
+                                {
                                     v->type = DILV_FAIL;
+                                }
                                 else
+                                {
                                     switch (dil_getval(v4))
                                     {
                                         case DILV_UP:
                                             if (!v4->val.ptr)
+                                            {
                                                 v->type = DILV_FAIL;
+                                            }
                                             else
+                                            {
                                                 switch (dil_getval(v5))
                                                 {
                                                     case DILV_SP:
@@ -1226,6 +1301,7 @@ void dilfe_cast2(class dilprg *p)
                                                         v->type = DILV_ERR;
                                                         break;
                                                 }
+                                            }
                                             break;
                                         case DILV_FAIL:
                                         case DILV_NULL:
@@ -1235,6 +1311,7 @@ void dilfe_cast2(class dilprg *p)
                                             v->type = DILV_ERR;
                                             break;
                                     }
+                                }
 
                                 break;
                             case DILV_FAIL:
@@ -1245,6 +1322,7 @@ void dilfe_cast2(class dilprg *p)
                                 v->type = DILV_ERR;
                                 break;
                         }
+                    }
                     break;
                 case DILV_FAIL:
                 case DILV_NULL:
@@ -1304,17 +1382,27 @@ void dilfe_resta(class dilprg *p)
                     }
 
                     if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                    {
                         strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
+                    }
                     else
+                    {
                         strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                    }
                     strcat(filename, "/units/");
                     strcat(filename, (char *)v1->val.ptr);
                     if (v2->val.ptr)
+                    {
                         v->val.ptr = restore_all_unit(filename, (class unit_data *)v2->val.ptr);
+                    }
                     else
+                    {
                         v->val.ptr = restore_all_unit(filename, p->owner);
+                    }
                     if (v->val.ptr == NULL)
+                    {
                         v->type = DILV_NULL;
+                    }
                     break;
                 case DILV_FAIL:
                     v->type = DILV_FAIL;
@@ -1351,9 +1439,13 @@ void dilfe_opro(class dilprg *p)
             {
                 case DILV_INT:
                     if ((v1->val.num > 0) && (v2->val.num > 0) && (v2->val.num < v1->val.num / 2 - 1))
+                    {
                         v->val.num = open_ended_roll(v1->val.num, v2->val.num);
+                    }
                     else
+                    {
                         v->val.num = 0;
+                    }
                     break;
                 default:
                     v->type = DILV_ERR;
@@ -1383,14 +1475,19 @@ void dilfe_eqpm(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_INT:
                         v->val.ptr = equipment((class unit_data *)v1->val.ptr, v2->val.num);
                         if (v->val.ptr == NULL)
+                        {
                             v->type = DILV_NULL;
+                        }
                         break;
                     case DILV_FAIL:
                     case DILV_NULL:
@@ -1400,6 +1497,7 @@ void dilfe_eqpm(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -1428,14 +1526,20 @@ void dilfe_mel(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
                         if (!v2->val.ptr || !IS_CHAR((class unit_data *)v2->val.ptr))
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             switch (dil_getval(v3))
                             {
                                 case DILV_INT:
@@ -1461,6 +1565,7 @@ void dilfe_mel(class dilprg *p)
                                     v->type = DILV_ERR;
                                     break;
                             }
+                        }
 
                         break;
                     case DILV_FAIL:
@@ -1471,6 +1576,7 @@ void dilfe_mel(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -1501,14 +1607,20 @@ void dilfe_meldam(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
                         if (!v2->val.ptr || !IS_CHAR((class unit_data *)v2->val.ptr))
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             switch (dil_getval(v3))
                             {
                                 case DILV_INT:
@@ -1541,6 +1653,7 @@ void dilfe_meldam(class dilprg *p)
                                     v->type = DILV_ERR;
                                     break;
                             }
+                        }
 
                         break;
                     case DILV_FAIL:
@@ -1551,6 +1664,7 @@ void dilfe_meldam(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -1668,9 +1782,13 @@ void dilfe_ldstr(class dilprg *p)
                     {
                         sstr = NULL;
                         if (p->frame[0].tmpl->zone->dilfilepath)
+                        {
                             strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                        }
                         else
+                        {
                             strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
+                        }
                         strcat(filename, "/strings/");
                         strcat(filename, (char *)v1->val.ptr);
                         v->val.num = load_string(filename, &sstr);
@@ -1682,7 +1800,9 @@ void dilfe_ldstr(class dilprg *p)
                             FREE(sstr);
                         }
                         else
+                        {
                             v2->val.ptr = NULL;
+                        }
                     }
 
                     break;
@@ -1735,16 +1855,24 @@ void dilfe_delstr(class dilprg *p)
             else
             {
                 if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                {
                     strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
+                }
                 else
+                {
                     strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                }
                 strcat(filename, "/strings/");
                 strcat(filename, (char *)v1->val.ptr);
                 ret = remove(filename);
                 if (ret)
+                {
                     v->val.num = TRUE;
+                }
                 else
+                {
                     v->val.num = FALSE;
+                }
             }
             break;
         case DILV_FAIL:
@@ -1785,16 +1913,24 @@ void dilfe_delunit(class dilprg *p)
             else
             {
                 if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                {
                     strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
+                }
                 else
+                {
                     strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                }
                 strcat(filename, "/units/");
                 strcat(filename, (char *)v1->val.ptr);
                 ret = remove(filename);
                 if (ret)
+                {
                     v->val.num = TRUE;
+                }
                 else
+                {
                     v->val.num = FALSE;
+                }
             }
 
             break;
@@ -1841,7 +1977,9 @@ void dilfe_svstr(class dilprg *p)
                             }
                             else if (str_is_empty((char *)v1->val.ptr) || str_is_empty((char *)v2->val.ptr) ||
                                      str_is_empty((char *)v3->val.ptr))
+                            {
                                 v->type = DILV_FAIL;
+                            }
                             else
                             {
                                 if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
@@ -2002,15 +2140,22 @@ void dilfe_visi(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
                         if (!v2->val.ptr)
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             v->val.num = CHAR_CAN_SEE((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr);
+                        }
                         break;
                     case DILV_FAIL:
                     case DILV_NULL:
@@ -2020,6 +2165,7 @@ void dilfe_visi(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -2047,18 +2193,25 @@ void dilfe_oppo(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
                         if (!v2->val.ptr || !IS_CHAR((class unit_data *)v2->val.ptr))
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             v->val.num =
                                 (CHAR_COMBAT((class unit_data *)v1->val.ptr)
                                      ? CHAR_COMBAT((class unit_data *)v1->val.ptr)->FindOpponent((class unit_data *)v2->val.ptr) != NULL
                                      : FALSE);
+                        }
                         break;
                     case DILV_FAIL:
                     case DILV_NULL:
@@ -2068,6 +2221,7 @@ void dilfe_oppo(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -2094,8 +2248,11 @@ void dilfe_gopp(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_INT:
@@ -2129,6 +2286,7 @@ void dilfe_gopp(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -2153,8 +2311,11 @@ void dilfe_gfol(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_INT:
@@ -2184,6 +2345,7 @@ void dilfe_gfol(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
             break;
         case DILV_FAIL:
         case DILV_NULL:
@@ -2208,14 +2370,20 @@ void dilfe_splx(class dilprg *p)
     {
         case DILV_SP:
             if (!v1->val.ptr)
+            {
                 v->type = DILV_FAIL;
+            }
             else
             {
                 const char *c = (const char *)v1->val.ptr;
                 if (str_is_empty(c))
+                {
                     v->val.num = -1;
+                }
                 else
+                {
                     v->val.num = search_block_abbrevs(c, g_SplColl.text, &c);
+                }
             }
             break;
         case DILV_FAIL:
@@ -2250,8 +2418,11 @@ void dilfe_spli(class dilprg *p)
     {
         case DILV_INT:
             if (!is_in(v1->val.num, SPL_ALL, SPL_TREE_MAX - 1))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (v2->type)
                 {
                     case DILV_SINT4R:
@@ -2345,6 +2516,7 @@ void dilfe_spli(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         default:
@@ -2375,13 +2547,18 @@ void dilfe_purs(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr)
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_SP:
                         if ((!v2->val.ptr) || (!*((char *)v2->val.ptr)))
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
                         {
                             int i;
@@ -2389,18 +2566,24 @@ void dilfe_purs(class dilprg *p)
                             v->val.num = 0;
 
                             for (i = 0; i <= MAX_MONEY; i++)
+                            {
                                 if (strcmp((char *)v2->val.ptr, g_money_types[i].abbrev) == 0)
+                                {
                                     break;
+                                }
+                            }
 
                             if (i <= MAX_MONEY)
                             {
                                 /* Note down money-objects in from, and their values */
                                 for (class unit_data *tmp = UNIT_CONTAINS((class unit_data *)v1->val.ptr); tmp; tmp = tmp->next)
+                                {
                                     if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == i)
                                     {
                                         v->val.num = MONEY_AMOUNT(tmp);
                                         break;
                                     }
+                                }
                             }
                         }
                         break;
@@ -2412,6 +2595,7 @@ void dilfe_purs(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -2475,13 +2659,18 @@ void dilfe_path(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr)
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
                         if (!v2->val.ptr)
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
                         {
                             class unit_data *u1, *u2;
@@ -2499,6 +2688,7 @@ void dilfe_path(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -2529,34 +2719,49 @@ void dilfe_cary(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
                         if (!v2->val.ptr)
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             switch (dil_getval(v3))
                             {
                                 case DILV_INT:
                                     if (v3->val.num < 1)
+                                    {
                                         v->type = DILV_FAIL;
+                                    }
                                     else
                                     {
                                         if (!char_can_carry_n((class unit_data *)v1->val.ptr, v3->val.num))
+                                        {
                                             v->val.num = 1;
+                                        }
                                         else if (!char_can_carry_w((class unit_data *)v1->val.ptr,
                                                                    v3->val.num * UNIT_WEIGHT((class unit_data *)v2->val.ptr)))
+                                        {
                                             v->val.num = 2;
+                                        }
                                         else
+                                        {
                                             v->val.num = 0;
+                                        }
                                     }
                                     break;
                                 default:
                                     v->type = DILV_ERR;
                                     break;
                             }
+                        }
                         break;
                     case DILV_FAIL:
                     case DILV_NULL:
@@ -2566,6 +2771,7 @@ void dilfe_cary(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_FAIL:
@@ -2604,8 +2810,11 @@ void dilfe_trmo(class dilprg *p)
         case DILV_NULL:
         case DILV_UP:
             if (v1->val.ptr && !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_FAIL:
@@ -2614,8 +2823,11 @@ void dilfe_trmo(class dilprg *p)
                     case DILV_NULL:
                     case DILV_UP:
                         if (v2->val.ptr && !IS_CHAR((class unit_data *)v2->val.ptr))
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             switch (dil_getval(v3))
                             {
                                 case DILV_FAIL:
@@ -2628,12 +2840,14 @@ void dilfe_trmo(class dilprg *p)
                                     v->type = DILV_ERR;
                                     break;
                             }
+                        }
 
                         break;
                     default:
                         v->type = DILV_ERR;
                         break;
                 }
+            }
             break;
         default:
             v->type = DILV_ERR;
@@ -2702,14 +2916,20 @@ void dilfe_fits(class dilprg *p)
     {
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
                         if (!v2->val.ptr || !IS_OBJ((class unit_data *)v2->val.ptr))
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             switch (dil_getval(v3))
                             {
                                 case DILV_INT:
@@ -2722,6 +2942,7 @@ void dilfe_fits(class dilprg *p)
                                     v->type = DILV_ERR;
                                     break;
                             }
+                        }
                         break;
                     case DILV_NULL:
                     case DILV_FAIL:
@@ -2731,6 +2952,7 @@ void dilfe_fits(class dilprg *p)
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         case DILV_NULL:
@@ -2831,9 +3053,13 @@ void dilfe_skitxt(class dilprg *p)
             v->type = DILV_SP;
             v->atyp = DILA_EXP;
             if ((v1->val.num < SKI_TREE_MAX) && (v1->val.num >= 0) && g_SkiColl.text[v1->val.num])
+            {
                 v->val.ptr = str_dup(g_SkiColl.text[v1->val.num]);
+            }
             else
+            {
                 v->val.ptr = str_dup("");
+            }
             break;
         default:
             v->type = DILV_ERR; /* wrong type */
@@ -2860,9 +3086,13 @@ void dilfe_wpntxt(class dilprg *p)
             if ((v1->val.num < WPN_TREE_MAX) && (v1->val.num >= 0))
             {
                 if (g_WpnColl.text[v1->val.num])
+                {
                     v->val.ptr = str_dup(g_WpnColl.text[v1->val.num]);
+                }
                 else
+                {
                     v->val.ptr = str_dup("");
+                }
             }
             else
             {
@@ -2922,7 +3152,9 @@ void dilfe_atoi(class dilprg *p)
                 v->val.num = atoi((char *)v1->val.ptr);
             }
             else
+            {
                 v->type = DILV_FAIL; /* failed */
+            }
             break;
         default:
             v->type = DILV_ERR; /* Wrong type */
@@ -2950,12 +3182,18 @@ void dilfe_isplayer(class dilprg *p)
                 v->type = DILV_INT;
                 v->atyp = DILA_NONE;
                 if (find_player_id((char *)v1->val.ptr) != -1)
+                {
                     v->val.num = TRUE;
+                }
                 else
+                {
                     v->val.num = FALSE;
+                }
             }
             else
+            {
                 v->type = DILV_FAIL; /* failed */
+            }
             break;
         default:
             v->type = DILV_ERR; /* Wrong type */
@@ -2991,9 +3229,13 @@ void *threadcallout(void *p)
         int rc = ::system((const char *)s.c_str());
 
         if (rc == -1 || WEXITSTATUS(rc) != 0)
+        {
             slog(LOG_BRIEF, 0, "fail system('%s') rc=%d exitstatus=%d", str, rc, WEXITSTATUS(rc));
+        }
         else
+        {
             slog(LOG_BRIEF, 0, "success system('%s') rc=%d exitstatus=%d", str, rc, WEXITSTATUS(rc));
+        }
     }
 
     pthread_exit(NULL);
@@ -3059,25 +3301,37 @@ void dilfe_len(class dilprg *p)
             v->atyp = DILA_NONE;
             v->type = DILV_INT;
             if (v1->val.ptr)
+            {
                 v->val.num = strlen((char *)v1->val.ptr);
+            }
             else
+            {
                 v->val.num = 0;
+            }
             break;
         case DILV_SLP:
             v->atyp = DILA_NONE;
             v->type = DILV_INT;
             if (v1->val.ptr)
+            {
                 v->val.num = ((cNamelist *)v1->val.ptr)->Length();
+            }
             else
+            {
                 v->val.num = 0;
+            }
             break;
         case DILV_ILP:
             v->atyp = DILA_NONE;
             v->type = DILV_INT;
             if (v1->val.ptr)
+            {
                 v->val.num = ((cintlist *)v1->val.ptr)->Length();
+            }
             else
+            {
                 v->val.num = 0;
+            }
             break;
         default:
             v->type = DILV_ERR; /* Wrong type */
@@ -3095,7 +3349,9 @@ long space_quick_count(char *src)
     src += 2;
     ;
     while (isdigit(*src) && rep < (int)sizeof(Buf) - 1)
+    {
         Buf[rep++] = *src++;
+    }
     Buf[rep] = 0;
 
     return (atoi(Buf));
@@ -3146,7 +3402,9 @@ void dilfe_txf(class dilprg *p)
                 FREE(dest);
             }
             else
+            {
                 v->type = DILV_FAIL; /* NULL string */
+            }
             break;
 
         default:
@@ -3239,7 +3497,9 @@ void dilfe_sact(class dilprg *p)
         } // switch
     }     // if
     else
+    {
         v->type = DILV_ERR; /* wrong type */
+    }
 
     p->stack.push(v);
 
@@ -3320,22 +3580,30 @@ void dilfe_gint(class dilprg *p)
         {
             case DIL_GINT_MANAREG:
                 if ((p_u != NULL) && IS_CHAR(p_u))
+                {
                     v->val.num = mana_gain(p_u);
+                }
                 break;
 
             case DIL_GINT_HITREG:
                 if ((p_u != NULL) && IS_CHAR(p_u))
+                {
                     v->val.num = hit_gain(p_u);
+                }
                 break;
 
             case DIL_GINT_MOVEREG:
                 if ((p_u != NULL) && IS_CHAR(p_u))
+                {
                     v->val.num = move_gain(p_u);
+                }
                 break;
 
             case DIL_GINT_EFFDEX:
                 if ((p_u != NULL) && IS_CHAR(p_u))
+                {
                     v->val.num = effective_dex(p_u);
+                }
                 break;
 
             case DIL_GINT_REQXP:
@@ -3348,9 +3616,13 @@ void dilfe_gint(class dilprg *p)
 
             case DIL_GINT_DESCRIPTOR:
                 if ((p_u != NULL) && IS_PC(p_u))
+                {
                     v->val.num = (CHAR_DESCRIPTOR(p_u) != NULL);
+                }
                 else
+                {
                     v->val.num = 1;
+                }
                 break;
 
             case DIL_GINT_CRIMENO:
@@ -3432,12 +3704,18 @@ void dilfe_getw(class dilprg *p)
                 v->val.ptr = str_dup(buf1);
 
                 if (v1->atyp == DILA_NORM && v1->type == DILV_SPR)
+                {
                     memmove(*(char **)v1->ref, c, strlen(c) + 1);
+                }
                 else if (p->sarg->arg == (const char *)v1->val.ptr)
+                {
                     p->sarg->arg = c; /* Update argument as in findunit :) */
+                }
             }
             else
+            {
                 v->type = DILV_FAIL; /* NULL string */
+            }
             break;
         default:
             v->type = DILV_ERR; /* wrong type */
@@ -3472,13 +3750,17 @@ void dilfe_getws(class dilprg *p)
                 tmp = str_dup((char *)v1->val.ptr);
                 ptr = tmp;
                 for (c = strtok(tmp, " "); c && *c; c = strtok(NULL, " "))
+                {
                     words->dAppendName(c);
+                }
                 FREE(ptr);
 
                 v->val.ptr = words;
             }
             else
+            {
                 v->type = DILV_FAIL; /* NULL string */
+            }
             break;
 
         default:
@@ -3530,7 +3812,9 @@ void dilfe_split(class dilprg *p)
                         }
 
                         if (buf)
+                        {
                             words->dAppendName(buf);
+                        }
 
                         v->val.ptr = words;
                         break;
@@ -3608,7 +3892,9 @@ void dilfe_udir(class dilprg *p)
 
                 sPath = (char *)v1->val.ptr;
                 if (sPath.empty())
+                {
                     sPath = ".*";
+                }
 
                 boost::filesystem::path full_path(uPath);
                 boost::filesystem::directory_iterator end_iter;
@@ -3629,6 +3915,7 @@ void dilfe_udir(class dilprg *p)
                 try
                 {
                     if ((boost::filesystem::exists(full_path)) && (boost::filesystem::is_directory(full_path)))
+                    {
                         for (boost::filesystem::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
                         {
                             boost::cmatch what;
@@ -3638,6 +3925,7 @@ void dilfe_udir(class dilprg *p)
                                 words->dAppendName(dir_itr->path().filename().c_str());
                             }
                         }
+                    }
                 }
                 catch (const std::exception &ex)
                 {
@@ -3649,7 +3937,9 @@ void dilfe_udir(class dilprg *p)
                 break;
             }
             else
+            {
                 v->type = DILV_FAIL;
+            }
         }
         break;
         case DILV_FAIL:
@@ -3695,7 +3985,9 @@ void dilfe_sdir(class dilprg *p)
 
                 sPath = (char *)v1->val.ptr;
                 if (sPath.empty())
+                {
                     sPath = ".*";
+                }
 
                 boost::filesystem::path full_path(uPath);
                 boost::filesystem::directory_iterator end_iter;
@@ -3715,13 +4007,17 @@ void dilfe_sdir(class dilprg *p)
                 try
                 {
                     if ((boost::filesystem::exists(full_path)) && (boost::filesystem::is_directory(full_path)))
+                    {
                         for (boost::filesystem::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
                         {
                             boost::cmatch what;
 
                             if (regex_match(dir_itr->path().filename().c_str(), what, expression))
+                            {
                                 words->dAppendName(dir_itr->path().filename().c_str());
+                            }
                         }
+                    }
                 }
                 catch (std::exception &ex)
                 {
@@ -3732,7 +4028,9 @@ void dilfe_sdir(class dilprg *p)
                 v->val.ptr = words;
             }
             else
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_FAIL:
         case DILV_NULL:
@@ -3810,15 +4108,21 @@ void dilfe_load(class dilprg *p)
                 if (fi)
                 {
                     if (fi->type == UNIT_ST_ROOM)
+                    {
                         slog(LOG_ALL, 0, "DIL trying to load a room %s@%s.", fi->name, fi->zone->name);
+                    }
                     else
+                    {
                         v->val.ptr = read_unit(fi);
+                    }
                 }
 
                 if (v->val.ptr)
                 {
                     if (IS_MONEY((class unit_data *)v->val.ptr))
+                    {
                         set_money((class unit_data *)v->val.ptr, MONEY_AMOUNT((class unit_data *)v->val.ptr));
+                    }
 
                     unit_to_unit((class unit_data *)v->val.ptr, p->sarg->owner);
                     dil_loadtime_activate((class unit_data *)v->val.ptr);
@@ -3826,10 +4130,14 @@ void dilfe_load(class dilprg *p)
                     v->type = DILV_UP;
                 }
                 else
+                {
                     v->type = DILV_NULL; /* Unit not found */
+                }
             }
             else
+            {
                 v->type = DILV_FAIL; /* NULL string */
+            }
             break;
         default:
             v->type = DILV_ERR; /* wrong type */
@@ -3860,10 +4168,14 @@ void dilfe_getcmd(class dilprg *p)
                     v->type = DILV_CP;
                 }
                 else
+                {
                     v->type = DILV_NULL; /* Unit not found */
+                }
             }
             else
+            {
                 v->type = DILV_FAIL; /* NULL string */
+            }
             break;
         default:
             v->type = DILV_ERR; /* wrong type */
@@ -3897,10 +4209,14 @@ void dilfe_clone(class dilprg *p)
                     v->type = DILV_UP;
                 }
                 else
+                {
                     v->type = DILV_NULL; /* Unit not found */
+                }
             }
             else
+            {
                 v->type = DILV_FAIL; /* NULL string */
+            }
             break;
         default:
             v->type = DILV_ERR; /* wrong type */
@@ -3942,22 +4258,30 @@ void dilfe_plus(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_SP:
             if (v->type != DILV_SP)
+            {
                 v->type = DILV_ERR; /* wrong type */
+            }
             break;
 
         case DILV_INT:
             if (v->type != DILV_INT)
+            {
                 v->type = DILV_ERR; /* wrong type */
+            }
             break;
 
         case DILV_NULL:
             if (v->type != DILV_SP)
+            {
                 v->type = DILV_ERR; /* wrong type */
+            }
             break;
 
         default:
@@ -4053,9 +4377,13 @@ void dilfe_dlf(class dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         if (dil_find((char *)v1->val.ptr, (class unit_data *)v2->val.ptr))
+                        {
                             v->val.num = TRUE;
+                        }
                         else
+                        {
                             v->val.num = FALSE;
+                        }
                     }
                     break;
                 case DILV_NULL:
@@ -4130,11 +4458,13 @@ void dilfe_call(class dilprg *p)
                                             return;
                                         }
                                         else
+                                        {
                                             szonelog(UNIT_FI_ZONE(p->sarg->owner),
                                                      "DIL %s@%s, Unable to find template %s",
                                                      UNIT_FI_NAME(p->sarg->owner),
                                                      UNIT_FI_ZONENAME(p->sarg->owner),
                                                      (char *)v1->val.ptr);
+                                        }
                                     }
                                     break;
                                 case DILV_NULL:
@@ -4252,9 +4582,13 @@ void dilfe_div(class dilprg *p)
                     v->type = DILV_INT;
                     v->atyp = DILA_NONE;
                     if (v2->val.num == 0)
+                    {
                         v->type = DILV_FAIL;
+                    }
                     else
+                    {
                         v->val.num = v1->val.num / v2->val.num;
+                    }
                     break;
                 case DILV_FAIL:
                     v->type = DILV_FAIL;
@@ -4291,9 +4625,13 @@ void dilfe_mod(class dilprg *p)
                     v->type = DILV_INT;
                     v->atyp = DILA_NONE;
                     if (v2->val.num == 0)
+                    {
                         v->type = DILV_FAIL;
+                    }
                     else
+                    {
                         v->val.num = v1->val.num % v2->val.num;
+                    }
                     break;
                 case DILV_FAIL:
                     v->type = DILV_FAIL;
@@ -4329,7 +4667,9 @@ void dilfe_and(class dilprg *p)
         v->val.num = v1->val.num & v2->val.num;
     }
     else
+    {
         v->type = DILV_FAIL;
+    }
 
     delete v1;
     delete v2;
@@ -4362,9 +4702,13 @@ void dilfe_or(class dilprg *p)
     v->atyp = DILA_NONE;
 
     if ((dil_getval(v1) == DILV_INT) && (dil_getval(v2) == DILV_INT))
+    {
         v->val.num = v1->val.num | v2->val.num;
+    }
     else
+    {
         v->type = DILV_FAIL;
+    }
     p->stack.push(v);
     delete v1;
     delete v2;
@@ -4397,6 +4741,7 @@ void dilfe_isa(class dilprg *p)
     {
         case DILV_UP:
             if (v1->val.ptr)
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_INT:
@@ -4410,9 +4755,11 @@ void dilfe_isa(class dilprg *p)
                         v->type = DILV_ERR; /* wrong type */
                         break;
                 }
-
+            }
             else
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_NULL:
         case DILV_FAIL:
@@ -4490,10 +4837,14 @@ void dilfe_fndr(class dilprg *p)
                 split_fi_ref((char *)v1->val.ptr, buf1, buf2);
                 v->val.ptr = world_room(buf1, buf2);
                 if (v->val.ptr == NULL)
+                {
                     v->type = DILV_NULL; /* not found */
+                }
             }
             else
+            {
                 v->type = DILV_NULL; /* not found */
+            }
 
             break;
         case DILV_NULL:
@@ -4525,10 +4876,14 @@ void dilfe_fndz(class dilprg *p)
             {
                 v->val.ptr = find_zone((const char *)v1->val.ptr);
                 if (v->val.ptr == NULL)
+                {
                     v->type = DILV_NULL; /* not found */
+                }
             }
             else
+            {
                 v->type = DILV_NULL; /* not found */
+            }
 
             break;
         case DILV_NULL:
@@ -4562,12 +4917,16 @@ void dilfe_fnds2(class dilprg *p)
 
         case DILV_UP:
             if (v1->val.ptr)
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_SP:
                         if (v2->val.ptr == NULL)
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             switch (dil_getval(v3))
                             {
                                 case DILV_INT:
@@ -4578,7 +4937,9 @@ void dilfe_fnds2(class dilprg *p)
                                     split_fi_ref((char *)v2->val.ptr, buf1, buf2);
                                     class file_index_type *fi = find_file_index(buf1, buf2);
                                     if (fi)
+                                    {
                                         v->val.ptr = fi->find_symbolic_instance_ref((class unit_data *)v1->val.ptr, v3->val.num);
+                                    }
                                     else
                                     {
                                         v->val.ptr = NULL;
@@ -4596,6 +4957,7 @@ void dilfe_fnds2(class dilprg *p)
                                     v->type = DILV_ERR; /* wrong type */
                                     break;
                             }
+                        }
 
                         break;
                     case DILV_FAIL:
@@ -4608,8 +4970,11 @@ void dilfe_fnds2(class dilprg *p)
                         v->type = DILV_ERR; /* wrong type */
                         break;
                 }
+            }
             else
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_NULL:
             v->type = DILV_NULL; /* not found */
@@ -4655,7 +5020,9 @@ void dilfe_fndsidx(class dilprg *p)
                         v->val.ptr = find_symbolic_idx(buf1, buf2, v2->val.num);
 
                         if (v->val.ptr == NULL)
+                        {
                             v->type = DILV_NULL; /* not found */
+                        }
                         break;
                     case DILV_FAIL:
                         v->type = DILV_FAIL;
@@ -4669,7 +5036,9 @@ void dilfe_fndsidx(class dilprg *p)
                 }
             }
             else
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_NULL:
             v->type = DILV_NULL; /* not found */
@@ -4708,7 +5077,9 @@ void dilfe_fnds(class dilprg *p)
             split_fi_ref((char *)v1->val.ptr, buf1, buf2);
             v->val.ptr = find_symbolic(buf1, buf2);
             if (v->val.ptr == NULL)
+            {
                 v->type = DILV_NULL; /* not found */
+            }
             break;
         default:
             v->type = DILV_ERR; /* wrong type */
@@ -4963,7 +5334,9 @@ void dilfe_slt(class dilprg *p)
                 case DILV_NULL:
                     v->atyp = DILA_NONE;
                     if (((char *)v1->val.ptr == NULL) || ((char *)v2->val.ptr == NULL))
+                    {
                         v->val.num = FALSE;
+                    }
                     else
                     {
                         s1 = str_dup((char *)v1->val.ptr);
@@ -4971,9 +5344,13 @@ void dilfe_slt(class dilprg *p)
                         str_lower(s1);
                         str_lower(s2);
                         if (strcmp(s1, s2) < 0)
+                        {
                             v->val.num = TRUE;
+                        }
                         else
+                        {
                             v->val.num = FALSE;
+                        }
                         FREE(s1);
                         FREE(s2);
                     }
@@ -5017,7 +5394,9 @@ void dilfe_sgt(class dilprg *p)
                 case DILV_NULL:
                     v->atyp = DILA_NONE;
                     if (((char *)v1->val.ptr == NULL) || ((char *)v2->val.ptr == NULL))
+                    {
                         v->val.num = FALSE;
+                    }
                     else
                     {
                         s1 = str_dup((char *)v1->val.ptr);
@@ -5025,9 +5404,13 @@ void dilfe_sgt(class dilprg *p)
                         str_lower(s1);
                         str_lower(s2);
                         if (strcmp(s1, s2) > 0)
+                        {
                             v->val.num = TRUE;
+                        }
                         else
+                        {
                             v->val.num = FALSE;
+                        }
                         FREE(s1);
                         FREE(s2);
                     }
@@ -5071,7 +5454,9 @@ void dilfe_sle(class dilprg *p)
                 case DILV_NULL:
                     v->atyp = DILA_NONE;
                     if (((char *)v1->val.ptr == NULL) || ((char *)v2->val.ptr == NULL))
+                    {
                         v->val.num = FALSE;
+                    }
                     else
                     {
                         s1 = str_dup((char *)v1->val.ptr);
@@ -5079,9 +5464,13 @@ void dilfe_sle(class dilprg *p)
                         str_lower(s1);
                         str_lower(s2);
                         if (strcmp(s1, s2) <= 0)
+                        {
                             v->val.num = TRUE;
+                        }
                         else
+                        {
                             v->val.num = FALSE;
+                        }
                         FREE(s1);
                         FREE(s2);
                     }
@@ -5125,7 +5514,9 @@ void dilfe_sge(class dilprg *p)
                 case DILV_NULL:
                     v->atyp = DILA_NONE;
                     if (((char *)v1->val.ptr == NULL) || ((char *)v2->val.ptr == NULL))
+                    {
                         v->val.num = FALSE;
+                    }
                     else
                     {
                         s1 = str_dup((char *)v1->val.ptr);
@@ -5133,9 +5524,13 @@ void dilfe_sge(class dilprg *p)
                         str_lower(s1);
                         str_lower(s2);
                         if (strcmp(s1, s2) >= 0)
+                        {
                             v->val.num = TRUE;
+                        }
                         else
+                        {
                             v->val.num = FALSE;
+                        }
                         FREE(s1);
                         FREE(s2);
                     }
@@ -5188,13 +5583,17 @@ void dilfe_se(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_SP:
             break;
         case DILV_NULL:
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v->type = DILV_NULL; /* null pointer */
+            }
             break;
         default:
             v->type = DILV_ERR;
@@ -5206,9 +5605,13 @@ void dilfe_se(class dilprg *p)
         case DILV_INT:
             v->atyp = DILA_NONE;
             if (str_is_empty((char *)v1->val.ptr) || str_is_empty((char *)v2->val.ptr))
+            {
                 v->val.num = (str_is_empty((char *)v1->val.ptr) && str_is_empty((char *)v2->val.ptr));
+            }
             else
+            {
                 v->val.num = !str_ccmp((char *)v1->val.ptr, (char *)v2->val.ptr);
+            }
             break;
         case DILV_NULL:
             v->atyp = DILA_NONE;
@@ -5249,7 +5652,9 @@ void dilfe_sne(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_NULL:
@@ -5266,9 +5671,13 @@ void dilfe_sne(class dilprg *p)
         case DILV_INT:
             v->atyp = DILA_NONE;
             if (str_is_empty((char *)v1->val.ptr) || str_is_empty((char *)v2->val.ptr))
+            {
                 v->val.num = (!str_is_empty((char *)v1->val.ptr) || !str_is_empty((char *)v2->val.ptr));
+            }
             else
+            {
                 v->val.num = (str_ccmp((char *)v1->val.ptr, (char *)v2->val.ptr) != 0);
+            }
             break;
     }
 
@@ -5354,15 +5763,25 @@ void dilfe_pe(class dilprg *p)
     {
         v->atyp = DILA_NONE;
         if (v1->val.ptr && ilp1 && n2)
+        {
             v->val.num = ((((cintlist *)v1->val.ptr)->Length()) == 0);
+        }
         else if (v2->val.ptr && ilp2 && n1)
+        {
             v->val.num = ((((cintlist *)v2->val.ptr)->Length()) == 0);
+        }
         else if (v1->val.ptr && slp1 && n2)
+        {
             v->val.num = ((((cNamelist *)v1->val.ptr)->Length()) == 0);
+        }
         else if (v2->val.ptr && slp2 && n1)
+        {
             v->val.num = ((((cNamelist *)v2->val.ptr)->Length()) == 0);
+        }
         else
+        {
             v->val.num = (v1->val.ptr == v2->val.ptr);
+        }
     }
     p->stack.push(v);
     delete v1;
@@ -5439,15 +5858,25 @@ void dilfe_pne(class dilprg *p)
     {
         v->atyp = DILA_NONE;
         if (v1->val.ptr && ilp1 && n2)
+        {
             v->val.num = ((((cintlist *)v1->val.ptr)->Length()) != 0);
+        }
         else if (v2->val.ptr && ilp2 && n1)
+        {
             v->val.num = ((((cintlist *)v2->val.ptr)->Length()) != 0);
+        }
         else if (v1->val.ptr && slp1 && n2)
+        {
             v->val.num = ((((cNamelist *)v1->val.ptr)->Length()) != 0);
+        }
         else if (v2->val.ptr && slp2 && n1)
+        {
             v->val.num = ((((cNamelist *)v2->val.ptr)->Length()) != 0);
+        }
         else
+        {
             v->val.num = (v1->val.ptr != v2->val.ptr);
+        }
     }
     p->stack.push(v);
     delete v1;
@@ -5509,23 +5938,35 @@ void dilfe_in(class dilprg *p)
 
         case DILV_SLP:
             if (v2->val.ptr)
+            {
                 v->type = DILV_SLP;
+            }
             else
+            {
                 v->type = DILV_NULL; /* not found */
+            }
             break;
 
         case DILV_EDP:
             if (v2->val.ptr)
+            {
                 v->type = DILV_EDP;
+            }
             else
+            {
                 v->type = DILV_NULL; /* not found */
+            }
             break;
 
         case DILV_SP:
             if (v2->val.ptr)
+            {
                 v->type = DILV_INT;
+            }
             else
+            {
                 v->type = DILV_NULL; /* not found */
+            }
             break;
 
         case DILV_NULL:
@@ -5545,9 +5986,13 @@ void dilfe_in(class dilprg *p)
 
         case DILV_SP:
             if (v1->val.ptr)
+            {
                 break;
+            }
             else
+            {
                 v->type = DILV_FAIL;
+            }
 
         case DILV_NULL:
             v->type = DILV_NULL;
@@ -5566,16 +6011,22 @@ void dilfe_in(class dilprg *p)
             v->type = DILV_INT;
             v->val.num = 0;
             if (v1->val.ptr)
+            {
                 v->val.num = 1 + (((cNamelist *)v2->val.ptr)->IsNameIdx((char *)v1->val.ptr));
+            }
             break;
 
         case DILV_EDP:
             v->atyp = DILA_NORM;
             v->type = DILV_EDP;
-            if (v1->val.ptr && v2->val.ptr) // MS2020 BUG
+            if (v1->val.ptr && v2->val.ptr)
+            { // MS2020 BUG
                 v->val.ptr = ((class extra_descr_data *)v2->val.ptr)->find_raw(skip_spaces((char *)v1->val.ptr));
+            }
             else
+            {
                 v->val.ptr = NULL;
+            }
             break;
 
         case DILV_INT:
@@ -5583,9 +6034,13 @@ void dilfe_in(class dilprg *p)
             v->type = DILV_INT;
             v->val.num = FALSE;
             if ((t1 == DILV_SP) && (t2 == DILV_SP) && v1->val.ptr && v2->val.ptr)
+            {
                 v->val.num = str_cstr((const char *)v2->val.ptr, (const char *)v1->val.ptr) != NULL;
+            }
             else
+            {
                 break;
+            }
     }
     p->stack.push(v);
     delete v1;
@@ -5619,13 +6074,17 @@ void dilfe_strcmp(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_SP:
             break;
         case DILV_NULL:
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v->type = DILV_NULL; /* null pointer */
+            }
             break;
         default:
             v->type = DILV_ERR;
@@ -5691,13 +6150,17 @@ void dilfe_strncmp(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_SP:
             break;
         case DILV_NULL:
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v->type = DILV_NULL; /* null pointer */
+            }
             break;
         default:
             v->type = DILV_ERR;
@@ -5741,9 +6204,13 @@ void dilfe_fndu2(class dilprg *p)
 
         case DILV_UP:
             if (v1->val.ptr)
+            {
                 v->type = DILV_UP;
+            }
             else
+            {
                 v->type = DILV_NULL; /* not applicable UP */
+            }
             break;
 
         case DILV_NULL:
@@ -5759,22 +6226,30 @@ void dilfe_fndu2(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_SP:
             if (v->type != DILV_ERR)
             {
                 if (!v2->val.ptr)
+                {
                     v->type = DILV_NULL; /* not applicable SP */
+                }
                 else if (!*((char *)v2->val.ptr))
+                {
                     v->type = DILV_NULL; /* not applicable SP */
+                }
             }
             break;
 
         case DILV_NULL:
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v->type = DILV_NULL; /* not applicable */
+            }
             break;
 
         default:
@@ -5786,7 +6261,9 @@ void dilfe_fndu2(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_INT:
@@ -5801,7 +6278,9 @@ void dilfe_fndu2(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_UP:
@@ -5809,7 +6288,9 @@ void dilfe_fndu2(class dilprg *p)
 
         case DILV_NULL: /* null pointer */
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v4->val.ptr = NULL;
+            }
             break;
 
         default:
@@ -5820,7 +6301,9 @@ void dilfe_fndu2(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_INT:
@@ -5839,15 +6322,23 @@ void dilfe_fndu2(class dilprg *p)
         v->val.ptr = find_unit_dil((class unit_data *)v1->val.ptr, &c, (class unit_data *)v4->val.ptr, v3->val.num, v5->val.num);
 
         if (v2->atyp == DILA_NORM && v2->type == DILV_SPR)
+        {
             memmove(v2->val.ptr, c, strlen(c) + 1);
+        }
         else if (p->sarg->arg == (const char *)v2->val.ptr)
+        {
             p->sarg->arg = c; /* Update argument if argument is argument! :) */
+        }
 
         if (!v->val.ptr)
+        {
             v->type = DILV_NULL;
+        }
     }
     else
+    {
         v->type = DILV_FAIL;
+    }
     p->stack.push(v);
     delete v1;
     delete v2;
@@ -5873,9 +6364,13 @@ void dilfe_fndu(class dilprg *p)
 
         case DILV_UP:
             if (v1->val.ptr)
+            {
                 v->type = DILV_UP;
+            }
             else
+            {
                 v->type = DILV_NULL; /* not applicable UP */
+            }
             break;
 
         case DILV_NULL:
@@ -5891,22 +6386,30 @@ void dilfe_fndu(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_SP:
             if (v->type != DILV_ERR)
             {
                 if (!v2->val.ptr)
+                {
                     v->type = DILV_NULL; /* not applicable SP */
+                }
                 else if (!*((char *)v2->val.ptr))
+                {
                     v->type = DILV_NULL; /* not applicable SP */
+                }
             }
             break;
 
         case DILV_NULL:
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v->type = DILV_NULL; /* not applicable */
+            }
             break;
 
         default:
@@ -5918,7 +6421,9 @@ void dilfe_fndu(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_INT:
@@ -5933,7 +6438,9 @@ void dilfe_fndu(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_UP:
@@ -5941,7 +6448,9 @@ void dilfe_fndu(class dilprg *p)
 
         case DILV_NULL: /* null pointer */
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v4->val.ptr = NULL;
+            }
             break;
 
         default:
@@ -5957,15 +6466,23 @@ void dilfe_fndu(class dilprg *p)
         v->val.ptr = find_unit_dil((class unit_data *)v1->val.ptr, &c, (class unit_data *)v4->val.ptr, v3->val.num);
 
         if (v2->atyp == DILA_NORM && v2->type == DILV_SPR)
+        {
             memmove(v2->val.ptr, c, strlen(c) + 1);
+        }
         else if (p->sarg->arg == (const char *)v2->val.ptr)
+        {
             p->sarg->arg = c; /* Update argument if argument is argument! :) */
+        }
 
         if (!v->val.ptr)
+        {
             v->type = DILV_NULL;
+        }
     }
     else
+    {
         v->type = DILV_FAIL;
+    }
     p->stack.push(v);
     delete v1;
     delete v2;
@@ -5989,9 +6506,13 @@ void dilfe_fndru(class dilprg *p)
             break;
         case DILV_UP:
             if (v1->val.ptr)
+            {
                 v->type = DILV_UP;
+            }
             else
+            {
                 v->type = DILV_NULL; /* not applicable UP */
+            }
             break;
         case DILV_NULL:
             v->type = DILV_NULL;
@@ -6005,14 +6526,18 @@ void dilfe_fndru(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_INT:
             break;
 
         case DILV_NULL:
             if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
                 v->type = DILV_NULL; /* not applicable */
+            }
             break;
         default:
             v->type = DILV_ERR; /* wrong type */
@@ -6023,7 +6548,9 @@ void dilfe_fndru(class dilprg *p)
     {
         case DILV_FAIL:
             if (v->type != DILV_ERR)
+            {
                 v->type = DILV_FAIL;
+            }
             break;
         case DILV_INT:
             break;
@@ -6038,10 +6565,14 @@ void dilfe_fndru(class dilprg *p)
         v->val.ptr = random_unit((class unit_data *)v1->val.ptr, v2->val.num, v3->val.num);
 
         if (!v->val.ptr)
+        {
             v->type = DILV_NULL;
+        }
     }
     else
+    {
         v->type = DILV_FAIL;
+    }
 
     p->stack.push(v);
     delete v1;
@@ -6286,9 +6817,13 @@ void dilfe_powe(class dilprg *p)
     v->atyp = DILA_NONE;
 
     if (p->sarg->pInt)
+    {
         v->ref = (sbit32 *)p->sarg->pInt;
+    }
     else
+    {
         v->ref = (int *)&dummy;
+    }
     p->stack.push(v);
 }
 
@@ -6301,7 +6836,9 @@ void dilfe_cmst(class dilprg *p)
     v->atyp = DILA_NORM;
 
     if (p->sarg->cmd->cmd_str)
+    {
         v->val.ptr = (char *)p->sarg->cmd->cmd_str;
+    }
     else
     {
         v->type = DILV_NULL;
@@ -6319,7 +6856,9 @@ void dilfe_excmst(class dilprg *p)
     v->atyp = DILA_NORM;
 
     if (p->sarg->cmd->excmd)
+    {
         v->val.ptr = (char *)p->sarg->cmd->excmd;
+    }
     else
     {
         v->type = DILV_NULL;
@@ -6337,7 +6876,9 @@ void dilfe_excmstc(class dilprg *p)
     v->atyp = DILA_NORM;
 
     if (p->sarg->cmd->excmdc)
+    {
         v->val.ptr = (char *)p->sarg->cmd->excmdc;
+    }
     else
     {
         v->type = DILV_NULL;
@@ -6354,7 +6895,9 @@ void dilfe_argm(class dilprg *p)
     v->type = DILV_SP;
     v->atyp = DILA_NORM;
     if (p->sarg->arg)
+    {
         v->val.ptr = (char *)p->sarg->arg;
+    }
     else
     {
         v->type = DILV_NULL;
@@ -6405,7 +6948,9 @@ void dilfe_cmds(class dilprg *p)
                 v->val.num = is_command(p->sarg->cmd, (char *)v1->val.ptr);
             }
             else
+            {
                 v->type = DILV_FAIL;
+            }
             break;
 
         case DILV_INT:
@@ -6436,8 +6981,11 @@ void dilfe_pck(class dilprg *p)
             break;
         case DILV_UP:
             if (!v1->val.ptr || !IS_CHAR((class unit_data *)v1->val.ptr))
+            {
                 v->type = DILV_FAIL;
+            }
             else
+            {
                 switch (dil_getval(v2))
                 {
                     case DILV_FAIL:
@@ -6446,14 +6994,19 @@ void dilfe_pck(class dilprg *p)
                         break;
                     case DILV_UP:
                         if (!v2->val.ptr)
+                        {
                             v->type = DILV_FAIL;
+                        }
                         else
+                        {
                             v->val.num = pay_point_charlie((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr);
+                        }
                         break;
                     default:
                         v->type = DILV_ERR;
                         break;
                 }
+            }
 
             break;
         default:
@@ -6512,6 +7065,7 @@ void dilfe_act(class dilprg *p)
                        TYPEFAIL_NULL,
                        1,
                        DILV_INT))
+    {
         switch (v6->val.num)
         {
             case TO_CHAR:
@@ -6520,7 +7074,9 @@ void dilfe_act(class dilprg *p)
             case TO_REST:
                 /* these require 1st argument */
                 if (v3->val.ptr)
+                {
                     act_generate(buf, (char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num, (class unit_data *)v3->val.ptr);
+                }
                 v->type = DILV_SP;
                 v->atyp = DILA_EXP;
                 v->val.ptr = str_dup(buf);
@@ -6529,12 +7085,15 @@ void dilfe_act(class dilprg *p)
             case TO_VICT:
             case TO_NOTVICT:
                 if (v5->val.ptr)
+                {
                     act_generate(buf, (char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num, (class unit_data *)v5->val.ptr);
+                }
                 v->type = DILV_SP;
                 v->atyp = DILA_EXP;
                 v->val.ptr = str_dup(buf);
                 break;
         }
+    }
     p->stack.push(v);
     delete v1;
     delete v2;

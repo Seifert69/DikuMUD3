@@ -25,8 +25,12 @@ ubit1 raw_destruct_affect(class unit_affected_type *af)
 ubit1 skill_overflow(int skill, int change, ubit1 set)
 {
     if (set)
+    {
         if (skill < 1)
+        {
             return TRUE;
+        }
+    }
 
     return FALSE;
 }
@@ -41,7 +45,9 @@ ubit1 apf_mod_char_flags(class unit_affected_type *af, class unit_data *unit, ub
     assert(IS_CHAR(unit));
 
     if (set)
+    {
         SET_BIT(CHAR_FLAGS(unit), (ubit32)af->data[0]);
+    }
     else
     {
         REMOVE_BIT(CHAR_FLAGS(unit), (ubit32)af->data[0]);
@@ -53,8 +59,12 @@ ubit1 apf_mod_char_flags(class unit_affected_type *af, class unit_data *unit, ub
         /* these bits set, since a call of this function will    */
         /* remove them                                           */
         for (taf = UNIT_AFFECTED(af->owner); taf; taf = taf->next)
+        {
             if ((taf != af) && (taf->applyf_i == APF_MOD_CHAR_FLAGS))
+            {
                 SET_BIT(CHAR_FLAGS(unit), (ubit32)taf->data[0]);
+            }
+        }
     }
     return TRUE;
 }
@@ -69,7 +79,9 @@ ubit1 apf_mod_obj_flags(class unit_affected_type *af, class unit_data *unit, ubi
     assert(IS_OBJ(unit));
 
     if (set)
+    {
         SET_BIT(OBJ_FLAGS(unit), (ubit32)af->data[0]);
+    }
     else
     {
         REMOVE_BIT(OBJ_FLAGS(unit), (ubit32)af->data[0]);
@@ -81,8 +93,12 @@ ubit1 apf_mod_obj_flags(class unit_affected_type *af, class unit_data *unit, ubi
         /* bits set, since a call of this function will remove   */
         /* them                                                  */
         for (taf = UNIT_AFFECTED(af->owner); taf; taf = taf->next)
+        {
             if ((taf != af) && (taf->applyf_i == APF_MOD_OBJ_FLAGS))
+            {
                 SET_BIT(OBJ_FLAGS(unit), (ubit32)taf->data[0]);
+            }
+        }
     }
     return TRUE;
 }
@@ -95,7 +111,9 @@ ubit1 apf_mod_unit_flags(class unit_affected_type *af, class unit_data *unit, ub
     class unit_affected_type *taf;
 
     if (set)
+    {
         SET_BIT(UNIT_FLAGS(unit), (ubit16)af->data[0]);
+    }
     else
     {
         REMOVE_BIT(UNIT_FLAGS(unit), (ubit16)af->data[0]);
@@ -107,8 +125,12 @@ ubit1 apf_mod_unit_flags(class unit_affected_type *af, class unit_data *unit, ub
         /* these bits set, since a call of this function will    */
         /* remove them                                           */
         for (taf = UNIT_AFFECTED(af->owner); taf; taf = taf->next)
+        {
             if ((taf != af) && (taf->applyf_i == APF_MOD_UNIT_FLAGS))
+            {
                 SET_BIT(UNIT_FLAGS(unit), (ubit16)taf->data[0]);
+            }
+        }
     }
     return TRUE;
 }
@@ -127,7 +149,9 @@ ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit, ubit1 
     if (IS_NPC(unit))
     {
         while (modify > WPN_GROUP_MAX)
+        {
             modify = TREE_PARENT(g_WpnColl.tree, modify);
+        }
     }
 
     if (set)
@@ -135,7 +159,9 @@ ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit, ubit1 
         if (IS_PC(unit))
         {
             if (skill_overflow(PC_WPN_SKILL(unit, modify), af->data[1], set))
+            {
                 return raw_destruct_affect(af);
+            }
             PC_WPN_SKILL(unit, modify) += af->data[1];
         }
         else
@@ -172,7 +198,9 @@ ubit1 apf_skill_adj(class unit_affected_type *af, class unit_data *unit, ubit1 s
         if (IS_PC(unit))
         {
             if (skill_overflow(PC_SKI_SKILL(unit, af->data[0]), af->data[1], set))
+            {
                 return raw_destruct_affect(af);
+            }
             PC_SKI_SKILL(unit, af->data[0]) += af->data[1];
         }
     }
@@ -205,7 +233,9 @@ ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit, ubit1 s
     if (IS_NPC(unit))
     {
         while (modify > SPL_GROUP_MAX)
+        {
             modify = TREE_PARENT(g_SplColl.tree, modify);
+        }
     }
 
     if (set)
@@ -213,7 +243,9 @@ ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit, ubit1 s
         if (IS_PC(unit))
         {
             if (skill_overflow(PC_SPL_SKILL(unit, modify), af->data[1], set))
+            {
                 return raw_destruct_affect(af);
+            }
             PC_SPL_SKILL(unit, modify) += af->data[1];
         }
         else
@@ -247,18 +279,24 @@ ubit1 apf_ability_adj(class unit_affected_type *af, class unit_data *unit, ubit1
     if (set)
     {
         if (skill_overflow(CHAR_ABILITY(unit, af->data[0]), af->data[1], set))
+        {
             return raw_destruct_affect(af);
+        }
         CHAR_ABILITY(unit, af->data[0]) += af->data[1];
 
         if (af->data[0] == ABIL_HP)
+        {
             UNIT_MAX_HIT(unit) = hit_limit(unit);
+        }
     }
     else
     {
         CHAR_ABILITY(unit, af->data[0]) -= af->data[1];
 
         if (af->data[0] == ABIL_HP)
+        {
             UNIT_MAX_HIT(unit) = hit_limit(unit);
+        }
     }
 
     return TRUE;
@@ -268,15 +306,21 @@ ubit1 apf_ability_adj(class unit_affected_type *af, class unit_data *unit, ubit1
 ubit1 apf_light(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     if (!set)
+    {
         af->data[0] = -af->data[0];
+    }
 
     if (IS_ROOM(unit))
+    {
         UNIT_LIGHTS(unit) += af->data[0];
+    }
 
     modify_bright(unit, af->data[0]);
 
     if (!set)
+    {
         af->data[0] = -af->data[0];
+    }
 
     return TRUE;
 }
@@ -286,7 +330,9 @@ ubit1 apf_light(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     if (!IS_CHAR(unit))
+    {
         return TRUE;
+    }
 
     if (!is_in(af->data[0], ARM_CLOTHES, ARM_PLATE) || (af->data[0] < CHAR_NATURAL_ARMOUR(unit)))
     {
@@ -299,11 +345,13 @@ ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit, ub
         class unit_affected_type *taf;
 
         for (taf = UNIT_AFFECTED(unit); taf; taf = taf->next)
+        {
             if ((taf->id == ID_NATURAL_ARMOUR) && (taf != af))
             {
                 af->data[1] = taf->data[1];
                 break;
             }
+        }
 
         CHAR_NATURAL_ARMOUR(unit) = MAX(CHAR_NATURAL_ARMOUR(unit), af->data[0]);
     }
@@ -322,10 +370,14 @@ ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit, ub
 ubit1 apf_speed(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     if (!IS_CHAR(unit))
+    {
         return TRUE;
+    }
 
     if ((af->data[0] < 4) || (af->data[2] < 0))
+    {
         return TRUE;
+    }
 
     if (set)
     {
@@ -334,17 +386,23 @@ ubit1 apf_speed(class unit_affected_type *af, class unit_data *unit, ubit1 set)
         af->data[2] = CHAR_SPEED(unit);
 
         for (taf = UNIT_AFFECTED(unit); taf; taf = taf->next)
+        {
             if ((taf->id == ID_SPEED) && (taf != af))
             {
                 af->data[2] = -1;
                 break;
             }
+        }
 
         if (taf == NULL)
+        {
             CHAR_SPEED(unit) = af->data[0];
+        }
     }
     else
+    {
         CHAR_SPEED(unit) = af->data[2];
+    }
 
     return TRUE;
 }

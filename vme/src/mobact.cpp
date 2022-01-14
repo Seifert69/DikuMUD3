@@ -47,9 +47,13 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
         }
 
         if (IS_SET(fptr->flags, SFB_RANTIME))
+        {
             ticks = number(ticks - ticks / 2, ticks + ticks / 2);
+        }
         if (fptr->event)
+        {
             g_events.remove(special_event, u, fptr);
+        }
         fptr->event = g_events.add(ticks, special_event, u, fptr);
         //      g_events.add(ticks, special_event, u, fptr);
         membug_verify_class(fptr);
@@ -88,18 +92,30 @@ void special_event(void *p1, void *p2)
                     } MS2020 debug */
 
     if (g_cServerConfig.isNoSpecials())
+    {
         return;
+    }
 
     if (!u)
+    {
         return;
+    }
     if (!fptr)
+    {
         return;
+    }
     if (u->is_destructed())
+    {
         return;
+    }
     if (fptr->is_destructed())
+    {
         return;
+    }
     if (fptr->event)
+    {
         fptr->event->func = NULL;
+    }
 
     fptr->event = NULL;
     priority = FALSE;
@@ -107,10 +123,14 @@ void special_event(void *p1, void *p2)
     for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->next)
     {
         if (ftmp == fptr)
+        {
             break;
+        }
 
         if (IS_SET(ftmp->flags, SFB_PRIORITY))
+        {
             priority = TRUE;
+        }
     }
 
     if (!priority)
@@ -139,19 +159,25 @@ void special_event(void *p1, void *p2)
             assert((ret == SFR_SHARE) || (ret == SFR_BLOCK));
         }
         else
+        {
             slog(LOG_ALL, 0, "Null function call!");
+        }
     }
     else // Not executed because SFUN Before it raised priority
     {
         if (fptr->index == SFUN_DIL_INTERNAL)
         {
             if (fptr->heart_beat == 1)
+            {
                 fptr->heart_beat = 5 * PULSE_SEC;
+            }
         }
     }
 
     if (fptr->is_destructed())
+    {
         return;
+    }
 
     if (fptr->heart_beat < PULSE_SEC)
     {
@@ -163,20 +189,28 @@ void special_event(void *p1, void *p2)
         int diltick, i;
         diltick = FALSE;
         if (IS_SET(fptr->flags, SFB_TICK))
+        {
             diltick = TRUE;
+        }
         else if (fptr->data)
         {
             class dilprg *prg = (class dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
+            {
                 if IS_SET (prg->fp->intr[i].flags, SFB_TICK)
                     diltick = TRUE;
+            }
         }
         if (!diltick)
+        {
             return;
+        }
     }
 
     if (!u->is_destructed() && !fptr->is_destructed())
+    {
         SetFptrTimer(u, fptr);
+    }
 }
 
 /* Return TRUE while stopping events */
@@ -191,16 +225,24 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
     if (fptr->index == SFUN_DIL_INTERNAL)
     {
         if (IS_SET(fptr->flags, SFB_TICK))
+        {
             diltick = 1;
+        }
         else if (fptr->data)
         {
             class dilprg *prg = (class dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
+            {
                 if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
+                {
                     diltick = 1;
+                }
+            }
         }
         if (!diltick)
+        {
             return;
+        }
     }
 
     if (IS_SET(fptr->flags, SFB_TICK) || fptr->index == SFUN_DIL_INTERNAL)
@@ -224,10 +266,14 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
 
         //      g_events.add(fptr->heart_beat, special_event, u, fptr);
         if (fptr->event)
+        {
             g_events.remove(special_event, u, fptr);
+        }
 
         if (!u->is_destructed() && !fptr->is_destructed())
+        {
             fptr->event = g_events.add(fptr->heart_beat, special_event, u, fptr);
+        }
     }
 }
 
@@ -236,7 +282,9 @@ void start_all_special(class unit_data *u)
     class unit_fptr *fptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    {
         start_special(u, fptr);
+    }
 }
 
 void stop_all_special(class unit_data *u)
@@ -244,5 +292,7 @@ void stop_all_special(class unit_data *u)
     class unit_fptr *fptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    {
         stop_special(u, fptr);
+    }
 }

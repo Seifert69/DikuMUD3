@@ -83,7 +83,9 @@ void skill_dump(void)
         for (int i = 0; i < SKI_TREE_MAX; i++)
         {
             if (g_SkiColl.text[i] == NULL)
+            {
                 continue;
+            }
 
             str = "";
 
@@ -118,7 +120,9 @@ void skill_dump(void)
 
         std::sort(vect.begin(), vect.end(), pairISCompare);
         for (auto it = vect.begin(); it != vect.end(); ++it)
+        {
             printf("%s", it->second.c_str());
+        }
     }
 
     exit(0);
@@ -131,12 +135,16 @@ void cmd_base_load(void)
     cmd_trie = 0;
 
     for (i = 0; *cmdload[i].cmd_str; i++)
+    {
         cmd_trie = add_trienode(cmdload[i].cmd_str, cmd_trie);
+    }
 
     qsort_triedata(cmd_trie);
 
     for (i = 0; *cmdload[i].cmd_str; i++)
+    {
         set_triedata(cmdload[i].cmd_str, cmd_trie, &cmdload[i], TRUE);
+    }
 
     command_read();
     // skill_dump();
@@ -165,7 +173,9 @@ void command_read(void)
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
         if (mstmp == NULL)
+        {
             continue;
+        }
 
         str_remspc(pTmp);
 
@@ -180,7 +190,9 @@ void command_read(void)
         strip_trailing_blanks(pTmp);
 
         if (pCh == NULL || str_is_empty(pCh))
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "command", 5) == 0)
         {
@@ -225,7 +237,9 @@ void command_read(void)
             continue;
         }
         if (ignore)
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "internal", 4) == 0)
         {
@@ -275,7 +289,9 @@ void command_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_SkiColl.tree[idx].bAutoTrain = dummy;
+            }
             continue;
         }
 
@@ -283,7 +299,9 @@ void command_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_SkiColl.tree[idx].bAutoTeacherNoAdd = dummy;
+            }
             continue;
         }
 
@@ -291,14 +309,20 @@ void command_read(void)
         {
             dummy = atoi(pCh);
             if (!is_in(dummy, -3, +3))
+            {
                 continue;
+            }
 
             int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Skills: Illegal race in: %s", pTmp);
+            }
             else
+            {
                 g_SkiColl.racial[ridx][idx] = dummy;
+            }
             continue;
         }
 
@@ -314,9 +338,13 @@ void command_read(void)
             int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Skills: Illegal profession %s", pTmp);
+            }
             else
+            {
                 g_SkiColl.prof_table[idx].profession_cost[ridx] = dummy;
+            }
             continue;
         }
 
@@ -338,9 +366,13 @@ void command_read(void)
                 int ridx = search_block(pTmp + 9, g_AbiColl.text, TRUE);
 
                 if (ridx == -1)
+                {
                     slog(LOG_ALL, 0, "Weapons: Illegal restrict %s", pTmp);
+                }
                 else
+                {
                     g_SkiColl.prof_table[idx].min_abil[ridx] = dummy;
+                }
             }
             continue;
         }
@@ -362,7 +394,9 @@ void command_read(void)
             {
                 dummy = atoi(pCh);
                 if (is_in(dummy, POSITION_DEAD, POSITION_STANDING))
+                {
                     cmdptr->minimum_position = dummy;
+                }
             }
             continue;
         }
@@ -404,12 +438,16 @@ void command_read(void)
                     FREE(cmdptr->tmpl);
 
                 if (!(cmdptr->tmpl = find_dil_template(pCh)))
+                {
                     slog(LOG_ALL, 0, "COMMAND LOAD WARNING: No such DIL template %s.", pCh);
+                }
             }
             continue;
         }
         if (*pTmp)
+        {
             slog(LOG_ALL, 0, "COMMAND LOAD ERROR: Unexpected text: %s", pTmp);
+        }
     }
 
     if (cmdptr)

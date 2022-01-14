@@ -71,14 +71,22 @@ int _parse_name(const char *arg, char *name)
     /* PC_MAX_NAME-1 = chars */
 
     for (i = 0; (*name = *arg); arg++, i++, name++)
+    {
         if ((*arg <= ' ') || !isalpha(*arg) || (i + 1) > (PC_MAX_NAME - 1))
+        {
             return 1;
+        }
+    }
 
-    if (i <= 2) /* Names must be at least 3 chars due to passwords */
+    if (i <= 2)
+    { /* Names must be at least 3 chars due to passwords */
         return 1;
+    }
 
-    if (fill_word(name - i)) /* Don't allow fillwords */
+    if (fill_word(name - i))
+    { /* Don't allow fillwords */
         return 1;
+    }
 
     touch_file(g_cServerConfig.getFileInEtcDir(BAD_STRINGS_FILE));
     m_pBadStrings = read_info_file(g_cServerConfig.getFileInEtcDir(BAD_STRINGS_FILE), m_pBadStrings);
@@ -86,7 +94,9 @@ int _parse_name(const char *arg, char *name)
     FREE(m_pBadStrings);
 
     if (badstrings.in(name - i))
+    {
         return 2;
+    }
 
     touch_file(g_cServerConfig.getFileInEtcDir(BAD_NAMES_FILE));
     m_pBadNames = read_info_file(g_cServerConfig.getFileInEtcDir(BAD_NAMES_FILE), m_pBadNames);
@@ -94,7 +104,9 @@ int _parse_name(const char *arg, char *name)
     FREE(m_pBadNames);
 
     if (badnames.equal(name - i))
+    {
         return 3;
+    }
 
     str_lower(name);
 
@@ -165,7 +177,9 @@ void pc_data::connect_game(void)
     //  assert (CHAR_DESCRIPTOR (pc));
 
     if (this->is_destructed() || !CHAR_DESCRIPTOR(this))
+    {
         return;
+    }
 
     PC_TIME(this).connect = time(0);
     CHAR_DESCRIPTOR(this)->logon = time(0);
@@ -176,7 +190,9 @@ void pc_data::connect_game(void)
 
     g_no_players++;
     if (g_no_players > g_max_no_players)
+    {
         g_max_no_players = g_no_players;
+    }
 }
 
 void pc_data::disconnect_game(void)
@@ -195,7 +211,9 @@ void pc_data::reconnect_game(class descriptor_data *d)
     // char tbuf[MAX_STRING_LENGTH * 2];
 
     if (this->is_destructed() || !d)
+    {
         return;
+    }
 
     CHAR_DESCRIPTOR(d->character) = NULL;
     extract_unit(d->character); // Toss out the temporary unit and take over the new one
@@ -207,7 +225,9 @@ void pc_data::reconnect_game(class descriptor_data *d)
     ActivateDil(this); // ch could potentially get zapped here.
 
     if (this->is_destructed() || !d)
+    {
         return;
+    }
 
     this->connect_game();
     /* MS2020
@@ -245,11 +265,17 @@ void pc_data::reconnect_game(class descriptor_data *d)
 void update_lasthost(class unit_data *pc, ubit32 s_addr)
 {
     if ((sbit32)s_addr == -1)
+    {
         return;
+    }
 
     for (int i = 0; i < 5; i++)
+    {
         if (PC_LASTHOST(pc)[i] == s_addr)
+        {
             return;
+        }
+    }
 
     memmove(&PC_LASTHOST(pc)[0], &PC_LASTHOST(pc)[1], sizeof(ubit32) * 4);
     PC_LASTHOST(pc)[4] = s_addr;
@@ -261,10 +287,14 @@ void update_lasthost(class unit_data *pc, ubit32 s_addr)
 void pc_data::gstate_tomenu(dilprg *pdontstop)
 {
     if (this->is_destructed())
+    {
         return;
+    }
 
     if (!char_is_playing(this))
+    {
         return;
+    }
 
     // slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
 
@@ -283,7 +313,9 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     CHAR_DESCRIPTOR(this) = NULL;
 
     while (UNIT_CONTAINS(this))
+    {
         extract_unit(UNIT_CONTAINS(this));
+    }
 
     CHAR_DESCRIPTOR(this) = tmp_descr;
 
@@ -306,10 +338,14 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     // char *color;
 
     if (this->is_destructed())
+    {
         return;
+    }
 
-    if (char_is_playing(this)) // Are we in the menu?
+    if (char_is_playing(this))
+    { // Are we in the menu?
         return;
+    }
 
     // slog(LOG_ALL, 0, "DEBUG: To game %s", UNIT_NAME(this));
 
@@ -334,7 +370,9 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         CHAR_LAST_ROOM(this) = NULL;
     }
     else
+    {
         load_room = hometown_unit(PC_HOME(this));
+    }
 
     reset_char(this);
 
@@ -346,10 +384,14 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         snprintf(buf, sizeof(buf), "%s has entered the world.<br/>", UNIT_NAME(this));
 
         for (i = g_descriptor_list; i; i = i->next)
+        {
             if (descriptor_is_playing(i) && i->character != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->character), this) &&
                 IS_PC(CHAR_ORIGINAL(i->character)) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->character)), PC_INFORM) &&
                 !same_surroundings(this, i->character))
+            {
                 send_to_descriptor(buf, i);
+            }
+        }
 
         act("$1n has arrived.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
     }
@@ -366,22 +408,30 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     else
     {
         if (!DILWAY)
+        {
             command_interpreter(this, "look");
+        }
     }
     if (file_exists(ContentsFileName(PC_FILENAME(this))))
     {
         load_contents(PC_FILENAME(this), this);
 
         if (!DILWAY)
+        {
             rent_calc(this, last_connect);
+        }
     }
 
     /*		if (!dilway)*/
     if (strcmp(g_cServerConfig.getImmortalName().c_str(), UNIT_NAME(this)) == 0)
+    {
         CHAR_LEVEL(this) = ULTIMATE_LEVEL;
+    }
 
     if (IS_ULTIMATE(this) && PC_IS_UNSAVED(this))
+    {
         save_player(this);
+    }
 
     start_affect(this); /* Activate affect ticks */
     // start_all_special(this); /* Activate fptr ticks   */
@@ -426,7 +476,9 @@ void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor
         (d->fptr)(d, constStr);
     }
     else
+    {
         d->state = 1;
+    }
 }
 
 /* Return TRUE if help is given (found)... */
@@ -525,7 +577,9 @@ void nanny_throw(class descriptor_data *d, char *arg)
         for (u = g_unit_list; u; u = u->gnext)
         {
             if (!IS_PC(u))
+            {
                 break; // PCs are always first in the list
+            }
 
             if (str_ccmp(PC_FILENAME(d->character), PC_FILENAME(u)) == 0)
             {
@@ -533,7 +587,9 @@ void nanny_throw(class descriptor_data *d, char *arg)
                 //	      assert (UNIT_IN (u));
 
                 if (!UNIT_IN(u))
+                {
                     slog(LOG_ALL, 0, "nanny_throw() player found but not in any units. Debug info - inspect me.");
+                }
 
                 /*
                 // If it's a guest player
@@ -568,7 +624,9 @@ void nanny_throw(class descriptor_data *d, char *arg)
         set_descriptor_fptr(d, nanny_close, TRUE);
     }
     else
+    {
         send_to_descriptor("Throw the other copy out? Please type Yes or No: ", d);
+    }
 }
 
 void nanny_dil(class descriptor_data *d, char *arg)
@@ -642,11 +700,13 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     /* See if guest is in game, if so - a guest was LD       */
     /* Password has now been redefined                       */
     for (u = g_unit_list; u; u = u->gnext)
+    {
         if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0))
         {
             UPC(u)->reconnect_game(d);
             return;
         }
+    }
 
     set_descriptor_fptr(d, nanny_dil, TRUE);
 }
@@ -670,10 +730,16 @@ int check_pwd(class descriptor_data *d, char *pwd)
     bNA = FALSE;
 
     for (i = 0; pwd[i]; i++)
+    {
         if (isalpha(pwd[i]))
+        {
             bA = TRUE;
+        }
         else
+        {
             bNA = TRUE;
+        }
+    }
 
     if (bA == FALSE)
     {
@@ -745,11 +811,13 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
 
     /* determine if this is the terminal string, and truncate if so */
     for (scan = str; *scan; scan++)
+    {
         if ((terminator = (*scan == '@' && scan[1] == '\0')))
         {
             *scan = '\0';
             break;
         }
+    }
 
     if (MAX_STRING_LENGTH - (d->localstr ? strlen(d->localstr) : 0) < strlen(str))
     {
@@ -773,7 +841,9 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
     if (terminator)
     {
         if (d->postedit)
+        {
             d->postedit(d);
+        }
 
         if (d->localstr)
             FREE(d->localstr);
@@ -786,7 +856,9 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
         return TRUE;
     }
     else
+    {
         strcat(d->localstr, "<br/>");
+    }
 
     return FALSE;
 }
@@ -795,7 +867,9 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
 void interpreter_string_add(class descriptor_data *d, char *str)
 {
     if (base_string_add(d, str))
+    {
         set_descriptor_fptr(d, descriptor_interpreter, FALSE);
+    }
 }
 
 /* Removes empty descriptions and makes ONE newline after each. */
@@ -808,9 +882,13 @@ void nanny_fix_descriptions(class unit_data *u)
     for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
     {
         if (exd->names.Name())
+        {
             strcpy(buf, exd->names.Name());
+        }
         else
+        {
             *buf = 0;
+        }
 
         if (!exd->names.Name() || search_block(buf, g_bodyparts, TRUE))
         {
@@ -910,7 +988,9 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
                 d->wait = PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->character) * PULSE_SEC;
             }
             else if (!PC_IS_UNSAVED(d->character))
+            {
                 save_player_file(d->character);
+            }
         }
 
         send_to_descriptor("<br/>Wrong password.<br/>", d);
@@ -939,7 +1019,9 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     for (u = g_unit_list; u; u = u->gnext)
     {
         if (!IS_PC(u))
+        {
             break;
+        }
 
         if (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0)
         {
@@ -991,13 +1073,17 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
     else if (*arg == 'n' || *arg == 'N')
     {
         if (PC_FILENAME(d->character))
+        {
             strcpy(PC_FILENAME(d->character), "");
+        }
         UNIT_NAMES(d->character).Free();
         send_to_descriptor("Ok, what IS it, then? ", d);
         set_descriptor_fptr(d, nanny_get_name, FALSE);
     }
     else
+    {
         send_to_descriptor("Please type Yes or No: ", d);
+    }
 }
 
 void nanny_get_name(class descriptor_data *d, char *arg)

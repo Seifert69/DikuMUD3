@@ -62,7 +62,9 @@ void cMultiHook::Input(int nFlags)
         {
             n = Read();
             if ((n == 0) || (n == -1))
+            {
                 break;
+            }
         }
 
         if (n == -1)
@@ -98,7 +100,9 @@ void cMultiHook::Close(void)
     slog(LOG_ALL, 0, "Closing connection to multi host.");
 
     if (this->IsHooked())
+    {
         Unhook();
+    }
 
     g_Multi.nCount--;
 }
@@ -116,16 +120,20 @@ int cMultiHook::Read(void)
     p = protocol_parse_incoming(this, &id, &len, &data, &text_type);
 
     if (p <= 0)
+    {
         return p;
+    }
 
     if (id != 0)
     {
         for (d = g_descriptor_list; d; d = d->next)
+        {
             if (d->id == id)
             {
                 assert(d->multi == this);
                 break;
             }
+        }
 
         if (d == NULL)
         {
@@ -146,7 +154,9 @@ int cMultiHook::Read(void)
             }
         }
         else
+        {
             succ_err = 0;
+        }
     }
 
     switch (p)
@@ -166,7 +176,9 @@ int cMultiHook::Read(void)
             /* This is very nice, but it prevents descriptor_close to send
                a connection_close to the mplex'er */
             if (d)
+            {
                 descriptor_close(d, FALSE);
+            }
             if (data)
                 FREE(data);
             break;
@@ -226,7 +238,9 @@ void multi_clear(void)
     {
         nextd = d->next;
         if (!d->multi->IsHooked())
+        {
             descriptor_close(d);
+        }
     }
 }
 
@@ -237,7 +251,9 @@ void multi_close_all(void)
     slog(LOG_BRIEF, 0, "Closing all multi connections.");
 
     for (i = 0; i < MAX_MULTI; i++)
+    {
         g_Multi.Multi[i].Close();
+    }
 
     multi_clear();
 }
@@ -247,8 +263,12 @@ void multi_ping_all(void)
     int i;
 
     for (i = 0; i < MAX_MULTI; i++)
+    {
         if (g_Multi.Multi[i].IsHooked())
+        {
             g_Multi.Multi[i].Ping();
+        }
+    }
 }
 
 /* ----------------------------------------------------------------- */
@@ -298,7 +318,9 @@ void cMotherHook::Input(int nFlags)
         i = fcntl(t, F_SETFL, FNDELAY);
 
         if (i == -1)
+        {
             error(HERE, "Noblock");
+        }
 
         int n;
         n = setsockopt(t, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
@@ -309,8 +331,12 @@ void cMotherHook::Input(int nFlags)
         }
 
         for (i = 0; i < MAX_MULTI; i++)
+        {
             if (!g_Multi.Multi[i].IsHooked())
+            {
                 break;
+            }
+        }
 
         if ((i >= MAX_MULTI) || g_Multi.Multi[i].IsHooked())
         {
@@ -344,7 +370,9 @@ void cMotherHook::Unhook(void)
 void cMotherHook::Close(void)
 {
     if (this->IsHooked())
+    {
         Unhook();
+    }
 
     multi_close_all();
 }

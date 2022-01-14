@@ -40,14 +40,18 @@ ubit8 *ids = NULL; /* For checking duplicate players... */
 int sel_name(const struct dirent *dptr)
 {
     if (strchr(dptr->d_name, '.') == NULL)
+    {
         return 1;
+    }
     return 0;
 }
 
 void convert_free_unit(class unit_data *u)
 {
     while (UNIT_CONTAINS(u))
+    {
         convert_free_unit(UNIT_CONTAINS(u));
+    }
 
     UNIT_AFFECTED(u) = NULL;
     UNIT_FUNC(u) = NULL;
@@ -106,7 +110,9 @@ class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList
     }
 
     if (IS_OBJ(u))
+    {
         UNIT_SIZE(u) = UNIT_SIZE(pc);
+    }
 
     return u;
 }
@@ -116,7 +122,9 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
     class unit_data *bla;
 
     if (u == NULL)
+    {
         return;
+    }
 
     convert_inventory(UNIT_CONTAINS(u), pc, bList);
 
@@ -221,7 +229,9 @@ int shall_delete(class unit_data *pc)
 
     /* Player which have paid at some point in time remain almost permanent. */
     if (PC_ACCOUNT(pc).total_credit > 0)
+    {
         return FALSE;
+    }
 
     if ((days > 60) && (CHAR_LEVEL(pc) <= START_LEVEL + 4))
     {
@@ -309,7 +319,9 @@ class unit_data *convert_load_player(char *name)
     }
 
     if (PC_ID(ch) > max_id)
+    {
         max_id = PC_ID(ch);
+    }
 
     return ch;
 }
@@ -331,7 +343,9 @@ void clist()
     listed in the server.cfg file:  "; char cpath[1024]; cpath[0]=0; std::cin.ignore(); std::cin.getline(cpath,1024); ipath=cpath;
     */
     if (ipath.empty())
+    {
         ipath = g_cServerConfig.getFileInLibDir("ply");
+    }
 
     fs::path full_path(ipath);
 
@@ -368,7 +382,9 @@ void clist()
             }
 
             if (!fs::is_directory(full_path))
+            {
                 continue;
+            }
             // std::cout << "\nIn directory: " << full_path << "\n\n";
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
@@ -400,9 +416,13 @@ void clist()
                                   << days_old(PC_TIME(pc).connect) << ";";
 
                         if (ids[PC_ID(pc)])
+                        {
                             std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")";
+                        }
                         else
+                        {
                             ids[PC_ID(pc)] = 1;
+                        }
 
                         shall_exclude(UNIT_NAME(pc));
                         // shall_delete(pc);
@@ -454,9 +474,13 @@ void clist()
                             tmp = true;
                         }
                         if (tmp)
+                        {
                             std::cout << ".";
+                        }
                         else
+                        {
                             std::cout << " Less than an hour";
+                        }
 
                         std::cout << "; " << std::endl;
 
@@ -515,7 +539,9 @@ void convert_file(void)
             }
 
             if (!fs::is_directory(full_path))
+            {
                 continue;
+            }
             std::cout << "\nIn directory: " << full_path << "\n\n";
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
@@ -543,9 +569,13 @@ void convert_file(void)
                         }
 
                         if (ids[PC_ID(pc)])
+                        {
                             std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")" << std::endl;
+                        }
                         else
+                        {
                             ids[PC_ID(pc)] = 1;
+                        }
 
                         std::cout << UNIT_NAME(pc) << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN") << std::endl;
 
@@ -615,7 +645,9 @@ void cleanup(void)
             }
 
             if (!fs::is_directory(full_path))
+            {
                 continue;
+            }
             std::cout << "\nIn directory: " << full_path << "\n\n";
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
@@ -711,11 +743,17 @@ void cleanup_playerfile(int c)
     g_entry_room = new EMPLACE(room_data) room_data;
     g_destroy_room = new EMPLACE(room_data) room_data;
     if (c == 1)
+    {
         convert_file();
+    }
     else if (c == 2)
+    {
         cleanup();
+    }
     else
+    {
         clist();
+    }
 
     printf("\n\nFinished.\n");
 }

@@ -65,19 +65,27 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
     f = fopen_cache(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG), "r+b");
 
     if (fseek(f, 8L, SEEK_SET) != 0)
+    {
         error(HERE, "Unable to seek in account log.");
+    }
     snprintf(buf, sizeof(buf), "%08x", next_crc);
 
     if (fwrite(buf, sizeof(char), 8, f) != 8)
+    {
         error(HERE, "Unable to write 1 in account log.");
+    }
 
     c = buf;
     sprintf(c, "%c %-15s %-15s %8d ", action, UNIT_NAME(god), UNIT_NAME(pc), amount);
 
     if (IS_PC(god))
+    {
         gid = PC_ID(god) ^ (vxor);
+    }
     else
+    {
         gid = 0 ^ (vxor);
+    }
 
     pid = PC_ID(pc) ^ (vxor << 1);
     total = PC_ACCOUNT(pc).total_credit;
@@ -131,6 +139,7 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
     time_t now = time(0);
 
     if (IS_ADMINISTRATOR(ch))
+    {
         snprintf(buf,
                  sizeof(buf),
                  "Credit         : %5.2f\n\r"
@@ -148,12 +157,17 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
                  PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
                  PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
                  PC_ACCOUNT(u).cracks);
+    }
     else
     {
         if (PC_ACCOUNT(u).total_credit > 0)
+        {
             snprintf(buf, sizeof(buf), "Has paid for playing.\n\r");
+        }
         else
+        {
             snprintf(buf, sizeof(buf), "Has NOT yet paid for playing.\n\r");
+        }
     }
 
     send_to_char(buf, ch);
@@ -166,7 +180,9 @@ void account_global_stat(class unit_data *ch)
     int i, j;
 
     if (!g_cServerConfig.isAccounting())
+    {
         return;
+    }
 
     snprintf(buf,
              sizeof(buf),
@@ -277,21 +293,31 @@ static ubit32 seconds_used(ubit8 bhr, ubit8 bmi, ubit8 bse, ubit8 ehr, ubit8 emi
 static int tm_less_than(struct tm *b, struct tm *e)
 {
     if (b->tm_wday != e->tm_wday)
+    {
         return TRUE;
+    }
 
     if (b->tm_hour > e->tm_hour)
+    {
         return FALSE;
+    }
 
     if (b->tm_hour == e->tm_hour)
     {
         if (b->tm_min > e->tm_min)
+        {
             return FALSE;
+        }
         else if (b->tm_min == e->tm_min)
         {
             if (b->tm_sec > e->tm_sec)
+            {
                 return FALSE;
+            }
             else
+            {
                 return TRUE;
+            }
         }
     }
 
@@ -305,7 +331,9 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
     ubit32 secs;
 
     if (PC_ACCOUNT(pc).flatrate > (ubit32)time(0))
+    {
         return;
+    }
 
     bidx = time_to_index(b->tm_hour, b->tm_min);
     assert(bidx < TIME_GRANULARITY);
@@ -333,9 +361,13 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
     float amt = (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / (float)3600.0);
 
     if (is_in(PC_ACCOUNT(pc).discount, 1, 99))
+    {
         PC_ACCOUNT(pc).credit -= (((float)(100 - PC_ACCOUNT(pc).discount)) * amt) / (float)100.0;
+    }
     else
+    {
         PC_ACCOUNT(pc).credit -= amt;
+    }
 
 #ifdef ACCOUNT_DEBUG
     {
@@ -377,7 +409,9 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
     }
 
     if (tm_less_than(b, e))
+    {
         account_calc(pc, b, e);
+    }
 }
 
 void account_subtract(class unit_data *pc, time_t from, time_t to)
@@ -387,10 +421,14 @@ void account_subtract(class unit_data *pc, time_t from, time_t to)
     assert(IS_PC(pc));
 
     if (!g_cServerConfig.isAccounting())
+    {
         return;
+    }
 
     if (CHAR_LEVEL(pc) >= g_cAccountConfig.m_nFreeFromLevel)
+    {
         return;
+    }
 
     bt = *localtime(&from);
     et = *localtime(&to);
@@ -409,7 +447,9 @@ int account_is_overdue(const class unit_data *ch)
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
         if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+        {
             return FALSE;
+        }
 
         return (PC_ACCOUNT(ch).credit < 0.0);
     }
@@ -524,7 +564,9 @@ int account_is_closed(class unit_data *ch)
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
         if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+        {
             return FALSE;
+        }
 
         i = (int)PC_ACCOUNT(ch).credit;
         j = PC_ACCOUNT(ch).credit_limit;
@@ -548,9 +590,13 @@ void account_withdraw(class unit_data *god, class unit_data *whom, ubit32 amount
 {
     PC_ACCOUNT(whom).credit -= (float)amount;
     if ((ubit32)amount > PC_ACCOUNT(whom).total_credit)
+    {
         PC_ACCOUNT(whom).total_credit = 0;
+    }
     else
+    {
         PC_ACCOUNT(whom).total_credit -= amount;
+    }
 
     slog(LOG_ALL, 255, "%s withdrew %d from account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
 
@@ -768,9 +814,13 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
             c = str_next_word(c, word);
             if (is_abbrev(word, "add"))
+            {
                 ;
+            }
             else if (is_abbrev(word, "remove"))
+            {
                 amount = -amount;
+            }
             else
             {
                 send_to_char("You must either add or remove.\n\r", ch);
@@ -874,7 +924,9 @@ void numlist_sanity(int *numlist, int numlen)
     int i;
 
     if (numlist == NULL)
+    {
         return;
+    }
 
     if (numlen % 3 != 0)
     {
@@ -891,7 +943,9 @@ void numlist_sanity(int *numlist, int numlen)
 int flatrate_sanity(int *numlist, int numlen)
 {
     if (numlist == NULL)
+    {
         return FALSE;
+    }
 
     if (numlen != 2)
     {
@@ -940,7 +994,9 @@ void CAccountConfig::Boot(void)
     FILE *f;
 
     if (!g_cServerConfig.isAccounting())
+    {
         return;
+    }
 
     slog(LOG_OFF, 0, "Booting account system.");
 
@@ -1057,8 +1113,12 @@ void CAccountConfig::Boot(void)
     }
 
     for (i = 0; i < 7; i++)
+    {
         for (j = 0; j < TIME_GRANULARITY; j++)
+        {
             day_charge[i][j] = m_nHourlyRate;
+        }
+    }
 
     numlist = parse_match_numlist((const char **)&c, "Base Range", &len);
 
@@ -1066,7 +1126,9 @@ void CAccountConfig::Boot(void)
     {
         numlist_sanity(numlist, len);
         for (i = 0; i < 7; i++)
+        {
             numlist_to_charge(numlist, len, day_charge[i]);
+        }
         FREE(numlist);
     }
 

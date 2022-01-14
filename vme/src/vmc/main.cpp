@@ -28,9 +28,13 @@ int main(int argc, char **argv)
 
     money = getenv("VME_MONEY");
     if (money)
+    {
         strcpy(moneyfile, money);
+    }
     else
+    {
         strcpy(moneyfile, "../etc/");
+    }
 
     if (argc == 1)
     {
@@ -70,9 +74,13 @@ int main(int argc, char **argv)
                     break;
                 case 'd':
                     if (*(argv[pos] + 2))
+                    {
                         strcpy(moneyfile, argv[pos] + 2);
+                    }
                     else if (++pos < argc)
+                    {
                         strcpy(moneyfile, argv[pos]);
+                    }
                     else
                     {
                         slog(LOG_OFF, 0, "Full path of the money file expected.");

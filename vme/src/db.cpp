@@ -178,10 +178,16 @@ void resolve_templates(void)
                     /* check argument count and types */
                     if ((tmpl->second->xrefs[i].rtnt != tmpl->second->extprg[i]->rtnt) ||
                         (tmpl->second->xrefs[i].argc != tmpl->second->extprg[i]->argc))
+                    {
                         valid = 0;
+                    }
                     for (j = 0; j < tmpl->second->xrefs[i].argc; j++)
+                    {
                         if (tmpl->second->xrefs[i].argt[j] != tmpl->second->extprg[i]->argt[j])
+                        {
                             valid = 0;
+                        }
+                    }
                 }
                 else
                 {
@@ -216,7 +222,9 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
      */
 
     if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
+    {
         error(HERE, "Failed to fread() tmplsize");
+    }
 
     while (tmplsize && !feof(f))
     {
@@ -242,7 +250,9 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
         }
         /* next size */
         if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() tmplsize");
+        }
     }
 
     return tmpllist;
@@ -267,7 +277,9 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
         fstrcpy(&cBuf, f);
 
         if (feof(f))
+        {
             break;
+        }
 
         temp_index = new file_index_type();
         temp_index->name = str_dup((char *)cBuf.GetData());
@@ -278,13 +290,19 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
         temp_index->crc = 0;
 
         if (fread(&(temp_index->type), sizeof(ubit8), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() temp_index->type");
+        }
 
         if (fread(&(temp_index->length), sizeof(ubit32), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() temp_index->length");
+        }
 
         if (fread(&(temp_index->crc), sizeof(ubit32), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() temp_index->crc");
+        }
 
         zone->mmp_fi.insert(std::make_pair(temp_index->name, temp_index));
         fi = temp_index;
@@ -303,7 +321,9 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
         }
 
         if (fi->type == UNIT_ST_ROOM)
+        {
             zone->no_rooms++;
+        }
 
         if (fi->type == UNIT_ST_ROOM)
         {
@@ -311,7 +331,9 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
             room_num++;
         }
         else
+        {
             fi->room_no = 0;
+        }
 
         /* We are now positioned at first data byte */
         fi->filepos = ftell(f);
@@ -360,15 +382,21 @@ void generate_zone_indexes(void)
     {
         /* Get name of next zone-file */
         if (fgets(buf, 200, zone_file) == NULL)
+        {
             break;
+        }
 
         if (*skip_blanks(buf) == '#')
+        {
             continue;
+        }
 
         c = str_next_word_copy(buf, zone);
 
         if (str_is_empty(zone))
+        {
             break;
+        }
 
         snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), zone);
 
@@ -382,25 +410,37 @@ void generate_zone_indexes(void)
         c = str_next_word_copy(c, tmpbuf);
 
         if (str_is_number(tmpbuf))
+        {
             access = atoi(tmpbuf);
+        }
         else
+        {
             access = 255;
+        }
 
         /* Read load level */
         c = str_next_word_copy(c, tmpbuf);
 
         if (str_is_number(tmpbuf))
+        {
             loadlevel = MAX(200, atoi(tmpbuf));
+        }
         else
+        {
             loadlevel = 200;
+        }
 
         /* Read pay only */
         c = str_next_word_copy(c, tmpbuf);
 
         if (str_is_number(tmpbuf))
+        {
             payonly = atoi(tmpbuf);
+        }
         else
+        {
             payonly = FALSE;
+        }
 
         c = str_next_word_copy(c, dilfilepath);
 
@@ -469,7 +509,9 @@ void generate_zone_indexes(void)
             fstrcpy(&cBuf, f);
 
             if (cBuf.GetData()[0] == 0)
+            {
                 break;
+            }
 
             z->creators.AppendName((char *)cBuf.GetData());
         }
@@ -477,9 +519,13 @@ void generate_zone_indexes(void)
         fstrcpy(&cBuf, f);
 
         if (cBuf.GetData()[0] != 0)
+        {
             z->title = str_dup((char *)cBuf.GetData());
+        }
         else
+        {
             z->title = str_dup("");
+        }
 
         /* read templates */
         z->no_tmpl = 0;
@@ -539,26 +585,36 @@ int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
     if (nVersion <= 56)
     {
         if (pBuf->Read8(&t8))
+        {
             return 1;
+        }
         i = t8;
     }
     else
     {
         if (pBuf->Read16(&t16))
+        {
             return 1;
+        }
         i = t16;
     }
 
     for (; 0 < i; i--)
     {
         if (pBuf->Read16(&af.duration))
+        {
             return 1;
+        }
 
         if (pBuf->Read16(&af.id))
+        {
             return 1;
+        }
 
         if (pBuf->Read16(&af.beat))
+        {
             return 1;
+        }
 
         /*if (af.id > ID_TOP_IDX)
              {
@@ -568,25 +624,39 @@ int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
              } */
 
         if (pBuf->Read32(&af.data[0]))
+        {
             return 1;
+        }
 
         if (pBuf->Read32(&af.data[1]))
+        {
             return 1;
+        }
 
         if (pBuf->Read32(&af.data[2]))
+        {
             return 1;
+        }
 
         if (pBuf->Read16(&af.firstf_i))
+        {
             return 1;
+        }
 
         if (pBuf->Read16(&af.tickf_i))
+        {
             return 1;
+        }
 
         if (pBuf->Read16(&af.lastf_i))
+        {
             return 1;
+        }
 
         if (pBuf->Read16(&af.applyf_i))
+        {
             return 1;
+        }
 
         /* Don't call, don't apply and don't set up tick for this affect (yet) */
         af.event = NULL;
@@ -609,7 +679,9 @@ void post_read_unit(class unit_data *u)
         static struct diltemplate *regen = NULL;
 
         if (regen == NULL)
+        {
             regen = find_dil_template("regenerate@update");
+        }
 
         if (regen)
         {
@@ -687,22 +759,34 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     }
     char *c;
     if (pBuf->SkipString(&c))
+    {
         g_nCorrupt++;
+    }
     UNIT_TITLE(u) = c;
     if (unit_version < 70)
+    {
         UNIT_TITLE(u) = fix_old_codes_to_html(UNIT_TITLE(u).c_str());
+    }
 
     if (pBuf->SkipString(&c))
+    {
         g_nCorrupt++;
+    }
     UNIT_OUT_DESCR(u) = c;
     if (unit_version < 70)
+    {
         UNIT_OUT_DESCR(u) = fix_old_codes_to_html(UNIT_OUT_DESCR(u).c_str());
+    }
 
     if (pBuf->SkipString(&c))
+    {
         g_nCorrupt++;
+    }
     UNIT_IN_DESCR(u) = c;
     if (unit_version < 70)
+    {
         UNIT_IN_DESCR(u) = fix_old_codes_to_html(UNIT_IN_DESCR(u).c_str());
+    }
 
     g_nCorrupt += bread_extra(pBuf, UNIT_EXTRA(u), unit_version);
 
@@ -716,7 +800,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
         UNIT_KEY(u) = str_dup(tmpbuf);
     }
     else
+    {
         UNIT_KEY(u) = NULL;
+    }
 
     if (unit_version < 46)
     {
@@ -724,7 +810,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
         UNIT_MANIPULATE(u) = t16;
     }
     else
+    {
         g_nCorrupt += pBuf->Read32(&UNIT_MANIPULATE(u));
+    }
 
     g_nCorrupt += pBuf->Read16(&UNIT_FLAGS(u));
     g_nCorrupt += pBuf->Read16(&ts16);
@@ -739,14 +827,18 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     if (unit_version <= 54)
     {
         if (UNIT_MAX_HIT(u) <= 0)
+        {
             UNIT_HIT(u) = UNIT_MAX_HIT(u) = 1000;
+        }
     }
 
     g_nCorrupt += pBuf->Read16(&UNIT_ALIGNMENT(u));
 
     g_nCorrupt += pBuf->Read8(&UNIT_OPEN_FLAGS(u));
     if (unit_version >= 71)
+    {
         g_nCorrupt += pBuf->Read8(&UNIT_OPEN_DIFF(u));
+    }
 
     g_nCorrupt += pBuf->Read8(&t8);
     UNIT_LIGHTS(u) = t8;
@@ -758,9 +850,13 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     g_nCorrupt += pBuf->Read8(&UNIT_MINV(u));
 
     if (unit_version >= 53)
+    {
         g_nCorrupt += pBuf->Read16(&UNIT_SIZE(u));
+    }
     else
+    {
         UNIT_SIZE(u) = 180;
+    }
 
     if (unit_version >= 51) // Get the unit the unit is in
     {
@@ -772,13 +868,19 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
         if (tmpfi)
         {
             if (UNIT_TYPE(u) == UNIT_ST_ROOM)
+            {
                 UNIT_IN(u) = (class unit_data *)tmpfi; /* To be normalized! */
+            }
             else
             {
                 if (IS_PC(u))
+                {
                     CHAR_LAST_ROOM(u) = tmpfi->fi_unit_list.front();
+                }
                 else
+                {
                     UNIT_IN(u) = tmpfi->fi_unit_list.front();
+                }
             }
         }
     }
@@ -802,11 +904,17 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
             {
                 g_nCorrupt += pBuf->Read8(&CHAR_SPEED(u));
                 if (IS_PC(u))
+                {
                     if (CHAR_SPEED(u) < SPEED_MIN)
+                    {
                         CHAR_SPEED(u) = SPEED_DEFAULT;
+                    }
+                }
             }
             else
+            {
                 CHAR_SPEED(u) = SPEED_DEFAULT;
+            }
 
             g_nCorrupt += pBuf->Read16(&t16);
             CHAR_ATTACK_TYPE(u) = t16;
@@ -836,31 +944,41 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     CHAR_ABILITY(u, i) = temp;
                 }
                 else
+                {
                     g_nCorrupt += pBuf->Read16(&CHAR_ABILITY(u, i));
+                }
 
                 if (IS_PC(u))
                 {
                     g_nCorrupt += pBuf->Read8(&PC_ABI_LVL(u, i));
                     if (unit_version < 72)
+                    {
                         g_nCorrupt += pBuf->Read8(&t8);
+                    }
                 }
             }
 
             if (IS_PC(u))
             {
                 if (unit_version >= 72)
+                {
                     g_nCorrupt += pBuf->Read8(&PC_PROFESSION(u));
+                }
 
                 g_nCorrupt += pBuf->ReadFloat(&PC_ACCOUNT(u).credit);
                 g_nCorrupt += pBuf->Read32(&PC_ACCOUNT(u).credit_limit);
                 g_nCorrupt += pBuf->Read32(&PC_ACCOUNT(u).total_credit);
 
                 if (unit_version >= 44)
+                {
                     g_nCorrupt += pBuf->Read16(&PC_ACCOUNT(u).last4);
+                }
                 else
                 {
                     if (unit_version >= 41)
+                    {
                         g_nCorrupt += pBuf->Skip32(); /* cc_time */
+                    }
                     PC_ACCOUNT(u).last4 = -1;
                 }
 
@@ -869,9 +987,13 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     g_nCorrupt += pBuf->Read8(&PC_ACCOUNT(u).discount);
 
                     if (unit_version >= 52)
+                    {
                         g_nCorrupt += pBuf->Read32(&PC_ACCOUNT(u).flatrate);
+                    }
                     else
+                    {
                         PC_ACCOUNT(u).flatrate = 0;
+                    }
 
                     g_nCorrupt += pBuf->Read8(&PC_ACCOUNT(u).cracks);
                 }
@@ -883,7 +1005,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 }
 
                 if (unit_version >= 48)
+                {
                     g_nCorrupt += pBuf->Read16(&PC_LIFESPAN(u));
+                }
                 else
                 {
                     CHAR_RACE(u)
@@ -892,15 +1016,21 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     struct base_race_info_type *sex_race;
 
                     if (CHAR_SEX(u) == SEX_MALE)
+                    {
                         sex_race = &g_race_info[CHAR_RACE(u)].male;
+                    }
                     else
+                    {
                         sex_race = &g_race_info[CHAR_RACE(u)].female;
+                    }
 
                     PC_LIFESPAN(u) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
                 }
 
                 if (unit_version < 50)
+                {
                     g_nCorrupt += pBuf->SkipString();
+                }
 
                 g_nCorrupt += pBuf->Read8(&PC_SETUP_ECHO(u));
                 g_nCorrupt += pBuf->Read8(&PC_SETUP_REDRAW(u));
@@ -941,9 +1071,13 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     tmpbuf[0] = '\0';
                     g_nCorrupt += pBuf->ReadStringCopy(tmpbuf, MAX_STRING_LENGTH);
                     if (str_is_empty(tmpbuf))
+                    {
                         UPC(u)->promptstr = NULL;
+                    }
                     else
+                    {
                         UPC(u)->promptstr = str_dup(tmpbuf);
+                    }
                 }
 
                 if (unit_version < 51)
@@ -954,7 +1088,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     class file_index_type *fi;
 
                     if ((fi = find_file_index(zone, name)))
+                    {
                         CHAR_LAST_ROOM(u) = fi->fi_unit_list.front();
+                    }
                 }
 
                 if (unit_version >= 42)
@@ -972,21 +1108,31 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 g_nCorrupt += pBuf->ReadStringCopy(PC_PWD(u), PC_MAX_PASSWORD);
                 PC_PWD(u)[PC_MAX_PASSWORD - 1] = '\0';
                 if (unit_version <= 72)
+                {
                     PC_PWD(u)[10] = '\0'; // This will allow me to later extend the password length
+                }
 
                 if (unit_version >= 54)
                 {
                     for (i = 0; i < 5; i++)
+                    {
                         g_nCorrupt += pBuf->Read32(&PC_LASTHOST(u)[i]);
+                    }
                 }
                 else
+                {
                     for (i = 0; i < 5; i++)
+                    {
                         PC_LASTHOST(u)[i] = 0;
+                    }
+                }
 
                 g_nCorrupt += pBuf->Read32(&PC_ID(u));
 
                 if (unit_version >= 40)
+                {
                     g_nCorrupt += pBuf->Read16(&PC_CRACK_ATTEMPTS(u));
+                }
 
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_HOME(u));
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_GUILD(u));
@@ -994,9 +1140,13 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 g_nCorrupt += pBuf->Read32(&PC_GUILD_TIME(u));
 
                 if (unit_version >= 38)
+                {
                     g_nCorrupt += pBuf->Read16(&PC_VIRTUAL_LEVEL(u));
+                }
                 else
+                {
                     PC_VIRTUAL_LEVEL(u) = CHAR_LEVEL(u);
+                }
 
                 if (unit_version <= 72)
                 {
@@ -1054,15 +1204,23 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                         PC_SPL_SKILL(u, i) = temp;
                     }
                     else
+                    {
                         g_nCorrupt += pBuf->Read16(&PC_SPL_SKILL(u, i));
+                    }
                     g_nCorrupt += pBuf->Read8(&PC_SPL_LVL(u, i));
 
                     if (unit_version < 72)
+                    {
                         g_nCorrupt += pBuf->Read8(&t8);
+                    }
 
                     if (unit_version < 46)
+                    {
                         if ((i < SPL_GROUP_MAX) && (PC_SPL_SKILL(u, i) == 0))
+                        {
                             PC_SPL_SKILL(u, i) = 1;
+                        }
+                    }
                 }
 
                 if (unit_version < 61)
@@ -1085,11 +1243,15 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                         PC_SKI_SKILL(u, i) = temp;
                     }
                     else
+                    {
                         g_nCorrupt += pBuf->Read16(&PC_SKI_SKILL(u, i));
+                    }
 
                     g_nCorrupt += pBuf->Read8(&PC_SKI_LVL(u, i));
                     if (unit_version < 72)
+                    {
                         g_nCorrupt += pBuf->Read8(&t8);
+                    }
                 }
 
                 g_nCorrupt += pBuf->Read8(&t8);
@@ -1104,14 +1266,22 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                         PC_WPN_SKILL(u, i) = temp;
                     }
                     else
+                    {
                         g_nCorrupt += pBuf->Read16(&PC_WPN_SKILL(u, i));
+                    }
 
                     g_nCorrupt += pBuf->Read8(&PC_WPN_LVL(u, i));
                     if (unit_version < 72)
+                    {
                         g_nCorrupt += pBuf->Read8(&t8);
+                    }
                     if (unit_version < 46)
+                    {
                         if ((i < WPN_GROUP_MAX) && (PC_WPN_SKILL(u, i) == 0))
+                        {
                             PC_WPN_SKILL(u, i) = 1;
+                        }
+                    }
                 }
 
                 if (unit_version < 47)
@@ -1126,17 +1296,25 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 j = t8;
 
                 for (i = 0; i < j; i++)
+                {
                     g_nCorrupt += pBuf->Read8(&PC_COND(u, i));
+                }
 
                 if (unit_version >= 56)
+                {
                     g_nCorrupt += pBuf->Read8(&PC_ACCESS_LEVEL(u));
+                }
                 else
+                {
                     PC_ACCESS_LEVEL(u) = 0;
+                }
 
                 g_nCorrupt += bread_extra(pBuf, PC_QUEST(u), unit_version);
 
                 if (unit_version >= 50)
+                {
                     g_nCorrupt += bread_extra(pBuf, PC_INFO(u), unit_version);
+                }
             }
             else
             {
@@ -1149,7 +1327,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                         NPC_WPN_SKILL(u, i) = temp;
                     }
                     else
+                    {
                         g_nCorrupt += pBuf->Read16(&NPC_WPN_SKILL(u, i));
+                    }
                 }
 
                 for (i = 0; i < SPL_GROUP_MAX; i++)
@@ -1161,7 +1341,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                         NPC_SPL_SKILL(u, i) = temp;
                     }
                     else
+                    {
                         g_nCorrupt += pBuf->Read16(&NPC_SPL_SKILL(u, i));
+                    }
                 }
 
                 g_nCorrupt += pBuf->Read8(&NPC_DEFAULT(u));
@@ -1188,7 +1370,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
             if (unit_version < 49)
             {
                 if (OBJ_TYPE(u) == ITEM_WEAPON && (OBJ_VALUE(u, 3) == 0))
+                {
                     OBJ_VALUE(u, 3) = RACE_DO_NOT_USE;
+                }
             }
             break;
 
@@ -1199,9 +1383,13 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
                 g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
                 if ((fi = find_file_index(zone, name)))
+                {
                     UNIT_IN(u) = (class unit_data *)fi; /* A file index */
+                }
                 else
+                {
                     UNIT_IN(u) = NULL;
+                }
             }
 
             /* Read N, S, E, W, U and D directions */
@@ -1239,7 +1427,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                             ROOM_EXIT(u, i)->key = str_dup(tmpbuf);
                         }
                         else
+                        {
                             ROOM_EXIT(u, i)->key = NULL;
+                        }
 
                         /* NOT fi->unit! Done later */
                         ROOM_EXIT(u, i)->to_room = (class unit_data *)fi;
@@ -1251,7 +1441,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                         g_nCorrupt += pBuf->SkipNames();
                         g_nCorrupt += pBuf->Skip16();
                         if (unit_version >= 71)
+                        {
                             g_nCorrupt += pBuf->Skip8();
+                        }
                         g_nCorrupt += pBuf->SkipString();
                         g_nCorrupt += pBuf->SkipString();
                     }
@@ -1295,7 +1487,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
             {
                 sscanf(prev, "%ld %ld", &val1, &val2);
                 if (val1 > 0 && is_in(val2, DEF_CURRENCY, MAX_MONEY))
+                {
                     coins_to_unit(u, val1, val2);
+                }
 
                 prev = c + 1;
             }
@@ -1315,9 +1509,13 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->names.Name());
 
         if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
+        {
             return read_unit(g_slime_fi); /* Slime it! */
+        }
         else
+        {
             return NULL;
+        }
     }
 
     post_read_unit(u);
@@ -1336,7 +1534,9 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
     snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->zone->filename);
 
     if ((f = fopen_cache(buf, "rb")) == NULL)
+    {
         error(HERE, "Couldn't open %s for reading.", buf);
+    }
 
     pBuf->FileRead(f, org_fi->filepos, org_fi->length);
 
@@ -1353,13 +1553,19 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
     class unit_data *u;
 
     if (org_fi == NULL)
+    {
         return NULL;
+    }
 
     if (org_fi == NULL)
+    {
         return NULL;
+    }
 
     if (is_slimed(org_fi))
+    {
         org_fi = g_slime_fi;
+    }
 
     read_unit_file(org_fi, &g_FileBuffer);
 
@@ -1369,7 +1575,9 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
     u->set_fi(org_fi);
 
     if (!IS_ROOM(u))
+    {
         assert(UNIT_IN(u) == NULL);
+    }
 
     unit_error_zone = NULL;
 
@@ -1384,7 +1592,9 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
     else
     {
         if (UNIT_TYPE(u) != UNIT_ST_ROOM)
+        {
             slog(LOG_ALL, 0, "Bizarro. This probably shouldn't happen");
+        }
     }
 
     return u;
@@ -1418,6 +1628,7 @@ void normalize_world(void)
     int i;
 
     for (u = g_unit_list; u; u = u->gnext)
+    {
         if (IS_ROOM(u))
         {
             /* Place room inside another room? */
@@ -1432,16 +1643,24 @@ void normalize_world(void)
 
             /* Change directions into unit_data points from file_index_type */
             for (i = 0; i <= MAX_EXIT; i++)
+            {
                 if (ROOM_EXIT(u, i))
                 {
                     if (((class file_index_type *)ROOM_EXIT(u, i)->to_room)->fi_unit_list.empty())
+                    {
                         ROOM_EXIT(u, i)->to_room = NULL;
+                    }
                     else
+                    {
                         ROOM_EXIT(u, i)->to_room = ((class file_index_type *)ROOM_EXIT(u, i)->to_room)->fi_unit_list.front();
+                    }
                 }
+            }
         }
+    }
 
     for (u = g_unit_list; u; u = u->gnext)
+    {
         if (IS_ROOM(u) && UNIT_IN(u))
         {
             tmpu = UNIT_IN(u);
@@ -1462,6 +1681,7 @@ void normalize_world(void)
                 unit_to_unit(u, tmpu);
             }
         }
+    }
 }
 
 #define ZON_DIR_CONT 0
@@ -1489,61 +1709,89 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
         fstrcpy(&cBuf, f);
 
         if (feof(f))
+        {
             break;
+        }
 
         strcpy(zonename, (char *)cBuf.GetData());
 
         fstrcpy(&cBuf, f);
 
         if (feof(f))
+        {
             break;
+        }
 
         strcpy(name, (char *)cBuf.GetData());
 
         if (*zonename && *name)
+        {
             if ((fi = find_file_index(zonename, name)))
+            {
                 cmd->fi[0] = fi;
+            }
             else
             {
                 szonelog(read_zone_error, "Slimed: Illegal ref.: %s@%s", name, zonename);
                 cmd->fi[0] = g_slime_fi;
             }
+        }
         else
+        {
             cmd->fi[0] = 0;
+        }
 
         fstrcpy(&cBuf, f);
 
         if (feof(f))
+        {
             break;
+        }
 
         strcpy(zonename, (char *)cBuf.GetData());
 
         fstrcpy(&cBuf, f);
 
         if (feof(f))
+        {
             break;
+        }
 
         strcpy(name, (char *)cBuf.GetData());
 
         if (*zonename && *name)
+        {
             if ((fi = find_file_index(zonename, name)))
+            {
                 cmd->fi[1] = fi;
+            }
             else
             {
                 szonelog(read_zone_error, "Illegal ref.: %s@%s", name, zonename);
                 cmd->fi[1] = g_slime_fi;
             }
+        }
         else
+        {
             cmd->fi[1] = 0;
+        }
 
         if (fread(&(cmd->num[0]), sizeof(cmd->num[0]), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() cmd->num[0]");
+        }
         if (fread(&(cmd->num[1]), sizeof(cmd->num[1]), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() cmd->num[1]");
+        }
         if (fread(&(cmd->num[2]), sizeof(cmd->num[2]), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() cmd->num[2]");
+        }
         if (fread(&(cmd->cmpl), sizeof(ubit8), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() cmd->cmpl");
+        }
 
         /* Link into list of next command */
         if (cmd_list == NULL)
@@ -1591,7 +1839,9 @@ void read_all_zones(void)
         read_zone_error = zone->second;
 
         if (strcmp(zone->second->name, "_players") == 0)
+        {
             continue;
+        }
 
         snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->filename);
 
@@ -1602,10 +1852,14 @@ void read_all_zones(void)
         }
 
         if (fread(&(zone->second->zone_time), sizeof(ubit16), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() zone->second->zone_time");
+        }
 
         if (fread(&(zone->second->reset_mode), sizeof(ubit8), 1, f) != 1)
+        {
             error(HERE, "Failed to fread() zone->second->reset_mode");
+        }
 
         zone->second->zri = read_zone(f, 0);
 

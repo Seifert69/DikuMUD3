@@ -44,7 +44,9 @@ static void slime_save(void)
 static void slime_add(class file_index_type *sp)
 {
     if (sp == NULL)
+    {
         return;
+    }
 
     if (slime_count++ == 0)
     {
@@ -62,6 +64,7 @@ static void slime_remove(class file_index_type *sp)
     int i;
 
     for (i = 0; i < slime_count; i++)
+    {
         if (slime_list[i] == sp)
         {
             slime_list[i] = slime_list[slime_count - 1];
@@ -73,6 +76,7 @@ static void slime_remove(class file_index_type *sp)
             }
             break;
         }
+    }
 }
 
 int is_slimed(class file_index_type *sp)
@@ -80,8 +84,12 @@ int is_slimed(class file_index_type *sp)
     int i;
 
     for (i = 0; i < slime_count; i++)
+    {
         if (slime_list[i] == sp)
+        {
             return TRUE;
+        }
+    }
 
     return FALSE;
 }
@@ -92,7 +100,9 @@ int slime_obj(struct spec_arg *sarg)
     class file_index_type *fi;
 
     if (!is_command(sarg->cmd, "slime"))
+    {
         return SFR_SHARE;
+    }
 
     if (!IS_OVERSEER(sarg->activator))
     {

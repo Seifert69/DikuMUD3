@@ -107,7 +107,9 @@ void init_char(class unit_data *ch)
     SET_BIT(CHAR_FLAGS(ch), CHAR_PROTECTED);
 
     for (i = 0; i < 3; i++)
+    {
         PC_COND(ch, i) = (CHAR_LEVEL(ch) >= 200 ? 48 : 24);
+    }
 
     PC_COND(ch, DRUNK) = 0;
 
@@ -123,7 +125,9 @@ descriptor_data::descriptor_data(cMultiHook *pe)
 
     g_no_connections++;
     if (g_no_connections > g_max_no_connections)
+    {
         g_max_no_connections = g_no_connections;
+    }
 
     /* init desc data */
     multi = pe;
@@ -195,9 +199,13 @@ void descriptor_data::CreateBBS(void)
         }
 
         if (account_is_overdue(this->character))
+        {
             fprintf(f, "1\n");
+        }
         else
+        {
             fprintf(f, "0\n");
+        }
 
         fprintf(f, "%d\n", PC_ACCOUNT(this->character).total_credit);
         fprintf(f, "%s\n", PC_FILENAME(this->character));
@@ -244,7 +252,9 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
         if (PC_IS_UNSAVED(d->character))
+        {
             g_possible_saves--;
+        }
         CHAR_DESCRIPTOR(d->character) = NULL;
         extract_unit(d->character);
         d->character = NULL;
@@ -278,7 +288,9 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         if (!d->character->is_destructed())
         {
             if (IS_PC(d->character))
+            {
                 UPC(d->character)->disconnect_game();
+            }
             if (!bReconnect)
             {
                 if (!PC_IS_UNSAVED(d->character))
@@ -313,20 +325,28 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
     }
 
     if (bSendClose && d->multi->IsHooked())
+    {
         protocol_send_close(d->multi, d->id);
+    }
 
     g_no_connections--;
 
-    if (g_next_to_process == d) /* to avoid crashing the process loop */
+    if (g_next_to_process == d)
+    { /* to avoid crashing the process loop */
         g_next_to_process = g_next_to_process->next;
+    }
 
-    if (d == g_descriptor_list) /* this is the head of the list */
+    if (d == g_descriptor_list)
+    { /* this is the head of the list */
         g_descriptor_list = g_descriptor_list->next;
+    }
     else /* This is somewhere inside the list */
     {
         /* Locate the previous element */
         for (tmp = g_descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
+        {
             ;
+        }
         tmp->next = d->next;
     }
 
@@ -345,7 +365,9 @@ void system_memory(class unit_data *ch)
     n = getrusage(RUSAGE_CHILDREN, &rusage_data);
 
     if (n != 0)
+    {
         slog(LOG_ALL, 0, "System memory status error.");
+    }
     else
     {
         snprintf(Buf,

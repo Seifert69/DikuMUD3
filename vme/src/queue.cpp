@@ -29,7 +29,9 @@ cQueueElem::cQueueElem(char *pStr, int bCopy)
         memcpy(pData, pStr, n);
     }
     else
+    {
         pData = (ubit8 *)pStr;
+    }
 
     nSize = n;
 }
@@ -44,10 +46,14 @@ cQueueElem::cQueueElem(ubit8 *d, ubit32 n, int bCopy)
             memcpy(pData, d, n);
         }
         else
+        {
             pData = NULL;
+        }
     }
     else
+    {
         pData = d;
+    }
 
     nSize = n;
 }
@@ -101,7 +107,9 @@ void cQueue::Copy(ubit8 *data, ubit32 nLen)
 void cQueue::Cut(ubit32 nLen)
 {
     if (nLen < 1)
+    {
         return;
+    }
 
     assert(nLen <= nBytes);
 
@@ -114,7 +122,9 @@ void cQueue::Cut(ubit32 nLen)
         assert(qe);
 
         if (nLen < qe->Bytes())
+        {
             Prepend(new cQueueElem(qe->Data() + nLen, qe->Bytes() - nLen));
+        }
 
         nLen -= MIN(qe->Bytes(), nLen);
         delete qe;
@@ -183,14 +193,20 @@ class cQueueElem *cQueue::GetHead(void)
     class cQueueElem *pTmp;
 
     if (IsEmpty())
+    {
         return NULL;
+    }
 
     pTmp = pHead;
 
     if (nEntries == 1)
+    {
         pHead = pTail = NULL;
+    }
     else
+    {
         pHead = pHead->pNext;
+    }
 
     nEntries--;
     nBytes -= pTmp->Bytes();
@@ -203,5 +219,7 @@ void cQueue::Flush(void)
     class cQueueElem *pTmp;
 
     while ((pTmp = GetHead()))
+    {
         delete pTmp;
+    }
 }

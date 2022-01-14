@@ -33,34 +33,45 @@ int ball(struct spec_arg *sarg)
         u = find_unit(sarg->activator, &arg, 0, FIND_UNIT_IN_ME);
 
         if (u != sarg->owner)
+        {
             return SFR_SHARE;
+        }
 
         arg = one_argument(arg, buf);
         v1 = atoi(buf);
         arg = one_argument(arg, buf);
         v2 = atoi(buf);
         if ((v2 < 0) || (v2 > 4))
+        {
             v2 = 0;
+        }
 
         for (i = 0; i < TOP_MAX; top[i++] = NULL)
+        {
             ;
+        }
 
         snprintf(buf, sizeof(buf), "Searching for Objects of type %d with max value[%d]<br/>", v1, v2);
 
         send_to_char(buf, sarg->activator);
 
         for (u = g_unit_list; u; u = u->gnext)
+        {
             if (IS_OBJ(u) && (OBJ_TYPE(u) == v1))
             {
                 for (i = 0; i < TOP_MAX; i++)
+                {
                     if ((top[i] == NULL) || OBJ_VALUE(u, v2) > OBJ_VALUE(top[i], v2))
                     {
                         top[i] = u;
                         break;
                     }
+                }
             }
+        }
 
         for (i = 0; i < TOP_MAX; i++)
+        {
             if (top[i])
             {
                 snprintf(buf,
@@ -74,6 +85,7 @@ int ball(struct spec_arg *sarg)
                          UNIT_FI_ZONENAME(UNIT_IN(top[i])));
                 send_to_char(buf, sarg->activator);
             }
+        }
         return SFR_BLOCK;
     }
     return SFR_SHARE;

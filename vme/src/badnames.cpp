@@ -45,7 +45,9 @@ badnames_list::~badnames_list(void)
         name = NULL;
     }
     if (l)
+    {
         delete l;
+    }
 }
 
 char *badnames_list::insert(char *n)
@@ -53,16 +55,22 @@ char *badnames_list::insert(char *n)
     badnames_list *l = this->next, *b = this;
     badnames_list *temp;
     if (!n)
+    {
         return (NULL);
+    }
     temp = new badnames_list(n);
 
     if (!temp)
+    {
         return (NULL);
+    }
 
     while (l)
     {
         if (strcmp(l->name, n) >= 0)
+        {
             break;
+        }
         else
         {
             b = l;
@@ -94,17 +102,25 @@ char *badnames_list::equal(char *n)
     badnames_list *l = this->next;
 
     if (!n)
+    {
         return (NULL);
+    }
     while (l)
     {
         if (strcasecmp(n, l->name) == 0)
+        {
             break;
+        }
         l = l->next;
     }
     if (l)
+    {
         return (l->name);
+    }
     else
+    {
         return (NULL);
+    }
 }
 
 char *badnames_list::in(char *n)
@@ -116,7 +132,9 @@ char *badnames_list::in(char *n)
     badnames_list *l = this->next;
 
     if (!n)
+    {
         return (NULL);
+    }
     strcpy(tname, n);
     while (tname[i] != 0)
     {
@@ -127,13 +145,19 @@ char *badnames_list::in(char *n)
     while (l)
     {
         if (strstr(tname, l->name))
+        {
             break;
+        }
         l = l->next;
     }
     if (l)
+    {
         return (l->name);
+    }
     else
+    {
         return (NULL);
+    }
 }
 
 void badnames_list::create(char *input_temp)
@@ -141,12 +165,18 @@ void badnames_list::create(char *input_temp)
     char *n;
 
     if (!input_temp)
+    {
         return;
+    }
     n = strtok(input_temp, " ");
     if (!n)
+    {
         return;
+    }
     insert(n);
 
     while ((n = strtok(0, " ")) != NULL)
+    {
         insert(n);
+    }
 }

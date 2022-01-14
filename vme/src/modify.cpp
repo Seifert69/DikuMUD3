@@ -224,11 +224,17 @@ void edit_extra(class descriptor_data *d)
     class extra_descr_data *exd;
 
     for (exd = UNIT_EXTRA(d->editing).m_pList; exd; exd = exd->next)
+    {
         if (exd == d->editref)
+        {
             break; // It still exists!
+        }
+    }
 
     if (exd)
+    {
         exd->descr = (d->localstr);
+    }
 }
 
 // Post-porcessing of adding-extra descriptions.
@@ -237,11 +243,17 @@ void edit_info(class descriptor_data *d)
     class extra_descr_data *exd;
 
     for (exd = PC_INFO(d->editing).m_pList; exd; exd = exd->next)
+    {
         if (exd == d->editref)
+        {
             break; // It still exists!
+        }
+    }
 
     if (exd)
+    {
         exd->descr = (d->localstr);
+    }
 }
 
 void edit_outside_descr(class descriptor_data *d)
@@ -259,27 +271,43 @@ int search_block_set(char *arg, const char **list, bool exact)
     int i, l;
 
     if (list == NULL)
+    {
         return -1;
+    }
 
     /* Substitute '_' and get length of string */
     for (l = 0; arg[l]; l++)
+    {
         if (arg[l] == '_')
+        {
             arg[l] = ' ';
+        }
+    }
 
     if (exact)
     {
         for (i = 0; list[i]; i++)
+        {
             if (!strcmp(arg, list[i]))
+            {
                 return i;
+            }
+        }
     }
     else
     {
         if (l == 0)
+        {
             l = 1; /* Avoid "" to match the first available string */
+        }
 
         for (i = 0; list[i]; i++)
-            if (!str_nccmp(arg, list[i], l)) /* no regard of case */
+        {
+            if (!str_nccmp(arg, list[i], l))
+            { /* no regard of case */
                 return i;
+            }
+        }
     }
 
     return -1;
@@ -287,29 +315,38 @@ int search_block_set(char *arg, const char **list, bool exact)
 
 /* show possible fields */
 #define GET_FIELD_UT(c)                                                                                                                    \
-    (c) == UT_CHAR   ? "Char"                                                                                                              \
-    : (c) == UT_PC   ? "Pc"                                                                                                                \
-    : (c) == UT_NPC  ? "Npc"                                                                                                               \
-    : (c) == UT_OBJ  ? "Obj"                                                                                                               \
-    : (c) == UT_UNIT ? "Unit"                                                                                                              \
-    : (c) == UT_ROOM ? "Room"                                                                                                              \
-                     : "Not Used"
+    (c) == UT_CHAR                                                                                                                         \
+        ? "Char"                                                                                                                           \
+        : (c) == UT_PC ? "Pc"                                                                                                              \
+                       : (c) == UT_NPC ? "Npc" : (c) == UT_OBJ ? "Obj" : (c) == UT_UNIT ? "Unit" : (c) == UT_ROOM ? "Room" : "Not Used"
 
 #define GET_FIELD_AT(c)                                                                                                                    \
-    (c) == AT_VAL      ? "&lt;value&gt;"                                                                                                   \
-    : (c) == AT_BIT    ? "&lt;bitlist&gt;"                                                                                                 \
-    : (c) == AT_TYP    ? "&lt;type&gt;"                                                                                                    \
-    : (c) == AT_STR    ? "&lt;string&gt;"                                                                                                  \
-    : (c) == AT_DES    ? "(enter description)"                                                                                             \
-    : (c) == AT_UNT    ? "&lt;unitpath&gt;"                                                                                                \
-    : (c) == AT_KEYDES ? "&lt;keyword&gt; (enter description)"                                                                             \
-    : (c) == AT_TYPVAL ? "&lt;type&gt; &lt;value&gt;"                                                                                      \
-    : (c) == AT_DIRBIT ? "&lt;direction&gt; &lt;bitlist&gt;"                                                                               \
-    : (c) == AT_TYPDES ? "&lt;type&gt; (enter description)"                                                                                \
-    : (c) == AT_DIRSTR ? "&lt;direction&gt; &lt;string&gt;"                                                                                \
-    : (c) == AT_DIRUNT ? "&lt;direction&gt; &lt;unitpath&gt;"                                                                              \
-    : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"                                                                           \
-                       : "Not usable"
+    (c) == AT_VAL                                                                                                                          \
+        ? "&lt;value&gt;"                                                                                                                  \
+        : (c) == AT_BIT                                                                                                                    \
+              ? "&lt;bitlist&gt;"                                                                                                          \
+              : (c) == AT_TYP                                                                                                              \
+                    ? "&lt;type&gt;"                                                                                                       \
+                    : (c) == AT_STR                                                                                                        \
+                          ? "&lt;string&gt;"                                                                                               \
+                          : (c) == AT_DES                                                                                                  \
+                                ? "(enter description)"                                                                                    \
+                                : (c) == AT_UNT                                                                                            \
+                                      ? "&lt;unitpath&gt;"                                                                                 \
+                                      : (c) == AT_KEYDES                                                                                   \
+                                            ? "&lt;keyword&gt; (enter description)"                                                        \
+                                            : (c) == AT_TYPVAL                                                                             \
+                                                  ? "&lt;type&gt; &lt;value&gt;"                                                           \
+                                                  : (c) == AT_DIRBIT                                                                       \
+                                                        ? "&lt;direction&gt; &lt;bitlist&gt;"                                              \
+                                                        : (c) == AT_TYPDES                                                                 \
+                                                              ? "&lt;type&gt; (enter description)"                                         \
+                                                              : (c) == AT_DIRSTR                                                           \
+                                                                    ? "&lt;direction&gt; &lt;string&gt;"                                   \
+                                                                    : (c) == AT_DIRUNT                                                     \
+                                                                          ? "&lt;direction&gt; &lt;unitpath&gt;"                           \
+                                                                          : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"     \
+                                                                                             : "Not usable"
 
 void show_fields(class unit_data *ch)
 {
@@ -342,7 +379,9 @@ void show_structure(const char *structure[], class unit_data *ch)
     std::string s;
 
     if (structure == NULL)
+    {
         return;
+    }
 
     for (c = (char **)structure; *c; c++)
     {
@@ -351,9 +390,13 @@ void show_structure(const char *structure[], class unit_data *ch)
     }
 
     if (s.empty())
+    {
         send_to_char("Not defined yet.<br/>", ch);
+    }
     else
+    {
         send_to_char(&s[0], ch);
+    }
 }
 
 long int get_bit(char *bitlst, const char *structure[])
@@ -366,16 +409,22 @@ long int get_bit(char *bitlst, const char *structure[])
     {
         /* copy bitname */
         for (s = bit; *l && *l != '|'; *(s++) = *(l++))
+        {
             ;
+        }
 
         *s = 0;
         if (*l)
+        {
             l++;
+        }
 
         if (!str_is_empty(bit))
         {
             if ((tmpval = search_block_set(bit, structure, FALSE)) == -1)
+            {
                 return -1;
+            }
             SET_BIT(bitval, 1 << tmpval);
         }
     }
@@ -404,7 +453,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     class unit_affected_type *aff;
 
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     /* Check argument */
     if (str_is_empty(argument))
@@ -740,7 +791,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 while (*strarg)
                 {
                     if (ed->names.IsName(strarg))
+                    {
                         ed->names.AppendName(strarg);
+                    }
 
                     argument = str_next_word(argument, strarg);
                 }
@@ -771,9 +824,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 7: /* "unit-flags" */
             if (IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
+            {
                 trans_unset(unt);
+            }
             else if (!IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && IS_SET(bitarg, UNIT_FL_TRANS))
+            {
                 trans_set(unt);
+            }
 
             UNIT_FLAGS(unt) = bitarg;
             return;
@@ -819,9 +876,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 13: /* "alignment" */
             if (is_in(valarg, -1000, 1000))
+            {
                 UNIT_ALIGNMENT(unt) = valarg;
+            }
             else
+            {
                 send_to_char("Shame on you: Value must be in -1000..+1000!<br/>", ch);
+            }
             return;
 
         case 14: /* "open_flags" */
@@ -875,7 +936,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                     PC_ACCOUNT(unt).cracks = 0;
                 }
                 else
+                {
                     send_to_char("Illegal value, expected -1 or 0..9999.<br/>", ch);
+                }
             }
             return;
 
@@ -1100,11 +1163,15 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 45: /* "exp" */
             if (CHAR_LEVEL(unt) < MORTAL_MAX_LEVEL && valarg > required_xp(1000))
+            {
                 send_to_char("You are not allowed to set exp that high for "
                              "mortals<br/>",
                              ch);
+            }
             else
+            {
                 CHAR_EXP(unt) = valarg;
+            }
             return;
 
         case 46: /* "affected-by" */
@@ -1145,9 +1212,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 54: /* "level" */
             if (is_in(valarg, 0, 199))
+            {
                 CHAR_LEVEL(unt) = valarg;
+            }
             else
+            {
                 send_to_char("Shame on you: Value must be in 0..199!<br/>", ch);
+            }
             return;
 
         case 55: /* "position" */
@@ -1156,9 +1227,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 56: /* "ability" */
             if (is_in(valarg, 0, 250))
+            {
                 CHAR_ABILITY(unt, typarg) = valarg;
+            }
             else
+            {
                 send_to_char("Shame on you: Value must be in 0%..250%!<br/>", ch);
+            }
             return;
 
         case 57: /* "skill-points" */
@@ -1176,7 +1251,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 send_to_char("Affect attempted removed.<br/>", ch);
             }
             else
+            {
                 send_to_char("No such affect.<br/>", ch);
+            }
             return;
 
         case 60: /* "add-quest" */
@@ -1198,9 +1275,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 62: /* "speed" */
             if (is_in(valarg, SPEED_MIN, SPEED_MAX))
+            {
                 CHAR_SPEED(unt) = valarg;
+            }
             else
+            {
                 send_to_char("Speed must be in [12..200]!<br/>", ch);
+            }
             return;
 
         case 63: /* "add-info" */
@@ -1227,7 +1308,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 while (*strarg)
                 {
                     if (ed->names.IsName(strarg))
+                    {
                         ed->names.AppendName(strarg);
+                    }
 
                     argument = str_next_word(argument, strarg);
                 }
@@ -1259,7 +1342,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 66: /* "promptstr" */
             if (UPC(unt)->promptstr != NULL)
+            {
                 free(UPC(unt)->promptstr);
+            }
             UPC(unt)->promptstr = str_dup(argument);
             send_to_char("Prompt String Modified.<br/>", ch);
             return;
@@ -1281,7 +1366,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 PC_TIME(unt).birth = time(NULL) - (valarg * SECS_PER_MUD_YEAR);
             }
             else
+            {
                 send_to_char("Value must be in 10..1000!<br/>", ch);
+            }
             return;
 
         case 68: /* "lifespan" */
@@ -1300,7 +1387,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 PC_LIFESPAN(unt) = valarg;
             }
             else
+            {
                 send_to_char("Value must be in 10..1000!<br/>", ch);
+            }
             return;
 
         case 69: /* "profession" */
@@ -1316,7 +1405,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 PC_PROFESSION(unt) = valarg;
             }
             else
+            {
                 send_to_char("Value must be in 0..PROFESION MAX<br/>", ch);
+            }
             return;
 
         default: /* undefined field type */
@@ -1342,7 +1433,9 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
     class unit_data *unt;
 
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     /* Check argument */
     if (str_is_empty(argument))
@@ -1414,9 +1507,13 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
             valarg = atoi(arg);
 
             if (IS_PC(unt))
+            {
                 PC_SPL_SKILL(unt, skillarg) = valarg;
+            }
             else
+            {
                 NPC_SPL_SKILL(unt, skillarg) = valarg;
+            }
             break;
 
         case SET_WEAPON:
@@ -1435,9 +1532,13 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
             valarg = atoi(arg);
 
             if (IS_PC(unt))
+            {
                 PC_WPN_SKILL(unt, skillarg) = valarg;
+            }
             else
+            {
                 NPC_WPN_SKILL(unt, skillarg) = valarg;
+            }
     }
 
     snprintf(buf, sizeof(buf), "New value: %d<br/>Ok.<br/>", valarg);

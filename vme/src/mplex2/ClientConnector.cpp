@@ -219,9 +219,13 @@ void ClearUnhooked(void)
 int cConHook::IsHooked(void)
 {
     if (this->m_pWebsServer)
+    {
         return TRUE;
+    }
     else
+    {
         return cHook::IsHooked();
+    }
 }
 
 void cConHook::Unhook(void)
@@ -233,7 +237,9 @@ void cConHook::Unhook(void)
     }
 
     if (this->m_pWebsServer == 0)
+    {
         cHook::Unhook();
+    }
 }
 
 void cConHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
@@ -242,21 +248,29 @@ void cConHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
     {
         assert(pData[nLen] == 0);
         if (!ws_send_message(m_pWebsServer, m_pWebsHdl, (const char *)pData))
+        {
             this->Close(TRUE);
+        }
     }
     else
+    {
         cHook::Write(pData, nLen, bCopy);
+    }
 }
 
 void cConHook::Close(int bNotifyMud)
 {
     if (m_nId == 0)
+    {
         return;
+    }
 
     m_mtx.lock();
 
     if (IsHooked())
+    {
         Unhook();
+    }
 
     if (bNotifyMud && m_nId != 0 && g_MudHook.IsHooked())
     {
@@ -293,10 +307,14 @@ void cConHook::TransmitCommand(const char *text)
     sendText[MAX_INPUT_LENGTH - 1] = 0; // MS2020 moved up to avoid strchr bug.
 
     if ((d = strchr(sendText, '\r')))
+    {
         *d = 0;
+    }
 
     if ((d = strchr(sendText, '\n')))
+    {
         *d = 0;
+    }
 
     strip_trailing_spaces(sendText);
     // keep input short.
@@ -339,7 +357,9 @@ char cConHook::AddInputChar(ubit8 c)
             }
         }
         else
+        {
             m_nEscapeCode = 0;
+        }
     }
 
     TAIL(cp);
@@ -360,7 +380,9 @@ char cConHook::AddInputChar(ubit8 c)
     *cp = 0;
 
     if ((c < ' ') || (c == 255) || (m_sSetup.telnet && (c > 127)))
+    {
         *(cp - 1) = 0;
+    }
 
     return *(cp - 1);
 }
@@ -380,7 +402,9 @@ void cConHook::AddString(char *str)
         if (ISNEWL(*s) || (strlen(m_aInputBuf) >= MAX_INPUT_LENGTH - 4))
         {
             while (ISNEWL(*(s + 1)))
+            {
                 s++;
+            }
             *eb++ = '\n';
             *eb++ = '\r';
             m_qInput.Append(new cQueueElem(m_aInputBuf));
@@ -415,7 +439,9 @@ void cConHook::AddString(char *str)
                     }
                 }
                 else
+                {
                     *eb++ = c;
+                }
             }
         }
     }
@@ -424,7 +450,9 @@ void cConHook::AddString(char *str)
     assert(eb - echobuf < (int)sizeof(echobuf) - 1);
 
     if (m_sSetup.echo)
+    {
         Write((ubit8 *)echobuf, eb - echobuf);
+    }
 }
 
 /* On -1 'con' was destroyed */
@@ -500,14 +528,18 @@ void cConHook::Input(int nFlags)
         {
             SequenceCompare(buf, &n);
             if (n <= 0)
+            {
                 return;
+            }
         }
 
         if (m_nFirst >= 0)
         {
             getLine(buf, &n);
             if (n <= 0)
+            {
                 return;
+            }
         }
 
         buf[n] = 0;
@@ -533,7 +565,9 @@ void cConHook::Input(int nFlags)
 void cConHook::WriteCon(const char *text)
 {
     if (text == NULL)
+    {
         return;
+    }
 
     Write((ubit8 *)text, strlen(text));
 }
@@ -550,7 +584,9 @@ std::string mplex_getcolor(class cConHook *hook, const char *colorstr)
     auto gcolor = hook->color.get(colorstr);
 
     if (gcolor.empty())
+    {
         gcolor = g_cDefcolor.get(colorstr);
+    }
 
     return gcolor;
 }
@@ -565,7 +601,9 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
     int column = 0, cutpoint = MIN(30, width / 2);
 
     if (!(current = source))
+    {
         return NULL;
+    }
 
     newptr = dest;
 
@@ -580,7 +618,9 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
                 *newptr++ = *current; // copy char
 
                 if (*current == 0)
+                {
                     break;
+                }
 
                 if (*current == 'm')
                 {
@@ -757,20 +797,28 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
             continue;
         }
 
-        if (isaspace(*current)) /* Remember last space */
+        if (isaspace(*current))
+        { /* Remember last space */
             last = current;
+        }
 
-        if (*current == '\n' || *current == '\r') /* Newlines signify new col. */
+        if (*current == '\n' || *current == '\r')
+        { /* Newlines signify new col. */
             column = 0;
+        }
 
-        if ((++column <= width)) /* MS: Added '<=' Have some space.. */
+        if ((++column <= width))
+        { /* MS: Added '<=' Have some space.. */
             *(newptr++) = *(current++);
+        }
         else
         /* Out of space, so... */
         {
             column = 0;
-            if (last == NULL || cutpoint < current - last) /* backtrack or cut */
+            if (last == NULL || cutpoint < current - last)
+            { /* backtrack or cut */
                 last = current;
+            }
             newptr -= (current - last);
             current = ++last;
             *(newptr++) = '\n';
@@ -814,13 +862,17 @@ void cConHook::StripHTML(char *dest, const char *src)
             p = getHTMLTag(p, aTag, sizeof(aTag));
 
             if (aTag[0] == 0)
+            {
                 continue;
+            }
 
             // We got a HTML tag
             if (strcmp(aTag, "br") == 0 || strcmp(aTag, "br/") == 0)
             {
-                if (*p == '\n' || *(p + 1) == '\n') // If the next is \n then dont add <br>
+                if (*p == '\n' || *(p + 1) == '\n')
+                { // If the next is \n then dont add <br>
                     continue;
+                }
 
                 // the <br/> tag was not followed by \n\r so add \n\r
                 *dest++ = '\n';
@@ -857,7 +909,9 @@ void cConHook::StripHTML(char *dest, const char *src)
                 }
                 t = strstr(p, "</script>");
                 if (t)
+                {
                     p = t + 9;
+                }
                 continue;
             }
             else if (strncmp(aTag, "/div", 4) == 0)
@@ -921,7 +975,9 @@ void cConHook::StripHTML(char *dest, const char *src)
                 l = getHTMLValue("class", aTag, buf, sizeof(buf) - 1);
 
                 if (l == 0)
+                {
                     continue;
+                }
 
                 // We got a single or double color code on our hands
                 // e.g. cpg, cg bn, cpy bb, etc.
@@ -937,9 +993,13 @@ void cConHook::StripHTML(char *dest, const char *src)
                         if (tmp[0] == 'c')
                         {
                             if (tmp[1] == 'p')
+                            {
                                 Control_ANSI_Fg(this, &dest, tmp[2], TRUE);
+                            }
                             else
+                            {
                                 Control_ANSI_Fg(this, &dest, tmp[1], FALSE);
+                            }
                         }
                         else if (tmp[0] == 'b')
                         {
@@ -990,7 +1050,9 @@ void cConHook::StripHTML(char *dest, const char *src)
                 p += 6;
             }
             else
+            {
                 *dest++ = *p++;
+            }
 
             continue;
         }
@@ -1002,7 +1064,9 @@ void cConHook::StripHTML(char *dest, const char *src)
             p++;
         }
         else
+        {
             *dest++ = *p++;
+        }
     }
     *dest = 0;
 }
@@ -1020,7 +1084,9 @@ char *cConHook::ParseOutput(const char *text)
     {
         size_t n = strlen(text);
         if (n < sizeof(Outbuf))
+        {
             strcpy(Outbuf, text);
+        }
         else
         {
             memcpy(Outbuf, text, sizeof(Outbuf));
@@ -1098,10 +1164,14 @@ void cConHook::PromptErase (void)
 void cConHook::PromptRedraw(const char *prompt)
 {
     if (*prompt)
+    {
         Write((ubit8 *)prompt, strlen(prompt));
+    }
 
     if (*m_aInputBuf)
+    {
         Write((ubit8 *)m_aInputBuf, strlen(m_aInputBuf));
+    }
 
     m_nPromptLen = strlen(prompt);
 }
@@ -1151,23 +1221,35 @@ void cConHook::testChar(ubit8 c)
     {
         case 0:
             if (c == IAC)
+            {
                 m_nFirst++;
+            }
             else
+            {
                 m_nFirst = -1;
+            }
             break;
 
         case 1:
             if (c == WILL)
+            {
                 m_nFirst++;
+            }
             else
+            {
                 m_nFirst = -1;
+            }
             break;
 
         case 2:
             if (c == TELOPT_ECHO)
+            {
                 m_nFirst++;
+            }
             else
+            {
                 m_nFirst = -1;
+            }
             break;
 
         case 3:
@@ -1177,7 +1259,9 @@ void cConHook::testChar(ubit8 c)
 
         case 4:
             if (c == IAC)
+            {
                 m_nFirst++;
+            }
             else
             {
                 m_nFirst = -1;
@@ -1187,7 +1271,9 @@ void cConHook::testChar(ubit8 c)
 
         case 5:
             if (c == WONT)
+            {
                 m_nFirst++;
+            }
             else
             {
                 m_nFirst = -1;
@@ -1225,9 +1311,13 @@ void cConHook::getLine(ubit8 buf[], int *size)
         // slog(LOG_ALL, 0, "Testchar %d, first %d.", buf[i], m_nFirst);
 
         if (m_nFirst == -1)
+        {
             return;
+        }
         if (m_nFirst == -2)
+        {
             break;
+        }
     }
 
     if (i < *size)
@@ -1248,7 +1338,9 @@ void cConHook::ShowChunk(void)
     scan = buffer;
 
     if (m_qPaged.IsEmpty())
+    {
         return;
+    }
 
     cQueueElem *qe = m_qPaged.GetHead();
 
@@ -1259,7 +1351,9 @@ void cConHook::ShowChunk(void)
         if (!*point)
         {
             if (m_qPaged.IsEmpty())
+            {
                 break;
+            }
 
             delete qe;
             qe = m_qPaged.GetHead();
@@ -1270,10 +1364,14 @@ void cConHook::ShowChunk(void)
         *scan = *point++;
 
         if (*scan == '\n')
+        {
             lines++;
+        }
 
         if (max_lines <= lines)
+        {
             break;
+        }
 
         scan++;
 
@@ -1288,10 +1386,14 @@ void cConHook::ShowChunk(void)
 
     /* Insert the rest of the un-paged stringback into buffer */
     if (!str_is_empty(point))
+    {
         m_qPaged.Prepend(new cQueueElem(point));
+    }
 
     if (qe)
+    {
         delete qe;
+    }
 
     m_nPromptMode = !m_qPaged.IsEmpty();
 
@@ -1347,9 +1449,13 @@ cConHook::cConHook(void)
     m_sSetup.websockets = g_mplex_arg.bWebSockets;
 
     if (g_mplex_arg.g_bModeANSI)
+    {
         m_sSetup.emulation = TERM_ANSI;
+    }
     else
+    {
         m_sSetup.emulation = TERM_TTY;
+    }
 
     m_sSetup.height = 15;
     m_sSetup.width = 80;
@@ -1449,7 +1555,9 @@ cConHook::cConHook(void)
     *(m_aHost + sizeof(m_aHost) - 1) = '\0';
 
     if (this->tfd() != -1)
+    {
         slog(LOG_ALL, 0, "cConHook() called with a non -1 fd.");
+    }
 
     g_CaptainHook.Hook(fd, this);
 
@@ -1460,14 +1568,20 @@ cConHook::cConHook(void)
 cConHook::~cConHook(void)
 {
     if (this == g_connection_list)
+    {
         g_connection_list = this->m_pNext;
+    }
     else
     {
         class cConHook *tmp;
 
         for (tmp = g_connection_list; tmp; tmp = tmp->m_pNext)
+        {
             if (tmp->m_pNext == this)
+            {
                 break;
+            }
+        }
         tmp->m_pNext = this->m_pNext;
     }
 

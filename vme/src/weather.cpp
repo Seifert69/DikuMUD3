@@ -109,9 +109,13 @@ struct time_info_data age(class unit_data *ch)
     static struct time_info_data player_age;
 
     if (IS_PC(ch))
+    {
         player_age = mud_time_passed(time(0), PC_TIME(ch).birth);
+    }
     else
+    {
         player_age = mud_time_passed(0, 0);
+    }
 
     return player_age;
 }
@@ -150,14 +154,22 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
 {
     int diff, change;
 
-    if (time_data.month <= 2) /* Winter */
+    if (time_data.month <= 2)
+    { /* Winter */
         diff = (zone->weather.pressure <= (zone->weather.base - 25) ? 2 : -2);
-    else if (time_data.month <= 4) /* Spring */
+    }
+    else if (time_data.month <= 4)
+    { /* Spring */
         diff = (zone->weather.pressure <= (zone->weather.base + 5) ? 2 : -2);
-    else if (time_data.month <= 6) /* Summer */
+    }
+    else if (time_data.month <= 6)
+    { /* Summer */
         diff = (zone->weather.pressure <= (zone->weather.base + 20) ? 2 : -2);
-    else /* Fall   */
+    }
+    else
+    { /* Fall   */
         diff = (zone->weather.pressure <= (zone->weather.base - 5) ? 2 : -2);
+    }
 
     zone->weather.change += (dice(1, 4) * diff + dice(2, 6) - dice(2, 6));
 
@@ -176,49 +188,85 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
         case SKY_CLOUDLESS:
         {
             if (zone->weather.pressure < 990)
+            {
                 change = 1;
+            }
             else if (zone->weather.pressure < 1010)
+            {
                 if (dice(1, 4) == 1)
+                {
                     change = 1;
+                }
+            }
             break;
         }
         case SKY_CLOUDY:
         {
             if (zone->weather.pressure < 970)
+            {
                 change = 2;
+            }
             else if (zone->weather.pressure < 990)
+            {
                 if (dice(1, 4) == 1)
+                {
                     change = 2;
+                }
                 else
+                {
                     change = 0;
+                }
+            }
             else if (zone->weather.pressure > 1030)
+            {
                 if (dice(1, 4) == 1)
+                {
                     change = 3;
+                }
+            }
 
             break;
         }
         case SKY_RAINING:
         {
             if (zone->weather.pressure < 970)
+            {
                 if (dice(1, 4) == 1)
+                {
                     change = 4;
+                }
                 else
+                {
                     change = 0;
+                }
+            }
             else if (zone->weather.pressure > 1030)
+            {
                 change = 5;
+            }
             else if (zone->weather.pressure > 1010)
+            {
                 if (dice(1, 4) == 1)
+                {
                     change = 5;
+                }
+            }
 
             break;
         }
         case SKY_LIGHTNING:
         {
             if (zone->weather.pressure > 1010)
+            {
                 change = 6;
+            }
             else if (zone->weather.pressure > 990)
+            {
                 if (dice(1, 4) == 1)
+                {
                     change = 6;
+                }
+            }
 
             break;
         }
@@ -279,7 +327,9 @@ void update_time_and_weather(void)
     another_hour(time_info);
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.begin(); z++)
+    {
         weather_change(z->second, time_info);
+    }
 }
 
 /* Convert 'time' into text, and copy it into str */
@@ -303,13 +353,21 @@ void boot_time_and_weather(void)
     time_info = mud_time_passed(time(0), g_beginning_of_time);
 
     if (time_info.hours == 5)
+    {
         g_sunlight = SUN_RISE;
+    }
     else if (6 <= time_info.hours && time_info.hours <= 20)
+    {
         g_sunlight = SUN_LIGHT;
+    }
     else if (time_info.hours == 21)
+    {
         g_sunlight = SUN_SET;
+    }
     else
+    {
         g_sunlight = SUN_DARK;
+    }
 
     slog(LOG_OFF, 0, "   Current Gametime: %dH %dD %dM %dY.", time_info.hours, time_info.day, time_info.month, time_info.year);
 
@@ -318,20 +376,32 @@ void boot_time_and_weather(void)
         z->second->weather.pressure = z->second->weather.base;
 
         if (time_info.month >= 7 && time_info.month <= 12)
+        {
             z->second->weather.pressure += number(-6, 6);
+        }
         else
+        {
             z->second->weather.pressure += number(-10, 10);
+        }
 
         z->second->weather.change = number(-2, 2);
 
         if (z->second->weather.pressure <= 980)
+        {
             z->second->weather.sky = SKY_LIGHTNING;
+        }
         else if (z->second->weather.pressure <= 1000)
+        {
             z->second->weather.sky = SKY_RAINING;
+        }
         else if (z->second->weather.pressure <= 1020)
+        {
             z->second->weather.sky = SKY_CLOUDY;
+        }
         else
+        {
             z->second->weather.sky = SKY_CLOUDLESS;
+        }
     }
 
     g_events.add(PULSE_SEC * SECS_PER_MUD_HOUR, weather_and_time_event, 0, 0);

@@ -65,7 +65,9 @@ public:
             this->Open();
 
             if (!this->IsHooked())
+            {
                 return -1;
+            }
         }
 
         str = "";
@@ -76,7 +78,9 @@ public:
             n = this->read(buf, sizeof(buf) - 1);
 
             if (n == 0)
+            {
                 break;
+            }
             if (n == -1)
             {
                 slog(LOG_OFF, 0, "Error reading from pipeMUD RO.");
@@ -87,7 +91,9 @@ public:
                 buf[n] = 0;
                 str.append(buf);
                 if (n < (int)strlen(buf) - 1)
+                {
                     break;
+                }
 
                 if (str.length() > 500000)
                 {
@@ -108,14 +114,18 @@ public:
                 if (p == NULL)
                 {
                     if (strlen(o) < 1)
+                    {
                         break;
+                    }
 
                     p = o + strlen(o);
                 }
                 std::string line(o, p - o);
                 o = p;
                 if (*o == '\n')
+                {
                     o++;
+                }
                 slog(LOG_OFF, 0, "Received line [%s]. Send to DIL", line.c_str());
 
                 pipeMUD_dispatch(line);
@@ -164,7 +174,9 @@ public:
             this->Open();
 
             if (!this->IsHooked())
+            {
                 return;
+            }
         }
 
         int n;
@@ -184,7 +196,9 @@ public:
             slog(LOG_OFF, 0, "Unable to write full string to pipeMUD WO. code not developed for this yet", errno);
         }
         else
+        {
             slog(LOG_OFF, 0, "Wrote message [%s] to dispatcher.", str.c_str());
+        }
     };
 } g_pipeMUD_WO;
 

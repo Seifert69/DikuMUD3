@@ -57,9 +57,13 @@ cActParameter::cActParameter(const dilval *v)
     m_p = NULL;
 
     if ((v->type == DILV_UP) || (v->type == DILV_UPR))
+    {
         m_u = (struct unit_data *)v->val.ptr;
+    }
     else if ((v->type == DILV_SP) || (v->type == DILV_SPR) || (v->type == DILV_HASHSTR))
+    {
         m_p = (char *)v->val.ptr;
+    }
 }
 
 int cActParameter::isNull(void)
@@ -98,7 +102,9 @@ void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
                 auto Col = color.get(buf);
 
                 if (Col.empty())
+                {
                     Col = g_cServerConfig.getColorType().get(buf);
+                }
 
                 if (Col.empty() == false)
                 {
@@ -135,13 +141,17 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
         }
 
         if (d->multi->bWebsockets)
+        {
             protocol_send_text(d->multi, d->id, messg, MULTI_TEXT_CHAR);
+        }
         else
         {
             struct unit_data *u = d->character;
 
-            if (!u || !IS_PC(u)) // switched or snooped?
+            if (!u || !IS_PC(u))
+            { // switched or snooped?
                 u = d->original;
+            }
 
             assert(IS_PC(u));
             std::string dest;
@@ -188,7 +198,9 @@ void page_string(class descriptor_data *d, const char *messg)
 void send_to_char(const char *messg, const class unit_data *ch)
 {
     if (IS_CHAR(ch))
+    {
         send_to_descriptor(messg, CHAR_DESCRIPTOR(ch));
+    }
 }
 
 void send_to_all(const char *messg)
@@ -196,9 +208,15 @@ void send_to_all(const char *messg)
     class descriptor_data *i;
 
     if (messg && *messg)
+    {
         for (i = g_descriptor_list; i; i = i->next)
+        {
             if (descriptor_is_playing(i))
+            {
                 send_to_descriptor(messg, i);
+            }
+        }
+    }
 }
 
 void send_to_zone_outdoor(const class zone_type *z, const char *messg)
@@ -206,11 +224,17 @@ void send_to_zone_outdoor(const class zone_type *z, const char *messg)
     class descriptor_data *i;
 
     if (messg && *messg)
+    {
         for (i = g_descriptor_list; i; i = i->next)
+        {
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && unit_zone(i->character) == z && CHAR_AWAKE(i->character) &&
                 !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
                 !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
+            {
                 send_to_descriptor(messg, i);
+            }
+        }
+    }
 }
 
 void send_to_outdoor(const char *messg)
@@ -218,11 +242,17 @@ void send_to_outdoor(const char *messg)
     class descriptor_data *i;
 
     if (messg && *messg)
+    {
         for (i = g_descriptor_list; i; i = i->next)
+        {
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && CHAR_AWAKE(i->character) &&
                 !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
                 !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
+            {
                 send_to_descriptor(messg, i);
+            }
+        }
+    }
 }
 
 // To deal with both telnet and HTML newlines, act() should *always*
@@ -253,22 +283,32 @@ void act_generate(char *buf,
     *buf = 0;
 
     if (!IS_CHAR(to) || arg1.m_u == NULL)
+    {
         return;
+    }
 
     // if (!IS_CHAR(to) || !CHAR_DESCRIPTOR(to) || arg1.m_u == NULL)
     //    return;
 
     if (to == arg1.m_u && (type == TO_ROOM || type == TO_NOTVICT || type == TO_REST))
+    {
         return;
+    }
 
     if (to == arg3.m_u && type == TO_NOTVICT)
+    {
         return;
+    }
 
     if (UNIT_IN(to) == arg1.m_u && type == TO_REST)
+    {
         return;
+    }
 
     if ((show_type == A_HIDEINV && !CHAR_CAN_SEE(to, arg1.m_u)) || (show_type != A_ALWAYS && !CHAR_AWAKE(to)))
+    {
         return;
+    }
 
     for (strp = str, point = buf;;)
     {
@@ -311,64 +351,102 @@ void act_generate(char *buf,
                                     i = UNIT_NAME((struct unit_data *)sub->m_u);
                                 }
                                 else
+                                {
                                     i = UNIT_TITLE(sub->m_u).c_str();
+                                }
                             }
                             else
+                            {
                                 i = SOMETON(sub->m_u);
+                            }
                         }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL n code to act(): %s", str);
+                        }
                         break;
                     case 'N':
                         if (sub->m_u != NULL)
+                        {
                             i = UNIT_SEE_NAME(to, (struct unit_data *)sub->m_u);
+                        }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL N code to act(): %s", str);
+                        }
                         break;
                     case 'm':
                         if (sub->m_u != NULL)
+                        {
                             i = HMHR(to, sub->m_u);
+                        }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL m code to act(): %s", str);
+                        }
                         break;
                     case 's':
                         if (sub->m_u != NULL)
+                        {
                             i = HSHR(to, sub->m_u);
+                        }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL s code to act(): %s", str);
+                        }
                         break;
                     case 'e':
                         if (sub->m_u != NULL)
+                        {
                             i = HESH(to, sub->m_u);
+                        }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL e code to act(): %s", str);
+                        }
                         break;
                     case 'p':
                         if (sub->m_u != NULL)
                         {
                             if (IS_CHAR(sub->m_u))
+                            {
                                 i = g_char_pos[CHAR_POS(sub->m_u)];
+                            }
                             else
+                            {
                                 i = "lying";
+                            }
                         }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL p code to act(): %s", str);
+                        }
                         break;
                     case 'a':
                         if (sub->m_u != NULL)
+                        {
                             i = UNIT_ANA((struct unit_data *)sub->m_u);
+                        }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL a code to act(): %s", str);
+                        }
                         break;
                     case 'd':
                         if (sub->m_i != NULL)
+                        {
                             i = itoa(*(sub->m_i));
+                        }
                         else
+                        {
                             slog(LOG_ALL, 0, "NULL i code to act(): %s", str);
+                        }
                         break;
                     case 't':
                         if (sub->m_p == NULL)
+                        {
                             slog(LOG_ALL, 0, "NULL t code to act(): %s", str);
+                        }
                         i = sub->m_p;
                         break;
                     default:
@@ -379,7 +457,9 @@ void act_generate(char *buf,
             }
 
             if (i == NULL)
+            {
                 i = "NULL";
+            }
 
             /*	  if (uppercase && *i)
                   {
@@ -389,14 +469,18 @@ void act_generate(char *buf,
                  }
             */
             while ((*point = *(i++)))
+            {
                 point++;
+            }
 
             i = NULL;
 
             ++strp;
         }
         else if (!(*(point++) = *(strp++)))
+        {
             break;
+        }
     }
 
     point--;
@@ -423,7 +507,9 @@ void act_generate(char *buf,
         cpos = strchr(point, '>');
 
         if (cpos)
+        {
             point = cpos + 1; // Skip the '>' char
+        }
     }
     *point = toupper(*point);
 }
@@ -441,7 +527,9 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
     assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);
 
     if (!str || !*str)
+    {
         return;
+    }
 
     *buf = 0;
 
@@ -449,14 +537,18 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
     {
         to = arg3.m_u;
         if (IS_CHAR(to))
+        {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0); // No newline
+        }
         return;
     }
     else if (type == TO_CHAR)
     {
         to = arg1.m_u;
         if (IS_CHAR(to))
+        {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0);
+        }
     }
 }
 
@@ -470,16 +562,26 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);
 
     if (!str || !*str)
+    {
         return;
+    }
 
     if (type == TO_VICT)
+    {
         to = arg3.m_u;
+    }
     else if (type == TO_CHAR)
+    {
         to = arg1.m_u;
+    }
     else if (arg1.m_u == NULL || UNIT_IN(arg1.m_u) == NULL)
+    {
         return;
+    }
     else
+    {
         to = UNIT_CONTAINS(UNIT_IN(arg1.m_u));
+    }
 
     /* same unit or to person */
     for (; to; to = to->next)
@@ -491,18 +593,25 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
         }
 
         if (type == TO_VICT || type == TO_CHAR)
+        {
             return;
+        }
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
+        {
             for (u = UNIT_CONTAINS(to); u; u = u->next)
+            {
                 if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                 {
                     act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                     send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
                 }
+            }
+        }
     }
 
     /* other units outside transparent unit */
     if (UNIT_IN(arg1.m_u) && (to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
+    {
         for (to = UNIT_CONTAINS(to); to; to = to->next)
         {
             if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
@@ -512,13 +621,18 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
             }
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
+            {
                 for (u = UNIT_CONTAINS(to); u; u = u->next)
+                {
                     if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                     {
                         act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                         send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
                     }
+                }
+            }
         }
+    }
 }
 
 void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type, const char *colortype)
@@ -531,16 +645,26 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);
 
     if (!str || !*str)
+    {
         return;
+    }
 
     if (type == TO_VICT)
+    {
         to = arg3.m_u;
+    }
     else if (type == TO_CHAR)
+    {
         to = arg1.m_u;
+    }
     else if (arg1.m_u == NULL || UNIT_IN(arg1.m_u) == NULL)
+    {
         return;
+    }
     else
+    {
         to = UNIT_CONTAINS(UNIT_IN(arg1.m_u));
+    }
 
     /* same unit or to person */
     for (; to; to = to->next)
@@ -564,10 +688,14 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
         }
 
         if (type == TO_VICT || type == TO_CHAR)
+        {
             return;
+        }
 
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
+        {
             for (u = UNIT_CONTAINS(to); u; u = u->next)
+            {
                 if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                 {
                     *buf = 0;
@@ -580,10 +708,13 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
                     strcat(b, "</div><br/>");
                     send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
                 }
+            }
+        }
     }
 
     /* other units outside transparent unit */
     if ((to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
+    {
         for (to = UNIT_CONTAINS(to); to; to = to->next)
         {
             if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
@@ -599,7 +730,9 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
             }
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
+            {
                 for (u = UNIT_CONTAINS(to); u; u = u->next)
+                {
                     if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                     {
                         *buf = 0;
@@ -611,5 +744,8 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
                         strcat(b, "</div><br/>");
                         send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
                     }
+                }
+            }
         }
+    }
 }

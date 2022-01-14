@@ -73,24 +73,36 @@ void create_affect(class unit_data *unit, class unit_affected_type *af)
         if (af->id >= 0)
         {
             if (af->applyf_i >= 0)
+            {
                 if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
+                {
                     return;
+                }
+            }
 
             if (af->firstf_i >= 0)
+            {
                 (*g_tif[af->firstf_i].func)(af, unit);
+            }
 
             if (af->duration > 0)
+            {
                 af->duration--; /* When 1 it means stop next tick... */
+            }
 
             if (af->beat > 0)
             {
                 if (af->event)
+                {
                     g_events.remove(affect_beat, (void *)af, 0);
+                }
                 af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
             }
         }
         else
+        {
             af->event = NULL;
+        }
     }
 }
 
@@ -107,18 +119,26 @@ void unlink_affect(class unit_affected_type *af)
     g_events.remove(affect_beat, (void *)af, 0);
 
     if (next_affected_dude == af)
+    {
         next_affected_dude = af->gnext;
+    }
 
     /* Unlink affect structure from global list of affects */
 
     if (affected_list == af)
+    {
         affected_list = af->gnext;
+    }
 
     if (af->gnext)
+    {
         af->gnext->gprevious = af->gprevious;
+    }
 
     if (af->gprevious)
+    {
         af->gprevious->gnext = af->gnext;
+    }
 
     /* Unlink affect structure from local list */
 
@@ -132,7 +152,9 @@ void unlink_affect(class unit_affected_type *af)
         else
         {
             for (; i->next != af; i = i->next)
+            {
                 ;
+            }
 
             assert(i);
             i->next = af->next;
@@ -150,18 +172,24 @@ void destroy_affect(class unit_affected_type *af)
     if (af->id >= 0)
     {
         if (af->applyf_i >= 0)
+        {
             if (!(*g_apf[af->applyf_i].func)(af, af->owner, FALSE))
             {
                 af->duration = 0;
                 af->beat = WAIT_SEC * 5;
                 if (af->event)
+                {
                     g_events.remove(affect_beat, (void *)af, 0);
+                }
                 af->event = g_events.add(number(120, 240), affect_beat, (void *)af, 0);
                 return;
             }
+        }
 
         if (af->lastf_i >= 0 && !af->owner->is_destructed())
+        {
             (*g_tif[af->lastf_i].func)(af, af->owner);
+        }
     }
 
     unlink_affect(af);
@@ -185,7 +213,9 @@ void affect_clear_unit(class unit_data *unit)
     }
 
     if (UNIT_AFFECTED(unit))
+    {
         slog(LOG_ALL, 0, "ERROR: Could not clear unit of affects!");
+    }
 }
 
 unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
@@ -193,8 +223,12 @@ unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
     class unit_affected_type *af;
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    {
         if (af->id == id)
+        {
             return af;
+        }
+    }
 
     return 0;
 }
@@ -210,7 +244,9 @@ void affect_beat(void *p1, void *p2)
     /* Used to be assert(af->beat > 0);  */
     /* But crashes game, I've set 0 to 8 */
     if (af->beat <= 0)
+    {
         af->beat = 2 * WAIT_SEC;
+    }
 
     destroyed = FALSE;
 
@@ -226,18 +262,24 @@ void affect_beat(void *p1, void *p2)
         else
         {
             if (af->tickf_i >= 0)
+            {
                 (*g_tif[af->tickf_i].func)(af, af->owner);
+            }
 
             destroyed = af->is_destructed();
 
             if (!destroyed && (af->duration > 0))
+            {
                 af->duration--;
+            }
         }
     }
     if (!destroyed)
     {
         if (af->event)
+        {
             g_events.remove(affect_beat, (void *)af, 0);
+        }
         af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
     }
 }
@@ -250,11 +292,15 @@ void apply_affect(class unit_data *unit)
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    {
         if ((af->id >= 0) && (af->applyf_i >= 0))
         {
             if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
+            {
                 continue;
+            }
         }
+    }
 }
 
 void start_affect(class unit_data *unit)
@@ -263,14 +309,20 @@ void start_affect(class unit_data *unit)
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    {
         if ((af->id >= 0) && (af->beat > 0))
         {
             if (af->event)
+            {
                 g_events.remove(affect_beat, (void *)af, 0);
+            }
             af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
         }
         else
+        {
             af->event = NULL;
+        }
+    }
 }
 
 void stop_affect(class unit_data *unit)
@@ -278,6 +330,10 @@ void stop_affect(class unit_data *unit)
     class unit_affected_type *af;
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    {
         if (af->event != NULL)
+        {
             g_events.remove(affect_beat, (void *)af, 0);
+        }
+    }
 }

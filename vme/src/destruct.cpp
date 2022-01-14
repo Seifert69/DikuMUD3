@@ -110,7 +110,9 @@ void basedestruct::register_destruct(void)
     int i = destruct_classindex();
 
     if (destructed_idx[i] >= destructed_top[i])
+    {
         destruct_resize(i);
+    }
 
     destructed[i][destructed_idx[i]] = this;
     destructed_idx[i]++;
@@ -156,7 +158,9 @@ void destruct_unit(class unit_data *unit)
     class descriptor_data *d;
     int in_menu = FALSE;
     if (!unit)
+    {
         return;
+    }
 
     if (!IS_PC(unit))
     {
@@ -191,8 +195,12 @@ void destruct_unit(class unit_data *unit)
 
         /* If the PC which is switched is extracted, then unswitch */
         if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+        {
             for (d = g_descriptor_list; d; d = d->next)
+            {
                 assert(d->original != unit);
+            }
+        }
 
         assert(!CHAR_FOLLOWERS(unit));
         assert(!CHAR_MASTER(unit));
@@ -207,7 +215,9 @@ void destruct_unit(class unit_data *unit)
     while (UNIT_CONTAINS(unit))
     {
         if (IS_OBJ(UNIT_CONTAINS(unit)) && OBJ_EQP_POS(UNIT_CONTAINS(unit)))
+        {
             unequip_object(UNIT_CONTAINS(unit));
+        }
         destruct_unit(UNIT_CONTAINS(unit));
     }
 
@@ -216,14 +226,20 @@ void destruct_unit(class unit_data *unit)
         /* Call functions of the unit which have any data                     */
         /* that they might want to work on.                                   */
         while (UNIT_FUNC(unit))
+        {
             destroy_fptr(unit, UNIT_FUNC(unit)); /* Unlinks, no free */
+        }
 
         while (UNIT_AFFECTED(unit))
+        {
             unlink_affect(UNIT_AFFECTED(unit));
+        }
     }
 
     if (UNIT_IN(unit))
+    {
         unit_from_unit(unit);
+    }
 
     if (UNIT_FILE_INDEX(unit))
     {
@@ -231,7 +247,9 @@ void destruct_unit(class unit_data *unit)
     }
 
     if ((g_unit_list == unit) || unit->gnext || unit->gprevious)
+    {
         remove_from_unit_list(unit);
+    }
 
     if (!in_menu)
     {
@@ -248,7 +266,9 @@ void clear_destructed(void)
     int i;
 
     for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
+    {
         delete (class unit_affected_type *)destructed[DR_AFFECT][i];
+    }
 
     destructed_idx[DR_AFFECT] = 0;
 
@@ -257,7 +277,9 @@ void clear_destructed(void)
         f = (class unit_fptr *)destructed[DR_FUNC][i];
 
         if (f->index == 82)
+        {
             assert(f->data == NULL);
+        }
 
         assert(f->event == NULL);
 

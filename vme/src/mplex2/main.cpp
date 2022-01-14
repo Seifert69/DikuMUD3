@@ -45,7 +45,9 @@ int main(int argc, char *argv[])
     assert(i++ == 0); /* Make sure we dont call ourselves... cheap hack! :) */
 
     if (!ParseArg(argc, argv, &g_mplex_arg))
+    {
         exit(0);
+    }
 
 #ifndef _WINDOWS
     signal(SIGQUIT, bye_signal);
@@ -72,7 +74,9 @@ int main(int argc, char *argv[])
         Assert(fd != -1, "NO MOTHER CONNECTION.");
 
         if (g_MotherHook.tfd() != -1)
+        {
             slog(LOG_ALL, 0, "Hook() in main called with a non -1 fd.");
+        }
 
         g_CaptainHook.Hook(fd, &g_MotherHook);
     }

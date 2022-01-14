@@ -61,7 +61,9 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
 
     if (pk_test(ch, vict, TRUE))
+    {
         return;
+    }
 
     if ((stabber = equipment_type(ch, WEAR_WIELD, ITEM_WEAPON)) == NULL)
     {
@@ -90,12 +92,16 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
         /* For each recent backstab, victim gets a +50 bonus to resist. */
 
         if ((paf = affected_by_spell(vict, ID_BACKSTABBED)))
+        {
             skillb += 50 * paf->data[0];
+        }
 
         hm = resistance_skill_check(effective_dex(ch), CHAR_DEX(vict), skilla, skillb);
     }
     else
+    {
         hm = resistance_skill_check(effective_dex(ch), 0, skilla, 0);
+    }
 
     if (paf == NULL)
     {

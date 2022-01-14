@@ -22,12 +22,14 @@ void remove_gmap(class cConHook *con)
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
     for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
+    {
         if (it->second == con)
         {
             slog(LOG_OFF, 0, "remove_gmap located con class, removed.");
             g_cMapHandler.erase(it);
             return;
         }
+    }
 }
 
 void on_close(websocketpp::connection_hdl hdl)

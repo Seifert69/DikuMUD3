@@ -89,10 +89,14 @@ char tmpfile2[L_tmpnam] = "";
 void dmc_exit(int n)
 {
     if (*tmpfile1)
+    {
         remove(tmpfile1);
+    }
 
     if (*tmpfile2)
+    {
         remove(tmpfile2);
+    }
 
     exit(n);
 }
@@ -120,13 +124,19 @@ void fix(char *file)
         sprintf(tmp2, "%s.%s", filename_prefix, OUTPUT_RSUFFIX);
         result = stat_mtime(file);
         if (result <= stat_mtime(tmp) && result <= stat_mtime(tmp2))
+        {
             return;
+        }
     }
     /* find filename component of path w/o .zon-suffix */
     if (!(p = strrchr(filename_prefix, '/')))
+    {
         p = filename_prefix;
+    }
     else
+    {
         ++p;
+    }
     strcpy(filename, p);
     strcpy(g_cur_filename, file);
     strcpy(top_filename, file);
@@ -160,13 +170,17 @@ void fix(char *file)
     else if (g_errcon)
     {
         if (g_fatal_warnings)
+        {
             fprintf(stderr, "Warnings have been treated as fatal errors.\n");
+        }
 
         fprintf(stderr, "Compilation aborted.\n");
         exit(1);
     }
     else
+    {
         dump_zone(filename_prefix);
+    }
 }
 
 void zone_reset(char *default_name)
@@ -196,14 +210,18 @@ void mem_init()
     CREATE(mm.bufs[0], char, MEMBLOCK);
     mm.buf = 0;
     for (i = 1; i <= BUFS; i++)
+    {
         mm.bufs[i] = 0;
+    }
     mm.free = 0;
 }
 
 void mem_reset()
 {
     if (ident_names)
+    {
         free_namelist(ident_names);
+    }
 
     ident_names = create_namelist();
 
@@ -296,7 +314,9 @@ void write_resetcom(FILE *fl, struct reset_command *c)
         fwrite(t, 1, strlen(t) + 1, fl);
     }
     else
+    {
         fwrite(nul, 1, 2, fl);
+    }
     if (c->ref2)
     {
         t = c->ref2;
@@ -305,7 +325,9 @@ void write_resetcom(FILE *fl, struct reset_command *c)
         fwrite(t, 1, strlen(t) + 1, fl);
     }
     else
+    {
         fwrite(nul, 1, 2, fl);
+    }
     fwrite(&c->num1, sizeof(c->num1), 1, fl);
     fwrite(&c->num2, sizeof(c->num2), 1, fl);
     fwrite(&c->num3, sizeof(c->num3), 1, fl);
@@ -361,7 +383,9 @@ void dump_zone(char *prefix)
     for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
+        {
             no_rooms++;
+        }
         check_unique_ident(u);
         process_unit(u);
     }
@@ -394,7 +418,9 @@ void dump_zone(char *prefix)
     }
 
     if (g_nooutput)
+    {
         return;
+    }
     sprintf(filename, "%s.%s", prefix, OUTPUT_WSUFFIX);
     if (!(fl = fopen(filename, "w")))
     {
@@ -411,14 +437,22 @@ void dump_zone(char *prefix)
     fwrite(&g_zone.z_zone.weather, sizeof(int), 1, fl);
     /* More data inserted here */
     if (g_zone.z_zone.notes)
+    {
         fwrite(g_zone.z_zone.notes, sizeof(char), strlen(g_zone.z_zone.notes) + 1, fl);
+    }
     else
+    {
         fwrite("", sizeof(char), 1, fl);
+    }
 
     if (g_zone.z_zone.help)
+    {
         fwrite(g_zone.z_zone.help, sizeof(char), strlen(g_zone.z_zone.help) + 1, fl);
+    }
     else
+    {
         fwrite("No help for this zone.", sizeof(char), 23, fl);
+    }
     if (g_zone.z_zone.creators)
     {
         // MS2020 for (creators = zone.z_zone.creators; (ubit32)*creators; creators++)
@@ -434,16 +468,22 @@ void dump_zone(char *prefix)
         fwrite(g_zone.z_zone.title, sizeof(char), strlen(g_zone.z_zone.title) + 1, fl);
     }
     else
+    {
         fwrite("", sizeof(char), 1, fl);
+    }
 
     /* write DIL templates */
     for (tmpl = g_zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
+    {
         write_diltemplate(fl, tmpl);
+    }
 
     /* end of DIL templates marker */
     dummy = 0;
     if (fwrite(&dummy, sizeof(dummy), 1, fl) != 1)
+    {
         error(HERE, "Failed to fwrite() end of DIL templates");
+    }
 
     write_dot(prefix);
     for (u = g_zone.z_rooms; u; u = u->next)
@@ -460,7 +500,9 @@ void dump_zone(char *prefix)
     }
 
     for (u = g_zone.z_objects; u; u = u->next)
+    {
         write_unit(fl, u, UNIT_IDENT(u));
+    }
 
     u = g_zone.z_objects;
     while (u)
@@ -471,7 +513,9 @@ void dump_zone(char *prefix)
     }
 
     for (u = g_zone.z_mobiles; u; u = u->next)
+    {
         write_unit(fl, u, UNIT_IDENT(u));
+    }
 
     u = g_zone.z_mobiles;
     while (u)
@@ -502,7 +546,9 @@ void dump_zone(char *prefix)
     fwrite(&g_zone.z_zone.reset_mode, sizeof(unsigned char), 1, fl);
 
     for (c = g_zone.z_table; c; c = c->next)
+    {
         write_resetcom(fl, c);
+    }
 
     fwrite("VMC", sizeof(char), 3, fl);
     fclose(fl);
@@ -514,7 +560,9 @@ long stat_mtime(char *name)
     struct stat buf;
 
     if (stat(name, &buf) < 0)
+    {
         return 0;
+    }
     return buf.st_mtime;
 }
 
@@ -532,7 +580,9 @@ void dil_free_prg(struct dilprg *prg, int dil)
     tmpl = prg->frame[0].tmpl;
 
     for (frm = prg->frame; frm <= (prg->fp); frm++)
+    {
         dil_free_frame(frm);
+    }
     if (!dil)
         FREE(prg->frame);
 
@@ -578,7 +628,9 @@ void dil_free_frame(struct dilframe *frame)
 
     /* free variables */
     for (j = 0; j < frame->tmpl->varc; j++)
+    {
         dil_free_var(&frame->vars[j]);
+    }
 
     if (frame->vars)
     {
@@ -633,8 +685,10 @@ void dil_free_template(struct diltemplate *tmpl, int copy, int dil)
             if (tmpl->xrefs[i].name)
                 FREE(tmpl->xrefs[i].name);
             if (!dil)
+            {
                 if (tmpl->xrefs[i].argt)
                     FREE(tmpl->xrefs[i].argt);
+            }
         }
 
         if (tmpl->xrefs)
@@ -649,17 +703,23 @@ void graph_sc(char *prefix)
     class unit_data *u;
     int x;
     for (x = 0, u = g_zone.z_rooms; u; u = u->next, x++)
+    {
         if (IS_ROOM(u))
+        {
             ROOM_NUM(u) = x;
+        }
+    }
 
     typedef boost::adjacency_list<> ZoneGraph;
 
     ZoneGraph G(x);
     for (u = g_zone.z_rooms; u; u = u->next)
+    {
         if (IS_ROOM(u))
         {
             add_edge(ROOM_NUM(u), 0, G);
         }
+    }
 }
 
 void write_dot(char *prefix)
@@ -682,14 +742,17 @@ void write_dot(char *prefix)
     for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
+        {
             dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" "
                   << "[label=\"" << UNIT_IDENT(u) << "\"];" << std::endl;
+        }
     }
 
     dotfl << std::endl << "/* Room Interconnects */" << std::endl;
     for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
+        {
             for (int i = 0; i < MAX_EXIT; i++)
             {
                 if (ROOM_EXIT(u, i))
@@ -716,6 +779,7 @@ void write_dot(char *prefix)
                     }
                 }
             }
+        }
     }
     dotfl << "}" << std::endl;
     dotfl << std::endl << "/*  Zone Interconnect Points */" << std::endl << std::endl;

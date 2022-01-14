@@ -46,12 +46,18 @@ void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
     else
     {
         if (pk_test(ch, victim, TRUE))
+        {
             return;
+        }
 
         if (!CHAR_FIGHTING(ch))
+        {
             simple_one_hit(ch, victim);
+        }
         else
+        {
             send_to_char("You do the best you can!<br/>", ch);
+        }
     }
 }
 
@@ -80,7 +86,9 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
     }
 
     if (ch == victim)
+    {
         send_to_char("Your mother would be so sad.. :(<br/>", ch);
+    }
     else
     {
         act("You chop $3m to pieces! Ah! The blood!", A_SOMEONE, ch, cActParameter(), victim, TO_CHAR);

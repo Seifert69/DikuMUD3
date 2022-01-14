@@ -49,13 +49,19 @@ int new_crime_serial_no(void)
 void offend_legal_state(class unit_data *ch, class unit_data *victim)
 {
     if (!IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+    {
         if (!CHAR_COMBAT(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET))
+        {
             SET_BIT(CHAR_FLAGS(victim), CHAR_SELF_DEFENCE);
+        }
+    }
 
     /* Test for LEGAL_TARGET bit */
     if (IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
         !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+    {
         SET_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET);
+    }
 }
 
 // MS2020: Have the NPC walk to the designated room
@@ -171,11 +177,15 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
 
     /* When victim is legal target you can't get accused from it. */
     if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
+    {
         return;
+    }
 
     // It's OK to kill NPCs that are not "protected"
     if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+    {
         return;
+    }
 
     // First let's deal with registering the crime the criminal committed
     // add_crime(criminal, victim, crime_type);
@@ -1067,7 +1077,9 @@ int reward_give(struct spec_arg *sarg)
     currency_t cur;
 
     if (!is_command(sarg->cmd, "give"))
+    {
         return SFR_SHARE;
+    }
 
     u = UNIT_CONTAINS(sarg->owner);
 
@@ -1075,8 +1087,10 @@ int reward_give(struct spec_arg *sarg)
     buf = buf + (char *)sarg->arg;
     command_interpreter(sarg->activator, (const char *)buf.c_str());
 
-    if (UNIT_CONTAINS(sarg->owner) == u) /* Was it given nothing? */
+    if (UNIT_CONTAINS(sarg->owner) == u)
+    { /* Was it given nothing? */
         return SFR_BLOCK;
+    }
 
     if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == NULL)
     {
@@ -1089,7 +1103,9 @@ int reward_give(struct spec_arg *sarg)
     cur = local_currency(sarg->owner);
 
     if (IS_PC(sarg->activator))
+    {
         gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
+    }
 
     money_to_unit(sarg->activator, paf->data[1], cur);
 

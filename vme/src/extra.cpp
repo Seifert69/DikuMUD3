@@ -30,7 +30,9 @@ extra_descr_data::extra_descr_data(const char *name, const char *descr)
 
     this->names = names;
     if (descr)
+    {
         this->descr = descr;
+    }
     this->next = NULL;
 }
 
@@ -39,7 +41,9 @@ extra_descr_data::extra_descr_data(const char **names, const char *descr)
 {
     this->names = names;
     if (descr)
+    {
         this->descr = descr;
+    }
     this->next = NULL;
 }
 
@@ -48,7 +52,9 @@ extra_descr_data::extra_descr_data(cNamelist names, const char *descr)
 {
     this->names = names;
     if (descr)
+    {
         this->descr = descr;
+    }
     this->next = NULL;
 }
 
@@ -69,13 +75,19 @@ class extra_descr_data *extra_descr_data::find_raw(const char *word)
         if (exd->names.Length() < 1)
         {
             if (str_is_empty(word))
+            {
                 return exd;
+            }
         }
         else
         {
             for (i = 0; i < exd->names.Length(); i++)
+            {
                 if (str_ccmp(word, exd->names.Name(i)) == 0)
+                {
                     return exd;
+                }
+            }
         }
     }
 
@@ -111,6 +123,7 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
         class extra_descr_data *pex;
 
         for (pex = *exlist; pex->next; pex = pex->next)
+        {
             if (pex->next == tex)
             {
                 pex->next = tex->next;
@@ -118,6 +131,7 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
                 delete tex;
                 return;
             }
+        }
     }
 }
 
@@ -157,7 +171,9 @@ int extra_list::count(void)
 
     // Count no of elements in list
     for (e = this->m_pList, i = 0; e; e = e->next)
+    {
         i++;
+    }
 
     return i;
 }
@@ -182,7 +198,9 @@ std::string extra_list::json(void)
         s.append("}");
 
         if (e->next)
+        {
             s.append(",\n");
+        }
     }
 
     s.append(" ]");
@@ -201,13 +219,17 @@ void extra_list::push_front(class extra_descr_data *ex)
 void extra_list::push_tail(class extra_descr_data *ex)
 {
     if (m_pList == NULL)
+    {
         push_front(ex);
+    }
     else
     {
         class extra_descr_data *p;
 
         for (p = m_pList; p->next; p = p->next)
+        {
             ;
+        }
 
         // p now points to the last element in the list
         p->next = ex;
@@ -234,6 +256,7 @@ void extra_list::erase(class extra_descr_data *exd)
     class extra_descr_data *pex;
 
     for (pex = m_pList; pex->next; pex = pex->next)
+    {
         if (pex->next == exd)
         {
             pex->next = exd->next;
@@ -241,6 +264,7 @@ void extra_list::erase(class extra_descr_data *exd)
             delete exd;
             return;
         }
+    }
 
     /* This should not be possible */
 
@@ -294,7 +318,9 @@ void extra_list::remove(const char *name)
     class extra_descr_data *tex = find_raw(name);
 
     if (tex)
+    {
         this->erase(tex);
+    }
 }
 
 void extra_list::AppendBuffer(CByteBuffer *pBuf)
@@ -322,9 +348,13 @@ void extra_list::AppendBuffer(CByteBuffer *pBuf)
 class extra_descr_data *extra_list::find_raw(const char *word)
 {
     if (this->m_pList)
+    {
         return this->m_pList->find_raw(word);
+    }
     else
+    {
         return NULL;
+    }
 }
 
 // From the elist object, make a copy of the list
@@ -364,13 +394,19 @@ class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit)
             if (i->names.Name())
             {
                 if (i->names.Name(0)[0] == '$')
+                {
                     continue;
+                }
 
                 if (i->names.IsName(word))
+                {
                     return i;
+                }
             }
             else if (UNIT_NAMES(unit).IsName(word))
+            {
                 return i;
+            }
         }
     }
 
@@ -382,14 +418,18 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_dat
     class extra_descr_data *exd = NULL;
 
     if (!list)
+    {
         return NULL;
+    }
 
     if (IS_ROOM(list))
     {
         if (CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
         {
             if (target)
+            {
                 *target = list;
+            }
             return exd;
         }
         else
@@ -403,13 +443,17 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_dat
         if (CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
         {
             if (target)
+            {
                 *target = list;
+            }
             return exd;
         }
     }
 
     if (target)
+    {
         *target = NULL;
+    }
 
     return NULL;
 }
@@ -419,7 +463,9 @@ const char *unit_find_extra_string(class unit_data *ch, char *word, class unit_d
     class extra_descr_data *exd = char_unit_find_extra(ch, NULL, word, list);
 
     if (exd)
+    {
         return exd->descr.c_str();
+    }
 
     return NULL;
 }

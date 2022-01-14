@@ -32,14 +32,18 @@
 int dil_effect(char *pStr, struct spell_args *sa)
 {
     if (str_is_empty(pStr))
+    {
         return FALSE;
+    }
 
     struct diltemplate *tmpl;
 
     tmpl = find_dil_template(pStr);
 
     if (tmpl == NULL)
+    {
         return FALSE;
+    }
 
     if (tmpl->argc != 3)
     {
@@ -113,7 +117,9 @@ ubit1 use_mana(class unit_data *medium, int mana)
             return TRUE;
         }
         else
+        {
             return FALSE;
+        }
     }
     else if (IS_OBJ(medium))
     {
@@ -127,7 +133,9 @@ ubit1 use_mana(class unit_data *medium, int mana)
                     return TRUE;
                 }
                 else
+                {
                     return FALSE;
+                }
                 break;
             default:
                 return FALSE; /* no mana in other objects */
@@ -144,25 +152,41 @@ ubit1 cast_magic_now(class unit_data *ch, int mana)
     if (CHAR_MANA(ch) > mana)
     {
         if (UNIT_MAX_HIT(ch) <= 0)
+        {
             hleft = 0;
+        }
         else
+        {
             hleft = (100 * UNIT_HIT(ch)) / UNIT_MAX_HIT(ch);
+        }
 
         sleft = mana ? CHAR_MANA(ch) / mana : 20;
 
         if (sleft >= 5)
+        {
             return TRUE;
+        }
 
         if (hleft >= 95)
+        {
             return FALSE;
-        else if (hleft > 80) /* Small chance, allow heal to be possible */
+        }
+        else if (hleft > 80)
+        { /* Small chance, allow heal to be possible */
             return (number(1, MAX(1, 16 - 2 * sleft)) == 1);
+        }
         else if (hleft > 50)
+        {
             return (number(1, MAX(1, 6 - sleft)) == 1);
+        }
         else if (hleft > 40)
+        {
             return (number(1, MAX(1, 4 - sleft)) == 1);
+        }
         else
+        {
             return TRUE;
+        }
     }
     return FALSE;
 }
@@ -181,11 +205,17 @@ int variation(int num, int d, int u)
 ubit1 may_teleport_away(class unit_data *unit)
 {
     if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+    {
         return FALSE;
+    }
 
     while ((unit = UNIT_IN(unit)))
+    {
         if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+        {
             return FALSE;
+        }
+    }
 
     return TRUE;
 }
@@ -195,12 +225,16 @@ ubit1 may_teleport_to(class unit_data *unit, class unit_data *dest)
 {
     if (unit == dest || IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
         UNIT_WEIGHT(unit) + UNIT_WEIGHT(dest) > UNIT_CAPACITY(dest))
+    {
         return FALSE;
+    }
 
     do
     {
         if (IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT))
+        {
             return FALSE;
+        }
     } while ((dest = UNIT_IN(dest)));
 
     return TRUE;
@@ -219,20 +253,30 @@ int object_power(class unit_data *unit)
     if (IS_OBJ(unit))
     {
         if (OBJ_TYPE(unit) == ITEM_POTION || OBJ_TYPE(unit) == ITEM_SCROLL || OBJ_TYPE(unit) == ITEM_WAND || OBJ_TYPE(unit) == ITEM_STAFF)
+        {
             return OBJ_VALUE(unit, 0);
+        }
         else
+        {
             return OBJ_RESISTANCE(unit);
+        }
     }
     else
+    {
         return 0;
+    }
 }
 
 int room_power(class unit_data *unit)
 {
     if (IS_ROOM(unit))
+    {
         return ROOM_RESISTANCE(unit);
+    }
     else
+    {
         return 0;
+    }
 }
 
 /* Return how well a unit defends itself against a spell, by using */
@@ -245,46 +289,64 @@ int spell_defense_skill(class unit_data *unit, int spell)
     if (IS_PC(unit))
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
+        {
             max = PC_SPL_SKILL(unit, spell) / 2;
+        }
         else
+        {
             max = PC_SPL_SKILL(unit, spell);
+        }
 
         while (!TREE_ISROOT(g_SplColl.tree, spell))
         {
             spell = TREE_PARENT(g_SplColl.tree, spell);
 
             if (PC_SPL_SKILL(unit, spell) > max)
+            {
                 max = PC_SPL_SKILL(unit, spell);
+            }
         }
 
         return max;
     }
 
     if (IS_OBJ(unit))
+    {
         return object_power(unit); //  Philosophical... / 2 ?
+    }
 
     if (IS_NPC(unit))
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
+        {
             spell = TREE_PARENT(g_SplColl.tree, spell);
+        }
 
         if (TREE_ISROOT(g_SplColl.tree, spell))
+        {
             max = NPC_SPL_SKILL(unit, spell);
+        }
         else
+        {
             max = NPC_SPL_SKILL(unit, spell) / 2;
+        }
 
         while (!TREE_ISROOT(g_SplColl.tree, spell))
         {
             spell = TREE_PARENT(g_SplColl.tree, spell);
 
             if (NPC_SPL_SKILL(unit, spell) > max)
+            {
                 max = NPC_SPL_SKILL(unit, spell);
+            }
         }
 
         return max;
     }
     else
+    {
         return room_power(unit);
+    }
 }
 
 /* Return how well a unit attacks with a spell, by using its skill */
@@ -293,20 +355,28 @@ int spell_defense_skill(class unit_data *unit, int spell)
 int spell_attack_skill(class unit_data *unit, int spell)
 {
     if (IS_PC(unit))
+    {
         return PC_SPL_SKILL(unit, spell);
+    }
 
     if (IS_OBJ(unit))
+    {
         return object_power(unit);
+    }
 
     if (IS_NPC(unit))
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
+        {
             spell = TREE_PARENT(g_SplColl.tree, spell);
+        }
 
         return NPC_SPL_SKILL(unit, spell);
     }
     else
+    {
         return room_power(unit);
+    }
 }
 
 /* Return the power in a unit for a given spell type     */
@@ -327,9 +397,13 @@ int spell_attack_ability(class unit_data *medium, int spell)
 int spell_ability(class unit_data *u, int ability, int spell)
 {
     if (IS_CHAR(u))
+    {
         return CHAR_ABILITY(u, ability);
+    }
     else
+    {
         return spell_defense_skill(u, spell);
+    }
 }
 
 /* ===================================================================== */
@@ -341,15 +415,19 @@ int spell_ability(class unit_data *u, int ability, int spell)
 int spell_resistance(class unit_data *att, class unit_data *def, int spell)
 {
     if (IS_CHAR(att) && IS_CHAR(def))
+    {
         return resistance_skill_check(spell_attack_ability(att, spell),
                                       spell_ability(def, ABIL_BRA, spell),
                                       spell_attack_skill(att, spell),
                                       spell_defense_skill(def, spell));
+    }
     else
+    {
         return resistance_skill_check(spell_attack_ability(att, spell),
                                       spell_ability(def, ABIL_BRA, spell),
                                       spell_attack_skill(att, spell),
                                       spell_defense_skill(def, spell));
+    }
 }
 
 /* Use this function when a spell caster competes against his own */
@@ -407,9 +485,13 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
     bEffect = dil_effect(sa->pEffect, sa);
 
     if (sa->hm > 0)
+    {
         damage(sa->caster, sa->target, 0, sa->hm, MSG_TYPE_SPELL, spell_number, COM_MSG_EBODY, !bEffect);
+    }
     else
+    {
         damage(sa->caster, sa->target, 0, 0, MSG_TYPE_SPELL, spell_number, COM_MSG_MISS, !bEffect);
+    }
 
     return sa->hm;
 }

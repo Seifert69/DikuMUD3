@@ -54,7 +54,9 @@ ubit1 spell_legal_type(int spl, int type)
 ubit1 spell_legal_target(int spl, class unit_data *caster, class unit_data *target)
 {
     if (IS_SET(g_spell_info[spl].targets, TAR_IGNORE))
+    {
         return TRUE;
+    }
 
     if (caster == NULL || target == NULL)
     {
@@ -63,14 +65,20 @@ ubit1 spell_legal_target(int spl, class unit_data *caster, class unit_data *targ
     }
 
     if (g_spell_info[spl].offensive && pk_test(caster, target, TRUE))
+    {
         return FALSE;
+    }
 
     if (IS_SET(g_spell_info[spl].targets, caster == target ? TAR_SELF_NONO : TAR_SELF_ONLY))
+    {
         return FALSE;
+    }
 
     if ((IS_SET(g_spell_info[spl].targets, TAR_ROOM) && IS_ROOM(target)) ||
         (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && IS_CHAR(target)) || (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && IS_OBJ(target)))
+    {
         return TRUE;
+    }
 
     return FALSE;
 }
@@ -120,19 +128,27 @@ int spell_perform(int spell_no,
         int bitv = 0;
 
         if (IS_SET(g_spell_info[spell_no].targets, TAR_CHAR))
+        {
             SET_BIT(bitv, UNIT_ST_NPC | UNIT_ST_PC);
+        }
 
         if (IS_SET(g_spell_info[spell_no].targets, TAR_OBJ))
+        {
             SET_BIT(bitv, UNIT_ST_OBJ);
+        }
 
         scan4_unit(caster, bitv);
 
         for (i = 0; i < g_unit_vector.top; i++)
+        {
             hm = spell_perform(spell_no, MEDIA_WAND, caster, medium, UVI(i), argument, pEffect);
+        }
 
         /* Self too... */
         if (!IS_SET(g_spell_info[spell_no].media, MEDIA_SELF_NONO))
+        {
             hm = spell_perform(spell_no, MEDIA_WAND, caster, medium, caster, argument, pEffect);
+        }
 
         return hm;
     }
@@ -159,7 +175,9 @@ int spell_perform(int spell_no,
     }
 
     if (g_spell_info[spell_no].offensive && target && IS_CHAR(target))
+    {
         offend_legal_state(caster, target);
+    }
 
     switch (g_spell_info[spell_no].cast_type)
     {
@@ -188,7 +206,9 @@ int spell_perform(int spell_no,
     strcat(myarg, argument);
 
     if (send_ack(caster, medium, target, &hm, cmd, myarg, target) == SFR_BLOCK)
+    {
         return hm;
+    }
 
     if (g_spell_info[spell_no].tmpl)
     {
@@ -337,7 +357,9 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
             unit = find_unit(ch, &argument, 0, g_spell_info[spl].targets);
 
             if (unit)
+            {
                 target_ok = TRUE;
+            }
         }
         else /* string is empty */
         {
@@ -348,7 +370,9 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
             }
 
             if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_FIGHT_VICT) && (unit = CHAR_FIGHTING(ch)))
+            {
                 target_ok = TRUE;
+            }
 
             if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_AUTO_SELF))
             {
@@ -368,16 +392,26 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
             if (*orgarg) /* If a name was typed */
             {
                 if (IS_SET(g_spell_info[spl].targets, TAR_CHAR))
+                {
                     act("Nobody by the name '$2t' here.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                }
                 else if (IS_SET(g_spell_info[spl].targets, TAR_OBJ))
+                {
                     act("Nothing by the name '' here.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                }
                 else if (IS_SET(g_spell_info[spl].targets, TAR_ROOM))
+                {
                     act("No location by the name '$2t'.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                }
                 else
+                {
                     send_to_char("Uhm....?<br/>", ch);
+                }
             }
-            else /* Nothing was given as argument */
+            else
+            { /* Nothing was given as argument */
                 act("What should the $2t spell be cast upon?", A_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), TO_CHAR);
+            }
 
             return;
         }
@@ -411,7 +445,9 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
     // Spells take time too!
     if (CHAR_COMBAT(ch))
+    {
         CHAR_COMBAT(ch)->changeSpeed(g_spell_info[spl].beats);
+    }
 
     say_spell(ch, unit, spl);
 
@@ -428,7 +464,9 @@ void spell_dil_check(void)
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
         if (g_spell_info[i].tmpl == NULL)
+        {
             continue;
+        }
 
         dil_name = (char *)g_spell_info[i].tmpl;
         g_spell_info[i].tmpl = find_dil_template(dil_name);
@@ -509,7 +547,9 @@ static void spell_read(void)
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
         if (mstmp == NULL)
+        {
             continue;
+        }
 
         str_remspc(pTmp);
 
@@ -524,7 +564,9 @@ static void spell_read(void)
         strip_trailing_blanks(pTmp);
 
         if (pCh == NULL || str_is_empty(pCh))
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "index", 5) == 0)
         {
@@ -538,7 +580,9 @@ static void spell_read(void)
         }
 
         if (idx == -1)
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
@@ -583,37 +627,49 @@ static void spell_read(void)
         {
             dummy = atoi(pCh);
             if (dummy == A_ALWAYS || dummy == A_HIDEINV || dummy == A_SOMEONE)
+            {
                 g_spell_info[idx].acttype = dummy;
+            }
         }
         else if (strncmp(pTmp, "sphere", 6) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, SPL_NONE, SPL_GROUP_MAX - 1))
+            {
                 g_SplColl.tree[idx].parent = dummy;
+            }
         }
         else if (strncmp(pTmp, "auto train", 10) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_SplColl.tree[idx].bAutoTrain = dummy;
+            }
         }
         else if (strncmp(pTmp, "auto teacher no add", 19) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_SplColl.tree[idx].bAutoTeacherNoAdd = dummy;
+            }
         }
         else if (strncmp(pTmp, "shield", 6) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, SHIELD_M_BLOCK, SHIELD_M_USELESS))
+            {
                 g_spell_info[idx].shield = dummy;
+            }
         }
         else if (strncmp(pTmp, "realm", 5) == 0)
         {
             dummy = atoi(pCh);
             if (dummy == ABIL_MAG || dummy == ABIL_DIV)
+            {
                 g_spell_info[idx].realm = dummy;
+            }
         }
         else if (strncmp(pTmp, "func", 4) == 0)
         {
@@ -626,19 +682,25 @@ static void spell_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, POSITION_DEAD, POSITION_STANDING))
+            {
                 g_spell_info[idx].minimum_position = dummy;
+            }
         }
         else if (strncmp(pTmp, "mana", 4) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 100))
+            {
                 g_spell_info[idx].usesmana = dummy;
+            }
         }
         else if (strncmp(pTmp, "turns", 5) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 4 * PULSE_VIOLENCE))
+            {
                 g_spell_info[idx].beats = dummy;
+            }
         }
         else if (strncmp(pTmp, "targets", 7) == 0)
         {
@@ -654,7 +716,9 @@ static void spell_read(void)
         {
             dummy = atoi(pCh);
             if (dummy == SPLCST_IGNORE || dummy == SPLCST_RESIST || dummy == SPLCST_CHECK)
+            {
                 g_spell_info[idx].cast_type = dummy;
+            }
         }
         else if (strncmp(pTmp, "offensive", 9) == 0)
         {
@@ -665,14 +729,20 @@ static void spell_read(void)
         {
             dummy = atoi(pCh);
             if (!is_in(dummy, -3, +3))
+            {
                 continue;
+            }
 
             int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Spells: Illegal race in: %s", pTmp);
+            }
             else
+            {
                 g_SplColl.racial[ridx][idx] = dummy;
+            }
         }
         else if (strncmp(pTmp, "profession ", 11) == 0)
         {
@@ -686,9 +756,13 @@ static void spell_read(void)
             int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Spells: Illegal profession %s", pTmp);
+            }
             else
+            {
                 g_SplColl.prof_table[idx].profession_cost[ridx] = dummy;
+            }
         }
         else if (strncmp(pTmp, "restrict ", 9) == 0)
         {
@@ -708,16 +782,22 @@ static void spell_read(void)
                 int ridx = search_block(pTmp + 9, g_AbiColl.text, TRUE);
 
                 if (ridx == -1)
+                {
                     slog(LOG_ALL, 0, "Spells: Illegal restrict %s", pTmp);
+                }
                 else
+                {
                     g_SplColl.prof_table[idx].min_abil[ridx] = dummy;
+                }
             }
         }
         else if (strncmp(pTmp, "fumble", 6) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 99))
+            {
                 g_spell_chart[idx].fumble = dummy;
+            }
         }
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
@@ -739,15 +819,25 @@ static void spell_read(void)
             }
 
             if (strncmp(pTmp + 7, "clothes", 7) == 0)
+            {
                 idx2 = ARM_CLOTHES;
+            }
             else if (strncmp(pTmp + 7, "sleather", 8) == 0)
+            {
                 idx2 = ARM_LEATHER;
+            }
             else if (strncmp(pTmp + 7, "hleather", 8) == 0)
+            {
                 idx2 = ARM_HLEATHER;
+            }
             else if (strncmp(pTmp + 7, "chain", 5) == 0)
+            {
                 idx2 = ARM_CHAIN;
+            }
             else if (strncmp(pTmp + 7, "plate", 5) == 0)
+            {
                 idx2 = ARM_PLATE;
+            }
 
             if (idx2 != -1)
             {
@@ -757,7 +847,9 @@ static void spell_read(void)
             }
         }
         else
+        {
             slog(LOG_ALL, 0, "Spell boot unknown string: %s", pTmp);
+        }
     }
 
     fclose(fl);
@@ -790,9 +882,13 @@ static void spell_init(void)
         g_SplColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
         if (i < SPL_GROUP_MAX)
+        {
             g_SplColl.tree[i].isleaf = FALSE;
+        }
         else
+        {
             g_SplColl.tree[i].isleaf = TRUE;
+        }
 
         g_spell_info[i].spell_pointer = NULL;
         g_spell_info[i].minimum_position = POSITION_STANDING;
@@ -810,17 +906,23 @@ static void spell_init(void)
 
         /* Default to zero */
         for (j = 0; j < PC_RACE_MAX; j++)
+        {
             g_SplColl.racial[j][i] = 0;
+        }
 
         /* Clear the spell_prof table */
         g_SplColl.prof_table[i].sanity = i;
         g_SplColl.prof_table[i].min_level = 0;
 
         for (int j = 0; j < ABIL_TREE_MAX; j++)
+        {
             g_SplColl.prof_table[i].min_abil[j] = 0;
+        }
 
         for (int j = 0; j < PROFESSION_MAX; j++)
+        {
             g_SplColl.prof_table[i].profession_cost[j] = -7;
+        }
 
         if ((i <= LAST_SPELL) && (g_SplColl.prof_table[i].sanity != i))
         {
@@ -846,7 +948,9 @@ void spell_dump(void)
         for (int i = 0; i < SPL_TREE_MAX; i++)
         {
             if (g_SplColl.text[i] == NULL)
+            {
                 continue;
+            }
 
             str = "";
 
@@ -879,7 +983,9 @@ void spell_dump(void)
         }
         std::sort(vect.begin(), vect.end(), pairISCompare);
         for (auto it = vect.begin(); it != vect.end(); ++it)
+        {
             printf("%s", it->second.c_str());
+        }
     }
 
     exit(0);

@@ -27,9 +27,13 @@ int trie_sort_cmp(const void *keyval, const void *datum)
 struct trie_entry *triebindex(char c, struct trie_type *t)
 {
     if (t->nexts)
+    {
         return (struct trie_entry *)bsearch(&c, t->nexts, t->size, sizeof(struct trie_entry), trie_src_cmp);
+    }
     else
+    {
         return NULL;
+    }
 }
 
 void qsort_triedata(struct trie_type *t)
@@ -39,7 +43,9 @@ void qsort_triedata(struct trie_type *t)
     qsort(t->nexts, t->size, sizeof(struct trie_entry), trie_sort_cmp);
 
     for (i = 0; i < t->size; i++)
+    {
         qsort_triedata(t->nexts[i].t);
+    }
 }
 
 int trie_index(char c, struct trie_type *t)
@@ -48,8 +54,12 @@ int trie_index(char c, struct trie_type *t)
 
     /* See if the char already exists in array */
     for (i = 0; i < t->size; i++)
+    {
         if (t->nexts[i].c == c)
+        {
             break;
+        }
+    }
 
     return i < t->size ? i : -1;
 }
@@ -92,7 +102,9 @@ struct trie_type *add_trienode(const char *s, struct trie_type *t)
             t->nexts[t->size - 1].t = add_trienode(s + 1, NULL);
         }
         else
+        {
             add_trienode(s + 1, t->nexts[i].t);
+        }
     }
 
     return t;
@@ -105,7 +117,9 @@ void set_triedata(const char *s, struct trie_type *t, void *p, ubit1 nonabbrev)
     while (*s && t)
     {
         if (t->data == NULL && !nonabbrev)
+        {
             t->data = p;
+        }
 
         i = trie_index(*s, t);
 
@@ -122,7 +136,9 @@ void set_triedata(const char *s, struct trie_type *t, void *p, ubit1 nonabbrev)
     }
 
     if (t && t->data == NULL)
+    {
         t->data = p;
+    }
 }
 
 /* It runs in nothing less than O(|s|), returns the data pointer */
@@ -131,8 +147,12 @@ void *search_trie(const char *s, struct trie_type *t)
     struct trie_entry *te;
 
     for (; *s && t; t = te->t, ++s)
-        if ((te = triebindex(*s, t)) == NULL) /* O(1) since always < 256 */
+    {
+        if ((te = triebindex(*s, t)) == NULL)
+        { /* O(1) since always < 256 */
             return NULL;
+        }
+    }
 
     return t->data;
 }
@@ -149,7 +169,9 @@ void free_trie(struct trie_type *t, void (*free_data)(void *))
 
     /* If there's any data at this node, let the supplied method free it */
     if (t->data)
+    {
         (*free_data)(t->data);
+    }
 
     /* Subtract size of free'ed info */
     trie_size -= (t->size * sizeof(struct trie_entry) + sizeof(struct trie_type));
@@ -157,8 +179,12 @@ void free_trie(struct trie_type *t, void (*free_data)(void *))
 
     /* Walk through node-array, and call recursively */
     for (i = 0; i < t->size; i++)
+    {
         if (t->nexts[i].t)
+        {
             free_trie(t->nexts[i].t, free_data);
+        }
+    }
 
     /* Clean up the last bits */
     if (t->size > 0)
@@ -199,7 +225,9 @@ ubit1 del_trie(char *s, struct trie_type **t, void (*free_data)(void *))
 
                 (*t)->size--;
                 for (; i < (*t)->size; i++)
+                {
                     (*t)->nexts[i] = (*t)->nexts[i + 1];
+                }
                 RECREATE((*t)->nexts, struct trie_entry, (*t)->size);
             }
         }

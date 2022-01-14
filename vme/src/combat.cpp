@@ -53,10 +53,13 @@ void cCombatList::add(class cCombat *Combat)
 void cCombatList::sub(class cCombat *pc)
 {
     for (int i = 0; i < nTop; i++)
+    {
         if (pElems[i] == pc)
         {
             if (nTop - i > 1)
+            {
                 memmove(&pElems[i], &pElems[i + 1], sizeof(class cCombat *) * (nTop - i - 1));
+            }
 
             pElems[nTop - 1] = NULL;
 
@@ -65,9 +68,12 @@ void cCombatList::sub(class cCombat *pc)
             if (nIdx != -1) /* Uh oh, we are running through the list... */
             {
                 if (i < nIdx)
+                {
                     nIdx--;
+                }
             }
         }
+    }
 }
 
 static int combat_compare(const void *v1, const void *v2)
@@ -76,17 +82,25 @@ static int combat_compare(const void *v1, const void *v2)
     class cCombat *e2 = *((class cCombat **)v2);
 
     if (e1->When() > e2->When())
+    {
         return +1;
+    }
     else if (e1->When() < e2->When())
+    {
         return -1;
+    }
     else
+    {
         return 0;
+    }
 }
 
 void cCombatList::Sort(void)
 {
     if (nTop > 0)
+    {
         qsort(pElems, nTop, sizeof(class cCombat *), combat_compare);
+    }
 }
 
 void cCombatList::PerformViolence(void)
@@ -94,14 +108,20 @@ void cCombatList::PerformViolence(void)
     int bAnyaction = FALSE;
 
     if (nTop < 1)
+    {
         return;
+    }
 
     Sort();
 
     // Happens just ONCE per turn, give everybody 12 actions...
     for (nIdx = 0; nIdx < nTop; nIdx++)
+    {
         if (pElems[nIdx]->nWhen > 0)
+        {
             pElems[nIdx]->nWhen = MAX(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
+        }
+    }
 
     do
     {
@@ -110,7 +130,9 @@ void cCombatList::PerformViolence(void)
             bAnyaction = FALSE;
 
             if (pElems[nIdx]->nWhen >= SPEED_DEFAULT)
+            {
                 break; // The rest are larger...
+            }
 
             class cCombat *tmp = pElems[nIdx];
 
@@ -133,14 +155,18 @@ void cCombatList::PerformViolence(void)
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, tmp->nWhen <= (SPEED_DEFAULT + 1) / 2);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                        {
                             tmp->nWhen += MAX(2, (1 + CHAR_SPEED(tmp->pOwner)) / 2);
+                        }
                     }
                     else
                     {
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, TRUE);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                        {
                             tmp->nWhen += MAX(4, CHAR_SPEED(tmp->pOwner));
+                        }
                     }
                 }
             }
@@ -184,7 +210,9 @@ cCombat::cCombat(class unit_data *owner, int bMelee)
 cCombat::~cCombat(void)
 {
     while (nNoOpponents > 0)
+    {
         subOpponent(pOpponents[nNoOpponents - 1]); // Faster sub at tail
+    }
 
     if (pOpponents)
     {
@@ -216,8 +244,12 @@ void cCombat::changeSpeed(int delta)
 int cCombat::findOpponentIdx(class unit_data *target)
 {
     for (int i = 0; i < nNoOpponents; i++)
+    {
         if (pOpponents[i] == target)
+        {
             return i;
+        }
+    }
 
     return -1;
 }
@@ -227,9 +259,13 @@ class unit_data *cCombat::FindOpponent(class unit_data *victim)
     int i = findOpponentIdx(victim);
 
     if (i == -1)
+    {
         return NULL;
+    }
     else
+    {
         return pOpponents[i];
+    }
 }
 
 void cCombat::add(class unit_data *victim)
@@ -254,7 +290,9 @@ void cCombat::sub(int idx)
     int bWas = FALSE;
 
     if (idx == -1)
+    {
         return;
+    }
 
     assert(nNoOpponents > 0);
     assert(idx >= 0 && idx < nNoOpponents);
@@ -269,7 +307,9 @@ void cCombat::sub(int idx)
     }
 
     if (nNoOpponents - idx > 1)
+    {
         memmove(&pOpponents[idx], &pOpponents[idx + 1], sizeof(class unit_data *) * (nNoOpponents - idx - 1));
+    }
 
     pOpponents[nNoOpponents - 1] = NULL;
     nNoOpponents--;
@@ -303,24 +343,32 @@ void cCombat::addOpponent(class unit_data *victim, int bMelee = FALSE)
         add(victim);
 
         if (!CHAR_COMBAT(victim))
+        {
             CHAR_COMBAT(victim) = new cCombat(victim, bMelee);
+        }
 
         CHAR_COMBAT(victim)->add(pOwner);
     }
 
     if (bMelee && pMelee == NULL)
+    {
         setMelee(victim);
+    }
 }
 
 void cCombat::subOpponent(class unit_data *victim)
 {
     if (nNoOpponents < 1)
+    {
         return;
+    }
 
     int i = findOpponentIdx(victim);
 
-    if (i == -1) // Not found
+    if (i == -1)
+    { // Not found
         return;
+    }
 
     CHAR_COMBAT(victim)->sub(CHAR_COMBAT(victim)->findOpponentIdx(pOwner));
     sub(i);
@@ -329,9 +377,13 @@ void cCombat::subOpponent(class unit_data *victim)
 class unit_data *cCombat::Opponent(int i)
 {
     if (i >= nNoOpponents)
+    {
         return NULL;
+    }
     else
+    {
         return pOpponents[i];
+    }
 }
 
 void cCombat::status(const class unit_data *god)
@@ -373,15 +425,21 @@ void cCombat::status(const class unit_data *god)
 void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 {
     if (ch == vict)
+    {
         return;
+    }
 
     /* No check for awake! If you die, FIGHTING() is set to point to murderer */
 
     if (ch->is_destructed() || vict->is_destructed())
+    {
         return;
+    }
 
     if (CHAR_COMBAT(ch) == NULL)
+    {
         CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+    }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
 
@@ -392,15 +450,21 @@ void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 {
     if (ch == vict)
+    {
         return;
+    }
 
     /* No check for awake! If you die, FIGHTING() is set to point to murderer */
 
     if (ch->is_destructed() || vict->is_destructed())
+    {
         return;
+    }
 
     if (CHAR_COMBAT(ch) == NULL)
+    {
         CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+    }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
 }
@@ -411,10 +475,14 @@ void stop_fighting(class unit_data *ch, class unit_data *victim)
     if (victim == NULL) // Stop all combat...
     {
         while (CHAR_COMBAT(ch))
+        {
             CHAR_COMBAT(ch)->subOpponent(CHAR_COMBAT(ch)->Opponent());
+        }
     }
     else
+    {
         CHAR_COMBAT(ch)->subOpponent(victim);
+    }
 
     if (CHAR_COMBAT(ch) == NULL)
     {
@@ -448,10 +516,14 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
     }
 
     if (u2 == NULL)
+    {
         u2 = god;
+    }
 
     if (CHAR_FIGHTING(u))
+    {
         u2 = CHAR_FIGHTING(u);
+    }
 
     if (!IS_CHAR(u2))
     {
@@ -462,9 +534,13 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
     g_CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
+    {
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
+    }
     else
+    {
         CHAR_COMBAT(u)->status(god);
+    }
 
     std::string str;
     melee_bonus(u, u2, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
@@ -491,10 +567,14 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
     }
 
     if (u2 == NULL)
+    {
         u2 = god;
+    }
 
     if (CHAR_FIGHTING(u))
+    {
         u2 = CHAR_FIGHTING(u);
+    }
 
     if (!IS_CHAR(u2))
     {
@@ -505,13 +585,19 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
     g_CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
+    {
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
+    }
     else
+    {
         CHAR_COMBAT(u)->status(god);
+    }
 
     int i = search_block(skip_blanks(pStr), g_SplColl.text, false);
     if (i == -1)
+    {
         i = SPL_ACID_BREATH;
+    }
 
     std::string str;
     spell_bonus(u, u, u2, WEAR_BODY, i, NULL, NULL, &str);

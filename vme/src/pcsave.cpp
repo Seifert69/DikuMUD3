@@ -35,7 +35,9 @@ void assign_player_file_index(unit_data *pc)
     auto it = z->mmp_fi.find(PC_FILENAME(pc));
 
     if (it != z->mmp_fi.end())
+    {
         UNIT_FILE_INDEX(pc) = it->second;
+    }
     else
     {
         class file_index_type *fi = new file_index_type();
@@ -75,16 +77,22 @@ class unit_data *find_player(char *name)
     d = find_descriptor(name, NULL);
 
     if (d && (d->fptr == descriptor_interpreter) && d->character)
+    {
         return d->character;
+    }
     else
+    {
         return NULL;
+    }
 }
 
 /* Return TRUE if deleted */
 int delete_inventory(const char *pName)
 {
     if (remove(ContentsFileName(pName)))
+    {
         return FALSE;
+    }
 
     return TRUE;
 }
@@ -93,7 +101,9 @@ int delete_inventory(const char *pName)
 int delete_player(const char *pName)
 {
     if (remove(PlayerFileName(pName)))
+    {
         return FALSE;
+    }
 
     delete_inventory(pName);
 
@@ -115,12 +125,16 @@ sbit32 find_player_id(char *pName)
     pFile = fopen(PlayerFileName(pName), "rb");
 
     if (pFile == NULL)
+    {
         return -1;
+    }
 
     rewind(pFile);
 
     if (fread(&id, sizeof(sbit32), 1, pFile) != 1)
+    {
         error(HERE, "Unable to read ID for player: '%s'", pName);
+    }
 
     fclose(pFile);
 
@@ -194,7 +208,9 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
        the n == nPlyLen */
 
     if (fseek(pPlayerFile, 0L, SEEK_END))
+    {
         assert(FALSE);
+    }
 
     assert(ftell(pPlayerFile) == (long int)(nPlyLen + sizeof(nPlyLen) + sizeof(id)));
 
@@ -225,7 +241,9 @@ void save_player_file(class unit_data *pc)
     assert(!pc->is_destructed());
 
     if (pc->is_destructed())
+    {
         return;
+    }
 
     if (locked)
     {
@@ -236,14 +254,18 @@ void save_player_file(class unit_data *pc)
     locked = TRUE;
 
     if (PC_IS_UNSAVED(pc))
+    {
         PC_TIME(pc).played++;
+    }
 
     /* PRIMITIVE SANITY CHECK */
     slog(LOG_ALL, 0, "Saving PC %s id =%d", UNIT_NAME(pc), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
     if (UNIT_IN(pc) && !IS_SET(UNIT_FLAGS(unit_room(pc)), UNIT_FL_NOSAVE))
+    {
         CHAR_LAST_ROOM(pc) = unit_room(pc);
+    }
 
     tmp_descr = CHAR_DESCRIPTOR(pc);
     CHAR_DESCRIPTOR(pc) = NULL; /* Do this to turn off all messages! */
@@ -254,7 +276,9 @@ void save_player_file(class unit_data *pc)
         if (IS_OBJ(tmp_u))
         {
             if ((tmp_i = OBJ_EQP_POS(tmp_u)))
+            {
                 unequip_object(tmp_u);
+            }
             OBJ_EQP_POS(tmp_u) = tmp_i;
         }
         unit_from_unit(tmp_u);
@@ -282,7 +306,9 @@ void save_player_file(class unit_data *pc)
             tmp_i = OBJ_EQP_POS(tmp_u);
             OBJ_EQP_POS(tmp_u) = 0;
             if (tmp_i)
+            {
                 equip_char(pc, tmp_u, tmp_i);
+            }
         }
     }
 
@@ -320,7 +346,9 @@ void save_player_contents(class unit_data *pc, int fast)
     daily_cost = save_contents(PC_FILENAME(pc), pc, fast, FALSE);
 
     if (daily_cost <= 0)
+    {
         keep_period += SECS_PER_REAL_DAY * 30;
+    }
     else
     {
         amount_t amount = char_holds_amount(pc, DEF_CURRENCY);
@@ -340,7 +368,9 @@ void save_player_contents(class unit_data *pc, int fast)
             }
 
             if (tmp_i < 30)
+            {
                 keep_period += (int)(((float)SECS_PER_REAL_DAY * (float)amount) / (float)daily_cost);
+            }
 
             tdiff = (keep_period - t0) / SECS_PER_REAL_HOUR;
             act("Inventory expires in $2d hours ($3t daily).", A_ALWAYS, pc, (int *)&tdiff, money_string(daily_cost, cur, FALSE), TO_CHAR);
@@ -382,9 +412,13 @@ void save_player(class unit_data *pc)
         CHAR_DESCRIPTOR(pc)->logon = t0;
 
         if (account_is_closed(pc))
+        {
             account_closed(pc);
+        }
         else if (account_is_overdue(pc))
+        {
             account_overdue(pc);
+        }
     }
 
     save_player_file(pc);
@@ -403,25 +437,35 @@ class unit_data *load_player_file(FILE *pFile)
 
     n = fread(&id, sizeof(int), 1, pFile);
     if (n != 1)
+    {
         return NULL;
+    }
 
     n = fread(&nPlyLen, sizeof(nPlyLen), 1, pFile);
     if (n != 1)
+    {
         return NULL;
+    }
 
     pBuf = &g_FileBuffer;
     n = pBuf->FileRead(pFile, nPlyLen);
 
     if (n != nPlyLen)
+    {
         slog(LOG_ALL, 0, "ERROR: PC FILE LENGTH MISMATCHED RECORDED LENGTH!");
+    }
 
     pc = read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
 
     if (pc == NULL)
+    {
         return NULL;
+    }
 
     if (g_nCorrupt)
+    {
         return NULL;
+    }
 
     return pc;
 }
@@ -435,11 +479,15 @@ class unit_data *load_player(const char *pName)
     class unit_data *pc;
 
     if (str_is_empty(pName))
+    {
         return NULL;
+    }
 
     pFile = fopen(PlayerFileName(pName), "rb");
     if (pFile == NULL)
+    {
         return NULL;
+    }
 
     pc = load_player_file(pFile);
     assign_player_file_index(pc);
@@ -487,7 +535,9 @@ void player_file_index(void)
     {
         n = std::remove(tmp_player_name.c_str());
         if (n != 0)
+        {
             slog(LOG_ALL, 0, "Remove failed");
+        }
         if (file_exists(tmp_player_name))
         {
             n = std::rename(tmp_player_name.c_str(), "./playingfuck");
@@ -516,5 +566,7 @@ void player_file_index(void)
     }
 
     if ((g_player_id = tmp_sl) <= 0)
+    {
         slog(LOG_ALL, 0, "WARNING: Player ID is %d", g_player_id);
+    }
 }

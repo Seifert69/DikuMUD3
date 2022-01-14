@@ -25,7 +25,9 @@ void checkpointing(int signal_no)
     static int last_tick = 0;
 
     if (g_player_convert)
+    {
         return;
+    }
 
     if (last_tick != 0 && g_tics == last_tick)
     {

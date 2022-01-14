@@ -103,7 +103,9 @@ void dilprg::unlink(void)
     if (this == tmpl->prg_list) // Are we inserted at the head?
     {
         if (tmpl->nextdude == this)
+        {
             tmpl->nextdude = this->next;
+        }
         tmpl->prg_list = this->next;
     }
     else
@@ -121,7 +123,9 @@ void dilprg::unlink(void)
                 // that would at least be a little less shaky and less likely.
                 //
                 if (tmpl->nextdude == this)
+                {
                     tmpl->nextdude = this->next;
+                }
                 tp->next = this->next;
                 ok = TRUE;
                 break;
@@ -150,7 +154,9 @@ dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
 
 #ifdef DMSERVER
     if (linktmpl)
+    {
         this->link(linktmpl);
+    }
 #endif
 
     this->flags = 0;   // Recall, copy, etc.
@@ -181,9 +187,13 @@ dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
 int dilprg::canfree(void)
 {
     if (this->nest <= 0)
+    {
         return TRUE;
+    }
     else
+    {
         return FALSE;
+    }
 }
 
 dilprg::~dilprg(void)
@@ -203,7 +213,9 @@ dilprg::~dilprg(void)
     assert(tmpl);
 
     for (frm = this->frame; frm <= (this->fp); frm++)
+    {
         dil_free_frame(frm);
+    }
 
     FREE(this->frame);
 

@@ -53,12 +53,18 @@ int main(int argc, char **argv)
             {
                 ln++;
                 if (!iscomment(buff))
+                {
                     if (!(save_buff = convert_line(buff, ln, save_buff)))
+                    {
                         error++;
+                    }
+                }
             }
 
             if (error <= 0)
+            {
                 string_to_file("color.dat", save_buff);
+            }
             fclose(in);
             exit(0);
         default:

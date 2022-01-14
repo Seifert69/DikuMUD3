@@ -19,18 +19,26 @@ char *parse_match(const char *pData, const char *pMatch)
 
     pTmp1 = (char *)str_cstr(pData, pMatch);
     if (pTmp1 == NULL)
+    {
         return NULL;
+    }
 
     pTmp2 = skip_blanks(pTmp1 + strlen(pMatch));
     if (*pTmp2 != '=')
+    {
         return NULL;
+    }
 
     pTmp2 = skip_blanks(pTmp2 + 1);
 
     if (*pTmp2)
+    {
         return pTmp2;
+    }
     else
+    {
         return NULL;
+    }
 }
 
 char *parse_name(char **pData)
@@ -42,16 +50,24 @@ char *parse_name(char **pData)
 
     pTmp1 = skip_blanks(*pData);
     if (*pTmp1 != '~')
+    {
         return NULL;
+    }
 
     pTmp1++;
 
     for (pTmp2 = pTmp1; *pTmp2; pTmp2++)
+    {
         if (*pTmp2 == '~')
+        {
             break;
+        }
+    }
 
     if (*pTmp2 != '~')
+    {
         return NULL;
+    }
 
     memcpy(Buf, pTmp1, pTmp2 - pTmp1);
     Buf[pTmp2 - pTmp1] = 0;
@@ -69,17 +85,25 @@ int parse_num(char **pData, int *pNum)
 
     pTmp1 = skip_blanks(*pData);
     if (!isdigit(*pTmp1) && *pTmp1 != '+' && *pTmp1 != '-')
+    {
         return FALSE;
+    }
 
     *pNum = atoi(pTmp1);
     if (*pTmp1 == '+' || *pTmp1 == '-')
+    {
         pTmp1++;
+    }
 
     while (isdigit(*pTmp1))
+    {
         pTmp1++;
+    }
 
     if (!isspace(*pTmp1) && *pTmp1 != 0)
+    {
         return FALSE;
+    }
 
     *pData = pTmp1;
 
@@ -104,7 +128,9 @@ int *parse_numlist(char **pData, int *int_count)
         }
         nums[count - 1] = i;
         while ((isspace(**pData) || ispunct(**pData)))
+        {
             (*pData)++;
+        }
     }
 
     *int_count = count;
@@ -124,7 +150,9 @@ char **parse_namelist(char **pData)
     {
         pNamelist = add_name(pTmp2, pNamelist);
         while (*pTmp1 != '~' && (isspace(*pTmp1) || ispunct(*pTmp1)))
+        {
             pTmp1++;
+        }
         FREE(pTmp2);
     }
 
@@ -145,10 +173,14 @@ int parse_match_num(const char **pData, const char *pMatch, int *pResult)
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == NULL)
+    {
         return FALSE;
+    }
 
     if (!(parse_num(&pTmp, pResult)))
+    {
         return FALSE;
+    }
 
     *pData = pTmp;
 
@@ -163,7 +195,9 @@ int *parse_match_numlist(const char **pData, const char *pMatch, int *count)
     *count = 0;
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == NULL)
+    {
         return NULL;
+    }
 
     i = parse_numlist(&pTmp, count);
 
@@ -178,7 +212,9 @@ char *parse_match_name(const char **pData, const char *pMatch)
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == NULL)
+    {
         return NULL;
+    }
 
     pName = parse_name(&pTmp);
 
@@ -193,7 +229,9 @@ char **parse_match_namelist(const char **pData, const char *pMatch)
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == NULL)
+    {
         return NULL;
+    }
 
     pNamelist = parse_namelist(&pTmp);
 

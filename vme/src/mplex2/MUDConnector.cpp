@@ -92,7 +92,9 @@ void test_mud_up(void)
     slog(LOG_OFF, 0, "Stream to server was re-opened!");
 
     if (g_MudHook.tfd() != -1)
+    {
         slog(LOG_ALL, 0, "test mud up called with a non -1 fd.");
+    }
 
     g_CaptainHook.Hook(fd, &g_MudHook);
     // assert(g_MudHook.IsHooked());
@@ -119,7 +121,9 @@ void mud_went_down(void)
     char buf[200];
 
     if (g_MudHook.IsHooked())
+    {
         g_MudHook.Unhook();
+    }
 
     for (con = g_connection_list; con; con = con->m_pNext)
     {
@@ -143,7 +147,9 @@ void Control(void)
     for (;;)
     {
         if (!g_MotherHook.IsHooked())
+        {
             return;
+        }
 
         if (!g_MudHook.IsHooked())
         {
@@ -166,7 +172,9 @@ void Control(void)
             }
         }
         else
+        {
             tries = 0;
+        }
 
         ClearUnhooked(); /* Clear all closed down connections */
 
@@ -198,7 +206,9 @@ void cMotherHook::Unhook(void)
 int cMotherHook::IsHooked(void)
 {
     if (g_mplex_arg.bWebSockets)
+    {
         return TRUE;
+    }
     return cHook::IsHooked();
 }
 
@@ -246,7 +256,9 @@ void cMudHook::Input(int nFlags)
         {
             n = read_mud();
             if ((n == 0) || (n == -1))
+            {
                 break;
+            }
         }
 
         if (n == -1)
@@ -294,7 +306,9 @@ int cMudHook::read_mud(void)
     // slog(LOG_OFF, 0, "read_mud(): p=%d. len=%d", p, len);
 
     if (p <= 0)
+    {
         return p;
+    }
 
     switch (p)
     {
@@ -325,7 +339,9 @@ int cMudHook::read_mud(void)
                     memcpy(&(con->m_sSetup), data, len);
 
                     if (n)
+                    {
                         con->m_sSetup.emulation = TERM_INTERNAL;
+                    }
 
                     assert(is_in(con->m_sSetup.emulation, TERM_DUMB, TERM_INTERNAL));
 
@@ -339,12 +355,16 @@ int cMudHook::read_mud(void)
                 }
             }
             if (con == NULL)
+            {
                 slog(LOG_OFF, 0, "ERROR: Unknown ID m_sSetup received.");
+            }
             break;
 
         case MULTI_TERMINATE_CHAR:
             if (data)
+            {
                 free(data);
+            }
             for (con = g_connection_list; con; con = con->m_pNext)
             {
                 if (con->m_nId == id)
@@ -355,13 +375,17 @@ int cMudHook::read_mud(void)
                 }
             }
             if (con == NULL)
+            {
                 slog(LOG_OFF, 0, "ERROR: Unknown ID requested terminated.");
+            }
             return 1;
 
         case MULTI_CONNECT_CON_CHAR:
             // slog(LOG_OFF,0,"MULTI_CON_CHAR: Received id=%d", id);
             if (data)
+            {
                 free(data);
+            }
             for (con = g_connection_list; con; con = con->m_pNext)
             {
                 // Only pick those waiting in the PlayLoop, not those new connections
@@ -389,7 +413,9 @@ int cMudHook::read_mud(void)
         case MULTI_PAGE_CHAR:
         case MULTI_PROMPT_CHAR:
             if (len == 0)
+            {
                 break;
+            }
 
             for (con = g_connection_list; con; con = con->m_pNext)
             {
@@ -404,7 +430,9 @@ int cMudHook::read_mud(void)
                         case MULTI_PAGE_CHAR:
                             // Dont page to the web-client - it pops up an overlay instead.
                             if (con->m_pWebsServer)
+                            {
                                 con->Write((ubit8 *)parsed, strlen(parsed));
+                            }
                             else
                             {
                                 con->m_qPaged.Append(new cQueueElem(parsed));
@@ -435,7 +463,9 @@ int cMudHook::read_mud(void)
     }
 
     if (data)
+    {
         free(data);
+    }
 
     return 1;
 }
