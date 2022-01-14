@@ -307,7 +307,9 @@ void advance_level(class unit_data *ch)
 
 #ifdef NOBLE
     if (IS_NOBLE(ch))
+    {
         return;
+    }
 #endif
 
     send_to_char("You raise a level!<br/>", ch);
@@ -339,9 +341,11 @@ void advance_level(class unit_data *ch)
 
 #ifdef NOBLE
     if (IS_NOBLE(ch))
+    {
         send_to_char("You become a noble, seek audience "
                      "with King Welmar.<br/>",
                      ch);
+    }
 
 #endif
 }

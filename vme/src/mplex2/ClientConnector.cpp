@@ -477,11 +477,14 @@ void cConHook::Input(int nFlags)
         {
 #if defined(_WINDOWS)
             if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+            {
                 return;
-
+            }
 #else
             if ((errno == EWOULDBLOCK) || (errno == EAGAIN))
+            {
                 return;
+            }
 #endif
 
             Close(TRUE);
@@ -877,18 +880,20 @@ void cConHook::StripHTML(char *dest, const char *src)
                     // strcpy(dest, aTag); TAIL(dest);
                     // strcpy(dest, "||"); TAIL(dest);
 
-
                     // If the tag has 'bars' it's a health update
                     l = getHTMLValue("bars", aTag, buf, sizeof(buf) - 1);
 
                     if (l != 0)
                     {
-                        strcpy(dest, "||"); TAIL(dest);
-                        strcpy(dest, buf); TAIL(dest);
-                        strcpy(dest, "||"); TAIL(dest);
+                        strcpy(dest, "||");
+                        TAIL(dest);
+                        strcpy(dest, buf);
+                        TAIL(dest);
+                        strcpy(dest, "||");
+                        TAIL(dest);
 
                         // KYLE: buf will have the hp,mp,ep
-                        // remove the three debug lines above, parse the string, and 
+                        // remove the three debug lines above, parse the string, and
                         // output mud protocol codes
                         //
                         continue;
@@ -898,12 +903,15 @@ void cConHook::StripHTML(char *dest, const char *src)
 
                     if (l != 0)
                     {
-                        strcpy(dest, "||"); TAIL(dest);
-                        strcpy(dest, buf); TAIL(dest);
-                        strcpy(dest, "||"); TAIL(dest);
+                        strcpy(dest, "||");
+                        TAIL(dest);
+                        strcpy(dest, buf);
+                        TAIL(dest);
+                        strcpy(dest, "||");
+                        TAIL(dest);
 
                         // KYLE: buf will have the visible exits
-                        // remove the three debug lines above, parse the string, and 
+                        // remove the three debug lines above, parse the string, and
                         // output mud protocol codes
                         //
                         continue;

@@ -1872,11 +1872,13 @@ void dilfe_svstr(class dilprg *p)
                                 }
                                 strcat(filename, "/strings/");
                                 if (!file_exists(filename))
+                                {
 #ifdef _WINDOWS
                                     _mkdir(filename);
 #else
                                     mkdir(filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
+                                }
                                 strcat(filename, (char *)v1->val.ptr);
                                 sstr = str_dup((char *)v2->val.ptr);
                                 v->val.num = save_string(filename, &sstr, (char *)v3->val.ptr);
@@ -1957,11 +1959,13 @@ void dilfe_filesz(class dilprg *p)
             }
             strcat(filename, "/strings/");
             if (!file_exists(filename))
+            {
 #ifdef _WINDOWS
                 _mkdir(filename);
 #else
                 mkdir(filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
+            }
             strcat(filename, (char *)v1->val.ptr);
             if ((fp = fopen(filename, "r")) == NULL)
             {

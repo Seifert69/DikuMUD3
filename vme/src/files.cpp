@@ -448,10 +448,16 @@ int load_string(char *filename, char **file_str)
     {
 #ifndef _WINDOWS
         if (nread > (unsigned int)statbuf.st_blksize)
+        {
             rt = read(input, temp, statbuf.st_blksize);
+        }
         else
-#endif
+        {
             rt = read(input, temp, nread);
+        }
+#else
+        rt = read(input, temp, nread);
+#endif
         temp = temp + rt;
         nread = nread - rt;
     }
@@ -474,17 +480,21 @@ int save_string(char *filename, char **file_str, char *opp)
         return (FILE_NOT_SAVED);
 
     if (opp[0] == 'w')
+    {
 #ifdef _WINDOWS
         output = open(filename, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE);
 #else
         output = open(filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 #endif
+    }
     else
+    {
 #ifdef _WINDOWS
         output = open(filename, O_WRONLY | O_CREAT | O_APPEND, S_IREAD | S_IWRITE);
 #else
         output = open(filename, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
 #endif
+    }
     if (!output)
         return (FILE_NOT_CREATED);
     stat(filename, &statbuf);
@@ -506,7 +516,6 @@ int save_string(char *filename, char **file_str, char *opp)
             nwrite = nwrite - statbuf.st_blksize;
         }
         else
-#endif
         {
             size_t mstmp = write(output, temp, nwrite);
             if (mstmp < 1)
@@ -516,6 +525,15 @@ int save_string(char *filename, char **file_str, char *opp)
             }
             nwrite = nwrite - nwrite;
         }
+#else
+        size_t mstmp = write(output, temp, nwrite);
+        if (mstmp < 1)
+        {
+            slog(LOG_ALL, 0, "ERROR: Unexpected bytes written %d in save string", mstmp);
+            assert(FALSE);
+        }
+        nwrite = nwrite - nwrite;
+#endif
     }
 
     close(output);

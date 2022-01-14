@@ -77,9 +77,13 @@ char_data::~char_data(void)
 {
 #ifdef DMSERVER
     if (money)
+    {
         FREE(money);
+    }
     if (last_attacker)
+    {
         FREE(last_attacker);
+    }
 #endif
     g_world_nochars--;
 }
@@ -525,10 +529,14 @@ unit_data::~unit_data(void)
         FREE(key);
 #ifdef DMSERVER
     while (UNIT_FUNC(this))
+    {
         destroy_fptr(this, UNIT_FUNC(this)); /* Unlinks, no free */
+    }
 
     while (UNIT_AFFECTED(this))
+    {
         unlink_affect(UNIT_AFFECTED(this));
+    }
 #endif
 
     /* Call functions of the unit which have any data                     */

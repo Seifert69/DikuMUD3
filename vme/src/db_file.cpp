@@ -1078,11 +1078,13 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
         if (IS_PC(u))
             inu = CHAR_LAST_ROOM(u);
         else if (UNIT_IN(u))
+        {
 #ifdef DMSERVER
             inu = unit_room(u);
 #else
             assert(inu == NULL);
 #endif
+        }
 
         if (inu && UNIT_FILE_INDEX(inu))
         {

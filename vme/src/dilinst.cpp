@@ -499,11 +499,13 @@ void dilfi_stora(class dilprg *p)
                     }
                     strcat(filename, "/units/");
                     if (!file_exists(filename))
+                    {
 #ifdef _WINDOWS
                         _mkdir(filename);
 #else
                         mkdir(filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
+                    }
                     strcat(filename, (char *)v2->val.ptr);
 
                     if (v3->val.num >= 1)
