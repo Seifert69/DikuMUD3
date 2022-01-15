@@ -885,7 +885,7 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = '\r';
                 continue;
             }
-            if (strcmp(aTag, "ga/") == 0)
+            if (strcmp(aTag, "go-ahead/") == 0)
             {
                 *dest++ = IAC;
                 *dest++ = GA;
