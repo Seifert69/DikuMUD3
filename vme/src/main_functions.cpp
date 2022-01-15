@@ -289,6 +289,7 @@ void game_event(void)
         if (point->prompt_mode == PROMPT_EXPECT)
         {
             send_prompt(point->character);
+            send_to_descriptor("<go-ahead/>", point);
             point->prompt_mode = PROMPT_IGNORE;
         }
     }

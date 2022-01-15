@@ -885,7 +885,12 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = '\r';
                 continue;
             }
-
+            if (strcmp(aTag, "go-ahead/") == 0)
+            {
+                *dest++ = IAC;
+                *dest++ = GA;
+                continue;
+            }
             if (strcmp(aTag, "script") == 0)
             {
                 if (strncasecmp(p, "PasswordOn()", 12) == 0)
