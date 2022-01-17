@@ -1060,12 +1060,14 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
                         pBuf->AppendNames((const char **)dilargs->dilarg[j].data.stringlist, 0);
                         break;
                     case DILV_ILP:
+                    {
                         int myi;
                         for (myi = 0; myi <= ((int *)dilargs->dilarg[j].data.intlist)[0]; myi++)
                         {
                             pBuf->Append32(((int *)dilargs->dilarg[j].data.intlist)[myi]);
                         }
-                        break;
+                    }
+                    break;
                     case DILV_SP:
                         pBuf->AppendString(dilargs->dilarg[j].data.string);
                         break;
