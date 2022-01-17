@@ -1,5 +1,7 @@
 #pragma once
 
+#include "essential.h"
+
 int _parse_name(const char *arg, char *name);
 void check_idle(void);
 void enter_game(class unit_data *ch, int dilway = FALSE);

@@ -1,10 +1,11 @@
 #pragma once
 
+#include "essential.h"
+
 char *PlayerFileName(const char *);
 int delete_inventory(const char *pName);
 int delete_player(const char *);
 int find_player_id(char *pName);
-int new_player_id(void);
 int player_exists(const char *pName);
 int read_player_id(void);
 void save_player(class unit_data *pc);
