@@ -8,10 +8,10 @@
 
 #include "cmdload.h"
 #include "comm.h"
-#include "common.h"
 #include "db.h"
 #include "dilrun.h"
 #include "mobact.h"
+#include "slog.h"
 #include "spec_assign.h"
 #include "structs.h"
 #include "textutil.h"

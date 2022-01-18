@@ -10,12 +10,14 @@
 #include "common.h"
 #include "db.h"
 #include "dilrun.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
 #include "money.h"
 #include "nanny.h"
 #include "pcsave.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utils.h"
@@ -42,9 +44,8 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
         return;
     }
 
-    char buf[256];
-    snprintf(buf, sizeof(buf), "Time warping for %d seconds<br/>", i);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("Time warping for %d seconds<br/>", i);
+    send_to_char(msg, ch);
 
     g_events.add(PULSE_SEC * i, timewarp_end, nullptr, nullptr);
 
@@ -53,18 +54,10 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
 
 void do_users(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    char *buf = nullptr;
-    int cur_size = 1024;
-
     class descriptor_data *d;
-    char tmp[256];
-    int len, users = 0;
+    int users = 0;
 
-    if (buf == nullptr)
-        CREATE(buf, char, cur_size);
-
-    strcpy(buf, "<u>Connections:</u><br/>");
-    len = strlen(buf);
+    std::string msg{"<u>Connections:</u><br/>"};
     /*
        <I%3d/%3d> immort lvl / wizi
        < %3d>     mortal vlvl
@@ -80,57 +73,34 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
             if (IS_IMMORTAL(d->character))
             {
                 /* an immortal character */
-                snprintf(tmp,
-                         sizeof(tmp),
-                         "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                         CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
-                         UNIT_MINV(CHAR_ORIGINAL(d->character)),
-                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                         descriptor_is_playing(d) ? "Playing" : "Menu",
-                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                         d->nPort,
-                         d->nLine == 255 ? "---" : itoa(d->nLine),
-                         d->host);
+                msg += diku::format_to_str("&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                                           CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
+                                           UNIT_MINV(CHAR_ORIGINAL(d->character)),
+                                           UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                                           descriptor_is_playing(d) ? "Playing" : "Menu",
+                                           g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                                           d->nPort,
+                                           d->nLine == 255 ? "---" : itoa(d->nLine),
+                                           d->host);
             }
             else
             {
                 /* a mortal character */
-                snprintf(tmp,
-                         sizeof(tmp),
-                         "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                         PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
-                         UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
-                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                         descriptor_is_playing(d) ? "Playing" : "Menu",
-                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                         d->nPort,
-                         d->nLine == 255 ? "---" : itoa(d->nLine),
-                         d->host);
+                msg += diku::format_to_str("&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                                           PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
+                                           UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
+                                           UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                                           descriptor_is_playing(d) ? "Playing" : "Menu",
+                                           g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                                           d->nPort,
+                                           d->nLine == 255 ? "---" : itoa(d->nLine),
+                                           d->host);
             }
-
-            len += strlen(tmp);
-            if (cur_size < len + 1)
-            {
-                cur_size *= 2;
-                RECREATE(buf, char, cur_size);
-            }
-            strcat(buf, tmp);
         }
     }
 
-    snprintf(tmp, sizeof(tmp), "<br/>%d visible players connected.<br/>", users);
-
-    len += strlen(tmp);
-    if (cur_size < len + 1)
-    {
-        cur_size *= 2;
-        RECREATE(buf, char, cur_size);
-    }
-
-    strcat(buf, tmp);
-
-    page_string(CHAR_DESCRIPTOR(ch), buf);
-    FREE(buf);
+    msg += diku::format_to_str("<br/>%d visible players connected.<br/>", users);
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 /* Reset the zone in which the char is in! */
@@ -245,8 +215,6 @@ void do_execute(class unit_data *ch, char *argument, const struct command_info *
 
 void do_shutdown(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    char buf[100];
-
     if (!IS_PC(ch))
     {
         return;
@@ -258,8 +226,8 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
         return;
     }
 
-    snprintf(buf, sizeof(buf), "Shutdown by %s.<br/>", UNIT_NAME(ch));
-    send_to_all(buf);
+    auto msg = diku::format_to_str("Shutdown by %s.<br/>", UNIT_NAME(ch));
+    send_to_all(msg);
     g_mud_shutdown = 1;
 }
 
@@ -524,8 +492,8 @@ void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
     else
     {
-        snprintf(buf, sizeof(buf), "Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
+        send_to_char(msg, ch);
         g_wizlock = lvl;
     }
 }

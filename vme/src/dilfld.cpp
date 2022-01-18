@@ -12,11 +12,13 @@
 #include "dil.h"
 #include "dilexp.h"
 #include "dilrun.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
 #include "skills.h"
 #include "structs.h"
+#include "szonelog.h"
 #include "textutil.h"
 #include "utility.h"
 #include "utils.h"
@@ -477,14 +479,10 @@ void dilfe_fld(class dilprg *p)
                         v->atyp = DILA_EXP;
                         v->type = DILV_SP;
 
-                        static char buf[512];
-                        snprintf(buf,
-                                 sizeof(buf),
-                                 "%s@%s",
-                                 UNIT_FI_NAME((class unit_data *)v1->val.ptr),
-                                 UNIT_FI_ZONENAME((class unit_data *)v1->val.ptr));
-
-                        v->val.ptr = strdup(buf);
+                        auto buf = diku::format_to_str("%s@%s",
+                                                       UNIT_FI_NAME((class unit_data *)v1->val.ptr),
+                                                       UNIT_FI_ZONENAME((class unit_data *)v1->val.ptr));
+                        v->val.ptr = strdup(buf.c_str());
                     }
                     else
                     {

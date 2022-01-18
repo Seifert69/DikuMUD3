@@ -11,8 +11,6 @@
 
 class descriptor_data *unit_is_edited(class unit_data *u);
 
-void szonelog(class zone_type *zone, const char *fmt, ...);
-
 class extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr);
 
 void insert_in_unit_list(class unit_data *u);

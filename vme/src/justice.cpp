@@ -15,6 +15,7 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "money.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utility.h"

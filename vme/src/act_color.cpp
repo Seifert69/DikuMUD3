@@ -10,13 +10,12 @@
 #include "comm.h"
 #include "common.h"
 #include "db.h"
+#include "formatter.h"
 #include "interpreter.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
-#include <cstdio>
 #include <cstring>
 
 void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
@@ -24,7 +23,6 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     char fore[MAX_INPUT_LENGTH];
     char back[MAX_INPUT_LENGTH];
     char buf[MAX_INPUT_LENGTH];
-    char cbuf[MAX_STRING_LENGTH];
     char full_name[21];
     int change = FALSE, add = FALSE;
 
@@ -75,31 +73,32 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     arg = one_argument(arg, fore);
     if (str_is_empty(fore))
     {
+        std::string msg;
         if ((change == TRUE) && (add == TRUE))
         {
             if (UPC(ch)->color.remove(full_name))
             {
-                snprintf(cbuf, sizeof(cbuf), "Reseting %s to sytem colors.<br/>", full_name);
-                // send_to_char(cbuf, ch);
-                // s printf (cbuf, "%s%s%s", CONTROL_COLOR_REMOVE, full_name, CONTROL_COLOR_END);
+                msg = diku::format_to_str("Reseting %s to sytem colors.<br/>", full_name);
+                // send_to_char(color, ch);
+                // s printf (color, "%s%s%s", CONTROL_COLOR_REMOVE, full_name, CONTROL_COLOR_END);
             }
             else
             {
-                snprintf(cbuf, sizeof(cbuf), "Error: Can not reset %s to default color, report to admin.<br/>", full_name);
+                msg = diku::format_to_str("Error: Can not reset %s to default color, report to admin.<br/>", full_name);
             }
         }
         else
         {
-            snprintf(cbuf, sizeof(cbuf), "%s is already set to system color.<br/>", full_name);
+            msg = diku::format_to_str("%s is already set to system color.<br/>", full_name);
         }
-        send_to_char(cbuf, ch);
+        send_to_char(msg, ch);
         return;
     }
 
     if (!is_forground(fore))
     {
-        snprintf(cbuf, sizeof(cbuf), "Invalid color for the forground color you typed '%s'<br/>", fore);
-        send_to_char(cbuf, ch);
+        auto msg = diku::format_to_str("Invalid color for the forground color you typed '%s'<br/>", fore);
+        send_to_char(msg, ch);
         return;
     }
 
@@ -111,30 +110,24 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     }
     if (!is_background(back))
     {
-        snprintf(cbuf, sizeof(cbuf), "Invalid color for the background color you typed '%s'<br/>", back);
-        send_to_char(cbuf, ch);
+        auto msg = diku::format_to_str("Invalid color for the background color you typed '%s'<br/>", back);
+        send_to_char(msg, ch);
         return;
     }
 
-    snprintf(cbuf, sizeof(cbuf), "%s %s", fore, back);
+    auto color = diku::format_to_str("%s %s", fore, back);
 
+    std::string result;
     if (change == TRUE)
     {
-        std::string mystr;
-
-        mystr = UPC(ch)->color.change(full_name, cbuf);
-        snprintf(cbuf, sizeof(cbuf), "Color %s changed.<br/>", mystr.c_str());
-        send_to_char(cbuf, ch);
-        return;
+        result = UPC(ch)->color.change(full_name, color);
     }
     if ((add == TRUE) && (change == FALSE))
     {
-        auto print_str = UPC(ch)->color.insert(full_name, cbuf);
-        snprintf(cbuf, sizeof(cbuf), "Color %s changed.<br/>", print_str.c_str());
-        send_to_char(cbuf, ch);
-        return;
+        result = UPC(ch)->color.insert(full_name, color);
     }
-    return;
+    auto msg = diku::format_to_str("Color %s changed.<br/>", result);
+    send_to_char(msg, ch);
 }
 
 // Test validity of e.g. cg or cpg

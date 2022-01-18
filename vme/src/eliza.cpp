@@ -9,9 +9,11 @@
 
 #include "db.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utility.h"
@@ -585,11 +587,8 @@ void eliza_log(class unit_data *who, const char *str, int comms)
 
     if ((comms < 5) && (idx < MAX_ELIBUF))
     {
-        char tmp[1024];
-
-        snprintf(tmp, sizeof(tmp), "%-12s::  %s\n", UNIT_NAME(who), str);
-
-        buf[idx++] = str_dup(tmp);
+        auto tmp = diku::format_to_str("%-12s::  %s\n", UNIT_NAME(who), str);
+        buf[idx++] = str_dup(tmp.c_str());
         return;
     }
 

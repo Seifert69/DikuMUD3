@@ -12,6 +12,7 @@
 #include "db_file.h"
 #include "essential.h"
 #include "protocol.h"
+#include "slog.h"
 #include "utility.h"
 
 #include <cassert>

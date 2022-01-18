@@ -19,6 +19,7 @@
 #include "hook.h"
 #include "mplex.h"
 #include "network.h"
+#include "slog.h"
 #include "textutil.h"
 
 #include <netdb.h>

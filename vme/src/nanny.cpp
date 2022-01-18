@@ -26,12 +26,14 @@
 #include "dilinst.h"
 #include "dilrun.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
 #include "nanny.h"
 #include "pcsave.h"
 #include "reception.h"
+#include "slog.h"
 #include "structs.h"
 #include "system.h"
 #include "textutil.h"
@@ -332,10 +334,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 void pc_data::gstate_togame(dilprg *pdontstop)
 {
     class descriptor_data *i;
-    // char tbuf[MAX_STRING_LENGTH * 2];
-    char buf[256];
     time_t last_connect = PC_TIME(this).connect;
-    // char *color;
 
     if (this->is_destructed())
     {
@@ -379,9 +378,10 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     insert_in_unit_list(this);
     unit_to_unit(this, load_room);
 
+    // TODO is this ok coz DILWAY = 1 and !1 is false so unreachable code
     if (CHAR_DESCRIPTOR(this) && !DILWAY) /* Only do these things if player is connected */
     {
-        snprintf(buf, sizeof(buf), "%s has entered the world.<br/>", UNIT_NAME(this));
+        auto msg = diku::format_to_str("%s has entered the world.<br/>", UNIT_NAME(this));
 
         for (i = g_descriptor_list; i; i = i->next)
         {
@@ -389,7 +389,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
                 IS_PC(CHAR_ORIGINAL(i->character)) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->character)), PC_INFORM) &&
                 !same_surroundings(this, i->character))
             {
-                send_to_descriptor(buf, i);
+                send_to_descriptor(msg, i);
             }
         }
 
@@ -540,12 +540,11 @@ void nanny_motd(class descriptor_data *d, char *arg)
     else
     {
         /*fuck*/
-        char buf[200];
-        snprintf(buf, sizeof(buf), "Welcome to %s!<br/>", g_cServerConfig.getMudName().c_str());
+        std::string buf{"Welcome to "};
+        buf += g_cServerConfig.getMudName() + "!<br/>";
         send_to_descriptor(buf, d);
         enter_game(d->character);
     }
-    return;
 }
 
 void nanny_throw(class descriptor_data *d, char *arg)
@@ -675,18 +674,17 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
         return;
     }
 
-    char buf[512];
     if (pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
     {
-        snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
-        send_to_descriptor(scriptwrap(buf).c_str(), d);
+        auto str = diku::format_to_str("PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
+        send_to_descriptor(scriptwrap(str), d);
         send_to_descriptor("Passwords don't match.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
         return;
     }
 
-    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.getMudName().c_str());
-    send_to_descriptor(scriptwrap(buf).c_str(), d);
+    auto str = diku::format_to_str("PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.getMudName().c_str());
+    send_to_descriptor(scriptwrap(str), d);
 
     class descriptor_data *td;
     while ((td = find_descriptor(PC_FILENAME(d->character), d)))
@@ -767,17 +765,14 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
 {
     if (STATE(d)++ == 0)
     {
-        char buf[100];
-
-        snprintf(buf, sizeof(buf), "Give me a new password for %s: ", UNIT_NAME(d->character));
-        send_to_descriptor(buf, d);
-        send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
+        auto msg = diku::format_to_str("Give me a new password for %s: ", UNIT_NAME(d->character));
+        send_to_descriptor(msg, d);
+        send_to_descriptor(scriptwrap("PasswordOn()"), d);
         return;
     }
 
-    char buf[512];
-    snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
-    send_to_descriptor(scriptwrap(buf).c_str(), d);
+    auto str = diku::format_to_str("PasswordOff('', '%s')", g_cServerConfig.getMudName());
+    send_to_descriptor(scriptwrap(str), d);
 
     if (!check_pwd(d, arg))
     {
@@ -916,7 +911,6 @@ void nanny_menu(class descriptor_data *d, char *arg)
 
 void nanny_existing_pwd(class descriptor_data *d, char *arg)
 {
-    char buf[400];
     class descriptor_data *td;
     class unit_data *u;
 
@@ -929,13 +923,11 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     {
         if (PC_CRACK_ATTEMPTS(d->character) > 2)
         {
-            snprintf(buf,
-                     sizeof(buf),
-                     "<br/>ATTENTION: Your password has been "
-                     "attempted cracked %d times since your last logon."
-                     " Press [enter] and wait for the password prompt.",
-                     PC_CRACK_ATTEMPTS(d->character));
-            send_to_descriptor(buf, d);
+            auto msg = diku::format_to_str("<br/>ATTENTION: Your password has been "
+                                           "attempted cracked %d times since your last logon."
+                                           " Press [enter] and wait for the password prompt.",
+                                           PC_CRACK_ATTEMPTS(d->character));
+            send_to_descriptor(msg, d);
             d->wait = MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
             return;
         }
@@ -944,14 +936,14 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     if (STATE(d) == 2)
     {
-        snprintf(buf, sizeof(buf), "Welcome back %s, please enter your password: ", UNIT_NAME(d->character));
-        send_to_descriptor(buf, d);
+        auto msg = diku::format_to_str("Welcome back %s, please enter your password: ", UNIT_NAME(d->character));
+        send_to_descriptor(msg, d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
         return;
     }
 
-    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.getMudName().c_str());
-    send_to_descriptor(scriptwrap(buf).c_str(), d);
+    auto str = diku::format_to_str("PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.getMudName().c_str());
+    send_to_descriptor(scriptwrap(str), d);
 
     if (str_is_empty(arg))
     {
@@ -1000,13 +992,11 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     PC_CRACK_ATTEMPTS(d->character) = 0;
 
-    snprintf(buf,
-             sizeof(buf),
-             "<br/>Welcome back %s, you last visited %s on %s<br/>",
-             UNIT_NAME(d->character),
-             g_cServerConfig.getMudName().c_str(),
-             ctime(&PC_TIME(d->character).connect));
-    send_to_descriptor(buf, d);
+    auto msg2 = diku::format_to_str("<br/>Welcome back %s, you last visited %s on %s<br/>",
+                                    UNIT_NAME(d->character),
+                                    g_cServerConfig.getMudName().c_str(),
+                                    ctime(&PC_TIME(d->character).connect));
+    send_to_descriptor(msg2, d);
 
     if ((td = find_descriptor(PC_FILENAME(d->character), d)))
     {
@@ -1044,11 +1034,9 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
 {
     if (STATE(d)++ == 0)
     {
-        char buf[100];
-
         // MS: removed help option since it was not implemented.
-        snprintf(buf, sizeof(buf), "Did I get that right, %s (Y/N)? ", UNIT_NAME(d->character));
-        send_to_descriptor(buf, d);
+        auto msg = diku::format_to_str("Did I get that right, %s (Y/N)? ", UNIT_NAME(d->character));
+        send_to_descriptor(msg, d);
         return;
     }
 

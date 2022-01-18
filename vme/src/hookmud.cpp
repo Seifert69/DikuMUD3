@@ -2,9 +2,11 @@
 
 #include "comm.h"
 #include "db.h"
+#include "error.h"
 #include "files.h"
 #include "main_functions.h"
 #include "protocol.h"
+#include "slog.h"
 #include "structs.h"
 #include "system.h"
 #include "textutil.h"

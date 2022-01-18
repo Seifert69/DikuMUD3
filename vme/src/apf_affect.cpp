@@ -9,12 +9,11 @@
 #include "handler.h"
 #include "modify.h"
 #include "skills.h"
+#include "slog.h"
 #include "structs.h"
 #include "utility.h"
 #include "utils.h"
 #include "vmelimits.h"
-
-#include <cstring>
 
 ubit1 raw_destruct_affect(class unit_affected_type *af)
 {

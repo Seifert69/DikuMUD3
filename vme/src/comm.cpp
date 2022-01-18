@@ -13,6 +13,7 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "protocol.h"
+#include "slog.h"
 #include "structs.h"
 #include "system.h"
 #include "textutil.h"
@@ -195,12 +196,22 @@ void page_string(class descriptor_data *d, const char *messg)
     }
 }
 
+void page_string(class descriptor_data *d, const std::string &messg)
+{
+    page_string(d, messg.c_str());
+}
+
 void send_to_char(const char *messg, const class unit_data *ch)
 {
     if (IS_CHAR(ch))
     {
         send_to_descriptor(messg, CHAR_DESCRIPTOR(ch));
     }
+}
+
+void send_to_char(const std::string &messg, const class unit_data *ch)
+{
+    send_to_char(messg.c_str(), ch);
 }
 
 void send_to_all(const char *messg)
@@ -217,6 +228,11 @@ void send_to_all(const char *messg)
             }
         }
     }
+}
+
+void send_to_all(const std::string &messg)
+{
+    send_to_all(messg.c_str());
 }
 
 void send_to_zone_outdoor(const class zone_type *z, const char *messg)

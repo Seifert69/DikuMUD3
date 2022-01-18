@@ -11,6 +11,7 @@
 #include "db.h"
 #include "dilrun.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "hookmud.h"
 #include "interpreter.h"
@@ -20,6 +21,7 @@
 #include "pcsave.h"
 #include "pipe.h"
 #include "signals.h"
+#include "slog.h"
 #include "structs.h"
 #include "system.h"
 #include "utils.h"
@@ -58,7 +60,7 @@ int g_mud_reboot = 0;   /* reboot the game after a shutdown */
 int g_wizlock = 0;      /* no mortals on now */
 int g_tics = 60;        /* number of tics since boot-time */
 
-char g_world_boottime[64] = ""; /* boottime of world */
+std::string g_world_boottime; /* boottime of world */
 
 /* ******************************************************************* *
  *             main game loop and related stuff                        *
@@ -110,7 +112,7 @@ void run_the_game(char *srvcfg)
 
     g_cServerConfig.Boot(srvcfg);
     slog(LOG_ALL, 0, "VME SERVER COMPILED AT %s %s", g_compile_date, g_compile_time);
-    slog(LOG_ALL, 0, "VME Compiled with [%s]", get_compiled_hash_defines().c_str());
+    slog(LOG_ALL, 0, "VME Compiled with [%s]", get_compiled_hash_defines());
     slog(LOG_OFF, 0, "Read server configuration.");
 
     slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
@@ -273,9 +275,8 @@ void game_event(void)
 
             if (point->snoop.snoop_by)
             {
-                char buffer[MAX_INPUT_LENGTH + 10];
-                snprintf(buffer, sizeof(buffer), "%s%s<br/>", SNOOP_PROMPT, pcomm);
-                send_to_descriptor(buffer, CHAR_DESCRIPTOR(point->snoop.snoop_by));
+                auto msg = diku::format_to_str("%s%s<br/>", SNOOP_PROMPT, pcomm);
+                send_to_descriptor(msg, CHAR_DESCRIPTOR(point->snoop.snoop_by));
             }
 
             point->fptr(point, pcomm);
@@ -376,7 +377,7 @@ void check_overpopulation_event(void *p1, void *p2)
 
         if (i >= 50)
         {
-            slog(LOG_ALL, 0, "Too many items in %s@%s(%s) : %d units", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), unit_trace_up(u).c_str(), i);
+            slog(LOG_ALL, 0, "Too many items in %s@%s(%s) : %d units", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), unit_trace_up(u), i);
 
             struct diltemplate *worms;
             worms = find_dil_template("worms@basis");

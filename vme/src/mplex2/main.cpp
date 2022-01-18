@@ -22,6 +22,7 @@
 #include "hook.h"
 #include "mplex.h"
 #include "network.h"
+#include "slog.h"
 #include "translate.h"
 
 #include <unistd.h>

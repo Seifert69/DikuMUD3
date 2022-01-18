@@ -39,9 +39,11 @@ $Revision: 2.18 $
 #include "pcsave.h"
 #include "reception.h"
 #include "skills.h"
+#include "slog.h"
 #include "spell_parser.h"
 #include "spells.h"
 #include "structs.h"
+#include "szonelog.h"
 #include "textutil.h"
 #include "trie.h"
 #include "utility.h"
@@ -3223,10 +3225,9 @@ void *threadcallout(void *p)
 
     if (ok)
     {
-        std::string s;
-        s = "./allow/"; // current dir iswhere vme/bin is located, set to bin/allow/
-        s.append(str);
-        slog(LOG_BRIEF, 0, "system('%s'); ", s.c_str());
+        std::string s{"./allow/"}; // current dir iswhere vme/bin is located, set to bin/allow/
+        s += str;
+        slog(LOG_BRIEF, 0, "system('%s'); ", s);
         int rc = ::system((const char *)s.c_str());
 
         if (rc == -1 || WEXITSTATUS(rc) != 0)

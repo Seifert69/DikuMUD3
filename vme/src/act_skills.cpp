@@ -10,7 +10,6 @@
 #include "experience.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "magic.h"
 #include "skills.h"
 #include "structs.h"
 #include "textutil.h"

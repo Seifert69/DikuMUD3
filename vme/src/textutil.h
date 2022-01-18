@@ -16,7 +16,7 @@ int str_escape_format(const char *str, char *dest, int destlen, int format = TRU
 char *str_escape_format(const char *src, int formatting = TRUE);
 void str_correct_utf8(std::string &src);
 char *html_encode_utf8(const char *src);
-std::string scriptwrap(const char *str);
+std::string scriptwrap(const std::string &str);
 void str_cescape_format(const char *src, char *dest);
 void str_cescape_transform(char *src);
 
@@ -40,8 +40,8 @@ char *spc(int n);
 char *str_repeatchar(int n, char c);
 
 char *str_line(const char *, char *);
-char *itoa(int n);
-char *ltoa(long n);
+const char *itoa(int n);
+const char *ltoa(long n);
 int str_ccmp(const char *s, const char *d);
 int str_nccmp(const char *s, const char *d, int n);
 char *str_dup(const char *source);

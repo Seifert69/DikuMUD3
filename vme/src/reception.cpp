@@ -9,11 +9,13 @@
 #include "db.h"
 #include "db_file.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "money.h"
 #include "pcsave.h"
 #include "slime.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utility.h"
@@ -321,9 +323,9 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
     }
     else /* UNIT CONTAINS NOTHING */
         if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
-    {
-        enlist(pBuf, unit, level, fast);
-    }
+        {
+            enlist(pBuf, unit, level, fast);
+        }
 }
 
 void send_saves(class unit_data *parent, class unit_data *unit)
@@ -342,13 +344,13 @@ void send_saves(class unit_data *parent, class unit_data *unit)
     }
 }
 
-char *ContentsFileName(const char *pName)
+const char *ContentsFileName(const char *pName)
 {
-    static char Buf[MAX_INPUT_LENGTH + 1];
+    static std::string Buf;
 
-    snprintf(Buf, sizeof(Buf), "%s.inv", PlayerFileName(pName));
+    Buf = PlayerFileName(pName) + ".inv";
 
-    return Buf;
+    return Buf.c_str();
 }
 
 /* Save all units inside 'unit' in the blk_file 'bf' as uncompressed  */
@@ -561,10 +563,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
             if (pnew_tmp && pnew)
             {
-                char buf[MAX_STRING_LENGTH];
-                snprintf(buf, sizeof(buf), "The slimy remains of %s", TITLENAME(pnew_tmp));
-                UNIT_OUT_DESCR(pnew) = (buf);
-                UNIT_TITLE(pnew) = (buf);
+                auto str = diku::format_to_str("The slimy remains of %s", TITLENAME(pnew_tmp));
+                UNIT_OUT_DESCR(pnew) = str;
+                UNIT_TITLE(pnew) = str;
                 UNIT_NAMES(pnew).PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));
                 delete pnew_tmp;
             }

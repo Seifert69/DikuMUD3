@@ -34,6 +34,7 @@
 #include "interpreter.h"
 #include "justice.h"
 #include "slime.h"
+#include "slog.h"
 #include "teach.h"
 #include "utils.h"
 #include "zon_basis.h"

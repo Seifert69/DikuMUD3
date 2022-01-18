@@ -11,12 +11,11 @@
 #include "db.h"
 #include "interpreter.h"
 #include "main_functions.h"
+#include "slog.h"
 #include "structs.h"
 #include "utility.h"
 #include "utils.h"
 
-#include <cstdio>
-#include <cstring>
 #include <ctime>
 
 int g_sunlight = SUN_SET;                     /* And how much sun. */
@@ -343,14 +342,11 @@ void weather_and_time_event(void *p1, void *p2)
 /* reset the time in the game from file */
 void boot_time_and_weather(void)
 {
-    struct time_info_data time_info;
     g_tBootTime = time(nullptr);
-    char *p = ctime(&g_tBootTime);
-    p[strlen(p) - 1] = '\0';
+    g_world_boottime = ctime(&g_tBootTime);
+    g_world_boottime.erase(g_world_boottime.length() - 1);
 
-    snprintf(g_world_boottime, sizeof(g_world_boottime), "%s", p);
-
-    time_info = mud_time_passed(time(nullptr), g_beginning_of_time);
+    struct time_info_data time_info = mud_time_passed(time(nullptr), g_beginning_of_time);
 
     if (time_info.hours == 5)
     {

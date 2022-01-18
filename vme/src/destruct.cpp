@@ -13,6 +13,7 @@
 #include "main_functions.h"
 #include "mobact.h"
 #include "nanny.h"
+#include "slog.h"
 #include "structs.h"
 #include "utility.h"
 #include "utils.h"

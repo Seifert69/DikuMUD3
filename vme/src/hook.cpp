@@ -11,6 +11,7 @@
 #endif
 
 #include "hook.h"
+#include "slog.h"
 #include "utility.h"
 
 #include <sys/time.h>

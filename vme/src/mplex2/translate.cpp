@@ -14,6 +14,7 @@
 
 #include "ClientConnector.h"
 #include "mplex.h"
+#include "slog.h"
 #include "translate.h"
 #include "ttydef.h"
 

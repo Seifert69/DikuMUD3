@@ -12,6 +12,7 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "mobact.h"
+#include "slog.h"
 #include "spec_assign.h"
 #include "structs.h"
 #include "utility.h"
@@ -20,9 +21,7 @@
 #include "zone_reset.h"
 
 #include <sys/time.h>
-#include <unistd.h>
 
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
@@ -182,7 +181,6 @@ void eventqueue::process(void)
 {
     struct eventq_elem *tmp_event, *newtop;
     int j, k;
-    char pname[64];
     char dilname[256];
     char dilzname[256];
     char diloname[256];
@@ -332,37 +330,38 @@ void eventqueue::process(void)
                     }
                     else
                     {
+                        std::string pname;
                         if (tfunc == check_reboot_event)
                         {
-                            snprintf(pname, sizeof(pname), "Reboot Event");
+                            pname = "Reboot Event";
                         }
                         else if (tfunc == affect_beat)
                         {
-                            snprintf(pname, sizeof(pname), "Affect Beat");
+                            pname = "Affect Beat";
                         }
                         else if (tfunc == delayed_action)
                         {
-                            snprintf(pname, sizeof(pname), "Affect Beat");
+                            pname = "Affect Beat";
                         }
                         else if (tfunc == check_idle_event)
                         {
-                            snprintf(pname, sizeof(pname), "Check Idle Event");
+                            pname = "Check Idle Event";
                         }
                         else if (tfunc == perform_violence_event)
                         {
-                            snprintf(pname, sizeof(pname), "Violence Event");
+                            pname = "Violence Event";
                         }
                         else if (tfunc == weather_and_time_event)
                         {
-                            snprintf(pname, sizeof(pname), "Weather And Time Event");
+                            pname = "Weather And Time Event";
                         }
                         else if (tfunc == zone_event)
                         {
-                            snprintf(pname, sizeof(pname), "Zone Reset Event");
+                            pname = "Zone Reset Event";
                         }
                         else
                         {
-                            snprintf(pname, sizeof(pname), "UNKNOWN Event");
+                            pname = "UNKNOWN Event";
                         }
                         slog(LOG_DIL, 0, "Internal Process (%s) Took %1.4f seconds to Complete", pname, loop_time);
                     }

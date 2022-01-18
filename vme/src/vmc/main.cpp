@@ -9,6 +9,7 @@
 #include "compile_defines.h"
 #include "money.h"
 #include "pp.h"
+#include "slog.h"
 #include "vmc.h"
 
 #include <unistd.h>

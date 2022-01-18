@@ -15,6 +15,7 @@
 #include "modify.h"
 #include "pcsave.h"
 #include "skills.h"
+#include "slog.h"
 #include "structs.h"
 #include "utility.h"
 #include "utils.h"

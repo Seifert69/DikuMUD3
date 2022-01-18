@@ -6,11 +6,11 @@
  */
 #include "main.h"
 
-#include "comm.h"
 #include "compile_defines.h"
 #include "diku_exception.h"
 #include "main_functions.h"
 #include "pipe.h"
+#include "slog.h"
 #include "structs.h"
 #include "system.h"
 #include "textutil.h"

@@ -15,10 +15,12 @@
 #include "dilrun.h"
 #include "experience.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "justice.h"
 #include "skills.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utility.h"
@@ -1134,11 +1136,9 @@ void damage(class unit_data *ch,
         }
     }
 
-    char arg[40];
+    auto arg = diku::format_to_str("%d %d %d", attack_group, attack_number, hit_location);
 
-    snprintf(arg, sizeof(arg), "%d %d %d", attack_group, attack_number, hit_location);
-
-    if (send_ack(ch, medium, victim, &dam, &g_cmd_auto_damage, arg, victim) == SFR_BLOCK)
+    if (send_ack(ch, medium, victim, &dam, &g_cmd_auto_damage, arg.c_str(), victim) == SFR_BLOCK)
     {
         return;
     }
@@ -1353,16 +1353,12 @@ void damage(class unit_data *ch,
 
 void break_object(class unit_data *obj)
 {
-    char tmp[MAX_STRING_LENGTH];
-
     if (OBJ_EQP_POS(obj))
     {
         unequip_object(obj);
     }
 
-    snprintf(tmp, sizeof(tmp), "%s (broken)", STR(UNIT_TITLE_STRING(obj)));
-
-    UNIT_TITLE(obj) = (tmp);
+    UNIT_TITLE(obj) = diku::format_to_str("%s (broken)", STR(UNIT_TITLE_STRING(obj)));
 
     OBJ_VALUE(obj, 0) = 0;
     OBJ_VALUE(obj, 1) = 0;

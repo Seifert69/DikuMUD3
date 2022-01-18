@@ -1,11 +1,13 @@
 #define BOOST_TEST_MODULE "CServerConfiguration Unit Tests"
-#include <boost/test/unit_test.hpp>
-#include <cstring>
-#include <fstream>
-#include <cstdarg>
 #include "config.h"
 #include "db.h"
 #include "diku_exception.h"
+
+#include <cstdarg>
+#include <cstring>
+#include <fstream>
+
+#include <boost/test/unit_test.hpp>
 
 struct CServerConfiguration_Fixture
 {
@@ -13,19 +15,17 @@ struct CServerConfiguration_Fixture
     static const std::string server_config;
     CServerConfiguration_Fixture()
     {
-        // Get temp filename for config file for tests
-        std::tmpnam(fake_server_config_filename);
+        srand(time(nullptr));
+        std::ostringstream sstrm;
+        sstrm << "tmp" << std::setfill('0') << std::setw(10) << rand();
+        fake_server_config_filename = sstrm.str();
+
         std::ofstream strm(fake_server_config_filename);
         strm << server_config;
     }
-
-    char fake_server_config_filename[L_tmpnam]{};
+    ~CServerConfiguration_Fixture() { remove(fake_server_config_filename.c_str()); }
+    std::string fake_server_config_filename;
 };
-
-// Dummy slog to suppress messages
-void slog(enum log_level, ubit8, const char *, ...)
-{
-}
 
 // Attach fixture to suite so each test case gets a new copy
 BOOST_FIXTURE_TEST_SUITE(CServerConfiguration_tests, CServerConfiguration_Fixture)
@@ -145,8 +145,6 @@ BOOST_AUTO_TEST_CASE(Boot_test)
         BOOST_TEST(config.getColorString() == expected);
     }
     BOOST_TEST(config.getImmortalName() == "Papi");
-
-    std::remove(fake_server_config_filename);
 }
 
 BOOST_AUTO_TEST_CASE(Boot_no_file_test)

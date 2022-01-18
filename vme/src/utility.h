@@ -25,11 +25,21 @@
 class log_buffer
 {
 public:
-    log_buffer(void) { str[0] = 0; }
+    log_buffer() = default;
+    void setString(std::string str) { m_str = std::move(str); }
+    void setLevel(log_level level) { m_level = level; }
+    void setWizInvLevel(ubit8 level) { m_wizinv_level = level; }
 
-    char str[MAX_INPUT_LENGTH + 50];
-    enum log_level level;
-    ubit8 wizinv_level;
+    const std::string &getString() const { return m_str; }
+    log_level getLevel() const { return m_level; }
+    ubit8 getWizInvLevel() const { return m_wizinv_level; }
+
+    void clearString() { m_str.clear(); }
+
+private:
+    std::string m_str{};
+    log_level m_level{};
+    ubit8 m_wizinv_level{};
 };
 
 /* For the printing of obj_type information, as used by the identify spell and
@@ -50,7 +60,6 @@ int dice(int number, int size);
 
 const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
 char *sprinttype(char *buf, int type, const char *names[]);
-/* Use like this:  error(HERE, "Something went wrong: %s", buf); */
-void error(const char *file, int line, const char *fmt, ...);
 
 extern class log_buffer g_log_buf[];
+extern FILE *g_log_file_fd;

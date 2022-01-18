@@ -7,6 +7,7 @@
 #include "badnames.h"
 
 #include "essential.h"
+#include "slog.h"
 #include "structs.h"
 
 #include <cctype>

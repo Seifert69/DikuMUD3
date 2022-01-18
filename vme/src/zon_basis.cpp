@@ -4,11 +4,12 @@
  $Date: 2003/12/28 22:02:45 $
  $Revision: 2.5 $
  */
-#include "affect.h"
 #include "comm.h"
 #include "db.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utility.h"
@@ -68,20 +69,14 @@ void basis_boot(void)
 
 int error_rod(struct spec_arg *sarg)
 {
-    class zone_type *zone;
-    FILE *fl;
-    char filename[256];
-
     if ((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
     {
         return SFR_SHARE;
     }
 
-    zone = unit_zone(sarg->activator);
+    zone_type *zone = unit_zone(sarg->activator);
 
-    strcpy(filename, UNIT_NAME(sarg->activator));
-
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(UNIT_NAME(sarg->activator)))
     {
         send_to_char("You are only allowed to erase errors "
                      "in your own zone.<br/>",
@@ -89,9 +84,10 @@ int error_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    snprintf(filename, sizeof(filename), "%s%s.err", g_cServerConfig.getZoneDir().c_str(), zone->filename);
+    std::string filename = g_cServerConfig.getZoneDir() + zone->filename + ".err";
 
-    if (!(fl = fopen(filename, "w")))
+    FILE *fl = fopen(filename.c_str(), "w");
+    if (!fl)
     {
         slog(LOG_ALL, 0, "Could not clear the zone error-file");
         send_to_char("Could not clear the zone error-file.<br/>", sarg->activator);
@@ -107,20 +103,14 @@ int error_rod(struct spec_arg *sarg)
 
 int info_rod(struct spec_arg *sarg)
 {
-    class zone_type *zone;
-    FILE *fl;
-    char filename[256];
-
     if (!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
     {
         return SFR_SHARE;
     }
 
-    zone = unit_zone(sarg->activator);
+    zone_type *zone = unit_zone(sarg->activator);
 
-    strcpy(filename, UNIT_NAME(sarg->activator));
-
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(UNIT_NAME(sarg->activator)))
     {
         send_to_char("You are only allowed to erase user-information"
                      " in your own zone.",
@@ -128,9 +118,10 @@ int info_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    snprintf(filename, sizeof(filename), "%s%s.inf", g_cServerConfig.getZoneDir().c_str(), zone->filename);
+    std::string filename = g_cServerConfig.getZoneDir() + zone->filename + ".inf";
 
-    if (!(fl = fopen(filename, "w")))
+    FILE *fl = fopen(filename.c_str(), "w");
+    if (fl)
     {
         slog(LOG_ALL, 0, "Could not clear the zone user info-file");
         send_to_char("Could not clear the zone user info-file.<br/>", sarg->activator);
@@ -197,11 +188,11 @@ int log_object(struct spec_arg *sarg)
 
             if (LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
             {
-                while (!str_is_empty(g_log_buf[*ip].str))
+                while (!g_log_buf[*ip].getString().empty())
                 {
-                    if (g_log_buf[*ip].level <= lev && g_log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
+                    if (g_log_buf[*ip].getLevel() <= lev && g_log_buf[*ip].getWizInvLevel() <= CHAR_LEVEL(ch))
                     {
-                        cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
+                        cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].getString().c_str(), cActParameter(), TO_CHAR, "log");
                     }
                     *ip = ((*ip + 1) % MAXLOG);
                 }
@@ -250,7 +241,11 @@ int log_object(struct spec_arg *sarg)
                     act("Current log level is `$2t'.",
                         A_ALWAYS,
                         ch,
-                        c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive",
+                        c == 'd'   ? "dil"
+                        : c == 'o' ? "off"
+                        : c == 'b' ? "brief"
+                        : c == 'a' ? "all"
+                                   : "extensive",
                         cActParameter(),
                         TO_CHAR);
                     return SFR_BLOCK;
@@ -259,7 +254,10 @@ int log_object(struct spec_arg *sarg)
                 act("You will now see the $2t log.",
                     A_ALWAYS,
                     ch,
-                    c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive",
+                    c == 'd'   ? "dil"
+                    : c == 'b' ? "brief"
+                    : c == 'a' ? "entire"
+                               : "extensive",
                     cActParameter(),
                     TO_CHAR);
                 OBJ_VALUE(sarg->owner, 0) = c;
@@ -271,7 +269,7 @@ int log_object(struct spec_arg *sarg)
 }
 
 /* Return TRUE if ok, FALSE if not */
-int system_check(class unit_data *pc, char *buf)
+int system_check(class unit_data *pc, const char *buf)
 {
     /* Check for `` and ; in system-string */
     if (strchr(buf, '`') || strchr(buf, ';'))
@@ -284,7 +282,7 @@ int system_check(class unit_data *pc, char *buf)
     return TRUE;
 }
 
-void execute_append(class unit_data *pc, char *str)
+void execute_append(class unit_data *pc, const char *str)
 {
     FILE *f;
 
@@ -305,7 +303,6 @@ void execute_append(class unit_data *pc, char *str)
 
 int admin_obj(struct spec_arg *sarg)
 {
-    char buf[512];
     int zonelist;
     class zone_type *zone;
     class extra_descr_data *exdp;
@@ -350,9 +347,10 @@ int admin_obj(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
+    std::string msg;
     if (zonelist)
     {
-        snprintf(buf, sizeof(buf), "mail zone zonelist %s", exdp->descr.c_str());
+        msg = diku::format_to_str("mail zone zonelist %s", exdp->descr.c_str());
     }
     else if ((zone = unit_zone(sarg->activator)) == nullptr)
     {
@@ -366,18 +364,18 @@ int admin_obj(struct spec_arg *sarg)
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;
         }
-        snprintf(buf, sizeof(buf), "mail zone %s %s", zone->filename, exdp->descr.c_str());
+        msg = diku::format_to_str("mail zone %s %s", zone->filename, exdp->descr.c_str());
     }
 
-    if (!system_check(sarg->activator, buf))
+    if (!system_check(sarg->activator, msg.c_str()))
     {
         return SFR_BLOCK;
     }
 
-    execute_append(sarg->activator, buf);
+    execute_append(sarg->activator, msg.c_str());
 
-    strcat(buf, "<br/>");
-    send_to_char(buf, sarg->activator);
+    msg += "<br/>";
+    send_to_char(msg, sarg->activator);
 
     return SFR_BLOCK;
 }

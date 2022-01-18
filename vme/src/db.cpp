@@ -16,7 +16,9 @@
 #include "dbfind.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "error.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
@@ -30,6 +32,7 @@
 #include "slime.h"
 #include "spell_parser.h"
 #include "structs.h"
+#include "szonelog.h"
 #include "textutil.h"
 #include "utility.h"
 #include "utils.h"
@@ -348,7 +351,7 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 void generate_zone_indexes(void)
 {
     class zone_type *z;
-    char zone[82], tmpbuf[82], filename[82 + 41];
+    char zone[82], tmpbuf[82];
     char buf[MAX_STRING_LENGTH];
     char dilfilepath[255];
     CByteBuffer cBuf(MAX_STRING_LENGTH);
@@ -398,7 +401,7 @@ void generate_zone_indexes(void)
             break;
         }
 
-        snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), zone);
+        std::string filename = g_cServerConfig.getZoneDir() + zone + ".data";
 
         /* Skip password */
         c = str_next_word_copy(c, tmpbuf);
@@ -796,8 +799,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
 
     if (!str_is_empty(name))
     {
-        snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
-        UNIT_KEY(u) = str_dup(tmpbuf);
+        auto tmp = diku::format_to_str("%s@%s", name, zone);
+        UNIT_KEY(u) = str_dup(tmp.c_str());
     }
     else
     {
@@ -1423,8 +1426,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
 
                         if (!str_is_empty(name))
                         {
-                            snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
-                            ROOM_EXIT(u, i)->key = str_dup(tmpbuf);
+                            auto tmp = diku::format_to_str("%s@%s", name, zone);
+                            ROOM_EXIT(u, i)->key = str_dup(tmp.c_str());
                         }
                         else
                         {
@@ -1529,13 +1532,12 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
 void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
 {
     FILE *f;
-    char buf[256];
 
-    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->zone->filename);
+    std::string filename = g_cServerConfig.getZoneDir() + org_fi->zone->filename + ".data";
 
-    if ((f = fopen_cache(buf, "rb")) == nullptr)
+    if ((f = fopen_cache(filename, "rb")) == nullptr)
     {
-        error(HERE, "Couldn't open %s for reading.", buf);
+        error(HERE, "Couldn't open %s for reading.", filename);
     }
 
     pBuf->FileRead(f, org_fi->filepos, org_fi->length);
@@ -1831,7 +1833,6 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 
 void read_all_zones(void)
 {
-    char filename[FI_MAX_ZONENAME + 41];
     FILE *f;
 
     for (auto zone = g_zone_info.mmp.begin(); zone != g_zone_info.mmp.end(); zone++)
@@ -1843,9 +1844,9 @@ void read_all_zones(void)
             continue;
         }
 
-        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->filename);
+        std::string filename = g_cServerConfig.getZoneDir() + zone->second->filename + ".reset";
 
-        if ((f = fopen(filename, "rb")) == nullptr)
+        if ((f = fopen(filename.c_str(), "rb")) == nullptr)
         {
             slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->filename);
             exit(10);

@@ -8,7 +8,9 @@
 #include "comm.h"
 #include "db.h"
 #include "files.h"
+#include "formatter.h"
 #include "interpreter.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utils.h"
@@ -118,8 +120,8 @@ int slime_obj(struct spec_arg *sarg)
         send_to_char("List of slimed units:<br/>", sarg->activator);
         for (i = 0; i < slime_count; i++)
         {
-            snprintf(buf, sizeof(buf), "%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
-            send_to_char(buf, sarg->activator);
+            auto msg = diku::format_to_str("%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
+            send_to_char(msg, sarg->activator);
         }
 
         return SFR_BLOCK;

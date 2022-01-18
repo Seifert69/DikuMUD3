@@ -8,14 +8,17 @@
 #include "db.h"
 #include "dilrun.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "justice.h"
 #include "magic.h"
 #include "modify.h"
 #include "skills.h"
+#include "slog.h"
 #include "spells.h"
 #include "structs.h"
+#include "szonelog.h"
 #include "textutil.h"
 #include "trie.h"
 #include "utility.h"
@@ -938,9 +941,6 @@ static void spell_init(void)
 
 void spell_dump(void)
 {
-    std::string str;
-    char buf[MAX_STRING_LENGTH];
-
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
@@ -952,19 +952,13 @@ void spell_dump(void)
                 continue;
             }
 
-            str = "";
+            std::string str = diku::format_to_str("%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
 
-            snprintf(buf, sizeof(buf), "%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
-            str.append(buf);
-
-            snprintf(buf,
-                     sizeof(buf),
-                     ".profession %s%s = %s%d\n",
-                     g_professions[j],
-                     spc(12 - strlen(g_professions[j])),
-                     (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                     g_SplColl.prof_table[i].profession_cost[j]);
-            str.append(buf);
+            str += diku::format_to_str(".profession %s%s = %s%d\n",
+                                       g_professions[j],
+                                       spc(12 - strlen(g_professions[j])),
+                                       (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                                       g_SplColl.prof_table[i].profession_cost[j]);
 
             /*if (g_SplColl.prof_table[i].min_level > 0)
             {

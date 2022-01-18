@@ -6,6 +6,7 @@
  */
 
 #include "comm.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "money.h"
@@ -395,19 +396,16 @@ int bank(struct spec_arg *sarg)
 
     if (changed_balance)
     {
-        char buf[MAX_STRING_LENGTH], *b;
-        int i;
-
         if (PC_BANK(sarg->activator))
             FREE(PC_BANK(sarg->activator));
 
-        for (i = 0, *buf = '\0', b = buf; i <= MAX_CURRENCY; ++i)
+        std::string buf;
+        for (int i = 0; i <= MAX_CURRENCY; ++i)
         {
-            sprintf(b, "~%d %ld", i, (long)balance[i]);
-            TAIL(b);
+            buf += diku::format_to_str("~%d %ld", i, (long)balance[i]);
         }
 
-        PC_BANK(sarg->activator) = str_dup(buf);
+        PC_BANK(sarg->activator) = str_dup(buf.c_str());
     }
 
     return SFR_BLOCK;
@@ -446,11 +444,7 @@ void tax_player(class unit_data *ch)
 
     amount_t holds, holds_sum;
 
-    char buf[MAX_STRING_LENGTH], *b;
     bool tmp_bool = FALSE;
-    int i;
-
-    *(b = buf) = '\0';
 
     CHAR_DESCRIPTOR(ch) = nullptr; /* To avoid getting text output to the player */
 
@@ -462,7 +456,7 @@ void tax_player(class unit_data *ch)
         PC_BANK(ch) = nullptr;
     }
 
-    for (i = 0; i <= MAX_CURRENCY; ++i)
+    for (int i = 0; i <= MAX_CURRENCY; ++i)
     {
         if (balance[i])
         {
@@ -471,18 +465,16 @@ void tax_player(class unit_data *ch)
         }
     }
 
+    std::string buf;
     if (tmp_bool)
     {
-        strcpy(b,
-               "The holdings of your bank account was moved into your"
-               " purse.<br/>");
-        TAIL(b);
+        buf += "The holdings of your bank account was moved into your"
+               " purse.<br/>";
     }
 
     if (move_money_up(ch, ch))
     {
-        strcpy(b, "All money hidden in bags etc was moved into your purse.<br/>");
-        TAIL(b);
+        buf += "All money hidden in bags etc was moved into your purse.<br/>";
     }
 
     /* Now all ch's money is in his inventory */
@@ -490,7 +482,7 @@ void tax_player(class unit_data *ch)
     tmp_bool = FALSE;
 
     /* Loop because the holds check may overflow... */
-    for (i = 0; i <= MAX_CURRENCY; ++i)
+    for (int i = 0; i <= MAX_CURRENCY; ++i)
     {
         holds_sum = 0;
 
@@ -501,8 +493,7 @@ void tax_player(class unit_data *ch)
             tmp_bool = TRUE;
 
             money_from_unit(ch, holds - limit, i);
-            sprintf(b, "You were taxed the equivalent of %s.<br/>", money_string(holds - limit, DEF_CURRENCY, TRUE));
-            TAIL(b);
+            buf += diku::format_to_str("You were taxed the equivalent of %s.<br/>", money_string(holds - limit, DEF_CURRENCY, TRUE));
         }
 
         limit -= (holds_sum + holds);
@@ -510,7 +501,7 @@ void tax_player(class unit_data *ch)
 
     CHAR_DESCRIPTOR(ch) = d;
 
-    if (b != buf)
+    if (!buf.empty())
     {
         if (tmp_bool)
         {
@@ -520,7 +511,7 @@ void tax_player(class unit_data *ch)
                 "<br/>$2t",
                 A_ALWAYS,
                 ch,
-                buf,
+                buf.c_str(),
                 cActParameter(),
                 TO_CHAR);
         }
@@ -530,7 +521,7 @@ void tax_player(class unit_data *ch)
                 "  Congratulations!<br/>$2t",
                 A_ALWAYS,
                 ch,
-                buf,
+                buf.c_str(),
                 cActParameter(),
                 TO_CHAR);
         }
