@@ -20,7 +20,7 @@ int check_reboot(void)
     char buf[200];
     static int count = 12;
 
-    tc = time(0);
+    tc = time(nullptr);
     t_info = localtime(&tc);
     if (count < 12)
     {

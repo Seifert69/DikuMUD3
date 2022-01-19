@@ -380,7 +380,7 @@ void advance_level(class unit_data *ch)
     dt = find_dil_template("advance_level@basis");
     assert(dt);
 
-    class dilprg *prg = dil_copy_template(dt, ch, NULL);
+    class dilprg *prg = dil_copy_template(dt, ch, nullptr);
     assert(prg);
 
     prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -570,7 +570,7 @@ void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
-    now = str_ccmp_next_word(arg, "now") != NULL;
+    now = str_ccmp_next_word(arg, "now") != nullptr;
 
     if (!now && PC_SKILL_POINTS(ch) >= skill_point_gain())
     {

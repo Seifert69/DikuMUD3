@@ -49,8 +49,8 @@
 
 int g_dilmenu;
 
-char *m_pBadNames = NULL;
-char *m_pBadStrings = NULL;
+char *m_pBadNames = nullptr;
+char *m_pBadStrings = nullptr;
 
 /* *************************************************************************
  *  Stuff for controlling the non-playing sockets (get name, pwd etc)      *
@@ -62,8 +62,8 @@ int _parse_name(const char *arg, char *name)
 
     class badnames_list badnames;
     class badnames_list badstrings;
-    m_pBadNames = NULL;
-    m_pBadStrings = NULL;
+    m_pBadNames = nullptr;
+    m_pBadStrings = nullptr;
 
     arg = skip_spaces(arg); /* skip whitespaces */
 
@@ -118,7 +118,7 @@ int _parse_name(const char *arg, char *name)
 void check_idle(void)
 {
     class descriptor_data *d, *next_d;
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     for (d = g_descriptor_list; d; d = next_d)
     {
@@ -181,8 +181,8 @@ void pc_data::connect_game(void)
         return;
     }
 
-    PC_TIME(this).connect = time(0);
-    CHAR_DESCRIPTOR(this)->logon = time(0);
+    PC_TIME(this).connect = time(nullptr);
+    CHAR_DESCRIPTOR(this)->logon = time(nullptr);
 
     CHAR_DESCRIPTOR(this)->CreateBBS();
 
@@ -215,7 +215,7 @@ void pc_data::reconnect_game(class descriptor_data *d)
         return;
     }
 
-    CHAR_DESCRIPTOR(d->character) = NULL;
+    CHAR_DESCRIPTOR(d->character) = nullptr;
     extract_unit(d->character); // Toss out the temporary unit and take over the new one
     d->character = this;
     CHAR_DESCRIPTOR(this) = d;
@@ -248,12 +248,12 @@ void pc_data::reconnect_game(class descriptor_data *d)
             TO_ROOM);
         unit_from_unit(this);
         unit_to_unit(this, CHAR_LAST_ROOM(this));
-        CHAR_LAST_ROOM(this) = NULL;
+        CHAR_LAST_ROOM(this) = nullptr;
     }
     act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
     slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
-    CHAR_DESCRIPTOR(this)->logon = ::time(0);
-    PC_TIME(this).connect = ::time(0);
+    CHAR_DESCRIPTOR(this)->logon = ::time(nullptr);
+    PC_TIME(this).connect = ::time(nullptr);
     //      stop_affect(ch);
     //      stop_all_special(ch);
     //      start_affect(ch);               /* Activate affect ticks */
@@ -310,7 +310,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     stop_snoopwrite(this);
 
     descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
-    CHAR_DESCRIPTOR(this) = NULL;
+    CHAR_DESCRIPTOR(this) = nullptr;
 
     while (UNIT_CONTAINS(this))
     {
@@ -355,8 +355,8 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 
         CHAR_DESCRIPTOR(this)->timer = 0;
         CHAR_DESCRIPTOR(this)->prompt_mode = PROMPT_EXPECT;
-        CHAR_DESCRIPTOR(this)->logon = ::time(0);
-        PC_TIME(this).connect = ::time(0);
+        CHAR_DESCRIPTOR(this)->logon = ::time(nullptr);
+        PC_TIME(this).connect = ::time(nullptr);
         set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
         dil_destroy("link_dead@basis", this);
 
@@ -367,7 +367,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     if (CHAR_LAST_ROOM(this))
     {
         load_room = CHAR_LAST_ROOM(this);
-        CHAR_LAST_ROOM(this) = NULL;
+        CHAR_LAST_ROOM(this) = nullptr;
     }
     else
     {
@@ -437,8 +437,8 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     // start_all_special(this); /* Activate fptr ticks   */
     if (!DILWAY)
     {
-        send_done(this, NULL, load_room, 0, &g_cmd_auto_play, "");
-        send_done(this, NULL, load_room, 0, &g_cmd_auto_play, "", NULL, "void@basis");
+        send_done(this, nullptr, load_room, 0, &g_cmd_auto_play, "");
+        send_done(this, nullptr, load_room, 0, &g_cmd_auto_play, "", nullptr, "void@basis");
     }
 
     ActivateDil(this);
@@ -452,7 +452,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 /*   game, and his inventory loaded.                              */
 void enter_game(class unit_data *ch, int dilway)
 {
-    UPC(ch)->gstate_togame(NULL);
+    UPC(ch)->gstate_togame(nullptr);
 }
 
 void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor_data *, char *), ubit1 call)
@@ -462,10 +462,10 @@ void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor
         if (d->localstr)
             FREE(d->localstr);
 
-        d->localstr = NULL;
-        d->editref = NULL;
-        d->postedit = NULL;
-        d->editing = NULL;
+        d->localstr = nullptr;
+        d->editref = nullptr;
+        d->postedit = nullptr;
+        d->editing = nullptr;
     }
 
     d->fptr = fptr;
@@ -525,7 +525,7 @@ void nanny_motd(class descriptor_data *d, char *arg)
     {
         g_dilmenu = TRUE;
         // Nono... only enter the game when entering from the menu (DIL) enter_game(d->character, TRUE);
-        class dilprg *prg = dil_copy_template(on_connect, d->character, NULL);
+        class dilprg *prg = dil_copy_template(on_connect, d->character, nullptr);
         if (prg)
         {
             set_descriptor_fptr(d, descriptor_interpreter, TRUE);
@@ -646,7 +646,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
     {
         class dilprg *prg;
 
-        prg = dil_copy_template(g_nanny_dil_tmpl, d->character, NULL);
+        prg = dil_copy_template(g_nanny_dil_tmpl, d->character, nullptr);
         if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
@@ -657,7 +657,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
         }
     }
 
-    if (d->character && UNIT_EXTRA(d->character).find_raw("$nanny") == NULL)
+    if (d->character && UNIT_EXTRA(d->character).find_raw("$nanny") == nullptr)
     {
         g_dilmenu = TRUE;
         enter_game(d->character, TRUE);
@@ -805,7 +805,7 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
             slog(LOG_ALL, 0, "Spooky localstr in base_string_add - tell papi.");
             FREE(d->localstr); // Spooky!
         }
-        d->localstr = NULL;
+        d->localstr = nullptr;
         return FALSE;
     }
 
@@ -827,7 +827,7 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
         send_to_descriptor("String too long - Truncated.<br/>", d);
     }
 
-    if (d->localstr == NULL)
+    if (d->localstr == nullptr)
     {
         CREATE(d->localstr, char, strlen(str) + 8);
         strcpy(d->localstr, str);
@@ -848,10 +848,10 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
         if (d->localstr)
             FREE(d->localstr);
 
-        d->localstr = NULL;
-        d->editref = NULL;
-        d->postedit = NULL;
-        d->editing = NULL;
+        d->localstr = nullptr;
+        d->editref = nullptr;
+        d->postedit = nullptr;
+        d->editing = nullptr;
 
         return TRUE;
     }
@@ -1118,7 +1118,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
         /* Known player, lets load his character information. */
         ch = load_player(tmp_name);
 
-        if (ch == NULL)
+        if (ch == nullptr)
         {
             send_to_descriptor("LOAD ERROR! PLEASE MAKE A NOTE OF ANY "
                                "SPECIAL ACTIONS YOU MAY HAVE TAKEN JUST "
@@ -1130,7 +1130,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
             return;
         }
 
-        CHAR_DESCRIPTOR(d->character) = NULL;
+        CHAR_DESCRIPTOR(d->character) = nullptr;
         extract_unit(d->character);
 
         CHAR_DESCRIPTOR(ch) = d;

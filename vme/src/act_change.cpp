@@ -195,7 +195,7 @@ static void chg_rows(class unit_data *ch, const char *arg)
 
 static void chg_terminal(class unit_data *ch, const char *arg)
 {
-    const char *Terminals[] = {"dumb", "tty", "ansi", NULL};
+    const char *Terminals[] = {"dumb", "tty", "ansi", nullptr};
 
     char buf[1024];
     int n;
@@ -337,7 +337,7 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
                                  "telnet",
                                  "character echo",
                                  "redraw prompt",
-                                 NULL};
+                                 nullptr};
 
     char buf[MAX_INPUT_LENGTH];
 
@@ -466,7 +466,7 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
             class dilprg *prg;
 
             tmpl = find_dil_template("do_change@commands");
-            prg = dil_copy_template(tmpl, ch, NULL);
+            prg = dil_copy_template(tmpl, ch, nullptr);
 
             if (prg)
             {

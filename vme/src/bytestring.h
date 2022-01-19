@@ -63,7 +63,7 @@ public:
     int Skip16(void);
     int Skip32(void);
     int SkipFloat(void);
-    int SkipString(char **ppStr = NULL);
+    int SkipString(char **ppStr = nullptr);
     int SkipNames(void);
     int SkipVals(void);
 

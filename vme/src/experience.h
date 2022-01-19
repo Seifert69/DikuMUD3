@@ -22,5 +22,5 @@ int melee_bonus(class unit_data *att,
                 int *pDef_armour_type,
                 class unit_data **pDef_armour,
                 int primary = TRUE,
-                std::string *pStat = NULL);
+                std::string *pStat = nullptr);
 void do_consider(class unit_data *, char *, const struct command_info *);

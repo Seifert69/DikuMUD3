@@ -139,7 +139,7 @@ void dilfi_edit(class dilprg *p)
         {
             CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->postedit = dil_edit_done;
             CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editing = p->owner;
-            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editref = NULL;
+            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editref = nullptr;
 
             set_descriptor_fptr(CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr), interpreter_string_add, TRUE);
         }
@@ -170,10 +170,10 @@ void dilfi_kedit(class dilprg *p)
                 }
                 if (d->localstr)
                     FREE(d->localstr);
-                d->localstr = NULL;
-                d->editref = NULL;
-                d->postedit = NULL;
-                d->editing = NULL;
+                d->localstr = nullptr;
+                d->editref = nullptr;
+                d->postedit = nullptr;
+                d->editing = nullptr;
                 set_descriptor_fptr(CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr), descriptor_interpreter, TRUE);
             }
         }
@@ -358,7 +358,7 @@ void dilfi_delpc(class dilprg *p)
         {
             if (v1->val.ptr)
             {
-                if ((d = find_descriptor(((char *)v1->val.ptr), NULL)))
+                if ((d = find_descriptor(((char *)v1->val.ptr), nullptr)))
                 {
                     extract_unit(d->character);
                     descriptor_close(d);
@@ -409,7 +409,7 @@ void dilfi_foe(class dilprg *p)
         {
             for (i = 0; i < p->fp->securecount; i++)
             {
-                if (p->fp->secure[i].lab == NULL)
+                if (p->fp->secure[i].lab == nullptr)
                 {
                     dil_sub_secure(p->fp, p->fp->secure[i].sup, TRUE);
                     i--; // Shit
@@ -427,7 +427,7 @@ void dilfi_foe(class dilprg *p)
 
             for (i = 0; i < g_unit_vector.top; i++)
             {
-                dil_add_secure(p, UVI(i), NULL);
+                dil_add_secure(p, UVI(i), nullptr);
             }
 
             // This statement is incorrect in Yamato when a room uses foreach() this
@@ -437,7 +437,7 @@ void dilfi_foe(class dilprg *p)
 
             if (IS_SET(UNIT_TYPE(p->sarg->owner), v1->val.num))
             {
-                dil_add_secure(p, p->sarg->owner, NULL);
+                dil_add_secure(p, p->sarg->owner, nullptr);
             }
         }
     }
@@ -463,7 +463,7 @@ void dilfi_fon(class dilprg *p)
     {
         dil_test_secure(p, TRUE);
         /* look for NULL references, remove first */
-        u = NULL;
+        u = nullptr;
         for (i = 0; i < p->fp->securecount; i++)
         {
             if (!p->fp->secure[i].lab)
@@ -473,7 +473,7 @@ void dilfi_fon(class dilprg *p)
                 {
                     dil_sub_secure(p->fp, u, TRUE);
                     i--;
-                    u = NULL;
+                    u = nullptr;
                     continue;
                 }
                 break;
@@ -842,7 +842,7 @@ void dilfi_stopf(class dilprg *p)
             }
             else
             {
-                stop_fighting((class unit_data *)v1->val.ptr, NULL);
+                stop_fighting((class unit_data *)v1->val.ptr, nullptr);
             }
         }
     }
@@ -1041,7 +1041,7 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
     frm->tmpl = rtmpl;
     frm->pc = rtmpl->core;
     frm->securecount = 0;
-    frm->secure = NULL;
+    frm->secure = nullptr;
 
     frm->intrcount = rtmpl->intrcount;
 
@@ -1051,7 +1051,7 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
     }
     else
     {
-        frm->intr = NULL;
+        frm->intr = nullptr;
     }
 
     if (rtmpl->varc)
@@ -1073,18 +1073,18 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
                 }
                 else
                 {
-                    frm->vars[i].val.string = NULL;
+                    frm->vars[i].val.string = nullptr;
                 }
             }
             else
             {
-                frm->vars[i].val.string = NULL;
+                frm->vars[i].val.string = nullptr;
             }
         }
     }
     else
     {
-        frm->vars = NULL;
+        frm->vars = nullptr;
     }
 
     ubit8 tmp;
@@ -1343,7 +1343,7 @@ void dilfi_ass(class dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_NULL:
-                    *((void **)v1->ref) = NULL;
+                    *((void **)v1->ref) = nullptr;
                     break;
 
                 case DILV_UP:
@@ -1363,7 +1363,7 @@ void dilfi_ass(class dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_NULL:
-                    *((void **)v1->ref) = NULL;
+                    *((void **)v1->ref) = nullptr;
                     break;
 
                 case DILV_ZP:
@@ -1383,7 +1383,7 @@ void dilfi_ass(class dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_NULL:
-                    *((void **)v1->ref) = NULL;
+                    *((void **)v1->ref) = nullptr;
                     break;
 
                 case DILV_CP:
@@ -1440,7 +1440,7 @@ void dilfi_ass(class dilprg *p)
                     break;
 
                 case DILV_NULL:
-                    *((void **)v1->ref) = NULL;
+                    *((void **)v1->ref) = nullptr;
                     break;
 
                 case DILV_HASHSTR:
@@ -1548,7 +1548,7 @@ void dilfi_ass(class dilprg *p)
 
                 case DILV_NULL:
                     /* assign empty list */
-                    *((void **)v1->ref) = NULL;
+                    *((void **)v1->ref) = nullptr;
                     break;
 
                 case DILV_EDP:
@@ -2133,7 +2133,7 @@ void dilfi_ade2(class dilprg *p)
                 if (v1->ref && v3->val.ptr && v4->val.ptr && (v2->val.ptr || v2->type == DILV_NULL))
                 {
                     // MS2020 XXX BUG HERE
-                    class extra_descr_data *e = new class extra_descr_data((char *)NULL, (char *)v3->val.ptr);
+                    class extra_descr_data *e = new class extra_descr_data((char *)nullptr, (char *)v3->val.ptr);
                     rogue_push_front(((class extra_descr_data **)v1->ref), e);
                     /**((class extra_descr_data **)v1->ref) =
                         (*((class extra_descr_data **)v1->ref))->add((char *)NULL, (char *)v3->val.ptr);*/
@@ -2183,7 +2183,7 @@ void dilfi_ade(class dilprg *p)
             {
                 if (v1->ref && v3->val.ptr && (v2->val.ptr || v2->type == DILV_NULL))
                 {
-                    class extra_descr_data *e = new class extra_descr_data((char *)NULL, (char *)v3->val.ptr);
+                    class extra_descr_data *e = new class extra_descr_data((char *)nullptr, (char *)v3->val.ptr);
                     rogue_push_front(((class extra_descr_data **)v1->ref), e);
 
                     /* *((class extra_descr_data **)v1->ref) =
@@ -2231,7 +2231,7 @@ void dilfi_sue(class dilprg *p)
                 if (v2->val.ptr && v1->ref)
                 {
                     // MS2020 bug, check if exd is NULL
-                    if (*((class extra_descr_data **)v1->ref) != NULL)
+                    if (*((class extra_descr_data **)v1->ref) != nullptr)
                     {
                         /* *((class extra_descr_data **)v1->ref) =
                             (*((class extra_descr_data **)v1->ref))->remove((char *)v2->val.ptr); */
@@ -2723,10 +2723,10 @@ void dilfi_snt(class dilprg *p)
             struct spec_arg sarg;
 
             sarg.activator = p->sarg->owner;
-            sarg.medium = NULL;
-            sarg.target = NULL;
-            sarg.pInt = NULL;
-            sarg.fptr = NULL; /* Set by unit_function_scan */
+            sarg.medium = nullptr;
+            sarg.target = nullptr;
+            sarg.pInt = nullptr;
+            sarg.fptr = nullptr; /* Set by unit_function_scan */
             sarg.cmd = &g_cmd_auto_msg;
             sarg.arg = (char *)v1->val.ptr;
             sarg.mflags = SFB_MSG | SFB_AWARE;
@@ -2762,11 +2762,11 @@ void dilfi_snta(class dilprg *p)
 
                 sarg.activator = p->sarg->owner;
                 sarg.medium = p->sarg->owner;
-                sarg.target = NULL;
-                sarg.pInt = NULL;
-                sarg.fptr = NULL; /* Set by unit_function_scan */
+                sarg.target = nullptr;
+                sarg.pInt = nullptr;
+                sarg.fptr = nullptr; /* Set by unit_function_scan */
 
-                sarg.fptr = NULL;
+                sarg.fptr = nullptr;
                 sarg.cmd = &g_cmd_auto_msg;
                 sarg.arg = (char *)v1->val.ptr;
                 sarg.mflags = SFB_MSG;
@@ -2852,7 +2852,7 @@ void dilfi_sntadil(class dilprg *p)
                         sarg.activator = p->owner;
                         sarg.medium = p->owner;
                         sarg.target = tp->owner;
-                        sarg.pInt = NULL;
+                        sarg.pInt = nullptr;
                         sarg.fptr = fptr;
 
                         sarg.cmd = &g_cmd_auto_msg;
@@ -2862,7 +2862,7 @@ void dilfi_sntadil(class dilprg *p)
                         function_activate(tp->owner, &sarg);
                     }
                 } /* for */
-                tmpl->nextdude = NULL;
+                tmpl->nextdude = nullptr;
                 dil_test_secure(p);
             }
         }
@@ -3010,7 +3010,7 @@ void dilfi_cast(class dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    class unit_data *caster = NULL, *medium = NULL, *target = NULL;
+    class unit_data *caster = nullptr, *medium = nullptr, *target = nullptr;
 
     p->waitcmd--;
 

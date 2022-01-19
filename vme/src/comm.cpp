@@ -24,37 +24,37 @@
 
 cActParameter::cActParameter()
 {
-    m_u = NULL;
-    m_i = NULL;
-    m_p = NULL;
+    m_u = nullptr;
+    m_i = nullptr;
+    m_p = nullptr;
 }
 
 cActParameter::cActParameter(const class unit_data *u)
 {
     m_u = u;
-    m_i = NULL;
-    m_p = NULL;
+    m_i = nullptr;
+    m_p = nullptr;
 }
 
 cActParameter::cActParameter(const int *i)
 {
-    m_u = NULL;
+    m_u = nullptr;
     m_i = i;
-    m_p = NULL;
+    m_p = nullptr;
 }
 
 cActParameter::cActParameter(const char *p)
 {
-    m_u = NULL;
-    m_i = NULL;
+    m_u = nullptr;
+    m_i = nullptr;
     m_p = p;
 }
 
 cActParameter::cActParameter(const dilval *v)
 {
-    m_u = NULL;
-    m_i = NULL;
-    m_p = NULL;
+    m_u = nullptr;
+    m_i = nullptr;
+    m_p = nullptr;
 
     if ((v->type == DILV_UP) || (v->type == DILV_UPR))
     {
@@ -68,7 +68,7 @@ cActParameter::cActParameter(const dilval *v)
 
 int cActParameter::isNull(void)
 {
-    return (m_u == NULL) && (m_i == NULL) && (m_p == NULL);
+    return (m_u == nullptr) && (m_i == nullptr) && (m_p == nullptr);
 }
 
 /*
@@ -269,7 +269,7 @@ void act_generate(char *buf,
 {
     const char *strp;
     char *point;
-    const char *i = NULL;
+    const char *i = nullptr;
     // MS2020 int uppercase = FALSE;
 
     class cActParameter *sub;
@@ -282,7 +282,7 @@ void act_generate(char *buf,
 
     *buf = 0;
 
-    if (!IS_CHAR(to) || arg1.m_u == NULL)
+    if (!IS_CHAR(to) || arg1.m_u == nullptr)
     {
         return;
     }
@@ -335,12 +335,12 @@ void act_generate(char *buf,
                     return;
             }
 
-            if (i == NULL)
+            if (i == nullptr)
             {
                 switch (*++strp)
                 {
                     case 'n':
-                        if (sub->m_u != NULL)
+                        if (sub->m_u != nullptr)
                         {
                             if (CHAR_CAN_SEE(to, sub->m_u))
                             {
@@ -366,7 +366,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 'N':
-                        if (sub->m_u != NULL)
+                        if (sub->m_u != nullptr)
                         {
                             i = UNIT_SEE_NAME(to, (struct unit_data *)sub->m_u);
                         }
@@ -376,7 +376,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 'm':
-                        if (sub->m_u != NULL)
+                        if (sub->m_u != nullptr)
                         {
                             i = HMHR(to, sub->m_u);
                         }
@@ -386,7 +386,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 's':
-                        if (sub->m_u != NULL)
+                        if (sub->m_u != nullptr)
                         {
                             i = HSHR(to, sub->m_u);
                         }
@@ -396,7 +396,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 'e':
-                        if (sub->m_u != NULL)
+                        if (sub->m_u != nullptr)
                         {
                             i = HESH(to, sub->m_u);
                         }
@@ -406,7 +406,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 'p':
-                        if (sub->m_u != NULL)
+                        if (sub->m_u != nullptr)
                         {
                             if (IS_CHAR(sub->m_u))
                             {
@@ -423,7 +423,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 'a':
-                        if (sub->m_u != NULL)
+                        if (sub->m_u != nullptr)
                         {
                             i = UNIT_ANA((struct unit_data *)sub->m_u);
                         }
@@ -433,7 +433,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 'd':
-                        if (sub->m_i != NULL)
+                        if (sub->m_i != nullptr)
                         {
                             i = itoa(*(sub->m_i));
                         }
@@ -443,7 +443,7 @@ void act_generate(char *buf,
                         }
                         break;
                     case 't':
-                        if (sub->m_p == NULL)
+                        if (sub->m_p == nullptr)
                         {
                             slog(LOG_ALL, 0, "NULL t code to act(): %s", str);
                         }
@@ -456,7 +456,7 @@ void act_generate(char *buf,
                 } /* switch */
             }
 
-            if (i == NULL)
+            if (i == nullptr)
             {
                 i = "NULL";
             }
@@ -473,7 +473,7 @@ void act_generate(char *buf,
                 point++;
             }
 
-            i = NULL;
+            i = nullptr;
 
             ++strp;
         }
@@ -574,7 +574,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     {
         to = arg1.m_u;
     }
-    else if (arg1.m_u == NULL || UNIT_IN(arg1.m_u) == NULL)
+    else if (arg1.m_u == nullptr || UNIT_IN(arg1.m_u) == nullptr)
     {
         return;
     }
@@ -657,7 +657,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     {
         to = arg1.m_u;
     }
-    else if (arg1.m_u == NULL || UNIT_IN(arg1.m_u) == NULL)
+    else if (arg1.m_u == nullptr || UNIT_IN(arg1.m_u) == nullptr)
     {
         return;
     }

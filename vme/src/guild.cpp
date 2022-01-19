@@ -41,7 +41,7 @@ class extra_descr_data *find_quest(char *word, class unit_data *unit)
 {
     if (!IS_PC(unit) || !word)
     {
-        return NULL;
+        return nullptr;
     }
 
     return PC_QUEST(unit).find_raw(word);
@@ -153,7 +153,7 @@ static struct guild_type *parse_guild_data(class unit_data *npc, char *pStr)
     {
         szonelog(UNIT_FI_ZONE(npc), "GUILD-ERROR (%s@%s): Illegal initialization element.", UNIT_FI_NAME(npc), UNIT_FI_ZONENAME(npc));
         free_guild_data(pG);
-        return NULL;
+        return nullptr;
     }
 
     return pG;
@@ -166,7 +166,7 @@ int guild_master_init(struct spec_arg *sarg)
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
         pG = (struct guild_type *)parse_guild_data(sarg->owner, (char *)sarg->fptr->data);
-        if (pG == NULL)
+        if (pG == nullptr)
         {
             destroy_fptr(sarg->owner, sarg->fptr);
         }
@@ -189,7 +189,7 @@ void act_to_guild(const char *msg, char *guild, class unit_data *member, class u
 {
     class descriptor_data *d;
 
-    if (guild == NULL || *guild == '\0')
+    if (guild == nullptr || *guild == '\0')
     {
         slog(LOG_ALL, 0, "No guild name in send_to_guild");
         return;
@@ -256,7 +256,7 @@ int teach_members_only(struct spec_arg *sarg)
 
 int guard_guild_way(struct spec_arg *sarg)
 {
-    char *str, *location, *excl = NULL, *msg1 = NULL, *msg2 = NULL, *guild_no;
+    char *str, *location, *excl = nullptr, *msg1 = nullptr, *msg2 = nullptr, *guild_no;
     int guild_cmp;
 
     if ((str = (char *)sarg->fptr->data) && (sarg->cmd->inttype == DIR_CMD) && (sarg->cmd->dir == (*str - '0')) &&
@@ -273,7 +273,7 @@ int guard_guild_way(struct spec_arg *sarg)
 
         if (IS_PC(sarg->activator))
         {
-            if ((PC_GUILD(sarg->activator) != NULL) && (*PC_GUILD(sarg->activator) != '\0'))
+            if ((PC_GUILD(sarg->activator) != nullptr) && (*PC_GUILD(sarg->activator) != '\0'))
             {
                 *location = '\0';
                 guild_cmp = strcmp(PC_GUILD(sarg->activator), guild_no);
@@ -350,7 +350,7 @@ void leave_guild(class unit_data *player)
 
     FREE(PC_GUILD(player));
 
-    PC_GUILD(player) = NULL;
+    PC_GUILD(player) = nullptr;
     PC_GUILD_TIME(player) = PC_TIME(player).played;
 }
 
@@ -402,7 +402,7 @@ int can_leave_guild(struct guild_type *pG, class unit_data *master, class unit_d
         {
             if (*p && **p)
             {
-                if (find_quest(*p, ch) == NULL)
+                if (find_quest(*p, ch) == nullptr)
                 {
                     act("$1n says, 'You must first complete the $2t quest, $3n'", A_SOMEONE, master, *p, ch, TO_ROOM);
                     return FALSE;
@@ -437,7 +437,7 @@ void join_guild(class unit_data *ch, char *guild_name)
     PC_GUILD(ch) = str_dup(guild_name);
     PC_GUILD_TIME(ch) = PC_TIME(ch).played;
 
-    exd = quest_add(ch, str_cc("$", PC_GUILD(ch)), itoa(time(0)));
+    exd = quest_add(ch, str_cc("$", PC_GUILD(ch)), itoa(time(nullptr)));
     exd->names.AppendName("0");
     exd->names.AppendName("$guild");
 }
@@ -475,7 +475,7 @@ int can_join_guild(struct guild_type *pG, class unit_data *master, class unit_da
     {
         for (p = pG->ppEnterQuest; *p; p++)
         {
-            if (**p && find_quest(*p, ch) == NULL)
+            if (**p && find_quest(*p, ch) == nullptr)
             {
                 act("$1n says, 'You must first complete the $2t quest, $3n'", A_SOMEONE, master, *p, ch, TO_ROOM);
                 return FALSE;
@@ -541,7 +541,7 @@ int guild_master(struct spec_arg *sarg)
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
         free_guild_data(pG);
-        sarg->fptr->data = NULL;
+        sarg->fptr->data = nullptr;
         return SFR_SHARE;
     }
 
@@ -557,7 +557,7 @@ int guild_master(struct spec_arg *sarg)
 
     if (strcmp(sarg->cmd->cmd_str, "join") == 0)
     {
-        if (PC_GUILD(sarg->activator) == NULL || *PC_GUILD(sarg->activator) == '\0')
+        if (PC_GUILD(sarg->activator) == nullptr || *PC_GUILD(sarg->activator) == '\0')
         {
             if (can_join_guild(pG, sarg->owner, sarg->activator))
             {
@@ -585,7 +585,7 @@ int guild_master(struct spec_arg *sarg)
     }
     else if (is_command(sarg->cmd, "insult"))
     {
-        if (find_unit(sarg->activator, &arg, 0, FIND_UNIT_SURRO) != sarg->owner)
+        if (find_unit(sarg->activator, &arg, nullptr, FIND_UNIT_SURRO) != sarg->owner)
         {
             return SFR_SHARE;
         }
@@ -679,7 +679,7 @@ int guild_title(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    if ((PC_GUILD(sarg->activator) == NULL) || (strcmp(PC_GUILD(sarg->activator), buf) != 0))
+    if ((PC_GUILD(sarg->activator) == nullptr) || (strcmp(PC_GUILD(sarg->activator), buf) != 0))
     {
         act("$1n says, 'Thou art not a member $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;
@@ -717,7 +717,7 @@ int guild_title(struct spec_arg *sarg)
 
     if (strcmp(buf, UNIT_TITLE_STRING(sarg->activator)) == 0)
     {
-        if (c == NULL)
+        if (c == nullptr)
         {
             act("$1n says, 'You have reached the ultimate title, $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         }

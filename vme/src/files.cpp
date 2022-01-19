@@ -51,7 +51,7 @@ ubit1 file_exists(const char *name)
 {
     FILE *fp;
 
-    if ((fp = fopen(name, "r")) == NULL)
+    if ((fp = fopen(name, "r")) == nullptr)
     {
         return FALSE;
     }
@@ -75,7 +75,7 @@ void touch_file(const char *name)
         return;
     }
 
-    if ((fp = fopen(name, "w")) == NULL)
+    if ((fp = fopen(name, "w")) == nullptr)
     {
         fprintf(stderr, "touch_file(): Couldn't create %s...\n", name);
         assert(FALSE);
@@ -96,7 +96,7 @@ char *fread_line_commented(FILE *fl, char *buf, int max)
     {
         s = fgets(buf, max, fl);
 
-        if (s == NULL)
+        if (s == nullptr)
         {
             break;
         }
@@ -176,7 +176,7 @@ char *fread_string(FILE *fl)
     }
     else
     {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -304,24 +304,32 @@ struct fcache_type
 };
 
 static struct fcache_type fcache[FCACHE_MAX] = {
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}};
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
+    {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}};
 
 char *enl_strcpy(char *dest, const char *source, int *dest_size)
 {
     int len = strlen(source);
 
-    if ((dest == NULL) || (*dest_size < len + 1))
+    if ((dest == nullptr) || (*dest_size < len + 1))
     {
         if (dest)
         {
@@ -406,7 +414,7 @@ FILE *fopen_cache(const char *name, const char *mode)
     {
         if (!fcache[hit_i].file)
         {
-            return NULL;
+            return nullptr;
         }
         if (strchr(mode, 'w'))
         {
@@ -457,7 +465,7 @@ void fclose_cache(void)
             }
             else
             {
-                fcache[i].file = NULL;
+                fcache[i].file = nullptr;
             }
         }
     }
@@ -532,7 +540,7 @@ int save_string(char *filename, char **file_str, char *opp)
         return (FILE_ILEGAL_OPP);
     }
 
-    if ((file_str == NULL) || (*file_str[0] == 0))
+    if ((file_str == nullptr) || (*file_str[0] == 0))
     {
         return (FILE_NOT_SAVED);
     }

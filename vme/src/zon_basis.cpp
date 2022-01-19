@@ -29,14 +29,14 @@
 #define MAIL_NOTE_NAME "letter"
 #define DESTROY_ROOM "destroy_room"
 
-class unit_data *g_void_room = 0;
-class unit_data *g_destroy_room = 0;
-class unit_data *heaven_room = 0;
-class unit_data *seq_room = 0;
-class unit_data *time_room = 0;
-class unit_data *g_entry_room = 0;
+class unit_data *g_void_room = nullptr;
+class unit_data *g_destroy_room = nullptr;
+class unit_data *heaven_room = nullptr;
+class unit_data *seq_room = nullptr;
+class unit_data *time_room = nullptr;
+class unit_data *g_entry_room = nullptr;
 
-class file_index_type *g_letter_fi = 0;
+class file_index_type *g_letter_fi = nullptr;
 
 void basis_boot(void)
 {
@@ -59,7 +59,7 @@ void basis_boot(void)
     assert(g_letter_fi);
 
     g_entry_room = world_room(DEFAULT_ENTRY_ZONE, DEFAULT_ENTRY_NAME);
-    if (g_entry_room == NULL)
+    if (g_entry_room == nullptr)
     {
         slog(LOG_ALL, 0, "Entry room does not exist, using void.");
         g_entry_room = g_void_room;
@@ -153,7 +153,7 @@ int log_object(struct spec_arg *sarg)
     char c;
     class unit_data *ch = UNIT_IN(sarg->owner);
 
-    if (sarg->fptr->data == NULL)
+    if (sarg->fptr->data == nullptr)
     {
         CREATE(ip, ubit8, 1);
         *ip = 0;
@@ -172,7 +172,7 @@ int log_object(struct spec_arg *sarg)
     {
         case CMD_AUTO_EXTRACT:
             FREE(ip);
-            sarg->fptr->data = 0;
+            sarg->fptr->data = nullptr;
             return SFR_SHARE;
 
         case CMD_AUTO_TICK:
@@ -290,7 +290,7 @@ void execute_append(class unit_data *pc, char *str)
 
     f = fopen(g_cServerConfig.getFileInLibDir(EXECUTE_FILE).c_str(), "ab+");
 
-    if (f == NULL)
+    if (f == nullptr)
     {
         slog(LOG_ALL, 0, "Error appending to execute file.");
         return;
@@ -338,7 +338,7 @@ int admin_obj(struct spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    if ((exdp = PC_INFO(sarg->activator).find_raw("$email")) == NULL)
+    if ((exdp = PC_INFO(sarg->activator).find_raw("$email")) == nullptr)
     {
         send_to_char("You do not have an email address registered.<br/>", sarg->activator);
         return SFR_BLOCK;
@@ -354,7 +354,7 @@ int admin_obj(struct spec_arg *sarg)
     {
         snprintf(buf, sizeof(buf), "mail zone zonelist %s", exdp->descr.c_str());
     }
-    else if ((zone = unit_zone(sarg->activator)) == NULL)
+    else if ((zone = unit_zone(sarg->activator)) == nullptr)
     {
         send_to_char("You are inside no zone?", sarg->activator);
         return SFR_BLOCK;

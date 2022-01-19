@@ -126,7 +126,7 @@ void signal_reset(void)
 
     sigfillset(&sigt);
 
-    pthread_sigmask(SIG_BLOCK, &sigt, NULL);
+    pthread_sigmask(SIG_BLOCK, &sigt, nullptr);
 }
 
 void signal_setup(void)
@@ -158,6 +158,6 @@ void signal_setup(void)
     interval.tv_usec = 0;
     itime.it_interval = interval;
     itime.it_value = interval;
-    setitimer(ITIMER_VIRTUAL, &itime, 0);
+    setitimer(ITIMER_VIRTUAL, &itime, nullptr);
     signal(SIGVTALRM, checkpointing);
 }

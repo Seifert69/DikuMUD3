@@ -558,7 +558,7 @@ void translate_init(void)
     {
         for (i = 0; i < 256; i++)
         {
-            control_code[j][i] = NULL;
+            control_code[j][i] = nullptr;
         }
     }
 

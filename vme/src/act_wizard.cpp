@@ -46,21 +46,21 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
     snprintf(buf, sizeof(buf), "Time warping for %d seconds<br/>", i);
     send_to_char(buf, ch);
 
-    g_events.add(PULSE_SEC * i, timewarp_end, 0, 0);
+    g_events.add(PULSE_SEC * i, timewarp_end, nullptr, nullptr);
 
     g_nTickUsec = 0; // Warp the time
 }
 
 void do_users(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    char *buf = NULL;
+    char *buf = nullptr;
     int cur_size = 1024;
 
     class descriptor_data *d;
     char tmp[256];
     int len, users = 0;
 
-    if (buf == NULL)
+    if (buf == nullptr)
         CREATE(buf, char, cur_size);
 
     strcpy(buf, "<u>Connections:</u><br/>");
@@ -178,7 +178,7 @@ void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
     }
     else
     {
-        if ((target = find_unit(ch, &argument, 0, FIND_UNIT_WORLD)))
+        if ((target = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD)))
         {
             if (UNIT_IN(target))
             {
@@ -278,7 +278,7 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
     }
     else
     {
-        victim = find_unit(ch, &argument, 0, FIND_UNIT_WORLD);
+        victim = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD);
     }
 
     if (!victim)
@@ -358,7 +358,7 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
         return;
     }
 
-    victim = find_unit(ch, &argument, 0, FIND_UNIT_WORLD | FIND_UNIT_SURRO);
+    victim = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD | FIND_UNIT_SURRO);
 
     if (!victim || !IS_NPC(victim))
     {
@@ -397,13 +397,13 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     arg = one_argument(arg, buf);
 
-    if (find_descriptor(buf, NULL))
+    if (find_descriptor(buf, nullptr))
     {
         send_to_char("A player by that name is connected.<br/>", ch);
         return;
     }
 
-    if ((fi = pc_str_to_file_index(ch, buf)) == NULL)
+    if ((fi = pc_str_to_file_index(ch, buf)) == nullptr)
     {
         for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
         {
@@ -416,7 +416,7 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
 
         if (player_exists(buf))
         {
-            if ((u = load_player(buf)) == NULL)
+            if ((u = load_player(buf)) == nullptr)
             {
                 send_to_char("Load error<br/>", ch);
                 return;

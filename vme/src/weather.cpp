@@ -110,7 +110,7 @@ struct time_info_data age(class unit_data *ch)
 
     if (IS_PC(ch))
     {
-        player_age = mud_time_passed(time(0), PC_TIME(ch).birth);
+        player_age = mud_time_passed(time(nullptr), PC_TIME(ch).birth);
     }
     else
     {
@@ -337,20 +337,20 @@ void update_time_and_weather(void)
 void weather_and_time_event(void *p1, void *p2)
 {
     update_time_and_weather();
-    g_events.add(SECS_PER_MUD_HOUR * 4, weather_and_time_event, 0, 0);
+    g_events.add(SECS_PER_MUD_HOUR * 4, weather_and_time_event, nullptr, nullptr);
 }
 
 /* reset the time in the game from file */
 void boot_time_and_weather(void)
 {
     struct time_info_data time_info;
-    g_tBootTime = time(0);
+    g_tBootTime = time(nullptr);
     char *p = ctime(&g_tBootTime);
     p[strlen(p) - 1] = '\0';
 
     snprintf(g_world_boottime, sizeof(g_world_boottime), "%s", p);
 
-    time_info = mud_time_passed(time(0), g_beginning_of_time);
+    time_info = mud_time_passed(time(nullptr), g_beginning_of_time);
 
     if (time_info.hours == 5)
     {
@@ -404,5 +404,5 @@ void boot_time_and_weather(void)
         }
     }
 
-    g_events.add(PULSE_SEC * SECS_PER_MUD_HOUR, weather_and_time_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_MUD_HOUR, weather_and_time_event, nullptr, nullptr);
 }

@@ -323,7 +323,7 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         {
             mon_array[i].take = mon_array[i].have = 0;
             mon_array[i].value = g_money_types[i].relative_value;
-            mon_array[i].unit = NULL;
+            mon_array[i].unit = nullptr;
             mon_array[i].cur = DEF_CURRENCY;
         }
 
@@ -596,7 +596,7 @@ class unit_data *unit_has_money_type(class unit_data *unit, ubit8 type)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*  Split `money' into two objects.
@@ -764,7 +764,7 @@ static void set_money_strings(FILE *fl, int idx)
     char buf[512], *tmp[32], *c, *s, *sc;
     int i = 0;
 
-    if (fgets(buf, sizeof buf, fl) == NULL)
+    if (fgets(buf, sizeof buf, fl) == nullptr)
     {
         slog(LOG_OFF, 0, "Error reading money strings.");
         assert(FALSE);
@@ -793,15 +793,15 @@ static void set_money_strings(FILE *fl, int idx)
 
         tmp[i++] = str_dup(s);
 
-        if ((s = c) == NULL && sc)
+        if ((s = c) == nullptr && sc)
         {
             s = sc;
-            sc = NULL;
+            sc = nullptr;
             g_money_types[idx].pl_idx = i;
         }
     } while (s);
 
-    tmp[i] = NULL;
+    tmp[i] = nullptr;
 
     CREATE(g_money_types[idx].strings, char *, i + 1);
     for (; 0 <= i; --i)
@@ -815,7 +815,7 @@ static void set_relval(FILE *fl, int idx)
     char buf[128];
     long res;
 
-    if (fgets(buf, sizeof buf, fl) == NULL || sscanf(buf, "%ld", &res) != 1)
+    if (fgets(buf, sizeof buf, fl) == nullptr || sscanf(buf, "%ld", &res) != 1)
     {
         slog(LOG_OFF, 0, "Error reading relative value.");
         assert(FALSE);
@@ -837,7 +837,7 @@ static char *get_string(FILE *fl, const char *err, ubit8 flag)
 {
     static char buf[256];
 
-    if (fgets(buf, sizeof buf, fl) == NULL)
+    if (fgets(buf, sizeof buf, fl) == nullptr)
     {
         slog(LOG_OFF, 0, "get_string(): %s", err);
         assert(FALSE);
@@ -876,7 +876,7 @@ void boot_money(void)
     myfile = g_cServerConfig.getFileInEtcDir(MONEYDEF_FILE);
     // if ((fl = fopen (str_cc (g_cServerConfig.m_etcdir, MONEYDEF_FILE), "r")) == NULL)
 #endif
-    if ((fl = fopen(myfile.c_str(), "r")) == NULL)
+    if ((fl = fopen(myfile.c_str(), "r")) == nullptr)
     {
         perror(str_cc("boot_money: ", myfile.c_str()));
         exit(3);
@@ -886,7 +886,7 @@ void boot_money(void)
     {
         do
         {
-            if (fgets(buf, sizeof buf, fl) == NULL)
+            if (fgets(buf, sizeof buf, fl) == nullptr)
             {
                 if (feof(fl))
                 {
@@ -941,7 +941,7 @@ void boot_money(void)
 
         set_relval(fl, idx);
 
-        if (fgets(buf, sizeof buf, fl) == NULL || sscanf(buf, "%d", &tmp) != 1)
+        if (fgets(buf, sizeof buf, fl) == nullptr || sscanf(buf, "%d", &tmp) != 1)
         {
             slog(LOG_OFF, 0, "Error reading coins_per_weight");
             assert(FALSE);

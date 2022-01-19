@@ -54,7 +54,7 @@ int g_verbose = 0;        /* be talkative */
 int g_fatal_warnings = 0; /* allow warnings */
 bool g_quiet_compile = false;
 
-char **ident_names = NULL; /* Used to check unique ident */
+char **ident_names = nullptr; /* Used to check unique ident */
 
 struct mem
 {
@@ -186,32 +186,32 @@ void fix(char *file)
 void zone_reset(char *default_name)
 {
     mem_reset();
-    g_zone.z_rooms = 0;
-    g_zone.z_mobiles = 0;
-    g_zone.z_objects = 0;
-    g_zone.z_table = 0;
+    g_zone.z_rooms = nullptr;
+    g_zone.z_mobiles = nullptr;
+    g_zone.z_objects = nullptr;
+    g_zone.z_table = nullptr;
     g_zone.z_zone.name = default_name;
     g_zone.z_zone.lifespan = 60;
     g_zone.z_zone.reset_mode = 0;
-    g_zone.z_zone.creators = 0;
-    g_zone.z_zone.title = 0;
-    g_zone.z_zone.notes = 0;
-    g_zone.z_zone.help = 0;
+    g_zone.z_zone.creators = nullptr;
+    g_zone.z_zone.title = nullptr;
+    g_zone.z_zone.notes = nullptr;
+    g_zone.z_zone.help = nullptr;
     g_zone.z_zone.weather = 1000;
-    g_zone.z_tmpl = NULL;
+    g_zone.z_tmpl = nullptr;
 }
 
 void mem_init()
 {
     int i;
 
-    ident_names = NULL;
+    ident_names = nullptr;
     g_tmplnames = create_namelist();
     CREATE(mm.bufs[0], char, MEMBLOCK);
     mm.buf = 0;
     for (i = 1; i <= BUFS; i++)
     {
-        mm.bufs[i] = 0;
+        mm.bufs[i] = nullptr;
     }
     mm.free = 0;
 }
@@ -282,8 +282,8 @@ class room_direction_data *mcreate_exit(void)
 
     //   rslt->open_name = NULL;
     rslt->exit_info = 0;
-    rslt->key = 0;
-    rslt->to_room = 0;
+    rslt->key = nullptr;
+    rslt->to_room = nullptr;
     return rslt;
 }
 
@@ -292,7 +292,7 @@ struct unit_affected_type *mcreate_affect(void)
     struct unit_affected_type *rs;
 
     MCREATE(rs, struct unit_affected_type, 1);
-    rs->next = 0;
+    rs->next = nullptr;
     rs->id = 0;
     rs->duration = 0;
     rs->data[0] = rs->data[1] = rs->data[2] = 0;
@@ -599,7 +599,7 @@ void dil_free_var(struct dilvar *v)
             if (v->val.string)
             {
                 FREE(v->val.string);
-                v->val.string = NULL;
+                v->val.string = nullptr;
             }
             break;
 
@@ -607,7 +607,7 @@ void dil_free_var(struct dilvar *v)
             if (v->val.namelist)
             {
                 delete v->val.namelist;
-                v->val.namelist = NULL;
+                v->val.namelist = nullptr;
             }
             break;
 
@@ -616,7 +616,7 @@ void dil_free_var(struct dilvar *v)
             if (v->val.intlist)
             {
                 delete v->val.intlist;
-                v->val.intlist = NULL;
+                v->val.intlist = nullptr;
             }
             break;
     }
@@ -635,21 +635,21 @@ void dil_free_frame(struct dilframe *frame)
     if (frame->vars)
     {
         FREE(frame->vars);
-        frame->vars = NULL;
+        frame->vars = nullptr;
     }
 
     /* discard secures */
     if (frame->secure)
     {
         FREE(frame->secure);
-        frame->secure = NULL;
+        frame->secure = nullptr;
     }
 
     /* discard intr */
     if (frame->intr)
     {
         FREE(frame->intr);
-        frame->intr = NULL;
+        frame->intr = nullptr;
     }
 }
 

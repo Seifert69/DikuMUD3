@@ -114,10 +114,10 @@ void special_event(void *p1, void *p2)
     }
     if (fptr->event)
     {
-        fptr->event->func = NULL;
+        fptr->event->func = nullptr;
     }
 
-    fptr->event = NULL;
+    fptr->event = nullptr;
     priority = FALSE;
 
     for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->next)
@@ -145,14 +145,14 @@ void special_event(void *p1, void *p2)
                 add_func_history(u, fptr->index, SFB_TICK);
 #endif
                 sarg.owner = u;
-                sarg.activator = NULL;
+                sarg.activator = nullptr;
                 sarg.fptr = fptr;
                 sarg.cmd = &g_cmd_auto_tick;
                 sarg.arg = "";
                 sarg.mflags = SFB_TICK;
-                sarg.medium = NULL;
-                sarg.target = NULL;
-                sarg.pInt = NULL;
+                sarg.medium = nullptr;
+                sarg.target = nullptr;
+                sarg.pInt = nullptr;
 
                 ret = (*(g_unit_function_array[fptr->index].func))(&sarg);
             }

@@ -36,7 +36,7 @@ struct dil_func_type
 #define TYPEFAIL_NULL 2
 
 void dil_edit_done(class descriptor_data *d);
-void DeactivateDil(class unit_data *pc, class dilprg *prg = NULL);
+void DeactivateDil(class unit_data *pc, class dilprg *prg = nullptr);
 void ActivateDil(class unit_data *pc);
 void dil_loadtime_activate(class unit_data *u);
 

@@ -47,7 +47,7 @@ cQueueElem::cQueueElem(ubit8 *d, ubit32 n, int bCopy)
         }
         else
         {
-            pData = NULL;
+            pData = nullptr;
         }
     }
     else
@@ -60,8 +60,8 @@ cQueueElem::cQueueElem(ubit8 *d, ubit32 n, int bCopy)
 
 cQueue::cQueue()
 {
-    pHead = NULL;
-    pTail = NULL;
+    pHead = nullptr;
+    pTail = nullptr;
     nEntries = 0;
     nBytes = 0;
 }
@@ -149,7 +149,7 @@ void cQueue::Append(class cQueueElem *pe)
         pTail = pe;
     }
 
-    pe->pNext = NULL;
+    pe->pNext = nullptr;
 
     nEntries++;
     nBytes += pe->Bytes();
@@ -164,7 +164,7 @@ void cQueue::Prepend(class cQueueElem *pe)
 {
     if (IsEmpty())
     {
-        pe->pNext = NULL;
+        pe->pNext = nullptr;
         pTail = pe;
     }
     else
@@ -194,14 +194,14 @@ class cQueueElem *cQueue::GetHead(void)
 
     if (IsEmpty())
     {
-        return NULL;
+        return nullptr;
     }
 
     pTmp = pHead;
 
     if (nEntries == 1)
     {
-        pHead = pTail = NULL;
+        pHead = pTail = nullptr;
     }
     else
     {

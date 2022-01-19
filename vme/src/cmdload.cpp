@@ -36,8 +36,8 @@
 #include <cstdlib>
 #include <cstring>
 
-struct trie_type *cmd_trie = NULL;
-struct command_info *g_cmdlist = NULL;
+struct trie_type *cmd_trie = nullptr;
+struct command_info *g_cmdlist = nullptr;
 struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_move, 0, 0},
                                    {"ne", do_move, 0, 0},           {"northwest", do_move, 0, 0},
                                    {"nw", do_move, 0, 0},           {"east", do_move, 0, 0},
@@ -69,7 +69,7 @@ struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast"
                                    {"users", do_users, 0, 0},       {"where", do_where, 0, 0},
 
                                    {"wizlock", do_wizlock, 0, 0},   {"wstat", do_wstat, 0, 0},
-                                   {"wedit", do_wedit, 0, 0},       {"", NULL, 0, 0}};
+                                   {"wedit", do_wedit, 0, 0},       {"", nullptr, 0, 0}};
 
 void skill_dump(void)
 {
@@ -82,7 +82,7 @@ void skill_dump(void)
 
         for (int i = 0; i < SKI_TREE_MAX; i++)
         {
-            if (g_SkiColl.text[i] == NULL)
+            if (g_SkiColl.text[i] == nullptr)
             {
                 continue;
             }
@@ -132,7 +132,7 @@ void cmd_base_load(void)
 {
     int i;
 
-    cmd_trie = 0;
+    cmd_trie = nullptr;
 
     for (i = 0; *cmdload[i].cmd_str; i++)
     {
@@ -158,7 +158,7 @@ void command_read(void)
     char pTmp[256];
     char *pCh;
     FILE *fl;
-    struct command_info *cmdptr = NULL, *lastptr = NULL;
+    struct command_info *cmdptr = nullptr, *lastptr = nullptr;
     struct cmdload_struct *intcmd;
 
     touch_file(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS));
@@ -172,7 +172,7 @@ void command_read(void)
     while (!feof(fl))
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             continue;
         }
@@ -189,7 +189,7 @@ void command_read(void)
         str_lower(pTmp);
         strip_trailing_blanks(pTmp);
 
-        if (pCh == NULL || str_is_empty(pCh))
+        if (pCh == nullptr || str_is_empty(pCh))
         {
             continue;
         }
@@ -200,38 +200,38 @@ void command_read(void)
             {
                 if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
                 {
-                    if (g_cmdlist == NULL)
+                    if (g_cmdlist == nullptr)
                     {
                         g_cmdlist = cmdptr;
-                        cmdptr->prev = NULL;
-                        cmdptr->next = NULL;
+                        cmdptr->prev = nullptr;
+                        cmdptr->next = nullptr;
                         lastptr = cmdptr;
-                        cmdptr = NULL;
+                        cmdptr = nullptr;
                     }
                     else
                     {
                         lastptr->next = cmdptr;
                         cmdptr->prev = lastptr;
-                        cmdptr->next = NULL;
+                        cmdptr->next = nullptr;
                         lastptr = cmdptr;
-                        cmdptr = NULL;
+                        cmdptr = nullptr;
                     }
                 }
             }
 
             CREATE(cmdptr, struct command_info, 1);
-            cmdptr->next = NULL;
-            cmdptr->prev = NULL;
+            cmdptr->next = nullptr;
+            cmdptr->prev = nullptr;
             cmdptr->minimum_level = 0;
             cmdptr->minimum_position = POSITION_DEAD;
             cmdptr->log_level = 0;
-            cmdptr->tmpl = NULL;
-            cmdptr->cmd_fptr = NULL;
+            cmdptr->tmpl = nullptr;
+            cmdptr->cmd_fptr = nullptr;
             cmdptr->type = 0;
             cmdptr->no = 0;
             cmdptr->inttype = 0;
             cmdptr->dir = 0;
-            cmdptr->cmd_str = NULL;
+            cmdptr->cmd_str = nullptr;
             cmdptr->cmd_str = str_dup(pCh);
             ignore = FALSE;
             continue;
@@ -256,7 +256,7 @@ void command_read(void)
             {
                 if (cmdptr->cmd_str)
                     FREE(cmdptr->cmd_str)
-                cmdptr = NULL;
+                cmdptr = nullptr;
                 slog(LOG_ALL, 0, "COMMAND LOAD ERROR: %s not a defined internal funciton.", pCh);
                 ignore = TRUE;
             }
@@ -279,7 +279,7 @@ void command_read(void)
             if (g_SkiColl.text[idx])
             {
                 free((char *)g_SkiColl.text[idx]);
-                g_SkiColl.text[idx] = NULL;
+                g_SkiColl.text[idx] = nullptr;
             }
             g_SkiColl.text[idx] = str_dup(pCh);
             continue;
@@ -454,21 +454,21 @@ void command_read(void)
     {
         if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
         {
-            if (g_cmdlist == NULL)
+            if (g_cmdlist == nullptr)
             {
                 g_cmdlist = cmdptr;
-                cmdptr->prev = NULL;
-                cmdptr->next = NULL;
+                cmdptr->prev = nullptr;
+                cmdptr->next = nullptr;
                 lastptr = cmdptr;
-                cmdptr = NULL;
+                cmdptr = nullptr;
             }
             else
             {
                 lastptr->next = cmdptr;
                 cmdptr->prev = lastptr;
-                cmdptr->next = NULL;
+                cmdptr->next = nullptr;
                 lastptr = cmdptr;
-                cmdptr = NULL;
+                cmdptr = nullptr;
             }
         }
     }

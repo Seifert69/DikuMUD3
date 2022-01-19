@@ -25,7 +25,7 @@ CByteBuffer::CByteBuffer(ubit32 nSize)
     m_nAllocated = nSize;
     CREATE(m_pData, ubit8, nSize);
 
-    assert(m_pData != NULL);
+    assert(m_pData != nullptr);
     *m_pData = 0;
 }
 
@@ -204,7 +204,7 @@ int CByteBuffer::ReadStringAlloc(char **ppStr)
 
     if (nLen == 1)
     {
-        *ppStr = NULL;
+        *ppStr = nullptr;
         return Skip8();
     }
 
@@ -290,7 +290,7 @@ int CByteBuffer::ReadIntList(int **ilist)
 
 int CByteBuffer::ReadBlock(ubit8 **ppData, ubit32 *pnLen)
 {
-    *ppData = NULL;
+    *ppData = nullptr;
 
     if (Read32(pnLen))
     {
@@ -299,7 +299,7 @@ int CByteBuffer::ReadBlock(ubit8 **ppData, ubit32 *pnLen)
 
     *ppData = (ubit8 *)malloc(*pnLen);
 
-    if (ppData == NULL)
+    if (ppData == nullptr)
     {
         return 1;
     }
@@ -532,7 +532,7 @@ ubit8 *bread_data(ubit8 **b, ubit32 *plen)
     ubit32 len;
     ubit8 *data;
 
-    data = NULL;
+    data = nullptr;
     len = bread_ubit32(b);
     if (plen)
     {
@@ -579,7 +579,7 @@ char *bread_str_alloc(ubit8 **b)
     }
 
     (*b)++;
-    return NULL;
+    return nullptr;
 }
 
 /* Returns pointer to the string and skips past the end to next

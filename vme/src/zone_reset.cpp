@@ -20,7 +20,7 @@
 
 #include <cstring>
 
-class zone_type *g_boot_zone = NULL; /* Points to the zone currently booted */
+class zone_type *g_boot_zone = nullptr; /* Points to the zone currently booted */
 
 /* No Operation */
 class unit_data *zone_nop(class unit_data *u, struct zone_reset_cmd *cmd)
@@ -40,7 +40,7 @@ class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -140,7 +140,7 @@ bool zone_limit(class unit_data *u, class file_index_type *fi, struct zone_reset
 /* num[1] is the max allowed locally existing number              */
 class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
 {
-    class unit_data *loaded = NULL;
+    class unit_data *loaded = nullptr;
 
     /* Destination */
     if (cmd->fi[1] && !cmd->fi[1]->fi_unit_list.empty() && cmd->fi[1]->type == UNIT_ST_ROOM)
@@ -149,7 +149,7 @@ class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
     }
 
     /* Does the destination room exist */
-    if (u == NULL)
+    if (u == nullptr)
     {
         szonelog(g_boot_zone, "Reset Error: Don't know where to put %s@%s", cmd->fi[0]->name, cmd->fi[0]->zone->name);
     }
@@ -180,7 +180,7 @@ class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
         }
         else
         {
-            loaded = NULL;
+            loaded = nullptr;
         }
     }
 
@@ -192,10 +192,10 @@ class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
 /* num[1] is equipment position                             */
 class unit_data *zone_equip(class unit_data *u, struct zone_reset_cmd *cmd)
 {
-    class unit_data *loaded = NULL;
+    class unit_data *loaded = nullptr;
 
     /* Does the destination unit exist */
-    if (u == NULL)
+    if (u == nullptr)
     {
         szonelog(g_boot_zone, "Reset error: %s@%s has no parent in equip.", cmd->fi[0]->name, cmd->fi[0]->zone->name);
     }
@@ -279,7 +279,7 @@ class unit_data *zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
         ROOM_EXIT(cmd->fi[0]->fi_unit_list.front(), cmd->num[0])->exit_info = cmd->num[1];
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* fi[0] is the room to be purged.                          */
@@ -303,7 +303,7 @@ class unit_data *zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* fi[0] is the thing(s) to be removed.                          */
@@ -328,7 +328,7 @@ class unit_data *zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* 'u' is the 'master' that will be followed                      */
@@ -338,10 +338,10 @@ class unit_data *zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
 /* num[1] is the max allowed locally existing number              */
 class unit_data *zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
 {
-    class unit_data *loaded = NULL;
+    class unit_data *loaded = nullptr;
 
     /* Does the master exist */
-    if (u == NULL)
+    if (u == nullptr)
     {
         szonelog(g_boot_zone, "Reset Error: Non Existant destination-unit in follow");
     }
@@ -385,7 +385,7 @@ bool low_reset_zone(class unit_data *u, struct zone_reset_cmd *cmd)
         if (success && cmd->nested && !low_reset_zone(success, cmd->nested) && cmd->cmpl)
         {
             extract_unit(success);
-            success = 0;
+            success = nullptr;
         }
 
         ok = ok && success;
@@ -401,13 +401,13 @@ void zone_reset(class zone_type *zone)
 
     zone_update_no_in_zone(); /* Reset the fi->no_in_zone */
 
-    low_reset_zone(NULL, zone->zri);
+    low_reset_zone(nullptr, zone->zri);
 
     /* Far too much LOG:
        slog(LOG_OFF, 0, "Zone reset of '%s' done (%d bytes used).",
        zone->name, g_memory_total_alloc - i); */
 
-    g_boot_zone = NULL;
+    g_boot_zone = nullptr;
 }
 
 /* MS: Changed this to queue reset events at boot such that game comes up
@@ -434,7 +434,7 @@ void reset_all_zones(void)
 
             if (zone->second->zone_time > 0)
             {
-                zone_event((void *)zone->second, (void *)0);
+                zone_event((void *)zone->second, (void *)nullptr);
             }
         }
     }
@@ -473,11 +473,11 @@ void zone_event(void *p1, void *p2)
 
         if (zone->reset_mode != RESET_NOT)
         {
-            g_events.add(zone->zone_time * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, 0);
+            g_events.add(zone->zone_time * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, nullptr);
         }
     }
     else
     {
-        g_events.add(1 * PULSE_ZONE, zone_event, zone, 0);
+        g_events.add(1 * PULSE_ZONE, zone_event, zone, nullptr);
     }
 }

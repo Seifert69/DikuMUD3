@@ -164,13 +164,13 @@ char *convert_line(char *temp, int ln, char *save_buff)
     if (strlen(token) < 1)
     {
         std::cerr << "Erorr!  Line " << ln << ":  No keyword value given." << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     if (strlen(token) > 20)
     {
         std::cerr << "Erorr!  Line " << ln << ":  Keyword to long." << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     while (*b != '=')
@@ -178,12 +178,12 @@ char *convert_line(char *temp, int ln, char *save_buff)
         if (!isspace(*b))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Ilegal char in left hand value of '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         if ((*b == '\n') || (*b == '\r') || (*b == '\0'))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Missing '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         b++;
     }
@@ -193,12 +193,12 @@ char *convert_line(char *temp, int ln, char *save_buff)
         if ((!isspace(*b)) && (*b != '='))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Ilegal char in right hand value of '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         if ((*b == '\n') || (*b == '\r') || (*b == '\0'))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Missing right hand side of '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         b++;
     }
@@ -217,13 +217,13 @@ char *convert_line(char *temp, int ln, char *save_buff)
     if (*b != '"')
     {
         std::cerr << "Erorr!  Line:  " << ln << ":  Missing '\"'" << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     if (strlen(strval) < 1)
     {
         std::cerr << "Erorr!  Line " << ln << ":  No value inside '\"\"'" << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     if (checkcolor(strval))
@@ -249,7 +249,7 @@ char *convert_line(char *temp, int ln, char *save_buff)
     else
     {
         std::cerr << "Error!  Line " << ln << ":  " << strval << " is not a legal color value." << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     return (new_buff);

@@ -38,7 +38,7 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
     char *c;
 
     assert(cExtra.isempty());
-    te = NULL;
+    te = nullptr;
 
     if (unit_version > 62)
     {
@@ -56,7 +56,7 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
         i = x;
     }
 
-    first = NULL;
+    first = nullptr;
 
     /* While description is non null, keep reading */
     for (; i > 0; i--)
@@ -77,11 +77,11 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
         {
             e->vals.ReadBuffer(pBuf);
         }
-        e->next = NULL;
+        e->next = nullptr;
 
         /* Insert at END of list to keep the ordering of the names */
         /* as specified in the binary file                         */
-        if (first == NULL)
+        if (first == nullptr)
         {
             first = e;
             te = e;
@@ -158,7 +158,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     }
     else
     {
-        tmpl->argt = NULL;
+        tmpl->argt = nullptr;
     }
 
     pBuf->ReadBlock(&tmpl->core, &tmpl->coresz);
@@ -176,7 +176,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     }
     else
     {
-        tmpl->vart = NULL;
+        tmpl->vart = nullptr;
     }
 
     pBuf->Read16(&tmpl->xrefcount);
@@ -202,13 +202,13 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
             }
             else
             {
-                tmpl->xrefs[i].argt = NULL;
+                tmpl->xrefs[i].argt = nullptr;
             }
         }
     }
     else
     {
-        tmpl->xrefs = NULL;
+        tmpl->xrefs = nullptr;
     }
 
 #ifdef DMSERVER
@@ -220,7 +220,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     }
     else
     {
-        tmpl->extprg = NULL;
+        tmpl->extprg = nullptr;
     }
 
     if (!g_mud_bootzone)
@@ -258,7 +258,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
             /* Typecheck error ! */
             if (!valid)
             {
-                tmpl->extprg[i] = NULL;
+                tmpl->extprg[i] = nullptr;
                 /* ERROR MESSAGE HERE */
                 slog(LOG_ALL, 0, "Error typechecking reference to '%s'", tmpl->xrefs[i].name);
             }
@@ -266,9 +266,9 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     }
 #else
     /* This is compiletime, no resolve done */
-    tmpl->extprg = NULL;
+    tmpl->extprg = nullptr;
 #endif
-    tmpl->prg_list = NULL;
+    tmpl->prg_list = nullptr;
 
     return tmpl;
 }
@@ -300,7 +300,7 @@ void bread_dilintr(CByteBuffer *pBuf, class dilprg *prg, int version)
     }
     else
     {
-        prg->frame[0].intr = NULL;
+        prg->frame[0].intr = nullptr;
     }
 }
 
@@ -378,7 +378,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 {
 #ifdef DMSERVER
     class dilprg *prg;
-    struct diltemplate *tmpl = NULL;
+    struct diltemplate *tmpl = nullptr;
     ubit32 recallpc = 0;
     ubit16 t16;
     int i, novar;
@@ -388,7 +388,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
     // prg = new EMPLACE(dilprg) dilprg(owner, stspec);
     // We will create an NOT link program here, link down below
-    prg = new EMPLACE(dilprg) dilprg(owner, NULL);
+    prg = new EMPLACE(dilprg) dilprg(owner, nullptr);
 
     /* read new version */
     if (version < 64)
@@ -434,8 +434,8 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         tmpl->nTriggers = 0;
         tmpl->fCPU = 0.0;
         tmpl->prgname = str_dup(name);
-        tmpl->zone = NULL;
-        tmpl->prg_list = NULL;
+        tmpl->zone = nullptr;
+        tmpl->prg_list = nullptr;
         /* Prevent all execution */
         SET_BIT(prg->flags, DILFL_EXECUTING);
         tmpl->flags |= DILFL_FREEME;
@@ -469,7 +469,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
     } /* saved variables */
     else
     {
-        prg->fp->vars = NULL;
+        prg->fp->vars = nullptr;
     }
 
     for (i = 0; i < novar; i++)
@@ -500,8 +500,8 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
     /* read interrupt array */
     bread_dilintr(pBuf, prg, version);
 
-    prg->frame[0].securecount = 0; /* number of secures */
-    prg->frame[0].secure = NULL;   /* secured vars */
+    prg->frame[0].securecount = 0;  /* number of secures */
+    prg->frame[0].secure = nullptr; /* secured vars */
 
     /* The static template ends here.... */
     if (tmpl->flags == DILFL_FREEME)
@@ -522,7 +522,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         {
             dil_free_var(&prg->fp->vars[i]);
 
-            prg->fp->vars[i].val.string = NULL;
+            prg->fp->vars[i].val.string = nullptr;
             prg->fp->vars[i].val.integer = 0;
         }
 
@@ -535,7 +535,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         }
         else
         {
-            prg->fp->vars = NULL;
+            prg->fp->vars = nullptr;
         }
         for (i = 0; i < tmpl->varc; i++)
         {
@@ -550,7 +550,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
             }
             else
             {
-                prg->fp->vars[i].val.string = NULL;
+                prg->fp->vars[i].val.string = nullptr;
             }
         }
         prg->varcrc = tmpl->varcrc; /* variables updated! */
@@ -565,7 +565,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         }
         else
         {
-            prg->fp->intr = NULL;
+            prg->fp->intr = nullptr;
         }
         prg->fp->intrcount = tmpl->intrcount;
 
@@ -573,7 +573,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         for (i = 0; i < prg->fp->intrcount; i++)
         {
             prg->fp->intr[i].flags = 0;
-            prg->fp->intr[i].lab = NULL;
+            prg->fp->intr[i].lab = nullptr;
         }
 
         recallpc = 0;
@@ -595,7 +595,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         }
         else
         {
-            prg->fp->intr = NULL;
+            prg->fp->intr = nullptr;
         }
         prg->fp->intrcount = tmpl->intrcount;
 
@@ -603,7 +603,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         for (i = 0; i < prg->fp->intrcount; i++)
         {
             prg->fp->intr[i].flags = 0;
-            prg->fp->intr[i].lab = NULL;
+            prg->fp->intr[i].lab = nullptr;
         }
     }
 
@@ -611,7 +611,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
     return prg;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 
@@ -622,8 +622,8 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
     ubit8 t8;
     ubit16 t16;
 
-    fptr = 0;
-    head = 0;
+    fptr = nullptr;
+    head = nullptr;
 
     if (version < 66)
     {
@@ -655,7 +655,7 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
         {
             slog(LOG_ALL, 0, "Illegal func index in bread_func index - corrupt.");
             g_nCorrupt = TRUE;
-            return NULL;
+            return nullptr;
         }
 
         if (version >= 70)
@@ -751,7 +751,7 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
             }
         }
 
-        fptr->next = NULL;
+        fptr->next = nullptr;
     }
 
     return head;
@@ -999,7 +999,7 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
 
         if (fptr->data && g_unit_function_array[fptr->index].save_w_d == SD_NULL)
         {
-            data = 0;
+            data = nullptr;
         }
 
         /* Else this is SD_ASCII and we can save anything we like ... :-) */
@@ -1187,7 +1187,7 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
     }
     else
     {
-        class unit_data *inu = NULL;
+        class unit_data *inu = nullptr;
 
         if (IS_PC(u))
         {
@@ -1198,7 +1198,7 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
 #ifdef DMSERVER
             inu = unit_room(u);
 #else
-            assert(inu == NULL);
+            assert(inu == nullptr);
 #endif
         }
 
@@ -1372,8 +1372,8 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
             /* Read N,S,E,W,U and D directions */
             for (i = 0; i <= MAX_EXIT; i++)
             {
-                char *c1 = NULL;
-                char *c2 = NULL;
+                char *c1 = nullptr;
+                char *c2 = nullptr;
 
                 if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
                 {

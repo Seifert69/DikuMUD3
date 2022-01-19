@@ -15,8 +15,8 @@
 
 #include <cstdio>
 
-class unit_affected_type *affected_list = 0;  /* Global list pointer       */
-class unit_affected_type *next_affected_dude; /* dirty - very dirty indeed */
+class unit_affected_type *affected_list = nullptr; /* Global list pointer       */
+class unit_affected_type *next_affected_dude;      /* dirty - very dirty indeed */
 
 /* Link an affected structure into the units affected structure */
 void link_affect(class unit_data *unit, class unit_affected_type *af)
@@ -26,7 +26,7 @@ void link_affect(class unit_data *unit, class unit_affected_type *af)
        UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit),
        UNIT_NAME(unit), af->id); */
 
-    af->gprevious = 0;
+    af->gprevious = nullptr;
 
     if (affected_list)
     {
@@ -35,7 +35,7 @@ void link_affect(class unit_data *unit, class unit_affected_type *af)
     }
     else
     {
-        af->gnext = 0;
+        af->gnext = nullptr;
     }
 
     affected_list = af;
@@ -68,7 +68,7 @@ void create_affect(class unit_data *unit, class unit_affected_type *af)
     if (!unit->is_destructed())
     {
         af = link_alloc_affect(unit, af);
-        af->event = NULL;
+        af->event = nullptr;
         /* If less than zero it is a transfer! */
         if (af->id >= 0)
         {
@@ -94,14 +94,14 @@ void create_affect(class unit_data *unit, class unit_affected_type *af)
             {
                 if (af->event)
                 {
-                    g_events.remove(affect_beat, (void *)af, 0);
+                    g_events.remove(affect_beat, (void *)af, nullptr);
                 }
-                af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
+                af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
             }
         }
         else
         {
-            af->event = NULL;
+            af->event = nullptr;
         }
     }
 }
@@ -116,7 +116,7 @@ void unlink_affect(class unit_affected_type *af)
     /* Affects may never be removed by lower function than this */
     af->register_destruct();
 
-    g_events.remove(affect_beat, (void *)af, 0);
+    g_events.remove(affect_beat, (void *)af, nullptr);
 
     if (next_affected_dude == af)
     {
@@ -179,9 +179,9 @@ void destroy_affect(class unit_affected_type *af)
                 af->beat = WAIT_SEC * 5;
                 if (af->event)
                 {
-                    g_events.remove(affect_beat, (void *)af, 0);
+                    g_events.remove(affect_beat, (void *)af, nullptr);
                 }
-                af->event = g_events.add(number(120, 240), affect_beat, (void *)af, 0);
+                af->event = g_events.add(number(120, 240), affect_beat, (void *)af, nullptr);
                 return;
             }
         }
@@ -230,7 +230,7 @@ unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 /* Called by event handler when its ticking time */
@@ -278,9 +278,9 @@ void affect_beat(void *p1, void *p2)
     {
         if (af->event)
         {
-            g_events.remove(affect_beat, (void *)af, 0);
+            g_events.remove(affect_beat, (void *)af, nullptr);
         }
-        af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
+        af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
     }
 }
 
@@ -314,13 +314,13 @@ void start_affect(class unit_data *unit)
         {
             if (af->event)
             {
-                g_events.remove(affect_beat, (void *)af, 0);
+                g_events.remove(affect_beat, (void *)af, nullptr);
             }
-            af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
+            af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
         }
         else
         {
-            af->event = NULL;
+            af->event = nullptr;
         }
     }
 }
@@ -331,9 +331,9 @@ void stop_affect(class unit_data *unit)
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
-        if (af->event != NULL)
+        if (af->event != nullptr)
         {
-            g_events.remove(affect_beat, (void *)af, 0);
+            g_events.remove(affect_beat, (void *)af, nullptr);
         }
     }
 }

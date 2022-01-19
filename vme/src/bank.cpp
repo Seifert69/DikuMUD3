@@ -133,7 +133,7 @@ static void cmd_deposit(const class unit_data *pc, class unit_data *clerk, char 
         }
     }
 
-    if ((thing = find_unit(pc, &s, 0, FIND_UNIT_INVEN)) == NULL)
+    if ((thing = find_unit(pc, &s, nullptr, FIND_UNIT_INVEN)) == nullptr)
     {
         act("$1n sighs and says 'I can't deposit what you haven't got, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
     }
@@ -209,7 +209,7 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
         }
     }
 
-    if ((thing = find_unit(pc, &s, 0, FIND_UNIT_INVEN)) == NULL)
+    if ((thing = find_unit(pc, &s, nullptr, FIND_UNIT_INVEN)) == nullptr)
     {
         act("$1n sighs and says 'I can't exchange what you haven't got, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
         return;
@@ -365,7 +365,7 @@ static void cmd_withdraw(const class unit_data *pc, class unit_data *clerk, char
 
 int bank(struct spec_arg *sarg)
 {
-    if (sarg->activator == NULL)
+    if (sarg->activator == nullptr)
     {
         return SFR_SHARE;
     }
@@ -452,14 +452,14 @@ void tax_player(class unit_data *ch)
 
     *(b = buf) = '\0';
 
-    CHAR_DESCRIPTOR(ch) = NULL; /* To avoid getting text output to the player */
+    CHAR_DESCRIPTOR(ch) = nullptr; /* To avoid getting text output to the player */
 
-    init_bank(ch, NULL, TRUE);
+    init_bank(ch, nullptr, TRUE);
 
     if (PC_BANK(ch))
     {
         FREE(PC_BANK(ch)); /* clear the bank... */
-        PC_BANK(ch) = NULL;
+        PC_BANK(ch) = nullptr;
     }
 
     for (i = 0; i <= MAX_CURRENCY; ++i)
@@ -548,7 +548,7 @@ void stat_bank(const class unit_data *ch, class unit_data *u)
         return;
     }
 
-    init_bank(u, NULL, TRUE);
+    init_bank(u, nullptr, TRUE);
 
     act("$2n has a bank-deposit of:", A_ALWAYS, ch, u, cActParameter(), TO_CHAR);
 

@@ -39,8 +39,8 @@ long g_nTickUsec = OPT_USEC; // Dont mess with this, it's the game heartbeat. Lo
 #define HEAPSPACE_INCREMENT 500
 /* constants */
 eventqueue g_events;
-class descriptor_data *g_descriptor_list = NULL;
-class descriptor_data *g_next_to_process = NULL;
+class descriptor_data *g_descriptor_list = nullptr;
+class descriptor_data *g_next_to_process = nullptr;
 
 /* For multi-connectors */
 class cMultiMaster g_Multi;
@@ -106,7 +106,7 @@ void run_the_game(char *srvcfg)
      #endif
      */
 
-    g_descriptor_list = NULL;
+    g_descriptor_list = nullptr;
 
     g_cServerConfig.Boot(srvcfg);
     slog(LOG_ALL, 0, "VME SERVER COMPILED AT %s %s", g_compile_date, g_compile_time);
@@ -133,13 +133,13 @@ void run_the_game(char *srvcfg)
     */
     slog(LOG_OFF, 0, "Priming eventqueue.");
 
-    g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_idle_event, 0, 0);
-    g_events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
-    g_events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_idle_event, nullptr, nullptr);
+    g_events.add(PULSE_SEC * 5, ping_multiplexers_event, nullptr, nullptr);
+    g_events.add(PULSE_VIOLENCE, perform_violence_event, nullptr, nullptr);
     // g_events.add(PULSE_POINTS, point_update_event, 0, 0);
     // g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 5, update_crimes_event, 0, 0);
-    g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
-    g_events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, nullptr, nullptr);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, nullptr, nullptr);
 
     slog(LOG_OFF, 0, "Entering game loop.");
 
@@ -176,11 +176,11 @@ void game_loop()
 {
     struct timeval now, old;
     long delay;
-    class descriptor_data *d = NULL;
+    class descriptor_data *d = nullptr;
     std::string str;
 
     g_tics = 61;
-    gettimeofday(&old, (struct timezone *)0);
+    gettimeofday(&old, (struct timezone *)nullptr);
 
     while (!g_mud_shutdown)
     {
@@ -197,7 +197,7 @@ void game_loop()
 
         /* Timer stuff. MUD is always at least OPT_USEC useconds in making one cycle. */
 
-        gettimeofday(&now, (struct timezone *)0);
+        gettimeofday(&now, (struct timezone *)nullptr);
 
         delay = g_nTickUsec - (1000000L * (now.tv_sec - old.tv_sec) + (now.tv_usec - old.tv_usec));
 
@@ -213,7 +213,7 @@ void game_loop()
     slog(LOG_ALL, 0, "Saving all players before exiting");
     for (d = g_descriptor_list; d; d = d->next)
     {
-        if (d->original != NULL)
+        if (d->original != nullptr)
         {
             if (IS_PC(d->original) && UNIT_IN(d->original))
             {
@@ -235,7 +235,7 @@ void game_loop()
     multi_close_all();
 
     // pthread_cancel(g_dijkstra_thread);
-    pthread_join(g_dijkstra_thread, NULL);
+    pthread_join(g_dijkstra_thread, nullptr);
     sleep(1);
 }
 
@@ -243,7 +243,7 @@ void game_loop()
 void game_event(void)
 {
     int i;
-    char *pcomm = NULL;
+    char *pcomm = nullptr;
     class descriptor_data *point;
     static struct timeval null_time = {0, 0};
 
@@ -301,19 +301,19 @@ void ping_multiplexers_event(void *p1, void *p2)
 {
     multi_ping_all();
 
-    g_events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
+    g_events.add(PULSE_SEC * 5, ping_multiplexers_event, nullptr, nullptr);
 }
 
 void check_idle_event(void *p1, void *p2)
 {
     check_idle();
-    g_events.add(PULSE_ZONE, check_idle_event, 0, 0);
+    g_events.add(PULSE_ZONE, check_idle_event, nullptr, nullptr);
 }
 
 void perform_violence_event(void *p1, void *p2)
 {
     g_CombatList.PerformViolence();
-    g_events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
+    g_events.add(PULSE_VIOLENCE, perform_violence_event, nullptr, nullptr);
 }
 
 // void update_crimes_event(void *p1, void *p2)
@@ -339,7 +339,7 @@ void timewarp_end(void *p1, void *p2)
 
 void check_overpopulation_event(void *p1, void *p2)
 {
-    g_events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, nullptr, nullptr);
 
     int nHours;
     nHours = (g_tics / PULSE_SEC) / 3600;
@@ -382,7 +382,7 @@ void check_overpopulation_event(void *p1, void *p2)
             worms = find_dil_template("worms@basis");
             if (worms)
             {
-                class dilprg *prg = dil_copy_template(worms, u, NULL);
+                class dilprg *prg = dil_copy_template(worms, u, nullptr);
                 if (prg)
                 {
                     prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -398,11 +398,11 @@ void check_reboot_event(void *p1, void *p2)
 {
     if (check_reboot() == 1)
     {
-        g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_reboot_event, 0, 0);
+        g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_reboot_event, nullptr, nullptr);
     }
     else
     {
-        g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
+        g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, nullptr, nullptr);
     }
 }
 

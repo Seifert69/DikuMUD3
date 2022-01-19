@@ -40,7 +40,7 @@ char *in_string(class unit_data *ch, class unit_data *u)
     }
 
     /*  error(HERE, "Something that is UNIT_IN, not in a room!");*/
-    return (NULL);
+    return (nullptr);
 }
 
 void player_where(class unit_data *ch, char *arg)
@@ -53,7 +53,7 @@ void player_where(class unit_data *ch, char *arg)
     {
         if (d->character && (d->character != ch) && UNIT_IN(d->character) && descriptor_is_playing(d) &&
             (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->character))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
-            d->original == NULL && CHAR_CAN_SEE(ch, d->character) && unit_zone(ch) == unit_zone(d->character))
+            d->original == nullptr && CHAR_CAN_SEE(ch, d->character) && unit_zone(ch) == unit_zone(d->character))
         {
             snprintf(buf, sizeof(buf), "%-30s at %s<br/>", UNIT_NAME(d->character), TITLENAME(unit_room(d->character)));
             send_to_char(buf, ch);
@@ -96,7 +96,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
         for (d = g_descriptor_list; d; d = d->next)
         {
             if (d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
-                (d->original == NULL || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
+                (d->original == nullptr || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
             {
                 nCount++;
                 if (d->original)

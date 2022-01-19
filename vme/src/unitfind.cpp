@@ -47,7 +47,7 @@ class unit_data *get_follower(class unit_data *u, int num)
             x++;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /* Assumes UNIT_IN(room) == NULL */
@@ -134,7 +134,7 @@ ubit1 same_surroundings(class unit_data *u1, class unit_data *u2)
 /* returns if PC is pay/no pay !0/0 */
 static inline int pcpay(class unit_data *u)
 {
-    return ((PC_ACCOUNT(u).credit > 0.0) || (PC_ACCOUNT(u).discount == 100) || (PC_ACCOUNT(u).flatrate > (ubit32)time(0)) ||
+    return ((PC_ACCOUNT(u).credit > 0.0) || (PC_ACCOUNT(u).discount == 100) || (PC_ACCOUNT(u).flatrate > (ubit32)time(nullptr)) ||
             (CHAR_DESCRIPTOR(u) ? g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(u)->host) : 0));
 }
 
@@ -191,7 +191,7 @@ static inline int findcheck(class unit_data *u, int pset, int tflags)
 //
 class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 {
-    class unit_data *u, *selected = NULL;
+    class unit_data *u, *selected = nullptr;
     int count = 0;
     int pset = 0;
 
@@ -306,7 +306,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* As find_unit below, except visibility is relative to
@@ -326,19 +326,19 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                                    const ubit32 bitvector,
                                    ubit8 type)
 {
-    class unit_data *best = NULL;
+    class unit_data *best = nullptr;
     int best_len = 0;
     ubit32 bitvectorm;
 
     int i, number, original_number;
-    const char *ct = NULL;
+    const char *ct = nullptr;
     char name[MAX_INPUT_LENGTH * 2], *c;
     ubit1 is_fillword = TRUE;
     class unit_data *u, *uu;
 
     if (type == 0)
     {
-        return NULL;
+        return nullptr;
     }
 
     /* Eliminate the 'pay' bits */
@@ -375,7 +375,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
 
     if (!*c)
     {
-        return NULL;
+        return nullptr;
     }
 
     str_remspc(c);
@@ -444,7 +444,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
         /* This is the ugly one, modified for transparance */
         if (IS_SET(bitvectorm, FIND_UNIT_SURRO))
         {
-            const char *tmp_self[] = {"self", NULL};
+            const char *tmp_self[] = {"self", nullptr};
 
             if ((ct = is_name_raw(c, tmp_self)))
             {
@@ -452,7 +452,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                 return (class unit_data *)ch;
             }
 
-            if (UNIT_IN(ch) == NULL)
+            if (UNIT_IN(ch) == nullptr)
             {
                 slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(ch), UNIT_FI_ZONENAME(ch));
             }
@@ -682,9 +682,9 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
 
     assert(this);
 
-    if (ref == NULL)
+    if (ref == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (IS_SET(bitvector, FIND_UNIT_EQUIP))
@@ -795,7 +795,7 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 class unit_data *file_index_type::find_symbolic_instance(void)
@@ -824,7 +824,7 @@ class unit_data *file_index_type::find_symbolic_instance(void)
         return this->fi_unit_list.front();
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Will find the unit_data for the file_index_type in question
@@ -857,7 +857,7 @@ class unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 class unit_data *find_symbolic(const char *zone, const char *name)
@@ -870,7 +870,7 @@ class unit_data *find_symbolic(const char *zone, const char *name)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -1049,7 +1049,7 @@ static class unit_data *scan4_ref_room(class unit_data *room, class unit_data *f
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* Scan the chars surroundings and all transparent surroundings for any   */

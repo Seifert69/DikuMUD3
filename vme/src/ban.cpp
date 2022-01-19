@@ -29,7 +29,7 @@ struct ban_t
     time_t until;
     char *textfile;
     struct ban_t *next;
-} *ban_list = NULL;
+} *ban_list = nullptr;
 
 void save_ban(void)
 {
@@ -56,7 +56,7 @@ void load_ban(void)
     bf = fopen(g_cServerConfig.getFileInLibDir(BAN_FILE).c_str(), "r");
     assert(bf);
 
-    while (fgets(buf, sizeof buf, bf) != NULL)
+    while (fgets(buf, sizeof buf, bf) != nullptr)
     {
         CREATE(tmp, struct ban_t, 1);
         sscanf(buf, "%s %c %ld %s\n", site, &tmp->type, &tmp->until, textfile);
@@ -71,7 +71,7 @@ void load_ban(void)
 
 time_t ban_timer(char *arg)
 {
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     while (*arg)
     {
@@ -339,7 +339,7 @@ bool ban_check(char *ban, char *site) /* TRUE, if banned */
 char site_banned(char *cur_site)
 {
     struct ban_t *entry, *next_entry;
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     for (entry = ban_list; entry; entry = next_entry)
     {

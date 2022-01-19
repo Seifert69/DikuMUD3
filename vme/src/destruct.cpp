@@ -63,7 +63,7 @@
 /* Used lots of places        */
 
 /* 3 Arrays of registered destructed things     */
-void **destructed[3] = {0, 0, 0};
+void **destructed[3] = {nullptr, nullptr, nullptr};
 
 /* 3 Arrays which indicate size of above arrays */
 int destructed_top[3] = {-1, -1, -1};
@@ -254,7 +254,7 @@ void destruct_unit(class unit_data *unit)
     if (!in_menu)
     {
         DELETE(unit_data, unit);
-        unit = NULL;
+        unit = nullptr;
     }
 #endif
 }
@@ -278,16 +278,16 @@ void clear_destructed(void)
 
         if (f->index == 82)
         {
-            assert(f->data == NULL);
+            assert(f->data == nullptr);
         }
 
-        assert(f->event == NULL);
+        assert(f->event == nullptr);
 
         if (f->data)
             FREE(f->data);
 
         DELETE(unit_fptr, f);
-        destructed[DR_FUNC][i] = NULL;
+        destructed[DR_FUNC][i] = nullptr;
     }
     destructed_idx[DR_FUNC] = 0;
 
@@ -296,7 +296,7 @@ void clear_destructed(void)
         if ((class unit_data *)destructed[DR_UNIT][i])
         {
             destruct_unit((class unit_data *)destructed[DR_UNIT][i]);
-            destructed[DR_UNIT][i] = NULL;
+            destructed[DR_UNIT][i] = nullptr;
         }
     }
     destructed_idx[DR_UNIT] = 0;

@@ -265,9 +265,9 @@ void load_messages(void)
     for (i = 0; i < COM_MAX_MSGS; i++)
     {
         fight_messages[i].group = -1;
-        fight_messages[i].no = 0; /* Nil */
+        fight_messages[i].no = nullptr; /* Nil */
         fight_messages[i].no_of_msgs = 0;
-        fight_messages[i].msg = 0;
+        fight_messages[i].msg = nullptr;
     }
 
     i = 0;
@@ -609,7 +609,7 @@ void combat_message(class unit_data *att,
     struct combat_msg_packet *msg;
     int i, r;
 
-    msg = 0;
+    msg = nullptr;
 
     for (i = 0; i < COM_MAX_MSGS; i++)
     {
@@ -1004,7 +1004,7 @@ void die(class unit_data *ch)
     if (death)
     {
         send_death(ch);
-        class dilprg *prg = dil_copy_template(death, ch, NULL);
+        class dilprg *prg = dil_copy_template(death, ch, nullptr);
         if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -1253,7 +1253,7 @@ void damage(class unit_data *ch,
     /* Murder! */
     if (CHAR_POS(victim) == POSITION_DEAD)
     {
-        sch = NULL;
+        sch = nullptr;
         if (ch == victim)
         {
             if (CHAR_LAST_ATTACKER(victim))
@@ -1380,7 +1380,7 @@ void break_object(class unit_data *obj)
 /* 'ch' is optional, and will receive a message if 'obj' breaks */
 void damage_object(class unit_data *ch, class unit_data *obj, int dam)
 {
-    if (obj == NULL)
+    if (obj == nullptr)
     {
         return;
     }
@@ -1459,7 +1459,7 @@ static int check_combat(class unit_data *ch)
         }
     }
 
-    return CHAR_FIGHTING(ch) != NULL;
+    return CHAR_FIGHTING(ch) != nullptr;
 }
 
 // Above level 50 a e.g. 100 roll becomes (with / 18):

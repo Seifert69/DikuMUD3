@@ -29,7 +29,7 @@ class descriptor_data *find_descriptor(const char *name, class descriptor_data *
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* Find a named zone */
@@ -37,9 +37,9 @@ class zone_type *find_zone(const char *zonename)
 {
     // struct bin_search_type *ba;
 
-    if ((zonename == NULL) || !*zonename)
+    if ((zonename == nullptr) || !*zonename)
     {
-        return NULL;
+        return nullptr;
     }
 
     auto it = g_zone_info.mmp.find(zonename);
@@ -49,7 +49,7 @@ class zone_type *find_zone(const char *zonename)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 
     /*    ba = binary_search(g_zone_info.ba, zonename, g_zone_info.no_of_zones);
@@ -64,7 +64,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 
     if (!*name)
     {
-        return NULL;
+        return nullptr;
     }
 
     char bufzone[MAX_STRING_LENGTH];
@@ -73,9 +73,9 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
     strcpy(bufzone, zonename);
     str_lower(bufzone);
 
-    if ((zone = find_zone(bufzone)) == NULL)
+    if ((zone = find_zone(bufzone)) == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     strcpy(bufname, name);
@@ -89,7 +89,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 
     /*if ((ba = binary_search(zone->ba, name, zone->no_of_fi)) == NULL)
@@ -106,12 +106,12 @@ struct diltemplate *find_dil_index(const char *zonename, const char *name)
 
     if (str_is_empty(name))
     {
-        return NULL;
+        return nullptr;
     }
 
-    if ((zone = find_zone(zonename)) == NULL)
+    if ((zone = find_zone(zonename)) == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     auto it = zone->mmp_tmpl.find(name);
@@ -122,7 +122,7 @@ struct diltemplate *find_dil_index(const char *zonename, const char *name)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 
     /*    if ((ba = binary_search(zone->tmplba, name, zone->no_tmpl)) == NULL)
@@ -143,7 +143,7 @@ struct diltemplate *find_dil_template(const char *name)
 
     if (str_is_empty(name))
     {
-        return NULL;
+        return nullptr;
     }
 
     split_fi_ref(name, zbuf, pbuf);
@@ -164,7 +164,7 @@ class unit_data *world_room(const char *zone, const char *name)
         return (fi->fi_unit_list.front());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*  Find file index.

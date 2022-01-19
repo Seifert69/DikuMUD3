@@ -32,7 +32,7 @@ struct trie_entry *triebindex(char c, struct trie_type *t)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -69,14 +69,14 @@ struct trie_type *add_trienode(const char *s, struct trie_type *t)
     int i;
 
     /* If no node is given, create one */
-    if (t == NULL)
+    if (t == nullptr)
     {
         trie_size += sizeof(struct trie_type);
         trie_nodes++;
 
         CREATE(t, struct trie_type, 1);
-        t->data = NULL;
-        t->nexts = NULL;
+        t->data = nullptr;
+        t->nexts = nullptr;
         t->size = 0;
     }
 
@@ -99,7 +99,7 @@ struct trie_type *add_trienode(const char *s, struct trie_type *t)
             t->size++;
 
             t->nexts[t->size - 1].c = *s;
-            t->nexts[t->size - 1].t = add_trienode(s + 1, NULL);
+            t->nexts[t->size - 1].t = add_trienode(s + 1, nullptr);
         }
         else
         {
@@ -116,7 +116,7 @@ void set_triedata(const char *s, struct trie_type *t, void *p, ubit1 nonabbrev)
 
     while (*s && t)
     {
-        if (t->data == NULL && !nonabbrev)
+        if (t->data == nullptr && !nonabbrev)
         {
             t->data = p;
         }
@@ -135,7 +135,7 @@ void set_triedata(const char *s, struct trie_type *t, void *p, ubit1 nonabbrev)
         }
     }
 
-    if (t && t->data == NULL)
+    if (t && t->data == nullptr)
     {
         t->data = p;
     }
@@ -148,9 +148,9 @@ void *search_trie(const char *s, struct trie_type *t)
 
     for (; *s && t; t = te->t, ++s)
     {
-        if ((te = triebindex(*s, t)) == NULL)
+        if ((te = triebindex(*s, t)) == nullptr)
         { /* O(1) since always < 256 */
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -216,7 +216,7 @@ ubit1 del_trie(char *s, struct trie_type **t, void (*free_data)(void *))
 
                 FREE((*t)->nexts);
                 FREE(*t);
-                *t = NULL;
+                *t = nullptr;
                 return TRUE;
             }
             else /* No, so we have to clean up carefully */
@@ -235,14 +235,14 @@ ubit1 del_trie(char *s, struct trie_type **t, void (*free_data)(void *))
     else if ((*t)->data)
     { /* Yep, delete */
         (*free_data)((*t)->data);
-        (*t)->data = NULL;
+        (*t)->data = nullptr;
 
         if ((*t)->size == 0) /* Is this a leaf? */
         {                    /* Yep, delete it, and confirm */
             trie_nodes--;
             trie_size -= sizeof(struct trie_type);
             FREE(*t);
-            *t = NULL;
+            *t = nullptr;
             return TRUE;
         }
     }

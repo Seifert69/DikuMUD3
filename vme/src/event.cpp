@@ -30,7 +30,7 @@ eventqueue::eventqueue(void)
 {
     count = 0;
     heapsize = 0;
-    heap = NULL;
+    heap = nullptr;
     loop_process = 0;
     loop_time = 0;
     max_process = 0;
@@ -137,13 +137,13 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     int i;
     if ((func == special_event) && arg2 && (((class unit_fptr *)arg2)->event))
     {
-        ((class unit_fptr *)arg2)->event->func = NULL;
-        ((class unit_fptr *)arg2)->event = NULL;
+        ((class unit_fptr *)arg2)->event->func = nullptr;
+        ((class unit_fptr *)arg2)->event = nullptr;
     }
     else if ((func == affect_beat) && arg1 && (((class unit_affected_type *)arg1)->event))
     {
-        ((class unit_affected_type *)arg1)->event->func = NULL;
-        ((class unit_affected_type *)arg1)->event = NULL;
+        ((class unit_affected_type *)arg1)->event->func = nullptr;
+        ((class unit_affected_type *)arg1)->event = nullptr;
     }
     else if ((func == affect_beat) && arg1 && (!((class unit_affected_type *)arg1)->event))
     {
@@ -159,7 +159,7 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
         {
             if (heap[i]->func == func && heap[i]->arg1 == arg1 && heap[i]->arg2 == arg2)
             {
-                heap[i]->func = NULL;
+                heap[i]->func = nullptr;
             }
         }
     }
@@ -173,7 +173,7 @@ void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *
     {
         if ((heap[i]->func == func) && (!arg1 || (heap[i]->arg1 == arg1)) && (!arg2 || (heap[i]->arg2 == arg2)))
         {
-            heap[i]->func = 0;
+            heap[i]->func = nullptr;
         }
     }
 }
@@ -191,11 +191,11 @@ void eventqueue::process(void)
     ubit32 us;
     void (*tfunc)(void *, void *);
     loop_process = 0;
-    gettimeofday(&old, (struct timezone *)0);
+    gettimeofday(&old, (struct timezone *)nullptr);
 
     while ((count >= 1) && (heap[1]->when <= g_tics))
     {
-        gettimeofday(&now, (struct timezone *)0);
+        gettimeofday(&now, (struct timezone *)nullptr);
         us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
         loop_time = us / 1000000.0;
 
@@ -213,7 +213,7 @@ void eventqueue::process(void)
         /* dequeue & process event */
         tmp_event = heap[1];
         heap[1] = heap[count];
-        heap[count] = NULL;
+        heap[count] = nullptr;
         count--;
         newtop = heap[1];
         j = 1;
@@ -258,7 +258,7 @@ void eventqueue::process(void)
                 membug_verify(u);
                 membug_verify(fptr);
 
-                bDestructed = (u->is_destructed() || fptr->is_destructed() || (tmp_event->func == NULL));
+                bDestructed = (u->is_destructed() || fptr->is_destructed() || (tmp_event->func == nullptr));
 
                 if (!bDestructed)
                 {
@@ -299,7 +299,7 @@ void eventqueue::process(void)
                     max_process = loop_process;
                 }
 
-                gettimeofday(&pnow, (struct timezone *)0);
+                gettimeofday(&pnow, (struct timezone *)nullptr);
                 us = (pnow.tv_sec - now.tv_sec) * 1000000L + (pnow.tv_usec - now.tv_usec);
                 loop_time = us / 1000000.0;
 
@@ -370,10 +370,10 @@ void eventqueue::process(void)
             } // !bDestructed
         }
         delete tmp_event;
-        tmp_event = NULL;
+        tmp_event = nullptr;
     }
 
-    gettimeofday(&now, (struct timezone *)0);
+    gettimeofday(&now, (struct timezone *)nullptr);
     us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
     loop_time = us / 1000000.0;
 

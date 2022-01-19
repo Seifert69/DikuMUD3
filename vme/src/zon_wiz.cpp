@@ -30,7 +30,7 @@ int ball(struct spec_arg *sarg)
 
     if (is_command(sarg->cmd, "use"))
     {
-        u = find_unit(sarg->activator, &arg, 0, FIND_UNIT_IN_ME);
+        u = find_unit(sarg->activator, &arg, nullptr, FIND_UNIT_IN_ME);
 
         if (u != sarg->owner)
         {
@@ -46,7 +46,7 @@ int ball(struct spec_arg *sarg)
             v2 = 0;
         }
 
-        for (i = 0; i < TOP_MAX; top[i++] = NULL)
+        for (i = 0; i < TOP_MAX; top[i++] = nullptr)
         {
             ;
         }
@@ -61,7 +61,7 @@ int ball(struct spec_arg *sarg)
             {
                 for (i = 0; i < TOP_MAX; i++)
                 {
-                    if ((top[i] == NULL) || OBJ_VALUE(u, v2) > OBJ_VALUE(top[i], v2))
+                    if ((top[i] == nullptr) || OBJ_VALUE(u, v2) > OBJ_VALUE(top[i], v2))
                     {
                         top[i] = u;
                         break;

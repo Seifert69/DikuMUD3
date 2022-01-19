@@ -44,15 +44,15 @@
 
 const char *g_player_zone = "_players";
 
-int g_room_number;                   /* For counting numbers in rooms */
-class unit_data *g_unit_list = NULL; /* The global unit_list          */
-class unit_data *g_npc_head = NULL;
-class unit_data *g_obj_head = NULL;
-class unit_data *g_room_head = NULL;
+int g_room_number;                      /* For counting numbers in rooms */
+class unit_data *g_unit_list = nullptr; /* The global unit_list          */
+class unit_data *g_npc_head = nullptr;
+class unit_data *g_obj_head = nullptr;
+class unit_data *g_room_head = nullptr;
 
 cSector g_sector_dat;
 /* Global permanent element of zone info */
-struct zone_info_type g_zone_info = {0, NULL};
+struct zone_info_type g_zone_info = {0, nullptr};
 
 /* By using this, we can easily sort the list if ever needed
 void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
@@ -197,7 +197,7 @@ void resolve_templates(void)
                 /* Typecheck error ! */
                 if (!valid)
                 {
-                    tmpl->second->extprg[i] = NULL;
+                    tmpl->second->extprg[i] = nullptr;
                     /* ERROR MESSAGE HERE */
                     szonelog(z->second, "Error typechecking reference to '%s'", tmpl->second->xrefs[i].name);
                 }
@@ -214,7 +214,7 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
     ubit32 tmplsize = 0;
     char nBuf[256], zBuf[256];
 
-    tmpllist = NULL;
+    tmpllist = nullptr;
 
     /*
      * The global templates are preceded with their length
@@ -358,7 +358,7 @@ void generate_zone_indexes(void)
 
     g_zone_info.no_of_zones = 0;
 
-    if ((zone_file = fopen(g_cServerConfig.getFileInEtcDir(ZONE_FILE_LIST).c_str(), "r")) == NULL)
+    if ((zone_file = fopen(g_cServerConfig.getFileInEtcDir(ZONE_FILE_LIST).c_str(), "r")) == nullptr)
     {
         slog(LOG_OFF, 0, "Could not open file containing filenames of zones: %s", ZONE_FILE_LIST);
         exit(0);
@@ -376,12 +376,12 @@ void generate_zone_indexes(void)
                        "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
                        "of player files on disk\n");
     g_zone_info.mmp.insert(std::make_pair(z->name, z));
-    z = NULL;
+    z = nullptr;
 
     for (;;)
     {
         /* Get name of next zone-file */
-        if (fgets(buf, 200, zone_file) == NULL)
+        if (fgets(buf, 200, zone_file) == nullptr)
         {
             break;
         }
@@ -444,7 +444,7 @@ void generate_zone_indexes(void)
 
         c = str_next_word_copy(c, dilfilepath);
 
-        if ((f = fopen_cache(filename, "rb")) == NULL)
+        if ((f = fopen_cache(filename, "rb")) == nullptr)
         {
             slog(LOG_OFF, 0, "Could not open data file: %s", filename);
             continue; /* Next file, please */
@@ -470,7 +470,7 @@ void generate_zone_indexes(void)
         }
         else
         {
-            z->dilfilepath = NULL;
+            z->dilfilepath = nullptr;
         }
 
         fstrcpy(&cBuf, f);
@@ -532,7 +532,7 @@ void generate_zone_indexes(void)
         generate_templates(f, z);
 
         z->no_of_fi = 0;
-        z->zri = 0;
+        z->zri = nullptr;
         generate_file_indexes(f, z);
         z->no_rooms = g_room_number; /* Number of rooms in the zone */
 
@@ -659,14 +659,14 @@ int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
         }
 
         /* Don't call, don't apply and don't set up tick for this affect (yet) */
-        af.event = NULL;
+        af.event = nullptr;
         link_alloc_affect(u, &af);
     }
 
     return 0;
 }
 
-class zone_type *unit_error_zone = NULL;
+class zone_type *unit_error_zone = nullptr;
 
 /* After a unit has been read, this is an opportunity to do stuff on it
  *
@@ -676,16 +676,16 @@ void post_read_unit(class unit_data *u)
     // Add regenerate to NPCs
     if (UNIT_TYPE(u) == UNIT_ST_NPC)
     {
-        static struct diltemplate *regen = NULL;
+        static struct diltemplate *regen = nullptr;
 
-        if (regen == NULL)
+        if (regen == nullptr)
         {
             regen = find_dil_template("regenerate@update");
         }
 
         if (regen)
         {
-            class dilprg *prg = dil_copy_template(regen, u, NULL);
+            class dilprg *prg = dil_copy_template(regen, u, nullptr);
             if (prg)
             {
                 prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -724,7 +724,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     if (type != UNIT_ST_NPC && type != UNIT_ST_PC && type != UNIT_ST_ROOM && type != UNIT_ST_OBJ)
     {
         g_nCorrupt = TRUE;
-        return NULL;
+        return nullptr;
     }
 
     // u = new EMPLACE(unit_data) unit_data(type);
@@ -801,7 +801,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     }
     else
     {
-        UNIT_KEY(u) = NULL;
+        UNIT_KEY(u) = nullptr;
     }
 
     if (unit_version < 46)
@@ -1072,7 +1072,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     g_nCorrupt += pBuf->ReadStringCopy(tmpbuf, MAX_STRING_LENGTH);
                     if (str_is_empty(tmpbuf))
                     {
-                        UPC(u)->promptstr = NULL;
+                        UPC(u)->promptstr = nullptr;
                     }
                     else
                     {
@@ -1388,14 +1388,14 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 }
                 else
                 {
-                    UNIT_IN(u) = NULL;
+                    UNIT_IN(u) = nullptr;
                 }
             }
 
             /* Read N, S, E, W, U and D directions */
             for (i = 0; i <= MAX_EXIT; i++)
             {
-                ROOM_EXIT(u, i) = NULL;
+                ROOM_EXIT(u, i) = nullptr;
                 g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
                 g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
                 str_lower(zone);
@@ -1428,7 +1428,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                         }
                         else
                         {
-                            ROOM_EXIT(u, i)->key = NULL;
+                            ROOM_EXIT(u, i)->key = nullptr;
                         }
 
                         /* NOT fi->unit! Done later */
@@ -1514,7 +1514,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
         }
         else
         {
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -1533,7 +1533,7 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
 
     snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->zone->filename);
 
-    if ((f = fopen_cache(buf, "rb")) == NULL)
+    if ((f = fopen_cache(buf, "rb")) == nullptr)
     {
         error(HERE, "Couldn't open %s for reading.", buf);
     }
@@ -1552,14 +1552,14 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 {
     class unit_data *u;
 
-    if (org_fi == NULL)
+    if (org_fi == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
-    if (org_fi == NULL)
+    if (org_fi == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (is_slimed(org_fi))
@@ -1576,10 +1576,10 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 
     if (!IS_ROOM(u))
     {
-        assert(UNIT_IN(u) == NULL);
+        assert(UNIT_IN(u) == nullptr);
     }
 
-    unit_error_zone = NULL;
+    unit_error_zone = nullptr;
 
     // if (IS_ROOM(u))
     //   org_fi->unit = u;
@@ -1617,7 +1617,7 @@ void read_all_rooms(void)
         }
     }
 
-    g_boot_zone = NULL;
+    g_boot_zone = nullptr;
 }
 
 /* After boot time, normalize all room exits */
@@ -1648,7 +1648,7 @@ void normalize_world(void)
                 {
                     if (((class file_index_type *)ROOM_EXIT(u, i)->to_room)->fi_unit_list.empty())
                     {
-                        ROOM_EXIT(u, i)->to_room = NULL;
+                        ROOM_EXIT(u, i)->to_room = nullptr;
                     }
                     else
                     {
@@ -1664,7 +1664,7 @@ void normalize_world(void)
         if (IS_ROOM(u) && UNIT_IN(u))
         {
             tmpu = UNIT_IN(u);
-            UNIT_IN(u) = NULL;
+            UNIT_IN(u) = nullptr;
 
             if (unit_recursive(u, tmpu))
             {
@@ -1689,7 +1689,7 @@ void normalize_world(void)
 #define ZON_DIR_UNNEST 2
 
 /* For local error purposes */
-static class zone_type *read_zone_error = NULL;
+static class zone_type *read_zone_error = nullptr;
 
 struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 {
@@ -1738,7 +1738,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
         }
         else
         {
-            cmd->fi[0] = 0;
+            cmd->fi[0] = nullptr;
         }
 
         fstrcpy(&cBuf, f);
@@ -1773,7 +1773,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
         }
         else
         {
-            cmd->fi[1] = 0;
+            cmd->fi[1] = nullptr;
         }
 
         if (fread(&(cmd->num[0]), sizeof(cmd->num[0]), 1, f) != 1)
@@ -1794,7 +1794,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
         }
 
         /* Link into list of next command */
-        if (cmd_list == NULL)
+        if (cmd_list == nullptr)
         {
             cmd_list = cmd;
             tmp_cmd = cmd;
@@ -1813,7 +1813,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
                 break;
 
             case ZON_DIR_NEST:
-                cmd->nested = read_zone(f, 0);
+                cmd->nested = read_zone(f, nullptr);
                 break;
 
             case ZON_DIR_UNNEST:
@@ -1845,7 +1845,7 @@ void read_all_zones(void)
 
         snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->filename);
 
-        if ((f = fopen(filename, "rb")) == NULL)
+        if ((f = fopen(filename, "rb")) == nullptr)
         {
             slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->filename);
             exit(10);
@@ -1861,7 +1861,7 @@ void read_all_zones(void)
             error(HERE, "Failed to fread() zone->second->reset_mode");
         }
 
-        zone->second->zri = read_zone(f, 0);
+        zone->second->zri = read_zone(f, nullptr);
 
         fclose(f);
     }
@@ -1990,7 +1990,7 @@ void db_shutdown(void)
         stop_affect(tmpu);
         //      unit_from_unit(tmpu);
         remove_from_unit_list(tmpu);
-        tmpu->next = NULL;
+        tmpu->next = nullptr;
         delete tmpu;
 
         clear_destructed();

@@ -98,7 +98,7 @@ int dice(int number, int size)
         size_t buffer_size_remaining = MAX_STRING_LENGTH;
         va_list args;
 
-        time_t now = time(0);
+        time_t now = time(nullptr);
         char *tmstr = ctime(&now);
 
         tmstr[strlen(tmstr) - 1] = '\0';

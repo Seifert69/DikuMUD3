@@ -843,7 +843,7 @@ void tif_poison_suffer(class unit_affected_type *af, class unit_data *unit)
 {
     CHAR_MANA(unit) -= af->data[1];
     CHAR_ENDURANCE(unit) -= af->data[2];
-    damage(unit, unit, 0, af->data[0], MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
+    damage(unit, unit, nullptr, af->data[0], MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
     /* unit can be destructed now, but no problemo */
 }
 

@@ -33,13 +33,13 @@ namespace fs = boost::filesystem;
 char player_directory[1024] = "\0";
 int max_id = -1;
 int top_id = -1;
-ubit8 *ids = NULL; /* For checking duplicate players... */
+ubit8 *ids = nullptr; /* For checking duplicate players... */
 
 #define OUTPUT_DIR "lib/"
 
 int sel_name(const struct dirent *dptr)
 {
-    if (strchr(dptr->d_name, '.') == NULL)
+    if (strchr(dptr->d_name, '.') == nullptr)
     {
         return 1;
     }
@@ -53,8 +53,8 @@ void convert_free_unit(class unit_data *u)
         convert_free_unit(UNIT_CONTAINS(u));
     }
 
-    UNIT_AFFECTED(u) = NULL;
-    UNIT_FUNC(u) = NULL;
+    UNIT_AFFECTED(u) = nullptr;
+    UNIT_FUNC(u) = nullptr;
 
     unit_from_unit(u);
     remove_from_unit_list(u);
@@ -75,7 +75,7 @@ void free_inventory(class unit_data *u)
 
 int days_old(time_t last_logon)
 {
-    return (int)(difftime(time(0), last_logon) / SECS_PER_REAL_DAY);
+    return (int)(difftime(time(nullptr), last_logon) / SECS_PER_REAL_DAY);
 }
 
 class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList)
@@ -121,7 +121,7 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 {
     class unit_data *bla;
 
-    if (u == NULL)
+    if (u == nullptr)
     {
         return;
     }
@@ -194,13 +194,13 @@ int sanity_check(class unit_data *u)
         return FALSE;
     }
 
-    if (PC_TIME(u).creation > time(0))
+    if (PC_TIME(u).creation > time(nullptr))
     {
         printf("Corrupted creation time.");
         return FALSE;
     }
 
-    if (PC_TIME(u).connect > time(0))
+    if (PC_TIME(u).connect > time(nullptr))
     {
         printf("Corrupted connect time.");
         return FALSE;
@@ -283,15 +283,15 @@ class unit_data *convert_load_player(char *name)
     if (!player_exists(name))
     {
         /* printf("No such player.\n"); */
-        return NULL;
+        return nullptr;
     }
 
     ch = load_player(name);
 
-    if (ch == NULL)
+    if (ch == nullptr)
     {
         printf("NULL.\n");
-        return NULL;
+        return nullptr;
     }
 
     insert_in_unit_list(ch);
@@ -301,21 +301,21 @@ class unit_data *convert_load_player(char *name)
     {
         printf("EXCLUDED.\n");
         convert_free_unit(ch);
-        return NULL;
+        return nullptr;
     }
 
     if (!sanity_check(ch))
     {
         printf("SANITY ERROR.\n");
         convert_free_unit(ch);
-        return NULL;
+        return nullptr;
     }
 
     if (PC_ID(ch) > top_id)
     {
         printf("TOP ID ERROR %d vs %d.\n", PC_ID(ch), top_id);
         convert_free_unit(ch);
-        return NULL;
+        return nullptr;
     }
 
     if (PC_ID(ch) > max_id)
@@ -389,7 +389,7 @@ void clist()
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
-                char *temp = NULL;
+                char *temp = nullptr;
                 try
                 {
                     if (fs::is_directory(*dir_itr))
@@ -405,7 +405,7 @@ void clist()
 
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
-                        if (pc == NULL)
+                        if (pc == nullptr)
                         {
                             std::cout << "ERROR: Corrupt\n";
                             delete temp;
@@ -427,7 +427,7 @@ void clist()
                         shall_exclude(UNIT_NAME(pc));
                         // shall_delete(pc);
 
-                        UNIT_CONTAINS(void_char) = NULL;
+                        UNIT_CONTAINS(void_char) = nullptr;
                         /* load_contents(temp, void_char);
 
                         if (UNIT_CONTAINS(void_char))
@@ -546,7 +546,7 @@ void convert_file(void)
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
-                char *temp = NULL;
+                char *temp = nullptr;
                 try
                 {
                     if (fs::is_directory(*dir_itr))
@@ -561,7 +561,7 @@ void convert_file(void)
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
 
-                        if (pc == NULL)
+                        if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
@@ -652,7 +652,7 @@ void cleanup(void)
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
-                char *temp = NULL;
+                char *temp = nullptr;
                 try
                 {
                     if (fs::is_directory(*dir_itr))
@@ -668,7 +668,7 @@ void cleanup(void)
                         std::cout << temp;
                         pc = convert_load_player(temp);
 
-                        if (pc == NULL)
+                        if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
@@ -700,7 +700,7 @@ void cleanup(void)
 
                         std::cout.flush();
 
-                        UNIT_CONTAINS(void_char) = NULL;
+                        UNIT_CONTAINS(void_char) = nullptr;
                         load_contents(temp, void_char);
                         if (UNIT_CONTAINS(void_char))
                         {

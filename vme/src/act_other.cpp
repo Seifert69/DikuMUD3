@@ -30,7 +30,7 @@ void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     if (!PC_IS_UNSAVED(ch) && CHAR_DESCRIPTOR(ch))
     {
-        if (CHAR_LEVEL(ch) < 200 && difftime(time(0), CHAR_DESCRIPTOR(ch)->logon) < 60)
+        if (CHAR_LEVEL(ch) < 200 && difftime(time(nullptr), CHAR_DESCRIPTOR(ch)->logon) < 60)
         {
             send_to_char("You must wait a minute between saves.<br/>", ch);
             return;
@@ -162,7 +162,7 @@ void points_reset(class unit_data *ch)
 void start_player(class unit_data *ch)
 {
     assert(CHAR_LEVEL(ch) == 0);
-    assert(UNIT_CONTAINS(ch) == NULL);
+    assert(UNIT_CONTAINS(ch) == nullptr);
     assert(IS_PC(ch));
     assert(CHAR_DESCRIPTOR(ch)); // Needed to copy pwd
 
@@ -194,7 +194,7 @@ void start_player(class unit_data *ch)
     if (g_playerinit_tmpl)
     {
         /* Call DIL to see if we should init the player in any other way. */
-        class dilprg *prg = dil_copy_template(g_playerinit_tmpl, ch, NULL);
+        class dilprg *prg = dil_copy_template(g_playerinit_tmpl, ch, nullptr);
 
         if (prg)
         {

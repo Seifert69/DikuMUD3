@@ -17,10 +17,10 @@
 int g_possible_saves = 0;
 
 /* Used for converting general direction in dmc! */
-const char *g_dirs[] = {"north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest", NULL};
+const char *g_dirs[] = {"north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest", nullptr};
 
 /* Used for converting general direction in dmc! */
-const char *g_dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", NULL};
+const char *g_dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", nullptr};
 
 struct shi_info_type g_shi_info[] = {
     /* %age Chance of blocking an attack if ready to block */

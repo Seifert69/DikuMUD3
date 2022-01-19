@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <cstring>
 
-const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
+const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", nullptr};
 
 /*  From char * input stream 'str' copy characters into 'buf' until
  *  end of string or newline. Returns position of 'str' after copied
@@ -24,9 +24,9 @@ const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "
  */
 char *str_line(const char *str, char *buf)
 {
-    if (str == NULL || buf == NULL)
+    if (str == nullptr || buf == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     for (; *str == ' ' || *str == '\n' || *str == '\r'; str++)
@@ -36,7 +36,7 @@ char *str_line(const char *str, char *buf)
 
     if (*str == '\0')
     {
-        return NULL;
+        return nullptr;
     }
 
     for (; (*buf = *str); buf++, str++)
@@ -186,11 +186,11 @@ int str_ccmp(const char *s, const char *d)
         return 0;
     }
 
-    if (s == NULL)
+    if (s == nullptr)
     {
         return -1;
     }
-    else if (d == NULL)
+    else if (d == nullptr)
     {
         return 1;
     }
@@ -216,11 +216,11 @@ int str_nccmp(const char *s, const char *d, int n)
         return 0;
     }
 
-    if (s == NULL)
+    if (s == nullptr)
     {
         return -1;
     }
-    else if (d == NULL)
+    else if (d == nullptr)
     {
         return 1;
     }
@@ -249,7 +249,7 @@ char *str_dup(const char *source)
         return dest;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*  As defined by 2nd Ed. of K&R ANSI C
@@ -276,7 +276,7 @@ char *str_str(const char *cs, const char *ct)
 
     } while (*cs++);
 
-    return NULL;
+    return nullptr;
 }
 
 /*  As defined by 2nd Ed. of K&R ANSI C, but non case sensitive
@@ -303,9 +303,9 @@ const char *str_cstr(const char *cs, const char *ct)
 /* return string without leading spaces */
 char *skip_blanks(const char *string)
 {
-    if (string == NULL)
+    if (string == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     for (; *string && isspace(*string); string++)
@@ -319,9 +319,9 @@ char *skip_blanks(const char *string)
 /* return string without leading spaces */
 char *skip_spaces(const char *string)
 {
-    if (string == NULL)
+    if (string == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     for (; *string && isaspace(*string); string++)
@@ -385,7 +385,7 @@ void strip_trailing_spaces(char *str)
 /* Returns true is arg is empty */
 ubit1 str_is_empty(const char *arg)
 {
-    if (arg == NULL)
+    if (arg == nullptr)
     {
         return TRUE;
     }
@@ -431,7 +431,7 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
     char arg[4096];
     int i, l;
 
-    if (list == NULL)
+    if (list == nullptr)
     {
         return -1;
     }
@@ -616,7 +616,7 @@ int search_block_abbrevs(const char *oarg, const char **list, const char **end)
     i = str_lower(skip_spaces(oarg), arg, sizeof(arg));
 
     bestidx = -1;
-    bestpos = NULL;
+    bestpos = nullptr;
 
     for (i = 0; list[i]; i++)
     {
@@ -929,7 +929,7 @@ const char *is_name_raw(const char *arg, char const *const *names) // MS2020 con
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*
@@ -954,7 +954,7 @@ char *is_name(char *arg, char const *const *names) // MS2020 const char *names[]
 
     if (!*arg)
     {
-        return 0;
+        return nullptr;
     }
 
     str_remspc(arg);
@@ -968,7 +968,7 @@ char **create_namelist(void)
     char **list;
 
     CREATE(list, char *, 1);
-    list[0] = NULL;
+    list[0] = nullptr;
 
     return list;
 }
@@ -977,7 +977,7 @@ char **create_namelist(void)
 //
 int len_namelist(const char **namelist)
 {
-    if (namelist == NULL)
+    if (namelist == nullptr)
     {
         return 0;
     }
@@ -1007,7 +1007,7 @@ char **add_name(const char *name, char **namelist)
     RECREATE(namelist, char *, pos + 2);
 
     namelist[pos] = str_dup(name);
-    namelist[pos + 1] = NULL;
+    namelist[pos + 1] = nullptr;
 
     return namelist;
 }
@@ -1044,7 +1044,7 @@ char *str_ccmp_next_word(const char *buf, const char *next_word)
     {
         if (*next_word != *buf)
         {
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -1053,7 +1053,7 @@ char *str_ccmp_next_word(const char *buf, const char *next_word)
         return (char *)buf;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*  Must receive a string of the format 'name@zone\0' or
@@ -1367,7 +1367,7 @@ char *html_encode_utf8(const char *src)
 {
     if (!src)
     {
-        return NULL;
+        return nullptr;
     }
 
     int nLen = strlen(src);
@@ -1615,7 +1615,7 @@ const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
     p++; // Skip '<'
 
     c = strchr(p, '>');
-    if (c == NULL)
+    if (c == nullptr)
     {
         return p;
     }
@@ -1648,7 +1648,7 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
     *pTag = 0;
 
     c = strstr(p, name);
-    if (c == NULL)
+    if (c == nullptr)
     {
         return 0;
     }
@@ -1671,7 +1671,7 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
 
     const char *ce;
     ce = strchr(c, '\''); // Find the last ' for the value
-    if (ce == NULL)
+    if (ce == nullptr)
     {
         return 0;
     }
@@ -1710,7 +1710,7 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
     *pNewTag = 0;
 
     c = strstr(pOldTag, pAttr);
-    if (c == NULL)
+    if (c == nullptr)
     {
         return 0;
     }
@@ -1739,7 +1739,7 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
     const char *ce;
 
     c = strchr(c, '\''); // Find the last ' for the value
-    if (c == NULL)
+    if (c == nullptr)
     { // Missing ending '
         return 0;
     }
@@ -1844,7 +1844,7 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
 {
     int i;
 
-    if ((p1 == NULL) || (p2 == NULL))
+    if ((p1 == nullptr) || (p2 == nullptr))
     {
         return 1;
     }

@@ -18,7 +18,7 @@
 #include <cstring>
 
 static int slime_count = 0;
-class file_index_type **slime_list = NULL;
+class file_index_type **slime_list = nullptr;
 
 static void slime_save(void)
 {
@@ -43,7 +43,7 @@ static void slime_save(void)
 
 static void slime_add(class file_index_type *sp)
 {
-    if (sp == NULL)
+    if (sp == nullptr)
     {
         return;
     }
@@ -72,7 +72,7 @@ static void slime_remove(class file_index_type *sp)
             if (slime_count == 0)
             {
                 FREE(slime_list);
-                slime_list = NULL;
+                slime_list = nullptr;
             }
             break;
         }
@@ -129,7 +129,7 @@ int slime_obj(struct spec_arg *sarg)
 
     fi = str_to_file_index(fi_name);
 
-    if (fi == NULL)
+    if (fi == nullptr)
     {
         act("No such file index '$2t'.", A_ALWAYS, sarg->activator, fi_name, cActParameter(), TO_CHAR);
         return SFR_BLOCK;

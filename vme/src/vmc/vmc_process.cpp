@@ -101,7 +101,7 @@ amount_t convert_money(char *str)
     amount_t res = 0;
     char *c;
 
-    if (str == NULL)
+    if (str == nullptr)
     {
         return 0;
     }
@@ -926,9 +926,9 @@ void init_unit(class unit_data *u)
 {
     int i;
 
-    u->next = 0;
+    u->next = nullptr;
 
-    UNIT_KEY(u) = 0;
+    UNIT_KEY(u) = nullptr;
     UNIT_MANIPULATE(u) = 0;
     UNIT_FLAGS(u) = 0;
     UNIT_BASE_WEIGHT(u) = 1;
@@ -939,14 +939,14 @@ void init_unit(class unit_data *u)
     UNIT_LIGHTS(u) = 0;
     UNIT_BRIGHT(u) = 0;
     UNIT_CHARS(u) = 0;
-    UNIT_AFFECTED(u) = 0;
+    UNIT_AFFECTED(u) = nullptr;
     UNIT_SIZE(u) = 180; /* 180cm default */
 
     switch (UNIT_TYPE(u))
     {
         case UNIT_ST_NPC:
             UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
-            CHAR_MONEY(u) = NULL;
+            CHAR_MONEY(u) = nullptr;
             CHAR_EXP(u) = 100; /* 100 XP per default at your own level */
             CHAR_FLAGS(u) = 0;
             CHAR_ATTACK_TYPE(u) = WPN_FIST;
@@ -1000,10 +1000,10 @@ void init_unit(class unit_data *u)
             UNIT_CAPACITY(u) = 30000;
             UNIT_BASE_WEIGHT(u) = 10;
             UNIT_WEIGHT(u) = 10;
-            UNIT_IN(u) = 0;
+            UNIT_IN(u) = nullptr;
             for (i = 0; i <= MAX_EXIT; i++)
             {
-                ROOM_EXIT(u, i) = 0;
+                ROOM_EXIT(u, i) = nullptr;
             }
             ROOM_FLAGS(u) = 0;
             ROOM_LANDSCAPE(u) = SECT_CITY;

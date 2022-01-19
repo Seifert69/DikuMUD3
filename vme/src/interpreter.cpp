@@ -23,121 +23,121 @@
 #include <cstdlib>
 #include <cstring>
 
-struct trie_type *g_intr_trie = NULL;
+struct trie_type *g_intr_trie = nullptr;
 
 struct command_info g_cmd_auto_tick = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_TICK,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_enter = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_ENTER,
     POSITION_STANDING,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_play = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_PLAY,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_leave = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_LEAVE,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_extract = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_EXTRACT,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_death = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_DEATH,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_combat = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_COMBAT,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_unknown = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_UNKNOWN,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_save = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_SAVE,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_msg = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_MSG,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
 struct command_info g_cmd_auto_edit = {
     0,
     0,
-    NULL,
+    nullptr,
     CMD_AUTO_EDIT,
     POSITION_DEAD,
-    NULL,
+    nullptr,
     0,
 };
 
-struct command_info g_cmd_auto_damage = {0, 0, NULL, CMD_AUTO_DAMAGE, POSITION_DEAD, NULL, 0};
+struct command_info g_cmd_auto_damage = {0, 0, nullptr, CMD_AUTO_DAMAGE, POSITION_DEAD, nullptr, 0};
 
-struct command_info *g_cmd_follow = NULL;
+struct command_info *g_cmd_follow = nullptr;
 
 struct command_info *g_cmd_dirs[MAX_EXIT + 1];
 
@@ -366,9 +366,9 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
 
     strip_trailing_spaces(argstr);
 
-    if ((cmd_ptr = (struct command_info *)search_trie(cmd, g_intr_trie)) == NULL)
+    if ((cmd_ptr = (struct command_info *)search_trie(cmd, g_intr_trie)) == nullptr)
     {
-        struct command_info the_cmd = {0, 0, NULL, CMD_AUTO_UNKNOWN, POSITION_DEAD, NULL, 0};
+        struct command_info the_cmd = {0, 0, nullptr, CMD_AUTO_UNKNOWN, POSITION_DEAD, nullptr, 0};
 
         the_cmd.cmd_str = str_dup(cmd);
         the_cmd.excmd = str_dup(cmd);
@@ -466,7 +466,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     {
         class dilprg *prg;
 
-        prg = dil_copy_template(cmd_ptr->tmpl, ch, NULL);
+        prg = dil_copy_template(cmd_ptr->tmpl, ch, nullptr);
         if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
@@ -681,7 +681,7 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
 
     if (to)
     {
-        ch = NULL;
+        ch = nullptr;
         if ((fi = str_to_file_index(to)))
         {
             for (tou = g_unit_list; tou; tou = tou->gnext)
@@ -693,12 +693,12 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class
             }
         }
 
-        if (ch == NULL)
+        if (ch == nullptr)
         {
             return SFR_SHARE;
         }
     }
-    else if (ch == NULL)
+    else if (ch == nullptr)
     {
         return SFR_SHARE;
     }
@@ -863,9 +863,9 @@ int send_preprocess(class unit_data *ch, const struct command_info *cmd, char *a
     struct spec_arg sarg;
 
     sarg.activator = ch;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
+    sarg.medium = nullptr;
+    sarg.target = nullptr;
+    sarg.pInt = nullptr;
     sarg.cmd = (struct command_info *)cmd;
     sarg.arg = arg;
 
@@ -877,9 +877,9 @@ int send_edit(class unit_data *ch, char *arg)
     struct spec_arg sarg;
 
     sarg.activator = ch;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
+    sarg.medium = nullptr;
+    sarg.target = nullptr;
+    sarg.pInt = nullptr;
     sarg.cmd = &g_cmd_auto_edit;
     sarg.arg = arg;
 
@@ -891,9 +891,9 @@ int send_message(class unit_data *ch, char *arg)
     struct spec_arg sarg;
 
     sarg.activator = ch;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
+    sarg.medium = nullptr;
+    sarg.target = nullptr;
+    sarg.pInt = nullptr;
     sarg.cmd = &g_cmd_auto_msg;
     sarg.arg = arg;
 
@@ -905,9 +905,9 @@ int send_death(class unit_data *ch)
     struct spec_arg sarg;
 
     sarg.activator = ch;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
+    sarg.medium = nullptr;
+    sarg.target = nullptr;
+    sarg.pInt = nullptr;
     sarg.cmd = &g_cmd_auto_death;
     sarg.arg = "";
 
@@ -919,9 +919,9 @@ int send_combat(class unit_data *ch)
     struct spec_arg sarg;
 
     sarg.activator = ch;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
+    sarg.medium = nullptr;
+    sarg.target = nullptr;
+    sarg.pInt = nullptr;
     sarg.cmd = &g_cmd_auto_combat;
     sarg.arg = "";
 
@@ -936,10 +936,10 @@ int send_save_to(class unit_data *from, class unit_data *to)
     assert(from);
 
     sarg.activator = from;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
-    sarg.fptr = NULL; /* Set by unit_function_scan */
+    sarg.medium = nullptr;
+    sarg.target = nullptr;
+    sarg.pInt = nullptr;
+    sarg.fptr = nullptr; /* Set by unit_function_scan */
     sarg.cmd = &g_cmd_auto_save;
     sarg.arg = "";
     sarg.mflags = SFB_SAVE;
@@ -952,10 +952,10 @@ int send_prompt(class unit_data *pc)
     struct spec_arg sarg;
 
     sarg.activator = pc;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
-    sarg.fptr = NULL; /* Set by unit_function_scan */
+    sarg.medium = nullptr;
+    sarg.target = nullptr;
+    sarg.pInt = nullptr;
+    sarg.fptr = nullptr; /* Set by unit_function_scan */
     sarg.cmd = &g_cmd_auto_tick;
     sarg.arg = "";
     sarg.mflags = SFB_PROMPT | SFB_AWARE;
@@ -993,7 +993,7 @@ int send_ack(class unit_data *activator,
 
     if (to)
     {
-        return basic_special(NULL, &sarg, SFB_PRE, extra_target, to);
+        return basic_special(nullptr, &sarg, SFB_PRE, extra_target, to);
     }
     else
     {
@@ -1021,7 +1021,7 @@ void send_done(class unit_data *activator,
 
     if (to)
     {
-        basic_special(NULL, &sarg, SFB_DONE, extra_target, to);
+        basic_special(nullptr, &sarg, SFB_DONE, extra_target, to);
     }
     else
     {
@@ -1033,7 +1033,7 @@ void send_done(class unit_data *activator,
 void assign_command_pointers(void)
 {
     struct command_info *cmd;
-    g_intr_trie = 0;
+    g_intr_trie = nullptr;
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
     {
         g_intr_trie = add_trienode(cmd->cmd_str, g_intr_trie);
@@ -1104,7 +1104,7 @@ void interpreter_dil_check(void)
     struct command_info *cmd;
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
     {
-        if (cmd->tmpl == NULL)
+        if (cmd->tmpl == nullptr)
         {
             continue;
         }
@@ -1112,14 +1112,14 @@ void interpreter_dil_check(void)
         if (cmd->tmpl->argc != 1)
         {
             slog(LOG_ALL, 0, "Interpreter DIL %s expected 1 argument.", cmd->tmpl->prgname);
-            cmd->tmpl = NULL;
+            cmd->tmpl = nullptr;
             continue;
         }
 
         if (cmd->tmpl->argt[0] != DILV_SP)
         {
             slog(LOG_ALL, 0, "Interpreter DIL %s argument 1 mismatch.", cmd->tmpl->prgname);
-            cmd->tmpl = NULL;
+            cmd->tmpl = nullptr;
             continue;
         }
     }

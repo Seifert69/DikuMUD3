@@ -143,7 +143,7 @@ static void stat_memory(class unit_data *ch)
     {
         if (UNIT_TYPE(u) != UNIT_ST_ROOM)
         {
-            if (UNIT_IN(u) == NULL)
+            if (UNIT_IN(u) == nullptr)
             {
                 snprintf(buf, sizeof(buf), "%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
                 send_to_char(buf, ch);
@@ -155,7 +155,7 @@ static void stat_memory(class unit_data *ch)
 static void stat_world(class unit_data *ch)
 {
     char buf[MAX_STRING_LENGTH];
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     char *p = ctime(&now);
     p[strlen(p) - 1] = '\0';
@@ -473,7 +473,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
     //  void stat_dijkstraa (class unit_data * ch, class zone_type *z);
 
-    static const char *zone_args[] = {"mobiles", "objects", "rooms", "reset", "errors", "info", "path", "dil", NULL};
+    static const char *zone_args[] = {"mobiles", "objects", "rooms", "reset", "errors", "info", "path", "dil", nullptr};
 
     static int search_types[] = {UNIT_ST_NPC, UNIT_ST_OBJ, UNIT_ST_ROOM};
 
@@ -482,7 +482,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
     if (argno == -1) /* Asked for a specific zone? */
     {
-        if ((zone = find_zone(buf)) == NULL)
+        if ((zone = find_zone(buf)) == nullptr)
         {
             send_to_char("Usage: wstat zone [name] "
                          "[mobiles|objects|rooms|reset|info|errors|path|dil]<br/>",
@@ -629,7 +629,7 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
 
         if (TREE_ISLEAF(g_SplColl.tree, i) && strcmp(tmpbuf1, "sphere") == 0)
         {
-            if (g_spell_info[i].tmpl == NULL && g_spell_info[i].spell_pointer == NULL)
+            if (g_spell_info[i].tmpl == nullptr && g_spell_info[i].spell_pointer == nullptr)
             {
                 strcpy(tmpbuf1, "NOT IMPLEMENTED");
             }
@@ -1036,13 +1036,13 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
 char *stat_obj_data(class unit_data *u, struct obj_type_t *pobjdata)
 {
     static char result[512];
-    char *special_str = NULL, int_str[5][32];
+    char *special_str = nullptr, int_str[5][32];
     int idx = OBJ_TYPE(u), i;
 
     switch (idx)
     {
         case ITEM_WEAPON:
-            special_str = sprinttype(NULL, OBJ_VALUE(u, 0), g_WpnColl.text);
+            special_str = sprinttype(nullptr, OBJ_VALUE(u, 0), g_WpnColl.text);
             break;
 
         case ITEM_CONTAINER:
@@ -1162,16 +1162,16 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                  CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->follower)) : "Nobody",
                  CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
                  CHAR_LEVEL(u),
-                 sprinttype(NULL, CHAR_SEX(u), g_char_sex),
-                 sprinttype(NULL, CHAR_POS(u), g_char_pos),
-                 IS_PC(u) ? sprinttype(NULL, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
+                 sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
+                 sprinttype(nullptr, CHAR_POS(u), g_char_pos),
+                 IS_PC(u) ? sprinttype(nullptr, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
                  char_carry_w_limit(u),
                  char_carry_n_limit(u),
                  sprintbit(bits1, CHAR_FLAGS(u), g_char_flags),
                  (signed long)CHAR_EXP(u),
                  CHAR_OFFENSIVE(u),
                  CHAR_DEFENSIVE(u),
-                 sprinttype(NULL, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
+                 sprinttype(nullptr, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
                  CHAR_SPEED(u),
                  CHAR_NATURAL_ARMOUR(u),
                  (signed long)UNIT_HIT(u),
@@ -1254,7 +1254,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                      "---------------- NON PLAYER ----------------<br/>"
                      "Default position: %s<br/>"
                      "NPC-flags: %s<br/>",
-                     sprinttype(NULL, NPC_DEFAULT(u), g_char_pos),
+                     sprinttype(nullptr, NPC_DEFAULT(u), g_char_pos),
                      sprintbit(bits1, NPC_FLAGS(u), g_npc_flags));
             send_to_char(buf, ch);
         }
@@ -1270,7 +1270,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                  "%s<br/>"
                  "Extra flags: %s<br/>"
                  "Cost: [%lu]  Cost/day: [%lu]  Equipped: %s<br/>",
-                 sprinttype(NULL, OBJ_TYPE(u), g_obj_types),
+                 sprinttype(nullptr, OBJ_TYPE(u), g_obj_types),
                  OBJ_TYPE(u),
                  (signed long)OBJ_VALUE(u, 0),
                  (signed long)OBJ_VALUE(u, 1),
@@ -1282,7 +1282,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                  sprintbit(bits1, OBJ_FLAGS(u), g_obj_flags),
                  (unsigned long)OBJ_PRICE(u),
                  (unsigned long)OBJ_PRICE_DAY(u),
-                 sprinttype(NULL, OBJ_EQP_POS(u), g_equip_pos));
+                 sprinttype(nullptr, OBJ_EQP_POS(u), g_equip_pos));
         send_to_char(buf, ch);
     }
     else /* Stat on a room */
@@ -1295,7 +1295,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                  UNIT_TITLE_STRING(u),
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
-                 sprinttype(NULL, ROOM_LANDSCAPE(u), g_room_landscape),
+                 sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
                  UROOM(u)->mapx,
                  UROOM(u)->mapy,
                  ROOM_RESISTANCE(u),
@@ -1391,9 +1391,9 @@ static void stat_descriptor(const class unit_data *ch, class unit_data *u)
 
 void do_wedit(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    class unit_data *u = NULL;
+    class unit_data *u = nullptr;
 
-    if (CHAR_DESCRIPTOR(ch) == NULL)
+    if (CHAR_DESCRIPTOR(ch) == nullptr)
     {
         return;
     }
@@ -1404,9 +1404,9 @@ void do_wedit(class unit_data *ch, char *argument, const struct command_info *cm
     }
     else
     {
-        u = find_unit(ch, &argument, 0, FIND_UNIT_GLOBAL);
+        u = find_unit(ch, &argument, nullptr, FIND_UNIT_GLOBAL);
 
-        if (u == NULL)
+        if (u == nullptr)
         {
             char name[MAX_INPUT_LENGTH + 1], zone[MAX_INPUT_LENGTH + 1];
 
@@ -1440,10 +1440,10 @@ void do_wedit(class unit_data *ch, char *argument, const struct command_info *cm
 void do_wstat(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char buf[4 * MAX_STRING_LENGTH];
-    class unit_data *u = NULL;
-    class zone_type *zone = NULL;
+    class unit_data *u = nullptr;
+    class zone_type *zone = nullptr;
 
-    if (CHAR_DESCRIPTOR(ch) == NULL)
+    if (CHAR_DESCRIPTOR(ch) == nullptr)
     {
         return;
     }
@@ -1513,9 +1513,9 @@ void do_wstat(class unit_data *ch, char *argument, const struct command_info *cm
     {
         class file_index_type *fi;
 
-        u = find_unit(ch, &argument, 0, FIND_UNIT_GLOBAL);
+        u = find_unit(ch, &argument, nullptr, FIND_UNIT_GLOBAL);
 
-        if (u == NULL)
+        if (u == nullptr)
         {
             fi = pc_str_to_file_index(ch, argument);
 

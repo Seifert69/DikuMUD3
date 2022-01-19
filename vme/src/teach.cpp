@@ -1003,7 +1003,7 @@ struct teach_packet *get_teacher(const char *pName)
 
     if (str_is_empty(pName))
     {
-        return NULL;
+        return nullptr;
     }
 
     name[0] = 0;
@@ -1016,7 +1016,7 @@ struct teach_packet *get_teacher(const char *pName)
     if (!u)
     {
         slog(LOG_EXTENSIVE, 0, "ERROR: get_teacher() Teacher %s not found.", pName);
-        return NULL;
+        return nullptr;
     }
 
     for (f = UNIT_FUNC(u); f; f = f->next)
@@ -1030,7 +1030,7 @@ struct teach_packet *get_teacher(const char *pName)
     if (!f)
     {
         slog(LOG_EXTENSIVE, 0, "ERROR: get_teacher() FUNC for %s not found.", pName);
-        return NULL;
+        return nullptr;
     }
 
     pckt = (struct teach_packet *)f->data;
@@ -1073,7 +1073,7 @@ class skill_collection *get_pc_train_values(class unit_data *pupil, int type, st
             assert(FALSE);
     }
 
-    return NULL; // Can't happen
+    return nullptr; // Can't happen
 }
 
 int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
@@ -1081,7 +1081,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     int index;
     char buf[MAX_INPUT_LENGTH + 10];
     const char *arg;
-    class skill_collection *pColl = NULL;
+    class skill_collection *pColl = nullptr;
 
     if (!is_command(sarg->cmd, "info") && !is_command(sarg->cmd, "practice"))
     {
@@ -1106,7 +1106,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         return SFR_BLOCK;
     }
 
-    static const char *remote_train[] = {"ability", "skill", "spell", "weapon", NULL};
+    static const char *remote_train[] = {"ability", "skill", "spell", "weapon", nullptr};
     arg = str_next_word(sarg->arg, buf);
 
     index = search_block(buf, remote_train, TRUE);
@@ -1150,7 +1150,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 
     if (str_ccmp(arg, "auto") == 0)
     {
-        if (TrainValues.values == NULL)
+        if (TrainValues.values == nullptr)
         {
             snprintf(buf, sizeof(buf), "<br/>Please specify ability, skill, spell, weapon before the auto keyword.<br/>");
             send_to_char(buf, sarg->activator);
@@ -1275,7 +1275,7 @@ int teaching(struct spec_arg *sarg)
 
         FREE(packet);
 
-        sarg->fptr->data = 0;
+        sarg->fptr->data = nullptr;
         return SFR_BLOCK;
     }
 
@@ -1347,7 +1347,7 @@ int teach_init(struct spec_arg *sarg)
     struct teach_packet *packet;
     struct skill_teach_type a_skill;
 
-    static const char *teach_types[] = {"abilities", "spells", "skills", "weapons", NULL};
+    static const char *teach_types[] = {"abilities", "spells", "skills", "weapons", nullptr};
 
     if (!(c = (char *)sarg->fptr->data))
     {
@@ -1429,7 +1429,7 @@ int teach_init(struct spec_arg *sarg)
             if (nProfession > -1)
             {
                 // Copy in all abilities for profession
-                for (n = 0; packet->text[n] != NULL; n++)
+                for (n = 0; packet->text[n] != nullptr; n++)
                 {
                     if ((g_AbiColl.prof_table[n].profession_cost[nProfession] >= -3) && !g_AbiColl.tree[n].bAutoTeacherNoAdd)
                     {
@@ -1457,7 +1457,7 @@ int teach_init(struct spec_arg *sarg)
             if (nProfession > -1)
             {
                 // Copy in all abilities for profession
-                for (n = 0; packet->text[n] != NULL; n++)
+                for (n = 0; packet->text[n] != nullptr; n++)
                 {
                     if (g_SkiColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_SkiColl.tree[n].bAutoTeacherNoAdd)
                     {
@@ -1485,7 +1485,7 @@ int teach_init(struct spec_arg *sarg)
             if (nProfession > -1)
             {
                 // Copy in all abilities for profession
-                for (n = 0; packet->text[n] != NULL; n++)
+                for (n = 0; packet->text[n] != nullptr; n++)
                 {
                     if (g_SplColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_SplColl.tree[n].bAutoTeacherNoAdd)
                     {
@@ -1513,7 +1513,7 @@ int teach_init(struct spec_arg *sarg)
             if (nProfession > -1)
             {
                 // Copy in all abilities for profession
-                for (n = 0; packet->text[n] != NULL; n++)
+                for (n = 0; packet->text[n] != nullptr; n++)
                 {
                     if (g_WpnColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_WpnColl.tree[n].bAutoTeacherNoAdd)
                     {

@@ -186,7 +186,7 @@ void Control(void)
         // not a problem because somebody will either trigger an existing connection
         // or telnet to get a new connection. Then Wait() will finish and a new
         // round begins.
-        n = g_CaptainHook.Wait(NULL);
+        n = g_CaptainHook.Wait(nullptr);
 
         if (n == -1)
         {
@@ -354,7 +354,7 @@ int cMudHook::read_mud(void)
                     break;
                 }
             }
-            if (con == NULL)
+            if (con == nullptr)
             {
                 slog(LOG_OFF, 0, "ERROR: Unknown ID m_sSetup received.");
             }
@@ -374,7 +374,7 @@ int cMudHook::read_mud(void)
                     return 1;
                 }
             }
-            if (con == NULL)
+            if (con == nullptr)
             {
                 slog(LOG_OFF, 0, "ERROR: Unknown ID requested terminated.");
             }
@@ -402,7 +402,7 @@ int cMudHook::read_mud(void)
                     }
                 }
             }
-            if (con == NULL)
+            if (con == nullptr)
             {
                 slog(LOG_OFF, 0, "Unknown destination for confirm! Requesting term.");
                 protocol_send_close(&g_MudHook, id);
@@ -452,7 +452,7 @@ int cMudHook::read_mud(void)
                 }
             }
 
-            if (con == NULL)
+            if (con == nullptr)
             {
                 slog(LOG_OFF, 0, "Unknown destination text received.");
             }

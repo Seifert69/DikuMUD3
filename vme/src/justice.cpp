@@ -25,13 +25,13 @@
 #include <ctime>
 #include <string>
 
-static int crime_serial_no = time(0);
+static int crime_serial_no = time(nullptr);
 
 int new_crime_serial_no(void)
 {
     int n;
 
-    n = time(0);
+    n = time(nullptr);
 
     if (n > crime_serial_no)
     {
@@ -126,7 +126,7 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 
     if (tmpl)
     {
-        prg = dil_copy_template(tmpl, criminal, NULL);
+        prg = dil_copy_template(tmpl, criminal, nullptr);
 
         if (prg)
         {
@@ -157,13 +157,13 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     class dilprg *prg2;
     class dilprg *prg3;
 
-    if (criminal == NULL)
+    if (criminal == nullptr)
     {
         slog(LOG_ALL, 0, "log_crime() NULL criminal");
         return;
     }
 
-    if (victim == NULL)
+    if (victim == nullptr)
     {
         slog(LOG_ALL, 0, "log_crime() NULL victim");
         return;
@@ -194,7 +194,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     tmpl = find_dil_template("set_witness@justice");
     if (tmpl)
     {
-        prg = dil_copy_template(tmpl, victim, NULL);
+        prg = dil_copy_template(tmpl, victim, nullptr);
 
         if (prg)
         {
@@ -222,7 +222,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
             tmpl = find_dil_template("set_witness@justice");
             if (tmpl)
             {
-                prg2 = dil_copy_template(tmpl, UVI(i), NULL);
+                prg2 = dil_copy_template(tmpl, UVI(i), nullptr);
 
                 if (prg2)
                 {
@@ -253,7 +253,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
                 if (CHAR_CAN_SEE(UVI(i), UVI(j)))
                 {
                     tmpl = find_dil_template("set_witness@justice");
-                    prg3 = dil_copy_template(tmpl, UVI(i), NULL);
+                    prg3 = dil_copy_template(tmpl, UVI(i), nullptr);
 
                     if (prg3)
                     {
@@ -1092,7 +1092,7 @@ int reward_give(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == NULL)
+    if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == nullptr)
     {
         act("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;

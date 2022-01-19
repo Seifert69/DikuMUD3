@@ -75,7 +75,7 @@ void init_char(class unit_data *ch)
     CHAR_RACE(ch) = RACE_HUMAN;
     CHAR_SEX(ch) = SEX_MALE;
 
-    PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(0);
+    PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(nullptr);
     PC_TIME(ch).played = 0;
     PC_LIFESPAN(ch) = 100;
 
@@ -101,7 +101,7 @@ void init_char(class unit_data *ch)
 
     CHAR_MANA(ch) = mana_limit(ch);
     CHAR_ENDURANCE(ch) = move_limit(ch);
-    CHAR_LAST_ROOM(ch) = NULL;
+    CHAR_LAST_ROOM(ch) = nullptr;
 
     CHAR_FLAGS(ch) = 0;
     SET_BIT(CHAR_FLAGS(ch), CHAR_PROTECTED);
@@ -144,14 +144,14 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     nPort = 0;
     nLine = 255;
 
-    localstr = NULL;
-    postedit = NULL;
-    editing = NULL;
-    editref = NULL;
+    localstr = nullptr;
+    postedit = nullptr;
+    editing = nullptr;
+    editref = nullptr;
 
-    original = 0;
-    snoop.snooping = 0;
-    snoop.snoop_by = 0;
+    original = nullptr;
+    snoop.snooping = nullptr;
+    snoop.snoop_by = nullptr;
     replyid = (ubit32)-1;
 
     /* Make a new PC struct */
@@ -255,9 +255,9 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         {
             g_possible_saves--;
         }
-        CHAR_DESCRIPTOR(d->character) = NULL;
+        CHAR_DESCRIPTOR(d->character) = nullptr;
         extract_unit(d->character);
-        d->character = NULL;
+        d->character = nullptr;
         /* Too much log slog(LOG_ALL, "Losing descriptor from menu."); */
     }
     else
@@ -265,10 +265,10 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         if (d->localstr)
             FREE(d->localstr);
 
-        d->localstr = NULL;
-        d->postedit = NULL;
-        d->editing = NULL;
-        d->editref = NULL;
+        d->localstr = nullptr;
+        d->postedit = nullptr;
+        d->editing = nullptr;
+        d->editref = nullptr;
 
         // Here we don't stop_fightfollow - do we ?
         stop_snoopwrite(d->character);
@@ -301,8 +301,8 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                     link_dead = find_dil_template("link_dead@basis");
                     if (link_dead)
                     {
-                        CHAR_DESCRIPTOR(d->character) = NULL;
-                        class dilprg *prg = dil_copy_template(link_dead, d->character, NULL);
+                        CHAR_DESCRIPTOR(d->character) = nullptr;
+                        class dilprg *prg = dil_copy_template(link_dead, d->character, nullptr);
                         if (prg)
                         {
                             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -312,16 +312,16 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                 }
                 else
                 {
-                    CHAR_DESCRIPTOR(d->character) = NULL; // Prevent counting down players, we did above
-                    extract_unit(d->character);           /* We extract guests */
+                    CHAR_DESCRIPTOR(d->character) = nullptr; // Prevent counting down players, we did above
+                    extract_unit(d->character);              /* We extract guests */
                     g_possible_saves--;
                 }
             }
         }
         /* Important we set tp null AFTER calling save - otherwise
            time played does not get updated. */
-        CHAR_DESCRIPTOR(d->character) = NULL;
-        d->character = NULL;
+        CHAR_DESCRIPTOR(d->character) = nullptr;
+        d->character = nullptr;
     }
 
     if (bSendClose && d->multi->IsHooked())

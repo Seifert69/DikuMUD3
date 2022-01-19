@@ -41,14 +41,14 @@ struct oracle_data
 struct subject_type
 {
     char **replies; /* NULL terminated         */
-} *eliza_subjects = NULL;
+} *eliza_subjects = nullptr;
 int eliza_maxsubjects = 0;
 
 struct template_type
 {
     char **exp; /* What shall we react on? */
     int subjno;
-} *eliza_template = NULL;
+} *eliza_template = nullptr;
 int eliza_maxtemplates = 0;
 
 struct keyword_type
@@ -56,7 +56,7 @@ struct keyword_type
     char **keyword; /* What shall we react on? */
     char priority;  /* how important is keywd: 0 worst, 9 best */
     int subjno;
-} *eliza_keyword = NULL;
+} *eliza_keyword = nullptr;
 int eliza_maxkeywords = 0;
 
 int eliza_booted = FALSE;
@@ -110,9 +110,9 @@ char *match_templ(char *input, struct template_type *tem)
     if (tem->exp[0] && !tem->exp[1]) /* Case with no % signs */
     {
         cp = str_str(ip, tem->exp[0]);
-        if (cp == NULL)
+        if (cp == nullptr)
         {
-            return NULL;
+            return nullptr;
         }
 
         /* Only OK if there is a punctation left of expression */
@@ -124,7 +124,7 @@ char *match_templ(char *input, struct template_type *tem)
             }
             else if (isalnum(*tcp))
             {
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -137,7 +137,7 @@ char *match_templ(char *input, struct template_type *tem)
             }
             else if (isalnum(*tcp))
             {
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -151,9 +151,9 @@ char *match_templ(char *input, struct template_type *tem)
             if (i > 0) /* Case: "text %" */
             {
                 lp = str_str(ip, tem->exp[i - 1]);
-                if (lp == NULL)
+                if (lp == nullptr)
                 {
-                    return NULL;
+                    return nullptr;
                 }
                 for (tcp = lp - 1; tcp >= ip; tcp--)
                 {
@@ -163,7 +163,7 @@ char *match_templ(char *input, struct template_type *tem)
                     }
                     else
                     {
-                        return NULL;
+                        return nullptr;
                     }
                 }
 
@@ -178,9 +178,9 @@ char *match_templ(char *input, struct template_type *tem)
             if (tem->exp[i + 1]) /* Case: "% text" */
             {
                 rp = str_str(ip, tem->exp[i + 1]);
-                if (rp == NULL)
+                if (rp == nullptr)
                 {
-                    return NULL;
+                    return nullptr;
                 }
 
                 /* String must end with the appropriate "text" */
@@ -188,7 +188,7 @@ char *match_templ(char *input, struct template_type *tem)
                 {
                     if (isalpha(*cp))
                     {
-                        return NULL;
+                        return nullptr;
                     }
                     else if (!isspace(*cp))
                     {
@@ -200,7 +200,7 @@ char *match_templ(char *input, struct template_type *tem)
                 {
                     if (ispunct(*cp))
                     {
-                        return NULL;
+                        return nullptr;
                     }
                 }
 
@@ -231,7 +231,7 @@ char *match_templ(char *input, struct template_type *tem)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -400,7 +400,7 @@ char *response(struct oracle_data *od, int subjno)
     int i, k, thisrep;
 
     thisrep = od->nextrep[subjno]++;
-    if (eliza_subjects[subjno].replies[od->nextrep[subjno]] == NULL)
+    if (eliza_subjects[subjno].replies[od->nextrep[subjno]] == nullptr)
     {
         od->nextrep[subjno] = 0;
     }
@@ -467,7 +467,7 @@ int trykeywd(char *line, int *score)
     {
         for (mi = 0; eliza_keyword[j].keyword[mi]; mi++)
         {
-            if (str_str(line, eliza_keyword[j].keyword[mi]) != NULL)
+            if (str_str(line, eliza_keyword[j].keyword[mi]) != nullptr)
             {
                 if (eliza_keyword[j].priority >= *score)
                 {
@@ -490,14 +490,14 @@ char *eliza_process(struct oracle_data *od, char *s)
 
     if (strlen(s) <= 1)
     {
-        return NULL;
+        return nullptr;
     }
 
     preprocess_string(s, od);
 
     if (strcmp(s, od->laststr) == 0)
     {
-        return NULL;
+        return nullptr;
     }
     else
     {
@@ -571,14 +571,14 @@ void eliza_log(class unit_data *who, const char *str, int comms)
         idx = 0;
     }
 
-    if (str == NULL)
+    if (str == nullptr)
     {
         idx = 0;
         for (int i = 0; i < MAX_ELIBUF; i++)
         {
             if (buf[i])
                 FREE(buf[i]);
-            buf[i] = NULL;
+            buf[i] = nullptr;
         }
         return;
     }
@@ -632,12 +632,12 @@ int oracle(struct spec_arg *sarg)
             FREE(od->nextrep);
             FREE(od);
         }
-        sarg->fptr->data = NULL;
-        g_events.remove_relaxed(delayed_action, sarg->owner, NULL);
+        sarg->fptr->data = nullptr;
+        g_events.remove_relaxed(delayed_action, sarg->owner, nullptr);
         return SFR_BLOCK;
     }
 
-    if (sarg->fptr->data == NULL)
+    if (sarg->fptr->data == nullptr)
     {
         if (eliza_booted == FALSE)
         {
@@ -656,7 +656,7 @@ int oracle(struct spec_arg *sarg)
         od->lastrep[0] = 0;
         strcpy(od->own_name, UNIT_NAME(sarg->owner));
         str_lower(od->own_name);
-        od->patient = NULL;
+        od->patient = nullptr;
         od->doctor = sarg->owner;
 
         CREATE(od->nextrep, int, eliza_maxsubjects);
@@ -678,12 +678,12 @@ int oracle(struct spec_arg *sarg)
     if (od->patient && !scan4_ref(sarg->owner, od->patient))
     {
         REMOVE_BIT(sarg->fptr->flags, SFB_PRIORITY);
-        od->patient = NULL;
+        od->patient = nullptr;
     }
 
     if (od->patient != sarg->activator)
     {
-        if ((od->patient == NULL) && (!is_command(sarg->cmd, "north")) && (!is_command(sarg->cmd, "east")) &&
+        if ((od->patient == nullptr) && (!is_command(sarg->cmd, "north")) && (!is_command(sarg->cmd, "east")) &&
             (!is_command(sarg->cmd, "west")) && (!is_command(sarg->cmd, "south")) && (!is_command(sarg->cmd, "northeast")) &&
             (!is_command(sarg->cmd, "southeast")) && (!is_command(sarg->cmd, "northwest")) && (!is_command(sarg->cmd, "southwest")) &&
             (!is_command(sarg->cmd, "ne")) && (!is_command(sarg->cmd, "se")) && (!is_command(sarg->cmd, "sw")) &&
@@ -711,7 +711,7 @@ int oracle(struct spec_arg *sarg)
             od->patient = sarg->activator;
             set_delayed_action(sarg->owner, buf);
             comms = 0;
-            eliza_log(sarg->owner, NULL, comms);
+            eliza_log(sarg->owner, nullptr, comms);
             eliza_log(sarg->owner, "========== oOo ============", comms);
             SET_BIT(sarg->fptr->flags, SFB_PRIORITY);
         }
@@ -729,7 +729,7 @@ int oracle(struct spec_arg *sarg)
         class unit_data *u;
         char *c = (char *)sarg->arg;
 
-        u = find_unit(sarg->activator, &c, 0, FIND_UNIT_SURRO);
+        u = find_unit(sarg->activator, &c, nullptr, FIND_UNIT_SURRO);
         if (u != sarg->owner)
         {
             return SFR_SHARE;
@@ -744,7 +744,7 @@ int oracle(struct spec_arg *sarg)
 
     strcpy(buf, sarg->arg);
     response = eliza_process(od, buf);
-    if (response == NULL)
+    if (response == nullptr)
     {
         return SFR_SHARE;
     }
@@ -882,7 +882,7 @@ void eliza_get_reacts(FILE *f, int subjno)
         }
 
         char *mstmp = fgets(buf, 240, f);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             slog(LOG_ALL, 0, "Eliza: unexpected fgets == NULL");
             assert(FALSE);
@@ -959,7 +959,7 @@ void eliza_get_subjects(FILE *f)
         }
 
         char *mstmp = fgets(buf, 240, f);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             slog(LOG_ALL, 0, "Eliza: unexpected fgets == NULL");
             assert(FALSE);

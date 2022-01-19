@@ -159,7 +159,7 @@ int main(int argc, char **argv)
         /* Other used routines are declared obsolete by SVID3 */
         //  srand (time (0));
         //#else
-        srandom(time(0));
+        srandom(time(nullptr));
         //#endif
         run_the_game(srvcfg);
     }

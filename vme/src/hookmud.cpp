@@ -110,7 +110,7 @@ void cMultiHook::Close(void)
 // Get the data and parse the mplex protocol
 int cMultiHook::Read(void)
 {
-    class descriptor_data *d = NULL;
+    class descriptor_data *d = nullptr;
     int p;
     ubit16 id;
     ubit16 len;
@@ -135,7 +135,7 @@ int cMultiHook::Read(void)
             }
         }
 
-        if (d == NULL)
+        if (d == nullptr)
         {
             /* This could perhaps occur if a connected player issues a command
                simultaneously with the server throwing the person out.

@@ -14,7 +14,7 @@
 
 cintlist::cintlist(void)
 {
-    intlist = NULL;
+    intlist = nullptr;
     length = 0;
 }
 
@@ -166,7 +166,7 @@ sbit32 *cintlist::ValuePtr(int idx)
         return &intlist[idx];
     }
 
-    return 0;
+    return nullptr;
 }
 
 void cintlist::Free(void)
@@ -174,7 +174,7 @@ void cintlist::Free(void)
     if (intlist)
     {
         FREE(intlist);
-        intlist = NULL;
+        intlist = nullptr;
     }
     length = 0;
 }
@@ -188,7 +188,7 @@ void cintlist::Append(int val)
 {
     length++;
 
-    if (intlist == NULL)
+    if (intlist == nullptr)
     {
         CREATE(intlist, int, length);
     }
@@ -202,7 +202,7 @@ void cintlist::Append(int val)
 void cintlist::Prepend(int val)
 {
     length++;
-    if (intlist == NULL)
+    if (intlist == nullptr)
     {
         CREATE(intlist, int, length);
     }
@@ -242,7 +242,7 @@ void cintlist::Insert(int val, int idx)
     // We know the list is at least 2 large
     length++;
 
-    assert(intlist != NULL);
+    assert(intlist != nullptr);
     RECREATE(intlist, int, length);
 
     memmove(&intlist[idx + 1], &intlist[idx], sizeof(int) * (olen - idx));

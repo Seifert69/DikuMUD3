@@ -74,7 +74,7 @@ class unit_data *find_player(char *name)
 {
     class descriptor_data *d;
 
-    d = find_descriptor(name, NULL);
+    d = find_descriptor(name, nullptr);
 
     if (d && (d->fptr == descriptor_interpreter) && d->character)
     {
@@ -82,7 +82,7 @@ class unit_data *find_player(char *name)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -124,7 +124,7 @@ sbit32 find_player_id(char *pName)
 
     pFile = fopen(PlayerFileName(pName), "rb");
 
-    if (pFile == NULL)
+    if (pFile == nullptr)
     {
         return -1;
     }
@@ -230,7 +230,7 @@ void save_player_file(class unit_data *pc)
     static bool locked = FALSE;
     sbit32 nPlyLen;
     int tmp_i;
-    class unit_data *tmp_u, *list = NULL;
+    class unit_data *tmp_u, *list = nullptr;
     class descriptor_data *tmp_descr;
     CByteBuffer *pBuf = &g_FileBuffer;
 
@@ -268,7 +268,7 @@ void save_player_file(class unit_data *pc)
     }
 
     tmp_descr = CHAR_DESCRIPTOR(pc);
-    CHAR_DESCRIPTOR(pc) = NULL; /* Do this to turn off all messages! */
+    CHAR_DESCRIPTOR(pc) = nullptr; /* Do this to turn off all messages! */
 
     /* Remove all inventory and equipment in order to make a CLEAN save */
     while ((tmp_u = UNIT_CONTAINS(pc)))
@@ -297,7 +297,7 @@ void save_player_file(class unit_data *pc)
     while ((tmp_u = list))
     {
         list = list->next;
-        tmp_u->next = NULL;
+        tmp_u->next = nullptr;
 
         unit_to_unit(tmp_u, pc);
 
@@ -340,7 +340,7 @@ void save_player_contents(class unit_data *pc, int fast)
        filbuffer_length); */
 
     /* Calculate for how long player may keep objects until erased */
-    t0 = time(0);
+    t0 = time(nullptr);
     keep_period = t0;
 
     daily_cost = save_contents(PC_FILENAME(pc), pc, fast, FALSE);
@@ -397,7 +397,7 @@ void save_player(class unit_data *pc)
         time_t t0;
         ubit32 used;
 
-        t0 = time(0);
+        t0 = time(nullptr);
         if (t0 < CHAR_DESCRIPTOR(pc)->logon)
         {
             slog(LOG_ALL, 0, "PCSAVE: Current less than last logon");
@@ -438,13 +438,13 @@ class unit_data *load_player_file(FILE *pFile)
     n = fread(&id, sizeof(int), 1, pFile);
     if (n != 1)
     {
-        return NULL;
+        return nullptr;
     }
 
     n = fread(&nPlyLen, sizeof(nPlyLen), 1, pFile);
     if (n != 1)
     {
-        return NULL;
+        return nullptr;
     }
 
     pBuf = &g_FileBuffer;
@@ -457,14 +457,14 @@ class unit_data *load_player_file(FILE *pFile)
 
     pc = read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
 
-    if (pc == NULL)
+    if (pc == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (g_nCorrupt)
     {
-        return NULL;
+        return nullptr;
     }
 
     return pc;
@@ -480,13 +480,13 @@ class unit_data *load_player(const char *pName)
 
     if (str_is_empty(pName))
     {
-        return NULL;
+        return nullptr;
     }
 
     pFile = fopen(PlayerFileName(pName), "rb");
-    if (pFile == NULL)
+    if (pFile == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     pc = load_player_file(pFile);
@@ -494,10 +494,10 @@ class unit_data *load_player(const char *pName)
 
     fclose(pFile);
 
-    if (pc == NULL)
+    if (pc == nullptr)
     {
         slog(LOG_ALL, 0, "Corrupted player %s.", pName);
-        return NULL;
+        return nullptr;
     }
     else
     {
@@ -510,7 +510,7 @@ class unit_data *load_player(const char *pName)
     {
         slog(LOG_ALL, 0, "Mismatching player name %s / %s.", pName, PC_FILENAME(pc));
         extract_unit(pc);
-        return NULL;
+        return nullptr;
     }
 
     if (PC_IS_UNSAVED(pc))

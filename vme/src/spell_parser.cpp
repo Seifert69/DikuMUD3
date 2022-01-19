@@ -39,7 +39,7 @@ void set_spellargs(struct spell_args *sa,
     sa->target = target;
     sa->arg = arg;
     sa->hm = hm;
-    sa->pEffect = NULL;
+    sa->pEffect = nullptr;
 }
 
 /* Check if type is proper compared to specifications in the spell list */
@@ -58,7 +58,7 @@ ubit1 spell_legal_target(int spl, class unit_data *caster, class unit_data *targ
         return TRUE;
     }
 
-    if (caster == NULL || target == NULL)
+    if (caster == nullptr || target == nullptr)
     {
         slog(LOG_ALL, 0, "NULL target in spell_legal_target");
         return FALSE;
@@ -107,7 +107,7 @@ int spell_perform(int spell_no,
                   char *pEffect,
                   int bonus)
 {
-    static struct command_info *cmd = NULL;
+    static struct command_info *cmd = nullptr;
     int hm = -1;
 
     if (!cmd)
@@ -214,7 +214,7 @@ int spell_perform(int spell_no,
     {
         class dilprg *prg;
 
-        prg = dil_copy_template(g_spell_info[spell_no].tmpl, caster, NULL);
+        prg = dil_copy_template(g_spell_info[spell_no].tmpl, caster, nullptr);
 
         if (prg)
         {
@@ -327,7 +327,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
         }
     }
 
-    if ((g_spell_info[spl].spell_pointer == NULL) && g_spell_info[spl].tmpl == NULL)
+    if ((g_spell_info[spl].spell_pointer == nullptr) && g_spell_info[spl].tmpl == nullptr)
     {
         send_to_char("Sorry, this magic has not yet been implemented.<br/>", ch);
         return;
@@ -345,7 +345,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
     /* **************** Locate targets **************** */
 
     target_ok = FALSE;
-    unit = 0;
+    unit = nullptr;
 
     orgarg = argument;
 
@@ -354,7 +354,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
         if (!str_is_empty(argument)) /* if there is an argument to look at */
         {
             /* Find unit by the name 'argument' at target location */
-            unit = find_unit(ch, &argument, 0, g_spell_info[spl].targets);
+            unit = find_unit(ch, &argument, nullptr, g_spell_info[spl].targets);
 
             if (unit)
             {
@@ -451,7 +451,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
     say_spell(ch, unit, spl);
 
-    spell_perform(spl, MEDIA_SPELL, ch, ch, unit, argument, NULL);
+    spell_perform(spl, MEDIA_SPELL, ch, ch, unit, argument, nullptr);
 }
 
 /* Boot time stuff below this line */
@@ -463,7 +463,7 @@ void spell_dil_check(void)
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
-        if (g_spell_info[i].tmpl == NULL)
+        if (g_spell_info[i].tmpl == nullptr)
         {
             continue;
         }
@@ -471,7 +471,7 @@ void spell_dil_check(void)
         dil_name = (char *)g_spell_info[i].tmpl;
         g_spell_info[i].tmpl = find_dil_template(dil_name);
 
-        if (g_spell_info[i].tmpl == NULL)
+        if (g_spell_info[i].tmpl == nullptr)
         {
             slog(LOG_ALL, 0, "Spell template %s not found.", dil_name);
             FREE(dil_name);
@@ -482,7 +482,7 @@ void spell_dil_check(void)
             {
                 slog(LOG_ALL, 0, "Spell DIL %s argument count error, must be 5.", dil_name);
                 FREE(dil_name);
-                g_spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = nullptr;
                 continue;
             }
 
@@ -490,7 +490,7 @@ void spell_dil_check(void)
             {
                 slog(LOG_ALL, 0, "Spell DIL %s argument 1 mismatch.", dil_name);
                 FREE(dil_name);
-                g_spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = nullptr;
                 continue;
             }
 
@@ -498,7 +498,7 @@ void spell_dil_check(void)
             {
                 slog(LOG_ALL, 0, "Spell DIL %s argument 2 mismatch.", dil_name);
                 FREE(dil_name);
-                g_spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = nullptr;
                 continue;
             }
 
@@ -506,7 +506,7 @@ void spell_dil_check(void)
             {
                 slog(LOG_ALL, 0, "Spell DIL %s argument 3 mismatch.", dil_name);
                 FREE(dil_name);
-                g_spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = nullptr;
                 continue;
             }
 
@@ -514,7 +514,7 @@ void spell_dil_check(void)
             {
                 slog(LOG_ALL, 0, "Spell DIL %s argument 4 mismatch.", dil_name);
                 FREE(dil_name);
-                g_spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = nullptr;
                 continue;
             }
 
@@ -522,7 +522,7 @@ void spell_dil_check(void)
             {
                 slog(LOG_ALL, 0, "Spell DIL %s argument 5 mismatch.", dil_name);
                 FREE(dil_name);
-                g_spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = nullptr;
                 continue;
             }
         }
@@ -546,7 +546,7 @@ static void spell_read(void)
     while (!feof(fl))
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             continue;
         }
@@ -563,7 +563,7 @@ static void spell_read(void)
         str_lower(pTmp);
         strip_trailing_blanks(pTmp);
 
-        if (pCh == NULL || str_is_empty(pCh))
+        if (pCh == nullptr || str_is_empty(pCh))
         {
             continue;
         }
@@ -589,7 +589,7 @@ static void spell_read(void)
             if (g_SplColl.text[idx])
             {
                 free((char *)g_SplColl.text[idx]);
-                g_SplColl.text[idx] = NULL;
+                g_SplColl.text[idx] = nullptr;
             }
             g_SplColl.text[idx] = str_dup(pCh);
         }
@@ -870,11 +870,11 @@ static void spell_init(void)
             g_spell_chart[i].element[j].alpha = 100;
         }
 
-        g_spell_info[i].tochar = NULL;
-        g_spell_info[i].tovict = NULL;
-        g_spell_info[i].torest = NULL;
-        g_spell_info[i].toself = NULL;
-        g_spell_info[i].toselfroom = NULL;
+        g_spell_info[i].tochar = nullptr;
+        g_spell_info[i].tovict = nullptr;
+        g_spell_info[i].torest = nullptr;
+        g_spell_info[i].toself = nullptr;
+        g_spell_info[i].toselfroom = nullptr;
         g_spell_info[i].acttype = A_SOMEONE;
 
         g_SplColl.tree[i].parent = SPL_ALL;
@@ -890,7 +890,7 @@ static void spell_init(void)
             g_SplColl.tree[i].isleaf = TRUE;
         }
 
-        g_spell_info[i].spell_pointer = NULL;
+        g_spell_info[i].spell_pointer = nullptr;
         g_spell_info[i].minimum_position = POSITION_STANDING;
         g_spell_info[i].usesmana = 20;
         g_spell_info[i].beats = PULSE_VIOLENCE;
@@ -899,10 +899,10 @@ static void spell_init(void)
         g_spell_info[i].cast_type = SPLCST_CHECK;
         g_spell_info[i].demi_power = 0;
         g_spell_info[i].offensive = FALSE;
-        g_spell_info[i].tmpl = NULL;
+        g_spell_info[i].tmpl = nullptr;
         g_spell_info[i].shield = SHIELD_M_USELESS;
 
-        g_SplColl.text[i] = NULL;
+        g_SplColl.text[i] = nullptr;
 
         /* Default to zero */
         for (j = 0; j < PC_RACE_MAX; j++)
@@ -933,7 +933,7 @@ static void spell_init(void)
 
     g_SplColl.tree[SPL_TREE_MAX].parent = -1;
     g_SplColl.tree[SPL_TREE_MAX].isleaf = FALSE;
-    g_SplColl.text[SPL_TREE_MAX] = NULL;
+    g_SplColl.text[SPL_TREE_MAX] = nullptr;
 }
 
 void spell_dump(void)
@@ -947,7 +947,7 @@ void spell_dump(void)
 
         for (int i = 0; i < SPL_TREE_MAX; i++)
         {
-            if (g_SplColl.text[i] == NULL)
+            if (g_SplColl.text[i] == nullptr)
             {
                 continue;
             }

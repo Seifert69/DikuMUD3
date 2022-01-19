@@ -72,7 +72,7 @@ const char *single_unit_messg(class unit_data *unit, const char *type, int direc
     {
         if (is_in(direction, 0, MAX_EXIT))
         {
-            if ((exd->names.Name(1) == NULL) || str_cstr(exd->names.Name(1), g_dirs_short[direction]))
+            if ((exd->names.Name(1) == nullptr) || str_cstr(exd->names.Name(1), g_dirs_short[direction]))
             {
                 strcpy(mesg, exd->descr.c_str());
                 str_substitute("$2t", g_dirs[direction], mesg);
@@ -120,12 +120,12 @@ int has_found_door(class unit_data *pc, int dir)
 
     exd = UNIT_EXTRA(UNIT_IN(pc)).find_raw(buf);
 
-    if (exd == NULL)
+    if (exd == nullptr)
     {
         return FALSE;
     }
 
-    return exd->names.IsName(UNIT_NAMES(pc).Name(0)) != NULL;
+    return exd->names.IsName(UNIT_NAMES(pc).Name(0)) != nullptr;
 
     if (IS_SET(ROOM_EXIT(UNIT_IN(pc), dir)->exit_info, EX_CLOSED))
     {
@@ -331,7 +331,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
     }
 
     /* Next room exists? */
-    if (ROOM_EXIT(room_from, direction)->to_room == 0)
+    if (ROOM_EXIT(room_from, direction)->to_room == nullptr)
     {
         send_to_char(ALAS_NOWAY, ch);
         return 0;
@@ -663,7 +663,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
 
     if (res == 1 && (in_room(ch) != room_from))
     {
-        class unit_data *u = NULL;
+        class unit_data *u = nullptr;
 
         if (IS_CHAR(ch) && CHAR_FOLLOWERS(ch))
         {
@@ -687,7 +687,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
                     ;
                 }
 
-                if (k == NULL)
+                if (k == nullptr)
                 {
                     break;
                 }

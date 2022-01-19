@@ -16,7 +16,7 @@
 
 cNamelist::cNamelist(void)
 {
-    namelist = NULL;
+    namelist = nullptr;
     length = 0;
 }
 
@@ -240,7 +240,7 @@ void cNamelist::Substitute(ubit32 idx, const char *newname)
 
 cNamelist::cNamelist(const char **list)
 {
-    namelist = NULL;
+    namelist = nullptr;
     length = 0;
 
     CopyList(list);
@@ -253,13 +253,13 @@ void cNamelist::Free(void)
     for (i = 0; i < length; i++)
     {
         delete namelist[i];
-        namelist[i] = NULL;
+        namelist[i] = nullptr;
     }
 
     if (namelist)
         FREE(namelist);
 
-    namelist = NULL;
+    namelist = nullptr;
     length = 0;
 }
 
@@ -308,7 +308,7 @@ const char *cNamelist::IsNameRaw(const char *name)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 const char *cNamelist::IsName(const char *name)
@@ -345,7 +345,7 @@ const char *cNamelist::StrStrRaw(const char *name)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Clean up name and see if it exists in the namelist. If so return name (uncleaned)
@@ -371,7 +371,7 @@ const char *cNamelist::StrStr(const char *name)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -421,7 +421,7 @@ const char *cNamelist::Name(ubit32 idx)
 
     if (!namelist)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (idx < length)
@@ -430,7 +430,7 @@ const char *cNamelist::Name(ubit32 idx)
     }
     else
     {
-        test = NULL;
+        test = nullptr;
     }
     return (test);
 }
@@ -442,7 +442,7 @@ std::string *cNamelist::InstanceName(ubit32 idx)
         return namelist[idx];
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void cNamelist::dAppendName(const char *name)
@@ -454,7 +454,7 @@ void cNamelist::dAppendName(const char *name)
         assert((*name == 0) || (*name != 0)); // Ensure valid string (debug)
     }
 
-    if (namelist == NULL)
+    if (namelist == nullptr)
     {
         CREATE(namelist, std::string *, length);
     }
@@ -474,7 +474,7 @@ void cNamelist::AppendName(const char *name)
         assert((*name == 0) || (*name != 0)); // Ensure valid string (debug)
     }
 
-    if (namelist == NULL)
+    if (namelist == nullptr)
     {
         CREATE(namelist, std::string *, length);
     }
@@ -494,7 +494,7 @@ void cNamelist::PrependName(const char *name)
         assert((*name == 0) || (*name != 0)); // Ensure valid string (debug)
     }
 
-    if (namelist == NULL)
+    if (namelist == nullptr)
     {
         CREATE(namelist, std::string *, length);
     }
@@ -531,7 +531,7 @@ void cNamelist::InsertName(const char *name, ubit32 loc)
         length = (loc + 1);
     }
 
-    if (namelist == NULL)
+    if (namelist == nullptr)
     {
         CREATE(namelist, std::string *, length);
     }

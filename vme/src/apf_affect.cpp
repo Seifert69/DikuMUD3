@@ -394,7 +394,7 @@ ubit1 apf_speed(class unit_affected_type *af, class unit_data *unit, ubit1 set)
             }
         }
 
-        if (taf == NULL)
+        if (taf == nullptr)
         {
             CHAR_SPEED(unit) = af->data[0];
         }

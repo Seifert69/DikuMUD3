@@ -61,7 +61,7 @@ void cCombatList::sub(class cCombat *pc)
                 memmove(&pElems[i], &pElems[i + 1], sizeof(class cCombat *) * (nTop - i - 1));
             }
 
-            pElems[nTop - 1] = NULL;
+            pElems[nTop - 1] = nullptr;
 
             nTop--;
 
@@ -196,12 +196,12 @@ cCombat::cCombat(class unit_data *owner, int bMelee)
     assert(owner);
 
     pOwner = owner;
-    pMelee = NULL;
+    pMelee = nullptr;
 
     nWhen = SPEED_DEFAULT;
     cmd[0] = 0;
 
-    pOpponents = NULL;
+    pOpponents = nullptr;
     nNoOpponents = 0;
 
     g_CombatList.add(this);
@@ -217,17 +217,17 @@ cCombat::~cCombat(void)
     if (pOpponents)
     {
         FREE(pOpponents);
-        pOpponents = NULL;
+        pOpponents = nullptr;
     }
 
-    CHAR_COMBAT(pOwner) = NULL;
+    CHAR_COMBAT(pOwner) = nullptr;
 
     g_CombatList.sub(this);
 
     CHAR_POS(pOwner) = POSITION_STANDING;
     update_pos(pOwner);
 
-    pOwner = NULL;
+    pOwner = nullptr;
 }
 
 void cCombat::setCommand(const char *arg)
@@ -260,7 +260,7 @@ class unit_data *cCombat::FindOpponent(class unit_data *victim)
 
     if (i == -1)
     {
-        return NULL;
+        return nullptr;
     }
     else
     {
@@ -302,7 +302,7 @@ void cCombat::sub(int idx)
 
     if (pOpponents[idx] == pMelee)
     {
-        pMelee = NULL;
+        pMelee = nullptr;
         bWas = TRUE;
     }
 
@@ -311,13 +311,13 @@ void cCombat::sub(int idx)
         memmove(&pOpponents[idx], &pOpponents[idx + 1], sizeof(class unit_data *) * (nNoOpponents - idx - 1));
     }
 
-    pOpponents[nNoOpponents - 1] = NULL;
+    pOpponents[nNoOpponents - 1] = nullptr;
     nNoOpponents--;
 
     if (nNoOpponents < 1)
     {
         FREE(pOpponents);
-        pOpponents = NULL;
+        pOpponents = nullptr;
         delete this; // We are done...
     }
     else if (bWas)
@@ -350,7 +350,7 @@ void cCombat::addOpponent(class unit_data *victim, int bMelee = FALSE)
         CHAR_COMBAT(victim)->add(pOwner);
     }
 
-    if (bMelee && pMelee == NULL)
+    if (bMelee && pMelee == nullptr)
     {
         setMelee(victim);
     }
@@ -378,7 +378,7 @@ class unit_data *cCombat::Opponent(int i)
 {
     if (i >= nNoOpponents)
     {
-        return NULL;
+        return nullptr;
     }
     else
     {
@@ -436,7 +436,7 @@ void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
         return;
     }
 
-    if (CHAR_COMBAT(ch) == NULL)
+    if (CHAR_COMBAT(ch) == nullptr)
     {
         CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
     }
@@ -461,7 +461,7 @@ void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
         return;
     }
 
-    if (CHAR_COMBAT(ch) == NULL)
+    if (CHAR_COMBAT(ch) == nullptr)
     {
         CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
     }
@@ -472,7 +472,7 @@ void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 /* remove a char from the list of fighting chars */
 void stop_fighting(class unit_data *ch, class unit_data *victim)
 {
-    if (victim == NULL) // Stop all combat...
+    if (victim == nullptr) // Stop all combat...
     {
         while (CHAR_COMBAT(ch))
         {
@@ -484,7 +484,7 @@ void stop_fighting(class unit_data *ch, class unit_data *victim)
         CHAR_COMBAT(ch)->subOpponent(victim);
     }
 
-    if (CHAR_COMBAT(ch) == NULL)
+    if (CHAR_COMBAT(ch) == nullptr)
     {
         REMOVE_BIT(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE);
         CHAR_POS(ch) = POSITION_STANDING;
@@ -508,14 +508,14 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    u2 = NULL;
+    u2 = nullptr;
 
     if (!str_is_empty(pStr))
     {
-        u2 = find_unit(god, (char **)&pStr, 0, FIND_UNIT_SURRO);
+        u2 = find_unit(god, (char **)&pStr, nullptr, FIND_UNIT_SURRO);
     }
 
-    if (u2 == NULL)
+    if (u2 == nullptr)
     {
         u2 = god;
     }
@@ -543,9 +543,9 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
     }
 
     std::string str;
-    melee_bonus(u, u2, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+    melee_bonus(u, u2, WEAR_BODY, nullptr, nullptr, nullptr, nullptr, TRUE, &str);
     send_to_char(str.c_str(), god);
-    melee_bonus(u2, u, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+    melee_bonus(u2, u, WEAR_BODY, nullptr, nullptr, nullptr, nullptr, TRUE, &str);
     send_to_char(str.c_str(), god);
 }
 
@@ -559,14 +559,14 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    u2 = NULL;
+    u2 = nullptr;
 
     if (!str_is_empty(pStr))
     {
-        u2 = find_unit(god, (char **)&pStr, 0, FIND_UNIT_SURRO);
+        u2 = find_unit(god, (char **)&pStr, nullptr, FIND_UNIT_SURRO);
     }
 
-    if (u2 == NULL)
+    if (u2 == nullptr)
     {
         u2 = god;
     }
@@ -600,8 +600,8 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
     }
 
     std::string str;
-    spell_bonus(u, u, u2, WEAR_BODY, i, NULL, NULL, &str);
+    spell_bonus(u, u, u2, WEAR_BODY, i, nullptr, nullptr, &str);
     send_to_char(str.c_str(), god);
-    spell_bonus(u2, u2, u, WEAR_BODY, i, NULL, NULL, &str);
+    spell_bonus(u2, u2, u, WEAR_BODY, i, nullptr, nullptr, &str);
     send_to_char(str.c_str(), god);
 }

@@ -330,7 +330,7 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, 
 
     if (str)
     {
-        *str = NULL;
+        *str = nullptr;
     }
 
     if (!Hook->IsHooked())

@@ -225,7 +225,7 @@ int dikuii_melee_bonus(class unit_data *att,
 
     if (pAtt_weapon_type && is_in(*pAtt_weapon_type, WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
-        att_wpn = NULL;
+        att_wpn = nullptr;
         att_wpn_type = *pAtt_weapon_type;
         att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
     }
@@ -419,9 +419,9 @@ int spell_bonus(class unit_data *att,
     // What if the CHAR is holding something?
     struct unit_data *wield = equipment(att, WEAR_WIELD);
     struct unit_data *shield = equipment(att, WEAR_SHIELD);
-    if (shield == NULL)
+    if (shield == nullptr)
     {
-        if (wield == NULL)
+        if (wield == nullptr)
         {
             att_bonus += 50;
             if (pStat)
@@ -585,7 +585,7 @@ int melee_bonus(class unit_data *att,
 
     if (pAtt_weapon_type && is_in(*pAtt_weapon_type, WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
-        att_wpn = NULL;
+        att_wpn = nullptr;
         att_wpn_type = *pAtt_weapon_type;
         att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
     }
@@ -841,7 +841,7 @@ int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
     CHAR_COMBAT(def)->setMelee(att);
     CHAR_POS(def) = POSITION_FIGHTING;
 
-    bonus = melee_bonus(att, def, hit_loc, NULL, NULL, NULL, NULL);
+    bonus = melee_bonus(att, def, hit_loc, nullptr, nullptr, nullptr, nullptr);
 
     CHAR_POS(def) = ocp;
     CHAR_COMBAT(def)->setMelee(ocf);
@@ -865,7 +865,7 @@ int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
 
     att_wpn_type = WPN_ROOT;
 
-    bonus = melee_bonus(att, def, WEAR_BODY, &att_wpn_type, NULL, &def_arm_type, NULL, 1, pStr);
+    bonus = melee_bonus(att, def, WEAR_BODY, &att_wpn_type, nullptr, &def_arm_type, nullptr, 1, pStr);
     bonus -= 25; // Compensate for the -25 for def not fighting attacker
 
     CHAR_POS(def) = ocp;
@@ -904,7 +904,7 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
-    if ((vict = find_unit(ch, &arg, 0, FIND_UNIT_SURRO)) == NULL)
+    if ((vict = find_unit(ch, &arg, nullptr, FIND_UNIT_SURRO)) == nullptr)
     {
         send_to_char("No such person around.<br/>", ch);
         return;
@@ -980,7 +980,7 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
         send_to_char("Plenty of time to flee.<br/>", ch);
     }
 
-    send_done(ch, NULL, vict, rtd, cmd, oarg);
+    send_done(ch, nullptr, vict, rtd, cmd, oarg);
 }
 
 /* Return the quality modifier for the given monster. Modifier depends on */

@@ -67,77 +67,16 @@ struct field_type
     ubit8 minplayer;        /* minimum level to modify player    */
 };
 
-static const char *unit_field_names[MAX_SET_FIELDS + 1] = {"add-name",
-                                                           "del-name",
-                                                           "title",
-                                                           "descr",
-                                                           "add-extra",
-                                                           "del-extra",
-                                                           "manipulate",
-                                                           "flags",
-                                                           "weight",
-                                                           "capacity",
-                                                           "max-hit",
-                                                           "hit",
-                                                           "key",
-                                                           "alignment",
-                                                           "open-flags",
-                                                           "toughness",
-                                                           "lights",
-                                                           "bright",
-                                                           "room-flags",
-                                                           "movement",
-                                                           "ccinfo",
-                                                           "add-dir-name",
-                                                           "del-dir-name",
-                                                           "dir-flags",
-                                                           "dir-key",
-                                                           "value0",
-                                                           "value1",
-                                                           "value2",
-                                                           "value3",
-                                                           "value4",
-                                                           "obj-flags",
-                                                           "cost",
-                                                           "rent",
-                                                           "type",
-                                                           "equip",
-                                                           "guild-name",
-                                                           "pwd",
-                                                           "pc-flags",
-                                                           "crimes",
-                                                           "drunk",
-                                                           "full",
-                                                           "thirsty",
-                                                           "default-pos",
-                                                           "npc-flags",
-                                                           "hometown",
-                                                           "exp",
-                                                           "char-flags",
-                                                           "mana",
-                                                           "endurance",
-                                                           "attack-type",
-                                                           "hand-quality",
-                                                           "size",
-                                                           "race",
-                                                           "sex",
-                                                           "level",
-                                                           "position",
-                                                           "ability",
-                                                           "skill-points",
-                                                           "ability-points",
-                                                           "remove-affect",
-                                                           "add-quest",
-                                                           "del-quest",
-                                                           "speed",
-                                                           "add-info",
-                                                           "del-info",
-                                                           "access",
-                                                           "promptstr",
-                                                           "age",
-                                                           "lifespan",
-                                                           "profession",
-                                                           NULL};
+static const char *unit_field_names[MAX_SET_FIELDS + 1] = {
+    "add-name",  "del-name",     "title",          "descr",         "add-extra", "del-extra",    "manipulate",   "flags",
+    "weight",    "capacity",     "max-hit",        "hit",           "key",       "alignment",    "open-flags",   "toughness",
+    "lights",    "bright",       "room-flags",     "movement",      "ccinfo",    "add-dir-name", "del-dir-name", "dir-flags",
+    "dir-key",   "value0",       "value1",         "value2",        "value3",    "value4",       "obj-flags",    "cost",
+    "rent",      "type",         "equip",          "guild-name",    "pwd",       "pc-flags",     "crimes",       "drunk",
+    "full",      "thirsty",      "default-pos",    "npc-flags",     "hometown",  "exp",          "char-flags",   "mana",
+    "endurance", "attack-type",  "hand-quality",   "size",          "race",      "sex",          "level",        "position",
+    "ability",   "skill-points", "ability-points", "remove-affect", "add-quest", "del-quest",    "speed",        "add-info",
+    "del-info",  "access",       "promptstr",      "age",           "lifespan",  "profession",   nullptr};
 
 // These are oddly placed here because they need to initialize before used below
 class skill_collection g_AbiColl(ABIL_TREE_MAX + 1);
@@ -146,76 +85,76 @@ class skill_collection g_SkiColl(SKI_TREE_MAX + 1);
 class skill_collection g_SplColl(SPL_TREE_MAX + 1);
 
 struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
-    {UT_UNIT, AT_STR, 0, 200, 200, 253},                      /* add-name        */
-    {UT_UNIT, AT_STR, 0, 200, 200, 253},                      /* del-name        */
-    {UT_UNIT, AT_STR, 0, 200, 200, 200},                      /* title           */
-    {UT_UNIT, AT_DES, 0, 200, 200, 253},                      /* long-description */
-    {UT_UNIT, AT_KEYDES, 0, 200, 200, 200},                   /* add-extra       */
-    {UT_UNIT, AT_STR, 0, 200, 200, 200},                      /* del-extra       */
+    {UT_UNIT, AT_STR, nullptr, 200, 200, 253},                /* add-name        */
+    {UT_UNIT, AT_STR, nullptr, 200, 200, 253},                /* del-name        */
+    {UT_UNIT, AT_STR, nullptr, 200, 200, 200},                /* title           */
+    {UT_UNIT, AT_DES, nullptr, 200, 200, 253},                /* long-description */
+    {UT_UNIT, AT_KEYDES, nullptr, 200, 200, 200},             /* add-extra       */
+    {UT_UNIT, AT_STR, nullptr, 200, 200, 200},                /* del-extra       */
     {UT_UNIT, AT_BIT, g_unit_manipulate, 200, 200, 250},      /* manipulate      */
     {UT_UNIT, AT_BIT, g_unit_flags, 200, 200, 250},           /* unit-flags      */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 230},                      /* weight          */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 230},                      /* capacity        */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* max-hp          */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* hp              */
-    {UT_UNIT, AT_STR, 0, 200, 200, 253},                      /* key             */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 249},                      /* alignment       */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 230},                /* weight          */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 230},                /* capacity        */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 253},                /* max-hp          */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 253},                /* hp              */
+    {UT_UNIT, AT_STR, nullptr, 200, 200, 253},                /* key             */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 249},                /* alignment       */
     {UT_UNIT, AT_BIT, g_unit_open_flags, 200, 200, 253},      /* open-flags      */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* tgh             */
-    {UT_UNIT, AT_VAL, 0, 253, 253, 253},                      /* lights          */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* bright          */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 253},                /* tgh             */
+    {UT_UNIT, AT_VAL, nullptr, 253, 253, 253},                /* lights          */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 253},                /* bright          */
     {UT_ROOM, AT_BIT, g_room_flags, 200, 200, 200},           /* room-flags      */
     {UT_ROOM, AT_TYP, g_room_landscape, 200, 200, 200},       /* movement        */
-    {UT_PC, AT_VAL, 0, 255, 255, 255},                        /* cc-info         */
-    {UT_ROOM, AT_DIRSTR, 0, 200, 200, 200},                   /* add-dir-name    */
-    {UT_ROOM, AT_DIRSTR, 0, 200, 200, 200},                   /* del-dir-name    */
+    {UT_PC, AT_VAL, nullptr, 255, 255, 255},                  /* cc-info         */
+    {UT_ROOM, AT_DIRSTR, nullptr, 200, 200, 200},             /* add-dir-name    */
+    {UT_ROOM, AT_DIRSTR, nullptr, 200, 200, 200},             /* del-dir-name    */
     {UT_ROOM, AT_DIRBIT, g_unit_open_flags, 200, 200, 200},   /* dir-flags       */
-    {UT_ROOM, AT_DIRSTR, 0, 200, 200, 200},                   /* dir-key         */
-    {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value0          */
-    {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value1          */
-    {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value2          */
-    {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value3          */
-    {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value4          */
+    {UT_ROOM, AT_DIRSTR, nullptr, 200, 200, 200},             /* dir-key         */
+    {UT_OBJ, AT_VAL, nullptr, 200, 240, 200},                 /* value0          */
+    {UT_OBJ, AT_VAL, nullptr, 200, 240, 200},                 /* value1          */
+    {UT_OBJ, AT_VAL, nullptr, 200, 240, 200},                 /* value2          */
+    {UT_OBJ, AT_VAL, nullptr, 200, 240, 200},                 /* value3          */
+    {UT_OBJ, AT_VAL, nullptr, 200, 240, 200},                 /* value4          */
     {UT_OBJ, AT_BIT, g_obj_flags, 200, 200, 200},             /* obj-flags       */
-    {UT_OBJ, AT_VAL, 0, 200, 200, 200},                       /* cost            */
-    {UT_OBJ, AT_VAL, 0, 200, 200, 200},                       /* rent            */
+    {UT_OBJ, AT_VAL, nullptr, 200, 200, 200},                 /* cost            */
+    {UT_OBJ, AT_VAL, nullptr, 200, 200, 200},                 /* rent            */
     {UT_OBJ, AT_TYP, g_obj_types, 200, 240, 200},             /* type            */
     {UT_OBJ, AT_TYP, g_obj_pos, 200, 240, 200},               /* equip           */
-    {UT_PC, AT_STR, 0, 200, 230, 253},                        /* guild-name      */
-    {UT_PC, AT_STR, 0, 240, 253, 230},                        /* pwd             */
+    {UT_PC, AT_STR, nullptr, 200, 230, 253},                  /* guild-name      */
+    {UT_PC, AT_STR, nullptr, 240, 253, 230},                  /* pwd             */
     {UT_PC, AT_BIT, g_pc_flags, 200, 200, 253},               /* pc-flags        */
-    {UT_PC, AT_VAL, 0, 200, 200, 253},                        /* crimes          */
-    {UT_PC, AT_VAL, 0, 200, 200, 200},                        /* drunk           */
-    {UT_PC, AT_VAL, 0, 200, 200, 200},                        /* full            */
-    {UT_PC, AT_VAL, 0, 200, 200, 200},                        /* thirsty         */
-    {UT_NPC, AT_VAL, 0, 200, 200, 253},                       /* default-pos     */
+    {UT_PC, AT_VAL, nullptr, 200, 200, 253},                  /* crimes          */
+    {UT_PC, AT_VAL, nullptr, 200, 200, 200},                  /* drunk           */
+    {UT_PC, AT_VAL, nullptr, 200, 200, 200},                  /* full            */
+    {UT_PC, AT_VAL, nullptr, 200, 200, 200},                  /* thirsty         */
+    {UT_NPC, AT_VAL, nullptr, 200, 200, 253},                 /* default-pos     */
     {UT_NPC, AT_BIT, g_npc_flags, 200, 200, 200},             /* npc-flags       */
-    {UT_PC, AT_STR, 0, 200, 230, 230},                        /* hometown        */
-    {UT_CHAR, AT_VAL, 0, 253, 253, 253},                      /* exp             */
+    {UT_PC, AT_STR, nullptr, 200, 230, 230},                  /* hometown        */
+    {UT_CHAR, AT_VAL, nullptr, 253, 253, 253},                /* exp             */
     {UT_CHAR, AT_BIT, g_char_flags, 200, 200, 253},           /* char-flags      */
-    {UT_CHAR, AT_VAL, 0, 200, 200, 240},                      /* mana            */
-    {UT_CHAR, AT_VAL, 0, 200, 200, 240},                      /* endurance       */
+    {UT_CHAR, AT_VAL, nullptr, 200, 200, 240},                /* mana            */
+    {UT_CHAR, AT_VAL, nullptr, 200, 200, 240},                /* endurance       */
     {UT_CHAR, AT_TYP, g_WpnColl.gettext(), 200, 200, 253},    /* attack-type     */
-    {UT_CHAR, AT_VAL, 0, 200, 200, 253},                      /* hand-quality    */
-    {UT_UNIT, AT_VAL, 0, 200, 200, 230},                      /* height          */
+    {UT_CHAR, AT_VAL, nullptr, 200, 200, 253},                /* hand-quality    */
+    {UT_UNIT, AT_VAL, nullptr, 200, 200, 230},                /* height          */
     {UT_CHAR, AT_TYP, g_pc_races, 200, 200, 253},             /* race            */
     {UT_CHAR, AT_TYP, g_char_sex, 200, 200, 253},             /* sex             */
-    {UT_NPC, AT_VAL, 0, 255, 255, 255},                       /* level           */
+    {UT_NPC, AT_VAL, nullptr, 255, 255, 255},                 /* level           */
     {UT_CHAR, AT_TYP, g_char_pos, 200, 253, 253},             /* position        */
     {UT_CHAR, AT_TYPVAL, g_AbiColl.gettext(), 240, 253, 253}, /* ability         */
-    {UT_PC, AT_VAL, 0, 230, 253, 253},                        /* skill-points    */
-    {UT_PC, AT_VAL, 0, 230, 253, 253},                        /* ability-points  */
-    {UT_UNIT, AT_VAL, 0, 200, 230, 200},                      /* remove affects  */
-    {UT_PC, AT_STR, 0, 200, 200, 230},                        /* add-quest       */
-    {UT_PC, AT_STR, 0, 200, 200, 230},                        /* del-quest       */
-    {UT_CHAR, AT_VAL, 0, 200, 253, 230},                      /* speed           */
-    {UT_PC, AT_STR, 0, 255, 254, 254},                        /* add-info        */
-    {UT_PC, AT_STR, 0, 255, 254, 254},                        /* del-info        */
-    {UT_PC, AT_VAL, 0, 255, 254, 254},                        /* access          */
-    {UT_PC, AT_STR, 0, 200, 200, 200},                        /* promptstr       */
-    {UT_PC, AT_VAL, 0, 230, 230, 230},                        /* age             */
-    {UT_PC, AT_VAL, 0, 254, 255, 255},                        /* lifespan        */
-    {UT_PC, AT_VAL, 0, 254, 255, 255},                        /* profession      */
+    {UT_PC, AT_VAL, nullptr, 230, 253, 253},                  /* skill-points    */
+    {UT_PC, AT_VAL, nullptr, 230, 253, 253},                  /* ability-points  */
+    {UT_UNIT, AT_VAL, nullptr, 200, 230, 200},                /* remove affects  */
+    {UT_PC, AT_STR, nullptr, 200, 200, 230},                  /* add-quest       */
+    {UT_PC, AT_STR, nullptr, 200, 200, 230},                  /* del-quest       */
+    {UT_CHAR, AT_VAL, nullptr, 200, 253, 230},                /* speed           */
+    {UT_PC, AT_STR, nullptr, 255, 254, 254},                  /* add-info        */
+    {UT_PC, AT_STR, nullptr, 255, 254, 254},                  /* del-info        */
+    {UT_PC, AT_VAL, nullptr, 255, 254, 254},                  /* access          */
+    {UT_PC, AT_STR, nullptr, 200, 200, 200},                  /* promptstr       */
+    {UT_PC, AT_VAL, nullptr, 230, 230, 230},                  /* age             */
+    {UT_PC, AT_VAL, nullptr, 254, 255, 255},                  /* lifespan        */
+    {UT_PC, AT_VAL, nullptr, 254, 255, 255},                  /* profession      */
 };
 
 // Post-porcessing of adding-extra descriptions.
@@ -270,7 +209,7 @@ int search_block_set(char *arg, const char **list, bool exact)
 {
     int i, l;
 
-    if (list == NULL)
+    if (list == nullptr)
     {
         return -1;
     }
@@ -378,7 +317,7 @@ void show_structure(const char *structure[], class unit_data *ch)
     char **c, buf[MAX_STRING_LENGTH];
     std::string s;
 
-    if (structure == NULL)
+    if (structure == nullptr)
     {
         return;
     }
@@ -447,7 +386,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     long int valarg = 0;
     long int bitarg = 0;
 
-    class file_index_type *untarg = NULL;
+    class file_index_type *untarg = nullptr;
     class extra_descr_data *ed;
     class unit_data *unt;
     class unit_affected_type *aff;
@@ -473,8 +412,8 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     }
     else
     {
-        unt = find_unit(ch, &argument, 0, FIND_UNIT_WORLD | FIND_UNIT_SURRO | FIND_UNIT_INVEN | FIND_UNIT_EQUIP);
-        if (unt == NULL)
+        unt = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD | FIND_UNIT_SURRO | FIND_UNIT_INVEN | FIND_UNIT_EQUIP);
+        if (unt == nullptr)
         {
             send_to_char("No such thing.<br/>", ch);
             return;
@@ -588,7 +527,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             send_to_char("Arg:&lt;unitpath&gt;<br/>", ch);
             argument = str_next_word(argument, strarg);
             /* find unit by 'path' name in arg */
-            if ((untarg = str_to_file_index(strarg)) == NULL)
+            if ((untarg = str_to_file_index(strarg)) == nullptr)
             {
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
@@ -688,7 +627,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
-            if ((untarg = str_to_file_index(arg)) == NULL)
+            if ((untarg = str_to_file_index(arg)) == nullptr)
             {
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
@@ -771,7 +710,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             argument = str_next_word(argument, strarg);
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
-            if ((ed = unit_find_extra(strarg, unt)) == NULL)
+            if ((ed = unit_find_extra(strarg, unt)) == nullptr)
             {
                 /* the field was not found. create a new one. */
                 ed = new (class extra_descr_data);
@@ -1087,12 +1026,12 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 if (PC_GUILD(unt))
                 {
                     FREE(PC_GUILD(unt));
-                    PC_GUILD(unt) = NULL;
+                    PC_GUILD(unt) = nullptr;
                 }
                 send_to_char("Changed.<br/>", ch);
                 return;
             }
-            if (PC_GUILD(unt) == NULL)
+            if (PC_GUILD(unt) == nullptr)
             {
                 CREATE(PC_GUILD(unt), char, strlen(argument) + 1);
             }
@@ -1149,7 +1088,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 44: /* hometown */
-            if (PC_HOME(unt) == NULL)
+            if (PC_HOME(unt) == nullptr)
             {
                 CREATE(PC_HOME(unt), char, strlen(argument) + 1);
             }
@@ -1288,7 +1227,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             argument = str_next_word(argument, strarg);
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
-            if ((ed = PC_INFO(unt).find_raw(strarg)) == NULL)
+            if ((ed = PC_INFO(unt).find_raw(strarg)) == nullptr)
             {
                 /* the field was not found. create a new one. */
                 ed = new (class extra_descr_data);
@@ -1341,7 +1280,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 66: /* "promptstr" */
-            if (UPC(unt)->promptstr != NULL)
+            if (UPC(unt)->promptstr != nullptr)
             {
                 free(UPC(unt)->promptstr);
             }
@@ -1363,7 +1302,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                      PC_TIME(unt).birth / (1.0 * SECS_PER_MUD_YEAR),
                      valarg);
 
-                PC_TIME(unt).birth = time(NULL) - (valarg * SECS_PER_MUD_YEAR);
+                PC_TIME(unt).birth = time(nullptr) - (valarg * SECS_PER_MUD_YEAR);
             }
             else
             {
@@ -1424,7 +1363,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 #define SET_SPELL 1
 #define SET_WEAPON 2
 
-static const char *skill_field_names[] = {"skill", "spell", "weapon", NULL};
+static const char *skill_field_names[] = {"skill", "spell", "weapon", nullptr};
 
 void do_setskill(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
@@ -1447,7 +1386,7 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
     }
 
     /* find unit to set */
-    if ((unt = find_unit(ch, &argument, 0, FIND_UNIT_WORLD)) == NULL)
+    if ((unt = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD)) == nullptr)
     {
         send_to_char("No such person or thing<br/>", ch);
         return;

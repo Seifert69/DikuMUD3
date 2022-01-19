@@ -15,7 +15,7 @@ int spell_perform(int spell_no,
                   class unit_data *medium,
                   class unit_data *target,
                   const char *argument,
-                  char *pEffect = NULL,
+                  char *pEffect = nullptr,
                   int bonus = 0);
 
 ubit1 spell_legal_type(int spl, int type);

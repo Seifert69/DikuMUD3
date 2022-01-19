@@ -61,7 +61,7 @@
 
 */
 
-class cConHook *g_connection_list = NULL;
+class cConHook *g_connection_list = nullptr;
 
 void dumbPlayLoop(cConHook *con, const char *cmd)
 {
@@ -236,7 +236,7 @@ void cConHook::Unhook(void)
         g_CaptainHook.Unhook(this);
     }
 
-    if (this->m_pWebsServer == 0)
+    if (this->m_pWebsServer == nullptr)
     {
         cHook::Unhook();
     }
@@ -284,7 +284,7 @@ void cConHook::Close(int bNotifyMud)
     m_pFptr = Idle;
     m_nId = 0;
 
-    m_pWebsServer = 0;
+    m_pWebsServer = nullptr;
 
     remove_gmap(this);
 
@@ -564,7 +564,7 @@ void cConHook::Input(int nFlags)
 /* -1 on connection closed, 0 on success */
 void cConHook::WriteCon(const char *text)
 {
-    if (text == NULL)
+    if (text == nullptr)
     {
         return;
     }
@@ -602,7 +602,7 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
 
     if (!(current = source))
     {
-        return NULL;
+        return nullptr;
     }
 
     newptr = dest;
@@ -815,7 +815,7 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
         /* Out of space, so... */
         {
             column = 0;
-            if (last == NULL || cutpoint < current - last)
+            if (last == nullptr || cutpoint < current - last)
             { /* backtrack or cut */
                 last = current;
             }
@@ -824,7 +824,7 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
             *(newptr++) = '\n';
             *(newptr++) = '\r';
             current = skip_spaces(current); /* Skip any double spaces, etc. */
-            last = NULL;
+            last = nullptr;
         }
     }
 
@@ -1446,7 +1446,7 @@ cConHook::cConHook(void)
     m_nPromptLen = 0;
 
     // m_pWebsHdl = 0;
-    m_pWebsServer = 0;
+    m_pWebsServer = nullptr;
 
     m_sSetup.echo = g_mplex_arg.g_bModeEcho;
     m_sSetup.redraw = g_mplex_arg.g_bModeRedraw;

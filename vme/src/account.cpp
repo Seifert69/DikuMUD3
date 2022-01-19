@@ -52,7 +52,7 @@ void account_cclog(class unit_data *ch, int amount)
 
 static void account_log(char action, class unit_data *god, class unit_data *pc, int amount)
 {
-    time_t now = time(0);
+    time_t now = time(nullptr);
     char *c;
     char buf[1024];
     ubit32 gid, pid, total, crc, vxor;
@@ -136,7 +136,7 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
 
     char *pTmstr = ctime((time_t *)&PC_ACCOUNT(u).flatrate);
     char buf[MAX_STRING_LENGTH];
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     if (IS_ADMINISTRATOR(ch))
     {
@@ -330,7 +330,7 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
     struct tm t;
     ubit32 secs;
 
-    if (PC_ACCOUNT(pc).flatrate > (ubit32)time(0))
+    if (PC_ACCOUNT(pc).flatrate > (ubit32)time(nullptr))
     {
         return;
     }
@@ -446,7 +446,7 @@ int account_is_overdue(const class unit_data *ch)
 {
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
         {
             return FALSE;
         }
@@ -477,7 +477,7 @@ static void account_status(const class unit_data *ch)
         send_to_char(Buf, ch);
     }
 
-    if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+    if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
     {
         pTmstr = ctime((time_t *)&PC_ACCOUNT(ch).flatrate);
         snprintf(Buf, sizeof(Buf), "Your account is on a flat rate until %s", pTmstr);
@@ -563,7 +563,7 @@ int account_is_closed(class unit_data *ch)
 
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
         {
             return FALSE;
         }
@@ -608,7 +608,7 @@ void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32
     char Buf[256];
     sbit32 add = days * SECS_PER_REAL_DAY;
 
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     if (days > 0)
     {
@@ -651,7 +651,7 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
     class unit_data *u, *note;
     char *c = (char *)arg;
 
-    const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", NULL};
+    const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", nullptr};
     int i, amount;
 
     if (!g_cServerConfig.isAccounting() || !IS_PC(ch))
@@ -704,9 +704,9 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
 #endif
 
-    u = find_unit(ch, &c, 0, FIND_UNIT_SURRO | FIND_UNIT_WORLD);
+    u = find_unit(ch, &c, nullptr, FIND_UNIT_SURRO | FIND_UNIT_WORLD);
 
-    if ((u == NULL) || !IS_PC(u))
+    if ((u == nullptr) || !IS_PC(u))
     {
         send_to_char("No such player found.\n\r", ch);
         return;
@@ -923,7 +923,7 @@ void numlist_sanity(int *numlist, int numlen)
 {
     int i;
 
-    if (numlist == NULL)
+    if (numlist == nullptr)
     {
         return;
     }
@@ -942,7 +942,7 @@ void numlist_sanity(int *numlist, int numlen)
 
 int flatrate_sanity(int *numlist, int numlen)
 {
-    if (numlist == NULL)
+    if (numlist == nullptr)
     {
         return FALSE;
     }
@@ -970,10 +970,10 @@ int flatrate_sanity(int *numlist, int numlen)
 
 CAccountConfig::CAccountConfig(void)
 {
-    m_pOverdueMessage = NULL;
-    m_pClosedMessage = NULL;
-    m_pPaypointMessage = NULL;
-    m_pCoinName = NULL;
+    m_pOverdueMessage = nullptr;
+    m_pClosedMessage = nullptr;
+    m_pPaypointMessage = nullptr;
+    m_pCoinName = nullptr;
     m_nFreeFromLevel = 200;
     m_nAccountLimit = 1500;
     m_nAccountFree = 1000;
@@ -1002,11 +1002,11 @@ void CAccountConfig::Boot(void)
 
     if (!file_exists(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG)))
     {
-        time_t now = time(0);
+        time_t now = time(nullptr);
 
         f = fopen(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG).c_str(), "wb");
 
-        if (f == NULL)
+        if (f == nullptr)
         {
             slog(LOG_ALL, 0, "Can't create account log file.");
             exit(0);
@@ -1037,7 +1037,7 @@ void CAccountConfig::Boot(void)
 
     m_pCoinName = parse_match_name((const char **)&c, "Coinage Name");
 
-    if (m_pCoinName == NULL)
+    if (m_pCoinName == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading coin name.");
         exit(0);
@@ -1045,7 +1045,7 @@ void CAccountConfig::Boot(void)
 
     m_pOverdueMessage = parse_match_name((const char **)&c, "Account Overdue");
 
-    if (m_pOverdueMessage == NULL)
+    if (m_pOverdueMessage == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading overdue message.");
         exit(0);
@@ -1058,7 +1058,7 @@ void CAccountConfig::Boot(void)
     }
 
     m_pClosedMessage = parse_match_name((const char **)&c, "Account Closed");
-    if (m_pClosedMessage == NULL)
+    if (m_pClosedMessage == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading closed message.");
         exit(0);
@@ -1208,7 +1208,7 @@ void CAccountConfig::Boot(void)
             strcat(Buf, " Message");
 
             m_flatrate[i].pMessage = parse_match_name((const char **)&c, Buf);
-            if (m_flatrate[i].pMessage == NULL)
+            if (m_flatrate[i].pMessage == nullptr)
             {
                 slog(LOG_ALL, 0, "Error reading flatrate message.");
                 exit(0);
@@ -1235,7 +1235,7 @@ void CAccountConfig::Boot(void)
     }
 
     m_pPaypointMessage = parse_match_name((const char **)&c, "Account Paypoint");
-    if (m_pPaypointMessage == NULL)
+    if (m_pPaypointMessage == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading paypoint message.");
         exit(0);

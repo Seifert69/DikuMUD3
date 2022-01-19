@@ -26,7 +26,7 @@ public:
     ubit8 *Data(void) { return pData; }
     void SetNull(void)
     {
-        pData = NULL;
+        pData = nullptr;
         nSize = 0;
     }
 

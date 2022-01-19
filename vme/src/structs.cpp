@@ -27,8 +27,8 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 room_direction_data::room_direction_data(void)
 {
-    key = NULL;
-    to_room = NULL;
+    key = nullptr;
+    to_room = nullptr;
     exit_info = 0;
     difficulty = 0;
 }
@@ -60,13 +60,13 @@ char_data::char_data(void)
 {
     g_world_nochars++;
 
-    money = NULL;
-    descriptor = NULL;
-    Combat = NULL;
-    followers = NULL;
-    master = NULL;
-    last_room = NULL;
-    last_attacker = NULL;
+    money = nullptr;
+    descriptor = nullptr;
+    Combat = nullptr;
+    followers = nullptr;
+    master = nullptr;
+    last_room = nullptr;
+    last_attacker = nullptr;
     last_attacker_type = 0;
 
     // MS2020 memset(&points, 0, sizeof (points));
@@ -139,10 +139,10 @@ pc_data::pc_data(void)
 
     g_world_nopc++;
 
-    bank = NULL;
-    guild = NULL;
-    hometown = NULL;
-    promptstr = NULL;
+    bank = nullptr;
+    guild = nullptr;
+    hometown = nullptr;
+    promptstr = nullptr;
 
     memset(&setup, 0, sizeof(setup));
     memset(&m_time, 0, sizeof(setup));
@@ -212,17 +212,17 @@ npc_data::~npc_data(void)
 
 zone_type::zone_type(void)
 {
-    name = NULL;
-    notes = NULL;
-    help = NULL;
-    filename = NULL;
-    rooms = NULL;
-    objects = NULL;
-    npcs = NULL;
+    name = nullptr;
+    notes = nullptr;
+    help = nullptr;
+    filename = nullptr;
+    rooms = nullptr;
+    objects = nullptr;
+    npcs = nullptr;
 
-    zri = NULL;
+    zri = nullptr;
 
-    spmatrix = NULL;
+    spmatrix = nullptr;
     no_rooms = 0;
     no_objs = 0;
     no_npcs = 0;
@@ -250,18 +250,18 @@ zone_type::~zone_type(void)
     for (ut = objects; ut; ut = nextut)
     {
         nextut = ut->next;
-        ut->next = NULL;
-        ut->gnext = NULL;
-        ut->gprevious = NULL;
+        ut->next = nullptr;
+        ut->gnext = nullptr;
+        ut->gprevious = nullptr;
         delete ut;
     }
 
     for (ut = npcs; ut; ut = nextut)
     {
         nextut = ut->next;
-        ut->next = NULL;
-        ut->gnext = NULL;
-        ut->gprevious = NULL;
+        ut->next = nullptr;
+        ut->gnext = nullptr;
+        ut->gprevious = nullptr;
         delete ut;
     }
 
@@ -310,8 +310,8 @@ zone_type::~zone_type(void)
 
 file_index_type::file_index_type(void)
 {
-    name = NULL;
-    zone = NULL;
+    name = nullptr;
+    zone = nullptr;
     // next = NULL;
     // unit = NULL;
 
@@ -341,14 +341,14 @@ unit_fptr::unit_fptr(void)
     priority = FN_PRI_CHORES;
     heart_beat = PULSE_SEC;
     flags = 0;
-    data = NULL;
-    next = NULL;
-    event = NULL;
+    data = nullptr;
+    next = nullptr;
+    event = nullptr;
 }
 
 unit_fptr::~unit_fptr()
 {
-    data = NULL;
+    data = nullptr;
 }
 
 #ifndef VMC_SRC
@@ -495,21 +495,21 @@ unit_data *new_unit_data(ubit8 type)
     else
     {
         assert(FALSE);
-        return NULL; // Need to avoid warning on Git actions.
+        return nullptr; // Need to avoid warning on Git actions.
     }
 }
 
 unit_data::unit_data(void)
 {
-    func = NULL;
-    affected = NULL;
-    fi = NULL;
-    key = NULL;
-    outside = NULL;
-    inside = NULL;
-    next = NULL;
-    gnext = NULL;
-    gprevious = NULL;
+    func = nullptr;
+    affected = nullptr;
+    fi = nullptr;
+    key = nullptr;
+    outside = nullptr;
+    inside = nullptr;
+    next = nullptr;
+    gnext = nullptr;
+    gprevious = nullptr;
     chars = 0;
     manipulate = 0;
     flags = 0;
@@ -533,9 +533,9 @@ unit_data::~unit_data(void)
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
 
 #ifdef DMSERVER
-    assert(gnext == NULL);
-    assert(gprevious == NULL);
-    assert(next == NULL);
+    assert(gnext == nullptr);
+    assert(gprevious == nullptr);
+    assert(next == nullptr);
     assert(g_unit_list != this);
 #endif
 

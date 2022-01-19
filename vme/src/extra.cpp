@@ -20,20 +20,20 @@
 
 extra_descr_data::extra_descr_data(void)
 {
-    next = NULL;
+    next = nullptr;
 }
 
 // MS2020: Super odd there was no constructor for adding data.
 extra_descr_data::extra_descr_data(const char *name, const char *descr)
 {
-    const char *names[2] = {name, NULL};
+    const char *names[2] = {name, nullptr};
 
     this->names = names;
     if (descr)
     {
         this->descr = descr;
     }
-    this->next = NULL;
+    this->next = nullptr;
 }
 
 // MS2020: Super odd there was no constructor for adding data.
@@ -44,7 +44,7 @@ extra_descr_data::extra_descr_data(const char **names, const char *descr)
     {
         this->descr = descr;
     }
-    this->next = NULL;
+    this->next = nullptr;
 }
 
 // MS2020: Super odd there was no constructor for adding data.
@@ -55,12 +55,12 @@ extra_descr_data::extra_descr_data(cNamelist names, const char *descr)
     {
         this->descr = descr;
     }
-    this->next = NULL;
+    this->next = nullptr;
 }
 
 extra_descr_data::~extra_descr_data(void)
 {
-    this->next = NULL;
+    this->next = nullptr;
 }
 
 // SIGH. Due to DIL I need to make this function on the extra_descr_data
@@ -91,7 +91,7 @@ class extra_descr_data *extra_descr_data::find_raw(const char *word)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Argh, just for DIL :-( *sob*
@@ -114,7 +114,7 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
         if (*exlist == tex)
         {
             *exlist = tex->next;
-            tex->next = NULL;
+            tex->next = nullptr;
             delete tex;
             return;
         }
@@ -127,7 +127,7 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
             if (pex->next == tex)
             {
                 pex->next = tex->next;
-                tex->next = NULL;
+                tex->next = nullptr;
                 delete tex;
                 return;
             }
@@ -141,13 +141,13 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
 
 extra_list::extra_list(void)
 {
-    m_pList = NULL;
+    m_pList = nullptr;
 }
 
 extra_list::~extra_list(void)
 {
     freelist(m_pList);
-    m_pList = NULL;
+    m_pList = nullptr;
 }
 
 void extra_list::freelist(class extra_descr_data *ex)
@@ -161,7 +161,7 @@ void extra_list::freelist(class extra_descr_data *ex)
 
 int extra_list::isempty(void)
 {
-    return m_pList == NULL;
+    return m_pList == nullptr;
 }
 
 int extra_list::count(void)
@@ -218,7 +218,7 @@ void extra_list::push_front(class extra_descr_data *ex)
 // Insert ex as the last element in front of the list
 void extra_list::push_tail(class extra_descr_data *ex)
 {
-    if (m_pList == NULL)
+    if (m_pList == nullptr)
     {
         push_front(ex);
     }
@@ -246,7 +246,7 @@ void extra_list::erase(class extra_descr_data *exd)
     if (m_pList == exd)
     {
         m_pList = exd->next;
-        exd->next = NULL;
+        exd->next = nullptr;
         delete exd;
 
         return;
@@ -260,7 +260,7 @@ void extra_list::erase(class extra_descr_data *exd)
         if (pex->next == exd)
         {
             pex->next = exd->next;
-            exd->next = NULL;
+            exd->next = nullptr;
             delete exd;
             return;
         }
@@ -353,7 +353,7 @@ class extra_descr_data *extra_list::find_raw(const char *word)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -362,7 +362,7 @@ void extra_list::copyfrom(class extra_list &listToBeCopied)
 {
     class extra_descr_data *new_ex;
 
-    assert(this->m_pList == NULL);
+    assert(this->m_pList == nullptr);
 
     class extra_descr_data *exd;
     for (exd = listToBeCopied.m_pList; exd; exd = exd->next)
@@ -410,16 +410,16 @@ class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_data **target, char *word, class unit_data *list)
 {
-    class extra_descr_data *exd = NULL;
+    class extra_descr_data *exd = nullptr;
 
     if (!list)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (IS_ROOM(list))
@@ -452,20 +452,20 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_dat
 
     if (target)
     {
-        *target = NULL;
+        *target = nullptr;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 const char *unit_find_extra_string(class unit_data *ch, char *word, class unit_data *list)
 {
-    class extra_descr_data *exd = char_unit_find_extra(ch, NULL, word, list);
+    class extra_descr_data *exd = char_unit_find_extra(ch, nullptr, word, list);
 
     if (exd)
     {
         return exd->descr.c_str();
     }
 
-    return NULL;
+    return nullptr;
 }

@@ -111,7 +111,7 @@ public:
             do
             {
                 p = strchr(o, '\n');
-                if (p == NULL)
+                if (p == nullptr)
                 {
                     if (strlen(o) < 1)
                     {
@@ -219,12 +219,12 @@ void pipeMUD_dispatch(std::string str)
 {
     struct diltemplate *tmpl;
     class dilprg *prg;
-    static unit_data *u = NULL;
+    static unit_data *u = nullptr;
 
     if (!u)
     {
         u = find_symbolic("basis", "discord");
-        if (u == NULL)
+        if (u == nullptr)
         {
             slog(LOG_OFF, 0, "Can't find discord@basis.");
             return;
@@ -232,7 +232,7 @@ void pipeMUD_dispatch(std::string str)
     }
 
     tmpl = find_dil_template("dispatcher@comm");
-    prg = dil_copy_template(tmpl, u, NULL);
+    prg = dil_copy_template(tmpl, u, nullptr);
 
     if (prg)
     {

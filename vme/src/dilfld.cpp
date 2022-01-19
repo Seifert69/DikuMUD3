@@ -27,7 +27,7 @@ void dilfe_fld(class dilprg *p)
     /* Get a structure field */
     class dilval *v1, *v2;
     v1 = p->stack.pop();
-    v2 = NULL;
+    v2 = nullptr;
     dilval *v = new dilval;
     int fldno;
 
@@ -120,7 +120,7 @@ void dilfe_fld(class dilprg *p)
                 }
                 else
                 {
-                    v->val.ptr = NULL;
+                    v->val.ptr = nullptr;
                 }
             }
             else if (v->type == DILV_SP)
@@ -554,7 +554,7 @@ void dilfe_fld(class dilprg *p)
                     }
                     else
                     {
-                        v->val.ptr = NULL;
+                        v->val.ptr = nullptr;
                     }
                     break;
                 case DILV_UP:
@@ -574,7 +574,7 @@ void dilfe_fld(class dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_ZP;
-                        v->val.ptr = NULL;
+                        v->val.ptr = nullptr;
 
                         class zone_type *z = (class zone_type *)v1->val.ptr;
 
@@ -634,7 +634,7 @@ void dilfe_fld(class dilprg *p)
                         }
                         else
                         {
-                            v->ref = NULL;
+                            v->ref = nullptr;
                         }
                     }
                     else
@@ -780,7 +780,7 @@ void dilfe_fld(class dilprg *p)
                         }
                         else
                         {
-                            v->ref = NULL;
+                            v->ref = nullptr;
                         }
                     }
                     else
@@ -815,7 +815,7 @@ void dilfe_fld(class dilprg *p)
                         }
                         else
                         {
-                            v->ref = NULL;
+                            v->ref = nullptr;
                         }
                     }
                     else
@@ -1001,7 +1001,7 @@ void dilfe_fld(class dilprg *p)
                         }
                         else
                         {
-                            v->ref = NULL;
+                            v->ref = nullptr;
                         }
                     }
                     else
@@ -1092,7 +1092,7 @@ void dilfe_fld(class dilprg *p)
                                 if (fi->second->fi_unit_list.empty())
                                 {
                                     v->type = DILV_FAIL;
-                                    v->val.ptr = NULL;
+                                    v->val.ptr = nullptr;
                                 }
                                 else
                                 {
@@ -1136,7 +1136,7 @@ void dilfe_fld(class dilprg *p)
                                 if (fi->second->fi_unit_list.empty())
                                 {
                                     v->type = DILV_FAIL;
-                                    v->val.ptr = NULL;
+                                    v->val.ptr = nullptr;
                                 }
                                 else
                                 {
@@ -1180,7 +1180,7 @@ void dilfe_fld(class dilprg *p)
                                 if (fi->second->fi_unit_list.empty())
                                 {
                                     v->type = DILV_FAIL;
-                                    v->val.ptr = NULL;
+                                    v->val.ptr = nullptr;
                                 }
                                 else
                                 {
@@ -1908,7 +1908,7 @@ void dilfe_fld(class dilprg *p)
                         int editing = FALSE;
                         class unit_data *vict;
                         vict = ((class unit_data *)v1->val.ptr);
-                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == NULL)
+                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             class descriptor_data *d;
                             for (d = g_descriptor_list; d; d = d->next)
@@ -1961,10 +1961,10 @@ void dilfe_fld(class dilprg *p)
                 case DILV_UP:
                     if (v1->val.ptr)
                     {
-                        class unit_data *switched = NULL;
+                        class unit_data *switched = nullptr;
                         class unit_data *vict;
                         vict = ((class unit_data *)v1->val.ptr);
-                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == NULL)
+                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             class descriptor_data *d;
                             for (d = g_descriptor_list; d; d = d->next)
@@ -2200,7 +2200,7 @@ void dilfe_fld(class dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = (UNIT_FUNC((class unit_data *)v1->val.ptr) != NULL);
+                        v->val.num = (UNIT_FUNC((class unit_data *)v1->val.ptr) != nullptr);
                     }
                     else
                     {
@@ -4596,7 +4596,7 @@ void dilfe_fld(class dilprg *p)
                         {
                             v->atyp = DILA_NORM;
                             v->type = DILV_NULL;
-                            v->val.ptr = NULL;
+                            v->val.ptr = nullptr;
                         }
                     }
                     else

@@ -93,9 +93,9 @@ void create_worldgraph()
     }
 
     create_sc_graph(i);
-    pthread_mutex_init(&dijkstra_queue_mutex, NULL);
+    pthread_mutex_init(&dijkstra_queue_mutex, nullptr);
     slog(LOG_ALL, 0, "Create Shortest Path VME thread");
-    pthread_create(&g_dijkstra_thread, NULL, create_sc_dijkstra, (void *)NULL);
+    pthread_create(&g_dijkstra_thread, nullptr, create_sc_dijkstra, (void *)nullptr);
 }
 
 void cleanup_sc_dijkstra(void *t)
@@ -107,9 +107,9 @@ void *create_sc_dijkstra(void *thread)
 {
     //	typedef graph_traits < graph_t >::vertex_descriptor vertex_descriptor;
     unit_data *u;
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-    pthread_cleanup_push(cleanup_sc_dijkstra, NULL);
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, nullptr);
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, nullptr);
+    pthread_cleanup_push(cleanup_sc_dijkstra, nullptr);
 
     while (!g_mud_shutdown)
     {
@@ -136,7 +136,7 @@ void *create_sc_dijkstra(void *thread)
     slog(LOG_ALL, 0, "Exiting Dijkstra Thread");
 
     // pthread_exit(0);
-    return NULL;
+    return nullptr;
 }
 
 void create_sc_graph(int num_of_sc)

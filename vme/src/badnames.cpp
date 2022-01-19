@@ -14,14 +14,14 @@
 
 badnames_list::badnames_list(void)
 {
-    next = NULL;
-    name = NULL;
+    next = nullptr;
+    name = nullptr;
 }
 
 badnames_list::badnames_list(char *n)
 {
     int len = 0;
-    next = NULL;
+    next = nullptr;
     len = strlen(n);
     // name = new char[len + 1];
     CREATE(name, char, len + 1);
@@ -38,11 +38,11 @@ badnames_list::~badnames_list(void)
 {
     badnames_list *l = this->next;
 
-    next = NULL;
+    next = nullptr;
     if (name)
     {
         FREE(name);
-        name = NULL;
+        name = nullptr;
     }
     if (l)
     {
@@ -56,13 +56,13 @@ char *badnames_list::insert(char *n)
     badnames_list *temp;
     if (!n)
     {
-        return (NULL);
+        return (nullptr);
     }
     temp = new badnames_list(n);
 
     if (!temp)
     {
-        return (NULL);
+        return (nullptr);
     }
 
     while (l)
@@ -86,7 +86,7 @@ char *badnames_list::insert(char *n)
     {
         temp->next = l->next;
         b->next = temp;
-        l->next = NULL;
+        l->next = nullptr;
         delete l;
     }
     else
@@ -103,7 +103,7 @@ char *badnames_list::equal(char *n)
 
     if (!n)
     {
-        return (NULL);
+        return (nullptr);
     }
     while (l)
     {
@@ -119,7 +119,7 @@ char *badnames_list::equal(char *n)
     }
     else
     {
-        return (NULL);
+        return (nullptr);
     }
 }
 
@@ -133,7 +133,7 @@ char *badnames_list::in(char *n)
 
     if (!n)
     {
-        return (NULL);
+        return (nullptr);
     }
     strcpy(tname, n);
     while (tname[i] != 0)
@@ -156,7 +156,7 @@ char *badnames_list::in(char *n)
     }
     else
     {
-        return (NULL);
+        return (nullptr);
     }
 }
 
@@ -175,7 +175,7 @@ void badnames_list::create(char *input_temp)
     }
     insert(n);
 
-    while ((n = strtok(0, " ")) != NULL)
+    while ((n = strtok(nullptr, " ")) != nullptr)
     {
         insert(n);
     }

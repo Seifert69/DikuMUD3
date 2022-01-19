@@ -18,7 +18,7 @@
 /* ---------------------------------------------------------------------- */
 
 const char *g_char_pos[] =
-    {"dead R.I.P.", "mortally-wounded", "incapacitated", "stunned", "sleeping", "resting", "sitting", "fighting", "standing", NULL};
+    {"dead R.I.P.", "mortally-wounded", "incapacitated", "stunned", "sleeping", "resting", "sitting", "fighting", "standing", nullptr};
 
 /* Moved to common.c: const char *g_dirs[] = */
 
@@ -32,7 +32,7 @@ const char *g_enter_dirs[] = {"the north",
                               "the northwest",
                               "the southeast",
                               "the southwest",
-                              NULL};
+                              nullptr};
 
 const int g_rev_dir[] = {2, 3, 0, 1, 5, 4, 9, 8, 7, 6};
 
@@ -51,7 +51,7 @@ const char *g_room_landscape[] = {"inside",
                                   "snow",
                                   "slush",
                                   "ice",
-                                  NULL};
+                                  nullptr};
 
 const int g_movement_loss[] = {
     1,  /* Inside     */
@@ -113,20 +113,20 @@ const char *g_fullness[] = {"less than half ",
                             "about half ",
                             "more than half ",
                             "", /* nothing makes "full" appear */
-                            NULL};
+                            nullptr};
 
 /* ---------------------------------------------------------------------- */
 /*                         I N F O R M A T I V E                          */
 /* ---------------------------------------------------------------------- */
 
-const char *g_arm_text[ARM_PLATE + 1 + 1] = {"clothes base", "leather base", "hardened leather base", "chain base", "plate base", NULL};
+const char *g_arm_text[ARM_PLATE + 1 + 1] = {"clothes base", "leather base", "hardened leather base", "chain base", "plate base", nullptr};
 
-const char *g_shi_text[SHIELD_LARGE + 2] = {"small shield", "medium shield", "large shield", NULL};
+const char *g_shi_text[SHIELD_LARGE + 2] = {"small shield", "medium shield", "large shield", nullptr};
 
 const char *g_bodyparts[] = {"arms",       "left arm",  "right arm", "legs",      "left leg",   "right leg", "head", "feet",
                              "right foot", "left foot", "toes",      "hands",     "right hand", "left hand", "face", "hair",
                              "neck",       "butt",      "eyes",      "right eye", "left eye",   "mouth",     "ears", "right ear",
-                             "left ear",   "teeth",     "tounge",    "nose",      "nostrils",   NULL};
+                             "left ear",   "teeth",     "tounge",    "nose",      "nostrils",   nullptr};
 
 const ubit8 g_bodyparts_cover[31][5] = {
     {WEAR_ARMS, WEAR_UNUSED},                                    /* arms */
@@ -185,13 +185,13 @@ const char *g_where[] = {"&lt;ILLEGAL POSITION&gt;", /* Position 0 is not a posi
                          "&lt;worn on right ear&gt;",
                          "&lt;worn on ankle&gt;",
                          "&lt;worn on ankle&gt;",
-                         NULL};
+                         nullptr};
 
 /* ---------------------------------------------------------------------- */
 /*                      P O I N T   S Y S T E M                           */
 /* ---------------------------------------------------------------------- */
 
-const char *g_npc_class_types[] = {"Normal", "Undead", NULL};
+const char *g_npc_class_types[] = {"Normal", "Undead", nullptr};
 
 const struct skill_interval g_how_good[] = {{-20, "horrible"},
                                             {-15, "very bad"},
@@ -203,7 +203,7 @@ const struct skill_interval g_how_good[] = {{-20, "horrible"},
                                             {15, "good"},
                                             {20, "very good"},
                                             {25, "supreme"},
-                                            {-1, NULL}};
+                                            {-1, nullptr}};
 
 const struct skill_interval g_weapon_skills[] = {{0, "utterly hopeless"},
                                                  {10, "impossible"},
@@ -214,7 +214,7 @@ const struct skill_interval g_weapon_skills[] = {{0, "utterly hopeless"},
                                                  {90, "supreme"},
                                                  {100, "expert"},
                                                  {150, "godly"},
-                                                 {-1, NULL}};
+                                                 {-1, nullptr}};
 
 const struct skill_interval g_skill_skills[] = {{0, "utterly hopeless"},
                                                 {10, "have heard about"},
@@ -225,7 +225,7 @@ const struct skill_interval g_skill_skills[] = {{0, "utterly hopeless"},
                                                 {90, "master"},
                                                 {100, "are expert at"},
                                                 {150, "are godly at"},
-                                                {-1, NULL}};
+                                                {-1, nullptr}};
 
 const struct skill_interval g_spell_skills[] = {{10, "might remember"},
                                                 {25, "can almost remember"},
@@ -235,7 +235,7 @@ const struct skill_interval g_spell_skills[] = {{10, "might remember"},
                                                 {90, "master"},
                                                 {100, "are expert with"},
                                                 {150, "are godly with"},
-                                                {-1, NULL}};
+                                                {-1, nullptr}};
 
 /* ---------------------------------------------------------------------- */
 /*                         B I T - V E C T O R S                          */
@@ -257,13 +257,14 @@ const char *g_sfb_flags[] = {"Priority",
                              "DILDestroy",
                              "Prompt",
                              "Unique",
-                             NULL};
+                             nullptr};
 
 /* UNIT_MANIPULATE */
 const char *g_unit_manipulate[] = {"take",  "finger", "neck",  "body", "head",  "legs", "feet", "hands", "arms",  "shield", "about-body",
-                                   "waist", "wrist",  "wield", "hold", "enter", "ear",  "back", "chest", "ankle", NULL};
+                                   "waist", "wrist",  "wield", "hold", "enter", "ear",  "back", "chest", "ankle", nullptr};
 
-const char *g_unit_open_flags[] = {"open-close", "closed", "locked", "pickproof", "inside-open-close-lock-unlock", "hidden", "climb", NULL};
+const char *g_unit_open_flags[] =
+    {"open-close", "closed", "locked", "pickproof", "inside-open-close-lock-unlock", "hidden", "climb", nullptr};
 
 /* UNIT_FLAGS */
 const char *g_unit_flags[] = {"private",
@@ -282,39 +283,23 @@ const char *g_unit_flags[] = {"private",
                               "magic",
                               "no-teleport",
                               "no-teleport-to",
-                              NULL};
+                              nullptr};
 
 /* OBJ_FLAGS */
-const char *g_obj_flags[] = {"unequip", "two-hands", "nocover", "nodual", NULL};
+const char *g_obj_flags[] = {"unequip", "two-hands", "nocover", "nodual", nullptr};
 
 /* ROOM_FLAGS */
 const char *g_room_flags[] = {"save",
                               "unused",
                               "no-save",
 
-                              NULL};
+                              nullptr};
 
 /* CHAR_FLAGS but ought to be CHAR_FLAGS */
-const char *g_char_flags[] = {"law-protected",
-                              "legal-target",
-                              "outlaw",
-                              "group",
-                              "blind",
-                              "hide",
-                              "mute",
-                              "sneak",
-                              "detect-alignments",
-                              "detect-invisible",
-                              "detect-magic",
-                              "detect-poison",
-                              "detect-undead",
-                              "detect-curse",
-                              "detect-life",
-                              "wimpy",
-                              "not-used",
-                              "self-defence",
-                              "peaceful",
-                              NULL};
+const char *g_char_flags[] = {
+    "law-protected",     "legal-target",     "outlaw",       "group",         "blind",         "hide",         "mute",        "sneak",
+    "detect-alignments", "detect-invisible", "detect-magic", "detect-poison", "detect-undead", "detect-curse", "detect-life", "wimpy",
+    "not-used",          "self-defence",     "peaceful",     nullptr};
 
 /* PC_FLAGS */
 const char *g_pc_flags[] = {"brief",
@@ -333,18 +318,18 @@ const char *g_pc_flags[] = {"brief",
                             "notelling",
                             "noshout",
                             "notell",
-                            NULL};
+                            nullptr};
 
 /* NPC FLAGS */
-const char *g_npc_flags[] = {"ILLEGAL-BIT", "sentinel", "scavenger", "nice-thief", "agressive", "stay-zone", NULL};
+const char *g_npc_flags[] = {"ILLEGAL-BIT", "sentinel", "scavenger", "nice-thief", "agressive", "stay-zone", nullptr};
 
 /* ---------------------------------------------------------------------- */
 /*                             O T H E R (stat)                           */
 /* ---------------------------------------------------------------------- */
 
-const char *g_unit_status[] = {"NPC", "PC", "ROOM", "OBJECT", NULL};
+const char *g_unit_status[] = {"NPC", "PC", "ROOM", "OBJECT", nullptr};
 
-const char *g_char_sex[] = {"neutral", "male", "female", NULL};
+const char *g_char_sex[] = {"neutral", "male", "female", nullptr};
 
 const char *g_obj_types[] = {"ILLEGAL OBJECT TYPE",
                              "light",
@@ -374,7 +359,7 @@ const char *g_obj_types[] = {"ILLEGAL OBJECT TYPE",
                              "shield",
                              "fur",
                              "board",
-                             NULL};
+                             nullptr};
 
 const char *g_equip_pos[] = {"In inventory/Not equipped",
                              "ILLEGAL EQUIP POSITION - REPORT!",
@@ -395,7 +380,7 @@ const char *g_equip_pos[] = {"In inventory/Not equipped",
                              "Worn around left wrist",
                              "Wielded",
                              "Held",
-                             NULL};
+                             nullptr};
 
 const char *g_obj_pos[] = {"inventory", "ILLEGAL EQUIP POSITION - REPORT!",
                            "rfinger",   "lfinger",
@@ -409,7 +394,7 @@ const char *g_obj_pos[] = {"inventory", "ILLEGAL EQUIP POSITION - REPORT!",
                            "held",      "chest",
                            "back",      "ear1",
                            "ear2",      "ankle1",
-                           "ankle2",    NULL};
+                           "ankle2",    nullptr};
 
 const char *g_connected_types[] = {"Playing",
                                    "Get Name",
@@ -428,4 +413,4 @@ const char *g_connected_types[] = {"Playing",
                                    "New select Race",
                                    "New select Guild",
                                    "Confirm player deletion",
-                                   NULL};
+                                   nullptr};

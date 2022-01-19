@@ -158,10 +158,10 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
                 if (!isdigit(c[0]))
                 {
                     pHostInfo = gethostbyname(c);
-                    Assert(pHostInfo != NULL, "Could not lookup address.");
+                    Assert(pHostInfo != nullptr, "Could not lookup address.");
                     pAddr = (struct in_addr *)(pHostInfo->h_addr_list[0]);
                     c = inet_ntoa(*pAddr);
-                    Assert(c != NULL, "Error in address conversion");
+                    Assert(c != nullptr, "Error in address conversion");
                 }
 
                 arg->pAddress = str_dup(c);

@@ -40,7 +40,7 @@ int dil_effect(char *pStr, struct spell_args *sa)
 
     tmpl = find_dil_template(pStr);
 
-    if (tmpl == NULL)
+    if (tmpl == nullptr)
     {
         return FALSE;
     }
@@ -90,12 +90,12 @@ int dil_effect(char *pStr, struct spell_args *sa)
 
         sarg.owner = prg->owner;
         sarg.activator = sa->caster;
-        sarg.medium = NULL;
-        sarg.target = NULL;
-        sarg.pInt = NULL;
+        sarg.medium = nullptr;
+        sarg.target = nullptr;
+        sarg.pInt = nullptr;
         sarg.fptr = fptr;
         sarg.cmd = &g_cmd_auto_tick;
-        sarg.arg = NULL;
+        sarg.arg = nullptr;
         sarg.mflags = SFB_TICK | SFB_AWARE;
 
         run_dil(&sarg);
@@ -458,7 +458,7 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
         do it randomly */
     hit_loc = hit_location(sa->caster, sa->target);
 
-    bonus += spell_bonus(sa->caster, sa->medium, sa->target, hit_loc, spell_number, &armour_type, NULL, NULL);
+    bonus += spell_bonus(sa->caster, sa->medium, sa->target, hit_loc, spell_number, &armour_type, nullptr, nullptr);
 
     roll = open100();
     roll_description(sa->caster, "spell", roll);
@@ -486,11 +486,11 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
 
     if (sa->hm > 0)
     {
-        damage(sa->caster, sa->target, 0, sa->hm, MSG_TYPE_SPELL, spell_number, COM_MSG_EBODY, !bEffect);
+        damage(sa->caster, sa->target, nullptr, sa->hm, MSG_TYPE_SPELL, spell_number, COM_MSG_EBODY, !bEffect);
     }
     else
     {
-        damage(sa->caster, sa->target, 0, 0, MSG_TYPE_SPELL, spell_number, COM_MSG_MISS, !bEffect);
+        damage(sa->caster, sa->target, nullptr, 0, MSG_TYPE_SPELL, spell_number, COM_MSG_MISS, !bEffect);
     }
 
     return sa->hm;

@@ -409,7 +409,7 @@ cCaptainHook::cCaptainHook(void)
 #endif
     for (int i = 0; i < 256; i++)
     {
-        pfHook[i] = NULL;
+        pfHook[i] = nullptr;
     }
 
     nTop = 0;
@@ -441,7 +441,7 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
     static int newid = 0;
 
     assert(nHandle < (int)sizeof(pfHook));
-    assert(pfHook[nHandle] == NULL);
+    assert(pfHook[nHandle] == nullptr);
 
     if (hook->fd != -1)
     {
@@ -497,7 +497,7 @@ void cCaptainHook::Unhook(cHook *hook)
     pfHook[nHandle]->id = -1;
     pfHook[nHandle]->qTX.Flush();
     pfHook[nHandle]->qRX.Flush();
-    pfHook[nHandle] = NULL;
+    pfHook[nHandle] = nullptr;
 
     nMax = 0;
     for (i = 0; i < nTop; i++)
@@ -543,7 +543,7 @@ int cCaptainHook::Wait(struct timeval *timeout)
         }
     }
 
-    n = select(nMax + 1, &read_set, &write_set, NULL, timeout);
+    n = select(nMax + 1, &read_set, &write_set, nullptr, timeout);
 
     if (n == -1)
     {

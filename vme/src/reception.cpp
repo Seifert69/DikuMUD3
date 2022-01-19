@@ -55,7 +55,7 @@ static void subtract_rent(class unit_data *ch, class unit_data *item, ubit32 pri
         }
         else
         {
-            money_transfer(ch, NULL, price, DEF_CURRENCY);
+            money_transfer(ch, nullptr, price, DEF_CURRENCY);
         }
     }
 }
@@ -74,7 +74,7 @@ static ubit32 subtract_recurse(class unit_data *ch,
         return 0;
     }
 
-    if (item == NULL)
+    if (item == nullptr)
     {
         return 0;
     }
@@ -116,14 +116,14 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
 
     assert(IS_PC(ch));
 
-    if (CHAR_DESCRIPTOR(ch) == NULL)
+    if (CHAR_DESCRIPTOR(ch) == nullptr)
     { /* If loading or similar, dont subtract! */
         return 0;
     }
 
     if (IS_MORTAL(ch))
     {
-        time_t t = time(0);
+        time_t t = time(nullptr);
 
         if ((t > savetime) && (savetime > 0))
         {
@@ -210,7 +210,7 @@ static int membuflen = 0, mempos;
 */
 
 /* Global variables */
-class file_index_type *g_slime_fi = NULL;
+class file_index_type *g_slime_fi = nullptr;
 
 /* save object */
 void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
@@ -357,7 +357,7 @@ char *ContentsFileName(const char *pName)
 /* Container = 1 if container should be saved also                    */
 void basic_save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer)
 {
-    class descriptor_data *tmp_descr = NULL;
+    class descriptor_data *tmp_descr = nullptr;
     FILE *pFile;
     char TmpName[MAX_INPUT_LENGTH + 1];
 
@@ -367,7 +367,7 @@ void basic_save_contents(const char *pFileName, class unit_data *unit, int fast,
     if (IS_CHAR(unit))
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
-        CHAR_DESCRIPTOR(unit) = NULL;
+        CHAR_DESCRIPTOR(unit) = nullptr;
     }
 
     CByteBuffer *pBuf = &g_FileBuffer;
@@ -424,7 +424,7 @@ int save_contents(const char *pFileName, class unit_data *unit, int fast, int bC
 
     basic_save_contents(name, unit, fast, bContainer);
 
-    return subtract_recurse(unit, UNIT_CONTAINS(unit), SECS_PER_REAL_DAY, NULL);
+    return subtract_recurse(unit, UNIT_CONTAINS(unit), SECS_PER_REAL_DAY, nullptr);
 }
 
 /* From the block_file 'bf' at index 'blk_idx' load the objects    */
@@ -439,28 +439,28 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     class unit_data *pnew, *pnew_tmp, *pstack[25];
     int len, init;
     int frame, n;
-    class descriptor_data *tmp_descr = NULL;
+    class descriptor_data *tmp_descr = nullptr;
     int equip_ok;
     FILE *pFile;
-    class unit_data *topu = NULL;
+    class unit_data *topu = nullptr;
 
     CByteBuffer InvBuf;
     InvBuf.Clear();
 
-    assert(g_slime_fi != NULL);
+    assert(g_slime_fi != nullptr);
 
     pFile = fopen(pFileName, "rb");
 
-    if (pFile == NULL)
+    if (pFile == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     len = fsize(pFile);
     if (len == 0)
     {
         fclose(pFile);
-        return NULL;
+        return nullptr;
     }
 
     n = InvBuf.FileRead(pFile, len);
@@ -469,7 +469,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     if (n != len)
     {
         slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
-        return NULL;
+        return nullptr;
     }
 
     frame = 0;
@@ -478,7 +478,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     if (unit && IS_CHAR(unit))
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
-        CHAR_DESCRIPTOR(unit) = NULL;
+        CHAR_DESCRIPTOR(unit) = nullptr;
     }
 
     for (init = TRUE; InvBuf.GetReadPosition() < InvBuf.GetLength();)
@@ -512,7 +512,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
         fi = find_file_index(hn.zone, hn.unit);
 
-        pnew = NULL;
+        pnew = nullptr;
 
         equip_ok = TRUE;
 
@@ -529,7 +529,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
         }
         else /* uncompressed */
         {
-            if ((fi == NULL) || is_slimed(fi))
+            if ((fi == nullptr) || is_slimed(fi))
             {
                 slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
                 pnew = read_unit(g_slime_fi); // Inserts unit into glist
@@ -541,14 +541,14 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                     break;
                 }
 
-                if (pnew->fi == NULL)
+                if (pnew->fi == nullptr)
                 {
                     pnew->set_fi(g_slime_fi);
                 }
             }
             else
             {
-                pnew_tmp = NULL;
+                pnew_tmp = nullptr;
                 pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->name, fi->zone->name));
                 if (g_nCorrupt)
                 {
@@ -575,7 +575,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             topu = pnew;
             init = FALSE;
         }
-        if (pstack[frame] == NULL)
+        if (pstack[frame] == nullptr)
         {
             if (UNIT_IN(pnew))
             {
@@ -587,7 +587,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             }
         }
 
-        UNIT_IN(pnew) = NULL;
+        UNIT_IN(pnew) = nullptr;
         if (pnew == pstack[frame])
         {
             slog(LOG_ALL, 0, "ERROR. Loading inventory, recursive linking. Please report.");

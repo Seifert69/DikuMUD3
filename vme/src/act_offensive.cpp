@@ -30,7 +30,7 @@ void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
         return;
     }
 
-    victim = find_unit(ch, &argument, 0, FIND_UNIT_SURRO);
+    victim = find_unit(ch, &argument, nullptr, FIND_UNIT_SURRO);
 
     if (!victim || !IS_CHAR(victim))
     {
@@ -77,7 +77,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         return;
     }
 
-    victim = find_unit(ch, &argument, 0, FIND_UNIT_SURRO);
+    victim = find_unit(ch, &argument, nullptr, FIND_UNIT_SURRO);
 
     if (!victim || !IS_CHAR(victim))
     {
@@ -102,7 +102,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         if (death)
         {
             send_death(ch);
-            class dilprg *prg = dil_copy_template(death, victim, NULL);
+            class dilprg *prg = dil_copy_template(death, victim, nullptr);
 
             if (prg)
             {

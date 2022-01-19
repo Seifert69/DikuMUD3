@@ -89,7 +89,7 @@ static void set_owner(class unit_data *obj, struct alias_head *ah, class unit_da
 static class extra_descr_data *make_alias_extra(class unit_data *u)
 {
     class extra_descr_data *exd;
-    static const char *aliaslist[] = {"$alias", NULL};
+    static const char *aliaslist[] = {"$alias", nullptr};
 
     exd = UNIT_EXTRA(u).find_raw("$alias");
 
@@ -98,7 +98,7 @@ static class extra_descr_data *make_alias_extra(class unit_data *u)
         return exd;
     }
 
-    exd = new extra_descr_data(aliaslist, NULL);
+    exd = new extra_descr_data(aliaslist, nullptr);
     UNIT_EXTRA(u).add(exd);
 
     return exd;
@@ -150,7 +150,7 @@ static char *parse_alias(char *src, char *arg)
 
         if (cnew - buf >= (sbit32)sizeof(buf) / 2 - 1)
         {
-            return NULL; /* we wrote too much, so abort */
+            return nullptr; /* we wrote too much, so abort */
         }
     }
 
@@ -261,7 +261,7 @@ static int print_alias(struct trie_type *t, class unit_data *ch)
  */
 static int add_alias(struct alias_head *ah, char *key, char *val, bool single)
 {
-    struct alias_t *al = NULL, *tmp_al;
+    struct alias_t *al = nullptr, *tmp_al;
 
     /* There is already an alias for key - Delete it */
     if (single && ah->trie && (al = (struct alias_t *)search_trie(key, ah->trie)))
@@ -289,7 +289,7 @@ static int add_alias(struct alias_head *ah, char *key, char *val, bool single)
 /* Delete an alias, using the free_alias procedure */
 static bool del_alias(struct alias_head *ah, char *key)
 {
-    struct alias_t *al = NULL;
+    struct alias_t *al = nullptr;
 
     if (ah->trie && (al = (struct alias_t *)search_trie(key, ah->trie)))
     {
@@ -311,7 +311,7 @@ static bool del_alias(struct alias_head *ah, char *key)
 static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
 {
     char *tmp, *sc, comm[MAX_INPUT_LENGTH + 2];
-    struct alias_t *tmp_al = NULL;
+    struct alias_t *tmp_al = nullptr;
     ubit8 res = 0;
     static ubit8 check_count = 0;
 
@@ -375,7 +375,7 @@ static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
 static bool alias_is_ok(struct alias_head *ah, char *key, char *val, class unit_data *ch)
 {
     char *tmp;
-    struct alias_t *al = NULL;
+    struct alias_t *al = nullptr;
     int count;
 
     if (strlen(key) > MAX_ALIAS_LENGTH)
@@ -501,7 +501,7 @@ static struct alias_head *str_to_alias(const char *str)
 
     CREATE(ah, struct alias_head, 1);
     ah->char_count = 0;
-    ah->trie = NULL;
+    ah->trie = nullptr;
     strcpy(ah->owner, "none");
 
     if (str)
@@ -551,7 +551,7 @@ static struct alias_head *str_to_alias(const char *str)
 static void cmd_alias(class unit_data *ch, char *arg, struct alias_head *alias_h)
 {
     char comm[MAX_INPUT_LENGTH + 1];
-    struct alias_t *al = NULL;
+    struct alias_t *al = nullptr;
 
     if (str_is_empty(arg))
     {
@@ -574,7 +574,7 @@ static void cmd_alias(class unit_data *ch, char *arg, struct alias_head *alias_h
     if (str_is_empty(arg))
     {
         /* No further arguments lists this alias, if defined */
-        if (alias_h->trie == NULL || (al = (struct alias_t *)search_trie(comm, alias_h->trie)) == NULL)
+        if (alias_h->trie == nullptr || (al = (struct alias_t *)search_trie(comm, alias_h->trie)) == nullptr)
         {
             act("No alias defined for `$2t'.", A_ALWAYS, ch, comm, cActParameter(), TO_CHAR);
         }
@@ -643,17 +643,17 @@ static void cmd_claim(class unit_data *ch, char *arg, class unit_data *obj, stru
 
 static int local_dictionary(struct spec_arg *sarg)
 {
-    char *pcomm = NULL, *cmd_array[256];
+    char *pcomm = nullptr, *cmd_array[256];
     ubit16 i;
-    struct alias_t *al = NULL;
+    struct alias_t *al = nullptr;
     struct alias_head *alias_h;
     class extra_descr_data *exd;
 
     /* specproc initialization */
-    if ((alias_h = (struct alias_head *)sarg->fptr->data) == NULL)
+    if ((alias_h = (struct alias_head *)sarg->fptr->data) == nullptr)
     {
         exd = UNIT_EXTRA(sarg->owner).find_raw("$alias");
-        sarg->fptr->data = str_to_alias(exd ? exd->descr.c_str() : NULL);
+        sarg->fptr->data = str_to_alias(exd ? exd->descr.c_str() : nullptr);
         alias_h = (struct alias_head *)sarg->fptr->data;
     }
 
@@ -665,7 +665,7 @@ static int local_dictionary(struct spec_arg *sarg)
             free_trie(alias_h->trie, free_alias);
         }
         FREE(alias_h);
-        sarg->fptr->data = NULL;
+        sarg->fptr->data = nullptr;
         return SFR_BLOCK;
     }
 
@@ -730,7 +730,8 @@ static int local_dictionary(struct spec_arg *sarg)
      *  as the user might have typed `in', which the interpreter expands
      *  to `inventory' in the cmd->cmd_str.
      */
-    if (alias_h->trie == NULL || (al = (struct alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->last_cmd, alias_h->trie)) == NULL)
+    if (alias_h->trie == nullptr ||
+        (al = (struct alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->last_cmd, alias_h->trie)) == nullptr)
     {
         return SFR_SHARE;
     }

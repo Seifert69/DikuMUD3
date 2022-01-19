@@ -67,7 +67,7 @@ int hit_probability_table[] = /* Determine by using 2d8 */
      2,  /* 15..16 => 4.68% for feet   */
      1}; // 64 total
 
-const char *g_professions[PROFESSION_MAX + 1] = {PROFESSION_STRINGS, NULL};
+const char *g_professions[PROFESSION_MAX + 1] = {PROFESSION_STRINGS, nullptr};
 
 const char *g_pc_races[PC_RACE_MAX + 1];
 const char *g_pc_race_adverbs[PC_RACE_MAX + 1];
@@ -582,7 +582,7 @@ void profession_init(void)
 
     for (i = 0; i < ln; i++)
     {
-        g_professions[i] = NULL;
+        g_professions[i] = nullptr;
     }
 }
 
@@ -603,7 +603,7 @@ static void profession_read(void)
     while (!feof(fl))
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             continue;
         }
@@ -618,7 +618,7 @@ static void profession_read(void)
             str_lower(pTmp);
         }
 
-        if (pCh == NULL || str_is_empty(pCh))
+        if (pCh == nullptr || str_is_empty(pCh))
         {
             continue;
         }
@@ -682,7 +682,7 @@ static void race_read(void)
     while (!feof(fl))
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             continue;
         }
@@ -697,7 +697,7 @@ static void race_read(void)
             str_lower(pTmp);
         }
 
-        if (pCh == NULL || str_is_empty(pCh))
+        if (pCh == nullptr || str_is_empty(pCh))
         {
             continue;
         }
@@ -723,7 +723,7 @@ static void race_read(void)
             if (g_pc_races[idx])
             {
                 free((char *)g_pc_races[idx]);
-                g_pc_races[idx] = NULL;
+                g_pc_races[idx] = nullptr;
             }
             g_pc_races[idx] = str_dup(pCh);
         }
@@ -732,7 +732,7 @@ static void race_read(void)
             if (g_pc_race_adverbs[idx])
             {
                 free((char *)g_pc_race_adverbs[idx]);
-                g_pc_race_adverbs[idx] = NULL;
+                g_pc_race_adverbs[idx] = nullptr;
             }
             g_pc_race_adverbs[idx] = str_dup(pCh);
         }
@@ -833,15 +833,15 @@ static void race_init(void)
     {
         memset(&g_race_info[i], 0, sizeof(struct race_info_type));
 
-        g_pc_races[i] = NULL;
-        g_pc_race_adverbs[i] = NULL;
+        g_pc_races[i] = nullptr;
+        g_pc_race_adverbs[i] = nullptr;
     }
 
-    g_pc_races[PC_RACE_MAX] = NULL;
-    g_pc_race_adverbs[PC_RACE_MAX] = NULL;
+    g_pc_races[PC_RACE_MAX] = nullptr;
+    g_pc_race_adverbs[PC_RACE_MAX] = nullptr;
 
     g_playerinit_tmpl = find_dil_template("playerinit@basis");
-    if (g_playerinit_tmpl == NULL)
+    if (g_playerinit_tmpl == nullptr)
     {
         slog(LOG_ALL, 0, "No 'playerinit@basis' DIL template.");
     }
@@ -850,12 +850,12 @@ static void race_init(void)
         if (g_playerinit_tmpl->argc != 0)
         {
             slog(LOG_ALL, 0, "playerinit@basis(); not defined correctly.");
-            g_playerinit_tmpl = NULL;
+            g_playerinit_tmpl = nullptr;
         }
     }
 
     g_nanny_dil_tmpl = find_dil_template("nanny@basis");
-    if (g_nanny_dil_tmpl == NULL)
+    if (g_nanny_dil_tmpl == nullptr)
     {
         slog(LOG_ALL, 0, "No 'nanny@basis' DIL template.");
     }
@@ -864,7 +864,7 @@ static void race_init(void)
         if ((g_nanny_dil_tmpl->argc != 1) || (g_nanny_dil_tmpl->argt[0] != DILV_SP))
         {
             slog(LOG_ALL, 0, "nanny@basis(string); not defined correctly.");
-            g_nanny_dil_tmpl = NULL;
+            g_nanny_dil_tmpl = nullptr;
         }
     }
 }
@@ -895,7 +895,7 @@ static void ability_read(void)
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
 
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             continue;
         }
@@ -912,7 +912,7 @@ static void ability_read(void)
         str_lower(pTmp);
         strip_trailing_blanks(pTmp);
 
-        if (pCh == NULL || str_is_empty(pCh))
+        if (pCh == nullptr || str_is_empty(pCh))
         {
             continue;
         }
@@ -938,7 +938,7 @@ static void ability_read(void)
             if (g_AbiColl.text[idx])
             {
                 free((char *)g_AbiColl.text[idx]);
-                g_AbiColl.text[idx] = NULL;
+                g_AbiColl.text[idx] = nullptr;
             }
             g_AbiColl.text[idx] = str_dup(pCh);
         }
@@ -1018,7 +1018,7 @@ static void ability_init(void)
         g_AbiColl.tree[i].bAutoTrain = TRUE;
         g_AbiColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
-        g_AbiColl.text[i] = NULL;
+        g_AbiColl.text[i] = nullptr;
 
         for (int j = 0; j < PC_RACE_MAX; j++)
         {
@@ -1041,7 +1041,7 @@ static void ability_init(void)
 
     g_AbiColl.tree[ABIL_TREE_MAX].parent = -1;
     g_AbiColl.tree[ABIL_TREE_MAX].isleaf = FALSE;
-    g_AbiColl.text[ABIL_TREE_MAX] = NULL;
+    g_AbiColl.text[ABIL_TREE_MAX] = nullptr;
 }
 
 bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem)
@@ -1132,7 +1132,7 @@ static void weapon_read(void)
     while (!feof(fl))
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             continue;
         }
@@ -1145,7 +1145,7 @@ static void weapon_read(void)
         }
 
         pCh = strchr(pTmp, '=');
-        if (pCh == NULL)
+        if (pCh == nullptr)
         {
             slog(LOG_ALL, 0, "Weapon boot odd line, no equal sign: %s", pTmp);
             continue;
@@ -1189,7 +1189,7 @@ static void weapon_read(void)
                     slog(LOG_ALL, 0, "Weapon boot error: Weapon name alreay assigned as %s and replaced as %s", g_WpnColl.text[idx], pCh);
                 }
                 free((char *)g_WpnColl.text[idx]);
-                g_WpnColl.text[idx] = NULL;
+                g_WpnColl.text[idx] = nullptr;
             }
             g_WpnColl.text[idx] = str_dup(pCh);
         }
@@ -1487,7 +1487,7 @@ static void weapon_init(void)
 
     g_WpnColl.tree[WPN_TREE_MAX].parent = -1;
     g_WpnColl.tree[WPN_TREE_MAX].isleaf = FALSE;
-    g_WpnColl.text[WPN_TREE_MAX] = NULL;
+    g_WpnColl.text[WPN_TREE_MAX] = nullptr;
 }
 
 void weapon_dump(void)
@@ -1559,7 +1559,7 @@ static void skill_init(void)
         g_SkiColl.tree[i].bAutoTrain = TRUE;
         g_SkiColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
-        g_SkiColl.text[i] = NULL;
+        g_SkiColl.text[i] = nullptr;
 
         /* Racial skills are all zero */
         for (int j = 0; j < PC_RACE_MAX; j++)
@@ -1590,7 +1590,7 @@ static void skill_init(void)
 
     g_SkiColl.tree[SKI_TREE_MAX].parent = -1;
     g_SkiColl.tree[SKI_TREE_MAX].isleaf = FALSE;
-    g_SkiColl.text[SKI_TREE_MAX] = NULL;
+    g_SkiColl.text[SKI_TREE_MAX] = nullptr;
 }
 
 void boot_skill(void)

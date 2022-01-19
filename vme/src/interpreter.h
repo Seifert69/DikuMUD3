@@ -80,7 +80,11 @@ void argument_interpreter(const char *argument, char *first_arg, char *second_ar
 int unit_function_scan(class unit_data *u, struct spec_arg *sarg);
 int function_activate(class unit_data *u, struct spec_arg *sarg);
 #ifdef DMSERVER
-int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class unit_data *extra_target = NULL, const char *to = NULL);
+int basic_special(class unit_data *ch,
+                  struct spec_arg *sarg,
+                  ubit16 mflt,
+                  class unit_data *extra_target = nullptr,
+                  const char *to = nullptr);
 #endif
 int send_preprocess(class unit_data *ch, const struct command_info *cmd, char *arg);
 void send_done(class unit_data *activator,
@@ -89,16 +93,16 @@ void send_done(class unit_data *activator,
                int i,
                const struct command_info *cmd,
                const char *arg,
-               class unit_data *extra_target = NULL,
-               const char *to = NULL);
+               class unit_data *extra_target = nullptr,
+               const char *to = nullptr);
 int send_ack(class unit_data *activator,
              class unit_data *medium,
              class unit_data *target,
              int *i,
              const struct command_info *cmd,
              const char *arg,
-             class unit_data *extra_target = NULL,
-             char *to = NULL);
+             class unit_data *extra_target = nullptr,
+             char *to = nullptr);
 int send_message(class unit_data *ch, char *arg);
 int send_edit(class unit_data *ch, char *arg);
 int send_death(class unit_data *ch);

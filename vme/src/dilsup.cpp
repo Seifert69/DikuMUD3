@@ -32,12 +32,13 @@ int pay_point_charlie(class unit_data *ch, class unit_data *to)
                 account_paypoint(ch);
                 return FALSE;
             }
-            else if ((UNIT_FI_ZONE(to)->payonly == 2) && (PC_ACCOUNT(ch).flatrate < (ubit32)time(0)))
+            else if ((UNIT_FI_ZONE(to)->payonly == 2) && (PC_ACCOUNT(ch).flatrate < (ubit32)time(nullptr)))
             {
                 account_paypoint(ch);
                 return FALSE;
             }
-            else if ((UNIT_FI_ZONE(to)->payonly == 3) && ((PC_ACCOUNT(ch).total_credit > 0) || (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))))
+            else if ((UNIT_FI_ZONE(to)->payonly == 3) &&
+                     ((PC_ACCOUNT(ch).total_credit > 0) || (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))))
             {
                 account_paypoint(ch);
                 return FALSE;
@@ -160,7 +161,7 @@ static const char *wear_size(class unit_data *ch, class unit_data *obj, int var)
         return "too large";
     }
 
-    return NULL;
+    return nullptr;
 }
 
 const char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword)
@@ -218,7 +219,7 @@ const char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword
             }
             else
             {
-                return NULL;
+                return nullptr;
             }
 
         case WEAR_SHIELD:
@@ -239,5 +240,5 @@ const char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword
             return wear_size(ch, obj, 50);
     }
 
-    return NULL;
+    return nullptr;
 }
