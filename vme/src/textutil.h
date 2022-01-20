@@ -40,8 +40,8 @@ char *spc(int n);
 char *str_repeatchar(int n, char c);
 
 char *str_line(const char *, char *);
-char *itoa(int n);
-char *ltoa(long n);
+const char *itoa(int n);
+const char *ltoa(long n);
 int str_ccmp(const char *s, const char *d);
 int str_nccmp(const char *s, const char *d, int n);
 char *str_dup(const char *source);

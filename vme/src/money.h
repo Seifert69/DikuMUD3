@@ -63,13 +63,13 @@ currency_t local_currency(class unit_data *unit);
 /* Print out representation of money-object with the amount amt .
  * (amt == 0 means all)
  */
-char *obj_money_string(class unit_data *obj, amount_t amt);
+const char *obj_money_string(class unit_data *obj, amount_t amt);
 
 /* Print out optimal representation of amt in currency
  *
  * Impossible amounts are converted automagically
  */
-char *money_string(amount_t amt, currency_t currency, ubit1 verbose);
+const char *money_string(amount_t amt, currency_t currency, ubit1 verbose);
 
 /* How many `coins' of given money-object can char carry, resp. unit contain
  *   (Naturally the amount of money is an upper bound)

@@ -54,8 +54,6 @@ void account_cclog(class unit_data *ch, int amount)
 static void account_log(char action, class unit_data *god, class unit_data *pc, int amount)
 {
     time_t now = time(nullptr);
-    char *c;
-    char buf[1024];
     ubit32 gid, pid, total, crc, vxor;
     FILE *f;
 
@@ -69,15 +67,15 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
     {
         error(HERE, "Unable to seek in account log.");
     }
-    snprintf(buf, sizeof(buf), "%08x", next_crc);
 
-    if (fwrite(buf, sizeof(char), 8, f) != 8)
+    if (fprintf(f, "%08x", next_crc) != 8)
     {
         error(HERE, "Unable to write 1 in account log.");
     }
 
-    c = buf;
-    sprintf(c, "%c %-15s %-15s %8d ", action, UNIT_NAME(god), UNIT_NAME(pc), amount);
+    fseek(f, 0L, SEEK_END);
+
+    fprintf(f, "%c %-15s %-15s %8d ", action, UNIT_NAME(god), UNIT_NAME(pc), amount);
 
     if (IS_PC(god))
     {
@@ -99,12 +97,7 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
     crc = gid + pid + total + amount + now;
     crc ^= vxor << 4;
 
-    TAIL(c);
-    sprintf(c, "%01x%08x%08x%08x%08x%08x%08x%08x%08x\n", number(0, 15), ~vxor, gid, crc, pid, amount, total, next_crc, (ubit32)now);
-
-    fseek(f, 0L, SEEK_END);
-
-    fprintf(f, "%s", buf);
+    fprintf(f, "%01x%08x%08x%08x%08x%08x%08x%08x%08x\n", number(0, 15), ~vxor, gid, crc, pid, amount, total, next_crc, (ubit32)now);
 
     fflush(f);
 }
@@ -172,8 +165,6 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
 
 void account_global_stat(class unit_data *ch)
 {
-    char buf[100 * TIME_GRANULARITY];
-    char *b;
     int i, j;
 
     if (!g_cServerConfig.isAccounting())
@@ -192,30 +183,26 @@ void account_global_stat(class unit_data *ch)
                                    (float)g_cAccountConfig.m_nAccountFree / 100.0);
     send_to_char(msg, ch);
 
-    b = buf;
-    snprintf(buf, sizeof(buf), "    Time    Sun  Mon  Tir  Wed  Thu  Fri  Sat\n\r");
-    TAIL(b);
+    std::string stats("    Time    Sun  Mon  Tir  Wed  Thu  Fri  Sat\n\r");
 
     for (i = 0; i < TIME_GRANULARITY; i++)
     {
+        boost::format line("%4d-%4d%5d%5d%5d%5d%5d%5d%5d\n\r");
         int st, et;
 
         st = index_to_time(i);
         et = st + MINUTE_GRANULARITY - 1;
 
-        sprintf(b, "%4d-%4d", st, et);
-        TAIL(b);
+        line % st % et;
 
         for (j = 0; j < 7; j++)
         {
-            sprintf(b, "%5d", day_charge[j][i]);
-            TAIL(b);
+            line % day_charge[j][i];
         }
-        strcat(b, "\n\r");
-        TAIL(b);
+        stats += line.str();
     }
 
-    page_string(CHAR_DESCRIPTOR(ch), buf);
+    page_string(CHAR_DESCRIPTOR(ch), stats);
 }
 
 void account_overdue(const class unit_data *ch)

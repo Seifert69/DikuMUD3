@@ -75,10 +75,10 @@ currency_t local_currency(class unit_data *unit)
 /*  Print out an optimal representation of currency
  *  e.g.: (1230, DEF_CURRENCY) -> '10 copper coins and 3 iron coins'
  */
-char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
+const char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
 {
-    static char buf[512];
-    char tmp[256];
+    static std::string buf;
+    buf.clear();
     struct money_type *money_tmp[MAX_MONEY + 1];
     sbit8 i, nr = 0, count = 0;
     amount_t times;
@@ -92,35 +92,30 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
         }
     }
 
-    *buf = *tmp = '\0';
-
     amt = adjust_money(amt, currency);
 
     while (nr--)
     {
         if ((times = (amt / money_tmp[nr]->relative_value)))
         {
-            strcat(buf, tmp);
             amt -= money_tmp[nr]->relative_value * times;
 
             if (verbose)
             {
                 if (times == 1)
                 {
-                    snprintf(tmp,
-                             sizeof(tmp),
-                             "%s %s, ",
-                             strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a",
-                             money_tmp[nr]->strings[0]);
+                    buf += diku::format_to_str("%s %s, ",
+                                               strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a",
+                                               money_tmp[nr]->strings[0]);
                 }
                 else
                 {
-                    snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->strings[money_tmp[nr]->pl_idx]);
+                    buf += diku::format_to_str("%d %s, ", (int)times, money_tmp[nr]->strings[money_tmp[nr]->pl_idx]);
                 }
             }
             else
             { /* Short version for lists... */
-                snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->abbrev);
+                buf += diku::format_to_str("%d %s, ", (int)times, money_tmp[nr]->abbrev);
             }
 
             count++;
@@ -129,18 +124,19 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
 
     if (count == 0)
     { /* This shouldn't happen (I guess) */
-        strcpy(buf, "nothing");
-        return buf;
-    }
-    tmp[strlen(tmp) - 2] = '\0'; /* Cut off last comma */
-
-    if (count > 1)
-    { /* Kill buf's last comma and put in `and' */
-        strcpy(&buf[strlen(buf) - 2], " and ");
+        buf = "nothing";
+        return buf.c_str();
     }
 
-    strcat(buf, tmp);
-    return buf;
+    /* Kill buf's last comma and put in `and' */
+    auto len = buf.length();
+    if (len > 2 && buf[len - 2] == ',' && buf[len - 1] == ' ')
+    {
+        buf.erase(len - 2);
+        buf += " and ";
+    }
+
+    return buf.c_str();
 }
 
 #ifndef VMC_SRC
@@ -696,9 +692,9 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 }
 
 /* Print out representation of supplied money-object with the amount amt */
-char *obj_money_string(class unit_data *obj, amount_t amt)
+const char *obj_money_string(class unit_data *obj, amount_t amt)
 {
-    static char buf[128];
+    static std::string buf;
     struct money_type *money_tmp;
 
     assert(IS_MONEY(obj));
@@ -712,14 +708,14 @@ char *obj_money_string(class unit_data *obj, amount_t amt)
 
     if (amt == 1)
     {
-        snprintf(buf, sizeof(buf), "%s %s", strchr("aeiou", *(money_tmp->strings[0])) ? "an" : "a", money_tmp->strings[0]);
+        buf = diku::format_to_str("%s %s", strchr("aeiou", *(money_tmp->strings[0])) ? "an" : "a", money_tmp->strings[0]);
     }
     else
     {
-        snprintf(buf, sizeof(buf), "%d %s", (int)amt, money_tmp->strings[money_tmp->pl_idx]);
+        buf = diku::format_to_str("%d %s", (int)amt, money_tmp->strings[money_tmp->pl_idx]);
     }
 
-    return buf;
+    return buf.c_str();
 }
 
 amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money)

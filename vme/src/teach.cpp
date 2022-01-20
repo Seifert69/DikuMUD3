@@ -265,46 +265,32 @@ int teaches_index(struct skill_teach_type *teaches_skills, int node)
 
 const char *trainrestricted(class unit_data *pupil, struct profession_cost *cost_entry, int minguildlevel)
 {
-    static char buf[MAX_STRING_LENGTH];
-    char *c;
-
     assert(IS_PC(pupil));
-
-    strcpy(buf, "[REQ: ");
-    c = buf;
-    TAIL(c);
-
+    static std::string buf;
+    buf.clear();
     if (PC_VIRTUAL_LEVEL(pupil) < cost_entry->min_level)
     {
-        sprintf(c, "Level:%d ", cost_entry->min_level);
-        TAIL(c);
+        buf += diku::format_to_str("Level:%d ", cost_entry->min_level);
     }
 
     if (char_guild_level(pupil) < minguildlevel)
     {
-        sprintf(c, "Guild level:%d ", minguildlevel);
-        TAIL(c);
+        buf += diku::format_to_str("Guild level:%d ", minguildlevel);
     }
 
     for (int i = 0; i < ABIL_TREE_MAX; i++)
     {
         if (CHAR_ABILITY(pupil, i) < cost_entry->min_abil[i])
         {
-            sprintf(c, "%s:%d ", g_AbiColl.text[i], cost_entry->min_abil[i]);
-            TAIL(c);
+            buf += diku::format_to_str("%s:%d ", g_AbiColl.text[i], cost_entry->min_abil[i]);
         }
     }
 
-    strcat(c, "]");
-
-    if (strlen(buf) == 7)
+    if (!buf.empty())
     {
-        return "";
+        buf = "[REQ: " + buf + ']';
     }
-    else
-    {
-        return buf;
-    }
+    return buf.c_str();
 }
 
 void info_show_one(class unit_data *teacher,

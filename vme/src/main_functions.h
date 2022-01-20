@@ -2,6 +2,8 @@
 
 #include "event.h"
 
+#include <string>
+
 // Prototypes
 void ShowUsage(const char *c);
 void type_validate_64(void);
@@ -18,7 +20,7 @@ void timewarp_end(void *p1, void *p2);
 #ifdef PROFILE
 extern char g_etext;
 #endif
-extern char g_world_boottime[64];
+extern std::string g_world_boottime;
 extern class descriptor_data *g_descriptor_list;
 extern class descriptor_data *g_next_to_process;
 extern eventqueue g_events;

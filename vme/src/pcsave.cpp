@@ -13,6 +13,7 @@
 #include "dilrun.h"
 #include "error.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "mobact.h"
@@ -53,16 +54,19 @@ void assign_player_file_index(unit_data *pc)
     }
 }
 
-char *PlayerFileName(const char *pName)
+std::string PlayerFileName(const char *pName)
 {
-    static char Buf[MAX_INPUT_LENGTH + 1 + 512];
-    char TmpBuf[MAX_INPUT_LENGTH + 1];
+    std::string TmpBuf;
 
-    strcpy(TmpBuf, pName);
-    str_lower(TmpBuf);
-    snprintf(Buf, sizeof(Buf), "%s%c/%s", g_cServerConfig.getPlyDir().c_str(), *TmpBuf, TmpBuf);
-
-    return Buf;
+    if (pName)
+    {
+        TmpBuf = pName;
+    }
+    for (auto &ch : TmpBuf)
+    {
+        ch = std::tolower(ch);
+    }
+    return diku::format_to_str("%s%c/%s", g_cServerConfig.getPlyDir(), *TmpBuf.c_str(), TmpBuf);
 }
 
 /* Return TRUE if exists */
@@ -101,7 +105,7 @@ int delete_inventory(const char *pName)
 /* Return TRUE if deleted */
 int delete_player(const char *pName)
 {
-    if (remove(PlayerFileName(pName)))
+    if (remove(PlayerFileName(pName).c_str()))
     {
         return FALSE;
     }
@@ -123,7 +127,7 @@ sbit32 find_player_id(char *pName)
         return -1;
     }
 
-    pFile = fopen(PlayerFileName(pName), "rb");
+    pFile = fopen(PlayerFileName(pName).c_str(), "rb");
 
     if (pFile == nullptr)
     {
@@ -221,7 +225,7 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
        crashes, it doesn't garble the player. At least then, the
        old file will remain intact. */
 
-    n = rename(tmp_player_name.c_str(), PlayerFileName(pName));
+    n = rename(tmp_player_name.c_str(), PlayerFileName(pName).c_str());
     assert(n == 0);
 }
 
@@ -484,7 +488,7 @@ class unit_data *load_player(const char *pName)
         return nullptr;
     }
 
-    pFile = fopen(PlayerFileName(pName), "rb");
+    pFile = fopen(PlayerFileName(pName).c_str(), "rb");
     if (pFile == nullptr)
     {
         return nullptr;

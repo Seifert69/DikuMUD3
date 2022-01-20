@@ -387,8 +387,6 @@ class unit_data *cCombat::Opponent(int i)
 
 void cCombat::status(const class unit_data *god)
 {
-    int i;
-
     auto msg = diku::format_to_str("Combat Status of '%s':<br/>"
                                    "Combat Speed [%d]  Turn [%d]<br/>"
                                    "Melee Opponent '%s'<br/>"
@@ -399,7 +397,7 @@ void cCombat::status(const class unit_data *god)
                                    CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
                                    nNoOpponents);
 
-    for (i = 0; i < nNoOpponents; i++)
+    for (int i = 0; i < nNoOpponents; i++)
     {
         msg += diku::format_to_str("   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
     }
