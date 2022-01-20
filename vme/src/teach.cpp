@@ -7,6 +7,7 @@
 
 #include "comm.h"
 #include "common.h"
+#include "formatter.h"
 #include "guild.h"
 #include "handler.h"
 #include "interpreter.h"
@@ -320,8 +321,6 @@ void info_show_one(class unit_data *teacher,
                    struct profession_cost *cost_entry,
                    std::vector<std::pair<int, std::string>> &vect)
 {
-    char buf[256];
-
     if (isleaf)
     {
         const char *req;
@@ -329,27 +328,26 @@ void info_show_one(class unit_data *teacher,
 
         if (*req)
         {
-            snprintf(buf, sizeof(buf), "<div class='ca'>%s     %-20s %s</div><br/>", spc(4 * indent), text, req);
-            vect.push_back(std::make_pair(1000, buf));
+            auto str = diku::format_to_str("<div class='ca'>%s     %-20s %s</div><br/>", spc(4 * indent), text, req);
+            vect.push_back(std::make_pair(1000, str));
             return;
         }
 
         if (current_points >= max_level)
         {
-            snprintf(buf, sizeof(buf), "<div class='ca'>%s%3d%% %-20s [Teacher at max]</div><br/>", spc(4 * indent), current_points, text);
-            vect.push_back(std::make_pair(1002, buf));
+            auto str =
+                diku::format_to_str("<div class='ca'>%s%3d%% %-20s [Teacher at max]</div><br/>", spc(4 * indent), current_points, text);
+            vect.push_back(std::make_pair(1002, str));
             return;
         }
 
         if (next_point == 0)
         {
-            snprintf(buf,
-                     sizeof(buf),
-                     "<div class='ca'>%s%3d%% %-20s [Practice next level]</div><br/>",
-                     spc(4 * indent),
-                     current_points,
-                     text);
-            vect.push_back(std::make_pair(1001, buf));
+            auto str = diku::format_to_str("<div class='ca'>%s%3d%% %-20s [Practice next level]</div><br/>",
+                                           spc(4 * indent),
+                                           current_points,
+                                           text);
+            vect.push_back(std::make_pair(1001, str));
         }
         else
         {
@@ -357,41 +355,37 @@ void info_show_one(class unit_data *teacher,
 
             if (IS_SET(PC_FLAGS(pupil), PC_EXPERT))
             {
-                snprintf(buf,
-                         sizeof(buf),
-                         "%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s] %s%s<br/>",
-                         next_point >= 20 ? "<div class='ca'>" : "",
-                         spc(4 * indent),
-                         current_points,
-                         text,
-                         current_points,
-                         max_level,
-                         next_point,
-                         money_string(money_round(TRUE, gold, currency, 1), currency, FALSE),
-                         std::string(lvl, '*').c_str(),
-                         next_point >= 20 ? "</div>" : "");
+                auto str = diku::format_to_str("%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s] %s%s<br/>",
+                                               next_point >= 20 ? "<div class='ca'>" : "",
+                                               spc(4 * indent),
+                                               current_points,
+                                               text,
+                                               current_points,
+                                               max_level,
+                                               next_point,
+                                               money_string(money_round(TRUE, gold, currency, 1), currency, FALSE),
+                                               std::string(lvl, '*').c_str(),
+                                               next_point >= 20 ? "</div>" : "");
+                vect.push_back(std::make_pair(next_point, str));
             }
             else
             {
-                snprintf(buf,
-                         sizeof(buf),
-                         "%s%s%3d%% %-20s [practice points %3d] %s%s<br/>",
-                         next_point >= 20 ? "<div class='ca'>" : "",
-                         spc(4 * indent),
-                         current_points,
-                         text,
-                         next_point,
-                         std::string(lvl, '*').c_str(),
-                         next_point >= 20 ? "</div>" : "");
+                auto str = diku::format_to_str("%s%s%3d%% %-20s [practice points %3d] %s%s<br/>",
+                                               next_point >= 20 ? "<div class='ca'>" : "",
+                                               spc(4 * indent),
+                                               current_points,
+                                               text,
+                                               next_point,
+                                               std::string(lvl, '*').c_str(),
+                                               next_point >= 20 ? "</div>" : "");
+                vect.push_back(std::make_pair(next_point, str));
             }
-
-            vect.push_back(std::make_pair(next_point, buf));
         }
     }
     else // category, not isleaf
     {
-        snprintf(buf, sizeof(buf), "%s     <a cmd='info #'>%s</a><br/>", spc(4 * indent), text);
-        vect.push_back(std::make_pair(-1, buf));
+        auto str = diku::format_to_str("%s     <a cmd='info #'>%s</a><br/>", spc(4 * indent), text);
+        vect.push_back(std::make_pair(-1, str));
     }
 }
 
@@ -735,7 +729,6 @@ int practice(class unit_data *teacher,
              int teach_index)
 {
     int cost;
-    char buf[512];
     currency_t currency = local_currency(teacher);
     amount_t amt;
 
@@ -743,15 +736,13 @@ int practice(class unit_data *teacher,
 
     if (!TREE_ISLEAF(pColl->tree, pckt->teaches[teach_index].node))
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "It is not possible to practice the category '%s'.<br/>"
-                 "The category is there to prevent you from being flooded with information.<br/>"
-                 "Try the command: 'info %s' on the category itself,<br/>"
-                 "to see which skills it contains.<br/>",
-                 pColl->text[pckt->teaches[teach_index].node],
-                 pColl->text[pckt->teaches[teach_index].node]);
-        send_to_char(buf, pupil);
+        auto msg = diku::format_to_str("It is not possible to practice the category '%s'.<br/>"
+                                       "The category is there to prevent you from being flooded with information.<br/>"
+                                       "Try the command: 'info %s' on the category itself,<br/>"
+                                       "to see which skills it contains.<br/>",
+                                       pColl->text[pckt->teaches[teach_index].node],
+                                       pColl->text[pckt->teaches[teach_index].node]);
+        send_to_char(msg, pupil);
         return TRUE;
     }
 
@@ -765,12 +756,10 @@ int practice(class unit_data *teacher,
     req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel);
     if (*req)
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "To practice %s you need to meet the following requirements %s.<br/>",
-                 pColl->text[pckt->teaches[teach_index].node],
-                 req);
-        send_to_char(buf, pupil);
+        auto msg = diku::format_to_str("To practice %s you need to meet the following requirements %s.<br/>",
+                                       pColl->text[pckt->teaches[teach_index].node],
+                                       req);
+        send_to_char(msg, pupil);
         return TRUE;
     }
 
@@ -794,8 +783,8 @@ int practice(class unit_data *teacher,
 
     if (*pTrainValues->practice_points < cost)
     {
-        snprintf(buf, sizeof(buf), pckt->msgs.not_enough_points, cost);
-        act(buf, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+        auto str = diku::format_to_str(pckt->msgs.not_enough_points, cost);
+        act(str.c_str(), A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
         if (CHAR_LEVEL(pupil) == START_LEVEL)
         {
             send_to_char("Beginners note: Go on adventure and gain a level.<br/>"
@@ -817,8 +806,8 @@ int practice(class unit_data *teacher,
 
     if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL && !char_can_afford(pupil, amt, currency))
     {
-        snprintf(buf, sizeof(buf), pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
-        act(buf, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+        auto str = diku::format_to_str(pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
+        act(str.c_str(), A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
         return TRUE;
     }
 
@@ -1124,8 +1113,8 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         if (is_command(sarg->cmd, "info"))
         {
             info_show_leaves(sarg->owner, sarg->activator, pColl, pckt->teaches, &TrainValues);
-            snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
-            send_to_char(buf, sarg->activator);
+            auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+            send_to_char(msg, sarg->activator);
         }
         else
         {
@@ -1144,8 +1133,8 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     if (str_ccmp(arg, "roots") == 0)
     {
         info_show_roots(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches);
-        snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
-        send_to_char(buf, sarg->activator);
+        auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+        send_to_char(msg, sarg->activator);
         return SFR_BLOCK;
     }
 
@@ -1153,8 +1142,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     {
         if (TrainValues.values == nullptr)
         {
-            snprintf(buf, sizeof(buf), "<br/>Please specify ability, skill, spell, weapon before the auto keyword.<br/>");
-            send_to_char(buf, sarg->activator);
+            send_to_char("<br/>Please specify ability, skill, spell, weapon before the auto keyword.<br/>", sarg->activator);
         }
         else
         {
@@ -1166,10 +1154,8 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 
             if (!exd)
             {
-                snprintf(buf,
-                         sizeof(buf),
-                         "Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>");
-                send_to_char(buf, sarg->activator);
+                send_to_char("Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>",
+                             sarg->activator);
                 return SFR_BLOCK;
             }
 
@@ -1194,12 +1180,10 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
                 }
             }
 
-            snprintf(buf,
-                     sizeof(buf),
-                     "<br/>Done auto practicing. You have %d ability and %d skill points left.<br/>",
-                     PC_ABILITY_POINTS(sarg->activator),
-                     PC_SKILL_POINTS(sarg->activator));
-            send_to_char(buf, sarg->activator);
+            auto msg = diku::format_to_str("<br/>Done auto practicing. You have %d ability and %d skill points left.<br/>",
+                                           PC_ABILITY_POINTS(sarg->activator),
+                                           PC_SKILL_POINTS(sarg->activator));
+            send_to_char(msg, sarg->activator);
         }
 
         return SFR_BLOCK;
@@ -1223,8 +1207,8 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     if (is_command(sarg->cmd, "info"))
     {
         info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs);
-        snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
-        send_to_char(buf, sarg->activator);
+        auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+        send_to_char(msg, sarg->activator);
     }
     else /* Practice! */
     {
@@ -1234,8 +1218,8 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         UNIT_MAX_HIT(sarg->activator) = hit_limit(sarg->activator);
 
         info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs);
-        snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
-        send_to_char(buf, sarg->activator);
+        auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+        send_to_char(msg, sarg->activator);
     }
 
     return SFR_BLOCK;

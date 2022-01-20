@@ -7,6 +7,7 @@
 
 #include "comm.h"
 #include "db.h"
+#include "formatter.h"
 #include "main_functions.h"
 #include "slog.h"
 
@@ -18,7 +19,6 @@ int check_reboot(void)
 {
     long tc;
     struct tm *t_info;
-    char buf[200];
     static int count = 12;
 
     tc = time(nullptr);
@@ -28,13 +28,11 @@ int check_reboot(void)
         count -= 2;
         if (count > 0)
         {
-            snprintf(buf,
-                     sizeof(buf),
-                     "ATTENTION: %s will automaticly reboot "
-                     "in %d minutes.<br/>",
-                     g_cServerConfig.getMudName().c_str(),
-                     count);
-            send_to_all(buf);
+            auto msg = diku::format_to_str("ATTENTION: %s will automaticly reboot "
+                                           "in %d minutes.<br/>",
+                                           g_cServerConfig.getMudName().c_str(),
+                                           count);
+            send_to_all(msg);
             return (1);
         }
         else
@@ -49,12 +47,10 @@ int check_reboot(void)
     if ((t_info->tm_hour + 1) == g_cServerConfig.getReboot() && (t_info->tm_min > 49))
     {
         count -= 2;
-        snprintf(buf,
-                 sizeof(buf),
-                 "ATTENTION: %s will automaticly reboot "
-                 "in 10 minutes.<br/>",
-                 g_cServerConfig.getMudName().c_str());
-        send_to_all(buf);
+        auto msg = diku::format_to_str("ATTENTION: %s will automaticly reboot "
+                                       "in 10 minutes.<br/>",
+                                       g_cServerConfig.getMudName().c_str());
+        send_to_all(msg);
         return (1);
     }
     return (0);

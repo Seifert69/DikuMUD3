@@ -9,6 +9,7 @@
 #include "db.h"
 #include "db_file.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "money.h"
@@ -564,10 +565,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
             if (pnew_tmp && pnew)
             {
-                char buf[MAX_STRING_LENGTH];
-                snprintf(buf, sizeof(buf), "The slimy remains of %s", TITLENAME(pnew_tmp));
-                UNIT_OUT_DESCR(pnew) = (buf);
-                UNIT_TITLE(pnew) = (buf);
+                auto str = diku::format_to_str("The slimy remains of %s", TITLENAME(pnew_tmp));
+                UNIT_OUT_DESCR(pnew) = str;
+                UNIT_TITLE(pnew) = str;
                 UNIT_NAMES(pnew).PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));
                 delete pnew_tmp;
             }

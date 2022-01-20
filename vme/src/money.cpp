@@ -10,6 +10,7 @@
 #include "comm.h"
 #include "db.h"
 #include "error.h"
+#include "formatter.h"
 #include "handler.h"
 #include "slog.h"
 #include "structs.h"
@@ -182,7 +183,6 @@ static amount_t calc_money(amount_t v1, char op, amount_t v2)
 /* Set all the values on money correctly according to amount - return money */
 class unit_data *set_money(class unit_data *money, amount_t amt)
 {
-    char tmp[256];
     ubit32 i;
 
     assert(IS_MONEY(money));
@@ -254,23 +254,19 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
 
     if (amt == 1)
     {
-        snprintf(tmp, sizeof(tmp), "A single %s has been left here.", money_singularis(money));
+        UNIT_OUT_DESCR(money) = diku::format_to_str("A single %s has been left here.", money_singularis(money));
     }
     else
     {
-        snprintf(tmp,
-                 sizeof(tmp),
-                 "A %s %s has been left here.",
-                 amt == 2      ? "couple of"
-                 : amt < 10    ? "few"
-                 : amt < 100   ? "small pile of"
-                 : amt < 1000  ? "pile of"
-                 : amt < 50000 ? "large pile of"
-                               : "mountain of",
-                 money_pluralis(money));
+        UNIT_OUT_DESCR(money) = diku::format_to_str("A %s %s has been left here.",
+                                                    amt == 2      ? "couple of"
+                                                    : amt < 10    ? "few"
+                                                    : amt < 100   ? "small pile of"
+                                                    : amt < 1000  ? "pile of"
+                                                    : amt < 50000 ? "large pile of"
+                                                                  : "mountain of",
+                                                    money_pluralis(money));
     }
-
-    UNIT_OUT_DESCR(money) = (tmp);
 
     return money;
 }
@@ -278,15 +274,14 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
 static class unit_data *make_money(class file_index_type *fi, amount_t amt)
 {
     class unit_data *money = read_unit(fi);
-    char buf[512];
 
     assert(IS_OBJ(money));
 
     UNIT_WEIGHT(money) = 0; /* Init money-weight */
 
-    snprintf(buf, sizeof(buf), cur_strings[MONEY_CURRENCY(money)], g_money_types[MONEY_TYPE(money)].tails);
+    auto str = diku::format_to_str(cur_strings[MONEY_CURRENCY(money)], g_money_types[MONEY_TYPE(money)].tails);
 
-    UNIT_EXTRA(money).add("", buf);
+    UNIT_EXTRA(money).add("", str.c_str());
 
     return set_money(money, amt);
 }

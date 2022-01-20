@@ -8,6 +8,7 @@
 
 #include "comm.h"
 #include "config.h"
+#include "formatter.h"
 #include "interpreter.h"
 #include "queue.h"
 #include "slog.h"
@@ -73,15 +74,11 @@ static char *get_next_word(const char *argument, char *first_arg)
 /* Setup owner-ship of dictionary. */
 static void set_owner(class unit_data *obj, struct alias_head *ah, class unit_data *ch)
 {
-    char buf[256];
-
     strcpy(ah->owner, UNIT_NAME(ch));
 
-    snprintf(buf, sizeof(buf), "On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj));
-    UNIT_OUT_DESCR(obj) = buf;
+    UNIT_OUT_DESCR(obj) = diku::format_to_str("On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj));
 
-    snprintf(buf, sizeof(buf), "%s's %s", ah->owner, UNIT_NAME(obj));
-    UNIT_TITLE(obj) = buf;
+    UNIT_TITLE(obj) = diku::format_to_str("%s's %s", ah->owner, UNIT_NAME(obj));
 }
 
 /* Allocate `exd', and erase old description */
@@ -226,10 +223,8 @@ static int push_alias(char *s, char *arg, struct trie_type *t, class unit_data *
 /* Merely prints a formatted alias-definition out to the char */
 static void alias_to_char(struct alias_t *al, class unit_data *ch)
 {
-    char buf[2 * MAX_INPUT_LENGTH + 2];
-
-    snprintf(buf, sizeof(buf), " %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
-    act("$2t", A_ALWAYS, ch, buf, cActParameter(), TO_CHAR);
+    auto buf = diku::format_to_str(" %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
+    act("$2t", A_ALWAYS, ch, buf.c_str(), cActParameter(), TO_CHAR);
 }
 
 /*  Prints all defined aliases in `t' alphabetically to char by

@@ -8,6 +8,7 @@
 #include "comm.h"
 #include "experience.h"
 #include "fight.h"
+#include "formatter.h"
 #include "interpreter.h"
 #include "modify.h"
 #include "skills.h"
@@ -179,10 +180,8 @@ void cCombatList::PerformViolence(void)
 
 void cCombatList::status(const class unit_data *ch)
 {
-    char buf[MAX_STRING_LENGTH];
-
-    snprintf(buf, sizeof(buf), "The Global Combat List contains [%d] entries.<br/>", nTop);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("The Global Combat List contains [%d] entries.<br/>", nTop);
+    send_to_char(msg, ch);
 }
 
 /* ======================================================================= */
@@ -388,31 +387,24 @@ class unit_data *cCombat::Opponent(int i)
 
 void cCombat::status(const class unit_data *god)
 {
-    char buf[MAX_STRING_LENGTH];
     int i;
-    std::string str;
 
-    snprintf(buf,
-             sizeof(buf),
-             "Combat Status of '%s':<br/>"
-             "Combat Speed [%d]  Turn [%d]<br/>"
-             "Melee Opponent '%s'<br/>"
-             "Total of %d Opponents:<br/><br/>",
-             STR(UNIT_NAME(pOwner)),
-             CHAR_SPEED(pOwner),
-             nWhen,
-             CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
-             nNoOpponents);
-
-    str.append(buf);
+    auto msg = diku::format_to_str("Combat Status of '%s':<br/>"
+                                   "Combat Speed [%d]  Turn [%d]<br/>"
+                                   "Melee Opponent '%s'<br/>"
+                                   "Total of %d Opponents:<br/><br/>",
+                                   STR(UNIT_NAME(pOwner)),
+                                   CHAR_SPEED(pOwner),
+                                   nWhen,
+                                   CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
+                                   nNoOpponents);
 
     for (i = 0; i < nNoOpponents; i++)
     {
-        snprintf(buf, sizeof(buf), "   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
-        str.append(buf);
+        msg += diku::format_to_str("   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
     }
 
-    send_to_char(&str[0], god);
+    send_to_char(msg, god);
 }
 
 /* ======================================================================= */

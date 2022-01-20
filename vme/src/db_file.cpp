@@ -11,6 +11,7 @@
 #include "dil.h"
 #include "dilrun.h"
 #include "error.h"
+#include "formatter.h"
 #include "handler.h"
 #include "main_functions.h"
 #include "slog.h"
@@ -838,10 +839,8 @@ void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
 
     if (tmpl->zone)
     {
-        char buf[512];
-
-        snprintf(buf, sizeof(buf), "%s@%s", tmpl->prgname, tmpl->zone->name);
-        pBuf->AppendString(buf);
+        auto str = diku::format_to_str("%s@%s", tmpl->prgname, tmpl->zone->name);
+        pBuf->AppendString(str.c_str());
     }
     else
     {
@@ -911,10 +910,8 @@ void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
     {
         if (tmpl->zone)
         {
-            char buf[512];
-
-            snprintf(buf, sizeof(buf), "%s@%s", tmpl->prgname, tmpl->zone->name);
-            pBuf->AppendString(buf);
+            auto buf = diku::format_to_str("%s@%s", tmpl->prgname, tmpl->zone->name);
+            pBuf->AppendString(buf.c_str());
         }
         else
         {

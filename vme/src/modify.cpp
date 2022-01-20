@@ -18,6 +18,7 @@
 #include "common.h"
 #include "constants.h"
 #include "db.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "money.h"
@@ -282,24 +283,16 @@ int search_block_set(char *arg, const char **list, bool exact)
 
 void show_fields(class unit_data *ch)
 {
-    char buf[400];
-    int i;
-    std::string s;
-
-    s = "<table class='colh3'>";
-
-    for (i = 0; i < MAX_SET_FIELDS; i++)
+    std::string msg{"<table class='colh3'>"};
+    for (int i = 0; i < MAX_SET_FIELDS; i++)
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
-                 unit_field_names[i],
-                 GET_FIELD_UT(unit_field_data[i].utype),
-                 GET_FIELD_AT(unit_field_data[i].atype));
-        s.append(buf);
+        msg += diku::format_to_str("<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
+                                   unit_field_names[i],
+                                   GET_FIELD_UT(unit_field_data[i].utype),
+                                   GET_FIELD_AT(unit_field_data[i].atype));
     }
-    s.append("</table>");
-    send_to_char(&s[0], ch);
+    msg += "</table>";
+    send_to_char(msg, ch);
 }
 
 #undef GET_FIELDT_UT
@@ -307,7 +300,7 @@ void show_fields(class unit_data *ch)
 
 void show_structure(const char *structure[], class unit_data *ch)
 {
-    char **c, buf[MAX_STRING_LENGTH];
+    char **c;
     std::string s;
 
     if (structure == nullptr)
@@ -317,8 +310,7 @@ void show_structure(const char *structure[], class unit_data *ch)
 
     for (c = (char **)structure; *c; c++)
     {
-        snprintf(buf, sizeof(buf), "%s<br/>", *c);
-        s.append(buf);
+        s += diku::format_to_str("%s<br/>", *c);
     }
 
     if (s.empty())
@@ -327,7 +319,7 @@ void show_structure(const char *structure[], class unit_data *ch)
     }
     else
     {
-        send_to_char(&s[0], ch);
+        send_to_char(s, ch);
     }
 }
 
@@ -371,7 +363,7 @@ int get_type(char *typdef, const char *structure[])
 /* modification of anything in units */
 void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    char arg[MAX_STRING_LENGTH], buf[MAX_STRING_LENGTH];
+    char arg[MAX_STRING_LENGTH];
     int type;
 
     char strarg[MAX_STRING_LENGTH];
@@ -478,6 +470,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             break;
 
         case AT_VAL:
+        {
             send_to_char("Arg:&lt;value&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
             if (str_is_empty(arg))
@@ -486,11 +479,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 return;
             }
             valarg = atoi(arg);
-            snprintf(buf, sizeof(buf), "Value is %ld<br/>", valarg);
-            send_to_char(buf, ch);
-            break;
+            auto msg = diku::format_to_str("Value is %ld<br/>", valarg);
+            send_to_char(msg, ch);
+        }
+        break;
 
         case AT_BIT:
+        {
             send_to_char("Arg:&lt;bitlist&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
             if ((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
@@ -499,11 +494,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Bit found is %ld<br/>", bitarg);
-            send_to_char(buf, ch);
-            break;
+            auto msg = diku::format_to_str("Bit found is %ld<br/>", bitarg);
+            send_to_char(msg, ch);
+        }
+        break;
 
         case AT_TYP:
+        {
             send_to_char("Arg:&lt;type&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
             if ((typarg = get_type(arg, unit_field_data[type].structure)) == -1)
@@ -512,11 +509,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
-            send_to_char(buf, ch);
-            break;
+            auto msg = diku::format_to_str("Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
+            send_to_char(msg, ch);
+        }
+        break;
 
         case AT_UNT:
+        {
             send_to_char("Arg:&lt;unitpath&gt;<br/>", ch);
             argument = str_next_word(argument, strarg);
             /* find unit by 'path' name in arg */
@@ -525,9 +524,10 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
-            send_to_char(buf, ch);
-            break;
+            auto msg = diku::format_to_str("Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
+            send_to_char(msg, ch);
+        }
+        break;
 
         case AT_KEYDES:
             send_to_char("Arg:&lt;string&gt; (description)<br/>", ch);
@@ -546,6 +546,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             break;
 
         case AT_TYPVAL:
+        {
             send_to_char("Arg:&lt;type&gt; &lt;value&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
             if ((typarg = get_type(arg, unit_field_data[type].structure)) == -1)
@@ -554,8 +555,8 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
+            send_to_char(msg, ch);
             argument = str_next_word(argument, arg);
             if (str_is_empty(arg))
             {
@@ -563,11 +564,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 return;
             }
             valarg = atoi(arg);
-            snprintf(buf, sizeof(buf), "Value is %ld<br/>", valarg);
-            send_to_char(buf, ch);
-            break;
+            msg = diku::format_to_str("Value is %ld<br/>", valarg);
+            send_to_char(msg, ch);
+        }
+        break;
 
         case AT_DIRBIT:
+        {
             send_to_char("Arg:&lt;direction&gt; <bitlist><br/>", ch);
             argument = str_next_word(argument, arg);
             if ((typarg = get_type(arg, g_dirs)) == -1)
@@ -576,8 +579,8 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(g_dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            send_to_char(msg, ch);
             argument = str_next_word(argument, arg);
             if ((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
             {
@@ -585,11 +588,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Bit found is %ld<br/>", bitarg);
-            send_to_char(buf, ch);
-            break;
+            msg = diku::format_to_str("Bit found is %ld<br/>", bitarg);
+            send_to_char(msg, ch);
+        }
+        break;
 
         case AT_DIRSTR:
+        {
             send_to_char("Arg:&lt;direction&gt; <string><br/>", ch);
             argument = str_next_word(argument, arg);
             if ((typarg = get_type(arg, g_dirs)) == -1)
@@ -598,17 +603,19 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(g_dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            send_to_char(msg, ch);
             if (str_is_empty(argument))
             {
                 send_to_char("Missing string argument.<br/>", ch);
                 return;
             }
             argument = skip_spaces(argument);
-            break;
+        }
+        break;
 
         case AT_DIRUNT:
+        {
             send_to_char("Arg:&lt;direction&gt; <unitpath><br/>", ch);
             argument = str_next_word(argument, arg);
             if ((typarg = get_type(arg, g_dirs)) == -1)
@@ -617,19 +624,21 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(g_dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            send_to_char(msg, ch);
             argument = str_next_word(argument, arg);
             if ((untarg = str_to_file_index(arg)) == nullptr)
             {
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
-            send_to_char(buf, ch);
-            break;
+            msg = diku::format_to_str("Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
+            send_to_char(msg, ch);
+        }
+        break;
 
         case AT_DIRDES:
+        {
             send_to_char("Arg:&lt;direction&gt; (description)<br/>", ch);
             argument = str_next_word(argument, arg);
             if ((typarg = get_type(arg, g_dirs)) == -1)
@@ -638,8 +647,8 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(g_dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            send_to_char(msg, ch);
             if (unit_is_edited(unt))
             {
                 send_to_char("Unit is already being edited.<br/>", ch);
@@ -647,7 +656,8 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             }
             CHAR_DESCRIPTOR(ch)->editing = unt;
             /* handle rest later */
-            break;
+        }
+        break;
 
         default:
             send_to_char("Forbidden argument type for field, please "
@@ -1361,7 +1371,7 @@ static const char *skill_field_names[] = {"skill", "spell", "weapon", nullptr};
 void do_setskill(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     int type, skillarg, valarg = 0;
-    char buf[MAX_STRING_LENGTH], arg[MAX_STRING_LENGTH];
+    char arg[MAX_STRING_LENGTH];
     class unit_data *unt;
 
     if (!CHAR_DESCRIPTOR(ch))
@@ -1473,6 +1483,6 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
             }
     }
 
-    snprintf(buf, sizeof(buf), "New value: %d<br/>Ok.<br/>", valarg);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("New value: %d<br/>Ok.<br/>", valarg);
+    send_to_char(msg, ch);
 }

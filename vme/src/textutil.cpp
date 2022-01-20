@@ -1467,13 +1467,11 @@ char *html_encode_utf8(const char *src)
 
 // Helper function to wrap javascript into something. This something might change
 // so it was easier to write a helper function. E.g. to onload for image. who knows.
-std::string scriptwrap(const char *str)
+std::string scriptwrap(const std::string &str)
 {
-    std::string mystr;
-
-    mystr = "<script>";
-    mystr.append(str);
-    mystr.append("</script>");
+    std::string mystr{"<script>"};
+    mystr += str;
+    mystr += "</script>";
 
     return mystr;
 }

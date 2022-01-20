@@ -17,6 +17,7 @@
 #include "diku_exception.h"
 #include "essential.h"
 #include "files.h"
+#include "formatter.h"
 #include "slog.h"
 #include "str_parse.h"
 #include "structs.h"
@@ -74,7 +75,7 @@ void CServerConfiguration::Boot(const std::string &srvcfg)
 
     if (!file_exists(srvcfg))
     {
-        slog(LOG_ALL, 0, "Could not find server configuration file. %s", srvcfg.c_str());
+        slog(LOG_ALL, 0, "Could not find server configuration file. %s", srvcfg);
         throw diku_exception{FPFL} << "Could not find server configuration file. [" << srvcfg << "]";
     }
 
@@ -87,7 +88,7 @@ void CServerConfiguration::Boot(const std::string &srvcfg)
     {
         m_mudname.resize(50);
     }
-    slog(LOG_ALL, 0, "The Mud Name is %s.", m_mudname.c_str());
+    slog(LOG_ALL, 0, "The Mud Name is %s.", m_mudname);
 
     m_pImmortName = parse_match_name((const char **)&c, "immortal_name", "immortal");
     if (m_pImmortName.length() > PC_MAX_NAME)
@@ -369,10 +370,10 @@ void CServerConfiguration::checkDirectoryExists(const std::string &name, const s
 {
     if (!(std::filesystem::exists(directory) && std::filesystem::is_directory(directory)))
     {
-        slog(LOG_ALL, 0, "The %s directory %s does not exist.", name.c_str(), directory.c_str());
-        throw diku_exception(FPFL) << boost::format("The %s directory %s does not exist.") % name % directory;
+        slog(LOG_ALL, 0, "The %s directory %s does not exist.", name, directory);
+        throw diku_exception(FPFL) << diku::format_to_str("The %s directory %s does not exist.", name, directory);
     }
-    slog(LOG_ALL, 0, "The %s directory is %s.", name.c_str(), directory.c_str());
+    slog(LOG_ALL, 0, "The %s directory is %s.", name, directory);
 }
 
 const std::string &CServerConfiguration::getPlyDir() const
@@ -498,14 +499,14 @@ in_addr CServerConfiguration::stringToIPAddress(const std::string &ip_address, c
     retval.S_un.S_addr = inet_addr(ip_address.c_str());
     if (retval.S_un.S_addr == INADDR_NONE)
     {
-        slog(LOG_ALL, 0, error_msg.c_str(), ip_address.c_str());
-        throw diku_exception(FPFL) << boost::format(error_msg) % ip_address;
+        slog(LOG_ALL, 0, error_msg, ip_address);
+        throw diku_exception(FPFL) << diku::format_to_str(error_msg.c_str(), ip_address);
     }
 #else
     if (inet_aton(ip_address.c_str(), &retval) == 0)
     {
-        slog(LOG_ALL, 0, error_msg.c_str(), ip_address.c_str());
-        throw diku_exception(FPFL) << boost::format(error_msg) % ip_address;
+        slog(LOG_ALL, 0, error_msg, ip_address);
+        throw diku_exception(FPFL) << diku::format_to_str(error_msg.c_str(), ip_address);
     }
 #endif
 

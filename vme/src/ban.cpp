@@ -10,6 +10,7 @@
 #include "comm.h"
 #include "db.h"
 #include "files.h"
+#include "formatter.h"
 #include "interpreter.h"
 #include "structs.h"
 #include "textutil.h"
@@ -107,7 +108,7 @@ time_t ban_timer(char *arg)
 void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *textfile)
 {
     struct ban_t *entry;
-    char d[50], buf[MAX_STRING_LENGTH];
+    char d[50];
 
     for (entry = ban_list; entry; entry = entry->next)
     {
@@ -153,14 +154,12 @@ void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *te
         strcpy(d, "");
     }
 
-    snprintf(buf,
-             sizeof(buf),
-             "Ban on %s, type %s, textfile %s. %s<br/>",
-             entry->site,
-             type == BAN_TOTAL ? "TOTAL" : "NEW CHARS",
-             entry->textfile,
-             d);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("Ban on %s, type %s, textfile %s. %s<br/>",
+                                   entry->site,
+                                   type == BAN_TOTAL ? "TOTAL" : "NEW CHARS",
+                                   entry->textfile,
+                                   d);
+    send_to_char(msg, ch);
     save_ban();
 }
 
@@ -217,7 +216,7 @@ void del_ban(class unit_data *ch, char *site)
 
 void show_site(class unit_data *ch, struct ban_t *entry)
 {
-    char buf[200], d[40];
+    char d[40];
 
     if (entry->until)
     {
@@ -227,14 +226,12 @@ void show_site(class unit_data *ch, struct ban_t *entry)
     {
         strcpy(d, " ");
     }
-    snprintf(buf,
-             sizeof(buf),
-             " %-30s : %-9s %s %s<br/>",
-             entry->site,
-             (entry->type == BAN_TOTAL) ? "TOTAL" : "NEW CHARS",
-             entry->textfile,
-             d);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str(" %-30s : %-9s %s %s<br/>",
+                                   entry->site,
+                                   (entry->type == BAN_TOTAL) ? "TOTAL" : "NEW CHARS",
+                                   entry->textfile,
+                                   d);
+    send_to_char(msg, ch);
 }
 
 void do_ban(class unit_data *ch, char *arg, const struct command_info *cmd)

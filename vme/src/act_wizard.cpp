@@ -10,6 +10,7 @@
 #include "common.h"
 #include "db.h"
 #include "dilrun.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
@@ -43,9 +44,8 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
         return;
     }
 
-    char buf[256];
-    snprintf(buf, sizeof(buf), "Time warping for %d seconds<br/>", i);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("Time warping for %d seconds<br/>", i);
+    send_to_char(msg, ch);
 
     g_events.add(PULSE_SEC * i, timewarp_end, nullptr, nullptr);
 
@@ -246,8 +246,6 @@ void do_execute(class unit_data *ch, char *argument, const struct command_info *
 
 void do_shutdown(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    char buf[100];
-
     if (!IS_PC(ch))
     {
         return;
@@ -259,8 +257,8 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
         return;
     }
 
-    snprintf(buf, sizeof(buf), "Shutdown by %s.<br/>", UNIT_NAME(ch));
-    send_to_all(buf);
+    auto msg = diku::format_to_str("Shutdown by %s.<br/>", UNIT_NAME(ch));
+    send_to_all(msg);
     g_mud_shutdown = 1;
 }
 
@@ -525,8 +523,8 @@ void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
     else
     {
-        snprintf(buf, sizeof(buf), "Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
+        send_to_char(msg, ch);
         g_wizlock = lvl;
     }
 }
