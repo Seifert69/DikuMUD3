@@ -127,7 +127,7 @@ public:
                 {
                     o++;
                 }
-                slog(LOG_OFF, 0, "Received line [%s]. Send to DIL", line.c_str());
+                slog(LOG_OFF, 0, "Received line [%s]. Send to DIL", line);
 
                 pipeMUD_dispatch(line);
             } while (p);
@@ -198,7 +198,7 @@ public:
         }
         else
         {
-            slog(LOG_OFF, 0, "Wrote message [%s] to dispatcher.", str.c_str());
+            slog(LOG_OFF, 0, "Wrote message [%s] to dispatcher.", str);
         }
     };
 } g_pipeMUD_WO;

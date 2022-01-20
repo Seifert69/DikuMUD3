@@ -11,6 +11,7 @@
 #include "common.h"
 #include "dbfind.h"
 #include "dilrun.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "skills.h"
@@ -477,8 +478,6 @@ void gain_condition(class unit_data *ch, int condition, int value)
 
 void set_title(class unit_data *ch)
 {
-    char buf[256];
-
     assert(IS_PC(ch));
 
     if (CHAR_LEVEL(ch) == 0)
@@ -488,8 +487,7 @@ void set_title(class unit_data *ch)
     else if (CHAR_LEVEL(ch) <= START_LEVEL)
     {
         assert(CHAR_RACE(ch) < PC_RACE_MAX);
-        snprintf(buf, sizeof(buf), "the %s", g_pc_races[CHAR_RACE(ch)]);
-        UNIT_TITLE(ch) = (buf);
+        UNIT_TITLE(ch) = diku::format_to_str("the %s", g_pc_races[CHAR_RACE(ch)]);
     }
     else if (IS_IMMORTAL(ch))
     {

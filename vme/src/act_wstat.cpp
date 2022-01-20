@@ -20,9 +20,9 @@
 #include "db.h"
 #include "dilshare.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "magic.h"
 #include "main_functions.h"
 #include "modify.h"
 #include "skills.h"
@@ -40,7 +40,6 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
@@ -112,24 +111,24 @@ static void stat_world_extra(const class unit_data *ch)
 
 static void stat_memory(class unit_data *ch)
 {
-    char buf[MAX_STRING_LENGTH];
+    auto msg = diku::format_to_str("Event queue entries: %d<br/>", g_events.Count());
+    send_to_char(msg, ch);
 
-    snprintf(buf, sizeof(buf), "Event queue entries: %d<br/>", g_events.Count());
-    send_to_char(buf, ch);
-    snprintf(buf, sizeof(buf), "Current Tic=%d , Event Queue Tic=%d<br/>", g_tics, g_events.NextEventTic());
-    send_to_char(buf, ch);
-    snprintf(buf, sizeof(buf), "Event queue GL Stats ( Proceses/Sec ): %d/%1.4f<br/>", g_events.PCount(), g_events.PTime());
-    send_to_char(buf, ch);
-    snprintf(buf, sizeof(buf), "Event queue Max Time  ( Proceses/Sec ): %d/%1.4f<br/>", g_events.Max_PTime_Process(), g_events.Max_PTime());
-    send_to_char(buf, ch);
-    snprintf(buf,
-             sizeof(buf),
-             "Event queue Max Process  ( Proceses/Sec ): %d/%1.4f<br/>",
-             g_events.Max_PCount(),
-             g_events.Max_PCount_Time());
-    send_to_char(buf, ch);
-    snprintf(buf, sizeof(buf), "Event queue Avg Process  ( Proceses/Sec ): %1.1f/%1.4f<br/>", g_events.Avg_PCount(), g_events.Avg_PTime());
-    send_to_char(buf, ch);
+    msg = diku::format_to_str("Current Tic=%d , Event Queue Tic=%d<br/>", g_tics, g_events.NextEventTic());
+    send_to_char(msg, ch);
+
+    msg = diku::format_to_str("Event queue GL Stats ( Proceses/Sec ): %d/%1.4f<br/>", g_events.PCount(), g_events.PTime());
+    send_to_char(msg, ch);
+
+    msg = diku::format_to_str("Event queue Max Time  ( Proceses/Sec ): %d/%1.4f<br/>", g_events.Max_PTime_Process(), g_events.Max_PTime());
+    send_to_char(msg, ch);
+
+    msg =
+        diku::format_to_str("Event queue Max Process  ( Proceses/Sec ): %d/%1.4f<br/>", g_events.Max_PCount(), g_events.Max_PCount_Time());
+    send_to_char(msg, ch);
+
+    msg = diku::format_to_str("Event queue Avg Process  ( Proceses/Sec ): %1.1f/%1.4f<br/>", g_events.Avg_PCount(), g_events.Avg_PTime());
+    send_to_char(msg, ch);
     //  system_memory (ch);
     //  memory_status (buf);
     //  send_to_char (buf, ch);
@@ -145,8 +144,8 @@ static void stat_memory(class unit_data *ch)
         {
             if (UNIT_IN(u) == nullptr)
             {
-                snprintf(buf, sizeof(buf), "%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
-                send_to_char(buf, ch);
+                msg = diku::format_to_str("%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+                send_to_char(msg, ch);
             }
         }
     }
@@ -154,45 +153,42 @@ static void stat_memory(class unit_data *ch)
 
 static void stat_world(class unit_data *ch)
 {
-    char buf[MAX_STRING_LENGTH];
     time_t now = time(nullptr);
 
     char *p = ctime(&now);
     p[strlen(p) - 1] = '\0';
 
-    snprintf(buf,
-             sizeof(buf),
-             "Server compiled at %s %s<br/>"
-             "World status (tick %d aka %d hours): %s<br/>"
-             "#rooms [%4d]  #objects [%4d]  #chars [%4d]  #npcs [%4d] "
-             "  #pcs [%4d]<br/>"
-             "#units [%4d]  #zones   [%4d]<br/>"
-             "#connections [%2d / peak %2d]<br/>"
-             "#players     [%2d / peak %2d]<br/>"
-             "Boottime: %s<br/>Time now: %s<br/>"
-             "DIL programs [%d]   DIL Vals [%d]<br>",
-             g_compile_date,
-             g_compile_time,
-             g_tics,
-             g_tics / (PULSE_SEC * 3600),
-             g_nTickUsec < 1 ? "time-warped" : "",
-             g_world_norooms,
-             g_world_noobjects,
-             g_world_nochars,
-             g_world_nonpc,
-             g_world_nopc,
-             g_world_norooms + g_world_noobjects + g_world_nochars,
-             g_world_nozones,
-             g_no_connections,
-             g_max_no_connections,
-             g_no_players,
-             g_max_no_players,
-             g_world_boottime,
-             p,
-             g_nDilPrg,
-             g_nDilVal);
+    auto msg = diku::format_to_str("Server compiled at %s %s<br/>"
+                                   "World status (tick %d aka %d hours): %s<br/>"
+                                   "#rooms [%4d]  #objects [%4d]  #chars [%4d]  #npcs [%4d] "
+                                   "  #pcs [%4d]<br/>"
+                                   "#units [%4d]  #zones   [%4d]<br/>"
+                                   "#connections [%2d / peak %2d]<br/>"
+                                   "#players     [%2d / peak %2d]<br/>"
+                                   "Boottime: %s<br/>Time now: %s<br/>"
+                                   "DIL programs [%d]   DIL Vals [%d]<br>",
+                                   g_compile_date,
+                                   g_compile_time,
+                                   g_tics,
+                                   g_tics / (PULSE_SEC * 3600),
+                                   g_nTickUsec < 1 ? "time-warped" : "",
+                                   g_world_norooms,
+                                   g_world_noobjects,
+                                   g_world_nochars,
+                                   g_world_nonpc,
+                                   g_world_nopc,
+                                   g_world_norooms + g_world_noobjects + g_world_nochars,
+                                   g_world_nozones,
+                                   g_no_connections,
+                                   g_max_no_connections,
+                                   g_no_players,
+                                   g_max_no_players,
+                                   g_world_boottime,
+                                   p,
+                                   g_nDilPrg,
+                                   g_nDilVal);
 
-    page_string(CHAR_DESCRIPTOR(ch), buf);
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 static char *stat_buffer, *stat_p;
@@ -306,37 +302,35 @@ static void stat_zone(class unit_data *ch, class zone_type *zone)
 
     cname = zone->creators.catnames();
 
-    snprintf(buf,
-             sizeof(buf),
-             "Zone [%s]  File [%s]  Access [%d]<br/>"
-             "Title: \"%s\"<br/>"
-             "Load level [%d] Pay only [%d]<br/>"
-             "Number of Units [%d]    Number of Rooms [%d]<br/>"
-             "Reset Mode : %s (%d)    Reset Interval [%d]<br/>"
-             "Pressure [%d] Change [%d] Sky [%d] Base [%d]<br/><br/>"
-             "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
-             "%s<br/>%s<br/>",
-             zone->name,
-             zone->filename,
-             zone->access,
-             zone->title ? zone->title : "",
-             zone->loadlevel,
-             zone->payonly,
-             zone->no_of_fi,
-             zone->no_rooms,
-             reset_modes[reset_mode],
-             reset_mode,
-             zone->zone_time,
-             zone->weather.pressure,
-             zone->weather.change,
-             zone->weather.sky,
-             zone->weather.base,
-             cname,
-             zone->notes,
-             errors ? "Errors in zone (stat zone error)" : "No errors registered in zone.",
-             info ? "User info feedback in zone (stat zone info)." : "No user info (feedback) in zone.");
+    auto msg = diku::format_to_str("Zone [%s]  File [%s]  Access [%d]<br/>"
+                                   "Title: \"%s\"<br/>"
+                                   "Load level [%d] Pay only [%d]<br/>"
+                                   "Number of Units [%d]    Number of Rooms [%d]<br/>"
+                                   "Reset Mode : %s (%d)    Reset Interval [%d]<br/>"
+                                   "Pressure [%d] Change [%d] Sky [%d] Base [%d]<br/><br/>"
+                                   "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
+                                   "%s<br/>%s<br/>",
+                                   zone->name,
+                                   zone->filename,
+                                   zone->access,
+                                   zone->title ? zone->title : "",
+                                   zone->loadlevel,
+                                   zone->payonly,
+                                   zone->no_of_fi,
+                                   zone->no_rooms,
+                                   reset_modes[reset_mode],
+                                   reset_mode,
+                                   zone->zone_time,
+                                   zone->weather.pressure,
+                                   zone->weather.change,
+                                   zone->weather.sky,
+                                   zone->weather.base,
+                                   cname,
+                                   zone->notes,
+                                   errors ? "Errors in zone (stat zone error)" : "No errors registered in zone.",
+                                   info ? "User info feedback in zone (stat zone info)." : "No user info (feedback) in zone.");
     FREE(cname)
-    page_string(CHAR_DESCRIPTOR(ch), buf);
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 static void stat_creators(class unit_data *ch, char *arg)
@@ -407,8 +401,8 @@ static void stat_dil(class unit_data *ch, class zone_type *zone)
     std::string mystr;
     // struct diltemplate *tmpl;
 
-    snprintf(buf, sizeof(buf), "<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
+    send_to_char(msg, ch);
 
     mystr = "<div class='twocol'>";
     *buf = 0;
@@ -435,8 +429,8 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
     std::string mystr;
     // struct diltemplate *tmpl;
 
-    snprintf(buf, sizeof(buf), "<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
+    send_to_char(msg, ch);
 
     mystr = "<div class='twocol'>";
 
@@ -505,16 +499,18 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
         case 0:
         case 1:
         case 2:
-            snprintf(buf, sizeof(buf), "List of %s in zone %s:<br/>", zone_args[argno], zone->name);
-            send_to_char(buf, ch);
+        {
+            auto msg = diku::format_to_str("List of %s in zone %s:<br/>", zone_args[argno], zone->name);
+            send_to_char(msg, ch);
             search_type = search_types[argno];
-            break;
+        }
+        break;
 
         case 3:
             if (zone->zri)
             {
-                snprintf(buf, sizeof(buf), "Reset information for zone %s:<br/>", zone->name);
-                send_to_char(buf, ch);
+                auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->name);
+                send_to_char(msg, ch);
                 CREATE(stat_buffer, char, 2 * MAX_STRING_LENGTH);
                 stat_p = stat_buffer;
                 stat_zone_reset("", zone->zri, ch);
@@ -523,8 +519,8 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
             }
             else
             {
-                snprintf(buf, sizeof(buf), "No reset information for zone %s.<br/>", zone->name);
-                send_to_char(buf, ch);
+                auto msg = diku::format_to_str("No reset information for zone %s.<br/>", zone->name);
+                send_to_char(msg, ch);
             }
             return;
 
@@ -739,34 +735,30 @@ static void stat_affect(const class unit_data *ch, class unit_data *u)
 
     for (af = UNIT_AFFECTED(u); af; af = af->next)
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "----------------------------------------------------<br/>"
-                 "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
-                 "First f() %s<br/>"
-                 "Tick  f() %s<br/>"
-                 "Last  f() %s<br/>"
-                 "Apply f() %s<br/>"
-                 "%s",
-                 af->id,
-                 af->duration,
-                 af->beat,
-                 af->data[0],
-                 af->data[1],
-                 af->data[2],
-                 af->firstf_i >= 0 ? STR(g_tif[af->firstf_i].descr) : "Not used (-1)",
-                 af->tickf_i >= 0 ? STR(g_tif[af->tickf_i].descr) : "Not used (-1)",
-                 af->lastf_i >= 0 ? STR(g_tif[af->lastf_i].descr) : "Not used (-1)",
-                 af->applyf_i >= 0 ? STR(g_apf[af->applyf_i].descr) : "Not used (-1)",
-                 u == af->owner ? "" : "Serious error in owner pointer!<br/>");
-
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("----------------------------------------------------<br/>"
+                                       "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
+                                       "First f() %s<br/>"
+                                       "Tick  f() %s<br/>"
+                                       "Last  f() %s<br/>"
+                                       "Apply f() %s<br/>"
+                                       "%s",
+                                       af->id,
+                                       af->duration,
+                                       af->beat,
+                                       af->data[0],
+                                       af->data[1],
+                                       af->data[2],
+                                       af->firstf_i >= 0 ? STR(g_tif[af->firstf_i].descr) : "Not used (-1)",
+                                       af->tickf_i >= 0 ? STR(g_tif[af->tickf_i].descr) : "Not used (-1)",
+                                       af->lastf_i >= 0 ? STR(g_tif[af->lastf_i].descr) : "Not used (-1)",
+                                       af->applyf_i >= 0 ? STR(g_apf[af->applyf_i].descr) : "Not used (-1)",
+                                       u == af->owner ? "" : "Serious error in owner pointer!<br/>");
+        send_to_char(msg, ch);
     }
 }
 
 static void stat_func(const class unit_data *ch, class unit_data *u)
 {
-    char buf[4096];
     std::string bits;
     class unit_fptr *f;
 
@@ -786,33 +778,28 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
 
             if ((prg = (class dilprg *)f->data))
             {
-                snprintf(buf,
-                         sizeof(buf),
-                         "DIL Name: %s@%s<br/>",
-                         prg->frame[0].tmpl->prgname,
-                         prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->name : "IDLE");
-
-                send_to_char(buf, ch);
+                auto msg = diku::format_to_str("DIL Name: %s@%s<br/>",
+                                               prg->frame[0].tmpl->prgname,
+                                               prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->name : "IDLE");
+                send_to_char(msg, ch);
             }
         }
 
-        snprintf(buf,
-                 sizeof(buf),
-                 "[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
-                 "%s<br/><br/>",
-                 f->priority,
-                 g_unit_function_array[f->index].name,
-                 sprintbit(bits, f->flags, g_sfb_flags),
-                 f->index,
-                 f->heart_beat,
-                 f->data ? g_unit_function_array[f->index].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data." : "No data.");
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
+                                       "%s<br/><br/>",
+                                       f->priority,
+                                       g_unit_function_array[f->index].name,
+                                       sprintbit(bits, f->flags, g_sfb_flags),
+                                       f->index,
+                                       f->heart_beat,
+                                       f->data ? g_unit_function_array[f->index].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data."
+                                               : "No data.");
+        send_to_char(msg, ch);
     }
 }
 
 static void stat_normal(class unit_data *ch, class unit_data *u)
 {
-    char buf[MAX_STRING_LENGTH];
     std::string bits1, bits2;
     char *cname;
 
@@ -823,56 +810,50 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
     /* Even though type isn't a flag, we'd better show them all in case
      * more than one is set!
      */
-    snprintf(buf,
-             sizeof(buf),
-             "Unit status: %s [%s@%s] %d copies (CRC %lu)<br/>Namelist: %s<br/>"
-             "Title: \"%s\"<br/>Outside_descr:<br/>\"%s\"<br/>"
-             "Inside_descr:<br/>\"%s\"<br/>",
-             sprintbit(bits2, UNIT_TYPE(u), g_unit_status),
-             UNIT_FI_NAME(u),
-             UNIT_FI_ZONENAME(u),
-             UNIT_FILE_INDEX(u) ? UNIT_FILE_INDEX(u)->no_in_mem : -1,
-             UNIT_FILE_INDEX(u) ? (unsigned long)UNIT_FILE_INDEX(u)->crc : 0,
-             cname,
-             STR(UNIT_TITLE_STRING(u)),
-             STR(UNIT_OUT_DESCR_STRING(u)),
-             STR(UNIT_IN_DESCR_STRING(u)));
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("Unit status: %s [%s@%s] %d copies (CRC %lu)<br/>Namelist: %s<br/>"
+                                   "Title: \"%s\"<br/>Outside_descr:<br/>\"%s\"<br/>"
+                                   "Inside_descr:<br/>\"%s\"<br/>",
+                                   sprintbit(bits2, UNIT_TYPE(u), g_unit_status),
+                                   UNIT_FI_NAME(u),
+                                   UNIT_FI_ZONENAME(u),
+                                   UNIT_FILE_INDEX(u) ? UNIT_FILE_INDEX(u)->no_in_mem : -1,
+                                   UNIT_FILE_INDEX(u) ? (unsigned long)UNIT_FILE_INDEX(u)->crc : 0,
+                                   cname,
+                                   STR(UNIT_TITLE_STRING(u)),
+                                   STR(UNIT_OUT_DESCR_STRING(u)),
+                                   STR(UNIT_IN_DESCR_STRING(u)));
+    send_to_char(msg, ch);
     FREE(cname);
-    snprintf(buf,
-             sizeof(buf),
-             "Lights: [%d]  Bright: [%d]  TrnIllu: [%d]  "
-             "Chars Within [%d] WIZI [%d]<br/>"
-             "Unit is inside: %s -- Unit %s<br/>"
-             "Manipulate: %s<br/>"
-             "Flags: %s<br/>"
-             "Hitpoints/max: [%ld/%ld]  Alignment: [%d]<br/>",
-             UNIT_LIGHTS(u),
-             UNIT_BRIGHT(u),
-             UNIT_ILLUM(u),
-             UNIT_CHARS(u),
-             UNIT_MINV(u),
-             UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
-             UNIT_CONTAINS(u) ? "has contents" : "is empty",
-             sprintbit(bits2, UNIT_MANIPULATE(u), g_unit_manipulate),
-             sprintbit(bits1, UNIT_FLAGS(u), g_unit_flags),
-             (signed long)UNIT_HIT(u),
-             (signed long)UNIT_MAX_HIT(u),
-             UNIT_ALIGNMENT(u));
-    send_to_char(buf, ch);
+    msg = diku::format_to_str("Lights: [%d]  Bright: [%d]  TrnIllu: [%d]  "
+                              "Chars Within [%d] WIZI [%d]<br/>"
+                              "Unit is inside: %s -- Unit %s<br/>"
+                              "Manipulate: %s<br/>"
+                              "Flags: %s<br/>"
+                              "Hitpoints/max: [%ld/%ld]  Alignment: [%d]<br/>",
+                              UNIT_LIGHTS(u),
+                              UNIT_BRIGHT(u),
+                              UNIT_ILLUM(u),
+                              UNIT_CHARS(u),
+                              UNIT_MINV(u),
+                              UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
+                              UNIT_CONTAINS(u) ? "has contents" : "is empty",
+                              sprintbit(bits2, UNIT_MANIPULATE(u), g_unit_manipulate),
+                              sprintbit(bits1, UNIT_FLAGS(u), g_unit_flags),
+                              (signed long)UNIT_HIT(u),
+                              (signed long)UNIT_MAX_HIT(u),
+                              UNIT_ALIGNMENT(u));
+    send_to_char(msg, ch);
 
-    snprintf(buf,
-             sizeof(buf),
-             "Key name: [%s]  Open flags: %s  Open Diff: %d<br/>"
-             "Base weight : [%d] Weight : [%d] Capacity : [%d] Size [%d]<br/>",
-             UNIT_KEY(u) ? UNIT_KEY(u) : "none",
-             sprintbit(bits1, UNIT_OPEN_FLAGS(u), g_unit_open_flags),
-             UNIT_OPEN_DIFF(u),
-             UNIT_BASE_WEIGHT(u),
-             UNIT_WEIGHT(u),
-             UNIT_CAPACITY(u),
-             UNIT_SIZE(u));
-    send_to_char(buf, ch);
+    msg = diku::format_to_str("Key name: [%s]  Open flags: %s  Open Diff: %d<br/>"
+                              "Base weight : [%d] Weight : [%d] Capacity : [%d] Size [%d]<br/>",
+                              UNIT_KEY(u) ? UNIT_KEY(u) : "none",
+                              sprintbit(bits1, UNIT_OPEN_FLAGS(u), g_unit_open_flags),
+                              UNIT_OPEN_DIFF(u),
+                              UNIT_BASE_WEIGHT(u),
+                              UNIT_WEIGHT(u),
+                              UNIT_CAPACITY(u),
+                              UNIT_SIZE(u));
+    send_to_char(msg, ch);
 }
 
 static void stat_extra(const class unit_data *ch, class extra_list &elist, char *grp)
@@ -1011,14 +992,13 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
 
     if (IS_PC(u))
     {
-        char buf[500];
         struct sockaddr_in sock;
 
         for (int i = 0; i < 5; i++)
         {
             sock.sin_addr.s_addr = PC_LASTHOST(u)[i];
-            snprintf(buf, sizeof(buf), "IP [%s]<br/>", inet_ntoa(sock.sin_addr));
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("IP [%s]<br/>", inet_ntoa(sock.sin_addr));
+            send_to_char(msg, ch);
         }
     }
     else
@@ -1135,63 +1115,60 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
          {0, 0, 0, 0, 0}} /*SHIELD    */
     };
 
-    char buf[4096];
     char tmp[512];
     std::string bits1, bits2;
     int i;
 
     if (IS_CHAR(u))
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "Char data:<br/>"
-                 "Descriptor: %s  Fighting: '%s'<br/>"
-                 "Master: '%s'  First Follower: '%s'<br/>"
-                 "Last room: '%s'<br/>"
-                 "Level [%d]  Sex [%s]  Position [%s]<br/>"
-                 "Race [%s]  Can Carry W [%d]  Can Carry N [%d]<br/>"
-                 "Char Flags [%s]<br/>"
-                 "Exp: [%ld] Offensive Bonus [%d] Defensive Bonus [%d]<br/>"
-                 "Attack [%s]   Speed [%d]   Natural-Armour [%d]<br/>"
-                 "HP [H%ld/L%d/G%d]   Mana [H%d/L%d/G%d]  END [H%d/L%d/G%d]<br/>"
-                 "STR [%d]  DEX [%d]  CON [%d]  CHA [%d]<br/>"
-                 "BRA [%d]  MAG [%d]  DIV [%d]  HP  [%d]<br/>",
-                 CHAR_DESCRIPTOR(u) ? "Yes" : "No",
-                 CHAR_FIGHTING(u) ? STR(UNIT_NAME(CHAR_FIGHTING(u))) : "Nobody",
-                 CHAR_MASTER(u) ? STR(UNIT_NAME(CHAR_MASTER(u))) : "Nobody",
-                 CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->follower)) : "Nobody",
-                 CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
-                 CHAR_LEVEL(u),
-                 sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
-                 sprinttype(nullptr, CHAR_POS(u), g_char_pos),
-                 IS_PC(u) ? sprinttype(nullptr, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
-                 char_carry_w_limit(u),
-                 char_carry_n_limit(u),
-                 sprintbit(bits1, CHAR_FLAGS(u), g_char_flags),
-                 (signed long)CHAR_EXP(u),
-                 CHAR_OFFENSIVE(u),
-                 CHAR_DEFENSIVE(u),
-                 sprinttype(nullptr, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
-                 CHAR_SPEED(u),
-                 CHAR_NATURAL_ARMOUR(u),
-                 (signed long)UNIT_HIT(u),
-                 hit_limit(u),
-                 hit_gain(u),
-                 CHAR_MANA(u),
-                 mana_limit(u),
-                 mana_gain(u),
-                 CHAR_ENDURANCE(u),
-                 move_limit(u),
-                 move_gain(u),
-                 CHAR_STR(u),
-                 CHAR_DEX(u),
-                 CHAR_CON(u),
-                 CHAR_CHA(u),
-                 CHAR_BRA(u),
-                 CHAR_MAG(u),
-                 CHAR_DIV(u),
-                 CHAR_HPP(u));
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("Char data:<br/>"
+                                       "Descriptor: %s  Fighting: '%s'<br/>"
+                                       "Master: '%s'  First Follower: '%s'<br/>"
+                                       "Last room: '%s'<br/>"
+                                       "Level [%d]  Sex [%s]  Position [%s]<br/>"
+                                       "Race [%s]  Can Carry W [%d]  Can Carry N [%d]<br/>"
+                                       "Char Flags [%s]<br/>"
+                                       "Exp: [%ld] Offensive Bonus [%d] Defensive Bonus [%d]<br/>"
+                                       "Attack [%s]   Speed [%d]   Natural-Armour [%d]<br/>"
+                                       "HP [H%ld/L%d/G%d]   Mana [H%d/L%d/G%d]  END [H%d/L%d/G%d]<br/>"
+                                       "STR [%d]  DEX [%d]  CON [%d]  CHA [%d]<br/>"
+                                       "BRA [%d]  MAG [%d]  DIV [%d]  HP  [%d]<br/>",
+                                       CHAR_DESCRIPTOR(u) ? "Yes" : "No",
+                                       CHAR_FIGHTING(u) ? STR(UNIT_NAME(CHAR_FIGHTING(u))) : "Nobody",
+                                       CHAR_MASTER(u) ? STR(UNIT_NAME(CHAR_MASTER(u))) : "Nobody",
+                                       CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->follower)) : "Nobody",
+                                       CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
+                                       CHAR_LEVEL(u),
+                                       sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
+                                       sprinttype(nullptr, CHAR_POS(u), g_char_pos),
+                                       IS_PC(u) ? sprinttype(nullptr, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
+                                       char_carry_w_limit(u),
+                                       char_carry_n_limit(u),
+                                       sprintbit(bits1, CHAR_FLAGS(u), g_char_flags),
+                                       (signed long)CHAR_EXP(u),
+                                       CHAR_OFFENSIVE(u),
+                                       CHAR_DEFENSIVE(u),
+                                       sprinttype(nullptr, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
+                                       CHAR_SPEED(u),
+                                       CHAR_NATURAL_ARMOUR(u),
+                                       (signed long)UNIT_HIT(u),
+                                       hit_limit(u),
+                                       hit_gain(u),
+                                       CHAR_MANA(u),
+                                       mana_limit(u),
+                                       mana_gain(u),
+                                       CHAR_ENDURANCE(u),
+                                       move_limit(u),
+                                       move_gain(u),
+                                       CHAR_STR(u),
+                                       CHAR_DEX(u),
+                                       CHAR_CON(u),
+                                       CHAR_CHA(u),
+                                       CHAR_BRA(u),
+                                       CHAR_MAG(u),
+                                       CHAR_DIV(u),
+                                       CHAR_HPP(u));
+        send_to_char(msg, ch);
 
         if (IS_PC(u))
         {
@@ -1202,105 +1179,98 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
             tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
 
             strcpy(tmp, ctime(&PC_TIME(u).connect));
-            snprintf(buf,
-                     sizeof(buf),
-                     "----------------- PLAYER -------------------<br/>"
-                     "Filename [%s]  Unique ID [%ld]  BBS [%3d]  Cracks [%2d]<br/>"
-                     "Skill points: [%ld]  Ability points: [%ld]  CRIMES: [%d]<br/>"
-                     "Hometown: [%s] Prompt: [%s]<br/>VLVL: %d (%d lxp) <br/>"
-                     "Profession: [%d %s]  Guild: [%s (%d member)]<br/>"
-                     "Drunk: [%d]  Full: [%d]  Thirst: [%d]<br/>"
-                     "CCInfo: %s     Setup: %s<br/>"
-                     "Age: %ldY %ldM %ldD %ldH   Lifespan : %dY   Played: %ldDays %ldHours (%d)<br/>"
-                     "Last connected at: %s<br/>"
-                     "Created at       : %s<br/>",
-                     PC_FILENAME(u),
-                     (signed long)PC_ID(u),
-                     PC_ACCESS_LEVEL(u),
-                     PC_CRACK_ATTEMPTS(u),
-                     (signed long)PC_SKILL_POINTS(u),
-                     (signed long)PC_ABILITY_POINTS(u),
-                     PC_CRIMES(u),
-                     STR(PC_HOME(u)),
-                     STR(UPC(u)->promptstr),
-                     PC_VIRTUAL_LEVEL(u),
-                     required_xp(PC_VIRTUAL_LEVEL(u) + 1) - required_xp(PC_VIRTUAL_LEVEL(u)),
-                     PC_PROFESSION(u),
-                     PC_PROFESSION(u) >= 0 && PC_PROFESSION(u) <= PROFESSION_MAX ? g_professions[PC_PROFESSION(u)] : "Undefined",
-                     STR(PC_GUILD(u)),
-                     PC_TIME(u).played - PC_GUILD_TIME(u),
-                     PC_COND(u, DRUNK),
-                     PC_COND(u, FULL),
-                     PC_COND(u, THIRST),
-                     PC_ACCOUNT(u).last4 == -1 ? "NONE" : "SET",
-                     sprintbit(bits1, PC_FLAGS(u), g_pc_flags),
-                     tid1.year,
-                     tid1.month,
-                     tid1.day,
-                     tid1.hours,
-                     PC_LIFESPAN(u),
-                     tid2.day,
-                     tid2.hours,
-                     PC_TIME(u).played,
-                     tmp,
-                     ctime(&PC_TIME(u).creation));
+            auto msg2 = diku::format_to_str("----------------- PLAYER -------------------<br/>"
+                                            "Filename [%s]  Unique ID [%ld]  BBS [%3d]  Cracks [%2d]<br/>"
+                                            "Skill points: [%ld]  Ability points: [%ld]  CRIMES: [%d]<br/>"
+                                            "Hometown: [%s] Prompt: [%s]<br/>VLVL: %d (%d lxp) <br/>"
+                                            "Profession: [%d %s]  Guild: [%s (%d member)]<br/>"
+                                            "Drunk: [%d]  Full: [%d]  Thirst: [%d]<br/>"
+                                            "CCInfo: %s     Setup: %s<br/>"
+                                            "Age: %ldY %ldM %ldD %ldH   Lifespan : %dY   Played: %ldDays %ldHours (%d)<br/>"
+                                            "Last connected at: %s<br/>"
+                                            "Created at       : %s<br/>",
+                                            PC_FILENAME(u),
+                                            (signed long)PC_ID(u),
+                                            PC_ACCESS_LEVEL(u),
+                                            PC_CRACK_ATTEMPTS(u),
+                                            (signed long)PC_SKILL_POINTS(u),
+                                            (signed long)PC_ABILITY_POINTS(u),
+                                            PC_CRIMES(u),
+                                            STR(PC_HOME(u)),
+                                            STR(UPC(u)->promptstr),
+                                            PC_VIRTUAL_LEVEL(u),
+                                            required_xp(PC_VIRTUAL_LEVEL(u) + 1) - required_xp(PC_VIRTUAL_LEVEL(u)),
+                                            PC_PROFESSION(u),
+                                            PC_PROFESSION(u) >= 0 && PC_PROFESSION(u) <= PROFESSION_MAX ? g_professions[PC_PROFESSION(u)]
+                                                                                                        : "Undefined",
+                                            STR(PC_GUILD(u)),
+                                            PC_TIME(u).played - PC_GUILD_TIME(u),
+                                            PC_COND(u, DRUNK),
+                                            PC_COND(u, FULL),
+                                            PC_COND(u, THIRST),
+                                            PC_ACCOUNT(u).last4 == -1 ? "NONE" : "SET",
+                                            sprintbit(bits1, PC_FLAGS(u), g_pc_flags),
+                                            tid1.year,
+                                            tid1.month,
+                                            tid1.day,
+                                            tid1.hours,
+                                            PC_LIFESPAN(u),
+                                            tid2.day,
+                                            tid2.hours,
+                                            PC_TIME(u).played,
+                                            tmp,
+                                            ctime(&PC_TIME(u).creation));
 
-            send_to_char(buf, ch);
+            send_to_char(msg2, ch);
         }
         else /* Stat on a monster */
         {
-            snprintf(buf,
-                     sizeof(buf),
-                     "---------------- NON PLAYER ----------------<br/>"
-                     "Default position: %s<br/>"
-                     "NPC-flags: %s<br/>",
-                     sprinttype(nullptr, NPC_DEFAULT(u), g_char_pos),
-                     sprintbit(bits1, NPC_FLAGS(u), g_npc_flags));
-            send_to_char(buf, ch);
+            auto msg2 = diku::format_to_str("---------------- NON PLAYER ----------------<br/>"
+                                            "Default position: %s<br/>"
+                                            "NPC-flags: %s<br/>",
+                                            sprinttype(nullptr, NPC_DEFAULT(u), g_char_pos),
+                                            sprintbit(bits1, NPC_FLAGS(u), g_npc_flags));
+            send_to_char(msg2, ch);
         }
     }
     else if (IS_OBJ(u)) /* Stat on an object */
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "Object data:<br/>"
-                 "Object type: %s (%d)<br/>"
-                 "Values: [%4ld] [%4ld] [%4ld] [%4ld] [%4ld]<br/>"
-                 "Magic resistance [%d]<br/><br/>"
-                 "%s<br/>"
-                 "Extra flags: %s<br/>"
-                 "Cost: [%lu]  Cost/day: [%lu]  Equipped: %s<br/>",
-                 sprinttype(nullptr, OBJ_TYPE(u), g_obj_types),
-                 OBJ_TYPE(u),
-                 (signed long)OBJ_VALUE(u, 0),
-                 (signed long)OBJ_VALUE(u, 1),
-                 (signed long)OBJ_VALUE(u, 2),
-                 (signed long)OBJ_VALUE(u, 3),
-                 (signed long)OBJ_VALUE(u, 4),
-                 OBJ_RESISTANCE(u),
-                 stat_obj_data(u, wstat_obj_type),
-                 sprintbit(bits1, OBJ_FLAGS(u), g_obj_flags),
-                 (unsigned long)OBJ_PRICE(u),
-                 (unsigned long)OBJ_PRICE_DAY(u),
-                 sprinttype(nullptr, OBJ_EQP_POS(u), g_equip_pos));
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("Object data:<br/>"
+                                       "Object type: %s (%d)<br/>"
+                                       "Values: [%4ld] [%4ld] [%4ld] [%4ld] [%4ld]<br/>"
+                                       "Magic resistance [%d]<br/><br/>"
+                                       "%s<br/>"
+                                       "Extra flags: %s<br/>"
+                                       "Cost: [%lu]  Cost/day: [%lu]  Equipped: %s<br/>",
+                                       sprinttype(nullptr, OBJ_TYPE(u), g_obj_types),
+                                       OBJ_TYPE(u),
+                                       (signed long)OBJ_VALUE(u, 0),
+                                       (signed long)OBJ_VALUE(u, 1),
+                                       (signed long)OBJ_VALUE(u, 2),
+                                       (signed long)OBJ_VALUE(u, 3),
+                                       (signed long)OBJ_VALUE(u, 4),
+                                       OBJ_RESISTANCE(u),
+                                       stat_obj_data(u, wstat_obj_type),
+                                       sprintbit(bits1, OBJ_FLAGS(u), g_obj_flags),
+                                       (unsigned long)OBJ_PRICE(u),
+                                       (unsigned long)OBJ_PRICE_DAY(u),
+                                       sprinttype(nullptr, OBJ_EQP_POS(u), g_equip_pos));
+        send_to_char(msg, ch);
     }
     else /* Stat on a room */
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "Room data:<br/>"
-                 "%s [%s@%s]  Sector type: %s<br/>"
-                 "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
-                 UNIT_TITLE_STRING(u),
-                 UNIT_FI_NAME(u),
-                 UNIT_FI_ZONENAME(u),
-                 sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
-                 UROOM(u)->mapx,
-                 UROOM(u)->mapy,
-                 ROOM_RESISTANCE(u),
-                 UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing");
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("Room data:<br/>"
+                                       "%s [%s@%s]  Sector type: %s<br/>"
+                                       "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
+                                       UNIT_TITLE_STRING(u),
+                                       UNIT_FI_NAME(u),
+                                       UNIT_FI_ZONENAME(u),
+                                       sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
+                                       UROOM(u)->mapx,
+                                       UROOM(u)->mapy,
+                                       ROOM_RESISTANCE(u),
+                                       UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing");
+        send_to_char(msg, ch);
 
         for (i = 0; i <= MAX_EXIT; i++)
         {
@@ -1311,34 +1281,30 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
 
                 if (ROOM_EXIT(u, i)->to_room)
                 {
-                    snprintf(buf,
-                             sizeof(buf),
-                             "EXIT %-5s to [%s@%s] (%s)<br/>"
-                             "   Exit Name: [%s]<br/>"
-                             "   Exit Bits: [%s] Difficulty: [%d]<br/>"
-                             "   Key: [%s]<br/>",
-                             g_dirs[i],
-                             UNIT_FI_NAME(ROOM_EXIT(u, i)->to_room),
-                             UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->to_room),
-                             UNIT_TITLE_STRING(ROOM_EXIT(u, i)->to_room),
-                             cname,
-                             &bits2[0],
-                             ROOM_EXIT(u, i)->difficulty,
-                             ROOM_EXIT(u, i)->key ? ROOM_EXIT(u, i)->key : "");
+                    msg = diku::format_to_str("EXIT %-5s to [%s@%s] (%s)<br/>"
+                                              "   Exit Name: [%s]<br/>"
+                                              "   Exit Bits: [%s] Difficulty: [%d]<br/>"
+                                              "   Key: [%s]<br/>",
+                                              g_dirs[i],
+                                              UNIT_FI_NAME(ROOM_EXIT(u, i)->to_room),
+                                              UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->to_room),
+                                              UNIT_TITLE_STRING(ROOM_EXIT(u, i)->to_room),
+                                              cname,
+                                              &bits2[0],
+                                              ROOM_EXIT(u, i)->difficulty,
+                                              ROOM_EXIT(u, i)->key ? ROOM_EXIT(u, i)->key : "");
                 }
                 else
                 {
-                    snprintf(buf,
-                             sizeof(buf),
-                             "EXIT %-5s to [NOWHERE]<br/>"
-                             "   Exit Name: [%s]<br/>"
-                             "   Exit Bits: [%s]<br/>",
-                             g_dirs[i],
-                             cname,
-                             &bits2[0]);
+                    msg = diku::format_to_str("EXIT %-5s to [NOWHERE]<br/>"
+                                              "   Exit Name: [%s]<br/>"
+                                              "   Exit Bits: [%s]<br/>",
+                                              g_dirs[i],
+                                              cname,
+                                              &bits2[0]);
                 }
                 FREE(cname);
-                send_to_char(buf, ch);
+                send_to_char(msg, ch);
             }
         }
     }
@@ -1346,7 +1312,6 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
 
 static void stat_contents(const class unit_data *ch, class unit_data *u)
 {
-    char buf[MAX_STRING_LENGTH];
     int bright = 0, light = 0;
     class unit_data *orgu;
 
@@ -1358,25 +1323,23 @@ static void stat_contents(const class unit_data *ch, class unit_data *u)
         {
             if (CHAR_LEVEL(ch) >= UNIT_MINV(u))
             {
-                snprintf(buf,
-                         sizeof(buf),
-                         "[%s@%s] Name '%s', Title '%s'  %s (L%d B%d)<br/>",
-                         UNIT_FI_NAME(u),
-                         UNIT_FI_ZONENAME(u),
-                         UNIT_NAME(u),
-                         UNIT_TITLE_STRING(u),
-                         IS_OBJ(u) && OBJ_EQP_POS(u) ? "Equipped" : "",
-                         UNIT_LIGHTS(u),
-                         UNIT_BRIGHT(u));
-                send_to_char(buf, ch);
+                auto msg = diku::format_to_str("[%s@%s] Name '%s', Title '%s'  %s (L%d B%d)<br/>",
+                                               UNIT_FI_NAME(u),
+                                               UNIT_FI_ZONENAME(u),
+                                               UNIT_NAME(u),
+                                               UNIT_TITLE_STRING(u),
+                                               IS_OBJ(u) && OBJ_EQP_POS(u) ? "Equipped" : "",
+                                               UNIT_LIGHTS(u),
+                                               UNIT_BRIGHT(u));
+                send_to_char(msg, ch);
                 bright += UNIT_BRIGHT(u);
                 light += UNIT_LIGHTS(u);
             }
         }
-        snprintf(buf, sizeof(buf), "Contents lights sum = %d, bright sum = %d<br/>", light, bright);
-        send_to_char(buf, ch);
-        snprintf(buf, sizeof(buf), "Parent unit lights total = %d (bright %d)<br/>", UNIT_LIGHTS(orgu), UNIT_BRIGHT(orgu));
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("Contents lights sum = %d, bright sum = %d<br/>", light, bright);
+        send_to_char(msg, ch);
+        msg = diku::format_to_str("Parent unit lights total = %d (bright %d)<br/>", UNIT_LIGHTS(orgu), UNIT_BRIGHT(orgu));
+        send_to_char(msg, ch);
     }
     else
     {

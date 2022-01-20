@@ -6,13 +6,11 @@
  */
 #include "color.h"
 
+#include "formatter.h"
 #include "textutil.h"
-#include "utility.h"
 
 #include <optional>
 #include <sstream>
-
-#include <boost/format.hpp>
 
 std::string color_type::insert(char *key, char *c)
 {
@@ -87,7 +85,7 @@ std::string color_type::change(const std::string &keyword, std::string color)
         search->second = std::move(color);
 
         std::ostringstream strm;
-        strm << boost::format("<div class='%s'>%s = %s</div>") % search->second % keyword % search->second;
+        strm << diku::format_to_str("<div class='%s'>%s = %s</div>", search->second, keyword, search->second);
         return strm.str();
     }
     return {};
@@ -221,7 +219,7 @@ std::string color_type::key_string()
     for (const auto &[keyword, color] : m_map)
     {
         auto i = std::max(0, 25 - static_cast<int>(keyword.length()));
-        strm << boost::format("<div class='%s'>%s%s= %s</div><br/>") % color % keyword % spc(i) % color;
+        strm << diku::format_to_str("<div class='%s'>%s%s= %s</div><br/>", color, keyword, spc(i), color);
     }
     strm << "<br/>";
     return strm.str();

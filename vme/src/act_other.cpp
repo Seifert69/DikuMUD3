@@ -18,7 +18,6 @@
 #include "utils.h"
 #include "vmelimits.h"
 
-#include <cstring>
 #include <ctime>
 
 void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)

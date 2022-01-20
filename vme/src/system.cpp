@@ -10,6 +10,7 @@
 #include "comm.h"
 #include "db.h"
 #include "dilrun.h"
+#include "formatter.h"
 #include "handler.h"
 #include "hookmud.h"
 #include "interpreter.h"
@@ -168,10 +169,8 @@ void descriptor_data::RemoveBBS(void)
 {
     if (nLine != 255)
     {
-        char buf[512];
-
-        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
-        remove(buf);
+        auto filename = diku::format_to_str("%s%d.%d", BBS_DIR, nPort, nLine);
+        remove(filename.c_str());
     }
 }
 
@@ -179,22 +178,19 @@ void descriptor_data::CreateBBS(void)
 {
     if (nLine != 255)
     {
-        char buf[512];
-        FILE *f;
-
-        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
+        auto filename = diku::format_to_str("%s%d.%d", BBS_DIR, nPort, nLine);
 
         if (!character)
         {
-            slog(LOG_ALL, 0, "No character in %s.", buf);
+            slog(LOG_ALL, 0, "No character in %s.", filename);
             return;
         }
 
-        f = fopen(buf, "wb");
+        FILE *f = fopen(filename.c_str(), "wb");
 
         if (!f)
         {
-            slog(LOG_ALL, 0, "Could not create %s.", buf);
+            slog(LOG_ALL, 0, "Could not create %s.", filename);
             return;
         }
 
@@ -360,7 +356,6 @@ void system_memory(class unit_data *ch)
 #ifdef LINUX
     struct rusage rusage_data;
     int n;
-    char Buf[1024];
 
     n = getrusage(RUSAGE_CHILDREN, &rusage_data);
 
@@ -370,19 +365,17 @@ void system_memory(class unit_data *ch)
     }
     else
     {
-        snprintf(Buf,
-                 sizeof(Buf),
-                 "Vol. Switches       %8ld<br/>"
-                 "Max RSS             %8ld<br/>"
-                 "Shared memory size  %8ld<br/>"
-                 "Unshared data size  %8ld<br/>"
-                 "Unshared stack size %8ld<br/><br/>",
-                 rusage_data.ru_nvcsw,
-                 rusage_data.ru_maxrss,
-                 rusage_data.ru_ixrss,
-                 rusage_data.ru_isrss,
-                 rusage_data.ru_idrss);
-        send_to_char(Buf, ch);
+        auto msg = diku::format_to_str("Vol. Switches       %8ld<br/>"
+                                       "Max RSS             %8ld<br/>"
+                                       "Shared memory size  %8ld<br/>"
+                                       "Unshared data size  %8ld<br/>"
+                                       "Unshared stack size %8ld<br/><br/>",
+                                       rusage_data.ru_nvcsw,
+                                       rusage_data.ru_maxrss,
+                                       rusage_data.ru_ixrss,
+                                       rusage_data.ru_isrss,
+                                       rusage_data.ru_idrss);
+        send_to_char(msg, ch);
     }
 #endif
 }

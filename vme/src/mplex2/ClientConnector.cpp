@@ -19,6 +19,7 @@
 #include "color.h"
 #include "echo_server.h"
 #include "essential.h"
+#include "formatter.h"
 #include "hook.h"
 #include "mplex.h"
 #include "network.h"
@@ -70,25 +71,23 @@ void dumbPlayLoop(cConHook *con, const char *cmd)
 
 void cConHook::PlayLoop(const char *cmd)
 {
-    char buf[200];
     if (m_nId == 0)
     {
         if (m_nState == 0)
         {
-            sprintf(buf, "Your ID to %s was reset due to connection lost.<br/>", g_mudname);
+            auto buf = diku::format_to_str("Your ID to %s was reset due to connection lost.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
 
         if (m_nState++ < 50)
         {
-            sprintf(buf, "Waiting to receive an ID from %s.<br/>", g_mudname);
+            auto buf = diku::format_to_str("Waiting to receive an ID from %s.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
 
-        sprintf(buf, "Giving up... You should try to disconnect and try again.<br/>");
-        WriteCon(buf);
+        WriteCon("Giving up... You should try to disconnect and try again.<br/>");
         return;
     }
     else // m_nId != 0
@@ -106,11 +105,9 @@ void dumbMenuSelect(class cConHook *con, const char *cmd)
 // This is where players are when initially connecting only.
 void cConHook::MenuSelect(const char *cmd)
 {
-    char buf[400];
-
     if (!g_MudHook.IsHooked())
     {
-        sprintf(buf, "%s is unreachable right now...<br/>", g_mudname);
+        auto buf = diku::format_to_str("%s is unreachable right now...<br/>", g_mudname);
         SendCon(buf);
         test_mud_up(); // Wonder if I have multi threading issues here :o)
         return;
@@ -118,7 +115,7 @@ void cConHook::MenuSelect(const char *cmd)
 
     if (m_nId == 0)
     {
-        sprintf(buf, "Requesting an ID from %s.<br/>", g_mudname);
+        auto buf = diku::format_to_str("Requesting an ID from %s.<br/>", g_mudname);
         SendCon(buf);
         m_nState = 1; // This means we're waiting for a response
         m_pFptr = dumbPlayLoop;
@@ -126,7 +123,7 @@ void cConHook::MenuSelect(const char *cmd)
     }
     else
     {
-        sprintf(buf, "You got ID from %s...<br/>", g_mudname);
+        auto buf = diku::format_to_str("You got ID from %s...<br/>", g_mudname);
         SendCon(buf);
         m_nState = 0;
         m_pFptr = dumbPlayLoop;
@@ -140,8 +137,7 @@ void dumbMudDown(class cConHook *con, const char *cmd)
 
 void cConHook::MudDown(const char *cmd)
 {
-    char buf[200];
-    sprintf(buf, "There is still no connection to %s.<br/>", g_mudname);
+    auto buf = diku::format_to_str("There is still no connection to %s.<br/>", g_mudname);
     SendCon(buf);
 
     test_mud_up(); // Wonder if I have multi threading issues here :o)
@@ -572,9 +568,19 @@ void cConHook::WriteCon(const char *text)
     Write((ubit8 *)text, strlen(text));
 }
 
+void cConHook::WriteCon(const std::string &text)
+{
+    WriteCon(text.c_str());
+}
+
 void cConHook::SendCon(const char *text)
 {
     WriteCon(ParseOutput(text));
+}
+
+void cConHook::SendCon(const std::string &text)
+{
+    SendCon(text.c_str());
 }
 
 /* ======================= TEXT FORMATTING OUTPUT ====================== */
@@ -596,7 +602,6 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
     const char *last = source, *current;
     char tmpbuf[MAX_STRING_LENGTH * 2];
     int i;
-    unsigned int x, crlen;
     char *newptr;
     int column = 0, cutpoint = MIN(30, width / 2);
 

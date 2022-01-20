@@ -7,6 +7,7 @@
 
 #include "comm.h"
 #include "db.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "structs.h"
@@ -51,9 +52,9 @@ int ball(struct spec_arg *sarg)
             ;
         }
 
-        snprintf(buf, sizeof(buf), "Searching for Objects of type %d with max value[%d]<br/>", v1, v2);
+        auto msg = diku::format_to_str("Searching for Objects of type %d with max value[%d]<br/>", v1, v2);
 
-        send_to_char(buf, sarg->activator);
+        send_to_char(msg, sarg->activator);
 
         for (u = g_unit_list; u; u = u->gnext)
         {
@@ -74,16 +75,14 @@ int ball(struct spec_arg *sarg)
         {
             if (top[i])
             {
-                snprintf(buf,
-                         sizeof(buf),
-                         "%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
-                         (signed long)OBJ_VALUE(top[i], v2),
-                         UNIT_FI_NAME(top[i]),
-                         UNIT_FI_ZONENAME(top[i]),
-                         UNIT_NAME(UNIT_IN(top[i])),
-                         UNIT_FI_NAME(UNIT_IN(top[i])),
-                         UNIT_FI_ZONENAME(UNIT_IN(top[i])));
-                send_to_char(buf, sarg->activator);
+                auto msg2 = diku::format_to_str("%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
+                                                (signed long)OBJ_VALUE(top[i], v2),
+                                                UNIT_FI_NAME(top[i]),
+                                                UNIT_FI_ZONENAME(top[i]),
+                                                UNIT_NAME(UNIT_IN(top[i])),
+                                                UNIT_FI_NAME(UNIT_IN(top[i])),
+                                                UNIT_FI_ZONENAME(UNIT_IN(top[i])));
+                send_to_char(msg2, sarg->activator);
             }
         }
         return SFR_BLOCK;

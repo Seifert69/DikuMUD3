@@ -8,6 +8,7 @@
 #include "comm.h"
 #include "dbfind.h"
 #include "dilrun.h"
+#include "formatter.h"
 #include "interpreter.h"
 #include "structs.h"
 #include "textutil.h"
@@ -360,8 +361,8 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
 
         for (const char **p = args; *p; p++)
         {
-            snprintf(buf, sizeof(buf), "   %s<br/>", *p);
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("   %s<br/>", *p);
+            send_to_char(msg, ch);
         }
 
         return;

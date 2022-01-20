@@ -6,8 +6,8 @@
  */
 
 #include "comm.h"
-#include "common.h"
 #include "db.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
@@ -16,7 +16,6 @@
 #include "utility.h"
 #include "utils.h"
 
-#include <cstdio>
 #include <cstring>
 
 /* also used in "corpses" wizard-command */
@@ -45,7 +44,6 @@ char *in_string(class unit_data *ch, class unit_data *u)
 
 void player_where(class unit_data *ch, char *arg)
 {
-    char buf[160];
     class descriptor_data *d;
     int any = FALSE;
 
@@ -55,8 +53,8 @@ void player_where(class unit_data *ch, char *arg)
             (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->character))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
             d->original == nullptr && CHAR_CAN_SEE(ch, d->character) && unit_zone(ch) == unit_zone(d->character))
         {
-            snprintf(buf, sizeof(buf), "%-30s at %s<br/>", UNIT_NAME(d->character), TITLENAME(unit_room(d->character)));
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("%-30s at %s<br/>", UNIT_NAME(d->character), TITLENAME(unit_room(d->character)));
+            send_to_char(msg, ch);
             any = TRUE;
         }
     }

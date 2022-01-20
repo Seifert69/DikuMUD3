@@ -6,6 +6,7 @@
  */
 #include "cmdload.h"
 #include "comm.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "magic.h"
@@ -739,7 +740,6 @@ int guild_title(struct spec_arg *sarg)
 
 void do_guild(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    char buf[MAX_STRING_LENGTH];
     int found = FALSE;
     class extra_descr_data *exd;
 
@@ -754,8 +754,8 @@ void do_guild(class unit_data *ch, char *arg, const struct command_info *cmd)
         if (exd->names.IsName("$guild"))
         {
             found = TRUE;
-            snprintf(buf, sizeof(buf), "%-30s %-2s<br/>", exd->names.Name(0) + 1, exd->names.Name(1));
-            send_to_char(buf, ch);
+            auto msg = diku::format_to_str("%-30s %-2s<br/>", exd->names.Name(0) + 1, exd->names.Name(1));
+            send_to_char(msg, ch);
         }
     }
 

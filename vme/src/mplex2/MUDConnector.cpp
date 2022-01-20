@@ -17,6 +17,7 @@
 #include "ClientConnector.h"
 #include "MUDConnector.h"
 #include "essential.h"
+#include "formatter.h"
 #include "hook.h"
 #include "mplex.h"
 #include "network.h"
@@ -63,7 +64,6 @@ void test_mud_up(void)
 {
     int fd;
     class cConHook *nextcon, *con;
-    char buf[200];
     static int nRetries = 0;
 
     fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
@@ -104,7 +104,7 @@ void test_mud_up(void)
     for (con = g_connection_list; con; con = nextcon)
     {
         nextcon = con->m_pNext;
-        sprintf(buf, "%s has begun rebooting... please wait.<br/>", g_mudname);
+        auto buf = diku::format_to_str("%s has begun rebooting... please wait.<br/>", g_mudname);
         con->SendCon(buf);
 
         con->m_pFptr = dumbMenuSelect;
@@ -118,7 +118,6 @@ void test_mud_up(void)
 void mud_went_down(void)
 {
     class cConHook *con;
-    char buf[200];
 
     if (g_MudHook.IsHooked())
     {
@@ -127,10 +126,9 @@ void mud_went_down(void)
 
     for (con = g_connection_list; con; con = con->m_pNext)
     {
-        sprintf(buf,
-                "The connection to %s was broken. "
-                "Please be patient...<br/>",
-                g_mudname);
+        auto buf = diku::format_to_str("The connection to %s was broken. "
+                                       "Please be patient...<br/>",
+                                       g_mudname);
         con->SendCon(buf);
         con->m_nId = 0;
         con->m_pFptr = dumbMudDown;

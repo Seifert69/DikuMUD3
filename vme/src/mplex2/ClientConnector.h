@@ -35,7 +35,9 @@ public:
     void AddString(char *str);
     void ParseInput(void);
     void SendCon(const char *str);
+    void SendCon(const std::string &str);
     void WriteCon(const char *str);
+    void WriteCon(const std::string &str);
     char *IndentText(const char *source, char *dest, int dest_size, int width);
     int ColorDisp(const char *current, char *newptr);
     char *ParseOutput(const char *text);
