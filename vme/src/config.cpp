@@ -17,6 +17,7 @@
 #include "diku_exception.h"
 #include "essential.h"
 #include "files.h"
+#include "slog.h"
 #include "str_parse.h"
 #include "structs.h"
 #include "textutil.h"

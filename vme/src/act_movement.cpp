@@ -45,9 +45,9 @@
 #include "interpreter.h"
 #include "movement.h"
 #include "skills.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 #include "vmelimits.h"
 

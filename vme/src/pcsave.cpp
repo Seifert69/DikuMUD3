@@ -11,15 +11,16 @@
 #include "db.h"
 #include "db_file.h"
 #include "dilrun.h"
+#include "error.h"
 #include "files.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "mobact.h"
 #include "money.h"
 #include "reception.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cstdio>

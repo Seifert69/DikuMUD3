@@ -10,12 +10,13 @@
 #include "db.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "error.h"
 #include "handler.h"
 #include "main_functions.h"
+#include "slog.h"
 #include "spec_assign.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cstdio>

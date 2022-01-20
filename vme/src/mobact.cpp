@@ -13,13 +13,12 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
+#include "slog.h"
 #include "spec_assign.h"
 #include "structs.h"
-#include "utility.h"
+#include "szonelog.h"
 #include "utils.h"
 #include "zone_reset.h"
-
-#include <cstdio>
 
 void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {

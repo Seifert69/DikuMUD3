@@ -9,6 +9,7 @@
 #include "config.h"
 #include "db.h"
 #include "main_functions.h"
+#include "slog.h"
 
 #include <sys/time.h>
 

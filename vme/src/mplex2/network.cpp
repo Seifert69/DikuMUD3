@@ -13,6 +13,7 @@
 
 #include "network.h"
 #include "protocol.h"
+#include "slog.h"
 
 #include <fcntl.h>
 #include <netinet/tcp.h>

@@ -8,8 +8,8 @@
 #include "textutil.h"
 
 #include "common.h"
+#include "slog.h"
 #include "structs.h"
-#include "utility.h"
 
 #include <cctype>
 #include <cstdio>

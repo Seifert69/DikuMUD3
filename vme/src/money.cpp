@@ -9,10 +9,11 @@
 
 #include "comm.h"
 #include "db.h"
+#include "error.h"
 #include "handler.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "vmelimits.h"
 
 #include <cassert>
@@ -260,9 +261,12 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
         snprintf(tmp,
                  sizeof(tmp),
                  "A %s %s has been left here.",
-                 amt == 2 ? "couple of"
-                          : amt < 10 ? "few"
-                                     : amt < 100 ? "small pile of" : amt < 1000 ? "pile of" : amt < 50000 ? "large pile of" : "mountain of",
+                 amt == 2      ? "couple of"
+                 : amt < 10    ? "few"
+                 : amt < 100   ? "small pile of"
+                 : amt < 1000  ? "pile of"
+                 : amt < 50000 ? "large pile of"
+                               : "mountain of",
                  money_pluralis(money));
     }
 

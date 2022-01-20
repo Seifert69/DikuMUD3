@@ -10,10 +10,10 @@
 #include "config.h"
 #include "interpreter.h"
 #include "queue.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "trie.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cctype>

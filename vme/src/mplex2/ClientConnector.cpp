@@ -24,9 +24,9 @@
 #include "network.h"
 #include "protocol.h"
 #include "queue.h"
+#include "slog.h"
 #include "textutil.h"
 #include "translate.h"
-#include "utility.h"
 
 #include <arpa/telnet.h>
 #include <fcntl.h>

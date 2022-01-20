@@ -8,12 +8,11 @@
 
 #include "apf_affect.h"
 #include "main_functions.h"
+#include "slog.h"
 #include "structs.h"
 #include "tif_affect.h"
 #include "utility.h"
 #include "utils.h"
-
-#include <cstdio>
 
 class unit_affected_type *affected_list = nullptr; /* Global list pointer       */
 class unit_affected_type *next_affected_dude;      /* dirty - very dirty indeed */

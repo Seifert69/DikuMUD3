@@ -5,6 +5,7 @@
 #include "dilrun.h"
 #include "essential.h"
 #include "hook.h"
+#include "slog.h"
 #include "textutil.h"
 #include "unitfind.h"
 

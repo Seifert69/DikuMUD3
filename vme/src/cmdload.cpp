@@ -25,11 +25,10 @@
 #include "modify.h"
 #include "reception.h"
 #include "skills.h"
+#include "slog.h"
 #include "spell_parser.h"
-#include "structs.h"
 #include "textutil.h"
 #include "trie.h"
-#include "utility.h"
 #include "vmelimits.h"
 
 #include <cstdio>

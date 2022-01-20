@@ -22,7 +22,7 @@
 #include "network.h"
 #include "protocol.h"
 #include "queue.h"
-#include "utility.h"
+#include "slog.h"
 
 #include <unistd.h>
 

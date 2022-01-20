@@ -18,14 +18,12 @@
 #include "interpreter.h"
 #include "modify.h"
 #include "skills.h"
+#include "slog.h"
 #include "spell_parser.h"
 #include "spells.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
-
-#include <cstdio>
 
 /* Returns TRUE when effect is shown by DIL */
 

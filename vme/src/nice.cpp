@@ -8,6 +8,7 @@
 #include "comm.h"
 #include "db.h"
 #include "main_functions.h"
+#include "slog.h"
 
 #include <cstdio>
 

@@ -12,15 +12,14 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "mobact.h"
+#include "slog.h"
 #include "spec_assign.h"
 #include "structs.h"
-#include "utility.h"
 #include "utils.h"
 #include "weather.h"
 #include "zone_reset.h"
 
 #include <sys/time.h>
-#include <unistd.h>
 
 #include <cstdio>
 #include <cstdlib>

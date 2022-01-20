@@ -10,6 +10,7 @@
 #include "common.h"
 #include "db_file.h"
 #include "dil.h"
+#include "error.h"
 #include "pp.h"
 #include "vmc_process.h"
 

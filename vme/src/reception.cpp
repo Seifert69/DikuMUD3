@@ -14,9 +14,9 @@
 #include "money.h"
 #include "pcsave.h"
 #include "slime.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 #include "zon_basis.h"
 
@@ -319,10 +319,13 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
             equip_char(unit, tmp_u, tmp_i);
         }
     }
-    else /* UNIT CONTAINS NOTHING */
-        if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+    else
     {
-        enlist(pBuf, unit, level, fast);
+        /* UNIT CONTAINS NOTHING */
+        if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+        {
+            enlist(pBuf, unit, level, fast);
+        }
     }
 }
 

@@ -7,8 +7,8 @@
 
 #include "extra.h"
 
+#include "error.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 //

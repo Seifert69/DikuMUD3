@@ -20,6 +20,7 @@
 #include "pcsave.h"
 #include "pipe.h"
 #include "signals.h"
+#include "slog.h"
 #include "structs.h"
 #include "system.h"
 #include "utils.h"
