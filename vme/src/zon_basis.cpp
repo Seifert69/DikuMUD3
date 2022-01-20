@@ -9,9 +9,9 @@
 #include "db.h"
 #include "handler.h"
 #include "interpreter.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cstdio>
@@ -197,11 +197,11 @@ int log_object(struct spec_arg *sarg)
 
             if (LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
             {
-                while (!str_is_empty(g_log_buf[*ip].str))
+                while (!g_log_buf[*ip].getString().empty())
                 {
-                    if (g_log_buf[*ip].level <= lev && g_log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
+                    if (g_log_buf[*ip].getLevel() <= lev && g_log_buf[*ip].getWizInvLevel() <= CHAR_LEVEL(ch))
                     {
-                        cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
+                        cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].getString().c_str(), cActParameter(), TO_CHAR, "log");
                     }
                     *ip = ((*ip + 1) % MAXLOG);
                 }
@@ -250,7 +250,11 @@ int log_object(struct spec_arg *sarg)
                     act("Current log level is `$2t'.",
                         A_ALWAYS,
                         ch,
-                        c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive",
+                        c == 'd'   ? "dil"
+                        : c == 'o' ? "off"
+                        : c == 'b' ? "brief"
+                        : c == 'a' ? "all"
+                                   : "extensive",
                         cActParameter(),
                         TO_CHAR);
                     return SFR_BLOCK;
@@ -259,7 +263,10 @@ int log_object(struct spec_arg *sarg)
                 act("You will now see the $2t log.",
                     A_ALWAYS,
                     ch,
-                    c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive",
+                    c == 'd'   ? "dil"
+                    : c == 'b' ? "brief"
+                    : c == 'a' ? "entire"
+                               : "extensive",
                     cActParameter(),
                     TO_CHAR);
                 OBJ_VALUE(sarg->owner, 0) = c;

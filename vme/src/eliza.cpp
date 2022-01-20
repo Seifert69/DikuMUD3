@@ -12,9 +12,9 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cassert>

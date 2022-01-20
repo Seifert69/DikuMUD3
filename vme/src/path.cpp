@@ -11,12 +11,12 @@
 #include "db.h"
 #include "main_functions.h"
 #include "sector.h"
+#include "slog.h"
 #include "structs.h"
 #include "utils.h"
 
 #include <pthread.h>
 
-#include <cstdio>
 #include <list>
 #include <vector>
 

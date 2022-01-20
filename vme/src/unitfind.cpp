@@ -10,8 +10,8 @@
 #include "common.h"
 #include "db.h"
 #include "handler.h"
+#include "slog.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cctype>

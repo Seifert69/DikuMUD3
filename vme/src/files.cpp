@@ -11,9 +11,9 @@
     #include <io.h>
 #endif
 
+#include "error.h"
 #include "files.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <fcntl.h>

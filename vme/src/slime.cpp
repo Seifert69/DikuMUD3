@@ -9,6 +9,7 @@
 #include "db.h"
 #include "files.h"
 #include "interpreter.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utils.h"

@@ -14,11 +14,11 @@
 
 #include "ClientConnector.h"
 #include "mplex.h"
+#include "slog.h"
 #include "translate.h"
 #include "ttydef.h"
 
 #include <arpa/telnet.h>
-#include <strings.h>
 
 #include <cstdio>
 

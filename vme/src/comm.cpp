@@ -13,10 +13,10 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "protocol.h"
+#include "slog.h"
 #include "structs.h"
 #include "system.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cctype>

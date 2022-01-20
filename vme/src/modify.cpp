@@ -23,9 +23,9 @@
 #include "money.h"
 #include "nanny.h"
 #include "skills.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <unistd.h>
@@ -252,40 +252,33 @@ int search_block_set(char *arg, const char **list, bool exact)
     return -1;
 }
 
+// clang-format off
 /* show possible fields */
-#define GET_FIELD_UT(c)                                                                                                                    \
-    (c) == UT_CHAR                                                                                                                         \
-        ? "Char"                                                                                                                           \
-        : (c) == UT_PC ? "Pc"                                                                                                              \
-                       : (c) == UT_NPC ? "Npc" : (c) == UT_OBJ ? "Obj" : (c) == UT_UNIT ? "Unit" : (c) == UT_ROOM ? "Room" : "Not Used"
+#define GET_FIELD_UT(c)                                               \
+    (c) == UT_CHAR   ? "Char"                                         \
+    : (c) == UT_PC   ? "Pc"                                           \
+    : (c) == UT_NPC  ? "Npc"                                          \
+    : (c) == UT_OBJ  ? "Obj"                                          \
+    : (c) == UT_UNIT ? "Unit"                                         \
+    : (c) == UT_ROOM ? "Room"                                         \
+                     : "Not Used"
 
-#define GET_FIELD_AT(c)                                                                                                                    \
-    (c) == AT_VAL                                                                                                                          \
-        ? "&lt;value&gt;"                                                                                                                  \
-        : (c) == AT_BIT                                                                                                                    \
-              ? "&lt;bitlist&gt;"                                                                                                          \
-              : (c) == AT_TYP                                                                                                              \
-                    ? "&lt;type&gt;"                                                                                                       \
-                    : (c) == AT_STR                                                                                                        \
-                          ? "&lt;string&gt;"                                                                                               \
-                          : (c) == AT_DES                                                                                                  \
-                                ? "(enter description)"                                                                                    \
-                                : (c) == AT_UNT                                                                                            \
-                                      ? "&lt;unitpath&gt;"                                                                                 \
-                                      : (c) == AT_KEYDES                                                                                   \
-                                            ? "&lt;keyword&gt; (enter description)"                                                        \
-                                            : (c) == AT_TYPVAL                                                                             \
-                                                  ? "&lt;type&gt; &lt;value&gt;"                                                           \
-                                                  : (c) == AT_DIRBIT                                                                       \
-                                                        ? "&lt;direction&gt; &lt;bitlist&gt;"                                              \
-                                                        : (c) == AT_TYPDES                                                                 \
-                                                              ? "&lt;type&gt; (enter description)"                                         \
-                                                              : (c) == AT_DIRSTR                                                           \
-                                                                    ? "&lt;direction&gt; &lt;string&gt;"                                   \
-                                                                    : (c) == AT_DIRUNT                                                     \
-                                                                          ? "&lt;direction&gt; &lt;unitpath&gt;"                           \
-                                                                          : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"     \
-                                                                                             : "Not usable"
+#define GET_FIELD_AT(c)                                               \
+    (c) == AT_VAL      ? "&lt;value&gt;"                              \
+    : (c) == AT_BIT    ? "&lt;bitlist&gt;"                            \
+    : (c) == AT_TYP    ? "&lt;type&gt;"                               \
+    : (c) == AT_STR    ? "&lt;string&gt;"                             \
+    : (c) == AT_DES    ? "(enter description)"                        \
+    : (c) == AT_UNT    ? "&lt;unitpath&gt;"                           \
+    : (c) == AT_KEYDES ? "&lt;keyword&gt; (enter description)"        \
+    : (c) == AT_TYPVAL ? "&lt;type&gt; &lt;value&gt;"                 \
+    : (c) == AT_DIRBIT ? "&lt;direction&gt; &lt;bitlist&gt;"          \
+    : (c) == AT_TYPDES ? "&lt;type&gt; (enter description)"           \
+    : (c) == AT_DIRSTR ? "&lt;direction&gt; &lt;string&gt;"           \
+    : (c) == AT_DIRUNT ? "&lt;direction&gt; &lt;unitpath&gt;"         \
+    : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"      \
+                       : "Not usable"
+// clang-format on
 
 void show_fields(class unit_data *ch)
 {

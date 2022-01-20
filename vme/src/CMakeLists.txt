@@ -39,12 +39,14 @@ set(VME_SRCS
         dilshare.cpp dilshare.h
         dilsup.cpp dilsup.h
         eliza.cpp eliza.h
+        error.h
         essential.h
         event.cpp event.h
         experience.cpp experience.h
         extra.cpp extra.h
         fight.cpp fight.h
         files.cpp files.h
+        formatter.h
         guild.cpp guild.h
         handler.cpp handler.h
         hook.cpp hook.h
@@ -73,6 +75,7 @@ set(VME_SRCS
         signals.cpp signals.h
         skills.cpp skills.h
         slime.cpp slime.h
+        slog.h
         spec_assign.cpp spec_assign.h
         spec_procs.cpp spec_procs.h
         spell_parser.cpp spell_parser.h
@@ -80,6 +83,7 @@ set(VME_SRCS
         str_parse.cpp str_parse.h
         structs.cpp structs.h
         system.cpp system.h
+        szonelog.h
         teach.cpp teach.h
         textutil.cpp textutil.h
         tif_affect.cpp tif_affect.h

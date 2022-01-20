@@ -16,8 +16,8 @@
 #include "mobact.h"
 #include "money.h"
 #include "nanny.h"
+#include "slog.h"
 #include "spec_assign.h"
-#include "utility.h"
 #include "utils.h"
 #include "zon_basis.h"
 
@@ -1157,43 +1157,4 @@ class extra_descr_data *quest_add(class unit_data *ch, const char *name, const c
     assert(name[0]);
 
     return PC_QUEST(ch).add(name, descr);
-}
-
-/* void szonelog(char *zonename, const char *fmt, ...) */
-void szonelog(class zone_type *zone, const char *fmt, ...)
-{
-    char name[256]{};
-    char buf[MAX_STRING_LENGTH]{};
-    char buf2[MAX_STRING_LENGTH + 512]{};
-    va_list args;
-    FILE *f;
-
-    va_start(args, fmt);
-    vsnprintf(buf, MAX_STRING_LENGTH - 51, fmt, args);
-    va_end(args);
-
-    if (zone == nullptr)
-    {
-        slog(LOG_ALL, 0, buf);
-        return;
-    }
-
-    snprintf(buf2, sizeof(buf2), "%s/%s", zone->name, buf);
-    slog(LOG_ALL, 0, buf2);
-
-    snprintf(name, sizeof(name), "%s%s.err", g_cServerConfig.getZoneDir().c_str(), zone->filename);
-
-    if ((f = fopen_cache(name, "a")) == nullptr)
-    {
-        slog(LOG_ALL, 0, "Unable to append to zonelog '%s'", name);
-    }
-    else
-    {
-        time_t now = time(nullptr);
-        char *tmstr = ctime(&now);
-
-        tmstr[strlen(tmstr) - 1] = '\0';
-
-        fprintf(f, "%s :: %s\n", tmstr, buf);
-    }
 }

@@ -12,9 +12,11 @@
 #include "main_functions.h"
 #include "money.h"
 #include "skills.h"
+#include "slog.h"
 #include "spec_procs.h"
 #include "str_parse.h"
 #include "structs.h"
+#include "szonelog.h"
 #include "textutil.h"
 #include "utils.h"
 

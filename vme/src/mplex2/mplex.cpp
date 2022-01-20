@@ -19,6 +19,7 @@
 #include "hook.h"
 #include "mplex.h"
 #include "network.h"
+#include "slog.h"
 #include "textutil.h"
 
 #include <netdb.h>
@@ -28,7 +29,6 @@
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 
 char g_mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;

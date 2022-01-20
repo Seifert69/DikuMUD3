@@ -1,5 +1,6 @@
 #include "ClientConnector.h"
 #include "mplex.h"
+#include "slog.h"
 #include "textutil.h"
 
 #include <websocketpp/config/asio_no_tls.hpp>

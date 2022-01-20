@@ -16,6 +16,7 @@
 #include "money.h"
 #include "nanny.h"
 #include "pcsave.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "utils.h"

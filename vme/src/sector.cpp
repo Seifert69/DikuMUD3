@@ -2,6 +2,7 @@
 
 #include "db.h"
 #include "essential.h"
+#include "slog.h"
 
 #include <fstream>
 #include <queue>

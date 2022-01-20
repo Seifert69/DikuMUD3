@@ -10,6 +10,7 @@
 #include "dil.h"
 #include "dilexp.h"
 #include "dilinst.h"
+#include "error.h"
 #include "essential.h"
 #include "handler.h"
 #include "interpreter.h"
@@ -17,8 +18,8 @@
 #include "main_functions.h"
 #include "mobact.h"
 #include "structs.h"
+#include "szonelog.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <sys/time.h>

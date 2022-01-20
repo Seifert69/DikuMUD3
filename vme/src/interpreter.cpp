@@ -12,12 +12,12 @@
 #include "db.h"
 #include "dilrun.h"
 #include "mobact.h"
+#include "slog.h"
 #include "spec_assign.h"
 #include "structs.h"
 #include "textutil.h"
 #include "trie.h"
 #include "unitfind.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cstdlib>

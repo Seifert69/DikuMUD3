@@ -17,8 +17,8 @@
 #include "main_functions.h"
 #include "skills.h"
 #include "structs.h"
+#include "szonelog.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 #include "vmelimits.h"
 

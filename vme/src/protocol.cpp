@@ -12,7 +12,7 @@
 #include "db_file.h"
 #include "essential.h"
 #include "protocol.h"
-#include "utility.h"
+#include "slog.h"
 
 #include <cassert>
 #include <cstring>

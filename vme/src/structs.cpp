@@ -13,6 +13,7 @@
 #include "db_file.h"
 #include "handler.h"
 #include "mobact.h"
+#include "slog.h"
 #include "textutil.h"
 #include "utils.h"
 

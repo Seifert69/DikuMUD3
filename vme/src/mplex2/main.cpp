@@ -14,7 +14,6 @@
     #include <time.h>
 #endif
 
-#include "ClientConnector.h"
 #include "MUDConnector.h"
 #include "compile_defines.h"
 #include "echo_server.h"
@@ -22,6 +21,7 @@
 #include "hook.h"
 #include "mplex.h"
 #include "network.h"
+#include "slog.h"
 #include "translate.h"
 
 #include <unistd.h>

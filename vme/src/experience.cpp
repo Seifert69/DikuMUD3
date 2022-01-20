@@ -15,9 +15,9 @@
 #include "magic.h"
 #include "modify.h"
 #include "skills.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
-#include "utility.h"
 #include "utils.h"
 
 #include <cstdio>
