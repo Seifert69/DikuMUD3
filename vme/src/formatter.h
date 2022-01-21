@@ -26,10 +26,11 @@ namespace diku
 template<typename T>
 void format(boost::format &formatter, T &&last_value)
 {
-    if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t>)
+    if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t> ||
+                  std::is_same_v<typename std::remove_reference<T>::type, int8_t>)
     {
-        // Upcasting uint8_t's so that they print numbers not the character
-        formatter % static_cast<uint16_t>(last_value);
+        // Upcasting (u)int8_t's so that they print numbers not the character
+        formatter % static_cast<int16_t>(last_value);
     }
     else
     {
@@ -54,10 +55,11 @@ void format(boost::format &formatter, T &&last_value)
 template<typename T, typename... ParamPack>
 void format(boost::format &formatter, T &&first_arg, ParamPack &&...rest_args)
 {
-    if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t>)
+    if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t> ||
+                  std::is_same_v<typename std::remove_reference<T>::type, int8_t>)
     {
-        // Upcasting uint8_t's so that they print numbers not the character
-        formatter % static_cast<uint16_t>(first_arg);
+        // Upcasting (u)int8_t's so that they print numbers not the character
+        formatter % static_cast<int16_t>(first_arg);
     }
     else
     {
