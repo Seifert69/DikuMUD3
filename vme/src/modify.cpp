@@ -300,15 +300,13 @@ void show_fields(class unit_data *ch)
 
 void show_structure(const char *structure[], class unit_data *ch)
 {
-    char **c;
-    std::string s;
-
     if (structure == nullptr)
     {
         return;
     }
 
-    for (c = (char **)structure; *c; c++)
+    std::string s;
+    for (char **c = (char **)structure; *c; c++)
     {
         s += diku::format_to_str("%s<br/>", *c);
     }

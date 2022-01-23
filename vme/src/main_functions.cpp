@@ -60,7 +60,7 @@ int g_mud_reboot = 0;   /* reboot the game after a shutdown */
 int g_wizlock = 0;      /* no mortals on now */
 int g_tics = 60;        /* number of tics since boot-time */
 
-char g_world_boottime[64] = ""; /* boottime of world */
+std::string g_world_boottime; /* boottime of world */
 
 /* ******************************************************************* *
  *             main game loop and related stuff                        *

@@ -7,6 +7,7 @@
 #include "affect.h"
 #include "db.h"
 #include "db_file.h"
+#include "formatter.h"
 #include "handler.h"
 #include "nanny.h"
 #include "pcsave.h"
@@ -328,11 +329,10 @@ class unit_data *convert_load_player(char *name)
 
 const char *isodate(struct tm *t)
 {
-    static char buf[200];
+    static std::string isodate;
 
-    snprintf(buf, sizeof(buf), "%04d-%02d-%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
-
-    return buf;
+    isodate = diku::format_to_str("%04d-%02d-%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
+    return isodate.c_str();
 }
 
 void clist()

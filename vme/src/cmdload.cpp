@@ -21,6 +21,7 @@
 #include "db.h"
 #include "experience.h"
 #include "files.h"
+#include "formatter.h"
 #include "interpreter.h"
 #include "modify.h"
 #include "reception.h"
@@ -72,9 +73,6 @@ struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast"
 
 void skill_dump(void)
 {
-    std::string str;
-    char buf[MAX_STRING_LENGTH];
-
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
@@ -86,20 +84,13 @@ void skill_dump(void)
                 continue;
             }
 
-            str = "";
+            std::string str = diku::format_to_str("%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
 
-            snprintf(buf, sizeof(buf), "%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
-            str.append(buf);
-
-            snprintf(buf,
-                     sizeof(buf),
-                     ".profession %s%s = %s%d\n",
-                     g_professions[j],
-                     spc(12 - strlen(g_professions[j])),
-                     (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                     g_SkiColl.prof_table[i].profession_cost[j]);
-            str.append(buf);
-
+            str += diku::format_to_str(".profession %s%s = %s%d\n",
+                                       g_professions[j],
+                                       spc(12 - strlen(g_professions[j])),
+                                       (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                                       g_SkiColl.prof_table[i].profession_cost[j]);
             /*if (g_SkiColl.prof_table[i].min_level > 0)
             {
                 s printf(buf, "restrict level          = %d\n", g_SkiColl.prof_table[i].min_level);
