@@ -3784,7 +3784,8 @@ descr "A pair of Skin gauntlets lie here."
 extra {}
 "These gauntlets look like someone has cut off their enemies hands and
 made a pair of skin tight gauntlets from the skin."
-CHAR_FLAG_TRANSFER(CHAR_HIDE) ARMOUR_PLATE(25, +25)
+CHAR_FLAG_TRANSFER(CHAR_HIDE) 
+ARMOUR_PLATE(25, +25)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 5
 MAG_TRANSFER (8)
