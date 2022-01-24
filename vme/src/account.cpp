@@ -145,7 +145,7 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
                                        "Credit to date : %5.2f\n\r"
                                        "Credit Card    : %s\n\r"
                                        "Discount       : %3d%%\n\r"
-                                       "Flat Rate      : %s%s\n\r"
+                                       "Flat Rate      : %s%s"
                                        "Crack counter  : %3d\n\r",
                                        (float)PC_ACCOUNT(u).credit / 100.0,
                                        (float)PC_ACCOUNT(u).credit_limit / 100.0,
