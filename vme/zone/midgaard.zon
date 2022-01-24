@@ -9378,20 +9378,6 @@ cost 6   COPPER_PIECE
 end
 
 
-                                  lth_cap1
-
-names {"leather cap","cap"}
-title "a leather cap"
-descr "A leather cap is lying on the ground."
-manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_PLATE(0, 0) /* 10 default str, Leather Quality, Average Craft */
-weight 25
-cost 6   COPPER_PIECE
-dilcopy abil_restrict@function(ABIL_STR, 70, 0, 0, "");
-
-end
-
-
 
                                  lth_gloves
 
@@ -9401,19 +9387,6 @@ descr "A pair of leather gloves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
 weight 2
-cost 6   COPPER_PIECE
-end
-
-
-                                 lth_gloves1
-
-names {"leather gloves","gloves"}
-title "a pair of leather gloves"
-descr "A pair of leather gloves is lying on the ground."
-manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
-ARMOUR_PLATE(0, 0) /* 10 default str, Leather Quality, Average Craft */
-weight 25
-dilcopy abi_restrict@function(ABIL_STR, 70, 0, 0, "");
 cost 6   COPPER_PIECE
 end
 
@@ -9429,19 +9402,6 @@ weight 2
 cost 8   COPPER_PIECE
 end
 
-                                lth_sleeves1
-
-names {"leather sleeves","sleeves"}
-title "a pair of leather sleeves"
-descr "A pair of leather sleeves is lying on the ground."
-manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_PLATE(0, 0) /* 10 default str, Leather Quality, Average Craft */
-weight 25
-dilcopy abi_restrict@function(ABIL_STR, 70, 0, 0, "");
-cost 8   COPPER_PIECE
-end
-
-
 
                                 lth_jerkin
 
@@ -9452,19 +9412,6 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
 weight 2
 cost 6   COPPER_PIECE
-end
-
-
-                                lth_jerkin1
-
-names {"leather jerkin","jerkin"}
-title "a leather jerkin"
-descr "A leather jerkin is lying on the ground."
-manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(0, 0) /* 10 default str, Leather Quality, Average Craft */
-weight 25
-cost 6   COPPER_PIECE
-dilcopy abi_restrict@function(ABIL_STR, 70, 0, 0, "");
 end
 
 
@@ -9490,30 +9437,6 @@ extra "$rem_o"
 end
 
 
-                lth_pants1
-
-names {"leather pants", "pants"}
-title "a pair of leather pants"
-descr "A pair of leather pants is lying on the ground."
-manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_PLATE(0, 0) /* 10 default str, Leather Quality, Average Craft */
-weight 25
-cost 8   COPPER_PIECE
-extra "$wear_s"
-"You slip into the $2N and feel rather smart."
-extra "$wear_o"
-"$1n slips into the $2N."
-
-extra "$rem_s"
-"You get out of the $2N and feel a little naked."
-extra "$rem_o"
-"$1n gets out of $1s $2N."
-
-dilcopy abi_restrict@function(ABIL_STR, 70, 0, 0, "");
-
-end
-
-
 
 lth_boots
 names {"leather boots", "boots"}
@@ -9527,18 +9450,6 @@ end
 
 
 
-
-                                lth_boots1
-
-names {"leather boots", "boots"}
-title "a pair of leather boots"
-descr "A pair of leather boots lies here."
-manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_PLATE(0, 0) /* 10 default str, Leather Quality, Average Craft */
-weight 23
-cost 6   COPPER_PIECE
-dilcopy abi_restrict@function(ABIL_STR, 70, 0, 0, "");
-end
 
 /* -------------------------- STUDDED ARMOURS -------------------------- */
 
