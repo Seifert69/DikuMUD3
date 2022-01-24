@@ -89,6 +89,7 @@ set(VME_SRCS
         textutil.cpp textutil.h
         tif_affect.cpp tif_affect.h
         trie.cpp trie.h
+        OutputCapture.cpp OutputCapture.h
         unitfind.cpp unitfind.h
         utility.cpp utility.h
         utils.h

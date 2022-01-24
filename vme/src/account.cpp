@@ -53,6 +53,9 @@ void account_cclog(class unit_data *ch, int amount)
 
 static void account_log(char action, class unit_data *god, class unit_data *pc, int amount)
 {
+    // If a unit test is being run, send results there too
+    unit_tests::OutputCapture::account_log(action, god, pc, amount);
+
     time_t now = time(nullptr);
     char *c;
     char buf[1024];

@@ -23,6 +23,7 @@ set(VMC_SRCS
         ../structs.cpp ../structs.h
         ../textutil.cpp ../textutil.h
         ../utility.cpp ../utility.h
+        ../OutputCapture.cpp ../OutputCapture.h
         )
 
 BISON_TARGET(vmcpar vmcpar.y

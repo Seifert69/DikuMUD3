@@ -177,6 +177,9 @@ void send_to_descriptor(const std::string &messg, class descriptor_data *d)
 
 void page_string(class descriptor_data *d, const char *messg)
 {
+    // If a unit test is being run, send results there too
+    unit_tests::OutputCapture::page_string(d, messg);
+
     if (d && messg && *messg)
     {
         std::string mystr;
@@ -202,6 +205,9 @@ void page_string(class descriptor_data *d, const std::string &messg)
 
 void send_to_char(const char *messg, const class unit_data *ch)
 {
+    // If a unit test is being run, send results there too
+    unit_tests::OutputCapture::send_to_char(messg, ch);
+
     if (IS_CHAR(ch))
     {
         send_to_descriptor(messg, CHAR_DESCRIPTOR(ch));
