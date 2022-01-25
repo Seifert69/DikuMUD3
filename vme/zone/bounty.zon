@@ -1422,6 +1422,12 @@ code
 		goto start;
 	}
 
+	if(((pc.exp) >= (getinteger(DIL_GINT_REQXP, null, pc.level+1))) and (pc.level < 50))
+	{
+		exec("say Try leveling up and coming back for some new packages!", self);
+		unsecure(pc);
+		goto start;
+	}
 	minlev:=pc.level+(pc.level/10);
 	if(pc.level==50) maxlev:=199;
 	else maxlev:=pc.level+(pc.level/5);
