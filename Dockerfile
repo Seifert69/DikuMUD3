@@ -1,10 +1,9 @@
-FROM ubuntu:20.10 as build
+FROM ubuntu:latest as build
 
 LABEL description="DikuMUD III Builder"
 WORKDIR /dikumud3
-RUN apt-get update && apt-get install -y build-essential ccache bison flex libboost-all-dev
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y build-essential ccache bison flex libboost-all-dev cmake
 COPY . .
-RUN cd vme/src && make clean && make all -j4
-RUN cd vme/etc && make all
-RUN cd vme/zone && ../bin/vmc -m -I../include/ *.zon
+RUN mkdir dkr_build && cd dkr_build && cmake .. && make -j 4
 ENTRYPOINT [ "/dikumud3/entrypoint.sh" ]

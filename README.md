@@ -97,3 +97,12 @@ DOCKER_BUILDKIT=1 docker build . -t dikumud3
 ```console
 docker run -d -p 4280:4280 dikumud3
 ```
+If the above gives an error like below, it may be because your distro sets `DOCKER_CONTENT_TRUST`. This stops docker from executing images that have not been digitally signed by the creator. You can disable the check by setting the env to zero.
+```
+[user@localhost]$ docker run -d -p 4280:4280 dikumud3
+docker: you are not authorized to perform this operation: server returned 401.
+See 'docker run --help'.
+[user@localhost]$ env | grep DOCKER
+32:DOCKER_CONTENT_TRUST=1
+[user@localhost]$ DOCKER_CONTENT_TRUST=0 docker run -d -p 4280:4280 dikumud3
+```
