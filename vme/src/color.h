@@ -24,31 +24,15 @@ public:
     // passed, so I didn't want implicit conversions happening
     // There are std::string overloads for all of them which these
     // just call
-    // clang-format off
-    [[deprecated("use std::string insert(std::string keyword, std::string color) instead"), nodiscard]]
-    std::string insert(char *key, char *c);
-
-    [[deprecated("use void insert(const std::string &combo) instead")]]
+    [[nodiscard]] std::string insert(char *key, char *c);
     void insert(const char *combo);
-
-    [[deprecated("use std::string change(const std::string &keyword, std::string color) instead"), nodiscard]]
-    std::string change(char *key, char *c);
-
-    [[deprecated("use void change(const std::string &combo) instead")]]
+    [[nodiscard]] std::string change(char *key, char *c);
     void change(const char *combo);
-
-    [[deprecated("use std::string get(const std::string &key) const instead"), nodiscard]]
-    std::string get(const char *key) const;
-
-    [[deprecated("use std::string get(const std::string &key, std::string &full_key) const instead"), nodiscard]]
-    std::string get(const char *key, char *full_key) const;
-
-    [[deprecated("use int remove(const std::string &key) instead")]]
+    [[nodiscard]] std::string get(const char *key) const;
+    [[nodiscard]] std::string get(const char *key, char *full_key) const;
     int remove(char *key);
-
-    [[deprecated("use void create(const std::string &input_string) instead")]]
     void create(const char *input_str);
-    // clang-format on
+
 public:
     color_type() = default;
     color_type(const color_type &) = delete;
