@@ -346,13 +346,13 @@ void send_saves(class unit_data *parent, class unit_data *unit)
     }
 }
 
-char *ContentsFileName(const char *pName)
+const char *ContentsFileName(const char *pName)
 {
-    static char Buf[MAX_INPUT_LENGTH + 1];
+    static std::string Buf;
 
-    snprintf(Buf, sizeof(Buf), "%s.inv", PlayerFileName(pName));
+    Buf = PlayerFileName(pName) + ".inv";
 
-    return Buf;
+    return Buf.c_str();
 }
 
 /* Save all units inside 'unit' in the blk_file 'bf' as uncompressed  */

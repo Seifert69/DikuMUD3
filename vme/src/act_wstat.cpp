@@ -48,30 +48,21 @@
 
 static void stat_world_count(const class unit_data *ch, char *arg)
 {
-    char buf[MAX_STRING_LENGTH];
-    std::string mystr;
-    class unit_data *u, *t;
-    int i;
-    int n;
-
     int nMinCount = atoi(arg);
+    auto msg = diku::format_to_str("The first 40 units containing at least %d units:<br/>", nMinCount);
 
-    snprintf(buf, sizeof(buf), "The first 40 units containing at least %d units:<br/>", nMinCount);
-    mystr = buf;
-
-    n = 0;
-    for (u = g_unit_list; u; u = u->gnext)
+    int n = 0;
+    for (unit_data *u = g_unit_list; u; u = u->gnext)
     {
-        i = 0;
-        for (t = UNIT_CONTAINS(u); t; t = t->next)
+        int i = 0;
+        for (unit_data *t = UNIT_CONTAINS(u); t; t = t->next)
         { // count top layer
             i++;
         }
 
         if (i >= nMinCount)
         {
-            snprintf(buf, sizeof(buf), "%s@%s(%s) : %d units <br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), UNIT_NAME(u), i);
-            mystr.append(buf);
+            msg += diku::format_to_str("%s@%s(%s) : %d units <br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), UNIT_NAME(u), i);
             n++;
 
             if (n >= 40)
@@ -81,32 +72,23 @@ static void stat_world_count(const class unit_data *ch, char *arg)
         }
     }
 
-    mystr.append("<br/>");
+    msg += "<br/>";
 
-    page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 static void stat_world_extra(const class unit_data *ch)
 {
-    char buf[MAX_STRING_LENGTH];
-    int i;
-    std::string mystr;
+    auto msg = diku::format_to_str("World zones (%d):<br/>", g_zone_info.no_of_zones);
+    msg += "<div class='fourcol'>";
 
-    mystr = "";
-    snprintf(buf, sizeof(buf), "World zones (%d):<br/>", g_zone_info.no_of_zones);
-    mystr.append(buf);
-
-    mystr = "<div class='fourcol'>";
-
-    auto zp = g_zone_info.mmp.begin();
-    for (i = 1; zp != g_zone_info.mmp.end(); zp++, i++)
+    for (auto zp : g_zone_info.mmp)
     {
-        snprintf(buf, sizeof(buf), "<a cmd='goto #'>%s</a><br/>", zp->second->name);
-        mystr.append(buf);
+        msg += diku::format_to_str("<a cmd='goto #'>%s</a><br/>", zp.second->name);
     }
-    mystr.append("</div><br/>");
+    msg += "</div><br/>";
 
-    page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 static void stat_memory(class unit_data *ch)
@@ -136,9 +118,7 @@ static void stat_memory(class unit_data *ch)
     // Also do a unit sanity check here, not memory related, just a hack
     //
 
-    class unit_data *u;
-
-    for (u = g_unit_list; u; u = u->next)
+    for (unit_data *u = g_unit_list; u; u = u->next)
     {
         if (UNIT_TYPE(u) != UNIT_ST_ROOM)
         {
@@ -191,102 +171,84 @@ static void stat_world(class unit_data *ch)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static char *stat_buffer, *stat_p;
-
-static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip, class unit_data *ch)
+static std::string stat_zone_reset(const std::string &indnt, struct zone_reset_cmd *zrip, class unit_data *ch)
 {
     static const char *nums[] = {"max", "zonemax", "local"};
     std::string bits;
     int i;
 
-    *stat_p = 0;
-
-    STRCAT(stat_p, indnt);
+    std::string stat{indnt};
 
     switch (zrip->cmd_no)
     {
         case 0:
-            strcpy(stat_p, "Nop");
+            stat = "Nop";
             break;
 
         case 1:
-            sprintf(stat_p, "Load %s", zrip->fi[0]->name);
-            TAIL(stat_p);
+            stat += diku::format_to_str("Load %s", zrip->fi[0]->name);
 
             if (zrip->fi[1])
             {
-                sprintf(stat_p, " into %s", zrip->fi[1]->name);
-                TAIL(stat_p);
+                stat += diku::format_to_str(" into %s", zrip->fi[1]->name);
             }
 
             for (i = 0; i < 3; i++)
             {
                 if (zrip->num[i])
                 {
-                    sprintf(stat_p, " %s %d", nums[i], zrip->num[i]);
-                    TAIL(stat_p);
+                    stat += diku::format_to_str(" %s %d", nums[i], zrip->num[i]);
                 }
             }
 
-            strcpy(stat_p, zrip->cmpl ? " Complete" : "");
+            stat += zrip->cmpl ? " Complete" : "";
             break;
 
         case 2:
-            sprintf(stat_p, "Equip %s %s max %d %s", zrip->fi[0]->name, g_where[zrip->num[1]], zrip->num[0], zrip->cmpl ? "Complete" : "");
+            stat = diku::format_to_str("Equip %s %s max %d %s",
+                                       zrip->fi[0]->name,
+                                       g_where[zrip->num[1]],
+                                       zrip->num[0],
+                                       zrip->cmpl ? "Complete" : "");
             break;
 
         case 3:
-            sprintf(stat_p,
-                    "Door at %s : %s : %s",
-                    zrip->fi[0]->name,
-                    g_dirs[zrip->num[0]],
-                    sprintbit(bits, zrip->num[1], g_unit_open_flags));
+            stat = diku::format_to_str("Door at %s : %s : %s",
+                                       zrip->fi[0]->name,
+                                       g_dirs[zrip->num[0]],
+                                       sprintbit(bits, zrip->num[1], g_unit_open_flags));
             break;
 
         case 4:
-            sprintf(stat_p, "Purge %s", zrip->fi[0]->name);
+            stat = diku::format_to_str("Purge %s", zrip->fi[0]->name);
             break;
 
         case 5:
-            sprintf(stat_p, "Remove %s in %s", zrip->fi[0]->name, zrip->fi[1]->name);
+            stat = diku::format_to_str("Remove %s in %s", zrip->fi[0]->name, zrip->fi[1]->name);
             break;
     }
 
-    STRCAT(stat_p, "<br/>");
-
-    /* make sure we get no overflow */
-    if (stat_p - stat_buffer + MAX_INPUT_LENGTH > 2 * MAX_STRING_LENGTH)
-    {
-        STRCAT(stat_p, "Truncated .....<br/>");
-        return;
-    }
+    stat += "<br/>";
 
     if (zrip->nested)
     {
-        char whitespace[MAX_INPUT_LENGTH];
+        stat += diku::format_to_str("%s{<br/>", indnt);
 
-        sprintf(stat_p, "%s{<br/>", indnt);
-        TAIL(stat_p);
+        std::string whitespace{indnt + "  "};
+        stat += stat_zone_reset(whitespace, zrip->nested, ch);
 
-        sprintf(whitespace, "%s  ", indnt);
-        stat_zone_reset(whitespace, zrip->nested, ch);
-
-        sprintf(stat_p, "%s}<br/>", indnt);
-        TAIL(stat_p);
+        stat += diku::format_to_str("%s}<br/>", indnt);
     }
     if (zrip->next)
     {
-        stat_zone_reset(indnt, zrip->next, ch);
+        stat += stat_zone_reset(indnt, zrip->next, ch);
     }
+    return stat;
 }
 
 static void stat_zone(class unit_data *ch, class zone_type *zone)
 {
     static const char *reset_modes[] = {"Never Reset", "Reset When Empty", "Reset Always", "UNKNOWN"};
-    char *cname;
-
-    char tmp[128], buf[MAX_STRING_LENGTH];
-    bool errors, info;
     int reset_mode = zone->reset_mode;
 
     if (!is_in(reset_mode, 0, 2))
@@ -294,13 +256,10 @@ static void stat_zone(class unit_data *ch, class zone_type *zone)
         reset_mode = 3;
     }
 
-    snprintf(tmp, sizeof(tmp), "%s%s.err", g_cServerConfig.getZoneDir().c_str(), zone->filename);
-    errors = file_exists(tmp);
+    bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".err");
+    bool info = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".inf");
 
-    snprintf(tmp, sizeof(tmp), "%s%s.inf", g_cServerConfig.getZoneDir().c_str(), zone->filename);
-    info = file_exists(tmp);
-
-    cname = zone->creators.catnames();
+    char *cname = zone->creators.catnames();
 
     auto msg = diku::format_to_str("Zone [%s]  File [%s]  Access [%d]<br/>"
                                    "Title: \"%s\"<br/>"
@@ -335,10 +294,8 @@ static void stat_zone(class unit_data *ch, class zone_type *zone)
 
 static void stat_creators(class unit_data *ch, char *arg)
 {
-    char buf[4 * MAX_STRING_LENGTH], *b;
     char tmp[1024];
     int found;
-    char *cname;
 
     if (str_is_empty(arg))
     {
@@ -346,122 +303,95 @@ static void stat_creators(class unit_data *ch, char *arg)
         return;
     }
 
-    b = buf;
-
     arg = one_argument(arg, tmp);
 
     if (str_ccmp(tmp, "all") == 0)
     {
-        sprintf(b, "List of all Zones with Creators.<br/><br/>");
-        TAIL(b);
-
+        std::string msg{"List of all Zones with Creators.<br/><br/>"};
         found = FALSE;
 
         for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
         {
-            cname = it->second->creators.catnames();
+            char *cname = it->second->creators.catnames();
 
-            sprintf(b, "%-15s   %s<br/>", it->second->name, cname);
+            msg += diku::format_to_str("%-15s   %s<br/>", it->second->name, cname);
             FREE(cname);
-            TAIL(b);
             found = TRUE;
         }
 
-        page_string(CHAR_DESCRIPTOR(ch), buf);
+        page_string(CHAR_DESCRIPTOR(ch), msg);
         return;
     }
 
-    sprintf(b, "Zones Created by %s.<br/><br/>", tmp);
-    TAIL(b);
+    auto msg = diku::format_to_str("Zones Created by %s.<br/><br/>", tmp);
 
     found = FALSE;
     for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
     {
         if (it->second->creators.IsName(tmp))
         {
-            sprintf(b, "%-15s   File: %s.zon<br/>", it->second->name, it->second->filename);
-            TAIL(b);
+            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->name, it->second->filename);
             found = TRUE;
         }
     }
 
     if (!found)
     {
-        sprintf(b, "None.<br/>");
+        msg += "None.<br/>";
     }
 
-    TAIL(b);
-
-    send_to_char(buf, ch);
+    send_to_char(msg, ch);
 }
 
 static void stat_dil(class unit_data *ch, class zone_type *zone)
 {
-    char buf[MAX_STRING_LENGTH];
-    std::string mystr;
-    // struct diltemplate *tmpl;
-
     auto msg = diku::format_to_str("<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
     send_to_char(msg, ch);
 
-    mystr = "<div class='twocol'>";
-    *buf = 0;
-
+    msg += "<div class='twocol'>";
     for (auto tmpl = zone->mmp_tmpl.begin(); tmpl != zone->mmp_tmpl.end(); tmpl++)
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "%.2fs %s [%d t / %d i]<br/>",
-                 tmpl->second->fCPU / 1000.0,
-                 tmpl->second->prgname,
-                 tmpl->second->nTriggers,
-                 tmpl->second->nInstructions);
-        mystr.append(buf);
+        msg += diku::format_to_str("%.2fs %s [%d t / %d i]<br/>",
+                                   tmpl->second->fCPU / 1000.0,
+                                   tmpl->second->prgname,
+                                   tmpl->second->nTriggers,
+                                   tmpl->second->nInstructions);
     }
 
-    mystr.append("</div><br/>"); // MS2020
-    send_to_char(mystr.c_str(), ch);
+    msg += "</div><br/>"; // MS2020
+    send_to_char(msg, ch);
 }
 
 static void stat_global_dil(class unit_data *ch, ubit32 nCount)
 {
-    char buf[MAX_STRING_LENGTH];
-    std::string mystr;
-    // struct diltemplate *tmpl;
-
     auto msg = diku::format_to_str("<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
     send_to_char(msg, ch);
 
-    mystr = "<div class='twocol'>";
+    msg += "<div class='twocol'>";
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
-        *buf = 0;
         for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
         {
             if (tmpl->second->fCPU >= nCount)
             {
-                snprintf(buf,
-                         sizeof(buf),
-                         "%.2fs %s@%s [%d t / %d i]<br/>",
-                         tmpl->second->fCPU / 1000.0,
-                         tmpl->second->prgname,
-                         tmpl->second->zone->name,
-                         tmpl->second->nTriggers,
-                         tmpl->second->nInstructions);
-                mystr.append(buf);
+                msg += diku::format_to_str("%.2fs %s@%s [%d t / %d i]<br/>",
+                                           tmpl->second->fCPU / 1000.0,
+                                           tmpl->second->prgname,
+                                           tmpl->second->zone->name,
+                                           tmpl->second->nTriggers,
+                                           tmpl->second->nInstructions);
             }
         }
     }
 
-    mystr.append("</div><br/>"); // MS2020
-    send_to_char(mystr.c_str(), ch);
+    msg += "</div><br/>"; // MS2020
+    send_to_char(msg, ch);
 }
 
 static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zone)
 {
-    char buf[MAX_STRING_LENGTH], filename[128];
-    std::string mystr;
+    char buf[MAX_STRING_LENGTH];
     int argno;
     int search_type = 0;
 
@@ -511,11 +441,8 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
             {
                 auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->name);
                 send_to_char(msg, ch);
-                CREATE(stat_buffer, char, 2 * MAX_STRING_LENGTH);
-                stat_p = stat_buffer;
-                stat_zone_reset("", zone->zri, ch);
+                auto stat_buffer = stat_zone_reset("", zone->zri, ch);
                 page_string(CHAR_DESCRIPTOR(ch), stat_buffer);
-                FREE(stat_buffer);
             }
             else
             {
@@ -526,8 +453,9 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
         case 4:
         case 5:
+        {
             /* Errors/Info (Small hack, this :-) ) */
-            snprintf(filename, sizeof(filename), "%s%s.%.3s", g_cServerConfig.getZoneDir().c_str(), zone->filename, zone_args[argno]);
+            auto filename = diku::format_to_str("%s%s.%.3s", g_cServerConfig.getZoneDir().c_str(), zone->filename, zone_args[argno]);
             if (!file_exists(filename))
             {
                 return;
@@ -535,6 +463,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
             file_to_string(filename, buf, MAX_STRING_LENGTH);
             page_string(CHAR_DESCRIPTOR(ch), buf);
             return;
+        }
 
         case 6:
             page_string(CHAR_DESCRIPTOR(ch), "Not Implemented");
@@ -550,32 +479,28 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
     }
 
     /* Search for mobs/objs/rooms and line in columns */
-    mystr = "<div class='threecol'>";
-    // for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
-    *buf = 0;
+    std::string msg{"<div class='threecol'>"};
     for (auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
     {
         if (fi->second->type == search_type)
         {
             if ((fi->second->type == UNIT_ST_OBJ) || (fi->second->type == UNIT_ST_NPC))
             {
-                snprintf(buf, sizeof(buf), "<a cmd='load #'>%s</a><br/>", fi->second->name);
+                msg += diku::format_to_str("<a cmd='load #'>%s</a><br/>", fi->second->name);
             }
             else
             {
-                snprintf(buf, sizeof(buf), "%s<br/>", fi->second->name);
+                msg += diku::format_to_str("%s<br/>", fi->second->name);
             }
-            mystr.append(buf); // MS2020
         }
     }
 
-    mystr.append("</div></br>");
-    send_to_char(mystr.c_str(), ch);
+    msg += "</div></br>";
+    send_to_char(msg, ch);
 }
 
 static void stat_ability(const class unit_data *ch, class unit_data *u)
 {
-    char buf[MAX_STRING_LENGTH], *b = buf;
     int i;
 
     if (!IS_PC(u))
@@ -584,18 +509,15 @@ static void stat_ability(const class unit_data *ch, class unit_data *u)
         return;
     }
 
-    strcpy(b, "Char Abilities:<br/>");
-    TAIL(b);
+    std::string buf{"Char Abilities:<br/>"};
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
-        sprintf(b,
-                "%20s : %3d%% Lvl %3d Racial %3d<br/>",
-                g_AbiColl.text[i],
-                CHAR_ABILITY(u, i),
-                PC_ABI_LVL(u, i),
-                get_racial_ability(CHAR_RACE(u), i));
-        TAIL(b);
+        buf += diku::format_to_str("%20s : %3d%% Lvl %3d Racial %3d<br/>",
+                                   g_AbiColl.text[i],
+                                   CHAR_ABILITY(u, i),
+                                   PC_ABI_LVL(u, i),
+                                   get_racial_ability(CHAR_RACE(u), i));
     }
 
     page_string(CHAR_DESCRIPTOR(ch), buf);
@@ -604,8 +526,6 @@ static void stat_ability(const class unit_data *ch, class unit_data *u)
 static void stat_spell(const class unit_data *ch, class unit_data *u)
 {
     char tmpbuf1[100];
-    char tmpbuf2[110];
-    char buf[100 * (SPL_TREE_MAX + 1)], *b = buf;
     int i, max;
 
     if (!IS_CHAR(u))
@@ -614,8 +534,7 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
         return;
     }
 
-    strcpy(b, "Char magic skill<br/><pre>");
-    TAIL(b);
+    std::string msg{"Char magic skill<br/><pre>"};
 
     max = IS_NPC(u) ? SPL_GROUP_MAX : SPL_TREE_MAX;
 
@@ -631,31 +550,27 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
             }
         }
 
-        snprintf(tmpbuf2,
-                 sizeof(tmpbuf2),
-                 "%s %s (%s)",
-                 g_spell_info[i].cast_type == SPLCST_CHECK ? "CHECK " : (g_spell_info[i].cast_type == SPLCST_RESIST ? "RESIST" : "OTHER "),
-                 g_SplColl.text[i],
-                 tmpbuf1);
+        auto tmpbuf2 = diku::format_to_str(
+            "%s %s (%s)",
+            g_spell_info[i].cast_type == SPLCST_CHECK ? "CHECK " : (g_spell_info[i].cast_type == SPLCST_RESIST ? "RESIST" : "OTHER "),
+            g_SplColl.text[i],
+            tmpbuf1);
 
-        sprintf(b,
-                "%c%c%c%c%c] %3d%%/%d %c %-50s [%3d racial]<br/>",
-                IS_SET(g_spell_info[i].media, MEDIA_SPELL) ? 'C' : '-',
-                IS_SET(g_spell_info[i].media, MEDIA_SCROLL) ? 'S' : '-',
-                IS_SET(g_spell_info[i].media, MEDIA_POTION) ? 'P' : '-',
-                IS_SET(g_spell_info[i].media, MEDIA_WAND) ? 'W' : '-',
-                IS_SET(g_spell_info[i].media, MEDIA_STAFF) ? 'R' : '-',
-                IS_NPC(u) ? NPC_SPL_SKILL(u, i) : PC_SPL_SKILL(u, i),
-                IS_NPC(u) ? 0 : PC_SPL_LVL(u, i),
-                g_spell_info[i].realm == ABIL_DIV ? 'D' : (g_spell_info[i].realm == ABIL_MAG ? 'M' : '!'),
-                tmpbuf2,
-                get_racial_spells(CHAR_RACE(u), i));
-        TAIL(b);
+        msg += diku::format_to_str("%c%c%c%c%c] %3d%%/%d %c %-50s [%3d racial]<br/>",
+                                   IS_SET(g_spell_info[i].media, MEDIA_SPELL) ? 'C' : '-',
+                                   IS_SET(g_spell_info[i].media, MEDIA_SCROLL) ? 'S' : '-',
+                                   IS_SET(g_spell_info[i].media, MEDIA_POTION) ? 'P' : '-',
+                                   IS_SET(g_spell_info[i].media, MEDIA_WAND) ? 'W' : '-',
+                                   IS_SET(g_spell_info[i].media, MEDIA_STAFF) ? 'R' : '-',
+                                   IS_NPC(u) ? NPC_SPL_SKILL(u, i) : PC_SPL_SKILL(u, i),
+                                   IS_NPC(u) ? 0 : PC_SPL_LVL(u, i),
+                                   g_spell_info[i].realm == ABIL_DIV ? 'D' : (g_spell_info[i].realm == ABIL_MAG ? 'M' : '!'),
+                                   tmpbuf2,
+                                   get_racial_spells(CHAR_RACE(u), i));
     }
 
-    strcpy(b, "</pre>");
-    page_string(CHAR_DESCRIPTOR(ch), buf);
-    assert(strlen(buf) < sizeof(buf));
+    msg += "</pre>";
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 static void stat_skill(const class unit_data *ch, class unit_data *u)
@@ -670,60 +585,47 @@ static void stat_skill(const class unit_data *ch, class unit_data *u)
     }
     else
     {
-        char buf[100 * (SKI_TREE_MAX + 1)], *b = buf;
-        int i;
+        std::string msg{"Other skills:<br/>"};
 
-        strcpy(b, "Other skills:<br/>");
-        TAIL(b);
-
-        for (i = 0; i < SKI_TREE_MAX; i++)
+        for (int i = 0; i < SKI_TREE_MAX; i++)
         {
-            sprintf(b,
-                    "%20s: %3d%% Lvl %3d Racial %3d<br/>",
-                    g_SkiColl.text[i],
-                    PC_SKI_SKILL(u, i),
-                    PC_SKI_LVL(u, i),
-                    get_racial_skill(CHAR_RACE(u), i));
-            TAIL(b);
+            msg += diku::format_to_str("%20s: %3d%% Lvl %3d Racial %3d<br/>",
+                                       g_SkiColl.text[i],
+                                       PC_SKI_SKILL(u, i),
+                                       PC_SKI_LVL(u, i),
+                                       get_racial_skill(CHAR_RACE(u), i));
         }
 
-        page_string(CHAR_DESCRIPTOR(ch), buf);
+        page_string(CHAR_DESCRIPTOR(ch), msg);
     }
 }
 
 static void stat_wskill(const class unit_data *ch, class unit_data *u)
 {
-    char buf[100 * (WPN_TREE_MAX + 1)], *b = buf;
-    int i, max;
-
     if (!IS_CHAR(u))
     {
         send_to_char("Unit is not a char<br/>", ch);
         return;
     }
 
-    strcpy(b, "Char weapon skill:<br/>");
-    TAIL(b);
+    std::string msg{"Char weapon skill:<br/>"};
 
-    max = IS_NPC(u) ? WPN_GROUP_MAX : WPN_TREE_MAX;
+    int max = IS_NPC(u) ? WPN_GROUP_MAX : WPN_TREE_MAX;
 
-    for (i = 0; i < max; i++)
+    for (int i = 0; i < max; i++)
     {
-        sprintf(b,
-                "%20s : %3d%% Lvl %3d Racial %3d<br/>",
-                g_WpnColl.text[i],
-                IS_NPC(u) ? NPC_WPN_SKILL(u, i) : PC_WPN_SKILL(u, i),
-                IS_NPC(u) ? 0 : PC_WPN_LVL(u, i),
-                get_racial_weapon(CHAR_RACE(u), i));
-        TAIL(b);
+        msg += diku::format_to_str("%20s : %3d%% Lvl %3d Racial %3d<br/>",
+                                   g_WpnColl.text[i],
+                                   IS_NPC(u) ? NPC_WPN_SKILL(u, i) : PC_WPN_SKILL(u, i),
+                                   IS_NPC(u) ? 0 : PC_WPN_LVL(u, i),
+                                   get_racial_weapon(CHAR_RACE(u), i));
     }
-    page_string(CHAR_DESCRIPTOR(ch), buf);
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 static void stat_affect(const class unit_data *ch, class unit_data *u)
 {
     class unit_affected_type *af;
-    char buf[1024];
 
     if (!UNIT_AFFECTED(u))
     {
@@ -1013,10 +915,10 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
          : (pobjdata[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None")                 \
                                       : (pobjdata[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
 
-char *stat_obj_data(class unit_data *u, struct obj_type_t *pobjdata)
+const char *stat_obj_data(class unit_data *u, obj_type_t *pobjdata)
 {
-    static char result[512];
-    char *special_str = nullptr, int_str[5][32];
+    char *special_str = nullptr;
+    std::string int_str[5];
     int idx = OBJ_TYPE(u), i;
 
     switch (idx)
@@ -1041,12 +943,12 @@ char *stat_obj_data(class unit_data *u, struct obj_type_t *pobjdata)
 
     for (i = 0; i < 5; ++i)
     { /* Init obj-value strings */
-        snprintf(int_str[i], 32, "%ld", (signed long)OBJ_VALUE(u, i));
+        int_str[i] = diku::format_to_str("%ld", (signed long)OBJ_VALUE(u, i));
     }
 
-    snprintf(result, sizeof(result), pobjdata[idx].fmt, STR_DATA(0), STR_DATA(1), STR_DATA(2), STR_DATA(3), STR_DATA(4), special_str);
-
-    return result;
+    static std::string result;
+    result = diku::format_to_str(pobjdata[idx].fmt, STR_DATA(0), STR_DATA(1), STR_DATA(2), STR_DATA(3), STR_DATA(4), special_str);
+    return result.c_str();
 }
 
 #undef STR_DATA
