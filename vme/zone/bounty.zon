@@ -1422,6 +1422,7 @@ code
 		goto start;
 	}
 
+	log("PC EXP: "+itoa(pc.exp)+" DIL_GINT_REQXP: "+itoa(getinteger(DIL_GINT_REQXP, null, pc.level)));
 	if((pc.exp > getinteger(DIL_GINT_REQXP, null, pc.level) and (pc.level < 50))
 	{
 		exec("say Try leveling up and coming back for some new packages!", self);
