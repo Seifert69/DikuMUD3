@@ -24,6 +24,10 @@ from moving to fjord and grotto thus depriving newbies access. */
 // Ken and I thought Udgaard had become too large for a starting zone. I'll add
 // the same for Haon-Dor (a builder house). I'll also revamp login so you only choose
 // one guild. And make it possible to choose additional guilds in the game.
+//
+// All the extended mud stuff could be moved to its own zone away from Udgaard.
+// It deserves it, really.
+//
 
 #include <macros.h>
 
@@ -5212,7 +5216,7 @@ title "an axe"
 descr "A short axe with a large head is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman-ship = -5% */
-WEAPON_DEF(WPN_HAND_AXE, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
+WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 6
 cost  4   SILVER_PIECE
 end
@@ -5291,7 +5295,7 @@ names {"spatula"}
 title "a spatula"
 descr "a spatula for burger flipping hangs here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_METAL("cheap metal")
 weight 1
 cost 2 IRON_PIECE
@@ -6893,7 +6897,7 @@ extra {}
 "This exquisite plate was crafted especially for the mayor, and bears
 the phoenix emblem of Udgaard.  It shines in light and dark, and appears
 to be able to withstand a great many blows."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 15
 dilcopy level_restrict@function(40,0,25,"");
@@ -6908,7 +6912,7 @@ extra {}
 "This tungsten plate shines quite brightly, and you must almost
 avert your eyes to keep from being blinded.  It appears to be
 very strong, yet at the same time pliable."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 12
 dilcopy level_restrict@function(40,0,25,"");
@@ -6923,7 +6927,7 @@ extra {}
 "These exquisite leggings were crafted especially for the mayor, and
 they bear the phoenix emblem of Udgaard.  The shine through both light
 and darkness, serving to protect well their master."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 10
 dilcopy level_restrict@function(40,0,25,"");
@@ -6938,7 +6942,7 @@ extra {}
 "These tungsten leggings shine quite brightly, and you must almost
 avert your eyes to keep from being blinded.  They appear to be
 very strong, yet at the same time pliable."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy level_restrict@function(40,0,25,"");
@@ -6953,7 +6957,7 @@ extra {}
 "These exquisite sleeves were crafted especially for the mayor, and
 they bear the phoenix emblem of Udgaard.  The shine through both light
 and darkness, serving to protect well their master."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 10
 dilcopy level_restrict@function(40,0,25,"");
@@ -6967,7 +6971,7 @@ extra {}
 "These tungsten sleeves shine quite brightly, and you must almost
 avert your eyes to keep from being blinded.  They appear to be
 very strong, yet at the same time pliable."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 7
 dilcopy level_restrict@function(40,0,25,"");
@@ -6984,7 +6988,7 @@ extra {}
 they bear the phoenix emblem of Udgaard.  These vicious looking gauntlets
 bear curving spikes, used to punch holes in ones enemy.  You notice some
 bloodstains on them."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 5
 dilcopy level_restrict@function(40,0,25,"");
@@ -7001,7 +7005,7 @@ in a line as yet ending with Thargarad.  The horns come from an
 unknown creature, and the rise a full foot from the helm.  The scrollwork
 on this helm is intricately and fabulously etched, making you
 wonder at its antiquity."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 10
 dilcopy level_restrict@function(40,0,25,"");
@@ -7015,7 +7019,7 @@ extra {}
 "This tungsten helmet shines quite brightly, and you must almost
 avert your eyes to keep from being blinded.  It appears to be
 very strong, yet at the same time pliable."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 7
 dilcopy level_restrict@function(40,0,25,"");
@@ -7031,7 +7035,7 @@ extra {}
 They shine with a deep golden color, almost like that of pure honey.
 They look to be quite rare."
 
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 5
 dilcopy level_restrict@function(40,0,25,"");
@@ -7046,7 +7050,7 @@ extra {}
 "These tungsten boots shine quite brightly, and you must almost
 avert your eyes to keep from being blinded.  They appear to be
 very strong, yet at the same time pliable."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy level_restrict@function(40,0,25,"");
@@ -7063,7 +7067,7 @@ extra {}
 of Udgaard.  Embroidered on the back the is seal of Udgaard,
 a large phoenix set in front of a glowing sun.  The material of this
 mantle is exquisite and it will offer good protection."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 weight 8
 cost 1 GOLD_PIECE
@@ -7078,7 +7082,7 @@ extra {}
 a magical power that makes it quite strong.  It will offer good protection
 while being very soft to the wearer.  Truly a piece of craftsmanship
 which can be only of elvish origin."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 2
 cost 1 GOLD_PIECE
@@ -7096,7 +7100,7 @@ protection
 while being very soft to the wearer.  They are truly a piece of
 craftsmanship
 which can be only of elvish origin."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 3
 cost 1 GOLD_PIECE
@@ -7111,7 +7115,7 @@ extra {}
 "These armguards, while only composed of leather look to offer
 good protection.  They are clearly elvish in nature, and are studded
 small mithril knobs."
-ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_HRD_LEATHER(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 3
 cost 1 GOLD_PIECE
@@ -7126,7 +7130,7 @@ extra {}
 mages.  It appears to be an item of insurmountable power, but you
 doubt that your feeble mind can unlock its secrets.  The robe is crimson
 and quite a beautiful thing to behold."
-ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_PLATE(BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 10
 dilcopy level_restrict@function(40,0,25,"");
@@ -7160,7 +7164,7 @@ extra {}
 fabled Mystics of Midgaard.  Its shaft is quite long, and it
 looks to be quite sturdy.  The staff seems to hum slightly."
 
-WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 8,8
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 8,8
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 10
 dilcopy level_restrict@function(40,0,25,"");
@@ -7187,7 +7191,7 @@ Heal:            +10%
 Divine:          +2
 Brain:           +1
 Constitution:    -1</pre>"
-WEAPON_DEF(WPN_WAR_HAMMER, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 8,8
+WEAPON_DEF(WPN_WAR_HAMMER, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 8,8
 SPELL_TRANSFER(SPL_CURE_WOUNDS_1, BONUS_ARTIFACT)  // Xyzzy: +10
 DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 BRA_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
@@ -7220,7 +7224,7 @@ extra {"$improved identify"}
 Battle axe: +10%
 Strength: +1    Dexterity: +2
 Brain:    -1    Magic:     -1</pre>"
-WEAPON_DEF(WPN_BATTLE_AXE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 9,9
+WEAPON_DEF(WPN_BATTLE_AXE, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 9,9
 WEAPON_TRANSFER(WPN_BATTLE_AXE, BONUS_ARTIFACT)  // Xyzzy: +10
 STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -7252,7 +7256,7 @@ Dexterity:       +2
 Constitution:    -1</pre>"
 
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 4,4
-WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_GOOD_PLUS)  // Xyzzy: +5
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
@@ -7282,7 +7286,7 @@ Constitution:    -1</pre>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 4,4
-WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_GOOD_PLUS)  // Xyzzy: +5
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 weight 4
@@ -7316,8 +7320,8 @@ STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 MAG_TRANSFER(BONUS_BAD)  // Xyzzy: -2
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_GREAT_SWORD, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 8,8
-SKILL_TRANSFER(SKI_DISARM, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+WEAPON_DEF(WPN_GREAT_SWORD, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 8,8
+SKILL_TRANSFER(SKI_DISARM, BONUS_GOOD_PLUS)  // Xyzzy: +5
 dilcopy level_restrict@function(40,0,25,"");
 dilcopy weap_restrict@function(WPN_GREAT_SWORD,50,0,25,"");
 dilcopy abi_restrict@function(ABIL_STR,50,0,25,"");
@@ -7418,7 +7422,7 @@ descr "A shirt has been left here."
 extra {}
 "On the shirt it has been written: 'Any resemblance with real persons
 is purely coincidental'."
-ARMOUR_CLOTHES(BONUS_JUNK, BONUS_AVERAGE)  // Xyzzy: -20,0
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -20,0
 end
 
 /* Standard items given away to beginners for free. */
@@ -7466,7 +7470,7 @@ title "a long sword"
 descr "A long sword has carelessly been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Iron - Non Pure, Craftman ship -5 */
-WEAPON_DEF(WPN_LONG_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 romflags {OBJ_NO_DUAL}
 weight 20
 cost 12 SILVER_PIECE
@@ -7858,7 +7862,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_MACE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 extra {}
-"This mace is Isabella choice for all new healers."
+"This mace is Isabella's choice for all new healers."
 WEAPON_SLAYER(RACE_RABBIT)
 end
 
@@ -8320,8 +8324,7 @@ names {"abacus"}
 title "an abacus"
 descr "An abacus lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
-ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
-SHIELD_DEF(SHIELD_SMALL, BONUS_AVERAGE_PLUS, BONUS_GOOD)  // Xyzzy: 1,3
+SHIELD_DEF(SHIELD_SMALL, BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: 1,3
 weight 5
 extra {}
 "The abacus has many different colored beads in rows."
@@ -8364,7 +8367,7 @@ extra {"$improved identify"}
 extra {"$repair"}
 " "
 MATERIAL_LEATHER("Leather and fur")
-ARMOUR_LEATHER(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 15
 rent 5 IRON_PIECE
@@ -8380,7 +8383,7 @@ names {"breast plate","plate"}
 title "a grey breast plate"
 descr "A servicable breast plate in good repair."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_LEATHER(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 5,0
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 5,0
 cost 40 IRON_PIECE
 rent 20 IRON_PIECE
 extra {}
@@ -8411,7 +8414,7 @@ extra {"$improved identify"}
 extra {"$repair"}
 " "
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_LEATHER(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 5,0
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 5,0
 cost 10 IRON_PIECE
 rent 5 IRON_PIECE
 weight 5
@@ -8432,7 +8435,7 @@ extra {"$repair"}
 " "
 /*manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}  */
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET} 
-ARMOUR_LEATHER(BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 5,0
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 5,0
 cost 10 IRON_PIECE
 rent 5 IRON_PIECE
 weight 5
@@ -8446,7 +8449,7 @@ names {"tunic"}
 title "a tunic"
 descr "A dirty tunic lies in a crumpled heap."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_CLOTHES(BONUS_JUNK, BONUS_AVERAGE)  // Xyzzy: -10,0
+ARMOUR_CLOTHES(BONUS_BAD_MINUS, BONUS_AVERAGE)  // Xyzzy: -10,0
 cost 4 IRON_PIECE
 rent 2 IRON_PIECE
 extra{}
