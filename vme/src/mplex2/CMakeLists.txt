@@ -16,6 +16,7 @@ set(MPLEX_SRCS
         ../membug.cpp ../membug.h
         ../protocol.cpp ../protocol.h
         ../queue.cpp ../queue.h
+        ../slog_raw.cpp ../slog_raw.h
         ../textutil.cpp ../textutil.h
         ../utility.cpp ../utility.h
         )

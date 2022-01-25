@@ -2,6 +2,8 @@
 
 #include "slog.h"
 
+#define HERE __FILE__, __LINE__
+
 /**
  * Public call to error(). Because this uses boost::format internally std::string
  * can be formatted with %s specifier and user defined types can also be printed
@@ -29,9 +31,7 @@ void error(const char *file, int line, const std::string &fmt, ParamPack &&...pa
     std::string str;
     if constexpr (sizeof...(pack) != 0)
     {
-        boost::format format(fmt);
-        diku::format(format, pack...);
-        str = format.str();
+        str = diku::format_to_str(fmt.c_str(), pack...);
     }
     else
     {

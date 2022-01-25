@@ -1,5 +1,7 @@
 #pragma once
 
+#include "slog_raw.h"
+
 #include <boost/format.hpp>
 
 /**
@@ -26,11 +28,6 @@ namespace diku
 template<typename T>
 void format(boost::format &formatter, T &&last_value)
 {
-    // Looks like sometimes more args were passed to old sprintf's then needed
-    if (formatter.remaining_args() < 1)
-    {
-        return;
-    }
     if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t> ||
                   std::is_same_v<typename std::remove_reference<T>::type, int8_t>)
     {
@@ -60,11 +57,6 @@ void format(boost::format &formatter, T &&last_value)
 template<typename T, typename... ParamPack>
 void format(boost::format &formatter, T &&first_arg, ParamPack &&...rest_args)
 {
-    // Looks like sometimes more args were passed to old sprintf's then needed
-    if (formatter.remaining_args() < 1)
-    {
-        return;
-    }
     if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t> ||
                   std::is_same_v<typename std::remove_reference<T>::type, int8_t>)
     {
@@ -91,13 +83,48 @@ void format(boost::format &formatter, T &&first_arg, ParamPack &&...rest_args)
  * @return A std::string with the format specifiers replaced with the args values
  */
 template<typename... ParamPack>
-std::string format_to_str(const char *fmt_str, ParamPack &&...args)
+std::string format_to_str(const char *fmt_str, ParamPack &&...args) noexcept
 {
-    static_assert(sizeof...(args) != 0, "No arguments passed to format in diku::format_to_str");
+    auto constexpr arg_count = sizeof...(args);
+    static_assert(arg_count != 0, "No arguments passed to format in diku::format_to_str");
 
     boost::format formatter(fmt_str);
-    format(formatter, args...);
-    return formatter.str();
+
+    // Unset throwing for more arguments than specifiers as this is ok
+    auto exceptions = formatter.exceptions();
+    exceptions &= ~boost::io::format_error_bits::too_many_args_bit;
+    formatter.exceptions(exceptions);
+
+    try
+    {
+        formatter.expected_args();
+        format(formatter, args...);
+        return formatter.str();
+    }
+    catch (const std::exception &e)
+    {
+        const size_t expected_args = formatter.expected_args();
+        if (expected_args > arg_count)
+        {
+            auto msg = format_to_str("Error: LESS arguments (%u) passed than expected (%u) diku::format_to_str() for: [%s]",
+                                     arg_count,
+                                     expected_args,
+                                     fmt_str);
+            slog_raw(LOG_ALL, 0, msg);
+        }
+        slog_raw(LOG_ALL, 0, e.what());
+#ifdef MUD_DEBUG
+        std::terminate();
+#endif
+    }
+    catch (...)
+    {
+        slog_raw(LOG_ALL, 0, "Unhandled exception type in diku::format_to_str()");
+#ifdef MUD_DEBUG
+        std::terminate();
+#endif
+    }
+    return {"<error - something went wrong - oops!>"};
 }
 
 } // namespace diku
