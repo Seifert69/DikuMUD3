@@ -26,6 +26,11 @@ namespace diku
 template<typename T>
 void format(boost::format &formatter, T &&last_value)
 {
+    // Looks like sometimes more args were passed to old sprintf's then needed
+    if (formatter.remaining_args() < 1)
+    {
+        return;
+    }
     if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t> ||
                   std::is_same_v<typename std::remove_reference<T>::type, int8_t>)
     {
@@ -55,6 +60,11 @@ void format(boost::format &formatter, T &&last_value)
 template<typename T, typename... ParamPack>
 void format(boost::format &formatter, T &&first_arg, ParamPack &&...rest_args)
 {
+    // Looks like sometimes more args were passed to old sprintf's then needed
+    if (formatter.remaining_args() < 1)
+    {
+        return;
+    }
     if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t> ||
                   std::is_same_v<typename std::remove_reference<T>::type, int8_t>)
     {
