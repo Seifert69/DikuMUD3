@@ -1546,17 +1546,87 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
     /* was fclose(f) */
 }
 
+
+// Currently used for weapons, shields, armors
+//
+int bonus_map_a(int bonus)
+{
+    static int map[15] = { -20, -17, -14, -11, -8, -5, -2, 0, 2, 5, 8, 11, 14, 17, 20};
+
+    if (bonus > 7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
+        bonus = 7;
+    }
+
+    if (bonus < -7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
+        bonus = -7;
+    }
+
+    return map[bonus+7]+2*(open100()/100);
+}
+
+
+// Mapping Skill, weapon, spell transfers
+int bonus_map_b(int bonus)
+{
+    static int map[15] = { -10, -8, -6, -5, -4, -2, -1, 0, 1, 2, 4, 5, 6, 8, 10 };
+
+    if (bonus > 7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
+        bonus = 7;
+    }
+
+    if (bonus < -7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
+        bonus = -7;
+    }
+
+    return map[bonus+7]+open100()/100;
+}
+
+
+
+void bonus_setup(unit_data *u)
+{
+    if (IS_OBJ(u))
+    {
+        if ((OBJ_TYPE(u) == ITEM_WEAPON) || (OBJ_TYPE(u) == ITEM_SHIELD) || (OBJ_TYPE(u) == ITEM_ARMOR))
+        {
+            OBJ_VALUE(u, 1) = bonus_map_a(OBJ_VALUE(u, 1));
+            OBJ_VALUE(u, 2) = bonus_map_a(OBJ_VALUE(u, 2));
+        }
+
+        for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->next)
+        {
+            if ((af->id == ID_TRANSFER_STR) ||
+                (af->id == ID_TRANSFER_DEX) ||
+                (af->id == ID_TRANSFER_CON) ||
+                (af->id == ID_TRANSFER_CHA) ||
+                (af->id == ID_TRANSFER_BRA) ||
+                (af->id == ID_TRANSFER_MAG) ||
+                (af->id == ID_TRANSFER_DIV) ||
+                (af->id == ID_TRANSFER_HPP))
+               af->data[1] = bonus_map_b(af->data[1]);
+            else if ((af->id == ID_SKILL_TRANSFER) ||
+                (af->id == ID_SPELL_TRANSFER) ||
+                (af->id == ID_WEAPON_TRANSFER))
+               af->data[1] = bonus_map_b(af->data[1]);
+        } 
+    }
+}
+
+
 /*  Room directions points to file_indexes instead of units
  *  after a room has been read, due to initialization considerations
  */
 class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 {
     class unit_data *u;
-
-    if (org_fi == nullptr)
-    {
-        return nullptr;
-    }
 
     if (org_fi == nullptr)
     {
@@ -1574,6 +1644,8 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 
     u = read_unit_string(&g_FileBuffer, org_fi->type, org_fi->length, str_cc(org_fi->name, org_fi->zone->name), ins_list);
     u->set_fi(org_fi);
+
+    bonus_setup(u);
 
     if (!IS_ROOM(u))
     {
