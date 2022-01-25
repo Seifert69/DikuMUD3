@@ -20,7 +20,6 @@
 
 /* in game log stuff below */
 #define MAXLOG 10
-#define HERE __FILE__, __LINE__
 
 class log_buffer
 {

@@ -1,10 +1,9 @@
 #pragma once
 
-#include "config.h"
-#include "files.h"
 #include "formatter.h"
 #include "slog.h"
 #include "structs.h"
+#include "szonelog_raw.h"
 
 #include <boost/format.hpp>
 
@@ -26,37 +25,12 @@ void szonelog(zone_type *zone, const char *fmt, ParamPack &&...pack)
     std::string formatted_text;
     if constexpr (sizeof...(pack) != 0)
     {
-        boost::format formatter(fmt);
-        diku::format(formatter, pack...);
-        formatted_text = formatter.str();
+        formatted_text = diku::format_to_str(fmt, pack...);
     }
     else
     {
         formatted_text = fmt;
     }
 
-    if (zone == nullptr)
-    {
-        slog(LOG_ALL, 0, "%s", formatted_text);
-        return;
-    }
-
-    slog(LOG_ALL, 0, "%s/%s", zone->name, formatted_text);
-
-    auto filename = diku::format_to_str("%s%s.err", g_cServerConfig.getZoneDir(), zone->filename);
-
-    FILE *f = fopen_cache(filename, "a");
-    if (f == nullptr)
-    {
-        slog(LOG_ALL, 0, "Unable to append to zonelog '%s'", filename);
-    }
-    else
-    {
-        time_t now = time(nullptr);
-        char *tmstr = ctime(&now);
-
-        tmstr[strlen(tmstr) - 1] = '\0';
-
-        fprintf(f, "%s :: %s\n", tmstr, formatted_text.c_str());
-    }
+    szonelog_raw(zone, formatted_text);
 }

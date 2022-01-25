@@ -76,6 +76,7 @@ set(VME_SRCS
         skills.cpp skills.h
         slime.cpp slime.h
         slog.h
+        slog_raw.cpp slog_raw.h
         spec_assign.cpp spec_assign.h
         spec_procs.cpp spec_procs.h
         spell_parser.cpp spell_parser.h
@@ -96,7 +97,8 @@ set(VME_SRCS
         zon_basis.cpp zon_basis.h
         zon_wiz.cpp zon_wiz.h
         zone_reset.cpp zone_reset.h
-        )
+ szonelog_raw.cpp szonelog_raw.h
+)
 
 # Add all sources to a library file so we can link with other projects and test suites
 add_library(vme_objs STATIC ${VME_SRCS})
