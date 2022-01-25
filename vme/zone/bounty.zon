@@ -1425,6 +1425,7 @@ code
 	log("PC EXP: "+itoa(pc.exp)+" DIL_GINT_REQXP: "+itoa(getinteger(DIL_GINT_REQXP, null, pc.level+1)));
 	if((pc.exp > getinteger(DIL_GINT_REQXP, null, pc.level+1) and (pc.level < 50)))
 	{
+		log(itoa(pc.exp)+" > "+itoa(getinteger(DIL_GINT_REQXP, null, pc.level+1))+" and level is "+pc.level);
 		exec("say Try leveling up and coming back for some new packages!", self);
 		unsecure(pc);
 		goto start;
