@@ -7,5 +7,6 @@
 
 BOOST_AUTO_TEST_CASE(SampleTest)
 {
+    BOOST_TEST_MESSAGE("DEFCOMP Unit Tests");
     BOOST_CHECK(true == true);
 }

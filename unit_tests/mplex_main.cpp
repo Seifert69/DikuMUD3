@@ -7,5 +7,6 @@
 
 BOOST_AUTO_TEST_CASE(SampleTest)
 {
+    BOOST_TEST_MESSAGE("MPlex Unit Tests");
     BOOST_CHECK(true == true);
 }

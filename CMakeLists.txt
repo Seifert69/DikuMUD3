@@ -4,6 +4,13 @@ project(DikuMUD3)
 find_package(BISON)
 find_package(FLEX)
 
+if (NOT CMAKE_BUILD_TYPE)
+    message(STATUS "Setting build type to 'Debug' as none was specified.")
+    set(CMAKE_BUILD_TYPE Debug)
+else ()
+    message(STATUS "Setting build type to '${CMAKE_BUILD_TYPE}'.")
+endif ()
+
 if (DIKU_STATIC)
     set(Boost_USE_STATIC_LIBS ON) # This has to be before the boost find package below
     add_compile_definitions(DIKU_STATIC)
@@ -40,3 +47,24 @@ add_subdirectory(vme/etc)
 
 enable_testing()
 add_subdirectory(unit_tests)
+
+# Run the unit tests, but dont fail the build because of them
+set(TEST_RUN_ARGS --log_level=message --no_result_code)
+# Add dependencies so that the tests run after everything and are last result on console
+add_custom_target(all_binaries ALL)
+add_dependencies(all_binaries
+        vme vmc mplex pp defcomp vmc_unit_tests pp_unit_tests mplex_unit_tests
+        defcomp_unit_tests vme_unit_tests zone_files dat_files color_files)
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    add_custom_command(TARGET all_binaries POST_BUILD
+            COMMENT "Running all unit tests"
+            COMMAND defcomp_unit_tests ${TEST_RUN_ARGS}
+            COMMAND pp_unit_tests ${TEST_RUN_ARGS}
+            COMMAND vmc_unit_tests ${TEST_RUN_ARGS}
+            COMMAND mplex_unit_tests ${TEST_RUN_ARGS}
+            COMMAND vme_unit_tests ${TEST_RUN_ARGS}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
+            WORKING_DIRECTORY
+            DEPENDS all_binaries
+            )
+endif ()
