@@ -1,8 +1,5 @@
 include_directories (${Boost_INCLUDE_DIRS})
 
-#set(TEST_RUN_ARGS "--log_level=all")
-set(TEST_RUN_ARGS "")
-
 ############################### VME ######################################
 add_executable(vme_unit_tests
         vme_main.cpp
@@ -26,13 +23,6 @@ add_test(NAME vme_unit_tests
         COMMAND vme_unit_tests --log_level=all
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
         )
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    # Run the test as part of debug build
-    add_custom_target(run_vme_unit_test ALL
-            COMMAND vme_unit_tests ${TEST_RUN_ARGS}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
-            DEPENDS vme_unit_tests)
-endif ()
 
 ############################### VMC ######################################
 add_executable(vmc_unit_tests
@@ -52,13 +42,6 @@ add_test(NAME vmc_unit_tests
         COMMAND vmc_unit_tests --log_level=all
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
         )
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    # Run the test as part of debug build
-    add_custom_target(run_vmc_unit_test ALL
-            COMMAND vmc_unit_tests ${TEST_RUN_ARGS}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
-            DEPENDS vmc_unit_tests)
-endif ()
 
 ############################### PP #######################################
 add_executable(pp_unit_tests
@@ -73,13 +56,6 @@ add_test(NAME pp_unit_tests
         COMMAND pp_unit_tests --log_level=all
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
         )
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    # Run the test as part of debug build
-    add_custom_target(run_pp_unit_test ALL
-            COMMAND pp_unit_tests ${TEST_RUN_ARGS}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
-            DEPENDS pp_unit_tests)
-endif ()
 
 ############################### MPLEX ####################################
 add_executable(mplex_unit_tests
@@ -94,13 +70,6 @@ add_test(NAME mplex_unit_tests
         COMMAND mplex_unit_tests --log_level=all
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
         )
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    # Run the test as part of debug build
-    add_custom_target(run_mplex_unit_test ALL
-            COMMAND mplex_unit_tests ${TEST_RUN_ARGS}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
-            DEPENDS mplex_unit_tests)
-endif ()
 
 ############################### DEFCOMP ##################################
 add_executable(defcomp_unit_tests
@@ -115,10 +84,3 @@ add_test(NAME defcomp_unit_tests
         COMMAND defcomp_unit_tests --log_level=all
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
         )
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    # Run the test as part of debug build
-    add_custom_target(run_defcomp_unit_test ALL
-            COMMAND defcomp_unit_tests ${TEST_RUN_ARGS}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
-            DEPENDS defcomp_unit_tests)
-endif ()
