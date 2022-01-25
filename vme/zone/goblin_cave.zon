@@ -392,7 +392,7 @@ extra {}
 "  This is a completely normal bastard sword, fitted for a goblin. The only
 thing that are exceptional are the blood line in the middle of the blade."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 12
 cost 8 SILVER_PIECE
 end
@@ -407,7 +407,7 @@ extra {}
 heavy head, which probably makes it even more devastating for an enemy. An
 inscription on the wooden handle says 'Gooood, Hhe, Hhe, Hhe, Gooood'."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_MACE, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
+WEAPON_DEF(WPN_MACE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 16
 cost 5 SILVER_PIECE
 end
@@ -448,7 +448,7 @@ extra {}
 "   YUCK, this beard is filled with grease. It's really something only a real
 psychopath would wear on his head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
-ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+ARMOUR_CLOTHES(BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 end
 
