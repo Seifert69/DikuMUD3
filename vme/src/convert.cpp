@@ -4,70 +4,58 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.7 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <limits.h>
-#include <time.h>
-#include <math.h>
+#include "affect.h"
+#include "db.h"
+#include "db_file.h"
+#include "formatter.h"
+#include "handler.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "reception.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+#include "zon_basis.h"
+
+#include <dirent.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <string>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <iostream>
 
-#include <iomanip>
 namespace fs = boost::filesystem;
-
-#include <fstream>
-#define CONVERT_PATH str_cc(g_cServerConfig.m_libdir, "ply")
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "db_file.h"
-#include "db.h"
-#include "handler.h"
-#include "common.h"
-#include "skills.h"
-#include "utility.h"
-#include "files.h"
-#include "affect.h"
-#include "money.h"
-
-int required_xp(int level);
-
-int save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer);
-int player_exists(const char *pName);
-int delete_player(const char *pName);
-int delete_inventory(const char *pName);
-void save_player_file(class unit_data *pc);
 
 char player_directory[1024] = "\0";
 int max_id = -1;
 int top_id = -1;
-ubit8 *ids = NULL; /* For checking duplicate players... */
+ubit8 *ids = nullptr; /* For checking duplicate players... */
 
 #define OUTPUT_DIR "lib/"
 
-#include <dirent.h>
-#include <string>
-
-int sel_name(const struct dirent *dptr);
 int sel_name(const struct dirent *dptr)
 {
-    if (strchr(dptr->d_name, '.') == NULL)
+    if (strchr(dptr->d_name, '.') == nullptr)
+    {
         return 1;
+    }
     return 0;
 }
 
 void convert_free_unit(class unit_data *u)
 {
     while (UNIT_CONTAINS(u))
+    {
         convert_free_unit(UNIT_CONTAINS(u));
+    }
 
-    UNIT_AFFECTED(u) = NULL;
-    UNIT_FUNC(u) = NULL;
+    UNIT_AFFECTED(u) = nullptr;
+    UNIT_FUNC(u) = nullptr;
 
     unit_from_unit(u);
     remove_from_unit_list(u);
@@ -88,7 +76,7 @@ void free_inventory(class unit_data *u)
 
 int days_old(time_t last_logon)
 {
-    return (int)(difftime(time(0), last_logon) / SECS_PER_REAL_DAY);
+    return (int)(difftime(time(nullptr), last_logon) / SECS_PER_REAL_DAY);
 }
 
 class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList)
@@ -123,7 +111,9 @@ class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList
     }
 
     if (IS_OBJ(u))
+    {
         UNIT_SIZE(u) = UNIT_SIZE(pc);
+    }
 
     return u;
 }
@@ -132,8 +122,10 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 {
     class unit_data *bla;
 
-    if (u == NULL)
+    if (u == nullptr)
+    {
         return;
+    }
 
     convert_inventory(UNIT_CONTAINS(u), pc, bList);
 
@@ -173,8 +165,6 @@ void convert_player(class unit_data *pc)
 /* Return TRUE if Ok. */
 int sanity_check(class unit_data *u)
 {
-    void race_adjust(class unit_data * ch);
-
     if (g_nCorrupt == TRUE)
     {
         printf("Corrupted unit in READ.");
@@ -205,13 +195,13 @@ int sanity_check(class unit_data *u)
         return FALSE;
     }
 
-    if (PC_TIME(u).creation > time(0))
+    if (PC_TIME(u).creation > time(nullptr))
     {
         printf("Corrupted creation time.");
         return FALSE;
     }
 
-    if (PC_TIME(u).connect > time(0))
+    if (PC_TIME(u).connect > time(nullptr))
     {
         printf("Corrupted connect time.");
         return FALSE;
@@ -240,7 +230,9 @@ int shall_delete(class unit_data *pc)
 
     /* Player which have paid at some point in time remain almost permanent. */
     if (PC_ACCOUNT(pc).total_credit > 0)
+    {
         return FALSE;
+    }
 
     if ((days > 60) && (CHAR_LEVEL(pc) <= START_LEVEL + 4))
     {
@@ -260,7 +252,6 @@ int shall_delete(class unit_data *pc)
 int shall_exclude(const char *name)
 {
     char buf[256];
-    int _parse_name(const char *arg, char *name);
     int result = 0;
 
     result = _parse_name(name, buf);
@@ -293,15 +284,15 @@ class unit_data *convert_load_player(char *name)
     if (!player_exists(name))
     {
         /* printf("No such player.\n"); */
-        return NULL;
+        return nullptr;
     }
 
     ch = load_player(name);
 
-    if (ch == NULL)
+    if (ch == nullptr)
     {
         printf("NULL.\n");
-        return NULL;
+        return nullptr;
     }
 
     insert_in_unit_list(ch);
@@ -311,51 +302,50 @@ class unit_data *convert_load_player(char *name)
     {
         printf("EXCLUDED.\n");
         convert_free_unit(ch);
-        return NULL;
+        return nullptr;
     }
 
     if (!sanity_check(ch))
     {
         printf("SANITY ERROR.\n");
         convert_free_unit(ch);
-        return NULL;
+        return nullptr;
     }
 
     if (PC_ID(ch) > top_id)
     {
         printf("TOP ID ERROR %d vs %d.\n", PC_ID(ch), top_id);
         convert_free_unit(ch);
-        return NULL;
+        return nullptr;
     }
 
     if (PC_ID(ch) > max_id)
+    {
         max_id = PC_ID(ch);
+    }
 
     return ch;
 }
 
 const char *isodate(struct tm *t)
 {
-    static char buf[200];
+    static std::string isodate;
 
-    snprintf(buf, sizeof(buf), "%04d-%02d-%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
-
-    return buf;
+    isodate = diku::format_to_str("%04d-%02d-%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
+    return isodate.c_str();
 }
 
 void clist()
 {
-    /* external functs */
-    struct time_info_data age(class unit_data * ch);
-    struct time_info_data real_time_passed(time_t t2, time_t t1);
-
     std::string ipath;
     /*
         std::cout << "\nEnter the full path to the root player directory for example '/home/mud/vme2.0/lib/ply' or \n<enter> for the one
     listed in the server.cfg file:  "; char cpath[1024]; cpath[0]=0; std::cin.ignore(); std::cin.getline(cpath,1024); ipath=cpath;
     */
     if (ipath.empty())
-        ipath = CONVERT_PATH;
+    {
+        ipath = g_cServerConfig.getFileInLibDir("ply");
+    }
 
     fs::path full_path(ipath);
 
@@ -392,12 +382,14 @@ void clist()
             }
 
             if (!fs::is_directory(full_path))
+            {
                 continue;
+            }
             // std::cout << "\nIn directory: " << full_path << "\n\n";
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
-                char *temp = NULL;
+                char *temp = nullptr;
                 try
                 {
                     if (fs::is_directory(*dir_itr))
@@ -413,7 +405,7 @@ void clist()
 
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
-                        if (pc == NULL)
+                        if (pc == nullptr)
                         {
                             std::cout << "ERROR: Corrupt\n";
                             delete temp;
@@ -424,14 +416,18 @@ void clist()
                                   << days_old(PC_TIME(pc).connect) << ";";
 
                         if (ids[PC_ID(pc)])
+                        {
                             std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")";
+                        }
                         else
+                        {
                             ids[PC_ID(pc)] = 1;
+                        }
 
                         shall_exclude(UNIT_NAME(pc));
                         // shall_delete(pc);
 
-                        UNIT_CONTAINS(void_char) = NULL;
+                        UNIT_CONTAINS(void_char) = nullptr;
                         /* load_contents(temp, void_char);
 
                         if (UNIT_CONTAINS(void_char))
@@ -478,9 +474,13 @@ void clist()
                             tmp = true;
                         }
                         if (tmp)
+                        {
                             std::cout << ".";
+                        }
                         else
+                        {
                             std::cout << " Less than an hour";
+                        }
 
                         std::cout << "; " << std::endl;
 
@@ -508,9 +508,7 @@ void clist()
 
 void convert_file(void)
 {
-    std::string ipath;
-    ipath = CONVERT_PATH;
-
+    std::string ipath{g_cServerConfig.getFileInLibDir("ply")};
     fs::path full_path(ipath);
 
     unsigned long file_count = 0;
@@ -541,12 +539,14 @@ void convert_file(void)
             }
 
             if (!fs::is_directory(full_path))
+            {
                 continue;
+            }
             std::cout << "\nIn directory: " << full_path << "\n\n";
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
-                char *temp = NULL;
+                char *temp = nullptr;
                 try
                 {
                     if (fs::is_directory(*dir_itr))
@@ -561,7 +561,7 @@ void convert_file(void)
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
 
-                        if (pc == NULL)
+                        if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
@@ -569,9 +569,13 @@ void convert_file(void)
                         }
 
                         if (ids[PC_ID(pc)])
+                        {
                             std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")" << std::endl;
+                        }
                         else
+                        {
                             ids[PC_ID(pc)] = 1;
+                        }
 
                         std::cout << UNIT_NAME(pc) << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN") << std::endl;
 
@@ -606,8 +610,7 @@ void convert_file(void)
 
 void cleanup(void)
 {
-    std::string ipath;
-    ipath = CONVERT_PATH;
+    std::string ipath{g_cServerConfig.getFileInLibDir("ply")};
 
     fs::path full_path(ipath);
 
@@ -642,12 +645,14 @@ void cleanup(void)
             }
 
             if (!fs::is_directory(full_path))
+            {
                 continue;
+            }
             std::cout << "\nIn directory: " << full_path << "\n\n";
 
             for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
-                char *temp = NULL;
+                char *temp = nullptr;
                 try
                 {
                     if (fs::is_directory(*dir_itr))
@@ -663,7 +668,7 @@ void cleanup(void)
                         std::cout << temp;
                         pc = convert_load_player(temp);
 
-                        if (pc == NULL)
+                        if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
@@ -695,7 +700,7 @@ void cleanup(void)
 
                         std::cout.flush();
 
-                        UNIT_CONTAINS(void_char) = NULL;
+                        UNIT_CONTAINS(void_char) = nullptr;
                         load_contents(temp, void_char);
                         if (UNIT_CONTAINS(void_char))
                         {
@@ -730,8 +735,6 @@ void cleanup(void)
 
 void cleanup_playerfile(int c)
 {
-    int read_player_id(void);
-
     top_id = read_player_id();
     CREATE(ids, ubit8, top_id + 1);
 
@@ -740,11 +743,17 @@ void cleanup_playerfile(int c)
     g_entry_room = new EMPLACE(room_data) room_data;
     g_destroy_room = new EMPLACE(room_data) room_data;
     if (c == 1)
+    {
         convert_file();
+    }
     else if (c == 2)
+    {
         cleanup();
+    }
     else
+    {
         clist();
+    }
 
     printf("\n\nFinished.\n");
 }

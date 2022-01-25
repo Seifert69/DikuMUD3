@@ -2,20 +2,17 @@ project(vmc)
 
 set(VMC_SRCS
         dilpar.h
-        dilshare.cpp
         diltok.h
         vmc.cpp vmc.h
-        vmc_process.cpp
+        vmc_process.cpp vmc_process.h
         vmctok.h
-        )
-
-# Source files from other parts to link with vme
-set(VMC_DEP_SRCS
+        # Source files from other parts to link with vmc
         ../bytestring.cpp ../bytestring.h
         ../color.cpp ../color.h
         ../common.cpp ../common.h
         ../db_file.cpp ../db_file.h
         ../destruct.cpp ../destruct.h
+        ../dilshare.cpp ../dil.h
         ../extra.cpp ../extra.h
         ../files.cpp ../files.h
         ../intlist.cpp ../intlist.h
@@ -27,8 +24,6 @@ set(VMC_DEP_SRCS
         ../textutil.cpp ../textutil.h
         ../utility.cpp ../utility.h
         )
-
-include_directories(.)
 
 BISON_TARGET(vmcpar vmcpar.y
         ${CMAKE_CURRENT_BINARY_DIR}/tmp_vmcpar.cpp
@@ -55,16 +50,17 @@ FLEX_TARGET(dillex
         )
 ADD_FLEX_BISON_DEPENDENCY(dillex dilpar)
 
-add_compile_definitions(VMC_SRC VMC MUD_DEBUG)
-
-add_executable(vmc vmc.cpp)
-
 add_library(vmc_objs STATIC
         ${VMC_SRCS}
         ${BISON_dilpar_OUTPUTS}
         ${FLEX_dillex_OUTPUTS}
         ${BISON_vmcpar_OUTPUTS}
         ${FLEX_vmclex_OUTPUTS}
+        )
+target_compile_definitions(vmc_objs PUBLIC VMC_SRC VMC MUD_DEBUG)
+target_include_directories(vmc_objs
+        PRIVATE . ${CMAKE_SOURCE_DIR}/vme/src ${CMAKE_SOURCE_DIR}/vme/src/pp
+        PUBLIC ${CMAKE_SOURCE_DIR}/vme/include
         )
 
 # Add report files to clean target
@@ -73,12 +69,19 @@ set_target_properties(vmc_objs
             ADDITIONAL_CLEAN_FILES "${CMAKE_CURRENT_BINARY_DIR}/tmp_vmcpar.output;${CMAKE_CURRENT_BINARY_DIR}/tmp_dilpar.output;"
         )
 
-#Add all other project sources to a library file so we can link with subject projects and test suites
-add_library(vmc_dep_objs STATIC ${VMC_DEP_SRCS})
 
+add_executable(vmc main.cpp)
+target_compile_definitions(vmc PUBLIC VMC_SRC VMC MUD_DEBUG)
+target_link_options(vmc PUBLIC -Wl,-zmuldefs) # TODO Come back and see if this can be removed
 target_link_libraries(vmc
         vmc_objs
         pp_objs
-        vmc_dep_objs
+        vme_objs
         ${FLEX_LIBRARIES}
+        crypt
+        Boost::filesystem
+        )
+target_include_directories(vmc
+        PRIVATE . ${CMAKE_SOURCE_DIR}/vme/src ${CMAKE_SOURCE_DIR}/vme/src/pp
+        PUBLIC ${CMAKE_SOURCE_DIR}/vme/include
         )

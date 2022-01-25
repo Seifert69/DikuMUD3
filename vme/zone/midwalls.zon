@@ -4628,7 +4628,7 @@ extra {}
 "This halberd bears the Midgaard coat of arms, and the stamp of the
 wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HALBERD, 1, 1)
+WEAPON_DEF(WPN_HALBERD, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 type ITEM_WEAPON
 weight 8
 cost 12 SILVER_PIECE
@@ -4643,7 +4643,7 @@ extra {}
 "This battle axe bears the Midgaard coat of arms, and the stamp of the
 wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BATTLE_AXE, 1, 1)
+WEAPON_DEF(WPN_BATTLE_AXE, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 type ITEM_WEAPON
 weight 8
 cost 12 SILVER_PIECE
@@ -4657,7 +4657,7 @@ extra {}
 "This greatsword bears the Midgaard coat of arms, and the stamp of the
 wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_GREAT_SWORD, 1, 1)
+WEAPON_DEF(WPN_GREAT_SWORD, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 type ITEM_WEAPON
 weight 5
 cost 12 SILVER_PIECE
@@ -4672,7 +4672,7 @@ extra {}
 "This longsword bears the Midgaard coat of arms, and the stamp of the
 wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, 1, 1)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 romflags {OBJ_NO_DUAL}
 type ITEM_WEAPON
 weight 5
@@ -4732,7 +4732,7 @@ extra {}
 of Midgaard."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 type ITEM_ARMOR
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 3
 cost 1 SILVER_PIECE
 end
@@ -4750,7 +4750,7 @@ on a shield.  A crown sits above the shield, a sceptre below, and there are
 two crossed rapiers behind the shield."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 type ITEM_ARMOR
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 14
 end
 
@@ -4763,7 +4763,7 @@ extra {}
 "These gauntlets appear to be from the stockpile of the Midgaard wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 type ITEM_ARMOR
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 14
 cost 140 COPPER_PIECE
 end
@@ -4777,7 +4777,7 @@ extra {}
 "These bracers appear to be from the stockpile of the Midgaard wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 type ITEM_ARMOR
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 14
 cost 140 COPPER_PIECE
 end
@@ -4791,7 +4791,7 @@ extra {}
 "These leggings appear to be from the stockpile of the Midgaard wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 type ITEM_ARMOR
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 14
 cost 140 COPPER_PIECE
 end
@@ -4805,7 +4805,7 @@ extra {}
 "This helmet appears to be from the stockpile of the Midgaard wall guards."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 type ITEM_ARMOR
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 14
 cost 140 COPPER_PIECE
 end
@@ -4830,11 +4830,11 @@ extra {"$improved identify"}
 It will remove 2 from magic."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 type ITEM_ARMOR
-ARMOUR_PLATE(0, 0)
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
-MAG_TRANSFER(-2)
-DIV_TRANSFER(-2)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+MAG_TRANSFER(BONUS_BAD)  // Xyzzy: -2
+DIV_TRANSFER(BONUS_BAD)  // Xyzzy: -2
 weight 14
 cost 100 IRON_PIECE
 end

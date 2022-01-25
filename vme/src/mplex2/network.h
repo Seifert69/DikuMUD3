@@ -4,9 +4,7 @@
  $Date: 2002/10/13 00:04:25 $
  $Revision: 2.1 $
  */
-
-#ifndef _MUD_NETWORK_H
-#define _MUD_NETWORK_H
+#pragma once
 
 #ifdef _WINDOWS
     #include <winsock.h>
@@ -15,13 +13,11 @@
 #include <sys/types.h>
 
 #ifdef LINUX
-    #include <sys/socket.h>
-    #include <netinet/in.h>
     #include <arpa/inet.h>
+    #include <netinet/in.h>
+    #include <sys/socket.h>
 #endif
 
 #define DEF_SERVER_ADDR "127.0.0.1"
 int OpenMother(int port);
 int OpenNetwork(int nMudPort, char *pMudAddr);
-
-#endif

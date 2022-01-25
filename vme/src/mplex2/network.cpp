@@ -6,36 +6,22 @@
  */
 
 #ifdef _WINDOWS
-    #include <winsock2.h>
     #include <time.h>
-#else
-    #include <unistd.h>
-    #include <sys/time.h>
-    #include <sys/un.h>
+    #include <winsock2.h>
 
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <sys/types.h>
-#include <fcntl.h>
-#include <errno.h>
-#ifdef IRIX
-    #include <netinet/tcp.h>
-#endif
-#ifdef LINUX
-    #include <netinet/tcp.h>
 #endif
 
 #include "network.h"
 #include "protocol.h"
-#include "textutil.h"
+#include "slog.h"
 
-#if defined(AMIGA)
-    #include <machine/endian.h>
-#endif
+#include <fcntl.h>
+#include <netinet/tcp.h>
+#include <sys/un.h>
+#include <unistd.h>
+
+#include <cerrno>
+#include <cstdlib>
 
 int OpenMother(int nPort)
 {

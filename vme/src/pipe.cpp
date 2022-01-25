@@ -1,19 +1,20 @@
-#include <stdio.h>
-#include <string>
+#include "pipe.h"
+
+#include "dbfind.h"
+#include "dil.h"
+#include "dilrun.h"
+#include "essential.h"
+#include "hook.h"
+#include "slog.h"
+#include "textutil.h"
+#include "unitfind.h"
+
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <errno.h>
-#include "essential.h"
+
+#include <cerrno>
 #include <cstring>
-#include "dilrun.h"
-#include "dbfind.h"
-#include "vme.h"
-#include "unitfind.h"
-#include "dil.h"
-#include "textutil.h"
-#include "hook.h"
+#include <string>
 
 class pipeMUD_RO : public cHookNative
 {
@@ -65,7 +66,9 @@ public:
             this->Open();
 
             if (!this->IsHooked())
+            {
                 return -1;
+            }
         }
 
         str = "";
@@ -76,7 +79,9 @@ public:
             n = this->read(buf, sizeof(buf) - 1);
 
             if (n == 0)
+            {
                 break;
+            }
             if (n == -1)
             {
                 slog(LOG_OFF, 0, "Error reading from pipeMUD RO.");
@@ -87,7 +92,9 @@ public:
                 buf[n] = 0;
                 str.append(buf);
                 if (n < (int)strlen(buf) - 1)
+                {
                     break;
+                }
 
                 if (str.length() > 500000)
                 {
@@ -105,20 +112,23 @@ public:
             do
             {
                 p = strchr(o, '\n');
-                if (p == NULL)
+                if (p == nullptr)
                 {
                     if (strlen(o) < 1)
+                    {
                         break;
+                    }
 
                     p = o + strlen(o);
                 }
                 std::string line(o, p - o);
                 o = p;
                 if (*o == '\n')
+                {
                     o++;
-                slog(LOG_OFF, 0, "Received line [%s]. Send to DIL", line.c_str());
+                }
+                slog(LOG_OFF, 0, "Received line [%s]. Send to DIL", line);
 
-                void pipeMUD_dispatch(std::string str);
                 pipeMUD_dispatch(line);
             } while (p);
         }
@@ -165,7 +175,9 @@ public:
             this->Open();
 
             if (!this->IsHooked())
+            {
                 return;
+            }
         }
 
         int n;
@@ -185,7 +197,9 @@ public:
             slog(LOG_OFF, 0, "Unable to write full string to pipeMUD WO. code not developed for this yet", errno);
         }
         else
-            slog(LOG_OFF, 0, "Wrote message [%s] to dispatcher.", str.c_str());
+        {
+            slog(LOG_OFF, 0, "Wrote message [%s] to dispatcher.", str);
+        }
     };
 } g_pipeMUD_WO;
 
@@ -206,12 +220,12 @@ void pipeMUD_dispatch(std::string str)
 {
     struct diltemplate *tmpl;
     class dilprg *prg;
-    static unit_data *u = NULL;
+    static unit_data *u = nullptr;
 
     if (!u)
     {
         u = find_symbolic("basis", "discord");
-        if (u == NULL)
+        if (u == nullptr)
         {
             slog(LOG_OFF, 0, "Can't find discord@basis.");
             return;
@@ -219,7 +233,7 @@ void pipeMUD_dispatch(std::string str)
     }
 
     tmpl = find_dil_template("dispatcher@comm");
-    prg = dil_copy_template(tmpl, u, NULL);
+    prg = dil_copy_template(tmpl, u, nullptr);
 
     if (prg)
     {

@@ -4,33 +4,30 @@
  $Date: 2003/12/28 22:02:44 $
  $Revision: 2.3 $
  */
-
-#include "external_vars.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #ifdef _WINDOWS
     #include <direct.h>
 #else
     #include <dirent.h>
 #endif
-#include <time.h>
-#include <ctype.h>
 
-#include "structs.h"
-#include "utils.h"
-#include "handler.h"
-#include "utility.h"
-#include "db.h"
+#include "account.h"
 #include "comm.h"
-#include "interpreter.h"
-#include "textutil.h"
-#include "account.h"
-#include "common.h"
+#include "db.h"
+#include "error.h"
 #include "files.h"
+#include "formatter.h"
+#include "handler.h"
+#include "interpreter.h"
 #include "str_parse.h"
-#include "account.h"
-#include "main.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+#include "zon_basis.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 /* This is a LOT nicer than using structs. Trust me, I tried to program it! */
 
@@ -47,7 +44,7 @@ void account_cclog(class unit_data *ch, int amount)
 {
     FILE *f;
 
-    f = fopen(str_cc(g_cServerConfig.m_logdir, CREDITFILE_LOG), "a+b");
+    f = fopen(g_cServerConfig.getFileInLogDir(CREDITFILE_LOG).c_str(), "a+b");
 
     fprintf(f, "%-16s %6.2f %s\n", UNIT_NAME(ch), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
@@ -56,7 +53,7 @@ void account_cclog(class unit_data *ch, int amount)
 
 static void account_log(char action, class unit_data *god, class unit_data *pc, int amount)
 {
-    time_t now = time(0);
+    time_t now = time(nullptr);
     char *c;
     char buf[1024];
     ubit32 gid, pid, total, crc, vxor;
@@ -66,22 +63,30 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
 
     next_crc ^= vxor;
 
-    f = fopen_cache(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG), "r+b");
+    f = fopen_cache(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG), "r+b");
 
     if (fseek(f, 8L, SEEK_SET) != 0)
+    {
         error(HERE, "Unable to seek in account log.");
+    }
     snprintf(buf, sizeof(buf), "%08x", next_crc);
 
     if (fwrite(buf, sizeof(char), 8, f) != 8)
+    {
         error(HERE, "Unable to write 1 in account log.");
+    }
 
     c = buf;
     sprintf(c, "%c %-15s %-15s %8d ", action, UNIT_NAME(god), UNIT_NAME(pc), amount);
 
     if (IS_PC(god))
+    {
         gid = PC_ID(god) ^ (vxor);
+    }
     else
+    {
         gid = 0 ^ (vxor);
+    }
 
     pid = PC_ID(pc) ^ (vxor << 1);
     total = PC_ACCOUNT(pc).total_credit;
@@ -118,7 +123,7 @@ int time_to_index(ubit8 hours, ubit8 minutes)
 
 void account_local_stat(const class unit_data *ch, class unit_data *u)
 {
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
     {
         send_to_char("Game is not in accounting mode.\n\r", ch);
         return;
@@ -131,36 +136,38 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
     }
 
     char *pTmstr = ctime((time_t *)&PC_ACCOUNT(u).flatrate);
-    char buf[MAX_STRING_LENGTH];
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     if (IS_ADMINISTRATOR(ch))
-        snprintf(buf,
-                 sizeof(buf),
-                 "Credit         : %5.2f\n\r"
-                 "Credit Limit   : %5.2f\n\r"
-                 "Credit to date : %5.2f\n\r"
-                 "Credit Card    : %s\n\r"
-                 "Discount       : %3d%%\n\r"
-                 "Flat Rate      : %s%s"
-                 "Crack counter  : %3d\n\r",
-                 (float)PC_ACCOUNT(u).credit / 100.0,
-                 (float)PC_ACCOUNT(u).credit_limit / 100.0,
-                 (float)PC_ACCOUNT(u).total_credit / 100.0,
-                 PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
-                 PC_ACCOUNT(u).discount,
-                 PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
-                 PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
-                 PC_ACCOUNT(u).cracks);
+    {
+        auto msg = diku::format_to_str("Credit         : %5.2f\n\r"
+                                       "Credit Limit   : %5.2f\n\r"
+                                       "Credit to date : %5.2f\n\r"
+                                       "Credit Card    : %s\n\r"
+                                       "Discount       : %3d%%\n\r"
+                                       "Flat Rate      : %s%s"
+                                       "Crack counter  : %3d\n\r",
+                                       (float)PC_ACCOUNT(u).credit / 100.0,
+                                       (float)PC_ACCOUNT(u).credit_limit / 100.0,
+                                       (float)PC_ACCOUNT(u).total_credit / 100.0,
+                                       PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
+                                       PC_ACCOUNT(u).discount,
+                                       PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
+                                       PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
+                                       PC_ACCOUNT(u).cracks);
+        send_to_char(msg, ch);
+    }
     else
     {
         if (PC_ACCOUNT(u).total_credit > 0)
-            snprintf(buf, sizeof(buf), "Has paid for playing.\n\r");
+        {
+            send_to_char("Has paid for playing.\n\r", ch);
+        }
         else
-            snprintf(buf, sizeof(buf), "Has NOT yet paid for playing.\n\r");
+        {
+            send_to_char("Has NOT yet paid for playing.\n\r", ch);
+        }
     }
-
-    send_to_char(buf, ch);
 }
 
 void account_global_stat(class unit_data *ch)
@@ -169,22 +176,21 @@ void account_global_stat(class unit_data *ch)
     char *b;
     int i, j;
 
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
+    {
         return;
+    }
 
-    snprintf(buf,
-             sizeof(buf),
-             "\n\rAccounting mode:\n\r"
-             "  Free from level : %d\n\r"
-             "  Currency Name   : %s\n\r"
-             "  Default limit   : %.2f\n\r"
-             "  Default start   : %.2f\n\r\n\r",
-             g_cAccountConfig.m_nFreeFromLevel,
-             g_cAccountConfig.m_pCoinName,
-             (float)g_cAccountConfig.m_nAccountLimit / 100.0,
-             (float)g_cAccountConfig.m_nAccountFree / 100.0);
-
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("\n\rAccounting mode:\n\r"
+                                   "  Free from level : %d\n\r"
+                                   "  Currency Name   : %s\n\r"
+                                   "  Default limit   : %.2f\n\r"
+                                   "  Default start   : %.2f\n\r\n\r",
+                                   g_cAccountConfig.m_nFreeFromLevel,
+                                   g_cAccountConfig.m_pCoinName,
+                                   (float)g_cAccountConfig.m_nAccountLimit / 100.0,
+                                   (float)g_cAccountConfig.m_nAccountFree / 100.0);
+    send_to_char(msg, ch);
 
     b = buf;
     snprintf(buf, sizeof(buf), "    Time    Sun  Mon  Tir  Wed  Thu  Fri  Sat\n\r");
@@ -216,10 +222,8 @@ void account_overdue(const class unit_data *ch)
 {
     int i, j;
 
-    if (g_cServerConfig.m_bAccounting)
+    if (g_cServerConfig.isAccounting())
     {
-        char Buf[256];
-
         ubit32 discount = PC_ACCOUNT(ch).discount;
         ubit32 lcharge = ((100 - discount) * g_cAccountConfig.m_nHourlyRate) / 100;
 
@@ -235,19 +239,16 @@ void account_overdue(const class unit_data *ch)
             i = i / lcharge;
         }
 
-        snprintf(Buf,
-                 sizeof(Buf),
-                 "Your account is overdue by %.2f %s with a "
-                 "limit of %.2f %s.\n\r"
-                 "The account will expire in %d hours and %d minutes.\n\r\n\r",
-                 (float)-PC_ACCOUNT(ch).credit / 100.0,
-                 g_cAccountConfig.m_pCoinName,
-                 (float)PC_ACCOUNT(ch).credit_limit / 100.0,
-                 g_cAccountConfig.m_pCoinName,
-                 i,
-                 j);
-
-        send_to_char(Buf, ch);
+        auto msg = diku::format_to_str("Your account is overdue by %.2f %s with a "
+                                       "limit of %.2f %s.\n\r"
+                                       "The account will expire in %d hours and %d minutes.\n\r\n\r",
+                                       (float)-PC_ACCOUNT(ch).credit / 100.0,
+                                       g_cAccountConfig.m_pCoinName,
+                                       (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                       g_cAccountConfig.m_pCoinName,
+                                       i,
+                                       j);
+        send_to_char(msg, ch);
         send_to_char(g_cAccountConfig.m_pOverdueMessage, ch);
     }
 }
@@ -259,7 +260,7 @@ void account_paypoint(class unit_data *ch)
 
 void account_closed(class unit_data *ch)
 {
-    if (g_cServerConfig.m_bAccounting)
+    if (g_cServerConfig.isAccounting())
     {
         send_to_char(g_cAccountConfig.m_pClosedMessage, ch);
     }
@@ -281,21 +282,31 @@ static ubit32 seconds_used(ubit8 bhr, ubit8 bmi, ubit8 bse, ubit8 ehr, ubit8 emi
 static int tm_less_than(struct tm *b, struct tm *e)
 {
     if (b->tm_wday != e->tm_wday)
+    {
         return TRUE;
+    }
 
     if (b->tm_hour > e->tm_hour)
+    {
         return FALSE;
+    }
 
     if (b->tm_hour == e->tm_hour)
     {
         if (b->tm_min > e->tm_min)
+        {
             return FALSE;
+        }
         else if (b->tm_min == e->tm_min)
         {
             if (b->tm_sec > e->tm_sec)
+            {
                 return FALSE;
+            }
             else
+            {
                 return TRUE;
+            }
         }
     }
 
@@ -308,8 +319,10 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
     struct tm t;
     ubit32 secs;
 
-    if (PC_ACCOUNT(pc).flatrate > (ubit32)time(0))
+    if (PC_ACCOUNT(pc).flatrate > (ubit32)time(nullptr))
+    {
         return;
+    }
 
     bidx = time_to_index(b->tm_hour, b->tm_min);
     assert(bidx < TIME_GRANULARITY);
@@ -337,29 +350,30 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
     float amt = (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / (float)3600.0);
 
     if (is_in(PC_ACCOUNT(pc).discount, 1, 99))
+    {
         PC_ACCOUNT(pc).credit -= (((float)(100 - PC_ACCOUNT(pc).discount)) * amt) / (float)100.0;
+    }
     else
+    {
         PC_ACCOUNT(pc).credit -= amt;
+    }
 
 #ifdef ACCOUNT_DEBUG
     {
-        char buf[500];
-        snprintf(buf,
-                 sizeof(buf),
-                 "%d:%d.%d (%d) to %d:%d.%d (%d) = %d -- "
-                 "charge %d / %.2f\n\r",
-                 b->tm_hour,
-                 b->tm_min,
-                 b->tm_sec,
-                 b->tm_wday,
-                 t.tm_hour,
-                 t.tm_min,
-                 t.tm_sec,
-                 e->tm_wday,
-                 secs,
-                 day_charge[b->tm_wday][bidx],
-                 (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / 3600.0));
-        send_to_char(buf, pc);
+        auto msg = diku::format_to_str("%d:%d.%d (%d) to %d:%d.%d (%d) = %d -- "
+                                       "charge %d / %.2f\n\r",
+                                       b->tm_hour,
+                                       b->tm_min,
+                                       b->tm_sec,
+                                       b->tm_wday,
+                                       t.tm_hour,
+                                       t.tm_min,
+                                       t.tm_sec,
+                                       e->tm_wday,
+                                       secs,
+                                       day_charge[b->tm_wday][bidx],
+                                       (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / 3600.0));
+        send_to_char(msg, pc);
     }
 #endif
 
@@ -381,7 +395,9 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
     }
 
     if (tm_less_than(b, e))
+    {
         account_calc(pc, b, e);
+    }
 }
 
 void account_subtract(class unit_data *pc, time_t from, time_t to)
@@ -390,11 +406,15 @@ void account_subtract(class unit_data *pc, time_t from, time_t to)
 
     assert(IS_PC(pc));
 
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
+    {
         return;
+    }
 
     if (CHAR_LEVEL(pc) >= g_cAccountConfig.m_nFreeFromLevel)
+    {
         return;
+    }
 
     bt = *localtime(&from);
     et = *localtime(&to);
@@ -410,10 +430,12 @@ void account_subtract(class unit_data *pc, time_t from, time_t to)
 
 int account_is_overdue(const class unit_data *ch)
 {
-    if (g_cServerConfig.m_bAccounting && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
+    if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+        {
             return FALSE;
+        }
 
         return (PC_ACCOUNT(ch).credit < 0.0);
     }
@@ -423,7 +445,6 @@ int account_is_overdue(const class unit_data *ch)
 
 static void account_status(const class unit_data *ch)
 {
-    char Buf[256];
     int j, i;
     char *pTmstr;
     ubit32 discount = PC_ACCOUNT(ch).discount;
@@ -437,38 +458,31 @@ static void account_status(const class unit_data *ch)
 
     if (discount > 0)
     {
-        snprintf(Buf, sizeof(Buf), "You have an overall discount of %d%%.\n\r", discount);
-        send_to_char(Buf, ch);
+        auto msg = diku::format_to_str("You have an overall discount of %d%%.\n\r", discount);
+        send_to_char(msg, ch);
     }
 
-    if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+    if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
     {
         pTmstr = ctime((time_t *)&PC_ACCOUNT(ch).flatrate);
-        snprintf(Buf, sizeof(Buf), "Your account is on a flat rate until %s", pTmstr);
-        send_to_char(Buf, ch);
+        auto msg = diku::format_to_str("Your account is on a flat rate until %s", pTmstr);
+        send_to_char(msg, ch);
 
         if (PC_ACCOUNT(ch).credit >= 0.0)
         {
-            snprintf(Buf,
-                     sizeof(Buf),
-                     "You have a positive balance of %.2f %s.\n\r",
-                     PC_ACCOUNT(ch).credit / 100.0,
-                     g_cAccountConfig.m_pCoinName);
-
-            send_to_char(Buf, ch);
+            auto msg2 = diku::format_to_str("You have a positive balance of %.2f %s.\n\r",
+                                            PC_ACCOUNT(ch).credit / 100.0,
+                                            g_cAccountConfig.m_pCoinName);
+            send_to_char(msg2, ch);
         }
         return;
     }
 
     if (PC_ACCOUNT(ch).credit >= 0.0)
     {
-        snprintf(Buf,
-                 sizeof(Buf),
-                 "You have a positive balance of %.2f %s.\n\r",
-                 PC_ACCOUNT(ch).credit / 100.0,
-                 g_cAccountConfig.m_pCoinName);
-
-        send_to_char(Buf, ch);
+        auto msg =
+            diku::format_to_str("You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+        send_to_char(msg, ch);
 
         if (lcharge > 0)
         {
@@ -480,13 +494,11 @@ static void account_status(const class unit_data *ch)
 
             i = (int)(((float)PC_ACCOUNT(ch).credit_limit / (float)(lcharge)));
 
-            snprintf(Buf,
-                     sizeof(Buf),
-                     "Your credit limit is %d hours (%.2f %s).\n\r",
-                     i,
-                     (float)PC_ACCOUNT(ch).credit_limit / 100.0,
-                     g_cAccountConfig.m_pCoinName);
-            send_to_char(Buf, ch);
+            auto msg = diku::format_to_str("Your credit limit is %d hours (%.2f %s).\n\r",
+                                           i,
+                                           (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                           g_cAccountConfig.m_pCoinName);
+            send_to_char(msg, ch);
         }
     }
     else
@@ -497,26 +509,23 @@ static void account_status(const class unit_data *ch)
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
-            snprintf(Buf,
-                     sizeof(Buf),
-                     "Your account is overdue by %.2f %s with a "
-                     "limit of %.2f %s.\n\r"
-                     "The account will expire in %d hours and %d minutes.\n\r",
-                     (float)-PC_ACCOUNT(ch).credit / 100.0,
-                     g_cAccountConfig.m_pCoinName,
-                     (float)PC_ACCOUNT(ch).credit_limit / 100.0,
-                     g_cAccountConfig.m_pCoinName,
-                     i,
-                     j);
-            send_to_char(Buf, ch);
+            auto msg = diku::format_to_str("Your account is overdue by %.2f %s with a "
+                                           "limit of %.2f %s.\n\r"
+                                           "The account will expire in %d hours and %d minutes.\n\r",
+                                           (float)-PC_ACCOUNT(ch).credit / 100.0,
+                                           g_cAccountConfig.m_pCoinName,
+                                           (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                           g_cAccountConfig.m_pCoinName,
+                                           i,
+                                           j);
+            send_to_char(msg, ch);
         }
         else
         {
-            snprintf(Buf,
-                     sizeof(Buf),
-                     "You have a negative balance of %.2f %s.\n\r",
-                     PC_ACCOUNT(ch).credit / 100.0,
-                     g_cAccountConfig.m_pCoinName);
+            auto msg = diku::format_to_str("You have a negative balance of %.2f %s.\n\r",
+                                           PC_ACCOUNT(ch).credit / 100.0,
+                                           g_cAccountConfig.m_pCoinName);
+            send_to_char(msg, ch);
         }
     }
 }
@@ -525,10 +534,12 @@ int account_is_closed(class unit_data *ch)
 {
     int i, j;
 
-    if (g_cServerConfig.m_bAccounting && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
+    if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
+        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+        {
             return FALSE;
+        }
 
         i = (int)PC_ACCOUNT(ch).credit;
         j = PC_ACCOUNT(ch).credit_limit;
@@ -552,9 +563,13 @@ void account_withdraw(class unit_data *god, class unit_data *whom, ubit32 amount
 {
     PC_ACCOUNT(whom).credit -= (float)amount;
     if ((ubit32)amount > PC_ACCOUNT(whom).total_credit)
+    {
         PC_ACCOUNT(whom).total_credit = 0;
+    }
     else
+    {
         PC_ACCOUNT(whom).total_credit -= amount;
+    }
 
     slog(LOG_ALL, 255, "%s withdrew %d from account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
 
@@ -563,22 +578,22 @@ void account_withdraw(class unit_data *god, class unit_data *whom, ubit32 amount
 
 void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32 days)
 {
-    char Buf[256];
     sbit32 add = days * SECS_PER_REAL_DAY;
 
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
+    std::string msg;
     if (days > 0)
     {
         if (PC_ACCOUNT(whom).flatrate > (ubit32)now)
         {
-            snprintf(Buf, sizeof(Buf), "\n\rAdding %d days to the flatrate.\n\r\n\r", days);
+            msg = diku::format_to_str("\n\rAdding %d days to the flatrate.\n\r\n\r", days);
             PC_ACCOUNT(whom).flatrate += add;
         }
         else
         {
             assert(add > 0);
-            snprintf(Buf, sizeof(Buf), "\n\rSetting flatrate to %d days.\n\r\n\r", days);
+            msg = diku::format_to_str("\n\rSetting flatrate to %d days.\n\r\n\r", days);
             PC_ACCOUNT(whom).flatrate = now + add;
         }
     }
@@ -586,12 +601,12 @@ void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32
     {
         if ((sbit32)PC_ACCOUNT(whom).flatrate + add < now)
         {
-            snprintf(Buf, sizeof(Buf), "\n\rDisabling flatrate, enabling measure rate.\n\r\n\r");
+            msg = "\n\rDisabling flatrate, enabling measure rate.\n\r\n\r";
             PC_ACCOUNT(whom).flatrate = 0;
         }
         else
         {
-            snprintf(Buf, sizeof(Buf), "\n\rSubtracting %d days from the flatrate.\n\r\n\r", days);
+            msg = diku::format_to_str("\n\rSubtracting %d days from the flatrate.\n\r\n\r", days);
             PC_ACCOUNT(whom).flatrate += add;
         }
     }
@@ -599,20 +614,19 @@ void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32
     slog(LOG_ALL, 255, "%s change flatrate with %d on account %s.", UNIT_NAME(god), days, UNIT_NAME(whom));
     account_log('F', god, whom, days);
 
-    send_to_char(Buf, god);
+    send_to_char(msg, god);
 }
 
 void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    char Buf[256];
     char word[MAX_INPUT_LENGTH];
     class unit_data *u, *note;
     char *c = (char *)arg;
 
-    const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", NULL};
+    const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", nullptr};
     int i, amount;
 
-    if (!g_cServerConfig.m_bAccounting || !IS_PC(ch))
+    if (!g_cServerConfig.isAccounting() || !IS_PC(ch))
     {
         send_to_char("That command is not available.<br/>", ch);
         return;
@@ -662,9 +676,9 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
 #endif
 
-    u = find_unit(ch, &c, 0, FIND_UNIT_SURRO | FIND_UNIT_WORLD);
+    u = find_unit(ch, &c, nullptr, FIND_UNIT_SURRO | FIND_UNIT_WORLD);
 
-    if ((u == NULL) || !IS_PC(u))
+    if ((u == nullptr) || !IS_PC(u))
     {
         send_to_char("No such player found.\n\r", ch);
         return;
@@ -696,43 +710,46 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
     switch (i)
     {
         case 0: /* Insert amount   */
+        {
             account_local_stat(ch, u);
 
-            snprintf(Buf, sizeof(Buf), "\n\rInserting %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
-            send_to_char(Buf, ch);
+            auto msg = diku::format_to_str("\n\rInserting %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
+            send_to_char(msg, ch);
 
             account_insert(ch, u, amount);
 
             account_local_stat(ch, u);
 
-            snprintf(Buf,
-                     sizeof(Buf),
-                     "%s inserted %.2f %s on your account.\n\r",
-                     UNIT_NAME(ch),
-                     (float)amount / 100.0,
-                     g_cAccountConfig.m_pCoinName);
+            msg = diku::format_to_str("%s inserted %.2f %s on your account.\n\r",
+                                      UNIT_NAME(ch),
+                                      (float)amount / 100.0,
+                                      g_cAccountConfig.m_pCoinName);
             note = read_unit(g_letter_fi);
-            UNIT_EXTRA(note).add("", Buf);
+            UNIT_EXTRA(note).add("", msg.c_str());
             unit_to_unit(note, u);
-            break;
+        }
+        break;
 
         case 1: /* Withdraw amount */
+        {
             account_local_stat(ch, u);
 
-            snprintf(Buf, sizeof(Buf), "\n\rWithdrawing %.2f %s.\n\r\n\r", ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
-            send_to_char(Buf, ch);
+            auto msg = diku::format_to_str("\n\rWithdrawing %.2f %s.\n\r\n\r", ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+            send_to_char(msg, ch);
 
             account_withdraw(ch, u, amount);
 
             account_local_stat(ch, u);
-            break;
+        }
+        break;
 
         case 2: /* Change limit    */
+        {
             account_local_stat(ch, u);
 
-            snprintf(Buf, sizeof(Buf), "\n\rSetting limit to %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
+            auto msg = diku::format_to_str("\n\rSetting limit to %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
 
-            send_to_char(Buf, ch);
+            send_to_char(msg, ch);
 
             PC_ACCOUNT(u).credit_limit = amount;
 
@@ -740,9 +757,11 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
             slog(LOG_ALL, 255, "%s changed limit of %s to %d.", UNIT_NAME(ch), UNIT_NAME(u), amount);
             account_log('L', ch, u, amount);
-            break;
+        }
+        break;
 
         case 3: /* Discount */
+        {
             if (!is_in(amount, 0, 100))
             {
                 send_to_char("Invalid discount, select 0% to 100%.\n\r", ch);
@@ -751,9 +770,9 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
             account_local_stat(ch, u);
 
-            snprintf(Buf, sizeof(Buf), "\n\rSetting discount to %3d%%.\n\r\n\r", amount);
+            auto msg = diku::format_to_str("\n\rSetting discount to %3d%%.\n\r\n\r", amount);
 
-            send_to_char(Buf, ch);
+            send_to_char(msg, ch);
 
             PC_ACCOUNT(u).discount = amount;
 
@@ -761,7 +780,8 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
             slog(LOG_ALL, 255, "%s changed discount of %s to %d.", UNIT_NAME(ch), UNIT_NAME(u), amount);
             account_log('D', ch, u, amount);
-            break;
+        }
+        break;
 
         case 4: /* Flatrate: account papi flatrate 30 add, 20 remove, etc. */
             if (!is_in(amount, 1, 365))
@@ -772,9 +792,13 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
             c = str_next_word(c, word);
             if (is_abbrev(word, "add"))
+            {
                 ;
+            }
             else if (is_abbrev(word, "remove"))
+            {
                 amount = -amount;
+            }
             else
             {
                 send_to_char("You must either add or remove.\n\r", ch);
@@ -877,8 +901,10 @@ void numlist_sanity(int *numlist, int numlen)
 {
     int i;
 
-    if (numlist == NULL)
+    if (numlist == nullptr)
+    {
         return;
+    }
 
     if (numlen % 3 != 0)
     {
@@ -894,8 +920,10 @@ void numlist_sanity(int *numlist, int numlen)
 
 int flatrate_sanity(int *numlist, int numlen)
 {
-    if (numlist == NULL)
+    if (numlist == nullptr)
+    {
         return FALSE;
+    }
 
     if (numlen != 2)
     {
@@ -920,10 +948,10 @@ int flatrate_sanity(int *numlist, int numlen)
 
 CAccountConfig::CAccountConfig(void)
 {
-    m_pOverdueMessage = NULL;
-    m_pClosedMessage = NULL;
-    m_pPaypointMessage = NULL;
-    m_pCoinName = NULL;
+    m_pOverdueMessage = nullptr;
+    m_pClosedMessage = nullptr;
+    m_pPaypointMessage = nullptr;
+    m_pCoinName = nullptr;
     m_nFreeFromLevel = 200;
     m_nAccountLimit = 1500;
     m_nAccountFree = 1000;
@@ -943,18 +971,20 @@ void CAccountConfig::Boot(void)
     int *numlist;
     FILE *f;
 
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
+    {
         return;
+    }
 
     slog(LOG_OFF, 0, "Booting account system.");
 
-    if (!file_exists(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG)))
+    if (!file_exists(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG)))
     {
-        time_t now = time(0);
+        time_t now = time(nullptr);
 
-        f = fopen(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG), "wb");
+        f = fopen(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG).c_str(), "wb");
 
-        if (f == NULL)
+        if (f == nullptr)
         {
             slog(LOG_ALL, 0, "Can't create account log file.");
             exit(0);
@@ -968,7 +998,7 @@ void CAccountConfig::Boot(void)
         fclose(f);
     }
 
-    f = fopen_cache(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG), "rb");
+    f = fopen_cache(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG), "rb");
 
     int mstmp = fscanf(f, "%*08x%08x", &next_crc);
     if (mstmp < 1)
@@ -977,15 +1007,15 @@ void CAccountConfig::Boot(void)
         assert(FALSE);
     }
 
-    touch_file(str_cc(g_cServerConfig.m_etcdir, ACCOUNT_FILE));
+    touch_file(g_cServerConfig.getFileInEtcDir(ACCOUNT_FILE));
 
-    config_file_to_string(str_cc(g_cServerConfig.m_etcdir, ACCOUNT_FILE), Buf, sizeof(Buf));
+    config_file_to_string(g_cServerConfig.getFileInEtcDir(ACCOUNT_FILE), Buf, sizeof(Buf));
 
     c = Buf;
 
     m_pCoinName = parse_match_name((const char **)&c, "Coinage Name");
 
-    if (m_pCoinName == NULL)
+    if (m_pCoinName == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading coin name.");
         exit(0);
@@ -993,7 +1023,7 @@ void CAccountConfig::Boot(void)
 
     m_pOverdueMessage = parse_match_name((const char **)&c, "Account Overdue");
 
-    if (m_pOverdueMessage == NULL)
+    if (m_pOverdueMessage == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading overdue message.");
         exit(0);
@@ -1006,7 +1036,7 @@ void CAccountConfig::Boot(void)
     }
 
     m_pClosedMessage = parse_match_name((const char **)&c, "Account Closed");
-    if (m_pClosedMessage == NULL)
+    if (m_pClosedMessage == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading closed message.");
         exit(0);
@@ -1061,8 +1091,12 @@ void CAccountConfig::Boot(void)
     }
 
     for (i = 0; i < 7; i++)
+    {
         for (j = 0; j < TIME_GRANULARITY; j++)
+        {
             day_charge[i][j] = m_nHourlyRate;
+        }
+    }
 
     numlist = parse_match_numlist((const char **)&c, "Base Range", &len);
 
@@ -1070,7 +1104,9 @@ void CAccountConfig::Boot(void)
     {
         numlist_sanity(numlist, len);
         for (i = 0; i < 7; i++)
+        {
             numlist_to_charge(numlist, len, day_charge[i]);
+        }
         FREE(numlist);
     }
 
@@ -1150,7 +1186,7 @@ void CAccountConfig::Boot(void)
             strcat(Buf, " Message");
 
             m_flatrate[i].pMessage = parse_match_name((const char **)&c, Buf);
-            if (m_flatrate[i].pMessage == NULL)
+            if (m_flatrate[i].pMessage == nullptr)
             {
                 slog(LOG_ALL, 0, "Error reading flatrate message.");
                 exit(0);
@@ -1177,7 +1213,7 @@ void CAccountConfig::Boot(void)
     }
 
     m_pPaypointMessage = parse_match_name((const char **)&c, "Account Paypoint");
-    if (m_pPaypointMessage == NULL)
+    if (m_pPaypointMessage == nullptr)
     {
         slog(LOG_ALL, 0, "Error reading paypoint message.");
         exit(0);

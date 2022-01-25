@@ -4,25 +4,21 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.2 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <type_traits>
+#include "destruct.h"
 
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "skills.h"
-#include "comm.h"
+#include "affect.h"
 #include "db.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "affect.h"
-#include "utility.h"
-#include "destruct.h"
-#include "event.h"
+#include "main_functions.h"
+#include "mobact.h"
+#include "nanny.h"
+#include "slog.h"
+#include "structs.h"
+#include "utils.h"
+
+#include <cstdlib>
+#include <cstring>
 
 /*
    This method is possible since we know that the only problem occurs when:
@@ -67,7 +63,7 @@
 /* Used lots of places        */
 
 /* 3 Arrays of registered destructed things     */
-void **destructed[3] = {0, 0, 0};
+void **destructed[3] = {nullptr, nullptr, nullptr};
 
 /* 3 Arrays which indicate size of above arrays */
 int destructed_top[3] = {-1, -1, -1};
@@ -114,7 +110,9 @@ void basedestruct::register_destruct(void)
     int i = destruct_classindex();
 
     if (destructed_idx[i] >= destructed_top[i])
+    {
         destruct_resize(i);
+    }
 
     destructed[i][destructed_idx[i]] = this;
     destructed_idx[i]++;
@@ -160,16 +158,9 @@ void destruct_unit(class unit_data *unit)
     class descriptor_data *d;
     int in_menu = FALSE;
     if (!unit)
+    {
         return;
-
-    void stop_all_special(class unit_data * u);
-    void unswitchbody(class unit_data * npc);
-    void unsnoop(class unit_data * ch, int mode);
-    void unlink_affect(class unit_affected_type * af);
-    void nanny_menu(class descriptor_data * d, char *arg);
-    void nanny_close(class descriptor_data * d, char *arg);
-
-    void do_return(class unit_data * ch, char *arg, struct command_info *cmd);
+    }
 
     if (!IS_PC(unit))
     {
@@ -204,8 +195,12 @@ void destruct_unit(class unit_data *unit)
 
         /* If the PC which is switched is extracted, then unswitch */
         if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+        {
             for (d = g_descriptor_list; d; d = d->next)
+            {
                 assert(d->original != unit);
+            }
+        }
 
         assert(!CHAR_FOLLOWERS(unit));
         assert(!CHAR_MASTER(unit));
@@ -220,7 +215,9 @@ void destruct_unit(class unit_data *unit)
     while (UNIT_CONTAINS(unit))
     {
         if (IS_OBJ(UNIT_CONTAINS(unit)) && OBJ_EQP_POS(UNIT_CONTAINS(unit)))
+        {
             unequip_object(UNIT_CONTAINS(unit));
+        }
         destruct_unit(UNIT_CONTAINS(unit));
     }
 
@@ -229,14 +226,20 @@ void destruct_unit(class unit_data *unit)
         /* Call functions of the unit which have any data                     */
         /* that they might want to work on.                                   */
         while (UNIT_FUNC(unit))
+        {
             destroy_fptr(unit, UNIT_FUNC(unit)); /* Unlinks, no free */
+        }
 
         while (UNIT_AFFECTED(unit))
+        {
             unlink_affect(UNIT_AFFECTED(unit));
+        }
     }
 
     if (UNIT_IN(unit))
+    {
         unit_from_unit(unit);
+    }
 
     if (UNIT_FILE_INDEX(unit))
     {
@@ -244,12 +247,14 @@ void destruct_unit(class unit_data *unit)
     }
 
     if ((g_unit_list == unit) || unit->gnext || unit->gprevious)
+    {
         remove_from_unit_list(unit);
+    }
 
     if (!in_menu)
     {
         DELETE(unit_data, unit);
-        unit = NULL;
+        unit = nullptr;
     }
 #endif
 }
@@ -261,7 +266,9 @@ void clear_destructed(void)
     int i;
 
     for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
+    {
         delete (class unit_affected_type *)destructed[DR_AFFECT][i];
+    }
 
     destructed_idx[DR_AFFECT] = 0;
 
@@ -270,15 +277,17 @@ void clear_destructed(void)
         f = (class unit_fptr *)destructed[DR_FUNC][i];
 
         if (f->index == 82)
-            assert(f->data == NULL);
+        {
+            assert(f->data == nullptr);
+        }
 
-        assert(f->event == NULL);
+        assert(f->event == nullptr);
 
         if (f->data)
             FREE(f->data);
 
         DELETE(unit_fptr, f);
-        destructed[DR_FUNC][i] = NULL;
+        destructed[DR_FUNC][i] = nullptr;
     }
     destructed_idx[DR_FUNC] = 0;
 
@@ -287,7 +296,7 @@ void clear_destructed(void)
         if ((class unit_data *)destructed[DR_UNIT][i])
         {
             destruct_unit((class unit_data *)destructed[DR_UNIT][i]);
-            destructed[DR_UNIT][i] = NULL;
+            destructed[DR_UNIT][i] = nullptr;
         }
     }
     destructed_idx[DR_UNIT] = 0;

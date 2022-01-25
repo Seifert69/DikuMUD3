@@ -5,22 +5,24 @@
  $Revision: 2.3 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <assert.h>
-#include "external_vars.h"
-#include "structs.h"
-#include "utils.h"
-#include "interpreter.h"
-#include "textutil.h"
-#include "handler.h"
+#include "eliza.h"
+
 #include "db.h"
-#include "comm.h"
-#include "utility.h"
 #include "files.h"
-#include "main.h"
+#include "formatter.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "slog.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cassert>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define ELIZA_TALKFILE "talk.eli"
 #define ELIZA_LOGFILE "log.eli"
@@ -40,14 +42,14 @@ struct oracle_data
 struct subject_type
 {
     char **replies; /* NULL terminated         */
-} *eliza_subjects = NULL;
+} *eliza_subjects = nullptr;
 int eliza_maxsubjects = 0;
 
 struct template_type
 {
     char **exp; /* What shall we react on? */
     int subjno;
-} *eliza_template = NULL;
+} *eliza_template = nullptr;
 int eliza_maxtemplates = 0;
 
 struct keyword_type
@@ -55,7 +57,7 @@ struct keyword_type
     char **keyword; /* What shall we react on? */
     char priority;  /* how important is keywd: 0 worst, 9 best */
     int subjno;
-} *eliza_keyword = NULL;
+} *eliza_keyword = nullptr;
 int eliza_maxkeywords = 0;
 
 int eliza_booted = FALSE;
@@ -109,22 +111,36 @@ char *match_templ(char *input, struct template_type *tem)
     if (tem->exp[0] && !tem->exp[1]) /* Case with no % signs */
     {
         cp = str_str(ip, tem->exp[0]);
-        if (cp == NULL)
-            return NULL;
+        if (cp == nullptr)
+        {
+            return nullptr;
+        }
 
         /* Only OK if there is a punctation left of expression */
         for (tcp = cp - 1; tcp >= input; tcp--)
+        {
             if (!*tcp || ispunct(*tcp))
+            {
                 break;
+            }
             else if (isalnum(*tcp))
-                return NULL;
+            {
+                return nullptr;
+            }
+        }
 
         /* Only OK if there is a punctation right of expression */
         for (tcp = cp + strlen(tem->exp[0]); *tcp; tcp++)
+        {
             if (ispunct(*tcp))
+            {
                 break;
+            }
             else if (isalnum(*tcp))
-                return NULL;
+            {
+                return nullptr;
+            }
+        }
 
         return respons;
     }
@@ -136,58 +152,88 @@ char *match_templ(char *input, struct template_type *tem)
             if (i > 0) /* Case: "text %" */
             {
                 lp = str_str(ip, tem->exp[i - 1]);
-                if (lp == NULL)
-                    return NULL;
+                if (lp == nullptr)
+                {
+                    return nullptr;
+                }
                 for (tcp = lp - 1; tcp >= ip; tcp--)
+                {
                     if (!*tcp || ispunct(*tcp))
+                    {
                         break;
+                    }
                     else
-                        return NULL;
+                    {
+                        return nullptr;
+                    }
+                }
 
                 lp += strlen(tem->exp[i - 1]);
                 ip = lp;
             }
             else
+            {
                 lp = ip;
+            }
 
             if (tem->exp[i + 1]) /* Case: "% text" */
             {
                 rp = str_str(ip, tem->exp[i + 1]);
-                if (rp == NULL)
-                    return NULL;
+                if (rp == nullptr)
+                {
+                    return nullptr;
+                }
 
                 /* String must end with the appropriate "text" */
                 for (cp = rp + strlen(tem->exp[i + 1]); *cp; cp++)
+                {
                     if (isalpha(*cp))
-                        return NULL;
+                    {
+                        return nullptr;
+                    }
                     else if (!isspace(*cp))
+                    {
                         break;
+                    }
+                }
 
                 for (cp = rp; cp > ip; cp--)
+                {
                     if (ispunct(*cp))
-                        return NULL;
+                    {
+                        return nullptr;
+                    }
+                }
 
                 ip = rp + strlen(tem->exp[i + 1]);
             }
             else /* Case: "text %" with nothing more (find end of string) */
             {
                 for (rp = ip; *rp; rp++)
+                {
                     if (ispunct(*rp))
                     {
                         rp--;
                         break;
                     }
+                }
             }
 
             for (j = 0, cp = lp; cp < rp; j++, cp++)
+            {
                 respons[j] = *cp;
+            }
             respons[j] = 0;
         }
     }
     if (*respons)
+    {
         return respons;
+    }
     else
-        return NULL;
+    {
+        return nullptr;
+    }
 }
 
 /*
@@ -203,7 +249,9 @@ int trytempl(char *line)
     {
         /* compare input line (line[]) to template (t[]) */
         if (match_templ(line, &eliza_template[i]))
+        {
             return i;
+        }
     }
 
     return -1;
@@ -214,19 +262,29 @@ void shift(int base, int delta)
     int i, k;
 
     if (delta == 0)
+    {
         return;
+    }
 
     if (delta > 0)
     {
         k = base;
         while (words[k] != 0)
+        {
             k++;
+        }
         for (i = k; i >= base; i--)
+        {
             words[i + delta] = words[i];
+        }
     }
-    else /* delta <0 */
+    else
+    { /* delta <0 */
         for (i = 0; i == 0 || words[base + i - 1] != 0; i++)
+        {
             words[base + i] = words[base + i - delta];
+        }
+    }
 }
 
 /*
@@ -245,18 +303,22 @@ void subst(const char *old, const char *pnew)
     {
         flag = 1;
         for (i = 0; i < olen; i++)
+        {
             if (old[i] != words[base + i])
             {
                 flag = 0;
                 break;
             }
+        }
 
         delim = words[base + olen];
         if (flag == 1 && (base == 0 || words[base - 1] == ' ') && (delim == ' ' || delim == 0))
         {
             shift(base, nlen - olen);
             for (i = 0; i < nlen; i++)
+            {
                 words[base + i] = pnew[i] + 128;
+            }
         }
     }
 }
@@ -290,7 +352,9 @@ void grammar(char *str)
     int i;
 
     for (i = 0; str[i]; i++)
+    {
         str[i] = str[i] & 127;
+    }
 
     str_substitute(" i are ", " I am ", str);
     str_substitute(" you am ", " you are ", str);
@@ -337,8 +401,10 @@ char *response(struct oracle_data *od, int subjno)
     int i, k, thisrep;
 
     thisrep = od->nextrep[subjno]++;
-    if (eliza_subjects[subjno].replies[od->nextrep[subjno]] == NULL)
+    if (eliza_subjects[subjno].replies[od->nextrep[subjno]] == nullptr)
+    {
         od->nextrep[subjno] = 0;
+    }
 
     cp = eliza_subjects[subjno].replies[thisrep];
 
@@ -348,7 +414,9 @@ char *response(struct oracle_data *od, int subjno)
         return response(od, eliza_retrieve_memory(od));
     }
     else
+    {
         strcpy(od->lastrep, cp);
+    }
 
     fix(); /* replace i by you etc. */
 
@@ -361,13 +429,17 @@ char *response(struct oracle_data *od, int subjno)
                 {
                     c1 = words[i] & 0177;
                     if (c1 != 0)
+                    {
                         resp[k++] = c1;
+                    }
                 }
                 break;
 
             case '&':
                 for (i = 0; UNIT_NAME(od->patient)[i] != 0; i++)
+                {
                     resp[k++] = UNIT_NAME(od->patient)[i];
+                }
                 break;
 
             default:
@@ -396,7 +468,7 @@ int trykeywd(char *line, int *score)
     {
         for (mi = 0; eliza_keyword[j].keyword[mi]; mi++)
         {
-            if (str_str(line, eliza_keyword[j].keyword[mi]) != NULL)
+            if (str_str(line, eliza_keyword[j].keyword[mi]) != nullptr)
             {
                 if (eliza_keyword[j].priority >= *score)
                 {
@@ -418,20 +490,28 @@ char *eliza_process(struct oracle_data *od, char *s)
     int i, pri;
 
     if (strlen(s) <= 1)
-        return NULL;
+    {
+        return nullptr;
+    }
 
     preprocess_string(s, od);
 
     if (strcmp(s, od->laststr) == 0)
-        return NULL;
+    {
+        return nullptr;
+    }
     else
+    {
         strcpy(od->laststr, s);
+    }
 
     words[0] = 0;
 
     i = trytempl(s);
     if (i >= 0)
+    {
         return response(od, eliza_template[i].subjno);
+    }
 
     i = trykeywd(s, &pri);
     if (i >= 0)
@@ -451,8 +531,6 @@ void delayed_action(void *p1, void *p2)
 {
     class unit_data *npc = (class unit_data *)p1;
     char *str = (char *)p2;
-
-    void command_interpreter(class unit_data * ch, const char *argument);
 
     command_interpreter(npc, str);
     FREE(str);
@@ -494,35 +572,36 @@ void eliza_log(class unit_data *who, const char *str, int comms)
         idx = 0;
     }
 
-    if (str == NULL)
+    if (str == nullptr)
     {
         idx = 0;
         for (int i = 0; i < MAX_ELIBUF; i++)
         {
             if (buf[i])
                 FREE(buf[i]);
-            buf[i] = NULL;
+            buf[i] = nullptr;
         }
         return;
     }
 
     if ((comms < 5) && (idx < MAX_ELIBUF))
     {
-        char tmp[1024];
-
-        snprintf(tmp, sizeof(tmp), "%-12s::  %s\n", UNIT_NAME(who), str);
-
-        buf[idx++] = str_dup(tmp);
+        auto tmp = diku::format_to_str("%-12s::  %s\n", UNIT_NAME(who), str);
+        buf[idx++] = str_dup(tmp.c_str());
         return;
     }
 
-    if (!(f = fopen_cache(str_cc(g_cServerConfig.m_logdir, ELIZA_LOGFILE), "a+")))
+    if (!(f = fopen_cache(g_cServerConfig.getFileInLogDir(ELIZA_LOGFILE), "a+")))
+    {
         abort();
+    }
 
     if (idx <= MAX_ELIBUF)
     {
         for (int i = 0; i < idx; i++)
+        {
             fprintf(f, "%s", buf[i]);
+        }
         idx = MAX_ELIBUF + 1;
     }
 
@@ -542,8 +621,6 @@ int oracle(struct spec_arg *sarg)
     struct oracle_data *od;
     int i;
 
-    void eliza_boot(void);
-
     od = (struct oracle_data *)sarg->fptr->data;
 
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
@@ -553,12 +630,12 @@ int oracle(struct spec_arg *sarg)
             FREE(od->nextrep);
             FREE(od);
         }
-        sarg->fptr->data = NULL;
-        g_events.remove_relaxed(delayed_action, sarg->owner, NULL);
+        sarg->fptr->data = nullptr;
+        g_events.remove_relaxed(delayed_action, sarg->owner, nullptr);
         return SFR_BLOCK;
     }
 
-    if (sarg->fptr->data == NULL)
+    if (sarg->fptr->data == nullptr)
     {
         if (eliza_booted == FALSE)
         {
@@ -577,28 +654,34 @@ int oracle(struct spec_arg *sarg)
         od->lastrep[0] = 0;
         strcpy(od->own_name, UNIT_NAME(sarg->owner));
         str_lower(od->own_name);
-        od->patient = NULL;
+        od->patient = nullptr;
         od->doctor = sarg->owner;
 
         CREATE(od->nextrep, int, eliza_maxsubjects);
         for (i = 0; i < eliza_maxsubjects; i++)
+        {
             od->nextrep[i] = 0;
+        }
         for (i = 0; i < MAX_HISTORY; i++)
+        {
             od->oldkeywd[i] = eliza_maxsubjects - 1;
+        }
     }
 
     if (!CHAR_IS_READY(sarg->owner))
+    {
         return SFR_SHARE;
+    }
 
     if (od->patient && !scan4_ref(sarg->owner, od->patient))
     {
         REMOVE_BIT(sarg->fptr->flags, SFB_PRIORITY);
-        od->patient = NULL;
+        od->patient = nullptr;
     }
 
     if (od->patient != sarg->activator)
     {
-        if ((od->patient == NULL) && (!is_command(sarg->cmd, "north")) && (!is_command(sarg->cmd, "east")) &&
+        if ((od->patient == nullptr) && (!is_command(sarg->cmd, "north")) && (!is_command(sarg->cmd, "east")) &&
             (!is_command(sarg->cmd, "west")) && (!is_command(sarg->cmd, "south")) && (!is_command(sarg->cmd, "northeast")) &&
             (!is_command(sarg->cmd, "southeast")) && (!is_command(sarg->cmd, "northwest")) && (!is_command(sarg->cmd, "southwest")) &&
             (!is_command(sarg->cmd, "ne")) && (!is_command(sarg->cmd, "se")) && (!is_command(sarg->cmd, "sw")) &&
@@ -626,7 +709,7 @@ int oracle(struct spec_arg *sarg)
             od->patient = sarg->activator;
             set_delayed_action(sarg->owner, buf);
             comms = 0;
-            eliza_log(sarg->owner, NULL, comms);
+            eliza_log(sarg->owner, nullptr, comms);
             eliza_log(sarg->owner, "========== oOo ============", comms);
             SET_BIT(sarg->fptr->flags, SFB_PRIORITY);
         }
@@ -644,19 +727,25 @@ int oracle(struct spec_arg *sarg)
         class unit_data *u;
         char *c = (char *)sarg->arg;
 
-        u = find_unit(sarg->activator, &c, 0, FIND_UNIT_SURRO);
+        u = find_unit(sarg->activator, &c, nullptr, FIND_UNIT_SURRO);
         if (u != sarg->owner)
+        {
             return SFR_SHARE;
+        }
     }
     else if (!is_command(sarg->cmd, "say") && (!is_command(sarg->cmd, "shout")))
+    {
         return SFR_SHARE;
+    }
 
     comms++;
 
     strcpy(buf, sarg->arg);
     response = eliza_process(od, buf);
-    if (response == NULL)
+    if (response == nullptr)
+    {
         return SFR_SHARE;
+    }
 
     if (IS_PC(sarg->activator) || ELIZA_DEBUG)
     {
@@ -674,8 +763,12 @@ struct template_type *eliza_find_template(int subjno)
     int i;
 
     for (i = 0; i < eliza_maxtemplates; i++)
+    {
         if (eliza_template[i].subjno == subjno)
+        {
             return &eliza_template[i];
+        }
+    }
 
     eliza_maxtemplates++;
     if (eliza_maxtemplates == 1)
@@ -697,8 +790,12 @@ struct keyword_type *eliza_find_keyword(int subjno)
     int i;
 
     for (i = 0; i < eliza_maxkeywords; i++)
+    {
         if (eliza_keyword[i].subjno == subjno)
+        {
             return &eliza_keyword[i];
+        }
+    }
 
     eliza_maxkeywords++;
     if (eliza_maxkeywords == 1)
@@ -732,12 +829,16 @@ void eliza_get_template(char *buf, int subjno)
         {
             tmp[i] = b[i];
             if (b[i] == '%')
+            {
                 break;
+            }
         }
         tmp[i] = 0;
 
         if (!str_is_empty(tmp))
+        {
             tem->exp = add_name(tmp, tem->exp);
+        }
 
         if (b[i] == '%')
         {
@@ -745,7 +846,9 @@ void eliza_get_template(char *buf, int subjno)
             b += i + 1;
         }
         else
+        {
             b += i;
+        }
     }
 }
 
@@ -777,7 +880,7 @@ void eliza_get_reacts(FILE *f, int subjno)
         }
 
         char *mstmp = fgets(buf, 240, f);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             slog(LOG_ALL, 0, "Eliza: unexpected fgets == NULL");
             assert(FALSE);
@@ -786,14 +889,18 @@ void eliza_get_reacts(FILE *f, int subjno)
         buf[strlen(buf) - 1] = 0; /* Destroy the newline from fgets */
 
         for (i = 0; buf[i]; i++)
+        {
             if (isdigit(buf[i]))
             {
                 priority = buf[i];
                 buf[i] = 0;
             }
+        }
 
         while (buf[--i] == ' ')
+        {
             buf[i] = 0;
+        }
 
         str_chraround(buf, ' ');
         str_remspc(buf);
@@ -820,7 +927,9 @@ void eliza_get_subjects(FILE *f)
     char buf[240];
 
     if (feof(f))
+    {
         return;
+    }
 
     eliza_maxsubjects++;
     if (eliza_maxsubjects == 1)
@@ -838,7 +947,9 @@ void eliza_get_subjects(FILE *f)
     {
         buf[0] = fgetc(f);
         if (feof(f))
+        {
             return;
+        }
         if (buf[0] != '*')
         {
             ungetc(buf[0], f);
@@ -846,14 +957,16 @@ void eliza_get_subjects(FILE *f)
         }
 
         char *mstmp = fgets(buf, 240, f);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
         {
             slog(LOG_ALL, 0, "Eliza: unexpected fgets == NULL");
             assert(FALSE);
         }
 
         if (*buf)
+        {
             buf[strlen(buf) - 1] = 0; /* Destroy the newline from fgets */
+        }
 
         eliza_subjects[eliza_maxsubjects - 1].replies = add_name(buf, eliza_subjects[eliza_maxsubjects - 1].replies);
     }
@@ -866,9 +979,13 @@ void eliza_gen_test_template(char *buf, struct template_type *tem)
     for (j = 0; tem->exp[j]; j++)
     {
         if (!*tem->exp[j])
+        {
             strcpy(buf, " michael ");
+        }
         else
+        {
             strcpy(buf, tem->exp[j]);
+        }
         TAIL(buf);
     }
 }
@@ -885,12 +1002,14 @@ void eliza_integrity(void)
         j = trytempl(buf);
 
         if ((j != -1) && (j < i))
+        {
             slog(LOG_ALL,
                  0,
                  "Eliza Template: '%s' conflicts with '%s/%s'",
                  buf,
                  STR(eliza_template[j].exp[0]),
                  STR(eliza_template[j].exp[1]));
+        }
     }
 
     /* Test if any keywords are overshadowed by templates */
@@ -902,12 +1021,14 @@ void eliza_integrity(void)
             k = trytempl(buf);
 
             if (k != -1)
+            {
                 slog(LOG_ALL,
                      0,
                      "Eliza Keyword '%s' may be shadowed by '%s/%s'",
                      buf,
                      STR(eliza_template[k].exp[0]),
                      STR(eliza_template[k].exp[1]));
+            }
         }
     }
 
@@ -920,7 +1041,9 @@ void eliza_integrity(void)
             k = trykeywd(buf, &l);
 
             if (k != i)
+            {
                 slog(LOG_ALL, 0, "Eliza Keyword '%s' may be shadowed by keywd '%s'", buf, STR(eliza_keyword[k].keyword[j]));
+            }
         }
     }
 }
@@ -933,7 +1056,7 @@ void eliza_boot(void)
 
     slog(LOG_ALL, 0, "Booting Eliza");
 
-    if (!(f = fopen(str_cc(g_cServerConfig.m_etcdir, ELIZA_TALKFILE), "r")))
+    if (!(f = fopen(g_cServerConfig.getFileInEtcDir(ELIZA_TALKFILE).c_str(), "r")))
     {
         slog(LOG_ALL, 0, "ELIZA BOOT FILE NOT FOUND.");
         return;
@@ -953,7 +1076,9 @@ void eliza_boot(void)
         }
 
         if (feof(f))
+        {
             break;
+        }
 
         eliza_get_reacts(f, i);
         eliza_get_subjects(f);

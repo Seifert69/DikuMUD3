@@ -1,8 +1,8 @@
+#include <ctype.h> /* Char type info			*/
 #include <stdio.h>
 #include <stdio.h>  /* Standard I/O info			*/
 #include <stdlib.h> /* Standard library info		*/
 #include <string.h>
-#include <ctype.h> /* Char type info			*/
 #include <time.h>
 
 #ifndef EVALINT
@@ -56,7 +56,7 @@ int getchn();
 int inc_open(const char *incfile);
 void init_path();
 int popfile();
-char *readline(register char *buf, register int bufsize, register int flags);
+char *readline(char *buf, int bufsize, int flags);
 void scaneol();
 void set_user();
 int trigraph();
@@ -67,7 +67,7 @@ int trigraph();
 char *addstr(char *old, char *limit, const char *msg, const char *snew);
 int getnstoken(int f);
 int gettoken(int f);
-void memmov(register char *f, register char *t, register unsigned l);
+void memmov(char *f, char *t, unsigned l);
 void pbcstr(char *s);
 void pbstr(const char *in);
 void pushback(int c);
@@ -126,11 +126,11 @@ EVALINT evalval();
 EVALINT hexbin(char ch);
 int ishex(char ch);
 int isoct(char ch);
-int item(register int(fun)(int), int f);
-int look(register const char *str);
-int match(register char *tbuf, register const char *str);
-char *readexpline(register char *buf, register int bufsize);
-int test(register const char *str);
+int item(int(fun)(int), int f);
+int look(const char *str);
+int match(char *tbuf, const char *str);
+char *readexpline(char *buf, int bufsize);
+int test(const char *str);
 
 #define PP_VERSION "VMC PreProcessor v1.0" /* Version info */
 #ifdef MAIN

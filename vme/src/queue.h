@@ -4,9 +4,7 @@
  $Date: 2001/04/29 03:46:07 $
  $Revision: 2.1 $
  */
-
-#ifndef _MUD_QUEUE_HCC
-#define _MUD_QUEUE_HCC
+#pragma once
 
 #include "essential.h"
 
@@ -28,7 +26,7 @@ public:
     ubit8 *Data(void) { return pData; }
     void SetNull(void)
     {
-        pData = NULL;
+        pData = nullptr;
         nSize = 0;
     }
 
@@ -72,5 +70,3 @@ private:
     ubit32 nEntries;
     ubit32 nBytes;
 };
-
-#endif

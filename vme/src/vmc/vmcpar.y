@@ -12,7 +12,6 @@
 #include "vmc.h"
 #include "dil.h"
 #include "utils.h"
-#include "external_vars.h"
 #include "textutil.h"
 #include "money.h"
 #include "db_file.h"
@@ -1544,7 +1543,10 @@ void fatal(const char *str)
 
 void real_warning(const char *str)
 {
-   fprintf(stderr, "WARNING: %s: %d: %s\n", g_cur_filename, linenum, str);
+   //if(!g_quiet_compile)
+   {
+       fprintf(stderr, "WARNING: %s: %d: %s\n", g_cur_filename, linenum, str);
+   }
 }
 
 

@@ -4,11 +4,10 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.6 $
  */
-
-#ifndef _MUD_NAMELIST_H
-#define _MUD_NAMELIST_H
+#pragma once
 
 #include "bytestring.h"
+
 #include <string>
 
 class cNamelist
@@ -59,5 +58,3 @@ private:
     std::string **namelist;
     ubit32 length;
 };
-
-#endif

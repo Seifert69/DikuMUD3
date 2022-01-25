@@ -4,43 +4,29 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.9 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include "act_wizard.h"
 
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
 #include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "db_file.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "affect.h"
-#include "magic.h"
 #include "common.h"
-#include "utility.h"
-#include "money.h"
-#include "system.h"
-#include "files.h"
-#include "movement.h"
-#include "main.h"
+#include "db.h"
 #include "dilrun.h"
-#include "event.h"
-/* external functs */
+#include "formatter.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "money.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "slog.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+#include "zon_basis.h"
+#include "zone_reset.h"
 
-struct time_info_data age(class unit_data *ch);
-struct time_info_data real_time_passed(time_t t2, time_t t1);
-class zone_type *find_zone(char *zonename);
-
-class descriptor_data *find_descriptor(const char *, class descriptor_data *);
-int player_exists(const char *pName);
-int delete_player(const char *name);
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 void do_timewarp(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
@@ -58,33 +44,20 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
         return;
     }
 
-    char buf[256];
-    snprintf(buf, sizeof(buf), "Time warping for %d seconds<br/>", i);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("Time warping for %d seconds<br/>", i);
+    send_to_char(msg, ch);
 
-    void timewarp_end(void *p1, void *p2);
-
-    g_events.add(PULSE_SEC * i, timewarp_end, 0, 0);
+    g_events.add(PULSE_SEC * i, timewarp_end, nullptr, nullptr);
 
     g_nTickUsec = 0; // Warp the time
 }
 
 void do_users(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    char *buf = NULL;
-    int cur_size = 1024;
-
-    int available_connections(void);
-
     class descriptor_data *d;
-    char tmp[256];
-    int len, users = 0;
+    int users = 0;
 
-    if (buf == NULL)
-        CREATE(buf, char, cur_size);
-
-    strcpy(buf, "<u>Connections:</u><br/>");
-    len = strlen(buf);
+    std::string msg{"<u>Connections:</u><br/>"};
     /*
        <I%3d/%3d> immort lvl / wizi
        < %3d>     mortal vlvl
@@ -100,65 +73,40 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
             if (IS_IMMORTAL(d->character))
             {
                 /* an immortal character */
-                snprintf(tmp,
-                         sizeof(tmp),
-                         "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                         CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
-                         UNIT_MINV(CHAR_ORIGINAL(d->character)),
-                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                         descriptor_is_playing(d) ? "Playing" : "Menu",
-                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                         d->nPort,
-                         d->nLine == 255 ? "---" : itoa(d->nLine),
-                         d->host);
+                msg += diku::format_to_str("&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                                           CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
+                                           UNIT_MINV(CHAR_ORIGINAL(d->character)),
+                                           UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                                           descriptor_is_playing(d) ? "Playing" : "Menu",
+                                           g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                                           d->nPort,
+                                           d->nLine == 255 ? "---" : itoa(d->nLine),
+                                           d->host);
             }
             else
             {
                 /* a mortal character */
-                snprintf(tmp,
-                         sizeof(tmp),
-                         "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                         PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
-                         UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
-                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                         descriptor_is_playing(d) ? "Playing" : "Menu",
-                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                         d->nPort,
-                         d->nLine == 255 ? "---" : itoa(d->nLine),
-                         d->host);
+                msg += diku::format_to_str("&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                                           PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
+                                           UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
+                                           UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                                           descriptor_is_playing(d) ? "Playing" : "Menu",
+                                           g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                                           d->nPort,
+                                           d->nLine == 255 ? "---" : itoa(d->nLine),
+                                           d->host);
             }
-
-            len += strlen(tmp);
-            if (cur_size < len + 1)
-            {
-                cur_size *= 2;
-                RECREATE(buf, char, cur_size);
-            }
-            strcat(buf, tmp);
         }
     }
 
-    snprintf(tmp, sizeof(tmp), "<br/>%d visible players connected.<br/>", users);
-
-    len += strlen(tmp);
-    if (cur_size < len + 1)
-    {
-        cur_size *= 2;
-        RECREATE(buf, char, cur_size);
-    }
-
-    strcat(buf, tmp);
-
-    page_string(CHAR_DESCRIPTOR(ch), buf);
-    FREE(buf);
+    msg += diku::format_to_str("<br/>%d visible players connected.<br/>", users);
+    page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
 /* Reset the zone in which the char is in! */
 void do_reset(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     class zone_type *zone;
-
-    int zone_reset(class zone_type *);
 
     if (!str_is_empty(arg))
     {
@@ -183,7 +131,9 @@ void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
     class file_index_type *fi;
 
     if (!IS_PC(ch))
+    {
         return;
+    }
 
     if (str_is_empty(argument))
     {
@@ -198,9 +148,13 @@ void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
     }
     else
     {
-        if ((target = find_unit(ch, &argument, 0, FIND_UNIT_WORLD)))
+        if ((target = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD)))
+        {
             if (UNIT_IN(target))
+            {
                 target = UNIT_IN(target);
+            }
+        }
     }
 
     if (!target)
@@ -237,20 +191,23 @@ void do_crash(class unit_data *ch, char *argument, const struct command_info *cm
     }
 
     if (strcmp(argument, "the entire game..."))
+    {
         send_to_char("You must type 'crash the entire game...'<br/>", ch);
+    }
     else
+    {
         assert(FALSE); /* Bye bye */
+    }
 }
 
 void do_execute(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    int system_check(class unit_data * pc, char *buf);
-    void execute_append(class unit_data * pc, char *str);
-
     argument = skip_spaces(argument);
 
     if (!system_check(ch, argument))
+    {
         return;
+    }
 
     execute_append(ch, argument);
     act("Executing $2t.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
@@ -258,10 +215,10 @@ void do_execute(class unit_data *ch, char *argument, const struct command_info *
 
 void do_shutdown(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    char buf[100];
-
     if (!IS_PC(ch))
+    {
         return;
+    }
 
     if (cmd_is_abbrev(ch, cmd))
     {
@@ -269,8 +226,8 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
         return;
     }
 
-    snprintf(buf, sizeof(buf), "Shutdown by %s.<br/>", UNIT_NAME(ch));
-    send_to_all(buf);
+    auto msg = diku::format_to_str("Shutdown by %s.<br/>", UNIT_NAME(ch));
+    send_to_all(msg);
     g_mud_shutdown = 1;
 }
 
@@ -278,16 +235,19 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
 {
     class unit_data *victim;
 
-    void unsnoop(class unit_data * ch, int mode);
-    void snoop(class unit_data * ch, class unit_data * victim);
-
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     if (str_is_empty(argument))
+    {
         victim = ch;
+    }
     else
-        victim = find_unit(ch, &argument, 0, FIND_UNIT_WORLD);
+    {
+        victim = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD);
+    }
 
     if (!victim)
     {
@@ -310,9 +270,13 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
     if (victim == ch)
     {
         if (CHAR_IS_SNOOPING(ch))
+        {
             unsnoop(ch, 0); /* Unsnoop just ch himself */
+        }
         else
+        {
             send_to_char("You are already snooping yourself.<br/>", ch);
+        }
         return;
     }
 
@@ -331,7 +295,9 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
     send_to_char("Ok.<br/>", ch);
 
     if (CHAR_IS_SNOOPING(ch))
+    {
         unsnoop(ch, 0); /* Unsnoop just ch himself */
+    }
 
     snoop(ch, victim);
 }
@@ -342,22 +308,25 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
 {
     class unit_data *victim;
 
-    void switchbody(class unit_data * ch, class unit_data * victim);
-    void unswitchbody(class unit_data * npc);
-
     if (!CHAR_DESCRIPTOR(ch))
+    {
         return;
+    }
 
     if (str_is_empty(argument))
     {
         if (CHAR_IS_SWITCHED(ch))
+        {
             unswitchbody(ch);
+        }
         else
+        {
             send_to_char("You are already home in your good old body.<br/>", ch);
+        }
         return;
     }
 
-    victim = find_unit(ch, &argument, 0, FIND_UNIT_WORLD | FIND_UNIT_SURRO);
+    victim = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD | FIND_UNIT_SURRO);
 
     if (!victim || !IS_NPC(victim))
     {
@@ -372,7 +341,9 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
     }
 
     if (CHAR_DESCRIPTOR(victim))
+    {
         act("$3n's body is already in use!", A_ALWAYS, ch, cActParameter(), victim, TO_CHAR);
+    }
     else
     {
         send_to_char("Ok.<br/>", ch);
@@ -386,9 +357,6 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
     class file_index_type *fi;
     class unit_data *u, *tmp;
 
-    void reset_char(class unit_data * ch);
-    void enter_game(class unit_data * ch, int dilway = FALSE);
-
     if (str_is_empty(arg))
     {
         send_to_char("Load? Load what?<br/>", ch);
@@ -397,24 +365,26 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     arg = one_argument(arg, buf);
 
-    if (find_descriptor(buf, NULL))
+    if (find_descriptor(buf, nullptr))
     {
         send_to_char("A player by that name is connected.<br/>", ch);
         return;
     }
 
-    if ((fi = pc_str_to_file_index(ch, buf)) == NULL)
+    if ((fi = pc_str_to_file_index(ch, buf)) == nullptr)
     {
         for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
+        {
             if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), buf))
             {
                 send_to_char("A player by that name is linkdead in the game.<br/>", ch);
                 return;
             }
+        }
 
         if (player_exists(buf))
         {
-            if ((u = load_player(buf)) == NULL)
+            if ((u = load_player(buf)) == nullptr)
             {
                 send_to_char("Load error<br/>", ch);
                 return;
@@ -427,10 +397,14 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
             send_to_char("You have loaded the player.<br/>", ch);
 
             if (UNIT_CONTAINS(u))
+            {
                 send_to_char("Inventory loaded.<br/>", ch);
+            }
 
             if (CHAR_LEVEL(u) > CHAR_LEVEL(ch))
+            {
                 slog(LOG_EXTENSIVE, UNIT_MINV(ch), "LEVEL: %s loaded %s when lower level.", UNIT_NAME(ch), UNIT_NAME(u));
+            }
             return;
         }
 
@@ -494,14 +468,22 @@ void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
     arg = one_argument(arg, buf);
 
     if (*buf)
+    {
         lvl = atoi(buf) + 1;
+    }
     else
+    {
         lvl = GOD_LEVEL;
+    }
 
     if (lvl >= CHAR_LEVEL(ch))
+    {
         lvl = CHAR_LEVEL(ch);
+    }
     if (lvl == 0)
+    {
         lvl = 1;
+    }
 
     if (g_wizlock && !*buf)
     {
@@ -510,8 +492,8 @@ void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
     else
     {
-        snprintf(buf, sizeof(buf), "Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
-        send_to_char(buf, ch);
+        auto msg = diku::format_to_str("Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
+        send_to_char(msg, ch);
         g_wizlock = lvl;
     }
 }

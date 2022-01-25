@@ -5,18 +5,25 @@
  $Revision: 2.4 $
  */
 
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
+#include "affect.h"
+#include "comm.h"
+#include "experience.h"
+#include "handler.h"
+#include "interpreter.h"
 #include "magic.h"
+#include "skills.h"
+#include "structs.h"
+#include "textutil.h"
+#include "unitfind.h"
+#include "utils.h"
 
-void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 /*
  * coded: Mon Jun 22 00:22:44 MET DST 1992 [HH]
  * tested: No
  */
+void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    class unit_affected_type af, *paf = NULL;
+    class unit_affected_type af, *paf = nullptr;
     class unit_data *vict, *stabber;
     int skilla, skillb, hm;
     char *oarg = arg;
@@ -35,7 +42,7 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
-    if ((vict = find_unit(ch, &arg, 0, FIND_UNIT_SURRO)) == NULL)
+    if ((vict = find_unit(ch, &arg, nullptr, FIND_UNIT_SURRO)) == nullptr)
     {
         send_to_char("Noone here by that name.<br/>", ch);
         return;
@@ -54,9 +61,11 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
 
     if (pk_test(ch, vict, TRUE))
+    {
         return;
+    }
 
-    if ((stabber = equipment_type(ch, WEAR_WIELD, ITEM_WEAPON)) == NULL)
+    if ((stabber = equipment_type(ch, WEAR_WIELD, ITEM_WEAPON)) == nullptr)
     {
         send_to_char("You need to wield a weapon, to make it a succes.<br/>", ch);
         return;
@@ -83,14 +92,18 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
         /* For each recent backstab, victim gets a +50 bonus to resist. */
 
         if ((paf = affected_by_spell(vict, ID_BACKSTABBED)))
+        {
             skillb += 50 * paf->data[0];
+        }
 
         hm = resistance_skill_check(effective_dex(ch), CHAR_DEX(vict), skilla, skillb);
     }
     else
+    {
         hm = resistance_skill_check(effective_dex(ch), 0, skilla, 0);
+    }
 
-    if (paf == NULL)
+    if (paf == nullptr)
     {
         af.id = ID_BACKSTABBED;
         af.duration = 15;
@@ -118,7 +131,7 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
         int dam;
         int att_bonus;
 
-        att_bonus = melee_bonus(ch, vict, hit_location(ch, vict), NULL, NULL, NULL, NULL);
+        att_bonus = melee_bonus(ch, vict, hit_location(ch, vict), nullptr, nullptr, nullptr, nullptr);
 
         att_bonus += open100() + hm;
 

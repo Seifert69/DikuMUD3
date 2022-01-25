@@ -4,42 +4,30 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.8 $
  */
-#include "external_vars.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/resource.h>
+#include "system.h"
 
-#include <netinet/tcp.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
+#include "account.h"
+#include "comm.h"
+#include "db.h"
+#include "dilrun.h"
+#include "formatter.h"
+#include "handler.h"
+#include "hookmud.h"
 #include "interpreter.h"
+#include "main_functions.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "protocol.h"
+#include "slog.h"
 #include "structs.h"
 #include "utils.h"
-#include "system.h"
-#include "db.h"
-#include "utility.h"
-#include "comm.h"
-#include "textutil.h"
-#include "ban.h"
-#include "handler.h"
-#include "files.h"
-#include "protocol.h"
-#include "main.h"
-#include "account.h"
 #include "vmelimits.h"
-#include "db_file.h"
-#include "str_parse.h"
-#include "common.h"
-#include "dilrun.h"
-#include "hookmud.h"
+
+#include <sys/resource.h>
+#include <sys/un.h>
+
+#include <cstdio>
+#include <cstdlib>
 
 void MplexSendSetup(class descriptor_data *d)
 {
@@ -57,13 +45,9 @@ void MplexSendSetup(class descriptor_data *d)
 /* Call only once when creating a new char (guest)    */
 void init_char(class unit_data *ch)
 {
-    int new_player_id(void);
-
     int i;
 
-    int required_xp(int level);
-
-    if (g_cServerConfig.m_bBBS)
+    if (g_cServerConfig.isBBS())
     {
         PC_SETUP_ECHO(ch) = TRUE;
         PC_SETUP_REDRAW(ch) = TRUE;
@@ -92,7 +76,7 @@ void init_char(class unit_data *ch)
     CHAR_RACE(ch) = RACE_HUMAN;
     CHAR_SEX(ch) = SEX_MALE;
 
-    PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(0);
+    PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(nullptr);
     PC_TIME(ch).played = 0;
     PC_LIFESPAN(ch) = 100;
 
@@ -118,13 +102,15 @@ void init_char(class unit_data *ch)
 
     CHAR_MANA(ch) = mana_limit(ch);
     CHAR_ENDURANCE(ch) = move_limit(ch);
-    CHAR_LAST_ROOM(ch) = NULL;
+    CHAR_LAST_ROOM(ch) = nullptr;
 
     CHAR_FLAGS(ch) = 0;
     SET_BIT(CHAR_FLAGS(ch), CHAR_PROTECTED);
 
     for (i = 0; i < 3; i++)
+    {
         PC_COND(ch, i) = (CHAR_LEVEL(ch) >= 200 ? 48 : 24);
+    }
 
     PC_COND(ch, DRUNK) = 0;
 
@@ -138,11 +124,11 @@ descriptor_data::descriptor_data(cMultiHook *pe)
 {
     static int nid = 0;
 
-    void nanny_get_name(class descriptor_data * d, char *arg);
-
     g_no_connections++;
     if (g_no_connections > g_max_no_connections)
+    {
         g_max_no_connections = g_no_connections;
+    }
 
     /* init desc data */
     multi = pe;
@@ -159,14 +145,14 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     nPort = 0;
     nLine = 255;
 
-    localstr = NULL;
-    postedit = NULL;
-    editing = NULL;
-    editref = NULL;
+    localstr = nullptr;
+    postedit = nullptr;
+    editing = nullptr;
+    editref = nullptr;
 
-    original = 0;
-    snoop.snooping = 0;
-    snoop.snoop_by = 0;
+    original = nullptr;
+    snoop.snooping = nullptr;
+    snoop.snoop_by = nullptr;
     replyid = (ubit32)-1;
 
     /* Make a new PC struct */
@@ -183,10 +169,8 @@ void descriptor_data::RemoveBBS(void)
 {
     if (nLine != 255)
     {
-        char buf[512];
-
-        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
-        remove(buf);
+        auto filename = diku::format_to_str("%s%d.%d", BBS_DIR, nPort, nLine);
+        remove(filename.c_str());
     }
 }
 
@@ -194,29 +178,30 @@ void descriptor_data::CreateBBS(void)
 {
     if (nLine != 255)
     {
-        char buf[512];
-        FILE *f;
-
-        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
+        auto filename = diku::format_to_str("%s%d.%d", BBS_DIR, nPort, nLine);
 
         if (!character)
         {
-            slog(LOG_ALL, 0, "No character in %s.", buf);
+            slog(LOG_ALL, 0, "No character in %s.", filename);
             return;
         }
 
-        f = fopen(buf, "wb");
+        FILE *f = fopen(filename.c_str(), "wb");
 
         if (!f)
         {
-            slog(LOG_ALL, 0, "Could not create %s.", buf);
+            slog(LOG_ALL, 0, "Could not create %s.", filename);
             return;
         }
 
         if (account_is_overdue(this->character))
+        {
             fprintf(f, "1\n");
+        }
         else
+        {
             fprintf(f, "0\n");
+        }
 
         fprintf(f, "%d\n", PC_ACCOUNT(this->character).total_credit);
         fprintf(f, "%s\n", PC_FILENAME(this->character));
@@ -249,9 +234,6 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
 {
     class descriptor_data *tmp;
     struct diltemplate *link_dead;
-    void unsnoop(class unit_data * ch, int mode);
-    void unswitchbody(class unit_data * npc);
-
     assert(d->character);
 
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */
@@ -266,10 +248,12 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
         if (PC_IS_UNSAVED(d->character))
+        {
             g_possible_saves--;
-        CHAR_DESCRIPTOR(d->character) = NULL;
+        }
+        CHAR_DESCRIPTOR(d->character) = nullptr;
         extract_unit(d->character);
-        d->character = NULL;
+        d->character = nullptr;
         /* Too much log slog(LOG_ALL, "Losing descriptor from menu."); */
     }
     else
@@ -277,10 +261,10 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         if (d->localstr)
             FREE(d->localstr);
 
-        d->localstr = NULL;
-        d->postedit = NULL;
-        d->editing = NULL;
-        d->editref = NULL;
+        d->localstr = nullptr;
+        d->postedit = nullptr;
+        d->editing = nullptr;
+        d->editref = nullptr;
 
         // Here we don't stop_fightfollow - do we ?
         stop_snoopwrite(d->character);
@@ -300,7 +284,9 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         if (!d->character->is_destructed())
         {
             if (IS_PC(d->character))
+            {
                 UPC(d->character)->disconnect_game();
+            }
             if (!bReconnect)
             {
                 if (!PC_IS_UNSAVED(d->character))
@@ -311,8 +297,8 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                     link_dead = find_dil_template("link_dead@basis");
                     if (link_dead)
                     {
-                        CHAR_DESCRIPTOR(d->character) = NULL;
-                        class dilprg *prg = dil_copy_template(link_dead, d->character, NULL);
+                        CHAR_DESCRIPTOR(d->character) = nullptr;
+                        class dilprg *prg = dil_copy_template(link_dead, d->character, nullptr);
                         if (prg)
                         {
                             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -322,33 +308,41 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                 }
                 else
                 {
-                    CHAR_DESCRIPTOR(d->character) = NULL; // Prevent counting down players, we did above
-                    extract_unit(d->character);           /* We extract guests */
+                    CHAR_DESCRIPTOR(d->character) = nullptr; // Prevent counting down players, we did above
+                    extract_unit(d->character);              /* We extract guests */
                     g_possible_saves--;
                 }
             }
         }
         /* Important we set tp null AFTER calling save - otherwise
            time played does not get updated. */
-        CHAR_DESCRIPTOR(d->character) = NULL;
-        d->character = NULL;
+        CHAR_DESCRIPTOR(d->character) = nullptr;
+        d->character = nullptr;
     }
 
     if (bSendClose && d->multi->IsHooked())
+    {
         protocol_send_close(d->multi, d->id);
+    }
 
     g_no_connections--;
 
-    if (g_next_to_process == d) /* to avoid crashing the process loop */
+    if (g_next_to_process == d)
+    { /* to avoid crashing the process loop */
         g_next_to_process = g_next_to_process->next;
+    }
 
-    if (d == g_descriptor_list) /* this is the head of the list */
+    if (d == g_descriptor_list)
+    { /* this is the head of the list */
         g_descriptor_list = g_descriptor_list->next;
+    }
     else /* This is somewhere inside the list */
     {
         /* Locate the previous element */
         for (tmp = g_descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
+        {
             ;
+        }
         tmp->next = d->next;
     }
 
@@ -362,27 +356,26 @@ void system_memory(class unit_data *ch)
 #ifdef LINUX
     struct rusage rusage_data;
     int n;
-    char Buf[1024];
 
     n = getrusage(RUSAGE_CHILDREN, &rusage_data);
 
     if (n != 0)
+    {
         slog(LOG_ALL, 0, "System memory status error.");
+    }
     else
     {
-        snprintf(Buf,
-                 sizeof(Buf),
-                 "Vol. Switches       %8ld<br/>"
-                 "Max RSS             %8ld<br/>"
-                 "Shared memory size  %8ld<br/>"
-                 "Unshared data size  %8ld<br/>"
-                 "Unshared stack size %8ld<br/><br/>",
-                 rusage_data.ru_nvcsw,
-                 rusage_data.ru_maxrss,
-                 rusage_data.ru_ixrss,
-                 rusage_data.ru_isrss,
-                 rusage_data.ru_idrss);
-        send_to_char(Buf, ch);
+        auto msg = diku::format_to_str("Vol. Switches       %8ld<br/>"
+                                       "Max RSS             %8ld<br/>"
+                                       "Shared memory size  %8ld<br/>"
+                                       "Unshared data size  %8ld<br/>"
+                                       "Unshared stack size %8ld<br/><br/>",
+                                       rusage_data.ru_nvcsw,
+                                       rusage_data.ru_maxrss,
+                                       rusage_data.ru_ixrss,
+                                       rusage_data.ru_isrss,
+                                       rusage_data.ru_idrss);
+        send_to_char(msg, ch);
     }
 #endif
 }

@@ -1,7 +1,6 @@
 project(pp)
 
 set(PP_SRCS
-        main.cpp
         pp.h
         pp1.cpp
         pp2.cpp
@@ -13,9 +12,10 @@ set(PP_SRCS
         pp8.cpp
         )
 
-add_executable(pp main.cpp)
-
-# Add all sources to a library file so we can link with subject projects and test suites
+# Add all sources to a library file so we can link with other projects and test suites
 add_library(pp_objs STATIC ${PP_SRCS})
+target_compile_definitions(pp_objs PUBLIC LINUX POSIX)
 
+add_executable(pp main.cpp)
+target_compile_definitions(pp PUBLIC LINUX POSIX)
 target_link_libraries(pp pp_objs)

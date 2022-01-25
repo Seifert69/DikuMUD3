@@ -4,9 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.7 $
  */
-
-#ifndef _MUD_DILTOK_H
-#define _MUD_DILTOK_H
+#pragma once
 
 struct symbols
 {
@@ -356,5 +354,3 @@ struct symbols
     {"zoneptr", DILST_ZP},
     {"cmdptr", DILST_CP},
     {0, 0}};
-
-#endif /* _MUD_DILTOK_H */

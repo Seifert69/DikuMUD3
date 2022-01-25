@@ -1,8 +1,9 @@
-#ifndef SECTOR_HPP
-#define SECTOR_HPP
-#include <vector>
+#pragma once
+
+#include <vme.h>
+
 #include <string>
-#include "vme.h"
+#include <vector>
 
 class cSector
 {
@@ -22,4 +23,5 @@ public:
     void set_endurance_cost(int from, int to, int cost);
     void set_path_endurance_cost(int from, int to, int pcost, int ecost);
 };
-#endif
+
+void boot_sector(void);

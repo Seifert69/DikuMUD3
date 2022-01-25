@@ -5,24 +5,18 @@
  $Revision: 2.3 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
 #include "affect.h"
-#include "utility.h"
-#include "fight.h"
+#include "comm.h"
+#include "db.h"
 #include "dilrun.h"
+#include "fight.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstring>
 
 /* extern variables */
 
@@ -36,7 +30,7 @@ void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
         return;
     }
 
-    victim = find_unit(ch, &argument, 0, FIND_UNIT_SURRO);
+    victim = find_unit(ch, &argument, nullptr, FIND_UNIT_SURRO);
 
     if (!victim || !IS_CHAR(victim))
     {
@@ -52,12 +46,18 @@ void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
     else
     {
         if (pk_test(ch, victim, TRUE))
+        {
             return;
+        }
 
         if (!CHAR_FIGHTING(ch))
+        {
             simple_one_hit(ch, victim);
+        }
         else
+        {
             send_to_char("You do the best you can!<br/>", ch);
+        }
     }
 }
 
@@ -77,7 +77,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         return;
     }
 
-    victim = find_unit(ch, &argument, 0, FIND_UNIT_SURRO);
+    victim = find_unit(ch, &argument, nullptr, FIND_UNIT_SURRO);
 
     if (!victim || !IS_CHAR(victim))
     {
@@ -86,7 +86,9 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
     }
 
     if (ch == victim)
+    {
         send_to_char("Your mother would be so sad.. :(<br/>", ch);
+    }
     else
     {
         act("You chop $3m to pieces! Ah! The blood!", A_SOMEONE, ch, cActParameter(), victim, TO_CHAR);
@@ -100,7 +102,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         if (death)
         {
             send_death(ch);
-            class dilprg *prg = dil_copy_template(death, victim, NULL);
+            class dilprg *prg = dil_copy_template(death, victim, nullptr);
 
             if (prg)
             {

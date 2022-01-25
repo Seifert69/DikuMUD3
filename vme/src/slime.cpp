@@ -5,30 +5,29 @@
  $Revision: 2.2 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "db.h"
-#include "utility.h"
-#include "files.h"
 #include "comm.h"
+#include "db.h"
+#include "files.h"
+#include "formatter.h"
+#include "interpreter.h"
+#include "slog.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 static int slime_count = 0;
-class file_index_type **slime_list = NULL;
+class file_index_type **slime_list = nullptr;
 
 static void slime_save(void)
 {
     int i;
     FILE *f;
 
-    if (!(f = fopen(str_cc(g_cServerConfig.m_libdir, SLIME_FILE), "wb")))
+    if (!(f = fopen(g_cServerConfig.getFileInLibDir(SLIME_FILE).c_str(), "wb")))
     {
         slog(LOG_ALL, 0, "Slime file could not be opened.");
         assert(FALSE);
@@ -46,8 +45,10 @@ static void slime_save(void)
 
 static void slime_add(class file_index_type *sp)
 {
-    if (sp == NULL)
+    if (sp == nullptr)
+    {
         return;
+    }
 
     if (slime_count++ == 0)
     {
@@ -65,6 +66,7 @@ static void slime_remove(class file_index_type *sp)
     int i;
 
     for (i = 0; i < slime_count; i++)
+    {
         if (slime_list[i] == sp)
         {
             slime_list[i] = slime_list[slime_count - 1];
@@ -72,10 +74,11 @@ static void slime_remove(class file_index_type *sp)
             if (slime_count == 0)
             {
                 FREE(slime_list);
-                slime_list = NULL;
+                slime_list = nullptr;
             }
             break;
         }
+    }
 }
 
 int is_slimed(class file_index_type *sp)
@@ -83,8 +86,12 @@ int is_slimed(class file_index_type *sp)
     int i;
 
     for (i = 0; i < slime_count; i++)
+    {
         if (slime_list[i] == sp)
+        {
             return TRUE;
+        }
+    }
 
     return FALSE;
 }
@@ -95,7 +102,9 @@ int slime_obj(struct spec_arg *sarg)
     class file_index_type *fi;
 
     if (!is_command(sarg->cmd, "slime"))
+    {
         return SFR_SHARE;
+    }
 
     if (!IS_OVERSEER(sarg->activator))
     {
@@ -111,8 +120,8 @@ int slime_obj(struct spec_arg *sarg)
         send_to_char("List of slimed units:<br/>", sarg->activator);
         for (i = 0; i < slime_count; i++)
         {
-            snprintf(buf, sizeof(buf), "%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
-            send_to_char(buf, sarg->activator);
+            auto msg = diku::format_to_str("%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
+            send_to_char(msg, sarg->activator);
         }
 
         return SFR_BLOCK;
@@ -122,7 +131,7 @@ int slime_obj(struct spec_arg *sarg)
 
     fi = str_to_file_index(fi_name);
 
-    if (fi == NULL)
+    if (fi == nullptr)
     {
         act("No such file index '$2t'.", A_ALWAYS, sarg->activator, fi_name, cActParameter(), TO_CHAR);
         return SFR_BLOCK;
@@ -175,8 +184,8 @@ void slime_boot(void)
     char buf1[256], buf2[256];
     FILE *f;
 
-    touch_file(str_cc(g_cServerConfig.m_libdir, SLIME_FILE));
-    if (!(f = fopen(str_cc(g_cServerConfig.m_libdir, SLIME_FILE), "rb")))
+    touch_file(g_cServerConfig.getFileInLibDir(SLIME_FILE));
+    if (!(f = fopen(g_cServerConfig.getFileInLibDir(SLIME_FILE).c_str(), "rb")))
     {
         slog(LOG_ALL, 0, "Slime file could not be opened.");
         assert(FALSE);

@@ -5,24 +5,22 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h> /* floor and pow */
-
-#include "structs.h"
-#include "utils.h"
 #include "common.h"
+
 #include "skills.h"
+#include "structs.h"
 #include "utility.h"
-#include "db.h"
+#include "utils.h"
+
+#include <cstdio>
 
 int g_possible_saves = 0;
 
 /* Used for converting general direction in dmc! */
-const char *g_dirs[] = {"north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest", NULL};
+const char *g_dirs[] = {"north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest", nullptr};
 
 /* Used for converting general direction in dmc! */
-const char *g_dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", NULL};
+const char *g_dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", nullptr};
 
 struct shi_info_type g_shi_info[] = {
     /* %age Chance of blocking an attack if ready to block */
@@ -41,13 +39,19 @@ struct shi_info_type g_shi_info[] = {
 int ability_point_gain(class unit_data *ch)
 {
     if (IS_NPC(ch))
+    {
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
+    }
     else
     {
         if (PC_VIRTUAL_LEVEL(ch) <= 100)
+        {
             return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
+        }
         else
+        {
             return 0;
+        }
     }
 }
 
@@ -68,9 +72,13 @@ int ability_point_gain(class unit_data *ch)
 int ability_point_total(class unit_data *ch)
 {
     if (IS_NPC(ch))
+    {
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * CHAR_LEVEL(ch);
+    }
     else
+    {
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * MIN(PC_VIRTUAL_LEVEL(ch), 100);
+    }
 }
 
 int skill_point_gain(void)
@@ -107,22 +115,30 @@ int buy_points(int points, int level, int *error)
     }
 
     if (points < 0)
+    {
         skill--;
+    }
 
     if (error)
+    {
         *error = 0;
+    }
 
     if (skill > SKILL_MAX)
     {
         if (error)
+        {
             *error = skill;
+        }
 
         return SKILL_MAX;
     }
     if (skill < 0)
     {
         if (error)
+        {
             *error = skill;
+        }
 
         return 0;
     }
@@ -146,7 +162,9 @@ int distribute_points(sbit16 *skills, int max, int points, int level)
     {
         skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
         if (error > sumerror)
+        {
             sumerror = error;
+        }
     }
 
     return sumerror;
@@ -162,7 +180,9 @@ int distribute_points(ubit8 *skills, int max, int points, int level)
     {
         skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
         if (error > sumerror)
+        {
             sumerror = error;
+        }
     }
 
     return sumerror;
@@ -179,12 +199,18 @@ int required_xp(int level)
 #define POWER_MULT 200 // Diku II was :  150
 
     if (level <= 0)
+    {
         return 0;
+    }
 
     if (level <= MORTAL_MAX_LEVEL)
+    {
         return LEVEL_MULT * level + level * level * POWER_MULT;
+    }
     else
+    {
         return required_xp(MORTAL_MAX_LEVEL) + level_xp(MORTAL_MAX_LEVEL - 1) * (level - MORTAL_MAX_LEVEL);
+    }
 
 #undef LEVEL_MULT
 #undef POWER_MULT
@@ -197,7 +223,9 @@ int required_xp(int level)
 int level_xp(int level)
 {
     if (level >= MORTAL_MAX_LEVEL)
+    {
         level = MORTAL_MAX_LEVEL - 1;
+    }
 
     return required_xp(level + 1) - required_xp(level);
 
@@ -215,9 +243,13 @@ void set_hits(class unit_data *obj, int craftsmanship)
         /* Hits are in [100..6000] based on craft, default == 1000 */
 
         if (craftsmanship >= 0)
+        {
             UNIT_MAX_HIT(obj) = 1000 + (1000 * craftsmanship) / 5;
+        }
         else
+        {
             UNIT_MAX_HIT(obj) = 1000 - (175 * -craftsmanship) / 5;
+        }
 
         UNIT_HIT(obj) = UNIT_MAX_HIT(obj);
     }

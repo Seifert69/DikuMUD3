@@ -4,12 +4,10 @@
  $Date: 2001/04/29 03:46:05 $
  $Revision: 2.1 $
  */
+#pragma once
 
-#ifndef _MUD_CONSTANTS_H
-#define _MUD_CONSTANTS_H
-
-#include "values.h"
 #include "skills.h"
+#include "values.h"
 
 extern const struct skill_interval g_how_good[];
 extern const struct skill_interval g_weapon_skills[];
@@ -24,8 +22,6 @@ extern const int g_movement_loss[];
 extern const char *g_weekdays[];
 extern const char *g_month_name[];
 extern const sbit8 g_time_light[SUN_SET + 1];
-extern const char *g_color_liquid[];
-// extern const int drink_aff[LIQ_MAX+2][3];
 extern const char *g_fullness[];
 extern const char *g_arm_text[];
 extern const char *g_shi_text[];
@@ -48,5 +44,3 @@ extern const char *g_obj_types[];
 extern const char *g_equip_pos[];
 extern const char *g_obj_pos[];
 extern const char *g_connected_types[];
-
-#endif

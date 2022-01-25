@@ -1096,7 +1096,7 @@ descr
 "In the middle of the void a bulletin board hangs unexplicably."
 dilcopy board@boards("dil","","rem_res@boards","",100);
 
-HIT_TRANSFER(+5)
+HIT_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 
 end
 

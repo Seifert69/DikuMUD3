@@ -5,16 +5,18 @@
  $Revision: 2.1 $
  */
 
-#include "structs.h"
-#include "utils.h"
-#include "fight.h"
 #include "comm.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "utility.h"
+#include "experience.h"
 #include "fight.h"
-#include "unitfind.h"
+#include "formatter.h"
+#include "interpreter.h"
+#include "modify.h"
 #include "skills.h"
+#include "structs.h"
+#include "textutil.h"
+#include "unitfind.h"
+#include "utility.h"
+#include "utils.h"
 
 // The Global Combat List...
 
@@ -52,21 +54,27 @@ void cCombatList::add(class cCombat *Combat)
 void cCombatList::sub(class cCombat *pc)
 {
     for (int i = 0; i < nTop; i++)
+    {
         if (pElems[i] == pc)
         {
             if (nTop - i > 1)
+            {
                 memmove(&pElems[i], &pElems[i + 1], sizeof(class cCombat *) * (nTop - i - 1));
+            }
 
-            pElems[nTop - 1] = NULL;
+            pElems[nTop - 1] = nullptr;
 
             nTop--;
 
             if (nIdx != -1) /* Uh oh, we are running through the list... */
             {
                 if (i < nIdx)
+                {
                     nIdx--;
+                }
             }
         }
+    }
 }
 
 static int combat_compare(const void *v1, const void *v2)
@@ -75,17 +83,25 @@ static int combat_compare(const void *v1, const void *v2)
     class cCombat *e2 = *((class cCombat **)v2);
 
     if (e1->When() > e2->When())
+    {
         return +1;
+    }
     else if (e1->When() < e2->When())
+    {
         return -1;
+    }
     else
+    {
         return 0;
+    }
 }
 
 void cCombatList::Sort(void)
 {
     if (nTop > 0)
+    {
         qsort(pElems, nTop, sizeof(class cCombat *), combat_compare);
+    }
 }
 
 void cCombatList::PerformViolence(void)
@@ -93,14 +109,20 @@ void cCombatList::PerformViolence(void)
     int bAnyaction = FALSE;
 
     if (nTop < 1)
+    {
         return;
+    }
 
     Sort();
 
     // Happens just ONCE per turn, give everybody 12 actions...
     for (nIdx = 0; nIdx < nTop; nIdx++)
+    {
         if (pElems[nIdx]->nWhen > 0)
+        {
             pElems[nIdx]->nWhen = MAX(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
+        }
+    }
 
     do
     {
@@ -109,7 +131,9 @@ void cCombatList::PerformViolence(void)
             bAnyaction = FALSE;
 
             if (pElems[nIdx]->nWhen >= SPEED_DEFAULT)
+            {
                 break; // The rest are larger...
+            }
 
             class cCombat *tmp = pElems[nIdx];
 
@@ -132,14 +156,18 @@ void cCombatList::PerformViolence(void)
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, tmp->nWhen <= (SPEED_DEFAULT + 1) / 2);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                        {
                             tmp->nWhen += MAX(2, (1 + CHAR_SPEED(tmp->pOwner)) / 2);
+                        }
                     }
                     else
                     {
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, TRUE);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                        {
                             tmp->nWhen += MAX(4, CHAR_SPEED(tmp->pOwner));
+                        }
                     }
                 }
             }
@@ -152,10 +180,8 @@ void cCombatList::PerformViolence(void)
 
 void cCombatList::status(const class unit_data *ch)
 {
-    char buf[MAX_STRING_LENGTH];
-
-    snprintf(buf, sizeof(buf), "The Global Combat List contains [%d] entries.<br/>", nTop);
-    send_to_char(buf, ch);
+    auto msg = diku::format_to_str("The Global Combat List contains [%d] entries.<br/>", nTop);
+    send_to_char(msg, ch);
 }
 
 /* ======================================================================= */
@@ -169,12 +195,12 @@ cCombat::cCombat(class unit_data *owner, int bMelee)
     assert(owner);
 
     pOwner = owner;
-    pMelee = NULL;
+    pMelee = nullptr;
 
     nWhen = SPEED_DEFAULT;
     cmd[0] = 0;
 
-    pOpponents = NULL;
+    pOpponents = nullptr;
     nNoOpponents = 0;
 
     g_CombatList.add(this);
@@ -183,22 +209,24 @@ cCombat::cCombat(class unit_data *owner, int bMelee)
 cCombat::~cCombat(void)
 {
     while (nNoOpponents > 0)
+    {
         subOpponent(pOpponents[nNoOpponents - 1]); // Faster sub at tail
+    }
 
     if (pOpponents)
     {
         FREE(pOpponents);
-        pOpponents = NULL;
+        pOpponents = nullptr;
     }
 
-    CHAR_COMBAT(pOwner) = NULL;
+    CHAR_COMBAT(pOwner) = nullptr;
 
     g_CombatList.sub(this);
 
     CHAR_POS(pOwner) = POSITION_STANDING;
     update_pos(pOwner);
 
-    pOwner = NULL;
+    pOwner = nullptr;
 }
 
 void cCombat::setCommand(const char *arg)
@@ -215,8 +243,12 @@ void cCombat::changeSpeed(int delta)
 int cCombat::findOpponentIdx(class unit_data *target)
 {
     for (int i = 0; i < nNoOpponents; i++)
+    {
         if (pOpponents[i] == target)
+        {
             return i;
+        }
+    }
 
     return -1;
 }
@@ -226,9 +258,13 @@ class unit_data *cCombat::FindOpponent(class unit_data *victim)
     int i = findOpponentIdx(victim);
 
     if (i == -1)
-        return NULL;
+    {
+        return nullptr;
+    }
     else
+    {
         return pOpponents[i];
+    }
 }
 
 void cCombat::add(class unit_data *victim)
@@ -253,7 +289,9 @@ void cCombat::sub(int idx)
     int bWas = FALSE;
 
     if (idx == -1)
+    {
         return;
+    }
 
     assert(nNoOpponents > 0);
     assert(idx >= 0 && idx < nNoOpponents);
@@ -263,20 +301,22 @@ void cCombat::sub(int idx)
 
     if (pOpponents[idx] == pMelee)
     {
-        pMelee = NULL;
+        pMelee = nullptr;
         bWas = TRUE;
     }
 
     if (nNoOpponents - idx > 1)
+    {
         memmove(&pOpponents[idx], &pOpponents[idx + 1], sizeof(class unit_data *) * (nNoOpponents - idx - 1));
+    }
 
-    pOpponents[nNoOpponents - 1] = NULL;
+    pOpponents[nNoOpponents - 1] = nullptr;
     nNoOpponents--;
 
     if (nNoOpponents < 1)
     {
         FREE(pOpponents);
-        pOpponents = NULL;
+        pOpponents = nullptr;
         delete this; // We are done...
     }
     else if (bWas)
@@ -302,24 +342,32 @@ void cCombat::addOpponent(class unit_data *victim, int bMelee = FALSE)
         add(victim);
 
         if (!CHAR_COMBAT(victim))
+        {
             CHAR_COMBAT(victim) = new cCombat(victim, bMelee);
+        }
 
         CHAR_COMBAT(victim)->add(pOwner);
     }
 
-    if (bMelee && pMelee == NULL)
+    if (bMelee && pMelee == nullptr)
+    {
         setMelee(victim);
+    }
 }
 
 void cCombat::subOpponent(class unit_data *victim)
 {
     if (nNoOpponents < 1)
+    {
         return;
+    }
 
     int i = findOpponentIdx(victim);
 
-    if (i == -1) // Not found
+    if (i == -1)
+    { // Not found
         return;
+    }
 
     CHAR_COMBAT(victim)->sub(CHAR_COMBAT(victim)->findOpponentIdx(pOwner));
     sub(i);
@@ -328,38 +376,33 @@ void cCombat::subOpponent(class unit_data *victim)
 class unit_data *cCombat::Opponent(int i)
 {
     if (i >= nNoOpponents)
-        return NULL;
+    {
+        return nullptr;
+    }
     else
+    {
         return pOpponents[i];
+    }
 }
 
 void cCombat::status(const class unit_data *god)
 {
-    char buf[MAX_STRING_LENGTH];
-    int i;
-    std::string str;
+    auto msg = diku::format_to_str("Combat Status of '%s':<br/>"
+                                   "Combat Speed [%d]  Turn [%d]<br/>"
+                                   "Melee Opponent '%s'<br/>"
+                                   "Total of %d Opponents:<br/><br/>",
+                                   STR(UNIT_NAME(pOwner)),
+                                   CHAR_SPEED(pOwner),
+                                   nWhen,
+                                   CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
+                                   nNoOpponents);
 
-    snprintf(buf,
-             sizeof(buf),
-             "Combat Status of '%s':<br/>"
-             "Combat Speed [%d]  Turn [%d]<br/>"
-             "Melee Opponent '%s'<br/>"
-             "Total of %d Opponents:<br/><br/>",
-             STR(UNIT_NAME(pOwner)),
-             CHAR_SPEED(pOwner),
-             nWhen,
-             CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
-             nNoOpponents);
-
-    str.append(buf);
-
-    for (i = 0; i < nNoOpponents; i++)
+    for (int i = 0; i < nNoOpponents; i++)
     {
-        snprintf(buf, sizeof(buf), "   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
-        str.append(buf);
+        msg += diku::format_to_str("   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
     }
 
-    send_to_char(&str[0], god);
+    send_to_char(msg, god);
 }
 
 /* ======================================================================= */
@@ -372,15 +415,21 @@ void cCombat::status(const class unit_data *god)
 void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 {
     if (ch == vict)
+    {
         return;
+    }
 
     /* No check for awake! If you die, FIGHTING() is set to point to murderer */
 
     if (ch->is_destructed() || vict->is_destructed())
+    {
         return;
+    }
 
-    if (CHAR_COMBAT(ch) == NULL)
+    if (CHAR_COMBAT(ch) == nullptr)
+    {
         CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+    }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
 
@@ -391,15 +440,21 @@ void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 {
     if (ch == vict)
+    {
         return;
+    }
 
     /* No check for awake! If you die, FIGHTING() is set to point to murderer */
 
     if (ch->is_destructed() || vict->is_destructed())
+    {
         return;
+    }
 
-    if (CHAR_COMBAT(ch) == NULL)
+    if (CHAR_COMBAT(ch) == nullptr)
+    {
         CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+    }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
 }
@@ -407,15 +462,19 @@ void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 /* remove a char from the list of fighting chars */
 void stop_fighting(class unit_data *ch, class unit_data *victim)
 {
-    if (victim == NULL) // Stop all combat...
+    if (victim == nullptr) // Stop all combat...
     {
         while (CHAR_COMBAT(ch))
+        {
             CHAR_COMBAT(ch)->subOpponent(CHAR_COMBAT(ch)->Opponent());
+        }
     }
     else
+    {
         CHAR_COMBAT(ch)->subOpponent(victim);
+    }
 
-    if (CHAR_COMBAT(ch) == NULL)
+    if (CHAR_COMBAT(ch) == nullptr)
     {
         REMOVE_BIT(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE);
         CHAR_POS(ch) = POSITION_STANDING;
@@ -439,18 +498,22 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    u2 = NULL;
+    u2 = nullptr;
 
     if (!str_is_empty(pStr))
     {
-        u2 = find_unit(god, (char **)&pStr, 0, FIND_UNIT_SURRO);
+        u2 = find_unit(god, (char **)&pStr, nullptr, FIND_UNIT_SURRO);
     }
 
-    if (u2 == NULL)
+    if (u2 == nullptr)
+    {
         u2 = god;
+    }
 
     if (CHAR_FIGHTING(u))
+    {
         u2 = CHAR_FIGHTING(u);
+    }
 
     if (!IS_CHAR(u2))
     {
@@ -461,14 +524,18 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
     g_CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
+    {
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
+    }
     else
+    {
         CHAR_COMBAT(u)->status(god);
+    }
 
     std::string str;
-    melee_bonus(u, u2, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+    melee_bonus(u, u2, WEAR_BODY, nullptr, nullptr, nullptr, nullptr, TRUE, &str);
     send_to_char(str.c_str(), god);
-    melee_bonus(u2, u, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+    melee_bonus(u2, u, WEAR_BODY, nullptr, nullptr, nullptr, nullptr, TRUE, &str);
     send_to_char(str.c_str(), god);
 }
 
@@ -482,18 +549,22 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    u2 = NULL;
+    u2 = nullptr;
 
     if (!str_is_empty(pStr))
     {
-        u2 = find_unit(god, (char **)&pStr, 0, FIND_UNIT_SURRO);
+        u2 = find_unit(god, (char **)&pStr, nullptr, FIND_UNIT_SURRO);
     }
 
-    if (u2 == NULL)
+    if (u2 == nullptr)
+    {
         u2 = god;
+    }
 
     if (CHAR_FIGHTING(u))
+    {
         u2 = CHAR_FIGHTING(u);
+    }
 
     if (!IS_CHAR(u2))
     {
@@ -504,26 +575,23 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
     g_CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
+    {
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
+    }
     else
+    {
         CHAR_COMBAT(u)->status(god);
+    }
 
     int i = search_block(skip_blanks(pStr), g_SplColl.text, false);
     if (i == -1)
+    {
         i = SPL_ACID_BREATH;
-
-    int spell_bonus(class unit_data * att,
-                    class unit_data * medium,
-                    class unit_data * def,
-                    int hit_loc,
-                    int spell_number,
-                    int *pDef_armour_type,
-                    class unit_data **pDef_armour,
-                    std::string *pStat);
+    }
 
     std::string str;
-    spell_bonus(u, u, u2, WEAR_BODY, i, NULL, NULL, &str);
+    spell_bonus(u, u, u2, WEAR_BODY, i, nullptr, nullptr, &str);
     send_to_char(str.c_str(), god);
-    spell_bonus(u2, u2, u, WEAR_BODY, i, NULL, NULL, &str);
+    spell_bonus(u2, u2, u, WEAR_BODY, i, nullptr, nullptr, &str);
     send_to_char(str.c_str(), god);
 }

@@ -4,9 +4,8 @@
  $Date: 2002/04/26 00:53:24 $
  $Revision: 2.4 $
  */
+#pragma once
 
-#ifndef _MUD_EVENT_H
-#define _MUD_EVENT_H
 struct eventq_elem
 {
     void (*func)(void *, void *);
@@ -53,5 +52,3 @@ public:
     void remove_relaxed(void (*func)(void *, void *), void *arg1, void *arg2);
     void process(void);
 };
-
-#endif

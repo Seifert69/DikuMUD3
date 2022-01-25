@@ -4,26 +4,27 @@
  $Date: 2004/09/21 08:45:46 $
  $Revision: 2.9 $
  */
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include "external_vars.h"
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "comm.h"
-#include "handler.h"
-#include "db.h"
-#include "interpreter.h"
 #include "affect.h"
-#include "utility.h"
-#include "spells.h"
-#include "money.h"
-#include "files.h"
+#include "comm.h"
+#include "db.h"
 #include "db_file.h"
+#include "files.h"
+#include "formatter.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "money.h"
+#include "pcsave.h"
+#include "slime.h"
+#include "slog.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+#include "zon_basis.h"
 
-int write_unit_string(ubit8 *b, class unit_data *u);
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 /* *************************************************************************
  * Routines for calculating rent                                           *
@@ -54,7 +55,9 @@ static void subtract_rent(class unit_data *ch, class unit_data *item, ubit32 pri
             extract_unit(item);
         }
         else
-            money_transfer(ch, NULL, price, DEF_CURRENCY);
+        {
+            money_transfer(ch, nullptr, price, DEF_CURRENCY);
+        }
     }
 }
 
@@ -68,13 +71,19 @@ static ubit32 subtract_recurse(class unit_data *ch,
     ubit32 sum = 0;
 
     if (IS_IMMORTAL(ch))
+    {
         return 0;
+    }
 
-    if (item == NULL)
+    if (item == nullptr)
+    {
         return 0;
+    }
 
     if (!UNIT_MINV(item))
+    {
         sum += subtract_recurse(ch, UNIT_CONTAINS(item), seconds, fptr);
+    }
 
     sum += subtract_recurse(ch, item->next, seconds, fptr);
 
@@ -86,13 +95,15 @@ static ubit32 subtract_recurse(class unit_data *ch,
         {
             price = (int)((float)OBJ_PRICE_DAY(item) * (float)seconds / (float)SECS_PER_REAL_DAY);
 
-            price = (price * g_cServerConfig.m_nRentModifier) / 100;
+            price = (price * g_cServerConfig.getRentModifier()) / 100;
 
             sum += price;
         }
 
         if (fptr)
+        {
             (*fptr)(ch, item, price);
+        }
     }
 
     return sum;
@@ -106,19 +117,23 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
 
     assert(IS_PC(ch));
 
-    if (CHAR_DESCRIPTOR(ch) == NULL) /* If loading or similar, dont subtract! */
+    if (CHAR_DESCRIPTOR(ch) == nullptr)
+    { /* If loading or similar, dont subtract! */
         return 0;
+    }
 
     if (IS_MORTAL(ch))
     {
-        time_t t = time(0);
+        time_t t = time(nullptr);
 
         if ((t > savetime) && (savetime > 0))
         {
             t -= savetime;
 
             if (t > SECS_PER_REAL_MIN * 10)
+            {
                 sum = subtract_recurse(ch, UNIT_CONTAINS(ch), t, subtract_rent);
+            }
         }
     }
 
@@ -134,14 +149,18 @@ void do_rent(class unit_data *ch, char *arg, const struct command_info *cmd)
     sum = subtract_recurse(ch, UNIT_CONTAINS(ch), SECS_PER_REAL_DAY, show_items);
 
     if (!rent_info)
+    {
         send_to_char("You are charged no rent.<br/>", ch);
+    }
     else
+    {
         act("Your inventory costs $2t per day to rent.",
             A_ALWAYS,
             ch,
             money_string(sum, local_currency(ch), FALSE),
             cActParameter(),
             TO_CHAR);
+    }
 }
 
 /* *************************************************************************
@@ -192,7 +211,7 @@ static int membuflen = 0, mempos;
 */
 
 /* Global variables */
-class file_index_type *g_slime_fi = NULL;
+class file_index_type *g_slime_fi = nullptr;
 
 /* save object */
 void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
@@ -206,8 +225,6 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
     /* So I memset to zero to avoid valgrind reporting a memory error                 */
     memset(&ho, 0, sizeof(ho));
     memset(&hn, 0, sizeof(hn));
-
-    int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc);
 
     if (!IS_SET(UNIT_TYPE(unit), UNIT_ST_NPC | UNIT_ST_OBJ))
     {
@@ -238,9 +255,13 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
     hn.level = level;
 
     if (IS_OBJ(unit))
+    {
         hn.equip = OBJ_EQP_POS(unit);
+    }
     else
+    {
         hn.equip = 0;
+    }
 
     hn.nVersion = 2;
     hn.length = len;
@@ -287,7 +308,9 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
         add_units(pBuf, parent, unit, level, fast);
 
         if (IS_OBJ(tmp_u) || IS_NPC(tmp_u))
+        {
             add_units(pBuf, parent, tmp_u, level + 1, fast);
+        }
 
         unit_to_unit(tmp_u, unit);
 
@@ -297,32 +320,39 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
             equip_char(unit, tmp_u, tmp_i);
         }
     }
-    else /* UNIT CONTAINS NOTHING */
+    else
+    {
+        /* UNIT CONTAINS NOTHING */
         if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+        {
             enlist(pBuf, unit, level, fast);
+        }
+    }
 }
 
 void send_saves(class unit_data *parent, class unit_data *unit)
 {
     if (!unit)
+    {
         return;
+    }
 
     send_saves(parent, UNIT_CONTAINS(unit));
     send_saves(parent, unit->next);
 
     if ((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+    {
         send_save_to(parent, unit);
+    }
 }
 
-char *ContentsFileName(const char *pName)
+const char *ContentsFileName(const char *pName)
 {
-    static char Buf[MAX_INPUT_LENGTH + 1];
+    static std::string Buf;
 
-    char *PlayerFileName(const char *);
+    Buf = PlayerFileName(pName) + ".inv";
 
-    snprintf(Buf, sizeof(Buf), "%s.inv", PlayerFileName(pName));
-
-    return Buf;
+    return Buf.c_str();
 }
 
 /* Save all units inside 'unit' in the blk_file 'bf' as uncompressed  */
@@ -331,7 +361,7 @@ char *ContentsFileName(const char *pName)
 /* Container = 1 if container should be saved also                    */
 void basic_save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer)
 {
-    class descriptor_data *tmp_descr = NULL;
+    class descriptor_data *tmp_descr = nullptr;
     FILE *pFile;
     char TmpName[MAX_INPUT_LENGTH + 1];
 
@@ -341,21 +371,25 @@ void basic_save_contents(const char *pFileName, class unit_data *unit, int fast,
     if (IS_CHAR(unit))
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
-        CHAR_DESCRIPTOR(unit) = NULL;
+        CHAR_DESCRIPTOR(unit) = nullptr;
     }
 
     CByteBuffer *pBuf = &g_FileBuffer;
     pBuf->Clear();
 
     if (bContainer)
+    {
         send_save_to(unit, unit);
+    }
 
     send_saves(unit, UNIT_CONTAINS(unit));
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 
     if (IS_CHAR(unit))
+    {
         CHAR_DESCRIPTOR(unit) = tmp_descr;
+    }
 
     if (pBuf->GetLength() > 0)
     {
@@ -394,7 +428,7 @@ int save_contents(const char *pFileName, class unit_data *unit, int fast, int bC
 
     basic_save_contents(name, unit, fast, bContainer);
 
-    return subtract_recurse(unit, UNIT_CONTAINS(unit), SECS_PER_REAL_DAY, NULL);
+    return subtract_recurse(unit, UNIT_CONTAINS(unit), SECS_PER_REAL_DAY, nullptr);
 }
 
 /* From the block_file 'bf' at index 'blk_idx' load the objects    */
@@ -409,29 +443,28 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     class unit_data *pnew, *pnew_tmp, *pstack[25];
     int len, init;
     int frame, n;
-    class descriptor_data *tmp_descr = NULL;
+    class descriptor_data *tmp_descr = nullptr;
     int equip_ok;
     FILE *pFile;
-    class unit_data *topu = NULL;
+    class unit_data *topu = nullptr;
 
     CByteBuffer InvBuf;
     InvBuf.Clear();
 
-    int is_slimed(class file_index_type * sp);
-    int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen, ubit32 crc);
-
-    assert(g_slime_fi != NULL);
+    assert(g_slime_fi != nullptr);
 
     pFile = fopen(pFileName, "rb");
 
-    if (pFile == NULL)
-        return NULL;
+    if (pFile == nullptr)
+    {
+        return nullptr;
+    }
 
     len = fsize(pFile);
     if (len == 0)
     {
         fclose(pFile);
-        return NULL;
+        return nullptr;
     }
 
     n = InvBuf.FileRead(pFile, len);
@@ -440,7 +473,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     if (n != len)
     {
         slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
-        return NULL;
+        return nullptr;
     }
 
     frame = 0;
@@ -449,20 +482,24 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     if (unit && IS_CHAR(unit))
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
-        CHAR_DESCRIPTOR(unit) = NULL;
+        CHAR_DESCRIPTOR(unit) = nullptr;
     }
 
     for (init = TRUE; InvBuf.GetReadPosition() < InvBuf.GetLength();)
     {
         if (InvBuf.Read((ubit8 *)&ho, sizeof(ho)))
+        {
             break;
+        }
 
         // It's the new version if both are equal to "obsoleted"
         if ((strcmp(ho.zone, "_obsoleted") == 0) && (strcmp(ho.unit, "_obsoleted") == 0))
         {
             // It's a new version
             if (InvBuf.Read((ubit8 *)&hn, sizeof(hn)))
+            {
                 break;
+            }
         }
         else
         {
@@ -479,7 +516,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
         fi = find_file_index(hn.zone, hn.unit);
 
-        pnew = NULL;
+        pnew = nullptr;
 
         equip_ok = TRUE;
 
@@ -496,7 +533,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
         }
         else /* uncompressed */
         {
-            if ((fi == NULL) || is_slimed(fi))
+            if ((fi == nullptr) || is_slimed(fi))
             {
                 slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
                 pnew = read_unit(g_slime_fi); // Inserts unit into glist
@@ -508,12 +545,14 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                     break;
                 }
 
-                if (pnew->fi == NULL)
+                if (pnew->fi == nullptr)
+                {
                     pnew->set_fi(g_slime_fi);
+                }
             }
             else
             {
-                pnew_tmp = NULL;
+                pnew_tmp = nullptr;
                 pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->name, fi->zone->name));
                 if (g_nCorrupt)
                 {
@@ -526,10 +565,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
             if (pnew_tmp && pnew)
             {
-                char buf[MAX_STRING_LENGTH];
-                snprintf(buf, sizeof(buf), "The slimy remains of %s", TITLENAME(pnew_tmp));
-                UNIT_OUT_DESCR(pnew) = (buf);
-                UNIT_TITLE(pnew) = (buf);
+                auto str = diku::format_to_str("The slimy remains of %s", TITLENAME(pnew_tmp));
+                UNIT_OUT_DESCR(pnew) = str;
+                UNIT_TITLE(pnew) = str;
                 UNIT_NAMES(pnew).PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));
                 delete pnew_tmp;
             }
@@ -540,15 +578,19 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             topu = pnew;
             init = FALSE;
         }
-        if (pstack[frame] == NULL)
+        if (pstack[frame] == nullptr)
         {
             if (UNIT_IN(pnew))
+            {
                 pstack[frame] = UNIT_IN(pnew);
+            }
             else
+            {
                 pstack[frame] = g_void_room;
+            }
         }
 
-        UNIT_IN(pnew) = NULL;
+        UNIT_IN(pnew) = nullptr;
         if (pnew == pstack[frame])
         {
             slog(LOG_ALL, 0, "ERROR. Loading inventory, recursive linking. Please report.");
@@ -570,7 +612,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
             if (hn.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
+            {
                 equip_char(UNIT_IN(pnew), pnew, hn.equip);
+            }
 
             pstack[frame] = pnew;
         }
@@ -616,18 +660,30 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen,
 
     /* find start of difference */
     for (dstart = 0; len && rlen; dstart++, len--, rlen--)
+    {
         if (*(ref + dstart) != *(obj + dstart))
+        {
             break;
+        }
+    }
 
     /* find end of difference */
     for (dend = 0; len && rlen; dend++, len--, rlen--)
+    {
         if (*(rend - dend) != *(oend - dend))
+        {
             break;
+        }
+    }
 
     if ((int)(sizeof(head) + len) > diflen)
+    {
         return -1;
+    }
     else
+    {
         diflen = sizeof(head) + len;
+    }
     head.start = dstart;
 
     head.end = reflen - dend;
@@ -637,7 +693,9 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen,
     memcpy(dif, (char *)&head, sizeof(head));
     dif += sizeof(head);
     if (len)
+    {
         memcpy(dif, (char *)obj + dstart, len);
+    }
     return (diflen);
 }
 
@@ -647,27 +705,41 @@ int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen
     struct diffhead head;
 
     if (diflen < (int)sizeof(head))
+    {
         return -1;
+    }
 
     memcpy((char *)&head, dif, sizeof(head));
     dif += sizeof(head);
     diflen -= sizeof(head);
 
     if ((int)(head.start + diflen + reflen - head.end) > reslen)
+    {
         return -1;
+    }
 
     if (head.reflen != reflen)
+    {
         return -1;
+    }
 
     if (head.crc != crc)
+    {
         return -1;
+    }
 
     if (head.start)
+    {
         memcpy(res, ref, head.start);
+    }
     if (diflen)
+    {
         memcpy(res + head.start, dif, diflen);
+    }
     if (head.end < (int)reflen)
+    {
         memcpy(res + head.start + diflen, ref + head.end, reflen - head.end);
+    }
 
     return (head.start + diflen + reflen - head.end);
 }

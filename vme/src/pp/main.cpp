@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "pp.h"
+#include "../compile_defines.h"
 
 //
 // MS copied in from the original project. But doesn't seem to work...
@@ -16,9 +17,9 @@ int original_main(int argc, char *argv[])
     static const char *zero_string = "0";
 #endif /* EMBEDDED_EXT */
 
-    register int t;            /* General holder for token	*/
-    register struct symtab *p; /* Ptr into symbol table	*/
-    register struct ppdir *sp; /* Ptr to predefined symbol	*/
+    int t;            /* General holder for token	*/
+    struct symtab *p; /* Ptr into symbol table	*/
+    struct ppdir *sp; /* Ptr to predefined symbol	*/
     int ifile;
     int ofile;
     char *s;
@@ -191,7 +192,7 @@ int original_main(int argc, char *argv[])
                     case 's':
                         Stats = Verbose = TRUE; /* Implies Verbose */
                         break;
-#endif                  /* DEBUG */
+#endif /* DEBUG */
                         /* -[t Astr|Rstr] Add or delete chars from LETTER class */
                     case 'T':
                     case 't':
@@ -489,6 +490,7 @@ int original_main(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
+    fprintf(stderr, "PP Compiled with [%s]\n", get_compiled_hash_defines().c_str());
     original_main(argc, argv);
     return 1;
 

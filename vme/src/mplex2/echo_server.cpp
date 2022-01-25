@@ -1,12 +1,10 @@
-#include <websocketpp/config/asio_no_tls.hpp>
-
-#include <websocketpp/server.hpp>
-
-#include <iostream>
-
-#include "mplex.h"
 #include "ClientConnector.h"
+#include "mplex.h"
+#include "slog.h"
 #include "textutil.h"
+
+#include <websocketpp/config/asio_no_tls.hpp>
+#include <websocketpp/server.hpp>
 
 // typedef websocketpp::server<websocketpp::config::asio> wsserver;
 
@@ -25,17 +23,19 @@ void remove_gmap(class cConHook *con)
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
     for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
+    {
         if (it->second == con)
         {
             slog(LOG_OFF, 0, "remove_gmap located con class, removed.");
             g_cMapHandler.erase(it);
             return;
         }
+    }
 }
 
 void on_close(websocketpp::connection_hdl hdl)
 {
-    class cConHook *con = 0;
+    class cConHook *con = nullptr;
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
     it = g_cMapHandler.find(hdl);
@@ -75,7 +75,7 @@ int ws_send_message(wsserver *s, websocketpp::connection_hdl hdl, const char *tx
 // Define a callback to handle incoming messages
 void on_message(wsserver *s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
-    class cConHook *con = 0;
+    class cConHook *con = nullptr;
 
     if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
     {
@@ -87,7 +87,22 @@ void on_message(wsserver *s, websocketpp::connection_hdl hdl, message_ptr msg)
         // Get the IP address
         const auto theip = s->get_con_from_hdl(hdl);
         boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
-        strncpy(con->m_aHost, theadr.to_string().c_str(), sizeof(con->m_aHost) - 1);
+        std::string ip_as_string{theadr.to_string()};
+        if (theadr.is_v6())
+        {
+            auto v6 = boost::asio::ip::make_address_v6(theadr.to_string());
+            // Lets hope it is a ipv4 mapped to ipv6 address space
+            if (v6.is_v4_mapped())
+            {
+                auto v4 = boost::asio::ip::make_address_v4(boost::asio::ip::v4_mapped_t::v4_mapped, v6);
+                ip_as_string = v4.to_string();
+            }
+            else
+            {
+                ip_as_string = boost::asio::ip::address_v4::any().to_string();
+            }
+        }
+        strncpy(con->m_aHost, ip_as_string.c_str(), sizeof(con->m_aHost) - 1);
         *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
         slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
     }

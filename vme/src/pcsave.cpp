@@ -5,31 +5,31 @@
  $Revision: 2.7 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
-#include <ctype.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "handler.h"
+#include "account.h"
+#include "affect.h"
 #include "comm.h"
 #include "db.h"
-#include "interpreter.h"
-#include "utility.h"
-#include "money.h"
-#include "files.h"
-#include "affect.h"
-#include "account.h"
 #include "db_file.h"
 #include "dilrun.h"
+#include "error.h"
+#include "files.h"
+#include "formatter.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "mobact.h"
+#include "money.h"
+#include "reception.h"
+#include "slog.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 
 // MS2020 sbit32 g_player_id = -1;
 sbit32 g_player_id = 1; // Looks to me like it needs to begin with 1 (crash on start)
-
-class descriptor_data *find_descriptor(const char *name, class descriptor_data *except);
 
 void assign_player_file_index(unit_data *pc)
 {
@@ -37,7 +37,9 @@ void assign_player_file_index(unit_data *pc)
     auto it = z->mmp_fi.find(PC_FILENAME(pc));
 
     if (it != z->mmp_fi.end())
+    {
         UNIT_FILE_INDEX(pc) = it->second;
+    }
     else
     {
         class file_index_type *fi = new file_index_type();
@@ -52,16 +54,16 @@ void assign_player_file_index(unit_data *pc)
     }
 }
 
-char *PlayerFileName(const char *pName)
+std::string PlayerFileName(const char *pName)
 {
-    static char Buf[MAX_INPUT_LENGTH + 1 + 512];
-    char TmpBuf[MAX_INPUT_LENGTH + 1];
+    std::string TmpBuf;
 
-    strcpy(TmpBuf, pName);
-    str_lower(TmpBuf);
-    snprintf(Buf, sizeof(Buf), "%s%c/%s", g_cServerConfig.m_plydir, *TmpBuf, TmpBuf);
-
-    return Buf;
+    if (pName)
+    {
+        TmpBuf = pName;
+        str_lower(TmpBuf);
+    }
+    return diku::format_to_str("%s%c/%s", g_cServerConfig.getPlyDir(), *TmpBuf.c_str(), TmpBuf);
 }
 
 /* Return TRUE if exists */
@@ -74,21 +76,25 @@ class unit_data *find_player(char *name)
 {
     class descriptor_data *d;
 
-    d = find_descriptor(name, NULL);
+    d = find_descriptor(name, nullptr);
 
     if (d && (d->fptr == descriptor_interpreter) && d->character)
+    {
         return d->character;
+    }
     else
-        return NULL;
+    {
+        return nullptr;
+    }
 }
 
 /* Return TRUE if deleted */
 int delete_inventory(const char *pName)
 {
-    char *ContentsFileName(const char *pName);
-
     if (remove(ContentsFileName(pName)))
+    {
         return FALSE;
+    }
 
     return TRUE;
 }
@@ -96,10 +102,10 @@ int delete_inventory(const char *pName)
 /* Return TRUE if deleted */
 int delete_player(const char *pName)
 {
-    char *ContentsFileName(const char *pName);
-
-    if (remove(PlayerFileName(pName)))
+    if (remove(PlayerFileName(pName).c_str()))
+    {
         return FALSE;
+    }
 
     delete_inventory(pName);
 
@@ -118,15 +124,19 @@ sbit32 find_player_id(char *pName)
         return -1;
     }
 
-    pFile = fopen(PlayerFileName(pName), "rb");
+    pFile = fopen(PlayerFileName(pName).c_str(), "rb");
 
-    if (pFile == NULL)
+    if (pFile == nullptr)
+    {
         return -1;
+    }
 
     rewind(pFile);
 
     if (fread(&id, sizeof(sbit32), 1, pFile) != 1)
+    {
         error(HERE, "Unable to read ID for player: '%s'", pName);
+    }
 
     fclose(pFile);
 
@@ -142,7 +152,7 @@ sbit32 read_player_id(void)
     /* By using r+ we are sure that we don't erase it accidentially
        if the host crashes just after opening the file. */
 
-    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME), "r+");
     assert(pFile);
     fseek(pFile, 0, SEEK_SET);
     int mstmp = fscanf(pFile, " %d ", &tmp_sl);
@@ -163,7 +173,7 @@ sbit32 new_player_id(void)
     /* By using r+ we are sure that we don't erase it accidentially
        if the host crashes just after opening the file. */
 
-    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME), "r+");
     assert(pFile);
     fseek(pFile, 0, SEEK_SET);
 
@@ -178,12 +188,11 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
 {
     int n;
     FILE *pPlayerFile;
-    static char *tmp_player_name;
-    tmp_player_name = str_cc(g_cServerConfig.m_plydir, "player.tmp");
+    static auto tmp_player_name{g_cServerConfig.getPlyDir() + "player.tmp"};
 
     /* Fucking shiting pissing lort! This marcel is driving me mad! */
     assert(!file_exists(tmp_player_name));
-    pPlayerFile = fopen(tmp_player_name, "wb");
+    pPlayerFile = fopen(tmp_player_name.c_str(), "wb");
     assert(pPlayerFile);
 
     n = fwrite(&id, sizeof(id), 1, pPlayerFile);
@@ -201,7 +210,9 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
        the n == nPlyLen */
 
     if (fseek(pPlayerFile, 0L, SEEK_END))
+    {
         assert(FALSE);
+    }
 
     assert(ftell(pPlayerFile) == (long int)(nPlyLen + sizeof(nPlyLen) + sizeof(id)));
 
@@ -211,7 +222,7 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
        crashes, it doesn't garble the player. At least then, the
        old file will remain intact. */
 
-    n = rename(tmp_player_name, PlayerFileName(pName));
+    n = rename(tmp_player_name.c_str(), PlayerFileName(pName).c_str());
     assert(n == 0);
 }
 
@@ -221,7 +232,7 @@ void save_player_file(class unit_data *pc)
     static bool locked = FALSE;
     sbit32 nPlyLen;
     int tmp_i;
-    class unit_data *tmp_u, *list = NULL;
+    class unit_data *tmp_u, *list = nullptr;
     class descriptor_data *tmp_descr;
     CByteBuffer *pBuf = &g_FileBuffer;
 
@@ -232,7 +243,9 @@ void save_player_file(class unit_data *pc)
     assert(!pc->is_destructed());
 
     if (pc->is_destructed())
+    {
         return;
+    }
 
     if (locked)
     {
@@ -243,17 +256,21 @@ void save_player_file(class unit_data *pc)
     locked = TRUE;
 
     if (PC_IS_UNSAVED(pc))
+    {
         PC_TIME(pc).played++;
+    }
 
     /* PRIMITIVE SANITY CHECK */
     slog(LOG_ALL, 0, "Saving PC %s id =%d", UNIT_NAME(pc), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
     if (UNIT_IN(pc) && !IS_SET(UNIT_FLAGS(unit_room(pc)), UNIT_FL_NOSAVE))
+    {
         CHAR_LAST_ROOM(pc) = unit_room(pc);
+    }
 
     tmp_descr = CHAR_DESCRIPTOR(pc);
-    CHAR_DESCRIPTOR(pc) = NULL; /* Do this to turn off all messages! */
+    CHAR_DESCRIPTOR(pc) = nullptr; /* Do this to turn off all messages! */
 
     /* Remove all inventory and equipment in order to make a CLEAN save */
     while ((tmp_u = UNIT_CONTAINS(pc)))
@@ -261,7 +278,9 @@ void save_player_file(class unit_data *pc)
         if (IS_OBJ(tmp_u))
         {
             if ((tmp_i = OBJ_EQP_POS(tmp_u)))
+            {
                 unequip_object(tmp_u);
+            }
             OBJ_EQP_POS(tmp_u) = tmp_i;
         }
         unit_from_unit(tmp_u);
@@ -280,7 +299,7 @@ void save_player_file(class unit_data *pc)
     while ((tmp_u = list))
     {
         list = list->next;
-        tmp_u->next = NULL;
+        tmp_u->next = nullptr;
 
         unit_to_unit(tmp_u, pc);
 
@@ -289,7 +308,9 @@ void save_player_file(class unit_data *pc)
             tmp_i = OBJ_EQP_POS(tmp_u);
             OBJ_EQP_POS(tmp_u) = 0;
             if (tmp_i)
+            {
                 equip_char(pc, tmp_u, tmp_i);
+            }
         }
     }
 
@@ -306,8 +327,6 @@ void save_player_contents(class unit_data *pc, int fast)
     amount_t daily_cost;
     currency_t cur = local_currency(pc);
 
-    int save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer);
-
     assert(IS_PC(pc));
 
     if (locked)
@@ -323,13 +342,15 @@ void save_player_contents(class unit_data *pc, int fast)
        filbuffer_length); */
 
     /* Calculate for how long player may keep objects until erased */
-    t0 = time(0);
+    t0 = time(nullptr);
     keep_period = t0;
 
     daily_cost = save_contents(PC_FILENAME(pc), pc, fast, FALSE);
 
     if (daily_cost <= 0)
+    {
         keep_period += SECS_PER_REAL_DAY * 30;
+    }
     else
     {
         amount_t amount = char_holds_amount(pc, DEF_CURRENCY);
@@ -349,7 +370,9 @@ void save_player_contents(class unit_data *pc, int fast)
             }
 
             if (tmp_i < 30)
+            {
                 keep_period += (int)(((float)SECS_PER_REAL_DAY * (float)amount) / (float)daily_cost);
+            }
 
             tdiff = (keep_period - t0) / SECS_PER_REAL_HOUR;
             act("Inventory expires in $2d hours ($3t daily).", A_ALWAYS, pc, (int *)&tdiff, money_string(daily_cost, cur, FALSE), TO_CHAR);
@@ -376,7 +399,7 @@ void save_player(class unit_data *pc)
         time_t t0;
         ubit32 used;
 
-        t0 = time(0);
+        t0 = time(nullptr);
         if (t0 < CHAR_DESCRIPTOR(pc)->logon)
         {
             slog(LOG_ALL, 0, "PCSAVE: Current less than last logon");
@@ -391,9 +414,13 @@ void save_player(class unit_data *pc)
         CHAR_DESCRIPTOR(pc)->logon = t0;
 
         if (account_is_closed(pc))
+        {
             account_closed(pc);
+        }
         else if (account_is_overdue(pc))
+        {
             account_overdue(pc);
+        }
     }
 
     save_player_file(pc);
@@ -412,25 +439,35 @@ class unit_data *load_player_file(FILE *pFile)
 
     n = fread(&id, sizeof(int), 1, pFile);
     if (n != 1)
-        return NULL;
+    {
+        return nullptr;
+    }
 
     n = fread(&nPlyLen, sizeof(nPlyLen), 1, pFile);
     if (n != 1)
-        return NULL;
+    {
+        return nullptr;
+    }
 
     pBuf = &g_FileBuffer;
     n = pBuf->FileRead(pFile, nPlyLen);
 
     if (n != nPlyLen)
+    {
         slog(LOG_ALL, 0, "ERROR: PC FILE LENGTH MISMATCHED RECORDED LENGTH!");
+    }
 
     pc = read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
 
-    if (pc == NULL)
-        return NULL;
+    if (pc == nullptr)
+    {
+        return nullptr;
+    }
 
     if (g_nCorrupt)
-        return NULL;
+    {
+        return nullptr;
+    }
 
     return pc;
 }
@@ -443,24 +480,26 @@ class unit_data *load_player(const char *pName)
     FILE *pFile;
     class unit_data *pc;
 
-    void stop_all_special(class unit_data * u);
-
     if (str_is_empty(pName))
-        return NULL;
+    {
+        return nullptr;
+    }
 
-    pFile = fopen(PlayerFileName(pName), "rb");
-    if (pFile == NULL)
-        return NULL;
+    pFile = fopen(PlayerFileName(pName).c_str(), "rb");
+    if (pFile == nullptr)
+    {
+        return nullptr;
+    }
 
     pc = load_player_file(pFile);
     assign_player_file_index(pc);
 
     fclose(pFile);
 
-    if (pc == NULL)
+    if (pc == nullptr)
     {
         slog(LOG_ALL, 0, "Corrupted player %s.", pName);
-        return NULL;
+        return nullptr;
     }
     else
     {
@@ -473,7 +512,7 @@ class unit_data *load_player(const char *pName)
     {
         slog(LOG_ALL, 0, "Mismatching player name %s / %s.", pName, PC_FILENAME(pc));
         extract_unit(pc);
-        return NULL;
+        return nullptr;
     }
 
     if (PC_IS_UNSAVED(pc))
@@ -491,18 +530,19 @@ void player_file_index(void)
     FILE *pFile;
     sbit32 tmp_sl;
     int n;
-    static char *tmp_player_name;
-    tmp_player_name = str_cc(g_cServerConfig.m_plydir, "player.tmp");
+    std::string tmp_player_name = g_cServerConfig.getPlyDir() + "player.tmp";
 
     /* Get rid of any temporary player save file */
     while (file_exists(tmp_player_name))
     {
-        n = remove(tmp_player_name);
+        n = std::remove(tmp_player_name.c_str());
         if (n != 0)
+        {
             slog(LOG_ALL, 0, "Remove failed");
+        }
         if (file_exists(tmp_player_name))
         {
-            n = rename(tmp_player_name, "./playingfuck");
+            n = std::rename(tmp_player_name.c_str(), "./playingfuck");
             if (n != 0)
             {
                 error(HERE, "Rename failed too - going down :-(");
@@ -510,14 +550,14 @@ void player_file_index(void)
         }
     }
 
-    if (!file_exists(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME)))
+    if (!file_exists(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME)))
     {
-        touch_file(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME));
+        touch_file(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME));
         g_player_id = -7;
         return;
     }
 
-    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME), "r+");
     assert(pFile);
 
     int mstmp = fscanf(pFile, " %d ", &tmp_sl);
@@ -528,5 +568,7 @@ void player_file_index(void)
     }
 
     if ((g_player_id = tmp_sl) <= 0)
+    {
         slog(LOG_ALL, 0, "WARNING: Player ID is %d", g_player_id);
+    }
 }

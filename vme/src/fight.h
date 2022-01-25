@@ -4,13 +4,12 @@
  $Date: 2003/11/29 03:31:16 $
  $Revision: 2.2 $
  */
+#pragma once
 
-#ifndef _MUD_FIGHT_H
-#define _MUD_FIGHT_H
-
-#include <string>
-#include <cstring>
 #include "essential.h"
+
+#include <cstring>
+#include <string>
 
 struct SFightColorSet
 {
@@ -19,7 +18,6 @@ struct SFightColorSet
     char *pOthers;
 };
 
-class unit_data *raw_kill(class unit_data *ch);
 void die(class unit_data *ch);
 
 void update_pos(class unit_data *victim);
@@ -38,17 +36,8 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int wpn_type,
 int simple_one_hit(class unit_data *att, class unit_data *def);
 int char_dual_wield(class unit_data *ch);
 void melee_violence(class unit_data *ch, int primary);
-int melee_bonus(class unit_data *att,
-                class unit_data *def,
-                int hit_loc,
-                int *pAtt_weapon_type,
-                class unit_data **pAtt_weapon,
-                int *pDef_armour_type,
-                class unit_data **pDef_armour,
-                int primary = TRUE,
-                std::string *pStat = NULL);
-int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **pDef_shield);
 void modify_hit(class unit_data *ch, int hit);
 int roll_boost(int roll, int level);
-
-#endif
+void damage_object(class unit_data *ch, class unit_data *obj, int dam);
+void load_messages(void);
+int hunting(struct spec_arg *sarg);

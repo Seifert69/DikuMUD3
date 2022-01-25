@@ -4,16 +4,17 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.6 $
  */
+#pragma once
 
-#ifndef _MUD_ESSENTIAL_H
-#define _MUD_ESSENTIAL_H
-
-#include <stdlib.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <assert.h>
-#include <time.h>
 #include "membug.h"
+
+#include <sys/types.h>
+
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 
 #ifdef _WINDOWS
     #include <ctype.h>
@@ -88,27 +89,15 @@ enum log_level
         fprintf(stderr, a);                                                                                                                \
     } while (0)
 
-#ifndef HPUX
-typedef signed char sbit8;
-typedef unsigned char ubit8;
-typedef signed short int sbit16;
-typedef unsigned short int ubit16;
-
-    #ifdef DOS
-typedef signed long sbit32;
-typedef unsigned long ubit32;
-    #else
-typedef signed int sbit32;
-typedef unsigned int ubit32;
-typedef signed long int sbit64;   // MS2020
-typedef unsigned long int ubit64; // MS2020
-    #endif
-
-#endif /* HPUX */
-
-typedef ubit8 ubit1; /* Boolean */
-extern FILE *g_log_file_fd;
-void slog(enum log_level, ubit8, const char *, ...);
+using sbit8 = int8_t;
+using ubit8 = uint8_t;
+using sbit16 = int16_t;
+using ubit16 = uint16_t;
+using sbit32 = int32_t;
+using ubit32 = uint32_t;
+using sbit64 = int64_t;  // MS2020
+using ubit64 = uint64_t; // MS2020
+using ubit1 = bool;      /* Boolean */
 
 #define CREATE(res, type, num)                                                                                                             \
     if (((res) = (type *)calloc((num), sizeof(type))) == NULL)                                                                             \
@@ -123,5 +112,3 @@ void slog(enum log_level, ubit8, const char *, ...);
         free(p);                                                                                                                           \
         p = NULL;                                                                                                                          \
     }
-
-#endif // MUD_ESSENTIAL

@@ -5,32 +5,29 @@
  $Revision: 2.10 $
  */
 
-#include <boost/config.hpp>
-#include <algorithm>
-#include <iostream>
-#include <boost/graph/adjacency_list.hpp>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-#include <fstream>
-#include <sstream>
-
-#ifdef WINDOWS
-
-#else
-    #include <unistd.h>
-#endif
-#undef WRITE_TEST
-#include <sys/types.h>
-#include <sys/stat.h>
-#include "pp.h"
-#include <utils.h>
 #include "vmc.h"
-#include <dil.h>
+
+#include "common.h"
+#include "db_file.h"
+#include "dil.h"
+#include "error.h"
+#include "pp.h"
+#include "vmc_process.h"
+
+#include <sys/stat.h>
 #include <textutil.h>
+#include <unistd.h>
 #include <utility.h>
-#include <db_file.h>
-#include <common.h>
+#include <utils.h>
+
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <string>
+
+#include <boost/graph/adjacency_list.hpp>
 
 #define MEMBLOCK (200000)
 #define BUFS 30
@@ -41,10 +38,7 @@ const sbit8 g_time_light[4] = {-1, 0, 1, 0};
 struct zone_info g_zone;
 char g_cur_filename[256], top_filename[256];
 
-void boot_money(char *moneyfile);
-void fix(char *file);
 void zone_reset(char *default_name);
-void init_unit(class unit_data *u);
 void dump_zone(char *prefix);
 long stat_mtime(char *name);
 void dil_free_template(struct diltemplate *tmpl, int copy, int dil = FALSE);
@@ -52,13 +46,16 @@ void dil_free_var(struct dilvar *var);
 void dil_free_frame(struct dilframe *frame);
 void dil_free_prg(struct dilprg *prg, int dil = FALSE);
 void write_dot(char *prefix);
+void init_lex(char *str);
+int yyparse(void);
 
-int make = 0,             /* cmp mod-times of files before compiling */
-    g_nooutput = 0,       /* suppress output */
-    g_verbose = 0,        /* be talkative */
-    g_fatal_warnings = 0; /* allow warnings */
+int g_make = 0;           /* cmp mod-times of files before compiling */
+int g_nooutput = 0;       /* suppress output */
+int g_verbose = 0;        /* be talkative */
+int g_fatal_warnings = 0; /* allow warnings */
+bool g_quiet_compile = false;
 
-char **ident_names = NULL; /* Used to check unique ident */
+char **ident_names = nullptr; /* Used to check unique ident */
 
 struct mem
 {
@@ -83,93 +80,8 @@ void ShowUsage(char *name)
     fprintf(stderr, "   -d Specifiy the location of the money file\n");
     fprintf(stderr, "   -I Search specified dir for include files.\n");
     fprintf(stderr, "   -p preprocess file only, output to stdout.\n");
+    fprintf(stderr, "   -q Quiet compile.\n");
     fprintf(stderr, "Copyright 1994 - 2001 (C) by Valhalla.\n");
-}
-
-int main(int argc, char **argv)
-{
-    int pos;
-    char moneyfile[512], *money;
-
-    mem_init();
-
-    money = getenv("VME_MONEY");
-    if (money)
-        strcpy(moneyfile, money);
-    else
-        strcpy(moneyfile, "../etc/");
-    if (argc == 1)
-    {
-        ShowUsage(argv[0]);
-        exit(1);
-    }
-
-    /*
-    * not sure why this is here anymore.
-    inc_dirs[inc_count++] = CPPI;
-    */
-
-    fprintf(stderr, "VMC %s Copyright (C) 2001 by Valhalla [%s]\n", VERSION, __DATE__);
-
-    for (pos = 1; pos < argc; pos++)
-        if (*argv[pos] == '-')
-            switch (*(argv[pos] + 1))
-            {
-                case 'I':
-                    Ipath[Ipcnt++] = argv[pos] + 2;
-                    ;
-                    break;
-                case 'm':
-                    make = 1;
-                    break;
-                case 's':
-                    g_nooutput = 1;
-                    break;
-                case 'v':
-                    g_verbose = 1;
-                    break;
-                case 'p':
-                    pponly = 1;
-                    break;
-                case 'l':
-                    g_fatal_warnings = 1;
-                    break;
-                case 'd':
-                    if (*(argv[pos] + 2))
-                        strcpy(moneyfile, argv[pos] + 2);
-                    else if (++pos < argc)
-                        strcpy(moneyfile, argv[pos]);
-                    else
-                    {
-                        slog(LOG_OFF, 0, "Full path of the money file expected.");
-                        exit(1);
-                    }
-                    break;
-
-                case '?':
-                    ShowUsage(argv[0]);
-                    exit(0);
-                case 'h':
-                    ShowUsage(argv[0]);
-                    exit(0);
-
-                default:
-                    fprintf(stderr, "Unknown option '%c'.\n", *(argv[pos] + 1));
-                    ShowUsage(argv[0]);
-                    exit(0);
-            }
-        else
-        {
-#ifndef WINDOWS
-            alarm(15 * 60); /* If not done in 5 minutes, abort */
-#endif
-            boot_money(moneyfile); /* I guess it was inevitable... /gnort */
-            fix(argv[pos]);
-        }
-
-    fprintf(stderr, "VMC Done.\n");
-
-    return 0;
 }
 
 char tmpfile1[L_tmpnam] = "";
@@ -178,10 +90,14 @@ char tmpfile2[L_tmpnam] = "";
 void dmc_exit(int n)
 {
     if (*tmpfile1)
+    {
         remove(tmpfile1);
+    }
 
     if (*tmpfile2)
+    {
         remove(tmpfile2);
+    }
 
     exit(n);
 }
@@ -190,8 +106,6 @@ void fix(char *file)
 {
     char *p, tmp[500], tmp2[500], filename_prefix[256], filename[256];
     int result;
-    void init_lex(char *str);
-    int yyparse(void);
 
     /* Examine filename */
     strcpy(filename_prefix, file);
@@ -205,24 +119,33 @@ void fix(char *file)
         }
         *p = '\0';
     }
-    if (make)
+    if (g_make)
     {
         sprintf(tmp, "%s.%s", filename_prefix, OUTPUT_WSUFFIX);
         sprintf(tmp2, "%s.%s", filename_prefix, OUTPUT_RSUFFIX);
         result = stat_mtime(file);
         if (result <= stat_mtime(tmp) && result <= stat_mtime(tmp2))
+        {
             return;
+        }
     }
     /* find filename component of path w/o .zon-suffix */
     if (!(p = strrchr(filename_prefix, '/')))
+    {
         p = filename_prefix;
+    }
     else
+    {
         ++p;
+    }
     strcpy(filename, p);
     strcpy(g_cur_filename, file);
     strcpy(top_filename, file);
     /* read & write */
-    fprintf(stderr, "Compiling '%s'\n", g_cur_filename);
+    if (!g_quiet_compile)
+    {
+        fprintf(stderr, "Compiling '%s'\n", g_cur_filename);
+    }
     zone_reset(filename);
     if (pp_main(file) > 0)
     {
@@ -248,50 +171,58 @@ void fix(char *file)
     else if (g_errcon)
     {
         if (g_fatal_warnings)
+        {
             fprintf(stderr, "Warnings have been treated as fatal errors.\n");
+        }
 
         fprintf(stderr, "Compilation aborted.\n");
         exit(1);
     }
     else
+    {
         dump_zone(filename_prefix);
+    }
 }
 
 void zone_reset(char *default_name)
 {
     mem_reset();
-    g_zone.z_rooms = 0;
-    g_zone.z_mobiles = 0;
-    g_zone.z_objects = 0;
-    g_zone.z_table = 0;
+    g_zone.z_rooms = nullptr;
+    g_zone.z_mobiles = nullptr;
+    g_zone.z_objects = nullptr;
+    g_zone.z_table = nullptr;
     g_zone.z_zone.name = default_name;
     g_zone.z_zone.lifespan = 60;
     g_zone.z_zone.reset_mode = 0;
-    g_zone.z_zone.creators = 0;
-    g_zone.z_zone.title = 0;
-    g_zone.z_zone.notes = 0;
-    g_zone.z_zone.help = 0;
+    g_zone.z_zone.creators = nullptr;
+    g_zone.z_zone.title = nullptr;
+    g_zone.z_zone.notes = nullptr;
+    g_zone.z_zone.help = nullptr;
     g_zone.z_zone.weather = 1000;
-    g_zone.z_tmpl = NULL;
+    g_zone.z_tmpl = nullptr;
 }
 
 void mem_init()
 {
     int i;
 
-    ident_names = NULL;
+    ident_names = nullptr;
     g_tmplnames = create_namelist();
     CREATE(mm.bufs[0], char, MEMBLOCK);
     mm.buf = 0;
     for (i = 1; i <= BUFS; i++)
-        mm.bufs[i] = 0;
+    {
+        mm.bufs[i] = nullptr;
+    }
     mm.free = 0;
 }
 
 void mem_reset()
 {
     if (ident_names)
+    {
         free_namelist(ident_names);
+    }
 
     ident_names = create_namelist();
 
@@ -352,8 +283,8 @@ class room_direction_data *mcreate_exit(void)
 
     //   rslt->open_name = NULL;
     rslt->exit_info = 0;
-    rslt->key = 0;
-    rslt->to_room = 0;
+    rslt->key = nullptr;
+    rslt->to_room = nullptr;
     return rslt;
 }
 
@@ -362,7 +293,7 @@ struct unit_affected_type *mcreate_affect(void)
     struct unit_affected_type *rs;
 
     MCREATE(rs, struct unit_affected_type, 1);
-    rs->next = 0;
+    rs->next = nullptr;
     rs->id = 0;
     rs->duration = 0;
     rs->data[0] = rs->data[1] = rs->data[2] = 0;
@@ -384,7 +315,9 @@ void write_resetcom(FILE *fl, struct reset_command *c)
         fwrite(t, 1, strlen(t) + 1, fl);
     }
     else
+    {
         fwrite(nul, 1, 2, fl);
+    }
     if (c->ref2)
     {
         t = c->ref2;
@@ -393,7 +326,9 @@ void write_resetcom(FILE *fl, struct reset_command *c)
         fwrite(t, 1, strlen(t) + 1, fl);
     }
     else
+    {
         fwrite(nul, 1, 2, fl);
+    }
     fwrite(&c->num1, sizeof(c->num1), 1, fl);
     fwrite(&c->num2, sizeof(c->num2), 1, fl);
     fwrite(&c->num3, sizeof(c->num3), 1, fl);
@@ -426,7 +361,6 @@ void dump_zone(char *prefix)
     int no_rooms = 0;
     struct diltemplate *tmpl, *ut;
     ubit32 dummy;
-    void dmc_error(int fatal, const char *fmt, ...);
 
     /* Quinn, I do this to get all the sematic errors and info */
     /* appear when nooutput = TRUE - it didn't before!         */
@@ -450,7 +384,9 @@ void dump_zone(char *prefix)
     for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
+        {
             no_rooms++;
+        }
         check_unique_ident(u);
         process_unit(u);
     }
@@ -483,7 +419,9 @@ void dump_zone(char *prefix)
     }
 
     if (g_nooutput)
+    {
         return;
+    }
     sprintf(filename, "%s.%s", prefix, OUTPUT_WSUFFIX);
     if (!(fl = fopen(filename, "w")))
     {
@@ -500,14 +438,22 @@ void dump_zone(char *prefix)
     fwrite(&g_zone.z_zone.weather, sizeof(int), 1, fl);
     /* More data inserted here */
     if (g_zone.z_zone.notes)
+    {
         fwrite(g_zone.z_zone.notes, sizeof(char), strlen(g_zone.z_zone.notes) + 1, fl);
+    }
     else
+    {
         fwrite("", sizeof(char), 1, fl);
+    }
 
     if (g_zone.z_zone.help)
+    {
         fwrite(g_zone.z_zone.help, sizeof(char), strlen(g_zone.z_zone.help) + 1, fl);
+    }
     else
+    {
         fwrite("No help for this zone.", sizeof(char), 23, fl);
+    }
     if (g_zone.z_zone.creators)
     {
         // MS2020 for (creators = zone.z_zone.creators; (ubit32)*creators; creators++)
@@ -523,16 +469,22 @@ void dump_zone(char *prefix)
         fwrite(g_zone.z_zone.title, sizeof(char), strlen(g_zone.z_zone.title) + 1, fl);
     }
     else
+    {
         fwrite("", sizeof(char), 1, fl);
+    }
 
     /* write DIL templates */
     for (tmpl = g_zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
+    {
         write_diltemplate(fl, tmpl);
+    }
 
     /* end of DIL templates marker */
     dummy = 0;
     if (fwrite(&dummy, sizeof(dummy), 1, fl) != 1)
+    {
         error(HERE, "Failed to fwrite() end of DIL templates");
+    }
 
     write_dot(prefix);
     for (u = g_zone.z_rooms; u; u = u->next)
@@ -549,7 +501,9 @@ void dump_zone(char *prefix)
     }
 
     for (u = g_zone.z_objects; u; u = u->next)
+    {
         write_unit(fl, u, UNIT_IDENT(u));
+    }
 
     u = g_zone.z_objects;
     while (u)
@@ -560,7 +514,9 @@ void dump_zone(char *prefix)
     }
 
     for (u = g_zone.z_mobiles; u; u = u->next)
+    {
         write_unit(fl, u, UNIT_IDENT(u));
+    }
 
     u = g_zone.z_mobiles;
     while (u)
@@ -591,7 +547,9 @@ void dump_zone(char *prefix)
     fwrite(&g_zone.z_zone.reset_mode, sizeof(unsigned char), 1, fl);
 
     for (c = g_zone.z_table; c; c = c->next)
+    {
         write_resetcom(fl, c);
+    }
 
     fwrite("VMC", sizeof(char), 3, fl);
     fclose(fl);
@@ -603,7 +561,9 @@ long stat_mtime(char *name)
     struct stat buf;
 
     if (stat(name, &buf) < 0)
+    {
         return 0;
+    }
     return buf.st_mtime;
 }
 
@@ -621,7 +581,9 @@ void dil_free_prg(struct dilprg *prg, int dil)
     tmpl = prg->frame[0].tmpl;
 
     for (frm = prg->frame; frm <= (prg->fp); frm++)
+    {
         dil_free_frame(frm);
+    }
     if (!dil)
         FREE(prg->frame);
 
@@ -638,7 +600,7 @@ void dil_free_var(struct dilvar *v)
             if (v->val.string)
             {
                 FREE(v->val.string);
-                v->val.string = NULL;
+                v->val.string = nullptr;
             }
             break;
 
@@ -646,7 +608,7 @@ void dil_free_var(struct dilvar *v)
             if (v->val.namelist)
             {
                 delete v->val.namelist;
-                v->val.namelist = NULL;
+                v->val.namelist = nullptr;
             }
             break;
 
@@ -655,7 +617,7 @@ void dil_free_var(struct dilvar *v)
             if (v->val.intlist)
             {
                 delete v->val.intlist;
-                v->val.intlist = NULL;
+                v->val.intlist = nullptr;
             }
             break;
     }
@@ -667,26 +629,28 @@ void dil_free_frame(struct dilframe *frame)
 
     /* free variables */
     for (j = 0; j < frame->tmpl->varc; j++)
+    {
         dil_free_var(&frame->vars[j]);
+    }
 
     if (frame->vars)
     {
         FREE(frame->vars);
-        frame->vars = NULL;
+        frame->vars = nullptr;
     }
 
     /* discard secures */
     if (frame->secure)
     {
         FREE(frame->secure);
-        frame->secure = NULL;
+        frame->secure = nullptr;
     }
 
     /* discard intr */
     if (frame->intr)
     {
         FREE(frame->intr);
-        frame->intr = NULL;
+        frame->intr = nullptr;
     }
 }
 
@@ -722,8 +686,10 @@ void dil_free_template(struct diltemplate *tmpl, int copy, int dil)
             if (tmpl->xrefs[i].name)
                 FREE(tmpl->xrefs[i].name);
             if (!dil)
+            {
                 if (tmpl->xrefs[i].argt)
                     FREE(tmpl->xrefs[i].argt);
+            }
         }
 
         if (tmpl->xrefs)
@@ -738,17 +704,23 @@ void graph_sc(char *prefix)
     class unit_data *u;
     int x;
     for (x = 0, u = g_zone.z_rooms; u; u = u->next, x++)
+    {
         if (IS_ROOM(u))
+        {
             ROOM_NUM(u) = x;
+        }
+    }
 
     typedef boost::adjacency_list<> ZoneGraph;
 
     ZoneGraph G(x);
     for (u = g_zone.z_rooms; u; u = u->next)
+    {
         if (IS_ROOM(u))
         {
             add_edge(ROOM_NUM(u), 0, G);
         }
+    }
 }
 
 void write_dot(char *prefix)
@@ -771,14 +743,17 @@ void write_dot(char *prefix)
     for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
+        {
             dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" "
                   << "[label=\"" << UNIT_IDENT(u) << "\"];" << std::endl;
+        }
     }
 
     dotfl << std::endl << "/* Room Interconnects */" << std::endl;
     for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
+        {
             for (int i = 0; i < MAX_EXIT; i++)
             {
                 if (ROOM_EXIT(u, i))
@@ -805,6 +780,7 @@ void write_dot(char *prefix)
                     }
                 }
             }
+        }
     }
     dotfl << "}" << std::endl;
     dotfl << std::endl << "/*  Zone Interconnect Points */" << std::endl << std::endl;

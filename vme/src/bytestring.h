@@ -4,9 +4,7 @@
  $Date: 2001/04/29 03:46:05 $
  $Revision: 2.1 $
  */
-
-#ifndef _MUD_BYTESTRING_H
-#define _MUD_BYTESTRING_H
+#pragma once
 
 #include "essential.h"
 
@@ -65,7 +63,7 @@ public:
     int Skip16(void);
     int Skip32(void);
     int SkipFloat(void);
-    int SkipString(char **ppStr = NULL);
+    int SkipString(char **ppStr = nullptr);
     int SkipNames(void);
     int SkipVals(void);
 
@@ -115,5 +113,3 @@ void bwrite_string(ubit8 **b, const char *str);
 void bwrite_double_string(ubit8 **b, char *str);
 void bwrite_nameblock(ubit8 **b, char **nb, int bOld);
 void bwrite_intblock(ubit8 **b, int *nb);
-
-#endif /* _MUD_BYTESTRING_H */

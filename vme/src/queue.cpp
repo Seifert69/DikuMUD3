@@ -10,11 +10,13 @@
    the linked list should be a doubly linked list for speed.
 */
 
-#include <assert.h>
-
 #include "queue.h"
+
 #include "utility.h"
-#include <string.h>
+
+#include <cassert>
+#include <cstring>
+
 cQueueElem::cQueueElem(char *pStr, int bCopy)
 {
     assert(pStr);
@@ -27,7 +29,9 @@ cQueueElem::cQueueElem(char *pStr, int bCopy)
         memcpy(pData, pStr, n);
     }
     else
+    {
         pData = (ubit8 *)pStr;
+    }
 
     nSize = n;
 }
@@ -42,18 +46,22 @@ cQueueElem::cQueueElem(ubit8 *d, ubit32 n, int bCopy)
             memcpy(pData, d, n);
         }
         else
-            pData = NULL;
+        {
+            pData = nullptr;
+        }
     }
     else
+    {
         pData = d;
+    }
 
     nSize = n;
 }
 
 cQueue::cQueue()
 {
-    pHead = NULL;
-    pTail = NULL;
+    pHead = nullptr;
+    pTail = nullptr;
     nEntries = 0;
     nBytes = 0;
 }
@@ -99,7 +107,9 @@ void cQueue::Copy(ubit8 *data, ubit32 nLen)
 void cQueue::Cut(ubit32 nLen)
 {
     if (nLen < 1)
+    {
         return;
+    }
 
     assert(nLen <= nBytes);
 
@@ -112,7 +122,9 @@ void cQueue::Cut(ubit32 nLen)
         assert(qe);
 
         if (nLen < qe->Bytes())
+        {
             Prepend(new cQueueElem(qe->Data() + nLen, qe->Bytes() - nLen));
+        }
 
         nLen -= MIN(qe->Bytes(), nLen);
         delete qe;
@@ -137,7 +149,7 @@ void cQueue::Append(class cQueueElem *pe)
         pTail = pe;
     }
 
-    pe->pNext = NULL;
+    pe->pNext = nullptr;
 
     nEntries++;
     nBytes += pe->Bytes();
@@ -152,7 +164,7 @@ void cQueue::Prepend(class cQueueElem *pe)
 {
     if (IsEmpty())
     {
-        pe->pNext = NULL;
+        pe->pNext = nullptr;
         pTail = pe;
     }
     else
@@ -181,14 +193,20 @@ class cQueueElem *cQueue::GetHead(void)
     class cQueueElem *pTmp;
 
     if (IsEmpty())
-        return NULL;
+    {
+        return nullptr;
+    }
 
     pTmp = pHead;
 
     if (nEntries == 1)
-        pHead = pTail = NULL;
+    {
+        pHead = pTail = nullptr;
+    }
     else
+    {
         pHead = pHead->pNext;
+    }
 
     nEntries--;
     nBytes -= pTmp->Bytes();
@@ -201,5 +219,7 @@ void cQueue::Flush(void)
     class cQueueElem *pTmp;
 
     while ((pTmp = GetHead()))
+    {
         delete pTmp;
+    }
 }

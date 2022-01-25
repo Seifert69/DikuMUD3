@@ -4,17 +4,16 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.7 $
  */
-#ifndef _MUD_UTILS_H
-#define _MUD_UTILS_H
+#pragma once
 
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-
-#include "structs.h"
+#include "constants.h"
 #include "essential.h"
+#include "structs.h"
+#include "weather.h"
 
-extern const sbit8 g_time_light[];
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
 
 /* ..................................................................... */
 
@@ -152,8 +151,6 @@ extern const sbit8 g_time_light[];
 #define UNIT_WEAR(unit, part) (IS_SET(UNIT_MANIPULATE(unit), part))
 
 #define UNIT_IS_OUTSIDE(unit) (!IS_SET(UNIT_FLAGS(UNIT_IN(unit)), UNIT_FL_INDOORS))
-
-extern int g_sunlight;
 
 #define UNIT_OUTSIDE_LIGHT(unit) (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0)
 
@@ -438,5 +435,3 @@ extern int g_sunlight;
 #define HMHR(to, ch) (CHAR_CAN_SEE((to), (ch)) ? B_HMHR(ch) : "them")
 
 #define UNIT_ANA(unit) ANA(*UNIT_NAME(unit))
-
-#endif /* _MUD_UTILS_H */

@@ -4,9 +4,7 @@
  $Date: 2003/12/31 01:21:59 $
  $Revision: 2.1 $
  */
-
-#ifndef _MUD_VMC_H
-#define _MUD_VMC_H
+#pragma once
 
 #include "utils.h"
 #define VERSION "2.0"
@@ -86,7 +84,8 @@ void *mmalloc(int size);
 void mem_reset(void);
 void mem_init(void);
 
-void process_unit(class unit_data *u);
+void ShowUsage(char *name);
+void fix(char *file);
 
 #define MCREATE(result, type, number) ((result) = (type *)mmalloc(sizeof(type) * number))
 
@@ -99,5 +98,6 @@ extern const char *g_error_zone_name;
 extern int g_errcon;
 extern int g_fatal_warnings;
 extern int g_verbose;
-
-#endif /* _MUD_VMC_H */
+extern int g_nooutput;
+extern int g_make;
+extern bool g_quiet_compile;

@@ -6,48 +6,29 @@
  */
 
 #ifdef _WINDOWS
-    #include "telnet.h"
-    #include "winsock2.h"
-    #include <time.h>
     #include "string.h"
+    #include "telnet.h"
     #include "winbase.h"
+    #include "winsock2.h"
+
+    #include <time.h>
 #endif
 
-#ifdef LINUX
-    #include <unistd.h>
-    #include <arpa/telnet.h>
-    #include <sys/time.h>
-    #include <netdb.h>
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <ctype.h>
-#include <assert.h>
-#include <signal.h>
-#include <thread>
-
-#define MPLEX_COMPILE 1
-#include "structs.h"
-
-#include "network.h"
-#include "protocol.h"
-#include "essential.h"
-#include "textutil.h"
-#include "ttydef.h"
-#include "db.h"
-#include "utility.h"
-#include "translate.h"
-#include "hook.h"
-#include "common.h"
-#include "queue.h"
-#include "mplex.h"
 #include "MUDConnector.h"
-#include "ClientConnector.h"
+#include "essential.h"
+#include "hook.h"
+#include "mplex.h"
+#include "network.h"
+#include "slog.h"
+#include "textutil.h"
+
+#include <netdb.h>
+
+#include <cassert>
+#include <cctype>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
 
 char g_mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;
@@ -90,6 +71,7 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -l  Name of the logfile (default: ./mplex.log).\n");
     fprintf(stderr, "  -x  Output raw HTML on telnet (nice for debugging).\n");
     fprintf(stderr, "  -w  Use Websockets.\n");
+    fprintf(stderr, "  -m  Use mud protocol (experimental).\n");
     exit(0);
 }
 
@@ -112,6 +94,8 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
     arg->g_bModeRedraw = FALSE;
     arg->g_bModeRawHTML = FALSE;
     arg->bWebSockets = FALSE;
+    arg->bMudProtocol = false;
+
     log_name = str_dup("./mplex.log");
 
     for (i = 1; i < argc; i++)
@@ -155,6 +139,10 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
                 arg->bWebSockets = TRUE;
                 break;
 
+            case 'm':
+                arg->bMudProtocol = true;
+                break;
+
             case 'l':
                 i++;
                 Assert(i < argc, "No argument to Mplex log.");
@@ -170,10 +158,10 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
                 if (!isdigit(c[0]))
                 {
                     pHostInfo = gethostbyname(c);
-                    Assert(pHostInfo != NULL, "Could not lookup address.");
+                    Assert(pHostInfo != nullptr, "Could not lookup address.");
                     pAddr = (struct in_addr *)(pHostInfo->h_addr_list[0]);
                     c = inet_ntoa(*pAddr);
-                    Assert(c != NULL, "Error in address conversion");
+                    Assert(c != nullptr, "Error in address conversion");
                 }
 
                 arg->pAddress = str_dup(c);
@@ -213,63 +201,4 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
     free(log_name);
 
     return TRUE;
-}
-
-int main(int argc, char *argv[])
-{
-    static int i = 0;
-    int fd = -1;
-
-#ifdef tPROFILE
-    extern etext();
-    monstartup((int)2, etext);
-#endif
-
-    assert(i++ == 0); /* Make sure we dont call ourselves... cheap hack! :) */
-
-    if (!ParseArg(argc, argv, &g_mplex_arg))
-        exit(0);
-
-#ifndef _WINDOWS
-    signal(SIGQUIT, bye_signal);
-    signal(SIGHUP, bye_signal);
-    signal(SIGINT, bye_signal);
-    signal(SIGTERM, bye_signal);
-    signal(SIGALRM, alarm_signal);
-#endif
-    /* MS2020 Websockets test hack */
-    translate_init();
-
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_mplex_arg.nMotherPort);
-
-    if (g_mplex_arg.bWebSockets)
-    {
-        /* MS2020 Websockets test hack */
-        void runechoserver(void);
-        std::thread t1(runechoserver);
-        t1.detach();
-    }
-    else
-    {
-        fd = OpenMother(g_mplex_arg.nMotherPort);
-        Assert(fd != -1, "NO MOTHER CONNECTION.");
-
-        if (g_MotherHook.tfd() != -1)
-            slog(LOG_ALL, 0, "Hook() in main called with a non -1 fd.");
-
-        g_CaptainHook.Hook(fd, &g_MotherHook);
-    }
-
-    /* Subtract stdout, stdin, stderr, fdmud, fdmother and 2 to be safe. */
-#if defined(_WINDOWS)
-    g_nActiveConnections = 256 - 3 - 2 - 2;
-#else
-    g_nConnectionsLeft = getdtablesize() - 3 - 2 - 2;
-#endif
-    Control();
-
-    g_MudHook.Unhook();
-    g_MotherHook.Unhook();
-
-    return 0;
 }

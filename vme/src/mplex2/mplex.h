@@ -4,14 +4,16 @@
  $Date: 2001/04/10 21:11:37 $
  $Revision: 2.0 $
  */
+#pragma once
 
-#include "network.h"
-#include <string.h>
-#include "protocol.h"
-#include "essential.h"
-#include "queue.h"
-#include "hook.h"
 #include "color.h"
+#include "essential.h"
+#include "hook.h"
+#include "network.h"
+#include "protocol.h"
+#include "queue.h"
+
+#include <cstring>
 
 struct arg_type
 {
@@ -24,6 +26,7 @@ struct arg_type
     int g_bModeTelnet;
     int g_bModeRawHTML;
     int bWebSockets;
+    int bMudProtocol;
 };
 
 #define Assert(a, b)                                                                                                                       \
@@ -39,3 +42,7 @@ struct arg_type
 extern int g_bHadAlarm;
 extern struct arg_type g_mplex_arg;
 extern char g_mudname[50];
+
+int ParseArg(int argc, char *argv[], struct arg_type *arg);
+void bye_signal(int signal);
+void alarm_signal(int sig);

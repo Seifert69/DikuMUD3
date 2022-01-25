@@ -76,13 +76,17 @@ ForEachMacros:
   - BOOST_FOREACH
 #StatementAttributeLikeMacros:
 #  - Q_EMIT
-IncludeBlocks:   Preserve
+IncludeBlocks:   Regroup
 IncludeCategories:
-  - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
+  - Regex:           '(\.h>)$'
     Priority:        2
     SortPriority:    0
 #    CaseSensitive:   false
-  - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
+  - Regex:           '^(<boost/)'
+    Priority:        4
+    SortPriority:    0
+#    CaseSensitive:   false
+  - Regex:           '^<.*>'
     Priority:        3
     SortPriority:    0
 #    CaseSensitive:   false
@@ -124,7 +128,7 @@ PenaltyReturnTypeOnItsOwnLine: 60
 #PenaltyIndentedWhitespace: 0
 PointerAlignment: Right
 ReflowComments:  true
-SortIncludes:    false
+SortIncludes:    true
 #SortJavaStaticImport: Before
 SortUsingDeclarations: true
 SpaceAfterCStyleCast: false

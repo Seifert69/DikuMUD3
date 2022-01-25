@@ -1,37 +1,25 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
+#include "hookmud.h"
+
+#include "comm.h"
+#include "db.h"
+#include "error.h"
+#include "files.h"
+#include "main_functions.h"
+#include "protocol.h"
+#include "slog.h"
+#include "structs.h"
+#include "system.h"
+#include "textutil.h"
+
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <sys/resource.h>
+#include <unistd.h>
 
-#include <netinet/tcp.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "system.h"
-#include "db.h"
-#include "utility.h"
-#include "comm.h"
-#include "textutil.h"
-#include "ban.h"
-#include "handler.h"
-#include "files.h"
-#include "protocol.h"
-#include "main.h"
-#include "account.h"
-#include "vmelimits.h"
-#include "db_file.h"
-#include "str_parse.h"
-#include "common.h"
-#include "dilrun.h"
-#include "hookmud.h"
+#include <cerrno>
+#include <cstdlib>
 
 class cMotherHook g_MotherHook;
 
@@ -75,7 +63,9 @@ void cMultiHook::Input(int nFlags)
         {
             n = Read();
             if ((n == 0) || (n == -1))
+            {
                 break;
+            }
         }
 
         if (n == -1)
@@ -111,7 +101,9 @@ void cMultiHook::Close(void)
     slog(LOG_ALL, 0, "Closing connection to multi host.");
 
     if (this->IsHooked())
+    {
         Unhook();
+    }
 
     g_Multi.nCount--;
 }
@@ -119,7 +111,7 @@ void cMultiHook::Close(void)
 // Get the data and parse the mplex protocol
 int cMultiHook::Read(void)
 {
-    class descriptor_data *d = NULL;
+    class descriptor_data *d = nullptr;
     int p;
     ubit16 id;
     ubit16 len;
@@ -129,18 +121,22 @@ int cMultiHook::Read(void)
     p = protocol_parse_incoming(this, &id, &len, &data, &text_type);
 
     if (p <= 0)
+    {
         return p;
+    }
 
     if (id != 0)
     {
         for (d = g_descriptor_list; d; d = d->next)
+        {
             if (d->id == id)
             {
                 assert(d->multi == this);
                 break;
             }
+        }
 
-        if (d == NULL)
+        if (d == nullptr)
         {
             /* This could perhaps occur if a connected player issues a command
                simultaneously with the server throwing the person out.
@@ -159,7 +155,9 @@ int cMultiHook::Read(void)
             }
         }
         else
+        {
             succ_err = 0;
+        }
     }
 
     switch (p)
@@ -179,7 +177,9 @@ int cMultiHook::Read(void)
             /* This is very nice, but it prevents descriptor_close to send
                a connection_close to the mplex'er */
             if (d)
+            {
                 descriptor_close(d, FALSE);
+            }
             if (data)
                 FREE(data);
             break;
@@ -187,7 +187,8 @@ int cMultiHook::Read(void)
         case MULTI_CONNECT_REQ_CHAR:
             d = descriptor_new(this);
             protocol_send_confirm(this, d->id);
-            send_to_descriptor(g_cServerConfig.m_pLogo, d);
+            send_to_descriptor("<mud-init/>", d);
+            send_to_descriptor(g_cServerConfig.getLogo(), d);
             send_to_descriptor("By what name do they call you? ", d);
             break;
 
@@ -239,7 +240,9 @@ void multi_clear(void)
     {
         nextd = d->next;
         if (!d->multi->IsHooked())
+        {
             descriptor_close(d);
+        }
     }
 }
 
@@ -250,7 +253,9 @@ void multi_close_all(void)
     slog(LOG_BRIEF, 0, "Closing all multi connections.");
 
     for (i = 0; i < MAX_MULTI; i++)
+    {
         g_Multi.Multi[i].Close();
+    }
 
     multi_clear();
 }
@@ -260,8 +265,12 @@ void multi_ping_all(void)
     int i;
 
     for (i = 0; i < MAX_MULTI; i++)
+    {
         if (g_Multi.Multi[i].IsHooked())
+        {
             g_Multi.Multi[i].Ping();
+        }
+    }
 }
 
 /* ----------------------------------------------------------------- */
@@ -311,7 +320,9 @@ void cMotherHook::Input(int nFlags)
         i = fcntl(t, F_SETFL, FNDELAY);
 
         if (i == -1)
+        {
             error(HERE, "Noblock");
+        }
 
         int n;
         n = setsockopt(t, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
@@ -322,8 +333,12 @@ void cMotherHook::Input(int nFlags)
         }
 
         for (i = 0; i < MAX_MULTI; i++)
+        {
             if (!g_Multi.Multi[i].IsHooked())
+            {
                 break;
+            }
+        }
 
         if ((i >= MAX_MULTI) || g_Multi.Multi[i].IsHooked())
         {
@@ -337,8 +352,8 @@ void cMotherHook::Input(int nFlags)
         g_Multi.nCount++;
 
         slog(LOG_ALL, 0, "A multi-host has connected to the game.");
-        protocol_send_exchange(&g_Multi.Multi[i], 0, g_cServerConfig.m_mudname);
-        protocol_send_color(&g_Multi.Multi[i], 0, g_cServerConfig.m_pColor);
+        protocol_send_exchange(&g_Multi.Multi[i], 0, g_cServerConfig.getMudName().data());
+        protocol_send_color(&g_Multi.Multi[i], 0, g_cServerConfig.getColorString().c_str());
     }
 }
 
@@ -357,7 +372,9 @@ void cMotherHook::Unhook(void)
 void cMotherHook::Close(void)
 {
     if (this->IsHooked())
+    {
         Unhook();
+    }
 
     multi_close_all();
 }

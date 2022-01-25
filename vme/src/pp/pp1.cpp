@@ -23,9 +23,9 @@ int pp_main(const char *filename)
 {
     //	static	char		*one_string = "1";
 
-    register int t;                         /* General holder for token	*/
-    register struct symtab *p = 0, *p1 = 0; /* Ptr into symbol table	*/
-    register struct ppdir *sp;              /* Ptr to predefined symbol	*/
+    int t;                         /* General holder for token	*/
+    struct symtab *p = 0, *p1 = 0; /* Ptr into symbol table	*/
+    struct ppdir *sp;              /* Ptr to predefined symbol	*/
     // MS2020 int			ifile;
     // MS2020 int			ofile;
     int i;

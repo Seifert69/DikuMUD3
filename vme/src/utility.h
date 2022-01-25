@@ -4,9 +4,9 @@
  $Date: 2001/04/29 03:46:07 $
  $Revision: 2.1 $
  */
+#pragma once
 
-#ifndef _MUD_UTILITY_H
-#define _MUD_UTILITY_H
+#include "essential.h"
 
 #include <string>
 
@@ -18,35 +18,27 @@
     #undef MAX
 #endif
 
-int is_in(int a, int from, int to);
-int MIN(int a, int b);
-int MAX(int a, int b);
-
-int number(int from, int to);
-int dice(int number, int size);
-
-const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
-char *sprinttype(char *buf, int type, const char *names[]);
-
 /* in game log stuff below */
-
 #define MAXLOG 10
-
-#define HERE __FILE__, __LINE__
-
-/* Use like this:  error(HERE, "Something went wrong: %s", buf); */
-void error(const char *file, int line, const char *fmt, ...);
-
-class unit_data *hometown_unit(char *str);
 
 class log_buffer
 {
 public:
-    log_buffer(void) { str[0] = 0; }
+    log_buffer() = default;
+    void setString(std::string str) { m_str = std::move(str); }
+    void setLevel(log_level level) { m_level = level; }
+    void setWizInvLevel(ubit8 level) { m_wizinv_level = level; }
 
-    char str[MAX_INPUT_LENGTH + 50];
-    enum log_level level;
-    ubit8 wizinv_level;
+    const std::string &getString() const { return m_str; }
+    log_level getLevel() const { return m_level; }
+    ubit8 getWizInvLevel() const { return m_wizinv_level; }
+
+    void clearString() { m_str.clear(); }
+
+private:
+    std::string m_str{};
+    log_level m_level{};
+    ubit8 m_wizinv_level{};
 };
 
 /* For the printing of obj_type information, as used by the identify spell and
@@ -58,6 +50,15 @@ struct obj_type_t
     ubit8 v[5];
 };
 
-char *stat_obj_data(class unit_data *u, struct obj_type_t *obj_data);
+int is_in(int a, int from, int to);
+int MIN(int a, int b);
+int MAX(int a, int b);
 
-#endif
+int number(int from, int to);
+int dice(int number, int size);
+
+const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
+char *sprinttype(char *buf, int type, const char *names[]);
+
+extern class log_buffer g_log_buf[];
+extern FILE *g_log_file_fd;

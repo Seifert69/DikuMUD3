@@ -4,9 +4,11 @@
  $Date: 2003/12/28 22:02:45 $
  $Revision: 2.3 $
  */
+#pragma once
 
-#ifndef _MUD_UNITFIND_H
-#define _MUD_UNITFIND_H
+#include "essential.h"
+
+#include <vme.h>
 
 #define UVI(i) (g_unit_vector.units[i])
 #define UVITOP (g_unit_vector.top)
@@ -17,8 +19,6 @@ struct unit_vector_data
     int size;
     int top;
 };
-
-extern struct unit_vector_data g_unit_vector;
 
 int follower_count(class unit_data *u);
 class unit_data *get_follower(class unit_data *u, int num);
@@ -39,4 +39,4 @@ class unit_data *find_symbolic(const char *zone, const char *name);
 class unit_data *find_symbolic_idx(const char *zone, const char *name, int idx);
 class unit_data *random_unit(class unit_data *ref, int sflags, int tflags);
 
-#endif
+extern struct unit_vector_data g_unit_vector;

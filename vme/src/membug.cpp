@@ -1,6 +1,6 @@
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
 
 #undef malloc
 #undef calloc
@@ -44,7 +44,9 @@ void membug_verify(void *ptr)
     char *p = (char *)ptr;
 
     if (!ptr)
+    {
         return;
+    }
 
     p -= 12;
     p += 8;
@@ -100,7 +102,9 @@ void membug_verify_class(void *ptr)
     char *p = (char *)ptr;
 
     if (!ptr)
+    {
         return;
+    }
 
     p -= 12;
     p += 8;
@@ -190,7 +194,9 @@ void membug_verify_reg(void *ptr)
     char *p = (char *)ptr;
 
     if (!ptr)
+    {
         return;
+    }
 
     p -= 12;
     p += 8;

@@ -1,15 +1,13 @@
 #define FALSE 0
 #define TRUE 1
-#include <ctype.h>
-#include <iostream>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <fcntl.h>
-
 #include <sys/stat.h>
-#include <assert.h>
+#include <unistd.h>
+
+#include <cassert>
+#include <cctype>
+#include <cstring>
+#include <iostream>
 
 int string_to_file(const char *name, const char *s)
 {
@@ -128,12 +126,18 @@ int checkcolor(char *cstr)
 int iscomment(char *b)
 {
     while (!isgraph(*b))
+    {
         b++;
+    }
 
     if ((*b == '#') || (*b == '\0') || (*b == '\r') || (*b == '\n'))
+    {
         return (1);
+    }
     else
+    {
         return (0);
+    }
 }
 
 char *convert_line(char *temp, int ln, char *save_buff)
@@ -144,7 +148,9 @@ char *convert_line(char *temp, int ln, char *save_buff)
     int i = 0;
 
     while (!isgraph(*b))
+    {
         b++;
+    }
 
     i = 0;
     while ((isalnum(*b)) || (*b == '_'))
@@ -158,13 +164,13 @@ char *convert_line(char *temp, int ln, char *save_buff)
     if (strlen(token) < 1)
     {
         std::cerr << "Erorr!  Line " << ln << ":  No keyword value given." << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     if (strlen(token) > 20)
     {
         std::cerr << "Erorr!  Line " << ln << ":  Keyword to long." << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     while (*b != '=')
@@ -172,12 +178,12 @@ char *convert_line(char *temp, int ln, char *save_buff)
         if (!isspace(*b))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Ilegal char in left hand value of '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         if ((*b == '\n') || (*b == '\r') || (*b == '\0'))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Missing '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         b++;
     }
@@ -187,12 +193,12 @@ char *convert_line(char *temp, int ln, char *save_buff)
         if ((!isspace(*b)) && (*b != '='))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Ilegal char in right hand value of '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         if ((*b == '\n') || (*b == '\r') || (*b == '\0'))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Missing right hand side of '='" << std::endl;
-            return (NULL);
+            return (nullptr);
         }
         b++;
     }
@@ -211,19 +217,21 @@ char *convert_line(char *temp, int ln, char *save_buff)
     if (*b != '"')
     {
         std::cerr << "Erorr!  Line:  " << ln << ":  Missing '\"'" << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     if (strlen(strval) < 1)
     {
         std::cerr << "Erorr!  Line " << ln << ":  No value inside '\"\"'" << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     if (checkcolor(strval))
     {
         if (save_buff)
+        {
             size = strlen(save_buff) + 1;
+        }
         size += strlen(token) + 1;
         size += strlen(strval) + 1;
         new_buff = new char[size];
@@ -241,67 +249,8 @@ char *convert_line(char *temp, int ln, char *save_buff)
     else
     {
         std::cerr << "Error!  Line " << ln << ":  " << strval << " is not a legal color value." << std::endl;
-        return (NULL);
+        return (nullptr);
     }
 
     return (new_buff);
-}
-
-int main(int argc, char **argv)
-{
-    int ln = 0, error = 0;
-    char buff[1024], *save_buff = NULL;
-    char in_name[1024];
-    FILE *in;
-    int opt, p_opt;
-
-    while ((opt = getopt(argc, argv, "cf:")) != -1)
-    {
-        switch (opt)
-        {
-            case 'c':
-                strcpy(in_name, "color.def");
-                p_opt = opt;
-                break;
-            case 'f':
-                strcpy(in_name, optarg);
-                break;
-            case ':':
-                printf("option needs a value\n");
-                exit(1);
-            case '?':
-                printf("unknown option: %c\n", optopt);
-                break;
-        }
-    }
-
-    switch (p_opt)
-    {
-        case 'c':
-            in = fopen(in_name, "r");
-            if (!in)
-            {
-                std::cerr << "In file not opened." << std::endl;
-                exit(1);
-            }
-
-            while (fgets(buff, 1024, in))
-            {
-                ln++;
-                if (!iscomment(buff))
-                    if (!(save_buff = convert_line(buff, ln, save_buff)))
-                        error++;
-            }
-
-            if (error <= 0)
-                string_to_file("color.dat", save_buff);
-            fclose(in);
-            exit(0);
-        default:
-            std::cerr << "You must supply the type of Define file." << std::endl;
-            std::cerr << "Example:" << std::endl;
-            std::cerr << "         defcomp -c  (To convert the color.def file)" << std::endl;
-            break;
-    }
-    exit(0);
 }

@@ -4,13 +4,11 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.7 $
  */
+#pragma once
 
-#ifndef _MUD_DIL_H
-#define _MUD_DIL_H
-
-#include "namelist.h"
 #include "intlist.h"
-#include "t_array.hpp"
+#include "namelist.h"
+#include "t_array.h"
 
 #define WAITCMD_MAXINST 32000
 
@@ -626,10 +624,3 @@ public:
 
     int canfree(void);
 };
-
-// extern class dilprg *dil_list;   Made local to tmpl
-// extern class dilprg *dil_list_nextdude;   Made local to tmpl
-extern int g_nDilPrg;
-extern int g_nDilVal;
-
-#endif /* _MUD_DIL_H */

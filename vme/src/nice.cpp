@@ -5,22 +5,13 @@
  $Revision: 2.2 $
  */
 
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include <sys/time.h>
-#include <signal.h>
-
-#include "structs.h"
-#include "system.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
 #include "comm.h"
-#include "textutil.h"
-#include "utility.h"
+#include "db.h"
+#include "formatter.h"
+#include "main_functions.h"
+#include "slog.h"
+
+#include <cstdio>
 
 #define REBOOT_AT 10 /* 0-23, time of optional reboot if -e lib/reboot */
 
@@ -28,23 +19,20 @@ int check_reboot(void)
 {
     long tc;
     struct tm *t_info;
-    char buf[200];
     static int count = 12;
 
-    tc = time(0);
+    tc = time(nullptr);
     t_info = localtime(&tc);
     if (count < 12)
     {
         count -= 2;
         if (count > 0)
         {
-            snprintf(buf,
-                     sizeof(buf),
-                     "ATTENTION: %s will automaticly reboot "
-                     "in %d minutes.<br/>",
-                     g_cServerConfig.m_mudname,
-                     count);
-            send_to_all(buf);
+            auto msg = diku::format_to_str("ATTENTION: %s will automaticly reboot "
+                                           "in %d minutes.<br/>",
+                                           g_cServerConfig.getMudName().c_str(),
+                                           count);
+            send_to_all(msg);
             return (1);
         }
         else
@@ -56,15 +44,13 @@ int check_reboot(void)
         }
     }
 
-    if ((t_info->tm_hour + 1) == g_cServerConfig.m_hReboot && (t_info->tm_min > 49))
+    if ((t_info->tm_hour + 1) == g_cServerConfig.getReboot() && (t_info->tm_min > 49))
     {
         count -= 2;
-        snprintf(buf,
-                 sizeof(buf),
-                 "ATTENTION: %s will automaticly reboot "
-                 "in 10 minutes.<br/>",
-                 g_cServerConfig.m_mudname);
-        send_to_all(buf);
+        auto msg = diku::format_to_str("ATTENTION: %s will automaticly reboot "
+                                       "in 10 minutes.<br/>",
+                                       g_cServerConfig.getMudName().c_str());
+        send_to_all(msg);
         return (1);
     }
     return (0);

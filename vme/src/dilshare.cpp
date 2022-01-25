@@ -5,11 +5,12 @@
  $Revision: 1.2 $
  */
 
-#include "structs.h"
-#include "namelist.h"
-#include "intlist.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "intlist.h"
+#include "namelist.h"
+#include "slog.h"
+#include "structs.h"
 #include "utils.h"
 
 int g_nDilPrg = 0;
@@ -20,8 +21,8 @@ dilval::dilval(void)
     g_nDilVal++;
 
     type = DILV_ERR;
-    val.ptr = NULL;
-    ref = NULL;
+    val.ptr = nullptr;
+    ref = nullptr;
     atyp = DILA_NONE;
 }
 
@@ -34,7 +35,7 @@ dilval::~dilval(void)
     {
         case DILV_SP:
             /* Only free if temporary allocated expression */
-            if (val.ptr == NULL)
+            if (val.ptr == nullptr)
             {
                 /*
                     slog (LOG_ALL, 0, "DIL: NULL string pointer to FREE().");
@@ -43,13 +44,13 @@ dilval::~dilval(void)
             else if (atyp == DILA_EXP)
             {
                 FREE(val.ptr);
-                val.ptr = NULL;
+                val.ptr = nullptr;
             }
             break;
 
         case DILV_SLP:
             /* Only free if temporary allocated expression */
-            if (val.ptr == NULL)
+            if (val.ptr == nullptr)
             {
                 /*
                     slog (LOG_ALL, 0, "DIL: NULL string list pointer to FREE().");
@@ -58,13 +59,13 @@ dilval::~dilval(void)
             else if (atyp == DILA_EXP)
             {
                 delete ((class cNamelist *)val.ptr);
-                val.ptr = NULL;
+                val.ptr = nullptr;
             }
             break;
 
         case DILV_ILP:
             /* Only free if temporary allocated expression */
-            if (val.ptr == NULL)
+            if (val.ptr == nullptr)
             {
                 /*
                                             slog (LOG_ALL, 0, "DIL: NULL intlist pointer to FREE().");
@@ -73,7 +74,7 @@ dilval::~dilval(void)
             else if (atyp == DILA_EXP)
             {
                 delete ((class cintlist *)val.ptr);
-                val.ptr = NULL;
+                val.ptr = nullptr;
             }
             break;
 
@@ -87,7 +88,7 @@ dilval::~dilval(void)
 
 void dilprg::link(diltemplate *tmpl)
 {
-    assert(this->next == NULL);
+    assert(this->next == nullptr);
 
     this->next = tmpl->prg_list;
     tmpl->prg_list = this;
@@ -103,7 +104,9 @@ void dilprg::unlink(void)
     if (this == tmpl->prg_list) // Are we inserted at the head?
     {
         if (tmpl->nextdude == this)
+        {
             tmpl->nextdude = this->next;
+        }
         tmpl->prg_list = this->next;
     }
     else
@@ -121,7 +124,9 @@ void dilprg::unlink(void)
                 // that would at least be a little less shaky and less likely.
                 //
                 if (tmpl->nextdude == this)
+                {
                     tmpl->nextdude = this->next;
+                }
                 tp->next = this->next;
                 ok = TRUE;
                 break;
@@ -139,18 +144,20 @@ void dilprg::unlink(void)
         }
     }
 
-    this->next = NULL;
+    this->next = nullptr;
 }
 
 dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
 {
     g_nDilPrg++;
 
-    this->next = NULL;
+    this->next = nullptr;
 
 #ifdef DMSERVER
     if (linktmpl)
+    {
         this->link(linktmpl);
+    }
 #endif
 
     this->flags = 0;   // Recall, copy, etc.
@@ -160,7 +167,7 @@ dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
     // ??? this->stack.init(10);
 
     this->owner = owner;
-    this->sarg = NULL;
+    this->sarg = nullptr;
     this->waitcmd = WAITCMD_MAXINST - 1;
 
     // Setup the base frame
@@ -168,22 +175,26 @@ dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
     this->fp = this->frame;
     this->framesz = 1;
 
-    this->frame->tmpl = NULL;
-    this->frame->vars = NULL;
+    this->frame->tmpl = nullptr;
+    this->frame->vars = nullptr;
     this->frame->intrcount = 0;
-    this->frame->intr = NULL;
+    this->frame->intr = nullptr;
     this->frame->securecount = 0;
-    this->frame->secure = NULL;
-    this->frame->pc = NULL;
+    this->frame->secure = nullptr;
+    this->frame->pc = nullptr;
     this->frame->stacklen = this->stack.length();
 }
 
 int dilprg::canfree(void)
 {
     if (this->nest <= 0)
+    {
         return TRUE;
+    }
     else
+    {
         return FALSE;
+    }
 }
 
 dilprg::~dilprg(void)
@@ -203,11 +214,12 @@ dilprg::~dilprg(void)
     assert(tmpl);
 
     for (frm = this->frame; frm <= (this->fp); frm++)
+    {
         dil_free_frame(frm);
+    }
 
     FREE(this->frame);
 
-    void dil_free_template(struct diltemplate * tmpl, int copy);
     dil_free_template(tmpl, IS_SET(this->flags, DILFL_COPY));
 
     dilval *v;
@@ -223,10 +235,10 @@ dilprg::~dilprg(void)
     this->flags = 0;
     this->varcrc = 0;
     this->corecrc = 0;
-    this->next = 0;
+    this->next = nullptr;
     this->framesz = 0;
-    this->owner = NULL;
-    this->sarg = NULL;
-    this->fp = NULL;
+    this->owner = nullptr;
+    this->sarg = nullptr;
+    this->fp = nullptr;
     this->waitcmd = WAITCMD_DESTROYED;
 }

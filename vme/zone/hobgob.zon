@@ -5163,7 +5163,7 @@ extra {"$identify"}
 "This cloak once belonged to a master of hiding. It allows you to move
 about undetected  and gives you extra strength and dex."
 flags {UNIT_FL_MAGIC}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 6
 cost 1 IRON_PIECE
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
@@ -5193,7 +5193,7 @@ descr "A miners pick has been left here"
 extra {}
 "The minors pick is large  with a wooden handle and a metal head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE, 0,0)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
 "A plain old pick"
 weight 7
@@ -5564,8 +5564,8 @@ extra {}
 "The feather is obviously a flight feather from a very large
 eagle"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-SPELL_TRANSFER(SPL_SUMMONING, 3)
-MAG_TRANSFER(+2)
+SPELL_TRANSFER(SPL_SUMMONING, BONUS_GOOD_PLUS)  // Xyzzy: 3
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 dilcopy abi_restrict@function (ABIL_MAG,50,0,0,"");
 
 weight 1
@@ -5581,8 +5581,8 @@ descr "a fish is laying here"
 extra {"$identify"}
 "This makes you a sit stupider and a bit weaker."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
-BRA_TRANSFER(-10)
-STR_TRANSFER(-5)
+BRA_TRANSFER(BONUS_JUNK)  // Xyzzy: -10
+STR_TRANSFER(BONUS_TERRIBLE_MINUS)  // Xyzzy: -5
 weight 1
 end
 
@@ -6187,7 +6187,7 @@ extra {"$identify"}
 extra {"$improved identify"}
 "-5 craftmanship 0 mag longsword"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, -5, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 romflags {OBJ_NO_DUAL}
 weight 7
 cost 1 SILVER_PIECE
@@ -6200,7 +6200,7 @@ descr "A wooden spoon has been left here"
 extra {}
 "A regular wooden spoon with slime dripping from it"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, -5, 0)
+WEAPON_DEF(WPN_CLUB, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 extra {"$identify"}
 "An average weapon"
 extra {"$improved identify"}
@@ -6214,7 +6214,7 @@ names {"spear"}
 title "a Spear"
 descr "A spear has been left here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SPEAR, 0, 0)
+WEAPON_DEF(WPN_SPEAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
 "An average spear"
 weight 5
@@ -6228,7 +6228,7 @@ title "a Short Sword"
 descr "A short sword has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, 0, 0)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
 "An average sword"
 
@@ -6242,7 +6242,7 @@ title "a Razor sharp shard of rock"
 descr "A razor sharp of rock has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, 0, 0)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 extra{}
 "The rock shard looks like it could do some real damage. "
@@ -6257,7 +6257,7 @@ extra {}
 closely you see they are in fact a very deep blue, reminding you of the
 darkest night sky."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
 "Average leggings"
 weight 4
@@ -6271,7 +6271,7 @@ descr "A pair of Hobgoblin leggings has been left here."
 extra {}
 "A pair of blood red leggings"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
 "Average leggings"
 weight 6
@@ -6285,7 +6285,7 @@ descr "A pair of Hobgoblin boots been left here."
 extra {}
 "A blood red boots"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
 "Average boots"
 weight 4
@@ -6299,7 +6299,7 @@ descr "A Hobgoblin breastplate has been left here."
 extra {}
 "A blood red breast plate"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 extra {"$identify"}
 "Average breastplate"
@@ -6316,7 +6316,7 @@ extra {}
 extra {"$identify"}
 "Average sleeves"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 rent 16 IRON_PIECE
 dilcopy abi_restrict@function (ABIL_STR,12,0,0,"");
@@ -6333,7 +6333,7 @@ extra {}
 extra {"$identify"}
 "Average leggings"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 1 SILVER_PIECE
 end
@@ -6345,14 +6345,14 @@ title "a pair of Tri Boots"
 descr "A pair of tri boots has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0, 1)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE_PLUS)  // Xyzzy: 0,1
 weight 7
 extra {"$identify"}
 "These boots seem very quiet."
 extra {"$improved identify"}
 "These boots add a little to your sneak skill, if you have any skill
 in that to begin with, that is."
-SKILL_TRANSFER(SKI_SNEAK,3)
+SKILL_TRANSFER(SKI_SNEAK, BONUS_GOOD_PLUS)  // Xyzzy: 3
 cost 5 COPPER_PIECE
 end
 
@@ -6362,9 +6362,9 @@ title "a pair of Tri Leggings"
 descr "A pair of tri leggings has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(1, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
 dilcopy abi_restrict@function (ABIL_STR,30,0,0,"");
-SKILL_TRANSFER(SKI_VENTRILOQUATE,3)
+SKILL_TRANSFER(SKI_VENTRILOQUATE, BONUS_GOOD_PLUS)  // Xyzzy: 3
 weight 8
 extra {"$identify"}
 "Gives you a bonus to ventriloquate"
@@ -6384,9 +6384,9 @@ title "a Tri Breastplate"
 descr "A tri breast plate has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(1, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
 dilcopy abi_restrict@function (ABIL_STR,30,0,0,"");
-SKILL_TRANSFER(SKI_TURN_UNDEAD,1)
+SKILL_TRANSFER(SKI_TURN_UNDEAD, BONUS_AVERAGE_PLUS)  // Xyzzy: 1
 weight 10
 extra {"$identify"}
 "Gives you a bonus to turn undead"
@@ -6404,9 +6404,9 @@ title "a pair of Tri Sleeves"
 descr "A pair of tri sleeves has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_HRD_LEATHER(0, 1)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE_PLUS)  // Xyzzy: 0,1
 dilcopy abi_restrict@function (ABIL_STR,30,0,0,"");
-STR_TRANSFER(+1)
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 extra {"$identify"}
 "Gives you a feeling of strength"
 extra {"$improved identify"}
@@ -6425,9 +6425,9 @@ title "a Tri Helmet"
 descr "A tri helmet has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,30,0,0,"");
-BRA_TRANSFER(+1)
+BRA_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 weight 9
 cost 1 COPPER_PIECE
 rent 57 IRON_PIECE
@@ -6447,7 +6447,7 @@ descr "A pair of blood leggings has been left here."
 extra {}
 "A pair of blood red leggings."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 82 COPPER_PIECE
 end
@@ -6459,7 +6459,7 @@ descr "A pair of blood boots been left here."
 extra {}
 "A blood red leather boots"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 cost 1 COPPER_PIECE
 end
@@ -6471,7 +6471,7 @@ descr "A blood breast plate has been left here."
 extra {}
 "A blood red leather breast plate"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 3
 cost 2 COPPER_PIECE
 end
@@ -6485,7 +6485,7 @@ extra {}
 "A pair of blood red leather sleeves"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 3
 cost 2 COPPER_PIECE
 end
@@ -6497,7 +6497,7 @@ descr "A blood helmet has been left here."
 extra {}
 "A blood red leather helmet."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 8 COPPER_PIECE
 end
@@ -6509,7 +6509,7 @@ descr "A pair of murky leggings has been left here."
 extra {}
 "A pair of murky leggings"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 1 SILVER_PIECE
 extra {"$identify"}
@@ -6523,7 +6523,7 @@ descr "A pair of murky boots been left here."
 extra {}
 "A blood murky boots"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 extra {"$identify"}
 "Average armor"
@@ -6537,7 +6537,7 @@ descr "A murky breastplate has been left here."
 extra {}
 "A murky breastplate"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 extra {"$identify"}
 "Average armor"
@@ -6553,7 +6553,7 @@ extra {}
 extra {"$identify"}
 "Average armor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 6
 cost 1 SILVER_PIECE
 end
@@ -6567,7 +6567,7 @@ extra {}
 extra {"$identify"}
 "Average armor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 cost 1 SILVER_PIECE
 end
@@ -6582,7 +6582,7 @@ extra {"$identify"}
 "Below average armor"
 manipulate {MANIPULATE_TAKE,
 MANIPULATE_WEAR_BODY}
-ARMOUR_CLOTHES(-1,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -1,0
 weight 1
 cost 1 IRON_PIECE
 end

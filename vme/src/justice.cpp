@@ -5,37 +5,33 @@
  $Revision: 2.7 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
+#include "justice.h"
+
+#include "affect.h"
+#include "comm.h"
+#include "common.h"
+#include "db.h"
+#include "dilrun.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "money.h"
+#include "slog.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+#include "vmelimits.h"
+
+#include <cstring>
+#include <ctime>
 #include <string>
 
-#include "structs.h"
-#include "utils.h"
-#include "handler.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "db.h"
-#include "comm.h"
-#include "justice.h"
-#include "skills.h"
-#include "affect.h"
-#include "utility.h"
-#include "money.h"
-#include "files.h"
-#include "common.h"
-#include "movement.h"
-#include "fight.h"
-#include "dilrun.h"
-
-static int crime_serial_no = time(0);
+static int crime_serial_no = time(nullptr);
 
 int new_crime_serial_no(void)
 {
     int n;
 
-    n = time(0);
+    n = time(nullptr);
 
     if (n > crime_serial_no)
     {
@@ -53,13 +49,19 @@ int new_crime_serial_no(void)
 void offend_legal_state(class unit_data *ch, class unit_data *victim)
 {
     if (!IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+    {
         if (!CHAR_COMBAT(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET))
+        {
             SET_BIT(CHAR_FLAGS(victim), CHAR_SELF_DEFENCE);
+        }
+    }
 
     /* Test for LEGAL_TARGET bit */
     if (IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
         !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+    {
         SET_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET);
+    }
 }
 
 // MS2020: Have the NPC walk to the designated room
@@ -124,7 +126,7 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 
     if (tmpl)
     {
-        prg = dil_copy_template(tmpl, criminal, NULL);
+        prg = dil_copy_template(tmpl, criminal, nullptr);
 
         if (prg)
         {
@@ -155,13 +157,13 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     class dilprg *prg2;
     class dilprg *prg3;
 
-    if (criminal == NULL)
+    if (criminal == nullptr)
     {
         slog(LOG_ALL, 0, "log_crime() NULL criminal");
         return;
     }
 
-    if (victim == NULL)
+    if (victim == nullptr)
     {
         slog(LOG_ALL, 0, "log_crime() NULL victim");
         return;
@@ -175,11 +177,15 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
 
     /* When victim is legal target you can't get accused from it. */
     if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
+    {
         return;
+    }
 
     // It's OK to kill NPCs that are not "protected"
     if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+    {
         return;
+    }
 
     // First let's deal with registering the crime the criminal committed
     // add_crime(criminal, victim, crime_type);
@@ -188,7 +194,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     tmpl = find_dil_template("set_witness@justice");
     if (tmpl)
     {
-        prg = dil_copy_template(tmpl, victim, NULL);
+        prg = dil_copy_template(tmpl, victim, nullptr);
 
         if (prg)
         {
@@ -216,7 +222,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
             tmpl = find_dil_template("set_witness@justice");
             if (tmpl)
             {
-                prg2 = dil_copy_template(tmpl, UVI(i), NULL);
+                prg2 = dil_copy_template(tmpl, UVI(i), nullptr);
 
                 if (prg2)
                 {
@@ -247,7 +253,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
                 if (CHAR_CAN_SEE(UVI(i), UVI(j)))
                 {
                     tmpl = find_dil_template("set_witness@justice");
-                    prg3 = dil_copy_template(tmpl, UVI(i), NULL);
+                    prg3 = dil_copy_template(tmpl, UVI(i), nullptr);
 
                     if (prg3)
                     {
@@ -1065,15 +1071,15 @@ void call_guards(class unit_data *guard)
 
 int reward_give(struct spec_arg *sarg)
 {
-    void gain_exp(class unit_data * ch, int gain);
-
     class unit_data *u;
     class unit_affected_type *paf;
     std::string buf;
     currency_t cur;
 
     if (!is_command(sarg->cmd, "give"))
+    {
         return SFR_SHARE;
+    }
 
     u = UNIT_CONTAINS(sarg->owner);
 
@@ -1081,10 +1087,12 @@ int reward_give(struct spec_arg *sarg)
     buf = buf + (char *)sarg->arg;
     command_interpreter(sarg->activator, (const char *)buf.c_str());
 
-    if (UNIT_CONTAINS(sarg->owner) == u) /* Was it given nothing? */
+    if (UNIT_CONTAINS(sarg->owner) == u)
+    { /* Was it given nothing? */
         return SFR_BLOCK;
+    }
 
-    if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == NULL)
+    if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == nullptr)
     {
         act("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;
@@ -1095,7 +1103,9 @@ int reward_give(struct spec_arg *sarg)
     cur = local_currency(sarg->owner);
 
     if (IS_PC(sarg->activator))
+    {
         gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
+    }
 
     money_to_unit(sarg->activator, paf->data[1], cur);
 

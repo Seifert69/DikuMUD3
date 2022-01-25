@@ -14611,7 +14611,7 @@ extra {}
 "Simply an enormous leaf, its purpose is to serve as a shield for
 embattled adventurers. While the nature of the shield may lead one to
 consider the quality to be lacking, appearances are often deceiving."
-SHIELD_DEF(SHIELD_LARGE, 0, 0)
+SHIELD_DEF(SHIELD_LARGE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy blowaway@function(600, "$1n shrinks back into a normal leaf.");
 weight 2
 end
@@ -14689,7 +14689,7 @@ names {"dagger of ice","ice dagger","ice thorn","dagger","thorn","ice"}
 title "a dagger of ice"
 descr "An icicle shaped remarkably like a dagger lies here, melting."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 0, 0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 1 IRON_PIECE
 extra {}

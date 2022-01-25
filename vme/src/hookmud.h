@@ -1,5 +1,4 @@
-#ifndef _MUD_HOOKMUD_H
-#define _MUD_HOOKMUD_H
+#pragma once
 
 #include "hook.h"
 
@@ -39,9 +38,9 @@ public:
     void Unhook(void);
 };
 
-extern class cMotherHook g_MotherHook;
-
 void multi_close_all(void);
 void init_mother(int nPort);
+void multi_clear(void);
+void multi_ping_all(void);
 
-#endif
+extern class cMotherHook g_MotherHook;

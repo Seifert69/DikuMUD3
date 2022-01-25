@@ -3387,7 +3387,7 @@ extra {"$identify"}
 "The rabbit foot will help you flee from combat more easily."
 extra {"$improved identify"}
 "<pre>Flee:            +10%<br/></pre>"
-SKILL_TRANSFER(SKI_FLEE, 10)
+SKILL_TRANSFER(SKI_FLEE, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
                            lumber_axe
@@ -3397,7 +3397,7 @@ title "a lumber axe"
 descr "A heavy lumber axe lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Iron 100% + Good craftmanship 10% = 110% */
-WEAPON_DEF(WPN_BATTLE_AXE, 1, 1)
+WEAPON_DEF(WPN_BATTLE_AXE, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,1
 weight 10
 cost 15 SILVER_PIECE
 extra {}
@@ -3411,7 +3411,7 @@ title "a rolling pin"
 descr "A heavy wooden rolling pin is left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Wood/Metal 50%, Avg craftmanship 0% = 50% */
-WEAPON_DEF(WPN_CLUB, -1, -1)
+WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -1,-1
 weight 6
 cost 2 COPPER_PIECE
 extra {}
@@ -3427,7 +3427,7 @@ title "a chequered shirt"
 descr "A chequered shirt lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 
-ARMOUR_CLOTHES(-5, 0) /* Good clothes 15%, 5% mary craft */
+ARMOUR_CLOTHES(BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 2
 cost 10 COPPER_PIECE
 extra {}
@@ -3441,7 +3441,7 @@ title "a pair of leather boots"
 descr "A pair of leather boots lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 
-ARMOUR_HRD_LEATHER(-4, 0) /* 70% Hard leather, 5% mary craft */
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -4,0
 weight 4
 cost 9 COPPER_PIECE
 extra {}
@@ -3503,7 +3503,7 @@ descr "Mary's very best pot has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER, MANIPULATE_WEAR_HEAD,
             MANIPULATE_HOLD}
 CONTAINER_DEF(50)
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 flags {UNIT_FL_NOSAVE}
 weight 40
@@ -3630,7 +3630,7 @@ names {"scimitar"}
 title "a scimitar"
 descr "A crude scimitar lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SCIMITAR, -5, 0)
+WEAPON_DEF(WPN_SCIMITAR, BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 2 SILVER_PIECE
 extra {}
@@ -3674,7 +3674,7 @@ title "a long, grey branch"
 descr "A long, grey branch rests heavily on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Fresh wood 55%, -20% Craftmanship = 10%, heavy = 43 str */
-WEAPON_DEF(WPN_BATTLE_CLUB, -10, 0)
+WEAPON_DEF(WPN_BATTLE_CLUB, BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -10,0
 weight 30
 cost 3 IRON_PIECE
 extra {}
@@ -3778,7 +3778,7 @@ title "a large round shield"
 descr "A large round shield has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 /* Wood && Iron, Craftmanship good 10% */
-SHIELD_DEF(SHIELD_LARGE, 0, 0)
+SHIELD_DEF(SHIELD_LARGE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 15
 cost 8 SILVER_PIECE
 extra {}
@@ -3793,7 +3793,7 @@ descr "An iron crown rests on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /* Iron 100%, Good craft = 10%, ostrength 20 */
 flags {UNIT_FL_MAGIC}
-ARMOUR_HRD_LEATHER(10, 5)
+ARMOUR_HRD_LEATHER(BONUS_EXCELLENT_PLUS, BONUS_GOOD)  // Xyzzy: 10,5
 weight 10
 cost 12 SILVER_PIECE
 

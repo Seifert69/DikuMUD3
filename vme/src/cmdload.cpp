@@ -5,30 +5,39 @@
  $Revision: 2.9 $
 */
 
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "cmdload.h"
-#include "structs.h"
-#include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "db.h"
-#include "utils.h"
-#include "vmelimits.h"
-#include "skills.h"
-#include "trie.h"
-#include "utility.h"
-#include "files.h"
-#include "common.h"
-#include "constants.h"
-#include "unitfind.h"
-#include "dilrun.h"
 
-struct trie_type *cmd_trie = NULL;
-struct command_info *g_cmdlist = NULL;
+#include "account.h"
+#include "act_change.h"
+#include "act_color.h"
+#include "act_info.h"
+#include "act_movement.h"
+#include "act_offensive.h"
+#include "act_other.h"
+#include "act_skills.h"
+#include "act_wizard.h"
+#include "act_wstat.h"
+#include "ban.h"
+#include "db.h"
+#include "experience.h"
+#include "files.h"
+#include "formatter.h"
+#include "interpreter.h"
+#include "modify.h"
+#include "reception.h"
+#include "skills.h"
+#include "slog.h"
+#include "spell_parser.h"
+#include "textutil.h"
+#include "trie.h"
+#include "vmelimits.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+struct trie_type *cmd_trie = nullptr;
+struct command_info *g_cmdlist = nullptr;
 struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_move, 0, 0},
                                    {"ne", do_move, 0, 0},           {"northwest", do_move, 0, 0},
                                    {"nw", do_move, 0, 0},           {"east", do_move, 0, 0},
@@ -60,38 +69,28 @@ struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast"
                                    {"users", do_users, 0, 0},       {"where", do_where, 0, 0},
 
                                    {"wizlock", do_wizlock, 0, 0},   {"wstat", do_wstat, 0, 0},
-                                   {"wedit", do_wedit, 0, 0},       {"", NULL, 0, 0}};
+                                   {"wedit", do_wedit, 0, 0},       {"", nullptr, 0, 0}};
 
 void skill_dump(void)
 {
-    std::string str;
-    char buf[MAX_STRING_LENGTH];
-
-    bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
-
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
 
         for (int i = 0; i < SKI_TREE_MAX; i++)
         {
-            if (g_SkiColl.text[i] == NULL)
+            if (g_SkiColl.text[i] == nullptr)
+            {
                 continue;
+            }
 
-            str = "";
+            std::string str = diku::format_to_str("%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
 
-            snprintf(buf, sizeof(buf), "%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
-            str.append(buf);
-
-            snprintf(buf,
-                     sizeof(buf),
-                     ".profession %s%s = %s%d\n",
-                     g_professions[j],
-                     spc(12 - strlen(g_professions[j])),
-                     (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                     g_SkiColl.prof_table[i].profession_cost[j]);
-            str.append(buf);
-
+            str += diku::format_to_str(".profession %s%s = %s%d\n",
+                                       g_professions[j],
+                                       spc(12 - strlen(g_professions[j])),
+                                       (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                                       g_SkiColl.prof_table[i].profession_cost[j]);
             /*if (g_SkiColl.prof_table[i].min_level > 0)
             {
                 s printf(buf, "restrict level          = %d\n", g_SkiColl.prof_table[i].min_level);
@@ -111,7 +110,9 @@ void skill_dump(void)
 
         std::sort(vect.begin(), vect.end(), pairISCompare);
         for (auto it = vect.begin(); it != vect.end(); ++it)
+        {
             printf("%s", it->second.c_str());
+        }
     }
 
     exit(0);
@@ -121,15 +122,19 @@ void cmd_base_load(void)
 {
     int i;
 
-    cmd_trie = 0;
+    cmd_trie = nullptr;
 
     for (i = 0; *cmdload[i].cmd_str; i++)
+    {
         cmd_trie = add_trienode(cmdload[i].cmd_str, cmd_trie);
+    }
 
     qsort_triedata(cmd_trie);
 
     for (i = 0; *cmdload[i].cmd_str; i++)
+    {
         set_triedata(cmdload[i].cmd_str, cmd_trie, &cmdload[i], TRUE);
+    }
 
     command_read();
     // skill_dump();
@@ -143,11 +148,11 @@ void command_read(void)
     char pTmp[256];
     char *pCh;
     FILE *fl;
-    struct command_info *cmdptr = NULL, *lastptr = NULL;
+    struct command_info *cmdptr = nullptr, *lastptr = nullptr;
     struct cmdload_struct *intcmd;
 
-    touch_file(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS), "rb")))
+    touch_file(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS));
+    if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS).c_str(), "rb")))
     {
         slog(LOG_ALL, 0, "FATAL: Unable to open etc/ " COMMAND_DEFS);
         exit(0);
@@ -157,8 +162,10 @@ void command_read(void)
     while (!feof(fl))
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
-        if (mstmp == NULL)
+        if (mstmp == nullptr)
+        {
             continue;
+        }
 
         str_remspc(pTmp);
 
@@ -172,8 +179,10 @@ void command_read(void)
         str_lower(pTmp);
         strip_trailing_blanks(pTmp);
 
-        if (pCh == NULL || str_is_empty(pCh))
+        if (pCh == nullptr || str_is_empty(pCh))
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "command", 5) == 0)
         {
@@ -181,44 +190,46 @@ void command_read(void)
             {
                 if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
                 {
-                    if (g_cmdlist == NULL)
+                    if (g_cmdlist == nullptr)
                     {
                         g_cmdlist = cmdptr;
-                        cmdptr->prev = NULL;
-                        cmdptr->next = NULL;
+                        cmdptr->prev = nullptr;
+                        cmdptr->next = nullptr;
                         lastptr = cmdptr;
-                        cmdptr = NULL;
+                        cmdptr = nullptr;
                     }
                     else
                     {
                         lastptr->next = cmdptr;
                         cmdptr->prev = lastptr;
-                        cmdptr->next = NULL;
+                        cmdptr->next = nullptr;
                         lastptr = cmdptr;
-                        cmdptr = NULL;
+                        cmdptr = nullptr;
                     }
                 }
             }
 
             CREATE(cmdptr, struct command_info, 1);
-            cmdptr->next = NULL;
-            cmdptr->prev = NULL;
+            cmdptr->next = nullptr;
+            cmdptr->prev = nullptr;
             cmdptr->minimum_level = 0;
             cmdptr->minimum_position = POSITION_DEAD;
             cmdptr->log_level = 0;
-            cmdptr->tmpl = NULL;
-            cmdptr->cmd_fptr = NULL;
+            cmdptr->tmpl = nullptr;
+            cmdptr->cmd_fptr = nullptr;
             cmdptr->type = 0;
             cmdptr->no = 0;
             cmdptr->inttype = 0;
             cmdptr->dir = 0;
-            cmdptr->cmd_str = NULL;
+            cmdptr->cmd_str = nullptr;
             cmdptr->cmd_str = str_dup(pCh);
             ignore = FALSE;
             continue;
         }
         if (ignore)
+        {
             continue;
+        }
 
         if (strncmp(pTmp, "internal", 4) == 0)
         {
@@ -235,7 +246,7 @@ void command_read(void)
             {
                 if (cmdptr->cmd_str)
                     FREE(cmdptr->cmd_str)
-                cmdptr = NULL;
+                cmdptr = nullptr;
                 slog(LOG_ALL, 0, "COMMAND LOAD ERROR: %s not a defined internal funciton.", pCh);
                 ignore = TRUE;
             }
@@ -258,7 +269,7 @@ void command_read(void)
             if (g_SkiColl.text[idx])
             {
                 free((char *)g_SkiColl.text[idx]);
-                g_SkiColl.text[idx] = NULL;
+                g_SkiColl.text[idx] = nullptr;
             }
             g_SkiColl.text[idx] = str_dup(pCh);
             continue;
@@ -268,7 +279,9 @@ void command_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_SkiColl.tree[idx].bAutoTrain = dummy;
+            }
             continue;
         }
 
@@ -276,7 +289,9 @@ void command_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
+            {
                 g_SkiColl.tree[idx].bAutoTeacherNoAdd = dummy;
+            }
             continue;
         }
 
@@ -284,14 +299,20 @@ void command_read(void)
         {
             dummy = atoi(pCh);
             if (!is_in(dummy, -3, +3))
+            {
                 continue;
+            }
 
             int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Skills: Illegal race in: %s", pTmp);
+            }
             else
+            {
                 g_SkiColl.racial[ridx][idx] = dummy;
+            }
             continue;
         }
 
@@ -307,9 +328,13 @@ void command_read(void)
             int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
+            {
                 slog(LOG_ALL, 0, "Skills: Illegal profession %s", pTmp);
+            }
             else
+            {
                 g_SkiColl.prof_table[idx].profession_cost[ridx] = dummy;
+            }
             continue;
         }
 
@@ -331,9 +356,13 @@ void command_read(void)
                 int ridx = search_block(pTmp + 9, g_AbiColl.text, TRUE);
 
                 if (ridx == -1)
+                {
                     slog(LOG_ALL, 0, "Weapons: Illegal restrict %s", pTmp);
+                }
                 else
+                {
                     g_SkiColl.prof_table[idx].min_abil[ridx] = dummy;
+                }
             }
             continue;
         }
@@ -355,7 +384,9 @@ void command_read(void)
             {
                 dummy = atoi(pCh);
                 if (is_in(dummy, POSITION_DEAD, POSITION_STANDING))
+                {
                     cmdptr->minimum_position = dummy;
+                }
             }
             continue;
         }
@@ -397,33 +428,37 @@ void command_read(void)
                     FREE(cmdptr->tmpl);
 
                 if (!(cmdptr->tmpl = find_dil_template(pCh)))
+                {
                     slog(LOG_ALL, 0, "COMMAND LOAD WARNING: No such DIL template %s.", pCh);
+                }
             }
             continue;
         }
         if (*pTmp)
+        {
             slog(LOG_ALL, 0, "COMMAND LOAD ERROR: Unexpected text: %s", pTmp);
+        }
     }
 
     if (cmdptr)
     {
         if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
         {
-            if (g_cmdlist == NULL)
+            if (g_cmdlist == nullptr)
             {
                 g_cmdlist = cmdptr;
-                cmdptr->prev = NULL;
-                cmdptr->next = NULL;
+                cmdptr->prev = nullptr;
+                cmdptr->next = nullptr;
                 lastptr = cmdptr;
-                cmdptr = NULL;
+                cmdptr = nullptr;
             }
             else
             {
                 lastptr->next = cmdptr;
                 cmdptr->prev = lastptr;
-                cmdptr->next = NULL;
+                cmdptr->next = nullptr;
                 lastptr = cmdptr;
-                cmdptr = NULL;
+                cmdptr = nullptr;
             }
         }
     }

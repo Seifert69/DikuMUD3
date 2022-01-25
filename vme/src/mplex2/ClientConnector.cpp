@@ -6,50 +6,39 @@
  */
 
 #ifdef _WINDOWS
-    #include "telnet.h"
-    #include "winsock2.h"
-    #include <time.h>
     #include "string.h"
+    #include "telnet.h"
     #include "winbase.h"
+    #include "winsock2.h"
+
+    #include <time.h>
 #endif
 
-#ifdef LINUX
-    #include <unistd.h>
-    #include <arpa/telnet.h>
-    #include <sys/time.h>
-    #include <netdb.h>
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <ctype.h>
-#include <assert.h>
-#include <signal.h>
-#include <thread>
-
-#define MPLEX_COMPILE 1
-#include "structs.h"
-
+#include "ClientConnector.h"
+#include "MUDConnector.h"
+#include "color.h"
+#include "echo_server.h"
+#include "essential.h"
+#include "formatter.h"
+#include "hook.h"
+#include "mplex.h"
 #include "network.h"
 #include "protocol.h"
-#include "essential.h"
-#include "textutil.h"
-#include "ttydef.h"
-#include "db.h"
-#include "utility.h"
-#include "translate.h"
-#include "hook.h"
-#include "common.h"
 #include "queue.h"
+#include "slog.h"
+#include "textutil.h"
+#include "translate.h"
 
-#include "mplex.h"
-#include "ClientConnector.h"
-#include "color.h"
-#include "MUDConnector.h"
+#include <arpa/telnet.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include <cassert>
+#include <cctype>
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
+#include <thread>
 
 /*
    In Mplex main MotherHook is opened and put into CaptainHook.
@@ -73,7 +62,7 @@
 
 */
 
-class cConHook *g_connection_list = NULL;
+class cConHook *g_connection_list = nullptr;
 
 void dumbPlayLoop(cConHook *con, const char *cmd)
 {
@@ -82,25 +71,23 @@ void dumbPlayLoop(cConHook *con, const char *cmd)
 
 void cConHook::PlayLoop(const char *cmd)
 {
-    char buf[200];
     if (m_nId == 0)
     {
         if (m_nState == 0)
         {
-            sprintf(buf, "Your ID to %s was reset due to connection lost.<br/>", g_mudname);
+            auto buf = diku::format_to_str("Your ID to %s was reset due to connection lost.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
 
         if (m_nState++ < 50)
         {
-            sprintf(buf, "Waiting to receive an ID from %s.<br/>", g_mudname);
+            auto buf = diku::format_to_str("Waiting to receive an ID from %s.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
 
-        sprintf(buf, "Giving up... You should try to disconnect and try again.<br/>");
-        WriteCon(buf);
+        WriteCon("Giving up... You should try to disconnect and try again.<br/>");
         return;
     }
     else // m_nId != 0
@@ -118,11 +105,9 @@ void dumbMenuSelect(class cConHook *con, const char *cmd)
 // This is where players are when initially connecting only.
 void cConHook::MenuSelect(const char *cmd)
 {
-    char buf[400];
-
     if (!g_MudHook.IsHooked())
     {
-        sprintf(buf, "%s is unreachable right now...<br/>", g_mudname);
+        auto buf = diku::format_to_str("%s is unreachable right now...<br/>", g_mudname);
         SendCon(buf);
         test_mud_up(); // Wonder if I have multi threading issues here :o)
         return;
@@ -130,7 +115,7 @@ void cConHook::MenuSelect(const char *cmd)
 
     if (m_nId == 0)
     {
-        sprintf(buf, "Requesting an ID from %s.<br/>", g_mudname);
+        auto buf = diku::format_to_str("Requesting an ID from %s.<br/>", g_mudname);
         SendCon(buf);
         m_nState = 1; // This means we're waiting for a response
         m_pFptr = dumbPlayLoop;
@@ -138,7 +123,7 @@ void cConHook::MenuSelect(const char *cmd)
     }
     else
     {
-        sprintf(buf, "You got ID from %s...<br/>", g_mudname);
+        auto buf = diku::format_to_str("You got ID from %s...<br/>", g_mudname);
         SendCon(buf);
         m_nState = 0;
         m_pFptr = dumbPlayLoop;
@@ -152,10 +137,7 @@ void dumbMudDown(class cConHook *con, const char *cmd)
 
 void cConHook::MudDown(const char *cmd)
 {
-    void test_mud_up(void);
-
-    char buf[200];
-    sprintf(buf, "There is still no connection to %s.<br/>", g_mudname);
+    auto buf = diku::format_to_str("There is still no connection to %s.<br/>", g_mudname);
     SendCon(buf);
 
     test_mud_up(); // Wonder if I have multi threading issues here :o)
@@ -233,9 +215,13 @@ void ClearUnhooked(void)
 int cConHook::IsHooked(void)
 {
     if (this->m_pWebsServer)
+    {
         return TRUE;
+    }
     else
+    {
         return cHook::IsHooked();
+    }
 }
 
 void cConHook::Unhook(void)
@@ -246,33 +232,41 @@ void cConHook::Unhook(void)
         g_CaptainHook.Unhook(this);
     }
 
-    if (this->m_pWebsServer == 0)
+    if (this->m_pWebsServer == nullptr)
+    {
         cHook::Unhook();
+    }
 }
 
 void cConHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 {
-    int ws_send_message(wsserver * s, websocketpp::connection_hdl hdl, const char *txt);
-
     if (this->m_pWebsServer)
     {
         assert(pData[nLen] == 0);
         if (!ws_send_message(m_pWebsServer, m_pWebsHdl, (const char *)pData))
+        {
             this->Close(TRUE);
+        }
     }
     else
+    {
         cHook::Write(pData, nLen, bCopy);
+    }
 }
 
 void cConHook::Close(int bNotifyMud)
 {
     if (m_nId == 0)
+    {
         return;
+    }
 
     m_mtx.lock();
 
     if (IsHooked())
+    {
         Unhook();
+    }
 
     if (bNotifyMud && m_nId != 0 && g_MudHook.IsHooked())
     {
@@ -286,9 +280,8 @@ void cConHook::Close(int bNotifyMud)
     m_pFptr = Idle;
     m_nId = 0;
 
-    m_pWebsServer = 0;
+    m_pWebsServer = nullptr;
 
-    void remove_gmap(class cConHook * con);
     remove_gmap(this);
 
     // Still have the issue that we ought to close the
@@ -310,10 +303,14 @@ void cConHook::TransmitCommand(const char *text)
     sendText[MAX_INPUT_LENGTH - 1] = 0; // MS2020 moved up to avoid strchr bug.
 
     if ((d = strchr(sendText, '\r')))
+    {
         *d = 0;
+    }
 
     if ((d = strchr(sendText, '\n')))
+    {
         *d = 0;
+    }
 
     strip_trailing_spaces(sendText);
     // keep input short.
@@ -356,7 +353,9 @@ char cConHook::AddInputChar(ubit8 c)
             }
         }
         else
+        {
             m_nEscapeCode = 0;
+        }
     }
 
     TAIL(cp);
@@ -377,7 +376,9 @@ char cConHook::AddInputChar(ubit8 c)
     *cp = 0;
 
     if ((c < ' ') || (c == 255) || (m_sSetup.telnet && (c > 127)))
+    {
         *(cp - 1) = 0;
+    }
 
     return *(cp - 1);
 }
@@ -397,7 +398,9 @@ void cConHook::AddString(char *str)
         if (ISNEWL(*s) || (strlen(m_aInputBuf) >= MAX_INPUT_LENGTH - 4))
         {
             while (ISNEWL(*(s + 1)))
+            {
                 s++;
+            }
             *eb++ = '\n';
             *eb++ = '\r';
             m_qInput.Append(new cQueueElem(m_aInputBuf));
@@ -432,7 +435,9 @@ void cConHook::AddString(char *str)
                     }
                 }
                 else
+                {
                     *eb++ = c;
+                }
             }
         }
     }
@@ -441,7 +446,9 @@ void cConHook::AddString(char *str)
     assert(eb - echobuf < (int)sizeof(echobuf) - 1);
 
     if (m_sSetup.echo)
+    {
         Write((ubit8 *)echobuf, eb - echobuf);
+    }
 }
 
 /* On -1 'con' was destroyed */
@@ -494,11 +501,14 @@ void cConHook::Input(int nFlags)
         {
 #if defined(_WINDOWS)
             if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+            {
                 return;
-
+            }
 #else
             if ((errno == EWOULDBLOCK) || (errno == EAGAIN))
+            {
                 return;
+            }
 #endif
 
             Close(TRUE);
@@ -514,14 +524,18 @@ void cConHook::Input(int nFlags)
         {
             SequenceCompare(buf, &n);
             if (n <= 0)
+            {
                 return;
+            }
         }
 
         if (m_nFirst >= 0)
         {
             getLine(buf, &n);
             if (n <= 0)
+            {
                 return;
+            }
         }
 
         buf[n] = 0;
@@ -546,10 +560,17 @@ void cConHook::Input(int nFlags)
 /* -1 on connection closed, 0 on success */
 void cConHook::WriteCon(const char *text)
 {
-    if (text == NULL)
+    if (text == nullptr)
+    {
         return;
+    }
 
     Write((ubit8 *)text, strlen(text));
+}
+
+void cConHook::WriteCon(const std::string &text)
+{
+    WriteCon(text.c_str());
 }
 
 void cConHook::SendCon(const char *text)
@@ -557,20 +578,23 @@ void cConHook::SendCon(const char *text)
     WriteCon(ParseOutput(text));
 }
 
+void cConHook::SendCon(const std::string &text)
+{
+    SendCon(text.c_str());
+}
+
 /* ======================= TEXT FORMATTING OUTPUT ====================== */
 
-const char *mplex_getcolor(class cConHook *hook, const char *colorstr)
+std::string mplex_getcolor(class cConHook *hook, const char *colorstr)
 {
-    const char *gcolor;
+    auto gcolor = hook->color.get(colorstr);
 
-    gcolor = hook->color.get(colorstr);
-
-    if (!gcolor)
+    if (gcolor.empty())
+    {
         gcolor = g_cDefcolor.get(colorstr);
-    if (!gcolor)
-        return (NULL);
+    }
 
-    return (gcolor);
+    return gcolor;
 }
 
 char *cConHook::IndentText(const char *source, char *dest, int dest_size, int width)
@@ -578,13 +602,13 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
     const char *last = source, *current;
     char tmpbuf[MAX_STRING_LENGTH * 2];
     int i;
-    unsigned int x, crlen;
-    const char *cretbuf;
     char *newptr;
     int column = 0, cutpoint = MIN(30, width / 2);
 
     if (!(current = source))
-        return NULL;
+    {
+        return nullptr;
+    }
 
     newptr = dest;
 
@@ -599,7 +623,9 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
                 *newptr++ = *current; // copy char
 
                 if (*current == 0)
+                {
                     break;
+                }
 
                 if (*current == 'm')
                 {
@@ -630,27 +656,23 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
                     protocol_translate(this, *current, &newptr);
                     if (*current == CONTROL_COLOR_END_CHAR)
                     {
-                        cretbuf = mplex_getcolor(this, tmpbuf);
-                        if (cretbuf)
+                        auto mplex_color = mplex_getcolor(this, tmpbuf);
+                        if (mplex_color.empty() == false)
                         {
-                            x = 0;
-                            crlen = strlen(cretbuf);
-                            while (x < crlen)
+                            auto cretbuf = mplex_color.begin();
+                            while (cretbuf != mplex_color.end())
                             {
                                 if (*cretbuf == CONTROL_CHAR)
                                 {
                                     cretbuf++;
-                                    x++;
                                     protocol_translate(this, *cretbuf, &newptr);
                                     cretbuf++;
-                                    x++;
 
                                     continue;
                                 }
                                 else
                                 {
                                     cretbuf++;
-                                    x++;
                                 }
                             }
                         }
@@ -780,26 +802,34 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
             continue;
         }
 
-        if (isaspace(*current)) /* Remember last space */
+        if (isaspace(*current))
+        { /* Remember last space */
             last = current;
+        }
 
-        if (*current == '\n' || *current == '\r') /* Newlines signify new col. */
+        if (*current == '\n' || *current == '\r')
+        { /* Newlines signify new col. */
             column = 0;
+        }
 
-        if ((++column <= width)) /* MS: Added '<=' Have some space.. */
+        if ((++column <= width))
+        { /* MS: Added '<=' Have some space.. */
             *(newptr++) = *(current++);
+        }
         else
         /* Out of space, so... */
         {
             column = 0;
-            if (last == NULL || cutpoint < current - last) /* backtrack or cut */
+            if (last == nullptr || cutpoint < current - last)
+            { /* backtrack or cut */
                 last = current;
+            }
             newptr -= (current - last);
             current = ++last;
             *(newptr++) = '\n';
             *(newptr++) = '\r';
             current = skip_spaces(current); /* Skip any double spaces, etc. */
-            last = NULL;
+            last = nullptr;
         }
     }
 
@@ -837,13 +867,17 @@ void cConHook::StripHTML(char *dest, const char *src)
             p = getHTMLTag(p, aTag, sizeof(aTag));
 
             if (aTag[0] == 0)
+            {
                 continue;
+            }
 
             // We got a HTML tag
             if (strcmp(aTag, "br") == 0 || strcmp(aTag, "br/") == 0)
             {
-                if (*p == '\n' || *(p + 1) == '\n') // If the next is \n then dont add <br>
+                if (*p == '\n' || *(p + 1) == '\n')
+                { // If the next is \n then dont add <br>
                     continue;
+                }
 
                 // the <br/> tag was not followed by \n\r so add \n\r
                 *dest++ = '\n';
@@ -856,21 +890,38 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = '\r';
                 continue;
             }
+            if (strcmp(aTag, "go-ahead/") == 0)
+            {
+                *dest++ = IAC;
+                *dest++ = GA;
+                continue;
+            }
             if (strcmp(aTag, "script") == 0)
             {
                 if (strncasecmp(p, "PasswordOn()", 12) == 0)
                 {
+                    if (g_mplex_arg.bMudProtocol)
+                    {
+                        // Kyle, might be something here for MUD protocol
+                    }
+
                     Control_Echo_Off(this, &dest, 0);
                     p += 12;
                 }
                 else if (strncasecmp(p, "PasswordOff(", 12) == 0)
                 {
+                    if (g_mplex_arg.bMudProtocol)
+                    {
+                        // Kyle, might be something here for MUD protocol
+                    }
                     Control_Echo_On(this, &dest, 0);
                     p += 12;
                 }
                 t = strstr(p, "</script>");
                 if (t)
+                {
                     p = t + 9;
+                }
                 continue;
             }
             else if (strncmp(aTag, "/div", 4) == 0)
@@ -885,10 +936,58 @@ void cConHook::StripHTML(char *dest, const char *src)
                 char buf[256];
                 int l;
 
+                if (g_mplex_arg.bMudProtocol)
+                {
+                    // Kyle: if you remove these comments you'll see the full tag contents
+                    //       which is nice for debugging. Or use gdb ;)
+                    // strcpy(dest, "||"); TAIL(dest);
+                    // strcpy(dest, aTag); TAIL(dest);
+                    // strcpy(dest, "||"); TAIL(dest);
+
+                    // If the tag has 'bars' it's a health update
+                    l = getHTMLValue("bars", aTag, buf, sizeof(buf) - 1);
+
+                    if (l != 0)
+                    {
+                        strcpy(dest, "||");
+                        TAIL(dest);
+                        strcpy(dest, buf);
+                        TAIL(dest);
+                        strcpy(dest, "||");
+                        TAIL(dest);
+
+                        // KYLE: buf will have the hp,mp,ep
+                        // remove the three debug lines above, parse the string, and
+                        // output mud protocol codes
+                        //
+                        continue;
+                    }
+
+                    l = getHTMLValue("exits", aTag, buf, sizeof(buf) - 1);
+
+                    if (l != 0)
+                    {
+                        strcpy(dest, "||");
+                        TAIL(dest);
+                        strcpy(dest, buf);
+                        TAIL(dest);
+                        strcpy(dest, "||");
+                        TAIL(dest);
+
+                        // KYLE: buf will have the visible exits
+                        // remove the three debug lines above, parse the string, and
+                        // output mud protocol codes
+                        //
+                        continue;
+                    }
+                }
+
                 l = getHTMLValue("class", aTag, buf, sizeof(buf) - 1);
 
                 if (l == 0)
+                {
                     continue;
+                }
 
                 // We got a single or double color code on our hands
                 // e.g. cpg, cg bn, cpy bb, etc.
@@ -904,9 +1003,13 @@ void cConHook::StripHTML(char *dest, const char *src)
                         if (tmp[0] == 'c')
                         {
                             if (tmp[1] == 'p')
+                            {
                                 Control_ANSI_Fg(this, &dest, tmp[2], TRUE);
+                            }
                             else
+                            {
                                 Control_ANSI_Fg(this, &dest, tmp[1], FALSE);
+                            }
                         }
                         else if (tmp[0] == 'b')
                         {
@@ -957,7 +1060,9 @@ void cConHook::StripHTML(char *dest, const char *src)
                 p += 6;
             }
             else
+            {
                 *dest++ = *p++;
+            }
 
             continue;
         }
@@ -969,7 +1074,9 @@ void cConHook::StripHTML(char *dest, const char *src)
             p++;
         }
         else
+        {
             *dest++ = *p++;
+        }
     }
     *dest = 0;
 }
@@ -987,7 +1094,9 @@ char *cConHook::ParseOutput(const char *text)
     {
         size_t n = strlen(text);
         if (n < sizeof(Outbuf))
+        {
             strcpy(Outbuf, text);
+        }
         else
         {
             memcpy(Outbuf, text, sizeof(Outbuf));
@@ -1065,10 +1174,14 @@ void cConHook::PromptErase (void)
 void cConHook::PromptRedraw(const char *prompt)
 {
     if (*prompt)
+    {
         Write((ubit8 *)prompt, strlen(prompt));
+    }
 
     if (*m_aInputBuf)
+    {
         Write((ubit8 *)m_aInputBuf, strlen(m_aInputBuf));
+    }
 
     m_nPromptLen = strlen(prompt);
 }
@@ -1118,23 +1231,35 @@ void cConHook::testChar(ubit8 c)
     {
         case 0:
             if (c == IAC)
+            {
                 m_nFirst++;
+            }
             else
+            {
                 m_nFirst = -1;
+            }
             break;
 
         case 1:
             if (c == WILL)
+            {
                 m_nFirst++;
+            }
             else
+            {
                 m_nFirst = -1;
+            }
             break;
 
         case 2:
             if (c == TELOPT_ECHO)
+            {
                 m_nFirst++;
+            }
             else
+            {
                 m_nFirst = -1;
+            }
             break;
 
         case 3:
@@ -1144,7 +1269,9 @@ void cConHook::testChar(ubit8 c)
 
         case 4:
             if (c == IAC)
+            {
                 m_nFirst++;
+            }
             else
             {
                 m_nFirst = -1;
@@ -1154,7 +1281,9 @@ void cConHook::testChar(ubit8 c)
 
         case 5:
             if (c == WONT)
+            {
                 m_nFirst++;
+            }
             else
             {
                 m_nFirst = -1;
@@ -1192,9 +1321,13 @@ void cConHook::getLine(ubit8 buf[], int *size)
         // slog(LOG_ALL, 0, "Testchar %d, first %d.", buf[i], m_nFirst);
 
         if (m_nFirst == -1)
+        {
             return;
+        }
         if (m_nFirst == -2)
+        {
             break;
+        }
     }
 
     if (i < *size)
@@ -1215,7 +1348,9 @@ void cConHook::ShowChunk(void)
     scan = buffer;
 
     if (m_qPaged.IsEmpty())
+    {
         return;
+    }
 
     cQueueElem *qe = m_qPaged.GetHead();
 
@@ -1226,7 +1361,9 @@ void cConHook::ShowChunk(void)
         if (!*point)
         {
             if (m_qPaged.IsEmpty())
+            {
                 break;
+            }
 
             delete qe;
             qe = m_qPaged.GetHead();
@@ -1237,10 +1374,14 @@ void cConHook::ShowChunk(void)
         *scan = *point++;
 
         if (*scan == '\n')
+        {
             lines++;
+        }
 
         if (max_lines <= lines)
+        {
             break;
+        }
 
         scan++;
 
@@ -1255,10 +1396,14 @@ void cConHook::ShowChunk(void)
 
     /* Insert the rest of the un-paged stringback into buffer */
     if (!str_is_empty(point))
+    {
         m_qPaged.Prepend(new cQueueElem(point));
+    }
 
     if (qe)
+    {
         delete qe;
+    }
 
     m_nPromptMode = !m_qPaged.IsEmpty();
 
@@ -1306,7 +1451,7 @@ cConHook::cConHook(void)
     m_nPromptLen = 0;
 
     // m_pWebsHdl = 0;
-    m_pWebsServer = 0;
+    m_pWebsServer = nullptr;
 
     m_sSetup.echo = g_mplex_arg.g_bModeEcho;
     m_sSetup.redraw = g_mplex_arg.g_bModeRedraw;
@@ -1314,9 +1459,13 @@ cConHook::cConHook(void)
     m_sSetup.websockets = g_mplex_arg.bWebSockets;
 
     if (g_mplex_arg.g_bModeANSI)
+    {
         m_sSetup.emulation = TERM_ANSI;
+    }
     else
+    {
         m_sSetup.emulation = TERM_TTY;
+    }
 
     m_sSetup.height = 15;
     m_sSetup.width = 80;
@@ -1416,7 +1565,9 @@ cConHook::cConHook(void)
     *(m_aHost + sizeof(m_aHost) - 1) = '\0';
 
     if (this->tfd() != -1)
+    {
         slog(LOG_ALL, 0, "cConHook() called with a non -1 fd.");
+    }
 
     g_CaptainHook.Hook(fd, this);
 
@@ -1427,14 +1578,20 @@ cConHook::cConHook(void)
 cConHook::~cConHook(void)
 {
     if (this == g_connection_list)
+    {
         g_connection_list = this->m_pNext;
+    }
     else
     {
         class cConHook *tmp;
 
         for (tmp = g_connection_list; tmp; tmp = tmp->m_pNext)
+        {
             if (tmp->m_pNext == this)
+            {
                 break;
+            }
+        }
         tmp->m_pNext = this->m_pNext;
     }
 

@@ -2671,10 +2671,10 @@ descr "A an evil mattock is lying on the ground here."
 extra {}
 "Can one ever control the powers of evil?"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_MATTOCK, 20, 16)
-DEX_TRANSFER (+7)
-STR_TRANSFER (+5)
-CON_TRANSFER (-1)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,16
+DEX_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +7
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 weight 10
 WPN_ARENA
 
@@ -2734,9 +2734,9 @@ names {"phoenix claw","claw"}
 descr "A bloody birds claw is laying here."
 extra {}
 "The claw is  the bloody stump from some poor bird."
-WEAPON_DEF(WPN_CLAW, 16, 10)
-SPELL_TRANSFER(SPL_SUMMONING, 6)
-SPELL_TRANSFER(SPL_CONTROL_TELEPORT, 6)
+WEAPON_DEF(WPN_CLAW, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 16,10
+SPELL_TRANSFER(SPL_SUMMONING, BONUS_SUPERIOR)  // Xyzzy: 6
+SPELL_TRANSFER(SPL_CONTROL_TELEPORT, BONUS_SUPERIOR)  // Xyzzy: 6
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WPN_ARENA
 dilbegin claw_wie();
@@ -2817,7 +2817,7 @@ names {"dagger"}
 title "a deadly dagger"
 descr "A deadly dagger lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 17, 14)
+WEAPON_DEF(WPN_DAGGER, BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 17,14
 weight 40
 spell 50
 extra {}
@@ -2858,7 +2858,7 @@ names {"severed arm", "arm"}
 title "the severed arm of Toxic"
 descr "A severed arm has been left here, covered in blood."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, 17, 11)
+WEAPON_DEF(WPN_CLUB, BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 17,11
 WPN_ARENA
 spell 50
 weight 70
@@ -2896,9 +2896,9 @@ names {"raven claw","claw"}
 descr "A bloody birds claw is laying here."
 extra {}
 "The claw is  the bloody stump from some poor bird."
-WEAPON_DEF(WPN_CLAW, 16, 10)
-SPELL_TRANSFER(SPL_SUMMONING, 6)
-SPELL_TRANSFER(SPL_CONTROL_TELEPORT, 6)
+WEAPON_DEF(WPN_CLAW, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 16,10
+SPELL_TRANSFER(SPL_SUMMONING, BONUS_SUPERIOR)  // Xyzzy: 6
+SPELL_TRANSFER(SPL_CONTROL_TELEPORT, BONUS_SUPERIOR)  // Xyzzy: 6
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WPN_ARENA
 spell 50
@@ -2961,7 +2961,7 @@ head. The handle is inlaid with diamond that sparkle with the slightest
 light."
 WPN_ARENA
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_HAMMER, 20, 21)
+WEAPON_DEF(WPN_WAR_HAMMER, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,21
 end
 
 
@@ -2972,8 +2972,8 @@ names {"dagger"}
 title "the Dagger of bone"
 descr "A dagger made from human bone is laying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 16, 20)
-MAG_TRANSFER(+5)
+WEAPON_DEF(WPN_DAGGER, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 16,20
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 15
 extra {}
 "The dagger is crafted from human bones and razor sharp"
@@ -2985,7 +2985,7 @@ names {"kopesh"}
 title "a kopesh"
 descr "A kopesh has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE , 25, 23)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,23
 weight 20
 WPN_ARENA
 extra {}
@@ -3000,8 +3000,8 @@ names {"left handed short sword", "short sword","short"}
 title "a left handed short sword"
 descr "A short sword has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, 15, 9)
-WEAPON_TRANSFER(WPN_SHORT_SWORD, +15)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_SUPERIOR, BONUS_EXCELLENT_PLUS)  // Xyzzy: 15,9
+WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_ARTIFACT)  // Xyzzy: +15
 spell 75
 weight 10
 WPN_ARENA
@@ -3065,13 +3065,13 @@ names {"bone breaker", "breaker of bones", "breaker", "hammer"}
 title "the breaker of bones"
 descr "A hammer lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_HAMMER, 18, 11)
-WEAPON_TRANSFER(WPN_WAR_HAMMER, +5)
+WEAPON_DEF(WPN_WAR_HAMMER, BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,11
+WEAPON_TRANSFER(WPN_WAR_HAMMER, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 30
 WPN_ARENA
 
-STR_TRANSFER(5)
-DEX_TRANSFER(5)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 extra {}
 "This looks like a normal war hammer but is it?"
 spell 75
@@ -3139,7 +3139,7 @@ title "a huge club"
 descr "A huge club has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, 18, 24)
+WEAPON_DEF(WPN_CLUB, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,24
 weight 35
 extra {}
 "As you carefully examine this club you realize this thing is much bigger than
@@ -3154,7 +3154,7 @@ title "a hand axe"
 descr "A hand axe with a sharp blade has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE, 7, 0)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_EXCELLENT, BONUS_AVERAGE)  // Xyzzy: 7,0
 weight 35
 extra {}
 "This hand axe is beautifully decorated along the length of the handle. The
@@ -3172,7 +3172,7 @@ descr "A miners pick has been left here"
 extra {}
 "The minors pick is large  with a wooden handle and a metal head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE, 18, 20)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,20
 extra {"$identify"}
 "A plain old pick"
 weight 25
@@ -3187,7 +3187,7 @@ descr "A long sword has been left here"
 extra {"$identify"}
 "An average long sword"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, 20, 10)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 20,10
 weight 25
 WPN_ARENA
 
@@ -3198,7 +3198,7 @@ names {"spear"}
 title "a Spear"
 descr "A spear has been left here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SPEAR, 25,25)
+WEAPON_DEF(WPN_SPEAR, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,25
 weight 25
 WPN_ARENA
 
@@ -3209,7 +3209,7 @@ names {"sword", "short sword"}
 title "a Short Sword"
 descr "A short sword has been left here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, 25, 25)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,25
 weight 15
 WPN_ARENA
 
@@ -3231,10 +3231,10 @@ extra {"$improved identify"}
 to pay for a weapon that eats Gnomes for breakfast."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_SLAYER(RACE_GNOME)
-WEAPON_DEF(WPN_WHIP, 18, 15)
-WEAPON_TRANSFER(WPN_WHIP,+20)
-STR_TRANSFER(-1)
-DEX_TRANSFER(-1)
+WEAPON_DEF(WPN_WHIP, BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,15
+WEAPON_TRANSFER(WPN_WHIP, BONUS_ARTIFACT)  // Xyzzy: +20
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 weight 35
 WPN_ARENA
 
@@ -3305,7 +3305,7 @@ descr "The war mattock from hell is laying here."
 extra {}
 "The mattock is huge and looks like it can do some serious damage when
 wielded."
-WEAPON_DEF(WPN_WAR_MATTOCK,25,25)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,25
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 
@@ -3375,7 +3375,7 @@ descr "A pair of slick leggings has been left here."
 extra {}
 "The leggings are slick with the blood of thine enemies."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_PLATE(23, 20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 23,20
 weight 15
 WPN_ARENA
 end
@@ -3387,9 +3387,9 @@ descr "A pair of horrible leggings has been left here."
 extra {}
 "The leggings look like someone's leg just rotted in them. "
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_PLATE(19, 21)
-STR_TRANSFER(+5)
-BRA_TRANSFER(+6)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 19,21
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
 weight 15
 WPN_ARENA
 end
@@ -3401,10 +3401,10 @@ descr "A pair of slick boots been left here."
 extra {}
 "A pair of boot red with blood and some other slimy substance."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_PLATE(19, 21)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 19,21
 weight 15
-DIV_TRANSFER(+5)
-CON_TRANSFER(+9)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +9
 WPN_ARENA
 end
 
@@ -3415,10 +3415,10 @@ descr "A slick breastplate has been left here."
 extra {}
 "The slick plate is full of intestinal slime and blood."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(19,21)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 19,21
 weight 25
-CHA_TRANSFER(+4)
-MAG_TRANSFER(+9)
+CHA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+MAG_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +9
 WPN_ARENA
 end
 
@@ -3429,10 +3429,10 @@ descr "A pair of slick sleeves has been left here."
 extra {}
 "A  pair of sleeves slick with blood."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_PLATE(19,21)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 19,21
 weight 20
-DEX_TRANSFER(+8)
-STR_TRANSFER(+6)
+DEX_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +8
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
 WPN_ARENA
 end
 
@@ -3444,10 +3444,10 @@ extra {}
 "A slick helmet with a large spike on top. Stuck on the spike is a large
 eyeball."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_PLATE(19,21)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 19,21
 weight 10
-CON_TRANSFER(+5)
-MAG_TRANSFER(+7)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +7
 WPN_ARENA
 end
 
@@ -3460,11 +3460,11 @@ extra {}
 "The dragon claws are very big and very sharp."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_PLATE(18, 18)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,18
 weight 25
-SKILL_TRANSFER(SKI_SNEAK, 18)
-STR_TRANSFER(+6)
-DEX_TRANSFER(+6)
+SKILL_TRANSFER(SKI_SNEAK, BONUS_ARTIFACT)  // Xyzzy: 18
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
 WPN_ARENA
 end
 
@@ -3476,11 +3476,11 @@ extra {}
 "The difference between these leggings and other elf leggings is that
 these are made from real elves."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_PLATE(18, 18)
-SKILL_TRANSFER(SKI_FLEE,13)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,18
+SKILL_TRANSFER(SKI_FLEE, BONUS_ARTIFACT)  // Xyzzy: 13
 weight 15
-BRA_TRANSFER(+3)
-DEX_TRANSFER(+5)
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 WPN_ARENA
 end
 
@@ -3494,11 +3494,11 @@ extra {}
 perfect for protection from harm."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(18,18)
-SKILL_TRANSFER(SKI_KICK ,16)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,18
+SKILL_TRANSFER(SKI_KICK, BONUS_ARTIFACT)  // Xyzzy: 16
 weight 25
-DEX_TRANSFER(+5)
-CHA_TRANSFER(+7)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +7
 WPN_ARENA
 end
 
@@ -3510,9 +3510,9 @@ extra {}
 "The sleeves have flesh and skin hanging from them. It is hard to tell
 just what they are made from...maybe flesh maybe something else."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_PLATE(18,18)
-STR_TRANSFER(+7)
-MAG_TRANSFER(+6)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,18
+STR_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +7
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
 weight 20
 WPN_ARENA
 end
@@ -3526,9 +3526,9 @@ extra {}
 should be able to see out the eye holes and the nostrils and mouth
 provide perfect breathing areas."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_PLATE(18,18)
-BRA_TRANSFER(+7)
-STR_TRANSFER(+5)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,18
+BRA_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +7
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 10
 WPN_ARENA
 end
@@ -3543,8 +3543,8 @@ extra{}
 Not much but some."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 
-DEX_TRANSFER(+3)
-SKILL_TRANSFER(SKI_FLEE, 3)
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+SKILL_TRANSFER(SKI_FLEE, BONUS_GOOD_PLUS)  // Xyzzy: 3
 WPN_ARENA
 end
 meshshirt
@@ -3556,8 +3556,8 @@ extra {}
 warriors."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(6,4)
-CHA_TRANSFER(+2)
+ARMOUR_HRD_LEATHER(BONUS_EXCELLENT, BONUS_GOOD)  // Xyzzy: 6,4
+CHA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 weight 15
 WPN_ARENA
 end
@@ -3568,9 +3568,9 @@ descr "A pair of sandals has been left here."
 extra {}
 "Just something to keep everyone else's blood from your feet."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(6, 4)
+ARMOUR_HRD_LEATHER(BONUS_EXCELLENT, BONUS_GOOD)  // Xyzzy: 6,4
 weight 10
-SPELL_TRANSFER(SPL_FIREBALL_1, +10)
+SPELL_TRANSFER(SPL_FIREBALL_1, BONUS_ARTIFACT)  // Xyzzy: +10
 WPN_ARENA
 end
 rbplat1
@@ -3582,10 +3582,10 @@ extra {}
 "This breast plate is old and rusted It looks like it has been left
 laying in a puddle of water or worse."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(+25,+23)
-SPELL_TRANSFER(SPL_PROTECTION,+20)
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+23
+SPELL_TRANSFER(SPL_PROTECTION, BONUS_ARTIFACT)  // Xyzzy: +20
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 weight 20
 WPN_ARENA
 dilbegin plate();
@@ -3638,10 +3638,10 @@ names {"rat skin cloak","cloak","skin"}
 descr "A rat skin cloak is laying here."
 extra {}
 "The cloak is made out of the fur of old brown rats."
-ARMOUR_PLATE(+24, +24)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +24,+24
 weight 15
-DEX_TRANSFER(7)
-MAG_TRANSFER(5)
+DEX_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 7
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
 WPN_ARENA
@@ -3657,9 +3657,9 @@ descr "A pile mold is laying here."
 extra {}
 "The cloak looks like it has been laying out in the rain too long.  Green
 fungi has started to grow on the surface of the cloak"
-ARMOUR_PLATE(+25, +25)
-DEX_TRANSFER(10)
-STR_TRANSFER(10)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+25
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
 extra {"$identify"}
 "A godly cloak"
 extra {"$improved identify"}
@@ -3667,8 +3667,8 @@ extra {"$improved identify"}
 DEX bonus +10 STR bonus +10
 Cloak Hides you and helps you with summoning +10 and teleporting +10
 Armor Plate"
-SPELL_TRANSFER(SPL_SUMMONING, 10)
-SPELL_TRANSFER(SPL_CONTROL_TELEPORT, 10)
+SPELL_TRANSFER(SPL_SUMMONING, BONUS_ARTIFACT)  // Xyzzy: 10
+SPELL_TRANSFER(SPL_CONTROL_TELEPORT, BONUS_ARTIFACT)  // Xyzzy: 10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
 WPN_ARENA
@@ -3683,11 +3683,11 @@ descr "A pair of muddy boots lie here."
 extra {}
 "These boots look like they have been left laying about in the mud. They
 are just caked with a deep rich red mud."
-ARMOUR_PLATE(25, +23)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,+23
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 10
-MAG_TRANSFER (10)
-DIV_TRANSFER (9)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
+DIV_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 9
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
 extra {"$identify"}
 "An above average pair of boots."
@@ -3709,11 +3709,11 @@ extra {}
 "It looks as if these legging have seen better days. The plate is cracked
 and gaping like it is ready to fall apart."
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
-ARMOUR_PLATE(-25, +25)
+ARMOUR_PLATE(BONUS_JUNK, BONUS_ARTIFACT)  // Xyzzy: -25,+25
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 15
-CON_TRANSFER (7)
-CHA_TRANSFER (10)
+CON_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 7
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
 extra {"$identify"}
 "An poor quality pair of leggings."
 extra {"$improved identify"}
@@ -3732,13 +3732,13 @@ title "a blob of green slime"
 descr "A disgusting blob of green slime has been left here."
 extra {}
 "The blob of slime looks like it may be a breastplate."
-ARMOUR_PLATE(23, +25)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 23,+25
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 25
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
-STR_TRANSFER (9)
-BRA_TRANSFER (8)
-MAG_TRANSFER (10)
+STR_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 9
+BRA_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 8
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
 extra {"$identify"}
 "An above average breastplate."
 extra {"$improved identify"}
@@ -3760,11 +3760,11 @@ extra {}
 "The sleeves seem to be living. Looking at them you see they are crafted
 from some form of fungi."
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
-ARMOUR_CHAIN(23, +25)
+ARMOUR_CHAIN(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 23,+25
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 15
-DIV_TRANSFER (9)
-STR_TRANSFER (12)
+DIV_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 9
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 12
 extra {"$identify"}
 "An above average pair of sleeves that make you more divine."
 extra {"$improved identify"}
@@ -3784,12 +3784,13 @@ descr "A pair of Skin gauntlets lie here."
 extra {}
 "These gauntlets look like someone has cut off their enemies hands and
 made a pair of skin tight gauntlets from the skin."
-CHAR_FLAG_TRANSFER(CHAR_HIDE) ARMOUR_PLATE(25, +25)
+CHAR_FLAG_TRANSFER(CHAR_HIDE) 
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,+25
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 5
-MAG_TRANSFER (8)
-BRA_TRANSFER (13)
-CHA_TRANSFER (11)
+MAG_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 8
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 13
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 11
 extra {"$identify"}
 "An above average pair of gauntlets that make you more magical."
 extra {"$improved identify"}
@@ -3808,11 +3809,11 @@ names {"skull helmet","helmet","helm","skull"}
 title "Skull helmet"
 descr "A skull helmet lies here."
 extra {} "This helmet is made from the skull of some poor victim."
-ARMOUR_PLATE(25, +25)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,+25
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
-BRA_TRANSFER (4)
-CHA_TRANSFER (2)
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: 4
+CHA_TRANSFER(BONUS_GOOD)  // Xyzzy: 2
 extra {"$identify"}
 "An above average helmet"
 extra {"$improved identify"}
@@ -3833,9 +3834,9 @@ descr "A large shield has been left here."
 extra {}
 "A large shield with a skull and cross-bones in the center of it."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
-SHIELD_DEF(SHIELD_LARGE, 25, 25)
-STR_TRANSFER (15)
-DEX_TRANSFER (13)
+SHIELD_DEF(SHIELD_LARGE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,25
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 15
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 13
 weight 50
 bright 5
 extra {"$identify"}
@@ -3885,7 +3886,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 25
 extra {}
 "This helmet is made of the worst steel known to man."
-ARMOUR_CHAIN(18, 12)
+ARMOUR_CHAIN(BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,12
 WPN_ARENA
 end
 
@@ -3898,7 +3899,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 50
 extra {}
 "This plate is made of the worst steel known to man."
-ARMOUR_CHAIN(18, 12)
+ARMOUR_CHAIN(BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,12
 WPN_ARENA
 end
                            blacksleeve1
@@ -3910,7 +3911,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 35
 extra {}
 "These sleeves have been made of the worst steel known to man."
-ARMOUR_CHAIN(18, 12)
+ARMOUR_CHAIN(BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,12
 WPN_ARENA
 end
                            blacklegging1
@@ -3922,7 +3923,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 35
 extra {}
 "These leggings have been made of the worst steel known to man."
-ARMOUR_CHAIN(18, 12)
+ARMOUR_CHAIN(BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,12
 WPN_ARENA
 end
                            blackgauntlet1
@@ -3934,7 +3935,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 15
 extra {}
 "These gauntlets have been made of the worst steel known to man."
-ARMOUR_CHAIN(18, 12)
+ARMOUR_CHAIN(BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,12
 WPN_ARENA
 end
                            blackboot1
@@ -3946,7 +3947,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 15
 extra {}
 "These boots have been made of the worst steel known to man."
-ARMOUR_CHAIN(18, 12)
+ARMOUR_CHAIN(BONUS_ARTIFACT, BONUS_SUPERIOR)  // Xyzzy: 18,12
 WPN_ARENA
 end
 
@@ -3976,10 +3977,10 @@ splitting the power drained, and giving 1/2 to mana, and 1/2 to hitpoints.
 extraordinarily powerful. For Arena use ONLY."
 weight 5
 spell 100
-WEAPON_DEF(WPN_LONG_SWORD, 20, 20)
-STR_TRANSFER(5)
-DEX_TRANSFER(5)
-SPELL_TRANSFER(SPL_DIVINE, 10)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
+SPELL_TRANSFER(SPL_DIVINE, BONUS_ARTIFACT)  // Xyzzy: 10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 dilbegin nightwield();
 code
@@ -4443,10 +4444,10 @@ extra {"$improved identify"}
 "This weapon has dil slay (5% chance), and dil damage (50% x 9 tails to
 hit). Adds 9 to brain and dex."
 weight 7
-WEAPON_DEF(WPN_FLAIL, 22, 20)
+WEAPON_DEF(WPN_FLAIL, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 22,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-DEX_TRANSFER(9)
-BRA_TRANSFER(9)
+DEX_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 9
+BRA_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 9
 dilbegin nine_wield();
 code
 {

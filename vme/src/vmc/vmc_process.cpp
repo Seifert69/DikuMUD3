@@ -5,19 +5,17 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-#include <stdarg.h> /* va_args in dmc_error() */
-#include <time.h>
-#include <ctype.h>
-
-#include "vmc.h"
-#include "skills.h"
 #include "common.h"
+#include "money.h"
+#include "skills.h"
 #include "textutil.h"
 #include "utility.h"
-#include "money.h"
+#include "vmc.h"
+
+#include <cctype>
+#include <cstdarg> /* va_args in dmc_error() */
+#include <cstdio>
+#include <cstdlib>
 
 /* PS Algorithm 3                                                      */
 /* This algorithm returns the total amount of hitpoints possessed when */
@@ -44,7 +42,10 @@ void dmc_error(int fatal, const char *fmt, ...)
     buf[sizeof(buf) - 10] = 0;
     va_end(args);
 
-    fprintf(stderr, "%s: %s\n", fatal && fatal != 2 ? "FATAL" : "WARNING", buf);
+    if (!g_quiet_compile || fatal)
+    {
+        fprintf(stderr, "%s: %s\n", fatal && fatal != 2 ? "FATAL" : "WARNING", buf);
+    }
     sprintf(filename, "%s.err", g_error_zone_name);
 
     if ((f = fopen(filename, "a")))
@@ -54,7 +55,9 @@ void dmc_error(int fatal, const char *fmt, ...)
     }
 
     if (fatal != 2 && (fatal || g_fatal_warnings))
+    {
         g_errcon = 1;
+    }
 }
 
 /*  MONEY
@@ -64,15 +67,25 @@ unsigned long legal_amount(class unit_data *u)
     unsigned long res = IRON_MULT * CHAR_LEVEL(u);
 
     if (CHAR_LEVEL(u) < 21)
+    {
         res *= 5;
+    }
     else if (CHAR_LEVEL(u) < 101)
+    {
         res *= 10;
+    }
     else if (CHAR_LEVEL(u) < 151)
+    {
         res *= 15;
+    }
     else if (CHAR_LEVEL(u) < 201)
+    {
         res *= 20;
+    }
     else
+    {
         res *= 25;
+    }
 
     return res;
 }
@@ -88,8 +101,10 @@ amount_t convert_money(char *str)
     amount_t res = 0;
     char *c;
 
-    if (str == NULL)
+    if (str == nullptr)
+    {
         return 0;
+    }
 
     while ((c = strchr(str, '~')))
     {
@@ -97,9 +112,13 @@ amount_t convert_money(char *str)
         if (val1 > 0)
         {
             if (val2 == -1)
+            {
                 res += val1;
+            }
             else if (is_in(val2, DEF_CURRENCY, MAX_MONEY))
+            {
                 res += val1 * val2;
+            }
             else
             {
                 dmc_error(TRUE, "Weird money error");
@@ -252,19 +271,29 @@ void set_points(class unit_data *u)
     }
 
     for (i = sum = 0; i < ABIL_TREE_MAX; i++)
+    {
         sum += CHAR_ABILITY(u, i);
+    }
 
     if (sum != 100)
+    {
         dmc_error(TRUE, "Abilities in '%s' sums up to %d,and not 100.", UNIT_IDENT(u), sum);
+    }
 
     for (i = sum = 0; i < WPN_GROUP_MAX; i++)
+    {
         sum += NPC_WPN_SKILL(u, i);
+    }
 
     for (i = 0; i < SPL_GROUP_MAX; i++)
+    {
         sum += NPC_SPL_SKILL(u, i);
+    }
 
     if (sum != 100)
+    {
         dmc_error(TRUE, "Spells&weapons in '%s' sums up to %d, and not 100.", UNIT_IDENT(u), sum);
+    }
 
     /* It's "*2" because each training session gives the player 2 ability
        points */
@@ -283,23 +312,37 @@ void set_points(class unit_data *u)
     // spoints = ((100+20-CHAR_LEVEL(u)/10)*spoints) / 100; /* 120% - 100% */
 
     if ((i = distribute_points(&CHAR_ABILITY(u, 0), ABIL_TREE_MAX, apoints, CHAR_LEVEL(u))))
+    {
         dmc_error(FALSE, "%s - An ability is %d points.", UNIT_IDENT(u), i);
+    }
 
     if ((i = distribute_points(&NPC_WPN_SKILL(u, 0), WPN_GROUP_MAX, spoints, CHAR_LEVEL(u))))
+    {
         dmc_error(FALSE, "%s - A weapon skill exceeds %d points.", UNIT_IDENT(u), i);
+    }
 
     for (max = i = 0; i < WPN_GROUP_MAX; i++)
+    {
         if (NPC_WPN_SKILL(u, i) > max)
+        {
             max = NPC_WPN_SKILL(u, i);
+        }
+    }
 
     NPC_WPN_SKILL(u, WPN_ROOT) = max / 4;
 
     if ((i = distribute_points(&NPC_SPL_SKILL(u, 0), SPL_GROUP_MAX, spoints, CHAR_LEVEL(u))))
+    {
         dmc_error(FALSE, "%s - A spell skill exceeds %d points.", UNIT_IDENT(u), i);
+    }
 
     for (max = i = 0; i < SPL_GROUP_MAX; i++)
+    {
         if (NPC_SPL_SKILL(u, i) > max)
+        {
             max = NPC_SPL_SKILL(u, i);
+        }
+    }
 
     NPC_SPL_SKILL(u, SPL_ALL) = max / 4;
 
@@ -365,9 +408,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_MAG_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_MAG)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_TRANSFER_DIV:
@@ -375,9 +422,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_DIV_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_DIV)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_TRANSFER_STR:
@@ -385,9 +436,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_STR_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_STR)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_TRANSFER_DEX:
@@ -395,9 +450,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_DEX_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_DEX)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_TRANSFER_CON:
@@ -405,9 +464,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_CON_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_CON)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_TRANSFER_CHA:
@@ -415,9 +478,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_CHA_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_CHA)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_TRANSFER_BRA:
@@ -425,9 +492,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_BRA_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_BRA)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_TRANSFER_HPP:
@@ -435,9 +506,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_HIT_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_HP)
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -20, 5))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_HIDDEN_DIFFICULTY:
@@ -468,9 +543,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_SPL_DEC);
                 applyf = (pAf->applyf_i == APF_SPELL_ADJ);
                 if (!is_in(pAf->data[0], 0, SPL_TREE_MAX))
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -10, 10))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -10..+10 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_SKILL_TRANSFER:
@@ -478,9 +557,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_SKI_DEC);
                 applyf = (pAf->applyf_i == APF_SKILL_ADJ);
                 if (!is_in(pAf->data[0], 0, SKI_TREE_MAX))
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -10, 10))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -10..+10 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_WEAPON_TRANSFER:
@@ -488,9 +571,13 @@ void process_affects(class unit_data *pUnit)
                 lastf = (pAf->lastf_i == TIF_WPN_DEC);
                 applyf = (pAf->applyf_i == APF_WEAPON_ADJ);
                 if (!is_in(pAf->data[0], 0, WPN_TREE_MAX))
+                {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                }
                 if (!is_in(pAf->data[1], -10, 10))
+                {
                     dmc_error(FALSE, "%s: Adjustment %d outside -10..+10 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                }
                 break;
 
             case ID_PROT_EVIL_TRANSFER:
@@ -600,15 +687,19 @@ void check_namelist(class unit_data *unit, class cNamelist *nl)
         for (i = 0; i < nl->Length(); i++)
         {
             if ((str_nccmp("self ", nl->Name(i), 5) == 0) || (str_ccmp("self", nl->Name(i)) == 0))
+            {
                 dmc_error(TRUE,
                           "Reserved word 'self' used in start of "
                           "name in %s@",
                           UNIT_IDENT(unit));
+            }
 
             len = strlen(nl->Name(i));
 
             if (nl->Name(i)[len - 1] == 's' && nl->Name(i)[len - 2] == '\'')
+            {
                 dmc_error(TRUE, "%s@: name [%s] not allowed to end in 's", UNIT_IDENT(unit), nl->Name(i));
+            }
         }
 
         class cNamelist tmp;
@@ -646,12 +737,20 @@ void process_unit(class unit_data *u)
     check_namelist(u, &UNIT_NAMES(u));
 
     for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
+    {
         check_namelist(u, &exd->names);
+    }
 
     if (IS_ROOM(u))
+    {
         for (i = 0; i <= MAX_EXIT; i++)
+        {
             if (ROOM_EXIT(u, i))
+            {
                 check_namelist(u, &ROOM_EXIT(u, i)->open_name);
+            }
+        }
+    }
 
     if (!IS_ROOM(u) && !UNIT_TITLE(u).empty())
     {
@@ -717,16 +816,26 @@ void process_unit(class unit_data *u)
                         int i;
 
                         for (i = 0; i <= MAX_MONEY; i++)
+                        {
                             if (!strcmp(UNIT_TITLE(u).c_str(), g_money_types[i].abbrev))
+                            {
                                 break;
+                            }
+                        }
 
                         if (i > MAX_MONEY)
+                        {
                             dmc_error(TRUE, "Not a legal money denominator (%s) on %s", UNIT_TITLE(u).c_str(), UNIT_IDENT(u));
+                        }
                         else
+                        {
                             OBJ_VALUE(u, 0) = i;
+                        }
                     }
                     else
+                    {
                         dmc_error(TRUE, "No money denominator on %s", UNIT_IDENT(u));
+                    }
                     break;
 
                 case ITEM_WEAPON:
@@ -806,7 +915,9 @@ void process_unit(class unit_data *u)
             }
 
             if (g_verbose)
+            {
                 show_info(u);
+            }
             break;
     }
 }
@@ -815,9 +926,9 @@ void init_unit(class unit_data *u)
 {
     int i;
 
-    u->next = 0;
+    u->next = nullptr;
 
-    UNIT_KEY(u) = 0;
+    UNIT_KEY(u) = nullptr;
     UNIT_MANIPULATE(u) = 0;
     UNIT_FLAGS(u) = 0;
     UNIT_BASE_WEIGHT(u) = 1;
@@ -828,14 +939,14 @@ void init_unit(class unit_data *u)
     UNIT_LIGHTS(u) = 0;
     UNIT_BRIGHT(u) = 0;
     UNIT_CHARS(u) = 0;
-    UNIT_AFFECTED(u) = 0;
+    UNIT_AFFECTED(u) = nullptr;
     UNIT_SIZE(u) = 180; /* 180cm default */
 
     switch (UNIT_TYPE(u))
     {
         case UNIT_ST_NPC:
             UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
-            CHAR_MONEY(u) = NULL;
+            CHAR_MONEY(u) = nullptr;
             CHAR_EXP(u) = 100; /* 100 XP per default at your own level */
             CHAR_FLAGS(u) = 0;
             CHAR_ATTACK_TYPE(u) = WPN_FIST;
@@ -847,7 +958,9 @@ void init_unit(class unit_data *u)
             CHAR_POS(u) = POSITION_STANDING;
             NPC_DEFAULT(u) = POSITION_STANDING;
             for (i = 0; i < ABIL_TREE_MAX; i++)
+            {
                 CHAR_ABILITY(u, i) = 0;
+            }
             CHAR_STR(u) = 40; /* % */
             CHAR_DEX(u) = 30;
             CHAR_CON(u) = 10;
@@ -856,11 +969,15 @@ void init_unit(class unit_data *u)
             CHAR_HPP(u) = 15;
 
             for (i = 0; i < WPN_GROUP_MAX; i++)
+            {
                 NPC_WPN_SKILL(u, i) = 0;
+            }
             NPC_WPN_SKILL(u, WPN_UNARMED) = 100; /* % */
 
             for (i = 0; i < SPL_GROUP_MAX; i++)
+            {
                 NPC_SPL_SKILL(u, i) = 0;
+            }
             NPC_FLAGS(u) = 0;
             CHAR_OFFENSIVE(u) = 0;
             CHAR_DEFENSIVE(u) = 0;
@@ -869,7 +986,9 @@ void init_unit(class unit_data *u)
 
         case UNIT_ST_OBJ:
             for (i = 0; i <= 3; i++)
+            {
                 OBJ_VALUE(u, i) = 0;
+            }
             OBJ_FLAGS(u) = 0;
             OBJ_PRICE(u) = 0;
             OBJ_PRICE_DAY(u) = 0;
@@ -881,9 +1000,11 @@ void init_unit(class unit_data *u)
             UNIT_CAPACITY(u) = 30000;
             UNIT_BASE_WEIGHT(u) = 10;
             UNIT_WEIGHT(u) = 10;
-            UNIT_IN(u) = 0;
+            UNIT_IN(u) = nullptr;
             for (i = 0; i <= MAX_EXIT; i++)
-                ROOM_EXIT(u, i) = 0;
+            {
+                ROOM_EXIT(u, i) = nullptr;
+            }
             ROOM_FLAGS(u) = 0;
             ROOM_LANDSCAPE(u) = SECT_CITY;
             ROOM_RESISTANCE(u) = 0;

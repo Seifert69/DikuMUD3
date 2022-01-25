@@ -656,6 +656,152 @@ code
 }
 dilend
 
+/*-
+--- Similar to qstWaitDone but can be applied directly on the npc
+-*/
+dilbegin unitptr qstOnComplete(qname : string,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+var
+   pc     : unitptr;
+   pcname : string;
+   u      : unitptr;
+   i      : integer;
+   ln     : integer;
+   exdp   : extraptr;
+   words  : stringlist;
+   s      : string;
+
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+   u := null;
+
+   :start:
+   wait(SFB_MSG, TRUE);
+
+   log("running qstOnComplete...");
+
+   if (command(CMD_AUTO_MSG)) 
+   {
+      log("MSG : " + argument);
+      
+      words := getwords(argument);
+      s := words.[0];
+      pcname := words.[1];
+
+      log("ARG: " + s);
+      log("PC: " + pcname);
+
+      if (s != "quest$done")
+         goto start;
+      
+      pc := findsymbolic(pcname); // The player activator
+
+      if (pc == null) {
+         log("PC is null...");
+         goto start;
+      }
+   }
+   else
+   {
+      goto start;
+   }
+
+   log("checking complete stuff..");
+
+   if ((qname + " Complete") in pc.quests) {
+      log(qname + " Complete in pc.quests");
+     return(u);
+   }
+
+   exdp := (qname + " Ongoing") in pc.quests;
+
+   if (not exdp) {
+      log("not exdp");
+      return(u);
+   }
+
+   if (not ("$done" in exdp.names)) {
+      log("$done not in expd.names");
+      return(u);
+   }
+
+   // We collected all the items
+   secure(pc, lostpc);
+
+   i := 0;
+   ln := length(sl);
+	pause;
+	heartbeat := PULSE_SEC * 4;
+
+   priority;
+
+   log("end text...");
+   // Give the explanation
+   while (i < ln)
+   {
+      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
+      exec(s, self);
+      pause;
+      i := i + 1;
+   }
+
+   subextra(pc.quests, qname + " Ongoing");
+   s := qname + " Complete";
+   sl := null;
+   addstring(sl, s);
+   addextra(pc.quests, sl, "");
+   if (xp > 0)
+   {
+      experience(xp, pc);
+      sendtext("You earned " + itoa(xp) + " experience.<br/>", pc);
+   }
+   if (gold > 0)
+   {
+      i := transfermoney(null, pc, gold);
+      sendtext("You received " + moneystring(gold, TRUE) + "<br/>", pc);
+   }
+
+   i := 0;
+   while (i < length(itemsl))
+   {
+      if (itemsl.[i] != "")
+      {
+         u := load(itemsl.[i]);
+         if (u == null)
+            log("Quest " + qname + " unable to load item " + itemsl.[i]);
+         else
+         {
+            if ((u.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
+                  MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
+                  MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
+                  MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
+                  MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
+                  MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
+                  MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
+                  MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
+                  MANIPULATE_WEAR_ANKLE)) or (u.objecttype == ITEM_WEAPON))
+               u.height := pc.height; // For wearable items, make them fit
+
+            link(u, pc);
+            act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
+            act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
+         }
+      }
+      i := i + 1;
+   }
+
+   nopriority;
+   return(pc);
+
+   :lostpc:
+   nopriority;
+   exec("say How rude!", self);
+   u := null;
+   return(u);
+}
+
+dilend
 
 dilbegin fnpri(FN_PRI_MISSION+7)
           qstSimpleQuest(qname : string,

@@ -2214,7 +2214,7 @@ names {"city guard","statue","guard"}
 descr "A small statue of a city guard is laying here."
 extra {}
 "A small version of a city guard"
-CHA_TRANSFER (+1)
+CHA_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 end
 

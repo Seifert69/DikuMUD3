@@ -4,15 +4,16 @@
  $Date: 2001/04/10 21:11:37 $
  $Revision: 2.0 $
  */
+#pragma once
 
-#include "network.h"
-#include <string.h>
-#include "protocol.h"
-#include "essential.h"
-#include "queue.h"
-#include "hook.h"
 #include "color.h"
+#include "essential.h"
+#include "hook.h"
+#include "network.h"
+#include "protocol.h"
+#include "queue.h"
 
+#include <cstring>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
@@ -34,7 +35,9 @@ public:
     void AddString(char *str);
     void ParseInput(void);
     void SendCon(const char *str);
+    void SendCon(const std::string &str);
     void WriteCon(const char *str);
+    void WriteCon(const std::string &str);
     char *IndentText(const char *source, char *dest, int dest_size, int width);
     int ColorDisp(const char *current, char *newptr);
     char *ParseOutput(const char *text);
@@ -93,7 +96,7 @@ private:
     std::mutex m_mtx; // Mutex for websockets threading
 };
 
-const char *mplex_getcolor(class cConHook *hook, const char *colorstr);
+std::string mplex_getcolor(class cConHook *hook, const char *colorstr);
 
 void dumbPlayLoop(cConHook *con, const char *cmd);
 void dumbPressReturn(class cConHook *con, const char *cmd);

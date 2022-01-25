@@ -4,9 +4,7 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.3 $
  */
-
-#ifndef _MUD_COMM_H
-#define _MUD_COMM_H
+#pragma once
 
 #include "dil.h"
 
@@ -26,12 +24,16 @@ public:
 };
 
 void page_string(class descriptor_data *d, const char *);
+void page_string(class descriptor_data *d, const std::string &);
 
 void send_to_outdoor(const char *messg);
 void send_to_zone_outdoor(const class zone_type *z, const char *messg);
 void send_to_descriptor(const char *messg, class descriptor_data *d);
+void send_to_descriptor(const std::string &messg, class descriptor_data *d);
 void send_to_all(const char *messg);
+void send_to_all(const std::string &messg);
 void send_to_char(const char *messg, const class unit_data *ch);
+void send_to_char(const std::string &messg, const class unit_data *ch);
 
 /*  Please note that act() does NOT accept TRUE or FALSE as second argument
  *  anymore...
@@ -55,5 +57,3 @@ int process_input(class descriptor_data *t);
 #define PROMPT_SENT 0
 #define PROMPT_EXPECT 1
 #define PROMPT_IGNORE 2
-
-#endif /* _MUD_COMM_H */

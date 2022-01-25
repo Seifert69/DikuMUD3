@@ -22,24 +22,16 @@ Pre-requisites:
    * Debian users look here for flex: https://github.com/Seifert69/DikuMUD3/issues?q=70
 
 
-How to build & launch
+How to build & launch (using the new cmake)
 
 1) First build the binaries:
 
-*If you would like to try the experimental cmake build system see [CMake](README_cmake.md)*
+        See [CMake](README_cmake.md)* for more details.
 
-       cd vme/src/
-       make all # add -j8 to compile on 8 threads in parallel
-
-2) Make sure `.def` files are pre-processed:
-
-       cd ../etc/
-       make all
-
-3) Then compile the zones:
-
-       cd ../zone/
-       ../bin/vmc -m -I../include/ *.zon
+       cd DikuMUD3/
+       cmake .
+       make all -j8 # -j8 to compile on 8 threads in parallel
+       make test # optionally run the unit tests
 
 4) Now you're ready to launch, open four tabs in shell:
 
@@ -50,7 +42,8 @@ How to build & launch
        tail -f mplex.log #tab4
 
 You can also launch a telnet mplex using e.g. `mplex -p 4242`
-And then `telnet localhost 4242`. But telnet is best for debugging
+And then `telnet localhost 4242`. You can run several mplex'ers
+to the server, some supporting telnet some support web sockets.
 
 5) To open the client
 

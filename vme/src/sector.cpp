@@ -1,46 +1,63 @@
-#include "essential.h"
-#include "db.h"
-#include "textutil.h"
-#include "external_vars.h"
-
-#include <vector>
-#include <string>
-#include <queue>
-#include <fstream>
-#include "vme.h"
 #include "sector.h"
+
+#include "db.h"
+#include "essential.h"
+#include "slog.h"
+
+#include <fstream>
+#include <queue>
+#include <string>
+#include <vector>
 
 std::string cSector::get_name(int sector)
 {
     if ((sector >= 0) && (sector < (int)names.size()))
+    {
         return (names[sector]);
+    }
     else
+    {
         return ("");
+    }
 };
 
 int cSector::get_path_cost(int from, int to)
 {
     if ((from >= 0) && (from < (int)names.size()) && (to >= 0) && (to < (int)names.size()))
+    {
         if (path[from][to] > 0)
+        {
             return (path[from][to]);
+        }
         else
+        {
             return (1);
+        }
+    }
     else
+    {
         return (1);
+    }
 };
 
 int cSector::get_enduance_cost(int from, int to)
 {
     if ((from >= 0) && (from < (int)names.size()) && (to >= 0) && (to < (int)names.size()))
+    {
         return (endurance[from][to]);
+    }
     else
+    {
         return (1);
+    }
 };
 
 void cSector::add_sector(int sector, std::string sector_name)
 {
     if (sector < 0)
+    {
         return;
+    }
 
     if ((int)names.size() < (sector + 1))
     {
@@ -60,7 +77,9 @@ void cSector::add_sector(int sector, std::string sector_name)
 void cSector::add_sector(int sector, char *sector_name)
 {
     if (sector < 0)
+    {
         return;
+    }
 
     if ((int)names.size() < (sector + 1))
     {
@@ -80,7 +99,9 @@ void cSector::add_sector(int sector, char *sector_name)
 void cSector::set_path_cost(int from, int to, int cost)
 {
     if ((from < 0) || (to < 0))
+    {
         return;
+    }
 
     if (((int)names.size() > from) && ((int)names.size() > to))
     {
@@ -91,7 +112,9 @@ void cSector::set_path_cost(int from, int to, int cost)
 void cSector::set_endurance_cost(int from, int to, int cost)
 {
     if ((from < 0) || (to < 0))
+    {
         return;
+    }
 
     if (((int)names.size() > from) && ((int)names.size() > to))
     {
@@ -102,7 +125,9 @@ void cSector::set_endurance_cost(int from, int to, int cost)
 void cSector::set_path_endurance_cost(int from, int to, int pcost, int ecost)
 {
     if ((from < 0) || (to < 0))
+    {
         return;
+    }
 
     if (((int)names.size() > from) && ((int)names.size() > to))
     {
@@ -118,7 +143,7 @@ void boot_sector(void)
     std::vector<std::string> sector_vect;
     std::queue<int> sector_queue;
 
-    in_file.open(str_cc(g_cServerConfig.m_libdir, SECTOR_DEFS));
+    in_file.open(g_cServerConfig.getFileInLibDir(SECTOR_DEFS));
     if (in_file.bad())
     {
         slog(LOG_ALL, 0, "ERROR:  Problem opening the Sector.dat");
@@ -134,18 +159,28 @@ void boot_sector(void)
                 in_file >> temp;
                 in_file >> index;
                 if (sector_vect.size() < (index + 1))
+                {
                     sector_vect.resize(index + 1);
+                }
                 sector_vect[index] = "";
                 while (in_file >> temp)
                 {
                     if ((temp == "NAME") || (temp == "="))
+                    {
                         continue;
+                    }
                     if (temp == "BEGIN")
+                    {
                         break;
+                    }
                     if (temp.length() > 0)
+                    {
                         sector_vect[index] += " " + temp;
+                    }
                     else
+                    {
                         sector_vect[index] += temp;
+                    }
                 }
 
                 sector_queue.push(index);
@@ -157,14 +192,18 @@ void boot_sector(void)
                         break;
                     }
                     else
+                    {
                         sector_queue.push(atoi(temp.c_str()));
+                    }
                 }
             }
         }
         in_file.close();
 
         for (unsigned int i = 0; i < sector_vect.size(); i++)
+        {
             g_sector_dat.add_sector(i, sector_vect[i]);
+        }
 
         int sector_index = 0, sector_end = 0, sector_path = 0, sector_from = 0;
         while (sector_queue.size() > 0)

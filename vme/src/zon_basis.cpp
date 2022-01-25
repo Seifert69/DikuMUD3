@@ -4,32 +4,19 @@
  $Date: 2003/12/28 22:02:45 $
  $Revision: 2.5 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
 #include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
 #include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "justice.h"
-#include "affect.h"
-#include "magic.h"
-#include "utility.h"
-#include "money.h"
-#include "spec_assign.h"
-#include "main.h"
-#include "fight.h"
-#include "common.h"
+#include "formatter.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "slog.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define DEFAULT_ENTRY_ZONE "udgaard"
 #define DEFAULT_ENTRY_NAME "temple"
@@ -42,14 +29,14 @@
 #define MAIL_NOTE_NAME "letter"
 #define DESTROY_ROOM "destroy_room"
 
-class unit_data *g_void_room = 0;
-class unit_data *g_destroy_room = 0;
-class unit_data *heaven_room = 0;
-class unit_data *seq_room = 0;
-class unit_data *time_room = 0;
-class unit_data *g_entry_room = 0;
+class unit_data *g_void_room = nullptr;
+class unit_data *g_destroy_room = nullptr;
+class unit_data *heaven_room = nullptr;
+class unit_data *seq_room = nullptr;
+class unit_data *time_room = nullptr;
+class unit_data *g_entry_room = nullptr;
 
-class file_index_type *g_letter_fi = 0;
+class file_index_type *g_letter_fi = nullptr;
 
 void basis_boot(void)
 {
@@ -72,7 +59,7 @@ void basis_boot(void)
     assert(g_letter_fi);
 
     g_entry_room = world_room(DEFAULT_ENTRY_ZONE, DEFAULT_ENTRY_NAME);
-    if (g_entry_room == NULL)
+    if (g_entry_room == nullptr)
     {
         slog(LOG_ALL, 0, "Entry room does not exist, using void.");
         g_entry_room = g_void_room;
@@ -81,18 +68,14 @@ void basis_boot(void)
 
 int error_rod(struct spec_arg *sarg)
 {
-    class zone_type *zone;
-    FILE *fl;
-    char filename[256];
-
     if ((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
+    {
         return SFR_SHARE;
+    }
 
-    zone = unit_zone(sarg->activator);
+    zone_type *zone = unit_zone(sarg->activator);
 
-    strcpy(filename, UNIT_NAME(sarg->activator));
-
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(UNIT_NAME(sarg->activator)))
     {
         send_to_char("You are only allowed to erase errors "
                      "in your own zone.<br/>",
@@ -100,9 +83,10 @@ int error_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    snprintf(filename, sizeof(filename), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    std::string filename = g_cServerConfig.getZoneDir() + zone->filename + ".err";
 
-    if (!(fl = fopen(filename, "w")))
+    FILE *fl = fopen(filename.c_str(), "w");
+    if (!fl)
     {
         slog(LOG_ALL, 0, "Could not clear the zone error-file");
         send_to_char("Could not clear the zone error-file.<br/>", sarg->activator);
@@ -118,18 +102,14 @@ int error_rod(struct spec_arg *sarg)
 
 int info_rod(struct spec_arg *sarg)
 {
-    class zone_type *zone;
-    FILE *fl;
-    char filename[256];
-
     if (!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
+    {
         return SFR_SHARE;
+    }
 
-    zone = unit_zone(sarg->activator);
+    zone_type *zone = unit_zone(sarg->activator);
 
-    strcpy(filename, UNIT_NAME(sarg->activator));
-
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(UNIT_NAME(sarg->activator)))
     {
         send_to_char("You are only allowed to erase user-information"
                      " in your own zone.",
@@ -137,9 +117,10 @@ int info_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    snprintf(filename, sizeof(filename), "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
+    std::string filename = g_cServerConfig.getZoneDir() + zone->filename + ".inf";
 
-    if (!(fl = fopen(filename, "w")))
+    FILE *fl = fopen(filename.c_str(), "w");
+    if (fl)
     {
         slog(LOG_ALL, 0, "Could not clear the zone user info-file");
         send_to_char("Could not clear the zone user info-file.<br/>", sarg->activator);
@@ -162,7 +143,7 @@ int log_object(struct spec_arg *sarg)
     char c;
     class unit_data *ch = UNIT_IN(sarg->owner);
 
-    if (sarg->fptr->data == NULL)
+    if (sarg->fptr->data == nullptr)
     {
         CREATE(ip, ubit8, 1);
         *ip = 0;
@@ -171,7 +152,9 @@ int log_object(struct spec_arg *sarg)
         sarg->fptr->data = ip;
     }
     else
+    {
         ip = (ubit8 *)sarg->fptr->data;
+    }
 
     c = OBJ_VALUE(sarg->owner, 0);
 
@@ -179,7 +162,7 @@ int log_object(struct spec_arg *sarg)
     {
         case CMD_AUTO_EXTRACT:
             FREE(ip);
-            sarg->fptr->data = 0;
+            sarg->fptr->data = nullptr;
             return SFR_SHARE;
 
         case CMD_AUTO_TICK:
@@ -204,10 +187,12 @@ int log_object(struct spec_arg *sarg)
 
             if (LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
             {
-                while (!str_is_empty(g_log_buf[*ip].str))
+                while (!g_log_buf[*ip].getString().empty())
                 {
-                    if (g_log_buf[*ip].level <= lev && g_log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
-                        cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
+                    if (g_log_buf[*ip].getLevel() <= lev && g_log_buf[*ip].getWizInvLevel() <= CHAR_LEVEL(ch))
+                    {
+                        cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].getString().c_str(), cActParameter(), TO_CHAR, "log");
+                    }
                     *ip = ((*ip + 1) % MAXLOG);
                 }
                 return SFR_BLOCK;
@@ -219,13 +204,21 @@ int log_object(struct spec_arg *sarg)
             {
                 sarg->arg = skip_spaces(sarg->arg);
                 if (is_abbrev(sarg->arg, "all"))
+                {
                     c = 'a';
+                }
                 else if (is_abbrev(sarg->arg, "extensive"))
+                {
                     c = 'e';
+                }
                 else if (is_abbrev(sarg->arg, "dil"))
+                {
                     c = 'd';
+                }
                 else if (is_abbrev(sarg->arg, "brief"))
+                {
                     c = 'b';
+                }
                 else if (is_abbrev(sarg->arg, "off"))
                 {
                     cact("Ok, log is now off.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR, "log");
@@ -275,7 +268,7 @@ int log_object(struct spec_arg *sarg)
 }
 
 /* Return TRUE if ok, FALSE if not */
-int system_check(class unit_data *pc, char *buf)
+int system_check(class unit_data *pc, const char *buf)
 {
     /* Check for `` and ; in system-string */
     if (strchr(buf, '`') || strchr(buf, ';'))
@@ -288,13 +281,13 @@ int system_check(class unit_data *pc, char *buf)
     return TRUE;
 }
 
-void execute_append(class unit_data *pc, char *str)
+void execute_append(class unit_data *pc, const char *str)
 {
     FILE *f;
 
-    f = fopen(str_cc(g_cServerConfig.m_libdir, EXECUTE_FILE), "ab+");
+    f = fopen(g_cServerConfig.getFileInLibDir(EXECUTE_FILE).c_str(), "ab+");
 
-    if (f == NULL)
+    if (f == nullptr)
     {
         slog(LOG_ALL, 0, "Error appending to execute file.");
         return;
@@ -309,16 +302,19 @@ void execute_append(class unit_data *pc, char *str)
 
 int admin_obj(struct spec_arg *sarg)
 {
-    char buf[512];
     int zonelist;
     class zone_type *zone;
     class extra_descr_data *exdp;
 
     if (sarg->cmd->no != CMD_AUTO_UNKNOWN)
+    {
         return SFR_SHARE;
+    }
 
     if (!IS_PC(sarg->activator))
+    {
         return SFR_SHARE;
+    }
 
     if (str_ccmp(sarg->cmd->cmd_str, "email") == 0)
     {
@@ -334,9 +330,11 @@ int admin_obj(struct spec_arg *sarg)
         zonelist = TRUE;
     }
     else
+    {
         return SFR_SHARE;
+    }
 
-    if ((exdp = PC_INFO(sarg->activator).find_raw("$email")) == NULL)
+    if ((exdp = PC_INFO(sarg->activator).find_raw("$email")) == nullptr)
     {
         send_to_char("You do not have an email address registered.<br/>", sarg->activator);
         return SFR_BLOCK;
@@ -348,9 +346,12 @@ int admin_obj(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
+    std::string msg;
     if (zonelist)
-        snprintf(buf, sizeof(buf), "mail zone zonelist %s", exdp->descr.c_str());
-    else if ((zone = unit_zone(sarg->activator)) == NULL)
+    {
+        msg = diku::format_to_str("mail zone zonelist %s", exdp->descr.c_str());
+    }
+    else if ((zone = unit_zone(sarg->activator)) == nullptr)
     {
         send_to_char("You are inside no zone?", sarg->activator);
         return SFR_BLOCK;
@@ -362,16 +363,18 @@ int admin_obj(struct spec_arg *sarg)
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;
         }
-        snprintf(buf, sizeof(buf), "mail zone %s %s", zone->filename, exdp->descr.c_str());
+        msg = diku::format_to_str("mail zone %s %s", zone->filename, exdp->descr.c_str());
     }
 
-    if (!system_check(sarg->activator, buf))
+    if (!system_check(sarg->activator, msg.c_str()))
+    {
         return SFR_BLOCK;
+    }
 
-    execute_append(sarg->activator, buf);
+    execute_append(sarg->activator, msg.c_str());
 
-    strcat(buf, "<br/>");
-    send_to_char(buf, sarg->activator);
+    msg += "<br/>";
+    send_to_char(msg, sarg->activator);
 
     return SFR_BLOCK;
 }

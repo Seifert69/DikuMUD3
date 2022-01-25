@@ -1,25 +1,8 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <boost/graph/strong_components.hpp>
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/dijkstra_shortest_paths.hpp>
-#include <boost/graph/filtered_graph.hpp>
-#include <boost/graph/graph_utility.hpp>
+#pragma once
+
 #include "structs.h"
-#include "utils.h"
-#include "interpreter.h"
-#include "comm.h"
-#include "db.h"
-#include "handler.h"
-#include "utility.h"
-#include "common.h"
-#include "constants.h"
-#include <vector>
-int path_weight(unit_data *from, unit_data *to, int dir);
-void create_sc_graph(int num_of_sc);
-void create_sc_dijkstra();
-extern unit_data *g_room_head;
+
+#include <boost/graph/adjacency_list.hpp>
 
 namespace boost
 {
@@ -30,14 +13,20 @@ enum edge_dir_t
 BOOST_INSTALL_PROPERTY(edge, dir);
 } // namespace boost
 
-typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property, boost::property<boost::edge_weight_t, int>>
-    graph_world_t;
-typedef boost::adjacency_list<boost::vecS,
-                              boost::vecS,
-                              boost::directedS,
-                              boost::no_property,
-                              boost::property<boost::edge_weight_t, int, boost::property<boost::edge_dir_t, int>>>
-    graph_t;
+using graph_world_t =
+    boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property, boost::property<boost::edge_weight_t, int>>;
+using graph_t = boost::adjacency_list<boost::vecS,
+                                      boost::vecS,
+                                      boost::directedS,
+                                      boost::no_property,
+                                      boost::property<boost::edge_weight_t, int, boost::property<boost::edge_dir_t, int>>>;
+
+int move_to(unit_data *from, unit_data *to);
+int path_weight(unit_data *from, unit_data *to, int dir);
+void create_sc_graph(int num_of_sc);
+void *create_sc_dijkstra(void *thread);
+void create_worldgraph(void);
 
 extern std::vector<graph_t> g_sc_graphs;
 extern std::vector<std::vector<unit_data *>> g_sc_room_ptr;
+extern pthread_t g_dijkstra_thread;

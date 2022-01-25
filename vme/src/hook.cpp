@@ -1,4 +1,3 @@
-
 /*
  $Author: All $
  $RCSfile: select.cpp,v $
@@ -9,19 +8,19 @@
 #ifdef _WINDOWS
     #include <time.h>
     #include <winsock2.h>
-#else
-    #include <unistd.h>
-    #include <sys/time.h>
-    #include <exception>
-
 #endif
-#include <sys/types.h>
-#include <assert.h>
-#include <signal.h>
-#include <string.h>
-#include <errno.h>
+
 #include "hook.h"
-#include "utility.h"
+#include "slog.h"
+
+#include <sys/time.h>
+#include <unistd.h>
+
+#include <cassert>
+#include <cerrno>
+#include <csignal>
+#include <cstring>
+#include <exception>
 
 cCaptainHook g_CaptainHook;
 
@@ -75,7 +74,9 @@ int cHookNative::IsHooked(void)
 void cHookNative::Unhook(void)
 {
     if (!IsHooked())
+    {
         return;
+    }
 
     int i;
 #ifdef _WINDOWS
@@ -106,7 +107,9 @@ int cHookNative::write(const void *buf, int count)
     int thisround;
 
     if (!IsHooked())
+    {
         return -1;
+    }
 
     sofar = 0;
 
@@ -160,7 +163,9 @@ int cHookNative::write(const void *buf, int count)
         else if (thisround < 0)
         {
             if (errno == EWOULDBLOCK)
+            {
                 return sofar;
+            }
 
             slog(LOG_ALL, 0, "cHookNative (%d): Write to socket, error %d", fd, errno);
             Unhook();
@@ -170,7 +175,9 @@ int cHookNative::write(const void *buf, int count)
         sofar += thisround;
 
         if (sofar >= count)
+        {
             break;
+        }
     }
 
     return sofar;
@@ -185,7 +192,9 @@ int cHookNative::read(void *buf, int count)
     int thisround;
 
     if (!IsHooked())
+    {
         return -1;
+    }
 
     for (;;)
     {
@@ -209,10 +218,14 @@ int cHookNative::read(void *buf, int count)
         {
 #ifdef _WINDOWS
             if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+            {
                 return 0;
+            }
 #else
             if (errno == EWOULDBLOCK)
+            {
                 return 0;
+            }
 #endif
             slog(LOG_ALL, 0, "Read from socket %d error %d", fd, errno);
             Unhook();
@@ -275,7 +288,9 @@ void cHook::PushWrite(void)
     ubit8 buf[1460];
 
     if (!cHook::IsHooked())
+    {
         return;
+    }
 
     while (!qTX.IsEmpty())
     {
@@ -298,7 +313,9 @@ void cHook::PushWrite(void)
             {
                 // will now be closed and error logged
                 if (IsHooked())
+                {
                     slog(LOG_ALL, 0, "PushWrite: Still hooked even though error - not possible");
+                }
                 return;
             }
 
@@ -312,7 +329,9 @@ void cHook::PushWrite(void)
             sofar += thisround;
 
             if (sofar >= len)
+            {
                 break;
+            }
         }
     }
 }
@@ -320,7 +339,9 @@ void cHook::PushWrite(void)
 void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 {
     if (nLen <= 0)
+    {
         return;
+    }
 
     if (!IsHooked())
     {
@@ -360,7 +381,9 @@ int cHook::ReadToQueue(void)
         {
             // will now be closed and error logged
             if (IsHooked())
+            {
                 slog(LOG_ALL, 0, "ReadToQueue: Still hooked even though error - not possible");
+            }
             return -1;
         }
     }
@@ -385,7 +408,9 @@ cCaptainHook::cCaptainHook(void)
     signal(SIGPIPE, SIG_IGN); // Or else pipe fucks the whole thing up...
 #endif
     for (int i = 0; i < 256; i++)
-        pfHook[i] = NULL;
+    {
+        pfHook[i] = nullptr;
+    }
 
     nTop = 0;
     nMax = 0;
@@ -399,8 +424,12 @@ cCaptainHook::~cCaptainHook(void)
 void cCaptainHook::Close(void)
 {
     for (int i = 0; i < 256; i++)
+    {
         if (pfHook[i])
+        {
             pfHook[i]->Unhook();
+        }
+    }
 
     nTop = 0;
     nMax = 0;
@@ -412,7 +441,7 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
     static int newid = 0;
 
     assert(nHandle < (int)sizeof(pfHook));
-    assert(pfHook[nHandle] == NULL);
+    assert(pfHook[nHandle] == nullptr);
 
     if (hook->fd != -1)
     {
@@ -434,7 +463,9 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
     nTop++;
 
     if (nHandle > nMax)
+    {
         nMax = nHandle;
+    }
 
     // DEBUG("HOOKED: Fd %d, Flags %d, Max %d\n", nHandle, nFlag, nMax);
 }
@@ -442,7 +473,9 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
 void cCaptainHook::Unhook(cHook *hook)
 {
     if (!hook->IsHooked())
+    {
         return;
+    }
 
     int nHandle = hook->fd;
     int i;
@@ -464,13 +497,15 @@ void cCaptainHook::Unhook(cHook *hook)
     pfHook[nHandle]->id = -1;
     pfHook[nHandle]->qTX.Flush();
     pfHook[nHandle]->qRX.Flush();
-    pfHook[nHandle] = NULL;
+    pfHook[nHandle] = nullptr;
 
     nMax = 0;
     for (i = 0; i < nTop; i++)
     {
         if (nIdx[i] > nMax)
+        {
             nMax = nIdx[i];
+        }
     }
 }
 
@@ -503,24 +538,30 @@ int cCaptainHook::Wait(struct timeval *timeout)
         FD_SET(nTable[i], &read_set);
 
         if (!pfHook[nTable[i]]->qTX.IsEmpty())
+        {
             FD_SET(nTable[i], &write_set);
+        }
     }
 
-    n = select(nMax + 1, &read_set, &write_set, NULL, timeout);
+    n = select(nMax + 1, &read_set, &write_set, nullptr, timeout);
 
     if (n == -1)
     {
         // Do not set to zero, it means that a timeout occurred.
         //
         if (errno == EAGAIN)
+        {
             n = 1;
+        }
         else if (errno == EINTR)
         {
             // slog(LOG_ALL, 0, "CaptainHook: Select Interrupted.\n");
             n = 1;
         }
         else
+        {
             slog(LOG_ALL, 0, "CaptainHook: Select error %d.\n", errno);
+        }
     }
     else if (n > 0)
     {
@@ -535,10 +576,14 @@ int cCaptainHook::Wait(struct timeval *timeout)
             tmpfd = nTable[i];
 
             if (FD_ISSET(tmpfd, &read_set))
+            {
                 SET_BIT(nFlag, SELECT_READ);
+            }
 
             if (FD_ISSET(tmpfd, &write_set))
+            {
                 SET_BIT(nFlag, SELECT_WRITE);
+            }
 
             cHook *pfTmpHook = pfHook[tmpfd];
 
@@ -550,19 +595,27 @@ int cCaptainHook::Wait(struct timeval *timeout)
                 if ((pfTmpHook == pfHook[tmpfd]) && (pfTmpHook->id == nId[i]))
                 {
                     if (pfTmpHook->tfd() == -1)
+                    {
                         slog(LOG_ALL, 0, "Wait()) SELECT_READ | SELECT_EXCEPT FD is -1");
+                    }
 
                     if (nFlag & (SELECT_READ | SELECT_EXCEPT))
+                    {
                         pfTmpHook->Input(nFlag);
+                    }
                 }
 
                 if ((pfTmpHook == pfHook[tmpfd]) && (pfTmpHook->id == nId[i]))
                 {
                     if (pfTmpHook->tfd() == -1)
+                    {
                         slog(LOG_ALL, 0, "Wait()) SELECT_WRITE FD is -1");
+                    }
 
                     if (nFlag & SELECT_WRITE)
+                    {
                         pfTmpHook->PushWrite();
+                    }
                 }
             }
         }

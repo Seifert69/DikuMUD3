@@ -7372,7 +7372,7 @@ extra {}
 extra {"runes"}
 "Each rune is very complex, and glow in a different colour."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SCYTHE, +25, +25)
+WEAPON_DEF(WPN_SCYTHE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+25
 dilcopy level_restrict@function(51,0,0,"");
 end
 

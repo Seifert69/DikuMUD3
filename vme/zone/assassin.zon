@@ -542,8 +542,8 @@ extra {"$identify"}
 "This dagger is designed to kill the Amir in Khorsabad.
 Backstab the Amir to accomplish your mission.<br/>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 1, 1)
-SKILL_TRANSFER(SKI_BACKSTAB,3)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
+SKILL_TRANSFER(SKI_BACKSTAB, BONUS_GOOD_PLUS)  // Xyzzy: 3
 weight 1
 
 dilbegin prg4();
@@ -599,7 +599,7 @@ talisman.<br/>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 flags {UNIT_FL_MAGIC}
 type ITEM_WORN
-DEX_TRANSFER(+1)
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 weight 0
 cost 1 IRON_PIECE
 rent 50 IRON_PIECE
@@ -626,11 +626,11 @@ extra {"$improved identify"}
 "This weapon has a craftsmanship and magical modifier of 7. It improves
 the wearers dexterity and magical power by two, and reduces the power of divine 
 interactions by 1. Skill in short sword will be improved by 5."
-WEAPON_DEF(WPN_SHORT_SWORD,7,7)
-DEX_TRANSFER(+2)
-MAG_TRANSFER(+2)
-DIV_TRANSFER(-1)
-WEAPON_TRANSFER(WPN_SHORT_SWORD,+5)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
+WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 4
 cost 1 IRON_PIECE
@@ -701,7 +701,7 @@ descr "A black cape of soft velvet lies here."
 extra {}
 "A beautiful and soft cape of black velvet."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 1
 rent 60 IRON_PIECE
 dilcopy abi_restrict@function(ABIL_CHA,50,0,0,"cha_rest@skaven");
@@ -714,7 +714,7 @@ descr "A wooden replica of a katana sword lies here."
 extra {}
 "A wooden replica of a katana sword, used for training purposes only."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SCIMITAR,-3,0)
+WEAPON_DEF(WPN_SCIMITAR, BONUS_BAD_MINUS, BONUS_AVERAGE)  // Xyzzy: -3,0
 cost 1 COPPER_PIECE
 weight 2
 end
@@ -733,7 +733,7 @@ extra {"$improved identify"}
 "The katana and hide skills will raise with 3%, Dexterity with 2 points.<br/>
 The katana is a weapon of craftmanship 5 and magic bonus 5.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SCIMITAR,0,0)
+WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 3 GOLD_PIECE
 rent 68 IRON_PIECE
@@ -755,7 +755,7 @@ extra {"$improved identify"}
 "The wakizashi and hide skills will raise with 3%, Dexterity with 2 points.<br/>
 The wakizashi is a weapon of craftmanship 5 and magic bonus 5.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SCIMITAR,0,0)
+WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 1
 cost 3 GOLD_PIECE
 rent 68 IRON_PIECE

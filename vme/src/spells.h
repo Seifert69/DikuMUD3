@@ -4,10 +4,9 @@
  $Date: 2003/01/30 04:08:58 $
  $Revision: 2.2 $
  */
+#pragma once
 
-#ifndef _MUD_SPELLS_H
-#define _MUD_SPELLS_H
-
+#include "dil.h"
 #include "spelldef.h"
 
 int spell_perform(int spell_no,
@@ -16,10 +15,8 @@ int spell_perform(int spell_no,
                   class unit_data *medium,
                   class unit_data *target,
                   const char *argument,
-                  char *pEffect = NULL,
+                  char *pEffect = nullptr,
                   int bonus = 0);
-
-#include "dil.h"
 
 ubit1 spell_legal_type(int spl, int type);
 ubit1 spell_legal_target(int spl, class unit_data *c, class unit_data *t);
@@ -56,21 +53,8 @@ struct spell_info_type
     struct diltemplate *tmpl; /* Perhaps a DIL template...         */
 };
 
-/* Spell externs */
-extern struct spell_info_type g_spell_info[SPL_TREE_MAX];
-extern struct requirement_type g_spl_requirement[];
-
 #define SPL_MAG_REQ(spell) (spl_requirement[spell].abilities[ABIL_MAG])
 
 #define SPL_DIV_REQ(spell) (spl_requirement[spell].abilities[ABIL_DIV])
 
 #define SPL_POW_REQ(spell) MIN(SPL_MAG_REQ(spell), SPL_DIV_REQ(spell))
-
-void set_spellargs(struct spell_args *sa,
-                   class unit_data *caster,
-                   class unit_data *medium,
-                   class unit_data *target,
-                   const char *arg,
-                   int hm);
-
-#endif /* _MUD_SPELLS_H */

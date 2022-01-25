@@ -66,8 +66,8 @@ char *addstr(char *old, char *limit, const char *msg, const char *snew)
 {
     static const char *origmsg = 0;
 
-    register char *o;
-    register const char *n;
+    char *o;
+    const char *n;
 
     if ((old + strlen(snew)) >= limit)
     {
@@ -101,7 +101,7 @@ char *addstr(char *old, char *limit, const char *msg, const char *snew)
 
 int getnstoken(int f)
 {
-    register int t;
+    int t;
     while (istype(t = gettoken(f), C_W) && (t != '\n'))
         ;       /* Skip space tokens but ! newlines */
     return (t); /* Last token read */
@@ -123,14 +123,14 @@ int getnstoken(int f)
 
 int gettoken(int f)
 {
-    register char ch;
-    register int comment_level;
-    register int fail;
-    register int nt;
-    register int numstate;
-    register char *p;
-    register int t;
-    register int tmask;
+    char ch;
+    int comment_level;
+    int fail;
+    int nt;
+    int numstate;
+    char *p;
+    int t;
+    int tmask;
 
     // MS2020 int  strline;
     /*	Define numstate values:						*/
@@ -527,7 +527,7 @@ int istype(int c, int v)
 /*									*/
 /************************************************************************/
 
-void memmov(register char *f, register char *t, register unsigned l)
+void memmov(char *f, char *t, unsigned l)
 {
     while (l--)
         *t++ = *f++;
@@ -578,7 +578,7 @@ void pbcstr(char *s)
 
 void pbstr(const char *in)
 {
-    register int i;
+    int i;
 
     for (i = strlen(in) - 1; i >= 0; i--)
         pushback(in[i] & 0xFF);
@@ -613,8 +613,8 @@ void pushback(int c)
 
 void puttoken(const char s[])
 {
-    register int ch;
-    register const char *str;
+    int ch;
+    const char *str;
     static int lastoutc = '\n'; /* Last char written */
 
     str = s;

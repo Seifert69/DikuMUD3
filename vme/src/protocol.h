@@ -4,9 +4,7 @@
  $Date: 2003/10/09 01:12:32 $
  $Revision: 2.2 $
  */
-
-#ifndef _MUD_PROTOCOL_H
-#define _MUD_PROTOCOL_H
+#pragma once
 
 #include "essential.h"
 #include "hook.h"
@@ -27,19 +25,6 @@ struct terminal_setup_type
     ubit8 colour_convert; // Colour conversion (mapping) used
     ubit8 websockets;     // Using websockets (HTML)?
 };
-
-void protocol_send_ping(cHook *Hook);
-void protocol_send_close(cHook *Hook, ubit16 id);
-void protocol_send_confirm(cHook *Hook, ubit16 id);
-void protocol_send_request(cHook *Hook);
-void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ubit8 type);
-void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *setup);
-void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname);
-void protocol_send_color(cHook *Hook, ubit16 id, char *color);
-void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, ubit8 nLine);
-
-int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, ubit8 *text_type);
-void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets);
 
 // These definitions are used by the mplex protocol
 #define MULTI_UNIQUE_CHAR '\x01'
@@ -87,4 +72,14 @@ void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets);
 
 #define MULTI_MAX_MUDNAME 256
 
-#endif
+void protocol_send_ping(cHook *Hook);
+void protocol_send_close(cHook *Hook, ubit16 id);
+void protocol_send_confirm(cHook *Hook, ubit16 id);
+void protocol_send_request(cHook *Hook);
+void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ubit8 type);
+void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *setup);
+void protocol_send_exchange(cHook *Hook, ubit16 id, const char *mudname);
+void protocol_send_color(cHook *Hook, ubit16 id, const char *color);
+void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, ubit8 nLine);
+int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, ubit8 *text_type);
+void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets);

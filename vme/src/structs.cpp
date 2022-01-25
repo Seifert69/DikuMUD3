@@ -6,14 +6,16 @@
  */
 
 #include "structs.h"
-#include "utils.h"
-#include "main.h"
-#include "handler.h"
+
+#include "affect.h"
 #include "color.h"
 #include "db.h"
 #include "db_file.h"
-#include "affect.h"
+#include "handler.h"
+#include "mobact.h"
+#include "slog.h"
 #include "textutil.h"
+#include "utils.h"
 
 int g_world_norooms = 0;   /* number of rooms in the world   */
 int g_world_noobjects = 0; /* number of objects in the world */
@@ -26,8 +28,8 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 room_direction_data::room_direction_data(void)
 {
-    key = NULL;
-    to_room = NULL;
+    key = nullptr;
+    to_room = nullptr;
     exit_info = 0;
     difficulty = 0;
 }
@@ -59,13 +61,13 @@ char_data::char_data(void)
 {
     g_world_nochars++;
 
-    money = NULL;
-    descriptor = NULL;
-    Combat = NULL;
-    followers = NULL;
-    master = NULL;
-    last_room = NULL;
-    last_attacker = NULL;
+    money = nullptr;
+    descriptor = nullptr;
+    Combat = nullptr;
+    followers = nullptr;
+    master = nullptr;
+    last_room = nullptr;
+    last_attacker = nullptr;
     last_attacker_type = 0;
 
     // MS2020 memset(&points, 0, sizeof (points));
@@ -76,9 +78,13 @@ char_data::~char_data(void)
 {
 #ifdef DMSERVER
     if (money)
+    {
         FREE(money);
+    }
     if (last_attacker)
+    {
         FREE(last_attacker);
+    }
 #endif
     g_world_nochars--;
 }
@@ -100,8 +106,12 @@ room_data::~room_data(void)
     g_world_norooms--;
 
     for (int i = 0; i < MAX_EXIT + 1; i++)
+    {
         if (dir_option[i])
+        {
             delete dir_option[i];
+        }
+    }
 }
 
 obj_data::obj_data(void)
@@ -130,14 +140,14 @@ pc_data::pc_data(void)
 
     g_world_nopc++;
 
-    bank = NULL;
-    guild = NULL;
-    hometown = NULL;
-    promptstr = NULL;
+    bank = nullptr;
+    guild = nullptr;
+    hometown = nullptr;
+    promptstr = nullptr;
 
     memset(&setup, 0, sizeof(setup));
-    memset(&m_time, 0, sizeof(setup));
-    memset(&account, 0, sizeof(setup));
+    memset(&m_time, 0, sizeof(m_time));
+    memset(&account, 0, sizeof(account));
 
     profession = -1;
     guild_time = 0;
@@ -203,17 +213,17 @@ npc_data::~npc_data(void)
 
 zone_type::zone_type(void)
 {
-    name = NULL;
-    notes = NULL;
-    help = NULL;
-    filename = NULL;
-    rooms = NULL;
-    objects = NULL;
-    npcs = NULL;
+    name = nullptr;
+    notes = nullptr;
+    help = nullptr;
+    filename = nullptr;
+    rooms = nullptr;
+    objects = nullptr;
+    npcs = nullptr;
 
-    zri = NULL;
+    zri = nullptr;
 
-    spmatrix = NULL;
+    spmatrix = nullptr;
     no_rooms = 0;
     no_objs = 0;
     no_npcs = 0;
@@ -241,18 +251,18 @@ zone_type::~zone_type(void)
     for (ut = objects; ut; ut = nextut)
     {
         nextut = ut->next;
-        ut->next = NULL;
-        ut->gnext = NULL;
-        ut->gprevious = NULL;
+        ut->next = nullptr;
+        ut->gnext = nullptr;
+        ut->gprevious = nullptr;
         delete ut;
     }
 
     for (ut = npcs; ut; ut = nextut)
     {
         nextut = ut->next;
-        ut->next = NULL;
-        ut->gnext = NULL;
-        ut->gprevious = NULL;
+        ut->next = nullptr;
+        ut->gnext = nullptr;
+        ut->gprevious = nullptr;
         delete ut;
     }
 
@@ -301,8 +311,8 @@ zone_type::~zone_type(void)
 
 file_index_type::file_index_type(void)
 {
-    name = NULL;
-    zone = NULL;
+    name = nullptr;
+    zone = nullptr;
     // next = NULL;
     // unit = NULL;
 
@@ -332,14 +342,14 @@ unit_fptr::unit_fptr(void)
     priority = FN_PRI_CHORES;
     heart_beat = PULSE_SEC;
     flags = 0;
-    data = NULL;
-    next = NULL;
-    event = NULL;
+    data = nullptr;
+    next = nullptr;
+    event = nullptr;
 }
 
 unit_fptr::~unit_fptr()
 {
-    data = NULL;
+    data = nullptr;
 }
 
 #ifndef VMC_SRC
@@ -453,10 +463,11 @@ unit_data *unit_data::copy()
         }
     }
     else
+    {
         assert(FALSE);
+    }
     insert_in_unit_list(u); /* Put unit into the g_unit_list      */
     apply_affect(u);        /* Set all affects that modify      */
-    void start_all_special(class unit_data * u);
     start_all_special(u);
 
     return u;
@@ -467,31 +478,39 @@ unit_data *unit_data::copy()
 unit_data *new_unit_data(ubit8 type)
 {
     if (type == UNIT_ST_ROOM)
+    {
         return new EMPLACE(room_data) room_data;
+    }
     else if (type == UNIT_ST_OBJ)
+    {
         return new EMPLACE(obj_data) obj_data;
+    }
     else if (type == UNIT_ST_PC)
+    {
         return new EMPLACE(pc_data) pc_data;
+    }
     else if (type == UNIT_ST_NPC)
+    {
         return new EMPLACE(npc_data) npc_data;
+    }
     else
     {
         assert(FALSE);
-        return NULL; // Need to avoid warning on Git actions.
+        return nullptr; // Need to avoid warning on Git actions.
     }
 }
 
 unit_data::unit_data(void)
 {
-    func = NULL;
-    affected = NULL;
-    fi = NULL;
-    key = NULL;
-    outside = NULL;
-    inside = NULL;
-    next = NULL;
-    gnext = NULL;
-    gprevious = NULL;
+    func = nullptr;
+    affected = nullptr;
+    fi = nullptr;
+    key = nullptr;
+    outside = nullptr;
+    inside = nullptr;
+    next = nullptr;
+    gnext = nullptr;
+    gprevious = nullptr;
     chars = 0;
     manipulate = 0;
     flags = 0;
@@ -512,14 +531,12 @@ unit_data::unit_data(void)
 
 unit_data::~unit_data(void)
 {
-    void unlink_affect(class unit_affected_type * af);
-
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
 
 #ifdef DMSERVER
-    assert(gnext == NULL);
-    assert(gprevious == NULL);
-    assert(next == NULL);
+    assert(gnext == nullptr);
+    assert(gprevious == nullptr);
+    assert(next == nullptr);
     assert(g_unit_list != this);
 #endif
 
@@ -527,30 +544,44 @@ unit_data::~unit_data(void)
         FREE(key);
 #ifdef DMSERVER
     while (UNIT_FUNC(this))
+    {
         destroy_fptr(this, UNIT_FUNC(this)); /* Unlinks, no free */
+    }
 
     while (UNIT_AFFECTED(this))
+    {
         unlink_affect(UNIT_AFFECTED(this));
+    }
 #endif
 
     /* Call functions of the unit which have any data                     */
     /* that they might want to work on.                                   */
 
     if (IS_OBJ(this))
+    {
         delete U_OBJ(this);
+    }
     else if (IS_ROOM(this))
+    {
         delete U_ROOM(this);
+    }
     else if (IS_CHAR(this))
     {
         if (IS_NPC(this))
+        {
             delete U_NPC(this);
+        }
         else
+        {
             delete U_PC(this);
+        }
 
         delete U_CHAR(this);
     }
     else
+    {
         assert(FALSE);
+    }
 }
 
 void unit_data::set_fi(class file_index_type *f)
@@ -558,7 +589,9 @@ void unit_data::set_fi(class file_index_type *f)
     assert(f);
 
     if (this->fi)
+    {
         slog(LOG_ALL, 0, "ERROR: FI was already set. This shouldn't happen");
+    }
 
     this->fi = f;
     this->fi->no_in_mem++;

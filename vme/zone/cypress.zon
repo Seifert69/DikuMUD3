@@ -733,7 +733,7 @@ names {"hand mace","mace"}
 title "a hand mace"
 descr "A good looking hand mace has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_MACE, +2, +3)
+WEAPON_DEF(WPN_MACE, BONUS_GOOD, BONUS_GOOD)  // Xyzzy: +2,+3
 WEAPON_SLAYER(RACE_ORC)
 weight 20
 dilcopy quest_restrict@function (GWYN_QUEST_COMPLETE,0,0,"");
@@ -753,7 +753,6 @@ extra {"$improved identify"}
 "This is a mace of Orc Slaying."
 end
 
-%mobiles
 %mobiles
 
 

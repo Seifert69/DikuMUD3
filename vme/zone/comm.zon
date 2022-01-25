@@ -368,7 +368,7 @@ if(left(arg,5) == "group")
  if((self.type == UNIT_ST_PC) and (not isset(self.pcflags,PC_ECHO)))
  	sendtext("Ok.<br/>", self);
  else
-  sendtext("<div class='tell_self'>"+me+"</div>", self);
+  sendtext("<div class='tell_self'>"+me+"</div><br/>", self);
 
  mast := self.master;
  if(mast == null) mast := self;

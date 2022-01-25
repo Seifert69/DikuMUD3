@@ -4,45 +4,32 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.11 $
  */
+#include "event.h"
+
 #include "affect.h"
+#include "comm.h"
+#include "eliza.h"
+#include "interpreter.h"
+#include "main_functions.h"
 #include "mobact.h"
-#include "external_vars.h"
-#ifdef _WINDOWS
-
-#else
-    #include <unistd.h>
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
+#include "slog.h"
+#include "spec_assign.h"
 #include "structs.h"
 #include "utils.h"
-#include "utility.h"
-#include "handler.h"
-#include "system.h"
-#include "comm.h"
-#include "db.h"
-#include "interpreter.h"
-#include "main.h"
-#include "textutil.h"
-#include "files.h"
-#include "event.h"
-#include "dilrun.h"
+#include "weather.h"
+#include "zone_reset.h"
+
 #include <sys/time.h>
-void check_reboot_event(void *, void *);
-void delayed_action(void *p1, void *p2);
-void check_idle_event(void *p1, void *p2);
-void perform_violence_event(void *, void *);
-void weather_and_time_event(void *, void *);
-void zone_event(void *, void *);
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 eventqueue::eventqueue(void)
 {
     count = 0;
     heapsize = 0;
-    heap = NULL;
+    heap = nullptr;
     loop_process = 0;
     loop_time = 0;
     max_process = 0;
@@ -83,10 +70,14 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
         membug_verify(f->data);
 
         if (u)
+        {
             assert(!u->is_destructed());
+        }
 
         if (f)
+        {
             assert(!f->is_destructed());
+        }
 
         if (f->index == 82)
         {
@@ -131,7 +122,9 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
             parent_index = current_index / 2;
         }
         else
+        {
             break;
+        }
     }
     heap[current_index] = end;
 
@@ -143,13 +136,13 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     int i;
     if ((func == special_event) && arg2 && (((class unit_fptr *)arg2)->event))
     {
-        ((class unit_fptr *)arg2)->event->func = NULL;
-        ((class unit_fptr *)arg2)->event = NULL;
+        ((class unit_fptr *)arg2)->event->func = nullptr;
+        ((class unit_fptr *)arg2)->event = nullptr;
     }
     else if ((func == affect_beat) && arg1 && (((class unit_affected_type *)arg1)->event))
     {
-        ((class unit_affected_type *)arg1)->event->func = NULL;
-        ((class unit_affected_type *)arg1)->event = NULL;
+        ((class unit_affected_type *)arg1)->event->func = nullptr;
+        ((class unit_affected_type *)arg1)->event = nullptr;
     }
     else if ((func == affect_beat) && arg1 && (!((class unit_affected_type *)arg1)->event))
     {
@@ -162,8 +155,12 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     else
     {
         for (i = 1; i <= count; i++)
+        {
             if (heap[i]->func == func && heap[i]->arg1 == arg1 && heap[i]->arg2 == arg2)
-                heap[i]->func = NULL;
+            {
+                heap[i]->func = nullptr;
+            }
+        }
     }
 }
 
@@ -172,15 +169,18 @@ void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *
     int i;
 
     for (i = 1; i <= count; i++)
+    {
         if ((heap[i]->func == func) && (!arg1 || (heap[i]->arg1 == arg1)) && (!arg2 || (heap[i]->arg2 == arg2)))
-            heap[i]->func = 0;
+        {
+            heap[i]->func = nullptr;
+        }
+    }
 }
 
 void eventqueue::process(void)
 {
     struct eventq_elem *tmp_event, *newtop;
     int j, k;
-    char pname[64];
     char dilname[256];
     char dilzname[256];
     char diloname[256];
@@ -189,11 +189,11 @@ void eventqueue::process(void)
     ubit32 us;
     void (*tfunc)(void *, void *);
     loop_process = 0;
-    gettimeofday(&old, (struct timezone *)0);
+    gettimeofday(&old, (struct timezone *)nullptr);
 
     while ((count >= 1) && (heap[1]->when <= g_tics))
     {
-        gettimeofday(&now, (struct timezone *)0);
+        gettimeofday(&now, (struct timezone *)nullptr);
         us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
         loop_time = us / 1000000.0;
 
@@ -211,7 +211,7 @@ void eventqueue::process(void)
         /* dequeue & process event */
         tmp_event = heap[1];
         heap[1] = heap[count];
-        heap[count] = NULL;
+        heap[count] = nullptr;
         count--;
         newtop = heap[1];
         j = 1;
@@ -219,8 +219,12 @@ void eventqueue::process(void)
         while (k <= count)
         {
             if (k < count)
+            {
                 if (heap[k]->when > heap[k + 1]->when)
+                {
                     k++;
+                }
+            }
             if (newtop->when > heap[k]->when)
             {
                 heap[j] = heap[k];
@@ -228,7 +232,9 @@ void eventqueue::process(void)
                 k = 2 * j;
             }
             else
+            {
                 break;
+            }
         }
         heap[j] = newtop;
         if (tmp_event->func)
@@ -250,7 +256,7 @@ void eventqueue::process(void)
                 membug_verify(u);
                 membug_verify(fptr);
 
-                bDestructed = (u->is_destructed() || fptr->is_destructed() || (tmp_event->func == NULL));
+                bDestructed = (u->is_destructed() || fptr->is_destructed() || (tmp_event->func == nullptr));
 
                 if (!bDestructed)
                 {
@@ -267,9 +273,13 @@ void eventqueue::process(void)
                     // But rundil checks too.
 
                     if (prg->fp->tmpl->prgname)
+                    {
                         strcpy(dilname, prg->fp->tmpl->prgname);
+                    }
                     if (prg->fp->tmpl->zone)
+                    {
                         strcpy(dilzname, prg->fp->tmpl->zone->name);
+                    }
                     strcpy(diloname, tmp_event->arg1 ? UNIT_FI_NAME((class unit_data *)(tmp_event->arg1)) : "NO NAME");
                     strcpy(dilozname, tmp_event->arg1 ? UNIT_FI_ZONENAME((class unit_data *)(tmp_event->arg1)) : "NO ZONE");
                 }
@@ -287,7 +297,7 @@ void eventqueue::process(void)
                     max_process = loop_process;
                 }
 
-                gettimeofday(&pnow, (struct timezone *)0);
+                gettimeofday(&pnow, (struct timezone *)nullptr);
                 us = (pnow.tv_sec - now.tv_sec) * 1000000L + (pnow.tv_usec - now.tv_usec);
                 loop_time = us / 1000000.0;
 
@@ -296,6 +306,7 @@ void eventqueue::process(void)
                     if (tfunc == special_event)
                     {
                         if (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL)
+                        {
                             slog(LOG_DIL,
                                  0,
                                  "Process took %1.4f seconds to complete: %s@%s on %s@%s - %s (%d)'",
@@ -306,43 +317,62 @@ void eventqueue::process(void)
                                  dilozname,
                                  g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
                                  ((class unit_fptr *)tmp_event->arg2)->index);
-
+                        }
                         else
+                        {
                             slog(LOG_DIL,
                                  0,
                                  "Internal process took %1.4f seconds to complete: %s (%d)'",
                                  loop_time,
                                  g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
                                  ((class unit_fptr *)tmp_event->arg2)->index);
+                        }
                     }
                     else
                     {
+                        std::string pname;
                         if (tfunc == check_reboot_event)
-                            snprintf(pname, sizeof(pname), "Reboot Event");
+                        {
+                            pname = "Reboot Event";
+                        }
                         else if (tfunc == affect_beat)
-                            snprintf(pname, sizeof(pname), "Affect Beat");
+                        {
+                            pname = "Affect Beat";
+                        }
                         else if (tfunc == delayed_action)
-                            snprintf(pname, sizeof(pname), "Affect Beat");
+                        {
+                            pname = "Affect Beat";
+                        }
                         else if (tfunc == check_idle_event)
-                            snprintf(pname, sizeof(pname), "Check Idle Event");
+                        {
+                            pname = "Check Idle Event";
+                        }
                         else if (tfunc == perform_violence_event)
-                            snprintf(pname, sizeof(pname), "Violence Event");
+                        {
+                            pname = "Violence Event";
+                        }
                         else if (tfunc == weather_and_time_event)
-                            snprintf(pname, sizeof(pname), "Weather And Time Event");
+                        {
+                            pname = "Weather And Time Event";
+                        }
                         else if (tfunc == zone_event)
-                            snprintf(pname, sizeof(pname), "Zone Reset Event");
+                        {
+                            pname = "Zone Reset Event";
+                        }
                         else
-                            snprintf(pname, sizeof(pname), "UNKNOWN Event");
+                        {
+                            pname = "UNKNOWN Event";
+                        }
                         slog(LOG_DIL, 0, "Internal Process (%s) Took %1.4f seconds to Complete", pname, loop_time);
                     }
                 }
             } // !bDestructed
         }
         delete tmp_event;
-        tmp_event = NULL;
+        tmp_event = nullptr;
     }
 
-    gettimeofday(&now, (struct timezone *)0);
+    gettimeofday(&now, (struct timezone *)nullptr);
     us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
     loop_time = us / 1000000.0;
 
