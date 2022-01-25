@@ -1565,7 +1565,12 @@ int bonus_map_a(int bonus)
         bonus = -7;
     }
 
-    return map[bonus+7]+2*(open100()/100);
+    int b = map[bonus+7];
+
+    if (b != 0)
+        b += 2*(open100()/100);
+
+    return b;
 }
 
 
@@ -1586,7 +1591,12 @@ int bonus_map_b(int bonus)
         bonus = -7;
     }
 
-    return map[bonus+7]+open100()/100;
+    int b = map[bonus+7];
+
+    if (b != 0)
+        b += open100()/100;
+
+    return b;
 }
 
 
