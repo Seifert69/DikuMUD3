@@ -33,6 +33,7 @@ const char *is_name_raw(const char *arg, char const *const *names); // MS2020 co
 char *is_name(char *arg, char const *const *names);                 // arg will get double spaces zapped
 
 int str_lower(char *s);
+int str_lower(std::string &s);
 int str_upper(char *s);
 int str_lower(const char *s, char *d, int nBufSize);
 
@@ -40,8 +41,8 @@ char *spc(int n);
 char *str_repeatchar(int n, char c);
 
 char *str_line(const char *, char *);
-char *itoa(int n);
-char *ltoa(long n);
+const char *itoa(int n);
+const char *ltoa(long n);
 int str_ccmp(const char *s, const char *d);
 int str_nccmp(const char *s, const char *d, int n);
 char *str_dup(const char *source);

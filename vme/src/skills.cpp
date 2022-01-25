@@ -1051,49 +1051,37 @@ bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair
 
 void ability_dump(void)
 {
-    std::string str;
-    char buf[MAX_STRING_LENGTH];
-
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
 
         for (int i = 0; i < ABIL_TREE_MAX; i++)
         {
-            str = "";
+            auto str = diku::format_to_str("%s,%s", g_AbiColl.text[i], spc(20 - strlen(g_AbiColl.text[i])));
 
-            snprintf(buf, sizeof(buf), "%s,%s", g_AbiColl.text[i], spc(20 - strlen(g_AbiColl.text[i])));
-            str.append(buf);
-
-            snprintf(buf,
-                     sizeof(buf),
-                     ".profession %s%s = %s%d\n",
-                     g_professions[j],
-                     spc(12 - strlen(g_professions[j])),
-                     (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                     g_AbiColl.prof_table[i].profession_cost[j]);
-            str.append(buf);
+            str += diku::format_to_str(".profession %s%s = %s%d\n",
+                                       g_professions[j],
+                                       spc(12 - strlen(g_professions[j])),
+                                       (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                                       g_AbiColl.prof_table[i].profession_cost[j]);
 
             vect.push_back(std::make_pair(g_AbiColl.prof_table[i].profession_cost[j], str));
 
+            // TODO This looks broken str is never used again in the old code
             if (g_AbiColl.prof_table[i].min_level > 0)
             {
-                snprintf(buf, sizeof(buf), "restrict level          = %d\n", g_AbiColl.prof_table[i].min_level);
-                str.append(buf);
+                str += diku::format_to_str("restrict level          = %d\n", g_AbiColl.prof_table[i].min_level);
             }
 
             for (int j = 0; j < ABIL_TREE_MAX; j++)
             {
                 if (g_AbiColl.prof_table[i].min_abil[j] > 0)
                 {
-                    snprintf(buf,
-                             sizeof(buf),
-                             "restrict %s%s    = %s%d\n",
-                             g_AbiColl.text[j],
-                             spc(12 - strlen(g_professions[j])),
-                             (g_AbiColl.prof_table[i].min_abil[j] >= 0) ? "+" : "",
-                             g_AbiColl.prof_table[i].min_abil[j]);
-                    str.append(buf);
+                    str += diku::format_to_str("restrict %s%s    = %s%d\n",
+                                               g_AbiColl.text[j],
+                                               spc(12 - strlen(g_professions[j])),
+                                               (g_AbiColl.prof_table[i].min_abil[j] >= 0) ? "+" : "",
+                                               g_AbiColl.prof_table[i].min_abil[j]);
                 }
             }
         }
@@ -1492,9 +1480,6 @@ static void weapon_init(void)
 
 void weapon_dump(void)
 {
-    std::string str;
-    char buf[MAX_STRING_LENGTH];
-
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
@@ -1506,19 +1491,13 @@ void weapon_dump(void)
                 continue;
             }
 
-            str = "";
+            auto str = diku::format_to_str("%s,%s", g_WpnColl.text[i], spc(20 - strlen(g_WpnColl.text[i])));
 
-            snprintf(buf, sizeof(buf), "%s,%s", g_WpnColl.text[i], spc(20 - strlen(g_WpnColl.text[i])));
-            str.append(buf);
-
-            snprintf(buf,
-                     sizeof(buf),
-                     ".profession %s%s = %s%d\n",
-                     g_professions[j],
-                     spc(12 - strlen(g_professions[j])),
-                     (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                     g_WpnColl.prof_table[i].profession_cost[j]);
-            str.append(buf);
+            str += diku::format_to_str(".profession %s%s = %s%d\n",
+                                       g_professions[j],
+                                       spc(12 - strlen(g_professions[j])),
+                                       (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                                       g_WpnColl.prof_table[i].profession_cost[j]);
 
             vect.push_back(std::make_pair(g_WpnColl.prof_table[i].profession_cost[j], str));
 

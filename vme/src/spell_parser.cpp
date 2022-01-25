@@ -8,6 +8,7 @@
 #include "db.h"
 #include "dilrun.h"
 #include "files.h"
+#include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "justice.h"
@@ -939,8 +940,6 @@ static void spell_init(void)
 
 void spell_dump(void)
 {
-    std::string str;
-
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
@@ -952,7 +951,7 @@ void spell_dump(void)
                 continue;
             }
 
-            str = diku::format_to_str("%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
+            std::string str = diku::format_to_str("%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
 
             str += diku::format_to_str(".profession %s%s = %s%d\n",
                                        g_professions[j],

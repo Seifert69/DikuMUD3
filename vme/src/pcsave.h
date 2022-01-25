@@ -2,7 +2,9 @@
 
 #include "essential.h"
 
-char *PlayerFileName(const char *);
+#include <string>
+
+std::string PlayerFileName(const char *);
 int delete_inventory(const char *pName);
 int delete_player(const char *);
 int find_player_id(char *pName);

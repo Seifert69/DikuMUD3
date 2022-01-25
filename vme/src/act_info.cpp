@@ -19,27 +19,26 @@
 #include <cstring>
 
 /* also used in "corpses" wizard-command */
-char *in_string(class unit_data *ch, class unit_data *u)
+const char *in_string(class unit_data *ch, class unit_data *u)
 {
-    static char in_str[512];
-    char *tmp = in_str;
-
+    static std::string in_str;
+    in_str.clear();
     while ((u = UNIT_IN(u)))
     {
         if (IS_ROOM(u))
         {
-            sprintf(tmp, "<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
-            return in_str;
+            in_str = diku::format_to_str("<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+            return in_str.c_str();
         }
         else
         {
-            sprintf(tmp, "%s/", UNIT_SEE_NAME(ch, u));
-            TAIL(tmp);
+            in_str += diku::format_to_str("%s/", UNIT_SEE_NAME(ch, u));
         }
     }
 
     /*  error(HERE, "Something that is UNIT_IN, not in a room!");*/
-    return (nullptr);
+
+    return nullptr;
 }
 
 void player_where(class unit_data *ch, char *arg)
@@ -74,7 +73,6 @@ void player_where(class unit_data *ch, char *arg)
 
 void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
 {
-    char buf1[MAX_STRING_LENGTH], buf2[512];
     class unit_data *i;
     class descriptor_data *d;
     char *arg = (char *)aaa;
@@ -97,29 +95,23 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                 (d->original == nullptr || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
             {
                 nCount++;
+                std::string whose_body;
                 if (d->original)
                 { /* If switched */
-                    snprintf(buf2, sizeof(buf2), " In body of %s", UNIT_NAME(d->character));
-                }
-                else
-                {
-                    buf2[0] = '\0';
+                    whose_body = diku::format_to_str(" In body of %s", UNIT_NAME(d->character));
                 }
 
-                snprintf(buf1,
-                         sizeof(buf1),
-                         "%-20s - %s [%s]%s<br/>",
-                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                         UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
-                         in_string(ch, d->character),
-                         buf2);
-                mystr.append(buf1);
+                mystr += diku::format_to_str("%-20s - %s [%s]%s<br/>",
+                                             UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                                             UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
+                                             in_string(ch, d->character),
+                                             whose_body);
             }
         }
     }
     else /* Arg was not empty */
     {
-        mystr = "";
+        mystr.clear();
 
         for (i = g_unit_list; i; i = i->gnext)
         {
@@ -131,19 +123,15 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                     continue;
                 }
 
-                snprintf(buf1,
-                         sizeof(buf1),
-                         "%-30s - %s [%s]<br/>",
-                         TITLENAME(i),
-                         UNIT_SEE_TITLE(ch, UNIT_IN(i)),
-                         (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
-
-                mystr.append(buf1);
+                mystr += diku::format_to_str("%-30s - %s [%s]<br/>",
+                                             TITLENAME(i),
+                                             UNIT_SEE_TITLE(ch, UNIT_IN(i)),
+                                             (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
             }
         }
     }
 
-    if (mystr.length() < 1)
+    if (mystr.empty())
     {
         send_to_char("Couldn't find any such thing.<br/>", ch);
     }
@@ -151,11 +139,11 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     {
         if (nCount > 100)
         {
-            mystr.append("...<br/>");
+            mystr += "...<br/>";
         }
-        mystr.append("Found ");
-        mystr.append(itoa(nCount));
-        mystr.append(" matches<br/>");
+        mystr += "Found ";
+        mystr += itoa(nCount);
+        mystr += " matches<br/>";
         page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
     }
 }

@@ -8,6 +8,7 @@
 #include "textutil.h"
 
 #include "common.h"
+#include "formatter.h"
 #include "slog.h"
 #include "structs.h"
 
@@ -66,6 +67,19 @@ int str_lower(char *s)
     }
 
     return l;
+}
+
+int str_lower(std::string &s)
+{
+    for (size_t i = 0; i < s.length(); ++i)
+    {
+        if (isupper(s[i]))
+        {
+            s[i] = tolower(s[i]);
+        }
+    }
+
+    return static_cast<int>(s.length());
 }
 
 int str_upper(char *s)
@@ -149,24 +163,24 @@ char *spc(int n)
  *  of the integer 'n'
  *  I've made it the easy way :)
  */
-char *itoa(int n)
+const char *itoa(int n)
 {
-    static char buf[32]; /* 32 digits can even cope with 64 bit ints */
+    static std::string buf; /* 32 digits can even cope with 64 bit ints */
 
-    snprintf(buf, sizeof(buf), "%d", n);
-    return buf;
+    buf = diku::format_to_str("%d", n);
+    return buf.c_str();
 }
 
 /*  Return a pointer to the string containing the ascii reresentation
  *  of the integer 'n'
  *  I've made it the easy way :)
  */
-char *ltoa(long n)
+const char *ltoa(long n)
 {
-    static char buf[32]; /* 32 digits can even cope with 64 bit ints */
+    static std::string buf; /* 32 digits can even cope with 64 bit ints */
 
-    snprintf(buf, sizeof(buf), "%ld", n);
-    return buf;
+    buf = diku::format_to_str("%ld", n);
+    return buf.c_str();
 }
 
 /*  STR Convention: "str_" [n] [c] <meaning>
@@ -1765,11 +1779,11 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
 // given the attribute colorstr return <div class='colorstr'>. Dont make colorstr too insanely long.
 const char *divcolor(const char *colorstr)
 {
-    static char buf[256];
+    static std::string buf;
 
-    snprintf(buf, sizeof(buf), "<div class='%s'>", colorstr);
+    buf = diku::format_to_str("<div class='%s'>", colorstr);
 
-    return buf;
+    return buf.c_str();
 }
 
 // Encode str to JSON encoding (format X)
