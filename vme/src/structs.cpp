@@ -146,8 +146,8 @@ pc_data::pc_data(void)
     promptstr = nullptr;
 
     memset(&setup, 0, sizeof(setup));
-    memset(&m_time, 0, sizeof(setup));
-    memset(&account, 0, sizeof(setup));
+    memset(&m_time, 0, sizeof(m_time));
+    memset(&account, 0, sizeof(account));
 
     profession = -1;
     guild_time = 0;
