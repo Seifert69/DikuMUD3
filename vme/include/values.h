@@ -116,6 +116,27 @@ END HEADER*/
 
 
 //
+// The bonus scale that builders use to assign weapon quality, magic bonus, shields, armours,
+// skills, attributes,etc.
+//
+#define BONUS_ARTIFACT        7
+#define BONUS_SUPERIOR        6
+#define BONUS_EXCELLENT_PLUS  5
+#define BONUS_EXCELLENT       4
+#define BONUS_GOOD_PLUS       3
+#define BONUS_GOOD            2
+#define BONUS_AVERAGE_PLUS    1
+#define BONUS_AVERAGE         0
+#define BONUS_AVERAGE_MINUS  -1
+#define BONUS_BAD            -2
+#define BONUS_BAD_MINUS      -3
+#define BONUS_TERRIBLE       -4
+#define BONUS_TERRIBLE_MINUS -5
+#define BONUS_JUNK_ALMOST    -6
+#define BONUS_JUNK           -7
+
+
+//
 // Possibly have fewer professions.
 //    4 core professions, fighter, mage, priest, thief
 //   and then the well known hybrids:
