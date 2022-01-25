@@ -949,9 +949,9 @@ extra {"$improved identify"}
 "It adds 2 to your Str and 3 to your Hit.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HANDS}
 MATERIAL_METAL("This item is made of a strange alloy.")
-STR_TRANSFER(+2)
-HIT_TRANSFER(+2)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+HIT_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy guild_restrict@function ({GUILD_BARBARIAN},0,0,"");
 
 dilbegin fnpri(30) recall charge_gauntlet();
@@ -1128,8 +1128,8 @@ extra {}
 "A barbarian sword, it is finely made, and unadorned. It looks very 
 well-balanced and sharp."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD,5,5)
-WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 6
 cost 3 SILVER_PIECE
 end
@@ -1143,8 +1143,8 @@ extra {}
 "A barbarian axe, it is finely made, and unadorned. It looks very 
 well-balanced and sharp."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BATTLE_AXE,5,5)
-WEAPON_TRANSFER(WPN_BATTLE_AXE,+5)
+WEAPON_DEF(WPN_BATTLE_AXE, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
+WEAPON_TRANSFER(WPN_BATTLE_AXE, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 8
 cost 3 SILVER_PIECE
 end
@@ -1158,8 +1158,8 @@ extra {}
 "A barbarian war mattock, it is finely made, and unadorned. It looks very 
 well-balanced and heavy."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_MATTOCK,5,5)
-WEAPON_TRANSFER(WPN_WAR_MATTOCK,+5)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 10
 cost 3 SILVER_PIECE
 end
@@ -1179,9 +1179,9 @@ extra {}
 beneath generations of wear. It appears to be quite heavy, though it
 holds easily in the hand due to its fine balance."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_MATTOCK,8,5)
-WEAPON_TRANSFER(WPN_WAR_MATTOCK,+5)
-STR_TRANSFER(+2)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_EXCELLENT_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 8,5
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 weight 9
 cost 5 SILVER_PIECE
 end
@@ -1195,8 +1195,8 @@ extra {}
 "A barbarian whip, it is finely made, and unadorned. It looks very 
 well-balanced and quick."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WHIP,5,5)
-WEAPON_TRANSFER(WPN_WHIP,+5)
+WEAPON_DEF(WPN_WHIP, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
+WEAPON_TRANSFER(WPN_WHIP, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 2
 cost 3 SILVER_PIECE
 end
@@ -1210,8 +1210,8 @@ extra {}
 "A barbarian halberd, it is finely made, and unadorned. It looks very 
 well-balanced and sharp."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HALBERD,5,5)
-WEAPON_TRANSFER(WPN_HALBERD,+5)
+WEAPON_DEF(WPN_HALBERD, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
+WEAPON_TRANSFER(WPN_HALBERD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 6
 cost 3 SILVER_PIECE
 end
@@ -1243,7 +1243,7 @@ names {"barbarians bracers", "bracers"}
 title "a barbarian's bracers"
 descr "A pair of hard leather bracers lie here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_HRD_LEATHER(2,2)
+ARMOUR_HRD_LEATHER(BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 2,2
 weight 6
 extra {}
 "This fine pair of hard leather bracers has a bloodshot eye inscribed each wrist."
@@ -1254,7 +1254,7 @@ names {"loin cloth", "cloth"}
 title "a barbarian's loin cloth"
 descr "A soft leather loin cloth lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_LEATHER(2,2)
+ARMOUR_LEATHER(BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 2,2
 weight 3
 extra {}
 "This soft leather loin cloth has a bloodshot eye inscribed upon it."
@@ -1265,7 +1265,7 @@ names {"leather jerkin", "jerkin"}
 title "a barbarian's jerkin"
 descr "A fine leather jerkin lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(2,2)
+ARMOUR_HRD_LEATHER(BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 2,2
 weight 10
 extra {}
 "This fine leather jerkin has a bloodshot eye inscribed upon the breast."
@@ -1276,7 +1276,7 @@ names {"hilkas bracers", "bracers"}
 title "fine leather bracers"
 descr "A fine pair of hard leather bracers lie here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_HRD_LEATHER(5,5)
+ARMOUR_HRD_LEATHER(BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
 weight 6
 extra {}
 "These bracers show hard wear, and fine craftsmanship. The mistress of the
@@ -1289,7 +1289,7 @@ names {"loin cloth", "cloth"}
 title "a master's loin cloth"
 descr "A fine leather loin cloth lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_LEATHER(5,5)
+ARMOUR_LEATHER(BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
 weight 3
 extra {}
 "This fine leather loin cloth is carefully crafted to meet the highest
@@ -1301,7 +1301,7 @@ names {"leather jerkin", "jerkin"}
 title "Hilka's jerkin"
 descr "A fine leather jerkin lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(5,5)
+ARMOUR_HRD_LEATHER(BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
 weight 10
 extra {}
 "This jerkin represents the best of carefully designed hard leather protection,

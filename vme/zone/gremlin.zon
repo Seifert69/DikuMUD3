@@ -2029,7 +2029,7 @@ names {"large club","club"}
 title "a large club"
 descr "A large knobby club is here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, 0,0)
+WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 extra {}
 "It's a simple yet effective club. Large and knobby, it wouldnt 
@@ -2041,7 +2041,7 @@ names {"small club","club"}
 title "a simple club"
 descr "A simple wooden club is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, -1,-1)
+WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE_MINUS, BONUS_AVERAGE_MINUS)  // Xyzzy: -1,-1
 weight 1
 extra {}
 "It's a simple club. Despite it small size, it still wouldnt 
@@ -2053,7 +2053,7 @@ names {"rusty sword","sword"}
 title "a rusty sword"
 descr "A rusty short sword is here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, -1,-1)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE_MINUS, BONUS_AVERAGE_MINUS)  // Xyzzy: -1,-1
 weight 1
 extra {}
 "This rusty sword appears to have been left in the rain for a period of 
@@ -2103,7 +2103,7 @@ descr
 extra {}
 "This is a simple hand axe.  It appears to be equally well suited for chopping wood and self defense."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE, 2, 0)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 2,0
 end
 
 barnham_dagger // thief, sorcerer, necromancer, assassin, conjurer
@@ -2114,11 +2114,11 @@ descr
 extra {}
 "This dagger gleams with a magical glow. It appears to be well suited for self defense.<br>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 7, 7)
+WEAPON_DEF(WPN_DAGGER, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 WEAPON_SLAYER(RACE_GOBLIN)
-WEAPON_TRANSFER(WPN_DAGGER,+10)
-STR_TRANSFER(+1)
-DEX_TRANSFER(+1)
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_ARTIFACT)  // Xyzzy: +10
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
 end
 
@@ -2130,11 +2130,11 @@ descr
 extra {}
 "This mace gleams with a magical glow. It appears to be well suited for self defense.<br>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_MACE, 7, 7)
+WEAPON_DEF(WPN_MACE, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 WEAPON_SLAYER(RACE_GOBLIN)
-WEAPON_TRANSFER(WPN_MACE,+10)
-STR_TRANSFER(+1)
-DEX_TRANSFER(+1)
+WEAPON_TRANSFER(WPN_MACE, BONUS_ARTIFACT)  // Xyzzy: +10
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
 end
 
@@ -2146,11 +2146,11 @@ descr
 extra {}
 "This long sword gleams with a magical glow. It appears to be well suited for self defense.<br>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, 7, 7)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 WEAPON_SLAYER(RACE_GOBLIN)
-WEAPON_TRANSFER(WPN_LONG_SWORD,+10)
-STR_TRANSFER(+1)
-DEX_TRANSFER(+1)
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_ARTIFACT)  // Xyzzy: +10
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
 end
 
@@ -2162,10 +2162,10 @@ descr
 extra {}
 "This dagger seems as if it once gleamed with a magical glow. Now, it is somewhat tarnished. It appears to be better suited for self defense than carving wood.<br>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 5, 5)
-WEAPON_TRANSFER(WPN_DAGGER,+5)
-STR_TRANSFER(+1)
-DEX_TRANSFER(+1)
+WEAPON_DEF(WPN_DAGGER, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
 end
 
@@ -2175,7 +2175,7 @@ title "a leather jerkin"
 descr "A simple leather jerkin has been left here."
 extra {}
 "A simple leather jerkin, it appears to provide some warmth as well as protection from the world."
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 4
 cost 1 COPPER_PIECE
@@ -2187,7 +2187,7 @@ title "a pair of leather leggings"
 descr "A pair of leather leggings have been left here."
 extra {}
 "Some simple leather leggings, they appear to provide some warmth as well as protection from the world."
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 2
 cost 1 COPPER_PIECE
@@ -2199,7 +2199,7 @@ title "a pair of leather boots"
 descr "A pair of leather boots have been left here."
 extra {}
 "Some simple leather boots, they appear to provide some warmth as well as protection from the world."
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 1
 cost 1 COPPER_PIECE
@@ -2211,11 +2211,11 @@ title "an Adventurer's Jerkin"
 descr "A gleaming chain jerkin is here."
 extra {}
 "A fine chainmail jerkin, it looks like it would give any adventurer a distinct advantage in battle!"
-ARMOUR_CHAIN(1,1)
+ARMOUR_CHAIN(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 5
 cost 1 COPPER_PIECE
-DEX_TRANSFER(2)
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: 2
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end
@@ -2226,11 +2226,11 @@ title "an Adventurer's Leggings"
 descr "A pair of gleaming chain leggings are here."
 extra {}
 "These fine chain leggings provide good protection, and seem to have a magical gleam to them."
-ARMOUR_CHAIN(1,1)
+ARMOUR_CHAIN(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 4
 cost 1 COPPER_PIECE
-STR_TRANSFER(2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: 2
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end
@@ -2241,7 +2241,7 @@ title "an Adventurer's Boots"
 descr "A pair of magical boots lie here."
 extra {}
 "These fine boots have a magical twinkle to them. They are high quality adventuring boots, to be sure."
-ARMOUR_LEATHER(1,1)
+ARMOUR_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 2
 cost 1 COPPER_PIECE
@@ -2256,13 +2256,13 @@ title "an Adventurer's Gloves"
 descr "A fine pair of gloves lay here."
 extra {}
 "These fine gloves appear to have been well used by adventurers of years past."
-ARMOUR_LEATHER(1,1)
+ARMOUR_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 2
 cost 1 COPPER_PIECE
-WEAPON_TRANSFER(WPN_DAGGER,+5)
-WEAPON_TRANSFER(WPN_MACE,+5)
-WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+WEAPON_TRANSFER(WPN_MACE, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end
@@ -2273,11 +2273,11 @@ title "a Hero's Helm"
 descr "A hero's helm lies here."
 extra {}
 "This gleaming helmet appears to provide great protection in battle. A hero of ages past must have worn this."
-ARMOUR_CHAIN(1,1)
+ARMOUR_CHAIN(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 cost 1 COPPER_PIECE
-HIT_TRANSFER(3)
+HIT_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: 3
 dilcopy mvlev_restrict@function(40,0,20,"");
 end
 
@@ -2373,9 +2373,9 @@ extra {"$rem_o"}
 "The power in $1n fades as they remove $2n."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_WOOD("This item is made of an unidentified ancient wood.")
-CHA_TRANSFER(+2)
-BRA_TRANSFER(+2)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
 dilcopy charger@sorcerer();
 dilcopy mana_drain@sorcerer();

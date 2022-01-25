@@ -917,7 +917,7 @@ descr "A huge poleaxe lies on the ground here."
 extra {}
 "A huge poleaxe, capable of large amounts of damage and perfect for
 mutilating people."
-WEAPON_DEF(WPN_BARDICHE,0,0)
+WEAPON_DEF(WPN_BARDICHE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 weight 16
 cost 1 COPPER_PIECE
@@ -963,8 +963,8 @@ extra {"$wear_s"}
 extra {"$wear_o"}
 "$1n lets the belt circle $1s waist and fastens the buckle."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
-STR_TRANSFER(+3)
-WEAPON_TRANSFER(WPN_SWORD,+5)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+WEAPON_TRANSFER(WPN_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 dilcopy guild_restrict@function ({GUILD_UDG_FIGHTER},0,25,"");
 dilcopy abi_restrict@function (ABIL_STR,10,0,25,"");
 dilcopy level_restrict@function (5,0,25,"");
@@ -1077,8 +1077,8 @@ your sword-fighting abilities by 3% whenever you wield it. However, this
 weapon is too large to be used as a secondary weapon.<br/>
 This sword is of craftmanship 5 and magic bonus 3.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD,0,0)
-WEAPON_TRANSFER(WPN_SWORD,+1)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+WEAPON_TRANSFER(WPN_SWORD, BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 weight 10
 cost 3 SILVER_PIECE
 rent 50 IRON_PIECE

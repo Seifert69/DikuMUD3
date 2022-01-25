@@ -314,7 +314,7 @@ title "a pair of gold laced leather leggings"
 descr "A pair of gold laced leggings has been left here."
 MATERIAL_METAL("Precious metal coins, and metal mesh")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 ABILITY_RESTRICT (ABIL_STR,35,0,25,"")
 LEVEL_RESTRICT (10,0,25,"")
 cost 5 GOLD_PIECE
@@ -335,7 +335,7 @@ extra {}
 "Nothing realy special about this hammer. it is old and slightly rustted.
 It looks to have seen lots of battles in its time."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_MATTOCK, -0, 0)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
 weight 15
 ABILITY_RESTRICT (ABIL_STR,35,0,25,"")
 LEVEL_RESTRICT (10,0,25,"")

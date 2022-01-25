@@ -1171,9 +1171,9 @@ extra {"$improved identify"}
 "It adds 2 to your Mag, 2 to your Bra, and -1 to Str.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_METAL("This item is made of silver.")
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
-STR_TRANSFER(-1)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy guild_restrict@function ({GUILD_UDG_MAGE},0,25,"");
 rent 32 IRON_PIECE
 
@@ -1395,7 +1395,7 @@ You feel protected from the sun and rain."
 extra {"$rem_s"}
 "You remove your $2N.<br/>
 You feel more wounderable to the sun and rain."
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
 weight 1
 cost 6 IRON_PIECE
@@ -1438,7 +1438,7 @@ lighting totally fails to crackle down the dark wood and no fancy magical
 effects appear. You smirk."
 extra {"$rem_o"}
 "$1n shrugs and puts away $1s $2N."
-WEAPON_DEF(WPN_QUARTERSTAFF,0,0)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 1 COPPER_PIECE
 end
@@ -1453,7 +1453,7 @@ magic with acute need of means of self-defence."
 extra {"$wear_s"}
 "You wield $2n with a smile on your face.<br/>
 You are just in the mood for some arcane sacrifices."
-WEAPON_DEF(WPN_DAGGER,0,0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 weight 1
 cost 1 COPPER_PIECE
@@ -1491,7 +1491,7 @@ extra {"$identify"}
 only made of cloth.<br/>"
 extra {"$improved identify"}
 "The craftmanship of the robe is 3 and the magical bonus 1.<br/>"
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 3
 cost 13 IRON_PIECE
@@ -1504,7 +1504,7 @@ descr "A pair of pointy boots stands here."
 extra {}
 "A pair of pointy boots, much like wizards fancy. The toes of the boots
 form a funky curl."
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
 weight 1
 cost 1 COPPER_PIECE
@@ -1577,7 +1577,7 @@ descr "A large, richly decorated gown lies here."
 extra {}
 "A large, richly embroidened gown, the mark of the College of Arcane Arts
 clearly visible on each shoulder."
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 2
 cost 4 SILVER_PIECE
@@ -1592,7 +1592,7 @@ descr "A broad, richly decorated sash lies here."
 extra {}
 "A broad silken sash, richly decorated. The mark of the College of Arcane
 Arts is visible on the sash."
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_CHEST}
 cost 4 SILVER_PIECE
 rent 12 IRON_PIECE
@@ -1606,7 +1606,7 @@ descr "A rake lies here, awaiting someone to step on it."
 extra {}
 "A large gardening rake. You can use it as a primitive weapon, but it's
 combat capabilities are severly limited."
-WEAPON_DEF(WPN_QUARTERSTAFF,0,-3)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_BAD_MINUS)  // Xyzzy: 0,-3
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 cost 3 IRON_PIECE
 end

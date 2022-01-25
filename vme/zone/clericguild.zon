@@ -977,7 +977,7 @@ title "a war hammer"
 descr "A medium-sized war hammer is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Iron + Craftman ship = + 0% */
-WEAPON_DEF(WPN_WAR_HAMMER, 0, 0)
+WEAPON_DEF(WPN_WAR_HAMMER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 6
 cost 1 COPPER_PIECE,4 IRON_PIECE
 end
@@ -989,7 +989,7 @@ descr "A white healer's staff lies here."
 extra {}
 "A white staff of a healer, a snake carved into the wood."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_QUARTERSTAFF,0,0)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 1 COPPER_PIECE,4 IRON_PIECE
 end
@@ -1000,7 +1000,7 @@ title "white robes of a healer"
 descr "Some white robes lie here."
 extra {}
 "White robes of a healer, marked with a holy symbol on the chest."
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 cost 2 SILVER_PIECE
 weight 2
@@ -1012,7 +1012,7 @@ title "a pair of sandals"
 descr "A pair of sandals lies here."
 extra {}
 "A pair of leather-thonged sandals."
-ARMOUR_LEATHER(0,-3)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_BAD_MINUS)  // Xyzzy: 0,-3
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
 weight 1
 cost 2 COPPER_PIECE
@@ -1058,8 +1058,8 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "$1n lets go of $1s $2n, it flickers and fades away..."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_HAMMER,7,7)   //changed to one handed weapon ETNA
-STR_TRANSFER(+3)
+WEAPON_DEF(WPN_WAR_HAMMER, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 flags {UNIT_FL_MAGIC}
 romflags {OBJ_NO_DUAL}
 dilcopy guild_restrict@function ({GUILD_UDG_CLERIC},0,25,"");
@@ -1133,7 +1133,7 @@ extra {"$wear_s"}
 "$1n puts on a $2n."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_METAL("This item is made of silver.")
-SKILL_TRANSFER(SKI_FIRST_AID,+2)
+SKILL_TRANSFER(SKI_FIRST_AID, BONUS_GOOD)  // Xyzzy: +2
 
 dilcopy one_torc();
 dilcopy guild_restrict@function ({GUILD_UDG_CLERIC},0,25,"");

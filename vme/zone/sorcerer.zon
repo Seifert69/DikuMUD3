@@ -1471,11 +1471,11 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "$1n sheaths $2n in $1s belt."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER,0,0)
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
-STR_TRANSFER(-1)
-WEAPON_TRANSFER(WPN_DAGGER,+5)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 MATERIAL_METAL("This item is made of fine steel.")
 dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
 dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
@@ -1527,9 +1527,9 @@ extra {"$rem_o"}
 extra {"$rem_s"}
 "You snap your $2N shut and put it away for later studies."
 type ITEM_BOOK
-SPELL_TRANSFER(SPL_SUMMONING,+1)
+SPELL_TRANSFER(SPL_SUMMONING, BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
-DEX_TRANSFER(-3)
+DEX_TRANSFER(BONUS_BAD_MINUS)  // Xyzzy: -3
 weight 10
 cost 15 GOLD_PIECE
 rent 50 IRON_PIECE
@@ -1753,7 +1753,7 @@ extra {"$identify"}
 "It lies easily in your hand, aiding in combat and makes you more
 agile in the arcane contacts.<br/>"
 flags {UNIT_FL_MAGIC}  //v43.01
-WEAPON_DEF(WPN_DAGGER,0,0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 MATERIAL_METAL("This weapon is made of black mithril.")
 weight 1
@@ -1766,9 +1766,9 @@ dilcopy abi_restrict@function(ABIL_BRA,50,0,0,"bra_rest@skaven");
 dilcopy abi_restrict@function(ABIL_DEX,30,0,0,"dex_rest@skaven");
 dilcopy level_restrict@function(34,0,0,"lvl_rest@skaven");
 dilcopy mvlev_restrict@function(84,0,0,"You are too high of level to use this Dagger");  //43.01
-DEX_TRANSFER(+2)  //v43.01 put back in but lower than orig id
-MAG_TRANSFER(+1)  //v43.01 put back in but lower than orig id
-WEAPON_TRANSFER(WPN_DAGGER  , +2)  //v43.01 put back in guessed at percentage
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+MAG_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_GOOD)  // Xyzzy: +2
 dilbegin daggerchat ();
 var
         enemy : unitptr;
@@ -1870,7 +1870,7 @@ extra {"$wear_o"}
 "$1n wields a $2n and raises it toward the heavens...<br/>
 Lightning crackles along the staff, $1n howls in joy and
 exhilaration!"
-WEAPON_DEF(WPN_QUARTERSTAFF,0,0)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 MATERIAL_WOOD("This weapon is made of oak.")
 cost 1 PLATINUM_PIECE
@@ -1987,7 +1987,7 @@ extra {"ornaments on the cutlass","ornaments","web"}
 "The ornaments form a spider web pattern on the blade of the cutlass.<br/>"
 extra {"handguard of the cutlass","handguard"}
 "The handguard is elaborately crafted and forms a spidery shape.<br/>"
-WEAPON_DEF(WPN_SCIMITAR,0,0)
+WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_METAL("This weapon is made of black mithril.")
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 /*cost 2 PLATINUM_PIECE v43.01*/
@@ -1998,9 +1998,9 @@ dilcopy abi_restrict@function (ABIL_DEX,50,0,0,"dex_rest@skaven");
 dilcopy abi_restrict@function (ABIL_MAG,10,0,25,"mag_rest@skaven");
 dilcopy level_restrict@function (50,0,25,"lvl_rest@skaven");
 /*below added v43.01*/
-WEAPON_TRANSFER(WPN_SCIMITAR  , +3) 
-DEX_TRANSFER(+1)
-MAG_TRANSFER(+1)
+WEAPON_TRANSFER(WPN_SCIMITAR, BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+MAG_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 dilbegin cutlass_chat ();
 var
         enemy : unitptr;
@@ -2154,7 +2154,7 @@ extra {"$wear_s"}
 extra {"$wear_o"}
 "$1n wraps $2n about $1s body and fastens the brooch."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_CLOTH("The cloak is made of silk.")
 weight 1
 cost 1 PLATINUM_PIECE
@@ -2241,7 +2241,7 @@ for that truly arcane look, so favoured among wizards!"
 extra {"symbols"}
 "Those look even more magical than true arcane symbols would do. The word
 'eldricht' springs to mind.<br/>"
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 1
 cost 2 SILVER_PIECE
@@ -2259,7 +2259,7 @@ for that truly arcane look, so favoured among wizards!"
 extra {"symbols"}
 "Those look even more magical than true arcane symbols would do. The word
 'elrdicht' springs to mind.<br/>"
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 1
 cost 2 SILVER_PIECE
@@ -2277,7 +2277,7 @@ for that truly arcane look, so favoured among wizards!"
 extra {"symbols"}
 "Those look even more arcane than true arcane symbols would do. The word
 'magickal' springs to mind.<br/>"
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 1
 cost 2 SILVER_PIECE
@@ -2295,7 +2295,7 @@ for that truly arcane look, so favoured among wizards!"
 extra {"symbols"}
 "Those look even more magical than true arcane symbols would do. The word
 'mystical' springs to mind.<br/>"
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 1
 cost 2 SILVER_PIECE
@@ -2310,7 +2310,7 @@ extra {}
 "Fancy shoes with curling toe, richly embroidered with golden threads and
 silver buttons. Those surely are the shoes of the upper class. With shoes
 like this, you'd be the center of attention wherever you go."
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
 weight 1
 cost 2 SILVER_PIECE

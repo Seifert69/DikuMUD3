@@ -7435,13 +7435,13 @@ title "a Bounty Hunter's enchanted plate"
 descr "A Bounty Hunter's enchanted plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_legs
@@ -7450,13 +7450,13 @@ title "a pair of Bounty Hunter's enchanted leggings"
 descr "A pair of Bounty Hunter's enchanted leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_arms
@@ -7465,13 +7465,13 @@ title "a pair of Bounty Hunter's enchanted sleeves"
 descr "A pair of Bounty Hunter's enchanted sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_helm
@@ -7480,13 +7480,13 @@ title "a Bounty Hunter's enchanted helmet"
 descr "A Bounty Hunter's enchanted helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_boots
@@ -7495,13 +7495,13 @@ title "a pair of Bounty Hunter's enchanted boots"
 descr "A pair of Bounty Hunter's enchanted boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_hands
@@ -7510,13 +7510,13 @@ title "a pair of Bounty Hunter's enchanted gauntlets"
 descr "A pair of Bounty Hunter's enchanted gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_back
@@ -7525,13 +7525,13 @@ title "a Bounty Hunter's enchanted backplate"
 descr "A Bounty Hunter's enchanted backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_sword
@@ -7540,13 +7540,13 @@ title "a Bounty Hunter's enchanted short sword"
 descr "A Bounty Hunter's enchanted short sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
-WEAPON_DEF(WPN_MACE, +10, +10)
+WEAPON_DEF(WPN_MACE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_shield
@@ -7555,13 +7555,13 @@ title "a Bounty Hunter's enchanted shield"
 descr "A Bounty Hunter's enchanted shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 10,10)
+SHIELD_DEF(SHIELD_LARGE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+2)
-BRA_TRANSFER(+2)
+MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 mag_staff
@@ -7570,13 +7570,13 @@ title "a Bounty Hunter's enchanted staff"
 descr "A Bounty Hunter's enchanted staff has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's staff."
-WEAPON_DEF(WPN_QUARTERSTAFF, +10, +10)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_plate2
@@ -7585,13 +7585,13 @@ title "a Bounty Hunter's magical plate"
 descr "A Bounty Hunter's magical plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_legs2
@@ -7600,13 +7600,13 @@ title "a pair of Bounty Hunter's magical leggings"
 descr "A pair of Bounty Hunter's magical leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_arms2
@@ -7615,13 +7615,13 @@ title "a pair of Bounty Hunter's magical sleeves"
 descr "A pair of Bounty Hunter's magical sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_helm2
@@ -7630,13 +7630,13 @@ title "a Bounty Hunter's magical helmet"
 descr "A Bounty Hunter's magical helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_boots2
@@ -7645,13 +7645,13 @@ title "a pair of Bounty Hunter's magical boots"
 descr "A pair of Bounty Hunter's magical boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_hands2
@@ -7660,13 +7660,13 @@ title "a pair of Bounty Hunter's magical gauntlets"
 descr "A pair of Bounty Hunter's magical gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_back2
@@ -7675,13 +7675,13 @@ title "a Bounty Hunter's magical backplate"
 descr "A Bounty Hunter's magical backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 mag_sword2
@@ -7690,14 +7690,14 @@ title "a Bounty Hunter's magical short sword"
 descr "A Bounty Hunter's magical short sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
-WEAPON_DEF(WPN_MACE, +15, +15)
+WEAPON_DEF(WPN_MACE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
-WEAPON_TRANSFER(WPN_SHORT_SWORD, 5)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 mag_shield2
@@ -7706,14 +7706,14 @@ title "a Bounty Hunter's magical shield"
 descr "A Bounty Hunter's magical shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 15,15)
+SHIELD_DEF(SHIELD_LARGE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+3)
-BRA_TRANSFER(+3)
-SKILL_TRANSFER(SKI_SHIELD, 5)
+MAG_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+SKILL_TRANSFER(SKI_SHIELD, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 mag_staff2
@@ -7722,14 +7722,14 @@ title "a Bounty Hunter's magical staff"
 descr "A Bounty Hunter's magical staff has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's staff."
-WEAPON_DEF(WPN_QUARTERSTAFF, +15, +15)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
-WEAPON_TRANSFER(WPN_QUARTERSTAFF, 5)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+WEAPON_TRANSFER(WPN_QUARTERSTAFF, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 mag_plate3
@@ -7738,13 +7738,13 @@ title "a Bounty Hunter's powerful plate"
 descr "A Bounty Hunter's powerful plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 mag_legs3
@@ -7753,13 +7753,13 @@ title "a pair of Bounty Hunter's powerful leggings"
 descr "A pair of Bounty Hunter's powerful leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 mag_arms3
@@ -7768,13 +7768,13 @@ title "a pair of Bounty Hunter's powerful sleeves"
 descr "A pair of Bounty Hunter's powerful sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 mag_helm3
@@ -7783,13 +7783,13 @@ title "a Bounty Hunter's powerful helmet"
 descr "A Bounty Hunter's powerful helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 mag_boots3
@@ -7798,13 +7798,13 @@ title "a pair of Bounty Hunter's powerful boots"
 descr "A pair of Bounty Hunter's powerful boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 mag_hands3
@@ -7813,13 +7813,13 @@ title "a pair of Bounty Hunter's powerful gauntlets"
 descr "A pair of Bounty Hunter's powerful gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 mag_back3
@@ -7828,13 +7828,13 @@ title "a Bounty Hunter's powerful backplate"
 descr "A Bounty Hunter's powerful backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 mag_sword3
@@ -7843,14 +7843,14 @@ title "a Bounty Hunter's powerful short sword"
 descr "A Bounty Hunter's powerful short sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
-WEAPON_DEF(WPN_MACE, +20, +20)
+WEAPON_DEF(WPN_MACE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
-WEAPON_TRANSFER(WPN_SHORT_SWORD, 10)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 mag_shield3
@@ -7859,14 +7859,14 @@ title "a Bounty Hunter's powerful shield"
 descr "A Bounty Hunter's powerful shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 20,20)
+SHIELD_DEF(SHIELD_LARGE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+4)
-BRA_TRANSFER(+4)
-SKILL_TRANSFER(SKI_SHIELD, 10)
+MAG_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+SKILL_TRANSFER(SKI_SHIELD, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 mag_staff3
@@ -7875,14 +7875,14 @@ title "a Bounty Hunter's powerful staff"
 descr "A Bounty Hunter's powerful staff has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's staff."
-WEAPON_DEF(WPN_QUARTERSTAFF, +20, +20)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-MAG_TRANSFER(+6)
-BRA_TRANSFER(+6)
-WEAPON_TRANSFER(WPN_QUARTERSTAFF, 10)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
+WEAPON_TRANSFER(WPN_QUARTERSTAFF, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 
@@ -7896,13 +7896,13 @@ title "a Bounty Hunter's divine plate"
 descr "A Bounty Hunter's divine plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_legs
@@ -7911,13 +7911,13 @@ title "a pair of Bounty Hunter's divine leggings"
 descr "A pair of Bounty Hunter's divine leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_arms
@@ -7926,13 +7926,13 @@ title "a pair of Bounty Hunter's divine sleeves"
 descr "A pair of Bounty Hunter's divine sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_helm
@@ -7941,13 +7941,13 @@ title "a Bounty Hunter's divine helmet"
 descr "A Bounty Hunter's divine helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_boots
@@ -7956,13 +7956,13 @@ title "a pair of Bounty Hunter's divine boots"
 descr "A pair of Bounty Hunter's divine boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_hands
@@ -7971,13 +7971,13 @@ title "a pair of Bounty Hunter's divine gauntlets"
 descr "A pair of Bounty Hunter's divine gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_back
@@ -7986,13 +7986,13 @@ title "a Bounty Hunter's divine backplate"
 descr "A Bounty Hunter's divine backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_mace
@@ -8001,13 +8001,13 @@ title "a Bounty Hunter's divine mace"
 descr "A Bounty Hunter's divine mace has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's mace."
-WEAPON_DEF(WPN_MACE, +10, +10)
+WEAPON_DEF(WPN_MACE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_shield
@@ -8016,13 +8016,13 @@ title "a Bounty Hunter's divine shield"
 descr "A Bounty Hunter's divine shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 10,10)
+SHIELD_DEF(SHIELD_LARGE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+2)
-BRA_TRANSFER(+2)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 div_maul
@@ -8031,13 +8031,13 @@ title "a Bounty Hunter's divine maul"
 descr "A Bounty Hunter's divine maul has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's maul."
-WEAPON_DEF(WPN_WAR_MAUL, +10, +10)
+WEAPON_DEF(WPN_WAR_MAUL, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_plate2
@@ -8046,13 +8046,13 @@ title "a Bounty Hunter's holy plate"
 descr "A Bounty Hunter's holy plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_legs2
@@ -8061,13 +8061,13 @@ title "a pair of Bounty Hunter's holy leggings"
 descr "A pair of Bounty Hunter's holy leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_arms2
@@ -8076,13 +8076,13 @@ title "a pair of Bounty Hunter's holy sleeves"
 descr "A pair of Bounty Hunter's holy sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_helm2
@@ -8091,13 +8091,13 @@ title "a Bounty Hunter's holy helmet"
 descr "A Bounty Hunter's holy helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_boots2
@@ -8106,13 +8106,13 @@ title "a pair of Bounty Hunter's holy boots"
 descr "A pair of Bounty Hunter's holy boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_hands2
@@ -8121,13 +8121,13 @@ title "a pair of Bounty Hunter's holy gauntlets"
 descr "A pair of Bounty Hunter's holy gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_back2
@@ -8136,13 +8136,13 @@ title "a Bounty Hunter's holy backplate"
 descr "A Bounty Hunter's holy backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 div_mace2
@@ -8151,14 +8151,14 @@ title "a Bounty Hunter's holy mace"
 descr "A Bounty Hunter's holy mace has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's mace."
-WEAPON_DEF(WPN_MACE, +15, +15)
+WEAPON_DEF(WPN_MACE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
-WEAPON_TRANSFER(WPN_MACE, 5)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+WEAPON_TRANSFER(WPN_MACE, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 div_shield2
@@ -8167,14 +8167,14 @@ title "a Bounty Hunter's holy shield"
 descr "A Bounty Hunter's holy shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 15,15)
+SHIELD_DEF(SHIELD_LARGE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+3)
-BRA_TRANSFER(+3)
-SKILL_TRANSFER(SKI_SHIELD, 5)
+DIV_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+BRA_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+SKILL_TRANSFER(SKI_SHIELD, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 div_maul2
@@ -8183,14 +8183,14 @@ title "a Bounty Hunter's holy maul"
 descr "A Bounty Hunter's holy maul has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's maul."
-WEAPON_DEF(WPN_WAR_MAUL, +15, +15)
+WEAPON_DEF(WPN_WAR_MAUL, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
-WEAPON_TRANSFER(WPN_WAR_MAUL, 5)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+WEAPON_TRANSFER(WPN_WAR_MAUL, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 div_plate3
@@ -8199,13 +8199,13 @@ title "a Bounty Hunter's godly plate"
 descr "A Bounty Hunter's godly plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 div_legs3
@@ -8214,13 +8214,13 @@ title "a pair of Bounty Hunter's godly leggings"
 descr "A pair of Bounty Hunter's godly leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 div_arms3
@@ -8229,13 +8229,13 @@ title "a pair of Bounty Hunter's godly sleeves"
 descr "A pair of Bounty Hunter's godly sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 div_helm3
@@ -8244,13 +8244,13 @@ title "a Bounty Hunter's godly helmet"
 descr "A Bounty Hunter's godly helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 div_boots3
@@ -8259,13 +8259,13 @@ title "a pair of Bounty Hunter's godly boots"
 descr "A pair of Bounty Hunter's godly boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 div_hands3
@@ -8274,13 +8274,13 @@ title "a pair of Bounty Hunter's godly gauntlets"
 descr "A pair of Bounty Hunter's godly gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 div_back3
@@ -8289,13 +8289,13 @@ title "a Bounty Hunter's godly backplate"
 descr "A Bounty Hunter's godly backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 div_mace3
@@ -8304,14 +8304,14 @@ title "a Bounty Hunter's godly mace"
 descr "A Bounty Hunter's godly mace has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's mace."
-WEAPON_DEF(WPN_MACE, +20, +20)
+WEAPON_DEF(WPN_MACE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
-WEAPON_TRANSFER(WPN_MACE, 10)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+WEAPON_TRANSFER(WPN_MACE, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 div_shield3
@@ -8320,14 +8320,14 @@ title "a Bounty Hunter's godly shield"
 descr "A Bounty Hunter's godly shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 20,20)
+SHIELD_DEF(SHIELD_LARGE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+4)
-BRA_TRANSFER(+4)
-SKILL_TRANSFER(SKI_SHIELD, 10)
+DIV_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+BRA_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+SKILL_TRANSFER(SKI_SHIELD, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 div_maul3
@@ -8336,14 +8336,14 @@ title "a Bounty Hunter's godly maul"
 descr "A Bounty Hunter's godly maul has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's maul."
-WEAPON_DEF(WPN_WAR_MAUL, +20, +20)
+WEAPON_DEF(WPN_WAR_MAUL, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-DIV_TRANSFER(+6)
-BRA_TRANSFER(+6)
-WEAPON_TRANSFER(WPN_WAR_MAUL, 10)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
+WEAPON_TRANSFER(WPN_WAR_MAUL, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 //////////////////////////////////////////////////////////////////
 //                    blacksmith items.                         //
@@ -8355,13 +8355,13 @@ title "a Bounty Hunter's plate"
 descr "A Bounty Hunter's plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_legs
@@ -8370,13 +8370,13 @@ title "a pair of Bounty Hunter's leggings"
 descr "A pair of Bounty Hunter's leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_arms
@@ -8385,13 +8385,13 @@ title "a pair of Bounty Hunter's sleeves"
 descr "A pair of Bounty Hunter's sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_helm
@@ -8400,13 +8400,13 @@ title "a Bounty Hunter's helmet"
 descr "A Bounty Hunter's helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_boots
@@ -8415,13 +8415,13 @@ title "a pair of Bounty Hunter's boots"
 descr "A pair of Bounty Hunter's boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_hands
@@ -8430,13 +8430,13 @@ title "a pair of Bounty Hunter's gauntlets"
 descr "A pair of Bounty Hunter's gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_back
@@ -8445,13 +8445,13 @@ title "a Bounty Hunter's backplate"
 descr "A Bounty Hunter's backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(10,10)
+ARMOUR_PLATE(BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_sword
@@ -8460,13 +8460,13 @@ title "a Bounty Hunter's long sword"
 descr "A Bounty Hunter's long sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
-WEAPON_DEF(WPN_MACE, +10, +10)
+WEAPON_DEF(WPN_MACE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_shield
@@ -8475,13 +8475,13 @@ title "a Bounty Hunter's shield"
 descr "A Bounty Hunter's shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 10,10)
+SHIELD_DEF(SHIELD_LARGE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: 10,10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+2)
-DEX_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 str_hammer
@@ -8490,13 +8490,13 @@ title "a Bounty Hunter's war mattock"
 descr "A Bounty Hunter's war mattock has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's war mattock."
-WEAPON_DEF(WPN_WAR_MATTOCK, +10, +10)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 
@@ -8506,13 +8506,13 @@ title "a Bounty Hunter's strong plate"
 descr "A Bounty Hunter's strong plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_legs2
@@ -8521,13 +8521,13 @@ title "a pair of Bounty Hunter's strong leggings"
 descr "A pair of Bounty Hunter's strong leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_arms2
@@ -8536,13 +8536,13 @@ title "a pair of Bounty Hunter's strong sleeves"
 descr "A pair of Bounty Hunter's strong sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_helm2
@@ -8551,13 +8551,13 @@ title "a Bounty Hunter's strong helmet"
 descr "A Bounty Hunter's strong helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_boots2
@@ -8566,13 +8566,13 @@ title "a pair of Bounty Hunter's strong boots"
 descr "A pair of Bounty Hunter's strong boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_hands2
@@ -8581,13 +8581,13 @@ title "a pair of Bounty Hunter's strong gauntlets"
 descr "A pair of Bounty Hunter's strong gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_back2
@@ -8596,13 +8596,13 @@ title "a Bounty Hunter's strong backplate"
 descr "A Bounty Hunter's strong backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(15,15)
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_sword2
@@ -8611,14 +8611,14 @@ title "a Bounty Hunter's strong long sword"
 descr "A Bounty Hunter's strong long sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
-WEAPON_DEF(WPN_MACE, +15, +15)
+WEAPON_DEF(WPN_MACE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
-WEAPON_TRANSFER(WPN_LONG_SWORD, 5)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 str_shield2
@@ -8627,14 +8627,14 @@ title "a Bounty Hunter's strong shield"
 descr "A Bounty Hunter's strong shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 15,15)
+SHIELD_DEF(SHIELD_LARGE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: 15,15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+3)
-DEX_TRANSFER(+3)
-SKILL_TRANSFER(SKI_SHIELD, 5)
+STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
+SKILL_TRANSFER(SKI_SHIELD, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 str_hammer2
@@ -8643,14 +8643,14 @@ title "a Bounty Hunter's strong war mattock"
 descr "A Bounty Hunter's strong war mattock has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's war mattock."
-WEAPON_DEF(WPN_WAR_MATTOCK, +15, +15)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
-WEAPON_TRANSFER(WPN_WAR_MATTOCK, 5)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, BONUS_EXCELLENT_PLUS)  // Xyzzy: 5
 end
 
 str_plate3
@@ -8659,13 +8659,13 @@ title "a Bounty Hunter's elite plate"
 descr "A Bounty Hunter's elite plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 str_legs3
@@ -8674,13 +8674,13 @@ title "a pair of Bounty Hunter's elite leggings"
 descr "A pair of Bounty Hunter's elite leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 str_arms3
@@ -8689,13 +8689,13 @@ title "a pair of Bounty Hunter's elite sleeves"
 descr "A pair of Bounty Hunter's elite sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 str_helm3
@@ -8704,13 +8704,13 @@ title "a Bounty Hunter's elite helmet"
 descr "A Bounty Hunter's elite helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 str_boots3
@@ -8719,13 +8719,13 @@ title "a pair of Bounty Hunter's elite boots"
 descr "A pair of Bounty Hunter's elite boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 str_hands3
@@ -8734,13 +8734,13 @@ title "a pair of Bounty Hunter's elite gauntlets"
 descr "A pair of Bounty Hunter's elite gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 str_back3
@@ -8749,13 +8749,13 @@ title "a Bounty Hunter's elite backplate"
 descr "A Bounty Hunter's elite backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(20,20)
+ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 end
 
 str_sword3
@@ -8764,14 +8764,14 @@ title "a Bounty Hunter's elite long sword"
 descr "A Bounty Hunter's elite long sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
-WEAPON_DEF(WPN_MACE, +20, +20)
+WEAPON_DEF(WPN_MACE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
-WEAPON_TRANSFER(WPN_LONG_SWORD, 10)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 str_shield3
@@ -8780,14 +8780,14 @@ title "a Bounty Hunter's elite shield"
 descr "A Bounty Hunter's elite shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 20,20)
+SHIELD_DEF(SHIELD_LARGE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+4)
-DEX_TRANSFER(+4)
-SKILL_TRANSFER(SKI_SHIELD, 10)
+STR_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+DEX_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
+SKILL_TRANSFER(SKI_SHIELD, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 str_hammer3
@@ -8796,14 +8796,14 @@ title "a Bounty Hunter's elite war mattock"
 descr "A Bounty Hunter's elite war mattock has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's war mattock."
-WEAPON_DEF(WPN_WAR_MATTOCK, +20, +20)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
-STR_TRANSFER(+6)
-DEX_TRANSFER(+6)
-WEAPON_TRANSFER(WPN_WAR_MATTOCK, 10)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +6
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, BONUS_ARTIFACT)  // Xyzzy: 10
 end
 
 
@@ -8826,7 +8826,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -8843,7 +8843,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -8860,7 +8860,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -8878,7 +8878,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -8895,7 +8895,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -8912,7 +8912,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -8930,7 +8930,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -8947,7 +8947,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their health."
 extra {"$improved identify"}
@@ -8967,7 +8967,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -8984,7 +8984,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9001,7 +9001,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9018,7 +9018,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -9035,7 +9035,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -9052,7 +9052,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -9070,7 +9070,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -9088,7 +9088,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their combat skills."
 extra {"$improved identify"}
@@ -9108,7 +9108,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -9125,7 +9125,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9142,7 +9142,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9160,7 +9160,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -9177,7 +9177,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -9194,7 +9194,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -9211,7 +9211,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -9228,7 +9228,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their health."
 extra {"$improved identify"}
@@ -9248,8 +9248,8 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -9266,7 +9266,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9283,7 +9283,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9300,7 +9300,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -9317,7 +9317,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -9334,7 +9334,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -9351,7 +9351,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -9368,7 +9368,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their health."
 extra {"$improved identify"}
@@ -9389,7 +9389,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -9406,7 +9406,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9423,7 +9423,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9440,7 +9440,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -9457,7 +9457,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their divinity."
 extra {"$improved identify"}
@@ -9474,7 +9474,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -9491,7 +9491,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -9509,7 +9509,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This bracelet will grant its wearer an added boost to their health."
 extra {"$improved identify"}
@@ -9528,7 +9528,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -9545,7 +9545,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9562,7 +9562,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9579,7 +9579,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -9596,7 +9596,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their divinity."
 extra {"$improved identify"}
@@ -9613,7 +9613,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -9630,7 +9630,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -9647,7 +9647,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This necklace will grant its wearer an added boost to their health."
 extra {"$improved identify"}
@@ -9666,7 +9666,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -9683,7 +9683,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9700,7 +9700,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9718,7 +9718,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -9735,7 +9735,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cape will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -9752,7 +9752,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -9770,7 +9770,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -9788,7 +9788,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their health."
 extra {"$improved identify"}
@@ -9806,7 +9806,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -9823,7 +9823,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9840,7 +9840,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9857,7 +9857,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -9874,7 +9874,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -9891,7 +9891,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -9908,7 +9908,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -9925,7 +9925,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their health."
 extra {"$improved identify"}
@@ -9945,7 +9945,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+10)
+STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -9962,7 +9962,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+10)
+DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -9979,7 +9979,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+10)
+CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -9997,7 +9997,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+10)
+CON_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -10014,7 +10014,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+10)
+DIV_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -10031,7 +10031,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+10)
+BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -10048,7 +10048,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+10)
+MAG_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -10065,7 +10065,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+10)
+HIT_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their health."
 extra {"$improved identify"}

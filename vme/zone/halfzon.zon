@@ -4766,7 +4766,7 @@ extra {}
 "Nothing really special about this hammer. it is old and slightly rusted.
 It looks to have seen lots of battles in its time."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_MATTOCK, -0, 0)
+WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
 weight 15
 dilcopy abi_restrict@function (ABIL_STR,20,0,25,"");
 end
@@ -4794,7 +4794,7 @@ names {"small club","club"}
 title "a small hardened wooden club"
 descr "An heavy odd looking club is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, 0, 0)
+WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 MATERIAL_WOOD("Hardened oak wood")
 weight 4
@@ -4811,7 +4811,7 @@ names {"log"}
 title "a heavy log"
 descr "A heavy log lies here on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BATTLE_CLUB, -0, 0)
+WEAPON_DEF(WPN_BATTLE_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
 MATERIAL_WOOD("A large cypress tree")
 dilcopy abi_restrict@function (ABIL_STR,35,0,25,"");
 weight 100
@@ -4828,7 +4828,7 @@ title "a dusty old broom"
 descr "A dusty old broom is here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SPEAR,0,0 )
+WEAPON_DEF(WPN_SPEAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_WOOD("A wooden handle with many wooden switches")
 weight 3
 cost 4 IRON_PIECE
@@ -4842,7 +4842,7 @@ title "a large shovel"
 descr "A large shovel is here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HALBERD,  0, 0)
+WEAPON_DEF(WPN_HALBERD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_WOOD("A 6' wooden handle")
 MATERIAL_METAL("A large square metal shovel head")
 weight 4
@@ -4857,7 +4857,7 @@ title "a large pitch fork"
 descr "A large pitch fork is stuck in the ground here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_TRIDENT, 0, 0)
+WEAPON_DEF(WPN_TRIDENT, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_WOOD("A 4' wooden handle")
 MATERIAL_METAL("A three pronged metal head")
 
@@ -4877,12 +4877,12 @@ descr "A deadly looking stiletto has been left here."
 MATERIAL_METAL("A very fine quality steel")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 1, 2)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE_PLUS, BONUS_GOOD)  // Xyzzy: 1,2
 weight 2
 cost 2 GOLD_PIECE
 rent 1 COPPER_PIECE
 
-SKILL_TRANSFER(SKI_BACKSTAB, 2)
+SKILL_TRANSFER(SKI_BACKSTAB, BONUS_GOOD)  // Xyzzy: 2
 dilcopy abi_restrict@function (ABIL_DEX,10,0,25,"");
 
 
@@ -4898,7 +4898,7 @@ title "a fork"
 descr "A table fork has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 0,0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 1
 cost 10 COPPER_PIECE
 rent 5 IRON_PIECE
@@ -4949,7 +4949,7 @@ title "a knife"
 descr "A large cooking knife has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 0, 0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 1 IRON_PIECE
 MATERIAL_METAL("A shiny silver metal")
@@ -4963,7 +4963,7 @@ title "a small carving knife"
 descr "A small carving knife has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 0, 0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 1 IRON_PIECE
 MATERIAL_METAL("Dull blue steel")
@@ -4994,7 +4994,7 @@ title "a stick"
 descr "A stick has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB,0, 0)
+WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 MATERIAL_WOOD("Heavy oak")
 weight 10
@@ -5010,7 +5010,7 @@ title "a club"
 descr "A giant club has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BATTLE_CLUB, 0, 0)
+WEAPON_DEF(WPN_BATTLE_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_WOOD("A small pine tree")
 weight 8
 cost 10 IRON_PIECE
@@ -5025,7 +5025,7 @@ title "a dagger"
 descr "A dagger has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 0, 0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_METAL("A dull black metal")
 weight 2
 cost 7 IRON_PIECE
@@ -5039,7 +5039,7 @@ title "a short sword"
 descr "A short sword has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, 0, 0)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MATERIAL_METAL("A greyish blue metal")
 weight 8
 cost 1 COPPER_PIECE
@@ -5053,7 +5053,7 @@ title "a long sword"
 descr "A short sword has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, 0, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 romflags {OBJ_NO_DUAL}
 MATERIAL_METAL("A greyish blue metal")
 
@@ -5068,7 +5068,7 @@ title "a warhammer"
 descr "A warhammer has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_HAMMER, 1, 1)
+WEAPON_DEF(WPN_WAR_HAMMER, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 MATERIAL_METAL("A large iron head")
 MATERIAL_WOOD("A wooden handle")
 weight 10
@@ -5113,7 +5113,7 @@ MATERIAL_METAL("A greyish blue metal blade")
 MATERIAL_WOOD("A long wooden handle")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HALBERD, 0, 0)
+WEAPON_DEF(WPN_HALBERD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 12
 cost 5 SILVER_PIECE
 
@@ -5126,7 +5126,7 @@ title "a spear"
 descr "A spear has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SPEAR, -0, 0)
+WEAPON_DEF(WPN_SPEAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
 MATERIAL_STONE("A stone tiped blade")
 MATERIAL_WOOD("A long wooden handle")
 
@@ -5144,7 +5144,7 @@ title "a flail"
 descr "A flail has been left here"
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_FLAIL, -0, 0)
+WEAPON_DEF(WPN_FLAIL, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
 
 MATERIAL_METAL("Iron")
 weight 6
@@ -5161,8 +5161,8 @@ names {"blood sword", "sword"}
 title "a blood sword"
 descr "A blood covered sword lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_GREAT_SWORD,0 ,0 )
-WEAPON_TRANSFER(WPN_GREAT_SWORD, +1)
+WEAPON_DEF(WPN_GREAT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+WEAPON_TRANSFER(WPN_GREAT_SWORD, BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 weight 12
 cost 800 COPPER_PIECE
 rent 400 IRON_PIECE
@@ -5246,7 +5246,7 @@ descr "A pair of polished boots has been left here."
 
 MATERIAL_METAL("A high luster silver colored metal")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 cost 2 GOLD_PIECE
 rent 3 COPPER_PIECE
 dilcopy abi_restrict@function (ABIL_STR,40,0,25,"");
@@ -5260,7 +5260,7 @@ descr "A pair of polished leggings has been left here."
 MATERIAL_METAL("A high luster silver colored metal")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_PLATE(0,0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,40,0,25,"");
 cost 2 GOLD_PIECE
 rent 3 COPPER_PIECE
@@ -5276,7 +5276,7 @@ descr "A polished breast plate has been left here."
 MATERIAL_METAL("A high luster silver colored metal")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(0,0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,40,0,25,"");
 cost 2 GOLD_PIECE
 rent 3 COPPER_PIECE
@@ -5290,7 +5290,7 @@ descr "A pair of polished sleeves has been left here."
 
 MATERIAL_METAL("A high luster silver colored metal")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_PLATE(0,0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,40,0,25,"");
 cost 2 GOLD_PIECE
 rent 3 COPPER_PIECE
@@ -5304,7 +5304,7 @@ descr "A polished helmet has been left here."
 MATERIAL_METAL("A high luster silver colored metal")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_PLATE(0,0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,40,0,25,"");
 cost 2 GOLD_PIECE
 rent 3 COPPER_PIECE
@@ -5318,7 +5318,7 @@ title "a pair of stone boots"
 descr "A pair of stone boots has been left here."
 MATERIAL_STONE("A hard granite stone")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 cost 3 SILVER_PIECE
 rent 1 COPPER_PIECE
 dilcopy abi_restrict@function (ABIL_STR,20,0,25,"");
@@ -5332,7 +5332,7 @@ descr "A pair of stone leggings has been left here."
 MATERIAL_STONE("A hard granite stone")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,20,0,25,"");
 cost 3 SILVER_PIECE
 rent 1 COPPER_PIECE
@@ -5347,7 +5347,7 @@ descr "A stone breast plate has been left here."
 MATERIAL_STONE("A hard granite stone")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 dilcopy abi_restrict@function (ABIL_STR,20,0,25,"");
 cost 3 SILVER_PIECE
@@ -5362,7 +5362,7 @@ descr "A pair of stone sleeves has been left here."
 MATERIAL_STONE("A hard granite stone")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 dilcopy abi_restrict@function (ABIL_STR,20,0,25,"");
 cost 3 SILVER_PIECE
@@ -5377,7 +5377,7 @@ descr "A stone helmet has been left here."
 MATERIAL_STONE("A hard granite stone")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
 dilcopy abi_restrict@function (ABIL_STR,20,0,25,"");
 cost 3 SILVER_PIECE
@@ -5391,7 +5391,7 @@ title "a pair of gold laced leather leggings"
 descr "A pair of gold laced leggings has been left here."
 MATERIAL_METAL("Precious metal coins, and metal mesh")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,35,0,25,"");
 cost 5 GOLD_PIECE
 weight 20
@@ -5408,7 +5408,7 @@ descr "a gold laced plate has been left here."
 MATERIAL_METAL("Precious metal coins, and metal mesh")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,35,0,25,"");
 cost 5 GOLD_PIECE
 weight 25
@@ -5423,7 +5423,7 @@ descr "A large feathered helmet."
 
 MATERIAL_SKIN("Eagle feathers")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy abi_restrict@function (ABIL_STR,15,0,25,"");
 cost 1 GOLD_PIECE
 weight 10
@@ -5956,7 +5956,7 @@ names {"tunic"}
 title "a deep grey tunic"
 descr "A deep grey tunic has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
-ARMOUR_CLOTHES(0, 0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 cost 5 IRON_PIECE
 MATERIAL_CLOTH("A grey cloth")
 end
@@ -5968,7 +5968,7 @@ title "a hard leather breast plate"
 descr "A hard leather breast plate has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 cost 10 IRON_PIECE
 MATERIAL_LEATHER("A hard leather")
 end
@@ -5980,7 +5980,7 @@ descr "A pair of hard leather leggings has been left here."
 MATERIAL_LEATHER("A hard leather")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 cost 10 IRON_PIECE
 end
 
@@ -5991,7 +5991,7 @@ descr "A pair of hard leather gloves has been left here."
 MATERIAL_LEATHER("A hard leather")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 cost 3 IRON_PIECE
 end
 
@@ -6011,7 +6011,7 @@ cost 50 COPPER_PIECE
 rent 25 IRON_PIECE
 weight 1
 /*
-CON_TRANSFER(+1)
+CON_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 uncomment when add quest.
 */
 end
@@ -6029,9 +6029,9 @@ type ITEM_WORN
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 cost 100 COPPER_PIECE
 weight 1
-STR_TRANSFER(+1)
-SKILL_TRANSFER(SKI_FLEE, 3)
-ARMOUR_CHAIN(0,0)
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+SKILL_TRANSFER(SKI_FLEE, BONUS_GOOD_PLUS)  // Xyzzy: 3
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$wear_s"}
 "You put on the maskwa ring."
 
@@ -6090,7 +6090,7 @@ descr "A large mug left here"
 MATERIAL_WOOD("A heavy wood")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BATTLE_CLUB, 5, 0)
+WEAPON_DEF(WPN_BATTLE_CLUB, BONUS_GOOD_PLUS, BONUS_AVERAGE)  // Xyzzy: 5,0
 
 weight 15
 cost 2 COPPER_PIECE

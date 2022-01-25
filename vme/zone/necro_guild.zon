@@ -1626,10 +1626,10 @@ extra {"$rem_o"}
 "$1n lets go of $1s $2n, you see the power of it fade away and die out."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 MATERIAL_ORGANIC("This item is made of bone.")
-WEAPON_DEF(WPN_SCYTHE,4,8)
-BRA_TRANSFER(+2)
-WEAPON_TRANSFER(WPN_SCYTHE,+3)
-SPELL_TRANSFER(SPL_CONTROL_UNDEAD,+2)
+WEAPON_DEF(WPN_SCYTHE, BONUS_GOOD, BONUS_EXCELLENT_PLUS)  // Xyzzy: 4,8
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+WEAPON_TRANSFER(WPN_SCYTHE, BONUS_GOOD_PLUS)  // Xyzzy: +3
+SPELL_TRANSFER(SPL_CONTROL_UNDEAD, BONUS_GOOD)  // Xyzzy: +2
 dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
 dilcopy level_restrict@function(20,0,25,"");
 dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"");
@@ -1879,10 +1879,10 @@ extra {"$rem_o"}
 The fingers reluctantly open and let go."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WRIST}
 MATERIAL_ORGANIC("This item is mummified flesh and bone.")
-BRA_TRANSFER(+2)
-DIV_TRANSFER(+2)
-CHA_TRANSFER(-1)
-SPELL_TRANSFER(SPL_CONTROL_UNDEAD,+5)
+BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
+SPELL_TRANSFER(SPL_CONTROL_UNDEAD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 PROTECTION_FROM_GOOD
 dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
 dilcopy abi_restrict@function (ABIL_BRA,10,0,0,"");
@@ -1903,7 +1903,7 @@ extra {"runes on the handle","runes","handle"}
 "The runes empower the whip, making it a fearsome weapon of pain.<br/>"
 flags {UNIT_FL_MAGIC}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WHIP, 2, 0)
+WEAPON_DEF(WPN_WHIP, BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 2,0
 dilcopy ali_restrict@function(-350,-1000,0,25,"");
 dilcopy abi_restrict@function(ABIL_BRA,20,0,0,"");
 weight 3
@@ -1919,7 +1919,7 @@ extra {}
 "It has some strange runes on the blade. It is made of a beautiful
 black metal. The blade is very broad and two edged."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, 2, 2)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 2,2
 weight 3
 cost 8 GOLD_PIECE
 dilcopy ali_restrict@function(-350,-1000,0,25,"");
@@ -1937,8 +1937,8 @@ descr "The dagger of Minas lies here."
 extra {}
 "The blade has a crimson glow, as you hold it the glow grows stronger. "
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 1, 0)
-CHA_TRANSFER(2)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
+CHA_TRANSFER(BONUS_GOOD)  // Xyzzy: 2
 weight 3
 rent 80 IRON_PIECE
 cost 8 GOLD_PIECE
@@ -1956,7 +1956,7 @@ extra {}
 creatures moaning towards a moon. A cold blue glow is surrounding the
 head of the mace."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BATTLE_MACE, 1, 0)
+WEAPON_DEF(WPN_BATTLE_MACE, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
 weight 15
 rent 80 IRON_PIECE
 cost 8 GOLD_PIECE
@@ -1973,7 +1973,7 @@ extra {}
 "The wooden warclub is strangely curved, but it seems to be extremely
 well balanced."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_CLUB, 0, 0)
+WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 1 COPPER_PIECE
 end
@@ -1987,7 +1987,7 @@ extra {}
 "The kilt is beautifully woven. It feels very light and yet
 the threads seem to be made of a hard beautiful metal."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_CHAIN(0, 5)
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_GOOD_PLUS)  // Xyzzy: 0,5
 weight 15
 cost 10 GOLD_PIECE
 rent 50 IRON_PIECE
@@ -2005,11 +2005,11 @@ extra {}
 "The breast plate is made of a strange black metal. In the centre of
 the plate there is a moonstone. The moonstone has a dim red light."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 20
 rent 130 IRON_PIECE
 cost 17 GOLD_PIECE
-STR_TRANSFER(2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: 2
 dilcopy ali_restrict@function (-350,-1000,0,25,"");
 dilcopy abi_restrict@function(ABIL_STR,30,0,0,"");
 dilcopy abi_restrict@function(ABIL_DIV,20,0,0,"");
@@ -2026,7 +2026,7 @@ type ITEM_WORN
 weight 2
 rent 75 IRON_PIECE
 cost 20 GOLD_PIECE
-DEX_TRANSFER(3)
+DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: 3
 dilcopy ali_restrict@function(-350,-1000,0,25,"");
 dilcopy abi_restrict@function(ABIL_DEX,25,0,0,"");
 dilcopy mvlev_restrict@function (100,0,25,"");
@@ -2071,7 +2071,7 @@ descr "A grey studded leather jerkin is lying on the ground."
 extra {}
 "The jerkin has the same colour as the rock floor."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_LEATHER(1, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
 weight 10
 rent 95 IRON_PIECE
 cost 12 COPPER_PIECE
@@ -2097,12 +2097,12 @@ extra {}
 black aura of power, and appears too be carried by death itself."
 
 manipulate{MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SCYTHE, 7, 7)
+WEAPON_DEF(WPN_SCYTHE, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 weight 5
 rent 146 COPPER_PIECE
 cost 10 SILVER_PIECE
-DIV_TRANSFER(+2)
-WEAPON_TRANSFER(WPN_SCYTHE, +5)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+WEAPON_TRANSFER(WPN_SCYTHE, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
 extra{"$identify"}
 "This is a magic weapon of the necromancer guild. It gives you a bonus too
@@ -2322,12 +2322,12 @@ extra {}
 destruction."
 
 manipulate{MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SICKLE, 7, 7)
+WEAPON_DEF(WPN_SICKLE, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 weight 5
 rent 146 COPPER_PIECE
 cost 10 SILVER_PIECE
-DIV_TRANSFER(+2)
-WEAPON_TRANSFER(WPN_SICKLE, +5)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+WEAPON_TRANSFER(WPN_SICKLE, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
 
 extra{"$identify"}
@@ -2360,12 +2360,12 @@ extra {}
 "This black staff emits a smoky, black aura of death."
 
 manipulate{MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_QUARTERSTAFF, 7,7)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 weight 3
 rent 146 COPPER_PIECE
 cost 10 SILVER_PIECE
-DIV_TRANSFER(+2)
-WEAPON_TRANSFER(WPN_QUARTERSTAFF, +5)
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+WEAPON_TRANSFER(WPN_QUARTERSTAFF, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
 
 extra{"$identify"}

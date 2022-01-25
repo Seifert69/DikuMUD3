@@ -13481,7 +13481,7 @@ extra {}
 two-handed weapon. Wielding this staff would make any potential
 opponent think twice before engaging the wielder in combat."
 
-WEAPON_DEF(WPN_QUARTERSTAFF, 1, 0)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
 
 extra {"$wear_s"}
 "You take the staff in your hands, ready for battle."
@@ -13510,7 +13510,7 @@ extra {}
 weapon. Wielding this staff would make any potential
 opponent think twice before engaging the wielder in combat."
 
-WEAPON_DEF(WPN_QUARTERSTAFF, 1, 0)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
 
 extra {"$wear_s"}
 "You take the staff in your hand, ready for battle."

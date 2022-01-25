@@ -456,7 +456,7 @@ extra {}
 "They are made from thick leather and have a heavy inner
 cushion."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 14   COPPER_PIECE
 end
@@ -466,7 +466,7 @@ names {"leather pants", "pants"}
 title "a pair of leather pants"
 descr "A pair of leather pants is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 8   COPPER_PIECE
 extra "$wear_s"
@@ -485,7 +485,7 @@ names {"studded leather sleeves","sleeves"}
 title "a pair of studded leather sleeves"
 descr "A pair of studded leather sleeves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 cost 8   COPPER_PIECE
 end
@@ -495,7 +495,7 @@ names {"studded leather jerkin","jerkin"}
 title "a studded leather jerkin"
 descr "A studded leather jerkin is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 12   COPPER_PIECE
 end
@@ -534,11 +534,11 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "As $1n sheaths $1s $2n, the dimness from its blade brightens."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BASTARD_SWORD1,7,7)
-STR_TRANSFER(+2)
-DIV_TRANSFER(+2)
-CHA_TRANSFER(-1)
-WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
+WEAPON_DEF(WPN_BASTARD_SWORD1, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 MATERIAL_METAL("This item is made of forged metal.")
 dilcopy guild_restrict@function ({GUILD_KNIGHT},0,25,"");
 dilcopy level_restrict@function (10,0,0,"");
@@ -776,7 +776,7 @@ descr "A black trench coat lies here in a heap."
 extra {}
 "The trench coat is thick and made of fine leather."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 7
 cost 5 SILVER_PIECE
 dilcopy guild_restrict@function ({GUILD_KNIGHT},0,25,"");
@@ -790,7 +790,7 @@ extra {}
 "The black beret is made of sturdy hide, those that see you wearing this
 will know you hail from the Dark Knights of Midgaard."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0,0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 cost 4 GOLD_PIECE
 rent 20 IRON_PIECE

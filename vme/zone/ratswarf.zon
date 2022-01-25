@@ -1981,7 +1981,7 @@ extra {}
 "This flail seems only to have been used to keep the dead in their place."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Pure Iron + Craftmanship */
-WEAPON_DEF(WPN_FLAIL, 0, 0)
+WEAPON_DEF(WPN_FLAIL, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 6
 rent 4 IRON_PIECE
 cost 8 COPPER_PIECE
@@ -1994,7 +1994,7 @@ title "a thin rapier"
 descr "A thin rapier lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron + Craftman ship = (90% + -5%) */
-WEAPON_DEF(WPN_RAPIER, -2, -1)
+WEAPON_DEF(WPN_RAPIER, BONUS_BAD, BONUS_AVERAGE_MINUS)  // Xyzzy: -2,-1
 weight 7
 cost 7 IRON_PIECE
 end
@@ -2005,7 +2005,7 @@ names {"leather whip","whip"}
 title "a leather whip"
 descr "A cruel leather whip is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WHIP, 0,0)
+WEAPON_DEF(WPN_WHIP, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 4 COPPER_PIECE
 end
@@ -2017,7 +2017,7 @@ descr "A double headed axe is here."
 extra {}
 "This appears to be a well crafted battle axe."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE,-2,0)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -2,0
 weight 17
 cost 4 COPPER_PIECE
 end
@@ -2031,7 +2031,7 @@ extra {}
 "This appears to be shoddy battle axe."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron + Craftman ship = (90% - 10%) */
-WEAPON_DEF(WPN_HAND_AXE,-4,0)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_TERRIBLE, BONUS_AVERAGE)  // Xyzzy: -4,0
 weight 7
 rent 4 IRON_PIECE
 cost 8 COPPER_PIECE
@@ -2046,7 +2046,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 weight 3
 cost 1 COPPER_PIECE
-DEX_TRANSFER(+1)
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 rent 25 IRON_PIECE
 end
 
@@ -2163,8 +2163,8 @@ names {"spider slippers","slippers"}
 title "a pair of spider of slippers"
 descr "A pair of spider slippers are lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0, 0)
-SKILL_TRANSFER(SKI_CLIMB, +1)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+SKILL_TRANSFER(SKI_CLIMB, BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 rent 122 IRON_PIECE
 weight 5
 cost 2 COPPER_PIECE
@@ -2202,7 +2202,7 @@ title "a granite mace"
 descr "A large, heavy granite mace is here."
 extra {} "This huge puppy appears to be of the Great Mace variety."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_MACE,-4,0)
+WEAPON_DEF(WPN_MACE, BONUS_TERRIBLE, BONUS_AVERAGE)  // Xyzzy: -4,0
 weight 25
 
 
@@ -2244,7 +2244,7 @@ title "some shabby armor"
 descr "Some shabby armor is lying on the ground."
 extra {} "It appears to be in bad condition, but it is curiously light."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 25
 cost 2 SILVER_PIECE
 end
@@ -2259,7 +2259,7 @@ extra {}
 type ITEM_TREASURE
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 CURSED_OBJECT
-CHA_TRANSFER(-5)
+CHA_TRANSFER(BONUS_TERRIBLE_MINUS)  // Xyzzy: -5
 rent 25 IRON_PIECE
 weight 20
 cost 1 GOLD_PIECE

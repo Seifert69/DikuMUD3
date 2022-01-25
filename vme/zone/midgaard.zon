@@ -9080,7 +9080,7 @@ extra {}
 "This is a nice wooden quarterstaff, reinforced at each end with a
 little metal bar."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_QUARTERSTAFF, 0, 0)
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 5   COPPER_PIECE
 end
@@ -9091,7 +9091,7 @@ names {"wooden stick","stick"}
 title "a wooden stick"
 descr "A simple-looking wooden stick is here."
 /* Wood + Craftman ship = (30% + 5%) */
-WEAPON_DEF(WPN_CLUB, -10, 0)
+WEAPON_DEF(WPN_CLUB, BONUS_JUNK, BONUS_AVERAGE)  // Xyzzy: -10,0
 weight 3
 cost 1   COPPER_PIECE
 end
@@ -9102,7 +9102,7 @@ names {"great wooden club","wooden club", "club"}
 title "a great wooden club"
 descr "A very large, simple-looking wooden club is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BATTLE_CLUB, -10, 0)
+WEAPON_DEF(WPN_BATTLE_CLUB, BONUS_JUNK, BONUS_AVERAGE)  // Xyzzy: -10,0
 weight 7
 cost 2   COPPER_PIECE
 end
@@ -9114,7 +9114,7 @@ title "a dagger"
 descr "A small dagger with a long thin blade is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman-ship = -5% */
-WEAPON_DEF(WPN_DAGGER, -5, 0)
+WEAPON_DEF(WPN_DAGGER, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 6
 cost  4   SILVER_PIECE
 end
@@ -9126,7 +9126,7 @@ title "a short sword"
 descr "A short sword lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
-WEAPON_DEF(WPN_SHORT_SWORD, -5, 0)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -9138,7 +9138,7 @@ title "a long sword"
 descr "A long sword has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
-WEAPON_DEF(WPN_LONG_SWORD, -5, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 romflags {OBJ_NO_DUAL}
 weight 10
 cost 12   SILVER_PIECE
@@ -9151,7 +9151,7 @@ title "a two handed sword"
 descr "A two handed sword has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
-WEAPON_DEF(WPN_GREAT_SWORD, -5, 0)
+WEAPON_DEF(WPN_GREAT_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 16   SILVER_PIECE
 end
@@ -9165,7 +9165,7 @@ descr "A katana has been left here."
 extra {}
 "The katana is a light weight finely crafted weapon."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SCIMITAR, 0, 0)
+WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 7
 cost 25   SILVER_PIECE
 end
@@ -9178,7 +9178,7 @@ title "a war hammer"
 descr "A medium-sized warhammer is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship -5% */
-WEAPON_DEF(WPN_WAR_HAMMER, -5, 0)
+WEAPON_DEF(WPN_WAR_HAMMER, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -9210,7 +9210,7 @@ title "a mace"
 descr "A mace has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship -5% */
-WEAPON_DEF(WPN_MACE, -5, 0)
+WEAPON_DEF(WPN_MACE, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -9224,7 +9224,7 @@ descr "A medium-sized spear has been dropped on the ground."
 extra {} "The spear has a wooden shaft, and is reinforced at the head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship -5% */
-WEAPON_DEF(WPN_SPEAR, -5, 0)
+WEAPON_DEF(WPN_SPEAR, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 7
 cost 2   SILVER_PIECE
 end
@@ -9240,7 +9240,7 @@ extra {}
 metal chain."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
-WEAPON_DEF(WPN_FLAIL, -5, 0)
+WEAPON_DEF(WPN_FLAIL, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 5
 cost 15   SILVER_PIECE
 end
@@ -9254,7 +9254,7 @@ descr "A battle axe has been dropped here."
 extra {} "The axe is made of metal with a wooden grip."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron + Craftman ship = (90% + -5%) */
-WEAPON_DEF(WPN_BATTLE_AXE, -5, 0)
+WEAPON_DEF(WPN_BATTLE_AXE, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 10   SILVER_PIECE
 end
@@ -9372,7 +9372,7 @@ names {"leather cap","cap"}
 title "a leather cap"
 descr "A leather cap is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 6   COPPER_PIECE
 end
@@ -9385,7 +9385,7 @@ names {"leather gloves","gloves"}
 title "a pair of leather gloves"
 descr "A pair of leather gloves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
-ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 6   COPPER_PIECE
 end
@@ -9397,7 +9397,7 @@ names {"leather sleeves","sleeves"}
 title "a pair of leather sleeves"
 descr "A pair of leather sleeves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 8   COPPER_PIECE
 end
@@ -9409,7 +9409,7 @@ names {"leather jerkin","jerkin"}
 title "a leather jerkin"
 descr "A leather jerkin is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 6   COPPER_PIECE
 end
@@ -9422,7 +9422,7 @@ names {"leather pants", "pants"}
 title "a pair of leather pants"
 descr "A pair of leather pants is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 8   COPPER_PIECE
 extra "$wear_s"
@@ -9443,7 +9443,7 @@ names {"leather boots", "boots"}
 title "a pair of leather boots"
 descr "A pair of leather boots lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 3
 cost 6   COPPER_PIECE
 end
@@ -9459,7 +9459,7 @@ names {"hard leather cap","cap"}
 title "a hard leather cap"
 descr "A hard leather cap is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_HRD_LEATHER(0, 0) /* 15 def str, HLth Quality, Average Craft */
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 12   COPPER_PIECE
 end
@@ -9470,7 +9470,7 @@ names {"hard leather gloves","gloves"}
 title "a pair of hard leather gloves"
 descr "A pair of hard leather gloves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
-ARMOUR_HRD_LEATHER(0, 0) /* 15 def str, HLth Quality, Average Craft */
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 1
 cost 12   COPPER_PIECE
 end
@@ -9481,7 +9481,7 @@ names {"studded leather sleeves","sleeves"}
 title "a pair of studded leather sleeves"
 descr "A pair of studded leather sleeves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_LEATHER(0, 0) /* 15 def str, Lth Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 cost 8   COPPER_PIECE
 end
@@ -9491,7 +9491,7 @@ names {"studded leather jerkin","jerkin"}
 title "a studded leather jerkin"
 descr "A studded leather jerkin is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_LEATHER(0, 0) /* 15 def str, Lth Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 12   COPPER_PIECE
 end
@@ -9502,7 +9502,7 @@ names {"studded leather pants","pants"}
 title "a pair of studded leather pants"
 descr "A pair of studded leather pants is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_LEATHER(0, 0) /* 15 def str, Lth Quality, Average Craft */
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 16   COPPER_PIECE
 end
@@ -9513,7 +9513,7 @@ names {"hard leather boots","boots"}
 title "a pair of hard leather boots"
 descr "A pair of hard leather boots lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0, 0) /* 10 def str, HLth Quality, Average Craft */
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 cost 12   COPPER_PIECE
 end
@@ -9528,7 +9528,7 @@ title "a scale mail coif"
 descr "A scale mail coif is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /* Iron/Leather mixture + avg/poor craftmanship */
-ARMOUR_CHAIN(-2, 0)
+ARMOUR_CHAIN(BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -2,0
 cost 7   SILVER_PIECE
 end
 
@@ -9538,7 +9538,7 @@ names {"reinforced gloves","gloves"}
 title "a pair of reinforced gloves"
 descr "A pair of reinforced gloves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
-ARMOUR_CHAIN(-2, 0)
+ARMOUR_CHAIN(BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -2,0
 weight 4
 cost 7   SILVER_PIECE
 end
@@ -9549,7 +9549,7 @@ names {"scale mail sleeves","sleeves"}
 title "a pair of scale mail sleeves"
 descr "A pair of scale mail sleeves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_CHAIN(-2, 0)
+ARMOUR_CHAIN(BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -2,0
 weight 8
 cost 9   SILVER_PIECE
 end
@@ -9560,7 +9560,7 @@ names {"scale mail jerkin","jerkin"}
 title "a scale mail jerkin"
 descr "A scale mail jerkin is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_CHAIN(-2, 0)
+ARMOUR_CHAIN(BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -2,0
 weight 9
 cost 7   SILVER_PIECE
 end
@@ -9571,7 +9571,7 @@ names {"scale mail skirt","skirt"}
 title "a long scale mail skirt"
 descr "A long scale mail skirt is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_CHAIN(-2, 0)
+ARMOUR_CHAIN(BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -2,0
 weight 9
 cost 9   SILVER_PIECE
 end
@@ -9582,7 +9582,7 @@ names {"scale mail boots","boots"}
 title "a pair of scale mail boots"
 descr "A pair of scale mail boots lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_CHAIN(-2, 0)
+ARMOUR_CHAIN(BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -2,0
 weight 6
 cost 7   SILVER_PIECE
 end
@@ -9596,7 +9596,7 @@ title "a chain mail coif"
 descr "A chain mail coif is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /* Iron rings + avg/poor = 100% +  -5% */
-ARMOUR_CHAIN(-5, 0)
+ARMOUR_CHAIN(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 4
 cost 15   SILVER_PIECE
 end
@@ -9607,7 +9607,7 @@ names {"chain mail sleeves","sleeves"}
 title "a pair of chain mail sleeves"
 descr "A pair of chain mail sleeves is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_CHAIN(-5, 0)
+ARMOUR_CHAIN(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 8
 cost 20   SILVER_PIECE
 end
@@ -9618,7 +9618,7 @@ names {"chain mail jerkin", "jerkin"}
 title "a chain mail jerkin"
 descr "A chain mail jerkin is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_CHAIN(-5, 0)
+ARMOUR_CHAIN(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 9
 cost 15   SILVER_PIECE
 end
@@ -9630,7 +9630,7 @@ names {"chain mail skirt", "skirt"}
 title "a long chain mail skirt"
 descr "A long chain mail skirt is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_CHAIN(-5, 0)
+ARMOUR_CHAIN(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 9
 cost 20   SILVER_PIECE
 end
@@ -9644,7 +9644,7 @@ title "a bronze helmet"
 descr "A bronze helmet is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /*  Bronze + poor craftmanship */
-ARMOUR_PLATE(-5, 0)
+ARMOUR_PLATE(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 8
 cost 12   COPPER_PIECE
 end
@@ -9655,7 +9655,7 @@ names {"bronze gauntlets","gauntlets"}
 title "a pair of bronze gauntlets"
 descr "A pair of bronze gauntlets is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
-ARMOUR_PLATE(-5, 0)
+ARMOUR_PLATE(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 8
 cost 12   COPPER_PIECE
 end
@@ -9666,7 +9666,7 @@ names {"bronze bracers","bracers"}
 title "a pair of bronze bracers"
 descr "A pair of bronze bracers is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_PLATE(-5, 0)
+ARMOUR_PLATE(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 8
 cost 22   SILVER_PIECE
 end
@@ -9677,7 +9677,7 @@ names {"bronze breast plate", "breast plate"}
 title "a bronze breast plate"
 descr "A bronze breast plate is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(-5, 0)
+ARMOUR_PLATE(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 20
 cost 17   SILVER_PIECE
 end
@@ -9689,7 +9689,7 @@ names {"bronze leggings","leggings"}
 title "a pair of bronze leggings"
 descr "A pair of bronze leggings is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_PLATE(-5, 0)
+ARMOUR_PLATE(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 8
 cost 22   SILVER_PIECE
 end
@@ -9700,7 +9700,7 @@ names {"bronze boots","boots"}
 title "a pair of bronze boots"
 descr "A pair of bronze boots is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_PLATE(-5, 0)
+ARMOUR_PLATE(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -9715,7 +9715,7 @@ title "an iron helmet"
 descr "An iron helmet is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /* Iron plates + poor craftmanship = 100% + -10% = 90% */
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 15   COPPER_PIECE
 end
@@ -9726,7 +9726,7 @@ names {"iron gauntlets","gauntlets"}
 title "a pair of iron gauntlets"
 descr "A pair of iron gauntlets is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 15   SILVER_PIECE
 end
@@ -9737,7 +9737,7 @@ names {"iron bracers","bracers"}
 title "a pair of iron bracers"
 descr "A pair of iron bracers is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 25   SILVER_PIECE
 end
@@ -9748,7 +9748,7 @@ names {"iron breast plate", "breast plate"}
 title "an iron breast plate"
 descr "An iron breast plate is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 20
 cost 20   SILVER_PIECE
 end
@@ -9760,7 +9760,7 @@ names {"iron leggings","leggings"}
 title "a pair of iron leggings"
 descr "A pair of iron leggings is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 25   SILVER_PIECE
 end
@@ -9771,7 +9771,7 @@ names {"iron boots","boots"}
 title "a pair of iron boots"
 descr "A pair of iron boots is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_PLATE(0, 0)
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 10   SILVER_PIECE
 end
@@ -9785,7 +9785,7 @@ names {"small wooden shield", "wooden shield", "shield"}
 title "a small wooden shield"
 descr "A small wooden shield is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
-SHIELD_DEF(SHIELD_SMALL, -10, 0)
+SHIELD_DEF(SHIELD_SMALL, BONUS_JUNK, BONUS_AVERAGE)  // Xyzzy: -10,0
 weight 8
 cost 1   SILVER_PIECE
 end
@@ -9796,7 +9796,7 @@ names {"small metal shield", "metal shield", "shield"}
 title "a small metal shield"
 descr "A small metal shield is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
-SHIELD_DEF(SHIELD_SMALL, -5, 0)
+SHIELD_DEF(SHIELD_SMALL, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 5
 cost 2   SILVER_PIECE
 end
@@ -9807,7 +9807,7 @@ names {"large metal shield", "metal shield", "shield"}
 title "a large metal shield"
 descr "A large metal shield is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
-SHIELD_DEF(SHIELD_LARGE, -5, 0)
+SHIELD_DEF(SHIELD_LARGE, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -10005,7 +10005,7 @@ type ITEM_WEAPON
 flags {UNIT_FL_MAGIC}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Silver / Good Craftmanship / A little magic~= -5% */
-WEAPON_DEF(WPN_DAGGER, -5, +1)
+WEAPON_DEF(WPN_DAGGER, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE_PLUS)  // Xyzzy: -5,+1
 weight 1
 rent 20 COPPER_PIECE
 cost 50   SILVER_PIECE
@@ -10317,7 +10317,7 @@ title "a meat cleaver"
 descr "A meat cleaver has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron + Craftman ship = -5% */
-WEAPON_DEF(WPN_HAND_AXE, -5, 0)
+WEAPON_DEF(WPN_HAND_AXE, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 4
 cost 2   SILVER_PIECE
 end
@@ -10363,7 +10363,7 @@ descr "A pair of heavy oilskin boots lies here."
 extra {}
 "They are made from thick oilskin that has been reinforced with hard wood."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 cost 14   COPPER_PIECE
 end
@@ -10377,7 +10377,7 @@ extra {}
 "It is made from thick oilskin and looks to give good protection from rain and
 some protection from blows."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 18   COPPER_PIECE
 end
@@ -10416,7 +10416,7 @@ descr "A pointy hat is lying on the ground."
 extra {} "It is the sort of hat most wizards fancy."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /*  Gives protection as a leather cap  */
-ARMOUR_CLOTHES(-3, 0)
+ARMOUR_CLOTHES(BONUS_BAD_MINUS, BONUS_AVERAGE)  // Xyzzy: -3,0
 weight 1
 cost 3   COPPER_PIECE
 end

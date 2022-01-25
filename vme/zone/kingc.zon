@@ -2772,7 +2772,7 @@ type ITEM_WORN
 weight 1
 cost 20 GOLD_PIECE
 rent 2 SILVER_PIECE
-DEX_TRANSFER (+1)
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 extra {"$identify"}
 "This ring transfers the wearer partially into the ethereal plane, thus making
 him harder to hit."
@@ -2800,7 +2800,7 @@ rent 50 SILVER_PIECE
 extra {"$identify"}
 "This Sceptre is made by the old Gods and is rumored to give immense strength
 to the person holding it."
-STR_TRANSFER (+1)
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 end
 
                            golden_crown
@@ -2810,7 +2810,7 @@ title "a golden crown"
 descr "A magnificently jewelled golden crown has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /* It is not a "real" chain armour, therefore -5%, gold -20% */
-ARMOUR_CHAIN(-5, 1)  /* Gold / Very good craft 15% */
+ARMOUR_CHAIN(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE_PLUS)  // Xyzzy: -5,1
 weight 40
 cost 100 GOLD_PIECE
 rent 50 SILVER_PIECE
@@ -2925,7 +2925,7 @@ title "a training sword"
 descr "A training sword with blunt edges is leaned against a wall."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Wood 30 % and Poor Craftsmansship = -40 % */
-WEAPON_DEF(WPN_LONG_SWORD, -20, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_JUNK, BONUS_AVERAGE)  // Xyzzy: -20,0
 weight 7
 cost 2 COPPER_PIECE
 /* Supposed to be negative affect on TODAM or TOHIT */
@@ -2938,7 +2938,7 @@ title "a long sword"
 descr "A long sword has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Iron 100 % Average craft 0 % */
-WEAPON_DEF(WPN_LONG_SWORD, 0, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 12 SILVER_PIECE
 end
@@ -2949,7 +2949,7 @@ title "a guard's shield"
 descr "A guard's shield lies on the floor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 /* Pure iron and decent craft (100% + 5%) */
-SHIELD_DEF(SHIELD_MEDIUM, 1, 0)
+SHIELD_DEF(SHIELD_MEDIUM, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 1,0
 weight 40
 cost 6 SILVER_PIECE
 extra {}
@@ -2964,7 +2964,7 @@ names {"guard's mail jerkin","chain mail jerkin","jerkin"}
 title "a guard's chain mail jerkin"
 descr "A chain mail jerkin lies on the floor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 30
 cost 25 SILVER_PIECE
 end
@@ -2975,7 +2975,7 @@ names {"guard's skirt", "chain mail skirt","skirt"}
 title "a guard's chain mail skirt"
 descr "A chain mail skirt lies on the floor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 28
 cost 30 SILVER_PIECE
 end
@@ -2986,7 +2986,7 @@ names {"chain mail coif","coif"}
 title "a guard's chain mail coif"
 descr "A chain mail coif lies on the floor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 7
 cost 20 COPPER_PIECE
 end
@@ -2997,7 +2997,7 @@ names {"chain mail sleeves","mail"}
 title "a guard's chain mail sleeves"
 descr "A pair of chain mail sleeves lie on the floor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
-ARMOUR_LEATHER(0,0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 12
 cost 30 SILVER_PIECE
 end
@@ -3009,7 +3009,7 @@ title "a large broadsword"
 descr "There is a large broadsword lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Pure iron and Decent craft (100% + 5%) */
-WEAPON_DEF(WPN_LONG_SWORD, 0, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 18
 cost 15 SILVER_PIECE
 end

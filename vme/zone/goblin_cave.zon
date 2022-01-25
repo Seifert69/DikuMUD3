@@ -272,7 +272,7 @@ extra {}
 Looking like something only a pimp, or perhaps Gwyn, would wear."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
-DEX_TRANSFER (+1)
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 rent 25 IRON_PIECE
 weight 10
 cost 4 COPPER_PIECE
@@ -362,7 +362,7 @@ extra {}
 'Cinquedea', also called five finger sword or ox tongue sword, because of the
 width of the sword. It has a mark with the writing 'Andrea dei Ferara'."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, 2, 0)
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 2,0
 weight 9
 cost 16 SILVER_PIECE
 end
@@ -378,7 +378,7 @@ the hand-protector, which is formed like an kidney. This is a little better
 craftsmanship than an ordinary weapon of this type. The weight balance isn't
 correct though, the blade is to heavy."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 0, 0)
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 cost 7 SILVER_PIECE
 end
@@ -392,7 +392,7 @@ extra {}
 "  This is a completely normal bastard sword, fitted for a goblin. The only
 thing that are exceptional are the blood line in the middle of the blade."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD, -5, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 12
 cost 8 SILVER_PIECE
 end
@@ -407,7 +407,7 @@ extra {}
 heavy head, which probably makes it even more devastating for an enemy. An
 inscription on the wooden handle says 'Gooood, Hhe, Hhe, Hhe, Gooood'."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_MACE, -5, 0)
+WEAPON_DEF(WPN_MACE, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 16
 cost 5 SILVER_PIECE
 end
@@ -448,7 +448,7 @@ extra {}
 "   YUCK, this beard is filled with grease. It's really something only a real
 psychopath would wear on his head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
-ARMOUR_CLOTHES(0, 0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 end
 
@@ -462,8 +462,8 @@ extra {}
 small goblin fools hat with tiny bells. This should really make you silent
 if you got the need to sneak someday."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
-ARMOUR_CLOTHES(0, 0)
-DIV_TRANSFER (+1)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+DIV_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 rent 25 IRON_PIECE
 weight 2
 cost 3 IRON_PIECE
@@ -478,7 +478,7 @@ extra {}
 "   This hat really looks magical. It's covered with small silver stars and
 half-moons, probably to summon the strengths from the dark sides of magic."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WEAR_HEAD}
-ARMOUR_CLOTHES(0, 0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
 rent 25 IRON_PIECE
 cost 6 COPPER_PIECE
@@ -492,7 +492,7 @@ descr
 "Some goblin sleeves has been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_ARMS}
 /* armour_type, quaility, optimal_strength */
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 8 COPPER_PIECE
 extra {} " These sleeves looks like normal sleeves, though they are greasy"
@@ -505,7 +505,7 @@ descr
 "A pair of goblin gauntlets has been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HANDS}
 /* armour_type, quaility, optimal_strength */
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 6 COPPER_PIECE
 extra {}
@@ -520,7 +520,7 @@ descr
 "A pair of goblin leggings has been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_LEGS}
 /* armour_type, quaility, optimal_strength */
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 8 COPPER_PIECE
 extra {}
@@ -534,7 +534,7 @@ descr
 "A goblin breast plate has been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_BODY}
 /* armour_type, quaility, optimal_strength */
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 6 COPPER_PIECE
 extra {} "It's made of leather. You will like it. "
@@ -546,7 +546,7 @@ title "a goblin helmet"
 descr
 "A goblin helmet has been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 6 COPPER_PIECE
 extra {}
@@ -562,7 +562,7 @@ descr
 "Some goblin boots has been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_FEET}
 /* armour_type, quaility, optimal_strength */
-ARMOUR_LEATHER(0, 0)
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 6 COPPER_PIECE
 extra {} " Oh, how happy you are to get this fine greasy boots."

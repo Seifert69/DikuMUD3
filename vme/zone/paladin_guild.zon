@@ -1147,7 +1147,7 @@ extra {}
 Midgaard. It looks like it could cave in a skull."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 type ITEM_WEAPON
-WEAPON_DEF(WPN_FLAIL,0,0)
+WEAPON_DEF(WPN_FLAIL, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 15
 cost 6 SILVER_PIECE
 rent 20 IRON_PIECE
@@ -1167,7 +1167,7 @@ sword provides a nice counter-balance, and you think you could swing it with
 only one hand."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 type ITEM_WEAPON
-WEAPON_DEF(WPN_LONG_SWORD, 0, 0)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 7 SILVER_PIECE
 rent 20 IRON_PIECE
@@ -1183,7 +1183,7 @@ extra {}
 The plate is elegantly crafted, offering maximum protection with minimum
 encumberance."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
-ARMOUR_CHAIN(0,0)
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 30
 cost 5 GOLD_PIECE
 rent 20 IRON_PIECE
@@ -1200,7 +1200,7 @@ The chausses are elegantly crafted, offering maximum protection with minimum
 encumberance. A short chainmail shirt provides added protection to the
 groin area."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_LEGS}
-ARMOUR_CHAIN(0,0)
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 18
 cost 3 GOLD_PIECE
 rent 20 IRON_PIECE
@@ -1216,7 +1216,7 @@ extra {}
 The vambracers are carefully crafted, offering maximum protection with
 minimum encumberance."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ARMS}
-ARMOUR_CHAIN(0,0)
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 15
 cost 3 GOLD_PIECE
 rent 20 IRON_PIECE
@@ -1232,7 +1232,7 @@ extra {}
 The gauntlets are crafted with great skill, providing maximum dexterity
 for your now well-armoured fingers."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HANDS}
-ARMOUR_CHAIN(0,0)
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 2 GOLD_PIECE
 rent 20 IRON_PIECE
@@ -1248,7 +1248,7 @@ extra {}
 Altough heavy and rather uncomfortable, those sorelets will provide the
 best protection to your feet in combats. Don't leave home without them."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
-ARMOUR_CHAIN(0,0)
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 2 GOLD_PIECE
 rent 20 IRON_PIECE
@@ -1266,7 +1266,7 @@ protecting your face from any harm that may come its way, but reducing
 your field of visibility substantially. A large blue plume decorates the
 helmet."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
-ARMOUR_CHAIN(0,0)
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 8
 cost 4 GOLD_PIECE
 rent 20 IRON_PIECE
@@ -1281,7 +1281,7 @@ extra {}
 "The cape is thick and soft, the bright colour inspiring hope and
 happiness. You admire the incredable craftmanship of this cloth."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
-ARMOUR_CLOTHES(0,0)
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 3
 cost 5 SILVER_PIECE
 rent 20 IRON_PIECE
@@ -1325,11 +1325,11 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "As $1n sheats $1s $2n, the glow from its blade subsides."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD,7,7)
-STR_TRANSFER(+2)
-DIV_TRANSFER(+2)
-CHA_TRANSFER(-1)
-WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 romflags {OBJ_NO_DUAL}
 MATERIAL_METAL("This item is made of reddish metal.")
 dilcopy guild_restrict@function ({GUILD_PALADIN},0,25,"");

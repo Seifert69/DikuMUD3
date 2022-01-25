@@ -1234,7 +1234,7 @@ horsey!  This small gift brings wishes of joy, happiness and health in the
 coming year to you and your family from the Administration of Valhalla MUD."
 weight 1
 manipulate {MANIPULATE_HOLD,MANIPULATE_TAKE}
-STR_TRANSFER(+2)
+STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 end
 
 cookie
@@ -1381,8 +1381,8 @@ title "a <div class='cr'>candy </div><div class='cpw'>cane</div>"
 descr "A simple candy cane lies here. It seems to glow strangely."
 cost 400 PLATINUM_PIECE
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, 3, 3)
-WEAPON_TRANSFER(WPN_DAGGER, +5)
+WEAPON_DEF(WPN_DAGGER, BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 3,3
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 dilcopy mvlev_restrict@function (49,0,25,"");
 extra {"$donotstore"}
 " This is to prevent excessive storage of items, mainly hard to get ones."
@@ -1415,7 +1415,7 @@ the Admin of Valhalla for New Players, weapons like these are hard to find.
 <div class='cpw'>             |-' |  </div>
 <div class='cpr'>             `---'  </div>
 </pre>"
-HIT_TRANSFER(+3)
+HIT_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 dilcopy quest_restrict@function(XMAS_DONE21,0,0,"");
 
 dilbegin candyheal();
@@ -1499,8 +1499,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -1523,8 +1523,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -1548,8 +1548,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -1574,8 +1574,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -1599,8 +1599,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -1624,8 +1624,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -1650,8 +1650,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This sash will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -1677,8 +1677,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -1702,8 +1702,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -1727,8 +1727,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -1752,8 +1752,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -1777,8 +1777,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -1802,8 +1802,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -1828,8 +1828,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -1854,7 +1854,7 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-HIT_TRANSFER(+4)
+HIT_TRANSFER(BONUS_EXCELLENT)  // Xyzzy: +4
 extra {"$identify"}
 "This anklet will grant its wearer an added boost to their combat skills."
 extra {"$improved identify"}
@@ -1881,8 +1881,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -1906,8 +1906,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -1931,8 +1931,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -1957,8 +1957,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -1982,8 +1982,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -2007,8 +2007,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -2033,8 +2033,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This belt will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -2060,8 +2060,8 @@ a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -2084,8 +2084,8 @@ a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -2108,8 +2108,8 @@ a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -2132,8 +2132,8 @@ a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -2156,8 +2156,8 @@ a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -2180,8 +2180,8 @@ a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -2204,8 +2204,8 @@ a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -2233,8 +2233,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This bracer will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -2258,8 +2258,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This bracer will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -2283,8 +2283,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This bracer will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -2308,8 +2308,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This bracer will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -2333,8 +2333,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This bracer will grant its wearer an added boost to their divinity."
 extra {"$improved identify"}
@@ -2358,8 +2358,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This bracer will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -2383,8 +2383,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This bracer will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -2410,8 +2410,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This chain will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -2435,8 +2435,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This chain will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -2460,8 +2460,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This chain will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -2485,8 +2485,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This chain will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -2510,8 +2510,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This chain will grant its wearer an added boost to their divinity."
 extra {"$improved identify"}
@@ -2535,8 +2535,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This chain will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -2560,8 +2560,8 @@ New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This chain will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -2587,8 +2587,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -2612,8 +2612,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -2637,8 +2637,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -2663,8 +2663,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -2688,8 +2688,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This cape will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -2713,8 +2713,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -2739,8 +2739,8 @@ and a very </div><div class='cpr'>Happy New Year</div>."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This cloak will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -2765,8 +2765,8 @@ Admin of Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -2789,8 +2789,8 @@ Admin of Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -2813,8 +2813,8 @@ Admin of Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -2837,8 +2837,8 @@ Admin of Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -2861,8 +2861,8 @@ Admin of Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -2885,8 +2885,8 @@ Admin of Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -2909,8 +2909,8 @@ Admin of Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This backplate will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
@@ -2937,8 +2937,8 @@ Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-STR_TRANSFER(+5)
-BRA_TRANSFER(-1)
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their strength."
 extra {"$improved identify"}
@@ -2961,8 +2961,8 @@ Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DEX_TRANSFER(+5)
-CON_TRANSFER(-1)
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their dexterity."
 extra {"$improved identify"}
@@ -2985,8 +2985,8 @@ Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CHA_TRANSFER(+5)
-STR_TRANSFER(-1)
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their charisma."
 extra {"$improved identify"}
@@ -3010,8 +3010,8 @@ Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-CON_TRANSFER(+5)
-DEX_TRANSFER(-1)
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their constitution."
 extra {"$improved identify"}
@@ -3034,8 +3034,8 @@ Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-DIV_TRANSFER(+5)
-MAG_TRANSFER (-1)
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their divine aura."
 extra {"$improved identify"}
@@ -3058,8 +3058,8 @@ Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-BRA_TRANSFER(+5)
-CHA_TRANSFER (-1)
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their intelligence."
 extra {"$improved identify"}
@@ -3082,8 +3082,8 @@ Valhalla and carries a yuletide message from them wishing you a
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
-MAG_TRANSFER(+5)
-DIV_TRANSFER (-1)
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This earring will grant its wearer an added boost to their magic aura."
 extra {"$improved identify"}
