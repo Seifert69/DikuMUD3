@@ -373,7 +373,7 @@ void show_obj_info(class unit_data *obj)
 
     if (!first)
     {
-        fprintf(stderr, "                      OBJECT\n\n");
+        fprintf(stderr, "OBJECT\ntype,name,zone,val0,val1,val2,val3,//,STR,DEX,CON,CHA,BRA,MAG,DIV,HPP,Good,Evil,Flags,//,Spell/Weapon/Skill Transfers\n\n");
         first = TRUE;
     }
 
