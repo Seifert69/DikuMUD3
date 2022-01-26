@@ -19,6 +19,7 @@ set(MPLEX_SRCS
         ../slog_raw.cpp ../slog_raw.h
         ../textutil.cpp ../textutil.h
         ../utility.cpp ../utility.h
+        ../OutputCapture.cpp ../OutputCapture.h
         )
 
 

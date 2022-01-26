@@ -292,6 +292,16 @@ bool CServerConfiguration::isAccounting() const
     return m_bAccounting;
 }
 
+void CServerConfiguration::enableAccounting()
+{
+    m_bAccounting = true;
+}
+
+void CServerConfiguration::disableAccounting()
+{
+    m_bAccounting = false;
+}
+
 bool CServerConfiguration::isAliasShout() const
 {
     return m_bAliasShout;

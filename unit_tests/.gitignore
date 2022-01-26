@@ -1,0 +1,7 @@
+*.info
+defcomp_report/
+mplex_report/
+pp_report/
+vmc_report/
+vme_report/
+

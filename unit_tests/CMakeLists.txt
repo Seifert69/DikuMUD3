@@ -4,8 +4,11 @@ include_directories (${Boost_INCLUDE_DIRS})
 add_executable(vme_unit_tests
         vme_main.cpp
         CServerConfiguration_tests.cpp
-        color_type_tests.cpp
+        FixtureBase.cpp FixtureBase.h
+        account_cpp_tests.cpp
         cNamelist_tests.cpp
+        color_type_tests.cpp
+        weather_cpp_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)
 target_compile_definitions(vme_unit_tests

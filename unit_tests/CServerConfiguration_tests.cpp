@@ -1,8 +1,8 @@
 #define BOOST_TEST_MODULE "CServerConfiguration Unit Tests"
+#include "FixtureBase.h"
 #include "config.h"
 #include "db.h"
 #include "diku_exception.h"
-#include "utility.h"
 
 #include <cstdarg>
 #include <cstring>
@@ -10,10 +10,11 @@
 
 #include <boost/test/unit_test.hpp>
 
-struct CServerConfiguration_Fixture
+struct CServerConfiguration_Fixture : public unit_tests::FixtureBase
 {
     static const std::string server_config;
     CServerConfiguration_Fixture()
+        : FixtureBase()
     {
         // No way to suppress the warning from tempnam because its hardcoded into lib
         // so we'll do it here it's only a unit test
@@ -24,15 +25,8 @@ struct CServerConfiguration_Fixture
 
         std::ofstream strm(fake_server_config_filename);
         strm << server_config;
-
-        // Redirect away application logging to tmp file
-        g_log_file_fd = tmpfile();
     }
-    ~CServerConfiguration_Fixture()
-    {
-        remove(fake_server_config_filename.c_str());
-        fclose(g_log_file_fd);
-    }
+    ~CServerConfiguration_Fixture() { remove(fake_server_config_filename.c_str()); }
     std::string fake_server_config_filename;
 };
 

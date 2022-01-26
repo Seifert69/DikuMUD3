@@ -63,6 +63,8 @@ public:
     [[nodiscard]] const in_addr &getSubnetMask() const;
     [[nodiscard]] const std::string &getZoneDir() const;
 
+    void enableAccounting();
+    void disableAccounting();
     /**
      * Generates a string of the path with the filename appended
      *

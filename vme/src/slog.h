@@ -1,5 +1,6 @@
 #pragma once
 
+#include "OutputCapture.h"
 #include "formatter.h"
 #include "slog_raw.h"
 #include "utility.h"
@@ -31,6 +32,9 @@ void slog(log_level level, ubit8 wizinv_level, const std::string &fmt, ParamPack
     {
         formatted_text = fmt;
     }
+
+    // If a unit test is being run, send results there too
+    unit_tests::OutputCapture::slog(level, wizinv_level, fmt, formatted_text);
 
     std::string buf;
 
