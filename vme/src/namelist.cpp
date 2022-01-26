@@ -96,7 +96,8 @@ int cNamelist::ReadBuffer(CByteBuffer *pBuf, int unit_version)
     }
     else
     {
-        ubit32 len, i;
+        ubit32 len;
+        ubit32 i;
         if (pBuf->Read32(&len))
         {
             return 1;
@@ -206,7 +207,8 @@ void cNamelist::Remove(ubit32 idx)
 
 void cNamelist::RemoveName(const char *name)
 {
-    ubit32 i, j;
+    ubit32 i;
+    ubit32 j;
 
     for (i = 0; i < length; i++)
     {
@@ -283,7 +285,8 @@ cNamelist *cNamelist::Duplicate(void)
 
 const char *cNamelist::IsNameRaw(const char *name)
 {
-    ubit32 i, j;
+    ubit32 i;
+    ubit32 j;
 
     for (i = 0; i < length; i++)
     {
@@ -378,7 +381,8 @@ const char *cNamelist::StrStr(const char *name)
 /* Returns -1 if no name matches, or 0.. for the index in the namelist */
 const int cNamelist::IsNameRawIdx(const char *name)
 {
-    ubit32 i, j;
+    ubit32 i;
+    ubit32 j;
 
     for (i = 0; i < length; i++)
     {
@@ -512,7 +516,9 @@ void cNamelist::PrependName(const char *name)
 
 void cNamelist::InsertName(const char *name, ubit32 loc)
 {
-    ubit32 nadd, x, olen;
+    ubit32 nadd;
+    ubit32 x;
+    ubit32 olen;
     olen = length;
 
     if (name)

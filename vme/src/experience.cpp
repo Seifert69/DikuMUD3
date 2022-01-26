@@ -43,7 +43,8 @@ int kludge_bonus(int level, int points)
         return ((5 * (level - 20)) * MIN(100, points)) / 100;
     }
 
-    int b, expected;
+    int b;
+    int expected;
 
     expected = 100 + (level - 50);
 
@@ -65,7 +66,8 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
     class unit_data *def_shield;
     int def_shield_bonus = 0;
 
-    int att_dex, def_dex;
+    int att_dex;
+    int def_dex;
     int hm;
 
     att_dex = effective_dex(att);
@@ -125,7 +127,8 @@ int dikuii_spell_bonus(class unit_data *att,
                        int *pDef_armour_type,
                        class unit_data **pDef_armour)
 {
-    int att_spl_knowledge, def_spl_knowledge;
+    int att_spl_knowledge;
+    int def_spl_knowledge;
     int att_bonus;
     int def_bonus;
     int def_armour_type;
@@ -208,8 +211,11 @@ int dikuii_melee_bonus(class unit_data *att,
                        class unit_data **pDef_armour,
                        int primary)
 {
-    int att_bonus, att_wpn_knowledge;
-    int def_dex, def_bonus, def_wpn_knowledge;
+    int att_bonus;
+    int att_wpn_knowledge;
+    int def_dex;
+    int def_bonus;
+    int def_wpn_knowledge;
 
     class unit_data *att_wpn;
     int att_wpn_type;
@@ -375,7 +381,8 @@ int spell_bonus(class unit_data *att,
                 class unit_data **pDef_armour,
                 std::string *pStat)
 {
-    int att_spl_knowledge, def_spl_knowledge;
+    int att_spl_knowledge;
+    int def_spl_knowledge;
     int att_bonus;
     int def_bonus;
     int def_armour_type;
@@ -537,13 +544,16 @@ int melee_bonus(class unit_data *att,
                 int primary,
                 std::string *pStat)
 {
-    int att_bonus, att_wpn_knowledge;
-    int def_bonus, def_wpn_knowledge;
+    int att_bonus;
+    int att_wpn_knowledge;
+    int def_bonus;
+    int def_wpn_knowledge;
 
     class unit_data *att_wpn;
     int att_wpn_type;
 
-    int def_armour_type, tmp;
+    int def_armour_type;
+    int tmp;
     class unit_data *def_armour;
     int hm;
 
@@ -789,7 +799,8 @@ int melee_bonus(class unit_data *att,
 
 int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
 {
-    int ocp, bonus;
+    int ocp;
+    int bonus;
     class unit_data *ocf;
 
     assert(CHAR_COMBAT(def));
@@ -813,8 +824,10 @@ int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
 
 int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
 {
-    int ocp, bonus;
-    int att_wpn_type, def_arm_type;
+    int ocp;
+    int bonus;
+    int att_wpn_type;
+    int def_arm_type;
     int dam;
 
     ocp = CHAR_POS(def);

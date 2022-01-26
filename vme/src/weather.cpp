@@ -150,7 +150,8 @@ static void another_hour(struct time_info_data time_data)
 
 static void weather_change(class zone_type *zone, struct time_info_data time_data)
 {
-    int diff, change;
+    int diff;
+    int change;
 
     if (time_data.month <= 2)
     { /* Winter */

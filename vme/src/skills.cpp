@@ -199,7 +199,8 @@ void roll_description(class unit_data *att, const char *text, int roll)
 
 int open_ended_roll(int size, int end)
 {
-    int i, s;
+    int i;
+    int s;
 
     s = i = number(1, size);
 
@@ -510,7 +511,10 @@ int effective_dex(class unit_data *ch)
     class unit_data *u;
     static const int arm_dex_penalty[] = {0, 10, 20, 40, 100};
 
-    int at, b, p, psum = 0;
+    int at;
+    int b;
+    int p;
+    int psum = 0;
 
     for (u = UNIT_CONTAINS(ch); u; u = u->next)
     {
@@ -879,7 +883,8 @@ void boot_race(void)
 
 static void ability_read(void)
 {
-    int dummy, idx = -1;
+    int dummy;
+    int idx = -1;
     char pTmp[256];
     char *pCh;
     FILE *fl;
@@ -1105,7 +1110,8 @@ void boot_ability(void)
 
 static void weapon_read(void)
 {
-    int dummy, idx = -1;
+    int dummy;
+    int idx = -1;
     char pTmp[256];
     char *pCh;
     FILE *fl;
@@ -1317,7 +1323,9 @@ static void weapon_read(void)
         else if (strncmp(pTmp, "ability", 7) == 0)
         {
             char tmp[256];
-            int i1, i2, i3;
+            int i1;
+            int i2;
+            int i3;
 
             pCh = str_next_word(pCh, tmp);
             i1 = atoi(tmp);
@@ -1350,7 +1358,9 @@ static void weapon_read(void)
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
             char tmp[256];
-            int i1, i2, i3;
+            int i1;
+            int i2;
+            int i3;
             int idx2 = -1;
 
             pCh = str_next_word(pCh, tmp);

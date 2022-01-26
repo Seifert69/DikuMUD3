@@ -97,7 +97,8 @@ const char *convert_back_money(unsigned long val)
 
 amount_t convert_money(char *str)
 {
-    long int val1, val2;
+    long int val1;
+    long int val2;
     amount_t res = 0;
     char *c;
 
@@ -140,7 +141,10 @@ amount_t convert_money(char *str)
 /* Output: [3] as input                  */
 void dmc_set_weapon(class unit_data *weapon)
 {
-    int category, craftsmanship, magic_bonus, slay;
+    int category;
+    int craftsmanship;
+    int magic_bonus;
+    int slay;
 
     category = OBJ_VALUE(weapon, 0);
     craftsmanship = OBJ_VALUE(weapon, 1);
@@ -161,7 +165,7 @@ void dmc_set_weapon(class unit_data *weapon)
         return;
     }
 
-    if (!is_in(magic_bonus,  BONUS_JUNK, BONUS_ARTIFACT))
+    if (!is_in(magic_bonus, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..7 allowed) in '%s'.", UNIT_IDENT(weapon));
         OBJ_TYPE(weapon) = ITEM_TRASH;
@@ -185,7 +189,9 @@ void dmc_set_weapon(class unit_data *weapon)
 /*         Value[2] = ...                 */
 void dmc_set_armour(class unit_data *armour)
 {
-    int category, craftsmanship, magic_bonus;
+    int category;
+    int craftsmanship;
+    int magic_bonus;
 
     category = OBJ_VALUE(armour, 0);
     craftsmanship = OBJ_VALUE(armour, 1);
@@ -198,14 +204,14 @@ void dmc_set_armour(class unit_data *armour)
         return;
     }
 
-    if (!is_in(craftsmanship,  BONUS_JUNK, BONUS_ARTIFACT))
+    if (!is_in(craftsmanship, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(armour));
         OBJ_TYPE(armour) = ITEM_TRASH;
         return;
     }
 
-    if (!is_in(magic_bonus,  BONUS_JUNK, BONUS_ARTIFACT))
+    if (!is_in(magic_bonus, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(armour));
         OBJ_TYPE(armour) = ITEM_TRASH;
@@ -223,7 +229,9 @@ void dmc_set_armour(class unit_data *armour)
 
 void dmc_set_shield(class unit_data *shield)
 {
-    int category, craftsmanship, magic_bonus;
+    int category;
+    int craftsmanship;
+    int magic_bonus;
 
     category = OBJ_VALUE(shield, 0);
     craftsmanship = OBJ_VALUE(shield, 1);
@@ -236,7 +244,7 @@ void dmc_set_shield(class unit_data *shield)
         return;
     }
 
-    if (!is_in(craftsmanship,  BONUS_JUNK, BONUS_ARTIFACT))
+    if (!is_in(craftsmanship, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(shield));
         OBJ_TYPE(shield) = ITEM_TRASH;
@@ -255,8 +263,11 @@ void dmc_set_shield(class unit_data *shield)
 
 void set_points(class unit_data *u)
 {
-    int i, sum, max;
-    int spoints, apoints;
+    int i;
+    int sum;
+    int max;
+    int spoints;
+    int apoints;
 
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_FIST, WPN_CRUSH))
     {
@@ -373,7 +384,9 @@ void show_obj_info(class unit_data *obj)
 
     if (!first)
     {
-        fprintf(stderr, "OBJECT\ntype,name,zone,val0,val1,val2,val3,//,STR,DEX,CON,CHA,BRA,MAG,DIV,HPP,Good,Evil,Flags,//,Spell/Weapon/Skill Transfers\n\n");
+        fprintf(stderr,
+                "OBJECT\ntype,name,zone,val0,val1,val2,val3,//,STR,DEX,CON,CHA,BRA,MAG,DIV,HPP,Good,Evil,Flags,//,Spell/Weapon/Skill "
+                "Transfers\n\n");
         first = TRUE;
     }
 
@@ -486,7 +499,7 @@ void show_obj_info(class unit_data *obj)
             }
         }
 
-        for (int i=0; i < 11; i++)
+        for (int i = 0; i < 11; i++)
         {
             s += itoa(bonusvector[i]);
             s += ",";
@@ -523,12 +536,10 @@ void show_obj_info(class unit_data *obj)
         }
     }
 
-
     if (doprint)
     {
         fprintf(stderr, "%s\n", s.c_str());
     }
-
 }
 
 void show_npc_info(class unit_data *npc)
@@ -557,7 +568,10 @@ void show_npc_info(class unit_data *npc)
 void process_affects(class unit_data *pUnit)
 {
     struct unit_affected_type *pAf;
-    int firstf, tickf, lastf, applyf;
+    int firstf;
+    int tickf;
+    int lastf;
+    int applyf;
 
     for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->next)
     {

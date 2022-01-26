@@ -77,7 +77,8 @@ void ShowUsage(const char *name)
 
 int ParseArg(int argc, char *argv[], struct arg_type *arg)
 {
-    int i, n;
+    int i;
+    int n;
     struct hostent *pHostInfo;
     struct in_addr *pAddr;
     char *c;

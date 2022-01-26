@@ -139,7 +139,8 @@ struct diltemplate *find_dil_index(const char *zonename, const char *name)
  */
 struct diltemplate *find_dil_template(const char *name)
 {
-    char zbuf[256], pbuf[256];
+    char zbuf[256];
+    char pbuf[256];
 
     if (str_is_empty(name))
     {
@@ -172,7 +173,8 @@ class unit_data *world_room(const char *zone, const char *name)
  */
 class file_index_type *str_to_file_index(const char *str)
 {
-    char name[FI_MAX_UNITNAME + 1], zone[FI_MAX_ZONENAME + 1];
+    char name[FI_MAX_UNITNAME + 1];
+    char zone[FI_MAX_ZONENAME + 1];
 
     split_fi_ref(str, zone, name);
 
@@ -184,7 +186,8 @@ class file_index_type *str_to_file_index(const char *str)
  */
 class file_index_type *pc_str_to_file_index(class unit_data *ch, const char *str)
 {
-    char name[MAX_INPUT_LENGTH + 1], zone[MAX_INPUT_LENGTH + 1];
+    char name[MAX_INPUT_LENGTH + 1];
+    char zone[MAX_INPUT_LENGTH + 1];
 
     split_fi_ref(str, zone, name);
 

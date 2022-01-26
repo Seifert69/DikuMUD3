@@ -205,7 +205,10 @@ void boot_sector(void)
             g_sector_dat.add_sector(i, sector_vect[i]);
         }
 
-        int sector_index = 0, sector_end = 0, sector_path = 0, sector_from = 0;
+        int sector_index = 0;
+        int sector_end = 0;
+        int sector_path = 0;
+        int sector_from = 0;
         while (sector_queue.size() > 0)
         {
             sector_from = 0;

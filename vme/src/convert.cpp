@@ -65,7 +65,8 @@ void convert_free_unit(class unit_data *u)
 
 void free_inventory(class unit_data *u)
 {
-    class unit_data *tmp, *nxt;
+    class unit_data *tmp;
+    class unit_data *nxt;
 
     for (tmp = u; tmp; tmp = nxt)
     {

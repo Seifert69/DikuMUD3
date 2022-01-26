@@ -25,7 +25,8 @@
 
 int OpenMother(int nPort)
 {
-    int n, fdMother;
+    int n;
+    int fdMother;
     struct linger ld;
     struct sockaddr_in server_addr;
 

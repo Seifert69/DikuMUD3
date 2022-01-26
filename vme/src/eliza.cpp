@@ -100,9 +100,14 @@ void preprocess_string(char *str, struct oracle_data *od)
 
 char *match_templ(char *input, struct template_type *tem)
 {
-    char *respons, *rp, *lp, *ip, *tcp;
+    char *respons;
+    char *rp;
+    char *lp;
+    char *ip;
+    char *tcp;
     char *cp;
-    int i, j;
+    int i;
+    int j;
 
     respons = words;
     ip = input;
@@ -259,7 +264,8 @@ int trytempl(char *line)
 
 void shift(int base, int delta)
 {
-    int i, k;
+    int i;
+    int k;
 
     if (delta == 0)
     {
@@ -294,7 +300,12 @@ void shift(int base, int delta)
   */
 void subst(const char *old, const char *pnew)
 {
-    int i, nlen, olen, flag, base, delim;
+    int i;
+    int nlen;
+    int olen;
+    int flag;
+    int base;
+    int delim;
 
     olen = strlen(old);
     nlen = strlen(pnew);
@@ -397,8 +408,11 @@ int eliza_retrieve_memory(struct oracle_data *od)
 char *response(struct oracle_data *od, int subjno)
 {
     static char resp[400];
-    char c1, *cp;
-    int i, k, thisrep;
+    char c1;
+    char *cp;
+    int i;
+    int k;
+    int thisrep;
 
     thisrep = od->nextrep[subjno]++;
     if (eliza_subjects[subjno].replies[od->nextrep[subjno]] == nullptr)
@@ -459,7 +473,9 @@ char *response(struct oracle_data *od, int subjno)
 /* the line does not match a template.  are there any keywords in it */
 int trykeywd(char *line, int *score)
 {
-    int j, index, mi;
+    int j;
+    int index;
+    int mi;
 
     index = -1;
     *score = -1;
@@ -487,7 +503,8 @@ int trykeywd(char *line, int *score)
 
 char *eliza_process(struct oracle_data *od, char *s)
 {
-    int i, pri;
+    int i;
+    int pri;
 
     if (strlen(s) <= 1)
     {
@@ -865,7 +882,9 @@ void eliza_get_keyword(char *buf, int subjno, int priority)
 void eliza_get_reacts(FILE *f, int subjno)
 {
     char buf[240];
-    int i, cnt, priority;
+    int i;
+    int cnt;
+    int priority;
     char c;
 
     priority = '5';
@@ -992,7 +1011,10 @@ void eliza_gen_test_template(char *buf, struct template_type *tem)
 
 void eliza_integrity(void)
 {
-    int i, j, k, l;
+    int i;
+    int j;
+    int k;
+    int l;
     char buf[240];
 
     /* Test if any templates are overshadowed by previous templates */

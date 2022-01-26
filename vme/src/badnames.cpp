@@ -53,7 +53,8 @@ badnames_list::~badnames_list(void)
 
 char *badnames_list::insert(char *n)
 {
-    badnames_list *l = this->next, *b = this;
+    badnames_list *l = this->next;
+    badnames_list *b = this;
     badnames_list *temp;
     if (!n)
     {

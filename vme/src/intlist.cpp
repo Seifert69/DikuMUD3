@@ -45,7 +45,8 @@ void cintlist::AppendBuffer(CByteBuffer *pBuf)
 
 int cintlist::ReadBuffer(CByteBuffer *pBuf)
 {
-    sbit32 len, i;
+    sbit32 len;
+    sbit32 i;
     sbit32 c;
     int n = 0;
 
@@ -65,7 +66,8 @@ int cintlist::ReadBuffer(CByteBuffer *pBuf)
 
 void cintlist::bread(ubit8 **b)
 {
-    sbit32 len, i;
+    sbit32 len;
+    sbit32 i;
     int c;
     len = bread_ubit32(b);
 

@@ -38,7 +38,8 @@ void create_worldgraph()
     typedef boost::graph_traits<graph_world_t>::vertex_descriptor vertex_descriptor;
     //	typedef graph_traits < graph_world_t >::edge_descriptor edge_descriptor;
     vertex_descriptor vd;
-    unit_data *u, *uu;
+    unit_data *u;
+    unit_data *uu;
     int i;
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
     {
@@ -146,7 +147,8 @@ void create_sc_graph(int num_of_sc)
     typedef boost::graph_traits<graph_t>::edge_descriptor edge_descriptor;
     int i;
     vertex_descriptor vd;
-    unit_data *u, *uu;
+    unit_data *u;
+    unit_data *uu;
     graph_t base_g;
     bool success;
     edge_descriptor ed;
@@ -260,7 +262,8 @@ int move_to(unit_data *from, unit_data *to)
     typedef boost::graph_traits<graph_t>::edge_descriptor edge_descriptor;
     edge_descriptor ed;
     bool success;
-    int i, next;
+    int i;
+    int next;
 
     if (!from)
     {

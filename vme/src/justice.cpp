@@ -151,7 +151,8 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 //
 void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_type, int active)
 {
-    int i, j;
+    int i;
+    int j;
     struct diltemplate *tmpl;
     class dilprg *prg;
     class dilprg *prg2;

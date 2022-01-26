@@ -87,7 +87,8 @@ void protocol_send_confirm(cHook *Hook, ubit16 id)
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                */
 void protocol_send_request(cHook *Hook)
 {
-    ubit16 id = 0, len = 0;
+    ubit16 id = 0;
+    ubit16 len = 0;
     ubit8 buf[10];
 
     if (!Hook->IsHooked())
@@ -109,7 +110,8 @@ void protocol_send_request(cHook *Hook)
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                */
 void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets)
 {
-    ubit16 id = 0, len = 0;
+    ubit16 id = 0;
+    ubit16 len = 0;
     ubit8 buf[10];
 
     if (!Hook->IsHooked())
@@ -174,7 +176,8 @@ void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, 
 void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ubit8 type)
 {
 #define MAX_TEXT_LEN (32768)
-    ubit16 len, txlen;
+    ubit16 len;
+    ubit16 txlen;
     ubit8 buf[6 + MAX_TEXT_LEN];
     char c;
 

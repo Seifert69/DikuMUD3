@@ -20,7 +20,7 @@
  * @param pack Parameter pack of all the arguments, just like ellipsis ... from C
  */
 template<typename... ParamPack>
-void szonelog(zone_type *zone, const char *fmt, ParamPack &&...pack)
+void szonelog(zone_type *zone, const char *fmt, ParamPack &&... pack)
 {
     std::string formatted_text;
     if constexpr (sizeof...(pack) != 0)

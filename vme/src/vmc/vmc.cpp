@@ -104,7 +104,11 @@ void dmc_exit(int n)
 
 void fix(char *file)
 {
-    char *p, tmp[500], tmp2[500], filename_prefix[256], filename[256];
+    char *p;
+    char tmp[500];
+    char tmp2[500];
+    char filename_prefix[256];
+    char filename[256];
     int result;
 
     /* Examine filename */
@@ -356,10 +360,12 @@ void dump_zone(char *prefix)
     FILE *fl;
     char filename[256];
     char **creators;
-    class unit_data *u, *v;
+    class unit_data *u;
+    class unit_data *v;
     struct reset_command *c;
     int no_rooms = 0;
-    struct diltemplate *tmpl, *ut;
+    struct diltemplate *tmpl;
+    struct diltemplate *ut;
     ubit32 dummy;
 
     /* Quinn, I do this to get all the sematic errors and info */

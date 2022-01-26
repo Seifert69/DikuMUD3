@@ -526,7 +526,8 @@ static void stat_ability(const class unit_data *ch, class unit_data *u)
 static void stat_spell(const class unit_data *ch, class unit_data *u)
 {
     char tmpbuf1[100];
-    int i, max;
+    int i;
+    int max;
 
     if (!IS_CHAR(u))
     {
@@ -702,7 +703,8 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
 
 static void stat_normal(class unit_data *ch, class unit_data *u)
 {
-    std::string bits1, bits2;
+    std::string bits1;
+    std::string bits2;
     char *cname;
 
     /* Stat on the unit */
@@ -919,7 +921,8 @@ const char *stat_obj_data(class unit_data *u, obj_type_t *pobjdata)
 {
     char *special_str = nullptr;
     std::string int_str[5];
-    int idx = OBJ_TYPE(u), i;
+    int idx = OBJ_TYPE(u);
+    int i;
 
     switch (idx)
     {
@@ -1018,7 +1021,8 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
     };
 
     char tmp[512];
-    std::string bits1, bits2;
+    std::string bits1;
+    std::string bits2;
     int i;
 
     if (IS_CHAR(u))
@@ -1075,7 +1079,8 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
         if (IS_PC(u))
         {
             /* Stat on a player  */
-            struct time_info_data tid1, tid2;
+            struct time_info_data tid1;
+            struct time_info_data tid2;
 
             tid1 = age(u);
             tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
@@ -1214,7 +1219,8 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
 
 static void stat_contents(const class unit_data *ch, class unit_data *u)
 {
-    int bright = 0, light = 0;
+    int bright = 0;
+    int light = 0;
     class unit_data *orgu;
 
     orgu = u;
@@ -1273,7 +1279,8 @@ void do_wedit(class unit_data *ch, char *argument, const struct command_info *cm
 
         if (u == nullptr)
         {
-            char name[MAX_INPUT_LENGTH + 1], zone[MAX_INPUT_LENGTH + 1];
+            char name[MAX_INPUT_LENGTH + 1];
+            char zone[MAX_INPUT_LENGTH + 1];
 
             split_fi_ref(argument, zone, name);
 

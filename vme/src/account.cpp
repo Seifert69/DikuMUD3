@@ -59,7 +59,11 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
     time_t now = time(nullptr);
     char *c;
     char buf[1024];
-    ubit32 gid, pid, total, crc, vxor;
+    ubit32 gid;
+    ubit32 pid;
+    ubit32 total;
+    ubit32 crc;
+    ubit32 vxor;
     FILE *f;
 
     vxor = number(0x10000000, 0xFFFFFF00 >> 1);
@@ -177,7 +181,8 @@ void account_global_stat(class unit_data *ch)
 {
     char buf[100 * TIME_GRANULARITY];
     char *b;
-    int i, j;
+    int i;
+    int j;
 
     if (!g_cServerConfig.isAccounting())
     {
@@ -201,7 +206,8 @@ void account_global_stat(class unit_data *ch)
 
     for (i = 0; i < TIME_GRANULARITY; i++)
     {
-        int st, et;
+        int st;
+        int et;
 
         st = index_to_time(i);
         et = st + MINUTE_GRANULARITY - 1;
@@ -223,7 +229,8 @@ void account_global_stat(class unit_data *ch)
 
 void account_overdue(const class unit_data *ch)
 {
-    int i, j;
+    int i;
+    int j;
 
     if (g_cServerConfig.isAccounting())
     {
@@ -318,7 +325,8 @@ static int tm_less_than(struct tm *b, struct tm *e)
 
 static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
 {
-    int bidx, eidx;
+    int bidx;
+    int eidx;
     struct tm t;
     ubit32 secs;
 
@@ -405,7 +413,8 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
 
 void account_subtract(class unit_data *pc, time_t from, time_t to)
 {
-    struct tm bt, et;
+    struct tm bt;
+    struct tm et;
 
     assert(IS_PC(pc));
 
@@ -448,7 +457,8 @@ int account_is_overdue(const class unit_data *ch)
 
 static void account_status(const class unit_data *ch)
 {
-    int j, i;
+    int j;
+    int i;
     char *pTmstr;
     ubit32 discount = PC_ACCOUNT(ch).discount;
     ubit32 lcharge = ((100 - discount) * g_cAccountConfig.m_nHourlyRate) / 100;
@@ -535,7 +545,8 @@ static void account_status(const class unit_data *ch)
 
 int account_is_closed(class unit_data *ch)
 {
-    int i, j;
+    int i;
+    int j;
 
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
@@ -623,11 +634,13 @@ void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32
 void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     char word[MAX_INPUT_LENGTH];
-    class unit_data *u, *note;
+    class unit_data *u;
+    class unit_data *note;
     char *c = (char *)arg;
 
     const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", nullptr};
-    int i, amount;
+    int i;
+    int amount;
 
     if (!g_cServerConfig.isAccounting() || !IS_PC(ch))
     {
@@ -872,8 +885,10 @@ void charge_sanity(ubit8 b_hr, ubit8 b_min, ubit8 e_hr, ubit8 e_min, int charge)
 
 void numlist_to_charge(int *numlist, int len, int *day_charge)
 {
-    int i, j;
-    int start_idx, end_idx;
+    int i;
+    int j;
+    int start_idx;
+    int end_idx;
 
     for (i = 0; i < len; i += 3)
     {
@@ -970,7 +985,9 @@ void CAccountConfig::Boot(void)
 {
     char Buf[2 * MAX_STRING_LENGTH];
     char *c;
-    int len, i, j;
+    int len;
+    int i;
+    int j;
     int *numlist;
     FILE *f;
 

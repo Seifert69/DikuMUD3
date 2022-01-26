@@ -24,7 +24,8 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     char back[MAX_INPUT_LENGTH];
     char buf[MAX_INPUT_LENGTH];
     char full_name[21];
-    int change = FALSE, add = FALSE;
+    int change = FALSE;
+    int add = FALSE;
 
     char *arg = (char *)aaa;
     if (!IS_PC(ch))

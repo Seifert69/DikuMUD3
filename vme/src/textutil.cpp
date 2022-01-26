@@ -443,7 +443,8 @@ ubit1 next_word_is_number(const char *str)
 int search_block(const char *oarg, const char **list, ubit1 exact)
 {
     char arg[4096];
-    int i, l;
+    int i;
+    int l;
 
     if (list == nullptr)
     {
@@ -621,11 +622,15 @@ ubit1 is_multi_abbrev(const char *arg1, const char *arg2)
 int search_block_abbrevs(const char *oarg, const char **list, const char **end)
 {
     char arg[4096];
-    char buf1[MAX_INPUT_LENGTH], buf2[MAX_INPUT_LENGTH];
-    char *s, *ps, *bestpos;
+    char buf1[MAX_INPUT_LENGTH];
+    char buf2[MAX_INPUT_LENGTH];
+    char *s;
+    char *ps;
+    char *bestpos;
     const char *d;
     int i;
-    int match, bestidx;
+    int match;
+    int bestidx;
 
     i = str_lower(skip_spaces(oarg), arg, sizeof(arg));
 
@@ -684,7 +689,8 @@ char *str_cc(const char *s1, const char *s2)
 
 void str_insert(char *str, char *itxt)
 {
-    int nlen, slen;
+    int nlen;
+    int slen;
 
     nlen = strlen(itxt);
     slen = strlen(str);
@@ -701,7 +707,9 @@ void str_insert(char *str, char *itxt)
 void str_substitute(const char *old, const char *newstr, char *str)
 {
     char *b;
-    int olen, nlen, slen;
+    int olen;
+    int nlen;
+    int slen;
 
     if (!str)
     {
@@ -922,7 +930,8 @@ void str_chraround(char *str, char c)
 
 const char *is_name_raw(const char *arg, char const *const *names) // MS2020 const char *names[])
 {
-    int i, j;
+    int i;
+    int j;
 
     for (i = 0; names[i]; i++)
     {
@@ -1077,7 +1086,8 @@ char *str_ccmp_next_word(const char *buf, const char *next_word)
  */
 void split_fi_ref(const char *str, char *zone, char *name)
 {
-    char *c, *t;
+    char *c;
+    char *t;
     int l;
 
     *zone = 0;
@@ -1282,7 +1292,8 @@ ubit32 inline utf8_decode(ubit32 *state, ubit32 *codep, ubit8 byte)
 void str_correct_utf8(char *src)
 {
     ubit32 codepoint = 0;
-    ubit32 prev = 0, current = 0;
+    ubit32 prev = 0;
+    ubit32 current = 0;
     char *s = src;
 
     for (; *s; prev = current, s++)

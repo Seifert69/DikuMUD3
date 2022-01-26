@@ -144,7 +144,9 @@ char *convert_line(char *temp, int ln, char *save_buff)
 {
     int size = 0;
     char *new_buff;
-    char token[1024], strval[1024], *b = temp;
+    char token[1024];
+    char strval[1024];
+    char *b = temp;
     int i = 0;
 
     while (!isgraph(*b))

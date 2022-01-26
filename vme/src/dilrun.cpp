@@ -545,7 +545,8 @@ void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd)
 /* of a DIL program (after secures are tested for!).			 */
 void dil_clear_non_secured(class dilprg *prg)
 {
-    int i, j;
+    int i;
+    int j;
     struct dilframe *frm;
 
     if (!prg->frame)
@@ -705,8 +706,12 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 {
     va_list args;
     class dilval *v[20];
-    int cnt, val, flag, idx = 0;
-    bool any, ok_sofar = TRUE;
+    int cnt;
+    int val;
+    int flag;
+    int idx = 0;
+    bool any;
+    bool ok_sofar = TRUE;
 
     va_start(args, tot);
 
@@ -859,7 +864,8 @@ struct dil_func_type g_dilfe_func[DILI_MAX + 1] = {
 static int check_interrupt(class dilprg *prg)
 {
     int i;
-    struct timeval tbegin, tend;
+    struct timeval tbegin;
+    struct timeval tend;
     double ttime;
 
     for (i = 0; i < prg->fp->intrcount; i++)
@@ -985,7 +991,8 @@ int run_dil(struct spec_arg *sarg)
 
     int i;
     static int activates = 0;
-    struct timeval tbegin, tend;
+    struct timeval tbegin;
+    struct timeval tend;
     double ttime;
 
     if (prg == nullptr)
@@ -1636,7 +1643,8 @@ void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr)
 
 void dil_loadtime_activate(class unit_data *u)
 {
-    class unit_fptr *f, *fnext;
+    class unit_fptr *f;
+    class unit_fptr *fnext;
     for (f = UNIT_FUNC(u); f; f = fnext)
     {
         fnext = f->next;
@@ -1661,8 +1669,11 @@ class dilprg *dil_copy(char *name, class unit_data *u)
     char buf[MAX_STRING_LENGTH];
     class dilprg *prg;
     struct diltemplate *tmpl;
-    char *tmplname, *farg, *targ;
-    int narg, i;
+    char *tmplname;
+    char *farg;
+    char *targ;
+    int narg;
+    int i;
     char *args[256];
 
     assert(name);

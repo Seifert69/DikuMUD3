@@ -26,7 +26,8 @@ int ball(struct spec_arg *sarg)
     char buf[128];
     class unit_data *u;
     class unit_data *top[TOP_MAX];
-    int v1, v2;
+    int v1;
+    int v2;
     int i;
 
     if (is_command(sarg->cmd, "use"))

@@ -198,7 +198,8 @@ void destroy_affect(class unit_affected_type *af)
 void affect_clear_unit(class unit_data *unit)
 {
     int i;
-    class unit_affected_type *taf1, *taf2;
+    class unit_affected_type *taf1;
+    class unit_affected_type *taf2;
 
     /* Some affects may not be destroyed at first attempt if it would */
     /* cause an overflow, therefore do several attemps to destroy     */

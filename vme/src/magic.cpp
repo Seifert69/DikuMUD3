@@ -145,7 +145,8 @@ ubit1 use_mana(class unit_data *medium, int mana)
 /* Determines if healing combat mana should be cast?? */
 ubit1 cast_magic_now(class unit_data *ch, int mana)
 {
-    int hleft, sleft;
+    int hleft;
+    int sleft;
 
     if (CHAR_MANA(ch) > mana)
     {

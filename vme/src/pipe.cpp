@@ -106,7 +106,8 @@ public:
 
         if (str.length() > 0)
         {
-            const char *p, *o;
+            const char *p;
+            const char *o;
 
             o = str.c_str();
             do

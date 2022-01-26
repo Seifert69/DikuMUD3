@@ -23,7 +23,8 @@
 int main(int argc, char **argv)
 {
     int pos;
-    char moneyfile[512], *money;
+    char moneyfile[512];
+    char *money;
 
     mem_init();
 

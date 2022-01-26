@@ -148,7 +148,8 @@ void command_read(void)
     char pTmp[256];
     char *pCh;
     FILE *fl;
-    struct command_info *cmdptr = nullptr, *lastptr = nullptr;
+    struct command_info *cmdptr = nullptr;
+    struct command_info *lastptr = nullptr;
     struct cmdload_struct *intcmd;
 
     touch_file(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS));

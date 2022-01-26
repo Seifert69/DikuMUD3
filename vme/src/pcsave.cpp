@@ -232,7 +232,8 @@ void save_player_file(class unit_data *pc)
     static bool locked = FALSE;
     sbit32 nPlyLen;
     int tmp_i;
-    class unit_data *tmp_u, *list = nullptr;
+    class unit_data *tmp_u;
+    class unit_data *list = nullptr;
     class descriptor_data *tmp_descr;
     CByteBuffer *pBuf = &g_FileBuffer;
 
@@ -323,7 +324,8 @@ void save_player_file(class unit_data *pc)
 void save_player_contents(class unit_data *pc, int fast)
 {
     static bool locked = FALSE;
-    time_t t0, keep_period;
+    time_t t0;
+    time_t keep_period;
     amount_t daily_cost;
     currency_t cur = local_currency(pc);
 
@@ -431,7 +433,8 @@ void save_player(class unit_data *pc)
 class unit_data *load_player_file(FILE *pFile)
 {
     class unit_data *pc;
-    ubit32 nPlyLen, n;
+    ubit32 nPlyLen;
+    ubit32 n;
     sbit32 id;
     CByteBuffer *pBuf;
 

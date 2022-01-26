@@ -262,7 +262,8 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
     class unit_data *unit;
     int spl;
     ubit1 target_ok;
-    char *orgarg, *c;
+    char *orgarg;
+    char *c;
 
     if (str_is_empty(argument))
     {
@@ -533,7 +534,8 @@ void spell_dil_check(void)
 
 static void spell_read(void)
 {
-    int dummy, idx = -1;
+    int dummy;
+    int idx = -1;
     char pTmp[256];
     char *pCh;
     FILE *fl;
@@ -804,7 +806,9 @@ static void spell_read(void)
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
             char tmp[256];
-            int i1, i2, i3;
+            int i1;
+            int i2;
+            int i3;
             int idx2 = -1;
 
             pCh = str_next_word(pCh, tmp);

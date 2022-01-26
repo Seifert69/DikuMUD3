@@ -26,7 +26,8 @@
 void dilfe_fld(class dilprg *p)
 {
     /* Get a structure field */
-    class dilval *v1, *v2;
+    class dilval *v1;
+    class dilval *v2;
     v1 = p->stack.pop();
     v2 = nullptr;
     dilval *v = new dilval;

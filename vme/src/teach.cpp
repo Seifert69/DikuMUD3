@@ -400,7 +400,8 @@ void info_show_roots(class unit_data *teacher,
                      struct pc_train_values *pTrainValues,
                      struct skill_teach_type *teaches_skills)
 {
-    int i, cost;
+    int i;
+    int cost;
     std::vector<std::pair<int, std::string>> vect;
 
     for (i = 0; teaches_skills[i].node != -1; i++)
@@ -453,7 +454,8 @@ void info_show_leaves(class unit_data *teacher,
                       struct skill_teach_type *teaches_skills,
                       struct pc_train_values *pTrainValues)
 {
-    int i, cost;
+    int i;
+    int cost;
     std::vector<std::pair<int, std::string>> vect;
 
     for (i = 0; teaches_skills[i].node != -1; i++)
@@ -509,7 +511,10 @@ void info_one_skill(class unit_data *teacher,
                     int teach_index,
                     struct teacher_msg *msgs)
 {
-    int indent, i, j, cost;
+    int indent;
+    int i;
+    int j;
+    int cost;
     indent = 0;
     std::vector<std::pair<int, std::string>> vect;
 
@@ -846,7 +851,8 @@ int auto_train(int type,
                struct teach_packet *pckt,
                int costlimit)
 {
-    int teach_index, cost;
+    int teach_index;
+    int cost;
     const char *req;
 
     int nTrained = 0;
@@ -1326,7 +1332,9 @@ int max_skill_mod(int nCost)
 int teach_init(struct spec_arg *sarg)
 {
     const char *c;
-    int i, count, n;
+    int i;
+    int count;
+    int n;
     // int realm = -1;
     char buf[MAX_STRING_LENGTH];
     struct teach_packet *packet;

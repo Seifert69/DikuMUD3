@@ -234,7 +234,8 @@ int cMultiHook::Read(void)
 
 void multi_clear(void)
 {
-    class descriptor_data *nextd, *d;
+    class descriptor_data *nextd;
+    class descriptor_data *d;
 
     for (d = g_descriptor_list; d; d = nextd)
     {
@@ -299,7 +300,8 @@ void cMotherHook::Input(int nFlags)
     if (nFlags & SELECT_READ)
     {
         struct sockaddr_in isa;
-        int i, t;
+        int i;
+        int t;
         unsigned int len;
 
         len = sizeof(isa);
@@ -381,7 +383,8 @@ void cMotherHook::Close(void)
 
 void init_mother(int nPort)
 {
-    int n, fdMother;
+    int n;
+    int fdMother;
     struct linger ld;
     struct sockaddr_in server_addr;
 

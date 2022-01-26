@@ -98,7 +98,8 @@ int is_slimed(class file_index_type *sp)
 
 int slime_obj(struct spec_arg *sarg)
 {
-    char buf[MAX_INPUT_LENGTH], fi_name[MAX_INPUT_LENGTH];
+    char buf[MAX_INPUT_LENGTH];
+    char fi_name[MAX_INPUT_LENGTH];
     class file_index_type *fi;
 
     if (!is_command(sarg->cmd, "slime"))
@@ -181,7 +182,8 @@ void slime_boot(void)
 {
     class file_index_type *fi;
     CByteBuffer cBuf(100);
-    char buf1[256], buf2[256];
+    char buf1[256];
+    char buf2[256];
     FILE *f;
 
     touch_file(g_cServerConfig.getFileInLibDir(SLIME_FILE));

@@ -270,7 +270,8 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     char excmd[MAX_INPUT_LENGTH + 10];
     char argstr[MAX_INPUT_LENGTH + 10];
 
-    int is_say, is_emote;
+    int is_say;
+    int is_emote;
     struct command_info *cmd_ptr;
     is_say = FALSE;
     is_emote = FALSE;
@@ -608,7 +609,8 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
         if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
         {
-            int diltick, i;
+            int diltick;
+            int i;
             diltick = FALSE;
             if (IS_SET(sarg->fptr->flags, SFB_TICK))
             {
@@ -663,7 +665,11 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
 int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class unit_data *extra_target, const char *to)
 {
-    class unit_data *u, *uu, *next, *nextt, *tou;
+    class unit_data *u;
+    class unit_data *uu;
+    class unit_data *next;
+    class unit_data *nextt;
+    class unit_data *tou;
     class file_index_type *fi;
 
     if (ch && ch->is_destructed())

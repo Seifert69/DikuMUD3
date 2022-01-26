@@ -252,7 +252,8 @@ void insert_fptr(class unit_data *u, class unit_fptr *f)
         return;
     }
 
-    class unit_fptr *p, *prev;
+    class unit_fptr *p;
+    class unit_fptr *prev;
 
     // Find location to insert
     prev = UNIT_FUNC(u);
@@ -363,7 +364,8 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
 /* Call die_follower if a person dies         */
 void stop_following(class unit_data *ch)
 {
-    struct char_follow_type *j, *k;
+    struct char_follow_type *j;
+    struct char_follow_type *k;
 
     assert(CHAR_MASTER(ch));
 
@@ -414,7 +416,8 @@ void start_following(class unit_data *ch, class unit_data *leader)
 /* Called by extract_unit when a character that follows/is followed dies */
 void die_follower(class unit_data *ch)
 {
-    struct char_follow_type *j, *k;
+    struct char_follow_type *j;
+    struct char_follow_type *k;
 
     if (CHAR_MASTER(ch))
     {
@@ -476,7 +479,8 @@ Example: (Lights, Bright, Illum)
 /* in order to correctly update the environment of the unit */
 void modify_bright(class unit_data *unit, int bright)
 {
-    class unit_data *ext, *in;
+    class unit_data *ext;
+    class unit_data *in;
 
     UNIT_BRIGHT(unit) += bright;
 
@@ -573,7 +577,8 @@ class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type)
 
 void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
 {
-    class unit_affected_type *af, newaf;
+    class unit_affected_type *af;
+    class unit_affected_type newaf;
 
     assert(pos > 0 && IS_OBJ(obj) && IS_CHAR(ch));
     assert(!equipment(ch, pos));
@@ -597,7 +602,8 @@ void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
 class unit_data *unequip_object(class unit_data *obj)
 {
     class unit_data *ch;
-    class unit_affected_type *af, *caf;
+    class unit_affected_type *af;
+    class unit_affected_type *caf;
 
     ch = UNIT_IN(obj);
 
@@ -675,7 +681,8 @@ class zone_type *unit_zone(const class unit_data *unit)
 std::string unit_trace_up(class unit_data *unit)
 {
     class unit_data *u;
-    std::string s, t;
+    std::string s;
+    std::string t;
 
     s = "";
     s.append(UNIT_FI_NAME(unit));
@@ -717,8 +724,12 @@ class unit_data *unit_room(class unit_data *unit)
 
 void intern_unit_up(class unit_data *unit, ubit1 pile)
 {
-    class unit_data *u, *in, *toin, *extin;
-    sbit8 bright, selfb;
+    class unit_data *u;
+    class unit_data *in;
+    class unit_data *toin;
+    class unit_data *extin;
+    sbit8 bright;
+    sbit8 selfb;
 
     assert(UNIT_IN(unit));
 
@@ -803,8 +814,11 @@ void unit_from_unit(class unit_data *unit)
 
 void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
 {
-    class unit_data *u, *in, *extin;
-    sbit8 bright, selfb;
+    class unit_data *u;
+    class unit_data *in;
+    class unit_data *extin;
+    sbit8 bright;
+    sbit8 selfb;
 
     assert(UNIT_IN(unit) == UNIT_IN(to));
     assert(unit != to);

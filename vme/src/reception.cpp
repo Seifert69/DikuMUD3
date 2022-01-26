@@ -440,9 +440,13 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     struct objheaderold ho;
     struct objheadernew hn;
     class file_index_type *fi;
-    class unit_data *pnew, *pnew_tmp, *pstack[25];
-    int len, init;
-    int frame, n;
+    class unit_data *pnew;
+    class unit_data *pnew_tmp;
+    class unit_data *pstack[25];
+    int len;
+    int init;
+    int frame;
+    int n;
     class descriptor_data *tmp_descr = nullptr;
     int equip_ok;
     FILE *pFile;
@@ -649,8 +653,12 @@ void reception_boot(void)
 /* Create difference-data (patch can reconstruct obj based on ref & dif) */
 int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc)
 {
-    int dstart, dend, len, rlen;
-    char *oend, *rend;
+    int dstart;
+    int dend;
+    int len;
+    int rlen;
+    char *oend;
+    char *rend;
     struct diffhead head;
 
     rend = ref + reflen - 1;

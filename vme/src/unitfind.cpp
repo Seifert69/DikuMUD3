@@ -191,7 +191,8 @@ static inline int findcheck(class unit_data *u, int pset, int tflags)
 //
 class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 {
-    class unit_data *u, *selected = nullptr;
+    class unit_data *u;
+    class unit_data *selected = nullptr;
     int count = 0;
     int pset = 0;
 
@@ -280,7 +281,8 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
     }
     else if (sflags == FIND_UNIT_SURRO)
     {
-        int i, p;
+        int i;
+        int p;
         scan4_unit(ref, tflags);
         if (UVITOP > 0)
         {
@@ -330,11 +332,15 @@ class unit_data *find_unit_general(const class unit_data *viewer,
     int best_len = 0;
     ubit32 bitvectorm;
 
-    int i, number, original_number;
+    int i;
+    int number;
+    int original_number;
     const char *ct = nullptr;
-    char name[MAX_INPUT_LENGTH * 2], *c;
+    char name[MAX_INPUT_LENGTH * 2];
+    char *c;
     ubit1 is_fillword = TRUE;
-    class unit_data *u, *uu;
+    class unit_data *u;
+    class unit_data *uu;
 
     if (type == 0)
     {
@@ -678,7 +684,8 @@ class unit_data *find_unit_dil(const class unit_data *ch, char **arg, const clas
 
 class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector)
 {
-    class unit_data *u, *uu;
+    class unit_data *u;
+    class unit_data *uu;
 
     assert(this);
 
@@ -898,7 +905,8 @@ static void double_unit_vector(void)
 /* but not outside room.                                                 */
 void scan4_unit_room(class unit_data *room, ubit8 type)
 {
-    class unit_data *u, *uu;
+    class unit_data *u;
+    class unit_data *uu;
 
     g_unit_vector.top = 0;
 
@@ -944,7 +952,8 @@ void scan4_unit_room(class unit_data *room, ubit8 type)
 /* use in local routines.                                                */
 void scan4_unit(class unit_data *ch, ubit8 type)
 {
-    class unit_data *u, *uu;
+    class unit_data *u;
+    class unit_data *uu;
 
     if (!UNIT_IN(ch))
     {

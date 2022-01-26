@@ -127,7 +127,8 @@ void do_reset(class unit_data *ch, char *arg, const struct command_info *cmd)
 void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char buf[MAX_INPUT_LENGTH];
-    class unit_data *target, *original_loc;
+    class unit_data *target;
+    class unit_data *original_loc;
     class file_index_type *fi;
 
     if (!IS_PC(ch))
@@ -355,7 +356,8 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     char buf[MAX_INPUT_LENGTH];
     class file_index_type *fi;
-    class unit_data *u, *tmp;
+    class unit_data *u;
+    class unit_data *tmp;
 
     if (str_is_empty(arg))
     {

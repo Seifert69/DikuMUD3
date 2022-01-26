@@ -245,7 +245,8 @@ void dilfe_left(class dilprg *p)
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int strl, x;
+    int strl;
+    int x;
 
     v->type = DILV_SP;
 
@@ -314,7 +315,9 @@ void dilfe_right(class dilprg *p)
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int strl, x, y;
+    int strl;
+    int x;
+    int y;
 
     v->type = DILV_SP;
 
@@ -384,7 +387,10 @@ void dilfe_mid(class dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int strl, l, r, x;
+    int strl;
+    int l;
+    int r;
+    int x;
 
     v->type = DILV_SP;
 
@@ -2674,7 +2680,8 @@ void dilfe_path(class dilprg *p)
                         }
                         else
                         {
-                            class unit_data *u1, *u2;
+                            class unit_data *u1;
+                            class unit_data *u2;
                             u1 = unit_room((class unit_data *)v1->val.ptr);
                             u2 = unit_room((class unit_data *)v2->val.ptr);
 
@@ -3359,7 +3366,8 @@ long space_quick_count(char *src)
 
 long str_escape_size(char *sbuf, long ln)
 {
-    long count = 0, i = 0;
+    long count = 0;
+    long i = 0;
 
     while (i < ln)
     {
@@ -3730,7 +3738,9 @@ void dilfe_getws(class dilprg *p)
     dilval *v = new dilval;
     /* Get first word of a string */
     dilval *v1 = p->stack.pop();
-    char *tmp, *c, *ptr;
+    char *tmp;
+    char *c;
+    char *ptr;
 
     switch (dil_getval(v1))
     {
@@ -3778,7 +3788,9 @@ void dilfe_split(class dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     int slen;
-    char *buf = nullptr, *c = nullptr, *spbuf = nullptr;
+    char *buf = nullptr;
+    char *c = nullptr;
+    char *spbuf = nullptr;
 
     v->type = DILV_SLP;
 
@@ -3867,7 +3879,8 @@ void dilfe_udir(class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     cNamelist *words = new cNamelist;
-    std::string uPath, sPath;
+    std::string uPath;
+    std::string sPath;
 
     v->type = DILV_SLP;
 
@@ -3962,7 +3975,8 @@ void dilfe_sdir(class dilprg *p)
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
     cNamelist *words = new cNamelist;
-    std::string uPath, sPath;
+    std::string uPath;
+    std::string sPath;
     v->type = DILV_SLP;
 
     switch (dil_getval(v1))
@@ -4820,7 +4834,8 @@ void dilfe_fndr(class dilprg *p)
     dilval *v = new dilval;
     /* Find a room */
     dilval *v1 = p->stack.pop();
-    char buf1[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH];
+    char buf1[MAX_STRING_LENGTH];
+    char buf2[MAX_STRING_LENGTH];
 
     switch (dil_getval(v1))
     {
@@ -4906,7 +4921,8 @@ void dilfe_fnds2(class dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
-    char buf1[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH];
+    char buf1[MAX_STRING_LENGTH];
+    char buf2[MAX_STRING_LENGTH];
 
     v->type = DILV_UP;
     switch (dil_getval(v1))
@@ -4997,7 +5013,8 @@ void dilfe_fndsidx(class dilprg *p)
     /* Find a symbolic unit */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char buf1[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH];
+    char buf1[MAX_STRING_LENGTH];
+    char buf2[MAX_STRING_LENGTH];
 
     v->type = DILV_UP;
     switch (dil_getval(v1))
@@ -5059,7 +5076,8 @@ void dilfe_fnds(class dilprg *p)
     dilval *v = new dilval;
     /* Find a symbolic unit */
     dilval *v1 = p->stack.pop();
-    char buf1[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH];
+    char buf1[MAX_STRING_LENGTH];
+    char buf2[MAX_STRING_LENGTH];
 
     switch (dil_getval(v1))
     {
@@ -5322,7 +5340,8 @@ void dilfe_slt(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1, *s2;
+    char *s1;
+    char *s2;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {
@@ -5382,7 +5401,8 @@ void dilfe_sgt(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1, *s2;
+    char *s1;
+    char *s2;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {
@@ -5442,7 +5462,8 @@ void dilfe_sle(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1, *s2;
+    char *s1;
+    char *s2;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {
@@ -5502,7 +5523,8 @@ void dilfe_sge(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1, *s2;
+    char *s1;
+    char *s2;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {

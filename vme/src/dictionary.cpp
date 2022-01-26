@@ -105,8 +105,10 @@ static class extra_descr_data *make_alias_extra(class unit_data *u)
 static char *parse_alias(char *src, char *arg)
 {
     static char buf[2 * MAX_INPUT_LENGTH + 2];
-    char *argv[10], *cnew = buf;
-    int argc, i = 0;
+    char *argv[10];
+    char *cnew = buf;
+    int argc;
+    int i = 0;
 
     for (argc = 1; argc < 10; argc++) /* store word-pointers in argv */
     {
@@ -162,8 +164,11 @@ the alias-substitution in s, using the arguments from arg, and
  */
 static int push_alias(char *s, char *arg, struct trie_type *t, class unit_data *ch, bool first)
 {
-    char cmd[MAX_INPUT_LENGTH + 1], parsed[2 * MAX_INPUT_LENGTH + 2];
-    char *par, *newarg, *c;
+    char cmd[MAX_INPUT_LENGTH + 1];
+    char parsed[2 * MAX_INPUT_LENGTH + 2];
+    char *par;
+    char *newarg;
+    char *c;
     struct alias_t *al;
 
     static ubit8 check_count = 0;
@@ -234,7 +239,8 @@ static int print_alias(struct trie_type *t, class unit_data *ch)
 {
     struct trie_type *t2;
     struct alias_t *al;
-    int i, count = 0;
+    int i;
+    int count = 0;
 
     for (i = 0; t && i < t->size; i++)
     {
@@ -256,7 +262,8 @@ static int print_alias(struct trie_type *t, class unit_data *ch)
  */
 static int add_alias(struct alias_head *ah, char *key, char *val, bool single)
 {
-    struct alias_t *al = nullptr, *tmp_al;
+    struct alias_t *al = nullptr;
+    struct alias_t *tmp_al;
 
     /* There is already an alias for key - Delete it */
     if (single && ah->trie && (al = (struct alias_t *)search_trie(key, ah->trie)))
@@ -305,7 +312,9 @@ static bool del_alias(struct alias_head *ah, char *key)
  */
 static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
 {
-    char *tmp, *sc, comm[MAX_INPUT_LENGTH + 2];
+    char *tmp;
+    char *sc;
+    char comm[MAX_INPUT_LENGTH + 2];
     struct alias_t *tmp_al = nullptr;
     ubit8 res = 0;
     static ubit8 check_count = 0;
@@ -492,7 +501,9 @@ static char *alias_to_str(struct alias_head *ah)
 static struct alias_head *str_to_alias(const char *str)
 {
     struct alias_head *ah;
-    char cmd[MAX_ALIAS_LENGTH + 1], *tmp, *tilde;
+    char cmd[MAX_ALIAS_LENGTH + 1];
+    char *tmp;
+    char *tilde;
 
     CREATE(ah, struct alias_head, 1);
     ah->char_count = 0;
@@ -638,7 +649,8 @@ static void cmd_claim(class unit_data *ch, char *arg, class unit_data *obj, stru
 
 static int local_dictionary(struct spec_arg *sarg)
 {
-    char *pcomm = nullptr, *cmd_array[256];
+    char *pcomm = nullptr;
+    char *cmd_array[256];
     ubit16 i;
     struct alias_t *al = nullptr;
     struct alias_head *alias_h;

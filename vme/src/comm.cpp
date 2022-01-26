@@ -576,7 +576,8 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
 // Always adds <br/> at the end
 void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type)
 {
-    const class unit_data *to, *u;
+    const class unit_data *to;
+    const class unit_data *u;
     char buf[MAX_STRING_LENGTH];
 
     /* This to catch old-style FALSE/TRUE calls...  */
@@ -658,9 +659,11 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
 
 void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type, const char *colortype)
 {
-    const class unit_data *to, *u;
+    const class unit_data *to;
+    const class unit_data *u;
     char buf[MAX_STRING_LENGTH];
-    char temp[MAX_STRING_LENGTH], *t;
+    char temp[MAX_STRING_LENGTH];
+    char *t;
     char *b = buf;
     /* This to catch old-style FALSE/TRUE calls...  */
     assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);

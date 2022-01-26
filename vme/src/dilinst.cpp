@@ -2774,7 +2774,8 @@ void dilfi_snta(class dilprg *p)
 
                 if (!fi->fi_unit_list.empty())
                 {
-                    std::forward_list<class unit_data *>::iterator it, next_it;
+                    std::forward_list<class unit_data *>::iterator it;
+                    std::forward_list<class unit_data *>::iterator next_it;
                     for (it = fi->fi_unit_list.begin(); it != fi->fi_unit_list.end(); it = next_it)
                     {
                         next_it = it;
@@ -3011,7 +3012,9 @@ void dilfi_cast(class dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    class unit_data *caster = nullptr, *medium = nullptr, *target = nullptr;
+    class unit_data *caster = nullptr;
+    class unit_data *medium = nullptr;
+    class unit_data *target = nullptr;
 
     p->waitcmd--;
 
@@ -3058,7 +3061,8 @@ class unit_data *hometown_unit(char *str)
 {
     if (str)
     {
-        char name[80], zone[80];
+        char name[80];
+        char zone[80];
         class unit_data *u;
 
         split_fi_ref(str, zone, name);

@@ -240,11 +240,7 @@ int log_object(struct spec_arg *sarg)
                     act("Current log level is `$2t'.",
                         A_ALWAYS,
                         ch,
-                        c == 'd'   ? "dil"
-                        : c == 'o' ? "off"
-                        : c == 'b' ? "brief"
-                        : c == 'a' ? "all"
-                                   : "extensive",
+                        c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive",
                         cActParameter(),
                         TO_CHAR);
                     return SFR_BLOCK;
@@ -253,10 +249,7 @@ int log_object(struct spec_arg *sarg)
                 act("You will now see the $2t log.",
                     A_ALWAYS,
                     ch,
-                    c == 'd'   ? "dil"
-                    : c == 'b' ? "brief"
-                    : c == 'a' ? "entire"
-                               : "extensive",
+                    c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive",
                     cActParameter(),
                     TO_CHAR);
                 OBJ_VALUE(sarg->owner, 0) = c;

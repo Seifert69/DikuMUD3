@@ -23,9 +23,13 @@
  */
 void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    class unit_affected_type af, *paf = nullptr;
-    class unit_data *vict, *stabber;
-    int skilla, skillb, hm;
+    class unit_affected_type af;
+    class unit_affected_type *paf = nullptr;
+    class unit_data *vict;
+    class unit_data *stabber;
+    int skilla;
+    int skillb;
+    int hm;
     char *oarg = arg;
 
     if (str_is_empty(arg))

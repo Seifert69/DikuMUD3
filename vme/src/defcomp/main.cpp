@@ -13,11 +13,14 @@
 int main(int argc, char **argv)
 {
     std::cout << "Defcomp Compiled with [" << get_compiled_hash_defines() << "]\n";
-    int ln = 0, error = 0;
-    char buff[1024], *save_buff = nullptr;
+    int ln = 0;
+    int error = 0;
+    char buff[1024];
+    char *save_buff = nullptr;
     char in_name[1024];
     FILE *in;
-    int opt, p_opt;
+    int opt;
+    int p_opt;
 
     while ((opt = getopt(argc, argv, "cf:")) != -1)
     {

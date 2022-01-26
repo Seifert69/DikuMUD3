@@ -259,7 +259,12 @@ int teach_members_only(struct spec_arg *sarg)
 
 int guard_guild_way(struct spec_arg *sarg)
 {
-    char *str, *location, *excl = nullptr, *msg1 = nullptr, *msg2 = nullptr, *guild_no;
+    char *str;
+    char *location;
+    char *excl = nullptr;
+    char *msg1 = nullptr;
+    char *msg2 = nullptr;
+    char *guild_no;
     int guild_cmp;
 
     if ((str = (char *)sarg->fptr->data) && (sarg->cmd->inttype == DIR_CMD) && (sarg->cmd->dir == (*str - '0')) &&
@@ -666,9 +671,12 @@ int guild_basis(struct spec_arg *sarg)
 
 int guild_title(struct spec_arg *sarg)
 {
-    char buf[MAX_STRING_LENGTH], male[MAX_STRING_LENGTH], female[MAX_STRING_LENGTH];
+    char buf[MAX_STRING_LENGTH];
+    char male[MAX_STRING_LENGTH];
+    char female[MAX_STRING_LENGTH];
     char *c;
-    int i, title_no;
+    int i;
+    int title_no;
 
     if (!is_command(sarg->cmd, "title") || !IS_PC(sarg->activator))
     {

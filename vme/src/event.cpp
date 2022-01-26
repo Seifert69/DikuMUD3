@@ -53,7 +53,8 @@ eventqueue::~eventqueue(void)
 struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1, void *arg2)
 {
     struct eventq_elem *end;
-    int parent_index, current_index;
+    int parent_index;
+    int current_index;
 
     if (when <= 0)
     {
@@ -179,13 +180,17 @@ void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *
 
 void eventqueue::process(void)
 {
-    struct eventq_elem *tmp_event, *newtop;
-    int j, k;
+    struct eventq_elem *tmp_event;
+    struct eventq_elem *newtop;
+    int j;
+    int k;
     char dilname[256];
     char dilzname[256];
     char diloname[256];
     char dilozname[256];
-    struct timeval now, old, pnow;
+    struct timeval now;
+    struct timeval old;
+    struct timeval pnow;
     ubit32 us;
     void (*tfunc)(void *, void *);
     loop_process = 0;

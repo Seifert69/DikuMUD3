@@ -7,7 +7,6 @@
 
 namespace unit_tests
 {
-
 struct slog_data
 {
     int m_level{};

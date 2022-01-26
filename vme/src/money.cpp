@@ -80,7 +80,9 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
     static char buf[512];
     char tmp[256];
     struct money_type *money_tmp[MAX_MONEY + 1];
-    sbit8 i, nr = 0, count = 0;
+    sbit8 i;
+    sbit8 nr = 0;
+    sbit8 count = 0;
     amount_t times;
 
     /* Get an array of all types in this currency */
@@ -215,7 +217,8 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
      */
     for (i = 0; i < UNIT_NAMES(money).Length(); ++i)
     {
-        ubit32 j, m = i;
+        ubit32 j;
+        ubit32 m = i;
 
         for (j = i; j < UNIT_NAMES(money).Length(); ++j)
         {
@@ -258,14 +261,12 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
     }
     else
     {
-        UNIT_OUT_DESCR(money) = diku::format_to_str("A %s %s has been left here.",
-                                                    amt == 2      ? "couple of"
-                                                    : amt < 10    ? "few"
-                                                    : amt < 100   ? "small pile of"
-                                                    : amt < 1000  ? "pile of"
-                                                    : amt < 50000 ? "large pile of"
-                                                                  : "mountain of",
-                                                    money_pluralis(money));
+        UNIT_OUT_DESCR(money) = diku::format_to_str(
+            "A %s %s has been left here.",
+            amt == 2
+                ? "couple of"
+                : amt < 10 ? "few" : amt < 100 ? "small pile of" : amt < 1000 ? "pile of" : amt < 50000 ? "large pile of" : "mountain of",
+            money_pluralis(money));
     }
 
     return money;
@@ -314,8 +315,10 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         } mon_array[MAX_MONEY + 1];
 
         class unit_data *tmp;
-        int i, last;
-        amount_t temp, calc = amt;
+        int i;
+        int last;
+        amount_t temp;
+        amount_t calc = amt;
 
         /* Initialize computation */
         for (i = 0; i <= MAX_MONEY; i++)
@@ -443,7 +446,8 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
     { /* Create the money according to arguments and give to `to' */
         struct money_type *money_tmp[MAX_MONEY + 1];
         class unit_data *tmp;
-        int i, nr;
+        int i;
+        int nr;
         amount_t times;
 
         for (i = 0, nr = 0; i <= MAX_MONEY; i++)
@@ -500,7 +504,8 @@ void coins_to_unit(class unit_data *unit, amount_t amt, int type)
 amount_t unit_holds_total(class unit_data *u, currency_t currency)
 {
     class unit_data *tmp;
-    amount_t amt = 0, rec;
+    amount_t amt = 0;
+    amount_t rec;
 
     if (IS_ROOM(u) || IS_CHAR(u) || (IS_OBJ(u) && OBJ_TYPE(u) == ITEM_CONTAINER))
     {
@@ -636,7 +641,8 @@ class unit_data *split_money(class unit_data *money, amount_t amt)
  */
 void pile_money(class unit_data *money)
 {
-    class unit_data *tmp, *unit = UNIT_IN(money);
+    class unit_data *tmp;
+    class unit_data *unit = UNIT_IN(money);
 
     assert(IS_MONEY(money) && unit);
 
@@ -656,8 +662,10 @@ void pile_money(class unit_data *money)
 amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 {
     struct money_type *money_tmp[MAX_MONEY + 1];
-    int i, nr = 0;
-    amount_t times, remainder = amt;
+    int i;
+    int nr = 0;
+    amount_t times;
+    amount_t remainder = amt;
 
     assert(0 < types);
 
@@ -760,7 +768,11 @@ void do_makemoney(class unit_data *ch, char *arg, const struct command_info *cmd
 
 static void set_money_strings(FILE *fl, int idx)
 {
-    char buf[512], *tmp[32], *c, *s, *sc;
+    char buf[512];
+    char *tmp[32];
+    char *c;
+    char *s;
+    char *sc;
     int i = 0;
 
     if (fgets(buf, sizeof buf, fl) == nullptr)
@@ -861,7 +873,9 @@ void boot_money(void)
 {
     FILE *fl;
     char buf[256];
-    int tmp, idx, prev_idx;
+    int tmp;
+    int idx;
+    int prev_idx;
     currency_t cur;
     ubit1 currencies = TRUE;
     std::string myfile = "";

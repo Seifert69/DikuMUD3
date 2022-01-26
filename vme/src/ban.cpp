@@ -50,7 +50,9 @@ void load_ban(void)
 {
     FILE *bf;
     struct ban_t *tmp;
-    char buf[256], site[256], textfile[256];
+    char buf[256];
+    char site[256];
+    char textfile[256];
 
     touch_file(g_cServerConfig.getFileInLibDir(BAN_FILE));
 
@@ -237,7 +239,9 @@ void show_site(class unit_data *ch, struct ban_t *entry)
 void do_ban(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     struct ban_t *tmp;
-    char site[MAX_INPUT_LENGTH], textfile[MAX_INPUT_LENGTH], mode;
+    char site[MAX_INPUT_LENGTH];
+    char textfile[MAX_INPUT_LENGTH];
+    char mode;
     char type;
     time_t until = 0;
 
@@ -335,7 +339,8 @@ bool ban_check(char *ban, char *site) /* TRUE, if banned */
 
 char site_banned(char *cur_site)
 {
-    struct ban_t *entry, *next_entry;
+    struct ban_t *entry;
+    struct ban_t *next_entry;
     time_t now = time(nullptr);
 
     for (entry = ban_list; entry; entry = next_entry)

@@ -196,7 +196,8 @@ void cConHook::PressReturn(const char *cmd)
 // Destroy all clients that are no longer connected
 void ClearUnhooked(void)
 {
-    class cConHook *con, *nextcon;
+    class cConHook *con;
+    class cConHook *nextcon;
 
     for (con = g_connection_list; con; con = nextcon)
     {
@@ -599,11 +600,13 @@ std::string mplex_getcolor(class cConHook *hook, const char *colorstr)
 
 char *cConHook::IndentText(const char *source, char *dest, int dest_size, int width)
 {
-    const char *last = source, *current;
+    const char *last = source;
+    const char *current;
     char tmpbuf[MAX_STRING_LENGTH * 2];
     int i;
     char *newptr;
-    int column = 0, cutpoint = MIN(30, width / 2);
+    int column = 0;
+    int cutpoint = MIN(30, width / 2);
 
     if (!(current = source))
     {
@@ -1341,7 +1344,8 @@ void cConHook::getLine(ubit8 buf[], int *size)
 void cConHook::ShowChunk(void)
 {
     char buffer[160 * 60 + 600];
-    char *scan, *point;
+    char *scan;
+    char *point;
     const int max_lines = m_sSetup.height;
     int lines = 0;
 

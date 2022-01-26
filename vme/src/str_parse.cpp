@@ -15,7 +15,8 @@
 
 char *parse_match(const char *pData, const char *pMatch)
 {
-    char *pTmp1, *pTmp2;
+    char *pTmp1;
+    char *pTmp2;
 
     pTmp1 = (char *)str_cstr(pData, pMatch);
     if (pTmp1 == nullptr)
@@ -44,7 +45,8 @@ char *parse_match(const char *pData, const char *pMatch)
 char *parse_name(char **pData)
 {
     char Buf[MAX_STRING_LENGTH];
-    char *pTmp1, *pTmp2;
+    char *pTmp1;
+    char *pTmp2;
 
     Buf[0] = 0;
 
@@ -113,7 +115,8 @@ int parse_num(char **pData, int *pNum)
 int *parse_numlist(char **pData, int *int_count)
 {
     int *nums = nullptr;
-    int count = 0, i;
+    int count = 0;
+    int i;
 
     while (parse_num(pData, &i))
     {
@@ -139,7 +142,8 @@ int *parse_numlist(char **pData, int *int_count)
 
 char **parse_namelist(char **pData)
 {
-    char *pTmp1, *pTmp2;
+    char *pTmp1;
+    char *pTmp2;
     char **pNamelist;
 
     pTmp1 = *pData;
@@ -208,7 +212,8 @@ int *parse_match_numlist(const char **pData, const char *pMatch, int *count)
 
 char *parse_match_name(const char **pData, const char *pMatch)
 {
-    char *pName, *pTmp;
+    char *pName;
+    char *pTmp;
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == nullptr)
@@ -225,7 +230,8 @@ char *parse_match_name(const char **pData, const char *pMatch)
 
 char **parse_match_namelist(const char **pData, const char *pMatch)
 {
-    char **pNamelist, *pTmp;
+    char **pNamelist;
+    char *pTmp;
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == nullptr)

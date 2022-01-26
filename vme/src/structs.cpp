@@ -246,7 +246,8 @@ zone_type::~zone_type(void)
 
     if (filename)
         FREE(filename);
-    class unit_data *ut, *nextut;
+    class unit_data *ut;
+    class unit_data *nextut;
 
     for (ut = objects; ut; ut = nextut)
     {
@@ -275,7 +276,8 @@ zone_type::~zone_type(void)
         delete p->second;
     }
 
-    struct zone_reset_cmd *pzri, *nextzri;
+    struct zone_reset_cmd *pzri;
+    struct zone_reset_cmd *nextzri;
 
     for (pzri = zri; pzri; pzri = nextzri)
     {
@@ -360,7 +362,8 @@ unit_data *unit_data::copy()
 
     u = new_unit_data(status);
 
-    CByteBuffer abuf, fbuf;
+    CByteBuffer abuf;
+    CByteBuffer fbuf;
     u->names.CopyList(&names);
     u->chars = chars;
     u->manipulate = manipulate;

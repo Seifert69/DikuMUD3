@@ -176,7 +176,8 @@ void run_the_game(char *srvcfg)
 
 void game_loop()
 {
-    struct timeval now, old;
+    struct timeval now;
+    struct timeval old;
     long delay;
     class descriptor_data *d = nullptr;
     std::string str;
@@ -346,7 +347,8 @@ void check_overpopulation_event(void *p1, void *p2)
     nHours = (g_tics / PULSE_SEC) / 3600;
     slog(LOG_ALL, 0, "Game up for %d tick hours, checking for overpopulation", nHours);
 
-    class unit_data *u, *t;
+    class unit_data *u;
+    class unit_data *t;
     int i;
     int nUnits = 0;
 
@@ -410,7 +412,8 @@ void check_reboot_event(void *p1, void *p2)
 /* utility procedure */
 struct timeval timediff(struct timeval *a, struct timeval *b)
 {
-    struct timeval rslt, tmp;
+    struct timeval rslt;
+    struct timeval tmp;
 
     tmp = *a;
 

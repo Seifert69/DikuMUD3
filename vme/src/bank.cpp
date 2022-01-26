@@ -47,7 +47,8 @@ static bool init_bank(const class unit_data *pc, class unit_data *clerk, bool in
         {
             char *c = PC_BANK(pc);
             long amt;
-            int cur, i;
+            int cur;
+            int i;
 
             for (i = 0; i <= MAX_CURRENCY; ++i)
             {
@@ -249,7 +250,9 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
     }
     else if ((s = str_ccmp_next_word(s, "to")))
     {
-        int tmp, remainder, i;
+        int tmp;
+        int remainder;
+        int i;
 
         for (i = 0; i <= MAX_MONEY; ++i)
         {
@@ -395,7 +398,8 @@ int bank(struct spec_arg *sarg)
 
     if (changed_balance)
     {
-        char buf[MAX_STRING_LENGTH], *b;
+        char buf[MAX_STRING_LENGTH];
+        char *b;
         int i;
 
         if (PC_BANK(sarg->activator))
@@ -415,7 +419,8 @@ int bank(struct spec_arg *sarg)
 
 static bool move_money_up(class unit_data *ch, class unit_data *u)
 {
-    class unit_data *tmp, *next;
+    class unit_data *tmp;
+    class unit_data *next;
     bool found = FALSE;
 
     for (tmp = UNIT_CONTAINS(u); tmp; tmp = next)
@@ -444,9 +449,11 @@ void tax_player(class unit_data *ch)
     amount_t limit = 50 * PLATINUM_MULT;
     class descriptor_data *d = CHAR_DESCRIPTOR(ch);
 
-    amount_t holds, holds_sum;
+    amount_t holds;
+    amount_t holds_sum;
 
-    char buf[MAX_STRING_LENGTH], *b;
+    char buf[MAX_STRING_LENGTH];
+    char *b;
     bool tmp_bool = FALSE;
     int i;
 

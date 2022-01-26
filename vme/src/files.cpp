@@ -27,7 +27,8 @@
 /* Returns the size of a file in bytes */
 long fsize(FILE *f)
 {
-    long oldpos, size;
+    long oldpos;
+    long size;
 
     oldpos = ftell(f);
 
@@ -115,7 +116,8 @@ char *fread_string_copy(FILE *fl, char *buf, int max)
 {
     char *obuf;
     char *point;
-    int flag, total;
+    int flag;
+    int total;
 
     memset(buf, '\0', max);
     total = 0;
@@ -359,8 +361,11 @@ BUT 'read-only' files may be written to!
 
 FILE *fopen_cache(const char *name, const char *mode)
 {
-    int i, min_i, hit_i;
-    static int pure_hits = 0, purge = 0;
+    int i;
+    int min_i;
+    int hit_i;
+    static int pure_hits = 0;
+    static int purge = 0;
 
     min_i = number(0, FCACHE_MAX - 1); /* In case many are equal */
     hit_i = -1;
@@ -476,7 +481,8 @@ int max_size_save = 1000000;
 int load_string(char *filename, char **file_str)
 {
     int input;
-    unsigned int nread, rt;
+    unsigned int nread;
+    unsigned int rt;
     char *temp;
     struct stat statbuf;
     if (!file_exists(filename))
@@ -610,7 +616,8 @@ int save_string(char *filename, char **file_str, char *opp)
 
 int store_name_test(char *name)
 {
-    int i = 0, ln = 0;
+    int i = 0;
+    int ln = 0;
 
     if (str_is_empty(name))
     {

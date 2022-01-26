@@ -21,7 +21,7 @@
  * @param pack Parameter pack of all the arguments, just like ellipsis ... from C
  */
 template<typename... ParamPack>
-void slog(log_level level, ubit8 wizinv_level, const std::string &fmt, ParamPack &&...pack)
+void slog(log_level level, ubit8 wizinv_level, const std::string &fmt, ParamPack &&... pack)
 {
     std::string formatted_text;
     if constexpr (sizeof...(pack) != 0)

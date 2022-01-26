@@ -208,7 +208,8 @@ void edit_inside_descr(class descriptor_data *d)
 
 int search_block_set(char *arg, const char **list, bool exact)
 {
-    int i, l;
+    int i;
+    int l;
 
     if (list == nullptr)
     {
@@ -323,8 +324,11 @@ void show_structure(const char *structure[], class unit_data *ch)
 
 long int get_bit(char *bitlst, const char *structure[])
 {
-    char *l, *s, bit[MAX_STRING_LENGTH];
-    long int bitval = 0, tmpval;
+    char *l;
+    char *s;
+    char bit[MAX_STRING_LENGTH];
+    long int bitval = 0;
+    long int tmpval;
 
     /* walk through bitlist */
     for (l = bitlst; *l;)
@@ -1368,7 +1372,9 @@ static const char *skill_field_names[] = {"skill", "spell", "weapon", nullptr};
 
 void do_setskill(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    int type, skillarg, valarg = 0;
+    int type;
+    int skillarg;
+    int valarg = 0;
     char arg[MAX_STRING_LENGTH];
     class unit_data *unt;
 

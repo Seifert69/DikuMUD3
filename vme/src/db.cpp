@@ -160,7 +160,9 @@ void generate_bin_arrays(void)
 /* Resolves DIL templates loaded boottime */
 void resolve_templates(void)
 {
-    int i, j, valid;
+    int i;
+    int j;
+    int valid;
 
     /* all zones */
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
@@ -210,10 +212,12 @@ void resolve_templates(void)
 /* Generate and read DIL templates */
 struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 {
-    struct diltemplate *tmpllist, *tmpl;
+    struct diltemplate *tmpllist;
+    struct diltemplate *tmpl;
     CByteBuffer Buf;
     ubit32 tmplsize = 0;
-    char nBuf[256], zBuf[256];
+    char nBuf[256];
+    char zBuf[256];
 
     tmpllist = nullptr;
 
@@ -349,13 +353,18 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 void generate_zone_indexes(void)
 {
     class zone_type *z;
-    char zone[82], tmpbuf[82], filename[82 + 41];
+    char zone[82];
+    char tmpbuf[82];
+    char filename[82 + 41];
     char buf[MAX_STRING_LENGTH];
     char dilfilepath[255];
     CByteBuffer cBuf(MAX_STRING_LENGTH);
-    FILE *f, *zone_file;
+    FILE *f;
+    FILE *zone_file;
     char *c;
-    ubit8 access, loadlevel, payonly;
+    ubit8 access;
+    ubit8 loadlevel;
+    ubit8 payonly;
 
     g_zone_info.no_of_zones = 0;
 
@@ -710,8 +719,10 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
 {
     class unit_data *u;
     class file_index_type *fi;
-    char zone[FI_MAX_ZONENAME + 1], name[FI_MAX_UNITNAME + 1];
-    int i, j;
+    char zone[FI_MAX_ZONENAME + 1];
+    char name[FI_MAX_UNITNAME + 1];
+    int i;
+    int j;
     ubit8 unit_version;
     ubit8 t8;
     ubit16 t16;
@@ -1481,8 +1492,10 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     {
         if (IS_CHAR(u) && CHAR_MONEY(u) && stspec)
         {
-            long int val1, val2;
-            char *c, *prev = CHAR_MONEY(u);
+            long int val1;
+            long int val2;
+            char *c;
+            char *prev = CHAR_MONEY(u);
 
             while ((c = strchr(prev, '~')))
             {
@@ -1546,12 +1559,11 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
     /* was fclose(f) */
 }
 
-
 // Currently used for weapons, shields, armors
 //
 int bonus_map_a(int bonus)
 {
-    static int map[15] = { -20, -17, -14, -11, -8, -5, -2, 0, 2, 5, 8, 11, 14, 17, 20};
+    static int map[15] = {-20, -17, -14, -11, -8, -5, -2, 0, 2, 5, 8, 11, 14, 17, 20};
 
     if (bonus > 7)
     {
@@ -1565,19 +1577,18 @@ int bonus_map_a(int bonus)
         bonus = -7;
     }
 
-    int b = map[bonus+7];
+    int b = map[bonus + 7];
 
     if (b != 0)
-        b += 2*(open100()/100);
+        b += 2 * (open100() / 100);
 
     return b;
 }
-
 
 // Mapping Skill, weapon, spell transfers
 int bonus_map_b(int bonus)
 {
-    static int map[15] = { -10, -8, -6, -5, -4, -2, -1, 0, 1, 2, 4, 5, 6, 8, 10 };
+    static int map[15] = {-10, -8, -6, -5, -4, -2, -1, 0, 1, 2, 4, 5, 6, 8, 10};
 
     if (bonus > 7)
     {
@@ -1591,15 +1602,13 @@ int bonus_map_b(int bonus)
         bonus = -7;
     }
 
-    int b = map[bonus+7];
+    int b = map[bonus + 7];
 
     if (b != 0)
-        b += open100()/100;
+        b += open100() / 100;
 
     return b;
 }
-
-
 
 void bonus_setup(unit_data *u)
 {
@@ -1613,23 +1622,14 @@ void bonus_setup(unit_data *u)
 
         for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->next)
         {
-            if ((af->id == ID_TRANSFER_STR) ||
-                (af->id == ID_TRANSFER_DEX) ||
-                (af->id == ID_TRANSFER_CON) ||
-                (af->id == ID_TRANSFER_CHA) ||
-                (af->id == ID_TRANSFER_BRA) ||
-                (af->id == ID_TRANSFER_MAG) ||
-                (af->id == ID_TRANSFER_DIV) ||
-                (af->id == ID_TRANSFER_HPP))
-               af->data[1] = bonus_map_b(af->data[1]);
-            else if ((af->id == ID_SKILL_TRANSFER) ||
-                (af->id == ID_SPELL_TRANSFER) ||
-                (af->id == ID_WEAPON_TRANSFER))
-               af->data[1] = bonus_map_b(af->data[1]);
-        } 
+            if ((af->id == ID_TRANSFER_STR) || (af->id == ID_TRANSFER_DEX) || (af->id == ID_TRANSFER_CON) || (af->id == ID_TRANSFER_CHA) ||
+                (af->id == ID_TRANSFER_BRA) || (af->id == ID_TRANSFER_MAG) || (af->id == ID_TRANSFER_DIV) || (af->id == ID_TRANSFER_HPP))
+                af->data[1] = bonus_map_b(af->data[1]);
+            else if ((af->id == ID_SKILL_TRANSFER) || (af->id == ID_SPELL_TRANSFER) || (af->id == ID_WEAPON_TRANSFER))
+                af->data[1] = bonus_map_b(af->data[1]);
+        }
     }
 }
-
 
 /*  Room directions points to file_indexes instead of units
  *  after a room has been read, due to initialization considerations
@@ -1707,7 +1707,8 @@ void read_all_rooms(void)
 void normalize_world(void)
 {
     class file_index_type *fi;
-    class unit_data *u, *tmpu;
+    class unit_data *u;
+    class unit_data *tmpu;
     int i;
 
     for (u = g_unit_list; u; u = u->gnext)
@@ -1776,10 +1777,13 @@ static class zone_type *read_zone_error = nullptr;
 
 struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 {
-    struct zone_reset_cmd *cmd, *tmp_cmd;
+    struct zone_reset_cmd *cmd;
+    struct zone_reset_cmd *tmp_cmd;
     class file_index_type *fi;
-    ubit8 cmdno, direction;
-    char zonename[FI_MAX_ZONENAME + 1], name[FI_MAX_UNITNAME + 1];
+    ubit8 cmdno;
+    ubit8 direction;
+    char zonename[FI_MAX_ZONENAME + 1];
+    char name[FI_MAX_UNITNAME + 1];
     CByteBuffer cBuf(100);
 
     tmp_cmd = cmd_list;

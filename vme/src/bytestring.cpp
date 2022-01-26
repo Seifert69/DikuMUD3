@@ -264,7 +264,8 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
 int CByteBuffer::ReadIntList(int **ilist)
 {
     sbit32 len;
-    int c, i;
+    int c;
+    int i;
     int *intlist;
     intlist = *ilist;
 
@@ -352,7 +353,8 @@ int CByteBuffer::SkipString(char **ppStr)
 int CByteBuffer::SkipNames(void)
 {
     char *c;
-    unsigned int len, i;
+    unsigned int len;
+    unsigned int i;
 
     if (Read32(&len) == 1)
     {
@@ -369,7 +371,8 @@ int CByteBuffer::SkipNames(void)
 
 int CByteBuffer::SkipVals(void)
 {
-    unsigned int len, i;
+    unsigned int len;
+    unsigned int i;
 
     if (Read32(&len) == 1)
     {
@@ -569,7 +572,8 @@ char *bread_str_alloc(ubit8 **b)
 {
     if (**b)
     {
-        char *c, *t;
+        char *c;
+        char *t;
         t = (char *)*b;
 
         c = str_dup(t);

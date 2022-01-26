@@ -63,7 +63,8 @@ void alarm_check(int i)
 void test_mud_up(void)
 {
     int fd;
-    class cConHook *nextcon, *con;
+    class cConHook *nextcon;
+    class cConHook *con;
     static int nRetries = 0;
 
     fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
@@ -295,8 +296,10 @@ void cMudHook::Unhook(void)
 int cMudHook::read_mud(void)
 {
     class cConHook *con;
-    ubit16 id, len;
-    int p, n;
+    ubit16 id;
+    ubit16 len;
+    int p;
+    int n;
     char *data;
     ubit8 text_type;
 

@@ -185,7 +185,8 @@ void special_event(void *p1, void *p2)
 
     if (fptr->index == SFUN_DIL_INTERNAL)
     {
-        int diltick, i;
+        int diltick;
+        int i;
         diltick = FALSE;
         if (IS_SET(fptr->flags, SFB_TICK))
         {
@@ -220,7 +221,8 @@ void stop_special(class unit_data *u, class unit_fptr *fptr)
 
 void start_special(class unit_data *u, class unit_fptr *fptr)
 {
-    int diltick = 0, i;
+    int diltick = 0;
+    int i;
     if (fptr->index == SFUN_DIL_INTERNAL)
     {
         if (IS_SET(fptr->flags, SFB_TICK))

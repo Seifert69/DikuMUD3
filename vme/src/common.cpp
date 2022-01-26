@@ -154,7 +154,9 @@ int buy_points(int points, int level, int *error)
 
 int distribute_points(sbit16 *skills, int max, int points, int level)
 {
-    int i, error, sumerror;
+    int i;
+    int error;
+    int sumerror;
 
     sumerror = 0;
 
@@ -172,7 +174,9 @@ int distribute_points(sbit16 *skills, int max, int points, int level)
 
 int distribute_points(ubit8 *skills, int max, int points, int level)
 {
-    int i, error, sumerror;
+    int i;
+    int error;
+    int sumerror;
 
     sumerror = 0;
 

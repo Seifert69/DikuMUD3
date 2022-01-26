@@ -34,7 +34,9 @@ CByteBuffer g_FileBuffer(16384);
 // Return 1 on error, 0 if OK
 int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
 {
-    class extra_descr_data *e, *te, *first;
+    class extra_descr_data *e;
+    class extra_descr_data *te;
+    class extra_descr_data *first;
     ubit8 x;
     ubit32 i; // for 32 bit extra lists
     char *c;
@@ -108,7 +110,8 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 #ifdef DMSERVER
     int valid;
 #endif
-    int i, j;
+    int i;
+    int j;
     ubit8 t;
     struct diltemplate *tmpl;
 
@@ -383,7 +386,8 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
     struct diltemplate *tmpl = nullptr;
     ubit32 recallpc = 0;
     ubit16 t16;
-    int i, novar;
+    int i;
+    int novar;
     ubit8 t;
     char name[255];
     int bNameRead;
@@ -619,7 +623,8 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
 class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *owner, int stspec)
 {
-    class unit_fptr *fptr, *head;
+    class unit_fptr *fptr;
+    class unit_fptr *head;
     int i;
     ubit8 t8;
     ubit16 t16;
@@ -678,7 +683,8 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
         }
         else if (fptr->index == SFUN_DILCOPY_INTERNAL)
         {
-            char name[256], *c;
+            char name[256];
+            char *c;
 
             struct dilargstype *dilargs;
 
@@ -776,7 +782,8 @@ void bread_block(FILE *datafile, long file_pos, int length, void *buffer)
 void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af, ubit8 version)
 {
     int i = 0;
-    ubit32 nPos, nOrgPos = pBuf->GetLength();
+    ubit32 nPos;
+    ubit32 nOrgPos = pBuf->GetLength();
 
     if (version <= 56)
     {
@@ -829,7 +836,8 @@ void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af, ubit8 versio
  */
 void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
 {
-    int i, j;
+    int i;
+    int j;
 
     /* write a template */
 
@@ -980,7 +988,8 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
 {
     char *data;
     int i = 0;
-    ubit32 nPos, nOrgPos = pBuf->GetLength();
+    ubit32 nPos;
+    ubit32 nOrgPos = pBuf->GetLength();
     pBuf->Append16(0); /* Assume no affects by default */
 
     for (; fptr; fptr = fptr->next)
@@ -1109,7 +1118,8 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
     int i;
     ubit8 nVersion;
 #ifdef DMSERVER
-    char zone[FI_MAX_ZONENAME + 1], name[FI_MAX_UNITNAME + 1];
+    char zone[FI_MAX_ZONENAME + 1];
+    char name[FI_MAX_UNITNAME + 1];
 #endif
 
     nVersion = UNIT_VERSION;
@@ -1418,7 +1428,9 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
 void write_unit(FILE *f, class unit_data *u, char *fname)
 {
     CByteBuffer *pBuf;
-    ubit32 nSizeStart, nStart, nPos;
+    ubit32 nSizeStart;
+    ubit32 nStart;
+    ubit32 nPos;
     ubit32 length;
     ubit32 crc;
 
@@ -1464,7 +1476,9 @@ void write_unit(FILE *f, class unit_data *u, char *fname)
 void write_diltemplate(FILE *f, struct diltemplate *tmpl)
 {
     CByteBuffer *pBuf;
-    ubit32 length, nStart, nPos;
+    ubit32 length;
+    ubit32 nStart;
+    ubit32 nPos;
 
     pBuf = &g_FileBuffer;
     pBuf->Clear();

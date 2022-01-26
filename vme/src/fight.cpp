@@ -201,7 +201,9 @@ void fread_single(FILE *f1, struct combat_single_msg *msg)
 
 int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
 {
-    int no[200], pos, grp;
+    int no[200];
+    int pos;
+    int grp;
     char shit[100];
 
     /* A group of -1 indicates end */
@@ -250,7 +252,8 @@ int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
 void load_messages(void)
 {
     FILE *f1;
-    int i, grp;
+    int i;
+    int grp;
     struct combat_msg_packet *messages;
 
     if (!(f1 = fopen(g_cServerConfig.getFileInEtcDir(MESS_FILE).c_str(), "r")))
@@ -607,7 +610,8 @@ void combat_message(class unit_data *att,
                     int hit_location)
 {
     struct combat_msg_packet *msg;
-    int i, r;
+    int i;
+    int r;
 
     msg = nullptr;
 
@@ -843,7 +847,12 @@ static void person_gain(class unit_data *ch, class unit_data *dead, int share, i
 /* when a kill has been made                                         */
 static void exp_align_gain(class unit_data *ch, class unit_data *victim)
 {
-    int rellevel, sumlevel, maxlevel, minlevel, no_members = 1, share;
+    int rellevel;
+    int sumlevel;
+    int maxlevel;
+    int minlevel;
+    int no_members = 1;
+    int share;
     class unit_data *head;
     struct char_follow_type *f;
 
@@ -1482,7 +1491,9 @@ int roll_boost(int roll, int level)
 /* -1 if fails, >= 0 amount of damage */
 int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapon_type, int primary, int attack)
 {
-    int dam, hm, hit_loc;
+    int dam;
+    int hm;
+    int hit_loc;
     int roll;
 
     int def_armour_type;

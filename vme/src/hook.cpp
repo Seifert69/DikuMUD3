@@ -283,7 +283,8 @@ void cHook::Unhook(void)
 
 void cHook::PushWrite(void)
 {
-    int sofar, len;
+    int sofar;
+    int len;
     int thisround;
     ubit8 buf[1460];
 
@@ -519,7 +520,8 @@ int cCaptainHook::Wait(struct timeval *timeout)
     /* The following two are used in Wait() because the Input & Write
        can cause any descriptor to become unhooked. It is then the job
        of the Unhook to update this table of descriptors accordingly */
-    int nTable[256], nId[256];
+    int nTable[256];
+    int nId[256];
 
     int nTableTop;
 
@@ -565,7 +567,9 @@ int cCaptainHook::Wait(struct timeval *timeout)
     }
     else if (n > 0)
     {
-        int nFlag, tmpfd, i;
+        int nFlag;
+        int tmpfd;
+        int i;
 
         /* We need to do this the hard way, because nTable[] can be
            changed radically by any sequence of read or write */

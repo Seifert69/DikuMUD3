@@ -118,7 +118,8 @@ int _parse_name(const char *arg, char *name)
 /* for idle time for any descriptors                                      */
 void check_idle(void)
 {
-    class descriptor_data *d, *next_d;
+    class descriptor_data *d;
+    class descriptor_data *next_d;
     time_t now = time(nullptr);
 
     for (d = g_descriptor_list; d; d = next_d)
@@ -709,7 +710,9 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 
 int check_pwd(class descriptor_data *d, char *pwd)
 {
-    int i, bA, bNA;
+    int i;
+    int bA;
+    int bNA;
 
     if (strlen(pwd) < 5)
     {

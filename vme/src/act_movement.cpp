@@ -295,13 +295,17 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
         -1 : If dead.
         */
 {
-    class unit_data *room_from, *room_to;
+    class unit_data *room_from;
+    class unit_data *room_to;
     char aLeaveSelf[MAX_STRING_LENGTH];
     char aLeaveOther[MAX_STRING_LENGTH];
     char aArrSelf[MAX_STRING_LENGTH];
     char aArrOther[MAX_STRING_LENGTH];
     char aPassengersOther[MAX_STRING_LENGTH];
-    const char *lo, *ls, *as, *ao;
+    const char *lo;
+    const char *ls;
+    const char *as;
+    const char *ao;
     aLeaveOther[0] = 0;
     aLeaveSelf[0] = 0;
     aArrOther[0] = 0;
@@ -677,7 +681,8 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
 
         if (u && CHAR_FOLLOWERS(u))
         {
-            int i, j;
+            int i;
+            int j;
             struct char_follow_type *k;
 
             for (i = 0;; i++) /* This shit is needed because the follow  */
@@ -774,7 +779,8 @@ void do_move(class unit_data *ch, char *argument, const struct command_info *cmd
 
 int low_find_door(class unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 {
-    char buf[256], dir[256];
+    char buf[256];
+    char dir[256];
     char *dirdoorstr;
     int door;
 
