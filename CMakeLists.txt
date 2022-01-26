@@ -25,7 +25,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     # Stronger warnings for debug build
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -fdiagnostics-color=always -Wformat=2 -Wformat-overflow=2 -Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -fdiagnostics-color=always -Wall -Wno-unknown-pragmas")
 else ()
     # Hide some warnings for a release build
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -fdiagnostics-color=always -Wno-deprecated-declarations")

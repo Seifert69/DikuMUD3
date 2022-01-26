@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Account_Withdraw_Suite, AccountCPPFixture)
 
-std::vector<int> withdrawal_amounts{274, 2744, 27447};
+std::vector<ubit32> withdrawal_amounts{274, 2744, 27447};
 BOOST_DATA_TEST_CASE(account_withdraw_test, withdrawal_amounts, amount)
 {
     float credit = 375.14f;
