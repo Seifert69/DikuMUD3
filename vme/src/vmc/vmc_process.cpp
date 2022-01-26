@@ -154,16 +154,16 @@ void dmc_set_weapon(class unit_data *weapon)
         return;
     }
 
-    if (!is_in(craftsmanship, -25, 25))
+    if (!is_in(craftsmanship, BONUS_JUNK, BONUS_ARTIFACT))
     {
-        dmc_error(TRUE, "Illegal bonus (-100..25 allowed) in '%s'.", UNIT_IDENT(weapon));
+        dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(weapon));
         OBJ_TYPE(weapon) = ITEM_TRASH;
         return;
     }
 
-    if (!is_in(magic_bonus, -25, 25))
+    if (!is_in(magic_bonus,  BONUS_JUNK, BONUS_ARTIFACT))
     {
-        dmc_error(TRUE, "Illegal bonus (-100..25 allowed) in '%s'.", UNIT_IDENT(weapon));
+        dmc_error(TRUE, "Illegal bonus (-7..7 allowed) in '%s'.", UNIT_IDENT(weapon));
         OBJ_TYPE(weapon) = ITEM_TRASH;
         return;
     }
@@ -198,16 +198,16 @@ void dmc_set_armour(class unit_data *armour)
         return;
     }
 
-    if (!is_in(craftsmanship, -100, 25))
+    if (!is_in(craftsmanship,  BONUS_JUNK, BONUS_ARTIFACT))
     {
-        dmc_error(TRUE, "Illegal bonus (-100..25 allowed) in '%s'.", UNIT_IDENT(armour));
+        dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(armour));
         OBJ_TYPE(armour) = ITEM_TRASH;
         return;
     }
 
-    if (!is_in(magic_bonus, -100, 25))
+    if (!is_in(magic_bonus,  BONUS_JUNK, BONUS_ARTIFACT))
     {
-        dmc_error(TRUE, "Illegal bonus (-100..25 allowed) in '%s'.", UNIT_IDENT(armour));
+        dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(armour));
         OBJ_TYPE(armour) = ITEM_TRASH;
         return;
     }
@@ -236,16 +236,16 @@ void dmc_set_shield(class unit_data *shield)
         return;
     }
 
-    if (!is_in(craftsmanship, -100, 25))
+    if (!is_in(craftsmanship,  BONUS_JUNK, BONUS_ARTIFACT))
     {
-        dmc_error(TRUE, "Illegal bonus (-100..25 allowed) in '%s'.", UNIT_IDENT(shield));
+        dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(shield));
         OBJ_TYPE(shield) = ITEM_TRASH;
         return;
     }
 
-    if (!is_in(magic_bonus, -100, 25))
+    if (!is_in(magic_bonus, BONUS_JUNK, BONUS_ARTIFACT))
     {
-        dmc_error(TRUE, "Illegal bonus (-100..25 allowed) in '%s'.", UNIT_IDENT(shield));
+        dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(shield));
         OBJ_TYPE(shield) = ITEM_TRASH;
         return;
     }
@@ -366,18 +366,177 @@ void set_room_data(class unit_data *u)
     SET_BIT(UNIT_MANIPULATE(u), MANIPULATE_ENTER);
 }
 
-void show_info(class unit_data *npc)
+void show_obj_info(class unit_data *obj)
+{
+    static int first = FALSE;
+    bool doprint = false;
+
+    if (!first)
+    {
+        fprintf(stderr, "                      OBJECT\n\n");
+        first = TRUE;
+    }
+
+    std::string s;
+
+    switch (OBJ_TYPE(obj))
+    {
+        case ITEM_WEAPON:
+            s += "weapon,";
+            s += UNIT_IDENT(obj);
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 0)); // Sword type
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 1)); // Material bonus
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 2)); // Magic bonus
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 3)); // Slaying race
+            s += ",";
+            doprint = true;
+            break;
+
+        case ITEM_ARMOR:
+            s += "armor,";
+            s += UNIT_IDENT(obj);
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 0)); // Armor category
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 1)); // Material bonus
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 2)); // Magic bonus
+            s += ",-,";
+            doprint = true;
+            break;
+
+        case ITEM_SHIELD:
+            s += "shield,";
+            s += UNIT_IDENT(obj);
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 0)); // Armor category
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 1)); // Material bonus
+            s += ",";
+            s += itoa(OBJ_VALUE(obj, 2)); // Magic bonus
+            s += ",-,";
+            doprint = true;
+            break;
+
+        case ITEM_WORN:
+        case ITEM_SCROLL:
+        case ITEM_WAND:
+        case ITEM_STAFF:
+        case ITEM_FIREWEAPON:
+        case ITEM_MISSILE:
+        case ITEM_POTION:
+        case ITEM_SPELL:
+            break;
+    }
+
+    if (doprint)
+    {
+        int bonusvector[11];
+        memset(bonusvector, 0, sizeof(bonusvector));
+
+        s += "//,";
+
+        for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
+        {
+            switch (af->id)
+            {
+                case ID_TRANSFER_STR:
+                    bonusvector[0] += af->data[1];
+                    break;
+                case ID_TRANSFER_DEX:
+                    bonusvector[1] += af->data[1];
+                    break;
+                case ID_TRANSFER_CON:
+                    bonusvector[2] += af->data[1];
+                    break;
+                case ID_TRANSFER_CHA:
+                    bonusvector[3] += af->data[1];
+                    break;
+                case ID_TRANSFER_BRA:
+                    bonusvector[4] += af->data[1];
+                    break;
+                case ID_TRANSFER_MAG:
+                    bonusvector[5] += af->data[1];
+                    break;
+                case ID_TRANSFER_DIV:
+                    bonusvector[6] += af->data[1];
+                    break;
+                case ID_TRANSFER_HPP:
+                    bonusvector[7] += af->data[1];
+                    break;
+                case ID_PROT_GOOD_TRANSFER:
+                    bonusvector[8] += af->data[1];
+                    break;
+                case ID_PROT_EVIL_TRANSFER:
+                    bonusvector[9] += af->data[1];
+                    break;
+                case ID_TRANSFER_CHARFLAGS:
+                    bonusvector[10] += af->data[1];
+                    break;
+            }
+        }
+
+        for (int i=0; i < 11; i++)
+        {
+            s += itoa(bonusvector[i]);
+            s += ",";
+        }
+
+        s += "//,";
+
+        for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
+        {
+            switch (af->id)
+            {
+                case ID_SPELL_TRANSFER:
+                    s += "Spl,";
+                    s += itoa(af->data[0]);
+                    s += ",";
+                    s += itoa(af->data[1]);
+                    s += ",";
+                    break;
+                case ID_SKILL_TRANSFER:
+                    s += "Ski,";
+                    s += itoa(af->data[0]);
+                    s += ",";
+                    s += itoa(af->data[1]);
+                    s += ",";
+                    break;
+                case ID_WEAPON_TRANSFER:
+                    s += "Wpn,";
+                    s += itoa(af->data[0]);
+                    s += ",";
+                    s += itoa(af->data[1]);
+                    s += ",";
+                    break;
+            }
+        }
+    }
+
+
+    if (doprint)
+    {
+        fprintf(stderr, "%s\n", s.c_str());
+    }
+
+}
+
+void show_npc_info(class unit_data *npc)
 {
     static int first = FALSE;
 
     if (!first)
     {
-        fprintf(stderr, "                      STR  DEX  CON  HIT  BRA  CHA  MAG  DIV\n\r\n\r");
+        fprintf(stderr, "                      STR  DEX  CON  HIT  BRA  CHA  MAG  DIV\n\n");
         first = TRUE;
     }
 
     fprintf(stderr,
-            "%-20s %4d %4d %4d %4d %4d %4d %4d %4d\n\r",
+            "%-20s %4d %4d %4d %4d %4d %4d %4d %4d\n",
             UNIT_IDENT(npc),
             CHAR_STR(npc),
             CHAR_DEX(npc),
@@ -411,9 +570,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -425,9 +584,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -439,9 +598,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -453,9 +612,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -467,9 +626,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -481,9 +640,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -495,9 +654,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -509,9 +668,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -20, 5))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -20..+5 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -546,9 +705,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -10, 10))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -10..+10 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -560,9 +719,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -10, 10))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -10..+10 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -574,9 +733,9 @@ void process_affects(class unit_data *pUnit)
                 {
                     dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
                 }
-                if (!is_in(pAf->data[1], -10, 10))
+                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(FALSE, "%s: Adjustment %d outside -10..+10 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
                 }
                 break;
 
@@ -848,6 +1007,10 @@ void process_unit(class unit_data *u)
                     dmc_set_shield(u);
                     break;
             }
+            if (g_verbose)
+            {
+                show_obj_info(u);
+            }
             break;
 
         case UNIT_ST_NPC:
@@ -916,7 +1079,7 @@ void process_unit(class unit_data *u)
 
             if (g_verbose)
             {
-                show_info(u);
+                show_npc_info(u);
             }
             break;
     }

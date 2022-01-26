@@ -391,7 +391,7 @@ void dump_zone(char *prefix)
         process_unit(u);
     }
 
-    if (no_rooms > 150)
+    if (no_rooms > 300)
     {
         dmc_error(FALSE,
                   "Warning: %3d rooms in zone [100 maximum suggested "

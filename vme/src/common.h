@@ -12,7 +12,7 @@
 /*                           A B I L I T I E S                           */
 /* ..................................................................... */
 
-#define SKILL_MAX 250 /* Maximum of any skill / ability */
+#define SKILL_MAX 500 /* Maximum of any skill / ability */
 #define AVERAGE_SKILL_COST 10
 #define HITPOINTS_BASE 125
 #define ABILITY_POINT_FACTOR (4) /* Abilitypoints multiplied by this */
