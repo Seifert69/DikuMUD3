@@ -385,6 +385,8 @@ void show_obj_info(class unit_data *obj)
             s += "weapon,";
             s += UNIT_IDENT(obj);
             s += ",";
+            s += g_error_zone_name;
+            s += ",";
             s += itoa(OBJ_VALUE(obj, 0)); // Sword type
             s += ",";
             s += itoa(OBJ_VALUE(obj, 1)); // Material bonus
@@ -400,6 +402,8 @@ void show_obj_info(class unit_data *obj)
             s += "armor,";
             s += UNIT_IDENT(obj);
             s += ",";
+            s += g_error_zone_name;
+            s += ",";
             s += itoa(OBJ_VALUE(obj, 0)); // Armor category
             s += ",";
             s += itoa(OBJ_VALUE(obj, 1)); // Material bonus
@@ -412,6 +416,8 @@ void show_obj_info(class unit_data *obj)
         case ITEM_SHIELD:
             s += "shield,";
             s += UNIT_IDENT(obj);
+            s += ",";
+            s += g_error_zone_name;
             s += ",";
             s += itoa(OBJ_VALUE(obj, 0)); // Armor category
             s += ",";
