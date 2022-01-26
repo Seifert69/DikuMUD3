@@ -377,6 +377,108 @@ void set_room_data(class unit_data *u)
     SET_BIT(UNIT_MANIPULATE(u), MANIPULATE_ENTER);
 }
 
+
+bool affect_vector_string(class unit_data *obj, std::string &s)
+{
+    int bonusvector[11];
+
+    s.clear();
+    
+    memset(bonusvector, 0, sizeof(bonusvector));
+
+    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
+    {
+        switch (af->id)
+        {
+            case ID_TRANSFER_STR:
+                bonusvector[0] += af->data[1];
+                break;
+            case ID_TRANSFER_DEX:
+                bonusvector[1] += af->data[1];
+                break;
+            case ID_TRANSFER_CON:
+                bonusvector[2] += af->data[1];
+                break;
+            case ID_TRANSFER_CHA:
+                bonusvector[3] += af->data[1];
+                break;
+            case ID_TRANSFER_BRA:
+                bonusvector[4] += af->data[1];
+                break;
+            case ID_TRANSFER_MAG:
+                bonusvector[5] += af->data[1];
+                break;
+            case ID_TRANSFER_DIV:
+                bonusvector[6] += af->data[1];
+                break;
+            case ID_TRANSFER_HPP:
+                bonusvector[7] += af->data[1];
+                break;
+            case ID_PROT_GOOD_TRANSFER:
+                bonusvector[8] += af->data[1];
+                break;
+            case ID_PROT_EVIL_TRANSFER:
+                bonusvector[9] += af->data[1];
+                break;
+            case ID_TRANSFER_CHARFLAGS:
+                bonusvector[10] += af->data[1];
+                break;
+        }
+    }
+
+    bool bHasData = false;
+
+    for (int i = 0; i < 11; i++)
+    {
+        s += itoa(bonusvector[i]);
+
+        if (bonusvector[i] != 0)
+            bHasData = true;
+
+        if (i < 10)
+            s += ",";
+    }
+
+    return bHasData;
+}
+
+
+bool affect_vector_list(class unit_data *obj, std::string &s)
+{
+    s.clear();
+
+    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
+    {
+        switch (af->id)
+        {
+            case ID_SPELL_TRANSFER:
+                s += "Spl,";
+                s += itoa(af->data[0]);
+                s += ",";
+                s += itoa(af->data[1]);
+                s += ",";
+                break;
+            case ID_SKILL_TRANSFER:
+                s += "Ski,";
+                s += itoa(af->data[0]);
+                s += ",";
+                s += itoa(af->data[1]);
+                s += ",";
+                break;
+            case ID_WEAPON_TRANSFER:
+                s += "Wpn,";
+                s += itoa(af->data[0]);
+                s += ",";
+                s += itoa(af->data[1]);
+                s += ",";
+                break;
+        }
+    }
+
+    return !s.empty();
+}
+
+
 void show_obj_info(class unit_data *obj)
 {
     static int first = FALSE;
@@ -385,10 +487,16 @@ void show_obj_info(class unit_data *obj)
     if (!first)
     {
         fprintf(stderr,
-                "OBJECT\ntype,name,zone,val0,val1,val2,val3,//,STR,DEX,CON,CHA,BRA,MAG,DIV,HPP,Good,Evil,Flags,//,Spell/Weapon/Skill "
+                "OBJECT\ntype,name,ntype,zone,val0,val1,val2,val3,//,STR,DEX,CON,CHA,BRA,MAG,DIV,HPP,Good,Evil,Flags,//,Spell/Weapon/Skill "
                 "Transfers\n\n");
         first = TRUE;
     }
+
+    std::string sAffectVector;
+    bool bHasAffect1 = affect_vector_string(obj, sAffectVector);
+
+    std::string sAffectList;
+    bool bHasAffect2 = affect_vector_list(obj, sAffectList);
 
     std::string s;
 
@@ -396,6 +504,8 @@ void show_obj_info(class unit_data *obj)
     {
         case ITEM_WEAPON:
             s += "weapon,";
+            s += itoa(OBJ_TYPE(obj));
+            s += ",";
             s += UNIT_IDENT(obj);
             s += ",";
             s += g_error_zone_name;
@@ -413,6 +523,8 @@ void show_obj_info(class unit_data *obj)
 
         case ITEM_ARMOR:
             s += "armor,";
+            s += itoa(OBJ_TYPE(obj));
+            s += ",";
             s += UNIT_IDENT(obj);
             s += ",";
             s += g_error_zone_name;
@@ -428,6 +540,8 @@ void show_obj_info(class unit_data *obj)
 
         case ITEM_SHIELD:
             s += "shield,";
+            s += itoa(OBJ_TYPE(obj));
+            s += ",";
             s += UNIT_IDENT(obj);
             s += ",";
             s += g_error_zone_name;
@@ -449,95 +563,31 @@ void show_obj_info(class unit_data *obj)
         case ITEM_MISSILE:
         case ITEM_POTION:
         case ITEM_SPELL:
+            s += "other,";
+            s += itoa(OBJ_TYPE(obj));
+            s += ",";
+            s += UNIT_IDENT(obj);
+            s += ",";
+            s += g_error_zone_name;
+            s += ",";
+            s += "0"; // itoa(OBJ_VALUE(obj, 0)); // Armor category
+            s += ",";
+            s += "0"; // itoa(OBJ_VALUE(obj, 1)); // Material bonus
+            s += ",";
+            s += "0"; // itoa(OBJ_VALUE(obj, 2)); // Magic bonus
+            s += ",-,";
+            doprint = true;
             break;
     }
 
-    if (doprint)
+    if (doprint || bHasAffect1 || bHasAffect2)
     {
-        int bonusvector[11];
-        memset(bonusvector, 0, sizeof(bonusvector));
-
-        s += "//,";
-
-        for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
-        {
-            switch (af->id)
-            {
-                case ID_TRANSFER_STR:
-                    bonusvector[0] += af->data[1];
-                    break;
-                case ID_TRANSFER_DEX:
-                    bonusvector[1] += af->data[1];
-                    break;
-                case ID_TRANSFER_CON:
-                    bonusvector[2] += af->data[1];
-                    break;
-                case ID_TRANSFER_CHA:
-                    bonusvector[3] += af->data[1];
-                    break;
-                case ID_TRANSFER_BRA:
-                    bonusvector[4] += af->data[1];
-                    break;
-                case ID_TRANSFER_MAG:
-                    bonusvector[5] += af->data[1];
-                    break;
-                case ID_TRANSFER_DIV:
-                    bonusvector[6] += af->data[1];
-                    break;
-                case ID_TRANSFER_HPP:
-                    bonusvector[7] += af->data[1];
-                    break;
-                case ID_PROT_GOOD_TRANSFER:
-                    bonusvector[8] += af->data[1];
-                    break;
-                case ID_PROT_EVIL_TRANSFER:
-                    bonusvector[9] += af->data[1];
-                    break;
-                case ID_TRANSFER_CHARFLAGS:
-                    bonusvector[10] += af->data[1];
-                    break;
-            }
-        }
-
-        for (int i = 0; i < 11; i++)
-        {
-            s += itoa(bonusvector[i]);
-            s += ",";
-        }
-
-        s += "//,";
-
-        for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
-        {
-            switch (af->id)
-            {
-                case ID_SPELL_TRANSFER:
-                    s += "Spl,";
-                    s += itoa(af->data[0]);
-                    s += ",";
-                    s += itoa(af->data[1]);
-                    s += ",";
-                    break;
-                case ID_SKILL_TRANSFER:
-                    s += "Ski,";
-                    s += itoa(af->data[0]);
-                    s += ",";
-                    s += itoa(af->data[1]);
-                    s += ",";
-                    break;
-                case ID_WEAPON_TRANSFER:
-                    s += "Wpn,";
-                    s += itoa(af->data[0]);
-                    s += ",";
-                    s += itoa(af->data[1]);
-                    s += ",";
-                    break;
-            }
-        }
-    }
-
-    if (doprint)
-    {
+        s += "//," + sAffectVector + ",//,";
+        std::string title = UNIT_TITLE(obj);
+        std::replace(title.begin(), title.end(), ',', ' ');
+        s += title;
+        s += ",";
+        s += sAffectList;
         fprintf(stderr, "%s\n", s.c_str());
     }
 }
