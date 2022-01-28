@@ -1,0 +1,178 @@
+/*
+filename    random
+password    2kpwd
+changedby   Papi
+EmailAdd    Papi  <seifert@dikumud.com>
+request     compile
+version     1
+END HEADER*/
+
+#include <macros.h>
+
+
+%zone		        randomt
+
+lifespan 25
+reset RESET_ANYHOW
+
+creators {"papi"}
+
+notes
+"This zone is an attempt to make random treasure by Papi."
+
+
+help
+"Player should never be in here."
+
+
+#define Q(x) #x
+#define QUOTE(x) Q(x)
+
+%dil
+
+
+// Level is 0-7 (BONUS_XXX) for power of weapon
+
+dilbegin unitptr generateweapon(lvl : integer);
+var
+    u : unitptr;
+    wpns : stringlist;
+    materials : stringlist;
+    idxWpn : integer;
+    idxMat : integer;
+    i : integer;
+    s : string;
+    t : string;
+code
+{
+    log("WEAPON MAKER");
+    heartbeat := PULSE_SEC * 4;
+    // weapon name, weapon id, cost cp, weight
+    wpns := {
+            QUOTE(WPN_BATTLE_AXE),    "160", "16",
+            QUOTE(WPN_HAND_AXE),       "60", "6",
+            QUOTE(WPN_WAR_MATTOCK),    "90", "10",
+            QUOTE(WPN_ADZE),           "70", "7",
+            QUOTE(WPN_WAR_MAUL),       "60", "9",
+            QUOTE(WPN_WAR_HAMMER),     "55", "7",
+            QUOTE(WPN_BATTLE_CLUB),    "50", "6",
+            QUOTE(WPN_CLUB),           "20", "4",
+            QUOTE(WPN_BATTLE_MACE),    "80", "12",
+            QUOTE(WPN_MACE),           "60", "6",
+            QUOTE(WPN_FLAIL),         "140", "16",
+            QUOTE(WPN_MORNING_STAR),   "80", "16",
+            QUOTE(WPN_GREAT_SWORD),   "200", "16",
+            QUOTE(WPN_LONG_SWORD),    "100", "8",
+            QUOTE(WPN_BROAD_SWORD),   "100", "8",
+            QUOTE(WPN_CLAYMORE),      "120", "9",
+            QUOTE(WPN_SCIMITAR),      "100", "7",
+            QUOTE(WPN_FALCHION),       "90", "9",
+            QUOTE(WPN_SHORT_SWORD),    "70", "6",
+            QUOTE(WPN_RAPIER),         "60", "4",
+            QUOTE(WPN_MAIN_GAUCHE),    "50", "2",
+            QUOTE(WPN_STILETTO),       "40", "1",
+            QUOTE(WPN_DAGGER),         "40", "1",
+            QUOTE(WPN_SICKLE),         "50", "2",
+            QUOTE(WPN_HALBERD),        "80", "10",
+            QUOTE(WPN_BARDICHE),       "80", "10",
+            QUOTE(WPN_SCYTHE),        "100", "12",
+            QUOTE(WPN_QUARTERSTAFF),   "50", "10",
+            QUOTE(WPN_SPEAR),          "40", "6",
+            QUOTE(WPN_JAVELIN),        "60", "7",
+            QUOTE(WPN_TRIDENT),        "70", "12"};
+
+
+    // type, quality%, weight%, value%
+    materials := {
+        "copper",     "114",      "1", QUOTE(BONUS_BAD_MINUS),
+        "bronze",     "110",     "10", QUOTE(BONUS_AVERAGE_MINUS),
+        "iron",       "100",    "100", QUOTE(BONUS_AVERAGE),
+        "silver",     "133",   "1000", QUOTE(BONUS_AVERAGE_PLUS),
+        "steel",      "100",    "500", QUOTE(BONUS_GOOD),
+        "high steel",  "81",    "800", QUOTE(BONUS_GOOD_PLUS),
+        "black steel", "71",   "5000", QUOTE(BONUS_EXCELLENT),
+        "true steel",  "69",  "10000", QUOTE(BONUS_EXCELLENT_PLUS),
+        "adamantium",  "61",  "50000", QUOTE(BONUS_SUPERIOR),
+        "mithril",     "50", "100000", QUOTE(BONUS_ARTIFACT) };
+
+    idxWpn := rnd(0,30) * 3;
+    idxMat := rnd(0,9) * 4;
+
+    u := load("weapon_rnd@randomt");
+    if (u != null)
+        log("loaded a weapon");
+
+    t := materials.[idxMat];
+    s := weapon_name(atoi(wpns.[idxWpn]));
+
+    addstring(u.names, t + " " + s);
+    addstring(u.names, s);
+    u.title := "a " + t + " " + s;
+    u.outside_descr := "a " + t + " " + s + " is laying here.";
+
+    // Calculate and set the weight
+    i := (atoi(wpns.[idxWpn+2]) * atoi(materials.[idxMat+1]))/100;
+    set_weight_base(u, i);
+
+    // Calculate and set the cost
+    i := (atoi(wpns.[idxWpn+1]) * atoi(materials.[idxMat+2]))/10000;
+    u.cost := i;
+
+    u.value[0] := atoi(wpns.[idxWpn]);
+
+    i := atoi(materials.[idxMat+3]);
+    u.value[1] := atoi(materials.[idxMat+3]);
+
+    return(u);
+}
+dilend
+
+
+
+%rooms
+
+treasury
+
+title "Test treasury"
+descr
+"You are in the treasury, its a huge square room with no exits. Apparently
+the room is empty - obviously the treasures are beyond the reach of mere
+mortals.
+
+Bounce to generate a non-wood weapon."
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB}
+ALWAYS_LIGHT
+
+dilbegin bouncegenerator();
+external
+    unitptr generateweapon(lvl : integer);
+var
+    u : unitptr;
+code
+{
+    heartbeat := PULSE_SEC * 4;
+
+    :loop:
+    wait(SFB_CMD, command("bounce"));
+    log("BOUNCE RECEIVED");
+    u := generateweapon@randomt(0);
+    link(u, self);
+    goto loop;
+}
+dilend
+
+end
+
+
+%objects
+
+weapon_rnd
+names {""}
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)
+title ""
+descr ""
+end
+
+
+%end
