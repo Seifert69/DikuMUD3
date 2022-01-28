@@ -4645,10 +4645,30 @@ ints		: PNUM
 			  dilint_list[0] = 1;
 			  dilint_list[1] = $1;
 			}
+      | '-' PNUM
+			{
+			  dilint_list[0] = 1;
+			  dilint_list[1] = -$2;
+			}
+      | '+' PNUM
+			{
+			  dilint_list[0] = 1;
+			  dilint_list[1] = $2;
+			}
 		| ints ',' PNUM
 			{
 			  dilint_list[0]++;
 			  dilint_list[dilint_list[0]] = $3;
+			}
+		| ints ',' '+' PNUM
+			{
+			  dilint_list[0]++;
+			  dilint_list[dilint_list[0]] = $4;
+			}
+		| ints ',' '-' PNUM
+			{
+			  dilint_list[0]++;
+			  dilint_list[dilint_list[0]] = -$4;
 			}
 		;
 
