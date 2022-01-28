@@ -15,8 +15,8 @@
 
 char *parse_match(const char *pData, const char *pMatch)
 {
-    char *pTmp1;
-    char *pTmp2;
+    char *pTmp1 = nullptr;
+    char *pTmp2 = nullptr;
 
     pTmp1 = (char *)str_cstr(pData, pMatch);
     if (pTmp1 == nullptr)
@@ -45,8 +45,8 @@ char *parse_match(const char *pData, const char *pMatch)
 char *parse_name(char **pData)
 {
     char Buf[MAX_STRING_LENGTH];
-    char *pTmp1;
-    char *pTmp2;
+    char *pTmp1 = nullptr;
+    char *pTmp2 = nullptr;
 
     Buf[0] = 0;
 
@@ -81,7 +81,7 @@ char *parse_name(char **pData)
 
 int parse_num(char **pData, int *pNum)
 {
-    char *pTmp1;
+    char *pTmp1 = nullptr;
 
     *pNum = 0;
 
@@ -116,7 +116,7 @@ int *parse_numlist(char **pData, int *int_count)
 {
     int *nums = nullptr;
     int count = 0;
-    int i;
+    int i = 0;
 
     while (parse_num(pData, &i))
     {
@@ -142,9 +142,9 @@ int *parse_numlist(char **pData, int *int_count)
 
 char **parse_namelist(char **pData)
 {
-    char *pTmp1;
-    char *pTmp2;
-    char **pNamelist;
+    char *pTmp1 = nullptr;
+    char *pTmp2 = nullptr;
+    char **pNamelist = nullptr;
 
     pTmp1 = *pData;
 
@@ -173,7 +173,7 @@ char **parse_namelist(char **pData)
 
 int parse_match_num(const char **pData, const char *pMatch, int *pResult)
 {
-    char *pTmp;
+    char *pTmp = nullptr;
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == nullptr)
@@ -193,8 +193,8 @@ int parse_match_num(const char **pData, const char *pMatch, int *pResult)
 
 int *parse_match_numlist(const char **pData, const char *pMatch, int *count)
 {
-    char *pTmp;
-    int *i;
+    char *pTmp = nullptr;
+    int *i = nullptr;
 
     *count = 0;
     pTmp = parse_match(*pData, pMatch);
@@ -212,8 +212,8 @@ int *parse_match_numlist(const char **pData, const char *pMatch, int *count)
 
 char *parse_match_name(const char **pData, const char *pMatch)
 {
-    char *pName;
-    char *pTmp;
+    char *pName = nullptr;
+    char *pTmp = nullptr;
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == nullptr)
@@ -230,8 +230,8 @@ char *parse_match_name(const char **pData, const char *pMatch)
 
 char **parse_match_namelist(const char **pData, const char *pMatch)
 {
-    char **pNamelist;
-    char *pTmp;
+    char **pNamelist = nullptr;
+    char *pTmp = nullptr;
 
     pTmp = parse_match(*pData, pMatch);
     if (pTmp == nullptr)

@@ -24,8 +24,8 @@ class file_index_type **slime_list = nullptr;
 
 static void slime_save(void)
 {
-    int i;
-    FILE *f;
+    int i = 0;
+    FILE *f = nullptr;
 
     if (!(f = fopen(g_cServerConfig.getFileInLibDir(SLIME_FILE).c_str(), "wb")))
     {
@@ -63,7 +63,7 @@ static void slime_add(class file_index_type *sp)
 
 static void slime_remove(class file_index_type *sp)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < slime_count; i++)
     {
@@ -83,7 +83,7 @@ static void slime_remove(class file_index_type *sp)
 
 int is_slimed(class file_index_type *sp)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < slime_count; i++)
     {
@@ -100,7 +100,7 @@ int slime_obj(struct spec_arg *sarg)
 {
     char buf[MAX_INPUT_LENGTH];
     char fi_name[MAX_INPUT_LENGTH];
-    class file_index_type *fi;
+    class file_index_type *fi = nullptr;
 
     if (!is_command(sarg->cmd, "slime"))
     {
@@ -117,7 +117,7 @@ int slime_obj(struct spec_arg *sarg)
 
     if (is_abbrev(buf, "list"))
     {
-        int i;
+        int i = 0;
         send_to_char("List of slimed units:<br/>", sarg->activator);
         for (i = 0; i < slime_count; i++)
         {
@@ -180,11 +180,11 @@ int slime_obj(struct spec_arg *sarg)
 
 void slime_boot(void)
 {
-    class file_index_type *fi;
+    class file_index_type *fi = nullptr;
     CByteBuffer cBuf(100);
     char buf1[256];
     char buf2[256];
-    FILE *f;
+    FILE *f = nullptr;
 
     touch_file(g_cServerConfig.getFileInLibDir(SLIME_FILE));
     if (!(f = fopen(g_cServerConfig.getFileInLibDir(SLIME_FILE).c_str(), "rb")))

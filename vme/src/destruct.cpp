@@ -155,7 +155,7 @@ int unit_affected_type::destruct_classindex(void)
 void destruct_unit(class unit_data *unit)
 {
 #ifdef DMSERVER
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
     int in_menu = FALSE;
     if (!unit)
     {
@@ -262,8 +262,8 @@ void destruct_unit(class unit_data *unit)
 /* May only be called from comm.c event loop */
 void clear_destructed(void)
 {
-    class unit_fptr *f;
-    int i;
+    class unit_fptr *f = nullptr;
+    int i = 0;
 
     for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
     {

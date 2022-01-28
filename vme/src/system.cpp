@@ -45,7 +45,7 @@ void MplexSendSetup(class descriptor_data *d)
 /* Call only once when creating a new char (guest)    */
 void init_char(class unit_data *ch)
 {
-    int i;
+    int i = 0;
 
     if (g_cServerConfig.isBBS())
     {
@@ -232,8 +232,8 @@ class descriptor_data *descriptor_new(class cMultiHook *pe)
 /* an unknown id...                                                 */
 void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
 {
-    class descriptor_data *tmp;
-    struct diltemplate *link_dead;
+    class descriptor_data *tmp = nullptr;
+    struct diltemplate *link_dead = nullptr;
     assert(d->character);
 
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */
@@ -355,7 +355,7 @@ void system_memory(class unit_data *ch)
 {
 #ifdef LINUX
     struct rusage rusage_data;
-    int n;
+    int n = 0;
 
     n = getrusage(RUSAGE_CHILDREN, &rusage_data);
 

@@ -55,7 +55,7 @@ char *badnames_list::insert(char *n)
 {
     badnames_list *l = this->next;
     badnames_list *b = this;
-    badnames_list *temp;
+    badnames_list *temp = nullptr;
     if (!n)
     {
         return (nullptr);
@@ -164,7 +164,7 @@ char *badnames_list::in(char *n)
 
 void badnames_list::create(char *input_temp)
 {
-    char *n;
+    char *n = nullptr;
 
     if (!input_temp)
     {

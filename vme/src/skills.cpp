@@ -199,8 +199,8 @@ void roll_description(class unit_data *att, const char *text, int roll)
 
 int open_ended_roll(int size, int end)
 {
-    int i;
-    int s;
+    int i = 0;
+    int s = 0;
 
     s = i = number(1, size);
 
@@ -230,9 +230,9 @@ int open_ended_roll(int size, int end)
 /* If skill and difficulty are equal => 50% chance success       */
 int skillchecksa(class unit_data *u, int skillidx, int abiidx, int difficulty)
 {
-    int roll;
-    int skl;
-    int hm;
+    int roll = 0;
+    int skl = 0;
+    int hm = 0;
 
     roll = open100();
 
@@ -396,7 +396,7 @@ int natural_damage(int roll, int weapon_type, int armour_type, int lbs)
 /* Return [0..200] for skill when defending with a weapon */
 int weapon_defense_skill(class unit_data *ch, int skill)
 {
-    int max;
+    int max = 0;
 
     if (IS_PC(ch))
     {
@@ -456,7 +456,7 @@ int weapon_attack_skill(class unit_data *ch, int skill)
 {
     if (IS_PC(ch))
     {
-        int n;
+        int n = 0;
 
         n = PC_WPN_SKILL(ch, skill);
 
@@ -485,7 +485,7 @@ int weapon_attack_skill(class unit_data *ch, int skill)
 
 int weapon_attack_ability(class unit_data *ch, int skill)
 {
-    int i;
+    int i = 0;
 
     i = CHAR_ABILITY(ch, g_wpn_info[skill].ability[0]) + CHAR_ABILITY(ch, g_wpn_info[skill].ability[1]) +
         CHAR_ABILITY(ch, g_wpn_info[skill].ability[2]);
@@ -508,12 +508,12 @@ int hit_location(class unit_data *att, class unit_data *def)
 /* what armour you wear                                           */
 int effective_dex(class unit_data *ch)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
     static const int arm_dex_penalty[] = {0, 10, 20, 40, 100};
 
-    int at;
-    int b;
-    int p;
+    int at = 0;
+    int b = 0;
+    int p = 0;
     int psum = 0;
 
     for (u = UNIT_CONTAINS(ch); u; u = u->next)
@@ -579,8 +579,8 @@ int effective_dex(class unit_data *ch)
 
 void profession_init(void)
 {
-    int i;
-    int ln;
+    int i = 0;
+    int ln = 0;
 
     ln = sizeof(g_professions) / sizeof(g_professions[0]);
 
@@ -594,8 +594,8 @@ static void profession_read(void)
 {
     int idx = -1;
     char pTmp[256];
-    char *pCh;
-    FILE *fl;
+    char *pCh = nullptr;
+    FILE *fl = nullptr;
 
     touch_file(g_cServerConfig.getFileInEtcDir(PROFESSION_DEFS));
     if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(PROFESSION_DEFS).c_str(), "rb")))
@@ -672,8 +672,8 @@ static void race_read(void)
 {
     int idx = -1;
     char pTmp[256];
-    char *pCh;
-    FILE *fl;
+    char *pCh = nullptr;
+    FILE *fl = nullptr;
     char tmp[256];
 
     touch_file(g_cServerConfig.getFileInEtcDir(RACE_DEFS));
@@ -831,7 +831,7 @@ struct diltemplate *g_nanny_dil_tmpl;
 
 static void race_init(void)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < PC_RACE_MAX; i++)
     {
@@ -883,11 +883,11 @@ void boot_race(void)
 
 static void ability_read(void)
 {
-    int dummy;
+    int dummy = 0;
     int idx = -1;
     char pTmp[256];
-    char *pCh;
-    FILE *fl;
+    char *pCh = nullptr;
+    FILE *fl = nullptr;
 
     touch_file(g_cServerConfig.getFileInEtcDir(ABILITY_DEFS));
     if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(ABILITY_DEFS).c_str(), "rb")))
@@ -1014,7 +1014,7 @@ static void ability_read(void)
 
 static void ability_init(void)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
@@ -1110,11 +1110,11 @@ void boot_ability(void)
 
 static void weapon_read(void)
 {
-    int dummy;
+    int dummy = 0;
     int idx = -1;
     char pTmp[256];
-    char *pCh;
-    FILE *fl;
+    char *pCh = nullptr;
+    FILE *fl = nullptr;
 
     touch_file(g_cServerConfig.getFileInEtcDir(WEAPON_DEFS));
     if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(WEAPON_DEFS).c_str(), "rb")))
@@ -1323,9 +1323,9 @@ static void weapon_read(void)
         else if (strncmp(pTmp, "ability", 7) == 0)
         {
             char tmp[256];
-            int i1;
-            int i2;
-            int i3;
+            int i1 = 0;
+            int i2 = 0;
+            int i3 = 0;
 
             pCh = str_next_word(pCh, tmp);
             i1 = atoi(tmp);
@@ -1358,9 +1358,9 @@ static void weapon_read(void)
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
             char tmp[256];
-            int i1;
-            int i2;
-            int i3;
+            int i1 = 0;
+            int i2 = 0;
+            int i3 = 0;
             int idx2 = -1;
 
             pCh = str_next_word(pCh, tmp);
@@ -1420,8 +1420,8 @@ static void weapon_read(void)
 
 static void weapon_init(void)
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
 
     for (i = 0; i < WPN_TREE_MAX; i++)
     {
@@ -1539,7 +1539,7 @@ void boot_weapon(void)
 
 static void skill_init(void)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < SKI_TREE_MAX; i++)
     {

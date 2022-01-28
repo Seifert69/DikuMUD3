@@ -56,7 +56,7 @@ char *str_line(const char *str, char *buf)
 /* Make a string lowercase, and also return length of string */
 int str_lower(char *s)
 {
-    int l;
+    int l = 0;
 
     for (l = 0; *s; s++, l++)
     {
@@ -84,7 +84,7 @@ int str_lower(std::string &s)
 
 int str_upper(char *s)
 {
-    int l;
+    int l = 0;
 
     for (l = 0; *s; s++, l++)
     {
@@ -101,7 +101,7 @@ int str_upper(char *s)
 
 int str_lower(const char *s, char *d, int nBufSize)
 {
-    int l;
+    int l = 0;
 
     for (l = 0; *s && (l < nBufSize); s++, d++, l++)
     {
@@ -253,7 +253,7 @@ int str_nccmp(const char *s, const char *d, int n)
 /* Allocate space for a copy of source */
 char *str_dup(const char *source)
 {
-    char *dest;
+    char *dest = nullptr;
 
     if (source)
     {
@@ -272,8 +272,8 @@ char *str_dup(const char *source)
  */
 char *str_str(const char *cs, const char *ct)
 {
-    char *si;
-    char *ti;
+    char *si = nullptr;
+    char *ti = nullptr;
 
     do
     {
@@ -443,8 +443,8 @@ ubit1 next_word_is_number(const char *str)
 int search_block(const char *oarg, const char **list, ubit1 exact)
 {
     char arg[4096];
-    int i;
-    int l;
+    int i = 0;
+    int l = 0;
 
     if (list == nullptr)
     {
@@ -488,7 +488,7 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
 int search_block_length(const char *oarg, int length, const char **list, ubit1 exact)
 {
     char arg[4096];
-    int i;
+    int i = 0;
 
     /* Make into lower case, and get length of string */
     str_lower(oarg, arg, sizeof(arg));
@@ -624,13 +624,13 @@ int search_block_abbrevs(const char *oarg, const char **list, const char **end)
     char arg[4096];
     char buf1[MAX_INPUT_LENGTH];
     char buf2[MAX_INPUT_LENGTH];
-    char *s;
-    char *ps;
-    char *bestpos;
-    const char *d;
-    int i;
-    int match;
-    int bestidx;
+    char *s = nullptr;
+    char *ps = nullptr;
+    char *bestpos = nullptr;
+    const char *d = nullptr;
+    int i = 0;
+    int match = 0;
+    int bestidx = 0;
 
     i = str_lower(skip_spaces(oarg), arg, sizeof(arg));
 
@@ -689,8 +689,8 @@ char *str_cc(const char *s1, const char *s2)
 
 void str_insert(char *str, char *itxt)
 {
-    int nlen;
-    int slen;
+    int nlen = 0;
+    int slen = 0;
 
     nlen = strlen(itxt);
     slen = strlen(str);
@@ -706,10 +706,10 @@ void str_insert(char *str, char *itxt)
    */
 void str_substitute(const char *old, const char *newstr, char *str)
 {
-    char *b;
-    int olen;
-    int nlen;
-    int slen;
+    char *b = nullptr;
+    int olen = 0;
+    int nlen = 0;
+    int slen = 0;
 
     if (!str)
     {
@@ -773,7 +773,7 @@ void str_substitute(const std::string &search, const std::string &replace, std::
 /* Remove all occurences of c in s */
 void str_rem(char *s, char c)
 {
-    int diff;
+    int diff = 0;
 
     if (c == '\0')
     {
@@ -798,7 +798,7 @@ void str_rem(char *s, char c)
 /* Remove all occurences of control codes in s, keeps \n and \r */
 void str_rem_codes(char *s)
 {
-    int diff;
+    int diff = 0;
 
     for (diff = 0; *(s + diff);)
     {
@@ -881,7 +881,7 @@ void str_blank_punct(char *s)
 /* Remove all multiple space occurences in s */
 void str_remspc(char *s)
 {
-    char *cp;
+    char *cp = nullptr;
 
     while (*s && (*s != ' ' || *(s + 1) != ' '))
     {
@@ -909,7 +909,7 @@ void str_remspc(char *s)
 
 void str_chraround(char *str, char c)
 {
-    int l;
+    int l = 0;
 
     l = strlen(str);
     memmove(str + 1, str, l);
@@ -930,8 +930,8 @@ void str_chraround(char *str, char c)
 
 const char *is_name_raw(const char *arg, char const *const *names) // MS2020 const char *names[])
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
 
     for (i = 0; names[i]; i++)
     {
@@ -988,7 +988,7 @@ char *is_name(char *arg, char const *const *names) // MS2020 const char *names[]
 /* Create an empty namelist */
 char **create_namelist(void)
 {
-    char **list;
+    char **list = nullptr;
 
     CREATE(list, char *, 1);
     list[0] = nullptr;
@@ -1005,7 +1005,7 @@ int len_namelist(const char **namelist)
         return 0;
     }
 
-    int i;
+    int i = 0;
 
     for (i = 0; namelist[i]; i++)
     {
@@ -1038,7 +1038,7 @@ char **add_name(const char *name, char **namelist)
 /* free space allocated to a namelist */
 void free_namelist(char **list)
 {
-    char **original;
+    char **original = nullptr;
 
     assert(list);
 
@@ -1086,9 +1086,9 @@ char *str_ccmp_next_word(const char *buf, const char *next_word)
  */
 void split_fi_ref(const char *str, char *zone, char *name)
 {
-    char *c;
-    char *t;
-    int l;
+    char *c = nullptr;
+    char *t = nullptr;
+    int l = 0;
 
     *zone = 0;
     *name = 0;
@@ -1155,7 +1155,7 @@ void split_fi_ref(const char *str, char *zone, char *name)
 
 char *catnames(char *s, char **names)
 {
-    char **nam;
+    char **nam = nullptr;
     ubit1 ok = FALSE;
 
     if (names)
@@ -1628,8 +1628,8 @@ char *fix_old_codes_to_html(const char *c)
  */
 const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
 {
-    const char *c;
-    int n;
+    const char *c = nullptr;
+    int n = 0;
 
     *pTag = 0;
 
@@ -1666,7 +1666,7 @@ const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
  */
 int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
 {
-    const char *c;
+    const char *c = nullptr;
 
     *pTag = 0;
 
@@ -1692,7 +1692,7 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
 
     c++; // Skip '
 
-    const char *ce;
+    const char *ce = nullptr;
     ce = strchr(c, '\''); // Find the last ' for the value
     if (ce == nullptr)
     {
@@ -1728,7 +1728,7 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
  */
 int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax)
 {
-    const char *c;
+    const char *c = nullptr;
 
     *pNewTag = 0;
 
@@ -1759,7 +1759,7 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
     strcat(pNewTag, pNewVal); // Copy in the new value
     strcat(pNewTag, "\'");    // Add the ending '
 
-    const char *ce;
+    const char *ce = nullptr;
 
     c = strchr(c, '\''); // Find the last ' for the value
     if (c == nullptr)
@@ -1865,7 +1865,7 @@ std::string str_json(const char *lbl, const std::string &str)
 // return 0 = match, 1 = differ
 int pwdcompare(const char *p1, const char *p2, int nMax)
 {
-    int i;
+    int i = 0;
 
     if ((p1 == nullptr) || (p2 == nullptr))
     {

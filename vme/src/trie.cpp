@@ -39,7 +39,7 @@ struct trie_entry *triebindex(char c, struct trie_type *t)
 
 void qsort_triedata(struct trie_type *t)
 {
-    int i;
+    int i = 0;
 
     qsort(t->nexts, t->size, sizeof(struct trie_entry), trie_sort_cmp);
 
@@ -51,7 +51,7 @@ void qsort_triedata(struct trie_type *t)
 
 int trie_index(char c, struct trie_type *t)
 {
-    int i;
+    int i = 0;
 
     /* See if the char already exists in array */
     for (i = 0; i < t->size; i++)
@@ -67,7 +67,7 @@ int trie_index(char c, struct trie_type *t)
 
 struct trie_type *add_trienode(const char *s, struct trie_type *t)
 {
-    int i;
+    int i = 0;
 
     /* If no node is given, create one */
     if (t == nullptr)
@@ -113,7 +113,7 @@ struct trie_type *add_trienode(const char *s, struct trie_type *t)
 
 void set_triedata(const char *s, struct trie_type *t, void *p, ubit1 nonabbrev)
 {
-    int i;
+    int i = 0;
 
     while (*s && t)
     {
@@ -145,7 +145,7 @@ void set_triedata(const char *s, struct trie_type *t, void *p, ubit1 nonabbrev)
 /* It runs in nothing less than O(|s|), returns the data pointer */
 void *search_trie(const char *s, struct trie_type *t)
 {
-    struct trie_entry *te;
+    struct trie_entry *te = nullptr;
 
     for (; *s && t; t = te->t, ++s)
     {
@@ -166,7 +166,7 @@ void *search_trie(const char *s, struct trie_type *t)
 /* Free an entire trie */
 void free_trie(struct trie_type *t, void (*free_data)(void *))
 {
-    ubit8 i;
+    ubit8 i = 0;
 
     /* If there's any data at this node, let the supplied method free it */
     if (t->data)

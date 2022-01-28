@@ -95,9 +95,9 @@ int skill_point_gain(void)
 
 int buy_points(int points, int level, int *error)
 {
-    int skill;
-    int cost;
-    int i;
+    int skill = 0;
+    int cost = 0;
+    int i = 0;
 
     assert(level >= 0);
 
@@ -154,9 +154,9 @@ int buy_points(int points, int level, int *error)
 
 int distribute_points(sbit16 *skills, int max, int points, int level)
 {
-    int i;
-    int error;
-    int sumerror;
+    int i = 0;
+    int error = 0;
+    int sumerror = 0;
 
     sumerror = 0;
 
@@ -174,9 +174,9 @@ int distribute_points(sbit16 *skills, int max, int points, int level)
 
 int distribute_points(ubit8 *skills, int max, int points, int level)
 {
-    int i;
-    int error;
-    int sumerror;
+    int i = 0;
+    int error = 0;
+    int sumerror = 0;
 
     sumerror = 0;
 

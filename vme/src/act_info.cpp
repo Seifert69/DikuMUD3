@@ -43,7 +43,7 @@ const char *in_string(class unit_data *ch, class unit_data *u)
 
 void player_where(class unit_data *ch, char *arg)
 {
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
     int any = FALSE;
 
     for (d = g_descriptor_list; d; d = d->next)
@@ -73,8 +73,8 @@ void player_where(class unit_data *ch, char *arg)
 
 void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
 {
-    class unit_data *i;
-    class descriptor_data *d;
+    class unit_data *i = nullptr;
+    class descriptor_data *d = nullptr;
     char *arg = (char *)aaa;
     std::string mystr;
     int nCount = 0;

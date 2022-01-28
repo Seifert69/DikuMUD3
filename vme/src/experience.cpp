@@ -43,8 +43,8 @@ int kludge_bonus(int level, int points)
         return ((5 * (level - 20)) * MIN(100, points)) / 100;
     }
 
-    int b;
-    int expected;
+    int b = 0;
+    int expected = 0;
 
     expected = 100 + (level - 50);
 
@@ -63,12 +63,12 @@ int kludge_bonus(int level, int points)
 
 int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **pDef_shield)
 {
-    class unit_data *def_shield;
+    class unit_data *def_shield = nullptr;
     int def_shield_bonus = 0;
 
-    int att_dex;
-    int def_dex;
-    int hm;
+    int att_dex = 0;
+    int def_dex = 0;
+    int hm = 0;
 
     att_dex = effective_dex(att);
     def_dex = effective_dex(def);
@@ -127,13 +127,13 @@ int dikuii_spell_bonus(class unit_data *att,
                        int *pDef_armour_type,
                        class unit_data **pDef_armour)
 {
-    int att_spl_knowledge;
-    int def_spl_knowledge;
-    int att_bonus;
-    int def_bonus;
-    int def_armour_type;
-    class unit_data *def_armour;
-    int hm;
+    int att_spl_knowledge = 0;
+    int def_spl_knowledge = 0;
+    int att_bonus = 0;
+    int def_bonus = 0;
+    int def_armour_type = 0;
+    class unit_data *def_armour = nullptr;
+    int hm = 0;
 
     att_bonus = CHAR_OFFENSIVE(att);
     def_bonus = CHAR_DEFENSIVE(def);
@@ -211,19 +211,19 @@ int dikuii_melee_bonus(class unit_data *att,
                        class unit_data **pDef_armour,
                        int primary)
 {
-    int att_bonus;
-    int att_wpn_knowledge;
-    int def_dex;
-    int def_bonus;
-    int def_wpn_knowledge;
+    int att_bonus = 0;
+    int att_wpn_knowledge = 0;
+    int def_dex = 0;
+    int def_bonus = 0;
+    int def_wpn_knowledge = 0;
 
-    class unit_data *att_wpn;
-    int att_wpn_type;
+    class unit_data *att_wpn = nullptr;
+    int att_wpn_type = 0;
 
-    int def_armour_type;
-    class unit_data *def_armour;
+    int def_armour_type = 0;
+    class unit_data *def_armour = nullptr;
 
-    int hm;
+    int hm = 0;
 
     def_dex = effective_dex(def);
 
@@ -265,7 +265,7 @@ int dikuii_melee_bonus(class unit_data *att,
 
     if (char_dual_wield(att))
     {
-        int dual_skill;
+        int dual_skill = 0;
 
         if (IS_PC(att))
         {
@@ -381,13 +381,13 @@ int spell_bonus(class unit_data *att,
                 class unit_data **pDef_armour,
                 std::string *pStat)
 {
-    int att_spl_knowledge;
-    int def_spl_knowledge;
-    int att_bonus;
-    int def_bonus;
-    int def_armour_type;
-    class unit_data *def_armour;
-    int hm;
+    int att_spl_knowledge = 0;
+    int def_spl_knowledge = 0;
+    int att_bonus = 0;
+    int def_bonus = 0;
+    int def_armour_type = 0;
+    class unit_data *def_armour = nullptr;
+    int hm = 0;
 
     if (pStat)
     {
@@ -544,18 +544,18 @@ int melee_bonus(class unit_data *att,
                 int primary,
                 std::string *pStat)
 {
-    int att_bonus;
-    int att_wpn_knowledge;
-    int def_bonus;
-    int def_wpn_knowledge;
+    int att_bonus = 0;
+    int att_wpn_knowledge = 0;
+    int def_bonus = 0;
+    int def_wpn_knowledge = 0;
 
-    class unit_data *att_wpn;
-    int att_wpn_type;
+    class unit_data *att_wpn = nullptr;
+    int att_wpn_type = 0;
 
-    int def_armour_type;
-    int tmp;
-    class unit_data *def_armour;
-    int hm;
+    int def_armour_type = 0;
+    int tmp = 0;
+    class unit_data *def_armour = nullptr;
+    int hm = 0;
 
     if (pStat)
     {
@@ -619,7 +619,7 @@ int melee_bonus(class unit_data *att,
 
     if (char_dual_wield(att))
     {
-        int dual_skill;
+        int dual_skill = 0;
 
         if (IS_PC(att))
         {
@@ -799,9 +799,9 @@ int melee_bonus(class unit_data *att,
 
 int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
 {
-    int ocp;
-    int bonus;
-    class unit_data *ocf;
+    int ocp = 0;
+    int bonus = 0;
+    class unit_data *ocf = nullptr;
 
     assert(CHAR_COMBAT(def));
 
@@ -824,11 +824,11 @@ int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
 
 int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
 {
-    int ocp;
-    int bonus;
-    int att_wpn_type;
-    int def_arm_type;
-    int dam;
+    int ocp = 0;
+    int bonus = 0;
+    int att_wpn_type = 0;
+    int def_arm_type = 0;
+    int dam = 0;
 
     ocp = CHAR_POS(def);
     CHAR_FIGHTING(def);
@@ -858,8 +858,8 @@ int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
 
 void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    class unit_data *vict;
-    int rtd;
+    class unit_data *vict = nullptr;
+    int rtd = 0;
     char *oarg = arg;
     std::string str;
 

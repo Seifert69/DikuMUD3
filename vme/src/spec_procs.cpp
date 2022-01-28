@@ -18,7 +18,7 @@
 /* Empty list means none                                 */
 int charname_in_list(class unit_data *ch, char *arg)
 {
-    char *c;
+    char *c = nullptr;
 
     if (!arg || !*arg || IS_PC(ch))
     {

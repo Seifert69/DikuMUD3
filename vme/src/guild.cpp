@@ -52,8 +52,8 @@ class extra_descr_data *find_quest(char *word, class unit_data *unit)
 
 int char_guild_level(class unit_data *ch)
 {
-    ubit32 i;
-    class extra_descr_data *exd;
+    ubit32 i = 0;
+    class extra_descr_data *exd = nullptr;
 
     assert(IS_CHAR(ch));
 
@@ -83,10 +83,10 @@ int char_guild_level(class unit_data *ch)
 
 void advance_guild_level(class unit_data *ch)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
 
     int lvl = char_guild_level(ch);
-    ubit32 i;
+    ubit32 i = 0;
 
     if (!IS_PC(ch))
     {
@@ -137,8 +137,8 @@ static void free_guild_data(struct guild_type *pGt)
 
 static struct guild_type *parse_guild_data(class unit_data *npc, char *pStr)
 {
-    char *pTmp1;
-    struct guild_type *pG;
+    char *pTmp1 = nullptr;
+    struct guild_type *pG = nullptr;
     int ok = 0;
 
     CREATE(pG, struct guild_type, 1);
@@ -164,7 +164,7 @@ static struct guild_type *parse_guild_data(class unit_data *npc, char *pStr)
 
 int guild_master_init(struct spec_arg *sarg)
 {
-    struct guild_type *pG;
+    struct guild_type *pG = nullptr;
 
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
@@ -190,7 +190,7 @@ int guild_master_init(struct spec_arg *sarg)
 /* Message will never be sent to 'nonmember'                           */
 void act_to_guild(const char *msg, char *guild, class unit_data *member, class unit_data *nonmember)
 {
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
 
     if (guild == nullptr || *guild == '\0')
     {
@@ -216,8 +216,8 @@ void act_to_guild(const char *msg, char *guild, class unit_data *member, class u
 /*                                                                         */
 int teach_members_only(struct spec_arg *sarg)
 {
-    char *str;
-    int guild;
+    char *str = nullptr;
+    int guild = 0;
 
     if ((is_command(sarg->cmd, "practice")) && IS_PC(sarg->activator) && CHAR_AWAKE(sarg->owner))
     {
@@ -259,13 +259,13 @@ int teach_members_only(struct spec_arg *sarg)
 
 int guard_guild_way(struct spec_arg *sarg)
 {
-    char *str;
-    char *location;
+    char *str = nullptr;
+    char *location = nullptr;
     char *excl = nullptr;
     char *msg1 = nullptr;
     char *msg2 = nullptr;
-    char *guild_no;
-    int guild_cmp;
+    char *guild_no = nullptr;
+    int guild_cmp = 0;
 
     if ((str = (char *)sarg->fptr->data) && (sarg->cmd->inttype == DIR_CMD) && (sarg->cmd->dir == (*str - '0')) &&
         CHAR_IS_READY(sarg->owner))
@@ -329,7 +329,7 @@ int guard_guild_way(struct spec_arg *sarg)
 
 void leave_guild(class unit_data *player)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
 
     assert(PC_GUILD(player));
 
@@ -364,8 +364,8 @@ void leave_guild(class unit_data *player)
 
 void guild_banish_player(class unit_data *ch)
 {
-    char *c;
-    class extra_descr_data *pExd;
+    char *c = nullptr;
+    class extra_descr_data *pExd = nullptr;
 
     if (!IS_PC(ch))
     {
@@ -390,7 +390,7 @@ void guild_banish_player(class unit_data *ch)
 
 int can_leave_guild(struct guild_type *pG, class unit_data *master, class unit_data *ch)
 {
-    char **p;
+    char **p = nullptr;
     currency_t currency = local_currency(master);
 
     if (!IS_PC(ch))
@@ -435,7 +435,7 @@ int can_leave_guild(struct guild_type *pG, class unit_data *master, class unit_d
 
 void join_guild(class unit_data *ch, char *guild_name)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
 
     assert(IS_PC(ch));
 
@@ -453,7 +453,7 @@ void join_guild(class unit_data *ch, char *guild_name)
 int can_join_guild(struct guild_type *pG, class unit_data *master, class unit_data *ch)
 {
     currency_t currency = local_currency(master);
-    char **p;
+    char **p = nullptr;
 
     if (!IS_PC(ch))
     {
@@ -635,8 +635,8 @@ int guild_master(struct spec_arg *sarg)
 /* sarg->fptr->data contains guild name.                                         */
 int guild_basis(struct spec_arg *sarg)
 {
-    int i;
-    class unit_data *u;
+    int i = 0;
+    class unit_data *u = nullptr;
 
     if (sarg->cmd->no == CMD_AUTO_DEATH && sarg->owner == sarg->activator)
     {
@@ -674,9 +674,9 @@ int guild_title(struct spec_arg *sarg)
     char buf[MAX_STRING_LENGTH];
     char male[MAX_STRING_LENGTH];
     char female[MAX_STRING_LENGTH];
-    char *c;
-    int i;
-    int title_no;
+    char *c = nullptr;
+    int i = 0;
+    int title_no = 0;
 
     if (!is_command(sarg->cmd, "title") || !IS_PC(sarg->activator))
     {
@@ -749,7 +749,7 @@ int guild_title(struct spec_arg *sarg)
 void do_guild(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     int found = FALSE;
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
 
     if (!IS_PC(ch))
     {

@@ -39,7 +39,7 @@ ubit1 skill_overflow(int skill, int change, ubit1 set)
 /*                                                      */
 ubit1 apf_mod_char_flags(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
-    class unit_affected_type *taf;
+    class unit_affected_type *taf = nullptr;
 
     assert(IS_CHAR(unit));
 
@@ -73,7 +73,7 @@ ubit1 apf_mod_char_flags(class unit_affected_type *af, class unit_data *unit, ub
 /*                                                      */
 ubit1 apf_mod_obj_flags(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
-    class unit_affected_type *taf;
+    class unit_affected_type *taf = nullptr;
 
     assert(IS_OBJ(unit));
 
@@ -107,7 +107,7 @@ ubit1 apf_mod_obj_flags(class unit_affected_type *af, class unit_data *unit, ubi
 /*                                                      */
 ubit1 apf_mod_unit_flags(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
-    class unit_affected_type *taf;
+    class unit_affected_type *taf = nullptr;
 
     if (set)
     {
@@ -136,7 +136,7 @@ ubit1 apf_mod_unit_flags(class unit_affected_type *af, class unit_data *unit, ub
 
 ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
-    int modify;
+    int modify = 0;
 
     if (!IS_CHAR(unit))
     {
@@ -220,7 +220,7 @@ ubit1 apf_skill_adj(class unit_affected_type *af, class unit_data *unit, ubit1 s
 /* Unit can be CHAR                                       */
 ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
-    int modify;
+    int modify = 0;
 
     if (!IS_CHAR(unit))
     {
@@ -341,7 +341,7 @@ ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit, ub
 
     if (set)
     {
-        class unit_affected_type *taf;
+        class unit_affected_type *taf = nullptr;
 
         for (taf = UNIT_AFFECTED(unit); taf; taf = taf->next)
         {
@@ -380,7 +380,7 @@ ubit1 apf_speed(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 
     if (set)
     {
-        class unit_affected_type *taf;
+        class unit_affected_type *taf = nullptr;
 
         af->data[2] = CHAR_SPEED(unit);
 

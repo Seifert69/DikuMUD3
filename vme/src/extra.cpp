@@ -67,8 +67,8 @@ extra_descr_data::~extra_descr_data(void)
 // when really I only wanted it on the list
 class extra_descr_data *extra_descr_data::find_raw(const char *word)
 {
-    ubit32 i;
-    class extra_descr_data *exd;
+    ubit32 i = 0;
+    class extra_descr_data *exd = nullptr;
 
     for (exd = this; exd; exd = exd->next)
     {
@@ -120,7 +120,7 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
         }
 
         // Find exd in the list (not the first element)
-        class extra_descr_data *pex;
+        class extra_descr_data *pex = nullptr;
 
         for (pex = *exlist; pex->next; pex = pex->next)
         {
@@ -166,8 +166,8 @@ int extra_list::isempty(void)
 
 int extra_list::count(void)
 {
-    int i;
-    class extra_descr_data *e;
+    int i = 0;
+    class extra_descr_data *e = nullptr;
 
     // Count no of elements in list
     for (e = this->m_pList, i = 0; e; e = e->next)
@@ -184,7 +184,7 @@ std::string extra_list::json(void)
 
     s = "\"extralist\": [ ";
 
-    class extra_descr_data *e;
+    class extra_descr_data *e = nullptr;
 
     // Count no of elements in list
     for (e = this->m_pList; e; e = e->next)
@@ -224,7 +224,7 @@ void extra_list::push_tail(class extra_descr_data *ex)
     }
     else
     {
-        class extra_descr_data *p;
+        class extra_descr_data *p = nullptr;
 
         for (p = m_pList; p->next; p = p->next)
         {
@@ -253,7 +253,7 @@ void extra_list::erase(class extra_descr_data *exd)
     }
 
     // FInd exd in the list (not the first element)
-    class extra_descr_data *pex;
+    class extra_descr_data *pex = nullptr;
 
     for (pex = m_pList; pex->next; pex = pex->next)
     {
@@ -285,7 +285,7 @@ class extra_descr_data *extra_list::add(class extra_descr_data *ex)
 /*                                                            */
 class extra_descr_data *extra_list::add(const char **names, const char *descr)
 {
-    class extra_descr_data *new_ex;
+    class extra_descr_data *new_ex = nullptr;
 
     new_ex = new class extra_descr_data(names, descr);
     push_front(new_ex);
@@ -295,7 +295,7 @@ class extra_descr_data *extra_list::add(const char **names, const char *descr)
 
 class extra_descr_data *extra_list::add(cNamelist cn, const char *descr)
 {
-    class extra_descr_data *new_ex;
+    class extra_descr_data *new_ex = nullptr;
 
     new_ex = new class extra_descr_data(cn, descr);
     push_front(new_ex);
@@ -305,7 +305,7 @@ class extra_descr_data *extra_list::add(cNamelist cn, const char *descr)
 
 class extra_descr_data *extra_list::add(const char *name, const char *descr)
 {
-    class extra_descr_data *new_ex;
+    class extra_descr_data *new_ex = nullptr;
 
     new_ex = new class extra_descr_data(name, descr);
     push_front(new_ex);
@@ -325,7 +325,7 @@ void extra_list::remove(const char *name)
 
 void extra_list::AppendBuffer(CByteBuffer *pBuf)
 {
-    class extra_descr_data *e;
+    class extra_descr_data *e = nullptr;
 
     assert(this);
 
@@ -360,11 +360,11 @@ class extra_descr_data *extra_list::find_raw(const char *word)
 // From the elist object, make a copy of the list
 void extra_list::copyfrom(class extra_list &listToBeCopied)
 {
-    class extra_descr_data *new_ex;
+    class extra_descr_data *new_ex = nullptr;
 
     assert(this->m_pList == nullptr);
 
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
     for (exd = listToBeCopied.m_pList; exd; exd = exd->next)
     {
         new_ex = new class extra_descr_data(exd->names, exd->descr.c_str());
@@ -385,7 +385,7 @@ class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit)
 
     if (unit && *word != '$')
     {
-        class extra_descr_data *i;
+        class extra_descr_data *i = nullptr;
 
         word = skip_spaces(word);
 

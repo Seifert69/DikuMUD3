@@ -65,8 +65,8 @@ void convert_free_unit(class unit_data *u)
 
 void free_inventory(class unit_data *u)
 {
-    class unit_data *tmp;
-    class unit_data *nxt;
+    class unit_data *tmp = nullptr;
+    class unit_data *nxt = nullptr;
 
     for (tmp = u; tmp; tmp = nxt)
     {
@@ -121,7 +121,7 @@ class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList
 
 void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALSE)
 {
-    class unit_data *bla;
+    class unit_data *bla = nullptr;
 
     if (u == nullptr)
     {
@@ -138,7 +138,7 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 
     if (bla != u)
     {
-        class unit_data *tmpu;
+        class unit_data *tmpu = nullptr;
 
         assert(UNIT_IN(u));
 
@@ -225,7 +225,7 @@ int sanity_check(class unit_data *u)
 
 int shall_delete(class unit_data *pc)
 {
-    int days;
+    int days = 0;
 
     days = days_old(PC_TIME(pc).connect);
 
@@ -280,7 +280,7 @@ int shall_exclude(const char *name)
 
 class unit_data *convert_load_player(char *name)
 {
-    class unit_data *ch;
+    class unit_data *ch = nullptr;
 
     if (!player_exists(name))
     {
@@ -355,7 +355,7 @@ void clist()
     unsigned long err_count = 0;
     struct time_info_data tid2;
 
-    class unit_data *pc;
+    class unit_data *pc = nullptr;
     class unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
     if (!fs::exists(full_path))
@@ -516,7 +516,7 @@ void convert_file(void)
     unsigned long dir_count = 0;
     unsigned long err_count = 0;
 
-    class unit_data *pc;
+    class unit_data *pc = nullptr;
 
     if (!fs::exists(full_path))
     {
@@ -621,7 +621,7 @@ void cleanup(void)
     unsigned long dir_count = 0;
     unsigned long err_count = 0;
 
-    class unit_data *pc;
+    class unit_data *pc = nullptr;
     class unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
     if (!fs::exists(full_path))

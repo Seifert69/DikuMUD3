@@ -138,7 +138,7 @@ void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, 
     ubit16 len = 0;
     ubit8 buf[80];
     char ptext[1024] = "UNKNOWN HOST";
-    ubit8 *b;
+    ubit8 *b = nullptr;
 
     if (!Hook->IsHooked())
     {
@@ -176,10 +176,10 @@ void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, 
 void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ubit8 type)
 {
 #define MAX_TEXT_LEN (32768)
-    ubit16 len;
-    ubit16 txlen;
+    ubit16 len = 0;
+    ubit16 txlen = 0;
     ubit8 buf[6 + MAX_TEXT_LEN];
-    char c;
+    char c = 0;
 
     assert(id != 0);
 
@@ -239,7 +239,7 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
 
 void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *setup)
 {
-    ubit16 len;
+    ubit16 len = 0;
     ubit8 buf[sizeof(struct terminal_setup_type) + 6 + 4];
 
     assert(id != 0);
@@ -262,7 +262,7 @@ void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *set
 // Send the MUD name to the mplex
 void protocol_send_exchange(cHook *Hook, ubit16 id, const char *mudname)
 {
-    ubit16 len;
+    ubit16 len = 0;
     ubit8 buf[MULTI_MAX_MUDNAME + 1 + 6 + 4];
 
     assert(strlen(mudname) < MULTI_MAX_MUDNAME);
@@ -287,7 +287,7 @@ void protocol_send_exchange(cHook *Hook, ubit16 id, const char *mudname)
 // Send the default colors to the Mplex
 void protocol_send_color(cHook *Hook, ubit16 id, const char *colorstr)
 {
-    ubit16 len;
+    ubit16 len = 0;
     ubit8 buf[(MAX_STRING_LENGTH * 2) + 11];
 
     assert(strlen(colorstr) < MAX_STRING_LENGTH * 2);
@@ -325,11 +325,11 @@ void protocol_send_color(cHook *Hook, ubit16 id, const char *colorstr)
 /*                                                                         */
 int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, ubit8 *text_type)
 {
-    int n;
-    ubit16 id;
-    ubit16 len;
+    int n = 0;
+    ubit16 id = 0;
+    ubit16 len = 0;
     char buf[10];
-    char *data;
+    char *data = nullptr;
 
     if (str)
     {

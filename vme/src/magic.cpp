@@ -34,7 +34,7 @@ int dil_effect(char *pStr, struct spell_args *sa)
         return FALSE;
     }
 
-    struct diltemplate *tmpl;
+    struct diltemplate *tmpl = nullptr;
 
     tmpl = find_dil_template(pStr);
 
@@ -67,8 +67,8 @@ int dil_effect(char *pStr, struct spell_args *sa)
         return FALSE;
     }
 
-    class dilprg *prg;
-    class unit_fptr *fptr;
+    class dilprg *prg = nullptr;
+    class unit_fptr *fptr = nullptr;
 
     prg = dil_copy_template(tmpl, sa->caster, &fptr);
     if (prg)
@@ -145,8 +145,8 @@ ubit1 use_mana(class unit_data *medium, int mana)
 /* Determines if healing combat mana should be cast?? */
 ubit1 cast_magic_now(class unit_data *ch, int mana)
 {
-    int hleft;
-    int sleft;
+    int hleft = 0;
+    int sleft = 0;
 
     if (CHAR_MANA(ch) > mana)
     {
@@ -283,7 +283,7 @@ int room_power(class unit_data *unit)
 /*                                                                 */
 int spell_defense_skill(class unit_data *unit, int spell)
 {
-    int max;
+    int max = 0;
 
     if (IS_PC(unit))
     {
@@ -446,12 +446,12 @@ int spell_cast_check(class unit_data *att, int spell)
 /* of each spell                                             */
 int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
 {
-    int def_shield_bonus;
-    int armour_type;
-    int hit_loc;
-    int roll;
-    int bEffect;
-    class unit_data *def_shield;
+    int def_shield_bonus = 0;
+    int armour_type = 0;
+    int hit_loc = 0;
+    int roll = 0;
+    int bEffect = 0;
+    class unit_data *def_shield = nullptr;
 
     /* Does the spell perhaps only hit head / body? All?? Right now I
         do it randomly */

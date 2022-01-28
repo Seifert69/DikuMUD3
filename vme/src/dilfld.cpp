@@ -26,12 +26,12 @@
 void dilfe_fld(class dilprg *p)
 {
     /* Get a structure field */
-    class dilval *v1;
-    class dilval *v2;
+    class dilval *v1 = nullptr;
+    class dilval *v2 = nullptr;
     v1 = p->stack.pop();
     v2 = nullptr;
     dilval *v = new dilval;
-    int fldno;
+    int fldno = 0;
 
     fldno = bread_ubit8(&(p->fp->pc));
 
@@ -1904,11 +1904,11 @@ void dilfe_fld(class dilprg *p)
                     if (v1->val.ptr)
                     {
                         int editing = FALSE;
-                        class unit_data *vict;
+                        class unit_data *vict = nullptr;
                         vict = ((class unit_data *)v1->val.ptr);
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
-                            class descriptor_data *d;
+                            class descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->next)
                             {
                                 if (descriptor_is_playing(d) && d->original == vict)
@@ -1960,11 +1960,11 @@ void dilfe_fld(class dilprg *p)
                     if (v1->val.ptr)
                     {
                         class unit_data *switched = nullptr;
-                        class unit_data *vict;
+                        class unit_data *vict = nullptr;
                         vict = ((class unit_data *)v1->val.ptr);
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
-                            class descriptor_data *d;
+                            class descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->next)
                             {
                                 if (descriptor_is_playing(d) && d->original == vict)

@@ -96,7 +96,7 @@ void dilprg::link(diltemplate *tmpl)
 
 void dilprg::unlink(void)
 {
-    struct diltemplate *tmpl;
+    struct diltemplate *tmpl = nullptr;
 
     tmpl = this->frame[0].tmpl;
     assert(tmpl);
@@ -205,8 +205,8 @@ dilprg::~dilprg(void)
 
 #ifdef DMSERVER
 
-    struct diltemplate *tmpl;
-    struct dilframe *frm;
+    struct diltemplate *tmpl = nullptr;
+    struct dilframe *frm = nullptr;
 
     this->unlink();
 
@@ -222,7 +222,7 @@ dilprg::~dilprg(void)
 
     dil_free_template(tmpl, IS_SET(this->flags, DILFL_COPY));
 
-    dilval *v;
+    dilval *v = nullptr;
 
     while (this->stack.length() > 0)
     {

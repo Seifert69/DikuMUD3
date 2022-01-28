@@ -27,8 +27,8 @@
 /* Returns the size of a file in bytes */
 long fsize(FILE *f)
 {
-    long oldpos;
-    long size;
+    long oldpos = 0;
+    long size = 0;
 
     oldpos = ftell(f);
 
@@ -50,7 +50,7 @@ long fsize(FILE *f)
 /* check if a file exists */
 ubit1 file_exists(const char *name)
 {
-    FILE *fp;
+    FILE *fp = nullptr;
 
     if ((fp = fopen(name, "r")) == nullptr)
     {
@@ -69,7 +69,7 @@ ubit1 file_exists(const std::string &name)
 /* create a file if it doesn't exist. if error, terminate */
 void touch_file(const char *name)
 {
-    FILE *fp;
+    FILE *fp = nullptr;
 
     if (file_exists(name))
     {
@@ -91,7 +91,7 @@ void touch_file(const std::string &name)
 
 char *fread_line_commented(FILE *fl, char *buf, int max)
 {
-    char *s;
+    char *s = nullptr;
 
     for (;;)
     {
@@ -114,10 +114,10 @@ char *fread_line_commented(FILE *fl, char *buf, int max)
 /* read and allocate space for a '~'-terminated string from a given file */
 char *fread_string_copy(FILE *fl, char *buf, int max)
 {
-    char *obuf;
-    char *point;
-    int flag;
-    int total;
+    char *obuf = nullptr;
+    char *point = nullptr;
+    int flag = 0;
+    int total = 0;
 
     memset(buf, '\0', max);
     total = 0;
@@ -185,7 +185,7 @@ char *fread_string(FILE *fl)
 /* Read contents of a file, but skip all remark lines and blank lines. */
 int config_file_to_string(const char *name, char *buf, int max_len)
 {
-    FILE *fl;
+    FILE *fl = nullptr;
     char tmp[500];
 
     *buf = '\0';
@@ -238,7 +238,7 @@ int config_file_to_string(const std::string &name, char *buf, int max_len)
 /* read contents of a text file, and place in buf */
 int file_to_string(const char *name, char *buf, int max_len)
 {
-    FILE *fl;
+    FILE *fl = nullptr;
     char tmp[500];
 
     *buf = '\0';
@@ -279,7 +279,7 @@ int file_to_string(const std::string &name, char *buf, int max_len)
 /* Read a null terminated string from file into str */
 void fstrcpy(CByteBuffer *pBuf, FILE *f)
 {
-    int c;
+    int c = 0;
 
     pBuf->Clear();
 
@@ -361,9 +361,9 @@ BUT 'read-only' files may be written to!
 
 FILE *fopen_cache(const char *name, const char *mode)
 {
-    int i;
-    int min_i;
-    int hit_i;
+    int i = 0;
+    int min_i = 0;
+    int hit_i = 0;
     static int pure_hits = 0;
     static int purge = 0;
 
@@ -455,7 +455,7 @@ FILE *fopen_cache(const std::string &name, const char *mode)
 
 void fclose_cache(void)
 {
-    int i;
+    int i = 0;
 
     /* closes all files in the cache! */
 
@@ -480,10 +480,10 @@ int max_size_save = 1000000;
 
 int load_string(char *filename, char **file_str)
 {
-    int input;
-    unsigned int nread;
-    unsigned int rt;
-    char *temp;
+    int input = 0;
+    unsigned int nread = 0;
+    unsigned int rt = 0;
+    char *temp = nullptr;
     struct stat statbuf;
     if (!file_exists(filename))
     {
@@ -537,9 +537,9 @@ int load_string(char *filename, char **file_str)
 
 int save_string(char *filename, char **file_str, char *opp)
 {
-    int output;
+    int output = 0;
     unsigned int nwrite = 0;
-    char *temp;
+    char *temp = nullptr;
     struct stat statbuf;
     if ((opp[0] != 'a') && (opp[0] != 'w'))
     {

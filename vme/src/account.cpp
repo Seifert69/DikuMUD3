@@ -42,7 +42,7 @@ class CAccountConfig g_cAccountConfig;
 
 void account_cclog(class unit_data *ch, int amount)
 {
-    FILE *f;
+    FILE *f = nullptr;
 
     f = fopen(g_cServerConfig.getFileInLogDir(CREDITFILE_LOG).c_str(), "a+b");
 
@@ -57,14 +57,14 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
     unit_tests::OutputCapture::account_log(action, god, pc, amount);
 
     time_t now = time(nullptr);
-    char *c;
+    char *c = nullptr;
     char buf[1024];
-    ubit32 gid;
-    ubit32 pid;
-    ubit32 total;
-    ubit32 crc;
-    ubit32 vxor;
-    FILE *f;
+    ubit32 gid = 0;
+    ubit32 pid = 0;
+    ubit32 total = 0;
+    ubit32 crc = 0;
+    ubit32 vxor = 0;
+    FILE *f = nullptr;
 
     vxor = number(0x10000000, 0xFFFFFF00 >> 1);
 
@@ -180,9 +180,9 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
 void account_global_stat(class unit_data *ch)
 {
     char buf[100 * TIME_GRANULARITY];
-    char *b;
-    int i;
-    int j;
+    char *b = nullptr;
+    int i = 0;
+    int j = 0;
 
     if (!g_cServerConfig.isAccounting())
     {
@@ -206,8 +206,8 @@ void account_global_stat(class unit_data *ch)
 
     for (i = 0; i < TIME_GRANULARITY; i++)
     {
-        int st;
-        int et;
+        int st = 0;
+        int et = 0;
 
         st = index_to_time(i);
         et = st + MINUTE_GRANULARITY - 1;
@@ -229,8 +229,8 @@ void account_global_stat(class unit_data *ch)
 
 void account_overdue(const class unit_data *ch)
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
 
     if (g_cServerConfig.isAccounting())
     {
@@ -278,7 +278,7 @@ void account_closed(class unit_data *ch)
 
 static ubit32 seconds_used(ubit8 bhr, ubit8 bmi, ubit8 bse, ubit8 ehr, ubit8 emi, ubit8 ese)
 {
-    ubit32 secs;
+    ubit32 secs = 0;
 
     secs = (ese - bse);
 
@@ -325,10 +325,10 @@ static int tm_less_than(struct tm *b, struct tm *e)
 
 static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
 {
-    int bidx;
-    int eidx;
+    int bidx = 0;
+    int eidx = 0;
     struct tm t;
-    ubit32 secs;
+    ubit32 secs = 0;
 
     if (PC_ACCOUNT(pc).flatrate > (ubit32)time(nullptr))
     {
@@ -457,9 +457,9 @@ int account_is_overdue(const class unit_data *ch)
 
 static void account_status(const class unit_data *ch)
 {
-    int j;
-    int i;
-    char *pTmstr;
+    int j = 0;
+    int i = 0;
+    char *pTmstr = nullptr;
     ubit32 discount = PC_ACCOUNT(ch).discount;
     ubit32 lcharge = ((100 - discount) * g_cAccountConfig.m_nHourlyRate) / 100;
 
@@ -545,8 +545,8 @@ static void account_status(const class unit_data *ch)
 
 int account_is_closed(class unit_data *ch)
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
 
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
@@ -634,13 +634,13 @@ void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32
 void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     char word[MAX_INPUT_LENGTH];
-    class unit_data *u;
-    class unit_data *note;
+    class unit_data *u = nullptr;
+    class unit_data *note = nullptr;
     char *c = (char *)arg;
 
     const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", nullptr};
-    int i;
-    int amount;
+    int i = 0;
+    int amount = 0;
 
     if (!g_cServerConfig.isAccounting() || !IS_PC(ch))
     {
@@ -885,10 +885,10 @@ void charge_sanity(ubit8 b_hr, ubit8 b_min, ubit8 e_hr, ubit8 e_min, int charge)
 
 void numlist_to_charge(int *numlist, int len, int *day_charge)
 {
-    int i;
-    int j;
-    int start_idx;
-    int end_idx;
+    int i = 0;
+    int j = 0;
+    int start_idx = 0;
+    int end_idx = 0;
 
     for (i = 0; i < len; i += 3)
     {
@@ -917,7 +917,7 @@ void numlist_to_charge(int *numlist, int len, int *day_charge)
 /* exits if something is wrong */
 void numlist_sanity(int *numlist, int numlen)
 {
-    int i;
+    int i = 0;
 
     if (numlist == nullptr)
     {
@@ -984,12 +984,12 @@ CAccountConfig::CAccountConfig(void)
 void CAccountConfig::Boot(void)
 {
     char Buf[2 * MAX_STRING_LENGTH];
-    char *c;
-    int len;
-    int i;
-    int j;
-    int *numlist;
-    FILE *f;
+    char *c = nullptr;
+    int len = 0;
+    int i = 0;
+    int j = 0;
+    int *numlist = nullptr;
+    FILE *f = nullptr;
 
     if (!g_cServerConfig.isAccounting())
     {

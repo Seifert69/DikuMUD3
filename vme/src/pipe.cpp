@@ -27,7 +27,7 @@ public:
             return;
         }
 
-        int fd;
+        int fd = 0;
 
         // FIFO file path
         const char *myfifo = "./pipeMUD";
@@ -56,7 +56,7 @@ public:
     //
     int Read(std::string &str)
     {
-        int n;
+        int n = 0;
         char buf[MAX_STRING_LENGTH];
         // fd_set read_fds;
         // timeval null_time = {0, 0};
@@ -106,8 +106,8 @@ public:
 
         if (str.length() > 0)
         {
-            const char *p;
-            const char *o;
+            const char *p = nullptr;
+            const char *o = nullptr;
 
             o = str.c_str();
             do
@@ -181,7 +181,7 @@ public:
             }
         }
 
-        int n;
+        int n = 0;
         std::string str;
 
         str = c;
@@ -219,8 +219,8 @@ void pipeMUD_write(const char *c)
 //
 void pipeMUD_dispatch(std::string str)
 {
-    struct diltemplate *tmpl;
-    class dilprg *prg;
+    struct diltemplate *tmpl = nullptr;
+    class dilprg *prg = nullptr;
     static unit_data *u = nullptr;
 
     if (!u)

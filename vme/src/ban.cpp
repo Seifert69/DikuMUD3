@@ -34,7 +34,7 @@ struct ban_t
 
 void save_ban(void)
 {
-    struct ban_t *tmp;
+    struct ban_t *tmp = nullptr;
     FILE *bf = fopen(g_cServerConfig.getFileInLibDir(BAN_FILE).c_str(), "w");
     assert(bf);
 
@@ -48,8 +48,8 @@ void save_ban(void)
 
 void load_ban(void)
 {
-    FILE *bf;
-    struct ban_t *tmp;
+    FILE *bf = nullptr;
+    struct ban_t *tmp = nullptr;
     char buf[256];
     char site[256];
     char textfile[256];
@@ -109,7 +109,7 @@ time_t ban_timer(char *arg)
 
 void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *textfile)
 {
-    struct ban_t *entry;
+    struct ban_t *entry = nullptr;
     char d[50];
 
     for (entry = ban_list; entry; entry = entry->next)
@@ -173,7 +173,7 @@ void kill_entry(struct ban_t *entry)
     }
     else
     {
-        struct ban_t *tmp;
+        struct ban_t *tmp = nullptr;
 
         for (tmp = ban_list; tmp; tmp = tmp->next)
         {
@@ -195,7 +195,7 @@ void kill_entry(struct ban_t *entry)
 
 void del_ban(class unit_data *ch, char *site)
 {
-    struct ban_t *entry;
+    struct ban_t *entry = nullptr;
 
     for (entry = ban_list; entry; entry = entry->next)
     {
@@ -238,11 +238,11 @@ void show_site(class unit_data *ch, struct ban_t *entry)
 
 void do_ban(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    struct ban_t *tmp;
+    struct ban_t *tmp = nullptr;
     char site[MAX_INPUT_LENGTH];
     char textfile[MAX_INPUT_LENGTH];
-    char mode;
-    char type;
+    char mode = 0;
+    char type = 0;
     time_t until = 0;
 
     if (str_is_empty(arg))
@@ -339,8 +339,8 @@ bool ban_check(char *ban, char *site) /* TRUE, if banned */
 
 char site_banned(char *cur_site)
 {
-    struct ban_t *entry;
-    struct ban_t *next_entry;
+    struct ban_t *entry = nullptr;
+    struct ban_t *next_entry = nullptr;
     time_t now = time(nullptr);
 
     for (entry = ban_list; entry; entry = next_entry)
@@ -362,7 +362,7 @@ char site_banned(char *cur_site)
 
 void show_ban_text(char *site, class descriptor_data *d)
 {
-    struct ban_t *entry;
+    struct ban_t *entry = nullptr;
     char bantext[MAX_STRING_LENGTH];
     char formtext[MAX_STRING_LENGTH];
 

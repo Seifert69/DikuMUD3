@@ -43,7 +43,7 @@ eventqueue::eventqueue(void)
 
 eventqueue::~eventqueue(void)
 {
-    int i;
+    int i = 0;
     for (i = 1; i <= count; i++)
     {
         delete heap[i];
@@ -52,9 +52,9 @@ eventqueue::~eventqueue(void)
 
 struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1, void *arg2)
 {
-    struct eventq_elem *end;
-    int parent_index;
-    int current_index;
+    struct eventq_elem *end = nullptr;
+    int parent_index = 0;
+    int current_index = 0;
 
     if (when <= 0)
     {
@@ -134,7 +134,7 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
 
 void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
 {
-    int i;
+    int i = 0;
     if ((func == special_event) && arg2 && (((class unit_fptr *)arg2)->event))
     {
         ((class unit_fptr *)arg2)->event->func = nullptr;
@@ -167,7 +167,7 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
 
 void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *arg2)
 {
-    int i;
+    int i = 0;
 
     for (i = 1; i <= count; i++)
     {
@@ -180,10 +180,10 @@ void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *
 
 void eventqueue::process(void)
 {
-    struct eventq_elem *tmp_event;
-    struct eventq_elem *newtop;
-    int j;
-    int k;
+    struct eventq_elem *tmp_event = nullptr;
+    struct eventq_elem *newtop = nullptr;
+    int j = 0;
+    int k = 0;
     char dilname[256];
     char dilzname[256];
     char diloname[256];
@@ -191,7 +191,7 @@ void eventqueue::process(void)
     struct timeval now;
     struct timeval old;
     struct timeval pnow;
-    ubit32 us;
+    ubit32 us = 0;
     void (*tfunc)(void *, void *) = nullptr;
     loop_process = 0;
     gettimeofday(&old, (struct timezone *)nullptr);

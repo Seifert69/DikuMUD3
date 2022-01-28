@@ -91,8 +91,8 @@ const char *single_unit_messg(class unit_data *unit, const char *type, int direc
 /* and hidden then the door is found if it has been searched for.         */
 int has_found_door(class unit_data *pc, int dir)
 {
-    class extra_descr_data *exd;
-    class unit_affected_type *af;
+    class extra_descr_data *exd = nullptr;
+    class unit_affected_type *af = nullptr;
     char buf[MAX_INPUT_LENGTH];
 
     if (!IS_ROOM(UNIT_IN(pc)))
@@ -174,8 +174,8 @@ int room_move(class unit_data *ch,
               const char *pArrOther,
               const char *pPassengersO)
 {
-    int res;
-    class unit_data *u;
+    int res = 0;
+    class unit_data *u = nullptr;
 
     room_from = in_room(ch);
 
@@ -295,17 +295,17 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
         -1 : If dead.
         */
 {
-    class unit_data *room_from;
-    class unit_data *room_to;
+    class unit_data *room_from = nullptr;
+    class unit_data *room_to = nullptr;
     char aLeaveSelf[MAX_STRING_LENGTH];
     char aLeaveOther[MAX_STRING_LENGTH];
     char aArrSelf[MAX_STRING_LENGTH];
     char aArrOther[MAX_STRING_LENGTH];
     char aPassengersOther[MAX_STRING_LENGTH];
-    const char *lo;
-    const char *ls;
-    const char *as;
-    const char *ao;
+    const char *lo = nullptr;
+    const char *ls = nullptr;
+    const char *as = nullptr;
+    const char *ao = nullptr;
     aLeaveOther[0] = 0;
     aLeaveSelf[0] = 0;
     aArrOther[0] = 0;
@@ -654,7 +654,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
        -1 : If dead.
        */
 {
-    class unit_data *room_from;
+    class unit_data *room_from = nullptr;
 
     room_from = in_room(ch);
 
@@ -681,9 +681,9 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
 
         if (u && CHAR_FOLLOWERS(u))
         {
-            int i;
-            int j;
-            struct char_follow_type *k;
+            int i = 0;
+            int j = 0;
+            struct char_follow_type *k = nullptr;
 
             for (i = 0;; i++) /* This shit is needed because the follow  */
             {                 /* structure can be destroyed by this move */
@@ -781,8 +781,8 @@ int low_find_door(class unit_data *ch, char *doorstr, int err_msg, int check_hid
 {
     char buf[256];
     char dir[256];
-    char *dirdoorstr;
-    int door;
+    char *dirdoorstr = nullptr;
+    int door = 0;
 
     dirdoorstr = one_argument(doorstr, dir);
 

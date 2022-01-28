@@ -199,7 +199,7 @@ static void chg_terminal(class unit_data *ch, const char *arg)
     const char *Terminals[] = {"dumb", "tty", "ansi", nullptr};
 
     char buf[1024];
-    int n;
+    int n = 0;
 
     if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
@@ -463,8 +463,8 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
 
         */
         default:
-            struct diltemplate *tmpl;
-            class dilprg *prg;
+            struct diltemplate *tmpl = nullptr;
+            class dilprg *prg = nullptr;
 
             tmpl = find_dil_template("do_change@commands");
             prg = dil_copy_template(tmpl, ch, nullptr);

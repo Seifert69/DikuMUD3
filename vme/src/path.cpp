@@ -37,10 +37,10 @@ void create_worldgraph()
     graph_world_t WorldGraph;
     typedef boost::graph_traits<graph_world_t>::vertex_descriptor vertex_descriptor;
     //	typedef graph_traits < graph_world_t >::edge_descriptor edge_descriptor;
-    vertex_descriptor vd;
-    unit_data *u;
-    unit_data *uu;
-    int i;
+    vertex_descriptor vd = 0;
+    unit_data *u = nullptr;
+    unit_data *uu = nullptr;
+    int i = 0;
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
     {
         vd = add_vertex(WorldGraph);
@@ -107,7 +107,7 @@ void cleanup_sc_dijkstra(void *t)
 void *create_sc_dijkstra(void *thread)
 {
     //	typedef graph_traits < graph_t >::vertex_descriptor vertex_descriptor;
-    unit_data *u;
+    unit_data *u = nullptr;
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, nullptr);
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, nullptr);
     pthread_cleanup_push(cleanup_sc_dijkstra, nullptr);
@@ -145,12 +145,12 @@ void create_sc_graph(int num_of_sc)
     int sc = 0;
     typedef boost::graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
     typedef boost::graph_traits<graph_t>::edge_descriptor edge_descriptor;
-    int i;
-    vertex_descriptor vd;
-    unit_data *u;
-    unit_data *uu;
+    int i = 0;
+    vertex_descriptor vd = 0;
+    unit_data *u = nullptr;
+    unit_data *uu = nullptr;
     graph_t base_g;
-    bool success;
+    bool success = 0;
     edge_descriptor ed;
 
     std::vector<unit_data *> rmptr;
@@ -261,9 +261,9 @@ int move_to(unit_data *from, unit_data *to)
 {
     typedef boost::graph_traits<graph_t>::edge_descriptor edge_descriptor;
     edge_descriptor ed;
-    bool success;
-    int i;
-    int next;
+    bool success = 0;
+    int i = 0;
+    int next = 0;
 
     if (!from)
     {

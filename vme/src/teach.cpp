@@ -144,10 +144,10 @@ int practice_skill_gain(int skill)
 //
 int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
 {
-    int mod;
-    int pct;
-    int avg_skill_cost;
-    int calccost;
+    int mod = 0;
+    int pct = 0;
+    int avg_skill_cost = 0;
+    int calccost = 0;
 
     avg_skill_cost = AVERAGE_SKILL_COST;
 
@@ -223,7 +223,7 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
 
 void clear_training_level(class unit_data *ch)
 {
-    int i;
+    int i = 0;
 
     assert(IS_PC(ch));
 
@@ -250,7 +250,7 @@ void clear_training_level(class unit_data *ch)
 
 int teaches_index(struct skill_teach_type *teaches_skills, int node)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; teaches_skills[i].node != -1; i++)
     {
@@ -266,7 +266,7 @@ int teaches_index(struct skill_teach_type *teaches_skills, int node)
 const char *trainrestricted(class unit_data *pupil, struct profession_cost *cost_entry, int minguildlevel)
 {
     static char buf[MAX_STRING_LENGTH];
-    char *c;
+    char *c = nullptr;
 
     assert(IS_PC(pupil));
 
@@ -323,7 +323,7 @@ void info_show_one(class unit_data *teacher,
 {
     if (isleaf)
     {
-        const char *req;
+        const char *req = nullptr;
         req = trainrestricted(pupil, cost_entry, min_level);
 
         if (*req)
@@ -400,8 +400,8 @@ void info_show_roots(class unit_data *teacher,
                      struct pc_train_values *pTrainValues,
                      struct skill_teach_type *teaches_skills)
 {
-    int i;
-    int cost;
+    int i = 0;
+    int cost = 0;
     std::vector<std::pair<int, std::string>> vect;
 
     for (i = 0; teaches_skills[i].node != -1; i++)
@@ -454,8 +454,8 @@ void info_show_leaves(class unit_data *teacher,
                       struct skill_teach_type *teaches_skills,
                       struct pc_train_values *pTrainValues)
 {
-    int i;
-    int cost;
+    int i = 0;
+    int cost = 0;
     std::vector<std::pair<int, std::string>> vect;
 
     for (i = 0; teaches_skills[i].node != -1; i++)
@@ -511,10 +511,10 @@ void info_one_skill(class unit_data *teacher,
                     int teach_index,
                     struct teacher_msg *msgs)
 {
-    int indent;
-    int i;
-    int j;
-    int cost;
+    int indent = 0;
+    int i = 0;
+    int j = 0;
+    int cost = 0;
     indent = 0;
     std::vector<std::pair<int, std::string>> vect;
 
@@ -630,7 +630,7 @@ void info_one_skill(class unit_data *teacher,
 
 int pupil_magic(class unit_data *pupil)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     for (af = UNIT_AFFECTED(pupil); af; af = af->next)
     {
@@ -733,9 +733,9 @@ int practice(class unit_data *teacher,
              struct teach_packet *pckt,
              int teach_index)
 {
-    int cost;
+    int cost = 0;
     currency_t currency = local_currency(teacher);
-    amount_t amt;
+    amount_t amt = 0;
 
     assert(teach_index != -1);
 
@@ -757,7 +757,7 @@ int practice(class unit_data *teacher,
         return TRUE;
     }
 
-    const char *req;
+    const char *req = nullptr;
     req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel);
     if (*req)
     {
@@ -832,7 +832,7 @@ void shuffle(int *array, size_t n)
 {
     if (n > 1)
     {
-        size_t i;
+        size_t i = 0;
         for (i = 0; i < n - 1; i++)
         {
             size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
@@ -851,13 +851,13 @@ int auto_train(int type,
                struct teach_packet *pckt,
                int costlimit)
 {
-    int teach_index;
-    int cost;
-    const char *req;
+    int teach_index = 0;
+    int cost = 0;
+    const char *req = nullptr;
 
     int nTrained = 0;
 
-    int nLen;
+    int nLen = 0;
 
     // How many values do we need to train?
     for (nLen = 0; pckt->teaches[nLen].node != -1; nLen++)
@@ -990,9 +990,9 @@ int auto_train(int type,
 
 struct teach_packet *get_teacher(const char *pName)
 {
-    class unit_data *u;
-    class unit_fptr *f;
-    struct teach_packet *pckt;
+    class unit_data *u = nullptr;
+    class unit_fptr *f = nullptr;
+    struct teach_packet *pckt = nullptr;
 
     char name[MAX_INPUT_LENGTH];
     char zone[MAX_INPUT_LENGTH];
@@ -1074,9 +1074,9 @@ class skill_collection *get_pc_train_values(class unit_data *pupil, int type, st
 
 int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 {
-    int index;
+    int index = 0;
     char buf[MAX_INPUT_LENGTH + 10];
-    const char *arg;
+    const char *arg = nullptr;
     class skill_collection *pColl = nullptr;
 
     if (!is_command(sarg->cmd, "info") && !is_command(sarg->cmd, "practice"))
@@ -1152,9 +1152,9 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         }
         else
         {
-            int nCount;
+            int nCount = 0;
             struct teach_packet *p[4];
-            class extra_descr_data *exd;
+            class extra_descr_data *exd = nullptr;
 
             exd = PC_QUEST(sarg->activator).find_raw("$autotrain");
 
@@ -1233,7 +1233,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 
 int teaching(struct spec_arg *sarg)
 {
-    struct teach_packet *packet;
+    struct teach_packet *packet = nullptr;
 
     packet = (struct teach_packet *)sarg->fptr->data;
     assert(packet);
@@ -1331,13 +1331,13 @@ int max_skill_mod(int nCost)
 // next array item. I would have expected it was more like one up every 5 or more training sessions.
 int teach_init(struct spec_arg *sarg)
 {
-    const char *c;
-    int i;
-    int count;
-    int n;
+    const char *c = nullptr;
+    int i = 0;
+    int count = 0;
+    int n = 0;
     // int realm = -1;
     char buf[MAX_STRING_LENGTH];
-    struct teach_packet *packet;
+    struct teach_packet *packet = nullptr;
     struct skill_teach_type a_skill;
 
     static const char *teach_types[] = {"abilities", "spells", "skills", "weapons", nullptr};

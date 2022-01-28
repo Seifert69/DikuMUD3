@@ -133,7 +133,7 @@ static const char *wear_size(class unit_data *ch, class unit_data *obj, int var)
         return "error";
     }
 
-    int percent;
+    int percent = 0;
 
     if (UNIT_SIZE(ch) > 0)
     {

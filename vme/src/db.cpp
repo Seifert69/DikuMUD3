@@ -160,9 +160,9 @@ void generate_bin_arrays(void)
 /* Resolves DIL templates loaded boottime */
 void resolve_templates(void)
 {
-    int i;
-    int j;
-    int valid;
+    int i = 0;
+    int j = 0;
+    int valid = 0;
 
     /* all zones */
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
@@ -212,8 +212,8 @@ void resolve_templates(void)
 /* Generate and read DIL templates */
 struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 {
-    struct diltemplate *tmpllist;
-    struct diltemplate *tmpl;
+    struct diltemplate *tmpllist = nullptr;
+    struct diltemplate *tmpl = nullptr;
     CByteBuffer Buf;
     ubit32 tmplsize = 0;
     char nBuf[256];
@@ -266,8 +266,8 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 /* Generate index's for each unit in the file 'f', zone 'zone' */
 void generate_file_indexes(FILE *f, class zone_type *zone)
 {
-    class file_index_type *fi;
-    class file_index_type *temp_index;
+    class file_index_type *fi = nullptr;
+    class file_index_type *temp_index = nullptr;
     static int object_num = 0;
     static int npc_num = 0;
 
@@ -352,19 +352,19 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 /* Call this routine at boot time, to index all zones */
 void generate_zone_indexes(void)
 {
-    class zone_type *z;
+    class zone_type *z = nullptr;
     char zone[82];
     char tmpbuf[82];
     char filename[82 + 41];
     char buf[MAX_STRING_LENGTH];
     char dilfilepath[255];
     CByteBuffer cBuf(MAX_STRING_LENGTH);
-    FILE *f;
-    FILE *zone_file;
-    char *c;
-    ubit8 access;
-    ubit8 loadlevel;
-    ubit8 payonly;
+    FILE *f = nullptr;
+    FILE *zone_file = nullptr;
+    char *c = nullptr;
+    ubit8 access = 0;
+    ubit8 loadlevel = 0;
+    ubit8 payonly = 0;
 
     g_zone_info.no_of_zones = 0;
 
@@ -588,9 +588,9 @@ void generate_zone_indexes(void)
 int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
 {
     class unit_affected_type af;
-    int i;
-    ubit8 t8;
-    ubit16 t16;
+    int i = 0;
+    ubit8 t8 = 0;
+    ubit16 t16 = 0;
 
     if (nVersion <= 56)
     {
@@ -717,18 +717,18 @@ void post_read_unit(class unit_data *u)
  */
 class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec)
 {
-    class unit_data *u;
-    class file_index_type *fi;
+    class unit_data *u = nullptr;
+    class file_index_type *fi = nullptr;
     char zone[FI_MAX_ZONENAME + 1];
     char name[FI_MAX_UNITNAME + 1];
-    int i;
-    int j;
-    ubit8 unit_version;
-    ubit8 t8;
-    ubit16 t16;
-    sbit16 ts16;
-    ubit32 t32;
-    ubit32 nStart;
+    int i = 0;
+    int j = 0;
+    ubit8 unit_version = 0;
+    ubit8 t8 = 0;
+    ubit16 t16 = 0;
+    sbit16 ts16 = 0;
+    ubit32 t32 = 0;
+    ubit32 nStart = 0;
     char tmpbuf[2 * MAX_STRING_LENGTH];
 
     g_nCorrupt = 0;
@@ -769,7 +769,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
         CAP(buf);
         UNIT_NAMES(u).Substitute(0, buf);
     }
-    char *c;
+    char *c = nullptr;
     if (pBuf->SkipString(&c))
     {
         g_nCorrupt++;
@@ -951,7 +951,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
             {
                 if (unit_version < 69)
                 {
-                    ubit8 temp;
+                    ubit8 temp = 0;
                     g_nCorrupt += pBuf->Read8(&temp);
                     CHAR_ABILITY(u, i) = temp;
                 }
@@ -1025,7 +1025,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     CHAR_RACE(u)
                     --; /* spooky */
 
-                    struct base_race_info_type *sex_race;
+                    struct base_race_info_type *sex_race = nullptr;
 
                     if (CHAR_SEX(u) == SEX_MALE)
                     {
@@ -1097,7 +1097,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
                     g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
 
-                    class file_index_type *fi;
+                    class file_index_type *fi = nullptr;
 
                     if ((fi = find_file_index(zone, name)))
                     {
@@ -1211,7 +1211,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp;
+                        ubit8 temp = 0;
                         g_nCorrupt += pBuf->Read8(&temp);
                         PC_SPL_SKILL(u, i) = temp;
                     }
@@ -1250,7 +1250,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp;
+                        ubit8 temp = 0;
                         g_nCorrupt += pBuf->Read8(&temp);
                         PC_SKI_SKILL(u, i) = temp;
                     }
@@ -1273,7 +1273,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp;
+                        ubit8 temp = 0;
                         g_nCorrupt += pBuf->Read8(&temp);
                         PC_WPN_SKILL(u, i) = temp;
                     }
@@ -1334,7 +1334,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp;
+                        ubit8 temp = 0;
                         g_nCorrupt += pBuf->Read8(&temp);
                         NPC_WPN_SKILL(u, i) = temp;
                     }
@@ -1348,7 +1348,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp;
+                        ubit8 temp = 0;
                         g_nCorrupt += pBuf->Read8(&temp);
                         NPC_SPL_SKILL(u, i) = temp;
                     }
@@ -1492,9 +1492,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     {
         if (IS_CHAR(u) && CHAR_MONEY(u) && stspec)
         {
-            long int val1;
-            long int val2;
-            char *c;
+            long int val1 = 0;
+            long int val2 = 0;
+            char *c = nullptr;
             char *prev = CHAR_MONEY(u);
 
             while ((c = strchr(prev, '~')))
@@ -1542,7 +1542,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
  */
 void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
 {
-    FILE *f;
+    FILE *f = nullptr;
     char buf[256];
 
     snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->zone->filename);
@@ -1636,7 +1636,7 @@ void bonus_setup(unit_data *u)
  */
 class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
 
     if (org_fi == nullptr)
     {
@@ -1706,10 +1706,10 @@ void read_all_rooms(void)
 /* After boot time, normalize all room exits */
 void normalize_world(void)
 {
-    class file_index_type *fi;
-    class unit_data *u;
-    class unit_data *tmpu;
-    int i;
+    class file_index_type *fi = nullptr;
+    class unit_data *u = nullptr;
+    class unit_data *tmpu = nullptr;
+    int i = 0;
 
     for (u = g_unit_list; u; u = u->gnext)
     {
@@ -1777,11 +1777,11 @@ static class zone_type *read_zone_error = nullptr;
 
 struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 {
-    struct zone_reset_cmd *cmd;
-    struct zone_reset_cmd *tmp_cmd;
-    class file_index_type *fi;
-    ubit8 cmdno;
-    ubit8 direction;
+    struct zone_reset_cmd *cmd = nullptr;
+    struct zone_reset_cmd *tmp_cmd = nullptr;
+    class file_index_type *fi = nullptr;
+    ubit8 cmdno = 0;
+    ubit8 direction = 0;
     char zonename[FI_MAX_ZONENAME + 1];
     char name[FI_MAX_UNITNAME + 1];
     CByteBuffer cBuf(100);
@@ -1919,7 +1919,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 void read_all_zones(void)
 {
     char filename[FI_MAX_ZONENAME + 41];
-    FILE *f;
+    FILE *f = nullptr;
 
     for (auto zone = g_zone_info.mmp.begin(); zone != g_zone_info.mmp.end(); zone++)
     {
@@ -2059,7 +2059,7 @@ void db_shutdown(void)
 {
     return;
 
-    class unit_data *tmpu;
+    class unit_data *tmpu = nullptr;
 
     slog(LOG_OFF, 0, "Destroying unit list.");
 

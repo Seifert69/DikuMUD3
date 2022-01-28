@@ -90,7 +90,7 @@ void cQueue::Copy(ubit8 *data, ubit32 nLen)
 {
     assert(nLen <= nBytes);
 
-    int now;
+    int now = 0;
     cQueueElem *qe = (cQueueElem *)PeekHead();
 
     do
@@ -113,7 +113,7 @@ void cQueue::Cut(ubit32 nLen)
 
     assert(nLen <= nBytes);
 
-    cQueueElem *qe;
+    cQueueElem *qe = nullptr;
 
     do
     {
@@ -190,7 +190,7 @@ const class cQueueElem *cQueue::PeekTail(void)
 
 class cQueueElem *cQueue::GetHead(void)
 {
-    class cQueueElem *pTmp;
+    class cQueueElem *pTmp = nullptr;
 
     if (IsEmpty())
     {
@@ -216,7 +216,7 @@ class cQueueElem *cQueue::GetHead(void)
 
 void cQueue::Flush(void)
 {
-    class cQueueElem *pTmp;
+    class cQueueElem *pTmp = nullptr;
 
     while ((pTmp = GetHead()))
     {

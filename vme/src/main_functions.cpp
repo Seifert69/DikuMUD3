@@ -178,7 +178,7 @@ void game_loop()
 {
     struct timeval now;
     struct timeval old;
-    long delay;
+    long delay = 0;
     class descriptor_data *d = nullptr;
     std::string str;
 
@@ -245,9 +245,9 @@ void game_loop()
 /* Accept new connects, relay commands, and call 'heartbeat-functs' */
 void game_event(void)
 {
-    int i;
+    int i = 0;
     char *pcomm = nullptr;
-    class descriptor_data *point;
+    class descriptor_data *point = nullptr;
     static struct timeval null_time = {0, 0};
 
     i = g_CaptainHook.Wait(&null_time);
@@ -343,13 +343,13 @@ void check_overpopulation_event(void *p1, void *p2)
 {
     g_events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, nullptr, nullptr);
 
-    int nHours;
+    int nHours = 0;
     nHours = (g_tics / PULSE_SEC) / 3600;
     slog(LOG_ALL, 0, "Game up for %d tick hours, checking for overpopulation", nHours);
 
-    class unit_data *u;
-    class unit_data *t;
-    int i;
+    class unit_data *u = nullptr;
+    class unit_data *t = nullptr;
+    int i = 0;
     int nUnits = 0;
 
     for (u = g_unit_list; u; u = u->gnext)
@@ -381,7 +381,7 @@ void check_overpopulation_event(void *p1, void *p2)
         {
             slog(LOG_ALL, 0, "Too many items in %s@%s(%s) : %d units", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), unit_trace_up(u), i);
 
-            struct diltemplate *worms;
+            struct diltemplate *worms = nullptr;
             worms = find_dil_template("worms@basis");
             if (worms)
             {

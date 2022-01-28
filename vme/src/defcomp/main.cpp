@@ -18,9 +18,9 @@ int main(int argc, char **argv)
     char buff[1024];
     char *save_buff = nullptr;
     char in_name[1024];
-    FILE *in;
-    int opt;
-    int p_opt;
+    FILE *in = nullptr;
+    int opt = 0;
+    int p_opt = 0;
 
     while ((opt = getopt(argc, argv, "cf:")) != -1)
     {

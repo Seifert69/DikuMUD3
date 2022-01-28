@@ -54,7 +54,7 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
 
 void do_users(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
     int users = 0;
 
     std::string msg{"<u>Connections:</u><br/>"};
@@ -106,7 +106,7 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
 /* Reset the zone in which the char is in! */
 void do_reset(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    class zone_type *zone;
+    class zone_type *zone = nullptr;
 
     if (!str_is_empty(arg))
     {
@@ -127,9 +127,9 @@ void do_reset(class unit_data *ch, char *arg, const struct command_info *cmd)
 void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char buf[MAX_INPUT_LENGTH];
-    class unit_data *target;
-    class unit_data *original_loc;
-    class file_index_type *fi;
+    class unit_data *target = nullptr;
+    class unit_data *original_loc = nullptr;
+    class file_index_type *fi = nullptr;
 
     if (!IS_PC(ch))
     {
@@ -234,7 +234,7 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
 
 void do_snoop(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    class unit_data *victim;
+    class unit_data *victim = nullptr;
 
     if (!CHAR_DESCRIPTOR(ch))
     {
@@ -307,7 +307,7 @@ void do_snoop(class unit_data *ch, char *argument, const struct command_info *cm
 
 void do_switch(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    class unit_data *victim;
+    class unit_data *victim = nullptr;
 
     if (!CHAR_DESCRIPTOR(ch))
     {
@@ -355,9 +355,9 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
 void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     char buf[MAX_INPUT_LENGTH];
-    class file_index_type *fi;
-    class unit_data *u;
-    class unit_data *tmp;
+    class file_index_type *fi = nullptr;
+    class unit_data *u = nullptr;
+    class unit_data *tmp = nullptr;
 
     if (str_is_empty(arg))
     {
@@ -464,7 +464,7 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
  */
 void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    int lvl;
+    int lvl = 0;
     char buf[128];
 
     arg = one_argument(arg, buf);

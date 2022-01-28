@@ -74,7 +74,7 @@ int player_exists(const char *pName)
 
 class unit_data *find_player(char *name)
 {
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
 
     d = find_descriptor(name, nullptr);
 
@@ -115,8 +115,8 @@ int delete_player(const char *pName)
 /* Given a name, return pointer to player-idx blk, or BLK_NULL if non exist */
 sbit32 find_player_id(char *pName)
 {
-    FILE *pFile;
-    sbit32 id;
+    FILE *pFile = nullptr;
+    sbit32 id = 0;
 
     if (str_is_empty(pName))
     {
@@ -146,8 +146,8 @@ sbit32 find_player_id(char *pName)
 /* Call to read current id from file*/
 sbit32 read_player_id(void)
 {
-    sbit32 tmp_sl;
-    FILE *pFile;
+    sbit32 tmp_sl = 0;
+    FILE *pFile = nullptr;
 
     /* By using r+ we are sure that we don't erase it accidentially
        if the host crashes just after opening the file. */
@@ -168,7 +168,7 @@ sbit32 read_player_id(void)
 /* Call to generate new id */
 sbit32 new_player_id(void)
 {
-    FILE *pFile;
+    FILE *pFile = nullptr;
 
     /* By using r+ we are sure that we don't erase it accidentially
        if the host crashes just after opening the file. */
@@ -186,8 +186,8 @@ sbit32 new_player_id(void)
 
 void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen, const ubit8 *pPlyBuf)
 {
-    int n;
-    FILE *pPlayerFile;
+    int n = 0;
+    FILE *pPlayerFile = nullptr;
     static auto tmp_player_name{g_cServerConfig.getPlyDir() + "player.tmp"};
 
     /* Fucking shiting pissing lort! This marcel is driving me mad! */
@@ -230,11 +230,11 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
 void save_player_file(class unit_data *pc)
 {
     static bool locked = FALSE;
-    sbit32 nPlyLen;
-    int tmp_i;
-    class unit_data *tmp_u;
+    sbit32 nPlyLen = 0;
+    int tmp_i = 0;
+    class unit_data *tmp_u = nullptr;
     class unit_data *list = nullptr;
-    class descriptor_data *tmp_descr;
+    class descriptor_data *tmp_descr = nullptr;
     CByteBuffer *pBuf = &g_FileBuffer;
 
     pBuf->Clear();
@@ -324,9 +324,9 @@ void save_player_file(class unit_data *pc)
 void save_player_contents(class unit_data *pc, int fast)
 {
     static bool locked = FALSE;
-    time_t t0;
-    time_t keep_period;
-    amount_t daily_cost;
+    time_t t0 = 0;
+    time_t keep_period = 0;
+    amount_t daily_cost = 0;
     currency_t cur = local_currency(pc);
 
     assert(IS_PC(pc));
@@ -359,8 +359,8 @@ void save_player_contents(class unit_data *pc, int fast)
 
         if (amount > 0)
         {
-            int tmp_i;
-            time_t tdiff;
+            int tmp_i = 0;
+            time_t tdiff = 0;
 
             /* No of days items may be kept (Maximum of 30!) */
             tmp_i = MIN(30, amount / daily_cost);
@@ -398,8 +398,8 @@ void save_player(class unit_data *pc)
 {
     if (CHAR_DESCRIPTOR(pc))
     {
-        time_t t0;
-        ubit32 used;
+        time_t t0 = 0;
+        ubit32 used = 0;
 
         t0 = time(nullptr);
         if (t0 < CHAR_DESCRIPTOR(pc)->logon)
@@ -432,11 +432,11 @@ void save_player(class unit_data *pc)
 /* String is allocated                              */
 class unit_data *load_player_file(FILE *pFile)
 {
-    class unit_data *pc;
-    ubit32 nPlyLen;
-    ubit32 n;
-    sbit32 id;
-    CByteBuffer *pBuf;
+    class unit_data *pc = nullptr;
+    ubit32 nPlyLen = 0;
+    ubit32 n = 0;
+    sbit32 id = 0;
+    CByteBuffer *pBuf = nullptr;
 
     assert(pFile);
 
@@ -480,8 +480,8 @@ class unit_data *load_player_file(FILE *pFile)
 /* Is neither inserted in unit_list not into anything */
 class unit_data *load_player(const char *pName)
 {
-    FILE *pFile;
-    class unit_data *pc;
+    FILE *pFile = nullptr;
+    class unit_data *pc = nullptr;
 
     if (str_is_empty(pName))
     {
@@ -530,9 +530,9 @@ class unit_data *load_player(const char *pName)
 /* Call at boot time to index file */
 void player_file_index(void)
 {
-    FILE *pFile;
-    sbit32 tmp_sl;
-    int n;
+    FILE *pFile = nullptr;
+    sbit32 tmp_sl = 0;
+    int n = 0;
     std::string tmp_player_name = g_cServerConfig.getPlyDir() + "player.tmp";
 
     /* Get rid of any temporary player save file */

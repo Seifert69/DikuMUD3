@@ -30,8 +30,8 @@ int main(int argc, char **argv)
     try
     {
         char srvcfg[512];
-        char *tempcfg;
-        char *log_name;
+        char *tempcfg = nullptr;
+        char *log_name = nullptr;
         int pos = 1;
 
         tempcfg = getenv("VME_SERVER_CFG");

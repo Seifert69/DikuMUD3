@@ -196,8 +196,8 @@ void cConHook::PressReturn(const char *cmd)
 // Destroy all clients that are no longer connected
 void ClearUnhooked(void)
 {
-    class cConHook *con;
-    class cConHook *nextcon;
+    class cConHook *con = nullptr;
+    class cConHook *nextcon = nullptr;
 
     for (con = g_connection_list; con; con = nextcon)
     {
@@ -298,7 +298,7 @@ void cConHook::Close(int bNotifyMud)
 void cConHook::TransmitCommand(const char *text)
 {
     char sendText[MAX_INPUT_LENGTH];
-    char *d;
+    char *d = nullptr;
 
     strncpy(sendText, text, MAX_INPUT_LENGTH);
     sendText[MAX_INPUT_LENGTH - 1] = 0; // MS2020 moved up to avoid strchr bug.
@@ -386,11 +386,11 @@ char cConHook::AddInputChar(ubit8 c)
 
 void cConHook::AddString(char *str)
 {
-    char *s;
+    char *s = nullptr;
     char echobuf[4096]; // ~= 12 * sizeof(str) = 12 * 256 = 3000
 
-    char *eb;
-    char c;
+    char *eb = nullptr;
+    char c = 0;
 
     eb = echobuf;
 
@@ -486,7 +486,7 @@ void cConHook::Input(int nFlags)
     }
     else if (nFlags & SELECT_READ)
     {
-        char *c;
+        char *c = nullptr;
         ubit8 buf[1024];
 
 #if defined(_WINDOWS)
@@ -544,7 +544,7 @@ void cConHook::Input(int nFlags)
 
         ParseInput();
 
-        cQueueElem *qe;
+        cQueueElem *qe = nullptr;
 
         while ((qe = m_qInput.GetHead()))
         {
@@ -601,10 +601,10 @@ std::string mplex_getcolor(class cConHook *hook, const char *colorstr)
 char *cConHook::IndentText(const char *source, char *dest, int dest_size, int width)
 {
     const char *last = source;
-    const char *current;
+    const char *current = nullptr;
     char tmpbuf[MAX_STRING_LENGTH * 2];
-    int i;
-    char *newptr;
+    int i = 0;
+    char *newptr = nullptr;
     int column = 0;
     int cutpoint = MIN(30, width / 2);
 
@@ -856,8 +856,8 @@ void cConHook::StripHTML(char *dest, const char *src)
         return;
     }
 
-    const char *p;
-    const char *t;
+    const char *p = nullptr;
+    const char *t = nullptr;
 
     p = src;
 
@@ -937,7 +937,7 @@ void cConHook::StripHTML(char *dest, const char *src)
             else if ((strncmp(aTag, "div ", 4) == 0) || (strncmp(aTag, "h1 ", 3) == 0))
             {
                 char buf[256];
-                int l;
+                int l = 0;
 
                 if (g_mplex_arg.bMudProtocol)
                 {
@@ -996,7 +996,7 @@ void cConHook::StripHTML(char *dest, const char *src)
                 // e.g. cpg, cg bn, cpy bb, etc.
                 if ((l >= 2) && (l <= 6) && ((buf[0] == 'b') || (buf[0] == 'c')))
                 {
-                    char *p;
+                    char *p = nullptr;
                     char tmp[256];
 
                     p = str_next_word(buf, tmp);
@@ -1315,7 +1315,7 @@ void cConHook::testChar(ubit8 c)
 
 void cConHook::getLine(ubit8 buf[], int *size)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < *size; i++)
     {
@@ -1344,8 +1344,8 @@ void cConHook::getLine(ubit8 buf[], int *size)
 void cConHook::ShowChunk(void)
 {
     char buffer[160 * 60 + 600];
-    char *scan;
-    char *point;
+    char *scan = nullptr;
+    char *point = nullptr;
     const int max_lines = m_sSetup.height;
     int lines = 0;
 
@@ -1489,18 +1489,18 @@ cConHook::cConHook(void)
         return; // Hack for making websockets work
     }
 
-    int fd;
+    int fd = 0;
 #ifdef _WINDOWS
     int j;
     int size;
 #else
-    unsigned int j;
-    unsigned int size;
+    unsigned int j = 0;
+    unsigned int size = 0;
 #endif
     struct sockaddr_in conaddr;
     struct sockaddr_in sock;
     char hostname[49];
-    int x;
+    int x = 0;
 
     assert(g_MotherHook.IsHooked());
 
@@ -1587,7 +1587,7 @@ cConHook::~cConHook(void)
     }
     else
     {
-        class cConHook *tmp;
+        class cConHook *tmp = nullptr;
 
         for (tmp = g_connection_list; tmp; tmp = tmp->m_pNext)
         {

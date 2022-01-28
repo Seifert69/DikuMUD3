@@ -45,9 +45,9 @@ void cintlist::AppendBuffer(CByteBuffer *pBuf)
 
 int cintlist::ReadBuffer(CByteBuffer *pBuf)
 {
-    sbit32 len;
-    sbit32 i;
-    sbit32 c;
+    sbit32 len = 0;
+    sbit32 i = 0;
+    sbit32 c = 0;
     int n = 0;
 
     if (pBuf->Read32(&len))
@@ -66,9 +66,9 @@ int cintlist::ReadBuffer(CByteBuffer *pBuf)
 
 void cintlist::bread(ubit8 **b)
 {
-    sbit32 len;
-    sbit32 i;
-    int c;
+    sbit32 len = 0;
+    sbit32 i = 0;
+    int c = 0;
     len = bread_ubit32(b);
 
     for (i = 0; i < len; i++)
@@ -80,9 +80,9 @@ void cintlist::bread(ubit8 **b)
 
 char *cintlist::catnames()
 {
-    sbit32 i;
-    char *s;
-    unsigned int strsize;
+    sbit32 i = 0;
+    char *s = nullptr;
+    unsigned int strsize = 0;
     strsize = (Length() * 3) + 3;
     for (i = 0; i < Length(); i++)
     {

@@ -171,7 +171,7 @@ void dilfe_tolower(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    char *s1;
+    char *s1 = nullptr;
 
     v->type = DILV_SP;
 
@@ -207,7 +207,7 @@ void dilfe_toupper(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    char *s1;
+    char *s1 = nullptr;
 
     v->type = DILV_SP;
 
@@ -245,8 +245,8 @@ void dilfe_left(class dilprg *p)
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int strl;
-    int x;
+    int strl = 0;
+    int x = 0;
 
     v->type = DILV_SP;
 
@@ -315,9 +315,9 @@ void dilfe_right(class dilprg *p)
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int strl;
-    int x;
-    int y;
+    int strl = 0;
+    int x = 0;
+    int y = 0;
 
     v->type = DILV_SP;
 
@@ -387,10 +387,10 @@ void dilfe_mid(class dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int strl;
-    int l;
-    int r;
-    int x;
+    int strl = 0;
+    int l = 0;
+    int r = 0;
+    int x = 0;
 
     v->type = DILV_SP;
 
@@ -640,7 +640,7 @@ void dilfe_clr(class dilprg *p)
 void dilfe_sendpre(class dilprg *p)
 {
     dilval *v = new dilval;
-    struct command_info *cmd;
+    struct command_info *cmd = nullptr;
     dilval *v7 = p->stack.pop();
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
@@ -750,8 +750,8 @@ void dilfe_clradd(class dilprg *p)
     dilval *v = new dilval;
 
     char full_name[21];
-    char *color;
-    unsigned int x;
+    char *color = nullptr;
+    unsigned int x = 0;
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -854,8 +854,8 @@ void dilfe_clrchg(class dilprg *p)
     dilval *v = new dilval;
 
     char full_name[21];
-    char *color;
-    unsigned int x;
+    char *color = nullptr;
+    unsigned int x = 0;
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -957,7 +957,7 @@ void dilfe_clrdel(class dilprg *p)
     dilval *v = new dilval;
 
     char full_name[21];
-    unsigned int x;
+    unsigned int x = 0;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -1692,7 +1692,7 @@ void dilfe_flog(class dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *sstr;
+    char *sstr = nullptr;
     char filename[255];
 
     v->type = DILV_INT;
@@ -1761,7 +1761,7 @@ void dilfe_ldstr(class dilprg *p)
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *sstr;
+    char *sstr = nullptr;
     char filename[512];
 
     v->type = DILV_INT;
@@ -1840,7 +1840,7 @@ void dilfe_delstr(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    int ret;
+    int ret = 0;
     char filename[512];
 
     v->type = DILV_INT;
@@ -1899,7 +1899,7 @@ void dilfe_delunit(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    int ret;
+    int ret = 0;
     char filename[512];
 
     v->type = DILV_INT;
@@ -1961,7 +1961,7 @@ void dilfe_svstr(class dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *sstr;
+    char *sstr = nullptr;
     char filename[511];
 
     v->type = DILV_INT;
@@ -2070,7 +2070,7 @@ void dilfe_filesz(class dilprg *p)
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
     char filename[511];
-    FILE *fp;
+    FILE *fp = nullptr;
 
     v->type = DILV_INT;
 
@@ -2568,7 +2568,7 @@ void dilfe_purs(class dilprg *p)
                         }
                         else
                         {
-                            int i;
+                            int i = 0;
 
                             v->val.num = 0;
 
@@ -2680,8 +2680,8 @@ void dilfe_path(class dilprg *p)
                         }
                         else
                         {
-                            class unit_data *u1;
-                            class unit_data *u2;
+                            class unit_data *u1 = nullptr;
+                            class unit_data *u2 = nullptr;
                             u1 = unit_room((class unit_data *)v1->val.ptr);
                             u2 = unit_room((class unit_data *)v2->val.ptr);
 
@@ -2802,7 +2802,7 @@ void dilfe_trmo(class dilprg *p)
 {
     dilval *v = new dilval;
     char buf[1024];
-    int i;
+    int i = 0;
     buf[0] = 0;
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -2916,7 +2916,7 @@ void dilfe_fits(class dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *c;
+    char *c = nullptr;
 
     v->type = DILV_SP;
 
@@ -2982,11 +2982,11 @@ void dilfe_intr(class dilprg *p)
 {
     dilval *v = new dilval;
     /* add interrupt to current frame */
-    ubit16 intnum;
-    ubit8 *beg;
-    ubit8 *end;
-    ubit32 endptr;
-    ubit32 begptr;
+    ubit16 intnum = 0;
+    ubit8 *beg = nullptr;
+    ubit8 *end = nullptr;
+    ubit32 endptr = 0;
+    ubit32 begptr = 0;
 
     dilval *v1 = p->stack.pop();
 
@@ -3273,7 +3273,7 @@ void dilfe_shell(class dilprg *p)
                 }
                 else
                 {
-                    pthread_t mythread;
+                    pthread_t mythread = 0;
                     v->val.num = pthread_create(&mythread, nullptr, threadcallout, v1->val.ptr);
                     if (v->val.num)
                     {
@@ -3387,7 +3387,7 @@ void dilfe_txf(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    char *dest;
+    char *dest = nullptr;
 
     switch (dil_getval(v1))
     {
@@ -3531,7 +3531,7 @@ void dilfe_gint(class dilprg *p)
 
     class unit_data *p_u = nullptr;
     int p_i = 0;
-    int idx;
+    int idx = 0;
 
     v->type = DILV_INT;
     v->val.num = 0;
@@ -3661,7 +3661,7 @@ void dilfe_ast(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    char *c;
+    char *c = nullptr;
 
     switch (dil_getval(v1))
     {
@@ -3693,7 +3693,7 @@ void dilfe_getw(class dilprg *p)
     dilval *v = new dilval;
     /* Get first word of a string */
     dilval *v1 = p->stack.pop();
-    char *c;
+    char *c = nullptr;
     char buf1[MAX_STRING_LENGTH];
 
     switch (dil_getval(v1))
@@ -3738,9 +3738,9 @@ void dilfe_getws(class dilprg *p)
     dilval *v = new dilval;
     /* Get first word of a string */
     dilval *v1 = p->stack.pop();
-    char *tmp;
-    char *c;
-    char *ptr;
+    char *tmp = nullptr;
+    char *c = nullptr;
+    char *ptr = nullptr;
 
     switch (dil_getval(v1))
     {
@@ -3787,7 +3787,7 @@ void dilfe_split(class dilprg *p)
     /* Get first word of a string */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int slen;
+    int slen = 0;
     char *buf = nullptr;
     char *c = nullptr;
     char *spbuf = nullptr;
@@ -4453,7 +4453,7 @@ void dilfe_call(class dilprg *p)
                                         v->atyp = DILA_NONE;
                                         v->val.num = -1;
 
-                                        struct diltemplate *tmpl;
+                                        struct diltemplate *tmpl = nullptr;
                                         tmpl = find_dil_template((char *)v1->val.ptr);
 
                                         if (tmpl)
@@ -5340,8 +5340,8 @@ void dilfe_slt(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1;
-    char *s2;
+    char *s1 = nullptr;
+    char *s2 = nullptr;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {
@@ -5401,8 +5401,8 @@ void dilfe_sgt(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1;
-    char *s2;
+    char *s1 = nullptr;
+    char *s2 = nullptr;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {
@@ -5462,8 +5462,8 @@ void dilfe_sle(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1;
-    char *s2;
+    char *s1 = nullptr;
+    char *s2 = nullptr;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {
@@ -5523,8 +5523,8 @@ void dilfe_sge(class dilprg *p)
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char *s1;
-    char *s2;
+    char *s1 = nullptr;
+    char *s2 = nullptr;
     v->type = DILV_INT;
     switch (dil_getval(v2))
     {
@@ -6654,7 +6654,7 @@ void dilfe_var(class dilprg *p)
 {
     dilval *v = new dilval;
     /* A variable */
-    int varno;
+    int varno = 0;
 
     varno = bread_ubit16(&(p->fp->pc));
 

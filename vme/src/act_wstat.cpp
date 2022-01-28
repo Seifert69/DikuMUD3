@@ -175,7 +175,7 @@ static std::string stat_zone_reset(const std::string &indnt, struct zone_reset_c
 {
     static const char *nums[] = {"max", "zonemax", "local"};
     std::string bits;
-    int i;
+    int i = 0;
 
     std::string stat{indnt};
 
@@ -295,7 +295,7 @@ static void stat_zone(class unit_data *ch, class zone_type *zone)
 static void stat_creators(class unit_data *ch, char *arg)
 {
     char tmp[1024];
-    int found;
+    int found = 0;
 
     if (str_is_empty(arg))
     {
@@ -392,7 +392,7 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
 static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zone)
 {
     char buf[MAX_STRING_LENGTH];
-    int argno;
+    int argno = 0;
     int search_type = 0;
 
     //  void stat_dijkstraa (class unit_data * ch, class zone_type *z);
@@ -501,7 +501,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
 static void stat_ability(const class unit_data *ch, class unit_data *u)
 {
-    int i;
+    int i = 0;
 
     if (!IS_PC(u))
     {
@@ -526,8 +526,8 @@ static void stat_ability(const class unit_data *ch, class unit_data *u)
 static void stat_spell(const class unit_data *ch, class unit_data *u)
 {
     char tmpbuf1[100];
-    int i;
-    int max;
+    int i = 0;
+    int max = 0;
 
     if (!IS_CHAR(u))
     {
@@ -626,7 +626,7 @@ static void stat_wskill(const class unit_data *ch, class unit_data *u)
 
 static void stat_affect(const class unit_data *ch, class unit_data *u)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     if (!UNIT_AFFECTED(u))
     {
@@ -663,7 +663,7 @@ static void stat_affect(const class unit_data *ch, class unit_data *u)
 static void stat_func(const class unit_data *ch, class unit_data *u)
 {
     std::string bits;
-    class unit_fptr *f;
+    class unit_fptr *f = nullptr;
 
     if (!UNIT_FUNC(u))
     {
@@ -677,7 +677,7 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
     {
         if (f->index == SFUN_DIL_INTERNAL)
         {
-            class dilprg *prg;
+            class dilprg *prg = nullptr;
 
             if ((prg = (class dilprg *)f->data))
             {
@@ -705,7 +705,7 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
 {
     std::string bits1;
     std::string bits2;
-    char *cname;
+    char *cname = nullptr;
 
     /* Stat on the unit */
 
@@ -766,7 +766,7 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
     char buf[4 * MAX_STRING_LENGTH];
     /* MS: We used to do a TAIL here... bad idea as newspaper is VERY HUGE */
     /* This isn't nice either, but it works... */
-    char *cname;
+    char *cname = nullptr;
     std::string str;
 
     str = "";
@@ -775,7 +775,7 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
     {
         one_argument(grp, buf);
 
-        class extra_descr_data *ed;
+        class extra_descr_data *ed = nullptr;
         for (ed = elist.m_pList; ed; ed = ed->next)
         {
             if ((*buf) && ed->names.StrStr(grp))
@@ -922,7 +922,7 @@ const char *stat_obj_data(class unit_data *u, obj_type_t *pobjdata)
     char *special_str = nullptr;
     std::string int_str[5];
     int idx = OBJ_TYPE(u);
-    int i;
+    int i = 0;
 
     switch (idx)
     {
@@ -968,7 +968,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
      *            A 6th trailing format-argument inserts a special string
      *              as according to the switch following...
      */
-    char *cname;
+    char *cname = nullptr;
     static struct obj_type_t wstat_obj_type[] = {
         {"Unused", {0, 0, 0, 0, 0}},                                 /*UNUSED    */
         {"Hours Left %s   Light Sources %s", {0, 0, 0, 0, 0}},       /*LIGHT     */
@@ -1023,7 +1023,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
     char tmp[512];
     std::string bits1;
     std::string bits2;
-    int i;
+    int i = 0;
 
     if (IS_CHAR(u))
     {
@@ -1221,7 +1221,7 @@ static void stat_contents(const class unit_data *ch, class unit_data *u)
 {
     int bright = 0;
     int light = 0;
-    class unit_data *orgu;
+    class unit_data *orgu = nullptr;
 
     orgu = u;
 
@@ -1383,7 +1383,7 @@ void do_wstat(class unit_data *ch, char *argument, const struct command_info *cm
     }
     else
     {
-        class file_index_type *fi;
+        class file_index_type *fi = nullptr;
 
         u = find_unit(ch, &argument, nullptr, FIND_UNIT_GLOBAL);
 

@@ -25,8 +25,8 @@
 
 int OpenMother(int nPort)
 {
-    int n;
-    int fdMother;
+    int n = 0;
+    int fdMother = 0;
     struct linger ld;
     struct sockaddr_in server_addr;
 
@@ -131,8 +131,8 @@ int OpenMother(int nPort)
 int OpenNetwork(int nPort, char *pcAddress)
 {
     struct sockaddr_in server_addr;
-    int fdClient;
-    int n;
+    int fdClient = 0;
+    int n = 0;
 
     slog(LOG_ALL, 0, "Open connection to server on %s %d.", pcAddress, nPort);
 
@@ -183,7 +183,7 @@ int OpenNetwork(int nPort, char *pcAddress)
     char buf[1024];
     n = setsockopt(fdClient, IPPROTO_TCP, TCP_NODELAY, buf, sizeof(buf));
 #else
-    int i;
+    int i = 0;
     n = setsockopt(fdClient, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
 #endif
     if (n == -1)

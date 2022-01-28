@@ -142,7 +142,7 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
 
 void do_rent(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    ubit32 sum;
+    ubit32 sum = 0;
 
     rent_info = FALSE;
 
@@ -216,7 +216,7 @@ class file_index_type *g_slime_fi = nullptr;
 /* save object */
 void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
 {
-    ubit32 len;
+    ubit32 len = 0;
     struct objheaderold ho;
     struct objheadernew hn;
     CByteBuffer TmpBuf;
@@ -287,7 +287,7 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
 void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit, int level, int fast)
 {
     int tmp_i = 0;
-    class unit_data *tmp_u;
+    class unit_data *tmp_u = nullptr;
 
     if (IS_ROOM(unit))
     {
@@ -362,7 +362,7 @@ const char *ContentsFileName(const char *pName)
 void basic_save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer)
 {
     class descriptor_data *tmp_descr = nullptr;
-    FILE *pFile;
+    FILE *pFile = nullptr;
     char TmpName[MAX_INPUT_LENGTH + 1];
 
     fast = 1; /* MAJOR BUG IN DIFF CAUSING BAD PLAYERS! WITH TOO MUCH */
@@ -439,17 +439,17 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 {
     struct objheaderold ho;
     struct objheadernew hn;
-    class file_index_type *fi;
-    class unit_data *pnew;
-    class unit_data *pnew_tmp;
+    class file_index_type *fi = nullptr;
+    class unit_data *pnew = nullptr;
+    class unit_data *pnew_tmp = nullptr;
     class unit_data *pstack[25];
-    int len;
-    int init;
-    int frame;
-    int n;
+    int len = 0;
+    int init = 0;
+    int frame = 0;
+    int n = 0;
     class descriptor_data *tmp_descr = nullptr;
-    int equip_ok;
-    FILE *pFile;
+    int equip_ok = 0;
+    FILE *pFile = nullptr;
     class unit_data *topu = nullptr;
 
     CByteBuffer InvBuf;
@@ -653,12 +653,12 @@ void reception_boot(void)
 /* Create difference-data (patch can reconstruct obj based on ref & dif) */
 int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc)
 {
-    int dstart;
-    int dend;
-    int len;
-    int rlen;
-    char *oend;
-    char *rend;
+    int dstart = 0;
+    int dend = 0;
+    int len = 0;
+    int rlen = 0;
+    char *oend = nullptr;
+    char *rend = nullptr;
     struct diffhead head;
 
     rend = ref + reflen - 1;
@@ -764,7 +764,7 @@ void store_all_unit(class unit_data *u, char *fname, int svcont)
 
 class unit_data *restore_all_unit(char *filename, unit_data *udest)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
     u = base_load_contents(filename, udest);
     return u;
 }

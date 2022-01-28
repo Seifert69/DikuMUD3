@@ -24,11 +24,11 @@ int ball(struct spec_arg *sarg)
 
     char *arg = (char *)sarg->arg;
     char buf[128];
-    class unit_data *u;
+    class unit_data *u = nullptr;
     class unit_data *top[TOP_MAX];
-    int v1;
-    int v2;
-    int i;
+    int v1 = 0;
+    int v2 = 0;
+    int i = 0;
 
     if (is_command(sarg->cmd, "use"))
     {

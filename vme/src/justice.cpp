@@ -29,7 +29,7 @@ static int crime_serial_no = time(nullptr);
 
 int new_crime_serial_no(void)
 {
-    int n;
+    int n = 0;
 
     n = time(nullptr);
 
@@ -104,9 +104,9 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
 //
 void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 {
-    struct diltemplate *tmpl;
-    class dilprg *prg;
-    int crime_no;
+    struct diltemplate *tmpl = nullptr;
+    class dilprg *prg = nullptr;
+    int crime_no = 0;
 
     if (str_is_empty(UNIT_NAME(criminal)))
     {
@@ -151,12 +151,12 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 //
 void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_type, int active)
 {
-    int i;
-    int j;
-    struct diltemplate *tmpl;
-    class dilprg *prg;
-    class dilprg *prg2;
-    class dilprg *prg3;
+    int i = 0;
+    int j = 0;
+    struct diltemplate *tmpl = nullptr;
+    class dilprg *prg = nullptr;
+    class dilprg *prg2 = nullptr;
+    class dilprg *prg3 = nullptr;
 
     if (criminal == nullptr)
     {
@@ -1072,10 +1072,10 @@ void call_guards(class unit_data *guard)
 
 int reward_give(struct spec_arg *sarg)
 {
-    class unit_data *u;
-    class unit_affected_type *paf;
+    class unit_data *u = nullptr;
+    class unit_affected_type *paf = nullptr;
     std::string buf;
-    currency_t cur;
+    currency_t cur = 0;
 
     if (!is_command(sarg->cmd, "give"))
     {

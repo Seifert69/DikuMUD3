@@ -18,7 +18,7 @@
 
 class descriptor_data *find_descriptor(const char *name, class descriptor_data *except)
 {
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
 
     /* Check if already playing */
     for (d = g_descriptor_list; d; d = d->next)
@@ -60,7 +60,7 @@ class zone_type *find_zone(const char *zonename)
 /* Zonename & name must point to non-empty strings. Must be lower case */
 class file_index_type *find_file_index(const char *zonename, const char *name)
 {
-    class zone_type *zone;
+    class zone_type *zone = nullptr;
 
     if (!*name)
     {
@@ -101,7 +101,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 /* Zonename & name must point to non-empty strings */
 struct diltemplate *find_dil_index(const char *zonename, const char *name)
 {
-    class zone_type *zone;
+    class zone_type *zone = nullptr;
     // struct bin_search_type *ba;
 
     if (str_is_empty(name))
@@ -157,7 +157,7 @@ struct diltemplate *find_dil_template(const char *name)
  */
 class unit_data *world_room(const char *zone, const char *name)
 {
-    class file_index_type *fi;
+    class file_index_type *fi = nullptr;
     fi = find_file_index(zone, name);
 
     if (fi && (fi->type == UNIT_ST_ROOM) && (!fi->fi_unit_list.empty()))

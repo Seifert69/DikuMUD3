@@ -100,14 +100,14 @@ void preprocess_string(char *str, struct oracle_data *od)
 
 char *match_templ(char *input, struct template_type *tem)
 {
-    char *respons;
-    char *rp;
-    char *lp;
-    char *ip;
-    char *tcp;
-    char *cp;
-    int i;
-    int j;
+    char *respons = nullptr;
+    char *rp = nullptr;
+    char *lp = nullptr;
+    char *ip = nullptr;
+    char *tcp = nullptr;
+    char *cp = nullptr;
+    int i = 0;
+    int j = 0;
 
     respons = words;
     ip = input;
@@ -248,7 +248,7 @@ read in the template and call match to check the entire template.
 */
 int trytempl(char *line)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < eliza_maxtemplates; i++)
     {
@@ -264,8 +264,8 @@ int trytempl(char *line)
 
 void shift(int base, int delta)
 {
-    int i;
-    int k;
+    int i = 0;
+    int k = 0;
 
     if (delta == 0)
     {
@@ -300,12 +300,12 @@ void shift(int base, int delta)
   */
 void subst(const char *old, const char *pnew)
 {
-    int i;
-    int nlen;
-    int olen;
-    int flag;
-    int base;
-    int delim;
+    int i = 0;
+    int nlen = 0;
+    int olen = 0;
+    int flag = 0;
+    int base = 0;
+    int delim = 0;
 
     olen = strlen(old);
     nlen = strlen(pnew);
@@ -360,7 +360,7 @@ void fix(void)
 
 void grammar(char *str)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; str[i]; i++)
     {
@@ -390,7 +390,7 @@ void eliza_store_memory(struct oracle_data *od, int n, int pri)
 /* Register 'n' as the index                            */
 int eliza_retrieve_memory(struct oracle_data *od)
 {
-    int mem;
+    int mem = 0;
 
     mem = od->oldkeywd[0];
 
@@ -408,11 +408,11 @@ int eliza_retrieve_memory(struct oracle_data *od)
 char *response(struct oracle_data *od, int subjno)
 {
     static char resp[400];
-    char c1;
-    char *cp;
-    int i;
-    int k;
-    int thisrep;
+    char c1 = 0;
+    char *cp = nullptr;
+    int i = 0;
+    int k = 0;
+    int thisrep = 0;
 
     thisrep = od->nextrep[subjno]++;
     if (eliza_subjects[subjno].replies[od->nextrep[subjno]] == nullptr)
@@ -473,9 +473,9 @@ char *response(struct oracle_data *od, int subjno)
 /* the line does not match a template.  are there any keywords in it */
 int trykeywd(char *line, int *score)
 {
-    int j;
-    int index;
-    int mi;
+    int j = 0;
+    int index = 0;
+    int mi = 0;
 
     index = -1;
     *score = -1;
@@ -503,8 +503,8 @@ int trykeywd(char *line, int *score)
 
 char *eliza_process(struct oracle_data *od, char *s)
 {
-    int i;
-    int pri;
+    int i = 0;
+    int pri = 0;
 
     if (strlen(s) <= 1)
     {
@@ -555,8 +555,8 @@ void delayed_action(void *p1, void *p2)
 
 void set_delayed_action(class unit_data *npc, char *str)
 {
-    int when;
-    char *cp;
+    int when = 0;
+    char *cp = nullptr;
 
     when = WAIT_SEC * 1;
 
@@ -580,7 +580,7 @@ void eliza_log(class unit_data *who, const char *str, int comms)
     static int idx = -1;
     static char *buf[MAX_ELIBUF];
 
-    FILE *f;
+    FILE *f = nullptr;
 
     if (idx == -1)
     {
@@ -634,9 +634,9 @@ int oracle(struct spec_arg *sarg)
 {
     static int comms = 0;
     char buf[2 * MAX_INPUT_LENGTH];
-    char *response;
-    struct oracle_data *od;
-    int i;
+    char *response = nullptr;
+    struct oracle_data *od = nullptr;
+    int i = 0;
 
     od = (struct oracle_data *)sarg->fptr->data;
 
@@ -741,7 +741,7 @@ int oracle(struct spec_arg *sarg)
 
     if (is_command(sarg->cmd, "tell") || is_command(sarg->cmd, "ask") || is_command(sarg->cmd, "whisper"))
     {
-        class unit_data *u;
+        class unit_data *u = nullptr;
         char *c = (char *)sarg->arg;
 
         u = find_unit(sarg->activator, &c, nullptr, FIND_UNIT_SURRO);
@@ -777,7 +777,7 @@ int oracle(struct spec_arg *sarg)
 /* ====================================================================== */
 struct template_type *eliza_find_template(int subjno)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < eliza_maxtemplates; i++)
     {
@@ -804,7 +804,7 @@ struct template_type *eliza_find_template(int subjno)
 
 struct keyword_type *eliza_find_keyword(int subjno)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < eliza_maxkeywords; i++)
     {
@@ -832,10 +832,10 @@ struct keyword_type *eliza_find_keyword(int subjno)
 
 void eliza_get_template(char *buf, int subjno)
 {
-    struct template_type *tem;
-    char *b;
+    struct template_type *tem = nullptr;
+    char *b = nullptr;
     char tmp[400];
-    int i;
+    int i = 0;
 
     tem = eliza_find_template(subjno);
     b = buf;
@@ -871,7 +871,7 @@ void eliza_get_template(char *buf, int subjno)
 
 void eliza_get_keyword(char *buf, int subjno, int priority)
 {
-    struct keyword_type *kwd;
+    struct keyword_type *kwd = nullptr;
 
     kwd = eliza_find_keyword(subjno);
 
@@ -882,10 +882,10 @@ void eliza_get_keyword(char *buf, int subjno, int priority)
 void eliza_get_reacts(FILE *f, int subjno)
 {
     char buf[240];
-    int i;
-    int cnt;
-    int priority;
-    char c;
+    int i = 0;
+    int cnt = 0;
+    int priority = 0;
+    char c = 0;
 
     priority = '5';
 
@@ -993,7 +993,7 @@ void eliza_get_subjects(FILE *f)
 
 void eliza_gen_test_template(char *buf, struct template_type *tem)
 {
-    int j;
+    int j = 0;
 
     for (j = 0; tem->exp[j]; j++)
     {
@@ -1011,10 +1011,10 @@ void eliza_gen_test_template(char *buf, struct template_type *tem)
 
 void eliza_integrity(void)
 {
-    int i;
-    int j;
-    int k;
-    int l;
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    int l = 0;
     char buf[240];
 
     /* Test if any templates are overshadowed by previous templates */
@@ -1072,9 +1072,9 @@ void eliza_integrity(void)
 
 void eliza_boot(void)
 {
-    FILE *f;
-    char c;
-    int i;
+    FILE *f = nullptr;
+    char c = 0;
+    int i = 0;
 
     slog(LOG_ALL, 0, "Booting Eliza");
 

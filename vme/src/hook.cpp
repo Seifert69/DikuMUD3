@@ -78,7 +78,7 @@ void cHookNative::Unhook(void)
         return;
     }
 
-    int i;
+    int i = 0;
 #ifdef _WINDOWS
     i = closesocket(fd);
 #else
@@ -103,8 +103,8 @@ void cHookNative::Unhook(void)
 //
 int cHookNative::write(const void *buf, int count)
 {
-    int sofar;
-    int thisround;
+    int sofar = 0;
+    int thisround = 0;
 
     if (!IsHooked())
     {
@@ -189,7 +189,7 @@ int cHookNative::write(const void *buf, int count)
 //
 int cHookNative::read(void *buf, int count)
 {
-    int thisround;
+    int thisround = 0;
 
     if (!IsHooked())
     {
@@ -283,9 +283,9 @@ void cHook::Unhook(void)
 
 void cHook::PushWrite(void)
 {
-    int sofar;
-    int len;
-    int thisround;
+    int sofar = 0;
+    int len = 0;
+    int thisround = 0;
     ubit8 buf[1460];
 
     if (!cHook::IsHooked())
@@ -363,7 +363,7 @@ void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 int cHook::ReadToQueue(void)
 {
     char buf[4 * 1460 - 6];
-    int thisround;
+    int thisround = 0;
 
     for (;;)
     {
@@ -479,7 +479,7 @@ void cCaptainHook::Unhook(cHook *hook)
     }
 
     int nHandle = hook->fd;
-    int i;
+    int i = 0;
 
     assert(pfHook[nHandle] == hook);
 
@@ -515,7 +515,7 @@ void cCaptainHook::Unhook(cHook *hook)
 //
 int cCaptainHook::Wait(struct timeval *timeout)
 {
-    int n;
+    int n = 0;
 
     /* The following two are used in Wait() because the Input & Write
        can cause any descriptor to become unhooked. It is then the job
@@ -523,7 +523,7 @@ int cCaptainHook::Wait(struct timeval *timeout)
     int nTable[256];
     int nId[256];
 
-    int nTableTop;
+    int nTableTop = 0;
 
     memcpy(nTable, nIdx, sizeof(int) * nTop);
     nTableTop = nTop;
@@ -567,9 +567,9 @@ int cCaptainHook::Wait(struct timeval *timeout)
     }
     else if (n > 0)
     {
-        int nFlag;
-        int tmpfd;
-        int i;
+        int nFlag = 0;
+        int tmpfd = 0;
+        int i = 0;
 
         /* We need to do this the hard way, because nTable[] can be
            changed radically by any sequence of read or write */

@@ -62,9 +62,9 @@ void alarm_check(int i)
 // Open connection to the MUD erver and alert all connected clients if OK.
 void test_mud_up(void)
 {
-    int fd;
-    class cConHook *nextcon;
-    class cConHook *con;
+    int fd = 0;
+    class cConHook *nextcon = nullptr;
+    class cConHook *con = nullptr;
     static int nRetries = 0;
 
     fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
@@ -118,7 +118,7 @@ void test_mud_up(void)
 // Alert all connected clients that the MUD server is unavailable
 void mud_went_down(void)
 {
-    class cConHook *con;
+    class cConHook *con = nullptr;
 
     if (g_MudHook.IsHooked())
     {
@@ -141,7 +141,7 @@ void mud_went_down(void)
 void Control(void)
 {
     static int tries = 0;
-    int n;
+    int n = 0;
 
     for (;;)
     {
@@ -249,7 +249,7 @@ void cMudHook::Input(int nFlags)
     }
     else if (nFlags & SELECT_READ)
     {
-        int n;
+        int n = 0;
 
         for (;;)
         {
@@ -295,13 +295,13 @@ void cMudHook::Unhook(void)
 
 int cMudHook::read_mud(void)
 {
-    class cConHook *con;
-    ubit16 id;
-    ubit16 len;
-    int p;
-    int n;
-    char *data;
-    ubit8 text_type;
+    class cConHook *con = nullptr;
+    ubit16 id = 0;
+    ubit16 len = 0;
+    int p = 0;
+    int n = 0;
+    char *data = nullptr;
+    ubit8 text_type = 0;
 
     p = protocol_parse_incoming(this, &id, &len, &data, &text_type);
     // slog(LOG_OFF, 0, "read_mud(): p=%d. len=%d", p, len);
@@ -422,7 +422,7 @@ int cMudHook::read_mud(void)
             {
                 if (id == con->m_nId)
                 {
-                    char *parsed;
+                    char *parsed = nullptr;
 
                     parsed = con->ParseOutput(data);
 

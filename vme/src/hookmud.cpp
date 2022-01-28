@@ -57,7 +57,7 @@ void cMultiHook::Input(int nFlags)
     }
     if (nFlags & SELECT_READ)
     {
-        int n;
+        int n = 0;
 
         for (;;)
         {
@@ -112,11 +112,11 @@ void cMultiHook::Close(void)
 int cMultiHook::Read(void)
 {
     class descriptor_data *d = nullptr;
-    int p;
-    ubit16 id;
-    ubit16 len;
-    char *data;
-    ubit8 text_type;
+    int p = 0;
+    ubit16 id = 0;
+    ubit16 len = 0;
+    char *data = nullptr;
+    ubit8 text_type = 0;
 
     p = protocol_parse_incoming(this, &id, &len, &data, &text_type);
 
@@ -234,8 +234,8 @@ int cMultiHook::Read(void)
 
 void multi_clear(void)
 {
-    class descriptor_data *nextd;
-    class descriptor_data *d;
+    class descriptor_data *nextd = nullptr;
+    class descriptor_data *d = nullptr;
 
     for (d = g_descriptor_list; d; d = nextd)
     {
@@ -249,7 +249,7 @@ void multi_clear(void)
 
 void multi_close_all(void)
 {
-    int i;
+    int i = 0;
 
     slog(LOG_BRIEF, 0, "Closing all multi connections.");
 
@@ -263,7 +263,7 @@ void multi_close_all(void)
 
 void multi_ping_all(void)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i < MAX_MULTI; i++)
     {
@@ -300,9 +300,9 @@ void cMotherHook::Input(int nFlags)
     if (nFlags & SELECT_READ)
     {
         struct sockaddr_in isa;
-        int i;
-        int t;
-        unsigned int len;
+        int i = 0;
+        int t = 0;
+        unsigned int len = 0;
 
         len = sizeof(isa);
 
@@ -326,7 +326,7 @@ void cMotherHook::Input(int nFlags)
             error(HERE, "Noblock");
         }
 
-        int n;
+        int n = 0;
         n = setsockopt(t, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
         if (n == -1)
         {
@@ -383,8 +383,8 @@ void cMotherHook::Close(void)
 
 void init_mother(int nPort)
 {
-    int n;
-    int fdMother;
+    int n = 0;
+    int fdMother = 0;
     struct linger ld;
     struct sockaddr_in server_addr;
 

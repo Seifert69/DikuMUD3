@@ -10,6 +10,8 @@
 #include "essential.h"
 #include "textutil.h"
 
+#include <math.h>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -217,7 +219,7 @@ int CByteBuffer::ReadStringAlloc(char **ppStr)
 
 int CByteBuffer::ReadNames(char ***pppStr, int bOld)
 {
-    char *c;
+    char *c = nullptr;
     *pppStr = create_namelist();
     assert(*pppStr);
 
@@ -242,13 +244,13 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
     }
     else // New xxx
     {
-        int l;
-        int Corrupt;
+        int l = 0;
+        int Corrupt = 0;
         char buf[MAX_STRING_LENGTH];
 
         Corrupt = Read32(&l);
 
-        int i;
+        int i = 0;
 
         for (i = 0; i < l; i++)
         {
@@ -263,10 +265,10 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
 
 int CByteBuffer::ReadIntList(int **ilist)
 {
-    sbit32 len;
-    int c;
-    int i;
-    int *intlist;
+    sbit32 len = 0;
+    int c = 0;
+    int i = 0;
+    int *intlist = nullptr;
     intlist = *ilist;
 
     if (Read32(&len))
@@ -352,9 +354,9 @@ int CByteBuffer::SkipString(char **ppStr)
 
 int CByteBuffer::SkipNames(void)
 {
-    char *c;
-    unsigned int len;
-    unsigned int i;
+    char *c = nullptr;
+    unsigned int len = 0;
+    unsigned int i = 0;
 
     if (Read32(&len) == 1)
     {
@@ -371,8 +373,8 @@ int CByteBuffer::SkipNames(void)
 
 int CByteBuffer::SkipVals(void)
 {
-    unsigned int len;
-    unsigned int i;
+    unsigned int len = 0;
+    unsigned int i = 0;
 
     if (Read32(&len) == 1)
     {
@@ -479,7 +481,7 @@ void CByteBuffer::AppendNames(const char **ppNames, int bOld)
 
         Append32(l);
 
-        int i;
+        int i = 0;
         for (i = 0; i < l; i++)
         {
             AppendString(ppNames[i]);
@@ -492,7 +494,7 @@ void CByteBuffer::AppendNames(const char **ppNames, int bOld)
 
 ubit8 bread_ubit8(ubit8 **b)
 {
-    ubit8 i;
+    ubit8 i = 0;
 
     memcpy((ubit8 *)&i, *b, sizeof(ubit8));
     *b += sizeof(ubit8);
@@ -502,7 +504,7 @@ ubit8 bread_ubit8(ubit8 **b)
 
 ubit16 bread_ubit16(ubit8 **b)
 {
-    ubit16 i;
+    ubit16 i = 0;
 
     memcpy((ubit8 *)&i, *b, sizeof(ubit16));
     *b += sizeof(ubit16);
@@ -512,7 +514,7 @@ ubit16 bread_ubit16(ubit8 **b)
 
 ubit32 bread_ubit32(ubit8 **b)
 {
-    ubit32 i;
+    ubit32 i = 0;
 
     memcpy((ubit8 *)&i, *b, sizeof(ubit32));
     *b += sizeof(ubit32);
@@ -522,7 +524,7 @@ ubit32 bread_ubit32(ubit8 **b)
 
 float bread_float(ubit8 **b)
 {
-    float f;
+    float f = NAN;
 
     memcpy((ubit8 *)&f, *b, sizeof(float));
     *b += sizeof(float);
@@ -532,8 +534,8 @@ float bread_float(ubit8 **b)
 
 ubit8 *bread_data(ubit8 **b, ubit32 *plen)
 {
-    ubit32 len;
-    ubit8 *data;
+    ubit32 len = 0;
+    ubit8 *data = nullptr;
 
     data = nullptr;
     len = bread_ubit32(b);
@@ -572,8 +574,8 @@ char *bread_str_alloc(ubit8 **b)
 {
     if (**b)
     {
-        char *c;
-        char *t;
+        char *c = nullptr;
+        char *t = nullptr;
         t = (char *)*b;
 
         c = str_dup(t);
@@ -606,7 +608,7 @@ char *bread_str_skip(ubit8 **b)
 char **bread_nameblock(ubit8 **b, int bOld)
 {
     char buf[MAX_STRING_LENGTH];
-    char **nb;
+    char **nb = nullptr;
 
     nb = create_namelist();
 
@@ -627,11 +629,11 @@ char **bread_nameblock(ubit8 **b, int bOld)
     }
     else // New xxx
     {
-        int l;
+        int l = 0;
 
         l = bread_ubit32(b);
 
-        int i;
+        int i = 0;
 
         for (i = 0; i < l; i++)
         {
@@ -662,7 +664,7 @@ void bwrite_ubit32(ubit8 **b, ubit32 i)
 
 void bwrite_sbit32(ubit8 **b, sbit32 i)
 {
-    int x;
+    int x = 0;
     x = i;
     memcpy(*b, (ubit8 *)&x, sizeof(sbit32));
     fprintf(stderr, "Sbit32 out %d\n", x);
@@ -710,7 +712,7 @@ void bwrite_string(ubit8 **b, const char *str)
 /* Write a string of the format:  ssss\0ssss\0 */
 void bwrite_double_string(ubit8 **b, char *str)
 {
-    int i;
+    int i = 0;
 
     if (str)
     {
@@ -746,7 +748,7 @@ void bwrite_nameblock(ubit8 **b, char **nb, int bOld)
     }
     else // New method xxx
     {
-        int l;
+        int l = 0;
 
         l = len_namelist((const char **)nb);
         bwrite_ubit32(b, l);
@@ -761,7 +763,7 @@ void bwrite_nameblock(ubit8 **b, char **nb, int bOld)
 /* number of ints, followed by ints */
 void bwrite_intblock(ubit8 **b, int *ib)
 {
-    int i;
+    int i = 0;
     i = ib[0];
     if (i > 0)
     {

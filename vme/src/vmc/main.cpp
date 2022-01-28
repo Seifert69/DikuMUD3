@@ -22,9 +22,9 @@
 
 int main(int argc, char **argv)
 {
-    int pos;
+    int pos = 0;
     char moneyfile[512];
-    char *money;
+    char *money = nullptr;
 
     mem_init();
 

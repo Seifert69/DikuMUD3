@@ -173,7 +173,7 @@ int virtual_level(class unit_data *ch)
 
 int num_in_msg(struct combat_msg_list *msg, int no)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; msg->no[i] != -1; i++)
     {
@@ -202,8 +202,8 @@ void fread_single(FILE *f1, struct combat_single_msg *msg)
 int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
 {
     int no[200];
-    int pos;
-    int grp;
+    int pos = 0;
+    int grp = 0;
     char shit[100];
 
     /* A group of -1 indicates end */
@@ -251,10 +251,10 @@ int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
 
 void load_messages(void)
 {
-    FILE *f1;
-    int i;
-    int grp;
-    struct combat_msg_packet *messages;
+    FILE *f1 = nullptr;
+    int i = 0;
+    int grp = 0;
+    struct combat_msg_packet *messages = nullptr;
 
     if (!(f1 = fopen(g_cServerConfig.getFileInEtcDir(MESS_FILE).c_str(), "r")))
     {
@@ -320,7 +320,7 @@ void load_messages(void)
 /* Returns index in [0..8] */
 int damage_index(int dam, int maxhp)
 {
-    int p;
+    int p = 0;
 
     if (dam < 1)
     {
@@ -374,7 +374,7 @@ int damage_index(int dam, int maxhp)
 char *sub_damage(char *str, int damage, int max_hp)
 {
     static char buf[256];
-    char *cp;
+    char *cp = nullptr;
 
     /* We can always make more/new blocks */
     const char *damage_blocks[16][9] = {{"ineptly", /*       A       */
@@ -609,9 +609,9 @@ void combat_message(class unit_data *att,
                     int msg_number,
                     int hit_location)
 {
-    struct combat_msg_packet *msg;
-    int i;
-    int r;
+    struct combat_msg_packet *msg = nullptr;
+    int i = 0;
+    int r = 0;
 
     msg = nullptr;
 
@@ -847,14 +847,14 @@ static void person_gain(class unit_data *ch, class unit_data *dead, int share, i
 /* when a kill has been made                                         */
 static void exp_align_gain(class unit_data *ch, class unit_data *victim)
 {
-    int rellevel;
-    int sumlevel;
-    int maxlevel;
-    int minlevel;
+    int rellevel = 0;
+    int sumlevel = 0;
+    int maxlevel = 0;
+    int minlevel = 0;
     int no_members = 1;
-    int share;
-    class unit_data *head;
-    struct char_follow_type *f;
+    int share = 0;
+    class unit_data *head = nullptr;
+    struct char_follow_type *f = nullptr;
 
     maxlevel = CHAR_LEVEL(ch);
 
@@ -879,7 +879,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
     }
     else /* NPC killed */
     {
-        class unit_affected_type *paf;
+        class unit_affected_type *paf = nullptr;
 
         paf = affected_by_spell(victim, ID_MAX_ATTACKER);
 
@@ -1002,7 +1002,7 @@ int lose_exp(class unit_data *ch)
 
 void die(class unit_data *ch)
 {
-    struct diltemplate *death;
+    struct diltemplate *death = nullptr;
 
     if (ch->is_destructed())
     {
@@ -1051,9 +1051,9 @@ void damage(class unit_data *ch,
             int hit_location,
             int bDisplay)
 {
-    int max_hit;
-    class unit_affected_type *paf;
-    class unit_data *sch;
+    int max_hit = 0;
+    class unit_affected_type *paf = nullptr;
+    class unit_data *sch = nullptr;
 
     if (ch->is_destructed() || victim->is_destructed())
     {
@@ -1491,17 +1491,17 @@ int roll_boost(int roll, int level)
 /* -1 if fails, >= 0 amount of damage */
 int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapon_type, int primary, int attack)
 {
-    int dam;
-    int hm;
-    int hit_loc;
-    int roll;
+    int dam = 0;
+    int hm = 0;
+    int hit_loc = 0;
+    int roll = 0;
 
-    int def_armour_type;
-    int def_shield_bonus;
+    int def_armour_type = 0;
+    int def_shield_bonus = 0;
 
-    class unit_data *att_weapon;
-    class unit_data *def_armour;
-    class unit_data *def_shield;
+    class unit_data *att_weapon = nullptr;
+    class unit_data *def_armour = nullptr;
+    class unit_data *def_shield = nullptr;
 
     assert(IS_CHAR(att) && IS_CHAR(def));
 
@@ -1700,7 +1700,7 @@ struct hunt_data
 /*     as they were activated by the flee command                */
 int hunting(struct spec_arg *sarg)
 {
-    struct hunt_data *h;
+    struct hunt_data *h = nullptr;
 
     if (sarg->cmd->no != CMD_AUTO_TICK)
     {

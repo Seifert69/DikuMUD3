@@ -246,8 +246,8 @@ zone_type::~zone_type(void)
 
     if (filename)
         FREE(filename);
-    class unit_data *ut;
-    class unit_data *nextut;
+    class unit_data *ut = nullptr;
+    class unit_data *nextut = nullptr;
 
     for (ut = objects; ut; ut = nextut)
     {
@@ -276,8 +276,8 @@ zone_type::~zone_type(void)
         delete p->second;
     }
 
-    struct zone_reset_cmd *pzri;
-    struct zone_reset_cmd *nextzri;
+    struct zone_reset_cmd *pzri = nullptr;
+    struct zone_reset_cmd *nextzri = nullptr;
 
     for (pzri = zri; pzri; pzri = nextzri)
     {
@@ -357,8 +357,8 @@ unit_fptr::~unit_fptr()
 #ifndef VMC_SRC
 unit_data *unit_data::copy()
 {
-    unit_data *u;
-    int x;
+    unit_data *u = nullptr;
+    int x = 0;
 
     u = new_unit_data(status);
 

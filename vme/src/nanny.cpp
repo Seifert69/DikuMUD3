@@ -59,7 +59,7 @@ char *m_pBadStrings = nullptr;
 
 int _parse_name(const char *arg, char *name)
 {
-    int i;
+    int i = 0;
 
     class badnames_list badnames;
     class badnames_list badstrings;
@@ -118,8 +118,8 @@ int _parse_name(const char *arg, char *name)
 /* for idle time for any descriptors                                      */
 void check_idle(void)
 {
-    class descriptor_data *d;
-    class descriptor_data *next_d;
+    class descriptor_data *d = nullptr;
+    class descriptor_data *next_d = nullptr;
     time_t now = time(nullptr);
 
     for (d = g_descriptor_list; d; d = next_d)
@@ -333,7 +333,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 //
 void pc_data::gstate_togame(dilprg *pdontstop)
 {
-    class descriptor_data *i;
+    class descriptor_data *i = nullptr;
     time_t last_connect = PC_TIME(this).connect;
 
     if (this->is_destructed())
@@ -362,7 +362,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         this->connect_game();
     }
 
-    unit_data *load_room;
+    unit_data *load_room = nullptr;
     if (CHAR_LAST_ROOM(this))
     {
         load_room = CHAR_LAST_ROOM(this);
@@ -517,7 +517,7 @@ void nanny_close(class descriptor_data *d, char *arg)
 
 void nanny_motd(class descriptor_data *d, char *arg)
 {
-    struct diltemplate *on_connect;
+    struct diltemplate *on_connect = nullptr;
     g_dilmenu = FALSE;
     on_connect = find_dil_template("on_connect@basis");
     if (on_connect)
@@ -548,8 +548,8 @@ void nanny_motd(class descriptor_data *d, char *arg)
 
 void nanny_throw(class descriptor_data *d, char *arg)
 {
-    class descriptor_data *td;
-    class unit_data *u;
+    class descriptor_data *td = nullptr;
+    class unit_data *u = nullptr;
 
     if (STATE(d)++ == 0)
     {
@@ -629,7 +629,7 @@ void nanny_throw(class descriptor_data *d, char *arg)
 
 void nanny_dil(class descriptor_data *d, char *arg)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
 
     exd = UNIT_EXTRA(d->character).find_raw("$nanny");
 
@@ -642,7 +642,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
 
     if (g_nanny_dil_tmpl)
     {
-        class dilprg *prg;
+        class dilprg *prg = nullptr;
 
         prg = dil_copy_template(g_nanny_dil_tmpl, d->character, nullptr);
         if (prg)
@@ -664,7 +664,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
 
 void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
 
     if (STATE(d)++ == 0)
     {
@@ -685,7 +685,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     auto str = diku::format_to_str("PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(str), d);
 
-    class descriptor_data *td;
+    class descriptor_data *td = nullptr;
     while ((td = find_descriptor(PC_FILENAME(d->character), d)))
     {
         send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
@@ -710,9 +710,9 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 
 int check_pwd(class descriptor_data *d, char *pwd)
 {
-    int i;
-    int bA;
-    int bNA;
+    int i = 0;
+    int bA = 0;
+    int bNA = 0;
 
     if (strlen(pwd) < 5)
     {
@@ -790,7 +790,7 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
 /* Return TRUE when done... */
 ubit1 base_string_add(class descriptor_data *d, char *str)
 {
-    char *scan;
+    char *scan = nullptr;
     int terminator = 0;
 
     if (STATE(d)++ == 0)
@@ -872,7 +872,7 @@ void interpreter_string_add(class descriptor_data *d, char *str)
 
 void nanny_fix_descriptions(class unit_data *u)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
     char buf[1024];
 
     for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
@@ -912,8 +912,8 @@ void nanny_menu(class descriptor_data *d, char *arg)
 
 void nanny_existing_pwd(class descriptor_data *d, char *arg)
 {
-    class descriptor_data *td;
-    class unit_data *u;
+    class descriptor_data *td = nullptr;
+    class unit_data *u = nullptr;
 
     /* PC_ID(d->character) can be -1 when a newbie is in the game and
         someone logins with the same name! */
@@ -962,7 +962,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     // "$1$Pa$N7RTSV11rv3qkWzsTFHU5."
     // Which would allow any pwd length but not work on Macs. Or as Ken suggests we could
     // have two iterations of the default to support up to 16 chars pwd.
-    int nCmp;
+    int nCmp = 0;
     nCmp = pwdcompare(crypt(arg, PC_PWD(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD);
 
     if (nCmp != 0)
@@ -1078,7 +1078,7 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
 void nanny_get_name(class descriptor_data *d, char *arg)
 {
     char tmp_name[100];
-    class descriptor_data *td;
+    class descriptor_data *td = nullptr;
 
     if (str_is_empty(arg))
     {
@@ -1095,7 +1095,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
 
     if (player_exists(tmp_name))
     {
-        class unit_data *ch;
+        class unit_data *ch = nullptr;
 
         if (site_banned(d->host) == BAN_TOTAL)
         {

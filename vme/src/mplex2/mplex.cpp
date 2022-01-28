@@ -77,12 +77,12 @@ void ShowUsage(const char *name)
 
 int ParseArg(int argc, char *argv[], struct arg_type *arg)
 {
-    int i;
-    int n;
-    struct hostent *pHostInfo;
-    struct in_addr *pAddr;
-    char *c;
-    char *log_name;
+    int i = 0;
+    int n = 0;
+    struct hostent *pHostInfo = nullptr;
+    struct in_addr *pAddr = nullptr;
+    char *c = nullptr;
+    char *log_name = nullptr;
 
     arg->nMudPort = 4999;    /* Default port */
     arg->nMotherPort = 4242; /* Default port */

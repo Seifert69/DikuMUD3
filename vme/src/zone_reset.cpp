@@ -45,7 +45,7 @@ class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
 /* Count ->no_in_zone for current 'g_boot_zone' (above) */
 void zone_update_no_in_zone(void)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
 
     /* Clear ALL ->no_in_zone */
     for (auto tmp_zone = g_zone_info.mmp.begin(); tmp_zone != g_zone_info.mmp.end(); tmp_zone++)
@@ -80,8 +80,8 @@ void zone_loaded_a_unit(class unit_data *u)
 /* Return TRUE if conditions are met, FALSE otherwise       */
 bool zone_limit(class unit_data *u, class file_index_type *fi, struct zone_reset_cmd *cmd)
 {
-    class unit_data *tmp;
-    sbit16 i;
+    class unit_data *tmp = nullptr;
+    sbit16 i = 0;
 
     if (fi->type == UNIT_ST_NPC)
     {
@@ -283,7 +283,7 @@ class unit_data *zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
 /* fi[0] is the room to be purged.                          */
 class unit_data *zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
 {
-    class unit_data *next;
+    class unit_data *next = nullptr;
 
     if (cmd->fi[0]->type != UNIT_ST_ROOM)
     {
@@ -308,7 +308,7 @@ class unit_data *zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
 /* fi[1] is the room to remove from.                             */
 class unit_data *zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
 {
-    class unit_data *next;
+    class unit_data *next = nullptr;
 
     if (cmd->fi[1]->type != UNIT_ST_ROOM)
     {
@@ -374,7 +374,7 @@ class unit_data *(*exec_zone_cmd[])(class unit_data *, struct zone_reset_cmd *) 
 
 bool low_reset_zone(class unit_data *u, struct zone_reset_cmd *cmd)
 {
-    class unit_data *success;
+    class unit_data *success = nullptr;
     bool ok = TRUE;
 
     for (; cmd; cmd = cmd->next)
@@ -414,7 +414,7 @@ void zone_reset(class zone_type *zone)
 /* Changed back to boot all before players login */
 void reset_all_zones(void)
 {
-    int j;
+    int j = 0;
 
     for (j = 0; j <= 255; j++)
     {
@@ -440,7 +440,7 @@ void reset_all_zones(void)
 
 bool zone_is_empty(class zone_type *zone)
 {
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
 
     for (d = g_descriptor_list; d; d = d->next)
     {

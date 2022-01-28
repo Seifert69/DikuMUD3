@@ -19,7 +19,7 @@ char cpp_free_pattern[8] = {7, 8, 9, 10, 11, 12, 13, 14};
 
 int membug_bread_ubit32(char **b)
 {
-    int i;
+    int i = 0;
 
     assert(sizeof(int) == 4); // If this isn't true, pick the type that is 4 bytes long
 
@@ -40,7 +40,7 @@ void membug_bwrite_ubit32(char **b, int i)
 // Call only if you dont know if a piece of memory is allocated via new or malloc
 void membug_verify(void *ptr)
 {
-    size_t size;
+    size_t size = 0;
     char *p = (char *)ptr;
 
     if (!ptr)
@@ -71,7 +71,7 @@ void membug_verify(void *ptr)
 
 void membug_setfree_class(void *ptr)
 {
-    size_t size;
+    size_t size = 0;
     char *p = (char *)ptr;
 
     p -= 12;
@@ -98,7 +98,7 @@ void membug_setfree_class(void *ptr)
 // Call to verify C++ object
 void membug_verify_class(void *ptr)
 {
-    size_t size;
+    size_t size = 0;
     char *p = (char *)ptr;
 
     if (!ptr)
@@ -129,7 +129,7 @@ void membug_verify_class(void *ptr)
 // Call to allocate new for C++ (use emplacement, see docs).
 void *membug_new(size_t size)
 {
-    char *p;
+    char *p = nullptr;
 
     assert(size > 0);
 
@@ -163,7 +163,7 @@ void membug_delete(void *ptr)
 
 void membug_setfree_reg(void *ptr)
 {
-    size_t size;
+    size_t size = 0;
     char *p = (char *)ptr;
 
     p -= 12;
@@ -190,7 +190,7 @@ void membug_setfree_reg(void *ptr)
 // Call to verify C regular object
 void membug_verify_reg(void *ptr)
 {
-    size_t size;
+    size_t size = 0;
     char *p = (char *)ptr;
 
     if (!ptr)
@@ -220,7 +220,7 @@ void membug_verify_reg(void *ptr)
 // Call to malloc
 void *membug_malloc(size_t size)
 {
-    char *p;
+    char *p = nullptr;
 
     assert(size > 0);
 
@@ -241,7 +241,7 @@ void *membug_malloc(size_t size)
 // Call to calloc
 void *membug_calloc(size_t nmemb, size_t size)
 {
-    char *p;
+    char *p = nullptr;
 
     assert(size * nmemb > 0);
 
@@ -263,7 +263,7 @@ void *membug_calloc(size_t nmemb, size_t size)
 // Call to realloc
 void *membug_realloc(void *ptr, size_t size)
 {
-    char *p;
+    char *p = nullptr;
 
     membug_verify_reg(ptr);
 

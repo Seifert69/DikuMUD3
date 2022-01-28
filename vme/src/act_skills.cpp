@@ -25,11 +25,11 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     class unit_affected_type af;
     class unit_affected_type *paf = nullptr;
-    class unit_data *vict;
-    class unit_data *stabber;
-    int skilla;
-    int skillb;
-    int hm;
+    class unit_data *vict = nullptr;
+    class unit_data *stabber = nullptr;
+    int skilla = 0;
+    int skillb = 0;
+    int hm = 0;
     char *oarg = arg;
 
     if (str_is_empty(arg))
@@ -132,8 +132,8 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
     else
     {
-        int dam;
-        int att_bonus;
+        int dam = 0;
+        int att_bonus = 0;
 
         att_bonus = melee_bonus(ch, vict, hit_location(ch, vict), nullptr, nullptr, nullptr, nullptr);
 

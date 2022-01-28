@@ -138,9 +138,9 @@ int info_rod(struct spec_arg *sarg)
 
 int log_object(struct spec_arg *sarg)
 {
-    ubit8 *ip;
+    ubit8 *ip = nullptr;
     enum log_level lev = LOG_OFF;
-    char c;
+    char c = 0;
     class unit_data *ch = UNIT_IN(sarg->owner);
 
     if (sarg->fptr->data == nullptr)
@@ -276,7 +276,7 @@ int system_check(class unit_data *pc, const char *buf)
 
 void execute_append(class unit_data *pc, const char *str)
 {
-    FILE *f;
+    FILE *f = nullptr;
 
     f = fopen(g_cServerConfig.getFileInLibDir(EXECUTE_FILE).c_str(), "ab+");
 
@@ -295,9 +295,9 @@ void execute_append(class unit_data *pc, const char *str)
 
 int admin_obj(struct spec_arg *sarg)
 {
-    int zonelist;
-    class zone_type *zone;
-    class extra_descr_data *exdp;
+    int zonelist = 0;
+    class zone_type *zone = nullptr;
+    class extra_descr_data *exdp = nullptr;
 
     if (sarg->cmd->no != CMD_AUTO_UNKNOWN)
     {

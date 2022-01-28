@@ -126,7 +126,7 @@ int spell_perform(int spell_no,
 
     if (spell_type == MEDIA_STAFF)
     {
-        int i;
+        int i = 0;
         int bitv = 0;
 
         if (IS_SET(g_spell_info[spell_no].targets, TAR_CHAR))
@@ -214,7 +214,7 @@ int spell_perform(int spell_no,
 
     if (g_spell_info[spell_no].tmpl)
     {
-        class dilprg *prg;
+        class dilprg *prg = nullptr;
 
         prg = dil_copy_template(g_spell_info[spell_no].tmpl, caster, nullptr);
 
@@ -259,11 +259,11 @@ int spell_perform(int spell_no,
 /* Assumes that argument does start with first letter of chopped string */
 void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    class unit_data *unit;
-    int spl;
-    ubit1 target_ok;
-    char *orgarg;
-    char *c;
+    class unit_data *unit = nullptr;
+    int spl = 0;
+    ubit1 target_ok = 0;
+    char *orgarg = nullptr;
+    char *c = nullptr;
 
     if (str_is_empty(argument))
     {
@@ -461,8 +461,8 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
 void spell_dil_check(void)
 {
-    char *dil_name;
-    int i;
+    char *dil_name = nullptr;
+    int i = 0;
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
@@ -534,11 +534,11 @@ void spell_dil_check(void)
 
 static void spell_read(void)
 {
-    int dummy;
+    int dummy = 0;
     int idx = -1;
     char pTmp[256];
-    char *pCh;
-    FILE *fl;
+    char *pCh = nullptr;
+    FILE *fl = nullptr;
 
     touch_file(g_cServerConfig.getFileInEtcDir(SPELL_DEFS));
     if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(SPELL_DEFS).c_str(), "rb")))
@@ -806,9 +806,9 @@ static void spell_read(void)
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
             char tmp[256];
-            int i1;
-            int i2;
-            int i3;
+            int i1 = 0;
+            int i2 = 0;
+            int i3 = 0;
             int idx2 = -1;
 
             pCh = str_next_word(pCh, tmp);
@@ -863,8 +863,8 @@ static void spell_read(void)
 
 static void spell_init(void)
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {

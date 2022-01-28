@@ -28,7 +28,7 @@
 /* Count the number of items a unit contains */
 int char_carry_n(class unit_data *unit)
 {
-    int i;
+    int i = 0;
 
     for (unit = UNIT_CONTAINS(unit), i = 0; unit; unit = unit->next)
     {
@@ -142,7 +142,7 @@ int hit_limit(class unit_data *ch)
 /* Hitpoint gain pr. game hour */
 int hit_gain(class unit_data *ch)
 {
-    int gain;
+    int gain = 0;
 
     assert(IS_CHAR(ch));
 
@@ -198,7 +198,7 @@ int move_limit(class unit_data *ch)
 
     if (IS_PC(ch))
     {
-        int pct;
+        int pct = 0;
 
         pct = age_graph(age(ch).year, PC_LIFESPAN(ch), 80, 130, 110, 90, 70, 50, 20, 0);
         if (IS_IMMORTAL(ch))
@@ -217,7 +217,7 @@ int move_limit(class unit_data *ch)
 /* move gain pr. game hour */
 int move_gain(class unit_data *ch)
 {
-    int gain;
+    int gain = 0;
 
     assert(IS_CHAR(ch));
 
@@ -275,7 +275,7 @@ int mana_limit(class unit_data *ch)
 
     if (IS_PC(ch))
     {
-        int pct;
+        int pct = 0;
 
         pct = age_graph(age(ch).year, PC_LIFESPAN(ch), 0, 100, 105, 110, 120, 130, 140, 0);
         if (IS_IMMORTAL(ch))
@@ -294,7 +294,7 @@ int mana_limit(class unit_data *ch)
 /* manapoint gain pr. game hour */
 int mana_gain(class unit_data *ch)
 {
-    int gain;
+    int gain = 0;
 
     assert(IS_CHAR(ch));
 
@@ -377,7 +377,7 @@ void advance_level(class unit_data *ch)
     PC_SKILL_POINTS(ch) += skill_point_gain();
     PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
 
-    struct diltemplate *dt;
+    struct diltemplate *dt = nullptr;
     dt = find_dil_template("advance_level@basis");
     assert(dt);
 
@@ -403,7 +403,7 @@ void advance_level(class unit_data *ch)
 
 void gain_condition(class unit_data *ch, int condition, int value)
 {
-    bool intoxicated;
+    bool intoxicated = 0;
 
     if (!IS_PC(ch) || (PC_COND(ch, condition) >= 48))
     {
@@ -497,7 +497,7 @@ void set_title(class unit_data *ch)
 
 void gain_exp_regardless(class unit_data *ch, int gain)
 {
-    int j;
+    int j = 0;
 
     if (!IS_PC(ch))
     {
@@ -540,7 +540,7 @@ void gain_exp(class unit_data *ch, int gain)
 
 void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    int now;
+    int now = 0;
 
     if (!IS_PC(ch))
     {

@@ -270,9 +270,9 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     char excmd[MAX_INPUT_LENGTH + 10];
     char argstr[MAX_INPUT_LENGTH + 10];
 
-    int is_say;
-    int is_emote;
-    struct command_info *cmd_ptr;
+    int is_say = 0;
+    int is_emote = 0;
+    struct command_info *cmd_ptr = nullptr;
     is_say = FALSE;
     is_emote = FALSE;
     assert(IS_CHAR(ch));
@@ -465,7 +465,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
 
     if (cmd_ptr->tmpl)
     {
-        class dilprg *prg;
+        class dilprg *prg = nullptr;
 
         prg = dil_copy_template(cmd_ptr->tmpl, ch, nullptr);
         if (prg)
@@ -570,8 +570,8 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 {
     int res = SFR_SHARE;
     int priority = 0;
-    ubit16 orgflag;
-    class unit_fptr *next;
+    ubit16 orgflag = 0;
+    class unit_fptr *next = nullptr;
 
     if (g_cServerConfig.isNoSpecials())
     {
@@ -609,8 +609,8 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
         if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
         {
-            int diltick;
-            int i;
+            int diltick = 0;
+            int i = 0;
             diltick = FALSE;
             if (IS_SET(sarg->fptr->flags, SFB_TICK))
             {
@@ -665,12 +665,12 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
 int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class unit_data *extra_target, const char *to)
 {
-    class unit_data *u;
-    class unit_data *uu;
-    class unit_data *next;
-    class unit_data *nextt;
-    class unit_data *tou;
-    class file_index_type *fi;
+    class unit_data *u = nullptr;
+    class unit_data *uu = nullptr;
+    class unit_data *next = nullptr;
+    class unit_data *nextt = nullptr;
+    class unit_data *tou = nullptr;
+    class file_index_type *fi = nullptr;
 
     if (ch && ch->is_destructed())
     {
@@ -1038,7 +1038,7 @@ void send_done(class unit_data *activator,
 /* Build the trie here :) */
 void assign_command_pointers(void)
 {
-    struct command_info *cmd;
+    struct command_info *cmd = nullptr;
     g_intr_trie = nullptr;
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
     {
@@ -1107,7 +1107,7 @@ void assign_command_pointers(void)
 
 void interpreter_dil_check(void)
 {
-    struct command_info *cmd;
+    struct command_info *cmd = nullptr;
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
     {
         if (cmd->tmpl == nullptr)

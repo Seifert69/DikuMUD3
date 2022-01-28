@@ -40,7 +40,7 @@ long lrand48();
 int number(int from, int to)
 {
 #ifndef VMC_SRC
-    int temp;
+    int temp = 0;
 #endif
 
     if (from > to)
@@ -65,7 +65,7 @@ int number(int from, int to)
 /* simulates dice roll */
 int dice(int number, int size)
 {
-    int r;
+    int r = 0;
     int sum = 0;
 
     assert(size >= 1);
@@ -84,7 +84,7 @@ class log_buffer g_log_buf[MAXLOG];
 // also return a char * to the same resulting string (&dest[0])
 const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[])
 {
-    long nr;
+    long nr = 0;
 
     dest = "";
 
@@ -114,8 +114,8 @@ const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[])
 
 char *sprinttype(char *buf, int type, const char *names[])
 {
-    char *str;
-    int nr;
+    char *str = nullptr;
+    int nr = 0;
 
     for (nr = 0; names[nr]; nr++)
     {

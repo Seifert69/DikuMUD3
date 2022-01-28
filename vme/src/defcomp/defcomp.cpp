@@ -11,7 +11,7 @@
 
 int string_to_file(const char *name, const char *s)
 {
-    int out;
+    int out = 0;
 
     out = open(name, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
@@ -143,7 +143,7 @@ int iscomment(char *b)
 char *convert_line(char *temp, int ln, char *save_buff)
 {
     int size = 0;
-    char *new_buff;
+    char *new_buff = nullptr;
     char token[1024];
     char strval[1024];
     char *b = temp;

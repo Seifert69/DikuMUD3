@@ -18,7 +18,7 @@
 
 int follower_count(class unit_data *u)
 {
-    struct char_follow_type *f;
+    struct char_follow_type *f = nullptr;
     int x = 0;
 
     if (IS_CHAR(u))
@@ -33,7 +33,7 @@ int follower_count(class unit_data *u)
 
 class unit_data *get_follower(class unit_data *u, int num)
 {
-    struct char_follow_type *f;
+    struct char_follow_type *f = nullptr;
     int x = 0;
 
     if (IS_CHAR(u))
@@ -191,7 +191,7 @@ static inline int findcheck(class unit_data *u, int pset, int tflags)
 //
 class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
     class unit_data *selected = nullptr;
     int count = 0;
     int pset = 0;
@@ -219,7 +219,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
     }
     else if (sflags == FIND_UNIT_ZONE)
     {
-        class zone_type *z;
+        class zone_type *z = nullptr;
 
         if (UNIT_FI_ZONE(ref))
         {
@@ -281,8 +281,8 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
     }
     else if (sflags == FIND_UNIT_SURRO)
     {
-        int i;
-        int p;
+        int i = 0;
+        int p = 0;
         scan4_unit(ref, tflags);
         if (UVITOP > 0)
         {
@@ -330,17 +330,17 @@ class unit_data *find_unit_general(const class unit_data *viewer,
 {
     class unit_data *best = nullptr;
     int best_len = 0;
-    ubit32 bitvectorm;
+    ubit32 bitvectorm = 0;
 
-    int i;
-    int number;
-    int original_number;
+    int i = 0;
+    int number = 0;
+    int original_number = 0;
     const char *ct = nullptr;
     char name[MAX_INPUT_LENGTH * 2];
-    char *c;
+    char *c = nullptr;
     ubit1 is_fillword = TRUE;
-    class unit_data *u;
-    class unit_data *uu;
+    class unit_data *u = nullptr;
+    class unit_data *uu = nullptr;
 
     if (type == 0)
     {
@@ -684,8 +684,8 @@ class unit_data *find_unit_dil(const class unit_data *ch, char **arg, const clas
 
 class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector)
 {
-    class unit_data *u;
-    class unit_data *uu;
+    class unit_data *u = nullptr;
+    class unit_data *uu = nullptr;
 
     assert(this);
 
@@ -905,8 +905,8 @@ static void double_unit_vector(void)
 /* but not outside room.                                                 */
 void scan4_unit_room(class unit_data *room, ubit8 type)
 {
-    class unit_data *u;
-    class unit_data *uu;
+    class unit_data *u = nullptr;
+    class unit_data *uu = nullptr;
 
     g_unit_vector.top = 0;
 
@@ -952,8 +952,8 @@ void scan4_unit_room(class unit_data *room, ubit8 type)
 /* use in local routines.                                                */
 void scan4_unit(class unit_data *ch, ubit8 type)
 {
-    class unit_data *u;
-    class unit_data *uu;
+    class unit_data *u = nullptr;
+    class unit_data *uu = nullptr;
 
     if (!UNIT_IN(ch))
     {
@@ -1031,7 +1031,7 @@ void scan4_unit(class unit_data *ch, ubit8 type)
 
 static class unit_data *scan4_ref_room(class unit_data *room, class unit_data *fu)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
 
     if (room == fu)
     {

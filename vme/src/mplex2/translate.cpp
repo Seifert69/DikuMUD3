@@ -552,8 +552,8 @@ void control_color_end(class cConHook *con, char **b, ubit8 code)
 
 void translate_init(void)
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
 
     for (j = 0; j < 4; j++)
     {

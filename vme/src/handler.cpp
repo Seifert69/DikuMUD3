@@ -29,7 +29,7 @@
 
 class descriptor_data *unit_is_edited(class unit_data *u)
 {
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
 
     for (d = g_descriptor_list; d; d = d->next)
     {
@@ -52,7 +52,7 @@ void insert_in_unit_list(class unit_data *u)
         UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
     }
 
-    class unit_data *tmp_u;
+    class unit_data *tmp_u = nullptr;
 
     if (!g_unit_list)
     {
@@ -214,7 +214,7 @@ void remove_from_unit_list(class unit_data *unit)
 
 class unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
 {
-    class unit_fptr *tf;
+    class unit_fptr *tf = nullptr;
 
     for (tf = UNIT_FUNC(u); tf; tf = tf->next)
     {
@@ -252,8 +252,8 @@ void insert_fptr(class unit_data *u, class unit_fptr *f)
         return;
     }
 
-    class unit_fptr *p;
-    class unit_fptr *prev;
+    class unit_fptr *p = nullptr;
+    class unit_fptr *prev = nullptr;
 
     // Find location to insert
     prev = UNIT_FUNC(u);
@@ -276,7 +276,7 @@ void insert_fptr(class unit_data *u, class unit_fptr *f)
 
 class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority, ubit16 beat, ubit16 flags, void *data)
 {
-    class unit_fptr *f;
+    class unit_fptr *f = nullptr;
     f = new EMPLACE(unit_fptr) unit_fptr;
 
     assert(f);
@@ -303,7 +303,7 @@ class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority, 
 /* Does not free 'f' - it is done by clear_destruct by comm.c */
 void destroy_fptr(class unit_data *u, class unit_fptr *f)
 {
-    class unit_fptr *tf;
+    class unit_fptr *tf = nullptr;
     struct spec_arg sarg;
 
     assert(f);
@@ -364,8 +364,8 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
 /* Call die_follower if a person dies         */
 void stop_following(class unit_data *ch)
 {
-    struct char_follow_type *j;
-    struct char_follow_type *k;
+    struct char_follow_type *j = nullptr;
+    struct char_follow_type *k = nullptr;
 
     assert(CHAR_MASTER(ch));
 
@@ -394,7 +394,7 @@ void stop_following(class unit_data *ch)
 /* Set 'ch' to follow leader. Circles allowed. */
 void start_following(class unit_data *ch, class unit_data *leader)
 {
-    struct char_follow_type *k;
+    struct char_follow_type *k = nullptr;
 
     assert(!leader->is_destructed());
     assert(!ch->is_destructed());
@@ -416,8 +416,8 @@ void start_following(class unit_data *ch, class unit_data *leader)
 /* Called by extract_unit when a character that follows/is followed dies */
 void die_follower(class unit_data *ch)
 {
-    struct char_follow_type *j;
-    struct char_follow_type *k;
+    struct char_follow_type *j = nullptr;
+    struct char_follow_type *k = nullptr;
 
     if (CHAR_MASTER(ch))
     {
@@ -479,8 +479,8 @@ Example: (Lights, Bright, Illum)
 /* in order to correctly update the environment of the unit */
 void modify_bright(class unit_data *unit, int bright)
 {
-    class unit_data *ext;
-    class unit_data *in;
+    class unit_data *ext = nullptr;
+    class unit_data *in = nullptr;
 
     UNIT_BRIGHT(unit) += bright;
 
@@ -511,7 +511,7 @@ void modify_bright(class unit_data *unit, int bright)
 
 void trans_set(class unit_data *u)
 {
-    class unit_data *u2;
+    class unit_data *u2 = nullptr;
     int sum = 0;
 
     for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->next)
@@ -542,7 +542,7 @@ void trans_unset(class unit_data *u)
 
 class unit_data *equipment(class unit_data *ch, ubit8 pos)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
 
     assert(IS_CHAR(ch));
 
@@ -561,7 +561,7 @@ class unit_data *equipment(class unit_data *ch, ubit8 pos)
 /* type checks (i.e. trash does not protect!).                       */
 class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type)
 {
-    class unit_data *obj;
+    class unit_data *obj = nullptr;
 
     obj = equipment(ch, pos);
 
@@ -577,7 +577,7 @@ class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type)
 
 void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
     class unit_affected_type newaf;
 
     assert(pos > 0 && IS_OBJ(obj) && IS_CHAR(ch));
@@ -601,9 +601,9 @@ void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
 
 class unit_data *unequip_object(class unit_data *obj)
 {
-    class unit_data *ch;
-    class unit_affected_type *af;
-    class unit_affected_type *caf;
+    class unit_data *ch = nullptr;
+    class unit_affected_type *af = nullptr;
+    class unit_affected_type *caf = nullptr;
 
     ch = UNIT_IN(obj);
 
@@ -640,7 +640,7 @@ class unit_data *unequip_object(class unit_data *obj)
 /* return TRUE                                                       */
 int unit_recursive(class unit_data *from, class unit_data *to)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
 
     for (u = to; u; u = UNIT_IN(u))
     {
@@ -680,7 +680,7 @@ class zone_type *unit_zone(const class unit_data *unit)
 //
 std::string unit_trace_up(class unit_data *unit)
 {
-    class unit_data *u;
+    class unit_data *u = nullptr;
     std::string s;
     std::string t;
 
@@ -724,12 +724,12 @@ class unit_data *unit_room(class unit_data *unit)
 
 void intern_unit_up(class unit_data *unit, ubit1 pile)
 {
-    class unit_data *u;
-    class unit_data *in;
-    class unit_data *toin;
-    class unit_data *extin;
-    sbit8 bright;
-    sbit8 selfb;
+    class unit_data *u = nullptr;
+    class unit_data *in = nullptr;
+    class unit_data *toin = nullptr;
+    class unit_data *extin = nullptr;
+    sbit8 bright = 0;
+    sbit8 selfb = 0;
 
     assert(UNIT_IN(unit));
 
@@ -814,11 +814,11 @@ void unit_from_unit(class unit_data *unit)
 
 void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
 {
-    class unit_data *u;
-    class unit_data *in;
-    class unit_data *extin;
-    sbit8 bright;
-    sbit8 selfb;
+    class unit_data *u = nullptr;
+    class unit_data *in = nullptr;
+    class unit_data *extin = nullptr;
+    sbit8 bright = 0;
+    sbit8 selfb = 0;
 
     assert(UNIT_IN(unit) == UNIT_IN(to));
     assert(unit != to);
@@ -1029,7 +1029,7 @@ void stop_snoopwrite(unit_data *unit)
     // removed this statement: if (!IS_PC(unit) || UNIT_IN(unit))
     //
 
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
     while ((d = unit_is_edited(unit)))
     {
         send_to_char("<br/>Unit was extracted, sorry.<br/>", d->character);

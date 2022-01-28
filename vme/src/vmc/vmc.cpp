@@ -104,12 +104,12 @@ void dmc_exit(int n)
 
 void fix(char *file)
 {
-    char *p;
+    char *p = nullptr;
     char tmp[500];
     char tmp2[500];
     char filename_prefix[256];
     char filename[256];
-    int result;
+    int result = 0;
 
     /* Examine filename */
     strcpy(filename_prefix, file);
@@ -208,7 +208,7 @@ void zone_reset(char *default_name)
 
 void mem_init()
 {
-    int i;
+    int i = 0;
 
     ident_names = nullptr;
     g_tmplnames = create_namelist();
@@ -237,7 +237,7 @@ void mem_reset()
 
 void *mmalloc(int size)
 {
-    long ret;
+    long ret = 0;
 
     if (size > MEMBLOCK)
     {
@@ -265,7 +265,7 @@ void *mmalloc(int size)
 
 class unit_data *mcreate_unit(int type)
 {
-    class unit_data *rslt;
+    class unit_data *rslt = nullptr;
 
     // rslt = new (class unit_data) (type);
     rslt = new_unit_data(type);
@@ -281,7 +281,7 @@ struct unit_fptr *mcreate_func(void)
 
 class room_direction_data *mcreate_exit(void)
 {
-    class room_direction_data *rslt;
+    class room_direction_data *rslt = nullptr;
 
     rslt = new (class room_direction_data);
 
@@ -294,7 +294,7 @@ class room_direction_data *mcreate_exit(void)
 
 struct unit_affected_type *mcreate_affect(void)
 {
-    struct unit_affected_type *rs;
+    struct unit_affected_type *rs = nullptr;
 
     MCREATE(rs, struct unit_affected_type, 1);
     rs->next = nullptr;
@@ -307,7 +307,7 @@ struct unit_affected_type *mcreate_affect(void)
 
 void write_resetcom(FILE *fl, struct reset_command *c)
 {
-    char *t;
+    char *t = nullptr;
     static char nul[] = {0, 0};
 
     fwrite(&c->cmd_no, sizeof(c->cmd_no), 1, fl);
@@ -357,16 +357,16 @@ void check_unique_ident(class unit_data *u)
    */
 void dump_zone(char *prefix)
 {
-    FILE *fl;
+    FILE *fl = nullptr;
     char filename[256];
-    char **creators;
-    class unit_data *u;
-    class unit_data *v;
-    struct reset_command *c;
+    char **creators = nullptr;
+    class unit_data *u = nullptr;
+    class unit_data *v = nullptr;
+    struct reset_command *c = nullptr;
     int no_rooms = 0;
-    struct diltemplate *tmpl;
-    struct diltemplate *ut;
-    ubit32 dummy;
+    struct diltemplate *tmpl = nullptr;
+    struct diltemplate *ut = nullptr;
+    ubit32 dummy = 0;
 
     /* Quinn, I do this to get all the sematic errors and info */
     /* appear when nooutput = TRUE - it didn't before!         */
@@ -581,8 +581,8 @@ void szonelog(struct zone_type *zone, const char *fmt, ...)
 
 void dil_free_prg(struct dilprg *prg, int dil)
 {
-    struct diltemplate *tmpl;
-    struct dilframe *frm;
+    struct diltemplate *tmpl = nullptr;
+    struct dilframe *frm = nullptr;
 
     tmpl = prg->frame[0].tmpl;
 
@@ -631,7 +631,7 @@ void dil_free_var(struct dilvar *v)
 
 void dil_free_frame(struct dilframe *frame)
 {
-    int j;
+    int j = 0;
 
     /* free variables */
     for (j = 0; j < frame->tmpl->varc; j++)
@@ -662,7 +662,7 @@ void dil_free_frame(struct dilframe *frame)
 
 void dil_free_template(struct diltemplate *tmpl, int copy, int dil)
 {
-    int i;
+    int i = 0;
 
     if (tmpl->flags == DILFL_FREEME)
     {
@@ -707,8 +707,8 @@ void dil_free_template(struct diltemplate *tmpl, int copy, int dil)
 
 void graph_sc(char *prefix)
 {
-    class unit_data *u;
-    int x;
+    class unit_data *u = nullptr;
+    int x = 0;
     for (x = 0, u = g_zone.z_rooms; u; u = u->next, x++)
     {
         if (IS_ROOM(u))
@@ -733,7 +733,7 @@ void write_dot(char *prefix)
 {
     char dotfilename[256];
     std::ostringstream interconnect;
-    class unit_data *u;
+    class unit_data *u = nullptr;
     sprintf(dotfilename, "%s.%s", prefix, "dot");
     std::ofstream dotfl(dotfilename);
     if (!(dotfl))

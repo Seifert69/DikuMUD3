@@ -25,7 +25,7 @@
 
 void tif_confusion_tick(class unit_affected_type *af, class unit_data *unit)
 {
-    class unit_fptr *fptr;
+    class unit_fptr *fptr = nullptr;
 
     if ((fptr = find_fptr(unit, SFUN_HUNTING)))
     {
@@ -67,7 +67,7 @@ void tif_invisibility_off(class unit_affected_type *af, class unit_data *unit)
 
 void tif_fear_check(class unit_affected_type *af, class unit_data *unit)
 {
-    class unit_data *ch;
+    class unit_data *ch = nullptr;
 
     if (CHAR_FIGHTING(unit))
     {
@@ -410,7 +410,7 @@ void tif_sleep_on(class unit_affected_type *af, class unit_data *unit)
 
 void tif_sleep_check(class unit_affected_type *af, class unit_data *unit)
 {
-    int hm;
+    int hm = 0;
 
     if (CHAR_POS(unit) > POSITION_SLEEPING)
     {

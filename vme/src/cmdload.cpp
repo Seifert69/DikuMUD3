@@ -120,7 +120,7 @@ void skill_dump(void)
 
 void cmd_base_load(void)
 {
-    int i;
+    int i = 0;
 
     cmd_trie = nullptr;
 
@@ -142,15 +142,15 @@ void cmd_base_load(void)
 
 void command_read(void)
 {
-    int dummy;
+    int dummy = 0;
     int idx = -1;
     int ignore = FALSE;
     char pTmp[256];
-    char *pCh;
-    FILE *fl;
+    char *pCh = nullptr;
+    FILE *fl = nullptr;
     struct command_info *cmdptr = nullptr;
     struct command_info *lastptr = nullptr;
-    struct cmdload_struct *intcmd;
+    struct cmdload_struct *intcmd = nullptr;
 
     touch_file(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS));
     if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS).c_str(), "rb")))

@@ -31,7 +31,7 @@ char *cur_strings[MAX_CURRENCY + 1];
 /* Returns the amount adjusted to closest payable value in the currency */
 static amount_t adjust_money(amount_t amt, currency_t currency)
 {
-    int i;
+    int i = 0;
 
     for (i = 0; i <= MAX_MONEY; i++)
     {
@@ -80,10 +80,10 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
     static char buf[512];
     char tmp[256];
     struct money_type *money_tmp[MAX_MONEY + 1];
-    sbit8 i;
+    sbit8 i = 0;
     sbit8 nr = 0;
     sbit8 count = 0;
-    amount_t times;
+    amount_t times = 0;
 
     /* Get an array of all types in this currency */
     for (i = 0; i <= MAX_MONEY; i++)
@@ -185,7 +185,7 @@ static amount_t calc_money(amount_t v1, char op, amount_t v2)
 /* Set all the values on money correctly according to amount - return money */
 class unit_data *set_money(class unit_data *money, amount_t amt)
 {
-    ubit32 i;
+    ubit32 i = 0;
 
     assert(IS_MONEY(money));
 
@@ -217,7 +217,7 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
      */
     for (i = 0; i < UNIT_NAMES(money).Length(); ++i)
     {
-        ubit32 j;
+        ubit32 j = 0;
         ubit32 m = i;
 
         for (j = i; j < UNIT_NAMES(money).Length(); ++j)
@@ -314,10 +314,10 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
             class unit_data *unit;
         } mon_array[MAX_MONEY + 1];
 
-        class unit_data *tmp;
-        int i;
-        int last;
-        amount_t temp;
+        class unit_data *tmp = nullptr;
+        int i = 0;
+        int last = 0;
+        amount_t temp = 0;
         amount_t calc = amt;
 
         /* Initialize computation */
@@ -445,10 +445,10 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
     else if (to)
     { /* Create the money according to arguments and give to `to' */
         struct money_type *money_tmp[MAX_MONEY + 1];
-        class unit_data *tmp;
-        int i;
-        int nr;
-        amount_t times;
+        class unit_data *tmp = nullptr;
+        int i = 0;
+        int nr = 0;
+        amount_t times = 0;
 
         for (i = 0, nr = 0; i <= MAX_MONEY; i++)
         {
@@ -503,9 +503,9 @@ void coins_to_unit(class unit_data *unit, amount_t amt, int type)
  */
 amount_t unit_holds_total(class unit_data *u, currency_t currency)
 {
-    class unit_data *tmp;
+    class unit_data *tmp = nullptr;
     amount_t amt = 0;
-    amount_t rec;
+    amount_t rec = 0;
 
     if (IS_ROOM(u) || IS_CHAR(u) || (IS_OBJ(u) && OBJ_TYPE(u) == ITEM_CONTAINER))
     {
@@ -539,7 +539,7 @@ amount_t unit_holds_total(class unit_data *u, currency_t currency)
  */
 amount_t char_holds_amount(class unit_data *ch, currency_t currency)
 {
-    class unit_data *tmp;
+    class unit_data *tmp = nullptr;
     amount_t amt = 0;
 
     assert(IS_CHAR(ch));
@@ -563,7 +563,7 @@ amount_t char_holds_amount(class unit_data *ch, currency_t currency)
  */
 ubit1 char_can_afford(class unit_data *ch, amount_t amt, currency_t currency)
 {
-    class unit_data *tmp;
+    class unit_data *tmp = nullptr;
 
     assert(IS_CHAR(ch));
 
@@ -590,7 +590,7 @@ ubit1 char_can_afford(class unit_data *ch, amount_t amt, currency_t currency)
 /* Check if there is some money of `type' in unit. (For piling purposes.) */
 class unit_data *unit_has_money_type(class unit_data *unit, ubit8 type)
 {
-    class unit_data *tmp;
+    class unit_data *tmp = nullptr;
 
     for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->next)
     {
@@ -641,7 +641,7 @@ class unit_data *split_money(class unit_data *money, amount_t amt)
  */
 void pile_money(class unit_data *money)
 {
-    class unit_data *tmp;
+    class unit_data *tmp = nullptr;
     class unit_data *unit = UNIT_IN(money);
 
     assert(IS_MONEY(money) && unit);
@@ -662,9 +662,9 @@ void pile_money(class unit_data *money)
 amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 {
     struct money_type *money_tmp[MAX_MONEY + 1];
-    int i;
+    int i = 0;
     int nr = 0;
-    amount_t times;
+    amount_t times = 0;
     amount_t remainder = amt;
 
     assert(0 < types);
@@ -707,7 +707,7 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 char *obj_money_string(class unit_data *obj, amount_t amt)
 {
     static char buf[128];
-    struct money_type *money_tmp;
+    struct money_type *money_tmp = nullptr;
 
     assert(IS_MONEY(obj));
 
@@ -746,7 +746,7 @@ amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money)
 
 void do_makemoney(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    currency_t cur;
+    currency_t cur = 0;
     amount_t amt = 0;
 
     if (!IS_PC(ch) || str_is_empty(arg) || (amt = atol(arg)) < 0)
@@ -770,9 +770,9 @@ static void set_money_strings(FILE *fl, int idx)
 {
     char buf[512];
     char *tmp[32];
-    char *c;
-    char *s;
-    char *sc;
+    char *c = nullptr;
+    char *s = nullptr;
+    char *sc = nullptr;
     int i = 0;
 
     if (fgets(buf, sizeof buf, fl) == nullptr)
@@ -824,7 +824,7 @@ static void set_money_strings(FILE *fl, int idx)
 static void set_relval(FILE *fl, int idx)
 {
     char buf[128];
-    long res;
+    long res = 0;
 
     if (fgets(buf, sizeof buf, fl) == nullptr || sscanf(buf, "%ld", &res) != 1)
     {
@@ -871,12 +871,12 @@ void boot_money(char *moneyfile)
 void boot_money(void)
 #endif
 {
-    FILE *fl;
+    FILE *fl = nullptr;
     char buf[256];
-    int tmp;
-    int idx;
-    int prev_idx;
-    currency_t cur;
+    int tmp = 0;
+    int idx = 0;
+    int prev_idx = 0;
+    currency_t cur = 0;
     ubit1 currencies = TRUE;
     std::string myfile = "";
 

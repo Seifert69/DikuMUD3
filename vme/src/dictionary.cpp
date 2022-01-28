@@ -85,7 +85,7 @@ static void set_owner(class unit_data *obj, struct alias_head *ah, class unit_da
 /* MS2020 rewritten */
 static class extra_descr_data *make_alias_extra(class unit_data *u)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
     static const char *aliaslist[] = {"$alias", nullptr};
 
     exd = UNIT_EXTRA(u).find_raw("$alias");
@@ -107,7 +107,7 @@ static char *parse_alias(char *src, char *arg)
     static char buf[2 * MAX_INPUT_LENGTH + 2];
     char *argv[10];
     char *cnew = buf;
-    int argc;
+    int argc = 0;
     int i = 0;
 
     for (argc = 1; argc < 10; argc++) /* store word-pointers in argv */
@@ -166,10 +166,10 @@ static int push_alias(char *s, char *arg, struct trie_type *t, class unit_data *
 {
     char cmd[MAX_INPUT_LENGTH + 1];
     char parsed[2 * MAX_INPUT_LENGTH + 2];
-    char *par;
-    char *newarg;
-    char *c;
-    struct alias_t *al;
+    char *par = nullptr;
+    char *newarg = nullptr;
+    char *c = nullptr;
+    struct alias_t *al = nullptr;
 
     static ubit8 check_count = 0;
 
@@ -237,9 +237,9 @@ static void alias_to_char(struct alias_t *al, class unit_data *ch)
  */
 static int print_alias(struct trie_type *t, class unit_data *ch)
 {
-    struct trie_type *t2;
-    struct alias_t *al;
-    int i;
+    struct trie_type *t2 = nullptr;
+    struct alias_t *al = nullptr;
+    int i = 0;
     int count = 0;
 
     for (i = 0; t && i < t->size; i++)
@@ -263,7 +263,7 @@ static int print_alias(struct trie_type *t, class unit_data *ch)
 static int add_alias(struct alias_head *ah, char *key, char *val, bool single)
 {
     struct alias_t *al = nullptr;
-    struct alias_t *tmp_al;
+    struct alias_t *tmp_al = nullptr;
 
     /* There is already an alias for key - Delete it */
     if (single && ah->trie && (al = (struct alias_t *)search_trie(key, ah->trie)))
@@ -312,8 +312,8 @@ static bool del_alias(struct alias_head *ah, char *key)
  */
 static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
 {
-    char *tmp;
-    char *sc;
+    char *tmp = nullptr;
+    char *sc = nullptr;
     char comm[MAX_INPUT_LENGTH + 2];
     struct alias_t *tmp_al = nullptr;
     ubit8 res = 0;
@@ -378,9 +378,9 @@ static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
  */
 static bool alias_is_ok(struct alias_head *ah, char *key, char *val, class unit_data *ch)
 {
-    char *tmp;
+    char *tmp = nullptr;
     struct alias_t *al = nullptr;
-    int count;
+    int count = 0;
 
     if (strlen(key) > MAX_ALIAS_LENGTH)
     {
@@ -463,8 +463,8 @@ static bool alias_is_ok(struct alias_head *ah, char *key, char *val, class unit_
  */
 static void rec_alias_to_str(struct trie_type *t, char **bufp)
 {
-    int i;
-    struct alias_t *al;
+    int i = 0;
+    struct alias_t *al = nullptr;
 
     if (t)
     {
@@ -500,10 +500,10 @@ static char *alias_to_str(struct alias_head *ah)
 /* Take the above constructed string and turn it into an alias-set. */
 static struct alias_head *str_to_alias(const char *str)
 {
-    struct alias_head *ah;
+    struct alias_head *ah = nullptr;
     char cmd[MAX_ALIAS_LENGTH + 1];
-    char *tmp;
-    char *tilde;
+    char *tmp = nullptr;
+    char *tilde = nullptr;
 
     CREATE(ah, struct alias_head, 1);
     ah->char_count = 0;
@@ -651,10 +651,10 @@ static int local_dictionary(struct spec_arg *sarg)
 {
     char *pcomm = nullptr;
     char *cmd_array[256];
-    ubit16 i;
+    ubit16 i = 0;
     struct alias_t *al = nullptr;
-    struct alias_head *alias_h;
-    class extra_descr_data *exd;
+    struct alias_head *alias_h = nullptr;
+    class extra_descr_data *exd = nullptr;
 
     /* specproc initialization */
     if ((alias_h = (struct alias_head *)sarg->fptr->data) == nullptr)
@@ -679,7 +679,7 @@ static int local_dictionary(struct spec_arg *sarg)
     /* create a snapshot of alias-set if saved */
     else if (sarg->cmd->no == CMD_AUTO_SAVE)
     {
-        char *tmp;
+        char *tmp = nullptr;
 
         exd = make_alias_extra(sarg->owner);
 

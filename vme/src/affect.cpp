@@ -46,7 +46,7 @@ void link_affect(class unit_data *unit, class unit_affected_type *af)
 
 unit_affected_type *link_alloc_affect(class unit_data *unit, class unit_affected_type *orgaf)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     af = new unit_affected_type;
     assert(!af->is_destructed());
@@ -109,7 +109,7 @@ void create_affect(class unit_data *unit, class unit_affected_type *af)
 /* It is freed by 'clear_destruct' automatically */
 void unlink_affect(class unit_affected_type *af)
 {
-    class unit_affected_type *i;
+    class unit_affected_type *i = nullptr;
 
     /* NB! Mucho importanto!                                    */
     /* Affects may never be removed by lower function than this */
@@ -197,9 +197,9 @@ void destroy_affect(class unit_affected_type *af)
 /* Attempts to clear a unit entirely of affects */
 void affect_clear_unit(class unit_data *unit)
 {
-    int i;
-    class unit_affected_type *taf1;
-    class unit_affected_type *taf2;
+    int i = 0;
+    class unit_affected_type *taf1 = nullptr;
+    class unit_affected_type *taf2 = nullptr;
 
     /* Some affects may not be destroyed at first attempt if it would */
     /* cause an overflow, therefore do several attemps to destroy     */
@@ -220,7 +220,7 @@ void affect_clear_unit(class unit_data *unit)
 
 unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
@@ -237,7 +237,7 @@ unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
 void affect_beat(void *p1, void *p2)
 {
     class unit_affected_type *af = (class unit_affected_type *)p1;
-    int destroyed;
+    int destroyed = 0;
 
     assert(af->id >= 0); /* Negative ids (transfer) dont have beats */
 
@@ -288,7 +288,7 @@ void affect_beat(void *p1, void *p2)
 /* If 'apply' is TRUE then apply function will be called */
 void apply_affect(class unit_data *unit)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
@@ -305,7 +305,7 @@ void apply_affect(class unit_data *unit)
 
 void start_affect(class unit_data *unit)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
@@ -327,7 +327,7 @@ void start_affect(class unit_data *unit)
 
 void stop_affect(class unit_data *unit)
 {
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {

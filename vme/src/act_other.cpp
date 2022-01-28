@@ -58,8 +58,8 @@ void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
 */
 void race_adjust(class unit_data *ch)
 {
-    struct base_race_info_type *sex_race;
-    struct race_info_type *my_race;
+    struct base_race_info_type *sex_race = nullptr;
+    struct race_info_type *my_race = nullptr;
 
     assert(IS_PC(ch));
     assert(is_in(CHAR_RACE(ch), 0, PC_RACE_MAX - 1));
@@ -83,7 +83,7 @@ void race_adjust(class unit_data *ch)
 
     PC_TIME(ch).birth = PC_TIME(ch).creation;
 
-    int years;
+    int years = 0;
 
     years = my_race->age + dice(my_race->age_dice.reps, my_race->age_dice.size);
 
@@ -110,7 +110,7 @@ void race_cost(class unit_data *ch)
 
 void points_reset(class unit_data *ch)
 {
-    int i;
+    int i = 0;
 
     PC_VIRTUAL_LEVEL(ch) = CHAR_LEVEL(ch) = START_LEVEL;
 

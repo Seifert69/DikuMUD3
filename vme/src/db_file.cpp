@@ -34,12 +34,12 @@ CByteBuffer g_FileBuffer(16384);
 // Return 1 on error, 0 if OK
 int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
 {
-    class extra_descr_data *e;
-    class extra_descr_data *te;
-    class extra_descr_data *first;
-    ubit8 x;
-    ubit32 i; // for 32 bit extra lists
-    char *c;
+    class extra_descr_data *e = nullptr;
+    class extra_descr_data *te = nullptr;
+    class extra_descr_data *first = nullptr;
+    ubit8 x = 0;
+    ubit32 i = 0; // for 32 bit extra lists
+    char *c = nullptr;
 
     assert(cExtra.isempty());
     te = nullptr;
@@ -108,12 +108,12 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
 struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 {
 #ifdef DMSERVER
-    int valid;
+    int valid = 0;
 #endif
-    int i;
-    int j;
-    ubit8 t;
-    struct diltemplate *tmpl;
+    int i = 0;
+    int j = 0;
+    ubit8 t = 0;
+    struct diltemplate *tmpl = nullptr;
 
     /* read a template */
     CREATE(tmpl, struct diltemplate, 1);
@@ -281,8 +281,8 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 /* Reads DIL interrupt list */
 void bread_dilintr(CByteBuffer *pBuf, class dilprg *prg, int version)
 {
-    int i;
-    ubit32 lab;
+    int i = 0;
+    ubit32 lab = 0;
 
     /* read interrupts */
     pBuf->Read16(&prg->frame[0].intrcount);
@@ -311,9 +311,9 @@ void bread_dilintr(CByteBuffer *pBuf, class dilprg *prg, int version)
 
 void bwrite_dilintr(CByteBuffer *pBuf, class dilprg *prg)
 {
-    ubit16 i;
-    ubit32 lab;
-    ubit32 elab;
+    ubit16 i = 0;
+    ubit32 lab = 0;
+    ubit32 elab = 0;
 
     pBuf->Append16(prg->frame[0].intrcount);
 
@@ -382,15 +382,15 @@ void bwrite_dilintr(CByteBuffer *pBuf, class dilprg *prg)
 void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class unit_fptr *fptr, int stspec)
 {
 #ifdef DMSERVER
-    class dilprg *prg;
+    class dilprg *prg = nullptr;
     struct diltemplate *tmpl = nullptr;
     ubit32 recallpc = 0;
-    ubit16 t16;
-    int i;
-    int novar;
-    ubit8 t;
+    ubit16 t16 = 0;
+    int i = 0;
+    int novar = 0;
+    ubit8 t = 0;
     char name[255];
-    int bNameRead;
+    int bNameRead = 0;
 
     // prg = new EMPLACE(dilprg) dilprg(owner, stspec);
     // We will create an NOT link program here, link down below
@@ -623,11 +623,11 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
 class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *owner, int stspec)
 {
-    class unit_fptr *fptr;
-    class unit_fptr *head;
-    int i;
-    ubit8 t8;
-    ubit16 t16;
+    class unit_fptr *fptr = nullptr;
+    class unit_fptr *head = nullptr;
+    int i = 0;
+    ubit8 t8 = 0;
+    ubit16 t16 = 0;
 
     fptr = nullptr;
     head = nullptr;
@@ -684,9 +684,9 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
         else if (fptr->index == SFUN_DILCOPY_INTERNAL)
         {
             char name[256];
-            char *c;
+            char *c = nullptr;
 
-            struct dilargstype *dilargs;
+            struct dilargstype *dilargs = nullptr;
 
             CREATE(dilargs, struct dilargstype, 1);
 
@@ -782,7 +782,7 @@ void bread_block(FILE *datafile, long file_pos, int length, void *buffer)
 void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af, ubit8 version)
 {
     int i = 0;
-    ubit32 nPos;
+    ubit32 nPos = 0;
     ubit32 nOrgPos = pBuf->GetLength();
 
     if (version <= 56)
@@ -836,8 +836,8 @@ void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af, ubit8 versio
  */
 void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
 
     /* write a template */
 
@@ -901,8 +901,8 @@ void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
  */
 void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
 {
-    int i;
-    struct diltemplate *tmpl;
+    int i = 0;
+    struct diltemplate *tmpl = nullptr;
 
     /* write new version */
     pBuf->Append32(prg->flags); /* from other template? */
@@ -986,9 +986,9 @@ void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
 
 void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
 {
-    char *data;
+    char *data = nullptr;
     int i = 0;
-    ubit32 nPos;
+    ubit32 nPos = 0;
     ubit32 nOrgPos = pBuf->GetLength();
     pBuf->Append16(0); /* Assume no affects by default */
 
@@ -1061,7 +1061,7 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
                         break;
                     case DILV_ILP:
                     {
-                        int myi;
+                        int myi = 0;
                         for (myi = 0; myi <= ((int *)dilargs->dilarg[j].data.intlist)[0]; myi++)
                         {
                             pBuf->Append32(((int *)dilargs->dilarg[j].data.intlist)[myi]);
@@ -1117,8 +1117,8 @@ void bwrite_block(FILE *datafile, int length, void *buffer)
 /* Write unit to string. */
 int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
 {
-    int i;
-    ubit8 nVersion;
+    int i = 0;
+    ubit8 nVersion = 0;
 #ifdef DMSERVER
     char zone[FI_MAX_ZONENAME + 1];
     char name[FI_MAX_UNITNAME + 1];
@@ -1429,12 +1429,12 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
 /* Used only by dmc.                                     */
 void write_unit(FILE *f, class unit_data *u, char *fname)
 {
-    CByteBuffer *pBuf;
-    ubit32 nSizeStart;
-    ubit32 nStart;
-    ubit32 nPos;
-    ubit32 length;
-    ubit32 crc;
+    CByteBuffer *pBuf = nullptr;
+    ubit32 nSizeStart = 0;
+    ubit32 nStart = 0;
+    ubit32 nPos = 0;
+    ubit32 length = 0;
+    ubit32 crc = 0;
 
     pBuf = &g_FileBuffer;
     pBuf->Clear();
@@ -1477,10 +1477,10 @@ void write_unit(FILE *f, class unit_data *u, char *fname)
 /* Used only by dmc. for writing zones                   */
 void write_diltemplate(FILE *f, struct diltemplate *tmpl)
 {
-    CByteBuffer *pBuf;
-    ubit32 length;
-    ubit32 nStart;
-    ubit32 nPos;
+    CByteBuffer *pBuf = nullptr;
+    ubit32 length = 0;
+    ubit32 nStart = 0;
+    ubit32 nPos = 0;
 
     pBuf = &g_FileBuffer;
     pBuf->Clear();

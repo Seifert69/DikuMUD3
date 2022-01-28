@@ -56,8 +56,8 @@
 /* report error in instruction */
 void dil_stop_special(class unit_data *unt, class dilprg *aprg)
 {
-    class unit_fptr *fptr;
-    class unit_data *u;
+    class unit_fptr *fptr = nullptr;
+    class unit_data *u = nullptr;
     for (u = unt; u; u = u->next)
     {
         DeactivateDil(u, aprg);
@@ -82,8 +82,8 @@ void dil_stop_special(class unit_data *unt, class dilprg *aprg)
 
 void dil_start_special(class unit_data *unt, class dilprg *aprg)
 {
-    class unit_fptr *fptr;
-    class unit_data *u;
+    class unit_fptr *fptr = nullptr;
+    class unit_data *u = nullptr;
     for (u = unt; u; u = u->next)
     {
         ActivateDil(u);
@@ -152,7 +152,7 @@ void dilfi_edit(class dilprg *p)
 void dilfi_kedit(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    class descriptor_data *d;
+    class descriptor_data *d = nullptr;
 
     if (dil_type_check("killedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
@@ -221,7 +221,7 @@ void dilfi_gamestate(class dilprg *p)
 
 void dilfi_send_done(class dilprg *p)
 {
-    struct command_info *cmd_ptr;
+    struct command_info *cmd_ptr = nullptr;
     dilval *v7 = p->stack.pop();
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
@@ -345,8 +345,8 @@ void dilfi_setpwd(class dilprg *p)
 void dilfi_delpc(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    class descriptor_data *d;
-    class unit_data *tmp;
+    class descriptor_data *d = nullptr;
+    class unit_data *tmp = nullptr;
 
     if (dil_type_check("delete_player", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
     {
@@ -398,7 +398,7 @@ void dilfi_reboot(class dilprg *p)
 void dilfi_foe(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    int i;
+    int i = 0;
 
     if (dil_type_check("foreach - build", p, 1, v1, TYPEFAIL_NULL, 1, DILV_INT))
     {
@@ -449,9 +449,9 @@ void dilfi_foe(class dilprg *p)
 void dilfi_fon(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    class unit_data *u;
-    ubit32 adr;
-    int i;
+    class unit_data *u = nullptr;
+    ubit32 adr = 0;
+    int i = 0;
 
     adr = bread_ubit32(&(p->fp->pc));
     p->waitcmd--;
@@ -588,7 +588,7 @@ void dilfi_sbt(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int dif;
+    int dif = 0;
 
     if (dil_type_check("setbright", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
@@ -890,9 +890,9 @@ void dilfi_cli(class dilprg *p)
 /* Return from proc */
 void dilfi_rtf(class dilprg *p)
 {
-    struct dilframe *cfrm;
-    ubit8 typ;
-    int i;
+    struct dilframe *cfrm = nullptr;
+    ubit8 typ = 0;
+    int i = 0;
     p->waitcmd--;
 
     if (p->fp == p->frame)
@@ -1025,8 +1025,8 @@ void dil_pop_frame(class dilprg *p)
 
 void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
 {
-    int i;
-    struct dilframe *frm;
+    int i = 0;
+    struct dilframe *frm = nullptr;
 
     i = p->fp - p->frame;
 
@@ -1088,7 +1088,7 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
         frm->vars = nullptr;
     }
 
-    ubit8 tmp;
+    ubit8 tmp = 0;
 
     for (i = 0; i < rtmpl->argc; i++)
     {
@@ -1165,9 +1165,9 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
 /* Remote function call */
 void dilfi_rfunc(class dilprg *p)
 {
-    int xrefi;
-    struct diltemplate *ctmpl;
-    ubit8 argcnt;
+    int xrefi = 0;
+    struct diltemplate *ctmpl = nullptr;
+    ubit8 argcnt = 0;
 
     p->waitcmd--;
 
@@ -1206,11 +1206,11 @@ void dilfi_rfunc(class dilprg *p)
 /* Remote symbolic function call */
 void dilfi_rsfunc(class dilprg *p)
 {
-    int i;
-    struct diltemplate /* *ctmpl,*/ *ntmpl;
+    int i = 0;
+    struct diltemplate /* *ctmpl,*/ *ntmpl = nullptr;
     dilval *v1 = p->stack.pop();
-    ubit8 argcnt;
-    int fail;
+    ubit8 argcnt = 0;
+    int fail = 0;
 
     p->waitcmd--;
 
@@ -1834,7 +1834,7 @@ void dilfi_exp(class dilprg *p)
 /* Branch on expression */
 void dilfi_if(class dilprg *p)
 {
-    ubit32 coreptr;
+    ubit32 coreptr = 0;
     dilval *v1 = p->stack.pop();
 
     coreptr = bread_ubit32(&(p->fp->pc)); /* else branch */
@@ -2326,7 +2326,7 @@ void dilfi_exec(class dilprg *p)
             if (IS_IMMORTAL((class unit_data *)v2->val.ptr))
             {
                 char buf[MAX_INPUT_LENGTH];
-                struct command_info *cmd_ptr;
+                struct command_info *cmd_ptr = nullptr;
 
                 str_next_word(cmd, buf);
 
@@ -2380,8 +2380,8 @@ void dilfi_wit(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    ubit32 coreptr;
-    ubit8 *oldpc;
+    ubit32 coreptr = 0;
+    ubit8 *oldpc = nullptr;
     coreptr = bread_ubit32(&(p->fp->pc));
     oldpc = &(p->fp->tmpl->core[coreptr]);
 
@@ -2500,7 +2500,7 @@ void dilfi_act(class dilprg *p)
 /* Goto new command */
 void dilfi_goto(class dilprg *p)
 {
-    ubit32 adr;
+    ubit32 adr = 0;
 
     adr = bread_ubit32(&(p->fp->pc));
     p->fp->pc = &(p->fp->tmpl->core[adr]);
@@ -2511,9 +2511,9 @@ void dilfi_goto(class dilprg *p)
 void dilfi_on(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    ubit32 adr;
-    ubit16 maxlab;
-    ubit8 *brkptr;
+    ubit32 adr = 0;
+    ubit16 maxlab = 0;
+    ubit8 *brkptr = nullptr;
 
     p->waitcmd--;
 
@@ -2552,7 +2552,7 @@ void dilfi_sua(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    class unit_affected_type *af;
+    class unit_affected_type *af = nullptr;
 
     p->waitcmd--;
 
@@ -2755,7 +2755,7 @@ void dilfi_snta(class dilprg *p)
     {
         if (v1->val.ptr && v2->val.ptr)
         {
-            class file_index_type *fi;
+            class file_index_type *fi = nullptr;
 
             if ((fi = str_to_file_index((char *)v2->val.ptr)))
             {
@@ -2811,13 +2811,13 @@ void dilfi_sntadil(class dilprg *p)
     {
         if (v1->val.ptr && !str_is_empty((char *)v2->val.ptr))
         {
-            struct diltemplate *tmpl;
+            struct diltemplate *tmpl = nullptr;
 
             tmpl = find_dil_template((const char *)v2->val.ptr);
 
             if (tmpl)
             {
-                class dilprg *tp;
+                class dilprg *tp = nullptr;
                 if (tmpl->nextdude)
                 {
                     slog(LOG_ALL, 0, "INVESTIGATE: DIL sendtoall() we appear to have a nested sendtoall() with nextdude.");
@@ -2829,7 +2829,7 @@ void dilfi_sntadil(class dilprg *p)
 
                     if (tp->fp && tp->fp->tmpl == tmpl && tp != p)
                     {
-                        class unit_fptr *fptr;
+                        class unit_fptr *fptr = nullptr;
 
                         /* If it is destructed, then it cant be found because data
                            will be null */
@@ -2896,7 +2896,7 @@ void dilfi_log(class dilprg *p)
 void dilfi_sec(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    ubit32 adr; /* address */
+    ubit32 adr = 0; /* address */
 
     adr = bread_ubit32(&(p->fp->pc));
 
@@ -3063,7 +3063,7 @@ class unit_data *hometown_unit(char *str)
     {
         char name[80];
         char zone[80];
-        class unit_data *u;
+        class unit_data *u = nullptr;
 
         split_fi_ref(str, zone, name);
         if ((u = world_room(zone, name)))

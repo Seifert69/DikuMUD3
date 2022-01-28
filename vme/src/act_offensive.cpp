@@ -22,7 +22,7 @@
 
 void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    class unit_data *victim;
+    class unit_data *victim = nullptr;
 
     if (str_is_empty(argument))
     {
@@ -63,7 +63,7 @@ void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
 
 void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    class unit_data *victim;
+    class unit_data *victim = nullptr;
 
     if (str_is_empty(argument))
     {
@@ -97,7 +97,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         set_fighting(ch, victim, TRUE); /* Point to the killer! */
         SET_BIT(CHAR_FLAGS(ch), CHAR_KILL_SELF);
 
-        struct diltemplate *death;
+        struct diltemplate *death = nullptr;
         death = find_dil_template("death@death");
         if (death)
         {

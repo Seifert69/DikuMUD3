@@ -490,7 +490,7 @@ void stop_fighting(class unit_data *ch, class unit_data *victim)
 
 void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
 {
-    class unit_data *u2;
+    class unit_data *u2 = nullptr;
 
     if (!IS_CHAR(u))
     {
@@ -541,7 +541,7 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
 
 void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
 {
-    class unit_data *u2;
+    class unit_data *u2 = nullptr;
 
     if (!IS_CHAR(u))
     {

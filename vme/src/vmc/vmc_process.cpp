@@ -35,7 +35,7 @@ void dmc_error(int fatal, const char *fmt, ...)
     char buf[MAX_STRING_LENGTH];
     char filename[128];
     va_list args;
-    FILE *f;
+    FILE *f = nullptr;
 
     va_start(args, fmt);
     vsnprintf(buf, sizeof(buf) - 10, fmt, args);
@@ -97,10 +97,10 @@ const char *convert_back_money(unsigned long val)
 
 amount_t convert_money(char *str)
 {
-    long int val1;
-    long int val2;
+    long int val1 = 0;
+    long int val2 = 0;
     amount_t res = 0;
-    char *c;
+    char *c = nullptr;
 
     if (str == nullptr)
     {
@@ -141,10 +141,10 @@ amount_t convert_money(char *str)
 /* Output: [3] as input                  */
 void dmc_set_weapon(class unit_data *weapon)
 {
-    int category;
-    int craftsmanship;
-    int magic_bonus;
-    int slay;
+    int category = 0;
+    int craftsmanship = 0;
+    int magic_bonus = 0;
+    int slay = 0;
 
     category = OBJ_VALUE(weapon, 0);
     craftsmanship = OBJ_VALUE(weapon, 1);
@@ -189,9 +189,9 @@ void dmc_set_weapon(class unit_data *weapon)
 /*         Value[2] = ...                 */
 void dmc_set_armour(class unit_data *armour)
 {
-    int category;
-    int craftsmanship;
-    int magic_bonus;
+    int category = 0;
+    int craftsmanship = 0;
+    int magic_bonus = 0;
 
     category = OBJ_VALUE(armour, 0);
     craftsmanship = OBJ_VALUE(armour, 1);
@@ -229,9 +229,9 @@ void dmc_set_armour(class unit_data *armour)
 
 void dmc_set_shield(class unit_data *shield)
 {
-    int category;
-    int craftsmanship;
-    int magic_bonus;
+    int category = 0;
+    int craftsmanship = 0;
+    int magic_bonus = 0;
 
     category = OBJ_VALUE(shield, 0);
     craftsmanship = OBJ_VALUE(shield, 1);
@@ -263,11 +263,11 @@ void dmc_set_shield(class unit_data *shield)
 
 void set_points(class unit_data *u)
 {
-    int i;
-    int sum;
-    int max;
-    int spoints;
-    int apoints;
+    int i = 0;
+    int sum = 0;
+    int max = 0;
+    int spoints = 0;
+    int apoints = 0;
 
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_FIST, WPN_CRUSH))
     {
@@ -377,13 +377,12 @@ void set_room_data(class unit_data *u)
     SET_BIT(UNIT_MANIPULATE(u), MANIPULATE_ENTER);
 }
 
-
 bool affect_vector_string(class unit_data *obj, std::string &s)
 {
     int bonusvector[11];
 
     s.clear();
-    
+
     memset(bonusvector, 0, sizeof(bonusvector));
 
     for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
@@ -442,7 +441,6 @@ bool affect_vector_string(class unit_data *obj, std::string &s)
     return bHasData;
 }
 
-
 bool affect_vector_list(class unit_data *obj, std::string &s)
 {
     s.clear();
@@ -477,7 +475,6 @@ bool affect_vector_list(class unit_data *obj, std::string &s)
 
     return !s.empty();
 }
-
 
 void show_obj_info(class unit_data *obj)
 {
@@ -617,11 +614,11 @@ void show_npc_info(class unit_data *npc)
 
 void process_affects(class unit_data *pUnit)
 {
-    struct unit_affected_type *pAf;
-    int firstf;
-    int tickf;
-    int lastf;
-    int applyf;
+    struct unit_affected_type *pAf = nullptr;
+    int firstf = 0;
+    int tickf = 0;
+    int lastf = 0;
+    int applyf = 0;
 
     for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->next)
     {
@@ -856,7 +853,7 @@ void process_affects(class unit_data *pUnit)
 
 void process_funcs(class unit_data *u)
 {
-    struct unit_fptr *fptr;
+    struct unit_fptr *fptr = nullptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
     {
@@ -897,8 +894,8 @@ void check_namelist(class unit_data *unit, class cNamelist *nl)
 
     if (nl)
     {
-        ubit32 i;
-        int len;
+        ubit32 i = 0;
+        int len = 0;
 
         for (i = 0; i < nl->Length(); i++)
         {
@@ -957,8 +954,8 @@ void check_namelist(class unit_data *unit, class cNamelist *nl)
 
 void process_unit(class unit_data *u)
 {
-    int i;
-    struct extra_descr_data *exd;
+    int i = 0;
+    struct extra_descr_data *exd = nullptr;
 
     process_affects(u);
     process_funcs(u);
@@ -1042,7 +1039,7 @@ void process_unit(class unit_data *u)
 
                     if (!UNIT_TITLE(u).empty())
                     {
-                        int i;
+                        int i = 0;
 
                         for (i = 0; i <= MAX_MONEY; i++)
                         {
@@ -1157,7 +1154,7 @@ void process_unit(class unit_data *u)
 
 void init_unit(class unit_data *u)
 {
-    int i;
+    int i = 0;
 
     u->next = nullptr;
 

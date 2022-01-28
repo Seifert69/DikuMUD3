@@ -53,7 +53,7 @@ void shutdown_request(int signal_no)
 
 void message_request(int signal_no)
 {
-    FILE *msg_file_fd;
+    FILE *msg_file_fd = nullptr;
     char line[512];
 
     slog(LOG_ALL, 0, "Received USR1 - message request");

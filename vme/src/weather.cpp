@@ -29,7 +29,7 @@ time_t g_tBootTime = 0;                       // time(0) when server boots
 /* Calculate the REAL time passed over the last t2-t1 centuries (secs) */
 struct time_info_data real_time_passed(time_t t2, time_t t1)
 {
-    long secs;
+    long secs = 0;
     struct time_info_data now;
 
     secs = (long)difftime(t2, t1);
@@ -51,7 +51,7 @@ struct time_info_data real_time_passed(time_t t2, time_t t1)
 struct time_info_data mud_date(time_t t)
 {
     struct time_info_data mdate;
-    long p;
+    long p = 0;
 
     p = (long)difftime(t, g_beginning_of_time);
 
@@ -83,7 +83,7 @@ struct time_info_data mud_date(void)
 /* Calculate the MUD time passed over the last t2-t1 centuries (secs) */
 struct time_info_data mud_time_passed(time_t t2, time_t t1)
 {
-    long secs;
+    long secs = 0;
     struct time_info_data now;
 
     secs = (long)difftime(t2, t1);
@@ -150,8 +150,8 @@ static void another_hour(struct time_info_data time_data)
 
 static void weather_change(class zone_type *zone, struct time_info_data time_data)
 {
-    int diff;
-    int change;
+    int diff = 0;
+    int change = 0;
 
     if (time_data.month <= 2)
     { /* Winter */

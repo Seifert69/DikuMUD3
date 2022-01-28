@@ -161,7 +161,7 @@ struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
 // Post-porcessing of adding-extra descriptions.
 void edit_extra(class descriptor_data *d)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
 
     for (exd = UNIT_EXTRA(d->editing).m_pList; exd; exd = exd->next)
     {
@@ -180,7 +180,7 @@ void edit_extra(class descriptor_data *d)
 // Post-porcessing of adding-extra descriptions.
 void edit_info(class descriptor_data *d)
 {
-    class extra_descr_data *exd;
+    class extra_descr_data *exd = nullptr;
 
     for (exd = PC_INFO(d->editing).m_pList; exd; exd = exd->next)
     {
@@ -208,8 +208,8 @@ void edit_inside_descr(class descriptor_data *d)
 
 int search_block_set(char *arg, const char **list, bool exact)
 {
-    int i;
-    int l;
+    int i = 0;
+    int l = 0;
 
     if (list == nullptr)
     {
@@ -324,11 +324,11 @@ void show_structure(const char *structure[], class unit_data *ch)
 
 long int get_bit(char *bitlst, const char *structure[])
 {
-    char *l;
-    char *s;
+    char *l = nullptr;
+    char *s = nullptr;
     char bit[MAX_STRING_LENGTH];
     long int bitval = 0;
-    long int tmpval;
+    long int tmpval = 0;
 
     /* walk through bitlist */
     for (l = bitlst; *l;)
@@ -366,7 +366,7 @@ int get_type(char *typdef, const char *structure[])
 void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char arg[MAX_STRING_LENGTH];
-    int type;
+    int type = 0;
 
     char strarg[MAX_STRING_LENGTH];
     int typarg = 0;
@@ -374,9 +374,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     long int bitarg = 0;
 
     class file_index_type *untarg = nullptr;
-    class extra_descr_data *ed;
-    class unit_data *unt;
-    class unit_affected_type *aff;
+    class extra_descr_data *ed = nullptr;
+    class unit_data *unt = nullptr;
+    class unit_affected_type *aff = nullptr;
 
     if (!CHAR_DESCRIPTOR(ch))
     {
@@ -1372,11 +1372,11 @@ static const char *skill_field_names[] = {"skill", "spell", "weapon", nullptr};
 
 void do_setskill(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    int type;
-    int skillarg;
+    int type = 0;
+    int skillarg = 0;
     int valarg = 0;
     char arg[MAX_STRING_LENGTH];
-    class unit_data *unt;
+    class unit_data *unt = nullptr;
 
     if (!CHAR_DESCRIPTOR(ch))
     {
