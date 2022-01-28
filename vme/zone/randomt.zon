@@ -31,9 +31,77 @@ help
 %dil
 
 
+// Roll for the quality of the smith work
+//
+dilbegin integer smithyroll(lvl : integer);
+var 
+    quallist : intlist;
+    roll : integer;
+    j : integer;
+    
+code
+{
+    log("Level = " + itoa(lvl));
+
+    // Quality-roll for BONUS_AVERAGE. Rolling 90-94 gives 0 bonus to quality
+    quallist := {-100, -5,
+                  -50, -4,
+                    5, -3,
+                   40, -2,
+                   60, -1,
+                   90,  0,
+                   95,  0,
+                  150,  0,
+                  200,  0,
+                  250,  1,
+                  300,  2,
+                  350,  3};
+
+    roll := openroll(100, 5);
+    log("Quality Roll = " + itoa(roll));
+    j := 0;
+
+    while (j < 12)
+    {
+        if (roll < quallist.[j*2])
+        {
+            j := (j+lvl); // Improve one per bonus level
+            if (j >= 12)
+                j := 11;  // Max out at the top to avoid OOB
+            j := quallist.[j*2+1]; // Get the bonus
+            break;
+        }
+        j := j + 1;
+    }
+    // Resulting bonus is in j
+
+    log("Quality Result = " + itoa(j));
+
+    return (j);
+}
+dilend
+
+
+
+//
+// Enchantments:
+//   Magic bonus
+//   Ability transfer (8)
+//   Good / Evil protection
+//   Resistance (spell categories)
+//   Defense (weapon categories)
+//   
+//   Possible expansions
+//     Weapon has embedded spells that can be used X times / day
+//     Extra Fire, Cold, Electricity, damage or blade type - how?
+
+
 // Level is 0-7 (BONUS_XXX) for power of weapon
 
 dilbegin unitptr generateweapon(lvl : integer);
+external
+    integer smithyroll(lvl : integer);
+
 var
     u : unitptr;
     wpns : stringlist;
@@ -43,6 +111,8 @@ var
     i : integer;
     s : string;
     t : string;
+    smith : integer;
+    enchantments : integer;
 code
 {
     log("WEAPON MAKER");
@@ -82,27 +152,30 @@ code
             QUOTE(WPN_TRIDENT),        "70", "12"};
 
 
-    // type, quality%, weight%, value%
+    // material, weight-index, value-index, enchantment capacity, bonus
     materials := {
-        "copper",     "114",      "1", QUOTE(BONUS_BAD_MINUS),
-        "bronze",     "110",     "10", QUOTE(BONUS_AVERAGE_MINUS),
-        "iron",       "100",    "100", QUOTE(BONUS_AVERAGE),
-        "silver",     "133",   "1000", QUOTE(BONUS_AVERAGE_PLUS),
-        "steel",      "100",    "500", QUOTE(BONUS_GOOD),
-        "high steel",  "81",    "800", QUOTE(BONUS_GOOD_PLUS),
-        "black steel", "71",   "5000", QUOTE(BONUS_EXCELLENT),
-        "true steel",  "69",  "10000", QUOTE(BONUS_EXCELLENT_PLUS),
-        "adamantium",  "61",  "50000", QUOTE(BONUS_SUPERIOR),
-        "mithril",     "50", "100000", QUOTE(BONUS_ARTIFACT) };
+        "copper",     "114",      "1", "0", QUOTE(BONUS_BAD_MINUS),
+        "bronze",     "110",     "10", "0", QUOTE(BONUS_AVERAGE_MINUS),
+        "iron",       "100",    "100", "0", QUOTE(BONUS_AVERAGE), 
+        "silver",     "133",   "1000", "3", QUOTE(BONUS_AVERAGE_PLUS),
+        "steel",       "90",    "500", "1", QUOTE(BONUS_GOOD),
+        "high steel",  "81",    "800", "1", QUOTE(BONUS_GOOD_PLUS),
+        "black steel", "71",   "5000", "2", QUOTE(BONUS_EXCELLENT),
+        "true steel",  "69",  "10000", "3", QUOTE(BONUS_EXCELLENT_PLUS),
+        "adamantium",  "61",  "50000", "4", QUOTE(BONUS_SUPERIOR),
+        "mithril",     "50", "100000", "5", QUOTE(BONUS_ARTIFACT) };
 
     idxWpn := rnd(0,30) * 3;
-    idxMat := rnd(0,9) * 4;
+    idxMat := rnd(0,9) * 5;
 
     u := load("weapon_rnd@randomt");
     if (u != null)
         log("loaded a weapon");
 
+
     t := materials.[idxMat];
+    log("Material roll = " + itoa(idxMat / 4));
+    log("Material = " + t);
     s := weapon_name(atoi(wpns.[idxWpn]));
 
     addstring(u.names, t + " " + s);
@@ -120,8 +193,29 @@ code
 
     u.value[0] := atoi(wpns.[idxWpn]);
 
-    i := atoi(materials.[idxMat+3]);
-    u.value[1] := atoi(materials.[idxMat+3]);
+    // Get the material bonus
+    i := atoi(materials.[idxMat+4]);
+    log("Material quality bonus = " + itoa(i));
+ 
+    // Get the quality of the smith work
+    smith := smithyroll(lvl);
+    log("Smith quality bonus = " + itoa(smith));
+
+    //
+    // Calculate number of enchantments
+    //
+    log("Enchantments = " + itoa(enchantments));
+    enchantments := smith + atoi(materials.[idxMat+3]);
+ 
+    smith := smith + i;
+    if (smith > 7)
+        smith := 7;
+    if (smith < -7)
+        smith := -7;
+
+    log("Final quality bonus = " + itoa(smith));
+
+    u.value[1] := smith;
 
     return(u);
 }
