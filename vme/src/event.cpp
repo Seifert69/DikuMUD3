@@ -192,7 +192,7 @@ void eventqueue::process(void)
     struct timeval old;
     struct timeval pnow;
     ubit32 us;
-    void (*tfunc)(void *, void *);
+    void (*tfunc)(void *, void *) = nullptr;
     loop_process = 0;
     gettimeofday(&old, (struct timezone *)nullptr);
 

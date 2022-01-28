@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#https://clang.llvm.org/extra/clang-tidy/checks/readability-isolate-declaration.html
+#https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-init-variables.html
 
 tidy_binary=clang-tidy-12
 which ${tidy_binary} > /dev/null 2>&1
@@ -238,7 +238,7 @@ popd
 for source in $sources
 do
    echo "Selecting [$source] for tidying!"
-   ${tidy_binary} -p $tmpdir --quiet --checks="-*,readability-isolate-declaration" --fix $source || exit 1
+   ${tidy_binary} -p $tmpdir --quiet --checks="-*,cppcoreguidelines-init-variables" --fix $source || exit 1
    clang-format -i $source
 done
 rm -rf $tmpdir
