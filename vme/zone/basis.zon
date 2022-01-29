@@ -449,6 +449,7 @@ external
 var
    tgt : unitptr;
    w : string;
+   exd : extraptr;
 code
 {
    heartbeat := PULSE_SEC;
@@ -475,7 +476,21 @@ code
    {
       // Notify of newbies on the newbie channel
       if (self.level < 2)
-         dispatch("discord msg #newbie Welcome **@" + self.name + "** to Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+      {
+         tgt := findroom("void@basis");
+         exd := "$newbies" in tgt.extra;
+         if (exd == null)
+         {
+            addextra(tgt.extra, {"$newbie"}, "");
+            exd := "$newbies" in tgt.extra;
+         }
+
+         if (not(self.name in exd.names))
+         {
+            addstring(exd.names, self.name);  // Persists until reboot
+            dispatch("discord msg #newbie Welcome **@" + self.name + "** to Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+         }
+      }
 
       w := whostring@comm();
       dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
