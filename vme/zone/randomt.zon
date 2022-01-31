@@ -30,54 +30,333 @@ help
 
 %dil
 
-
-// Roll for the quality of the smith work
+// il : intlist  [array of integers from 5..94]
 //
-dilbegin integer smithyroll(lvl : integer);
-var 
-    quallist : intlist;
+// This funciton presume rolls of < 5 are a failure.
+// This funciton presume rolls of > 95 are a open-ended success.
+// The integers in the intlist are the number of bonuses, in the range
+// 5..94 
+//
+// Example: [75,95]
+//  Roll -30 = -1; Roll -80 = -2; Roll 74 = 0; Roll 75 = +1;
+//  roll 94 = +1; roll 95 = +2; roll 144=+2; 145 = +3
+
+dilbegin integer successroll(il : intlist);
+var
     roll : integer;
     j : integer;
+    m : integer;
+code
+{
+    roll := openroll(100, 5);
+    
+    // Test if failure
+    if (roll <= 4)
+    {
+        if (roll > -50)
+            return (-1);
+        else
+            return ((roll / 50)-1);
+    }
+
+    j := 0;
+    m := length(il);
+
+    if (m < 1)
+    {
+        log("Illegal intlist in successroll()");
+        quit;
+    }
+
+    while (j < m)
+    {
+        if (roll < il.[j])
+            break;
+        j := j + 1;
+    }
+
+    if (j < m)
+        return (j); // First match = 0, second = +1, etc.
+
+    // Roll is larger than last number in il
+
+    return (m + (roll-il.[m-1])/50);
+}
+dilend
+
+
+//
+// max = length(list);
+//
+dilbegin integer bonuslistroll(il : intlist, bonuslvl : integer, max : integer);
+external
+    integer successroll(il : intlist);
+
+var
+    i : integer;
+code
+{
+
+    i := successroll(il) + bonuslvl;
+    if (i < 0)
+        return (0);
+
+    if (i >= max)
+        return (max-1);
+
+    return (i);
+}
+dilend
+
+
+// Roll for the decor on the blade which can give room for more enchantments.
+// And a nice description//
+dilbegin integer bladejob(u : unitptr, lvl : integer,  blade : string);
+external
+    integer successroll(il : intlist);
+var 
+    roll : integer;
+    j : integer;
+    sl : stringlist;    
+    mats : stringlist;    
+code
+{
+    // lvl is the smith roll outcome (typically 0-3 but OE)
+    // u.value[1] is the smith and material bonus (up to max 7)
+    // u.value[2] is the material enchantment (up to 5) plus smith bonus (usually 0-3, but Open ended)
+
+    sl := {
+        "Blade decor minus 3 or less",
+        "Blade decor minus 2",
+        "Blade decor minus 1",
+        "Blade plain decor 0",
+        "Blade smooth decor 1",
+        "Blade engraved decor 2",
+        "Blade decor 3",
+        "Blade decor 4",
+        "Blade decor inlaid 5 + eng ",  // + Engraving mats
+        "Blade decor inlaid 6 + eng ",  // + Engraving mats
+        "Blade decor inlaid 7 + eng ",  // + Engraving mats
+        "Blade decor inlaid 8 + eng ",  // + Engraving mats
+        "Blade decor inlaid 9 + eng ",  // + Engraving mats
+        "Blade decor inlaid 10 + eng " // + Engraving mats
+    };
+
+    // Roll for the decoration, typically 0-3
+    roll := successroll({50,75,85,95});
+    log("Blade decor Roll = " + itoa(roll));
+
+    j := u.value[2] + roll + 3;
+    if (j >= length(sl))
+        j := length(sl)-1;
+
+    log("Blade decor sum = " + itoa(j));
+    log("Blade decor: " + sl.[j]);
+
+    if (j >= 8)
+    {
+        mats := { "silver", "gold", "platinum" };
+        roll := rnd(0,2); // Pick random material
+        u.value[2] := u.value[2] + roll + 1;
+        log("Material : " + mats.[roll]);
+        log("Blade enchantment potential : " + itoa(u.value[2]));
+        u.extra.descr := u.extra.descr + " " + sl.[j] + " in " + mats.[roll];
+    }
+    else
+    {
+        u.extra.descr := u.extra.descr + " " + sl.[j];
+    }
+
+    return (0);
+}
+dilend
+
+
+//
+// Roll for the quality of the smith work baed on the material difficulty 
+// and adjust the treasure level. Append a description.
+//
+// Returns the smith bonus. Typically +0 to +2, but since it is open ended can be anything
+//
+dilbegin integer smithjob(u : unitptr, bonuslvl : integer, matlvl : integer, enchant : integer, mat : string);
+external
+    integer successroll(il : intlist);
+var 
+    roll : integer;
+    q : integer;
+    sl : stringlist;
     
 code
 {
-    log("Level = " + itoa(lvl));
+    log("Smith Level = " + itoa(bonuslvl) + "  Material difficulty = " + itoa(matlvl));
 
-    // Quality-roll for BONUS_AVERAGE. Rolling 90-94 gives 0 bonus to quality
-    quallist := {-100, -5,
-                  -50, -4,
-                    5, -3,
-                   40, -2,
-                   60, -1,
-                   90,  0,
-                   95,  0,
-                  150,  0,
-                  200,  0,
-                  250,  1,
-                  300,  2,
-                  350,  3};
+    //
+    roll := successroll({40, 70, 90});
+    roll := roll + (bonuslvl - matlvl);
 
-    roll := openroll(100, 5);
-    log("Quality Roll = " + itoa(roll));
-    j := 0;
+    log("Smith roll = " + itoa(roll));
 
-    while (j < 12)
+    // Adjust weapon quality
+    q := u.value[1] + roll;
+    if (q < -7)
+        q := -7;
+    if (q > 7)
+        q := 7;
+    u.value[1] := q;     
+
+    log("New weapon quality is = " + itoa(q));
+
+    // Enchantments potential
+    u.value[2] := u.value[2] + roll; // +1,+2 gives more room for enchantment
+    log("New weapon enchantment increased to = " + itoa(u.value[2]));
+
+    // Get a smithing description based on weapons quality
+    sl := {
+        "Junk $2t $3t", // -7
+        "Nearly junk $2t $3t",
+        "Very terrible $2t $3t.",
+        "Terrible $2t $3t",
+        "Very bad $2t $3t.",
+        "Bad $2t $3t.",
+        "Below average $2t $3t.", 
+        "Average $2t $3t.", // 0
+        "Above average $2t $3t",
+        "Good $2t $3t",
+        "very good $2t $3t.",
+        "Excellent $2t $3t.",
+        "Above Excellent $2t $3t.",
+        "Superior $2t $3t.",
+        "Artifact $2t $3t." };
+
+    log("weapon extra : " + sl.[u.value[1]+7]);
+    u.extra.descr := sl.[u.value[1]+7];
+
+    return (roll);
+}
+dilend
+
+
+
+// Weapon id, cost, weight must be set before calling this
+// Returns material level + smith level (not limited to -7 ...+7)
+//
+dilbegin integer wpnmetals(u : unitptr, lvl : integer, blade : string);
+external
+    integer smithjob@randomt(u : unitptr, bonuslvl : integer, matlvl : integer, enchant : integer, mat : string);
+    integer bladejob@randomt(u : unitptr, lvl : integer,  blade : string);
+    integer bonuslistroll@randomt(il : intlist, bonuslvl : integer, max : integer);
+
+var
+    materials : stringlist;
+    idxMat : integer;
+    i : integer;
+    s : string;
+    mat : string;
+    smith : integer;
+    enchantments : integer;
+code
+{
+    // material, weight-index, value-index, enchantment capacity, bonus
+    // Presuming the smithing material difficulty is equal to the mat bonus
+    materials := {
+        "copper",     "114",      "1", "0", QUOTE(BONUS_BAD),
+        "bronze",     "110",     "10", "0", QUOTE(BONUS_AVERAGE_MINUS),
+        "iron",       "100",    "100", "0", QUOTE(BONUS_AVERAGE), 
+        "silver",     "133",   "1000", "3", QUOTE(BONUS_AVERAGE_PLUS),
+        "steel",       "90",    "500", "1", QUOTE(BONUS_GOOD),
+        "high steel",  "81",    "800", "1", QUOTE(BONUS_GOOD_PLUS),
+        "black steel", "71",   "5000", "2", QUOTE(BONUS_EXCELLENT),
+        "true steel",  "69",  "10000", "3", QUOTE(BONUS_EXCELLENT_PLUS),
+        "adamantium",  "61",  "50000", "4", QUOTE(BONUS_SUPERIOR),
+        "mithril",     "50", "100000", "5", QUOTE(BONUS_ARTIFACT) };
+
+    // First roll for a random material based on bonuslvl
+    // with [il] for BONUS_AVERAGE; 56% copper, 24% bronze, 9% iron, 5%+
+    //               BONUS_ARTIFACT; 56% true steel, 24% adamantium, 14% mithril
+
+    idxMat := bonuslistroll({60,85,95}, lvl, length(materials)/5) * 5;
+    mat := materials.[idxMat];
+    log("Material roll = " + itoa(idxMat/5) + " " + mat);
+
+    // Set name, title, description, extra
+    addstring(u.names, mat + " " + u.name);
+    u.title := "a " + mat + " " + u.name;
+    u.outside_descr := "a " + mat + " " + u.name + " is laying here.";
+    // XXX Add extra
+
+    // Adjust weight for material
+    set_weight_base(u, (u.weight * atoi(materials.[idxMat+1]))/100);
+
+    // Adjust the cost for material
+    u.cost := (u.cost * atoi(materials.[idxMat+2]))/10000;
+
+    // Set the material quality bonus
+    u.value[1] := atoi(materials.[idxMat+4]);
+    log("Material quality bonus = " + itoa(u.value[1]));
+
+    // Set Enchantments potential
+    u.value[2] := atoi(materials.[idxMat+3]); 
+    log("Material enchantment potential = " + itoa(u.value[1]));
+
+    // Make a smithy roll for the material and adjust
+    smith := smithjob@randomt(u, lvl, atoi(materials.[idxMat+3]), u.value[2], mat);
+    i := bladejob(u, smith, blade);
+
+    return (smith);
+}
+dilend
+
+//
+// bonuslvl    : BONUS_XXX (0-7) of the quality of weapon to create
+// wpnid       : WPN_XXX type of weapon to create, e.g. WPN_JAVELIN
+// dflcost     : Default cost of the weapon if it was made in iron
+// dflweight   : Default weight of the weapon
+// dflsize     : Default size of the weapon (170cm?)
+// materialdil : the DIL to generate the material
+// bladedil    : the DIL to process the blade / point / head of the weapon
+// hiltdil     : the DIL to process the hilt / shaft of the weapon
+//
+dilbegin unitptr generateaweapon(bonuslvl : integer, wpnid : integer, 
+                                 dflcost : integer, dflweight : integer, dflsize : integer,
+                                 materialdil : string,
+                                 bladedil : string,
+                                 hiltdil : string);
+
+external
+    integer wpnmetals(u : unitptr, lvl : integer, blade : string);
+
+var
+    u : unitptr;
+    wpns : stringlist;
+    i : integer;
+    s : string;
+    t : string;
+    smith : integer;
+    enchantments : integer;
+code
+{
+    u := load("weapon_rnd@randomt");
+    if (u == null)
     {
-        if (roll < quallist.[j*2])
-        {
-            j := (j+lvl); // Improve one per bonus level
-            if (j >= 12)
-                j := 11;  // Max out at the top to avoid OOB
-            j := quallist.[j*2+1]; // Get the bonus
-            break;
-        }
-        j := j + 1;
+        log("Unable to load basis weapon");
+        quit;
     }
-    // Resulting bonus is in j
 
-    log("Quality Result = " + itoa(j));
+    u.value[0] := wpnid;
+    s := weapon_name(wpnid);
+    u.names.[0] := s;
 
-    return (j);
+    // add a placeholder for appending descriptions 
+    addextra(u.extra, {""}, "");
+
+    set_weight_base(u, dflweight);
+    u.height := dflsize;
+    u.cost := dflcost;
+
+    // Find primary weapon material and smith job, gets 
+    i := dilcall(materialdil)(u, bonuslvl, "blade"); 
+
+    return(u);
 }
 dilend
 
@@ -100,7 +379,7 @@ dilend
 
 dilbegin unitptr generateweapon(lvl : integer);
 external
-    integer smithyroll(lvl : integer);
+    integer bladequality(lvl : integer);
 
 var
     u : unitptr;
@@ -172,7 +451,6 @@ code
     if (u != null)
         log("loaded a weapon");
 
-
     t := materials.[idxMat];
     log("Material roll = " + itoa(idxMat / 4));
     log("Material = " + t);
@@ -198,7 +476,7 @@ code
     log("Material quality bonus = " + itoa(i));
  
     // Get the quality of the smith work
-    smith := smithyroll(lvl);
+    smith := bladequality(lvl);
     log("Smith quality bonus = " + itoa(smith));
 
     //
@@ -241,6 +519,11 @@ ALWAYS_LIGHT
 dilbegin bouncegenerator();
 external
     unitptr generateweapon(lvl : integer);
+    unitptr generateaweapon@randomt(bonuslvl : integer, wpnid : integer, 
+                                 dflcost : integer, dflweight : integer, dflsize : integer,
+                                 materialdil : string,
+                                 bladedil : string,
+                                 hiltdil : string);
 var
     u : unitptr;
 code
@@ -250,7 +533,10 @@ code
     :loop:
     wait(SFB_CMD, command("bounce"));
     log("BOUNCE RECEIVED");
-    u := generateweapon@randomt(0);
+    u := generateaweapon@randomt(BONUS_ARTIFACT, WPN_BATTLE_AXE, 160, 16, 180, 
+                                 "wpnmetals@randomt",
+                                 "",
+                                 "");
     link(u, self);
     goto loop;
 }
