@@ -111,6 +111,71 @@ dilend
 
 // Roll for the decor on the blade which can give room for more enchantments.
 // And a nice description//
+dilbegin integer hiltjob(u : unitptr, lvl : integer,  blade : string);
+external
+    integer successroll(il : intlist);
+var 
+    roll : integer;
+    j : integer;
+    sl : stringlist;    
+    mats : stringlist;    
+code
+{
+    // lvl is the smith roll outcome (typically 0-3 but OE)
+    // u.value[1] is the smith and material bonus (up to max 7)
+    // u.value[2] is the material enchantment (up to 5) plus smith bonus (usually 0-3, but Open ended)
+
+    sl := {
+        "Hilt decor minus 3 or less",
+        "Hilt decor minus 2",
+        "Hilt decor minus 1",
+        "Hilt plain decor 0",
+        "Hilt smooth decor 1",
+        "Hilt engraved decor 2",
+        "Hilt decor 3",
+        "Hilt decor 4",
+        "Hilt decor inlaid 5 + eng ",  // + Engraving mats
+        "Hilt decor inlaid 6 + eng ",  // + Engraving mats
+        "Hilt decor inlaid 7 + eng ",  // + Engraving mats
+        "Hilt decor inlaid 8 + eng ",  // + Engraving mats
+        "Hilt decor inlaid 9 + eng ",  // + Engraving mats
+        "Hilt decor inlaid 10 + eng " // + Engraving mats
+    };
+
+    // Roll for the decoration, typically 0-3
+    roll := successroll({50,75,85,95});
+    log("Blade decor Roll = " + itoa(roll));
+
+    j := u.value[2] + roll + 3;
+    if (j >= length(sl))
+        j := length(sl)-1;
+
+    log("Hilt decor sum = " + itoa(j));
+    log("Hilt decor: " + sl.[j]);
+
+    if (j >= 8)
+    {
+        mats := { "pearl", "ruby", "diamond" };
+        roll := rnd(0,2); // Pick random material
+        u.value[2] := u.value[2] + roll + 1;
+        log("Hilt Material : " + mats.[roll]);
+        log("Hilt enchantment potential : " + itoa(u.value[2]));
+        u.extra.descr := u.extra.descr + " " + sl.[j] + " in " + mats.[roll];
+    }
+    else
+    {
+        u.extra.descr := u.extra.descr + " " + sl.[j];
+    }
+
+    return (0);
+}
+dilend
+
+
+
+
+// Roll for the decor on the blade which can give room for more enchantments.
+// And a nice description//
 dilbegin integer bladejob(u : unitptr, lvl : integer,  blade : string);
 external
     integer successroll(il : intlist);
@@ -240,10 +305,11 @@ dilend
 // Weapon id, cost, weight must be set before calling this
 // Returns material level + smith level (not limited to -7 ...+7)
 //
-dilbegin integer wpnmetals(u : unitptr, lvl : integer, blade : string);
+dilbegin integer metalmats(u : unitptr, lvl : integer, blade : string);
 external
     integer smithjob@randomt(u : unitptr, bonuslvl : integer, matlvl : integer, enchant : integer, mat : string);
     integer bladejob@randomt(u : unitptr, lvl : integer,  blade : string);
+    integer hiltjob@randomt(u : unitptr, lvl : integer,  blade : string);
     integer bonuslistroll@randomt(il : intlist, bonuslvl : integer, max : integer);
 
 var
@@ -301,11 +367,14 @@ code
     // Make a smithy roll for the material and adjust
     smith := smithjob@randomt(u, lvl, atoi(materials.[idxMat+3]), u.value[2], mat);
     i := bladejob(u, smith, blade);
+    i := hiltjob(u, smith,  blade);
 
     return (smith);
 }
 dilend
 
+// For generating metal weapons with hilts / shafts such as swords, axes, 
+// maces, tridents, spears, javelins, etc.
 //
 // bonuslvl    : BONUS_XXX (0-7) of the quality of weapon to create
 // wpnid       : WPN_XXX type of weapon to create, e.g. WPN_JAVELIN
@@ -316,14 +385,14 @@ dilend
 // bladedil    : the DIL to process the blade / point / head of the weapon
 // hiltdil     : the DIL to process the hilt / shaft of the weapon
 //
-dilbegin unitptr generateaweapon(bonuslvl : integer, wpnid : integer, 
+dilbegin unitptr metalweapon(bonuslvl : integer, wpnid : integer, 
                                  dflcost : integer, dflweight : integer, dflsize : integer,
                                  materialdil : string,
                                  bladedil : string,
                                  hiltdil : string);
 
 external
-    integer wpnmetals(u : unitptr, lvl : integer, blade : string);
+    integer metalmats(u : unitptr, lvl : integer, blade : string);
 
 var
     u : unitptr;
@@ -519,7 +588,7 @@ ALWAYS_LIGHT
 dilbegin bouncegenerator();
 external
     unitptr generateweapon(lvl : integer);
-    unitptr generateaweapon@randomt(bonuslvl : integer, wpnid : integer, 
+    unitptr metalweapon@randomt(bonuslvl : integer, wpnid : integer, 
                                  dflcost : integer, dflweight : integer, dflsize : integer,
                                  materialdil : string,
                                  bladedil : string,
@@ -533,8 +602,8 @@ code
     :loop:
     wait(SFB_CMD, command("bounce"));
     log("BOUNCE RECEIVED");
-    u := generateaweapon@randomt(BONUS_ARTIFACT, WPN_BATTLE_AXE, 160, 16, 180, 
-                                 "wpnmetals@randomt",
+    u := metalweapon@randomt(BONUS_ARTIFACT, WPN_BATTLE_AXE, 160, 16, 180, 
+                                 "metalmats@randomt",
                                  "",
                                  "");
     link(u, self);
