@@ -373,6 +373,148 @@ code
 }
 dilend
 
+
+//
+// ================= ENCHANTMENTS ===================
+//
+
+
+dilbegin enc_lightdark(u : unitptr, mod : integer);
+code
+{
+    if (mod > 3)
+    {
+        mod := 3;
+        log("enc_lightdark modifier too large ");
+    }
+    if (mod < -3)
+    {
+        mod := -3;
+        log("enc_lightdark modifier too small ");
+    }
+    setbright(u, u.bright + mod);
+    return;
+}
+dilend
+
+
+//
+// call with e.g. (u, ABIL_STR, BONUS_ARTIFACT)
+//
+dilbegin enc_ability(u : unitptr, abilid : integer, mod : integer);
+var
+  il : intlist;
+code
+{
+    if (mod > BONUS_ARTIFACT)
+    {
+        mod := BONUS_ARTIFACT;
+        log("enc_ability modifier too large ");
+    }
+    if (mod < BONUS_JUNK)
+    {
+        mod := BONUS_JUNK;
+        log("enc_lightdark modifier too small ");
+    }
+
+    il := {-ID_RAISE_MAG, TIF_MAG_INC, TIF_MAG_DEC, 
+           -ID_RAISE_DIV, TIF_DIV_INC, TIF_DIV_DEC, 
+           -ID_RAISE_STR, TIF_STR_INC, TIF_STR_DEC, 
+           -ID_RAISE_DEX, TIF_DEX_INC, TIF_DEX_DEC, 
+           -ID_RAISE_CON, TIF_CON_INC, TIF_CON_DEC, 
+           -ID_RAISE_CHA, TIF_CHA_INC, TIF_CHA_DEC, 
+           -ID_RAISE_BRA, TIF_BRA_INC, TIF_BRA_DEC, 
+           -ID_RAISE_HPP, TIF_HIT_INC, TIF_HIT_DEC    };
+           
+	addaff(u, il.[abilid*3], -1, 0,
+	       abilid, mod, 0,
+           il.[abilid*3+1], TIF_NONE, il.[abilid*3+2], APF_ABILITY);
+
+    return;
+}
+dilend
+
+
+// Make 4 ticks faster
+dilbegin enc_haste(u : unitptr);
+code
+{
+	addaff(u, ID_TRANSFER_SPEED, -1, 0,
+	       SPEED_DEFAULT - SPEED_DEFAULT/3, 0, 0,
+           TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
+
+    return;
+}
+dilend
+
+
+// Make 4 ticks slower
+dilbegin enc_slow(u : unitptr);
+code
+{
+	addaff(u, ID_TRANSFER_SPEED, -1, 0,
+	       SPEED_DEFAULT+SPEED_DEFAULT/3, 0, 0,
+           TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
+
+    return;
+}
+dilend
+
+
+
+dilbegin enc_goodprot(u : unitptr);
+code
+{
+	addaff(u, ID_PROT_GOOD_TRANSFER, -1, 0,
+	       0, 0, 0,
+           TIF_PROT_GOOD_ON, TIF_NONE, TIF_PROT_GOOD_OFF, APF_NONE);
+
+    return;
+}
+dilend
+
+
+dilbegin enc_evilprot(u : unitptr);
+code
+{
+	addaff(u, ID_PROT_EVIL_TRANSFER, -1, 0,
+	       0, 0, 0,
+           TIF_PROT_EVIL_ON, TIF_NONE, TIF_PROT_EVIL_OFF, APF_NONE);
+
+    return;
+}
+dilend
+
+
+dilbegin integer enchant(u : unitptr, lvl : integer, blade : string);
+external
+    enc_lightdark(u : unitptr, mod : integer);
+    enc_ability(u : unitptr, abilid : integer, mod : integer);
+    enc_haste(u : unitptr);
+    enc_slow(u : unitptr);
+    enc_goodprot(u : unitptr);
+    enc_evilprot(u : unitptr);
+
+code
+{
+    log("here we're supposed to enchant the weapon");
+    //enc_lightdark(u, 1);
+    //enc_ability(u, ABIL_MAG, -1);
+    //enc_ability(u, ABIL_DIV,  1);
+    //enc_ability(u, ABIL_STR,  2);
+    //enc_ability(u, ABIL_DEX,  3);
+    //enc_ability(u, ABIL_CON,  4);
+    //enc_ability(u, ABIL_CHA,  5);
+    //enc_ability(u, ABIL_BRA,  6);
+    //enc_ability(u, ABIL_HP,  7);
+    enc_haste(u);
+    //enc_slow(u);
+    //enc_goodprot(u);
+    //enc_evilprot(u);
+    return (0);
+}
+dilend
+
 // For generating metal weapons with hilts / shafts such as swords, axes, 
 // maces, tridents, spears, javelins, etc.
 //
@@ -392,7 +534,7 @@ dilbegin unitptr metalweapon(bonuslvl : integer, wpnid : integer,
                                  hiltdil : string);
 
 external
-    integer metalmats(u : unitptr, lvl : integer, blade : string);
+    integer enchant(u : unitptr, lvl : integer, blade : string);
 
 var
     u : unitptr;
@@ -424,6 +566,11 @@ code
 
     // Find primary weapon material and smith job, gets 
     i := dilcall(materialdil)(u, bonuslvl, "blade"); 
+
+    if (u.value[2] > 0)
+        u.flags := u.flags | UNIT_FL_MAGIC;
+
+    i := enchant@randomt(u, bonuslvl, "blade");
 
     return(u);
 }

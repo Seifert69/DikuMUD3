@@ -2674,8 +2674,8 @@ void dilfi_ada(class dilprg *p)
             }
             else if (IS_OBJ((unit_data *) v1->val.ptr))
             {
-                if (is_in(-v2->val.num, 1, ID_TOP_IDX) && is_in(-v8->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(-v9->val.num, TIF_NONE, TIF_MAX) && is_in(-v10->val.num, TIF_NONE, TIF_MAX) && is_in(-v11->val.num, APF_NONE, APF_MAX))
+                if (is_in(-v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
                 {
                     if (p->frame[0].tmpl->zone->access != 0)
                     {
