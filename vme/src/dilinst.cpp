@@ -2636,33 +2636,89 @@ void dilfi_ada(class dilprg *p)
                        1,
                        DILV_INT))
     {
-        if ((v1->val.ptr) && is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
-            is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
+        if (v1->val.ptr)
         {
-            if (p->frame[0].tmpl->zone->access != 0)
+            if (IS_CHAR((unit_data *) v1->val.ptr))
             {
-                szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (ada).", p->frame->tmpl->prgname);
-                p->waitcmd = WAITCMD_QUIT;
+                if (is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
+                {
+                    if (p->frame[0].tmpl->zone->access != 0)
+                    {
+                        szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (ada).", p->frame->tmpl->prgname);
+                        p->waitcmd = WAITCMD_QUIT;
+                    }
+                    else
+                    {
+                        class unit_affected_type af;
+
+                        af.id = v2->val.num;
+                        af.duration = v3->val.num;
+                        af.beat = v4->val.num;
+
+                        af.data[0] = v5->val.num;
+                        af.data[1] = v6->val.num;
+                        af.data[2] = v7->val.num;
+
+                        af.firstf_i = v8->val.num;
+                        af.tickf_i = v9->val.num;
+                        af.lastf_i = v10->val.num;
+                        af.applyf_i = v11->val.num;
+                        create_affect((class unit_data *)v1->val.ptr, &af);
+                    }
+                }
+                else
+                {
+                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect parameters OOB (ada).", p->frame->tmpl->prgname);
+                }
+            }
+            else if (IS_OBJ((unit_data *) v1->val.ptr))
+            {
+                if (is_in(-v2->val.num, 1, ID_TOP_IDX) && is_in(-v8->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(-v9->val.num, TIF_NONE, TIF_MAX) && is_in(-v10->val.num, TIF_NONE, TIF_MAX) && is_in(-v11->val.num, APF_NONE, APF_MAX))
+                {
+                    if (p->frame[0].tmpl->zone->access != 0)
+                    {
+                        szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (ada).", p->frame->tmpl->prgname);
+                        p->waitcmd = WAITCMD_QUIT;
+                    }
+                    else
+                    {
+                        // This is a transfer affect
+
+                        class unit_affected_type af;
+
+                        af.id = v2->val.num;
+                        af.duration = -1; // v3->val.num;
+                        af.beat = 0; // v4->val.num;
+
+                        af.data[0] = v5->val.num;
+                        af.data[1] = v6->val.num;
+                        af.data[2] = v7->val.num;
+
+                        af.firstf_i = v8->val.num;
+                        af.tickf_i = v9->val.num;
+                        af.lastf_i = v10->val.num;
+                        af.applyf_i = v11->val.num;
+                        create_affect((class unit_data *)v1->val.ptr, &af);
+                    }
+                }
+                else
+                {
+                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect parameters OOB (ada).", p->frame->tmpl->prgname);
+                }
             }
             else
             {
-                class unit_affected_type af;
-
-                af.id = v2->val.num;
-                af.duration = v3->val.num;
-                af.beat = v4->val.num;
-
-                af.data[0] = v5->val.num;
-                af.data[1] = v6->val.num;
-                af.data[2] = v7->val.num;
-
-                af.firstf_i = v8->val.num;
-                af.tickf_i = v9->val.num;
-                af.lastf_i = v10->val.num;
-                af.applyf_i = v11->val.num;
-                create_affect((class unit_data *)v1->val.ptr, &af);
+                szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect unit is neither char nor object (ada).", p->frame->tmpl->prgname);
             }
         }
+        else
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect, NULL unit pointer (ada).", p->frame->tmpl->prgname);
+        }
+        
+
     }
     delete v1;
     delete v2;
