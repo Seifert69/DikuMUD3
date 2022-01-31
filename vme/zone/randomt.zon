@@ -486,6 +486,32 @@ code
 dilend
 
 
+
+dilbegin enc_resist(u : unitptr, mod : integer);
+code
+{
+    // Categories
+    //SPL_DIVINE             1
+    //SPL_PROTECTION         2
+    //SPL_DETECTION          3
+    //SPL_SUMMONING          4
+    //SPL_CREATION           5
+    //SPL_MIND               6
+    //SPL_HEAT               7	/* Fire          */
+    //SPL_COLD               8	/* Frost         */
+    //SPL_CELL               9	/* Electricity   */
+    //SPL_INTERNAL          10	/* Poison        */
+    //SPL_EXTERNAL          11	/* Acid          */
+
+	addaff(u, -ID_SPELL_DEFENSE, -1, 0,
+	       SPL_HEAT, BONUS_GOOD_PLUS, 0,
+           TIF_SPL_INC, TIF_NONE, TIF_SPL_DEC, APF_SPELL_ADJ);
+
+    return;
+}
+dilend
+
+
 dilbegin integer enchant(u : unitptr, lvl : integer, blade : string);
 external
     enc_lightdark(u : unitptr, mod : integer);
@@ -494,6 +520,7 @@ external
     enc_slow(u : unitptr);
     enc_goodprot(u : unitptr);
     enc_evilprot(u : unitptr);
+    enc_resist(u : unitptr, mod : integer);
 
 code
 {
@@ -507,10 +534,12 @@ code
     //enc_ability(u, ABIL_CHA,  5);
     //enc_ability(u, ABIL_BRA,  6);
     //enc_ability(u, ABIL_HP,  7);
-    enc_haste(u);
+    //enc_haste(u);
     //enc_slow(u);
     //enc_goodprot(u);
     //enc_evilprot(u);
+    enc_resist(u, 3);
+
     return (0);
 }
 dilend
