@@ -39,7 +39,7 @@ link_directories(${CMAKE_SOURCE_DIR}/vme/bin)
 
 add_subdirectory(vme/src)
 add_subdirectory(vme/src/defcomp)
-add_subdirectory(vme/src/mplex2)
+add_subdirectory(vme/src/mplex)
 add_subdirectory(vme/src/pp)
 add_subdirectory(vme/src/vmc)
 add_subdirectory(vme/zone)
