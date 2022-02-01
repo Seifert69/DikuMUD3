@@ -108,7 +108,7 @@ void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
 /*  Generate array of bin_search_type for the zone_list, and for each
  *  zone's file_index's.
  */
-void generate_bin_arrays(void)
+void generate_bin_arrays()
 {
     // class file_index_type *fi;
     // class zone_type *z;
@@ -158,7 +158,7 @@ void generate_bin_arrays(void)
 }
 
 /* Resolves DIL templates loaded boottime */
-void resolve_templates(void)
+void resolve_templates()
 {
     int i = 0;
     int j = 0;
@@ -350,7 +350,7 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 }
 
 /* Call this routine at boot time, to index all zones */
-void generate_zone_indexes(void)
+void generate_zone_indexes()
 {
     class zone_type *z = nullptr;
     char zone[82];
@@ -1683,7 +1683,7 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
     return u;
 }
 
-void read_all_rooms(void)
+void read_all_rooms()
 {
     // MS2020 int room_num = 0;
 
@@ -1704,7 +1704,7 @@ void read_all_rooms(void)
 }
 
 /* After boot time, normalize all room exits */
-void normalize_world(void)
+void normalize_world()
 {
     class file_index_type *fi = nullptr;
     class unit_data *u = nullptr;
@@ -1916,7 +1916,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
     return cmd_list;
 }
 
-void read_all_zones(void)
+void read_all_zones()
 {
     char filename[FI_MAX_ZONENAME + 41];
     FILE *f = nullptr;
@@ -1973,7 +1973,7 @@ char *read_info_file(const std::string &name, char *oldstr)
     return read_info_file(name.c_str(), oldstr);
 }
 
-void boot_db(void)
+void boot_db()
 {
     slog(LOG_OFF, 0, "Boot DB -- BEGIN.");
     slog(LOG_OFF, 0, "Copyright (C) 1994 - 2021 by DikuMUD & Valhalla.");
@@ -2055,7 +2055,7 @@ void boot_db(void)
     touch_file(g_cServerConfig.getFileInLogDir(STATISTICS_FILE));
 }
 
-void db_shutdown(void)
+void db_shutdown()
 {
     return;
 

@@ -9,7 +9,7 @@
 #include "essential.h"
 
 void protocol_translate(class cConHook *con, ubit8 code, char **b);
-void translate_init(void);
+void translate_init();
 
 void Control_Echo_Off(class cConHook *con, char **b, ubit8 code);
 void Control_Echo_On(class cConHook *con, char **b, ubit8 code);

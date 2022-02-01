@@ -22,7 +22,7 @@ struct skill_interval
 class skill_collection
 {
 public:
-    const char **gettext(void);
+    const char **gettext();
     skill_collection(int nSize);
 
     struct profession_cost *prof_table;
@@ -130,7 +130,7 @@ struct wpn_info_type
 
 void roll_description(class unit_data *att, const char *text, int roll);
 int open_ended_roll(int size, int end);
-inline int open100(void)
+inline int open100()
 {
     // MS2020 reducing open roll chance to 2% on high and 1% low.
     return open_ended_roll(100, 2);
@@ -152,11 +152,11 @@ int hit_location(class unit_data *att, class unit_data *def);
 int effective_dex(class unit_data *ch);
 
 bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
-void boot_ability(void);
-void boot_profession(void);
-void boot_race(void);
-void boot_skill(void);
-void boot_weapon(void);
+void boot_ability();
+void boot_profession();
+void boot_race();
+void boot_skill();
+void boot_weapon();
 
 int get_racial_ability(int nRace, int nAbility);
 int get_racial_weapon(int nRace, int nWeapon);

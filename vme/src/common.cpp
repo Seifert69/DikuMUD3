@@ -81,7 +81,7 @@ int ability_point_total(class unit_data *ch)
     }
 }
 
-int skill_point_gain(void)
+int skill_point_gain()
 {
     return AVERAGE_SKILL_COST * SKILL_POINT_FACTOR;
 }

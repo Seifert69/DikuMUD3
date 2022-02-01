@@ -16,7 +16,7 @@
 int g_nDilPrg = 0;
 int g_nDilVal = 0;
 
-dilval::dilval(void)
+dilval::dilval()
 {
     g_nDilVal++;
 
@@ -27,7 +27,7 @@ dilval::dilval(void)
 }
 
 /* free generated temporary values */
-dilval::~dilval(void)
+dilval::~dilval()
 {
     g_nDilVal--;
 
@@ -94,7 +94,7 @@ void dilprg::link(diltemplate *tmpl)
     tmpl->prg_list = this;
 }
 
-void dilprg::unlink(void)
+void dilprg::unlink()
 {
     struct diltemplate *tmpl = nullptr;
 
@@ -185,7 +185,7 @@ dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
     this->frame->stacklen = this->stack.length();
 }
 
-int dilprg::canfree(void)
+int dilprg::canfree()
 {
     if (this->nest <= 0)
     {
@@ -197,7 +197,7 @@ int dilprg::canfree(void)
     }
 }
 
-dilprg::~dilprg(void)
+dilprg::~dilprg()
 {
     assert(canfree());
 

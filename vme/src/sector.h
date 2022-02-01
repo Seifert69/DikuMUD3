@@ -24,4 +24,4 @@ public:
     void set_path_endurance_cost(int from, int to, int pcost, int ecost);
 };
 
-void boot_sector(void);
+void boot_sector();

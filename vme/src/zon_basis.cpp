@@ -38,7 +38,7 @@ class unit_data *g_entry_room = nullptr;
 
 class file_index_type *g_letter_fi = nullptr;
 
-void basis_boot(void)
+void basis_boot()
 {
     g_void_room = world_room(BASIS_ZONE, VOID_ROOM);
     assert(g_void_room);

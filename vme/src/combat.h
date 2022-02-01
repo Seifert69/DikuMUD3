@@ -38,10 +38,10 @@ public:
     class unit_data *Opponent(int i = 0);
     class unit_data *FindOpponent(class unit_data *tmp);
 
-    inline class unit_data *Owner(void) { return pOwner; }
-    inline class unit_data *Melee(void) { return pMelee; }
+    inline class unit_data *Owner() { return pOwner; }
+    inline class unit_data *Melee() { return pMelee; }
     inline int When() { return nWhen; }
-    inline int NoOpponents(void) { return nNoOpponents; }
+    inline int NoOpponents() { return nNoOpponents; }
 
     void changeSpeed(int delta);
     void setMelee(class unit_data *victim);

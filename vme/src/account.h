@@ -20,9 +20,9 @@ struct flatrate_type
 class CAccountConfig
 {
 public:
-    CAccountConfig(void);
+    CAccountConfig();
 
-    void Boot(void);
+    void Boot();
 
     char *m_pCoinName;
     char *m_pOverdueMessage;

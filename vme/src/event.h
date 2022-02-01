@@ -31,24 +31,24 @@ private:
     struct eventq_elem **heap;
 
 public:
-    eventqueue(void);
-    ~eventqueue(void);
+    eventqueue();
+    ~eventqueue();
 
-    inline int Count(void) { return count; }
-    inline int NextEventTic(void) { return (count > 0 ? heap[1]->when : 0); }
-    inline int PCount(void) { return loop_process; }
-    inline float PTime(void) { return loop_time; }
-    inline float Max_PTime(void) { return max_loop_time; }
-    inline int Max_PTime_Process(void) { return max_loop_time_process; }
-    inline int Max_PCount(void) { return max_process; }
-    inline float Max_PCount_Time(void) { return max_process_time; }
-    inline double Total_PCount(void) { return total_process; }
-    inline int Total_Loops(void) { return total_loops; }
-    inline float Total_PTime(void) { return total_time; }
-    inline float Avg_PTime(void) { return (float)total_time / (float)total_loops; }
-    inline float Avg_PCount(void) { return (float)total_process / (float)total_loops; }
+    inline int Count() { return count; }
+    inline int NextEventTic() { return (count > 0 ? heap[1]->when : 0); }
+    inline int PCount() { return loop_process; }
+    inline float PTime() { return loop_time; }
+    inline float Max_PTime() { return max_loop_time; }
+    inline int Max_PTime_Process() { return max_loop_time_process; }
+    inline int Max_PCount() { return max_process; }
+    inline float Max_PCount_Time() { return max_process_time; }
+    inline double Total_PCount() { return total_process; }
+    inline int Total_Loops() { return total_loops; }
+    inline float Total_PTime() { return total_time; }
+    inline float Avg_PTime() { return (float)total_time / (float)total_loops; }
+    inline float Avg_PCount() { return (float)total_process / (float)total_loops; }
     eventq_elem *add(int when, void (*func)(void *, void *), void *arg1, void *arg2);
     void remove(void (*func)(void *, void *), void *arg1, void *arg2);
     void remove_relaxed(void (*func)(void *, void *), void *arg1, void *arg2);
-    void process(void);
+    void process();
 };

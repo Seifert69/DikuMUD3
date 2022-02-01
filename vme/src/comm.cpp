@@ -66,7 +66,7 @@ cActParameter::cActParameter(const dilval *v)
     }
 }
 
-int cActParameter::isNull(void)
+int cActParameter::isNull()
 {
     return (m_u == nullptr) && (m_i == nullptr) && (m_p == nullptr);
 }

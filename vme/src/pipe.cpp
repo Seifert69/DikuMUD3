@@ -19,7 +19,7 @@
 class pipeMUD_RO : public cHookNative
 {
 public:
-    void Open(void)
+    void Open()
     {
         if (this->IsHooked())
         {
@@ -142,7 +142,7 @@ public:
 class pipeMUD_WO : public cHookNative
 {
 public:
-    void Open(void)
+    void Open()
     {
         if (this->IsHooked())
         {
@@ -245,7 +245,7 @@ void pipeMUD_dispatch(std::string str)
     }
 }
 
-void namedpipe_setup(void)
+void namedpipe_setup()
 {
     g_pipeMUD_RO.Open();
 }

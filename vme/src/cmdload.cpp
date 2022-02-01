@@ -71,7 +71,7 @@ struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast"
                                    {"wizlock", do_wizlock, 0, 0},   {"wstat", do_wstat, 0, 0},
                                    {"wedit", do_wedit, 0, 0},       {"", nullptr, 0, 0}};
 
-void skill_dump(void)
+void skill_dump()
 {
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
@@ -118,7 +118,7 @@ void skill_dump(void)
     exit(0);
 }
 
-void cmd_base_load(void)
+void cmd_base_load()
 {
     int i = 0;
 
@@ -140,7 +140,7 @@ void cmd_base_load(void)
     // skill_dump();
 }
 
-void command_read(void)
+void command_read()
 {
     int dummy = 0;
     int idx = -1;

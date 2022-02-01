@@ -25,7 +25,7 @@ int move_to(unit_data *from, unit_data *to);
 int path_weight(unit_data *from, unit_data *to, int dir);
 void create_sc_graph(int num_of_sc);
 void *create_sc_dijkstra(void *thread);
-void create_worldgraph(void);
+void create_worldgraph();
 
 extern std::vector<graph_t> g_sc_graphs;
 extern std::vector<std::vector<unit_data *>> g_sc_room_ptr;

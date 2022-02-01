@@ -14,7 +14,7 @@
 
 char site_banned(char *cur_site);
 void show_ban_text(char *site, class descriptor_data *d);
-void load_ban(void);
+void load_ban();
 char site_banned(char *cur_site);
 void show_ban_text(char *site, class descriptor_data *d);
 void do_ban(class unit_data *, char *, const struct command_info *);

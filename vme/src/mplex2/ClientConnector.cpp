@@ -194,7 +194,7 @@ void cConHook::PressReturn(const char *cmd)
 // ===============================
 
 // Destroy all clients that are no longer connected
-void ClearUnhooked(void)
+void ClearUnhooked()
 {
     class cConHook *con = nullptr;
     class cConHook *nextcon = nullptr;
@@ -213,7 +213,7 @@ void ClearUnhooked(void)
 
 /* ================== VIRTUAL OVERRIDE ===================== */
 
-int cConHook::IsHooked(void)
+int cConHook::IsHooked()
 {
     if (this->m_pWebsServer)
     {
@@ -225,7 +225,7 @@ int cConHook::IsHooked(void)
     }
 }
 
-void cConHook::Unhook(void)
+void cConHook::Unhook()
 {
     if (IsHooked())
     {
@@ -453,7 +453,7 @@ void cConHook::AddString(char *str)
 }
 
 /* On -1 'con' was destroyed */
-void cConHook::ParseInput(void)
+void cConHook::ParseInput()
 {
     if (m_qInput.Size() > 50)
     {
@@ -469,7 +469,7 @@ void cConHook::ParseInput(void)
 
 /* ======================= STUFF ====================== */
 
-void cConHook::ProcessPaged(void)
+void cConHook::ProcessPaged()
 {
     if (m_pFptr != dumbPressReturn)
     {
@@ -1341,7 +1341,7 @@ void cConHook::getLine(ubit8 buf[], int *size)
 }
 
 /* Returns new point (NULL if done) */
-void cConHook::ShowChunk(void)
+void cConHook::ShowChunk()
 {
     char buffer[160 * 60 + 600];
     char *scan = nullptr;
@@ -1431,7 +1431,7 @@ void cConHook::SetWebsocket(wsserver *server, websocketpp::connection_hdl hdl)
 }
 
 // cConHook Constructor
-cConHook::cConHook(void)
+cConHook::cConHook()
 {
     m_bGobble = false;
     m_bColorCreate = false;
@@ -1579,7 +1579,7 @@ cConHook::cConHook(void)
 }
 
 // cConHook Destructor
-cConHook::~cConHook(void)
+cConHook::~cConHook()
 {
     if (this == g_connection_list)
     {

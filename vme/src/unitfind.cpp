@@ -805,7 +805,7 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
     return nullptr;
 }
 
-class unit_data *file_index_type::find_symbolic_instance(void)
+class unit_data *file_index_type::find_symbolic_instance()
 {
     // class unit_data *u;
 
@@ -884,7 +884,7 @@ class unit_data *find_symbolic(const char *zone, const char *name)
 struct unit_vector_data g_unit_vector;
 
 /* Init the g_unit_vector for FIRST use */
-static void init_unit_vector(void)
+static void init_unit_vector()
 {
     g_unit_vector.size = 10;
 
@@ -892,7 +892,7 @@ static void init_unit_vector(void)
 }
 
 /* If things get too cramped, double size of g_unit_vector */
-static void double_unit_vector(void)
+static void double_unit_vector()
 {
     g_unit_vector.size *= 2;
 

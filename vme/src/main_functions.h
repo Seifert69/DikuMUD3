@@ -6,13 +6,13 @@
 
 // Prototypes
 void ShowUsage(const char *c);
-void type_validate_64(void);
+void type_validate_64();
 void run_the_game(char *srvcfg);
 void check_idle_event(void *, void *);
 void check_overpopulation_event(void *p1, void *p2);
 void check_reboot_event(void *, void *);
 void game_event();
-void game_loop(void);
+void game_loop();
 void perform_violence_event(void *, void *);
 void ping_multiplexers_event(void *, void *);
 void timewarp_end(void *p1, void *p2);

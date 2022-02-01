@@ -127,7 +127,7 @@ void on_message(wsserver *s, websocketpp::connection_hdl hdl, message_ptr msg)
     con->m_pFptr(con, msg->get_payload().c_str());
 }
 
-void runechoserver(void)
+void runechoserver()
 {
     // Create a server endpoint
     wsserver echo_server;

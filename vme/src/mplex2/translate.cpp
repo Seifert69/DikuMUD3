@@ -550,7 +550,7 @@ void control_color_end(class cConHook *con, char **b, ubit8 code)
     con->m_bColorRemove = false;
 }
 
-void translate_init(void)
+void translate_init()
 {
     int i = 0;
     int j = 0;

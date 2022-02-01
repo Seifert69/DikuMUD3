@@ -46,17 +46,17 @@ cCaptainHook g_CaptainHook;
 // is connected or not.
 //
 
-cHookNative::cHookNative(void)
+cHookNative::cHookNative()
 {
     fd = -1;
 }
 
-cHookNative::~cHookNative(void)
+cHookNative::~cHookNative()
 {
     Unhook();
 }
 
-int cHookNative::get_fd(void)
+int cHookNative::get_fd()
 {
     return fd;
 }
@@ -66,12 +66,12 @@ void cHookNative::Hook(int f)
     fd = f;
 }
 
-int cHookNative::IsHooked(void)
+int cHookNative::IsHooked()
 {
     return fd != -1;
 }
 
-void cHookNative::Unhook(void)
+void cHookNative::Unhook()
 {
     if (!IsHooked())
     {
@@ -245,21 +245,21 @@ int cHookNative::read(void *buf, int count)
 // is connected or not.
 //
 
-cHook::cHook(void)
+cHook::cHook()
 {
 }
 
-cHook::~cHook(void)
+cHook::~cHook()
 {
     Unhook();
 }
 
-void cHook::Unhook(void)
+void cHook::Unhook()
 {
     cHookNative::Unhook();
 }
 
-int cHook::tfd(void)
+int cHook::tfd()
 {
     return get_fd();
 }
@@ -281,7 +281,7 @@ void cHook::Unhook(void)
 /*                     NETWORK READ & WRITE                            */
 /* ------------------------------------------------------------------- */
 
-void cHook::PushWrite(void)
+void cHook::PushWrite()
 {
     int sofar = 0;
     int len = 0;
@@ -360,7 +360,7 @@ void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 // into the Hook's Rx queue...
 // -1 on error, 0 on ok.
 //
-int cHook::ReadToQueue(void)
+int cHook::ReadToQueue()
 {
     char buf[4 * 1460 - 6];
     int thisround = 0;
@@ -403,7 +403,7 @@ int cHook::ReadToQueue(void)
 // Hooks in the list.
 //
 
-cCaptainHook::cCaptainHook(void)
+cCaptainHook::cCaptainHook()
 {
 #ifndef _WINDOWS
     signal(SIGPIPE, SIG_IGN); // Or else pipe fucks the whole thing up...
@@ -417,12 +417,12 @@ cCaptainHook::cCaptainHook(void)
     nMax = 0;
 }
 
-cCaptainHook::~cCaptainHook(void)
+cCaptainHook::~cCaptainHook()
 {
     Close();
 }
 
-void cCaptainHook::Close(void)
+void cCaptainHook::Close()
 {
     for (int i = 0; i < 256; i++)
     {

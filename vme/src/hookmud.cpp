@@ -37,12 +37,12 @@ class cMotherHook g_MotherHook;
 // which in turn calls cMultiMaster::Input when data is received.
 //
 
-cMultiMaster::cMultiMaster(void)
+cMultiMaster::cMultiMaster()
 {
     nCount = 0;
 }
 
-cMultiHook::cMultiHook(void)
+cMultiHook::cMultiHook()
 {
     succ_err = 0;
     bWebsockets = 0;
@@ -80,12 +80,12 @@ void cMultiHook::Input(int nFlags)
     }
 }
 
-void cMultiHook::Ping(void)
+void cMultiHook::Ping()
 {
     protocol_send_ping(this);
 }
 
-void cMultiHook::Unhook(void)
+void cMultiHook::Unhook()
 {
     if (this->IsHooked())
     {
@@ -96,7 +96,7 @@ void cMultiHook::Unhook(void)
     }
 }
 
-void cMultiHook::Close(void)
+void cMultiHook::Close()
 {
     slog(LOG_ALL, 0, "Closing connection to multi host.");
 
@@ -109,7 +109,7 @@ void cMultiHook::Close(void)
 }
 
 // Get the data and parse the mplex protocol
-int cMultiHook::Read(void)
+int cMultiHook::Read()
 {
     class descriptor_data *d = nullptr;
     int p = 0;
@@ -232,7 +232,7 @@ int cMultiHook::Read(void)
     return p;
 }
 
-void multi_clear(void)
+void multi_clear()
 {
     class descriptor_data *nextd = nullptr;
     class descriptor_data *d = nullptr;
@@ -247,7 +247,7 @@ void multi_clear(void)
     }
 }
 
-void multi_close_all(void)
+void multi_close_all()
 {
     int i = 0;
 
@@ -261,7 +261,7 @@ void multi_close_all(void)
     multi_clear();
 }
 
-void multi_ping_all(void)
+void multi_ping_all()
 {
     int i = 0;
 
@@ -359,7 +359,7 @@ void cMotherHook::Input(int nFlags)
     }
 }
 
-void cMotherHook::Unhook(void)
+void cMotherHook::Unhook()
 {
     if (this->IsHooked())
     {
@@ -371,7 +371,7 @@ void cMotherHook::Unhook(void)
 }
 
 // If the mother port 4999 is closed then close all mplex connections
-void cMotherHook::Close(void)
+void cMotherHook::Close()
 {
     if (this->IsHooked())
     {

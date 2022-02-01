@@ -334,7 +334,7 @@ void subst(const char *old, const char *pnew)
     }
 }
 
-void fix(void)
+void fix()
 {
     /*   subst("ive", "you've"); Preproc   essed */
     /*   subst("youve", "I've"); Preprocessed */
@@ -1009,7 +1009,7 @@ void eliza_gen_test_template(char *buf, struct template_type *tem)
     }
 }
 
-void eliza_integrity(void)
+void eliza_integrity()
 {
     int i = 0;
     int j = 0;
@@ -1070,7 +1070,7 @@ void eliza_integrity(void)
     }
 }
 
-void eliza_boot(void)
+void eliza_boot()
 {
     FILE *f = nullptr;
     char c = 0;

@@ -13,12 +13,12 @@
 class cNamelist
 {
 public:
-    cNamelist(void);
+    cNamelist();
     cNamelist(const char **list);
-    ~cNamelist(void);
+    ~cNamelist();
     void operator=(cNamelist *cn);
     void operator=(const char **);
-    void Free(void);
+    void Free();
     void CopyList(const char **list);
     void CopyList(class cNamelist *);
 
@@ -28,7 +28,7 @@ public:
     void bwrite(ubit8 **b);
 
     char *catnames();
-    std::string json(void);
+    std::string json();
 
     void Remove(ubit32 idx);
     void RemoveName(const char *name);
@@ -42,7 +42,7 @@ public:
     void PrependName(const char *name);
     void InsertName(const char *name, ubit32 loc);
 
-    cNamelist *Duplicate(void);
+    cNamelist *Duplicate();
 
     const int IsNameIdx(const char *name);
     const int IsNameRawIdx(const char *name);
@@ -52,7 +52,7 @@ public:
     const char *StrStrRaw(const char *name);
     const char *StrStr(const char *name);
 
-    inline ubit32 Length(void) { return length; }
+    inline ubit32 Length() { return length; }
 
 private:
     std::string **namelist;

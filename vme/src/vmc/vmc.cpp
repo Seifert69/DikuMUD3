@@ -47,7 +47,7 @@ void dil_free_frame(struct dilframe *frame);
 void dil_free_prg(struct dilprg *prg, int dil = FALSE);
 void write_dot(char *prefix);
 void init_lex(char *str);
-int yyparse(void);
+int yyparse();
 
 int g_make = 0;           /* cmp mod-times of files before compiling */
 int g_nooutput = 0;       /* suppress output */
@@ -274,12 +274,12 @@ class unit_data *mcreate_unit(int type)
     return rslt;
 }
 
-struct unit_fptr *mcreate_func(void)
+struct unit_fptr *mcreate_func()
 {
     return (struct unit_fptr *)mmalloc(sizeof(struct unit_fptr));
 }
 
-class room_direction_data *mcreate_exit(void)
+class room_direction_data *mcreate_exit()
 {
     class room_direction_data *rslt = nullptr;
 
@@ -292,7 +292,7 @@ class room_direction_data *mcreate_exit(void)
     return rslt;
 }
 
-struct unit_affected_type *mcreate_affect(void)
+struct unit_affected_type *mcreate_affect()
 {
     struct unit_affected_type *rs = nullptr;
 

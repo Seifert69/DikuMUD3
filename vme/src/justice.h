@@ -15,5 +15,5 @@
 
 void offend_legal_state(class unit_data *ch, class unit_data *victim);
 void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_type, int active = TRUE);
-int new_crime_serial_no(void);
+int new_crime_serial_no();
 int reward_give(struct spec_arg *sarg);

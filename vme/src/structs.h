@@ -56,10 +56,10 @@ struct cmp_str
 class file_index_type
 {
 public:
-    file_index_type(void);
+    file_index_type();
     ~file_index_type();
 
-    class unit_data *find_symbolic_instance(void);
+    class unit_data *find_symbolic_instance();
     class unit_data *find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector);
     std::forward_list<class unit_data *> fi_unit_list; // This list of units that match this file_index
 
@@ -95,8 +95,8 @@ struct zone_reset_cmd
 class zone_type
 {
 public:
-    zone_type(void);
-    ~zone_type(void);
+    zone_type();
+    ~zone_type();
 
     class cNamelist creators; /* List of creators of zone         */
     char *name;               /* Unique in list                   */
@@ -162,10 +162,10 @@ class descriptor_data
 {
 public:
     descriptor_data(cMultiHook *pe);
-    ~descriptor_data(void);
+    ~descriptor_data();
 
-    void CreateBBS(void);
-    void RemoveBBS(void);
+    void CreateBBS();
+    void RemoveBBS();
 
     time_t logon;      /* Time of last connect              */
     cMultiHook *multi; /* Multi element pointer             */
@@ -228,13 +228,13 @@ public:
     class unit_data *owner;
     class unit_affected_type *next, *gnext, *gprevious;
 
-    int destruct_classindex(void);
+    int destruct_classindex();
 };
 
 class unit_fptr : public basedestruct
 {
 public:
-    unit_fptr(void);
+    unit_fptr();
     ~unit_fptr();
 
     ubit16 index;          /* Index to function pointer array             */
@@ -245,13 +245,13 @@ public:
     class unit_fptr *next; /* Next in linked list                         */
     eventq_elem *event;    /* pointer to eventq for quick removing        */
 
-    int destruct_classindex(void);
+    int destruct_classindex();
 };
 
 class unit_data : public basedestruct
 {
 public:
-    unit_data(void);
+    unit_data();
     virtual ~unit_data();
     class unit_data *copy();
     void set_fi(class file_index_type *f);
@@ -311,8 +311,8 @@ public:
 
     class extra_list extra; /* All the look 'at' stuff                     */
 
-    int destruct_classindex(void);
-    std::string json(void);
+    int destruct_classindex();
+    std::string json();
 };
 
 /* ----------------- ROOM SPECIFIC STRUCTURES ----------------------- */
@@ -320,8 +320,8 @@ public:
 class room_direction_data
 {
 public:
-    room_direction_data(void);
-    ~room_direction_data(void);
+    room_direction_data();
+    ~room_direction_data();
 
     class cNamelist open_name; // For Open & Enter
 
@@ -336,7 +336,7 @@ public:
 class room_data : public unit_data
 {
 public:
-    room_data(void);
+    room_data();
     ~room_data();
 
     class room_direction_data *dir_option[MAX_EXIT + 1]; // Why 11? Why not MAX_EXIT+1?
@@ -374,7 +374,7 @@ public:
 class obj_data : public unit_data
 {
 public:
-    obj_data(void);
+    obj_data();
     ~obj_data();
 
     sbit32 value[5];     /* Values of the item (see list)       */
@@ -392,7 +392,7 @@ public:
 class char_point_data
 {
 public:
-    char_point_data(void);
+    char_point_data();
     /*~char_point_data(void); not needed yet all base types they destroy themselves*/
 
     ubit32 flags; /* Char flags                               */
@@ -425,7 +425,7 @@ struct char_follow_type
 class char_data : public unit_data
 {
 public:
-    char_data(void);
+    char_data();
     virtual ~char_data();
 
     class descriptor_data *descriptor;
@@ -465,14 +465,14 @@ struct pc_account_data
 class pc_data : public char_data
 {
 public:
-    pc_data(void);
+    pc_data();
     ~pc_data();
 
     void gstate_tomenu(dilprg *pdontstop);
     void gstate_togame(dilprg *pdontstart);
 
-    void disconnect_game(void);
-    void connect_game(void);
+    void disconnect_game();
+    void connect_game();
     void reconnect_game(class descriptor_data *d);
 
     struct terminal_setup_type setup;
@@ -526,7 +526,7 @@ public:
 class npc_data : public char_data
 {
 public:
-    npc_data(void);
+    npc_data();
     ~npc_data();
 
     sbit16 weapons[WPN_GROUP_MAX];

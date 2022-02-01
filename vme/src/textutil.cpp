@@ -986,7 +986,7 @@ char *is_name(char *arg, char const *const *names) // MS2020 const char *names[]
 }
 
 /* Create an empty namelist */
-char **create_namelist(void)
+char **create_namelist()
 {
     char **list = nullptr;
 

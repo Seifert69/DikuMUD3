@@ -12,21 +12,21 @@ class CByteBuffer
 {
 public:
     CByteBuffer(ubit32 nSize = 1024);
-    virtual ~CByteBuffer(void);
+    virtual ~CByteBuffer();
 
     // Informative functions
 
-    inline ubit32 GetLength(void) { return m_nLength; }
-    inline ubit32 GetAllocated(void) { return m_nAllocated; }
-    inline ubit32 GetReadPosition(void) { return m_nReadPos; }
-    inline const ubit8 *GetData(void) { return m_pData; }
+    inline ubit32 GetLength() { return m_nLength; }
+    inline ubit32 GetAllocated() { return m_nAllocated; }
+    inline ubit32 GetReadPosition() { return m_nReadPos; }
+    inline const ubit8 *GetData() { return m_pData; }
 
     void SetReadPosition(ubit32 nReadPosition);
     void SetLength(ubit32 nLen);
     void SetData(ubit8 *pData, ubit32 nLength);
 
-    inline void Rewind(void) { m_nReadPos = 0; }
-    inline void Clear(void)
+    inline void Rewind() { m_nReadPos = 0; }
+    inline void Clear()
     {
         m_nReadPos = 0;
         m_nLength = 0;
@@ -59,13 +59,13 @@ public:
     int ReadIntList(int **ilist);
 
     int Skip(int n);
-    int Skip8(void);
-    int Skip16(void);
-    int Skip32(void);
-    int SkipFloat(void);
+    int Skip8();
+    int Skip16();
+    int Skip32();
+    int SkipFloat();
     int SkipString(char **ppStr = nullptr);
-    int SkipNames(void);
-    int SkipVals(void);
+    int SkipNames();
+    int SkipVals();
 
     // Public functions to write to a buffer
     //

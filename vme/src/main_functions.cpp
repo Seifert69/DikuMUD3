@@ -71,7 +71,7 @@ const char *g_compile_time = __TIME__;
 
 //
 // Need this to be sure the typedefs are right for 64 bit architecture (MS2020)
-void type_validate_64(void)
+void type_validate_64()
 {
     if (sizeof(void *) == 8)
     {
@@ -243,7 +243,7 @@ void game_loop()
 }
 
 /* Accept new connects, relay commands, and call 'heartbeat-functs' */
-void game_event(void)
+void game_event()
 {
     int i = 0;
     char *pcomm = nullptr;

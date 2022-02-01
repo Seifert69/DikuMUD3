@@ -507,7 +507,7 @@ void clist()
     return;
 }
 
-void convert_file(void)
+void convert_file()
 {
     std::string ipath{g_cServerConfig.getFileInLibDir("ply")};
     fs::path full_path(ipath);
@@ -609,7 +609,7 @@ void convert_file(void)
 
 } /*end of convert_file*/
 
-void cleanup(void)
+void cleanup()
 {
     std::string ipath{g_cServerConfig.getFileInLibDir("ply")};
 

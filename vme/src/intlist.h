@@ -14,15 +14,15 @@
 class cintlist
 {
 public:
-    cintlist(void);
-    ~cintlist(void);
+    cintlist();
+    ~cintlist();
     void operator=(cintlist *cint);
     void CopyList(cintlist *cint);
-    void Free(void);
-    cintlist *Duplicate(void);
+    void Free();
+    cintlist *Duplicate();
     void Replace(int idx, int val);
     char *catnames();
-    std::string json(void);
+    std::string json();
     int Value(int idx);
     sbit32 *ValuePtr(int idx);
     void Remove(int idx);
@@ -32,7 +32,7 @@ public:
     void Prepend(int val);
     void Insert(int val, int loc);
     void bread(ubit8 **b);
-    inline sbit32 Length(void) { return length; }
+    inline sbit32 Length() { return length; }
 
 private:
     int *intlist;

@@ -1,4 +1,4 @@
 #pragma once
 
-void signal_reset(void);
-void signal_setup(void);
+void signal_reset();
+void signal_setup();

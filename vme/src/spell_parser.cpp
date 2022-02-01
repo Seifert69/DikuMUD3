@@ -459,7 +459,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
 /* Boot time stuff below this line */
 
-void spell_dil_check(void)
+void spell_dil_check()
 {
     char *dil_name = nullptr;
     int i = 0;
@@ -532,7 +532,7 @@ void spell_dil_check(void)
     }
 }
 
-static void spell_read(void)
+static void spell_read()
 {
     int dummy = 0;
     int idx = -1;
@@ -861,7 +861,7 @@ static void spell_read(void)
     fclose(fl);
 }
 
-static void spell_init(void)
+static void spell_init()
 {
     int i = 0;
     int j = 0;
@@ -942,7 +942,7 @@ static void spell_init(void)
     g_SplColl.text[SPL_TREE_MAX] = nullptr;
 }
 
-void spell_dump(void)
+void spell_dump()
 {
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
@@ -988,7 +988,7 @@ void spell_dump(void)
     exit(0);
 }
 
-void boot_spell(void)
+void boot_spell()
 {
     spell_init();
     spell_read();

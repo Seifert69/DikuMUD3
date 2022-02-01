@@ -1,7 +1,7 @@
 #pragma once
 
 int system_check(class unit_data *pc, const char *buf);
-void basis_boot(void);
+void basis_boot();
 void execute_append(class unit_data *pc, const char *str);
 int log_object(struct spec_arg *sarg);
 int error_rod(struct spec_arg *sarg);

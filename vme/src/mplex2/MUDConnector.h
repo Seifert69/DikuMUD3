@@ -18,22 +18,22 @@
 class cMotherHook : public cHook
 {
 public:
-    void Unhook(void);
+    void Unhook();
     void Input(int nFlags);
-    int IsHooked(void);
+    int IsHooked();
 };
 
 class cMudHook : public cHook
 {
 public:
-    void Unhook(void);
-    int read_mud(void);
+    void Unhook();
+    int read_mud();
     void Input(int nFlags);
 };
 
-void Control(void);
-void test_mud_up(void);
-void mud_went_down(void);
+void Control();
+void test_mud_up();
+void mud_went_down();
 
 // I think this is the open socket from the main listening telnet port
 extern cMotherHook g_MotherHook;

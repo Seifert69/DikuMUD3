@@ -13,9 +13,9 @@ private:
     badnames_list *next;
 
 public:
-    badnames_list(void);
+    badnames_list();
     badnames_list(char *n);
-    ~badnames_list(void);
+    ~badnames_list();
 
     char *insert(char *n);
     char *in(char *n);

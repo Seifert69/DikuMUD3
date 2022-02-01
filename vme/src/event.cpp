@@ -25,7 +25,7 @@
 #include <cstdlib>
 #include <cstring>
 
-eventqueue::eventqueue(void)
+eventqueue::eventqueue()
 {
     count = 0;
     heapsize = 0;
@@ -41,7 +41,7 @@ eventqueue::eventqueue(void)
     total_time = 0;
 }
 
-eventqueue::~eventqueue(void)
+eventqueue::~eventqueue()
 {
     int i = 0;
     for (i = 1; i <= count; i++)
@@ -178,7 +178,7 @@ void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *
     }
 }
 
-void eventqueue::process(void)
+void eventqueue::process()
 {
     struct eventq_elem *tmp_event = nullptr;
     struct eventq_elem *newtop = nullptr;

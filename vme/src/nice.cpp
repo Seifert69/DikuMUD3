@@ -15,7 +15,7 @@
 
 #define REBOOT_AT 10 /* 0-23, time of optional reboot if -e lib/reboot */
 
-int check_reboot(void)
+int check_reboot()
 {
     long tc = 0;
     struct tm *t_info = nullptr;

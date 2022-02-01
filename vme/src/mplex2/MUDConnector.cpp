@@ -60,7 +60,7 @@ void alarm_check(int i)
 }
 
 // Open connection to the MUD erver and alert all connected clients if OK.
-void test_mud_up(void)
+void test_mud_up()
 {
     int fd = 0;
     class cConHook *nextcon = nullptr;
@@ -116,7 +116,7 @@ void test_mud_up(void)
 }
 
 // Alert all connected clients that the MUD server is unavailable
-void mud_went_down(void)
+void mud_went_down()
 {
     class cConHook *con = nullptr;
 
@@ -138,7 +138,7 @@ void mud_went_down(void)
 }
 
 // Main MPLEX loop called by main() in mplex.cpp
-void Control(void)
+void Control()
 {
     static int tries = 0;
     int n = 0;
@@ -197,12 +197,12 @@ void Control(void)
 
 // ====================== MotherHook (Listening to TCP port)
 
-void cMotherHook::Unhook(void)
+void cMotherHook::Unhook()
 {
     g_CaptainHook.Unhook(this);
 }
 
-int cMotherHook::IsHooked(void)
+int cMotherHook::IsHooked()
 {
     if (g_mplex_arg.bWebSockets)
     {
@@ -282,7 +282,7 @@ class cConHook *connection_list = NULL;
 
 char Outbuf[32768];
 */
-void cMudHook::Unhook(void)
+void cMudHook::Unhook()
 {
     if (this->IsHooked())
     {
@@ -293,7 +293,7 @@ void cMudHook::Unhook(void)
     }
 }
 
-int cMudHook::read_mud(void)
+int cMudHook::read_mud()
 {
     class cConHook *con = nullptr;
     ubit16 id = 0;

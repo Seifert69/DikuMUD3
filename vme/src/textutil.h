@@ -60,7 +60,7 @@ ubit1 is_abbrev(const char *arg1, const char *arg2);
 char *str_cc(const char *s1, const char *s2);
 char **add_name(const char *name, char **namelist);
 
-char **create_namelist(void);
+char **create_namelist();
 int len_namelist(const char **namelist);
 
 void free_namelist(char **list);

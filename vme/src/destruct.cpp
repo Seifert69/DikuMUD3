@@ -88,17 +88,17 @@ void destruct_resize(int i)
 
 /* ======= Destruct class ========== */
 
-basedestruct::basedestruct(void)
+basedestruct::basedestruct()
 {
     m_bDestructed = 0;
 }
 
-basedestruct::~basedestruct(void)
+basedestruct::~basedestruct()
 {
     // assert(m_bDestructed);
 }
 
-void basedestruct::register_destruct(void)
+void basedestruct::register_destruct()
 {
     assert(this);
     assert(!m_bDestructed);
@@ -118,33 +118,33 @@ void basedestruct::register_destruct(void)
     destructed_idx[i]++;
 }
 
-int basedestruct::is_destructed(void)
+int basedestruct::is_destructed()
 {
     return (m_bDestructed != 0);
 }
 
-void basedestruct::undo_destruct(void)
+void basedestruct::undo_destruct()
 {
     m_bDestructed = 0;
 }
 
-int basedestruct::destruct_classindex(void)
+int basedestruct::destruct_classindex()
 {
     assert(FALSE);
     return -1;
 }
 
-int unit_data::destruct_classindex(void)
+int unit_data::destruct_classindex()
 {
     return DR_UNIT;
 }
 
-int unit_fptr::destruct_classindex(void)
+int unit_fptr::destruct_classindex()
 {
     return DR_FUNC;
 }
 
-int unit_affected_type::destruct_classindex(void)
+int unit_affected_type::destruct_classindex()
 {
     return DR_AFFECT;
 }
@@ -260,7 +260,7 @@ void destruct_unit(class unit_data *unit)
 }
 
 /* May only be called from comm.c event loop */
-void clear_destructed(void)
+void clear_destructed()
 {
     class unit_fptr *f = nullptr;
     int i = 0;

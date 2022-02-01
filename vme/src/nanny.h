@@ -3,7 +3,7 @@
 #include "essential.h"
 
 int _parse_name(const char *arg, char *name);
-void check_idle(void);
+void check_idle();
 void enter_game(class unit_data *ch, int dilway = FALSE);
 void nanny_close(class descriptor_data *d, char *arg);
 void nanny_get_name(class descriptor_data *d, char *arg);

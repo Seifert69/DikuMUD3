@@ -165,7 +165,7 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     g_descriptor_list = this;
 }
 
-void descriptor_data::RemoveBBS(void)
+void descriptor_data::RemoveBBS()
 {
     if (nLine != 255)
     {
@@ -174,7 +174,7 @@ void descriptor_data::RemoveBBS(void)
     }
 }
 
-void descriptor_data::CreateBBS(void)
+void descriptor_data::CreateBBS()
 {
     if (nLine != 255)
     {
@@ -212,7 +212,7 @@ void descriptor_data::CreateBBS(void)
     }
 }
 
-descriptor_data::~descriptor_data(void)
+descriptor_data::~descriptor_data()
 {
     RemoveBBS();
     nLine = 255;

@@ -14,7 +14,7 @@
 #include <cctype>
 #include <cstring>
 
-cNamelist::cNamelist(void)
+cNamelist::cNamelist()
 {
     namelist = nullptr;
     length = 0;
@@ -164,7 +164,7 @@ char *cNamelist::catnames()
     return s;
 }
 
-std::string cNamelist::json(void)
+std::string cNamelist::json()
 {
     std::string s;
 
@@ -248,7 +248,7 @@ cNamelist::cNamelist(const char **list)
     CopyList(list);
 }
 
-void cNamelist::Free(void)
+void cNamelist::Free()
 {
     ubit32 i = 0;
 
@@ -265,12 +265,12 @@ void cNamelist::Free(void)
     length = 0;
 }
 
-cNamelist::~cNamelist(void)
+cNamelist::~cNamelist()
 {
     Free();
 }
 
-cNamelist *cNamelist::Duplicate(void)
+cNamelist *cNamelist::Duplicate()
 {
     cNamelist *pNl = new cNamelist;
     ubit32 i = 0;

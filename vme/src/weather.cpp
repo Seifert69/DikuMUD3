@@ -69,7 +69,7 @@ struct time_info_data mud_date(time_t t)
     return mdate;
 }
 
-struct time_info_data mud_date(void)
+struct time_info_data mud_date()
 {
     // By doing this, essentially we allow timewarping to also warp the MUD time and date
     // MUD time can skew a tiny bit this way if ticks generally take longer than 250ms.
@@ -317,7 +317,7 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
     }
 }
 
-void update_time_and_weather(void)
+void update_time_and_weather()
 {
     struct time_info_data time_info;
 
@@ -340,7 +340,7 @@ void weather_and_time_event(void *p1, void *p2)
 }
 
 /* reset the time in the game from file */
-void boot_time_and_weather(void)
+void boot_time_and_weather()
 {
     g_tBootTime = time(nullptr);
     g_world_boottime = ctime(&g_tBootTime);

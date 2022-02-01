@@ -132,7 +132,7 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types);
 #ifdef VMC_SRC
 void boot_money(char *moneyfile);
 #else
-void boot_money(void);
+void boot_money();
 #endif
 
 /* You shouldn't have to refer to this array yourself.

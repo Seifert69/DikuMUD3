@@ -868,7 +868,7 @@ static char *get_string(FILE *fl, const char *err, ubit8 flag)
 #ifdef VMC_SRC
 void boot_money(char *moneyfile)
 #else
-void boot_money(void)
+void boot_money()
 #endif
 {
     FILE *fl = nullptr;

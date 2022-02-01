@@ -18,7 +18,7 @@
 // std::list (I tried in vain) or anything similar. So I've followed the
 // existing structure adding only a controlling class (extra_list).
 
-extra_descr_data::extra_descr_data(void)
+extra_descr_data::extra_descr_data()
 {
     next = nullptr;
 }
@@ -58,7 +58,7 @@ extra_descr_data::extra_descr_data(cNamelist names, const char *descr)
     this->next = nullptr;
 }
 
-extra_descr_data::~extra_descr_data(void)
+extra_descr_data::~extra_descr_data()
 {
     this->next = nullptr;
 }
@@ -139,12 +139,12 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
 //               EXTRA LIST
 // =============================================================
 
-extra_list::extra_list(void)
+extra_list::extra_list()
 {
     m_pList = nullptr;
 }
 
-extra_list::~extra_list(void)
+extra_list::~extra_list()
 {
     freelist(m_pList);
     m_pList = nullptr;
@@ -159,12 +159,12 @@ void extra_list::freelist(class extra_descr_data *ex)
     }
 }
 
-int extra_list::isempty(void)
+int extra_list::isempty()
 {
     return m_pList == nullptr;
 }
 
-int extra_list::count(void)
+int extra_list::count()
 {
     int i = 0;
     class extra_descr_data *e = nullptr;
@@ -178,7 +178,7 @@ int extra_list::count(void)
     return i;
 }
 
-std::string extra_list::json(void)
+std::string extra_list::json()
 {
     std::string s;
 

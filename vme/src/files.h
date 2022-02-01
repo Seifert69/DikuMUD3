@@ -26,7 +26,7 @@ int config_file_to_string(const char *name, char *buf, int max_len);
 int config_file_to_string(const std::string &name, char *buf, int max_len);
 FILE *fopen_cache(const char *name, const char *mode);
 FILE *fopen_cache(const std::string &name, const char *mode);
-void fclose_cache(void);
+void fclose_cache();
 ubit1 file_exists(const char *name);
 ubit1 file_exists(const std::string &name);
 int load_string(char *filename, char **file_str);

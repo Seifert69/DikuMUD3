@@ -39,5 +39,5 @@ void melee_violence(class unit_data *ch, int primary);
 void modify_hit(class unit_data *ch, int hit);
 int roll_boost(int roll, int level);
 void damage_object(class unit_data *ch, class unit_data *obj, int dam);
-void load_messages(void);
+void load_messages();
 int hunting(struct spec_arg *sarg);

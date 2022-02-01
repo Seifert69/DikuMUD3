@@ -489,8 +489,8 @@ struct dilvar
 class dilval
 {
 public:
-    dilval(void);
-    ~dilval(void);
+    dilval();
+    ~dilval();
 
     ubit8 type; /* result type     */
     ubit8 atyp; /* allocation type */
@@ -600,9 +600,9 @@ class dilprg
 {
 public:
     dilprg(class unit_data *owner, diltemplate *linktmpl);
-    ~dilprg(void);
+    ~dilprg();
     void link(diltemplate *tmpl);
-    void unlink(void);
+    void unlink();
 
     ubit32 flags;   // Recall, copy, etc.
     ubit16 varcrc;  // variable crc from compiler (saved)
@@ -622,5 +622,5 @@ public:
 
     class dilprg *next; /* For global dilprg list (sendtoalldil) */
 
-    int canfree(void);
+    int canfree();
 };

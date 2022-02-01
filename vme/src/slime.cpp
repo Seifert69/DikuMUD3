@@ -22,7 +22,7 @@
 static int slime_count = 0;
 class file_index_type **slime_list = nullptr;
 
-static void slime_save(void)
+static void slime_save()
 {
     int i = 0;
     FILE *f = nullptr;
@@ -178,7 +178,7 @@ int slime_obj(struct spec_arg *sarg)
     return SFR_BLOCK;
 }
 
-void slime_boot(void)
+void slime_boot()
 {
     class file_index_type *fi = nullptr;
     CByteBuffer cBuf(100);

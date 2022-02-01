@@ -11,12 +11,12 @@
 class cActParameter
 {
 public:
-    cActParameter(void);
+    cActParameter();
     cActParameter(const class unit_data *u);
     cActParameter(const int *i);
     cActParameter(const char *p);
     cActParameter(const dilval *v);
-    int isNull(void);
+    int isNull();
 
     const class unit_data *m_u;
     const int *m_i;

@@ -7,13 +7,13 @@
 class cMultiHook : public cHook
 {
 public:
-    cMultiHook(void);
+    cMultiHook();
     void Input(int nFlags);
-    void Unhook(void);
+    void Unhook();
 
-    void Close(void);
-    int Read(void);
-    void Ping(void);
+    void Close();
+    int Read();
+    void Ping();
 
     int succ_err; /* Number of successive errors */
     ubit8 bWebsockets;
@@ -22,7 +22,7 @@ public:
 class cMultiMaster
 {
 public:
-    cMultiMaster(void);
+    cMultiMaster();
 
     int nCount;
     cMultiHook Multi[MAX_MULTI];
@@ -34,13 +34,13 @@ class cMotherHook : public cHook
 {
 public:
     void Input(int nFlags);
-    void Close(void);
-    void Unhook(void);
+    void Close();
+    void Unhook();
 };
 
-void multi_close_all(void);
+void multi_close_all();
 void init_mother(int nPort);
-void multi_clear(void);
-void multi_ping_all(void);
+void multi_clear();
+void multi_ping_all();
 
 extern class cMotherHook g_MotherHook;

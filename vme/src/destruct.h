@@ -5,16 +5,16 @@
 class basedestruct
 {
 public:
-    basedestruct(void);
+    basedestruct();
     virtual ~basedestruct();
     // virtual void clear_destruct(void);
-    void register_destruct(void);
-    int is_destructed(void);
-    void undo_destruct(void);
+    void register_destruct();
+    int is_destructed();
+    void undo_destruct();
 
 private:
-    virtual int destruct_classindex(void) = 0;
+    virtual int destruct_classindex() = 0;
     ubit1 m_bDestructed;
 };
 
-void clear_destructed(void);
+void clear_destructed();

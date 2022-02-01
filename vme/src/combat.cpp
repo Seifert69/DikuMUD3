@@ -96,7 +96,7 @@ static int combat_compare(const void *v1, const void *v2)
     }
 }
 
-void cCombatList::Sort(void)
+void cCombatList::Sort()
 {
     if (nTop > 0)
     {
@@ -104,7 +104,7 @@ void cCombatList::Sort(void)
     }
 }
 
-void cCombatList::PerformViolence(void)
+void cCombatList::PerformViolence()
 {
     int bAnyaction = FALSE;
 
@@ -206,7 +206,7 @@ cCombat::cCombat(class unit_data *owner, int bMelee)
     g_CombatList.add(this);
 }
 
-cCombat::~cCombat(void)
+cCombat::~cCombat()
 {
     while (nNoOpponents > 0)
     {

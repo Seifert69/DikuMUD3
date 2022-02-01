@@ -27,7 +27,7 @@
 
 static int crime_serial_no = time(nullptr);
 
-int new_crime_serial_no(void)
+int new_crime_serial_no()
 {
     int n = 0;
 

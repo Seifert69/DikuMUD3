@@ -32,7 +32,7 @@ struct ban_t
     struct ban_t *next;
 } *ban_list = nullptr;
 
-void save_ban(void)
+void save_ban()
 {
     struct ban_t *tmp = nullptr;
     FILE *bf = fopen(g_cServerConfig.getFileInLibDir(BAN_FILE).c_str(), "w");
@@ -46,7 +46,7 @@ void save_ban(void)
     fclose(bf);
 }
 
-void load_ban(void)
+void load_ban()
 {
     FILE *bf = nullptr;
     struct ban_t *tmp = nullptr;

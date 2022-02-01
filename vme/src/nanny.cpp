@@ -116,7 +116,7 @@ int _parse_name(const char *arg, char *name)
 
 /* This is called from main_loop every n seconds (long duration) to check */
 /* for idle time for any descriptors                                      */
-void check_idle(void)
+void check_idle()
 {
     class descriptor_data *d = nullptr;
     class descriptor_data *next_d = nullptr;
@@ -174,7 +174,7 @@ void reset_char(class unit_data *ch)
     UNIT_MAX_HIT(ch) = hit_limit(ch);
 }
 
-void pc_data::connect_game(void)
+void pc_data::connect_game()
 {
     //  assert (CHAR_DESCRIPTOR (pc));
 
@@ -197,7 +197,7 @@ void pc_data::connect_game(void)
     }
 }
 
-void pc_data::disconnect_game(void)
+void pc_data::disconnect_game()
 {
     if (CHAR_DESCRIPTOR(this))
     {

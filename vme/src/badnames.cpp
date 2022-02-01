@@ -13,7 +13,7 @@
 #include <cctype>
 #include <cstring>
 
-badnames_list::badnames_list(void)
+badnames_list::badnames_list()
 {
     next = nullptr;
     name = nullptr;
@@ -35,7 +35,7 @@ badnames_list::badnames_list(char *n)
     strcpy(name, n);
 }
 
-badnames_list::~badnames_list(void)
+badnames_list::~badnames_list()
 {
     badnames_list *l = this->next;
 

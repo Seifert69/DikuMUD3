@@ -964,7 +964,7 @@ int flatrate_sanity(int *numlist, int numlen)
     return TRUE;
 }
 
-CAccountConfig::CAccountConfig(void)
+CAccountConfig::CAccountConfig()
 {
     m_pOverdueMessage = nullptr;
     m_pClosedMessage = nullptr;
@@ -981,7 +981,7 @@ CAccountConfig::CAccountConfig(void)
     memset(&m_flatrate, 0, sizeof(m_flatrate));
 }
 
-void CAccountConfig::Boot(void)
+void CAccountConfig::Boot()
 {
     char Buf[2 * MAX_STRING_LENGTH];
     char *c = nullptr;

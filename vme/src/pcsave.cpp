@@ -144,7 +144,7 @@ sbit32 find_player_id(char *pName)
 }
 
 /* Call to read current id from file*/
-sbit32 read_player_id(void)
+sbit32 read_player_id()
 {
     sbit32 tmp_sl = 0;
     FILE *pFile = nullptr;
@@ -166,7 +166,7 @@ sbit32 read_player_id(void)
 }
 
 /* Call to generate new id */
-sbit32 new_player_id(void)
+sbit32 new_player_id()
 {
     FILE *pFile = nullptr;
 
@@ -528,7 +528,7 @@ class unit_data *load_player(const char *pName)
 }
 
 /* Call at boot time to index file */
-void player_file_index(void)
+void player_file_index()
 {
     FILE *pFile = nullptr;
     sbit32 tmp_sl = 0;

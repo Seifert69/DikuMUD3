@@ -43,7 +43,7 @@ class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
 }
 
 /* Count ->no_in_zone for current 'g_boot_zone' (above) */
-void zone_update_no_in_zone(void)
+void zone_update_no_in_zone()
 {
     class unit_data *u = nullptr;
 
@@ -412,7 +412,7 @@ void zone_reset(class zone_type *zone)
    really fast */
 
 /* Changed back to boot all before players login */
-void reset_all_zones(void)
+void reset_all_zones()
 {
     int j = 0;
 

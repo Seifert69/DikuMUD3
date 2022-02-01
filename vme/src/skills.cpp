@@ -99,7 +99,7 @@ skill_collection::skill_collection(int nSize)
         CREATE(racial[i], sbit8, nSize);
 }
 
-const char **skill_collection::gettext(void)
+const char **skill_collection::gettext()
 {
     return this->text;
 }
@@ -577,7 +577,7 @@ int effective_dex(class unit_data *ch)
 
 /* ========================================================================= */
 
-void profession_init(void)
+void profession_init()
 {
     int i = 0;
     int ln = 0;
@@ -590,7 +590,7 @@ void profession_init(void)
     }
 }
 
-static void profession_read(void)
+static void profession_read()
 {
     int idx = -1;
     char pTmp[256];
@@ -660,7 +660,7 @@ static void profession_read(void)
     fclose(fl);
 }
 
-void boot_profession(void)
+void boot_profession()
 {
     profession_init();
     profession_read();
@@ -668,7 +668,7 @@ void boot_profession(void)
 
 /* ========================================================================= */
 
-static void race_read(void)
+static void race_read()
 {
     int idx = -1;
     char pTmp[256];
@@ -829,7 +829,7 @@ static void race_read(void)
 struct diltemplate *g_playerinit_tmpl;
 struct diltemplate *g_nanny_dil_tmpl;
 
-static void race_init(void)
+static void race_init()
 {
     int i = 0;
 
@@ -873,7 +873,7 @@ static void race_init(void)
     }
 }
 
-void boot_race(void)
+void boot_race()
 {
     race_init();
     race_read();
@@ -881,7 +881,7 @@ void boot_race(void)
 
 /* ========================================================================= */
 
-static void ability_read(void)
+static void ability_read()
 {
     int dummy = 0;
     int idx = -1;
@@ -1012,7 +1012,7 @@ static void ability_read(void)
     fclose(fl);
 }
 
-static void ability_init(void)
+static void ability_init()
 {
     int i = 0;
 
@@ -1054,7 +1054,7 @@ bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair
     return firstElem.first > secondElem.first;
 }
 
-void ability_dump(void)
+void ability_dump()
 {
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
@@ -1099,7 +1099,7 @@ void ability_dump(void)
     exit(0);
 }
 
-void boot_ability(void)
+void boot_ability()
 {
     ability_init();
     ability_read();
@@ -1108,7 +1108,7 @@ void boot_ability(void)
 
 /* ========================================================================= */
 
-static void weapon_read(void)
+static void weapon_read()
 {
     int dummy = 0;
     int idx = -1;
@@ -1418,7 +1418,7 @@ static void weapon_read(void)
     fclose(fl);
 }
 
-static void weapon_init(void)
+static void weapon_init()
 {
     int i = 0;
     int j = 0;
@@ -1488,7 +1488,7 @@ static void weapon_init(void)
     g_WpnColl.text[WPN_TREE_MAX] = nullptr;
 }
 
-void weapon_dump(void)
+void weapon_dump()
 {
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
@@ -1528,7 +1528,7 @@ void weapon_dump(void)
     exit(0);
 }
 
-void boot_weapon(void)
+void boot_weapon()
 {
     weapon_init();
     weapon_read();
@@ -1537,7 +1537,7 @@ void boot_weapon(void)
 
 /* ========================================================================= */
 
-static void skill_init(void)
+static void skill_init()
 {
     int i = 0;
 
@@ -1582,7 +1582,7 @@ static void skill_init(void)
     g_SkiColl.text[SKI_TREE_MAX] = nullptr;
 }
 
-void boot_skill(void)
+void boot_skill()
 {
     skill_init();
 }

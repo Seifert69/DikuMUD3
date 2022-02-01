@@ -2,7 +2,7 @@
 
 #include <vme.h>
 
-void boot_spell(void);
+void boot_spell();
 void do_cast(class unit_data *, char *, const struct command_info *);
 void set_spellargs(struct spell_args *sa,
                    class unit_data *caster,

@@ -453,7 +453,7 @@ FILE *fopen_cache(const std::string &name, const char *mode)
     return fopen_cache(name.c_str(), mode);
 }
 
-void fclose_cache(void)
+void fclose_cache()
 {
     int i = 0;
 

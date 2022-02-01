@@ -31,7 +31,7 @@ CByteBuffer::CByteBuffer(ubit32 nSize)
     *m_pData = 0;
 }
 
-CByteBuffer::~CByteBuffer(void)
+CByteBuffer::~CByteBuffer()
 {
     FREE(m_pData);
 }
@@ -322,22 +322,22 @@ int CByteBuffer::Skip(int nLen)
     return 0;
 }
 
-int CByteBuffer::Skip8(void)
+int CByteBuffer::Skip8()
 {
     return Skip(sizeof(ubit8));
 }
 
-int CByteBuffer::Skip16(void)
+int CByteBuffer::Skip16()
 {
     return Skip(sizeof(ubit16));
 }
 
-int CByteBuffer::Skip32(void)
+int CByteBuffer::Skip32()
 {
     return Skip(sizeof(ubit32));
 }
 
-int CByteBuffer::SkipFloat(void)
+int CByteBuffer::SkipFloat()
 {
     return Skip(sizeof(float));
 }
@@ -352,7 +352,7 @@ int CByteBuffer::SkipString(char **ppStr)
     return Skip(1 + strlen((char *)m_pData + m_nReadPos));
 }
 
-int CByteBuffer::SkipNames(void)
+int CByteBuffer::SkipNames()
 {
     char *c = nullptr;
     unsigned int len = 0;
@@ -371,7 +371,7 @@ int CByteBuffer::SkipNames(void)
     return 0;
 }
 
-int CByteBuffer::SkipVals(void)
+int CByteBuffer::SkipVals()
 {
     unsigned int len = 0;
     unsigned int i = 0;

@@ -78,11 +78,11 @@ struct reset_command
 };
 
 class unit_data *mcreate_unit(int type);
-class room_direction_data *mcreate_exit(void);
+class room_direction_data *mcreate_exit();
 struct unit_affected_type *mcreate_affect();
 void *mmalloc(int size);
-void mem_reset(void);
-void mem_init(void);
+void mem_reset();
+void mem_init();
 
 void ShowUsage(char *name);
 void fix(char *file);

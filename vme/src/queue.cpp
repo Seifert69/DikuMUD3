@@ -71,17 +71,17 @@ cQueue::~cQueue()
     Flush();
 }
 
-ubit32 cQueue::Size(void)
+ubit32 cQueue::Size()
 {
     return nEntries;
 }
 
-ubit32 cQueue::Bytes(void)
+ubit32 cQueue::Bytes()
 {
     return nBytes;
 }
 
-int cQueue::IsEmpty(void)
+int cQueue::IsEmpty()
 {
     return nEntries == 0;
 }
@@ -178,17 +178,17 @@ void cQueue::Prepend(class cQueueElem *pe)
     nBytes += pe->Bytes();
 }
 
-const cQueueElem *cQueue::PeekHead(void)
+const cQueueElem *cQueue::PeekHead()
 {
     return pHead;
 }
 
-const class cQueueElem *cQueue::PeekTail(void)
+const class cQueueElem *cQueue::PeekTail()
 {
     return pTail;
 }
 
-class cQueueElem *cQueue::GetHead(void)
+class cQueueElem *cQueue::GetHead()
 {
     class cQueueElem *pTmp = nullptr;
 
@@ -214,7 +214,7 @@ class cQueueElem *cQueue::GetHead(void)
     return pTmp;
 }
 
-void cQueue::Flush(void)
+void cQueue::Flush()
 {
     class cQueueElem *pTmp = nullptr;
 

@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <cstring>
 
-cintlist::cintlist(void)
+cintlist::cintlist()
 {
     intlist = nullptr;
     length = 0;
@@ -105,7 +105,7 @@ char *cintlist::catnames()
     return s;
 }
 
-std::string cintlist::json(void)
+std::string cintlist::json()
 {
     std::string s;
 
@@ -171,7 +171,7 @@ sbit32 *cintlist::ValuePtr(int idx)
     return nullptr;
 }
 
-void cintlist::Free(void)
+void cintlist::Free()
 {
     if (intlist)
     {
@@ -181,7 +181,7 @@ void cintlist::Free(void)
     length = 0;
 }
 
-cintlist::~cintlist(void)
+cintlist::~cintlist()
 {
     this->Free();
 }
@@ -251,7 +251,7 @@ void cintlist::Insert(int val, int idx)
     intlist[idx] = val;
 }
 
-cintlist *cintlist::Duplicate(void)
+cintlist *cintlist::Duplicate()
 {
     cintlist *pNl = new cintlist;
     sbit32 i = 0;

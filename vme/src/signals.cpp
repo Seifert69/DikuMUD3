@@ -121,7 +121,7 @@ void sig_debugdump(int tsignal)
 }
 
 #endif /* DEBUG_HISTORY */
-void signal_reset(void)
+void signal_reset()
 {
     sigset_t sigt;
 
@@ -130,7 +130,7 @@ void signal_reset(void)
     pthread_sigmask(SIG_BLOCK, &sigt, nullptr);
 }
 
-void signal_setup(void)
+void signal_setup()
 {
     struct itimerval itime;
     struct timeval interval;

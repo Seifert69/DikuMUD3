@@ -1036,7 +1036,7 @@ void send_done(class unit_data *activator,
 }
 
 /* Build the trie here :) */
-void assign_command_pointers(void)
+void assign_command_pointers()
 {
     struct command_info *cmd = nullptr;
     g_intr_trie = nullptr;
@@ -1105,7 +1105,7 @@ void assign_command_pointers(void)
     g_cmd_dirs[DIR_DOWN] = cmd;
 }
 
-void interpreter_dil_check(void)
+void interpreter_dil_check()
 {
     struct command_info *cmd = nullptr;
     for (cmd = g_cmdlist; cmd; cmd = cmd->next)
@@ -1131,7 +1131,7 @@ void interpreter_dil_check(void)
     }
 }
 
-void boot_interpreter(void)
+void boot_interpreter()
 {
     cmd_base_load();
 }

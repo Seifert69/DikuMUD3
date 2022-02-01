@@ -26,7 +26,7 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 /* Descriptor stuff is in system.c */
 
-room_direction_data::room_direction_data(void)
+room_direction_data::room_direction_data()
 {
     key = nullptr;
     to_room = nullptr;
@@ -34,11 +34,11 @@ room_direction_data::room_direction_data(void)
     difficulty = 0;
 }
 
-room_direction_data::~room_direction_data(void)
+room_direction_data::~room_direction_data()
 {
 }
 
-char_point_data::char_point_data(void)
+char_point_data::char_point_data()
 {
     flags = 0;          /* Char flags                               */
     exp = 0;            /* The experience of the player             */
@@ -57,7 +57,7 @@ char_point_data::char_point_data(void)
     memset(abilities, 0, sizeof(abilities));
 }
 
-char_data::char_data(void)
+char_data::char_data()
 {
     g_world_nochars++;
 
@@ -74,7 +74,7 @@ char_data::char_data(void)
     // Removed because class constructor already initialize class variables.
 }
 
-char_data::~char_data(void)
+char_data::~char_data()
 {
 #ifdef DMSERVER
     if (money)
@@ -89,7 +89,7 @@ char_data::~char_data(void)
     g_world_nochars--;
 }
 
-room_data::room_data(void)
+room_data::room_data()
 {
     status = UNIT_ST_ROOM;
 
@@ -101,7 +101,7 @@ room_data::room_data(void)
 #endif
 }
 
-room_data::~room_data(void)
+room_data::~room_data()
 {
     g_world_norooms--;
 
@@ -114,7 +114,7 @@ room_data::~room_data(void)
     }
 }
 
-obj_data::obj_data(void)
+obj_data::obj_data()
 {
     status = UNIT_ST_OBJ;
 
@@ -129,12 +129,12 @@ obj_data::obj_data(void)
     resistance = 0;
 }
 
-obj_data::~obj_data(void)
+obj_data::~obj_data()
 {
     g_world_noobjects--;
 }
 
-pc_data::pc_data(void)
+pc_data::pc_data()
 {
     status = UNIT_ST_PC;
 
@@ -177,7 +177,7 @@ pc_data::pc_data(void)
     filename[0] = 0;
 }
 
-pc_data::~pc_data(void)
+pc_data::~pc_data()
 {
     g_world_nopc--;
 
@@ -194,7 +194,7 @@ pc_data::~pc_data(void)
         FREE(promptstr);
 }
 
-npc_data::npc_data(void)
+npc_data::npc_data()
 {
     status = UNIT_ST_NPC;
 
@@ -206,12 +206,12 @@ npc_data::npc_data(void)
     flags = 0;
 }
 
-npc_data::~npc_data(void)
+npc_data::~npc_data()
 {
     g_world_nonpc--;
 }
 
-zone_type::zone_type(void)
+zone_type::zone_type()
 {
     name = nullptr;
     notes = nullptr;
@@ -230,7 +230,7 @@ zone_type::zone_type(void)
     access = 255;
 }
 
-zone_type::~zone_type(void)
+zone_type::~zone_type()
 {
     if (name)
         FREE(name);
@@ -311,7 +311,7 @@ zone_type::~zone_type(void)
         FREE(spmatrix);
 }
 
-file_index_type::file_index_type(void)
+file_index_type::file_index_type()
 {
     name = nullptr;
     zone = nullptr;
@@ -332,13 +332,13 @@ file_index_type::file_index_type(void)
 #endif
 }
 
-file_index_type::~file_index_type(void)
+file_index_type::~file_index_type()
 {
     if (name)
         FREE(name);
 }
 
-unit_fptr::unit_fptr(void)
+unit_fptr::unit_fptr()
 {
     index = 0;
     priority = FN_PRI_CHORES;
@@ -503,7 +503,7 @@ unit_data *new_unit_data(ubit8 type)
     }
 }
 
-unit_data::unit_data(void)
+unit_data::unit_data()
 {
     func = nullptr;
     affected = nullptr;
@@ -532,7 +532,7 @@ unit_data::unit_data(void)
     alignment = 0;
 }
 
-unit_data::~unit_data(void)
+unit_data::~unit_data()
 {
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
 
@@ -600,7 +600,7 @@ void unit_data::set_fi(class file_index_type *f)
     this->fi->no_in_mem++;
 }
 
-std::string unit_data::json(void)
+std::string unit_data::json()
 {
     std::string s;
     std::string t;

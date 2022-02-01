@@ -23,17 +23,17 @@ typedef class websocketpp::server<websocketpp::config::asio> wsserver;
 class cConHook : public cHook
 {
 public:
-    cConHook(void);
-    ~cConHook(void);
+    cConHook();
+    ~cConHook();
 
-    void Unhook(void);
-    int IsHooked(void); // At this level we also need to check for websockets
+    void Unhook();
+    int IsHooked(); // At this level we also need to check for websockets
     void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
 
     void Close(int bNotifyMud);
     char AddInputChar(ubit8 c);
     void AddString(char *str);
-    void ParseInput(void);
+    void ParseInput();
     void SendCon(const char *str);
     void SendCon(const std::string &str);
     void WriteCon(const char *str);
@@ -41,11 +41,11 @@ public:
     char *IndentText(const char *source, char *dest, int dest_size, int width);
     int ColorDisp(const char *current, char *newptr);
     char *ParseOutput(const char *text);
-    void PromptErase(void);
+    void PromptErase();
     void PromptRedraw(const char *prompt);
     void TransmitCommand(const char *text);
-    void ShowChunk(void);
-    void ProcessPaged(void);
+    void ShowChunk();
+    void ProcessPaged();
     void PressReturn(const char *cmd);
     void PlayLoop(const char *cmd);
     void MudDown(const char *cmd);
@@ -104,6 +104,6 @@ void dumbMenuSelect(class cConHook *con, const char *cmd);
 void dumbMudDown(class cConHook *con, const char *cmd);
 void Idle(cConHook *con, const char *cmd);
 
-void ClearUnhooked(void);
+void ClearUnhooked();
 
 extern class cConHook *g_connection_list;

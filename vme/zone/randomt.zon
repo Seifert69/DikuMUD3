@@ -30,6 +30,67 @@ help
 
 %dil
 
+dilbegin string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+var
+   vowels : string;
+   ana : string;
+code
+{
+    vowels := "aeiou";
+
+    if (a1 != "")
+    {
+        s := replace("$1n", a1, s);
+
+        if (a1.[0] in vowels)
+            ana := "an";
+        else
+            ana := "a";
+
+        s := replace("$1a", ana, s);
+    }
+
+    if (a2 != "")
+    {
+        s := replace("$2n", a2, s);
+
+        if (a2.[0] in vowels)
+            ana := "an";
+        else
+            ana := "a";
+
+        s := replace("$2a", ana, s);
+    }
+
+    if (a3 != "")
+    {
+        s := replace("$3n", a3, s);
+
+        if (a3.[0] in vowels)
+            ana := "an";
+        else
+            ana := "a";
+
+        s := replace("$3a", ana, s);
+    }
+
+    if (a4 != "")
+    {
+        s := replace("$4n", a4, s);
+
+        if (a4.[0] in vowels)
+            ana := "an";
+        else
+            ana := "a";
+
+        s := replace("$4a", ana, s);
+    }
+
+    return (s);
+}
+dilend
+
+
 // il : intlist  [array of integers from 5..94]
 //
 // This funciton presume rolls of < 5 are a failure.
@@ -114,10 +175,13 @@ dilend
 dilbegin integer hiltjob(u : unitptr, lvl : integer,  hilt : string);
 external
     integer successroll(il : intlist);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var 
     roll : integer;
     j : integer;
     sl : stringlist;    
+    hiltmats : stringlist;    
+    nHilt : integer;
     mats : stringlist;    
 code
 {
@@ -126,21 +190,24 @@ code
     // u.value[2] is the material enchantment (up to 5) plus smith bonus (usually 0-3, but Open ended)
 
     sl := {
-        "Hilt decor minus 3 or less",
-        "Hilt decor minus 2",
-        "Hilt decor minus 1",
-        "The hilt 0",
-        "Hilt smooth decor 1",
-        "Hilt engraved decor 2",
-        "Hilt decor 3",
-        "Hilt decor 4",
-        "Hilt decor inlaid 5 + eng ",  // + Engraving mats
-        "Hilt decor inlaid 6 + eng ",  // + Engraving mats
-        "Hilt decor inlaid 7 + eng ",  // + Engraving mats
-        "Hilt decor inlaid 8 + eng ",  // + Engraving mats
-        "Hilt decor inlaid 9 + eng ",  // + Engraving mats
-        "Hilt decor inlaid 10 + eng " // + Engraving mats
+        "You wonder if you can even hold onto the oddly shaped $3n $2n.",
+        "The $2n is made of $3n but it isn't impressive.",
+        "A funcitonal $2n made of $3n but could look better.",
+        "The $2n is made of $3n.",
+        "The $2n is made of $3n and looks like it is well made.",
+        "The $2n is made of $3n and looks good.",
+        "The $2n is made of $3n and looks really good.",
+        "The $2n is made of $3n and looks excellent.",
+        "The $2n is made of $3n and a $4n is set in at the end.", 
+        "The $2n is made of $3n and a $4n is set in at the end.",
+        "The $2n is made of $3n and a $4n is set in at the end.",
+        "The $2n is made of $3n and a $4n is set in at the end.",
+        "The $2n is made of $3n and a $4n is set in at the end.",
+        "The $2n is made of $3n and a $4n is set in at the end."
     };
+
+    hiltmats := {"leather", "ivory", "iron"};
+    nHilt := rnd(0, length(hiltmats)-1);
 
     // Roll for the decoration, typically 0-3
     roll := successroll({50,75,85,95});
@@ -160,11 +227,11 @@ code
         u.value[2] := u.value[2] + roll + 1;
         log("Hilt Material : " + mats.[roll]);
         log("Hilt enchantment potential : " + itoa(u.value[2]));
-        u.extra.descr := u.extra.descr + " " + sact(sl.[j], A_ALWAYS, self, hilt, mats.[roll], TO_CHAR);
+        u.extra.descr := u.extra.descr + " " + sreplace(sl.[j], u.name, hilt, hiltmats.[nHilt], mats.[roll]);
     }
     else
     {
-        u.extra.descr := u.extra.descr + " " + sact(sl.[j], A_ALWAYS, self, hilt, null, TO_CHAR);
+        u.extra.descr := u.extra.descr + " " + sreplace(sl.[j], u.name, hilt, hiltmats.[nHilt], "");
     }
 
     return (0);
@@ -179,11 +246,13 @@ dilend
 dilbegin integer bladejob(u : unitptr, lvl : integer,  blade : string);
 external
     integer successroll(il : intlist);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+
 var 
     roll : integer;
     j : integer;
     sl : stringlist;    
-    mats : stringlist;    
+    mats : stringlist;   
 code
 {
     // lvl is the smith roll outcome (typically 0-3 but OE)
@@ -191,20 +260,20 @@ code
     // u.value[2] is the material enchantment (up to 5) plus smith bonus (usually 0-3, but Open ended)
 
     sl := {
-        "You wonder if that's really $1a $1N $2t, it is crooked and uneven.",
-        "The $2t is crooked and could be a lot better.",
-        "The $2t looks functional but could be better.",
-        "The $2t is very plain.",
-        "The $2t is very smooth and well made.",
-        "The well made $2t is both very sharp and smooth.",
-        "The well made $2t has nice engravings.",
-        "The well made $2t has beautiful intricate engravings",
-        "The well made $2t has beautiful intricate engravings and inlaid $3t runes.",
-        "This strong $2t has $3t runes inlaid.",
-        "This strong well made $2t has $3t runes inlaid.",
-        "This beautiful and strong $2t has $3t runes inlaid.",
-        "This is a fantastic $1n $2t which is highly decorated and with inlaid $3t runes.",
-        "This is probably the most stunning $1n $2t you have ever seen, it is highly decorated and with inlaid $3t runes." 
+        "You wonder if that's really $1a $1n $2n, it is crooked and uneven.",
+        "The $2n is crooked and could be a lot better.",
+        "The $2n looks functional but could be better.",
+        "The $2n is very plain.",
+        "The $2n is very smooth and well made.",
+        "The well made $2n is both very sharp and smooth.",
+        "The well made $2n has nice engravings.",
+        "The well made $2n has beautiful intricate engravings",
+        "The well made $2n has beautiful intricate engravings and inlaid $3n runes.",
+        "This strong $2n has $3n runes inlaid.",
+        "This strong well made $2n has $3n runes inlaid.",
+        "This beautiful and strong $2n has $3n runes inlaid.",
+        "This is a fantastic $1n $2n which is highly decorated and with inlaid $3n runes.",
+        "This is probably the most stunning $1n $2n you have ever seen, it is highly decorated and with inlaid $3n runes." 
     };
 
     // Roll for the decoration, typically 0-3
@@ -225,12 +294,12 @@ code
         u.value[2] := u.value[2] + roll + 1;
         log("Material : " + mats.[roll]);
         log("Blade enchantment potential : " + itoa(u.value[2]));
-        u.extra.descr := u.extra.descr + " " + sact(sl.[j], A_ALWAYS, self, blade, mats.[roll], TO_CHAR);
+        u.extra.descr := u.extra.descr + " " + sreplace(sl.[j], u.name, blade, mats.[roll], "");
     }
     else
     {
         u.extra.descr := u.extra.descr + " " + 
-            sact(sl.[j], A_ALWAYS, self, blade, null, TO_CHAR);
+            sreplace(sl.[j], u.name, blade, "", "");
     }
 
     return (0);
@@ -247,6 +316,7 @@ dilend
 dilbegin integer smithjob(u : unitptr, bonuslvl : integer, matlvl : integer, enchant : integer, mat : string);
 external
     integer successroll(il : intlist);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var 
     roll : integer;
     q : integer;
@@ -278,24 +348,24 @@ code
 
     // Get a smithing description based on weapons quality
     sl := {
-        "You look at the lump of $2t and wonder if it is even $3a $3N.", // -7
-        "This lump of $2t was clearly an unsuccessful attempt at making $3a $3N.",
-        "This $2t $3N is terribly bad.",
-        "This $2t $3N is terrible.", // -4
-        "A really badly made $2t $3N.",
-        "Whoever made this $2t $3N was probably the apprentice's apprentice.",
-        "Not the best $2t $3N you've seen but it can come in handy.", 
-        "It's $2a $2t $3N.", // 0
-        "A decent $2t $3N.",  // +1
-        "A good $2t $3N.",
-        "This is a very good $2t $3N.",
-        "An excellent $2t $3N.",
-        "An excellent and well balanced $2t $3N.",
-        "A superior $2t $3N.",
-        "Probably the best $2t $3N you've ever seen." };
+        "You look at the lump of $2n and wonder if it is even $1a $1n.", // -7
+        "This lump of $2n was clearly an unsuccessful attempt at making $1a $1n.",
+        "This $2n $1n is terribly bad.",
+        "This $2n $1n is terrible.", // -4
+        "A really badly made $2n $1n.",
+        "Whoever made this $2n $1n was probably the apprentice's apprentice.",
+        "Not the best $2n $1n you've seen but it can come in handy.", 
+        "It's $2a $2n $1n.", // 0
+        "A decent $2n $1n.",  // +1
+        "A good $2n $1n.",
+        "This is a very good $2n $1n.",
+        "An excellent $2n $1n.",
+        "An excellent and well balanced $2n $1n.",
+        "A superior $2n $1n.",
+        "Probably the best $2n $1n you've ever seen." };
 
     log("weapon extra : " + sl.[u.value[1]+7]);
-    u.extra.descr :=  sact(sl.[u.value[1]+7], A_ALWAYS, self, mat, u, TO_CHAR);
+    u.extra.descr :=  sreplace(sl.[u.value[1]+7], u.name, mat, "", ""); 
 
     return (roll);
 }

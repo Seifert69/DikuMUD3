@@ -87,8 +87,8 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf);
 class unit_data *read_unit(class file_index_type *fi, int ins_list = TRUE);
 char *read_info_file(const char *name, char *oldstr);
 char *read_info_file(const std::string &name, char *oldstr);
-void boot_db(void);
-void db_shutdown(void);
+void boot_db();
+void db_shutdown();
 int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion);
 
 extern int g_room_number;

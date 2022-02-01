@@ -640,7 +640,7 @@ void load_contents(const char *pFileName, class unit_data *unit)
     base_load_contents(ContentsFileName(pFileName), unit);
 }
 
-void reception_boot(void)
+void reception_boot()
 {
     g_slime_fi = find_file_index("basis", "slime");
     assert(g_slime_fi);

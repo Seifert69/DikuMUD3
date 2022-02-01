@@ -15,17 +15,17 @@
 class extra_list
 {
 public:
-    extra_list(void);
-    ~extra_list(void);
+    extra_list();
+    ~extra_list();
 
     void AppendBuffer(CByteBuffer *pBuf);
     class extra_descr_data *find_raw(const char *word);
     void erase(class extra_descr_data *exd);
     void remove(const char *name);
     void copyfrom(class extra_list &listToBeCopied);
-    int isempty(void);
-    int count(void);
-    std::string json(void);
+    int isempty();
+    int count();
+    std::string json();
 
     void push_front(class extra_descr_data *ex);
     void push_tail(class extra_descr_data *ex);
@@ -46,11 +46,11 @@ private:
 class extra_descr_data
 {
 public:
-    extra_descr_data(void);
+    extra_descr_data();
     extra_descr_data(const char *name, const char *descr);
     extra_descr_data(const char **names, const char *descr);
     extra_descr_data(cNamelist names, const char *descr);
-    ~extra_descr_data(void);
+    ~extra_descr_data();
 
     class extra_descr_data *find_raw(const char *word);
 

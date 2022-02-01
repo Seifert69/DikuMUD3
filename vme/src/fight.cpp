@@ -249,7 +249,7 @@ int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
     return grp;
 }
 
-void load_messages(void)
+void load_messages()
 {
     FILE *f1 = nullptr;
     int i = 0;

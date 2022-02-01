@@ -18,7 +18,7 @@ struct cmdload_struct
     int dir;
 };
 
-void cmd_base_load(void);
-void command_read(void);
+void cmd_base_load();
+void command_read();
 
 extern struct command_info *g_cmdlist;

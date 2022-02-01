@@ -33,14 +33,14 @@ class cCaptainHook;
 class cHookNative
 {
 public:
-    cHookNative(void);
+    cHookNative();
     virtual ~cHookNative();
 
     void Hook(int fd);
-    int IsHooked(void);
-    virtual void Unhook(void);
+    int IsHooked();
+    virtual void Unhook();
 
-    int get_fd(void);
+    int get_fd();
 
     int write(const void *buf, int count);
     int read(void *buf, int count);
@@ -54,20 +54,20 @@ class cHook : public cHookNative
     friend class cCaptainHook;
 
 public:
-    cHook(void);
-    virtual ~cHook(void);
+    cHook();
+    virtual ~cHook();
 
-    int tfd(void);
+    int tfd();
     // virtual int IsHooked(void);
-    virtual void Unhook(void);
+    virtual void Unhook();
 
     virtual void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
-    int ReadToQueue(void);
+    int ReadToQueue();
 
     cQueue qRX;
 
 protected:
-    void PushWrite(void);
+    void PushWrite();
     virtual void Input(int nFlags) = 0;
 
     cQueue qTX;
@@ -82,10 +82,10 @@ class cCaptainHook
     friend class cHook;
 
 public:
-    cCaptainHook(void);
-    ~cCaptainHook(void);
+    cCaptainHook();
+    ~cCaptainHook();
 
-    void Close(void);
+    void Close();
     void Hook(int nHandle, cHook *hook);
     int Wait(struct timeval *timeout);
     void Unhook(cHook *hook);

@@ -37,7 +37,7 @@ struct arm_info_type
 int required_xp(int level);
 int level_xp(int level);
 void set_hits(class unit_data *obj, int craftsmanship);
-int skill_point_gain(void);
+int skill_point_gain();
 int ability_point_gain(class unit_data *ch);
 int ability_point_total(class unit_data *ch);
 int distribute_points(sbit16 *skills, int max, int points, int level);
