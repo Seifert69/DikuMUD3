@@ -12,6 +12,9 @@ using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
 
+namespace mplex
+{
+
 // pull out the type of messages sent by our config
 typedef wsserver::message_ptr message_ptr;
 
@@ -171,3 +174,5 @@ void runechoserver()
         exit(42);
     }
 }
+
+} // namespace mplex

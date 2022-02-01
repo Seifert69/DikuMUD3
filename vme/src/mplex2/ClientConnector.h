@@ -17,6 +17,9 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
+namespace mplex
+{
+
 // typedef websocketpp::server<websocketpp::config::asio> wsserver;
 typedef class websocketpp::server<websocketpp::config::asio> wsserver;
 
@@ -107,3 +110,5 @@ void Idle(cConHook *con, const char *cmd);
 void ClearUnhooked();
 
 extern class cConHook *g_connection_list;
+
+} // namespace mplex

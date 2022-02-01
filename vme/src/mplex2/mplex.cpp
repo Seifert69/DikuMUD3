@@ -30,6 +30,9 @@
 #include <cstdio>
 #include <cstdlib>
 
+namespace mplex
+{
+
 char g_mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;
 struct arg_type g_mplex_arg;
@@ -203,3 +206,5 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
 
     return TRUE;
 }
+
+} // namespace mplex

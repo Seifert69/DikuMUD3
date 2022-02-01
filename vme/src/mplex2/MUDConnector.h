@@ -15,6 +15,9 @@
 
 #include <cstring>
 
+namespace mplex
+{
+
 class cMotherHook : public cHook
 {
 public:
@@ -41,3 +44,5 @@ extern cMotherHook g_MotherHook;
 extern cMudHook g_MudHook;
 extern int g_nConnectionsLeft;
 extern class color_type g_cDefcolor;
+
+} // namespace mplex

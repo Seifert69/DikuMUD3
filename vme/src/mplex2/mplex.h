@@ -15,6 +15,9 @@
 
 #include <cstring>
 
+namespace mplex
+{
+
 struct arg_type
 {
     int nMotherPort;
@@ -46,3 +49,5 @@ extern char g_mudname[50];
 int ParseArg(int argc, char *argv[], struct arg_type *arg);
 void bye_signal(int signal);
 void alarm_signal(int sig);
+
+} // namespace mplex

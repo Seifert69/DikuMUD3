@@ -8,6 +8,9 @@
 
 #include "essential.h"
 
+namespace mplex
+{
+
 void protocol_translate(class cConHook *con, ubit8 code, char **b);
 void translate_init();
 
@@ -221,3 +224,5 @@ void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code);
 #define CONTROL_BG_WHITE                                                                                                                   \
     "\x1B"                                                                                                                                 \
     "x"
+
+} // namespace mplex

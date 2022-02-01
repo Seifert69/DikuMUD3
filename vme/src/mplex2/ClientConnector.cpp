@@ -61,6 +61,8 @@
     have their m_nId set to zero.
 
 */
+namespace mplex
+{
 
 class cConHook *g_connection_list = nullptr;
 
@@ -1601,3 +1603,5 @@ cConHook::~cConHook()
 
     g_nConnectionsLeft++;
 }
+
+} // namespace mplex
