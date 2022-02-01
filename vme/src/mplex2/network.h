@@ -19,5 +19,11 @@
 #endif
 
 #define DEF_SERVER_ADDR "127.0.0.1"
+
+namespace mplex
+{
+
 int OpenMother(int port);
 int OpenNetwork(int nMudPort, char *pMudAddr);
+
+} // namespace mplex

@@ -22,6 +22,9 @@
 
 #include <cstdio>
 
+namespace mplex
+{
+
 static ubit8 default_colours[3][24] = {
     /* Default (no change in table) */
     {CONTROL_FG_BLACK_CHAR,  CONTROL_FG_RED_CHAR,      CONTROL_FG_GREEN_CHAR,  CONTROL_FG_YELLOW_CHAR,
@@ -625,3 +628,5 @@ void translate_init()
         control_code[TERM_INTERNAL][i] = Control_Copy;
     }
 }
+
+} // namespace mplex

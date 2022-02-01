@@ -23,6 +23,9 @@
 #include <cerrno>
 #include <cstdlib>
 
+namespace mplex
+{
+
 int OpenMother(int nPort)
 {
     int n = 0;
@@ -198,3 +201,5 @@ int OpenNetwork(int nPort, char *pcAddress)
     }
     return fdClient;
 }
+
+} // namespace mplex

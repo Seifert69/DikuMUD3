@@ -34,6 +34,9 @@
 #include <cstring>
 #include <thread>
 
+namespace mplex
+{
+
 class color_type g_cDefcolor;
 int g_nConnectionsLeft = -1;
 
@@ -470,3 +473,5 @@ int cMudHook::read_mud()
 
     return 1;
 }
+
+} // namespace mplex
