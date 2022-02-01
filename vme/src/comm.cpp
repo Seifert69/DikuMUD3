@@ -448,6 +448,10 @@ void act_generate(char *buf,
                         {
                             i = UNIT_ANA((struct unit_data *)sub->m_u);
                         }
+                        else if (sub->m_p != nullptr)
+                        {
+                            i = ANA(*sub->m_p);
+                        }
                         else
                         {
                             slog(LOG_ALL, 0, "NULL a code to act(): %s", str);
