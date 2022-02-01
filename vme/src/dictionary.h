@@ -1,3 +1,5 @@
 #pragma once
 
-int dictionary(struct spec_arg *sarg);
+#include "interpreter.h"
+
+int dictionary(spec_arg *sarg);

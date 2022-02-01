@@ -82,20 +82,20 @@ struct zone_info_type
     std::map<const char *, zone_type *, cmp_str> mmp;
 };
 
-class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec = TRUE);
-void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf);
-class unit_data *read_unit(class file_index_type *fi, int ins_list = TRUE);
+unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec = TRUE);
+void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf);
+unit_data *read_unit(file_index_type *fi, int ins_list = TRUE);
 char *read_info_file(const char *name, char *oldstr);
 char *read_info_file(const std::string &name, char *oldstr);
 void boot_db();
 void db_shutdown();
-int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion);
+int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion);
 
 extern int g_room_number;
-extern class unit_data *g_unit_list;
-extern class unit_data *g_room_head;
-extern class unit_data *g_npc_head;
-extern class unit_data *g_obj_head;
-extern struct zone_info_type g_zone_info;
+extern unit_data *g_unit_list;
+extern unit_data *g_room_head;
+extern unit_data *g_npc_head;
+extern unit_data *g_obj_head;
+extern zone_info_type g_zone_info;
 extern const char *g_player_zone;
 extern cSector g_sector_dat;

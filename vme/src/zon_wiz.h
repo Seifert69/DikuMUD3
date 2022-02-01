@@ -1,3 +1,5 @@
 #pragma once
 
-int ball(struct spec_arg *sarg);
+#include "interpreter.h"
+
+int ball(spec_arg *sarg);

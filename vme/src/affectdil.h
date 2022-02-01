@@ -7,18 +7,19 @@
 #pragma once
 
 #include "essential.h"
+#include "structs.h"
 
 /* affect a units values                                           */
 struct apply_function_type
 {
     char *descr;
 
-    ubit1 (*func)(class unit_affected_type *af, class unit_data *unit, ubit1 set);
+    ubit1 (*func)(unit_affected_type *af, unit_data *unit, ubit1 set);
 };
 
 /* These functions may send messages and destroy any unit. */
 struct tick_function_type
 {
     char *descr;
-    void (*func)(class unit_affected_type *af, class unit_data *unit);
+    void (*func)(unit_affected_type *af, unit_data *unit);
 };

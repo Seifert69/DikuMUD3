@@ -64,7 +64,7 @@
 namespace mplex
 {
 
-class cConHook *g_connection_list = nullptr;
+cConHook *g_connection_list = nullptr;
 
 void dumbPlayLoop(cConHook *con, const char *cmd)
 {
@@ -99,7 +99,7 @@ void cConHook::PlayLoop(const char *cmd)
     }
 }
 
-void dumbMenuSelect(class cConHook *con, const char *cmd)
+void dumbMenuSelect(cConHook *con, const char *cmd)
 {
     con->MenuSelect(cmd);
 }
@@ -132,7 +132,7 @@ void cConHook::MenuSelect(const char *cmd)
     }
 }
 
-void dumbMudDown(class cConHook *con, const char *cmd)
+void dumbMudDown(cConHook *con, const char *cmd)
 {
     con->MudDown(cmd);
 }
@@ -152,7 +152,7 @@ void Idle(cConHook *con, const char *cmd)
     slog(LOG_ALL, 0, "AHA! Ilde was called! Tell Development team about this!");
 }
 
-void dumbPressReturn(class cConHook *con, const char *cmd)
+void dumbPressReturn(cConHook *con, const char *cmd)
 {
     con->PressReturn(cmd);
 }
@@ -198,8 +198,8 @@ void cConHook::PressReturn(const char *cmd)
 // Destroy all clients that are no longer connected
 void ClearUnhooked()
 {
-    class cConHook *con = nullptr;
-    class cConHook *nextcon = nullptr;
+    cConHook *con = nullptr;
+    cConHook *nextcon = nullptr;
 
     for (con = g_connection_list; con; con = nextcon)
     {
@@ -588,7 +588,7 @@ void cConHook::SendCon(const std::string &text)
 
 /* ======================= TEXT FORMATTING OUTPUT ====================== */
 
-std::string mplex_getcolor(class cConHook *hook, const char *colorstr)
+std::string mplex_getcolor(cConHook *hook, const char *colorstr)
 {
     auto gcolor = hook->color.get(colorstr);
 
@@ -1499,8 +1499,8 @@ cConHook::cConHook()
     unsigned int j = 0;
     unsigned int size = 0;
 #endif
-    struct sockaddr_in conaddr;
-    struct sockaddr_in sock;
+    sockaddr_in conaddr;
+    sockaddr_in sock;
     char hostname[49];
     int x = 0;
 
@@ -1508,7 +1508,7 @@ cConHook::cConHook()
 
     j = sizeof(conaddr);
     // slog(LOG_OFF, 0, "accept() before.");
-    fd = accept(g_MotherHook.tfd(), (struct sockaddr *)&conaddr, &j);
+    fd = accept(g_MotherHook.tfd(), (sockaddr *)&conaddr, &j);
     // slog(LOG_OFF, 0, "accept() after.");
     Assert(fd >= 0, "ACCEPT");
 
@@ -1529,7 +1529,7 @@ cConHook::cConHook()
        error(HERE, "No Setsockopt()"); */
 
     size = sizeof(sock);
-    if (getpeername(fd, (struct sockaddr *)&sock, &size) == -1)
+    if (getpeername(fd, (sockaddr *)&sock, &size) == -1)
     {
         slog(LOG_OFF, 0, "getpeername: socket %d error no %d.", fd, errno);
         // MS2020 strncpy (hostname,"NO GETPEERNAME",strlen("NO GETPEERNAME")+1);
@@ -1589,7 +1589,7 @@ cConHook::~cConHook()
     }
     else
     {
-        class cConHook *tmp = nullptr;
+        cConHook *tmp = nullptr;
 
         for (tmp = g_connection_list; tmp; tmp = tmp->m_pNext)
         {

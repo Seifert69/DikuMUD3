@@ -132,8 +132,8 @@ void signal_reset()
 
 void signal_setup()
 {
-    struct itimerval itime;
-    struct timeval interval;
+    itimerval itime;
+    timeval interval;
 
     /* just to be on the safe side: */
 

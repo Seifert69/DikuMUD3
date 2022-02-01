@@ -21,7 +21,7 @@ typedef wsserver::message_ptr message_ptr;
 // std::map<std::owner_less<websocketpp::connection_hdl>, void *> g_cMapHandler;
 std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> g_cMapHandler;
 
-void remove_gmap(class cConHook *con)
+void remove_gmap(cConHook *con)
 {
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
@@ -38,7 +38,7 @@ void remove_gmap(class cConHook *con)
 
 void on_close(websocketpp::connection_hdl hdl)
 {
-    class cConHook *con = nullptr;
+    cConHook *con = nullptr;
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
     it = g_cMapHandler.find(hdl);
@@ -78,7 +78,7 @@ int ws_send_message(wsserver *s, websocketpp::connection_hdl hdl, const char *tx
 // Define a callback to handle incoming messages
 void on_message(wsserver *s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
-    class cConHook *con = nullptr;
+    cConHook *con = nullptr;
 
     if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
     {

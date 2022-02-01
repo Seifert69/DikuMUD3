@@ -16,7 +16,7 @@
 /* Example: "king welmar/tim/tom"                        */
 /* Players are automatically non-excluded                */
 /* Empty list means none                                 */
-int charname_in_list(class unit_data *ch, char *arg)
+int charname_in_list(unit_data *ch, char *arg)
 {
     char *c = nullptr;
 

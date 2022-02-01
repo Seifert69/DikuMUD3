@@ -23,9 +23,9 @@
 #include <cstdlib>
 #include <cstring>
 
-void tif_confusion_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_confusion_tick(unit_affected_type *af, unit_data *unit)
 {
-    class unit_fptr *fptr = nullptr;
+    unit_fptr *fptr = nullptr;
 
     if ((fptr = find_fptr(unit, SFUN_HUNTING)))
     {
@@ -34,20 +34,20 @@ void tif_confusion_tick(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_confusion_on(class unit_affected_type *af, class unit_data *unit)
+void tif_confusion_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel confused.<br/>", unit);
     act("$1n seems confused.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     tif_confusion_tick(af, unit);
 }
 
-void tif_confusion_off(class unit_affected_type *af, class unit_data *unit)
+void tif_confusion_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You less confused.<br/>", unit);
     act("$1n seem less confused.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
-void tif_invisibility_on(class unit_affected_type *af, class unit_data *unit)
+void tif_invisibility_on(unit_affected_type *af, unit_data *unit)
 {
     if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE))
     {
@@ -56,7 +56,7 @@ void tif_invisibility_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_invisibility_off(class unit_affected_type *af, class unit_data *unit)
+void tif_invisibility_off(unit_affected_type *af, unit_data *unit)
 {
     if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE))
     {
@@ -65,9 +65,9 @@ void tif_invisibility_off(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_fear_check(class unit_affected_type *af, class unit_data *unit)
+void tif_fear_check(unit_affected_type *af, unit_data *unit)
 {
-    class unit_data *ch = nullptr;
+    unit_data *ch = nullptr;
 
     if (CHAR_FIGHTING(unit))
     {
@@ -131,39 +131,39 @@ void tif_fear_check(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_blind_on(class unit_affected_type *af, class unit_data *unit)
+void tif_blind_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("A cloak of darkness falls around you.<br/>", unit);
 }
 
-void tif_blind_off(class unit_affected_type *af, class unit_data *unit)
+void tif_blind_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("The veil of darkness disappears.<br/>", unit);
 }
 
 /* sneak */
-void tif_sneak_on(class unit_affected_type *af, class unit_data *unit)
+void tif_sneak_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("Ok, you'll try to move silently for a while.<br/>", unit);
 }
 
-void tif_sneak_off(class unit_affected_type *af, class unit_data *unit)
+void tif_sneak_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You stop sneaking about.<br/>", unit);
 }
 
-void tif_sneak_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_sneak_tick(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You sneak about unnoticed.<br/>", unit);
 }
 
 /* hide */
-void tif_hide_on(class unit_affected_type *af, class unit_data *unit)
+void tif_hide_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You try to hide yourself.<br/>", unit);
 }
 
-void tif_hide_off(class unit_affected_type *af, class unit_data *unit)
+void tif_hide_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You stop hiding.<br/>", unit);
     if (af->tickf_i == TIF_HIDE_TICK)
@@ -172,7 +172,7 @@ void tif_hide_off(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_hide_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_hide_tick(unit_affected_type *af, unit_data *unit)
 {
     if (!(af->data[1]))
     {
@@ -198,7 +198,7 @@ void tif_hide_tick(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_nohide_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_nohide_tick(unit_affected_type *af, unit_data *unit)
 {
     if (!(af->data[1]))
     {
@@ -225,17 +225,17 @@ void tif_nohide_tick(class unit_affected_type *af, class unit_data *unit)
 }
 
 /* bless */
-void tif_bless_on(class unit_affected_type *af, class unit_data *unit)
+void tif_bless_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel divine forces helping you.<br/>", unit);
 }
 
-void tif_bless_off(class unit_affected_type *af, class unit_data *unit)
+void tif_bless_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel divine forces abandoning you.<br/>", unit);
 }
 
-void tif_bless_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_bless_tick(unit_affected_type *af, unit_data *unit)
 {
     if (af->duration == 1)
     {
@@ -244,17 +244,17 @@ void tif_bless_tick(class unit_affected_type *af, class unit_data *unit)
 }
 
 /* berserk */
-void tif_berserk_on(class unit_affected_type *af, class unit_data *unit)
+void tif_berserk_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You suddenly go berserk!<br/>", unit);
 }
 
-void tif_berserk_off(class unit_affected_type *af, class unit_data *unit)
+void tif_berserk_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You no longer feel berserk.<br/>", unit);
 }
 
-void tif_berserk_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_berserk_tick(unit_affected_type *af, unit_data *unit)
 {
     if (af->duration == 1)
     {
@@ -263,17 +263,17 @@ void tif_berserk_tick(class unit_affected_type *af, class unit_data *unit)
 }
 
 /* rage */
-void tif_rage_on(class unit_affected_type *af, class unit_data *unit)
+void tif_rage_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel enraged!<br/>", unit);
 }
 
-void tif_rage_off(class unit_affected_type *af, class unit_data *unit)
+void tif_rage_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel your rage subsiding.<br/>", unit);
 }
 
-void tif_rage_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_rage_tick(unit_affected_type *af, unit_data *unit)
 {
     if (af->duration == 1)
     {
@@ -282,7 +282,7 @@ void tif_rage_tick(class unit_affected_type *af, class unit_data *unit)
 }
 
 /* curse */
-void tif_curse_on(class unit_affected_type *af, class unit_data *unit)
+void tif_curse_on(unit_affected_type *af, unit_data *unit)
 {
     if (IS_CHAR(unit))
     {
@@ -295,7 +295,7 @@ void tif_curse_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_curse_off(class unit_affected_type *af, class unit_data *unit)
+void tif_curse_off(unit_affected_type *af, unit_data *unit)
 {
     if (IS_CHAR(unit))
     {
@@ -310,13 +310,13 @@ void tif_curse_off(class unit_affected_type *af, class unit_data *unit)
 }
 
 /* sanctuary */
-void tif_sanctuary_on(class unit_affected_type *af, class unit_data *unit)
+void tif_sanctuary_on(unit_affected_type *af, unit_data *unit)
 {
     act("$1n momentarily glows in a bright white light.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     send_to_char("You momentarily glow in a bright white light.<br/>", unit);
 }
 
-void tif_sanctuary_off(class unit_affected_type *af, class unit_data *unit)
+void tif_sanctuary_off(unit_affected_type *af, unit_data *unit)
 {
     act("$1n glows in a bright white light. Then it fades away.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     send_to_char("You glow in a bright white light. "
@@ -324,7 +324,7 @@ void tif_sanctuary_off(class unit_affected_type *af, class unit_data *unit)
                  unit);
 }
 
-void tif_sanctuary_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_sanctuary_tick(unit_affected_type *af, unit_data *unit)
 {
     if (af->duration == 1)
     {
@@ -335,12 +335,12 @@ void tif_sanctuary_tick(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_eyes_tingle(class unit_affected_type *af, class unit_data *unit)
+void tif_eyes_tingle(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("Your eyes begin to tingle.<br/>", unit);
 }
 
-void tif_torch_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 {
     OBJ_VALUE(unit, 0)
     --;
@@ -354,7 +354,7 @@ void tif_torch_tick(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_light_add(class unit_affected_type *af, class unit_data *unit)
+void tif_light_add(unit_affected_type *af, unit_data *unit)
 {
     if (!UNIT_IN(unit))
     {
@@ -373,7 +373,7 @@ void tif_light_add(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_light_sub(class unit_affected_type *af, class unit_data *unit)
+void tif_light_sub(unit_affected_type *af, unit_data *unit)
 {
     if (!UNIT_IN(unit))
     {
@@ -392,7 +392,7 @@ void tif_light_sub(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_sleep_on(class unit_affected_type *af, class unit_data *unit)
+void tif_sleep_on(unit_affected_type *af, unit_data *unit)
 {
     act("You feel very tired.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     if (CHAR_POS(unit) > POSITION_SLEEPING)
@@ -408,7 +408,7 @@ void tif_sleep_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_sleep_check(class unit_affected_type *af, class unit_data *unit)
+void tif_sleep_check(unit_affected_type *af, unit_data *unit)
 {
     int hm = 0;
 
@@ -431,13 +431,13 @@ void tif_sleep_check(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_sleep_off(class unit_affected_type *af, class unit_data *unit)
+void tif_sleep_off(unit_affected_type *af, unit_data *unit)
 {
     act("You feel less sleepy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     /* no no not a 'wake' here, remember he's still affacted */
 }
 
-void tif_protect_on(class unit_affected_type *af, class unit_data *unit)
+void tif_protect_on(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -449,7 +449,7 @@ void tif_protect_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_protect_off(class unit_affected_type *af, class unit_data *unit)
+void tif_protect_off(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -461,7 +461,7 @@ void tif_protect_off(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_hit_on(class unit_affected_type *af, class unit_data *unit)
+void tif_hit_on(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -473,14 +473,14 @@ void tif_hit_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_hit_off(class unit_affected_type *af, class unit_data *unit)
+void tif_hit_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_hit_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_mag_on(class unit_affected_type *af, class unit_data *unit)
+void tif_mag_on(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -492,14 +492,14 @@ void tif_mag_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_mag_off(class unit_affected_type *af, class unit_data *unit)
+void tif_mag_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_mag_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_div_on(class unit_affected_type *af, class unit_data *unit)
+void tif_div_on(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -511,14 +511,14 @@ void tif_div_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_div_off(class unit_affected_type *af, class unit_data *unit)
+void tif_div_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_div_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_str_on(class unit_affected_type *af, class unit_data *unit)
+void tif_str_on(unit_affected_type *af, unit_data *unit)
 {
     /*old stuff
        if (af->data[1] > 0)
@@ -575,14 +575,14 @@ void tif_str_on(class unit_affected_type *af, class unit_data *unit)
     /*end new str*/
 }
 
-void tif_str_off(class unit_affected_type *af, class unit_data *unit)
+void tif_str_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_str_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_dex_on(class unit_affected_type *af, class unit_data *unit)
+void tif_dex_on(unit_affected_type *af, unit_data *unit)
 {
     /* old dex stuff
        if (af->data[1] > 0)
@@ -637,14 +637,14 @@ void tif_dex_on(class unit_affected_type *af, class unit_data *unit)
     /*end new dex*/
 }
 
-void tif_dex_off(class unit_affected_type *af, class unit_data *unit)
+void tif_dex_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_dex_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_con_on(class unit_affected_type *af, class unit_data *unit)
+void tif_con_on(unit_affected_type *af, unit_data *unit)
 {
     /* old con stuff
        if (af->data[1] > 0)
@@ -699,14 +699,14 @@ void tif_con_on(class unit_affected_type *af, class unit_data *unit)
     /*end new con*/
 }
 
-void tif_con_off(class unit_affected_type *af, class unit_data *unit)
+void tif_con_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_con_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_cha_on(class unit_affected_type *af, class unit_data *unit)
+void tif_cha_on(unit_affected_type *af, unit_data *unit)
 {
     /* old cha stuff
        if (af->data[1] > 0)
@@ -761,14 +761,14 @@ void tif_cha_on(class unit_affected_type *af, class unit_data *unit)
     /*end new cha*/
 }
 
-void tif_cha_off(class unit_affected_type *af, class unit_data *unit)
+void tif_cha_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_cha_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_bra_on(class unit_affected_type *af, class unit_data *unit)
+void tif_bra_on(unit_affected_type *af, unit_data *unit)
 {
     /* old bra stuff
        if (af->data[1] > 0)
@@ -823,14 +823,14 @@ void tif_bra_on(class unit_affected_type *af, class unit_data *unit)
     /*end new cha*/
 }
 
-void tif_bra_off(class unit_affected_type *af, class unit_data *unit)
+void tif_bra_off(unit_affected_type *af, unit_data *unit)
 {
     af->data[1] = -af->data[1];
     tif_bra_on(af, unit);
     af->data[1] = -af->data[1];
 }
 
-void tif_poison_on(class unit_affected_type *af, class unit_data *unit)
+void tif_poison_on(unit_affected_type *af, unit_data *unit)
 {
     act("You feel very ill.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     act("$1n seems very ill.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_ROOM);
@@ -839,7 +839,7 @@ void tif_poison_on(class unit_affected_type *af, class unit_data *unit)
 /* Data[0] The amount of hitpoints to loose (>=0)        */
 /* Data[1] The amount of Mana points to loose (>=0)      */
 /* Data[2] The amount of Endurance points to loose (>=0) */
-void tif_poison_suffer(class unit_affected_type *af, class unit_data *unit)
+void tif_poison_suffer(unit_affected_type *af, unit_data *unit)
 {
     CHAR_MANA(unit) -= af->data[1];
     CHAR_ENDURANCE(unit) -= af->data[2];
@@ -847,69 +847,69 @@ void tif_poison_suffer(class unit_affected_type *af, class unit_data *unit)
     /* unit can be destructed now, but no problemo */
 }
 
-void tif_poison_off(class unit_affected_type *af, class unit_data *unit)
+void tif_poison_off(unit_affected_type *af, unit_data *unit)
 {
     act("You feel better.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 /* plague */
-void tif_plague_on(class unit_affected_type *af, class unit_data *unit)
+void tif_plague_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You suddenly feel very sick.<br/>", unit);
 }
 
-void tif_plague_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_plague_tick(unit_affected_type *af, unit_data *unit)
 {
 }
 
-void tif_plague_off(class unit_affected_type *af, class unit_data *unit)
+void tif_plague_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel much better.<br/>", unit);
 }
 
 /* insanity */
-void tif_insanity_on(class unit_affected_type *af, class unit_data *unit)
+void tif_insanity_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel a battle with your own mind begins.<br/>", unit);
     act("A mad look appears on $1n's face", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
-void tif_insanity_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_insanity_tick(unit_affected_type *af, unit_data *unit)
 {
 }
 
-void tif_insanity_off(class unit_affected_type *af, class unit_data *unit)
+void tif_insanity_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel the battle with your own mind is over.<br/>", unit);
     act("The mad look disappears from $1n's face.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
-void tif_prot_evil_on(class unit_affected_type *af, class unit_data *unit)
+void tif_prot_evil_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel protected from the forces of evil.<br/>", unit);
 }
 
-void tif_prot_good_on(class unit_affected_type *af, class unit_data *unit)
+void tif_prot_good_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel protected from the forces of good.<br/>", unit);
 }
 
-void tif_prot_evil_off(class unit_affected_type *af, class unit_data *unit)
+void tif_prot_evil_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel less protected from the forces of evil.<br/>", unit);
 }
 
-void tif_prot_good_off(class unit_affected_type *af, class unit_data *unit)
+void tif_prot_good_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel less protected from the forces of good.<br/>", unit);
 }
 
-void tif_sustain_on(class unit_affected_type *af, class unit_data *unit)
+void tif_sustain_on(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You feel sustained.<br/>", unit);
 }
 
-void tif_sustain_tick(class unit_affected_type *af, class unit_data *unit)
+void tif_sustain_tick(unit_affected_type *af, unit_data *unit)
 {
     if (!IS_PC(unit))
     {
@@ -920,12 +920,12 @@ void tif_sustain_tick(class unit_affected_type *af, class unit_data *unit)
     PC_COND(unit, 2) = af->data[2];
 }
 
-void tif_sustain_off(class unit_affected_type *af, class unit_data *unit)
+void tif_sustain_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You no longer feel sustained.<br/>", unit);
 }
 
-void tif_decay_corpse(class unit_affected_type *af, class unit_data *unit)
+void tif_decay_corpse(unit_affected_type *af, unit_data *unit)
 {
     /* Make routine to change the description of a corpse instead */
     if (ODD(af->duration) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
@@ -934,7 +934,7 @@ void tif_decay_corpse(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_destroy_corpse(class unit_affected_type *af, class unit_data *unit)
+void tif_destroy_corpse(unit_affected_type *af, unit_data *unit)
 {
     if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
     {
@@ -943,7 +943,7 @@ void tif_destroy_corpse(class unit_affected_type *af, class unit_data *unit)
     extract_unit(unit);
 }
 
-void tif_buried_destruct(class unit_affected_type *af, class unit_data *unit)
+void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
 {
     if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
     {
@@ -951,7 +951,7 @@ void tif_buried_destruct(class unit_affected_type *af, class unit_data *unit)
 
         while (UNIT_CONTAINS(unit))
         {
-            class unit_affected_type naf;
+            unit_affected_type naf;
 
             SET_BIT(UNIT_FLAGS(UNIT_CONTAINS(unit)), UNIT_FL_BURIED);
 
@@ -977,7 +977,7 @@ void tif_buried_destruct(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_valhalla_ret(class unit_affected_type *af, class unit_data *unit)
+void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
 {
     if (!IS_PC(unit))
     {
@@ -1012,16 +1012,16 @@ void tif_valhalla_ret(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_jail_wait(class unit_affected_type *af, class unit_data *unit)
+void tif_jail_wait(unit_affected_type *af, unit_data *unit)
 {
 }
 
 /* Get thrown out of jail */
-void tif_jail_release(class unit_affected_type *af, class unit_data *unit)
+void tif_jail_release(unit_affected_type *af, unit_data *unit)
 {
 }
 
-void tif_spl_on(class unit_affected_type *af, class unit_data *unit)
+void tif_spl_on(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -1033,7 +1033,7 @@ void tif_spl_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_spl_off(class unit_affected_type *af, class unit_data *unit)
+void tif_spl_off(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -1045,7 +1045,7 @@ void tif_spl_off(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_ski_on(class unit_affected_type *af, class unit_data *unit)
+void tif_ski_on(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -1057,7 +1057,7 @@ void tif_ski_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_ski_off(class unit_affected_type *af, class unit_data *unit)
+void tif_ski_off(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -1069,7 +1069,7 @@ void tif_ski_off(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_wpn_on(class unit_affected_type *af, class unit_data *unit)
+void tif_wpn_on(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -1081,7 +1081,7 @@ void tif_wpn_on(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_wpn_off(class unit_affected_type *af, class unit_data *unit)
+void tif_wpn_off(unit_affected_type *af, unit_data *unit)
 {
     if (af->data[1] > 0)
     {
@@ -1093,7 +1093,7 @@ void tif_wpn_off(class unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_armour_on(class unit_affected_type *af, class unit_data *unit)
+void tif_armour_on(unit_affected_type *af, unit_data *unit)
 {
     const char *c = "pale skin like";
 
@@ -1125,104 +1125,104 @@ void tif_armour_on(class unit_affected_type *af, class unit_data *unit)
     act("$1n's skin transforms into $2t substance.", A_ALWAYS, unit, c, cActParameter(), TO_ROOM);
 }
 
-void tif_speed_on(class unit_affected_type *af, class unit_data *unit)
+void tif_speed_on(unit_affected_type *af, unit_data *unit)
 {
     act("You feel faster...", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
-void tif_speed_off(class unit_affected_type *af, class unit_data *unit)
+void tif_speed_off(unit_affected_type *af, unit_data *unit)
 {
     act("You feel slower...", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 /* --------------------------------------------------------------------- */
 
-void tif_naught(class unit_affected_type *af, class unit_data *unit)
+void tif_naught(unit_affected_type *af, unit_data *unit)
 {
     slog(LOG_ALL, 0, "Obsoleted affect called with ID %d on %s@%s.", af->applyf_i, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
 }
 
-struct tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},
-                                     {"Destroy Corpse", tif_destroy_corpse},
-                                     {"Valhalla Return", tif_valhalla_ret},
-                                     {"Hitpoints On", tif_hit_on},
-                                     {"Hitpoints Off", tif_hit_off},
-                                     {"Magic Mod On", tif_mag_on},
-                                     {"Magic Mod Off", tif_mag_off},
-                                     {"Divine Mod On", tif_div_on},
-                                     {"Divine Mod Off", tif_div_off},
-                                     {"Strength Mod On", tif_str_on},
-                                     {"Strength Mod Off", tif_str_off},
-                                     {"Dexterity Mod On", tif_dex_on},
-                                     {"Dexterity Mod Off", tif_dex_off},
-                                     {"Constitution Mod On", tif_con_on},
-                                     {"Constitution Mod Off", tif_con_off},
-                                     {"Charisma Mod On", tif_cha_on},
-                                     {"Charisma Mod Off", tif_cha_off},
-                                     {"Brain Mod On", tif_bra_on},
-                                     {"Brain Mod Off", tif_bra_off},
-                                     {"XXX", tif_armour_on},
-                                     {"XXX", tif_armour_on},
-                                     {"Spell-skill Mod On", tif_protect_on},
-                                     {"Spell-skill Mod Off", tif_protect_off},
-                                     {"Poison On", tif_poison_on},
-                                     {"Poison Off", tif_poison_off},
-                                     {"Poison Suffer", tif_poison_suffer},
-                                     {"Light/Dark Add", tif_light_add},
-                                     {"Light/Dark Sub", tif_light_sub},
-                                     {"Torch burning countdown", tif_torch_tick},
-                                     {"Eyes tingles", tif_eyes_tingle},
-                                     {"Blind On", tif_blind_on},
-                                     {"Blind Off", tif_blind_off},
-                                     {"Fear Tick Check", tif_fear_check},
-                                     {"Invisibility On", tif_invisibility_on},
-                                     {"Invisibility Off", tif_invisibility_off},
-                                     {"Sneak on", tif_sneak_on},
-                                     {"Sneak off", tif_sneak_off},
-                                     {"Sneak tick", tif_sneak_tick},
-                                     {"Hide on", tif_hide_on},
-                                     {"Hide off", tif_hide_off},
-                                     {"Nide tick", tif_hide_tick},
-                                     {"Nohide tick", tif_nohide_tick},
-                                     {"sleep on", tif_sleep_on},
-                                     {"sleep check", tif_sleep_check},
-                                     {"sleep off", tif_sleep_off},
-                                     {"bless on", tif_bless_on},
-                                     {"bless tick", tif_bless_tick},
-                                     {"bless off", tif_bless_off},
-                                     {"curse on", tif_curse_on},
-                                     {"curse off", tif_curse_off},
-                                     {"sancruary on", tif_sanctuary_on},
-                                     {"sanctuary tick", tif_sanctuary_tick},
-                                     {"sanctuary off", tif_sanctuary_off},
-                                     {"insanity on", tif_insanity_on},
-                                     {"insanity tick", tif_insanity_tick},
-                                     {"insanity off", tif_insanity_off},
-                                     {"protect from evil on", tif_prot_evil_on},
-                                     {"protect from evil off", tif_prot_evil_off},
-                                     {"sustain on", tif_sustain_on},
-                                     {"sustain tick", tif_sustain_tick},
-                                     {"sustain off", tif_sustain_off},
-                                     {"jail waiting", tif_jail_wait},
-                                     {"jail release", tif_jail_release},
-                                     {"plague on", tif_plague_on},
-                                     {"plague tick", tif_plague_tick},
-                                     {"plague off", tif_plague_off},
-                                     {"obsoleted reward on", tif_naught},
-                                     {"obsoleted reward off", tif_naught},
-                                     {"spell on", tif_spl_on},
-                                     {"spell off", tif_spl_off},
-                                     {"skill on", tif_ski_on},
-                                     {"skill off", tif_ski_off},
-                                     {"weapon on", tif_wpn_on},
-                                     {"weapon off", tif_wpn_off},
-                                     {"confusion on", tif_confusion_on},
-                                     {"confusion off", tif_confusion_off},
-                                     {"confusion tick", tif_confusion_tick},
-                                     {"buried destruct", tif_buried_destruct},
-                                     {"protection from good on", tif_prot_good_on},
-                                     {"protection from good off", tif_prot_good_off},
-                                     {"natural armour on", tif_armour_on},
-                                     {"natural armour off", tif_armour_on},
-                                     {"speed better", tif_speed_on},
-                                     {"speed worse", tif_speed_off}};
+tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},
+                              {"Destroy Corpse", tif_destroy_corpse},
+                              {"Valhalla Return", tif_valhalla_ret},
+                              {"Hitpoints On", tif_hit_on},
+                              {"Hitpoints Off", tif_hit_off},
+                              {"Magic Mod On", tif_mag_on},
+                              {"Magic Mod Off", tif_mag_off},
+                              {"Divine Mod On", tif_div_on},
+                              {"Divine Mod Off", tif_div_off},
+                              {"Strength Mod On", tif_str_on},
+                              {"Strength Mod Off", tif_str_off},
+                              {"Dexterity Mod On", tif_dex_on},
+                              {"Dexterity Mod Off", tif_dex_off},
+                              {"Constitution Mod On", tif_con_on},
+                              {"Constitution Mod Off", tif_con_off},
+                              {"Charisma Mod On", tif_cha_on},
+                              {"Charisma Mod Off", tif_cha_off},
+                              {"Brain Mod On", tif_bra_on},
+                              {"Brain Mod Off", tif_bra_off},
+                              {"XXX", tif_armour_on},
+                              {"XXX", tif_armour_on},
+                              {"Spell-skill Mod On", tif_protect_on},
+                              {"Spell-skill Mod Off", tif_protect_off},
+                              {"Poison On", tif_poison_on},
+                              {"Poison Off", tif_poison_off},
+                              {"Poison Suffer", tif_poison_suffer},
+                              {"Light/Dark Add", tif_light_add},
+                              {"Light/Dark Sub", tif_light_sub},
+                              {"Torch burning countdown", tif_torch_tick},
+                              {"Eyes tingles", tif_eyes_tingle},
+                              {"Blind On", tif_blind_on},
+                              {"Blind Off", tif_blind_off},
+                              {"Fear Tick Check", tif_fear_check},
+                              {"Invisibility On", tif_invisibility_on},
+                              {"Invisibility Off", tif_invisibility_off},
+                              {"Sneak on", tif_sneak_on},
+                              {"Sneak off", tif_sneak_off},
+                              {"Sneak tick", tif_sneak_tick},
+                              {"Hide on", tif_hide_on},
+                              {"Hide off", tif_hide_off},
+                              {"Nide tick", tif_hide_tick},
+                              {"Nohide tick", tif_nohide_tick},
+                              {"sleep on", tif_sleep_on},
+                              {"sleep check", tif_sleep_check},
+                              {"sleep off", tif_sleep_off},
+                              {"bless on", tif_bless_on},
+                              {"bless tick", tif_bless_tick},
+                              {"bless off", tif_bless_off},
+                              {"curse on", tif_curse_on},
+                              {"curse off", tif_curse_off},
+                              {"sancruary on", tif_sanctuary_on},
+                              {"sanctuary tick", tif_sanctuary_tick},
+                              {"sanctuary off", tif_sanctuary_off},
+                              {"insanity on", tif_insanity_on},
+                              {"insanity tick", tif_insanity_tick},
+                              {"insanity off", tif_insanity_off},
+                              {"protect from evil on", tif_prot_evil_on},
+                              {"protect from evil off", tif_prot_evil_off},
+                              {"sustain on", tif_sustain_on},
+                              {"sustain tick", tif_sustain_tick},
+                              {"sustain off", tif_sustain_off},
+                              {"jail waiting", tif_jail_wait},
+                              {"jail release", tif_jail_release},
+                              {"plague on", tif_plague_on},
+                              {"plague tick", tif_plague_tick},
+                              {"plague off", tif_plague_off},
+                              {"obsoleted reward on", tif_naught},
+                              {"obsoleted reward off", tif_naught},
+                              {"spell on", tif_spl_on},
+                              {"spell off", tif_spl_off},
+                              {"skill on", tif_ski_on},
+                              {"skill off", tif_ski_off},
+                              {"weapon on", tif_wpn_on},
+                              {"weapon off", tif_wpn_off},
+                              {"confusion on", tif_confusion_on},
+                              {"confusion off", tif_confusion_off},
+                              {"confusion tick", tif_confusion_tick},
+                              {"buried destruct", tif_buried_destruct},
+                              {"protection from good on", tif_prot_good_on},
+                              {"protection from good off", tif_prot_good_off},
+                              {"natural armour on", tif_armour_on},
+                              {"natural armour off", tif_armour_on},
+                              {"speed better", tif_speed_on},
+                              {"speed worse", tif_speed_off}};

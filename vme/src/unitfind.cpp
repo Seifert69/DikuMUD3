@@ -16,9 +16,9 @@
 
 #include <cctype>
 
-int follower_count(class unit_data *u)
+int follower_count(unit_data *u)
 {
-    struct char_follow_type *f = nullptr;
+    char_follow_type *f = nullptr;
     int x = 0;
 
     if (IS_CHAR(u))
@@ -31,9 +31,9 @@ int follower_count(class unit_data *u)
     return x;
 }
 
-class unit_data *get_follower(class unit_data *u, int num)
+unit_data *get_follower(unit_data *u, int num)
 {
-    struct char_follow_type *f = nullptr;
+    char_follow_type *f = nullptr;
     int x = 0;
 
     if (IS_CHAR(u))
@@ -51,7 +51,7 @@ class unit_data *get_follower(class unit_data *u, int num)
 }
 
 /* Assumes UNIT_IN(room) == NULL */
-static ubit1 same_surroundings_room(class unit_data *room, class unit_data *u2)
+static ubit1 same_surroundings_room(unit_data *room, unit_data *u2)
 {
     if (!UNIT_IN(u2))
     {
@@ -71,7 +71,7 @@ static ubit1 same_surroundings_room(class unit_data *room, class unit_data *u2)
     return FALSE;
 }
 
-ubit1 same_surroundings(class unit_data *u1, class unit_data *u2)
+ubit1 same_surroundings(unit_data *u1, unit_data *u2)
 {
     if (!UNIT_IN(u1))
     {
@@ -132,20 +132,20 @@ ubit1 same_surroundings(class unit_data *u1, class unit_data *u2)
 */
 
 /* returns if PC is pay/no pay !0/0 */
-static inline int pcpay(class unit_data *u)
+static inline int pcpay(unit_data *u)
 {
     return ((PC_ACCOUNT(u).credit > 0.0) || (PC_ACCOUNT(u).discount == 100) || (PC_ACCOUNT(u).flatrate > (ubit32)time(nullptr)) ||
             (CHAR_DESCRIPTOR(u) ? g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(u)->host) : 0));
 }
 
 /* returns if ROOM is pay/no pay !0/0 */
-static inline int roompay(class unit_data *u)
+static inline int roompay(unit_data *u)
 {
     return (UNIT_FI_ZONE(u)->payonly);
 }
 
 /* These functions determine if the units are candidates in find */
-static inline int findcheck(class unit_data *u, int pset, int tflags)
+static inline int findcheck(unit_data *u, int pset, int tflags)
 {
     if (IS_SET(UNIT_TYPE(u), tflags))
     {
@@ -189,10 +189,10 @@ static inline int findcheck(class unit_data *u, int pset, int tflags)
 // 2020. This really needs some rewriting... Plus the number(1,count) looks
 // like it will always return the first unit...
 //
-class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
+unit_data *random_unit(unit_data *ref, int sflags, int tflags)
 {
-    class unit_data *u = nullptr;
-    class unit_data *selected = nullptr;
+    unit_data *u = nullptr;
+    unit_data *selected = nullptr;
     int count = 0;
     int pset = 0;
 
@@ -219,7 +219,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
     }
     else if (sflags == FIND_UNIT_ZONE)
     {
-        class zone_type *z = nullptr;
+        zone_type *z = nullptr;
 
         if (UNIT_FI_ZONE(ref))
         {
@@ -321,14 +321,10 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 // this also needs to work on units that can't be seen, let's add a boolean  argument if the
 // function only returns units that are visible to the viewer, or not.
 //
-class unit_data *find_unit_general(const class unit_data *viewer,
-                                   const class unit_data *ch,
-                                   char **arg,
-                                   const class unit_data *list,
-                                   const ubit32 bitvector,
-                                   ubit8 type)
+unit_data *
+find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, const unit_data *list, const ubit32 bitvector, ubit8 type)
 {
-    class unit_data *best = nullptr;
+    unit_data *best = nullptr;
     int best_len = 0;
     ubit32 bitvectorm = 0;
 
@@ -339,8 +335,8 @@ class unit_data *find_unit_general(const class unit_data *viewer,
     char name[MAX_INPUT_LENGTH * 2];
     char *c = nullptr;
     ubit1 is_fillword = TRUE;
-    class unit_data *u = nullptr;
-    class unit_data *uu = nullptr;
+    unit_data *u = nullptr;
+    unit_data *uu = nullptr;
 
     if (type == 0)
     {
@@ -455,7 +451,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
             if ((ct = is_name_raw(c, tmp_self)))
             {
                 *arg = (char *)ct;
-                return (class unit_data *)ch;
+                return (unit_data *)ch;
             }
 
             if (UNIT_IN(ch) == nullptr)
@@ -617,8 +613,8 @@ class unit_data *find_unit_general(const class unit_data *viewer,
 
     for (; list; list = list->next)
     {
-        if (IS_SET(type, UNIT_TYPE((class unit_data *)list)) && (ct = UNIT_NAMES((class unit_data *)list).IsNameRaw(c)) &&
-            (ct - c >= best_len) && CHAR_CAN_SEE(viewer, list))
+        if (IS_SET(type, UNIT_TYPE((unit_data *)list)) && (ct = UNIT_NAMES((unit_data *)list).IsNameRaw(c)) && (ct - c >= best_len) &&
+            CHAR_CAN_SEE(viewer, list))
         {
             if (ct - c > best_len)
             {
@@ -628,7 +624,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
 
             if (--number == 0)
             {
-                best = (class unit_data *)list;
+                best = (unit_data *)list;
             }
         }
     }
@@ -672,20 +668,20 @@ class unit_data *find_unit_general(const class unit_data *viewer,
 
   */
 
-class unit_data *find_unit(const class unit_data *ch, char **arg, const class unit_data *list, const ubit32 bitvector)
+unit_data *find_unit(const unit_data *ch, char **arg, const unit_data *list, const ubit32 bitvector)
 {
     return find_unit_general(ch, ch, arg, list, bitvector);
 }
 
-class unit_data *find_unit_dil(const class unit_data *ch, char **arg, const class unit_data *list, const ubit32 bitvector, ubit8 type)
+unit_data *find_unit_dil(const unit_data *ch, char **arg, const unit_data *list, const ubit32 bitvector, ubit8 type)
 {
     return find_unit_general(ch, ch, arg, list, bitvector, type);
 }
 
-class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector)
+unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
-    class unit_data *u = nullptr;
-    class unit_data *uu = nullptr;
+    unit_data *u = nullptr;
+    unit_data *uu = nullptr;
 
     assert(this);
 
@@ -780,7 +776,7 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
 
         if (!this->fi_unit_list.empty())
         {
-            for (std::forward_list<class unit_data *>::iterator it = this->fi_unit_list.begin(); it != this->fi_unit_list.end(); it++)
+            for (std::forward_list<unit_data *>::iterator it = this->fi_unit_list.begin(); it != this->fi_unit_list.end(); it++)
             {
                 if (UNIT_FILE_INDEX(*it) == this)
                 {
@@ -805,7 +801,7 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
     return nullptr;
 }
 
-class unit_data *file_index_type::find_symbolic_instance()
+unit_data *file_index_type::find_symbolic_instance()
 {
     // class unit_data *u;
 
@@ -837,9 +833,9 @@ class unit_data *file_index_type::find_symbolic_instance()
 // Will find the unit_data for the file_index_type in question
 // which is matching the idx (ignore for PCs)
 //
-class unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
+unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
 {
-    class file_index_type *fi = find_file_index(zone, name);
+    file_index_type *fi = find_file_index(zone, name);
 
     union
     {
@@ -854,7 +850,7 @@ class unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
             return fi->fi_unit_list.front();
         }
 
-        for (std::forward_list<class unit_data *>::iterator it = fi->fi_unit_list.begin(); it != fi->fi_unit_list.end(); it++)
+        for (std::forward_list<unit_data *>::iterator it = fi->fi_unit_list.begin(); it != fi->fi_unit_list.end(); it++)
         {
             val.p = *it;
             if (val.i == idx)
@@ -867,9 +863,9 @@ class unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
     return nullptr;
 }
 
-class unit_data *find_symbolic(const char *zone, const char *name)
+unit_data *find_symbolic(const char *zone, const char *name)
 {
-    class file_index_type *fi = find_file_index(zone, name);
+    file_index_type *fi = find_file_index(zone, name);
 
     if (fi)
     {
@@ -881,14 +877,14 @@ class unit_data *find_symbolic(const char *zone, const char *name)
     }
 }
 
-struct unit_vector_data g_unit_vector;
+unit_vector_data g_unit_vector;
 
 /* Init the g_unit_vector for FIRST use */
 static void init_unit_vector()
 {
     g_unit_vector.size = 10;
 
-    CREATE(g_unit_vector.units, class unit_data *, g_unit_vector.size);
+    CREATE(g_unit_vector.units, unit_data *, g_unit_vector.size);
 }
 
 /* If things get too cramped, double size of g_unit_vector */
@@ -896,17 +892,17 @@ static void double_unit_vector()
 {
     g_unit_vector.size *= 2;
 
-    RECREATE(g_unit_vector.units, class unit_data *, g_unit_vector.size);
+    RECREATE(g_unit_vector.units, unit_data *, g_unit_vector.size);
 }
 
 /* Scan the chars surroundings and all transparent surroundings for all  */
 /* units of types which match 'flags' in the 'room' specified.           */
 /* Difference to scan4_unit is that a room is searched for contents,     */
 /* but not outside room.                                                 */
-void scan4_unit_room(class unit_data *room, ubit8 type)
+void scan4_unit_room(unit_data *room, ubit8 type)
 {
-    class unit_data *u = nullptr;
-    class unit_data *uu = nullptr;
+    unit_data *u = nullptr;
+    unit_data *uu = nullptr;
 
     g_unit_vector.top = 0;
 
@@ -950,10 +946,10 @@ void scan4_unit_room(class unit_data *room, ubit8 type)
 /* Scan the chars surroundings and all transparent surroundsings for all */
 /* units of types which match 'flags'. Updates the 'g_unit_vector' for     */
 /* use in local routines.                                                */
-void scan4_unit(class unit_data *ch, ubit8 type)
+void scan4_unit(unit_data *ch, ubit8 type)
 {
-    class unit_data *u = nullptr;
-    class unit_data *uu = nullptr;
+    unit_data *u = nullptr;
+    unit_data *uu = nullptr;
 
     if (!UNIT_IN(ch))
     {
@@ -1029,9 +1025,9 @@ void scan4_unit(class unit_data *ch, ubit8 type)
     }
 }
 
-static class unit_data *scan4_ref_room(class unit_data *room, class unit_data *fu)
+static unit_data *scan4_ref_room(unit_data *room, unit_data *fu)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
 
     if (room == fu)
     {
@@ -1067,7 +1063,7 @@ static class unit_data *scan4_ref_room(class unit_data *room, class unit_data *f
 /* you know that *fu exists, then a much simpler test is possible using   */
 /* the 'same_surroundings()' function.                                     */
 /* No checks for invisibility and the like                                */
-class unit_data *scan4_ref(class unit_data *ch, class unit_data *fu)
+unit_data *scan4_ref(unit_data *ch, unit_data *fu)
 {
     if (!UNIT_IN(ch))
     {

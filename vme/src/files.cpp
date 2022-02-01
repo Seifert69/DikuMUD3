@@ -305,7 +305,7 @@ struct fcache_type
     FILE *file;
 };
 
-static struct fcache_type fcache[FCACHE_MAX] = {
+static fcache_type fcache[FCACHE_MAX] = {
     {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
     {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},
     {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr}, {0, 0, nullptr, nullptr},

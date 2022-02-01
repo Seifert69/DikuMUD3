@@ -1,3 +1,5 @@
 #pragma once
 
-extern struct tick_function_type g_tif[];
+#include "affect.h"
+
+extern tick_function_type g_tif[];

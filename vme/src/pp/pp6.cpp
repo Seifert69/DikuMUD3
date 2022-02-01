@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 /************************************************************************/
 /*									*/
 /*	File:	pp6.c							*/
@@ -266,3 +269,5 @@ void pragvalue(int aaa, int bbb, const char *ccc)
     pbstr(buf);     /* Push back into "input" stream */
     pushback('\n'); /* So scaneol finds the end */
 }
+
+#pragma GCC diagnostic pop

@@ -1,7 +1,9 @@
 #pragma once
 
-void zone_reset(class zone_type *zone);
+#include "structs.h"
+
+void zone_reset(zone_type *zone);
 void reset_all_zones();
 void zone_event(void *, void *);
 
-extern class zone_type *g_boot_zone;
+extern zone_type *g_boot_zone;

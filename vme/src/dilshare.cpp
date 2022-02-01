@@ -58,7 +58,7 @@ dilval::~dilval()
             }
             else if (atyp == DILA_EXP)
             {
-                delete ((class cNamelist *)val.ptr);
+                delete ((cNamelist *)val.ptr);
                 val.ptr = nullptr;
             }
             break;
@@ -73,7 +73,7 @@ dilval::~dilval()
             }
             else if (atyp == DILA_EXP)
             {
-                delete ((class cintlist *)val.ptr);
+                delete ((cintlist *)val.ptr);
                 val.ptr = nullptr;
             }
             break;
@@ -96,7 +96,7 @@ void dilprg::link(diltemplate *tmpl)
 
 void dilprg::unlink()
 {
-    struct diltemplate *tmpl = nullptr;
+    diltemplate *tmpl = nullptr;
 
     tmpl = this->frame[0].tmpl;
     assert(tmpl);
@@ -147,7 +147,7 @@ void dilprg::unlink()
     this->next = nullptr;
 }
 
-dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
+dilprg::dilprg(unit_data *owner, diltemplate *linktmpl)
 {
     g_nDilPrg++;
 
@@ -171,7 +171,7 @@ dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
     this->waitcmd = WAITCMD_MAXINST - 1;
 
     // Setup the base frame
-    CREATE(this->frame, struct dilframe, 1);
+    CREATE(this->frame, dilframe, 1);
     this->fp = this->frame;
     this->framesz = 1;
 
@@ -205,8 +205,8 @@ dilprg::~dilprg()
 
 #ifdef DMSERVER
 
-    struct diltemplate *tmpl = nullptr;
-    struct dilframe *frm = nullptr;
+    diltemplate *tmpl = nullptr;
+    dilframe *frm = nullptr;
 
     this->unlink();
 

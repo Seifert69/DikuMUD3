@@ -8,22 +8,23 @@
 
 #include "essential.h"
 
+class trie_type;
 struct trie_entry
 {
     char c;
-    struct trie_type *t;
+    trie_type *t;
 };
 
 struct trie_type
 {
     void *data;
     ubit8 size;
-    struct trie_entry *nexts;
+    trie_entry *nexts;
 };
 
-void *search_trie(const char *s, struct trie_type *t);
-void set_triedata(const char *s, struct trie_type *t, void *p, ubit1 verbose);
-struct trie_type *add_trienode(const char *s, struct trie_type *t);
-void free_trie(struct trie_type *t, void (*free_data)(void *));
-ubit1 del_trie(char *s, struct trie_type **t, void (*)(void *));
-void qsort_triedata(struct trie_type *t);
+void *search_trie(const char *s, trie_type *t);
+void set_triedata(const char *s, trie_type *t, void *p, ubit1 verbose);
+trie_type *add_trienode(const char *s, trie_type *t);
+void free_trie(trie_type *t, void (*free_data)(void *));
+ubit1 del_trie(char *s, trie_type **t, void (*)(void *));
+void qsort_triedata(trie_type *t);

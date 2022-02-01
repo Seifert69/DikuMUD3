@@ -16,9 +16,9 @@
 
 #include <cstring>
 
-class descriptor_data *find_descriptor(const char *name, class descriptor_data *except)
+descriptor_data *find_descriptor(const char *name, descriptor_data *except)
 {
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
 
     /* Check if already playing */
     for (d = g_descriptor_list; d; d = d->next)
@@ -33,9 +33,9 @@ class descriptor_data *find_descriptor(const char *name, class descriptor_data *
 }
 
 /* Find a named zone */
-class zone_type *find_zone(const char *zonename)
+zone_type *find_zone(const char *zonename)
 {
-    // struct bin_search_type *ba;
+    // bin_search_type *ba;
 
     if ((zonename == nullptr) || !*zonename)
     {
@@ -58,9 +58,9 @@ class zone_type *find_zone(const char *zonename)
 }
 
 /* Zonename & name must point to non-empty strings. Must be lower case */
-class file_index_type *find_file_index(const char *zonename, const char *name)
+file_index_type *find_file_index(const char *zonename, const char *name)
 {
-    class zone_type *zone = nullptr;
+    zone_type *zone = nullptr;
 
     if (!*name)
     {
@@ -99,9 +99,9 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 }
 
 /* Zonename & name must point to non-empty strings */
-struct diltemplate *find_dil_index(const char *zonename, const char *name)
+diltemplate *find_dil_index(const char *zonename, const char *name)
 {
-    class zone_type *zone = nullptr;
+    zone_type *zone = nullptr;
     // struct bin_search_type *ba;
 
     if (str_is_empty(name))
@@ -137,7 +137,7 @@ struct diltemplate *find_dil_index(const char *zonename, const char *name)
  * call by a DIL program.
  * Uses find_dil_index...
  */
-struct diltemplate *find_dil_template(const char *name)
+diltemplate *find_dil_template(const char *name)
 {
     char zbuf[256];
     char pbuf[256];
@@ -155,9 +155,9 @@ struct diltemplate *find_dil_template(const char *name)
 /*  Find a room in the world based on zone name and name e.g.
  *  "midgaard", "prison" and return a pointer to the room
  */
-class unit_data *world_room(const char *zone, const char *name)
+unit_data *world_room(const char *zone, const char *name)
 {
-    class file_index_type *fi = nullptr;
+    file_index_type *fi = nullptr;
     fi = find_file_index(zone, name);
 
     if (fi && (fi->type == UNIT_ST_ROOM) && (!fi->fi_unit_list.empty()))
@@ -171,7 +171,7 @@ class unit_data *world_room(const char *zone, const char *name)
 /*  Find file index.
  *  String MUST be in format 'name@zone\0' or 'zone/name'.
  */
-class file_index_type *str_to_file_index(const char *str)
+file_index_type *str_to_file_index(const char *str)
 {
     char name[FI_MAX_UNITNAME + 1];
     char zone[FI_MAX_ZONENAME + 1];
@@ -184,7 +184,7 @@ class file_index_type *str_to_file_index(const char *str)
 /*  As str_to_file_index, except that if no zone is given, the
  *  zone of the 'ch' is assumed
  */
-class file_index_type *pc_str_to_file_index(class unit_data *ch, const char *str)
+file_index_type *pc_str_to_file_index(unit_data *ch, const char *str)
 {
     char name[MAX_INPUT_LENGTH + 1];
     char zone[MAX_INPUT_LENGTH + 1];

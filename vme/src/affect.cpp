@@ -14,11 +14,11 @@
 #include "utility.h"
 #include "utils.h"
 
-class unit_affected_type *affected_list = nullptr; /* Global list pointer       */
-class unit_affected_type *next_affected_dude;      /* dirty - very dirty indeed */
+unit_affected_type *affected_list = nullptr; /* Global list pointer       */
+unit_affected_type *next_affected_dude;      /* dirty - very dirty indeed */
 
 /* Link an affected structure into the units affected structure */
-void link_affect(class unit_data *unit, class unit_affected_type *af)
+void link_affect(unit_data *unit, unit_affected_type *af)
 {
     /*if (af->id > ID_TOP_IDX)
        error(HERE, "%s@%s (%s) linked affect ID %d > max value.",
@@ -44,9 +44,9 @@ void link_affect(class unit_data *unit, class unit_affected_type *af)
     af->owner = unit;
 }
 
-unit_affected_type *link_alloc_affect(class unit_data *unit, class unit_affected_type *orgaf)
+unit_affected_type *link_alloc_affect(unit_data *unit, unit_affected_type *orgaf)
 {
-    class unit_affected_type *af = nullptr;
+    unit_affected_type *af = nullptr;
 
     af = new unit_affected_type;
     assert(!af->is_destructed());
@@ -62,7 +62,7 @@ unit_affected_type *link_alloc_affect(class unit_data *unit, class unit_affected
 /* If the apf function returns TRUE then the tif - function */
 /* is *not* called - but the structure is still alloced and */
 /* linked.                                                  */
-void create_affect(class unit_data *unit, class unit_affected_type *af)
+void create_affect(unit_data *unit, unit_affected_type *af)
 {
     if (!unit->is_destructed())
     {
@@ -107,9 +107,9 @@ void create_affect(class unit_data *unit, class unit_affected_type *af)
 
 /* Unlink  an affect structure from lists        */
 /* It is freed by 'clear_destruct' automatically */
-void unlink_affect(class unit_affected_type *af)
+void unlink_affect(unit_affected_type *af)
 {
-    class unit_affected_type *i = nullptr;
+    unit_affected_type *i = nullptr;
 
     /* NB! Mucho importanto!                                    */
     /* Affects may never be removed by lower function than this */
@@ -164,7 +164,7 @@ void unlink_affect(class unit_affected_type *af)
 /* Call apply (unset), Unlink, and last function, then free structure */
 /* If the apf funtion returns TRUE then the affect will neither be    */
 /* Unliked nor freed nor will the tif funtion be called               */
-void destroy_affect(class unit_affected_type *af)
+void destroy_affect(unit_affected_type *af)
 {
     /* It is assumed that none of these function calls can */
     /* destroy the affect.                                 */
@@ -195,11 +195,11 @@ void destroy_affect(class unit_affected_type *af)
 }
 
 /* Attempts to clear a unit entirely of affects */
-void affect_clear_unit(class unit_data *unit)
+void affect_clear_unit(unit_data *unit)
 {
     int i = 0;
-    class unit_affected_type *taf1 = nullptr;
-    class unit_affected_type *taf2 = nullptr;
+    unit_affected_type *taf1 = nullptr;
+    unit_affected_type *taf2 = nullptr;
 
     /* Some affects may not be destroyed at first attempt if it would */
     /* cause an overflow, therefore do several attemps to destroy     */
@@ -218,9 +218,9 @@ void affect_clear_unit(class unit_data *unit)
     }
 }
 
-unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
+unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 {
-    class unit_affected_type *af = nullptr;
+    unit_affected_type *af = nullptr;
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
@@ -236,7 +236,7 @@ unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
 /* Called by event handler when its ticking time */
 void affect_beat(void *p1, void *p2)
 {
-    class unit_affected_type *af = (class unit_affected_type *)p1;
+    unit_affected_type *af = (unit_affected_type *)p1;
     int destroyed = 0;
 
     assert(af->id >= 0); /* Negative ids (transfer) dont have beats */
@@ -286,9 +286,9 @@ void affect_beat(void *p1, void *p2)
 
 /* ONLY USED WHEN LOADING UNITS                          */
 /* If 'apply' is TRUE then apply function will be called */
-void apply_affect(class unit_data *unit)
+void apply_affect(unit_data *unit)
 {
-    class unit_affected_type *af = nullptr;
+    unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
@@ -303,9 +303,9 @@ void apply_affect(class unit_data *unit)
     }
 }
 
-void start_affect(class unit_data *unit)
+void start_affect(unit_data *unit)
 {
-    class unit_affected_type *af = nullptr;
+    unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
@@ -325,9 +325,9 @@ void start_affect(class unit_data *unit)
     }
 }
 
-void stop_affect(class unit_data *unit)
+void stop_affect(unit_data *unit)
 {
-    class unit_affected_type *af = nullptr;
+    unit_affected_type *af = nullptr;
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {

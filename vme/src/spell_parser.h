@@ -1,15 +1,12 @@
 #pragma once
 
+#include "spells.h"
+
 #include <vme.h>
 
 void boot_spell();
-void do_cast(class unit_data *, char *, const struct command_info *);
-void set_spellargs(struct spell_args *sa,
-                   class unit_data *caster,
-                   class unit_data *medium,
-                   class unit_data *target,
-                   const char *arg,
-                   int hm);
+void do_cast(unit_data *, char *, const command_info *);
+void set_spellargs(spell_args *sa, unit_data *caster, unit_data *medium, unit_data *target, const char *arg, int hm);
 
 /* Spell externs */
-extern struct spell_info_type g_spell_info[SPL_TREE_MAX];
+extern spell_info_type g_spell_info[SPL_TREE_MAX];

@@ -11,19 +11,19 @@
 
 int spell_perform(int spell_no,
                   int spell_type,
-                  class unit_data *caster,
-                  class unit_data *medium,
-                  class unit_data *target,
+                  unit_data *caster,
+                  unit_data *medium,
+                  unit_data *target,
                   const char *argument,
                   char *pEffect = nullptr,
                   int bonus = 0);
 
 ubit1 spell_legal_type(int spl, int type);
-ubit1 spell_legal_target(int spl, class unit_data *c, class unit_data *t);
+ubit1 spell_legal_target(int spl, unit_data *c, unit_data *t);
 
 struct spell_args
 {
-    class unit_data *caster, *medium, *target;
+    unit_data *caster, *medium, *target;
     const char *arg;
     int hm;
     char *pEffect;
@@ -38,7 +38,7 @@ struct spell_info_type
     char *toself;
     char *toselfroom;
 
-    void (*spell_pointer)(struct spell_args *sa);
+    void (*spell_pointer)(spell_args *sa);
     ubit8 minimum_position; /* Position for caster               */
     sbit16 usesmana;        /* Amount of mana used by a spell    */
     sbit8 beats;            /* Heartbeats until ready for next   */
@@ -50,7 +50,7 @@ struct spell_info_type
     ubit8 realm;            /* Essence, Channeling, Mentalism?   */
     ubit8 shield;           /* Shield method SHIELD_M_XXX        */
 
-    struct diltemplate *tmpl; /* Perhaps a DIL template...         */
+    diltemplate *tmpl; /* Perhaps a DIL template...         */
 };
 
 #define SPL_MAG_REQ(spell) (spl_requirement[spell].abilities[ABIL_MAG])

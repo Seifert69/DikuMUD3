@@ -22,7 +22,7 @@ static int INT_INTEREST = 5;
 static amount_t balance[MAX_CURRENCY + 1];
 static bool changed_balance;
 
-static bool init_bank(const class unit_data *pc, class unit_data *clerk, bool init)
+static bool init_bank(const unit_data *pc, unit_data *clerk, bool init)
 {
     if (clerk && !CHAR_IS_READY(clerk))
     {
@@ -71,7 +71,7 @@ static bool init_bank(const class unit_data *pc, class unit_data *clerk, bool in
     return FALSE;
 }
 
-static void cmd_balance(const class unit_data *pc, class unit_data *clerk, char *s)
+static void cmd_balance(const unit_data *pc, unit_data *clerk, char *s)
 {
     char buf[1024];
     bool any = FALSE;
@@ -106,9 +106,9 @@ static void cmd_balance(const class unit_data *pc, class unit_data *clerk, char 
     act("$1n talks to $3n.", A_SOMEONE, pc, cActParameter(), clerk, TO_ROOM);
 }
 
-static void cmd_deposit(const class unit_data *pc, class unit_data *clerk, char *s)
+static void cmd_deposit(const unit_data *pc, unit_data *clerk, char *s)
 {
-    class unit_data *thing = nullptr;
+    unit_data *thing = nullptr;
     amount_t amount = 0;
 
     if (!init_bank(pc, clerk, TRUE))
@@ -181,9 +181,9 @@ static void cmd_deposit(const class unit_data *pc, class unit_data *clerk, char 
     }
 }
 
-static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char *s)
+static void cmd_exchange(const unit_data *pc, unit_data *clerk, char *s)
 {
-    class unit_data *thing = nullptr;
+    unit_data *thing = nullptr;
     currency_t cur = 0;
     amount_t amount = 0;
 
@@ -246,7 +246,7 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
         act("You get $2t back.", A_SOMEONE, pc, money_string(amount, cur, TRUE), cActParameter(), TO_CHAR);
 
         extract_unit(thing);
-        money_to_unit((class unit_data *)pc, amount, cur);
+        money_to_unit((unit_data *)pc, amount, cur);
     }
     else if ((s = str_ccmp_next_word(s, "to")))
     {
@@ -266,7 +266,7 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
         if (i > MAX_MONEY)
         {
             act("$1n shrugs and says 'Never heard of that one before, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
-            unit_to_unit(thing, (class unit_data *)pc);
+            unit_to_unit(thing, (unit_data *)pc);
             return;
         }
 
@@ -281,12 +281,12 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
 
         if (tmp > 0)
         {
-            coins_to_unit((class unit_data *)pc, tmp, i);
+            coins_to_unit((unit_data *)pc, tmp, i);
             act("You get $2d $3t back.", A_SOMEONE, pc, &tmp, tmp == 1 ? money_singularis_type(i) : money_pluralis_type(i), TO_CHAR);
         }
         if (remainder > 0)
         {
-            money_to_unit((class unit_data *)pc, remainder, cur);
+            money_to_unit((unit_data *)pc, remainder, cur);
             act(tmp > 0 ? "...and $2t in change." : "You get $2t back.",
                 A_SOMEONE,
                 pc,
@@ -298,12 +298,12 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
     else
     {
         act("$1n says 'Exchange to what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
-        unit_to_unit(thing, (class unit_data *)pc);
+        unit_to_unit(thing, (unit_data *)pc);
         return;
     }
 }
 
-static void cmd_withdraw(const class unit_data *pc, class unit_data *clerk, char *s)
+static void cmd_withdraw(const unit_data *pc, unit_data *clerk, char *s)
 {
     currency_t cur = 0;
     amount_t amount = 0;
@@ -359,14 +359,14 @@ static void cmd_withdraw(const class unit_data *pc, class unit_data *clerk, char
         balance[cur] -= amount * g_money_types[i].relative_value;
         changed_balance = TRUE;
 
-        coins_to_unit((class unit_data *)pc, amount, i);
+        coins_to_unit((unit_data *)pc, amount, i);
 
         act("$3n hands $1n some $2t.", A_SOMEONE, pc, money_pluralis_type(i), clerk, TO_ROOM);
         act("$3n hands you your $2t.", A_SOMEONE, pc, money_pluralis_type(i), clerk, TO_CHAR);
     }
 }
 
-int bank(struct spec_arg *sarg)
+int bank(spec_arg *sarg)
 {
     if (sarg->activator == nullptr)
     {
@@ -417,10 +417,10 @@ int bank(struct spec_arg *sarg)
     return SFR_BLOCK;
 }
 
-static bool move_money_up(class unit_data *ch, class unit_data *u)
+static bool move_money_up(unit_data *ch, unit_data *u)
 {
-    class unit_data *tmp = nullptr;
-    class unit_data *next = nullptr;
+    unit_data *tmp = nullptr;
+    unit_data *next = nullptr;
     bool found = FALSE;
 
     for (tmp = UNIT_CONTAINS(u); tmp; tmp = next)
@@ -444,10 +444,10 @@ static bool move_money_up(class unit_data *ch, class unit_data *u)
     return found;
 }
 
-void tax_player(class unit_data *ch)
+void tax_player(unit_data *ch)
 {
     amount_t limit = 50 * PLATINUM_MULT;
-    class descriptor_data *d = CHAR_DESCRIPTOR(ch);
+    descriptor_data *d = CHAR_DESCRIPTOR(ch);
 
     amount_t holds = 0;
     amount_t holds_sum = 0;
@@ -544,7 +544,7 @@ void tax_player(class unit_data *ch)
     }
 }
 
-void stat_bank(const class unit_data *ch, class unit_data *u)
+void stat_bank(const unit_data *ch, unit_data *u)
 {
     bool none = TRUE;
     int i = 0;

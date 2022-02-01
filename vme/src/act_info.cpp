@@ -19,7 +19,7 @@
 #include <cstring>
 
 /* also used in "corpses" wizard-command */
-const char *in_string(class unit_data *ch, class unit_data *u)
+const char *in_string(unit_data *ch, unit_data *u)
 {
     static std::string in_str;
     in_str.clear();
@@ -41,9 +41,9 @@ const char *in_string(class unit_data *ch, class unit_data *u)
     return nullptr;
 }
 
-void player_where(class unit_data *ch, char *arg)
+void player_where(unit_data *ch, char *arg)
 {
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
     int any = FALSE;
 
     for (d = g_descriptor_list; d; d = d->next)
@@ -71,10 +71,10 @@ void player_where(class unit_data *ch, char *arg)
     }
 }
 
-void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
+void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 {
-    class unit_data *i = nullptr;
-    class descriptor_data *d = nullptr;
+    unit_data *i = nullptr;
+    descriptor_data *d = nullptr;
     char *arg = (char *)aaa;
     std::string mystr;
     int nCount = 0;

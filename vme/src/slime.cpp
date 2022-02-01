@@ -20,7 +20,7 @@
 #include <cstring>
 
 static int slime_count = 0;
-class file_index_type **slime_list = nullptr;
+file_index_type **slime_list = nullptr;
 
 static void slime_save()
 {
@@ -43,7 +43,7 @@ static void slime_save()
     fclose(f);
 }
 
-static void slime_add(class file_index_type *sp)
+static void slime_add(file_index_type *sp)
 {
     if (sp == nullptr)
     {
@@ -52,16 +52,16 @@ static void slime_add(class file_index_type *sp)
 
     if (slime_count++ == 0)
     {
-        CREATE(slime_list, class file_index_type *, slime_count);
+        CREATE(slime_list, file_index_type *, slime_count);
     }
     else
     {
-        RECREATE(slime_list, class file_index_type *, slime_count);
+        RECREATE(slime_list, file_index_type *, slime_count);
     }
     slime_list[slime_count - 1] = sp;
 }
 
-static void slime_remove(class file_index_type *sp)
+static void slime_remove(file_index_type *sp)
 {
     int i = 0;
 
@@ -81,7 +81,7 @@ static void slime_remove(class file_index_type *sp)
     }
 }
 
-int is_slimed(class file_index_type *sp)
+int is_slimed(file_index_type *sp)
 {
     int i = 0;
 
@@ -96,11 +96,11 @@ int is_slimed(class file_index_type *sp)
     return FALSE;
 }
 
-int slime_obj(struct spec_arg *sarg)
+int slime_obj(spec_arg *sarg)
 {
     char buf[MAX_INPUT_LENGTH];
     char fi_name[MAX_INPUT_LENGTH];
-    class file_index_type *fi = nullptr;
+    file_index_type *fi = nullptr;
 
     if (!is_command(sarg->cmd, "slime"))
     {
@@ -180,7 +180,7 @@ int slime_obj(struct spec_arg *sarg)
 
 void slime_boot()
 {
-    class file_index_type *fi = nullptr;
+    file_index_type *fi = nullptr;
     CByteBuffer cBuf(100);
     char buf1[256];
     char buf2[256];

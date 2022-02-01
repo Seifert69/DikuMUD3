@@ -35,7 +35,7 @@ namespace mplex
 
 char g_mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;
-struct arg_type g_mplex_arg;
+arg_type g_mplex_arg;
 
 void bye_signal(int signal)
 {
@@ -78,12 +78,12 @@ void ShowUsage(const char *name)
     exit(0);
 }
 
-int ParseArg(int argc, char *argv[], struct arg_type *arg)
+int ParseArg(int argc, char *argv[], arg_type *arg)
 {
     int i = 0;
     int n = 0;
-    struct hostent *pHostInfo = nullptr;
-    struct in_addr *pAddr = nullptr;
+    hostent *pHostInfo = nullptr;
+    in_addr *pAddr = nullptr;
     char *c = nullptr;
     char *log_name = nullptr;
 
@@ -163,7 +163,7 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
                 {
                     pHostInfo = gethostbyname(c);
                     Assert(pHostInfo != nullptr, "Could not lookup address.");
-                    pAddr = (struct in_addr *)(pHostInfo->h_addr_list[0]);
+                    pAddr = (in_addr *)(pHostInfo->h_addr_list[0]);
                     c = inet_ntoa(*pAddr);
                     Assert(c != nullptr, "Error in address conversion");
                 }

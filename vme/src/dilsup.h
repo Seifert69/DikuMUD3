@@ -6,5 +6,7 @@
  */
 #pragma once
 
-int pay_point_charlie(class unit_data *ch, class unit_data *to);
-char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword = -1);
+#include "structs.h"
+
+int pay_point_charlie(unit_data *ch, unit_data *to);
+char *obj_wear_size(unit_data *ch, unit_data *obj, int keyword = -1);

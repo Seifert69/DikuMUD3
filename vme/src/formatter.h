@@ -54,7 +54,7 @@ void format(boost::format &formatter, T &&last_value)
  * @param rest_args Parameter pack of the rest of arguments
  */
 template<typename T, typename... ParamPack>
-void format(boost::format &formatter, T &&first_arg, ParamPack &&... rest_args)
+void format(boost::format &formatter, T &&first_arg, ParamPack &&...rest_args)
 {
     if constexpr (std::is_same_v<typename std::remove_reference<T>::type, uint8_t> ||
                   std::is_same_v<typename std::remove_reference<T>::type, int8_t>)
@@ -82,7 +82,7 @@ void format(boost::format &formatter, T &&first_arg, ParamPack &&... rest_args)
  * @return A std::string with the format specifiers replaced with the args values
  */
 template<typename... ParamPack>
-std::string format_to_str(const char *fmt_str, ParamPack &&... args) noexcept
+std::string format_to_str(const char *fmt_str, ParamPack &&...args) noexcept
 {
     auto constexpr arg_count = sizeof...(args);
     static_assert(arg_count != 0, "No arguments passed to format in diku::format_to_str");

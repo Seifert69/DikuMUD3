@@ -237,10 +237,10 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
 /* file descriptor 'fd'. If fd is -1 then don't send anything.             */
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                */
 
-void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *setup)
+void protocol_send_setup(cHook *Hook, ubit16 id, terminal_setup_type *setup)
 {
     ubit16 len = 0;
-    ubit8 buf[sizeof(struct terminal_setup_type) + 6 + 4];
+    ubit8 buf[sizeof(terminal_setup_type) + 6 + 4];
 
     assert(id != 0);
 
@@ -249,12 +249,12 @@ void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *set
         return;
     }
 
-    len = sizeof(struct terminal_setup_type);
+    len = sizeof(terminal_setup_type);
 
     memcpy(&(buf[0]), MULTI_SETUP, 2);
     memcpy(&(buf[2]), &id, 2);
     memcpy(&(buf[4]), &len, 2);
-    memcpy(&(buf[6]), setup, sizeof(struct terminal_setup_type));
+    memcpy(&(buf[6]), setup, sizeof(terminal_setup_type));
 
     Hook->Write(buf, 6 + len);
 }

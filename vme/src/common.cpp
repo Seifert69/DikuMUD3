@@ -22,7 +22,7 @@ const char *g_dirs[] = {"north", "east", "south", "west", "up", "down", "northea
 /* Used for converting general direction in dmc! */
 const char *g_dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", nullptr};
 
-struct shi_info_type g_shi_info[] = {
+shi_info_type g_shi_info[] = {
     /* %age Chance of blocking an attack if ready to block */
     {15}, /* SHIELD_SMALL  */
     {20}, /* SHIELD_MEDIUM */
@@ -36,7 +36,7 @@ struct shi_info_type g_shi_info[] = {
 /* Example: A character is about to raise from level 2 to 3. Add       */
 /*          ability_point_gain(3) to his ability points                */
 
-int ability_point_gain(class unit_data *ch)
+int ability_point_gain(unit_data *ch)
 {
     if (IS_NPC(ch))
     {
@@ -69,7 +69,7 @@ int ability_point_gain(class unit_data *ch)
 /* The formula is total up to the current level                        */
 // Only used for NPCs and their point distro so we ignore the 100 level cap.
 //
-int ability_point_total(class unit_data *ch)
+int ability_point_total(unit_data *ch)
 {
     if (IS_NPC(ch))
     {
@@ -240,7 +240,7 @@ int level_xp(int level)
 }
 
 /* Primarily used for shields, armours and weapons */
-void set_hits(class unit_data *obj, int craftsmanship)
+void set_hits(unit_data *obj, int craftsmanship)
 {
     if (UNIT_HIT(obj) == 100) // 100 is the *default* and is overridden
     {
@@ -266,7 +266,7 @@ void set_hits(class unit_data *obj, int craftsmanship)
 /*         Value[3] is slaying race      */
 /*         Value[4]                      */
 /*                                       */
-void set_weapon(class unit_data *weapon)
+void set_weapon(unit_data *weapon)
 {
     set_hits(weapon, OBJ_VALUE(weapon, 1));
 }
@@ -276,7 +276,7 @@ void set_weapon(class unit_data *weapon)
 /*         Value[1] is craftsmanship      */
 /*         Value[2] is magic bonus        */
 
-void set_armour(class unit_data *armour)
+void set_armour(unit_data *armour)
 {
     set_hits(armour, OBJ_VALUE(armour, 1));
 }
@@ -286,7 +286,7 @@ void set_armour(class unit_data *armour)
 /*         Value[1] is craftsmanship        */
 /*         Value[2] is magic bonus          */
 /*                                          */
-void set_shield(class unit_data *shield)
+void set_shield(unit_data *shield)
 {
     set_hits(shield, OBJ_VALUE(shield, 1));
 }

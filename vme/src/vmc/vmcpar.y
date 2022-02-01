@@ -6,6 +6,9 @@
  */
 
 %{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 #include <stdio.h>
 #include <ctype.h>
 
@@ -1575,3 +1578,5 @@ char *str_dup_file(FILE *fl)
   }
   return res;
 }
+
+#pragma GCC diagnostic pop

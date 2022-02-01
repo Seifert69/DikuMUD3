@@ -20,9 +20,9 @@
 
 /* extern variables */
 
-void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_hit(unit_data *ch, char *argument, const command_info *cmd)
 {
-    class unit_data *victim = nullptr;
+    unit_data *victim = nullptr;
 
     if (str_is_empty(argument))
     {
@@ -61,9 +61,9 @@ void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
     }
 }
 
-void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_kill(unit_data *ch, char *argument, const command_info *cmd)
 {
-    class unit_data *victim = nullptr;
+    unit_data *victim = nullptr;
 
     if (str_is_empty(argument))
     {
@@ -97,12 +97,12 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         set_fighting(ch, victim, TRUE); /* Point to the killer! */
         SET_BIT(CHAR_FLAGS(ch), CHAR_KILL_SELF);
 
-        struct diltemplate *death = nullptr;
+        diltemplate *death = nullptr;
         death = find_dil_template("death@death");
         if (death)
         {
             send_death(ch);
-            class dilprg *prg = dil_copy_template(death, victim, nullptr);
+            dilprg *prg = dil_copy_template(death, victim, nullptr);
 
             if (prg)
             {

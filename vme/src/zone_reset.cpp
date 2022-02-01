@@ -18,23 +18,23 @@
 #include "szonelog.h"
 #include "utils.h"
 
-class zone_type *g_boot_zone = nullptr; /* Points to the zone currently booted */
+zone_type *g_boot_zone = nullptr; /* Points to the zone currently booted */
 
 /* No Operation */
-class unit_data *zone_nop(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_nop(unit_data *u, zone_reset_cmd *cmd)
 {
     /* Return TRUE - NOP always succeedes */
 
-    return (class unit_data *)g_boot_zone; /* dummy */
+    return (unit_data *)g_boot_zone; /* dummy */
 }
 
 /* Random */
-class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_random(unit_data *u, zone_reset_cmd *cmd)
 {
     /* Return TRUE if random 0-99 less than given percent  */
     if (number(0, 99) < cmd->num[0])
     {
-        return (class unit_data *)g_boot_zone; /* dummy */
+        return (unit_data *)g_boot_zone; /* dummy */
     }
     else
     {
@@ -45,7 +45,7 @@ class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
 /* Count ->no_in_zone for current 'g_boot_zone' (above) */
 void zone_update_no_in_zone()
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
 
     /* Clear ALL ->no_in_zone */
     for (auto tmp_zone = g_zone_info.mmp.begin(); tmp_zone != g_zone_info.mmp.end(); tmp_zone++)
@@ -66,7 +66,7 @@ void zone_update_no_in_zone()
 }
 
 /* After loading a unit, call this function to update no_in_zone */
-void zone_loaded_a_unit(class unit_data *u)
+void zone_loaded_a_unit(unit_data *u)
 {
     if (unit_zone(u) == g_boot_zone)
     {
@@ -78,9 +78,9 @@ void zone_loaded_a_unit(class unit_data *u)
 /* num[1] is the max allowed existing in zone.              */
 /* num[2] is the max allowed existing in room (object)      */
 /* Return TRUE if conditions are met, FALSE otherwise       */
-bool zone_limit(class unit_data *u, class file_index_type *fi, struct zone_reset_cmd *cmd)
+bool zone_limit(unit_data *u, file_index_type *fi, zone_reset_cmd *cmd)
 {
-    class unit_data *tmp = nullptr;
+    unit_data *tmp = nullptr;
     sbit16 i = 0;
 
     if (fi->type == UNIT_ST_NPC)
@@ -136,9 +136,9 @@ bool zone_limit(class unit_data *u, class file_index_type *fi, struct zone_reset
 /* fi[1] is room to place loaded unit in or 0 if a PUT command    */
 /* num[0] is the max allowed existing number (0 ignores) in world */
 /* num[1] is the max allowed locally existing number              */
-class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
 {
-    class unit_data *loaded = nullptr;
+    unit_data *loaded = nullptr;
 
     /* Destination */
     if (cmd->fi[1] && !cmd->fi[1]->fi_unit_list.empty() && cmd->fi[1]->type == UNIT_ST_ROOM)
@@ -188,9 +188,9 @@ class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
 /* fi[0] is unit to be loaded and equipped on parent unit.  */
 /* num[0] is the max allowed existing number (0 ignores)    */
 /* num[1] is equipment position                             */
-class unit_data *zone_equip(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
 {
-    class unit_data *loaded = nullptr;
+    unit_data *loaded = nullptr;
 
     /* Does the destination unit exist */
     if (u == nullptr)
@@ -262,7 +262,7 @@ class unit_data *zone_equip(class unit_data *u, struct zone_reset_cmd *cmd)
 /* fi[0] is room in which the door is located.              */
 /* num[0] is the exit number (0..5)                         */
 /* num[1] is the new state                                  */
-class unit_data *zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_door(unit_data *u, zone_reset_cmd *cmd)
 {
     if (!cmd->fi[0] || (cmd->fi[0]->type != UNIT_ST_ROOM))
     {
@@ -281,9 +281,9 @@ class unit_data *zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
 }
 
 /* fi[0] is the room to be purged.                          */
-class unit_data *zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_purge(unit_data *u, zone_reset_cmd *cmd)
 {
-    class unit_data *next = nullptr;
+    unit_data *next = nullptr;
 
     if (cmd->fi[0]->type != UNIT_ST_ROOM)
     {
@@ -306,9 +306,9 @@ class unit_data *zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
 
 /* fi[0] is the thing(s) to be removed.                          */
 /* fi[1] is the room to remove from.                             */
-class unit_data *zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_remove(unit_data *u, zone_reset_cmd *cmd)
 {
-    class unit_data *next = nullptr;
+    unit_data *next = nullptr;
 
     if (cmd->fi[1]->type != UNIT_ST_ROOM)
     {
@@ -334,9 +334,9 @@ class unit_data *zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
 /* fi[1] -                                                        */
 /* num[0] is the max allowed existing number (0 ignores) in world */
 /* num[1] is the max allowed locally existing number              */
-class unit_data *zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
+unit_data *zone_follow(unit_data *u, zone_reset_cmd *cmd)
 {
-    class unit_data *loaded = nullptr;
+    unit_data *loaded = nullptr;
 
     /* Does the master exist */
     if (u == nullptr)
@@ -369,12 +369,12 @@ class unit_data *zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
     return loaded;
 }
 
-class unit_data *(*exec_zone_cmd[])(class unit_data *, struct zone_reset_cmd *) =
+unit_data *(*exec_zone_cmd[])(unit_data *, zone_reset_cmd *) =
     {zone_nop, zone_load, zone_equip, zone_door, zone_purge, zone_remove, zone_follow, zone_random};
 
-bool low_reset_zone(class unit_data *u, struct zone_reset_cmd *cmd)
+bool low_reset_zone(unit_data *u, zone_reset_cmd *cmd)
 {
-    class unit_data *success = nullptr;
+    unit_data *success = nullptr;
     bool ok = TRUE;
 
     for (; cmd; cmd = cmd->next)
@@ -391,7 +391,7 @@ bool low_reset_zone(class unit_data *u, struct zone_reset_cmd *cmd)
     return ok;
 }
 
-void zone_reset(class zone_type *zone)
+void zone_reset(zone_type *zone)
 {
     /* extern int memory_total_alloc;
            int i = memory_total_alloc; */
@@ -438,9 +438,9 @@ void reset_all_zones()
     }
 }
 
-bool zone_is_empty(class zone_type *zone)
+bool zone_is_empty(zone_type *zone)
 {
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
 
     for (d = g_descriptor_list; d; d = d->next)
     {
@@ -459,7 +459,7 @@ bool zone_is_empty(class zone_type *zone)
 /* Check if any zones needs updating */
 void zone_event(void *p1, void *p2)
 {
-    class zone_type *zone = (class zone_type *)p1;
+    zone_type *zone = (zone_type *)p1;
 
     if (zone->reset_mode != RESET_IFEMPTY || zone_is_empty(zone))
     {

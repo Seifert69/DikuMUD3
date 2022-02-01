@@ -1,3 +1,5 @@
 #pragma once
 
-extern struct apply_function_type g_apf[];
+#include "affect.h"
+
+extern apply_function_type g_apf[];

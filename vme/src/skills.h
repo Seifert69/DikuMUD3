@@ -7,6 +7,7 @@
 #pragma once
 
 #include "essential.h"
+#include "structs.h"
 #include "values.h"
 
 #include <csignal>
@@ -19,15 +20,17 @@ struct skill_interval
     const char *descr;
 };
 
+class profession_cost;
+class tree_type;
 class skill_collection
 {
 public:
     const char **gettext();
     skill_collection(int nSize);
 
-    struct profession_cost *prof_table;
+    profession_cost *prof_table;
     const char **text;
-    struct tree_type *tree;
+    tree_type *tree;
     sbit8 *racial[PC_RACE_MAX];
 };
 
@@ -71,22 +74,22 @@ struct dice_type
 struct base_race_info_type
 {
     ubit16 height;
-    struct dice_type height_dice;
+    dice_type height_dice;
 
     ubit16 weight;
-    struct dice_type weight_dice;
+    dice_type weight_dice;
 
     ubit16 lifespan;
-    struct dice_type lifespan_dice;
+    dice_type lifespan_dice;
 };
 
 struct race_info_type
 {
-    struct base_race_info_type male;
-    struct base_race_info_type female;
+    base_race_info_type male;
+    base_race_info_type female;
 
     ubit16 age;
-    struct dice_type age_dice;
+    dice_type age_dice;
 };
 
 struct damage_chart_element_type
@@ -100,7 +103,7 @@ struct damage_chart_type
 {
     int fumble; /* from 01 - fuble => fumble      */
 
-    struct damage_chart_element_type element[5];
+    damage_chart_element_type element[5];
 };
 
 #define TREE_PARENT(tree, node) (tree[node].parent)
@@ -128,7 +131,7 @@ struct wpn_info_type
 
 #define DEMIGOD_LEVEL_XP (40000000)
 
-void roll_description(class unit_data *att, const char *text, int roll);
+void roll_description(unit_data *att, const char *text, int roll);
 int open_ended_roll(int size, int end);
 inline int open100()
 {
@@ -136,20 +139,20 @@ inline int open100()
     return open_ended_roll(100, 2);
 }
 
-int skillchecksa(class unit_data *u, int skillidx, int abiidx, int difficulty);
+int skillchecksa(unit_data *u, int skillidx, int abiidx, int difficulty);
 int resistance_skill_check(int att_skill1, int def_skill1, int att_skill2, int def_skill2);
 
-int weapon_fumble(class unit_data *weapon, int roll);
-int chart_damage(int roll, struct damage_chart_element_type *element);
-int chart_size_damage(int roll, struct damage_chart_element_type *element, int lbs);
+int weapon_fumble(unit_data *weapon, int roll);
+int chart_damage(int roll, damage_chart_element_type *element);
+int chart_size_damage(int roll, damage_chart_element_type *element, int lbs);
 int weapon_damage(int roll, int weapon_type, int armour_type);
 int natural_damage(int roll, int weapon_type, int armour_type, int lbs);
 
-int weapon_defense_skill(class unit_data *ch, int skill);
-int weapon_attack_skill(class unit_data *ch, int skill);
-int weapon_attack_ability(class unit_data *ch, int skill);
-int hit_location(class unit_data *att, class unit_data *def);
-int effective_dex(class unit_data *ch);
+int weapon_defense_skill(unit_data *ch, int skill);
+int weapon_attack_skill(unit_data *ch, int skill);
+int weapon_attack_ability(unit_data *ch, int skill);
+int hit_location(unit_data *att, unit_data *def);
+int effective_dex(unit_data *ch);
 
 bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
 void boot_ability();
@@ -163,14 +166,14 @@ int get_racial_weapon(int nRace, int nWeapon);
 int get_racial_skill(int nRace, int nSkill);
 int get_racial_spells(int nRace, int nSpell);
 
-extern struct diltemplate *g_nanny_dil_tmpl;
-extern struct diltemplate *g_playerinit_tmpl;
-extern struct wpn_info_type g_wpn_info[];
+extern diltemplate *g_nanny_dil_tmpl;
+extern diltemplate *g_playerinit_tmpl;
+extern wpn_info_type g_wpn_info[];
 extern const char *g_professions[PROFESSION_MAX + 1];
 extern int g_hit_location_table[];
-extern struct race_info_type g_race_info[PC_RACE_MAX];
+extern race_info_type g_race_info[PC_RACE_MAX];
 extern const char *g_pc_races[PC_RACE_MAX + 1];
 extern const char *g_pc_race_adverbs[PC_RACE_MAX + 1];
 
-extern struct damage_chart_type g_weapon_chart[WPN_TREE_MAX];
-extern struct damage_chart_type g_spell_chart[SPL_TREE_MAX];
+extern damage_chart_type g_weapon_chart[WPN_TREE_MAX];
+extern damage_chart_type g_spell_chart[SPL_TREE_MAX];

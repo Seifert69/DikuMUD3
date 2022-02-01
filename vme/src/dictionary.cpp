@@ -34,7 +34,7 @@
 struct alias_head
 {
     ubit16 char_count;
-    struct trie_type *trie;
+    trie_type *trie;
     char owner[20];
 };
 
@@ -47,7 +47,7 @@ struct alias_t
 /* Procedure supplied to free_trie and del_trie */
 void free_alias(void *data)
 {
-    struct alias_t *al = (struct alias_t *)data;
+    alias_t *al = (alias_t *)data;
 
     FREE(al->key);
     FREE(al->value);
@@ -72,7 +72,7 @@ static char *get_next_word(const char *argument, char *first_arg)
 }
 
 /* Setup owner-ship of dictionary. */
-static void set_owner(class unit_data *obj, struct alias_head *ah, class unit_data *ch)
+static void set_owner(unit_data *obj, alias_head *ah, unit_data *ch)
 {
     strcpy(ah->owner, UNIT_NAME(ch));
 
@@ -83,9 +83,9 @@ static void set_owner(class unit_data *obj, struct alias_head *ah, class unit_da
 
 /* Allocate `exd', and erase old description */
 /* MS2020 rewritten */
-static class extra_descr_data *make_alias_extra(class unit_data *u)
+static extra_descr_data *make_alias_extra(unit_data *u)
 {
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
     static const char *aliaslist[] = {"$alias", nullptr};
 
     exd = UNIT_EXTRA(u).find_raw("$alias");
@@ -162,14 +162,14 @@ the alias-substitution in s, using the arguments from arg, and
  *  check_count makes sure that the user doesn't make nasty (!) computationally
  *  heavy (!!!) aliases that will bog the mud enormously.
  */
-static int push_alias(char *s, char *arg, struct trie_type *t, class unit_data *ch, bool first)
+static int push_alias(char *s, char *arg, trie_type *t, unit_data *ch, bool first)
 {
     char cmd[MAX_INPUT_LENGTH + 1];
     char parsed[2 * MAX_INPUT_LENGTH + 2];
     char *par = nullptr;
     char *newarg = nullptr;
     char *c = nullptr;
-    struct alias_t *al = nullptr;
+    alias_t *al = nullptr;
 
     static ubit8 check_count = 0;
 
@@ -202,7 +202,7 @@ static int push_alias(char *s, char *arg, struct trie_type *t, class unit_data *
         strcpy(parsed, par);
         newarg = (char *)get_next_word(parsed, cmd);
 
-        if ((al = (struct alias_t *)search_trie(cmd, t)))
+        if ((al = (alias_t *)search_trie(cmd, t)))
         {
             if (push_alias(al->value, newarg, t, ch, FALSE) < 0)
             {
@@ -226,7 +226,7 @@ static int push_alias(char *s, char *arg, struct trie_type *t, class unit_data *
 }
 
 /* Merely prints a formatted alias-definition out to the char */
-static void alias_to_char(struct alias_t *al, class unit_data *ch)
+static void alias_to_char(alias_t *al, unit_data *ch)
 {
     auto buf = diku::format_to_str(" %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
     act("$2t", A_ALWAYS, ch, buf.c_str(), cActParameter(), TO_CHAR);
@@ -235,10 +235,10 @@ static void alias_to_char(struct alias_t *al, class unit_data *ch)
 /*  Prints all defined aliases in `t' alphabetically to char by
  *  recursively walking the trie
  */
-static int print_alias(struct trie_type *t, class unit_data *ch)
+static int print_alias(trie_type *t, unit_data *ch)
 {
-    struct trie_type *t2 = nullptr;
-    struct alias_t *al = nullptr;
+    trie_type *t2 = nullptr;
+    alias_t *al = nullptr;
     int i = 0;
     int count = 0;
 
@@ -246,7 +246,7 @@ static int print_alias(struct trie_type *t, class unit_data *ch)
     {
         t2 = t->nexts[i].t;
 
-        if ((al = (struct alias_t *)t2->data))
+        if ((al = (alias_t *)t2->data))
         {
             alias_to_char(al, ch);
             count++;
@@ -260,20 +260,20 @@ static int print_alias(struct trie_type *t, class unit_data *ch)
  *  single says if we plan to add only one alias or several at `boottime'.
  *  If false, it is assumed the user sorts the trie himself
  */
-static int add_alias(struct alias_head *ah, char *key, char *val, bool single)
+static int add_alias(alias_head *ah, char *key, char *val, bool single)
 {
-    struct alias_t *al = nullptr;
-    struct alias_t *tmp_al = nullptr;
+    alias_t *al = nullptr;
+    alias_t *tmp_al = nullptr;
 
     /* There is already an alias for key - Delete it */
-    if (single && ah->trie && (al = (struct alias_t *)search_trie(key, ah->trie)))
+    if (single && ah->trie && (al = (alias_t *)search_trie(key, ah->trie)))
     {
         FREE(al->value);
         al->value = str_dup(val);
         return 0;
     }
 
-    CREATE(tmp_al, struct alias_t, 1);
+    CREATE(tmp_al, alias_t, 1);
     tmp_al->key = str_dup(key);
     tmp_al->value = str_dup(val);
     ah->char_count += (strlen(key) + strlen(val) + 2);
@@ -289,11 +289,11 @@ static int add_alias(struct alias_head *ah, char *key, char *val, bool single)
 }
 
 /* Delete an alias, using the free_alias procedure */
-static bool del_alias(struct alias_head *ah, char *key)
+static bool del_alias(alias_head *ah, char *key)
 {
-    struct alias_t *al = nullptr;
+    alias_t *al = nullptr;
 
-    if (ah->trie && (al = (struct alias_t *)search_trie(key, ah->trie)))
+    if (ah->trie && (al = (alias_t *)search_trie(key, ah->trie)))
     {
         ah->char_count -= (strlen(al->key) + strlen(al->value) + 2);
 
@@ -310,12 +310,12 @@ static bool del_alias(struct alias_head *ah, char *key)
  *  check_count makes sure that the user doesn't make nasty (!) computationally
  *  heavy (!!!) aliases that will bog the mud enormously.
  */
-static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
+static ubit8 circle_alias(char *key, char *val, trie_type *t, bool first)
 {
     char *tmp = nullptr;
     char *sc = nullptr;
     char comm[MAX_INPUT_LENGTH + 2];
-    struct alias_t *tmp_al = nullptr;
+    alias_t *tmp_al = nullptr;
     ubit8 res = 0;
     static ubit8 check_count = 0;
 
@@ -361,7 +361,7 @@ static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
             return 5;
         }
 
-        if (t && (tmp_al = (struct alias_t *)search_trie(comm, t)) && (res = circle_alias(key, tmp_al->value, t, FALSE)))
+        if (t && (tmp_al = (alias_t *)search_trie(comm, t)) && (res = circle_alias(key, tmp_al->value, t, FALSE)))
         {
             return res;
         }
@@ -376,10 +376,10 @@ static ubit8 circle_alias(char *key, char *val, struct trie_type *t, bool first)
  *  This should all be linear, except for the recursion check,
  *  which has a fixed upper bound.
  */
-static bool alias_is_ok(struct alias_head *ah, char *key, char *val, class unit_data *ch)
+static bool alias_is_ok(alias_head *ah, char *key, char *val, unit_data *ch)
 {
     char *tmp = nullptr;
-    struct alias_t *al = nullptr;
+    alias_t *al = nullptr;
     int count = 0;
 
     if (strlen(key) > MAX_ALIAS_LENGTH)
@@ -391,7 +391,7 @@ static bool alias_is_ok(struct alias_head *ah, char *key, char *val, class unit_
     }
 
     count = strlen(key) + strlen(val) + ah->char_count + 3;
-    if (ah->trie && (al = (struct alias_t *)search_trie(key, ah->trie)))
+    if (ah->trie && (al = (alias_t *)search_trie(key, ah->trie)))
     {
         count -= strlen(al->value);
     }
@@ -461,14 +461,14 @@ static bool alias_is_ok(struct alias_head *ah, char *key, char *val, class unit_
 /*  This walks the trie recursively to note down the aliases in the buffer
  *  pointed to by bufp
  */
-static void rec_alias_to_str(struct trie_type *t, char **bufp)
+static void rec_alias_to_str(trie_type *t, char **bufp)
 {
     int i = 0;
-    struct alias_t *al = nullptr;
+    alias_t *al = nullptr;
 
     if (t)
     {
-        if ((al = (struct alias_t *)t->data))
+        if ((al = (alias_t *)t->data))
         {
             sprintf(*bufp, "%s %s~", al->key, al->value);
             TAIL(*bufp);
@@ -482,7 +482,7 @@ static void rec_alias_to_str(struct trie_type *t, char **bufp)
 }
 
 /* Convert a trie to a string.  Needed for saving the aliases */
-static char *alias_to_str(struct alias_head *ah)
+static char *alias_to_str(alias_head *ah)
 {
     static char buf[MAX_ALIAS_COUNT + ALIAS_NAME + 2 + 500];
     char *bufp = buf;
@@ -498,14 +498,14 @@ static char *alias_to_str(struct alias_head *ah)
 }
 
 /* Take the above constructed string and turn it into an alias-set. */
-static struct alias_head *str_to_alias(const char *str)
+static alias_head *str_to_alias(const char *str)
 {
-    struct alias_head *ah = nullptr;
+    alias_head *ah = nullptr;
     char cmd[MAX_ALIAS_LENGTH + 1];
     char *tmp = nullptr;
     char *tilde = nullptr;
 
-    CREATE(ah, struct alias_head, 1);
+    CREATE(ah, alias_head, 1);
     ah->char_count = 0;
     ah->trie = nullptr;
     strcpy(ah->owner, "none");
@@ -554,10 +554,10 @@ static struct alias_head *str_to_alias(const char *str)
 
 /* ********** The Alias Commands ********** */
 
-static void cmd_alias(class unit_data *ch, char *arg, struct alias_head *alias_h)
+static void cmd_alias(unit_data *ch, char *arg, alias_head *alias_h)
 {
     char comm[MAX_INPUT_LENGTH + 1];
-    struct alias_t *al = nullptr;
+    alias_t *al = nullptr;
 
     if (str_is_empty(arg))
     {
@@ -580,7 +580,7 @@ static void cmd_alias(class unit_data *ch, char *arg, struct alias_head *alias_h
     if (str_is_empty(arg))
     {
         /* No further arguments lists this alias, if defined */
-        if (alias_h->trie == nullptr || (al = (struct alias_t *)search_trie(comm, alias_h->trie)) == nullptr)
+        if (alias_h->trie == nullptr || (al = (alias_t *)search_trie(comm, alias_h->trie)) == nullptr)
         {
             act("No alias defined for `$2t'.", A_ALWAYS, ch, comm, cActParameter(), TO_CHAR);
         }
@@ -603,7 +603,7 @@ static void cmd_alias(class unit_data *ch, char *arg, struct alias_head *alias_h
     }
 }
 
-static void cmd_unalias(class unit_data *ch, char *arg, struct alias_head *alias_h)
+static void cmd_unalias(unit_data *ch, char *arg, alias_head *alias_h)
 {
     if (str_is_empty(arg))
     {
@@ -628,7 +628,7 @@ static void cmd_unalias(class unit_data *ch, char *arg, struct alias_head *alias
     }
 }
 
-static void cmd_claim(class unit_data *ch, char *arg, class unit_data *obj, struct alias_head *alias_h)
+static void cmd_claim(unit_data *ch, char *arg, unit_data *obj, alias_head *alias_h)
 {
     char buf[MAX_INPUT_LENGTH + 1];
 
@@ -647,21 +647,21 @@ static void cmd_claim(class unit_data *ch, char *arg, class unit_data *obj, stru
 
 /* ********** The Dictionary Specproc ********** */
 
-static int local_dictionary(struct spec_arg *sarg)
+static int local_dictionary(spec_arg *sarg)
 {
     char *pcomm = nullptr;
     char *cmd_array[256];
     ubit16 i = 0;
-    struct alias_t *al = nullptr;
-    struct alias_head *alias_h = nullptr;
-    class extra_descr_data *exd = nullptr;
+    alias_t *al = nullptr;
+    alias_head *alias_h = nullptr;
+    extra_descr_data *exd = nullptr;
 
     /* specproc initialization */
-    if ((alias_h = (struct alias_head *)sarg->fptr->data) == nullptr)
+    if ((alias_h = (alias_head *)sarg->fptr->data) == nullptr)
     {
         exd = UNIT_EXTRA(sarg->owner).find_raw("$alias");
         sarg->fptr->data = str_to_alias(exd ? exd->descr.c_str() : nullptr);
-        alias_h = (struct alias_head *)sarg->fptr->data;
+        alias_h = (alias_head *)sarg->fptr->data;
     }
 
     /* clean up if destroyed */
@@ -737,8 +737,7 @@ static int local_dictionary(struct spec_arg *sarg)
      *  as the user might have typed `in', which the interpreter expands
      *  to `inventory' in the cmd->cmd_str.
      */
-    if (alias_h->trie == nullptr ||
-        (al = (struct alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->last_cmd, alias_h->trie)) == nullptr)
+    if (alias_h->trie == nullptr || (al = (alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->last_cmd, alias_h->trie)) == nullptr)
     {
         return SFR_SHARE;
     }
@@ -766,7 +765,7 @@ static int local_dictionary(struct spec_arg *sarg)
     {
         if (i < 256) /* 256 should certainly be enough, but check anyway */
         {
-            class cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
+            cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
             cmd_array[i++] = (char *)qe->Data();
             qe->SetNull();
             delete qe;
@@ -781,7 +780,7 @@ static int local_dictionary(struct spec_arg *sarg)
          */
         if (!CHAR_DESCRIPTOR(sarg->activator)->qInput.IsEmpty())
         {
-            class cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
+            cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
             delete qe;
@@ -811,7 +810,7 @@ static int local_dictionary(struct spec_arg *sarg)
     return SFR_BLOCK;
 }
 
-int dictionary(struct spec_arg *sarg)
+int dictionary(spec_arg *sarg)
 {
     /* Recursive calls can occur via 'at':
 

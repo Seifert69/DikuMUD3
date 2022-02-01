@@ -6,6 +6,9 @@
  */
 
 %{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 #include <stdio.h>
 #ifdef WINDOWS
 #include <io.h>
@@ -6610,3 +6613,5 @@ void dumpdil(struct dilprg *prg) {
     dumpdiltemplate(prg->frame[i].tmpl);
   }
 }
+
+#pragma GCC diagnostic pop

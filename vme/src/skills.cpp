@@ -71,12 +71,12 @@ const char *g_professions[PROFESSION_MAX + 1] = {PROFESSION_STRINGS, nullptr};
 
 const char *g_pc_races[PC_RACE_MAX + 1];
 const char *g_pc_race_adverbs[PC_RACE_MAX + 1];
-struct race_info_type g_race_info[PC_RACE_MAX];
+race_info_type g_race_info[PC_RACE_MAX];
 
-struct damage_chart_type g_spell_chart[SPL_TREE_MAX];
+damage_chart_type g_spell_chart[SPL_TREE_MAX];
 
-struct damage_chart_type g_weapon_chart[WPN_TREE_MAX];
-struct wpn_info_type g_wpn_info[WPN_TREE_MAX];
+damage_chart_type g_weapon_chart[WPN_TREE_MAX];
+wpn_info_type g_wpn_info[WPN_TREE_MAX];
 
 // I had to move these to modify.cpp of the member function was
 // called before the class constructor ! :-/ Yikes.
@@ -90,7 +90,7 @@ struct wpn_info_type g_wpn_info[WPN_TREE_MAX];
 
 skill_collection::skill_collection(int nSize)
 {
-    CREATE(prof_table, struct profession_cost, nSize);
+    CREATE(prof_table, profession_cost, nSize);
     CREATE(text, const char *, nSize);
     assert(this->text);
     CREATE(tree, tree_type, nSize);
@@ -168,7 +168,7 @@ int get_racial_spells(int nRace, int nSpell)
 
 /* ===================================================================== */
 
-void roll_description(class unit_data *att, const char *text, int roll)
+void roll_description(unit_data *att, const char *text, int roll)
 {
     if (roll >= 200)
     {
@@ -228,7 +228,7 @@ int open_ended_roll(int size, int end)
 /*    AbiIdx is the primary ability related                      */
 /* Result > 0 is success                                         */
 /* If skill and difficulty are equal => 50% chance success       */
-int skillchecksa(class unit_data *u, int skillidx, int abiidx, int difficulty)
+int skillchecksa(unit_data *u, int skillidx, int abiidx, int difficulty)
 {
     int roll = 0;
     int skl = 0;
@@ -292,14 +292,14 @@ int weight_size(int lbs)
     }
 }
 
-int weapon_fumble(class unit_data *weapon, int roll)
+int weapon_fumble(unit_data *weapon, int roll)
 {
     assert(IS_OBJ(weapon) && (OBJ_TYPE(weapon) == ITEM_WEAPON));
 
     return roll <= g_weapon_chart[OBJ_VALUE(weapon, 0)].fumble;
 }
 
-int chart_damage(int roll, struct damage_chart_element_type *element)
+int chart_damage(int roll, damage_chart_element_type *element)
 {
     if (element->alpha == 0)
     {
@@ -318,7 +318,7 @@ int chart_damage(int roll, struct damage_chart_element_type *element)
 }
 
 /* Size is for natural attacks to limit max damage for such */
-int chart_size_damage(int roll, struct damage_chart_element_type *element, int lbs)
+int chart_size_damage(int roll, damage_chart_element_type *element, int lbs)
 {
     if (element->alpha == 0)
     {
@@ -394,7 +394,7 @@ int natural_damage(int roll, int weapon_type, int armour_type, int lbs)
 }
 
 /* Return [0..200] for skill when defending with a weapon */
-int weapon_defense_skill(class unit_data *ch, int skill)
+int weapon_defense_skill(unit_data *ch, int skill)
 {
     int max = 0;
 
@@ -452,7 +452,7 @@ int weapon_defense_skill(class unit_data *ch, int skill)
 }
 
 /* Return [0..200] for skill when attacking with a weapon */
-int weapon_attack_skill(class unit_data *ch, int skill)
+int weapon_attack_skill(unit_data *ch, int skill)
 {
     if (IS_PC(ch))
     {
@@ -483,7 +483,7 @@ int weapon_attack_skill(class unit_data *ch, int skill)
     }
 }
 
-int weapon_attack_ability(class unit_data *ch, int skill)
+int weapon_attack_ability(unit_data *ch, int skill)
 {
     int i = 0;
 
@@ -496,7 +496,7 @@ int weapon_attack_ability(class unit_data *ch, int skill)
 }
 
 /* Return the armour position of where one person hits another */
-int hit_location(class unit_data *att, class unit_data *def)
+int hit_location(unit_data *att, unit_data *def)
 {
     /* Maybe do height reductions later */
 
@@ -506,9 +506,9 @@ int hit_location(class unit_data *att, class unit_data *def)
 /* Return the effective dex of a person in armour ...             */
 /* Later we will redo this function - as of now it doesn't matter */
 /* what armour you wear                                           */
-int effective_dex(class unit_data *ch)
+int effective_dex(unit_data *ch)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
     static const int arm_dex_penalty[] = {0, 10, 20, 40, 100};
 
     int at = 0;
@@ -826,8 +826,8 @@ static void race_read()
     fclose(fl);
 }
 
-struct diltemplate *g_playerinit_tmpl;
-struct diltemplate *g_nanny_dil_tmpl;
+diltemplate *g_playerinit_tmpl;
+diltemplate *g_nanny_dil_tmpl;
 
 static void race_init()
 {
@@ -835,7 +835,7 @@ static void race_init()
 
     for (i = 0; i < PC_RACE_MAX; i++)
     {
-        memset(&g_race_info[i], 0, sizeof(struct race_info_type));
+        memset(&g_race_info[i], 0, sizeof(race_info_type));
 
         g_pc_races[i] = nullptr;
         g_pc_race_adverbs[i] = nullptr;

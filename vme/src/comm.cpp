@@ -29,7 +29,7 @@ cActParameter::cActParameter()
     m_p = nullptr;
 }
 
-cActParameter::cActParameter(const class unit_data *u)
+cActParameter::cActParameter(const unit_data *u)
 {
     m_u = u;
     m_i = nullptr;
@@ -58,7 +58,7 @@ cActParameter::cActParameter(const dilval *v)
 
     if ((v->type == DILV_UP) || (v->type == DILV_UPR))
     {
-        m_u = (struct unit_data *)v->val.ptr;
+        m_u = (unit_data *)v->val.ptr;
     }
     else if ((v->type == DILV_SP) || (v->type == DILV_SPR) || (v->type == DILV_HASHSTR))
     {
@@ -76,7 +76,7 @@ int cActParameter::isNull()
  *  user's color preferences.  You probably only want to do this for telnet users.
  *  web users can rely on the styles defined in the CSS
  */
-void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
+void substHTMLcolor(std::string &dest, const char *src, color_type &color)
 {
     const char *p = nullptr;
 
@@ -130,7 +130,7 @@ void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
  *  Public routines for system-to-player communication
  *  Sends directly to multiplexer.
  */
-void send_to_descriptor(const char *messg, class descriptor_data *d)
+void send_to_descriptor(const char *messg, descriptor_data *d)
 {
     if (d && messg && *messg)
     {
@@ -146,7 +146,7 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
         }
         else
         {
-            struct unit_data *u = d->character;
+            unit_data *u = d->character;
 
             if (!u || !IS_PC(u))
             { // switched or snooped?
@@ -170,12 +170,12 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
     }
 }
 
-void send_to_descriptor(const std::string &messg, class descriptor_data *d)
+void send_to_descriptor(const std::string &messg, descriptor_data *d)
 {
     send_to_descriptor(messg.c_str(), d);
 }
 
-void page_string(class descriptor_data *d, const char *messg)
+void page_string(descriptor_data *d, const char *messg)
 {
     // If a unit test is being run, send results there too
     unit_tests::OutputCapture::page_string(d, messg);
@@ -198,12 +198,12 @@ void page_string(class descriptor_data *d, const char *messg)
     }
 }
 
-void page_string(class descriptor_data *d, const std::string &messg)
+void page_string(descriptor_data *d, const std::string &messg)
 {
     page_string(d, messg.c_str());
 }
 
-void send_to_char(const char *messg, const class unit_data *ch)
+void send_to_char(const char *messg, const unit_data *ch)
 {
     // If a unit test is being run, send results there too
     unit_tests::OutputCapture::send_to_char(messg, ch);
@@ -214,14 +214,14 @@ void send_to_char(const char *messg, const class unit_data *ch)
     }
 }
 
-void send_to_char(const std::string &messg, const class unit_data *ch)
+void send_to_char(const std::string &messg, const unit_data *ch)
 {
     send_to_char(messg.c_str(), ch);
 }
 
 void send_to_all(const char *messg)
 {
-    class descriptor_data *i = nullptr;
+    descriptor_data *i = nullptr;
 
     if (messg && *messg)
     {
@@ -240,9 +240,9 @@ void send_to_all(const std::string &messg)
     send_to_all(messg.c_str());
 }
 
-void send_to_zone_outdoor(const class zone_type *z, const char *messg)
+void send_to_zone_outdoor(const zone_type *z, const char *messg)
 {
-    class descriptor_data *i = nullptr;
+    descriptor_data *i = nullptr;
 
     if (messg && *messg)
     {
@@ -260,7 +260,7 @@ void send_to_zone_outdoor(const class zone_type *z, const char *messg)
 
 void send_to_outdoor(const char *messg)
 {
-    class descriptor_data *i = nullptr;
+    descriptor_data *i = nullptr;
 
     if (messg && *messg)
     {
@@ -285,7 +285,7 @@ void act_generate(char *buf,
                   cActParameter arg2,
                   cActParameter arg3,
                   int type,
-                  const class unit_data *to,
+                  const unit_data *to,
                   int bNewline)
 {
     const char *strp = nullptr;
@@ -293,7 +293,7 @@ void act_generate(char *buf,
     const char *i = nullptr;
     // MS2020 int uppercase = FALSE;
 
-    class cActParameter *sub = nullptr;
+    cActParameter *sub = nullptr;
     /*union {
         const void *vo;
         class unit_data *un;
@@ -369,7 +369,7 @@ void act_generate(char *buf,
                                 {
                                     /* Upper-case it */
                                     // MS 2020 uppercase = TRUE;
-                                    i = UNIT_NAME((struct unit_data *)sub->m_u);
+                                    i = UNIT_NAME((unit_data *)sub->m_u);
                                 }
                                 else
                                 {
@@ -389,7 +389,7 @@ void act_generate(char *buf,
                     case 'N':
                         if (sub->m_u != nullptr)
                         {
-                            i = UNIT_SEE_NAME(to, (struct unit_data *)sub->m_u);
+                            i = UNIT_SEE_NAME(to, (unit_data *)sub->m_u);
                         }
                         else
                         {
@@ -446,7 +446,7 @@ void act_generate(char *buf,
                     case 'a':
                         if (sub->m_u != nullptr)
                         {
-                            i = UNIT_ANA((struct unit_data *)sub->m_u);
+                            i = UNIT_ANA((unit_data *)sub->m_u);
                         }
                         else if (sub->m_p != nullptr)
                         {
@@ -546,7 +546,7 @@ void act_generate(char *buf,
 // to argument here it will be confusing for TO_VICT and TO_CHAR scenarios.
 void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type)
 {
-    const class unit_data *to = nullptr;
+    const unit_data *to = nullptr;
 
     /* This to catch old-style FALSE/TRUE calls...  */
     assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);
@@ -580,8 +580,8 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
 // Always adds <br/> at the end
 void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type)
 {
-    const class unit_data *to = nullptr;
-    const class unit_data *u = nullptr;
+    const unit_data *to = nullptr;
+    const unit_data *u = nullptr;
     char buf[MAX_STRING_LENGTH];
 
     /* This to catch old-style FALSE/TRUE calls...  */
@@ -663,8 +663,8 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
 
 void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type, const char *colortype)
 {
-    const class unit_data *to = nullptr;
-    const class unit_data *u = nullptr;
+    const unit_data *to = nullptr;
+    const unit_data *u = nullptr;
     char buf[MAX_STRING_LENGTH];
     char temp[MAX_STRING_LENGTH];
     char *t = nullptr;

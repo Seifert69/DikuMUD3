@@ -1,3 +1,6 @@
 #pragma once
 
-void do_backstab(class unit_data *, char *, const struct command_info *);
+#include "interpreter.h"
+#include "structs.h"
+
+void do_backstab(unit_data *, char *, const command_info *);

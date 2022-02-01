@@ -1,12 +1,15 @@
 #pragma once
 
-void do_snoop(class unit_data *, char *, const struct command_info *);
-void do_reset(class unit_data *, char *, const struct command_info *);
-void do_shutdown(class unit_data *, char *, const struct command_info *);
-void do_load(class unit_data *, char *, const struct command_info *);
-void do_at(class unit_data *, char *, const struct command_info *);
-void do_users(class unit_data *, char *, const struct command_info *);
-void do_switch(class unit_data *, char *, const struct command_info *);
-void do_timewarp(class unit_data *, char *, const struct command_info *);
-void do_crash(class unit_data *, char *, const struct command_info *);
-void do_wizlock(class unit_data *, char *, const struct command_info *);
+#include "interpreter.h"
+#include "structs.h"
+
+void do_snoop(unit_data *, char *, const command_info *);
+void do_reset(unit_data *, char *, const command_info *);
+void do_shutdown(unit_data *, char *, const command_info *);
+void do_load(unit_data *, char *, const command_info *);
+void do_at(unit_data *, char *, const command_info *);
+void do_users(unit_data *, char *, const command_info *);
+void do_switch(unit_data *, char *, const command_info *);
+void do_timewarp(unit_data *, char *, const command_info *);
+void do_crash(unit_data *, char *, const command_info *);
+void do_wizlock(unit_data *, char *, const command_info *);

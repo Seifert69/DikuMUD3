@@ -40,7 +40,7 @@
 #include "zon_basis.h"
 #include "zon_wiz.h"
 
-int spec_unused(struct spec_arg *sarg)
+int spec_unused(spec_arg *sarg)
 {
 #ifdef VMC
 #else
@@ -65,7 +65,7 @@ int spec_unused(struct spec_arg *sarg)
 #endif
 
 /* macro definitions for array indices are in values.h */
-struct unit_function_array_type g_unit_function_array[] = {
+unit_function_array_type g_unit_function_array[] = {
     {"0 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"DIL Copy Internal", VMCIT(dil_direct_init), FN_PRI_CHORES, SD_NEVER, 0, 0},
     {"2 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},

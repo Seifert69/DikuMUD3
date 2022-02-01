@@ -20,7 +20,7 @@
 #include "utils.h"
 #include "zone_reset.h"
 
-void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
+void SetFptrTimer(unit_data *u, unit_fptr *fptr)
 {
     ubit32 ticks = 0;
 
@@ -34,8 +34,8 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
             szonelog(g_boot_zone, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
             if ((fptr->index == SFUN_DILCOPY_INTERNAL) || (fptr->index == SFUN_DIL_INTERNAL))
             {
-                class dilprg *p = nullptr;
-                p = (class dilprg *)fptr->data;
+                dilprg *p = nullptr;
+                p = (dilprg *)fptr->data;
 
                 if (p)
                 {
@@ -60,7 +60,7 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
     }
 }
 
-void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
+void ResetFptrTimer(unit_data *u, unit_fptr *fptr)
 {
     membug_verify_class(u);
     membug_verify_class(fptr);
@@ -74,13 +74,13 @@ void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 
 void special_event(void *p1, void *p2)
 {
-    class unit_data *u = (class unit_data *)p1;
-    class unit_fptr *fptr = (class unit_fptr *)p2;
+    unit_data *u = (unit_data *)p1;
+    unit_fptr *fptr = (unit_fptr *)p2;
     int priority = 0;
 
     ubit32 ret = SFR_SHARE;
-    class unit_fptr *ftmp = nullptr;
-    struct spec_arg sarg;
+    unit_fptr *ftmp = nullptr;
+    spec_arg sarg;
 
     /*    if (fptr->index == SFUN_DIL_INTERNAL)
             if (fptr && fptr->data)
@@ -194,7 +194,7 @@ void special_event(void *p1, void *p2)
         }
         else if (fptr->data)
         {
-            class dilprg *prg = (class dilprg *)fptr->data;
+            dilprg *prg = (dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
             {
                 if IS_SET (prg->fp->intr[i].flags, SFB_TICK)
@@ -214,12 +214,12 @@ void special_event(void *p1, void *p2)
 }
 
 /* Return TRUE while stopping events */
-void stop_special(class unit_data *u, class unit_fptr *fptr)
+void stop_special(unit_data *u, unit_fptr *fptr)
 {
     g_events.remove(special_event, u, fptr);
 }
 
-void start_special(class unit_data *u, class unit_fptr *fptr)
+void start_special(unit_data *u, unit_fptr *fptr)
 {
     int diltick = 0;
     int i = 0;
@@ -231,7 +231,7 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
         }
         else if (fptr->data)
         {
-            class dilprg *prg = (class dilprg *)fptr->data;
+            dilprg *prg = (dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
             {
                 if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
@@ -278,9 +278,9 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
     }
 }
 
-void start_all_special(class unit_data *u)
+void start_all_special(unit_data *u)
 {
-    class unit_fptr *fptr = nullptr;
+    unit_fptr *fptr = nullptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
     {
@@ -288,9 +288,9 @@ void start_all_special(class unit_data *u)
     }
 }
 
-void stop_all_special(class unit_data *u)
+void stop_all_special(unit_data *u)
 {
-    class unit_fptr *fptr = nullptr;
+    unit_fptr *fptr = nullptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
     {

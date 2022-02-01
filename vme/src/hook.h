@@ -87,7 +87,7 @@ public:
 
     void Close();
     void Hook(int nHandle, cHook *hook);
-    int Wait(struct timeval *timeout);
+    int Wait(timeval *timeout);
     void Unhook(cHook *hook);
 
 private:

@@ -37,14 +37,14 @@
 namespace mplex
 {
 
-class color_type g_cDefcolor;
+color_type g_cDefcolor;
 int g_nConnectionsLeft = -1;
 
 // Listening for new telnet connections on def. 4242
-class cMotherHook g_MotherHook;
+cMotherHook g_MotherHook;
 
 // Sending and receiving data to the MUD server
-class cMudHook g_MudHook;
+cMudHook g_MudHook;
 
 //
 // The MotherHook: listens for new connections on the client port (4242)
@@ -66,8 +66,8 @@ void alarm_check(int i)
 void test_mud_up()
 {
     int fd = 0;
-    class cConHook *nextcon = nullptr;
-    class cConHook *con = nullptr;
+    cConHook *nextcon = nullptr;
+    cConHook *con = nullptr;
     static int nRetries = 0;
 
     fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
@@ -121,7 +121,7 @@ void test_mud_up()
 // Alert all connected clients that the MUD server is unavailable
 void mud_went_down()
 {
-    class cConHook *con = nullptr;
+    cConHook *con = nullptr;
 
     if (g_MudHook.IsHooked())
     {
@@ -223,7 +223,7 @@ void cMotherHook::Input(int nFlags)
     }
     else if (nFlags & SELECT_READ)
     {
-        class cConHook *con = new cConHook();
+        cConHook *con = new cConHook();
 
         if (g_nConnectionsLeft <= 1)
         {
@@ -298,7 +298,7 @@ void cMudHook::Unhook()
 
 int cMudHook::read_mud()
 {
-    class cConHook *con = nullptr;
+    cConHook *con = nullptr;
     ubit16 id = 0;
     ubit16 len = 0;
     int p = 0;
@@ -328,7 +328,7 @@ int cMudHook::read_mud()
             break;
 
         case MULTI_SETUP_CHAR:
-            if (len != sizeof(struct terminal_setup_type))
+            if (len != sizeof(terminal_setup_type))
             {
                 slog(LOG_OFF, 0, "Illegal size m_sSetup received.");
                 break;

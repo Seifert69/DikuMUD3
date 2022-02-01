@@ -21,9 +21,9 @@
 
 struct door_data
 {
-    class unit_data *thing;
-    class unit_data *room;
-    class unit_data *reverse; /* Reverse Room or Inside thing */
+    unit_data *thing;
+    unit_data *room;
+    unit_data *reverse; /* Reverse Room or Inside thing */
     char *key;
     ubit8 direction; /* For rooms, which direction was picked? */
     ubit8 *flags;
@@ -34,15 +34,15 @@ struct door_data
 struct visit_data
 {
     int state;
-    class unit_data *go_to;
+    unit_data *go_to;
 
-    class unit_data *start_room;
-    class unit_data *dest_room;
+    unit_data *start_room;
+    unit_data *dest_room;
 
     /* Return DESTROY_ME to destroy moving function        */
     /*        SFR_SHARE to allow lower functions to handle */
     /*        SFR_SUPREME to not allow lower functions     */
-    int (*what_now)(const class unit_data *, struct visit_data *);
+    int (*what_now)(const unit_data *, visit_data *);
 
     void *data;
     int non_tick_return; /* What to return upon non-ticks (SFR_...) */

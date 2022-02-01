@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 #define MAIN /* This is the main() module */
 
 #include "pp.h"
@@ -435,3 +438,5 @@ void output_addc(int s)
     *p = s;
     *++p = '\0';
 }
+
+#pragma GCC diagnostic pop

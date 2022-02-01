@@ -11,12 +11,13 @@
 #include "formatter.h"
 #include "interpreter.h"
 #include "structs.h"
+#include "system.h"
 #include "textutil.h"
 #include "utils.h"
 
 #include <cstdlib>
 
-static void chg_wimpy(class unit_data *ch)
+static void chg_wimpy(unit_data *ch)
 {
     if (IS_SET(CHAR_FLAGS(ch), CHAR_WIMPY))
     {
@@ -30,7 +31,7 @@ static void chg_wimpy(class unit_data *ch)
     TOGGLE_BIT(CHAR_FLAGS(ch), CHAR_WIMPY);
 }
 
-static void chg_expert(class unit_data *ch)
+static void chg_expert(unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_EXPERT))
     {
@@ -44,7 +45,7 @@ static void chg_expert(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_EXPERT);
 }
 
-static void chg_brief(class unit_data *ch)
+static void chg_brief(unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_BRIEF))
     {
@@ -58,7 +59,7 @@ static void chg_brief(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_BRIEF);
 }
 
-static void chg_compact(class unit_data *ch)
+static void chg_compact(unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_COMPACT))
     {
@@ -72,7 +73,7 @@ static void chg_compact(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_COMPACT);
 }
 
-static void chg_peaceful(class unit_data *ch)
+static void chg_peaceful(unit_data *ch)
 {
     if (IS_SET(CHAR_FLAGS(ch), CHAR_PEACEFUL))
     {
@@ -86,13 +87,13 @@ static void chg_peaceful(class unit_data *ch)
     TOGGLE_BIT(CHAR_FLAGS(ch), CHAR_PEACEFUL);
 }
 
-static void chg_prompt(class unit_data *ch)
+static void chg_prompt(unit_data *ch)
 {
     TOGGLE_BIT(PC_FLAGS(ch), PC_PROMPT);
     send_to_char("Prompt changed.<br/>", ch);
 }
 
-static void chg_inform(class unit_data *ch)
+static void chg_inform(unit_data *ch)
 {
     TOGGLE_BIT(PC_FLAGS(ch), PC_INFORM);
 
@@ -106,7 +107,7 @@ static void chg_inform(class unit_data *ch)
     }
 }
 
-static void chg_shout(class unit_data *ch)
+static void chg_shout(unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_NOSHOUT))
     {
@@ -120,7 +121,7 @@ static void chg_shout(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_NOSHOUT);
 }
 
-static void chg_tell(class unit_data *ch)
+static void chg_tell(unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_NOTELL))
     {
@@ -134,7 +135,7 @@ static void chg_tell(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_NOTELL);
 }
 
-static void chg_exits(class unit_data *ch)
+static void chg_exits(unit_data *ch)
 {
     if (IS_SET(PC_FLAGS(ch), PC_EXITS))
     {
@@ -148,7 +149,7 @@ static void chg_exits(class unit_data *ch)
     TOGGLE_BIT(PC_FLAGS(ch), PC_EXITS);
 }
 
-static void chg_columns(class unit_data *ch, const char *arg)
+static void chg_columns(unit_data *ch, const char *arg)
 {
     if (str_is_empty(arg) || !str_is_number(arg))
     {
@@ -171,7 +172,7 @@ static void chg_columns(class unit_data *ch, const char *arg)
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
 
-static void chg_rows(class unit_data *ch, const char *arg)
+static void chg_rows(unit_data *ch, const char *arg)
 {
     if (str_is_empty(arg) || !str_is_number(arg))
     {
@@ -194,7 +195,7 @@ static void chg_rows(class unit_data *ch, const char *arg)
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
 
-static void chg_terminal(class unit_data *ch, const char *arg)
+static void chg_terminal(unit_data *ch, const char *arg)
 {
     const char *Terminals[] = {"dumb", "tty", "ansi", nullptr};
 
@@ -236,7 +237,7 @@ static void chg_terminal(class unit_data *ch, const char *arg)
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
 
-static void chg_telnet(class unit_data *ch)
+static void chg_telnet(unit_data *ch)
 {
     if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
@@ -258,7 +259,7 @@ static void chg_telnet(class unit_data *ch)
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
 
-static void chg_character_echo(class unit_data *ch)
+static void chg_character_echo(unit_data *ch)
 {
     if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
@@ -280,7 +281,7 @@ static void chg_character_echo(class unit_data *ch)
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
 
-static void chg_redraw_prompt(class unit_data *ch)
+static void chg_redraw_prompt(unit_data *ch)
 {
     if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
@@ -302,7 +303,7 @@ static void chg_redraw_prompt(class unit_data *ch)
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
 
-static void chg_echo_say(class unit_data *ch)
+static void chg_echo_say(unit_data *ch)
 {
     TOGGLE_BIT(PC_FLAGS(ch), PC_ECHO);
 
@@ -316,7 +317,7 @@ static void chg_echo_say(class unit_data *ch)
     }
 }
 
-void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_change(unit_data *ch, char *arg, const command_info *cmd)
 {
     static const char *args[] = {"brief",
                                  "compact",
@@ -463,8 +464,8 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
 
         */
         default:
-            struct diltemplate *tmpl = nullptr;
-            class dilprg *prg = nullptr;
+            diltemplate *tmpl = nullptr;
+            dilprg *prg = nullptr;
 
             tmpl = find_dil_template("do_change@commands");
             prg = dil_copy_template(tmpl, ch, nullptr);

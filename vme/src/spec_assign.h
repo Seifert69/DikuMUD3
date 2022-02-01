@@ -8,4 +8,4 @@
 
 #include "interpreter.h"
 
-extern struct unit_function_array_type g_unit_function_array[];
+extern unit_function_array_type g_unit_function_array[];

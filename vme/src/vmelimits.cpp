@@ -26,7 +26,7 @@
 #include <cstring>
 
 /* Count the number of items a unit contains */
-int char_carry_n(class unit_data *unit)
+int char_carry_n(unit_data *unit)
 {
     int i = 0;
 
@@ -41,27 +41,27 @@ int char_carry_n(class unit_data *unit)
     return i;
 }
 
-int char_carry_n_limit(class unit_data *ch)
+int char_carry_n_limit(unit_data *ch)
 {
     return 10 + (CHAR_DEX(ch) / 10);
 }
 
-int char_can_carry_n(class unit_data *ch, int n)
+int char_can_carry_n(unit_data *ch, int n)
 {
     return (char_carry_n_limit(ch) >= (char_carry_n(ch) + n));
 }
 
-int char_carry_w_limit(class unit_data *ch)
+int char_carry_w_limit(unit_data *ch)
 {
     return 50 + MAX(50, UNIT_BASE_WEIGHT(ch) / 2) + CHAR_STR(ch) * 2;
 }
 
-int char_can_carry_w(class unit_data *ch, int weight)
+int char_can_carry_w(unit_data *ch, int weight)
 {
     return (char_carry_w_limit(ch) >= (UNIT_CONTAINING_W(ch) + weight));
 }
 
-int char_can_carry_unit(class unit_data *ch, class unit_data *unit)
+int char_can_carry_unit(unit_data *ch, unit_data *unit)
 {
     return (char_can_carry_w(ch, UNIT_WEIGHT(unit)) && char_can_carry_n(ch, 1));
 }
@@ -117,7 +117,7 @@ int age_graph(int age, int lifespan, int p0, int p1, int p2, int p3, int p4, int
 }
 
 /* This function is copied into basis.zon - remember to update accordingly!! */
-static int hit_limit_number(class unit_data *ch, int point)
+static int hit_limit_number(unit_data *ch, int point)
 {
     if (IS_PC(ch))
     {
@@ -134,13 +134,13 @@ static int hit_limit_number(class unit_data *ch, int point)
     }
 }
 
-int hit_limit(class unit_data *ch)
+int hit_limit(unit_data *ch)
 {
     return hit_limit_number(ch, CHAR_HPP(ch));
 }
 
 /* Hitpoint gain pr. game hour */
-int hit_gain(class unit_data *ch)
+int hit_gain(unit_data *ch)
 {
     int gain = 0;
 
@@ -168,7 +168,7 @@ int hit_gain(class unit_data *ch)
             break;
     }
 
-    class unit_data *u = ch;
+    unit_data *u = ch;
 
     while (u)
     {
@@ -192,7 +192,7 @@ int hit_gain(class unit_data *ch)
     return gain;
 }
 
-int move_limit(class unit_data *ch)
+int move_limit(unit_data *ch)
 {
     int ml = CHAR_CON(ch) * 2 + 150;
 
@@ -215,7 +215,7 @@ int move_limit(class unit_data *ch)
 }
 
 /* move gain pr. game hour */
-int move_gain(class unit_data *ch)
+int move_gain(unit_data *ch)
 {
     int gain = 0;
 
@@ -243,7 +243,7 @@ int move_gain(class unit_data *ch)
             break;
     }
 
-    class unit_data *u = ch;
+    unit_data *u = ch;
 
     while (u)
     {
@@ -267,7 +267,7 @@ int move_gain(class unit_data *ch)
     return gain;
 }
 
-int mana_limit(class unit_data *ch)
+int mana_limit(unit_data *ch)
 {
     assert(IS_CHAR(ch));
 
@@ -292,7 +292,7 @@ int mana_limit(class unit_data *ch)
 }
 
 /* manapoint gain pr. game hour */
-int mana_gain(class unit_data *ch)
+int mana_gain(unit_data *ch)
 {
     int gain = 0;
 
@@ -321,7 +321,7 @@ int mana_gain(class unit_data *ch)
             break;
     }
 
-    class unit_data *u = ch;
+    unit_data *u = ch;
 
     while (u)
     {
@@ -345,7 +345,7 @@ int mana_gain(class unit_data *ch)
 }
 
 /* Gain maximum in various points */
-void advance_level(class unit_data *ch)
+void advance_level(unit_data *ch)
 {
     assert(IS_PC(ch));
 
@@ -377,11 +377,11 @@ void advance_level(class unit_data *ch)
     PC_SKILL_POINTS(ch) += skill_point_gain();
     PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
 
-    struct diltemplate *dt = nullptr;
+    diltemplate *dt = nullptr;
     dt = find_dil_template("advance_level@basis");
     assert(dt);
 
-    class dilprg *prg = dil_copy_template(dt, ch, nullptr);
+    dilprg *prg = dil_copy_template(dt, ch, nullptr);
     assert(prg);
 
     prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -401,7 +401,7 @@ void advance_level(class unit_data *ch)
 #endif
 }
 
-void gain_condition(class unit_data *ch, int condition, int value)
+void gain_condition(unit_data *ch, int condition, int value)
 {
     bool intoxicated = 0;
 
@@ -476,7 +476,7 @@ void gain_condition(class unit_data *ch, int condition, int value)
     }
 }
 
-void set_title(class unit_data *ch)
+void set_title(unit_data *ch)
 {
     assert(IS_PC(ch));
 
@@ -495,7 +495,7 @@ void set_title(class unit_data *ch)
     }
 }
 
-void gain_exp_regardless(class unit_data *ch, int gain)
+void gain_exp_regardless(unit_data *ch, int gain)
 {
     int j = 0;
 
@@ -530,7 +530,7 @@ void gain_exp_regardless(class unit_data *ch, int gain)
     }
 }
 
-void gain_exp(class unit_data *ch, int gain)
+void gain_exp(unit_data *ch, int gain)
 {
     if (IS_MORTAL(ch))
     {
@@ -538,7 +538,7 @@ void gain_exp(class unit_data *ch, int gain)
     }
 }
 
-void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_level(unit_data *ch, char *arg, const command_info *cmd)
 {
     int now = 0;
 

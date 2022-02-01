@@ -20,7 +20,7 @@
 
 #include <ctime>
 
-void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_save(unit_data *ch, char *arg, const command_info *cmd)
 {
     if (!IS_PC(ch))
     {
@@ -56,10 +56,10 @@ void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
  This function is also called from DIL
  from the dil function reset_race()
 */
-void race_adjust(class unit_data *ch)
+void race_adjust(unit_data *ch)
 {
-    struct base_race_info_type *sex_race = nullptr;
-    struct race_info_type *my_race = nullptr;
+    base_race_info_type *sex_race = nullptr;
+    race_info_type *my_race = nullptr;
 
     assert(IS_PC(ch));
     assert(is_in(CHAR_RACE(ch), 0, PC_RACE_MAX - 1));
@@ -108,7 +108,7 @@ void race_cost(class unit_data *ch)
         PC_SPL_COST(ch, i) = racial_spells[i][CHAR_RACE(ch)];
 }*/
 
-void points_reset(class unit_data *ch)
+void points_reset(unit_data *ch)
 {
     int i = 0;
 
@@ -158,7 +158,7 @@ void points_reset(class unit_data *ch)
 
 /* Can be called once when a new player is created from nanny().  */
 
-void start_player(class unit_data *ch)
+void start_player(unit_data *ch)
 {
     assert(CHAR_LEVEL(ch) == 0);
     assert(UNIT_CONTAINS(ch) == nullptr);
@@ -193,7 +193,7 @@ void start_player(class unit_data *ch)
     if (g_playerinit_tmpl)
     {
         /* Call DIL to see if we should init the player in any other way. */
-        class dilprg *prg = dil_copy_template(g_playerinit_tmpl, ch, nullptr);
+        dilprg *prg = dil_copy_template(g_playerinit_tmpl, ch, nullptr);
 
         if (prg)
         {

@@ -41,11 +41,11 @@ long g_nTickUsec = OPT_USEC; // Dont mess with this, it's the game heartbeat. Lo
 #define HEAPSPACE_INCREMENT 500
 /* constants */
 eventqueue g_events;
-class descriptor_data *g_descriptor_list = nullptr;
-class descriptor_data *g_next_to_process = nullptr;
+descriptor_data *g_descriptor_list = nullptr;
+descriptor_data *g_next_to_process = nullptr;
 
 /* For multi-connectors */
-class cMultiMaster g_Multi;
+cMultiMaster g_Multi;
 
 /* The global server configuration */
 
@@ -176,14 +176,14 @@ void run_the_game(char *srvcfg)
 
 void game_loop()
 {
-    struct timeval now;
-    struct timeval old;
+    timeval now;
+    timeval old;
     long delay = 0;
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
     std::string str;
 
     g_tics = 61;
-    gettimeofday(&old, (struct timezone *)nullptr);
+    gettimeofday(&old, nullptr);
 
     while (!g_mud_shutdown)
     {
@@ -200,7 +200,7 @@ void game_loop()
 
         /* Timer stuff. MUD is always at least OPT_USEC useconds in making one cycle. */
 
-        gettimeofday(&now, (struct timezone *)nullptr);
+        gettimeofday(&now, nullptr);
 
         delay = g_nTickUsec - (1000000L * (now.tv_sec - old.tv_sec) + (now.tv_usec - old.tv_usec));
 
@@ -247,8 +247,8 @@ void game_event()
 {
     int i = 0;
     char *pcomm = nullptr;
-    class descriptor_data *point = nullptr;
-    static struct timeval null_time = {0, 0};
+    descriptor_data *point = nullptr;
+    static timeval null_time = {0, 0};
 
     i = g_CaptainHook.Wait(&null_time);
 
@@ -265,7 +265,7 @@ void game_event()
 
         if (--(point->wait) <= 0 && !point->qInput.IsEmpty())
         {
-            class cQueueElem *qe = point->qInput.GetHead();
+            cQueueElem *qe = point->qInput.GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
             delete qe;
@@ -347,8 +347,8 @@ void check_overpopulation_event(void *p1, void *p2)
     nHours = (g_tics / PULSE_SEC) / 3600;
     slog(LOG_ALL, 0, "Game up for %d tick hours, checking for overpopulation", nHours);
 
-    class unit_data *u = nullptr;
-    class unit_data *t = nullptr;
+    unit_data *u = nullptr;
+    unit_data *t = nullptr;
     int i = 0;
     int nUnits = 0;
 
@@ -381,11 +381,11 @@ void check_overpopulation_event(void *p1, void *p2)
         {
             slog(LOG_ALL, 0, "Too many items in %s@%s(%s) : %d units", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), unit_trace_up(u), i);
 
-            struct diltemplate *worms = nullptr;
+            diltemplate *worms = nullptr;
             worms = find_dil_template("worms@basis");
             if (worms)
             {
-                class dilprg *prg = dil_copy_template(worms, u, nullptr);
+                dilprg *prg = dil_copy_template(worms, u, nullptr);
                 if (prg)
                 {
                     prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -410,10 +410,10 @@ void check_reboot_event(void *p1, void *p2)
 }
 
 /* utility procedure */
-struct timeval timediff(struct timeval *a, struct timeval *b)
+timeval timediff(timeval *a, timeval *b)
 {
-    struct timeval rslt;
-    struct timeval tmp;
+    timeval rslt;
+    timeval tmp;
 
     tmp = *a;
 

@@ -1,6 +1,10 @@
-#include <cstdio>
-#include "pp.h"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 #include "../compile_defines.h"
+#include "pp.h"
+
+#include <cstdio>
 
 //
 // MS copied in from the original project. But doesn't seem to work...
@@ -508,3 +512,5 @@ int main(int argc, char *argv[])
     Ipath[Ipcnt++] = path;
     pp_main(argv[1]);
 }
+
+#pragma GCC diagnostic pop

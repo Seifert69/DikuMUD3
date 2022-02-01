@@ -42,7 +42,7 @@ void cNamelist::operator=(const char **list)
     }
 }
 
-void cNamelist::operator=(class cNamelist *cn)
+void cNamelist::operator=(cNamelist *cn)
 {
     for (ubit32 i = 0; i < cn->Length(); i++)
     {
@@ -50,7 +50,7 @@ void cNamelist::operator=(class cNamelist *cn)
     }
 }
 
-void cNamelist::CopyList(class cNamelist *cn)
+void cNamelist::CopyList(cNamelist *cn)
 {
     for (ubit32 i = 0; i < cn->Length(); i++)
     {

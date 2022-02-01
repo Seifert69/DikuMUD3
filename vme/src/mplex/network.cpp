@@ -30,10 +30,10 @@ int OpenMother(int nPort)
 {
     int n = 0;
     int fdMother = 0;
-    struct linger ld;
-    struct sockaddr_in server_addr;
+    linger ld;
+    sockaddr_in server_addr;
 
-    memset(&server_addr, 0, sizeof(struct sockaddr_in));
+    memset(&server_addr, 0, sizeof(sockaddr_in));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(nPort);
@@ -102,7 +102,7 @@ int OpenMother(int nPort)
         exit(1);
     }
 
-    n = bind(fdMother, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
+    n = bind(fdMother, (sockaddr *)&server_addr, sizeof(sockaddr_in));
 
     if (n != 0)
     {
@@ -133,13 +133,13 @@ int OpenMother(int nPort)
 
 int OpenNetwork(int nPort, char *pcAddress)
 {
-    struct sockaddr_in server_addr;
+    sockaddr_in server_addr;
     int fdClient = 0;
     int n = 0;
 
     slog(LOG_ALL, 0, "Open connection to server on %s %d.", pcAddress, nPort);
 
-    memset((char *)&server_addr, 0, sizeof(struct sockaddr_in));
+    memset((char *)&server_addr, 0, sizeof(sockaddr_in));
 
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = inet_addr(pcAddress);
@@ -153,7 +153,7 @@ int OpenNetwork(int nPort, char *pcAddress)
         return -1;
     }
 
-    n = connect(fdClient, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
+    n = connect(fdClient, (sockaddr *)&server_addr, sizeof(sockaddr_in));
 
     if (n == -1)
     {

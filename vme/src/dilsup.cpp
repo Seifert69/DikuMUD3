@@ -13,7 +13,7 @@
 
 #include <cstring>
 
-int pay_point_charlie(class unit_data *ch, class unit_data *to)
+int pay_point_charlie(unit_data *ch, unit_data *to)
 {
     if (IS_PC(ch) && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
     {
@@ -49,7 +49,7 @@ int pay_point_charlie(class unit_data *ch, class unit_data *to)
     return TRUE;
 }
 
-static int getkeyword(class unit_data *obj)
+static int getkeyword(unit_data *obj)
 {
     int keyword = -2;
 
@@ -126,7 +126,7 @@ static int getkeyword(class unit_data *obj)
 }
 
 /* Return NULL if unit fits, pointer to string otherwise */
-static const char *wear_size(class unit_data *ch, class unit_data *obj, int var)
+static const char *wear_size(unit_data *ch, unit_data *obj, int var)
 {
     if (UNIT_SIZE(ch) == 0)
     {
@@ -164,7 +164,7 @@ static const char *wear_size(class unit_data *ch, class unit_data *obj, int var)
     return nullptr;
 }
 
-const char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword)
+const char *obj_wear_size(unit_data *ch, unit_data *obj, int keyword)
 {
     if (keyword == -1)
     {

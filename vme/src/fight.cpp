@@ -40,19 +40,19 @@ struct combat_single_msg
 
 struct combat_msg_packet
 {
-    struct combat_single_msg cmiss;
-    struct combat_single_msg shield;
-    struct combat_single_msg nodam;
-    struct combat_single_msg entire;
-    struct combat_single_msg head;
-    struct combat_single_msg hand;
-    struct combat_single_msg arm;
-    struct combat_single_msg body;
-    struct combat_single_msg legs;
-    struct combat_single_msg feet;
-    struct combat_single_msg die;
+    combat_single_msg cmiss;
+    combat_single_msg shield;
+    combat_single_msg nodam;
+    combat_single_msg entire;
+    combat_single_msg head;
+    combat_single_msg hand;
+    combat_single_msg arm;
+    combat_single_msg body;
+    combat_single_msg legs;
+    combat_single_msg feet;
+    combat_single_msg die;
 
-    struct combat_msg_packet *next;
+    combat_msg_packet *next;
 };
 
 struct combat_msg_list
@@ -60,16 +60,16 @@ struct combat_msg_list
     int group;      /* Which message group      */
     int *no;        /* Which message number #'s */
     int no_of_msgs; /* # of msgs to choose from */
-    struct combat_msg_packet *msg;
+    combat_msg_packet *msg;
 };
 
-struct combat_msg_list fight_messages[COM_MAX_MSGS];
+combat_msg_list fight_messages[COM_MAX_MSGS];
 
 /* Returns TRUE if combat is not allowed, and FALSE if combat is allowed */
 /* Also used for steal, etc.                                             */
 /* If message is true, then a message is sent to the 'att'               */
 
-int pk_test(class unit_data *att, class unit_data *def, int message)
+int pk_test(unit_data *att, unit_data *def, int message)
 {
     if (IS_PC(att) && IS_PC(def) && att != def)
     {
@@ -131,13 +131,13 @@ int pk_test(class unit_data *att, class unit_data *def, int message)
     return FALSE;
 }
 
-int char_dual_wield(class unit_data *ch)
+int char_dual_wield(unit_data *ch)
 {
     return equipment_type(ch, WEAR_WIELD, ITEM_WEAPON) && equipment_type(ch, WEAR_HOLD, ITEM_WEAPON);
 }
 
 /* Given an amount of experience, what is the 'virtual' level of the char? */
-int virtual_level(class unit_data *ch)
+int virtual_level(unit_data *ch)
 {
     if (IS_NPC(ch))
     {
@@ -171,7 +171,7 @@ int virtual_level(class unit_data *ch)
 
 /* -------------------------------------------------------------------- */
 
-int num_in_msg(struct combat_msg_list *msg, int no)
+int num_in_msg(combat_msg_list *msg, int no)
 {
     int i = 0;
 
@@ -186,7 +186,7 @@ int num_in_msg(struct combat_msg_list *msg, int no)
     return FALSE;
 }
 
-void fread_single(FILE *f1, struct combat_single_msg *msg)
+void fread_single(FILE *f1, combat_single_msg *msg)
 {
     msg->to_char = fread_string(f1);
     msg->to_vict = fread_string(f1);
@@ -199,7 +199,7 @@ void fread_single(FILE *f1, struct combat_single_msg *msg)
     }
 }
 
-int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
+int load_msg_prehead(FILE *f1, combat_msg_list *msg)
 {
     int no[200];
     int pos = 0;
@@ -254,7 +254,7 @@ void load_messages()
     FILE *f1 = nullptr;
     int i = 0;
     int grp = 0;
-    struct combat_msg_packet *messages = nullptr;
+    combat_msg_packet *messages = nullptr;
 
     if (!(f1 = fopen(g_cServerConfig.getFileInEtcDir(MESS_FILE).c_str(), "r")))
     {
@@ -289,7 +289,7 @@ void load_messages()
             exit(12);
         }
 
-        CREATE(messages, struct combat_msg_packet, 1);
+        CREATE(messages, combat_msg_packet, 1);
 
         fight_messages[i].no_of_msgs++;
         fight_messages[i].group = grp;
@@ -568,10 +568,10 @@ char *sub_damage(char *str, int damage, int max_hp)
     return buf;
 }
 
-static void combat_send(struct combat_single_msg *msg,
-                        class unit_data *arg1,
-                        class unit_data *arg2,
-                        class unit_data *arg3,
+static void combat_send(combat_single_msg *msg,
+                        unit_data *arg1,
+                        unit_data *arg2,
+                        unit_data *arg3,
                         int dam,
                         const char *color1,
                         const char *color2,
@@ -601,15 +601,9 @@ static void combat_send(struct combat_single_msg *msg,
 /* Use COM_MSG_MISS when a complete miss                  */
 /* Use COM_MSG_NODAM when a hit but no damage is given    */
 
-void combat_message(class unit_data *att,
-                    class unit_data *def,
-                    class unit_data *medium,
-                    int damage,
-                    int msg_group,
-                    int msg_number,
-                    int hit_location)
+void combat_message(unit_data *att, unit_data *def, unit_data *medium, int damage, int msg_group, int msg_number, int hit_location)
 {
-    struct combat_msg_packet *msg = nullptr;
+    combat_msg_packet *msg = nullptr;
     int i = 0;
     int r = 0;
 
@@ -691,7 +685,7 @@ void combat_message(class unit_data *att,
 
 /* -------------------------------------------------------------------- */
 
-void update_pos(class unit_data *victim)
+void update_pos(unit_data *victim)
 {
     if ((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
     {
@@ -722,7 +716,7 @@ void update_pos(class unit_data *victim)
 /* -------------------------------------------------------------------- */
 
 /* When ch kills victim */
-static void change_alignment(class unit_data *slayer, class unit_data *victim)
+static void change_alignment(unit_data *slayer, unit_data *victim)
 {
     int adjust = 0;
     int diff = 0;
@@ -794,7 +788,7 @@ static void change_alignment(class unit_data *slayer, class unit_data *victim)
 
 /* Do all the gain stuff for CH where no is the number of players */
 /* which are to share the "share" of experience                   */
-static void person_gain(class unit_data *ch, class unit_data *dead, int share, int grouped, int maxlevel)
+static void person_gain(unit_data *ch, unit_data *dead, int share, int grouped, int maxlevel)
 {
     if (share > 0)
     {
@@ -845,7 +839,7 @@ static void person_gain(class unit_data *ch, class unit_data *dead, int share, i
 /* This takes 100% care of victim and attackers change in experience */
 /* and alignments. Do not fiddle with these values anywhere else     */
 /* when a kill has been made                                         */
-static void exp_align_gain(class unit_data *ch, class unit_data *victim)
+static void exp_align_gain(unit_data *ch, unit_data *victim)
 {
     int rellevel = 0;
     int sumlevel = 0;
@@ -853,8 +847,8 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
     int minlevel = 0;
     int no_members = 1;
     int share = 0;
-    class unit_data *head = nullptr;
-    struct char_follow_type *f = nullptr;
+    unit_data *head = nullptr;
+    char_follow_type *f = nullptr;
 
     maxlevel = CHAR_LEVEL(ch);
 
@@ -879,7 +873,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
     }
     else /* NPC killed */
     {
-        class unit_affected_type *paf = nullptr;
+        unit_affected_type *paf = nullptr;
 
         paf = affected_by_spell(victim, ID_MAX_ATTACKER);
 
@@ -1000,9 +994,9 @@ int lose_exp(class unit_data *ch)
 /* Die is only called when a PC or NPC is killed for real, causing XP loss
    and transfer of rewards */
 
-void die(class unit_data *ch)
+void die(unit_data *ch)
 {
-    struct diltemplate *death = nullptr;
+    diltemplate *death = nullptr;
 
     if (ch->is_destructed())
     {
@@ -1013,7 +1007,7 @@ void die(class unit_data *ch)
     if (death)
     {
         send_death(ch);
-        class dilprg *prg = dil_copy_template(death, ch, nullptr);
+        dilprg *prg = dil_copy_template(death, ch, nullptr);
         if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -1026,7 +1020,7 @@ void die(class unit_data *ch)
 /* -------------------------------------------------------------------- */
 
 /* Call when adding or subtracting hitpoints to/from a character */
-void modify_hit(class unit_data *ch, int hit)
+void modify_hit(unit_data *ch, int hit)
 {
     if (CHAR_POS(ch) > POSITION_DEAD)
     {
@@ -1042,9 +1036,9 @@ void modify_hit(class unit_data *ch, int hit)
     }
 }
 
-void damage(class unit_data *ch,
-            class unit_data *victim,
-            class unit_data *medium,
+void damage(unit_data *ch,
+            unit_data *victim,
+            unit_data *medium,
             int dam,
             int attack_group,
             int attack_number,
@@ -1052,8 +1046,8 @@ void damage(class unit_data *ch,
             int bDisplay)
 {
     int max_hit = 0;
-    class unit_affected_type *paf = nullptr;
-    class unit_data *sch = nullptr;
+    unit_affected_type *paf = nullptr;
+    unit_data *sch = nullptr;
 
     if (ch->is_destructed() || victim->is_destructed())
     {
@@ -1157,7 +1151,7 @@ void damage(class unit_data *ch,
         }
         else
         {
-            class unit_affected_type af;
+            unit_affected_type af;
 
             af.id = ID_MAX_ATTACKER;
             af.duration = 4;
@@ -1358,7 +1352,7 @@ void damage(class unit_data *ch,
     }
 }
 
-void break_object(class unit_data *obj)
+void break_object(unit_data *obj)
 {
     if (OBJ_EQP_POS(obj))
     {
@@ -1381,7 +1375,7 @@ void break_object(class unit_data *obj)
 }
 
 /* 'ch' is optional, and will receive a message if 'obj' breaks */
-void damage_object(class unit_data *ch, class unit_data *obj, int dam)
+void damage_object(unit_data *ch, unit_data *obj, int dam)
 {
     if (obj == nullptr)
     {
@@ -1435,7 +1429,7 @@ void damage_object(class unit_data *ch, class unit_data *obj, int dam)
 }
 
 /* Returns TRUE if ok */
-static int check_combat(class unit_data *ch)
+static int check_combat(unit_data *ch)
 {
     if (ch->is_destructed())
     {
@@ -1489,7 +1483,7 @@ int roll_boost(int roll, int level)
 }
 
 /* -1 if fails, >= 0 amount of damage */
-int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapon_type, int primary, int attack)
+int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int primary, int attack)
 {
     int dam = 0;
     int hm = 0;
@@ -1499,9 +1493,9 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
     int def_armour_type = 0;
     int def_shield_bonus = 0;
 
-    class unit_data *att_weapon = nullptr;
-    class unit_data *def_armour = nullptr;
-    class unit_data *def_shield = nullptr;
+    unit_data *att_weapon = nullptr;
+    unit_data *def_armour = nullptr;
+    unit_data *def_shield = nullptr;
 
     assert(IS_CHAR(att) && IS_CHAR(def));
 
@@ -1654,13 +1648,13 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
     return dam;
 }
 
-int simple_one_hit(class unit_data *att, class unit_data *def)
+int simple_one_hit(unit_data *att, unit_data *def)
 {
     return one_hit(att, def, 0, WPN_ROOT, TRUE, TRUE);
 }
 
 /* control the fights going on */
-void melee_violence(class unit_data *ch, int primary)
+void melee_violence(unit_data *ch, int primary)
 {
     if (!check_combat(ch))
     {
@@ -1687,7 +1681,7 @@ struct hunt_data
 {
     int no;
     int was_legal;
-    class unit_data *victim;
+    unit_data *victim;
 };
 
 /* The hunting routine will prefer to hit anyone hunted to those */
@@ -1698,16 +1692,16 @@ struct hunt_data
 /* MS: Changed only to re-attack on tick command                 */
 /*     Otherwise two characters hunting get really many attacks  */
 /*     as they were activated by the flee command                */
-int hunting(struct spec_arg *sarg)
+int hunting(spec_arg *sarg)
 {
-    struct hunt_data *h = nullptr;
+    hunt_data *h = nullptr;
 
     if (sarg->cmd->no != CMD_AUTO_TICK)
     {
         return SFR_SHARE;
     }
 
-    h = (struct hunt_data *)sarg->fptr->data;
+    h = (hunt_data *)sarg->fptr->data;
     assert(h);
 
     h->no--;
