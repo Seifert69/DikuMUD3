@@ -1036,6 +1036,7 @@ external
     integer enchant(u : unitptr, lvl : integer, blade : string);
     integer bladejob@randomt(u : unitptr, lvl : integer,  blade : string);
     integer hiltjob@randomt(u : unitptr, lvl : integer,  blade : string);
+    identify(u :unitptr, norm : string, improved: string);
 
 var
     u : unitptr;
@@ -1071,6 +1072,10 @@ code
     i := dilcall(hiltdil)(u, smith,  hilt);
 
     u.value[1] := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+    if (u.value[1] > 0)
+        identify(u, "Weapon has a quality bonus.", "Weapon has a quality bonus of " + itoa(u.value[1]) + ".");
+    else if (u.value[1] < 0)
+        identify(u, "Weapon has a quality penalty.", "Weapon has a quality penalty of " + itoa(u.value[1]) + ".");
 
     // u.value[2] contains the # of enchantments for this weapon
     if (u.value[2] > 0)  // Move to enchant
