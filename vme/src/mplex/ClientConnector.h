@@ -21,7 +21,7 @@ namespace mplex
 {
 
 // typedef websocketpp::server<websocketpp::config::asio> wsserver;
-typedef class websocketpp::server<websocketpp::config::asio> wsserver;
+typedef websocketpp::server<websocketpp::config::asio> wsserver;
 
 class cConHook : public cHook
 {
@@ -60,7 +60,7 @@ public:
     void Input(int nFlags);
     void getLine(ubit8 buf[], int *size);
     void testChar(ubit8 c);
-    class color_type color;
+    color_type color;
 
     bool m_bColorChange;
     bool m_bColorCreate;
@@ -82,14 +82,14 @@ public:
     char m_aOutput[4096];
     char m_aInputBuf[2 * MAX_INPUT_LENGTH];
     char m_aHost[50];
-    void (*m_pFptr)(class cConHook *, const char *cmd);
+    void (*m_pFptr)(cConHook *, const char *cmd);
 
     wsserver *m_pWebsServer;
     websocketpp::connection_hdl m_pWebsHdl;
 
     cConHook *m_pNext;
 
-    struct terminal_setup_type m_sSetup;
+    terminal_setup_type m_sSetup;
 
     ubit8 m_nBgColor; /* Stupid bitching ANSI   */
 
@@ -99,16 +99,16 @@ private:
     std::mutex m_mtx; // Mutex for websockets threading
 };
 
-std::string mplex_getcolor(class cConHook *hook, const char *colorstr);
+std::string mplex_getcolor(cConHook *hook, const char *colorstr);
 
 void dumbPlayLoop(cConHook *con, const char *cmd);
-void dumbPressReturn(class cConHook *con, const char *cmd);
-void dumbMenuSelect(class cConHook *con, const char *cmd);
-void dumbMudDown(class cConHook *con, const char *cmd);
+void dumbPressReturn(cConHook *con, const char *cmd);
+void dumbMenuSelect(cConHook *con, const char *cmd);
+void dumbMudDown(cConHook *con, const char *cmd);
 void Idle(cConHook *con, const char *cmd);
 
 void ClearUnhooked();
 
-extern class cConHook *g_connection_list;
+extern cConHook *g_connection_list;
 
 } // namespace mplex

@@ -61,9 +61,9 @@ int kludge_bonus(int level, int points)
 /* Returns 0 or less if unsuccessful, or 1..100 for the blocking    */
 /* chance                                                           */
 
-int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **pDef_shield)
+int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
 {
-    class unit_data *def_shield = nullptr;
+    unit_data *def_shield = nullptr;
     int def_shield_bonus = 0;
 
     int att_dex = 0;
@@ -119,20 +119,20 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
     return def_shield_bonus;
 }
 
-int dikuii_spell_bonus(class unit_data *att,
-                       class unit_data *medium,
-                       class unit_data *def,
+int dikuii_spell_bonus(unit_data *att,
+                       unit_data *medium,
+                       unit_data *def,
                        int hit_loc,
                        int spell_number,
                        int *pDef_armour_type,
-                       class unit_data **pDef_armour)
+                       unit_data **pDef_armour)
 {
     int att_spl_knowledge = 0;
     int def_spl_knowledge = 0;
     int att_bonus = 0;
     int def_bonus = 0;
     int def_armour_type = 0;
-    class unit_data *def_armour = nullptr;
+    unit_data *def_armour = nullptr;
     int hm = 0;
 
     att_bonus = CHAR_OFFENSIVE(att);
@@ -202,13 +202,13 @@ int dikuii_spell_bonus(class unit_data *att,
 /* to anything, then it will be set to the defenders armour_type  */
 /* which should be used upon lookup                               */
 
-int dikuii_melee_bonus(class unit_data *att,
-                       class unit_data *def,
+int dikuii_melee_bonus(unit_data *att,
+                       unit_data *def,
                        int hit_loc,
                        int *pAtt_weapon_type,
-                       class unit_data **pAtt_weapon,
+                       unit_data **pAtt_weapon,
                        int *pDef_armour_type,
-                       class unit_data **pDef_armour,
+                       unit_data **pDef_armour,
                        int primary)
 {
     int att_bonus = 0;
@@ -217,11 +217,11 @@ int dikuii_melee_bonus(class unit_data *att,
     int def_bonus = 0;
     int def_wpn_knowledge = 0;
 
-    class unit_data *att_wpn = nullptr;
+    unit_data *att_wpn = nullptr;
     int att_wpn_type = 0;
 
     int def_armour_type = 0;
-    class unit_data *def_armour = nullptr;
+    unit_data *def_armour = nullptr;
 
     int hm = 0;
 
@@ -372,13 +372,13 @@ int dikuii_melee_bonus(class unit_data *att,
     return MAX(-50, hm);
 }
 
-int spell_bonus(class unit_data *att,
-                class unit_data *medium,
-                class unit_data *def,
+int spell_bonus(unit_data *att,
+                unit_data *medium,
+                unit_data *def,
                 int hit_loc,
                 int spell_number,
                 int *pDef_armour_type,
-                class unit_data **pDef_armour,
+                unit_data **pDef_armour,
                 std::string *pStat)
 {
     int att_spl_knowledge = 0;
@@ -386,7 +386,7 @@ int spell_bonus(class unit_data *att,
     int att_bonus = 0;
     int def_bonus = 0;
     int def_armour_type = 0;
-    class unit_data *def_armour = nullptr;
+    unit_data *def_armour = nullptr;
     int hm = 0;
 
     if (pStat)
@@ -417,8 +417,8 @@ int spell_bonus(class unit_data *att,
     // Check for free hands
     // What if there is something on _HANDS, e.g. Gloves - how should that affect bonus?
     // What if the CHAR is holding something?
-    struct unit_data *wield = equipment(att, WEAR_WIELD);
-    struct unit_data *shield = equipment(att, WEAR_SHIELD);
+    unit_data *wield = equipment(att, WEAR_WIELD);
+    unit_data *shield = equipment(att, WEAR_SHIELD);
     if (shield == nullptr)
     {
         if (wield == nullptr)
@@ -534,13 +534,13 @@ int spell_bonus(class unit_data *att,
 /* to anything, then it will be set to the defenders armour_type  */
 /* which should be used upon lookup                               */
 
-int melee_bonus(class unit_data *att,
-                class unit_data *def,
+int melee_bonus(unit_data *att,
+                unit_data *def,
                 int hit_loc,
                 int *pAtt_weapon_type,
-                class unit_data **pAtt_weapon,
+                unit_data **pAtt_weapon,
                 int *pDef_armour_type,
-                class unit_data **pDef_armour,
+                unit_data **pDef_armour,
                 int primary,
                 std::string *pStat)
 {
@@ -549,12 +549,12 @@ int melee_bonus(class unit_data *att,
     int def_bonus = 0;
     int def_wpn_knowledge = 0;
 
-    class unit_data *att_wpn = nullptr;
+    unit_data *att_wpn = nullptr;
     int att_wpn_type = 0;
 
     int def_armour_type = 0;
     int tmp = 0;
-    class unit_data *def_armour = nullptr;
+    unit_data *def_armour = nullptr;
     int hm = 0;
 
     if (pStat)
@@ -797,11 +797,11 @@ int melee_bonus(class unit_data *att,
     return MAX(-50, hm);
 }
 
-int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
+int base_melee(unit_data *att, unit_data *def, int hit_loc)
 {
     int ocp = 0;
     int bonus = 0;
-    class unit_data *ocf = nullptr;
+    unit_data *ocf = nullptr;
 
     assert(CHAR_COMBAT(def));
 
@@ -822,7 +822,7 @@ int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
 /* danger involved in combat (i.e. how fast would you die in worst case)    */
 /* Returns number of rounds it takes att to kill def                        */
 
-int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
+int base_consider(unit_data *att, unit_data *def, std::string *pStr)
 {
     int ocp = 0;
     int bonus = 0;
@@ -856,9 +856,9 @@ int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
     }
 }
 
-void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_consider(unit_data *ch, char *arg, const command_info *cmd)
 {
-    class unit_data *vict = nullptr;
+    unit_data *vict = nullptr;
     int rtd = 0;
     char *oarg = arg;
     std::string str;
@@ -956,7 +956,7 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
 
 /* Return the quality modifier for the given monster. Modifier depends on */
 /* the hand or weapon quality and armour or toughness quality.            */
-int experience_modification(class unit_data *att, class unit_data *def)
+int experience_modification(unit_data *att, unit_data *def)
 {
     return base_melee(def, att, WEAR_BODY) - base_melee(att, def, WEAR_BODY);
 }

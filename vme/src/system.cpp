@@ -29,7 +29,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-void MplexSendSetup(class descriptor_data *d)
+void MplexSendSetup(descriptor_data *d)
 {
     assert(d);
 
@@ -43,7 +43,7 @@ void MplexSendSetup(class descriptor_data *d)
 /* ----------------------------------------------------------------- */
 
 /* Call only once when creating a new char (guest)    */
-void init_char(class unit_data *ch)
+void init_char(unit_data *ch)
 {
     int i = 0;
 
@@ -220,7 +220,7 @@ descriptor_data::~descriptor_data()
 
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
-class descriptor_data *descriptor_new(class cMultiHook *pe)
+descriptor_data *descriptor_new(cMultiHook *pe)
 {
     return new descriptor_data(pe);
 }
@@ -230,10 +230,10 @@ class descriptor_data *descriptor_new(class cMultiHook *pe)
 /* mplex'er has sent a terminate request to the server. Nothing     */
 /* bad happens if you mess up, but the mplex'er receives data to    */
 /* an unknown id...                                                 */
-void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
+void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 {
-    class descriptor_data *tmp = nullptr;
-    struct diltemplate *link_dead = nullptr;
+    descriptor_data *tmp = nullptr;
+    diltemplate *link_dead = nullptr;
     assert(d->character);
 
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */
@@ -298,7 +298,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                     if (link_dead)
                     {
                         CHAR_DESCRIPTOR(d->character) = nullptr;
-                        class dilprg *prg = dil_copy_template(link_dead, d->character, nullptr);
+                        dilprg *prg = dil_copy_template(link_dead, d->character, nullptr);
                         if (prg)
                         {
                             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -351,10 +351,10 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
 
 /* Returns how much memory is in use by system. This may help spotting
    possible fragmentation of memory. */
-void system_memory(class unit_data *ch)
+void system_memory(unit_data *ch)
 {
 #ifdef LINUX
-    struct rusage rusage_data;
+    rusage rusage_data;
     int n = 0;
 
     n = getrusage(RUSAGE_CHILDREN, &rusage_data);

@@ -116,23 +116,23 @@
 // class dilprg *dil_list = NULL;
 // class dilprg *dil_list_nextdude = NULL;
 
-void dil_edit_done(class descriptor_data *d)
+void dil_edit_done(descriptor_data *d)
 {
     send_edit(d->editing, d->localstr);
 }
 
-void dil_intr_remove(class dilprg *p, int idx)
+void dil_intr_remove(dilprg *p, int idx)
 {
     if ((idx >= 0) && (idx < p->fp->intrcount))
     {
-        memmove(&(p->fp->intr[idx]), &(p->fp->intr[idx + 1]), sizeof(struct dilintr) * (p->fp->intrcount - idx - 1));
+        memmove(&(p->fp->intr[idx]), &(p->fp->intr[idx + 1]), sizeof(dilintr) * (p->fp->intrcount - idx - 1));
         p->fp->intr[p->fp->intrcount - 1].flags = 0;
         p->fp->intr[p->fp->intrcount - 1].lab = nullptr;
         p->fp->intr[p->fp->intrcount - 1].elab = nullptr;
     }
 }
 
-int dil_intr_insert(class dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
+int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 {
     int intnum = 0;
 
@@ -163,7 +163,7 @@ int dil_intr_insert(class dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 
     return intnum;
 }
-void dil_free_var(struct dilvar *v)
+void dil_free_var(dilvar *v)
 {
     switch (v->type)
     {
@@ -194,7 +194,7 @@ void dil_free_var(struct dilvar *v)
     }
 }
 
-void dil_free_frame(struct dilframe *frame)
+void dil_free_frame(dilframe *frame)
 {
     int j = 0;
 
@@ -225,7 +225,7 @@ void dil_free_frame(struct dilframe *frame)
     }
 }
 
-void dil_free_template(struct diltemplate *tmpl, int copy)
+void dil_free_template(diltemplate *tmpl, int copy)
 {
     int i = 0;
 
@@ -276,7 +276,7 @@ void dil_free_template(struct diltemplate *tmpl, int copy)
 }
 
 /* returns boolean value of DIL value */
-char dil_getbool(class dilval *v, class dilprg *prg)
+char dil_getbool(dilval *v, dilprg *prg)
 {
     /*
        Please! no 'smart' stuff here, the older NICE version
@@ -354,7 +354,7 @@ char dil_getbool(class dilval *v, class dilprg *prg)
 }
 
 /* transform references to values, and returns original type */
-int dil_getval(class dilval *v)
+int dil_getval(dilval *v)
 {
     /* original type */
     static int orig_type[DILV_MAX + 1] = {
@@ -431,7 +431,7 @@ int dil_getval(class dilval *v)
 }
 
 /* adds exp node to exp, returns node number */
-void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab)
+void dil_add_secure(dilprg *prg, unit_data *sup, ubit8 *lab)
 {
     if (sup == nullptr)
     {
@@ -440,11 +440,11 @@ void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab)
 
     if (prg->fp->securecount)
     {
-        RECREATE(prg->fp->secure, struct dilsecure, prg->fp->securecount + 1);
+        RECREATE(prg->fp->secure, dilsecure, prg->fp->securecount + 1);
     }
     else
     {
-        CREATE(prg->fp->secure, struct dilsecure, prg->fp->securecount + 1);
+        CREATE(prg->fp->secure, dilsecure, prg->fp->securecount + 1);
     }
     prg->fp->secure[prg->fp->securecount].sup = sup;
     prg->fp->secure[prg->fp->securecount].lab = lab;
@@ -453,7 +453,7 @@ void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab)
 }
 
 /* adds exp node to exp, returns node number */
-int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
+int dil_sub_secure(dilframe *frm, unit_data *sup, int bForeach)
 {
     int i = 0;
     int count = 0;
@@ -477,7 +477,7 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
             count++;
             if (frm->securecount)
             {
-                RECREATE(frm->secure, struct dilsecure, frm->securecount);
+                RECREATE(frm->secure, dilsecure, frm->securecount);
             }
             else
             {
@@ -497,10 +497,10 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
    ********************************************************************* */
 
 /* Clears all extra pointers equal to a removed extra            */
-void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd)
+void dil_clear_extras(dilprg *prg, extra_descr_data *exd)
 {
     int i = 0;
-    struct dilframe *frm = nullptr;
+    dilframe *frm = nullptr;
 
     if (!prg->frame)
     {
@@ -527,7 +527,7 @@ void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd)
     {
         if (prg->stack[i]->atyp == DILV_EDPR)
         {
-            if (*((class extra_descr_data **)prg->stack[i]->ref) == exd)
+            if (*((extra_descr_data **)prg->stack[i]->ref) == exd)
             {
                 prg->stack[i]->ref = nullptr;
             }
@@ -544,11 +544,11 @@ void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd)
 
 /* Clears all variables that are not secured! Called at every activation */
 /* of a DIL program (after secures are tested for!).			 */
-void dil_clear_non_secured(class dilprg *prg)
+void dil_clear_non_secured(dilprg *prg)
 {
     int i = 0;
     int j = 0;
-    struct dilframe *frm = nullptr;
+    dilframe *frm = nullptr;
 
     if (!prg->frame)
     {
@@ -584,7 +584,7 @@ void dil_clear_non_secured(class dilprg *prg)
 
 /* If a secure is violated, this routine will clear all local DIL variables */
 /* that refer to this secure.						    */
-void dil_clear_lost_reference(struct dilframe *frm, void *ptr)
+void dil_clear_lost_reference(dilframe *frm, void *ptr)
 {
     int i = 0;
 
@@ -632,11 +632,11 @@ void dil_clear_lost_reference(struct dilframe *frm, void *ptr)
 
 */
 
-void dil_test_secure(class dilprg *prg, int bForeach)
+void dil_test_secure(dilprg *prg, int bForeach)
 {
     int i = 0;
     int count = 0;
-    struct dilframe *frm = nullptr;
+    dilframe *frm = nullptr;
 
     if (prg->waitcmd <= WAITCMD_STOP)
     {
@@ -681,7 +681,7 @@ void dil_test_secure(class dilprg *prg, int bForeach)
 }
 
 /* report error in passed type to function */
-void dil_typeerr(class dilprg *p, const char *where)
+void dil_typeerr(dilprg *p, const char *where)
 {
     /* returned value not of expected type */
     /* This is serous! mess-up in the core.. stop the program */
@@ -703,10 +703,10 @@ void dil_typeerr(class dilprg *p, const char *where)
  *  n is the number of accepted types and type is an int of the form
  *  DILV_xxx.  Returns 0 for success, -1 for failure.
  */
-int dil_type_check(const char *f, class dilprg *p, int tot, ...)
+int dil_type_check(const char *f, dilprg *p, int tot, ...)
 {
     va_list args;
-    class dilval *v[20];
+    dilval *v[20];
     int cnt = 0;
     int val = 0;
     int flag = 0;
@@ -718,7 +718,7 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 
     while (tot--)
     {
-        v[idx] = va_arg(args, class dilval *);
+        v[idx] = va_arg(args, dilval *);
 
         flag = va_arg(args, int);
         cnt = va_arg(args, int);
@@ -769,7 +769,7 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 /* Evaluating DIL-expressions/instructions				    */
 /* ************************************************************************ */
 
-struct dil_func_type g_dilfe_func[DILI_MAX + 1] = {
+dil_func_type g_dilfe_func[DILI_MAX + 1] = {
     {dilfe_illegal}, /* 0 */
     {dilfe_plus},     {dilfe_min},       {dilfe_mul},
     {dilfe_div},      {dilfe_mod},       {dilfe_and},
@@ -862,11 +862,11 @@ struct dil_func_type g_dilfe_func[DILI_MAX + 1] = {
     {dilfe_fndz},     {dilfe_fndsidx},   {dilfe_call} // 203
 };
 
-static int check_interrupt(class dilprg *prg)
+static int check_interrupt(dilprg *prg)
 {
     int i = 0;
-    struct timeval tbegin;
-    struct timeval tend;
+    timeval tbegin;
+    timeval tend;
     double ttime = NAN;
 
     for (i = 0; i < prg->fp->intrcount; i++)
@@ -880,7 +880,7 @@ static int check_interrupt(class dilprg *prg)
             prg->fp->pc = prg->fp->intr[i].lab;
             prg->fp->stacklen = prg->stack.length();
 
-            gettimeofday(&tbegin, (struct timezone *)nullptr);
+            gettimeofday(&tbegin, nullptr);
 
             (prg)->fp->tmpl->nTriggers++;
             while (prg->waitcmd > 0 && (prg->fp->pc < prg->fp->intr[i].elab))
@@ -891,7 +891,7 @@ static int check_interrupt(class dilprg *prg)
                 (g_dilfe_func[*(prg->fp->pc - 1)].func(prg));
             }
 
-            gettimeofday(&tend, (struct timezone *)nullptr);
+            gettimeofday(&tend, nullptr);
 
             ttime = (tend.tv_sec - tbegin.tv_sec) * 1000.0 + (tend.tv_usec - tbegin.tv_usec) / 1000.0;
             (prg)->fp->tmpl->fCPU += ttime;
@@ -938,10 +938,10 @@ static int check_interrupt(class dilprg *prg)
 /* Running a DIL-program */
 /* ************************************************************************ */
 
-void ActivateDil(class unit_data *pc)
+void ActivateDil(unit_data *pc)
 {
-    class unit_fptr *fptr = nullptr;
-    class dilprg *prg = nullptr;
+    unit_fptr *fptr = nullptr;
+    dilprg *prg = nullptr;
 
     for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
     {
@@ -951,7 +951,7 @@ void ActivateDil(class unit_data *pc)
         }
         if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
         {
-            prg = (class dilprg *)fptr->data;
+            prg = (dilprg *)fptr->data;
             REMOVE_BIT(prg->flags, DILFL_DEACTIVATED);
         }
     }
@@ -961,10 +961,10 @@ void ActivateDil(class unit_data *pc)
  * deactivate all dil's except the running one on a player
  * during a gamestate change.
  */
-void DeactivateDil(class unit_data *pc, class dilprg *aprg)
+void DeactivateDil(unit_data *pc, dilprg *aprg)
 {
-    class unit_fptr *fptr = nullptr;
-    class dilprg *prg = nullptr;
+    unit_fptr *fptr = nullptr;
+    dilprg *prg = nullptr;
 
     for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
     {
@@ -974,7 +974,7 @@ void DeactivateDil(class unit_data *pc, class dilprg *aprg)
             {
                 continue;
             }
-            prg = (class dilprg *)fptr->data;
+            prg = (dilprg *)fptr->data;
             SET_BIT(prg->flags, DILFL_DEACTIVATED);
         }
     }
@@ -985,15 +985,15 @@ void DeactivateDil(class unit_data *pc, class dilprg *aprg)
 // and nest-- before you return (if you call dil_free_prg first be sure to decrease first)
 // dil_free_prg only frees when nest <= 0.
 //
-int run_dil(struct spec_arg *sarg)
+int run_dil(spec_arg *sarg)
 {
-    class dilprg *prg = (class dilprg *)sarg->fptr->data;
+    dilprg *prg = (dilprg *)sarg->fptr->data;
     char *orgarg = (char *)sarg->arg; /* Because fndu may mess with it!!! */
 
     int i = 0;
     static int activates = 0;
-    struct timeval tbegin;
-    struct timeval tend;
+    timeval tbegin;
+    timeval tend;
     double ttime = NAN;
 
     if (prg == nullptr)
@@ -1110,7 +1110,7 @@ int run_dil(struct spec_arg *sarg)
 
     activates++;
 
-    gettimeofday(&tbegin, (struct timezone *)nullptr);
+    gettimeofday(&tbegin, nullptr);
 
     (prg)->fp->tmpl->nTriggers++;
     while (prg->waitcmd > 0)
@@ -1124,7 +1124,7 @@ int run_dil(struct spec_arg *sarg)
         (g_dilfe_func[*(prg->fp->pc - 1)].func(prg));
     }
     membug_verify(prg);
-    gettimeofday(&tend, (struct timezone *)nullptr);
+    gettimeofday(&tend, nullptr);
 
     ttime = (tend.tv_sec - tbegin.tv_sec) * 1000.0 + (tend.tv_usec - tbegin.tv_usec) / 1000.0;
     (prg)->fp->tmpl->fCPU += ttime;
@@ -1280,7 +1280,7 @@ int run_dil(struct spec_arg *sarg)
     }
 }
 
-int dil_init(struct spec_arg *sarg)
+int dil_init(spec_arg *sarg)
 {
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
@@ -1301,7 +1301,7 @@ int dil_init(struct spec_arg *sarg)
     return SFR_SHARE;
 }
 
-static void dil_free_dilargs(struct dilargstype *dilargs)
+static void dil_free_dilargs(dilargstype *dilargs)
 {
     if (dilargs->name)
         FREE(dilargs->name);
@@ -1331,16 +1331,16 @@ static void dil_free_dilargs(struct dilargstype *dilargs)
     FREE(dilargs);
 }
 
-int dil_direct_init(struct spec_arg *sarg)
+int dil_direct_init(spec_arg *sarg)
 {
-    struct dilargstype *dilargs = (struct dilargstype *)sarg->fptr->data;
+    dilargstype *dilargs = (dilargstype *)sarg->fptr->data;
 
     assert(dilargs);
 
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
-        class dilprg *prg = nullptr;
-        struct diltemplate *tmpl = nullptr;
+        dilprg *prg = nullptr;
+        diltemplate *tmpl = nullptr;
 
         tmpl = find_dil_template(dilargs->name);
 
@@ -1437,17 +1437,17 @@ int dil_direct_init(struct spec_arg *sarg)
     return SFR_SHARE;
 }
 
-int dil_destroy(const char *name, class unit_data *u)
+int dil_destroy(const char *name, unit_data *u)
 {
-    class unit_fptr *fptr = nullptr;
-    class dilprg *prg = nullptr;
-    struct spec_arg sarg;
+    unit_fptr *fptr = nullptr;
+    dilprg *prg = nullptr;
+    spec_arg sarg;
 
     fptr = dil_find(name, u);
     if (fptr && !fptr->is_destructed())
     {
         assert(fptr->data); /* MUST or ged! */
-        prg = ((class dilprg *)fptr->data);
+        prg = ((dilprg *)fptr->data);
 
         //  This is to send the dildestroy SFB to any listening DILs
         sarg.owner = prg->owner;
@@ -1475,7 +1475,7 @@ int dil_destroy(const char *name, class unit_data *u)
     return FALSE;
 }
 
-void dil_init_vars(int varc, struct dilframe *frm)
+void dil_init_vars(int varc, dilframe *frm)
 {
     for (int i = 0; i < varc; i++)
     {
@@ -1499,20 +1499,20 @@ void dil_init_vars(int varc, struct dilframe *frm)
     }
 }
 
-class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, class unit_fptr **pfptr)
+dilprg *dil_copy_template(diltemplate *tmpl, unit_data *u, unit_fptr **pfptr)
 {
-    class dilprg *prg = nullptr;
-    class unit_fptr *fptr = nullptr;
+    dilprg *prg = nullptr;
+    unit_fptr *fptr = nullptr;
 
     if (IS_SET(tmpl->flags, DILFL_UNIQUE))
     {
-        class unit_fptr *f = nullptr;
+        unit_fptr *f = nullptr;
         for (f = UNIT_FUNC(u); f; f = f->next)
         {
             if (f->index == SFUN_DIL_INTERNAL)
             {
-                class dilprg *uprg = nullptr;
-                if ((uprg = (class dilprg *)f->data))
+                dilprg *uprg = nullptr;
+                if ((uprg = (dilprg *)f->data))
                 {
                     if (uprg->frame[0].tmpl == tmpl)
                     {
@@ -1534,7 +1534,7 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, cl
 
     if (tmpl->varc)
     {
-        CREATE(prg->frame->vars, struct dilvar, tmpl->varc);
+        CREATE(prg->frame->vars, dilvar, tmpl->varc);
     }
 
     for (int i = 0; i < tmpl->varc; i++)
@@ -1546,7 +1546,7 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, cl
 
     if (tmpl->intrcount)
     {
-        CREATE(prg->frame->intr, struct dilintr, tmpl->intrcount);
+        CREATE(prg->frame->intr, dilintr, tmpl->intrcount);
     }
 
     prg->frame->intrcount = tmpl->intrcount;
@@ -1572,10 +1572,10 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, cl
     return prg;
 }
 
-void dil_activate(class dilprg *prg)
+void dil_activate(dilprg *prg)
 {
-    struct spec_arg sarg;
-    class unit_fptr *fptr = nullptr;
+    spec_arg sarg;
+    unit_fptr *fptr = nullptr;
 
     assert(prg);
 
@@ -1590,7 +1590,7 @@ void dil_activate(class dilprg *prg)
     assert(fptr);
 
 #ifdef DEBUG_HISTORY
-    void add_func_history(class unit_data * u, ubit16, ubit16);
+    void add_func_history(unit_data * u, ubit16, ubit16);
     add_func_history(prg->owner, SFUN_DIL_INTERNAL, SFB_TICK);
 #endif
 
@@ -1607,10 +1607,10 @@ void dil_activate(class dilprg *prg)
     run_dil(&sarg);
 }
 
-void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr)
+void dil_activate_cmd(dilprg *prg, command_info *cmd_ptr)
 {
-    struct spec_arg sarg;
-    class unit_fptr *fptr = nullptr;
+    spec_arg sarg;
+    unit_fptr *fptr = nullptr;
 
     assert(prg);
 
@@ -1625,7 +1625,7 @@ void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr)
     assert(fptr);
 
 #ifdef DEBUG_HISTORY
-    void add_func_history(class unit_data * u, ubit16, ubit16);
+    void add_func_history(unit_data * u, ubit16, ubit16);
     add_func_history(prg->owner, SFUN_DIL_INTERNAL, SFB_TICK);
 #endif
 
@@ -1642,10 +1642,10 @@ void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr)
     run_dil(&sarg);
 }
 
-void dil_loadtime_activate(class unit_data *u)
+void dil_loadtime_activate(unit_data *u)
 {
-    class unit_fptr *f = nullptr;
-    class unit_fptr *fnext = nullptr;
+    unit_fptr *f = nullptr;
+    unit_fptr *fnext = nullptr;
     for (f = UNIT_FUNC(u); f; f = fnext)
     {
         fnext = f->next;
@@ -1665,11 +1665,11 @@ void dil_loadtime_activate(class unit_data *u)
     //        dil_loadtime_activate(u);
 }
 
-class dilprg *dil_copy(char *name, class unit_data *u)
+dilprg *dil_copy(char *name, unit_data *u)
 {
     char buf[MAX_STRING_LENGTH];
-    class dilprg *prg = nullptr;
-    struct diltemplate *tmpl = nullptr;
+    dilprg *prg = nullptr;
+    diltemplate *tmpl = nullptr;
     char *tmplname = nullptr;
     char *farg = nullptr;
     char *targ = nullptr;
@@ -1789,10 +1789,10 @@ class dilprg *dil_copy(char *name, class unit_data *u)
     return prg;
 }
 
-class unit_fptr *dil_find(const char *name, class unit_data *u)
+unit_fptr *dil_find(const char *name, unit_data *u)
 {
-    class unit_fptr *fptr = nullptr;
-    struct diltemplate *tmpl = nullptr;
+    unit_fptr *fptr = nullptr;
+    diltemplate *tmpl = nullptr;
 
     if ((tmpl = find_dil_template(name)))
     {
@@ -1800,7 +1800,7 @@ class unit_fptr *dil_find(const char *name, class unit_data *u)
         {
             if ((!fptr->is_destructed()) && (fptr->index == SFUN_DIL_INTERNAL))
             {
-                if ((((class dilprg *)fptr->data)->frame[0].tmpl == tmpl) && ((class dilprg *)fptr->data)->waitcmd > WAITCMD_QUIT)
+                if ((((dilprg *)fptr->data)->frame[0].tmpl == tmpl) && ((dilprg *)fptr->data)->waitcmd > WAITCMD_QUIT)
                 {
                     return fptr;
                 }

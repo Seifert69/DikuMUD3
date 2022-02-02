@@ -61,8 +61,8 @@ int _parse_name(const char *arg, char *name)
 {
     int i = 0;
 
-    class badnames_list badnames;
-    class badnames_list badstrings;
+    badnames_list badnames;
+    badnames_list badstrings;
     m_pBadNames = nullptr;
     m_pBadStrings = nullptr;
 
@@ -118,8 +118,8 @@ int _parse_name(const char *arg, char *name)
 /* for idle time for any descriptors                                      */
 void check_idle()
 {
-    class descriptor_data *d = nullptr;
-    class descriptor_data *next_d = nullptr;
+    descriptor_data *d = nullptr;
+    descriptor_data *next_d = nullptr;
     time_t now = time(nullptr);
 
     for (d = g_descriptor_list; d; d = next_d)
@@ -165,7 +165,7 @@ void check_idle()
 }
 
 /* clear some of the the working variables of a char */
-void reset_char(class unit_data *ch)
+void reset_char(unit_data *ch)
 {
     /* Ok, this is test to avoid level 255's entering the game... */
     //  assert (CHAR_SEX (ch) != 255);
@@ -207,7 +207,7 @@ void pc_data::disconnect_game()
     }
 }
 
-void pc_data::reconnect_game(class descriptor_data *d)
+void pc_data::reconnect_game(descriptor_data *d)
 {
     // char *color;
     // char tbuf[MAX_STRING_LENGTH * 2];
@@ -264,7 +264,7 @@ void pc_data::reconnect_game(class descriptor_data *d)
     set_descriptor_fptr(d, descriptor_interpreter, FALSE);
 }
 
-void update_lasthost(class unit_data *pc, ubit32 s_addr)
+void update_lasthost(unit_data *pc, ubit32 s_addr)
 {
     if ((sbit32)s_addr == -1)
     {
@@ -333,7 +333,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 //
 void pc_data::gstate_togame(dilprg *pdontstop)
 {
-    class descriptor_data *i = nullptr;
+    descriptor_data *i = nullptr;
     time_t last_connect = PC_TIME(this).connect;
 
     if (this->is_destructed())
@@ -449,12 +449,12 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 /*   and thus a reconnect is performed.                           */
 /* If UNIT_IN is not set, then the char must be put inside the    */
 /*   game, and his inventory loaded.                              */
-void enter_game(class unit_data *ch, int dilway)
+void enter_game(unit_data *ch, int dilway)
 {
     UPC(ch)->gstate_togame(nullptr);
 }
 
-void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor_data *, char *), ubit1 call)
+void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, char *), ubit1 call)
 {
     if (d->fptr == interpreter_string_add)
     {
@@ -510,21 +510,21 @@ void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor
 }
 */
 
-void nanny_close(class descriptor_data *d, char *arg)
+void nanny_close(descriptor_data *d, char *arg)
 {
     descriptor_close(d);
 }
 
-void nanny_motd(class descriptor_data *d, char *arg)
+void nanny_motd(descriptor_data *d, char *arg)
 {
-    struct diltemplate *on_connect = nullptr;
+    diltemplate *on_connect = nullptr;
     g_dilmenu = FALSE;
     on_connect = find_dil_template("on_connect@basis");
     if (on_connect)
     {
         g_dilmenu = TRUE;
         // Nono... only enter the game when entering from the menu (DIL) enter_game(d->character, TRUE);
-        class dilprg *prg = dil_copy_template(on_connect, d->character, nullptr);
+        dilprg *prg = dil_copy_template(on_connect, d->character, nullptr);
         if (prg)
         {
             set_descriptor_fptr(d, descriptor_interpreter, TRUE);
@@ -546,10 +546,10 @@ void nanny_motd(class descriptor_data *d, char *arg)
     }
 }
 
-void nanny_throw(class descriptor_data *d, char *arg)
+void nanny_throw(descriptor_data *d, char *arg)
 {
-    class descriptor_data *td = nullptr;
-    class unit_data *u = nullptr;
+    descriptor_data *td = nullptr;
+    unit_data *u = nullptr;
 
     if (STATE(d)++ == 0)
     {
@@ -627,9 +627,9 @@ void nanny_throw(class descriptor_data *d, char *arg)
     }
 }
 
-void nanny_dil(class descriptor_data *d, char *arg)
+void nanny_dil(descriptor_data *d, char *arg)
 {
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
 
     exd = UNIT_EXTRA(d->character).find_raw("$nanny");
 
@@ -642,7 +642,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
 
     if (g_nanny_dil_tmpl)
     {
-        class dilprg *prg = nullptr;
+        dilprg *prg = nullptr;
 
         prg = dil_copy_template(g_nanny_dil_tmpl, d->character, nullptr);
         if (prg)
@@ -662,9 +662,9 @@ void nanny_dil(class descriptor_data *d, char *arg)
     }
 }
 
-void nanny_pwd_confirm(class descriptor_data *d, char *arg)
+void nanny_pwd_confirm(descriptor_data *d, char *arg)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
 
     if (STATE(d)++ == 0)
     {
@@ -685,7 +685,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     auto str = diku::format_to_str("PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(str), d);
 
-    class descriptor_data *td = nullptr;
+    descriptor_data *td = nullptr;
     while ((td = find_descriptor(PC_FILENAME(d->character), d)))
     {
         send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
@@ -708,7 +708,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     set_descriptor_fptr(d, nanny_dil, TRUE);
 }
 
-int check_pwd(class descriptor_data *d, char *pwd)
+int check_pwd(descriptor_data *d, char *pwd)
 {
     int i = 0;
     int bA = 0;
@@ -762,7 +762,7 @@ int check_pwd(class descriptor_data *d, char *pwd)
     return TRUE;
 }
 
-void nanny_new_pwd(class descriptor_data *d, char *arg)
+void nanny_new_pwd(descriptor_data *d, char *arg)
 {
     if (STATE(d)++ == 0)
     {
@@ -788,7 +788,7 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
 }
 
 /* Return TRUE when done... */
-ubit1 base_string_add(class descriptor_data *d, char *str)
+ubit1 base_string_add(descriptor_data *d, char *str)
 {
     char *scan = nullptr;
     int terminator = 0;
@@ -860,7 +860,7 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
 }
 
 /* Add user input to the 'current' string (as defined by d->str) */
-void interpreter_string_add(class descriptor_data *d, char *str)
+void interpreter_string_add(descriptor_data *d, char *str)
 {
     if (base_string_add(d, str))
     {
@@ -870,9 +870,9 @@ void interpreter_string_add(class descriptor_data *d, char *str)
 
 /* Removes empty descriptions and makes ONE newline after each. */
 
-void nanny_fix_descriptions(class unit_data *u)
+void nanny_fix_descriptions(unit_data *u)
 {
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
     char buf[1024];
 
     for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
@@ -905,15 +905,15 @@ void nanny_fix_descriptions(class unit_data *u)
     }
 }
 
-void nanny_menu(class descriptor_data *d, char *arg)
+void nanny_menu(descriptor_data *d, char *arg)
 {
     nanny_close(d, arg);
 }
 
-void nanny_existing_pwd(class descriptor_data *d, char *arg)
+void nanny_existing_pwd(descriptor_data *d, char *arg)
 {
-    class descriptor_data *td = nullptr;
-    class unit_data *u = nullptr;
+    descriptor_data *td = nullptr;
+    unit_data *u = nullptr;
 
     /* PC_ID(d->character) can be -1 when a newbie is in the game and
         someone logins with the same name! */
@@ -1031,7 +1031,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     set_descriptor_fptr(d, nanny_motd, TRUE);
 }
 
-void nanny_name_confirm(class descriptor_data *d, char *arg)
+void nanny_name_confirm(descriptor_data *d, char *arg)
 {
     if (STATE(d)++ == 0)
     {
@@ -1075,10 +1075,10 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
     }
 }
 
-void nanny_get_name(class descriptor_data *d, char *arg)
+void nanny_get_name(descriptor_data *d, char *arg)
 {
     char tmp_name[100];
-    class descriptor_data *td = nullptr;
+    descriptor_data *td = nullptr;
 
     if (str_is_empty(arg))
     {
@@ -1095,7 +1095,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
 
     if (player_exists(tmp_name))
     {
-        class unit_data *ch = nullptr;
+        unit_data *ch = nullptr;
 
         if (site_banned(d->host) == BAN_TOTAL)
         {

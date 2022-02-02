@@ -30,6 +30,7 @@
 #include "spell_parser.h"
 #include "spells.h"
 #include "structs.h"
+#include "system.h"
 #include "textutil.h"
 #include "tif_affect.h"
 #include "utility.h"
@@ -46,7 +47,7 @@
 #include <map>
 #include <string>
 
-static void stat_world_count(const class unit_data *ch, char *arg)
+static void stat_world_count(const unit_data *ch, char *arg)
 {
     int nMinCount = atoi(arg);
     auto msg = diku::format_to_str("The first 40 units containing at least %d units:<br/>", nMinCount);
@@ -77,7 +78,7 @@ static void stat_world_count(const class unit_data *ch, char *arg)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static void stat_world_extra(const class unit_data *ch)
+static void stat_world_extra(const unit_data *ch)
 {
     auto msg = diku::format_to_str("World zones (%d):<br/>", g_zone_info.no_of_zones);
     msg += "<div class='fourcol'>";
@@ -91,7 +92,7 @@ static void stat_world_extra(const class unit_data *ch)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static void stat_memory(class unit_data *ch)
+static void stat_memory(unit_data *ch)
 {
     auto msg = diku::format_to_str("Event queue entries: %d<br/>", g_events.Count());
     send_to_char(msg, ch);
@@ -131,7 +132,7 @@ static void stat_memory(class unit_data *ch)
     }
 }
 
-static void stat_world(class unit_data *ch)
+static void stat_world(unit_data *ch)
 {
     time_t now = time(nullptr);
 
@@ -171,7 +172,7 @@ static void stat_world(class unit_data *ch)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static std::string stat_zone_reset(const std::string &indnt, struct zone_reset_cmd *zrip, class unit_data *ch)
+static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zrip, unit_data *ch)
 {
     static const char *nums[] = {"max", "zonemax", "local"};
     std::string bits;
@@ -246,7 +247,7 @@ static std::string stat_zone_reset(const std::string &indnt, struct zone_reset_c
     return stat;
 }
 
-static void stat_zone(class unit_data *ch, class zone_type *zone)
+static void stat_zone(unit_data *ch, zone_type *zone)
 {
     static const char *reset_modes[] = {"Never Reset", "Reset When Empty", "Reset Always", "UNKNOWN"};
     int reset_mode = zone->reset_mode;
@@ -292,7 +293,7 @@ static void stat_zone(class unit_data *ch, class zone_type *zone)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static void stat_creators(class unit_data *ch, char *arg)
+static void stat_creators(unit_data *ch, char *arg)
 {
     char tmp[1024];
     int found = 0;
@@ -343,7 +344,7 @@ static void stat_creators(class unit_data *ch, char *arg)
     send_to_char(msg, ch);
 }
 
-static void stat_dil(class unit_data *ch, class zone_type *zone)
+static void stat_dil(unit_data *ch, zone_type *zone)
 {
     auto msg = diku::format_to_str("<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
     send_to_char(msg, ch);
@@ -362,7 +363,7 @@ static void stat_dil(class unit_data *ch, class zone_type *zone)
     send_to_char(msg, ch);
 }
 
-static void stat_global_dil(class unit_data *ch, ubit32 nCount)
+static void stat_global_dil(unit_data *ch, ubit32 nCount)
 {
     auto msg = diku::format_to_str("<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
     send_to_char(msg, ch);
@@ -389,7 +390,7 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
     send_to_char(msg, ch);
 }
 
-static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zone)
+static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
 {
     char buf[MAX_STRING_LENGTH];
     int argno = 0;
@@ -499,7 +500,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
     send_to_char(msg, ch);
 }
 
-static void stat_ability(const class unit_data *ch, class unit_data *u)
+static void stat_ability(const unit_data *ch, unit_data *u)
 {
     int i = 0;
 
@@ -523,7 +524,7 @@ static void stat_ability(const class unit_data *ch, class unit_data *u)
     page_string(CHAR_DESCRIPTOR(ch), buf);
 }
 
-static void stat_spell(const class unit_data *ch, class unit_data *u)
+static void stat_spell(const unit_data *ch, unit_data *u)
 {
     char tmpbuf1[100];
     int i = 0;
@@ -574,7 +575,7 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static void stat_skill(const class unit_data *ch, class unit_data *u)
+static void stat_skill(const unit_data *ch, unit_data *u)
 {
     if (!IS_CHAR(u))
     {
@@ -601,7 +602,7 @@ static void stat_skill(const class unit_data *ch, class unit_data *u)
     }
 }
 
-static void stat_wskill(const class unit_data *ch, class unit_data *u)
+static void stat_wskill(const unit_data *ch, unit_data *u)
 {
     if (!IS_CHAR(u))
     {
@@ -624,9 +625,9 @@ static void stat_wskill(const class unit_data *ch, class unit_data *u)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static void stat_affect(const class unit_data *ch, class unit_data *u)
+static void stat_affect(const unit_data *ch, unit_data *u)
 {
-    class unit_affected_type *af = nullptr;
+    unit_affected_type *af = nullptr;
 
     if (!UNIT_AFFECTED(u))
     {
@@ -660,10 +661,10 @@ static void stat_affect(const class unit_data *ch, class unit_data *u)
     }
 }
 
-static void stat_func(const class unit_data *ch, class unit_data *u)
+static void stat_func(const unit_data *ch, unit_data *u)
 {
     std::string bits;
-    class unit_fptr *f = nullptr;
+    unit_fptr *f = nullptr;
 
     if (!UNIT_FUNC(u))
     {
@@ -677,9 +678,9 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
     {
         if (f->index == SFUN_DIL_INTERNAL)
         {
-            class dilprg *prg = nullptr;
+            dilprg *prg = nullptr;
 
-            if ((prg = (class dilprg *)f->data))
+            if ((prg = (dilprg *)f->data))
             {
                 auto msg = diku::format_to_str("DIL Name: %s@%s<br/>",
                                                prg->frame[0].tmpl->prgname,
@@ -701,7 +702,7 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
     }
 }
 
-static void stat_normal(class unit_data *ch, class unit_data *u)
+static void stat_normal(unit_data *ch, unit_data *u)
 {
     std::string bits1;
     std::string bits2;
@@ -760,7 +761,7 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
     send_to_char(msg, ch);
 }
 
-static void stat_extra(const class unit_data *ch, class extra_list &elist, char *grp)
+static void stat_extra(const unit_data *ch, extra_list &elist, char *grp)
 {
     bool found = false;
     char buf[4 * MAX_STRING_LENGTH];
@@ -775,7 +776,7 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
     {
         one_argument(grp, buf);
 
-        class extra_descr_data *ed = nullptr;
+        extra_descr_data *ed = nullptr;
         for (ed = elist.m_pList; ed; ed = ed->next)
         {
             if ((*buf) && ed->names.StrStr(grp))
@@ -847,12 +848,12 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
     }
 }
 
-static void stat_extra_descr(const class unit_data *ch, class unit_data *u, char *grp)
+static void stat_extra_descr(const unit_data *ch, unit_data *u, char *grp)
 {
     stat_extra(ch, UNIT_EXTRA(u), grp);
 }
 
-static void stat_extra_quest(const class unit_data *ch, class unit_data *u, char *grp)
+static void stat_extra_quest(const unit_data *ch, unit_data *u, char *grp)
 {
     if (IS_PC(u))
     {
@@ -864,7 +865,7 @@ static void stat_extra_quest(const class unit_data *ch, class unit_data *u, char
     }
 }
 
-static void stat_extra_info(const class unit_data *ch, class unit_data *u, char *grp)
+static void stat_extra_info(const unit_data *ch, unit_data *u, char *grp)
 {
     if (!IS_ADMINISTRATOR(ch))
     {
@@ -884,7 +885,7 @@ static void stat_extra_info(const class unit_data *ch, class unit_data *u, char 
     }
 }
 
-static void stat_ip(const class unit_data *ch, class unit_data *u)
+static void stat_ip(const unit_data *ch, unit_data *u)
 {
     if (!IS_ADMINISTRATOR(ch))
     {
@@ -896,7 +897,7 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
 
     if (IS_PC(u))
     {
-        struct sockaddr_in sock;
+        sockaddr_in sock;
 
         for (int i = 0; i < 5; i++)
         {
@@ -917,7 +918,7 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
          : (pobjdata[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None")                 \
                                       : (pobjdata[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
 
-const char *stat_obj_data(class unit_data *u, obj_type_t *pobjdata)
+const char *stat_obj_data(unit_data *u, obj_type_t *pobjdata)
 {
     char *special_str = nullptr;
     std::string int_str[5];
@@ -956,7 +957,7 @@ const char *stat_obj_data(class unit_data *u, obj_type_t *pobjdata)
 
 #undef STR_DATA
 
-static void stat_data(const class unit_data *ch, class unit_data *u)
+static void stat_data(const unit_data *ch, unit_data *u)
 {
     /*  This is a bit tricky:
      *    1: format for the sprintf, where all arguments are %s's.
@@ -969,7 +970,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
      *              as according to the switch following...
      */
     char *cname = nullptr;
-    static struct obj_type_t wstat_obj_type[] = {
+    static obj_type_t wstat_obj_type[] = {
         {"Unused", {0, 0, 0, 0, 0}},                                 /*UNUSED    */
         {"Hours Left %s   Light Sources %s", {0, 0, 0, 0, 0}},       /*LIGHT     */
         {"Power %s<br/>Spells : '%s', '%s', '%s'", {0, 1, 1, 1, 0}}, /*SCROLL    */
@@ -1079,8 +1080,8 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
         if (IS_PC(u))
         {
             /* Stat on a player  */
-            struct time_info_data tid1;
-            struct time_info_data tid2;
+            time_info_data tid1;
+            time_info_data tid2;
 
             tid1 = age(u);
             tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
@@ -1217,11 +1218,11 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
     }
 }
 
-static void stat_contents(const class unit_data *ch, class unit_data *u)
+static void stat_contents(const unit_data *ch, unit_data *u)
 {
     int bright = 0;
     int light = 0;
-    class unit_data *orgu = nullptr;
+    unit_data *orgu = nullptr;
 
     orgu = u;
 
@@ -1255,14 +1256,14 @@ static void stat_contents(const class unit_data *ch, class unit_data *u)
     }
 }
 
-static void stat_descriptor(const class unit_data *ch, class unit_data *u)
+static void stat_descriptor(const unit_data *ch, unit_data *u)
 {
     send_to_char("Is yet to be programmed.<br/>", ch);
 }
 
-void do_wedit(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
 
     if (CHAR_DESCRIPTOR(ch) == nullptr)
     {
@@ -1309,11 +1310,11 @@ void do_wedit(class unit_data *ch, char *argument, const struct command_info *cm
     send_to_char("Sending json edit info to your browser.<br/>", ch);
 }
 
-void do_wstat(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_wstat(unit_data *ch, char *argument, const command_info *cmd)
 {
     char buf[4 * MAX_STRING_LENGTH];
-    class unit_data *u = nullptr;
-    class zone_type *zone = nullptr;
+    unit_data *u = nullptr;
+    zone_type *zone = nullptr;
 
     if (CHAR_DESCRIPTOR(ch) == nullptr)
     {
@@ -1383,7 +1384,7 @@ void do_wstat(class unit_data *ch, char *argument, const struct command_info *cm
     }
     else
     {
-        class file_index_type *fi = nullptr;
+        file_index_type *fi = nullptr;
 
         u = find_unit(ch, &argument, nullptr, FIND_UNIT_GLOBAL);
 

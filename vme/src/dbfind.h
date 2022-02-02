@@ -6,12 +6,14 @@
  */
 #pragma once
 
-class descriptor_data *find_descriptor(const char *name, class descriptor_data *except);
-class zone_type *find_zone(const char *zonename);
-class file_index_type *find_file_index(const char *zonename, const char *name);
-struct diltemplate *find_dil_index(const char *zonename, const char *name);
-class unit_data *world_room(const char *zone, const char *name);
-struct diltemplate *find_dil_template(const char *name);
-class file_index_type *str_to_file_index(const char *str);
-class file_index_type *pc_str_to_file_index(class unit_data *ch, const char *str);
-class zone_type *find_zone(const char *zonename);
+#include "structs.h"
+
+descriptor_data *find_descriptor(const char *name, descriptor_data *except);
+zone_type *find_zone(const char *zonename);
+file_index_type *find_file_index(const char *zonename, const char *name);
+diltemplate *find_dil_index(const char *zonename, const char *name);
+unit_data *world_room(const char *zone, const char *name);
+diltemplate *find_dil_template(const char *name);
+file_index_type *str_to_file_index(const char *str);
+file_index_type *pc_str_to_file_index(unit_data *ch, const char *str);
+zone_type *find_zone(const char *zonename);

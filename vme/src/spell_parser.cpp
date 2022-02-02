@@ -27,14 +27,9 @@
 #include <cstdlib>
 #include <cstring>
 
-struct spell_info_type g_spell_info[SPL_TREE_MAX];
+spell_info_type g_spell_info[SPL_TREE_MAX];
 
-void set_spellargs(struct spell_args *sa,
-                   class unit_data *caster,
-                   class unit_data *medium,
-                   class unit_data *target,
-                   const char *arg,
-                   int hm)
+void set_spellargs(spell_args *sa, unit_data *caster, unit_data *medium, unit_data *target, const char *arg, int hm)
 {
     sa->caster = caster;
     sa->medium = medium;
@@ -53,7 +48,7 @@ ubit1 spell_legal_type(int spl, int type)
 
 /* Check if target is proper compared to specifications in the spell list */
 /* above. Useable with for example wand checks to see if target is legal  */
-ubit1 spell_legal_target(int spl, class unit_data *caster, class unit_data *target)
+ubit1 spell_legal_target(int spl, unit_data *caster, unit_data *target)
 {
     if (IS_SET(g_spell_info[spl].targets, TAR_IGNORE))
     {
@@ -85,7 +80,7 @@ ubit1 spell_legal_target(int spl, class unit_data *caster, class unit_data *targ
     return FALSE;
 }
 
-void say_spell(class unit_data *ch, class unit_data *target, int si)
+void say_spell(unit_data *ch, unit_data *target, int si)
 {
     if (ch != target)
     {
@@ -102,19 +97,19 @@ void say_spell(class unit_data *ch, class unit_data *target, int si)
 
 int spell_perform(int spell_no,
                   int spell_type,
-                  class unit_data *caster,
-                  class unit_data *medium,
-                  class unit_data *target,
+                  unit_data *caster,
+                  unit_data *medium,
+                  unit_data *target,
                   const char *argument,
                   char *pEffect,
                   int bonus)
 {
-    static struct command_info *cmd = nullptr;
+    static command_info *cmd = nullptr;
     int hm = -1;
 
     if (!cmd)
     {
-        cmd = (struct command_info *)search_trie("cast", g_intr_trie);
+        cmd = (command_info *)search_trie("cast", g_intr_trie);
         assert(cmd);
     }
 
@@ -214,7 +209,7 @@ int spell_perform(int spell_no,
 
     if (g_spell_info[spell_no].tmpl)
     {
-        class dilprg *prg = nullptr;
+        dilprg *prg = nullptr;
 
         prg = dil_copy_template(g_spell_info[spell_no].tmpl, caster, nullptr);
 
@@ -236,7 +231,7 @@ int spell_perform(int spell_no,
     }
     else if (g_spell_info[spell_no].spell_pointer)
     {
-        struct spell_args sa;
+        spell_args sa;
 
         set_spellargs(&sa, caster, medium, target, argument, hm);
         sa.pEffect = pEffect;
@@ -257,9 +252,9 @@ int spell_perform(int spell_no,
 }
 
 /* Assumes that argument does start with first letter of chopped string */
-void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_cast(unit_data *ch, char *argument, const command_info *cmd)
 {
-    class unit_data *unit = nullptr;
+    unit_data *unit = nullptr;
     int spl = 0;
     ubit1 target_ok = 0;
     char *orgarg = nullptr;
@@ -680,7 +675,7 @@ static void spell_read()
             if (g_spell_info[idx].tmpl)
                 FREE(g_spell_info[idx].tmpl);
             /* Nasty, just needed for brief conversion */
-            g_spell_info[idx].tmpl = (struct diltemplate *)str_dup(pCh);
+            g_spell_info[idx].tmpl = (diltemplate *)str_dup(pCh);
         }
         else if (strncmp(pTmp, "minpos", 6) == 0)
         {

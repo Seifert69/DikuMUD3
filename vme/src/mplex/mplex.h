@@ -43,10 +43,10 @@ struct arg_type
     } while (0);
 
 extern int g_bHadAlarm;
-extern struct arg_type g_mplex_arg;
+extern arg_type g_mplex_arg;
 extern char g_mudname[50];
 
-int ParseArg(int argc, char *argv[], struct arg_type *arg);
+int ParseArg(int argc, char *argv[], arg_type *arg);
 void bye_signal(int signal);
 void alarm_signal(int sig);
 

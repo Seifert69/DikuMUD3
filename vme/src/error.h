@@ -21,7 +21,7 @@
  * @param pack Parameter pack of all the arguments, just like ellipsis ... from C
  */
 template<typename... ParamPack>
-void error(const char *file, int line, const std::string &fmt, ParamPack &&... pack)
+void error(const char *file, int line, const std::string &fmt, ParamPack &&...pack)
 {
     /**
      * MS: Moved szonelog to handler.c to make this module independent.

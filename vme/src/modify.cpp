@@ -80,12 +80,12 @@ static const char *unit_field_names[MAX_SET_FIELDS + 1] = {
     "del-info",  "access",       "promptstr",      "age",           "lifespan",  "profession",   nullptr};
 
 // These are oddly placed here because they need to initialize before used below
-class skill_collection g_AbiColl(ABIL_TREE_MAX + 1);
-class skill_collection g_WpnColl(WPN_TREE_MAX + 1);
-class skill_collection g_SkiColl(SKI_TREE_MAX + 1);
-class skill_collection g_SplColl(SPL_TREE_MAX + 1);
+skill_collection g_AbiColl(ABIL_TREE_MAX + 1);
+skill_collection g_WpnColl(WPN_TREE_MAX + 1);
+skill_collection g_SkiColl(SKI_TREE_MAX + 1);
+skill_collection g_SplColl(SPL_TREE_MAX + 1);
 
-struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
+field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_UNIT, AT_STR, nullptr, 200, 200, 253},                /* add-name        */
     {UT_UNIT, AT_STR, nullptr, 200, 200, 253},                /* del-name        */
     {UT_UNIT, AT_STR, nullptr, 200, 200, 200},                /* title           */
@@ -159,9 +159,9 @@ struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
 };
 
 // Post-porcessing of adding-extra descriptions.
-void edit_extra(class descriptor_data *d)
+void edit_extra(descriptor_data *d)
 {
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
 
     for (exd = UNIT_EXTRA(d->editing).m_pList; exd; exd = exd->next)
     {
@@ -178,9 +178,9 @@ void edit_extra(class descriptor_data *d)
 }
 
 // Post-porcessing of adding-extra descriptions.
-void edit_info(class descriptor_data *d)
+void edit_info(descriptor_data *d)
 {
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
 
     for (exd = PC_INFO(d->editing).m_pList; exd; exd = exd->next)
     {
@@ -196,12 +196,12 @@ void edit_info(class descriptor_data *d)
     }
 }
 
-void edit_outside_descr(class descriptor_data *d)
+void edit_outside_descr(descriptor_data *d)
 {
     UNIT_OUT_DESCR(d->editing) = (d->localstr);
 }
 
-void edit_inside_descr(class descriptor_data *d)
+void edit_inside_descr(descriptor_data *d)
 {
     UNIT_IN_DESCR(d->editing) = (d->localstr);
 }
@@ -282,7 +282,7 @@ int search_block_set(char *arg, const char **list, bool exact)
                        : "Not usable"
 // clang-format on
 
-void show_fields(class unit_data *ch)
+void show_fields(unit_data *ch)
 {
     std::string msg{"<table class='colh3'>"};
     for (int i = 0; i < MAX_SET_FIELDS; i++)
@@ -299,7 +299,7 @@ void show_fields(class unit_data *ch)
 #undef GET_FIELDT_UT
 #undef GET_FIELD_AT
 
-void show_structure(const char *structure[], class unit_data *ch)
+void show_structure(const char *structure[], unit_data *ch)
 {
     if (structure == nullptr)
     {
@@ -363,7 +363,7 @@ int get_type(char *typdef, const char *structure[])
 }
 
 /* modification of anything in units */
-void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_set(unit_data *ch, char *argument, const command_info *cmd)
 {
     char arg[MAX_STRING_LENGTH];
     int type = 0;
@@ -373,10 +373,10 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     long int valarg = 0;
     long int bitarg = 0;
 
-    class file_index_type *untarg = nullptr;
-    class extra_descr_data *ed = nullptr;
-    class unit_data *unt = nullptr;
-    class unit_affected_type *aff = nullptr;
+    file_index_type *untarg = nullptr;
+    extra_descr_data *ed = nullptr;
+    unit_data *unt = nullptr;
+    unit_affected_type *aff = nullptr;
 
     if (!CHAR_DESCRIPTOR(ch))
     {
@@ -718,7 +718,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             if ((ed = unit_find_extra(strarg, unt)) == nullptr)
             {
                 /* the field was not found. create a new one. */
-                ed = new (class extra_descr_data);
+                ed = new (extra_descr_data);
                 while (*strarg) /* insert names */
                 {
                     ed->names.AppendName(strarg);
@@ -1235,7 +1235,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             if ((ed = PC_INFO(unt).find_raw(strarg)) == nullptr)
             {
                 /* the field was not found. create a new one. */
-                ed = new (class extra_descr_data);
+                ed = new (extra_descr_data);
                 while (*strarg) /* insert names */
                 {
                     ed->names.AppendName(strarg);
@@ -1370,13 +1370,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
 static const char *skill_field_names[] = {"skill", "spell", "weapon", nullptr};
 
-void do_setskill(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
 {
     int type = 0;
     int skillarg = 0;
     int valarg = 0;
     char arg[MAX_STRING_LENGTH];
-    class unit_data *unt = nullptr;
+    unit_data *unt = nullptr;
 
     if (!CHAR_DESCRIPTOR(ch))
     {

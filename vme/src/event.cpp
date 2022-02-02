@@ -50,9 +50,9 @@ eventqueue::~eventqueue()
     }
 }
 
-struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1, void *arg2)
+eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1, void *arg2)
 {
-    struct eventq_elem *end = nullptr;
+    eventq_elem *end = nullptr;
     int parent_index = 0;
     int current_index = 0;
 
@@ -64,8 +64,8 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
     // One could add a sanity check to make sure that events for known
     if (func == special_event)
     {
-        struct unit_data *u = (struct unit_data *)arg1;
-        struct unit_fptr *f = (struct unit_fptr *)arg2;
+        unit_data *u = (unit_data *)arg1;
+        unit_fptr *f = (unit_fptr *)arg2;
         membug_verify(u);
         membug_verify(f);
         membug_verify(f->data);
@@ -82,7 +82,7 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
 
         if (f->index == 82)
         {
-            struct dilprg *prg = (struct dilprg *)f->data;
+            dilprg *prg = (dilprg *)f->data;
             membug_verify(prg);
 
             assert(prg);
@@ -95,12 +95,12 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
         if (!heapsize)
         {
             heapsize = 5000;
-            CREATE(heap, struct eventq_elem *, heapsize);
+            CREATE(heap, eventq_elem *, heapsize);
         }
         else
         {
             heapsize = heapsize * 2;
-            RECREATE(heap, struct eventq_elem *, heapsize);
+            RECREATE(heap, eventq_elem *, heapsize);
             slog(LOG_DIL, 0, "HEAP expand to %d", heapsize);
         }
     }
@@ -135,21 +135,21 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
 void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
 {
     int i = 0;
-    if ((func == special_event) && arg2 && (((class unit_fptr *)arg2)->event))
+    if ((func == special_event) && arg2 && (((unit_fptr *)arg2)->event))
     {
-        ((class unit_fptr *)arg2)->event->func = nullptr;
-        ((class unit_fptr *)arg2)->event = nullptr;
+        ((unit_fptr *)arg2)->event->func = nullptr;
+        ((unit_fptr *)arg2)->event = nullptr;
     }
-    else if ((func == affect_beat) && arg1 && (((class unit_affected_type *)arg1)->event))
+    else if ((func == affect_beat) && arg1 && (((unit_affected_type *)arg1)->event))
     {
-        ((class unit_affected_type *)arg1)->event->func = nullptr;
-        ((class unit_affected_type *)arg1)->event = nullptr;
+        ((unit_affected_type *)arg1)->event->func = nullptr;
+        ((unit_affected_type *)arg1)->event = nullptr;
     }
-    else if ((func == affect_beat) && arg1 && (!((class unit_affected_type *)arg1)->event))
+    else if ((func == affect_beat) && arg1 && (!((unit_affected_type *)arg1)->event))
     {
         return;
     }
-    else if ((func == special_event) && arg2 && (!((class unit_fptr *)arg2)->event))
+    else if ((func == special_event) && arg2 && (!((unit_fptr *)arg2)->event))
     {
         return;
     }
@@ -180,25 +180,25 @@ void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *
 
 void eventqueue::process()
 {
-    struct eventq_elem *tmp_event = nullptr;
-    struct eventq_elem *newtop = nullptr;
+    eventq_elem *tmp_event = nullptr;
+    eventq_elem *newtop = nullptr;
     int j = 0;
     int k = 0;
     char dilname[256];
     char dilzname[256];
     char diloname[256];
     char dilozname[256];
-    struct timeval now;
-    struct timeval old;
-    struct timeval pnow;
+    timeval now;
+    timeval old;
+    timeval pnow;
     ubit32 us = 0;
     void (*tfunc)(void *, void *) = nullptr;
     loop_process = 0;
-    gettimeofday(&old, (struct timezone *)nullptr);
+    gettimeofday(&old, nullptr);
 
     while ((count >= 1) && (heap[1]->when <= g_tics))
     {
-        gettimeofday(&now, (struct timezone *)nullptr);
+        gettimeofday(&now, nullptr);
         us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
         loop_time = us / 1000000.0;
 
@@ -248,15 +248,15 @@ void eventqueue::process()
             int bDestructed = 0;
 
             if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->data &&
-                (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL))
+                (((unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL))
             {
                 strcpy(dilname, "NO NAME");
                 strcpy(dilzname, "NO ZONE");
                 strcpy(diloname, "NO NAME");
                 strcpy(dilozname, "NO ZONE");
 
-                class unit_data *u = (unit_data *)tmp_event->arg1;
-                class unit_fptr *fptr = (unit_fptr *)tmp_event->arg2;
+                unit_data *u = (unit_data *)tmp_event->arg1;
+                unit_fptr *fptr = (unit_fptr *)tmp_event->arg2;
 
                 membug_verify(u);
                 membug_verify(fptr);
@@ -265,7 +265,7 @@ void eventqueue::process()
 
                 if (!bDestructed)
                 {
-                    class dilprg *prg = (class dilprg *)fptr->data;
+                    dilprg *prg = (dilprg *)fptr->data;
 
                     assert(prg);
                     membug_verify(prg);
@@ -285,8 +285,8 @@ void eventqueue::process()
                     {
                         strcpy(dilzname, prg->fp->tmpl->zone->name);
                     }
-                    strcpy(diloname, tmp_event->arg1 ? UNIT_FI_NAME((class unit_data *)(tmp_event->arg1)) : "NO NAME");
-                    strcpy(dilozname, tmp_event->arg1 ? UNIT_FI_ZONENAME((class unit_data *)(tmp_event->arg1)) : "NO ZONE");
+                    strcpy(diloname, tmp_event->arg1 ? UNIT_FI_NAME((unit_data *)(tmp_event->arg1)) : "NO NAME");
+                    strcpy(dilozname, tmp_event->arg1 ? UNIT_FI_ZONENAME((unit_data *)(tmp_event->arg1)) : "NO ZONE");
                 }
             }
 
@@ -302,7 +302,7 @@ void eventqueue::process()
                     max_process = loop_process;
                 }
 
-                gettimeofday(&pnow, (struct timezone *)nullptr);
+                gettimeofday(&pnow, nullptr);
                 us = (pnow.tv_sec - now.tv_sec) * 1000000L + (pnow.tv_usec - now.tv_usec);
                 loop_time = us / 1000000.0;
 
@@ -310,7 +310,7 @@ void eventqueue::process()
                 {
                     if (tfunc == special_event)
                     {
-                        if (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL)
+                        if (((unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL)
                         {
                             slog(LOG_DIL,
                                  0,
@@ -320,8 +320,8 @@ void eventqueue::process()
                                  dilzname,
                                  diloname,
                                  dilozname,
-                                 g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
-                                 ((class unit_fptr *)tmp_event->arg2)->index);
+                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->index].name,
+                                 ((unit_fptr *)tmp_event->arg2)->index);
                         }
                         else
                         {
@@ -329,8 +329,8 @@ void eventqueue::process()
                                  0,
                                  "Internal process took %1.4f seconds to complete: %s (%d)'",
                                  loop_time,
-                                 g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
-                                 ((class unit_fptr *)tmp_event->arg2)->index);
+                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->index].name,
+                                 ((unit_fptr *)tmp_event->arg2)->index);
                         }
                     }
                     else
@@ -377,7 +377,7 @@ void eventqueue::process()
         tmp_event = nullptr;
     }
 
-    gettimeofday(&now, (struct timezone *)nullptr);
+    gettimeofday(&now, nullptr);
     us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
     loop_time = us / 1000000.0;
 

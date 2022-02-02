@@ -52,8 +52,8 @@ public:
     void CutCopy(ubit8 *data, ubit32 nLen);
     void Cut(ubit32 nLen);
 
-    void Append(class cQueueElem *pe);
-    void Prepend(class cQueueElem *pe);
+    void Append(cQueueElem *pe);
+    void Prepend(cQueueElem *pe);
 
     cQueueElem *GetHead();
 

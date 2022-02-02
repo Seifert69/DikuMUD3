@@ -60,5 +60,5 @@ int dice(int number, int size);
 const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
 char *sprinttype(char *buf, int type, const char *names[]);
 
-extern class log_buffer g_log_buf[];
+extern log_buffer g_log_buf[];
 extern FILE *g_log_file_fd;

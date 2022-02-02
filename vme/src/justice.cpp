@@ -46,7 +46,7 @@ int new_crime_serial_no()
     return crime_serial_no;
 }
 
-void offend_legal_state(class unit_data *ch, class unit_data *victim)
+void offend_legal_state(unit_data *ch, unit_data *victim)
 {
     if (!IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
     {
@@ -102,10 +102,10 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
 // Activate the add_crime@justice DIL
 //
 //
-void add_crime(class unit_data *criminal, class unit_data *victim, int type)
+void add_crime(unit_data *criminal, unit_data *victim, int type)
 {
-    struct diltemplate *tmpl = nullptr;
-    class dilprg *prg = nullptr;
+    diltemplate *tmpl = nullptr;
+    dilprg *prg = nullptr;
     int crime_no = 0;
 
     if (str_is_empty(UNIT_NAME(criminal)))
@@ -149,14 +149,14 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 // crime_type can be CRIME_EXTRA, CRIME_STEALING, CRIME_MURDER, CRIME_PK
 // active ?
 //
-void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_type, int active)
+void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int active)
 {
     int i = 0;
     int j = 0;
-    struct diltemplate *tmpl = nullptr;
-    class dilprg *prg = nullptr;
-    class dilprg *prg2 = nullptr;
-    class dilprg *prg3 = nullptr;
+    diltemplate *tmpl = nullptr;
+    dilprg *prg = nullptr;
+    dilprg *prg2 = nullptr;
+    dilprg *prg3 = nullptr;
 
     if (criminal == nullptr)
     {
@@ -1070,10 +1070,10 @@ void call_guards(class unit_data *guard)
 
 // -------------------------------------------------------------- */
 
-int reward_give(struct spec_arg *sarg)
+int reward_give(spec_arg *sarg)
 {
-    class unit_data *u = nullptr;
-    class unit_affected_type *paf = nullptr;
+    unit_data *u = nullptr;
+    unit_affected_type *paf = nullptr;
     std::string buf;
     currency_t cur = 0;
 

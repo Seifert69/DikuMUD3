@@ -6,13 +6,15 @@
  */
 #pragma once
 
+#include "dil.h"
 #include "essential.h"
+#include "structs.h"
 
 #include <cstddef>
 
 struct dil_func_type
 {
-    void (*func)(class dilprg *);
+    void (*func)(dilprg *);
 };
 
 /* Maximum number of consecutive instructions allowed in one tick */
@@ -35,44 +37,44 @@ struct dil_func_type
 #define FAIL_NULL 1
 #define TYPEFAIL_NULL 2
 
-void dil_edit_done(class descriptor_data *d);
-void DeactivateDil(class unit_data *pc, class dilprg *prg = nullptr);
-void ActivateDil(class unit_data *pc);
-void dil_loadtime_activate(class unit_data *u);
+void dil_edit_done(descriptor_data *d);
+void DeactivateDil(unit_data *pc, dilprg *prg = nullptr);
+void ActivateDil(unit_data *pc);
+void dil_loadtime_activate(unit_data *u);
 
-int dil_direct_init(struct spec_arg *sarg);
-int dil_init(struct spec_arg *sarg);
+int dil_direct_init(spec_arg *sarg);
+int dil_init(spec_arg *sarg);
 
-void dil_activate(class dilprg *prg);
-void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr);
-void dil_init_vars(int varc, struct dilframe *frm);
-void dil_free_var(struct dilvar *var);
+void dil_activate(dilprg *prg);
+void dil_activate_cmd(dilprg *prg, command_info *cmd_ptr);
+void dil_init_vars(int varc, dilframe *frm);
+void dil_free_var(dilvar *var);
 
-void dil_free_frame(struct dilframe *frame);
+void dil_free_frame(dilframe *frame);
 
-char dil_getbool(class dilval *v, class dilprg *prg);
-int dil_getval(class dilval *v);
-void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab);
-int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach = FALSE);
-void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd);
-void dil_clear_non_secured(class dilprg *prg);
-void dil_clear_lost_reference(struct dilframe *frm, void *ptr);
-void dil_test_secure(class dilprg *prg, int bForeach = FALSE);
-int dil_destroy(const char *name, class unit_data *u);
+char dil_getbool(dilval *v, dilprg *prg);
+int dil_getval(dilval *v);
+void dil_add_secure(dilprg *prg, unit_data *sup, ubit8 *lab);
+int dil_sub_secure(dilframe *frm, unit_data *sup, int bForeach = FALSE);
+void dil_clear_extras(dilprg *prg, extra_descr_data *exd);
+void dil_clear_non_secured(dilprg *prg);
+void dil_clear_lost_reference(dilframe *frm, void *ptr);
+void dil_test_secure(dilprg *prg, int bForeach = FALSE);
+int dil_destroy(const char *name, unit_data *u);
 
 /* NULL fptr creates one...  */
-class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, class unit_fptr **pfptr);
-class dilprg *dil_copy(char *name, class unit_data *u);
+dilprg *dil_copy_template(diltemplate *tmpl, unit_data *u, unit_fptr **pfptr);
+dilprg *dil_copy(char *name, unit_data *u);
 
-class unit_fptr *dil_find(const char *name, class unit_data *u);
+unit_fptr *dil_find(const char *name, unit_data *u);
 
-void dil_typeerr(class dilprg *p, const char *where);
+void dil_typeerr(dilprg *p, const char *where);
 
-int dil_type_check(const char *f, class dilprg *p, int tot, ...);
+int dil_type_check(const char *f, dilprg *p, int tot, ...);
 
-void dil_intr_remove(class dilprg *p, int idx);
-int dil_intr_insert(class dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags);
-int run_dil(struct spec_arg *sarg);
-void dil_free_template(struct diltemplate *tmpl, int copy);
+void dil_intr_remove(dilprg *p, int idx);
+int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags);
+int run_dil(spec_arg *sarg);
+void dil_free_template(diltemplate *tmpl, int copy);
 
-extern struct dil_func_type g_dilfe_func[];
+extern dil_func_type g_dilfe_func[];

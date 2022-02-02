@@ -20,13 +20,13 @@
 
 // The Global Combat List...
 
-class cCombatList g_CombatList;
+cCombatList g_CombatList;
 
 cCombatList::cCombatList()
 {
     nMaxTop = 10;
 
-    CREATE(pElems, class cCombat *, nMaxTop);
+    CREATE(pElems, cCombat *, nMaxTop);
 
     nTop = 0;
     nIdx = -1;
@@ -40,18 +40,18 @@ cCombatList::~cCombatList()
     nTop = 0;
 }
 
-void cCombatList::add(class cCombat *Combat)
+void cCombatList::add(cCombat *Combat)
 {
     if (nTop >= nMaxTop)
     {
         nMaxTop += 10;
-        RECREATE(pElems, class cCombat *, nMaxTop);
+        RECREATE(pElems, cCombat *, nMaxTop);
     }
 
     pElems[nTop++] = Combat;
 }
 
-void cCombatList::sub(class cCombat *pc)
+void cCombatList::sub(cCombat *pc)
 {
     for (int i = 0; i < nTop; i++)
     {
@@ -59,7 +59,7 @@ void cCombatList::sub(class cCombat *pc)
         {
             if (nTop - i > 1)
             {
-                memmove(&pElems[i], &pElems[i + 1], sizeof(class cCombat *) * (nTop - i - 1));
+                memmove(&pElems[i], &pElems[i + 1], sizeof(cCombat *) * (nTop - i - 1));
             }
 
             pElems[nTop - 1] = nullptr;
@@ -79,8 +79,8 @@ void cCombatList::sub(class cCombat *pc)
 
 static int combat_compare(const void *v1, const void *v2)
 {
-    class cCombat *e1 = *((class cCombat **)v1);
-    class cCombat *e2 = *((class cCombat **)v2);
+    cCombat *e1 = *((cCombat **)v1);
+    cCombat *e2 = *((cCombat **)v2);
 
     if (e1->When() > e2->When())
     {
@@ -100,7 +100,7 @@ void cCombatList::Sort()
 {
     if (nTop > 0)
     {
-        qsort(pElems, nTop, sizeof(class cCombat *), combat_compare);
+        qsort(pElems, nTop, sizeof(cCombat *), combat_compare);
     }
 }
 
@@ -135,7 +135,7 @@ void cCombatList::PerformViolence()
                 break; // The rest are larger...
             }
 
-            class cCombat *tmp = pElems[nIdx];
+            cCombat *tmp = pElems[nIdx];
 
             if (pElems[nIdx]->cmd[0]) // Execute a combat command...
             {
@@ -178,7 +178,7 @@ void cCombatList::PerformViolence()
     nIdx = -1;
 }
 
-void cCombatList::status(const class unit_data *ch)
+void cCombatList::status(const unit_data *ch)
 {
     auto msg = diku::format_to_str("The Global Combat List contains [%d] entries.<br/>", nTop);
     send_to_char(msg, ch);
@@ -190,7 +190,7 @@ void cCombatList::status(const class unit_data *ch)
 /*                                                                         */
 /* ======================================================================= */
 
-cCombat::cCombat(class unit_data *owner, int bMelee)
+cCombat::cCombat(unit_data *owner, int bMelee)
 {
     assert(owner);
 
@@ -240,7 +240,7 @@ void cCombat::changeSpeed(int delta)
     nWhen += delta;
 }
 
-int cCombat::findOpponentIdx(class unit_data *target)
+int cCombat::findOpponentIdx(unit_data *target)
 {
     for (int i = 0; i < nNoOpponents; i++)
     {
@@ -253,7 +253,7 @@ int cCombat::findOpponentIdx(class unit_data *target)
     return -1;
 }
 
-class unit_data *cCombat::FindOpponent(class unit_data *victim)
+unit_data *cCombat::FindOpponent(unit_data *victim)
 {
     int i = findOpponentIdx(victim);
 
@@ -267,7 +267,7 @@ class unit_data *cCombat::FindOpponent(class unit_data *victim)
     }
 }
 
-void cCombat::add(class unit_data *victim)
+void cCombat::add(unit_data *victim)
 {
     assert(victim);
 
@@ -275,11 +275,11 @@ void cCombat::add(class unit_data *victim)
 
     if (nNoOpponents == 1)
     {
-        CREATE(pOpponents, class unit_data *, 1);
+        CREATE(pOpponents, unit_data *, 1);
     }
     else
     {
-        RECREATE(pOpponents, class unit_data *, nNoOpponents);
+        RECREATE(pOpponents, unit_data *, nNoOpponents);
     }
     pOpponents[nNoOpponents - 1] = victim;
 }
@@ -307,7 +307,7 @@ void cCombat::sub(int idx)
 
     if (nNoOpponents - idx > 1)
     {
-        memmove(&pOpponents[idx], &pOpponents[idx + 1], sizeof(class unit_data *) * (nNoOpponents - idx - 1));
+        memmove(&pOpponents[idx], &pOpponents[idx + 1], sizeof(unit_data *) * (nNoOpponents - idx - 1));
     }
 
     pOpponents[nNoOpponents - 1] = nullptr;
@@ -325,7 +325,7 @@ void cCombat::sub(int idx)
     }
 }
 
-void cCombat::setMelee(class unit_data *victim)
+void cCombat::setMelee(unit_data *victim)
 {
     pMelee = victim;
 }
@@ -333,7 +333,7 @@ void cCombat::setMelee(class unit_data *victim)
 // Add another opponent. A very important feature is, that opponents
 // always exists as pairs and if one is removed so is the other.
 //
-void cCombat::addOpponent(class unit_data *victim, int bMelee = FALSE)
+void cCombat::addOpponent(unit_data *victim, int bMelee = FALSE)
 {
     // This if is needed since we call recursively for the victim
 
@@ -355,7 +355,7 @@ void cCombat::addOpponent(class unit_data *victim, int bMelee = FALSE)
     }
 }
 
-void cCombat::subOpponent(class unit_data *victim)
+void cCombat::subOpponent(unit_data *victim)
 {
     if (nNoOpponents < 1)
     {
@@ -373,7 +373,7 @@ void cCombat::subOpponent(class unit_data *victim)
     sub(i);
 }
 
-class unit_data *cCombat::Opponent(int i)
+unit_data *cCombat::Opponent(int i)
 {
     if (i >= nNoOpponents)
     {
@@ -385,7 +385,7 @@ class unit_data *cCombat::Opponent(int i)
     }
 }
 
-void cCombat::status(const class unit_data *god)
+void cCombat::status(const unit_data *god)
 {
     auto msg = diku::format_to_str("Combat Status of '%s':<br/>"
                                    "Combat Speed [%d]  Turn [%d]<br/>"
@@ -412,7 +412,7 @@ void cCombat::status(const class unit_data *god)
 /* ======================================================================= */
 
 /* start one char fighting another (yes, it is horrible, I know... )  */
-void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
+void set_fighting(unit_data *ch, unit_data *vict, int bMelee)
 {
     if (ch == vict)
     {
@@ -437,7 +437,7 @@ void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 }
 
 /* start one char fighting another (yes, it is horrible, I know... )  */
-void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
+void add_fighting(unit_data *ch, unit_data *vict, int bMelee)
 {
     if (ch == vict)
     {
@@ -460,7 +460,7 @@ void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 }
 
 /* remove a char from the list of fighting chars */
-void stop_fighting(class unit_data *ch, class unit_data *victim)
+void stop_fighting(unit_data *ch, unit_data *victim)
 {
     if (victim == nullptr) // Stop all combat...
     {
@@ -488,9 +488,9 @@ void stop_fighting(class unit_data *ch, class unit_data *victim)
 /*                                                                         */
 /* ======================================================================= */
 
-void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
+void stat_combat(unit_data *god, unit_data *u, const char *pStr)
 {
-    class unit_data *u2 = nullptr;
+    unit_data *u2 = nullptr;
 
     if (!IS_CHAR(u))
     {
@@ -539,9 +539,9 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
     send_to_char(str.c_str(), god);
 }
 
-void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
+void stat_spell(unit_data *god, unit_data *u, const char *pStr)
 {
-    class unit_data *u2 = nullptr;
+    unit_data *u2 = nullptr;
 
     if (!IS_CHAR(u))
     {

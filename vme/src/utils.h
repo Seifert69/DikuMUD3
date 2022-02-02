@@ -268,7 +268,7 @@
 
 #define CHAR_COMBAT(ch) (UCHAR(ch)->Combat)
 
-#define CHAR_FIGHTING(ch) (UCHAR(ch)->Combat ? CHAR_COMBAT(ch)->Melee() : (class unit_data *)NULL)
+#define CHAR_FIGHTING(ch) (UCHAR(ch)->Combat ? CHAR_COMBAT(ch)->Melee() : (unit_data *)NULL)
 
 #define CHAR_MASTER(ch) (UCHAR(ch)->master)
 
@@ -278,11 +278,11 @@
 
 #define CHAR_IS_READY(ch) (CHAR_AWAKE(ch) && (CHAR_POS(ch) != POSITION_FIGHTING))
 
-#define CHAR_IS_SNOOPING(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.snooping) : (class unit_data *)NULL)
+#define CHAR_IS_SNOOPING(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.snooping) : (unit_data *)NULL)
 
-#define CHAR_IS_SNOOPED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.snoop_by) : (class unit_data *)NULL)
+#define CHAR_IS_SNOOPED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.snoop_by) : (unit_data *)NULL)
 
-#define CHAR_IS_SWITCHED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->original) : (class unit_data *)NULL)
+#define CHAR_IS_SWITCHED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->original) : (unit_data *)NULL)
 
 #define CHAR_SNOOPING(ch) (CHAR_IS_SNOOPING(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.snooping) : (ch))
 
@@ -294,7 +294,7 @@
 
 #define CHAR_HAS_FLAG(ch, flags) (IS_SET(CHAR_FLAGS(ch), (flags)))
 
-#define CHAR_ROOM_EXIT(ch, door) (IS_ROOM(UNIT_IN(ch)) ? ROOM_EXIT(UNIT_IN(ch), (door)) : (class unit_data *)NULL)
+#define CHAR_ROOM_EXIT(ch, door) (IS_ROOM(UNIT_IN(ch)) ? ROOM_EXIT(UNIT_IN(ch), (door)) : (unit_data *)NULL)
 
 #define CHAR_VISION(ch) (!CHAR_HAS_FLAG(ch, CHAR_BLIND))
 

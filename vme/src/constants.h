@@ -9,10 +9,10 @@
 #include "skills.h"
 #include "values.h"
 
-extern const struct skill_interval g_how_good[];
-extern const struct skill_interval g_weapon_skills[];
-extern const struct skill_interval g_spell_skills[];
-extern const struct skill_interval g_skill_skills[];
+extern const skill_interval g_how_good[];
+extern const skill_interval g_weapon_skills[];
+extern const skill_interval g_spell_skills[];
+extern const skill_interval g_skill_skills[];
 
 extern const char *g_char_pos[];
 extern const char *g_enter_dirs[];

@@ -35,16 +35,16 @@
 int g_sunlight = 0;
 const sbit8 g_time_light[4] = {-1, 0, 1, 0};
 
-struct zone_info g_zone;
+zone_info g_zone;
 char g_cur_filename[256], top_filename[256];
 
 void zone_reset(char *default_name);
 void dump_zone(char *prefix);
 long stat_mtime(char *name);
-void dil_free_template(struct diltemplate *tmpl, int copy, int dil = FALSE);
-void dil_free_var(struct dilvar *var);
-void dil_free_frame(struct dilframe *frame);
-void dil_free_prg(struct dilprg *prg, int dil = FALSE);
+void dil_free_template(diltemplate *tmpl, int copy, int dil = FALSE);
+void dil_free_var(dilvar *var);
+void dil_free_frame(dilframe *frame);
+void dil_free_prg(dilprg *prg, int dil = FALSE);
 void write_dot(char *prefix);
 void init_lex(char *str);
 int yyparse();
@@ -263,9 +263,9 @@ void *mmalloc(int size)
     return mm.bufs[mm.buf] + ret;
 }
 
-class unit_data *mcreate_unit(int type)
+unit_data *mcreate_unit(int type)
 {
-    class unit_data *rslt = nullptr;
+    unit_data *rslt = nullptr;
 
     // rslt = new (class unit_data) (type);
     rslt = new_unit_data(type);
@@ -274,16 +274,16 @@ class unit_data *mcreate_unit(int type)
     return rslt;
 }
 
-struct unit_fptr *mcreate_func()
+unit_fptr *mcreate_func()
 {
-    return (struct unit_fptr *)mmalloc(sizeof(struct unit_fptr));
+    return (unit_fptr *)mmalloc(sizeof(unit_fptr));
 }
 
-class room_direction_data *mcreate_exit()
+room_direction_data *mcreate_exit()
 {
-    class room_direction_data *rslt = nullptr;
+    room_direction_data *rslt = nullptr;
 
-    rslt = new (class room_direction_data);
+    rslt = new (room_direction_data);
 
     //   rslt->open_name = NULL;
     rslt->exit_info = 0;
@@ -292,11 +292,11 @@ class room_direction_data *mcreate_exit()
     return rslt;
 }
 
-struct unit_affected_type *mcreate_affect()
+unit_affected_type *mcreate_affect()
 {
-    struct unit_affected_type *rs = nullptr;
+    unit_affected_type *rs = nullptr;
 
-    MCREATE(rs, struct unit_affected_type, 1);
+    MCREATE(rs, unit_affected_type, 1);
     rs->next = nullptr;
     rs->id = 0;
     rs->duration = 0;
@@ -305,7 +305,7 @@ struct unit_affected_type *mcreate_affect()
     return rs;
 }
 
-void write_resetcom(FILE *fl, struct reset_command *c)
+void write_resetcom(FILE *fl, reset_command *c)
 {
     char *t = nullptr;
     static char nul[] = {0, 0};
@@ -340,7 +340,7 @@ void write_resetcom(FILE *fl, struct reset_command *c)
     fwrite(&c->direction, sizeof(c->direction), 1, fl);
 }
 
-void check_unique_ident(class unit_data *u)
+void check_unique_ident(unit_data *u)
 {
     if (is_name(UNIT_IDENT(u), ident_names))
     {
@@ -360,12 +360,12 @@ void dump_zone(char *prefix)
     FILE *fl = nullptr;
     char filename[256];
     char **creators = nullptr;
-    class unit_data *u = nullptr;
-    class unit_data *v = nullptr;
-    struct reset_command *c = nullptr;
+    unit_data *u = nullptr;
+    unit_data *v = nullptr;
+    reset_command *c = nullptr;
     int no_rooms = 0;
-    struct diltemplate *tmpl = nullptr;
-    struct diltemplate *ut = nullptr;
+    diltemplate *tmpl = nullptr;
+    diltemplate *ut = nullptr;
     ubit32 dummy = 0;
 
     /* Quinn, I do this to get all the sematic errors and info */
@@ -573,16 +573,16 @@ long stat_mtime(char *name)
     return buf.st_mtime;
 }
 
-void szonelog(struct zone_type *zone, const char *fmt, ...)
+void szonelog(zone_type *zone, const char *fmt, ...)
 {
     /* Not pretty, but it's this or linking with handler.c ;) */
     fprintf(stderr, "%s\n", fmt);
 }
 
-void dil_free_prg(struct dilprg *prg, int dil)
+void dil_free_prg(dilprg *prg, int dil)
 {
-    struct diltemplate *tmpl = nullptr;
-    struct dilframe *frm = nullptr;
+    diltemplate *tmpl = nullptr;
+    dilframe *frm = nullptr;
 
     tmpl = prg->frame[0].tmpl;
 
@@ -598,7 +598,7 @@ void dil_free_prg(struct dilprg *prg, int dil)
         FREE(prg);
 }
 
-void dil_free_var(struct dilvar *v)
+void dil_free_var(dilvar *v)
 {
     switch (v->type)
     {
@@ -629,7 +629,7 @@ void dil_free_var(struct dilvar *v)
     }
 }
 
-void dil_free_frame(struct dilframe *frame)
+void dil_free_frame(dilframe *frame)
 {
     int j = 0;
 
@@ -660,7 +660,7 @@ void dil_free_frame(struct dilframe *frame)
     }
 }
 
-void dil_free_template(struct diltemplate *tmpl, int copy, int dil)
+void dil_free_template(diltemplate *tmpl, int copy, int dil)
 {
     int i = 0;
 
@@ -707,7 +707,7 @@ void dil_free_template(struct diltemplate *tmpl, int copy, int dil)
 
 void graph_sc(char *prefix)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
     int x = 0;
     for (x = 0, u = g_zone.z_rooms; u; u = u->next, x++)
     {
@@ -733,7 +733,7 @@ void write_dot(char *prefix)
 {
     char dotfilename[256];
     std::ostringstream interconnect;
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
     sprintf(dotfilename, "%s.%s", prefix, "dot");
     std::ofstream dotfl(dotfilename);
     if (!(dotfl))

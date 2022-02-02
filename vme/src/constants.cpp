@@ -193,49 +193,49 @@ const char *g_where[] = {"&lt;ILLEGAL POSITION&gt;", /* Position 0 is not a posi
 
 const char *g_npc_class_types[] = {"Normal", "Undead", nullptr};
 
-const struct skill_interval g_how_good[] = {{-20, "horrible"},
-                                            {-15, "very bad"},
-                                            {-10, "bad"},
-                                            {-5, "worse than average"},
-                                            {0, "average"},
-                                            {5, "a little better than average"},
-                                            {10, "better than average"},
-                                            {15, "good"},
-                                            {20, "very good"},
-                                            {25, "supreme"},
-                                            {-1, nullptr}};
+const skill_interval g_how_good[] = {{-20, "horrible"},
+                                     {-15, "very bad"},
+                                     {-10, "bad"},
+                                     {-5, "worse than average"},
+                                     {0, "average"},
+                                     {5, "a little better than average"},
+                                     {10, "better than average"},
+                                     {15, "good"},
+                                     {20, "very good"},
+                                     {25, "supreme"},
+                                     {-1, nullptr}};
 
-const struct skill_interval g_weapon_skills[] = {{0, "utterly hopeless"},
-                                                 {10, "impossible"},
-                                                 {25, "poor"},
-                                                 {40, "good"},
-                                                 {50, "skilled"},
-                                                 {70, "specialized"},
-                                                 {90, "supreme"},
-                                                 {100, "expert"},
-                                                 {150, "godly"},
-                                                 {-1, nullptr}};
+const skill_interval g_weapon_skills[] = {{0, "utterly hopeless"},
+                                          {10, "impossible"},
+                                          {25, "poor"},
+                                          {40, "good"},
+                                          {50, "skilled"},
+                                          {70, "specialized"},
+                                          {90, "supreme"},
+                                          {100, "expert"},
+                                          {150, "godly"},
+                                          {-1, nullptr}};
 
-const struct skill_interval g_skill_skills[] = {{0, "utterly hopeless"},
-                                                {10, "have heard about"},
-                                                {25, "have tried a little"},
-                                                {40, "have practiced"},
-                                                {50, "are good at"},
-                                                {70, "are an expert at"},
-                                                {90, "master"},
-                                                {100, "are expert at"},
-                                                {150, "are godly at"},
-                                                {-1, nullptr}};
+const skill_interval g_skill_skills[] = {{0, "utterly hopeless"},
+                                         {10, "have heard about"},
+                                         {25, "have tried a little"},
+                                         {40, "have practiced"},
+                                         {50, "are good at"},
+                                         {70, "are an expert at"},
+                                         {90, "master"},
+                                         {100, "are expert at"},
+                                         {150, "are godly at"},
+                                         {-1, nullptr}};
 
-const struct skill_interval g_spell_skills[] = {{10, "might remember"},
-                                                {25, "can almost remember"},
-                                                {40, "can remember"},
-                                                {50, "have practiced"},
-                                                {70, "have learned"},
-                                                {90, "master"},
-                                                {100, "are expert with"},
-                                                {150, "are godly with"},
-                                                {-1, nullptr}};
+const skill_interval g_spell_skills[] = {{10, "might remember"},
+                                         {25, "can almost remember"},
+                                         {40, "can remember"},
+                                         {50, "have practiced"},
+                                         {70, "have learned"},
+                                         {90, "master"},
+                                         {100, "are expert with"},
+                                         {150, "are godly with"},
+                                         {-1, nullptr}};
 
 /* ---------------------------------------------------------------------- */
 /*                         B I T - V E C T O R S                          */

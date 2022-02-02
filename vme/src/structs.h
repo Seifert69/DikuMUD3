@@ -9,21 +9,20 @@
 #include "color.h"
 #include "combat.h"
 #include "destruct.h"
-#include "dil.h"
-#include "essential.h"
 #include "event.h"
 #include "extra.h"
-#include "fight.h"
+#include "hookmud.h"
+#include "namelist.h"
 #include "protocol.h"
 #include "queue.h"
-#include "system.h"
-#include "values.h"
 
 #include <vme.h>
 
+#include <cstring>
 #include <forward_list>
 #include <map>
 #include <vector>
+
 #ifndef MPLEX_COMPILE
     #include <boost/graph/adjacency_list.hpp>
     #include <boost/graph/graph_traits.hpp>
@@ -44,6 +43,10 @@
 #define SD_NULL 1  /* Ignore fptr->data (save as 0 ptr)  */
 #define SD_ASCII 2 /* If pointer, then it's ascii char * */
 
+class unit_data;
+class diltemplate;
+class dilprg;
+
 /* ----------------- DATABASE STRUCTURES ----------------------- */
 
 // Used for std::map in place of the old binary search
@@ -52,6 +55,7 @@ struct cmp_str
     bool operator()(char const *a, char const *b) const { return std::strcmp(a, b) < 0; }
 };
 
+class zone_type;
 /* A linked sorted list of all units within a zone file */
 class file_index_type
 {
@@ -59,12 +63,12 @@ public:
     file_index_type();
     ~file_index_type();
 
-    class unit_data *find_symbolic_instance();
-    class unit_data *find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector);
-    std::forward_list<class unit_data *> fi_unit_list; // This list of units that match this file_index
+    unit_data *find_symbolic_instance();
+    unit_data *find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector);
+    std::forward_list<unit_data *> fi_unit_list; // This list of units that match this file_index
 
-    char *name;            /* Unique within this list          */
-    class zone_type *zone; /* Pointer to owner of structure    */
+    char *name;      /* Unique within this list          */
+    zone_type *zone; /* Pointer to owner of structure    */
     // class file_index_type *next; // Replaced by zone's mmp_fi list Next file index, (zone_type->fi list)
     // obsoleted by fi_unit_list. class unit_data *unit; // Pointer to room if is room
 
@@ -84,11 +88,11 @@ struct zone_reset_cmd
     ubit8 cmd_no; /* Index to array of func() ptrs */
     ubit8 cmpl;   /* Complete flag                 */
 
-    class file_index_type *fi[2];
+    file_index_type *fi[2];
     sbit16 num[3];
 
-    struct zone_reset_cmd *next;
-    struct zone_reset_cmd *nested;
+    zone_reset_cmd *next;
+    zone_reset_cmd *nested;
 };
 
 /* A linked/sorted list of all the zones in the game */
@@ -98,20 +102,20 @@ public:
     zone_type();
     ~zone_type();
 
-    class cNamelist creators; /* List of creators of zone         */
-    char *name;               /* Unique in list                   */
-    char *title;              /* A nice looking zone title        */
-    char *notes;              /* Creator notes to zone            */
-    char *help;               /* User-Help to zone                */
-    char *filename;           /* The filename of this file        */
+    cNamelist creators; /* List of creators of zone         */
+    char *name;         /* Unique in list                   */
+    char *title;        /* A nice looking zone title        */
+    char *notes;        /* Creator notes to zone            */
+    char *help;         /* User-Help to zone                */
+    char *filename;     /* The filename of this file        */
 
-    class unit_data *rooms;   // unit pointer to the base rooms, used in vmc really
-    class unit_data *objects; // unit pointer to the base objects, used in vmc really
-    class unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
+    unit_data *rooms;   // unit pointer to the base rooms, used in vmc really
+    unit_data *objects; // unit pointer to the base objects, used in vmc really
+    unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
     std::map<const char *, file_index_type *, cmp_str> mmp_fi;
 
-    struct zone_reset_cmd *zri; /* List of Zone reset commands      */
+    zone_reset_cmd *zri; /* List of Zone reset commands      */
 
     std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
 
@@ -154,8 +158,8 @@ struct time_info_data
 
 struct snoop_data
 {
-    class unit_data *snooping; /* Who is this char snooping        */
-    class unit_data *snoop_by; /* And who is snooping on this char */
+    unit_data *snooping; /* Who is this char snooping        */
+    unit_data *snoop_by; /* And who is snooping on this char */
 };
 
 class descriptor_data
@@ -170,7 +174,7 @@ public:
     time_t logon;      /* Time of last connect              */
     cMultiHook *multi; /* Multi element pointer             */
     ubit16 id;         /* The ID for the multi              */
-    void (*fptr)(class descriptor_data *, char *);
+    void (*fptr)(descriptor_data *, char *);
     int state;      /* Locally used in each fptr         */
     char host[50];  /* hostname                          */
     ubit16 nPort;   /* Mplex port                        */
@@ -182,8 +186,8 @@ public:
     /* For the 'modify-string' system.       */
     char *localstr; /* This string is expanded while editing */
 
-    void (*postedit)(class descriptor_data *);
-    class unit_data *editing;
+    void (*postedit)(descriptor_data *);
+    unit_data *editing;
     void *editref; /* pointer to "where we are editing"     */
     /* when using (volatile) extras + boards */
 
@@ -191,11 +195,11 @@ public:
     char last_cmd[MAX_INPUT_LENGTH + 1]; /* the last entered cmd_str         */
     char history[MAX_INPUT_LENGTH + 1];  /* simple command history           */
     cQueue qInput;                       /* q of unprocessed input           */
-    class unit_data *character;          /* linked to char                   */
-    class unit_data *original;           /* original char                    */
-    struct snoop_data snoop;             /* to snoop people.                 */
+    unit_data *character;                /* linked to char                   */
+    unit_data *original;                 /* original char                    */
+    snoop_data snoop;                    /* to snoop people.                 */
 
-    class descriptor_data *next; /* link to next descriptor          */
+    descriptor_data *next; /* link to next descriptor          */
 };
 
 /* ----------------- UNIT GENERAL STRUCTURES ----------------------- */
@@ -205,10 +209,10 @@ struct unit_dil_affected_type
     ubit16 beat;
     ubit16 duration;
     ubit16 transfer;
-    class cNamelist data;
+    cNamelist data;
     char *apply;  /* Apply DIL  */
     char *remove; /* Remove DIL */
-    struct unit_dil_affected_type *next;
+    unit_dil_affected_type *next;
 };
 
 class unit_affected_type : public basedestruct
@@ -225,8 +229,8 @@ public:
     sbit16 lastf_i;
     sbit16 applyf_i;
     eventq_elem *event; /*pointer to eventq for quick removing      */
-    class unit_data *owner;
-    class unit_affected_type *next, *gnext, *gprevious;
+    unit_data *owner;
+    unit_affected_type *next, *gnext, *gprevious;
 
     int destruct_classindex();
 };
@@ -237,13 +241,13 @@ public:
     unit_fptr();
     ~unit_fptr();
 
-    ubit16 index;          /* Index to function pointer array             */
-    ubit8 priority;        /* Order to insert ftpr on unit (2020)         */
-    ubit16 heart_beat;     /* in 1/4 of a sec                             */
-    ubit16 flags;          /* When to override next function (boolean)    */
-    void *data;            /* Pointer to data local for this unit         */
-    class unit_fptr *next; /* Next in linked list                         */
-    eventq_elem *event;    /* pointer to eventq for quick removing        */
+    ubit16 index;       /* Index to function pointer array             */
+    ubit8 priority;     /* Order to insert ftpr on unit (2020)         */
+    ubit16 heart_beat;  /* in 1/4 of a sec                             */
+    ubit16 flags;       /* When to override next function (boolean)    */
+    void *data;         /* Pointer to data local for this unit         */
+    unit_fptr *next;    /* Next in linked list                         */
+    eventq_elem *event; /* pointer to eventq for quick removing        */
 
     int destruct_classindex();
 };
@@ -253,30 +257,30 @@ class unit_data : public basedestruct
 public:
     unit_data();
     virtual ~unit_data();
-    class unit_data *copy();
-    void set_fi(class file_index_type *f);
+    unit_data *copy();
+    void set_fi(file_index_type *f);
 
-    class cNamelist names; /* Name Keyword list for get, enter, etc.      */
+    cNamelist names; /* Name Keyword list for get, enter, etc.      */
 
-    class unit_fptr /* Function pointer type                      */
+    unit_fptr /* Function pointer type                      */
         *func;
 
-    struct unit_dil_affected_type *dilaffect;
+    unit_dil_affected_type *dilaffect;
 
-    class unit_affected_type *affected;
+    unit_affected_type *affected;
 
-    class file_index_type *fi; /* Unit file-index                               */
+    file_index_type *fi; /* Unit file-index                               */
 
     char *key; /* Pointer to fileindex to Unit which is the key */
 
-    class unit_data *outside; /* Pointer out of the unit, ei. from an object   */
+    unit_data *outside; /* Pointer out of the unit, ei. from an object   */
     /* out to the char carrying it                   */
-    class unit_data *inside; /* Linked list of chars,rooms & objs             */
+    unit_data *inside; /* Linked list of chars,rooms & objs             */
 
-    class unit_data /* For next unit in 'inside' linked list         */
+    unit_data /* For next unit in 'inside' linked list         */
         *next;
 
-    class unit_data /* global l-list of objects, chars & rooms       */
+    unit_data /* global l-list of objects, chars & rooms       */
         *gnext,
         *gprevious;
 
@@ -309,7 +313,7 @@ public:
     /* The inside description of a unit            */
     std::string in_descr;
 
-    class extra_list extra; /* All the look 'at' stuff                     */
+    extra_list extra; /* All the look 'at' stuff                     */
 
     int destruct_classindex();
     std::string json();
@@ -323,10 +327,10 @@ public:
     room_direction_data();
     ~room_direction_data();
 
-    class cNamelist open_name; // For Open & Enter
+    cNamelist open_name; // For Open & Enter
 
     char *key;
-    class unit_data *to_room;
+    unit_data *to_room;
     ubit8 difficulty; // Skill needed for swim, climb, search, pick-lock
     int weight;       // Used for shortest path algorithm
 
@@ -339,7 +343,7 @@ public:
     room_data();
     ~room_data();
 
-    class room_direction_data *dir_option[MAX_EXIT + 1]; // Why 11? Why not MAX_EXIT+1?
+    room_direction_data *dir_option[MAX_EXIT + 1]; // Why 11? Why not MAX_EXIT+1?
 
     ubit8 flags;         /* Room flags                              */
     ubit8 movement_type; /* The type of movement (city, hills etc.) */
@@ -418,8 +422,8 @@ public:
 
 struct char_follow_type
 {
-    class unit_data *follower; /* Must be a char */
-    struct char_follow_type *next;
+    unit_data *follower; /* Must be a char */
+    char_follow_type *next;
 };
 
 class char_data : public unit_data
@@ -428,13 +432,13 @@ public:
     char_data();
     virtual ~char_data();
 
-    class descriptor_data *descriptor;
-    class cCombat *Combat;
-    class unit_data *master;    /* Must be a char */
-    class unit_data *last_room; /* Last location of character */
-    class char_point_data points;
+    descriptor_data *descriptor;
+    cCombat *Combat;
+    unit_data *master;    /* Must be a char */
+    unit_data *last_room; /* Last location of character */
+    char_point_data points;
 
-    struct char_follow_type *followers;
+    char_follow_type *followers;
 
     char *last_attacker; /* Last attacker of character */
     char *money;         /*  Money transfer from db-files. */
@@ -473,20 +477,20 @@ public:
 
     void disconnect_game();
     void connect_game();
-    void reconnect_game(class descriptor_data *d);
+    void reconnect_game(descriptor_data *d);
 
-    struct terminal_setup_type setup;
+    terminal_setup_type setup;
 
-    struct pc_time_data m_time;     /* PCs time info  */
-    struct pc_account_data account; /* Accounting     */
+    pc_time_data m_time;     /* PCs time info  */
+    pc_account_data account; /* Accounting     */
 
     char *guild;     /* Which guild is the player a member of?  */
     char *bank;      /* How much money in bank?                 */
     char *hometown;  /* PCs Hometown (symbolic reference)       */
     char *promptstr; /* A PC's Prompt                           */
 
-    class extra_list info;  /* For saving Admin information             */
-    class extra_list quest; /* For saving QUEST information            */
+    extra_list info;  /* For saving Admin information             */
+    extra_list quest; /* For saving QUEST information            */
 
     sbit8 profession;  // The player's chosen profession, -1 means unknown
     ubit32 guild_time; /* When (playing secs) player entered      */
@@ -518,7 +522,7 @@ public:
     char pwd[PC_MAX_PASSWORD];  /* Needed when loaded w/o descriptor   */
     char filename[PC_MAX_NAME]; /* The name on disk...                 */
     ubit32 lasthosts[5];        /* last 5 different IPs                */
-    class color_type color;     /* Players default colors              */
+    color_type color;           /* Players default colors              */
 };
 
 /* ------------------ NPC SPECIFIC STRUCTURES ----------------------- */

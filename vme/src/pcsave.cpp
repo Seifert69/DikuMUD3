@@ -42,7 +42,7 @@ void assign_player_file_index(unit_data *pc)
     }
     else
     {
-        class file_index_type *fi = new file_index_type();
+        file_index_type *fi = new file_index_type();
 
         fi->name = str_dup(PC_FILENAME(pc));
         fi->zone = z;
@@ -72,9 +72,9 @@ int player_exists(const char *pName)
     return file_exists(PlayerFileName(pName));
 }
 
-class unit_data *find_player(char *name)
+unit_data *find_player(char *name)
 {
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
 
     d = find_descriptor(name, nullptr);
 
@@ -227,14 +227,14 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
 }
 
 /* Save the player 'pc' (no inventory) */
-void save_player_file(class unit_data *pc)
+void save_player_file(unit_data *pc)
 {
     static bool locked = FALSE;
     sbit32 nPlyLen = 0;
     int tmp_i = 0;
-    class unit_data *tmp_u = nullptr;
-    class unit_data *list = nullptr;
-    class descriptor_data *tmp_descr = nullptr;
+    unit_data *tmp_u = nullptr;
+    unit_data *list = nullptr;
+    descriptor_data *tmp_descr = nullptr;
     CByteBuffer *pBuf = &g_FileBuffer;
 
     pBuf->Clear();
@@ -321,7 +321,7 @@ void save_player_file(class unit_data *pc)
 }
 
 /* If 'fast' is false compression is used for inventory.       */
-void save_player_contents(class unit_data *pc, int fast)
+void save_player_contents(unit_data *pc, int fast)
 {
     static bool locked = FALSE;
     time_t t0 = 0;
@@ -394,7 +394,7 @@ void save_player_contents(class unit_data *pc, int fast)
 }
 
 /* Save the player 'pc'. Update logon and playing time.        */
-void save_player(class unit_data *pc)
+void save_player(unit_data *pc)
 {
     if (CHAR_DESCRIPTOR(pc))
     {
@@ -430,9 +430,9 @@ void save_player(class unit_data *pc)
 
 /* Read player from file, starting at index "index" */
 /* String is allocated                              */
-class unit_data *load_player_file(FILE *pFile)
+unit_data *load_player_file(FILE *pFile)
 {
-    class unit_data *pc = nullptr;
+    unit_data *pc = nullptr;
     ubit32 nPlyLen = 0;
     ubit32 n = 0;
     sbit32 id = 0;
@@ -478,10 +478,10 @@ class unit_data *load_player_file(FILE *pFile)
 /* Read player from file, starting at index "index"   */
 /* String is allocated                                */
 /* Is neither inserted in unit_list not into anything */
-class unit_data *load_player(const char *pName)
+unit_data *load_player(const char *pName)
 {
     FILE *pFile = nullptr;
-    class unit_data *pc = nullptr;
+    unit_data *pc = nullptr;
 
     if (str_is_empty(pName))
     {

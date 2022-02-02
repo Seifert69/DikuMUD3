@@ -27,9 +27,9 @@
 #include <cstring>
 #include <ctime>
 
-class descriptor_data *unit_is_edited(class unit_data *u)
+descriptor_data *unit_is_edited(unit_data *u)
 {
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
 
     for (d = g_descriptor_list; d; d = d->next)
     {
@@ -43,7 +43,7 @@ class descriptor_data *unit_is_edited(class unit_data *u)
 }
 
 /* By using this, we can easily sort the list if ever needed */
-void insert_in_unit_list(class unit_data *u)
+void insert_in_unit_list(unit_data *u)
 {
     assert(u->gnext == nullptr && u->gprevious == nullptr && g_unit_list != u);
 
@@ -52,7 +52,7 @@ void insert_in_unit_list(class unit_data *u)
         UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
     }
 
-    class unit_data *tmp_u = nullptr;
+    unit_data *tmp_u = nullptr;
 
     if (!g_unit_list)
     {
@@ -174,7 +174,7 @@ void insert_in_unit_list(class unit_data *u)
 }
 
 /* Remove a unit from the g_unit_list */
-void remove_from_unit_list(class unit_data *unit)
+void remove_from_unit_list(unit_data *unit)
 {
     assert(unit->gprevious || unit->gnext || (g_unit_list == unit));
 
@@ -212,9 +212,9 @@ void remove_from_unit_list(class unit_data *unit)
     unit->gnext = unit->gprevious = nullptr;
 }
 
-class unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
+unit_fptr *find_fptr(unit_data *u, ubit16 idx)
 {
-    class unit_fptr *tf = nullptr;
+    unit_fptr *tf = nullptr;
 
     for (tf = UNIT_FUNC(u); tf; tf = tf->next)
     {
@@ -228,7 +228,7 @@ class unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
 }
 
 // 2020: Add it prioritized
-void insert_fptr(class unit_data *u, class unit_fptr *f)
+void insert_fptr(unit_data *u, unit_fptr *f)
 {
     if (f->priority == 0)
     {
@@ -252,8 +252,8 @@ void insert_fptr(class unit_data *u, class unit_fptr *f)
         return;
     }
 
-    class unit_fptr *p = nullptr;
-    class unit_fptr *prev = nullptr;
+    unit_fptr *p = nullptr;
+    unit_fptr *prev = nullptr;
 
     // Find location to insert
     prev = UNIT_FUNC(u);
@@ -274,9 +274,9 @@ void insert_fptr(class unit_data *u, class unit_fptr *f)
     f->next = nullptr;
 }
 
-class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority, ubit16 beat, ubit16 flags, void *data)
+unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat, ubit16 flags, void *data)
 {
-    class unit_fptr *f = nullptr;
+    unit_fptr *f = nullptr;
     f = new EMPLACE(unit_fptr) unit_fptr;
 
     assert(f);
@@ -301,10 +301,10 @@ class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority, 
 }
 
 /* Does not free 'f' - it is done by clear_destruct by comm.c */
-void destroy_fptr(class unit_data *u, class unit_fptr *f)
+void destroy_fptr(unit_data *u, unit_fptr *f)
 {
-    class unit_fptr *tf = nullptr;
-    struct spec_arg sarg;
+    unit_fptr *tf = nullptr;
+    spec_arg sarg;
 
     assert(f);
     if (f->is_destructed())
@@ -362,10 +362,10 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
 
 /* Stop the 'ch' from following his master    */
 /* Call die_follower if a person dies         */
-void stop_following(class unit_data *ch)
+void stop_following(unit_data *ch)
 {
-    struct char_follow_type *j = nullptr;
-    struct char_follow_type *k = nullptr;
+    char_follow_type *j = nullptr;
+    char_follow_type *k = nullptr;
 
     assert(CHAR_MASTER(ch));
 
@@ -392,9 +392,9 @@ void stop_following(class unit_data *ch)
 }
 
 /* Set 'ch' to follow leader. Circles allowed. */
-void start_following(class unit_data *ch, class unit_data *leader)
+void start_following(unit_data *ch, unit_data *leader)
 {
-    struct char_follow_type *k = nullptr;
+    char_follow_type *k = nullptr;
 
     assert(!leader->is_destructed());
     assert(!ch->is_destructed());
@@ -405,7 +405,7 @@ void start_following(class unit_data *ch, class unit_data *leader)
         stop_following(ch);
     }
     CHAR_MASTER(ch) = leader;
-    CREATE(k, struct char_follow_type, 1);
+    CREATE(k, char_follow_type, 1);
     k->follower = ch;
     k->next = CHAR_FOLLOWERS(leader);
     CHAR_FOLLOWERS(leader) = k;
@@ -414,10 +414,10 @@ void start_following(class unit_data *ch, class unit_data *leader)
 }
 
 /* Called by extract_unit when a character that follows/is followed dies */
-void die_follower(class unit_data *ch)
+void die_follower(unit_data *ch)
 {
-    struct char_follow_type *j = nullptr;
-    struct char_follow_type *k = nullptr;
+    char_follow_type *j = nullptr;
+    char_follow_type *k = nullptr;
 
     if (CHAR_MASTER(ch))
     {
@@ -477,10 +477,10 @@ Example: (Lights, Bright, Illum)
 */
 /* Call this routine if you modify the brightness of a unit */
 /* in order to correctly update the environment of the unit */
-void modify_bright(class unit_data *unit, int bright)
+void modify_bright(unit_data *unit, int bright)
 {
-    class unit_data *ext = nullptr;
-    class unit_data *in = nullptr;
+    unit_data *ext = nullptr;
+    unit_data *in = nullptr;
 
     UNIT_BRIGHT(unit) += bright;
 
@@ -509,9 +509,9 @@ void modify_bright(class unit_data *unit, int bright)
     }
 }
 
-void trans_set(class unit_data *u)
+void trans_set(unit_data *u)
 {
-    class unit_data *u2 = nullptr;
+    unit_data *u2 = nullptr;
     int sum = 0;
 
     for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->next)
@@ -528,7 +528,7 @@ void trans_set(class unit_data *u)
     }
 }
 
-void trans_unset(class unit_data *u)
+void trans_unset(unit_data *u)
 {
     UNIT_BRIGHT(u) -= UNIT_ILLUM(u);
 
@@ -540,9 +540,9 @@ void trans_unset(class unit_data *u)
     UNIT_ILLUM(u) = 0;
 }
 
-class unit_data *equipment(class unit_data *ch, ubit8 pos)
+unit_data *equipment(unit_data *ch, ubit8 pos)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
 
     assert(IS_CHAR(ch));
 
@@ -559,9 +559,9 @@ class unit_data *equipment(class unit_data *ch, ubit8 pos)
 
 /* The following functions find armor / weapons on a person with     */
 /* type checks (i.e. trash does not protect!).                       */
-class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type)
+unit_data *equipment_type(unit_data *ch, int pos, ubit8 type)
 {
-    class unit_data *obj = nullptr;
+    unit_data *obj = nullptr;
 
     obj = equipment(ch, pos);
 
@@ -575,10 +575,10 @@ class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type)
     }
 }
 
-void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
+void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
 {
-    class unit_affected_type *af = nullptr;
-    class unit_affected_type newaf;
+    unit_affected_type *af = nullptr;
+    unit_affected_type newaf;
 
     assert(pos > 0 && IS_OBJ(obj) && IS_CHAR(ch));
     assert(!equipment(ch, pos));
@@ -599,11 +599,11 @@ void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
     }
 }
 
-class unit_data *unequip_object(class unit_data *obj)
+unit_data *unequip_object(unit_data *obj)
 {
-    class unit_data *ch = nullptr;
-    class unit_affected_type *af = nullptr;
-    class unit_affected_type *caf = nullptr;
+    unit_data *ch = nullptr;
+    unit_affected_type *af = nullptr;
+    unit_affected_type *caf = nullptr;
 
     ch = UNIT_IN(obj);
 
@@ -638,9 +638,9 @@ class unit_data *unequip_object(class unit_data *obj)
 /* through itself. For example if Papi carries a coffin and God is   */
 /* inside the coffin, when God types trans Papi this function will   */
 /* return TRUE                                                       */
-int unit_recursive(class unit_data *from, class unit_data *to)
+int unit_recursive(unit_data *from, unit_data *to)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
 
     for (u = to; u; u = UNIT_IN(u))
     {
@@ -653,9 +653,9 @@ int unit_recursive(class unit_data *from, class unit_data *to)
     return FALSE;
 }
 
-class zone_type *unit_zone(const class unit_data *unit)
+zone_type *unit_zone(const unit_data *unit)
 {
-    class unit_data *org = (class unit_data *)unit;
+    unit_data *org = (unit_data *)unit;
 
     for (; unit; unit = UNIT_IN(unit))
     {
@@ -678,9 +678,9 @@ class zone_type *unit_zone(const class unit_data *unit)
 //
 // Returns a symname text string of all the units a unit is in
 //
-std::string unit_trace_up(class unit_data *unit)
+std::string unit_trace_up(unit_data *unit)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
     std::string s;
     std::string t;
 
@@ -701,14 +701,14 @@ std::string unit_trace_up(class unit_data *unit)
     return s;
 }
 
-class unit_data *unit_room(class unit_data *unit)
+unit_data *unit_room(unit_data *unit)
 {
     if (unit == nullptr)
     {
         return nullptr;
     }
 
-    class unit_data *org = unit;
+    unit_data *org = unit;
 
     for (; unit; unit = UNIT_IN(unit))
     {
@@ -722,12 +722,12 @@ class unit_data *unit_room(class unit_data *unit)
     return nullptr;
 }
 
-void intern_unit_up(class unit_data *unit, ubit1 pile)
+void intern_unit_up(unit_data *unit, ubit1 pile)
 {
-    class unit_data *u = nullptr;
-    class unit_data *in = nullptr;
-    class unit_data *toin = nullptr;
-    class unit_data *extin = nullptr;
+    unit_data *u = nullptr;
+    unit_data *in = nullptr;
+    unit_data *toin = nullptr;
+    unit_data *extin = nullptr;
     sbit8 bright = 0;
     sbit8 selfb = 0;
 
@@ -799,12 +799,12 @@ void intern_unit_up(class unit_data *unit, ubit1 pile)
     }
 }
 
-void unit_up(class unit_data *unit)
+void unit_up(unit_data *unit)
 {
     intern_unit_up(unit, TRUE);
 }
 
-void unit_from_unit(class unit_data *unit)
+void unit_from_unit(unit_data *unit)
 {
     while (UNIT_IN(unit))
     {
@@ -812,11 +812,11 @@ void unit_from_unit(class unit_data *unit)
     }
 }
 
-void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
+void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
 {
-    class unit_data *u = nullptr;
-    class unit_data *in = nullptr;
-    class unit_data *extin = nullptr;
+    unit_data *u = nullptr;
+    unit_data *in = nullptr;
+    unit_data *extin = nullptr;
     sbit8 bright = 0;
     sbit8 selfb = 0;
 
@@ -886,12 +886,12 @@ void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
     }
 }
 
-void unit_down(class unit_data *unit, class unit_data *to)
+void unit_down(unit_data *unit, unit_data *to)
 {
     intern_unit_down(unit, to, TRUE);
 }
 
-void intern_unit_to_unit(class unit_data *unit, class unit_data *to, ubit1 pile)
+void intern_unit_to_unit(unit_data *unit, unit_data *to, ubit1 pile)
 {
     assert(to);
     if (unit == to)
@@ -913,12 +913,12 @@ void intern_unit_to_unit(class unit_data *unit, class unit_data *to, ubit1 pile)
     }
 }
 
-void unit_to_unit(class unit_data *unit, class unit_data *to)
+void unit_to_unit(unit_data *unit, unit_data *to)
 {
     intern_unit_to_unit(unit, to, TRUE);
 }
 
-void snoop(class unit_data *ch, class unit_data *victim)
+void snoop(unit_data *ch, unit_data *victim)
 {
     assert(!victim->is_destructed());
     assert(!ch->is_destructed());
@@ -936,7 +936,7 @@ void snoop(class unit_data *ch, class unit_data *victim)
 
 /* Mode 0: Stop ch from snooping a person       */
 /* Mode 1: Mode 0 + stop any person snooping ch */
-void unsnoop(class unit_data *ch, int mode)
+void unsnoop(unit_data *ch, int mode)
 {
     assert(CHAR_DESCRIPTOR(ch));
     assert(CHAR_IS_SNOOPING(ch) || CHAR_IS_SNOOPED(ch));
@@ -956,7 +956,7 @@ void unsnoop(class unit_data *ch, int mode)
     }
 }
 
-void switchbody(class unit_data *ch, class unit_data *vict)
+void switchbody(unit_data *ch, unit_data *vict)
 {
     assert(CHAR_DESCRIPTOR(ch) && IS_NPC(vict));
     assert(!CHAR_DESCRIPTOR(vict));
@@ -985,7 +985,7 @@ void switchbody(class unit_data *ch, class unit_data *vict)
     CHAR_LAST_ROOM(vict) = nullptr;
 }
 
-void unswitchbody(class unit_data *npc)
+void unswitchbody(unit_data *npc)
 {
     assert(IS_NPC(npc) && CHAR_DESCRIPTOR(npc));
     assert(CHAR_IS_SWITCHED(npc));
@@ -1029,7 +1029,7 @@ void stop_snoopwrite(unit_data *unit)
     // removed this statement: if (!IS_PC(unit) || UNIT_IN(unit))
     //
 
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
     while ((d = unit_is_edited(unit)))
     {
         send_to_char("<br/>Unit was extracted, sorry.<br/>", d->character);
@@ -1065,7 +1065,7 @@ void stop_snoopwrite(unit_data *unit)
 
 /* Used when a unit is to be extracted from the game */
 /* Extracts recursively                              */
-void extract_unit(class unit_data *unit)
+void extract_unit(unit_data *unit)
 {
     /* Prevent recursive calling on extracted units. */
     /* This happens on for example corpses. When the */
@@ -1157,7 +1157,7 @@ void extract_unit(class unit_data *unit)
 
 /* Add weight to the unit and change everything it is in */
 /* (It will not change the -basic- weight of a player)   */
-void weight_change_unit(class unit_data *unit, int weight)
+void weight_change_unit(unit_data *unit, int weight)
 {
     for (; unit; unit = UNIT_IN(unit))
     {
@@ -1165,7 +1165,7 @@ void weight_change_unit(class unit_data *unit, int weight)
     }
 }
 
-class extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr)
+extra_descr_data *quest_add(unit_data *ch, const char *name, const char *descr)
 {
     assert(name != nullptr);
     assert(name[0]);

@@ -1,4 +1,7 @@
 #pragma once
 
-void stat_bank(const class unit_data *ch, class unit_data *u);
-int bank(struct spec_arg *sarg);
+#include "interpreter.h"
+#include "structs.h"
+
+void stat_bank(const unit_data *ch, unit_data *u);
+int bank(spec_arg *sarg);

@@ -8,6 +8,7 @@
 #include "affect.h"
 #include "comm.h"
 #include "experience.h"
+#include "fight.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "magic.h"
@@ -21,12 +22,12 @@
  * coded: Mon Jun 22 00:22:44 MET DST 1992 [HH]
  * tested: No
  */
-void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
 {
-    class unit_affected_type af;
-    class unit_affected_type *paf = nullptr;
-    class unit_data *vict = nullptr;
-    class unit_data *stabber = nullptr;
+    unit_affected_type af;
+    unit_affected_type *paf = nullptr;
+    unit_data *vict = nullptr;
+    unit_data *stabber = nullptr;
     int skilla = 0;
     int skillb = 0;
     int hm = 0;

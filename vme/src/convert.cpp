@@ -38,7 +38,7 @@ ubit8 *ids = nullptr; /* For checking duplicate players... */
 
 #define OUTPUT_DIR "lib/"
 
-int sel_name(const struct dirent *dptr)
+int sel_name(const dirent *dptr)
 {
     if (strchr(dptr->d_name, '.') == nullptr)
     {
@@ -47,7 +47,7 @@ int sel_name(const struct dirent *dptr)
     return 0;
 }
 
-void convert_free_unit(class unit_data *u)
+void convert_free_unit(unit_data *u)
 {
     while (UNIT_CONTAINS(u))
     {
@@ -63,10 +63,10 @@ void convert_free_unit(class unit_data *u)
     delete u;
 }
 
-void free_inventory(class unit_data *u)
+void free_inventory(unit_data *u)
 {
-    class unit_data *tmp = nullptr;
-    class unit_data *nxt = nullptr;
+    unit_data *tmp = nullptr;
+    unit_data *nxt = nullptr;
 
     for (tmp = u; tmp; tmp = nxt)
     {
@@ -80,13 +80,13 @@ int days_old(time_t last_logon)
     return (int)(difftime(time(nullptr), last_logon) / SECS_PER_REAL_DAY);
 }
 
-class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList)
+unit_data *convert_item(unit_data *u, unit_data *pc, int bList)
 {
     if (bList)
     {
         if (strcmp(UNIT_FI_ZONE(u)->name, "treasure") == 0)
         {
-            class extra_descr_data *ed = UNIT_EXTRA(u).m_pList;
+            extra_descr_data *ed = UNIT_EXTRA(u).m_pList;
             std::cout << std::endl << UNIT_FI_NAME(u) << "@treasure" << std::endl;
             if (ed)
             {
@@ -119,9 +119,9 @@ class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList
     return u;
 }
 
-void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALSE)
+void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
 {
-    class unit_data *bla = nullptr;
+    unit_data *bla = nullptr;
 
     if (u == nullptr)
     {
@@ -138,7 +138,7 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 
     if (bla != u)
     {
-        class unit_data *tmpu = nullptr;
+        unit_data *tmpu = nullptr;
 
         assert(UNIT_IN(u));
 
@@ -158,13 +158,13 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 
 /* This procedure makes any conversion you might want on every player in   *
  * the playerfile, including affects and inventory                         */
-void convert_player(class unit_data *pc)
+void convert_player(unit_data *pc)
 {
     ;
 }
 
 /* Return TRUE if Ok. */
-int sanity_check(class unit_data *u)
+int sanity_check(unit_data *u)
 {
     if (g_nCorrupt == TRUE)
     {
@@ -223,7 +223,7 @@ int sanity_check(class unit_data *u)
     return TRUE;
 }
 
-int shall_delete(class unit_data *pc)
+int shall_delete(unit_data *pc)
 {
     int days = 0;
 
@@ -278,9 +278,9 @@ int shall_exclude(const char *name)
     return FALSE;
 }
 
-class unit_data *convert_load_player(char *name)
+unit_data *convert_load_player(char *name)
 {
-    class unit_data *ch = nullptr;
+    unit_data *ch = nullptr;
 
     if (!player_exists(name))
     {
@@ -328,7 +328,7 @@ class unit_data *convert_load_player(char *name)
     return ch;
 }
 
-const char *isodate(struct tm *t)
+const char *isodate(tm *t)
 {
     static std::string isodate;
 
@@ -353,10 +353,10 @@ void clist()
     unsigned long file_count = 0;
     unsigned long dir_count = 0;
     unsigned long err_count = 0;
-    struct time_info_data tid2;
+    time_info_data tid2;
 
-    class unit_data *pc = nullptr;
-    class unit_data *void_char = new EMPLACE(npc_data) npc_data;
+    unit_data *pc = nullptr;
+    unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
     if (!fs::exists(full_path))
     {
@@ -442,7 +442,7 @@ void clist()
 
                         bool tmp = false;
 
-                        struct tm *t = gmtime(&PC_TIME(pc).creation);
+                        tm *t = gmtime(&PC_TIME(pc).creation);
                         std::cout << isodate(t) << ";";
 
                         t = gmtime(&PC_TIME(pc).birth);
@@ -516,7 +516,7 @@ void convert_file()
     unsigned long dir_count = 0;
     unsigned long err_count = 0;
 
-    class unit_data *pc = nullptr;
+    unit_data *pc = nullptr;
 
     if (!fs::exists(full_path))
     {
@@ -621,8 +621,8 @@ void cleanup()
     unsigned long dir_count = 0;
     unsigned long err_count = 0;
 
-    class unit_data *pc = nullptr;
-    class unit_data *void_char = new EMPLACE(npc_data) npc_data;
+    unit_data *pc = nullptr;
+    unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
     if (!fs::exists(full_path))
     {

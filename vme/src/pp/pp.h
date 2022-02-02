@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 #include <ctype.h> /* Char type info			*/
 #include <stdio.h>
 #include <stdio.h>  /* Standard I/O info			*/
@@ -660,3 +663,5 @@ EXTERN int Orig_disk I_ZERO; /* Original disk	*/
 /*
  *	End of pp.h
  */
+
+#pragma GCC diagnostic pop

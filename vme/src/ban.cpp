@@ -29,12 +29,12 @@ struct ban_t
     char type;
     time_t until;
     char *textfile;
-    struct ban_t *next;
+    ban_t *next;
 } *ban_list = nullptr;
 
 void save_ban()
 {
-    struct ban_t *tmp = nullptr;
+    ban_t *tmp = nullptr;
     FILE *bf = fopen(g_cServerConfig.getFileInLibDir(BAN_FILE).c_str(), "w");
     assert(bf);
 
@@ -49,7 +49,7 @@ void save_ban()
 void load_ban()
 {
     FILE *bf = nullptr;
-    struct ban_t *tmp = nullptr;
+    ban_t *tmp = nullptr;
     char buf[256];
     char site[256];
     char textfile[256];
@@ -61,7 +61,7 @@ void load_ban()
 
     while (fgets(buf, sizeof buf, bf) != nullptr)
     {
-        CREATE(tmp, struct ban_t, 1);
+        CREATE(tmp, ban_t, 1);
         sscanf(buf, "%s %c %ld %s\n", site, &tmp->type, &tmp->until, textfile);
         tmp->site = str_dup(site);
         tmp->textfile = str_dup(textfile);
@@ -107,9 +107,9 @@ time_t ban_timer(char *arg)
     return now;
 }
 
-void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *textfile)
+void add_ban(unit_data *ch, char *site, char type, time_t *until, char *textfile)
 {
-    struct ban_t *entry = nullptr;
+    ban_t *entry = nullptr;
     char d[50];
 
     for (entry = ban_list; entry; entry = entry->next)
@@ -122,7 +122,7 @@ void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *te
 
     if (!entry)
     {
-        CREATE(entry, struct ban_t, 1);
+        CREATE(entry, ban_t, 1);
         entry->site = str_dup(site);
         if (!str_is_empty(textfile))
         {
@@ -165,7 +165,7 @@ void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *te
     save_ban();
 }
 
-void kill_entry(struct ban_t *entry)
+void kill_entry(ban_t *entry)
 {
     if (entry == ban_list)
     {
@@ -173,7 +173,7 @@ void kill_entry(struct ban_t *entry)
     }
     else
     {
-        struct ban_t *tmp = nullptr;
+        ban_t *tmp = nullptr;
 
         for (tmp = ban_list; tmp; tmp = tmp->next)
         {
@@ -193,9 +193,9 @@ void kill_entry(struct ban_t *entry)
     save_ban();
 }
 
-void del_ban(class unit_data *ch, char *site)
+void del_ban(unit_data *ch, char *site)
 {
-    struct ban_t *entry = nullptr;
+    ban_t *entry = nullptr;
 
     for (entry = ban_list; entry; entry = entry->next)
     {
@@ -216,7 +216,7 @@ void del_ban(class unit_data *ch, char *site)
     }
 }
 
-void show_site(class unit_data *ch, struct ban_t *entry)
+void show_site(unit_data *ch, ban_t *entry)
 {
     char d[40];
 
@@ -236,9 +236,9 @@ void show_site(class unit_data *ch, struct ban_t *entry)
     send_to_char(msg, ch);
 }
 
-void do_ban(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_ban(unit_data *ch, char *arg, const command_info *cmd)
 {
-    struct ban_t *tmp = nullptr;
+    ban_t *tmp = nullptr;
     char site[MAX_INPUT_LENGTH];
     char textfile[MAX_INPUT_LENGTH];
     char mode = 0;
@@ -339,8 +339,8 @@ bool ban_check(char *ban, char *site) /* TRUE, if banned */
 
 char site_banned(char *cur_site)
 {
-    struct ban_t *entry = nullptr;
-    struct ban_t *next_entry = nullptr;
+    ban_t *entry = nullptr;
+    ban_t *next_entry = nullptr;
     time_t now = time(nullptr);
 
     for (entry = ban_list; entry; entry = next_entry)
@@ -360,9 +360,9 @@ char site_banned(char *cur_site)
     return NO_BAN;
 }
 
-void show_ban_text(char *site, class descriptor_data *d)
+void show_ban_text(char *site, descriptor_data *d)
 {
-    struct ban_t *entry = nullptr;
+    ban_t *entry = nullptr;
     char bantext[MAX_STRING_LENGTH];
     char formtext[MAX_STRING_LENGTH];
 

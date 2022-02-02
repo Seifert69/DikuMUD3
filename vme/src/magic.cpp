@@ -27,14 +27,14 @@
 
 /* Returns TRUE when effect is shown by DIL */
 
-int dil_effect(char *pStr, struct spell_args *sa)
+int dil_effect(char *pStr, spell_args *sa)
 {
     if (str_is_empty(pStr))
     {
         return FALSE;
     }
 
-    struct diltemplate *tmpl = nullptr;
+    diltemplate *tmpl = nullptr;
 
     tmpl = find_dil_template(pStr);
 
@@ -67,8 +67,8 @@ int dil_effect(char *pStr, struct spell_args *sa)
         return FALSE;
     }
 
-    class dilprg *prg = nullptr;
-    class unit_fptr *fptr = nullptr;
+    dilprg *prg = nullptr;
+    unit_fptr *fptr = nullptr;
 
     prg = dil_copy_template(tmpl, sa->caster, &fptr);
     if (prg)
@@ -84,7 +84,7 @@ int dil_effect(char *pStr, struct spell_args *sa)
 
         assert(fptr);
 
-        struct spec_arg sarg;
+        spec_arg sarg;
 
         sarg.owner = prg->owner;
         sarg.activator = sa->caster;
@@ -105,7 +105,7 @@ int dil_effect(char *pStr, struct spell_args *sa)
 /* This procedure uses mana from a medium */
 /* returns TRUE if ok, and FALSE if there was not enough mana.  */
 /* wands and staffs uses one charge, no matter what 'mana' is. --HHS */
-ubit1 use_mana(class unit_data *medium, int mana)
+ubit1 use_mana(unit_data *medium, int mana)
 {
     if (IS_CHAR(medium))
     {
@@ -143,7 +143,7 @@ ubit1 use_mana(class unit_data *medium, int mana)
 }
 
 /* Determines if healing combat mana should be cast?? */
-ubit1 cast_magic_now(class unit_data *ch, int mana)
+ubit1 cast_magic_now(unit_data *ch, int mana)
 {
     int hleft = 0;
     int sleft = 0;
@@ -201,7 +201,7 @@ int variation(int num, int d, int u)
 
 /* See if unit is allowed to be transferred away from its surroundings */
 /* i.e. if a player is allowed to transfer out of jail, etc.           */
-ubit1 may_teleport_away(class unit_data *unit)
+ubit1 may_teleport_away(unit_data *unit)
 {
     if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
     {
@@ -220,7 +220,7 @@ ubit1 may_teleport_away(class unit_data *unit)
 }
 
 /* See if unit is allowed to be transferred to 'dest' */
-ubit1 may_teleport_to(class unit_data *unit, class unit_data *dest)
+ubit1 may_teleport_to(unit_data *unit, unit_data *dest)
 {
     if (unit == dest || IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
         UNIT_WEIGHT(unit) + UNIT_WEIGHT(dest) > UNIT_CAPACITY(dest))
@@ -240,14 +240,14 @@ ubit1 may_teleport_to(class unit_data *unit, class unit_data *dest)
 }
 
 /* See if unit is allowed to be transferred to 'dest' */
-ubit1 may_teleport(class unit_data *unit, class unit_data *dest)
+ubit1 may_teleport(unit_data *unit, unit_data *dest)
 {
     return may_teleport_away(unit) && may_teleport_to(unit, dest);
 }
 
 /* ===================================================================== */
 
-int object_power(class unit_data *unit)
+int object_power(unit_data *unit)
 {
     if (IS_OBJ(unit))
     {
@@ -266,7 +266,7 @@ int object_power(class unit_data *unit)
     }
 }
 
-int room_power(class unit_data *unit)
+int room_power(unit_data *unit)
 {
     if (IS_ROOM(unit))
     {
@@ -281,7 +281,7 @@ int room_power(class unit_data *unit)
 /* Return how well a unit defends itself against a spell, by using */
 /* its skill (not its power) - That is the group (or attack).      */
 /*                                                                 */
-int spell_defense_skill(class unit_data *unit, int spell)
+int spell_defense_skill(unit_data *unit, int spell)
 {
     int max = 0;
 
@@ -351,7 +351,7 @@ int spell_defense_skill(class unit_data *unit, int spell)
 /* Return how well a unit attacks with a spell, by using its skill */
 /* (not its power).                                                */
 /*                                                                 */
-int spell_attack_skill(class unit_data *unit, int spell)
+int spell_attack_skill(unit_data *unit, int spell)
 {
     if (IS_PC(unit))
     {
@@ -380,7 +380,7 @@ int spell_attack_skill(class unit_data *unit, int spell)
 
 /* Return the power in a unit for a given spell type     */
 /* For CHAR's determine if Divine or Magic power is used */
-int spell_attack_ability(class unit_data *medium, int spell)
+int spell_attack_ability(unit_data *medium, int spell)
 {
     if (IS_CHAR(medium))
     {
@@ -393,7 +393,7 @@ int spell_attack_ability(class unit_data *medium, int spell)
     return spell_attack_skill(medium, spell);
 }
 
-int spell_ability(class unit_data *u, int ability, int spell)
+int spell_ability(unit_data *u, int ability, int spell)
 {
     if (IS_CHAR(u))
     {
@@ -411,7 +411,7 @@ int spell_ability(class unit_data *u, int ability, int spell)
 /* else. These are typically aggressive spells like 'sleep' etc. where */
 /* the defender is entiteled a saving throw.                           */
 /*                                                                     */
-int spell_resistance(class unit_data *att, class unit_data *def, int spell)
+int spell_resistance(unit_data *att, unit_data *def, int spell)
 {
     if (IS_CHAR(att) && IS_CHAR(def))
     {
@@ -433,7 +433,7 @@ int spell_resistance(class unit_data *att, class unit_data *def, int spell)
 /* skill/ability when casting a spell. For example healing spells */
 /* create food etc.                                               */
 /* Returns how well it went "100" is perfect > better.            */
-int spell_cast_check(class unit_data *att, int spell)
+int spell_cast_check(unit_data *att, int spell)
 {
     return resistance_skill_check(spell_attack_ability(att, spell), 0, spell_attack_skill(att, spell), 0);
 }
@@ -444,14 +444,14 @@ int spell_cast_check(class unit_data *att, int spell)
 /* nessecary work for you                                    */
 /* Qty is 1 for small, 2 for medium and 3 for large versions */
 /* of each spell                                             */
-int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
+int spell_offensive(spell_args *sa, int spell_number, int bonus)
 {
     int def_shield_bonus = 0;
     int armour_type = 0;
     int hit_loc = 0;
     int roll = 0;
     int bEffect = 0;
-    class unit_data *def_shield = nullptr;
+    unit_data *def_shield = nullptr;
 
     /* Does the spell perhaps only hit head / body? All?? Right now I
         do it randomly */
@@ -497,9 +497,9 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
 
 /*last spells*/
 
-void spell_clear_skies(struct spell_args *sa)
+void spell_clear_skies(spell_args *sa)
 {
-    class unit_data *room = unit_room(sa->caster);
+    unit_data *room = unit_room(sa->caster);
 
     if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
@@ -513,9 +513,9 @@ void spell_clear_skies(struct spell_args *sa)
     act("You feel a warm breeze.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
 }
 
-void spell_storm_call(struct spell_args *sa)
+void spell_storm_call(spell_args *sa)
 {
-    class unit_data *room = unit_room(sa->caster);
+    unit_data *room = unit_room(sa->caster);
 
     if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {

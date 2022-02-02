@@ -54,7 +54,7 @@ static ubit8 default_colours[3][24] = {
      CONTROL_BG_BLUE_CHAR,   CONTROL_BG_RED_CHAR,      CONTROL_BG_GREEN_CHAR,  CONTROL_BG_YELLOW_CHAR,
      CONTROL_BG_BLUE_CHAR,   CONTROL_BG_MAGENTA_CHAR,  CONTROL_BG_CYAN_CHAR,   CONTROL_BG_WHITE_CHAR}};
 
-void (*control_code[5][256])(class cConHook *con, char **b, ubit8 code);
+void (*control_code[5][256])(cConHook *con, char **b, ubit8 code);
 
 #define TELNET_SEND_GA(buf) sprintf(buf, "%c%c", IAC, GA)
 #define TELNET_ECHO_OFF(buf) sprintf(buf, "%c%c%c", IAC, WILL, TELOPT_ECHO)
@@ -66,7 +66,7 @@ void (*control_code[5][256])(class cConHook *con, char **b, ubit8 code);
     if (control_code[(con)->m_sSetup.emulation][code])                                                                                     \
         (*control_code[(con)->m_sSetup.emulation][code])((con), (b), (code));
 
-void protocol_translate(class cConHook *con, ubit8 code, char **b)
+void protocol_translate(cConHook *con, ubit8 code, char **b)
 {
     if (code >= CONTROL_FG_BLACK_CHAR && code <= CONTROL_BG_WHITE_CHAR)
     {
@@ -86,7 +86,7 @@ void protocol_translate(class cConHook *con, ubit8 code, char **b)
 /* anyone using TTY or ANSI in 2020 ?? :o) Is telnet ANSI? I forgot...     */
 /* ======================================================================= */
 
-void Control_Echo_Off(class cConHook *con, char **b, ubit8 code)
+void Control_Echo_Off(cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet || (con->m_sSetup.emulation == TERM_TTY))
     {
@@ -100,7 +100,7 @@ void Control_Echo_Off(class cConHook *con, char **b, ubit8 code)
     }
 }
 
-void Control_Echo_On(class cConHook *con, char **b, ubit8 code)
+void Control_Echo_On(cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet || (con->m_sSetup.emulation == TERM_TTY))
     {
@@ -118,7 +118,7 @@ void Control_Echo_On(class cConHook *con, char **b, ubit8 code)
 /*                             A N S I                                     */
 /* ======================================================================= */
 
-void Control_ANSI_Fg(class cConHook *con, char **dest, ubit8 code, int bBold)
+void Control_ANSI_Fg(cConHook *con, char **dest, ubit8 code, int bBold)
 {
     switch (code)
     {
@@ -219,7 +219,7 @@ void Control_ANSI_Fg(class cConHook *con, char **dest, ubit8 code, int bBold)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, dest);
 }
 
-void Control_ANSI_Bg(class cConHook *con, char **dest, ubit8 code)
+void Control_ANSI_Bg(cConHook *con, char **dest, ubit8 code)
 {
     switch (code)
     {
@@ -261,7 +261,7 @@ void Control_ANSI_Bg(class cConHook *con, char **dest, ubit8 code)
     }
 }
 
-void Control_ANSI_Fg_Black(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_Black(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_BLACK);
     TAIL(*b);
@@ -270,7 +270,7 @@ void Control_ANSI_Fg_Black(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fg_Red(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_Red(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_RED);
     TAIL(*b);
@@ -279,7 +279,7 @@ void Control_ANSI_Fg_Red(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fg_Green(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_Green(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_GREEN);
     TAIL(*b);
@@ -288,7 +288,7 @@ void Control_ANSI_Fg_Green(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fg_Yellow(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_Yellow(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_YELLOW);
     TAIL(*b);
@@ -297,7 +297,7 @@ void Control_ANSI_Fg_Yellow(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fg_Blue(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_Blue(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_BLUE);
     TAIL(*b);
@@ -306,7 +306,7 @@ void Control_ANSI_Fg_Blue(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fg_Magenta(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_Magenta(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_MAGENTA);
     TAIL(*b);
@@ -315,7 +315,7 @@ void Control_ANSI_Fg_Magenta(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fg_Cyan(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_Cyan(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_CYAN);
     TAIL(*b);
@@ -324,7 +324,7 @@ void Control_ANSI_Fg_Cyan(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fg_White(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fg_White(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_WHITE);
     TAIL(*b);
@@ -333,111 +333,111 @@ void Control_ANSI_Fg_White(class cConHook *con, char **b, ubit8 code)
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-void Control_ANSI_Fgb_Black(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_Black(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_BLACK);
     TAIL(*b);
 }
 
-void Control_ANSI_Fgb_Red(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_Red(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_RED);
     TAIL(*b);
 }
 
-void Control_ANSI_Fgb_Green(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_Green(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_GREEN);
     TAIL(*b);
 }
 
-void Control_ANSI_Fgb_Yellow(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_Yellow(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_YELLOW);
     TAIL(*b);
 }
 
-void Control_ANSI_Fgb_Blue(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_Blue(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_BLUE);
     TAIL(*b);
 }
 
-void Control_ANSI_Fgb_Magenta(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_Magenta(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_MAGENTA);
     TAIL(*b);
 }
 
-void Control_ANSI_Fgb_Cyan(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_Cyan(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_CYAN);
     TAIL(*b);
 }
 
-void Control_ANSI_Fgb_White(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Fgb_White(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FGB_WHITE);
     TAIL(*b);
 }
 
-void Control_ANSI_Bg_Black(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_Black(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_BLACK);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_BLACK_CHAR;
 }
 
-void Control_ANSI_Bg_Red(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_Red(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_RED);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_RED_CHAR;
 }
 
-void Control_ANSI_Bg_Green(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_Green(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_GREEN);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_GREEN_CHAR;
 }
 
-void Control_ANSI_Bg_Yellow(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_Yellow(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_YELLOW);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_YELLOW_CHAR;
 }
 
-void Control_ANSI_Bg_Blue(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_Blue(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_BLUE);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_BLUE_CHAR;
 }
 
-void Control_ANSI_Bg_Magenta(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_Magenta(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_MAGENTA);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_MAGENTA_CHAR;
 }
 
-void Control_ANSI_Bg_Cyan(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_Cyan(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_CYAN);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_CYAN_CHAR;
 }
 
-void Control_ANSI_Bg_White(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bg_White(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BG_WHITE);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_WHITE_CHAR;
 }
 
-void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Echo_Off(cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -449,7 +449,7 @@ void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code)
     TAIL(*b);
 }
 
-void Control_ANSI_Reset(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Reset(cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -463,26 +463,26 @@ void Control_ANSI_Reset(class cConHook *con, char **b, ubit8 code)
     Control_ANSI_Fg_White(con, b, code);
 }
 
-void Control_ANSI_Home(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Home(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_HOME);
     TAIL(*b);
     con->m_nPromptLen = 0;
 }
 
-void Control_ANSI_Bold(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Bold(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_BOLD);
     TAIL(*b);
 }
 
-void Control_ANSI_Reverse(class cConHook *con, char **b, ubit8 code)
+void Control_ANSI_Reverse(cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_REVERSE);
     TAIL(*b);
 }
 
-void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
+void Control_TTY_Echo_Off(cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -491,7 +491,7 @@ void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
     }
 }
 
-void Control_TTY_Echo_On(class cConHook *con, char **b, ubit8 code)
+void Control_TTY_Echo_On(cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -500,7 +500,7 @@ void Control_TTY_Echo_On(class cConHook *con, char **b, ubit8 code)
     }
 }
 
-void Control_Copy(class cConHook *con, char **b, ubit8 code)
+void Control_Copy(cConHook *con, char **b, ubit8 code)
 {
     **b = CONTROL_CHAR;
     (*b)++;
@@ -508,42 +508,42 @@ void Control_Copy(class cConHook *con, char **b, ubit8 code)
     (*b)++;
 }
 
-void Control_Gobble_On(class cConHook *con, char **b, ubit8 code)
+void Control_Gobble_On(cConHook *con, char **b, ubit8 code)
 {
     con->m_bGobble = true;
 }
 
-void Control_Gobble_Off(class cConHook *con, char **b, ubit8 code)
+void Control_Gobble_Off(cConHook *con, char **b, ubit8 code)
 {
     con->m_bGobble = false;
 }
 
-void control_color_change(class cConHook *con, char **b, ubit8 code)
+void control_color_change(cConHook *con, char **b, ubit8 code)
 {
     con->m_bColorChange = true;
 }
 
-void control_color_insert(class cConHook *con, char **b, ubit8 code)
+void control_color_insert(cConHook *con, char **b, ubit8 code)
 {
     con->m_bColorInsert = true;
 }
 
-void control_color_create(class cConHook *con, char **b, ubit8 code)
+void control_color_create(cConHook *con, char **b, ubit8 code)
 {
     con->m_bColorCreate = true;
 }
 
-void control_color_remove(class cConHook *con, char **b, ubit8 code)
+void control_color_remove(cConHook *con, char **b, ubit8 code)
 {
     con->m_bColorRemove = true;
 }
 
-void control_color_disp(class cConHook *con, char **b, ubit8 code)
+void control_color_disp(cConHook *con, char **b, ubit8 code)
 {
     con->m_bColorDisp = true;
 }
 
-void control_color_end(class cConHook *con, char **b, ubit8 code)
+void control_color_end(cConHook *con, char **b, ubit8 code)
 {
     con->m_bColorCreate = false;
     con->m_bColorChange = false;

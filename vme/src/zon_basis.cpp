@@ -29,14 +29,14 @@
 #define MAIL_NOTE_NAME "letter"
 #define DESTROY_ROOM "destroy_room"
 
-class unit_data *g_void_room = nullptr;
-class unit_data *g_destroy_room = nullptr;
-class unit_data *heaven_room = nullptr;
-class unit_data *seq_room = nullptr;
-class unit_data *time_room = nullptr;
-class unit_data *g_entry_room = nullptr;
+unit_data *g_void_room = nullptr;
+unit_data *g_destroy_room = nullptr;
+unit_data *heaven_room = nullptr;
+unit_data *seq_room = nullptr;
+unit_data *time_room = nullptr;
+unit_data *g_entry_room = nullptr;
 
-class file_index_type *g_letter_fi = nullptr;
+file_index_type *g_letter_fi = nullptr;
 
 void basis_boot()
 {
@@ -66,7 +66,7 @@ void basis_boot()
     }
 }
 
-int error_rod(struct spec_arg *sarg)
+int error_rod(spec_arg *sarg)
 {
     if ((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
     {
@@ -100,7 +100,7 @@ int error_rod(struct spec_arg *sarg)
     return SFR_BLOCK;
 }
 
-int info_rod(struct spec_arg *sarg)
+int info_rod(spec_arg *sarg)
 {
     if (!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
     {
@@ -136,12 +136,12 @@ int info_rod(struct spec_arg *sarg)
 
 /* Log stuff below */
 
-int log_object(struct spec_arg *sarg)
+int log_object(spec_arg *sarg)
 {
     ubit8 *ip = nullptr;
-    enum log_level lev = LOG_OFF;
+    log_level lev = LOG_OFF;
     char c = 0;
-    class unit_data *ch = UNIT_IN(sarg->owner);
+    unit_data *ch = UNIT_IN(sarg->owner);
 
     if (sarg->fptr->data == nullptr)
     {
@@ -240,7 +240,11 @@ int log_object(struct spec_arg *sarg)
                     act("Current log level is `$2t'.",
                         A_ALWAYS,
                         ch,
-                        c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive",
+                        c == 'd'   ? "dil"
+                        : c == 'o' ? "off"
+                        : c == 'b' ? "brief"
+                        : c == 'a' ? "all"
+                                   : "extensive",
                         cActParameter(),
                         TO_CHAR);
                     return SFR_BLOCK;
@@ -249,7 +253,10 @@ int log_object(struct spec_arg *sarg)
                 act("You will now see the $2t log.",
                     A_ALWAYS,
                     ch,
-                    c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive",
+                    c == 'd'   ? "dil"
+                    : c == 'b' ? "brief"
+                    : c == 'a' ? "entire"
+                               : "extensive",
                     cActParameter(),
                     TO_CHAR);
                 OBJ_VALUE(sarg->owner, 0) = c;
@@ -261,7 +268,7 @@ int log_object(struct spec_arg *sarg)
 }
 
 /* Return TRUE if ok, FALSE if not */
-int system_check(class unit_data *pc, const char *buf)
+int system_check(unit_data *pc, const char *buf)
 {
     /* Check for `` and ; in system-string */
     if (strchr(buf, '`') || strchr(buf, ';'))
@@ -274,7 +281,7 @@ int system_check(class unit_data *pc, const char *buf)
     return TRUE;
 }
 
-void execute_append(class unit_data *pc, const char *str)
+void execute_append(unit_data *pc, const char *str)
 {
     FILE *f = nullptr;
 
@@ -293,11 +300,11 @@ void execute_append(class unit_data *pc, const char *str)
     fclose(f);
 }
 
-int admin_obj(struct spec_arg *sarg)
+int admin_obj(spec_arg *sarg)
 {
     int zonelist = 0;
-    class zone_type *zone = nullptr;
-    class extra_descr_data *exdp = nullptr;
+    zone_type *zone = nullptr;
+    extra_descr_data *exdp = nullptr;
 
     if (sarg->cmd->no != CMD_AUTO_UNKNOWN)
     {

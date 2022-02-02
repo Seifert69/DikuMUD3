@@ -6,6 +6,9 @@
  */
 #pragma once
 
+#include "interpreter.h"
+#include "structs.h"
+
 #include <vme.h>
 
 #define DIR_CMD 1
@@ -13,7 +16,7 @@
 struct cmdload_struct
 {
     const char *cmd_str;
-    void (*cmd_fptr)(class unit_data *ch, char *arg, const struct command_info *c);
+    void (*cmd_fptr)(unit_data *ch, char *arg, const command_info *c);
     int inttype;
     int dir;
 };
@@ -21,4 +24,4 @@ struct cmdload_struct
 void cmd_base_load();
 void command_read();
 
-extern struct command_info *g_cmdlist;
+extern command_info *g_cmdlist;

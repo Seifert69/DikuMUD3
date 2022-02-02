@@ -18,7 +18,7 @@
 int check_reboot()
 {
     long tc = 0;
-    struct tm *t_info = nullptr;
+    tm *t_info = nullptr;
     static int count = 12;
 
     tc = time(nullptr);

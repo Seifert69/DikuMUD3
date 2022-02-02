@@ -8,20 +8,23 @@
 
 #include "essential.h"
 
+class cCombat;
+class unit_data;
+
 class cCombatList
 {
 public:
     cCombatList();
     ~cCombatList();
     void PerformViolence();
-    void add(class cCombat *pc);
-    void sub(class cCombat *pc);
-    void status(const class unit_data *ch);
+    void add(cCombat *pc);
+    void sub(cCombat *pc);
+    void status(const unit_data *ch);
 
 private:
     void Sort();
 
-    class cCombat **pElems;
+    cCombat **pElems;
     int nMaxTop; // No of allocated elements
     int nTop;    // Current Max
     int nIdx;    // Updated when in Perform() and doing Sub()
@@ -29,45 +32,45 @@ private:
 
 class cCombat
 {
-    friend class cCombatList;
+    friend cCombatList;
 
 public:
-    cCombat(class unit_data *owner, int bMelee = FALSE);
+    cCombat(unit_data *owner, int bMelee = FALSE);
     ~cCombat();
 
-    class unit_data *Opponent(int i = 0);
-    class unit_data *FindOpponent(class unit_data *tmp);
+    unit_data *Opponent(int i = 0);
+    unit_data *FindOpponent(unit_data *tmp);
 
-    inline class unit_data *Owner() { return pOwner; }
-    inline class unit_data *Melee() { return pMelee; }
+    inline unit_data *Owner() { return pOwner; }
+    inline unit_data *Melee() { return pMelee; }
     inline int When() { return nWhen; }
     inline int NoOpponents() { return nNoOpponents; }
 
     void changeSpeed(int delta);
-    void setMelee(class unit_data *victim);
+    void setMelee(unit_data *victim);
     void setCommand(const char *arg);
 
-    void addOpponent(class unit_data *victim, int bMelee);
-    void subOpponent(class unit_data *victim);
-    void status(const class unit_data *ch);
+    void addOpponent(unit_data *victim, int bMelee);
+    void subOpponent(unit_data *victim);
+    void status(const unit_data *ch);
 
 private:
-    void add(class unit_data *victim);
+    void add(unit_data *victim);
     void sub(int idx);
-    int findOpponentIdx(class unit_data *tmp);
+    int findOpponentIdx(unit_data *tmp);
 
     int nWhen;                      // What tick to attack / command at
-    class unit_data *pOwner;        // The owning unit
-    class unit_data *pMelee;        // The melee or kill pointer
-    class unit_data **pOpponents;   // Array of opponents (given damage)
+    unit_data *pOwner;              // The owning unit
+    unit_data *pMelee;              // The melee or kill pointer
+    unit_data **pOpponents;         // Array of opponents (given damage)
     int nNoOpponents;               // Number of opponents
     char cmd[MAX_INPUT_LENGTH + 1]; // A combat command
 };
 
-void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee = FALSE);
-void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee = FALSE);
-void stop_fighting(class unit_data *ch, class unit_data *victim = nullptr);
-void stat_combat(class unit_data *ch, class unit_data *u, const char *pStr);
-void stat_spell(class unit_data *god, class unit_data *u, const char *pStr);
+void set_fighting(unit_data *ch, unit_data *vict, int bMelee = FALSE);
+void add_fighting(unit_data *ch, unit_data *vict, int bMelee = FALSE);
+void stop_fighting(unit_data *ch, unit_data *victim = nullptr);
+void stat_combat(unit_data *ch, unit_data *u, const char *pStr);
+void stat_spell(unit_data *god, unit_data *u, const char *pStr);
 
-extern class cCombatList g_CombatList;
+extern cCombatList g_CombatList;

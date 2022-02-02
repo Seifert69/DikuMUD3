@@ -152,10 +152,10 @@ int unit_affected_type::destruct_classindex()
 /* ======================================= */
 
 /* May only be called by clear_destuct! */
-void destruct_unit(class unit_data *unit)
+void destruct_unit(unit_data *unit)
 {
 #ifdef DMSERVER
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
     int in_menu = FALSE;
     if (!unit)
     {
@@ -262,19 +262,19 @@ void destruct_unit(class unit_data *unit)
 /* May only be called from comm.c event loop */
 void clear_destructed()
 {
-    class unit_fptr *f = nullptr;
+    unit_fptr *f = nullptr;
     int i = 0;
 
     for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
     {
-        delete (class unit_affected_type *)destructed[DR_AFFECT][i];
+        delete (unit_affected_type *)destructed[DR_AFFECT][i];
     }
 
     destructed_idx[DR_AFFECT] = 0;
 
     for (i = 0; i < destructed_idx[DR_FUNC]; i++)
     {
-        f = (class unit_fptr *)destructed[DR_FUNC][i];
+        f = (unit_fptr *)destructed[DR_FUNC][i];
 
         if (f->index == 82)
         {
@@ -293,9 +293,9 @@ void clear_destructed()
 
     for (i = 0; i < destructed_idx[DR_UNIT]; i++)
     {
-        if ((class unit_data *)destructed[DR_UNIT][i])
+        if ((unit_data *)destructed[DR_UNIT][i])
         {
-            destruct_unit((class unit_data *)destructed[DR_UNIT][i]);
+            destruct_unit((unit_data *)destructed[DR_UNIT][i]);
             destructed[DR_UNIT][i] = nullptr;
         }
     }

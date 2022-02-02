@@ -18,14 +18,14 @@
 #include <cstdlib>
 #include <cstring>
 
-int ball(struct spec_arg *sarg)
+int ball(spec_arg *sarg)
 {
 #define TOP_MAX 10
 
     char *arg = (char *)sarg->arg;
     char buf[128];
-    class unit_data *u = nullptr;
-    class unit_data *top[TOP_MAX];
+    unit_data *u = nullptr;
+    unit_data *top[TOP_MAX];
     int v1 = 0;
     int v2 = 0;
     int i = 0;

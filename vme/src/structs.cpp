@@ -246,8 +246,8 @@ zone_type::~zone_type()
 
     if (filename)
         FREE(filename);
-    class unit_data *ut = nullptr;
-    class unit_data *nextut = nullptr;
+    unit_data *ut = nullptr;
+    unit_data *nextut = nullptr;
 
     for (ut = objects; ut; ut = nextut)
     {
@@ -276,8 +276,8 @@ zone_type::~zone_type()
         delete p->second;
     }
 
-    struct zone_reset_cmd *pzri = nullptr;
-    struct zone_reset_cmd *nextzri = nullptr;
+    zone_reset_cmd *pzri = nullptr;
+    zone_reset_cmd *nextzri = nullptr;
 
     for (pzri = zri; pzri; pzri = nextzri)
     {
@@ -587,7 +587,7 @@ unit_data::~unit_data()
     }
 }
 
-void unit_data::set_fi(class file_index_type *f)
+void unit_data::set_fi(file_index_type *f)
 {
     assert(f);
 

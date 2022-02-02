@@ -62,7 +62,7 @@ void dmc_error(int fatal, const char *fmt, ...)
 
 /*  MONEY
  */
-unsigned long legal_amount(class unit_data *u)
+unsigned long legal_amount(unit_data *u)
 {
     unsigned long res = IRON_MULT * CHAR_LEVEL(u);
 
@@ -139,7 +139,7 @@ amount_t convert_money(char *str)
 /*         Value[3] is slaying race      */
 /*                                       */
 /* Output: [3] as input                  */
-void dmc_set_weapon(class unit_data *weapon)
+void dmc_set_weapon(unit_data *weapon)
 {
     int category = 0;
     int craftsmanship = 0;
@@ -187,7 +187,7 @@ void dmc_set_weapon(class unit_data *weapon)
 /* INPUT:  Value[0] = Category            */
 /*         Value[1] = Bonus               */
 /*         Value[2] = ...                 */
-void dmc_set_armour(class unit_data *armour)
+void dmc_set_armour(unit_data *armour)
 {
     int category = 0;
     int craftsmanship = 0;
@@ -227,7 +227,7 @@ void dmc_set_armour(class unit_data *armour)
 /*         Value[2] = ...                   */
 /*                                          */
 
-void dmc_set_shield(class unit_data *shield)
+void dmc_set_shield(unit_data *shield)
 {
     int category = 0;
     int craftsmanship = 0;
@@ -261,7 +261,7 @@ void dmc_set_shield(class unit_data *shield)
     set_shield(shield);
 }
 
-void set_points(class unit_data *u)
+void set_points(unit_data *u)
 {
     int i = 0;
     int sum = 0;
@@ -372,12 +372,12 @@ void set_points(class unit_data *u)
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = hitpoint_total(CHAR_HPP(u));
 }
 
-void set_room_data(class unit_data *u)
+void set_room_data(unit_data *u)
 {
     SET_BIT(UNIT_MANIPULATE(u), MANIPULATE_ENTER);
 }
 
-bool affect_vector_string(class unit_data *obj, std::string &s)
+bool affect_vector_string(unit_data *obj, std::string &s)
 {
     int bonusvector[11];
 
@@ -441,7 +441,7 @@ bool affect_vector_string(class unit_data *obj, std::string &s)
     return bHasData;
 }
 
-bool affect_vector_list(class unit_data *obj, std::string &s)
+bool affect_vector_list(unit_data *obj, std::string &s)
 {
     s.clear();
 
@@ -476,7 +476,7 @@ bool affect_vector_list(class unit_data *obj, std::string &s)
     return !s.empty();
 }
 
-void show_obj_info(class unit_data *obj)
+void show_obj_info(unit_data *obj)
 {
     static int first = FALSE;
     bool doprint = false;
@@ -589,7 +589,7 @@ void show_obj_info(class unit_data *obj)
     }
 }
 
-void show_npc_info(class unit_data *npc)
+void show_npc_info(unit_data *npc)
 {
     static int first = FALSE;
 
@@ -612,9 +612,9 @@ void show_npc_info(class unit_data *npc)
             CHAR_DIV(npc));
 }
 
-void process_affects(class unit_data *pUnit)
+void process_affects(unit_data *pUnit)
 {
-    struct unit_affected_type *pAf = nullptr;
+    unit_affected_type *pAf = nullptr;
     int firstf = 0;
     int tickf = 0;
     int lastf = 0;
@@ -851,9 +851,9 @@ void process_affects(class unit_data *pUnit)
     }
 }
 
-void process_funcs(class unit_data *u)
+void process_funcs(unit_data *u)
 {
-    struct unit_fptr *fptr = nullptr;
+    unit_fptr *fptr = nullptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
     {
@@ -888,7 +888,7 @@ void process_funcs(class unit_data *u)
     }
 }
 
-void check_namelist(class unit_data *unit, class cNamelist *nl)
+void check_namelist(unit_data *unit, cNamelist *nl)
 {
     char buf[128];
 
@@ -928,7 +928,7 @@ void check_namelist(class unit_data *unit, class cNamelist *nl)
             }
         }
 
-        class cNamelist tmp;
+        cNamelist tmp;
 
         if (nl->Length() > 1)
         {
@@ -952,10 +952,10 @@ void check_namelist(class unit_data *unit, class cNamelist *nl)
     }
 }
 
-void process_unit(class unit_data *u)
+void process_unit(unit_data *u)
 {
     int i = 0;
-    struct extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
 
     process_affects(u);
     process_funcs(u);
@@ -1152,7 +1152,7 @@ void process_unit(class unit_data *u)
     }
 }
 
-void init_unit(class unit_data *u)
+void init_unit(unit_data *u)
 {
     int i = 0;
 

@@ -21,7 +21,7 @@
 #include <cerrno>
 #include <cstdlib>
 
-class cMotherHook g_MotherHook;
+cMotherHook g_MotherHook;
 
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -111,7 +111,7 @@ void cMultiHook::Close()
 // Get the data and parse the mplex protocol
 int cMultiHook::Read()
 {
-    class descriptor_data *d = nullptr;
+    descriptor_data *d = nullptr;
     int p = 0;
     ubit16 id = 0;
     ubit16 len = 0;
@@ -234,8 +234,8 @@ int cMultiHook::Read()
 
 void multi_clear()
 {
-    class descriptor_data *nextd = nullptr;
-    class descriptor_data *d = nullptr;
+    descriptor_data *nextd = nullptr;
+    descriptor_data *d = nullptr;
 
     for (d = g_descriptor_list; d; d = nextd)
     {
@@ -299,14 +299,14 @@ void cMotherHook::Input(int nFlags)
 
     if (nFlags & SELECT_READ)
     {
-        struct sockaddr_in isa;
+        sockaddr_in isa;
         int i = 0;
         int t = 0;
         unsigned int len = 0;
 
         len = sizeof(isa);
 
-        if ((t = accept(this->tfd(), (struct sockaddr *)&isa, &len)) < 0)
+        if ((t = accept(this->tfd(), (sockaddr *)&isa, &len)) < 0)
         {
             slog(LOG_ALL, 0, "Mother accept error %d", errno);
             return;
@@ -385,10 +385,10 @@ void init_mother(int nPort)
 {
     int n = 0;
     int fdMother = 0;
-    struct linger ld;
-    struct sockaddr_in server_addr;
+    linger ld;
+    sockaddr_in server_addr;
 
-    memset(&server_addr, 0, sizeof(struct sockaddr_in));
+    memset(&server_addr, 0, sizeof(sockaddr_in));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(nPort);
@@ -419,7 +419,7 @@ void init_mother(int nPort)
         exit(0);
     }
 
-    n = bind(fdMother, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
+    n = bind(fdMother, (sockaddr *)&server_addr, sizeof(sockaddr_in));
 
     if (n != 0)
     {

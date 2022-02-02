@@ -59,9 +59,9 @@
 // However, many act() in movement require 3 units, so therefore $2t in extras is
 // string substituted in this procedure
 //
-const char *single_unit_messg(class unit_data *unit, const char *type, int direction, char *mesg)
+const char *single_unit_messg(unit_data *unit, const char *type, int direction, char *mesg)
 {
-    class extra_descr_data *exd = UNIT_EXTRA(unit).m_pList;
+    extra_descr_data *exd = UNIT_EXTRA(unit).m_pList;
 
     if (exd)
     {
@@ -89,10 +89,10 @@ const char *single_unit_messg(class unit_data *unit, const char *type, int direc
 
 /* Has 'pc' found the door at 'dir'? If direction exits and it is closed  */
 /* and hidden then the door is found if it has been searched for.         */
-int has_found_door(class unit_data *pc, int dir)
+int has_found_door(unit_data *pc, int dir)
 {
-    class extra_descr_data *exd = nullptr;
-    class unit_affected_type *af = nullptr;
+    extra_descr_data *exd = nullptr;
+    unit_affected_type *af = nullptr;
     char buf[MAX_INPUT_LENGTH];
 
     if (!IS_ROOM(UNIT_IN(pc)))
@@ -144,7 +144,7 @@ int has_found_door(class unit_data *pc, int dir)
     }
 }
 
-class unit_data *in_room(class unit_data *u)
+unit_data *in_room(unit_data *u)
 {
     while (u && !IS_ROOM(u))
     {
@@ -162,10 +162,10 @@ class unit_data *in_room(class unit_data *u)
 /* Endurance is calculated and subtracted here */
 /* ch is the CHAR doing the move command. mover is the vehicle, steed or boat or the char itself */
 /* 1 = success, 0 = fail, -1 = dead */
-int room_move(class unit_data *ch,
-              class unit_data *mover,
-              class unit_data *room_from,
-              class unit_data *room_to,
+int room_move(unit_data *ch,
+              unit_data *mover,
+              unit_data *room_from,
+              unit_data *room_to,
               int bIsFollower,
               int direction,
               const char *pLeaveSelf,
@@ -175,7 +175,7 @@ int room_move(class unit_data *ch,
               const char *pPassengersO)
 {
     int res = 0;
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
 
     room_from = in_room(ch);
 
@@ -278,7 +278,7 @@ int room_move(class unit_data *ch,
 
 #define S_IS_AMPHIB "$is_amphib"
 
-int generic_move(class unit_data *ch, class unit_data *mover, int direction, int following)
+int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 /* Asserts:
         0. ch is in a room, going in a direction n,e,s,w,u or d
         1. Does not assert anything about position.
@@ -295,8 +295,8 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
         -1 : If dead.
         */
 {
-    class unit_data *room_from = nullptr;
-    class unit_data *room_to = nullptr;
+    unit_data *room_from = nullptr;
+    unit_data *room_to = nullptr;
     char aLeaveSelf[MAX_STRING_LENGTH];
     char aLeaveOther[MAX_STRING_LENGTH];
     char aArrSelf[MAX_STRING_LENGTH];
@@ -370,7 +370,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
     }
     else // Steed or boat code (shares scan for passenger combat)
     {
-        for (class unit_data *u = UNIT_CONTAINS(mover); u; u = u->next)
+        for (unit_data *u = UNIT_CONTAINS(mover); u; u = u->next)
         {
             if (IS_CHAR(u) && CHAR_FIGHTING(u))
             {
@@ -646,7 +646,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
 
 /* Following defaults to false. If it is set to TRUE, then it will generate
    the special to check if the move is allowed. */
-int self_walk(class unit_data *ch, class unit_data *mover, int direction, int following)
+int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
 /*
        Returns :
        1 : If succes.
@@ -654,7 +654,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
        -1 : If dead.
        */
 {
-    class unit_data *room_from = nullptr;
+    unit_data *room_from = nullptr;
 
     room_from = in_room(ch);
 
@@ -667,7 +667,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
 
     if (res == 1 && (in_room(ch) != room_from))
     {
-        class unit_data *u = nullptr;
+        unit_data *u = nullptr;
 
         if (IS_CHAR(ch) && CHAR_FOLLOWERS(ch))
         {
@@ -683,7 +683,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
         {
             int i = 0;
             int j = 0;
-            struct char_follow_type *k = nullptr;
+            char_follow_type *k = nullptr;
 
             for (i = 0;; i++) /* This shit is needed because the follow  */
             {                 /* structure can be destroyed by this move */
@@ -717,7 +717,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
 }
 
 /* dir must be one of [CMD_NORTH..MAX_EXIT]              */
-void move_dir(class unit_data *ch, int dir)
+void move_dir(unit_data *ch, int dir)
 {
     assert((dir >= 0) && (dir <= MAX_EXIT));
 
@@ -759,7 +759,7 @@ void move_dir(class unit_data *ch, int dir)
     }
 }
 
-void do_move(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_move(unit_data *ch, char *argument, const command_info *cmd)
 {
     /* NOTICE! It uses cmd->no for efficiency, thus cmd->no MUST */
     /* be one of CMD_NORTH..CMD_DOWN which again MUST BE 0..5    */
@@ -777,7 +777,7 @@ void do_move(class unit_data *ch, char *argument, const struct command_info *cmd
 /*               hidden doors will be considered.                    */
 /* err_msg:      if TRUE, error messages will be shown.              */
 
-int low_find_door(class unit_data *ch, char *doorstr, int err_msg, int check_hidden)
+int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 {
     char buf[256];
     char dir[256];

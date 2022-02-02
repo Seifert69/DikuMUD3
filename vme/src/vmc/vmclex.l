@@ -7,6 +7,9 @@
  
 %option nounput 
 %{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 #include <stdio.h>
 #include <ctype.h>
 #include "vmc.h"
@@ -238,3 +241,5 @@ void init_lex(char *str)
 
    yy_scan_string(str);
 }
+
+#pragma GCC diagnostic pop

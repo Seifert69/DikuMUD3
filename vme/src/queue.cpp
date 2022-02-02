@@ -137,7 +137,7 @@ void cQueue::CutCopy(ubit8 *data, ubit32 nLen)
     Cut(nLen);
 }
 
-void cQueue::Append(class cQueueElem *pe)
+void cQueue::Append(cQueueElem *pe)
 {
     if (IsEmpty())
     {
@@ -160,7 +160,7 @@ void cQueue::Append(class cQueueElem *pe)
  *  Listen...
  *  The sound of a thousand comp.sci. professors rotating in their graves.
  */
-void cQueue::Prepend(class cQueueElem *pe)
+void cQueue::Prepend(cQueueElem *pe)
 {
     if (IsEmpty())
     {
@@ -183,14 +183,14 @@ const cQueueElem *cQueue::PeekHead()
     return pHead;
 }
 
-const class cQueueElem *cQueue::PeekTail()
+const cQueueElem *cQueue::PeekTail()
 {
     return pTail;
 }
 
-class cQueueElem *cQueue::GetHead()
+cQueueElem *cQueue::GetHead()
 {
-    class cQueueElem *pTmp = nullptr;
+    cQueueElem *pTmp = nullptr;
 
     if (IsEmpty())
     {
@@ -216,7 +216,7 @@ class cQueueElem *cQueue::GetHead()
 
 void cQueue::Flush()
 {
-    class cQueueElem *pTmp = nullptr;
+    cQueueElem *pTmp = nullptr;
 
     while ((pTmp = GetHead()))
     {

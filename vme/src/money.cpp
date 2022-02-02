@@ -23,7 +23,7 @@
 #include <cstdlib>
 #include <cstring>
 
-struct money_type g_money_types[MAX_MONEY + 1];
+money_type g_money_types[MAX_MONEY + 1];
 char *cur_strings[MAX_CURRENCY + 1];
 
 /* procedures also used in the vmc part */
@@ -64,7 +64,7 @@ static amount_t adjust_money(amount_t amt, currency_t currency)
     return 0;
 }
 
-currency_t local_currency(class unit_data *unit)
+currency_t local_currency(unit_data *unit)
 {
     /*  Well, I dunno...
      *  Any ideas?
@@ -79,7 +79,7 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
 {
     static char buf[512];
     char tmp[256];
-    struct money_type *money_tmp[MAX_MONEY + 1];
+    money_type *money_tmp[MAX_MONEY + 1];
     sbit8 i = 0;
     sbit8 nr = 0;
     sbit8 count = 0;
@@ -183,7 +183,7 @@ static amount_t calc_money(amount_t v1, char op, amount_t v2)
 }
 
 /* Set all the values on money correctly according to amount - return money */
-class unit_data *set_money(class unit_data *money, amount_t amt)
+unit_data *set_money(unit_data *money, amount_t amt)
 {
     ubit32 i = 0;
 
@@ -261,20 +261,22 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
     }
     else
     {
-        UNIT_OUT_DESCR(money) = diku::format_to_str(
-            "A %s %s has been left here.",
-            amt == 2
-                ? "couple of"
-                : amt < 10 ? "few" : amt < 100 ? "small pile of" : amt < 1000 ? "pile of" : amt < 50000 ? "large pile of" : "mountain of",
-            money_pluralis(money));
+        UNIT_OUT_DESCR(money) = diku::format_to_str("A %s %s has been left here.",
+                                                    amt == 2      ? "couple of"
+                                                    : amt < 10    ? "few"
+                                                    : amt < 100   ? "small pile of"
+                                                    : amt < 1000  ? "pile of"
+                                                    : amt < 50000 ? "large pile of"
+                                                                  : "mountain of",
+                                                    money_pluralis(money));
     }
 
     return money;
 }
 
-static class unit_data *make_money(class file_index_type *fi, amount_t amt)
+static unit_data *make_money(file_index_type *fi, amount_t amt)
 {
-    class unit_data *money = read_unit(fi);
+    unit_data *money = read_unit(fi);
 
     assert(IS_OBJ(money));
 
@@ -299,7 +301,7 @@ static class unit_data *make_money(class file_index_type *fi, amount_t amt)
  *  I wanted this one to make shops as simple and intuitive as they were in
  *  DikuI, despite the complexity of the system.
  */
-void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, currency_t currency)
+void money_transfer(unit_data *from, unit_data *to, amount_t amt, currency_t currency)
 {
     amt = adjust_money(amt, currency);
 
@@ -311,10 +313,10 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         {
             amount_t take, have, value;
             currency_t cur;
-            class unit_data *unit;
+            unit_data *unit;
         } mon_array[MAX_MONEY + 1];
 
-        class unit_data *tmp = nullptr;
+        unit_data *tmp = nullptr;
         int i = 0;
         int last = 0;
         amount_t temp = 0;
@@ -444,8 +446,8 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
     }
     else if (to)
     { /* Create the money according to arguments and give to `to' */
-        struct money_type *money_tmp[MAX_MONEY + 1];
-        class unit_data *tmp = nullptr;
+        money_type *money_tmp[MAX_MONEY + 1];
+        unit_data *tmp = nullptr;
         int i = 0;
         int nr = 0;
         amount_t times = 0;
@@ -483,7 +485,7 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
     }
 }
 
-void coins_to_unit(class unit_data *unit, amount_t amt, int type)
+void coins_to_unit(unit_data *unit, amount_t amt, int type)
 {
     if (type == -1)
     {
@@ -492,7 +494,7 @@ void coins_to_unit(class unit_data *unit, amount_t amt, int type)
     }
     else
     {
-        class unit_data *tmp = make_money(g_money_types[type].fi, amt);
+        unit_data *tmp = make_money(g_money_types[type].fi, amt);
         unit_to_unit(tmp, unit);
     }
 }
@@ -501,9 +503,9 @@ void coins_to_unit(class unit_data *unit, amount_t amt, int type)
  *  inventory.
  *  Use ANY_CURRENCY as currency-type to count up ALL money...
  */
-amount_t unit_holds_total(class unit_data *u, currency_t currency)
+amount_t unit_holds_total(unit_data *u, currency_t currency)
 {
-    class unit_data *tmp = nullptr;
+    unit_data *tmp = nullptr;
     amount_t amt = 0;
     amount_t rec = 0;
 
@@ -537,9 +539,9 @@ amount_t unit_holds_total(class unit_data *u, currency_t currency)
 /*  Counts up what amount of a given currency char holds in inventory.
  *  Use ANY_CURRENCY as currency-type to count up ALL money...
  */
-amount_t char_holds_amount(class unit_data *ch, currency_t currency)
+amount_t char_holds_amount(unit_data *ch, currency_t currency)
 {
-    class unit_data *tmp = nullptr;
+    unit_data *tmp = nullptr;
     amount_t amt = 0;
 
     assert(IS_CHAR(ch));
@@ -561,9 +563,9 @@ amount_t char_holds_amount(class unit_data *ch, currency_t currency)
 /*  Checks if the character is able to pay the amount with the currency
  *  (Currently) based on what money he has in inventory.
  */
-ubit1 char_can_afford(class unit_data *ch, amount_t amt, currency_t currency)
+ubit1 char_can_afford(unit_data *ch, amount_t amt, currency_t currency)
 {
-    class unit_data *tmp = nullptr;
+    unit_data *tmp = nullptr;
 
     assert(IS_CHAR(ch));
 
@@ -588,9 +590,9 @@ ubit1 char_can_afford(class unit_data *ch, amount_t amt, currency_t currency)
 }
 
 /* Check if there is some money of `type' in unit. (For piling purposes.) */
-class unit_data *unit_has_money_type(class unit_data *unit, ubit8 type)
+unit_data *unit_has_money_type(unit_data *unit, ubit8 type)
 {
-    class unit_data *tmp = nullptr;
+    unit_data *tmp = nullptr;
 
     for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->next)
     {
@@ -608,7 +610,7 @@ class unit_data *unit_has_money_type(class unit_data *unit, ubit8 type)
  *  (which is why you must ALWAYS make sure the new object is either piled,
  *  or moved!)
  */
-class unit_data *split_money(class unit_data *money, amount_t amt)
+unit_data *split_money(unit_data *money, amount_t amt)
 {
     assert(IS_MONEY(money));
 
@@ -621,7 +623,7 @@ class unit_data *split_money(class unit_data *money, amount_t amt)
     if (MONEY_AMOUNT(money) > amt)
     {
         /* Not very pretty to use this, but I really can't find an alternative */
-        class unit_data *pnew = make_money(g_money_types[MONEY_TYPE(money)].fi, amt);
+        unit_data *pnew = make_money(g_money_types[MONEY_TYPE(money)].fi, amt);
         set_money(money, calc_money(MONEY_AMOUNT(money), '-', amt));
 
         if (UNIT_IN(money))
@@ -639,10 +641,10 @@ class unit_data *split_money(class unit_data *money, amount_t amt)
 /*  Make sure that _if_ there is another money-object of `money's type in
  *  the same object, that they're fused
  */
-void pile_money(class unit_data *money)
+void pile_money(unit_data *money)
 {
-    class unit_data *tmp = nullptr;
-    class unit_data *unit = UNIT_IN(money);
+    unit_data *tmp = nullptr;
+    unit_data *unit = UNIT_IN(money);
 
     assert(IS_MONEY(money) && unit);
 
@@ -661,7 +663,7 @@ void pile_money(class unit_data *money)
  */
 amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 {
-    struct money_type *money_tmp[MAX_MONEY + 1];
+    money_type *money_tmp[MAX_MONEY + 1];
     int i = 0;
     int nr = 0;
     amount_t times = 0;
@@ -704,10 +706,10 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 }
 
 /* Print out representation of supplied money-object with the amount amt */
-char *obj_money_string(class unit_data *obj, amount_t amt)
+char *obj_money_string(unit_data *obj, amount_t amt)
 {
     static char buf[128];
-    struct money_type *money_tmp = nullptr;
+    money_type *money_tmp = nullptr;
 
     assert(IS_MONEY(obj));
 
@@ -730,21 +732,21 @@ char *obj_money_string(class unit_data *obj, amount_t amt)
     return buf;
 }
 
-amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money)
+amount_t char_can_carry_amount(unit_data *ch, unit_data *money)
 {
     int d_wgt = char_carry_w_limit(ch) - UNIT_CONTAINING_W(ch);
 
     return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
-amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money)
+amount_t unit_can_hold_amount(unit_data *unit, unit_data *money)
 {
     int d_wgt = UNIT_CAPACITY(unit) - UNIT_CONTAINING_W(unit);
 
     return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
-void do_makemoney(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_makemoney(unit_data *ch, char *arg, const command_info *cmd)
 {
     currency_t cur = 0;
     amount_t amt = 0;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "event.h"
+#include "structs.h"
 
 #include <string>
 
@@ -21,8 +22,8 @@ void timewarp_end(void *p1, void *p2);
 extern char g_etext;
 #endif
 extern std::string g_world_boottime;
-extern class descriptor_data *g_descriptor_list;
-extern class descriptor_data *g_next_to_process;
+extern descriptor_data *g_descriptor_list;
+extern descriptor_data *g_next_to_process;
 extern eventqueue g_events;
 extern int g_mud_bootzone;
 extern int g_no_players;

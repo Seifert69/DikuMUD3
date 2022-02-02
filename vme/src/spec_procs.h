@@ -1,3 +1,5 @@
 #pragma once
 
-int charname_in_list(class unit_data *ch, char *arg);
+#include "structs.h"
+
+int charname_in_list(unit_data *ch, char *arg);

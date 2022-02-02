@@ -18,7 +18,7 @@
 
 #include <cstring>
 
-void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
+void do_color(unit_data *ch, char *aaa, const command_info *cmd)
 {
     char fore[MAX_INPUT_LENGTH];
     char back[MAX_INPUT_LENGTH];

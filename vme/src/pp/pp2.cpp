@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 /************************************************************************/
 /*									*/
 /*	File:	pp2.c							*/
@@ -1446,3 +1449,5 @@ void unsbind(char *sym)
         Nsyms--; /* One less symbol */
     }
 }
+
+#pragma GCC diagnostic pop

@@ -18,7 +18,7 @@ cintlist::cintlist()
     length = 0;
 }
 
-void cintlist::operator=(class cintlist *cn)
+void cintlist::operator=(cintlist *cn)
 {
     for (sbit32 i = 0; i < cn->Length(); i++)
     {
@@ -26,7 +26,7 @@ void cintlist::operator=(class cintlist *cn)
     }
 }
 
-void cintlist::CopyList(class cintlist *cn)
+void cintlist::CopyList(cintlist *cn)
 {
     for (sbit32 i = 0; i < cn->Length(); i++)
     {

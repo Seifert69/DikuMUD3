@@ -7,6 +7,9 @@
 %option nounput noyywrap
 
 %{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 #include <ctype.h>
 #include <string.h>
 #include "essential.h"
@@ -224,3 +227,5 @@ void dilmain(int tplate, char *zname, int lnum, char* dilp )
 
 
 }
+
+#pragma GCC diagnostic pop

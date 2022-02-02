@@ -32,7 +32,7 @@
 
 static int rent_info;
 
-static void show_items(class unit_data *ch, class unit_data *item, ubit32 price)
+static void show_items(unit_data *ch, unit_data *item, ubit32 price)
 {
     if (price > 0)
     {
@@ -45,7 +45,7 @@ static void show_items(class unit_data *ch, class unit_data *item, ubit32 price)
 
 /* ----------------------------------------------------------------- */
 
-static void subtract_rent(class unit_data *ch, class unit_data *item, ubit32 price)
+static void subtract_rent(unit_data *ch, unit_data *item, ubit32 price)
 {
     if (price > 0)
     {
@@ -63,10 +63,7 @@ static void subtract_rent(class unit_data *ch, class unit_data *item, ubit32 pri
 
 /* ----------------------------------------------------------------- */
 
-static ubit32 subtract_recurse(class unit_data *ch,
-                               class unit_data *item,
-                               ubit32 seconds,
-                               void (*fptr)(class unit_data *ch, class unit_data *obj, ubit32 price))
+static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, void (*fptr)(unit_data *ch, unit_data *obj, ubit32 price))
 {
     ubit32 sum = 0;
 
@@ -111,7 +108,7 @@ static ubit32 subtract_recurse(class unit_data *ch,
 
 /* ----------------------------------------------------------------- */
 
-ubit32 rent_calc(class unit_data *ch, time_t savetime)
+ubit32 rent_calc(unit_data *ch, time_t savetime)
 {
     ubit32 sum = 0;
 
@@ -140,7 +137,7 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
     return sum;
 }
 
-void do_rent(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_rent(unit_data *ch, char *arg, const command_info *cmd)
 {
     ubit32 sum = 0;
 
@@ -211,14 +208,14 @@ static int membuflen = 0, mempos;
 */
 
 /* Global variables */
-class file_index_type *g_slime_fi = nullptr;
+file_index_type *g_slime_fi = nullptr;
 
 /* save object */
-void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
+void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
 {
     ubit32 len = 0;
-    struct objheaderold ho;
-    struct objheadernew hn;
+    objheaderold ho;
+    objheadernew hn;
     CByteBuffer TmpBuf;
 
     /* On 64 bit Linux at least, the struct is padded and 1 byte larger than its data */
@@ -284,10 +281,10 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
 /*    level  - 0 for contents only, 1 for contents & container   */
 /*    fast   - TRUE for compression, FALSE for no compression.   */
 
-void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit, int level, int fast)
+void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level, int fast)
 {
     int tmp_i = 0;
-    class unit_data *tmp_u = nullptr;
+    unit_data *tmp_u = nullptr;
 
     if (IS_ROOM(unit))
     {
@@ -330,7 +327,7 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
     }
 }
 
-void send_saves(class unit_data *parent, class unit_data *unit)
+void send_saves(unit_data *parent, unit_data *unit)
 {
     if (!unit)
     {
@@ -359,9 +356,9 @@ const char *ContentsFileName(const char *pName)
 /* if fast == 1 or compressed if fast == 0. Only OBJ's and NPC's will */
 /* be saved!                                                          */
 /* Container = 1 if container should be saved also                    */
-void basic_save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer)
+void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int bContainer)
 {
-    class descriptor_data *tmp_descr = nullptr;
+    descriptor_data *tmp_descr = nullptr;
     FILE *pFile = nullptr;
     char TmpName[MAX_INPUT_LENGTH + 1];
 
@@ -411,7 +408,7 @@ void basic_save_contents(const char *pFileName, class unit_data *unit, int fast,
 /* if fast == 1 or compressed if fast == 0. Only OBJ's and NPC's will */
 /* be saved!                                                          */
 /* Container = 1 if container should be saved also                    */
-int save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer)
+int save_contents(const char *pFileName, unit_data *unit, int fast, int bContainer)
 {
     char name[MAX_INPUT_LENGTH + 1];
 
@@ -435,22 +432,22 @@ int save_contents(const char *pFileName, class unit_data *unit, int fast, int bC
 /* and place them inside 'unit' by unit_to_unit and possibly equip */
 /* Return the top level unit loaded                                */
 
-class unit_data *base_load_contents(const char *pFileName, const class unit_data *unit)
+unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
 {
-    struct objheaderold ho;
-    struct objheadernew hn;
-    class file_index_type *fi = nullptr;
-    class unit_data *pnew = nullptr;
-    class unit_data *pnew_tmp = nullptr;
-    class unit_data *pstack[25];
+    objheaderold ho;
+    objheadernew hn;
+    file_index_type *fi = nullptr;
+    unit_data *pnew = nullptr;
+    unit_data *pnew_tmp = nullptr;
+    unit_data *pstack[25];
     int len = 0;
     int init = 0;
     int frame = 0;
     int n = 0;
-    class descriptor_data *tmp_descr = nullptr;
+    descriptor_data *tmp_descr = nullptr;
     int equip_ok = 0;
     FILE *pFile = nullptr;
-    class unit_data *topu = nullptr;
+    unit_data *topu = nullptr;
 
     CByteBuffer InvBuf;
     InvBuf.Clear();
@@ -481,7 +478,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     }
 
     frame = 0;
-    pstack[frame] = (class unit_data *)unit;
+    pstack[frame] = (unit_data *)unit;
 
     if (unit && IS_CHAR(unit))
     {
@@ -635,7 +632,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 /* From the block_file 'bf' at index 'blk_idx' load the objects    */
 /* and place them inside 'unit' by unit_to_unit and possibly equip */
 /* Return the daily cost                                           */
-void load_contents(const char *pFileName, class unit_data *unit)
+void load_contents(const char *pFileName, unit_data *unit)
 {
     base_load_contents(ContentsFileName(pFileName), unit);
 }
@@ -659,7 +656,7 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen,
     int rlen = 0;
     char *oend = nullptr;
     char *rend = nullptr;
-    struct diffhead head;
+    diffhead head;
 
     rend = ref + reflen - 1;
     oend = obj + objlen - 1;
@@ -710,7 +707,7 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen,
 /* reconstruct obj based on ref and diff */
 int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen, ubit32 crc)
 {
-    struct diffhead head;
+    diffhead head;
 
     if (diflen < (int)sizeof(head))
     {
@@ -754,7 +751,7 @@ int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen
 
 /* ========================= DIL STORE / RESTORE ======================= */
 
-void store_all_unit(class unit_data *u, char *fname, int svcont)
+void store_all_unit(unit_data *u, char *fname, int svcont)
 {
     /*fuck  if (!UNIT_FILE_INDEX (u))
         return;*/
@@ -762,9 +759,9 @@ void store_all_unit(class unit_data *u, char *fname, int svcont)
     basic_save_contents(fname, u, FALSE, svcont);
 }
 
-class unit_data *restore_all_unit(char *filename, unit_data *udest)
+unit_data *restore_all_unit(char *filename, unit_data *udest)
 {
-    class unit_data *u = nullptr;
+    unit_data *u = nullptr;
     u = base_load_contents(filename, udest);
     return u;
 }

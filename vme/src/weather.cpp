@@ -27,10 +27,10 @@ time_t g_tBootTime = 0;                       // time(0) when server boots
  */
 
 /* Calculate the REAL time passed over the last t2-t1 centuries (secs) */
-struct time_info_data real_time_passed(time_t t2, time_t t1)
+time_info_data real_time_passed(time_t t2, time_t t1)
 {
     long secs = 0;
-    struct time_info_data now;
+    time_info_data now;
 
     secs = (long)difftime(t2, t1);
 
@@ -48,9 +48,9 @@ struct time_info_data real_time_passed(time_t t2, time_t t1)
 }
 
 /* Calculate the MUD date */
-struct time_info_data mud_date(time_t t)
+time_info_data mud_date(time_t t)
 {
-    struct time_info_data mdate;
+    time_info_data mdate;
     long p = 0;
 
     p = (long)difftime(t, g_beginning_of_time);
@@ -69,7 +69,7 @@ struct time_info_data mud_date(time_t t)
     return mdate;
 }
 
-struct time_info_data mud_date()
+time_info_data mud_date()
 {
     // By doing this, essentially we allow timewarping to also warp the MUD time and date
     // MUD time can skew a tiny bit this way if ticks generally take longer than 250ms.
@@ -81,10 +81,10 @@ struct time_info_data mud_date()
 }
 
 /* Calculate the MUD time passed over the last t2-t1 centuries (secs) */
-struct time_info_data mud_time_passed(time_t t2, time_t t1)
+time_info_data mud_time_passed(time_t t2, time_t t1)
 {
     long secs = 0;
-    struct time_info_data now;
+    time_info_data now;
 
     secs = (long)difftime(t2, t1);
 
@@ -102,9 +102,9 @@ struct time_info_data mud_time_passed(time_t t2, time_t t1)
     return now;
 }
 
-struct time_info_data age(class unit_data *ch)
+time_info_data age(unit_data *ch)
 {
-    static struct time_info_data player_age;
+    static time_info_data player_age;
 
     if (IS_PC(ch))
     {
@@ -119,7 +119,7 @@ struct time_info_data age(class unit_data *ch)
 }
 
 /* Here comes the code */
-static void another_hour(struct time_info_data time_data)
+static void another_hour(time_info_data time_data)
 {
     switch (time_data.hours)
     {
@@ -148,7 +148,7 @@ static void another_hour(struct time_info_data time_data)
     }
 }
 
-static void weather_change(class zone_type *zone, struct time_info_data time_data)
+static void weather_change(zone_type *zone, time_info_data time_data)
 {
     int diff = 0;
     int change = 0;
@@ -319,7 +319,7 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
 
 void update_time_and_weather()
 {
-    struct time_info_data time_info;
+    time_info_data time_info;
 
     time_info = mud_date();
 
@@ -346,7 +346,7 @@ void boot_time_and_weather()
     g_world_boottime = ctime(&g_tBootTime);
     g_world_boottime.erase(g_world_boottime.length() - 1);
 
-    struct time_info_data time_info = mud_time_passed(time(nullptr), g_beginning_of_time);
+    time_info_data time_info = mud_time_passed(time(nullptr), g_beginning_of_time);
 
     if (time_info.hours == 5)
     {

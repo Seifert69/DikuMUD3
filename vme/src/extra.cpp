@@ -65,10 +65,10 @@ extra_descr_data::~extra_descr_data()
 
 // SIGH. Due to DIL I need to make this function on the extra_descr_data
 // when really I only wanted it on the list
-class extra_descr_data *extra_descr_data::find_raw(const char *word)
+extra_descr_data *extra_descr_data::find_raw(const char *word)
 {
     ubit32 i = 0;
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
 
     for (exd = this; exd; exd = exd->next)
     {
@@ -95,7 +95,7 @@ class extra_descr_data *extra_descr_data::find_raw(const char *word)
 }
 
 // Argh, just for DIL :-( *sob*
-void rogue_push_front(class extra_descr_data **exlist, class extra_descr_data *newex)
+void rogue_push_front(extra_descr_data **exlist, extra_descr_data *newex)
 {
     assert(exlist && newex);
 
@@ -104,9 +104,9 @@ void rogue_push_front(class extra_descr_data **exlist, class extra_descr_data *n
 }
 
 // Sob
-void rogue_remove(class extra_descr_data **exlist, const char *name)
+void rogue_remove(extra_descr_data **exlist, const char *name)
 {
-    class extra_descr_data *tex = (*exlist)->find_raw(name);
+    extra_descr_data *tex = (*exlist)->find_raw(name);
 
     if (tex)
     {
@@ -120,7 +120,7 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
         }
 
         // Find exd in the list (not the first element)
-        class extra_descr_data *pex = nullptr;
+        extra_descr_data *pex = nullptr;
 
         for (pex = *exlist; pex->next; pex = pex->next)
         {
@@ -150,7 +150,7 @@ extra_list::~extra_list()
     m_pList = nullptr;
 }
 
-void extra_list::freelist(class extra_descr_data *ex)
+void extra_list::freelist(extra_descr_data *ex)
 {
     if (ex)
     {
@@ -167,7 +167,7 @@ int extra_list::isempty()
 int extra_list::count()
 {
     int i = 0;
-    class extra_descr_data *e = nullptr;
+    extra_descr_data *e = nullptr;
 
     // Count no of elements in list
     for (e = this->m_pList, i = 0; e; e = e->next)
@@ -184,7 +184,7 @@ std::string extra_list::json()
 
     s = "\"extralist\": [ ";
 
-    class extra_descr_data *e = nullptr;
+    extra_descr_data *e = nullptr;
 
     // Count no of elements in list
     for (e = this->m_pList; e; e = e->next)
@@ -209,14 +209,14 @@ std::string extra_list::json()
 }
 
 // Insert ex as the first element in front of the list
-void extra_list::push_front(class extra_descr_data *ex)
+void extra_list::push_front(extra_descr_data *ex)
 {
     ex->next = m_pList;
     m_pList = ex;
 }
 
 // Insert ex as the last element in front of the list
-void extra_list::push_tail(class extra_descr_data *ex)
+void extra_list::push_tail(extra_descr_data *ex)
 {
     if (m_pList == nullptr)
     {
@@ -224,7 +224,7 @@ void extra_list::push_tail(class extra_descr_data *ex)
     }
     else
     {
-        class extra_descr_data *p = nullptr;
+        extra_descr_data *p = nullptr;
 
         for (p = m_pList; p->next; p = p->next)
         {
@@ -238,7 +238,7 @@ void extra_list::push_tail(class extra_descr_data *ex)
 
 // Unlink exd from the list and delete the object and return the next object
 // Always returns the list object (why?)
-void extra_list::erase(class extra_descr_data *exd)
+void extra_list::erase(extra_descr_data *exd)
 {
     assert(m_pList && exd);
 
@@ -253,7 +253,7 @@ void extra_list::erase(class extra_descr_data *exd)
     }
 
     // FInd exd in the list (not the first element)
-    class extra_descr_data *pex = nullptr;
+    extra_descr_data *pex = nullptr;
 
     for (pex = m_pList; pex->next; pex = pex->next)
     {
@@ -273,7 +273,7 @@ void extra_list::erase(class extra_descr_data *exd)
 }
 
 // adds ex (not a copy of ex, so be sure it is allocated before calling)
-class extra_descr_data *extra_list::add(class extra_descr_data *ex)
+extra_descr_data *extra_list::add(extra_descr_data *ex)
 {
     push_front(ex);
 
@@ -283,31 +283,31 @@ class extra_descr_data *extra_list::add(class extra_descr_data *ex)
 /*                                                            */
 /* Adds an extra description just before the one given (this) */
 /*                                                            */
-class extra_descr_data *extra_list::add(const char **names, const char *descr)
+extra_descr_data *extra_list::add(const char **names, const char *descr)
 {
-    class extra_descr_data *new_ex = nullptr;
+    extra_descr_data *new_ex = nullptr;
 
-    new_ex = new class extra_descr_data(names, descr);
+    new_ex = new extra_descr_data(names, descr);
     push_front(new_ex);
 
     return new_ex;
 }
 
-class extra_descr_data *extra_list::add(cNamelist cn, const char *descr)
+extra_descr_data *extra_list::add(cNamelist cn, const char *descr)
 {
-    class extra_descr_data *new_ex = nullptr;
+    extra_descr_data *new_ex = nullptr;
 
-    new_ex = new class extra_descr_data(cn, descr);
+    new_ex = new extra_descr_data(cn, descr);
     push_front(new_ex);
 
     return new_ex;
 }
 
-class extra_descr_data *extra_list::add(const char *name, const char *descr)
+extra_descr_data *extra_list::add(const char *name, const char *descr)
 {
-    class extra_descr_data *new_ex = nullptr;
+    extra_descr_data *new_ex = nullptr;
 
-    new_ex = new class extra_descr_data(name, descr);
+    new_ex = new extra_descr_data(name, descr);
     push_front(new_ex);
 
     return new_ex;
@@ -315,7 +315,7 @@ class extra_descr_data *extra_list::add(const char *name, const char *descr)
 
 void extra_list::remove(const char *name)
 {
-    class extra_descr_data *tex = find_raw(name);
+    extra_descr_data *tex = find_raw(name);
 
     if (tex)
     {
@@ -325,7 +325,7 @@ void extra_list::remove(const char *name)
 
 void extra_list::AppendBuffer(CByteBuffer *pBuf)
 {
-    class extra_descr_data *e = nullptr;
+    extra_descr_data *e = nullptr;
 
     assert(this);
 
@@ -345,7 +345,7 @@ void extra_list::AppendBuffer(CByteBuffer *pBuf)
 /* Only matches on complete letter by letter match!           */
 /* The empty word "" or NULL matches an empty namelist.       */
 /*                                                            */
-class extra_descr_data *extra_list::find_raw(const char *word)
+extra_descr_data *extra_list::find_raw(const char *word)
 {
     if (this->m_pList)
     {
@@ -358,16 +358,16 @@ class extra_descr_data *extra_list::find_raw(const char *word)
 }
 
 // From the elist object, make a copy of the list
-void extra_list::copyfrom(class extra_list &listToBeCopied)
+void extra_list::copyfrom(extra_list &listToBeCopied)
 {
-    class extra_descr_data *new_ex = nullptr;
+    extra_descr_data *new_ex = nullptr;
 
     assert(this->m_pList == nullptr);
 
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
     for (exd = listToBeCopied.m_pList; exd; exd = exd->next)
     {
-        new_ex = new class extra_descr_data(exd->names, exd->descr.c_str());
+        new_ex = new extra_descr_data(exd->names, exd->descr.c_str());
         this->add(new_ex);
     }
 }
@@ -379,13 +379,13 @@ void extra_list::copyfrom(class extra_list &listToBeCopied)
 /*  We don't want people to be able to see $-prefixed extras
  *  so check for that...
  */
-class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit)
+extra_descr_data *unit_find_extra(const char *word, unit_data *unit)
 {
     word = skip_spaces(word);
 
     if (unit && *word != '$')
     {
-        class extra_descr_data *i = nullptr;
+        extra_descr_data *i = nullptr;
 
         word = skip_spaces(word);
 
@@ -413,9 +413,9 @@ class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit)
     return nullptr;
 }
 
-class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_data **target, char *word, class unit_data *list)
+extra_descr_data *char_unit_find_extra(unit_data *ch, unit_data **target, char *word, unit_data *list)
 {
-    class extra_descr_data *exd = nullptr;
+    extra_descr_data *exd = nullptr;
 
     if (!list)
     {
@@ -458,9 +458,9 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_dat
     return nullptr;
 }
 
-const char *unit_find_extra_string(class unit_data *ch, char *word, class unit_data *list)
+const char *unit_find_extra_string(unit_data *ch, char *word, unit_data *list)
 {
-    class extra_descr_data *exd = char_unit_find_extra(ch, nullptr, word, list);
+    extra_descr_data *exd = char_unit_find_extra(ch, nullptr, word, list);
 
     if (exd)
     {

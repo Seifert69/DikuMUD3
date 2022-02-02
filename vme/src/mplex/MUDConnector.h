@@ -43,6 +43,6 @@ extern cMotherHook g_MotherHook;
 // Connection to and from the MUD server
 extern cMudHook g_MudHook;
 extern int g_nConnectionsLeft;
-extern class color_type g_cDefcolor;
+extern color_type g_cDefcolor;
 
 } // namespace mplex

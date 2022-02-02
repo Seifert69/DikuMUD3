@@ -513,7 +513,7 @@ void cCaptainHook::Unhook(cHook *hook)
 // If an unhook is performed during the wait, the possible select may be
 // postponed until the next call to wait().
 //
-int cCaptainHook::Wait(struct timeval *timeout)
+int cCaptainHook::Wait(timeval *timeout)
 {
     int n = 0;
 

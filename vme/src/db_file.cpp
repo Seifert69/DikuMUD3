@@ -32,11 +32,11 @@ CByteBuffer g_FileBuffer(16384);
 // ubit8 *filbuffer = 0;                 /* Buffer for read/write unit      */
 
 // Return 1 on error, 0 if OK
-int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
+int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
 {
-    class extra_descr_data *e = nullptr;
-    class extra_descr_data *te = nullptr;
-    class extra_descr_data *first = nullptr;
+    extra_descr_data *e = nullptr;
+    extra_descr_data *te = nullptr;
+    extra_descr_data *first = nullptr;
     ubit8 x = 0;
     ubit32 i = 0; // for 32 bit extra lists
     char *c = nullptr;
@@ -74,7 +74,7 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
         {
             c = fix_old_codes_to_html(c);
         }
-        e = new (class extra_descr_data);
+        e = new (extra_descr_data);
         e->descr = c;
         e->names.ReadBuffer(pBuf, unit_version);
         if (unit_version > 61)
@@ -105,7 +105,7 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
 /*
  * This function reads a DIL template
  */
-struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
+diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 {
 #ifdef DMSERVER
     int valid = 0;
@@ -113,10 +113,10 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     int i = 0;
     int j = 0;
     ubit8 t = 0;
-    struct diltemplate *tmpl = nullptr;
+    diltemplate *tmpl = nullptr;
 
     /* read a template */
-    CREATE(tmpl, struct diltemplate, 1);
+    CREATE(tmpl, diltemplate, 1);
 
     tmpl->nInstructions = 0;
     tmpl->nTriggers = 0;
@@ -188,7 +188,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     if (tmpl->xrefcount)
     {
-        CREATE(tmpl->xrefs, struct dilxref, tmpl->xrefcount);
+        CREATE(tmpl->xrefs, dilxref, tmpl->xrefcount);
 
         /* read the symbolic references */
         for (i = 0; i < tmpl->xrefcount; i++)
@@ -221,7 +221,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     if (tmpl->xrefcount)
     {
-        CREATE(tmpl->extprg, struct diltemplate *, tmpl->xrefcount);
+        CREATE(tmpl->extprg, diltemplate *, tmpl->xrefcount);
     }
     else
     {
@@ -279,7 +279,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 }
 
 /* Reads DIL interrupt list */
-void bread_dilintr(CByteBuffer *pBuf, class dilprg *prg, int version)
+void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
 {
     int i = 0;
     ubit32 lab = 0;
@@ -289,7 +289,7 @@ void bread_dilintr(CByteBuffer *pBuf, class dilprg *prg, int version)
 
     if (prg->frame[0].intrcount)
     {
-        CREATE(prg->frame[0].intr, struct dilintr, prg->frame[0].intrcount);
+        CREATE(prg->frame[0].intr, dilintr, prg->frame[0].intrcount);
 
         for (i = 0; i < prg->frame[0].intrcount; i++)
         {
@@ -309,7 +309,7 @@ void bread_dilintr(CByteBuffer *pBuf, class dilprg *prg, int version)
     }
 }
 
-void bwrite_dilintr(CByteBuffer *pBuf, class dilprg *prg)
+void bwrite_dilintr(CByteBuffer *pBuf, dilprg *prg)
 {
     ubit16 i = 0;
     ubit32 lab = 0;
@@ -379,11 +379,11 @@ void bwrite_dilintr(CByteBuffer *pBuf, class dilprg *prg)
  * Really curious what "stspec" is.... (MS2020)
  */
 
-void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class unit_fptr *fptr, int stspec)
+void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *fptr, int stspec)
 {
 #ifdef DMSERVER
-    class dilprg *prg = nullptr;
-    struct diltemplate *tmpl = nullptr;
+    dilprg *prg = nullptr;
+    diltemplate *tmpl = nullptr;
     ubit32 recallpc = 0;
     ubit16 t16 = 0;
     int i = 0;
@@ -435,7 +435,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
     if (!tmpl)
     {
         /* Make static template containing just the name */
-        CREATE(tmpl, struct diltemplate, 1);
+        CREATE(tmpl, diltemplate, 1);
         tmpl->nInstructions = 0;
         tmpl->nTriggers = 0;
         tmpl->fCPU = 0.0;
@@ -471,7 +471,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
     if (novar)
     {
-        CREATE(prg->fp->vars, struct dilvar, novar);
+        CREATE(prg->fp->vars, dilvar, novar);
     } /* saved variables */
     else
     {
@@ -537,7 +537,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
         if (tmpl->varc)
         {
-            CREATE(prg->fp->vars, struct dilvar, tmpl->varc);
+            CREATE(prg->fp->vars, dilvar, tmpl->varc);
         }
         else
         {
@@ -567,7 +567,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
         if (tmpl->intrcount)
         {
-            CREATE(prg->fp->intr, struct dilintr, tmpl->intrcount);
+            CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
         }
         else
         {
@@ -597,7 +597,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 
         if (tmpl->intrcount)
         {
-            CREATE(prg->fp->intr, struct dilintr, tmpl->intrcount);
+            CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
         }
         else
         {
@@ -621,10 +621,10 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
 #endif
 }
 
-class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *owner, int stspec)
+unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int stspec)
 {
-    class unit_fptr *fptr = nullptr;
-    class unit_fptr *head = nullptr;
+    unit_fptr *fptr = nullptr;
+    unit_fptr *head = nullptr;
     int i = 0;
     ubit8 t8 = 0;
     ubit16 t16 = 0;
@@ -652,7 +652,7 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
         }
         else
         {
-            head = new EMPLACE(unit_fptr) class unit_fptr;
+            head = new EMPLACE(unit_fptr) unit_fptr;
             fptr = head;
         }
 
@@ -686,9 +686,9 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
             char name[256];
             char *c = nullptr;
 
-            struct dilargstype *dilargs = nullptr;
+            dilargstype *dilargs = nullptr;
 
-            CREATE(dilargs, struct dilargstype, 1);
+            CREATE(dilargs, dilargstype, 1);
 
             pBuf->ReadStringCopy(name, sizeof(name));
             strcat(name, "/");
@@ -779,7 +779,7 @@ void bread_block(FILE *datafile, long file_pos, int length, void *buffer)
     }
 }
 
-void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af, ubit8 version)
+void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version)
 {
     int i = 0;
     ubit32 nPos = 0;
@@ -834,7 +834,7 @@ void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af, ubit8 versio
 /*
  * This function writes a DIL template
  */
-void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
+void bwrite_diltemplate(CByteBuffer *pBuf, diltemplate *tmpl)
 {
     int i = 0;
     int j = 0;
@@ -899,10 +899,10 @@ void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
 /*
  * This function writes a DIL program
  */
-void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
+void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
 {
     int i = 0;
-    struct diltemplate *tmpl = nullptr;
+    diltemplate *tmpl = nullptr;
 
     /* write new version */
     pBuf->Append32(prg->flags); /* from other template? */
@@ -984,7 +984,7 @@ void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
     bwrite_dilintr(pBuf, prg);
 }
 
-void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
+void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
 {
     char *data = nullptr;
     int i = 0;
@@ -1038,13 +1038,13 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
         if (fptr->index == SFUN_DIL_INTERNAL)
         {
             assert(fptr->data);
-            bwrite_dil(pBuf, (class dilprg *)fptr->data);
+            bwrite_dil(pBuf, (dilprg *)fptr->data);
         }
         else if (fptr->index == SFUN_DILCOPY_INTERNAL)
         {
 #ifdef VMC_SRC
             assert(fptr->data);
-            struct dilargstype *dilargs = (struct dilargstype *)fptr->data;
+            dilargstype *dilargs = (dilargstype *)fptr->data;
 
             pBuf->AppendDoubleString(dilargs->name);
 
@@ -1115,7 +1115,7 @@ void bwrite_block(FILE *datafile, int length, void *buffer)
 }
 
 /* Write unit to string. */
-int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
+int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 {
     int i = 0;
     ubit8 nVersion = 0;
@@ -1197,7 +1197,7 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
     }
     else
     {
-        class unit_data *inu = nullptr;
+        unit_data *inu = nullptr;
 
         if (IS_PC(u))
         {
@@ -1427,7 +1427,7 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
 
 /* Appends unit 'u' to file 'f'. Name is the unique name */
 /* Used only by dmc.                                     */
-void write_unit(FILE *f, class unit_data *u, char *fname)
+void write_unit(FILE *f, unit_data *u, char *fname)
 {
     CByteBuffer *pBuf = nullptr;
     ubit32 nSizeStart = 0;
@@ -1475,7 +1475,7 @@ void write_unit(FILE *f, class unit_data *u, char *fname)
 
 /* Append template 'tmpl' to file 'f'                    */
 /* Used only by dmc. for writing zones                   */
-void write_diltemplate(FILE *f, struct diltemplate *tmpl)
+void write_diltemplate(FILE *f, diltemplate *tmpl)
 {
     CByteBuffer *pBuf = nullptr;
     ubit32 length = 0;

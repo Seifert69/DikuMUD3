@@ -28,7 +28,7 @@ private:
     int total_loops;
     double total_process;
     float total_time;
-    struct eventq_elem **heap;
+    eventq_elem **heap;
 
 public:
     eventqueue();

@@ -36,40 +36,40 @@
 #include <cstdlib>
 #include <cstring>
 
-struct trie_type *cmd_trie = nullptr;
-struct command_info *g_cmdlist = nullptr;
-struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_move, 0, 0},
-                                   {"ne", do_move, 0, 0},           {"northwest", do_move, 0, 0},
-                                   {"nw", do_move, 0, 0},           {"east", do_move, 0, 0},
-                                   {"south", do_move, 0, 0},        {"southeast", do_move, 0, 0},
-                                   {"se", do_move, 0, 0},           {"west", do_move, 0, 0},
-                                   {"southwest", do_move, 0, 0},    {"sw", do_move, 0, 0},
-                                   {"up", do_move, 0, 0},           {"down", do_move, 0, 0},
+trie_type *cmd_trie = nullptr;
+command_info *g_cmdlist = nullptr;
+cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_move, 0, 0},
+                            {"ne", do_move, 0, 0},           {"northwest", do_move, 0, 0},
+                            {"nw", do_move, 0, 0},           {"east", do_move, 0, 0},
+                            {"south", do_move, 0, 0},        {"southeast", do_move, 0, 0},
+                            {"se", do_move, 0, 0},           {"west", do_move, 0, 0},
+                            {"southwest", do_move, 0, 0},    {"sw", do_move, 0, 0},
+                            {"up", do_move, 0, 0},           {"down", do_move, 0, 0},
 
-                                   {"account", do_account, 0, 0},   {"at", do_at, 0, 0},
+                            {"account", do_account, 0, 0},   {"at", do_at, 0, 0},
 
-                                   {"backstab", do_backstab, 0, 0}, {"ban", do_ban, 0, 0},
+                            {"backstab", do_backstab, 0, 0}, {"ban", do_ban, 0, 0},
 
-                                   {"cast", do_cast, 0, 0},         {"change", do_change, 0, 0},
-                                   {"color", do_color, 0, 0},       {"consider", do_consider, 0, 0},
-                                   {"crash", do_crash, 0, 0},
+                            {"cast", do_cast, 0, 0},         {"change", do_change, 0, 0},
+                            {"color", do_color, 0, 0},       {"consider", do_consider, 0, 0},
+                            {"crash", do_crash, 0, 0},
 
-                                   {"execute", do_execute, 0, 0},
+                            {"execute", do_execute, 0, 0},
 
-                                   {"kill", do_kill, 0, 0},
+                            {"kill", do_kill, 0, 0},
 
-                                   {"level", do_level, 0, 0},       {"load", do_load, 0, 0},
-                                   {"timewarp", do_timewarp, 0, 0},
+                            {"level", do_level, 0, 0},       {"load", do_load, 0, 0},
+                            {"timewarp", do_timewarp, 0, 0},
 
-                                   {"rent", do_rent, 0, 0},         {"reset", do_reset, 0, 0},
-                                   {"save", do_save, 0, 0},         {"set", do_set, 0, 0},
-                                   {"setskill", do_setskill, 0, 0}, {"shutdown", do_shutdown, 0, 0},
-                                   {"snoop", do_snoop, 0, 0},       {"switch", do_switch, 0, 0},
+                            {"rent", do_rent, 0, 0},         {"reset", do_reset, 0, 0},
+                            {"save", do_save, 0, 0},         {"set", do_set, 0, 0},
+                            {"setskill", do_setskill, 0, 0}, {"shutdown", do_shutdown, 0, 0},
+                            {"snoop", do_snoop, 0, 0},       {"switch", do_switch, 0, 0},
 
-                                   {"users", do_users, 0, 0},       {"where", do_where, 0, 0},
+                            {"users", do_users, 0, 0},       {"where", do_where, 0, 0},
 
-                                   {"wizlock", do_wizlock, 0, 0},   {"wstat", do_wstat, 0, 0},
-                                   {"wedit", do_wedit, 0, 0},       {"", nullptr, 0, 0}};
+                            {"wizlock", do_wizlock, 0, 0},   {"wstat", do_wstat, 0, 0},
+                            {"wedit", do_wedit, 0, 0},       {"", nullptr, 0, 0}};
 
 void skill_dump()
 {
@@ -148,9 +148,9 @@ void command_read()
     char pTmp[256];
     char *pCh = nullptr;
     FILE *fl = nullptr;
-    struct command_info *cmdptr = nullptr;
-    struct command_info *lastptr = nullptr;
-    struct cmdload_struct *intcmd = nullptr;
+    command_info *cmdptr = nullptr;
+    command_info *lastptr = nullptr;
+    cmdload_struct *intcmd = nullptr;
 
     touch_file(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS));
     if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS).c_str(), "rb")))
@@ -210,7 +210,7 @@ void command_read()
                 }
             }
 
-            CREATE(cmdptr, struct command_info, 1);
+            CREATE(cmdptr, command_info, 1);
             cmdptr->next = nullptr;
             cmdptr->prev = nullptr;
             cmdptr->minimum_level = 0;
@@ -234,7 +234,7 @@ void command_read()
 
         if (strncmp(pTmp, "internal", 4) == 0)
         {
-            if ((intcmd = ((struct cmdload_struct *)search_trie(pCh, cmd_trie))))
+            if ((intcmd = ((cmdload_struct *)search_trie(pCh, cmd_trie))))
             {
                 if (cmdptr)
                 {

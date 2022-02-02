@@ -28,7 +28,7 @@ public:
     cMultiHook Multi[MAX_MULTI];
 };
 
-extern class cMultiMaster g_Multi;
+extern cMultiMaster g_Multi;
 
 class cMotherHook : public cHook
 {
@@ -43,4 +43,4 @@ void init_mother(int nPort);
 void multi_clear();
 void multi_ping_all();
 
-extern class cMotherHook g_MotherHook;
+extern cMotherHook g_MotherHook;

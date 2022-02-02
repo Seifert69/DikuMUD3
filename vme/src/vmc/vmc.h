@@ -54,14 +54,16 @@ struct zone_header
     int weather;
 };
 
+class reset_command;
+
 struct zone_info
 {
-    class unit_data *z_rooms;
-    class unit_data *z_mobiles;
-    class unit_data *z_objects;
-    struct reset_command *z_table;
-    struct zone_header z_zone;
-    struct diltemplate *z_tmpl;
+    unit_data *z_rooms;
+    unit_data *z_mobiles;
+    unit_data *z_objects;
+    reset_command *z_table;
+    zone_header z_zone;
+    diltemplate *z_tmpl;
 };
 
 struct reset_command
@@ -74,12 +76,12 @@ struct reset_command
     sbit16 num3;
     char direction;
     char cmpl;
-    struct reset_command *next;
+    reset_command *next;
 };
 
-class unit_data *mcreate_unit(int type);
-class room_direction_data *mcreate_exit();
-struct unit_affected_type *mcreate_affect();
+unit_data *mcreate_unit(int type);
+room_direction_data *mcreate_exit();
+unit_affected_type *mcreate_affect();
 void *mmalloc(int size);
 void mem_reset();
 void mem_init();

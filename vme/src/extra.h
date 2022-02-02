@@ -12,6 +12,9 @@
 
 #include <string>
 
+class extra_descr_data;
+class unit_data;
+
 class extra_list
 {
 public:
@@ -19,28 +22,28 @@ public:
     ~extra_list();
 
     void AppendBuffer(CByteBuffer *pBuf);
-    class extra_descr_data *find_raw(const char *word);
-    void erase(class extra_descr_data *exd);
+    extra_descr_data *find_raw(const char *word);
+    void erase(extra_descr_data *exd);
     void remove(const char *name);
-    void copyfrom(class extra_list &listToBeCopied);
+    void copyfrom(extra_list &listToBeCopied);
     int isempty();
     int count();
     std::string json();
 
-    void push_front(class extra_descr_data *ex);
-    void push_tail(class extra_descr_data *ex);
+    void push_front(extra_descr_data *ex);
+    void push_tail(extra_descr_data *ex);
 
-    class extra_descr_data *add(class extra_descr_data *ex);
-    class extra_descr_data *add(const char *name, const char *descr);
-    class extra_descr_data *add(const char **names, const char *descr);
-    class extra_descr_data *add(cNamelist cn, const char *descr);
+    extra_descr_data *add(extra_descr_data *ex);
+    extra_descr_data *add(const char *name, const char *descr);
+    extra_descr_data *add(const char **names, const char *descr);
+    extra_descr_data *add(cNamelist cn, const char *descr);
 
     // I couldn't use std:list because dilfld needs the next pointer
     // and I can't get to the container only one pointer in DIL.
-    class extra_descr_data *m_pList;
+    extra_descr_data *m_pList;
 
 private:
-    void freelist(class extra_descr_data *);
+    void freelist(extra_descr_data *);
 };
 
 class extra_descr_data
@@ -52,18 +55,18 @@ public:
     extra_descr_data(cNamelist names, const char *descr);
     ~extra_descr_data();
 
-    class extra_descr_data *find_raw(const char *word);
+    extra_descr_data *find_raw(const char *word);
 
-    class cintlist vals;
-    class cNamelist names;        /* Keyword in look/examine          */
-    std::string descr;            /* What to see                      */
-    class extra_descr_data *next; /* Next in list                     */
+    cintlist vals;
+    cNamelist names;        /* Keyword in look/examine          */
+    std::string descr;      /* What to see                      */
+    extra_descr_data *next; /* Next in list                     */
 };
 
-const char *unit_find_extra_string(class unit_data *ch, char *word, class unit_data *list);
+const char *unit_find_extra_string(unit_data *ch, char *word, unit_data *list);
 
-class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_data **target, char *word, class unit_data *list);
+extra_descr_data *char_unit_find_extra(unit_data *ch, unit_data **target, char *word, unit_data *list);
 
-class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit);
-void rogue_push_front(class extra_descr_data **exlist, class extra_descr_data *newex);
-void rogue_remove(class extra_descr_data **exlist, const char *name);
+extra_descr_data *unit_find_extra(const char *word, unit_data *unit);
+void rogue_push_front(extra_descr_data **exlist, extra_descr_data *newex);
+void rogue_remove(extra_descr_data **exlist, const char *name);

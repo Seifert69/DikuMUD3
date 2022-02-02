@@ -1,3 +1,6 @@
 #pragma once
 
-void do_change(class unit_data *, char *, const struct command_info *);
+#include "interpreter.h"
+#include "structs.h"
+
+void do_change(unit_data *, char *, const command_info *);

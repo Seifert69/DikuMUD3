@@ -6,8 +6,11 @@
  */
 #pragma once
 
+#include "extra.h"
+#include "interpreter.h"
 #include "intlist.h"
 #include "namelist.h"
+#include "structs.h"
 #include "t_array.h"
 
 #define WAITCMD_MAXINST 32000
@@ -34,7 +37,7 @@ struct dilargstype
 {
     ubit8 no;
     char *name;
-    struct dilargtype dilarg[256];
+    dilargtype dilarg[256];
 };
 
 /*
@@ -468,15 +471,14 @@ struct dilvar
     char *name;  /* variable name */
     union
     {
-        class unit_data *unitptr;
-        class zone_type *zoneptr;
-        struct command_info *cmdptr;
+        unit_data *unitptr;
+        zone_type *zoneptr;
+        command_info *cmdptr;
         sbit32 integer;
-        class extra_descr_data *extraptr;
+        extra_descr_data *extraptr;
         char *string;
-        class cStringInstance *pHash;
-        class cNamelist *namelist;
-        class cintlist *intlist;
+        cNamelist *namelist;
+        cintlist *intlist;
     } val;
 };
 
@@ -505,8 +507,8 @@ public:
 /* structure for securing unit pointers */
 struct dilsecure
 {
-    class unit_data *sup; /* A direct reference to the variabel! */
-    ubit8 *lab;           /* address to jump to, NULL=foreach */
+    unit_data *sup; /* A direct reference to the variabel! */
+    ubit8 *lab;     /* address to jump to, NULL=foreach */
 };
 
 /*
@@ -522,6 +524,7 @@ struct dilxref
     ubit8 *argt; /* argument types */
 };
 
+class dilprg;
 /*
  *  A DIL template for registering DIL programs/functions/procedures.
  *  Inline code is registered as local instances.
@@ -529,8 +532,8 @@ struct dilxref
  */
 struct diltemplate
 {
-    char *prgname;         /* program name @ zone */
-    class zone_type *zone; /* Pointer to owner of structure    */
+    char *prgname;   /* program name @ zone */
+    zone_type *zone; /* Pointer to owner of structure    */
 
     ubit32 flags; /* recall, etc. */
     ubit8 priority;
@@ -547,17 +550,17 @@ struct diltemplate
     ubit16 varc; /* number of variables */
     ubit8 *vart; /* variable types */
 
-    ubit16 xrefcount;            /* number of external references   */
-    struct diltemplate **extprg; /* external programs (SERVER only) */
-    struct dilxref *xrefs;       /* external references (VMC only)  */
+    ubit16 xrefcount;     /* number of external references   */
+    diltemplate **extprg; /* external programs (SERVER only) */
+    dilxref *xrefs;       /* external references (VMC only)  */
 
     ubit32 nInstructions; /* Number of instructions          */
     ubit32 nTriggers;     /* Number of triggers of the DIL   */
     double fCPU;          /* CPU usage (miliseconds)         */
 
-    class dilprg *nextdude;      // For use in DIL sendtoall() with destroyed units
-    class dilprg *prg_list;      // Replacing the global dil_list with a template local one
-    struct diltemplate *vmcnext; // Only for VMC
+    dilprg *nextdude;     // For use in DIL sendtoall() with destroyed units
+    dilprg *prg_list;     // Replacing the global dil_list with a template local one
+    diltemplate *vmcnext; // Only for VMC
 };
 
 struct dilintr
@@ -576,16 +579,16 @@ struct dilintr
  */
 struct dilframe
 {
-    struct diltemplate *tmpl; /* current template */
-    struct dilvar *vars;      /* variables */
+    diltemplate *tmpl; /* current template */
+    dilvar *vars;      /* variables */
 
     ubit8 *pc; /* program counter */
 
-    ubit16 securecount;       /* number of secures (not saved) */
-    struct dilsecure *secure; /* secured vars (not saved) */
+    ubit16 securecount; /* number of secures (not saved) */
+    dilsecure *secure;  /* secured vars (not saved) */
 
-    ubit16 intrcount;     /* number of interrupts */
-    struct dilintr *intr; /* interrupts */
+    ubit16 intrcount; /* number of interrupts */
+    dilintr *intr;    /* interrupts */
     int stacklen;
 };
 
@@ -599,7 +602,7 @@ struct dilframe
 class dilprg
 {
 public:
-    dilprg(class unit_data *owner, diltemplate *linktmpl);
+    dilprg(unit_data *owner, diltemplate *linktmpl);
     ~dilprg();
     void link(diltemplate *tmpl);
     void unlink();
@@ -609,18 +612,18 @@ public:
     ubit16 corecrc; // core crc from compiler (saved)
     ubit16 nest;    // How many levels is the call nested
 
-    ubit16 framesz;         /* stack size */
-    struct dilframe *fp;    /* stack and pointer */
-    struct dilframe *frame; /* stack frames, #0 saved */
+    ubit16 framesz;  /* stack size */
+    dilframe *fp;    /* stack and pointer */
+    dilframe *frame; /* stack frames, #0 saved */
 
     t_array<dilval> stack;
 
-    struct spec_arg *sarg;
-    class unit_data *owner;
+    spec_arg *sarg;
+    unit_data *owner;
 
     sbit16 waitcmd; /* Command countdown */
 
-    class dilprg *next; /* For global dilprg list (sendtoalldil) */
+    dilprg *next; /* For global dilprg list (sendtoalldil) */
 
     int canfree();
 };

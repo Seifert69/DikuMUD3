@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 /************************************************************************/
 /*									*/
 /*	File:	pp8.c							*/
@@ -975,3 +978,5 @@ int test(const char *str)
         return (FALSE);
     }
 }
+
+#pragma GCC diagnostic pop

@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 /************************************************************************/
 /*									*/
 /*	File:	pp3.c							*/
@@ -965,3 +968,5 @@ int trigraph()
     }
     return (c);
 }
+
+#pragma GCC diagnostic pop

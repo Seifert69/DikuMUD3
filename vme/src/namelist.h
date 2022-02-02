@@ -20,7 +20,7 @@ public:
     void operator=(const char **);
     void Free();
     void CopyList(const char **list);
-    void CopyList(class cNamelist *);
+    void CopyList(cNamelist *);
 
     void AppendBuffer(CByteBuffer *pBuf);
     int ReadBuffer(CByteBuffer *pBuf, int unit_version);

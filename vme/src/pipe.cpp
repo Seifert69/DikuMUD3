@@ -219,8 +219,8 @@ void pipeMUD_write(const char *c)
 //
 void pipeMUD_dispatch(std::string str)
 {
-    struct diltemplate *tmpl = nullptr;
-    class dilprg *prg = nullptr;
+    diltemplate *tmpl = nullptr;
+    dilprg *prg = nullptr;
     static unit_data *u = nullptr;
 
     if (!u)

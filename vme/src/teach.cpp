@@ -64,9 +64,9 @@ struct teach_packet
 {
     ubit8 type; /* Ability, spell, skill, weapon */
     // Obsolete, only guild level in teachers 0 for guild-level, 1 for ordinary level
-    struct teacher_msg msgs;
-    struct skill_teach_type *teaches; /* Array of skills */
-    struct tree_type *tree;
+    teacher_msg msgs;
+    skill_teach_type *teaches; /* Array of skills */
+    tree_type *tree;
     const char **text;
 };
 
@@ -77,7 +77,7 @@ struct pc_train_values
     sbit32 *practice_points;
 };
 
-static int gold_cost(struct skill_teach_type *s, int level)
+static int gold_cost(skill_teach_type *s, int level)
 {
     if (level < 1)
     {
@@ -221,7 +221,7 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
     }
 }
 
-void clear_training_level(class unit_data *ch)
+void clear_training_level(unit_data *ch)
 {
     int i = 0;
 
@@ -248,7 +248,7 @@ void clear_training_level(class unit_data *ch)
     }
 }
 
-int teaches_index(struct skill_teach_type *teaches_skills, int node)
+int teaches_index(skill_teach_type *teaches_skills, int node)
 {
     int i = 0;
 
@@ -263,7 +263,7 @@ int teaches_index(struct skill_teach_type *teaches_skills, int node)
     return -1;
 }
 
-const char *trainrestricted(class unit_data *pupil, struct profession_cost *cost_entry, int minguildlevel)
+const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int minguildlevel)
 {
     static char buf[MAX_STRING_LENGTH];
     char *c = nullptr;
@@ -307,8 +307,8 @@ const char *trainrestricted(class unit_data *pupil, struct profession_cost *cost
     }
 }
 
-void info_show_one(class unit_data *teacher,
-                   class unit_data *pupil,
+void info_show_one(unit_data *teacher,
+                   unit_data *pupil,
                    ubit8 current_points,
                    ubit8 max_level,
                    int next_point,
@@ -318,7 +318,7 @@ void info_show_one(class unit_data *teacher,
                    int indent,
                    ubit8 isleaf,
                    int min_level,
-                   struct profession_cost *cost_entry,
+                   profession_cost *cost_entry,
                    std::vector<std::pair<int, std::string>> &vect)
 {
     if (isleaf)
@@ -394,11 +394,11 @@ bool pairISCompareAsc(const std::pair<int, std::string> &firstElem, const std::p
     return firstElem.first < secondElem.first;
 }
 
-void info_show_roots(class unit_data *teacher,
-                     class unit_data *pupil,
-                     class skill_collection *pColl,
-                     struct pc_train_values *pTrainValues,
-                     struct skill_teach_type *teaches_skills)
+void info_show_roots(unit_data *teacher,
+                     unit_data *pupil,
+                     skill_collection *pColl,
+                     pc_train_values *pTrainValues,
+                     skill_teach_type *teaches_skills)
 {
     int i = 0;
     int cost = 0;
@@ -448,11 +448,11 @@ void info_show_roots(class unit_data *teacher,
     send_to_char(str.c_str(), pupil);
 }
 
-void info_show_leaves(class unit_data *teacher,
-                      class unit_data *pupil,
-                      class skill_collection *pColl,
-                      struct skill_teach_type *teaches_skills,
-                      struct pc_train_values *pTrainValues)
+void info_show_leaves(unit_data *teacher,
+                      unit_data *pupil,
+                      skill_collection *pColl,
+                      skill_teach_type *teaches_skills,
+                      pc_train_values *pTrainValues)
 {
     int i = 0;
     int cost = 0;
@@ -503,13 +503,13 @@ void info_show_leaves(class unit_data *teacher,
     send_to_char(str.c_str(), pupil);
 }
 
-void info_one_skill(class unit_data *teacher,
-                    class unit_data *pupil,
-                    class skill_collection *pColl,
-                    struct pc_train_values *pTrainValues,
-                    struct skill_teach_type *teaches_skills,
+void info_one_skill(unit_data *teacher,
+                    unit_data *pupil,
+                    skill_collection *pColl,
+                    pc_train_values *pTrainValues,
+                    skill_teach_type *teaches_skills,
                     int teach_index,
-                    struct teacher_msg *msgs)
+                    teacher_msg *msgs)
 {
     int indent = 0;
     int i = 0;
@@ -628,9 +628,9 @@ void info_one_skill(class unit_data *teacher,
     send_to_char(str.c_str(), pupil);
 }
 
-int pupil_magic(class unit_data *pupil)
+int pupil_magic(unit_data *pupil)
 {
-    class unit_affected_type *af = nullptr;
+    unit_affected_type *af = nullptr;
 
     for (af = UNIT_AFFECTED(pupil); af; af = af->next)
     {
@@ -685,7 +685,7 @@ int pupil_magic(class unit_data *pupil)
     return FALSE;
 }
 
-void practice_base(int type, struct teach_packet *pckt, struct pc_train_values *pTrainValues, int teach_index, int cost)
+void practice_base(int type, teach_packet *pckt, pc_train_values *pTrainValues, int teach_index, int cost)
 {
     if (!TREE_ISLEAF(pckt->tree, pckt->teaches[teach_index].node))
     {
@@ -726,11 +726,11 @@ void practice_base(int type, struct teach_packet *pckt, struct pc_train_values *
     }
 }
 
-int practice(class unit_data *teacher,
-             class unit_data *pupil,
-             class skill_collection *pColl,
-             struct pc_train_values *pTrainValues,
-             struct teach_packet *pckt,
+int practice(unit_data *teacher,
+             unit_data *pupil,
+             skill_collection *pColl,
+             pc_train_values *pTrainValues,
+             teach_packet *pckt,
              int teach_index)
 {
     int cost = 0;
@@ -844,12 +844,7 @@ void shuffle(int *array, size_t n)
 }
 
 // Any skill that costs more than costlimit will not be trained
-int auto_train(int type,
-               class unit_data *pupil,
-               class skill_collection *pColl,
-               struct pc_train_values *pTrainValues,
-               struct teach_packet *pckt,
-               int costlimit)
+int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_values *pTrainValues, teach_packet *pckt, int costlimit)
 {
     int teach_index = 0;
     int cost = 0;
@@ -988,11 +983,11 @@ int auto_train(int type,
     return nTrained;
 }
 
-struct teach_packet *get_teacher(const char *pName)
+teach_packet *get_teacher(const char *pName)
 {
-    class unit_data *u = nullptr;
-    class unit_fptr *f = nullptr;
-    struct teach_packet *pckt = nullptr;
+    unit_data *u = nullptr;
+    unit_fptr *f = nullptr;
+    teach_packet *pckt = nullptr;
 
     char name[MAX_INPUT_LENGTH];
     char zone[MAX_INPUT_LENGTH];
@@ -1029,13 +1024,13 @@ struct teach_packet *get_teacher(const char *pName)
         return nullptr;
     }
 
-    pckt = (struct teach_packet *)f->data;
+    pckt = (teach_packet *)f->data;
     assert(pckt);
 
     return pckt;
 }
 
-class skill_collection *get_pc_train_values(class unit_data *pupil, int type, struct pc_train_values *pValues)
+skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_values *pValues)
 {
     switch (type)
     {
@@ -1072,12 +1067,12 @@ class skill_collection *get_pc_train_values(class unit_data *pupil, int type, st
     return nullptr; // Can't happen
 }
 
-int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
+int teach_basis(spec_arg *sarg, teach_packet *pckt)
 {
     int index = 0;
     char buf[MAX_INPUT_LENGTH + 10];
     const char *arg = nullptr;
-    class skill_collection *pColl = nullptr;
+    skill_collection *pColl = nullptr;
 
     if (!is_command(sarg->cmd, "info") && !is_command(sarg->cmd, "practice"))
     {
@@ -1111,7 +1106,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         arg = sarg->arg; // Restore the arg because no remote keyword was there.
     }
 
-    struct pc_train_values TrainValues;
+    pc_train_values TrainValues;
     pColl = get_pc_train_values(sarg->activator, pckt->type, &TrainValues);
 
     if (str_is_empty(arg))
@@ -1153,8 +1148,8 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         else
         {
             int nCount = 0;
-            struct teach_packet *p[4];
-            class extra_descr_data *exd = nullptr;
+            teach_packet *p[4];
+            extra_descr_data *exd = nullptr;
 
             exd = PC_QUEST(sarg->activator).find_raw("$autotrain");
 
@@ -1231,11 +1226,11 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     return SFR_BLOCK;
 }
 
-int teaching(struct spec_arg *sarg)
+int teaching(spec_arg *sarg)
 {
-    struct teach_packet *packet = nullptr;
+    teach_packet *packet = nullptr;
 
-    packet = (struct teach_packet *)sarg->fptr->data;
+    packet = (teach_packet *)sarg->fptr->data;
     assert(packet);
 
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
@@ -1329,7 +1324,7 @@ int max_skill_mod(int nCost)
 // {costs} is one or more integers
 // I'm a bit puzzled on the {costs}, it seems like for each time you train cost goes up the the
 // next array item. I would have expected it was more like one up every 5 or more training sessions.
-int teach_init(struct spec_arg *sarg)
+int teach_init(spec_arg *sarg)
 {
     const char *c = nullptr;
     int i = 0;
@@ -1337,8 +1332,8 @@ int teach_init(struct spec_arg *sarg)
     int n = 0;
     // int realm = -1;
     char buf[MAX_STRING_LENGTH];
-    struct teach_packet *packet = nullptr;
-    struct skill_teach_type a_skill;
+    teach_packet *packet = nullptr;
+    skill_teach_type a_skill;
 
     static const char *teach_types[] = {"abilities", "spells", "skills", "weapons", nullptr};
 
@@ -1366,7 +1361,7 @@ int teach_init(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    CREATE(packet, struct teach_packet, 1);
+    CREATE(packet, teach_packet, 1);
     packet->type = i;
 
     // --- Next field ---
@@ -1407,7 +1402,7 @@ int teach_init(struct spec_arg *sarg)
     packet->msgs.remove_inventory = str_dup(buf);
 
     count = 1;
-    CREATE(packet->teaches, struct skill_teach_type, 1);
+    CREATE(packet->teaches, skill_teach_type, 1);
 
     packet->teaches[count - 1].node = -1;
     packet->teaches[count - 1].min_cost_per_point = -1;
@@ -1435,7 +1430,7 @@ int teach_init(struct spec_arg *sarg)
 
                         count++;
 
-                        RECREATE(packet->teaches, struct skill_teach_type, count);
+                        RECREATE(packet->teaches, skill_teach_type, count);
                         packet->teaches[count - 1].node = -1;
                         packet->teaches[count - 1].min_cost_per_point = -1;
                         packet->teaches[count - 1].max_cost_per_point = -1;
@@ -1463,7 +1458,7 @@ int teach_init(struct spec_arg *sarg)
 
                         count++;
 
-                        RECREATE(packet->teaches, struct skill_teach_type, count);
+                        RECREATE(packet->teaches, skill_teach_type, count);
                         packet->teaches[count - 1].node = -1;
                         packet->teaches[count - 1].min_cost_per_point = -1;
                         packet->teaches[count - 1].max_cost_per_point = -1;
@@ -1491,7 +1486,7 @@ int teach_init(struct spec_arg *sarg)
 
                         count++;
 
-                        RECREATE(packet->teaches, struct skill_teach_type, count);
+                        RECREATE(packet->teaches, skill_teach_type, count);
                         packet->teaches[count - 1].node = -1;
                         packet->teaches[count - 1].min_cost_per_point = -1;
                         packet->teaches[count - 1].max_cost_per_point = -1;
@@ -1520,7 +1515,7 @@ int teach_init(struct spec_arg *sarg)
 
                         count++;
 
-                        RECREATE(packet->teaches, struct skill_teach_type, count);
+                        RECREATE(packet->teaches, skill_teach_type, count);
                         packet->teaches[count - 1].node = -1;
                         packet->teaches[count - 1].min_cost_per_point = -1;
                         packet->teaches[count - 1].max_cost_per_point = -1;
@@ -1755,7 +1750,7 @@ int teach_init(struct spec_arg *sarg)
         {
             packet->teaches[count - 1] = a_skill;
             count++;
-            RECREATE(packet->teaches, struct skill_teach_type, count);
+            RECREATE(packet->teaches, skill_teach_type, count);
 
             packet->teaches[count - 1].node = -1;
             packet->teaches[count - 1].min_cost_per_point = -1;
@@ -1776,7 +1771,7 @@ int teach_init(struct spec_arg *sarg)
                 packet->teaches[count - 1].max_cost_per_point = 0;
 
                 count++;
-                RECREATE(packet->teaches, struct skill_teach_type, count);
+                RECREATE(packet->teaches, skill_teach_type, count);
 
                 packet->teaches[count - 1].node = -1;
                 packet->teaches[count - 1].min_cost_per_point = -1;

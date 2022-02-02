@@ -78,7 +78,7 @@ int dice(int number, int size)
     return sum;
 }
 
-class log_buffer g_log_buf[MAXLOG];
+log_buffer g_log_buf[MAXLOG];
 
 // Clears dest and then writes the text "bits" into 'dest' and
 // also return a char * to the same resulting string (&dest[0])
