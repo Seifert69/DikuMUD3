@@ -81,6 +81,8 @@ target_link_libraries(vmc
         ${FLEX_LIBRARIES}
         crypt
         Boost::filesystem
+        Boost::regex
+        pthread
         )
 target_include_directories(vmc
         PRIVATE . ${CMAKE_SOURCE_DIR}/vme/src ${CMAKE_SOURCE_DIR}/vme/src/pp
