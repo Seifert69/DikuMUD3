@@ -334,16 +334,14 @@ file_index_type::file_index_type()
 
 file_index_type::~file_index_type()
 {
-    if (name)
-        FREE(name);
+    //    if (name)
+    //        FREE(name);
 }
 
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
     unit_data *uu = nullptr;
-
-    assert(this);
 
     if (ref == nullptr)
     {
@@ -430,13 +428,9 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_ZONE))
     {
-        /* for (u = g_unit_list; u; u = u->gnext)
-            if ((unit_zone(u) == this->zone) && (UNIT_FILE_INDEX(u) == this))
-                return u;*/
-
-        if (!this->fi_unit_list.empty())
+        if (!fi_unit_list.empty())
         {
-            for (std::forward_list<unit_data *>::iterator it = this->fi_unit_list.begin(); it != this->fi_unit_list.end(); it++)
+            for (auto it = fi_unit_list.begin(); it != fi_unit_list.end(); it++)
             {
                 if (UNIT_FILE_INDEX(*it) == this)
                 {
@@ -448,13 +442,9 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_WORLD))
     {
-        /* for (u = g_unit_list; u; u = u->gnext)
-            if (UNIT_FILE_INDEX(u) == this)
-                return u;*/
-
-        if (!this->fi_unit_list.empty())
+        if (!fi_unit_list.empty())
         {
-            return this->fi_unit_list.front();
+            return fi_unit_list.front();
         }
     }
 
@@ -463,31 +453,160 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
 unit_data *file_index_type::find_symbolic_instance()
 {
-    // class unit_data *u;
-
-    assert(this);
-
-    /*
-    for (class unit_data *u = g_unit_list; u; u = u->gnext)
+    if (!fi_unit_list.empty())
     {
-        if (UNIT_FILE_INDEX(u) == this)
-        {
-            if (this->fi_unit_list.front() != u)
-            {
-                slog(LOG_ALL, 0, "Break me here %s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(u),
-    UNIT_FI_ZONENAME(u));
-            }
-
-            return u;
-        }
-    }*/
-
-    if (!this->fi_unit_list.empty())
-    {
-        return this->fi_unit_list.front();
+        return fi_unit_list.front();
     }
 
     return nullptr;
+}
+
+const char *file_index_type::getName() const
+{
+    return name.c_str();
+}
+
+long file_index_type::getFilepos() const
+{
+    return filepos;
+}
+
+ubit32 file_index_type::getCRC() const
+{
+    return crc;
+}
+
+sbit16 file_index_type::getNumInZone() const
+{
+    return no_in_zone;
+}
+
+ubit16 file_index_type::getRoomNum() const
+{
+    return room_no;
+}
+
+ubit8 file_index_type::getType() const
+{
+    return type;
+}
+
+ubit16 file_index_type::getNumInMem() const
+{
+    return no_in_mem;
+}
+
+ubit32 file_index_type::getLength() const
+{
+    return length;
+}
+
+void file_index_type::IncrementNumInMemory()
+{
+    ++no_in_mem;
+}
+
+zone_type *file_index_type::getZone() const
+{
+    return zone;
+}
+
+void file_index_type::setType(ubit8 value)
+{
+    type = value;
+}
+
+void file_index_type::setZone(zone_type *value)
+{
+    zone = value;
+}
+
+void file_index_type::setName(const char *value, bool to_lower)
+{
+    if (value)
+    {
+        name = std::string(value);
+        if (to_lower)
+        {
+            str_lower(name);
+        }
+    }
+}
+
+void file_index_type::DecrementNumInMemory()
+{
+    // TODO find out why code is trying to decrement no_in_mem below 0
+    // I tried this but somewhere it goes below zero
+    //    assert(no_in_mem > 0);
+    if (no_in_mem > 0)
+    {
+        --no_in_mem;
+    }
+}
+
+void file_index_type::IncrementNumInZone()
+{
+    ++no_in_zone;
+}
+
+void file_index_type::setNumInZone(sbit16 value)
+{
+    no_in_zone = value;
+}
+
+void file_index_type::setLength(ubit32 value)
+{
+    length = value;
+}
+
+void file_index_type::setFilepos(long value)
+{
+    filepos = value;
+}
+
+void file_index_type::setRoomNum(ubit16 value)
+{
+    room_no = value;
+}
+
+void file_index_type::setNumInMemory(sbit16 value)
+{
+    no_in_mem = value;
+}
+
+void file_index_type::setCRC(ubit32 value)
+{
+    crc = value;
+}
+
+bool file_index_type::Empty() const
+{
+    return fi_unit_list.empty();
+}
+
+unit_data *file_index_type::Front() const
+{
+    return fi_unit_list.front();
+}
+
+std::forward_list<unit_data *>::iterator file_index_type::Begin()
+{
+    return fi_unit_list.begin();
+}
+
+std::forward_list<unit_data *>::iterator file_index_type::End()
+{
+    return fi_unit_list.end();
+}
+
+void file_index_type::PushFront(unit_data *value)
+{
+    fi_unit_list.push_front(value);
+}
+
+void file_index_type::Remove(unit_data *value)
+{
+    fi_unit_list.remove(value);
 }
 
 unit_fptr::unit_fptr()
@@ -749,7 +868,7 @@ void unit_data::set_fi(file_index_type *f)
     }
 
     this->fi = f;
-    this->fi->no_in_mem++;
+    this->fi->IncrementNumInMemory();
 }
 
 std::string unit_data::json()

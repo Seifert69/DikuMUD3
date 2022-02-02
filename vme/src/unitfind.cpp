@@ -691,14 +691,14 @@ unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
         void *p;
     } val;
 
-    if (fi && !fi->fi_unit_list.empty())
+    if (fi && !fi->Empty())
     {
-        if (fi->type == UNIT_ST_PC)
+        if (fi->getType() == UNIT_ST_PC)
         {
-            return fi->fi_unit_list.front();
+            return fi->Front();
         }
 
-        for (std::forward_list<unit_data *>::iterator it = fi->fi_unit_list.begin(); it != fi->fi_unit_list.end(); it++)
+        for (std::forward_list<unit_data *>::iterator it = fi->Begin(); it != fi->End(); it++)
         {
             val.p = *it;
             if (val.i == idx)

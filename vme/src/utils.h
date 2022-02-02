@@ -133,16 +133,16 @@
 
 /* ............................FILE INDEX STUFF..................... */
 
-#define FI_ZONENAME(fi) ((fi)->zone->name)
+#define FI_ZONENAME(fi) ((fi)->getZone()->name)
 
-#define FI_NAME(fi) ((fi)->name)
+#define FI_NAME(fi) ((fi)->getName())
 
 /* ............................UNIT SUPERSTRUCTURES..................... */
 
 #define UNIT_IS_TRANSPARENT(u)                                                                                                             \
     (!IS_SET(UNIT_FLAGS(u), UNIT_FL_BURIED) && IS_SET(UNIT_FLAGS(u), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED))
 
-#define UNIT_FI_ZONE(unit) ((unit)->fi->zone)
+#define UNIT_FI_ZONE(unit) ((unit)->fi->getZone())
 
 #define UNIT_FI_ZONENAME(unit) (UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE")
 

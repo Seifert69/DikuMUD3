@@ -44,11 +44,11 @@ void assign_player_file_index(unit_data *pc)
     {
         file_index_type *fi = new file_index_type();
 
-        fi->name = str_dup(PC_FILENAME(pc));
-        fi->zone = z;
-        fi->type = UNIT_ST_PC;
+        fi->setName(PC_FILENAME(pc));
+        fi->setZone(z);
+        fi->setType(UNIT_ST_PC);
 
-        z->mmp_fi.insert(std::make_pair(fi->name, fi));
+        z->mmp_fi.insert(std::make_pair(fi->getName(), fi));
 
         UNIT_FILE_INDEX(pc) = fi;
     }

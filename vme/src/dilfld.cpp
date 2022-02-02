@@ -1085,16 +1085,16 @@ void dilfe_fld(dilprg *p)
 
                         for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
                         {
-                            if (fi->second->type == UNIT_ST_ROOM)
+                            if (fi->second->getType() == UNIT_ST_ROOM)
                             {
-                                if (fi->second->fi_unit_list.empty())
+                                if (fi->second->Empty())
                                 {
                                     v->type = DILV_FAIL;
                                     v->val.ptr = nullptr;
                                 }
                                 else
                                 {
-                                    v->val.ptr = fi->second->fi_unit_list.front();
+                                    v->val.ptr = fi->second->Front();
                                 }
                                 break;
                             }
@@ -1129,16 +1129,16 @@ void dilfe_fld(dilprg *p)
 
                         for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
                         {
-                            if (fi->second->type == UNIT_ST_NPC)
+                            if (fi->second->getType() == UNIT_ST_NPC)
                             {
-                                if (fi->second->fi_unit_list.empty())
+                                if (fi->second->Empty())
                                 {
                                     v->type = DILV_FAIL;
                                     v->val.ptr = nullptr;
                                 }
                                 else
                                 {
-                                    v->val.ptr = fi->second->fi_unit_list.front();
+                                    v->val.ptr = fi->second->Front();
                                 }
                                 break;
                             }
@@ -1173,16 +1173,16 @@ void dilfe_fld(dilprg *p)
 
                         for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
                         {
-                            if (fi->second->type == UNIT_ST_OBJ)
+                            if (fi->second->getType() == UNIT_ST_OBJ)
                             {
-                                if (fi->second->fi_unit_list.empty())
+                                if (fi->second->Empty())
                                 {
                                     v->type = DILV_FAIL;
                                     v->val.ptr = nullptr;
                                 }
                                 else
                                 {
-                                    v->val.ptr = fi->second->fi_unit_list.front();
+                                    v->val.ptr = fi->second->Front();
                                 }
                                 break;
                             }
@@ -1241,7 +1241,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_FILE_INDEX((unit_data *)v1->val.ptr) ? UNIT_FILE_INDEX((unit_data *)v1->val.ptr)->no_in_mem : 1;
+                        v->val.num =
+                            UNIT_FILE_INDEX((unit_data *)v1->val.ptr) ? UNIT_FILE_INDEX((unit_data *)v1->val.ptr)->getNumInMem() : 1;
                     }
                     else
                     {

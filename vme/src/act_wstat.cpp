@@ -187,11 +187,11 @@ static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zri
             break;
 
         case 1:
-            stat += diku::format_to_str("Load %s", zrip->fi[0]->name);
+            stat += diku::format_to_str("Load %s", zrip->fi[0]->getName());
 
             if (zrip->fi[1])
             {
-                stat += diku::format_to_str(" into %s", zrip->fi[1]->name);
+                stat += diku::format_to_str(" into %s", zrip->fi[1]->getName());
             }
 
             for (i = 0; i < 3; i++)
@@ -207,7 +207,7 @@ static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zri
 
         case 2:
             stat = diku::format_to_str("Equip %s %s max %d %s",
-                                       zrip->fi[0]->name,
+                                       zrip->fi[0]->getName(),
                                        g_where[zrip->num[1]],
                                        zrip->num[0],
                                        zrip->cmpl ? "Complete" : "");
@@ -215,17 +215,17 @@ static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zri
 
         case 3:
             stat = diku::format_to_str("Door at %s : %s : %s",
-                                       zrip->fi[0]->name,
+                                       zrip->fi[0]->getName(),
                                        g_dirs[zrip->num[0]],
                                        sprintbit(bits, zrip->num[1], g_unit_open_flags));
             break;
 
         case 4:
-            stat = diku::format_to_str("Purge %s", zrip->fi[0]->name);
+            stat = diku::format_to_str("Purge %s", zrip->fi[0]->getName());
             break;
 
         case 5:
-            stat = diku::format_to_str("Remove %s in %s", zrip->fi[0]->name, zrip->fi[1]->name);
+            stat = diku::format_to_str("Remove %s in %s", zrip->fi[0]->getName(), zrip->fi[1]->getName());
             break;
     }
 
@@ -483,15 +483,15 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
     std::string msg{"<div class='threecol'>"};
     for (auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
     {
-        if (fi->second->type == search_type)
+        if (fi->second->getType() == search_type)
         {
-            if ((fi->second->type == UNIT_ST_OBJ) || (fi->second->type == UNIT_ST_NPC))
+            if ((fi->second->getType() == UNIT_ST_OBJ) || (fi->second->getType() == UNIT_ST_NPC))
             {
-                msg += diku::format_to_str("<a cmd='load #'>%s</a><br/>", fi->second->name);
+                msg += diku::format_to_str("<a cmd='load #'>%s</a><br/>", fi->second->getName());
             }
             else
             {
-                msg += diku::format_to_str("%s<br/>", fi->second->name);
+                msg += diku::format_to_str("%s<br/>", fi->second->getName());
             }
         }
     }
@@ -721,8 +721,8 @@ static void stat_normal(unit_data *ch, unit_data *u)
                                    sprintbit(bits2, UNIT_TYPE(u), g_unit_status),
                                    UNIT_FI_NAME(u),
                                    UNIT_FI_ZONENAME(u),
-                                   UNIT_FILE_INDEX(u) ? UNIT_FILE_INDEX(u)->no_in_mem : -1,
-                                   UNIT_FILE_INDEX(u) ? (unsigned long)UNIT_FILE_INDEX(u)->crc : 0,
+                                   UNIT_FILE_INDEX(u) ? UNIT_FILE_INDEX(u)->getNumInMem() : -1,
+                                   UNIT_FILE_INDEX(u) ? (unsigned long)UNIT_FILE_INDEX(u)->getCRC() : 0,
                                    cname,
                                    STR(UNIT_TITLE_STRING(u)),
                                    STR(UNIT_OUT_DESCR_STRING(u)),
@@ -1394,13 +1394,13 @@ void do_wstat(unit_data *ch, char *argument, const command_info *cmd)
 
             if (fi)
             {
-                if (fi->type == UNIT_ST_ROOM)
+                if (fi->getType() == UNIT_ST_ROOM)
                 {
-                    u = fi->fi_unit_list.front(); // Shouldn't be empty
+                    u = fi->Front(); // Shouldn't be empty
                 }
                 else
                 {
-                    if (fi->no_in_mem == 0)
+                    if (fi->getNumInMem() == 0)
                     {
                         if (!IS_ADMINISTRATOR(ch))
                         {

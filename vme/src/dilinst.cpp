@@ -2829,11 +2829,11 @@ void dilfi_snta(dilprg *p)
                 sarg.arg = (char *)v1->val.ptr;
                 sarg.mflags = SFB_MSG;
 
-                if (!fi->fi_unit_list.empty())
+                if (!fi->Empty())
                 {
                     std::forward_list<unit_data *>::iterator it;
                     std::forward_list<unit_data *>::iterator next_it;
-                    for (it = fi->fi_unit_list.begin(); it != fi->fi_unit_list.end(); it = next_it)
+                    for (it = fi->Begin(); it != fi->End(); it = next_it)
                     {
                         next_it = it;
                         next_it++;

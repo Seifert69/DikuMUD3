@@ -49,7 +49,7 @@ void insert_in_unit_list(unit_data *u)
 
     if (UNIT_FILE_INDEX(u))
     {
-        UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
+        UNIT_FILE_INDEX(u)->PushFront(u);
     }
 
     unit_data *tmp_u = nullptr;
@@ -180,7 +180,7 @@ void remove_from_unit_list(unit_data *unit)
 
     if (UNIT_FILE_INDEX(unit))
     {
-        UNIT_FILE_INDEX(unit)->fi_unit_list.remove(unit);
+        UNIT_FILE_INDEX(unit)->Remove(unit);
     }
 
     if (g_npc_head == unit)
@@ -667,7 +667,7 @@ zone_type *unit_zone(const unit_data *unit)
                 slog(LOG_ALL, 0, "ZONE: FATAL(1): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
                 return nullptr;
             }
-            return UNIT_FILE_INDEX(unit)->zone;
+            return UNIT_FILE_INDEX(unit)->getZone();
         }
     }
 
