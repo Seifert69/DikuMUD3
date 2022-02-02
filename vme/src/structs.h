@@ -60,8 +60,12 @@ class zone_type;
 class file_index_type
 {
 public:
-    file_index_type();
-    ~file_index_type();
+    file_index_type() = default;                                  // Default ctor
+    ~file_index_type() = default;                                 // Default dtor
+    file_index_type(const file_index_type &) = delete;            // Delete copy ctor
+    file_index_type &operator=(const file_index_type &) = delete; // Delete assignment
+    file_index_type(file_index_type &&) = delete;                 // Delete move ctor
+    file_index_type &operator=(file_index_type &&) = delete;      // Delete move assignment
 
     [[nodiscard]] unit_data *find_symbolic_instance();
     [[nodiscard]] unit_data *find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector);

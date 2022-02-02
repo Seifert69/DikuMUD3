@@ -311,33 +311,6 @@ zone_type::~zone_type()
         FREE(spmatrix);
 }
 
-file_index_type::file_index_type()
-{
-    name = nullptr;
-    zone = nullptr;
-    // next = NULL;
-    // unit = NULL;
-
-    filepos = 0;
-    length = 0;
-    crc = 0;
-
-    no_in_zone = 0;
-    no_in_mem = 0;
-    room_no = 0;
-    type = 0;
-
-#ifdef DMSERVER
-    no_in_zone = 0;
-#endif
-}
-
-file_index_type::~file_index_type()
-{
-    //    if (name)
-    //        FREE(name);
-}
-
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
