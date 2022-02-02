@@ -3633,6 +3633,14 @@ void dilfe_gint(dilprg *p)
                 v->val.num = new_crime_serial_no();
                 break;
 
+            case DIL_GINT_BONUS_A:
+                v->val.num = bonus_map_a(p_i);
+                break;
+
+            case DIL_GINT_BONUS_B:
+                v->val.num = bonus_map_b(p_i);
+                break;
+
             default:
                 v->type = DILV_FAIL; /* failed */
                 slog(LOG_ALL,

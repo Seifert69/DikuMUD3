@@ -47,6 +47,8 @@ int buy_points(int points, int level, int *error);
 void set_weapon(unit_data *o);
 void set_shield(unit_data *o);
 void set_armour(unit_data *o);
+int bonus_map_a(int bonus);
+int bonus_map_b(int bonus);
 
 extern shi_info_type g_shi_info[];
 extern const char *g_dirs[];

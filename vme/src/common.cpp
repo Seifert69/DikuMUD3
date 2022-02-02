@@ -6,7 +6,7 @@
  */
 
 #include "common.h"
-
+#include "error.h"
 #include "skills.h"
 #include "structs.h"
 #include "utility.h"
@@ -28,6 +28,61 @@ shi_info_type g_shi_info[] = {
     {20}, /* SHIELD_MEDIUM */
     {25}  /* SHIELD_LARGE  */
 };
+
+
+// Translate BONUS_XXX for weapons, shields, armors, skills -> ]-20..+20[
+//
+int bonus_map_a(int bonus)
+{
+    static int map[15] = {-20, -17, -14, -11, -8, -5, -2, 0, 2, 5, 8, 11, 14, 17, 20};
+
+    if (bonus > 7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
+        bonus = 7;
+    }
+
+    if (bonus < -7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
+        bonus = -7;
+    }
+
+    int b = map[bonus + 7];
+
+    if (b != 0)
+        b += 2 * (open100() / 100);
+
+    return b;
+}
+
+// Translate BONUS_XXX for abilities -> ]-10..+10[
+//
+int bonus_map_b(int bonus)
+{
+    static int map[15] = {-10, -8, -6, -5, -4, -2, -1, 0, 1, 2, 4, 5, 6, 8, 10};
+
+    if (bonus > 7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
+        bonus = 7;
+    }
+
+    if (bonus < -7)
+    {
+        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
+        bonus = -7;
+    }
+
+    int b = map[bonus + 7];
+
+    if (b != 0)
+        b += open100() / 100;
+
+    return b;
+}
+
+
 
 /* PS Algorithm 2                                                      */
 /* This algorithm returns the amount of points gained at a particular  */

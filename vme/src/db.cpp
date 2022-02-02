@@ -1559,56 +1559,6 @@ void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
     /* was fclose(f) */
 }
 
-// Currently used for weapons, shields, armors
-//
-int bonus_map_a(int bonus)
-{
-    static int map[15] = {-20, -17, -14, -11, -8, -5, -2, 0, 2, 5, 8, 11, 14, 17, 20};
-
-    if (bonus > 7)
-    {
-        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
-        bonus = 7;
-    }
-
-    if (bonus < -7)
-    {
-        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
-        bonus = -7;
-    }
-
-    int b = map[bonus + 7];
-
-    if (b != 0)
-        b += 2 * (open100() / 100);
-
-    return b;
-}
-
-// Mapping Skill, weapon, spell transfers
-int bonus_map_b(int bonus)
-{
-    static int map[15] = {-10, -8, -6, -5, -4, -2, -1, 0, 1, 2, 4, 5, 6, 8, 10};
-
-    if (bonus > 7)
-    {
-        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
-        bonus = 7;
-    }
-
-    if (bonus < -7)
-    {
-        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
-        bonus = -7;
-    }
-
-    int b = map[bonus + 7];
-
-    if (b != 0)
-        b += open100() / 100;
-
-    return b;
-}
 
 void bonus_setup(unit_data *u)
 {
