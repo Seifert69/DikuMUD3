@@ -1218,7 +1218,7 @@ end
 
 treasure0
 names {"treasure0"}
-title "tresure0 chest is here"
+title "the tresure0 chest"
 descr "treasure0 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
@@ -1246,7 +1246,7 @@ end
 
 treasure4
 names {"treasure4"}
-title "tresure4 chest is here"
+title "the tresure4 chest"
 descr "treasure4 is here, open it"
 CONTAINER_DEF(10)
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
@@ -1273,7 +1273,7 @@ end
 
 treasure7
 names {"treasure7"}
-title "tresure7 chest is here"
+title "the tresure7 chest"
 descr "treasure7 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
