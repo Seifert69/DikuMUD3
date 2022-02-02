@@ -8,6 +8,7 @@
 %option nounput 
 %{
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wredundant-tags"
 
 #include <stdio.h>

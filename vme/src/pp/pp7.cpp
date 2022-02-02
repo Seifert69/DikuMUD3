@@ -1,3 +1,7 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 /************************************************************************/
 /*									*/
 /*	File:	pp7.c							*/
@@ -134,3 +138,5 @@ void warning(const char *s1, const char *s2)
 {
     prmsg("WARNING: ", s1, s2);
 }
+
+#pragma GCC diagnostic pop
