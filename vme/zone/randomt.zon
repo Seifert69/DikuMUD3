@@ -535,6 +535,9 @@ code
 
     i := successroll({50, 80, 95}, bonuslvl*5);
 
+    if (i == 0)
+        return(1);
+
     setbright(u, i); // 0..3
     identify(u, "Emits a magical light.", "Emits a magical light " + itoa(i) +".");
 
@@ -563,6 +566,9 @@ code
     }
 
     i := -successroll({50, 80, 95}, bonuslvl*5);
+
+    if (i == 0)
+        return(1);
 
     setbright(u, i); // 0..-3
     identify(u, "Emits magical darkness.", "Emits magical darkness " + itoa(i) +".");
@@ -624,6 +630,10 @@ code
     // XXX TODO. Determine how much to modify the ability
 
     i := getinteger(DIL_GINT_BONUS_B, null, bonuslvl);
+
+    if (i == 0)
+        return(1);
+
 	addaff(u, il.[abilid*3], -1, 0,
 	       abilid, i, 0,
            il.[abilid*3+1], TIF_NONE, il.[abilid*3+2], APF_ABILITY);
@@ -742,6 +752,9 @@ code
 
     i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
 
+    if (i == 0)
+        return(1);
+
 	addaff(u, -ID_SPELL_DEFENSE, -1, 0,
 	       splid, i, 0,
            TIF_SPL_INC, TIF_NONE, TIF_SPL_DEC, APF_SPELL_ADJ);
@@ -790,6 +803,10 @@ code
     }
 
     i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+
+    if (i == 0)
+        return(1);
+
 	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
 	       defid, i, 0,
            TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
@@ -849,6 +866,10 @@ external
 code
 {
     u.value[2] := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+
+    if (u.value[2] == 0)
+        return(1);
+
     identify(u, "Weapon has a magic bonus.", "Weapon has a magic bonus of " + itoa(u.value[2])+".");
     return (1);
 }
@@ -862,6 +883,10 @@ var
 code
 {
     i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+
+    if (i == 0)
+        return(1);
+
 	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
 	       u.value[0], i, 0,
            TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
