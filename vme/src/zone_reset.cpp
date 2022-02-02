@@ -32,7 +32,7 @@ unit_data *zone_nop(unit_data *u, zone_reset_cmd *cmd)
 unit_data *zone_random(unit_data *u, zone_reset_cmd *cmd)
 {
     /* Return TRUE if random 0-99 less than given percent  */
-    if (number(0, 99) < cmd->num[0])
+    if (number(0, 99) < cmd->getNum(0))
     {
         return (unit_data *)g_boot_zone; /* dummy */
     }
@@ -86,34 +86,34 @@ bool zone_limit(unit_data *u, file_index_type *fi, zone_reset_cmd *cmd)
     if (fi->getType() == UNIT_ST_NPC)
     {
         /* If no maxima on mobiles, set it to default of one global. */
-        if (cmd->num[0] == 0 && cmd->num[1] == 0 && cmd->num[2] == 0)
+        if (cmd->getNum(0) == 0 && cmd->getNum(1) == 0 && cmd->getNum(2) == 0)
         {
-            cmd->num[0] = 1;
+            cmd->setNum(0, 1);
         }
     }
     else
     {
         /* If no maxima on objects, set it to default of one local! */
-        if (cmd->num[0] == 0 && cmd->num[1] == 0 && cmd->num[2] == 0)
+        if (cmd->getNum(0) == 0 && cmd->getNum(1) == 0 && cmd->getNum(2) == 0)
         {
-            cmd->num[2] = 1;
+            cmd->setNum(2, 1);
         }
     }
 
     /* Check for global maxima */
-    if (cmd->num[0] && (fi->getNumInMem()) >= (ubit16)(cmd->num[0]))
+    if (cmd->getNum(0) && (fi->getNumInMem()) >= (ubit16)(cmd->getNum(0)))
     {
         return FALSE;
     }
 
     /* Check for zone maximum */
-    if (cmd->num[1] && fi->getNumInZone() >= cmd->num[1] && unit_zone(u) == g_boot_zone)
+    if (cmd->getNum(1) && fi->getNumInZone() >= cmd->getNum(1) && unit_zone(u) == g_boot_zone)
     {
         return FALSE;
     }
 
     /* Check for local maxima */
-    if ((i = cmd->num[2]))
+    if ((i = cmd->getNum(2)))
     {
         for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->next)
         {
@@ -141,26 +141,29 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
     unit_data *loaded = nullptr;
 
     /* Destination */
-    if (cmd->fi[1] && !cmd->fi[1]->Empty() && cmd->fi[1]->getType() == UNIT_ST_ROOM)
+    if (cmd->getFileIndexType(1) && !cmd->getFileIndexType(1)->Empty() && cmd->getFileIndexType(1)->getType() == UNIT_ST_ROOM)
     {
-        u = cmd->fi[1]->Front();
+        u = cmd->getFileIndexType(1)->Front();
     }
 
     /* Does the destination room exist */
     if (u == nullptr)
     {
-        szonelog(g_boot_zone, "Reset Error: Don't know where to put %s@%s", cmd->fi[0]->getName(), cmd->fi[0]->getZone()->name);
+        szonelog(g_boot_zone,
+                 "Reset Error: Don't know where to put %s@%s",
+                 cmd->getFileIndexType(0)->getName(),
+                 cmd->getFileIndexType(0)->getZone()->name);
     }
-    else if (cmd->fi[0]->getType() != UNIT_ST_OBJ && cmd->fi[0]->getType() != UNIT_ST_NPC)
+    else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_OBJ && cmd->getFileIndexType(0)->getType() != UNIT_ST_NPC)
     {
         szonelog(g_boot_zone,
                  "Reset Error: %s@%s loaded object is neither an obj nor npc.",
-                 cmd->fi[0]->getName(),
-                 cmd->fi[0]->getZone()->name);
+                 cmd->getFileIndexType(0)->getName(),
+                 cmd->getFileIndexType(0)->getZone()->name);
     }
-    else if (zone_limit(u, cmd->fi[0], cmd))
+    else if (zone_limit(u, cmd->getFileIndexType(0), cmd))
     {
-        loaded = read_unit(cmd->fi[0]);
+        loaded = read_unit(cmd->getFileIndexType(0));
         if (!loaded->is_destructed())
         {
             if (IS_MONEY(loaded))
@@ -198,7 +201,10 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
     /* Does the destination unit exist */
     if (u == nullptr)
     {
-        szonelog(g_boot_zone, "Reset error: %s@%s has no parent in equip.", cmd->fi[0]->getName(), cmd->fi[0]->getZone()->name);
+        szonelog(g_boot_zone,
+                 "Reset error: %s@%s has no parent in equip.",
+                 cmd->getFileIndexType(0)->getName(),
+                 cmd->getFileIndexType(0)->getZone()->name);
     }
     else if (!IS_CHAR(u))
     {
@@ -207,27 +213,27 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u)); // cmd->fi[0]->name, cmd->fi[0]->zone->name);
     }
-    else if (cmd->fi[0]->getType() != UNIT_ST_OBJ)
+    else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_OBJ)
     {
         szonelog(g_boot_zone,
                  "Reset Error: %s@%s equipping %s@%s is not an object.",
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
-                 cmd->fi[0]->getName(),
-                 cmd->fi[0]->getZone()->name);
+                 cmd->getFileIndexType(0)->getName(),
+                 cmd->getFileIndexType(0)->getZone()->name);
     }
-    else if (cmd->num[1] <= 0)
+    else if (cmd->getNum(1) <= 0)
     {
         szonelog(g_boot_zone,
                  "Reset Error: %s@%s equipping %s@%s doesn't have a legal equip position.",
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
-                 cmd->fi[0]->getName(),
-                 cmd->fi[0]->getZone()->name);
+                 cmd->getFileIndexType(0)->getName(),
+                 cmd->getFileIndexType(0)->getZone()->name);
     }
-    else if (!equipment(u, cmd->num[1]) && !(cmd->num[0] && (cmd->fi[0]->getNumInMem()) >= (ubit16)(cmd->num[0])))
+    else if (!equipment(u, cmd->getNum(1)) && !(cmd->getNum(0) && (cmd->getFileIndexType(0)->getNumInMem()) >= (ubit16)(cmd->getNum(0))))
     {
-        loaded = read_unit(cmd->fi[0]);
+        loaded = read_unit(cmd->getFileIndexType(0));
 
         unit_to_unit(loaded, u);
         zone_loaded_a_unit(loaded);
@@ -254,7 +260,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                              UNIT_FI_ZONENAME(u));
             }
 #endif
-            equip_char(u, loaded, cmd->num[1]);
+            equip_char(u, loaded, cmd->getNum(1));
             UNIT_SIZE(loaded) = UNIT_SIZE(u); /* Autofit */
         }
     }
@@ -267,17 +273,20 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
 /* num[1] is the new state                                  */
 unit_data *zone_door(unit_data *u, zone_reset_cmd *cmd)
 {
-    if (!cmd->fi[0] || (cmd->fi[0]->getType() != UNIT_ST_ROOM))
+    if (!cmd->getFileIndexType(0) || (cmd->getFileIndexType(0)->getType() != UNIT_ST_ROOM))
     {
         szonelog(g_boot_zone, "Zone Reset Error: Not a room in door reference!");
     }
-    else if (!ROOM_EXIT(cmd->fi[0]->Front(), cmd->num[0]))
+    else if (!ROOM_EXIT(cmd->getFileIndexType(0)->Front(), cmd->getNum(0)))
     {
-        szonelog(g_boot_zone, "Zone Reset Error: No %s direction from room %s in door.", g_dirs[cmd->num[0]], cmd->fi[0]->getName());
+        szonelog(g_boot_zone,
+                 "Zone Reset Error: No %s direction from room %s in door.",
+                 g_dirs[cmd->getNum(0)],
+                 cmd->getFileIndexType(0)->getName());
     }
     else
     {
-        ROOM_EXIT(cmd->fi[0]->Front(), cmd->num[0])->exit_info = cmd->num[1];
+        ROOM_EXIT(cmd->getFileIndexType(0)->Front(), cmd->getNum(0))->exit_info = cmd->getNum(1);
     }
 
     return nullptr;
@@ -288,13 +297,13 @@ unit_data *zone_purge(unit_data *u, zone_reset_cmd *cmd)
 {
     unit_data *next = nullptr;
 
-    if (cmd->fi[0]->getType() != UNIT_ST_ROOM)
+    if (cmd->getFileIndexType(0)->getType() != UNIT_ST_ROOM)
     {
         szonelog(g_boot_zone, "Reset Error : No room in purge reference!");
     }
     else
     {
-        for (u = UNIT_CONTAINS(cmd->fi[0]->Front()); u; u = next)
+        for (u = UNIT_CONTAINS(cmd->getFileIndexType(0)->Front()); u; u = next)
         {
             next = u->next;
             if (!IS_PC(u) && !IS_ROOM(u))
@@ -313,16 +322,16 @@ unit_data *zone_remove(unit_data *u, zone_reset_cmd *cmd)
 {
     unit_data *next = nullptr;
 
-    if (cmd->fi[1]->getType() != UNIT_ST_ROOM)
+    if (cmd->getFileIndexType(1)->getType() != UNIT_ST_ROOM)
     {
         szonelog(g_boot_zone, "Reset Error: No room in remove reference!");
     }
     else
     {
-        for (u = UNIT_CONTAINS(cmd->fi[1]->Front()); u; u = next)
+        for (u = UNIT_CONTAINS(cmd->getFileIndexType(1)->Front()); u; u = next)
         {
             next = u->next;
-            if (UNIT_FILE_INDEX(u) == cmd->fi[0] && !IS_ROOM(u))
+            if (UNIT_FILE_INDEX(u) == cmd->getFileIndexType(0) && !IS_ROOM(u))
             {
                 extract_unit(u);
             }
@@ -350,13 +359,13 @@ unit_data *zone_follow(unit_data *u, zone_reset_cmd *cmd)
     {
         szonelog(g_boot_zone, "Reset Error: Master to follow is not a mobile.");
     }
-    else if (cmd->fi[0]->getType() != UNIT_ST_NPC)
+    else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_NPC)
     {
-        szonelog(g_boot_zone, "Reset Error: Follower %s is not a mobile.", cmd->fi[0]->getName());
+        szonelog(g_boot_zone, "Reset Error: Follower %s is not a mobile.", cmd->getFileIndexType(0)->getName());
     }
-    else if (zone_limit(u, cmd->fi[0], cmd))
+    else if (zone_limit(u, cmd->getFileIndexType(0), cmd))
     {
-        loaded = read_unit(cmd->fi[0]);
+        loaded = read_unit(cmd->getFileIndexType(0));
 
         unit_to_unit(loaded, UNIT_IN(u));
         start_following(loaded, u);
@@ -380,10 +389,10 @@ bool low_reset_zone(unit_data *u, zone_reset_cmd *cmd)
     unit_data *success = nullptr;
     bool ok = TRUE;
 
-    for (; cmd; cmd = cmd->next)
+    for (; cmd; cmd = cmd->getNext())
     {
-        success = (*exec_zone_cmd[cmd->cmd_no])(u, cmd);
-        if (success && cmd->nested && !low_reset_zone(success, cmd->nested) && cmd->cmpl)
+        success = (*exec_zone_cmd[cmd->getCommandNum()])(u, cmd);
+        if (success && cmd->getNested() && !low_reset_zone(success, cmd->getNested()) && cmd->getCompleteFlag())
         {
             extract_unit(success);
             success = nullptr;

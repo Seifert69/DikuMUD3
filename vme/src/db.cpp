@@ -1749,7 +1749,7 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
     while (((cmdno = (ubit8)fgetc(f)) != 255) && !feof(f))
     {
         CREATE(cmd, zone_reset_cmd, 1);
-        cmd->cmd_no = cmdno;
+        cmd->setCommandNum(cmdno);
 
         fstrcpy(&cBuf, f);
 
@@ -1773,17 +1773,17 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
         {
             if ((fi = find_file_index(zonename, name)))
             {
-                cmd->fi[0] = fi;
+                cmd->setFileIndexType(0, fi);
             }
             else
             {
                 szonelog(read_zone_error, "Slimed: Illegal ref.: %s@%s", name, zonename);
-                cmd->fi[0] = g_slime_fi;
+                cmd->setFileIndexType(0, g_slime_fi);
             }
         }
         else
         {
-            cmd->fi[0] = nullptr;
+            cmd->setFileIndexType(0, nullptr);
         }
 
         fstrcpy(&cBuf, f);
@@ -1808,35 +1808,44 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
         {
             if ((fi = find_file_index(zonename, name)))
             {
-                cmd->fi[1] = fi;
+                cmd->setFileIndexType(1, fi);
             }
             else
             {
                 szonelog(read_zone_error, "Illegal ref.: %s@%s", name, zonename);
-                cmd->fi[1] = g_slime_fi;
+                cmd->setFileIndexType(1, g_slime_fi);
             }
         }
         else
         {
-            cmd->fi[1] = nullptr;
+            cmd->setFileIndexType(1, nullptr);
         }
 
-        if (fread(&(cmd->num[0]), sizeof(cmd->num[0]), 1, f) != 1)
+        sbit16 temp{};
+        if (fread(&temp, sizeof(temp), 1, f) != 1)
         {
             error(HERE, "Failed to fread() cmd->num[0]");
         }
-        if (fread(&(cmd->num[1]), sizeof(cmd->num[1]), 1, f) != 1)
+        cmd->setNum(0, temp);
+
+        if (fread(&temp, sizeof(temp), 1, f) != 1)
         {
             error(HERE, "Failed to fread() cmd->num[1]");
         }
-        if (fread(&(cmd->num[2]), sizeof(cmd->num[2]), 1, f) != 1)
+        cmd->setNum(1, temp);
+
+        if (fread(&temp, sizeof(temp), 1, f) != 1)
         {
             error(HERE, "Failed to fread() cmd->num[2]");
         }
-        if (fread(&(cmd->cmpl), sizeof(ubit8), 1, f) != 1)
+        cmd->setNum(2, temp);
+
+        ubit8 temp2{};
+        if (fread(&temp2, sizeof(temp2), 1, f) != 1)
         {
             error(HERE, "Failed to fread() cmd->cmpl");
         }
+        cmd->setCompleteFlag(temp2);
 
         /* Link into list of next command */
         if (cmd_list == nullptr)
@@ -1846,7 +1855,7 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
         }
         else
         {
-            tmp_cmd->next = cmd;
+            tmp_cmd->setNextPtr(cmd);
             tmp_cmd = cmd;
         }
 
@@ -1858,7 +1867,7 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
                 break;
 
             case ZON_DIR_NEST:
-                cmd->nested = read_zone(f, nullptr);
+                cmd->setNestedPtr(read_zone(f, nullptr));
                 break;
 
             case ZON_DIR_UNNEST:
