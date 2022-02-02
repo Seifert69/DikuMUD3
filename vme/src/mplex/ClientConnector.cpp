@@ -619,6 +619,12 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
 
     while (*current)
     {
+        if ((newptr + 100) > dest + dest_size)
+        {
+            *newptr = 0;
+            break;
+        }
+
         if (*current == CONTROL_CHAR)
         {
             *newptr++ = *current++; // Copy control char
@@ -1090,8 +1096,8 @@ void cConHook::StripHTML(char *dest, const char *src)
 // This should only be called for telnet
 char *cConHook::ParseOutput(const char *text)
 {
-    static char Outbuf[32768];
-    static char Outbuf2[32768];
+    static char Outbuf[32868];
+    static char Outbuf2[34768];
 
     assert(strlen(text) < sizeof(Outbuf));
 
@@ -1105,7 +1111,7 @@ char *cConHook::ParseOutput(const char *text)
         else
         {
             memcpy(Outbuf, text, sizeof(Outbuf));
-            Outbuf[sizeof(Outbuf) - 1] = 0;
+            Outbuf[sizeof(Outbuf) - 100] = 0;
         }
 
         return Outbuf;
