@@ -102,7 +102,7 @@ dilend
 //  Roll -30 = -1; Roll -80 = -2; Roll 74 = 0; Roll 75 = +1;
 //  roll 94 = +1; roll 95 = +2; roll 144=+2; 145 = +3
 
-dilbegin integer successroll(il : intlist);
+dilbegin integer successroll_oe(il : intlist);
 var
     roll : integer;
     j : integer;
@@ -125,7 +125,7 @@ code
 
     if (m < 1)
     {
-        log("Illegal intlist in successroll()");
+        log("Illegal intlist in successroll_oe()");
         quit;
     }
 
@@ -146,19 +146,42 @@ code
 dilend
 
 
+// returns an index in the list il
+dilbegin integer successroll(il : intlist);
+external
+    integer successroll_oe(il : intlist);
+
+var
+    i : integer;
+code
+{
+    i := successroll_oe(il);
+
+    if (i < 0)
+        return (0);
+
+    if (i >= length(il))
+        return (length(il)-1);
+
+    return (i);
+}
+dilend
+
+
+
 //
 // max = length(list);
 //
 dilbegin integer bonuslistroll(il : intlist, bonuslvl : integer, max : integer);
 external
-    integer successroll(il : intlist);
+    integer successroll_oe(il : intlist);
 
 var
     i : integer;
 code
 {
 
-    i := successroll(il) + bonuslvl;
+    i := successroll_oe(il) + bonuslvl;
     if (i < 0)
         return (0);
 
@@ -174,7 +197,7 @@ dilend
 // And a nice description//
 dilbegin integer hiltjob(u : unitptr, lvl : integer,  hilt : string);
 external
-    integer successroll(il : intlist);
+    integer successroll_oe(il : intlist);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var 
     roll : integer;
@@ -210,7 +233,7 @@ code
     nHilt := rnd(0, length(hiltmats)-1);
 
     // Roll for the decoration, typically 0-3
-    roll := successroll({50,75,85,95});
+    roll := successroll_oe({50,75,85,95});
     log("hilt decor Roll = " + itoa(roll));
 
     j := u.value[2] + roll + 3;
@@ -245,7 +268,7 @@ dilend
 // And a nice description//
 dilbegin integer bladejob(u : unitptr, lvl : integer,  blade : string);
 external
-    integer successroll(il : intlist);
+    integer successroll_oe(il : intlist);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 
 var 
@@ -277,7 +300,7 @@ code
     };
 
     // Roll for the decoration, typically 0-3
-    roll := successroll({50,75,85,95});
+    roll := successroll_oe({50,75,85,95});
     log("Blade decor Roll = " + itoa(roll));
 
     j := u.value[2] + roll + 3;
@@ -315,7 +338,7 @@ dilend
 //
 dilbegin integer smithjob(u : unitptr, bonuslvl : integer, matlvl : integer, enchant : integer, mat : string);
 external
-    integer successroll(il : intlist);
+    integer successroll_oe(il : intlist);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var 
     roll : integer;
@@ -327,7 +350,7 @@ code
     log("Smith Level = " + itoa(bonuslvl) + "  Material difficulty = " + itoa(matlvl));
 
     //
-    roll := successroll({40, 70, 90});
+    roll := successroll_oe({40, 70, 90});
     roll := roll + (bonuslvl - matlvl);
 
     log("Smith roll = " + itoa(roll));
@@ -379,8 +402,6 @@ dilend
 dilbegin integer metalmats(u : unitptr, lvl : integer, blade : string);
 external
     integer smithjob@randomt(u : unitptr, bonuslvl : integer, matlvl : integer, enchant : integer, mat : string);
-    integer bladejob@randomt(u : unitptr, lvl : integer,  blade : string);
-    integer hiltjob@randomt(u : unitptr, lvl : integer,  blade : string);
     integer bonuslistroll@randomt(il : intlist, bonuslvl : integer, max : integer);
 
 var
@@ -437,8 +458,6 @@ code
 
     // Make a smithy roll for the material and adjust
     smith := smithjob@randomt(u, lvl, atoi(materials.[idxMat+3]), u.value[2], mat);
-    i := bladejob(u, smith, blade);
-    i := hiltjob(u, smith,  blade);
 
     return (smith);
 }
@@ -446,25 +465,30 @@ dilend
 
 
 //
-// ================= ENCHANTMENTS ===================
+// ======================== ENCHANTMENTS =========================
 //
 
 
-dilbegin enc_lightdark(u : unitptr, mod : integer);
+dilbegin integer enc_lightdark(u : unitptr, bonuslvl : integer, data : string);
 code
 {
-    if (mod > 3)
+    if (bonuslvl > 7)
     {
-        mod := 3;
-        log("enc_lightdark modifier too large ");
+        bonuslvl := 7;
+        log("enc_lightdark bonuslvlifier too large ");
     }
-    if (mod < -3)
+    if (bonuslvl < -7)
     {
-        mod := -3;
-        log("enc_lightdark modifier too small ");
+        bonuslvl := -7;
+        log("enc_lightdark bonuslvlifier too small ");
     }
-    setbright(u, u.bright + mod);
-    return;
+
+
+    // XXX TODO: Determine how much is generated
+
+    setbright(u, u.bright + 3);
+
+    return (1);
 }
 dilend
 
@@ -472,19 +496,20 @@ dilend
 //
 // call with e.g. (u, ABIL_STR, BONUS_ARTIFACT)
 //
-dilbegin enc_ability(u : unitptr, abilid : integer, mod : integer);
+dilbegin integer enc_ability(u : unitptr, bonuslvl : integer, data : string);
 var
-  il : intlist;
+    il : intlist;
+    abilid : integer;
 code
 {
-    if (mod > BONUS_ARTIFACT)
+    if (bonuslvl > BONUS_ARTIFACT)
     {
-        mod := BONUS_ARTIFACT;
+        bonuslvl := BONUS_ARTIFACT;
         log("enc_ability modifier too large ");
     }
-    if (mod < BONUS_JUNK)
+    if (bonuslvl < BONUS_JUNK)
     {
-        mod := BONUS_JUNK;
+        bonuslvl:= BONUS_JUNK;
         log("enc_lightdark modifier too small ");
     }
 
@@ -496,63 +521,78 @@ code
            -ID_RAISE_CHA, TIF_CHA_INC, TIF_CHA_DEC, 
            -ID_RAISE_BRA, TIF_BRA_INC, TIF_BRA_DEC, 
            -ID_RAISE_HPP, TIF_HIT_INC, TIF_HIT_DEC    };
-           
+
+    abilid := atoi(data);
+    if (abilid < ABIL_MAG)
+    {
+        log("Illegal ability modifier " + data);
+        quit;
+    }
+
+    if (abilid >= ABIL_TREE_MAX)
+    {
+        log("Illegal ability modifier " + data);
+        quit;
+    }
+
+    // XXX TODO. Determine how much to modify the ability
+
 	addaff(u, il.[abilid*3], -1, 0,
-	       abilid, mod, 0,
+	       abilid, getinteger(DIL_GINT_BONUS_B, null, bonuslvl), 0,
            il.[abilid*3+1], TIF_NONE, il.[abilid*3+2], APF_ABILITY);
 
-    return;
+    return (1);
 }
 dilend
 
 
 // Make 4 ticks faster
-dilbegin enc_haste(u : unitptr);
+dilbegin integer enc_haste(u : unitptr, bonuslvl : integer, data : string);
 code
 {
 	addaff(u, ID_TRANSFER_SPEED, -1, 0,
 	       SPEED_DEFAULT - SPEED_DEFAULT/3, 0, 0,
            TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
 
-    return;
+    return (1);
 }
 dilend
 
 
 // Make 4 ticks slower
-dilbegin enc_slow(u : unitptr);
+dilbegin integer enc_slow(u : unitptr, bonuslvl : integer, data : string);
 code
 {
 	addaff(u, ID_TRANSFER_SPEED, -1, 0,
 	       SPEED_DEFAULT+SPEED_DEFAULT/3, 0, 0,
            TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
 
-    return;
+    return (1);
 }
 dilend
 
 
 
-dilbegin enc_goodprot(u : unitptr);
+dilbegin integer enc_goodprot(u : unitptr, bonuslvl : integer, data : string);
 code
 {
 	addaff(u, ID_PROT_GOOD_TRANSFER, -1, 0,
 	       0, 0, 0,
            TIF_PROT_GOOD_ON, TIF_NONE, TIF_PROT_GOOD_OFF, APF_NONE);
 
-    return;
+    return (1);
 }
 dilend
 
 
-dilbegin enc_evilprot(u : unitptr);
+dilbegin integer enc_evilprot(u : unitptr, bonuslvl : integer, data : string);
 code
 {
 	addaff(u, ID_PROT_EVIL_TRANSFER, -1, 0,
 	       0, 0, 0,
            TIF_PROT_EVIL_ON, TIF_NONE, TIF_PROT_EVIL_OFF, APF_NONE);
 
-    return;
+    return (1);
 }
 dilend
 
@@ -571,57 +611,183 @@ dilend
 //SPL_INTERNAL          	/* Poison        */
 //SPL_EXTERNAL          	/* Acid          */
 
-dilbegin enc_resist(u : unitptr, splid : integer, mod : integer);
+dilbegin integer enc_resist(u : unitptr, bonuslvl : integer, data : string);
+var 
+    splid : integer;
 code
 {
+    splid := atoi(data);
+
     if (splid < SPL_DIVINE)
     {
-        log("OOB LB spell id");
+        log("OOB LB spell id " + data);
         quit;
     }
 
     if (splid >= SPL_GROUP_MAX)
     {
-        log("OOB UB spell id");
+        log("OOB UB spell id " + data);
         quit;
     }
 
 	addaff(u, -ID_SPELL_DEFENSE, -1, 0,
-	       splid, BONUS_GOOD_PLUS, 0,
+	       splid, getinteger(DIL_GINT_BONUS_A, null, bonuslvl), 0,
            TIF_SPL_INC, TIF_NONE, TIF_SPL_DEC, APF_SPELL_ADJ);
 
-    return;
+    return (1);
 }
 dilend
 
 
-dilbegin integer enchant(u : unitptr, lvl : integer, blade : string);
-external
-    enc_lightdark(u : unitptr, mod : integer);
-    enc_ability(u : unitptr, abilid : integer, mod : integer);
-    enc_haste(u : unitptr);
-    enc_slow(u : unitptr);
-    enc_goodprot(u : unitptr);
-    enc_evilprot(u : unitptr);
-    enc_resist(u : unitptr, splid : integer, mod : integer);
+// Weapon defense
+// WPN_AXE_HAM   1		/* Axe/hammer category        */
+// WPN_SWORD     2		/* Sword Category             */
+// WPN_CLUB_MACE 3		/* Club/Mace/Flail Category   */
+// WPN_POLEARM   4		/* Polearm category           */
+// WPN_UNARMED   5		/* Natural attacks            */
+// WPN_SPECIAL   6		/* Special weapons            */
+// WPN_GROUP_MAX 7		/* #[0..6] of groups          */
 
+dilbegin integer enc_defense(u : unitptr, bonuslvl : integer, data : string);
+var 
+    defid : integer;
+code
+{
+    defid := atoi(data);
+
+    if (defid < WPN_AXE_HAM)
+    {
+        log("OOB LB wpn id " + data);
+        quit;
+    }
+
+    if (defid >= WPN_GROUP_MAX)
+    {
+        log("OOB UB wpn id " + data);
+        quit;
+    }
+
+	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
+	       defid, getinteger(DIL_GINT_BONUS_A, null, bonuslvl), 0,
+           TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
+
+    return (1);
+}
+dilend
+
+
+
+dilbegin integer enc_magicbonus(u : unitptr, bonuslvl : integer, data : string);
+code
+{
+    u.value[2] := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+    return (1);
+}
+dilend
+
+dilbegin integer enc_wpnattack(u : unitptr, bonuslvl : integer, data : string);
+code
+{
+	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
+	       u.value[0], getinteger(DIL_GINT_BONUS_A, null, bonuslvl), 0,
+           TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
+
+    return (1);
+}
+dilend
+
+
+dilbegin integer enchant(u : unitptr, bonuslvl : integer, blade : string);
+external 
+    integer successroll(il : intlist);
+
+var
+    enchantments : integer;
+    used : stringlist;
+    encn : intlist;
+    encs : stringlist;
+    i : integer;
+    s : string;
 code
 {
     log("here we're supposed to enchant the weapon");
-    //enc_lightdark(u, 1);
-    //enc_ability(u, ABIL_MAG, -1);
-    //enc_ability(u, ABIL_DIV,  1);
-    //enc_ability(u, ABIL_STR,  2);
-    //enc_ability(u, ABIL_DEX,  3);
-    //enc_ability(u, ABIL_CON,  4);
-    //enc_ability(u, ABIL_CHA,  5);
-    //enc_ability(u, ABIL_BRA,  6);
-    //enc_ability(u, ABIL_HP,  BONUS_ARTIFACT);
-    //enc_haste(u);
-    //enc_slow(u);
-    //enc_goodprot(u);
-    //enc_evilprot(u);
-    enc_resist(u, SPL_HEAT, 3);
+    u.flags := u.flags | UNIT_FL_MAGIC;
+    enchantments := u.value[2];
+
+    encn := {
+         6, 8, 10, 12, 14, 16, 18, 20, // enc_ability
+         25, // enc_lightdark
+         26, // enc_haste,
+         27, // enc_slow,
+         30, // enc_goodprot,
+         33, // enc_evilprot,
+         35, 36, 37, 38, 39, 41, 44, 47, 50, 53, 56, // enc_resist
+         58,60,62,64,66,68, // enc_defense
+         80,               // wpnattack+
+         99                // magicbonus+
+    };
+
+    encs := {
+        "enc_ability@randomt", QUOTE(ABIL_MAG),
+        "enc_ability@randomt", QUOTE(ABIL_DIV),
+        "enc_ability@randomt", QUOTE(ABIL_STR),
+        "enc_ability@randomt", QUOTE(ABIL_DEX),
+        "enc_ability@randomt", QUOTE(ABIL_CON),
+        "enc_ability@randomt", QUOTE(ABIL_CHA),
+        "enc_ability@randomt", QUOTE(ABIL_BRA),
+        "enc_ability@randomt", QUOTE(ABIL_HP),
+        "enc_lightdark@randomt", "0",
+        "enc_haste@randomt", "0",
+        "enc_slow@randomt", "0",
+        "enc_goodprot@randomt", "0",
+        "enc_evilprot@randomt", "0",
+        "enc_resist@randomt", QUOTE(SPL_DIVINE),
+        "enc_resist@randomt", QUOTE(SPL_PROTECTION),
+        "enc_resist@randomt", QUOTE(SPL_SUMMONING),
+        "enc_resist@randomt", QUOTE(SPL_CREATION),
+        "enc_resist@randomt", QUOTE(SPL_DETECTION),
+        "enc_resist@randomt", QUOTE(SPL_MIND),
+        "enc_resist@randomt", QUOTE(SPL_HEAT),
+        "enc_resist@randomt", QUOTE(SPL_COLD),
+        "enc_resist@randomt", QUOTE(SPL_CELL),     // Electricity
+        "enc_resist@randomt", QUOTE(SPL_INTERNAL), // Poison
+        "enc_resist@randomt", QUOTE(SPL_EXTERNAL),  // Acid
+        "enc_defense@randomt", QUOTE(WPN_AXE_HAM),
+        "enc_defense@randomt", QUOTE(WPN_SWORD),
+        "enc_defense@randomt", QUOTE(WPN_CLUB_MACE),
+        "enc_defense@randomt", QUOTE(WPN_POLEARM),
+        "enc_defense@randomt", QUOTE(WPN_UNARMED),
+        "enc_defense@randomt", QUOTE(WPN_SPECIAL),
+        "enc_wpnattack@randomt", "0",
+        "enc_magicbonus@randomt", "0" };
+
+        //   Possible expansions
+        //     Maybe go through affect list and pick more such as bless, etc.
+        //     Weapon has embedded spells that can be used X times / day
+        //     Fireblade, Coldblade, Electricity, (how?)
+        //     Soul saver?
+        //     Fights for you while you're down
+
+    if (length(encn) != length(encs)/2)
+    {
+        log("ERROR: The two arrays must be in sync");
+        quit;
+    }
+
+    while (enchantments > 0)
+    {
+        i := successroll(encn);
+        s := itoa(i);
+        if (length(s) < 2)
+            s := "0" + s;
+        if (s in used)
+            continue;
+        insert(used, 0, s);
+
+        i := dilcall(encs.[i*2])(u, bonuslvl, encs.[i*2+1]);
+
+        enchantments := enchantments - 1;
+    }
 
     return (0);
 }
@@ -641,20 +807,24 @@ dilend
 //
 dilbegin unitptr metalweapon(bonuslvl : integer, wpnid : integer, 
                                  dflcost : integer, dflweight : integer, dflsize : integer,
+                                 blade : string,
+                                 hilt : string,
                                  materialdil : string,
                                  bladedil : string,
                                  hiltdil : string);
 
 external
     integer enchant(u : unitptr, lvl : integer, blade : string);
+    integer bladejob@randomt(u : unitptr, lvl : integer,  blade : string);
+    integer hiltjob@randomt(u : unitptr, lvl : integer,  blade : string);
 
 var
     u : unitptr;
     wpns : stringlist;
     i : integer;
+    smith : integer;
     s : string;
     t : string;
-    smith : integer;
     enchantments : integer;
 code
 {
@@ -677,12 +847,13 @@ code
     u.cost := dflcost;
 
     // Find primary weapon material and smith job, gets 
-    i := dilcall(materialdil)(u, bonuslvl, "blade"); 
+    smith := dilcall(materialdil)(u, bonuslvl, blade); 
+    i := dilcall(bladedil)(u, smith, blade);
+    i := dilcall(hiltdil)(u, smith,  hilt);
 
-    if (u.value[2] > 0)
-        u.flags := u.flags | UNIT_FL_MAGIC;
-
-    i := enchant@randomt(u, bonuslvl, "blade");
+    // u.value[2] contains the # of enchantments for this weapon
+    if (u.value[2] > 0)  // Move to enchant
+        i := enchant@randomt(u, bonuslvl, blade);
 
     return(u);
 }
@@ -690,25 +861,22 @@ dilend
 
 
 
+// Genrate a random bladed weapon
 //
-// Enchantments:
-//   Magic bonus
-//   Ability transfer (8)
-//   Good / Evil protection
-//   Resistance (spell categories)
-//   Defense (weapon categories)
-//   
-//   Possible expansions
-//     Weapon has embedded spells that can be used X times / day
-//     Extra Fire, Cold, Electricity, damage or blade type - how?
-
-
-// Level is 0-7 (BONUS_XXX) for power of weapon
-
-dilbegin unitptr rndsword(lvl : integer);
+// lvl : is 0-7 (BONUS_XXX) for power of weapon
+// 
+// Calls metalweapon with the three DILs
+//   metalmats()
+//   bladejob()
+//   hiltjob()
+// and metalweapon end up calling enchant()
+//
+dilbegin unitptr rndblade(lvl : integer);
 external
     unitptr metalweapon(bonuslvl : integer, wpnid : integer, 
                                  dflcost : integer, dflweight : integer, dflsize : integer,
+                                 blade : string,
+                                 hilt : string,
                                  materialdil : string,
                                  bladedil : string,
                                  hiltdil : string);
@@ -733,11 +901,63 @@ code
             WPN_RAPIER,         60, 4,
             WPN_MAIN_GAUCHE,    50, 2,
             WPN_STILETTO,       40, 1,
-            WPN_DAGGER,         40, 1};
+            WPN_DAGGER,         40, 1,
+            WPN_SICKLE,         50, 2,
+            WPN_SCYTHE,        100, 12
+            };
 
     idxWpn := rnd(0,length(wpns)/3-1) * 3;
 
-    return (metalweapon(lvl, wpns.[idxWpn], wpns.[idxWpn+1], wpns.[idxWpn+2], 170, "metalmats@randomt", "", ""));
+    return (metalweapon(lvl, wpns.[idxWpn], wpns.[idxWpn+1], wpns.[idxWpn+2], 170, "blade", "hilt", 
+            "metalmats@randomt", "bladejob@randomt", "hiltjob@randomt"));
+}
+dilend
+
+
+dilbegin unitptr rndheadshaft(lvl : integer);
+external
+    unitptr metalweapon(bonuslvl : integer, wpnid : integer, 
+                                 dflcost : integer, dflweight : integer, dflsize : integer,
+                                 blade : string,
+                                 hilt : string,
+                                 materialdil : string,
+                                 bladedil : string,
+                                 hiltdil : string);
+
+var
+    u : unitptr;
+    wpns : intlist;
+    idxWpn : integer;
+code
+{
+
+    log("Random head / shaft");
+
+    // weapon id, cost cp, weight
+    wpns := {
+            WPN_BATTLE_AXE,    160, 16,
+            WPN_HAND_AXE,       60, 6,
+            WPN_WAR_MATTOCK,    90, 10,
+            WPN_ADZE,           70, 7,
+            WPN_WAR_MAUL,       60, 9,
+            WPN_WAR_HAMMER,     55, 7,
+            WPN_BATTLE_CLUB,    50, 6,
+            WPN_CLUB,           20, 4,
+            WPN_BATTLE_MACE,    80, 12,
+            WPN_MACE,           60, 6,
+            WPN_FLAIL,         140, 16,
+            WPN_MORNING_STAR,   80, 16,
+            WPN_HALBERD,        80, 10,
+            WPN_BARDICHE,       80, 10,
+            WPN_QUARTERSTAFF,   50, 10,
+            WPN_SPEAR,          40, 6,
+            WPN_JAVELIN,        60, 7,
+            WPN_TRIDENT,        70, 12};
+
+    idxWpn := rnd(0,length(wpns)/3-1) * 3;
+
+    return (metalweapon(lvl, wpns.[idxWpn], wpns.[idxWpn+1], wpns.[idxWpn+2], 170, "head", "shaft", 
+            "metalmats@randomt", "bladejob@randomt", "hiltjob@randomt"));
 }
 dilend
 
@@ -745,37 +965,37 @@ dilend
 /*
     // weapon name, weapon id, cost cp, weight
     wpns := {
-            QUOTE(WPN_BATTLE_AXE),    "160", "16",
-            QUOTE(WPN_HAND_AXE),       "60", "6",
-            QUOTE(WPN_WAR_MATTOCK),    "90", "10",
-            QUOTE(WPN_ADZE),           "70", "7",
-            QUOTE(WPN_WAR_MAUL),       "60", "9",
-            QUOTE(WPN_WAR_HAMMER),     "55", "7",
-            QUOTE(WPN_BATTLE_CLUB),    "50", "6",
-            QUOTE(WPN_CLUB),           "20", "4",
-            QUOTE(WPN_BATTLE_MACE),    "80", "12",
-            QUOTE(WPN_MACE),           "60", "6",
-            QUOTE(WPN_FLAIL),         "140", "16",
-            QUOTE(WPN_MORNING_STAR),   "80", "16",
-            QUOTE(WPN_GREAT_SWORD),   "200", "16",
-            QUOTE(WPN_LONG_SWORD),    "100", "8",
-            QUOTE(WPN_BROAD_SWORD),   "100", "8",
-            QUOTE(WPN_CLAYMORE),      "120", "9",
-            QUOTE(WPN_SCIMITAR),      "100", "7",
-            QUOTE(WPN_FALCHION),       "90", "9",
-            QUOTE(WPN_SHORT_SWORD),    "70", "6",
-            QUOTE(WPN_RAPIER),         "60", "4",
-            QUOTE(WPN_MAIN_GAUCHE),    "50", "2",
-            QUOTE(WPN_STILETTO),       "40", "1",
-            QUOTE(WPN_DAGGER),         "40", "1",
-            QUOTE(WPN_SICKLE),         "50", "2",
-            QUOTE(WPN_HALBERD),        "80", "10",
-            QUOTE(WPN_BARDICHE),       "80", "10",
-            QUOTE(WPN_SCYTHE),        "100", "12",
-            QUOTE(WPN_QUARTERSTAFF),   "50", "10",
-            QUOTE(WPN_SPEAR),          "40", "6",
-            QUOTE(WPN_JAVELIN),        "60", "7",
-            QUOTE(WPN_TRIDENT),        "70", "12"};
+            WPN_BATTLE_AXE,    160, 16,
+            WPN_HAND_AXE,       60, 6,
+            WPN_WAR_MATTOCK,    90, 10,
+            WPN_ADZE,           70, 7,
+            WPN_WAR_MAUL,       60, 9,
+            WPN_WAR_HAMMER,     55, 7,
+            WPN_BATTLE_CLUB,    50, 6,
+            WPN_CLUB,           20, 4,
+            WPN_BATTLE_MACE,    80, 12,
+            WPN_MACE,           60, 6,
+            WPN_FLAIL,         140, 16,
+            WPN_MORNING_STAR,   80, 16,
+            WPN_GREAT_SWORD,   200, 16,
+            WPN_LONG_SWORD,    100, 8,
+            WPN_BROAD_SWORD,   100, 8,
+            WPN_CLAYMORE,      120, 9,
+            WPN_SCIMITAR,      100, 7,
+            WPN_FALCHION,       90, 9,
+            WPN_SHORT_SWORD,    70, 6,
+            WPN_RAPIER,         60, 4,
+            WPN_MAIN_GAUCHE,    50, 2,
+            WPN_STILETTO,       40, 1,
+            WPN_DAGGER,         40, 1,
+            WPN_SICKLE,         50, 2,
+            WPN_HALBERD,        80, 10,
+            WPN_BARDICHE,       80, 10,
+            WPN_SCYTHE,        100, 12,
+            WPN_QUARTERSTAFF,   50, 10,
+            WPN_SPEAR,          40, 6,
+            WPN_JAVELIN,        60, 7,
+            WPN_TRIDENT,        70, 12};
 
 */
 
@@ -796,7 +1016,7 @@ ALWAYS_LIGHT
 
 dilbegin bouncegenerator();
 external
-    unitptr rndsword(lvl : integer);
+    unitptr rndblade(lvl : integer);
 var
     u : unitptr;
 code
@@ -804,7 +1024,7 @@ code
     :loop:
     wait(SFB_CMD, command("bounce"));
     log("BOUNCE RECEIVED");
-    u := rndsword(BONUS_ARTIFACT);
+    u := rndblade(BONUS_ARTIFACT);
     // u := metalweapon@randomt(BONUS_ARTIFACT, WPN_BATTLE_AXE, 160, 16, 180, "metalmats@randomt","","");
     link(u, self);
     goto loop;
