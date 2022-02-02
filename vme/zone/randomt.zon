@@ -35,14 +35,17 @@ var
     exd : extraptr;
 code
 {
-    exd := "$identify" in u.extra;
-    if (exd == null)
+    if (norm != "")
     {
-        addextra(u.extra, {"$identify"}, "");
         exd := "$identify" in u.extra;
-    }
+        if (exd == null)
+        {
+            addextra(u.extra, {"$identify"}, "");
+            exd := "$identify" in u.extra;
+        }
 
-    exd.descr := exd.descr + norm;
+        exd.descr := exd.descr + norm + "<br/>";
+    }
 
     exd := "$improved identify" in u.extra;
     if (exd == null)
@@ -51,7 +54,7 @@ code
         exd := "$improved identify" in u.extra;
     }
 
-    exd.descr := exd.descr + improved;
+    exd.descr := exd.descr + improved + "<br/>";
 
     return;
 }
@@ -121,23 +124,30 @@ dilend
 
 // il : intlist  [array of integers from 5..94]
 //
-// This funciton presume rolls of < 5 are a failure.
-// This funciton presume rolls of > 95 are a open-ended success.
+// This function presume rolls of < 5 are a failure, each -50 is -1 more
+// This function presume rolls of > 95 are a open-ended success, each +50 is +1 more
 // The integers in the intlist are the number of bonuses, in the range
 // 5..94 
 //
-// Example: [75,95]
-//  Roll -30 = -1; Roll -80 = -2; Roll 74 = 0; Roll 75 = +1;
-//  roll 94 = +1; roll 95 = +2; roll 144=+2; 145 = +3
-
-dilbegin integer successroll_oe(il : intlist);
+// Example: {15,75,90}
+//  Roll <= -50     = -2
+//  Roll [-49..4]   = -1
+//  Roll [ 5..15]   =  0
+//  Roll [16..75]   = +1
+//  Roll [76..90]   = +2
+//  Roll [91..141]  = +3
+//  Roll [142..192] = +4
+//
+// The first intlist entry must be > 4
+//
+dilbegin integer successroll_oe(il : intlist, rollskew : integer);
 var
     roll : integer;
     j : integer;
     m : integer;
 code
 {
-    roll := openroll(100, 5);
+    roll := openroll(100, 5) + rollskew;
     
     // Test if failure
     if (roll <= 4)
@@ -159,7 +169,7 @@ code
 
     while (j < m)
     {
-        if (roll < il.[j])
+        if (roll <= il.[j])
             break;
         j := j + 1;
     }
@@ -169,27 +179,35 @@ code
 
     // Roll is larger than last number in il
 
-    return (m + (roll-il.[m-1])/50);
+    return (m + (roll - il.[m-1])/50);
 }
 dilend
 
 
-// returns an index in the list il
-dilbegin integer successroll(il : intlist);
+
+// returns an index in the list il.
+// Will return a number in [0..length(il)]
+// E.g. {10,75,90}
+//  0 = roll <= 10
+//  1 = roll in [11..75]
+//  2 = roll in [76..90]
+//  3 = roll > 90
+//
+dilbegin integer successroll(il : intlist, rollskew : integer);
 external
-    integer successroll_oe(il : intlist);
+    integer successroll_oe(il : intlist, rollskew : integer);
 
 var
     i : integer;
 code
 {
-    i := successroll_oe(il);
+    i := successroll_oe(il, rollskew);
 
     if (i < 0)
         return (0);
 
-    if (i >= length(il))
-        return (length(il)-1);
+    if (i > length(il))
+        return (length(il));
 
     return (i);
 }
@@ -202,14 +220,14 @@ dilend
 //
 dilbegin integer bonuslistroll(il : intlist, bonuslvl : integer, max : integer);
 external
-    integer successroll_oe(il : intlist);
+    integer successroll_oe(il : intlist, rollskew : integer);
 
 var
     i : integer;
 code
 {
 
-    i := successroll_oe(il) + bonuslvl;
+    i := successroll_oe(il, 0) + bonuslvl;
     if (i < 0)
         return (0);
 
@@ -225,7 +243,7 @@ dilend
 // And a nice description//
 dilbegin integer hiltjob(u : unitptr, lvl : integer,  hilt : string);
 external
-    integer successroll_oe(il : intlist);
+    integer successroll_oe(il : intlist, rollskew : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var 
     roll : integer;
@@ -261,7 +279,7 @@ code
     nHilt := rnd(0, length(hiltmats)-1);
 
     // Roll for the decoration, typically 0-3
-    roll := successroll_oe({50,75,85,95});
+    roll := successroll_oe({50,75,85,95}, 0);
     log("hilt decor Roll = " + itoa(roll));
 
     j := u.value[2] + roll + 3;
@@ -296,7 +314,7 @@ dilend
 // And a nice description//
 dilbegin integer bladejob(u : unitptr, lvl : integer,  blade : string);
 external
-    integer successroll(il : intlist);
+    integer successroll(il : intlist, rollskew : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 
 var 
@@ -328,7 +346,7 @@ code
     };
 
     // Roll for the decoration, typically 0-3
-    roll := successroll({50,75,85,95});
+    roll := successroll({50,75,85,95}, 0);
     log("Blade decor Roll = " + itoa(roll));
 
     j := u.value[2] + roll + 3;
@@ -366,7 +384,7 @@ dilend
 //
 dilbegin integer smithjob(u : unitptr, bonuslvl : integer, matlvl : integer, enchant : integer, mat : string);
 external
-    integer successroll_oe(il : intlist);
+    integer successroll_oe(il : intlist, rollskew : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var 
     roll : integer;
@@ -378,7 +396,7 @@ code
     log("Smith Level = " + itoa(bonuslvl) + "  Material difficulty = " + itoa(matlvl));
 
     //
-    roll := successroll_oe({40, 70, 90});
+    roll := successroll_oe({40, 70, 90}, 0);
     roll := roll + (bonuslvl - matlvl);
 
     log("Smith roll = " + itoa(roll));
@@ -496,25 +514,58 @@ dilend
 // ======================== ENCHANTMENTS =========================
 //
 
-
-dilbegin integer enc_lightdark(u : unitptr, bonuslvl : integer, data : string);
+dilbegin integer enc_light(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer successroll(il : intlist, rollskew : integer);
+    identify(u :unitptr, norm : string, improved: string);
+var
+    i : integer;
 code
 {
     if (bonuslvl > 7)
     {
         bonuslvl := 7;
-        log("enc_lightdark bonuslvlifier too large ");
+        log("enc_light bonuslvlifier too large ");
     }
     if (bonuslvl < -7)
     {
         bonuslvl := -7;
-        log("enc_lightdark bonuslvlifier too small ");
+        log("enc_light bonuslvlifier too small ");
     }
 
+    i := successroll({50, 80, 95}, bonuslvl*5);
 
-    // XXX TODO: Determine how much is generated
+    setbright(u, i); // 0..3
+    identify(u, "Emits a magical light.", "Emits a magical light " + itoa(i) +".");
 
-    setbright(u, u.bright + 3);
+    return (1);
+}
+dilend
+
+
+dilbegin integer enc_dark(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer successroll(il : intlist, rollskew : integer);
+    identify(u :unitptr, norm : string, improved: string);
+var
+    i : integer;
+code
+{
+    if (bonuslvl > 7)
+    {
+        bonuslvl := 7;
+        log("enc_dark bonuslvlifier too large ");
+    }
+    if (bonuslvl < -7)
+    {
+        bonuslvl := -7;
+        log("enc_dark bonuslvlifier too small ");
+    }
+
+    i := -successroll({50, 80, 95}, bonuslvl*5);
+
+    setbright(u, i); // 0..-3
+    identify(u, "Emits magical darkness.", "Emits magical darkness " + itoa(i) +".");
 
     return (1);
 }
@@ -532,6 +583,7 @@ var
     il : intlist;
     abilid : integer;
     i : integer;
+    sl : stringlist;
 code
 {
     log("Enchant ability");
@@ -543,7 +595,7 @@ code
     if (bonuslvl < BONUS_JUNK)
     {
         bonuslvl:= BONUS_JUNK;
-        log("enc_lightdark modifier too small ");
+        log("enc_ability modifier too small ");
     }
 
     il := {-ID_RAISE_MAG, TIF_MAG_INC, TIF_MAG_DEC, 
@@ -554,6 +606,7 @@ code
            -ID_RAISE_CHA, TIF_CHA_INC, TIF_CHA_DEC, 
            -ID_RAISE_BRA, TIF_BRA_INC, TIF_BRA_DEC, 
            -ID_RAISE_HPP, TIF_HIT_INC, TIF_HIT_DEC    };
+
 
     abilid := atoi(data);
     if (abilid < ABIL_MAG)
@@ -575,7 +628,8 @@ code
 	       abilid, i, 0,
            il.[abilid*3+1], TIF_NONE, il.[abilid*3+2], APF_ABILITY);
 
-    identify(u, "Improved "+itoa(abilid), "Improved "+itoa(abilid)+" with "+itoa(i));
+    sl := {"magic", "divine", "strength", "dexterity", "constitution", "charisma", "brain", "hitpoints"};
+    identify(u, "Improved "+sl.[abilid] +" ability.", "Improved "+sl.[abilid]+" with "+itoa(i)+".");
 
     return (1);
 }
@@ -584,11 +638,15 @@ dilend
 
 // Make 4 ticks faster
 dilbegin integer enc_haste(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
 code
 {
 	addaff(u, ID_TRANSFER_SPEED, -1, 0,
 	       SPEED_DEFAULT - SPEED_DEFAULT/3, 0, 0,
            TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
+
+    identify(u, "Weapon makes you hasted.", "Improved haste with +4.");
 
     return (1);
 }
@@ -597,11 +655,15 @@ dilend
 
 // Make 4 ticks slower
 dilbegin integer enc_slow(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
 code
 {
 	addaff(u, ID_TRANSFER_SPEED, -1, 0,
 	       SPEED_DEFAULT+SPEED_DEFAULT/3, 0, 0,
            TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
+
+    identify(u, "Weapon makes you slower.", "Slows you with -4.");
 
     return (1);
 }
@@ -610,11 +672,15 @@ dilend
 
 
 dilbegin integer enc_goodprot(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
 code
 {
 	addaff(u, ID_PROT_GOOD_TRANSFER, -1, 0,
 	       0, 0, 0,
            TIF_PROT_GOOD_ON, TIF_NONE, TIF_PROT_GOOD_OFF, APF_NONE);
+
+    identify(u, "Weapon makes you protected against good.", "Weapon makes you protected against good.");
 
     return (1);
 }
@@ -622,11 +688,15 @@ dilend
 
 
 dilbegin integer enc_evilprot(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
 code
 {
 	addaff(u, ID_PROT_EVIL_TRANSFER, -1, 0,
 	       0, 0, 0,
            TIF_PROT_EVIL_ON, TIF_NONE, TIF_PROT_EVIL_OFF, APF_NONE);
+
+    identify(u, "Weapon makes you protected against evil.", "Weapon makes you protected against evil.");
 
     return (1);
 }
@@ -648,8 +718,12 @@ dilend
 //SPL_EXTERNAL          	/* Acid          */
 
 dilbegin integer enc_resist(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
 var 
     splid : integer;
+    sl : stringlist;
+    i : integer;
 code
 {
     splid := atoi(data);
@@ -666,9 +740,17 @@ code
         quit;
     }
 
+    i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+
 	addaff(u, -ID_SPELL_DEFENSE, -1, 0,
-	       splid, getinteger(DIL_GINT_BONUS_A, null, bonuslvl), 0,
+	       splid, i, 0,
            TIF_SPL_INC, TIF_NONE, TIF_SPL_DEC, APF_SPELL_ADJ);
+
+    sl := {"", "divination", "protection", "detection", "summoning", "creation", 
+           "mind", "fire", "cold", "electricity", "poison", "acid"};
+
+    identify(u, "Weapon increases your resistance against " + sl.[splid] + ".",
+                "Weapon increases your resistance against " + sl.[splid] + " by " + itoa(i) + ".");
 
     return (1);
 }
@@ -685,8 +767,12 @@ dilend
 // WPN_GROUP_MAX 7		/* #[0..6] of groups          */
 
 dilbegin integer enc_defense(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
 var 
     defid : integer;
+    i : integer;
+    sl : stringlist;
 code
 {
     defid := atoi(data);
@@ -703,9 +789,53 @@ code
         quit;
     }
 
+    i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
 	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
-	       defid, getinteger(DIL_GINT_BONUS_A, null, bonuslvl), 0,
+	       defid, i, 0,
            TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
+
+    sl := {"", "axes and hammers", "bladed weapons", "clubs and maces", "polearms", "natural attacks", "special weapons"};
+
+    identify(u, "Weapon increases your defense against " + sl.[defid] + ".",
+                "Weapon increases your defense against " + sl.[defid] + " by " + itoa(i) + ".");
+
+    return (1);
+}
+dilend
+
+
+dilbegin integer enc_slaying(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+
+var
+    il : intlist;
+    sl : stringlist;
+    i : integer;
+code
+{
+    il := {
+        RACE_DRAGON_BLACK, 
+        RACE_DRAGON_BLUE, 
+        RACE_DRAGON_GREEN,
+        RACE_DRAGON_RED,
+        RACE_DRAGON_WHITE,
+        RACE_DRAGON_SILVER
+    };
+
+    sl := {
+        "black dragons",
+        "blue dragons", 
+        "green dragons",
+        "red dragons",
+        "white dragons",
+        "silver dragons"
+    };
+
+    i := rnd(0,length(il)-1);
+
+    u.value[3] := il.[i];
+    identify(u, "", "Slaying against "+sl.[i]+".");
 
     return (1);
 }
@@ -714,19 +844,30 @@ dilend
 
 
 dilbegin integer enc_magicbonus(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
 code
 {
     u.value[2] := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+    identify(u, "Weapon has a magic bonus.", "Weapon has a magic bonus of " + itoa(u.value[2])+".");
     return (1);
 }
 dilend
 
 dilbegin integer enc_wpnattack(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+var
+    i : integer;
 code
 {
+    i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
 	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
-	       u.value[0], getinteger(DIL_GINT_BONUS_A, null, bonuslvl), 0,
+	       u.value[0], i, 0,
            TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
+
+    identify(u, "Weapon increases your skill with this weapon.",
+                "Weapon increases your skill with this weapon by " + itoa(i)+".");
 
     return (1);
 }
@@ -735,7 +876,7 @@ dilend
 
 dilbegin integer enchant(u : unitptr, bonuslvl : integer, blade : string);
 external 
-    integer successroll(il : intlist);
+    integer successroll(il : intlist, rollskew : integer);
 
 var
     enchantments : integer;
@@ -751,19 +892,21 @@ code
     log("here we're supposed to enchant the weapon: " + itoa(enchantments));
 
     encn := {
+         4, // enc_light
          6, 8, 10, 12, 14, 16, 18, 20, // enc_ability
-         25, // enc_lightdark
          26, // enc_haste,
          27, // enc_slow,
          30, // enc_goodprot,
          33, // enc_evilprot,
          35, 36, 37, 38, 39, 41, 44, 47, 50, 53, 56, // enc_resist
          58,60,62,64,66,68, // enc_defense
-         80,               // wpnattack+
-         99                // magicbonus+
+         70,                // enc_slaying
+         80                 // wpnattack+
+                            // magicbonus+ for anythnig above the previous 
     };
 
     encs := {
+        "enc_light@randomt", "0",
         "enc_ability@randomt", QUOTE(ABIL_MAG),
         "enc_ability@randomt", QUOTE(ABIL_DIV),
         "enc_ability@randomt", QUOTE(ABIL_STR),
@@ -772,7 +915,6 @@ code
         "enc_ability@randomt", QUOTE(ABIL_CHA),
         "enc_ability@randomt", QUOTE(ABIL_BRA),
         "enc_ability@randomt", QUOTE(ABIL_HP),
-        "enc_lightdark@randomt", "0",
         "enc_haste@randomt", "0",
         "enc_slow@randomt", "0",
         "enc_goodprot@randomt", "0",
@@ -794,6 +936,7 @@ code
         "enc_defense@randomt", QUOTE(WPN_POLEARM),
         "enc_defense@randomt", QUOTE(WPN_UNARMED),
         "enc_defense@randomt", QUOTE(WPN_SPECIAL),
+        "enc_slaying@randomt", "0",
         "enc_wpnattack@randomt", "0",
         "enc_magicbonus@randomt", "0" };
 
@@ -806,7 +949,7 @@ code
         //     Soul saver?
         //     Fights for you while you're down
 
-    if (length(encn) != length(encs)/2)
+    if (length(encn)+1 != length(encs)/2)
     {
         log("ERROR: The two arrays must be in sync");
         quit;
@@ -817,7 +960,7 @@ code
         log("enchantment "+itoa(enchantments));
         enchantments := enchantments - 1;
 
-        i := successroll(encn);
+        i := successroll(encn, 0);
         s := itoa(i);
         if (length(s) < 2)
             s := "0" + s;
@@ -1015,42 +1158,20 @@ code
 dilend
 
 
-/*
-    // weapon name, weapon id, cost cp, weight
-    wpns := {
-            WPN_BATTLE_AXE,    160, 16,
-            WPN_HAND_AXE,       60, 6,
-            WPN_WAR_MATTOCK,    90, 10,
-            WPN_ADZE,           70, 7,
-            WPN_WAR_MAUL,       60, 9,
-            WPN_WAR_HAMMER,     55, 7,
-            WPN_BATTLE_CLUB,    50, 6,
-            WPN_CLUB,           20, 4,
-            WPN_BATTLE_MACE,    80, 12,
-            WPN_MACE,           60, 6,
-            WPN_FLAIL,         140, 16,
-            WPN_MORNING_STAR,   80, 16,
-            WPN_GREAT_SWORD,   200, 16,
-            WPN_LONG_SWORD,    100, 8,
-            WPN_BROAD_SWORD,   100, 8,
-            WPN_CLAYMORE,      120, 9,
-            WPN_SCIMITAR,      100, 7,
-            WPN_FALCHION,       90, 9,
-            WPN_SHORT_SWORD,    70, 6,
-            WPN_RAPIER,         60, 4,
-            WPN_MAIN_GAUCHE,    50, 2,
-            WPN_STILETTO,       40, 1,
-            WPN_DAGGER,         40, 1,
-            WPN_SICKLE,         50, 2,
-            WPN_HALBERD,        80, 10,
-            WPN_BARDICHE,       80, 10,
-            WPN_SCYTHE,        100, 12,
-            WPN_QUARTERSTAFF,   50, 10,
-            WPN_SPEAR,          40, 6,
-            WPN_JAVELIN,        60, 7,
-            WPN_TRIDENT,        70, 12};
+dilbegin unitptr rndweapon(lvl : integer);
+external
+    unitptr rndheadshaft(lvl : integer);
+    unitptr rndblade(lvl : integer);
 
-*/
+code
+{
+    if (rnd(0,1) == 1)
+        return (rndblade(lvl));
+    else
+        return (rndheadshaft(lvl));
+}
+dilend
+
 
 %rooms
 
@@ -1069,7 +1190,7 @@ ALWAYS_LIGHT
 
 dilbegin bouncegenerator();
 external
-    unitptr rndblade(lvl : integer);
+    unitptr rndweapon(lvl : integer);
 var
     u : unitptr;
 code
@@ -1077,8 +1198,7 @@ code
     :loop:
     wait(SFB_CMD, command("bounce"));
     log("BOUNCE RECEIVED");
-    u := rndblade(BONUS_ARTIFACT);
-    // u := metalweapon@randomt(BONUS_ARTIFACT, WPN_BATTLE_AXE, 160, 16, 180, "metalmats@randomt","","");
+    u := rndweapon(rnd(0,7));
     link(u, self);
     goto loop;
 }
@@ -1105,7 +1225,7 @@ CONTAINER_DEF(10)
 
 dilbegin treasure0();
 external
-    unitptr rndblade(lvl : integer);
+    unitptr rndweapon(lvl : integer);
 
 var 
     i : integer;
@@ -1115,7 +1235,7 @@ code
     i := 0;
     while (i < 10)
     {
-        u := rndblade(BONUS_AVERAGE);
+        u := rndweapon(BONUS_AVERAGE);
         link(u, self);
         i := i + 1;
     }
@@ -1133,7 +1253,7 @@ open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 
 dilbegin treasure4();
 external
-    unitptr rndblade(lvl : integer);
+    unitptr rndweapon(lvl : integer);
 var 
     i : integer;
     u : unitptr;
@@ -1142,7 +1262,7 @@ code
     i := 0;
     while (i < 10)
     {
-        u := rndblade(BONUS_EXCELLENT);
+        u := rndweapon(BONUS_EXCELLENT);
         link(u, self);
         i := i + 1;
     }
@@ -1160,7 +1280,7 @@ CONTAINER_DEF(10)
 
 dilbegin treasure7();
 external
-    unitptr rndblade(lvl : integer);
+    unitptr rndweapon(lvl : integer);
 var 
     i : integer;
     u : unitptr;
@@ -1170,7 +1290,7 @@ code
     i := 0;
     while (i < 10)
     {
-        u := rndblade(BONUS_ARTIFACT);
+        u := rndweapon(BONUS_ARTIFACT);
         link(u, self);
         i := i + 1;
     }
