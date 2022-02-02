@@ -1245,6 +1245,8 @@ ACTION
 #define DIL_GINT_MANAREG    5  // returns the amount of mana PC/NPC should regenerate
 #define DIL_GINT_HITREG     6  // returns the amount of hp PC/NPC should regenerate
 #define DIL_GINT_MOVEREG    7  // returns the amount of endurance PC/NPC should regenerate
+#define DIL_GINT_BONUS_A    8  // Translate BONUS_XXX to skill levels (up to 20 bonus)
+#define DIL_GINT_BONUS_B    9  // Transalte BONUS_XXX to ability levels (up to 10 bonus)
 
 #endif /* _MUD_VALUES_H */
 
