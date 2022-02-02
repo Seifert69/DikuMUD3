@@ -30,6 +30,34 @@ help
 
 %dil
 
+dilbegin identify(u :unitptr, norm : string, improved: string);
+var
+    exd : extraptr;
+code
+{
+    exd := "$identify" in u.extra;
+    if (exd == null)
+    {
+        addextra(u.extra, {"$identify"}, "");
+        exd := "$identify" in u.extra;
+    }
+
+    exd.descr := exd.descr + norm;
+
+    exd := "$improved identify" in u.extra;
+    if (exd == null)
+    {
+        addextra(u.extra, {"$improved identify"}, "");
+        exd := "$improved identify" in u.extra;
+    }
+
+    exd.descr := exd.descr + improved;
+
+    return;
+}
+dilend
+
+
 dilbegin string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var
    vowels : string;
@@ -268,7 +296,7 @@ dilend
 // And a nice description//
 dilbegin integer bladejob(u : unitptr, lvl : integer,  blade : string);
 external
-    integer successroll_oe(il : intlist);
+    integer successroll(il : intlist);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 
 var 
@@ -300,7 +328,7 @@ code
     };
 
     // Roll for the decoration, typically 0-3
-    roll := successroll_oe({50,75,85,95});
+    roll := successroll({50,75,85,95});
     log("Blade decor Roll = " + itoa(roll));
 
     j := u.value[2] + roll + 3;
@@ -497,11 +525,16 @@ dilend
 // call with e.g. (u, ABIL_STR, BONUS_ARTIFACT)
 //
 dilbegin integer enc_ability(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+
 var
     il : intlist;
     abilid : integer;
+    i : integer;
 code
 {
+    log("Enchant ability");
     if (bonuslvl > BONUS_ARTIFACT)
     {
         bonuslvl := BONUS_ARTIFACT;
@@ -537,9 +570,12 @@ code
 
     // XXX TODO. Determine how much to modify the ability
 
+    i := getinteger(DIL_GINT_BONUS_B, null, bonuslvl);
 	addaff(u, il.[abilid*3], -1, 0,
-	       abilid, getinteger(DIL_GINT_BONUS_B, null, bonuslvl), 0,
+	       abilid, i, 0,
            il.[abilid*3+1], TIF_NONE, il.[abilid*3+2], APF_ABILITY);
+
+    identify(u, "Improved "+itoa(abilid), "Improved "+itoa(abilid)+" with "+itoa(i));
 
     return (1);
 }
@@ -710,9 +746,9 @@ var
     s : string;
 code
 {
-    log("here we're supposed to enchant the weapon");
     u.flags := u.flags | UNIT_FL_MAGIC;
     enchantments := u.value[2];
+    log("here we're supposed to enchant the weapon: " + itoa(enchantments));
 
     encn := {
          6, 8, 10, 12, 14, 16, 18, 20, // enc_ability
@@ -761,6 +797,8 @@ code
         "enc_wpnattack@randomt", "0",
         "enc_magicbonus@randomt", "0" };
 
+        //   Add SLAYING
+        //
         //   Possible expansions
         //     Maybe go through affect list and pick more such as bless, etc.
         //     Weapon has embedded spells that can be used X times / day
@@ -776,6 +814,9 @@ code
 
     while (enchantments > 0)
     {
+        log("enchantment "+itoa(enchantments));
+        enchantments := enchantments - 1;
+
         i := successroll(encn);
         s := itoa(i);
         if (length(s) < 2)
@@ -784,9 +825,19 @@ code
             continue;
         insert(used, 0, s);
 
-        i := dilcall(encs.[i*2])(u, bonuslvl, encs.[i*2+1]);
+        if (i < 0)
+        {
+            log("Index too low");
+            quit;
+        }
 
-        enchantments := enchantments - 1;
+        if (i >= length(encs)/2)
+        {
+            log("Index too high");
+            quit;
+        }
+
+        i := dilcall(encs.[i*2])(u, bonuslvl, encs.[i*2+1]);
     }
 
     return (0);
@@ -850,6 +901,8 @@ code
     smith := dilcall(materialdil)(u, bonuslvl, blade); 
     i := dilcall(bladedil)(u, smith, blade);
     i := dilcall(hiltdil)(u, smith,  hilt);
+
+    u.value[1] := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
 
     // u.value[2] contains the # of enchantments for this weapon
     if (u.value[2] > 0)  // Move to enchant
@@ -1043,5 +1096,93 @@ title ""
 descr ""
 end
 
+treasure0
+names {"treasure0"}
+title "tresure0 chest is here"
+descr "treasure0 is here, open it"
+open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
+CONTAINER_DEF(10)
+
+dilbegin treasure0();
+external
+    unitptr rndblade(lvl : integer);
+
+var 
+    i : integer;
+    u : unitptr;
+code
+{
+    i := 0;
+    while (i < 10)
+    {
+        u := rndblade(BONUS_AVERAGE);
+        link(u, self);
+        i := i + 1;
+    }
+    quit;
+}
+dilend
+end
+
+treasure4
+names {"treasure4"}
+title "tresure4 chest is here"
+descr "treasure4 is here, open it"
+CONTAINER_DEF(10)
+open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
+
+dilbegin treasure4();
+external
+    unitptr rndblade(lvl : integer);
+var 
+    i : integer;
+    u : unitptr;
+code
+{
+    i := 0;
+    while (i < 10)
+    {
+        u := rndblade(BONUS_EXCELLENT);
+        link(u, self);
+        i := i + 1;
+    }
+    quit;
+}
+dilend
+end
+
+treasure7
+names {"treasure7"}
+title "tresure7 chest is here"
+descr "treasure7 is here, open it"
+open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
+CONTAINER_DEF(10)
+
+dilbegin treasure7();
+external
+    unitptr rndblade(lvl : integer);
+var 
+    i : integer;
+    u : unitptr;
+code
+{
+    log("TREASURE7");
+    i := 0;
+    while (i < 10)
+    {
+        u := rndblade(BONUS_ARTIFACT);
+        link(u, self);
+        i := i + 1;
+    }
+    quit;
+}
+dilend
+end
+
+%reset
+
+load treasure0 into treasury max 1
+load treasure4 into treasury max 1
+load treasure7 into treasury max 1
 
 %end
