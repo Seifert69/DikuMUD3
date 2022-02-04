@@ -142,9 +142,9 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if ((fi = pc_str_to_file_index(ch, argument)) && (!fi->fi_unit_list.empty()) && (fi->type == UNIT_ST_ROOM))
+    if ((fi = pc_str_to_file_index(ch, argument)) && (!fi->Empty()) && (fi->getType() == UNIT_ST_ROOM))
     {
-        target = fi->fi_unit_list.front();
+        target = fi->Front();
         argument = one_argument(argument, buf);
     }
     else
@@ -414,17 +414,17 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    if (fi->type == UNIT_ST_ROOM)
+    if (fi->getType() == UNIT_ST_ROOM)
     {
         send_to_char("Sorry, you are not allowed to load rooms.<br/>", ch);
         return;
     }
 
-    if (CHAR_LEVEL(ch) < fi->zone->loadlevel)
+    if (CHAR_LEVEL(ch) < fi->getZone()->loadlevel)
     {
-        if (!fi->zone->creators.IsName(UNIT_NAME(ch)))
+        if (!fi->getZone()->creators.IsName(UNIT_NAME(ch)))
         {
-            int i = fi->zone->loadlevel;
+            int i = fi->getZone()->loadlevel;
 
             act("Level $2d is required to load items from this zone.", A_ALWAYS, ch, &i, cActParameter(), TO_CHAR);
             return;

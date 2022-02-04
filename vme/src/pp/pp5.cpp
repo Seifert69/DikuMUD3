@@ -1,3 +1,7 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 /************************************************************************/
 /*									*/
 /*	File:	pp5.c							*/
@@ -183,3 +187,5 @@ void doifs(int t, int bbb, const char *ccc)
         printf("doifs: %d %d %d\n", t, iftype, Iflevel);
 #endif /* PPDEBUG */
 }
+
+#pragma GCC diagnostic pop

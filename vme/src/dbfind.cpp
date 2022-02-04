@@ -160,9 +160,9 @@ unit_data *world_room(const char *zone, const char *name)
     file_index_type *fi = nullptr;
     fi = find_file_index(zone, name);
 
-    if (fi && (fi->type == UNIT_ST_ROOM) && (!fi->fi_unit_list.empty()))
+    if (fi && (fi->getType() == UNIT_ST_ROOM) && (!fi->Empty()))
     {
-        return (fi->fi_unit_list.front());
+        return (fi->Front());
     }
 
     return nullptr;

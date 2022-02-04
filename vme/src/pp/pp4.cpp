@@ -1,3 +1,7 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+
 /************************************************************************/
 /*									*/
 /*	File:	pp4.c							*/
@@ -690,3 +694,5 @@ int type(int c)
     else
         return (c);
 }
+
+#pragma GCC diagnostic pop

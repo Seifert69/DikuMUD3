@@ -287,65 +287,70 @@ void generate_file_indexes(FILE *f, zone_type *zone)
         }
 
         temp_index = new file_index_type();
-        temp_index->name = str_dup((char *)cBuf.GetData());
-        str_lower(temp_index->name);
+        temp_index->setName(reinterpret_cast<const char *>(cBuf.GetData()), true);
 
-        temp_index->zone = zone;
+        temp_index->setZone(zone);
         // temp_index->unit = NULL;
-        temp_index->crc = 0;
+        temp_index->setCRC(0);
 
-        if (fread(&(temp_index->type), sizeof(ubit8), 1, f) != 1)
+        ubit8 temp_8{};
+        if (fread(&temp_8, sizeof(ubit8), 1, f) != 1)
         {
             error(HERE, "Failed to fread() temp_index->type");
         }
+        temp_index->setType(temp_8);
 
-        if (fread(&(temp_index->length), sizeof(ubit32), 1, f) != 1)
+        ubit32 temp_32{};
+        if (fread(&temp_32, sizeof(ubit32), 1, f) != 1)
         {
             error(HERE, "Failed to fread() temp_index->length");
         }
+        temp_index->setLength(temp_32);
 
-        if (fread(&(temp_index->crc), sizeof(ubit32), 1, f) != 1)
+        temp_32 = 0;
+        if (fread(&temp_32, sizeof(ubit32), 1, f) != 1)
         {
             error(HERE, "Failed to fread() temp_index->crc");
         }
+        temp_index->setCRC(temp_32);
 
-        zone->mmp_fi.insert(std::make_pair(temp_index->name, temp_index));
+        zone->mmp_fi.insert(std::make_pair(temp_index->getName(), temp_index));
         fi = temp_index;
         zone->no_of_fi++;
-        fi->filepos = ftell(f);
-        if (fi->type == UNIT_ST_OBJ)
+        fi->setFilepos(ftell(f));
+        if (fi->getType() == UNIT_ST_OBJ)
         {
             zone->no_objs++;
             object_num++;
         }
 
-        if (fi->type == UNIT_ST_NPC)
+        if (fi->getType() == UNIT_ST_NPC)
         {
             zone->no_npcs++;
             npc_num++;
         }
 
-        if (fi->type == UNIT_ST_ROOM)
+        if (fi->getType() == UNIT_ST_ROOM)
         {
             zone->no_rooms++;
         }
 
-        if (fi->type == UNIT_ST_ROOM)
+        if (fi->getType() == UNIT_ST_ROOM)
         {
-            fi->room_no = g_room_number++;
+            fi->setRoomNum(g_room_number++);
             room_num++;
         }
         else
         {
-            fi->room_no = 0;
+            fi->setRoomNum(0);
         }
 
         /* We are now positioned at first data byte */
-        fi->filepos = ftell(f);
-        fi->no_in_mem = 0;
+        fi->setFilepos(ftell(f));
+        fi->setNumInMemory(0);
 
         /* Seek forward to next index, so we are ready */
-        fseek(f, fi->filepos + fi->length, SEEK_SET);
+        fseek(f, fi->getFilepos() + fi->getLength(), SEEK_SET);
     }
 }
 
@@ -887,11 +892,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (IS_PC(u))
                 {
-                    CHAR_LAST_ROOM(u) = tmpfi->fi_unit_list.front();
+                    CHAR_LAST_ROOM(u) = tmpfi->Front();
                 }
                 else
                 {
-                    UNIT_IN(u) = tmpfi->fi_unit_list.front();
+                    UNIT_IN(u) = tmpfi->Front();
                 }
             }
         }
@@ -1101,7 +1106,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     if ((fi = find_file_index(zone, name)))
                     {
-                        CHAR_LAST_ROOM(u) = fi->fi_unit_list.front();
+                        CHAR_LAST_ROOM(u) = fi->Front();
                     }
                 }
 
@@ -1545,20 +1550,19 @@ void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
     FILE *f = nullptr;
     char buf[256];
 
-    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->zone->filename);
+    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->getZone()->filename);
 
     if ((f = fopen_cache(buf, "rb")) == nullptr)
     {
         error(HERE, "Couldn't open %s for reading.", buf);
     }
 
-    pBuf->FileRead(f, org_fi->filepos, org_fi->length);
+    pBuf->FileRead(f, org_fi->getFilepos(), org_fi->getLength());
 
     // bread_block(f, org_fi->filepos, org_fi->length, buffer);
 
     /* was fclose(f) */
 }
-
 
 void bonus_setup(unit_data *u)
 {
@@ -1600,9 +1604,13 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
 
     read_unit_file(org_fi, &g_FileBuffer);
 
-    unit_error_zone = org_fi->zone;
+    unit_error_zone = org_fi->getZone();
 
-    u = read_unit_string(&g_FileBuffer, org_fi->type, org_fi->length, str_cc(org_fi->name, org_fi->zone->name), ins_list);
+    u = read_unit_string(&g_FileBuffer,
+                         org_fi->getType(),
+                         org_fi->getLength(),
+                         str_cc(org_fi->getName(), org_fi->getZone()->name),
+                         ins_list);
     u->set_fi(org_fi);
 
     bonus_setup(u);
@@ -1643,7 +1651,7 @@ void read_all_rooms()
 
         for (auto fi = z->second->mmp_fi.begin(); fi != z->second->mmp_fi.end(); fi++)
         {
-            if (fi->second->type == UNIT_ST_ROOM)
+            if (fi->second->getType() == UNIT_ST_ROOM)
             {
                 read_unit(fi->second);
             }
@@ -1670,9 +1678,9 @@ void normalize_world()
             {
                 fi = (file_index_type *)UNIT_IN(u);
 
-                assert(!fi->fi_unit_list.empty());
+                assert(!fi->Empty());
 
-                UNIT_IN(u) = fi->fi_unit_list.front();
+                UNIT_IN(u) = fi->Front();
             }
 
             /* Change directions into unit_data points from file_index_type */
@@ -1680,13 +1688,13 @@ void normalize_world()
             {
                 if (ROOM_EXIT(u, i))
                 {
-                    if (((file_index_type *)ROOM_EXIT(u, i)->to_room)->fi_unit_list.empty())
+                    if (((file_index_type *)ROOM_EXIT(u, i)->to_room)->Empty())
                     {
                         ROOM_EXIT(u, i)->to_room = nullptr;
                     }
                     else
                     {
-                        ROOM_EXIT(u, i)->to_room = ((file_index_type *)ROOM_EXIT(u, i)->to_room)->fi_unit_list.front();
+                        ROOM_EXIT(u, i)->to_room = ((file_index_type *)ROOM_EXIT(u, i)->to_room)->Front();
                     }
                 }
             }

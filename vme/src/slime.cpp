@@ -35,9 +35,9 @@ static void slime_save()
 
     for (i = 0; i < slime_count; i++)
     {
-        fputs(slime_list[i]->zone->name, f);
+        fputs(slime_list[i]->getZone()->name, f);
         fputc(0, f);
-        fputs(slime_list[i]->name, f);
+        fputs(slime_list[i]->getName(), f);
         fputc(0, f);
     }
     fclose(f);
@@ -121,7 +121,7 @@ int slime_obj(spec_arg *sarg)
         send_to_char("List of slimed units:<br/>", sarg->activator);
         for (i = 0; i < slime_count; i++)
         {
-            auto msg = diku::format_to_str("%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
+            auto msg = diku::format_to_str("%s@%s<br/>", slime_list[i]->getName(), slime_list[i]->getZone()->name);
             send_to_char(msg, sarg->activator);
         }
 
@@ -138,7 +138,7 @@ int slime_obj(spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    if (fi->zone == find_zone(BASIS_ZONE))
+    if (fi->getZone() == find_zone(BASIS_ZONE))
     {
         act("Basis zone is not allowed slimed.", A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
         return SFR_BLOCK;

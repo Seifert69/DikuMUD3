@@ -1,4 +1,5 @@
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wredundant-tags"
 
 #define MAIN /* This is the main() module */

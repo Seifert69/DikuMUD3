@@ -554,7 +554,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             else
             {
                 pnew_tmp = nullptr;
-                pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->name, fi->zone->name));
+                pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->getName(), fi->getZone()->name));
                 if (g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");

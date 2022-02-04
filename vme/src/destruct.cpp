@@ -243,7 +243,7 @@ void destruct_unit(unit_data *unit)
 
     if (UNIT_FILE_INDEX(unit))
     {
-        UNIT_FILE_INDEX(unit)->no_in_mem--;
+        UNIT_FILE_INDEX(unit)->DecrementNumInMemory();
     }
 
     if ((g_unit_list == unit) || unit->gnext || unit->gprevious)
