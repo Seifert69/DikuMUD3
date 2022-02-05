@@ -2,6 +2,20 @@
   {
     "name": "etc Directory Files",
     "relative_path": "../etc/",
+    "new_file_check": {
+      "files_to_skip": [
+        "abilities.dat",
+        "commands.dat",
+        "professions.dat",
+        "races.dat",
+        "sector.dat",
+        "spells.dat",
+        "weapons.dat"
+      ],
+      "file_extensions": [
+        ".dat"
+      ]
+    },
     "error_fmt_str": "Compiled etc file: %1% has changed.\nexpected  = %2%\ncalculated= %3%\nPlease update corresponding checksum in unit_tests/defcomp_checksum_tests.json with command 'sha512sum %1%'\n",
     "files": [
       {

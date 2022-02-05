@@ -2,6 +2,14 @@
   {
     "name": "etc Directory Files",
     "relative_path": "../etc/",
+    "new_file_check": {
+      "files_to_skip": [
+        "color.dat"
+      ],
+      "file_extensions": [
+        ".dat"
+      ]
+    },
     "error_fmt_str": "Compiled etc file: %1% has changed.\nexpected  = %2%\ncalculated= %3%\nPlease update corresponding checksum in unit_tests/vmc_checksum_tests.json with command 'sha512sum %1%'\n",
     "files": [
       {
@@ -37,6 +45,13 @@
   {
     "name": "zone Directory Files",
     "relative_path": "../zone/",
+    "new_file_check": {
+      "files_to_skip": [],
+      "file_extensions": [
+        ".data",
+        ".reset"
+      ]
+    },
     "error_fmt_str": "Compiled zone file: %1% has changed.\nexpected  = %2%\ncalculated= %3%\nPlease update corresponding checksum in unit_tests/vmc_checksum_tests.json with command 'sha512sum %1%'\n",
     "files": [
       {

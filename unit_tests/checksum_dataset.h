@@ -5,6 +5,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <set>
 #include <vector>
 
 #include <boost/test/data/monomorphic.hpp>
@@ -27,8 +28,9 @@ public:
     };
 
     checksum_dataset(const std::string &json_filename);
-
     ~checksum_dataset() = default;
+
+    std::set<std::string> create_directory_listing(const std::string &relative_path, const rapidjson::Value &value);
 };
 
 namespace boost::unit_test::data::monomorphic
