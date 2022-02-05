@@ -69,16 +69,15 @@ add_custom_target(all_binaries ALL)
 add_dependencies(all_binaries
         vme vmc mplex pp defcomp vmc_unit_tests pp_unit_tests mplex_unit_tests
         defcomp_unit_tests vme_unit_tests zone_files dat_files color_files)
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    add_custom_command(TARGET all_binaries POST_BUILD
-            COMMENT "Running all unit tests"
-            COMMAND defcomp_unit_tests ${TEST_RUN_ARGS}
-            COMMAND pp_unit_tests ${TEST_RUN_ARGS}
-            COMMAND vmc_unit_tests ${TEST_RUN_ARGS}
-            COMMAND mplex_unit_tests ${TEST_RUN_ARGS}
-            COMMAND vme_unit_tests ${TEST_RUN_ARGS}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
-            WORKING_DIRECTORY
-            DEPENDS all_binaries
-            )
-endif ()
+
+add_custom_command(TARGET all_binaries POST_BUILD
+        COMMENT "Running all unit tests"
+        COMMAND defcomp_unit_tests ${TEST_RUN_ARGS}
+        COMMAND pp_unit_tests ${TEST_RUN_ARGS}
+        COMMAND vmc_unit_tests ${TEST_RUN_ARGS}
+        COMMAND mplex_unit_tests ${TEST_RUN_ARGS}
+        COMMAND vme_unit_tests ${TEST_RUN_ARGS}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
+        WORKING_DIRECTORY
+        DEPENDS all_binaries
+        )

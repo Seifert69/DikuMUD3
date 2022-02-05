@@ -1,0 +1,500 @@
+[
+  {
+    "name": "etc Directory Files",
+    "relative_path": "../etc/",
+    "error_fmt_str": "Compiled etc file: %1% has changed.\nexpected  = %2%\ncalculated= %3%\nPlease update corresponding checksum in unit_tests/vmc_checksum_tests.json with command 'sha512sum %1%'\n",
+    "files": [
+      {
+        "filename": "abilities.dat",
+        "sha512": "4f7a820fc8ea48780af1dbf5bca1f7a36382018175b559bf58322455bb3faf85764508ee03163d3d08cd4a64eeb0a84101a62b2df81f54ef28f45d6cd9469580"
+      },
+      {
+        "filename": "commands.dat",
+        "sha512": "ddd5cd6f63439ad42a0b6151dc5d8cb5fc91a431526ed5f903b69452c1d2214ffb21f638b200a1c6b47ad7c3b99f1921eb8fd7a2e2a40419ca4d7566a407ae87"
+      },
+      {
+        "filename": "professions.dat",
+        "sha512": "b8e2800735826ce429a26b15984fceea6222802ff2b643714a282f4e83a2f6ded1e3b0e59c189c097976680e1e3e6d2187a51eb791169c0cc1ae399cd5294c8b"
+      },
+      {
+        "filename": "races.dat",
+        "sha512": "f208ffdc368054045733b78277c8daaf4f0863e75d9f781680ca912b3a308fd5a33e289e719edf82bb41c9786f8c690590cc3176236f130a12235520f64ea3b0"
+      },
+      {
+        "filename": "sector.dat",
+        "sha512": "87993ef79ac0377066dbb22e8ebb577252ae827215de8024d4b767249c979a2957c0e70a0f50f7b3f06539807554ff7ab133862de22b13616ed07f7e04a0a59f"
+      },
+      {
+        "filename": "spells.dat",
+        "sha512": "ce8faaa9adcd6ea7f24befe0220288ac6ddd6b04445f356fb3ad56f614952830f8c8e0b68200eedc5ca2a17e530a3a94f90cfe5f91a4668c5148a31e04d41b6c"
+      },
+      {
+        "filename": "weapons.dat",
+        "sha512": "a4b8b3de061d132db51f778e3119b7d12186f565bc98465ba60683211603d5865f7882013bd51da158b69a328af3280f0130a7bc3aaab83168e9722f270ccf6a"
+      }
+    ]
+  },
+  {
+    "name": "zone Directory Files",
+    "relative_path": "../zone/",
+    "error_fmt_str": "Compiled zone file: %1% has changed.\nexpected  = %2%\ncalculated= %3%\nPlease update corresponding checksum in unit_tests/vmc_checksum_tests.json with command 'sha512sum %1%'\n",
+    "files": [
+      {
+        "filename": "arena.data",
+        "sha512": "7f4e6aa4690ed3494377f9394b085685379101c5d5f7b3db626c69373ae6cf058d8f580167d524c60ec3b77964329315ee442cc1567b08b1a8a877b0b85260cd"
+      },
+      {
+        "filename": "assassin.data",
+        "sha512": "fba73ba759153e98d31484ea0a870fa1fbab0d28faaf06cb22e581ff2c44ef240b8cde74d4704d6927ed16daf1051844aa8358aa093d3f134f8966e4a9f28a13"
+      },
+      {
+        "filename": "barbarian.data",
+        "sha512": "0ec67602abf277ba0a2501fc2e93c631979cadc6e52a7b70730c2cdcaf14af4a05b6155309d454ef6b8640612f7cfe7b9a094decf36408b635c4e7ca00136c45"
+      },
+      {
+        "filename": "baseget.data",
+        "sha512": "997168cef953e46944f0e02dfc5d98ec6e112973406aab046ed1a09a44335f832180fe34d3146163a10c234cea28d4ee9fe10db42feedc76adc9d92e9f4d80a8"
+      },
+      {
+        "filename": "baselook.data",
+        "sha512": "3e1231d1cc11304e297a0d9537aa0905c17a9d73c6c951b776d571055cab5cbf3c40118fd847a6d7e1e21fa9e33fd3c18b34e9a5430d367f497e1881a52f0a64"
+      },
+      {
+        "filename": "basemove.data",
+        "sha512": "87c6717f76ae49f87ef0fa487f7f16cabba633a1c2bf19a1468c642c95a17eed02c25506e20d78f8478cb023c8231099fa63df89372c0f8b93b2712385836bdf"
+      },
+      {
+        "filename": "basis.data",
+        "sha512": "b60f43ff20128e0452214222f2c32affd747dfb7d2f3bb27e5ef39cb3d6a217df08468020b87b86b85fb9d20d26bc7a3e2d46f9c89a4ebd920c4eaa5cafc72c5"
+      },
+      {
+        "filename": "boards.data",
+        "sha512": "d30a19f148e9b54cd982b2b5c429c982e70751516d670f74707efffcee313a0feda5df3cbd4f27ff819df550266742b8a008c9551e55d0a15d7aa3b50dad136a"
+      },
+      {
+        "filename": "bounty.data",
+        "sha512": "d40bae419ff2d995414f3dd694015a1198dd975d42d2dc2f7362593c5fd4b7c0750adf3ec4d437f0fe44eeebaf9c64ef1ae0949660276e56e50b764beee6145a"
+      },
+      {
+        "filename": "clan.data",
+        "sha512": "c82c4aeae26400f3c009ceb371dd25873249e790684ee34925bb14ead4574546b4f52a3ca2bd4292f52c55d92ed04b52df03e9737ad2a434a0c5864d71f3f8eb"
+      },
+      {
+        "filename": "clan_koh.data",
+        "sha512": "e1678ac471b861fe24d377dd3efd8ed4ed0cb6a0b250b387794f16df2e50162365d54601f22ad82291cbb02f999888c51aa1dc645cb12fca22c951704eed0256"
+      },
+      {
+        "filename": "clericguild.data",
+        "sha512": "fcfb499953babda693e172053a5b7750d039416a3ff498897b2883c86c21af32dcff4e065979b7e87521f674fea6dba2f05495a67e51edbe283c9ce3829607aa"
+      },
+      {
+        "filename": "commands.data",
+        "sha512": "69b0aade5513d899b2ce811f22637050cc02a23b8c1e5c41b7088247e48d31e727ff690d3daf25262a7a768f2c58b5c698391ab1158671241a82c6ee8e1c4e8e"
+      },
+      {
+        "filename": "comm.data",
+        "sha512": "b58e10f1065103b8eb8facd9ced3bb76307dd89c735f80d9f21db9393a580ee809f49627a6ae885d7af388986e66afef093b51d25a00420bd75040f96e3a2ba7"
+      },
+      {
+        "filename": "competition.data",
+        "sha512": "d6dd190d1ebb6eb419df345cb5ad11446053337b140c1c8a42bb5b29e5e57c8a9f60ff43ce225f5c146600a3308a57949bc90f282ca8c9de5b0152fcfc84d7bf"
+      },
+      {
+        "filename": "cypress.data",
+        "sha512": "be49a7247ef7c1ab5b412329b8e341c0627ad50356056941263edd609dfca3a3655f7160f14ab4f43cfb6a7d52e051267e6f7455cea153258407ea4707fe938a"
+      },
+      {
+        "filename": "death.data",
+        "sha512": "7cb371b3be6ebe52105bb05ecfef85f79b091dea7cd95980a4e1607f5f6e9303fdc05409841f3d1869ba102a7266cad6fca92e0274a7cb623a3b90f0cc60673f"
+      },
+      {
+        "filename": "druid.data",
+        "sha512": "b64ee62f999cc5894c5038301ac2e70b0012b15bd6cf70be367f06f361d2140d7e5631e346a47dd2230c51fc692000bd14b3e1463b213223825578803c065874"
+      },
+      {
+        "filename": "fightersguild.data",
+        "sha512": "a2711fbb3e870101c076a78d960637ad829e220b8047559b0a022c198570d85cb319acc08310d67e848cd1383426b85f90e735c9fd702006255a4dfcd7e8f354"
+      },
+      {
+        "filename": "function.data",
+        "sha512": "243cf3ec5b245a530da0cfa0b443790391030710dbc00ef94235328e37f81d730398dae29bb37d9750d526383cf8bd6c43b8878be9bdc344826589f61f2d681b"
+      },
+      {
+        "filename": "goblin_cave.data",
+        "sha512": "6056cde567b5fc15202d497a1e4c26167a4bdfee50ccbe7061439d2f8d92e6ae67fb7be8643864517d57f60fd948428441654297b0a09cfe227811f54f9ba491"
+      },
+      {
+        "filename": "gremlin.data",
+        "sha512": "07853e879028cc4660c7752679f683d14a25375dd55479045394001d8ef96e74279b9a41c1d87d1e216b6bd3643f8318e654a0fdd81d3ca4fe650487c64918bd"
+      },
+      {
+        "filename": "guild_paths.data",
+        "sha512": "0e3240d1c54407db83441f906bb3a2a3455c69403596c5cf3be6c5ed26c4082e0156e0738d818883859ee637776bf73d8f3021a099d86b2ce892af83d46b110d"
+      },
+      {
+        "filename": "guild_quest.data",
+        "sha512": "8eab67687bc6544ef9e6c4968ecb8010e4ff69a0f7368e8bb00d6a11dd13dafd9b0bd89f5f6068a0284f9b83cc0baf5370b0463b9b5364d90464f054d96188a7"
+      },
+      {
+        "filename": "halfzon.data",
+        "sha512": "6315696349d24d802aa69511a0adaaee829d637085ab6d7331e7a02db7631fe221b25daed26a320932f42a8588350a97a5a24b409c9b5c58e0d2526ec889c6d0"
+      },
+      {
+        "filename": "haon-dor.data",
+        "sha512": "3e8c701877c1f9a93b346c2f5948de2e75a70b437a5b247550060e25e845490b605b65490f3e75c6870ce845d44ad72a5e32063a69e7d6383a5bf8fd606a3431"
+      },
+      {
+        "filename": "help.data",
+        "sha512": "b4f21c928697910285859c274a3a65257501704cbc5edafeb254a6a4f0e4f262cde8ca672a5ea3a5d70ec34a5728beaa5597cb56aef9536e29c93c8d37888f1c"
+      },
+      {
+        "filename": "hobgob.data",
+        "sha512": "6717ed7c4fcd4a7b6180e388c74c0e16e37bfcd03d7cbd794d66e171efa61dfb70f6b50abdccb8b1b97a5d72c9fb17129bf0a19034ed70ef7147e7497fd1664c"
+      },
+      {
+        "filename": "holiday20.data",
+        "sha512": "be62d595998e8574f05977b469c3c73b730c1fafaa6ddfb35a0a82ded3c4a5a17522c1955f28eec8d96989a19a6092b5b967f51804f6115d5b4479a06651f290"
+      },
+      {
+        "filename": "holiday21.data",
+        "sha512": "c1ae811d7360fb339f9d4aec26f59c2b57a8f403a5d8b61b7bf223d72a74978c163bcd61d0e9502e22736641dd751896998926e844b27c10170bcf2699909978"
+      },
+      {
+        "filename": "justice.data",
+        "sha512": "4c9f6b7784caeab529e6ec4122d82584458bf7cbb51a3fd2786687bbbbe93633eb51f4e7ba3da613c5b2ed015d9f2822e7d8a21ca8026558775f82fc97fcdb6c"
+      },
+      {
+        "filename": "kingc.data",
+        "sha512": "7ea6e135ea2560e8841154af1bf5b543ffa358534fb0432fcb02bb6a9835701ef378e08952f03525a588ab5161c3d07d72e1c8b709b44ee487391e99ffdf44a8"
+      },
+      {
+        "filename": "knight.data",
+        "sha512": "0f7c81f68fbbb7d71d17dd85f7a376c5c1eea0655f97264e97b6d8427d954265cbce5d20af03eea9995c83f36034ad59bb777f252ccf1ea9c5ef50af98657541"
+      },
+      {
+        "filename": "mageguild.data",
+        "sha512": "276f3be8a5c53a1f53238586059a8e7350a0d4e1c9df03ca4cb9dd769459f3714ad7784b1979de573b73470c52494bd70011b27bda987341e23be700925e0dfe"
+      },
+      {
+        "filename": "mail.data",
+        "sha512": "3f112409a210b3525924bf4228e42e648dcd1fff9f637e2ac703957590ca73cdbc3987bee942a2da6048e0cffb6ae7beed4ea6e1fdffffcc889079b03db45948"
+      },
+      {
+        "filename": "midgaard.data",
+        "sha512": "4405d9b37931ae8bc1cea860e050dac80f598f6db5aa26dac500df88f8f97c600144e6176a21c7db5d9d1e3300a3ab760ada5495aa793c37fb87e4e863e59941"
+      },
+      {
+        "filename": "midwalls.data",
+        "sha512": "91dfc8eb546adca662ee3212401d1236e029c6d7bc18ea84e6a5643f54e3972de6e0eec08c7705e24fc4a7ef11727042e060e6ab3190e64e6ddbcbdea4a413f5"
+      },
+      {
+        "filename": "necro_guild.data",
+        "sha512": "3ae8a9206c37a245ba4e964f629467dc8751d3dbf2af27d923bf66acb8ad33e577f9835afc91af833a7237c40eb0b6af40ebe6d2ae04ebd80e834c784bac1af3"
+      },
+      {
+        "filename": "newbie.data",
+        "sha512": "c3c96f4abb41bcef29bd71a13654abc6a95bbc21674711d2d9fce0b1ac84ea4bce4a21055d301bf6f002bc52180a2396eccdf811a1503a80b98a2e1bc91cb1f8"
+      },
+      {
+        "filename": "offices.data",
+        "sha512": "1a7e94416fb603e1530df02f7de9df6abb1669efa4220d113c46c9ee4e0418bcf553f046effd9b0afd040cd9e6bd132e8ae608bbf527af69b9fb26fb693cfc0f"
+      },
+      {
+        "filename": "paladin_guild.data",
+        "sha512": "4edf05a54548e15f719c896f1ae3f6c0ec9ee0870e4df2937cfa291bbb046df5f2f001e485c6aac4fe299e0c49a0c0cd620567bfbe188effcd9fb0d014774106"
+      },
+      {
+        "filename": "quests.data",
+        "sha512": "85744d6bcb2fa4ddd8dc82109c904e3d26e04f7060dc072a823fface3fccfe92117e71fbccb3b8c7c69dc716e5a087153f86848e4d55eaeba6e61d4fc988490f"
+      },
+      {
+        "filename": "randomt.data",
+        "sha512": "e9f5ece6bdaf8ce415187f445faf24269d47aaa9a62bacba611c85728ed62809b6b89465d05565bcf6fa55a026db3b45fe064e7d2655a0ae3e6d3a33950e1cc2"
+      },
+      {
+        "filename": "ranger.data",
+        "sha512": "dfb5164986bb4d1c536a17b29dd340d4e86e61db94a1bfebdbf465cc0b37d3f1d700a4ec206afe073eac4cfe2a1c5b0fa0199ec176e0074b63fce3bdee017cc5"
+      },
+      {
+        "filename": "ratswarf.data",
+        "sha512": "081d79c2d3f95bfb4272e4056a362eeded5c1191f4bd0ffe20d1f424eec72d4d1906bfcd4d4bda01187197f6c3048bd820bba394e7fbd54518e57676c3b11373"
+      },
+      {
+        "filename": "rebirth.data",
+        "sha512": "e6144af70d8485b90e81b51b67599c106a202dc9872ee15d44bd66243adf5856c691c3b92bcf2b259a49ca01c8843cb08fc18fb864af47259a4f15049fdefcc4"
+      },
+      {
+        "filename": "restrict.data",
+        "sha512": "b4416e1645fec365ef7573ebf99eb1b691de4bf03b2ba72470450fada847105788045ce03600329c324cf41b6b022db65b607f33d95a28820068c25ea1a8f345"
+      },
+      {
+        "filename": "set.data",
+        "sha512": "dbfa205fe10cab1a0b839baf823054901d767f6ba216474a294bfb1d4bd9bcbbad4e2c150b6c66c365ca939cf7c51c49db5927b245142d0618208cdd310d434a"
+      },
+      {
+        "filename": "skills.data",
+        "sha512": "720424fa2c728203ffce84df0bd6f79507cbfc637b45e583d81fa96d200072a86b1a463c193a73f903aa59f40d9d388bf772f37526c2d467cc6c14bc6c213ac8"
+      },
+      {
+        "filename": "socials.data",
+        "sha512": "2701445f031471208aba66aac98f4128023ab7f08ba2c05ac55c80be15d86b91cdec871a66d9eed5b75a7f06c744a42e6ff9a8ad5c70fe05e7e52baae9c0294f"
+      },
+      {
+        "filename": "sorcerer.data",
+        "sha512": "f8809301914b511a43a4551436c4fa632de91da3f3432cc7c1f8e3e87f591ce7ecd7617d3a71eee0576c9aeb9ee2ba07b493d2bc5b06799a994c148fe84c06bd"
+      },
+      {
+        "filename": "spells.data",
+        "sha512": "121fa69ac6bf41dd4cb1d3863016e85bfa39d18de6886071ec60608da2da64e44d8616393e2561d1648ef5809f02ca9bed330b364f122c962fc528e9dad19e6b"
+      },
+      {
+        "filename": "test.data",
+        "sha512": "3ac17c461efd24bcead17d45e39ce831450c2868b432ed83203da93bb5607ae15632337ef9ccf9568dbfbc9b91d51ddd91861c9f9c08ceb18de0a60fb10631a3"
+      },
+      {
+        "filename": "thievesguild.data",
+        "sha512": "ce7b0146aa1b3a7db4210549aa017bb6579a7b2495a8ad34ccab06c89381d07f79e2ae41717917036b0f54b31abfd7e0bc88577c0ae8d08b40cb80a67433a827"
+      },
+      {
+        "filename": "udgaard.data",
+        "sha512": "f77a5fdf2142b1980df4d68cc78fbc422bc623aa7a41ea9e20d5ae25bbca1c6beb17474e34d0a27458db2887d3aca5ae99f13aaab1d1dcb9cb840e5222e21aeb"
+      },
+      {
+        "filename": "update.data",
+        "sha512": "328c277cbf865ff161e8a56c9a0dbfff3566a81d763b944a0266c4735b04b3efa5794ce00b855d9cfa9b163ddc5ba696fb26e9ebcae7ff8024cf25be91238a8b"
+      },
+      {
+        "filename": "wiz.data",
+        "sha512": "82c6c0666c5b3a077a121a6f7e8c059a9312eeedb3a8fe44a9bcb2c59e2b2e8a1c52fc7c7bda9c7db739f7d56e35ad543bec8ad78e3a85a1657f2a39c4212868"
+      },
+      {
+        "filename": "arena.reset",
+        "sha512": "edf2ed161158999f620bc76fee453afba01a8e0f7bc4de1aa9eda7a169b19c9bd321670d5a43113a1f7f7064e831711f461b156b12541e2831671a52ed3a1b9d"
+      },
+      {
+        "filename": "assassin.reset",
+        "sha512": "7a8f582443722abde8316bd293dbd263c3de44483a72075f40e5aeb5bb89d95d36369aa8261d204c276ff2f778de53290ee9114c2713fe0530f54360f6be1b8b"
+      },
+      {
+        "filename": "barbarian.reset",
+        "sha512": "570a17a8e4926018d9b3cd89d2bac8c6c72ab595faa771463f5fed7f9dbcbeaba2530cbe974e3b463309a9e5bab5e857dce6e65d4ef02d28bd4bbec4f30db18d"
+      },
+      {
+        "filename": "baseget.reset",
+        "sha512": "bf2b0f93c765f3b715fc49aba128843e118b3d8c08dc2142b1989c639296a7176b5bc3fd216531af6e186223e233bf8b510c24d44801d399e2f4a3e445426ad9"
+      },
+      {
+        "filename": "baselook.reset",
+        "sha512": "bf2b0f93c765f3b715fc49aba128843e118b3d8c08dc2142b1989c639296a7176b5bc3fd216531af6e186223e233bf8b510c24d44801d399e2f4a3e445426ad9"
+      },
+      {
+        "filename": "basemove.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "basis.reset",
+        "sha512": "e7db65041e0060a98dd2e6c61101f324b203755e9e8269923f8b6094e0d72df95a00c8ca4378cdeaf79259e40ad5335dced16038208f11edbfd4cba186041859"
+      },
+      {
+        "filename": "boards.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "bounty.reset",
+        "sha512": "28a680aefffe053776745ce4412b0edde3ac20cb58978f2edd08c48ccfa0d0a8c039e8039243adbc6f30adececf2e1af3d89c505d894dd1c7fe1afcb03945cf6"
+      },
+      {
+        "filename": "clan_koh.reset",
+        "sha512": "cf487b8360a474534464334b5ea5aa069702203dc11b245824a255fb4b86bd7797eb2383be745e29b4181a8d18933d8aef2ccf6118196574d7c2eadac15e7cd5"
+      },
+      {
+        "filename": "clan.reset",
+        "sha512": "94eac7e57fdf38fbdf81a7af23ecfca7a3445b9aee16edc6a61fd54b3711fa71a0a0c0e1a2a688f16240913fe97b34305ccd11cf824b02bbe49a81bc8f2637bd"
+      },
+      {
+        "filename": "clericguild.reset",
+        "sha512": "5b71ecabe0e3c845957a73098b03916226cec0e70d714f49c205dfcf222611c2380274d16da5169004a79852bc2f7500ffa7938864d52728cd270798d1c728ea"
+      },
+      {
+        "filename": "commands.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "comm.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "competition.reset",
+        "sha512": "c598a9db25a6b1b0cb10744656ebce151d43f5c4f6cec34d8deadbb9b984d577fe5ddbd334c4cde27e2cfbd70a78f02524e95e7943f665c843fd08105f249f49"
+      },
+      {
+        "filename": "cypress.reset",
+        "sha512": "23479d73ab78ef475c6120ec602d4beffbfe9bbf6185b5b0dc2b7685fea3596c797b62997452a81525d2d7a20c75c08a67fd8898c9e0b49ccdb2c91c40234fc8"
+      },
+      {
+        "filename": "death.reset",
+        "sha512": "86373e77bfe384e2a9beacc7e6d0d9ff8d1ca01244e25e47e5424cb58a1c054806df118361d0e0b2b2db6cbaf126a8a43889af6b3ec0eb25ff0988d83ceb4eb8"
+      },
+      {
+        "filename": "druid.reset",
+        "sha512": "71daef1ea395a3792a09c8c9402830b96fffa4a31296c434c4d5e43cc8f9de49735092c9d68591e607d1186ee01fdef03c3742aea1eac92027245ef075d2adef"
+      },
+      {
+        "filename": "fightersguild.reset",
+        "sha512": "db3f7969f6e1fb9ddef5af80519aa841a23428eda2a9282b67c9716f78945092372cb91a864f011cc14caf92c56f21dd9614e8cbd68f128c7cce145a947009c4"
+      },
+      {
+        "filename": "function.reset",
+        "sha512": "86373e77bfe384e2a9beacc7e6d0d9ff8d1ca01244e25e47e5424cb58a1c054806df118361d0e0b2b2db6cbaf126a8a43889af6b3ec0eb25ff0988d83ceb4eb8"
+      },
+      {
+        "filename": "goblin_cave.reset",
+        "sha512": "2eb6e18684eac1c0b2a8e7ca722938281554975edaccb766efc6568191187dc76742b841a45103e96c5ed382de4c394b6005da92f52b2f879df192bda57f8fd7"
+      },
+      {
+        "filename": "gremlin.reset",
+        "sha512": "d3ae3f9ebe3ddefd824d61d7ebd4cccfcc38ce0a2420a705b4c762f58af6930682af7efe7456983fe3ea528a3a75ce5060da44f8659933b628df39948baa54a7"
+      },
+      {
+        "filename": "guild_paths.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "guild_quest.reset",
+        "sha512": "ffa15507b6b36682692622bb3fead18b08d4e1a5a6c4eec355c78a9a8edc539b01c2788e401905a3097acdfcfd10a208f70380dbb5606456afb1d23f1229ba36"
+      },
+      {
+        "filename": "halfzon.reset",
+        "sha512": "3f54b41e563818dcf58c63ddf2fa05b03a574d8e9efb212cbe4e07cdf04af5808bbf9b8982c078974b01c8807c36e72c12ff08ca4c34e167e3fd08eb2e0a73a0"
+      },
+      {
+        "filename": "haon-dor.reset",
+        "sha512": "48f4d01b2cb284d4e2d0fd17b1d580fbddf518f0a505d394b927ecde543952a326b11c585bfed9aed2d3619810f12562bfcf337ec172d21a0308f8ee81860c0c"
+      },
+      {
+        "filename": "help.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "hobgob.reset",
+        "sha512": "d4bd1d812ec04d61aa5d6c56138b3331039ab0b5da5b8d7f189328c0ba935ef69eb8fb7b35dd9d30a9088afe47482c14044afbe598a572de0e740a953964fa7e"
+      },
+      {
+        "filename": "holiday20.reset",
+        "sha512": "d36676a9ae24a67377d5c6d69fce70bc6fe4a45aa4fbfd67685e7e7e63eac5b9d6fd6d4af89ad8f17c36160322666f322fdd8cebbcab513497bde1a6d7dc1eda"
+      },
+      {
+        "filename": "holiday21.reset",
+        "sha512": "e81dd61107e9d000fafc212ac2a458b5141a6d488ca26a2f62c39cf5549a4fde2d0bc0d76486816d21b2d91efbbdb529a10fc41eb83ef99717fd72f9253146b6"
+      },
+      {
+        "filename": "justice.reset",
+        "sha512": "86373e77bfe384e2a9beacc7e6d0d9ff8d1ca01244e25e47e5424cb58a1c054806df118361d0e0b2b2db6cbaf126a8a43889af6b3ec0eb25ff0988d83ceb4eb8"
+      },
+      {
+        "filename": "kingc.reset",
+        "sha512": "efbd106d198b404154d11f08120f83ce7fb4cba62deb7cc2165151e002b1f4be6dbe40acbf1c288011be0caa699b74b5385e14fed619654e68e6cc26b49a7e91"
+      },
+      {
+        "filename": "knight.reset",
+        "sha512": "41230b182cdbfacfcc30ec5708a95f7cec3697c73082dd9ea379dd7e3839bc60b4ed30ee47beed97aab2ecef27f1bb02a7f2a4e43f0dc94bf73e3414880c9bf6"
+      },
+      {
+        "filename": "mageguild.reset",
+        "sha512": "2c4fb2a89671108b138d7863bfcb7d2901e16db48031787e58ac124d185afd586d7d3b17dc73d59d9ccbf477c8906505a3aca5f3372e8383bdc9bcf25fadb6d3"
+      },
+      {
+        "filename": "mail.reset",
+        "sha512": "ed1563074b9f34b2671ebd85fc00b155ef4ad23418a60e3dbcb72c84efb56f6cb96ffef240ce3ce8a085524e492bf954f4745cb739f6b77eaf2e5c44c0488eaf"
+      },
+      {
+        "filename": "midgaard.reset",
+        "sha512": "16bf6858b09d73824b9ed4ea4ed9ff90ce7c938aa70d4189719123de8d5587115e1ca213209115aba367b93350d74596cd9c213866d832cff55d65fc9aa2fbd4"
+      },
+      {
+        "filename": "midwalls.reset",
+        "sha512": "ea6ee139f7c7cce01cf5bfc6e79b3016db683e5096807dc4b9f5987633a46b9eee47cca7662e1e86af4bd257e147d0f55bac0a357d2ac8db2ee5e5d631ad5c5f"
+      },
+      {
+        "filename": "necro_guild.reset",
+        "sha512": "82dace25d921ccba9fba066a1532e60cf8c0d96ce3f4b4e7dec3409a69163ca12121290181c2abdfb479b47c1d94a8678fab8ff5740273cfb17314ab824b3fc6"
+      },
+      {
+        "filename": "newbie.reset",
+        "sha512": "f7afb0a6816705e03bd3b8a0b0e42b05835dbca0715594bbedc479e12664d3e0229d29f4007beeb595da62090a5202ce4441ac1b19ddfc48456b6afff256a499"
+      },
+      {
+        "filename": "offices.reset",
+        "sha512": "b0fd4b85ab3d3de51a8faebb2f7d6ed34e96ef0da29be01e381360587931df4f2f36142d9063ef6975bf4d0cca639def144a142076879b23d313691fa6e65ffe"
+      },
+      {
+        "filename": "paladin_guild.reset",
+        "sha512": "8159f75850324ff6acb6ff1bdd8f103dbf4171c1c173498209538e4c542479b1512a8d5b5cee2a41e9d23a3acf45b9589973efdcc1f75bff040eaf0bfcaf06da"
+      },
+      {
+        "filename": "quests.reset",
+        "sha512": "94d4b3dedcf460045a9e4c3925855345266870d4a740e44a697d0af66efeaf8ad3f17f7af45dd8f3b3dd8cc4f8fac11c661efeeb3316a447c3886e8cbd2439e7"
+      },
+      {
+        "filename": "randomt.reset",
+        "sha512": "86b21def3a9e436fd8d9c8dd9694133a1819a1cf9364e6553bb192e6cedbb4e7b933beffcf822bf40d9b2852161889a70a6711df1a17db297539332968f3b294"
+      },
+      {
+        "filename": "ranger.reset",
+        "sha512": "2af38a01adfec2cc587f2b20d3f37ddf4978c861833eb05512513882644accd787ec8201895e21fa5c375e8efe87b3949564fa52188114cc7e320845720b2691"
+      },
+      {
+        "filename": "ratswarf.reset",
+        "sha512": "530fab0d349a73aae9be29855ab8393b353dfe1bfa73f9ae800f72a35dc8853bf3567d456b7d846f2e5295d4fda2fdd463372ba5ed4915661d4cfc85a4029f26"
+      },
+      {
+        "filename": "rebirth.reset",
+        "sha512": "70a4c46b3a42b2bfb9ac40b490025e3f0e6efe9fec43dabfff9f6b7560b7d823239e2d6f8cbe86cd8c52445f4d120d417ab38f8df5543868903e344f1ffa7b0d"
+      },
+      {
+        "filename": "restrict.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "set.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "skills.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "socials.reset",
+        "sha512": "86373e77bfe384e2a9beacc7e6d0d9ff8d1ca01244e25e47e5424cb58a1c054806df118361d0e0b2b2db6cbaf126a8a43889af6b3ec0eb25ff0988d83ceb4eb8"
+      },
+      {
+        "filename": "sorcerer.reset",
+        "sha512": "0e19a1e2af60d26a102c749b82afc2b7d8be1635708b0e62c0fe84400884000fe2434272ca773013c1acd9dfc4a01f72ea2a61343056d3f5b323c1d50add025e"
+      },
+      {
+        "filename": "spells.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "test.reset",
+        "sha512": "7fd3a96038aa381dee8605a74af9c6d94501f179c0da63898cef28437e40351043a2a48b94726a10c13305f9c4c0b8d2b0209d75b28ab1161d916a650df32c27"
+      },
+      {
+        "filename": "thievesguild.reset",
+        "sha512": "491a6c1488182e8242c6797a4fb9cb9c66440a8223411728a269afef688a32fd65fc53f3e224dbb826f88d0fc4006813ab913bee379a78ca62f31143d429df39"
+      },
+      {
+        "filename": "udgaard.reset",
+        "sha512": "670ef685a8875c4782731b93b8eb9c9a8354de4a92b3f36134d71283426473cebfd4ddc7a5a6f36ab107e6a8aa5ed7a1d6be592070ce3bb45a67a41e7ea24a89"
+      },
+      {
+        "filename": "update.reset",
+        "sha512": "6cae24e00bb44fee43d067fac8eaf8ae136fcab13c7891ec921ca45a54177e3fd88debc5b032f02535dd7eddd84dd9ffd34316d357e3f4a2a4b1889129b92aa6"
+      },
+      {
+        "filename": "wiz.reset",
+        "sha512": "d9ac55256695dcd6e164766810cdfc7285e6df6409750bf9ff34a0eac678b3e0f0c8c2a407772c1ee787aa07f9422e7b404fd8857dc79e10cb5c12d0367d4400"
+      }
+    ]
+  }
+]

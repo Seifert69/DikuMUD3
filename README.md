@@ -19,6 +19,8 @@ Pre-requisites:
    * gcc/g++
    * flex/bison (sudo apt-get install bison flex)
    * boost devel (sudo apt-get install libboost-all-dev)
+   * OpenSSL devel (sudo apt-get install libssl-dev)
+   * Rapidjson devel (sudo apt-get install rapidjson-dev)
    * Debian users look here for flex: https://github.com/Seifert69/DikuMUD3/issues?q=70
 
 

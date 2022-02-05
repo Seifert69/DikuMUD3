@@ -1,7 +1,7 @@
 project(defcomp)
 
 set(DC_SRCS
-        defcomp.cpp  defcomp.h
+        defcomp.cpp defcomp.h
         )
 
 add_library(defcomp_objs STATIC ${DC_SRCS})

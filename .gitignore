@@ -16,3 +16,4 @@ Makefile
 CTestTestfile.cmake
 Testing/
 unit_tests/CTestTestfile.cmake
+core.*
