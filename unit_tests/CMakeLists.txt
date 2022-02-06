@@ -1,4 +1,4 @@
-include_directories (${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(OpenSSL)
 
@@ -13,8 +13,9 @@ add_executable(vme_unit_tests
         weather_cpp_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)
-target_compile_definitions(vme_unit_tests
-        PUBLIC DMSERVER RAPIDJSON_HAS_STDSTRING
+target_compile_definitions(vme_unit_tests PUBLIC
+        DMSERVER
+        RAPIDJSON_HAS_STDSTRING
         )
 target_link_libraries(vme_unit_tests
         vme_objs
@@ -37,7 +38,9 @@ add_executable(vmc_unit_tests
         )
 target_compile_definitions(vmc_unit_tests PUBLIC
         VMC_SRC
-        VMC MUD_DEBUG RAPIDJSON_HAS_STDSTRING
+        VMC
+        MUD_DEBUG
+        RAPIDJSON_HAS_STDSTRING
         )
 target_link_libraries(vmc_unit_tests
         vmc_objs
@@ -55,8 +58,9 @@ add_test(NAME vmc_unit_tests
 add_executable(pp_unit_tests
         pp_main.cpp
         )
-target_compile_definitions(pp_unit_tests
-        PUBLIC DMSERVER RAPIDJSON_HAS_STDSTRING
+target_compile_definitions(pp_unit_tests PUBLIC
+        DMSERVER
+        RAPIDJSON_HAS_STDSTRING
         )
 target_link_libraries(pp_unit_tests
         pp_objs
@@ -72,8 +76,9 @@ add_test(NAME pp_unit_tests
 add_executable(mplex_unit_tests
         mplex_main.cpp
         )
-target_compile_definitions(mplex_unit_tests
-        PUBLIC DMSERVER RAPIDJSON_HAS_STDSTRING
+target_compile_definitions(mplex_unit_tests PUBLIC
+        DMSERVER
+        RAPIDJSON_HAS_STDSTRING
         )
 target_link_libraries(mplex_unit_tests
         mplex_objs
@@ -91,8 +96,9 @@ add_executable(defcomp_unit_tests
         checksum_dataset.cpp checksum_dataset.h
         sha512.cpp sha512.h
         )
-target_compile_definitions(defcomp_unit_tests
-        PUBLIC DMSERVER RAPIDJSON_HAS_STDSTRING
+target_compile_definitions(defcomp_unit_tests PUBLIC
+        DMSERVER
+        RAPIDJSON_HAS_STDSTRING
         )
 target_link_libraries(defcomp_unit_tests
         defcomp_objs
