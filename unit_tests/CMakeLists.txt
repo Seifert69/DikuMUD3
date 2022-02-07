@@ -33,7 +33,7 @@ add_test(NAME vme_unit_tests
 ############################### VMC ######################################
 add_executable(vmc_unit_tests
         vmc_main.cpp
-        checksum_dataset.cpp checksum_dataset.h
+        ChecksumDataset.cpp ChecksumDataset.h
         sha512.cpp sha512.h
         )
 target_compile_definitions(vmc_unit_tests PUBLIC
@@ -41,6 +41,7 @@ target_compile_definitions(vmc_unit_tests PUBLIC
         VMC
         MUD_DEBUG
         RAPIDJSON_HAS_STDSTRING
+        PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
         )
 target_link_libraries(vmc_unit_tests
         vmc_objs
@@ -93,12 +94,13 @@ add_test(NAME mplex_unit_tests
 ############################### DEFCOMP ##################################
 add_executable(defcomp_unit_tests
         defcomp_main.cpp
-        checksum_dataset.cpp checksum_dataset.h
+        ChecksumDataset.cpp ChecksumDataset.h
         sha512.cpp sha512.h
         )
 target_compile_definitions(defcomp_unit_tests PUBLIC
         DMSERVER
         RAPIDJSON_HAS_STDSTRING
+        PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
         )
 target_link_libraries(defcomp_unit_tests
         defcomp_objs

@@ -12,8 +12,8 @@ public:
 
     void generate(const std::string &filename);
 
-    std::array<unsigned char, SHA512_DIGEST_LENGTH> getChecksum() const;
-    const std::string &getChecksumString() const;
+    [[nodiscard]] std::array<unsigned char, SHA512_DIGEST_LENGTH> getChecksum() const;
+    [[nodiscard]] const std::string &getChecksumString() const;
 
 private:
     bool checksum_calculated{false};
