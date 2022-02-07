@@ -1,0 +1,111 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "Precomputed hashes for zone and def compiled files",
+    "title": "Hash file config",
+    "properties": {
+        "name": {
+            "description": "Descriptive name of the config file",
+            "type": "string"
+        },
+        "relative_path": {
+            "description": "Relative path from top of the source project to directory containing source files",
+            "type": "string"
+        },
+        "new_file_check": {
+            "description": "Parameters for discovering new files",
+            "type": "object",
+            "properties": {
+                "source_extension": {
+                    "description": "File extension used for source files eg '.zon'",
+                    "type": "string"
+                },
+                "files_to_skip": {
+                    "description": "List of files to exclude from new file check",
+                    "type": "array",
+                    "items": {
+                        "description": "Filename (it will have project root + relative path added to the name",
+                        "type": "string"
+                    },
+                    "minItems": 0,
+                    "uniqueItems": true
+                },
+                "output_extensions": {
+                    "description": "List of output extensions from compiling a source file",
+                    "type": "array",
+                    "items": {
+                        "description": "File extension used for source files eg '.data'",
+                        "type": "string"
+                    },
+                    "minItems": 0,
+                    "uniqueItems": true
+                }
+            },
+            "required": [
+                "source_extension",
+                "files_to_skip",
+                "output_extensions"
+            ]
+        },
+        "files": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "source_file": {
+                            "description": "Filename and pre-calculated sha512 for the source file",
+                            "type": "object",
+                            "properties": {
+                                "filename": {
+                                    "description": "Filename (it will have project root + relative path added to the name",
+                                    "type": "string"
+                                },
+                                "sha512": {
+                                    "description": "Hex string of sha512 checksum",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "filename",
+                                "sha512"
+                            ]
+                        },
+                        "output": {
+                            "description": "Filename(s) and pre-calculated sha512(s) created by source file",
+                            "type": "array",
+                            "items": {
+                                "description": "An output file and pre-calculated sha512 hash of it",
+                                "type": "object",
+                                "properties": {
+                                    "filename": {
+                                        "description": "Filename (it will have project root + relative path added to the name",
+                                        "type": "string"
+                                    },
+                                    "sha512": {
+                                        "description": "Hex string of sha512 checksum",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "filename",
+                                    "sha512"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "source_file",
+                        "output"
+                    ]
+                }
+            ]
+        }
+    },
+    "required": [
+        "name",
+        "relative_path",
+        "new_file_check",
+        "files"
+    ]
+}

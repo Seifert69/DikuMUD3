@@ -1,0 +1,100 @@
+{
+    "name": "etc Directory Files",
+    "relative_path": "vme/etc/",
+    "new_file_check": {
+        "source_extension": ".def",
+        "files_to_skip": [
+            "color.dat",
+            "color.def"
+        ],
+        "output_extensions": [
+            ".dat"
+        ]
+    },
+    "files": [
+        {
+            "source_file": {
+                "filename": "abilities.def",
+                "sha512": "a9b2ab4e06fd9f0d0cc803dfc848ef8737f1ba4aeb8768e85dac94a8f90a2b22daf03ab4f8b7f3c7ca0a6964105895ba61b9b2ff7f4a259c0941ae2d0f750f3c"
+            },
+            "output": [
+                {
+                    "filename": "abilities.dat",
+                    "sha512": "4f7a820fc8ea48780af1dbf5bca1f7a36382018175b559bf58322455bb3faf85764508ee03163d3d08cd4a64eeb0a84101a62b2df81f54ef28f45d6cd9469580"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "commands.def",
+                "sha512": "170150e2b52368eafe7dd1048818719baf4b31b31f6416904c64d92a297a4a76285d868edf57b6384ae526780c9aa79d9f76fbb16689c2a6af5a0cbaffcfed88"
+            },
+            "output": [
+                {
+                    "filename": "commands.dat",
+                    "sha512": "ddd5cd6f63439ad42a0b6151dc5d8cb5fc91a431526ed5f903b69452c1d2214ffb21f638b200a1c6b47ad7c3b99f1921eb8fd7a2e2a40419ca4d7566a407ae87"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "professions.def",
+                "sha512": "2c9ba747e7216267b112abcaf346f45a005e8ecea546f9238bc58b50a3d42604b4c9d8a81399bb708ce8bc77db5ba1b09f91d17ad80816e53d8e0c86d490b7cc"
+            },
+            "output": [
+                {
+                    "filename": "professions.dat",
+                    "sha512": "b8e2800735826ce429a26b15984fceea6222802ff2b643714a282f4e83a2f6ded1e3b0e59c189c097976680e1e3e6d2187a51eb791169c0cc1ae399cd5294c8b"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "races.def",
+                "sha512": "d6375ad2c6275a9ac05ab54bc4efcc0c97bc16e76ad3d88ac20b725ebf026ff5b5a8cfc14098e7f717b01e6886c935ac3b29b660a86e623fea487d9659e28b63"
+            },
+            "output": [
+                {
+                    "filename": "races.dat",
+                    "sha512": "f208ffdc368054045733b78277c8daaf4f0863e75d9f781680ca912b3a308fd5a33e289e719edf82bb41c9786f8c690590cc3176236f130a12235520f64ea3b0"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "sector.def",
+                "sha512": "602ff2740404f2c94722173a79a1a2b9369f46e9ceb832c753d28202869cf05fe431446e1e452f2da53c270898de406596c86f316b48b06d481aa400181d2869"
+            },
+            "output": [
+                {
+                    "filename": "sector.dat",
+                    "sha512": "87993ef79ac0377066dbb22e8ebb577252ae827215de8024d4b767249c979a2957c0e70a0f50f7b3f06539807554ff7ab133862de22b13616ed07f7e04a0a59f"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "spells.def",
+                "sha512": "412ec8261b40722825a4b3eec3ef49c87c1b5fa8e2f2bfaf568939e22ebeec35b6a9a28e1c1165ead074cde5c6aa3bd27c5c06452fc3558e7a2e2977e8b64242"
+            },
+            "output": [
+                {
+                    "filename": "spells.dat",
+                    "sha512": "ce8faaa9adcd6ea7f24befe0220288ac6ddd6b04445f356fb3ad56f614952830f8c8e0b68200eedc5ca2a17e530a3a94f90cfe5f91a4668c5148a31e04d41b6c"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "weapons.def",
+                "sha512": "1ded84b4b1e9767632af0f20faa47cf969db592223e0c410c00503c0e48ff51204511e241f96399add80749150574ea7ec46902bfb03f37a6022f449a1444554"
+            },
+            "output": [
+                {
+                    "filename": "weapons.dat",
+                    "sha512": "a4b8b3de061d132db51f778e3119b7d12186f565bc98465ba60683211603d5865f7882013bd51da158b69a328af3280f0130a7bc3aaab83168e9722f270ccf6a"
+                }
+            ]
+        }
+    ]
+}

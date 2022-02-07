@@ -6,7 +6,7 @@
 
 sha512::sha512()
 {
-    if (!SHA512_Init(&context))
+    if (SHA512_Init(&context) == 0)
     {
         throw std::logic_error("SHA512_Init() failed");
     }
@@ -27,7 +27,7 @@ void sha512::generate(const std::string &filename)
     while (filesize >= blocksize)
     {
         in.read(reinterpret_cast<char *>(data_block.data()), blocksize);
-        if (!SHA512_Update(&context, data_block.data(), blocksize))
+        if (SHA512_Update(&context, data_block.data(), blocksize) == 0)
         {
             throw std::logic_error("SHA512_Update() failed");
         }
@@ -37,13 +37,13 @@ void sha512::generate(const std::string &filename)
     if (filesize > 0)
     {
         in.read(reinterpret_cast<char *>(data_block.data()), filesize);
-        if (!SHA512_Update(&context, data_block.data(), filesize))
+        if (SHA512_Update(&context, data_block.data(), filesize) == 0)
         {
             throw std::logic_error("SHA512_Update() failed");
         }
     }
 
-    if (!SHA512_Final(checksum.data(), &context))
+    if (SHA512_Final(checksum.data(), &context) == 0)
     {
         throw std::logic_error("SHA512_Final() failed");
     }

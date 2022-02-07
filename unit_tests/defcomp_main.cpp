@@ -3,7 +3,7 @@
     #define BOOST_TEST_DYN_LINK
 #endif
 #define BOOST_TEST_MAIN
-#include "checksum_dataset.h"
+#include "ChecksumDataset.h"
 #include "sha512.h"
 
 #include <boost/format.hpp>
@@ -11,26 +11,16 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(SampleTest)
+BOOST_AUTO_TEST_SUITE(Defcomp_tests)
+
+BOOST_AUTO_TEST_CASE(Heading)
 {
     BOOST_TEST_MESSAGE("DEFCOMP Unit Tests");
-    BOOST_CHECK(true == true);
 }
 
-BOOST_DATA_TEST_CASE(TestChecksums,
-                     boost::unit_test::data::make_delayed<checksum_dataset>("../../unit_tests/defcomp_checksum_tests.json"),
-                     file_info)
-{
-    sha512 sha;
+std::vector<std::string> config_files{"color_file_hashes.json"};
 
-    ////////////////////////// Test Subject //////////////////////////////
-    sha.generate(file_info.full_filename);
-    ////////////////////////// Test Subject //////////////////////////////
+// Sharing the code with vmc_main.cpp
+#include "checksum_test_case.tcc"
 
-    auto checksum = sha.getChecksumString();
-
-    boost::format error_message(file_info.error_fmt_str);
-    error_message % file_info.full_filename % file_info.sha512_checksum % checksum;
-
-    BOOST_TEST(file_info.sha512_checksum == checksum, error_message.str());
-}
+BOOST_AUTO_TEST_SUITE_END()

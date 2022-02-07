@@ -1,0 +1,40 @@
+{
+    "name": "etc Directory Files",
+    "relative_path": "vme/etc/",
+    "new_file_check": {
+        "source_extension": ".def",
+        "files_to_skip": [
+            "abilities.dat",
+            "abilities.def",
+            "commands.dat",
+            "commands.def",
+            "professions.dat",
+            "professions.def",
+            "races.dat",
+            "races.def",
+            "sector.dat",
+            "sector.def",
+            "spells.dat",
+            "spells.def",
+            "weapons.dat",
+            "weapons.def"
+        ],
+        "output_extensions": [
+            ".dat"
+        ]
+    },
+    "files": [
+        {
+            "source_file": {
+                "filename": "color.def",
+                "sha512": "b64d60cec255482c434c3727849dfc975abc8588bb0aca4dc1080f3eaae21781db21e026535789bd537bc08c1f0d6b33db7244e6ca24b08da43ae1ce2bd2cee2"
+            },
+            "output": [
+                {
+                    "filename": "color.dat",
+                    "sha512": "986c2e8de3465251f81b30a907f01972f3bcee94161014cfd2e84c5722b550d26da6db084bd14c4effd5770873001b6b5b78d76858f88bd9c84b6aeab9daa1ef"
+                }
+            ]
+        }
+    ]
+}
