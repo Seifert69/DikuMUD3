@@ -50,7 +50,7 @@ $VME_ROOT/bin/rundispatcher.sh &
 #
 
 if [ ! -f ${VME_ROOT}/bin/discord.token ]; then
-   echo "No file at $VME_ROOT/bin/discord.token, not starting discord integration"
+   echo "Skipping discord integration because no token file present at $VME_ROOT/bin/discord.token"
 else
    echo "Starting runmuddiscord.sh: $VME_ROOT/bin/runmuddiscord.sh &"
    $VME_ROOT/bin/runmuddiscord.sh &

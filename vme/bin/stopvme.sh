@@ -75,7 +75,7 @@ if [ ! -z "${PIDS}" ]; then
    kill -9 $PIDS
 fi
 
-sleep 1
+sleep 2
 
 PIDS="$(pgrep -x vme -u $USER)"
 #echo "vme: $PIDS"
