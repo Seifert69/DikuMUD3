@@ -136,6 +136,24 @@ int char_dual_wield(unit_data *ch)
     return equipment_type(ch, WEAR_WIELD, ITEM_WEAPON) && equipment_type(ch, WEAR_HOLD, ITEM_WEAPON);
 }
 
+// returns true if obj is a slaying weapon against opponent_race
+bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
+{
+    if (obj && IS_OBJ(obj) && (OBJ_TYPE(obj) == ITEM_WEAPON) && (OBJ_VALUE(obj, 3) != RACE_DO_NOT_USE))
+    {
+        if (OBJ_VALUE(obj, 3) == opponent_race)  
+        {
+            return true;
+        }
+        /* else
+            // Plan is to perhaps have a races range in $slaying extra, or intlist of races
+        */
+    }
+
+    return false;
+}
+
+
 /* Given an amount of experience, what is the 'virtual' level of the char? */
 int virtual_level(unit_data *ch)
 {
@@ -1587,11 +1605,11 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
     {
         damage(att, def, att_weapon, 0, MSG_TYPE_WEAPON, att_weapon_type, COM_MSG_MISS);
     }
-    else /* A hit! */
+    else /* A hit! hm > 0 */
     {
         if (att_weapon)
         {
-            if (OBJ_VALUE(att_weapon, 3) == CHAR_RACE(def))
+            if (is_obj_slaying(att_weapon, CHAR_RACE(def)))
             {
                 hm += hm / 5; /* Add 20% bonus extra again to damage */
                 act("Your $2N glows!", A_SOMEONE, att, att_weapon, cActParameter(), TO_CHAR);

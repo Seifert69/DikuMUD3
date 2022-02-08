@@ -306,7 +306,7 @@ int dikuii_melee_bonus(unit_data *att,
     }
 
     /* Slaying Weapons */
-    if (att_wpn && OBJ_VALUE(att_wpn, 3) == CHAR_RACE(def))
+    if (is_obj_slaying(att_wpn, CHAR_RACE(def)))
     {
         att_bonus += 25;
     }
@@ -684,7 +684,7 @@ int melee_bonus(unit_data *att,
     }
 
     /* Slaying Weapons */
-    if (att_wpn && OBJ_VALUE(att_wpn, 3) == CHAR_RACE(def))
+    if (is_obj_slaying(att_wpn, CHAR_RACE(def)))
     {
         att_bonus += 50;
 

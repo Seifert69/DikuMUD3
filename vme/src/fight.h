@@ -43,3 +43,4 @@ int roll_boost(int roll, int level);
 void damage_object(unit_data *ch, unit_data *obj, int dam);
 void load_messages();
 int hunting(spec_arg *sarg);
+bool is_obj_slaying(unit_data *obj, ubit16 opponent_race);
