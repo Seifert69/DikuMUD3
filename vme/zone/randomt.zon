@@ -296,7 +296,7 @@ code
         return(1);
 
     setbright(u, i); // 0..3
-    identify(u, "Emits a magical light.", "Emits a magical light " + itoa(i) +".");
+    identify(u, "Emits a magical light.", "Emits a magical light +" + itoa(i) +".");
 
     return (1);
 }
@@ -331,6 +331,24 @@ code
     identify(u, "Emits magical darkness.", "Emits magical darkness " + itoa(i) +".");
 
     return (1);
+}
+dilend
+
+
+// Enchant the weapon either dark or light
+dilbegin integer enc_lightdark(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer enc_dark(u : unitptr, bonuslvl : integer, data : string);
+    integer enc_light(u : unitptr, bonuslvl : integer, data : string);
+
+var
+    i : integer;
+code
+{
+    if (rnd(0,1) == 0)
+        return (enc_dark(u, bonuslvl, data));
+    else
+        return (enc_light(u, bonuslvl, data));
 }
 dilend
 
@@ -396,9 +414,46 @@ code
            il.[abilid*3+1], TIF_NONE, il.[abilid*3+2], APF_ABILITY);
 
     sl := {"magic", "divine", "strength", "dexterity", "constitution", "charisma", "brain", "hitpoints"};
-    identify(u, "Improved "+sl.[abilid] +" ability.", "Improved "+sl.[abilid]+" with "+itoa(i)+".");
+    identify(u, "Improved "+sl.[abilid] +" ability.", "Improved "+sl.[abilid]+" with +"+itoa(i)+".");
 
     return (1);
+}
+dilend
+
+
+// Grants 1-3 abilities on an item
+// call with e.g. (u, BONUS_ARTIFACT, "")
+//
+dilbegin integer enc_abilities(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer enc_ability(u : unitptr, bonuslvl : integer, data : string);
+
+var
+    il : intlist;
+    numenc : integer;
+    numenccopy : integer;
+    i : integer;
+    r : integer;
+code
+{
+    log("Enchant abilities");
+
+    numenc := 1+rnd(0,1)+rnd(0,1);
+    numenccopy := numenc;
+
+    il := { ABIL_MAG, ABIL_DIV, ABIL_STR, ABIL_DEX, ABIL_CON, ABIL_CHA, ABIL_BRA, ABIL_HP };
+    i := length(il)-1;
+
+    while (numenc > 0)
+    {
+        r := rnd(0,i);
+        enc_ability(u, bonuslvl, itoa(il.[r]));
+        il.[r] := il.[i];
+        i := i - 1;
+        numenc := numenc - 1;
+    }
+
+    return (numenccopy);
 }
 dilend
 
@@ -452,6 +507,26 @@ dilend
 
 
 
+// Enchant the weapon either dark or light
+dilbegin integer enc_haste_slow(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer enc_haste(u : unitptr, bonuslvl : integer, data : string);
+    integer enc_slow(u : unitptr, bonuslvl : integer, data : string);
+
+var
+    i : integer;
+code
+{
+    if (rnd(0,1) == 0)
+        return (enc_haste(u, bonuslvl, data));
+    else
+        return (enc_slow(u, bonuslvl, data));
+}
+dilend
+
+
+
+
 dilbegin integer enc_goodprot(u : unitptr, bonuslvl : integer, data : string);
 external
     identify(u :unitptr, norm : string, improved: string);
@@ -483,6 +558,23 @@ code
 }
 dilend
 
+
+// Enchant the weapon either good or evil
+dilbegin integer enc_good_evil(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer enc_goodprot(u : unitptr, bonuslvl : integer, data : string);
+    integer enc_evilprot(u : unitptr, bonuslvl : integer, data : string);
+
+var
+    i : integer;
+code
+{
+    if (rnd(0,1) == 0)
+        return (enc_goodprot(u, bonuslvl, data));
+    else
+        return (enc_evilprot(u, bonuslvl, data));
+}
+dilend
 
 
 // Resistance against spells in any spell category
@@ -534,14 +626,55 @@ code
            "mind", "fire", "cold", "electricity", "poison", "acid"};
 
     identify(u, "Increases your resistance against " + sl.[splid] + ".",
-                "Increases your resistance against " + sl.[splid] + " by " + itoa(i) + ".");
+                "Increases your resistance against " + sl.[splid] + " by +" + itoa(i) + ".");
 
     return (1);
 }
 dilend
 
 
-// Weapon defense
+
+// Grants 1-5 resistances on an item
+// call with e.g. (u, BONUS_ARTIFACT, "")
+//
+dilbegin integer enc_resistances(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer enc_resist(u : unitptr, bonuslvl : integer, data : string);
+
+var
+    il : intlist;
+    numenc : integer;
+    numenccopy : integer;
+    i : integer;
+    r : integer;
+code
+{
+    log("Enchant resistances");
+
+    numenc := 1+rnd(0,1)+rnd(0,1)+rnd(0,1)+rnd(0,1);
+    numenccopy := numenc;
+
+    il := { SPL_DIVINE, SPL_PROTECTION, SPL_DETECTION, SPL_SUMMONING, SPL_CREATION, SPL_MIND,
+            SPL_HEAT, SPL_COLD, SPL_CELL, SPL_INTERNAL, SPL_EXTERNAL };
+    i := length(il)-1;
+
+    while (numenc > 0)
+    {
+        r := rnd(0,i);
+        enc_resist(u, bonuslvl, itoa(il.[r]));
+        il.[r] := il.[i];
+        i := i - 1;
+        numenc := numenc - 1;
+    }
+
+    return (numenccopy);
+}
+dilend
+
+
+
+
+// Weapon defence
 // WPN_AXE_HAM   1		/* Axe/hammer category        */
 // WPN_SWORD     2		/* Sword Category             */
 // WPN_CLUB_MACE 3		/* Club/Mace/Flail Category   */
@@ -550,7 +683,7 @@ dilend
 // WPN_SPECIAL   6		/* Special weapons            */
 // WPN_GROUP_MAX 7		/* #[0..6] of groups          */
 
-dilbegin integer enc_defense(u : unitptr, bonuslvl : integer, data : string);
+dilbegin integer enc_defence(u : unitptr, bonuslvl : integer, data : string);
 external
     identify(u :unitptr, norm : string, improved: string);
 var 
@@ -584,15 +717,54 @@ code
 
     sl := {"not possible", "axes and hammers", "bladed weapons", "clubs and maces", "polearms", "natural attacks", "special weapons"};
 
-    identify(u, "Increases your defense against " + sl.[defid] + ".",
-                "Increases your defense against " + sl.[defid] + " by " + itoa(i) + ".");
+    identify(u, "Increases your defence against " + sl.[defid] + ".",
+                "Increases your defence against " + sl.[defid] + " by +" + itoa(i) + ".");
 
     return (1);
 }
 dilend
 
 
-dilbegin integer enc_slaying(u : unitptr, bonuslvl : integer, data : string);
+// Grants 1-2 defences on an item
+// call with e.g. (u, BONUS_ARTIFACT, "")
+//
+dilbegin integer enc_defences(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer enc_defence(u : unitptr, bonuslvl : integer, data : string);
+
+var
+    il : intlist;
+    numenc : integer;
+    numenccopy : integer;
+    i : integer;
+    r : integer;
+code
+{
+    log("Enchant defences");
+
+    numenc := 1+rnd(0,1);
+    numenccopy := numenc;
+
+    il := { WPN_AXE_HAM, WPN_SWORD, WPN_CLUB_MACE, WPN_POLEARM, WPN_UNARMED, WPN_SPECIAL };
+    i := length(il)-1;
+
+    while (numenc > 0)
+    {
+        r := rnd(0,i);
+        enc_defence(u, bonuslvl, itoa(il.[r]));
+        il.[r] := il.[i];
+        i := i - 1;
+        numenc := numenc - 1;
+    }
+
+    return (numenccopy);
+}
+dilend
+
+
+
+
+dilbegin integer enc_wpnslaying(u : unitptr, bonuslvl : integer, data : string);
 external
     identify(u :unitptr, norm : string, improved: string);
 
@@ -632,7 +804,7 @@ dilend
 
 // Confer a magic attack bonus on a weapon
 //
-dilbegin integer encWpnMagicB(u : unitptr, bonuslvl : integer, data : string);
+dilbegin integer enc_wpnenchant(u : unitptr, bonuslvl : integer, data : string);
 external
     identify(u :unitptr, norm : string, improved: string);
 code
@@ -642,7 +814,7 @@ code
     if (u.value[2] == 0)
         return(1);
 
-    identify(u, "Confers a magic attack bonus.", "Confers a magic attack bonus of " + itoa(u.value[2])+".");
+    identify(u, "Confers a magic attack bonus.", "Confers a magic attack bonus of +" + itoa(u.value[2])+".");
     return (1);
 }
 dilend
@@ -651,7 +823,7 @@ dilend
 // u : weapon
 // The wielder of this weapon will get a magic bonus to his attack skill.
 //
-dilbegin integer enc_wpnattack(u : unitptr, bonuslvl : integer, data : string);
+dilbegin integer enc_wpnskill(u : unitptr, bonuslvl : integer, data : string);
 external
     identify(u :unitptr, norm : string, improved: string);
 var
@@ -668,36 +840,42 @@ code
            TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
 
     identify(u, "Increases your skill with this weapon.",
-                "Increases your skill with this weapon by " + itoa(i)+".");
+                "Increases your skill with this weapon by +" + itoa(i)+".");
 
     return (1);
 }
 dilend
 
 
+//  Possible enchantment expansions
+//    NEW: Maybe go through affect list and pick more such as bless, etc?
+//    NEW: Weapon has embedded spells that can be used X times / day
+//    NEW: Fireblade, Coldblade, Electricity, (how?)
+//    NEW: Soul saver? When you die your soul is saved.
+//    NEW: Intelligent. Weapon fights for you while you're down.
+//
+
 //
 // ======================== ENCHANT SUPER FUNCTIONS =========================
 //
 
-dilbegin integer encJewelry(u : unitptr, bonuslvl : integer, data : string);
-external 
-    integer successroll(il : intlist, rollskew : integer);
-
+dilbegin integer encWpn(u : unitptr, bonuslvl : integer, blade : string);
 var
     enchantments : integer;
     lvl : integer;
     i : integer;
+    r : integer;
+    n : integer;
     s : string;
-    encn : intlist;
     encs : stringlist;
-    used : stringlist;
+    encn : intlist;
 
     rollenc : integer;
     enc1 : integer;
     enc2 : integer;
     enc3 : integer;
-
     exd : extraptr;
+
 code
 {
     exd := "" in u.extra;
@@ -708,138 +886,7 @@ code
 
     lvl := (rollenc + enc1 + enc2 + enc3) / 4; // Take the average
 
-    log("encWpnNew() lvl = " + itoa(lvl));
-
-    if (lvl == 0)
-        return (0);
-
-    u.flags := u.flags | UNIT_FL_MAGIC;
-
-    log("Enchant the jewelry: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
-
-    encn := {
-         4, // enc_light
-         6, 8, 10, 12, 14, 16, 18, 20, // enc_ability
-         26, // enc_haste,
-         27, // enc_slow,
-         30, // enc_goodprot,
-         33, // enc_evilprot,
-         35, 36, 37, 38, 39, 41, 44, 47, 50, 53, 56, // enc_resist
-         58,60,62,64,66,68  // enc_defense
-    }; // XXX    NEED TO FIX THIS SO WE DONT ROLL TOO MANY TIMES
-
-    encs := {
-        "enc_light@randomt", "0",
-        "enc_ability@randomt", QUOTE(ABIL_MAG),
-        "enc_ability@randomt", QUOTE(ABIL_DIV),
-        "enc_ability@randomt", QUOTE(ABIL_STR),
-        "enc_ability@randomt", QUOTE(ABIL_DEX),
-        "enc_ability@randomt", QUOTE(ABIL_CON),
-        "enc_ability@randomt", QUOTE(ABIL_CHA),
-        "enc_ability@randomt", QUOTE(ABIL_BRA),
-        "enc_ability@randomt", QUOTE(ABIL_HP),
-        "enc_haste@randomt", "0",
-        "enc_slow@randomt", "0",
-        "enc_goodprot@randomt", "0",
-        "enc_evilprot@randomt", "0",
-        "enc_resist@randomt", QUOTE(SPL_DIVINE),
-        "enc_resist@randomt", QUOTE(SPL_PROTECTION),
-        "enc_resist@randomt", QUOTE(SPL_SUMMONING),
-        "enc_resist@randomt", QUOTE(SPL_CREATION),
-        "enc_resist@randomt", QUOTE(SPL_DETECTION),
-        "enc_resist@randomt", QUOTE(SPL_MIND),
-        "enc_resist@randomt", QUOTE(SPL_HEAT),
-        "enc_resist@randomt", QUOTE(SPL_COLD),
-        "enc_resist@randomt", QUOTE(SPL_CELL),     // Electricity
-        "enc_resist@randomt", QUOTE(SPL_INTERNAL), // Poison
-        "enc_resist@randomt", QUOTE(SPL_EXTERNAL),  // Acid
-        "enc_defense@randomt", QUOTE(WPN_AXE_HAM),
-        "enc_defense@randomt", QUOTE(WPN_SWORD),
-        "enc_defense@randomt", QUOTE(WPN_CLUB_MACE),
-        "enc_defense@randomt", QUOTE(WPN_POLEARM),
-        "enc_defense@randomt", QUOTE(WPN_UNARMED),
-        "enc_defense@randomt", QUOTE(WPN_SPECIAL)
-        };
-
-        //   Possible expansions
-        //     Maybe go through affect list and pick more such as bless, etc.
-        //     Weapon has embedded spells that can be used X times / day
-        //     Fireblade, Coldblade, Electricity, (how?)
-        //     Soul saver?
-        //     Fights for you while you're down
-
-    if (length(encn) != length(encs)/2)
-    {
-        log("ERROR: The two arrays must be in sync");
-        quit;
-    }
-
-    enchantments := lvl;
-    while (enchantments > 0)
-    {
-        log("enchantment "+itoa(enchantments));
-        enchantments := enchantments - 1;
-
-        i := successroll(encn, 0);
-        s := itoa(i);
-        if (length(s) < 2)
-            s := "0" + s;
-        if (s in used)
-            continue;
-        insert(used, 0, s);
-
-        if (i < 0)
-        {
-            log("Index too low");
-            quit;
-        }
-
-        if (i >= length(encs)/2)
-        {
-            continue;
-            log("Index too high");
-            quit;
-        }
-
-        i := dilcall(encs.[i*2])(u, lvl, encs.[i*2+1]);
-    }
-
-    return (0);
-}
-dilend
-
-
-
-dilbegin integer encWpnNew(u : unitptr, bonuslvl : integer, blade : string);
-external 
-    integer successroll(il : intlist, rollskew : integer);
-
-var
-    enchantments : integer;
-    lvl : integer;
-    i : integer;
-    s : string;
-    encn : intlist;
-    encs : stringlist;
-    used : stringlist;
-
-    rollenc : integer;
-    enc1 : integer;
-    enc2 : integer;
-    enc3 : integer;
-
-    exd : extraptr;
-code
-{
-    exd := "" in u.extra;
-    rollenc := exd.vals.[4]; // Enchantment roll
-    enc1 := exd.vals.[5];    // enchantment material 1
-    enc2 := exd.vals.[6];    // enchantment material 2
-    enc3 := exd.vals.[7];    // enchantment material 3
-
-    lvl := (rollenc + enc1 + enc2 + enc3) / 4; // Take the average
-
-    log("encWpnNew() lvl = " + itoa(lvl));
+    log("encWpn() lvl = " + itoa(lvl));
 
     if (lvl == 0)
         return (0);
@@ -848,63 +895,23 @@ code
 
     log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
 
-    encn := {
-         4, // enc_light
-         6, 8, 10, 12, 14, 16, 18, 20, // enc_ability
-         26, // enc_haste,
-         27, // enc_slow,
-         30, // enc_goodprot,
-         33, // enc_evilprot,
-         35, 36, 37, 38, 39, 41, 44, 47, 50, 53, 56, // enc_resist
-         58,60,62,64,66,68, // enc_defense
-         70,                // enc_slaying
-         80                 // wpnattack+
-                            // magicbonus+ for anythnig above the previous 
-    };
-
     encs := {
-        "enc_light@randomt", "0",
-        "enc_ability@randomt", QUOTE(ABIL_MAG),
-        "enc_ability@randomt", QUOTE(ABIL_DIV),
-        "enc_ability@randomt", QUOTE(ABIL_STR),
-        "enc_ability@randomt", QUOTE(ABIL_DEX),
-        "enc_ability@randomt", QUOTE(ABIL_CON),
-        "enc_ability@randomt", QUOTE(ABIL_CHA),
-        "enc_ability@randomt", QUOTE(ABIL_BRA),
-        "enc_ability@randomt", QUOTE(ABIL_HP),
-        "enc_haste@randomt", "0",
-        "enc_slow@randomt", "0",
-        "enc_goodprot@randomt", "0",
-        "enc_evilprot@randomt", "0",
-        "enc_resist@randomt", QUOTE(SPL_DIVINE),
-        "enc_resist@randomt", QUOTE(SPL_PROTECTION),
-        "enc_resist@randomt", QUOTE(SPL_SUMMONING),
-        "enc_resist@randomt", QUOTE(SPL_CREATION),
-        "enc_resist@randomt", QUOTE(SPL_DETECTION),
-        "enc_resist@randomt", QUOTE(SPL_MIND),
-        "enc_resist@randomt", QUOTE(SPL_HEAT),
-        "enc_resist@randomt", QUOTE(SPL_COLD),
-        "enc_resist@randomt", QUOTE(SPL_CELL),     // Electricity
-        "enc_resist@randomt", QUOTE(SPL_INTERNAL), // Poison
-        "enc_resist@randomt", QUOTE(SPL_EXTERNAL),  // Acid
-        "enc_defense@randomt", QUOTE(WPN_AXE_HAM),
-        "enc_defense@randomt", QUOTE(WPN_SWORD),
-        "enc_defense@randomt", QUOTE(WPN_CLUB_MACE),
-        "enc_defense@randomt", QUOTE(WPN_POLEARM),
-        "enc_defense@randomt", QUOTE(WPN_UNARMED),
-        "enc_defense@randomt", QUOTE(WPN_SPECIAL),
-        "enc_slaying@randomt", "0",
-        "enc_wpnattack@randomt", "0",
-        "encWpnMagicB@randomt", "0" };
+        "enc_haste_slow@randomt", "",   // 0
+        "enc_wpnslaying@randomt", "",   // 1
+        "enc_wpnskill@randomt", "",     // 2
+        "enc_good_evil@randomt", "",    // 3
+        "enc_abilities@randomt", "",    // 4
+        "enc_resistances@randomt", "",  // 5
+        "enc_defences@randomt", "",     // 6 
+        "enc_lightdark@randomt", "",    // 7 
+        "enc_wpnenchant@randomt", ""    // 8 
+        };
 
-        //   Possible expansions
-        //     Maybe go through affect list and pick more such as bless, etc.
-        //     Weapon has embedded spells that can be used X times / day
-        //     Fireblade, Coldblade, Electricity, (how?)
-        //     Soul saver?
-        //     Fights for you while you're down
 
-    if (length(encn)+1 != length(encs)/2)
+    encn := { 0, 2, 4, 6, 8, 7, 5, 3, 1 };
+    i := length(encn)-1;
+
+    if (i+1 != length(encs)/2)
     {
         log("ERROR: The two arrays must be in sync");
         quit;
@@ -914,29 +921,85 @@ code
     while (enchantments > 0)
     {
         log("enchantment "+itoa(enchantments));
-        enchantments := enchantments - 1;
+        r := (rnd(0,i)+rnd(0,i))/2;
+        n := dilcall(encs.[encn.[r]*2])(u, lvl, encs.[encn.[r]*2+1]);
 
-        i := successroll(encn, 0);
-        s := itoa(i);
-        if (length(s) < 2)
-            s := "0" + s;
-        if (s in used)
-            continue;
-        insert(used, 0, s);
+        encn.[r] := encn.[i]; // Well not perfect but it probably works
+        i := i - 1;
+        enchantments := enchantments - n;
+    }
 
-        if (i < 0)
-        {
-            log("Index too low");
-            quit;
-        }
+    return (0);
+}
+dilend
 
-        if (i >= length(encs)/2)
-        {
-            log("Index too high");
-            quit;
-        }
 
-        i := dilcall(encs.[i*2])(u, lvl, encs.[i*2+1]);
+
+dilbegin integer encJewelry(u : unitptr, bonuslvl : integer, blade : string);
+var
+    enchantments : integer;
+    lvl : integer;
+    i : integer;
+    r : integer;
+    n : integer;
+    s : string;
+    encs : stringlist;
+    encn : intlist;
+
+    rollenc : integer;
+    enc1 : integer;
+    enc2 : integer;
+    enc3 : integer;
+    exd : extraptr;
+
+code
+{
+    exd := "" in u.extra;
+    rollenc := exd.vals.[4]; // Enchantment roll
+    enc1 := exd.vals.[5];    // enchantment material 1
+    enc2 := exd.vals.[6];    // enchantment material 2
+    enc3 := exd.vals.[7];    // enchantment material 3
+
+    lvl := (rollenc + enc1 + enc2 + enc3) / 4; // Take the average
+
+    log("encWpn() lvl = " + itoa(lvl));
+
+    if (lvl == 0)
+        return (0);
+
+    u.flags := u.flags | UNIT_FL_MAGIC;
+
+    log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
+
+    encs := {
+        "enc_haste_slow@randomt", "",   // 0
+        "enc_good_evil@randomt", "",    // 1
+        "enc_abilities@randomt", "",    // 2
+        "enc_resistances@randomt", "",  // 3
+        "enc_defences@randomt", "",     // 4 
+        "enc_lightdark@randomt", ""     // 5 
+        };
+
+
+    encn := { 0, 2, 4, 5, 3, 1 };
+    i := length(encn)-1;
+
+    if (i+1 != length(encs)/2)
+    {
+        log("ERROR: The two arrays must be in sync");
+        quit;
+    }
+
+    enchantments := lvl;
+    while (enchantments > 0)
+    {
+        log("enchantment "+itoa(enchantments));
+        r := (rnd(0,i)+rnd(0,i))/2;
+        n := dilcall(encs.[encn.[r]*2])(u, lvl, encs.[encn.[r]*2+1]);
+
+        encn.[r] := encn.[i]; // Well not perfect but it probably works
+        i := i - 1;
+        enchantments := enchantments - n;
     }
 
     return (0);
@@ -1521,7 +1584,7 @@ code
             QUOTE(WPN_MORNING_STAR),   "80", "16", "head//handle", "matWpnBlade@randomt",
             QUOTE(WPN_HALBERD),        "80", "10", "head//shaft",  "matWpnBlade@randomt",
             QUOTE(WPN_BARDICHE),       "80", "10", "head//shaft",  "matWpnBlade@randomt",
-            QUOTE(WPN_QUARTERSTAFF),   "50", "10", "tip//shaft",   "matWpnBlade@randomt",
+            // QUOTE(WPN_QUARTERSTAFF),   "50", "10", "tip//shaft",   "matWpnBlade@randomt",
             QUOTE(WPN_SPEAR),          "40", "6",  "head//shaft",  "matWpnBlade@randomt",
             QUOTE(WPN_JAVELIN),        "60", "7",  "head//shaft",  "matWpnBlade@randomt",
             QUOTE(WPN_TRIDENT),        "70", "12", "fork//shaft",  "matWpnBlade@randomt"
@@ -1535,7 +1598,7 @@ code
     u.manipulate := u.manipulate | MANIPULATE_WIELD;
     u.value[0] := atoi(wpns.[idxWpn]); // Set the weapon type
 
-    treasureize(u, bonuslvl, wpns.[idxWpn+4], wpns.[idxWpn+3], "encWpnNew@randomt", wpns.[idxWpn+3]);
+    treasureize(u, bonuslvl, wpns.[idxWpn+4], wpns.[idxWpn+3], "encWpn@randomt", wpns.[idxWpn+3]);
 
     return(u);
 }
@@ -1686,7 +1749,7 @@ end
 
 treasure0
 names {"treasure0"}
-title "the tresure0 chest"
+title "the treasure chest"
 descr "treasure0 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
@@ -1774,6 +1837,3 @@ load treasure4 into treasury max 1
 load treasure7 into treasury max 1
 
 %end
-
-
-
