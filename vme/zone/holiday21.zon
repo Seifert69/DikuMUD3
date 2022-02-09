@@ -3373,8 +3373,8 @@ end
 // comment out this entire load section after the holiday season.
 // this will maitain the items for players, but take away some christmas cheer.
 
-%reset 
 /*
+%reset 
 load xmas_tree2 into hall@newbie         local 1
 load xmas_tree into square@udgaard       local 1
 load xmas_tree2 into postoffice@udgaard  local 1
