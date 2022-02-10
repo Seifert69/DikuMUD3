@@ -166,21 +166,6 @@ END HEADER*/
 #define QUEST_WW              "Wight warrens quest"
 #define QUEST_WELMAR          "King Welmar Quest"
 
-#define MIN_HUMANOID_PC      0
-#define RACE_HUMAN           0     /* PC race */
-#define RACE_ELF             1     /* PC race */
-#define RACE_DWARF           2     /* PC race */
-#define RACE_HALFLING        3     /* PC race */
-#define RACE_GNOME           4     /* PC race */
-#define RACE_HALF_ORC        5
-#define RACE_HALF_OGRE       6
-#define RACE_HALF_ELF        7
-#define RACE_BROWNIE         8
-#define RACE_GROLL           9
-#define RACE_DARK_ELF       10
-#define MAX_HUMANOID_PC     100
-
-
 
 /*Insert any new definitions here... */
 /*check values.h for max number of races.*/
@@ -702,6 +687,20 @@ END HEADER*/
 
 /* keep in mind if you need more ask the vme coders.*/
 
+#define MIN_HUMANOID_PC      0
+#define RACE_HUMAN           0     /* PC race */
+#define RACE_ELF             1     /* PC race */
+#define RACE_DWARF           2     /* PC race */
+#define RACE_HALFLING        3     /* PC race */
+#define RACE_GNOME           4     /* PC race */
+#define RACE_HALF_ORC        5
+#define RACE_HALF_OGRE       6
+#define RACE_HALF_ELF        7
+#define RACE_BROWNIE         8
+#define RACE_GROLL           9
+#define RACE_DARK_ELF       10
+#define MAX_HUMANOID_PC     100
+
 /*
 	*	Monster Races:
 	*
@@ -726,6 +725,8 @@ END HEADER*/
 #define RACE_GIANT_MOB           132
 #define RACE_DRIDER              133
 #define MAX_HUMANOID_NPC         200
+
+
 /*Ants, beetles, butterflies,lobsters, shrimp, crabs,scorpions, spiders, ticks*/
 #define RACE_ARTHROPODA_MIN      220
 
@@ -937,10 +938,12 @@ END HEADER*/
 #define RACE_DRAGON_LAVA         1158
 #define RACE_DRAGON_SHADOW       1159
 #define RACE_DRAGON_LIZARD       1160
+#define RACE_WYRM                1161
 #define RACE_DRAGON_MAX          1199  /* For use with special object */
 
 
 
+#define RACE_UNDEAD_MIN          1200 /* For use with special object */
 #define RACE_SPIRIT_MIN          1200 /* For use with special object */
 #define RACE_UNDEAD              1201
 #define RACE_SPIRIT              1202
@@ -949,6 +952,11 @@ END HEADER*/
 #define RACE_ZOMBIE              1205
 #define RACE_GHOUL               1206
 #define RACE_SKELETON            1207
+
+#define RACE_VAMPIRE             1208
+#define RACE_BANSHEE             1209
+#define RACE_DEATH_GHAST         1210
+
 #define RACE_SPIRIT_MAX          1249  /* For use with special object */
 
 #define RACE_LICH_MIN            1250 /* For use with special object */
@@ -959,6 +967,8 @@ END HEADER*/
 #define RACE_LICH_LIGHT          1255
 #define RACE_LICH_WATER          1256
 #define RACE_LICH_MAX            1299 /* For use with special object */
+#define RACE_UNDEAD_MAX          1299 /* For use with special object */
+
 
 #define RACE_ELEMENTAL_MIN       1300 /* For use with special object */
 #define RACE_ELEMENTAL_AIR       1301
@@ -979,29 +989,33 @@ END HEADER*/
 #define RACE_SNAKE_DEMON         1365
 #define RACE_DEMON_MAX           1399 /* For use with special object */
 
+// Oh no, terrible mess down below. Really all "humanoids" ought to be together,
+// all lizards together,  etc. Probably for those it would make sense to have a 
+// MIN/MAX for regular & fantasy when applicable
 
 #define RACE_HOMARID             2400
 #define RACE_MERMAID             2401
-#define RACE_PIXIE               2402
-#define RACE_VAMPIRE             2403
-#define RACE_WYRM                2404
+#define RACE_MERMAN              2423
 #define RACE_MINOTAUR            2405
 
+
 #define RACE_PEGASUS             2408
-#define RACE_BANSHEE             2409
-#define RACE_SAND_CRAWLER        2410
 #define RACE_DRYAD               2411
 #define RACE_NAIAD               2412
+#define RACE_YETI                2419
+
+
+#define RACE_WEREWOLF            2420
+
+#define RACE_SHADOW_BEAST        2416
+#define RACE_SHADOW_DEVIL        2433
+
+#define RACE_PIXIE               2402
+#define RACE_SAND_CRAWLER        2410
 #define RACE_STONE_RENDER        2413
 #define RACE_UR_VILE             2414
-#define RACE_DEATH_GHAST         2415
-#define RACE_SHADOW_BEAST        2416
-
 #define RACE_YOGOLOTH            2418
-#define RACE_YETI                2419
-#define RACE_WEREWOLF            2420
 #define RACE_CREEPER             2421  /* cross between a worm, a lizard, and a roach. */
-#define RACE_MERMAN              2423
 #define RACE_STATUE              2424
 #define RACE_GOLEM               2425
 #define RACE_SLIME               2426
@@ -1011,7 +1025,6 @@ END HEADER*/
 #define RACE_GARGOYLE            2430
 #define RACE_MUTANT              2431
 #define RACE_CAVE_FISHER         2432
-#define RACE_SHADOW_DEVIL        2433
 #define RACE_NIXIE               2434
 #define RACE_NYMPH               2435
 #define RACE_SATYR               2436
