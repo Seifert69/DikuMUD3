@@ -352,6 +352,12 @@ extra {"$drink_drunk"} #drunk
   flags {UNIT_FL_MAGIC} \
   value[3] race
 
+/* Will slay dragons */
+#define WEAPON_SLAYER_DRAGONS \
+  flags {UNIT_FL_MAGIC} \
+  value[3] RACE_DRAGON_MIN \
+  extra {"$slayer"} {RACE_DRAGON_MIN, RACE_DRAGON_MAX} "dragon slayer"
+
 /* To be used when a object is cursed so that it can't be unequipped */
 #define CURSED_OBJECT \
 affect         \
