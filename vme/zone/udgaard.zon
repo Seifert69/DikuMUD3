@@ -7766,6 +7766,10 @@ WEAPON_DEF(WPN_RAPIER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 1
 cost 12 IRON_PIECE
 WEAPON_SLAYER(RACE_RABBIT)
+extra {"$identify"}
+"The words Rabbit's Bane are etched on the blade."
+extra {"$improved identify"}
+"This is a Rabbit slaying rapier."
 end
 
         hand_axe
@@ -7838,6 +7842,10 @@ weight 1
 extra {}
 "The dagger is the choice for new thieves."
 WEAPON_SLAYER(RACE_RABBIT)
+extra {"$identify"}
+"The words Rabbit's Bane are etched on the blade."
+extra {"$improved identify"}
+"This is a Rabbit slaying dagger."
 end
                                mage_staff
 
@@ -7850,6 +7858,10 @@ weight 3
 extra {}
 "The staff is made from a fine oak wood."
 WEAPON_SLAYER(RACE_RABBIT)
+extra {"$identify"}
+"The words Rabbit's Bane are engraved on the staff."
+extra {"$improved identify"}
+"This is a Rabbit slaying staff."
 end
 
 
@@ -7864,6 +7876,10 @@ weight 4
 extra {}
 "This mace is Isabella's choice for all new healers."
 WEAPON_SLAYER(RACE_RABBIT)
+extra {"$identify"}
+"The words Rabbit's Bane are etched on the shaft."
+extra {"$improved identify"}
+"This is a Rabbit slaying mace."
 end
 
 
@@ -7882,6 +7898,10 @@ weight 5
 extra {}
 "This longsword is Sir Lancelot's choice for young fighters."
 WEAPON_SLAYER(RACE_RABBIT)
+extra {"$identify"}
+"The words Rabbit's Bane are etched on the blade."
+extra {"$improved identify"}
+"This is a Rabbit slaying sword."
 end
 
   fighter_plate
@@ -9348,7 +9368,10 @@ extra {}
 "This small dagger is standard issue for the conjurer, and is specially
 useful against rabbits."
 WEAPON_SLAYER(RACE_RABBIT)
-
+extra {"$identify"}
+"The words Rabbit's Bane are etched on the blade."
+extra {"$improved identify"}
+"This is a Rabbit slaying dagger."
 end
 
     newbie_sword
@@ -9365,6 +9388,10 @@ extra {}
 against boars."
 
 WEAPON_SLAYER(RACE_BOAR)
+extra {"$identify"}
+"The words Boar's Bane are etched on the blade."
+extra {"$improved identify"}
+"This is a Boar slaying sword."
 end
 
 
@@ -9381,6 +9408,11 @@ extra {}
 engraved upon its head."
 
 WEAPON_SLAYER(RACE_FOX)
+extra {"$identify"}
+"The words Fox's Bane are etched on the blade."
+extra {"$improved identify"}
+"This is a Fox slaying mace."
+
 end
 
 
@@ -9397,6 +9429,10 @@ extra {}
 badger
 engraved into its hilt."
 WEAPON_SLAYER(RACE_BADGER)
+extra {"$identify"}
+"The words Badger's Bane are etched on the blade."
+extra {"$improved identify"}
+"This is a Badger slaying sword."
 
 end
 
