@@ -536,6 +536,8 @@ code
 	       0, 0, 0,
            TIF_PROT_GOOD_ON, TIF_NONE, TIF_PROT_GOOD_OFF, APF_NONE);
 
+    u.alignment := 1000;
+
     identify(u, "Makes you protected against good.", "Makes you protected against good.");
 
     return (1);
@@ -551,6 +553,8 @@ code
 	addaff(u, ID_PROT_EVIL_TRANSFER, -1, 0,
 	       0, 0, 0,
            TIF_PROT_EVIL_ON, TIF_NONE, TIF_PROT_EVIL_OFF, APF_NONE);
+
+    u.alignment := -1000;
 
     identify(u, "Makes you protected against evil.", "Makes you protected against evil.");
 
@@ -769,33 +773,70 @@ external
     identify(u :unitptr, norm : string, improved: string);
 
 var
-    il : intlist;
     sl : stringlist;
     i : integer;
+    exd : extraptr;
 code
 {
-    il := {
-        RACE_DRAGON_BLACK, 
-        RACE_DRAGON_BLUE, 
-        RACE_DRAGON_GREEN,
-        RACE_DRAGON_RED,
-        RACE_DRAGON_WHITE,
-        RACE_DRAGON_SILVER
-    };
+    log("Enchant slaying");
 
     sl := {
-        "black dragons",
-        "blue dragons", 
-        "green dragons",
-        "red dragons",
-        "white dragons",
-        "silver dragons"
+        // Race from, Race to, "$n slayer" name
+
+        QUOTE(RACE_MOSQUITO), "", "mosquito",
+        QUOTE(RACE_ARTHROPODA_MIN), QUOTE(RACE_ARTHROPODA_MAX), "arthropoda", // ants beetles, ...
+        QUOTE(RACE_ANNELIDA_MIN), QUOTE(RACE_ANNELIDA_MAX), "annelida", // WOrms, leeches
+        QUOTE(RACE_CNIDARIA_MIN), QUOTE(RACE_CNIDARIA_MAX), "cnidaria", // Jellyfish
+        QUOTE(RACE_MOLLUSK_MIN), QUOTE(RACE_MOLLUSK_MAX), "mollusk", // Oysters, etc
+        QUOTE(RACE_RABBIT), "", "rabbit",
+        QUOTE(RACE_BOAR), "", "boar",
+        QUOTE(RACE_BEAR), "", "bear",
+        QUOTE(RACE_GOBLIN), "", "goblin", 
+        QUOTE(RACE_HUMAN), "", "human", 
+        QUOTE(RACE_DWARF), "", "dwarf", 
+        QUOTE(RACE_ELF), "", "elf", 
+        QUOTE(RACE_DROW), "", "drow",
+        QUOTE(RACE_ORC), "", "orc",
+        QUOTE(RACE_HOBGOBLIN), "", "hobgoblin", 
+        QUOTE(RACE_JAWLESS_FISH_MIN), QUOTE(RACE_BONEY_FISH_MAX), "fish", 
+        QUOTE(RACE_BIRD_MIN), QUOTE(RACE_BIRD_MAX), "bird", 
+        QUOTE(RACE_PLANT_MIN), QUOTE(RACE_PLANT_MAX), "plant", 
+        QUOTE(RACE_AMPHIBIAN_MIN), QUOTE(RACE_AMPHIBIAN_MAX), "amphibian", 
+        QUOTE(RACE_TROLL), "", "troll", 
+        QUOTE(RACE_GIANT), "", "giant", 
+        QUOTE(RACE_REPTILES_MIN), QUOTE(RACE_REPTILES_MAX), "reptile", 
+        QUOTE(RACE_MAMMAL_MIN), QUOTE(RACE_MAMMAL_MAX), "mammal", 
+        QUOTE(MIN_HUMANOID_PC), QUOTE(MAX_HUMANOID_NPC), "humanoid", 
+        QUOTE(RACE_WEREWOLF), "", "werewolf",
+        QUOTE(RACE_GHOST), "", "ghost",
+        QUOTE(RACE_VAMPIRE), "", "vampire",
+        QUOTE(RACE_ELEMENTAL_MIN), QUOTE(RACE_ELEMENTAL_MAX), "elemental", 
+        QUOTE(RACE_LICH_MIN), QUOTE(RACE_LICH_MAX), "lich",
+        QUOTE(RACE_UNDEAD_MIN), QUOTE(RACE_UNDEAD_MAX), "undead", 
+        QUOTE(RACE_DEMON_MIN), QUOTE(RACE_DEMON_MAX), "demon", 
+        QUOTE(RACE_DRAGON_BLACK), "", "black dragon", 
+        QUOTE(RACE_DRAGON_BLUE), "", "blue dragon", 
+        QUOTE(RACE_DRAGON_GREEN), "", "green dragon", 
+        QUOTE(RACE_DRAGON_RED), "", "red dragon", 
+        QUOTE(RACE_DRAGON_WHITE), "", "white dragon", 
+        QUOTE(RACE_DRAGON_SILVER), "", "silver dragon", 
+        QUOTE(RACE_DRAGON_MIN), QUOTE(RACE_DRAGON_MAX), "dragon"
     };
 
-    i := rnd(0,length(il)-1);
+    // 38
 
-    u.value[3] := il.[i];
-    identify(u, "", "Slaying against "+sl.[i]+".");
+    i := rnd(0, (length(sl)/3)-1)*3;
+
+    u.value[3] := atoi(sl.[i]);
+    identify(u, "You sense a low hum.", "Slaying against "+sl.[i+2]+"s.");
+
+    if (sl.[i+1] != "") // Check if a range
+    {
+        addextra(u.extra, {"$slayer"}, sl.[i+2]);
+        exd := "$slayer" in u.extra;
+        insert(exd.vals, 0, atoi(sl.[i]));
+        insert(exd.vals, 1, atoi(sl.[i+1]));
+    }
 
     return (1);
 }
@@ -848,11 +889,14 @@ dilend
 
 
 //  Possible enchantment expansions
-//    NEW: Maybe go through affect list and pick more such as bless, etc?
-//    NEW: Weapon has embedded spells that can be used X times / day
-//    NEW: Fireblade, Coldblade, Electricity, (how?)
-//    NEW: Soul saver? When you die your soul is saved.
-//    NEW: Intelligent. Weapon fights for you while you're down.
+//    NEW: All, maybe go through affect list and pick more such as bless, etc?
+//    NEW: All, has embedded spells that can be used X times / day
+//    NEW: All, add magic bonus to a skill
+//    NEW: All, add magic bonus to a spell
+//    NEW: non-weapon, add magic bonus to a weapon skill (silly to wield an axe and get + to long sword)
+//    NEW: Weapon Fireblade, Coldblade, Electricity, (how?)
+//    NEW: Weapon Soul saver? When you die your soul is saved.
+//    NEW: Weapon Intelligent. Weapon fights for you while you're down.
 //
 
 //
@@ -1622,12 +1666,12 @@ var
     price : integer;
 code
 {
-    i := rnd(0,2);
+    i := rnd(0,5);
 
     if (i == 0) // Ring
     {
         s := "ring";
-        price := 1 * IRON_MULT;
+        price := 3 * IRON_MULT;
         wear := MANIPULATE_WEAR_FINGER;
     }
     else if (i == 1) // necklace
@@ -1636,7 +1680,7 @@ code
         s := "necklace";
         wear := MANIPULATE_WEAR_NECK;
     }
-    else
+    else if (i == 2)
     {
         price := 20 * IRON_MULT;
         sl := {"crown", "tiara"};
@@ -1644,8 +1688,24 @@ code
         s := sl.[i];
         wear := MANIPULATE_WEAR_HEAD;
     }
-
-    // s is e.g. "ring" and wear would be MANIPULATE_WEAR_FINGER
+    else if (i == 3)
+    {
+        price := 4 * IRON_MULT;
+        s := "bracelet";
+        wear := MANIPULATE_WEAR_WRIST;
+    }
+    else if (i == 4)
+    {
+        price := 4 * IRON_MULT;
+        s := "anklet";
+        wear := MANIPULATE_WEAR_ANKLE;
+    }
+    else if (i == 5)
+    {
+        price := 4 * IRON_MULT;
+        s := "earring";
+        wear := MANIPULATE_WEAR_EAR;
+    }
 
     log("Random Jewelry");
     u := createItem(s, ITEM_TREASURE, price, 180, 0);
@@ -1837,3 +1897,17 @@ load treasure4 into treasury max 1
 load treasure7 into treasury max 1
 
 %end
+
+// TODO:
+// Enhanced slaying weapons, add "$slaying" extra and store races in extra.vals as probably ranges {from, to}+
+// Cost
+// Weight
+// Hitpoints
+//
+// --
+// Treasure types:
+// More weapons: quaterstaff, bows, etc.
+// Armors
+// Other body wear, such as cloak, quivers, backpacks, belts, hold, etc.
+// 
+// Maybe even predesigned treasure, e.g. "The holy avenger of San Luis Obispo"
