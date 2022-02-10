@@ -25,6 +25,7 @@ int main(int argc, char **argv)
     int pos = 0;
     char moneyfile[512];
     char *money = nullptr;
+    bool b_first = true;
 
     mem_init();
 
@@ -108,10 +109,11 @@ int main(int argc, char **argv)
         }
         else
         {
-            if (!g_quiet_compile)
+            if (!g_quiet_compile && b_first)
             {
                 fprintf(stderr, "VMC %s Copyright (C) 2001 by Valhalla [%s]\n", VERSION, __DATE__);
                 fprintf(stderr, "VMC Compiled with [%s]\n", get_compiled_hash_defines().c_str());
+                b_first = false;
             }
 #ifndef WINDOWS
             alarm(15 * 60); /* If not done in 5 minutes, abort */
