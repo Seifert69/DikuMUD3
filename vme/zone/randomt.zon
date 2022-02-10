@@ -1415,9 +1415,23 @@ code
     enc2 := minmax7(rollenc + rnd(-1,1));
     enc3 := minmax7(rollenc + rnd(-1,1));
 
-    // TODO:
-    // Adjust cost, weight based on these
-    //
+    // Adjust weight, cost, hits
+
+    set_weight_base(u, u.weight - (u.weight * rollmat*5) / 100);  // +7 means 35% less weight, -7 +35% weight
+
+    u.hp := 1000;
+
+    if (rollmat > 0)
+    {
+        u.hp := u.hp + (rollmat * 1000);
+        u.cost   := u.cost * rollmat * 50;  // +7 means x350 cost.
+    }
+
+    if (rollmat < 0)
+    {
+        u.hp := u.hp + (rollmat * 125);  // Down to 125 hits for -7
+        u.cost := u.cost + (u.cost * rollmat * 10) / 100;  // -7 means 70% reduced cost.
+    }
 
     il := {};
     insert(il, 0, rollmat);
