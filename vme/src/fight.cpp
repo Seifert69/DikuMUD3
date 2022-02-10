@@ -145,9 +145,21 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
         {
             return true;
         }
-        /* else
-            // Plan is to perhaps have a races range in $slaying extra, or intlist of races
-        */
+
+        extra_descr_data *exd = UNIT_EXTRA(obj).find_raw("$slayer");
+
+        if (exd == NULL)
+        {
+            return false;
+        }
+
+        for (int i=0; i+1 < exd->vals.Length(); i += 2)
+        {
+            if ((opponent_race >= exd->vals.Value(i) && (opponent_race <= exd->vals.Value(i+1))))
+            {
+                return true;
+            }
+        }
     }
 
     return false;
@@ -1612,7 +1624,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
             if (is_obj_slaying(att_weapon, CHAR_RACE(def)))
             {
                 hm += hm / 5; /* Add 20% bonus extra again to damage */
-                act("Your $2N glows!", A_SOMEONE, att, att_weapon, cActParameter(), TO_CHAR);
+                act("Your $2N glows!", A_ALWAYS, att, att_weapon, cActParameter(), TO_CHAR);
                 act("$1n's $2N glows!", A_HIDEINV, att, att_weapon, cActParameter(), TO_ROOM);
             }
             dam = weapon_damage(hm, att_weapon_type, def_armour_type);
