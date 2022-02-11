@@ -1380,21 +1380,21 @@ var
     exd : extraptr;
 code
 {
-    // Fix the hilt
+    // Fix the hilt, $2n = hilt, $3n = hilt material, $4n = gem
     sl := {
         "You wonder if you can even hold onto the oddly shaped $3n $2n.", // -7
-        "The $2n is made of $3n but it isn't impressive.",
-        "A functional $2n made of $3n but could look better.",
-        "The $2n is made of $3n.",
+        "The $3n $2n looks really terrible.", // -6
+        "The $3n $2n looks terrible.", 
+        "The $3n $2n looks really bad.", 
+        "The $3n $2n looks bad.", 
+        "The $2n is made of $3n and it isn't impressive.",
+        "A functional $2n made of $3n but could be better.",
+        "The $2n is made of $3n.", // 0
         "The $2n is made of $3n and looks like it is well made.",
         "The $2n is made of $3n and looks good.",
         "The $2n is made of $3n and looks really good.",
-        "The $2n is made of $3n and looks excellent.",  // 0
-        "The $2n is made of $3n and $4n is set in at the end.", 
-        "The $2n is made of $3n and $4n is set in at the end.",
-        "The $2n is made of $3n and $4n is set in at the end.",
-        "The $2n is made of $3n and $4n is set in at the end.",
-        "The $2n is made of $3n and $4n is set in at the end.",
+        "The $2n is made of $3n and looks excellent.",
+        "The $2n is made of $3n and looks really excellent.",
         "The $2n is made of $3n and $4n is set in at the end.",
         "The $2n is made of $3n and $4n is set in at the end." // +7
     };
