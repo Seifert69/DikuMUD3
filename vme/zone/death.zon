@@ -107,22 +107,22 @@ var
    rltime:integer;
 code
 {
-   heartbeat:=3;
+   // heartbeat:=3;
    rltime:=realtime;
    addextra (self.extra, {CORPSE_FILE},"statue_"+arg+"."+itoa(rltime));
    addextra (self.extra, {CORPSE_TIME},itoa(rltime));
-   store (self,"statue_"+arg+"."+itoa(rltime),TRUE);
-
+   store(self,"statue_"+arg+"."+itoa(rltime),TRUE);
    quit;
-   }
-   dilend
+}
+dilend
 
-   dilbegin death_clear();
-   var
+
+dilbegin death_clear();
+var
    i:integer;
-   code
-   {
-   heartbeat:=3;
+code
+{
+   // heartbeat:=3;
    i:=delunit(self.extra.["$CORPSE_FILE"].descr);
    destroy(self);
 }

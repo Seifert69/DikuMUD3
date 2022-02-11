@@ -679,18 +679,18 @@ code
    :start:
    wait(SFB_MSG, TRUE);
 
-   log("running qstOnComplete...");
+   // log("running qstOnComplete...");
 
    if (command(CMD_AUTO_MSG)) 
    {
-      log("MSG : " + argument);
+      // log("MSG : " + argument);
       
       words := getwords(argument);
       s := words.[0];
       pcname := words.[1];
 
-      log("ARG: " + s);
-      log("PC: " + pcname);
+      // log("ARG: " + s);
+      // log("PC: " + pcname);
 
       if (s != "quest$done")
          goto start;
@@ -698,7 +698,7 @@ code
       pc := findsymbolic(pcname); // The player activator
 
       if (pc == null) {
-         log("PC is null...");
+         // log("PC is null...");
          goto start;
       }
    }
@@ -707,22 +707,22 @@ code
       goto start;
    }
 
-   log("checking complete stuff..");
+   // log("checking complete stuff..");
 
    if ((qname + " Complete") in pc.quests) {
-      log(qname + " Complete in pc.quests");
+      // log(qname + " Complete in pc.quests");
      return(u);
    }
 
    exdp := (qname + " Ongoing") in pc.quests;
 
    if (not exdp) {
-      log("not exdp");
+      // log("not exdp");
       return(u);
    }
 
    if (not ("$done" in exdp.names)) {
-      log("$done not in expd.names");
+      // log("$done not in expd.names");
       return(u);
    }
 
@@ -736,7 +736,7 @@ code
 
    priority;
 
-   log("end text...");
+   // log("end text...");
    // Give the explanation
    while (i < ln)
    {
