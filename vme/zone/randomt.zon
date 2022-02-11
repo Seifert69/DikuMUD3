@@ -1502,6 +1502,7 @@ external
     treasureroll(u : unitptr, bonuslvl : integer);
 var
     i : integer;
+    exd : extraptr;
 code
 {
     treasureroll(u, bonuslvl);
@@ -1512,7 +1513,8 @@ code
     if (encDil != "")
         i := dilcall(encDil)(u, bonuslvl, encArg);
 
-    // u.extra.vals := {};  // remove temporary storage of rolls
+    exd := "" in u.extra;
+    exd.vals := {};  // remove temporary storage of rolls
 
     return(u);
 }
