@@ -413,12 +413,12 @@
         {
             "source_file": {
                 "filename": "haon-dor.zon",
-                "sha512": "5fe4e4c5161ab9c916504eb75024d6844b00cfe8a3de95192acf47fc4c2676bcba6819e414c0d7f92234cc1d5d42c3ce23fef59867316775c6008e34202dd9e9"
+                "sha512": "ccb4209ff14a08fe3df53659b79fc6b3afc49ebdaded25e01bbf3c4176f68f638e6395699c620deec7d8d49f197a1e2322bdbcacec3bf95e4ba09140250b1c08"
             },
             "output": [
                 {
                     "filename": "haon-dor.data",
-                    "sha512": "3e8c701877c1f9a93b346c2f5948de2e75a70b437a5b247550060e25e845490b605b65490f3e75c6870ce845d44ad72a5e32063a69e7d6383a5bf8fd606a3431"
+                    "sha512": "9ba983a5169f4ca87179bbcb888f629e5fbf5a5627f0fcd0b9f9fe1068c89070cb1f143fe120407a08b2a6cb9e61a34b16b50cb051978d734a21445a716bbf17"
                 },
                 {
                     "filename": "haon-dor.reset",
@@ -685,12 +685,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "a7035b3b6a2a8b8389163758489c42dd9e082ad25245f2a41f12b71c39c49d46d8b5698afcf489698bf067c418a5fd86e68bbe68597e34d141b778147b59914d"
+                "sha512": "d0e9609e74b011ebf014a78648960646b6645fc84d3925c0923f9b1d7702b218eab29ed60d88aab5d9fb8d33ba856407d1d577e647f45b7abd7dcb9a0d856db4"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "f517288d78694b56ccc976cc286fa68b42243a92af1f9538bec8f64a42843524455f95e8fe4b554b42c83d336a32da382f9b9444daf7a82813036e3e70096697"
+                    "sha512": "b3ba9e181668fa693ab2a80b219be7fb1e04088617634b45b777090cef59c7eaf0eaebf83669b632e5c42e167e1f844b43bdbc95523b892297e4289bb4f1d844"
                 },
                 {
                     "filename": "randomt.reset",
