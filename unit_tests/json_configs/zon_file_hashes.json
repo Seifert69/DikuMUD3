@@ -237,12 +237,12 @@
         {
             "source_file": {
                 "filename": "competition.zon",
-                "sha512": "27e1cfa0ccc0ba1c4d883a1f9a38769201a4f02d51c946c706e796ba4212a017c374b5d3bae454a9038cd545e917c72af577b5dc23ab08bc11722a0c11045150"
+                "sha512": "028cadb90d19295dc4135469c3fc6f1b8a9a439f688e71c89ef75831774b0ce40fc98fcadca81ef88fde1d27554ea3e4d41aedc2c72e86ede1c7ee0cf91512d3"
             },
             "output": [
                 {
                     "filename": "competition.data",
-                    "sha512": "d6dd190d1ebb6eb419df345cb5ad11446053337b140c1c8a42bb5b29e5e57c8a9f60ff43ce225f5c146600a3308a57949bc90f282ca8c9de5b0152fcfc84d7bf"
+                    "sha512": "8cae973af23fbf6bb4ec5462dcc3e42dc1158f49ca0ff751ef15140f6485962485f2c209a33c64c67ae16894c9abb76ed6be1d5bbccf9ba15a3917cb7f2a7ca3"
                 },
                 {
                     "filename": "competition.reset",
@@ -269,12 +269,12 @@
         {
             "source_file": {
                 "filename": "death.zon",
-                "sha512": "3c29bcea4dd848491c0245973684579ddbc4521aa268205b082d7c2ce623033f4a21d2d8219e69667095eed331842a8606e047c67bdee32356389b4b9836c357"
+                "sha512": "8fafbbab0d929d2cc1f375c6223599fbaac642583a8e3d6e1ec3e1cf99a710d8a22cccfeb8c0e8e2707d52960a42816665e10913cedb6c66405167191418728b"
             },
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "7cb371b3be6ebe52105bb05ecfef85f79b091dea7cd95980a4e1607f5f6e9303fdc05409841f3d1869ba102a7266cad6fca92e0274a7cb623a3b90f0cc60673f"
+                    "sha512": "e81b1f8fb61beb809028098b483d107a1b2ef0a2515ad0f69f082fae94ca02832e0a6cf4defd79cd0547ec3bf72c3821f5487e7035804c750888087588627899"
                 },
                 {
                     "filename": "death.reset",
@@ -669,12 +669,12 @@
         {
             "source_file": {
                 "filename": "quests.zon",
-                "sha512": "5ec54112115c289e34a26f7cc2b0f6c60436121b24d8704e58abb005e07fe46a8e7766a81e85cbd5fb7a9930929cc45f4b3ed8a95bbf98ea55e6b32a9d5e5361"
+                "sha512": "22668cfedf90eb192eb1e16a2e34909c384d8c8ba81641f377a88a2ad7edcab42a22abda7bbcebae9058fdb37e34495f38532e2a4a1225ec6ff382d1cb2b45b1"
             },
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "85744d6bcb2fa4ddd8dc82109c904e3d26e04f7060dc072a823fface3fccfe92117e71fbccb3b8c7c69dc716e5a087153f86848e4d55eaeba6e61d4fc988490f"
+                    "sha512": "808eb1462bec4b0a7e8dabfd6babb78ea4be4170b33ddf65a8a40584b68f5b846ed0b4087d061573782982212984866381885af99f8b3dba04bda03525979697"
                 },
                 {
                     "filename": "quests.reset",
@@ -685,12 +685,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "046449a859327cd5081b2d7dc50714c513537e4323126faceb3ea2351ed17ce57b8412bd8440bba82fc0022268e62592f8a55000ec0dcbae9463a9ed4aea3426"
+                "sha512": "6a69d5360e1f8cbb8c47b1e7048b1015da7ed4194371cbe0125628ab6fa55f50b1a9e830e5315f7bd5c35008c19a237ad2f9737a4ba8caa9a8b81d608a19fd91"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "7d752676551b4641645caba8677d4a10007969f2909d4e6951b02c25831e8b6acdbcbc0c8ecc5c93408475e0f34e10ec9449cb3e9f3e8e69845ed76ccb9df081"
+                    "sha512": "08b4689f2bd8cffb8dcd6ba3c96276845cb6d14788081e8f856beb3a87dae9b7a2a2730fbec1d87dc76d45f9ad7cb05c43443ffe5895e5d8da90f49c443bb49c"
                 },
                 {
                     "filename": "randomt.reset",
