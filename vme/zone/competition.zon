@@ -515,7 +515,7 @@ code
 			log ("No one was in the competition when it ended "+cname+"<br>");
 			quit;
 		}
-		act_world(rm.extra.[cname+" LIST"].names.[1]+ " has just won the "+rm.extra.[cname+" INFO"].names.[1]+ " competition!  Congratulations!");
+		act_world(rm.extra.[cname+" LIST"].names.[1]+ " has just won the "+rm.extra.[cname+" INFO"].names.[1]+ " competition!  Congratulations!<br/>");
 		quit;
 	}
 	goto start;
