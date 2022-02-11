@@ -27,6 +27,46 @@ help
 
 %dil
 
+// Copy on a chest. 
+// bonuslvl : [0..+7], number of items
+dilbegin rndchest(bonuslvl : integer, num : integer, mins : integer);
+external
+    unitptr RndTreasure(lvl : integer);
+var 
+    i : integer;
+    u : unitptr;
+code
+{
+    pause;
+
+:generate:
+    heartbeat := PULSE_SEC;
+    i := num;
+    while (i > 0)
+    {
+        u := RndTreasure(bonuslvl);
+        link(u, self);
+        i := i - 1;
+        pause;
+    }
+
+:waitforloot:
+    wait(SFB_CMD, TRUE);
+    // debug log(self.name + " got signal");
+
+    if (self.inside)
+    {
+        u := findsymbolic(self, "weapon_rnd@randomt", FIND_UNIT_INVEN);
+        if (u)
+            goto waitforloot;
+    }
+
+    heartbeat := PULSE_SEC * 60 * mins;
+    pause;
+    goto generate;
+}
+dilend
+
 //
 // ======================== UTILITY =========================
 //
@@ -367,7 +407,7 @@ var
     sl : stringlist;
 code
 {
-    log("Enchant ability");
+    // debug log("Enchant ability");
     if (bonuslvl > BONUS_ARTIFACT)
     {
         bonuslvl := BONUS_ARTIFACT;
@@ -414,7 +454,7 @@ code
            il.[abilid*3+1], TIF_NONE, il.[abilid*3+2], APF_ABILITY);
 
     sl := {"magic", "divine", "strength", "dexterity", "constitution", "charisma", "brain", "hitpoints"};
-    identify(u, "Improved "+sl.[abilid] +" ability.", "Improved "+sl.[abilid]+" with +"+itoa(i)+".");
+    identify(u, "Improves "+sl.[abilid] +" ability.", "Improves "+sl.[abilid]+" with +"+itoa(i)+".");
 
     return (1);
 }
@@ -436,7 +476,7 @@ var
     r : integer;
 code
 {
-    log("Enchant abilities");
+    // debug log("Enchant abilities");
 
     numenc := 1+rnd(0,1)+rnd(0,1);
     numenccopy := numenc;
@@ -653,7 +693,7 @@ var
     r : integer;
 code
 {
-    log("Enchant resistances");
+    // debug log("Enchant resistances");
 
     numenc := 1+rnd(0,1)+rnd(0,1)+rnd(0,1)+rnd(0,1);
     numenccopy := numenc;
@@ -744,7 +784,7 @@ var
     r : integer;
 code
 {
-    log("Enchant defences");
+    // debug log("Enchant defences");
 
     numenc := 1+rnd(0,1);
     numenccopy := numenc;
@@ -778,7 +818,7 @@ var
     exd : extraptr;
 code
 {
-    log("Enchant slaying");
+    // debug log("Enchant slaying");
 
     sl := {
         // Race from, Race to, "$n slayer" name
@@ -855,7 +895,7 @@ code
     if (u.value[2] == 0)
         return(1);
 
-    identify(u, "Confers a magic attack bonus.", "Confers a magic attack bonus of +" + itoa(u.value[2])+".");
+    identify(u, "Confers an enchanted attack bonus.", "Confers an enchanted attack bonus of +" + itoa(u.value[2])+".");
     return (1);
 }
 dilend
@@ -930,14 +970,14 @@ code
 
     lvl := (rollenc + enc1 + enc2 + enc3) / 4; // Take the average
 
-    log("encWpn() lvl = " + itoa(lvl));
+    // debug log("encWpn() lvl = " + itoa(lvl));
 
     if (lvl == 0)
         return (0);
 
     u.flags := u.flags | UNIT_FL_MAGIC;
 
-    log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
+    // debug log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
 
     encs := {
         "enc_haste_slow@randomt", "",   // 0
@@ -964,7 +1004,7 @@ code
     enchantments := lvl;
     while (enchantments > 0)
     {
-        log("enchantment "+itoa(enchantments));
+        // debug log("enchantment "+itoa(enchantments));
         r := (rnd(0,i)+rnd(0,i))/2;
         n := dilcall(encs.[encn.[r]*2])(u, lvl, encs.[encn.[r]*2+1]);
 
@@ -1006,14 +1046,14 @@ code
 
     lvl := (rollenc + enc1 + enc2 + enc3) / 4; // Take the average
 
-    log("encWpn() lvl = " + itoa(lvl));
+    // debug log("encWpn() lvl = " + itoa(lvl));
 
     if (lvl == 0)
         return (0);
 
     u.flags := u.flags | UNIT_FL_MAGIC;
 
-    log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
+    // debug log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
 
     encs := {
         "enc_haste_slow@randomt", "",   // 0
@@ -1037,7 +1077,7 @@ code
     enchantments := lvl;
     while (enchantments > 0)
     {
-        log("enchantment "+itoa(enchantments));
+        // debug log("enchantment "+itoa(enchantments));
         r := (rnd(0,i)+rnd(0,i))/2;
         n := dilcall(encs.[encn.[r]*2])(u, lvl, encs.[encn.[r]*2+1]);
 
@@ -1178,12 +1218,12 @@ code
         "A stunning well made $2n $1n.",
         "Probably the most beautiful $2n $1n you've ever seen." };
 
-    log("Jewelry extra : " + sl.[smithlvl+7]);
+    // debug log("Jewelry extra : " + sl.[smithlvl+7]);
 
     exd := "" in u.extra;
     exd.descr :=  sreplace(sl.[smithlvl+7], u.name, mat, "", "");
 
-    log("exd name = [" + exd.name + "] descr = " + exd.descr);
+    // debug log("exd name = [" + exd.name + "] descr = " + exd.descr);
 
     return;
 }
@@ -1227,11 +1267,11 @@ code
 
     r := sreplace(sl.[mat3+7], u.name, gem, "", "");
 
-    log("Gem extra: " + r);
+    // debug log("Gem extra: " + r);
 
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + r;
-    log("Gem name = [" + exd.name + "]  descr="+exd.descr);
+    // debug log("Gem name = [" + exd.name + "]  descr="+exd.descr);
 
     return;
 }
@@ -1268,12 +1308,12 @@ code
         "A superior $2n $1n.",
         "Probably the best $2n $1n you've ever seen." };
 
-    log("weapon extra : " + sl.[smithlvl+7]);
+    // debug log("weapon extra : " + sl.[smithlvl+7]);
 
     exd := "" in u.extra;
     exd.descr :=  sreplace(sl.[smithlvl+7], u.name, mat, "", "");
 
-    log("exd name = [" + exd.name + "] descr = " + exd.descr);
+    // debug log("exd name = [" + exd.name + "] descr = " + exd.descr);
 
     return;
 }
@@ -1314,12 +1354,12 @@ code
     };
 
     s := sl.[lvl1 + 7];
-    log("Blade : " + s);
+    // debug log("Blade : " + s);
 
     t := matMetalEnc(lvl2);
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
-    log("setWpnBlade extra : " + exd.descr);
+    // debug log("setWpnBlade extra : " + exd.descr);
 
     return;
 }
@@ -1363,11 +1403,11 @@ code
     t := matGem(mat3);
     r := sreplace(sl.[mat2+7], u.name, kind, s, t);
 
-    log("Hilt decor: " + r);
+    // debug log("Hilt decor: " + r);
 
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + r;
-    log("setWpnHilt name = [" + exd.name + "]  descr="+exd.descr);
+    // debug log("setWpnHilt name = [" + exd.name + "]  descr="+exd.descr);
 
     return;
 }
@@ -1399,7 +1439,7 @@ var
     il : intlist;
 code
 {
-    log("treasureroll");
+    // debug log("treasureroll");
     if (u.extra == null)
         addextra(u.extra, {""}, "");
 
@@ -1432,6 +1472,10 @@ code
         u.hp := u.hp + (rollmat * 125);  // Down to 125 hits for -7
         u.cost := u.cost + (u.cost * rollmat * 10) / 100;  // -7 means 70% reduced cost.
     }
+
+    // Human, elf, dwarf, halfling, gnome, half-orc, half-ogre, half-elf, brownie, groll, dark elf
+    il := {175, 147, 120, 90, 98, 172, 205, 150, 75, 227, 148};
+    u.height := il.[rnd(0, length(il))];
 
     il := {};
     insert(il, 0, rollmat);
@@ -1520,7 +1564,7 @@ var
 
 code
 {
-    log("matJewelry");
+    // debug log("matJewelry");
 
     rollsmith := u.extra.vals.[0];  // Smithing roll
     mat1 := u.extra.vals.[1];  // Primary jewelry material
@@ -1565,7 +1609,7 @@ var
 
 code
 {
-    log("matWpnBlade");
+    // debug log("matWpnBlade");
 
     rollsmith := u.extra.vals.[0];  // Smithing roll
     mat1 := u.extra.vals.[1];  // Primary blade material
@@ -1649,7 +1693,7 @@ code
             };
 
 
-    log("Random weapon");
+    // debug log("Random weapon");
     idxWpn := rnd(0,length(wpns)/5-1) * 5;
 
     u := createItem(weapon_name(atoi(wpns.[idxWpn])), ITEM_WEAPON, atoi(wpns.[idxWpn+1]), 180, atoi(wpns.[idxWpn+2]));
@@ -1721,7 +1765,7 @@ code
         wear := MANIPULATE_WEAR_EAR;
     }
 
-    log("Random Jewelry");
+    // debug log("Random Jewelry");
     u := createItem(s, ITEM_TREASURE, price, 180, 0);
     u.manipulate := u.manipulate | wear;
     
@@ -1801,7 +1845,7 @@ code
 {
     :loop:
     wait(SFB_CMD, command("bounce"));
-    log("BOUNCE RECEIVED");
+    // debug log("BOUNCE RECEIVED");
     u := RndTreasure(rnd(0,7));
     link(u, self);
     act("$2n appears.", A_ALWAYS, activator, u, null, TO_ALL);
@@ -1827,26 +1871,7 @@ title "the treasure chest"
 descr "treasure0 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
-
-dilbegin treasure0();
-external
-    unitptr RndTreasure(lvl : integer);
-
-var 
-    i : integer;
-    u : unitptr;
-code
-{
-    i := 0;
-    while (i < 10)
-    {
-        u := RndTreasure(BONUS_AVERAGE);
-        link(u, self);
-        i := i + 1;
-    }
-    quit;
-}
-dilend
+dilcopy rndchest@randomt(BONUS_AVERAGE, 10, 1);
 end
 
 treasure4
@@ -1856,24 +1881,7 @@ descr "treasure4 is here, open it"
 CONTAINER_DEF(10)
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 
-dilbegin treasure4();
-external
-    unitptr RndTreasure(lvl : integer);
-var 
-    i : integer;
-    u : unitptr;
-code
-{
-    i := 0;
-    while (i < 10)
-    {
-        u := RndTreasure(BONUS_EXCELLENT);
-        link(u, self);
-        i := i + 1;
-    }
-    quit;
-}
-dilend
+dilcopy rndchest@randomt(BONUS_EXCELLENT, 10, 1);
 end
 
 treasure7
@@ -1882,26 +1890,7 @@ title "the tresure7 chest"
 descr "treasure7 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
-
-dilbegin treasure7();
-external
-    unitptr RndTreasure(lvl : integer);
-var 
-    i : integer;
-    u : unitptr;
-code
-{
-    log("TREASURE7");
-    i := 0;
-    while (i < 10)
-    {
-        u := RndTreasure(BONUS_ARTIFACT);
-        link(u, self);
-        i := i + 1;
-    }
-    quit;
-}
-dilend
+dilcopy rndchest@randomt(BONUS_ARTIFACT, 10, 1);
 end
 
 %reset

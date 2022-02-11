@@ -1204,6 +1204,9 @@ of damp earth and dirty orcs compete quite equally.  The only exit is east."
 east to orc_cave_other descr
 "The cave continues east.";
 
+// Load ONE random treasure item every 30 minutes if the cave is empty
+dilcopy rndchest@randomt(BONUS_AVERAGE, 1, 30);
+
 movement SECT_INSIDE
 gmap(441,207)
 
