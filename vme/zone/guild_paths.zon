@@ -26,6 +26,52 @@ created by eirinn
 
 %dil
 
+// MS 2022. High level description of guilds.
+//
+// When a player first joins the game they choose a profession.
+// The profession automatically enrolls them in a guild matching
+// the profession.
+//
+// A player can thereafter join as many guilds as they want. Joining a 
+// guild should require something from the player, e.g. completing a quest.
+// Training cost is determined by the player's profession, so joining a new
+// guild will not make it cheaper to practice e.g. your strength, but new
+// guilds and teachers might offer training in skills not in your current guild
+// or even have higher maximums than your current guild.
+//
+// Guild Masters:
+//    Except for your starting guild, you join new guilds at the guild master.
+//
+// DIL setup:
+//    [nokill]
+//         - optional DIL to avoid having guild members murdered.
+//    quest blocking DIL(s)
+//         - e.g. quest_block@guild_paths(); you can only join if you completed X
+//    join DIL
+//         - We're missing a generic join DIL I think.
+//         - e.g. master_join@paladin_guild
+//
+//     MurderBanish()  (replaces SFUN_GUILD_BASIS)
+//        - Any player killing a guild master / teacher will get banished
+//
+//     AlertMembers()  (replaces SFUN_GUILD_BASIS)
+//        - Alert guild members that guild is under attack
+//
+//     guild_titles@guild_paths()
+
+
+// Guild teachers:
+//   Offer teachings, abilities, skills, spells, weapons that you can practice.
+//
+// - setup:
+// Missing generic guild block train
+// special SFUN_GUILD_BASIS GUILD_PALADIN
+// dilcopy teacher_prac@guild_paths( GUILD_PALADIN );
+// #define _WEAPON
+// #include "guilddef.h"
+// #undef _WEAPON
+//
+
 //
 // =================================================================
 //
@@ -33,7 +79,7 @@ created by eirinn
 // Plan:
 //   in block.zon ?
 //
-// quest@block({commands}, {quests}, {actions}) - 
+// quest_block@guild_paths(cmd : string, quest : string, sExec : stringlist);
 //    used to blocks the join command unless player has list of quests
 //
 // alignment@block - 
@@ -47,6 +93,7 @@ created by eirinn
 // 
 // guild_wield()
 //    if not in guild, unequip and drop
+//
 
 //
 // =================================================================
@@ -58,6 +105,8 @@ created by eirinn
 // JoinGuild@guild_paths(pc : unitptr, sGuild : string);
 // LeaveGuild@guild_paths(pc : unitptr, sGuild : string);
 // BanishGuild@guild_paths(pc : unitptr, sGuild : string);
+// MurderBanish@guild_paths(sGuild : string);
+// AlertMembers@guild_paths(sGuild : string, sMsg : string);
 
 
 #define GUILD_JOINED   "$guilds"
@@ -178,6 +227,7 @@ dilend
 
 
 // Player pc is banished from his guild sGuild (moved to GUILD_BANISHED)
+// If player is not in the guild, they are still added as banished.
 //
 dilbegin BanishGuild(pc : unitptr, sGuild : string);
 var
@@ -189,8 +239,7 @@ code
 
    if (exd == null)
    {
-      log("Error in BanishGuild. $guilds missing from player." + pc.name);
-      return;
+      addextra(pc.info, {GUILD_JOINED}, "");
    }
 
    exdbanished := GUILD_BANISHED in pc.info;
@@ -201,29 +250,104 @@ code
       exdbanished := GUILD_BANISHED in pc.info;
    }
 
-   if (not (sGuild in exd.names))
-   {
-      log("Error in BanishGuild. The guild left was not in $guilds for " + pc.name);
-      return;
-   }
-
-   if (sGuild in exdbanished.names)
-   {
-      log("Error in BanishGuild. The guild left was already left for " + pc.name);
-      return;
-   }
-
+   // Remove the player from the guild (if a member)
    substring(exd.names, sGuild);
-   addstring(exdbanished.names, sGuild);
+
+   if (not (sGuild in exdbanished.names))
+   {
+      // Banish the player, regardless if they're a member or not.
+      addstring(exdbanished.names, sGuild);
+   }
+
    return;
 }
 dilend
 
 
 // =================================================================
+// Replacing SFUN_GUILD_BASIS
 
-// quest@block({commands}, {quests}, {actions}) - 
+// kill_banish
+// Purpose: If someone attacks a guild master, make them banished,
+//    even if they are not members.
+//
+dilbegin fnpri(FN_PRI_BLOCK-2) MurderBanish(sGuild : string);
+external
+   BanishGuild@guild_paths(pc : unitptr, sGuild : string);
+
+var
+   u : unitptr;
+
+code
+{
+:loop:
+   wait(SFB_DEAD, self == activator);
+
+   u := self.outside;
+
+   while (u)
+   {
+      if ((u.type == UNIT_ST_PC) and (u.fighting == self) and (visible(self, u)))
+      {
+         BanishGuild@guild_paths(u, sGuild);
+      }
+      u := u.next;
+   }
+
+   goto loop;
+}
+dilend
+
+
+
+// Alert all guild members if guild is under attack
+//    NOT YET IMPLEMENTED
+dilbegin fnpri(FN_PRI_BLOCK-2) AlertMembers(sGuild : string, sMsg : string);
+external
+   BanishGuild@guild_paths(pc : unitptr, sGuild : string);
+var
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC * 60;
+
+:loop:
+   wait(SFB_COM, TRUE);
+
+    if (self.fighting)
+    {
+       if (sMsg == "")
+         sMsg := "$3n tells you, 'Help! Our guild is attacked by $1n'";
+
+      s := sact(sMsg, A_SOMEONE, self.fighting, null, self, TO_CHAR);
+
+      // Need to write code to send to guild members. Channel?
+
+      pause;
+    }
+
+     goto loop;
+}
+dilend
+
+
+// =================================================================
+
+// quest@block(cmd, quest, {exec}) - 
+//    If a char does the command 'cmd':
+//       Allow command if char has the quest 'quest'
+//       block it otherwise
+//
+// Sample: 
+//    dilcopy quest_block@guild_paths("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
+//
+//    The player can only join if they have completed the WIGHT_COMPLETE quest.
+//
+
 dilbegin fnpri(FN_PRI_BLOCK-1) quest_block(cmd : string, quest : string, sExec : stringlist);
+external
+   Explainer@quests(pc : unitptr, sl : stringlist);
+
 code
 {
 :loop:
@@ -232,7 +356,7 @@ code
    if (not (quest in activator.quests))
    {
       block;
-      exec(sExec.[0], self); // Do as in quests...
+      Explainer@quests(activator, sExec);
    }
 
    goto loop;

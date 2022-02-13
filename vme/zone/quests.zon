@@ -25,6 +25,65 @@ notes
 
 %dil
 
+// ========== EXPLAINER - GENERIC REALLY NICE ============
+
+// expl: list of strings for the NPC to execute to explain the quest.
+//       YOu can use $ variables, e.g. $1n = self (npc), $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
+//
+// Example:
+//   {"say $1n, do you want this quest?", "jump", "hug $1n", 
+//    "say <a cmd='"'>nod</a> if you wish to accept",
+//    "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."}
+//
+dilbegin Explainer(pc : unitptr, sl : stringlist);
+var
+   i : integer;
+   ln : integer;
+   tsl : stringlist;
+   s : string;
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+   on_activation((pc.position <= POSITION_SLEEPING) or (pc.position == POSITION_FIGHTING), skip);
+
+   secure(pc, lostpc);
+   i := 0;
+   ln := length(sl);
+	heartbeat := 1;  // 0.25 seconds
+	pause;
+	heartbeat := PULSE_SEC * 4;
+
+   // Give the explanation
+   while (i < ln)
+   {
+      if ((sl.[i].[0] == ":") and (sl.[i].[1] == ":"))
+      {
+         tsl := split(sl.[i], "::");
+         if (length(tsl) == 3)
+         {
+            act(tsl.[1], A_SOMEONE, pc, null, self, TO_CHAR);
+            act(tsl.[2], A_SOMEONE, pc, null, self, TO_REST);
+            pause;
+         }
+         else
+            log("Found act code :: in qstAssign but not the two expected strings = " + sl.[i]);
+      }
+      else
+      {
+         s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
+         exec(s, self);
+         pause;
+      }
+      i := i + 1;
+   }
+
+:lostpc:
+   return;
+}
+dilend
+
+
 // ============ GENERIC qstItemsWait() Helper function
 
 // For receiving money:

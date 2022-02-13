@@ -65,19 +65,109 @@ Sk(r)ay email </div><div class='cpr'>otap@dorit.ihi.ku.dk</div><div class='cw'> 
 
 %dil
 
-dilbegin restrict_guild (damage:integer,gld:string);
+dilbegin antievil();
+external
+   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+   integer IsBanished@guild_paths(pc : unitptr, sGuild : string);
+
+var
+	flux : integer;
+	pc : unitptr;
+   room:unitptr;
+code
+{
+   heartbeat := PULSE_SEC*7;
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+	:start:
+
+   wait(SFB_CMD,(activator.type == UNIT_ST_PC));
+
+   pc := activator;
+   if (pc.level > 200) goto start;
+   secure(pc,gone);
+   if (command("flee"))
+      block;
+
+   if (IsInGuild@guild_paths(pc, GUILD_NECROMANCER) or IsInGuild@guild_paths(pc, GUILD_ASSASSIN))
+   {
+      self.hp := self.max_hp;
+      exec("frown "+pc.name,self);
+      exec("say Thy kind is not welcome in here, "+pc.name+"!",self);
+      pause;
+      exec("say Begone "+pc.name+", or I shall deal with you harshly!",self);
+      pause;
+      exec("emote fingers his weapon threateningly.",self);
+      exec("say Tempt me not, "+pc.name+", leave this holy place now!", self); pause;
+      exec("say That's it, "+pc.name+", thy time is up!",self);
+      pc.hp := 0;
+      pc.endurance := 0;
+      exec("emote cast a spell that drains your lives energy.",self);
+      act("Two paladin guards appear and grab $1n and drag $1m out of the Guild, dumping "+
+      "$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
+      room := findroom("cth_square1@midgaard");
+      link(pc,room);
+      act("Two paladin guards emerge from the Guild halls, dragging $1n"+
+      "between them and dump $1m unceremoniously on the street.", A_SOMEONE,pc,self,null,TO_REST);
+      unsecure(pc);
+      goto gone;
+   }
+
+   if ((pc.alignment < -900) or IsBanished@guild_paths(pc, GUILD_PALADIN))
+   {
+      exec("frown "+pc.name,self);
+      exec("say Thy evil heart is not welcome here, "+pc.name+"!",self);
+      pause;
+      exec("say Begone "+pc.name+", do not taint this holy place with thy "+
+      "presence!",self);
+      pause;
+      exec("emote fingers his weapon threateningly.",self);
+      exec("say I live to fight evil, tempt me not, "+pc.name+".",self);
+      pause;
+      exec("growl "+pc.name,self);
+      exec("say Evil One, begone now!",self);
+      pause;
+      exec("say That's it, "+pc.name+", hell awaits thee now!",self);
+      exec("emote draws his sword.",self);
+      exec("kill "+pc.name,self);
+      unsecure(pc);
+      goto gone;
+   }
+
+   if (PALADIN_FALLEN in pc.quests)
+   {
+      exec("frown",self);
+      exec("say I remember thee, "+pc.name+".",self);
+      pause;
+      exec("say Thou fouled the pure spirit of our Order by your falling from "+
+      "grace!",self);
+      exec("say How dare thou show thy face here!",self);
+      pause;
+      exec("spit "+pc.name,self);
+      pause;
+      exec("slap "+pc.name,self);
+      pause;
+      exec("growl "+pc.name,self);
+      pause;pause;pause;pause;pause;
+   }
+      :gone:
+   unsecure(pc);
+   goto start;
+}
+dilend
+
+
+
+dilbegin restrict_guild(damage:integer, gld:string);
+external
+   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+
 code
 {
 heartbeat:=PULSE_SEC*3;
 :start:
-wait (SFB_DONE,
-(
-(( command ("wear")) or
-(command ("wield")) or
-(command ("hold")))
-) and
-(self==medium) and
-(activator.guild!=gld));
+wait (SFB_DONE,((( command ("wear")) or (command ("wield")) or (command ("hold")))) and
+               (self==medium) and (not IsInGuild@guild_paths(activator, gld)));
 
 if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
@@ -140,37 +230,39 @@ code
 dilend
 
 
-dilbegin blocktrain();
+dilbegin fnpri(FN_PRI_BLOCK) blocktrain();
 external
    integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
-
 var
   pc   : unitptr;
-
 code
 {
 :start:
-   heartbeat := PULSE_SEC*5;
-   wait (SFB_CMD, command ("practice"));
+   wait (SFB_CMD, command ("practice") and (activator.type == UNIT_ST_PC));
 
-   if ((activator.type == UNIT_ST_PC) and IsInGuild@guild_paths(activator, GUILD_PALADIN))
+   if (not IsInGuild@guild_paths(activator, GUILD_PALADIN))
    {
-      if (activator.alignment < -350)
-      {
-         block;
-         exec ("say You are a disgrace to our order!!", self);
-         exec ("say In the future you will be banned for this action!", self);
-         exec ("spit "+ activator.name, self);
-      }
-
-      if (activator.alignment < 350)
-      {
-         block;
-         exec ("say You have strayed from the path of our order. I will "+
-              "not train you until you have purified your soul.", self);
-         goto start;
-      }
+      block;
+      exec("say You're not a member of our guild. Go speak with Reignier", self);
+      goto start;
    }
+
+   if (activator.alignment < -350)
+   {
+      block;
+      exec ("say You are a disgrace to our order!!", self);
+      exec ("say In the future you will be banned for this action!", self);
+      exec ("spit "+ activator.name, self);
+   }
+
+   if (activator.alignment < 350)
+   {
+      block;
+      exec ("say You have strayed from the path of our order. I will "+
+            "not train you until you have purified your soul.", self);
+      goto start;
+   }
+
    goto start;
 }
 dilend
@@ -570,96 +662,13 @@ romflags {CHAR_PROTECTED}
 M_HUMAN_CLERIC_SWORD(100, SEX_MALE,"","heal")
 alignment 1000
 exp 0
-special SFUN_GUILD_BASIS GUILD_PALADIN
+
+dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
+dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 dilcopy rescue@function("reignier/edmund/alex/joan/corbin/paladin");
 dilcopy teamwork@function("reignier/edmund/alex/joan/corbin/paladin");
-dilcopy wander_zones@function ("paladin_guild",120, 1);
-
-dilbegin antievil();
-var
-	flux : integer;
-	pc : unitptr;
-    room:unitptr;
-code
-{
-heartbeat := PULSE_SEC*7;
-	:start:
-on_activation(self.position == POSITION_FIGHTING,skip);
-wait(SFB_CMD,(activator.type == UNIT_ST_PC));
-pc := activator;
-if (pc.level > 200) goto start;
-secure(pc,gone);
-if (command("flee"))
-block;
-if (("N" in pc.guild)or
-("A" in pc.guild))
-{
-self.hp := self.max_hp;
-exec("frown "+pc.name,self);
-exec("say Thy kind is not welcome in here, "+pc.name+"!",self);
-pause;
-exec("say Begone "+pc.name+", or I shall deal with you harshly!",self);
-pause;
-exec("emote fingers his weapon threateningly.",self);
-exec("say Tempt me not, "+pc.name+", leave this holy place now!"
-,self); pause;
-exec("say That's it, "+pc.name+", thy time is up!",self);
-pc.hp := 0;
-pc.endurance := 0;
-exec("emote cast a spell that drains your lives energy.",self);
-act("Two paladin guards appear and grab $1n and drag $1m out of the Guild, dumping "+
-"$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
-room := findroom("cth_square1@midgaard");
-link(pc,room);
-act("Two paladin guards emerge from the Guild halls, dragging $1n"+
-"between them and dump $1m unceremoniously on the street."
-,A_SOMEONE,pc,self,null,TO_REST);
-unsecure(pc);
-goto gone;
-}
-if (pc.alignment < -900)
-{
-exec("frown "+pc.name,self);
-exec("say Thy evil heart is not welcome here, "+pc.name+"!",self);
-pause;
-exec("say Begone "+pc.name+", do not taint this holy place with thy "+
-"presence!",self);
-pause;
-exec("emote fingers his weapon threateningly.",self);
-exec("say I live to fight evil, tempt me not, "+pc.name+".",self);
-pause;
-exec("growl "+pc.name,self);
-exec("say Evil One, begone now!",self);
-pause;
-exec("say That's it, "+pc.name+", hell awaits thee now!",self);
-exec("emote draws his sword.",self);
-exec("kill "+pc.name,self);
-unsecure(pc);
-goto gone;
-}
-if (PALADIN_FALLEN in pc.quests)
-{
-exec("frown",self);
-exec("say I remember thee, "+pc.name+".",self);
-pause;
-exec("say Thou fouled the pure spirit of our Order by your falling from "+
-"grace!",self);
-exec("say How dare thou show thy face here!",self);
-pause;
-exec("spit "+pc.name,self);
-pause;
-exec("slap "+pc.name,self);
-pause;
-exec("growl "+pc.name,self);
-pause;pause;pause;pause;pause;
-}
-	:gone:
-unsecure(pc);
-goto start;
-}
-dilend
-
-
+dilcopy antievil@paladin_guild();
+dilcopy wander_zones@function("paladin_guild", 120, 1);
 end
 
 
@@ -685,15 +694,18 @@ M_HUMAN_CLERIC_SWORD(130, SEX_MALE, "", "heal")
 alignment 1000
 exp -300
 
-dilcopy nokill@paladin_guild();
 
-/* ------ DIL FOR ENTRANCE TO PALADIN GUILD ----- */
+/* ------ DIL FOR JOINING THE PALADIN GUILD ----- */
 
 /* Requirements: Player must have an alignment of 350 or above, and
                  have completed the Wight warren quest, and
-                 not be a Fallen Paladin. */
+                 not be a Fallen Paladin and not be Banished. */
 
-dilcopy quest_block@guild_paths("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
+dilcopy nokill@paladin_guild();
+dilcopy quest_block@guild_paths("join", WIGHT_COMPLETE, 
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Wight Warren's quest"});
+dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
+dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 
 dilbegin master_join();
 external
@@ -783,7 +795,7 @@ dilend
 dilbegin paladin_quest1();
 external
    integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
-
+   BanishGuild@guild_paths(pc : unitptr, sGuild : string);
 var
 	pc : unitptr;
 	item : unitptr;
@@ -901,14 +913,14 @@ code
          goto start;
          }
 
-         if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment < -349))
-         { block;
-         exec ("say You are a disgrace to our order!!", self);
-         addextra (pc.quests, {PALADIN_FALLEN}, "");
-         pc.guild := "";
-         unsecure (pc);
-         exec ("spit "+activator.name, self);
-         goto start;
+         if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment < -900))
+         {
+            block;
+            exec ("say You are a disgrace to our order, you have been banished!", self);
+            BanishGuild@guild_paths(pc, GUILD_PALADIN);
+            unsecure (pc);
+            exec ("spit "+activator.name, self);
+            goto start;
          }
       else
          {
@@ -989,7 +1001,6 @@ code
 dilend
 
 dilcopy combat_mag@function("","heal",25,2);
-special SFUN_GUILD_BASIS GUILD_PALADIN
 
 /*
 special SFUN_GUILD_MASTER
@@ -1031,17 +1042,13 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 M_HUMAN_CLERIC_SWORD(199, SEX_MALE, "", "heal")
 alignment 1000
-dilcopy nokill@paladin_guild();
-dilcopy blocktrain@paladin_guild();
 
 dilcopy combat_mag@function("harm","",25,2);
-special SFUN_GUILD_BASIS GUILD_PALADIN
-/*
-special SFUN_MEMBERS_ONLY GUILD_PALADIN+"#$1n exclaims, 'You must be a holy
-knight to train with me!'"
-*/
 
-dilcopy teacher_prac@guild_paths( GUILD_PALADIN );
+dilcopy nokill@paladin_guild();
+dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
+dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy blocktrain@paladin_guild();
 
 #define _WEAPON
 #include "guilddef.h"
@@ -1063,18 +1070,15 @@ blinding, and you know with a certainty that there is much Sir Alex could
 teach you about Faith."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
-M_HUMAN_CLERIC_SWORD(199, SEX_FEMALE, "", "heal")
+M_HUMAN_CLERIC_SWORD(199, SEX_MALE, "", "heal")
 alignment 1000
+
+dilcopy combat_mag@function("","heal",25,2);
+
 dilcopy nokill@paladin_guild();
+dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
+dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 dilcopy blocktrain@paladin_guild();
-
-special SFUN_GUILD_BASIS GUILD_PALADIN
-/*
-special SFUN_MEMBERS_ONLY GUILD_PALADIN+"#$1n says, 'I only teach warriors
-of the holy path. Begone!'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_PALADIN );
-
 
 #define _SPELL
 #include "guilddef.h"
@@ -1097,16 +1101,13 @@ flags {UNIT_FL_NO_TELEPORT}
 M_HUMAN_CLERIC_SWORD(199, SEX_FEMALE, "", "heal")
 romflags {CHAR_PROTECTED}
 alignment 1000
-dilcopy nokill@paladin_guild();
-dilcopy blocktrain@paladin_guild();
 
 dilcopy combat_mag@function("","heal",25,2);
-special SFUN_GUILD_BASIS GUILD_PALADIN
-/*
-special SFUN_MEMBERS_ONLY GUILD_PALADIN+"#$1n exclaims, 'You are not a
-warrior of the faith!'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_PALADIN );
+
+dilcopy nokill@paladin_guild();
+dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
+dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy blocktrain@paladin_guild();
 
 #define _ABILITY
 #include "guilddef.h"
@@ -1131,29 +1132,25 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 M_HUMAN_CLERIC_SWORD(199, SEX_MALE, "", "heal")
 alignment 1000
-dilcopy nokill@paladin_guild();
-dilcopy blocktrain@paladin_guild();
 
 dilcopy combat_mag@function("harm","",25,2);
-special SFUN_GUILD_BASIS GUILD_PALADIN
-/*
-special SFUN_MEMBERS_ONLY GUILD_PALADIN+"#$1n says, 'Begone $3n!'"
-*/
 
-dilcopy teacher_prac@guild_paths( GUILD_PALADIN );
+dilcopy nokill@paladin_guild();
+dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
+dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy blocktrain@paladin_guild();
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
-
 
 end
 
 
 
 %objects
-/*----------------- PALADIN OBJECTS/ARMOR/WEAPONS ------------- */
 
+/*----------------- PALADIN OBJECTS/ARMOR/WEAPONS ------------- */
 
                 chain_flail
 names {"chain flail", "flail"}
