@@ -99,74 +99,79 @@ dilend
 
 dilbegin nokill();
 var
-	pc : unitptr;
-	room : unitptr;
+   pc : unitptr;
+   room : unitptr;
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+  heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING );
-        pc := self.fighting;
-        if(pc.type == UNIT_ST_NPC) goto start;
-        if (pc.level >200) goto start;
-        secure(pc,gone);
-        if (command("flee"))
-                block;
+:start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING );
 
-self.hp:= self.max_hp;
-act("The sounds of battle attract the attention of the guild guards.",
-A_SOMEONE, pc, self, null, TO_ALL);
-act("Several of them charge into the room, beating you senseless!",
-A_SOMEONE, pc, self, null, TO_CHAR);
-act("Several of them charge into the room, beating $1n senseless!",
-A_SOMEONE, pc, self, null, TO_REST);
-pc.hp := 0;
-act("You can feel yourself being dragged away as you slip into the "+
-"unconsciousness.",A_SOMEONE, pc, self, null, TO_CHAR);
-position_update(pc);
-act("Two of the guards grab $1n and drag him out of the Guild, dumping "+
-"$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
-room := findroom("cth_square7@midgaard");
-link(pc,room);
-act("Two guild guards appear, dragging an unconscious figure between "+
-"them and dump $1m unceremoniously on the street."
-,A_SOMEONE,pc,self,null,TO_REST);
-	:gone:
-unsecure(pc);
-goto start;
+   pc := self.fighting;
+   if(pc.type == UNIT_ST_NPC) goto start;
+   if (pc.level >200) goto start;
+   secure(pc,gone);
+   if (command("flee"))
+      block;
+   self.hp:= self.max_hp;
+   act("The sounds of battle attract the attention of the guild guards.",
+      A_SOMEONE, pc, self, null, TO_ALL);
+   act("Several of them charge into the room, beating you senseless!",
+      A_SOMEONE, pc, self, null, TO_CHAR);
+   act("Several of them charge into the room, beating $1n senseless!",
+      A_SOMEONE, pc, self, null, TO_REST);
+   pc.hp := 0;
+
+   act("You can feel yourself being dragged away as you slip into the "+
+      "unconsciousness.",A_SOMEONE, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("Two of the guards grab $1n and drag him out of the Guild, dumping "+
+      "$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
+   room := findroom("cth_square7@midgaard");
+   link(pc,room);
+   act("Two guild guards appear, dragging an unconscious figure between "+
+      "them and dump $1m unceremoniously on the street."
+      ,A_SOMEONE,pc,self,null,TO_REST);
+:gone:
+   unsecure(pc);
+   goto start;
 }
 dilend
 
 
 dilbegin blocktrain();
+external
+   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+
 var
-  pc:     unitptr;
-  expd : extraptr;
+  pc   : unitptr;
+
 code
 {
 :start:
-heartbeat := PULSE_SEC*5;
-wait (SFB_CMD, TRUE);
+   heartbeat := PULSE_SEC*5;
+   wait (SFB_CMD, command ("practice"));
 
-if ((activator.type == UNIT_ST_PC) and command ("practice"))
-  {
-        expd := "$path" in pc.quests;
-        if (expd == null) goto start;
-        if ((GUILD_PALADIN in expd.names) and (activator.alignment < -350))
-      { block;
-        exec ("say You are a disgrace to our order!!", self);
-        exec ("say In the future you will be banned for this action!", self);
-		exec ("spit "+ activator.name, self);
+   if ((activator.type == UNIT_ST_PC) and IsInGuild@guild_paths(activator, GUILD_PALADIN))
+   {
+      if (activator.alignment < -350)
+      {
+         block;
+         exec ("say You are a disgrace to our order!!", self);
+         exec ("say In the future you will be banned for this action!", self);
+         exec ("spit "+ activator.name, self);
       }
-if ((GUILD_PALADIN in expd.names)  and (activator.alignment < 350))
-      { block;
-        exec ("say You have strayed from the path of our order. I will "+
+
+      if (activator.alignment < 350)
+      {
+         block;
+         exec ("say You have strayed from the path of our order. I will "+
               "not train you until you have purified your soul.", self);
-        goto start;
+         goto start;
       }
-  }
-goto start;
+   }
+   goto start;
 }
 dilend
 
@@ -515,6 +520,8 @@ extra {"small scroll","scroll"}
 	Paladins, type 'title' to receive a title suiting your<br/>
 	deeds and glory.<br/>
 <br/>
+	Type 'join' if you wish to join the Paladin Guild<br/>
+<br/>
 	Speak to me, Reignier, if your faith is weak and your path<br/>
 	pain full. I can provide you with the holy weapon of the<br/>
 	Paladins, as well as the symbol to recognize you as one.<br/>
@@ -548,7 +555,6 @@ end
 
 
 
-%mobiles
 %mobiles
 
 p_guard
@@ -678,18 +684,25 @@ romflags {CHAR_PROTECTED}
 M_HUMAN_CLERIC_SWORD(130, SEX_MALE, "", "heal")
 alignment 1000
 exp -300
+
 dilcopy nokill@paladin_guild();
-
-
 
 /* ------ DIL FOR ENTRANCE TO PALADIN GUILD ----- */
 
-/* Requirements: Player must have an alignment of 500 or above, have
-completed the Wight warren quest and not be a Fallen Paladin.
-More restrictions to come....   */
+/* Requirements: Player must have an alignment of 350 or above, and
+                 have completed the Wight warren quest, and
+                 not be a Fallen Paladin. */
 
-/*
-dilbegin master_block();
+dilcopy quest_block@guild_paths("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
+
+dilbegin master_join();
+external
+   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+   integer IsBanished@guild_paths(pc : unitptr, sGuild : string);
+   JoinGuild@guild_paths(pc : unitptr, sGuild : string);
+   LeaveGuild@guild_paths(pc : unitptr, sGuild : string);
+   BanishGuild@guild_paths(pc : unitptr, sGuild : string);
+
 code
 {
    heartbeat := PULSE_SEC*5;
@@ -702,27 +715,27 @@ code
 
    if ((activator.type ==  UNIT_ST_PC) and command ("join"))
    {
-      if (activator.level < 0)
+      if (activator.level < 5)
       {
          block;
          exec ("say You must fight more battles to prove your worth. Do " +
-               "not bother me again until you are level 0, at least...", self);
+               "not bother me again until you are level 5, at least...", self);
          pause;
          goto start;
       }
 
-      if (PALADIN_FALLEN in activator.quests)
+      if ((PALADIN_FALLEN in activator.quests) or (IsBanished@guild_paths(activator, GUILD_PALADIN)))
       { 
          block;
          exec ("say You are foolish, Fallen One, to even show your face " +
                "to me again, let alone lavish false and misleading praise " +
-               "upon me. You like a serpent, and must be taught a lesson.", self);
+               "upon me. You're like a serpent, and must be taught a lesson.", self);
          exec("spit " + activator.name, self);
          pause;
          goto start;
       }
 
-      if (activator.alignment < -349)
+      if (activator.alignment < 350)
       {
          if (activator.alignment < -350)
          {
@@ -737,10 +750,7 @@ code
          goto start;
       }
 
-      expd := "$path" in activator.quests;
-      if (expd == null) goto start;
-
-      if ((GUILD_PALADIN in expd.names) )
+      if (IsInGuild@guild_paths(activator, GUILD_PALADIN))
       {
          block;
          exec("say Me thinks your head has been rattled too many times in your "+
@@ -750,6 +760,16 @@ code
          goto start;
       }
 
+      if (IsInGuild@guild_paths(activator, GUILD_ASSASSIN) or IsInGuild@guild_paths(activator, GUILD_UDG_THIEF) or
+          IsInGuild@guild_paths(activator, GUILD_NECROMANCER))
+      {
+         block;
+         exec("say Your other guild choices exclude you from joining the Paladin's Guild.", self);
+         pause;
+         goto start;  
+      }
+
+      JoinGuild@guild_paths(activator, GUILD_PALADIN);
       exec ("say Welcome to the Holy Order of Paladins, "+activator.name+
             ". May you walk paths of honor and be diligent in your protection "+
             "of Midgaard and it's people.", self);
@@ -758,11 +778,13 @@ code
    goto start;
 }
 dilend
-*/
+
 
 dilbegin paladin_quest1();
+external
+   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+
 var
-expd : extraptr;
 	pc : unitptr;
 	item : unitptr;
 	check : extraptr;
@@ -772,202 +794,198 @@ code
 
 	:start:
 
-wait (SFB_DONE, ((command("worship"))or(command("bow"))) and
-(self ==target));
+   wait (SFB_DONE, ((command("worship"))or(command("bow"))) and (self ==target));
 	pc := activator;
 	secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto start;
-        if ((GUILD_PALADIN in expd.names) and (pc.alignment > 349))
+
+   if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment > 349))
 	{
-exec("say Ahhh.. I do have a few faithful followers, I was wondering if "+
-"any still existed.", self);
-pause;
-if (PALADIN_SWORD in pc.quests)
-{
-exec("say What brings you hither, "+pc.name+" and how does your weapon "+
-"serve you?",self);pause;
-exec("say Is the light of the blade making you proud and fierce?",self);
-pause;
-exec("say Or have the perils of the road claimed the weapon from your "+
-"hands?",self);pause;
-exec("say If you wish me to grant you another weapon, you must first "+
-"prove yourself, "+pc.name+".",self);pause;
+   exec("say Ahhh.. I do have a few faithful followers, I was wondering if "+
+   "any still existed.", self);
+   pause;
+   if (PALADIN_SWORD in pc.quests)
+   {
+   exec("say What brings you hither, "+pc.name+" and how does your weapon "+
+   "serve you?",self);pause;
+   exec("say Is the light of the blade making you proud and fierce?",self);
+   pause;
+   exec("say Or have the perils of the road claimed the weapon from your "+
+   "hands?",self);pause;
+   exec("say If you wish me to grant you another weapon, you must first "+
+   "prove yourself, "+pc.name+".",self);pause;
 
-if (pc.vlevel < 15)
-{
-exec("say Bring me the evil weapon of the darkelven priestess and I shall "+
-"grant you another Flame Tongue!",self);
-goto cu;
-}
-if (pc.vlevel < 25)
-{
-exec("say Bring me the Smotslager, the staff of the taunter, and I shall "+
-"grant you another Flame Tongue!",self);
-goto cu;
-}
-if (pc.vlevel < 35)
-{
-exec("say Bring me the hammer of black metal from the caves of darkness, "+
-"and I shall grant you another Flame Tongue!",self);
-goto cu;
-}
-if (pc.vlevel < 51)
-{
-exec("say Bring me the sword that eludes the light, from the hand of an "+
-"immortal champion and I shall grant you another Flame Tongue!",self);
-goto cu;
-}
-else
-{
-exec("say ...although you, oh Immortal Champion, can create your own in "+
-"the blink of an eye!",self);pause;
-exec("bow "+pc.name,self);pause;
-goto cu;
-}
-goto cu;
-}
-else
-exec("say I have received a great gift from our fathers above, a replica "+
-"of the sword used by King Cromwell in the last minutes of his life.",
-self); pause;
-exec("say Without his sacrifice only the gods know where we would be
-today.", self);
-pause;
-exec("say The sword is a bastard sword, you can wield it in one,"+
-" or in both hands, as you please.", self);
-pause;
-exec("say You must specify that you are 'wielding tongue two' to "+
-"wield it two handedly.", self);
-pause;
-exec("say Now take this Flame Tongue, and use it wisely. "+
-"It will serve you well.", self);
-	item := load("fl1_tongue@paladin_guild");
-        item.height := pc.height;
-	link(item, self);
-exec("give tongue "+pc.name, self);
-exec ("say Oh I almost forgot", self);
-pause;
-exec ("say The gods have given me a small amulet for you to wear.",self);
-pause;
-exec ("say This token should aid you in your quests against evil.", self);
-exec ("smile "+pc.name,self);
-	item := load("pal_cross@paladin_guild");
-        item.height := pc.height;
-	link(item, self);
-exec("give amulet "+pc.name, self);
-addextra(pc.quests, {PALADIN_SWORD}, "");
-pause;
-	:cu:
-exec("say I hope to see you again soon, our guild's strength is
-returning.", self);
-pause;
-exec("say Our faithfulness and prayers has touched the gods above.", self);
-pause;
-exec("say Only they know the gifts that lie ahead in our paths.", self);
-pause;
-exec("say Go now, for I must return to my studies.", self);
-unsecure(pc);
-goto start;
-	}
-        expd := "$path" in pc.quests;
-        if (expd == null) goto start;
-        if ((GUILD_PALADIN in expd.names) and (pc.alignment < 349))
-      {
-      	block;
-        exec ("say You have strayed from the path of our order. I will "+
-              "not allow your worthless soul worship me. Go until you have
-purified yourself.", self);
-		unsecure(pc);
-        goto start;
-      }
-        expd := "$path" in pc.quests;
-        if (expd == null) goto start;
-        if ((GUILD_PALADIN in expd.names) and (pc.alignment < -349))
-      { block;
-        exec ("say You are a disgrace to our order!!", self);
-        addextra (pc.quests, {PALADIN_FALLEN}, "");
-        pc.guild := "";
-        unsecure (pc);
-        exec ("spit "+activator.name, self);
-        goto start;
-      }
-    else
-      {
-    	block;
-		unsecure(pc);
-    	exec ("say Beggar, be off!", self);
+   if (pc.vlevel < 15)
+   {
+   exec("say Bring me the evil weapon of the darkelven priestess and I shall "+
+   "grant you another Flame Tongue!",self);
+   goto cu;
+   }
+   if (pc.vlevel < 25)
+   {
+   exec("say Bring me the Smotslager, the staff of the taunter, and I shall "+
+   "grant you another Flame Tongue!",self);
+   goto cu;
+   }
+   if (pc.vlevel < 35)
+   {
+   exec("say Bring me the hammer of black metal from the caves of darkness, "+
+   "and I shall grant you another Flame Tongue!",self);
+   goto cu;
+   }
+   if (pc.vlevel < 51)
+   {
+   exec("say Bring me the sword that eludes the light, from the hand of an "+
+   "immortal champion and I shall grant you another Flame Tongue!",self);
+   goto cu;
+   }
+   else
+   {
+   exec("say ...although you, oh Immortal Champion, can create your own in "+
+   "the blink of an eye!",self);pause;
+   exec("bow "+pc.name,self);pause;
+   goto cu;
+   }
+   goto cu;
+   }
+   else
+   exec("say I have received a great gift from our fathers above, a replica "+
+   "of the sword used by King Cromwell in the last minutes of his life.",
+   self); pause;
+   exec("say Without his sacrifice only the gods know where we would be
+   today.", self);
+   pause;
+   exec("say The sword is a bastard sword, you can wield it in one,"+
+   " or in both hands, as you please.", self);
+   pause;
+   exec("say You must specify that you are 'wielding tongue two' to "+
+   "wield it two handedly.", self);
+   pause;
+   exec("say Now take this Flame Tongue, and use it wisely. "+
+   "It will serve you well.", self);
+      item := load("fl1_tongue@paladin_guild");
+         item.height := pc.height;
+      link(item, self);
+   exec("give tongue "+pc.name, self);
+   exec ("say Oh I almost forgot", self);
+   pause;
+   exec ("say The gods have given me a small amulet for you to wear.",self);
+   pause;
+   exec ("say This token should aid you in your quests against evil.", self);
+   exec ("smile "+pc.name,self);
+      item := load("pal_cross@paladin_guild");
+         item.height := pc.height;
+      link(item, self);
+   exec("give amulet "+pc.name, self);
+   addextra(pc.quests, {PALADIN_SWORD}, "");
+   pause;
+      :cu:
+   exec("say I hope to see you again soon, our guild's strength is
+   returning.", self);
+   pause;
+   exec("say Our faithfulness and prayers has touched the gods above.", self);
+   pause;
+   exec("say Only they know the gifts that lie ahead in our paths.", self);
+   pause;
+   exec("say Go now, for I must return to my studies.", self);
+   unsecure(pc);
+   goto start;
       }
 
-unsecure(pc);
-goto start;
+         if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment < 349))
+         {
+            block;
+         exec ("say You have strayed from the path of our order. I will "+
+               "not allow your worthless soul worship me. Go until you have
+   purified yourself.", self);
+         unsecure(pc);
+         goto start;
+         }
 
-:lost:
+         if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment < -349))
+         { block;
+         exec ("say You are a disgrace to our order!!", self);
+         addextra (pc.quests, {PALADIN_FALLEN}, "");
+         pc.guild := "";
+         unsecure (pc);
+         exec ("spit "+activator.name, self);
+         goto start;
+         }
+      else
+         {
+         block;
+         unsecure(pc);
+         exec ("say Beggar, be off!", self);
+         }
 
-unsecure(pc);
-exec("say Unfaithful little @#$!@@, I should have him banished.", self);
-goto start;
+   unsecure(pc);
+   goto start;
 
+   :lost:
+
+   unsecure(pc);
+   exec("say Unfaithful little @#$!@@, I should have him banished.", self);
+   goto start;
 }
 dilend
 
+
 dilbegin paladin_quest2();
+external
+   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+
 var
-expd : extraptr;
-        pc : unitptr;
-        item : unitptr;
-        gift : unitptr;
+   pc : unitptr;
+   item : unitptr;
+   gift : unitptr;
 code
 {
-        heartbeat := PULSE_SEC * 4;
+   heartbeat := PULSE_SEC * 4;
 
-        :start:
+   :start:
 
-wait (SFB_DONE, (command("give")and(self ==target)));
-        pc := activator;
-        secure(pc, lost);
+   wait (SFB_DONE, (command("give")and(self ==target)));
+
+   pc := activator;
+   secure(pc, lost);
 	gift := medium;
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-        if ((GUILD_PALADIN in expd.names) and (pc.alignment > 349)
-	and (PALADIN_SWORD in pc.quests))
-if (((pc.level < 15)and
-(gift.nameidx $= "dflail")and(gift.zoneidx $= "darkelf"))
-or ((pc.level < 25)and
-(gift.nameidx $= "iggystaff")and(gift.zoneidx $= "elfdom"))
-or ((pc.level < 35)and
-(gift.nameidx $= "black_hammer")and(gift.zoneidx $= "citadel"))
-or ((pc.level < 51)and
-(gift.nameidx $= "sword_dark")and(gift.zoneidx $= "keep")))
-        {
-exec("say Ahhh... Excellent. Your courage failed you not.", self);pause;
-exec("say Now take this Flame Tongue, and use it wisely. "+
-"It will serve you well.", self);
-        item := load("fl1_tongue@paladin_guild");
-        item.height := pc.height;
-        link(item, self);
-exec("give tongue "+pc.name, self);
-pause;
-exec ("say This token should aid you in your quests against evil.", self);
-exec ("smile "+pc.name,self);
-        item := load("pal_cross@paladin_guild");
-        item.height := pc.height;
-        link(item, self);
-exec("give amulet "+pc.name, self);pause;
-exec("say I hope to see you again soon, our guild's strength is returning."
-,self);
-pause;
-exec("say Our faithfulness and prayers has touched the gods above.", self);
-pause;
-exec("say Only they know the gifts that lie ahead in our paths.", self);
-pause;
-exec("say Go now, for I must return to my studies.", self);
-	}
-	:lost:
-destroy(gift);
-unsecure(pc);
-goto start;
-        }
+   if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment > 349) and (PALADIN_SWORD in pc.quests))
+   if (((pc.level < 15)and
+   (gift.nameidx $= "dflail")and(gift.zoneidx $= "darkelf"))
+   or ((pc.level < 25)and
+   (gift.nameidx $= "iggystaff")and(gift.zoneidx $= "elfdom"))
+   or ((pc.level < 35)and
+   (gift.nameidx $= "black_hammer")and(gift.zoneidx $= "citadel"))
+   or ((pc.level < 51)and
+   (gift.nameidx $= "sword_dark")and(gift.zoneidx $= "keep")))
+         {
+   exec("say Ahhh... Excellent. Your courage failed you not.", self);pause;
+   exec("say Now take this Flame Tongue, and use it wisely. "+
+   "It will serve you well.", self);
+         item := load("fl1_tongue@paladin_guild");
+         item.height := pc.height;
+         link(item, self);
+   exec("give tongue "+pc.name, self);
+   pause;
+   exec ("say This token should aid you in your quests against evil.", self);
+   exec ("smile "+pc.name,self);
+         item := load("pal_cross@paladin_guild");
+         item.height := pc.height;
+         link(item, self);
+   exec("give amulet "+pc.name, self);pause;
+   exec("say I hope to see you again soon, our guild's strength is returning."
+   ,self);
+   pause;
+   exec("say Our faithfulness and prayers has touched the gods above.", self);
+   pause;
+   exec("say Only they know the gifts that lie ahead in our paths.", self);
+   pause;
+   exec("say Go now, for I must return to my studies.", self);
+      }
+      :lost:
+   destroy(gift);
+   unsecure(pc);
+   goto start;
+}
 dilend
 
 dilcopy combat_mag@function("","heal",25,2);

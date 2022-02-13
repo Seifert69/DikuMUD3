@@ -26,6 +26,222 @@ created by eirinn
 
 %dil
 
+//
+// =================================================================
+//
+
+// Plan:
+//   in block.zon ?
+//
+// quest@block({commands}, {quests}, {actions}) - 
+//    used to blocks the join command unless player has list of quests
+//
+// alignment@block - 
+//    blocks the join command unless player has alignment GOOD, EVIL or NEUTRAL
+//
+// guild@block({commands}, guild, {actions}) - 
+//    used to block player {commands} unless the player is in the guild
+// 
+// move@block({directions}, guild, {actions}) - 
+//    used to block player moving in direction unless the player is in the guild
+// 
+// guild_wield()
+//    if not in guild, unequip and drop
+
+//
+// =================================================================
+// New guild helper functions per 2022 MS to add / remove
+// guilds from player's info.
+//
+// integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+// integer IsBanished@guild_paths(pc : unitptr, sGuild : string);
+// JoinGuild@guild_paths(pc : unitptr, sGuild : string);
+// LeaveGuild@guild_paths(pc : unitptr, sGuild : string);
+// BanishGuild@guild_paths(pc : unitptr, sGuild : string);
+
+
+#define GUILD_JOINED   "$guilds"
+#define GUILD_BANISHED "$guilds_banished"
+#define GUILD_LEFT     "$guilds_left"
+
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin integer IsInGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+      return (0);
+
+   if (sGuild in exd.names)
+      return (1);
+
+   return (0);
+}
+dilend
+
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin integer IsBanished(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_BANISHED in pc.info;
+
+   if (exd == null)
+      return (0);
+
+   if (sGuild in exd.names)
+      return (1);
+
+   return (0);
+}
+dilend
+
+
+// Joins player pc to guild sGuild
+//
+dilbegin JoinGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+   {
+      addextra(pc.info, {GUILD_JOINED}, "");
+      exd := GUILD_JOINED in pc.info;
+   }
+
+   if (sGuild in exd.names)
+   {
+      log("Error in JoinGuild. Guild was already in player guild list");
+      return;
+   }
+
+   addstring(exd.names, sGuild);
+   return;
+}
+dilend
+
+
+// Player pc leaves the guild sGuild (moved to GUILD_LEFT)
+//
+dilbegin LeaveGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+   exdleft : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in LeaveGuild. $guilds missing from player." + pc.name);
+      return;
+   }
+
+   exdleft := GUILD_LEFT in pc.info;
+
+   if (exdleft == null)
+   {
+      addextra(pc.info, {GUILD_LEFT}, "");
+      exdleft := GUILD_LEFT in pc.info;
+   }
+
+   if (not(sGuild in exd.names))
+   {
+      log("Error in LeaveGuild. The guild left was not in $guilds for " + pc.name);
+      return;
+   }
+
+   if (sGuild in exdleft.names)
+   {
+      log("Error in LeaveGuild. The guild left was already left for " + pc.name);
+      return;
+   }
+
+   substring(exd.names, sGuild);
+   addstring(exdleft.names, sGuild);
+   return;
+}
+dilend
+
+
+// Player pc is banished from his guild sGuild (moved to GUILD_BANISHED)
+//
+dilbegin BanishGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+   exdbanished : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in BanishGuild. $guilds missing from player." + pc.name);
+      return;
+   }
+
+   exdbanished := GUILD_BANISHED in pc.info;
+
+   if (exdbanished == null)
+   {
+      addextra(pc.info, {GUILD_BANISHED}, "");
+      exdbanished := GUILD_BANISHED in pc.info;
+   }
+
+   if (not (sGuild in exd.names))
+   {
+      log("Error in BanishGuild. The guild left was not in $guilds for " + pc.name);
+      return;
+   }
+
+   if (sGuild in exdbanished.names)
+   {
+      log("Error in BanishGuild. The guild left was already left for " + pc.name);
+      return;
+   }
+
+   substring(exd.names, sGuild);
+   addstring(exdbanished.names, sGuild);
+   return;
+}
+dilend
+
+
+// =================================================================
+
+// quest@block({commands}, {quests}, {actions}) - 
+dilbegin fnpri(FN_PRI_BLOCK-1) quest_block(cmd : string, quest : string, sExec : stringlist);
+code
+{
+:loop:
+   wait(SFB_CMD, command(cmd));
+
+   if (not (quest in activator.quests))
+   {
+      block;
+      exec(sExec.[0], self); // Do as in quests...
+   }
+
+   goto loop;
+}
+dilend
+
+
+// =================================================================
+
 /* $path extra in quests format:
    names: $path, 1st guild, 2nd guild, 3rd guild,
           0            1          2          3
@@ -81,6 +297,8 @@ code
    goto start;
 }
 dilend /* guild_guard */
+
+
 
 /* DIL for rogue teacher to prevent training. */
 dilbegin rogue_restrict(guilds : stringlist);
@@ -146,7 +364,6 @@ else
 
 dilbegin fnpri(FN_PRI_BLOCK) teacher_prac(the_guild : string);
 external path_update@guild_paths( u : unitptr);
-
 var
    pc   : unitptr;
    gp   : extraptr;
@@ -168,8 +385,7 @@ code
 {
 :start:
    data_list := null;
-   wait(SFB_CMD, (command("practice") or command("info")) and
-                 (activator.level < 230));
+   wait(SFB_CMD, (command("practice") or command("info")) and (activator.level < 230));
 
    pc := activator;
    secure (pc, lost_pc);
@@ -661,7 +877,6 @@ dilend /* admin_gp */
 /* The following is a command */
 
 dilbegin join_dil(arg : string); /* Block the join command */
-
 code
 {
    act("Guilds can no longer be quit or joined. The only way to leave " +
@@ -970,6 +1185,8 @@ if (pc.level > 15)
    goto start;
 }
 dilend /* hand_hold */
+
+
 
 dilbegin guild_titles( the_guild : string, title_list : stringlist );
 external path_update(u : unitptr);
