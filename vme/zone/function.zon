@@ -2460,78 +2460,75 @@ understand how to use them.
 
 
 
-dilbegin guild_restrict
-(guilds:stringlist,damage:integer,percent:integer,action:string);
+dilbegin guild_restrict(guilds:stringlist,damage:integer,percent:integer,action:string);
+external
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
- amount:integer;
- expd : extraptr;
+   amount:integer;
+   expd : extraptr;
 code
 {
-if (damage < 0) damage := -damage;
-if (percent < 0) percent := -percent;
+   if (damage < 0) damage := -damage;
+   if (percent < 0) percent := -percent;
 
-interrupt (SFB_MSG,argument=="unstore",start);
-if ((self.equip) and
-(self.outside.zoneidx=="g_q"))
-	goto nextstart;
+   interrupt (SFB_MSG,argument=="unstore",start);
+   if ((self.equip) and (self.outside.zoneidx=="g_q"))
+      goto nextstart;
+
 :start:
-damage := 0;
-percent := 25;
-amount := 0;
+   damage := 0;
+   percent := 25;
+   amount := 0;
 
-wait (SFB_DONE, (((command ("hold")) or
-(command ("wear")) or
-(command ("grab")) or
-(command ("wield"))) and
-(self==medium)));
-:nextstart:
-if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
-   and (activator.master.type != UNIT_ST_PC) ) goto start;
+   wait (SFB_DONE, (((command ("hold")) or
+   (command ("wear")) or
+   (command ("grab")) or
+   (command ("wield"))) and
+   (self==medium)));
+
+   :nextstart:
+   if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
+      and (activator.master.type != UNIT_ST_PC) ) goto start;
 
 
-if (self.outside.level>=IMMORTAL_LEVEL) goto start;
+   if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
-expd:= "$path" in self.outside.quests;
-   if (expd != null)
+   if (IsInGuilds@guilds(self.outside, guilds))
+      goto start;
+
+   if ((not( command ("wear"))) and (not(command ("wield"))) and (not(command ("hold")))) goto start;
+
+   if (action=="")
    {
-      if ((expd.names.[1] in guilds) or
-          (expd.names.[2] in guilds) or
-          (expd.names.[3] in guilds))
-                   goto start;
+      act ("Your $2n burns you and you drop it to the ground.",
+      A_ALWAYS,self.outside,self,null,TO_CHAR);
+      act ("$1n's $2n burns $1m and $1e drops it to the ground.",
+      A_SOMEONE,self.outside,self,null,TO_REST);
+      act ("Being in the right guild might help.",
+      A_ALWAYS,self.outside,null,null,TO_CHAR);
    }
+   else
+      action ();
 
-if ((not( command ("wear"))) and
-(not(command ("wield"))) and
-(not(command ("hold")))) goto start;
+   if (percent!=0)
+      amount:=(self.outside.hp*percent)/100;
+   if (damage==-1)
+      damage:=openroll (100,5);
 
-if (action=="")
-  {
-act ("Your $2n burns you and you drop it to the ground.",
-A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("$1n's $2n burns $1m and $1e drops it to the ground.",
-A_SOMEONE,self.outside,self,null,TO_REST);
-act ("Being in the right guild might help.",
-A_ALWAYS,self.outside,null,null,TO_CHAR);
-}
-else action ();
-
-if (percent!=0)
-  amount:=(self.outside.hp*percent)/100;
-if (damage==-1)
-  damage:=openroll (100,5);
-if (percent!=0)
-  if (damage>amount)
-    damage:=amount;
-  else if (damage==0)
-  damage:=amount;
+   if (percent!=0)
+      if (damage>amount)
+         damage:=amount;
+      else if (damage==0)
+         damage:=amount;
 
 
-self.outside.hp:=self.outside.hp-damage;
-position_update (self.outside);
+   self.outside.hp:=self.outside.hp-damage;
+   position_update (self.outside);
 
-unequip (self);
-link (self,self.outside.outside);
-goto start;
+   unequip (self);
+   link (self,self.outside.outside);
+   goto start;
 }
 dilend
 
@@ -2602,74 +2599,71 @@ code
 }
 dilend // prof_restrict
 
-dilbegin anti_guild
-(guilds:stringlist,damage:integer,percent:integer,action:string);
+
+
+dilbegin anti_guild(guilds:stringlist,damage:integer,percent:integer,action:string);
+external
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
- amount:integer;
+   amount:integer;
 code
 {
-heartbeat:=PULSE_SEC*3;
-interrupt (SFB_MSG,argument=="unstore",start);
-if ((self.equip) and
-(self.outside.zoneidx=="g_q"))
-goto nextstart;
-:start:
-damage := 0;
-percent := 25;
-amount := 0;
+   heartbeat:=PULSE_SEC*3;
+   interrupt (SFB_MSG,argument=="unstore",start);
+   if ((self.equip) and (self.outside.zoneidx=="g_q"))
+      goto nextstart;
 
-wait (SFB_DONE, (((command ("hold")) or
-(command ("wear")) or
-(command ("grab")) or
-(command ("wield"))) and
-(self==medium)));
-:nextstart:
+   :start:
+   damage := 0;
+   percent := 25;
+   amount := 0;
 
-if (activator.type!=UNIT_ST_PC) goto start;
+   wait (SFB_DONE, (((command ("hold")) or
+   (command ("wear")) or
+   (command ("grab")) or
+   (command ("wield"))) and
+   (self==medium)));
+   :nextstart:
 
+   if (activator.type!=UNIT_ST_PC) goto start;
 
+   if (not IsInGuilds@guilds(self.outside, guilds))
+      goto start;
 
-   if (self.extra.["$path"] != null)
+   if (self.outside.level>=IMMORTAL_LEVEL) goto start;
+
+   if (action =="")
    {
-      if ((not(self.extra.["$path"].names.[1] in guilds)) and
-          (not(self.extra.["$path"].names.[2] in guilds)) and
-          (not(self.extra.["$path"].names.[3] in guilds)))
-                   goto start;
+      act ("Your $2n burns you and you drop it to the ground.",
+      A_ALWAYS,self.outside,self,null,TO_CHAR);
+      act ("$1n's $2n burns $1m and $1e drops it to the ground.",
+      A_SOMEONE,self.outside,self,null,TO_REST);
+      act ("Not being in this guild might help.",
+      A_ALWAYS,self.outside,null,null,TO_CHAR);
    }
+   else action ();
 
-if (self.outside.level>=IMMORTAL_LEVEL) goto start;
+   if (percent!=0)
+      amount:=(self.outside.hp*percent)/100;
+   if (damage==-1)
+      damage:=openroll (100,5);
 
-if (action =="")
-  {
-  act ("Your $2n burns you and you drop it to the ground.",
-  A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act ("$1n's $2n burns $1m and $1e drops it to the ground.",
-  A_SOMEONE,self.outside,self,null,TO_REST);
-  act ("Not being in this guild might help.",
-  A_ALWAYS,self.outside,null,null,TO_CHAR);
-  }
-else action ();
+   if (percent!=0)
+      if (damage>amount)
+         damage:=amount;
+   else if (damage==0)
+      damage:=amount;
 
-if (percent!=0)
-  amount:=(self.outside.hp*percent)/100;
-if (damage==-1)
-  damage:=openroll (100,5);
+   self.outside.hp:=self.outside.hp-damage;
+   position_update (self.outside);
 
-if (percent!=0)
-  if (damage>amount)
-    damage:=amount;
-  else if (damage==0)
-  damage:=amount;
-
-
-self.outside.hp:=self.outside.hp-damage;
-position_update (self.outside);
-
-unequip (self);
-link (self,self.outside.outside);
-goto start;
+   unequip (self);
+   link (self,self.outside.outside);
+   goto start;
 }
 dilend
+
 
 dilbegin quest_restrict
 (quest:string,damage:integer,percent:integer,action:string);

@@ -17,6 +17,7 @@
 basis 1120tw0008         1   0 250 0 ../etc
 death 1120tw0008         1   0 250 0 ../lib/death
 spells 1120tw0008        1   0 250 0 ../lib/dilfiles/spells
+randomt 1120tw0008       1   0 250 0
 skills 1120tw0008        1   0 250 0
 commands 1120tw0008      1   0 250 0 ../etc
 baseget  1120tw0008      1   0 250 0
@@ -34,6 +35,7 @@ function 1120tw0008      1   0 250 0
 restrict 1120tw0008      1   0 250 0
 bounty release           1 250 0 0
 quests release           1   2   0 0
+guilds release           1   0 250 0
 #
 newbie 1120tw0008        1   0 250 0 ../lib/newbie
 justice 1120tw0008       1   0 250 0 ../lib/justice

@@ -5343,6 +5343,7 @@ goto start;
 dilend
 end
 
+
 wings
 title "dragons wings"
 names {"dragons wings","dragon wings", "wings"}
@@ -5357,30 +5358,31 @@ spell 200
 weight 5
 
 dilbegin wings_2();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
-  pcname : string;
-  item: unitptr;
-  pc: unitptr;
-  i: integer;
-  expd : extraptr;
+   pcname : string;
+   item: unitptr;
+   pc: unitptr;
+   i: integer;
+
 code
 {
-        :init:
-heartbeat := PULSE_SEC*5;
+:init:
+   heartbeat := PULSE_SEC*5;
 
-        :start:
-wait(SFB_CMD,((((command("crazzak")) or (command ("wings"))) and
-(activator.type == UNIT_ST_PC) and (self.equip == WEAR_BODY))));
+:start:
+   wait(SFB_CMD,((((command("crazzak")) or (command ("wings"))) and
+   (activator.type == UNIT_ST_PC) and (self.equip == WEAR_BODY))));
 
-
-if ( command ("wings") and (not ("home" in argument))) goto start;
-				block;
-				pc:=activator;
-				secure (pc,losthim);
-if (command ("crazzak") and
-(pc.mana>=10))
- {
-   if(pc.outside.zoneidx == "timezon") goto failmana;
+   if ( command ("wings") and (not ("home" in argument))) goto start;
+   block;
+   pc:=activator;
+   secure (pc,losthim);
+   if (command ("crazzak") and(pc.mana>=10))
+   {
+      if(pc.outside.zoneidx == "timezon") goto failmana;
      act ("As you mutter Crazzak., the dragon wings spread out in an awe inspiring splendor.",
      A_SOMEONE, pc, null, null, TO_CHAR);
      act ("$1n's wings spread out in an awe inspiring splendor.",
@@ -5393,31 +5395,32 @@ if (command ("crazzak") and
      "off your feet.", A_SOMEONE, pc, null, null, TO_REST);
      pause;
      act ("The dragon wings glow with a magical light and you are transported",
- A_SOMEONE, pc, null, null, TO_CHAR);
+       A_SOMEONE, pc, null, null, TO_CHAR);
      act ("$1ns giant dragon wings glow brightly and $1e vanishes from view.",
         A_SOMEONE, pc, null, null, TO_REST);
-	cast_spell(SPL_RANDOM_TELEPORT, self.outside, self,self.outside);
-	block;
-	pc.mana:=pc.mana-10;
+	   cast_spell(SPL_RANDOM_TELEPORT, self.outside, self,self.outside);
+	   block;
+	   pc.mana:=pc.mana-10;
 
      act ("The dragon wings slowly set you down and settle onto your back.",
- A_SOMEONE, pc, null, null, TO_CHAR);
+       A_SOMEONE, pc, null, null, TO_CHAR);
      act ("$1n appears in mid air being carried by giant dragon wings.",
         A_SOMEONE, pc, null, null, TO_REST);
      act ("$1n's dragon wings slowly sets $1m down and fold up "+
 		 "to a more wearable size.",
         A_SOMEONE, pc, null, null, TO_REST);
 	}
+	else if (command ("wings") and ("home" in argument) and (pc.mana>=40))
+      goto home;
 	else
-if (command ("wings") and ("home" in argument) and (pc.mana>=40))
-goto home;
-	else goto failmana;
+      goto failmana;
 
-unsecure (pc);
-goto init;
-	:home:
+   unsecure (pc);
+   goto init;
+
+:home:
    if(pc.outside.zoneidx == "timezon") goto failmana;
-if((pc.outside == findroom("nightmare@hobgob")) and ("home" in argument))
+   if((pc.outside == findroom("nightmare@hobgob")) and ("home" in argument))
    {
         act("You can't fly from here you're in trouble haven't you noticed!",
             A_ALWAYS, self.outside, null, null, TO_CHAR);
@@ -5427,7 +5430,7 @@ if((pc.outside == findroom("nightmare@hobgob")) and ("home" in argument))
         goto start;
    }
 
-if((pc.outside == findroom("meph_quarter@gazha")) and ("home" in argument))
+   if((pc.outside == findroom("meph_quarter@gazha")) and ("home" in argument))
    {
         act("You can't fly from here.",
             A_ALWAYS, self.outside, null, null, TO_CHAR);
@@ -5436,15 +5439,6 @@ if((pc.outside == findroom("meph_quarter@gazha")) and ("home" in argument))
         unsecure(pc);
         goto start;
    }
-
-expd := "$path" in pc.quests;
-if (expd == null)
-{
- act("Sorry, these will not work unless you have a guild path. Please "+
-     "talk to an administrator.", A_ALWAYS, self.outside, null, null,
- TO_CHAR);
- goto start;
-}
 
      act ("The dragon wings spread out in an awe inspiring splendor.",
      A_SOMEONE, pc, null, null, TO_CHAR);
@@ -5462,37 +5456,38 @@ if (expd == null)
      act ("The wings slowly lift $1n off the ground and carry $1m "+
     "off into the distance.", A_SOMEONE, pc, null, null, TO_REST);
 
-expd := "$path" in pc.quests;
-        if (expd.names.[1] == GUILD_ASSASSIN)
+   if (IsInGuild@guilds(pc, GUILD_ASSASSIN))
       link(self.outside, findroom("master_room@assassin"));
-   else if (expd.names.[1] == GUILD_SORCERER)
+   if (IsInGuild@guilds(pc, GUILD_SORCERER))
       link(self.outside, findroom("grotto@sorcerer"));
-   else if (expd.names.[1] == GUILD_NYM_RANGER)
+   else if (IsInGuild@guilds(pc, GUILD_NYM_RANGER))
       link(self.outside, findroom("tent_1@ranger"));
-   else if (expd.names.[1] == GUILD_UDG_FIGHTER)
+   else if (IsInGuild@guilds(pc, GUILD_UDG_FIGHTER))
       link(self.outside, findroom("outlook@fightersguild"));
-   else if (expd.names.[1] == GUILD_UDG_THIEF)
+   else if (IsInGuild@guilds(pc, GUILD_UDG_THIEF))
       link(self.outside, findroom("study@thievesguild"));
-   else if (expd.names.[1] == GUILD_UDG_CLERIC)
+   else if (IsInGuild@guilds(pc, GUILD_UDG_CLERIC))
       link(self.outside, findroom("sanctuary@clericguild"));
-   else if (expd.names.[1] == GUILD_UDG_MAGE)
+   else if (IsInGuild@guilds(pc, GUILD_UDG_MAGE))
       link(self.outside, findroom("chan_office@mageguild"));
-   else if (expd.names.[1] == GUILD_PALADIN)
+   else if (IsInGuild@guilds(pc, GUILD_PALADIN))
       link(self.outside, findroom("meditat@paladin_guild"));
-   else if (expd.names.[1] == GUILD_NECROMANCER)
+   else if (IsInGuild@guilds(pc, GUILD_NECROMANCER))
       link(self.outside, findroom("up_damp_crypt@necro_guild"));
-   else if (expd.names.[1] == GUILD_NYM_DRUID)
+   else if (IsInGuild@guilds(pc, GUILD_NYM_DRUID))
       link(self.outside, findroom("henge@druid"));
-   else if (expd.names.[1] == GUILD_KNIGHT)
+   else if (IsInGuild@guilds(pc, GUILD_KNIGHT))
       link(self.outside, findroom("room_5@knight"));
-   else if (expd.names.[1] == GUILD_BARBARIAN)
+   else if (IsInGuild@guilds(pc, GUILD_BARBARIAN))
       link(self.outside, findroom("hall_04@barbarian"));
+   else
+      act("Tell an administrator guild wasn't found." , A_ALWAYS, pc, null,null, TO_CHAR);
 
-        exec ("look",pc);
-     act ("$1n flies in on a pair of dragon wings" , A_SOMEONE, pc, null,null, TO_REST);
+   exec ("look",pc);
+   act ("$1n flies in on a pair of dragon wings" , A_SOMEONE, pc, null,null, TO_REST);
+   unsecure (pc);
+   goto init;
 
-        unsecure (pc);
-        goto init;
 	:losthim:
 	exec ("say lost him",pc);
 	unsecure (pc);

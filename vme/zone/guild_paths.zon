@@ -397,13 +397,8 @@ dilend
 
 // =================================================================
 
-/* $path extra in quests format:
-   names: $path, 1st guild, 2nd guild, 3rd guild,
-          0            1          2          3
-          1st level, 2nd level, 3rd level, overall level.
-          4          5          6          7
-
-   descr: "F/A/S" etc
+/* $ path is OBSOLETE. Use functions in guilds.zon to figure out if 
+   a player is in a guild for example 
 */
 
 #define GUILD_PATH "$path"
@@ -546,7 +541,7 @@ code
    secure (pc, lost_pc);
    pc.guild := the_guild;
 /*
-   if (GUILD_PATHS == 0)
+   if ("$path" == 0)
    {
       test := "$guild" in pc.quests;
       if ((test == null) or (not(the_guild in test.names)))

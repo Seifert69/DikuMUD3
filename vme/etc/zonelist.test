@@ -33,6 +33,7 @@ mail 1120tw0008          1   0 250 0 ../lib/mail
 function 1120tw0008      1   0 250 0
 restrict 1120tw0008      1   0 250 0
 test 1120tw0008          1   0 250 0
+guilds 1120tw0008        1   0 250 0
 
 #quests release           1   2   0 0
 #bounty release           1 250 0 0

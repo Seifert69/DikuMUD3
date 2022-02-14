@@ -7611,15 +7611,6 @@ code
       statue_load(pc, "newbie/silring",  1);
    }
 
-   /* expd := "$path" in pc.quests;
-   if (expd == null)
-   {
-      act("You are not on a guild path. Please see an " +
-          "administrator as soon as possible.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto start;
-   }*/
-
    if (pc.profession == PROFESSION_CONJURER)
    {
       statue_load(pc, "udgaard/conjurer_book",  1);

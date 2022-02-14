@@ -18,6 +18,10 @@ Converted:
    Ranger
    Paladin
 
+Remember at the end to search for all (also in Zones)
+   $path
+   restore the guild_paths.zon and check it out
+
 */
 
 %zone guilds
@@ -120,11 +124,15 @@ E.g. Fighter / Mage.
 // integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 // integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
 // integer IsBanished@guilds(pc : unitptr, sGuild : string);
+// string GuildString@guilds(pc : unitptr);
+// string GuildStrings@guilds(pc : unitptr);
 // JoinGuild@guilds(pc : unitptr, sGuild : string);
 // LeaveGuild@guilds(pc : unitptr, sGuild : string);
 // BanishGuild@guilds(pc : unitptr, sGuild : string);
 // MurderBanish@guilds(sGuild : string);
 // AlertMembers@guilds(sGuild : string, sMsg : string);
+// AdvGuildLevel(ch : unitptr);
+
 //
 // Blockers:
 // TrainMemberChk(sGuild : string, sMsg : string);
@@ -134,6 +142,24 @@ E.g. Fighter / Mage.
 #define GUILD_JOINED   "$guilds_in"
 #define GUILD_BANISHED "$guilds_ban"
 #define GUILD_LEFT     "$guilds_out"
+
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin string GuildString(pc : unitptr);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+      return ("");
+
+   return (exd.names.[1]); // Hack for now
+}
+dilend
 
 
 // Checks if player pc is in guild sGuild
@@ -310,6 +336,15 @@ code
    }
 
    return;
+}
+dilend
+
+
+dilbegin AdvGuildLevel(pc : unitptr);
+code
+{
+   log("Not yet implemented - Advance Guild Level for players");
+   quit;
 }
 dilend
 
