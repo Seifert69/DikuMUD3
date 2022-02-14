@@ -35,7 +35,7 @@ static void slime_save()
 
     for (i = 0; i < slime_count; i++)
     {
-        fputs(slime_list[i]->getZone()->name, f);
+        fputs(slime_list[i]->getZone()->getName(), f);
         fputc(0, f);
         fputs(slime_list[i]->getName(), f);
         fputc(0, f);
@@ -121,7 +121,7 @@ int slime_obj(spec_arg *sarg)
         send_to_char("List of slimed units:<br/>", sarg->activator);
         for (i = 0; i < slime_count; i++)
         {
-            auto msg = diku::format_to_str("%s@%s<br/>", slime_list[i]->getName(), slime_list[i]->getZone()->name);
+            auto msg = diku::format_to_str("%s@%s<br/>", slime_list[i]->getName(), slime_list[i]->getZone()->getName());
             send_to_char(msg, sarg->activator);
         }
 

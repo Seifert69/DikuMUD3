@@ -4127,7 +4127,7 @@ void dilfe_load(dilprg *p)
                 {
                     if (fi->getType() == UNIT_ST_ROOM)
                     {
-                        slog(LOG_ALL, 0, "DIL trying to load a room %s@%s.", fi->getName(), fi->getZone()->name);
+                        slog(LOG_ALL, 0, "DIL trying to load a room %s@%s.", fi->getName(), fi->getZone()->getName());
                     }
                     else
                     {

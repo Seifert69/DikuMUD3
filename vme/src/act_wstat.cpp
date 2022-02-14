@@ -86,7 +86,7 @@ static void stat_world_extra(const unit_data *ch)
 
     for (auto zp : g_zone_info.mmp)
     {
-        msg += diku::format_to_str("<a cmd='goto #'>%s</a><br/>", zp.second->name);
+        msg += diku::format_to_str("<a cmd='goto #'>%s</a><br/>", zp.second->getName());
     }
     msg += "</div><br/>";
 
@@ -271,7 +271,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    "Pressure [%d] Change [%d] Sky [%d] Base [%d]<br/><br/>"
                                    "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
                                    "%s<br/>%s<br/>",
-                                   zone->name,
+                                   zone->getName(),
                                    zone->filename,
                                    zone->access,
                                    zone->title ? zone->title : "",
@@ -316,7 +316,7 @@ static void stat_creators(unit_data *ch, char *arg)
         {
             char *cname = it->second->getCreators().catnames();
 
-            msg += diku::format_to_str("%-15s   %s<br/>", it->second->name, cname);
+            msg += diku::format_to_str("%-15s   %s<br/>", it->second->getName(), cname);
             FREE(cname);
             found = TRUE;
         }
@@ -332,7 +332,7 @@ static void stat_creators(unit_data *ch, char *arg)
     {
         if (it->second->getCreators().IsName(tmp))
         {
-            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->name, it->second->filename);
+            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->getName(), it->second->filename);
             found = TRUE;
         }
     }
@@ -347,7 +347,7 @@ static void stat_creators(unit_data *ch, char *arg)
 
 static void stat_dil(unit_data *ch, zone_type *zone)
 {
-    auto msg = diku::format_to_str("<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
+    auto msg = diku::format_to_str("<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->getName());
     send_to_char(msg, ch);
 
     msg += "<div class='twocol'>";
@@ -380,7 +380,7 @@ static void stat_global_dil(unit_data *ch, ubit32 nCount)
                 msg += diku::format_to_str("%.2fs %s@%s [%d t / %d i]<br/>",
                                            tmpl->second->fCPU / 1000.0,
                                            tmpl->second->prgname,
-                                           tmpl->second->zone->name,
+                                           tmpl->second->zone->getName(),
                                            tmpl->second->nTriggers,
                                            tmpl->second->nInstructions);
             }
@@ -432,7 +432,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         case 1:
         case 2:
         {
-            auto msg = diku::format_to_str("List of %s in zone %s:<br/>", zone_args[argno], zone->name);
+            auto msg = diku::format_to_str("List of %s in zone %s:<br/>", zone_args[argno], zone->getName());
             send_to_char(msg, ch);
             search_type = search_types[argno];
         }
@@ -441,14 +441,14 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         case 3:
             if (zone->zri)
             {
-                auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->name);
+                auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->getName());
                 send_to_char(msg, ch);
                 auto stat_buffer = stat_zone_reset("", zone->zri, ch);
                 page_string(CHAR_DESCRIPTOR(ch), stat_buffer);
             }
             else
             {
-                auto msg = diku::format_to_str("No reset information for zone %s.<br/>", zone->name);
+                auto msg = diku::format_to_str("No reset information for zone %s.<br/>", zone->getName());
                 send_to_char(msg, ch);
             }
             return;
@@ -685,7 +685,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
             {
                 auto msg = diku::format_to_str("DIL Name: %s@%s<br/>",
                                                prg->frame[0].tmpl->prgname,
-                                               prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->name : "IDLE");
+                                               prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->getName() : "IDLE");
                 send_to_char(msg, ch);
             }
         }
@@ -1288,7 +1288,7 @@ void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
 
             if (*name && !*zone)
             {
-                strcpy(zone, unit_zone(ch)->name);
+                strcpy(zone, unit_zone(ch)->getName());
             }
 
             u = find_symbolic(zone, name);

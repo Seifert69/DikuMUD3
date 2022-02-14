@@ -65,14 +65,21 @@ public:
 
     cNamelist &getCreators();
 
+    const char *getName() const;
+    // Used in one place (dilfld.cpp:2227) that needs a non-const pointer - will be removed at a later date
+    // Once whole path can be checked on why modifiable pointer is needed
+    char *getNamePtr();
+    void setName(char *value);
+
 private:
-    cNamelist creators; /* List of creators of zone         */
+    cNamelist creators;  /* List of creators of zone         */
+    char *name{nullptr}; /* Unique in list                   */
+
 public:
-    char *name;         /* Unique in list                   */
-    char *title;        /* A nice looking zone title        */
-    char *notes;        /* Creator notes to zone            */
-    char *help;         /* User-Help to zone                */
-    char *filename;     /* The filename of this file        */
+    char *title;    /* A nice looking zone title        */
+    char *notes;    /* Creator notes to zone            */
+    char *help;     /* User-Help to zone                */
+    char *filename; /* The filename of this file        */
 
     unit_data *rooms;   // unit pointer to the base rooms, used in vmc really
     unit_data *objects; // unit pointer to the base objects, used in vmc really

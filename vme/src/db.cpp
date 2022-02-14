@@ -384,14 +384,14 @@ void generate_zone_indexes()
     z = new (zone_type);
     g_zone_info.no_of_zones++;
     z->zone_no = g_zone_info.no_of_zones - 1;
-    z->name = str_dup("_players");
+    z->setName(str_dup("_players"));
     z->filename = str_dup("ply");
     z->title = str_dup("Reserved zone for player file_indexes");
     z->help = str_dup("");
     z->notes = str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
                        "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
                        "of player files on disk\n");
-    g_zone_info.mmp.insert(std::make_pair(z->name, z));
+    g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
     z = nullptr;
 
     for (;;)
@@ -490,17 +490,18 @@ void generate_zone_indexes()
         }
 
         fstrcpy(&cBuf, f);
-        z->name = str_dup((char *)cBuf.GetData());
-        str_lower(z->name);
+        auto name = str_dup((char *)cBuf.GetData());
+        str_lower(name);
+        z->setName(name);
 
-        if (find_zone(z->name))
+        if (find_zone(z->getName()))
         {
-            slog(LOG_ALL, 0, "ZONE BOOT: Duplicate zone name [%s] not allowed", z->name);
+            slog(LOG_ALL, 0, "ZONE BOOT: Duplicate zone name [%s] not allowed", z->getName());
             exit(42);
         }
 
         // Insert zone into sorted list
-        g_zone_info.mmp.insert(std::make_pair(z->name, z));
+        g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
 
         int mstmp = fread(&z->weather.base, sizeof(int), 1, f);
         if (mstmp < 1)
@@ -1610,7 +1611,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
     u = read_unit_string(&g_FileBuffer,
                          org_fi->getType(),
                          org_fi->getLength(),
-                         str_cc(org_fi->getName(), org_fi->getZone()->name),
+                         str_cc(org_fi->getName(), org_fi->getZone()->getName()),
                          ins_list);
     u->set_fi(org_fi);
 
@@ -1893,7 +1894,7 @@ void read_all_zones()
     {
         read_zone_error = zone->second;
 
-        if (strcmp(zone->second->name, "_players") == 0)
+        if (strcmp(zone->second->getName(), "_players") == 0)
         {
             continue;
         }

@@ -283,7 +283,7 @@ void eventqueue::process()
                     }
                     if (prg->fp->tmpl->zone)
                     {
-                        strcpy(dilzname, prg->fp->tmpl->zone->name);
+                        strcpy(dilzname, prg->fp->tmpl->zone->getName());
                     }
                     strcpy(diloname, tmp_event->arg1 ? UNIT_FI_NAME((unit_data *)(tmp_event->arg1)) : "NO NAME");
                     strcpy(dilozname, tmp_event->arg1 ? UNIT_FI_ZONENAME((unit_data *)(tmp_event->arg1)) : "NO ZONE");

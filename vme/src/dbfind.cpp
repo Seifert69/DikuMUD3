@@ -194,7 +194,7 @@ file_index_type *pc_str_to_file_index(unit_data *ch, const char *str)
 
     if (*name && !*zone)
     {
-        strcpy(zone, unit_zone(ch)->name);
+        strcpy(zone, unit_zone(ch)->getName());
     }
 
     return find_file_index(zone, name);

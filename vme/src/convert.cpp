@@ -84,7 +84,7 @@ unit_data *convert_item(unit_data *u, unit_data *pc, int bList)
 {
     if (bList)
     {
-        if (strcmp(UNIT_FI_ZONE(u)->name, "treasure") == 0)
+        if (strcmp(UNIT_FI_ZONE(u)->getName(), "treasure") == 0)
         {
             extra_descr_data *ed = UNIT_EXTRA(u).m_pList;
             std::cout << std::endl << UNIT_FI_NAME(u) << "@treasure" << std::endl;

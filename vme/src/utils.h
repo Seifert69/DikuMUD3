@@ -134,7 +134,7 @@
 
 /* ............................FILE INDEX STUFF..................... */
 
-#define FI_ZONENAME(fi) ((fi)->getZone()->name)
+#define FI_ZONENAME(fi) ((fi)->getZone()->getName())
 
 #define FI_NAME(fi) ((fi)->getName())
 

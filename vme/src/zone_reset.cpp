@@ -153,14 +153,14 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
         szonelog(g_boot_zone,
                  "Reset Error: Don't know where to put %s@%s",
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_OBJ && cmd->getFileIndexType(0)->getType() != UNIT_ST_NPC)
     {
         szonelog(g_boot_zone,
                  "Reset Error: %s@%s loaded object is neither an obj nor npc.",
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (zone_limit(u, cmd->getFileIndexType(0), cmd))
     {
@@ -205,7 +205,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
         szonelog(g_boot_zone,
                  "Reset error: %s@%s has no parent in equip.",
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (!IS_CHAR(u))
     {
@@ -221,7 +221,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (cmd->getNum(1) <= 0)
     {
@@ -230,7 +230,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (!equipment(u, cmd->getNum(1)) && !(cmd->getNum(0) && (cmd->getFileIndexType(0)->getNumInMem()) >= (ubit16)(cmd->getNum(0))))
     {

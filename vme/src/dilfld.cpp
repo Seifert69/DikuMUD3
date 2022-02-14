@@ -144,7 +144,7 @@ void dilfe_fld(dilprg *p)
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner),
                                  p->fp->tmpl->prgname,
-                                 p->fp->tmpl->zone->name,
+                                 p->fp->tmpl->zone->getName(),
                                  v2->val.num);
 
                         v->type = DILV_FAIL;
@@ -167,7 +167,7 @@ void dilfe_fld(dilprg *p)
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner),
                                  p->fp->tmpl->prgname,
-                                 p->fp->tmpl->zone->name,
+                                 p->fp->tmpl->zone->getName(),
                                  v2->val.num);
                         v->type = DILV_FAIL; /* illegal index */
                     }
@@ -578,7 +578,7 @@ void dilfe_fld(dilprg *p)
 
                         if (z)
                         {
-                            auto it = g_zone_info.mmp.find(z->name);
+                            auto it = g_zone_info.mmp.find(z->getName());
                             if (it != g_zone_info.mmp.end())
                             {
                                 it++;
@@ -732,7 +732,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SP;
-                        v->val.ptr = (void *)IF_STR(((zone_type *)v1->val.ptr)->name);
+                        v->val.ptr = (void *)IF_STR(((zone_type *)v1->val.ptr)->getName());
                     }
                     else
                     {
@@ -2224,7 +2224,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SP;
-                        v->val.ptr = unit_zone((unit_data *)v1->val.ptr)->name;
+                        v->val.ptr = unit_zone((unit_data *) v1->val.ptr)->getNamePtr();
                     }
                     else
                     {

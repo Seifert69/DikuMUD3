@@ -909,7 +909,7 @@ void dilfi_rtf(dilprg *p)
                  0,
                  "DIL %s@%s on %s@%s: Unexpected stack length after procedure call.",
                  p->fp->tmpl->prgname,
-                 p->fp->tmpl->zone->name,
+                 p->fp->tmpl->zone->getName(),
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner));
             p->waitcmd = WAITCMD_QUIT;
@@ -925,7 +925,7 @@ void dilfi_rtf(dilprg *p)
                  0,
                  "DIL %s@%s on %s@%s: Unexpected stack length after function call.",
                  p->fp->tmpl->prgname,
-                 p->fp->tmpl->zone->name,
+                 p->fp->tmpl->zone->getName(),
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner));
             p->waitcmd = WAITCMD_QUIT;
@@ -1189,7 +1189,7 @@ void dilfi_rfunc(dilprg *p)
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner),
                  p->fp->tmpl->prgname,
-                 p->fp->tmpl->zone->name,
+                 p->fp->tmpl->zone->getName(),
                  xrefi);
         p->waitcmd = WAITCMD_STOP;
         for (int i = 0; (i < argcnt); i++)

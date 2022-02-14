@@ -526,7 +526,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
             }
-            auto msg = diku::format_to_str("Unit pointer is [%s@%s]<br/>", untarg->getName(), untarg->getZone()->name);
+            auto msg = diku::format_to_str("Unit pointer is [%s@%s]<br/>", untarg->getName(), untarg->getZone()->getName());
             send_to_char(msg, ch);
         }
         break;
@@ -634,7 +634,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
             }
-            msg = diku::format_to_str("Unit pointer is [%s@%s]<br/>", untarg->getName(), untarg->getZone()->name);
+            msg = diku::format_to_str("Unit pointer is [%s@%s]<br/>", untarg->getName(), untarg->getZone()->getName());
             send_to_char(msg, ch);
         }
         break;

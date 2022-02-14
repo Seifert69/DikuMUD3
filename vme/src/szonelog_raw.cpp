@@ -14,7 +14,7 @@ void szonelog_raw(const zone_type *zone, const std::string &msg)
         return;
     }
 
-    slog(LOG_ALL, 0, "%s/%s", zone->name, msg);
+    slog(LOG_ALL, 0, "%s/%s", zone->getName(), msg);
 
     auto filename = diku::format_to_str("%s%s.err", g_cServerConfig.getZoneDir(), zone->filename);
 

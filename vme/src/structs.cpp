@@ -317,6 +317,23 @@ cNamelist &zone_type::getCreators()
     return creators;
 }
 
+const char *zone_type::getName() const
+{
+    return name;
+}
+
+char *zone_type::getNamePtr()
+{
+    return name;
+}
+
+void zone_type::setName(char *value)
+{
+    FREE(name);
+    name = value;
+}
+
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

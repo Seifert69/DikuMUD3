@@ -691,7 +691,7 @@ void dil_typeerr(dilprg *p, const char *where)
              UNIT_FI_NAME(p->sarg->owner),
              UNIT_FI_ZONENAME(p->sarg->owner),
              p->fp->tmpl->prgname,
-             p->fp->tmpl->zone->name,
+             p->fp->tmpl->zone->getName(),
              where);
     p->waitcmd = WAITCMD_QUIT;
 }
