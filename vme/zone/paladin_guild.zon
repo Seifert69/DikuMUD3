@@ -689,6 +689,7 @@ exp -300
                  have completed the Wight warren quest, and
                  not be a Fallen Paladin and not be Banished. */
 
+dilcopy combat_mag@function("","heal",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy quest_block@guilds("join", WIGHT_COMPLETE, 
            {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Wight Warren's quest"});
@@ -706,6 +707,8 @@ external
 
 code
 {
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
    heartbeat := PULSE_SEC*5;
 
    :start:
@@ -987,18 +990,6 @@ code
    goto start;
 }
 dilend
-
-dilcopy combat_mag@function("","heal",25,2);
-
-/*
-special SFUN_GUILD_MASTER
-"Guild                    = ~Midgaard Paladin~
-Guild Enter Quest         = ~~
-Guild Enter Cost          = 5 GOLD_PIECE
-Guild Leave Quest         = ~~
-Guild Leave Cost          = 5 PLATINUM_PIECE
-Guild Exclude Quest       = ~Midgaard Paladin Quitter~ ~Paladin, Fallen From Grace~"
-*/
 
 dilcopy guild_titles@guilds(GUILD_PALADIN, { "Converted", "Converted",
 "Dedicated", "Dedicated", "Pure", "Pure", "Redeemed", "Redeemed",

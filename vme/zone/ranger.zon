@@ -27,43 +27,41 @@ endurance + incapacitated */
 
 dilbegin nokill();
 var
-        pc      : unitptr;
-        room    : unitptr;
-        i       : integer;
+   pc      : unitptr;
+   room    : unitptr;
+   i       : integer;
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+   heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING);
-        pc := self.fighting;
-        if (pc.level > 200) goto start;
-        secure(pc,gone);
-        if (command("flee"))
-                block;
+   :start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING);
+   pc := self.fighting;
+   if (pc.level > 200) goto start;
+   secure(pc,gone);
+   if (command("flee"))
+      block;
 
-self.hp := self.max_hp;
-act("The sounds of battle attract attention of the training rangers.",
-A_ALWAYS, pc, self, null, TO_ALL);
-act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly </div>"+
-"smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
-act("Several of them charge into the room, grabbing $1n and repeatedly "+
-"smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
-pc.hp := 0;
-pc.endurance := 0;
-act("Your face a bloody mess, you are dragged away."
-,A_ALWAYS, pc, self, null, TO_CHAR);
-position_update(pc);
-act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
-"$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
-room := findroom("for_gath1@ranger");
-link(pc,room);
-act("Two large rangers emerge from the Guild, dragging $1n"+
-"between them and dump $1m unceremoniously on the ground."
-,A_SOMEONE,pc,self,null,TO_REST);
-        :gone:
-unsecure(pc);
-goto start;
+   self.hp := self.max_hp;
+   act("The sounds of battle attract attention of the training rangers.",
+      A_ALWAYS, pc, self, null, TO_ALL);
+   act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly </div>"+
+      "smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
+   act("Several of them charge into the room, grabbing $1n and repeatedly "+
+      "smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
+   pc.hp := 0;
+   pc.endurance := 0;
+   act("Your face a bloody mess, you are dragged away." ,A_ALWAYS, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("Two of them grab $1n and drag $1m out of the Guild, dumping "+"$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
+   room := findroom("for_gath1@ranger");
+   link(pc,room);
+   act("Two large rangers emerge from the Guild, dragging $1n"+
+      "between them and dump $1m unceremoniously on the ground.",A_SOMEONE,pc,self,null,TO_REST);
+
+:gone:
+   unsecure(pc);
+   goto start;
 }
 dilend /*nokill*/
 
@@ -330,9 +328,8 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 end
 
 %mobiles
-%mobiles
 
-#define RANGER_FALLEN "Ranger, Fallen From Grace"
+// Replaced with GUILD_BANISHED #define RANGER_FALLEN "Ranger, Fallen From Grace"
 
 #define HUMAN_RANGER_ABIL \
 MSET_ABILITY (20,15,15,20,10,10,0,10)
@@ -372,16 +369,11 @@ alignment 1000
 money 2 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_NYM_RANGER
-/*
-special SFUN_GUILD_MASTER
-"&lGuild               = ~"+GUILD_NYM_RANGER+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(1*GOLD_MULT)+"&n
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(5*GOLD_MULT)+"&n
-Guild Exclude Quest  = ~Nymgaard Ranger Quitter~"
-*/
+dilcopy nokill@ranger();
+dilcopy quest_block@guilds("join", "Ranger Entry Quest Complete",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Ranger Entry quest"});
+dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
+dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
 
 dilcopy guild_titles@guild_paths(GUILD_NYM_RANGER, {"Master of the Hunt",
 "Mistress of the Hunt", "Scout", "Scout", "Guide", "Guide", "Beastmaster",
@@ -392,62 +384,70 @@ dilcopy guild_titles@guild_paths(GUILD_NYM_RANGER, {"Master of the Hunt",
 "Warden", "Lady Warden", "Justifier", "Justifier", "Protector Of The Lands",
 "Protector Of The Lands", "Guardian", "Guardian", "Ranger", "Lady Ranger"});
 
-/*
-special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
-*/
-/*
-dilbegin master_dil();
-
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
 code
 {
-  heartbeat := PULSE_SEC*5;
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
-  :start:
-  wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
-  self.position := POSITION_STANDING;
+   heartbeat := PULSE_SEC*5;
 
-    if ((not("Ranger Entry Quest Complete" in activator.quests)))
-    {
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_NYM_RANGER))
+   {
       block;
-      exec ("say You must talk to the gods before you will be allowed to " +
-            "join this guild!",
-            self);
-      pause;
-      goto start;
-    }
-
-    if (RANGER_FALLEN in activator.quests)
-    { block;
       exec ("say Why do you stand before me? you have been "+
       "told to leave our midst!", self);
       exec ("spit " + activator.name, self);
       pause;
       goto start;
-    }
+   }
 
-    if (activator.guild $= "Nymgaard Ranger")
-      { block;
-       exec ("sigh " + activator.name, self);
-	pause;
-	exec ("say I have told you about eating those magic " +
-	"mushrooms. You don't even know  who " +
-	"you are now " + activator.name+ ". You already hold the position "+
-	"of mighty ranger!" , self);
-	pause;
-	goto start;
-      }
-    if (activator.guild == "")
-    exec ("say The vitality of the forest, and the strength of the tree " +
-          "flows through your spirit.", self);
+   if (IsInGuild@guilds(activator, GUILD_NYM_RANGER))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say I have told you about eating those magic " +
+      "mushrooms. You don't even know who " +
+      "you are now " + activator.name+ ". You already hold the position "+
+      "of mighty ranger!" , self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuilds@guilds(activator, GUILD_RANGER_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Ranger.", self);
+      pause;
+      goto start;  
+   }
+
+   JoinGuild@guilds(activator, GUILD_PALADIN);
+
+   exec ("say The vitality of the forest, and the strength of the tree " +
+         "flows through your spirit.", self);
 
   goto start;
 }
 dilend
-*/
 
-dilbegin ranger_dil ();
+
+dilbegin ranger_dil();
+external 
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
-expd: extraptr;
 	pc : unitptr;
 	item : unitptr;
 code
@@ -456,61 +456,56 @@ code
 
 	:start:
 
- wait (SFB_DONE, (command("bow") or command("worship"))
-                 and (self == target));
-        pc := activator;
-        secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto start;
-        if ((GUILD_NYM_RANGER in expd.names) )
-	{
-	exec ("say I thank you for your service in protecting "+
-	"land and animals from those that wish to destroy "+
-	"them ",self);
-	pause;
-	exec ("say Since the realm is so dangerous and filled with " +
-        "dangerous creatures, we must protect ourselves as only " +
-        "rangers can.", self);
-	pause;
-	exec ("say In my wanderings of the area I have found "+
-	"this special long bow, made by the ancient Talen " +
-        "Rangers when we were at our best.", self);
-	pause;
-	exec ("say I give it to you in the hopes that it will "+
-        "aid you in your need.", self);
-        item := load("ranger_bow@ranger");
-	link(item, self);
-	exec ("give trinket "+pc.name, self);
-        if (item.outside == self) link(item, pc);
-	pause;
-        exec ("say Peace Be with you, go now and protect the lands",self);
-        unsecure(pc);
-	goto start;
-	}
-    else
-      {
-	block;
-		unsecure(pc);
-	exec ("say You are not a member here, leave now", self);
-      }
+   wait (SFB_DONE, (command("bow") or command("worship")) and (self == target));
+   
+   pc := activator;
+   secure(pc, lost);
 
-unsecure(pc);
-goto start;
+   if (IsInGuild@guilds(activator, GUILD_NYM_RANGER))
+	{
+      exec ("say I thank you for your service in protecting "+
+      "land and animals from those that wish to destroy "+
+      "them ",self);
+      pause;
+      exec ("say Since the realm is so dangerous and filled with " +
+         "dangerous creatures, we must protect ourselves as only " +
+         "rangers can.", self);
+      pause;
+      exec ("say In my wanderings of the area I have found "+
+      "this special long bow, made by the ancient Talen " +
+         "Rangers when we were at our best.", self);
+      pause;
+      exec ("say I give it to you in the hopes that it will "+
+         "aid you in your need.", self);
+      item := load("ranger_bow@ranger");
+      link(item, self);
+      exec("give bow "+pc.name, self);
+      if (item.outside == self) 
+         link(item, pc);
+      pause;
+      exec ("say Peace Be with you, go now and protect the lands",self);
+      unsecure(pc);
+      goto start;
+	}
+   else
+   {
+   	block;
+		unsecure(pc);
+	   exec ("say You are not a member here, leave now", self);
+   }
+
+   unsecure(pc);
+   goto start;
 
 :lost:
-
-unsecure(pc);
-exec("say Who dares to leave my presence while i am talking? I "+
-"should banish them!", self);
-goto start;
-
+   unsecure(pc);
+   exec("say Who dares to leave my presence while i am talking? I "+
+   "should banish them!", self);
+   goto start;
 }
-dilend /* ranger_dil */
-
-dilcopy nokill@ranger();
-
-
+dilend // ranger_dil
 end
+
 
 justifier
 names {"justin", "justifier"}
@@ -523,25 +518,20 @@ in the knowledge that he can beat almost any man or beast alive."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 M_HUMAN_CLERIC_SWORD(90, SEX_MALE, "", "heal")
-
-dilcopy nokill@ranger();
 alignment 500
-
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_NYM_RANGER
-/*
-special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
-*/
+dilcopy nokill@ranger();
 
-dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
+dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
 
 #define _WEAPON
 #include "guilddef.h"
 #undef _WEAPON
-
-
 end
+
 
 /*
 seeker
@@ -590,13 +580,9 @@ alignment 1000
 exp -100
 
 dilcopy nokill@ranger();
-
-special SFUN_GUILD_BASIS GUILD_NYM_RANGER
-/*
-special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
+dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -620,12 +606,9 @@ alignment 500
 
 dilcopy nokill@ranger();
 
-special SFUN_GUILD_BASIS GUILD_NYM_RANGER
-/*
-special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
+dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -649,21 +632,18 @@ M_HUMAN_CLERIC_SWORD(90, SEX_FEMALE, "", "heal")
 alignment 500
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_NYM_RANGER
-/*
-special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+dilcopy nokill@ranger();
+dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
+dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
 
 dilcopy nokill@ranger();
-
-
 end
+
 
 %objects
 
