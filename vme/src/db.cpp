@@ -386,7 +386,7 @@ void generate_zone_indexes()
     z->zone_no = g_zone_info.no_of_zones - 1;
     z->setName(str_dup("_players"));
     z->filename = str_dup("ply");
-    z->title = str_dup("Reserved zone for player file_indexes");
+    z->setTitle(str_dup("Reserved zone for player file_indexes"));
     z->help = str_dup("");
     z->notes = str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
                        "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
@@ -537,11 +537,11 @@ void generate_zone_indexes()
 
         if (cBuf.GetData()[0] != 0)
         {
-            z->title = str_dup((char *)cBuf.GetData());
+            z->setTitle( str_dup((char *)cBuf.GetData()));
         }
         else
         {
-            z->title = str_dup("");
+            z->setTitle(  str_dup(""));
         }
 
         /* read templates */

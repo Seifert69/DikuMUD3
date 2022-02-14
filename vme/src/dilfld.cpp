@@ -912,7 +912,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE; // Dont dealloc!
                         v->type = DILV_SPR;
-                        v->ref = &(((zone_type *)v1->val.ptr)->title);
+                        v->ref = ((zone_type *)v1->val.ptr)->getTitlePtrPtr();
                     }
                     else
                     {

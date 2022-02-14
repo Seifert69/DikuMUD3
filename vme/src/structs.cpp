@@ -333,6 +333,21 @@ void zone_type::setName(char *value)
     name = value;
 }
 
+const char *zone_type::getTitle() const
+{
+    return title;
+}
+
+char **zone_type::getTitlePtrPtr()
+{
+    return &title;
+}
+
+void zone_type::setTitle(char *value)
+{
+    FREE(title);
+    title=value;
+}
 
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {

@@ -71,12 +71,16 @@ public:
     char *getNamePtr();
     void setName(char *value);
 
+    const char *getTitle() const;
+    char **getTitlePtrPtr();
+    void setTitle(char *value);
+
 private:
-    cNamelist creators;  /* List of creators of zone         */
-    char *name{nullptr}; /* Unique in list                   */
+    cNamelist creators;   /* List of creators of zone         */
+    char *name{nullptr};  /* Unique in list                   */
+    char *title{nullptr}; /* A nice looking zone title        */
 
 public:
-    char *title;    /* A nice looking zone title        */
     char *notes;    /* Creator notes to zone            */
     char *help;     /* User-Help to zone                */
     char *filename; /* The filename of this file        */
