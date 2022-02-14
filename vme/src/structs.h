@@ -96,10 +96,9 @@ private:
 
     unit_data *rooms{nullptr};   // unit pointer to the base rooms, used in vmc really
     unit_data *objects{nullptr}; // unit pointer to the base objects, used in vmc really
+    unit_data *npcs{nullptr};    // unit pointer to the base npcs, used in vmc really
 
 public:
-    unit_data *npcs; // unit pointer to the base npcs, used in vmc really
-
     std::map<const char *, file_index_type *, cmp_str> mmp_fi;
 
     zone_reset_cmd *zri; /* List of Zone reset commands      */
