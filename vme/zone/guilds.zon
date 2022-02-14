@@ -1,0 +1,417 @@
+#include <macros.h>
+
+%zone guilds
+
+reset RESET_NOT
+
+creators {"Papi"}
+
+notes
+"The DIL functions needed to manage Guilds."
+
+help 
+"MS 2022. High level description of guilds.<br/>
+
+When a player first joins the game they choose a profession.
+The profession automatically enrolls them in a guild matching
+the profession.<br/>
+
+A player can thereafter join as many guilds as they want. Joining a 
+guild should require something from the player, e.g. completing a quest.
+Training cost is determined by the player's profession, so joining a new
+guild will not make it cheaper to practice e.g. your strength, but new
+guilds and teachers might offer training in skills not in your current guild
+or even have higher maximums than your current guild."
+
+
+%dil
+
+//
+// Guild Masters:
+//    Except for your starting guild, you join new guilds at the guild master.
+//
+// DIL setup:
+//    [nokill]
+//         - optional DIL to avoid having guild members murdered.
+//    quest blocking DIL(s)
+//         - e.g. QuestBlock@guilds(); you can only join if you completed X
+//    join DIL
+//         - We're missing a generic join DIL I think.
+//         - e.g. master_join@paladin_guild
+//
+//     MurderBanish()  (replaces SFUN_GUILD_BASIS)
+//        - Any player killing a guild master / teacher will get banished
+//
+//     AlertMembers()  (replaces SFUN_GUILD_BASIS)
+//        - Alert guild members that guild is under attack
+//
+//     guild_titles@guild_paths()
+
+
+// Guild teachers:
+//   Offer teachings, abilities, skills, spells, weapons that you can practice.
+//
+// - setup:
+// Missing generic guild block train
+// special SFUN_GUILD_BASIS GUILD_PALADIN
+// dilcopy teacher_prac@guilds( GUILD_PALADIN );
+// #define _WEAPON
+// #include "guilddef.h"
+// #undef _WEAPON
+//
+
+//
+// =================================================================
+//
+
+// Plan:
+//   in block.zon ?
+//
+// QuestBlock@guilds(cmd : string, quest : string, sExec : stringlist);
+//    used to blocks the join command unless player has list of quests
+//
+// alignment@block - 
+//    blocks the join command unless player has alignment GOOD, EVIL or NEUTRAL
+//
+// guild@block({commands}, guild, {actions}) - 
+//    used to block player {commands} unless the player is in the guild
+// 
+// move@block({directions}, guild, {actions}) - 
+//    used to block player moving in direction unless the player is in the guild
+// 
+// guild_wield()
+//    if not in guild, unequip and drop
+//
+
+//
+// =================================================================
+// New guild helper functions per 2022 MS to add / remove
+// guilds from player's info.
+//
+// integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+// integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+// integer IsBanished@guilds(pc : unitptr, sGuild : string);
+// JoinGuild@guilds(pc : unitptr, sGuild : string);
+// LeaveGuild@guilds(pc : unitptr, sGuild : string);
+// BanishGuild@guilds(pc : unitptr, sGuild : string);
+// MurderBanish@guilds(sGuild : string);
+// AlertMembers@guilds(sGuild : string, sMsg : string);
+//
+// Blockers:
+// TrainMemberChk(sGuild : string, sMsg : string);
+// QuestBlock(cmd : string, quest : string, sExec : stringlist);
+
+
+#define GUILD_JOINED   "$guilds"
+#define GUILD_BANISHED "$guilds_banished"
+#define GUILD_LEFT     "$guilds_left"
+
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin integer IsInGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+      return (0);
+
+   if (sGuild in exd.names)
+      return (1);
+
+   return (0);
+}
+dilend
+
+
+// Checks if player pc is in any of the guilds in 'sGuilds'
+// 0 = not in any of the guild, 1 = in one of the guilds
+//
+dilbegin integer IsInGuilds(pc : unitptr, sGuilds : stringlist);
+var
+   exd : extraptr;
+   ln : integer;
+
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+      return (0);
+
+   ln := length(sGuilds) - 1;
+   while (ln >= 0)
+   {
+      if (sGuilds.[ln] in exd.names)
+         return (1);
+
+      ln := ln-1;
+   }
+
+   return (0);
+}
+dilend
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin integer IsBanished(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_BANISHED in pc.info;
+
+   if (exd == null)
+      return (0);
+
+   if (sGuild in exd.names)
+      return (1);
+
+   return (0);
+}
+dilend
+
+
+// Joins player pc to guild sGuild
+//
+dilbegin JoinGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+   {
+      addextra(pc.info, {GUILD_JOINED}, "");
+      exd := GUILD_JOINED in pc.info;
+   }
+
+   if (sGuild in exd.names)
+   {
+      log("Error in JoinGuild. Guild was already in player guild list");
+      return;
+   }
+
+   addstring(exd.names, sGuild);
+   return;
+}
+dilend
+
+
+// Player pc leaves the guild sGuild (moved to GUILD_LEFT)
+//
+dilbegin LeaveGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+   exdleft : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in LeaveGuild. $guilds missing from player." + pc.name);
+      return;
+   }
+
+   exdleft := GUILD_LEFT in pc.info;
+
+   if (exdleft == null)
+   {
+      addextra(pc.info, {GUILD_LEFT}, "");
+      exdleft := GUILD_LEFT in pc.info;
+   }
+
+   if (not(sGuild in exd.names))
+   {
+      log("Error in LeaveGuild. The guild left was not in $guilds for " + pc.name);
+      return;
+   }
+
+   if (sGuild in exdleft.names)
+   {
+      log("Error in LeaveGuild. The guild left was already left for " + pc.name);
+      return;
+   }
+
+   substring(exd.names, sGuild);
+   addstring(exdleft.names, sGuild);
+   return;
+}
+dilend
+
+
+// Player pc is banished from his guild sGuild (moved to GUILD_BANISHED)
+// If player is not in the guild, they are still added as banished.
+//
+dilbegin BanishGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+   exdbanished : extraptr;
+code
+{
+   exd := GUILD_JOINED in pc.info;
+
+   if (exd == null)
+   {
+      addextra(pc.info, {GUILD_JOINED}, "");
+   }
+
+   exdbanished := GUILD_BANISHED in pc.info;
+
+   if (exdbanished == null)
+   {
+      addextra(pc.info, {GUILD_BANISHED}, "");
+      exdbanished := GUILD_BANISHED in pc.info;
+   }
+
+   // Remove the player from the guild (if a member)
+   substring(exd.names, sGuild);
+
+   if (not (sGuild in exdbanished.names))
+   {
+      // Banish the player, regardless if they're a member or not.
+      addstring(exdbanished.names, sGuild);
+   }
+
+   return;
+}
+dilend
+
+
+// =================================================================
+// Replacing SFUN_GUILD_BASIS
+
+// kill_banish
+// Purpose: If someone attacks a guild master, make them banished,
+//    even if they are not members.
+//
+dilbegin fnpri(FN_PRI_BLOCK-2) MurderBanish(sGuild : string);
+external
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+
+var
+   u : unitptr;
+
+code
+{
+:loop:
+   wait(SFB_DEAD, self == activator);
+
+   u := self.outside;
+
+   while (u)
+   {
+      if ((u.type == UNIT_ST_PC) and (u.fighting == self) and (visible(self, u)))
+      {
+         BanishGuild@guilds(u, sGuild);
+      }
+      u := u.next;
+   }
+
+   goto loop;
+}
+dilend
+
+
+
+// Alert all guild members if guild is under attack
+//    NOT YET IMPLEMENTED
+dilbegin fnpri(FN_PRI_BLOCK-2) AlertMembers(sGuild : string, sMsg : string);
+external
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+var
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC * 60;
+
+:loop:
+   wait(SFB_COM, TRUE);
+
+    if (self.fighting)
+    {
+       if (sMsg == "")
+         sMsg := "$3n tells you, 'Help! Our guild is attacked by $1n'";
+
+      s := sact(sMsg, A_SOMEONE, self.fighting, null, self, TO_CHAR);
+
+      // Need to write code to send to guild members. Channel?
+
+      pause;
+    }
+
+     goto loop;
+}
+dilend
+
+
+// =================================================================
+
+// quest@block(cmd, quest, {exec}) - 
+//    If a char does the command 'cmd':
+//       Allow command if char has the quest 'quest'
+//       block it otherwise
+//
+// Sample: 
+//    dilcopy QuestBlock@guilds("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
+//
+//    The player can only join if they have completed the WIGHT_COMPLETE quest.
+//
+
+dilbegin fnpri(FN_PRI_BLOCK-1) QuestBlock(cmd : string, quest : string, sExec : stringlist);
+external
+   Explainer@quests(pc : unitptr, sl : stringlist);
+
+code
+{
+:loop:
+   wait(SFB_CMD, command(cmd));
+
+   if (not (quest in activator.quests))
+   {
+      block;
+      Explainer@quests(activator, sExec);
+   }
+
+   goto loop;
+}
+dilend
+
+
+
+dilbegin fnpri(FN_PRI_BLOCK+1) TrainMemberChk(sGuild : string, sMsg : string);
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+var
+  pc   : unitptr;
+code
+{
+:start:
+   wait (SFB_CMD, command ("practice") and (activator.type == UNIT_ST_PC));
+
+   if (not IsInGuild@guilds(activator, sGuild))
+   {
+      block;
+      if ((self.position > POSITION_SLEEPING) or (self.position != POSITION_FIGHTING))
+      {
+         if (sMsg == "")
+            sMsg := "say You're not a member of our guild, go speak with the guild master.";
+         exec(sMsg, self);
+      }
+   }
+   goto start;
+}
+dilend
+
+
+
+// =================================================================
+
+%end

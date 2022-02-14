@@ -109,7 +109,7 @@ created by eirinn
 // AlertMembers@guild_paths(sGuild : string, sMsg : string);
 //
 // Blockers:
-// TrainMemberCheck(sGuild : string, sMsg : string);
+// TrainMemberChk(sGuild : string, sMsg : string);
 // QuestBlock(cmd : string, quest : string, sExec : stringlist);
 
 
@@ -369,7 +369,7 @@ dilend
 
 
 
-dilbegin fnpri(FN_PRI_BLOCK+1) TrainMemberCheck(sGuild : string, sMsg : string);
+dilbegin fnpri(FN_PRI_BLOCK+1) TrainMemberChk(sGuild : string, sMsg : string);
 external
    integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
 var
@@ -386,7 +386,7 @@ code
       {
          if (sMsg == "")
             sMsg := "say You're not a member of our guild, go speak with the guild master.";
-         execs(Msg, self);
+         // execs(Msg, self);
       }
    }
    goto start;

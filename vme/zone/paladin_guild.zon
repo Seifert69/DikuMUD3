@@ -67,8 +67,8 @@ Sk(r)ay email </div><div class='cpr'>otap@dorit.ihi.ku.dk</div><div class='cw'> 
 
 dilbegin antievil();
 external
-   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
-   integer IsBanished@guild_paths(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
 
 var
 	flux : integer;
@@ -89,7 +89,7 @@ code
    if (command("flee"))
       block;
 
-   if (IsInGuild@guild_paths(pc, GUILD_NECROMANCER) or IsInGuild@guild_paths(pc, GUILD_ASSASSIN))
+   if (IsInGuild@guilds(pc, GUILD_NECROMANCER) or IsInGuild@guilds(pc, GUILD_ASSASSIN))
    {
       self.hp := self.max_hp;
       exec("frown "+pc.name,self);
@@ -132,7 +132,7 @@ code
       goto gone;
    }
 
-   if (IsBanished@guild_paths(pc, GUILD_PALADIN))
+   if (IsBanished@guilds(pc, GUILD_PALADIN))
    {
       exec("frown",self);
       exec("say I remember thee, "+pc.name+".",self);
@@ -159,12 +159,12 @@ dilend
 
 dilbegin restrict_guild(damage:integer, gld:string);
 external
-   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 code
 {
    :start:
    wait (SFB_DONE,((( command ("wear")) or (command ("wield")) or (command ("hold")))) and
-                  (self==medium) and (not IsInGuild@guild_paths(activator, gld)));
+                  (self==medium) and (not IsInGuild@guilds(activator, gld)));
 
    if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
@@ -227,7 +227,7 @@ dilend
 
 dilbegin fnpri(FN_PRI_BLOCK) BlockEvilTrain();
 external
-   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
   pc   : unitptr;
 code
@@ -651,8 +651,8 @@ M_HUMAN_CLERIC_SWORD(100, SEX_MALE,"","heal")
 alignment 1000
 exp 0
 
-dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
-dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy MurderBanish@guilds(GUILD_PALADIN);
+dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 dilcopy rescue@function("reignier/edmund/alex/joan/corbin/paladin");
 dilcopy teamwork@function("reignier/edmund/alex/joan/corbin/paladin");
 dilcopy antievil@paladin_guild();
@@ -690,18 +690,19 @@ exp -300
                  not be a Fallen Paladin and not be Banished. */
 
 dilcopy nokill@paladin_guild();
-dilcopy quest_block@guild_paths("join", WIGHT_COMPLETE, 
+dilcopy quest_block@guilds("join", WIGHT_COMPLETE, 
            {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Wight Warren's quest"});
-dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
-dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy MurderBanish@guilds(GUILD_PALADIN);
+dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 
 dilbegin master_join();
 external
-   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
-   integer IsBanished@guild_paths(pc : unitptr, sGuild : string);
-   JoinGuild@guild_paths(pc : unitptr, sGuild : string);
-   LeaveGuild@guild_paths(pc : unitptr, sGuild : string);
-   BanishGuild@guild_paths(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
 
 code
 {
@@ -724,7 +725,7 @@ code
          goto start;
       }
 
-      if ((PALADIN_FALLEN in activator.quests) or (IsBanished@guild_paths(activator, GUILD_PALADIN)))
+      if ((PALADIN_FALLEN in activator.quests) or (IsBanished@guilds(activator, GUILD_PALADIN)))
       { 
          block;
          exec ("say You are foolish, Fallen One, to even show your face " +
@@ -750,7 +751,7 @@ code
          goto start;
       }
 
-      if (IsInGuild@guild_paths(activator, GUILD_PALADIN))
+      if (IsInGuild@guilds(activator, GUILD_PALADIN))
       {
          block;
          exec("say Me thinks your head has been rattled too many times in your "+
@@ -760,8 +761,7 @@ code
          goto start;
       }
 
-      if (IsInGuild@guild_paths(activator, GUILD_ASSASSIN) or IsInGuild@guild_paths(activator, GUILD_UDG_THIEF) or
-          IsInGuild@guild_paths(activator, GUILD_NECROMANCER))
+      if (IsInGuilds@guilds(activator, GUILD_PALADIN_EXCL))
       {
          block;
          exec("say Your other guild choices exclude you from joining the Paladin's Guild.", self);
@@ -769,7 +769,7 @@ code
          goto start;  
       }
 
-      JoinGuild@guild_paths(activator, GUILD_PALADIN);
+      JoinGuild@guilds(activator, GUILD_PALADIN);
       exec ("say Welcome to the Holy Order of Paladins, "+activator.name+
             ". May you walk paths of honor and be diligent in your protection "+
             "of Midgaard and it's people.", self);
@@ -782,8 +782,8 @@ dilend
 
 dilbegin paladin_quest1();
 external
-   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
-   BanishGuild@guild_paths(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
 var
 	pc : unitptr;
 	item : unitptr;
@@ -798,7 +798,7 @@ code
 	pc := activator;
 	secure(pc, lost);
 
-   if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment > 349))
+   if (IsInGuild@guilds(pc, GUILD_PALADIN) and (pc.alignment > 349))
 	{
    exec("say Ahhh.. I do have a few faithful followers, I was wondering if "+
    "any still existed.", self);
@@ -891,7 +891,7 @@ code
    goto start;
       }
 
-         if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment < 349))
+         if (IsInGuild@guilds(pc, GUILD_PALADIN) and (pc.alignment < 349))
          {
             block;
          exec ("say You have strayed from the path of our order. I will "+
@@ -901,11 +901,11 @@ code
          goto start;
          }
 
-         if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment < -900))
+         if (IsInGuild@guilds(pc, GUILD_PALADIN) and (pc.alignment < -900))
          {
             block;
             exec ("say You are a disgrace to our order, you have been banished!", self);
-            BanishGuild@guild_paths(pc, GUILD_PALADIN);
+            BanishGuild@guilds(pc, GUILD_PALADIN);
             unsecure (pc);
             exec ("spit "+activator.name, self);
             goto start;
@@ -931,7 +931,7 @@ dilend
 
 dilbegin paladin_quest2();
 external
-   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 
 var
    pc : unitptr;
@@ -948,7 +948,7 @@ code
    pc := activator;
    secure(pc, lost);
 	gift := medium;
-   if (IsInGuild@guild_paths(pc, GUILD_PALADIN) and (pc.alignment > 349) and (PALADIN_SWORD in pc.quests))
+   if (IsInGuild@guilds(pc, GUILD_PALADIN) and (pc.alignment > 349) and (PALADIN_SWORD in pc.quests))
    if (((pc.level < 15)and
    (gift.nameidx $= "dflail")and(gift.zoneidx $= "darkelf"))
    or ((pc.level < 25)and
@@ -1000,7 +1000,7 @@ Guild Leave Cost          = 5 PLATINUM_PIECE
 Guild Exclude Quest       = ~Midgaard Paladin Quitter~ ~Paladin, Fallen From Grace~"
 */
 
-dilcopy guild_titles@guild_paths(GUILD_PALADIN, { "Converted", "Converted",
+dilcopy guild_titles@guilds(GUILD_PALADIN, { "Converted", "Converted",
 "Dedicated", "Dedicated", "Pure", "Pure", "Redeemed", "Redeemed",
 "Hero of the Narrow Path", "Heroine of the Narrow Path", "Annointed Knight",
 "Annointed Knight", "Blessed Knight", "Blessed Knight", "Holy Knight",
@@ -1034,9 +1034,9 @@ alignment 1000
 dilcopy combat_mag@function("harm","",25,2);
 
 dilcopy nokill@paladin_guild();
-dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
-dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy MurderBanish@guilds(GUILD_PALADIN);
+dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _WEAPON
@@ -1065,9 +1065,9 @@ alignment 1000
 dilcopy combat_mag@function("","heal",25,2);
 
 dilcopy nokill@paladin_guild();
-dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
-dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy MurderBanish@guilds(GUILD_PALADIN);
+dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _SPELL
@@ -1095,9 +1095,9 @@ alignment 1000
 dilcopy combat_mag@function("","heal",25,2);
 
 dilcopy nokill@paladin_guild();
-dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
-dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy MurderBanish@guilds(GUILD_PALADIN);
+dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _ABILITY
@@ -1127,9 +1127,9 @@ alignment 1000
 dilcopy combat_mag@function("harm","",25,2);
 
 dilcopy nokill@paladin_guild();
-dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
-dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy MurderBanish@guilds(GUILD_PALADIN);
+dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
+dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _SKILL

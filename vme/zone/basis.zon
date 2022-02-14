@@ -110,7 +110,6 @@ code
 { 
    log(self.name + " advanced to level " + itoa(self.vlevel));
 
-
    adv_guild_lvl@g_q(self);
 
    return;
@@ -1216,8 +1215,8 @@ dilend
    Expects: nIdx [0..2] which is the guild ot change (0=primary, 1 or 2), and
    nGuild in [0..10] which is the guild to enroll the character in.  You cannot
    overwrite a selection that has already been made
-*/
-dilbegin setguild(nIdx:integer, nGuild : integer);
+
+dilbegin oldsetguild(nIdx:integer, nGuild : integer);
 external
    setautotrain(nGuild : integer);
 
@@ -1323,7 +1322,41 @@ code
    setautotrain(nGuild);
    return;
 }
+dilend*/
+
+
+/* MS2020 Simplifying the old code and login
+   Manages a characters guild selection data.
+   Expects: nIdx [0..2] which is the guild ot change (0=primary, 1 or 2), and
+   nGuild in [0..10] which is the guild to enroll the character in.  You cannot
+   overwrite a selection that has already been made
+*/
+dilbegin setguild(nIdx:integer, nGuild : integer);
+external
+   setautotrain(nGuild : integer);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+
+var
+   guilds : stringlist;
+code
+{
+   guilds := GUILD_SL;
+
+   if ((nGuild > length(guilds)-1) or (nGuild < 0))
+   {
+      log("Illegal value in setguild");
+      return;
+   }
+
+   log("setguild() on "+self.name+" set to "+guilds.[nGuild]+" for index "+itoa(nIdx));
+
+   JoinGuild@guilds(self, guilds.[nGuild]);
+   setautotrain(nGuild);
+   return;
+}
 dilend
+
+
 
 dilbegin string listselector(sl : stringlist);
 var
@@ -5126,6 +5159,9 @@ dilend /* nanny_guild */
 
 
 dilbegin nanny_alignment( arg : string );
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
    exdp   : extraptr;
    state  : integer;
@@ -5143,11 +5179,9 @@ code
    if ((self.race == RACE_HALFLING) or (self.race == RACE_ELF) or
        (self.race == RACE_HALF_ELF) or (self.race == RACE_BROWNIE))
 */
-   if ((self.guild == "Udgaard Healer") or
-       (self.guild == "Nymgaard Ranger"))
-     cat := 1; /* Good and Neutral */
-
-   else if (self.guild == "Midgaard Paladin")
+   if (IsInGuild@guilds(self, GUILD_UDG_CLERIC) or IsInGuild@guilds(self, GUILD_NYM_RANGER))
+     cat := 1; // Good and Neutral 
+   else if (IsInGuild@guilds(self, GUILD_PALADIN))
      cat := 2;
 /*
    else if ((self.race == RACE_GROLL) or (self.race == RACE_HALF_ORC) or
@@ -5160,8 +5194,7 @@ code
       goto done;
    } */
 
-   else if ((self.guild == "Necromancer") or
-           (self.guild =="Midgaard Dark Knight"))
+   else if (IsInGuild@guilds(self, GUILD_NECROMANCER) or IsInGuild@guilds(self, GUILD_KNIGHT))
      cat := 3;
 
    else
