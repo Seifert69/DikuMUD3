@@ -67,11 +67,11 @@ END HEADER*/
 
 #define GUILD_PALADIN     "Midgaard Paladin"
 #define GUILD_PALADIN_ATL  "joan@paladin_guild", "edmund@paladin_guild", "alex@paladin_guild", "corbin@paladin_guild" //  Abi, Wpn, Spl, Ski
-#define GUILD_PALADIN_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_KNIGHT, GUILD_ASSASSIN, GUILD_UDG_THIEF}
+#define GUILD_PALADIN_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_KNIGHT, GUILD_ASSASSIN, GUILD_UDG_THIEF, GUILD_NECROMANCER}
 
 #define GUILD_NYM_RANGER  "Nymgaard Ranger"
 #define GUILD_RANGER_ATL  "mountain_man@ranger", "justifier@ranger", "guardian@ranger", "pathfinder@ranger" //  Abi, Wpn, Spl, Ski
-#define GUILD_KNIGHT_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_KNIGHT_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
 
 #define GUILD_UDG_THIEF   "Udgaard Thief"
 #define GUILD_THIEF_ATL   "bisse@thievesguild","pirate@thievesguild","gryma@thievesguild" //  Abi, Wpn, Ski
@@ -87,7 +87,7 @@ END HEADER*/
 
 #define GUILD_NYM_DRUID   "Nymgaard Druid"
 #define GUILD_DRUID_ATL   "oak@druid", "elm@druid", "maple@druid", "willow@druid" //  Abi, Wpn, Spl, Ski
-#define GUILD_DRUID_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_DRUID_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
 
 #define GUILD_MYSTIC      "obsolete"
 #define GUILD_MYSTIC_ATL  "", "", "", "" //  Abi, Wpn, Spl, Ski
