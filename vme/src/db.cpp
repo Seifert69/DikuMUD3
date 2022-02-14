@@ -549,7 +549,7 @@ void generate_zone_indexes()
         generate_templates(f, z);
 
         z->no_of_fi = 0;
-        z->zri = nullptr;
+        z->setZoneResetCommands(nullptr);
         generate_file_indexes(f, z);
         z->no_rooms = g_room_number; /* Number of rooms in the zone */
 
@@ -1917,7 +1917,7 @@ void read_all_zones()
             error(HERE, "Failed to fread() zone->second->reset_mode");
         }
 
-        zone->second->zri = read_zone(f, nullptr);
+        zone->second->setZoneResetCommands(read_zone(f, nullptr));
 
         fclose(f);
     }

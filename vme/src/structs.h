@@ -89,6 +89,10 @@ public:
     const std::map<const char *, file_index_type *, cmp_str> &getFileIndexMap() const;
     std::map<const char *, file_index_type *, cmp_str> &getFileIndexMap();
 
+    const zone_reset_cmd *getZoneResetCommands() const;
+    zone_reset_cmd *getZoneResetCommands();
+    void setZoneResetCommands(zone_reset_cmd *value);
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -103,9 +107,8 @@ private:
 
     std::map<const char *, file_index_type *, cmp_str> mmp_fi;
 
+    zone_reset_cmd *zri{nullptr}; /* List of Zone reset commands      */
 public:
-    zone_reset_cmd *zri; /* List of Zone reset commands      */
-
     std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
 
     ubit8 **spmatrix; /* Shortest Path Matrix             */

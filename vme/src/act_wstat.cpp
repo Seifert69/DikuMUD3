@@ -173,7 +173,7 @@ static void stat_world(unit_data *ch)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zrip, unit_data *ch)
+static std::string stat_zone_reset(const std::string &indnt, const zone_reset_cmd *zrip, unit_data *ch)
 {
     static const char *nums[] = {"max", "zonemax", "local"};
     std::string bits;
@@ -439,11 +439,11 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         break;
 
         case 3:
-            if (zone->zri)
+            if (zone->getZoneResetCommands())
             {
                 auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->getName());
                 send_to_char(msg, ch);
-                auto stat_buffer = stat_zone_reset("", zone->zri, ch);
+                auto stat_buffer = stat_zone_reset("", zone->getZoneResetCommands(), ch);
                 page_string(CHAR_DESCRIPTOR(ch), stat_buffer);
             }
             else

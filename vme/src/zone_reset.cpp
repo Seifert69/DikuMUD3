@@ -412,7 +412,7 @@ void zone_reset(zone_type *zone)
 
     zone_update_no_in_zone(); /* Reset the fi->no_in_zone */
 
-    low_reset_zone(nullptr, zone->zri);
+    low_reset_zone(nullptr, zone->getZoneResetCommands());
 
     /* Far too much LOG:
        slog(LOG_OFF, 0, "Zone reset of '%s' done (%d bytes used).",

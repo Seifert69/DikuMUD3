@@ -402,6 +402,22 @@ std::map<const char *, file_index_type *, cmp_str> &zone_type::getFileIndexMap()
     return mmp_fi;
 }
 
+const zone_reset_cmd *zone_type::getZoneResetCommands() const
+{
+    return zri;
+}
+
+zone_reset_cmd *zone_type::getZoneResetCommands()
+{
+    return zri;
+}
+
+void zone_type::setZoneResetCommands(zone_reset_cmd *value)
+{
+    FREE(zri);
+    zri = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
