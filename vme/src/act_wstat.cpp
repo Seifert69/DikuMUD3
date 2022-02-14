@@ -261,7 +261,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
     bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".err");
     bool info = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".inf");
 
-    char *cname = zone->creators.catnames();
+    char *cname = zone->getCreators().catnames();
 
     auto msg = diku::format_to_str("Zone [%s]  File [%s]  Access [%d]<br/>"
                                    "Title: \"%s\"<br/>"
@@ -314,7 +314,7 @@ static void stat_creators(unit_data *ch, char *arg)
 
         for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
         {
-            char *cname = it->second->creators.catnames();
+            char *cname = it->second->getCreators().catnames();
 
             msg += diku::format_to_str("%-15s   %s<br/>", it->second->name, cname);
             FREE(cname);
@@ -330,7 +330,7 @@ static void stat_creators(unit_data *ch, char *arg)
     found = FALSE;
     for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
     {
-        if (it->second->creators.IsName(tmp))
+        if (it->second->getCreators().IsName(tmp))
         {
             msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->name, it->second->filename);
             found = TRUE;

@@ -672,7 +672,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SLPR;
-                        v->ref = &(((zone_type *)v1->val.ptr)->creators);
+                        v->ref = &(((zone_type *)v1->val.ptr)->getCreators());
                     }
                     else
                     {

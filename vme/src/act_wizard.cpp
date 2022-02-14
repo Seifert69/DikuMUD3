@@ -422,7 +422,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
 
     if (CHAR_LEVEL(ch) < fi->getZone()->loadlevel)
     {
-        if (!fi->getZone()->creators.IsName(UNIT_NAME(ch)))
+        if (!fi->getZone()->getCreators().IsName(UNIT_NAME(ch)))
         {
             int i = fi->getZone()->loadlevel;
 

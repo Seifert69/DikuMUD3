@@ -529,7 +529,7 @@ void generate_zone_indexes()
                 break;
             }
 
-            z->creators.AppendName((char *)cBuf.GetData());
+            z->getCreators().AppendName((char *)cBuf.GetData());
         }
 
         fstrcpy(&cBuf, f);

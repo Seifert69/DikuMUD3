@@ -63,7 +63,11 @@ public:
     zone_type();
     ~zone_type();
 
+    cNamelist &getCreators();
+
+private:
     cNamelist creators; /* List of creators of zone         */
+public:
     char *name;         /* Unique in list                   */
     char *title;        /* A nice looking zone title        */
     char *notes;        /* Creator notes to zone            */
