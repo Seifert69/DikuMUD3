@@ -4336,7 +4336,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
-                        v->ref = &(((zone_type *)v1->val.ptr)->filename);
+                        v->ref = ((zone_type *)v1->val.ptr)->getFilenamePtrPtr();
                     }
                     else
                     {

@@ -79,19 +79,22 @@ public:
     char **getNotesPtrPtr();
     void setNotes(char *value);
 
-    char **getHelpPtrPtr() ;
+    char **getHelpPtrPtr();
     void setHelp(char *value);
 
+    const char *getFilename() const;
+    char **getFilenamePtrPtr();
+    void setFilename(char *value);
+
 private:
-    cNamelist creators;   /* List of creators of zone         */
-    char *name{nullptr};  /* Unique in list                   */
-    char *title{nullptr}; /* A nice looking zone title        */
-    char *notes{nullptr}; /* Creator notes to zone            */
-    char *help{nullptr};  /* User-Help to zone                */
+    cNamelist creators;      /* List of creators of zone         */
+    char *name{nullptr};     /* Unique in list                   */
+    char *title{nullptr};    /* A nice looking zone title        */
+    char *notes{nullptr};    /* Creator notes to zone            */
+    char *help{nullptr};     /* User-Help to zone                */
+    char *filename{nullptr}; /* The filename of this file        */
 
 public:
-    char *filename; /* The filename of this file        */
-
     unit_data *rooms;   // unit pointer to the base rooms, used in vmc really
     unit_data *objects; // unit pointer to the base objects, used in vmc really
     unit_data *npcs;    // unit pointer to the base npcs, used in vmc really

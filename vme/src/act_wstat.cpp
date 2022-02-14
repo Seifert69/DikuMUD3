@@ -258,8 +258,8 @@ static void stat_zone(unit_data *ch, zone_type *zone)
         reset_mode = 3;
     }
 
-    bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".err");
-    bool info = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".inf");
+    bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->getFilename() + ".err");
+    bool info = file_exists(g_cServerConfig.getZoneDir() + zone->getFilename() + ".inf");
 
     char *cname = zone->getCreators().catnames();
 
@@ -272,7 +272,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
                                    "%s<br/>%s<br/>",
                                    zone->getName(),
-                                   zone->filename,
+                                   zone->getFilename(),
                                    zone->access,
                                    zone->getTitle() ? zone->getTitle() : "",
                                    zone->loadlevel,
@@ -332,7 +332,7 @@ static void stat_creators(unit_data *ch, char *arg)
     {
         if (it->second->getCreators().IsName(tmp))
         {
-            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->getName(), it->second->filename);
+            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->getName(), it->second->getFilename());
             found = TRUE;
         }
     }
@@ -457,7 +457,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         case 5:
         {
             /* Errors/Info (Small hack, this :-) ) */
-            auto filename = diku::format_to_str("%s%s.%.3s", g_cServerConfig.getZoneDir().c_str(), zone->filename, zone_args[argno]);
+            auto filename = diku::format_to_str("%s%s.%.3s", g_cServerConfig.getZoneDir().c_str(), zone->getFilename(), zone_args[argno]);
             if (!file_exists(filename))
             {
                 return;

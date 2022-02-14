@@ -385,7 +385,7 @@ void generate_zone_indexes()
     g_zone_info.no_of_zones++;
     z->zone_no = g_zone_info.no_of_zones - 1;
     z->setName(str_dup("_players"));
-    z->filename = str_dup("ply");
+    z->setFilename(str_dup("ply"));
     z->setTitle(str_dup("Reserved zone for player file_indexes"));
     z->setHelp(str_dup(""));
     z->setNotes(str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
@@ -478,7 +478,7 @@ void generate_zone_indexes()
         g_zone_info.no_of_zones++;
 
         z->zone_no = g_zone_info.no_of_zones - 1;
-        z->filename = str_dup(zone);
+        z->setFilename(str_dup(zone));
 
         if (*dilfilepath)
         {
@@ -1552,7 +1552,7 @@ void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
     FILE *f = nullptr;
     char buf[256];
 
-    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->getZone()->filename);
+    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->getZone()->getFilename());
 
     if ((f = fopen_cache(buf, "rb")) == nullptr)
     {
@@ -1899,11 +1899,11 @@ void read_all_zones()
             continue;
         }
 
-        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->filename);
+        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->getFilename());
 
         if ((f = fopen(filename, "rb")) == nullptr)
         {
-            slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->filename);
+            slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->getFilename());
             exit(10);
         }
 

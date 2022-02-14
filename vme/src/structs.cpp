@@ -376,6 +376,22 @@ void zone_type::setHelp(char *value)
     help = value;
 }
 
+const char *zone_type::getFilename() const
+{
+    return filename;
+}
+
+char **zone_type::getFilenamePtrPtr()
+{
+    return &filename;
+}
+
+void zone_type::setFilename(char *value)
+{
+    FREE(filename);
+    filename = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
