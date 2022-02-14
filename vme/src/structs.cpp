@@ -349,6 +349,22 @@ void zone_type::setTitle(char *value)
     title=value;
 }
 
+const char *zone_type::getNotes() const
+{
+    return notes;
+}
+
+char **zone_type::getNotesPtrPtr()
+{
+    return &notes;
+}
+
+void zone_type::setNotes(char *value)
+{
+    FREE(notes);
+    notes=value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

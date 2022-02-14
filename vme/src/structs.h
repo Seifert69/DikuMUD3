@@ -75,13 +75,17 @@ public:
     char **getTitlePtrPtr();
     void setTitle(char *value);
 
+    const char *getNotes() const;
+    char **getNotesPtrPtr();
+    void setNotes(char *value);
+
 private:
     cNamelist creators;   /* List of creators of zone         */
     char *name{nullptr};  /* Unique in list                   */
     char *title{nullptr}; /* A nice looking zone title        */
+    char *notes{nullptr};    /* Creator notes to zone            */
 
 public:
-    char *notes;    /* Creator notes to zone            */
     char *help;     /* User-Help to zone                */
     char *filename; /* The filename of this file        */
 

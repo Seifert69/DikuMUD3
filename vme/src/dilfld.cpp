@@ -4363,7 +4363,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
-                        v->ref = &(((zone_type *)v1->val.ptr)->notes);
+                        v->ref = ((zone_type *)v1->val.ptr)->getNotesPtrPtr();
                     }
                     else
                     {

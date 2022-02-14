@@ -388,9 +388,9 @@ void generate_zone_indexes()
     z->filename = str_dup("ply");
     z->setTitle(str_dup("Reserved zone for player file_indexes"));
     z->help = str_dup("");
-    z->notes = str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
-                       "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
-                       "of player files on disk\n");
+    z->setNotes(str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
+                        "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
+                        "of player files on disk\n"));
     g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
     z = nullptr;
 
@@ -516,7 +516,7 @@ void generate_zone_indexes()
 
         /* More data read here */
         fstrcpy(&cBuf, f);
-        z->notes = str_dup((char *)cBuf.GetData());
+        z->setNotes(str_dup((char *)cBuf.GetData()));
 
         fstrcpy(&cBuf, f);
         z->help = str_dup((char *)cBuf.GetData());
@@ -537,11 +537,11 @@ void generate_zone_indexes()
 
         if (cBuf.GetData()[0] != 0)
         {
-            z->setTitle( str_dup((char *)cBuf.GetData()));
+            z->setTitle(str_dup((char *)cBuf.GetData()));
         }
         else
         {
-            z->setTitle(  str_dup(""));
+            z->setTitle(str_dup(""));
         }
 
         /* read templates */
