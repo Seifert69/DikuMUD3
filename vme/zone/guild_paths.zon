@@ -46,7 +46,7 @@ created by eirinn
 //    [nokill]
 //         - optional DIL to avoid having guild members murdered.
 //    quest blocking DIL(s)
-//         - e.g. quest_block@guild_paths(); you can only join if you completed X
+//         - e.g. QuestBlock@guild_paths(); you can only join if you completed X
 //    join DIL
 //         - We're missing a generic join DIL I think.
 //         - e.g. master_join@paladin_guild
@@ -79,7 +79,7 @@ created by eirinn
 // Plan:
 //   in block.zon ?
 //
-// quest_block@guild_paths(cmd : string, quest : string, sExec : stringlist);
+// QuestBlock@guild_paths(cmd : string, quest : string, sExec : stringlist);
 //    used to blocks the join command unless player has list of quests
 //
 // alignment@block - 
@@ -107,6 +107,10 @@ created by eirinn
 // BanishGuild@guild_paths(pc : unitptr, sGuild : string);
 // MurderBanish@guild_paths(sGuild : string);
 // AlertMembers@guild_paths(sGuild : string, sMsg : string);
+//
+// Blockers:
+// TrainMemberCheck(sGuild : string, sMsg : string);
+// QuestBlock(cmd : string, quest : string, sExec : stringlist);
 
 
 #define GUILD_JOINED   "$guilds"
@@ -339,12 +343,12 @@ dilend
 //       block it otherwise
 //
 // Sample: 
-//    dilcopy quest_block@guild_paths("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
+//    dilcopy QuestBlock@guild_paths("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
 //
 //    The player can only join if they have completed the WIGHT_COMPLETE quest.
 //
 
-dilbegin fnpri(FN_PRI_BLOCK-1) quest_block(cmd : string, quest : string, sExec : stringlist);
+dilbegin fnpri(FN_PRI_BLOCK-1) QuestBlock(cmd : string, quest : string, sExec : stringlist);
 external
    Explainer@quests(pc : unitptr, sl : stringlist);
 
@@ -362,6 +366,33 @@ code
    goto loop;
 }
 dilend
+
+
+
+dilbegin fnpri(FN_PRI_BLOCK+1) TrainMemberCheck(sGuild : string, sMsg : string);
+external
+   integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
+var
+  pc   : unitptr;
+code
+{
+:start:
+   wait (SFB_CMD, command ("practice") and (activator.type == UNIT_ST_PC));
+
+   if (not IsInGuild@guild_paths(activator, sGuild))
+   {
+      block;
+      if ((self.position > POSITION_SLEEPING) or (self.position != POSITION_FIGHTING))
+      {
+         if (sMsg == "")
+            sMsg := "say You're not a member of our guild, go speak with the guild master.";
+         execs(Msg, self);
+      }
+   }
+   goto start;
+}
+dilend
+
 
 
 // =================================================================

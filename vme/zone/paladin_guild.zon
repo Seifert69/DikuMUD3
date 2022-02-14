@@ -109,11 +109,10 @@ code
       link(pc,room);
       act("Two paladin guards emerge from the Guild halls, dragging $1n"+
       "between them and dump $1m unceremoniously on the street.", A_SOMEONE,pc,self,null,TO_REST);
-      unsecure(pc);
       goto gone;
    }
 
-   if ((pc.alignment < -900) or IsBanished@guild_paths(pc, GUILD_PALADIN))
+   if (pc.alignment < -900)
    {
       exec("frown "+pc.name,self);
       exec("say Thy evil heart is not welcome here, "+pc.name+"!",self);
@@ -130,11 +129,10 @@ code
       exec("say That's it, "+pc.name+", hell awaits thee now!",self);
       exec("emote draws his sword.",self);
       exec("kill "+pc.name,self);
-      unsecure(pc);
       goto gone;
    }
 
-   if (PALADIN_FALLEN in pc.quests)
+   if (IsBanished@guild_paths(pc, GUILD_PALADIN))
    {
       exec("frown",self);
       exec("say I remember thee, "+pc.name+".",self);
@@ -150,7 +148,8 @@ code
       exec("growl "+pc.name,self);
       pause;pause;pause;pause;pause;
    }
-      :gone:
+
+:gone:
    unsecure(pc);
    goto start;
 }
@@ -161,28 +160,26 @@ dilend
 dilbegin restrict_guild(damage:integer, gld:string);
 external
    integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
-
 code
 {
-heartbeat:=PULSE_SEC*3;
-:start:
-wait (SFB_DONE,((( command ("wear")) or (command ("wield")) or (command ("hold")))) and
-               (self==medium) and (not IsInGuild@guild_paths(activator, gld)));
+   :start:
+   wait (SFB_DONE,((( command ("wear")) or (command ("wield")) or (command ("hold")))) and
+                  (self==medium) and (not IsInGuild@guild_paths(activator, gld)));
 
-if (self.outside.level>=IMMORTAL_LEVEL) goto start;
+   if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
-act ("Your $2n burns you and you drop it to the ground.",
-A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("$1n's $2n burns $1m and $1s drops it to the ground.",
-A_SOMEONE,self.outside,self,null,TO_REST);
-act ("Being in the right guild might help.",
-A_ALWAYS,self.outside,null,null,TO_CHAR);
-self.outside.hp:=self.outside.hp-damage;
-position_update (self.outside);
+   act ("Your $2n burns you and you drop it to the ground.",
+      A_ALWAYS,self.outside,self,null,TO_CHAR);
+   act ("$1n's $2n burns $1m and $1s drops it to the ground.",
+      A_SOMEONE,self.outside,self,null,TO_REST);
+   act ("Being in the right guild might help.",
+      A_ALWAYS,self.outside,null,null,TO_CHAR);
+   self.outside.hp:=self.outside.hp-damage;
+   position_update (self.outside);
 
-unequip (self);
-link (self,self.outside.outside);
-goto start;
+   unequip (self);
+   link (self,self.outside.outside);
+   goto start;
 }
 dilend
 
@@ -193,8 +190,6 @@ var
    room : unitptr;
 code
 {
-  heartbeat := 3 * PULSE_SEC;
-
 :start:
    wait(SFB_COM,  self.position == POSITION_FIGHTING );
 
@@ -230,7 +225,7 @@ code
 dilend
 
 
-dilbegin fnpri(FN_PRI_BLOCK) blocktrain();
+dilbegin fnpri(FN_PRI_BLOCK) BlockEvilTrain();
 external
    integer IsInGuild@guild_paths(pc : unitptr, sGuild : string);
 var
@@ -239,13 +234,6 @@ code
 {
 :start:
    wait (SFB_CMD, command ("practice") and (activator.type == UNIT_ST_PC));
-
-   if (not IsInGuild@guild_paths(activator, GUILD_PALADIN))
-   {
-      block;
-      exec("say You're not a member of our guild. Go speak with Reignier", self);
-      goto start;
-   }
 
    if (activator.alignment < -350)
    {
@@ -1048,7 +1036,8 @@ dilcopy combat_mag@function("harm","",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
 dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy blocktrain@paladin_guild();
+dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy BlockEvilTrain@paladin_guild();
 
 #define _WEAPON
 #include "guilddef.h"
@@ -1078,7 +1067,8 @@ dilcopy combat_mag@function("","heal",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
 dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy blocktrain@paladin_guild();
+dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy BlockEvilTrain@paladin_guild();
 
 #define _SPELL
 #include "guilddef.h"
@@ -1107,7 +1097,8 @@ dilcopy combat_mag@function("","heal",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
 dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy blocktrain@paladin_guild();
+dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy BlockEvilTrain@paladin_guild();
 
 #define _ABILITY
 #include "guilddef.h"
@@ -1138,7 +1129,8 @@ dilcopy combat_mag@function("harm","",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guild_paths(GUILD_PALADIN);
 dilcopy AlertMembers@guild_paths(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy blocktrain@paladin_guild();
+dilcopy TrainMemberCheck(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy BlockEvilTrain@paladin_guild();
 
 #define _SKILL
 #include "guilddef.h"
