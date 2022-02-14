@@ -8,14 +8,7 @@ version     14
 END HEADER*/
 
 
-
-
-
-
 #include <macros.h>
-
-
-
 
 #define _GUILD_ASSASSIN
 #define ASSASSIN_ONGOING "Assassin Quest Ongoing"
@@ -45,46 +38,49 @@ help
 "This is the infamous guild of the Khorsabad Assassins, the masters of
 quick and silent death. Welcome.<br/>"
 
+
 %dil
 
 dilbegin nokill();
 var
-        pc : unitptr;
-        room : unitptr;
+   pc : unitptr;
+   room : unitptr;
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+   heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING );
-        pc := self.fighting;
-        if (pc.level > 200) goto start;
-        if (command("flee"))
-                block;
+   :start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING );
+   pc := self.fighting;
+   if (pc.level > 200) goto start;
+   if (command("flee"))
+      block;
 
-self.hp := self.max_hp;
-act("At the sounds of battle, black-covered shapes file quietly into the "+
-"room.", A_SOMEONE, pc, self, null, TO_ALL);
-act("A sudden blow in the back of your head sends you spinning into"+
-"the murky depths of unconsciousness!",A_SOMEONE,pc,self,null,TO_CHAR);
-act("One of them delivers a sharp blow in the back of $1s head, sending "+
-"$1m down to the ground!", A_SOMEONE,pc,self,null,TO_REST);
-pc.hp := 0;
-act("You feel yourself being dragged away somewhere..."
-,A_SOMEONE, pc, self, null, TO_CHAR);
-position_update(pc);
-act("Two assassins grab $1n and drag him out of the Guild, dumping "+
-"$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
-room := findroom("a65@arabian");
-link(pc,room);
-act("Two dark-clad shapes appear, dragging an unconscious figure between "+
-"them and dump $1m unceremoniously on the street."
-,A_SOMEONE,pc,self,null,TO_REST);
-        :gone:
-unsecure(pc);
-goto start;
+   self.hp := self.max_hp;
+   act("At the sounds of battle, black-covered shapes file quietly into the "+
+      "room.", A_SOMEONE, pc, self, null, TO_ALL);
+   act("A sudden blow in the back of your head sends you spinning into"+
+      "the murky depths of unconsciousness!",A_SOMEONE,pc,self,null,TO_CHAR);
+   act("One of them delivers a sharp blow in the back of $1s head, sending "+
+      "$1m down to the ground!", A_SOMEONE,pc,self,null,TO_REST);
+   pc.hp := 0;
+   act("You feel yourself being dragged away somewhere..."
+      ,A_SOMEONE, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("Two assassins grab $1n and drag him out of the Guild, dumping "+
+      "$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
+   room := findroom("a65@arabian");
+   link(pc,room);
+   act("Two dark-clad shapes appear, dragging an unconscious figure between "+
+      "them and dump $1m unceremoniously on the street."
+      ,A_SOMEONE,pc,self,null,TO_REST);
+:gone:
+   unsecure(pc);
+   goto start;
 }
 dilend
+
+
 
 %rooms
 /* ---------------------------- GUILD HALL ------------------------------- */
@@ -217,39 +213,108 @@ watch your movements for any signs of deception."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 exp -100
 
-dilbegin prg1();
-var
-  pc:   unitptr;
-  item: unitptr;
-  expd : extraptr;
+dilcopy nokill@assassin();
+dilcopy quest_block@guilds("join", ASSASSIN_COMPLETE,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Assassin quest"});
+dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
+dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
+
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+
 code
 {
-  :init:
-  heartbeat := PULSE_SEC*4;
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
-  :start:
-wait (SFB_DONE, command ("worship")and(self ==target));
-	pc := activator;
-	secure(pc, lostpc);
-    expd := "$path" in pc.quests;
-    if (expd == null) goto lostpc;
+   heartbeat := PULSE_SEC*5;
 
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_ASSASSIN))
+   {
+      block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, GUILD_ASSASSIN))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say I have told you about getting lost in the dark ways " +
+      "You don't even know who " +
+      "you are now " + activator.name+ ". You already hold the position "+
+      "of mighty assassin!" , self);
+      pause;
+      goto start;
+   }
+
+  /* if (IsInGuilds@guilds(activator, GUILD_ASSASSIN_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming an Assassin.", self);
+      pause;
+      goto start;  
+   }*/
+
+   JoinGuild@guilds(activator, GUILD_ASSASSIN);
+
+   exec ("say The vitality of the forest, and the strength of the tree " +
+         "flows through your spirit.", self);
+
+  goto start;
+}
+dilend
+
+dilbegin guilditem();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+var
+   pc:   unitptr;
+   item: unitptr;
+   expd : extraptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*4;
+
+   :start:
+   wait (SFB_DONE, command ("worship") and (self ==target));
+   pc := activator;
+   secure(pc, lostpc);
 
 :stuff:
-    if (GUILD_ASSASSIN in expd.names)
-    {
+   if (IsInGuild@guilds(activator, GUILD_ASSASSIN))
+   {
       secure(pc,lostpc);
       exec("say Do you feel that you have been a good assassin lately?",self);
       pause;
       exec("say Well, you obviously haven't been using the proper weapon.",self);
       pause;
       exec("say take this, if this can't make you kill better, nothing will. " +
-	   " go now, and may all your kills be swift.", self);
+         " go now, and may all your kills be swift.", self);
       pause;
       exec("say and also take this, it will show your membership as an " +
-	   "Assassin.  Wear it proudly.", self);
+         "Assassin.  Wear it proudly.", self);
       act(" The master Assassin pulls some items from underneath the folds of " +
-	  " his cloak and gives it to you.",A_ALWAYS,self,null,null,TO_CHAR);
+         " his cloak and gives it to you.",A_ALWAYS,self,null,null,TO_CHAR);
       item := load ("death_bringer@assassin");
       item.height := pc.height;
       link(item,pc);
@@ -258,35 +323,24 @@ wait (SFB_DONE, command ("worship")and(self ==target));
       link(item,pc);
       unsecure(pc);
       goto start;
-    }
-else
-    {
-	unsecure(pc);
-pause;
-exec("say Beat it or I will have you flogged.", self);
-exec("emote spits on your boots.",self);
-      }
-
-unsecure(pc);
-goto start;
+   }
+   else
+   {
+	   unsecure(pc);
+      pause;
+      exec("say Beat it or I will have you flogged.", self);
+      exec("emote spits on your boots.",self);
+   }
+   unsecure(pc);
+   goto start;
 
 :lostpc:
-
-unsecure(pc);
-exec("shrug", self);
-goto start;
+   unsecure(pc);
+   exec("shrug", self);
+   goto start;
 }
 dilend
 
-/*
-special SFUN_GUILD_MASTER
-"Guild               = ~"+GUILD_ASSASSIN+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(1*GOLD_MULT)+"<br/>
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(1*PLATINUM_MULT)+"<br/>
-Guild Exclude Quest  = ~~"
-*/
 
 dilcopy guild_titles@guild_paths(GUILD_ASSASSIN, {"Novice Cutthroat",
 "Novice Cutthroat", "Cutthroat", "Cutthroat", "Master Cutthroat",
@@ -300,9 +354,6 @@ dilcopy guild_titles@guild_paths(GUILD_ASSASSIN, {"Novice Cutthroat",
 "Master Slayer", "Master Slayer", "Assassin", "Assassin", "True Assassin",
 "True Assassin", "Master Assassin", "Master Assassin", "Ultimate Quick Blade",
 "Ultimate Quick Blade"});
-
-dilcopy nokill@assassin();
-
 end
 
 		weapon_trainer

@@ -15,7 +15,7 @@ END HEADER*/
 title "Ranger Guild@Alquenburg"
 lifespan 20
 reset RESET_ANYHOW
-creators {"eirinn","palio"}
+creators {"eirinn", "palio"}
 
 notes
 "This is the ranger guild."
@@ -329,8 +329,6 @@ end
 
 %mobiles
 
-// Replaced with GUILD_BANISHED #define RANGER_FALLEN "Ranger, Fallen From Grace"
-
 #define HUMAN_RANGER_ABIL \
 MSET_ABILITY (20,15,15,20,10,10,0,10)
 
@@ -433,7 +431,7 @@ code
       goto start;  
    }
 
-   JoinGuild@guilds(activator, GUILD_PALADIN);
+   JoinGuild@guilds(activator, GUILD_NYM_RANGER);
 
    exec ("say The vitality of the forest, and the strength of the tree " +
          "flows through your spirit.", self);
