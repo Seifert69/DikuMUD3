@@ -2,12 +2,22 @@
 
 /*
 Guilds to convert:
-
+   Fighter
+   Knight
+   Thief
+   Cleric
+   Druid
+   Mage 
+   Sorcerer
+   Barbarian
+   Monk?
 
 Converted:
    Assassin
+   Necromancer
    Ranger
    Paladin
+
 */
 
 %zone guilds
@@ -16,8 +26,7 @@ reset RESET_NOT
 
 creators {"Papi"}
 
-notes
-"The DIL functions needed to manage Guilds."
+notes "The DIL functions needed to manage Guilds."
 
 help 
 "MS 2022. High level description of guilds.<br/>
@@ -26,12 +35,22 @@ When a player first joins the game they choose a profession.
 The profession automatically enrolls them in a guild matching
 the profession.<br/>
 
+Some guilds exclude other guilds. For example you cannot become
+a Paladin if you're in the Necromancer, Thief or Dark Knight guilds.<br/>
+
 A player can thereafter join as many guilds as they want. Joining a 
-guild should require something from the player, e.g. completing a quest.
+guild should require something from the player, e.g. completing a quest.<br/>
+
 Training cost is determined by the player's profession, so joining a new
 guild will not make it cheaper to practice e.g. your strength, but new
 guilds and teachers might offer training in skills not in your current guild
-or even have higher maximums than your current guild."
+or even have higher maximums than your current guild.<br/>
+
+Along with this we will also introduce the ability to switch profession
+when you reach level 50. For example from a fighter to a mage. This will
+allow you to make a combination character as you build up to level 100 and beyond.
+E.g. Fighter / Mage.
+"
 
 
 %dil
@@ -112,9 +131,9 @@ or even have higher maximums than your current guild."
 // QuestBlock(cmd : string, quest : string, sExec : stringlist);
 
 
-#define GUILD_JOINED   "$guilds"
-#define GUILD_BANISHED "$guilds_banished"
-#define GUILD_LEFT     "$guilds_left"
+#define GUILD_JOINED   "$guilds_in"
+#define GUILD_BANISHED "$guilds_ban"
+#define GUILD_LEFT     "$guilds_out"
 
 
 // Checks if player pc is in guild sGuild

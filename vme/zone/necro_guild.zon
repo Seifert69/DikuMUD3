@@ -38,47 +38,47 @@ lifespan 137
 
 dilbegin nokill();
 var
-        pc      : unitptr;
-        room    : unitptr;
+   pc      : unitptr;
+   room    : unitptr;
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+   heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING );
-        pc := self.fighting;
-        if(pc.type == UNIT_ST_NPC) goto start;
-        if (pc.level >200) goto start;
-        secure(pc,gone);
-        if (command("flee"))
-                block;
+   :start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING );
+   pc := self.fighting;
+   if(pc.type == UNIT_ST_NPC) goto start;
+   if (pc.level >200) goto start;
+   secure(pc,gone);
+   if (command("flee"))
+      block;
 
-self.hp:= self.max_hp;
-act("Suddenly, several skeletal warriors surround you silently.",
-A_ALWAYS, pc, self, null, TO_ALL);
-act("In a dreadful silence and with a terrible sense of purpose they "+
-"break every bone in your living body."
-, A_ALWAYS, pc, self, null, TO_CHAR);
-act("In dreadful silence and with a terrible sense of purpose they "+
-"break every bone in $1n's body!"
-,A_SOMEONE, pc, self, null, TO_REST);
-pc.hp:= 0;
-pc.endurance:= 0;
-pc.mana:= 0;
-act("Half-dead from pain, you are dragged away."
-,A_ALWAYS, pc, self, null, TO_CHAR);
-position_update(pc);
-act("One of them drag away with the limp body toward the exit, the rest "+
-"of them sail quietly past you and are gone."
-,A_SOMEONE, pc, self, null, TO_REST);
-room:= findroom("altar@necro_guild");
-link(pc,room);
-act("A skeletal warrior drags the limp body of $1n in from below "+
-"and leave $1m on the altar."
-,A_SOMEONE,pc,self,null,TO_REST);
-        :gone:
-unsecure(pc);
-goto start;
+   self.hp:= self.max_hp;
+   act("Suddenly, several skeletal warriors surround you silently.",
+   A_ALWAYS, pc, self, null, TO_ALL);
+   act("In a dreadful silence and with a terrible sense of purpose they "+
+   "break every bone in your living body."
+   , A_ALWAYS, pc, self, null, TO_CHAR);
+   act("In dreadful silence and with a terrible sense of purpose they "+
+   "break every bone in $1n's body!"
+   ,A_SOMEONE, pc, self, null, TO_REST);
+   pc.hp:= 0;
+   pc.endurance:= 0;
+   pc.mana:= 0;
+   act("Half-dead from pain, you are dragged away."
+    ,A_ALWAYS, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("One of them drag away with the limp body toward the exit, the rest "+
+   "of them sail quietly past you and are gone."
+      ,A_SOMEONE, pc, self, null, TO_REST);
+   room:= findroom("altar@necro_guild");
+   link(pc,room);
+   act("A skeletal warrior drags the limp body of $1n in from below "+
+   "and leave $1m on the altar."
+      ,A_SOMEONE,pc,self,null,TO_REST);
+:gone:
+   unsecure(pc);
+   goto start;
 }
 dilend
 
@@ -449,7 +449,7 @@ end
 
  evil_necro
 names {"evil necromancer", "necromancer","zombie lord","lord","necro"}
-title "the Zombie Lord "
+title "the Zombie Lord"
 descr
 "An evil necromancer is looking for corpses."
 extra {}
@@ -459,42 +459,44 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
 exp -100
+
 dilbegin prg2();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
-  pc:   unitptr;
-  item: unitptr;
-  expd : extraptr;
+   pc:   unitptr;
+   item: unitptr;
+
 code
 {
-  :init:
-  heartbeat := PULSE_SEC*4;
+   :init:
+   heartbeat := PULSE_SEC*4;
 
-  :start:
-  wait (SFB_CMD, activator.type == UNIT_ST_PC);
-  secure(pc,lostpc);
-  pc := activator;
-  expd := "$path" in pc.quests;
-  if (expd == null) goto lostpc;
-  if (GUILD_NECROMANCER in expd.names)
-  {
-  exec("tell "+pc.name+" Hello, Would you like to " +
-       "journey to our guild to increase your powerful skills?  Just nod if"
-+
-       "you wish to go.", self);
-  if (command("nod"))
-    {
-    act("The evil necromancer waves his hand, creating a cloud, when the "+
- "smoke clears you find yourself in a different place!"
- ,A_ALWAYS,pc,null,null,TO_CHAR);
-    act("The evil necromancer waves his hand, creating a cloud, when the"+
- "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-    link(pc, findroom("church_ruin@necro_guild"));
+   :start:
+   wait (SFB_CMD, activator.type == UNIT_ST_PC);
 
-      }
-}
-unsecure(pc);
+   if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
+      goto start;
+
+   secure(pc,lostpc);
+   pc := activator;
+
+   exec("tell "+pc.name+" Hello, Would you like to " +
+         "journey to our guild to increase your powerful skills?  Just nod if " +
+         "you wish to go.", self);
+   if (command("nod"))
+   {
+      act("The evil necromancer waves his hand, creating a cloud, when the "+
+         "smoke clears you find yourself in a different place!"
+         ,A_ALWAYS,pc,null,null,TO_CHAR);
+      act("The evil necromancer waves his hand, creating a cloud, when the"+
+         "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
+      link(pc, findroom("church_ruin@necro_guild"));
+   }
+
 :lostpc:
-goto start;
+   unsecure(pc);
+   goto start;
 }
 dilend
 
@@ -514,39 +516,41 @@ romflags {CHAR_PROTECTED}
 
 
 dilbegin prg3();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
-  pc:   unitptr;
-  item: unitptr;
-  expd : extraptr;
+   pc:   unitptr;
+   item: unitptr;
+
 code
 {
-  :init:
-  heartbeat := PULSE_SEC*4;
+   :init:
+   heartbeat := PULSE_SEC*4;
 
-  :start:
-  wait (SFB_CMD, activator.type == UNIT_ST_PC);
-  secure(pc,lostpc);
-  pc := activator;
-  expd := "$path" in pc.quests;
-  if (expd == null) goto lostpc;
-  if (GUILD_NECROMANCER in expd.names)
-  {
-  exec("say Hello, Would you like a lift back to Midgaard? " +
-       "Just nod if you wish to go.", self);
-  if (command("nod"))
-    {
-    act("The evil necromancer waves his hand, creating a cloud, when the"+
- "smoke clears you find yourself in a different place!"
- ,A_ALWAYS,pc,null,null,TO_CHAR);
-    act("The evil necromancer waves his hand, creating a cloud, when the"+
- "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-    link(pc, findroom("market_sq@midgaard"));
+   :start:
+   wait (SFB_CMD, activator.type == UNIT_ST_PC);
 
-      }
-}
-unsecure(pc);
+   if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
+      goto start;
+
+   secure(pc,lostpc);
+   pc := activator;
+
+
+   exec("say Hello, Would you like a lift back to Midgaard? " +
+      "Just nod if you wish to go.", self);
+   if (command("nod"))
+   {
+      act("The evil necromancer waves his hand, creating a cloud, when the"+
+      "smoke clears you find yourself in a different place!"
+      ,A_ALWAYS,pc,null,null,TO_CHAR);
+      act("The evil necromancer waves his hand, creating a cloud, when the"+
+      "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
+      link(pc, findroom("market_sq@midgaard"));
+   }
+   unsecure(pc);
 :lostpc:
-goto start;
+   goto start;
 }
 dilend
 
@@ -567,16 +571,9 @@ special SFUN_GUILD_BASIS GUILD_NECROMANCER
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
-/*special SFUN_GUILD_GUARD_WAY
-""+"north"+"#"+GUILD_NECROMANCER+"#tomb#
-#$1n snarls viciously at you as you try to enter..
-#$1n snarls viciously at $3n as $1e tries to enter."
-*/
-
 dilcopy guild_guard@guild_paths(GUILD_NECROMANCER, "north");
-dilcopy teamwork@function ( "wolf");
+dilcopy teamwork@function ("wolf");
 dilcopy nokill@necro_guild();
-
 end
 
 
@@ -592,12 +589,11 @@ alignment -500
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
-/*dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
-                            {"$1n attacks $3n!", "$1n attacks you!"});   */
 dilbegin ravenprg();
 code
 {
   heartbeat:=PULSE_SEC*5;
+
   :start:
   wait(SFB_CMD, activator.type==UNIT_ST_PC);
   exec("say KRAAG KRAAG...", self);
@@ -627,21 +623,17 @@ romflags {CHAR_PROTECTED}
 M_HUMAN_WARRIOR_SPECIAL(80, SEX_MALE)
 alignment -900
 
-special SFUN_GUILD_BASIS GUILD_NECROMANCER
-dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
-                            {"$1n attacks $3n!", "$1n attacks you!"});
-/*
-special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
-initiated, Sinister One.'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
+dilcopy nokill@necro_guild();
+
+dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
+dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
+
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
 #define _WEAPON
 #include "guilddef.h"
 #undef _WEAPON
-
-dilcopy nokill@necro_guild();
-
 end
 
 
@@ -664,21 +656,15 @@ M_ELF_CLERIC_SWORD(90, SEX_FEMALE,"energy drain","heal")
 alignment -1000
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_NECROMANCER
-dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
-                            {"$1n attacks $3n!", "$1n attacks you!"});
-/*
-special SFUN_GUILD_MASTER
-"Guild               = ~"+GUILD_NECROMANCER+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(3*GOLD_MULT)+"<br/>
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(3*PLATINUM_MULT)+"<br/>
-Guild Exclude Quest  = ~~"
-*/
+dilcopy nokill@necro_guild();
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
-dilcopy guild_titles@guild_paths(GUILD_NECROMANCER, {"Novice of The Grey
-Ring",
+dilcopy quest_block@guilds("join", GOLEM_COMPLETE,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Golem quest"});
+dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
+dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
+
+dilcopy guild_titles@guild_paths(GUILD_NECROMANCER, {"Novice of The Grey Ring",
 "Novice of The Grey Ring", "Servant of The Grey Ring",
 "Servant of The Grey Ring", "Sentry of The Grey Ring",
 "Sentry of The Grey Ring", "Holder of The Grey Ring",
@@ -696,104 +682,95 @@ Ring",
 "Spirit Invoker", "Soulforge", "Soulforge", "Necromancer", "Necromancer",
 "Archnecromancer", "Archnecromancer"});
 
-dilcopy nokill@necro_guild();
-
 dilbegin necro_give();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
-        pc : unitptr;
-        item : unitptr;
-  expd : extraptr;
+   pc : unitptr;
+   item : unitptr;
+
 code
 {
-heartbeat:= PULSE_SEC * 3;
-:start:
+   heartbeat:= PULSE_SEC * 3;
 
-wait (SFB_DONE, command ("worship")and(self ==target));
-pc:= activator;
-secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-        if ((GUILD_NECROMANCER in expd.names)  and (pc.alignment < -349))
-{
-pause;
-exec("emote raises her head and stares at you intently.", self);
-pause;
-exec("say "+pc.name+".", self);
-pause;
-exec("say I have been expecting you.", self);
-pause;
-exec("say You crave the power.", self);
-pause;
-exec("say That is why you joined our Guild, "+pc.name+".", self);
-pause;
-exec("say I have something for you.", self);
-        item := load("necro_hand1@necro_guild");
-        item.height := pc.height;
-        link(item, self);
-exec("give hand "+pc.name, self);
-exec ("emote chuckles at your obvious confusion.", self);
-pause;
-exec ("say This is an item of true necromancy... wear it at your
-leisure.",self);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto start;
-        if ((GUILD_NECROMANCER in expd.names) and (pc.level > 19))
-{
-pause;
-exec("say Hmm... undoubtedly, you'd want more...",self);
-pause;
-exec("cackle ",self);
-pause;
-        item := load("necro_scythe1@necro_guild");
-        item.height := pc.height;
-        link(item, self);
-exec("give scythe "+pc.name, self);
-exec("say This is a weapon of your Guild.", self);
-pause;
-exec("say Use it... enjoy it...", self);
-pause;
-exec("wave "+pc.name, self);
-unsecure(pc);
-goto start;
-}
-unsecure(pc);
-goto start;
-}
+   :start:
+   wait (SFB_DONE, command ("worship") and (self == target));
 
-        expd := "$path" in pc.quests;
-        if (expd == null) goto start;
-else if ((GUILD_NECROMANCER in expd.names) and (pc.alignment > -350))
-{
-exec ("frown ",self);
-pause;
-exec ("say You need to devote yourself more to your studies...", self);
-pause;
-exec ("say Although a necromancer, our gifts would burn your hands.", self);
-exec ("cackle ", self);
-pause;
-exec ("say Leave now, come when you can show greater dedication!", self);
-unsecure (pc);
-goto start;
-}
-else
-{
-block;
-unsecure(pc);
-exec ("say Begone, you disgusting beggar...", self);
-}
+   if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
+      goto start;
 
-unsecure(pc);
-goto start;
+   pc:= activator;
+   secure(pc, lost);
+
+   if (pc.alignment < -349)
+   {
+      pause;
+      exec("emote raises her head and stares at you intently.", self);
+      pause;
+      exec("say "+pc.name+".", self);
+      pause;
+      exec("say I have been expecting you.", self);
+      pause;
+      exec("say You crave the power.", self);
+      pause;
+      exec("say That is why you joined our Guild, "+pc.name+".", self);
+      pause;
+      exec("say I have something for you.", self);
+      item := load("necro_hand1@necro_guild");
+      item.height := pc.height;
+      link(item, self);
+      exec("give hand "+pc.name, self);
+      exec ("emote chuckles at your obvious confusion.", self);
+      pause;
+      exec ("say This is an item of true necromancy... wear it at your
+      leisure.",self);
+
+      if (pc.level > 19)
+      {
+         pause;
+         exec("say Hmm... undoubtedly, you'd want more...",self);
+         pause;
+         exec("cackle ",self);
+         pause;
+         item := load("necro_scythe1@necro_guild");
+         item.height := pc.height;
+         link(item, self);
+         exec("give scythe "+pc.name, self);
+         exec("say This is a weapon of your Guild.", self);
+         pause;
+         exec("say Use it... enjoy it...", self);
+         pause;
+         exec("wave "+pc.name, self);
+      }
+   }
+   else if ((pc.alignment > -350) and (pc.alignment < 350))
+   {
+      exec ("frown ",self);
+      pause;
+      exec ("say You need to devote yourself more to your studies...", self);
+      pause;
+      exec ("say Although a necromancer, our gifts would burn your hands.", self);
+      exec ("cackle ", self);
+      pause;
+      exec ("say Leave now, come when you can show greater dedication!", self);
+   }
+   else
+   {
+      block;
+      exec ("say Begone, you disgusting beggar...", self);
+   }
+
+   unsecure(pc);
+   goto start;
 
 :lost:
-
-unsecure(pc);
-exec("emote hisses angrily 'Leaving without even hearing me out!'", self);
-pause;
-exec("cackle ",self);
-exec("say This one will get far...",self);
-goto start;
-
+   unsecure(pc);
+   exec("emote hisses angrily 'Leaving without even hearing me out!'", self);
+   pause;
+   exec("cackle ",self);
+   exec("say This one will get far...",self);
+   goto start;
 }
 dilend
 
@@ -815,8 +792,9 @@ alignment -750
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
-dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
-                            {"$1n attacks $3n!", "$1n attacks you!"});
+dilcopy nokill@necro_guild();
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
+
 dilcopy shopkeeper@function(
 {
 "firebreather@midgaard 1 5",
@@ -835,11 +813,6 @@ dilcopy shopkeeper@function(
 {"4","12","13","23"},
 "",
 110,60,286720,"","");
-
-
-dilcopy nokill@necro_guild();
-
-
 end
 
                                   krain
@@ -859,23 +832,16 @@ M_ELF_CLERIC_CLUB(70, SEX_FEMALE, "plague", "plague")
 alignment -1000
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_NECROMANCER
-dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
-                            {"$1n attacks $3n!", "$1n attacks you!"});
-/*
-special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
-initiated, Foul One!'"
-*/
+dilcopy nokill@necro_guild();
+dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
+dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
 
-dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
 #define _SPELL
 #include "guilddef.h"
 #undef _SPELL
-
-dilcopy nokill@necro_guild();
-
-
 end
 
                                 kadiya
@@ -894,24 +860,16 @@ M_ELF_MAGE_GAS(80, SEX_FEMALE, "stinking cloud")
 alignment -1000
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_NECROMANCER
+dilcopy nokill@necro_guild();
+dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
+dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
 
-dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
-                            {"$1n attacks $3n!", "$1n attacks you!"});
-/*
-special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
-initiated, sinister one'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
 #define _ABILITY
 #include "guilddef.h"
 #undef _ABILITY
-
-dilcopy nokill@necro_guild();
-
-
 end
 
 
@@ -930,25 +888,16 @@ M_ELF_MAGE_GAS(70, SEX_MALE, "stinking cloud")
 alignment -1000
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_NECROMANCER
+dilcopy nokill@necro_guild();
+dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
+dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
 
-dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
-                            {"$1n attacks $3n!", "$1n attacks you!"});
-/*
-special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
-initiated, Sinister One.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
-
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
-
-dilcopy nokill@necro_guild();
-
-
 end
 
 /*                      GOLEM DIL STUFF                               */
@@ -974,13 +923,13 @@ flags {UNIT_FL_NO_TELEPORT}
 
 dilbegin golem_unbonded();
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 
 var
-tf:integer;
-  pcowner: unitptr;
-  str : string;
-expd: extraptr;
+   tf:integer;
+   pcowner: unitptr;
+   str : string;
 
 code
 {
@@ -992,21 +941,16 @@ code
    while (self.outside.type == UNIT_ST_NPC)
      pause;
 
-
    heartbeat := PULSE_SEC*8;
 
    :unbonded:
-   exec("emote sits motionless, waiting for a powerful necromancer to
-control"+
-        " it.", self);
+   exec("emote sits motionless, waiting for a powerful necromancer to control it.", self);
 
-   wait (SFB_CMD, (activator.type == UNIT_ST_PC) and command("whisper") and
-         ("serve" in argument));
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC) and command("whisper") and ("serve" in argument));
 
    pcowner := activator;
-        expd := "$path" in pcowner.quests;
-        if (expd == null) goto rouge;
-        if (not(GUILD_NECROMANCER in expd.names))
+
+   if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
    {
       exec ("emote ignore's "+pcowner.name+"'s attempts at control.", self);
       pause;
@@ -1015,17 +959,15 @@ control"+
 
    secure(pcowner, rouge);
 
-
-   if (not (pcowner.level > 19) )
+   if (pcowner.level < 19)
    {
       exec ("say You lack enough power to control me.", self);
       pause;
       goto rouge;
    }
 
-
    exec ("say Say what you want to call me.", self);
-   wait (SFB_CMD, (command("say") and (activator #= pcowner)));
+   wait (SFB_CMD, (command("say") and (activator == pcowner)));
    addstring(self.names, argument);
 
    str := self.name;
@@ -1037,13 +979,11 @@ control"+
          pcowner.name+"!", self);
 
    addextra(self.extra, {"$owner"}, pcowner.name);
-
-
+   quit;
 
    :rouge:
-
    heartbeat := PULSE_SEC*8;
-   tf:= walk_room@function ("turning_point@midgaard",4);
+   tf:= walk_room@function ("turning_point@midgaard", 4);
 
    wait (SFB_CMD, (activator.type == UNIT_ST_PC));
    pcowner := activator;
@@ -1058,20 +998,20 @@ dilend
 dilbegin golem_brain();
 
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 
 var
-tf:integer;
-      u:  unitptr;
+   tf:integer;
+   u:  unitptr;
    junk:  integer;
-   expd:  extraptr;
-pcowner:  unitptr;
-    exd:  extraptr;
- loader:  unitptr;
- pcname:  string;
-  stat1:  string;
-  stat2:  string;
-  stat3:  string;
+   pcowner:  unitptr;
+   exd:  extraptr;
+   loader:  unitptr;
+   pcname:  string;
+   stat1:  string;
+   stat2:  string;
+   stat3:  string;
 
 code
 {
@@ -1098,18 +1038,12 @@ code
    goto bond;
 
    :brains:
-
-
    wait (SFB_CMD, (command("status") or command("tell")) and
-         (activator #= pcowner) and
-         (findunit(activator, argument, FIND_UNIT_SURRO |
-                   FIND_UNIT_INVEN, null) == self));
-        expd := "$path" in activator.quests;
-        if (expd == null) goto lostbond;
-        if (not(GUILD_NECROMANCER in expd.names))
-     goto lostbond;
+         (activator == pcowner) and
+         (findunit(activator, argument, FIND_UNIT_SURRO | FIND_UNIT_INVEN, null) == self));
 
-
+   if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
+      goto lostbond;
 
    if (command("tell"))
    {
@@ -1158,8 +1092,7 @@ code
 
    exec ("follow "+self.name, self);
    priority;
-   exec ("say "+pcowner.name+", you no longer control me... by straying
-from "+
+   exec ("say "+pcowner.name+", you no longer control me... by straying from "+
          "the paths of magic, you have lost your control over me! ", self);
    pause;
 
@@ -1216,18 +1149,18 @@ flags {UNIT_FL_NO_TELEPORT}
 
 
 dilbegin golem_load();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 
 var
-  pc:        unitptr;
-  familiar:  unitptr;
-expd: extraptr;
-  exdp:      extraptr;
-  i:         integer;
-  in_name:   string;
-  in_title:  string;
-  in_descr:  string;
-  item:      unitptr;
-  junk:      integer;
+   pc:        unitptr;
+   familiar:  unitptr;
+   i:         integer;
+   in_name:   string;
+   in_title:  string;
+   in_descr:  string;
+   item:      unitptr;
+   junk:      integer;
 
 code
 {
@@ -1240,10 +1173,8 @@ code
          ((GOLEM_BONDED in activator.quests) and not
          ("familiar" in activator.inside.name))));
 
-        expd := "$path" in pc.quests;
-        if (expd == null) goto waitawhile;
-        if ((GUILD_NECROMANCER in expd.names))
-     goto waitawhile;
+   if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
+      goto waitawhile;
 
    :setup:
 
@@ -1259,7 +1190,7 @@ code
    i := 0;
    while (i < 5)
    {
-      wait (SFB_CMD, activator #= pc);
+      wait (SFB_CMD, activator == pc);
 
       if (command ("nod"))
         goto ritual;
@@ -1288,13 +1219,11 @@ code
    exec ("say Then let us begin!", self);
    pause;
 
-   act("Dalmar pulls a lever and a cage containing a sewn body rises out of
-"+
+   act("Dalmar pulls a lever and a cage containing a sewn body rises out of "+
        "the ground!", A_SOMEONE, self, null, null, TO_ALL);
    pause;
 
-   act ("The cage rises up too a hole in the cealing, and large metal bars
-"+
+   act ("The cage rises up too a hole in the cealing, and large metal bars "+
         "rise out of the roof top into the sky.", A_SOMEONE, self,
         null, pc, TO_ALL);
    pause;
@@ -1305,23 +1234,19 @@ code
         A_SOMEONE, self, null, null, TO_ALL);
    pause;
    act("The body on the cage is encased in blinding light!", A_SOMEONE,
-self,
-        null, pc, TO_ALL);
+      self, null, pc, TO_ALL);
    pause;
-   act("The cage slowly lowers too the ground, opens, and the creature
-within"+
+   act("The cage slowly lowers too the ground, opens, and the creature within"+
        " stands up on its own.", A_SOMEONE, self, null, pc, TO_ALL);
    pause;
 
 
    familiar := load("golem@necro_guild");
    secure(familiar, hagsecure);
-   exec("say here is a manual of golems, which will explain much about your
-"+
+   exec("say here is a manual of golems, which will explain much about your "+
         "new golem.", self);
    pause;
-   exec("say any bugs with these guys, report them too Elminster, the golem
-"+
+   exec("say any bugs with these guys, report them too Elminster, the golem "+
         "builder, dont come crying too me about it!", self);
 
    item := load ("golem_manual@necro_guild");
@@ -1336,8 +1261,7 @@ within"+
    unsecure (familiar);
    pause;
 
-   exec ("say Simply whisper to your golem 'Serve me' and it will bond to
-you.", self);
+   exec ("say Simply whisper to your golem 'Serve me' and it will bond to you.", self);
    pause;
    exec ("say When the golem asks you what you want to call it, give it" +
          " the name you would use to command it.", self);
@@ -1361,10 +1285,11 @@ dilend
 
 
 dilbegin get_golem();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
-  pc:     unitptr;
-  i:      integer;
-expd: extraptr;
+   pc:     unitptr;
+   i:      integer;
 
 code
 {
@@ -1376,35 +1301,25 @@ code
    :start:
    wait (SFB_CMD, (activator.type == UNIT_ST_PC));
 
-
    pc := activator;
    secure (pc, lostpc);
 
-   if (not ((GOLEM_ONGOING in pc.quests)
-            or (GOLEM_COMPLETE in pc.quests) or (GOLEM_BONDED in
-pc.quests)))
+   if (not ((GOLEM_ONGOING in pc.quests) or (GOLEM_COMPLETE in pc.quests) or (GOLEM_BONDED in pc.quests)))
    {
       pause;
-        expd := "$path" in pc.quests;
-        if (expd == null) goto waitawhile;
-        if (not(GUILD_NECROMANCER in expd.names))
 
+      if (not IsInGuild@guilds(pc, GUILD_NECROMANCER))
       {
-         exec ("say I will have nothing to do with a mundane such as you,
-"+pc.name+"!", self);
+         exec ("say I will have nothing to do with a mundane such as you, "+pc.name+"!", self);
          unsecure (pc);
          goto waitawhile;
       }
 
-      if ( not(pc.level >= 20) )
+      if (pc.level < 20)
       {
-        exec("say you are but a weak necromancer, you cannot create a golem
-"+
-        "yet!", self);
-        pause;
-         exec ("say Come visit me again once you reach level 20. Perhaps I
-can
-assist you.", self);
+         exec("say you are but a weak necromancer, you cannot create a golem yet!", self);
+         pause;
+         exec ("say Come visit me again once you reach level 20. Perhaps I can assist you.", self);
          unsecure (pc);
          goto waitawhile;
       }
@@ -1412,15 +1327,13 @@ assist you.", self);
       priority;
       exec("say so you wish to create a golem, do you?", self);
       pause;
-      exec("say very well, but first i must have the following components:",
-           self);
+      exec("say very well, but first i must have the following components:", self);
       pause;
       exec("say i need the adamantium of a darkelf's armour.", self);
       pause;
       exec("say a darkelf bracer too be precise.",self);
       pause;
-      exec("say I also need the nectar of a certain flower that grows only
-"+
+      exec("say I also need the nectar of a certain flower that grows only "+
            "in the artic", self);
       pause;
       exec("say finally, i need valuable amethyst.", self);
@@ -1430,7 +1343,7 @@ assist you.", self);
       i := 0;
       while (i < 5)
       {
-         wait (SFB_CMD, (activator #= pc));
+         wait (SFB_CMD, (activator == pc));
 
          if (command ("nod"))
            goto quest_accepted;
@@ -1457,13 +1370,13 @@ assist you.", self);
       pause;
       exec ("cackle", self);
       pause;
-      exec("say that is what i figured, find me those items and return!",
-           self);
+      exec("say that is what i figured, find me those items and return!", self);
       addextra (pc.quests, {GOLEM_ONGOING}, "");
       nopriority;
       unsecure (pc);
       goto start;
    }
+
    :waitawhile:
    heartbeat := PULSE_SEC*60;
    pause;
@@ -1498,8 +1411,7 @@ code
    heartbeat := PULSE_SEC*5;
 
    :start:
-   wait (SFB_CMD, ((command ("give")) and (activator.type == UNIT_ST_PC)
-and (self.name in argument)));
+   wait (SFB_CMD, ((command ("give")) and (activator.type == UNIT_ST_PC) and (self.name in argument)));
 
    :give:
    if (not (GOLEM_ONGOING in activator.quests))
@@ -1524,16 +1436,14 @@ and (self.name in argument)));
       if ("amethyst" in self.inside.name)
       {
          addstring (exdp.names, "amethyst");
-         exec("say an amethyst! so you listened too my instructions!",
-self);
+         exec("say an amethyst! so you listened too my instructions!", self);
          destroy (self.inside);
       }
 
       else if ("darkelf bracers" in self.inside.name)
       {
          addstring (exdp.names, "bracers");
-         exec("say ahhh adamantium bracers! This will strengthen the
-golem!",
+         exec("say ahhh adamantium bracers! This will strengthen the golem!",
               self);
          destroy (self.inside);
       }
@@ -1546,20 +1456,16 @@ golem!",
       }
       else
       {
-         exec ("say This is not ingrediant for the spell! Why do you waste
-my
-time?", self);
+         exec ("say This is not ingrediant for the spell! Why do you waste my time?", self);
          destroy (self.inside);
       }
    }
-   if (("amethyst" in exdp.names) and ("bracers" in exdp.names) and
-("flower" in exdp.names))
+   if (("amethyst" in exdp.names) and ("bracers" in exdp.names) and ("flower" in exdp.names))
    {
       pause;
       subextra (pc.quests, GOLEM_ONGOING);
       addextra (pc.quests, {GOLEM_COMPLETE}, "");
-      exec ("say Ahhh. That is all the ingrediants! We may now create your
-"+
+      exec ("say Ahhh. That is all the ingrediants! We may now create your "+
             "golem "+pc.name+"!", self);
       pause;
    }
@@ -1575,10 +1481,6 @@ time?", self);
    goto start;
 }
 dilend
-
-
-
-
 end
 
 
