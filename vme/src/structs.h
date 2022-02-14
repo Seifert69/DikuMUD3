@@ -94,8 +94,9 @@ private:
     char *help{nullptr};     /* User-Help to zone                */
     char *filename{nullptr}; /* The filename of this file        */
 
+    unit_data *rooms{nullptr}; // unit pointer to the base rooms, used in vmc really
+
 public:
-    unit_data *rooms;   // unit pointer to the base rooms, used in vmc really
     unit_data *objects; // unit pointer to the base objects, used in vmc really
     unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
