@@ -482,7 +482,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
 
     /* Search for mobs/objs/rooms and line in columns */
     std::string msg{"<div class='threecol'>"};
-    for (auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
+    for (auto fi = zone->getFileIndexMap().begin(); fi != zone->getFileIndexMap().end(); fi++)
     {
         if (fi->second->getType() == search_type)
         {

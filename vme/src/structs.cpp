@@ -392,6 +392,16 @@ void zone_type::setFilename(char *value)
     filename = value;
 }
 
+const std::map<const char *, file_index_type *, cmp_str> &zone_type::getFileIndexMap() const
+{
+    return mmp_fi;
+}
+
+std::map<const char *, file_index_type *, cmp_str> &zone_type::getFileIndexMap()
+{
+    return mmp_fi;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

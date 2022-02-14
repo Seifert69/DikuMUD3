@@ -51,7 +51,7 @@ void zone_update_no_in_zone()
     /* Clear ALL ->no_in_zone */
     for (auto tmp_zone = g_zone_info.mmp.begin(); tmp_zone != g_zone_info.mmp.end(); tmp_zone++)
     {
-        for (auto fi = tmp_zone->second->mmp_fi.begin(); fi != tmp_zone->second->mmp_fi.end(); fi++)
+        for (auto fi = tmp_zone->second->getFileIndexMap().begin(); fi != tmp_zone->second->getFileIndexMap().end(); fi++)
         {
             fi->second->setNumInZone(0);
         }

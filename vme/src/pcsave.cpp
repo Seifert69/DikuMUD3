@@ -34,9 +34,9 @@ sbit32 g_player_id = 1; // Looks to me like it needs to begin with 1 (crash on s
 void assign_player_file_index(unit_data *pc)
 {
     zone_type *z = find_zone(g_player_zone);
-    auto it = z->mmp_fi.find(PC_FILENAME(pc));
+    auto it = z->getFileIndexMap().find(PC_FILENAME(pc));
 
-    if (it != z->mmp_fi.end())
+    if (it != z->getFileIndexMap().end())
     {
         UNIT_FILE_INDEX(pc) = it->second;
     }
@@ -48,7 +48,7 @@ void assign_player_file_index(unit_data *pc)
         fi->setZone(z);
         fi->setType(UNIT_ST_PC);
 
-        z->mmp_fi.insert(std::make_pair(fi->getName(), fi));
+        z->getFileIndexMap().insert(std::make_pair(fi->getName(), fi));
 
         UNIT_FILE_INDEX(pc) = fi;
     }

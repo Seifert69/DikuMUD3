@@ -315,7 +315,7 @@ void generate_file_indexes(FILE *f, zone_type *zone)
         }
         temp_index->setCRC(temp_32);
 
-        zone->mmp_fi.insert(std::make_pair(temp_index->getName(), temp_index));
+        zone->getFileIndexMap().insert(std::make_pair(temp_index->getName(), temp_index));
         fi = temp_index;
         zone->no_of_fi++;
         fi->setFilepos(ftell(f));
@@ -1651,7 +1651,7 @@ void read_all_rooms()
     {
         g_boot_zone = z->second;
 
-        for (auto fi = z->second->mmp_fi.begin(); fi != z->second->mmp_fi.end(); fi++)
+        for (auto fi = z->second->getFileIndexMap().begin(); fi != z->second->getFileIndexMap().end(); fi++)
         {
             if (fi->second->getType() == UNIT_ST_ROOM)
             {

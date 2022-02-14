@@ -82,9 +82,9 @@ file_index_type *find_file_index(const char *zonename, const char *name)
     strcpy(bufname, name);
     str_lower(bufname);
 
-    auto it = zone->mmp_fi.find(bufname);
+    auto it = zone->getFileIndexMap().find(bufname);
 
-    if (it != zone->mmp_fi.end())
+    if (it != zone->getFileIndexMap().end())
     {
         return it->second;
     }

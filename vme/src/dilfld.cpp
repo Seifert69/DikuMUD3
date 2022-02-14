@@ -1083,7 +1083,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_UP;
                         zone_type *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
+                        for (auto fi = z->getFileIndexMap().begin(); fi != z->getFileIndexMap().end(); fi++)
                         {
                             if (fi->second->getType() == UNIT_ST_ROOM)
                             {
@@ -1127,7 +1127,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_UP;
                         zone_type *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
+                        for (auto fi = z->getFileIndexMap().begin(); fi != z->getFileIndexMap().end(); fi++)
                         {
                             if (fi->second->getType() == UNIT_ST_NPC)
                             {
@@ -1171,7 +1171,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_UP;
                         zone_type *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
+                        for (auto fi = z->getFileIndexMap().begin(); fi != z->getFileIndexMap().end(); fi++)
                         {
                             if (fi->second->getType() == UNIT_ST_OBJ)
                             {

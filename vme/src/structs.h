@@ -86,6 +86,9 @@ public:
     char **getFilenamePtrPtr();
     void setFilename(char *value);
 
+    const std::map<const char *, file_index_type *, cmp_str> &getFileIndexMap() const;
+    std::map<const char *, file_index_type *, cmp_str> &getFileIndexMap();
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -98,9 +101,9 @@ private:
     unit_data *objects{nullptr}; // unit pointer to the base objects, used in vmc really
     unit_data *npcs{nullptr};    // unit pointer to the base npcs, used in vmc really
 
-public:
     std::map<const char *, file_index_type *, cmp_str> mmp_fi;
 
+public:
     zone_reset_cmd *zri; /* List of Zone reset commands      */
 
     std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
