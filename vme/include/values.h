@@ -71,7 +71,7 @@ END HEADER*/
 
 #define GUILD_NYM_RANGER  "Nymgaard Ranger"
 #define GUILD_RANGER_ATL  "mountain_man@ranger", "justifier@ranger", "guardian@ranger", "pathfinder@ranger" //  Abi, Wpn, Spl, Ski
-#define GUILD_KNIGHT_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
+#define GUILD_RANGER_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
 
 #define GUILD_UDG_THIEF   "Udgaard Thief"
 #define GUILD_THIEF_ATL   "bisse@thievesguild","pirate@thievesguild","gryma@thievesguild" //  Abi, Wpn, Ski
