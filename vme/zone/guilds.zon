@@ -1,5 +1,15 @@
 #include <macros.h>
 
+/*
+Guilds to convert:
+
+
+Converted:
+   Assassin
+   Ranger
+   Paladin
+*/
+
 %zone guilds
 
 reset RESET_NOT

@@ -486,49 +486,47 @@ watch your movements for any signs of movement."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 
 dilbegin prg2();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
   pc:   unitptr;
   item: unitptr;
   expd : extraptr;
 code
 {
-  :init:
-  heartbeat := PULSE_SEC*4;
+   :init:
+   heartbeat := PULSE_SEC*4;
 
-  :start:
-  wait (SFB_CMD, activator.type == UNIT_ST_PC);
-  secure(pc,lostpc);
-  pc := activator;
-  expd := "$path" in pc.quests;
-  if (expd == null) goto lostpc;
-  if (not(GUILD_ASSASSIN in expd.names))
-  {
-  goto start;
-  }
-  else
-  {
-  exec("tell "+pc.name+" Hello, fellow assassin.  Would you like to " +
-       "journey to our guild to increase your powerful skills?  Just nod if
-" +
-       "you wish to go.", self);
-  if (command("nod"))
-    {
-    act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-	"smoke clears you find yourself in a different place!"
-	,A_ALWAYS,pc,null,null,TO_CHAR);
-    act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-	"smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-    link(pc, findroom("entrance@assassin"));
+   :start:
+   wait (SFB_CMD, activator.type == UNIT_ST_PC);
+   pc := activator;
 
-      }
-}
-unsecure(pc);
-:lostpc:
-goto start;
+   if (not IsInGuild@guilds(pc, GUILD_ASSASSIN))
+      goto start;
+
+   secure(pc,lostpc);
+
+   exec("tell "+pc.name+" Hello, fellow assassin.  Would you like to " +
+         "journey to our guild to increase your powerful skills?  Just nod if " +
+         "you wish to go.", self);
+   if (command("nod"))
+   {
+      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+      "smoke clears you find yourself in a different place!"
+      ,A_ALWAYS,pc,null,null,TO_CHAR);
+      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+      "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
+      link(pc, findroom("entrance@assassin"));
+   }
+
+   unsecure(pc);
+   :lostpc:
+   goto start;
 }
 dilend
-
 end
+
+
 		shdw2_assassin
 
 names {"shadow assassin", "shadow", "assassin"}
@@ -541,10 +539,12 @@ watch your movements for any signs of movement."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 
 dilbegin prg3();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
   pc:   unitptr;
   item: unitptr;
-  expd : extraptr;
+
 code
 {
   :init:
@@ -554,26 +554,27 @@ code
   wait (SFB_CMD, activator.type == UNIT_ST_PC);
   secure(pc,lostpc);
   pc := activator;
-  expd := "$path" in pc.quests;
-  if (expd == null) goto lostpc;
-  if (GUILD_ASSASSIN in expd.names)
-  {
-  exec("say Hello, fellow assassin.  Would you like a lift back to midgaard? " +
-       "Just nod if you wish to go.", self);
-  if (command("nod"))
-    {
-    act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-	"smoke clears you find yourself in a different place!"
-	,A_ALWAYS,pc,null,null,TO_CHAR);
-    act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-	"smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-    link(pc, findroom("market_sq@midgaard"));
 
+   if (IsInGuild@guilds(activator, GUILD_ASSASSIN))
+   {
+      exec("say Hello, fellow assassin.  Would you like a lift back to midgaard? " +
+         "Just nod if you wish to go.", self);
+
+      if (command("nod"))
+      {
+         act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+         "smoke clears you find yourself in a different place!"
+         ,A_ALWAYS,pc,null,null,TO_CHAR);
+         act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+         "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
+         link(pc, findroom("market_sq@midgaard"));
       }
-}
-unsecure(pc);
-:lostpc:
-goto start;
+   }
+
+   unsecure(pc);
+
+   :lostpc:
+   goto start;
 }
 dilend
 
