@@ -79,14 +79,17 @@ public:
     char **getNotesPtrPtr();
     void setNotes(char *value);
 
+    char **getHelpPtrPtr() ;
+    void setHelp(char *value);
+
 private:
     cNamelist creators;   /* List of creators of zone         */
     char *name{nullptr};  /* Unique in list                   */
     char *title{nullptr}; /* A nice looking zone title        */
-    char *notes{nullptr};    /* Creator notes to zone            */
+    char *notes{nullptr}; /* Creator notes to zone            */
+    char *help{nullptr};  /* User-Help to zone                */
 
 public:
-    char *help;     /* User-Help to zone                */
     char *filename; /* The filename of this file        */
 
     unit_data *rooms;   // unit pointer to the base rooms, used in vmc really

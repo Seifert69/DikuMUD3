@@ -346,7 +346,7 @@ char **zone_type::getTitlePtrPtr()
 void zone_type::setTitle(char *value)
 {
     FREE(title);
-    title=value;
+    title = value;
 }
 
 const char *zone_type::getNotes() const
@@ -362,7 +362,18 @@ char **zone_type::getNotesPtrPtr()
 void zone_type::setNotes(char *value)
 {
     FREE(notes);
-    notes=value;
+    notes = value;
+}
+
+char **zone_type::getHelpPtrPtr()
+{
+    return &help;
+}
+
+void zone_type::setHelp(char *value)
+{
+    FREE(help);
+    help = value;
 }
 
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)

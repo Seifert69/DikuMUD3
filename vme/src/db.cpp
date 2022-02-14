@@ -387,7 +387,7 @@ void generate_zone_indexes()
     z->setName(str_dup("_players"));
     z->filename = str_dup("ply");
     z->setTitle(str_dup("Reserved zone for player file_indexes"));
-    z->help = str_dup("");
+    z->setHelp(str_dup(""));
     z->setNotes(str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
                         "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
                         "of player files on disk\n"));
@@ -519,7 +519,7 @@ void generate_zone_indexes()
         z->setNotes(str_dup((char *)cBuf.GetData()));
 
         fstrcpy(&cBuf, f);
-        z->help = str_dup((char *)cBuf.GetData());
+        z->setHelp(str_dup((char *)cBuf.GetData()));
 
         for (;;)
         {
