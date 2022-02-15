@@ -1184,7 +1184,7 @@ void damage(unit_data *ch,
 
             af.setID(ID_MAX_ATTACKER);
             af.duration = 4;
-            af.beat = WAIT_SEC * 60 * 5;
+            af.setBeat(WAIT_SEC * 60 * 5);
             af.firstf_i = TIF_NONE;
             af.tickf_i = TIF_NONE;
             af.lastf_i = TIF_NONE;

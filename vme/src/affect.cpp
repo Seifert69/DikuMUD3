@@ -85,18 +85,18 @@ void create_affect(unit_data *unit, unit_affected_type *af)
             }
 
             // If there is no beat, decrease duration on creation
-            if ((af->beat <= 0) && (af->duration > 0))
+            if ((af->getBeat() <= 0) && (af->duration > 0))
             {
                 af->duration--; /* When 1 it means stop next tick... */
             }
 
-            if (af->beat > 0)
+            if (af->getBeat() > 0)
             {
                 if (af->event)
                 {
                     g_events.remove(affect_beat, (void *)af, nullptr);
                 }
-                af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
+                af->event = g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr);
             }
 
         }
@@ -177,7 +177,7 @@ void destroy_affect(unit_affected_type *af)
             if (!(*g_apf[af->applyf_i].func)(af, af->owner, FALSE))
             {
                 af->duration = 0;
-                af->beat = WAIT_SEC * 5;
+                af->setBeat(WAIT_SEC * 5);
                 if (af->event)
                 {
                     g_events.remove(affect_beat, (void *)af, nullptr);
@@ -245,9 +245,9 @@ void affect_beat(void *p1, void *p2)
 
     /* Used to be assert(af->beat > 0);  */
     /* But crashes game, I've set 0 to 8 */
-    if (af->beat <= 0)
+    if (af->getBeat() <= 0)
     {
-        af->beat = 2 * WAIT_SEC;
+        af->setBeat(2 * WAIT_SEC);
     }
 
     destroyed = FALSE;
@@ -282,7 +282,7 @@ void affect_beat(void *p1, void *p2)
         {
             g_events.remove(affect_beat, (void *)af, nullptr);
         }
-        af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
+        af->event = g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr);
     }
 }
 
@@ -312,13 +312,13 @@ void start_affect(unit_data *unit)
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
-        if ((af->getID() >= 0) && (af->beat > 0))
+        if ((af->getID() >= 0) && (af->getBeat() > 0))
         {
             if (af->event)
             {
                 g_events.remove(affect_beat, (void *)af, nullptr);
             }
-            af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
+            af->event = g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr);
         }
         else
         {

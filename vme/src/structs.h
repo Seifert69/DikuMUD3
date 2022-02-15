@@ -67,10 +67,14 @@ public:
     void setID(sbit16 value);
     int readIDFrom(CByteBuffer &buf);
 
+    ubit16 getBeat() const;
+    void setBeat(ubit16 value);
+    int readBeatFrom(CByteBuffer &buf);
+
 private:
-    sbit16 id{0}; //
+    sbit16 id{0};   //
+    ubit16 beat{0}; // Beat in 1/4 of secs, 0 = None
 public:
-    ubit16 beat;     /* Beat in 1/4 of secs, 0 = None */
     sbit16 duration; /* How many beats until end      */
 
     int data[3];

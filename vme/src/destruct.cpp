@@ -164,6 +164,21 @@ int unit_affected_type::readIDFrom(CByteBuffer &buf)
     return buf.Read16(&id);
 }
 
+ubit16 unit_affected_type::getBeat() const
+{
+    return beat;
+}
+
+void unit_affected_type::setBeat(ubit16 value)
+{
+    beat = value;
+}
+
+int unit_affected_type::readBeatFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&beat);
+}
+
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

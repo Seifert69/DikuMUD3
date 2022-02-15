@@ -963,7 +963,7 @@ affect_field    : ID number
     }
     | TIME number
     {
-        cur_aff->beat = $2;
+        cur_aff->setBeat($2);
     }
     ;
 

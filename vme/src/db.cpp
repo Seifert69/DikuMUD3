@@ -630,7 +630,7 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
             return 1;
         }
 
-        if (pBuf->Read16(&af.beat))
+        if (af.readBeatFrom(*pBuf))
         {
             return 1;
         }
