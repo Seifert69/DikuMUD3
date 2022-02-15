@@ -478,6 +478,16 @@ void zone_type::setNumOfRooms(ubit16 value)
     no_rooms = value;
 }
 
+ubit16 zone_type::getNumOfObjects() const
+{
+    return no_objs;
+}
+
+void zone_type::incrementNumOfObjects()
+{
+    ++no_objs;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

@@ -1298,7 +1298,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
-                        v->val.num = ((zone_type *)v1->val.ptr)->no_objs;
+                        v->val.num = ((zone_type *)v1->val.ptr)->getNumOfObjects();
                     }
                     else
                     {

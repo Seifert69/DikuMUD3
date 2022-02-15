@@ -321,7 +321,7 @@ void generate_file_indexes(FILE *f, zone_type *zone)
         fi->setFilepos(ftell(f));
         if (fi->getType() == UNIT_ST_OBJ)
         {
-            zone->no_objs++;
+            zone->incrementNumOfObjects();
             object_num++;
         }
 

@@ -110,6 +110,9 @@ public:
     void incrementNumOfRooms();
     void setNumOfRooms(ubit16 value);
 
+    ubit16 getNumOfObjects() const;
+    void incrementNumOfObjects();
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -133,8 +136,9 @@ private:
     ubit16 no_of_fi{0};        /* Number of fi's in the list       */
     ubit16 zone_time{0};       /* How often to reset zone          */
     ubit16 no_rooms{0};        /* The number of rooms              */
+    ubit16 no_objs{0};
+
 public:
-    ubit16 no_objs;
     ubit16 no_npcs;
     ubit8 reset_mode; /* when/how to reset zone           */
     ubit16 no_tmpl;   /* number of DIL templates          */
