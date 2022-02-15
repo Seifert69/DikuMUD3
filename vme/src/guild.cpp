@@ -124,7 +124,7 @@ void act_to_guild(const char *msg, char *guild, unit_data *member, unit_data *no
         return;
     }
 
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
         if (descriptor_is_playing(d) && (d->cgetCharacter() != nonmember) && IS_PC(d->cgetCharacter()) && PC_GUILD(d->cgetCharacter()) &&
             strcmp(PC_GUILD(d->cgetCharacter()), guild) == 0)

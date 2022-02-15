@@ -455,7 +455,7 @@ bool zone_is_empty(zone_type *zone)
 {
     descriptor_data *d = nullptr;
 
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
         if (descriptor_is_playing(d))
         {

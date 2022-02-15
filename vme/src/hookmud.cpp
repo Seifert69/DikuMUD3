@@ -127,7 +127,7 @@ int cMultiHook::Read()
 
     if (id != 0)
     {
-        for (d = g_descriptor_list; d; d = d->next)
+        for (d = g_descriptor_list; d; d = d->getNext())
         {
             if (d->getMultiHookID() == id)
             {
@@ -238,7 +238,7 @@ void multi_clear()
 
     for (d = g_descriptor_list; d; d = nextd)
     {
-        nextd = d->next;
+        nextd = d->getNext();
         if (!d->getMultiHookPtr()->IsHooked())
         {
             descriptor_close(d);

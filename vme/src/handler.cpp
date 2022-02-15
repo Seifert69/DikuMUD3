@@ -31,7 +31,7 @@ descriptor_data *unit_is_edited(unit_data *u)
 {
     descriptor_data *d = nullptr;
 
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
         if (d->cgetEditing() == u)
         {
@@ -1051,7 +1051,7 @@ void stop_snoopwrite(unit_data *unit)
         /* If the PC which is switched is extracted, then unswitch */
         if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
         {
-            for (d = g_descriptor_list; d; d = d->next)
+            for (d = g_descriptor_list; d; d = d->getNext())
             {
                 if (d->cgetOriginalCharacter() == unit)
                 {

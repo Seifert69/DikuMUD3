@@ -1908,7 +1908,7 @@ void dilfe_fld(dilprg *p)
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
-                            for (d = g_descriptor_list; d; d = d->next)
+                            for (d = g_descriptor_list; d; d = d->getNext())
                             {
                                 if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
                                 {
@@ -1964,7 +1964,7 @@ void dilfe_fld(dilprg *p)
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
-                            for (d = g_descriptor_list; d; d = d->next)
+                            for (d = g_descriptor_list; d; d = d->getNext())
                             {
                                 if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
                                 {

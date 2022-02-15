@@ -137,6 +137,9 @@ public:
     const snoop_data &cgetSnoopData() const;
     snoop_data &getSnoopData();
 
+    descriptor_data *getNext();
+    void setNext(descriptor_data *value);
+
 private:
     time_t logon{0};                        // Time of last connect
     cMultiHook *multi{nullptr};             // Multi element pointer
@@ -160,9 +163,7 @@ private:
     unit_data *character{nullptr};          // linked to char
     unit_data *original{nullptr};           // original char
     snoop_data snoop;                       // to snoop people.
-
-public:
-    descriptor_data *next; /* link to next descriptor          */
+    descriptor_data *next{nullptr};         // link to next descriptor
 };
 
 /* ----------------- UNIT GENERAL STRUCTURES ----------------------- */

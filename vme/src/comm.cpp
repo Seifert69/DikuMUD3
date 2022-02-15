@@ -225,7 +225,7 @@ void send_to_all(const char *messg)
 
     if (messg && *messg)
     {
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i))
             {
@@ -246,7 +246,7 @@ void send_to_zone_outdoor(const zone_type *z, const char *messg)
 
     if (messg && *messg)
     {
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && unit_zone(i->cgetCharacter()) == z &&
                 CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&
@@ -264,7 +264,7 @@ void send_to_outdoor(const char *messg)
 
     if (messg && *messg)
     {
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && CHAR_AWAKE(i->cgetCharacter()) &&
                 !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&

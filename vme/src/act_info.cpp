@@ -46,7 +46,7 @@ void player_where(unit_data *ch, char *arg)
     descriptor_data *d = nullptr;
     int any = FALSE;
 
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
         if (d->cgetCharacter() && (d->cgetCharacter() != ch) && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
             (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->cgetCharacter()))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
@@ -89,7 +89,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
     {
         mystr = "<u>Players</u><br/>";
 
-        for (d = g_descriptor_list; d; d = d->next)
+        for (d = g_descriptor_list; d; d = d->getNext())
         {
             if (d->cgetCharacter() && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
                 CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&

@@ -64,7 +64,7 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
        < %3d/%3d> mortal vlvl/ wizi
     */
 
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
         assert(d->cgetCharacter());
         if (CHAR_LEVEL(ch) >= UNIT_MINV(CHAR_ORIGINAL(d->cgetCharacter())))

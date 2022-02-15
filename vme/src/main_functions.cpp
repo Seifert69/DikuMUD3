@@ -214,7 +214,7 @@ void game_loop()
     }
 
     slog(LOG_ALL, 0, "Saving all players before exiting");
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
         if (d->cgetOriginalCharacter() != nullptr)
         {
@@ -261,7 +261,7 @@ void game_event()
     /* process_commands; */
     for (point = g_descriptor_list; point; point = g_next_to_process)
     {
-        g_next_to_process = point->next;
+        g_next_to_process = point->getNext();
 
         if (point->predecrementLoopWaitCounter() <= 0 && !point->getInputQueue().IsEmpty())
         {
@@ -286,7 +286,7 @@ void game_event()
     }
 
     /* give the people some prompts */
-    for (point = g_descriptor_list; point; point = point->next)
+    for (point = g_descriptor_list; point; point = point->getNext())
     {
         if (point->getPromptMode() == PROMPT_EXPECT)
         {

@@ -468,6 +468,16 @@ snoop_data &descriptor_data::getSnoopData()
     return snoop;
 }
 
+descriptor_data *descriptor_data::getNext()
+{
+    return next;
+}
+
+void descriptor_data::setNext(descriptor_data *value)
+{
+    next = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
@@ -576,21 +586,21 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 
     if (g_next_to_process == d)
     { /* to avoid crashing the process loop */
-        g_next_to_process = g_next_to_process->next;
+        g_next_to_process = g_next_to_process->getNext();
     }
 
     if (d == g_descriptor_list)
     { /* this is the head of the list */
-        g_descriptor_list = g_descriptor_list->next;
+        g_descriptor_list = g_descriptor_list->getNext();
     }
     else /* This is somewhere inside the list */
     {
         /* Locate the previous element */
-        for (tmp = g_descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
+        for (tmp = g_descriptor_list; tmp && (tmp->getNext() != d); tmp = tmp->getNext())
         {
             ;
         }
-        tmp->next = d->next;
+        tmp->setNext(d->getNext());
     }
 
     delete d;

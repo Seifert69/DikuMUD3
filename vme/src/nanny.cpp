@@ -124,7 +124,7 @@ void check_idle()
 
     for (d = g_descriptor_list; d; d = next_d)
     {
-        next_d = d->next;
+        next_d = d->getNext();
         d->incrementHoursPlayerIdle();
         if (!descriptor_is_playing(d)) /* Not in game yet */
         {
@@ -382,7 +382,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     {
         auto msg = diku::format_to_str("%s has entered the world.<br/>", UNIT_NAME(this));
 
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i) && i->cgetCharacter() != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->cgetCharacter()), this) &&
                 IS_PC(CHAR_ORIGINAL(i->cgetCharacter())) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->cgetCharacter())), PC_INFORM) &&
