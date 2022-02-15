@@ -33,7 +33,7 @@ descriptor_data *unit_is_edited(unit_data *u)
 
     for (d = g_descriptor_list; d; d = d->next)
     {
-        if (d->editing == u)
+        if (d->cgetEditing() == u)
         {
             return d;
         }

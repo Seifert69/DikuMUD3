@@ -461,7 +461,7 @@ void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, cha
         d->clearLocalString();
         d->editref = nullptr;
         d->setPostEditFunctionPtr(nullptr);
-        d->editing = nullptr;
+        d->setEditing(nullptr);
     }
 
     d->setFunctionPtr(fptr);
@@ -831,7 +831,7 @@ ubit1 base_string_add(descriptor_data *d, char *str)
         d->clearLocalString();
         d->editref = nullptr;
         d->setPostEditFunctionPtr(nullptr);
-        d->editing = nullptr;
+        d->setEditing(nullptr);
 
         return TRUE;
     }

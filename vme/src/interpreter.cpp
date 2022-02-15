@@ -282,7 +282,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
         return;
     }
 
-    if (IS_PC(ch) && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->editing)
+    if (IS_PC(ch) && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->cgetEditing())
     {
         return;
     }

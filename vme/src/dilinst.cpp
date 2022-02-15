@@ -140,7 +140,7 @@ void dilfi_edit(dilprg *p)
         else
         {
             CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setPostEditFunctionPtr(dil_edit_done);
-            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->editing = p->owner;
+            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setEditing(p->owner);
             CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->editref = nullptr;
 
             set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), interpreter_string_add, TRUE);
@@ -173,7 +173,7 @@ void dilfi_kedit(dilprg *p)
                 d->clearLocalString();
                 d->editref = nullptr;
                 d->setPostEditFunctionPtr(nullptr);
-                d->editing = nullptr;
+                d->setEditing(nullptr);
                 set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), descriptor_interpreter, TRUE);
             }
         }

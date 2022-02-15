@@ -1912,7 +1912,7 @@ void dilfe_fld(dilprg *p)
                             {
                                 if (descriptor_is_playing(d) && d->original == vict)
                                 {
-                                    if (d->editing)
+                                    if (d->cgetEditing())
                                     {
                                         editing = TRUE;
                                     }
@@ -1924,7 +1924,7 @@ void dilfe_fld(dilprg *p)
                         {
                             if (IS_PC(vict) && CHAR_DESCRIPTOR(vict))
                             {
-                                if (CHAR_DESCRIPTOR(vict)->editing)
+                                if (CHAR_DESCRIPTOR(vict)->cgetEditing())
                                 {
                                     editing = TRUE;
                                 }

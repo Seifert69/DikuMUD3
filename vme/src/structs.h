@@ -108,6 +108,10 @@ public:
     void callPostEditFunctionPtr(descriptor_data *data) const;
     void setPostEditFunctionPtr(PostEditFunctionPtr value);
 
+    const unit_data *cgetEditing() const;
+    unit_data *getEditing();
+    void setEditing(unit_data *value);
+
 private:
     time_t logon{0};                       // Time of last connect
     cMultiHook *multi{nullptr};            // Multi element pointer
@@ -122,9 +126,9 @@ private:
     ubit32 replyid{0};                     // Used for 'tell reply'
     char *localstr{nullptr};               // For the 'modify-string' system. This string is expanded while editing
     PostEditFunctionPtr postedit{nullptr}; //
+    unit_data *editing{nullptr};           //
 
 public:
-    unit_data *editing;
     void *editref; /* pointer to "where we are editing"     */
     /* when using (volatile) extras + boards */
 

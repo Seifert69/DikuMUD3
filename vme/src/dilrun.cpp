@@ -118,7 +118,7 @@
 
 void dil_edit_done(descriptor_data *d)
 {
-    send_edit(d->editing, d->getLocalString());
+    send_edit(d->getEditing(), d->getLocalString());
 }
 
 void dil_intr_remove(dilprg *p, int idx)
