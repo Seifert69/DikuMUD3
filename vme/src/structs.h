@@ -94,6 +94,10 @@ public:
     int predecrementLoopWaitCounter();
     void setLoopWaitCounter(int value);
 
+    ubit16 getHoursPlayerIdle() const;
+    void setHoursPlayerIdle(ubit16 value);
+    void incrementHoursPlayerIdle();
+
 private:
     time_t logon{0};            // Time of last connect
     cMultiHook *multi{nullptr}; // Multi element pointer
@@ -104,9 +108,9 @@ private:
     ubit16 nPort{0};            // Mplex port
     ubit8 nLine{0};             // Serial Line
     int wait{0};                // wait for how many loops
+    ubit16 timer{0};            // num of hours idleness for mortals
 
 public:
-    ubit16 timer;   /* num of hours idleness for mortals */
     ubit32 replyid; /* Used for 'tell reply'             */
 
     /* For the 'modify-string' system.       */

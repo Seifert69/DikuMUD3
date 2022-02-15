@@ -308,6 +308,21 @@ void descriptor_data::setLoopWaitCounter(int value)
     wait = value;
 }
 
+ubit16 descriptor_data::getHoursPlayerIdle() const
+{
+    return timer;
+}
+
+void descriptor_data::setHoursPlayerIdle(ubit16 value)
+{
+    timer = value;
+}
+
+void descriptor_data::incrementHoursPlayerIdle()
+{
+    ++timer;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
