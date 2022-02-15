@@ -253,6 +253,20 @@ void descriptor_data::setFunctionPtr(descriptor_data::FunctionPtr value)
     fptr = value;
 }
 
+int descriptor_data::getState() const
+{
+    return state;
+}
+
+void descriptor_data::setState(int value)
+{
+    state = value;
+}
+int descriptor_data::postincrementState()
+{
+    return state++;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)

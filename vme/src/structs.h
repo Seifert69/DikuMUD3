@@ -78,14 +78,18 @@ public:
     void callFunctionPtr(descriptor_data *data, char *arg) const;
     void setFunctionPtr(FunctionPtr value);
 
+    int getState() const;
+    void setState(int value);
+    int postincrementState();
+
 private:
     time_t logon{0};            // Time of last connect
     cMultiHook *multi{nullptr}; // Multi element pointer
     ubit16 id{0};               // The ID for the multi
     FunctionPtr fptr{nullptr};  //
+    int state{0};                  // Locally used in each fptr
 
 public:
-    int state;      /* Locally used in each fptr         */
     char host[50];  /* hostname                          */
     ubit16 nPort;   /* Mplex port                        */
     ubit8 nLine;    /* Serial Line                       */

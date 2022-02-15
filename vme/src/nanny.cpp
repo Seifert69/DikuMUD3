@@ -46,7 +46,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#define STATE(d) ((d)->state)
+//#define STATE(d) ((d)->getState())
 
 int g_dilmenu;
 
@@ -471,12 +471,12 @@ void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, cha
     if (call)
     {
         char constStr[] = ""; // cheat to get rid of warnings.  todo fix correctly
-        d->state = 0;
+        d->setState(0);
         d->callFunctionPtr(d, constStr);
     }
     else
     {
-        d->state = 1;
+        d->setState(1);
     }
 }
 
@@ -551,7 +551,7 @@ void nanny_throw(descriptor_data *d, char *arg)
     descriptor_data *td = nullptr;
     unit_data *u = nullptr;
 
-    if (STATE(d)++ == 0)
+    if (d->postincrementState() == 0)
     {
         send_to_descriptor("Already playing!<br/>Throw the other copy out? (Y/N) ", d);
         return;
@@ -666,7 +666,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
 {
     unit_data *u = nullptr;
 
-    if (STATE(d)++ == 0)
+    if (d->postincrementState() == 0)
     {
         send_to_descriptor("<br/>Please retype password: ", d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
@@ -764,7 +764,7 @@ int check_pwd(descriptor_data *d, char *pwd)
 
 void nanny_new_pwd(descriptor_data *d, char *arg)
 {
-    if (STATE(d)++ == 0)
+    if (d->postincrementState() == 0)
     {
         auto msg = diku::format_to_str("Give me a new password for %s: ", UNIT_NAME(d->character));
         send_to_descriptor(msg, d);
@@ -793,7 +793,7 @@ ubit1 base_string_add(descriptor_data *d, char *str)
     char *scan = nullptr;
     int terminator = 0;
 
-    if (STATE(d)++ == 0)
+    if (d->postincrementState() == 0)
     {
         send_to_descriptor("Terminate with a '@'.<br/>", d);
         if (d->localstr)
@@ -918,9 +918,9 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     /* PC_ID(d->character) can be -1 when a newbie is in the game and
         someone logins with the same name! */
 
-    STATE(d)++;
+    d->postincrementState();
 
-    if (STATE(d) == 1)
+    if (d->getState() == 1)
     {
         if (PC_CRACK_ATTEMPTS(d->character) > 2)
         {
@@ -932,10 +932,10 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
             d->wait = MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
             return;
         }
-        STATE(d)++;
+        d->postincrementState();
     }
 
-    if (STATE(d) == 2)
+    if (d->getState() == 2)
     {
         auto msg = diku::format_to_str("Welcome back %s, please enter your password: ", UNIT_NAME(d->character));
         send_to_descriptor(msg, d);
@@ -1033,7 +1033,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
 void nanny_name_confirm(descriptor_data *d, char *arg)
 {
-    if (STATE(d)++ == 0)
+    if (d->postincrementState() == 0)
     {
         // MS: removed help option since it was not implemented.
         auto msg = diku::format_to_str("Did I get that right, %s (Y/N)? ", UNIT_NAME(d->character));
