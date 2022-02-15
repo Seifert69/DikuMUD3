@@ -114,9 +114,8 @@ private:
 
     std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
 
+    ubit8 **spmatrix{nullptr}; /* Shortest Path Matrix             */
 public:
-    ubit8 **spmatrix; /* Shortest Path Matrix             */
-
     ubit16 zone_no;   /* Zone index counter (spmatrix)    */
     ubit16 no_of_fi;  /* Number of fi's in the list       */
     ubit16 zone_time; /* How often to reset zone          */
