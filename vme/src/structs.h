@@ -134,6 +134,9 @@ public:
     unit_data *getOriginalCharacter();
     void setOriginalCharacter(unit_data *value);
 
+    const snoop_data &cgetSnoopData() const;
+    snoop_data &getSnoopData();
+
 private:
     time_t logon{0};                        // Time of last connect
     cMultiHook *multi{nullptr};             // Multi element pointer
@@ -156,10 +159,9 @@ private:
     cQueue qInput;                          // q of unprocessed input
     unit_data *character{nullptr};          // linked to char
     unit_data *original{nullptr};           // original char
+    snoop_data snoop;                       // to snoop people.
 
 public:
-    snoop_data snoop; /* to snoop people.                 */
-
     descriptor_data *next; /* link to next descriptor          */
 };
 

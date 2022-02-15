@@ -458,6 +458,16 @@ void descriptor_data::setOriginalCharacter(unit_data *value)
     original = value;
 }
 
+const snoop_data &descriptor_data::cgetSnoopData() const
+{
+    return snoop;
+}
+
+snoop_data &descriptor_data::getSnoopData()
+{
+    return snoop;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
@@ -512,7 +522,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         // if (CHAR_IS_SWITCHED(d->character))
         //    unswitchbody(d->character);
 
-        assert(!d->snoop.getSnooping() && !d->snoop.getSnoopBy());
+        assert(!d->cgetSnoopData().getSnooping() && !d->cgetSnoopData().getSnoopBy());
         assert(!d->cgetOriginalCharacter());
 
         act("$1n has lost $1s link.", A_HIDEINV, d->cgetCharacter(), cActParameter(), cActParameter(), TO_ROOM);
