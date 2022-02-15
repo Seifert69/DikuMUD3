@@ -85,9 +85,9 @@ void create_affect(unit_data *unit, unit_affected_type *af)
             }
 
             // If there is no beat, decrease duration on creation
-            if ((af->getBeat() <= 0) && (af->duration > 0))
+            if ((af->getBeat() <= 0) && (af->getDuration() > 0))
             {
-                af->duration--; /* When 1 it means stop next tick... */
+                af->decrementDuration(); /* When 1 it means stop next tick... */
             }
 
             if (af->getBeat() > 0)
@@ -98,7 +98,6 @@ void create_affect(unit_data *unit, unit_affected_type *af)
                 }
                 af->event = g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr);
             }
-
         }
         else
         {
@@ -176,7 +175,7 @@ void destroy_affect(unit_affected_type *af)
         {
             if (!(*g_apf[af->applyf_i].func)(af, af->owner, FALSE))
             {
-                af->duration = 0;
+                af->setDuration(0);
                 af->setBeat(WAIT_SEC * 5);
                 if (af->event)
                 {
@@ -254,7 +253,7 @@ void affect_beat(void *p1, void *p2)
 
     if (!IS_PC(af->owner) || CHAR_DESCRIPTOR(af->owner))
     {
-        if (af->duration == 0)
+        if (af->getDuration() == 0)
         {
             /* 'destroy_affect' will try to destroy the event, but there */
             /* is none. It doesn't matter though                         */
@@ -270,9 +269,9 @@ void affect_beat(void *p1, void *p2)
 
             destroyed = af->is_destructed();
 
-            if (!destroyed && (af->duration > 0))
+            if (!destroyed && (af->getDuration() > 0))
             {
-                af->duration--;
+                af->decrementDuration();
             }
         }
     }

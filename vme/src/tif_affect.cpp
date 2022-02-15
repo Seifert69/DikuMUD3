@@ -237,7 +237,7 @@ void tif_bless_off(unit_affected_type *af, unit_data *unit)
 
 void tif_bless_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (af->duration == 1)
+    if (af->getDuration() == 1)
     {
         send_to_char("You sense the divine forces about to move away.<br/>", unit);
     }
@@ -256,7 +256,7 @@ void tif_berserk_off(unit_affected_type *af, unit_data *unit)
 
 void tif_berserk_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (af->duration == 1)
+    if (af->getDuration() == 1)
     {
         send_to_char("Your sense of being berserk is ebbing.<br/>", unit);
     }
@@ -275,7 +275,7 @@ void tif_rage_off(unit_affected_type *af, unit_data *unit)
 
 void tif_rage_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (af->duration == 1)
+    if (af->getDuration() == 1)
     {
         send_to_char("You sense your rage starting to ebb.<br/>", unit);
     }
@@ -326,7 +326,7 @@ void tif_sanctuary_off(unit_affected_type *af, unit_data *unit)
 
 void tif_sanctuary_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (af->duration == 1)
+    if (af->getDuration() == 1)
     {
         act("$1n glows in a bright white light... The light flickers.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
         send_to_char("You glow in a bright white light... "
@@ -345,11 +345,11 @@ void tif_torch_tick(unit_affected_type *af, unit_data *unit)
     if (OBJ_VALUE(unit, 0) > 0)
         OBJ_VALUE(unit, 0)--;  // Decreash how many hours of burning are left.
 
-    if (af->duration <= 4)
+    if (af->getDuration() <= 4)
     {
         if (IS_CHAR(UNIT_IN(unit)))
         {
-            if (af->duration <= 1) // Last tick.
+            if (af->getDuration() <= 1) // Last tick.
             {
                 act("Your $2N goes out.", A_HIDEINV, UNIT_IN(unit), unit, cActParameter(), TO_CHAR);
             }
@@ -935,7 +935,7 @@ void tif_sustain_off(unit_affected_type *af, unit_data *unit)
 void tif_decay_corpse(unit_affected_type *af, unit_data *unit)
 {
     /* Make routine to change the description of a corpse instead */
-    if (ODD(af->duration) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
+    if (ODD(af->getDuration()) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
     {
         act("The rotten stench of $1n is here.", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
@@ -963,7 +963,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
             SET_BIT(UNIT_FLAGS(UNIT_CONTAINS(unit)), UNIT_FL_BURIED);
 
             naf.setID(ID_BURIED);
-            naf.duration = 0;
+            naf.setDuration(0);
             naf.setBeat(WAIT_SEC * SECS_PER_REAL_HOUR);
             naf.firstf_i = TIF_NONE;
             naf.tickf_i = TIF_NONE;

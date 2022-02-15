@@ -71,12 +71,16 @@ public:
     void setBeat(ubit16 value);
     int readBeatFrom(CByteBuffer &buf);
 
-private:
-    sbit16 id{0};   //
-    ubit16 beat{0}; // Beat in 1/4 of secs, 0 = None
-public:
-    sbit16 duration; /* How many beats until end      */
+    sbit16 getDuration() const;
+    void setDuration(sbit16 value);
+    void decrementDuration();
+    int readDurationFrom(CByteBuffer &buf);
 
+private:
+    sbit16 id{0};       //
+    ubit16 beat{0};     // Beat in 1/4 of secs, 0 = None
+    sbit16 duration{0}; // How many beats until end
+public:
     int data[3];
 
     sbit16 firstf_i;

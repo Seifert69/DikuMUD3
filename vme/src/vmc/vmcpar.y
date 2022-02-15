@@ -939,7 +939,7 @@ affect_field    : ID number
     }
     | DURATION number
     {
-        cur_aff->duration = $2;
+        cur_aff->setDuration($2);
     }
     | DATA index number
     {

@@ -620,7 +620,7 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
 
     for (; 0 < i; i--)
     {
-        if (pBuf->Read16(&af.duration))
+        if (af.readDurationFrom(*pBuf))
         {
             return 1;
         }

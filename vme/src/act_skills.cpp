@@ -111,7 +111,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
     if (paf == nullptr)
     {
         af.setID(ID_BACKSTABBED);
-        af.duration = 15;
+        af.setDuration(15);
         af.setBeat(WAIT_SEC * 60);
         af.firstf_i = TIF_NONE;
         af.tickf_i = TIF_NONE;
@@ -122,7 +122,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
     }
     else
     {
-        paf->duration = 15;
+        paf->setDuration(15);
         paf->setBeat(WAIT_SEC * 60);
         paf->data[0]++;
     }

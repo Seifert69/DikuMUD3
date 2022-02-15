@@ -179,6 +179,26 @@ int unit_affected_type::readBeatFrom(CByteBuffer &buf)
     return buf.Read16(&beat);
 }
 
+sbit16 unit_affected_type::getDuration() const
+{
+    return duration;
+}
+
+void unit_affected_type::setDuration(sbit16 value)
+{
+    duration = value;
+}
+
+void unit_affected_type::decrementDuration()
+{
+    duration--;
+}
+
+int unit_affected_type::readDurationFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&duration);
+}
+
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

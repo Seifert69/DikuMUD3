@@ -1183,7 +1183,7 @@ void damage(unit_data *ch,
             unit_affected_type af;
 
             af.setID(ID_MAX_ATTACKER);
-            af.duration = 4;
+            af.setDuration(4);
             af.setBeat(WAIT_SEC * 60 * 5);
             af.firstf_i = TIF_NONE;
             af.tickf_i = TIF_NONE;

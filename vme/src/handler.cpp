@@ -593,7 +593,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
         {
             newaf = *af;
             newaf.setID(-newaf.getID()); /* No longer a transfer    */
-            newaf.duration = -1;         /* Permanent until unequip */
+            newaf.setDuration(-1);       /* Permanent until unequip */
             create_affect(ch, &newaf);
         }
     }
@@ -619,7 +619,7 @@ unit_data *unequip_object(unit_data *obj)
         {
             for (caf = UNIT_AFFECTED(ch); caf; caf = caf->next)
             {
-                if ((-caf->getID() == af->getID()) && (caf->duration == -1) && (caf->data[0] == af->data[0]) &&
+                if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->data[0] == af->data[0]) &&
                     (caf->data[1] == af->data[1]) &&
                     // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
                     (caf->applyf_i == af->applyf_i) && (caf->firstf_i == af->firstf_i) && (caf->lastf_i == af->lastf_i) &&

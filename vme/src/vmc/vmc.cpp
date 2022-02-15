@@ -299,7 +299,7 @@ unit_affected_type *mcreate_affect()
     MCREATE(rs, unit_affected_type, 1);
     rs->next = nullptr;
     rs->setID(0);
-    rs->duration = 0;
+    rs->setDuration(0);
     rs->data[0] = rs->data[1] = rs->data[2] = 0;
     rs->firstf_i = rs->tickf_i = rs->lastf_i = rs->applyf_i = 0;
     return rs;

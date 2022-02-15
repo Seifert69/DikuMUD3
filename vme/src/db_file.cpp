@@ -797,7 +797,7 @@ void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version)
     for (; af; af = af->next)
     {
         i++;
-        pBuf->Append16(af->duration);
+        pBuf->Append16(af->getDuration());
         pBuf->Append16(af->getID());
         pBuf->Append16(af->getBeat());
 

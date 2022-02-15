@@ -648,7 +648,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
                                        "Apply f() %s<br/>"
                                        "%s",
                                        af->getID(),
-                                       af->duration,
+                                       af->getDuration(),
                                        af->getBeat(),
                                        af->data[0],
                                        af->data[1],
