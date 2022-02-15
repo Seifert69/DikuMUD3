@@ -137,6 +137,31 @@ public:
     const char *getDILFilePath() const;
     void setDILFilePath(char *value);
 
+    class Weather
+    {
+    public:
+        int getPressure() const { return pressure; }
+        int getChange() const { return change; }
+        int getSky() const { return sky; }
+        int getBase() const { return base; }
+
+        void setBase(int value) { base = value; }
+        void setChange(int value) { change = value; }
+        void incrementChangeBy(int value) { change += value; }
+        void decrementChangeBy(int value) { change -= value; }
+        void setPressure(int value) { pressure = value; }
+        void incrementPressureBy(int value) { pressure += value; }
+        void setSky(int value) { sky = value; }
+
+    private:
+        int pressure{0}; /* How is the pressure ( Mb )            */
+        int change{0};   /* How fast and what way does it change. */
+        int sky{0};      /* How is the sky.                       */
+        int base{0};     /* What is the basis pressure like?      */
+    };
+    const Weather &getWeather() const;
+    Weather &getWeather();
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -169,14 +194,7 @@ private:
     ubit8 payonly{0};          /* TRUE when only 4 paying players  */
     char *dilfilepath{nullptr};
 
-public:
-    struct
-    {
-        int pressure; /* How is the pressure ( Mb )            */
-        int change;   /* How fast and what way does it change. */
-        int sky;      /* How is the sky.                       */
-        int base;     /* What is the basis pressure like?      */
-    } weather;
+    Weather weather;
 };
 
 /* ----------------- OTHER STRUCTURES ----------------------- */

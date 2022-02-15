@@ -573,6 +573,16 @@ void zone_type::setDILFilePath(char *value)
     dilfilepath = value;
 }
 
+const zone_type::Weather &zone_type::getWeather() const
+{
+    return weather;
+}
+
+zone_type::Weather &zone_type::getWeather()
+{
+    return weather;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

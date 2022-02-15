@@ -503,12 +503,14 @@ void generate_zone_indexes()
         // Insert zone into sorted list
         g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
 
-        int mstmp = fread(&z->weather.base, sizeof(int), 1, f);
+        int temp1{0};
+        int mstmp = fread(&temp1, sizeof(int), 1, f);
         if (mstmp < 1)
         {
             slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in db.cpp", mstmp);
             assert(FALSE);
         }
+        z->getWeather().setBase(temp1);
 
         z->setAccessLevel(access);
         z->setLevelRequiredToLoadItems(loadlevel);

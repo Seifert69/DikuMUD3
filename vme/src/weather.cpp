@@ -155,42 +155,42 @@ static void weather_change(zone_type *zone, time_info_data time_data)
 
     if (time_data.month <= 2)
     { /* Winter */
-        diff = (zone->weather.pressure <= (zone->weather.base - 25) ? 2 : -2);
+        diff = (zone->getWeather().getPressure() <= (zone->getWeather().getBase() - 25) ? 2 : -2);
     }
     else if (time_data.month <= 4)
     { /* Spring */
-        diff = (zone->weather.pressure <= (zone->weather.base + 5) ? 2 : -2);
+        diff = (zone->getWeather().getPressure() <= (zone->getWeather().getBase() + 5) ? 2 : -2);
     }
     else if (time_data.month <= 6)
     { /* Summer */
-        diff = (zone->weather.pressure <= (zone->weather.base + 20) ? 2 : -2);
+        diff = (zone->getWeather().getPressure() <= (zone->getWeather().getBase() + 20) ? 2 : -2);
     }
     else
     { /* Fall   */
-        diff = (zone->weather.pressure <= (zone->weather.base - 5) ? 2 : -2);
+        diff = (zone->getWeather().getPressure() <= (zone->getWeather().getBase() - 5) ? 2 : -2);
     }
 
-    zone->weather.change += (dice(1, 4) * diff + dice(2, 6) - dice(2, 6));
+    zone->getWeather().incrementChangeBy((dice(1, 4) * diff + dice(2, 6) - dice(2, 6)));
 
-    zone->weather.change = MIN(zone->weather.change, 12);
-    zone->weather.change = MAX(zone->weather.change, -12);
+    zone->getWeather().setChange(MIN(zone->getWeather().getChange(), 12));
+    zone->getWeather().setChange(MAX(zone->getWeather().getChange(), -12));
 
-    zone->weather.pressure += zone->weather.change;
+    zone->getWeather().incrementPressureBy(zone->getWeather().getChange());
 
-    zone->weather.pressure = MIN(zone->weather.pressure, 1050);
-    zone->weather.pressure = MAX(zone->weather.pressure, 950);
+    zone->getWeather().setPressure(MIN(zone->getWeather().getPressure(), 1050));
+    zone->getWeather().setPressure(MAX(zone->getWeather().getPressure(), 950));
 
     change = 0;
 
-    switch (zone->weather.sky)
+    switch (zone->getWeather().getSky())
     {
         case SKY_CLOUDLESS:
         {
-            if (zone->weather.pressure < 990)
+            if (zone->getWeather().getPressure() < 990)
             {
                 change = 1;
             }
-            else if (zone->weather.pressure < 1010)
+            else if (zone->getWeather().getPressure() < 1010)
             {
                 if (dice(1, 4) == 1)
                 {
@@ -201,11 +201,11 @@ static void weather_change(zone_type *zone, time_info_data time_data)
         }
         case SKY_CLOUDY:
         {
-            if (zone->weather.pressure < 970)
+            if (zone->getWeather().getPressure() < 970)
             {
                 change = 2;
             }
-            else if (zone->weather.pressure < 990)
+            else if (zone->getWeather().getPressure() < 990)
             {
                 if (dice(1, 4) == 1)
                 {
@@ -216,7 +216,7 @@ static void weather_change(zone_type *zone, time_info_data time_data)
                     change = 0;
                 }
             }
-            else if (zone->weather.pressure > 1030)
+            else if (zone->getWeather().getPressure() > 1030)
             {
                 if (dice(1, 4) == 1)
                 {
@@ -228,7 +228,7 @@ static void weather_change(zone_type *zone, time_info_data time_data)
         }
         case SKY_RAINING:
         {
-            if (zone->weather.pressure < 970)
+            if (zone->getWeather().getPressure() < 970)
             {
                 if (dice(1, 4) == 1)
                 {
@@ -239,11 +239,11 @@ static void weather_change(zone_type *zone, time_info_data time_data)
                     change = 0;
                 }
             }
-            else if (zone->weather.pressure > 1030)
+            else if (zone->getWeather().getPressure() > 1030)
             {
                 change = 5;
             }
-            else if (zone->weather.pressure > 1010)
+            else if (zone->getWeather().getPressure() > 1010)
             {
                 if (dice(1, 4) == 1)
                 {
@@ -255,11 +255,11 @@ static void weather_change(zone_type *zone, time_info_data time_data)
         }
         case SKY_LIGHTNING:
         {
-            if (zone->weather.pressure > 1010)
+            if (zone->getWeather().getPressure() > 1010)
             {
                 change = 6;
             }
-            else if (zone->weather.pressure > 990)
+            else if (zone->getWeather().getPressure() > 990)
             {
                 if (dice(1, 4) == 1)
                 {
@@ -272,7 +272,7 @@ static void weather_change(zone_type *zone, time_info_data time_data)
         default:
         {
             change = 0;
-            zone->weather.sky = SKY_CLOUDLESS;
+            zone->getWeather().setSky(SKY_CLOUDLESS);
             break;
         }
     }
@@ -284,32 +284,32 @@ static void weather_change(zone_type *zone, time_info_data time_data)
 
         case 1:
             send_to_zone_outdoor(zone, "The sky is getting cloudy.<br/>");
-            zone->weather.sky = SKY_CLOUDY;
+            zone->getWeather().setSky(SKY_CLOUDY);
             break;
 
         case 2:
             send_to_zone_outdoor(zone, "It starts to rain.<br/>");
-            zone->weather.sky = SKY_RAINING;
+            zone->getWeather().setSky(SKY_RAINING);
             break;
 
         case 3:
             send_to_zone_outdoor(zone, "The clouds disappear.<br/>");
-            zone->weather.sky = SKY_CLOUDLESS;
+            zone->getWeather().setSky(SKY_CLOUDLESS);
             break;
 
         case 4:
             send_to_zone_outdoor(zone, "Lightning starts to show in the sky.<br/>");
-            zone->weather.sky = SKY_LIGHTNING;
+            zone->getWeather().setSky(SKY_LIGHTNING);
             break;
 
         case 5:
             send_to_zone_outdoor(zone, "The rain stopped.<br/>");
-            zone->weather.sky = SKY_CLOUDY;
+            zone->getWeather().setSky(SKY_CLOUDY);
             break;
 
         case 6:
             send_to_zone_outdoor(zone, "The lightning has stopped.<br/>");
-            zone->weather.sky = SKY_RAINING;
+            zone->getWeather().setSky(SKY_RAINING);
             break;
 
         default:
@@ -369,34 +369,34 @@ void boot_time_and_weather()
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.begin(); z++)
     {
-        z->second->weather.pressure = z->second->weather.base;
+        z->second->getWeather().setPressure(z->second->getWeather().getBase());
 
         if (time_info.month >= 7 && time_info.month <= 12)
         {
-            z->second->weather.pressure += number(-6, 6);
+            z->second->getWeather().incrementPressureBy(number(-6, 6));
         }
         else
         {
-            z->second->weather.pressure += number(-10, 10);
+            z->second->getWeather().incrementPressureBy(number(-10, 10));
         }
 
-        z->second->weather.change = number(-2, 2);
+        z->second->getWeather().setChange(number(-2, 2));
 
-        if (z->second->weather.pressure <= 980)
+        if (z->second->getWeather().getPressure() <= 980)
         {
-            z->second->weather.sky = SKY_LIGHTNING;
+            z->second->getWeather().setSky(SKY_LIGHTNING);
         }
-        else if (z->second->weather.pressure <= 1000)
+        else if (z->second->getWeather().getPressure() <= 1000)
         {
-            z->second->weather.sky = SKY_RAINING;
+            z->second->getWeather().setSky(SKY_RAINING);
         }
-        else if (z->second->weather.pressure <= 1020)
+        else if (z->second->getWeather().getPressure() <= 1020)
         {
-            z->second->weather.sky = SKY_CLOUDY;
+            z->second->getWeather().setSky(SKY_CLOUDY);
         }
         else
         {
-            z->second->weather.sky = SKY_CLOUDLESS;
+            z->second->getWeather().setSky(SKY_CLOUDLESS);
         }
     }
 
