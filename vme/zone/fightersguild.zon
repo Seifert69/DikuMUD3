@@ -774,18 +774,15 @@ M_HUMAN_WARRIOR_CLUB(80, SEX_MALE)
 alignment 1000
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_FIGHTER+"#$1n says, 'Begone $3n!'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_UDG_FIGHTER );
+dilcopy nokill@fightersguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
+dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
+dilcopy TrainMemberChk(GUILD_UDG_FIGHTER, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
 
-dilcopy nokill@fightersguild();
 
 end
 
@@ -805,13 +802,10 @@ alignment 1000
 money 70 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_FIGHTER+"#$1n says, 'Buggar yee off, $3n'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_UDG_FIGHTER );
-
+dilcopy nokill@fightersguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
+dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
+dilcopy TrainMemberChk(GUILD_UDG_FIGHTER, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -839,12 +833,10 @@ alignment 0
 money 80 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_FIGHTER+"#$1n says, 'Buggar ye off, $3n.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_UDG_FIGHTER );
+dilcopy nokill@fightersguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
+dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
+dilcopy TrainMemberChk(GUILD_UDG_FIGHTER, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -899,8 +891,11 @@ dilcopy shopkeeper@function(
    "$1n asks, 'I'm having a break, can you stop by later?.'" },
 {},"",100,10,2*PLATINUM_MULT,"",""
 );
-special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+
 dilcopy nokill@fightersguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
+dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
+
 
 end
 
@@ -922,16 +917,12 @@ M_HUMAN_WARRIOR_POLE(140, SEX_MALE)
 alignment 1000
 money 10 IRON_PIECE
 
-special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+dilcopy nokill@fightersguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
+dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 dilcopy rescue@function("gate guard");
 dilcopy teamwork@function("gate guard");
-/*
-special SFUN_GUILD_GUARD_WAY
-        ""+"east"+"#"+GUILD_UDG_FIGHTER+"#entrance#guard#$1n stops you
-and says, 'Members only!'#$1n stops $3n, and says, 'Members only!'"
-*/
 dilcopy guild_guard@guild_paths(GUILD_UDG_FIGHTER, "east");
-dilcopy nokill@fightersguild();
 
 end
 
