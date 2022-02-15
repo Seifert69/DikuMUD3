@@ -135,7 +135,7 @@ ubit1 same_surroundings(unit_data *u1, unit_data *u2)
 static inline int pcpay(unit_data *u)
 {
     return ((PC_ACCOUNT(u).credit > 0.0) || (PC_ACCOUNT(u).discount == 100) || (PC_ACCOUNT(u).flatrate > (ubit32)time(nullptr)) ||
-            (CHAR_DESCRIPTOR(u) ? g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(u)->host) : 0));
+            (CHAR_DESCRIPTOR(u) ? g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(u)->getHostname()) : 0));
 }
 
 /* returns if ROOM is pay/no pay !0/0 */

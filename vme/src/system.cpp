@@ -267,6 +267,17 @@ int descriptor_data::postincrementState()
     return state++;
 }
 
+const char *descriptor_data::getHostname() const
+{
+    return host;
+}
+
+void descriptor_data::setHostname(const char *value)
+{
+    strncpy(host, value, sizeof(host));
+    host[sizeof(host) - 1] = 0;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)

@@ -78,10 +78,10 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                                            UNIT_MINV(CHAR_ORIGINAL(d->character)),
                                            UNIT_NAME(CHAR_ORIGINAL(d->character)),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
-                                           g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                                           g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->nPort,
                                            d->nLine == 255 ? "---" : itoa(d->nLine),
-                                           d->host);
+                                           d->getHostname());
             }
             else
             {
@@ -91,10 +91,10 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                                            UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
                                            UNIT_NAME(CHAR_ORIGINAL(d->character)),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
-                                           g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                                           g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->nPort,
                                            d->nLine == 255 ? "---" : itoa(d->nLine),
-                                           d->host);
+                                           d->getHostname());
             }
         }
     }

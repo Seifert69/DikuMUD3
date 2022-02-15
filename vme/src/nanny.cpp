@@ -253,7 +253,7 @@ void pc_data::reconnect_game(descriptor_data *d)
         CHAR_LAST_ROOM(this) = nullptr;
     }
     act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
-    slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
+    slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
     CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
     PC_TIME(this).connect = ::time(nullptr);
     //      stop_affect(ch);
@@ -350,7 +350,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 
     if (CHAR_DESCRIPTOR(this))
     {
-        update_lasthost(this, inet_addr(CHAR_DESCRIPTOR(this)->host));
+        update_lasthost(this, inet_addr(CHAR_DESCRIPTOR(this)->getHostname()));
 
         CHAR_DESCRIPTOR(this)->timer = 0;
         CHAR_DESCRIPTOR(this)->prompt_mode = PROMPT_EXPECT;
@@ -398,7 +398,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     /* New player stats. Level can be zero after reroll while ID is not. */
     if ((CHAR_LEVEL(this) == 0) && PC_IS_UNSAVED(this))
     {
-        slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
+        slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
 
         PC_ID(this) = new_player_id();
 
@@ -969,7 +969,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     {
         if (!str_is_empty(arg))
         {
-            slog(LOG_ALL, 0, "%s entered a wrong password [%s].", PC_FILENAME(d->character), d->host);
+            slog(LOG_ALL, 0, "%s entered a wrong password [%s].", PC_FILENAME(d->character), d->getHostname());
             PC_CRACK_ATTEMPTS(d->character)++;
 
             if ((td = find_descriptor(PC_FILENAME(d->character), d)))
@@ -1025,7 +1025,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     }
 
     /* Ok, he wasn't Link Dead, lets enter the game via menu */
-    slog(LOG_BRIEF, CHAR_LEVEL(d->character), "%s[%s] has connected.", PC_FILENAME(d->character), d->host);
+    slog(LOG_BRIEF, CHAR_LEVEL(d->character), "%s[%s] has connected.", PC_FILENAME(d->character), d->getHostname());
 
     send_to_descriptor("<br/>", d);
     set_descriptor_fptr(d, nanny_motd, TRUE);
@@ -1050,9 +1050,9 @@ void nanny_name_confirm(descriptor_data *d, char *arg)
      */
     if (*arg == 'y' || *arg == 'Y')
     {
-        if (site_banned(d->host) != NO_BAN)
+        if (site_banned(d->getHostname()) != NO_BAN)
         {
-            show_ban_text(d->host, d);
+            show_ban_text(d->getHostname(), d);
             set_descriptor_fptr(d, nanny_close, TRUE);
             return;
         }
@@ -1097,9 +1097,9 @@ void nanny_get_name(descriptor_data *d, char *arg)
     {
         unit_data *ch = nullptr;
 
-        if (site_banned(d->host) == BAN_TOTAL)
+        if (site_banned(d->getHostname()) == BAN_TOTAL)
         {
-            show_ban_text(d->host, d);
+            show_ban_text(d->getHostname(), d);
             set_descriptor_fptr(d, nanny_close, TRUE);
             return;
         }

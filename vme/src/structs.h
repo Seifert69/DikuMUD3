@@ -82,15 +82,18 @@ public:
     void setState(int value);
     int postincrementState();
 
+    const char *getHostname() const;
+    void setHostname(const char *value);
+
 private:
     time_t logon{0};            // Time of last connect
     cMultiHook *multi{nullptr}; // Multi element pointer
     ubit16 id{0};               // The ID for the multi
     FunctionPtr fptr{nullptr};  //
     int state{0};                  // Locally used in each fptr
+    char host[50]{0};           // hostname
 
 public:
-    char host[50];  /* hostname                          */
     ubit16 nPort;   /* Mplex port                        */
     ubit8 nLine;    /* Serial Line                       */
     int wait;       /* wait for how many loops           */

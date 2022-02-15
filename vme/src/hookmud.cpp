@@ -199,8 +199,7 @@ int cMultiHook::Read()
 
                 d->nPort = bread_ubit16(&b);
                 d->nLine = bread_ubit8(&b);
-                strncpy(d->host, (char *)b, sizeof(d->host));
-                d->host[sizeof(d->host) - 1] = 0;
+                d->setHostname(reinterpret_cast<const char *>(b));
             }
             if (data)
                 FREE(data);
