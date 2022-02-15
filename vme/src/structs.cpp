@@ -512,6 +512,16 @@ void zone_type::setResetMode(ubit8 value)
     reset_mode = value;
 }
 
+void zone_type::incrementNumOfDILTemplates()
+{
+    ++no_tmpl;
+}
+
+void zone_type::setNumOfDILTemplates(ubit16 value)
+{
+    no_tmpl = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

@@ -120,6 +120,9 @@ public:
     ubit8 *getResetModePtr();
     void setResetMode(ubit8 value);
 
+    void incrementNumOfDILTemplates();
+    void setNumOfDILTemplates(ubit16 value);
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -146,10 +149,9 @@ private:
     ubit16 no_objs{0};         /* */
     ubit16 no_npcs{0};         /* */
     ubit8 reset_mode{0};       /* when/how to reset zone           */
+    ubit16 no_tmpl{0};         /* number of DIL templates          */
 
 public:
-    ubit16 no_tmpl; /* number of DIL templates          */
-
     ubit8 access;    /* Access Level 0 = highest (root)  */
     ubit8 loadlevel; /* Level required to load items     */
     ubit8 payonly;   /* TRUE when only 4 paying players  */

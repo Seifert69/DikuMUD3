@@ -252,7 +252,7 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 
             /* Link into list of indexes */
 
-            zone->no_tmpl++;
+            zone->incrementNumOfDILTemplates();
         }
         /* next size */
         if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
@@ -545,7 +545,7 @@ void generate_zone_indexes()
         }
 
         /* read templates */
-        z->no_tmpl = 0;
+        z->setNumOfDILTemplates(0);
         generate_templates(f, z);
 
         z->setNumOfFileIndexes(0);
