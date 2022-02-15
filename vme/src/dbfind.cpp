@@ -115,9 +115,9 @@ diltemplate *find_dil_index(const char *zonename, const char *name)
         return nullptr;
     }
 
-    auto it = zone->mmp_tmpl.find(name);
+    auto it = zone->getTemplate().find(name);
 
-    if (it != zone->mmp_tmpl.end())
+    if (it != zone->getTemplate().end())
     {
         return it->second;
     }

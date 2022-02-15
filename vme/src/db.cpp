@@ -169,7 +169,7 @@ void resolve_templates()
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
         /* all templates in zone */
-        for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
+        for (auto tmpl = z->second->getTemplate().begin(); tmpl != z->second->getTemplate().end(); tmpl++)
         {
             /* all external references */
             for (i = 0; i < tmpl->second->xrefcount; i++)
@@ -248,7 +248,7 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 
             tmpl->prgname = str_dup(nBuf);
             str_lower(tmpl->prgname);
-            zone->mmp_tmpl.insert(std::make_pair(tmpl->prgname, tmpl));
+            zone->getTemplate().insert(std::make_pair(tmpl->prgname, tmpl));
 
             /* Link into list of indexes */
 

@@ -351,7 +351,7 @@ static void stat_dil(unit_data *ch, zone_type *zone)
     send_to_char(msg, ch);
 
     msg += "<div class='twocol'>";
-    for (auto tmpl = zone->mmp_tmpl.begin(); tmpl != zone->mmp_tmpl.end(); tmpl++)
+    for (auto tmpl = zone->getTemplate().begin(); tmpl != zone->getTemplate().end(); tmpl++)
     {
         msg += diku::format_to_str("%.2fs %s [%d t / %d i]<br/>",
                                    tmpl->second->fCPU / 1000.0,
@@ -373,7 +373,7 @@ static void stat_global_dil(unit_data *ch, ubit32 nCount)
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
-        for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
+        for (auto tmpl = z->second->getTemplate().begin(); tmpl != z->second->getTemplate().end(); tmpl++)
         {
             if (tmpl->second->fCPU >= nCount)
             {

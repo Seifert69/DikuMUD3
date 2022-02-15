@@ -93,6 +93,9 @@ public:
     zone_reset_cmd *getZoneResetCommands();
     void setZoneResetCommands(zone_reset_cmd *value);
 
+    const std::map<const char *, diltemplate *, cmp_str> &getTemplate() const;
+    std::map<const char *, diltemplate *, cmp_str> &getTemplate();
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -108,9 +111,10 @@ private:
     std::map<const char *, file_index_type *, cmp_str> mmp_fi;
 
     zone_reset_cmd *zri{nullptr}; /* List of Zone reset commands      */
-public:
+
     std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
 
+public:
     ubit8 **spmatrix; /* Shortest Path Matrix             */
 
     ubit16 zone_no;   /* Zone index counter (spmatrix)    */

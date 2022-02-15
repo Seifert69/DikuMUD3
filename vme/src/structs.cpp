@@ -418,6 +418,16 @@ void zone_type::setZoneResetCommands(zone_reset_cmd *value)
     zri = value;
 }
 
+const std::map<const char *, diltemplate *, cmp_str> &zone_type::getTemplate() const
+{
+    return mmp_tmpl;
+}
+
+std::map<const char *, diltemplate *, cmp_str> &zone_type::getTemplate()
+{
+    return mmp_tmpl;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
