@@ -413,6 +413,16 @@ void descriptor_data::setLastCommand(const char *value)
     strncpy(last_cmd, value, sizeof(last_cmd));
 }
 
+char *descriptor_data::getCommandHistory()
+{
+    return history;
+}
+
+void descriptor_data::setCommandHistory(const char *value)
+{
+    strncpy(history, value, sizeof(history));
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)

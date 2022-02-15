@@ -308,7 +308,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
     {
         if (*arg == '!')
         {
-            arg = CHAR_DESCRIPTOR(ch)->history;
+            arg = CHAR_DESCRIPTOR(ch)->getCommandHistory();
         }
         else
         {
@@ -316,7 +316,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
             {
                 is_say = TRUE;
                 *arg = ' ';
-                strcpy(CHAR_DESCRIPTOR(ch)->history, arg);
+                CHAR_DESCRIPTOR(ch)->setCommandHistory(arg);
             }
             else
             {
@@ -324,11 +324,11 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
                 {
                     is_emote = TRUE;
                     *arg = ' ';
-                    strcpy(CHAR_DESCRIPTOR(ch)->history, arg);
+                    CHAR_DESCRIPTOR(ch)->setCommandHistory(arg);
                 }
                 else
                 {
-                    strcpy(CHAR_DESCRIPTOR(ch)->history, arg);
+                    CHAR_DESCRIPTOR(ch)->setCommandHistory(arg);
                 }
             }
         }
