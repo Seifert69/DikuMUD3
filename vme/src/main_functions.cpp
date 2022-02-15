@@ -216,13 +216,13 @@ void game_loop()
     slog(LOG_ALL, 0, "Saving all players before exiting");
     for (d = g_descriptor_list; d; d = d->next)
     {
-        if (d->original != nullptr)
+        if (d->cgetOriginalCharacter() != nullptr)
         {
-            if (IS_PC(d->original) && UNIT_IN(d->original))
+            if (IS_PC(d->cgetOriginalCharacter()) && UNIT_IN(d->cgetOriginalCharacter()))
             {
-                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->original));
-                save_player(d->original);
-                save_player_contents(d->original, TRUE);
+                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetOriginalCharacter()));
+                save_player(d->getOriginalCharacter());
+                save_player_contents(d->getOriginalCharacter(), TRUE);
             }
         }
         else

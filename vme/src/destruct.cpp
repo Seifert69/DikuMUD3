@@ -198,7 +198,7 @@ void destruct_unit(unit_data *unit)
         {
             for (d = g_descriptor_list; d; d = d->next)
             {
-                assert(d->original != unit);
+                assert(d->cgetOriginalCharacter() != unit);
             }
         }
 

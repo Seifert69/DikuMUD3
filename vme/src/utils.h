@@ -283,13 +283,13 @@
 
 #define CHAR_IS_SNOOPED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.getSnoopBy()) : (unit_data *)NULL)
 
-#define CHAR_IS_SWITCHED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->original) : (unit_data *)NULL)
+#define CHAR_IS_SWITCHED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->cgetOriginalCharacter()) : (unit_data *)NULL)
 
 #define CHAR_SNOOPING(ch) (CHAR_IS_SNOOPING(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.getSnooping()) : (ch))
 
 #define CHAR_SNOOPED(ch) (CHAR_IS_SNOOPED(ch) ? (CHAR_DESCRIPTOR(ch)->snoop.getSnoopBy()) : (ch))
 
-#define CHAR_ORIGINAL(ch) (CHAR_IS_SWITCHED(ch) ? (CHAR_DESCRIPTOR(ch)->original) : (ch))
+#define CHAR_ORIGINAL(ch) (CHAR_IS_SWITCHED(ch) ? (CHAR_DESCRIPTOR(ch)->getOriginalCharacter()) : (ch))
 
 #define CHAR_AWAKE(ch) (CHAR_POS(ch) > POSITION_SLEEPING)
 

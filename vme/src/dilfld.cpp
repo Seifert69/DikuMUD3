@@ -1910,7 +1910,7 @@ void dilfe_fld(dilprg *p)
                             descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->next)
                             {
-                                if (descriptor_is_playing(d) && d->original == vict)
+                                if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
                                 {
                                     if (d->cgetEditing())
                                     {
@@ -1966,7 +1966,7 @@ void dilfe_fld(dilprg *p)
                             descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->next)
                             {
-                                if (descriptor_is_playing(d) && d->original == vict)
+                                if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
                                 {
                                     switched = d->getCharacter();
                                     break;
@@ -1977,7 +1977,7 @@ void dilfe_fld(dilprg *p)
                         {
                             if (IS_NPC(vict) && CHAR_DESCRIPTOR(vict))
                             {
-                                if (CHAR_DESCRIPTOR(vict)->original)
+                                if (CHAR_DESCRIPTOR(vict)->cgetOriginalCharacter())
                                 {
                                     switched = CHAR_DESCRIPTOR(vict)->getCharacter();
                                 }

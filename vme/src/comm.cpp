@@ -150,7 +150,7 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
 
             if (!u || !IS_PC(u))
             { // switched or snooped?
-                u = d->original;
+                u = d->cgetOriginalCharacter();
             }
 
             assert(IS_PC(u));

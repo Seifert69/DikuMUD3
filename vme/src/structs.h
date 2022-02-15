@@ -130,6 +130,10 @@ public:
     unit_data *getCharacter();
     void setCharacter(unit_data *value);
 
+    const unit_data *cgetOriginalCharacter() const;
+    unit_data *getOriginalCharacter();
+    void setOriginalCharacter(unit_data *value);
+
 private:
     time_t logon{0};                        // Time of last connect
     cMultiHook *multi{nullptr};             // Multi element pointer
@@ -151,10 +155,10 @@ private:
     char history[MAX_INPUT_LENGTH + 1]{0};  // simple command history
     cQueue qInput;                          // q of unprocessed input
     unit_data *character{nullptr};          // linked to char
+    unit_data *original{nullptr};           // original char
 
 public:
-    unit_data *original; /* original char                    */
-    snoop_data snoop;    /* to snoop people.                 */
+    snoop_data snoop; /* to snoop people.                 */
 
     descriptor_data *next; /* link to next descriptor          */
 };

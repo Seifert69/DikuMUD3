@@ -974,7 +974,7 @@ void switchbody(unit_data *ch, unit_data *vict)
 
     if (IS_PC(ch))
     {
-        CHAR_DESCRIPTOR(ch)->original = ch;
+        CHAR_DESCRIPTOR(ch)->setOriginalCharacter(ch);
     }
     if (CHAR_IS_SNOOPING(ch))
     {
@@ -1010,7 +1010,7 @@ void unswitchbody(unit_data *npc)
     }
 
     CHAR_DESCRIPTOR(npc)->setCharacter(CHAR_ORIGINAL(npc));
-    CHAR_DESCRIPTOR(npc)->original = nullptr;
+    CHAR_DESCRIPTOR(npc)->setOriginalCharacter(nullptr);
 
     CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->cgetCharacter()) = CHAR_DESCRIPTOR(npc);
     CHAR_DESCRIPTOR(npc) = nullptr;
@@ -1053,7 +1053,7 @@ void stop_snoopwrite(unit_data *unit)
         {
             for (d = g_descriptor_list; d; d = d->next)
             {
-                if (d->original == unit)
+                if (d->cgetOriginalCharacter() == unit)
                 {
                     unswitchbody(d->getCharacter());
                     break;
