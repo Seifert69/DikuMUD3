@@ -317,7 +317,7 @@ void generate_file_indexes(FILE *f, zone_type *zone)
 
         zone->getFileIndexMap().insert(std::make_pair(temp_index->getName(), temp_index));
         fi = temp_index;
-        zone->no_of_fi++;
+        zone->incrementNumOfFileIndexes();
         fi->setFilepos(ftell(f));
         if (fi->getType() == UNIT_ST_OBJ)
         {
@@ -548,7 +548,7 @@ void generate_zone_indexes()
         z->no_tmpl = 0;
         generate_templates(f, z);
 
-        z->no_of_fi = 0;
+        z->setNumOfFileIndexes(0);
         z->setZoneResetCommands(nullptr);
         generate_file_indexes(f, z);
         z->no_rooms = g_room_number; /* Number of rooms in the zone */

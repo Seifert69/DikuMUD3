@@ -433,6 +433,21 @@ void zone_type::setZoneNumber(ubit16 value)
     zone_no = value;
 }
 
+ubit16 zone_type::getNumOfFileIndexes() const
+{
+    return no_of_fi;
+}
+
+void zone_type::incrementNumOfFileIndexes()
+{
+    ++no_of_fi;
+}
+
+void zone_type::setNumOfFileIndexes(ubit16 value)
+{
+    no_of_fi = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
