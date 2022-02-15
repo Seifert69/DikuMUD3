@@ -109,10 +109,9 @@ private:
     ubit8 nLine{0};             // Serial Line
     int wait{0};                // wait for how many loops
     ubit16 timer{0};            // num of hours idleness for mortals
+    ubit32 replyid{0};          // Used for 'tell reply'
 
 public:
-    ubit32 replyid; /* Used for 'tell reply'             */
-
     /* For the 'modify-string' system.       */
     char *localstr; /* This string is expanded while editing */
 
