@@ -1600,7 +1600,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &(((zone_type *)v1->val.ptr)->zone_time);
+                        v->ref = ((zone_type *)v1->val.ptr)->getZoneResetTimePtr();
                     }
                     else
                     {

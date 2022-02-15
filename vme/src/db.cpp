@@ -1907,10 +1907,12 @@ void read_all_zones()
             exit(10);
         }
 
-        if (fread(&(zone->second->zone_time), sizeof(ubit16), 1, f) != 1)
+        ubit16 temp{0};
+        if (fread(&temp, sizeof(ubit16), 1, f) != 1)
         {
             error(HERE, "Failed to fread() zone->second->zone_time");
         }
+        zone->second->setZoneResetTime(temp);
 
         if (fread(&(zone->second->reset_mode), sizeof(ubit8), 1, f) != 1)
         {

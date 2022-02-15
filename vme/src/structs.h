@@ -102,6 +102,10 @@ public:
     void incrementNumOfFileIndexes();
     void setNumOfFileIndexes(ubit16 value);
 
+    ubit16 getZoneResetTime() const;
+    void setZoneResetTime(ubit16 value);
+    ubit16 *getZoneResetTimePtr();
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -123,9 +127,9 @@ private:
     ubit8 **spmatrix{nullptr}; /* Shortest Path Matrix             */
     ubit16 zone_no{0};         /* Zone index counter (spmatrix)    */
     ubit16 no_of_fi{0};        /* Number of fi's in the list       */
+    ubit16 zone_time{0};       /* How often to reset zone          */
 public:
-    ubit16 zone_time; /* How often to reset zone          */
-    ubit16 no_rooms;  /* The number of rooms              */
+    ubit16 no_rooms; /* The number of rooms              */
     ubit16 no_objs;
     ubit16 no_npcs;
     ubit8 reset_mode; /* when/how to reset zone           */

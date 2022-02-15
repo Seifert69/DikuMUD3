@@ -443,7 +443,7 @@ void reset_all_zones()
                 continue;
             }
 
-            if (zone->second->zone_time > 0)
+            if (zone->second->getZoneResetTime() > 0)
             {
                 zone_event((void *)zone->second, (void *)nullptr);
             }
@@ -484,7 +484,7 @@ void zone_event(void *p1, void *p2)
 
         if (zone->reset_mode != RESET_NOT)
         {
-            g_events.add(zone->zone_time * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, nullptr);
+            g_events.add(zone->getZoneResetTime() * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, nullptr);
         }
     }
     else

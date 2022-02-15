@@ -448,6 +448,21 @@ void zone_type::setNumOfFileIndexes(ubit16 value)
     no_of_fi = value;
 }
 
+ubit16 zone_type::getZoneResetTime() const
+{
+    return zone_time;
+}
+
+void zone_type::setZoneResetTime(ubit16 value)
+{
+    zone_time = value;
+}
+
+ubit16 *zone_type::getZoneResetTimePtr()
+{
+    return &zone_time;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
