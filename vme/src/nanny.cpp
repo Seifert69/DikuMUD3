@@ -152,7 +152,7 @@ void check_idle()
                 slog(LOG_ALL, 0, "Kicking out idle player and making link-dead.");
                 descriptor_close(d);
             }
-            else if (IS_PC(d->character) && now - d->logon >= SECS_PER_REAL_HOUR / 3)
+            else if (IS_PC(d->character) && now - d->getLastLogonTime() >= SECS_PER_REAL_HOUR / 3)
             {
                 send_to_char("Autosave.<br/>", d->character);
                 save_player(d->character);
@@ -184,7 +184,7 @@ void pc_data::connect_game()
     }
 
     PC_TIME(this).connect = time(nullptr);
-    CHAR_DESCRIPTOR(this)->logon = time(nullptr);
+    CHAR_DESCRIPTOR(this)->setLastLogonTime(time(nullptr));
 
     CHAR_DESCRIPTOR(this)->CreateBBS();
 
@@ -254,7 +254,7 @@ void pc_data::reconnect_game(descriptor_data *d)
     }
     act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
     slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
-    CHAR_DESCRIPTOR(this)->logon = ::time(nullptr);
+    CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
     PC_TIME(this).connect = ::time(nullptr);
     //      stop_affect(ch);
     //      stop_all_special(ch);
@@ -354,7 +354,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 
         CHAR_DESCRIPTOR(this)->timer = 0;
         CHAR_DESCRIPTOR(this)->prompt_mode = PROMPT_EXPECT;
-        CHAR_DESCRIPTOR(this)->logon = ::time(nullptr);
+        CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
         PC_TIME(this).connect = ::time(nullptr);
         set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
         dil_destroy("link_dead@basis", this);

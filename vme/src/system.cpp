@@ -218,6 +218,16 @@ descriptor_data::~descriptor_data()
     nLine = 255;
 }
 
+time_t descriptor_data::getLastLogonTime() const
+{
+    return logon;
+}
+
+void descriptor_data::setLastLogonTime(time_t value)
+{
+    logon = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)

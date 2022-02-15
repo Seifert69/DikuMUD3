@@ -60,13 +60,19 @@ class zone_reset_cmd;
 class descriptor_data
 {
 public:
-    descriptor_data(cMultiHook *pe);
+    explicit descriptor_data(cMultiHook *pe);
     ~descriptor_data();
 
     void CreateBBS();
     void RemoveBBS();
 
-    time_t logon;      /* Time of last connect              */
+    time_t getLastLogonTime() const;
+    void setLastLogonTime(time_t value);
+
+private:
+    time_t logon{0}; // Time of last connect
+
+public:
     cMultiHook *multi; /* Multi element pointer             */
     ubit16 id;         /* The ID for the multi              */
     void (*fptr)(descriptor_data *, char *);

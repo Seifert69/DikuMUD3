@@ -29,7 +29,7 @@ void do_save(unit_data *ch, char *arg, const command_info *cmd)
 
     if (!PC_IS_UNSAVED(ch) && CHAR_DESCRIPTOR(ch))
     {
-        if (CHAR_LEVEL(ch) < 200 && difftime(time(nullptr), CHAR_DESCRIPTOR(ch)->logon) < 60)
+        if (CHAR_LEVEL(ch) < 200 && difftime(time(nullptr), CHAR_DESCRIPTOR(ch)->getLastLogonTime()) < 60)
         {
             send_to_char("You must wait a minute between saves.<br/>", ch);
             return;
