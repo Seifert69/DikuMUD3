@@ -69,12 +69,14 @@ public:
     time_t getLastLogonTime() const;
     void setLastLogonTime(time_t value);
 
+    cMultiHook *getMultiHookPtr();
+
 private:
-    time_t logon{0}; // Time of last connect
+    time_t logon{0};            // Time of last connect
+    cMultiHook *multi{nullptr}; // Multi element pointer
 
 public:
-    cMultiHook *multi; /* Multi element pointer             */
-    ubit16 id;         /* The ID for the multi              */
+    ubit16 id; /* The ID for the multi              */
     void (*fptr)(descriptor_data *, char *);
     int state;      /* Locally used in each fptr         */
     char host[50];  /* hostname                          */

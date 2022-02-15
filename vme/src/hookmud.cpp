@@ -131,7 +131,7 @@ int cMultiHook::Read()
         {
             if (d->id == id)
             {
-                assert(d->multi == this);
+                assert(d->getMultiHookPtr() == this);
                 break;
             }
         }
@@ -240,7 +240,7 @@ void multi_clear()
     for (d = g_descriptor_list; d; d = nextd)
     {
         nextd = d->next;
-        if (!d->multi->IsHooked())
+        if (!d->getMultiHookPtr()->IsHooked())
         {
             descriptor_close(d);
         }
