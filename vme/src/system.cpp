@@ -353,6 +353,21 @@ void descriptor_data::appendLocalString(const char *str)
     strcat(localstr, "<br/>");
 }
 
+bool descriptor_data::hasPostEditFunctionPtr() const
+{
+    return postedit != nullptr;
+}
+
+void descriptor_data::callPostEditFunctionPtr(descriptor_data *data) const
+{
+    postedit(data);
+}
+
+void descriptor_data::setPostEditFunctionPtr(PostEditFunctionPtr value)
+{
+    postedit = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
@@ -394,7 +409,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
     else
     {
         d->clearLocalString();
-        d->postedit = nullptr;
+        d->setPostEditFunctionPtr(nullptr);
         d->editing = nullptr;
         d->editref = nullptr;
 

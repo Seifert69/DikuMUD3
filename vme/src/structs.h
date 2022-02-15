@@ -103,22 +103,27 @@ public:
     void setLocalString(const char *str);
     void appendLocalString(const char *str);
 
+    using PostEditFunctionPtr = void (*)(descriptor_data *);
+    bool hasPostEditFunctionPtr() const;
+    void callPostEditFunctionPtr(descriptor_data *data) const;
+    void setPostEditFunctionPtr(PostEditFunctionPtr value);
+
 private:
-    time_t logon{0};            // Time of last connect
-    cMultiHook *multi{nullptr}; // Multi element pointer
-    ubit16 id{0};               // The ID for the multi
-    FunctionPtr fptr{nullptr};  //
-    int state{0};               // Locally used in each fptr
-    char host[50]{0};           // hostname
-    ubit16 nPort{0};            // Mplex port
-    ubit8 nLine{0};             // Serial Line
-    int wait{0};                // wait for how many loops
-    ubit16 timer{0};            // num of hours idleness for mortals
-    ubit32 replyid{0};          // Used for 'tell reply'
-    char *localstr{nullptr};    // For the 'modify-string' system. This string is expanded while editing
+    time_t logon{0};                       // Time of last connect
+    cMultiHook *multi{nullptr};            // Multi element pointer
+    ubit16 id{0};                          // The ID for the multi
+    FunctionPtr fptr{nullptr};             //
+    int state{0};                          // Locally used in each fptr
+    char host[50]{0};                      // hostname
+    ubit16 nPort{0};                       // Mplex port
+    ubit8 nLine{0};                        // Serial Line
+    int wait{0};                           // wait for how many loops
+    ubit16 timer{0};                       // num of hours idleness for mortals
+    ubit32 replyid{0};                     // Used for 'tell reply'
+    char *localstr{nullptr};               // For the 'modify-string' system. This string is expanded while editing
+    PostEditFunctionPtr postedit{nullptr}; //
 
 public:
-    void (*postedit)(descriptor_data *);
     unit_data *editing;
     void *editref; /* pointer to "where we are editing"     */
     /* when using (volatile) extras + boards */

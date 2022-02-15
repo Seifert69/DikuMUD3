@@ -707,7 +707,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 3: /* "outside description" */
             send_to_char("Modifying long description.<br/>", ch);
-            CHAR_DESCRIPTOR(ch)->postedit = edit_outside_descr;
+            CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_outside_descr);
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
             return;
 
@@ -746,7 +746,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             CHAR_DESCRIPTOR(ch)->editref = ed;
-            CHAR_DESCRIPTOR(ch)->postedit = edit_extra;
+            CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_extra);
             CHAR_DESCRIPTOR(ch)->editing = unt;
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
             return;
@@ -1263,7 +1263,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             CHAR_DESCRIPTOR(ch)->editref = ed;
-            CHAR_DESCRIPTOR(ch)->postedit = edit_info;
+            CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_info);
             CHAR_DESCRIPTOR(ch)->editing = unt;
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
             return;
