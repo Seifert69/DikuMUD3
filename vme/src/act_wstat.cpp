@@ -251,7 +251,7 @@ static std::string stat_zone_reset(const std::string &indnt, const zone_reset_cm
 static void stat_zone(unit_data *ch, zone_type *zone)
 {
     static const char *reset_modes[] = {"Never Reset", "Reset When Empty", "Reset Always", "UNKNOWN"};
-    int reset_mode = zone->reset_mode;
+    int reset_mode = zone->getResetMode();
 
     if (!is_in(reset_mode, 0, 2))
     {

@@ -474,7 +474,7 @@ void zone_event(void *p1, void *p2)
 {
     zone_type *zone = (zone_type *)p1;
 
-    if (zone->reset_mode != RESET_IFEMPTY || zone_is_empty(zone))
+    if (zone->getResetMode() != RESET_IFEMPTY || zone_is_empty(zone))
     {
         zone_reset(zone);
 
@@ -482,7 +482,7 @@ void zone_event(void *p1, void *p2)
          *       same time (causes lags!)
          */
 
-        if (zone->reset_mode != RESET_NOT)
+        if (zone->getResetMode() != RESET_NOT)
         {
             g_events.add(zone->getZoneResetTime() * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, nullptr);
         }

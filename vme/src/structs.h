@@ -116,6 +116,10 @@ public:
     ubit16 getNumOfNPCs() const;
     void incrementNumOfNPCs();
 
+    ubit8 getResetMode() const;
+    ubit8 *getResetModePtr();
+    void setResetMode(ubit8 value);
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -139,12 +143,12 @@ private:
     ubit16 no_of_fi{0};        /* Number of fi's in the list       */
     ubit16 zone_time{0};       /* How often to reset zone          */
     ubit16 no_rooms{0};        /* The number of rooms              */
-    ubit16 no_objs{0};
-    ubit16 no_npcs{0};
+    ubit16 no_objs{0};         /* */
+    ubit16 no_npcs{0};         /* */
+    ubit8 reset_mode{0};       /* when/how to reset zone           */
 
 public:
-    ubit8 reset_mode; /* when/how to reset zone           */
-    ubit16 no_tmpl;   /* number of DIL templates          */
+    ubit16 no_tmpl; /* number of DIL templates          */
 
     ubit8 access;    /* Access Level 0 = highest (root)  */
     ubit8 loadlevel; /* Level required to load items     */

@@ -497,6 +497,21 @@ ubit16 zone_type::getNumOfNPCs() const
     return no_npcs;
 }
 
+ubit8 zone_type::getResetMode() const
+{
+    return reset_mode;
+}
+
+ubit8 *zone_type::getResetModePtr()
+{
+    return &reset_mode;
+}
+
+void zone_type::setResetMode(ubit8 value)
+{
+    reset_mode = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

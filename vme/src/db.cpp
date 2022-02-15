@@ -1914,10 +1914,12 @@ void read_all_zones()
         }
         zone->second->setZoneResetTime(temp);
 
-        if (fread(&(zone->second->reset_mode), sizeof(ubit8), 1, f) != 1)
+        ubit8 temp2{0};
+        if (fread(&temp2, sizeof(ubit8), 1, f) != 1)
         {
             error(HERE, "Failed to fread() zone->second->reset_mode");
         }
+        zone->second->setResetMode(temp2);
 
         zone->second->setZoneResetCommands(read_zone(f, nullptr));
 
