@@ -170,9 +170,7 @@ void dilfi_kedit(dilprg *p)
                 {
                     d->postedit(d);
                 }
-                if (d->localstr)
-                    FREE(d->localstr);
-                d->localstr = nullptr;
+                d->clearLocalString();
                 d->editref = nullptr;
                 d->postedit = nullptr;
                 d->editing = nullptr;

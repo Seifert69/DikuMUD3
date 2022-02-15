@@ -323,6 +323,36 @@ void descriptor_data::incrementHoursPlayerIdle()
     ++timer;
 }
 
+void descriptor_data::clearLocalString()
+{
+    FREE(localstr);
+    localstr = nullptr;
+}
+
+const char *descriptor_data::getLocalString() const
+{
+    return localstr;
+}
+
+void descriptor_data::setLocalString(const char *str)
+{
+    if (localstr == nullptr)
+    {
+        CREATE(localstr, char, strlen(str) + 8);
+        strcpy(localstr, str);
+    }
+    else
+    {
+        RECREATE(localstr, char, strlen(localstr) + strlen(str) + 8);
+        strcat(localstr, str);
+    }
+}
+
+void descriptor_data::appendLocalString(const char *str)
+{
+    strcat(localstr, "<br/>");
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
@@ -363,10 +393,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
     }
     else
     {
-        if (d->localstr)
-            FREE(d->localstr);
-
-        d->localstr = nullptr;
+        d->clearLocalString();
         d->postedit = nullptr;
         d->editing = nullptr;
         d->editref = nullptr;

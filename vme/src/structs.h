@@ -98,6 +98,11 @@ public:
     void setHoursPlayerIdle(ubit16 value);
     void incrementHoursPlayerIdle();
 
+    void clearLocalString();
+    const char *getLocalString() const;
+    void setLocalString(const char *str);
+    void appendLocalString(const char *str);
+
 private:
     time_t logon{0};            // Time of last connect
     cMultiHook *multi{nullptr}; // Multi element pointer
@@ -110,11 +115,9 @@ private:
     int wait{0};                // wait for how many loops
     ubit16 timer{0};            // num of hours idleness for mortals
     ubit32 replyid{0};          // Used for 'tell reply'
+    char *localstr{nullptr};    // For the 'modify-string' system. This string is expanded while editing
 
 public:
-    /* For the 'modify-string' system.       */
-    char *localstr; /* This string is expanded while editing */
-
     void (*postedit)(descriptor_data *);
     unit_data *editing;
     void *editref; /* pointer to "where we are editing"     */

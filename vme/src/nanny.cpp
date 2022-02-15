@@ -458,10 +458,7 @@ void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, cha
 {
     if (d->getFunctionPtr() == interpreter_string_add)
     {
-        if (d->localstr)
-            FREE(d->localstr);
-
-        d->localstr = nullptr;
+        d->clearLocalString();
         d->editref = nullptr;
         d->postedit = nullptr;
         d->editing = nullptr;
@@ -796,12 +793,11 @@ ubit1 base_string_add(descriptor_data *d, char *str)
     if (d->postincrementState() == 0)
     {
         send_to_descriptor("Terminate with a '@'.<br/>", d);
-        if (d->localstr)
+        if (d->getLocalString())
         {
             slog(LOG_ALL, 0, "Spooky localstr in base_string_add - tell papi.");
-            FREE(d->localstr); // Spooky!
         }
-        d->localstr = nullptr;
+        d->clearLocalString();
         return FALSE;
     }
 
@@ -815,24 +811,15 @@ ubit1 base_string_add(descriptor_data *d, char *str)
         }
     }
 
-    if (MAX_STRING_LENGTH - (d->localstr ? strlen(d->localstr) : 0) < strlen(str))
+    if (MAX_STRING_LENGTH - (d->getLocalString() ? strlen(d->getLocalString()) : 0) < strlen(str))
     {
-        str[MAX_STRING_LENGTH - (d->localstr ? strlen(d->localstr) : 0)] = '\0';
+        str[MAX_STRING_LENGTH - (d->getLocalString() ? strlen(d->getLocalString()) : 0)] = '\0';
         terminator = 1;
 
         send_to_descriptor("String too long - Truncated.<br/>", d);
     }
 
-    if (d->localstr == nullptr)
-    {
-        CREATE(d->localstr, char, strlen(str) + 8);
-        strcpy(d->localstr, str);
-    }
-    else
-    {
-        RECREATE(d->localstr, char, strlen(d->localstr) + strlen(str) + 8);
-        strcat(d->localstr, str);
-    }
+    d->setLocalString(str);
 
     if (terminator)
     {
@@ -841,10 +828,7 @@ ubit1 base_string_add(descriptor_data *d, char *str)
             d->postedit(d);
         }
 
-        if (d->localstr)
-            FREE(d->localstr);
-
-        d->localstr = nullptr;
+        d->clearLocalString();
         d->editref = nullptr;
         d->postedit = nullptr;
         d->editing = nullptr;
@@ -853,7 +837,7 @@ ubit1 base_string_add(descriptor_data *d, char *str)
     }
     else
     {
-        strcat(d->localstr, "<br/>");
+        d->appendLocalString("<br/>");
     }
 
     return FALSE;

@@ -878,7 +878,7 @@ int send_preprocess(unit_data *ch, const command_info *cmd, char *arg)
     return basic_special(ch, &sarg, SFB_CMD);
 }
 
-int send_edit(unit_data *ch, char *arg)
+int send_edit(unit_data *ch, const char *arg)
 {
     spec_arg sarg;
 

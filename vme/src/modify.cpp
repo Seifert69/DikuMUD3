@@ -173,7 +173,7 @@ void edit_extra(descriptor_data *d)
 
     if (exd)
     {
-        exd->descr = (d->localstr);
+        exd->descr = d->getLocalString();
     }
 }
 
@@ -192,18 +192,18 @@ void edit_info(descriptor_data *d)
 
     if (exd)
     {
-        exd->descr = (d->localstr);
+        exd->descr = d->getLocalString();
     }
 }
 
 void edit_outside_descr(descriptor_data *d)
 {
-    UNIT_OUT_DESCR(d->editing) = (d->localstr);
+    UNIT_OUT_DESCR(d->editing) = d->getLocalString();
 }
 
 void edit_inside_descr(descriptor_data *d)
 {
-    UNIT_IN_DESCR(d->editing) = (d->localstr);
+    UNIT_IN_DESCR(d->editing) = d->getLocalString();
 }
 
 int search_block_set(char *arg, const char **list, bool exact)
