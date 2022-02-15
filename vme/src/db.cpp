@@ -512,7 +512,7 @@ void generate_zone_indexes()
 
         z->setAccessLevel(access);
         z->setLevelRequiredToLoadItems(loadlevel);
-        z->payonly = payonly;
+        z->setPayOnly(payonly);
 
         /* More data read here */
         fstrcpy(&cBuf, f);

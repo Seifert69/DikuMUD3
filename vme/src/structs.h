@@ -130,6 +130,10 @@ public:
     ubit8 *getLevelRequiredToLoadItemsPtr();
     void setLevelRequiredToLoadItems(ubit8 value);
 
+    ubit8 getPayOnly() const;
+    ubit8 *getPayOnlyPtr();
+    void setPayOnly(ubit8 value);
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -159,9 +163,9 @@ private:
     ubit16 no_tmpl{0};         /* number of DIL templates          */
     ubit8 access{0};           /* Access Level 0 = highest (root)  */
     ubit8 loadlevel{0};        /* Level required to load items     */
+    ubit8 payonly{0};          /* TRUE when only 4 paying players  */
 
 public:
-    ubit8 payonly; /* TRUE when only 4 paying players  */
     char *dilfilepath;
 
     struct

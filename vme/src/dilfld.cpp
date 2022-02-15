@@ -1519,7 +1519,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &(((zone_type *)v1->val.ptr)->payonly);
+                        v->ref = ((zone_type *)v1->val.ptr)->getPayOnlyPtr();
                     }
                     else
                     {
