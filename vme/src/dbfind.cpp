@@ -24,7 +24,7 @@ descriptor_data *find_descriptor(const char *name, descriptor_data *except)
     /* Check if already playing */
     for (d = g_descriptor_list; d; d = d->next)
     {
-        if (d != except && str_ccmp(PC_FILENAME(CHAR_ORIGINAL(d->character)), name) == 0)
+        if (d != except && str_ccmp(PC_FILENAME(CHAR_ORIGINAL(d->cgetCharacter())), name) == 0)
         {
             return d;
         }

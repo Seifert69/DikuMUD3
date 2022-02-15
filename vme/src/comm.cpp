@@ -146,7 +146,7 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
         }
         else
         {
-            unit_data *u = d->character;
+            const unit_data *u = d->cgetCharacter();
 
             if (!u || !IS_PC(u))
             { // switched or snooped?
@@ -248,9 +248,9 @@ void send_to_zone_outdoor(const zone_type *z, const char *messg)
     {
         for (i = g_descriptor_list; i; i = i->next)
         {
-            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && unit_zone(i->character) == z && CHAR_AWAKE(i->character) &&
-                !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
-                !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
+            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && unit_zone(i->cgetCharacter()) == z &&
+                CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(UNIT_FLAGS(unit_room(i->getCharacter())), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }
@@ -266,9 +266,9 @@ void send_to_outdoor(const char *messg)
     {
         for (i = g_descriptor_list; i; i = i->next)
         {
-            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && CHAR_AWAKE(i->character) &&
-                !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
-                !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
+            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && CHAR_AWAKE(i->cgetCharacter()) &&
+                !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(UNIT_FLAGS(unit_room(i->getCharacter())), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }

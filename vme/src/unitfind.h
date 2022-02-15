@@ -23,7 +23,7 @@ struct unit_vector_data
 
 int follower_count(unit_data *u);
 unit_data *get_follower(unit_data *u, int num);
-ubit1 same_surroundings(unit_data *u1, unit_data *u2);
+ubit1 same_surroundings(const unit_data *u1, const unit_data *u2);
 void scan4_unit_room(unit_data *room, ubit8 type);
 void scan4_unit(unit_data *ch, ubit8 type);
 unit_data *scan4_ref(unit_data *ch, unit_data *fu);

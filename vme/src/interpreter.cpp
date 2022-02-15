@@ -498,7 +498,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
 int descriptor_is_playing(descriptor_data *d)
 {
-    return d && d->character && char_is_playing(d->character);
+    return d && d->cgetCharacter() && char_is_playing(d->getCharacter());
 }
 
 // If unit is linked in the global list then it's in the game
@@ -509,8 +509,8 @@ int char_is_playing(unit_data *u)
 
 void descriptor_interpreter(descriptor_data *d, char *arg)
 {
-    assert(d->character);
-    command_interpreter(d->character, arg);
+    assert(d->cgetCharacter());
+    command_interpreter(d->getCharacter(), arg);
 }
 
 /* Check to see if the full command was typed */

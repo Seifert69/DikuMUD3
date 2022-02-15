@@ -126,6 +126,10 @@ public:
 
     cQueue &getInputQueue();
 
+    const unit_data *cgetCharacter() const;
+    unit_data *getCharacter();
+    void setCharacter(unit_data *value);
+
 private:
     time_t logon{0};                        // Time of last connect
     cMultiHook *multi{nullptr};             // Multi element pointer
@@ -146,11 +150,11 @@ private:
     char last_cmd[MAX_INPUT_LENGTH + 1]{0}; // the last entered cmd_str
     char history[MAX_INPUT_LENGTH + 1]{0};  // simple command history
     cQueue qInput;                          // q of unprocessed input
+    unit_data *character{nullptr};          // linked to char
 
 public:
-    unit_data *character; /* linked to char                   */
-    unit_data *original;  /* original char                    */
-    snoop_data snoop;     /* to snoop people.                 */
+    unit_data *original; /* original char                    */
+    snoop_data snoop;    /* to snoop people.                 */
 
     descriptor_data *next; /* link to next descriptor          */
 };

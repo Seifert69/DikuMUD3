@@ -970,7 +970,7 @@ void switchbody(unit_data *ch, unit_data *vict)
     assert(!vict->is_destructed());
     assert(!ch->is_destructed());
 
-    CHAR_DESCRIPTOR(ch)->character = vict;
+    CHAR_DESCRIPTOR(ch)->setCharacter(vict);
 
     if (IS_PC(ch))
     {
@@ -1009,10 +1009,10 @@ void unswitchbody(unit_data *npc)
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->snoop.getSnoopBy())->snoop.setSnooping(CHAR_ORIGINAL(npc));
     }
 
-    CHAR_DESCRIPTOR(npc)->character = CHAR_ORIGINAL(npc);
+    CHAR_DESCRIPTOR(npc)->setCharacter(CHAR_ORIGINAL(npc));
     CHAR_DESCRIPTOR(npc)->original = nullptr;
 
-    CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->character) = CHAR_DESCRIPTOR(npc);
+    CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->cgetCharacter()) = CHAR_DESCRIPTOR(npc);
     CHAR_DESCRIPTOR(npc) = nullptr;
 }
 
@@ -1037,7 +1037,7 @@ void stop_snoopwrite(unit_data *unit)
     descriptor_data *d = nullptr;
     while ((d = unit_is_edited(unit)))
     {
-        send_to_char("<br/>Unit was extracted, sorry.<br/>", d->character);
+        send_to_char("<br/>Unit was extracted, sorry.<br/>", d->cgetCharacter());
         set_descriptor_fptr(d, descriptor_interpreter, FALSE);
     }
 
@@ -1055,7 +1055,7 @@ void stop_snoopwrite(unit_data *unit)
             {
                 if (d->original == unit)
                 {
-                    unswitchbody(d->character);
+                    unswitchbody(d->getCharacter());
                     break;
                 }
             }

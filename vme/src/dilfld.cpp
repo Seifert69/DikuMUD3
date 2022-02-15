@@ -1968,7 +1968,7 @@ void dilfe_fld(dilprg *p)
                             {
                                 if (descriptor_is_playing(d) && d->original == vict)
                                 {
-                                    switched = d->character;
+                                    switched = d->getCharacter();
                                     break;
                                 }
                             }
@@ -1979,7 +1979,7 @@ void dilfe_fld(dilprg *p)
                             {
                                 if (CHAR_DESCRIPTOR(vict)->original)
                                 {
-                                    switched = CHAR_DESCRIPTOR(vict)->character;
+                                    switched = CHAR_DESCRIPTOR(vict)->getCharacter();
                                 }
                             }
                         }

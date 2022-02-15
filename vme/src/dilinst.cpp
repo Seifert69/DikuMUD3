@@ -358,7 +358,7 @@ void dilfi_delpc(dilprg *p)
             {
                 if ((d = find_descriptor(((char *)v1->val.ptr), nullptr)))
                 {
-                    extract_unit(d->character);
+                    extract_unit(d->getCharacter());
                     descriptor_close(d);
                 }
                 else

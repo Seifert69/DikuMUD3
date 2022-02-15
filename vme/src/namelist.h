@@ -34,7 +34,7 @@ public:
     void RemoveName(const char *name);
 
     void Substitute(ubit32 idx, const char *newname);
-    const char *Name(ubit32 idx = 0);
+    const char *Name(ubit32 idx = 0) const;
     std::string *InstanceName(ubit32 idx = 0);
 
     void AppendName(const char *name);

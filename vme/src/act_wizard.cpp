@@ -66,17 +66,17 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
 
     for (d = g_descriptor_list; d; d = d->next)
     {
-        assert(d->character);
-        if (CHAR_LEVEL(ch) >= UNIT_MINV(CHAR_ORIGINAL(d->character)))
+        assert(d->cgetCharacter());
+        if (CHAR_LEVEL(ch) >= UNIT_MINV(CHAR_ORIGINAL(d->cgetCharacter())))
         {
             users++;
-            if (IS_IMMORTAL(d->character))
+            if (IS_IMMORTAL(d->cgetCharacter()))
             {
                 /* an immortal character */
                 msg += diku::format_to_str("&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                                           CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
-                                           UNIT_MINV(CHAR_ORIGINAL(d->character)),
-                                           UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                                           CHAR_LEVEL(CHAR_ORIGINAL(d->cgetCharacter())),
+                                           UNIT_MINV(CHAR_ORIGINAL(d->cgetCharacter())),
+                                           UNIT_NAME(CHAR_ORIGINAL(d->cgetCharacter())),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),
@@ -87,9 +87,9 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
             {
                 /* a mortal character */
                 msg += diku::format_to_str("&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                                           PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
-                                           UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
-                                           UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                                           PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->cgetCharacter())),
+                                           UNIT_MINV(CHAR_ORIGINAL(d->cgetCharacter())) ? '*' : ' ',
+                                           UNIT_NAME(CHAR_ORIGINAL(d->cgetCharacter())),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),

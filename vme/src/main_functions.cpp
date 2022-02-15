@@ -227,11 +227,11 @@ void game_loop()
         }
         else
         {
-            if (IS_PC(d->character) && UNIT_IN(d->character))
+            if (IS_PC(d->cgetCharacter()) && UNIT_IN(d->cgetCharacter()))
             {
-                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->character));
-                save_player(d->character);
-                save_player_contents(d->character, TRUE);
+                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetCharacter()));
+                save_player(d->getCharacter());
+                save_player_contents(d->getCharacter(), TRUE);
             }
         }
     }
@@ -290,7 +290,7 @@ void game_event()
     {
         if (point->getPromptMode() == PROMPT_EXPECT)
         {
-            send_prompt(point->character);
+            send_prompt(point->getCharacter());
             send_to_descriptor("<go-ahead/>", point);
             point->setPromptMode(PROMPT_IGNORE);
         }

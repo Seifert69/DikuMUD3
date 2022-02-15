@@ -33,7 +33,7 @@ void MplexSendSetup(descriptor_data *d)
 {
     assert(d);
 
-    protocol_send_setup(d->getMultiHookPtr(), d->getMultiHookID(), &PC_SETUP(d->character));
+    protocol_send_setup(d->getMultiHookPtr(), d->getMultiHookID(), &PC_SETUP(d->cgetCharacter()));
 }
 
 /* ----------------------------------------------------------------- */
@@ -428,6 +428,21 @@ cQueue &descriptor_data::getInputQueue()
     return qInput;
 }
 
+const unit_data *descriptor_data::cgetCharacter() const
+{
+    return character;
+}
+
+unit_data *descriptor_data::getCharacter()
+{
+    return character;
+}
+
+void descriptor_data::setCharacter(unit_data *value)
+{
+    character = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
@@ -444,26 +459,26 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 {
     descriptor_data *tmp = nullptr;
     diltemplate *link_dead = nullptr;
-    assert(d->character);
+    assert(d->cgetCharacter());
 
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */
     /* If unit has been extracted, then all his data is half erased */
     /* (affects, etc) and he shall not be saved!                    */
-    if (!char_is_playing(d->character)) /* In menu - extract completely */
+    if (!char_is_playing(d->getCharacter())) /* In menu - extract completely */
     {
-        assert(!UNIT_IN(d->character));
-        assert(!d->character->gnext);
-        assert(!d->character->gprevious);
+        assert(!UNIT_IN(d->cgetCharacter()));
+        assert(!d->cgetCharacter()->gnext);
+        assert(!d->cgetCharacter()->gprevious);
 
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
-        if (PC_IS_UNSAVED(d->character))
+        if (PC_IS_UNSAVED(d->cgetCharacter()))
         {
             g_possible_saves--;
         }
-        CHAR_DESCRIPTOR(d->character) = nullptr;
-        extract_unit(d->character);
-        d->character = nullptr;
+        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+        extract_unit(d->getCharacter());
+        d->setCharacter(nullptr);
         /* Too much log slog(LOG_ALL, "Losing descriptor from menu."); */
     }
     else
@@ -474,7 +489,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         d->setEditReference(nullptr);
 
         // Here we don't stop_fightfollow - do we ?
-        stop_snoopwrite(d->character);
+        stop_snoopwrite(d->getCharacter());
 
         // if (CHAR_IS_SNOOPING(d->character) || CHAR_IS_SNOOPED(d->character))
         //    unsnoop(d->character, 1);
@@ -485,27 +500,27 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         assert(!d->snoop.getSnooping() && !d->snoop.getSnoopBy());
         assert(!d->original);
 
-        act("$1n has lost $1s link.", A_HIDEINV, d->character, cActParameter(), cActParameter(), TO_ROOM);
-        slog(LOG_BRIEF, UNIT_MINV(d->character), "Closing link and making link dead: %s.", UNIT_NAME(d->character));
+        act("$1n has lost $1s link.", A_HIDEINV, d->cgetCharacter(), cActParameter(), cActParameter(), TO_ROOM);
+        slog(LOG_BRIEF, UNIT_MINV(d->cgetCharacter()), "Closing link and making link dead: %s.", UNIT_NAME(d->cgetCharacter()));
 
-        if (!d->character->is_destructed())
+        if (!d->getCharacter()->is_destructed())
         {
-            if (IS_PC(d->character))
+            if (IS_PC(d->cgetCharacter()))
             {
-                UPC(d->character)->disconnect_game();
+                UPC(d->cgetCharacter())->disconnect_game();
             }
             if (!bReconnect)
             {
-                if (!PC_IS_UNSAVED(d->character))
+                if (!PC_IS_UNSAVED(d->cgetCharacter()))
                 {
                     /* We need to save player to update his time status! */
-                    save_player(d->character); /* Save non-guests */
-                    save_player_contents(d->character, TRUE);
+                    save_player(d->getCharacter()); /* Save non-guests */
+                    save_player_contents(d->getCharacter(), TRUE);
                     link_dead = find_dil_template("link_dead@basis");
                     if (link_dead)
                     {
-                        CHAR_DESCRIPTOR(d->character) = nullptr;
-                        dilprg *prg = dil_copy_template(link_dead, d->character, nullptr);
+                        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+                        dilprg *prg = dil_copy_template(link_dead, d->getCharacter(), nullptr);
                         if (prg)
                         {
                             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -515,16 +530,16 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
                 }
                 else
                 {
-                    CHAR_DESCRIPTOR(d->character) = nullptr; // Prevent counting down players, we did above
-                    extract_unit(d->character);              /* We extract guests */
+                    CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr; // Prevent counting down players, we did above
+                    extract_unit(d->getCharacter());               /* We extract guests */
                     g_possible_saves--;
                 }
             }
         }
         /* Important we set tp null AFTER calling save - otherwise
            time played does not get updated. */
-        CHAR_DESCRIPTOR(d->character) = nullptr;
-        d->character = nullptr;
+        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+        d->setCharacter(nullptr);
     }
 
     if (bSendClose && d->getMultiHookPtr()->IsHooked())
