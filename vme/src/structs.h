@@ -56,10 +56,18 @@ class zone_reset_cmd;
 
 /* --------------------- DESCRIPTOR STRUCTURES -------------------- */
 
-struct snoop_data
+class snoop_data
 {
-    unit_data *snooping; /* Who is this char snooping        */
-    unit_data *snoop_by; /* And who is snooping on this char */
+public:
+    const unit_data *getSnooping() const { return snooping; }
+    const unit_data *getSnoopBy() const { return snoop_by; }
+
+    void setSnooping(const unit_data *value) { snooping = const_cast<unit_data *>(value); }
+    void setSnoopBy(const unit_data *value) { snoop_by = const_cast<unit_data *>(value); }
+
+private:
+    unit_data *snooping{nullptr}; // Who is this char snooping
+    unit_data *snoop_by{nullptr}; // And who is snooping on this char
 };
 
 class descriptor_data

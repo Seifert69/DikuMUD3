@@ -274,10 +274,10 @@ void game_event()
             point->timer = 0;
             point->prompt_mode = PROMPT_EXPECT;
 
-            if (point->snoop.snoop_by)
+            if (point->snoop.getSnoopBy())
             {
                 auto msg = diku::format_to_str("%s%s<br/>", SNOOP_PROMPT, pcomm);
-                send_to_descriptor(msg, CHAR_DESCRIPTOR(point->snoop.snoop_by));
+                send_to_descriptor(msg, CHAR_DESCRIPTOR(point->snoop.getSnoopBy()));
             }
 
             point->fptr(point, pcomm);
