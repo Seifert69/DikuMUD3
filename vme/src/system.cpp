@@ -403,6 +403,16 @@ void descriptor_data::setPromptMode(int value)
     prompt_mode = value;
 }
 
+const char *descriptor_data::getLastCommand() const
+{
+    return last_cmd;
+}
+
+void descriptor_data::setLastCommand(const char *value)
+{
+    strncpy(last_cmd, value, sizeof(last_cmd));
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)

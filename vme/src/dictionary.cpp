@@ -737,7 +737,8 @@ static int local_dictionary(spec_arg *sarg)
      *  as the user might have typed `in', which the interpreter expands
      *  to `inventory' in the cmd->cmd_str.
      */
-    if (alias_h->trie == nullptr || (al = (alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->last_cmd, alias_h->trie)) == nullptr)
+    if (alias_h->trie == nullptr ||
+        (al = (alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->getLastCommand(), alias_h->trie)) == nullptr)
     {
         return SFR_SHARE;
     }

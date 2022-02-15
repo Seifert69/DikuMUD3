@@ -355,7 +355,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
     if (CHAR_DESCRIPTOR(ch))
     {
-        strcpy(CHAR_DESCRIPTOR(ch)->last_cmd, cmd);
+        CHAR_DESCRIPTOR(ch)->setLastCommand(cmd);
     }
 
     if (!cmd[0])
@@ -516,7 +516,7 @@ void descriptor_interpreter(descriptor_data *d, char *arg)
 /* Check to see if the full command was typed */
 ubit1 cmd_is_abbrev(unit_data *ch, const command_info *cmd)
 {
-    return CHAR_DESCRIPTOR(ch) && str_ccmp(CHAR_DESCRIPTOR(ch)->last_cmd, cmd->cmd_str);
+    return CHAR_DESCRIPTOR(ch) && str_ccmp(CHAR_DESCRIPTOR(ch)->getLastCommand(), cmd->cmd_str);
 }
 
 /* To check for commands by string */
