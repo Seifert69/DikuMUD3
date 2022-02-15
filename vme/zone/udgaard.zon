@@ -1573,6 +1573,10 @@ dilend
 Blesses PC's. Damages undead and demons. Use with care. */
 
 dilbegin holy_water();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
  mob : unitptr;
  n : integer;
@@ -1600,9 +1604,7 @@ act("$1n opens a vial and sprinkles holy water over $3n with a blessing.",
 A_SOMEONE,self.outside,self,mob,TO_NOTVICT);
 act("$1n opens a vial and sprinkles holy water over you with a blessing.",
 A_SOMEONE,self.outside,self,mob,TO_VICT);
-if ((("$Udgaard Healer" in self.outside.quests)or
-     ("$Midgaard Paladin" in self.outside.quests))and
-     (mob.guild!=GUILD_NECROMANCER))
+if (IsInGuilds@guilds(self.outside, {GUILD_UDG_CLERIC, GUILD_PALADIN}))
 {
 n:=cast_spell(SPL_BLESS,self.outside,self,mob,"");
 }
@@ -1615,9 +1617,7 @@ act("You open your vial and sprinkle yourself with the holy water.",
 A_SOMEONE,self.outside,self,mob,TO_CHAR);
 act("$1n opens a vial and sprinkles $1mself with holy water.",
 A_SOMEONE,self.outside,self,mob,TO_REST);
-if ((("$Udgaard Healer" in self.outside.quests)or
-     ("$Midgaard Paladin" in self.outside.quests))and
-     (self.outside.guild!=GUILD_NECROMANCER))
+if (IsInGuilds@guilds(self.outside, {GUILD_UDG_CLERIC, GUILD_PALADIN}))
 {
 n:=cast_spell(SPL_BLESS,self.outside,self,self.outside,"");
 }

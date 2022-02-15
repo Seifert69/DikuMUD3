@@ -8,13 +8,6 @@ version     23
 END HEADER*/
 
 
-
-
-
-
-
-
-
 #define _GUILD_UDGAARD_CONJURER
 #define CONJURER_CHARM "$Conjurer Charm Given"
 
@@ -79,59 +72,61 @@ mana + incapacitated */
 
 dilbegin nokill();
 var
-        pc : unitptr;
-        room : unitptr;
+   pc : unitptr;
+   room : unitptr;
+
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+   heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING );
-        if(pc.type == UNIT_ST_NPC) goto start;
-        pc := self.fighting;
-if(pc.level>200) goto start;
-         if (command("flee"))
-                block;
+   :start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING );
+   if(pc.type == UNIT_ST_NPC) goto start;
+   pc := self.fighting;
+   if(pc.level>200) goto start;
+   if (command("flee"))
+   block;
 
-self.hp := self.max_hp;
-act("The sounds of battle attract the attention of the college guards.",
-A_ALWAYS, pc, self, null, TO_ALL);
-act("Suddenly the air is hot with magic, as several spells smash into "+
-"your body and mind!", A_ALWAYS, pc, self, null, TO_CHAR);
-act("Several of them charge into the room, $3n topples under the magical "+
-"assault!",A_SOMEONE, pc, self, null, TO_REST);
-pc.hp := 0;
-pc.mana := 0;
-act("You can feel yourself being dragged away as you slip into the "+
-"unconsciousness.",A_ALWAYS, pc, self, null, TO_CHAR);
-position_update(pc);
-act("Two of the guards grab $1n and drag $1m out of the Guild, dumping "+
-"$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
-room := findroom("cth_square2@midgaard");
-link(pc,room);
-act("Two guards appear, dragging an unconscious figure between them and "+
-"dump $1m unceremoniously on the street."
-,A_SOMEONE,pc,self,null,TO_REST);
-        :gone:
-unsecure(pc);
-goto start;
+   self.hp := self.max_hp;
+   act("The sounds of battle attract the attention of the college guards.",
+   A_ALWAYS, pc, self, null, TO_ALL);
+   act("Suddenly the air is hot with magic, as several spells smash into "+
+   "your body and mind!", A_ALWAYS, pc, self, null, TO_CHAR);
+   act("Several of them charge into the room, $3n topples under the magical "+
+   "assault!",A_SOMEONE, pc, self, null, TO_REST);
+   pc.hp := 0;
+   pc.mana := 0;
+   act("You can feel yourself being dragged away as you slip into the "+
+   "unconsciousness.",A_ALWAYS, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("Two of the guards grab $1n and drag $1m out of the Guild, dumping "+
+   "$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
+   room := findroom("cth_square2@midgaard");
+   link(pc,room);
+   act("Two guards appear, dragging an unconscious figure between them and "+
+   "dump $1m unceremoniously on the street."
+   ,A_SOMEONE,pc,self,null,TO_REST);
+   :gone:
+   unsecure(pc);
+   goto start;
 }
 dilend
 
+
+
 /* DIL for the mobs summoned with a spellweaver charm. It will cause the
 summoned mobs to vanish back after a short while. */
-
 dilbegin vanish_back();
 code
 {
-        :init:
-        heartbeat := PULSE_SEC* (rnd(15,25));
+   :init:
+   heartbeat := PULSE_SEC* (rnd(15,25));
 
-        :start:
-wait(SFB_TICK,TRUE);
-wait(SFB_TICK,TRUE);
-act("$1n fades away and disappears!",A_SOMEONE,self,null,null,TO_ALL);
-destroy(self);
+   :start:
+   wait(SFB_TICK,TRUE);
+   wait(SFB_TICK,TRUE);
+   act("$1n fades away and disappears!",A_SOMEONE,self,null,null,TO_ALL);
+   destroy(self);
 }
 dilend
 
@@ -618,7 +613,7 @@ east to garden3 descr "A small path leads off into the east.<br/>";
 ALWAYS_LIGHT
 end
 
-%mobiles
+
 %mobiles
 
 		gate_guard
@@ -635,16 +630,11 @@ M_HUMAN_MAGE_ACID(160,SEX_MALE,"acid ball")
 alignment 800
 money 7 IRON_PIECE
 
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 dilcopy rescue@function("guard");
 dilcopy teamwork@function("guard");
-/*special SFUN_GUILD_GUARD_WAY
-""+"east"+"#"+GUILD_UDG_MAGE+"#entrance#guard
-#$1n stops you and says,'Members only!'
-#$1n stops $3n, and says, 'Members only!'"*/
-
 dilcopy guild_guard@guild_paths(GUILD_UDG_MAGE, "east");
-
 end
 
 		rafizir
@@ -662,16 +652,11 @@ alignment 735
 money 5 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
-/*
-special SFUN_GUILD_MASTER
-"Guild               = ~"+GUILD_UDG_MAGE+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(1*SILVER_MULT)+"<br/>
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(5*GOLD_MULT)+"<br/>
-Guild Exclude Quest  = ~Udgaard Mage Quitter~"
-*/
+dilcopy nokill@mageguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
+dilcopy quest_block@guilds("join", "XXX Quest",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
 
 dilcopy guild_titles@guild_paths(GUILD_UDG_MAGE, {"Apprentice of Magic",
 "Apprentice of Magic", "Spell Student", "Spell Student", "Scholar of Magic",
@@ -685,114 +670,179 @@ dilcopy guild_titles@guild_paths(GUILD_UDG_MAGE, {"Apprentice of Magic",
 
 /* Conjurer Master DIL - gives out the Spellweaver Charm. */
 
-dilbegin conj_give();
-var
-        pc : unitptr;
-        item : unitptr;
-        expd : extraptr;
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+
 code
 {
-        heartbeat := PULSE_SEC * 5;
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
-        :start:
+   heartbeat := PULSE_SEC*5;
 
-wait (SFB_DONE, (command("worship")or(command("bow")))
-and(self==target));
-        pc := activator;
-        secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-        if ((GUILD_UDG_MAGE in expd.names))
-        {
-if("$Conjurer Charm Given" in pc.quests)
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_UDG_MAGE))
+   {
+      block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, GUILD_UDG_MAGE))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say Perhaps you have been reading too many books? " +
+      "You don't even know who " +
+      "you are now " + activator.name+ ". You're already a member of  "+
+      "the guild!" , self);
+      pause;
+      goto start; 
+   }
+
+   if (IsInGuilds@guilds(activator, GUILD_MAGE_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Fighter.", self);
+      pause;
+      goto start;  
+   }
+
+   JoinGuild@guilds(activator, GUILD_UDG_MAGE);
+
+   exec ("say The power of the Mages now coarses in your veins.", self);
+   goto start;
+}
+dilend
+
+
+
+dilbegin conj_give();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
+var
+   pc : unitptr;
+   item : unitptr;
+
+code
 {
-exec("say Greetings "+pc.name+", good to see you here again.",self);pause;
-exec("say Knowing my students, I guess you do not come here for ilde chat."
-,self);exec("sigh",self);pause;
-exec("say I think you managed to lose your Spellweaver Charm and wish to "+
-"receive another one.",self);
-act("$3n gives you a stern look that makes you feel very small indeed."
-,A_ALWAYS,pc,null,self,TO_CHAR);
-act("$3n gives $1n a stern look that makes $1m step uneasily from foot to "+
-"foot.",A_SOMEONE,pc,null,self,TO_REST);pause;
-exec("say Now "+pc.name+", the Spellweaver Charms are weak enchantments, "+
-"but they do not grow on trees.",self);pause;
-exec("say If you wish another one, you have to earn it first.",self);
-pause;
-exec("emote eyes you carefully...",self);pause;
-exec("say In the lands of the savages, far away from here, grow the "+
-"mystical fruits of magic, bring me one of those!",self);pause;
-exec("say My supplies are dwindling.",self);pause;
-exec("say I shall replace your Charm if... when you get back.",self);pause;
-exec("say Farewell, "+pc.name+".",self);
-exec("emote returns to his paperwork.",self);
-unsecure(pc);
-goto start;
-}
-exec("say Greetings "+pc.name+", good to see you here.",self);pause;
-exec("say I know you are an aspiring Conjurer...",self);pause;
-exec("say The way of a devoted student is long and perilous... too many "+
-"promising pupils endanger their lives seeking fortunes through adventures."
-,self);pause;
-exec("say Know, that there is no short-cuts to knowledge, no fast lane to "+
-"wisdom.",self);pause;
-exec("say And even the one of greatest talent can fall before sharp "+
-"wits and cunning... or lacking that, a sharp blade.",self);pause;
-exec("emote sinks into deep thoughts.",self);pause;
-exec("say "+pc.name+", we wish to keep our promising students alive, "+
-"thus we will provide you with a small item to aid you."
-,self);pause;
-exec("say A simple enchantment, yet useful in dire straits.",self);
-        item := load("conj_charm@mageguild");
-        item.height := pc.height;
-        link(item, pc);
-sendtext(self.name+" hands you a small charm.<br/>",pc);
-act("$3n hands $1n a small charm.",A_SOMEONE,pc,null,self,TO_REST);
-pause;
-exec("say This charm summons a creature to stand by your side in combat."
-,self); pause;
-exec("say Notice, however, that the creature summoned has a will and life "+
-"of its own.",self);pause;
-exec("say It will obey no command of yours and do nothing else except "+
-"fighting the enemy it has been summoned to vanquish.",self);pause;
-exec("say The magic of the charm is feeble... the creature will be sent "+
-"back into its homelands after a short while.",self);pause;
-exec("say I trust your wisdom in the use of this trinket. Simply grip "+
-"your charm in combat to activate the runes.",self);pause;
-exec("say And one more thing before you go...",self);
-exec("emote regards you with slight amusement in his eyes...",self);pause;
-exec("say Let's be careful out there.",self);pause;
-exec("emote nods goodbye and return to his paperwork.",self);
-addextra(pc.quests, {CONJURER_CHARM}, "");
-unsecure(pc);
-goto start;
-}
-else
+   heartbeat := PULSE_SEC * 5;
+
+:start:
+
+   wait (SFB_DONE, (command("worship")or(command("bow"))) and(self==target));
+
+   pc := activator;
+   secure(pc, lost);
+
+   if (IsInGuild@guilds(pc, GUILD_UDG_MAGE))
+   {
+      if ("$Conjurer Charm Given" in pc.quests)
       {
-        unsecure(pc);
-        pause;
-        exec ("say Yeah, I know I am famous, but lets not overdo this "+
-"thing, shall we?", self);
-        goto start;
+         exec("say Greetings "+pc.name+", good to see you here again.",self);pause;
+         exec("say Knowing my students, I guess you do not come here for ilde chat."
+         ,self);exec("sigh",self);pause;
+         exec("say I think you managed to lose your Spellweaver Charm and wish to "+
+         "receive another one.",self);
+         act("$3n gives you a stern look that makes you feel very small indeed."
+         ,A_ALWAYS,pc,null,self,TO_CHAR);
+         act("$3n gives $1n a stern look that makes $1m step uneasily from foot to "+
+         "foot.",A_SOMEONE,pc,null,self,TO_REST);pause;
+         exec("say Now "+pc.name+", the Spellweaver Charms are weak enchantments, "+
+         "but they do not grow on trees.",self);pause;
+         exec("say If you wish another one, you have to earn it first.",self);
+         pause;
+         exec("emote eyes you carefully...",self);pause;
+         exec("say In the lands of the savages, far away from here, grow the "+
+         "mystical fruits of magic, bring me one of those!",self);pause;
+         exec("say My supplies are dwindling.",self);pause;
+         exec("say I shall replace your Charm if... when you get back.",self);pause;
+         exec("say Farewell, "+pc.name+".",self);
+         exec("emote returns to his paperwork.",self);
+         unsecure(pc);
+         goto start;
       }
 
-unsecure(pc);
-goto start;
+      exec("say Greetings "+pc.name+", good to see you here.",self);pause;
+      exec("say I know you are an aspiring Conjurer...",self);pause;
+      exec("say The way of a devoted student is long and perilous... too many "+
+      "promising pupils endanger their lives seeking fortunes through adventures."
+      ,self);pause;
+      exec("say Know, that there is no short-cuts to knowledge, no fast lane to "+
+      "wisdom.",self);pause;
+      exec("say And even the one of greatest talent can fall before sharp "+
+      "wits and cunning... or lacking that, a sharp blade.",self);pause;
+      exec("emote sinks into deep thoughts.",self);pause;
+      exec("say "+pc.name+", we wish to keep our promising students alive, "+
+      "thus we will provide you with a small item to aid you."
+      ,self);pause;
+      exec("say A simple enchantment, yet useful in dire straits.",self);
+      item := load("conj_charm@mageguild");
+      item.height := pc.height;
+      link(item, pc);
+      sendtext(self.name+" hands you a small charm.<br/>",pc);
+      act("$3n hands $1n a small charm.",A_SOMEONE,pc,null,self,TO_REST);
+      pause;
+      exec("say This charm summons a creature to stand by your side in combat."
+      ,self); pause;
+      exec("say Notice, however, that the creature summoned has a will and life "+
+      "of its own.",self);pause;
+      exec("say It will obey no command of yours and do nothing else except "+
+      "fighting the enemy it has been summoned to vanquish.",self);pause;
+      exec("say The magic of the charm is feeble... the creature will be sent "+
+      "back into its homelands after a short while.",self);pause;
+      exec("say I trust your wisdom in the use of this trinket. Simply grip "+
+      "your charm in combat to activate the runes.",self);pause;
+      exec("say And one more thing before you go...",self);
+      exec("emote regards you with slight amusement in his eyes...",self);pause;
+      exec("say Let's be careful out there.",self);pause;
+      exec("emote nods goodbye and return to his paperwork.",self);
+      addextra(pc.quests, {CONJURER_CHARM}, "");
+      unsecure(pc);
+      goto start;
+   }
+   else
+   {
+      unsecure(pc);
+      pause;
+      exec ("say Yeah, I know I am famous, but lets not overdo this "+
+      "thing, shall we?", self);
+      goto start;
+   }
+   unsecure(pc);
+   goto start;
 
-	:lost:
-
-unsecure(pc);
-exec("shrug", self);
-goto start;
+:lost:
+   unsecure(pc);
+   exec("shrug", self);
+   goto start;
 }
 dilend
 
 dilbegin conj_quest2();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
         pc : unitptr;
         item : unitptr;
         gift : unitptr;
-      expd: extraptr;
+
 code
 {
         heartbeat := PULSE_SEC * 4;
@@ -803,12 +853,10 @@ wait (SFB_DONE, (command("give")and(self ==target)));
         pc := activator;
         secure(pc, lost);
         gift := medium;
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-        if ((GUILD_UDG_MAGE in expd.names) and
-(CONJURER_CHARM in pc.quests))
-{
-if((gift.nameidx $= "mana_fruit")and(gift.zoneidx $= "lostlands"))
+
+        if (IsInGuild@guilds(pc, GUILD_UDG_MAGE) and (CONJURER_CHARM in pc.quests))
+        {
+        if((gift.nameidx $= "mana_fruit")and(gift.zoneidx $= "lostlands"))
 {
         heartbeat := PULSE_SEC * 7;
 exec("say Aaah, excellent!",self);
@@ -839,10 +887,8 @@ goto start;
 goto start;
 }
 dilend
-
-dilcopy nokill@mageguild();
-
 end
+
 
 		zofax
 names {"Zofax","dean"}

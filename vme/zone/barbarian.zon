@@ -595,12 +595,13 @@ M_HUMAN_WARRIOR_POLE(160,SEX_MALE)
 alignment 0
 money 1 SILVER_PIECE
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
 dilcopy rescue@function("guard");
 dilcopy teamwork@function("guard");
 dilcopy guild_guard@guild_paths(GUILD_BARBARIAN, "east");
-
 end
+
 
 hilka
 names {"hilka","guild master","master","chief","barbarian"}
@@ -618,7 +619,11 @@ alignment 0
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+dilcopy quest_block@guilds("join", "XXX Quest",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
 
 dilcopy guild_titles@guild_paths(GUILD_BARBARIAN, {"Young Blood",
 "Young Blood", "Apprentice Berserker", "Apprentice Berserker", "Journeyman Berserker",
@@ -630,13 +635,76 @@ dilcopy guild_titles@guild_paths(GUILD_BARBARIAN, {"Young Blood",
 "The Blood Eye", "Render", "Renderess", "Master Berserker", "Master Berserker", "Barbarian Mistress",
 "Barbarian Master", "Master of Rage", "Mistress of Rage", "Master of the Enraged", "Mistress of the Enraged"});
 
+
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_BARBARIAN))
+   {
+      block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, GUILD_BARBARIAN))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say Perhaps you have been hitting your head  too much? " +
+      "You don't even know who " +
+      "you are now " + activator.name+ ". You're already a member of  "+
+      "the guild!" , self);
+      pause;
+      goto start; 
+   }
+
+   if (IsInGuilds@guilds(activator, GUILD_BARBARIAN_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Fighter.", self);
+      pause;
+      goto start;  
+   }
+
+   JoinGuild@guilds(activator, GUILD_BARBARIAN);
+
+   exec ("say The power of the Dark Knights now coarses in your veins.", self);
+   goto start;
+}
+dilend
+
+
 /* Barbarian Master DIL - gives out the Bloody Gauntlets. */
 
 dilbegin barb_give();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
 	pc : unitptr;
 	item : unitptr;
-	expd : extraptr;
+
 code
 {
 	heartbeat := PULSE_SEC * 5;
@@ -646,12 +714,10 @@ code
 	wait (SFB_DONE, (command("worship")or(command("bow")))and(self==target));
 		pc := activator;
 		secure(pc, lost);
-		expd := "$path" in pc.quests;
-		if (expd == null)
-			goto lost;
-		if ((GUILD_BARBARIAN in expd.names))
+
+		if (IsInGuild@guilds(pc, GUILD_BARBARIAN))
 		{
-			if(BARBARIAN_ITEM in pc.quests)
+			if (BARBARIAN_ITEM in pc.quests)
 			{
 				exec("say Well, if it isnt "+pc.name+". Back for more handouts I presume?",self);pause;
 				exec("sigh",self);
@@ -740,11 +806,14 @@ code
 dilend
 
 dilbegin barb_quest2();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
 var
 	pc : unitptr;
 	item : unitptr;
 	gift : unitptr;
-	expd: extraptr;
+
 code
 {
 	heartbeat := PULSE_SEC * 4;
@@ -755,10 +824,8 @@ code
 	pc := activator;
 	secure(pc, lost);
 	gift := medium;
-	expd := "$path" in pc.quests;
-	if (expd == null)
-		goto lost;
-	if ((GUILD_BARBARIAN in expd.names) and (BARBARIAN_ITEM in pc.quests))
+
+	if (IsInGuild@guilds(pc, GUILD_BARBARIAN) and (BARBARIAN_ITEM in pc.quests))
 	{
 		if((gift.nameidx $= "blood_bowl")and(gift.zoneidx $= "lostlands"))
 		{
@@ -801,10 +868,8 @@ code
 	goto start;
 }
 dilend
-
-dilcopy nokill@barbarian();
-
 end
+
 
 ethror
 names {"ethror","training master","trainer","barbarian"}
@@ -817,22 +882,21 @@ and is more than willing to share his knowledge with those interested in
 exploring the way of the enraged. "
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
-
 M_HUMAN_WARRIOR_SPECIAL(90, SEX_MALE)
 alignment 0
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
-
-dilcopy teacher_prac@guild_paths( GUILD_BARBARIAN );
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk(GUILD_BARBARIAN, "");
 
 #define _ABILITY
 #include "guilddef.h"
 #undef _ABILITY
-dilcopy nokill@barbarian();
-
 end
+
 
 faeld
 names {"faeld","weapon master","master","barbarian"}
@@ -851,16 +915,16 @@ alignment 1000
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
-
-dilcopy teacher_prac@guild_paths( GUILD_BARBARIAN );
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk(GUILD_BARBARIAN, "");
 
 #define _WEAPON
 #include "guilddef.h"
 #undef _WEAPON
-dilcopy nokill@barbarian();
-
 end
+
 
 monn
 names {"monn","trainer","barbarian"}
@@ -877,16 +941,16 @@ alignment 0
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
-
-dilcopy teacher_prac@guild_paths( GUILD_BARBARIAN );
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk(GUILD_BARBARIAN, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
-dilcopy nokill@barbarian();
-
 end
+
 
 raz
 names {"raz","shopkeeper","trader"}

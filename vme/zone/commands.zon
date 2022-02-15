@@ -10558,6 +10558,8 @@ code
 }
 dilend /* guild_wipe */
 
+
+
 dilbegin ctnrent(arg: string);
 
 var clerk: unitptr;

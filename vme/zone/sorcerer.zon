@@ -104,15 +104,15 @@ code
    :start:
    wait(SFB_COM, ((activator.type == UNIT_ST_PC) and
        (activator.name $= self.fighting.name)));
-if (self.fighting.level>200) goto start;
-        if(self.fighting.type == UNIT_ST_NPC) goto start;
+   if (self.fighting.level>200) goto start;
+   if(self.fighting.type == UNIT_ST_NPC) goto start;
 
-act("$1n chants in a foreboding tone...",
-       A_SOMEONE, self, null, self.fighting,TO_ALL);
-act("You feel your life being drained away!",
-       A_SOMEONE, self.fighting, null, null,TO_CHAR);
-act("$3n pales and sinks to $3s knees, $3s body depraved of "+
-"strength!",A_SOMEONE, self, null, self.fighting,TO_NOTVICT);
+   act("$1n chants in a foreboding tone...",
+         A_SOMEONE, self, null, self.fighting,TO_ALL);
+   act("You feel your life being drained away!",
+         A_SOMEONE, self.fighting, null, null,TO_CHAR);
+   act("$3n pales and sinks to $3s knees, $3s body depraved of "+
+   "strength!",A_SOMEONE, self, null, self.fighting,TO_NOTVICT);
    self.fighting.hp := 0;
    self.fighting.position := POSITION_INCAP;
    self.position := POSITION_STANDING;
@@ -120,13 +120,14 @@ act("$3n pales and sinks to $3s knees, $3s body depraved of "+
 }
 dilend
 
-/* Dil to simulate unexpected bump on the head by a stalagtite */
 
+/* Dil to simulate unexpected bump on the head by a stalagtite */
 dilbegin headbump();
 external
 	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+
 var
-  num   :       integer;
+   num   :       integer;
 code
 {
    heartbeat := PULSE_SEC*5;
@@ -152,14 +153,15 @@ dilend
 dilbegin recall charger();
 code
 {
-:start:
-heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/4;
-wait (SFB_TICK,(self.equip==WEAR_WIELD));
-heartbeat:=PULSE_SEC*5;
-sendto ("add charge",self);
-goto start;
+   :start:
+   heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/4;
+   wait (SFB_TICK,(self.equip==WEAR_WIELD));
+   heartbeat:=PULSE_SEC*5;
+   sendto ("add charge",self);
+   goto start;
 }
 dilend
+
 
 dilbegin recall mana_drain();
 external
@@ -1063,9 +1065,8 @@ dilcopy shopkeeper@function(
  "$1n sighs, 'I am sorry sir... we seem to be out for the moment.'",
  "$1n says, 'Be with you in a second, sir.'"
   },{"3","2"}, "", 150, 10,2*PLATINUM_MULT,"", "");
-
-
 end
+
 
                                	mist_dweller
 names {"dweller", "mist dweller"}
@@ -1081,7 +1082,6 @@ M_MIST_DWELLER_LARGE(100,SEX_NEUTRAL)
 money 4 COPPER_PIECE
 flags {CHAR_SNEAK}
 dilcopy wander_zones@function ("cypress", 40,0, 0);
-
 end
 
                                 dark_mage
@@ -1098,7 +1098,6 @@ alignment -800
 money 1 SILVER_PIECE
 exp 120
 M_DARK_ELF_MAGE_ACID(100,SEX_MALE,"acid ball")
-
 end
 
 
@@ -1115,7 +1114,6 @@ M_HUMAN_MAGE_FROST(100,SEX_FEMALE,"icestorm")
 alignment 0
 money 2 GOLD_PIECE
 exp 120
-
 end
 
 /* good_mage
@@ -1139,7 +1137,6 @@ romflags {CHAR_DETECT_INVISIBLE,CHAR_SNEAK}
 M_MIST_DWELLER_LARGE(120,SEX_NEUTRAL)
 alignment 0
 money 3 COPPER_PIECE
-
 end
 
 
@@ -1181,6 +1178,7 @@ dilcopy shopkeeper@function(
 
 end
 
+
 				phoebius
 names {"phoebius", "master sorcerer", "master", "sorcerer"}
 title "Phoebius the Master Sorcerer"
@@ -1198,77 +1196,13 @@ romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
 alignment 0
 M_GNOME_MAGE_ACID(70,SEX_MALE,"acid swirl")
 exp -300
+
 dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
-
-dilbegin parlor_home();
-var
-expd : extraptr;
-	item	: 	unitptr;
-        pc      :       unitptr;
-	i	:	integer;
-code
-{
-   :init:
-   heartbeat := PULSE_SEC*4;
-
-        :start:
-wait (SFB_CMD,(command("worship"))and(activator.type == UNIT_ST_PC));
-	   pc := activator;
-	   secure(pc, lost_pc);
-
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost_pc;
-        if (not (GUILD_SORCERER in expd.names) )goto lost_pc;
-
-pause;
-exec("say Welcome, "+pc.name+".", self);pause;
-exec("say Glad to see you here.", self); pause;
-exec("say How is the world outside?",self);pause;
-exec("ponder ",self);pause;
-exec("say "+pc.name+", I assume you come here seeking the symbol of our "+
-"Guild...",self);pause;
-exec("say An item to identify you as a Sorcerer.",self);
-           item := load("sorc_pendant@sorcerer");
-           item.height := pc.height;
-           link(item, self);
-exec("give pendant "+pc.name, self);pause;
-exec("say Although not the most powerful item in existence, I think you "+
-"will find it quite useful.",self);pause;
-exec("say Also, take this weapon, "+pc.name+".",self);pause;
-exec("say This dagger is crafted by magic, and magic it will bring
-you.",self);
-           item := load("vorous2@sorcerer");
-           item.height := pc.height;
-           link(item, pc);
-exec("emote gives a vorous to "+pc.name, self);
-pause;
-exec("say Wield it when needed... it is hardly a weapon of power, yet
-useful.",self);pause;
-exec("hand "+pc.name, self);pause;
-exec("say Always glad to see a fellow Sorcerer.",self);pause;
-exec("say Fare Thee well, "+pc.name+", bring the wide world my
-regards.",self);
-	   unsecure(pc);
-           goto start;
-
-	:lost_pc:
-	pause;
-exec("sigh",self);
-	goto start;
-}
-dilend
-
-/*
-special SFUN_GUILD_MASTER
-"Guild               = ~"+SORCERER_GUILD+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(1*PLATINUM_MULT)+"<br/>
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(2*PLATINUM_MULT)+"<br/>
-Guild Exclude Quest  = ~Midgaard Sorcerer Quitter~"*/
-/* Guild Exclude Quest  = ~Midgaard Paladin Quitter~ ~Udgaard Fighter Quitter~ ~Necromancer Quitter~  */
-/*  special SFUN_GUILD_MASTER SORCERER_GUILD   Now format changed */
+dilcopy quest_block@guilds("join", "XXX Quest",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy MurderBanish@guilds(SORCERER_GUILD);
+dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
 
 dilcopy guild_titles@guild_paths(GUILD_SORCERER, {"Third Order Mesmerist",
 "Third Order Mesmerist", "Secondary Mesmerist", "Secondary Mesmerist",
@@ -1287,8 +1221,127 @@ dilcopy guild_titles@guild_paths(GUILD_SORCERER, {"Third Order Mesmerist",
 "Sorceress Prime", "Master Sorcerer of the Ages",
 "Sorceress Mistress of the Ages"});
 
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
 
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, SORCERER_GUILD))
+   {
+      block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, SORCERER_GUILD))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say Perhaps you have been hitting your head  too much? " +
+      "You don't even know who " +
+      "you are now " + activator.name+ ". You're already a member of  "+
+      "the guild!" , self);
+      pause;
+      goto start; 
+   }
+
+   if (IsInGuilds@guilds(activator, GUILD_SORCERER_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Sorcerer.", self);
+      pause;
+      goto start;  
+   }
+
+   JoinGuild@guilds(activator, SORCERER_GUILD);
+
+   exec ("say The power of the Sorcerers now coarses in your veins.", self);
+   goto start;
+}
+dilend
+
+
+
+
+dilbegin parlor_home();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
+var
+   item	: 	unitptr;
+   pc      :       unitptr;
+   i	:	integer;
+code
+{
+:init:
+   heartbeat := PULSE_SEC*4;
+
+:start:
+   wait (SFB_CMD, (command("worship"))and(activator.type == UNIT_ST_PC));
+
+   if (not IsInGuild@guilds(activator, GUILD_SORCERER))
+      goto start;
+
+   pc := activator;
+   secure(pc, lost_pc);
+
+   pause;
+   exec("say Welcome, "+pc.name+".", self);pause;
+   exec("say Glad to see you here.", self); pause;
+   exec("say How is the world outside?",self);pause;
+   exec("ponder ",self);pause;
+   exec("say "+pc.name+", I assume you come here seeking the symbol of our "+
+      "Guild...",self);pause;
+   exec("say An item to identify you as a Sorcerer.",self);
+   item := load("sorc_pendant@sorcerer");
+   item.height := pc.height;
+   link(item, self);
+   exec("give pendant "+pc.name, self);pause;
+   exec("say Although not the most powerful item in existence, I think you "+
+      "will find it quite useful.",self);pause;
+   exec("say Also, take this weapon, "+pc.name+".",self);pause;
+   exec("say This dagger is crafted by magic, and magic it will bring you.",self);
+   item := load("vorous2@sorcerer");
+   item.height := pc.height;
+   link(item, pc);
+   exec("emote gives a vorous to "+pc.name, self);
+   pause;
+   exec("say Wield it when needed... it is hardly a weapon of power, yet
+   useful.",self);pause;
+   exec("hand "+pc.name, self);pause;
+   exec("say Always glad to see a fellow Sorcerer.",self);pause;
+   exec("say Fare Thee well, "+pc.name+", bring the wide world my
+   regards.",self);
+   unsecure(pc);
+   goto start;
+
+:lost_pc:
+	pause;
+   exec("sigh",self);
+	goto start;
+}
+dilend
 end
+
 
                                 claudius
 names {"claudius", "sorcerer", "teacher"}
@@ -1305,23 +1358,18 @@ M_HUMAN_MAGE_ACID(100,SEX_MALE,"acid swirl")
 exp -300
 alignment 200
 ATTACK_DEFENSE(+100, +300)
-special SFUN_GUILD_BASIS GUILD_SORCERER
-/*
-special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n mumbles 'Huh? Who? But
-you're not a Sorcerer!'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
 
 dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
-
+dilcopy MurderBanish@guilds(SORCERER_GUILD);
+dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
+dilcopy TrainMemberChk(SORCERER_GUILD, "");
 
 #define _SPELL
 #include "guilddef.h"
 #undef _SPELL
-
-
 end
+
 
                    calastran
 names {"Calastran", "sorcerer", "teacher"}
@@ -1341,20 +1389,15 @@ default POSITION_STANDING
 
 dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
-special SFUN_GUILD_BASIS SORCERER_GUILD
-/*
-special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n shrugs and exclaims 'You
-are not a Sorcerer, begone!'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
+dilcopy MurderBanish@guilds(SORCERER_GUILD);
+dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
+dilcopy TrainMemberChk(SORCERER_GUILD, "");
 
 #define _ABILITY
 #include "guilddef.h"
 #undef _ABILITY
-
-
 end
+
 
                                 lasheetah
 names {"lasheetah", "sorcerer", "teacher","master","weaponmaster"}
@@ -1369,22 +1412,18 @@ romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
 M_DARK_ELF_MAGE_GAS(100,SEX_FEMALE,"sinking cloud")
 exp -100
 alignment -200
+
 dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
-special SFUN_GUILD_BASIS SORCERER_GUILD
-/*
-special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n hisses, 'You are not a
-Sorcerer, fool!'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
+dilcopy MurderBanish@guilds(SORCERER_GUILD);
+dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
+dilcopy TrainMemberChk(SORCERER_GUILD, "");
 
 #define _WEAPON
 #include "guilddef.h"
 #undef _WEAPON
-
-
 end
+
 
                                 forbin
 names {"forbin", "sorcerer", "teacher"}
@@ -1401,21 +1440,16 @@ M_HALFLING_MAGE_FIRE(80,SEX_MALE,"acid ball")
 level 80
 alignment 100
 exp -200
+
 dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
-special SFUN_GUILD_BASIS SORCERER_GUILD
-/*
-special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n rolls his eyes 'You are
-not a Sorcerer.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
+dilcopy MurderBanish@guilds(SORCERER_GUILD);
+dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
+dilcopy TrainMemberChk(SORCERER_GUILD, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
-
-
 end
 
 

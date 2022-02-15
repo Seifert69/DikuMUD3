@@ -1,26 +1,22 @@
 #include <macros.h>
 
 /*
-Guilds to convert:
-   Knight
-   Mage 
-   Sorcerer
-   Barbarian
-   Monk?
+   Next step:
 
-Converted:
-   Fighter
-   Thief
-   Druid
-   Necromancer
-   Ranger
-   Paladin
-   Assassin
-   Cleric
+   Figure out how to store guild data
 
-Remember at the end to search for all (also in Zones)
-   $path
-   .guild
+   "$guild_in", "guild 1", "guild 2", ...
+     - but then where do I store the level
+
+or maybe just
+
+   "paladin guild", "guild level", "joined at vlevel"
+
+or
+   "paladin guild", "", [guild level], [joined at vlevel]
+
+When you raise a level, what happens ?
+
 
 */
 
