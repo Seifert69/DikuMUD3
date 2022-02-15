@@ -4,24 +4,23 @@
 Guilds to convert:
    Fighter
    Knight
-   Thief
-   Cleric
-   Druid
    Mage 
    Sorcerer
    Barbarian
    Monk?
-   Assassin
 
 Converted:
+   Thief
    Druid
    Necromancer
    Ranger
    Paladin
+   Assassin
+   Cleric
 
 Remember at the end to search for all (also in Zones)
    $path
-   restore the guild_paths.zon and check it out
+   .guild
 
 */
 

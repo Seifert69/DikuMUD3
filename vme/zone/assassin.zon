@@ -441,8 +441,8 @@ dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
 #include "guilddef.h"
 #undef _ABILITY
 dilcopy nokill@assassin();
-
 end
+
 
 		assassin_guard
 names {"assassin guard","guard","assassin"}

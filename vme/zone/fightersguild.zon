@@ -66,46 +66,48 @@ endurance + incapacitated */
 
 dilbegin nokill();
 var
-        pc      : unitptr;
-        room    : unitptr;
-        i       : integer;
+   pc      : unitptr;
+   room    : unitptr;
+   i       : integer;
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+   heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING);
-        pc := self.fighting;
-        if(pc.type == UNIT_ST_NPC) goto start;
-        if (pc.level > 200) goto start;
-        secure(pc,gone);
-        if (command("flee"))
-                block;
+:start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING);
+   pc := self.fighting;
+   if(pc.type == UNIT_ST_NPC) goto start;
+   if (pc.level > 200) goto start;
+   secure(pc,gone);
+   if (command("flee"))
+            block;
 
-self.hp := self.max_hp;
-act("The sounds of battle attract attention of the training mercenaries.",
-A_ALWAYS, pc, self, null, TO_ALL);
-act("Several of them charge into the room, grabbing you and repeatedly "+
-"smashing your head into the wall!", A_ALWAYS, pc, self, null, TO_CHAR);
-act("Several of them charge into the room, grabbing $1n and repeatedly "+
-"smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
-pc.hp := 0;
-pc.endurance := 0;
-act("Your face a bloody mess, you are dragged away into the streets."
-,A_ALWAYS, pc, self, null, TO_CHAR);
-position_update(pc);
-act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
-"$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
-room := findroom("col_sq3@midgaard");
-link(pc,room);
-act("Two large warriors emerge from the Guild houses, dragging $1n"+
-"between them and dump $1m unceremoniously on the street."
-,A_SOMEONE,pc,self,null,TO_REST);
-        :gone:
-unsecure(pc);
-goto start;
+   self.hp := self.max_hp;
+   act("The sounds of battle attract attention of the training mercenaries.",
+   A_ALWAYS, pc, self, null, TO_ALL);
+   act("Several of them charge into the room, grabbing you and repeatedly "+
+   "smashing your head into the wall!", A_ALWAYS, pc, self, null, TO_CHAR);
+   act("Several of them charge into the room, grabbing $1n and repeatedly "+
+   "smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
+   pc.hp := 0;
+   pc.endurance := 0;
+   act("Your face a bloody mess, you are dragged away into the streets."
+   ,A_ALWAYS, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
+   "$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
+   room := findroom("col_sq3@midgaard");
+   link(pc,room);
+   act("Two large warriors emerge from the Guild houses, dragging $1n"+
+   "between them and dump $1m unceremoniously on the street."
+   ,A_SOMEONE,pc,self,null,TO_REST);
+
+:gone:
+   unsecure(pc);
+   goto start;
 }
 dilend
+
 
 dilbegin metallurgist();
 var
@@ -117,198 +119,197 @@ var
 	i	: integer;
 code
 {
-heartbeat:=PULSE_SEC*3;
-	:start:
-wait(SFB_DONE,command("give") and (activator.type==UNIT_ST_PC) and
-(target==self));
-pc:=activator;
-secure(pc,gone);
-item:=medium;
-secure(item,gone);
-mag:="undecipherable";
-craft:="undecipherable";
+   heartbeat:=PULSE_SEC*3;
+:start:
+   wait(SFB_DONE,command("give") and (activator.type==UNIT_ST_PC) and (target==self));
+   pc:=activator;
+   secure(pc,gone);
+   item:=medium;
+   secure(item,gone);
+   mag:="undecipherable";
+   craft:="undecipherable";
 
-/* If self cannot see the giver/item: drop item,		*/
+   /* If self cannot see the giver/item: drop item,		*/
 
-if (not(visible(self,medium)))
-{
-exec("say I cannot work on invisible objects!",self);
-goto gone;
-}
+   if (not(visible(self,medium)))
+   {
+      exec("say I cannot work on invisible objects!",self);
+      goto gone;
+   }
 
-if (not(visible(self,activator)))
-{
-exec("say Huh?! Who goes there!",self);
-exec("say I do not work for people whom I don't see!",self);
-goto gone;
-}
+   if (not(visible(self,activator)))
+   {
+      exec("say Huh?! Who goes there!",self);
+      exec("say I do not work for people whom I don't see!",self);
+      goto gone;
+   }
 
-/* If item_worn only						*/
+   /* If item_worn only						*/
 
-if (item.objecttype==ITEM_WORN)
-{
-exec("emote examines "+item.name+" carefully.",self);
-exec("say This item has no value as armour... If it has any "+
-"powers, those are beyond my grasp.",self);
-exec("give "+item.name+" "+pc.name,self);
-goto gone;
-}
+   if (item.objecttype==ITEM_WORN)
+   {
+      exec("emote examines "+item.name+" carefully.",self);
+      exec("say This item has no value as armour... If it has any "+
+      "powers, those are beyond my grasp.",self);
+      exec("give "+item.name+" "+pc.name,self);
+      goto gone;
+   }
 
-/* If not armor or weapon is given: give back			*/
+   /* If not armor or weapon is given: give back			*/
 
-if ((item.objecttype!=ITEM_WEAPON)and(item.objecttype!=ITEM_ARMOR)
-and(item.objecttype!=ITEM_SHIELD))
-{
-exec("exec stares at the "+item.name+".", self);
-exec("say I am sorry, this item is beyond my skills.",self);
-exec("give "+item.name+" "+pc.name,self);
-goto gone;
-}
+   if ((item.objecttype!=ITEM_WEAPON)and(item.objecttype!=ITEM_ARMOR)
+   and(item.objecttype!=ITEM_SHIELD))
+   {
+   exec("exec stares at the "+item.name+".", self);
+   exec("say I am sorry, this item is beyond my skills.",self);
+   exec("give "+item.name+" "+pc.name,self);
+   goto gone;
+   }
 
-/* If PC does not have cash for the evaluation (1 SP) 		*/
+   /* If PC does not have cash for the evaluation (1 SP) 		*/
 
-i:=1*SILVER_MULT;
-if (not(transfermoney(pc,null,i)))
-{
-exec("say I'm sorry, "+pc.name+". You seem to be a bit low on cash.",self);
-exec("say I've got bills to pay, you know.",self);
-exec("give "+item.name+" "+pc.name,self);
-goto gone;
-}
+   i:=1*SILVER_MULT;
+   if (not(transfermoney(pc,null,i)))
+   {
+   exec("say I'm sorry, "+pc.name+". You seem to be a bit low on cash.",self);
+   exec("say I've got bills to pay, you know.",self);
+   exec("give "+item.name+" "+pc.name,self);
+   goto gone;
+   }
 
-/* Bubbles and some simple magics... One of three rituals	*/
-i:=rnd(1,3);
+   /* Bubbles and some simple magics... One of three rituals	*/
+   i:=rnd(1,3);
 
-if (i==1)
-{
-exec("emote rubs gently the surface of "+item.title+", mumbling to "+
-"herself...",self);
-goto effect;
-}
-if (i==2)
-{
-exec("emote examines "+item.title+" carefully under the lamp light.",self);
-goto effect;
-}
-if (i==3)
-{
-exec("emote mumbles a short, strange phrase, staring at "+item.title+
-".",self);
-goto effect;
-}
-	:effect:
-/* Various names for various craftmanships		*/
+   if (i==1)
+   {
+   exec("emote rubs gently the surface of "+item.title+", mumbling to "+
+   "herself...",self);
+   goto effect;
+   }
+   if (i==2)
+   {
+   exec("emote examines "+item.title+" carefully under the lamp light.",self);
+   goto effect;
+   }
+   if (i==3)
+   {
+   exec("emote mumbles a short, strange phrase, staring at "+item.title+
+   ".",self);
+   goto effect;
+   }
+      :effect:
+   /* Various names for various craftmanships		*/
 
-if (item.value[1] < -10)
-	{ craft:="terrible"; goto effect2; }	/* craft below -10 */
-if (item.value[1] < -5)
-	{ craft:="very bad"; goto effect2; }	/* craft below -5  */
-if (item.value[1] < 0)
-	{ craft:="bad"; goto effect2; }		/* craft below 0   */
-if ((item.value[1] > -1) and (item.value[2] < 3))
-	{ craft:="average"; goto effect2; }   	/* craft 0-2	*/
-if ((item.value[1] > 2) and (item.value[2] < 5))
-	{ craft:="above average"; goto effect2; }  /* craft 3-4	*/
-if ((item.value[1] > 4) and (item.value[2] < 8))
-	{ craft:="fine"; goto effect2; }	/* craft 5-7	*/
-if ((item.value[1] > 7) and (item.value[2] < 11))
-	{ craft:="excellent"; goto effect2; }	/* craft 8-10	*/
-if ((item.value[1] > 10) and (item.value[2] <16))
-	{ craft:="amazing"; goto effect2; }	/* craft 11-15	*/
-if (item.value[1] > 15)
-	{ craft:="unique"; goto effect2; }	/* craft over 15 */
+   if (item.value[1] < -10)
+      { craft:="terrible"; goto effect2; }	/* craft below -10 */
+   if (item.value[1] < -5)
+      { craft:="very bad"; goto effect2; }	/* craft below -5  */
+   if (item.value[1] < 0)
+      { craft:="bad"; goto effect2; }		/* craft below 0   */
+   if ((item.value[1] > -1) and (item.value[2] < 3))
+      { craft:="average"; goto effect2; }   	/* craft 0-2	*/
+   if ((item.value[1] > 2) and (item.value[2] < 5))
+      { craft:="above average"; goto effect2; }  /* craft 3-4	*/
+   if ((item.value[1] > 4) and (item.value[2] < 8))
+      { craft:="fine"; goto effect2; }	/* craft 5-7	*/
+   if ((item.value[1] > 7) and (item.value[2] < 11))
+      { craft:="excellent"; goto effect2; }	/* craft 8-10	*/
+   if ((item.value[1] > 10) and (item.value[2] <16))
+      { craft:="amazing"; goto effect2; }	/* craft 11-15	*/
+   if (item.value[1] > 15)
+      { craft:="unique"; goto effect2; }	/* craft over 15 */
 
-	:effect2:
-/* various names for various enchantment		*/
+      :effect2:
+   /* various names for various enchantment		*/
 
-if (item.value[2] < -10)
-        { mag:="strong negative"; goto effect3; }    /* mag below -10 */
-if (item.value[2] < -5)
-        { mag:="negative"; goto effect3; }    		/* mag below -5  */
-if (item.value[2] < 0)
-        { mag:="slightly negative"; goto effect3; }	/* mag below 0	 */
-if (item.value[2]==0)
-	{ mag:="no magical"; goto effect3; }		/* mag 0	*/
-if ((item.value[2] > 0) and (item.value[2] < 5))
-        { mag:="weak"; goto effect3; }     		/* mag 1-4    */
-if ((item.value[2] > 4) and (item.value[2] < 8))
-        { mag:="quite strong"; goto effect3; }        	/* mag 5-7    */
-if ((item.value[2] > 7) and (item.value[2] < 11))
-        { mag:="strong"; goto effect3; }   		/* mag 8-10   */
-if ((item.value[2] > 10) and (item.value[2] <16))
-        { mag:="extremely strong"; goto effect3; }     	/* mag 11-15  */
-if (item.value[2] > 15)
-        { mag:="divine strength"; goto effect3; }     		/* mag over 15 */
+   if (item.value[2] < -10)
+         { mag:="strong negative"; goto effect3; }    /* mag below -10 */
+   if (item.value[2] < -5)
+         { mag:="negative"; goto effect3; }    		/* mag below -5  */
+   if (item.value[2] < 0)
+         { mag:="slightly negative"; goto effect3; }	/* mag below 0	 */
+   if (item.value[2]==0)
+      { mag:="no magical"; goto effect3; }		/* mag 0	*/
+   if ((item.value[2] > 0) and (item.value[2] < 5))
+         { mag:="weak"; goto effect3; }     		/* mag 1-4    */
+   if ((item.value[2] > 4) and (item.value[2] < 8))
+         { mag:="quite strong"; goto effect3; }        	/* mag 5-7    */
+   if ((item.value[2] > 7) and (item.value[2] < 11))
+         { mag:="strong"; goto effect3; }   		/* mag 8-10   */
+   if ((item.value[2] > 10) and (item.value[2] <16))
+         { mag:="extremely strong"; goto effect3; }     	/* mag 11-15  */
+   if (item.value[2] > 15)
+         { mag:="divine strength"; goto effect3; }     		/* mag over 15 */
 
-	:effect3:
-/* Decides type of armour/shield			*/
+      :effect3:
+   /* Decides type of armour/shield			*/
 
-if (item.objecttype==ITEM_ARMOR)
-{
-if (item.value[0]==0)
-	prot:="normal clothing";
-if (item.value[0]==1)
-	prot:="leather";
-if (item.value[0]==2)
-	prot:="hardened leather";
-if (item.value[0]==3)
-	prot:="chain mail";
-if (item.value[0]==4)
-	prot:="plated armour";
-goto speakup;
-}
+   if (item.objecttype==ITEM_ARMOR)
+   {
+   if (item.value[0]==0)
+      prot:="normal clothing";
+   if (item.value[0]==1)
+      prot:="leather";
+   if (item.value[0]==2)
+      prot:="hardened leather";
+   if (item.value[0]==3)
+      prot:="chain mail";
+   if (item.value[0]==4)
+      prot:="plated armour";
+   goto speakup;
+   }
 
-if (item.objecttype==ITEM_SHIELD)
-{
-if (item.value[0]==0)
-	prot:="small-sized shield";
-if (item.value[0]==1)
-	prot:="medium-sized shield";
-if (item.value[0]==2)
-	prot:="large-sized shield";
-goto speakup;
-}
+   if (item.objecttype==ITEM_SHIELD)
+   {
+   if (item.value[0]==0)
+      prot:="small-sized shield";
+   if (item.value[0]==1)
+      prot:="medium-sized shield";
+   if (item.value[0]==2)
+      prot:="large-sized shield";
+   goto speakup;
+   }
 
-	:speakup:
-if (item.objecttype==ITEM_WEAPON)
-{
-exec("say "+pc.name+", your "+item.name+" seems to be a weapon of "+
-craft+" workmanship.",self);
-pause;
-exec("say Furthermore, I can detect a "+mag+" enchantment on it.",
-self);
-exec("emote gives "+item.name+" to "+pc.name,self);
-link(item, pc);
-goto gone;
-}
-if (item.objecttype==ITEM_ARMOR)
-{
-exec("say "+pc.name+", "+item.title+" seems to be an armour with "+
-"protection equivalent to at least "+prot+".",self);
-pause;
-exec("say The craftmanship seems to be "+craft+" and there seems to be a "+
-mag+" enchantment placed on it.",self);
-exec("emote gives "+item.name+" to "+pc.name,self);
-link(item, pc);
-goto gone;
-}
-if (item.objecttype==ITEM_SHIELD)
-{
-exec("say "+pc.name+", "+item.title+" will protect you as a "+prot+".",self);
-pause;
-exec("say Your "+item.name+" is of "+craft+" craftmanship and there seems to "
-+"be a "+ mag+" enchantment empowering it.",self);
-exec("emote gives "+item.name+" to "+pc.name,self);
-link(item, pc);
-goto gone;
-}
+      :speakup:
+   if (item.objecttype==ITEM_WEAPON)
+   {
+   exec("say "+pc.name+", your "+item.name+" seems to be a weapon of "+
+   craft+" workmanship.",self);
+   pause;
+   exec("say Furthermore, I can detect a "+mag+" enchantment on it.",
+   self);
+   exec("emote gives "+item.name+" to "+pc.name,self);
+   link(item, pc);
+   goto gone;
+   }
+   if (item.objecttype==ITEM_ARMOR)
+   {
+   exec("say "+pc.name+", "+item.title+" seems to be an armour with "+
+   "protection equivalent to at least "+prot+".",self);
+   pause;
+   exec("say The craftmanship seems to be "+craft+" and there seems to be a "+
+   mag+" enchantment placed on it.",self);
+   exec("emote gives "+item.name+" to "+pc.name,self);
+   link(item, pc);
+   goto gone;
+   }
+   if (item.objecttype==ITEM_SHIELD)
+   {
+   exec("say "+pc.name+", "+item.title+" will protect you as a "+prot+".",self);
+   pause;
+   exec("say Your "+item.name+" is of "+craft+" craftmanship and there seems to "
+   +"be a "+ mag+" enchantment empowering it.",self);
+   exec("emote gives "+item.name+" to "+pc.name,self);
+   link(item, pc);
+   goto gone;
+   }
 
-	:gone:
-if (item !=null)
-exec("drop "+item.name,self);
-unsecure(pc);
-unsecure(item);
-goto start;
+      :gone:
+   if (item !=null)
+   exec("drop "+item.name,self);
+   unsecure(pc);
+   unsecure(item);
+   goto start;
 }
 dilend
 
@@ -584,7 +585,7 @@ end
 /* ================================================================== */
 /*                              MOBILES                               */
 /* ================================================================== */
-%mobiles
+
 %mobiles
 
 /* ---------------------------- TEACHERS ---------------------------- */
@@ -606,16 +607,11 @@ exp -100
 alignment 1000
 money 2 IRON_PIECE
 
-special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
-/*
-special SFUN_GUILD_MASTER
-"Guild               = ~"+GUILD_UDG_FIGHTER+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(1*SILVER_MULT)+"<br/>
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(5*SILVER_MULT)+"<br/>
-Guild Exclude Quest  = ~Udgaard Fighter Quitter~"
-*/
+dilcopy nokill@fightersguild();
+dilcopy quest_block@guilds("join", "XXX Quest",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
+dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 
 dilcopy guild_titles@guild_paths(GUILD_UDG_FIGHTER, {"Swordpupil",
 "Swordpupil", "Recruit", "Recruit", "Sentry", "Sentress", "Fighter",
@@ -627,15 +623,75 @@ dilcopy guild_titles@guild_paths(GUILD_UDG_FIGHTER, {"Swordpupil",
 "Lady Champion", "Dragoon", "Lady Dragoon", "Cavalier", "Cavalier", "Knight",
 "Lady Knight"});
 
-dilcopy nokill@fightersguild();
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_UDG_FIGHTER))
+   {
+      block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, GUILD_UDG_FIGHTER))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say Perhaps you have been hitting your head  too much? " +
+      "You don't even know who " +
+      "you are now " + activator.name+ ". You're already a member of  "+
+      "the guild!" , self);
+      pause;
+      goto start; 
+   }
+
+   /*if (IsInGuilds@guilds(activator, GUILD_UDG_FIGHTER))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Fighter.", self);
+      pause;
+      goto start;  
+   }*/
+
+   JoinGuild@guilds(activator, GUILD_UDG_FIGHTER);
+
+   exec ("say The strength of the fighter now coarses in your veins.", self);
+   goto start;
+}
+dilend
+
+
 
 /* Fighter Master DIL - gives out the swordman's belt*/
 
 dilbegin fighter_give();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
 	pc : unitptr;
 	item : unitptr;
-        expd : extraptr;
+
 code
 {
 	heartbeat := PULSE_SEC * 4;
@@ -645,63 +701,59 @@ code
 wait (SFB_DONE, command ("worship")and(self ==target));
 	pc := activator;
 	secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-	if ((GUILD_UDG_FIGHTER in expd.names))
-	{
-pause;
-exec("emote puts away the battle axe he has been polishing. ", self);
-pause;
-exec("say Yes, greetings to you, too, "+pc.name+".",self);
-pause;
-exec("say I do not approve of hour-long chats, unlike some other people "+
-"in our city...", self);
-exec("eyeball", self);
-pause;
-exec("whisper "+pc.name+" Especially them spell-tossers next door. ", self);
-exec("nod",self);pause;
-exec("say When them idiots start their magic babbling, you don't even know "+
-"if you'll wake up the next day, much less in what shape.",self);pause;
-exec("say But let's leave this behind... to business.",self);pause;
-exec("say As a Guild, we have a special item for you, a seasoned fighter, "+
-"no doubt.",self);pause;
-exec("say A belt, it is the perfect item for a swordsman, although much "+
-"less so for an axe-wielding maniac, like myself.", self);
-exec("emote looks with longing at his battle axe.",self);pause;
-exec("say But I will not keep you waiting in suspense.",self);
-	item := load("fight_belt@fightersguild");
-        item.height := pc.height;
-	link(item, pc);
-sendtext("Sir Arthur hands you a belt.<br/>.",self);
-act("$3n hands $1n a belt.",A_SOMEONE,pc,null,self,TO_REST);
-pause;
-exec ("say There you go. Run along now.", self);pause;
-exec ("say And hey... a free advice...",self);
-exec ("peer",self);pause;
-exec ("say You should take care worshipping people like that...",self);pause;
-exec("say You might run into someone less open-minded than myself.", self);
-pause;
-exec("wave "+pc.name, self);
-unsecure(pc);
-goto start;
-}
-else
-      {
-	unsecure(pc);
-pause;
-exec("say Beat it, bootlicker or I will have you flogged.", self);
-exec("emote spits on your boots.",self);
-      }
 
-unsecure(pc);
-goto start;
+	if (IsInGuild@guilds(pc, GUILD_UDG_FIGHTER))
+	{
+      pause;
+      exec("emote puts away the battle axe he has been polishing. ", self);
+      pause;
+      exec("say Yes, greetings to you, too, "+pc.name+".",self);
+      pause;
+      exec("say I do not approve of hour-long chats, unlike some other people "+
+      "in our city...", self);
+      exec("eyeball", self);
+      pause;
+      exec("whisper "+pc.name+" Especially them spell-tossers next door. ", self);
+      exec("nod",self);pause;
+      exec("say When them idiots start their magic babbling, you don't even know "+
+      "if you'll wake up the next day, much less in what shape.",self);pause;
+      exec("say But let's leave this behind... to business.",self);pause;
+      exec("say As a Guild, we have a special item for you, a seasoned fighter, "+
+      "no doubt.",self);pause;
+      exec("say A belt, it is the perfect item for a swordsman, although much "+
+      "less so for an axe-wielding maniac, like myself.", self);
+      exec("emote looks with longing at his battle axe.",self);pause;
+      exec("say But I will not keep you waiting in suspense.",self);
+      item := load("fight_belt@fightersguild");
+      item.height := pc.height;
+      link(item, pc);
+      sendtext("Sir Arthur hands you a belt.<br/>.",self);
+      act("$3n hands $1n a belt.",A_SOMEONE,pc,null,self,TO_REST);
+      pause;
+      exec ("say There you go. Run along now.", self);pause;
+      exec ("say And hey... a free advice...",self);
+      exec ("peer",self);pause;
+      exec ("say You should take care worshipping people like that...",self);pause;
+      exec("say You might run into someone less open-minded than myself.", self);
+      pause;
+      exec("wave "+pc.name, self);
+      unsecure(pc);
+      goto start;
+   }
+   else
+   {
+      unsecure(pc);
+      pause;
+      exec("say Beat it, bootlicker or I will have you flogged.", self);
+      exec("emote spits on your boots.",self);
+   }
+   unsecure(pc);
+   goto start;
 
 :lost:
-
-unsecure(pc);
-exec("shrug", self);
-goto start;
-
+   unsecure(pc);
+   exec("shrug", self);
+   goto start;
 }
 dilend
 

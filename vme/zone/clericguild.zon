@@ -75,35 +75,36 @@ ground or if player logs. */
 
 dilbegin recall hammer_vanish();
 var
-        blah : integer;
-	blih : integer;
-        ting : unitptr;
+   blah : integer;
+   blih : integer;
+   ting : unitptr;
 code
 {
-        :start:
-interrupt(SFB_DEAD,activator == self,gone);
-ting := equipment(self,WEAR_WIELD);
-if (ting.nameidx != "sp_hammer") goto gone;
-secure(ting,gone);
-heartbeat :=
-PULSE_SEC*(rnd(30,60)+self.abilities[ABIL_DIV]+self.abilities[ABIL_CHA]);
-wait(SFB_TICK,TRUE);
-wait(SFB_TICK,TRUE);
-act("Your $2n flickers and starts to fade..."
-,A_ALWAYS,self,ting,null,TO_CHAR);
-act("$1n's $2n flickers and starts to fade..."
-,A_ALWAYS,self,ting,null,TO_REST);
-heartbeat := PULSE_SEC*10;
-pause;
-act("Your $2n ceases its brief existence and merges with your soul."
-,A_ALWAYS,self,ting,null,TO_CHAR);
-act("$1n's $2n ceases its brief existence and merges with $1n's soul."
-,A_ALWAYS,self,ting,null,TO_REST);
+:start:
+   interrupt(SFB_DEAD,activator == self,gone);
+   ting := equipment(self,WEAR_WIELD);
+   if (ting.nameidx != "sp_hammer") goto gone;
+   secure(ting,gone);
+   heartbeat :=
+   PULSE_SEC*(rnd(30,60)+self.abilities[ABIL_DIV]+self.abilities[ABIL_CHA]);
+   wait(SFB_TICK,TRUE);
+   wait(SFB_TICK,TRUE);
+   act("Your $2n flickers and starts to fade..."
+   ,A_ALWAYS,self,ting,null,TO_CHAR);
+   act("$1n's $2n flickers and starts to fade..."
+   ,A_ALWAYS,self,ting,null,TO_REST);
+   heartbeat := PULSE_SEC*10;
+   pause;
+   act("Your $2n ceases its brief existence and merges with your soul."
+   ,A_ALWAYS,self,ting,null,TO_CHAR);
+   act("$1n's $2n ceases its brief existence and merges with $1n's soul."
+   ,A_ALWAYS,self,ting,null,TO_REST);
+
 :gone:
-destroy(ting);
-unsecure(ting);
-blah := dildestroy("hammernosteal@clericguild",self);
-blih := dildestroy("hammer_vanish@clericguild",self);
+   destroy(ting);
+   unsecure(ting);
+   blah := dildestroy("hammernosteal@clericguild",self);
+   blih := dildestroy("hammer_vanish@clericguild",self);
 }
 dilend
 
@@ -111,25 +112,25 @@ dilend
 
 dilbegin hammernosteal();
 var
-        vict : unitptr;
-	ting : unitptr;
+   vict : unitptr;
+   ting : unitptr;
 code
 {
-        :start:
-wait(SFB_CMD,(command("disarm"))and(argument)
-and(activator != self));
-vict := activator;
-secure(vict,start);
-ting:=findunit(vict,argument,FIND_UNIT_SURRO,null);
-if (ting!=self) goto start;
-block;
-act("You can't disarm $3n, he's using an etheral weapon!"
-,A_SOMEONE,vict,null,self,TO_CHAR);
-act("$1n tries to disarm you, but $1s weapon moves straight through yours!"
-,A_SOMEONE,vict,null,self,TO_VICT);
-act("$1n tries to disarm $3n, but $1s weapon moves straight through $3n's!"
-,A_SOMEONE,vict,null,self,TO_NOTVICT);
-goto start;
+:start:
+   wait(SFB_CMD,(command("disarm"))and(argument)
+   and(activator != self));
+   vict := activator;
+   secure(vict,start);
+   ting:=findunit(vict,argument,FIND_UNIT_SURRO,null);
+   if (ting!=self) goto start;
+   block;
+   act("You can't disarm $3n, he's using an etheral weapon!"
+   ,A_SOMEONE,vict,null,self,TO_CHAR);
+   act("$1n tries to disarm you, but $1s weapon moves straight through yours!"
+   ,A_SOMEONE,vict,null,self,TO_VICT);
+   act("$1n tries to disarm $3n, but $1s weapon moves straight through $3n's!"
+   ,A_SOMEONE,vict,null,self,TO_NOTVICT);
+   goto start;
 }
 dilend    
 
@@ -138,117 +139,115 @@ does not set as already having gotten one at this time need to set
 and use a secondary quest if lost. ETNA*/
 
 dilbegin healer_give();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
-	pc : unitptr;
-	item : unitptr;
-        expd : extraptr;
+   pc : unitptr;
+   item : unitptr;
+
 code
 {
 	heartbeat := PULSE_SEC * 4;
 
 	:start:
 
-wait (SFB_DONE,command("worship")and(self ==target));
+   wait (SFB_DONE,command("worship")and(self ==target));
 	pc := activator;
 	secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null)
-		
-        {
-           unsecure(pc);
-           goto start;
-        }
-    if (TORC_GIVEN in pc.quests) goto lecture;		
-	if (GUILD_UDG_CLERIC in expd.names)
+
+   if (TORC_GIVEN in pc.quests) goto lecture;		
+
+	if (IsInGuild@guilds(pc, GUILD_UDG_CLERIC))
 	{
-exec("bow"+pc.name,self);pause;
-exec("say Hello, "+pc.name+".", self);pause;
-exec("say I trust you are in good health?",self);
-exec("nudge "+pc.name,self);pause;
-exec("say A minor jest. Not a very good one, I fear, but I was told those "+
-"can easily break up the ice at parties.",self);pause;
-exec("say Not that I do get invited to many...",self);
-exec("sigh",self);pause;
-exec("say Comes from the line of business, I am afraid. Monks are hardly "+
-"the party animal type.",self);
-exec("think ",self);pause;
-exec("say Never mind. Let us get to the matter at hand.",self);pause;
-exec("say As a wandering healer you'll meet many dangers, no doubt.",self);
-pause;
-exec("say To ease your work and travels, accept this small token of "+
-"our Guild.",self);
-	item := load("heal_torc@clericguild");
-    dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
-        item.height := pc.height;
-		link(item, self);
-		addextra (pc.quests, {TORC_GIVEN}, "");
-exec("give torc "+pc.name, self);pause;
-exec("say Beside several small enchantments, this item can also provide "+
-"you with means of self-defence.",self);
-exec("say Examine it carefully and you will know.", self);pause;
-exec("say Our blessings will follow you, young acolyte.", self);pause;
-exec("say Let your faith guide your ways.",self);pause;
-exec("bow "+pc.name,self);
-unsecure(pc);
-goto start;
-}
-else
-{
-pause;
-exec("say Please, not here, "+pc.name+". People are watching.", self);
-exec("peer",self);pause;
-exec("tokiss "+pc.name,self);           //this sub works
-}
+      exec("bow"+pc.name,self);pause;
+      exec("say Hello, "+pc.name+".", self);pause;
+      exec("say I trust you are in good health?",self);
+      exec("nudge "+pc.name,self);pause;
+      exec("say A minor jest. Not a very good one, I fear, but I was told those "+
+      "can easily break up the ice at parties.",self);pause;
+      exec("say Not that I do get invited to many...",self);
+      exec("sigh",self);pause;
+      exec("say Comes from the line of business, I am afraid. Monks are hardly "+
+      "the party animal type.",self);
+      exec("think ",self);pause;
+      exec("say Never mind. Let us get to the matter at hand.",self);pause;
+      exec("say As a wandering healer you'll meet many dangers, no doubt.",self);
+      pause;
+      exec("say To ease your work and travels, accept this small token of "+
+      "our Guild.",self);
+      item := load("heal_torc@clericguild");
+      dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+      item.height := pc.height;
+      link(item, self);
+      addextra (pc.quests, {TORC_GIVEN}, "");
+      exec("give torc "+pc.name, self);pause;
+      exec("say Beside several small enchantments, this item can also provide "+
+      "you with means of self-defence.",self);
+      exec("say Examine it carefully and you will know.", self);pause;
+      exec("say Our blessings will follow you, young acolyte.", self);pause;
+      exec("say Let your faith guide your ways.",self);pause;
+      exec("bow "+pc.name,self);
+      unsecure(pc);
+      goto start;
+   }
+   else
+   {
+      pause;
+      exec("say Please, not here, "+pc.name+". People are watching.", self);
+      exec("peer",self);pause;
+      exec("tokiss "+pc.name,self);           //this sub works
+   }
 
 :lecture:
-pause;
-exec("emote stares at the top of "+pc.name+"'s head coldly.",self);
-pause;
-exec("say You were given a powerful protection, "+pc.name+".", self);
-pause;
-exec("say Did you not take care of our gift to you?",self);
-exec("glare "+pc.name,self);
-pause;
-exec("sigh",self);pause;
-exec("say If you have lost or broken it, go see Sister Morenae "+
-      "for your penance.",self);
-unsecure(pc);
-goto start;
+   pause;
+   exec("emote stares at the top of "+pc.name+"'s head coldly.",self);
+   pause;
+   exec("say You were given a powerful protection, "+pc.name+".", self);
+   pause;
+   exec("say Did you not take care of our gift to you?",self);
+   exec("glare "+pc.name,self);
+   pause;
+   exec("sigh",self);pause;
+   exec("say If you have lost or broken it, go see Sister Morenae "+
+         "for your penance.",self);
+   unsecure(pc);
+   goto start;
 
 :lost:
-unsecure(pc);
-exec("say Oh well, got bored with my speeches, I guess.", self);
-goto start;
+   unsecure(pc);
+   exec("say Oh well, got bored with my speeches, I guess.", self);
+   goto start;
 }
 dilend
 
 /*One torc allows 1 at a time*/
 dilbegin one_torc();
 var
-item:unitptr;
-dest_item:unitptr;
+   item:unitptr;
+   dest_item:unitptr;
 code
 {
 :start:
-wait (SFB_DONE, (((self.outside==activator) and (self.equip!=0)) and
-((medium.equip==WEAR_NECK_1) or  (medium.equip==WEAR_NECK_2))));
-item:=activator.inside;
-while (item!=null)
+   wait (SFB_DONE, (((self.outside==activator) and (self.equip!=0)) and
+   ((medium.equip==WEAR_NECK_1) or  (medium.equip==WEAR_NECK_2))));
+   item:=activator.inside;
+   while (item!=null)
+   {
+      if ((item!=self) and (item.symname==self.symname))
       {
-if ((item!=self) and (item.symname==self.symname))
-    {
-       if (item.equip!=0) unequip(item);
-act("The hand of an angry God takes the extra torcs from you.",
-                A_ALWAYS, self.outside,null, null, TO_CHAR);
-act("One of $1n's $2N is taken by the hand of an angry God.", A_HIDEINV,
-              self.outside, self, null, TO_REST);
- dest_item:=item;
- item:=item.next;
-    destroy(dest_item);
- }
-else item:=item.next;
-}
-goto start;
+         if (item.equip!=0) unequip(item);
+         act("The hand of an angry God takes the extra torcs from you.",
+            A_ALWAYS, self.outside,null, null, TO_CHAR);
+         act("One of $1n's $2N is taken by the hand of an angry God.", A_HIDEINV,
+            self.outside, self, null, TO_REST);
+         dest_item:=item;
+         item:=item.next;
+         destroy(dest_item);
+      }
+      else
+         item:=item.next;
+   }
+   goto start;
 }
 dilend
 
@@ -538,7 +537,7 @@ end
 /* ================================================================== */
 /*                              MOBILES                               */
 /* ================================================================== */
-%mobiles
+
 %mobiles
 
 /* ---------------------------- TEACHERS ---------------------------- */
@@ -561,17 +560,12 @@ alignment 1000
 money 2 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
-/*
-removed due to new guild paths    
-special SFUN_GUILD_MASTER
-"Guild               = ~"+GUILD_UDG_CLERIC+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(1*SILVER_MULT)+"<br/>
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(5*GOLD_MULT)+"<br/>
-Guild Exclude Quest  = ~Udgaard Cleric Quitter~"
-*/
+dilcopy healer_give@clericguild();
+
+dilcopy quest_block@guilds("join", "XXX Quest",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
+dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
 
 dilcopy guild_titles@guild_paths(GUILD_UDG_CLERIC, { "Believer", "Believer",
 "Attendant", "Attendant", "Acolyte", "Acolyte", "Novice", "Novice",
@@ -582,8 +576,62 @@ dilcopy guild_titles@guild_paths(GUILD_UDG_CLERIC, { "Believer", "Believer",
 "Bishop", "Bishop", "Arch Bishop", "Arch Lady of the Church", "Patriarch",
 "Matriarch"});
 
-dilcopy healer_give@clericguild();
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
 
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_UDG_CLERIC))
+   {
+      block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, GUILD_UDG_CLERIC))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say Perhaps you have been preaching too much? " +
+      "You don't even know who " +
+      "you are now " + activator.name+ ". You already hold the position "+
+      "of divine cleric!" , self);
+      pause;
+      goto start; 
+   }
+
+   if (IsInGuilds@guilds(activator, GUILD_CLERIC_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Cleric.", self);
+      pause;
+      goto start;  
+   }
+
+   JoinGuild@guilds(activator, GUILD_UDG_CLERIC);
+
+   exec ("say The divination of higher powers now flow through your spirit.", self);
+   goto start;
+}
+dilend
 end
 
 
@@ -604,13 +652,9 @@ M_HUMAN_CLERIC_HAMMER(80, SEX_FEMALE, "harm", "heal")
 alignment 1000
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
-/*
-nit sure why this was removed probabaly guild paths again
-special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
-believers, begone $3n, you foul atheist.'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
+dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -636,12 +680,9 @@ alignment 1000
 money 10 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
-believers, begone $3n, you foul atheist.'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
+dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
 
 #define _SKILL
 #include "guilddef.h"
@@ -665,13 +706,9 @@ alignment 1000
 money 2 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
-believers, begone $3n, you foul atheist.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
+dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -698,13 +735,9 @@ alignment 1000
 money 2 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
-believers, begone $3n, you foul atheist.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
+dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -730,7 +763,8 @@ alignment 800
 money 2 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
+dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
 
 /* The DIL for the Sister Morenae - gives replacement Silver Torc to Healers.*/
 dilbegin torc_repl();
@@ -952,9 +986,11 @@ M_HUMAN_CLERIC_STAFF(150, SEX_MALE, "harm", "heal")
 alignment 1000
 money 5 IRON_PIECE
 
-special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
+dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
 dilcopy teamwork@function ("guard");
 dilcopy rescue@function ("guard");
+
 /*replaced below with routines from function*/
 /* Guard WEST (3), GUILD_UDG_CLERIC */
 /*special SFUN_GUILD_GUARD_WAY
@@ -962,7 +998,6 @@ dilcopy rescue@function ("guard");
 'Healers only!'#$1n stops $3n, and says, 'Healers only!'" */
 
 dilcopy guild_guard@guild_paths(GUILD_UDG_CLERIC, "west");
-
 end
 
 
