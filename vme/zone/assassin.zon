@@ -258,10 +258,10 @@ code
       "you are now " + activator.name+ ". You already hold the position "+
       "of mighty assassin!" , self);
       pause;
-      goto start;
+      goto start; 
    }
 
-  /* if (IsInGuilds@guilds(activator, GUILD_ASSASSIN_EXCL))
+   /* if (IsInGuilds@guilds(activator, GUILD_ASSASSIN_EXCL))
    {
       block;
       exec("say Your other guild choices exclude you from becoming an Assassin.", self);
@@ -365,12 +365,11 @@ extra {}
 weapon use on the entire continent."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 exp -100
-special SFUN_GUILD_BASIS GUILD_ASSASSIN
-/*
-special SFUN_MEMBERS_ONLY "Khorsabad Assassin#$1n hisses, 'Members only.'"
-*/
 
-dilcopy teacher_prac@guild_paths( GUILD_ASSASSIN );
+dilcopy nokill@assassin();
+dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
+dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -389,12 +388,11 @@ training..."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 exp -100
 sex SEX_FEMALE
-special SFUN_GUILD_BASIS GUILD_ASSASSIN
-/*
-special SFUN_MEMBERS_ONLY "Khorsabad Assassin#$1n says, 'But you are not a
-member.'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_ASSASSIN );
+
+dilcopy nokill@assassin();
+dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
+dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -414,13 +412,10 @@ of all ages."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_ASSASSIN
-/*
-special SFUN_MEMBERS_ONLY "Khorsabad Assassin#$1n says, 'I only educate
-assassins.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_ASSASSIN );
+dilcopy nokill@assassin();
+dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
+dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
 
 #define _SKILL
 #include "guilddef.h"
@@ -437,13 +432,10 @@ descr "Sharki stands here waiting to aid your advancement of abilities."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_ASSASSIN
-/*
-special SFUN_MEMBERS_ONLY "Khorsabad Assassin#$1n says, 'You are no
-assassin.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_ASSASSIN );
+dilcopy nokill@assassin();
+dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
+dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -461,6 +453,7 @@ extra {}
 all in black, he watches you intently from the shadows."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 special SFUN_GUILD_BASIS GUILD_ASSASSIN
+
 /*
 special SFUN_GUILD_GUARD_WAY
 ""+"east"+"#"+GUILD_ASSASSIN+"#wharf_3#guard
@@ -692,17 +685,20 @@ dilcopy abi_restrict@function(ABIL_DEX,20,0,0,"");
 
 
 dilbegin death();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
-        storenum        :       integer;
-        num             :       integer;
-        num2            :       integer;
-        diff            :       integer;
-	lev		:	integer;
-	mag_skill	:	integer;
-	skill_com	:	integer;
-        dex_skill       :       integer;
-	sho_skill	:	integer;
-        expd            :       extraptr;
+   storenum        :       integer;
+   num             :       integer;
+   num2            :       integer;
+   diff            :       integer;
+   lev		:	integer;
+   mag_skill	:	integer;
+   skill_com	:	integer;
+   dex_skill       :       integer;
+   sho_skill	:	integer;
+
 code
 {
    :init:
@@ -712,9 +708,7 @@ code
    wait(SFB_COM, ((self.outside.fighting) and
        (self.equip == WEAR_WIELD)));
 
-   expd := "$path" in self.quests;
-   if (expd == null) goto start;
-   if (GUILD_ASSASSIN in expd.names)
+   if (IsInGuild@guilds(self, GUILD_ASSASSIN))
    {
       num2 := rnd(1, 5);
       storenum := self.outside.fighting.max_hp / (4 * num2);

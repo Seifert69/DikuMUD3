@@ -658,9 +658,6 @@ exp -100
 
 dilcopy nokill@necro_guild();
 dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
-
-dilcopy quest_block@guilds("join", GOLEM_COMPLETE,
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Golem quest"});
 dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
 dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
 
@@ -681,6 +678,70 @@ dilcopy guild_titles@guild_paths(GUILD_NECROMANCER, {"Novice of The Grey Ring",
 "Invoker of Dark", "Animist", "Animist", "Spirit Invoker",
 "Spirit Invoker", "Soulforge", "Soulforge", "Necromancer", "Necromancer",
 "Archnecromancer", "Archnecromancer"});
+
+dilcopy quest_block@guilds("join", "XXX Quest",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_NECROMANCER))
+   {
+      block;
+      exec ("say Why do you stand before me? You have been banished!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, GUILD_NECROMANCER))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec("say I have warned you about the necromancer's rotten brain disease.  " +
+      "You don't even know who " +
+      "you are now " + activator.name+ ". You already hold the position "+
+      "of necromancer!" , self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuilds@guilds(activator, GUILD_NECROMANCER_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Necromancer.", self);
+      pause;
+      goto start;  
+   }
+
+   if (activator.alignment > 350)
+   {
+      block;
+      exec("say You do not possess the character to become a necromancer.", self);
+      goto start;
+   }
+
+   JoinGuild@guilds(activator, GUILD_NYM_DRUID);
+
+   exec ("say The black forces of life now flow through your veins.", self);
+   goto start;
+}
+dilend
+
 
 dilbegin necro_give();
 external

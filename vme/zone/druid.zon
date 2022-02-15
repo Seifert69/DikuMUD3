@@ -441,59 +441,19 @@ happens to be the guildmaster as well as the teacher for abilities."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 M_TREE_LARGE(100,SEX_NEUTRAL)
-dilbegin worship_me();
-var
- gift : unitptr;
- pc   : unitptr;
- gs   : extraptr;
-code
-{
-heartbeat := PULSE_SEC * 10;
-:start:
-/* log("druid worship started");*/
-wait(SFB_DONE, ((command("worship")) and (self == target)));
-pc := activator;
-secure(pc, gone);
-gs := "$path" in pc.quests;
-if (gs == null)
-{
-log("not a druid! quiting");
-goto gone;
-}
 
-if ((GUILD_NYM_DRUID in gs.names))
-{
-exec("say Greetings, Druid.  I welcome you to our home.", self);
-pause;
-exec("say I have been alive in this world for many years, and I know "+
-     "that you face great peril beyond the borders of this sanctuary.", self);
-pause;
-exec("say As a token of friendship and goodwill towards a true Druid, I "+
-     "wish to give you this helpful tool.", self);
-pause;
-gift := load("herb_staff@druid");
-gift.height := pc.height;
-
-dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",gift);
-link(gift, pc);
-act("$1n gives you $2n.", A_ALWAYS, self, gift, pc, TO_VICT);
-act("$1n gives $2n to $3n.", A_SOMEONE, self, gift, pc, TO_NOTVICT);
-log("<div class='cpy'>a real druid he got a staff!</div>");
-pause;
-exec("say I hope this will serve you well in your travels.  Return when "+
-     "you are ready to continue your education with us.", self);
-goto start;
-}
-pause;
-pause;
-:gone:
-unsecure(pc);
-goto start;
-}
-dilend
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
 dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+dilcopy quest_block@guilds("join", "XXX Quest",
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+
 
 dilcopy guild_titles@guild_paths(GUILD_NYM_DRUID, {"Novice Druid",
 "Novice Druidess", "Nature Student", "Nature Student", "Scholar of Nature",
@@ -509,10 +469,116 @@ dilcopy guild_titles@guild_paths(GUILD_NYM_DRUID, {"Novice Druid",
 "Protector of the Forest", "Druid Lord", "Druid Lady", "Archdruid",
 "Archdruidess"});
 
-#define _ABILITY
-#include "guilddef.h"
-#undef _ABILITY
 
+dilbegin master_join();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+
+   if (IsBanished@guilds(activator, GUILD_NYM_DRUID))
+   {
+      block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuild@guilds(activator, GUILD_NYM_DRUID))
+   {
+      block;
+      exec ("sigh " + activator.name, self);
+      pause;
+      exec ("say I have told you about eating those magic " +
+      "mushrooms. You don't even know who " +
+      "you are now " + activator.name+ ". You already hold the position "+
+      "of leafy druid!" , self);
+      pause;
+      goto start;
+   }
+
+   if (IsInGuilds@guilds(activator, GUILD_DRUID_EXCL))
+   {
+      block;
+      exec("say Your other guild choices exclude you from becoming a Druid.", self);
+      pause;
+      goto start;  
+   }
+
+   if (activator.alignment < -350)
+   {
+      block;
+      exec("say You, Evil One, cannot be a protector of nature.", self);
+      goto start;
+   }
+
+   JoinGuild@guilds(activator, GUILD_NYM_DRUID);
+
+   exec ("say The vitality of the forest, and the strength of the tree " +
+         "now flows through your spirit.", self);
+
+  goto start;
+}
+dilend
+
+
+dilbegin worship_me();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+var
+   gift : unitptr;
+   pc   : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 10;
+
+:start:
+   /* log("druid worship started");*/
+   wait(SFB_DONE, ((command("worship")) and (self == target)));
+   pc := activator;
+   secure(pc, gone);
+
+   if (IsInGuild@guilds(pc, GUILD_NYM_DRUID))
+   {
+      exec("say Greetings, Druid.  I welcome you to our home.", self);
+      pause;
+      exec("say I have been alive in this world for many years, and I know "+
+      "that you face great peril beyond the borders of this sanctuary.", self);
+      pause;
+      exec("say As a token of friendship and goodwill towards a true Druid, I "+
+      "wish to give you this helpful tool.", self);
+      pause;
+      gift := load("herb_staff@druid");
+      gift.height := pc.height;
+      dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",gift);
+      link(gift, pc);
+      act("$1n gives you $2n.", A_ALWAYS, self, gift, pc, TO_VICT);
+      act("$1n gives $2n to $3n.", A_SOMEONE, self, gift, pc, TO_NOTVICT);
+      log("<div class='cpy'>a real druid he got a staff!</div>");
+      pause;
+      exec("say I hope this will serve you well in your travels.  Return when "+
+      "you are ready to continue your education with us.", self);
+      goto start;
+   }
+   pause;
+   pause;
+:gone:
+   unsecure(pc);
+   goto start;
+}
+dilend
 
 end
 
@@ -529,9 +595,11 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 M_TREE_LARGE(100,SEX_NEUTRAL)
 alignment 0
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
+
 dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -548,11 +616,13 @@ extra {}
 "Elm trees are magical. They provide the best materials for wands and
 other thaumaturgical implements. This wise old elm can teach you spells."
 M_TREE_LARGE(90,SEX_NEUTRAL)
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
-dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
+
+dilcopy nokill@druid();
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -571,17 +641,17 @@ most others trees cannot, such as violent windstorms. This hardy tree
 can teach you survival skills."
 M_TREE_LARGE(94,SEX_NEUTRAL)
 alignment 0
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
-dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
+
+dilcopy nokill@druid();
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
-
-
 end
 
 guard
@@ -597,13 +667,15 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
 alignment 0
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+
+dilcopy nokill@druid();
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
 dilcopy rescue@function("black locust tree");
 dilcopy teamwork@function("black locust tree");
 dilcopy guild_guard@guild_paths(GUILD_NYM_DRUID, "north");
-dilcopy nokill@druid();
-
 end
+
 
 %objects
 

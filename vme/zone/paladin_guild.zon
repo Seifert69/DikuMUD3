@@ -728,7 +728,7 @@ code
          goto start;
       }
 
-      if ((PALADIN_FALLEN in activator.quests) or (IsBanished@guilds(activator, GUILD_PALADIN)))
+      if (IsBanished@guilds(activator, GUILD_PALADIN))
       { 
          block;
          exec ("say You are foolish, Fallen One, to even show your face " +
