@@ -121,7 +121,7 @@ static int hit_limit_number(unit_data *ch, int point)
 {
     if (IS_PC(ch))
     {
-        if (!PC_IMMORTAL(ch) && age(ch).year > PC_LIFESPAN(ch))
+        if (!PC_IMMORTAL(ch) && age(ch).getYear() > PC_LIFESPAN(ch))
         {
             return -1;
         }
@@ -200,7 +200,7 @@ int move_limit(unit_data *ch)
     {
         int pct = 0;
 
-        pct = age_graph(age(ch).year, PC_LIFESPAN(ch), 80, 130, 110, 90, 70, 50, 20, 0);
+        pct = age_graph(age(ch).getYear(), PC_LIFESPAN(ch), 80, 130, 110, 90, 70, 50, 20, 0);
         if (IS_IMMORTAL(ch))
         {
             pct = 100;
@@ -277,7 +277,7 @@ int mana_limit(unit_data *ch)
     {
         int pct = 0;
 
-        pct = age_graph(age(ch).year, PC_LIFESPAN(ch), 0, 100, 105, 110, 120, 130, 140, 0);
+        pct = age_graph(age(ch).getYear(), PC_LIFESPAN(ch), 0, 100, 105, 110, 120, 130, 140, 0);
         if (IS_IMMORTAL(ch))
         {
             pct = 100;

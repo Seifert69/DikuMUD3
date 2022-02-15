@@ -34,15 +34,15 @@ time_info_data real_time_passed(time_t t2, time_t t1)
 
     secs = (long)difftime(t2, t1);
 
-    now.hours = (secs / SECS_PER_REAL_HOUR) % 24;
-    secs -= SECS_PER_REAL_HOUR * now.hours;
+    now.setHours((secs / SECS_PER_REAL_HOUR) % 24);
+    secs -= SECS_PER_REAL_HOUR * now.getHours();
 
-    now.day = (secs / SECS_PER_REAL_DAY) % 365; /* 0.. days  */
-    secs -= SECS_PER_REAL_DAY * now.day;
+    now.setDay((secs / SECS_PER_REAL_DAY) % 365); /* 0.. days  */
+    secs -= SECS_PER_REAL_DAY * now.getDay();
 
-    now.month = -1;
+    now.setMonth(-1);
 
-    now.year = (secs / SECS_PER_REAL_YEAR); /* 0.. days  */
+    now.setYear((secs / SECS_PER_REAL_YEAR)); /* 0.. days  */
 
     return now;
 }
@@ -55,16 +55,16 @@ time_info_data mud_date(time_t t)
 
     p = (long)difftime(t, g_beginning_of_time);
 
-    mdate.hours = (p / SECS_PER_MUD_HOUR) % 24; /* 0..23 hours */
-    p -= SECS_PER_MUD_HOUR * mdate.hours;
+    mdate.setHours((p / SECS_PER_MUD_HOUR) % 24); /* 0..23 hours */
+    p -= SECS_PER_MUD_HOUR * mdate.getHours();
 
-    mdate.day = (p / SECS_PER_MUD_DAY) % MUD_MONTH; /* 0..20 days  */
-    p -= SECS_PER_MUD_DAY * mdate.day;
+    mdate.setDay((p / SECS_PER_MUD_DAY) % MUD_MONTH); /* 0..20 days  */
+    p -= SECS_PER_MUD_DAY * mdate.getDay();
 
-    mdate.month = (p / SECS_PER_MUD_MONTH) % MUD_YEAR; /* 0..8 months */
-    p -= SECS_PER_MUD_MONTH * mdate.month;
+    mdate.setMonth((p / SECS_PER_MUD_MONTH) % MUD_YEAR); /* 0..8 months */
+    p -= SECS_PER_MUD_MONTH * mdate.getMonth();
 
-    mdate.year = (p / SECS_PER_MUD_YEAR); /* [0..[ years */
+    mdate.setYear((p / SECS_PER_MUD_YEAR)); /* [0..[ years */
 
     return mdate;
 }
@@ -88,16 +88,16 @@ time_info_data mud_time_passed(time_t t2, time_t t1)
 
     secs = (long)difftime(t2, t1);
 
-    now.hours = (secs / SECS_PER_MUD_HOUR) % 24; /* 0..23 hours */
-    secs -= SECS_PER_MUD_HOUR * now.hours;
+    now.setHours((secs / SECS_PER_MUD_HOUR) % 24); /* 0..23 hours */
+    secs -= SECS_PER_MUD_HOUR * now.getHours();
 
-    now.day = (secs / SECS_PER_MUD_DAY) % MUD_MONTH; /* 0..20 days  */
-    secs -= SECS_PER_MUD_DAY * now.day;
+    now.setDay((secs / SECS_PER_MUD_DAY) % MUD_MONTH); /* 0..20 days  */
+    secs -= SECS_PER_MUD_DAY * now.getDay();
 
-    now.month = (secs / SECS_PER_MUD_MONTH) % MUD_YEAR; /* 0..8 months */
-    secs -= SECS_PER_MUD_MONTH * now.month;
+    now.setMonth((secs / SECS_PER_MUD_MONTH) % MUD_YEAR); /* 0..8 months */
+    secs -= SECS_PER_MUD_MONTH * now.getMonth();
 
-    now.year = (secs / SECS_PER_MUD_YEAR); /* 0..XX? years */
+    now.setYear((secs / SECS_PER_MUD_YEAR)); /* 0..XX? years */
 
     return now;
 }
@@ -121,7 +121,7 @@ time_info_data age(unit_data *ch)
 /* Here comes the code */
 static void another_hour(time_info_data time_data)
 {
-    switch (time_data.hours)
+    switch (time_data.getHours())
     {
         case 5:
             g_sunlight = SUN_RISE;
@@ -153,15 +153,15 @@ static void weather_change(zone_type *zone, time_info_data time_data)
     int diff = 0;
     int change = 0;
 
-    if (time_data.month <= 2)
+    if (time_data.getMonth() <= 2)
     { /* Winter */
         diff = (zone->cgetWeather().getPressure() <= (zone->cgetWeather().getBase() - 25) ? 2 : -2);
     }
-    else if (time_data.month <= 4)
+    else if (time_data.getMonth() <= 4)
     { /* Spring */
         diff = (zone->cgetWeather().getPressure() <= (zone->cgetWeather().getBase() + 5) ? 2 : -2);
     }
-    else if (time_data.month <= 6)
+    else if (time_data.getMonth() <= 6)
     { /* Summer */
         diff = (zone->cgetWeather().getPressure() <= (zone->cgetWeather().getBase() + 20) ? 2 : -2);
     }
@@ -319,9 +319,7 @@ static void weather_change(zone_type *zone, time_info_data time_data)
 
 void update_time_and_weather()
 {
-    time_info_data time_info;
-
-    time_info = mud_date();
+    time_info_data time_info = mud_date();
 
     another_hour(time_info);
 
@@ -348,15 +346,15 @@ void boot_time_and_weather()
 
     time_info_data time_info = mud_time_passed(time(nullptr), g_beginning_of_time);
 
-    if (time_info.hours == 5)
+    if (time_info.getHours() == 5)
     {
         g_sunlight = SUN_RISE;
     }
-    else if (6 <= time_info.hours && time_info.hours <= 20)
+    else if (6 <= time_info.getHours() && time_info.getHours() <= 20)
     {
         g_sunlight = SUN_LIGHT;
     }
-    else if (time_info.hours == 21)
+    else if (time_info.getHours() == 21)
     {
         g_sunlight = SUN_SET;
     }
@@ -365,13 +363,19 @@ void boot_time_and_weather()
         g_sunlight = SUN_DARK;
     }
 
-    slog(LOG_OFF, 0, "   Current Gametime: %dH %dD %dM %dY.", time_info.hours, time_info.day, time_info.month, time_info.year);
+    slog(LOG_OFF,
+         0,
+         "   Current Gametime: %dH %dD %dM %dY.",
+         time_info.getHours(),
+         time_info.getDay(),
+         time_info.getMonth(),
+         time_info.getYear());
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.begin(); z++)
     {
         z->second->getWeather().setPressure(z->second->cgetWeather().getBase());
 
-        if (time_info.month >= 7 && time_info.month <= 12)
+        if (time_info.getMonth() >= 7 && time_info.getMonth() <= 12)
         {
             z->second->getWeather().incrementPressureBy(number(-6, 6));
         }

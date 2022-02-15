@@ -21,6 +21,7 @@
 #include <cstring>
 #include <forward_list>
 #include <map>
+#include <ostream>
 #include <vector>
 
 #ifndef MPLEX_COMPILE
@@ -55,10 +56,48 @@ class zone_reset_cmd;
 
 /* This structure is purely intended to be an easy way to transfer */
 /* and return information about time (real or mudwise).            */
-struct time_info_data
+class time_info_data
 {
-    long hours, day, month;
-    long year;
+public:
+    time_info_data() = default;
+    time_info_data(long h, long d, long m, long y)
+        : hours(h)
+        , day(d)
+        , month(m)
+        , year(y)
+    {
+    }
+    time_info_data(const time_info_data &) = default;
+    time_info_data(time_info_data &&) = default;
+    time_info_data &operator=(const time_info_data &) = default;
+    time_info_data &operator=(time_info_data &&) = default;
+    ~time_info_data() = default;
+
+    friend bool operator==(const time_info_data &left, const time_info_data &right) noexcept
+    {
+        return left.hours == right.hours && left.day == right.day && left.month == right.month && left.year == right.year;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const time_info_data &value)
+    {
+        os << "h:" << value.hours << " d:" << value.day << " m:" << value.month << " y:" << value.year;
+        return os;
+    }
+
+    long getHours() const { return hours; }
+    long getDay() const { return day; }
+    long getMonth() const { return month; }
+    long getYear() const { return year; }
+
+    void setHours(long value) { hours = value; }
+    void setDay(long value) { day = value; }
+    void setMonth(long value) { month = value; }
+    void setYear(long value) { year = value; }
+
+private:
+    long hours{0};
+    long day{0};
+    long month{0};
+    long year{0};
 };
 
 /* --------------------- DESCRIPTOR STRUCTURES -------------------- */

@@ -1081,11 +1081,8 @@ static void stat_data(const unit_data *ch, unit_data *u)
         if (IS_PC(u))
         {
             /* Stat on a player  */
-            time_info_data tid1;
-            time_info_data tid2;
-
-            tid1 = age(u);
-            tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
+            time_info_data tid1 = age(u);
+            time_info_data tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
 
             strcpy(tmp, ctime(&PC_TIME(u).connect));
             auto msg2 = diku::format_to_str("----------------- PLAYER -------------------<br/>"
@@ -1119,13 +1116,13 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                             PC_COND(u, THIRST),
                                             PC_ACCOUNT(u).last4 == -1 ? "NONE" : "SET",
                                             sprintbit(bits1, PC_FLAGS(u), g_pc_flags),
-                                            tid1.year,
-                                            tid1.month,
-                                            tid1.day,
-                                            tid1.hours,
+                                            tid1.getYear(),
+                                            tid1.getMonth(),
+                                            tid1.getDay(),
+                                            tid1.getHours(),
                                             PC_LIFESPAN(u),
-                                            tid2.day,
-                                            tid2.hours,
+                                            tid2.getDay(),
+                                            tid2.getHours(),
                                             PC_TIME(u).played,
                                             tmp,
                                             ctime(&PC_TIME(u).creation));

@@ -454,24 +454,24 @@ void clist()
 
                         time_t val = 0;
                         val = secs / SECS_PER_REAL_HOUR;
-                        tid2.hours = val % 24;
-                        tid2.day = val / 24;
-                        tid2.month = -1;
-                        tid2.year = val / (365 * 24);
+                        tid2.setHours(val % 24);
+                        tid2.setDay(val / 24);
+                        tid2.setMonth(-1);
+                        tid2.setYear(val / (365 * 24));
 
-                        if (tid2.year > 0)
+                        if (tid2.getYear() > 0)
                         {
-                            std::cout << " " << (long)tid2.year << " years";
+                            std::cout << " " << tid2.getYear() << " years";
                             tmp = true;
                         }
-                        if (tid2.day > 0)
+                        if (tid2.getDay() > 0)
                         {
-                            std::cout << " " << (long)tid2.day << " days";
+                            std::cout << " " << tid2.getDay() << " days";
                             tmp = true;
                         }
-                        if (tid2.hours > 0)
+                        if (tid2.getHours() > 0)
                         {
-                            std::cout << " " << (long)tid2.hours << " hours";
+                            std::cout << " " << tid2.getHours() << " hours";
                             tmp = true;
                         }
                         if (tmp)
