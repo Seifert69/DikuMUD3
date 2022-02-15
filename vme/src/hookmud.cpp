@@ -197,7 +197,7 @@ int cMultiHook::Read()
             {
                 ubit8 *b = (ubit8 *)data;
 
-                d->nPort = bread_ubit16(&b);
+                d->setMplexPortNum(bread_ubit16(&b));
                 d->nLine = bread_ubit8(&b);
                 d->setHostname(reinterpret_cast<const char *>(b));
             }

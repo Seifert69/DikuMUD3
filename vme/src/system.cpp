@@ -278,6 +278,16 @@ void descriptor_data::setHostname(const char *value)
     host[sizeof(host) - 1] = 0;
 }
 
+ubit16 descriptor_data::getMplexPortNum() const
+{
+    return nPort;
+}
+
+void descriptor_data::setMplexPortNum(ubit16 value)
+{
+    nPort = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
