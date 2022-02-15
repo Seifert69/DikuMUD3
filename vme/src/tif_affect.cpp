@@ -962,7 +962,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
 
             SET_BIT(UNIT_FLAGS(UNIT_CONTAINS(unit)), UNIT_FL_BURIED);
 
-            naf.id = ID_BURIED;
+            naf.setID(ID_BURIED);
             naf.duration = 0;
             naf.beat = WAIT_SEC * SECS_PER_REAL_HOUR;
             naf.firstf_i = TIF_NONE;

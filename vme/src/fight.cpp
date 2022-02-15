@@ -141,7 +141,7 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 {
     if (obj && IS_OBJ(obj) && (OBJ_TYPE(obj) == ITEM_WEAPON) && (OBJ_VALUE(obj, 3) != RACE_DO_NOT_USE))
     {
-        if (OBJ_VALUE(obj, 3) == opponent_race)  
+        if (OBJ_VALUE(obj, 3) == opponent_race)
         {
             return true;
         }
@@ -153,9 +153,9 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
             return false;
         }
 
-        for (int i=0; i+1 < exd->vals.Length(); i += 2)
+        for (int i = 0; i + 1 < exd->vals.Length(); i += 2)
         {
-            if ((opponent_race >= exd->vals.Value(i) && (opponent_race <= exd->vals.Value(i+1))))
+            if ((opponent_race >= exd->vals.Value(i) && (opponent_race <= exd->vals.Value(i + 1))))
             {
                 return true;
             }
@@ -164,7 +164,6 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 
     return false;
 }
-
 
 /* Given an amount of experience, what is the 'virtual' level of the char? */
 int virtual_level(unit_data *ch)
@@ -1183,7 +1182,7 @@ void damage(unit_data *ch,
         {
             unit_affected_type af;
 
-            af.id = ID_MAX_ATTACKER;
+            af.setID(ID_MAX_ATTACKER);
             af.duration = 4;
             af.beat = WAIT_SEC * 60 * 5;
             af.firstf_i = TIF_NONE;

@@ -625,7 +625,7 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
             return 1;
         }
 
-        if (pBuf->Read16(&af.id))
+        if (af.readIDFrom(*pBuf))
         {
             return 1;
         }
@@ -1580,10 +1580,11 @@ void bonus_setup(unit_data *u)
 
         for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->next)
         {
-            if ((af->id == ID_TRANSFER_STR) || (af->id == ID_TRANSFER_DEX) || (af->id == ID_TRANSFER_CON) || (af->id == ID_TRANSFER_CHA) ||
-                (af->id == ID_TRANSFER_BRA) || (af->id == ID_TRANSFER_MAG) || (af->id == ID_TRANSFER_DIV) || (af->id == ID_TRANSFER_HPP))
+            if ((af->getID() == ID_TRANSFER_STR) || (af->getID() == ID_TRANSFER_DEX) || (af->getID() == ID_TRANSFER_CON) ||
+                (af->getID() == ID_TRANSFER_CHA) || (af->getID() == ID_TRANSFER_BRA) || (af->getID() == ID_TRANSFER_MAG) ||
+                (af->getID() == ID_TRANSFER_DIV) || (af->getID() == ID_TRANSFER_HPP))
                 af->data[1] = bonus_map_b(af->data[1]);
-            else if ((af->id == ID_SKILL_TRANSFER) || (af->id == ID_SPELL_TRANSFER) || (af->id == ID_WEAPON_TRANSFER))
+            else if ((af->getID() == ID_SKILL_TRANSFER) || (af->getID() == ID_SPELL_TRANSFER) || (af->getID() == ID_WEAPON_TRANSFER))
                 af->data[1] = bonus_map_b(af->data[1]);
         }
     }

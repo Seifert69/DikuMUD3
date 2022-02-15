@@ -63,7 +63,13 @@ class zone_reset_cmd;
 class unit_affected_type : public basedestruct
 {
 public:
-    sbit16 id;
+    sbit16 getID() const;
+    void setID(sbit16 value);
+    int readIDFrom(CByteBuffer &buf);
+
+private:
+    sbit16 id{0}; //
+public:
     ubit16 beat;     /* Beat in 1/4 of secs, 0 = None */
     sbit16 duration; /* How many beats until end      */
 

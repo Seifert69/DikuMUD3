@@ -131,7 +131,7 @@ int has_found_door(unit_data *pc, int dir)
     {
         for (af = UNIT_AFFECTED(UNIT_IN(pc)); af; af = af->next)
         {
-            if (af->id == ID_SPOTTED_SECRET && PC_ID(pc) == af->data[0])
+            if (af->getID() == ID_SPOTTED_SECRET && PC_ID(pc) == af->data[0])
             {
                 return TRUE;
             }

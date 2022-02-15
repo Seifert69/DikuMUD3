@@ -69,7 +69,7 @@ void create_affect(unit_data *unit, unit_affected_type *af)
         af = link_alloc_affect(unit, af);
         af->event = nullptr;
         /* If less than zero it is a transfer! */
-        if (af->id >= 0)
+        if (af->getID() >= 0)
         {
             if (af->applyf_i >= 0)
             {
@@ -170,7 +170,7 @@ void destroy_affect(unit_affected_type *af)
 {
     /* It is assumed that none of these function calls can */
     /* destroy the affect.                                 */
-    if (af->id >= 0)
+    if (af->getID() >= 0)
     {
         if (af->applyf_i >= 0)
         {
@@ -226,7 +226,7 @@ unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
-        if (af->id == id)
+        if (af->getID() == id)
         {
             return af;
         }
@@ -241,7 +241,7 @@ void affect_beat(void *p1, void *p2)
     unit_affected_type *af = (unit_affected_type *)p1;
     int destroyed = 0;
 
-    assert(af->id >= 0); /* Negative ids (transfer) dont have beats */
+    assert(af->getID() >= 0); /* Negative ids (transfer) dont have beats */
 
     /* Used to be assert(af->beat > 0);  */
     /* But crashes game, I've set 0 to 8 */
@@ -295,7 +295,7 @@ void apply_affect(unit_data *unit)
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
-        if ((af->id >= 0) && (af->applyf_i >= 0))
+        if ((af->getID() >= 0) && (af->applyf_i >= 0))
         {
             if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
             {
@@ -312,7 +312,7 @@ void start_affect(unit_data *unit)
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
-        if ((af->id >= 0) && (af->beat > 0))
+        if ((af->getID() >= 0) && (af->beat > 0))
         {
             if (af->event)
             {

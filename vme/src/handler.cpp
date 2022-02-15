@@ -589,11 +589,11 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
 
     for (af = UNIT_AFFECTED(obj); af; af = af->next)
     {
-        if (af->id < 0) /* It is a transfer affect! */
+        if (af->getID() < 0) /* It is a transfer affect! */
         {
             newaf = *af;
-            newaf.id = -newaf.id; /* No longer a transfer    */
-            newaf.duration = -1;  /* Permanent until unequip */
+            newaf.setID(-newaf.getID()); /* No longer a transfer    */
+            newaf.duration = -1;         /* Permanent until unequip */
             create_affect(ch, &newaf);
         }
     }
@@ -615,11 +615,12 @@ unit_data *unequip_object(unit_data *obj)
 
     for (af = UNIT_AFFECTED(obj); af; af = af->next)
     {
-        if (af->id < 0) /* It is a transfer affect! */
+        if (af->getID() < 0) /* It is a transfer affect! */
         {
             for (caf = UNIT_AFFECTED(ch); caf; caf = caf->next)
             {
-                if ((-caf->id == af->id) && (caf->duration == -1) && (caf->data[0] == af->data[0]) && (caf->data[1] == af->data[1]) &&
+                if ((-caf->getID() == af->getID()) && (caf->duration == -1) && (caf->data[0] == af->data[0]) &&
+                    (caf->data[1] == af->data[1]) &&
                     // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
                     (caf->applyf_i == af->applyf_i) && (caf->firstf_i == af->firstf_i) && (caf->lastf_i == af->lastf_i) &&
                     (caf->tickf_i == af->tickf_i))

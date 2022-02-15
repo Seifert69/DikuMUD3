@@ -387,7 +387,7 @@ bool affect_vector_string(unit_data *obj, std::string &s)
 
     for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
     {
-        switch (af->id)
+        switch (af->getID())
         {
             case ID_TRANSFER_STR:
                 bonusvector[0] += af->data[1];
@@ -447,7 +447,7 @@ bool affect_vector_list(unit_data *obj, std::string &s)
 
     for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
     {
-        switch (af->id)
+        switch (af->getID())
         {
             case ID_SPELL_TRANSFER:
                 s += "Spl,";
@@ -627,7 +627,7 @@ void process_affects(unit_data *pUnit)
         lastf = (pAf->lastf_i == TIF_NONE);
         applyf = (pAf->applyf_i == APF_NONE);
 
-        switch (pAf->id)
+        switch (pAf->getID())
         {
             case ID_TRANSFER_MAG:
                 firstf = (pAf->firstf_i == TIF_MAG_INC);
@@ -635,11 +635,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_MAG)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -649,11 +649,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_DIV)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -663,11 +663,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_STR)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -677,11 +677,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_DEX)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -691,11 +691,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_CON)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -705,11 +705,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_CHA)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -719,11 +719,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_BRA)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -733,23 +733,23 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->data[0] != ABIL_HP)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
             case ID_HIDDEN_DIFFICULTY:
                 if (!is_in(pAf->data[0], 0, 5))
                 {
-                    dmc_error(TRUE, "%s: Illegal direction %d!", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal direction %d!", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                     pAf->data[0] = 0;
                 }
                 if (!is_in(pAf->data[1], 0, SKILL_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal skill %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal skill %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                     pAf->data[0] = 0;
                 }
                 break;
@@ -770,11 +770,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_SPELL_ADJ);
                 if (!is_in(pAf->data[0], 0, SPL_TREE_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -784,11 +784,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_SKILL_ADJ);
                 if (!is_in(pAf->data[0], 0, SKI_TREE_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -798,11 +798,11 @@ void process_affects(unit_data *pUnit)
                 applyf = (pAf->applyf_i == APF_WEAPON_ADJ);
                 if (!is_in(pAf->data[0], 0, WPN_TREE_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->getID());
                 }
                 if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->getID());
                 }
                 break;
 
@@ -828,25 +828,25 @@ void process_affects(unit_data *pUnit)
                 break;
 
             default:
-                dmc_error(TRUE, "%s: Illegal affect ID (%d).", UNIT_IDENT(pUnit), pAf->id);
+                dmc_error(TRUE, "%s: Illegal affect ID (%d).", UNIT_IDENT(pUnit), pAf->getID());
                 break;
         }
 
         if (firstf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal firstf %d in id %d.", UNIT_IDENT(pUnit), pAf->firstf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal firstf %d in id %d.", UNIT_IDENT(pUnit), pAf->firstf_i, pAf->getID());
         }
         if (tickf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal tickf %d in id %d.", UNIT_IDENT(pUnit), pAf->tickf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal tickf %d in id %d.", UNIT_IDENT(pUnit), pAf->tickf_i, pAf->getID());
         }
         if (lastf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal lastf %d in id %d.", UNIT_IDENT(pUnit), pAf->lastf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal lastf %d in id %d.", UNIT_IDENT(pUnit), pAf->lastf_i, pAf->getID());
         }
         if (applyf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal applyf %d in id %d.", UNIT_IDENT(pUnit), pAf->applyf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal applyf %d in id %d.", UNIT_IDENT(pUnit), pAf->applyf_i, pAf->getID());
         }
     }
 }

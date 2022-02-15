@@ -345,7 +345,7 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
 
         for (taf = UNIT_AFFECTED(unit); taf; taf = taf->next)
         {
-            if ((taf->id == ID_NATURAL_ARMOUR) && (taf != af))
+            if ((taf->getID() == ID_NATURAL_ARMOUR) && (taf != af))
             {
                 af->data[1] = taf->data[1];
                 break;
@@ -386,7 +386,7 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 
         for (taf = UNIT_AFFECTED(unit); taf; taf = taf->next)
         {
-            if ((taf->id == ID_SPEED) && (taf != af))
+            if ((taf->getID() == ID_SPEED) && (taf != af))
             {
                 af->data[2] = -1;
                 break;

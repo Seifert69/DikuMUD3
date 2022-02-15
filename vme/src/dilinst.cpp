@@ -2654,7 +2654,7 @@ void dilfi_ada(dilprg *p)
                     {
                         unit_affected_type af;
 
-                        af.id = v2->val.num;
+                        af.setID(v2->val.num);
                         af.duration = v3->val.num;
                         af.beat = v4->val.num;
 
@@ -2696,7 +2696,7 @@ void dilfi_ada(dilprg *p)
 
                         unit_affected_type af;
 
-                        af.id = v2->val.num;  // Negative for object transfers
+                        af.setID(v2->val.num);  // Negative for object transfers
                         af.duration = v3->val.num;
                         af.beat = v4->val.num;
 

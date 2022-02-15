@@ -149,6 +149,21 @@ int unit_affected_type::destruct_classindex()
     return DR_AFFECT;
 }
 
+sbit16 unit_affected_type::getID() const
+{
+    return id;
+}
+
+void unit_affected_type::setID(sbit16 value)
+{
+    id = value;
+}
+
+int unit_affected_type::readIDFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&id);
+}
+
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

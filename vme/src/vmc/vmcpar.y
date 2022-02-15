@@ -935,7 +935,7 @@ affect_fields   : affect_field
 
 affect_field    : ID number
     {
-        cur_aff->id = $2;
+        cur_aff->setID($2);
     }
     | DURATION number
     {
