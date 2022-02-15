@@ -88,6 +88,9 @@ public:
     ubit16 getMplexPortNum() const;
     void setMplexPortNum(ubit16 value);
 
+    ubit8 getSerialLine() const;
+    void setSerialLine(ubit8 value);
+
 private:
     time_t logon{0};            // Time of last connect
     cMultiHook *multi{nullptr}; // Multi element pointer
@@ -96,9 +99,9 @@ private:
     int state{0};               // Locally used in each fptr
     char host[50]{0};           // hostname
     ubit16 nPort{0};            // Mplex port
+    ubit8 nLine{0};             // Serial Line
 
 public:
-    ubit8 nLine;    /* Serial Line                       */
     int wait;       /* wait for how many loops           */
     ubit16 timer;   /* num of hours idleness for mortals */
     ubit32 replyid; /* Used for 'tell reply'             */

@@ -80,7 +80,7 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),
-                                           d->nLine == 255 ? "---" : itoa(d->nLine),
+                                           d->getSerialLine() == 255 ? "---" : itoa(d->getSerialLine()),
                                            d->getHostname());
             }
             else
@@ -93,7 +93,7 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),
-                                           d->nLine == 255 ? "---" : itoa(d->nLine),
+                                           d->getSerialLine() == 255 ? "---" : itoa(d->getSerialLine()),
                                            d->getHostname());
             }
         }

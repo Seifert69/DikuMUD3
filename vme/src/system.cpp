@@ -288,6 +288,16 @@ void descriptor_data::setMplexPortNum(ubit16 value)
     nPort = value;
 }
 
+ubit8 descriptor_data::getSerialLine() const
+{
+    return nLine;
+}
+
+void descriptor_data::setSerialLine(ubit8 value)
+{
+    nLine = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
