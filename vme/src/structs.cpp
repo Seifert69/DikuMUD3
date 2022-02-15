@@ -488,6 +488,15 @@ void zone_type::incrementNumOfObjects()
     ++no_objs;
 }
 
+void zone_type::incrementNumOfNPCs()
+{
+    ++no_npcs;
+}
+ubit16 zone_type::getNumOfNPCs() const
+{
+    return no_npcs;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

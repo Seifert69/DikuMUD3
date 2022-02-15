@@ -327,7 +327,7 @@ void generate_file_indexes(FILE *f, zone_type *zone)
 
         if (fi->getType() == UNIT_ST_NPC)
         {
-            zone->no_npcs++;
+            zone->incrementNumOfNPCs();
             npc_num++;
         }
 

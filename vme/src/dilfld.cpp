@@ -1326,7 +1326,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
-                        v->val.num = ((zone_type *)v1->val.ptr)->no_npcs;
+                        v->val.num = ((zone_type *)v1->val.ptr)->getNumOfNPCs();
                     }
                     else
                     {
