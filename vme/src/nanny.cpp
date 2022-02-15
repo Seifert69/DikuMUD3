@@ -353,7 +353,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         update_lasthost(this, inet_addr(CHAR_DESCRIPTOR(this)->getHostname()));
 
         CHAR_DESCRIPTOR(this)->setHoursPlayerIdle(0);
-        CHAR_DESCRIPTOR(this)->prompt_mode = PROMPT_EXPECT;
+        CHAR_DESCRIPTOR(this)->setPromptMode(PROMPT_EXPECT);
         CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
         PC_TIME(this).connect = ::time(nullptr);
         set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);

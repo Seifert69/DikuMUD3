@@ -272,7 +272,7 @@ void game_event()
 
             point->setLoopWaitCounter(1);
             point->setHoursPlayerIdle(0);
-            point->prompt_mode = PROMPT_EXPECT;
+            point->setPromptMode(PROMPT_EXPECT);
 
             if (point->snoop.getSnoopBy())
             {
@@ -288,11 +288,11 @@ void game_event()
     /* give the people some prompts */
     for (point = g_descriptor_list; point; point = point->next)
     {
-        if (point->prompt_mode == PROMPT_EXPECT)
+        if (point->getPromptMode() == PROMPT_EXPECT)
         {
             send_prompt(point->character);
             send_to_descriptor("<go-ahead/>", point);
-            point->prompt_mode = PROMPT_IGNORE;
+            point->setPromptMode(PROMPT_IGNORE);
         }
     }
 

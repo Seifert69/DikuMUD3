@@ -393,6 +393,16 @@ const void *descriptor_data::getEditingReference() const
     return editref;
 }
 
+int descriptor_data::getPromptMode() const
+{
+    return prompt_mode;
+}
+
+void descriptor_data::setPromptMode(int value)
+{
+    prompt_mode = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)

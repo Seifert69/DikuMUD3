@@ -115,6 +115,9 @@ public:
     const void *getEditingReference() const;
     void setEditReference(void *value);
 
+    int getPromptMode() const;
+    void setPromptMode(int value);
+
 private:
     time_t logon{0};                       // Time of last connect
     cMultiHook *multi{nullptr};            // Multi element pointer
@@ -131,9 +134,9 @@ private:
     PostEditFunctionPtr postedit{nullptr}; //
     unit_data *editing{nullptr};           //
     void *editref{nullptr};                // pointer to "where we are editing". when using (volatile) extras + boards
+    int prompt_mode{0};                    // control of prompt-printing
 
 public:
-    int prompt_mode;                     /* control of prompt-printing       */
     char last_cmd[MAX_INPUT_LENGTH + 1]; /* the last entered cmd_str         */
     char history[MAX_INPUT_LENGTH + 1];  /* simple command history           */
     cQueue qInput;                       /* q of unprocessed input           */

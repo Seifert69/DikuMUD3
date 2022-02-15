@@ -134,9 +134,9 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
 {
     if (d && messg && *messg)
     {
-        if (d->prompt_mode == PROMPT_IGNORE)
+        if (d->getPromptMode() == PROMPT_IGNORE)
         {
-            d->prompt_mode = PROMPT_EXPECT;
+            d->setPromptMode(PROMPT_EXPECT);
             send_to_descriptor("<br/>", d);
         }
 
