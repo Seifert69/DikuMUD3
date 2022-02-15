@@ -275,7 +275,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    zone->getFilename(),
                                    zone->getAccessLevel(),
                                    zone->getTitle() ? zone->getTitle() : "",
-                                   zone->loadlevel,
+                                   zone->getLevelRequiredToLoadItems(),
                                    zone->payonly,
                                    zone->getNumOfFileIndexes(),
                                    zone->getNumOfRooms(),

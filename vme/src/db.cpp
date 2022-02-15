@@ -511,7 +511,7 @@ void generate_zone_indexes()
         }
 
         z->setAccessLevel(access);
-        z->loadlevel = loadlevel;
+        z->setLevelRequiredToLoadItems(loadlevel);
         z->payonly = payonly;
 
         /* More data read here */

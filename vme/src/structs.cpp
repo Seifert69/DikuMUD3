@@ -532,6 +532,21 @@ void zone_type::setAccessLevel(ubit8 value)
     access = value;
 }
 
+ubit8 zone_type::getLevelRequiredToLoadItems() const
+{
+    return loadlevel;
+}
+
+ubit8 *zone_type::getLevelRequiredToLoadItemsPtr()
+{
+    return &loadlevel;
+}
+
+void zone_type::setLevelRequiredToLoadItems(ubit8 value)
+{
+    loadlevel = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
