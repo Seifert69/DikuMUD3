@@ -6718,7 +6718,7 @@ void dilfe_weat(dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NORM;
-    v->val.num = unit_zone(p->sarg->owner)->getWeather().getSky();
+    v->val.num = unit_zone(p->sarg->owner)->cgetWeather().getSky();
     p->stack.push(v);
 }
 

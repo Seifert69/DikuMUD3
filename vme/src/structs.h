@@ -59,6 +59,10 @@ struct cmp_str
 /* A linked/sorted list of all the zones in the game */
 class zone_type
 {
+    // TODO Once DIL is figured out - hopeful we can remove the need to give pointers to internal class members
+    //      then all the *Ptr variant functions can go
+
+    // TODO Add [[nodiscard]] to getters() once interface is stable
 public:
     zone_type();
     ~zone_type();
@@ -66,8 +70,6 @@ public:
     cNamelist &getCreators();
 
     const char *getName() const;
-    // Used in one place (dilfld.cpp:2227) that needs a non-const pointer - will be removed at a later date
-    // Once whole path can be checked on why modifiable pointer is needed
     char *getNamePtr();
     void setName(char *value);
 
@@ -86,15 +88,17 @@ public:
     char **getFilenamePtrPtr();
     void setFilename(char *value);
 
-    const std::map<const char *, file_index_type *, cmp_str> &getFileIndexMap() const;
+    // TODO stop exposing the external container
+    const std::map<const char *, file_index_type *, cmp_str> &cgetFileIndexMap() const;
     std::map<const char *, file_index_type *, cmp_str> &getFileIndexMap();
 
-    const zone_reset_cmd *getZoneResetCommands() const;
+    const zone_reset_cmd *cgetZoneResetCommands() const;
     zone_reset_cmd *getZoneResetCommands();
     void setZoneResetCommands(zone_reset_cmd *value);
 
-    const std::map<const char *, diltemplate *, cmp_str> &getTemplate() const;
-    std::map<const char *, diltemplate *, cmp_str> &getTemplate();
+    // TODO stop exposing the external container
+    const std::map<const char *, diltemplate *, cmp_str> &cgetDILTemplate() const;
+    std::map<const char *, diltemplate *, cmp_str> &getDILTemplate();
 
     void setZoneNumber(ubit16 value);
 
@@ -139,6 +143,7 @@ public:
 
     class Weather
     {
+        // TODO this should be extracted to global namespace and the functions from weather.cpp moved here too
     public:
         int getPressure() const { return pressure; }
         int getChange() const { return change; }
@@ -154,47 +159,41 @@ public:
         void setSky(int value) { sky = value; }
 
     private:
-        int pressure{0}; /* How is the pressure ( Mb )            */
-        int change{0};   /* How fast and what way does it change. */
-        int sky{0};      /* How is the sky.                       */
-        int base{0};     /* What is the basis pressure like?      */
+        int pressure{0}; // How is the pressure ( Mb )
+        int change{0};   // How fast and what way does it change.
+        int sky{0};      // How is the sky.
+        int base{0};     // What is the basis pressure like?
     };
-    const Weather &getWeather() const;
+    const Weather &cgetWeather() const;
     Weather &getWeather();
 
 private:
-    cNamelist creators;      /* List of creators of zone         */
-    char *name{nullptr};     /* Unique in list                   */
-    char *title{nullptr};    /* A nice looking zone title        */
-    char *notes{nullptr};    /* Creator notes to zone            */
-    char *help{nullptr};     /* User-Help to zone                */
-    char *filename{nullptr}; /* The filename of this file        */
-
-    unit_data *rooms{nullptr};   // unit pointer to the base rooms, used in vmc really
-    unit_data *objects{nullptr}; // unit pointer to the base objects, used in vmc really
-    unit_data *npcs{nullptr};    // unit pointer to the base npcs, used in vmc really
-
-    std::map<const char *, file_index_type *, cmp_str> mmp_fi;
-
-    zone_reset_cmd *zri{nullptr}; /* List of Zone reset commands      */
-
-    std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
-
-    ubit8 **spmatrix{nullptr}; /* Shortest Path Matrix             */
-    ubit16 zone_no{0};         /* Zone index counter (spmatrix)    */
-    ubit16 no_of_fi{0};        /* Number of fi's in the list       */
-    ubit16 zone_time{0};       /* How often to reset zone          */
-    ubit16 no_rooms{0};        /* The number of rooms              */
-    ubit16 no_objs{0};         /* */
-    ubit16 no_npcs{0};         /* */
-    ubit8 reset_mode{0};       /* when/how to reset zone           */
-    ubit16 no_tmpl{0};         /* number of DIL templates          */
-    ubit8 access{0};           /* Access Level 0 = highest (root)  */
-    ubit8 loadlevel{0};        /* Level required to load items     */
-    ubit8 payonly{0};          /* TRUE when only 4 paying players  */
-    char *dilfilepath{nullptr};
-
-    Weather weather;
+    cNamelist creators;                                        // List of creators of zone
+    char *name{nullptr};                                       // Unique in list
+    char *title{nullptr};                                      // A nice looking zone title
+    char *notes{nullptr};                                      // Creator notes to zone
+    char *help{nullptr};                                       // User-Help to zone
+    char *filename{nullptr};                                   // The filename of this file
+    unit_data *rooms{nullptr};                                 // unit pointer to the base rooms, used in vmc really
+    unit_data *objects{nullptr};                               // unit pointer to the base objects, used in vmc really
+    unit_data *npcs{nullptr};                                  // unit pointer to the base npcs, used in vmc really
+    std::map<const char *, file_index_type *, cmp_str> mmp_fi; //
+    zone_reset_cmd *zri{nullptr};                              // List of Zone reset commands
+    std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;   //
+    ubit8 **spmatrix{nullptr};                                 // Shortest Path Matrix
+    ubit16 zone_no{0};                                         // Zone index counter (spmatrix)
+    ubit16 no_of_fi{0};                                        // Number of fi's in the list
+    ubit16 zone_time{0};                                       // How often to reset zone
+    ubit16 no_rooms{0};                                        // The number of rooms
+    ubit16 no_objs{0};                                         //
+    ubit16 no_npcs{0};                                         //
+    ubit8 reset_mode{0};                                       // when/how to reset zone
+    ubit16 no_tmpl{0};                                         // number of DIL templates
+    ubit8 access{0};                                           // Access Level 0 = highest (root)
+    ubit8 loadlevel{0};                                        // Level required to load items
+    ubit8 payonly{0};                                          // TRUE when only 4 paying players
+    char *dilfilepath{nullptr};                                //
+    Weather weather;                                           //
 };
 
 /* ----------------- OTHER STRUCTURES ----------------------- */

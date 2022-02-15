@@ -282,10 +282,10 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    reset_modes[reset_mode],
                                    reset_mode,
                                    zone->getZoneResetTime(),
-                                   zone->getWeather().getPressure(),
-                                   zone->getWeather().getChange(),
-                                   zone->getWeather().getSky(),
-                                   zone->getWeather().getBase(),
+                                   zone->cgetWeather().getPressure(),
+                                   zone->cgetWeather().getChange(),
+                                   zone->cgetWeather().getSky(),
+                                   zone->cgetWeather().getBase(),
                                    cname,
                                    zone->getNotes(),
                                    errors ? "Errors in zone (stat zone error)" : "No errors registered in zone.",
@@ -351,7 +351,7 @@ static void stat_dil(unit_data *ch, zone_type *zone)
     send_to_char(msg, ch);
 
     msg += "<div class='twocol'>";
-    for (auto tmpl = zone->getTemplate().begin(); tmpl != zone->getTemplate().end(); tmpl++)
+    for (auto tmpl = zone->cgetDILTemplate().begin(); tmpl != zone->cgetDILTemplate().end(); tmpl++)
     {
         msg += diku::format_to_str("%.2fs %s [%d t / %d i]<br/>",
                                    tmpl->second->fCPU / 1000.0,
@@ -373,7 +373,7 @@ static void stat_global_dil(unit_data *ch, ubit32 nCount)
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
-        for (auto tmpl = z->second->getTemplate().begin(); tmpl != z->second->getTemplate().end(); tmpl++)
+        for (auto tmpl = z->second->cgetDILTemplate().begin(); tmpl != z->second->cgetDILTemplate().end(); tmpl++)
         {
             if (tmpl->second->fCPU >= nCount)
             {
@@ -439,11 +439,11 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         break;
 
         case 3:
-            if (zone->getZoneResetCommands())
+            if (zone->cgetZoneResetCommands())
             {
                 auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->getName());
                 send_to_char(msg, ch);
-                auto stat_buffer = stat_zone_reset("", zone->getZoneResetCommands(), ch);
+                auto stat_buffer = stat_zone_reset("", zone->cgetZoneResetCommands(), ch);
                 page_string(CHAR_DESCRIPTOR(ch), stat_buffer);
             }
             else
@@ -482,7 +482,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
 
     /* Search for mobs/objs/rooms and line in columns */
     std::string msg{"<div class='threecol'>"};
-    for (auto fi = zone->getFileIndexMap().begin(); fi != zone->getFileIndexMap().end(); fi++)
+    for (auto fi = zone->cgetFileIndexMap().begin(); fi != zone->cgetFileIndexMap().end(); fi++)
     {
         if (fi->second->getType() == search_type)
         {

@@ -1083,7 +1083,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_UP;
                         zone_type *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->getFileIndexMap().begin(); fi != z->getFileIndexMap().end(); fi++)
+                        for (auto fi = z->cgetFileIndexMap().begin(); fi != z->cgetFileIndexMap().end(); fi++)
                         {
                             if (fi->second->getType() == UNIT_ST_ROOM)
                             {
@@ -1127,7 +1127,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_UP;
                         zone_type *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->getFileIndexMap().begin(); fi != z->getFileIndexMap().end(); fi++)
+                        for (auto fi = z->cgetFileIndexMap().begin(); fi != z->cgetFileIndexMap().end(); fi++)
                         {
                             if (fi->second->getType() == UNIT_ST_NPC)
                             {
@@ -1171,7 +1171,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_UP;
                         zone_type *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->getFileIndexMap().begin(); fi != z->getFileIndexMap().end(); fi++)
+                        for (auto fi = z->cgetFileIndexMap().begin(); fi != z->cgetFileIndexMap().end(); fi++)
                         {
                             if (fi->second->getType() == UNIT_ST_OBJ)
                             {
@@ -2224,7 +2224,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SP;
-                        v->val.ptr = unit_zone((unit_data *) v1->val.ptr)->getNamePtr();
+                        v->val.ptr = unit_zone((unit_data *)v1->val.ptr)->getNamePtr();
                     }
                     else
                     {

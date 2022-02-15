@@ -169,7 +169,7 @@ void resolve_templates()
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
         /* all templates in zone */
-        for (auto tmpl = z->second->getTemplate().begin(); tmpl != z->second->getTemplate().end(); tmpl++)
+        for (auto tmpl = z->second->cgetDILTemplate().begin(); tmpl != z->second->cgetDILTemplate().end(); tmpl++)
         {
             /* all external references */
             for (i = 0; i < tmpl->second->xrefcount; i++)
@@ -248,7 +248,7 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 
             tmpl->prgname = str_dup(nBuf);
             str_lower(tmpl->prgname);
-            zone->getTemplate().insert(std::make_pair(tmpl->prgname, tmpl));
+            zone->getDILTemplate().insert(std::make_pair(tmpl->prgname, tmpl));
 
             /* Link into list of indexes */
 
@@ -1653,7 +1653,7 @@ void read_all_rooms()
     {
         g_boot_zone = z->second;
 
-        for (auto fi = z->second->getFileIndexMap().begin(); fi != z->second->getFileIndexMap().end(); fi++)
+        for (auto fi = z->second->cgetFileIndexMap().begin(); fi != z->second->cgetFileIndexMap().end(); fi++)
         {
             if (fi->second->getType() == UNIT_ST_ROOM)
             {

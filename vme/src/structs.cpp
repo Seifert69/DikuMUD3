@@ -392,7 +392,7 @@ void zone_type::setFilename(char *value)
     filename = value;
 }
 
-const std::map<const char *, file_index_type *, cmp_str> &zone_type::getFileIndexMap() const
+const std::map<const char *, file_index_type *, cmp_str> &zone_type::cgetFileIndexMap() const
 {
     return mmp_fi;
 }
@@ -402,7 +402,7 @@ std::map<const char *, file_index_type *, cmp_str> &zone_type::getFileIndexMap()
     return mmp_fi;
 }
 
-const zone_reset_cmd *zone_type::getZoneResetCommands() const
+const zone_reset_cmd *zone_type::cgetZoneResetCommands() const
 {
     return zri;
 }
@@ -418,12 +418,12 @@ void zone_type::setZoneResetCommands(zone_reset_cmd *value)
     zri = value;
 }
 
-const std::map<const char *, diltemplate *, cmp_str> &zone_type::getTemplate() const
+const std::map<const char *, diltemplate *, cmp_str> &zone_type::cgetDILTemplate() const
 {
     return mmp_tmpl;
 }
 
-std::map<const char *, diltemplate *, cmp_str> &zone_type::getTemplate()
+std::map<const char *, diltemplate *, cmp_str> &zone_type::getDILTemplate()
 {
     return mmp_tmpl;
 }
@@ -573,7 +573,7 @@ void zone_type::setDILFilePath(char *value)
     dilfilepath = value;
 }
 
-const zone_type::Weather &zone_type::getWeather() const
+const zone_type::Weather &zone_type::cgetWeather() const
 {
     return weather;
 }
