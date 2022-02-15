@@ -263,14 +263,14 @@ void game_event()
     {
         g_next_to_process = point->next;
 
-        if (--(point->wait) <= 0 && !point->qInput.IsEmpty())
+        if (point->predecrementLoopWaitCounter() <= 0 && !point->qInput.IsEmpty())
         {
             cQueueElem *qe = point->qInput.GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
             delete qe;
 
-            point->wait = 1;
+            point->setLoopWaitCounter(1);
             point->timer = 0;
             point->prompt_mode = PROMPT_EXPECT;
 

@@ -929,7 +929,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
                                            " Press [enter] and wait for the password prompt.",
                                            PC_CRACK_ATTEMPTS(d->character));
             send_to_descriptor(msg, d);
-            d->wait = MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
+            d->setLoopWaitCounter(MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC);
             return;
         }
         d->postincrementState();
@@ -978,7 +978,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
                                    "your name using an illegal password.<br/>",
                                    td);
                 PC_CRACK_ATTEMPTS(td->character)++;
-                d->wait = PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->character) * PULSE_SEC;
+                d->setLoopWaitCounter(PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->character) * PULSE_SEC);
             }
             else if (!PC_IS_UNSAVED(d->character))
             {
