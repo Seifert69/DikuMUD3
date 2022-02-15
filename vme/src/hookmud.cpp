@@ -213,7 +213,7 @@ int cMultiHook::Read()
                 //
                 char *mystr = html_encode_utf8(data);
 
-                d->qInput.Append(new cQueueElem(mystr, FALSE));
+                d->getInputQueue().Append(new cQueueElem(mystr, FALSE));
                 if (data)
                     FREE(data);
             }

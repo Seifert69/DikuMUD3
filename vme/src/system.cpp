@@ -423,6 +423,11 @@ void descriptor_data::setCommandHistory(const char *value)
     strncpy(history, value, sizeof(history));
 }
 
+cQueue &descriptor_data::getInputQueue()
+{
+    return qInput;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)

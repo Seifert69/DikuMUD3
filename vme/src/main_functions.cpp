@@ -263,9 +263,9 @@ void game_event()
     {
         g_next_to_process = point->next;
 
-        if (point->predecrementLoopWaitCounter() <= 0 && !point->qInput.IsEmpty())
+        if (point->predecrementLoopWaitCounter() <= 0 && !point->getInputQueue().IsEmpty())
         {
-            cQueueElem *qe = point->qInput.GetHead();
+            cQueueElem *qe = point->getInputQueue().GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
             delete qe;
