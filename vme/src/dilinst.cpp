@@ -141,7 +141,7 @@ void dilfi_edit(dilprg *p)
         {
             CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setPostEditFunctionPtr(dil_edit_done);
             CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setEditing(p->owner);
-            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->editref = nullptr;
+            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setEditReference(nullptr);
 
             set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), interpreter_string_add, TRUE);
         }
@@ -171,7 +171,7 @@ void dilfi_kedit(dilprg *p)
                     d->callPostEditFunctionPtr(d);
                 }
                 d->clearLocalString();
-                d->editref = nullptr;
+                d->setEditReference(nullptr);
                 d->setPostEditFunctionPtr(nullptr);
                 d->setEditing(nullptr);
                 set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), descriptor_interpreter, TRUE);

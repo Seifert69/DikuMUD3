@@ -383,6 +383,16 @@ void descriptor_data::setEditing(unit_data *value)
     editing = value;
 }
 
+void descriptor_data::setEditReference(void *value)
+{
+    editref = value;
+}
+
+const void *descriptor_data::getEditingReference() const
+{
+    return editref;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
@@ -426,7 +436,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         d->clearLocalString();
         d->setPostEditFunctionPtr(nullptr);
         d->setEditing(nullptr);
-        d->editref = nullptr;
+        d->setEditReference(nullptr);
 
         // Here we don't stop_fightfollow - do we ?
         stop_snoopwrite(d->character);

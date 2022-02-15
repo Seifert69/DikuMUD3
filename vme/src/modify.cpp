@@ -165,7 +165,7 @@ void edit_extra(descriptor_data *d)
 
     for (exd = UNIT_EXTRA(d->cgetEditing()).m_pList; exd; exd = exd->next)
     {
-        if (exd == d->editref)
+        if (exd == d->getEditingReference())
         {
             break; // It still exists!
         }
@@ -184,7 +184,7 @@ void edit_info(descriptor_data *d)
 
     for (exd = PC_INFO(d->cgetEditing()).m_pList; exd; exd = exd->next)
     {
-        if (exd == d->editref)
+        if (exd == d->getEditingReference())
         {
             break; // It still exists!
         }
@@ -745,7 +745,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Modifying existing description.<br/>", ch);
             }
 
-            CHAR_DESCRIPTOR(ch)->editref = ed;
+            CHAR_DESCRIPTOR(ch)->setEditReference(ed);
             CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_extra);
             CHAR_DESCRIPTOR(ch)->setEditing(unt);
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
@@ -1262,7 +1262,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Modifying existing description.<br/>", ch);
             }
 
-            CHAR_DESCRIPTOR(ch)->editref = ed;
+            CHAR_DESCRIPTOR(ch)->setEditReference(ed);
             CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_info);
             CHAR_DESCRIPTOR(ch)->setEditing(unt);
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
