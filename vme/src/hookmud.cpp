@@ -129,7 +129,7 @@ int cMultiHook::Read()
     {
         for (d = g_descriptor_list; d; d = d->next)
         {
-            if (d->id == id)
+            if (d->getMultiHookID() == id)
             {
                 assert(d->getMultiHookPtr() == this);
                 break;
@@ -186,7 +186,7 @@ int cMultiHook::Read()
 
         case MULTI_CONNECT_REQ_CHAR:
             d = descriptor_new(this);
-            protocol_send_confirm(this, d->id);
+            protocol_send_confirm(this, d->getMultiHookID());
             send_to_descriptor("<mud-init/>", d);
             send_to_descriptor(g_cServerConfig.getLogo(), d);
             send_to_descriptor("By what name do they call you? ", d);

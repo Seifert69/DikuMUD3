@@ -142,7 +142,7 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
 
         if (d->getMultiHookPtr()->bWebsockets)
         {
-            protocol_send_text(d->getMultiHookPtr(), d->id, messg, MULTI_TEXT_CHAR);
+            protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), messg, MULTI_TEXT_CHAR);
         }
         else
         {
@@ -159,7 +159,7 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
             // char buf[strlen(messg) + 10000];
 
             substHTMLcolor(dest, messg, UPC(u)->color);
-            protocol_send_text(d->getMultiHookPtr(), d->id, dest.c_str(), MULTI_TEXT_CHAR);
+            protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), dest.c_str(), MULTI_TEXT_CHAR);
         }
 
         if (d->snoop.getSnoopBy())
@@ -188,7 +188,7 @@ void page_string(descriptor_data *d, const char *messg)
         mystr.append(messg);
         mystr.append("</paged>");
 
-        protocol_send_text(d->getMultiHookPtr(), d->id, mystr.c_str(), MULTI_PAGE_CHAR);
+        protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), mystr.c_str(), MULTI_PAGE_CHAR);
 
         if (d->snoop.getSnoopBy())
         {

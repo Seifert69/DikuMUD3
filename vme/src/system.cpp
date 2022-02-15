@@ -33,7 +33,7 @@ void MplexSendSetup(descriptor_data *d)
 {
     assert(d);
 
-    protocol_send_setup(d->getMultiHookPtr(), d->id, &PC_SETUP(d->character));
+    protocol_send_setup(d->getMultiHookPtr(), d->getMultiHookID(), &PC_SETUP(d->character));
 }
 
 /* ----------------------------------------------------------------- */
@@ -233,6 +233,11 @@ cMultiHook *descriptor_data::getMultiHookPtr()
     return multi;
 }
 
+ubit16 descriptor_data::getMultiHookID() const
+{
+    return id;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
@@ -337,7 +342,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 
     if (bSendClose && d->getMultiHookPtr()->IsHooked())
     {
-        protocol_send_close(d->getMultiHookPtr(), d->id);
+        protocol_send_close(d->getMultiHookPtr(), d->getMultiHookID());
     }
 
     g_no_connections--;

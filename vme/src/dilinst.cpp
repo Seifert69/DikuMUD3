@@ -1731,7 +1731,7 @@ void dilfi_sete(dilprg *p)
                 if (CHAR_DESCRIPTOR((unit_data *)v2->val.ptr))
                 {
                     protocol_send_text(CHAR_DESCRIPTOR((unit_data *)v2->val.ptr)->getMultiHookPtr(),
-                                       CHAR_DESCRIPTOR((unit_data *)v2->val.ptr)->id,
+                                       CHAR_DESCRIPTOR((unit_data *)v2->val.ptr)->getMultiHookID(),
                                        (((const char *)v1->val.ptr) + 2),
                                        MULTI_PROMPT_CHAR);
                 }

@@ -71,12 +71,14 @@ public:
 
     cMultiHook *getMultiHookPtr();
 
+    ubit16 getMultiHookID() const;
+
 private:
     time_t logon{0};            // Time of last connect
     cMultiHook *multi{nullptr}; // Multi element pointer
+    ubit16 id{0};               // The ID for the multi
 
 public:
-    ubit16 id; /* The ID for the multi              */
     void (*fptr)(descriptor_data *, char *);
     int state;      /* Locally used in each fptr         */
     char host[50];  /* hostname                          */
