@@ -438,7 +438,7 @@ void reset_all_zones()
                 g_world_nozones++;
             }
 
-            if (zone->second->access != j)
+            if (zone->second->getAccessLevel() != j)
             {
                 continue;
             }

@@ -522,6 +522,16 @@ void zone_type::setNumOfDILTemplates(ubit16 value)
     no_tmpl = value;
 }
 
+ubit8 zone_type::getAccessLevel() const
+{
+    return access;
+}
+
+void zone_type::setAccessLevel(ubit8 value)
+{
+    access = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

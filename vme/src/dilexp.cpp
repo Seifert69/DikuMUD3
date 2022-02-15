@@ -1372,7 +1372,7 @@ void dilfe_resta(dilprg *p)
             {
                 case DILV_UP:
                 case DILV_NULL:
-                    if (p->frame[0].tmpl->zone->access > 10)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
                     {
                         szonelog(p->frame->tmpl->zone,
                                  "DIL '%s' attempt to violate system access security (restorall).",
@@ -1706,7 +1706,7 @@ void dilfe_flog(dilprg *p)
                     switch (dil_getval(v3))
                     {
                         case DILV_SP:
-                            if (p->frame[0].tmpl->zone->access > 1)
+                            if (p->frame[0].tmpl->zone->getAccessLevel() > 1)
                             {
                                 szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to access logs w/o access.", p->frame->tmpl->prgname);
                                 p->waitcmd = WAITCMD_QUIT;
@@ -1772,7 +1772,7 @@ void dilfe_ldstr(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_SP:
-                    if (p->frame[0].tmpl->zone->access > 10)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
                     {
                         szonelog(p->frame->tmpl->zone,
                                  "DIL '%s' attempt to violate system access security (loadstr).",
@@ -1849,7 +1849,7 @@ void dilfe_delstr(dilprg *p)
     {
         case DILV_SP:
 
-            if (p->frame[0].tmpl->zone->access > 10)
+            if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
             {
                 szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (delstr).", p->frame->tmpl->prgname);
                 p->waitcmd = WAITCMD_QUIT;
@@ -1907,7 +1907,7 @@ void dilfe_delunit(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_SP:
-            if (p->frame[0].tmpl->zone->access > 10)
+            if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
             {
                 szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (delunit).", p->frame->tmpl->prgname);
                 p->waitcmd = WAITCMD_QUIT;
@@ -1975,7 +1975,7 @@ void dilfe_svstr(dilprg *p)
                     switch (dil_getval(v3))
                     {
                         case DILV_SP:
-                            if (p->frame[0].tmpl->zone->access > 10)
+                            if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
                             {
                                 szonelog(p->frame->tmpl->zone,
                                          "DIL '%s' attempt to violate system access security (savestr).",
@@ -3262,7 +3262,7 @@ void dilfe_shell(dilprg *p)
             {
                 v->type = DILV_INT;
                 v->atyp = DILA_NONE;
-                if (p->frame[0].tmpl->zone->access != 0) // 0 is the highest access
+                if (p->frame[0].tmpl->zone->getAccessLevel() != 0) // 0 is the highest access
                 {
                     szonelog(p->frame->tmpl->zone, "DIL '%s' attempt run shell() w/o access.", p->frame->tmpl->prgname);
                     p->waitcmd = WAITCMD_QUIT;

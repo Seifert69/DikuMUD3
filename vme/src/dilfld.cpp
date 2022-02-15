@@ -1683,7 +1683,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
 
-                        if (p->frame[0].tmpl->zone->access != 0)
+                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
                             v->type = DILV_INT;
                             v->val.num = PC_LIFESPAN((unit_data *)v1->val.ptr);
@@ -1719,7 +1719,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = ((zone_type *)v1->val.ptr)->access;
+                        v->val.num = ((zone_type *)v1->val.ptr)->getAccessLevel();
                     }
                     else
                     {
@@ -1801,7 +1801,7 @@ void dilfe_fld(dilprg *p)
 
                         if (IS_PC((unit_data *)v1->val.ptr))
                         {
-                            if (p->frame[0].tmpl->zone->access != 0)
+                            if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                             {
                                 v->type = DILV_INT;
                                 v->val.num = UNIT_MAX_HIT((unit_data *)v1->val.ptr);
@@ -2153,7 +2153,7 @@ void dilfe_fld(dilprg *p)
                         case UNIT_ST_PC:
                             if (is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                             {
-                                if (p->frame[0].tmpl->zone->access == 0)
+                                if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_SINT2R;
@@ -2932,7 +2932,7 @@ void dilfe_fld(dilprg *p)
                 {
                     if (IS_PC((unit_data *)v1->val.ptr))
                     {
-                        if (p->frame[0].tmpl->zone->access == 0)
+                        if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_SINT2R;
@@ -2998,7 +2998,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
-                    if (p->frame[0].tmpl->zone->access == 0)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3124,7 +3124,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                 {
-                    if (p->frame[0].tmpl->zone->access == 0)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3249,7 +3249,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
-                    if (p->frame[0].tmpl->zone->access == 0)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3372,7 +3372,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                 {
-                    if (p->frame[0].tmpl->zone->access == 0)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3468,7 +3468,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                     if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
                     {
-                        if (p->frame[0].tmpl->zone->access == 0)
+                        if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_SINT4R;
@@ -3532,7 +3532,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                     if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
                     {
-                        if ((IS_PC((unit_data *)v1->val.ptr)) && (p->frame[0].tmpl->zone->access != 0))
+                        if ((IS_PC((unit_data *)v1->val.ptr)) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
                         {
                             v->type = DILV_INT;
                             v->val.num = CHAR_LEVEL((unit_data *)v1->val.ptr);
@@ -3580,7 +3580,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                     if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
                     {
-                        if ((IS_PC((unit_data *)v1->val.ptr)) && (p->frame[0].tmpl->zone->access != 0))
+                        if ((IS_PC((unit_data *)v1->val.ptr)) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
@@ -3617,7 +3617,7 @@ void dilfe_fld(dilprg *p)
                     if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
                     {
                         v->atyp = DILA_NONE;
-                        if (p->frame[0].tmpl->zone->access != 0)
+                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
                             v->type = DILV_INT;
                             v->val.num = PC_VIRTUAL_LEVEL((unit_data *)v1->val.ptr);
@@ -3931,7 +3931,7 @@ void dilfe_fld(dilprg *p)
                         case UNIT_ST_PC:
                             if (is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                             {
-                                if (p->frame[0].tmpl->zone->access == 0)
+                                if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_SINT2R;
@@ -4522,7 +4522,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
-                    if (p->frame[0].tmpl->zone->access == 0)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;

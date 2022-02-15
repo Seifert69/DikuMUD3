@@ -273,7 +273,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    "%s<br/>%s<br/>",
                                    zone->getName(),
                                    zone->getFilename(),
-                                   zone->access,
+                                   zone->getAccessLevel(),
                                    zone->getTitle() ? zone->getTitle() : "",
                                    zone->loadlevel,
                                    zone->payonly,

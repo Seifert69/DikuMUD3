@@ -510,7 +510,7 @@ void generate_zone_indexes()
             assert(FALSE);
         }
 
-        z->access = access;
+        z->setAccessLevel(access);
         z->loadlevel = loadlevel;
         z->payonly = payonly;
 
