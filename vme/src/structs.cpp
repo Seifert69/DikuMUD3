@@ -463,6 +463,21 @@ ubit16 *zone_type::getZoneResetTimePtr()
     return &zone_time;
 }
 
+ubit16 zone_type::getNumOfRooms() const
+{
+    return no_rooms;
+}
+
+void zone_type::incrementNumOfRooms()
+{
+    ++no_rooms;
+}
+
+void zone_type::setNumOfRooms(ubit16 value)
+{
+    no_rooms = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

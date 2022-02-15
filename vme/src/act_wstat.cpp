@@ -278,7 +278,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    zone->loadlevel,
                                    zone->payonly,
                                    zone->getNumOfFileIndexes(),
-                                   zone->no_rooms,
+                                   zone->getNumOfRooms(),
                                    reset_modes[reset_mode],
                                    reset_mode,
                                    zone->getZoneResetTime(),

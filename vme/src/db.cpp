@@ -333,7 +333,7 @@ void generate_file_indexes(FILE *f, zone_type *zone)
 
         if (fi->getType() == UNIT_ST_ROOM)
         {
-            zone->no_rooms++;
+            zone->incrementNumOfRooms();
         }
 
         if (fi->getType() == UNIT_ST_ROOM)
@@ -551,7 +551,7 @@ void generate_zone_indexes()
         z->setNumOfFileIndexes(0);
         z->setZoneResetCommands(nullptr);
         generate_file_indexes(f, z);
-        z->no_rooms = g_room_number; /* Number of rooms in the zone */
+        z->setNumOfRooms(g_room_number); /* Number of rooms in the zone */
 
         fflush(f); /* Don't fclose(f); since we are using _cache */
     }
