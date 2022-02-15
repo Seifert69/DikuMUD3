@@ -96,6 +96,8 @@ public:
     const std::map<const char *, diltemplate *, cmp_str> &getTemplate() const;
     std::map<const char *, diltemplate *, cmp_str> &getTemplate();
 
+    void setZoneNumber(ubit16 value);
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -115,8 +117,8 @@ private:
     std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
 
     ubit8 **spmatrix{nullptr}; /* Shortest Path Matrix             */
+    ubit16 zone_no{0};         /* Zone index counter (spmatrix)    */
 public:
-    ubit16 zone_no;   /* Zone index counter (spmatrix)    */
     ubit16 no_of_fi;  /* Number of fi's in the list       */
     ubit16 zone_time; /* How often to reset zone          */
     ubit16 no_rooms;  /* The number of rooms              */

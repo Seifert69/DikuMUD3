@@ -428,6 +428,11 @@ std::map<const char *, diltemplate *, cmp_str> &zone_type::getTemplate()
     return mmp_tmpl;
 }
 
+void zone_type::setZoneNumber(ubit16 value)
+{
+    zone_no = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

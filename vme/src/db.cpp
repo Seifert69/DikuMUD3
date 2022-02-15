@@ -383,7 +383,7 @@ void generate_zone_indexes()
     // Insert a virtual zone _players
     z = new (zone_type);
     g_zone_info.no_of_zones++;
-    z->zone_no = g_zone_info.no_of_zones - 1;
+    z->setZoneNumber(g_zone_info.no_of_zones - 1);
     z->setName(str_dup("_players"));
     z->setFilename(str_dup("ply"));
     z->setTitle(str_dup("Reserved zone for player file_indexes"));
@@ -477,7 +477,7 @@ void generate_zone_indexes()
         z = new (zone_type);
         g_zone_info.no_of_zones++;
 
-        z->zone_no = g_zone_info.no_of_zones - 1;
+        z->setZoneNumber(g_zone_info.no_of_zones - 1);
         z->setFilename(str_dup(zone));
 
         if (*dilfilepath)
