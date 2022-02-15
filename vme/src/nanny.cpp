@@ -128,7 +128,7 @@ void check_idle()
         d->timer++;
         if (!descriptor_is_playing(d)) /* Not in game yet */
         {
-            if (d->fptr == nanny_get_name)
+            if (d->getFunctionPtr() == nanny_get_name)
             {
                 if (d->timer >= 2)
                 {
@@ -456,7 +456,7 @@ void enter_game(unit_data *ch, int dilway)
 
 void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, char *), ubit1 call)
 {
-    if (d->fptr == interpreter_string_add)
+    if (d->getFunctionPtr() == interpreter_string_add)
     {
         if (d->localstr)
             FREE(d->localstr);
@@ -467,12 +467,12 @@ void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, cha
         d->editing = nullptr;
     }
 
-    d->fptr = fptr;
+    d->setFunctionPtr(fptr);
     if (call)
     {
         char constStr[] = ""; // cheat to get rid of warnings.  todo fix correctly
         d->state = 0;
-        (d->fptr)(d, constStr);
+        d->callFunctionPtr(d, constStr);
     }
     else
     {

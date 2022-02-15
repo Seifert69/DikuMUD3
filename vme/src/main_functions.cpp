@@ -280,7 +280,7 @@ void game_event()
                 send_to_descriptor(msg, CHAR_DESCRIPTOR(point->snoop.getSnoopBy()));
             }
 
-            point->fptr(point, pcomm);
+            point->callFunctionPtr(point, pcomm);
             FREE(pcomm);
         }
     }

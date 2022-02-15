@@ -78,7 +78,7 @@ unit_data *find_player(char *name)
 
     d = find_descriptor(name, nullptr);
 
-    if (d && (d->fptr == descriptor_interpreter) && d->character)
+    if (d && (d->getFunctionPtr() == descriptor_interpreter) && d->character)
     {
         return d->character;
     }

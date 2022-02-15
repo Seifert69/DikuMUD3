@@ -238,6 +238,21 @@ ubit16 descriptor_data::getMultiHookID() const
     return id;
 }
 
+const descriptor_data::FunctionPtr descriptor_data::getFunctionPtr() const
+{
+    return fptr;
+}
+
+void descriptor_data::callFunctionPtr(descriptor_data *data, char *arg) const
+{
+    fptr(data, arg);
+}
+
+void descriptor_data::setFunctionPtr(descriptor_data::FunctionPtr value)
+{
+    fptr = value;
+}
+
 /* Pass the multi-fd which is to be associated with this new descriptor */
 /* Note that id zero signifies that mplex descriptor has no mplex'er    */
 descriptor_data *descriptor_new(cMultiHook *pe)
