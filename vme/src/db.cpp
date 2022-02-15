@@ -482,11 +482,11 @@ void generate_zone_indexes()
 
         if (*dilfilepath)
         {
-            z->dilfilepath = str_dup(dilfilepath);
+            z->setDILFilePath(str_dup(dilfilepath));
         }
         else
         {
-            z->dilfilepath = nullptr;
+            z->setDILFilePath(nullptr);
         }
 
         fstrcpy(&cBuf, f);

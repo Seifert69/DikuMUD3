@@ -1388,13 +1388,13 @@ void dilfe_resta(dilprg *p)
                         break;
                     }
 
-                    if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                    if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                     {
                         strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
                     }
                     else
                     {
-                        strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                        strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
                     }
                     strcat(filename, "/units/");
                     strcat(filename, (char *)v1->val.ptr);
@@ -1788,9 +1788,9 @@ void dilfe_ldstr(dilprg *p)
                     else
                     {
                         sstr = nullptr;
-                        if (p->frame[0].tmpl->zone->dilfilepath)
+                        if (p->frame[0].tmpl->zone->getDILFilePath())
                         {
-                            strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                            strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
                         }
                         else
                         {
@@ -1861,13 +1861,13 @@ void dilfe_delstr(dilprg *p)
             }
             else
             {
-                if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                 {
                     strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
                 }
                 else
                 {
-                    strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                    strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
                 }
                 strcat(filename, "/strings/");
                 strcat(filename, (char *)v1->val.ptr);
@@ -1919,13 +1919,13 @@ void dilfe_delunit(dilprg *p)
             }
             else
             {
-                if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                 {
                     strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
                 }
                 else
                 {
-                    strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                    strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
                 }
                 strcat(filename, "/units/");
                 strcat(filename, (char *)v1->val.ptr);
@@ -1989,7 +1989,7 @@ void dilfe_svstr(dilprg *p)
                             }
                             else
                             {
-                                if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                                 {
                                     if (!file_exists(g_cServerConfig.getDILFileDir()))
                                     {
@@ -2004,16 +2004,16 @@ void dilfe_svstr(dilprg *p)
                                 }
                                 else
                                 {
-                                    if (!file_exists(p->frame[0].tmpl->zone->dilfilepath))
+                                    if (!file_exists(p->frame[0].tmpl->zone->getDILFilePath()))
                                     {
 #ifdef _WINDOWS
-                                        _mkdir(p->frame[0].tmpl->zone->dilfilepath);
+                                        _mkdir(p->frame[0].tmpl->zone->getDILFilePath());
 #else
-                                        mkdir(p->frame[0].tmpl->zone->dilfilepath,
+                                        mkdir(p->frame[0].tmpl->zone->getDILFilePath(),
                                               S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
                                     }
-                                    strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                                    strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
                                 }
                                 strcat(filename, "/strings/");
                                 if (!file_exists(filename))
@@ -2077,7 +2077,7 @@ void dilfe_filesz(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_SP:
-            if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+            if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
             {
                 if (!file_exists(g_cServerConfig.getDILFileDir()))
                 {
@@ -2091,16 +2091,16 @@ void dilfe_filesz(dilprg *p)
             }
             else
             {
-                if (!file_exists(p->frame[0].tmpl->zone->dilfilepath))
+                if (!file_exists(p->frame[0].tmpl->zone->getDILFilePath()))
                 {
 #ifdef _WINDOWS
-                    _mkdir(p->frame[0].tmpl->zone->dilfilepath);
+                    _mkdir(p->frame[0].tmpl->zone->getDILFilePath());
 #else
-                    mkdir(p->frame[0].tmpl->zone->dilfilepath, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
+                    mkdir(p->frame[0].tmpl->zone->getDILFilePath(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
                 }
 
-                strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
             }
             strcat(filename, "/strings/");
             if (!file_exists(filename))
@@ -3896,14 +3896,14 @@ void dilfe_udir(dilprg *p)
             {
                 v->atyp = DILA_EXP;
                 v->type = DILV_SLP;
-                if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                 {
                     uPath = g_cServerConfig.getDILFileDir();
                     uPath = uPath + "/units";
                 }
                 else
                 {
-                    uPath = p->frame[0].tmpl->zone->dilfilepath;
+                    uPath = p->frame[0].tmpl->zone->getDILFilePath();
                     uPath = uPath + "/units";
                 }
 
@@ -3990,14 +3990,14 @@ void dilfe_sdir(dilprg *p)
             {
                 v->atyp = DILA_EXP;
                 v->type = DILV_SLP;
-                if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                 {
                     uPath = g_cServerConfig.getDILFileDir();
                     uPath = uPath + "/strings";
                 }
                 else
                 {
-                    uPath = p->frame[0].tmpl->zone->dilfilepath;
+                    uPath = p->frame[0].tmpl->zone->getDILFilePath();
                     uPath = uPath + "/strings";
                 }
 

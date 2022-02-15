@@ -520,7 +520,7 @@ void dilfi_stora(dilprg *p)
                 }
                 else
                 {
-                    if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                    if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                     {
                         if (!file_exists(g_cServerConfig.getDILFileDir()))
                         {
@@ -534,16 +534,16 @@ void dilfi_stora(dilprg *p)
                     }
                     else
                     {
-                        if (!file_exists(p->frame[0].tmpl->zone->dilfilepath))
+                        if (!file_exists(p->frame[0].tmpl->zone->getDILFilePath()))
                         {
 #ifdef _WINDOWS
-                            _mkdir(p->frame[0].tmpl->zone->dilfilepath);
+                            _mkdir(p->frame[0].tmpl->zone->getDILFilePath());
 #else
-                            mkdir(p->frame[0].tmpl->zone->dilfilepath, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
+                            mkdir(p->frame[0].tmpl->zone->getDILFilePath(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
                         }
 
-                        strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                        strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
                     }
                     strcat(filename, "/units/");
                     if (!file_exists(filename))

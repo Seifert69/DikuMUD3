@@ -562,6 +562,17 @@ void zone_type::setPayOnly(ubit8 value)
     payonly = value;
 }
 
+const char *zone_type::getDILFilePath() const
+{
+    return dilfilepath;
+}
+
+void zone_type::setDILFilePath(char *value)
+{
+    FREE(dilfilepath);
+    dilfilepath = value;
+}
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;

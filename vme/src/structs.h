@@ -134,6 +134,9 @@ public:
     ubit8 *getPayOnlyPtr();
     void setPayOnly(ubit8 value);
 
+    const char *getDILFilePath() const;
+    void setDILFilePath(char *value);
+
 private:
     cNamelist creators;      /* List of creators of zone         */
     char *name{nullptr};     /* Unique in list                   */
@@ -164,10 +167,9 @@ private:
     ubit8 access{0};           /* Access Level 0 = highest (root)  */
     ubit8 loadlevel{0};        /* Level required to load items     */
     ubit8 payonly{0};          /* TRUE when only 4 paying players  */
+    char *dilfilepath{nullptr};
 
 public:
-    char *dilfilepath;
-
     struct
     {
         int pressure; /* How is the pressure ( Mb )            */
