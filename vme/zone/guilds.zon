@@ -591,6 +591,7 @@ code
 
    s := itoa(1+atoi(exd.names.[1]));
    exd.names.[1] := s;
+   sendtext("You are now level " + s + " in the " + pc.guild + " guild.<br/>", pc);
    return;
 }
 dilend
@@ -632,7 +633,7 @@ code
    while (exd)
    {
       sl := split(exd.names.[0], "/");
-      sendtext(sl.[1] + "<br/>", self);
+      sendtext(sl.[1] + " (level "+exd.names.[1]+")<br/>", self);
 
       exd := "$guild" in exd.next;
       i := i + 1;
