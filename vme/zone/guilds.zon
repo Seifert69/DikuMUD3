@@ -2,22 +2,7 @@
 
 /*
    Next step:
-
-   Figure out how to store guild data
-
-   "$guild_in", "guild 1", "guild 2", ...
-     - but then where do I store the level
-
-or maybe just
-
-   "paladin guild", "guild level", "joined at vlevel"
-
-or
-   "paladin guild", "", [guild level], [joined at vlevel]
-
-When you raise a level, what happens ?
-
-
+      Update join guild and more.
 */
 
 %zone guilds
@@ -50,6 +35,22 @@ Along with this we will also introduce the ability to switch profession
 when you reach level 50. For example from a fighter to a mage. This will
 allow you to make a combination character as you build up to level 100 and beyond.
 E.g. Fighter / Mage.
+
+The data structure is as follows:
+
+pc.guild
+   Holds the GUILD_ string of the player's current 'default' guild.
+
+pc.info
+   Has the following entry for each guild that the player is a member of:
+
+   {'$guild/paladin', '7', '50', '$guild'}
+
+   .[0] is the guild name prepended with '$guild/'
+   .[1] is the current guild level
+   .[2] was the player's vlvl when the joined the guild. 
+   .[3] is the guild string (I considered prepending $g_ but will just try this)
+        (in case we need to iterate throught them all)
 "
 
 
@@ -81,9 +82,7 @@ E.g. Fighter / Mage.
 //   Offer teachings, abilities, skills, spells, weapons that you can practice.
 //
 // - setup:
-// Missing generic guild block train
-// special SFUN_GUILD_BASIS GUILD_PALADIN
-// dilcopy teacher_prac@guilds( GUILD_PALADIN );
+
 // #define _WEAPON
 // #include "guilddef.h"
 // #undef _WEAPON
@@ -127,33 +126,28 @@ E.g. Fighter / Mage.
 // BanishGuild@guilds(pc : unitptr, sGuild : string);
 // MurderBanish@guilds(sGuild : string);
 // AlertMembers@guilds(sGuild : string, sMsg : string);
-// AdvGuildLevel(ch : unitptr);
 
 //
 // Blockers:
 // TrainMemberChk(sGuild : string, sMsg : string);
 // QuestBlock(cmd : string, quest : string, sExec : stringlist);
+//
+// SetAutoTrain(pc : unitptr, sGuild : string);
+// AdvGuildLevel(ch : unitptr);
 
 
-#define GUILD_JOINED   "$guilds_in"
-#define GUILD_BANISHED "$guilds_ban"
-#define GUILD_LEFT     "$guilds_out"
+#define GUILD_PREPEND   "$guild/"
+#define GUILD_BANISHED  "$guilds_ban"
+#define GUILD_LEFT      "$guilds_left"
 
 
 // Checks if player pc is in guild sGuild
 // 0 = not in guild, 1 = in guild
 //
 dilbegin string GuildString(pc : unitptr);
-var
-   exd : extraptr;
 code
 {
-   exd := GUILD_JOINED in pc.info;
-
-   if (exd == null)
-      return ("");
-
-   return (exd.names.[1]); // Hack for now
+   return (pc.guild);
 }
 dilend
 
@@ -166,15 +160,12 @@ var
    exd : extraptr;
 code
 {
-   exd := GUILD_JOINED in pc.info;
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
       return (0);
 
-   if (sGuild in exd.names)
-      return (1);
-
-   return (0);
+   return (1);
 }
 dilend
 
@@ -184,20 +175,14 @@ dilend
 //
 dilbegin integer IsInGuilds(pc : unitptr, sGuilds : stringlist);
 var
-   exd : extraptr;
    ln : integer;
 
 code
 {
-   exd := GUILD_JOINED in pc.info;
-
-   if (exd == null)
-      return (0);
-
    ln := length(sGuilds) - 1;
    while (ln >= 0)
    {
-      if (sGuilds.[ln] in exd.names)
+      if ((GUILD_PREPEND+sGuilds.[ln]) in pc.info)
          return (1);
 
       ln := ln-1;
@@ -206,6 +191,7 @@ code
    return (0);
 }
 dilend
+
 
 // Checks if player pc is in guild sGuild
 // 0 = not in guild, 1 = in guild
@@ -220,7 +206,7 @@ code
    if (exd == null)
       return (0);
 
-   if (sGuild in exd.names)
+   if ((GUILD_PREPEND + sGuild) in exd.names)
       return (1);
 
    return (0);
@@ -233,23 +219,26 @@ dilend
 dilbegin JoinGuild(pc : unitptr, sGuild : string);
 var
    exd : extraptr;
+   sl : stringlist;
 code
 {
-   exd := GUILD_JOINED in pc.info;
+   sGuild := GUILD_PREPEND+sGuild;
 
-   if (exd == null)
-   {
-      addextra(pc.info, {GUILD_JOINED}, "");
-      exd := GUILD_JOINED in pc.info;
-   }
+   exd := sGuild in pc.info;
 
-   if (sGuild in exd.names)
+   if (exd)
    {
       log("Error in JoinGuild. Guild was already in player guild list");
       return;
    }
 
-   addstring(exd.names, sGuild);
+   addstring(sl, sGuild);
+   addstring(sl, "0");
+   addstring(sl, itoa(pc.vlevel));
+   addstring(sl, "$guild");
+   
+   addextra(pc.info, sl, "");
+
    return;
 }
 dilend
@@ -263,13 +252,17 @@ var
    exdleft : extraptr;
 code
 {
-   exd := GUILD_JOINED in pc.info;
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
    {
-      log("Error in LeaveGuild. $guilds missing from player." + pc.name);
+      log("Error in LeaveGuild. $guild to leave not found for " + pc.name);
       return;
    }
+
+   subextra(pc.info, GUILD_PREPEND + sGuild);
+
+   // Now add to GUILD_LEFT
 
    exdleft := GUILD_LEFT in pc.info;
 
@@ -279,19 +272,12 @@ code
       exdleft := GUILD_LEFT in pc.info;
    }
 
-   if (not(sGuild in exd.names))
-   {
-      log("Error in LeaveGuild. The guild left was not in $guilds for " + pc.name);
-      return;
-   }
-
    if (sGuild in exdleft.names)
    {
-      log("Error in LeaveGuild. The guild left was already left for " + pc.name);
+      log("Error in LeaveGuild. The guild was already left for : " + pc.name);
       return;
    }
 
-   substring(exd.names, sGuild);
    addstring(exdleft.names, sGuild);
    return;
 }
@@ -307,11 +293,11 @@ var
    exdbanished : extraptr;
 code
 {
-   exd := GUILD_JOINED in pc.info;
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
 
-   if (exd == null)
+   if (exd)
    {
-      addextra(pc.info, {GUILD_JOINED}, "");
+      subextra(pc.info, GUILD_PREPEND + sGuild);
    }
 
    exdbanished := GUILD_BANISHED in pc.info;
@@ -322,9 +308,6 @@ code
       exdbanished := GUILD_BANISHED in pc.info;
    }
 
-   // Remove the player from the guild (if a member)
-   substring(exd.names, sGuild);
-
    if (not (sGuild in exdbanished.names))
    {
       // Banish the player, regardless if they're a member or not.
@@ -332,15 +315,6 @@ code
    }
 
    return;
-}
-dilend
-
-
-dilbegin AdvGuildLevel(pc : unitptr);
-code
-{
-   log("Not yet implemented - Advance Guild Level for players");
-   quit;
 }
 dilend
 
@@ -402,7 +376,7 @@ code
 
       s := sact(sMsg, A_SOMEONE, self.fighting, null, self, TO_CHAR);
 
-      // Need to write code to send to guild members. Channel?
+      // Need to write code to send to guild members. Use Channels? XXX
 
       pause;
     }
@@ -413,7 +387,6 @@ dilend
 
 
 // =================================================================
-
 // quest@block(cmd, quest, {exec}) - 
 //    If a char does the command 'cmd':
 //       Allow command if char has the quest 'quest'
@@ -473,5 +446,257 @@ dilend
 
 
 // =================================================================
+
+// Call this to set the auto-train values to the guild name given
+//
+dilbegin SetAutoTrain(pc : unitptr, sGuild : string);
+var
+   sl : stringlist;
+code
+{
+   if (sGuild == GUILD_UDG_FIGHTER)
+      sl := {"$autotrain", GUILD_UDG_FIGHTER_ATL};
+   else if (sGuild == GUILD_KNIGHT)
+      sl := {"$autotrain", GUILD_KNIGHT_ATL};
+   else if (sGuild == GUILD_PALADIN)
+      sl := {"$autotrain", GUILD_PALADIN_ATL};
+   else if (sGuild == GUILD_NYM_RANGER)
+      sl := {"$autotrain", GUILD_RANGER_ATL};
+   else if (sGuild == GUILD_UDG_THIEF)
+      sl := {"$autotrain", GUILD_THIEF_ATL};
+   else if (sGuild == GUILD_ASSASSIN)
+      sl := {"$autotrain", GUILD_ASSASSIN_ATL};
+   else if (sGuild == GUILD_UDG_CLERIC)
+      sl := {"$autotrain", GUILD_CLERIC_ATL};
+   else if (sGuild == GUILD_NYM_DRUID)
+      sl := {"$autotrain", GUILD_DRUID_ATL};
+   else if (sGuild == GUILD_NECROMANCER)
+      sl := {"$autotrain", GUILD_NECROMANCER_ATL};
+   else if (sGuild == GUILD_UDG_MAGE)
+      sl := {"$autotrain", GUILD_MAGE_ATL};
+   else if (sGuild == GUILD_SORCERER)
+      sl := {"$autotrain", GUILD_SORCERER_ATL};
+   else if (sGuild == GUILD_BARBARIAN)
+      sl := {"$autotrain", GUILD_BARBARIAN_ATL};
+   else
+   {
+      log("ERROR: setautotrain: invalid sGuild");
+      return;
+   }
+
+   subextra(pc.quests, "$autotrain");
+   addextra(pc.quests, sl, "");
+   return;
+}
+dilend
+
+
+
+// Set / changes the player's current default guild.
+// Also sets up the Auto-train.
+// The player must already be in the guild for this
+// to work.
+//
+dilbegin SetDefaultGuild(pc : unitptr, sGuild : string);
+external
+   SetAutoTrain(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := sGuild in pc.info;
+
+   if (exd == null)
+   {
+      log("Error setting ["+sGuild+"] as the new default for player: "+pc.name);
+      return;
+   }
+
+   pc.guild := sGuild;
+   SetAutoTrain(pc, sGuild);
+   return;
+}
+dilend
+
+
+dilbegin AdvGuildLevel(pc : unitptr);
+var
+   exd : extraptr;
+   s : string;
+code
+{
+   exd := (GUILD_PREPEND + pc.guild) in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in AdvGuildLevel(): Unable to find ["+pc.guild+"] in pc.info");
+      return;
+   }
+
+   s := itoa(1+atoi(exd.names.[1]));
+   exd.names.[1] := s;
+   return;
+}
+dilend
+
+
+// Returns the level of the player's guild 'sGuild'
+// -1 if no such guild found
+//
+dilbegin integer GetGuildLevel(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+      return (-1);
+
+   return (atoi(exd.names.[1]));
+}
+dilend
+
+
+
+dilbegin SetTitles(the_guild : string, title_list : stringlist);
+external
+   integer GetGuildLevel(pc : unitptr, sGuild : string);
+   SetDefaultGuild(pc : unitptr, sGuild : string);
+var
+   ln:integer;
+   male_list    : stringlist;
+   female_list  : stringlist;
+   pc           : unitptr;
+   pclevel      : integer;
+   pcsex        : integer;
+   i            : integer;
+   newtit       : string;
+   my_race      : string;
+
+code
+{
+:init:
+   /* Sort the list into two different lists and add gaps for even levels */
+   addstring(male_list, "-");
+   addstring(female_list, "-");
+
+   i := 0;
+   ln:=length(title_list);
+   while(i < ln)
+   {
+      addstring(male_list, title_list.[i]);
+      if (i+1<ln)
+         addstring(female_list, title_list.[i+1]);
+      i := i + 2;
+   }
+
+
+:start:
+   wait(SFB_CMD, command("title") and (activator.level < 235) and (activator.type == UNIT_ST_PC));
+   pc := activator;
+   secure(pc, lost_pc);
+   SetDefaultGuild(pc, the_guild);
+
+:do_title:
+   pcsex   := pc.sex;
+   if (pc.race == RACE_HUMAN)
+      my_race := "Human";
+   else if (pc.race == RACE_ELF)
+      my_race := "Elf";
+   else if (pc.race == RACE_DWARF)
+      my_race := "Dwarf";
+   else if (pc.race == RACE_HALFLING)
+      my_race := "Halfling";
+   else if (pc.race == RACE_GNOME)
+      my_race := "Gnome";
+   else if (pc.race == RACE_HALF_ORC)
+      my_race := "Half-Orc";
+   else if (pc.race == RACE_HALF_OGRE)
+      my_race := "Half-Ogre";
+   else if (pc.race == RACE_HALF_ELF)
+      my_race := "Half-Elf";
+   else if (pc.race == RACE_BROWNIE)
+      my_race := "Brownie";
+   else if (pc.race == RACE_GROLL)
+      my_race := "Groll";
+   else
+      my_race := "Darkelf";
+
+   pclevel := GetGuildLevel(pc, the_guild);
+   pclevel := pclevel/5;
+
+   if (pcsex < 2)
+   {
+      if (pclevel>(length(male_list)-1))
+         pclevel:=(length(male_list)-1);
+      newtit := male_list.[pclevel];
+   }
+   else
+   {
+      if (pclevel>(length(female_list)-1))
+         pclevel:=(length(female_list)-1);
+      newtit := female_list.[pclevel];
+   }
+
+   if (newtit == "-")
+   {
+      if (pcsex < 2)
+      {
+         if (pclevel<1)
+            goto jumpbug;
+         if (not(male_list.[pclevel - 1] in pc.title))
+         {
+            exec("say Enjoy the title, " + pc.name + "!", self);
+            pc.title := "the " + my_race + " " + male_list.[pclevel - 1];
+            goto lost_pc;
+         }
+         else
+         {
+            :jumpbug:
+            exec("say You need to attain a higher level before you " +
+                 "can receive a new title, " + pc.name + ".", self);
+            goto lost_pc;
+         }
+      }
+      else if (pcsex > 1)
+      {
+         if (pclevel<1)
+            goto jumpbug2;
+
+         if (not(female_list.[pclevel - 1] in pc.title))
+         {
+            exec("say Enjoy the title, " + pc.name + "!", self);
+            pc.title := "the " + my_race + " " + female_list.[pclevel - 1];
+            goto lost_pc;
+         }
+         else
+         {
+            :jumpbug2:
+            exec("say You need to attain a higher level before you " +
+                 "can receive a new title, " + pc.name + ".", self);
+            goto lost_pc;
+         }
+      }
+   }
+   else if (newtit in pc.title)
+   {
+      exec("say You have already attained the appropriate title for " +
+           "this guild level, " + pc.name + ".", self);
+      goto lost_pc;
+   }
+   else
+   {
+      pc.title := "the " + my_race + " " + newtit;
+      exec("say Enjoy the title, " + pc.name + "!", self);
+      goto lost_pc;
+   }
+
+:lost_pc:
+   unsecure(pc);
+   goto start;
+}
+dilend /* guild_titles */
+
 
 %end

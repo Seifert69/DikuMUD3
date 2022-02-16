@@ -63,7 +63,7 @@ END HEADER*/
 
 #define GUILD_KNIGHT      "Midgaard Dark Knight"
 #define GUILD_KNIGHT_ATL  "matthew@knight", "aramand@knight", "hilary@knight", "soroth@knight" //  Abi, Wpn, Spl, Ski
-#define GUILD_KNIGHT_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_KNIGHT_EXCL {GUILD_PALADIN, GUILD_UDG_MAGE, GUILD_SORCERER}
 
 #define GUILD_PALADIN     "Midgaard Paladin"
 #define GUILD_PALADIN_ATL  "joan@paladin_guild", "edmund@paladin_guild", "alex@paladin_guild", "corbin@paladin_guild" //  Abi, Wpn, Spl, Ski
@@ -71,19 +71,19 @@ END HEADER*/
 
 #define GUILD_NYM_RANGER  "Nymgaard Ranger"
 #define GUILD_RANGER_ATL  "mountain_man@ranger", "justifier@ranger", "guardian@ranger", "pathfinder@ranger" //  Abi, Wpn, Spl, Ski
-#define GUILD_RANGER_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
+#define GUILD_RANGER_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER, GUILD_KNIGHT}
 
 #define GUILD_UDG_THIEF   "Udgaard Thief"
 #define GUILD_THIEF_ATL   "bisse@thievesguild","pirate@thievesguild","gryma@thievesguild" //  Abi, Wpn, Ski
-#define GUILD_THIEF_EXCL  {}
+#define GUILD_THIEF_EXCL  {GUILD_PALADIN}
 
 #define GUILD_ASSASSIN     "Khorsabad Assassin"
 #define GUILD_ASSASSIN_ATL "ability_trainer@assassin", "weapon_trainer@assassin", "spell_trainer@assassin", "skill_trainer@assassin" //  Abi, Wpn, Spl, Ski
-#define GUILD_ASSASSIN_EXCL  {}
+#define GUILD_ASSASSIN_EXCL  {GUILD_PALADIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID}
 
 #define GUILD_UDG_CLERIC  "Udgaard Healer"
 #define GUILD_CLERIC_ATL  "tack@clericguild", "tick@clericguild", "isabella@clericguild", "bartholomew@clericguild" //  Abi, Wpn, Spl, Ski
-#define GUILD_CLERIC_EXCL  {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_CLERIC_EXCL  {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
 
 #define GUILD_NYM_DRUID   "Nymgaard Druid"
 #define GUILD_DRUID_ATL   "oak@druid", "elm@druid", "maple@druid", "willow@druid" //  Abi, Wpn, Spl, Ski

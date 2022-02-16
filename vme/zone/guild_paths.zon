@@ -405,10 +405,11 @@ dilend /* hand_hold */
 
 
 dilbegin guild_titles( the_guild : string, title_list : stringlist );
-external path_update(u : unitptr);
+external
+   path_update(u : unitptr);
 
 var
-ln:integer;
+   ln:integer;
    male_list    : stringlist;
    female_list  : stringlist;
 
@@ -622,7 +623,7 @@ dilend /* guild_titles */
 Something I added for familiars but can be used in anything wanting to check
 a guild level if you already have something sorry but I couldn't find it.
 */
-dilbegin integer level_guild_chk (pc: unitptr,s:string);
+dilbegin integer level_guild_chk(pc: unitptr,s:string);
 var
 	expd:extraptr;
 code
