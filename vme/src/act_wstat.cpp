@@ -1091,7 +1091,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                             "Filename [%s]  Unique ID [%ld]  BBS [%3d]  Cracks [%2d]<br/>"
                                             "Skill points: [%ld]  Ability points: [%ld]  CRIMES: [%d]<br/>"
                                             "Hometown: [%s] Prompt: [%s]<br/>VLVL: %d (%d lxp) <br/>"
-                                            "Profession: [%d %s]  Guild: [%s (%d member)]<br/>"
+                                            "Profession: [%d %s]  Guild default: [%s]<br/>"
                                             "Drunk: [%d]  Full: [%d]  Thirst: [%d]<br/>"
                                             "CCInfo: %s     Setup: %s<br/>"
                                             "Age: %ldY %ldM %ldD %ldH   Lifespan : %dY   Played: %ldDays %ldHours (%d)<br/>"
@@ -1112,7 +1112,6 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                             PC_PROFESSION(u) >= 0 && PC_PROFESSION(u) <= PROFESSION_MAX ? g_professions[PC_PROFESSION(u)]
                                                                                                         : "Undefined",
                                             STR(PC_GUILD(u)),
-                                            PC_TIME(u).played - PC_GUILD_TIME(u),
                                             PC_COND(u, DRUNK),
                                             PC_COND(u, FULL),
                                             PC_COND(u, THIRST),

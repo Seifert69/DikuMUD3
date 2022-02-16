@@ -522,7 +522,7 @@ public:
     pc_time_data m_time;     /* PCs time info  */
     pc_account_data account; /* Accounting     */
 
-    char *guild;     /* Which guild is the player a member of?  */
+    char *guild;     // Player's current default guild (guilds in .info)
     char *bank;      /* How much money in bank?                 */
     char *hometown;  /* PCs Hometown (symbolic reference)       */
     char *promptstr; /* A PC's Prompt                           */
@@ -531,7 +531,6 @@ public:
     extra_list quest; /* For saving QUEST information            */
 
     sbit8 profession;  // The player's chosen profession, -1 means unknown
-    ubit32 guild_time; /* When (playing secs) player entered      */
     ubit16 vlvl;       /* Virtual Level for player                */
 
     sbit32 id;             /* Unique identifier for each player (-1 guest) */
