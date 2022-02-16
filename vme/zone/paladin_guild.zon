@@ -704,7 +704,8 @@ external
    JoinGuild@guilds(pc : unitptr, sGuild : string);
    LeaveGuild@guilds(pc : unitptr, sGuild : string);
    BanishGuild@guilds(pc : unitptr, sGuild : string);
-
+var
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -713,13 +714,12 @@ code
 
    :start:
    wait (SFB_CMD, TRUE);
+   pc := activator;
+   secure(pc, start);
 
-   if ((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING))
-      goto start;
-
-   if ((activator.type ==  UNIT_ST_PC) and command ("join"))
+   if ((pc.type ==  UNIT_ST_PC) and command ("join"))
    {
-      if (activator.level < 5)
+      if (pc.level < 5)
       {
          block;
          exec ("say You must fight more battles to prove your worth. Do " +
@@ -728,24 +728,24 @@ code
          goto start;
       }
 
-      if (IsBanished@guilds(activator, GUILD_PALADIN))
+      if (IsBanished@guilds(pc, GUILD_PALADIN))
       { 
          block;
          exec ("say You are foolish, Fallen One, to even show your face " +
                "to me again, let alone lavish false and misleading praise " +
                "upon me. You're like a serpent, and must be taught a lesson.", self);
-         exec("spit " + activator.name, self);
+         exec("spit " + pc.name, self);
          pause;
          goto start;
       }
 
-      if (activator.alignment < 350)
+      if (pc.alignment < 350)
       {
-         if (activator.alignment < -350)
+         if (pc.alignment < -350)
          {
             block;
             exec("say You, Evil One, must not be allowed to survive.", self);
-            exec("spit " + activator.name, self);
+            exec("spit " + pc.name, self);
             goto start;
          }
          block;
@@ -754,17 +754,17 @@ code
          goto start;
       }
 
-      if (IsInGuild@guilds(activator, GUILD_PALADIN))
+      if (IsInGuild@guilds(pc, GUILD_PALADIN))
       {
          block;
          exec("say Me thinks your head has been rattled too many times in your "+
-              "helmet, "+activator.name+". You are already a member of the "+
+              "helmet, "+pc.name+". You are already a member of the "+
               "Holy Order!", self);
          pause;
          goto start;
       }
 
-      if (IsInGuilds@guilds(activator, GUILD_PALADIN_EXCL))
+      if (IsInGuilds@guilds(pc, GUILD_PALADIN_EXCL))
       {
          block;
          exec("say Your other guild choices exclude you from joining the Paladin's Guild.", self);
@@ -772,8 +772,8 @@ code
          goto start;  
       }
 
-      JoinGuild@guilds(activator, GUILD_PALADIN);
-      exec ("say Welcome to the Holy Order of Paladins, "+activator.name+
+      JoinGuild@guilds(pc, GUILD_PALADIN);
+      exec ("say Welcome to the Holy Order of Paladins, "+pc.name+
             ". May you walk paths of honor and be diligent in your protection "+
             "of Midgaard and it's people.", self);
    }

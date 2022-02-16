@@ -244,6 +244,7 @@ extra {"parchment on the table","parchment"}
 "<pre>The writing on the parchment proclaims in tall, red letters:<br/>
 <br/>
         TITLE at the master will give you a title if you are worthy.<br/>
+        JOIN at the master will let you join this guild if you are worthy.<br/>
 <br/>
                                 - Wicca the Tainted One<br/>
 <br/>
@@ -688,6 +689,8 @@ external
    integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
    integer IsBanished@guilds(pc : unitptr, sGuild : string);
    JoinGuild@guilds(pc : unitptr, sGuild : string);
+var
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -697,30 +700,32 @@ code
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
    self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
 
-   if (IsBanished@guilds(activator, GUILD_NECROMANCER))
+   if (IsBanished@guilds(pc, GUILD_NECROMANCER))
    {
       block;
       exec ("say Why do you stand before me? You have been banished!", self);
-      exec ("spit " + activator.name, self);
+      exec ("spit " + pc.name, self);
       pause;
       goto start;
    }
 
-   if (IsInGuild@guilds(activator, GUILD_NECROMANCER))
+   if (IsInGuild@guilds(pc, GUILD_NECROMANCER))
    {
       block;
-      exec ("sigh " + activator.name, self);
+      exec ("sigh " + pc.name, self);
       pause;
       exec("say I have warned you about the necromancer's rotten brain disease.  " +
       "You don't even know who " +
-      "you are now " + activator.name+ ". You already hold the position "+
+      "you are now " + pc.name+ ". You already hold the position "+
       "of necromancer!" , self);
       pause;
       goto start;
    }
 
-   if (IsInGuilds@guilds(activator, GUILD_NECROMANCER_EXCL))
+   if (IsInGuilds@guilds(pc, GUILD_NECROMANCER_EXCL))
    {
       block;
       exec("say Your other guild choices exclude you from becoming a Necromancer.", self);
@@ -728,14 +733,14 @@ code
       goto start;  
    }
 
-   if (activator.alignment > 350)
+   if (pc.alignment > 350)
    {
       block;
       exec("say You do not possess the character to become a necromancer.", self);
       goto start;
    }
 
-   JoinGuild@guilds(activator, GUILD_NYM_DRUID);
+   JoinGuild@guilds(pc, GUILD_NYM_DRUID);
 
    exec ("say The black forces of life now flow through your veins.", self);
    goto start;

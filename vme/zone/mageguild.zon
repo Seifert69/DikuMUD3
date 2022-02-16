@@ -280,6 +280,7 @@ extra {"small sign","sign"}
 <br/>
 		Welcome to the College of Arcane Arts.<br/>
 <br/>
+	'join'		- Request to join this guild.<br/>
 	'title'		- changes your title to a new and better one.<br/>
 <br/>
    	Members, please pay respect to your Archcancellor by bowing<br/>
@@ -678,7 +679,8 @@ external
    JoinGuild@guilds(pc : unitptr, sGuild : string);
    LeaveGuild@guilds(pc : unitptr, sGuild : string);
    BanishGuild@guilds(pc : unitptr, sGuild : string);
-
+var 
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -688,6 +690,8 @@ code
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
    self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
 
    if (IsBanished@guilds(activator, GUILD_UDG_MAGE))
    {

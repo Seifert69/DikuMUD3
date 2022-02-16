@@ -160,6 +160,7 @@ extra {"large sign", "canvas sign", "canvas", "sign"}
 "<pre>                            The Nymgaard Rangers Guild<br/>
 <br/>
    'title'      - grants you a new title if you deserve it.<br/>
+   'join'       - join this guild (if you qualify!).<br/>
 <br/>
 Bowing to or worshipping the master may grant you his favour.</pre>"
 
@@ -390,6 +391,9 @@ external
    JoinGuild@guilds(pc : unitptr, sGuild : string);
    LeaveGuild@guilds(pc : unitptr, sGuild : string);
    BanishGuild@guilds(pc : unitptr, sGuild : string);
+
+var
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -399,31 +403,32 @@ code
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
    self.position := POSITION_STANDING;
+   pc := activator;
 
-   if (IsBanished@guilds(activator, GUILD_NYM_RANGER))
+   if (IsBanished@guilds(pc, GUILD_NYM_RANGER))
    {
       block;
       exec ("say Why do you stand before me? you have been "+
       "told to leave our midst!", self);
-      exec ("spit " + activator.name, self);
+      exec ("spit " + pc.name, self);
       pause;
       goto start;
    }
 
-   if (IsInGuild@guilds(activator, GUILD_NYM_RANGER))
+   if (IsInGuild@guilds(pc, GUILD_NYM_RANGER))
    {
       block;
-      exec ("sigh " + activator.name, self);
+      exec ("sigh " + pc.name, self);
       pause;
       exec ("say I have told you about eating those magic " +
       "mushrooms. You don't even know who " +
-      "you are now " + activator.name+ ". You already hold the position "+
+      "you are now " + pc.name+ ". You already hold the position "+
       "of mighty ranger!" , self);
       pause;
       goto start;
    }
 
-   if (IsInGuilds@guilds(activator, GUILD_RANGER_EXCL))
+   if (IsInGuilds@guilds(pc, GUILD_RANGER_EXCL))
    {
       block;
       exec("say Your other guild choices exclude you from becoming a Ranger.", self);
@@ -431,7 +436,7 @@ code
       goto start;  
    }
 
-   JoinGuild@guilds(activator, GUILD_NYM_RANGER);
+   JoinGuild@guilds(pc, GUILD_NYM_RANGER);
 
    exec ("say The vitality of the forest, and the strength of the tree " +
          "flows through your spirit.", self);

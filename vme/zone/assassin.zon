@@ -156,7 +156,7 @@ to hide.  A desk stands near the north wall, but is currently free of any
 adornments. A sign hangs on the wall."
 
 extra {"sign"}
-"  If you are worthy, TITLE will grant you a new title."
+"  JOIN to join this guild.<br/>If you are worthy, TITLE will grant you a new title."
 
 /*&A board hangs on the east wall."
 
@@ -227,7 +227,8 @@ external
    JoinGuild@guilds(pc : unitptr, sGuild : string);
    LeaveGuild@guilds(pc : unitptr, sGuild : string);
    BanishGuild@guilds(pc : unitptr, sGuild : string);
-
+var
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -237,31 +238,33 @@ code
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
    self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
 
-   if (IsBanished@guilds(activator, GUILD_ASSASSIN))
+   if (IsBanished@guilds(pc, GUILD_ASSASSIN))
    {
       block;
       exec ("say Why do you stand before me? you have been "+
       "told to leave our midst!", self);
-      exec ("spit " + activator.name, self);
+      exec ("spit " + pc.name, self);
       pause;
       goto start;
    }
 
-   if (IsInGuild@guilds(activator, GUILD_ASSASSIN))
+   if (IsInGuild@guilds(pc, GUILD_ASSASSIN))
    {
       block;
-      exec ("sigh " + activator.name, self);
+      exec ("sigh " + pc.name, self);
       pause;
       exec ("say I have told you about getting lost in the dark ways " +
       "You don't even know who " +
-      "you are now " + activator.name+ ". You already hold the position "+
+      "you are now " + pc.name+ ". You already hold the position "+
       "of mighty assassin!" , self);
       pause;
       goto start; 
    }
 
-   /* if (IsInGuilds@guilds(activator, GUILD_ASSASSIN_EXCL))
+   /* if (IsInGuilds@guilds(pc, GUILD_ASSASSIN_EXCL))
    {
       block;
       exec("say Your other guild choices exclude you from becoming an Assassin.", self);
@@ -269,7 +272,7 @@ code
       goto start;  
    }*/
 
-   JoinGuild@guilds(activator, GUILD_ASSASSIN);
+   JoinGuild@guilds(pc, GUILD_ASSASSIN);
 
    exec ("say The vitality of the forest, and the strength of the tree " +
          "flows through your spirit.", self);

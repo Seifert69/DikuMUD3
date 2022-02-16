@@ -175,7 +175,11 @@ evil and destroy all that is good.  A door opens to the Main Hall on the
 north wall."
 extra {"stone statue","statue","knight"}
 "You are already looking at it."
-extra {"wall"} "There is nothing on the walls."
+extra {"wall"} "There is nothing on the walls except for a sign."
+extra {"sign"} 
+"'join'       - join this guild (if you qualify!).<br/>
+'title'      - to get a new title (if you deserve it!).<br/>"
+
 extra {"shield"}
 "The shield is a replica of the one Master Shirilan used to slay a Holy
 Paladin."
@@ -264,7 +268,8 @@ external
    JoinGuild@guilds(pc : unitptr, sGuild : string);
    LeaveGuild@guilds(pc : unitptr, sGuild : string);
    BanishGuild@guilds(pc : unitptr, sGuild : string);
-
+var
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -274,31 +279,34 @@ code
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
    self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
 
-   if (IsBanished@guilds(activator, GUILD_KNIGHT))
+
+   if (IsBanished@guilds(pc, GUILD_KNIGHT))
    {
       block;
       exec ("say Why do you stand before me? you have been "+
       "told to leave our midst!", self);
-      exec ("spit " + activator.name, self);
+      exec ("spit " + pc.name, self);
       pause;
       goto start;
    }
 
-   if (IsInGuild@guilds(activator, GUILD_KNIGHT))
+   if (IsInGuild@guilds(pc, GUILD_KNIGHT))
    {
       block;
-      exec ("sigh " + activator.name, self);
+      exec ("sigh " + pc.name, self);
       pause;
       exec ("say Perhaps you have been hitting your head  too much? " +
       "You don't even know who " +
-      "you are now " + activator.name+ ". You're already a member of  "+
+      "you are now " + pc.name+ ". You're already a member of  "+
       "the guild!" , self);
       pause;
       goto start; 
    }
 
-   if (IsInGuilds@guilds(activator, GUILD_KNIGHT_EXCL))
+   if (IsInGuilds@guilds(pc, GUILD_KNIGHT_EXCL))
    {
       block;
       exec("say Your other guild choices exclude you from becoming a Fighter.", self);
@@ -306,7 +314,7 @@ code
       goto start;  
    }
 
-   JoinGuild@guilds(activator, GUILD_KNIGHT);
+   JoinGuild@guilds(pc, GUILD_KNIGHT);
 
    exec ("say The power of the Dark Knights now coarses in your veins.", self);
    goto start;

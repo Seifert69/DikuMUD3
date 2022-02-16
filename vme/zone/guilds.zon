@@ -1,8 +1,22 @@
 #include <macros.h>
 
 /*
-   Next step:
-      Update join guild and more.
+All the guilds processed (ignoring Monk since it's not complete):
+      Assassin
+      mage
+      necro
+
+      fightersguild
+      cleric
+      thieves
+
+      paladin
+      ranger
+      dark knight
+      sorcerer
+      barbarian
+
+Missing sign at all guilds
 */
 
 %zone guilds
@@ -24,15 +38,18 @@ Some guilds exclude other guilds. For example you cannot become
 a Paladin if you're in the Necromancer, Thief or Dark Knight guilds.<br/>
 
 A player can thereafter join as many guilds as they want. Joining a 
-guild should require something from the player, e.g. completing a quest.<br/>
+guild should require something from the player, e.g. at least completing
+a quest.<br/>
 
 Training cost is determined by the player's profession, so joining a new
 guild will not make it cheaper to practice e.g. your strength, but new
 guilds and teachers might offer training in skills not in your current guild
-or even have higher maximums than your current guild.<br/>
+or even have higher maximums than your current guild. For example, at mage
+teacher can typically train your brain to a higher maximum than a fighter
+teacher.<br/>
 
-Along with this we will also introduce the ability to switch profession
-when you reach level 50. For example from a fighter to a mage. This will
+Along with this we will also introduce the ability to switch profession.
+For example from a fighter to a mage. This will
 allow you to make a combination character as you build up to level 100 and beyond.
 E.g. Fighter / Mage.
 
@@ -51,6 +68,39 @@ pc.info
    .[2] was the player's vlvl when the joined the guild. 
    .[3] is the guild string (I considered prepending $g_ but will just try this)
         (in case we need to iterate throught them all)
+
+Notes on switching profession. Idea:
+
+Perhaps when you start a new character you can only choose 
+   Fighter, Mage, Cleric, Thief
+
+Those are the four classical archetypes. As per the guild description
+you can of course join new guilds (if you can complete the quests).
+For example as a fighter you may join the Barbarian guild and explore it.
+
+Then when you reach some medium level, e.g. level 25 you can change profession
+the first time. But you can only change profession to a related profession:
+
+Fighter -> Barbarian, Ranger
+Thief   -> Assassin, 
+Cleric  -> Necromancer, Druid, 
+Mage    -> Sorcerer
+
+Later, when you reach a higher level, e.g. 50 or 75, you can change profession
+again. But this time I suggest you can either freely choose your final profession
+or you can choose more broadly than above. If we were to restrict it and not make
+it completely free, then how about something like this:
+
+Fighter, Barbarian, Ranger ->
+   Paladin,  Dark Knight, Assassin, Cleric, Druid
+
+Mage / Sorcerer -> 
+   Thief, Assassin, Fighter 
+
+Cleric, Necromancer, Druid ->
+   Fighter, Paladin, Dark Knight, Necromancer
+
+
 "
 
 
@@ -64,7 +114,7 @@ pc.info
 //    [nokill]
 //         - optional DIL to avoid having guild members murdered.
 //    quest blocking DIL(s)
-//         - e.g. QuestBlock@guilds(); you can only join if you completed X
+//         - e.g. quest_block@guilds(); you can only join if you completed X
 //    join DIL
 //         - We're missing a generic join DIL I think.
 //         - e.g. master_join@paladin_guild
@@ -95,7 +145,7 @@ pc.info
 // Plan:
 //   in block.zon ?
 //
-// QuestBlock@guilds(cmd : string, quest : string, sExec : stringlist);
+// quest_block@guilds(cmd : string, quest : string, sExec : stringlist);
 //    used to blocks the join command unless player has list of quests
 //
 // alignment@block - 
@@ -130,7 +180,7 @@ pc.info
 //
 // Blockers:
 // TrainMemberChk(sGuild : string, sMsg : string);
-// QuestBlock(cmd : string, quest : string, sExec : stringlist);
+// quest_block(cmd : string, quest : string, sExec : stringlist);
 //
 // SetAutoTrain(pc : unitptr, sGuild : string);
 // AdvGuildLevel(ch : unitptr);
@@ -217,14 +267,15 @@ dilend
 // Joins player pc to guild sGuild
 //
 dilbegin JoinGuild(pc : unitptr, sGuild : string);
+external
+   SetDefaultGuild(pc : unitptr, sGuild : string);
+
 var
    exd : extraptr;
    sl : stringlist;
 code
 {
-   sGuild := GUILD_PREPEND+sGuild;
-
-   exd := sGuild in pc.info;
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
 
    if (exd)
    {
@@ -232,12 +283,14 @@ code
       return;
    }
 
-   addstring(sl, sGuild);
+   addstring(sl, GUILD_PREPEND + sGuild);
    addstring(sl, "0");
    addstring(sl, itoa(pc.vlevel));
    addstring(sl, "$guild");
    
    addextra(pc.info, sl, "");
+
+   SetDefaultGuild(pc, sGuild);
 
    return;
 }
@@ -329,10 +382,8 @@ dilend
 dilbegin fnpri(FN_PRI_BLOCK-2) MurderBanish(sGuild : string);
 external
    BanishGuild@guilds(pc : unitptr, sGuild : string);
-
 var
    u : unitptr;
-
 code
 {
 :loop:
@@ -393,12 +444,12 @@ dilend
 //       block it otherwise
 //
 // Sample: 
-//    dilcopy QuestBlock@guilds("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
+//    dilcopy quest_block@guilds("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
 //
 //    The player can only join if they have completed the WIGHT_COMPLETE quest.
 //
 
-dilbegin fnpri(FN_PRI_BLOCK-1) QuestBlock(cmd : string, quest : string, sExec : stringlist);
+dilbegin fnpri(FN_PRI_BLOCK-1) quest_block(cmd : string, quest : string, sExec : stringlist);
 external
    Explainer@quests(pc : unitptr, sl : stringlist);
 
@@ -504,7 +555,7 @@ var
    exd : extraptr;
 code
 {
-   exd := sGuild in pc.info;
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
    {
@@ -514,6 +565,11 @@ code
 
    pc.guild := sGuild;
    SetAutoTrain(pc, sGuild);
+
+   if (pc.level > 0)
+   {
+      sendtext(sGuild + " is now your default guild (request a guild title to change default).<br/>", pc);
+   }
    return;
 }
 dilend
@@ -557,6 +613,72 @@ code
 }
 dilend
 
+dilbegin do_guilds(arg : string);
+var
+   exd : extraptr;
+   sl : stringlist;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+   {
+      sendtext("Only for players.<br/>", self);
+      quit;
+   }
+
+   sendtext("You are a member of the following guilds:<br/>", self);
+   exd := "$guild" in self.info;
+   i := 0;
+   while (exd)
+   {
+      sl := split(exd.names.[0], "/");
+      sendtext(sl.[1] + "<br/>", self);
+
+      exd := "$guild" in exd.next;
+      i := i + 1;
+   }
+
+   if (i == 0)
+   {
+      sendtext("None. Seems like an error. Contact an adminsitrator.<br/>", self);
+   }
+   else
+   {
+      sendtext(self.guild +  " is your default guild (and the guild you level in. Get a guild title from your guild master to change your default guild).<br/>", self);
+   }
+
+   exd := GUILD_BANISHED in self.info;
+   if (exd)
+   {
+      sendtext("<br/>You have been banished from the following guilds:<br/>", self);
+
+      i := length(exd.names)-2;
+      while (i >= 0)
+      {
+         sendtext(exd.names.[i+1] + "<br/>", self);
+         i := i - 1;
+      }
+   }
+
+
+   exd := GUILD_LEFT in self.info;
+   if (exd)
+   {
+      sendtext("<br/>You have left the following guilds:<br/>", self);
+
+      i := length(exd.names)-2;
+      while (i >= 0)
+      {
+         sendtext(exd.names.[i+1] + "<br/>", self);
+         i := i - 1;
+      }
+   }
+
+   quit;
+}
+dilend
+
+
 
 
 dilbegin SetTitles(the_guild : string, title_list : stringlist);
@@ -594,6 +716,7 @@ code
 
 :start:
    wait(SFB_CMD, command("title") and (activator.level < 235) and (activator.type == UNIT_ST_PC));
+   block;
    pc := activator;
    secure(pc, lost_pc);
    SetDefaultGuild(pc, the_guild);

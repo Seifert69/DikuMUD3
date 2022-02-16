@@ -50,8 +50,7 @@ code
    secure(pc, lostpc);
    i := 0;
    ln := length(sl);
-	heartbeat := 1;  // 0.25 seconds
-	pause;
+
 	heartbeat := PULSE_SEC * 4;
 
    // Give the explanation

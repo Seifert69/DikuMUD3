@@ -7350,7 +7350,7 @@ code
    "comm echo<br/>"+
    "  To do a channel emote type: <br/>"+
    "<channel name> @ <action><br/>"+
-   "  The standard guild channel is gchat only members will here you 
+   "  The standard guild channel is gchat only members will hear you.
    <br/><br/>",self);
 
    goto start;

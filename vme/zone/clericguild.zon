@@ -273,6 +273,8 @@ extra {"sign", "wall"}
 "<pre>The sign says:<br/>
 <br/>
    Welcome to the Midgaard Healer guild.<br/>
+   'join'       - join this guild (if you qualify!).<br/>
+   'title'      - to get a new title (if you deserve it!).<br/>
 <br/>
    - Tuck the Guild Master.<br/></pre>"
 flags {UNIT_FL_NO_TELEPORT}
@@ -584,7 +586,8 @@ external
    JoinGuild@guilds(pc : unitptr, sGuild : string);
    LeaveGuild@guilds(pc : unitptr, sGuild : string);
    BanishGuild@guilds(pc : unitptr, sGuild : string);
-
+var
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -594,31 +597,33 @@ code
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
    self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
 
-   if (IsBanished@guilds(activator, GUILD_UDG_CLERIC))
+   if (IsBanished@guilds(pc, GUILD_UDG_CLERIC))
    {
       block;
       exec ("say Why do you stand before me? you have been "+
       "told to leave our midst!", self);
-      exec ("spit " + activator.name, self);
+      exec ("spit " + pc.name, self);
       pause;
       goto start;
    }
 
-   if (IsInGuild@guilds(activator, GUILD_UDG_CLERIC))
+   if (IsInGuild@guilds(pc, GUILD_UDG_CLERIC))
    {
       block;
-      exec ("sigh " + activator.name, self);
+      exec ("sigh " + pc.name, self);
       pause;
       exec ("say Perhaps you have been preaching too much? " +
       "You don't even know who " +
-      "you are now " + activator.name+ ". You already hold the position "+
+      "you are now " + pc.name+ ". You already hold the position "+
       "of divine cleric!" , self);
       pause;
       goto start; 
    }
 
-   if (IsInGuilds@guilds(activator, GUILD_CLERIC_EXCL))
+   if (IsInGuilds@guilds(pc, GUILD_CLERIC_EXCL))
    {
       block;
       exec("say Your other guild choices exclude you from becoming a Cleric.", self);
@@ -626,7 +631,7 @@ code
       goto start;  
    }
 
-   JoinGuild@guilds(activator, GUILD_UDG_CLERIC);
+   JoinGuild@guilds(pc, GUILD_UDG_CLERIC);
 
    exec ("say The divination of higher powers now flow through your spirit.", self);
    goto start;

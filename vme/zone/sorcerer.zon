@@ -927,6 +927,9 @@ The Sign Reads:
 	Please worship your master Phoebius often. Occasionally
 	he may have a new gift for you, but he only gives them
 	to worthy Sorcerers who love and worship their master.
+
+'join'       - join this guild (if you qualify!).<br/>
+'title'      - to get a new title (if you deserve it!).<br/>
 "
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
@@ -1229,7 +1232,8 @@ external
    JoinGuild@guilds(pc : unitptr, sGuild : string);
    LeaveGuild@guilds(pc : unitptr, sGuild : string);
    BanishGuild@guilds(pc : unitptr, sGuild : string);
-
+var
+   pc : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -1239,31 +1243,33 @@ code
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
    self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
 
-   if (IsBanished@guilds(activator, SORCERER_GUILD))
+   if (IsBanished@guilds(pc, SORCERER_GUILD))
    {
       block;
       exec ("say Why do you stand before me? you have been "+
       "told to leave our midst!", self);
-      exec ("spit " + activator.name, self);
+      exec ("spit " + pc.name, self);
       pause;
       goto start;
    }
 
-   if (IsInGuild@guilds(activator, SORCERER_GUILD))
+   if (IsInGuild@guilds(pc, SORCERER_GUILD))
    {
       block;
-      exec ("sigh " + activator.name, self);
+      exec ("sigh " + pc.name, self);
       pause;
       exec ("say Perhaps you have been hitting your head  too much? " +
       "You don't even know who " +
-      "you are now " + activator.name+ ". You're already a member of  "+
+      "you are now " + pc.name+ ". You're already a member of  "+
       "the guild!" , self);
       pause;
       goto start; 
    }
 
-   if (IsInGuilds@guilds(activator, GUILD_SORCERER_EXCL))
+   if (IsInGuilds@guilds(pc, GUILD_SORCERER_EXCL))
    {
       block;
       exec("say Your other guild choices exclude you from becoming a Sorcerer.", self);
@@ -1271,7 +1277,7 @@ code
       goto start;  
    }
 
-   JoinGuild@guilds(activator, SORCERER_GUILD);
+   JoinGuild@guilds(pc, SORCERER_GUILD);
 
    exec ("say The power of the Sorcerers now coarses in your veins.", self);
    goto start;

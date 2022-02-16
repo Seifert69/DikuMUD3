@@ -99,14 +99,13 @@ code
 dilend /* join_dil */
 
 
-/* The following is a command */
-dilbegin insult_dil(arg : string); /* Block the insult command */
+/* The following is a social command, guess it should be in another zone */
+dilbegin insult_dil(arg : string);
 var
    pc   : unitptr;
 
 code
 {
-   log("Is this in use insult_dil ?");
    if (arg == "")
    {
       act("You insult the world in general! Life's a bitch!",
@@ -152,60 +151,11 @@ dilend /* insult_dil */
 
 /* The following dil is a command: guilds */
 dilbegin guilds_dil(arg : string);
-external path_update(u : unitptr);
-
-var
-   expd    : extraptr;
-   buf     : string;
-
+external
+   do_guilds@guilds(arg : string);
 code
 {
-   log("Is this in use guilds_dil ?");
-   quit;
-
-   if (self.level >= 235)
-   {
-      act("You're too high in level for normal guilds.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   path_update(self);
-
-   expd := "$path" in self.quests;
-
-   if (expd == null)
-   {
-:error:
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-
-   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
-       (expd.names.[3] == null) or (expd.names.[4] == null) or
-       (expd.names.[5] == null) or (expd.names.[6] == null) or
-       (expd.names.[7] == null))
-      goto error;
-
-   buf := "Your Guild Path is:<br/>";
-
-   if (expd.names.[1] != "")
-      buf := buf + "First: " + expd.names.[1] + "   " + expd.names.[4] + "<br/>";
-
-   if (expd.names.[2] != "")
-      buf := buf + "Second: " + expd.names.[2] + "   " + expd.names.[5] + "<br/>";
-
-   if (expd.names.[3] != "")
-      buf := buf + "Third: " + expd.names.[3] + "   " + expd.names.[6] + "<br/>";
-
-   buf := buf + "Your overall level is " + itoa(self.vlevel) + ".<br/>";
-   sendtext(buf, self);
+   do_guilds@guilds(arg);
    quit;
 }
 dilend /* guilds_dil */
@@ -406,217 +356,13 @@ dilend /* hand_hold */
 
 dilbegin guild_titles( the_guild : string, title_list : stringlist );
 external
-   path_update(u : unitptr);
-
-var
-   ln:integer;
-   male_list    : stringlist;
-   female_list  : stringlist;
-
-   expd         : extraptr;
-
-   pc           : unitptr;
-
-   pclevel      : integer;
-   pcsex        : integer;
-   i            : integer;
-
-   newtit       : string;
-   my_race      : string;
-
+   SetTitles@guilds(the_guild : string, title_list : stringlist);
 code
 {
-:init:
-/* Sort the list into two different lists and add gaps for even levels */
-
-   addstring(male_list, "-");
-   addstring(female_list, "-");
-
-   i := 0;
-   ln:=length(title_list);
-   while(i < ln)
-   {
-      addstring(male_list, title_list.[i]);
-      if (i+1<ln)
-      addstring(female_list, title_list.[i+1]);
-      i := i + 2;
-   }
-
-
-:start:
-   wait(SFB_CMD, command("title") and (activator.level < 235) and
-                 (activator.type == UNIT_ST_PC));
-   pc := activator;
-   secure(pc, lost_pc);
-
-   block;
-
-   if (not("$path" in pc.quests))
-   {
-      exec("say Just a second, " + pc.name + ", I need to check your " +
-           "record.", self);
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto lost_pc;
-   }
-
-   path_update(pc);
-
-   expd := "$path" in pc.quests;
-   if (expd == null) goto start;
-
-   if (the_guild == expd.names.[1])
-   {
-      pclevel := atoi(expd.names.[4]);
-      goto do_title;
-   }
-   else if (the_guild == expd.names.[2])
-   {
-      if (atoi(expd.names.[5]) < 1)
-      {
-         act("You must complete 40 levels in the " + expd.names.[1] +
-             " guild before you can begin receiving titles in the " +
-             expd.names.[2] + " guild. That means you need to complete " +
-             itoa(40 - atoi(expd.names.[4])) + " more levels.",
-             A_ALWAYS, pc, null, null, TO_CHAR);
-         goto lost_pc;
-      }
-      else
-      {
-         pclevel := atoi(expd.names.[5]);
-         goto do_title;
-      }
-   }
-   else if (the_guild == expd.names.[3])
-   {
-      if (atoi(expd.names.[6]) < 1)
-      {
-         act("You must complete 40 levels in the " + expd.names.[2] +
-             " guild before you can begin receiving titles in the " +
-             expd.names.[3] + " guild. That means you need to complete " +
-             itoa(40 - atoi(expd.names.[5])) + " more levels.",
-             A_ALWAYS, pc, null, null, TO_CHAR);
-         goto lost_pc;
-      }
-      else
-      {
-         pclevel := atoi(expd.names.[6]);
-         goto do_title;
-      }
-   }
-
-:do_title:
-
-   pcsex   := pc.sex;
-
-   if (pc.race == RACE_HUMAN)
-      my_race := "Human";
-   else if (pc.race == RACE_ELF)
-      my_race := "Elf";
-   else if (pc.race == RACE_DWARF)
-      my_race := "Dwarf";
-   else if (pc.race == RACE_HALFLING)
-      my_race := "Halfling";
-   else if (pc.race == RACE_GNOME)
-      my_race := "Gnome";
-   else if (pc.race == RACE_HALF_ORC)
-      my_race := "Half-Orc";
-   else if (pc.race == RACE_HALF_OGRE)
-      my_race := "Half-Ogre";
-   else if (pc.race == RACE_HALF_ELF)
-      my_race := "Half-Elf";
-   else if (pc.race == RACE_BROWNIE)
-      my_race := "Brownie";
-   else if (pc.race == RACE_GROLL)
-      my_race := "Groll";
-   else
-      my_race := "Darkelf";
-
-
-pclevel:=pclevel/5;
-
-   if (pcsex < 2)
-   {
-   if (pclevel>(length(male_list)-1))
-   pclevel:=(length(male_list)-1);
-      newtit := male_list.[pclevel];
-   }
-   else
-   {
-      if (pclevel>(length(female_list)-1))
-   pclevel:=(length(female_list)-1);
-      newtit := female_list.[pclevel];
-	  }
-
-
-   if (newtit == "-")
-   {
-      if (pcsex < 2)
-      {
-      if (pclevel<1)
-      goto jumpbug;
-         if (not(male_list.[pclevel - 1] in pc.title))
-         {
-
-            exec("say Enjoy the title, " + pc.name + "!", self);
-            pc.title := "the " + my_race + " " + male_list.[pclevel - 1];
-            goto lost_pc;
-         }
-         else
-         {
-                     :jumpbug:
-            exec("say You need to attain a higher level before you " +
-
-                 "can receive a new title, " + pc.name + ".", self);
-            goto lost_pc;
-         }
-      }
-      else if (pcsex > 1)
-      {
-            if (pclevel<1)
-goto jumpbug2;
-
-         if (not(female_list.[pclevel - 1] in pc.title))
-         {
-
-            exec("say Enjoy the title, " + pc.name + "!", self);
-            pc.title := "the " + my_race + " " + female_list.[pclevel - 1];
-            goto lost_pc;
-         }
-         else
-         {
-                  :jumpbug2:
-            exec("say You need to attain a higher level before you " +
-                 "can receive a new title, " + pc.name + ".", self);
-            goto lost_pc;
-         }
-      }
-   }
-
-   else if (newtit in pc.title)
-   {
-      exec("say You have already attained the appropriate title for " +
-           "this guild level, " + pc.name + ".",
-           self);
-      goto lost_pc;
-   }
-
-   else
-   {
-      pc.title := "the " + my_race + " " + newtit;
-      exec("say Enjoy the title, " + pc.name + "!", self);
-      goto lost_pc;
-   }
-
-:lost_pc:
-   unsecure(pc);
-   goto start;
+   SetTitles@guilds(the_guild, title_list);
+   quit;
 }
-dilend /* guild_titles */
+dilend
 
 
 /*
