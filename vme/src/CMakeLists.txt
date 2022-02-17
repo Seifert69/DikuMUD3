@@ -95,6 +95,7 @@ set(VME_SRCS
         tif_affect.cpp tif_affect.h
         time_info_data.cpp time_info_data.h
         trie.cpp trie.h
+        unit_dil_affected_type.cpp unit_dil_affected_type.h
         unitfind.cpp unitfind.h
         utility.cpp utility.h
         utils.h
