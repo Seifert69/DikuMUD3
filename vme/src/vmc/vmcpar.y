@@ -959,7 +959,7 @@ affect_field    : ID number
     }
     | APPLYF number
     {
-        cur_aff->applyf_i = $2;
+        cur_aff->setApplyFI($2);
     }
     | TIME number
     {

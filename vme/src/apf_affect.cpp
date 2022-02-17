@@ -59,7 +59,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* remove them                                           */
         for (taf = UNIT_AFFECTED(af->owner); taf; taf = taf->next)
         {
-            if ((taf != af) && (taf->applyf_i == APF_MOD_CHAR_FLAGS))
+            if ((taf != af) && (taf->getApplyFI() == APF_MOD_CHAR_FLAGS))
             {
                 SET_BIT(CHAR_FLAGS(unit), (ubit32)taf->getDataAtIndex(0));
             }
@@ -93,7 +93,7 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* them                                                  */
         for (taf = UNIT_AFFECTED(af->owner); taf; taf = taf->next)
         {
-            if ((taf != af) && (taf->applyf_i == APF_MOD_OBJ_FLAGS))
+            if ((taf != af) && (taf->getApplyFI() == APF_MOD_OBJ_FLAGS))
             {
                 SET_BIT(OBJ_FLAGS(unit), (ubit32)taf->getDataAtIndex(0));
             }
@@ -125,7 +125,7 @@ ubit1 apf_mod_unit_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* remove them                                           */
         for (taf = UNIT_AFFECTED(af->owner); taf; taf = taf->next)
         {
-            if ((taf != af) && (taf->applyf_i == APF_MOD_UNIT_FLAGS))
+            if ((taf != af) && (taf->getApplyFI() == APF_MOD_UNIT_FLAGS))
             {
                 SET_BIT(UNIT_FLAGS(unit), (ubit16)taf->getDataAtIndex(0));
             }

@@ -306,7 +306,7 @@ unit_affected_type *mcreate_affect()
     rs->setFirstFI(0);
     rs->setTickFI(0);
     rs->setLastFI(0);
-    rs->applyf_i = 0;
+    rs->setApplyFI(0);
     return rs;
 }
 

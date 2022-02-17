@@ -71,9 +71,9 @@ void create_affect(unit_data *unit, unit_affected_type *af)
         /* If less than zero it is a transfer! */
         if (af->getID() >= 0)
         {
-            if (af->applyf_i >= 0)
+            if (af->getApplyFI() >= 0)
             {
-                if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
+                if (!(*g_apf[af->getApplyFI()].func)(af, unit, TRUE))
                 {
                     return;
                 }
@@ -171,9 +171,9 @@ void destroy_affect(unit_affected_type *af)
     /* destroy the affect.                                 */
     if (af->getID() >= 0)
     {
-        if (af->applyf_i >= 0)
+        if (af->getApplyFI() >= 0)
         {
-            if (!(*g_apf[af->applyf_i].func)(af, af->owner, FALSE))
+            if (!(*g_apf[af->getApplyFI()].func)(af, af->owner, FALSE))
             {
                 af->setDuration(0);
                 af->setBeat(WAIT_SEC * 5);
@@ -294,9 +294,9 @@ void apply_affect(unit_data *unit)
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
-        if ((af->getID() >= 0) && (af->applyf_i >= 0))
+        if ((af->getID() >= 0) && (af->getApplyFI() >= 0))
         {
-            if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
+            if (!(*g_apf[af->getApplyFI()].func)(af, unit, TRUE))
             {
                 continue;
             }

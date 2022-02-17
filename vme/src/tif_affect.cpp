@@ -972,7 +972,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
             naf.setFirstFI(TIF_NONE);
             naf.setTickFI(TIF_NONE);
             naf.setLastFI(TIF_BURIED_DESTRUCT);
-            naf.applyf_i = APF_NONE;
+            naf.setApplyFI(APF_NONE);
 
             create_affect(UNIT_CONTAINS(unit), &naf);
 
@@ -1170,7 +1170,7 @@ void tif_speed_off(unit_affected_type *af, unit_data *unit)
 
 void tif_naught(unit_affected_type *af, unit_data *unit)
 {
-    slog(LOG_ALL, 0, "Obsoleted affect called with ID %d on %s@%s.", af->applyf_i, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+    slog(LOG_ALL, 0, "Obsoleted affect called with ID %d on %s@%s.", af->getApplyFI(), UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
 }
 
 tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},  // 0

@@ -93,6 +93,10 @@ public:
     void setLastFI(sbit16 value);
     int readLastFIFrom(CByteBuffer &buf);
 
+    sbit16 getApplyFI() const;
+    void setApplyFI(sbit16 value);
+    int readApplyFIFrom(CByteBuffer &buf);
+
 private:
     sbit16 id{0};       //
     ubit16 beat{0};     // Beat in 1/4 of secs, 0 = None
@@ -101,8 +105,8 @@ private:
     sbit16 firstf_i{0}; //
     sbit16 tickf_i{0};  //
     sbit16 lastf_i{0};  //
+    sbit16 applyf_i{0}; //
 public:
-    sbit16 applyf_i;
     eventq_elem *event; /*pointer to eventq for quick removing      */
     unit_data *owner;
     unit_affected_type *next, *gnext, *gprevious;

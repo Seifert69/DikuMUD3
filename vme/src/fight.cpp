@@ -1188,7 +1188,7 @@ void damage(unit_data *ch,
             af.setFirstFI(TIF_NONE);
             af.setTickFI(TIF_NONE);
             af.setLastFI(TIF_NONE);
-            af.applyf_i = APF_NONE;
+            af.setApplyFI(APF_NONE);
             af.setDataAtIndex(0, CHAR_LEVEL(ch));
             af.setDataAtIndex(1, 0);
             af.setDataAtIndex(2, 0);

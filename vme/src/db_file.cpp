@@ -808,7 +808,7 @@ void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version)
         pBuf->Append16(af->getFirstFI());
         pBuf->Append16(af->getTickFI());
         pBuf->Append16(af->getLastFI());
-        pBuf->Append16(af->applyf_i);
+        pBuf->Append16(af->getApplyFI());
     }
 
     assert(i <= 5000);

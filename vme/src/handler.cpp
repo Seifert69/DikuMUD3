@@ -622,8 +622,8 @@ unit_data *unequip_object(unit_data *obj)
                 if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->getDataAtIndex(0) == af->getDataAtIndex(0)) &&
                     (caf->getDataAtIndex(1) == af->getDataAtIndex(1)) &&
                     // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
-                    (caf->applyf_i == af->applyf_i) && (caf->getFirstFI() == af->getFirstFI()) && (caf->getLastFI() == af->getLastFI()) &&
-                    (caf->getTickFI() == af->getTickFI()))
+                    (caf->getApplyFI() == af->getApplyFI()) && (caf->getFirstFI() == af->getFirstFI()) &&
+                    (caf->getLastFI() == af->getLastFI()) && (caf->getTickFI() == af->getTickFI()))
                 {
                     destroy_affect(caf);
                     break; /* Skip inner for loop since we found the affect */

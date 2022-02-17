@@ -116,7 +116,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
         af.setFirstFI(TIF_NONE);
         af.setTickFI(TIF_NONE);
         af.setLastFI(TIF_NONE);
-        af.applyf_i = APF_NONE;
+        af.setApplyFI(APF_NONE);
         af.setDataAtIndex(0, 1);
         create_affect(vict, &af);
     }
