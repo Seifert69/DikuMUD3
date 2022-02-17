@@ -161,8 +161,8 @@ private:
     char *key{nullptr};          //
     unit_data *to_room{nullptr}; //
     ubit8 difficulty{0};         // Skill needed for swim, climb, search, pick-lock
+    int weight{0};               // Used for shortest path algorithm
 public:
-    int weight;      // Used for shortest path algorithm
     ubit8 exit_info; // Door info flags
 };
 
