@@ -184,7 +184,6 @@ Cleric, Necromancer, Druid ->
 //
 // SetAutoTrain(pc : unitptr, sGuild : string);
 // AdvGuildLevel(ch : unitptr);
-// SetGuildLevel(ch : unitptr, sGuild : string, lvl : integer);
 
 
 #define GUILD_PREPEND   "$guild/"
@@ -598,26 +597,6 @@ code
 dilend
 
 
-// Do not use, only for conversion from old system
-dilbegin SetGuildLevel(pc : unitptr, sGuild : string, lvl : integer);
-var
-   exd : extraptr;
-   s : string;
-code
-{
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
-
-   if (exd == null)
-   {
-      log("Error in AdvGuildLevel(): Unable to find ["+sGuild+"] in pc.info");
-      return;
-   }
-
-   exd.names.[1] := itoa(lvl);
-   return;
-}
-dilend
-
 // Returns the level of the player's guild 'sGuild'
 // -1 if no such guild found
 //
@@ -850,6 +829,27 @@ code
 }
 dilend /* guild_titles */
 
+
+
+// Do not use, only for conversion from old system (below)
+dilbegin SetGuildLevel(pc : unitptr, sGuild : string, lvl : integer);
+var
+   exd : extraptr;
+   s : string;
+code
+{
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in AdvGuildLevel(): Unable to find ["+sGuild+"] in pc.info");
+      return;
+   }
+
+   exd.names.[1] := itoa(lvl);
+   return;
+}
+dilend
 
 
 // Used to convert old players
