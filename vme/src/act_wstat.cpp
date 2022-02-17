@@ -1202,7 +1202,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                               UNIT_TITLE_STRING(ROOM_EXIT(u, i)->getToRoom()),
                                               cname,
                                               &bits2[0],
-                                              ROOM_EXIT(u, i)->difficulty,
+                                              ROOM_EXIT(u, i)->getSkillDifficulty(),
                                               ROOM_EXIT(u, i)->getKey() ? ROOM_EXIT(u, i)->getKey() : "");
                 }
                 else

@@ -1251,7 +1251,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         ROOM_EXIT(u, i)->exit_info = pBuf->ReadU16(&g_nCorrupt);
                         if (unit_version >= 71)
                         {
-                            ROOM_EXIT(u, i)->difficulty = pBuf->ReadU8(&g_nCorrupt); // V71
+                            ROOM_EXIT(u, i)->setSkillDifficulty(pBuf->ReadU8(&g_nCorrupt)); // V71
                         }
 
                         g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));

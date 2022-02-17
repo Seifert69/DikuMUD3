@@ -545,7 +545,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                 skillbonus = 100;
             }
 
-            int diff = ROOM_EXIT(room_from, direction)->difficulty;
+            int diff = ROOM_EXIT(room_from, direction)->getSkillDifficulty();
 
             if (bOceanEscape)
             {

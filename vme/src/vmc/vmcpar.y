@@ -329,7 +329,7 @@ exit_field  : TO reference
             sprintf(buf, "Exit difficulty %d must be in [0..250]", $2);
             fatal(buf);
         }
-        ROOM_EXIT(cur, cur_ex)->difficulty = $2;
+        ROOM_EXIT(cur, cur_ex)->setSkillDifficulty($2);
     }
     | OPEN flags
     {

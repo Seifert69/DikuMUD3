@@ -80,6 +80,21 @@ void room_direction_data::setToRoom(unit_data *value)
     to_room = value;
 }
 
+ubit8 room_direction_data::getSkillDifficulty() const
+{
+    return difficulty;
+}
+
+void room_direction_data::setSkillDifficulty(ubit8 value)
+{
+    difficulty = value;
+}
+
+ubit8 *room_direction_data::getSkillDifficultyPtr()
+{
+    return &difficulty;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -555,7 +570,7 @@ unit_data *unit_data::copy()
             uroom->dir_option[x]->getOpenName() = thisroom->dir_option[x]->getOpenName();
             uroom->dir_option[x]->setKey(str_dup(thisroom->dir_option[x]->getKey()));
             uroom->dir_option[x]->exit_info = thisroom->dir_option[x]->exit_info;
-            uroom->dir_option[x]->difficulty = thisroom->dir_option[x]->difficulty;
+            uroom->dir_option[x]->setSkillDifficulty(thisroom->dir_option[x]->getSkillDifficulty());
         }
     }
     else if (IS_OBJ(this))
@@ -834,7 +849,7 @@ std::string unit_data::json()
                 }
                 s.append(UROOM(this)->dir_option[i]->getOpenName().json());
                 s.append(",\n");
-                s.append(str_json("difficulty", UROOM(this)->dir_option[i]->difficulty));
+                s.append(str_json("difficulty", UROOM(this)->dir_option[i]->getSkillDifficulty()));
                 s.append(",\n");
                 s.append(str_json("exitflags", UROOM(this)->dir_option[i]->exit_info));
                 s.append(",\n");

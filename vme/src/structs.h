@@ -152,14 +152,18 @@ public:
     unit_data *getToRoom();
     void setToRoom(unit_data *value);
 
+    ubit8 getSkillDifficulty() const;
+    ubit8 *getSkillDifficultyPtr();
+    void setSkillDifficulty(ubit8 value);
+
 private:
     cNamelist open_name;         // For Open & Enter
     char *key{nullptr};          //
     unit_data *to_room{nullptr}; //
+    ubit8 difficulty{0};         // Skill needed for swim, climb, search, pick-lock
 public:
-    ubit8 difficulty; // Skill needed for swim, climb, search, pick-lock
-    int weight;       // Used for shortest path algorithm
-    ubit8 exit_info;  // Door info flags
+    int weight;      // Used for shortest path algorithm
+    ubit8 exit_info; // Door info flags
 };
 
 class room_data : public unit_data
