@@ -678,7 +678,7 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
         }
 
         /* Don't call, don't apply and don't set up tick for this affect (yet) */
-        af.event = nullptr;
+        af.setEventQueueElement(nullptr);
         link_alloc_affect(u, &af);
     }
 

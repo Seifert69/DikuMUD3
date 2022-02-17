@@ -141,12 +141,12 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
         ((unit_fptr *)arg2)->event->func = nullptr;
         ((unit_fptr *)arg2)->event = nullptr;
     }
-    else if ((func == affect_beat) && arg1 && (((unit_affected_type *)arg1)->event))
+    else if ((func == affect_beat) && arg1 && (((unit_affected_type *)arg1)->cgetEventQueueElement()))
     {
-        ((unit_affected_type *)arg1)->event->func = nullptr;
-        ((unit_affected_type *)arg1)->event = nullptr;
+        ((unit_affected_type *)arg1)->getEventQueueElement()->func = nullptr;
+        ((unit_affected_type *)arg1)->setEventQueueElement(nullptr);
     }
-    else if ((func == affect_beat) && arg1 && (!((unit_affected_type *)arg1)->event))
+    else if ((func == affect_beat) && arg1 && (!((unit_affected_type *)arg1)->cgetEventQueueElement()))
     {
         return;
     }

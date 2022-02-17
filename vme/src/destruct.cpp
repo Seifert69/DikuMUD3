@@ -278,6 +278,22 @@ int unit_affected_type::readApplyFIFrom(CByteBuffer &buf)
 {
     return buf.Read16(&applyf_i);
 }
+
+const eventq_elem *unit_affected_type::cgetEventQueueElement() const
+{
+    return event;
+}
+
+eventq_elem *unit_affected_type::getEventQueueElement()
+{
+    return event;
+}
+
+void unit_affected_type::setEventQueueElement(eventq_elem *value)
+{
+    event = value;
+}
+
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

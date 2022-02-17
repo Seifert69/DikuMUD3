@@ -67,7 +67,7 @@ void create_affect(unit_data *unit, unit_affected_type *af)
     if (!unit->is_destructed())
     {
         af = link_alloc_affect(unit, af);
-        af->event = nullptr;
+        af->setEventQueueElement(nullptr);
         /* If less than zero it is a transfer! */
         if (af->getID() >= 0)
         {
@@ -92,16 +92,16 @@ void create_affect(unit_data *unit, unit_affected_type *af)
 
             if (af->getBeat() > 0)
             {
-                if (af->event)
+                if (af->cgetEventQueueElement())
                 {
                     g_events.remove(affect_beat, (void *)af, nullptr);
                 }
-                af->event = g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr);
+                af->setEventQueueElement(g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr));
             }
         }
         else
         {
-            af->event = nullptr;
+            af->setEventQueueElement(nullptr);
         }
     }
 }
@@ -177,11 +177,11 @@ void destroy_affect(unit_affected_type *af)
             {
                 af->setDuration(0);
                 af->setBeat(WAIT_SEC * 5);
-                if (af->event)
+                if (af->cgetEventQueueElement())
                 {
                     g_events.remove(affect_beat, (void *)af, nullptr);
                 }
-                af->event = g_events.add(number(120, 240), affect_beat, (void *)af, nullptr);
+                af->setEventQueueElement(g_events.add(number(120, 240), affect_beat, (void *)af, nullptr));
                 return;
             }
         }
@@ -277,11 +277,11 @@ void affect_beat(void *p1, void *p2)
     }
     if (!destroyed)
     {
-        if (af->event)
+        if (af->cgetEventQueueElement())
         {
             g_events.remove(affect_beat, (void *)af, nullptr);
         }
-        af->event = g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr);
+        af->setEventQueueElement(g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr));
     }
 }
 
@@ -313,15 +313,15 @@ void start_affect(unit_data *unit)
     {
         if ((af->getID() >= 0) && (af->getBeat() > 0))
         {
-            if (af->event)
+            if (af->cgetEventQueueElement())
             {
                 g_events.remove(affect_beat, (void *)af, nullptr);
             }
-            af->event = g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr);
+            af->setEventQueueElement(g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr));
         }
         else
         {
-            af->event = nullptr;
+            af->setEventQueueElement(nullptr);
         }
     }
 }
@@ -332,7 +332,7 @@ void stop_affect(unit_data *unit)
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
     {
-        if (af->event != nullptr)
+        if (af->cgetEventQueueElement() != nullptr)
         {
             g_events.remove(affect_beat, (void *)af, nullptr);
         }
