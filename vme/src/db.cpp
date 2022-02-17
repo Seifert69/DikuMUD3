@@ -642,17 +642,17 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
              return;
              } */
 
-        if (af.readDataFromAtIndex(0, *pBuf))
+        if (af.readFromIntoDataAtIndex(*pBuf, 0))
         {
             return 1;
         }
 
-        if (af.readDataFromAtIndex(1, *pBuf))
+        if (af.readFromIntoDataAtIndex(*pBuf, 1))
         {
             return 1;
         }
 
-        if (af.readDataFromAtIndex(2, *pBuf))
+        if (af.readFromIntoDataAtIndex(*pBuf, 2))
         {
             return 1;
         }

@@ -592,7 +592,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
         if (af->getID() < 0) /* It is a transfer affect! */
         {
             newaf = *af;
-            newaf.setID(-newaf.getID()); /* No longer a transfer    */
+            newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
             newaf.setDuration(-1);       /* Permanent until unequip */
             create_affect(ch, &newaf);
         }

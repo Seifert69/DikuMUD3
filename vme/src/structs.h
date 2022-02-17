@@ -63,6 +63,13 @@ class zone_reset_cmd;
 class unit_affected_type : public basedestruct
 {
 public:
+    unit_affected_type() = default;
+    ~unit_affected_type() = default;
+    unit_affected_type(const unit_affected_type &) = delete;
+    unit_affected_type(unit_affected_type &&) = delete;
+    unit_affected_type &operator=(const unit_affected_type &) = default;
+    unit_affected_type &operator=(unit_affected_type &&) = delete;
+
     sbit16 getID() const;
     void setID(sbit16 value);
     int readIDFrom(CByteBuffer &buf);
@@ -79,7 +86,7 @@ public:
     int getDataAtIndex(size_t index) const;
     void setDataAtIndex(size_t index, int value);
     void incrementDataAtIndex(size_t index);
-    int readDataFromAtIndex(size_t index, CByteBuffer &buf);
+    int readFromIntoDataAtIndex(CByteBuffer &buf, size_t index);
 
     sbit16 getFirstFI() const;
     void setFirstFI(sbit16 value);
@@ -114,6 +121,8 @@ public:
     unit_affected_type *getG_Previous();
     void setG_Previous(unit_affected_type *value);
 
+    int destruct_classindex();
+
 private:
     sbit16 id{0};                           //
     ubit16 beat{0};                         // Beat in 1/4 of secs, 0 = None
@@ -128,8 +137,6 @@ private:
     unit_affected_type *next{nullptr};      //
     unit_affected_type *gnext{nullptr};     //
     unit_affected_type *gprevious{nullptr}; //
-public:
-    int destruct_classindex();
 };
 
 class unit_fptr : public basedestruct
@@ -389,8 +396,8 @@ public:
     extra_list info;  /* For saving Admin information             */
     extra_list quest; /* For saving QUEST information            */
 
-    sbit8 profession;  // The player's chosen profession, -1 means unknown
-    ubit16 vlvl;       /* Virtual Level for player                */
+    sbit8 profession; // The player's chosen profession, -1 means unknown
+    ubit16 vlvl;      /* Virtual Level for player                */
 
     sbit32 id;             /* Unique identifier for each player (-1 guest) */
     sbit32 skill_points;   /* No of practice points left              */

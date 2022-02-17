@@ -505,9 +505,9 @@ void tif_mag_on(unit_affected_type *af, unit_data *unit)
 
 void tif_mag_off(unit_affected_type *af, unit_data *unit)
 {
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
     tif_mag_on(af, unit);
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
 }
 
 void tif_div_on(unit_affected_type *af, unit_data *unit)
@@ -524,9 +524,9 @@ void tif_div_on(unit_affected_type *af, unit_data *unit)
 
 void tif_div_off(unit_affected_type *af, unit_data *unit)
 {
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
     tif_div_on(af, unit);
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
 }
 
 void tif_str_on(unit_affected_type *af, unit_data *unit)
@@ -588,9 +588,9 @@ void tif_str_on(unit_affected_type *af, unit_data *unit)
 
 void tif_str_off(unit_affected_type *af, unit_data *unit)
 {
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
     tif_str_on(af, unit);
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
 }
 
 void tif_dex_on(unit_affected_type *af, unit_data *unit)
@@ -650,9 +650,9 @@ void tif_dex_on(unit_affected_type *af, unit_data *unit)
 
 void tif_dex_off(unit_affected_type *af, unit_data *unit)
 {
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
     tif_dex_on(af, unit);
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
 }
 
 void tif_con_on(unit_affected_type *af, unit_data *unit)
@@ -712,9 +712,9 @@ void tif_con_on(unit_affected_type *af, unit_data *unit)
 
 void tif_con_off(unit_affected_type *af, unit_data *unit)
 {
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
     tif_con_on(af, unit);
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
 }
 
 void tif_cha_on(unit_affected_type *af, unit_data *unit)
@@ -774,9 +774,9 @@ void tif_cha_on(unit_affected_type *af, unit_data *unit)
 
 void tif_cha_off(unit_affected_type *af, unit_data *unit)
 {
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
     tif_cha_on(af, unit);
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
 }
 
 void tif_bra_on(unit_affected_type *af, unit_data *unit)
@@ -836,9 +836,9 @@ void tif_bra_on(unit_affected_type *af, unit_data *unit)
 
 void tif_bra_off(unit_affected_type *af, unit_data *unit)
 {
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
     tif_bra_on(af, unit);
-    af->setDataAtIndex(1, -af->getDataAtIndex(1));
+    af->setDataAtIndex(1, af->getDataAtIndex(1) * -1);
 }
 
 void tif_poison_on(unit_affected_type *af, unit_data *unit)

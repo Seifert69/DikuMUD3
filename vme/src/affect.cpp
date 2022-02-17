@@ -46,9 +46,7 @@ void link_affect(unit_data *unit, unit_affected_type *af)
 
 unit_affected_type *link_alloc_affect(unit_data *unit, unit_affected_type *orgaf)
 {
-    unit_affected_type *af = nullptr;
-
-    af = new unit_affected_type;
+    unit_affected_type *af = new unit_affected_type;
     assert(!af->is_destructed());
 
     *af = *orgaf;

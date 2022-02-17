@@ -214,7 +214,7 @@ void unit_affected_type::incrementDataAtIndex(size_t index)
     data[index]++;
 }
 
-int unit_affected_type::readDataFromAtIndex(size_t index, CByteBuffer &buf)
+int unit_affected_type::readFromIntoDataAtIndex(CByteBuffer &buf, size_t index)
 {
     return buf.Read32(&data[index]);
 }

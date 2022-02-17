@@ -294,9 +294,7 @@ room_direction_data *mcreate_exit()
 
 unit_affected_type *mcreate_affect()
 {
-    unit_affected_type *rs = nullptr;
-
-    MCREATE(rs, unit_affected_type, 1);
+    unit_affected_type *rs=new EMPLACE(unit_affected_type) unit_affected_type;
     rs->setNext(nullptr);
     rs->setID(0);
     rs->setDuration(0);
