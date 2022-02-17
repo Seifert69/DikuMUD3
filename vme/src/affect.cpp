@@ -41,7 +41,7 @@ void link_affect(unit_data *unit, unit_affected_type *af)
 
     af->next = UNIT_AFFECTED(unit);
     UNIT_AFFECTED(unit) = af;
-    af->owner = unit;
+    af->setOwner(unit);
 }
 
 unit_affected_type *link_alloc_affect(unit_data *unit, unit_affected_type *orgaf)
@@ -142,12 +142,12 @@ void unlink_affect(unit_affected_type *af)
 
     /* Unlink affect structure from local list */
 
-    i = UNIT_AFFECTED(af->owner);
+    i = UNIT_AFFECTED(af->cgetOwner());
     if (i)
     {
         if (i == af)
         {
-            UNIT_AFFECTED(af->owner) = i->next;
+            UNIT_AFFECTED(af->getOwner()) = i->next;
         }
         else
         {
@@ -173,7 +173,7 @@ void destroy_affect(unit_affected_type *af)
     {
         if (af->getApplyFI() >= 0)
         {
-            if (!(*g_apf[af->getApplyFI()].func)(af, af->owner, FALSE))
+            if (!(*g_apf[af->getApplyFI()].func)(af, af->getOwner(), FALSE))
             {
                 af->setDuration(0);
                 af->setBeat(WAIT_SEC * 5);
@@ -186,9 +186,9 @@ void destroy_affect(unit_affected_type *af)
             }
         }
 
-        if (af->getLastFI() >= 0 && !af->owner->is_destructed())
+        if (af->getLastFI() >= 0 && !af->getOwner()->is_destructed())
         {
-            (*g_tif[af->getLastFI()].func)(af, af->owner);
+            (*g_tif[af->getLastFI()].func)(af, af->getOwner());
         }
     }
 
@@ -251,7 +251,7 @@ void affect_beat(void *p1, void *p2)
 
     destroyed = FALSE;
 
-    if (!IS_PC(af->owner) || CHAR_DESCRIPTOR(af->owner))
+    if (!IS_PC(af->cgetOwner()) || CHAR_DESCRIPTOR(af->cgetOwner()))
     {
         if (af->getDuration() == 0)
         {
@@ -264,7 +264,7 @@ void affect_beat(void *p1, void *p2)
         {
             if (af->getTickFI() >= 0)
             {
-                (*g_tif[af->getTickFI()].func)(af, af->owner);
+                (*g_tif[af->getTickFI()].func)(af, af->getOwner());
             }
 
             destroyed = af->is_destructed();

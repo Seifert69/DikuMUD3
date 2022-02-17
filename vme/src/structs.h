@@ -101,6 +101,10 @@ public:
     eventq_elem *getEventQueueElement();
     void setEventQueueElement(eventq_elem *value);
 
+    const unit_data *cgetOwner() const;
+    unit_data *getOwner();
+    void setOwner(unit_data *value);
+
 private:
     sbit16 id{0};                //
     ubit16 beat{0};              // Beat in 1/4 of secs, 0 = None
@@ -111,8 +115,8 @@ private:
     sbit16 lastf_i{0};           //
     sbit16 applyf_i{0};          //
     eventq_elem *event{nullptr}; // pointer to eventq for quick removing
+    unit_data *owner{nullptr};   //
 public:
-    unit_data *owner;
     unit_affected_type *next, *gnext, *gprevious;
 
     int destruct_classindex();

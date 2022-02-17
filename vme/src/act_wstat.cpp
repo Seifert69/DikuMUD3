@@ -657,7 +657,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
                                        af->getTickFI() >= 0 ? STR(g_tif[af->getTickFI()].descr) : "Not used (-1)",
                                        af->getLastFI() >= 0 ? STR(g_tif[af->getLastFI()].descr) : "Not used (-1)",
                                        af->getApplyFI() >= 0 ? STR(g_apf[af->getApplyFI()].descr) : "Not used (-1)",
-                                       u == af->owner ? "" : "Serious error in owner pointer!<br/>");
+                                       u == af->cgetOwner() ? "" : "Serious error in owner pointer!<br/>");
         send_to_char(msg, ch);
     }
 }

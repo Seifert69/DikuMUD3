@@ -294,6 +294,21 @@ void unit_affected_type::setEventQueueElement(eventq_elem *value)
     event = value;
 }
 
+const unit_data *unit_affected_type::cgetOwner() const
+{
+    return owner;
+}
+
+unit_data *unit_affected_type::getOwner()
+{
+    return owner;
+}
+
+void unit_affected_type::setOwner(unit_data *value)
+{
+    owner = value;
+}
+
 /* ======================================= */
 
 /* May only be called by clear_destuct! */
