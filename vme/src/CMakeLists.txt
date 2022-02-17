@@ -45,6 +45,7 @@ set(VME_SRCS
         experience.cpp experience.h
         extra.cpp extra.h
         fight.cpp fight.h
+        file_index_type.cpp file_index_type.h
         files.cpp files.h
         formatter.h
         guild.cpp guild.h
@@ -65,6 +66,7 @@ set(VME_SRCS
         namelist.cpp namelist.h
         nanny.cpp nanny.h
         nice.cpp nice.h
+        OutputCapture.cpp OutputCapture.h
         path.cpp path.h
         pcsave.cpp pcsave.h
         pipe.cpp pipe.h
@@ -85,11 +87,11 @@ set(VME_SRCS
         structs.cpp structs.h
         system.cpp system.h
         szonelog.h
+        szonelog_raw.cpp szonelog_raw.h
         teach.cpp teach.h
         textutil.cpp textutil.h
         tif_affect.cpp tif_affect.h
         trie.cpp trie.h
-        OutputCapture.cpp OutputCapture.h
         unitfind.cpp unitfind.h
         utility.cpp utility.h
         utils.h
@@ -98,8 +100,7 @@ set(VME_SRCS
         zon_basis.cpp zon_basis.h
         zon_wiz.cpp zon_wiz.h
         zone_reset.cpp zone_reset.h
- szonelog_raw.cpp szonelog_raw.h
-)
+        )
 
 # Add all sources to a library file so we can link with other projects and test suites
 add_library(vme_objs STATIC ${VME_SRCS})
