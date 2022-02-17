@@ -1,16 +1,22 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage brief<br/><br/>
-<br/>
-If you're tired of seeing all the old room descriptions scrolling up over<br/>
-the screen you can use this command. Then you will only get the room title,<br/>
-and its contents. Beware, do not use brief when you're exploring new sections,<br/>
-there might be clues in the room description text that are important. To turn<br/>
-off brief, just use the same command again.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Compact<br/><br/>
-Change<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Brief</h1>
+<p>Usage:
+</p>
+<pre> <a cmd='#'>change brief</a>
+</pre>
+<p>If you're tired of seeing all the old room descriptions scrolling up over
+the screen you can use this command. Then you will only get the room title,
+and its contents. You can still type 'look' to see the full room description.
+</p><p>Beware, do not use brief when you're exploring new sections, there might be
+clues in the room description text that are important. To turn off brief, 
+just use the same command again.
+</p><p><br />
+</p><p>See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Compact</a>
+ &gt; <a cmd='#'>Help Change</a>
+</pre>
+
+
+
+
+</div>

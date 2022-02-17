@@ -1,0 +1,9 @@
+<div class="mw-parser-output"><h1>Wedit</h1>
+<p>Is an experimental command that serializes world objects as JSON and sends them to the web-client.
+</p><p>The long term goal is to have an editing interface on the web-client allowing users to edit objects with a reasonably good content editor.
+</p>
+
+
+
+
+</div>
