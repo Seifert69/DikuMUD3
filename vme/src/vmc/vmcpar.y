@@ -878,8 +878,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            cur_aff->next = mcreate_affect();
-            cur_aff = cur_aff->next;
+            cur_aff->setNext(mcreate_affect());
+            cur_aff = cur_aff->getNext();
         }
     }
     affect_fields ';'

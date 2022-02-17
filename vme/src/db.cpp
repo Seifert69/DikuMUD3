@@ -1578,7 +1578,7 @@ void bonus_setup(unit_data *u)
             OBJ_VALUE(u, 2) = bonus_map_a(OBJ_VALUE(u, 2));
         }
 
-        for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->next)
+        for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->getNext())
         {
             if ((af->getID() == ID_TRANSFER_STR) || (af->getID() == ID_TRANSFER_DEX) || (af->getID() == ID_TRANSFER_CON) ||
                 (af->getID() == ID_TRANSFER_CHA) || (af->getID() == ID_TRANSFER_BRA) || (af->getID() == ID_TRANSFER_MAG) ||

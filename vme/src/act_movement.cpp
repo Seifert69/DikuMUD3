@@ -129,7 +129,7 @@ int has_found_door(unit_data *pc, int dir)
 
     if (IS_SET(ROOM_EXIT(UNIT_IN(pc), dir)->exit_info, EX_CLOSED))
     {
-        for (af = UNIT_AFFECTED(UNIT_IN(pc)); af; af = af->next)
+        for (af = UNIT_AFFECTED(UNIT_IN(pc)); af; af = af->getNext())
         {
             if (af->getID() == ID_SPOTTED_SECRET && PC_ID(pc) == af->getDataAtIndex(0))
             {

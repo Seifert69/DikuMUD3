@@ -39,7 +39,7 @@ void link_affect(unit_data *unit, unit_affected_type *af)
 
     affected_list = af;
 
-    af->next = UNIT_AFFECTED(unit);
+    af->setNext(UNIT_AFFECTED(unit));
     UNIT_AFFECTED(unit) = af;
     af->setOwner(unit);
 }
@@ -147,17 +147,17 @@ void unlink_affect(unit_affected_type *af)
     {
         if (i == af)
         {
-            UNIT_AFFECTED(af->getOwner()) = i->next;
+            UNIT_AFFECTED(af->getOwner()) = i->getNext();
         }
         else
         {
-            for (; i->next != af; i = i->next)
+            for (; i->cgetNext() != af; i = i->getNext())
             {
                 ;
             }
 
             assert(i);
-            i->next = af->next;
+            i->setNext(af->getNext());
         }
     }
 }
@@ -208,7 +208,7 @@ void affect_clear_unit(unit_data *unit)
     {
         for (taf1 = UNIT_AFFECTED(unit); taf1; taf1 = taf2)
         {
-            taf2 = taf1->next;
+            taf2 = taf1->getNext();
             destroy_affect(taf1);
         }
     }
@@ -223,7 +223,7 @@ unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
         if (af->getID() == id)
         {
@@ -292,7 +292,7 @@ void apply_affect(unit_data *unit)
     unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
         if ((af->getID() >= 0) && (af->getApplyFI() >= 0))
         {
@@ -309,7 +309,7 @@ void start_affect(unit_data *unit)
     unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
         if ((af->getID() >= 0) && (af->getBeat() > 0))
         {
@@ -330,7 +330,7 @@ void stop_affect(unit_data *unit)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
         if (af->cgetEventQueueElement() != nullptr)
         {

@@ -297,7 +297,7 @@ unit_affected_type *mcreate_affect()
     unit_affected_type *rs = nullptr;
 
     MCREATE(rs, unit_affected_type, 1);
-    rs->next = nullptr;
+    rs->setNext(nullptr);
     rs->setID(0);
     rs->setDuration(0);
     rs->setDataAtIndex(0, 0);

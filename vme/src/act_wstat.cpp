@@ -638,7 +638,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
 
     send_to_char("Unit affects:<br/>", ch);
 
-    for (af = UNIT_AFFECTED(u); af; af = af->next)
+    for (af = UNIT_AFFECTED(u); af; af = af->getNext())
     {
         auto msg = diku::format_to_str("----------------------------------------------------<br/>"
                                        "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
