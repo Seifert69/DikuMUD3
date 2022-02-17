@@ -955,7 +955,7 @@ affect_field    : ID number
     }
     | LASTF number
     {
-        cur_aff->lastf_i = $2;
+        cur_aff->setLastFI($2);
     }
     | APPLYF number
     {

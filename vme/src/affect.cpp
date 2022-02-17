@@ -186,9 +186,9 @@ void destroy_affect(unit_affected_type *af)
             }
         }
 
-        if (af->lastf_i >= 0 && !af->owner->is_destructed())
+        if (af->getLastFI() >= 0 && !af->owner->is_destructed())
         {
-            (*g_tif[af->lastf_i].func)(af, af->owner);
+            (*g_tif[af->getLastFI()].func)(af, af->owner);
         }
     }
 

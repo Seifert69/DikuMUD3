@@ -667,7 +667,7 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
             return 1;
         }
 
-        if (pBuf->Read16(&af.lastf_i))
+        if (af.readLastFIFrom(*pBuf))
         {
             return 1;
         }
