@@ -113,7 +113,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
         af.setID(ID_BACKSTABBED);
         af.setDuration(15);
         af.setBeat(WAIT_SEC * 60);
-        af.firstf_i = TIF_NONE;
+        af.setFirstFI(TIF_NONE);
         af.tickf_i = TIF_NONE;
         af.lastf_i = TIF_NONE;
         af.applyf_i = APF_NONE;

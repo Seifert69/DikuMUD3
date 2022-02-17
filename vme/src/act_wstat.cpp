@@ -653,7 +653,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
                                        af->getDataAtIndex(0),
                                        af->getDataAtIndex(1),
                                        af->getDataAtIndex(2),
-                                       af->firstf_i >= 0 ? STR(g_tif[af->firstf_i].descr) : "Not used (-1)",
+                                       af->getFirstFI() >= 0 ? STR(g_tif[af->getFirstFI()].descr) : "Not used (-1)",
                                        af->tickf_i >= 0 ? STR(g_tif[af->tickf_i].descr) : "Not used (-1)",
                                        af->lastf_i >= 0 ? STR(g_tif[af->lastf_i].descr) : "Not used (-1)",
                                        af->applyf_i >= 0 ? STR(g_apf[af->applyf_i].descr) : "Not used (-1)",

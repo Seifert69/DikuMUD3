@@ -79,9 +79,9 @@ void create_affect(unit_data *unit, unit_affected_type *af)
                 }
             }
 
-            if (af->firstf_i >= 0)
+            if (af->getFirstFI() >= 0)
             {
-                (*g_tif[af->firstf_i].func)(af, unit);
+                (*g_tif[af->getFirstFI()].func)(af, unit);
             }
 
             // If there is no beat, decrease duration on creation

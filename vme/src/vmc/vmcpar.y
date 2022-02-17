@@ -947,7 +947,7 @@ affect_field    : ID number
     }
     | FIRSTF number
     {
-        cur_aff->firstf_i = $2;
+        cur_aff->setFirstFI($2);
     }
     | TICKF number
     {

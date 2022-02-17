@@ -219,6 +219,21 @@ int unit_affected_type::readDataFromAtIndex(size_t index, CByteBuffer &buf)
     return buf.Read32(&data[index]);
 }
 
+sbit16 unit_affected_type::getFirstFI() const
+{
+    return firstf_i;
+}
+
+void unit_affected_type::setFirstFI(sbit16 value)
+{
+    firstf_i = value;
+}
+
+int unit_affected_type::readFirstFIFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&firstf_i);
+}
+
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

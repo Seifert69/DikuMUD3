@@ -622,7 +622,7 @@ void process_affects(unit_data *pUnit)
 
     for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->next)
     {
-        firstf = (pAf->firstf_i == TIF_NONE);
+        firstf = (pAf->getFirstFI() == TIF_NONE);
         tickf = (pAf->tickf_i == TIF_NONE);
         lastf = (pAf->lastf_i == TIF_NONE);
         applyf = (pAf->applyf_i == APF_NONE);
@@ -630,7 +630,7 @@ void process_affects(unit_data *pUnit)
         switch (pAf->getID())
         {
             case ID_TRANSFER_MAG:
-                firstf = (pAf->firstf_i == TIF_MAG_INC);
+                firstf = (pAf->getFirstFI() == TIF_MAG_INC);
                 lastf = (pAf->lastf_i == TIF_MAG_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_MAG)
@@ -644,7 +644,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_DIV:
-                firstf = (pAf->firstf_i == TIF_DIV_INC);
+                firstf = (pAf->getFirstFI() == TIF_DIV_INC);
                 lastf = (pAf->lastf_i == TIF_DIV_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_DIV)
@@ -658,7 +658,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_STR:
-                firstf = (pAf->firstf_i == TIF_STR_INC);
+                firstf = (pAf->getFirstFI() == TIF_STR_INC);
                 lastf = (pAf->lastf_i == TIF_STR_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_STR)
@@ -672,7 +672,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_DEX:
-                firstf = (pAf->firstf_i == TIF_DEX_INC);
+                firstf = (pAf->getFirstFI() == TIF_DEX_INC);
                 lastf = (pAf->lastf_i == TIF_DEX_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_DEX)
@@ -686,7 +686,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_CON:
-                firstf = (pAf->firstf_i == TIF_CON_INC);
+                firstf = (pAf->getFirstFI() == TIF_CON_INC);
                 lastf = (pAf->lastf_i == TIF_CON_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_CON)
@@ -700,7 +700,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_CHA:
-                firstf = (pAf->firstf_i == TIF_CHA_INC);
+                firstf = (pAf->getFirstFI() == TIF_CHA_INC);
                 lastf = (pAf->lastf_i == TIF_CHA_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_CHA)
@@ -714,7 +714,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_BRA:
-                firstf = (pAf->firstf_i == TIF_BRA_INC);
+                firstf = (pAf->getFirstFI() == TIF_BRA_INC);
                 lastf = (pAf->lastf_i == TIF_BRA_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_BRA)
@@ -728,7 +728,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_HPP:
-                firstf = (pAf->firstf_i == TIF_HIT_INC);
+                firstf = (pAf->getFirstFI() == TIF_HIT_INC);
                 lastf = (pAf->lastf_i == TIF_HIT_DEC);
                 applyf = (pAf->applyf_i == APF_ABILITY);
                 if (pAf->getDataAtIndex(0) != ABIL_HP)
@@ -759,13 +759,13 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_TRANSFER_CHARFLAGS:
-                firstf = (pAf->firstf_i == TIF_EYES_TINGLE);
+                firstf = (pAf->getFirstFI() == TIF_EYES_TINGLE);
                 lastf = (pAf->lastf_i == TIF_EYES_TINGLE);
                 applyf = (pAf->applyf_i == APF_MOD_CHAR_FLAGS);
                 break;
 
             case ID_SPELL_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_SPL_INC);
+                firstf = (pAf->getFirstFI() == TIF_SPL_INC);
                 lastf = (pAf->lastf_i == TIF_SPL_DEC);
                 applyf = (pAf->applyf_i == APF_SPELL_ADJ);
                 if (!is_in(pAf->getDataAtIndex(0), 0, SPL_TREE_MAX))
@@ -779,7 +779,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_SKILL_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_SKI_INC);
+                firstf = (pAf->getFirstFI() == TIF_SKI_INC);
                 lastf = (pAf->lastf_i == TIF_SKI_DEC);
                 applyf = (pAf->applyf_i == APF_SKILL_ADJ);
                 if (!is_in(pAf->getDataAtIndex(0), 0, SKI_TREE_MAX))
@@ -793,7 +793,7 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_WEAPON_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_WPN_INC);
+                firstf = (pAf->getFirstFI() == TIF_WPN_INC);
                 lastf = (pAf->lastf_i == TIF_WPN_DEC);
                 applyf = (pAf->applyf_i == APF_WEAPON_ADJ);
                 if (!is_in(pAf->getDataAtIndex(0), 0, WPN_TREE_MAX))
@@ -807,21 +807,21 @@ void process_affects(unit_data *pUnit)
                 break;
 
             case ID_PROT_EVIL_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_PROT_EVIL_ON);
+                firstf = (pAf->getFirstFI() == TIF_PROT_EVIL_ON);
                 lastf = (pAf->lastf_i == TIF_PROT_EVIL_OFF);
                 tickf = (pAf->tickf_i == TIF_NONE);
                 applyf = (pAf->applyf_i == APF_NONE);
                 break;
 
             case ID_PROT_GOOD_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_PROT_GOOD_ON);
+                firstf = (pAf->getFirstFI() == TIF_PROT_GOOD_ON);
                 lastf = (pAf->lastf_i == TIF_PROT_GOOD_OFF);
                 tickf = (pAf->tickf_i == TIF_NONE);
                 applyf = (pAf->applyf_i == APF_NONE);
                 break;
 
             case ID_TRANSFER_SPEED:
-                firstf = ((pAf->firstf_i == TIF_SPEED_BETTER) || (pAf->firstf_i == TIF_SPEED_WORSE));
+                firstf = ((pAf->getFirstFI() == TIF_SPEED_BETTER) || (pAf->getFirstFI() == TIF_SPEED_WORSE));
                 lastf = ((pAf->lastf_i == TIF_SPEED_BETTER) || (pAf->lastf_i == TIF_SPEED_WORSE));
                 tickf = (pAf->tickf_i == TIF_NONE);
                 applyf = (pAf->applyf_i == APF_SPEED);
@@ -834,7 +834,7 @@ void process_affects(unit_data *pUnit)
 
         if (firstf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal firstf %d in id %d.", UNIT_IDENT(pUnit), pAf->firstf_i, pAf->getID());
+            dmc_error(TRUE, "%s: Illegal firstf %d in id %d.", UNIT_IDENT(pUnit), pAf->getFirstFI(), pAf->getID());
         }
         if (tickf == FALSE)
         {
