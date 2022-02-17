@@ -37,6 +37,7 @@
 #include "weather.h"
 #include "zon_basis.h"
 #include "zone_reset.h"
+#include "zone_reset_cmd.h"
 
 #include <cctype>
 #include <cstdio>

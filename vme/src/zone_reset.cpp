@@ -17,6 +17,7 @@
 #include "structs.h"
 #include "szonelog.h"
 #include "utils.h"
+#include "zone_reset_cmd.h"
 
 zone_type *g_boot_zone = nullptr; /* Points to the zone currently booted */
 

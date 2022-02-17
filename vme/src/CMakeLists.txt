@@ -100,6 +100,7 @@ set(VME_SRCS
         zon_basis.cpp zon_basis.h
         zon_wiz.cpp zon_wiz.h
         zone_reset.cpp zone_reset.h
+        zone_reset_cmd.cpp zone_reset_cmd.h
         )
 
 # Add all sources to a library file so we can link with other projects and test suites
