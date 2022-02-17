@@ -111,22 +111,24 @@ public:
     unit_affected_type *getG_Next();
     void setG_Next(unit_affected_type *value);
 
-private:
-    sbit16 id{0};                       //
-    ubit16 beat{0};                     // Beat in 1/4 of secs, 0 = None
-    sbit16 duration{0};                 // How many beats until end
-    int data[3]{0};                     //
-    sbit16 firstf_i{0};                 //
-    sbit16 tickf_i{0};                  //
-    sbit16 lastf_i{0};                  //
-    sbit16 applyf_i{0};                 //
-    eventq_elem *event{nullptr};        // pointer to eventq for quick removing
-    unit_data *owner{nullptr};          //
-    unit_affected_type *next{nullptr};  //
-    unit_affected_type *gnext{nullptr}; //
-public:
-    unit_affected_type *gprevious;
+    unit_affected_type *getG_Previous();
+    void setG_Previous(unit_affected_type *value);
 
+private:
+    sbit16 id{0};                           //
+    ubit16 beat{0};                         // Beat in 1/4 of secs, 0 = None
+    sbit16 duration{0};                     // How many beats until end
+    int data[3]{0};                         //
+    sbit16 firstf_i{0};                     //
+    sbit16 tickf_i{0};                      //
+    sbit16 lastf_i{0};                      //
+    sbit16 applyf_i{0};                     //
+    eventq_elem *event{nullptr};            // pointer to eventq for quick removing
+    unit_data *owner{nullptr};              //
+    unit_affected_type *next{nullptr};      //
+    unit_affected_type *gnext{nullptr};     //
+    unit_affected_type *gprevious{nullptr}; //
+public:
     int destruct_classindex();
 };
 

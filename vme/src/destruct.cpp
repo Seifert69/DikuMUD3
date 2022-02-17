@@ -328,6 +328,16 @@ void unit_affected_type::setG_Next(unit_affected_type *value)
 {
     gnext = value;
 }
+
+unit_affected_type *unit_affected_type::getG_Previous()
+{
+    return gprevious;
+}
+
+void unit_affected_type::setG_Previous(unit_affected_type *value)
+{
+    gprevious = value;
+}
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

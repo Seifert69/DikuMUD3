@@ -25,12 +25,12 @@ void link_affect(unit_data *unit, unit_affected_type *af)
        UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit),
        UNIT_NAME(unit), af->id); */
 
-    af->gprevious = nullptr;
+    af->setG_Previous(nullptr);
 
     if (affected_list)
     {
         af->setG_Next(affected_list);
-        affected_list->gprevious = af;
+        affected_list->setG_Previous(af);
     }
     else
     {
@@ -132,12 +132,12 @@ void unlink_affect(unit_affected_type *af)
 
     if (af->getG_Next())
     {
-        af->getG_Next()->gprevious = af->gprevious;
+        af->getG_Next()->setG_Previous(af->getG_Previous());
     }
 
-    if (af->gprevious)
+    if (af->getG_Previous())
     {
-        af->gprevious->setG_Next(af->getG_Next());
+        af->getG_Previous()->setG_Next(af->getG_Next());
     }
 
     /* Unlink affect structure from local list */
