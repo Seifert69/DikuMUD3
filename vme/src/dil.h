@@ -463,6 +463,7 @@ struct dilargstype
 #define DILT_CONST 2
 #define DILT_ARG 3
 
+class zone_type;
 /* DIL variable structure */
 struct dilvar
 {

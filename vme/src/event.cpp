@@ -18,6 +18,7 @@
 #include "utils.h"
 #include "weather.h"
 #include "zone_reset.h"
+#include "zone_type.h"
 
 #include <sys/time.h>
 
