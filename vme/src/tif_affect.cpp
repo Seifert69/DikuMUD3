@@ -174,12 +174,14 @@ void tif_hide_off(unit_affected_type *af, unit_data *unit)
 
 void tif_hide_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (!(af->data[1]))
+    if (!(af->getDataAtIndex(1)))
     {
         return;
     }
 
-    switch (af->data[1]--)
+    auto value = af->getDataAtIndex(1);
+    af->setDataAtIndex(1, value - 1);
+    switch (value)
     {
         case 1:
             send_to_char("Someone is bound to look here sometime.<br/>", unit);
@@ -200,12 +202,14 @@ void tif_hide_tick(unit_affected_type *af, unit_data *unit)
 
 void tif_nohide_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (!(af->data[1]))
+    if (!(af->getDataAtIndex(1)))
     {
         return;
     }
 
-    switch (af->data[1]--)
+    auto value = af->getDataAtIndex(1);
+    af->setDataAtIndex(1, value - 1);
+    switch (value)
     {
         case 1:
             send_to_char("Someone is probably looking at you.<br/>", unit);
@@ -421,9 +425,9 @@ void tif_sleep_check(unit_affected_type *af, unit_data *unit)
 
     if (CHAR_POS(unit) > POSITION_SLEEPING)
     {
-        hm = resistance_skill_check(af->data[0],
+        hm = resistance_skill_check(af->getDataAtIndex(0),
                                     spell_ability(unit, ABIL_BRA, SPL_SLEEP),
-                                    af->data[1],
+                                    af->getDataAtIndex(1),
                                     spell_defense_skill(unit, SPL_SLEEP));
         if (hm < 0)
         {
@@ -446,7 +450,7 @@ void tif_sleep_off(unit_affected_type *af, unit_data *unit)
 
 void tif_protect_on(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         act("You feel protected.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     }
@@ -458,7 +462,7 @@ void tif_protect_on(unit_affected_type *af, unit_data *unit)
 
 void tif_protect_off(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         act("You feel less protected.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     }
@@ -470,7 +474,7 @@ void tif_protect_off(unit_affected_type *af, unit_data *unit)
 
 void tif_hit_on(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         act("You feel more healthy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     }
@@ -482,14 +486,14 @@ void tif_hit_on(unit_affected_type *af, unit_data *unit)
 
 void tif_hit_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_hit_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_mag_on(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         act("You feel more powerful.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     }
@@ -501,14 +505,14 @@ void tif_mag_on(unit_affected_type *af, unit_data *unit)
 
 void tif_mag_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_mag_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_div_on(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         act("You feel closer to your god.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     }
@@ -520,9 +524,9 @@ void tif_div_on(unit_affected_type *af, unit_data *unit)
 
 void tif_div_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_div_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_str_on(unit_affected_type *af, unit_data *unit)
@@ -536,7 +540,7 @@ void tif_str_on(unit_affected_type *af, unit_data *unit)
      */
 
     /*Darg new str*/
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         switch (1 + (int)(5.0 * rand() / (RAND_MAX + 1.0)))
         {
@@ -584,9 +588,9 @@ void tif_str_on(unit_affected_type *af, unit_data *unit)
 
 void tif_str_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_str_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_dex_on(unit_affected_type *af, unit_data *unit)
@@ -598,7 +602,7 @@ void tif_dex_on(unit_affected_type *af, unit_data *unit)
          act ("You feel a little clumsy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
      */
     /*Darg new dex*/
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         switch (1 + (int)(5.0 * rand() / (RAND_MAX + 1.0)))
         {
@@ -646,9 +650,9 @@ void tif_dex_on(unit_affected_type *af, unit_data *unit)
 
 void tif_dex_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_dex_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_con_on(unit_affected_type *af, unit_data *unit)
@@ -660,7 +664,7 @@ void tif_con_on(unit_affected_type *af, unit_data *unit)
          act ("You feel less robust.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
      */
     /*Darg new con*/
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         switch (1 + (int)(5.0 * rand() / (RAND_MAX + 1.0)))
         {
@@ -708,9 +712,9 @@ void tif_con_on(unit_affected_type *af, unit_data *unit)
 
 void tif_con_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_con_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_cha_on(unit_affected_type *af, unit_data *unit)
@@ -722,7 +726,7 @@ void tif_cha_on(unit_affected_type *af, unit_data *unit)
          act ("You feel less authoritative.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
      */
     /*Darg new cha*/
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         switch (1 + (int)(5.0 * rand() / (RAND_MAX + 1.0)))
         {
@@ -770,9 +774,9 @@ void tif_cha_on(unit_affected_type *af, unit_data *unit)
 
 void tif_cha_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_cha_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_bra_on(unit_affected_type *af, unit_data *unit)
@@ -784,7 +788,7 @@ void tif_bra_on(unit_affected_type *af, unit_data *unit)
          act ("You feel a little dumb.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
      */
     /*Darg new bra*/
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
         switch (1 + (int)(5.0 * rand() / (RAND_MAX + 1.0)))
         {
@@ -832,9 +836,9 @@ void tif_bra_on(unit_affected_type *af, unit_data *unit)
 
 void tif_bra_off(unit_affected_type *af, unit_data *unit)
 {
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
     tif_bra_on(af, unit);
-    af->data[1] = -af->data[1];
+    af->setDataAtIndex(1, -af->getDataAtIndex(1));
 }
 
 void tif_poison_on(unit_affected_type *af, unit_data *unit)
@@ -848,9 +852,9 @@ void tif_poison_on(unit_affected_type *af, unit_data *unit)
 /* Data[2] The amount of Endurance points to loose (>=0) */
 void tif_poison_suffer(unit_affected_type *af, unit_data *unit)
 {
-    CHAR_MANA(unit) -= af->data[1];
-    CHAR_ENDURANCE(unit) -= af->data[2];
-    damage(unit, unit, nullptr, af->data[0], MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
+    CHAR_MANA(unit) -= af->getDataAtIndex(1);
+    CHAR_ENDURANCE(unit) -= af->getDataAtIndex(2);
+    damage(unit, unit, nullptr, af->getDataAtIndex(0), MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
     /* unit can be destructed now, but no problemo */
 }
 
@@ -922,9 +926,9 @@ void tif_sustain_tick(unit_affected_type *af, unit_data *unit)
     {
         return;
     }
-    PC_COND(unit, 0) = af->data[0];
-    PC_COND(unit, 1) = af->data[1];
-    PC_COND(unit, 2) = af->data[2];
+    PC_COND(unit, 0) = af->getDataAtIndex(0);
+    PC_COND(unit, 1) = af->getDataAtIndex(1);
+    PC_COND(unit, 2) = af->getDataAtIndex(2);
 }
 
 void tif_sustain_off(unit_affected_type *af, unit_data *unit)
@@ -1030,73 +1034,93 @@ void tif_jail_release(unit_affected_type *af, unit_data *unit)
 
 void tif_spl_on(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
-        act("You feel more skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel more skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
     else
     {
-        act("You feel less skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel less skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
 }
 
 void tif_spl_off(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
-        act("You feel less skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel less skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
     else
     {
-        act("You feel more skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel more skilled at $2t.", A_ALWAYS, unit, g_SplColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
 }
 
 void tif_ski_on(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
-        act("You feel more skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel more skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
     else
     {
-        act("You feel less skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel less skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
 }
 
 void tif_ski_off(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
-        act("You feel less skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel less skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
     else
     {
-        act("You feel more skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel more skilled in $2t.", A_ALWAYS, unit, g_SkiColl.text[af->getDataAtIndex(0)], cActParameter(), TO_CHAR);
     }
 }
 
 void tif_wpn_on(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
-        act("You feel more skilled at the $2t fighting style.", A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel more skilled at the $2t fighting style.",
+            A_ALWAYS,
+            unit,
+            g_WpnColl.text[af->getDataAtIndex(0)],
+            cActParameter(),
+            TO_CHAR);
     }
     else
     {
-        act("You feel less skilled at the $2t fighting style.", A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel less skilled at the $2t fighting style.",
+            A_ALWAYS,
+            unit,
+            g_WpnColl.text[af->getDataAtIndex(0)],
+            cActParameter(),
+            TO_CHAR);
     }
 }
 
 void tif_wpn_off(unit_affected_type *af, unit_data *unit)
 {
-    if (af->data[1] > 0)
+    if (af->getDataAtIndex(1) > 0)
     {
-        act("You feel less skilled at the $2t fighting style.", A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel less skilled at the $2t fighting style.",
+            A_ALWAYS,
+            unit,
+            g_WpnColl.text[af->getDataAtIndex(0)],
+            cActParameter(),
+            TO_CHAR);
     }
     else
     {
-        act("You feel more skilled at the $2t fighting style.", A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
+        act("You feel more skilled at the $2t fighting style.",
+            A_ALWAYS,
+            unit,
+            g_WpnColl.text[af->getDataAtIndex(0)],
+            cActParameter(),
+            TO_CHAR);
     }
 }
 
@@ -1123,7 +1147,7 @@ void tif_armour_on(unit_affected_type *af, unit_data *unit)
             break;
 
         default:
-            af->data[0] = ARM_CLOTHES;
+            af->setDataAtIndex(0, ARM_CLOTHES);
             break;
     }
 

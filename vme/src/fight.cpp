@@ -908,7 +908,7 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
 
         if (paf)
         {
-            maxlevel = MAX(virtual_level(head), paf->data[0]);
+            maxlevel = MAX(virtual_level(head), paf->getDataAtIndex(0));
         }
         else
         {
@@ -1176,7 +1176,7 @@ void damage(unit_data *ch,
     {
         if ((paf = affected_by_spell(victim, ID_MAX_ATTACKER)))
         {
-            paf->data[0] = MAX(CHAR_LEVEL(ch), paf->data[0]);
+            paf->setDataAtIndex(0, MAX(CHAR_LEVEL(ch), paf->getDataAtIndex(0)));
         }
         else
         {
@@ -1189,8 +1189,9 @@ void damage(unit_data *ch,
             af.tickf_i = TIF_NONE;
             af.lastf_i = TIF_NONE;
             af.applyf_i = APF_NONE;
-            af.data[0] = CHAR_LEVEL(ch);
-            af.data[1] = af.data[2] = 0;
+            af.setDataAtIndex(0, CHAR_LEVEL(ch));
+            af.setDataAtIndex(1, 0);
+            af.setDataAtIndex(2, 0);
 
             create_affect(victim, &af);
         }

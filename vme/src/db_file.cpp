@@ -801,9 +801,9 @@ void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version)
         pBuf->Append16(af->getID());
         pBuf->Append16(af->getBeat());
 
-        pBuf->Append32(af->data[0]);
-        pBuf->Append32(af->data[1]);
-        pBuf->Append32(af->data[2]);
+        pBuf->Append32(af->getDataAtIndex(0));
+        pBuf->Append32(af->getDataAtIndex(1));
+        pBuf->Append32(af->getDataAtIndex(2));
 
         pBuf->Append16(af->firstf_i);
         pBuf->Append16(af->tickf_i);

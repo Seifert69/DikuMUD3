@@ -45,11 +45,11 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        SET_BIT(CHAR_FLAGS(unit), (ubit32)af->data[0]);
+        SET_BIT(CHAR_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
     }
     else
     {
-        REMOVE_BIT(CHAR_FLAGS(unit), (ubit32)af->data[0]);
+        REMOVE_BIT(CHAR_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -61,7 +61,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->applyf_i == APF_MOD_CHAR_FLAGS))
             {
-                SET_BIT(CHAR_FLAGS(unit), (ubit32)taf->data[0]);
+                SET_BIT(CHAR_FLAGS(unit), (ubit32)taf->getDataAtIndex(0));
             }
         }
     }
@@ -79,11 +79,11 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        SET_BIT(OBJ_FLAGS(unit), (ubit32)af->data[0]);
+        SET_BIT(OBJ_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
     }
     else
     {
-        REMOVE_BIT(OBJ_FLAGS(unit), (ubit32)af->data[0]);
+        REMOVE_BIT(OBJ_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -95,7 +95,7 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->applyf_i == APF_MOD_OBJ_FLAGS))
             {
-                SET_BIT(OBJ_FLAGS(unit), (ubit32)taf->data[0]);
+                SET_BIT(OBJ_FLAGS(unit), (ubit32)taf->getDataAtIndex(0));
             }
         }
     }
@@ -111,11 +111,11 @@ ubit1 apf_mod_unit_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        SET_BIT(UNIT_FLAGS(unit), (ubit16)af->data[0]);
+        SET_BIT(UNIT_FLAGS(unit), (ubit16)af->getDataAtIndex(0));
     }
     else
     {
-        REMOVE_BIT(UNIT_FLAGS(unit), (ubit16)af->data[0]);
+        REMOVE_BIT(UNIT_FLAGS(unit), (ubit16)af->getDataAtIndex(0));
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -127,7 +127,7 @@ ubit1 apf_mod_unit_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->applyf_i == APF_MOD_UNIT_FLAGS))
             {
-                SET_BIT(UNIT_FLAGS(unit), (ubit16)taf->data[0]);
+                SET_BIT(UNIT_FLAGS(unit), (ubit16)taf->getDataAtIndex(0));
             }
         }
     }
@@ -144,7 +144,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
         return TRUE;
     }
 
-    modify = af->data[0];
+    modify = af->getDataAtIndex(0);
     if (IS_NPC(unit))
     {
         while (modify > WPN_GROUP_MAX)
@@ -157,26 +157,26 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         if (IS_PC(unit))
         {
-            if (skill_overflow(PC_WPN_SKILL(unit, modify), af->data[1], set))
+            if (skill_overflow(PC_WPN_SKILL(unit, modify), af->getDataAtIndex(1), set))
             {
                 return raw_destruct_affect(af);
             }
-            PC_WPN_SKILL(unit, modify) += af->data[1];
+            PC_WPN_SKILL(unit, modify) += af->getDataAtIndex(1);
         }
         else
         {
-            NPC_WPN_SKILL(unit, modify) += af->data[1];
+            NPC_WPN_SKILL(unit, modify) += af->getDataAtIndex(1);
         }
     }
     else
     {
         if (IS_PC(unit))
         {
-            PC_WPN_SKILL(unit, modify) -= af->data[1];
+            PC_WPN_SKILL(unit, modify) -= af->getDataAtIndex(1);
         }
         else
         {
-            NPC_WPN_SKILL(unit, modify) -= af->data[1];
+            NPC_WPN_SKILL(unit, modify) -= af->getDataAtIndex(1);
         }
     }
 
@@ -196,18 +196,18 @@ ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         if (IS_PC(unit))
         {
-            if (skill_overflow(PC_SKI_SKILL(unit, af->data[0]), af->data[1], set))
+            if (skill_overflow(PC_SKI_SKILL(unit, af->getDataAtIndex(0)), af->getDataAtIndex(1), set))
             {
                 return raw_destruct_affect(af);
             }
-            PC_SKI_SKILL(unit, af->data[0]) += af->data[1];
+            PC_SKI_SKILL(unit, af->getDataAtIndex(0)) += af->getDataAtIndex(1);
         }
     }
     else
     {
         if (IS_PC(unit))
         {
-            PC_SKI_SKILL(unit, af->data[0]) -= af->data[1];
+            PC_SKI_SKILL(unit, af->getDataAtIndex(0)) -= af->getDataAtIndex(1);
         }
     }
 
@@ -228,7 +228,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
         return TRUE;
     }
 
-    modify = af->data[0];
+    modify = af->getDataAtIndex(0);
     if (IS_NPC(unit))
     {
         while (modify > SPL_GROUP_MAX)
@@ -241,26 +241,26 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         if (IS_PC(unit))
         {
-            if (skill_overflow(PC_SPL_SKILL(unit, modify), af->data[1], set))
+            if (skill_overflow(PC_SPL_SKILL(unit, modify), af->getDataAtIndex(1), set))
             {
                 return raw_destruct_affect(af);
             }
-            PC_SPL_SKILL(unit, modify) += af->data[1];
+            PC_SPL_SKILL(unit, modify) += af->getDataAtIndex(1);
         }
         else
         {
-            NPC_SPL_SKILL(unit, modify) += af->data[1];
+            NPC_SPL_SKILL(unit, modify) += af->getDataAtIndex(1);
         }
     }
     else
     {
         if (IS_PC(unit))
         {
-            PC_SPL_SKILL(unit, modify) -= af->data[1];
+            PC_SPL_SKILL(unit, modify) -= af->getDataAtIndex(1);
         }
         else
         {
-            NPC_SPL_SKILL(unit, modify) -= af->data[1];
+            NPC_SPL_SKILL(unit, modify) -= af->getDataAtIndex(1);
         }
     }
 
@@ -277,22 +277,22 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        if (skill_overflow(CHAR_ABILITY(unit, af->data[0]), af->data[1], set))
+        if (skill_overflow(CHAR_ABILITY(unit, af->getDataAtIndex(0)), af->getDataAtIndex(1), set))
         {
             return raw_destruct_affect(af);
         }
-        CHAR_ABILITY(unit, af->data[0]) += af->data[1];
+        CHAR_ABILITY(unit, af->getDataAtIndex(0)) += af->getDataAtIndex(1);
 
-        if (af->data[0] == ABIL_HP)
+        if (af->getDataAtIndex(0) == ABIL_HP)
         {
             UNIT_MAX_HIT(unit) = hit_limit(unit);
         }
     }
     else
     {
-        CHAR_ABILITY(unit, af->data[0]) -= af->data[1];
+        CHAR_ABILITY(unit, af->getDataAtIndex(0)) -= af->getDataAtIndex(1);
 
-        if (af->data[0] == ABIL_HP)
+        if (af->getDataAtIndex(0) == ABIL_HP)
         {
             UNIT_MAX_HIT(unit) = hit_limit(unit);
         }
@@ -306,19 +306,19 @@ ubit1 apf_light(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     if (!set)
     {
-        af->data[0] = -af->data[0];
+        af->setDataAtIndex(0, -af->getDataAtIndex(0));
     }
 
     if (IS_ROOM(unit))
     {
-        UNIT_LIGHTS(unit) += af->data[0];
+        UNIT_LIGHTS(unit) += af->getDataAtIndex(0);
     }
 
-    modify_bright(unit, af->data[0]);
+    modify_bright(unit, af->getDataAtIndex(0));
 
     if (!set)
     {
-        af->data[0] = -af->data[0];
+        af->setDataAtIndex(0, -af->getDataAtIndex(0));
     }
 
     return TRUE;
@@ -333,9 +333,9 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
         return TRUE;
     }
 
-    if (!is_in(af->data[0], ARM_CLOTHES, ARM_PLATE) || (af->data[0] < CHAR_NATURAL_ARMOUR(unit)))
+    if (!is_in(af->getDataAtIndex(0), ARM_CLOTHES, ARM_PLATE) || (af->getDataAtIndex(0) < CHAR_NATURAL_ARMOUR(unit)))
     {
-        af->data[0] = -1; /* Ineffective, other spell cancels this one */
+        af->setDataAtIndex(0, -1); /* Ineffective, other spell cancels this one */
         return TRUE;
     }
 
@@ -347,17 +347,17 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf->getID() == ID_NATURAL_ARMOUR) && (taf != af))
             {
-                af->data[1] = taf->data[1];
+                af->setDataAtIndex(1, taf->getDataAtIndex(1));
                 break;
             }
         }
 
-        CHAR_NATURAL_ARMOUR(unit) = MAX(CHAR_NATURAL_ARMOUR(unit), af->data[0]);
+        CHAR_NATURAL_ARMOUR(unit) = MAX(CHAR_NATURAL_ARMOUR(unit), af->getDataAtIndex(0));
     }
     else
     {
         /* Restore value... */
-        CHAR_NATURAL_ARMOUR(unit) = af->data[1];
+        CHAR_NATURAL_ARMOUR(unit) = af->getDataAtIndex(1);
     }
 
     return TRUE;
@@ -373,7 +373,7 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
         return TRUE;
     }
 
-    if ((af->data[0] < 4) || (af->data[2] < 0))
+    if ((af->getDataAtIndex(0) < 4) || (af->getDataAtIndex(2) < 0))
     {
         return TRUE;
     }
@@ -382,25 +382,25 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         unit_affected_type *taf = nullptr;
 
-        af->data[2] = CHAR_SPEED(unit);
+        af->setDataAtIndex(2, CHAR_SPEED(unit));
 
         for (taf = UNIT_AFFECTED(unit); taf; taf = taf->next)
         {
             if ((taf->getID() == ID_SPEED) && (taf != af))
             {
-                af->data[2] = -1;
+                af->setDataAtIndex(2, -1);
                 break;
             }
         }
 
         if (taf == nullptr)
         {
-            CHAR_SPEED(unit) = af->data[0];
+            CHAR_SPEED(unit) = af->getDataAtIndex(0);
         }
     }
     else
     {
-        CHAR_SPEED(unit) = af->data[2];
+        CHAR_SPEED(unit) = af->getDataAtIndex(2);
     }
 
     return TRUE;

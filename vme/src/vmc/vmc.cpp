@@ -300,7 +300,9 @@ unit_affected_type *mcreate_affect()
     rs->next = nullptr;
     rs->setID(0);
     rs->setDuration(0);
-    rs->data[0] = rs->data[1] = rs->data[2] = 0;
+    rs->setDataAtIndex(0, 0);
+    rs->setDataAtIndex(1, 0);
+    rs->setDataAtIndex(2, 0);
     rs->firstf_i = rs->tickf_i = rs->lastf_i = rs->applyf_i = 0;
     return rs;
 }

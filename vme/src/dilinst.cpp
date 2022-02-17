@@ -2658,9 +2658,9 @@ void dilfi_ada(dilprg *p)
                         af.setDuration(v3->val.num);
                         af.setBeat(v4->val.num);
 
-                        af.data[0] = v5->val.num;
-                        af.data[1] = v6->val.num;
-                        af.data[2] = v7->val.num;
+                        af.setDataAtIndex(0, v5->val.num);
+                        af.setDataAtIndex(1, v6->val.num);
+                        af.setDataAtIndex(2, v7->val.num);
 
                         af.firstf_i = v8->val.num;
                         af.tickf_i = v9->val.num;
@@ -2700,9 +2700,9 @@ void dilfi_ada(dilprg *p)
                         af.setDuration(v3->val.num);
                         af.setBeat(v4->val.num);
 
-                        af.data[0] = v5->val.num;
-                        af.data[1] = v6->val.num;
-                        af.data[2] = v7->val.num;
+                        af.setDataAtIndex(0, v5->val.num);
+                        af.setDataAtIndex(1, v6->val.num);
+                        af.setDataAtIndex(2, v7->val.num);
 
                         af.firstf_i = v8->val.num;
                         af.tickf_i = v9->val.num;

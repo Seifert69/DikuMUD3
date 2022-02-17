@@ -199,6 +199,26 @@ int unit_affected_type::readDurationFrom(CByteBuffer &buf)
     return buf.Read16(&duration);
 }
 
+int unit_affected_type::getDataAtIndex(size_t index) const
+{
+    return data[index];
+}
+
+void unit_affected_type::setDataAtIndex(size_t index, int value)
+{
+    data[index] = value;
+}
+
+void unit_affected_type::incrementDataAtIndex(size_t index)
+{
+    data[index]++;
+}
+
+int unit_affected_type::readDataFromAtIndex(size_t index, CByteBuffer &buf)
+{
+    return buf.Read32(&data[index]);
+}
+
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

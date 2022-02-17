@@ -76,13 +76,16 @@ public:
     void decrementDuration();
     int readDurationFrom(CByteBuffer &buf);
 
+    int getDataAtIndex(size_t index) const;
+    void setDataAtIndex(size_t index, int value);
+    void incrementDataAtIndex(size_t index);
+    int readDataFromAtIndex(size_t index, CByteBuffer &buf);
 private:
     sbit16 id{0};       //
     ubit16 beat{0};     // Beat in 1/4 of secs, 0 = None
     sbit16 duration{0}; // How many beats until end
+    int data[3]{0};     //
 public:
-    int data[3];
-
     sbit16 firstf_i;
     sbit16 tickf_i;
     sbit16 lastf_i;

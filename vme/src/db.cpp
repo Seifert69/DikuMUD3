@@ -642,17 +642,17 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
              return;
              } */
 
-        if (pBuf->Read32(&af.data[0]))
+        if (af.readDataFromAtIndex(0, *pBuf))
         {
             return 1;
         }
 
-        if (pBuf->Read32(&af.data[1]))
+        if (af.readDataFromAtIndex(1, *pBuf))
         {
             return 1;
         }
 
-        if (pBuf->Read32(&af.data[2]))
+        if (af.readDataFromAtIndex(2, *pBuf))
         {
             return 1;
         }
@@ -1583,9 +1583,13 @@ void bonus_setup(unit_data *u)
             if ((af->getID() == ID_TRANSFER_STR) || (af->getID() == ID_TRANSFER_DEX) || (af->getID() == ID_TRANSFER_CON) ||
                 (af->getID() == ID_TRANSFER_CHA) || (af->getID() == ID_TRANSFER_BRA) || (af->getID() == ID_TRANSFER_MAG) ||
                 (af->getID() == ID_TRANSFER_DIV) || (af->getID() == ID_TRANSFER_HPP))
-                af->data[1] = bonus_map_b(af->data[1]);
+            {
+                af->setDataAtIndex(1, bonus_map_b(af->getDataAtIndex(1)));
+            }
             else if ((af->getID() == ID_SKILL_TRANSFER) || (af->getID() == ID_SPELL_TRANSFER) || (af->getID() == ID_WEAPON_TRANSFER))
-                af->data[1] = bonus_map_b(af->data[1]);
+            {
+                af->setDataAtIndex(1, bonus_map_b(af->getDataAtIndex(1)));
+            }
         }
     }
 }

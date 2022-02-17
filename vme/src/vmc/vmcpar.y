@@ -943,7 +943,7 @@ affect_field    : ID number
     }
     | DATA index number
     {
-        cur_aff->data[$2] = $3;
+        cur_aff->setDataAtIndex($2, $3);
     }
     | FIRSTF number
     {

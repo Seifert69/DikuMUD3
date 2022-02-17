@@ -619,8 +619,8 @@ unit_data *unequip_object(unit_data *obj)
         {
             for (caf = UNIT_AFFECTED(ch); caf; caf = caf->next)
             {
-                if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->data[0] == af->data[0]) &&
-                    (caf->data[1] == af->data[1]) &&
+                if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->getDataAtIndex(0) == af->getDataAtIndex(0)) &&
+                    (caf->getDataAtIndex(1) == af->getDataAtIndex(1)) &&
                     // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
                     (caf->applyf_i == af->applyf_i) && (caf->firstf_i == af->firstf_i) && (caf->lastf_i == af->lastf_i) &&
                     (caf->tickf_i == af->tickf_i))
