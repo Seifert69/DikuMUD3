@@ -826,7 +826,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 
         if (ROOM_EXIT(UNIT_IN(ch), door))
         {
-            if (ROOM_EXIT(UNIT_IN(ch), door)->open_name.IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(UNIT_IN(ch), door)->getOpenName().IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }
@@ -852,7 +852,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
     {
         if (ROOM_EXIT(UNIT_IN(ch), door))
         {
-            if (ROOM_EXIT(UNIT_IN(ch), door)->open_name.IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(UNIT_IN(ch), door)->getOpenName().IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }

@@ -894,7 +894,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             argument = str_next_word(argument, strarg);
-            ROOM_EXIT(unt, typarg)->open_name.AppendName(strarg);
+            ROOM_EXIT(unt, typarg)->getOpenName().AppendName(strarg);
             return;
 
         case 22: /* "del-dir-name" */
@@ -905,7 +905,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             argument = str_next_word(argument, strarg);
-            ROOM_EXIT(unt, typarg)->open_name.AppendName(strarg);
+            ROOM_EXIT(unt, typarg)->getOpenName().AppendName(strarg);
             return;
 
         case 23: /* "dir-flags" */

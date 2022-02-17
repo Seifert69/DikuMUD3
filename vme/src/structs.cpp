@@ -39,6 +39,16 @@ room_direction_data::~room_direction_data()
 {
 }
 
+const cNamelist &room_direction_data::getOpenName() const
+{
+    return open_name;
+}
+
+cNamelist &room_direction_data::getOpenName()
+{
+    return open_name;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -511,7 +521,7 @@ unit_data *unit_data::copy()
         uroom->flags = thisroom->flags;
         for (x = 0; x < MAX_EXIT + 1; x++)
         {
-            uroom->dir_option[x]->open_name = thisroom->dir_option[x]->open_name;
+            uroom->dir_option[x]->getOpenName() = thisroom->dir_option[x]->getOpenName();
             uroom->dir_option[x]->key = str_dup(thisroom->dir_option[x]->key);
             uroom->dir_option[x]->exit_info = thisroom->dir_option[x]->exit_info;
             uroom->dir_option[x]->difficulty = thisroom->dir_option[x]->difficulty;
@@ -791,7 +801,7 @@ std::string unit_data::json()
                     s.append(str_json("toroom", t));
                     s.append(",\n");
                 }
-                s.append(UROOM(this)->dir_option[i]->open_name.json());
+                s.append(UROOM(this)->dir_option[i]->getOpenName().json());
                 s.append(",\n");
                 s.append(str_json("difficulty", UROOM(this)->dir_option[i]->difficulty));
                 s.append(",\n");

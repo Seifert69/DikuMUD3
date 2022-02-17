@@ -318,7 +318,7 @@ exit_field  : TO reference
     }
     | KEYWORD stringlist
     {
-        ROOM_EXIT(cur, cur_ex)->open_name.CopyList((const char **)$2);
+        ROOM_EXIT(cur, cur_ex)->getOpenName().CopyList((const char **)$2);
     }
     | DIFFICULTY number
     {

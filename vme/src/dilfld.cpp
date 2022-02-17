@@ -2517,7 +2517,7 @@ void dilfe_fld(dilprg *p)
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
-                    v->ref = &(ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->open_name);
+                    v->ref = &(ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getOpenName());
                 }
                 else
                 {

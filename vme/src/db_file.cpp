@@ -1376,7 +1376,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 if (ROOM_EXIT(u, i) && c1 && c2)
                 {
                     pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->to_room);
-                    ROOM_EXIT(u, i)->open_name.AppendBuffer(pBuf);
+                    ROOM_EXIT(u, i)->getOpenName().AppendBuffer(pBuf);
                     pBuf->Append16(ROOM_EXIT(u, i)->exit_info);
                     pBuf->Append8(ROOM_EXIT(u, i)->difficulty); // V71 MS2020
                     pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->key);

@@ -141,14 +141,17 @@ public:
     room_direction_data();
     ~room_direction_data();
 
-    cNamelist open_name; // For Open & Enter
+    const cNamelist &getOpenName() const;
+    cNamelist &getOpenName();
 
+private:
+    cNamelist open_name; // For Open & Enter
+public:
     char *key;
     unit_data *to_room;
     ubit8 difficulty; // Skill needed for swim, climb, search, pick-lock
     int weight;       // Used for shortest path algorithm
-
-    ubit8 exit_info; // Door info flags
+    ubit8 exit_info;  // Door info flags
 };
 
 class room_data : public unit_data

@@ -1246,7 +1246,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     if ((fi = find_file_index(zone, name)))
                     {
                         ROOM_EXIT(u, i) = new (room_direction_data);
-                        g_nCorrupt += ROOM_EXIT(u, i)->open_name.ReadBuffer(pBuf, unit_version);
+                        g_nCorrupt += ROOM_EXIT(u, i)->getOpenName().ReadBuffer(pBuf, unit_version);
 
                         ROOM_EXIT(u, i)->exit_info = pBuf->ReadU16(&g_nCorrupt);
                         if (unit_version >= 71)

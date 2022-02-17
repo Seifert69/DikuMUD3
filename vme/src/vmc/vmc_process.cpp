@@ -982,7 +982,7 @@ void process_unit(unit_data *u)
         {
             if (ROOM_EXIT(u, i))
             {
-                check_namelist(u, &ROOM_EXIT(u, i)->open_name);
+                check_namelist(u, &ROOM_EXIT(u, i)->getOpenName());
             }
         }
     }
