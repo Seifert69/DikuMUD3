@@ -189,7 +189,8 @@ dilend
 // Clean old junk away
 dilbegin login_scrub(tgt : unitptr);
 external
-login_clean@justice();
+   login_clean@justice();
+   login_clean@guilds();
 var
    i : integer;
    ext : extraptr;

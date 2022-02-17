@@ -184,6 +184,7 @@ Cleric, Necromancer, Druid ->
 //
 // SetAutoTrain(pc : unitptr, sGuild : string);
 // AdvGuildLevel(ch : unitptr);
+// SetGuildLevel(ch : unitptr, sGuild : string, lvl : integer);
 
 
 #define GUILD_PREPEND   "$guild/"
@@ -568,7 +569,7 @@ code
 
    if (pc.level > 0)
    {
-      sendtext(sGuild + " is now your default guild (request a guild title to change default).<br/>", pc);
+      sendtext(sGuild + " is now your main guild (request a guild title to switch main guild).<br/>", pc);
    }
    return;
 }
@@ -596,6 +597,26 @@ code
 }
 dilend
 
+
+// Do not use, only for conversion from old system
+dilbegin SetGuildLevel(pc : unitptr, sGuild : string, lvl : integer);
+var
+   exd : extraptr;
+   s : string;
+code
+{
+   exd := (GUILD_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in AdvGuildLevel(): Unable to find ["+sGuild+"] in pc.info");
+      return;
+   }
+
+   exd.names.[1] := itoa(lvl);
+   return;
+}
+dilend
 
 // Returns the level of the player's guild 'sGuild'
 // -1 if no such guild found
@@ -645,7 +666,7 @@ code
    }
    else
    {
-      sendtext(self.guild +  " is your default guild (and the guild you level in. Get a guild title from your guild master to change your default guild).<br/>", self);
+      sendtext(self.guild +  " is your main guild (Request a guild title from a guild master to change your main guild).<br/>", self);
    }
 
    exd := GUILD_BANISHED in self.info;
@@ -720,6 +741,14 @@ code
    block;
    pc := activator;
    secure(pc, lost_pc);
+   pclevel := GetGuildLevel(pc, the_guild);
+
+   if (pclevel == -1)
+   {
+      exec("say " + pc.name + ", you're not a guild member.<br/>", self);
+      goto start;
+   }
+
    SetDefaultGuild(pc, the_guild);
 
 :do_title:
@@ -747,7 +776,6 @@ code
    else
       my_race := "Darkelf";
 
-   pclevel := GetGuildLevel(pc, the_guild);
    pclevel := pclevel/5;
 
    if (pcsex < 2)
@@ -822,5 +850,81 @@ code
 }
 dilend /* guild_titles */
 
+
+
+// Used to convert old players
+//
+dilbegin login_clean();
+external
+   JoinGuild(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   SetGuildLevel(ch : unitptr, sGuild : string, lvl : integer);
+
+var
+   exd : extraptr;
+   i : integer;
+code
+{
+   if ("$guild" in self.info)
+      return;
+
+   exd := "$path" in self.quests;
+   
+   if (exd)
+   {
+      i := length(exd.names)-1;
+
+      if (i != 8)
+      {
+         log("Unable to convert. Unexpected number of names in $path for player "+self.name);
+         return;
+      }
+
+      if (exd.names.[1] != "")
+      {
+         JoinGuild(self, exd.names.[1]);
+         SetGuildLevel(self, exd.names.[1], atoi(exd.names.[4]));
+      }
+
+      if (exd.names.[2] != "")
+      {
+         JoinGuild(self, exd.names.[2]);
+         SetGuildLevel(self, exd.names.[2], atoi(exd.names.[5]));
+      }
+
+      if (exd.names.[3] != "")
+      {
+         JoinGuild(self, exd.names.[3]);
+         SetGuildLevel(self, exd.names.[3], atoi(exd.names.[5]));
+      }
+
+      if (self.guild != "")
+      {
+         if (not IsInGuild(self, self.guild))
+         {
+            JoinGuild(self, self.guild);
+            SetGuildLevel(self, self.guild, self.vlevel);
+         }
+      }
+      else
+      {
+         self.guild := exd.names.[1];
+      }
+
+      subextra(self.quests, "$path");
+   }
+   else if (self.guild != "")
+   {
+      JoinGuild(self, self.guild);
+      SetGuildLevel(self, self.guild, self.vlevel);
+   }
+   else
+   {
+      log(self.name + " has no $path or guild info.");
+   }
+
+   return;
+}
+dilend
 
 %end
