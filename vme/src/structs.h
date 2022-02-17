@@ -144,10 +144,14 @@ public:
     const cNamelist &getOpenName() const;
     cNamelist &getOpenName();
 
+    const char *getKey() const;
+    char **getKeyPtr();
+    void setKey(char *value);
+
 private:
     cNamelist open_name; // For Open & Enter
+    char *key{nullptr};  //
 public:
-    char *key;
     unit_data *to_room;
     ubit8 difficulty; // Skill needed for swim, climb, search, pick-lock
     int weight;       // Used for shortest path algorithm

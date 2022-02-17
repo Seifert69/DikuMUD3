@@ -926,7 +926,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             argument = str_next_word(argument, strarg);
-            ROOM_EXIT(unt, typarg)->key = str_dup(strarg);
+            ROOM_EXIT(unt, typarg)->setKey(str_dup(strarg));
             return;
 
         case 25: /* "value0" */

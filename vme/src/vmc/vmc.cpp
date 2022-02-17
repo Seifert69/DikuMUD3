@@ -289,7 +289,7 @@ room_direction_data *mcreate_exit()
 
     //   rslt->open_name = NULL;
     rslt->exit_info = 0;
-    rslt->key = nullptr;
+    rslt->setKey(nullptr);
     rslt->to_room = nullptr;
     return rslt;
 }

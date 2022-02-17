@@ -1379,7 +1379,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                     ROOM_EXIT(u, i)->getOpenName().AppendBuffer(pBuf);
                     pBuf->Append16(ROOM_EXIT(u, i)->exit_info);
                     pBuf->Append8(ROOM_EXIT(u, i)->difficulty); // V71 MS2020
-                    pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->key);
+                    pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->getKey());
                 }
                 else
                 {

@@ -49,6 +49,21 @@ cNamelist &room_direction_data::getOpenName()
     return open_name;
 }
 
+const char *room_direction_data::getKey() const
+{
+    return key;
+}
+
+void room_direction_data::setKey(char *value)
+{
+    FREE(key);
+    key = value;
+}
+char **room_direction_data::getKeyPtr()
+{
+    return &key;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -522,7 +537,7 @@ unit_data *unit_data::copy()
         for (x = 0; x < MAX_EXIT + 1; x++)
         {
             uroom->dir_option[x]->getOpenName() = thisroom->dir_option[x]->getOpenName();
-            uroom->dir_option[x]->key = str_dup(thisroom->dir_option[x]->key);
+            uroom->dir_option[x]->setKey(str_dup(thisroom->dir_option[x]->getKey()));
             uroom->dir_option[x]->exit_info = thisroom->dir_option[x]->exit_info;
             uroom->dir_option[x]->difficulty = thisroom->dir_option[x]->difficulty;
         }
@@ -807,7 +822,7 @@ std::string unit_data::json()
                 s.append(",\n");
                 s.append(str_json("exitflags", UROOM(this)->dir_option[i]->exit_info));
                 s.append(",\n");
-                s.append(str_json("key", UROOM(this)->dir_option[i]->key));
+                s.append(str_json("key", UROOM(this)->dir_option[i]->getKey()));
                 s.append("\n");
                 s.append("}\n");
             }

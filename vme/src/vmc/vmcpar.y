@@ -312,9 +312,10 @@ exit_field  : TO reference
         tzone[30] = 0;
         strncpy(tname, $2 + strlen((char *)$2) + 1, 30);
         tname[30] = 0;
-        ROOM_EXIT(cur, cur_ex)->key = (char *)malloc(strlen(tzone) + strlen(tname) + 2);
-        strcpy(ROOM_EXIT(cur, cur_ex)->key, (char *)tzone);
-        strcpy(ROOM_EXIT(cur, cur_ex)->key + strlen(tzone) + 1, (char *)tname);
+        char *key=(char *)malloc(strlen(tzone) + strlen(tname) + 2);
+        strcpy(key, (char *)tzone);
+        strcpy(key + strlen(tzone) + 1, (char *)tname);
+        ROOM_EXIT(cur, cur_ex)->setKey(key);
     }
     | KEYWORD stringlist
     {

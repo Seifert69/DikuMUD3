@@ -1262,11 +1262,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         if (!str_is_empty(name))
                         {
                             snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
-                            ROOM_EXIT(u, i)->key = str_dup(tmpbuf);
+                            ROOM_EXIT(u, i)->setKey(str_dup(tmpbuf));
                         }
                         else
                         {
-                            ROOM_EXIT(u, i)->key = nullptr;
+                            ROOM_EXIT(u, i)->setKey(nullptr);
                         }
 
                         /* NOT fi->unit! Done later */
