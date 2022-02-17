@@ -2663,7 +2663,7 @@ void dilfi_ada(dilprg *p)
                         af.setDataAtIndex(2, v7->val.num);
 
                         af.setFirstFI(v8->val.num);
-                        af.tickf_i = v9->val.num;
+                        af.setTickFI(v9->val.num);
                         af.lastf_i = v10->val.num;
                         af.applyf_i = v11->val.num;
                         create_affect((unit_data *)v1->val.ptr, &af);
@@ -2705,7 +2705,7 @@ void dilfi_ada(dilprg *p)
                         af.setDataAtIndex(2, v7->val.num);
 
                         af.setFirstFI(v8->val.num);
-                        af.tickf_i = v9->val.num;
+                        af.setTickFI(v9->val.num);
                         af.lastf_i = v10->val.num;
                         af.applyf_i = v11->val.num;
                         create_affect((unit_data *)v1->val.ptr, &af);

@@ -85,14 +85,18 @@ public:
     void setFirstFI(sbit16 value);
     int readFirstFIFrom(CByteBuffer &buf);
 
+    sbit16 getTickFI() const;
+    void setTickFI(sbit16 value);
+    int readTickFIFrom(CByteBuffer &buf);
+
 private:
     sbit16 id{0};       //
     ubit16 beat{0};     // Beat in 1/4 of secs, 0 = None
     sbit16 duration{0}; // How many beats until end
     int data[3]{0};     //
     sbit16 firstf_i{0}; //
+    sbit16 tickf_i{0};  //
 public:
-    sbit16 tickf_i;
     sbit16 lastf_i;
     sbit16 applyf_i;
     eventq_elem *event; /*pointer to eventq for quick removing      */

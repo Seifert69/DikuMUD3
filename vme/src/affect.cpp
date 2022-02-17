@@ -262,9 +262,9 @@ void affect_beat(void *p1, void *p2)
         }
         else
         {
-            if (af->tickf_i >= 0)
+            if (af->getTickFI() >= 0)
             {
-                (*g_tif[af->tickf_i].func)(af, af->owner);
+                (*g_tif[af->getTickFI()].func)(af, af->owner);
             }
 
             destroyed = af->is_destructed();

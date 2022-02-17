@@ -234,6 +234,20 @@ int unit_affected_type::readFirstFIFrom(CByteBuffer &buf)
     return buf.Read16(&firstf_i);
 }
 
+sbit16 unit_affected_type::getTickFI() const
+{
+    return tickf_i;
+}
+
+void unit_affected_type::setTickFI(sbit16 value)
+{
+    tickf_i = value;
+}
+
+int unit_affected_type::readTickFIFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&tickf_i);
+}
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

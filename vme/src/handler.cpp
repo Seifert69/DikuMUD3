@@ -623,7 +623,7 @@ unit_data *unequip_object(unit_data *obj)
                     (caf->getDataAtIndex(1) == af->getDataAtIndex(1)) &&
                     // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
                     (caf->applyf_i == af->applyf_i) && (caf->getFirstFI() == af->getFirstFI()) && (caf->lastf_i == af->lastf_i) &&
-                    (caf->tickf_i == af->tickf_i))
+                    (caf->getTickFI() == af->getTickFI()))
                 {
                     destroy_affect(caf);
                     break; /* Skip inner for loop since we found the affect */

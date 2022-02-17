@@ -166,7 +166,7 @@ void tif_hide_on(unit_affected_type *af, unit_data *unit)
 void tif_hide_off(unit_affected_type *af, unit_data *unit)
 {
     send_to_char("You stop hiding.<br/>", unit);
-    if (af->tickf_i == TIF_HIDE_TICK)
+    if (af->getTickFI() == TIF_HIDE_TICK)
     {
         act("You suddenly notice that $1n is standing here.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
@@ -970,7 +970,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
             naf.setDuration(0);
             naf.setBeat(WAIT_SEC * SECS_PER_REAL_HOUR);
             naf.setFirstFI(TIF_NONE);
-            naf.tickf_i = TIF_NONE;
+            naf.setTickFI(TIF_NONE);
             naf.lastf_i = TIF_BURIED_DESTRUCT;
             naf.applyf_i = APF_NONE;
 

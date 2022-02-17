@@ -623,7 +623,7 @@ void process_affects(unit_data *pUnit)
     for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->next)
     {
         firstf = (pAf->getFirstFI() == TIF_NONE);
-        tickf = (pAf->tickf_i == TIF_NONE);
+        tickf = (pAf->getTickFI() == TIF_NONE);
         lastf = (pAf->lastf_i == TIF_NONE);
         applyf = (pAf->applyf_i == APF_NONE);
 
@@ -809,21 +809,21 @@ void process_affects(unit_data *pUnit)
             case ID_PROT_EVIL_TRANSFER:
                 firstf = (pAf->getFirstFI() == TIF_PROT_EVIL_ON);
                 lastf = (pAf->lastf_i == TIF_PROT_EVIL_OFF);
-                tickf = (pAf->tickf_i == TIF_NONE);
+                tickf = (pAf->getTickFI() == TIF_NONE);
                 applyf = (pAf->applyf_i == APF_NONE);
                 break;
 
             case ID_PROT_GOOD_TRANSFER:
                 firstf = (pAf->getFirstFI() == TIF_PROT_GOOD_ON);
                 lastf = (pAf->lastf_i == TIF_PROT_GOOD_OFF);
-                tickf = (pAf->tickf_i == TIF_NONE);
+                tickf = (pAf->getTickFI() == TIF_NONE);
                 applyf = (pAf->applyf_i == APF_NONE);
                 break;
 
             case ID_TRANSFER_SPEED:
                 firstf = ((pAf->getFirstFI() == TIF_SPEED_BETTER) || (pAf->getFirstFI() == TIF_SPEED_WORSE));
                 lastf = ((pAf->lastf_i == TIF_SPEED_BETTER) || (pAf->lastf_i == TIF_SPEED_WORSE));
-                tickf = (pAf->tickf_i == TIF_NONE);
+                tickf = (pAf->getTickFI() == TIF_NONE);
                 applyf = (pAf->applyf_i == APF_SPEED);
                 break;
 
@@ -838,7 +838,7 @@ void process_affects(unit_data *pUnit)
         }
         if (tickf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal tickf %d in id %d.", UNIT_IDENT(pUnit), pAf->tickf_i, pAf->getID());
+            dmc_error(TRUE, "%s: Illegal tickf %d in id %d.", UNIT_IDENT(pUnit), pAf->getTickFI(), pAf->getID());
         }
         if (lastf == FALSE)
         {

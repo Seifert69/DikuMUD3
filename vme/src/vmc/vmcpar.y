@@ -951,7 +951,7 @@ affect_field    : ID number
     }
     | TICKF number
     {
-        cur_aff->tickf_i = $2;
+        cur_aff->setTickFI($2);
     }
     | LASTF number
     {
