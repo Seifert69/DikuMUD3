@@ -7,6 +7,7 @@
 #pragma once
 
 #include "structs.h"
+#include "time_info_data.h"
 
 #include <ctime>
 

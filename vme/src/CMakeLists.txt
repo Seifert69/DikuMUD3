@@ -91,6 +91,7 @@ set(VME_SRCS
         teach.cpp teach.h
         textutil.cpp textutil.h
         tif_affect.cpp tif_affect.h
+        time_info_data.cpp time_info_data.h
         trie.cpp trie.h
         unitfind.cpp unitfind.h
         utility.cpp utility.h
