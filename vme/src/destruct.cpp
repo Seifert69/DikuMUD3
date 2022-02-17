@@ -309,11 +309,6 @@ void unit_affected_type::setOwner(unit_data *value)
     owner = value;
 }
 
-const unit_affected_type *unit_affected_type::cgetNext() const
-{
-    return next;
-}
-
 unit_affected_type *unit_affected_type::getNext()
 {
     return next;
@@ -324,6 +319,15 @@ void unit_affected_type::setNext(unit_affected_type *value)
     next = value;
 }
 
+unit_affected_type *unit_affected_type::getG_Next()
+{
+    return gnext;
+}
+
+void unit_affected_type::setG_Next(unit_affected_type *value)
+{
+    gnext = value;
+}
 /* ======================================= */
 
 /* May only be called by clear_destuct! */

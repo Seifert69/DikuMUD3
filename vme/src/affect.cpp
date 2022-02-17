@@ -29,12 +29,12 @@ void link_affect(unit_data *unit, unit_affected_type *af)
 
     if (affected_list)
     {
-        af->gnext = affected_list;
+        af->setG_Next(affected_list);
         affected_list->gprevious = af;
     }
     else
     {
-        af->gnext = nullptr;
+        af->setG_Next(nullptr);
     }
 
     affected_list = af;
@@ -120,24 +120,24 @@ void unlink_affect(unit_affected_type *af)
 
     if (next_affected_dude == af)
     {
-        next_affected_dude = af->gnext;
+        next_affected_dude = af->getG_Next();
     }
 
     /* Unlink affect structure from global list of affects */
 
     if (affected_list == af)
     {
-        affected_list = af->gnext;
+        affected_list = af->getG_Next();
     }
 
-    if (af->gnext)
+    if (af->getG_Next())
     {
-        af->gnext->gprevious = af->gprevious;
+        af->getG_Next()->gprevious = af->gprevious;
     }
 
     if (af->gprevious)
     {
-        af->gprevious->gnext = af->gnext;
+        af->gprevious->setG_Next(af->getG_Next());
     }
 
     /* Unlink affect structure from local list */
@@ -151,7 +151,7 @@ void unlink_affect(unit_affected_type *af)
         }
         else
         {
-            for (; i->cgetNext() != af; i = i->getNext())
+            for (; i->getNext() != af; i = i->getNext())
             {
                 ;
             }
