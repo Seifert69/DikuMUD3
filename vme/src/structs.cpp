@@ -54,14 +54,30 @@ const char *room_direction_data::getKey() const
     return key;
 }
 
+char **room_direction_data::getKeyPtr()
+{
+    return &key;
+}
+
 void room_direction_data::setKey(char *value)
 {
     FREE(key);
     key = value;
 }
-char **room_direction_data::getKeyPtr()
+
+const unit_data *room_direction_data::getToRoom() const
 {
-    return &key;
+    return to_room;
+}
+
+unit_data *room_direction_data::getToRoom()
+{
+    return to_room;
+}
+
+void room_direction_data::setToRoom(unit_data *value)
+{
+    to_room = value;
 }
 
 char_data::char_data()
@@ -808,11 +824,11 @@ std::string unit_data::json()
                 s.append(",\n");
                 s.append(str_json_encode_quote(g_dirs[i]));
                 s.append(": {\n");
-                if (UROOM(this)->dir_option[i]->to_room)
+                if (UROOM(this)->dir_option[i]->getToRoom())
                 {
-                    t = UNIT_FI_NAME(ROOM_EXIT(this, i)->to_room);
+                    t = UNIT_FI_NAME(ROOM_EXIT(this, i)->getToRoom());
                     t.append("@");
-                    t.append(UNIT_FI_ZONENAME(UROOM(this)->dir_option[i]->to_room));
+                    t.append(UNIT_FI_ZONENAME(UROOM(this)->dir_option[i]->getToRoom()));
                     s.append(str_json("toroom", t));
                     s.append(",\n");
                 }

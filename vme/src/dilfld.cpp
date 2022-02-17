@@ -2661,7 +2661,7 @@ void dilfe_fld(dilprg *p)
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
-                    v->val.ptr = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->to_room;
+                    v->val.ptr = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getToRoom();
                 }
                 else
                 {

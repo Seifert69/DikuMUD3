@@ -337,13 +337,13 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
 
     /* Next room exists? */
-    if (ROOM_EXIT(room_from, direction)->to_room == nullptr)
+    if (ROOM_EXIT(room_from, direction)->getToRoom() == nullptr)
     {
         send_to_char(ALAS_NOWAY, ch);
         return 0;
     }
 
-    room_to = ROOM_EXIT(room_from, direction)->to_room;
+    room_to = ROOM_EXIT(room_from, direction)->getToRoom();
 
     if (CHAR_POS(ch) == POSITION_FIGHTING)
     {

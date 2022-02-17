@@ -304,7 +304,7 @@ exit_fields : /* naught */
 
 exit_field  : TO reference
     {
-        ROOM_EXIT(cur, cur_ex)->to_room = (struct unit_data *)$2;
+        ROOM_EXIT(cur, cur_ex)->setToRoom((unit_data *)$2);
     }
     | KEY reference
     {

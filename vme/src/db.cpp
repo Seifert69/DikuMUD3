@@ -1270,7 +1270,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         }
 
                         /* NOT fi->unit! Done later */
-                        ROOM_EXIT(u, i)->to_room = (unit_data *)fi;
+                        ROOM_EXIT(u, i)->setToRoom((unit_data *)fi);
                     }
                     else
                     { /* Exit not existing, skip the junk info! */
@@ -1513,13 +1513,13 @@ void normalize_world()
             {
                 if (ROOM_EXIT(u, i))
                 {
-                    if (((file_index_type *)ROOM_EXIT(u, i)->to_room)->Empty())
+                    if (((file_index_type *)ROOM_EXIT(u, i)->getToRoom())->Empty())
                     {
-                        ROOM_EXIT(u, i)->to_room = nullptr;
+                        ROOM_EXIT(u, i)->setToRoom(nullptr);
                     }
                     else
                     {
-                        ROOM_EXIT(u, i)->to_room = ((file_index_type *)ROOM_EXIT(u, i)->to_room)->Front();
+                        ROOM_EXIT(u, i)->setToRoom(((file_index_type *)ROOM_EXIT(u, i)->getToRoom())->Front());
                     }
                 }
             }

@@ -148,11 +148,15 @@ public:
     char **getKeyPtr();
     void setKey(char *value);
 
+    const unit_data *getToRoom() const;
+    unit_data *getToRoom();
+    void setToRoom(unit_data *value);
+
 private:
-    cNamelist open_name; // For Open & Enter
-    char *key{nullptr};  //
+    cNamelist open_name;         // For Open & Enter
+    char *key{nullptr};          //
+    unit_data *to_room{nullptr}; //
 public:
-    unit_data *to_room;
     ubit8 difficulty; // Skill needed for swim, climb, search, pick-lock
     int weight;       // Used for shortest path algorithm
     ubit8 exit_info;  // Door info flags

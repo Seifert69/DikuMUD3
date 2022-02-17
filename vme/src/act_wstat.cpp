@@ -1190,16 +1190,16 @@ static void stat_data(const unit_data *ch, unit_data *u)
                 cname = ROOM_EXIT(u, i)->getOpenName().catnames();
                 sprintbit(bits2, ROOM_EXIT(u, i)->exit_info, g_unit_open_flags);
 
-                if (ROOM_EXIT(u, i)->to_room)
+                if (ROOM_EXIT(u, i)->getToRoom())
                 {
                     msg = diku::format_to_str("EXIT %-5s to [%s@%s] (%s)<br/>"
                                               "   Exit Name: [%s]<br/>"
                                               "   Exit Bits: [%s] Difficulty: [%d]<br/>"
                                               "   Key: [%s]<br/>",
                                               g_dirs[i],
-                                              UNIT_FI_NAME(ROOM_EXIT(u, i)->to_room),
-                                              UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->to_room),
-                                              UNIT_TITLE_STRING(ROOM_EXIT(u, i)->to_room),
+                                              UNIT_FI_NAME(ROOM_EXIT(u, i)->getToRoom()),
+                                              UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->getToRoom()),
+                                              UNIT_TITLE_STRING(ROOM_EXIT(u, i)->getToRoom()),
                                               cname,
                                               &bits2[0],
                                               ROOM_EXIT(u, i)->difficulty,
