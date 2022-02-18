@@ -1027,7 +1027,7 @@ dilcopy combat_mag@function("harm","",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guilds(GUILD_PALADIN);
 dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy TrainMemberChk@guilds(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _WEAPON
@@ -1058,7 +1058,7 @@ dilcopy combat_mag@function("","heal",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guilds(GUILD_PALADIN);
 dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy TrainMemberChk@guilds(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _SPELL
@@ -1088,7 +1088,7 @@ dilcopy combat_mag@function("","heal",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guilds(GUILD_PALADIN);
 dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy TrainMemberChk@guilds(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _ABILITY
@@ -1120,7 +1120,7 @@ dilcopy combat_mag@function("harm","",25,2);
 dilcopy nokill@paladin_guild();
 dilcopy MurderBanish@guilds(GUILD_PALADIN);
 dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
-dilcopy TrainMemberChk(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
+dilcopy TrainMemberChk@guilds(GUILD_PALADIN, "say You're not a member of our guild. Go speak with Reignier.");
 dilcopy BlockEvilTrain@paladin_guild();
 
 #define _SKILL

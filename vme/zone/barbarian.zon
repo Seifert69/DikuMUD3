@@ -894,7 +894,7 @@ exp -100
 dilcopy nokill@barbarian();
 dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
 dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
-dilcopy TrainMemberChk(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk@guilds(GUILD_BARBARIAN, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -922,7 +922,7 @@ exp -100
 dilcopy nokill@barbarian();
 dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
 dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
-dilcopy TrainMemberChk(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk@guilds(GUILD_BARBARIAN, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -948,7 +948,7 @@ exp -100
 dilcopy nokill@barbarian();
 dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
 dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
-dilcopy TrainMemberChk(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk@guilds(GUILD_BARBARIAN, "");
 
 #define _SKILL
 #include "guilddef.h"

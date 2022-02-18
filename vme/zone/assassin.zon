@@ -372,7 +372,7 @@ exp -100
 dilcopy nokill@assassin();
 dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
 dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
-dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk@guilds(GUILD_ASSASSIN, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -395,7 +395,7 @@ sex SEX_FEMALE
 dilcopy nokill@assassin();
 dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
 dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
-dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk@guilds(GUILD_ASSASSIN, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -418,7 +418,7 @@ exp -100
 dilcopy nokill@assassin();
 dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
 dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
-dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk@guilds(GUILD_ASSASSIN, "");
 
 #define _SKILL
 #include "guilddef.h"
@@ -438,7 +438,7 @@ exp -100
 dilcopy nokill@assassin();
 dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
 dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
-dilcopy TrainMemberChk(GUILD_ASSASSIN, "");
+dilcopy TrainMemberChk@guilds(GUILD_ASSASSIN, "");
 
 #define _ABILITY
 #include "guilddef.h"

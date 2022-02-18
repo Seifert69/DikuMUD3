@@ -1369,7 +1369,7 @@ dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
 dilcopy MurderBanish@guilds(SORCERER_GUILD);
 dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
-dilcopy TrainMemberChk(SORCERER_GUILD, "");
+dilcopy TrainMemberChk@guilds(SORCERER_GUILD, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -1397,7 +1397,7 @@ dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
 dilcopy MurderBanish@guilds(SORCERER_GUILD);
 dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
-dilcopy TrainMemberChk(SORCERER_GUILD, "");
+dilcopy TrainMemberChk@guilds(SORCERER_GUILD, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -1423,7 +1423,7 @@ dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
 dilcopy MurderBanish@guilds(SORCERER_GUILD);
 dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
-dilcopy TrainMemberChk(SORCERER_GUILD, "");
+dilcopy TrainMemberChk@guilds(SORCERER_GUILD, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -1451,7 +1451,7 @@ dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
 dilcopy MurderBanish@guilds(SORCERER_GUILD);
 dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
-dilcopy TrainMemberChk(SORCERER_GUILD, "");
+dilcopy TrainMemberChk@guilds(SORCERER_GUILD, "");
 
 #define _SKILL
 #include "guilddef.h"

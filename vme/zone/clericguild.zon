@@ -659,7 +659,7 @@ exp -100
 
 dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
 dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
-dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_CLERIC, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -687,7 +687,7 @@ exp -100
 
 dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
 dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
-dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_CLERIC, "");
 
 #define _SKILL
 #include "guilddef.h"
@@ -713,7 +713,7 @@ exp -100
 
 dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
 dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
-dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_CLERIC, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -742,7 +742,7 @@ exp -100
 
 dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
 dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
-dilcopy TrainMemberChk(GUILD_UDG_CLERIC, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_CLERIC, "");
 
 #define _SPELL
 #include "guilddef.h"

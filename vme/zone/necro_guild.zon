@@ -628,7 +628,7 @@ dilcopy nokill@necro_guild();
 
 dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
 dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
-dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NECROMANCER, "");
 
 dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
@@ -901,7 +901,7 @@ exp -100
 dilcopy nokill@necro_guild();
 dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
 dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
-dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NECROMANCER, "");
 
 dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
@@ -929,7 +929,7 @@ exp -100
 dilcopy nokill@necro_guild();
 dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
 dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
-dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NECROMANCER, "");
 
 dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 
@@ -957,7 +957,7 @@ exp -100
 dilcopy nokill@necro_guild();
 dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
 dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
-dilcopy TrainMemberChk(GUILD_NECROMANCER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NECROMANCER, "");
 
 dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n attacks $3n!", "$1n attacks you!"});
 

@@ -909,13 +909,10 @@ alignment 500
 money 5 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_MAGE+
-"#$1n says, 'You are not an enlisted student, $3n. Please leave the
-premises.'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_UDG_MAGE );
+dilcopy no_kill@mageguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -941,13 +938,10 @@ alignment 500
 money 5 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_MAGE+
-"#$1n says, 'You are not an enlisted student, $3n. Please leave the
-premises.'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_UDG_MAGE );
+dilcopy no_kill@mageguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -971,12 +965,10 @@ alignment 1000
 money 9 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_MAGE+
-"#$1n says, 'You are not an enlisted student, $3n. Beat it or have it
-beaten for you.'"*/
-dilcopy teacher_prac@guild_paths( GUILD_UDG_MAGE );
+dilcopy no_kill@mageguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -1002,12 +994,10 @@ alignment 700
 money 7 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_MAGE+
-"#$1n says, 'You are not an enlisted student, $3n. You better leave
-before someone kicks you out.'"*/
-dilcopy teacher_prac@guild_paths( GUILD_UDG_MAGE );
+dilcopy no_kill@mageguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
 
 #define _SKILL
 #include "guilddef.h"
@@ -1030,8 +1020,10 @@ romflags {CHAR_PROTECTED}
 alignment 700
 money 3 IRON_PIECE
 exp 0
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
-dilcopy nokill@mageguild();
+
+dilcopy no_kill@mageguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 
 end
 
@@ -1049,7 +1041,11 @@ romflags {CHAR_PROTECTED}
 alignment 600
 money 5 IRON_PIECE
 exp 0
-special SFUN_GUILD_BASIS GUILD_UDG_MAGE
+
+dilcopy no_kill@mageguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
+dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
+
 dilcopy shopkeeper@function(
 {"tea@mageguild 20 20","coffee@mageguild 20 20"
 ,"milk@mageguild 20 20","lemonade@mageguild 20 20"

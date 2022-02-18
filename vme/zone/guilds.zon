@@ -2,19 +2,7 @@
 
 /*
 All the guilds processed (ignoring Monk since it's not complete):
-      Assassin
-      mage
-      necro
-
-      fightersguild
-      cleric
-      thieves
-
-      paladin
-      ranger
-      dark knight
-      sorcerer
-      barbarian
+   assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon ../Zones/monk.zon
 
 Missing sign at all guilds
 */
@@ -720,11 +708,11 @@ code
    block;
    pc := activator;
    secure(pc, lost_pc);
-   pclevel := GetGuildLevel(pc, the_guild);
 
+   pclevel := GetGuildLevel(pc, the_guild);
    if (pclevel == -1)
    {
-      exec("say " + pc.name + ", you're not a guild member.<br/>", self);
+      exec("say " + pc.name + ", you're not a guild member.", self);
       goto start;
    }
 

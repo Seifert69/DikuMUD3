@@ -784,7 +784,7 @@ exp -100
 dilcopy nokill@fightersguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
-dilcopy TrainMemberChk(GUILD_UDG_FIGHTER, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_FIGHTER, "");
 
 #define _SKILL
 #include "guilddef.h"
@@ -812,7 +812,7 @@ exp -100
 dilcopy nokill@fightersguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
-dilcopy TrainMemberChk(GUILD_UDG_FIGHTER, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_FIGHTER, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -843,7 +843,7 @@ exp -100
 dilcopy nokill@fightersguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
-dilcopy TrainMemberChk(GUILD_UDG_FIGHTER, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_FIGHTER, "");
 
 #define _ABILITY
 #include "guilddef.h"

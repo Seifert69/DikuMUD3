@@ -434,7 +434,7 @@ romflags {CHAR_PROTECTED}
 dilcopy nokill@knight();
 dilcopy MurderBanish@guilds(GUILD_KNIGHT);
 dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
-dilcopy TrainMemberChk(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -460,7 +460,7 @@ romflags {CHAR_PROTECTED}
 dilcopy nokill@knight();
 dilcopy MurderBanish@guilds(GUILD_KNIGHT);
 dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
-dilcopy TrainMemberChk(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -484,7 +484,7 @@ romflags {CHAR_PROTECTED}
 dilcopy nokill@knight();
 dilcopy MurderBanish@guilds(GUILD_KNIGHT);
 dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
-dilcopy TrainMemberChk(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -510,7 +510,7 @@ romflags {CHAR_PROTECTED}
 dilcopy nokill@knight();
 dilcopy MurderBanish@guilds(GUILD_KNIGHT);
 dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
-dilcopy TrainMemberChk(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _SKILL
 #include "guilddef.h"

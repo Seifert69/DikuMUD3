@@ -528,7 +528,7 @@ dilcopy nokill@ranger();
 
 dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
 dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
-dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -585,7 +585,7 @@ exp -100
 dilcopy nokill@ranger();
 dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
 dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
-dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -611,7 +611,7 @@ dilcopy nokill@ranger();
 
 dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
 dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
-dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -638,7 +638,7 @@ exp -100
 dilcopy nokill@ranger();
 dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
 dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
-dilcopy TrainMemberChk(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 
 #define _SKILL
 #include "guilddef.h"
