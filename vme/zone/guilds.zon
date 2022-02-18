@@ -872,7 +872,7 @@ code
    
    if (exd)
    {
-      i := length(exd.names)-1;
+      i := length(exd.names);
 
       if (i != 8)
       {
@@ -895,7 +895,7 @@ code
       if (exd.names.[3] != "")
       {
          JoinGuild(self, exd.names.[3]);
-         SetGuildLevel(self, exd.names.[3], atoi(exd.names.[5]));
+         SetGuildLevel(self, exd.names.[3], atoi(exd.names.[6]));
       }
 
       if (self.guild != "")

@@ -314,6 +314,7 @@ code
    subextra (tgt.extra,"$NO_DEC06");
 
    login_clean@justice();
+   login_clean@guilds();
    return;
 }
 dilend
