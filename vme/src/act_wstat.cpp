@@ -1188,7 +1188,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
             if (ROOM_EXIT(u, i))
             {
                 cname = ROOM_EXIT(u, i)->getOpenName().catnames();
-                sprintbit(bits2, ROOM_EXIT(u, i)->exit_info, g_unit_open_flags);
+                sprintbit(bits2, ROOM_EXIT(u, i)->getDoorFlags(), g_unit_open_flags);
 
                 if (ROOM_EXIT(u, i)->getToRoom())
                 {

@@ -333,7 +333,7 @@ exit_field  : TO reference
     }
     | OPEN flags
     {
-        ROOM_EXIT(cur, cur_ex)->exit_info = $2;
+        ROOM_EXIT(cur, cur_ex)->setDoorFlags($2);
     }
     | DESCR STRING
     {

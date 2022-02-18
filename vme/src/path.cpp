@@ -220,17 +220,17 @@ int path_weight(unit_data *from, unit_data *to, int dir)
 
     if (dir <= DIR_SOUTHWEST)
     {
-        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_OPEN_CLOSE))
+        if (ROOM_EXIT(from, dir)->isDoorFlagSet(EX_OPEN_CLOSE))
         {
             weight += 10;
         }
 
-        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_LOCKED))
+        if (ROOM_EXIT(from, dir)->isDoorFlagSet(EX_LOCKED))
         {
             weight += 50;
         }
 
-        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_HIDDEN))
+        if (ROOM_EXIT(from, dir)->isDoorFlagSet(EX_HIDDEN))
         {
             weight += 200;
         }

@@ -1248,7 +1248,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         ROOM_EXIT(u, i) = new (room_direction_data);
                         g_nCorrupt += ROOM_EXIT(u, i)->getOpenName().ReadBuffer(pBuf, unit_version);
 
-                        ROOM_EXIT(u, i)->exit_info = pBuf->ReadU16(&g_nCorrupt);
+                        ROOM_EXIT(u, i)->setDoorFlags(pBuf->ReadU16(&g_nCorrupt));
                         if (unit_version >= 71)
                         {
                             ROOM_EXIT(u, i)->setSkillDifficulty(pBuf->ReadU8(&g_nCorrupt)); // V71

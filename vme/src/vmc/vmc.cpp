@@ -288,7 +288,7 @@ room_direction_data *mcreate_exit()
     rslt = new (room_direction_data);
 
     //   rslt->open_name = NULL;
-    rslt->exit_info = 0;
+    rslt->setDoorFlags(0);
     rslt->setKey(nullptr);
     rslt->setToRoom(nullptr);
     return rslt;

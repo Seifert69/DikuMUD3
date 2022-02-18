@@ -112,7 +112,7 @@ int has_found_door(unit_data *pc, int dir)
         return TRUE;
     }
 
-    if (!IS_SET(ROOM_EXIT(UNIT_IN(pc), dir)->exit_info, EX_HIDDEN))
+    if (!ROOM_EXIT(UNIT_IN(pc), dir)->isDoorFlagSet(EX_HIDDEN))
     {
         return TRUE;
     }
@@ -129,7 +129,7 @@ int has_found_door(unit_data *pc, int dir)
 
     return exd->names.IsName(UNIT_NAMES(pc).Name(0)) != nullptr;
 
-    if (IS_SET(ROOM_EXIT(UNIT_IN(pc), dir)->exit_info, EX_CLOSED))
+    if (ROOM_EXIT(UNIT_IN(pc), dir)->isDoorFlagSet(EX_CLOSED))
     {
         for (af = UNIT_AFFECTED(UNIT_IN(pc)); af; af = af->getNext())
         {
@@ -481,7 +481,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }
     }
 
-    if (IS_SET(ROOM_EXIT(room_from, direction)->exit_info, EX_CLOSED))
+    if (ROOM_EXIT(room_from, direction)->isDoorFlagSet(EX_CLOSED))
     {
         if (!has_found_door(ch, direction))
         {
@@ -494,7 +494,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         return 0;
     }
 
-    if (IS_SET(ROOM_EXIT(room_from, direction)->exit_info, EX_CLIMB))
+    if (ROOM_EXIT(room_from, direction)->isDoorFlagSet(EX_CLIMB))
     {
         act("Alas, you must climb to go that way.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         return 0;

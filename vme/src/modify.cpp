@@ -915,7 +915,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 return;
             }
 
-            ROOM_EXIT(unt, typarg)->exit_info = bitarg;
+            ROOM_EXIT(unt, typarg)->setDoorFlags(bitarg);
             return;
 
         case 24: /* "dir-key" */
