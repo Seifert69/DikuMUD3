@@ -3753,57 +3753,22 @@ code
 }
 dilend
 
-/*
-dilbegin testzonenpcs();
-var
-   z : zoneptr;
-   u : unitptr;
+
+
+// 2022 : Called from vmelimits, hard requirement
+//
+//
+dilbegin advance_level();
+external 
+   AdvGuildLevel@guilds(ch : unitptr);
+
 code
-{
-   z := zhead();
-
-   while (z)
-   {
-      log(z.name + " " + z.title);
-
-      u := z.npcs;
-
-      if (u)
-      {
-         log("got an NPC");
-         log("Its name is: " + u.symname);
-      }
-
-      z := z.next;
-   }
-   quit;
+{ 
+   log(self.name + " advanced to level " + itoa(self.vlevel));
+   AdvGuildLevel@guilds(self);
+   return;
 }
 dilend
-
-
-dilbegin aware unique mytestsymname();
-external
-   string testsymname();
-
-var
-   s1 : string;
-   s2 : string;
-code
-{
-   :loop:
-   wait(SFB_CMD, activator != self);
-
-   s1 := activator.symname;
-   s2 := self.symname;
-   exec("say I am "+s2+" and you are "+s1, self);
-   exec("say I am "+self.symname+" and you are "+activator.symname, self);
-   s1 := "say I am "+self.symname+" and you are "+activator.symname;
-   exec(s1, self);
-   s1 := "say when calling: act, self, self, act " + activator.symname + testsymname() + self.symname + activator.symname;
-   exec(s1, self);
-   goto loop;
-}
-dilend*/
 end
 
 

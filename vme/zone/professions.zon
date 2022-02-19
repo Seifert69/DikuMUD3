@@ -188,23 +188,25 @@ dilend
 
 
 
-dilbegin login_clean@professions(prof : integer);
+dilbegin login_clean(prof : integer, desc : string);
 external
-   SetupProf@profession(pc : unitptr, prof : integer, desc : string);
-var
-   s : string;
+   SetupProf@professions(pc : unitptr, prof : integer, desc : string);
 code
 {
+   if (PROFESSION_KEY in self.info)
+      return;
+
+   log("prof login_clean()");
+
    if (prof < 0)
    {
       log(self.name + " had profession -1. Bizarre. Setting to 0 (fighter).");
       prof := 0;
-      s := "Unable to establish profession when converting old player - set to 0";
+      if (desc == "")
+         desc := "Bizarre -1";
    }
-   else
-      s := "Converting old player";
 
-   SetupProf@profession(self, prof, s);
+   SetupProf@professions(self, prof, desc+"<br/>");
    return;
 }
 dilend

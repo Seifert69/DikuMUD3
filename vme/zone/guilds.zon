@@ -873,19 +873,23 @@ external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
    SetGuildLevel(ch : unitptr, sGuild : string, lvl : integer);
    integer ProfessionIdx@professions(sGuild : string);
-   login_clean@professions(prof : integer);
+   login_clean@professions(prof : integer, desc : string);
 
 var
    exd : extraptr;
    i : integer;
    prof : integer;
+   desc : string;
 
 code
 {
-   if ("$guild" in self.info)
+   if (GUILD_KEY in self.info)
       return;
 
+   log("guild login_clean()");
    exd := "$path" in self.quests;
+
+   desc := "Converted from existing profession in range";
    
    if (exd)
    {
@@ -906,7 +910,10 @@ code
          JoinGuild(self, exd.names.[1]);
          SetGuildLevel(self, exd.names.[1], atoi(exd.names.[4]));
          if (prof < 0)
+         {
             prof := ProfessionIdx@professions(exd.names.[1]);
+            desc := "Converted from guild path #1";
+         }
       }
 
       if (exd.names.[2] != "")
@@ -914,7 +921,10 @@ code
          JoinGuild(self, exd.names.[2]);
          SetGuildLevel(self, exd.names.[2], atoi(exd.names.[5]));
          if (prof < 0)
+         {
             prof := ProfessionIdx@professions(exd.names.[2]);
+            desc := "Converted from guild path #2";
+         }
       }
 
       if (exd.names.[3] != "")
@@ -922,7 +932,10 @@ code
          JoinGuild(self, exd.names.[3]);
          SetGuildLevel(self, exd.names.[3], atoi(exd.names.[6]));
          if (prof < 0)
+         {
             prof := ProfessionIdx@professions(exd.names.[3]);
+            desc := "Converted from guild path #3";
+         }
       }
 
       if (self.guild != "")
@@ -932,7 +945,10 @@ code
             JoinGuild(self, self.guild);
             SetGuildLevel(self, self.guild, self.vlevel);
             if (prof < 0)
+            {
                prof := ProfessionIdx@professions(self.guild);
+               desc := "Converted from self.guild, apparently no guild path even though $path";
+            }
          }
       }
       else
@@ -948,14 +964,17 @@ code
       JoinGuild(self, self.guild);
       SetGuildLevel(self, self.guild, self.vlevel);
       if (prof < 0)
+      {
          prof := ProfessionIdx@professions(self.guild);
+         desc := "Converted from self.guild, there was no $path";
+      }
    }
    else
    {
       log(self.name + " has no $path or guild info.");
    }
 
-   login_clean@professions(prof);
+   login_clean@professions(prof, desc);
 
    return;
 }
