@@ -22,21 +22,22 @@ cost training STR and CON.<br/>
 
 %dil
 
-// string ProfessionName@professions(pc : unitptr);
+// string ProfessionName@professions(prof_xxx : integer);
+// integer ProfessionIdx@professions(sGuild : string);
 // NewPlayerProf@professions(pc : unitptr, prof : integer);
 //
 
 // ===============================================================
 
-dilbegin string ProfessionName(prof : integer);
+dilbegin string ProfessionName(prof_xxx : integer);
 var
    sl : stringlist;
 code
 {
-   if ((prof < 0) or (prof >= PROFESSION_MAX))
+   if ((prof_xxx < 0) or (prof_xxx >= PROFESSION_MAX))
       return ("contact admin about profession");
    sl := {PROFESSION_STRINGS};
-   return (sl.[prof]);
+   return (sl.[prof_xxx]);
 }
 dilend
 
@@ -113,16 +114,16 @@ var
 
 code
 {
-   if ((pc.profession == PROFESSION_FIGHTER) or
-       (pc.profession == PROFESSION_THIEF) or 
-       (pc.profession == PROFESSION_PRIEST) or
-       (pc.profession == PROFESSION_CONJURER))
+   if ((prof == PROFESSION_FIGHTER) or
+       (prof == PROFESSION_THIEF) or 
+       (prof == PROFESSION_PRIEST) or
+       (prof == PROFESSION_CONJURER))
    {
       SetupProf@professions(pc, prof, "New player profession set to "+itoa(prof));
    }
    else
    {
-      log("NewPLayerProf got illegal profession " + itoa(prof));
+      log("NewPlayerProf got illegal profession " + itoa(prof));
    }
 
    return;
@@ -203,7 +204,7 @@ code
    else
       s := "Converting old player";
 
-   SetupProf@profession(self,prof, s);
+   SetupProf@profession(self, prof, s);
    return;
 }
 dilend

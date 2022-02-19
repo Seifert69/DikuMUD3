@@ -609,11 +609,14 @@ dilend
 
 dilbegin do_guilds(arg : string);
 external
-   string ProfessionName@professions(pc : unitptr);
+   string ProfessionName@professions(prof_xxx : integer);
+   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+
 var
    exd : extraptr;
    sl : stringlist;
    i : integer;
+
 code
 {
    if (self.type != UNIT_ST_PC)
@@ -640,8 +643,12 @@ code
    }
    else
    {
-      sendtext(self.guild +  " is your main guild (Request a guild title from a guild master to change your main guild).<br/>", self);
+      if (i > 1)
+         sendtext(self.guild +  " is your main guild (Request a guild title from a guild master to change your main guild).<br/>", self);
    }
+
+   if (GetGuildLevel(self, self.guild) == -1)
+      sendtext("Your default guild is [" + self.guild + "] and seems incorrectly setup. Please contact an administrator.<br/>", self);
 
    exd := GUILD_KEY_BANISHED in self.info;
    if (exd)
@@ -673,7 +680,7 @@ code
    // =========================================
    // Show the character's profession
    //
-   sendtext("Your profession is: " + ProfessionName@professions(self) + ".<br/>", self);
+   sendtext("Your profession is: " + ProfessionName@professions(self.profession) + ".<br/>", self);
 
    //
    // When the character has 25 guild levels in his main profession, he can 
