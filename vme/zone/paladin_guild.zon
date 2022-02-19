@@ -991,7 +991,7 @@ code
 }
 dilend
 
-dilcopy guild_titles@guilds(GUILD_PALADIN, { "Converted", "Converted",
+dilcopy SetTitles@guilds(GUILD_PALADIN, { "Converted", "Converted",
 "Dedicated", "Dedicated", "Pure", "Pure", "Redeemed", "Redeemed",
 "Hero of the Narrow Path", "Heroine of the Narrow Path", "Annointed Knight",
 "Annointed Knight", "Blessed Knight", "Blessed Knight", "Holy Knight",

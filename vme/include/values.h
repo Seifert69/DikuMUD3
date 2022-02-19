@@ -54,8 +54,15 @@ END HEADER*/
 #define ITEM_SKIN   26
 #define ITEM_BOARD   27
 
+
 #define POLICE_ACADEMY    "$Police Member"
 #define POLICE_BANNED     "$Police Banned"
+
+#define GUILD_KEY           "$guild"
+#define GUILD_KEY_PREPEND   "$guild/"
+#define GUILD_KEY_BANISHED  "$guilds_ban"
+#define GUILD_KEY_LEFT      "$guilds_left"
+
 
 #define GUILD_UDG_FIGHTER     "Udgaard Fighter"
 #define GUILD_UDG_FIGHTER_ATL "jones@fightersguild","lancelot@fightersguild","robin@fightersguild" //  Abi, Wpn, Ski
@@ -112,28 +119,6 @@ END HEADER*/
 #define GUILD_SL   {GUILD_UDG_FIGHTER, GUILD_KNIGHT, GUILD_PALADIN, GUILD_NYM_RANGER,   \
 	                GUILD_UDG_THIEF, GUILD_ASSASSIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID, \
 	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_BARBARIAN}
-// #define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N", "C", "S", "B"}
-
-
-//
-// The bonus scale that builders use to assign weapon quality, magic bonus, shields, armours,
-// skills, attributes,etc.
-//
-#define BONUS_ARTIFACT        7
-#define BONUS_SUPERIOR        6
-#define BONUS_EXCELLENT_PLUS  5
-#define BONUS_EXCELLENT       4
-#define BONUS_GOOD_PLUS       3
-#define BONUS_GOOD            2
-#define BONUS_AVERAGE_PLUS    1
-#define BONUS_AVERAGE         0
-#define BONUS_AVERAGE_MINUS  -1
-#define BONUS_BAD            -2
-#define BONUS_BAD_MINUS      -3
-#define BONUS_TERRIBLE       -4
-#define BONUS_TERRIBLE_MINUS -5
-#define BONUS_JUNK_ALMOST    -6
-#define BONUS_JUNK           -7
 
 
 //
@@ -156,11 +141,39 @@ END HEADER*/
 #define PROFESSION_CONJURER    10
 #define PROFESSION_SORCERER    11
 #define PROFESSION_BARBARIAN   12
+#define PROFESSION_COUNT       13
 #define PROFESSION_MAX         13 /* 12+1 */
+
+
+#define PROFESSION_KEY      "$profession"
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
                            "Priest", "Druid", "Obsolete - Do Not Select","Necromancer", "Conjurer", "Sorcerer", \
 						   "Barbarian"
+
+
+
+
+//
+// The bonus scale that builders use to assign weapon quality, magic bonus, shields, armours,
+// skills, attributes,etc.
+//
+#define BONUS_ARTIFACT        7
+#define BONUS_SUPERIOR        6
+#define BONUS_EXCELLENT_PLUS  5
+#define BONUS_EXCELLENT       4
+#define BONUS_GOOD_PLUS       3
+#define BONUS_GOOD            2
+#define BONUS_AVERAGE_PLUS    1
+#define BONUS_AVERAGE         0
+#define BONUS_AVERAGE_MINUS  -1
+#define BONUS_BAD            -2
+#define BONUS_BAD_MINUS      -3
+#define BONUS_TERRIBLE       -4
+#define BONUS_TERRIBLE_MINUS -5
+#define BONUS_JUNK_ALMOST    -6
+#define BONUS_JUNK           -7
+
 
 
 #define QUEST_WW              "Wight warrens quest"

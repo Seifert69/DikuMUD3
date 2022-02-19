@@ -1,8 +1,11 @@
 #include <macros.h>
 
 /*
+Check all PROFESSION_MAX tests
+
+
 All the guilds processed (ignoring Monk since it's not complete):
-   assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon ../Zones/monk.zon
+   assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon druid.zon ../Zones/monk.zon
 
 Missing sign at all guilds
 */
@@ -164,19 +167,21 @@ Cleric, Necromancer, Druid ->
 // BanishGuild@guilds(pc : unitptr, sGuild : string);
 // MurderBanish@guilds(sGuild : string);
 // AlertMembers@guilds(sGuild : string, sMsg : string);
+// integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
 
 //
 // Blockers:
-// TrainMemberChk(sGuild : string, sMsg : string);
-// quest_block(cmd : string, quest : string, sExec : stringlist);
+// TrainMemberChk@guilds(sGuild : string, sMsg : string);
+// quest_block@guilds(cmd : string, quest : string, sExec : stringlist);
 //
-// SetAutoTrain(pc : unitptr, sGuild : string);
-// AdvGuildLevel(ch : unitptr);
+// SetAutoTrain@guilds(pc : unitptr, sGuild : string);
+// AdvGuildLevel@guilds(ch : unitptr);
 
-
-#define GUILD_PREPEND   "$guild/"
-#define GUILD_BANISHED  "$guilds_ban"
-#define GUILD_LEFT      "$guilds_left"
+// Do not use, for basis only
+//
+// login_clean@guilds();
+// SetGuildLevel(pc : unitptr, sGuild : string, lvl : integer); // Do not use, for login_clean only
+//
 
 
 // Checks if player pc is in guild sGuild
@@ -198,7 +203,7 @@ var
    exd : extraptr;
 code
 {
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
       return (0);
@@ -220,7 +225,7 @@ code
    ln := length(sGuilds) - 1;
    while (ln >= 0)
    {
-      if ((GUILD_PREPEND+sGuilds.[ln]) in pc.info)
+      if ((GUILD_KEY_PREPEND+sGuilds.[ln]) in pc.info)
          return (1);
 
       ln := ln-1;
@@ -239,12 +244,12 @@ var
    exd : extraptr;
 code
 {
-   exd := GUILD_BANISHED in pc.info;
+   exd := GUILD_KEY_BANISHED in pc.info;
 
    if (exd == null)
       return (0);
 
-   if ((GUILD_PREPEND + sGuild) in exd.names)
+   if ((GUILD_KEY_PREPEND + sGuild) in exd.names)
       return (1);
 
    return (0);
@@ -263,7 +268,7 @@ var
    sl : stringlist;
 code
 {
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
    if (exd)
    {
@@ -271,7 +276,7 @@ code
       return;
    }
 
-   addstring(sl, GUILD_PREPEND + sGuild);
+   addstring(sl, GUILD_KEY_PREPEND + sGuild);
    addstring(sl, "0");
    addstring(sl, itoa(pc.vlevel));
    addstring(sl, "$guild");
@@ -285,7 +290,7 @@ code
 dilend
 
 
-// Player pc leaves the guild sGuild (moved to GUILD_LEFT)
+// Player pc leaves the guild sGuild (moved to GUILD_KEY_LEFT)
 //
 dilbegin LeaveGuild(pc : unitptr, sGuild : string);
 var
@@ -293,7 +298,7 @@ var
    exdleft : extraptr;
 code
 {
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
    {
@@ -301,16 +306,16 @@ code
       return;
    }
 
-   subextra(pc.info, GUILD_PREPEND + sGuild);
+   subextra(pc.info, GUILD_KEY_PREPEND + sGuild);
 
-   // Now add to GUILD_LEFT
+   // Now add to GUILD_KEY_LEFT
 
-   exdleft := GUILD_LEFT in pc.info;
+   exdleft := GUILD_KEY_LEFT in pc.info;
 
    if (exdleft == null)
    {
-      addextra(pc.info, {GUILD_LEFT}, "");
-      exdleft := GUILD_LEFT in pc.info;
+      addextra(pc.info, {GUILD_KEY_LEFT}, "");
+      exdleft := GUILD_KEY_LEFT in pc.info;
    }
 
    if (sGuild in exdleft.names)
@@ -325,7 +330,7 @@ code
 dilend
 
 
-// Player pc is banished from his guild sGuild (moved to GUILD_BANISHED)
+// Player pc is banished from his guild sGuild (moved to GUILD_KEY_BANISHED)
 // If player is not in the guild, they are still added as banished.
 //
 dilbegin BanishGuild(pc : unitptr, sGuild : string);
@@ -334,19 +339,19 @@ var
    exdbanished : extraptr;
 code
 {
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
    if (exd)
    {
-      subextra(pc.info, GUILD_PREPEND + sGuild);
+      subextra(pc.info, GUILD_KEY_PREPEND + sGuild);
    }
 
-   exdbanished := GUILD_BANISHED in pc.info;
+   exdbanished := GUILD_KEY_BANISHED in pc.info;
 
    if (exdbanished == null)
    {
-      addextra(pc.info, {GUILD_BANISHED}, "");
-      exdbanished := GUILD_BANISHED in pc.info;
+      addextra(pc.info, {GUILD_KEY_BANISHED}, "");
+      exdbanished := GUILD_KEY_BANISHED in pc.info;
    }
 
    if (not (sGuild in exdbanished.names))
@@ -543,7 +548,7 @@ var
    exd : extraptr;
 code
 {
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
    {
@@ -569,7 +574,7 @@ var
    s : string;
 code
 {
-   exd := (GUILD_PREPEND + pc.guild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + pc.guild) in pc.info;
 
    if (exd == null)
    {
@@ -593,7 +598,7 @@ var
    exd : extraptr;
 code
 {
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
       return (-1);
@@ -603,6 +608,8 @@ code
 dilend
 
 dilbegin do_guilds(arg : string);
+external
+   string ProfessionName@professions(pc : unitptr);
 var
    exd : extraptr;
    sl : stringlist;
@@ -636,7 +643,7 @@ code
       sendtext(self.guild +  " is your main guild (Request a guild title from a guild master to change your main guild).<br/>", self);
    }
 
-   exd := GUILD_BANISHED in self.info;
+   exd := GUILD_KEY_BANISHED in self.info;
    if (exd)
    {
       sendtext("<br/>You have been banished from the following guilds:<br/>", self);
@@ -650,7 +657,7 @@ code
    }
 
 
-   exd := GUILD_LEFT in self.info;
+   exd := GUILD_KEY_LEFT in self.info;
    if (exd)
    {
       sendtext("<br/>You have left the following guilds:<br/>", self);
@@ -662,6 +669,17 @@ code
          i := i - 1;
       }
    }
+
+   // =========================================
+   // Show the character's profession
+   //
+   sendtext("Your profession is: " + ProfessionName@professions(self) + ".<br/>", self);
+
+   //
+   // When the character has 25 guild levels in his main profession, he can 
+   // choose a specialization (e.g. a fighter may become a barbarian)
+   //
+
 
    quit;
 }
@@ -826,7 +844,7 @@ var
    s : string;
 code
 {
-   exd := (GUILD_PREPEND + sGuild) in pc.info;
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
    if (exd == null)
    {
@@ -847,10 +865,14 @@ external
    JoinGuild(pc : unitptr, sGuild : string);
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
    SetGuildLevel(ch : unitptr, sGuild : string, lvl : integer);
+   integer ProfessionIdx@professions(sGuild : string);
+   login_clean@professions(prof : integer);
 
 var
    exd : extraptr;
    i : integer;
+   prof : integer;
+
 code
 {
    if ("$guild" in self.info)
@@ -860,6 +882,10 @@ code
    
    if (exd)
    {
+      prof := self.profession;
+      if (prof > PROFESSION_MAX)
+         prof := -1;
+
       i := length(exd.names);
 
       if (i != 8)
@@ -872,18 +898,24 @@ code
       {
          JoinGuild(self, exd.names.[1]);
          SetGuildLevel(self, exd.names.[1], atoi(exd.names.[4]));
+         if (prof < 0)
+            prof := ProfessionIdx@professions(exd.names.[1]);
       }
 
       if (exd.names.[2] != "")
       {
          JoinGuild(self, exd.names.[2]);
          SetGuildLevel(self, exd.names.[2], atoi(exd.names.[5]));
+         if (prof < 0)
+            prof := ProfessionIdx@professions(exd.names.[2]);
       }
 
       if (exd.names.[3] != "")
       {
          JoinGuild(self, exd.names.[3]);
          SetGuildLevel(self, exd.names.[3], atoi(exd.names.[6]));
+         if (prof < 0)
+            prof := ProfessionIdx@professions(exd.names.[3]);
       }
 
       if (self.guild != "")
@@ -892,6 +924,8 @@ code
          {
             JoinGuild(self, self.guild);
             SetGuildLevel(self, self.guild, self.vlevel);
+            if (prof < 0)
+               prof := ProfessionIdx@professions(self.guild);
          }
       }
       else
@@ -903,13 +937,18 @@ code
    }
    else if (self.guild != "")
    {
+      log(self.name + " had no $path but had default guild info.");
       JoinGuild(self, self.guild);
       SetGuildLevel(self, self.guild, self.vlevel);
+      if (prof < 0)
+         prof := ProfessionIdx@professions(self.guild);
    }
    else
    {
       log(self.name + " has no $path or guild info.");
    }
+
+   login_clean@professions(prof);
 
    return;
 }

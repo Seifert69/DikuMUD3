@@ -898,7 +898,7 @@ code
    //
    if (command(CMD_AUTO_MSG)) 
    {
-      log("MSG : " + argument);
+      // log("MSG : " + argument);
 
       s := getword(argument);
 

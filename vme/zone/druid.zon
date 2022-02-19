@@ -445,7 +445,7 @@ M_TREE_LARGE(100,SEX_NEUTRAL)
 dilcopy nokill@druid();
 dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
 dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
-dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
 #define _ABILITY
 #include "guilddef.h"
@@ -599,7 +599,7 @@ alignment 0
 dilcopy nokill@druid();
 dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
 dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
-dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -622,7 +622,7 @@ romflags {CHAR_PROTECTED}
 dilcopy nokill@druid();
 dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
 dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
-dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -647,7 +647,7 @@ romflags {CHAR_PROTECTED}
 dilcopy nokill@druid();
 dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
 dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
-dilcopy TrainMemberChk(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
 #define _SKILL
 #include "guilddef.h"

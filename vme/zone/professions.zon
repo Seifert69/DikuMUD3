@@ -1,0 +1,212 @@
+#include <macros.h>
+
+
+%zone professions
+
+reset RESET_NOT
+
+creators {"Papi"}
+
+notes "The DIL functions needed to manage Guilds."
+
+help 
+"This zone contains helper functions for professions.<br/>
+
+Professions are comparable to natural talents. The profession,
+not the guild, determine the training cost.<br/>
+So for example, a mage profession means you'll have a low cost
+training MAG and BRA. A fighter profession means you have a low
+cost training STR and CON.<br/>
+"
+
+
+%dil
+
+// string ProfessionName@professions(pc : unitptr);
+// NewPlayerProf@professions(pc : unitptr, prof : integer);
+//
+
+// ===============================================================
+
+dilbegin string ProfessionName(prof : integer);
+var
+   sl : stringlist;
+code
+{
+   if ((prof < 0) or (prof >= PROFESSION_MAX))
+      return ("contact admin about profession");
+   sl := {PROFESSION_STRINGS};
+   return (sl.[prof]);
+}
+dilend
+
+// Given guild name, return profession index
+//
+//
+dilbegin integer ProfessionIdx(sGuild : string);
+var
+   sl : stringlist;
+   i : integer;
+code
+{
+   sl := {PROFESSION_STRINGS};
+   i := sGuild in sl;
+   i := i - 1;
+
+   return (i);
+}
+dilend
+
+
+// To be called on a player that does not have a $profession setup.
+//    prof (integer) is the profession to set PROFESSION_XXX
+//    descr is description of how it was set (new character, conversion, etc).
+//
+dilbegin SetupProf(pc : unitptr, prof : integer, desc : string);
+var
+   sl : stringlist;
+   i : integer;
+   exd : extraptr;
+
+code
+{
+   exd := PROFESSION_KEY in pc.info;
+
+   // If there is a $professions, then this doesn't apply.
+   if (exd != null)
+   {
+      log("SetInitalProf() called but $profession was already set for player " + pc.name);
+      return;
+   }
+
+   if ((i < 0) or (i > PROFESSION_MAX))
+   {
+      log("SetInitalProf() called but prof OOB.");
+      return;
+   }
+
+   pc.profession := prof;
+   addextra(pc.info, {PROFESSION_KEY}, desc+"<br/>");
+   exd := PROFESSION_KEY in pc.info;
+   insert(exd.vals, 0, -1); // Dummy -1 for everyone (matches $profession index)
+
+   sl := {PROFESSION_STRINGS};
+   addstring(exd.names, sl.[prof]);
+   insert(exd.vals, 1, prof); 
+
+   return;
+}
+dilend
+
+
+
+// Call to setup a new player. Only 
+//
+dilbegin NewPlayerProf(pc : unitptr, prof : integer);
+external
+   SetupProf@professions(pc : unitptr, prof : integer, desc : string);
+
+var
+   sl : stringlist;
+   i : integer;
+   exd : extraptr;
+
+code
+{
+   if ((pc.profession == PROFESSION_FIGHTER) or
+       (pc.profession == PROFESSION_THIEF) or 
+       (pc.profession == PROFESSION_PRIEST) or
+       (pc.profession == PROFESSION_CONJURER))
+   {
+      SetupProf@professions(pc, prof, "New player profession set to "+itoa(prof));
+   }
+   else
+   {
+      log("NewPLayerProf got illegal profession " + itoa(prof));
+   }
+
+   return;
+}
+dilend
+
+
+
+
+dilbegin string Specialization(pc : unitptr);
+external
+   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+   sl : stringlist;
+   i : integer;
+   il : intlist;
+code
+{
+   exd := "$professions" in pc.info;
+
+   // If there is a $professions, then this doesn't apply.
+   if (exd != null)
+      return ("");
+
+   if (pc.profession == PROFESSION_FIGHTER)
+      i := 0;
+   else if (pc.profession == PROFESSION_THIEF)
+      i := 1;
+   else if (pc.profession == PROFESSION_PRIEST)
+      i := 2;
+   else if (pc.profession == PROFESSION_CONJURER)
+      i := 3;
+   else
+      i := -1;
+
+   // Player is in a core profession
+   if (i < 0)
+   {
+      // Old players will be in odd professions and have no $profession extra
+      return ("");
+   }
+
+
+   sl := {GUILD_UDG_FIGHTER, GUILD_UDG_THIEF, GUILD_UDG_CLERIC, GUILD_UDG_MAGE};
+
+   i := GetGuildLevel@guilds(pc, sl.[i]);
+
+   if (i == -1)
+   {
+      log("error");
+      return ("");
+   }
+
+   if (i < 25)
+      return ("");
+
+   // Aha. We have 25 guild levels in a core profession, time to specialize!
+   return ("Time to specialize!");
+}
+dilend
+
+
+
+dilbegin login_clean@professions(prof : integer);
+external
+   SetupProf@profession(pc : unitptr, prof : integer, desc : string);
+var
+   s : string;
+code
+{
+   if (prof < 0)
+   {
+      log(self.name + " had profession -1. Bizarre. Setting to 0 (fighter).");
+      prof := 0;
+      s := "Unable to establish profession when converting old player - set to 0";
+   }
+   else
+      s := "Converting old player";
+
+   SetupProf@profession(self,prof, s);
+   return;
+}
+dilend
+
+
+%end

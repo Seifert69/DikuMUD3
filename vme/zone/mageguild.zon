@@ -909,7 +909,7 @@ alignment 500
 money 5 IRON_PIECE
 exp -100
 
-dilcopy no_kill@mageguild();
+dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
@@ -938,7 +938,7 @@ alignment 500
 money 5 IRON_PIECE
 exp -100
 
-dilcopy no_kill@mageguild();
+dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
@@ -965,7 +965,7 @@ alignment 1000
 money 9 IRON_PIECE
 exp -100
 
-dilcopy no_kill@mageguild();
+dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
@@ -994,7 +994,7 @@ alignment 700
 money 7 IRON_PIECE
 exp -100
 
-dilcopy no_kill@mageguild();
+dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 dilcopy TrainMemberChk@guilds(GUILD_UDG_MAGE, "");
@@ -1021,7 +1021,7 @@ alignment 700
 money 3 IRON_PIECE
 exp 0
 
-dilcopy no_kill@mageguild();
+dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 
@@ -1042,7 +1042,7 @@ alignment 600
 money 5 IRON_PIECE
 exp 0
 
-dilcopy no_kill@mageguild();
+dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 
