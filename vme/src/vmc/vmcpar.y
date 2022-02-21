@@ -521,7 +521,7 @@ omobile_field   : MANA number
     }
     | ATTACK number
     {
-        CHAR_ATTACK_TYPE(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setAttackType($2);
     }
     | POSITION number
     {

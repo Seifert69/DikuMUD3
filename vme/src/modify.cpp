@@ -1131,7 +1131,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 49: /* "attack-type" */
-            CHAR_ATTACK_TYPE(unt) = typarg;
+            dynamic_cast<char_data *>(unt)->points.setAttackType(typarg);
             return;
 
         case 50: /* "hand-quality" OBSOLETE */

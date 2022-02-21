@@ -259,6 +259,11 @@ public:
     ubit8 *getNaturalArmorPtr();
     int readNaturalArmorFrom(CByteBuffer &buf);
 
+    ubit8 getAttackType() const;
+    void setAttackType(ubit8 value);
+    int readAttackTypeFrom(CByteBuffer &buf);
+    ubit8 *getAttackTypePtr();
+
 private:
     ubit32 flags{0};         // Char flags
     sbit32 exp{0};           // The experience of the player
@@ -269,8 +274,8 @@ private:
     sbit16 defensive{0};     // The DB of a character.
     ubit8 speed{0};          // The default speed for natural combat
     ubit8 natural_armour{0}; // The natural built-in armour (ARM_)
+    ubit8 attack_type{0};    // PC/NPC Attack Type for bare hands (WPN_)
 public:
-    ubit8 attack_type;               /* PC/NPC Attack Type for bare hands (WPN_) */
     ubit8 dex_reduction;             /* For speed of armour calculations only    */
     ubit8 sex;                       /* PC / NPC s sex                           */
     ubit8 level;                     /* PC / NPC s level                         */

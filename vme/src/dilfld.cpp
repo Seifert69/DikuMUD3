@@ -3726,7 +3726,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &CHAR_ATTACK_TYPE((unit_data *)v1->val.ptr);
+                        v->ref = reinterpret_cast<char_data *>(v1->val.ptr)->points.getAttackTypePtr();
                     }
                     else
                     {

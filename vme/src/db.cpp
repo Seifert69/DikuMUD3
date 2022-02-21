@@ -885,7 +885,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 char_unit->points.setSpeed(SPEED_DEFAULT);
             }
 
-            CHAR_ATTACK_TYPE(u) = pBuf->ReadU16(&g_nCorrupt);
+            g_nCorrupt = char_unit->points.readAttackTypeFrom(*pBuf);
 
             if (unit_version <= 52)
             {

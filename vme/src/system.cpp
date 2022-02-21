@@ -96,17 +96,17 @@ void init_char(unit_data *ch)
         PC_ID(ch) = new_player_id();
     }
 
-    CHAR_ATTACK_TYPE(ch) = WPN_FIST;
-    dynamic_cast<char_data *>(ch)->points.setNaturalArmor(ARM_CLOTHES);
+    char_unit->points.setAttackType(WPN_FIST);
+    char_unit->points.setNaturalArmor(ARM_CLOTHES);
 
     UNIT_HIT(ch) = UNIT_MAX_HIT(ch) = 1;
 
-    dynamic_cast<char_data *>(ch)->points.setMana(mana_limit(ch));
-    dynamic_cast<char_data *>(ch)->points.setEndurance(move_limit(ch));
+    char_unit->points.setMana(mana_limit(ch));
+    char_unit->points.setEndurance(move_limit(ch));
     CHAR_LAST_ROOM(ch) = nullptr;
 
-    dynamic_cast<char_data *>(ch)->points.setAllCharacterFlags(0);
-    dynamic_cast<char_data *>(ch)->points.setCharacterFlag(CHAR_PROTECTED);
+    char_unit->points.setAllCharacterFlags(0);
+    char_unit->points.setCharacterFlag(CHAR_PROTECTED);
 
     for (i = 0; i < 3; i++)
     {

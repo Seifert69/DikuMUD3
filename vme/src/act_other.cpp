@@ -175,7 +175,7 @@ void start_player(unit_data *ch)
 
     set_title(ch);
 
-    CHAR_ATTACK_TYPE(ch) = WPN_FIST;
+    player->points.setAttackType(WPN_FIST);
     player->points.setNaturalArmor(ARM_CLOTHES);
 
     PC_COND(ch, THIRST) = 24;

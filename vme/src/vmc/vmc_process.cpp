@@ -274,7 +274,7 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_FIST, WPN_CRUSH))
     {
         dmc_error(TRUE, "Illegal hand attack type %d.", CHAR_ATTACK_TYPE(u));
-        CHAR_ATTACK_TYPE(u) = WPN_FIST;
+        dynamic_cast<char_data *>(u)->points.setAttackType(WPN_FIST);
     }
 
     if (!is_in(CHAR_LEVEL(u), 0, 199))
@@ -368,7 +368,7 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
         dmc_error(TRUE, "Illegal attack category in '%s'.", UNIT_IDENT(u));
-        CHAR_ATTACK_TYPE(u) = WPN_FIST;
+        dynamic_cast<char_data *>(u)->points.setAttackType(WPN_FIST);
     }
 
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = hitpoint_total(CHAR_HPP(u));
@@ -1189,7 +1189,7 @@ void init_unit(unit_data *u)
             CHAR_MONEY(u) = nullptr;
             npc->points.setPlayerExperience(100); // 100 XP per default at your own level
             npc->points.setAllCharacterFlags(0);
-            CHAR_ATTACK_TYPE(u) = WPN_FIST;
+            npc->points.setAttackType(WPN_FIST);
             npc->points.setNaturalArmor(ARM_HLEATHER);
             npc->points.setSpeed(12);
             npc->points.setRace(RACE_HUMAN);

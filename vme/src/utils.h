@@ -262,7 +262,7 @@
 
 #define CHAR_EXP(ch) (UCHAR(ch)->points.getPlayerExperience())
 
-#define CHAR_ATTACK_TYPE(ch) (UCHAR(ch)->points.attack_type)
+#define CHAR_ATTACK_TYPE(ch) (UCHAR(ch)->points.getAttackType())
 
 #define CHAR_NATURAL_ARMOUR(ch) (UCHAR(ch)->points.getNaturalArmor())
 
