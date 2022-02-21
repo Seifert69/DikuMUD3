@@ -517,7 +517,7 @@ omobile_field   : MANA number
     }
     | RACE number
     {
-        CHAR_RACE(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setRace($2);
     }
     | ATTACK number
     {

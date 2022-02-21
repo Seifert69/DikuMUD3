@@ -1147,7 +1147,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 52: /* "race" */
-            CHAR_RACE(unt) = typarg;
+            dynamic_cast<char_data *>(unt)->points.setRace(typarg);
             return;
 
         case 53: /* "sex" */

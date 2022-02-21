@@ -73,7 +73,7 @@ void init_char(unit_data *ch)
 
     CHAR_POS(ch) = POSITION_STANDING;
     CHAR_SPEED(ch) = SPEED_DEFAULT;
-    CHAR_RACE(ch) = RACE_HUMAN;
+    dynamic_cast<char_data *>(ch)->points.setRace(RACE_HUMAN);
     CHAR_SEX(ch) = SEX_MALE;
 
     PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(nullptr);

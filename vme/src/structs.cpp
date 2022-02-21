@@ -118,6 +118,26 @@ void char_point_data::incrementPlayerExperienceBy(sbit32 value)
     exp += value;
 }
 
+ubit16 char_point_data::getRace() const
+{
+    return race;
+}
+
+ubit16 *char_point_data::getRacePtr()
+{
+    return &race;
+}
+
+int char_point_data::readRaceFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&race);
+}
+
+void char_point_data::setRace(ubit16 value)
+{
+    race = value;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -624,7 +644,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setPlayerExperience(this_upcast->points.getPlayerExperience());
         CHAR_MANA(u) = CHAR_MANA(this);
         CHAR_ENDURANCE(u) = CHAR_ENDURANCE(this);
-        CHAR_RACE(u) = CHAR_RACE(this);
+        u_upcast->points.setRace(this_upcast->points.getRace());
         CHAR_OFFENSIVE(u) = CHAR_OFFENSIVE(this);
         CHAR_DEFENSIVE(u) = CHAR_DEFENSIVE(this);
         CHAR_SPEED(u) = CHAR_SPEED(this);

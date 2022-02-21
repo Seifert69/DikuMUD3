@@ -223,12 +223,16 @@ public:
     void incrementPlayerExperienceBy(sbit32 value);
     int readPlayerExperienceFrom(CByteBuffer &buf);
 
+    ubit16 getRace() const;
+    ubit16 *getRacePtr();
+    int readRaceFrom(CByteBuffer &buf);
+    void setRace(ubit16 value);
+
 private:
     ubit32 flags{0}; // Char flags
     sbit32 exp{0};   // The experience of the player
+    ubit16 race{0};  // PC/NPC race, Humanoid, Animal, etc.
 public:
-    ubit16 race; /* PC/NPC race, Humanoid, Animal, etc.     */
-
     sbit16 mana;      /* How many mana points are left?           */
     sbit16 endurance; /* How many endurance points are left?      */
     sbit16 offensive; /* The OB of a character.                   */

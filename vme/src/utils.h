@@ -233,7 +233,7 @@
 
 #define CHAR_LEVEL(ch) (UCHAR(ch)->points.level)
 
-#define CHAR_RACE(ch) (UCHAR(ch)->points.race)
+#define CHAR_RACE(ch) (UCHAR(ch)->points.getRace())
 
 #define CHAR_ABILITY(ch, index) (UCHAR(ch)->points.abilities[index])
 

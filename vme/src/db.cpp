@@ -856,6 +856,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             /* fallthru */
 
         case UNIT_ST_PC:
+
             g_nCorrupt += dynamic_cast<char_data *>(u)->points.readPlayerExperienceFrom(*pBuf);
             g_nCorrupt += dynamic_cast<char_data *>(u)->points.readCharacterFlagsFrom(*pBuf);
 
@@ -886,7 +887,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
             }
-            CHAR_RACE(u) = pBuf->ReadU16(&g_nCorrupt);
+            g_nCorrupt += dynamic_cast<char_data *>(u)->points.readRaceFrom(*pBuf);
 
             CHAR_OFFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
             CHAR_DEFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
@@ -972,7 +973,9 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    CHAR_RACE(u)--; /* spooky */
+                    // TODO worse than spooky - why decrement a race??
+                    //      Also could be really bad if race==0
+                    dynamic_cast<char_data *>(u)->points.setRace(dynamic_cast<char_data *>(u)->points.getRace() - 1);
 
                     base_race_info_type *sex_race = nullptr;
 
