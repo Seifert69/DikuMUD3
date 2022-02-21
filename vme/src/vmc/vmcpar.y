@@ -541,7 +541,7 @@ omobile_field   : MANA number
     }
     | SPEED number
     {
-        CHAR_SPEED(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setSpeed($2);
     }
     | DEFENSIVE number
     {

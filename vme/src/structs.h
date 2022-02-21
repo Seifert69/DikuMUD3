@@ -250,6 +250,10 @@ public:
     int readDefensiveBonusFrom(CByteBuffer &buf);
     sbit16 *getDefensiveBonusPtr();
 
+    ubit8 getSpeed() const;
+    void setSpeed(ubit8 value);
+    int readSpeedFrom(CByteBuffer &buf);
+
 private:
     ubit32 flags{0};     // Char flags
     sbit32 exp{0};       // The experience of the player
@@ -258,8 +262,8 @@ private:
     sbit16 endurance{0}; // How many endurance points are left?
     sbit16 offensive{0}; // The OB of a character.
     sbit16 defensive{0}; // The DB of a character.
+    ubit8 speed{0};      // The default speed for natural combat
 public:
-    ubit8 speed;                     /* The default speed for natural combat     */
     ubit8 natural_armour;            /* The natural built-in armour (ARM_)       */
     ubit8 attack_type;               /* PC/NPC Attack Type for bare hands (WPN_) */
     ubit8 dex_reduction;             /* For speed of armour calculations only    */

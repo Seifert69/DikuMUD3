@@ -228,6 +228,21 @@ sbit16 *char_point_data::getDefensiveBonusPtr()
     return &defensive;
 }
 
+ubit8 char_point_data::getSpeed() const
+{
+    return speed;
+}
+
+void char_point_data::setSpeed(ubit8 value)
+{
+    speed = value;
+}
+
+int char_point_data::readSpeedFrom(CByteBuffer &buf)
+{
+    return buf.Read8(&speed);
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -737,7 +752,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setRace(this_upcast->points.getRace());
         u_upcast->points.setOffensiveBonus(this_upcast->points.getOffensiveBonus());
         u_upcast->points.setDefensiveBonus(this_upcast->points.getDefensiveBonus());
-        CHAR_SPEED(u) = CHAR_SPEED(this);
+        u_upcast->points.setSpeed(this_upcast->points.getSpeed());
         CHAR_NATURAL_ARMOUR(u) = CHAR_NATURAL_ARMOUR(this);
         CHAR_ATTACK_TYPE(u) = CHAR_ATTACK_TYPE(this);
         CHAR_SEX(u) = CHAR_SEX(this);

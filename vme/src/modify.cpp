@@ -1220,7 +1220,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 62: /* "speed" */
             if (is_in(valarg, SPEED_MIN, SPEED_MAX))
             {
-                CHAR_SPEED(unt) = valarg;
+                dynamic_cast<char_data *>(unt)->points.setSpeed(valarg);
             }
             else
             {

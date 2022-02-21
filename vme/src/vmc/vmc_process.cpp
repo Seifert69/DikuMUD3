@@ -1191,7 +1191,7 @@ void init_unit(unit_data *u)
             npc->points.setAllCharacterFlags(0);
             CHAR_ATTACK_TYPE(u) = WPN_FIST;
             CHAR_NATURAL_ARMOUR(u) = ARM_HLEATHER;
-            CHAR_SPEED(u) = 12;
+            npc->points.setSpeed(12);
             npc->points.setRace(RACE_HUMAN);
             CHAR_SEX(u) = SEX_NEUTRAL;
             CHAR_LEVEL(u) = 1;

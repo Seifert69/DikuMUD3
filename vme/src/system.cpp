@@ -71,16 +71,17 @@ void init_char(unit_data *ch)
 
     account_defaults(ch);
 
+    auto char_unit = dynamic_cast<char_data *>(ch);
     CHAR_POS(ch) = POSITION_STANDING;
-    CHAR_SPEED(ch) = SPEED_DEFAULT;
-    dynamic_cast<char_data *>(ch)->points.setRace(RACE_HUMAN);
+    char_unit->points.setSpeed(SPEED_DEFAULT);
+    char_unit->points.setRace(RACE_HUMAN);
     CHAR_SEX(ch) = SEX_MALE;
 
     PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(nullptr);
     PC_TIME(ch).played = 0;
     PC_LIFESPAN(ch) = 100;
 
-    dynamic_cast<char_data *>(ch)->points.setPlayerExperience(0);
+    char_unit->points.setPlayerExperience(0);
     CHAR_LEVEL(ch) = 0;
     PC_ID(ch) = -1;
     PC_CRIMES(ch) = 0;

@@ -266,7 +266,7 @@
 
 #define CHAR_NATURAL_ARMOUR(ch) (UCHAR(ch)->points.natural_armour)
 
-#define CHAR_SPEED(ch) (UCHAR(ch)->points.speed)
+#define CHAR_SPEED(ch) (UCHAR(ch)->points.getSpeed())
 
 #define CHAR_COMBAT(ch) (UCHAR(ch)->Combat)
 

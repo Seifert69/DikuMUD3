@@ -396,12 +396,12 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 
         if (taf == nullptr)
         {
-            CHAR_SPEED(unit) = af->getDataAtIndex(0);
+            dynamic_cast<char_data *>(unit)->points.setSpeed(af->getDataAtIndex(0));
         }
     }
     else
     {
-        CHAR_SPEED(unit) = af->getDataAtIndex(2);
+        dynamic_cast<char_data *>(unit)->points.setSpeed(af->getDataAtIndex(2));
     }
 
     return TRUE;

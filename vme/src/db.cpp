@@ -871,18 +871,18 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
             if (unit_version >= 39)
             {
-                CHAR_SPEED(u) = pBuf->ReadU8(&g_nCorrupt);
+                g_nCorrupt += char_unit->points.readSpeedFrom(*pBuf);
                 if (IS_PC(u))
                 {
                     if (CHAR_SPEED(u) < SPEED_MIN)
                     {
-                        CHAR_SPEED(u) = SPEED_DEFAULT;
+                        char_unit->points.setSpeed(SPEED_DEFAULT);
                     }
                 }
             }
             else
             {
-                CHAR_SPEED(u) = SPEED_DEFAULT;
+                char_unit->points.setSpeed(SPEED_DEFAULT);
             }
 
             CHAR_ATTACK_TYPE(u) = pBuf->ReadU16(&g_nCorrupt);
