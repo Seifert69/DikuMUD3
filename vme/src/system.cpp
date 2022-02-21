@@ -82,7 +82,7 @@ void init_char(unit_data *ch)
     PC_LIFESPAN(ch) = 100;
 
     char_unit->points.setPlayerExperience(0);
-    CHAR_LEVEL(ch) = 0;
+    char_unit->points.setLevel(0);
     PC_ID(ch) = -1;
     PC_CRIMES(ch) = 0;
 

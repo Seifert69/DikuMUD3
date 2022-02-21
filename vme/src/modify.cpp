@@ -1157,7 +1157,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 54: /* "level" */
             if (is_in(valarg, 0, 199))
             {
-                CHAR_LEVEL(unt) = valarg;
+                dynamic_cast<char_data *>(unt)->points.setLevel(valarg);
             }
             else
             {

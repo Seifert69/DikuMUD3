@@ -280,7 +280,7 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_LEVEL(u), 0, 199))
     {
         dmc_error(TRUE, "Illegal level in  '%s'.", UNIT_IDENT(u));
-        CHAR_LEVEL(u) = 0;
+        dynamic_cast<char_data *>(u)->points.setLevel(0);
     }
 
     for (i = sum = 0; i < ABIL_TREE_MAX; i++)
@@ -1194,7 +1194,7 @@ void init_unit(unit_data *u)
             npc->points.setSpeed(12);
             npc->points.setRace(RACE_HUMAN);
             npc->points.setSex(SEX_NEUTRAL);
-            CHAR_LEVEL(u) = 1;
+            npc->points.setLevel(1);
             CHAR_POS(u) = POSITION_STANDING;
             NPC_DEFAULT(u) = POSITION_STANDING;
             for (i = 0; i < ABIL_TREE_MAX; i++)

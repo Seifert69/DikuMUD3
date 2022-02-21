@@ -3543,7 +3543,7 @@ void dilfe_fld(dilprg *p)
                         else
                         {
                             v->type = DILV_UINT1R;
-                            v->ref = &CHAR_LEVEL((unit_data *)v1->val.ptr);
+                            v->ref = reinterpret_cast<char_data *>(v1->val.ptr)->points.getLevelPtr();
                         }
                     }
                     else

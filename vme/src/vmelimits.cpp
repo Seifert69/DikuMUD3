@@ -371,7 +371,7 @@ void advance_level(unit_data *ch)
     PC_VIRTUAL_LEVEL(ch)++;
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
     {
-        CHAR_LEVEL(ch)++;
+        dynamic_cast<char_data *>(ch)->points.incLevel();
     }
 
     PC_SKILL_POINTS(ch) += skill_point_gain();

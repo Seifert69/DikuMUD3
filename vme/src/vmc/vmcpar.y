@@ -513,7 +513,7 @@ omobile_field   : MANA number
     }
     | LEVEL number
     {
-        CHAR_LEVEL(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setLevel($2);
     }
     | RACE number
     {

@@ -113,7 +113,8 @@ void points_reset(unit_data *ch)
 {
     int i = 0;
 
-    PC_VIRTUAL_LEVEL(ch) = CHAR_LEVEL(ch) = START_LEVEL;
+    PC_VIRTUAL_LEVEL(ch) = START_LEVEL;
+    dynamic_cast<char_data *>(ch)->points.setLevel(START_LEVEL);
 
     PC_ABILITY_POINTS(ch) = 0;
     PC_SKILL_POINTS(ch) = 0;

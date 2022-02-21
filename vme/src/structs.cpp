@@ -306,6 +306,31 @@ int char_point_data::readSexFrom(CByteBuffer &buf)
     return buf.Read8(&sex);
 }
 
+ubit8 char_point_data::getLevel() const
+{
+    return level;
+}
+
+void char_point_data::setLevel(ubit8 value)
+{
+    level = value;
+}
+
+ubit8 *char_point_data::getLevelPtr()
+{
+    return &level;
+}
+
+int char_point_data::readLevelFrom(CByteBuffer &buf)
+{
+    return buf.Read8(&level);
+}
+
+void char_point_data::incLevel()
+{
+    ++level;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -819,7 +844,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setNaturalArmor(this_upcast->points.getNaturalArmor());
         u_upcast->points.setAttackType(this_upcast->points.getAttackType());
         u_upcast->points.setSex(this_upcast->points.getSex());
-        CHAR_LEVEL(u) = CHAR_LEVEL(this);
+        u_upcast->points.setLevel(this_upcast->points.getLevel());
         CHAR_POS(u) = CHAR_POS(this);
         for (x = 0; x < ABIL_TREE_MAX; x++)
         {

@@ -231,7 +231,7 @@
 
 #define CHAR_POS(ch) (UCHAR(ch)->points.position)
 
-#define CHAR_LEVEL(ch) (UCHAR(ch)->points.level)
+#define CHAR_LEVEL(ch) (UCHAR(ch)->points.getLevel())
 
 #define CHAR_RACE(ch) (UCHAR(ch)->points.getRace())
 

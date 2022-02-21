@@ -770,7 +770,7 @@ void dilfi_rslv(dilprg *p)
             {
                 if (!IS_IMMORTAL((unit_data *)v1->val.ptr))
                 {
-                    CHAR_LEVEL((unit_data *)v1->val.ptr) = 1;
+                    reinterpret_cast<char_data *>(v1->val.ptr)->points.setLevel(1);
                 }
             }
         }
