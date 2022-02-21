@@ -1114,7 +1114,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                CHAR_EXP(unt) = valarg;
+                dynamic_cast<char_data *>(unt)->points.setPlayerExperience(valarg);
             }
             return;
 

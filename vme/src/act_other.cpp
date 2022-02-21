@@ -170,7 +170,7 @@ void start_player(unit_data *ch)
     // Obsolete race_cost(ch);
     points_reset(ch);
 
-    CHAR_EXP(ch) = required_xp(PC_VIRTUAL_LEVEL(ch));
+    dynamic_cast<char_data *>(ch)->points.setPlayerExperience(required_xp(PC_VIRTUAL_LEVEL(ch)));
 
     set_title(ch);
 

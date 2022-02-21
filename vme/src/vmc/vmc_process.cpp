@@ -1102,7 +1102,7 @@ void process_unit(unit_data *u)
                           " the 100 default!",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                CHAR_EXP(u) = 100;
+                dynamic_cast<char_data *>(u)->points.setPlayerExperience(100);
             }
             else if (CHAR_EXP(u) < -500)
             {
@@ -1111,7 +1111,7 @@ void process_unit(unit_data *u)
                           "-500 XP.",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                CHAR_EXP(u) = -500;
+                dynamic_cast<char_data *>(u)->points.setPlayerExperience(-500);
             }
 
             if (!is_in(CHAR_OFFENSIVE(u), -1000, 1000))
@@ -1182,7 +1182,7 @@ void init_unit(unit_data *u)
         case UNIT_ST_NPC:
             UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
             CHAR_MONEY(u) = nullptr;
-            CHAR_EXP(u) = 100; /* 100 XP per default at your own level */
+            dynamic_cast<char_data *>(u)->points.setPlayerExperience(100); // 100 XP per default at your own level
             dynamic_cast<char_data *>(u)->points.setAllCharacterFlags(0);
             CHAR_ATTACK_TYPE(u) = WPN_FIST;
             CHAR_NATURAL_ARMOUR(u) = ARM_HLEATHER;

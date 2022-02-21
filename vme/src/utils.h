@@ -260,7 +260,7 @@
 /* NOT to be used unless by db.... */
 #define CHAR_MONEY(ch) (UCHAR(ch)->money)
 
-#define CHAR_EXP(ch) (UCHAR(ch)->points.exp)
+#define CHAR_EXP(ch) (UCHAR(ch)->points.getPlayerExperience())
 
 #define CHAR_ATTACK_TYPE(ch) (UCHAR(ch)->points.attack_type)
 

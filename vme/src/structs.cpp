@@ -93,6 +93,31 @@ void char_point_data::toggleCharacterFlag(ubit32 value)
     flags ^= value;
 }
 
+sbit32 char_point_data::getPlayerExperience() const
+{
+    return exp;
+}
+
+sbit32 *char_point_data::getPlayerExperiencePtr()
+{
+    return &exp;
+}
+
+void char_point_data::setPlayerExperience(sbit32 value)
+{
+    exp = value;
+}
+
+int char_point_data::readPlayerExperienceFrom(CByteBuffer &buf)
+{
+    return buf.Read32(&exp);
+}
+
+void char_point_data::incrementPlayerExperienceBy(sbit32 value)
+{
+    exp += value;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -592,8 +617,11 @@ unit_data *unit_data::copy()
     }
     else if (IS_CHAR(this))
     {
-        dynamic_cast<char_data *>(u)->points.setAllCharacterFlags(dynamic_cast<char_data *>(this)->points.getCharacterFlags());
-        CHAR_EXP(u) = CHAR_EXP(this);
+        auto u_upcast = dynamic_cast<char_data *>(u);
+        auto this_upcast = dynamic_cast<char_data *>(this);
+
+        u_upcast->points.setAllCharacterFlags(this_upcast->points.getCharacterFlags());
+        u_upcast->points.setPlayerExperience(this_upcast->points.getPlayerExperience());
         CHAR_MANA(u) = CHAR_MANA(this);
         CHAR_ENDURANCE(u) = CHAR_ENDURANCE(this);
         CHAR_RACE(u) = CHAR_RACE(this);

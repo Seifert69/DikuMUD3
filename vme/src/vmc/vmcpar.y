@@ -505,7 +505,7 @@ omobile_field   : MANA number
     }
     | EXP number
     {
-        CHAR_EXP(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setPlayerExperience($2);
     }
     | SEX number
     {

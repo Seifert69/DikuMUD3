@@ -217,11 +217,16 @@ public:
     void removeCharacterFlag(ubit32 value);
     void toggleCharacterFlag(ubit32 value);
 
+    sbit32 getPlayerExperience() const;
+    sbit32 *getPlayerExperiencePtr();
+    void setPlayerExperience(sbit32 value);
+    void incrementPlayerExperienceBy(sbit32 value);
+    int readPlayerExperienceFrom(CByteBuffer &buf);
+
 private:
     ubit32 flags{0}; // Char flags
+    sbit32 exp{0};   // The experience of the player
 public:
-    sbit32 exp; /* The experience of the player             */
-
     ubit16 race; /* PC/NPC race, Humanoid, Animal, etc.     */
 
     sbit16 mana;      /* How many mana points are left?           */
