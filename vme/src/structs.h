@@ -209,8 +209,17 @@ public:
     char_point_data();
     /*~char_point_data(void); not needed yet all base types they destroy themselves*/
 
-    ubit32 flags; /* Char flags                               */
+    ubit32 getCharacterFlags() const;
+    ubit32 *getCharacterFlagsPtr();
+    void setAllCharacterFlags(ubit32 value);
+    int readCharacterFlagsFrom(CByteBuffer &buf);
+    void setCharacterFlag(ubit32 value);
+    void removeCharacterFlag(ubit32 value);
+    void toggleCharacterFlag(ubit32 value);
 
+private:
+    ubit32 flags{0}; // Char flags
+public:
     sbit32 exp; /* The experience of the player             */
 
     ubit16 race; /* PC/NPC race, Humanoid, Animal, etc.     */

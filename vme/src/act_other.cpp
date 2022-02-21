@@ -188,7 +188,7 @@ void start_player(unit_data *ch)
 
     if (!UNIT_IS_EVIL(ch))
     {
-        SET_BIT(CHAR_FLAGS(ch), CHAR_PEACEFUL);
+        dynamic_cast<char_data *>(ch)->points.setCharacterFlag(CHAR_PEACEFUL);
     }
 
     if (g_playerinit_tmpl)

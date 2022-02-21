@@ -1119,7 +1119,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 46: /* "affected-by" */
-            CHAR_FLAGS(unt) = bitarg;
+            dynamic_cast<char_data *>(unt)->points.setAllCharacterFlags(bitarg);
             return;
 
         case 47: /* "mana" */

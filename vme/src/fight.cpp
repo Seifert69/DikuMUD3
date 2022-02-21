@@ -1120,7 +1120,7 @@ void damage(unit_data *ch,
             {
                 destroy_affect(paf);
             }
-            REMOVE_BIT(CHAR_FLAGS(victim), CHAR_HIDE);
+            dynamic_cast<char_data *>(victim)->points.removeCharacterFlag(CHAR_HIDE);
         }
 
         if (IS_SET(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE))
@@ -1347,7 +1347,7 @@ void damage(unit_data *ch,
 
         if (victim == ch)
         {
-            SET_BIT(CHAR_FLAGS(ch), CHAR_KILL_SELF);
+            dynamic_cast<char_data *>(ch)->points.setCharacterFlag(CHAR_KILL_SELF);
             die(ch);
         }
         else
@@ -1769,7 +1769,7 @@ int hunting(spec_arg *sarg)
             /* again                                                  */
             if (h->was_legal)
             {
-                SET_BIT(CHAR_FLAGS(h->victim), CHAR_LEGAL_TARGET);
+                dynamic_cast<char_data *>(h->victim)->points.setCharacterFlag(CHAR_LEGAL_TARGET);
             }
 
             if (!CHAR_COMBAT(sarg->owner) || !CHAR_COMBAT(sarg->owner)->FindOpponent(h->victim))

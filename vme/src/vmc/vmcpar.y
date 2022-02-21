@@ -533,7 +533,7 @@ omobile_field   : MANA number
     }
     | FLAGS flags
     {
-        CHAR_FLAGS(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setAllCharacterFlags($2);
     }
     | ARMOUR number
     {

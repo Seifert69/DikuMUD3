@@ -53,7 +53,7 @@ void offend_legal_state(unit_data *ch, unit_data *victim)
     {
         if (!CHAR_COMBAT(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET))
         {
-            SET_BIT(CHAR_FLAGS(victim), CHAR_SELF_DEFENCE);
+            dynamic_cast<char_data *>(victim)->points.setCharacterFlag(CHAR_SELF_DEFENCE);
         }
     }
 
@@ -61,7 +61,7 @@ void offend_legal_state(unit_data *ch, unit_data *victim)
     if (IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
         !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
     {
-        SET_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET);
+        dynamic_cast<char_data *>(ch)->points.setCharacterFlag(CHAR_LEGAL_TARGET);
     }
 }
 

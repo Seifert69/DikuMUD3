@@ -3835,7 +3835,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = &CHAR_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = reinterpret_cast<char_data *>(v1->val.ptr)->points.getCharacterFlagsPtr();
                     }
                     else
                     {

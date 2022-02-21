@@ -46,11 +46,11 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        SET_BIT(CHAR_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
+        dynamic_cast<char_data *>(unit)->points.setCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
     }
     else
     {
-        REMOVE_BIT(CHAR_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
+        dynamic_cast<char_data *>(unit)->points.removeCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -62,7 +62,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_CHAR_FLAGS))
             {
-                SET_BIT(CHAR_FLAGS(unit), (ubit32)taf->getDataAtIndex(0));
+                dynamic_cast<char_data *>(unit)->points.setCharacterFlag(static_cast<ubit32>(taf->getDataAtIndex(0)));
             }
         }
     }

@@ -1183,7 +1183,7 @@ void init_unit(unit_data *u)
             UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
             CHAR_MONEY(u) = nullptr;
             CHAR_EXP(u) = 100; /* 100 XP per default at your own level */
-            CHAR_FLAGS(u) = 0;
+            dynamic_cast<char_data *>(u)->points.setAllCharacterFlags(0);
             CHAR_ATTACK_TYPE(u) = WPN_FIST;
             CHAR_NATURAL_ARMOUR(u) = ARM_HLEATHER;
             CHAR_SPEED(u) = 12;

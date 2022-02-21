@@ -219,7 +219,7 @@
 
 #define CHAR_DEFENSIVE(unit) (UCHAR(unit)->points.defensive)
 
-#define CHAR_FLAGS(unit) (UCHAR(unit)->points.flags)
+#define CHAR_FLAGS(unit) (UCHAR(unit)->points.getCharacterFlags())
 
 #define CHAR_SEX(ch) (UCHAR(ch)->points.sex)
 

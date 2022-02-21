@@ -857,7 +857,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
         case UNIT_ST_PC:
             CHAR_EXP(u) = pBuf->ReadS32(&g_nCorrupt);
-            CHAR_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
+            g_nCorrupt += dynamic_cast<char_data *>(u)->points.readCharacterFlagsFrom(*pBuf);
 
             CHAR_MANA(u) = pBuf->ReadS16(&g_nCorrupt);
             CHAR_ENDURANCE(u) = pBuf->ReadS16(&g_nCorrupt);
@@ -895,13 +895,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             CHAR_LEVEL(u) = pBuf->ReadU8(&g_nCorrupt);
             CHAR_POS(u) = pBuf->ReadU8(&g_nCorrupt);
 
-            j = pBuf->ReadU8(&g_nCorrupt);;
+            j = pBuf->ReadU8(&g_nCorrupt);
+            ;
 
             for (i = 0; i < j; i++)
             {
                 if (unit_version < 69)
                 {
-                    CHAR_ABILITY(u, i) = pBuf->ReadU8(&g_nCorrupt);;
+                    CHAR_ABILITY(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                    ;
                 }
                 else
                 {
@@ -1143,7 +1145,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    j = pBuf->ReadU16(&g_nCorrupt);;
+                    j = pBuf->ReadU16(&g_nCorrupt);
+                    ;
                 }
 
                 for (i = 0; i < j; i++)
@@ -1669,7 +1672,7 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
 
     while (((cmdno = (ubit8)fgetc(f)) != 255) && !feof(f))
     {
-        cmd=new zone_reset_cmd();
+        cmd = new zone_reset_cmd();
         cmd->setCommandNum(cmdno);
 
         fstrcpy(&cBuf, f);

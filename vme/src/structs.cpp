@@ -58,6 +58,41 @@ char_point_data::char_point_data()
     memset(abilities, 0, sizeof(abilities));
 }
 
+ubit32 char_point_data::getCharacterFlags() const
+{
+    return flags;
+}
+
+ubit32 *char_point_data::getCharacterFlagsPtr()
+{
+    return &flags;
+}
+
+void char_point_data::setAllCharacterFlags(ubit32 value)
+{
+    flags = value;
+}
+
+int char_point_data::readCharacterFlagsFrom(CByteBuffer &buf)
+{
+    return buf.Read32(&flags);
+}
+
+void char_point_data::setCharacterFlag(ubit32 value)
+{
+    flags |= value;
+}
+
+void char_point_data::removeCharacterFlag(ubit32 value)
+{
+    flags &= ~value;
+}
+
+void char_point_data::toggleCharacterFlag(ubit32 value)
+{
+    flags ^= value;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -557,7 +592,7 @@ unit_data *unit_data::copy()
     }
     else if (IS_CHAR(this))
     {
-        CHAR_FLAGS(u) = CHAR_FLAGS(this);
+        dynamic_cast<char_data *>(u)->points.setAllCharacterFlags(dynamic_cast<char_data *>(this)->points.getCharacterFlags());
         CHAR_EXP(u) = CHAR_EXP(this);
         CHAR_MANA(u) = CHAR_MANA(this);
         CHAR_ENDURANCE(u) = CHAR_ENDURANCE(this);

@@ -104,8 +104,8 @@ void init_char(unit_data *ch)
     CHAR_ENDURANCE(ch) = move_limit(ch);
     CHAR_LAST_ROOM(ch) = nullptr;
 
-    CHAR_FLAGS(ch) = 0;
-    SET_BIT(CHAR_FLAGS(ch), CHAR_PROTECTED);
+    dynamic_cast<char_data *>(ch)->points.setAllCharacterFlags(0);
+    dynamic_cast<char_data *>(ch)->points.setCharacterFlag(CHAR_PROTECTED);
 
     for (i = 0; i < 3; i++)
     {
