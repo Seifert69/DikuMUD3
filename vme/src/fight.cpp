@@ -8,6 +8,7 @@
 #include "fight.h"
 
 #include "affect.h"
+#include "char_follow_type.h"
 #include "combat.h"
 #include "comm.h"
 #include "common.h"

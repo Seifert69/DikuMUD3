@@ -118,6 +118,7 @@ using ubit1 = bool;      /* Boolean */
 
 #define FREE(p)                                                                                                                            \
     {                                                                                                                                      \
+        /* Make sure FREE isn't being used to free class items created with EMPLACE */                                                     \
         static_assert(std::is_same_v<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>, void *> ||                           \
                       std::is_pod_v<std::remove_pointer_t<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>>>);              \
         free(p);                                                                                                                           \

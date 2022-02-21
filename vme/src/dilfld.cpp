@@ -5,6 +5,7 @@
  $Revision: 2.11 $
  */
 
+#include "char_follow_type.h"
 #include "combat.h"
 #include "common.h"
 #include "config.h"
