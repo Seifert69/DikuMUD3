@@ -568,11 +568,13 @@ extra { }
 the legendary race of the Black wolves. With ruby red eyes, the wolf
 looks at you with cold and hatred."
 M_WOLF_GODLY(150,SEX_NEUTRAL)
-special SFUN_GUILD_BASIS GUILD_NECROMANCER
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
-dilcopy guild_guard@guild_paths(GUILD_NECROMANCER, "north");
+dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
+dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
+// Prospects must be able to enter
+// dilcopy guild_guard@guild_paths(GUILD_NECROMANCER, "north");
 dilcopy teamwork@function ("wolf");
 dilcopy nokill@necro_guild();
 end

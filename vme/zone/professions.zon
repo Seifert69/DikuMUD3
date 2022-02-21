@@ -16,7 +16,38 @@ Professions are comparable to natural talents. The profession,
 not the guild, determine the training cost.<br/>
 So for example, a mage profession means you'll have a low cost
 training MAG and BRA. A fighter profession means you have a low
-cost training STR and CON.<br/>
+cost training STR and CON. So while a player can join as many
+guilds as they like, it'll still be impossible or too expensive for
+a mage to practice fighter skills.<br/>
+
+When you start the game you can choose one of four basic 
+professions: fighter, thief, cleric, mage.<br/>
+
+Once you hit level 25 in your main profession guild, you can
+specialize as follows:<br/>
+
+fighter: barbarian<br/>
+thief: assassin<br/>
+cleric: druid<br/>
+mage: sorcerer<br/>
+
+I made it so that these specializations are not obtainable on a
+career change. Once you hit level 50 in a guild, you can choose your
+second career :<br/>
+
+fighter:<br/>
+   thief, cleric, mage, 
+   knight, paladin, ranger<br/>
+thief:<br/>
+   fighter, cleric, mage,
+   ranger<br/>
+cleric:<br/>
+   fighter, thief, mage,
+   paladin<br/>
+mage:<br/>
+   fighter, thief, cleric,
+   necromancer<br/>
+
 "
 
 
@@ -24,22 +55,27 @@ cost training STR and CON.<br/>
 
 // string ProfessionName@professions(prof_xxx : integer);
 // integer ProfessionIdx@professions(sGuild : string);
+// integer ProfCount@professions(pc : unitptr);
 // NewPlayerProf@professions(pc : unitptr, prof : integer);
 //
 
 // ===============================================================
 
+
+// Given a profession number (PROFESSION_XXX) return the name.
+//
 dilbegin string ProfessionName(prof_xxx : integer);
 var
    sl : stringlist;
 code
 {
-   if ((prof_xxx < 0) or (prof_xxx >= PROFESSION_MAX))
+   if ((prof_xxx < 0) or (prof_xxx >= PROFESSION_COUNT))
       return ("contact admin about profession");
    sl := {PROFESSION_STRINGS};
    return (sl.[prof_xxx]);
 }
 dilend
+
 
 // Given guild name, return profession index
 //
@@ -59,6 +95,61 @@ code
 dilend
 
 
+// Counts number of professions. 
+//
+dilbegin integer ProfCount(pc : unitptr);
+var
+   exd : extraptr;
+   i : integer;
+code
+{
+   exd := PROFESSION_KEY in pc.info;
+
+   i := length(exd.names) - 1;
+
+   if (i < 1)
+   {
+      log("ProfCount was < 1 for player " + pc.name + ". Admin should fix.");
+   }
+
+   return (i);
+}
+dilend
+
+
+// Returns 1 if the player is ready to move from one of the four 
+// basic professions to a specialization, e.g. from fighter to barbarian.
+//
+dilbegin integer ReadySpecialize(pc : unitptr);
+external
+   integer ProfCount@professions(pc : unitptr);
+   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+
+var
+   exd : extraptr;
+   sl : stringlist;
+code
+{
+   if (ProfCount@professions(pc) == 1)
+   {
+      // We only have one profession
+      // Now find the guild matching pc.profession
+      // and if that guild level is >= 25 we can specialize
+
+      sl := GUILD_SL;
+      if (GetGuildLevel@guilds(pc, sl.[pc.profession]) >= 25)
+      {
+         return (1);
+      }
+   }
+
+   return (0);
+}
+dilend
+
+
+
+// ONLY CALL FROM INSIDE PROFESSIONS ZONE. PRIVATE FUNCTION.
 // To be called on a player that does not have a $profession setup.
 //    prof (integer) is the profession to set PROFESSION_XXX
 //    descr is description of how it was set (new character, conversion, etc).
@@ -80,7 +171,7 @@ code
       return;
    }
 
-   if ((i < 0) or (i > PROFESSION_MAX))
+   if ((i < 0) or (i >= PROFESSION_COUNT))
    {
       log("SetInitalProf() called but prof OOB.");
       return;
@@ -101,7 +192,7 @@ dilend
 
 
 
-// Call to setup a new player. Only 
+// Call to setup a new player. Only.
 //
 dilbegin NewPlayerProf(pc : unitptr, prof : integer);
 external
@@ -133,61 +224,6 @@ dilend
 
 
 
-dilbegin string Specialization(pc : unitptr);
-external
-   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
-var
-   exd : extraptr;
-   sl : stringlist;
-   i : integer;
-   il : intlist;
-code
-{
-   exd := "$professions" in pc.info;
-
-   // If there is a $professions, then this doesn't apply.
-   if (exd != null)
-      return ("");
-
-   if (pc.profession == PROFESSION_FIGHTER)
-      i := 0;
-   else if (pc.profession == PROFESSION_THIEF)
-      i := 1;
-   else if (pc.profession == PROFESSION_PRIEST)
-      i := 2;
-   else if (pc.profession == PROFESSION_CONJURER)
-      i := 3;
-   else
-      i := -1;
-
-   // Player is in a core profession
-   if (i < 0)
-   {
-      // Old players will be in odd professions and have no $profession extra
-      return ("");
-   }
-
-
-   sl := {GUILD_UDG_FIGHTER, GUILD_UDG_THIEF, GUILD_UDG_CLERIC, GUILD_UDG_MAGE};
-
-   i := GetGuildLevel@guilds(pc, sl.[i]);
-
-   if (i == -1)
-   {
-      log("error");
-      return ("");
-   }
-
-   if (i < 25)
-      return ("");
-
-   // Aha. We have 25 guild levels in a core profession, time to specialize!
-   return ("Time to specialize!");
-}
-dilend
-
-
-
 dilbegin login_clean(prof : integer, desc : string);
 external
    SetupProf@professions(pc : unitptr, prof : integer, desc : string);
@@ -210,6 +246,8 @@ code
    return;
 }
 dilend
+
+
 
 
 %end

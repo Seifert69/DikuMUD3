@@ -4134,6 +4134,10 @@ void dilfe_load(dilprg *p)
                         v->val.ptr = read_unit(fi);
                     }
                 }
+                else
+                {
+                    slog(LOG_ALL, 0, "DIL load(%s) - unit does not exist.", (char *) v1->val.ptr);
+                }
 
                 if (v->val.ptr)
                 {

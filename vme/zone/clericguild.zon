@@ -998,11 +998,8 @@ dilcopy rescue@function ("guard");
 
 /*replaced below with routines from function*/
 /* Guard WEST (3), GUILD_UDG_CLERIC */
-/*special SFUN_GUILD_GUARD_WAY
-""+"west"+"#"+GUILD_UDG_CLERIC+"#entrance#guard#$1n stops you and says,
-'Healers only!'#$1n stops $3n, and says, 'Healers only!'" */
-
-dilcopy guild_guard@guild_paths(GUILD_UDG_CLERIC, "west");
+// Prospects must be able to enter
+// dilcopy guild_guard@guild_paths(GUILD_UDG_CLERIC, "west");
 end
 
 

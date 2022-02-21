@@ -1151,7 +1151,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
             teach_packet *p[4];
             extra_descr_data *exd = nullptr;
 
-            exd = PC_QUEST(sarg->activator).find_raw("$autotrain");
+            exd = PC_INFO(sarg->activator).find_raw("$autotrain");
 
             if (!exd)
             {

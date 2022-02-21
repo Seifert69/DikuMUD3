@@ -10,6 +10,8 @@ END HEADER*/
 
 #define _GUILD_BARBARIAN
 #define BARBARIAN_ITEM "$Barbarian Gauntlet Given"
+#define QUEST_BEAR_BRAWL "Barbarian Bear Brawl"
+#define QUEST_BEAR_BRAWL_COMPLETE "Barbarian Bear Brawl Complete"
 
 /* This zone is the Barbarians Guild, skillful and agile warriors. */
 
@@ -63,6 +65,94 @@ the game of life and death.<br/>
 /* ================================================================== */
 
 %dil
+
+// hilka_cloth
+dilbegin aware brawl_det();
+external
+   integer qstMarkComplete@quests(pc : unitptr, qname : string);
+var 
+   u : unitptr;
+code
+{
+:init:
+	wait(SFB_COM, self.equip != 0);
+
+   if (activator != self.outside)
+      goto init;
+
+   if (self.outside.fighting == null)
+      goto init;
+
+   if (self.outside.fighting.race != RACE_BEAR)
+      goto init;
+
+   // Make sure the player fights a healthy opponent
+   if (self.outside.fighting.hp < (self.outside.fighting.max_hp*5)/10)
+   {
+      goto init;
+   }
+
+
+:checkfair:
+   u := self.outside.inside;
+
+   while (u)
+   {
+      if (u != self)
+      {
+         if (u.equip)
+            break;
+      }
+
+      u := u.next;
+   }
+
+   if (u)
+   {
+      goto init;
+   }
+
+   u := self.outside.outside.inside;
+
+   while (u)
+   {
+      if (u != self.outside)
+      {
+         if (u.fighting == self.outside.fighting)
+         {
+            goto init;
+         }
+      }
+
+      u := u.next;
+   }
+
+:loop:
+	wait(SFB_COM|SFB_DEAD, TRUE);
+
+   if (self.equip == 0)
+      goto init;
+
+   if (command(CMD_AUTO_COMBAT))
+   {
+      if (activator != self.outside)
+         goto loop;
+
+      goto checkfair;
+   }
+
+   if (command(CMD_AUTO_DEATH))
+   {
+      qstMarkComplete@quests(self.outside, QUEST_BEAR_BRAWL);
+   	act("Your instincts feel awakened.", A_ALWAYS, self.outside, null, null, TO_CHAR);
+      quit;
+   }
+
+   log("HUH??? Shouldnt be possible");
+
+	goto init;
+}
+dilend
 
 /* Nokill dil for Guild Staff - ejects the sinner out with 0 hp and
 mana + incapacitated */
@@ -623,8 +713,8 @@ exp -100
 dilcopy nokill@barbarian();
 dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
 dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
-dilcopy quest_block@guilds("join", "XXX Quest",
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy quest_block@guilds("join", QUEST_BEAR_BRAWL_COMPLETE,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Bear Brawl quest. Go speak with Raz."});
 
 dilcopy guild_titles@guild_paths(GUILD_BARBARIAN, {"Young Blood",
 "Young Blood", "Apprentice Berserker", "Apprentice Berserker", "Journeyman Berserker",
@@ -692,7 +782,7 @@ code
 
    JoinGuild@guilds(pc, GUILD_BARBARIAN);
 
-   exec ("say The power of the Dark Knights now coarses in your veins.", self);
+   exec ("say The power of the Barbarian now coarse in your veins.", self);
    goto start;
 }
 dilend
@@ -971,7 +1061,10 @@ romflags {CHAR_PROTECTED}
 alignment 0
 money 3 SILVER_PIECE
 exp 0
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
+
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+
 dilcopy shopkeeper@function(
 {"coffee@barbarian 20 20"
 ,"ale@barbarian 20 20","tuborg@udgaard 20 50"},
@@ -987,6 +1080,59 @@ dilcopy shopkeeper@function(
 );
 dilcopy nokill@barbarian();
 
+
+// Assign Brawl quest to players wanting to join the Barbarian's guild
+// 
+dilbegin assignBrawl();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+var
+   pc     : unitptr;
+   u      : unitptr;
+   exdp   : extraptr;
+
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   if (IsInGuild@guilds(activator, QUEST_BEAR_BRAWL))
+      goto start;
+
+   pc := qstWaitDone@quests(QUEST_BEAR_BRAWL, activator, 
+            {"cheer $1N", 
+            "say Excellent, $1N! You have the instincts of a Barbarian in your blood."}, 800, 2 * COPPER_MULT, {""});
+
+	pc := qstWaitHero@quests(QUEST_BEAR_BRAWL, activator, 
+		{"look $1N",
+		"say To join the Barbarian's guild you have to prove your raw instincts.",
+      "say We require that you kill a bear with your bare hands wearing nothing but a loin cloth.",
+      "say Are you up for the challenge, $1n?"}, "");
+
+   if (pc == null)
+      goto start;
+
+   secure(pc, start);
+
+   // Quest accepted
+   exdp := qstAssign@quests(QUEST_BEAR_BRAWL, pc, 
+      {"say Excellent!", "clap $1N"},
+      "Raz in the Barbarian guild has requested that you kill a bear with your bare hands wearing only a loin cloth.");
+
+   u := load("barb_cloth@barbarian");
+   link(u, pc);
+   act("$3n gives you $2n.", A_ALWAYS, pc, u, self, TO_CHAR);
+
+   goto start;
+}
+dilend
 end
 
 %objects
@@ -1326,6 +1472,7 @@ ARMOUR_LEATHER(BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 2,2
 weight 3
 extra {}
 "This soft leather loin cloth has a bloodshot eye inscribed upon it."
+dilcopy brawl_det@barbarian();
 end
 
 barb_jerkin

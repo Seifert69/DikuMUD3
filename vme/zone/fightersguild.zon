@@ -866,12 +866,15 @@ M_AVG_HUMAN(60, SEX_FEMALE)
 exp 0
 money 8 IRON_PIECE
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
 romflags {CHAR_PROTECTED}
+
+dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
+dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 dilcopy metallurgist@fightersguild();
 dilcopy nokill@fightersguild();
-
 end
+
+
 
                              bartender
 names {"Maia","bartender"}

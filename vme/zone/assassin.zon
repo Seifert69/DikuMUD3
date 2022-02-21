@@ -455,20 +455,12 @@ extra {}
 "Whoa! If you didn't know he was there, you'd never seen the guy! Clad
 all in black, he watches you intently from the shadows."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
-special SFUN_GUILD_BASIS GUILD_ASSASSIN
 
-/*
-special SFUN_GUILD_GUARD_WAY
-""+"east"+"#"+GUILD_ASSASSIN+"#wharf_3#guard
-#A whisper from the shadows stops you 'One step further and you are dead,
-$3n...'
-#A whisper from the shadows stops $3n 'One step further and you are dead,
-$3n...'"
-*/
+dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
+dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
 
-dilcopy guild_guard@guild_paths(GUILD_ASSASSIN, "east");
-
-
+// Prospects must be able to enter
+// dilcopy guild_guard@guild_paths(GUILD_ASSASSIN, "east");
 end
 
 		shadow_assassin

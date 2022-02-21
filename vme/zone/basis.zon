@@ -366,9 +366,9 @@ code
       if ("$PK_EXTRA" in self.extra)
          dilcopy("pk_erase@basis()", self);
 
-      login_scrub(self);
    }
 
+   login_scrub(self);
    dilcopy("got_mail@mail()", self);
 
    return;

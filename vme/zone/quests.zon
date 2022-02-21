@@ -394,6 +394,31 @@ code
 dilend
 
 
+// On the player 'pc' mark the quest 'qname' complete
+// Return 1 if marked successfully, 0 otherwise
+//
+dilbegin integer qstMarkComplete(pc : unitptr, qname : string);
+var
+   exdp : extraptr;
+code
+{
+   exdp := (qname + " Ongoing") in pc.quests;
+
+   if (exdp == null)
+      return (0);
+
+   if (not ("$done" in exdp.names))
+   {
+      addstring(exdp.names, "$done");
+      return (1);
+   }
+
+   return (0);
+}
+dilend
+
+
+
 // Add this to a quest NPC that's waiting to "get items" from a player.
 // The items received will be destroyed, and incorrect items given back.
 //
@@ -423,6 +448,9 @@ dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string,
                                                      itemsl : stringlist,
                                                      itemfunc : stringlist,
                                                      thanksl : stringlist, nothanks : string);
+external
+   integer qstMarkComplete@quests(pc : unitptr, qname : string);
+
 var
   pc     : unitptr;
   item   : unitptr;
@@ -518,9 +546,9 @@ code
          goto start;
       i := i + 1;
    }
-   if (not ("$done" in exdp.names))
+
+   if (qstMarkComplete@quests(pc, qname))
    {
-      addstring(exdp.names, "$done");
       sendto("quest$done " + pc.symname, self);  // Trigger self, to recognize quest completion
    }
 

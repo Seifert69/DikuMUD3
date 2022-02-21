@@ -1,10 +1,13 @@
 #include <macros.h>
 
 /*
+Add SPECIALIZE command to four guild masters, starting with Barbarians
+
 Check all PROFESSION_MAX tests
 
+Check all SFUN 
 
-All the guilds processed (ignoring Monk since it's not complete):
+All the guilds processed (Monk is not complete):
    assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon druid.zon ../Zones/monk.zon
 
 Missing sign at all guilds
@@ -279,7 +282,7 @@ code
    addstring(sl, GUILD_KEY_PREPEND + sGuild);
    addstring(sl, "0");
    addstring(sl, itoa(pc.vlevel));
-   addstring(sl, "$guild");
+   addstring(sl, GUILD_KEY);
    
    addextra(pc.info, sl, "");
 
@@ -528,8 +531,8 @@ code
       return;
    }
 
-   subextra(pc.quests, "$autotrain");
-   addextra(pc.quests, sl, "");
+   subextra(pc.info, "$autotrain");
+   addextra(pc.info, sl, "");
    return;
 }
 dilend
@@ -611,6 +614,7 @@ dilbegin do_guilds(arg : string);
 external
    string ProfessionName@professions(prof_xxx : integer);
    integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+   integer ReadySpecialize@professions(pc : unitptr);
 
 var
    exd : extraptr;
@@ -626,14 +630,14 @@ code
    }
 
    sendtext("You are a member of the following guilds:<br/>", self);
-   exd := "$guild" in self.info;
+   exd := GUILD_KEY in self.info;
    i := 0;
    while (exd)
    {
       sl := split(exd.names.[0], "/");
       sendtext(sl.[1] + " (level "+exd.names.[1]+")<br/>", self);
 
-      exd := "$guild" in exd.next;
+      exd := GUILD_KEY in exd.next;
       i := i + 1;
    }
 
@@ -686,6 +690,10 @@ code
    // When the character has 25 guild levels in his main profession, he can 
    // choose a specialization (e.g. a fighter may become a barbarian)
    //
+   if (ReadySpecialize@professions(self))
+   {
+      sendtext("You are ready to specialize your profession.<br/>", self);
+   }
 
 
    quit;
@@ -887,6 +895,7 @@ code
       return;
 
    log("guild login_clean()");
+   subextra(self.quests, "$autotrain");
    exd := "$path" in self.quests;
 
    desc := "Converted from existing profession in range";
@@ -894,7 +903,7 @@ code
    if (exd)
    {
       prof := self.profession;
-      if (prof > PROFESSION_MAX)
+      if (prof >= PROFESSION_COUNT)
          prof := -1;
 
       i := length(exd.names);

@@ -2322,8 +2322,7 @@ title "The Cave of the Green Dragon"
 descr
 "You are in a big natural cave.  The floor is littered with bones of all sorts
 and the stench is so massive that you could cut it with a knife.  The only
-exit
-is to the south."
+exit is to the south."
 south to rn_6142 descr
 "The exit leads out into the forest.";
 extra {"bone","bones","floor"}
@@ -2464,7 +2463,7 @@ dilcopy qstSimpleQuest@quests(QUEST_JOHN,
          {"say Hey I could use some help.",
           "say You wouldn't happen to have a left over axe? I really could use one"},
          {"say You're a real pal."},
-         "Find an axe for John the Lumberjack in Haon-Dor.",
+         "John the Lumberjack in Haon-Dor has asked you to find him an axe.",
          {"thank $1N",
           "emote wields your axe.",
           "emote looks around for some trees to chop down."},
@@ -2744,7 +2743,7 @@ extra {}
 "The bear is a big, brown, furry animal with very large claws and very sharp
 teeth.  It doesn't resemble those cute little thingies from toy shops at all."
 alignment -50
-M_BEAR_TINY(8,SEX_MALE)
+M_BEAR_TINY(15,SEX_MALE)
 position POSITION_SLEEPING
 default POSITION_STANDING
 

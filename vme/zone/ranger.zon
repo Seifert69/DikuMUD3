@@ -554,10 +554,9 @@ exp -100
 
 dilcopy nokill@ranger();
 
-special SFUN_GUILD_BASIS GUILD_NYM_RANGER
-special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
-
-dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
+dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 
 #define _SPELL_DIV
 #include "guilddef.h"
