@@ -2936,20 +2936,20 @@ void dilfe_fld(dilprg *p)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_SINT2R;
-                            v->ref = &CHAR_ABILITY((unit_data *)v1->val.ptr, v2->val.num);
+                            v->ref = reinterpret_cast<char_data *>(v1->val.ptr)->points.getAbilityAtIndexPtr(v2->val.num);
                         }
                         else
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
-                            v->val.num = CHAR_ABILITY((unit_data *)v1->val.ptr, v2->val.num);
+                            v->val.num = reinterpret_cast<char_data *>(v1->val.ptr)->points.getAbilityAtIndex(v2->val.num);
                         }
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &CHAR_ABILITY((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = reinterpret_cast<char_data *>(v1->val.ptr)->points.getAbilityAtIndexPtr(v2->val.num);
                     }
                 }
                 else

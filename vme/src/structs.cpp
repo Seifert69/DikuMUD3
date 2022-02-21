@@ -55,7 +55,7 @@ char_point_data::char_point_data()
     sex = 0;            /* PC / NPC s sex                           */
     level = 0;          /* PC / NPC s level                         */
     position = 0;       /* Standing, sitting, fighting...           */
-    memset(abilities, 0, sizeof(abilities));
+    memset(abilities.data(), 0, abilities.size());
 }
 
 ubit32 char_point_data::getCharacterFlags() const
@@ -351,6 +351,121 @@ ubit8 *char_point_data::getPositionPtr()
     return &position;
 }
 
+sbit16 char_point_data::getAbilityAtIndex(size_t index) const
+{
+    return abilities[index];
+}
+
+sbit16 char_point_data::getSTR() const
+{
+    return abilities[ABIL_STR];
+}
+
+sbit16 char_point_data::getDEX() const
+{
+    return abilities[ABIL_DEX];
+}
+
+sbit16 char_point_data::getCON() const
+{
+    return abilities[ABIL_CON];
+}
+
+sbit16 char_point_data::getCHA() const
+{
+    return abilities[ABIL_CHA];
+}
+
+sbit16 char_point_data::getBRA() const
+{
+    return abilities[ABIL_BRA];
+}
+
+sbit16 char_point_data::getMAG() const
+{
+    return abilities[ABIL_MAG];
+}
+
+sbit16 char_point_data::getDIV() const
+{
+    return abilities[ABIL_DIV];
+}
+
+sbit16 char_point_data::getHPP() const
+{
+    return abilities[ABIL_HP];
+}
+
+sbit16 *char_point_data::getAbilityAtIndexPtr(size_t index)
+{
+    return &abilities[index];
+}
+
+void char_point_data::setAbilityAtIndexTo(size_t index, sbit16 value)
+{
+    abilities[index] = value;
+}
+
+int char_point_data::readAbilityFromAtIndex(CByteBuffer &buf, size_t index)
+{
+    return buf.Read16(&abilities[index]);
+}
+
+void char_point_data::increaseAbilityAtIndexBy(size_t index, sbit16 value)
+{
+    abilities[index] += value;
+}
+
+void char_point_data::decreaseAbilityAtIndexBy(size_t index, sbit16 value)
+{
+    abilities[index] -= value;
+}
+
+std::array<sbit16, ABIL_TREE_MAX> &char_point_data::getAbilitiesArray()
+{
+    return abilities;
+}
+
+void char_point_data::setSTR(sbit16 value)
+{
+    abilities[ABIL_STR] = value;
+}
+
+void char_point_data::setDEX(sbit16 value)
+{
+    abilities[ABIL_DEX] = value;
+}
+
+void char_point_data::setCON(sbit16 value)
+{
+    abilities[ABIL_CON] = value;
+}
+
+void char_point_data::setCHA(sbit16 value)
+{
+    abilities[ABIL_CHA] = value;
+}
+
+void char_point_data::setBRA(sbit16 value)
+{
+    abilities[ABIL_BRA] = value;
+}
+
+void char_point_data::setMAG(sbit16 value)
+{
+    abilities[ABIL_MAG] = value;
+}
+
+void char_point_data::setDIV(sbit16 value)
+{
+    abilities[ABIL_DIV] = value;
+}
+
+void char_point_data::setHPP(sbit16 value)
+{
+    abilities[ABIL_HP] = value;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -493,8 +608,8 @@ npc_data::npc_data()
 
     g_world_nonpc++;
 
-    memset(weapons, 0, sizeof(weapons));
-    memset(spells, 0, sizeof(spells));
+    memset(weapons.data(), 0, weapons.size());
+    memset(spells.data(), 0, spells.size());
     default_pos = POSITION_STANDING;
     flags = 0;
 }
@@ -868,7 +983,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setPosition(this_upcast->points.getPosition());
         for (x = 0; x < ABIL_TREE_MAX; x++)
         {
-            CHAR_ABILITY(u, x) = CHAR_ABILITY(this, x);
+            u_upcast->points.setAbilityAtIndexTo(x, this_upcast->points.getAbilityAtIndex(x));
         }
         if (IS_PC(this))
         {

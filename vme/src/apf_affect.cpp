@@ -282,7 +282,7 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             return raw_destruct_affect(af);
         }
-        CHAR_ABILITY(unit, af->getDataAtIndex(0)) += af->getDataAtIndex(1);
+        dynamic_cast<char_data *>(unit)->points.increaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {
@@ -291,7 +291,7 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        CHAR_ABILITY(unit, af->getDataAtIndex(0)) -= af->getDataAtIndex(1);
+        dynamic_cast<char_data *>(unit)->points.decreaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {

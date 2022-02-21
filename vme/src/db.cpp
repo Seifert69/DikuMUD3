@@ -907,12 +907,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (unit_version < 69)
                 {
-                    CHAR_ABILITY(u, i) = pBuf->ReadU8(&g_nCorrupt);
-                    ;
+                    ubit8 temp = 0;
+                    g_nCorrupt += pBuf->Read8(&temp);
+                    char_unit->points.setAbilityAtIndexTo(i, temp);
                 }
                 else
                 {
-                    CHAR_ABILITY(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                    g_nCorrupt += char_unit->points.readAbilityFromAtIndex(*pBuf, i);
                 }
 
                 if (IS_PC(u))

@@ -121,7 +121,7 @@ void points_reset(unit_data *ch)
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
-        CHAR_ABILITY(ch, i) = 0;
+        dynamic_cast<char_data *>(ch)->points.setAbilityAtIndexTo(i, 0);
         PC_ABI_LVL(ch, i) = 0;
     }
 

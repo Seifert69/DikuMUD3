@@ -235,23 +235,23 @@
 
 #define CHAR_RACE(ch) (UCHAR(ch)->points.getRace())
 
-#define CHAR_ABILITY(ch, index) (UCHAR(ch)->points.abilities[index])
+#define CHAR_ABILITY(ch, index) (UCHAR(ch)->points.getAbilityAtIndex(index))
 
-#define CHAR_STR(ch) (CHAR_ABILITY(ch, ABIL_STR))
+#define CHAR_STR(ch) (UCHAR(ch)->points.getSTR())
 
-#define CHAR_DEX(ch) (CHAR_ABILITY(ch, ABIL_DEX))
+#define CHAR_DEX(ch) (UCHAR(ch)->points.getDEX())
 
-#define CHAR_CON(ch) (CHAR_ABILITY(ch, ABIL_CON))
+#define CHAR_CON(ch) (UCHAR(ch)->points.getCON())
 
-#define CHAR_CHA(ch) (CHAR_ABILITY(ch, ABIL_CHA))
+#define CHAR_CHA(ch) (UCHAR(ch)->points.getCHA())
 
-#define CHAR_BRA(ch) (CHAR_ABILITY(ch, ABIL_BRA))
+#define CHAR_BRA(ch) (UCHAR(ch)->points.getBRA())
 
-#define CHAR_MAG(ch) (CHAR_ABILITY(ch, ABIL_MAG))
+#define CHAR_MAG(ch) (UCHAR(ch)->points.getMAG())
 
-#define CHAR_DIV(ch) (CHAR_ABILITY(ch, ABIL_DIV))
+#define CHAR_DIV(ch) (UCHAR(ch)->points.getDIV())
 
-#define CHAR_HPP(ch) (CHAR_ABILITY(ch, ABIL_HP))
+#define CHAR_HPP(ch) (UCHAR(ch)->points.getHPP())
 
 #define CHAR_ENDURANCE(ch) (UCHAR(ch)->points.getEndurance())
 

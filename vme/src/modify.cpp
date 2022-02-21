@@ -1172,7 +1172,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 56: /* "ability" */
             if (is_in(valarg, 0, 250))
             {
-                CHAR_ABILITY(unt, typarg) = valarg;
+                dynamic_cast<char_data *>(unt)->points.setAbilityAtIndexTo(typarg, valarg);
             }
             else
             {

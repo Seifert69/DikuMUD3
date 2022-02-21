@@ -324,12 +324,15 @@ void set_points(unit_data *u)
 
     // spoints = ((100+20-CHAR_LEVEL(u)/10)*spoints) / 100; /* 120% - 100% */
 
-    if ((i = distribute_points(&CHAR_ABILITY(u, 0), ABIL_TREE_MAX, apoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(dynamic_cast<char_data *>(u)->points.getAbilitiesArray(),
+                               dynamic_cast<char_data *>(u)->points.getAbilitiesArray().size(),
+                               apoints,
+                               CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - An ability is %d points.", UNIT_IDENT(u), i);
     }
 
-    if ((i = distribute_points(&NPC_WPN_SKILL(u, 0), WPN_GROUP_MAX, spoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UNPC(u)->weapons, UNPC(u)->weapons.size(), spoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - A weapon skill exceeds %d points.", UNIT_IDENT(u), i);
     }
@@ -344,7 +347,7 @@ void set_points(unit_data *u)
 
     NPC_WPN_SKILL(u, WPN_ROOT) = max / 4;
 
-    if ((i = distribute_points(&NPC_SPL_SKILL(u, 0), SPL_GROUP_MAX, spoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UNPC(u)->spells, UNPC(u)->spells.size(), spoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - A spell skill exceeds %d points.", UNIT_IDENT(u), i);
     }
@@ -1199,14 +1202,14 @@ void init_unit(unit_data *u)
             NPC_DEFAULT(u) = POSITION_STANDING;
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {
-                CHAR_ABILITY(u, i) = 0;
+                npc->points.setAbilityAtIndexTo(i, 0);
             }
-            CHAR_STR(u) = 40; /* % */
-            CHAR_DEX(u) = 30;
-            CHAR_CON(u) = 10;
-            CHAR_CHA(u) = 2;
-            CHAR_BRA(u) = 3;
-            CHAR_HPP(u) = 15;
+            npc->points.setSTR(40); /* % */
+            npc->points.setDEX(30);
+            npc->points.setCON(10);
+            npc->points.setCHA(2);
+            npc->points.setBRA(3);
+            npc->points.setHPP(15);
 
             for (i = 0; i < WPN_GROUP_MAX; i++)
             {

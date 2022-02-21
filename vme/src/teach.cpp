@@ -1049,8 +1049,8 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
     switch (type)
     {
         case TEACH_ABILITIES:
-            pValues->values = &CHAR_ABILITY(pupil, 0); // Current ability
-            pValues->lvl = &PC_ABI_LVL(pupil, 0);      // How many times you've trained this level on this ability
+            pValues->values = dynamic_cast<char_data *>(pupil)->points.getAbilitiesArray().data(); // Current ability
+            pValues->lvl = &PC_ABI_LVL(pupil, 0); // How many times you've trained this level on this ability
             pValues->practice_points = &PC_ABILITY_POINTS(pupil);
             return &g_AbiColl;
 

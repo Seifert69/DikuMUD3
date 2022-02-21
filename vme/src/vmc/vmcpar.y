@@ -553,7 +553,7 @@ omobile_field   : MANA number
     }
     | ABILITY index number
     {
-        CHAR_ABILITY(cur, $2) = $3;
+        dynamic_cast<char_data*>(cur)->points.setAbilityAtIndexTo($2, $3);
     }
     | WEAPON index number
     {
