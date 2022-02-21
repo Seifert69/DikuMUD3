@@ -21,11 +21,13 @@ else ()
 endif ()
 find_package(Boost COMPONENTS unit_test_framework filesystem regex system REQUIRED)
 
+# Makes cmake set -std=c++17 rather than -std=gnu++17 for g++ flags
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Common cmake flags for all builds
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fdiagnostics-color=always")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     # Stronger warnings for debug build
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas -Wredundant-move -Wvirtual-move-assign -Wpessimizing-move")

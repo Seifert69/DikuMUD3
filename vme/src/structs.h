@@ -232,7 +232,7 @@ public:
     sbit16 *getManaPtr();
     int readManaFrom(CByteBuffer &buf);
     void setMana(sbit16 value);
-    void decrementManaBy(sbit16 value);
+    void decreaseManaBy(sbit16 value);
 
     sbit16 getEndurance() const;
     sbit16 *getEndurancePtr();

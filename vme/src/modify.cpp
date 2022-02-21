@@ -672,6 +672,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     strip_trailing_spaces(argument);
 
     /* insert data read in argument */
+    auto *character = dynamic_cast<char_data *>(unt);
     switch (type)
     {
         case 0: /* "add-name" */
@@ -1114,24 +1115,24 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                dynamic_cast<char_data *>(unt)->points.setPlayerExperience(valarg);
+                character->points.setPlayerExperience(valarg);
             }
             return;
 
         case 46: /* "affected-by" */
-            dynamic_cast<char_data *>(unt)->points.setAllCharacterFlags(bitarg);
+            character->points.setAllCharacterFlags(bitarg);
             return;
 
         case 47: /* "mana" */
-            dynamic_cast<char_data *>(unt)->points.setMana(valarg);
+            character->points.setMana(valarg);
             return;
 
         case 48: /* "endurance" */
-            dynamic_cast<char_data *>(unt)->points.setEndurance(valarg);
+            character->points.setEndurance(valarg);
             return;
 
         case 49: /* "attack-type" */
-            dynamic_cast<char_data *>(unt)->points.setAttackType(typarg);
+            character->points.setAttackType(typarg);
             return;
 
         case 50: /* "hand-quality" OBSOLETE */
@@ -1147,17 +1148,17 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 52: /* "race" */
-            dynamic_cast<char_data *>(unt)->points.setRace(typarg);
+            character->points.setRace(typarg);
             return;
 
         case 53: /* "sex" */
-            dynamic_cast<char_data *>(unt)->points.setSex(typarg);
+            character->points.setSex(typarg);
             return;
 
         case 54: /* "level" */
             if (is_in(valarg, 0, 199))
             {
-                dynamic_cast<char_data *>(unt)->points.setLevel(valarg);
+                character->points.setLevel(valarg);
             }
             else
             {
@@ -1166,13 +1167,13 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 55: /* "position" */
-            dynamic_cast<char_data *>(unt)->points.setPosition(typarg);
+            character->points.setPosition(typarg);
             return;
 
         case 56: /* "ability" */
             if (is_in(valarg, 0, 250))
             {
-                dynamic_cast<char_data *>(unt)->points.setAbilityAtIndexTo(typarg, valarg);
+                character->points.setAbilityAtIndexTo(typarg, valarg);
             }
             else
             {
@@ -1220,7 +1221,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 62: /* "speed" */
             if (is_in(valarg, SPEED_MIN, SPEED_MAX))
             {
-                dynamic_cast<char_data *>(unt)->points.setSpeed(valarg);
+                character->points.setSpeed(valarg);
             }
             else
             {

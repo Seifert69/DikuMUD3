@@ -857,48 +857,45 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
         case UNIT_ST_PC:
         {
-            auto char_unit = dynamic_cast<char_data *>(u);
-            g_nCorrupt += char_unit->points.readPlayerExperienceFrom(*pBuf);
-            g_nCorrupt += char_unit->points.readCharacterFlagsFrom(*pBuf);
+            auto *character = dynamic_cast<char_data *>(u);
+            g_nCorrupt += character->points.readPlayerExperienceFrom(*pBuf);
+            g_nCorrupt += character->points.readCharacterFlagsFrom(*pBuf);
 
-            g_nCorrupt += char_unit->points.readPlayerExperienceFrom(*pBuf);
-            g_nCorrupt += char_unit->points.readCharacterFlagsFrom(*pBuf);
+            g_nCorrupt += character->points.readManaFrom(*pBuf);
+            g_nCorrupt += character->points.readEnduranceFrom(*pBuf);
 
-            g_nCorrupt += char_unit->points.readManaFrom(*pBuf);
-            g_nCorrupt += char_unit->points.readEnduranceFrom(*pBuf);
-
-            g_nCorrupt += char_unit->points.readNaturalArmorFrom(*pBuf);
+            g_nCorrupt += character->points.readNaturalArmorFrom(*pBuf);
 
             if (unit_version >= 39)
             {
-                g_nCorrupt += char_unit->points.readSpeedFrom(*pBuf);
+                g_nCorrupt += character->points.readSpeedFrom(*pBuf);
                 if (IS_PC(u))
                 {
                     if (CHAR_SPEED(u) < SPEED_MIN)
                     {
-                        char_unit->points.setSpeed(SPEED_DEFAULT);
+                        character->points.setSpeed(SPEED_DEFAULT);
                     }
                 }
             }
             else
             {
-                char_unit->points.setSpeed(SPEED_DEFAULT);
+                character->points.setSpeed(SPEED_DEFAULT);
             }
 
-            g_nCorrupt = char_unit->points.readAttackTypeFrom(*pBuf);
+            g_nCorrupt += character->points.readAttackTypeFrom(*pBuf);
 
             if (unit_version <= 52)
             {
                 UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
             }
-            g_nCorrupt += char_unit->points.readRaceFrom(*pBuf);
+            g_nCorrupt += character->points.readRaceFrom(*pBuf);
 
-            g_nCorrupt += char_unit->points.readOffensiveBonusFrom(*pBuf);
-            g_nCorrupt += char_unit->points.readDefensiveBonusFrom(*pBuf);
+            g_nCorrupt += character->points.readOffensiveBonusFrom(*pBuf);
+            g_nCorrupt += character->points.readDefensiveBonusFrom(*pBuf);
 
-            g_nCorrupt += char_unit->points.readSexFrom(*pBuf);
-            g_nCorrupt += char_unit->points.readLevelFrom(*pBuf);
-            g_nCorrupt += char_unit->points.readPositionFrom(*pBuf);
+            g_nCorrupt += character->points.readSexFrom(*pBuf);
+            g_nCorrupt += character->points.readLevelFrom(*pBuf);
+            g_nCorrupt += character->points.readPositionFrom(*pBuf);
 
             j = pBuf->ReadU8(&g_nCorrupt);
             ;
@@ -909,11 +906,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     ubit8 temp = 0;
                     g_nCorrupt += pBuf->Read8(&temp);
-                    char_unit->points.setAbilityAtIndexTo(i, temp);
+                    character->points.setAbilityAtIndexTo(i, temp);
                 }
                 else
                 {
-                    g_nCorrupt += char_unit->points.readAbilityFromAtIndex(*pBuf, i);
+                    g_nCorrupt += character->points.readAbilityFromAtIndex(*pBuf, i);
                 }
 
                 if (IS_PC(u))
@@ -980,7 +977,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     // TODO worse than spooky - why decrement a race??
                     //      Also could be really bad if race==0
-                    char_unit->points.setRace(dynamic_cast<char_data *>(u)->points.getRace() - 1);
+                    character->points.setRace(character->points.getRace() - 1);
 
                     base_race_info_type *sex_race = nullptr;
 
@@ -1125,7 +1122,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     if (CHAR_EXP(u) < xpfloor)
                     {
                         slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", UNIT_NAME(u), CHAR_EXP(u), xpfloor);
-                        dynamic_cast<char_data *>(u)->points.setPlayerExperience(xpfloor);
+                        character->points.setPlayerExperience(xpfloor);
                         // xxx
                     }
                 }

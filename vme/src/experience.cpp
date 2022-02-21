@@ -808,11 +808,12 @@ int base_melee(unit_data *att, unit_data *def, int hit_loc)
     ocp = CHAR_POS(def);
     ocf = CHAR_FIGHTING(def);
     CHAR_COMBAT(def)->setMelee(att);
-    dynamic_cast<char_data *>(def)->points.setPosition(POSITION_FIGHTING);
+    auto *defense = dynamic_cast<char_data *>(def);
+    defense->points.setPosition(POSITION_FIGHTING);
 
     bonus = melee_bonus(att, def, hit_loc, nullptr, nullptr, nullptr, nullptr);
 
-    dynamic_cast<char_data *>(def)->points.setPosition(ocp);
+    defense->points.setPosition(ocp);
     CHAR_COMBAT(def)->setMelee(ocf);
 
     return bonus;
@@ -832,14 +833,15 @@ int base_consider(unit_data *att, unit_data *def, std::string *pStr)
 
     ocp = CHAR_POS(def);
     CHAR_FIGHTING(def);
-    dynamic_cast<char_data *>(def)->points.setPosition(POSITION_FIGHTING);
+    auto *defense = dynamic_cast<char_data *>(def);
+    defense->points.setPosition(POSITION_FIGHTING);
 
     att_wpn_type = WPN_ROOT;
 
     bonus = melee_bonus(att, def, WEAR_BODY, &att_wpn_type, nullptr, &def_arm_type, nullptr, 1, pStr);
     bonus -= 25; // Compensate for the -25 for def not fighting attacker
 
-    dynamic_cast<char_data *>(def)->points.setPosition(ocp);
+    defense->points.setPosition(ocp);
 
     dam = weapon_damage(5 + bonus, att_wpn_type, def_arm_type);
     dam += weapon_damage(50 + bonus, att_wpn_type, def_arm_type);

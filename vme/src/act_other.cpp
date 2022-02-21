@@ -114,14 +114,15 @@ void points_reset(unit_data *ch)
     int i = 0;
 
     PC_VIRTUAL_LEVEL(ch) = START_LEVEL;
-    dynamic_cast<char_data *>(ch)->points.setLevel(START_LEVEL);
+    auto *character = dynamic_cast<char_data *>(ch);
+    character->points.setLevel(START_LEVEL);
 
     PC_ABILITY_POINTS(ch) = 0;
     PC_SKILL_POINTS(ch) = 0;
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
-        dynamic_cast<char_data *>(ch)->points.setAbilityAtIndexTo(i, 0);
+        character->points.setAbilityAtIndexTo(i, 0);
         PC_ABI_LVL(ch, i) = 0;
     }
 
@@ -171,7 +172,7 @@ void start_player(unit_data *ch)
     // Obsolete race_cost(ch);
     points_reset(ch);
 
-    auto player = dynamic_cast<char_data *>(ch);
+    auto *player = dynamic_cast<char_data *>(ch);
     player->points.setPlayerExperience(required_xp(PC_VIRTUAL_LEVEL(ch)));
 
     set_title(ch);
@@ -190,7 +191,7 @@ void start_player(unit_data *ch)
 
     if (!UNIT_IS_EVIL(ch))
     {
-        dynamic_cast<char_data *>(ch)->points.setCharacterFlag(CHAR_PEACEFUL);
+        player->points.setCharacterFlag(CHAR_PEACEFUL);
     }
 
     if (g_playerinit_tmpl)
@@ -206,6 +207,6 @@ void start_player(unit_data *ch)
     }
 
     UNIT_MAX_HIT(ch) = UNIT_HIT(ch) = hit_limit(ch);
-    dynamic_cast<char_data *>(ch)->points.setMana(mana_limit(ch));
-    dynamic_cast<char_data *>(ch)->points.setEndurance(move_limit(ch));
+    player->points.setMana(mana_limit(ch));
+    player->points.setEndurance(move_limit(ch));
 }

@@ -40,21 +40,21 @@ room_direction_data::~room_direction_data()
 }
 
 char_point_data::char_point_data()
+    : flags{0}          // Char flags
+    , exp{0}            // The experience of the player
+    , race{0}           // PC/NPC race, Humanoid, Animal, etc.
+    , mana{0}           // How many mana points are left?
+    , endurance{0}      // How many endurance points are left?
+    , offensive{0}      // The OB of a character.
+    , defensive{0}      // The DB of a character.
+    , speed{0}          // The default speed for natural combat
+    , natural_armour{0} // The natural built-in armour (ARM_)
+    , attack_type{0}    // PC/NPC Attack Type for bare hands (WPN_)
+    , dex_reduction{0}  // For speed of armour calculations only
+    , sex{0}            // PC / NPC s sex
+    , level{0}          // PC / NPC s level
+    , position{0}       // Standing, sitting, fighting...
 {
-    flags = 0;          /* Char flags                               */
-    exp = 0;            /* The experience of the player             */
-    race = 0;           /* PC/NPC race, Humanoid, Animal, etc.     */
-    mana = 0;           /* How many mana points are left?           */
-    endurance = 0;      /* How many endurance points are left?      */
-    offensive = 0;      /* The OB of a character.                   */
-    defensive = 0;      /* The DB of a character.                   */
-    speed = 0;          /* The default speed for natural combat     */
-    natural_armour = 0; /* The natural built-in armour (ARM_)       */
-    attack_type = 0;    /* PC/NPC Attack Type for bare hands (WPN_) */
-    dex_reduction = 0;  /* For speed of armour calculations only    */
-    sex = 0;            /* PC / NPC s sex                           */
-    level = 0;          /* PC / NPC s level                         */
-    position = 0;       /* Standing, sitting, fighting...           */
     memset(abilities.data(), 0, abilities.size());
 }
 
@@ -158,7 +158,7 @@ void char_point_data::setMana(sbit16 value)
     mana = value;
 }
 
-void char_point_data::decrementManaBy(sbit16 value)
+void char_point_data::decreaseManaBy(sbit16 value)
 {
     mana -= value;
 }
@@ -965,8 +965,8 @@ unit_data *unit_data::copy()
     }
     else if (IS_CHAR(this))
     {
-        auto u_upcast = dynamic_cast<char_data *>(u);
-        auto this_upcast = dynamic_cast<char_data *>(this);
+        auto *u_upcast = dynamic_cast<char_data *>(u);
+        auto *this_upcast = dynamic_cast<char_data *>(this);
 
         u_upcast->points.setAllCharacterFlags(this_upcast->points.getCharacterFlags());
         u_upcast->points.setPlayerExperience(this_upcast->points.getPlayerExperience());

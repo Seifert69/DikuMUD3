@@ -271,16 +271,17 @@ void set_points(unit_data *u)
     int spoints = 0;
     int apoints = 0;
 
+    auto *character = dynamic_cast<char_data *>(u);
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_FIST, WPN_CRUSH))
     {
         dmc_error(TRUE, "Illegal hand attack type %d.", CHAR_ATTACK_TYPE(u));
-        dynamic_cast<char_data *>(u)->points.setAttackType(WPN_FIST);
+        character->points.setAttackType(WPN_FIST);
     }
 
     if (!is_in(CHAR_LEVEL(u), 0, 199))
     {
         dmc_error(TRUE, "Illegal level in  '%s'.", UNIT_IDENT(u));
-        dynamic_cast<char_data *>(u)->points.setLevel(0);
+        character->points.setLevel(0);
     }
 
     for (i = sum = 0; i < ABIL_TREE_MAX; i++)
@@ -324,8 +325,8 @@ void set_points(unit_data *u)
 
     // spoints = ((100+20-CHAR_LEVEL(u)/10)*spoints) / 100; /* 120% - 100% */
 
-    if ((i = distribute_points(dynamic_cast<char_data *>(u)->points.getAbilitiesArray(),
-                               dynamic_cast<char_data *>(u)->points.getAbilitiesArray().size(),
+    if ((i = distribute_points(character->points.getAbilitiesArray(),
+                               character->points.getAbilitiesArray().size(),
                                apoints,
                                CHAR_LEVEL(u))))
     {
@@ -365,13 +366,13 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_NATURAL_ARMOUR(u), ARM_CLOTHES, ARM_PLATE))
     {
         dmc_error(TRUE, "%s, Illegal natural armour type.", UNIT_IDENT(u));
-        dynamic_cast<char_data *>(u)->points.setNaturalArmor(ARM_PLATE);
+        character->points.setNaturalArmor(ARM_PLATE);
     }
 
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
         dmc_error(TRUE, "Illegal attack category in '%s'.", UNIT_IDENT(u));
-        dynamic_cast<char_data *>(u)->points.setAttackType(WPN_FIST);
+        character->points.setAttackType(WPN_FIST);
     }
 
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = hitpoint_total(CHAR_HPP(u));
@@ -1091,7 +1092,7 @@ void process_unit(unit_data *u)
         case UNIT_ST_NPC:
         {
             set_points(u);
-            auto npc = dynamic_cast<char_data *>(u);
+            auto *npc = dynamic_cast<char_data *>(u);
             npc->points.setMana(100);
             npc->points.setEndurance(100);
 
@@ -1107,7 +1108,7 @@ void process_unit(unit_data *u)
                           " the 100 default!",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                dynamic_cast<char_data *>(u)->points.setPlayerExperience(100);
+                npc->points.setPlayerExperience(100);
             }
             else if (CHAR_EXP(u) < -500)
             {
@@ -1116,7 +1117,7 @@ void process_unit(unit_data *u)
                           "-500 XP.",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                dynamic_cast<char_data *>(u)->points.setPlayerExperience(-500);
+                npc->points.setPlayerExperience(-500);
             }
 
             if (!is_in(CHAR_OFFENSIVE(u), -1000, 1000))
@@ -1187,7 +1188,7 @@ void init_unit(unit_data *u)
     {
         case UNIT_ST_NPC:
         {
-            auto npc = dynamic_cast<char_data *>(u);
+            auto *npc = dynamic_cast<char_data *>(u);
             UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
             CHAR_MONEY(u) = nullptr;
             npc->points.setPlayerExperience(100); // 100 XP per default at your own level
