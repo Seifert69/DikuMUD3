@@ -1,4 +1,5 @@
 set(VME_SRCS
+        OutputCapture.cpp OutputCapture.h
         account.cpp account.h
         act_change.cpp act_change.h
         act_color.cpp act_color.h

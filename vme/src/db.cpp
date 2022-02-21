@@ -866,7 +866,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     PC_PROFESSION(u) = pBuf->ReadS8(&g_nCorrupt);
                 }
 
-                g_nCorrupt += pBuf->ReadFloat(&PC_ACCOUNT(u).credit);
+                g_nCorrupt += PC_ACCOUNT(u).readAccountBalanceFrom(*pBuf);
                 PC_ACCOUNT(u).credit_limit = pBuf->ReadU32(&g_nCorrupt);
                 PC_ACCOUNT(u).total_credit = pBuf->ReadU32(&g_nCorrupt);
 

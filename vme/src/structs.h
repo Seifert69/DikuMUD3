@@ -227,10 +227,18 @@ public:
 };
 
 /* ------------------  PC SPECIFIC STRUCTURES ------------------------ */
-
-struct pc_account_data
+class pc_account_data
 {
-    float credit;        /* How many coin units are left on account?       */
+public:
+    float getAccountBalance() const { return credit; }
+    void setAccountBalance(float value) { credit = value; }
+    void reduceAccountBalanceBy(float value) { credit -= value; }
+    void increaseAccountBalanceBy(float value) { credit += value; }
+    int readAccountBalanceFrom(CByteBuffer &buf) { return buf.ReadFloat(&credit); }
+
+private:
+    float credit{0.0f}; // How many coin units are left on account?
+public:
     ubit32 credit_limit; /* In coin units (i.e. cents / oerer)             */
     ubit32 total_credit; /* Accumulated credit to date (coin units)        */
     sbit16 last4;        /* The last four digits of his credit card, or -1 */
@@ -254,8 +262,8 @@ public:
 
     terminal_setup_type setup;
 
-    pc_time_data m_time{};   /* PCs time info  */
-    pc_account_data account; /* Accounting     */
+    pc_time_data m_time{};     /* PCs time info  */
+    pc_account_data account{}; /* Accounting     */
 
     char *guild;     // Player's current default guild (guilds in .info)
     char *bank;      /* How much money in bank?                 */

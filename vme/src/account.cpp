@@ -154,7 +154,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        "Discount       : %3d%%\n\r"
                                        "Flat Rate      : %s%s"
                                        "Crack counter  : %3d\n\r",
-                                       (float)PC_ACCOUNT(u).credit / 100.0,
+                                       PC_ACCOUNT(u).getAccountBalance() / 100.0,
                                        (float)PC_ACCOUNT(u).credit_limit / 100.0,
                                        (float)PC_ACCOUNT(u).total_credit / 100.0,
                                        PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
@@ -244,7 +244,7 @@ void account_overdue(const unit_data *ch)
         }
         else
         {
-            i = (int)(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).credit);
+            i = static_cast<int>(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
         }
@@ -252,7 +252,7 @@ void account_overdue(const unit_data *ch)
         auto msg = diku::format_to_str("Your account is overdue by %.2f %s with a "
                                        "limit of %.2f %s.\n\r"
                                        "The account will expire in %d hours and %d minutes.\n\r\n\r",
-                                       (float)-PC_ACCOUNT(ch).credit / 100.0,
+                                       (PC_ACCOUNT(ch).getAccountBalance() * -1) / 100.0,
                                        g_cAccountConfig.m_pCoinName,
                                        (float)PC_ACCOUNT(ch).credit_limit / 100.0,
                                        g_cAccountConfig.m_pCoinName,
@@ -362,11 +362,11 @@ static void account_calc(unit_data *pc, tm *b, tm *e)
 
     if (is_in(PC_ACCOUNT(pc).discount, 1, 99))
     {
-        PC_ACCOUNT(pc).credit -= (((float)(100 - PC_ACCOUNT(pc).discount)) * amt) / (float)100.0;
+        PC_ACCOUNT(pc).reduceAccountBalanceBy((((float)(100 - PC_ACCOUNT(pc).discount)) * amt) / 100.0f);
     }
     else
     {
-        PC_ACCOUNT(pc).credit -= amt;
+        PC_ACCOUNT(pc).reduceAccountBalanceBy(amt);
     }
 
 #ifdef ACCOUNT_DEBUG
@@ -449,7 +449,7 @@ int account_is_overdue(const unit_data *ch)
             return FALSE;
         }
 
-        return (PC_ACCOUNT(ch).credit < 0.0);
+        return (PC_ACCOUNT(ch).getAccountBalance() < 0.0);
     }
 
     return FALSE;
@@ -481,25 +481,26 @@ static void account_status(const unit_data *ch)
         auto msg = diku::format_to_str("Your account is on a flat rate until %s", pTmstr);
         send_to_char(msg, ch);
 
-        if (PC_ACCOUNT(ch).credit >= 0.0)
+        if (PC_ACCOUNT(ch).getAccountBalance() >= 0.0)
         {
             auto msg2 = diku::format_to_str("You have a positive balance of %.2f %s.\n\r",
-                                            PC_ACCOUNT(ch).credit / 100.0,
+                                            PC_ACCOUNT(ch).getAccountBalance() / 100.0,
                                             g_cAccountConfig.m_pCoinName);
             send_to_char(msg2, ch);
         }
         return;
     }
 
-    if (PC_ACCOUNT(ch).credit >= 0.0)
+    if (PC_ACCOUNT(ch).getAccountBalance() >= 0.0)
     {
-        auto msg =
-            diku::format_to_str("You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+        auto msg = diku::format_to_str("You have a positive balance of %.2f %s.\n\r",
+                                       PC_ACCOUNT(ch).getAccountBalance() / 100.0,
+                                       g_cAccountConfig.m_pCoinName);
         send_to_char(msg, ch);
 
         if (lcharge > 0)
         {
-            i = (int)PC_ACCOUNT(ch).credit;
+            i = static_cast<int>(PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
@@ -518,14 +519,14 @@ static void account_status(const unit_data *ch)
     {
         if (lcharge > 0)
         {
-            i = (int)(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).credit);
+            i = static_cast<int>(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
             auto msg = diku::format_to_str("Your account is overdue by %.2f %s with a "
                                            "limit of %.2f %s.\n\r"
                                            "The account will expire in %d hours and %d minutes.\n\r",
-                                           (float)-PC_ACCOUNT(ch).credit / 100.0,
+                                           (PC_ACCOUNT(ch).getAccountBalance() * -1) / 100.0,
                                            g_cAccountConfig.m_pCoinName,
                                            (float)PC_ACCOUNT(ch).credit_limit / 100.0,
                                            g_cAccountConfig.m_pCoinName,
@@ -536,7 +537,7 @@ static void account_status(const unit_data *ch)
         else
         {
             auto msg = diku::format_to_str("You have a negative balance of %.2f %s.\n\r",
-                                           PC_ACCOUNT(ch).credit / 100.0,
+                                           PC_ACCOUNT(ch).getAccountBalance() / 100.0,
                                            g_cAccountConfig.m_pCoinName);
             send_to_char(msg, ch);
         }
@@ -555,7 +556,7 @@ int account_is_closed(unit_data *ch)
             return FALSE;
         }
 
-        i = (int)PC_ACCOUNT(ch).credit;
+        i = static_cast<int>(PC_ACCOUNT(ch).getAccountBalance());
         j = PC_ACCOUNT(ch).credit_limit;
 
         return (i < -j);
@@ -566,7 +567,7 @@ int account_is_closed(unit_data *ch)
 
 void account_insert(unit_data *god, unit_data *whom, ubit32 amount)
 {
-    PC_ACCOUNT(whom).credit += (float)amount;
+    PC_ACCOUNT(whom).increaseAccountBalanceBy(static_cast<float>(amount));
     PC_ACCOUNT(whom).total_credit += amount;
 
     slog(LOG_ALL, 255, "%s inserted %d on account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
@@ -575,7 +576,7 @@ void account_insert(unit_data *god, unit_data *whom, ubit32 amount)
 
 void account_withdraw(unit_data *god, unit_data *whom, ubit32 amount)
 {
-    PC_ACCOUNT(whom).credit -= (float)amount;
+    PC_ACCOUNT(whom).reduceAccountBalanceBy(static_cast<float>(amount));
     if ((ubit32)amount > PC_ACCOUNT(whom).total_credit)
     {
         PC_ACCOUNT(whom).total_credit = 0;
@@ -835,7 +836,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
 void account_defaults(unit_data *pc)
 {
-    PC_ACCOUNT(pc).credit = (float)g_cAccountConfig.m_nAccountFree;
+    PC_ACCOUNT(pc).setAccountBalance(static_cast<float>(g_cAccountConfig.m_nAccountFree));
     PC_ACCOUNT(pc).credit_limit = (int)g_cAccountConfig.m_nAccountLimit;
     PC_ACCOUNT(pc).total_credit = 0;
     PC_ACCOUNT(pc).last4 = -1;

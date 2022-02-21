@@ -423,14 +423,14 @@ BOOST_AUTO_TEST_CASE(account_insert_test)
 
     int amount = 5546;
 
-    whom->account.credit = credit;
+    whom->account.setAccountBalance(credit);
     whom->account.total_credit = total_credit;
 
     ////////////////////////// Test Subject //////////////////////////////
     account_insert(god.get(), whom.get(), amount);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.credit == credit + amount);
+    BOOST_TEST(whom->account.getAccountBalance() == credit + amount);
     BOOST_TEST(whom->account.total_credit == total_credit + amount);
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
@@ -454,14 +454,14 @@ BOOST_DATA_TEST_CASE(account_withdraw_test, withdrawal_amounts, amount)
     float credit = 375.14f;
     ubit32 total_credit = 4876;
 
-    whom->account.credit = credit;
+    whom->account.setAccountBalance(credit);
     whom->account.total_credit = total_credit;
 
     ////////////////////////// Test Subject //////////////////////////////
     account_withdraw(god.get(), whom.get(), amount);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.credit == credit - amount);
+    BOOST_TEST(whom->account.getAccountBalance() == credit - amount);
     ubit32 expected_total_credit = total_credit - amount;
     if (amount > total_credit)
     {
@@ -690,7 +690,7 @@ BOOST_AUTO_TEST_SUITE_END() // Account_Local_Stat_Suite
 BOOST_FIXTURE_TEST_SUITE(Account_Defaults_Suite, AccountCPPFixture)
 BOOST_AUTO_TEST_CASE(account_defaults_test)
 {
-    whom->account.credit = 333.0;
+    whom->account.setAccountBalance(333.0);
     whom->account.credit_limit = 333;
     whom->account.total_credit = 333;
     whom->account.last4 = 333;
@@ -702,7 +702,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     account_defaults(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.credit == 0.0);
+    BOOST_TEST(whom->account.getAccountBalance() == 0.0);
     BOOST_TEST(whom->account.credit_limit == 0);
     BOOST_TEST(whom->account.total_credit == 0);
     BOOST_TEST(whom->account.last4 == -1);
@@ -768,7 +768,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_1)
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) + 10000;
-    whom->account.credit = -1000.00;
+    whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -782,7 +782,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_2)
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) - 10000;
-    whom->account.credit = -1000.00;
+    whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -796,7 +796,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_3)
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) + 10000;
-    whom->account.credit = 1000.00;
+    whom->account.setAccountBalance(1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -810,7 +810,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_4)
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) - 10000;
-    whom->account.credit = -1000.00;
+    whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -826,7 +826,7 @@ BOOST_AUTO_TEST_CASE(account_overdue_test)
 {
     g_cAccountConfig.m_nHourlyRate = 5;
     whom->account.credit_limit = 4895;
-    whom->account.credit = 456;
+    whom->account.setAccountBalance(456);
     ////////////////////////// Test Subject //////////////////////////////
     account_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -842,7 +842,7 @@ BOOST_AUTO_TEST_CASE(account_overdue_test)
 BOOST_AUTO_TEST_CASE(account_overdue_test_2)
 {
     whom->account.credit_limit = 4895;
-    whom->account.credit = 456;
+    whom->account.setAccountBalance(456);
     whom->account.discount = 100;
     ////////////////////////// Test Subject //////////////////////////////
     account_overdue(whom.get());
@@ -947,7 +947,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_5)
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) - 1000;
-    whom->account.credit = -50;
+    whom->account.setAccountBalance(-50);
     whom->account.credit_limit = 100;
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
@@ -961,7 +961,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_6)
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) - 1000;
-    whom->account.credit = -500;
+    whom->account.setAccountBalance(-500);
     whom->account.credit_limit = 100;
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
