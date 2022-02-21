@@ -275,8 +275,8 @@ private:
     ubit8 speed{0};          // The default speed for natural combat
     ubit8 natural_armour{0}; // The natural built-in armour (ARM_)
     ubit8 attack_type{0};    // PC/NPC Attack Type for bare hands (WPN_)
+    ubit8 dex_reduction{0};  // For speed of armour calculations only
 public:
-    ubit8 dex_reduction;             /* For speed of armour calculations only    */
     ubit8 sex;                       /* PC / NPC s sex                           */
     ubit8 level;                     /* PC / NPC s level                         */
     ubit8 position;                  /* Standing, sitting, fighting...           */
