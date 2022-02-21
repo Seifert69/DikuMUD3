@@ -275,6 +275,11 @@ public:
     int readLevelFrom(CByteBuffer &buf);
     void incLevel();
 
+    ubit8 getPosition() const;
+    void setPosition(ubit8 value);
+    int readPositionFrom(CByteBuffer &buf);
+    ubit8 *getPositionPtr();
+
 private:
     ubit32 flags{0};         // Char flags
     sbit32 exp{0};           // The experience of the player
@@ -289,8 +294,8 @@ private:
     ubit8 dex_reduction{0};  // For speed of armour calculations only
     ubit8 sex{0};            // PC / NPC s sex
     ubit8 level{0};          // PC / NPC s level
+    ubit8 position{0};       // Standing, sitting, fighting...
 public:
-    ubit8 position;                  /* Standing, sitting, fighting...           */
     sbit16 abilities[ABIL_TREE_MAX]; /* Str/dex etc.                 */
 };
 

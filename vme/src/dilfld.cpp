@@ -3686,7 +3686,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &CHAR_POS((unit_data *)v1->val.ptr);
+                        v->ref = reinterpret_cast<char_data *>(v1->val.ptr)->points.getPositionPtr();
                     }
                     else
                     {

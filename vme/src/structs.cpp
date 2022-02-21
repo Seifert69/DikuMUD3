@@ -331,6 +331,26 @@ void char_point_data::incLevel()
     ++level;
 }
 
+ubit8 char_point_data::getPosition() const
+{
+    return position;
+}
+
+void char_point_data::setPosition(ubit8 value)
+{
+    position = value;
+}
+
+int char_point_data::readPositionFrom(CByteBuffer &buf)
+{
+    return buf.Read8(&position);
+}
+
+ubit8 *char_point_data::getPositionPtr()
+{
+    return &position;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -845,7 +865,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setAttackType(this_upcast->points.getAttackType());
         u_upcast->points.setSex(this_upcast->points.getSex());
         u_upcast->points.setLevel(this_upcast->points.getLevel());
-        CHAR_POS(u) = CHAR_POS(this);
+        u_upcast->points.setPosition(this_upcast->points.getPosition());
         for (x = 0; x < ABIL_TREE_MAX; x++)
         {
             CHAR_ABILITY(u, x) = CHAR_ABILITY(this, x);

@@ -1166,7 +1166,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 55: /* "position" */
-            CHAR_POS(unt) = typarg;
+            dynamic_cast<char_data *>(unt)->points.setPosition(typarg);
             return;
 
         case 56: /* "ability" */

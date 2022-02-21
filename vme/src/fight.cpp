@@ -724,23 +724,23 @@ void update_pos(unit_data *victim)
     }
     else if (UNIT_HIT(victim) > 0)
     {
-        CHAR_POS(victim) = POSITION_STANDING;
+        dynamic_cast<char_data *>(victim)->points.setPosition(POSITION_STANDING);
     }
     else if (UNIT_HIT(victim) <= -11)
     {
-        CHAR_POS(victim) = POSITION_DEAD;
+        dynamic_cast<char_data *>(victim)->points.setPosition(POSITION_DEAD);
     }
     else if (UNIT_HIT(victim) <= -6)
     {
-        CHAR_POS(victim) = POSITION_MORTALLYW;
+        dynamic_cast<char_data *>(victim)->points.setPosition(POSITION_MORTALLYW);
     }
     else if (UNIT_HIT(victim) <= -3)
     {
-        CHAR_POS(victim) = POSITION_INCAP;
+        dynamic_cast<char_data *>(victim)->points.setPosition(POSITION_INCAP);
     }
     else
     {
-        CHAR_POS(victim) = POSITION_STUNNED;
+        dynamic_cast<char_data *>(victim)->points.setPosition(POSITION_STUNNED);
     }
 }
 
@@ -1101,7 +1101,7 @@ void damage(unit_data *ch,
 
     if ((CHAR_POS(victim) == POSITION_SLEEPING) && (dam > 0))
     {
-        CHAR_POS(victim) = POSITION_RESTING;
+        dynamic_cast<char_data *>(victim)->points.setPosition(POSITION_RESTING);
         send_to_char("OUCH! You wake up!<br/>", victim);
     }
 
@@ -1560,7 +1560,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
 
         if (CHAR_POS(att) != POSITION_FIGHTING)
         {
-            CHAR_POS(att) = POSITION_FIGHTING;
+            dynamic_cast<char_data *>(att)->points.setPosition(POSITION_FIGHTING);
         }
         add_fighting(att, def, TRUE);
     }
@@ -1701,7 +1701,7 @@ void melee_violence(unit_data *ch, int primary)
     {
         act("You get back in a fighting position, ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n gets back in a fighting position ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_ROOM);
-        CHAR_POS(ch) = POSITION_FIGHTING;
+        dynamic_cast<char_data *>(ch)->points.setPosition(POSITION_FIGHTING);
     }
 }
 

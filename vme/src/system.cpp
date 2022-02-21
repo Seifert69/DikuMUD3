@@ -72,7 +72,7 @@ void init_char(unit_data *ch)
     account_defaults(ch);
 
     auto char_unit = dynamic_cast<char_data *>(ch);
-    CHAR_POS(ch) = POSITION_STANDING;
+    char_unit->points.setPosition(POSITION_STANDING);
     char_unit->points.setSpeed(SPEED_DEFAULT);
     char_unit->points.setRace(RACE_HUMAN);
     char_unit->points.setSex(SEX_MALE);

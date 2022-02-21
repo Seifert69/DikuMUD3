@@ -898,7 +898,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
             g_nCorrupt += char_unit->points.readSexFrom(*pBuf);
             g_nCorrupt += char_unit->points.readLevelFrom(*pBuf);
-            CHAR_POS(u) = pBuf->ReadU8(&g_nCorrupt);
+            g_nCorrupt += char_unit->points.readPositionFrom(*pBuf);
 
             j = pBuf->ReadU8(&g_nCorrupt);
             ;

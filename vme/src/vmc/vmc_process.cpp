@@ -1195,7 +1195,7 @@ void init_unit(unit_data *u)
             npc->points.setRace(RACE_HUMAN);
             npc->points.setSex(SEX_NEUTRAL);
             npc->points.setLevel(1);
-            CHAR_POS(u) = POSITION_STANDING;
+            npc->points.setPosition(POSITION_STANDING);
             NPC_DEFAULT(u) = POSITION_STANDING;
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {

@@ -525,7 +525,7 @@ omobile_field   : MANA number
     }
     | POSITION number
     {
-        CHAR_POS(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setPosition($2);
     }
     | DEFAULT number
     {

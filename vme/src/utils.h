@@ -229,7 +229,7 @@
 
 #define CHAR_LAST_ATTACKER_TYPE(unit) (UCHAR(unit)->last_attacker_type)
 
-#define CHAR_POS(ch) (UCHAR(ch)->points.position)
+#define CHAR_POS(ch) (UCHAR(ch)->points.getPosition())
 
 #define CHAR_LEVEL(ch) (UCHAR(ch)->points.getLevel())
 

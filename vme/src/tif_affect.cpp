@@ -416,7 +416,7 @@ void tif_sleep_on(unit_affected_type *af, unit_data *unit)
 
         act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n falls asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_ROOM);
-        CHAR_POS(unit) = POSITION_SLEEPING;
+        dynamic_cast<char_data *>(unit)->points.setPosition(POSITION_SLEEPING);
     }
 }
 
@@ -438,7 +438,7 @@ void tif_sleep_check(unit_affected_type *af, unit_data *unit)
             }
             act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             act("$1n falls asleep.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-            CHAR_POS(unit) = POSITION_SLEEPING;
+            dynamic_cast<char_data *>(unit)->points.setPosition(POSITION_SLEEPING);
         }
     }
 }
@@ -996,7 +996,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
         return;
     }
 
-    CHAR_POS(unit) = POSITION_STANDING;
+    dynamic_cast<char_data *>(unit)->points.setPosition(POSITION_STANDING);
     REMOVE_BIT(PC_FLAGS(unit), PC_SPIRIT);
     dynamic_cast<char_data *>(unit)->points.removeCharacterFlag(CHAR_KILL_SELF);
 
