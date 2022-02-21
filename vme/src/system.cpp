@@ -76,7 +76,10 @@ void init_char(unit_data *ch)
     getCharPoints(ch).setRace(RACE_HUMAN);
     getCharPoints(ch).setSex(SEX_MALE);
 
-    PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(nullptr);
+    const auto now = time(nullptr);
+    PC_TIME(ch).connect = now;
+    PC_TIME(ch).birth = now;
+    PC_TIME(ch).setPlayerCharacterCreationTime(now);
     PC_TIME(ch).played = 0;
     PC_LIFESPAN(ch) = 100;
 

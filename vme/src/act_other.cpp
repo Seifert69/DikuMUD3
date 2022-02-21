@@ -82,7 +82,7 @@ void race_adjust(unit_data *ch)
 
     PC_LIFESPAN(ch) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
 
-    PC_TIME(ch).birth = PC_TIME(ch).creation;
+    PC_TIME(ch).birth = PC_TIME(ch).getPlayerCharacterCreationTime();
 
     int years = 0;
 

@@ -1293,7 +1293,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 pBuf->Append32((ubit32)0); // OBSOLETE pBuf->Append32((ubit32)PC_GUILD_TIME(u));
                 pBuf->Append16(PC_VIRTUAL_LEVEL(u));
 
-                pBuf->Append32((ubit32)PC_TIME(u).creation);
+                PC_TIME(u).writeTo(*pBuf);
                 pBuf->Append32((ubit32)PC_TIME(u).connect);
                 pBuf->Append32((ubit32)PC_TIME(u).birth);
                 pBuf->Append32(PC_TIME(u).played);

@@ -226,12 +226,21 @@ public:
 };
 
 /* ------------------  PC SPECIFIC STRUCTURES ------------------------ */
-struct pc_time_data
+class pc_time_data
 {
-    time_t creation; /* This represents time when the pc was created.     */
-    time_t connect;  /* This is the last time that the pc connected.      */
-    time_t birth;    /* This represents the characters age                */
-    ubit32 played;   /* This is the total accumulated time played in secs */
+public:
+    void readFrom(CByteBuffer &buf, int &errors) { creation = buf.ReadU32(&errors); }
+    void writeTo(CByteBuffer &buf) const { buf.Append32((ubit32)creation); }
+
+    time_t getPlayerCharacterCreationTime() const { return creation; }
+    void setPlayerCharacterCreationTime(time_t value) { creation = value; }
+
+private:
+    time_t creation{0}; // This represents time when the pc was created.
+public:
+    time_t connect; /* This is the last time that the pc connected.      */
+    time_t birth;   /* This represents the characters age                */
+    ubit32 played;  /* This is the total accumulated time played in secs */
 };
 
 struct pc_account_data
@@ -260,7 +269,7 @@ public:
 
     terminal_setup_type setup;
 
-    pc_time_data m_time;     /* PCs time info  */
+    pc_time_data m_time{};   /* PCs time info  */
     pc_account_data account; /* Accounting     */
 
     char *guild;     // Player's current default guild (guilds in .info)

@@ -196,7 +196,7 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (PC_TIME(u).creation > time(nullptr))
+    if (PC_TIME(u).getPlayerCharacterCreationTime() > time(nullptr))
     {
         printf("Corrupted creation time.");
         return FALSE;
@@ -442,7 +442,8 @@ void clist()
 
                         bool tmp = false;
 
-                        tm *t = gmtime(&PC_TIME(pc).creation);
+                        const auto creation_time = PC_TIME(pc).getPlayerCharacterCreationTime();
+                        tm *t = gmtime(&creation_time);
                         std::cout << isodate(t) << ";";
 
                         t = gmtime(&PC_TIME(pc).birth);
