@@ -8,6 +8,7 @@
 
 #include "constants.h"
 #include "essential.h"
+#include "file_index_type.h"
 #include "structs.h"
 #include "weather.h"
 
