@@ -254,17 +254,22 @@ public:
     void setSpeed(ubit8 value);
     int readSpeedFrom(CByteBuffer &buf);
 
+    ubit8 getNaturalArmor() const;
+    void setNaturalArmor(ubit8 value);
+    ubit8 *getNaturalArmorPtr();
+    int readNaturalArmorFrom(CByteBuffer &buf);
+
 private:
-    ubit32 flags{0};     // Char flags
-    sbit32 exp{0};       // The experience of the player
-    ubit16 race{0};      // PC/NPC race, Humanoid, Animal, etc.
-    sbit16 mana{0};      // How many mana points are left?
-    sbit16 endurance{0}; // How many endurance points are left?
-    sbit16 offensive{0}; // The OB of a character.
-    sbit16 defensive{0}; // The DB of a character.
-    ubit8 speed{0};      // The default speed for natural combat
+    ubit32 flags{0};         // Char flags
+    sbit32 exp{0};           // The experience of the player
+    ubit16 race{0};          // PC/NPC race, Humanoid, Animal, etc.
+    sbit16 mana{0};          // How many mana points are left?
+    sbit16 endurance{0};     // How many endurance points are left?
+    sbit16 offensive{0};     // The OB of a character.
+    sbit16 defensive{0};     // The DB of a character.
+    ubit8 speed{0};          // The default speed for natural combat
+    ubit8 natural_armour{0}; // The natural built-in armour (ARM_)
 public:
-    ubit8 natural_armour;            /* The natural built-in armour (ARM_)       */
     ubit8 attack_type;               /* PC/NPC Attack Type for bare hands (WPN_) */
     ubit8 dex_reduction;             /* For speed of armour calculations only    */
     ubit8 sex;                       /* PC / NPC s sex                           */

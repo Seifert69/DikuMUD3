@@ -867,7 +867,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             g_nCorrupt += char_unit->points.readManaFrom(*pBuf);
             g_nCorrupt += char_unit->points.readEnduranceFrom(*pBuf);
 
-            CHAR_NATURAL_ARMOUR(u) = pBuf->ReadU8(&g_nCorrupt);
+            g_nCorrupt += char_unit->points.readNaturalArmorFrom(*pBuf);
 
             if (unit_version >= 39)
             {

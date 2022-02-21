@@ -170,12 +170,13 @@ void start_player(unit_data *ch)
     // Obsolete race_cost(ch);
     points_reset(ch);
 
-    dynamic_cast<char_data *>(ch)->points.setPlayerExperience(required_xp(PC_VIRTUAL_LEVEL(ch)));
+    auto player = dynamic_cast<char_data *>(ch);
+    player->points.setPlayerExperience(required_xp(PC_VIRTUAL_LEVEL(ch)));
 
     set_title(ch);
 
     CHAR_ATTACK_TYPE(ch) = WPN_FIST;
-    CHAR_NATURAL_ARMOUR(ch) = ARM_CLOTHES;
+    player->points.setNaturalArmor(ARM_CLOTHES);
 
     PC_COND(ch, THIRST) = 24;
     PC_COND(ch, FULL) = 24;

@@ -362,7 +362,7 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_NATURAL_ARMOUR(u), ARM_CLOTHES, ARM_PLATE))
     {
         dmc_error(TRUE, "%s, Illegal natural armour type.", UNIT_IDENT(u));
-        CHAR_NATURAL_ARMOUR(u) = ARM_PLATE;
+        dynamic_cast<char_data *>(u)->points.setNaturalArmor(ARM_PLATE);
     }
 
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_GROUP_MAX, WPN_TREE_MAX - 1))
@@ -1190,7 +1190,7 @@ void init_unit(unit_data *u)
             npc->points.setPlayerExperience(100); // 100 XP per default at your own level
             npc->points.setAllCharacterFlags(0);
             CHAR_ATTACK_TYPE(u) = WPN_FIST;
-            CHAR_NATURAL_ARMOUR(u) = ARM_HLEATHER;
+            npc->points.setNaturalArmor(ARM_HLEATHER);
             npc->points.setSpeed(12);
             npc->points.setRace(RACE_HUMAN);
             CHAR_SEX(u) = SEX_NEUTRAL;

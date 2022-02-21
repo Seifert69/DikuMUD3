@@ -353,12 +353,12 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
             }
         }
 
-        CHAR_NATURAL_ARMOUR(unit) = MAX(CHAR_NATURAL_ARMOUR(unit), af->getDataAtIndex(0));
+        dynamic_cast<char_data *>(unit)->points.setNaturalArmor(MAX(CHAR_NATURAL_ARMOUR(unit), af->getDataAtIndex(0)));
     }
     else
     {
         /* Restore value... */
-        CHAR_NATURAL_ARMOUR(unit) = af->getDataAtIndex(1);
+        dynamic_cast<char_data *>(unit)->points.setNaturalArmor(af->getDataAtIndex(1));
     }
 
     return TRUE;

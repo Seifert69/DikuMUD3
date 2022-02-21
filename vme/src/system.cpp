@@ -97,7 +97,7 @@ void init_char(unit_data *ch)
     }
 
     CHAR_ATTACK_TYPE(ch) = WPN_FIST;
-    CHAR_NATURAL_ARMOUR(ch) = ARM_CLOTHES;
+    dynamic_cast<char_data *>(ch)->points.setNaturalArmor(ARM_CLOTHES);
 
     UNIT_HIT(ch) = UNIT_MAX_HIT(ch) = 1;
 

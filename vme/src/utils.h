@@ -264,7 +264,7 @@
 
 #define CHAR_ATTACK_TYPE(ch) (UCHAR(ch)->points.attack_type)
 
-#define CHAR_NATURAL_ARMOUR(ch) (UCHAR(ch)->points.natural_armour)
+#define CHAR_NATURAL_ARMOUR(ch) (UCHAR(ch)->points.getNaturalArmor())
 
 #define CHAR_SPEED(ch) (UCHAR(ch)->points.getSpeed())
 

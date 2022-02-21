@@ -537,7 +537,7 @@ omobile_field   : MANA number
     }
     | ARMOUR number
     {
-        CHAR_NATURAL_ARMOUR(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setNaturalArmor($2);
     }
     | SPEED number
     {

@@ -243,6 +243,26 @@ int char_point_data::readSpeedFrom(CByteBuffer &buf)
     return buf.Read8(&speed);
 }
 
+ubit8 char_point_data::getNaturalArmor() const
+{
+    return natural_armour;
+}
+
+void char_point_data::setNaturalArmor(ubit8 value)
+{
+    natural_armour = value;
+}
+
+ubit8 *char_point_data::getNaturalArmorPtr()
+{
+    return &natural_armour;
+}
+
+int char_point_data::readNaturalArmorFrom(CByteBuffer &buf)
+{
+    return buf.Read8(&natural_armour);
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -753,7 +773,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setOffensiveBonus(this_upcast->points.getOffensiveBonus());
         u_upcast->points.setDefensiveBonus(this_upcast->points.getDefensiveBonus());
         u_upcast->points.setSpeed(this_upcast->points.getSpeed());
-        CHAR_NATURAL_ARMOUR(u) = CHAR_NATURAL_ARMOUR(this);
+        u_upcast->points.setNaturalArmor(this_upcast->points.getNaturalArmor());
         CHAR_ATTACK_TYPE(u) = CHAR_ATTACK_TYPE(this);
         CHAR_SEX(u) = CHAR_SEX(this);
         CHAR_LEVEL(u) = CHAR_LEVEL(this);
