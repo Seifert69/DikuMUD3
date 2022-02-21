@@ -180,69 +180,69 @@ static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zri
 
     std::string stat{indnt};
 
-    switch (zrip->cmd_no)
+    switch (zrip->getCommandNum())
     {
         case 0:
             stat = "Nop";
             break;
 
         case 1:
-            stat += diku::format_to_str("Load %s", zrip->fi[0]->getName());
+            stat += diku::format_to_str("Load %s", zrip->getFileIndexType(0)->getName());
 
-            if (zrip->fi[1])
+            if (zrip->getFileIndexType(1))
             {
-                stat += diku::format_to_str(" into %s", zrip->fi[1]->getName());
+                stat += diku::format_to_str(" into %s", zrip->getFileIndexType(1)->getName());
             }
 
             for (i = 0; i < 3; i++)
             {
-                if (zrip->num[i])
+                if (zrip->getNum(i))
                 {
-                    stat += diku::format_to_str(" %s %d", nums[i], zrip->num[i]);
+                    stat += diku::format_to_str(" %s %d", nums[i], zrip->getNum(i));
                 }
             }
 
-            stat += zrip->cmpl ? " Complete" : "";
+            stat += zrip->getCompleteFlag() ? " Complete" : "";
             break;
 
         case 2:
             stat = diku::format_to_str("Equip %s %s max %d %s",
-                                       zrip->fi[0]->getName(),
-                                       g_where[zrip->num[1]],
-                                       zrip->num[0],
-                                       zrip->cmpl ? "Complete" : "");
+                                       zrip->getFileIndexType(0)->getName(),
+                                       g_where[zrip->getNum(1)],
+                                       zrip->getNum(0),
+                                       zrip->getCompleteFlag() ? "Complete" : "");
             break;
 
         case 3:
             stat = diku::format_to_str("Door at %s : %s : %s",
-                                       zrip->fi[0]->getName(),
-                                       g_dirs[zrip->num[0]],
-                                       sprintbit(bits, zrip->num[1], g_unit_open_flags));
+                                       zrip->getFileIndexType(0)->getName(),
+                                       g_dirs[zrip->getNum(0)],
+                                       sprintbit(bits, zrip->getNum(1), g_unit_open_flags));
             break;
 
         case 4:
-            stat = diku::format_to_str("Purge %s", zrip->fi[0]->getName());
+            stat = diku::format_to_str("Purge %s", zrip->getFileIndexType(0)->getName());
             break;
 
         case 5:
-            stat = diku::format_to_str("Remove %s in %s", zrip->fi[0]->getName(), zrip->fi[1]->getName());
+            stat = diku::format_to_str("Remove %s in %s", zrip->getFileIndexType(0)->getName(), zrip->getFileIndexType(1)->getName());
             break;
     }
 
     stat += "<br/>";
 
-    if (zrip->nested)
+    if (zrip->getNested())
     {
         stat += diku::format_to_str("%s{<br/>", indnt);
 
         std::string whitespace{indnt + "  "};
-        stat += stat_zone_reset(whitespace, zrip->nested, ch);
+        stat += stat_zone_reset(whitespace, zrip->getNested(), ch);
 
         stat += diku::format_to_str("%s}<br/>", indnt);
     }
-    if (zrip->next)
+    if (zrip->getNext())
     {
-        stat += stat_zone_reset(indnt, zrip->next, ch);
+        stat += stat_zone_reset(indnt, zrip->getNext(), ch);
     }
     return stat;
 }
