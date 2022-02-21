@@ -860,7 +860,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             g_nCorrupt += dynamic_cast<char_data *>(u)->points.readPlayerExperienceFrom(*pBuf);
             g_nCorrupt += dynamic_cast<char_data *>(u)->points.readCharacterFlagsFrom(*pBuf);
 
-            CHAR_MANA(u) = pBuf->ReadS16(&g_nCorrupt);
+            g_nCorrupt += dynamic_cast<char_data *>(u)->points.readManaFrom(*pBuf);
             CHAR_ENDURANCE(u) = pBuf->ReadS16(&g_nCorrupt);
 
             CHAR_NATURAL_ARMOUR(u) = pBuf->ReadU8(&g_nCorrupt);

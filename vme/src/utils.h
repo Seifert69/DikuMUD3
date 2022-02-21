@@ -255,7 +255,7 @@
 
 #define CHAR_ENDURANCE(ch) (UCHAR(ch)->points.endurance)
 
-#define CHAR_MANA(ch) (UCHAR(ch)->points.mana)
+#define CHAR_MANA(ch) (UCHAR(ch)->points.getMana())
 
 /* NOT to be used unless by db.... */
 #define CHAR_MONEY(ch) (UCHAR(ch)->money)

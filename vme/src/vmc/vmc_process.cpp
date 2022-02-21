@@ -1087,7 +1087,7 @@ void process_unit(unit_data *u)
 
         case UNIT_ST_NPC:
             set_points(u);
-            CHAR_MANA(u) = 100;
+            dynamic_cast<char_data *>(u)->points.setMana(100);
             CHAR_ENDURANCE(u) = 100;
 
             if (!is_in(CHAR_SPEED(u), SPEED_MIN, SPEED_MAX))

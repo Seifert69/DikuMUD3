@@ -1123,7 +1123,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 47: /* "mana" */
-            CHAR_MANA(unt) = valarg;
+            dynamic_cast<char_data *>(unt)->points.setMana(valarg);
             return;
 
         case 48: /* "endurance" */

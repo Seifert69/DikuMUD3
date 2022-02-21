@@ -479,7 +479,7 @@ mobile_field    : unit_field
 
 omobile_field   : MANA number
     {
-        CHAR_MANA(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setMana($2);
     }
     | ACT flags
     {
