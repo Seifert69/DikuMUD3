@@ -854,7 +854,7 @@ void tif_poison_on(unit_affected_type *af, unit_data *unit)
 void tif_poison_suffer(unit_affected_type *af, unit_data *unit)
 {
     dynamic_cast<char_data *>(unit)->points.decrementManaBy(af->getDataAtIndex(1));
-    CHAR_ENDURANCE(unit) -= af->getDataAtIndex(2);
+    dynamic_cast<char_data *>(unit)->points.decrementEndurance(af->getDataAtIndex(2));
     damage(unit, unit, nullptr, af->getDataAtIndex(0), MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
     /* unit can be destructed now, but no problemo */
 }
@@ -1014,7 +1014,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
     PC_COND(unit, DRUNK) = 0;
 
     dynamic_cast<char_data *>(unit)->points.setMana(mana_limit(unit));
-    CHAR_ENDURANCE(unit) = move_limit(unit);
+    dynamic_cast<char_data *>(unit)->points.setEndurance(move_limit(unit));
     UNIT_HIT(unit) = UNIT_MAX_HIT(unit);
 
     if (!unit->is_destructed())

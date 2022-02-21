@@ -1086,9 +1086,11 @@ void process_unit(unit_data *u)
             break;
 
         case UNIT_ST_NPC:
+        {
             set_points(u);
-            dynamic_cast<char_data *>(u)->points.setMana(100);
-            CHAR_ENDURANCE(u) = 100;
+            auto npc = dynamic_cast<char_data *>(u);
+            npc->points.setMana(100);
+            npc->points.setEndurance(100);
 
             if (!is_in(CHAR_SPEED(u), SPEED_MIN, SPEED_MAX))
             {
@@ -1153,7 +1155,8 @@ void process_unit(unit_data *u)
             {
                 show_npc_info(u);
             }
-            break;
+        }
+        break;
     }
 }
 

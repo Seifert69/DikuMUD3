@@ -253,7 +253,7 @@
 
 #define CHAR_HPP(ch) (CHAR_ABILITY(ch, ABIL_HP))
 
-#define CHAR_ENDURANCE(ch) (UCHAR(ch)->points.endurance)
+#define CHAR_ENDURANCE(ch) (UCHAR(ch)->points.getEndurance())
 
 #define CHAR_MANA(ch) (UCHAR(ch)->points.getMana())
 

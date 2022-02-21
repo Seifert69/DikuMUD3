@@ -101,7 +101,7 @@ void init_char(unit_data *ch)
     UNIT_HIT(ch) = UNIT_MAX_HIT(ch) = 1;
 
     dynamic_cast<char_data *>(ch)->points.setMana(mana_limit(ch));
-    CHAR_ENDURANCE(ch) = move_limit(ch);
+    dynamic_cast<char_data *>(ch)->points.setEndurance(move_limit(ch));
     CHAR_LAST_ROOM(ch) = nullptr;
 
     dynamic_cast<char_data *>(ch)->points.setAllCharacterFlags(0);

@@ -1127,7 +1127,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 48: /* "endurance" */
-            CHAR_ENDURANCE(unt) = valarg;
+            dynamic_cast<char_data *>(unt)->points.setEndurance(valarg);
             return;
 
         case 49: /* "attack-type" */

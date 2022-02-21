@@ -856,12 +856,16 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             /* fallthru */
 
         case UNIT_ST_PC:
+        {
+            auto char_unit = dynamic_cast<char_data *>(u);
+            g_nCorrupt += char_unit->points.readPlayerExperienceFrom(*pBuf);
+            g_nCorrupt += char_unit->points.readCharacterFlagsFrom(*pBuf);
 
-            g_nCorrupt += dynamic_cast<char_data *>(u)->points.readPlayerExperienceFrom(*pBuf);
-            g_nCorrupt += dynamic_cast<char_data *>(u)->points.readCharacterFlagsFrom(*pBuf);
+            g_nCorrupt += char_unit->points.readPlayerExperienceFrom(*pBuf);
+            g_nCorrupt += char_unit->points.readCharacterFlagsFrom(*pBuf);
 
-            g_nCorrupt += dynamic_cast<char_data *>(u)->points.readManaFrom(*pBuf);
-            CHAR_ENDURANCE(u) = pBuf->ReadS16(&g_nCorrupt);
+            g_nCorrupt += char_unit->points.readManaFrom(*pBuf);
+            g_nCorrupt += char_unit->points.readEnduranceFrom(*pBuf);
 
             CHAR_NATURAL_ARMOUR(u) = pBuf->ReadU8(&g_nCorrupt);
 
@@ -887,7 +891,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
             }
-            g_nCorrupt += dynamic_cast<char_data *>(u)->points.readRaceFrom(*pBuf);
+            g_nCorrupt += char_unit->points.readRaceFrom(*pBuf);
 
             CHAR_OFFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
             CHAR_DEFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
@@ -975,7 +979,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     // TODO worse than spooky - why decrement a race??
                     //      Also could be really bad if race==0
-                    dynamic_cast<char_data *>(u)->points.setRace(dynamic_cast<char_data *>(u)->points.getRace() - 1);
+                    char_unit->points.setRace(dynamic_cast<char_data *>(u)->points.getRace() - 1);
 
                     base_race_info_type *sex_race = nullptr;
 
@@ -1292,7 +1296,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 NPC_DEFAULT(u) = pBuf->ReadU8(&g_nCorrupt);
                 NPC_FLAGS(u) = pBuf->ReadU8(&g_nCorrupt);
             }
-            break;
+        }
+        break;
 
         case UNIT_ST_OBJ:
             OBJ_VALUE(u, 0) = pBuf->ReadS32(&g_nCorrupt);

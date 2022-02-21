@@ -163,6 +163,31 @@ void char_point_data::decrementManaBy(sbit16 value)
     mana -= value;
 }
 
+sbit16 char_point_data::getEndurance() const
+{
+    return endurance;
+}
+
+sbit16 *char_point_data::getEndurancePtr()
+{
+    return &endurance;
+}
+
+void char_point_data::setEndurance(sbit16 value)
+{
+    endurance = value;
+}
+
+int char_point_data::readEnduranceFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&endurance);
+}
+
+void char_point_data::decrementEndurance(sbit16 value)
+{
+    endurance -= value;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -668,7 +693,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setAllCharacterFlags(this_upcast->points.getCharacterFlags());
         u_upcast->points.setPlayerExperience(this_upcast->points.getPlayerExperience());
         u_upcast->points.setMana(this_upcast->points.getMana());
-        CHAR_ENDURANCE(u) = CHAR_ENDURANCE(this);
+        u_upcast->points.setEndurance(this_upcast->points.getEndurance());
         u_upcast->points.setRace(this_upcast->points.getRace());
         CHAR_OFFENSIVE(u) = CHAR_OFFENSIVE(this);
         CHAR_DEFENSIVE(u) = CHAR_DEFENSIVE(this);

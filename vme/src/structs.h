@@ -234,13 +234,19 @@ public:
     void setMana(sbit16 value);
     void decrementManaBy(sbit16 value);
 
+    sbit16 getEndurance() const;
+    sbit16 *getEndurancePtr();
+    void setEndurance(sbit16 value);
+    int readEnduranceFrom(CByteBuffer &buf);
+    void decrementEndurance(sbit16 value);
+
 private:
-    ubit32 flags{0}; // Char flags
-    sbit32 exp{0};   // The experience of the player
-    ubit16 race{0};  // PC/NPC race, Humanoid, Animal, etc.
-    sbit16 mana{0};  // How many mana points are left?
+    ubit32 flags{0};     // Char flags
+    sbit32 exp{0};       // The experience of the player
+    ubit16 race{0};      // PC/NPC race, Humanoid, Animal, etc.
+    sbit16 mana{0};      // How many mana points are left?
+    sbit16 endurance{0}; // How many endurance points are left?
 public:
-    sbit16 endurance; /* How many endurance points are left?      */
     sbit16 offensive; /* The OB of a character.                   */
     sbit16 defensive; /* The DB of a character.                   */
 

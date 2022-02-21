@@ -205,5 +205,5 @@ void start_player(unit_data *ch)
 
     UNIT_MAX_HIT(ch) = UNIT_HIT(ch) = hit_limit(ch);
     dynamic_cast<char_data *>(ch)->points.setMana(mana_limit(ch));
-    CHAR_ENDURANCE(ch) = move_limit(ch);
+    dynamic_cast<char_data *>(ch)->points.setEndurance(move_limit(ch));
 }
