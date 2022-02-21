@@ -181,7 +181,7 @@ void pc_data::connect_game()
         return;
     }
 
-    PC_TIME(this).connect = time(nullptr);
+    m_time.setPlayerLastConnectTime(time(nullptr));
     CHAR_DESCRIPTOR(this)->setLastLogonTime(time(nullptr));
 
     CHAR_DESCRIPTOR(this)->CreateBBS();
@@ -253,7 +253,7 @@ void pc_data::reconnect_game(descriptor_data *d)
     act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
     slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
     CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
-    PC_TIME(this).connect = ::time(nullptr);
+    m_time.setPlayerLastConnectTime(time(nullptr));
     //      stop_affect(ch);
     //      stop_all_special(ch);
     //      start_affect(ch);               /* Activate affect ticks */
@@ -332,7 +332,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 void pc_data::gstate_togame(dilprg *pdontstop)
 {
     descriptor_data *i = nullptr;
-    time_t last_connect = PC_TIME(this).connect;
+    const time_t last_connect = m_time.getPlayerLastConnectTime();
 
     if (this->is_destructed())
     {
@@ -353,7 +353,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         CHAR_DESCRIPTOR(this)->setMinutesPlayerIdle(0);
         CHAR_DESCRIPTOR(this)->setPromptMode(PROMPT_EXPECT);
         CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
-        PC_TIME(this).connect = ::time(nullptr);
+        m_time.setPlayerLastConnectTime(time(nullptr));
         set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
         dil_destroy("link_dead@basis", this);
 
@@ -975,10 +975,11 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     PC_CRACK_ATTEMPTS(d->cgetCharacter()) = 0;
 
+    const auto last_connect = PC_TIME(d->cgetCharacter()).getPlayerLastConnectTime();
     auto msg2 = diku::format_to_str("<br/>Welcome back %s, you last visited %s on %s<br/>",
                                     UNIT_NAME(d->cgetCharacter()),
                                     g_cServerConfig.getMudName().c_str(),
-                                    ctime(&PC_TIME(d->cgetCharacter()).connect));
+                                    ctime(&last_connect));
     send_to_descriptor(msg2, d);
 
     if ((td = find_descriptor(PC_FILENAME(d->cgetCharacter()), d)))

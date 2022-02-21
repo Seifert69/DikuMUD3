@@ -77,7 +77,7 @@ void init_char(unit_data *ch)
     getCharPoints(ch).setSex(SEX_MALE);
 
     const auto now = time(nullptr);
-    PC_TIME(ch).connect = now;
+    PC_TIME(ch).setPlayerLastConnectTime(now);
     PC_TIME(ch).birth = now;
     PC_TIME(ch).setPlayerCharacterCreationTime(now);
     PC_TIME(ch).played = 0;

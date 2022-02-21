@@ -202,7 +202,7 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (PC_TIME(u).connect > time(nullptr))
+    if (PC_TIME(u).getPlayerLastConnectTime() > time(nullptr))
     {
         printf("Corrupted connect time.");
         return FALSE;
@@ -227,7 +227,7 @@ int shall_delete(unit_data *pc)
 {
     int days = 0;
 
-    days = days_old(PC_TIME(pc).connect);
+    days = days_old(PC_TIME(pc).getPlayerLastConnectTime());
 
     /* Player which have paid at some point in time remain almost permanent. */
     if (PC_ACCOUNT(pc).total_credit > 0)
@@ -414,7 +414,7 @@ void clist()
                         }
 
                         std::cout << PC_ID(pc) << ";" << (int)CHAR_LEVEL(pc) << ";" << (IS_MORTAL(pc) ? " PLY  " : "ADMIN") << ";"
-                                  << days_old(PC_TIME(pc).connect) << ";";
+                                  << days_old(PC_TIME(pc).getPlayerLastConnectTime()) << ";";
 
                         if (ids[PC_ID(pc)])
                         {

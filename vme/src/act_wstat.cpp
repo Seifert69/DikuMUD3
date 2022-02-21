@@ -1088,7 +1088,8 @@ static void stat_data(const unit_data *ch, unit_data *u)
             time_info_data tid1 = age(u);
             time_info_data tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
 
-            strcpy(tmp, ctime(&PC_TIME(u).connect));
+            const auto last_connect_time = PC_TIME(u).getPlayerLastConnectTime();
+            strcpy(tmp, ctime(&last_connect_time));
             const auto creation_time = PC_TIME(u).getPlayerCharacterCreationTime();
             auto msg2 = diku::format_to_str("----------------- PLAYER -------------------<br/>"
                                             "Filename [%s]  Unique ID [%ld]  BBS [%3d]  Cracks [%2d]<br/>"

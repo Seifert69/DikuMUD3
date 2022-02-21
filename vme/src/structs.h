@@ -229,18 +229,29 @@ public:
 class pc_time_data
 {
 public:
-    void readFrom(CByteBuffer &buf, int &errors) { creation = buf.ReadU32(&errors); }
-    void writeTo(CByteBuffer &buf) const { buf.Append32((ubit32)creation); }
+    void readFrom(CByteBuffer &buf, int &errors)
+    {
+        creation = buf.ReadU32(&errors);
+        connect = buf.ReadU32(&errors);
+    }
+    void writeTo(CByteBuffer &buf) const
+    {
+        buf.Append32((ubit32)creation);
+        buf.Append32((ubit32)connect);
+    }
 
     time_t getPlayerCharacterCreationTime() const { return creation; }
     void setPlayerCharacterCreationTime(time_t value) { creation = value; }
 
+    time_t getPlayerLastConnectTime() const { return connect; }
+    void setPlayerLastConnectTime(time_t value) { connect = value; }
+
 private:
     time_t creation{0}; // This represents time when the pc was created.
+    time_t connect{0};  // This is the last time that the pc connected.
 public:
-    time_t connect; /* This is the last time that the pc connected.      */
-    time_t birth;   /* This represents the characters age                */
-    ubit32 played;  /* This is the total accumulated time played in secs */
+    time_t birth;  /* This represents the characters age                */
+    ubit32 played; /* This is the total accumulated time played in secs */
 };
 
 struct pc_account_data
