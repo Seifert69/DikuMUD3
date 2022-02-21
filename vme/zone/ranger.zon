@@ -536,7 +536,7 @@ dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 end
 
 
-/*
+
 seeker
 names {"maliki","seeker"}
 title "Maliki the Seeker"
@@ -558,13 +558,11 @@ dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
 dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
 dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 
-#define _SPELL_DIV
+#define _SPELL
 #include "guilddef.h"
-#undef _SPELL_DIV
-
-
+#undef _SPELL
 end
-*/
+
 
 guardian
 names {"Sholdin","guardian","ranger"}
@@ -689,7 +687,7 @@ load master into tent_1 max 1
 load pathfinder into camp_fire max 1
 load mountain_man into barn max 1
 load justifier into chal_area max 1
-/*load seeker into chapel max 1*/
+load seeker into chapel max 1
 load guardian into sholdin_tent max 1
 
 %end

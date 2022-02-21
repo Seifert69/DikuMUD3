@@ -10281,14 +10281,14 @@ end
 /* -------------------------- ZONE RESET -------------------------- */
 
 #define ARMOUR_S3   \
-   equip lth_sleeves1 position WEAR_ARMS   \
-   equip lth_jerkin1 position WEAR_BODY    \
-   equip lth_pants1 position WEAR_LEGS
+   equip lth_sleeves position WEAR_ARMS   \
+   equip lth_jerkin position WEAR_BODY    \
+   equip lth_pants position WEAR_LEGS
 
 #define ARMOUR_S8   \
-   equip lth_sleeves1 position WEAR_ARMS   \
-   equip lth_jerkin1 position WEAR_BODY    \
-   equip lth_pants1 position WEAR_LEGS
+   equip lth_sleeves position WEAR_ARMS   \
+   equip lth_jerkin position WEAR_BODY    \
+   equip lth_pants position WEAR_LEGS
 
 #define ARMOUR_S30   \
    equip iron_bracers position WEAR_ARMS   \
