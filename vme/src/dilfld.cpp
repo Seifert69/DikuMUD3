@@ -4094,17 +4094,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (player && IS_PC(player))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = &PC_TIME((unit_data *)v1->val.ptr).birth;
+                        v->ref = player->m_time.getPlayerBirthdayPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

@@ -1304,10 +1304,10 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                      "SET %s set %s's age from %.2f to %d",
                      UNIT_NAME(ch),
                      UNIT_NAME(unt),
-                     PC_TIME(unt).birth / (1.0 * SECS_PER_MUD_YEAR),
+                     PC_TIME(unt).getPlayerBirthday() / (1.0 * SECS_PER_MUD_YEAR),
                      valarg);
 
-                PC_TIME(unt).birth = time(nullptr) - (valarg * SECS_PER_MUD_YEAR);
+                PC_TIME(unt).setPlayerBirthday(time(nullptr) - (valarg * SECS_PER_MUD_YEAR));
             }
             else
             {

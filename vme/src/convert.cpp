@@ -446,7 +446,8 @@ void clist()
                         tm *t = gmtime(&creation_time);
                         std::cout << isodate(t) << ";";
 
-                        t = gmtime(&PC_TIME(pc).birth);
+                        const auto birthday = PC_TIME(pc).getPlayerBirthday();
+                        t = gmtime(&birthday);
                         std::cout << isodate(t) << ";";
 
                         time_t secs = (time_t)PC_TIME(pc).played;

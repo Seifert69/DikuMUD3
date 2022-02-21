@@ -78,7 +78,7 @@ void init_char(unit_data *ch)
 
     const auto now = time(nullptr);
     PC_TIME(ch).setPlayerLastConnectTime(now);
-    PC_TIME(ch).birth = now;
+    PC_TIME(ch).setPlayerBirthday(now);
     PC_TIME(ch).setPlayerCharacterCreationTime(now);
     PC_TIME(ch).played = 0;
     PC_LIFESPAN(ch) = 100;
