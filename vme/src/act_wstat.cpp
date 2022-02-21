@@ -37,6 +37,7 @@
 #include "utils.h"
 #include "vmelimits.h"
 #include "weather.h"
+#include "zone_reset_cmd.h"
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
