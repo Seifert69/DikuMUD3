@@ -1220,7 +1220,7 @@ void init_unit(unit_data *u)
             }
             NPC_FLAGS(u) = 0;
             npc->points.setOffensiveBonus(0);
-            CHAR_DEFENSIVE(u) = 0;
+            npc->points.setDefensiveBonus(0);
         }
         break;
 

@@ -2821,7 +2821,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &CHAR_DEFENSIVE((unit_data *)v1->val.ptr);
+                        v->ref = reinterpret_cast<char_data *>(v1->val.ptr)->points.getDefensiveBonusPtr();
                     }
                     else
                     {

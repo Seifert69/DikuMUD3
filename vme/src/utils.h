@@ -217,7 +217,7 @@
 
 #define CHAR_OFFENSIVE(unit) (UCHAR(unit)->points.getOffensiveBonus())
 
-#define CHAR_DEFENSIVE(unit) (UCHAR(unit)->points.defensive)
+#define CHAR_DEFENSIVE(unit) (UCHAR(unit)->points.getDefensiveBonus())
 
 #define CHAR_FLAGS(unit) (UCHAR(unit)->points.getCharacterFlags())
 

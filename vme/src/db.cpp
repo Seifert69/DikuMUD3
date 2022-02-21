@@ -894,7 +894,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             g_nCorrupt += char_unit->points.readRaceFrom(*pBuf);
 
             g_nCorrupt += char_unit->points.readOffensiveBonusFrom(*pBuf);
-            CHAR_DEFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
+            g_nCorrupt += char_unit->points.readDefensiveBonusFrom(*pBuf);
 
             CHAR_SEX(u) = pBuf->ReadU8(&g_nCorrupt);
             CHAR_LEVEL(u) = pBuf->ReadU8(&g_nCorrupt);

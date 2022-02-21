@@ -545,7 +545,7 @@ omobile_field   : MANA number
     }
     | DEFENSIVE number
     {
-        CHAR_DEFENSIVE(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setDefensiveBonus($2);
     }
     | OFFENSIVE number
     {

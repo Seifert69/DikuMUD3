@@ -208,6 +208,26 @@ sbit16 *char_point_data::getOffensiveBonusPtr()
     return &offensive;
 }
 
+sbit16 char_point_data::getDefensiveBonus() const
+{
+    return defensive;
+}
+
+void char_point_data::setDefensiveBonus(sbit16 value)
+{
+    defensive = value;
+}
+
+int char_point_data::readDefensiveBonusFrom(CByteBuffer &buf)
+{
+    return buf.Read16(&defensive);
+}
+
+sbit16 *char_point_data::getDefensiveBonusPtr()
+{
+    return &defensive;
+}
+
 char_data::char_data()
 {
     g_world_nochars++;
@@ -716,7 +736,7 @@ unit_data *unit_data::copy()
         u_upcast->points.setEndurance(this_upcast->points.getEndurance());
         u_upcast->points.setRace(this_upcast->points.getRace());
         u_upcast->points.setOffensiveBonus(this_upcast->points.getOffensiveBonus());
-        CHAR_DEFENSIVE(u) = CHAR_DEFENSIVE(this);
+        u_upcast->points.setDefensiveBonus(this_upcast->points.getDefensiveBonus());
         CHAR_SPEED(u) = CHAR_SPEED(this);
         CHAR_NATURAL_ARMOUR(u) = CHAR_NATURAL_ARMOUR(this);
         CHAR_ATTACK_TYPE(u) = CHAR_ATTACK_TYPE(this);

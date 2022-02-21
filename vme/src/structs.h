@@ -245,6 +245,11 @@ public:
     int readOffensiveBonusFrom(CByteBuffer &buf);
     sbit16 *getOffensiveBonusPtr();
 
+    sbit16 getDefensiveBonus() const;
+    void setDefensiveBonus(sbit16 value);
+    int readDefensiveBonusFrom(CByteBuffer &buf);
+    sbit16 *getDefensiveBonusPtr();
+
 private:
     ubit32 flags{0};     // Char flags
     sbit32 exp{0};       // The experience of the player
@@ -252,9 +257,8 @@ private:
     sbit16 mana{0};      // How many mana points are left?
     sbit16 endurance{0}; // How many endurance points are left?
     sbit16 offensive{0}; // The OB of a character.
+    sbit16 defensive{0}; // The DB of a character.
 public:
-    sbit16 defensive; /* The DB of a character.                   */
-
     ubit8 speed;                     /* The default speed for natural combat     */
     ubit8 natural_armour;            /* The natural built-in armour (ARM_)       */
     ubit8 attack_type;               /* PC/NPC Attack Type for bare hands (WPN_) */
