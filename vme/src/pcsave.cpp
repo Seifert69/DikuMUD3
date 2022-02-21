@@ -258,7 +258,7 @@ void save_player_file(unit_data *pc)
 
     if (PC_IS_UNSAVED(pc))
     {
-        PC_TIME(pc).played++;
+        PC_TIME(pc).incTotalTimePlayedInSecondsBy(1);
     }
 
     /* PRIMITIVE SANITY CHECK */
@@ -412,7 +412,7 @@ void save_player(unit_data *pc)
 
         used = t0 - CHAR_DESCRIPTOR(pc)->getLastLogonTime();
 
-        PC_TIME(pc).played += used;
+        PC_TIME(pc).incTotalTimePlayedInSecondsBy(used);
         CHAR_DESCRIPTOR(pc)->setLastLogonTime(t0);
 
         if (account_is_closed(pc))
@@ -521,7 +521,7 @@ unit_data *load_player(const char *pName)
     if (PC_IS_UNSAVED(pc))
     {
         slog(LOG_ALL, 0, "PC loaded with unsaved set!", pName);
-        PC_TIME(pc).played++;
+        PC_TIME(pc).incTotalTimePlayedInSecondsBy(1);
     }
 
     return pc;

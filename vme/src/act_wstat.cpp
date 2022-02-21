@@ -1086,7 +1086,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
         {
             /* Stat on a player  */
             time_info_data tid1 = age(u);
-            time_info_data tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
+            time_info_data tid2 = real_time_passed((time_t)PC_TIME(u).getTotalTimePlayedInSeconds(), 0);
 
             const auto last_connect_time = PC_TIME(u).getPlayerLastConnectTime();
             strcpy(tmp, ctime(&last_connect_time));
@@ -1128,7 +1128,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                             PC_LIFESPAN(u),
                                             tid2.getDay(),
                                             tid2.getHours(),
-                                            PC_TIME(u).played,
+                                            PC_TIME(u).getTotalTimePlayedInSeconds(),
                                             tmp,
                                             ctime(&creation_time));
 

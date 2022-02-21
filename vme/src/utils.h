@@ -403,7 +403,7 @@ inline const char_point_data &getCharPoints(const unit_data *unit)
 
 #define PC_MORTAL(ch) (IS_PC(ch) && CHAR_LEVEL(ch) < 200)
 
-#define PC_IS_UNSAVED(ch) (PC_TIME(ch).played == 0)
+#define PC_IS_UNSAVED(ch) (PC_TIME(ch).getTotalTimePlayedInSeconds() == 0)
 
 /* ..................................................................... */
 

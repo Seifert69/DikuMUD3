@@ -234,12 +234,14 @@ public:
         creation = buf.ReadU32(&errors);
         connect = buf.ReadU32(&errors);
         birth = buf.ReadU32(&errors);
+        played = buf.ReadU32(&errors);
     }
     void writeTo(CByteBuffer &buf) const
     {
         buf.Append32((ubit32)creation);
         buf.Append32((ubit32)connect);
         buf.Append32((ubit32)birth);
+        buf.Append32(played);
     }
 
     time_t getPlayerCharacterCreationTime() const { return creation; }
@@ -252,12 +254,15 @@ public:
     time_t *getPlayerBirthdayPtr() { return &birth; }
     void setPlayerBirthday(time_t value) { birth = value; }
 
+    ubit32 getTotalTimePlayedInSeconds() const { return played; }
+    void setTotalTimePlayedInSeconds(ubit32 value) { played = value; }
+    void incTotalTimePlayedInSecondsBy(ubit32 seconds) { played += seconds; }
+
 private:
     time_t creation{0}; // This represents time when the pc was created.
     time_t connect{0};  // This is the last time that the pc connected.
     time_t birth{0};    // This represents the characters age
-public:
-    ubit32 played; /* This is the total accumulated time played in secs */
+    ubit32 played{0};   // This is the total accumulated time played in secs
 };
 
 struct pc_account_data

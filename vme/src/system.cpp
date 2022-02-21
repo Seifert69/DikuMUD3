@@ -80,7 +80,7 @@ void init_char(unit_data *ch)
     PC_TIME(ch).setPlayerLastConnectTime(now);
     PC_TIME(ch).setPlayerBirthday(now);
     PC_TIME(ch).setPlayerCharacterCreationTime(now);
-    PC_TIME(ch).played = 0;
+    PC_TIME(ch).setTotalTimePlayedInSeconds(0);
     PC_LIFESPAN(ch) = 100;
 
     getCharPoints(ch).setPlayerExperience(0);

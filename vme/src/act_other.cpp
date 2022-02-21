@@ -179,7 +179,7 @@ void start_player(unit_data *ch)
     PC_COND(ch, FULL) = 24;
     PC_COND(ch, DRUNK) = 0;
 
-    PC_TIME(ch).played = 0;
+    PC_TIME(ch).setTotalTimePlayedInSeconds(0);
 
     SET_BIT(PC_FLAGS(ch), PC_ECHO);
     SET_BIT(PC_FLAGS(ch), PC_PROMPT);

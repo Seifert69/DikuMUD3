@@ -450,7 +450,7 @@ void clist()
                         t = gmtime(&birthday);
                         std::cout << isodate(t) << ";";
 
-                        time_t secs = (time_t)PC_TIME(pc).played;
+                        time_t secs = static_cast<time_t>(PC_TIME(pc).getTotalTimePlayedInSeconds());
 
                         convert_free_unit(pc);
 
