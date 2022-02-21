@@ -221,7 +221,7 @@
 
 #define CHAR_FLAGS(unit) (UCHAR(unit)->points.getCharacterFlags())
 
-#define CHAR_SEX(ch) (UCHAR(ch)->points.sex)
+#define CHAR_SEX(ch) (UCHAR(ch)->points.getSex())
 
 #define CHAR_LAST_ROOM(unit) (UCHAR(unit)->last_room)
 

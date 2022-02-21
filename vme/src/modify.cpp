@@ -1151,7 +1151,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 53: /* "sex" */
-            CHAR_SEX(unt) = typarg;
+            dynamic_cast<char_data *>(unt)->points.setSex(typarg);
             return;
 
         case 54: /* "level" */

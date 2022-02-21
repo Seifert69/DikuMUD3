@@ -1193,7 +1193,7 @@ void init_unit(unit_data *u)
             npc->points.setNaturalArmor(ARM_HLEATHER);
             npc->points.setSpeed(12);
             npc->points.setRace(RACE_HUMAN);
-            CHAR_SEX(u) = SEX_NEUTRAL;
+            npc->points.setSex(SEX_NEUTRAL);
             CHAR_LEVEL(u) = 1;
             CHAR_POS(u) = POSITION_STANDING;
             NPC_DEFAULT(u) = POSITION_STANDING;

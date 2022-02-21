@@ -509,7 +509,7 @@ omobile_field   : MANA number
     }
     | SEX number
     {
-        CHAR_SEX(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setSex($2);
     }
     | LEVEL number
     {

@@ -75,7 +75,7 @@ void init_char(unit_data *ch)
     CHAR_POS(ch) = POSITION_STANDING;
     char_unit->points.setSpeed(SPEED_DEFAULT);
     char_unit->points.setRace(RACE_HUMAN);
-    CHAR_SEX(ch) = SEX_MALE;
+    char_unit->points.setSex(SEX_MALE);
 
     PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(nullptr);
     PC_TIME(ch).played = 0;

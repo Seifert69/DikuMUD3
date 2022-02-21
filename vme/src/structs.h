@@ -264,6 +264,11 @@ public:
     int readAttackTypeFrom(CByteBuffer &buf);
     ubit8 *getAttackTypePtr();
 
+    ubit8 getSex() const;
+    void setSex(ubit8 value);
+    ubit8 *getSexPtr();
+    int readSexFrom(CByteBuffer &buf);
+
 private:
     ubit32 flags{0};         // Char flags
     sbit32 exp{0};           // The experience of the player
@@ -276,8 +281,8 @@ private:
     ubit8 natural_armour{0}; // The natural built-in armour (ARM_)
     ubit8 attack_type{0};    // PC/NPC Attack Type for bare hands (WPN_)
     ubit8 dex_reduction{0};  // For speed of armour calculations only
+    ubit8 sex{0};            // PC / NPC s sex
 public:
-    ubit8 sex;                       /* PC / NPC s sex                           */
     ubit8 level;                     /* PC / NPC s level                         */
     ubit8 position;                  /* Standing, sitting, fighting...           */
     sbit16 abilities[ABIL_TREE_MAX]; /* Str/dex etc.                 */
