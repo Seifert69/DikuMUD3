@@ -215,7 +215,7 @@
 
 #define CHAR_DESCRIPTOR(ch) (UCHAR(ch)->descriptor)
 
-#define CHAR_OFFENSIVE(unit) (UCHAR(unit)->points.offensive)
+#define CHAR_OFFENSIVE(unit) (UCHAR(unit)->points.getOffensiveBonus())
 
 #define CHAR_DEFENSIVE(unit) (UCHAR(unit)->points.defensive)
 

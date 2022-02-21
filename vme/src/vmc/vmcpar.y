@@ -549,7 +549,7 @@ omobile_field   : MANA number
     }
     | OFFENSIVE number
     {
-        CHAR_OFFENSIVE(cur) = $2;
+        dynamic_cast<char_data*>(cur)->points.setOffensiveBonus($2);
     }
     | ABILITY index number
     {

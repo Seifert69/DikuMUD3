@@ -240,14 +240,19 @@ public:
     int readEnduranceFrom(CByteBuffer &buf);
     void decrementEndurance(sbit16 value);
 
+    sbit16 getOffensiveBonus() const;
+    void setOffensiveBonus(sbit16 value);
+    int readOffensiveBonusFrom(CByteBuffer &buf);
+    sbit16 *getOffensiveBonusPtr();
+
 private:
     ubit32 flags{0};     // Char flags
     sbit32 exp{0};       // The experience of the player
     ubit16 race{0};      // PC/NPC race, Humanoid, Animal, etc.
     sbit16 mana{0};      // How many mana points are left?
     sbit16 endurance{0}; // How many endurance points are left?
+    sbit16 offensive{0}; // The OB of a character.
 public:
-    sbit16 offensive; /* The OB of a character.                   */
     sbit16 defensive; /* The DB of a character.                   */
 
     ubit8 speed;                     /* The default speed for natural combat     */

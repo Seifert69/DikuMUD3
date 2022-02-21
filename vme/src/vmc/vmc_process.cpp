@@ -1183,14 +1183,16 @@ void init_unit(unit_data *u)
     switch (UNIT_TYPE(u))
     {
         case UNIT_ST_NPC:
+        {
+            auto npc = dynamic_cast<char_data *>(u);
             UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
             CHAR_MONEY(u) = nullptr;
-            dynamic_cast<char_data *>(u)->points.setPlayerExperience(100); // 100 XP per default at your own level
-            dynamic_cast<char_data *>(u)->points.setAllCharacterFlags(0);
+            npc->points.setPlayerExperience(100); // 100 XP per default at your own level
+            npc->points.setAllCharacterFlags(0);
             CHAR_ATTACK_TYPE(u) = WPN_FIST;
             CHAR_NATURAL_ARMOUR(u) = ARM_HLEATHER;
             CHAR_SPEED(u) = 12;
-            dynamic_cast<char_data *>(u)->points.setRace(RACE_HUMAN);
+            npc->points.setRace(RACE_HUMAN);
             CHAR_SEX(u) = SEX_NEUTRAL;
             CHAR_LEVEL(u) = 1;
             CHAR_POS(u) = POSITION_STANDING;
@@ -1217,10 +1219,10 @@ void init_unit(unit_data *u)
                 NPC_SPL_SKILL(u, i) = 0;
             }
             NPC_FLAGS(u) = 0;
-            CHAR_OFFENSIVE(u) = 0;
+            npc->points.setOffensiveBonus(0);
             CHAR_DEFENSIVE(u) = 0;
-
-            break;
+        }
+        break;
 
         case UNIT_ST_OBJ:
             for (i = 0; i <= 3; i++)
