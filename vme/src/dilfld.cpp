@@ -4617,13 +4617,15 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
-                        if (CHAR_FOLLOWERS((unit_data *)v1->val.ptr))
+                        if (CHAR_FOLLOWERS(character))
                         {
                             v->atyp = DILA_NORM;
                             v->type = DILV_UPR;
-                            v->ref = &CHAR_FOLLOWERS((unit_data *)v1->val.ptr)->follower;
+                            v->ref = character->followers->getFollowerPtr();
                         }
                         else
                         {
@@ -4636,7 +4638,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

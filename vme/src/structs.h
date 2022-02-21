@@ -204,10 +204,22 @@ public:
 
 /* ----------------- CHAR SPECIFIC STRUCTURES ----------------------- */
 
-struct char_follow_type
+class char_follow_type
 {
-    unit_data *follower; /* Must be a char */
-    char_follow_type *next;
+public:
+    char_follow_type() = default;
+    ~char_follow_type() = default;
+
+    unit_data *getFollower() { return follower; }
+    void setFollower(unit_data *value) { follower = value; }
+    unit_data **getFollowerPtr() { return &follower; }
+
+    char_follow_type *getNext() { return next; }
+    void setNext(char_follow_type *value) { next = value; }
+
+private:
+    unit_data *follower{nullptr}; // Must be a char
+    char_follow_type *next{nullptr};
 };
 
 class char_data : public unit_data

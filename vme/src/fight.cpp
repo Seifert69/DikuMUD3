@@ -923,14 +923,14 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
 
         if (CHAR_HAS_FLAG(ch, CHAR_GROUP))
         {
-            for (f = CHAR_FOLLOWERS(head); f; f = f->next)
+            for (f = CHAR_FOLLOWERS(head); f; f = f->getNext())
             {
-                if (CHAR_HAS_FLAG(f->follower, CHAR_GROUP) && same_surroundings(head, f->follower))
+                if (CHAR_HAS_FLAG(f->getFollower(), CHAR_GROUP) && same_surroundings(head, f->getFollower()))
                 {
-                    sumlevel += virtual_level(f->follower);
+                    sumlevel += virtual_level(f->getFollower());
 
-                    maxlevel = MAX(virtual_level(f->follower), maxlevel);
-                    minlevel = MIN(virtual_level(f->follower), minlevel);
+                    maxlevel = MAX(virtual_level(f->getFollower()), maxlevel);
+                    minlevel = MIN(virtual_level(f->getFollower()), minlevel);
 
                     no_members++;
                 }
@@ -979,11 +979,11 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
             person_gain(head, victim, share, (no_members > 1), maxlevel);
         }
 
-        for (f = CHAR_FOLLOWERS(head); f; f = f->next)
+        for (f = CHAR_FOLLOWERS(head); f; f = f->getNext())
         {
-            if (CHAR_HAS_FLAG(f->follower, CHAR_GROUP) && same_surroundings(f->follower, ch))
+            if (CHAR_HAS_FLAG(f->getFollower(), CHAR_GROUP) && same_surroundings(f->getFollower(), ch))
             {
-                person_gain(f->follower, victim, share, (no_members > 1), maxlevel);
+                person_gain(f->getFollower(), victim, share, (no_members > 1), maxlevel);
             }
         }
     }

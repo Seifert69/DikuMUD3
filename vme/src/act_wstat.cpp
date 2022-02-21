@@ -1047,7 +1047,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_DESCRIPTOR(u) ? "Yes" : "No",
                                        CHAR_FIGHTING(u) ? STR(UNIT_NAME(CHAR_FIGHTING(u))) : "Nobody",
                                        CHAR_MASTER(u) ? STR(UNIT_NAME(CHAR_MASTER(u))) : "Nobody",
-                                       CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->follower)) : "Nobody",
+                                       CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->getFollower())) : "Nobody",
                                        CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
                                        CHAR_LEVEL(u),
                                        sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
