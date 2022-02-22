@@ -1,6 +1,7 @@
 #pragma once
 
 #include "structs.h"
+#include "zone_type.h"
 
 void zone_reset(zone_type *zone);
 void reset_all_zones();

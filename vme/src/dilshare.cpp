@@ -12,6 +12,7 @@
 #include "slog.h"
 #include "structs.h"
 #include "utils.h"
+#include "zone_type.h"
 
 int g_nDilPrg = 0;
 int g_nDilVal = 0;

@@ -5,6 +5,7 @@
 #include "formatter.h"
 #include "slog.h"
 #include "structs.h"
+#include "zone_type.h"
 
 void szonelog_raw(const zone_type *zone, const std::string &msg)
 {

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "structs.h"
+#include "zone_type.h"
 
 descriptor_data *find_descriptor(const char *name, descriptor_data *except);
 zone_type *find_zone(const char *zonename);

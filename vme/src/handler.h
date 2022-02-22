@@ -7,6 +7,7 @@
 #pragma once
 #include "structs.h"
 #include "unitfind.h"
+#include "zone_type.h"
 
 #include <string>
 
