@@ -1255,7 +1255,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             {
                 pBuf->Append8(PC_PROFESSION(u));
                 pBuf->AppendFloat(PC_ACCOUNT(u).getAccountBalance());
-                pBuf->Append32(PC_ACCOUNT(u).credit_limit);
+                pBuf->Append32(PC_ACCOUNT(u).getCreditLimit());
                 pBuf->Append32(PC_ACCOUNT(u).total_credit);
                 pBuf->Append16(PC_ACCOUNT(u).last4);
                 pBuf->Append8(PC_ACCOUNT(u).discount);

@@ -691,7 +691,7 @@ BOOST_FIXTURE_TEST_SUITE(Account_Defaults_Suite, AccountCPPFixture)
 BOOST_AUTO_TEST_CASE(account_defaults_test)
 {
     whom->account.setAccountBalance(333.0);
-    whom->account.credit_limit = 333;
+    whom->account.setCreditLimit(333);
     whom->account.total_credit = 333;
     whom->account.last4 = 333;
     whom->account.discount = 222;
@@ -703,7 +703,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     BOOST_TEST(whom->account.getAccountBalance() == 0.0);
-    BOOST_TEST(whom->account.credit_limit == 0);
+    BOOST_TEST(whom->account.getCreditLimit() == 0);
     BOOST_TEST(whom->account.total_credit == 0);
     BOOST_TEST(whom->account.last4 == -1);
     BOOST_TEST(whom->account.discount == 0);
@@ -825,7 +825,7 @@ BOOST_FIXTURE_TEST_SUITE(Account_Overdue_Suite, AccountCPPFixture)
 BOOST_AUTO_TEST_CASE(account_overdue_test)
 {
     g_cAccountConfig.m_nHourlyRate = 5;
-    whom->account.credit_limit = 4895;
+    whom->account.setCreditLimit(4895);
     whom->account.setAccountBalance(456);
     ////////////////////////// Test Subject //////////////////////////////
     account_overdue(whom.get());
@@ -841,7 +841,7 @@ BOOST_AUTO_TEST_CASE(account_overdue_test)
 
 BOOST_AUTO_TEST_CASE(account_overdue_test_2)
 {
-    whom->account.credit_limit = 4895;
+    whom->account.setCreditLimit(4895);
     whom->account.setAccountBalance(456);
     whom->account.discount = 100;
     ////////////////////////// Test Subject //////////////////////////////
@@ -948,7 +948,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_5)
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) - 1000;
     whom->account.setAccountBalance(-50);
-    whom->account.credit_limit = 100;
+    whom->account.setCreditLimit(100);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -962,7 +962,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_6)
     whom->points.setLevel(1);
     whom->account.flatrate = time(nullptr) - 1000;
     whom->account.setAccountBalance(-500);
-    whom->account.credit_limit = 100;
+    whom->account.setCreditLimit(100);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
     ////////////////////////// Test Subject //////////////////////////////

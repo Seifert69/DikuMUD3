@@ -867,7 +867,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
 
                 g_nCorrupt += PC_ACCOUNT(u).readAccountBalanceFrom(*pBuf);
-                PC_ACCOUNT(u).credit_limit = pBuf->ReadU32(&g_nCorrupt);
+                PC_ACCOUNT(u).readCreditLimitFrom(*pBuf, g_nCorrupt);
                 PC_ACCOUNT(u).total_credit = pBuf->ReadU32(&g_nCorrupt);
 
                 if (unit_version >= 44)

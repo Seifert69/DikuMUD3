@@ -236,10 +236,14 @@ public:
     void increaseAccountBalanceBy(float value) { credit += value; }
     int readAccountBalanceFrom(CByteBuffer &buf) { return buf.ReadFloat(&credit); }
 
+    ubit32 getCreditLimit() const { return credit_limit; }
+    void setCreditLimit(ubit32 value) { credit_limit = value; }
+    void readCreditLimitFrom(CByteBuffer &buf, int &error) { credit_limit = buf.ReadU32(&error); }
+
 private:
-    float credit{0.0f}; // How many coin units are left on account?
+    float credit{0.0f};     // How many coin units are left on account?
+    ubit32 credit_limit{0}; // In coin units (i.e. cents / oerer)
 public:
-    ubit32 credit_limit; /* In coin units (i.e. cents / oerer)             */
     ubit32 total_credit; /* Accumulated credit to date (coin units)        */
     sbit16 last4;        /* The last four digits of his credit card, or -1 */
     ubit8 cracks;        /* Crack-attempts on CC last4                     */

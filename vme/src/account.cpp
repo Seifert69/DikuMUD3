@@ -155,7 +155,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        "Flat Rate      : %s%s"
                                        "Crack counter  : %3d\n\r",
                                        PC_ACCOUNT(u).getAccountBalance() / 100.0,
-                                       (float)PC_ACCOUNT(u).credit_limit / 100.0,
+                                       PC_ACCOUNT(u).getCreditLimit() / 100.0,
                                        (float)PC_ACCOUNT(u).total_credit / 100.0,
                                        PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
                                        PC_ACCOUNT(u).discount,
@@ -244,7 +244,7 @@ void account_overdue(const unit_data *ch)
         }
         else
         {
-            i = static_cast<int>(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).getAccountBalance());
+            i = static_cast<int>(PC_ACCOUNT(ch).getCreditLimit() + PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
         }
@@ -254,7 +254,7 @@ void account_overdue(const unit_data *ch)
                                        "The account will expire in %d hours and %d minutes.\n\r\n\r",
                                        (PC_ACCOUNT(ch).getAccountBalance() * -1) / 100.0,
                                        g_cAccountConfig.m_pCoinName,
-                                       (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                       PC_ACCOUNT(ch).getCreditLimit() / 100.0,
                                        g_cAccountConfig.m_pCoinName,
                                        i,
                                        j);
@@ -506,11 +506,11 @@ static void account_status(const unit_data *ch)
 
             act("At the current rate that is $2d hours and $3d minutes.", A_ALWAYS, ch, &i, &j, TO_CHAR);
 
-            i = (int)(((float)PC_ACCOUNT(ch).credit_limit / (float)(lcharge)));
+            i = static_cast<int>(PC_ACCOUNT(ch).getCreditLimit() / static_cast<float>(lcharge));
 
             auto msg = diku::format_to_str("Your credit limit is %d hours (%.2f %s).\n\r",
                                            i,
-                                           (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                           PC_ACCOUNT(ch).getCreditLimit() / 100.0,
                                            g_cAccountConfig.m_pCoinName);
             send_to_char(msg, ch);
         }
@@ -519,7 +519,7 @@ static void account_status(const unit_data *ch)
     {
         if (lcharge > 0)
         {
-            i = static_cast<int>(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).getAccountBalance());
+            i = static_cast<int>(PC_ACCOUNT(ch).getCreditLimit() + PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
@@ -528,7 +528,7 @@ static void account_status(const unit_data *ch)
                                            "The account will expire in %d hours and %d minutes.\n\r",
                                            (PC_ACCOUNT(ch).getAccountBalance() * -1) / 100.0,
                                            g_cAccountConfig.m_pCoinName,
-                                           (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                           PC_ACCOUNT(ch).getCreditLimit() / 100.0,
                                            g_cAccountConfig.m_pCoinName,
                                            i,
                                            j);
@@ -557,7 +557,7 @@ int account_is_closed(unit_data *ch)
         }
 
         i = static_cast<int>(PC_ACCOUNT(ch).getAccountBalance());
-        j = PC_ACCOUNT(ch).credit_limit;
+        j = PC_ACCOUNT(ch).getCreditLimit();
 
         return (i < -j);
     }
@@ -768,7 +768,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
             send_to_char(msg, ch);
 
-            PC_ACCOUNT(u).credit_limit = amount;
+            PC_ACCOUNT(u).setCreditLimit(amount);
 
             account_local_stat(ch, u);
 
@@ -837,7 +837,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 void account_defaults(unit_data *pc)
 {
     PC_ACCOUNT(pc).setAccountBalance(static_cast<float>(g_cAccountConfig.m_nAccountFree));
-    PC_ACCOUNT(pc).credit_limit = (int)g_cAccountConfig.m_nAccountLimit;
+    PC_ACCOUNT(pc).setCreditLimit(static_cast<int>(g_cAccountConfig.m_nAccountLimit));
     PC_ACCOUNT(pc).total_credit = 0;
     PC_ACCOUNT(pc).last4 = -1;
     PC_ACCOUNT(pc).discount = 0;
