@@ -1259,7 +1259,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 pBuf->Append32(PC_ACCOUNT(u).getTotalCredit());
                 pBuf->Append16(PC_ACCOUNT(u).getLastFourDigitsofCreditCard());
                 pBuf->Append8(PC_ACCOUNT(u).getDiscountPercentage());
-                pBuf->Append32(PC_ACCOUNT(u).flatrate);
+                pBuf->Append32(PC_ACCOUNT(u).getFlatRateExpirationDate());
                 pBuf->Append8(PC_ACCOUNT(u).getCrackAttempts());
 
                 pBuf->Append16(PC_LIFESPAN(u));

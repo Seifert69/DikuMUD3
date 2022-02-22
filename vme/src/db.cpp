@@ -889,18 +889,18 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     if (unit_version >= 52)
                     {
-                        PC_ACCOUNT(u).flatrate = pBuf->ReadU32(&g_nCorrupt);
+                        PC_ACCOUNT(u).readFlatRateExpirationDateFrom(*pBuf, g_nCorrupt);
                     }
                     else
                     {
-                        PC_ACCOUNT(u).flatrate = 0;
+                        PC_ACCOUNT(u).setFlatRateExpirationDate(0);
                     }
 
                     PC_ACCOUNT(u).readCrackAttemptsFrom(*pBuf, g_nCorrupt);
                 }
                 else
                 {
-                    PC_ACCOUNT(u).flatrate = 0;
+                    PC_ACCOUNT(u).setFlatRateExpirationDate(0);
                     PC_ACCOUNT(u).setDiscountPercentage(0);
                     PC_ACCOUNT(u).setCrackAttempts(0);
                 }

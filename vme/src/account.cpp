@@ -142,7 +142,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
         return;
     }
 
-    char *pTmstr = ctime((time_t *)&PC_ACCOUNT(u).flatrate);
+    char *pTmstr = ctime((time_t *)&PC_ACCOUNT(u).getFlatRateExpirationDate());
     time_t now = time(nullptr);
 
     if (IS_ADMINISTRATOR(ch))
@@ -159,8 +159,8 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        PC_ACCOUNT(u).getTotalCredit() / 100.0,
                                        PC_ACCOUNT(u).getLastFourDigitsofCreditCard() == -1 ? "NONE" : "REGISTERED",
                                        PC_ACCOUNT(u).getDiscountPercentage(),
-                                       PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
-                                       PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
+                                       PC_ACCOUNT(u).getFlatRateExpirationDate() < (ubit32)now ? "Expired" : "Expires on ",
+                                       PC_ACCOUNT(u).getFlatRateExpirationDate() < (ubit32)now ? " (none)\n\r" : pTmstr,
                                        PC_ACCOUNT(u).getCrackAttempts());
         send_to_char(msg, ch);
     }
@@ -330,7 +330,7 @@ static void account_calc(unit_data *pc, tm *b, tm *e)
     tm t;
     ubit32 secs = 0;
 
-    if (PC_ACCOUNT(pc).flatrate > (ubit32)time(nullptr))
+    if (PC_ACCOUNT(pc).getFlatRateExpirationDate() > (ubit32)time(nullptr))
     {
         return;
     }
@@ -444,7 +444,7 @@ int account_is_overdue(const unit_data *ch)
 {
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+        if (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))
         {
             return FALSE;
         }
@@ -475,9 +475,9 @@ static void account_status(const unit_data *ch)
         send_to_char(msg, ch);
     }
 
-    if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+    if (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))
     {
-        pTmstr = ctime((time_t *)&PC_ACCOUNT(ch).flatrate);
+        pTmstr = ctime((time_t *)&PC_ACCOUNT(ch).getFlatRateExpirationDate());
         auto msg = diku::format_to_str("Your account is on a flat rate until %s", pTmstr);
         send_to_char(msg, ch);
 
@@ -551,7 +551,7 @@ int account_is_closed(unit_data *ch)
 
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+        if (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))
         {
             return FALSE;
         }
@@ -600,29 +600,29 @@ void account_flatrate_change(unit_data *god, unit_data *whom, sbit32 days)
     std::string msg;
     if (days > 0)
     {
-        if (PC_ACCOUNT(whom).flatrate > (ubit32)now)
+        if (PC_ACCOUNT(whom).getFlatRateExpirationDate() > (ubit32)now)
         {
             msg = diku::format_to_str("\n\rAdding %d days to the flatrate.\n\r\n\r", days);
-            PC_ACCOUNT(whom).flatrate += add;
+            PC_ACCOUNT(whom).incFlatRateExpirationDate(add);
         }
         else
         {
             assert(add > 0);
             msg = diku::format_to_str("\n\rSetting flatrate to %d days.\n\r\n\r", days);
-            PC_ACCOUNT(whom).flatrate = now + add;
+            PC_ACCOUNT(whom).setFlatRateExpirationDate(now + add);
         }
     }
     else /* days < 0 */
     {
-        if ((sbit32)PC_ACCOUNT(whom).flatrate + add < now)
+        if ((sbit32)PC_ACCOUNT(whom).getFlatRateExpirationDate() + add < now)
         {
             msg = "\n\rDisabling flatrate, enabling measure rate.\n\r\n\r";
-            PC_ACCOUNT(whom).flatrate = 0;
+            PC_ACCOUNT(whom).setFlatRateExpirationDate(0);
         }
         else
         {
             msg = diku::format_to_str("\n\rSubtracting %d days from the flatrate.\n\r\n\r", days);
-            PC_ACCOUNT(whom).flatrate += add;
+            PC_ACCOUNT(whom).incFlatRateExpirationDate(add);
         }
     }
 
@@ -842,7 +842,7 @@ void account_defaults(unit_data *pc)
     PC_ACCOUNT(pc).setLastFourDigitsofCreditCard(-1);
     PC_ACCOUNT(pc).setDiscountPercentage(0);
     PC_ACCOUNT(pc).setCrackAttempts(0);
-    PC_ACCOUNT(pc).flatrate = 0;
+    PC_ACCOUNT(pc).setFlatRateExpirationDate(0);
 }
 
 void charge_sanity(ubit8 b_hr, ubit8 b_min, ubit8 e_hr, ubit8 e_min, int charge)

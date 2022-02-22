@@ -72,15 +72,15 @@ BOOST_AUTO_TEST_CASE(days_gt_zero_flatrate_gt_now)
 {
     sbit32 days = 20;
     time_t now = time(nullptr);
-    whom->account.flatrate = now + 10000;
+    whom->account.setFlatRateExpirationDate(now + 10000);
 
-    const sbit32 expected_flatrate = whom->account.flatrate + (days * SECS_PER_REAL_DAY);
+    const sbit32 expected_flatrate = whom->account.getFlatRateExpirationDate() + (days * SECS_PER_REAL_DAY);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_flatrate_change(god.get(), whom.get(), days);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.flatrate == expected_flatrate);
+    BOOST_TEST(whom->account.getFlatRateExpirationDate() == expected_flatrate);
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);
@@ -104,14 +104,14 @@ BOOST_AUTO_TEST_CASE(days_gt_zero_flatrate_lt_now_plus_add)
 {
     sbit32 days = 20;
     time_t now = time(nullptr);
-    whom->account.flatrate = now - 10000;
+    whom->account.setFlatRateExpirationDate(now - 10000);
     const sbit32 expected_flatrate = now + (days * SECS_PER_REAL_DAY);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_flatrate_change(god.get(), whom.get(), days);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.flatrate == expected_flatrate);
+    BOOST_TEST(whom->account.getFlatRateExpirationDate() == expected_flatrate);
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);
@@ -135,14 +135,14 @@ BOOST_AUTO_TEST_CASE(days_eq_zero_flatrate_gt_now)
 {
     sbit32 days = 0;
     time_t now = time(nullptr);
-    whom->account.flatrate = now + 10000;
-    const sbit32 expected_flatrate = whom->account.flatrate + (days * SECS_PER_REAL_DAY);
+    whom->account.setFlatRateExpirationDate(now + 10000);
+    const sbit32 expected_flatrate = whom->account.getFlatRateExpirationDate() + (days * SECS_PER_REAL_DAY);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_flatrate_change(god.get(), whom.get(), days);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.flatrate == expected_flatrate);
+    BOOST_TEST(whom->account.getFlatRateExpirationDate() == expected_flatrate);
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);
@@ -166,14 +166,14 @@ BOOST_AUTO_TEST_CASE(days_eq_zero_flatrate_lt_now)
 {
     sbit32 days = 0;
     time_t now = time(nullptr);
-    whom->account.flatrate = now - 10000;
+    whom->account.setFlatRateExpirationDate(now - 10000);
     const sbit32 expected_flatrate = 0;
 
     ////////////////////////// Test Subject //////////////////////////////
     account_flatrate_change(god.get(), whom.get(), days);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.flatrate == expected_flatrate);
+    BOOST_TEST(whom->account.getFlatRateExpirationDate() == expected_flatrate);
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);
@@ -197,14 +197,14 @@ BOOST_AUTO_TEST_CASE(days_lt_zero_flatrate_gt_now)
 {
     sbit32 days = -7;
     time_t now = time(nullptr);
-    whom->account.flatrate = now + 10000;
+    whom->account.setFlatRateExpirationDate(now + 10000);
     const sbit32 expected_flatrate = 0;
 
     ////////////////////////// Test Subject //////////////////////////////
     account_flatrate_change(god.get(), whom.get(), days);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.flatrate == expected_flatrate);
+    BOOST_TEST(whom->account.getFlatRateExpirationDate() == expected_flatrate);
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);
     BOOST_TEST(slog.m_wiz_inv_level == 255);
@@ -227,14 +227,14 @@ BOOST_AUTO_TEST_CASE(days_lt_zero_flatrate_lt_now)
 {
     sbit32 days = -7;
     time_t now = time(nullptr);
-    whom->account.flatrate = now + ((days * -1) + 1) * SECS_PER_REAL_DAY;
-    const sbit32 expected_flatrate = whom->account.flatrate + (days * SECS_PER_REAL_DAY);
+    whom->account.setFlatRateExpirationDate(now + ((days * -1) + 1) * SECS_PER_REAL_DAY);
+    const sbit32 expected_flatrate = whom->account.getFlatRateExpirationDate() + (days * SECS_PER_REAL_DAY);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_flatrate_change(god.get(), whom.get(), days);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(whom->account.flatrate == expected_flatrate);
+    BOOST_TEST(whom->account.getFlatRateExpirationDate() == expected_flatrate);
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);
@@ -697,7 +697,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     whom->account.setLastFourDigitsofCreditCard(333);
     whom->account.setDiscountPercentage(222);
     whom->account.setCrackAttempts(222);
-    whom->account.flatrate = 333;
+    whom->account.setFlatRateExpirationDate(333);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_defaults(whom.get());
@@ -709,7 +709,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     BOOST_TEST(whom->account.getLastFourDigitsofCreditCard() == -1);
     BOOST_TEST(whom->account.getDiscountPercentage() == 0);
     BOOST_TEST(whom->account.getCrackAttempts() == 0);
-    BOOST_TEST(whom->account.flatrate == 0);
+    BOOST_TEST(whom->account.getFlatRateExpirationDate() == 0);
 }
 BOOST_AUTO_TEST_SUITE_END() // Account_Defaults_Suite
 //===========================================================================================
@@ -768,7 +768,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_1)
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
-    whom->account.flatrate = time(nullptr) + 10000;
+    whom->account.setFlatRateExpirationDate(time(nullptr) + 10000);
     whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
@@ -782,7 +782,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_2)
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
-    whom->account.flatrate = time(nullptr) - 10000;
+    whom->account.setFlatRateExpirationDate(time(nullptr) - 10000);
     whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
@@ -796,7 +796,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_3)
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
-    whom->account.flatrate = time(nullptr) + 10000;
+    whom->account.setFlatRateExpirationDate(time(nullptr) + 10000);
     whom->account.setAccountBalance(1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
@@ -810,7 +810,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_4)
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
-    whom->account.flatrate = time(nullptr) - 10000;
+    whom->account.setFlatRateExpirationDate(time(nullptr) - 10000);
     whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
@@ -935,7 +935,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_4)
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
-    whom->account.flatrate = time(nullptr) + 1000;
+    whom->account.setFlatRateExpirationDate(time(nullptr) + 1000);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -947,7 +947,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_5)
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
-    whom->account.flatrate = time(nullptr) - 1000;
+    whom->account.setFlatRateExpirationDate(time(nullptr) - 1000);
     whom->account.setAccountBalance(-50);
     whom->account.setCreditLimit(100);
     ////////////////////////// Test Subject //////////////////////////////
@@ -961,7 +961,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_6)
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
     whom->points.setLevel(1);
-    whom->account.flatrate = time(nullptr) - 1000;
+    whom->account.setFlatRateExpirationDate(time(nullptr) - 1000);
     whom->account.setAccountBalance(-500);
     whom->account.setCreditLimit(100);
     ////////////////////////// Test Subject //////////////////////////////

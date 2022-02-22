@@ -258,6 +258,11 @@ public:
     void setDiscountPercentage(ubit8 value) { discount = value; }
     void readDiscountPercentageFrom(CByteBuffer &buf, int &error) { discount = buf.ReadU8(&error); }
 
+    const ubit32 &getFlatRateExpirationDate() const { return flatrate; }
+    void incFlatRateExpirationDate(ubit32 value) { flatrate += value; }
+    void setFlatRateExpirationDate(ubit32 value) { flatrate = value; }
+    void readFlatRateExpirationDateFrom(CByteBuffer &buf, int &error) { flatrate = buf.ReadU32(&error); }
+
 private:
     float credit{0.0f};     // How many coin units are left on account?
     ubit32 credit_limit{0}; // In coin units (i.e. cents / oerer)
@@ -265,8 +270,7 @@ private:
     sbit16 last4{-1};       // The last four digits of his credit card, or -1
     ubit8 cracks{0};        // Crack-attempts on CC last4
     ubit8 discount{0};      // 0 - 100% discount
-public:
-    ubit32 flatrate; /* The expiration date of a flat rate service     */
+    ubit32 flatrate{0};     // The expiration date of a flat rate service
 };
 
 class pc_data : public char_data
