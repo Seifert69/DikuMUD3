@@ -51,7 +51,7 @@ void zone_update_no_in_zone()
     /* Clear ALL ->no_in_zone */
     for (auto tmp_zone = g_zone_info.mmp.begin(); tmp_zone != g_zone_info.mmp.end(); tmp_zone++)
     {
-        for (auto fi = tmp_zone->second->mmp_fi.begin(); fi != tmp_zone->second->mmp_fi.end(); fi++)
+        for (auto fi = tmp_zone->second->cgetFileIndexMap().begin(); fi != tmp_zone->second->cgetFileIndexMap().end(); fi++)
         {
             fi->second->setNumInZone(0);
         }
@@ -153,14 +153,14 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
         szonelog(g_boot_zone,
                  "Reset Error: Don't know where to put %s@%s",
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_OBJ && cmd->getFileIndexType(0)->getType() != UNIT_ST_NPC)
     {
         szonelog(g_boot_zone,
                  "Reset Error: %s@%s loaded object is neither an obj nor npc.",
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (zone_limit(u, cmd->getFileIndexType(0), cmd))
     {
@@ -205,7 +205,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
         szonelog(g_boot_zone,
                  "Reset error: %s@%s has no parent in equip.",
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (!IS_CHAR(u))
     {
@@ -221,7 +221,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (cmd->getNum(1) <= 0)
     {
@@ -230,7 +230,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
                  cmd->getFileIndexType(0)->getName(),
-                 cmd->getFileIndexType(0)->getZone()->name);
+                 cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (!equipment(u, cmd->getNum(1)) && !(cmd->getNum(0) && (cmd->getFileIndexType(0)->getNumInMem()) >= (ubit16)(cmd->getNum(0))))
     {
@@ -412,7 +412,7 @@ void zone_reset(zone_type *zone)
 
     zone_update_no_in_zone(); /* Reset the fi->no_in_zone */
 
-    low_reset_zone(nullptr, zone->zri);
+    low_reset_zone(nullptr, zone->getZoneResetCommands());
 
     /* Far too much LOG:
        slog(LOG_OFF, 0, "Zone reset of '%s' done (%d bytes used).",
@@ -438,12 +438,12 @@ void reset_all_zones()
                 g_world_nozones++;
             }
 
-            if (zone->second->access != j)
+            if (zone->second->getAccessLevel() != j)
             {
                 continue;
             }
 
-            if (zone->second->zone_time > 0)
+            if (zone->second->getZoneResetTime() > 0)
             {
                 zone_event((void *)zone->second, (void *)nullptr);
             }
@@ -474,7 +474,7 @@ void zone_event(void *p1, void *p2)
 {
     zone_type *zone = (zone_type *)p1;
 
-    if (zone->reset_mode != RESET_IFEMPTY || zone_is_empty(zone))
+    if (zone->getResetMode() != RESET_IFEMPTY || zone_is_empty(zone))
     {
         zone_reset(zone);
 
@@ -482,9 +482,9 @@ void zone_event(void *p1, void *p2)
          *       same time (causes lags!)
          */
 
-        if (zone->reset_mode != RESET_NOT)
+        if (zone->getResetMode() != RESET_NOT)
         {
-            g_events.add(zone->zone_time * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, nullptr);
+            g_events.add(zone->getZoneResetTime() * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, nullptr);
         }
     }
     else

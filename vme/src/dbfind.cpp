@@ -82,9 +82,9 @@ file_index_type *find_file_index(const char *zonename, const char *name)
     strcpy(bufname, name);
     str_lower(bufname);
 
-    auto it = zone->mmp_fi.find(bufname);
+    auto it = zone->cgetFileIndexMap().find(bufname);
 
-    if (it != zone->mmp_fi.end())
+    if (it != zone->cgetFileIndexMap().end())
     {
         return it->second;
     }
@@ -115,9 +115,9 @@ diltemplate *find_dil_index(const char *zonename, const char *name)
         return nullptr;
     }
 
-    auto it = zone->mmp_tmpl.find(name);
+    auto it = zone->cgetDILTemplate().find(name);
 
-    if (it != zone->mmp_tmpl.end())
+    if (it != zone->cgetDILTemplate().end())
     {
         return it->second;
     }
@@ -194,7 +194,7 @@ file_index_type *pc_str_to_file_index(unit_data *ch, const char *str)
 
     if (*name && !*zone)
     {
-        strcpy(zone, unit_zone(ch)->name);
+        strcpy(zone, unit_zone(ch)->getName());
     }
 
     return find_file_index(zone, name);

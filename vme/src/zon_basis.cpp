@@ -75,7 +75,7 @@ int error_rod(spec_arg *sarg)
 
     zone_type *zone = unit_zone(sarg->activator);
 
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(UNIT_NAME(sarg->activator)))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(UNIT_NAME(sarg->activator)))
     {
         send_to_char("You are only allowed to erase errors "
                      "in your own zone.<br/>",
@@ -83,7 +83,7 @@ int error_rod(spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    std::string filename = g_cServerConfig.getZoneDir() + zone->filename + ".err";
+    std::string filename = g_cServerConfig.getZoneDir() + zone->getFilename() + ".err";
 
     FILE *fl = fopen(filename.c_str(), "w");
     if (!fl)
@@ -109,7 +109,7 @@ int info_rod(spec_arg *sarg)
 
     zone_type *zone = unit_zone(sarg->activator);
 
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(UNIT_NAME(sarg->activator)))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(UNIT_NAME(sarg->activator)))
     {
         send_to_char("You are only allowed to erase user-information"
                      " in your own zone.",
@@ -117,7 +117,7 @@ int info_rod(spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    std::string filename = g_cServerConfig.getZoneDir() + zone->filename + ".inf";
+    std::string filename = g_cServerConfig.getZoneDir() + zone->getFilename() + ".inf";
 
     FILE *fl = fopen(filename.c_str(), "w");
     if (fl)
@@ -358,12 +358,12 @@ int admin_obj(spec_arg *sarg)
     }
     else
     {
-        if ((!zone->creators.IsName(UNIT_NAME(sarg->activator))) && (!IS_OVERSEER(sarg->activator)))
+        if ((!zone->getCreators().IsName(UNIT_NAME(sarg->activator))) && (!IS_OVERSEER(sarg->activator)))
         {
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;
         }
-        msg = diku::format_to_str("mail zone %s %s", zone->filename, exdp->descr.c_str());
+        msg = diku::format_to_str("mail zone %s %s", zone->getFilename(), exdp->descr.c_str());
     }
 
     if (!system_check(sarg->activator, msg.c_str()))

@@ -86,7 +86,7 @@ static void stat_world_extra(const unit_data *ch)
 
     for (auto zp : g_zone_info.mmp)
     {
-        msg += diku::format_to_str("<a cmd='goto #'>%s</a><br/>", zp.second->name);
+        msg += diku::format_to_str("<a cmd='goto #'>%s</a><br/>", zp.second->getName());
     }
     msg += "</div><br/>";
 
@@ -173,7 +173,7 @@ static void stat_world(unit_data *ch)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zrip, unit_data *ch)
+static std::string stat_zone_reset(const std::string &indnt, const zone_reset_cmd *zrip, unit_data *ch)
 {
     static const char *nums[] = {"max", "zonemax", "local"};
     std::string bits;
@@ -251,17 +251,17 @@ static std::string stat_zone_reset(const std::string &indnt, zone_reset_cmd *zri
 static void stat_zone(unit_data *ch, zone_type *zone)
 {
     static const char *reset_modes[] = {"Never Reset", "Reset When Empty", "Reset Always", "UNKNOWN"};
-    int reset_mode = zone->reset_mode;
+    int reset_mode = zone->getResetMode();
 
     if (!is_in(reset_mode, 0, 2))
     {
         reset_mode = 3;
     }
 
-    bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".err");
-    bool info = file_exists(g_cServerConfig.getZoneDir() + zone->filename + ".inf");
+    bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->getFilename() + ".err");
+    bool info = file_exists(g_cServerConfig.getZoneDir() + zone->getFilename() + ".inf");
 
-    char *cname = zone->creators.catnames();
+    char *cname = zone->getCreators().catnames();
 
     auto msg = diku::format_to_str("Zone [%s]  File [%s]  Access [%d]<br/>"
                                    "Title: \"%s\"<br/>"
@@ -271,23 +271,23 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    "Pressure [%d] Change [%d] Sky [%d] Base [%d]<br/><br/>"
                                    "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
                                    "%s<br/>%s<br/>",
-                                   zone->name,
-                                   zone->filename,
-                                   zone->access,
-                                   zone->title ? zone->title : "",
-                                   zone->loadlevel,
-                                   zone->payonly,
-                                   zone->no_of_fi,
-                                   zone->no_rooms,
+                                   zone->getName(),
+                                   zone->getFilename(),
+                                   zone->getAccessLevel(),
+                                   zone->getTitle() ? zone->getTitle() : "",
+                                   zone->getLevelRequiredToLoadItems(),
+                                   zone->getPayOnly(),
+                                   zone->getNumOfFileIndexes(),
+                                   zone->getNumOfRooms(),
                                    reset_modes[reset_mode],
                                    reset_mode,
-                                   zone->zone_time,
-                                   zone->weather.pressure,
-                                   zone->weather.change,
-                                   zone->weather.sky,
-                                   zone->weather.base,
+                                   zone->getZoneResetTime(),
+                                   zone->cgetWeather().getPressure(),
+                                   zone->cgetWeather().getChange(),
+                                   zone->cgetWeather().getSky(),
+                                   zone->cgetWeather().getBase(),
                                    cname,
-                                   zone->notes,
+                                   zone->getNotes(),
                                    errors ? "Errors in zone (stat zone error)" : "No errors registered in zone.",
                                    info ? "User info feedback in zone (stat zone info)." : "No user info (feedback) in zone.");
     FREE(cname)
@@ -314,9 +314,9 @@ static void stat_creators(unit_data *ch, char *arg)
 
         for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
         {
-            char *cname = it->second->creators.catnames();
+            char *cname = it->second->getCreators().catnames();
 
-            msg += diku::format_to_str("%-15s   %s<br/>", it->second->name, cname);
+            msg += diku::format_to_str("%-15s   %s<br/>", it->second->getName(), cname);
             FREE(cname);
             found = TRUE;
         }
@@ -330,9 +330,9 @@ static void stat_creators(unit_data *ch, char *arg)
     found = FALSE;
     for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
     {
-        if (it->second->creators.IsName(tmp))
+        if (it->second->getCreators().IsName(tmp))
         {
-            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->name, it->second->filename);
+            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->getName(), it->second->getFilename());
             found = TRUE;
         }
     }
@@ -347,11 +347,11 @@ static void stat_creators(unit_data *ch, char *arg)
 
 static void stat_dil(unit_data *ch, zone_type *zone)
 {
-    auto msg = diku::format_to_str("<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
+    auto msg = diku::format_to_str("<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->getName());
     send_to_char(msg, ch);
 
     msg += "<div class='twocol'>";
-    for (auto tmpl = zone->mmp_tmpl.begin(); tmpl != zone->mmp_tmpl.end(); tmpl++)
+    for (auto tmpl = zone->cgetDILTemplate().begin(); tmpl != zone->cgetDILTemplate().end(); tmpl++)
     {
         msg += diku::format_to_str("%.2fs %s [%d t / %d i]<br/>",
                                    tmpl->second->fCPU / 1000.0,
@@ -373,14 +373,14 @@ static void stat_global_dil(unit_data *ch, ubit32 nCount)
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
-        for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
+        for (auto tmpl = z->second->cgetDILTemplate().begin(); tmpl != z->second->cgetDILTemplate().end(); tmpl++)
         {
             if (tmpl->second->fCPU >= nCount)
             {
                 msg += diku::format_to_str("%.2fs %s@%s [%d t / %d i]<br/>",
                                            tmpl->second->fCPU / 1000.0,
                                            tmpl->second->prgname,
-                                           tmpl->second->zone->name,
+                                           tmpl->second->zone->getName(),
                                            tmpl->second->nTriggers,
                                            tmpl->second->nInstructions);
             }
@@ -432,23 +432,23 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         case 1:
         case 2:
         {
-            auto msg = diku::format_to_str("List of %s in zone %s:<br/>", zone_args[argno], zone->name);
+            auto msg = diku::format_to_str("List of %s in zone %s:<br/>", zone_args[argno], zone->getName());
             send_to_char(msg, ch);
             search_type = search_types[argno];
         }
         break;
 
         case 3:
-            if (zone->zri)
+            if (zone->cgetZoneResetCommands())
             {
-                auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->name);
+                auto msg = diku::format_to_str("Reset information for zone %s:<br/>", zone->getName());
                 send_to_char(msg, ch);
-                auto stat_buffer = stat_zone_reset("", zone->zri, ch);
+                auto stat_buffer = stat_zone_reset("", zone->cgetZoneResetCommands(), ch);
                 page_string(CHAR_DESCRIPTOR(ch), stat_buffer);
             }
             else
             {
-                auto msg = diku::format_to_str("No reset information for zone %s.<br/>", zone->name);
+                auto msg = diku::format_to_str("No reset information for zone %s.<br/>", zone->getName());
                 send_to_char(msg, ch);
             }
             return;
@@ -457,7 +457,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         case 5:
         {
             /* Errors/Info (Small hack, this :-) ) */
-            auto filename = diku::format_to_str("%s%s.%.3s", g_cServerConfig.getZoneDir().c_str(), zone->filename, zone_args[argno]);
+            auto filename = diku::format_to_str("%s%s.%.3s", g_cServerConfig.getZoneDir().c_str(), zone->getFilename(), zone_args[argno]);
             if (!file_exists(filename))
             {
                 return;
@@ -482,7 +482,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
 
     /* Search for mobs/objs/rooms and line in columns */
     std::string msg{"<div class='threecol'>"};
-    for (auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
+    for (auto fi = zone->cgetFileIndexMap().begin(); fi != zone->cgetFileIndexMap().end(); fi++)
     {
         if (fi->second->getType() == search_type)
         {
@@ -685,7 +685,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
             {
                 auto msg = diku::format_to_str("DIL Name: %s@%s<br/>",
                                                prg->frame[0].tmpl->prgname,
-                                               prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->name : "IDLE");
+                                               prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->getName() : "IDLE");
                 send_to_char(msg, ch);
             }
         }
@@ -1288,7 +1288,7 @@ void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
 
             if (*name && !*zone)
             {
-                strcpy(zone, unit_zone(ch)->name);
+                strcpy(zone, unit_zone(ch)->getName());
             }
 
             u = find_symbolic(zone, name);

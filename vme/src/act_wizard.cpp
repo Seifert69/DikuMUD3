@@ -420,11 +420,11 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    if (CHAR_LEVEL(ch) < fi->getZone()->loadlevel)
+    if (CHAR_LEVEL(ch) < fi->getZone()->getLevelRequiredToLoadItems())
     {
-        if (!fi->getZone()->creators.IsName(UNIT_NAME(ch)))
+        if (!fi->getZone()->getCreators().IsName(UNIT_NAME(ch)))
         {
-            int i = fi->getZone()->loadlevel;
+            int i = fi->getZone()->getLevelRequiredToLoadItems();
 
             act("Level $2d is required to load items from this zone.", A_ALWAYS, ch, &i, cActParameter(), TO_CHAR);
             return;

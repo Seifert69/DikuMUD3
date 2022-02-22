@@ -326,7 +326,7 @@ void dilfi_setpwd(dilprg *p)
         {
             dil_typeerr(p, "Not a pc unit");
         }
-        else if (p->frame[0].tmpl->zone->access > 0)
+        else if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (setpassword).", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
@@ -349,7 +349,7 @@ void dilfi_delpc(dilprg *p)
 
     if (dil_type_check("delete_player", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
     {
-        if (p->frame[0].tmpl->zone->access > 0)
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (delete_player).", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
@@ -383,7 +383,7 @@ void dilfi_delpc(dilprg *p)
 
 void dilfi_reboot(dilprg *p)
 {
-    if (p->frame[0].tmpl->zone->access > 0)
+    if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
     {
         szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (reboot).", p->frame->tmpl->prgname);
         p->waitcmd = WAITCMD_QUIT;
@@ -505,7 +505,7 @@ void dilfi_stora(dilprg *p)
 
     if (dil_type_check("storeall", p, 3, v1, FAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_SP, v3, FAIL_NULL, 1, DILV_INT))
     {
-        if (p->frame[0].tmpl->zone->access > 10)
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (storeall).", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
@@ -520,7 +520,7 @@ void dilfi_stora(dilprg *p)
                 }
                 else
                 {
-                    if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
+                    if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
                     {
                         if (!file_exists(g_cServerConfig.getDILFileDir()))
                         {
@@ -534,16 +534,16 @@ void dilfi_stora(dilprg *p)
                     }
                     else
                     {
-                        if (!file_exists(p->frame[0].tmpl->zone->dilfilepath))
+                        if (!file_exists(p->frame[0].tmpl->zone->getDILFilePath()))
                         {
 #ifdef _WINDOWS
-                            _mkdir(p->frame[0].tmpl->zone->dilfilepath);
+                            _mkdir(p->frame[0].tmpl->zone->getDILFilePath());
 #else
-                            mkdir(p->frame[0].tmpl->zone->dilfilepath, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
+                            mkdir(p->frame[0].tmpl->zone->getDILFilePath(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
                         }
 
-                        strcpy(filename, p->frame[0].tmpl->zone->dilfilepath);
+                        strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
                     }
                     strcat(filename, "/units/");
                     if (!file_exists(filename))
@@ -613,7 +613,7 @@ void dilfi_amod(dilprg *p)
     {
         if (g_cServerConfig.isAccounting() && v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
         {
-            if (p->frame[0].tmpl->zone->access != 0)
+            if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
             {
                 szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (amod).", p->frame->tmpl->prgname);
                 p->waitcmd = WAITCMD_QUIT;
@@ -759,7 +759,7 @@ void dilfi_rslv(dilprg *p)
 
     if (dil_type_check("reset_level", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (p->frame[0].tmpl->zone->access > 1)
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 1)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to reset level w/o access.", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
@@ -785,7 +785,7 @@ void dilfi_rsvlv(dilprg *p)
 
     if (dil_type_check("reset_vlevel", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (p->frame[0].tmpl->zone->access > 1)
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 1)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to reset vlevel w/o access.", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
@@ -810,7 +810,7 @@ void dilfi_rsrce(dilprg *p)
     dilval *v1 = p->stack.pop();
     if (dil_type_check("reset_race", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (p->frame[0].tmpl->zone->access > 1)
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 1)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to reset race w/o access.", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
@@ -909,7 +909,7 @@ void dilfi_rtf(dilprg *p)
                  0,
                  "DIL %s@%s on %s@%s: Unexpected stack length after procedure call.",
                  p->fp->tmpl->prgname,
-                 p->fp->tmpl->zone->name,
+                 p->fp->tmpl->zone->getName(),
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner));
             p->waitcmd = WAITCMD_QUIT;
@@ -925,7 +925,7 @@ void dilfi_rtf(dilprg *p)
                  0,
                  "DIL %s@%s on %s@%s: Unexpected stack length after function call.",
                  p->fp->tmpl->prgname,
-                 p->fp->tmpl->zone->name,
+                 p->fp->tmpl->zone->getName(),
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner));
             p->waitcmd = WAITCMD_QUIT;
@@ -1189,7 +1189,7 @@ void dilfi_rfunc(dilprg *p)
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner),
                  p->fp->tmpl->prgname,
-                 p->fp->tmpl->zone->name,
+                 p->fp->tmpl->zone->getName(),
                  xrefi);
         p->waitcmd = WAITCMD_STOP;
         for (int i = 0; (i < argcnt); i++)
@@ -2642,7 +2642,7 @@ void dilfi_ada(dilprg *p)
                 if (is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
                 {
-                    if (p->frame[0].tmpl->zone->access != 0)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                     {
                         szonelog(p->frame->tmpl->zone,
                                  "DIL '%s' attempt to violate system access security (ada).",
@@ -2678,7 +2678,7 @@ void dilfi_ada(dilprg *p)
                 if (is_in(-v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
                 {
-                    if (p->frame[0].tmpl->zone->access != 0)
+                    if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                     {
                         szonelog(p->frame->tmpl->zone,
                                  "DIL '%s' attempt to violate system access security (ada).",

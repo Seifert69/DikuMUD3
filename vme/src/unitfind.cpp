@@ -141,7 +141,7 @@ static inline int pcpay(unit_data *u)
 /* returns if ROOM is pay/no pay !0/0 */
 static inline int roompay(unit_data *u)
 {
-    return (UNIT_FI_ZONE(u)->payonly);
+    return (UNIT_FI_ZONE(u)->getPayOnly());
 }
 
 /* These functions determine if the units are candidates in find */

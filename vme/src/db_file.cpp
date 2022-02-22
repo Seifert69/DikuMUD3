@@ -754,7 +754,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                      0,
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON LOAD",
                      (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
-                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->name : "NO ZONE"),
+                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
                      fptr->heart_beat);
             }
         }
@@ -847,7 +847,7 @@ void bwrite_diltemplate(CByteBuffer *pBuf, diltemplate *tmpl)
 
     if (tmpl->zone)
     {
-        auto str = diku::format_to_str("%s@%s", tmpl->prgname, tmpl->zone->name);
+        auto str = diku::format_to_str("%s@%s", tmpl->prgname, tmpl->zone->getName());
         pBuf->AppendString(str.c_str());
     }
     else
@@ -918,7 +918,7 @@ void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
     {
         if (tmpl->zone)
         {
-            auto buf = diku::format_to_str("%s@%s", tmpl->prgname, tmpl->zone->name);
+            auto buf = diku::format_to_str("%s@%s", tmpl->prgname, tmpl->zone->getName());
             pBuf->AppendString(buf.c_str());
         }
         else
@@ -1026,7 +1026,7 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
                      0,
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON SAVE",
                      (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
-                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->name : "NO ZONE"),
+                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
                      fptr->heart_beat);
             }
         }

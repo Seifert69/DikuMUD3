@@ -169,7 +169,7 @@ void resolve_templates()
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
         /* all templates in zone */
-        for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
+        for (auto tmpl = z->second->cgetDILTemplate().begin(); tmpl != z->second->cgetDILTemplate().end(); tmpl++)
         {
             /* all external references */
             for (i = 0; i < tmpl->second->xrefcount; i++)
@@ -248,11 +248,11 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 
             tmpl->prgname = str_dup(nBuf);
             str_lower(tmpl->prgname);
-            zone->mmp_tmpl.insert(std::make_pair(tmpl->prgname, tmpl));
+            zone->getDILTemplate().insert(std::make_pair(tmpl->prgname, tmpl));
 
             /* Link into list of indexes */
 
-            zone->no_tmpl++;
+            zone->incrementNumOfDILTemplates();
         }
         /* next size */
         if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
@@ -315,25 +315,25 @@ void generate_file_indexes(FILE *f, zone_type *zone)
         }
         temp_index->setCRC(temp_32);
 
-        zone->mmp_fi.insert(std::make_pair(temp_index->getName(), temp_index));
+        zone->getFileIndexMap().insert(std::make_pair(temp_index->getName(), temp_index));
         fi = temp_index;
-        zone->no_of_fi++;
+        zone->incrementNumOfFileIndexes();
         fi->setFilepos(ftell(f));
         if (fi->getType() == UNIT_ST_OBJ)
         {
-            zone->no_objs++;
+            zone->incrementNumOfObjects();
             object_num++;
         }
 
         if (fi->getType() == UNIT_ST_NPC)
         {
-            zone->no_npcs++;
+            zone->incrementNumOfNPCs();
             npc_num++;
         }
 
         if (fi->getType() == UNIT_ST_ROOM)
         {
-            zone->no_rooms++;
+            zone->incrementNumOfRooms();
         }
 
         if (fi->getType() == UNIT_ST_ROOM)
@@ -383,15 +383,15 @@ void generate_zone_indexes()
     // Insert a virtual zone _players
     z = new (zone_type);
     g_zone_info.no_of_zones++;
-    z->zone_no = g_zone_info.no_of_zones - 1;
-    z->name = str_dup("_players");
-    z->filename = str_dup("ply");
-    z->title = str_dup("Reserved zone for player file_indexes");
-    z->help = str_dup("");
-    z->notes = str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
-                       "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
-                       "of player files on disk\n");
-    g_zone_info.mmp.insert(std::make_pair(z->name, z));
+    z->setZoneNumber(g_zone_info.no_of_zones - 1);
+    z->setName(str_dup("_players"));
+    z->setFilename(str_dup("ply"));
+    z->setTitle(str_dup("Reserved zone for player file_indexes"));
+    z->setHelp(str_dup(""));
+    z->setNotes(str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
+                        "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
+                        "of player files on disk\n"));
+    g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
     z = nullptr;
 
     for (;;)
@@ -477,48 +477,51 @@ void generate_zone_indexes()
         z = new (zone_type);
         g_zone_info.no_of_zones++;
 
-        z->zone_no = g_zone_info.no_of_zones - 1;
-        z->filename = str_dup(zone);
+        z->setZoneNumber(g_zone_info.no_of_zones - 1);
+        z->setFilename(str_dup(zone));
 
         if (*dilfilepath)
         {
-            z->dilfilepath = str_dup(dilfilepath);
+            z->setDILFilePath(str_dup(dilfilepath));
         }
         else
         {
-            z->dilfilepath = nullptr;
+            z->setDILFilePath(nullptr);
         }
 
         fstrcpy(&cBuf, f);
-        z->name = str_dup((char *)cBuf.GetData());
-        str_lower(z->name);
+        auto name = str_dup((char *)cBuf.GetData());
+        str_lower(name);
+        z->setName(name);
 
-        if (find_zone(z->name))
+        if (find_zone(z->getName()))
         {
-            slog(LOG_ALL, 0, "ZONE BOOT: Duplicate zone name [%s] not allowed", z->name);
+            slog(LOG_ALL, 0, "ZONE BOOT: Duplicate zone name [%s] not allowed", z->getName());
             exit(42);
         }
 
         // Insert zone into sorted list
-        g_zone_info.mmp.insert(std::make_pair(z->name, z));
+        g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
 
-        int mstmp = fread(&z->weather.base, sizeof(int), 1, f);
+        int temp1{0};
+        int mstmp = fread(&temp1, sizeof(int), 1, f);
         if (mstmp < 1)
         {
             slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in db.cpp", mstmp);
             assert(FALSE);
         }
+        z->getWeather().setBase(temp1);
 
-        z->access = access;
-        z->loadlevel = loadlevel;
-        z->payonly = payonly;
+        z->setAccessLevel(access);
+        z->setLevelRequiredToLoadItems(loadlevel);
+        z->setPayOnly(payonly);
 
         /* More data read here */
         fstrcpy(&cBuf, f);
-        z->notes = str_dup((char *)cBuf.GetData());
+        z->setNotes(str_dup((char *)cBuf.GetData()));
 
         fstrcpy(&cBuf, f);
-        z->help = str_dup((char *)cBuf.GetData());
+        z->setHelp(str_dup((char *)cBuf.GetData()));
 
         for (;;)
         {
@@ -529,28 +532,28 @@ void generate_zone_indexes()
                 break;
             }
 
-            z->creators.AppendName((char *)cBuf.GetData());
+            z->getCreators().AppendName((char *)cBuf.GetData());
         }
 
         fstrcpy(&cBuf, f);
 
         if (cBuf.GetData()[0] != 0)
         {
-            z->title = str_dup((char *)cBuf.GetData());
+            z->setTitle(str_dup((char *)cBuf.GetData()));
         }
         else
         {
-            z->title = str_dup("");
+            z->setTitle(str_dup(""));
         }
 
         /* read templates */
-        z->no_tmpl = 0;
+        z->setNumOfDILTemplates(0);
         generate_templates(f, z);
 
-        z->no_of_fi = 0;
-        z->zri = nullptr;
+        z->setNumOfFileIndexes(0);
+        z->setZoneResetCommands(nullptr);
         generate_file_indexes(f, z);
-        z->no_rooms = g_room_number; /* Number of rooms in the zone */
+        z->setNumOfRooms(g_room_number); /* Number of rooms in the zone */
 
         fflush(f); /* Don't fclose(f); since we are using _cache */
     }
@@ -1551,7 +1554,7 @@ void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
     FILE *f = nullptr;
     char buf[256];
 
-    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->getZone()->filename);
+    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->getZone()->getFilename());
 
     if ((f = fopen_cache(buf, "rb")) == nullptr)
     {
@@ -1610,7 +1613,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
     u = read_unit_string(&g_FileBuffer,
                          org_fi->getType(),
                          org_fi->getLength(),
-                         str_cc(org_fi->getName(), org_fi->getZone()->name),
+                         str_cc(org_fi->getName(), org_fi->getZone()->getName()),
                          ins_list);
     u->set_fi(org_fi);
 
@@ -1650,7 +1653,7 @@ void read_all_rooms()
     {
         g_boot_zone = z->second;
 
-        for (auto fi = z->second->mmp_fi.begin(); fi != z->second->mmp_fi.end(); fi++)
+        for (auto fi = z->second->cgetFileIndexMap().begin(); fi != z->second->cgetFileIndexMap().end(); fi++)
         {
             if (fi->second->getType() == UNIT_ST_ROOM)
             {
@@ -1893,30 +1896,34 @@ void read_all_zones()
     {
         read_zone_error = zone->second;
 
-        if (strcmp(zone->second->name, "_players") == 0)
+        if (strcmp(zone->second->getName(), "_players") == 0)
         {
             continue;
         }
 
-        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->filename);
+        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->getFilename());
 
         if ((f = fopen(filename, "rb")) == nullptr)
         {
-            slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->filename);
+            slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->getFilename());
             exit(10);
         }
 
-        if (fread(&(zone->second->zone_time), sizeof(ubit16), 1, f) != 1)
+        ubit16 temp{0};
+        if (fread(&temp, sizeof(ubit16), 1, f) != 1)
         {
             error(HERE, "Failed to fread() zone->second->zone_time");
         }
+        zone->second->setZoneResetTime(temp);
 
-        if (fread(&(zone->second->reset_mode), sizeof(ubit8), 1, f) != 1)
+        ubit8 temp2{0};
+        if (fread(&temp2, sizeof(ubit8), 1, f) != 1)
         {
             error(HERE, "Failed to fread() zone->second->reset_mode");
         }
+        zone->second->setResetMode(temp2);
 
-        zone->second->zri = read_zone(f, nullptr);
+        zone->second->setZoneResetCommands(read_zone(f, nullptr));
 
         fclose(f);
     }
