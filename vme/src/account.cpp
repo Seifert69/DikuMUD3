@@ -161,7 +161,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        PC_ACCOUNT(u).discount,
                                        PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
                                        PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
-                                       PC_ACCOUNT(u).cracks);
+                                       PC_ACCOUNT(u).getCrackAttempts());
         send_to_char(msg, ch);
     }
     else
@@ -841,7 +841,7 @@ void account_defaults(unit_data *pc)
     PC_ACCOUNT(pc).setTotalCredit(0);
     PC_ACCOUNT(pc).setLastFourDigitsofCreditCard(-1);
     PC_ACCOUNT(pc).discount = 0;
-    PC_ACCOUNT(pc).cracks = 0;
+    PC_ACCOUNT(pc).setCrackAttempts(0);
     PC_ACCOUNT(pc).flatrate = 0;
 }
 

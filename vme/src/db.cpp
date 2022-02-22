@@ -896,13 +896,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         PC_ACCOUNT(u).flatrate = 0;
                     }
 
-                    PC_ACCOUNT(u).cracks = pBuf->ReadU8(&g_nCorrupt);
+                    PC_ACCOUNT(u).readCrackAttemptsFrom(*pBuf, g_nCorrupt);
                 }
                 else
                 {
                     PC_ACCOUNT(u).flatrate = 0;
                     PC_ACCOUNT(u).discount = 0;
-                    PC_ACCOUNT(u).cracks = 0;
+                    PC_ACCOUNT(u).setCrackAttempts(0);
                 }
 
                 if (unit_version >= 48)

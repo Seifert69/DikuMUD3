@@ -696,7 +696,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     whom->account.setTotalCredit(333);
     whom->account.setLastFourDigitsofCreditCard(333);
     whom->account.discount = 222;
-    whom->account.cracks = 222;
+    whom->account.setCrackAttempts(222);
     whom->account.flatrate = 333;
 
     ////////////////////////// Test Subject //////////////////////////////
@@ -708,7 +708,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     BOOST_TEST(whom->account.getTotalCredit() == 0);
     BOOST_TEST(whom->account.getLastFourDigitsofCreditCard() == -1);
     BOOST_TEST(whom->account.discount == 0);
-    BOOST_TEST(whom->account.cracks == 0);
+    BOOST_TEST(whom->account.getCrackAttempts() == 0);
     BOOST_TEST(whom->account.flatrate == 0);
 }
 BOOST_AUTO_TEST_SUITE_END() // Account_Defaults_Suite

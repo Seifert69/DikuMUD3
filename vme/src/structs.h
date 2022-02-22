@@ -250,13 +250,17 @@ public:
     void setLastFourDigitsofCreditCard(sbit16 value) { last4 = value; }
     void readLastFourDigitsofCreditCardFrom(CByteBuffer &buf, int &error) { last4 = buf.ReadS16(&error); }
 
+    ubit8 getCrackAttempts() const { return cracks; }
+    void setCrackAttempts(ubit8 value) { cracks = value; }
+    void readCrackAttemptsFrom(CByteBuffer &buf, int &error) { cracks = buf.ReadU8(&error); }
+
 private:
     float credit{0.0f};     // How many coin units are left on account?
     ubit32 credit_limit{0}; // In coin units (i.e. cents / oerer)
     ubit32 total_credit{0}; // Accumulated credit to date (coin units)
     sbit16 last4{-1};       // The last four digits of his credit card, or -1
+    ubit8 cracks{0};        // Crack-attempts on CC last4
 public:
-    ubit8 cracks;    /* Crack-attempts on CC last4                     */
     ubit8 discount;  /* 0 - 100% discount                              */
     ubit32 flatrate; /* The expiration date of a flat rate service     */
 };
