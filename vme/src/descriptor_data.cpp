@@ -93,7 +93,7 @@ void descriptor_data::CreateBBS()
             fprintf(f, "0\n");
         }
 
-        fprintf(f, "%d\n", PC_ACCOUNT(this->character).total_credit);
+        fprintf(f, "%d\n", PC_ACCOUNT(this->character).getTotalCredit());
         fprintf(f, "%s\n", PC_FILENAME(this->character));
         fprintf(f, "%d\n", CHAR_LEVEL(this->character));
         fprintf(f, "%d\n", PC_ACCESS_LEVEL(this->character));

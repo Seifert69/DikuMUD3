@@ -353,13 +353,15 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if ((v1->val.ptr && IS_PC((unit_data *)v1->val.ptr)))
+                {
+                    auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (player && IS_PC(player))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
                         if (g_cServerConfig.isAccounting())
                         {
-                            v->val.num = PC_ACCOUNT((unit_data *)v1->val.ptr).total_credit;
+                            v->val.num = player->account.getTotalCredit();
                         }
                         else
                         {
@@ -370,7 +372,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

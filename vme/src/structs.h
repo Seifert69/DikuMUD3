@@ -240,15 +240,21 @@ public:
     void setCreditLimit(ubit32 value) { credit_limit = value; }
     void readCreditLimitFrom(CByteBuffer &buf, int &error) { credit_limit = buf.ReadU32(&error); }
 
+    ubit32 getTotalCredit() const { return total_credit; }
+    void increaseTotalCreditBy(ubit32 value) { total_credit += value; }
+    void reduceTotalCreditBy(ubit32 value) { total_credit -= value; }
+    void setTotalCredit(ubit32 value) { total_credit = value; }
+    void readTotalCreditFrom(CByteBuffer &buf, int &error) { total_credit = buf.ReadU32(&error); }
+
 private:
     float credit{0.0f};     // How many coin units are left on account?
     ubit32 credit_limit{0}; // In coin units (i.e. cents / oerer)
+    ubit32 total_credit{0}; // Accumulated credit to date (coin units)
 public:
-    ubit32 total_credit; /* Accumulated credit to date (coin units)        */
-    sbit16 last4;        /* The last four digits of his credit card, or -1 */
-    ubit8 cracks;        /* Crack-attempts on CC last4                     */
-    ubit8 discount;      /* 0 - 100% discount                              */
-    ubit32 flatrate;     /* The expiration date of a flat rate service     */
+    sbit16 last4;    /* The last four digits of his credit card, or -1 */
+    ubit8 cracks;    /* Crack-attempts on CC last4                     */
+    ubit8 discount;  /* 0 - 100% discount                              */
+    ubit32 flatrate; /* The expiration date of a flat rate service     */
 };
 
 class pc_data : public char_data

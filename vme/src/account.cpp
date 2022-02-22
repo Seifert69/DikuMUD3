@@ -96,7 +96,7 @@ static void account_log(char action, unit_data *god, unit_data *pc, int amount)
     }
 
     pid = PC_ID(pc) ^ (vxor << 1);
-    total = PC_ACCOUNT(pc).total_credit;
+    total = PC_ACCOUNT(pc).getTotalCredit();
 
     amount += 13;
     amount ^= vxor << 2;
@@ -156,7 +156,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        "Crack counter  : %3d\n\r",
                                        PC_ACCOUNT(u).getAccountBalance() / 100.0,
                                        PC_ACCOUNT(u).getCreditLimit() / 100.0,
-                                       (float)PC_ACCOUNT(u).total_credit / 100.0,
+                                       PC_ACCOUNT(u).getTotalCredit() / 100.0,
                                        PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
                                        PC_ACCOUNT(u).discount,
                                        PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
@@ -166,7 +166,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
     }
     else
     {
-        if (PC_ACCOUNT(u).total_credit > 0)
+        if (PC_ACCOUNT(u).getTotalCredit() > 0)
         {
             send_to_char("Has paid for playing.\n\r", ch);
         }
@@ -568,7 +568,7 @@ int account_is_closed(unit_data *ch)
 void account_insert(unit_data *god, unit_data *whom, ubit32 amount)
 {
     PC_ACCOUNT(whom).increaseAccountBalanceBy(static_cast<float>(amount));
-    PC_ACCOUNT(whom).total_credit += amount;
+    PC_ACCOUNT(whom).increaseTotalCreditBy(amount);
 
     slog(LOG_ALL, 255, "%s inserted %d on account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
     account_log('I', god, whom, amount);
@@ -577,13 +577,13 @@ void account_insert(unit_data *god, unit_data *whom, ubit32 amount)
 void account_withdraw(unit_data *god, unit_data *whom, ubit32 amount)
 {
     PC_ACCOUNT(whom).reduceAccountBalanceBy(static_cast<float>(amount));
-    if ((ubit32)amount > PC_ACCOUNT(whom).total_credit)
+    if ((ubit32)amount > PC_ACCOUNT(whom).getTotalCredit())
     {
-        PC_ACCOUNT(whom).total_credit = 0;
+        PC_ACCOUNT(whom).setTotalCredit(0);
     }
     else
     {
-        PC_ACCOUNT(whom).total_credit -= amount;
+        PC_ACCOUNT(whom).reduceTotalCreditBy(amount);
     }
 
     slog(LOG_ALL, 255, "%s withdrew %d from account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
@@ -838,7 +838,7 @@ void account_defaults(unit_data *pc)
 {
     PC_ACCOUNT(pc).setAccountBalance(static_cast<float>(g_cAccountConfig.m_nAccountFree));
     PC_ACCOUNT(pc).setCreditLimit(static_cast<int>(g_cAccountConfig.m_nAccountLimit));
-    PC_ACCOUNT(pc).total_credit = 0;
+    PC_ACCOUNT(pc).setTotalCredit(0);
     PC_ACCOUNT(pc).last4 = -1;
     PC_ACCOUNT(pc).discount = 0;
     PC_ACCOUNT(pc).cracks = 0;

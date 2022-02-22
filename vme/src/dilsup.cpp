@@ -28,7 +28,7 @@ int pay_point_charlie(unit_data *ch, unit_data *to)
 
         if (UNIT_FI_ZONE(to) && UNIT_FI_ZONE(to)->getPayOnly())
         {
-            if ((UNIT_FI_ZONE(to)->getPayOnly() == 1) && (PC_ACCOUNT(ch).total_credit <= 0))
+            if ((UNIT_FI_ZONE(to)->getPayOnly() == 1) && (PC_ACCOUNT(ch).getTotalCredit() <= 0))
             {
                 account_paypoint(ch);
                 return FALSE;
@@ -39,7 +39,7 @@ int pay_point_charlie(unit_data *ch, unit_data *to)
                 return FALSE;
             }
             else if ((UNIT_FI_ZONE(to)->getPayOnly() == 3) &&
-                     ((PC_ACCOUNT(ch).total_credit > 0) || (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))))
+                     ((PC_ACCOUNT(ch).getTotalCredit() > 0) || (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))))
             {
                 account_paypoint(ch);
                 return FALSE;

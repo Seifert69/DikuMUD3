@@ -424,14 +424,14 @@ BOOST_AUTO_TEST_CASE(account_insert_test)
     int amount = 5546;
 
     whom->account.setAccountBalance(credit);
-    whom->account.total_credit = total_credit;
+    whom->account.setTotalCredit(total_credit);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_insert(god.get(), whom.get(), amount);
     ////////////////////////// Test Subject //////////////////////////////
 
     BOOST_TEST(whom->account.getAccountBalance() == credit + amount);
-    BOOST_TEST(whom->account.total_credit == total_credit + amount);
+    BOOST_TEST(whom->account.getTotalCredit() == total_credit + amount);
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);
@@ -455,7 +455,7 @@ BOOST_DATA_TEST_CASE(account_withdraw_test, withdrawal_amounts, amount)
     ubit32 total_credit = 4876;
 
     whom->account.setAccountBalance(credit);
-    whom->account.total_credit = total_credit;
+    whom->account.setTotalCredit(total_credit);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_withdraw(god.get(), whom.get(), amount);
@@ -467,7 +467,7 @@ BOOST_DATA_TEST_CASE(account_withdraw_test, withdrawal_amounts, amount)
     {
         expected_total_credit = 0;
     }
-    BOOST_TEST(whom->account.total_credit == expected_total_credit);
+    BOOST_TEST(whom->account.getTotalCredit() == expected_total_credit);
 
     auto expected = diku::format_to_str("%s withdrew %d from account %s.", god->names.Name(), amount, whom->names.Name());
 
@@ -655,7 +655,7 @@ BOOST_AUTO_TEST_CASE(account_local_stat_broke_test)
 
 BOOST_AUTO_TEST_CASE(account_local_stat_funds_test)
 {
-    whom->account.total_credit = 5000;
+    whom->account.setTotalCredit(5000);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_local_stat(god.get(), whom.get());
@@ -668,7 +668,7 @@ BOOST_AUTO_TEST_CASE(account_local_stat_funds_test)
 BOOST_AUTO_TEST_CASE(account_local_stat_admin_test)
 {
     god->points.setLevel(ADMINISTRATOR_LEVEL);
-    whom->account.total_credit = 5000;
+    whom->account.setTotalCredit(5000);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_local_stat(god.get(), whom.get());
@@ -692,7 +692,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
 {
     whom->account.setAccountBalance(333.0);
     whom->account.setCreditLimit(333);
-    whom->account.total_credit = 333;
+    whom->account.setTotalCredit(333);
     whom->account.last4 = 333;
     whom->account.discount = 222;
     whom->account.cracks = 222;
@@ -704,7 +704,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
 
     BOOST_TEST(whom->account.getAccountBalance() == 0.0);
     BOOST_TEST(whom->account.getCreditLimit() == 0);
-    BOOST_TEST(whom->account.total_credit == 0);
+    BOOST_TEST(whom->account.getTotalCredit() == 0);
     BOOST_TEST(whom->account.last4 == -1);
     BOOST_TEST(whom->account.discount == 0);
     BOOST_TEST(whom->account.cracks == 0);
