@@ -668,6 +668,7 @@ BOOST_AUTO_TEST_CASE(account_local_stat_funds_test)
 BOOST_AUTO_TEST_CASE(account_local_stat_admin_test)
 {
     god->points.setLevel(ADMINISTRATOR_LEVEL);
+    whom->account.setLastFourDigitsofCreditCard(4444);
     whom->account.setTotalCredit(5000);
 
     ////////////////////////// Test Subject //////////////////////////////
@@ -693,7 +694,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     whom->account.setAccountBalance(333.0);
     whom->account.setCreditLimit(333);
     whom->account.setTotalCredit(333);
-    whom->account.last4 = 333;
+    whom->account.setLastFourDigitsofCreditCard(333);
     whom->account.discount = 222;
     whom->account.cracks = 222;
     whom->account.flatrate = 333;
@@ -705,7 +706,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     BOOST_TEST(whom->account.getAccountBalance() == 0.0);
     BOOST_TEST(whom->account.getCreditLimit() == 0);
     BOOST_TEST(whom->account.getTotalCredit() == 0);
-    BOOST_TEST(whom->account.last4 == -1);
+    BOOST_TEST(whom->account.getLastFourDigitsofCreditCard() == -1);
     BOOST_TEST(whom->account.discount == 0);
     BOOST_TEST(whom->account.cracks == 0);
     BOOST_TEST(whom->account.flatrate == 0);

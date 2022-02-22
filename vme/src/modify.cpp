@@ -868,7 +868,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             if (valarg == -1)
             {
                 send_to_char("Erasing CC information.<br/>", ch);
-                PC_ACCOUNT(unt).last4 = -1;
+                PC_ACCOUNT(unt).setLastFourDigitsofCreditCard(-1);
                 PC_ACCOUNT(unt).cracks = 0;
             }
             else
@@ -876,7 +876,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 if (is_in(valarg, 0, 9999))
                 {
                     send_to_char("Setting CC information.<br/>", ch);
-                    PC_ACCOUNT(unt).last4 = valarg;
+                    PC_ACCOUNT(unt).setLastFourDigitsofCreditCard(valarg);
                     PC_ACCOUNT(unt).cracks = 0;
                 }
                 else

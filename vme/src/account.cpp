@@ -157,7 +157,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        PC_ACCOUNT(u).getAccountBalance() / 100.0,
                                        PC_ACCOUNT(u).getCreditLimit() / 100.0,
                                        PC_ACCOUNT(u).getTotalCredit() / 100.0,
-                                       PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
+                                       PC_ACCOUNT(u).getLastFourDigitsofCreditCard() == -1 ? "NONE" : "REGISTERED",
                                        PC_ACCOUNT(u).discount,
                                        PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
                                        PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
@@ -839,7 +839,7 @@ void account_defaults(unit_data *pc)
     PC_ACCOUNT(pc).setAccountBalance(static_cast<float>(g_cAccountConfig.m_nAccountFree));
     PC_ACCOUNT(pc).setCreditLimit(static_cast<int>(g_cAccountConfig.m_nAccountLimit));
     PC_ACCOUNT(pc).setTotalCredit(0);
-    PC_ACCOUNT(pc).last4 = -1;
+    PC_ACCOUNT(pc).setLastFourDigitsofCreditCard(-1);
     PC_ACCOUNT(pc).discount = 0;
     PC_ACCOUNT(pc).cracks = 0;
     PC_ACCOUNT(pc).flatrate = 0;

@@ -872,7 +872,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 44)
                 {
-                    PC_ACCOUNT(u).last4 = pBuf->ReadS16(&g_nCorrupt);
+                    PC_ACCOUNT(u).readLastFourDigitsofCreditCardFrom(*pBuf, g_nCorrupt);
                 }
                 else
                 {
@@ -880,7 +880,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     {
                         g_nCorrupt += pBuf->Skip32(); /* cc_time */
                     }
-                    PC_ACCOUNT(u).last4 = -1;
+                    PC_ACCOUNT(u).setLastFourDigitsofCreditCard(-1);
                 }
 
                 if (unit_version >= 45)
