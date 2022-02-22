@@ -695,7 +695,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     whom->account.setCreditLimit(333);
     whom->account.setTotalCredit(333);
     whom->account.setLastFourDigitsofCreditCard(333);
-    whom->account.discount = 222;
+    whom->account.setDiscountPercentage(222);
     whom->account.setCrackAttempts(222);
     whom->account.flatrate = 333;
 
@@ -707,7 +707,7 @@ BOOST_AUTO_TEST_CASE(account_defaults_test)
     BOOST_TEST(whom->account.getCreditLimit() == 0);
     BOOST_TEST(whom->account.getTotalCredit() == 0);
     BOOST_TEST(whom->account.getLastFourDigitsofCreditCard() == -1);
-    BOOST_TEST(whom->account.discount == 0);
+    BOOST_TEST(whom->account.getDiscountPercentage() == 0);
     BOOST_TEST(whom->account.getCrackAttempts() == 0);
     BOOST_TEST(whom->account.flatrate == 0);
 }
@@ -844,7 +844,7 @@ BOOST_AUTO_TEST_CASE(account_overdue_test_2)
 {
     whom->account.setCreditLimit(4895);
     whom->account.setAccountBalance(456);
-    whom->account.discount = 100;
+    whom->account.setDiscountPercentage(100);
     ////////////////////////// Test Subject //////////////////////////////
     account_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////

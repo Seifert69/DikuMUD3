@@ -158,7 +158,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        PC_ACCOUNT(u).getCreditLimit() / 100.0,
                                        PC_ACCOUNT(u).getTotalCredit() / 100.0,
                                        PC_ACCOUNT(u).getLastFourDigitsofCreditCard() == -1 ? "NONE" : "REGISTERED",
-                                       PC_ACCOUNT(u).discount,
+                                       PC_ACCOUNT(u).getDiscountPercentage(),
                                        PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
                                        PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
                                        PC_ACCOUNT(u).getCrackAttempts());
@@ -234,7 +234,7 @@ void account_overdue(const unit_data *ch)
 
     if (g_cServerConfig.isAccounting())
     {
-        ubit32 discount = PC_ACCOUNT(ch).discount;
+        ubit32 discount = PC_ACCOUNT(ch).getDiscountPercentage();
         ubit32 lcharge = ((100 - discount) * g_cAccountConfig.m_nHourlyRate) / 100;
 
         if (lcharge == 0)
@@ -360,9 +360,9 @@ static void account_calc(unit_data *pc, tm *b, tm *e)
 
     float amt = (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / (float)3600.0);
 
-    if (is_in(PC_ACCOUNT(pc).discount, 1, 99))
+    if (is_in(PC_ACCOUNT(pc).getDiscountPercentage(), 1, 99))
     {
-        PC_ACCOUNT(pc).reduceAccountBalanceBy((((float)(100 - PC_ACCOUNT(pc).discount)) * amt) / 100.0f);
+        PC_ACCOUNT(pc).reduceAccountBalanceBy((((float)(100 - PC_ACCOUNT(pc).getDiscountPercentage())) * amt) / 100.0f);
     }
     else
     {
@@ -460,7 +460,7 @@ static void account_status(const unit_data *ch)
     int j = 0;
     int i = 0;
     char *pTmstr = nullptr;
-    ubit32 discount = PC_ACCOUNT(ch).discount;
+    ubit32 discount = PC_ACCOUNT(ch).getDiscountPercentage();
     ubit32 lcharge = ((100 - discount) * g_cAccountConfig.m_nHourlyRate) / 100;
 
     if (account_is_overdue(ch))
@@ -791,7 +791,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
             send_to_char(msg, ch);
 
-            PC_ACCOUNT(u).discount = amount;
+            PC_ACCOUNT(u).setDiscountPercentage(amount);
 
             account_local_stat(ch, u);
 
@@ -840,7 +840,7 @@ void account_defaults(unit_data *pc)
     PC_ACCOUNT(pc).setCreditLimit(static_cast<int>(g_cAccountConfig.m_nAccountLimit));
     PC_ACCOUNT(pc).setTotalCredit(0);
     PC_ACCOUNT(pc).setLastFourDigitsofCreditCard(-1);
-    PC_ACCOUNT(pc).discount = 0;
+    PC_ACCOUNT(pc).setDiscountPercentage(0);
     PC_ACCOUNT(pc).setCrackAttempts(0);
     PC_ACCOUNT(pc).flatrate = 0;
 }

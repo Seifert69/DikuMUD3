@@ -885,7 +885,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 45)
                 {
-                    PC_ACCOUNT(u).discount = pBuf->ReadU8(&g_nCorrupt);
+                    PC_ACCOUNT(u).readDiscountPercentageFrom(*pBuf, g_nCorrupt);
 
                     if (unit_version >= 52)
                     {
@@ -901,7 +901,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 else
                 {
                     PC_ACCOUNT(u).flatrate = 0;
-                    PC_ACCOUNT(u).discount = 0;
+                    PC_ACCOUNT(u).setDiscountPercentage(0);
                     PC_ACCOUNT(u).setCrackAttempts(0);
                 }
 
