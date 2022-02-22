@@ -6751,7 +6751,7 @@ void dilfe_tho(dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date().hours;
+    v->val.num = mud_date().getHours();
     p->stack.push(v);
 }
 
@@ -6762,7 +6762,7 @@ void dilfe_tda(dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date().day;
+    v->val.num = mud_date().getDay();
     p->stack.push(v);
 }
 
@@ -6773,7 +6773,7 @@ void dilfe_tmd(dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date().month;
+    v->val.num = mud_date().getMonth();
     p->stack.push(v);
 }
 
@@ -6784,7 +6784,7 @@ void dilfe_tye(dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date().year;
+    v->val.num = mud_date().getYear();
     p->stack.push(v);
 }
 

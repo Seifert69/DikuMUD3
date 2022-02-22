@@ -137,10 +137,7 @@ BOOST_DATA_TEST_CASE(mud_time_passed_test, to_mudtime_dataset ^ from_mudtime_dat
     ////////////////////////// Test Subject //////////////////////////////
     auto result = mud_time_passed(to, from);
     ////////////////////////// Test Subject //////////////////////////////
-    BOOST_TEST(result.hours == expected_result.hours);
-    BOOST_TEST(result.day == expected_result.day);
-    BOOST_TEST(result.month == expected_result.month);
-    BOOST_TEST(result.year == expected_result.year);
+    BOOST_TEST(result == expected_result);
 }
 
 /**********************************************************************************
@@ -189,10 +186,7 @@ BOOST_DATA_TEST_CASE(real_time_passed_test,
     ////////////////////////// Test Subject //////////////////////////////
     auto result = real_time_passed(to, from);
     ////////////////////////// Test Subject //////////////////////////////
-    BOOST_TEST(result.hours == expected_result.hours);
-    BOOST_TEST(result.day == expected_result.day);
-    BOOST_TEST(result.month == expected_result.month);
-    BOOST_TEST(result.year == expected_result.year);
+    BOOST_TEST(result == expected_result);
 }
 
 /**********************************************************************************
@@ -206,10 +200,8 @@ BOOST_AUTO_TEST_CASE(age_npc_test)
     auto result = age(unit.get());
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(result.hours == 0);
-    BOOST_TEST(result.day == 0);
-    BOOST_TEST(result.month == 0);
-    BOOST_TEST(result.year == 0);
+    time_info_data expected(0, 0, 0, 0);
+    BOOST_TEST(result == expected);
 }
 
 /**********************************************************************************
@@ -225,10 +217,9 @@ BOOST_AUTO_TEST_CASE(age_pc_test)
     auto result = age(unit.get());
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(result.hours == 2);
-    BOOST_TEST(result.day == 13);
-    BOOST_TEST(result.month == 3);
-    BOOST_TEST(result.year == 8);
+    time_info_data expected(2, 13, 3, 8);
+
+    BOOST_TEST(result == expected);
 }
 
 /**********************************************************************************
@@ -242,10 +233,8 @@ BOOST_AUTO_TEST_CASE(mud_date_test)
     auto result = mud_date(test_date);
     ////////////////////////// Test Subject //////////////////////////////
 
-    BOOST_TEST(result.hours == 6);
-    BOOST_TEST(result.day == 3);
-    BOOST_TEST(result.month == 8);
-    BOOST_TEST(result.year == 1090);
+    time_info_data expected(6, 3, 8, 1090);
+    BOOST_TEST(result == expected);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
