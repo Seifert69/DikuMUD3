@@ -9,6 +9,7 @@ END HEADER*/
 
 #define _GUILD_UDGAARD_FIGHTER
 #define BELT_GIVEN "$Swordsman Belt given"
+#define QUEST_FIGHTER_ENTRY "Fighters Guild Entry"
 
 /* This zone is the Fighters Guild. It has been made as                  */
 /* a separate zone in order to make Midgaard smaller.                    */
@@ -611,12 +612,12 @@ alignment 1000
 money 2 IRON_PIECE
 
 dilcopy nokill@fightersguild();
-dilcopy quest_block@guilds("join", "XXX Quest",
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy quest_block@guilds("join", QUEST_FIGHTER_ENTRY,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Fighter's Guild quest. Go speak with Maia."});
 dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 
-dilcopy guild_titles@guild_paths(GUILD_UDG_FIGHTER, {"Swordpupil",
+dilcopy SetTitles@guilds(GUILD_UDG_FIGHTER, {"Swordpupil",
 "Swordpupil", "Recruit", "Recruit", "Sentry", "Sentress", "Fighter",
 "Fighter", "Soldier", "Soldier", "Warrior", "Warrior", "Veteran",
 "Veteran", "Swordsman", "Swordswoman", "Fencer", "Fenceress",
@@ -906,6 +907,18 @@ dilcopy nokill@fightersguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 
+dilcopy qstSimpleQuest@quests(QUEST_FIGHTER_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Maia in the Fighter's Guild has asked you to bring her the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. Welcome to the Fighter's guild."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_FIGHTER_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
 
 end
 
@@ -932,7 +945,7 @@ dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 dilcopy rescue@function("gate guard");
 dilcopy teamwork@function("gate guard");
-dilcopy guild_guard@guild_paths(GUILD_UDG_FIGHTER, "east");
+// dilcopy guild_guard@guild_paths(GUILD_UDG_FIGHTER, "east");
 
 end
 

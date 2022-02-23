@@ -2743,7 +2743,7 @@ extra {}
 "The bear is a big, brown, furry animal with very large claws and very sharp
 teeth.  It doesn't resemble those cute little thingies from toy shops at all."
 alignment -50
-M_BEAR_TINY(15,SEX_MALE)
+M_BEAR_TINY(8, SEX_MALE)
 position POSITION_SLEEPING
 default POSITION_STANDING
 

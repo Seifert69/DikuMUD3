@@ -11,6 +11,9 @@ END HEADER*/
 
 #define _GUILD_NYM_DRUID
 #define GUILD_NYM_DRUID "Nymgaard Druid"
+#define QUEST_DRUID_ENTRY "Druid Guild Entry"
+
+
 #define GROVE_FLAGS \
 {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_SACRED,UNIT_FL_NO_TELEPORT}
 
@@ -451,11 +454,11 @@ dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 #include "guilddef.h"
 #undef _ABILITY
 
-dilcopy quest_block@guilds("join", "XXX Quest",
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy quest_block@guilds("join", QUEST_DRUID_ENTRY,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Druid Guild quest. Go speak with the Locust tree."});
 
 
-dilcopy guild_titles@guild_paths(GUILD_NYM_DRUID, {"Novice Druid",
+dilcopy SetTitles@guilds(GUILD_NYM_DRUID, {"Novice Druid",
 "Novice Druidess", "Nature Student", "Nature Student", "Scholar of Nature",
 "Scholar of Nature", "Master of Fungi", "Mistress of Fungi",
 "Learner of Trees", "Learner of Trees", "Forest Speaker", "Forest Speaker",
@@ -666,6 +669,20 @@ M_TREE_LARGE(120,SEX_NEUTRAL)
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
+
+dilcopy qstSimpleQuest@quests(QUEST_DRUID_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "The locust tree in the Druid's Guild has asked you to bring it the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. You should go speak with the guild master now."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_DRUID_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+
 alignment 0
 
 dilcopy nokill@druid();
@@ -673,7 +690,7 @@ dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
 dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
 dilcopy rescue@function("black locust tree");
 dilcopy teamwork@function("black locust tree");
-dilcopy guild_guard@guild_paths(GUILD_NYM_DRUID, "north");
+// dilcopy guild_guard@guild_paths(GUILD_NYM_DRUID, "north");
 end
 
 

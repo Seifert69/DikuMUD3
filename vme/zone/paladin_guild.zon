@@ -24,6 +24,8 @@ title "Paladin Guild@Mainland"
 #define PALADIN_FALLEN "Paladin, Fallen From Grace"
 #define WIGHT_COMPLETE "Wight warrens quest"
 #define PALADIN_SWORD "$Flame Tongue Granted"
+#define QUEST_PALADIN_ENTRY "Paladin Guild Entry"
+
 
 #define HUMAN_PAL_ABIL \
 MSET_ABILITY (20,15,15,20,10,10,0,10)
@@ -691,8 +693,8 @@ exp -300
 
 dilcopy combat_mag@function("","heal",25,2);
 dilcopy nokill@paladin_guild();
-dilcopy quest_block@guilds("join", WIGHT_COMPLETE, 
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Wight Warren's quest"});
+dilcopy quest_block@guilds("join", QUEST_PALADIN_ENTRY, 
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Paladin Guild quest. Go speak with Joan."});
 dilcopy MurderBanish@guilds(GUILD_PALADIN);
 dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 
@@ -1094,6 +1096,19 @@ dilcopy BlockEvilTrain@paladin_guild();
 #define _ABILITY
 #include "guilddef.h"
 #undef _ABILITY
+
+dilcopy qstSimpleQuest@quests(QUEST_PALADIN_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Joan in the Paladin's Guild has asked you to bring her the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. You should go speak with the guild master now."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_PALADIN_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
 
 
 end

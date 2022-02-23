@@ -10,6 +10,7 @@ END HEADER*/
 
 #define _GUILD_UDGAARD_CONJURER
 #define CONJURER_CHARM "$Conjurer Charm Given"
+#define QUEST_MAGE_ENTRY "Conjurer Guild Entry"
 
 /* This zone is the Mages Guild, the School of Magic. It has been    */
 /* made as a separate zone in order to make Midgaard smaller.        */
@@ -635,7 +636,7 @@ dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 dilcopy rescue@function("guard");
 dilcopy teamwork@function("guard");
-dilcopy guild_guard@guild_paths(GUILD_UDG_MAGE, "east");
+// dilcopy guild_guard@guild_paths(GUILD_UDG_MAGE, "east");
 end
 
 		rafizir
@@ -656,10 +657,10 @@ exp -100
 dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
-dilcopy quest_block@guilds("join", "XXX Quest",
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy quest_block@guilds("join", QUEST_MAGE_ENTRY,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Conjurer Entry quest. Go speak with Mr. Backspindle."});
 
-dilcopy guild_titles@guild_paths(GUILD_UDG_MAGE, {"Apprentice of Magic",
+dilcopy SetTitles@guilds(GUILD_UDG_MAGE, {"Apprentice of Magic",
 "Apprentice of Magic", "Spell Student", "Spell Student", "Scholar of Magic",
 "Scholar of Magic", "Delver in Spells", "Delveress in Spells",
 "Medium of Magic", "Medium of Magic", "Scribe of Magic", "Scribess of Magic",
@@ -1025,6 +1026,18 @@ dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 
+dilcopy qstSimpleQuest@quests(QUEST_MAGE_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Mr. Backspindle in the Conjurer's Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. You should go speak with the guild master now."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_MAGE_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
 end
 
 		rayasa

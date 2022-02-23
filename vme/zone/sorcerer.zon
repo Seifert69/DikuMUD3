@@ -16,6 +16,8 @@ v 43.01 2010.07.21 Changed weapons some to be
  02/09/2001 Mesmer upgraded recall scrolls  */
 
 #define _GUILD_MIDGAARD_SORCERER
+#define QUEST_SORCERER_ENTRY "Sorcerer Guild Entry"
+
 
 #include <macros.h>
 
@@ -124,7 +126,7 @@ dilend
 /* Dil to simulate unexpected bump on the head by a stalagtite */
 dilbegin headbump();
 external
-	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
 
 var
    num   :       integer;
@@ -133,7 +135,7 @@ code
    heartbeat := PULSE_SEC*5;
    :start:
    wait(SFB_CMD, activator.type == UNIT_ST_PC);
-	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 num:=GetGuildLevel@guilds(activator,GUILD_SORCERER);
 	 if (num>-1)
 	 	goto start;
 
@@ -165,7 +167,7 @@ dilend
 
 dilbegin recall mana_drain();
 external
-	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+	   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
 var
     storenum    :   integer;
     charge      :   integer;
@@ -196,7 +198,7 @@ fire := rnd(1,50);
 if(fire < 20)
      goto start;
 
-	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 num:=GetGuildLevel@guilds(activator,GUILD_SORCERER);
 	 if (num>-1)
    {
       num2 := rnd(1, 10);
@@ -382,7 +384,7 @@ dilend
 
 dilbegin parlor_kickout();
 external
-	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+	   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
 var
 	num:integer;
 	pc	:	unitptr;
@@ -390,7 +392,7 @@ code
 {
    :start:
    wait(SFB_CMD, activator.type == UNIT_ST_PC);
-	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 num:=GetGuildLevel@guilds(activator,GUILD_SORCERER);
 	 if (num>-1)
 	 	goto start;
 
@@ -436,7 +438,7 @@ ALWAYS_LIGHT
 
 dilbegin bar_kickout();
 external
-	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+	   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
 var
         pc      :       unitptr;
 				num:integer;
@@ -444,7 +446,7 @@ code
 {
    :start:
    wait(SFB_CMD, activator.type == UNIT_ST_PC);
-	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 num:=GetGuildLevel@guilds(activator,GUILD_SORCERER);
 	 if (num>-1)
 	 	goto start;
 
@@ -1202,12 +1204,12 @@ exp -300
 
 dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
-dilcopy quest_block@guilds("join", "XXX Quest",
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy quest_block@guilds("join", QUEST_SORCERER_ENTRY,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Sorcerer Guild quest. Go speak with Master Forbin."});
 dilcopy MurderBanish@guilds(SORCERER_GUILD);
 dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
 
-dilcopy guild_titles@guild_paths(GUILD_SORCERER, {"Third Order Mesmerist",
+dilcopy SetTitles@guilds(GUILD_SORCERER, {"Third Order Mesmerist",
 "Third Order Mesmerist", "Secondary Mesmerist", "Secondary Mesmerist",
 "Mesmerist Prime", "Mesmerist Prime", "Lesser Cagliostro", "Lesser Cagliostra",
 "Greater Cagliostro", "Greater Cagliostra", "Cagliostro Prime",
@@ -1432,7 +1434,7 @@ end
 
 
                                 forbin
-names {"forbin", "sorcerer", "teacher"}
+names {"forbin", "sorcerer", "teacher", "master forbin"}
 title "Forbin the Master of Skills"
 descr "Forbin the Master of Skills is here to teach you."
 extra {}
@@ -1456,6 +1458,20 @@ dilcopy TrainMemberChk@guilds(SORCERER_GUILD, "");
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
+
+dilcopy qstSimpleQuest@quests(QUEST_SORCERER_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Forbin in the Sorcerer's Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N.  You should go speak with the guild master now."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_SORCERER_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+
 end
 
 

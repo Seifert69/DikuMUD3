@@ -10,6 +10,8 @@ END HEADER*/
 #define _GUILD_UDGAARD_HEALER
 #define TORC_GIVEN "$Cleric torc given"
 #define TORC_REPL "Replacing Torc"
+#define QUEST_CLERIC_ENTRY "Cleric Guild Entry"
+
 
 #include <macros.h>
 
@@ -564,12 +566,12 @@ exp -100
 
 dilcopy healer_give@clericguild();
 
-dilcopy quest_block@guilds("join", "XXX Quest",
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy quest_block@guilds("join", QUEST_CLERIC_ENTRY,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Cleric Guild quest. Go speak with sister Morenae."});
 dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
 dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
 
-dilcopy guild_titles@guild_paths(GUILD_UDG_CLERIC, { "Believer", "Believer",
+dilcopy SetTitles@guilds(GUILD_UDG_CLERIC, { "Believer", "Believer",
 "Attendant", "Attendant", "Acolyte", "Acolyte", "Novice", "Novice",
 "Missionary", "Missionary", "Adept", "Adept", "Deacon", "Deaconess",
 "Vicar", "Vicaress", "Priest", "Priestess", "Levite", "Levitess", "Canon",
@@ -770,6 +772,20 @@ exp -100
 
 dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
 dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
+
+dilcopy qstSimpleQuest@quests(QUEST_CLERIC_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Sister Morenae in the Healer's Guild has asked you to bring her the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. You should go speak with the guild master now."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_CLERIC_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+
 
 /* The DIL for the Sister Morenae - gives replacement Silver Torc to Healers.*/
 dilbegin torc_repl();

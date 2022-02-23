@@ -1,6 +1,10 @@
 #include <macros.h>
 
 /*
+test mud delete the zon_file... before git pull?
+
+Ask for help with heads.
+
 Add SPECIALIZE command to four guild masters, starting with Barbarians
 
 grep guild_paths in all guilds
@@ -562,7 +566,7 @@ code
 :loop:
    wait(SFB_CMD, command(cmd));
 
-   if (not (quest in activator.quests))
+   if (not ((quest+" Complete") in activator.quests))
    {
       block;
       Explainer@quests(activator, sExec);

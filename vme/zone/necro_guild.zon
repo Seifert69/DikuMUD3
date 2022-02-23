@@ -11,6 +11,8 @@ version     12END HEADER*/
 
 #include <macros.h>
 
+#define QUEST_NECROMANCER_ENTRY "Necromancer Guild Entry"
+
 #define GOLEM_ONGOING "Golem Quest Ongoing"
 #define GOLEM_COMPLETE "Golem Quest Completed"
 #define GOLEM_BONDED "Golem Bonded"
@@ -664,7 +666,7 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE", {"$1n at
 dilcopy MurderBanish@guilds(GUILD_NECROMANCER);
 dilcopy AlertMembers@guilds(GUILD_NECROMANCER, "");
 
-dilcopy guild_titles@guild_paths(GUILD_NECROMANCER, {"Novice of The Grey Ring",
+dilcopy SetTitles@guilds(GUILD_NECROMANCER, {"Novice of The Grey Ring",
 "Novice of The Grey Ring", "Servant of The Grey Ring",
 "Servant of The Grey Ring", "Sentry of The Grey Ring",
 "Sentry of The Grey Ring", "Holder of The Grey Ring",
@@ -682,8 +684,8 @@ dilcopy guild_titles@guild_paths(GUILD_NECROMANCER, {"Novice of The Grey Ring",
 "Spirit Invoker", "Soulforge", "Soulforge", "Necromancer", "Necromancer",
 "Archnecromancer", "Archnecromancer"});
 
-dilcopy quest_block@guilds("join", "XXX Quest",
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the XXX Quest quest"});
+dilcopy quest_block@guilds("join", QUEST_NECROMANCER_ENTRY,
+           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Necromancer Entry quest. Go speak with Murim."});
 
 dilbegin master_join();
 external
@@ -881,6 +883,19 @@ dilcopy shopkeeper@function(
 {"4","12","13","23"},
 "",
 110,60,286720,"","");
+
+dilcopy qstSimpleQuest@quests(QUEST_NECROMANCER_ENTRY,
+         {"say Hey $1N, want to prove yourself to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Murim in the Necromancer's Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. Welcome to the Necromancer's guild."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_NECROMANCER_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
 end
 
                                   krain

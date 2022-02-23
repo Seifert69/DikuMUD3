@@ -25,89 +25,30 @@ notes
 
 %dil
 
-// ========== EXPLAINER - GENERIC REALLY NICE ============
-
-// Executes the msg, also interprets :: codes for acts(). See Explainer()
-//    returns 0 if not done.
-//    returns 1 if successful
-// 'self' is the mob explaining (arg3, i.e. $3n)
-// 'arg1' is the involved character ($1n)
-// 'arg2' is optional, e.g. an object ($2n)
-//
-dilbegin integer Explain(arg1 : unitptr, arg2 : unitptr, msg : string);
-var
-   tsl : stringlist;
-code
-{
-   if ((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING))
-      return (0);
-
-   if ((msg.[0] == ":") and (msg.[1] == ":"))
-   {
-      tsl := split(msg, "::");
-      if (length(tsl) == 3)
-      {
-         act(tsl.[1], A_SOMEONE, arg1, arg2, self, TO_CHAR);
-         act(tsl.[2], A_SOMEONE, arg1, arg2, self, TO_REST);
-      }
-      else
-      {
-         log("Found act code :: in Explain() but not the two expected strings = " + msg);
-         return (0);
-      }
-   }
-   else
-   {
-      exec(sact(msg, A_SOMEONE, arg1, arg2, self, TO_CHAR), self);
-   }
-   return (1);
-}
-dilend
-
-
-
-// expl: list of strings for the NPC to execute to explain the quest.
-//       YOu can use $ variables, e.g. $1n = self (npc), $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
-//       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
-//
-// Example:
-//   {"say $1n, do you want this quest?", "jump", "hug $1n", 
-//    "say <a cmd='"'>nod</a> if you wish to accept",
-//    "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."}
-//
-dilbegin Explainer(pc : unitptr, sl : stringlist);
-external
-   integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
-
-var
-   i : integer;
-   ln : integer;
-code
-{
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-   on_activation((pc.position <= POSITION_SLEEPING) or (pc.position == POSITION_FIGHTING), skip);
-
-   secure(pc, lostpc);
-   i := 0;
-   ln := length(sl);
-
-	heartbeat := PULSE_SEC * 4;
-
-   // Give the explanation
-   while (i < ln)
-   {
-      pause;
-      Explain@quests(pc, null, sl.[i]);
-      i := i + 1;
-   }
- 
-:lostpc:
-   return;
-}
-dilend
-
-
 // ============ GENERIC qstItemsWait() Helper function
+
+// For getting a decapitated head:
+//
+// You'll want to pass on s as the sym-name of the head
+//
+dilbegin integer decapCheck(u : unitptr, i : integer, s : string);
+var
+   exd : extraptr;
+code
+{
+   log("in decapCheck");
+   exd := "$living_sym" in u.extra;
+
+   if (exd)
+      if (exd.descr == s)
+         return (1);
+
+   return(0);
+}
+dilend
+
+
+
 
 // For receiving money:
 //
@@ -226,6 +167,88 @@ code
 
    :lostpc:
    return(0);
+}
+dilend
+
+
+// ========== EXPLAINER - GENERIC REALLY NICE ============
+
+// Executes the msg, also interprets :: codes for acts(). See Explainer()
+//    returns 0 if not done.
+//    returns 1 if successful
+// 'self' is the mob explaining (arg3, i.e. $3n)
+// 'arg1' is the involved character ($1n)
+// 'arg2' is optional, e.g. an object ($2n)
+//
+dilbegin integer Explain(arg1 : unitptr, arg2 : unitptr, msg : string);
+var
+   tsl : stringlist;
+code
+{
+   if ((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING))
+      return (0);
+
+   if ((msg.[0] == ":") and (msg.[1] == ":"))
+   {
+      tsl := split(msg, "::");
+      if (length(tsl) == 3)
+      {
+         act(tsl.[1], A_SOMEONE, arg1, arg2, self, TO_CHAR);
+         act(tsl.[2], A_SOMEONE, arg1, arg2, self, TO_REST);
+      }
+      else
+      {
+         log("Found act code :: in Explain() but not the two expected strings = " + msg);
+         return (0);
+      }
+   }
+   else
+   {
+      exec(sact(msg, A_SOMEONE, arg1, arg2, self, TO_CHAR), self);
+   }
+   return (1);
+}
+dilend
+
+
+
+// expl: list of strings for the NPC to execute to explain the quest.
+//       YOu can use $ variables, e.g. $1n = self (npc), $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
+//
+// Example:
+//   {"say $1n, do you want this quest?", "jump", "hug $1n", 
+//    "say <a cmd='"'>nod</a> if you wish to accept",
+//    "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."}
+//
+dilbegin Explainer(pc : unitptr, sl : stringlist);
+external
+   integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
+
+var
+   i : integer;
+   ln : integer;
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+   on_activation((pc.position <= POSITION_SLEEPING) or (pc.position == POSITION_FIGHTING), skip);
+
+   secure(pc, lostpc);
+   i := 0;
+   ln := length(sl);
+
+	heartbeat := PULSE_SEC * 4;
+
+   // Give the explanation
+   while (i < ln)
+   {
+      pause;
+      Explain@quests(pc, null, sl.[i]);
+      i := i + 1;
+   }
+ 
+:lostpc:
+   return;
 }
 dilend
 
@@ -533,7 +556,7 @@ code
          {
             s := itemfunc.[i];
             t := getword(s); // get the function
-            j := atoi(getword(s));
+            j := atoi(getword(s)); // get the integer
             j := dilcall(t)(item, j, s);
             // log("dilcall()()  returned: " + itoa(j));
          }

@@ -11,7 +11,6 @@ END HEADER*/
 #define _GUILD_BARBARIAN
 #define BARBARIAN_ITEM "$Barbarian Gauntlet Given"
 #define QUEST_BEAR_BRAWL "Barbarian Bear Brawl"
-#define QUEST_BEAR_BRAWL_COMPLETE "Barbarian Bear Brawl Complete"
 
 /* This zone is the Barbarians Guild, skillful and agile warriors. */
 
@@ -692,7 +691,7 @@ dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
 dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
 dilcopy rescue@function("guard");
 dilcopy teamwork@function("guard");
-dilcopy guild_guard@guild_paths(GUILD_BARBARIAN, "east");
+// dilcopy guild_guard@guild_paths(GUILD_BARBARIAN, "east");
 end
 
 
@@ -717,10 +716,10 @@ dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian");
 dilcopy nokill@barbarian();
 dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
 dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
-dilcopy quest_block@guilds("join", QUEST_BEAR_BRAWL_COMPLETE,
+dilcopy quest_block@guilds("join", QUEST_BEAR_BRAWL,
            {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Bear Brawl quest. Go speak with Raz."});
 
-dilcopy guild_titles@guild_paths(GUILD_BARBARIAN, {"Young Blood",
+dilcopy SetTitles@guilds(GUILD_BARBARIAN, {"Young Blood",
 "Young Blood", "Apprentice Berserker", "Apprentice Berserker", "Journeyman Berserker",
 "Journeywoman Berserker", "Rage Seeker", "Rage Seeker",
 "Blood Seeker", "Blood Seeker", "Whirlwind", "Whirlwind",
