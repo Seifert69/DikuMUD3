@@ -136,8 +136,7 @@ code
       // Now find the guild matching pc.profession
       // and if that guild level is >= 25 we can specialize
 
-      sl := GUILD_SL;
-      if (GetGuildLevel@guilds(pc, sl.[pc.profession]) >= 25)
+      if (GetGuildLevel@guilds(pc, pc.guild) >= 25)
       {
          return (1);
       }
@@ -186,6 +185,77 @@ code
    addstring(exd.names, sl.[prof]);
    insert(exd.vals, 1, prof); 
 
+   return;
+}
+dilend
+
+
+// ONLY CALL FROM INSIDE PROFESSIONS ZONE. PRIVATE FUNCTION.
+// To be called on a player to add a profession.
+//
+dilbegin AddSpec(pc : unitptr, newProf : integer, desc : string);
+var
+   sl : stringlist;
+   i : integer;
+   exd : extraptr;
+
+code
+{
+   exd := PROFESSION_KEY in pc.info;
+
+   // If there is a $professions, then this doesn't apply.
+   if (exd == null)
+   {
+      log("AddSpec() called but $profession did not exist for player " + pc.name);
+      return;
+   }
+
+   if ((i < 0) or (i >= PROFESSION_COUNT))
+   {
+      log("AddSpec() called but prof OOB.");
+      return;
+   }
+
+   if (length(exd.names) != 2)
+   {
+      log("AddSpec() was expecting precisely one profession.");
+      return;
+   }
+
+   pc.profession := newProf;
+   
+   sl := {PROFESSION_STRINGS};
+   addstring(exd.names, sl.[newProf]);
+   exd.descr := exd.descr + desc + "<br/>";
+   insert(exd.vals, 2, newProf);
+   return;
+}
+dilend
+
+
+// Call to allow player to specialize from starting position to specializaiton.
+// Only.
+//
+dilbegin SpecializeProf(pc : unitptr, newProf : integer);
+external
+   AddSpec(pc : unitptr, newProf : integer, desc : string);
+
+var
+   sl : stringlist;
+   i : integer;
+   exd : extraptr;
+
+code
+{
+   if (((pc.profession == PROFESSION_FIGHTER) and ((newProf == PROFESSION_BARBARIAN) or (newProf == PROFESSION_RANGER))) or
+       ((pc.profession == PROFESSION_THIEF) and ((newProf == PROFESSION_ASSASSIN))))
+   {
+      AddSpec@professions(pc, newProf, "Specializing from " + itoa(pc.profession) + " to " + itoa(newProf));
+   }
+   else
+   {
+      log("SpecializeProf() incorrect spec " + pc.name+ " " + itoa(pc.profession) + " " + itoa(newProf));
+   }
    return;
 }
 dilend

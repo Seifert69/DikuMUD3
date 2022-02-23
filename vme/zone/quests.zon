@@ -27,6 +27,45 @@ notes
 
 // ========== EXPLAINER - GENERIC REALLY NICE ============
 
+// Executes the msg, also interprets :: codes for acts(). See Explainer()
+//    returns 0 if not done.
+//    returns 1 if successful
+// 'self' is the mob explaining (arg3, i.e. $3n)
+// 'arg1' is the involved character ($1n)
+// 'arg2' is optional, e.g. an object ($2n)
+//
+dilbegin integer Explain(arg1 : unitptr, arg2 : unitptr, msg : string);
+var
+   tsl : stringlist;
+code
+{
+   if ((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING))
+      return (0);
+
+   if ((msg.[0] == ":") and (msg.[1] == ":"))
+   {
+      tsl := split(msg, "::");
+      if (length(tsl) == 3)
+      {
+         act(tsl.[1], A_SOMEONE, arg1, arg2, self, TO_CHAR);
+         act(tsl.[2], A_SOMEONE, arg1, arg2, self, TO_REST);
+      }
+      else
+      {
+         log("Found act code :: in Explain() but not the two expected strings = " + msg);
+         return (0);
+      }
+   }
+   else
+   {
+      exec(sact(msg, A_SOMEONE, arg1, arg2, self, TO_CHAR), self);
+   }
+   return (1);
+}
+dilend
+
+
+
 // expl: list of strings for the NPC to execute to explain the quest.
 //       YOu can use $ variables, e.g. $1n = self (npc), $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
 //       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
@@ -37,11 +76,12 @@ notes
 //    "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."}
 //
 dilbegin Explainer(pc : unitptr, sl : stringlist);
+external
+   integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
+
 var
    i : integer;
    ln : integer;
-   tsl : stringlist;
-   s : string;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -56,27 +96,11 @@ code
    // Give the explanation
    while (i < ln)
    {
-      if ((sl.[i].[0] == ":") and (sl.[i].[1] == ":"))
-      {
-         tsl := split(sl.[i], "::");
-         if (length(tsl) == 3)
-         {
-            act(tsl.[1], A_SOMEONE, pc, null, self, TO_CHAR);
-            act(tsl.[2], A_SOMEONE, pc, null, self, TO_REST);
-            pause;
-         }
-         else
-            log("Found act code :: in qstAssign but not the two expected strings = " + sl.[i]);
-      }
-      else
-      {
-         s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
-         exec(s, self);
-         pause;
-      }
+      pause;
+      Explain@quests(pc, null, sl.[i]);
       i := i + 1;
    }
-
+ 
 :lostpc:
    return;
 }
@@ -249,6 +273,7 @@ code
    {
       pause;
       exec("peer", self);
+      log("odd peer in qstWaitHero()");
       pc := null;
       return(pc);
    }
@@ -331,6 +356,7 @@ code
    if (not visible(self, pc))
    {
       exec("peer", self);
+      log("odd peer in qstAssign()");
       return(exd);
    }
 

@@ -3,9 +3,11 @@
 /*
 Add SPECIALIZE command to four guild masters, starting with Barbarians
 
-Check all PROFESSION_MAX tests
+grep guild_paths in all guilds
 
-Check all SFUN 
+why is it so easy to kill a bear as Dwili level 15 vs 15 bear?
+
+Check all PROFESSION_MAX tests
 
 All the guilds processed (Monk is not complete):
    assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon druid.zon ../Zones/monk.zon
@@ -77,7 +79,7 @@ the first time. But you can only change profession to a related profession:
 
 Fighter -> Barbarian, Ranger
 Thief   -> Assassin, 
-Cleric  -> Necromancer, Druid, 
+Cleric  -> Druid, Necromancer
 Mage    -> Sorcerer
 
 Later, when you reach a higher level, e.g. 50 or 75, you can change profession
@@ -93,8 +95,6 @@ Mage / Sorcerer ->
 
 Cleric, Necromancer, Druid ->
    Fighter, Paladin, Dark Knight, Necromancer
-
-
 "
 
 
@@ -185,6 +185,114 @@ Cleric, Necromancer, Druid ->
 // login_clean@guilds();
 // SetGuildLevel(pc : unitptr, sGuild : string, lvl : integer); // Do not use, for login_clean only
 //
+
+
+
+
+// 'sGuild' - the guild you must be a member of
+// 'drink'  - Is the drink that will transform the character
+// self is for example the guild master.
+//
+dilbegin Specialize(sGuild : string, drink : string);
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+   integer ReadySpecialize@professions(pc : unitptr);
+
+var
+   pc : unitptr;
+   u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+
+:start:
+   wait(SFB_CMD, command("say"));
+
+   if ((not ("specialize" in argument)) and (not ("specialise" in argument)))
+      goto start;
+
+   pc := activator;
+   secure(pc, start);
+
+   if (not IsInGuild@guilds(activator, sGuild))
+   {
+      pause;
+   	Explain@quests(pc, null, "say $1N, in order to specialize, you must first become a guild member.");
+      goto start;
+   }
+
+   if (not ReadySpecialize@professions(activator))
+   {
+      pause;
+   	Explain@quests(pc, null, "say $1N, to specialize, you must at least be level 25 in your main guild.");
+      goto start;
+   }
+
+   // We are in the right guild
+   //
+   pause;
+   Explainer@quests(pc, {
+      "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
+      "say Once you commit this process will alter your body permanently.",
+      "say I'll give you a mug of black ale. Once you cosume it the change will occur.",
+      "say Remember, this will only work for fighters.",
+      "::$3n hands you a mug of black ale.::$3n hands a mug of black ale to $1n."});
+
+   u := load(drink);
+   link(u, pc);
+   goto start;
+}
+dilend
+
+
+// dilcopy this function to the drink that transforms the player
+//
+dilbegin Transform(fromProfession : integer, newProfession : integer, msgs : stringlist);
+external
+   integer ReadySpecialize@professions(pc : unitptr);
+   SpecializeProf@professions(pc : unitptr, newProf : integer);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+
+var
+   i : integer;
+   pc : unitptr;
+code
+{
+   heartbeat := 1;
+:start:
+   wait(SFB_CMD, command("drink"));
+   pc := activator;
+   secure(pc, lostpc);
+
+   if (pc.type != UNIT_ST_PC)
+      goto start;
+
+   i := self.value[0]; // How much was in the drink
+   wait(SFB_TICK, TRUE);
+
+   if (self.value[0] >= i)  // Nothing was drunk
+      goto start;
+
+   // Something was drunk
+   if ((self.profession != fromProfession) or (not ReadySpecialize@professions(pc)))
+   {
+      pc.position := POSITION_STUNNED;
+      pc.hp := 0;
+      act("Your overwhelmed with agony and pass out.", A_ALWAYS, pc, self, null, TO_CHAR);
+      act("$1n drinks $2n then $1e screams out in pain and passes out.", A_ALWAYS, pc, self, null, TO_CHAR);
+      quit;
+   }
+
+   SpecializeProf@professions(pc, newProfession);
+   Explainer@quests(pc, msgs);
+
+:lostpc:
+   quit;
+}
+dilend
+
 
 
 // Checks if player pc is in guild sGuild
@@ -610,6 +718,17 @@ code
 }
 dilend
 
+
+
+dilbegin do_join(arg : string);
+code
+{
+   // sendtext("The join command is normally to be used at guild masters.<br/>", self);
+   quit;
+}
+dilend /* join_dil */
+
+
 dilbegin do_guilds(arg : string);
 external
    string ProfessionName@professions(prof_xxx : integer);
@@ -620,6 +739,7 @@ var
    exd : extraptr;
    sl : stringlist;
    i : integer;
+   s : string;
 
 code
 {
@@ -635,7 +755,11 @@ code
    while (exd)
    {
       sl := split(exd.names.[0], "/");
-      sendtext(sl.[1] + " (level "+exd.names.[1]+")<br/>", self);
+      if (sl.[1] == self.guild)
+         s := " - Main Guild";
+      else
+         s := "";
+      sendtext(sl.[1] + " (level "+exd.names.[1]+")"+s+"<br/>", self);
 
       exd := GUILD_KEY in exd.next;
       i := i + 1;
@@ -648,7 +772,7 @@ code
    else
    {
       if (i > 1)
-         sendtext(self.guild +  " is your main guild (Request a guild title from a guild master to change your main guild).<br/>", self);
+         sendtext("<br/>Request a guild title from a guild master to change your main guild.<br/>", self);
    }
 
    if (GetGuildLevel(self, self.guild) == -1)

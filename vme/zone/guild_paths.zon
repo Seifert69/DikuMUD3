@@ -93,7 +93,7 @@ dilend /* admin_gp */
 dilbegin join_dil(arg : string); /* Block the join command */
 code
 {
-   log("OBSOLETE join_dil in guild_paths called");
+   log("[" + self.symname + "] - OBSOLETE join_dil in guild_paths called: ["+arg+"]");
    quit;
 }
 dilend /* join_dil */

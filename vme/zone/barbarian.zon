@@ -144,7 +144,7 @@ code
    if (command(CMD_AUTO_DEATH))
    {
       qstMarkComplete@quests(self.outside, QUEST_BEAR_BRAWL);
-   	act("Your instincts feel awakened.", A_ALWAYS, self.outside, null, null, TO_CHAR);
+		act("Your instincts feel awakened.", A_ALWAYS, self.outside, null, null, TO_CHAR);
       quit;
    }
 
@@ -471,9 +471,11 @@ more than strong enough to support the roof and its heavy seasonal snows. "
 extra {"table","food"}
 "Here the guildmaster's table dominates the space. Best approach carefully. "
 extra {"small sign","sign"}
-"This is the great hall of the Barbarians Guild. <br><br>
-'join'       - join this guild (if you qualify!).<br/>
-'title'		- changes your title to a new and better one.<br/><br/>
+"This is the great hall of the Barbarians Guild. <br/><pre>
+'join'           - join this guild (if you qualify!).
+'title'          - changes your title to a new and better one.
+'say specialize' - Change profession to Barbarian.
+</pre><br/>
 Members, pay respect to your Chief by worshipping her. 
 The power of our guild may be shared with those who show respect."
 
@@ -709,6 +711,8 @@ M_HUMAN_WARRIOR_CLUB(160,SEX_FEMALE)
 alignment 0
 money 1 GOLD_PIECE
 exp -100
+
+dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian");
 
 dilcopy nokill@barbarian();
 dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
@@ -1450,6 +1454,22 @@ extra {}
 LIQ_DEF("brown", 0,1,1,5,2,5,0)
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 cost 3 IRON_PIECE
+end
+
+alespec
+names {"mug of black ale","mug", "black ale", "ale"}
+title "a mug of ale"
+descr "A wooden mug stands here."
+extra {}
+"A large, wooden mug."
+LIQ_DEF("black", 0,1,1,5,2,5,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+dilcopy Transform@guilds(PROFESSION_FIGHTER, PROFESSION_BARBARIAN, 
+   {"::The black ale flows down your throat.::",
+    "::You get a warm feeling.::",
+    "::You muscles tense up::",
+    "::You're now a Barbarian::"});
 end
 
 barb_bracer

@@ -2999,12 +2999,12 @@ code
    s := getword(arg);
    if (s == "auto")
    {
-      exd := "$autotrain" in self.quests;
+      exd := "$autotrain" in self.info;
 
       u := findsymbolic(exd.names.[1]);
       if (not u)
       {
-         sendtext("A teacher is missing so you cannot auto practice right now.<br/>", self);
+         sendtext("A teacher ["+exd.names.[1]+"] is missing so you cannot auto practice right now.<br/>", self);
       }
       else
       {
