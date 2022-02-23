@@ -2580,10 +2580,8 @@ code
 
    pot := findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
 
-log ("Before all");
    if (pot)
    {
-log ("Aha wait for a new player");
       pc := qstWaitHero@quests(QUEST_RABBIT, activator, 
          {"say Hello $1N how are you today?",
          "say I am trying to make a delicious rabbit stew, but I need some ingredients.",

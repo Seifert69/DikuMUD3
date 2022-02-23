@@ -191,7 +191,7 @@ Cleric, Necromancer, Druid ->
 // 'drink'  - Is the drink that will transform the character
 // self is for example the guild master.
 //
-dilbegin Specialize(sGuild : string, drink : string);
+dilbegin Specialize(sGuild : string, drink : string, expl : stringlist);
 external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
    integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
@@ -231,13 +231,7 @@ code
    // We are in the right guild
    //
    pause;
-   Explainer@quests(pc, {
-      "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
-      "say Once you commit this process will alter your body permanently.",
-      "say I'll give you a mug of black ale. Once you cosume it the change will occur.",
-      "say Remember, this will only work for fighters.",
-      "::$3n hands you a mug of black ale.::$3n hands a mug of black ale to $1n."});
-
+   Explainer@quests(pc, expl);
    u := load(drink);
    link(u, pc);
    goto start;
@@ -721,7 +715,7 @@ dilend
 dilbegin do_join(arg : string);
 code
 {
-   // sendtext("The join command is normally to be used at guild masters.<br/>", self);
+   sendtext("You think about joining something.<br/>", self);
    quit;
 }
 dilend /* join_dil */

@@ -36,7 +36,6 @@ var
    exd : extraptr;
 code
 {
-   log("in decapCheck");
    exd := "$living_sym" in u.extra;
 
    if (exd)
@@ -237,13 +236,14 @@ code
    i := 0;
    ln := length(sl);
 
-	heartbeat := PULSE_SEC * 4;
+	heartbeat := 1;
 
    // Give the explanation
    while (i < ln)
    {
       pause;
       Explain@quests(pc, null, sl.[i]);
+   	heartbeat := PULSE_SEC * 4;
       i := i + 1;
    }
  
@@ -713,9 +713,12 @@ code
    if (not exdp)
       return(u);
 
+   log("Got ongoing " + qname);
+
    if (not ("$done" in exdp.names))
       return(u);
 
+   log("found $done  " + qname);
    // We collected all the items
    secure(pc, lostpc);
 

@@ -247,8 +247,11 @@ var
 
 code
 {
-   if (((pc.profession == PROFESSION_FIGHTER) and ((newProf == PROFESSION_BARBARIAN) or (newProf == PROFESSION_RANGER))) or
-       ((pc.profession == PROFESSION_THIEF) and ((newProf == PROFESSION_ASSASSIN))))
+   // Make sure it is an allowed specialization
+   if (((pc.profession == PROFESSION_FIGHTER) and (newProf == PROFESSION_BARBARIAN)) or
+       ((pc.profession == PROFESSION_THIEF) and (newProf == PROFESSION_ASSASSIN)) or
+       ((pc.profession == PROFESSION_PRIEST) and (newProf == PROFESSION_DRUID)) or
+       ((pc.profession == PROFESSION_CONJURER) and (newProf == PROFESSION_SORCERER)))
    {
       AddSpec@professions(pc, newProf, "Specializing from " + itoa(pc.profession) + " to " + itoa(newProf));
    }
