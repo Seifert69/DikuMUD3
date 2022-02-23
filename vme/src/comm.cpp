@@ -162,10 +162,10 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
             protocol_send_text(d->multi, d->id, dest.c_str(), MULTI_TEXT_CHAR);
         }
 
-        if (d->snoop.snoop_by)
+        if (d->snoop.getSnoopBy())
         {
-            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->snoop.snoop_by));
-            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.snoop_by));
+            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
+            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
         }
     }
 }
@@ -190,10 +190,10 @@ void page_string(descriptor_data *d, const char *messg)
 
         protocol_send_text(d->multi, d->id, mystr.c_str(), MULTI_PAGE_CHAR);
 
-        if (d->snoop.snoop_by)
+        if (d->snoop.getSnoopBy())
         {
-            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->snoop.snoop_by));
-            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.snoop_by));
+            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
+            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
         }
     }
 }

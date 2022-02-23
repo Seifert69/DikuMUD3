@@ -151,8 +151,8 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     editref = nullptr;
 
     original = nullptr;
-    snoop.snooping = nullptr;
-    snoop.snoop_by = nullptr;
+    snoop.setSnooping(nullptr);
+    snoop.setSnoopBy(nullptr);
     replyid = (ubit32)-1;
 
     /* Make a new PC struct */
@@ -275,7 +275,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         // if (CHAR_IS_SWITCHED(d->character))
         //    unswitchbody(d->character);
 
-        assert(!d->snoop.snooping && !d->snoop.snoop_by);
+        assert(!d->snoop.getSnooping() && !d->snoop.getSnoopBy());
         assert(!d->original);
 
         act("$1n has lost $1s link.", A_HIDEINV, d->character, cActParameter(), cActParameter(), TO_ROOM);
