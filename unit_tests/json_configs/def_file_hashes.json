@@ -27,12 +27,12 @@
         {
             "source_file": {
                 "filename": "commands.def",
-                "sha512": "170150e2b52368eafe7dd1048818719baf4b31b31f6416904c64d92a297a4a76285d868edf57b6384ae526780c9aa79d9f76fbb16689c2a6af5a0cbaffcfed88"
+                "sha512": "d783bce863733179a83f327b6ca3c22048125d4dc299071a48110bea8d4dfd92c3a5bddb9b5607180ca274e025092773f34c7ae60bfb01fa1d49142abc488b9a"
             },
             "output": [
                 {
                     "filename": "commands.dat",
-                    "sha512": "ddd5cd6f63439ad42a0b6151dc5d8cb5fc91a431526ed5f903b69452c1d2214ffb21f638b200a1c6b47ad7c3b99f1921eb8fd7a2e2a40419ca4d7566a407ae87"
+                    "sha512": "687df350bf44648183934defbb7dea85fd7b10a4e997e7528264728a0d1f194d817f4b3eade60b016f5258cfdd44a0a2a5e5beb2063de0ff0c0484abed342d39"
                 }
             ]
         },
