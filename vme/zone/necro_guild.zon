@@ -245,12 +245,11 @@ table. You also see some stairs leading down."
 extra {"parchment on the table","parchment"}
 "<pre>The writing on the parchment proclaims in tall, red letters:<br/>
 <br/>
-        TITLE at the master will give you a title if you are worthy.<br/>
-        JOIN at the master will let you join this guild if you are worthy.<br/>
+'join'           - join this guild (if you qualify!).
+'title'          - changes your title to a new and better one.
+'worship'        - ... 
 <br/>
-                                - Wicca the Tainted One<br/>
-<br/>
-</pre>"
+                                - Wicca the Tainted One</pre>"
 extra {"long table","table"}
 "The long table is carved in dark, heavy wood. Skull and bone motif
 covers the dark wood and a strange chill emanates from the table-top.<br/>"

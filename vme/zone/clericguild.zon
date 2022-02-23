@@ -275,9 +275,11 @@ extra {"sign", "wall"}
 "<pre>The sign says:<br/>
 <br/>
    Welcome to the Midgaard Healer guild.<br/>
-   'join'       - join this guild (if you qualify!).<br/>
-   'title'      - to get a new title (if you deserve it!).<br/>
-<br/>
+<pre>
+   'join'           - join this guild (if you qualify!).
+   'title'          - changes your title to a new and better one.
+   'worship'        - ... 
+</pre><br/>
    - Tuck the Guild Master.<br/></pre>"
 flags {UNIT_FL_NO_TELEPORT}
 end

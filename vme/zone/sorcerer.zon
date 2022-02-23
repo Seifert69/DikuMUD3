@@ -593,6 +593,7 @@ extra {"sign"}
 		   or Fighter then do not bother us, for
 		   it has been decided that we will not accept
 		   you!"
+
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_MOB, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 north to inside_cave1;
@@ -923,16 +924,18 @@ extra {"pool", "natural pool"}
 "It remains calm so you doubt there is any inlet here. It is out of your
 reach so there is no point trying to drink from it."
 extra {"sign", "large sign"}
-"
-The Sign Reads:
+"<pre>The Sign Reads:
 	Attention fellow sorcerers:
 	Please worship your master Phoebius often. Occasionally
 	he may have a new gift for you, but he only gives them
 	to worthy Sorcerers who love and worship their master.
 
-'join'       - join this guild (if you qualify!).<br/>
-'title'      - to get a new title (if you deserve it!).<br/>
-"
+'join'           - join this guild (if you qualify!).
+'title'          - changes your title to a new and better one.
+'worship'        - ... 
+'say specialize' - To change profession (if you qualify).
+</pre><br/>"
+
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 south to medium_cavern2;

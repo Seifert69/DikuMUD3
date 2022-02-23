@@ -180,8 +180,11 @@ extra {"stone statue","statue","knight"}
 "You are already looking at it."
 extra {"wall"} "There is nothing on the walls except for a sign."
 extra {"sign"} 
-"'join'       - join this guild (if you qualify!).<br/>
-'title'      - to get a new title (if you deserve it!).<br/>"
+"<pre>
+'join'           - join this guild (if you qualify!).
+'title'          - changes your title to a new and better one.
+'worship'        - ... 
+</pre><br/>"
 
 extra {"shield"}
 "The shield is a replica of the one Master Shirilan used to slay a Holy

@@ -340,8 +340,11 @@ extra {"sign", "wall"}
 "The sign says:<pre><br/>
 <br/>
    Welcome to the Midgaard Fighters' Guild.<br/>
-   'join'       - join this guild (if you qualify!).<br/>
-   'title'      - to get a new title (if you deserve it!).<br/>
+   <pre>
+   'join'           - join this guild (if you qualify!).
+   'title'          - changes your title to a new and better one.
+   'worship'        - ... 
+   </pre><br/>
 
 <br/>
    - Sir Arthur the Guild Master.<br/>

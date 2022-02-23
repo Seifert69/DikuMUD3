@@ -11,8 +11,6 @@ Add SPECIALIZE command to four guild masters:
 
 All the guilds processed (Monk is not complete):
    assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon druid.zon ../Zones/monk.zon
-
-Missing sign at all guilds
 */
 
 %zone guilds

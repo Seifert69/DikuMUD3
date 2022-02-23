@@ -471,9 +471,10 @@ extra {"table","food"}
 "Here the guildmaster's table dominates the space. Best approach carefully. "
 extra {"small sign","sign"}
 "This is the great hall of the Barbarians Guild. <br/><pre>
-'join'           - join this guild (if you qualify!).
-'title'          - changes your title to a new and better one.
-'say specialize' - Change profession to Barbarian.
+	'join'           - join this guild (if you qualify!).
+	'title'          - changes your title to a new and better one.
+	'worship'        - ... 
+	'say specialize' - To change profession (if you qualify).
 </pre><br/>
 Members, pay respect to your Chief by worshipping her. 
 The power of our guild may be shared with those who show respect."

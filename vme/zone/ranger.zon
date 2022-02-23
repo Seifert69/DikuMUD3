@@ -160,8 +160,9 @@ there is a canvas sign on it. Perhaps you should read the sign?"
 extra {"large sign", "canvas sign", "canvas", "sign"}
 "<pre>                            The Nymgaard Rangers Guild<br/>
 <br/>
-   'title'      - grants you a new title if you deserve it.<br/>
-   'join'       - join this guild (if you qualify!).<br/>
+   'join'           - join this guild (if you qualify!).
+   'title'          - changes your title to a new and better one.
+   'worship'        - ... 
 <br/>
 Bowing to or worshipping the master may grant you his favour.</pre>"
 

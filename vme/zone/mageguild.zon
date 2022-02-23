@@ -281,8 +281,9 @@ extra {"small sign","sign"}
 <br/>
 		Welcome to the College of Arcane Arts.<br/>
 <br/>
-	'join'		- Request to join this guild.<br/>
-	'title'		- changes your title to a new and better one.<br/>
+        'join'           - join this guild (if you qualify!).
+        'title'          - changes your title to a new and better one.
+        'worship'        - ... 
 <br/>
    	Members, please pay respect to your Archcancellor by bowing<br/>
 	or worshipping him. The special items of our College are<br/>

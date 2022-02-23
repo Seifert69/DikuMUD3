@@ -241,7 +241,10 @@ many tons. You don't think you could move them even if you tried!"
 extra {"glowing runes", "runes", "sign", "rune", "rock"}
 "<pre>                            The Druid Guild<br/>
 <br/>
-   'title'      - to get a new title (if you deserve it!).<br/>
+   'join'           - join this guild (if you qualify!).
+   'title'          - changes your title to a new and better one.
+   'worship'        - ... 
+   'say specialize' - To change profession (if you qualify).
 <br/>
 Members, remember to show respect to you master by bowing or worshipping<br/>
 him. The Druid Guild is wealthy and can aid you with minor items, should<br/>

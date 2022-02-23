@@ -602,7 +602,9 @@ extra {"small scroll","scroll"}
 	Paladins, type 'title' to receive a title suiting your<br/>
 	deeds and glory.<br/>
 <br/>
-	Type 'join' if you wish to join the Paladin Guild<br/>
+   'join'           - join this guild (if you qualify!).
+   'title'          - changes your title to a new and better one.
+   'worship'        - ... 
 <br/>
 	Speak to me, Reignier, if your faith is weak and your path<br/>
 	pain full. I can provide you with the holy weapon of the<br/>
