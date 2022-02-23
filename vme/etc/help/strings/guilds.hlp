@@ -1,24 +1,45 @@
-<h1>Guilds</h1>
-<p>Guilds are the primary way of finding teachers in this game, as well
-as your only way to learn certain spells and skills.  Each time you
-earn enough experience points to raise a level you may go to your guild
-and train in these abilities, skills, and spells, thus increasing your
-ability to battle tougher and tougher monsters.</p>
-<p>To see which commands are available in a guild, find the guildmaster and<br/>
-look at the sign hanging next to him.<p>
-The guilds are as follows:<br/>
-<br/>
-    Fighter                      Paladin<br/>
-    Conjurer                     Sorcerer<br/>
-    Healer                       Necromancer<br/>
-    Thief                        Assassin<br/>
-<br/>
-<br/>See Also:<br/>
-    Skills           Spells<br/>
-    Abilities        Status<br/>
-    Info             Practice<br/>
-    Teacher          Classes<br/>
-    Title            Level<br/>
-    Races            Police/Guard Guild<br/>
-    Guild Paths<br/>
-<br/>
+<div class="mw-parser-output"><h1>Guilds</h1>
+<p>This help topic describes both the 'guilds' command as well as the guild concept.
+</p>
+<h2><span class="mw-headline" id="Command">Command</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a cmd='#'>edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<pre> &gt; guilds
+</pre>
+<p>Use the guilds command to see which guilds you are a member of, and your level in each guild. Note, that when you level up you also level up in your primary guild. To change your primary guild, go to a guild master and request a new title - then your primary guild also changes.
+</p>
+<h2><span class="mw-headline" id="Concept">Concept</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a cmd='#'>edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>The following guilds are available in Valhalla:
+</p>
+<pre>     Fighter 
+     Cleric
+     Thieves
+     Mage
+     Paladin
+     Ranger
+     Dark Knight
+     Sorcerer
+     Barbarian
+     Assassin
+     Necromancer
+</pre>
+<p>When you start the game you're automatically enrolled in a guild. All guilds have a guild master and a number of guild teachers. This is your first main guild.
+</p><p>Each time you level up in the game, your guild level also increases.
+</p><p>The guild master is where you can 'join' a guild or get yourself a new guild 'title'. 
+</p><p>Requirements for joining a new guild varies. The guild master will tell you what they are. Typically you need to solve a quest for the guild master.
+</p><p>Once you join a new guild it becomes your new primary guild. To switch primary guilds, request a title from the guild in question.
+</p><p>Guilds also contain guild teachers. There are typically four teachers, an ability, a skill, a spell and a weapon teacher. Each time you earn enough experience points to raise a level you should go to your guild and train in these abilities, skills, and spells, thus increasing your ability to battle tougher and tougher monsters.
+</p><p>Even though you can join as many guilds as you want, some guilds
+</p><p>See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Status</a>
+ &gt; <a cmd='#'>Help Info</a>
+ &gt; <a cmd='#'>Help Practice</a>
+ &gt; <a cmd='#'>Help Level</a>
+ &gt; <a cmd='#'>Help Skills</a>
+ &gt; <a cmd='#'>Help Spells</a>
+ &gt; <a cmd='#'>Help Abilities</a>
+</pre>
+
+
+
+
+</div>

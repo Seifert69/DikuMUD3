@@ -9,6 +9,9 @@ END HEADER*/
 
 
 #define _GUILD_MIDGAARD_KNIGHT
+#define QUEST_KNIGHT_ENTRY "Knight Guild Entry"
+
+
 #include <macros.h>
 %zone knight
 title "Midgaard Dark Knights@Mainland"
@@ -30,45 +33,47 @@ endurance + incapacitated */
 
 dilbegin nokill();
 var
-        pc      : unitptr;
-        room    : unitptr;
-        i       : integer;
+   pc      : unitptr;
+   room    : unitptr;
+   i       : integer;
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+   heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING);
-        pc := self.fighting;
-        if (pc.level > 200) goto start;
-        secure(pc,gone);
-        if (command("flee"))
-                block;
+:start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING);
+   pc := self.fighting;
+   if (pc.level > 200) goto start;
+   secure(pc,gone);
+   if (command("flee"))
+            block;
 
-self.hp := self.max_hp;
-act("The sounds of battle attract attention of the training Dark Knights.",
-A_ALWAYS, pc, self, null, TO_ALL);
-act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly </div>"+
-"smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
-act("Several of them charge into the room, grabbing $1n and repeatedly "+
-"smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
-pc.hp := 0;
-pc.endurance := 0;
-act("Your face a bloody mess, you are dragged away."
-,A_ALWAYS, pc, self, null, TO_CHAR);
-position_update(pc);
-act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
-"$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
-room := findroom("sth1@sewers");
-link(pc,room);
-act("Two large Dark Knights emerge from the Guild, dragging $1n"+
-"between them and dump $1m unceremoniously in the sewer."
-,A_SOMEONE,pc,self,null,TO_REST);
-        :gone:
-unsecure(pc);
-goto start;
+   self.hp := self.max_hp;
+   act("The sounds of battle attract attention of the training Dark Knights.",
+      A_ALWAYS, pc, self, null, TO_ALL);
+   act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly </div>"+
+   "smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
+   act("Several of them charge into the room, grabbing $1n and repeatedly "+
+   "smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
+   pc.hp := 0;
+   pc.endurance := 0;
+   act("Your face a bloody mess, you are dragged away."
+      ,A_ALWAYS, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
+   "$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
+   room := findroom("sth1@sewers");
+   link(pc,room);
+   act("Two large Dark Knights emerge from the Guild, dragging $1n"+
+   "between them and dump $1m unceremoniously in the sewer."
+      ,A_SOMEONE,pc,self,null,TO_REST);
+
+:gone:
+   unsecure(pc);
+   goto start;
 }
 dilend /*nokill*/
+
 
 %rooms
 room_1
@@ -173,7 +178,14 @@ evil and destroy all that is good.  A door opens to the Main Hall on the
 north wall."
 extra {"stone statue","statue","knight"}
 "You are already looking at it."
-extra {"wall"} "There is nothing on the walls."
+extra {"wall"} "There is nothing on the walls except for a sign."
+extra {"sign"} 
+"<pre>
+'join'           - join this guild (if you qualify!).
+'title'          - changes your title to a new and better one.
+'worship'        - ... 
+</pre><br/>"
+
 extra {"shield"}
 "The shield is a replica of the one Master Shirilan used to slay a Holy
 Paladin."
@@ -211,7 +223,7 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 west to room_3;
 end
 
-%mobiles
+
 %mobiles
 /* ---------------------------- TEACHERS ---------------------------- */
 
@@ -230,10 +242,13 @@ romflags {CHAR_PROTECTED}
 M_HUMAN_MAGE_FIRE(130, SEX_MALE, "magma")
 alignment -1000
 exp -300
-dilcopy nokill@knight();
-special SFUN_GUILD_BASIS GUILD_KNIGHT
 
-dilcopy guild_titles@guild_paths(GUILD_KNIGHT, { "Initiate", "Initiate",
+
+dilcopy nokill@knight();
+dilcopy MurderBanish@guilds(GUILD_KNIGHT);
+dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
+
+dilcopy SetTitles@guilds(GUILD_KNIGHT, { "Initiate", "Initiate",
 "Learner of the Dark Forces", "Learner of the Dark Forces",
 "Journeyman of Evil", "Journey Woman of Evil", "Dark Charge", "Dark Charge",
 "Disciple of the Dark Forces", "Disciple of the Dark Forces",
@@ -249,86 +264,99 @@ dilcopy guild_titles@guild_paths(GUILD_KNIGHT, { "Initiate", "Initiate",
 "Champion of Hades", "Count of The Dark Knights",
 "Countess Of The Dark Knights"});
 
-dilbegin knight_dil ();
+dilcopy MasterJoin@guilds(GUILD_KNIGHT, GUILD_KNIGHT_EXCL, QUEST_KNIGHT_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Knight's Guild quest.","say Go speak with Lady Soroth."},
+ {"handshake $1N", "say Welcome to the Knight's Guild, $1N."});
+
+dilbegin knight_dil();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
-expd: extraptr;
-	pc : unitptr;
-	item : unitptr;
-	item2 : unitptr;
+   pc : unitptr;
+   item : unitptr;
+   item2 : unitptr;
 code
 {
 	heartbeat := PULSE_SEC * 4;
 
-	:start:
+:start:
+   wait (SFB_DONE, (command("bow") or command("worship")) and (self == target));
+   pc:= activator;
+   secure(pc, lost);
 
- wait (SFB_DONE, (command("bow") or command("worship"))
-                 and (self == target));
+   if (AVENGER_GIVEN in pc.quests) 
+      goto start;
 
-pc:= activator;
-secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-        if (AVENGER_GIVEN in pc.quests) goto start;
-		if ((GUILD_KNIGHT in expd.names)  and (pc.alignment < -349))
-{
-	exec ("say Hello there "+pc.name+" I see you have decided to follow "+
-	"the path or a Dark Knight and vanquish good from the land.",self);
-	pause;
-	exec ("say Since the realm is so full of purists, especially those " +
-        "Holy Paladins, we must protect ourselves as only " +
-        "Dark Knights can.", self);
-	pause;
-	exec ("say Before Master Shirilan departed this realm he left with me "+
-	"the knowledge of a mighty item I could bestow on promising " +
-        "young followers of the dark forces.", self);
-	pause;
-	exec ("say I will give it to you in the hopes that it will "+
-        "aid you in your need.", self);
-        item := load("avenger@knight");
- dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
-        item.height := pc.height;
-		link(item, self);
-exec("give sword "+pc.name, self);
-	pause;
-exec ("say Protect that sword well as the powers of good prevent us from "
-+	"making more.",self);
-pause;
-exec ("say Also this token should aid you in your quests against good.", self);
-pause;
-exec ("smile "+pc.name,self);
-        item2 := load("night_cross@knight");
-dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item2);
-        item2.height := pc.height;
-        link(item2,pc);
-exec("give pendant "+pc.name, self);
-	pause;
-exec("say I hope to see you again soon, our guild's strength is returning.",self);
-pause;
-exec("say Our worship has strengthened the dark forces.", self);
-pause;
-exec("say They will serve you as long as you serve them.", self);
-pause;
-exec("say Go now, train well and I ready myself for the next pupil.", self);
-	pause;
-    unsecure(pc);
-	goto start;
-	}
-else
+   if (IsInGuild@guilds(pc, GUILD_KNIGHT))
    {
-block;
- unsecure(pc);
-exec ("say You are not a Dark Knight leave before I feed your scrawny butt "
-	+"to the demons in hades!", self);
- goto start;
+      if (pc.alignment >= -349)
+      {
+         exec ("say You must work harder on your demeanor.", self);
+         goto start;
+      }
+
+      exec ("say Hello there "+pc.name+" I see you have decided to follow "+
+      "the path or a Dark Knight and vanquish good from the land.",self);
+      pause;
+      exec ("say Since the realm is so full of purists, especially those " +
+         "Holy Paladins, we must protect ourselves as only " +
+         "Dark Knights can.", self);
+      pause;
+      exec ("say Before Master Shirilan departed this realm he left with me "+
+      "the knowledge of a mighty item I could bestow on promising " +
+         "young followers of the dark forces.", self);
+      pause;
+      exec ("say I will give it to you in the hopes that it will "+
+         "aid you in your need.", self);
+         item := load("avenger@knight");
+      dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+         item.height := pc.height;
+      link(item, self);
+      exec("give sword "+pc.name, self);
+      pause;
+      exec ("say Protect that sword well as the powers of good prevent us from "
+      +	"making more.",self);
+      pause;
+      exec ("say Also this token should aid you in your quests against good.", self);
+      pause;
+      exec ("smile "+pc.name,self);
+         item2 := load("night_cross@knight");
+      dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item2);
+         item2.height := pc.height;
+         link(item2,pc);
+      exec("give pendant "+pc.name, self);
+      pause;
+      exec("say I hope to see you again soon, our guild's strength is returning.",self);
+      pause;
+      exec("say Our worship has strengthened the dark forces.", self);
+      pause;
+      exec("say They will serve you as long as you serve them.", self);
+      pause;
+      exec("say Go now, train well and I ready myself for the next pupil.", self);
+      pause;
+      unsecure(pc);
+      goto start;
    }
-unsecure(pc);
-goto start;
+   else
+   {
+      block;
+      unsecure(pc);
+      exec ("say You are not a Dark Knight leave before I feed your scrawny butt "
+      +"to the demons in hades!", self);
+      goto start;
+   }
+   unsecure(pc);
+   goto start;
 
 :lost:
-destroy(item);
-unsecure(pc);
-exec("say Just wait until they decide to talk to be and i now ignore them!", self);
-goto start;
+   destroy(item);
+   unsecure(pc);
+   exec("say Just wait until they decide to talk to be and i now ignore them!", self);
+   goto start;
 
 }
 dilend/* knight_dil */
@@ -350,17 +378,19 @@ technique from this great hero."
 flags {UNIT_FL_NO_TELEPORT}
 M_HUMAN_CLERIC_SWORD(140, SEX_MALE,"cause serious","cure serious")
 alignment -1000
-dilcopy nokill@knight();
-special SFUN_GUILD_BASIS GUILD_KNIGHT
 romflags {CHAR_PROTECTED}
-dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
+
+dilcopy nokill@knight();
+dilcopy MurderBanish@guilds(GUILD_KNIGHT);
+dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _WEAPON
 #include "guilddef.h"
 #undef _WEAPON
-
-
 end
+
+
 hilary
 names {"Lady Hilary","hilary","lady","teacher"}
 title "Maid Hilary"
@@ -374,22 +404,18 @@ flags {UNIT_FL_NO_TELEPORT}
 NATURAL_DEF(WPN_FIST, ARM_PLATE)
 M_HUMAN_MAGE_FIRE(130, SEX_FEMALE, "cast lava flow")
 alignment -1000
-dilcopy nokill@knight();
 romflags {CHAR_PROTECTED}
-special SFUN_GUILD_BASIS GUILD_KNIGHT
-/*
-special SFUN_MEMBERS_ONLY GUILD_KNIGHT+"#$1n says, 'I only teach warriors
-of the holy path. Begone!'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
 
+dilcopy nokill@knight();
+dilcopy MurderBanish@guilds(GUILD_KNIGHT);
+dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _SPELL
 #include "guilddef.h"
 #undef _SPELL
-
-
 end
+
 
 matthew
 names {"Matthew the Brilliant","matthew"}
@@ -402,21 +428,18 @@ in the Dark Knights remains a mystery."
 flags {UNIT_FL_NO_TELEPORT}
 M_HUMAN_CLERIC_SWORD(130, SEX_MALE, "harm", "heal")
 alignment -1000
-dilcopy nokill@knight();
 romflags {CHAR_PROTECTED}
-special SFUN_GUILD_BASIS GUILD_KNIGHT
-/*
-special SFUN_MEMBERS_ONLY GUILD_KNIGHT+"#$1n exclaims, 'You are not a
-warrior of the faith!'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
+
+dilcopy nokill@knight();
+dilcopy MurderBanish@guilds(GUILD_KNIGHT);
+dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _ABILITY
 #include "guilddef.h"
 #undef _ABILITY
-
-
 end
+
 
 soroth
 names {"Lady Soroth","soroth","lady"}
@@ -431,18 +454,29 @@ look so confident."
 flags {UNIT_FL_NO_TELEPORT}
 M_HUMAN_MAGE_FIRE(120, SEX_FEMALE, "hellfire")
 alignment -1000
-dilcopy nokill@knight();
 romflags {CHAR_PROTECTED}
-special SFUN_GUILD_BASIS GUILD_KNIGHT
-/*
-special SFUN_MEMBERS_ONLY GUILD_KNIGHT+"#$1n says, 'Begone $3n!'"
-*/
 
-dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
+dilcopy nokill@knight();
+dilcopy MurderBanish@guilds(GUILD_KNIGHT);
+dilcopy AlertMembers@guilds(GUILD_KNIGHT, "");
+dilcopy TrainMemberChk@guilds(GUILD_KNIGHT, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
+
+dilcopy qstSimpleQuest@quests(QUEST_KNIGHT_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Lady Soroth in the Knight's Guild has asked you to bring her the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N.  You should go speak with the guild master now."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_KNIGHT_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
 
 end
 

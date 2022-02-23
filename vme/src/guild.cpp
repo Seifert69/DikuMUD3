@@ -359,7 +359,6 @@ void leave_guild(unit_data *player)
     FREE(PC_GUILD(player));
 
     PC_GUILD(player) = nullptr;
-    PC_GUILD_TIME(player) = PC_TIME(player).played;
 }
 
 void guild_banish_player(unit_data *ch)
@@ -433,6 +432,8 @@ int can_leave_guild(guild_type *pG, unit_data *master, unit_data *ch)
     return TRUE;
 }
 
+
+// Obsolete
 void join_guild(unit_data *ch, char *guild_name)
 {
     extra_descr_data *exd = nullptr;
@@ -443,7 +444,6 @@ void join_guild(unit_data *ch, char *guild_name)
         FREE(PC_GUILD(ch));
 
     PC_GUILD(ch) = str_dup(guild_name);
-    PC_GUILD_TIME(ch) = PC_TIME(ch).played;
 
     exd = quest_add(ch, str_cc("$", PC_GUILD(ch)), itoa(time(nullptr)));
     exd->names.AppendName("0");
@@ -669,6 +669,8 @@ int guild_basis(spec_arg *sarg)
     return SFR_SHARE;
 }
 
+
+// Obsolete
 int guild_title(spec_arg *sarg)
 {
     char buf[MAX_STRING_LENGTH];
@@ -696,7 +698,7 @@ int guild_title(spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    title_no = (PC_TIME(sarg->activator).played - PC_GUILD_TIME(sarg->activator)) / (SECS_PER_REAL_HOUR * 4);
+    title_no = (PC_TIME(sarg->activator).played - 0) / (SECS_PER_REAL_HOUR * 4);
     male[0] = female[0] = 0;
 
     for (i = 0;; i++)

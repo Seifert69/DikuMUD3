@@ -151,7 +151,6 @@ pc_data::pc_data()
     memset(&account, 0, sizeof(account));
 
     profession = -1;
-    guild_time = 0;
     vlvl = 0;
     id = -1;
 

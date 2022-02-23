@@ -37,6 +37,12 @@ the direction to climb as well as typing the climb <keyword>
 #define CLIMB_NOT_IN_EXITS 0x02
 */
 
+
+// Use this to wrap constants in quoutes, e.g. QUOTE(DIR_NORTH) -> "0"
+#define QXX(x) #x
+#define QUOTE(x) QXX(x)
+
+
 #define FLEE_LEAVE  "$noflee"
 
 #define NO_FLEE_LEAVE(directions)  \

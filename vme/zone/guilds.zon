@@ -1,0 +1,1171 @@
+#include <macros.h>
+
+/*
+test mud delete the zon_file... before git pull?
+
+Write help
+
+All the guilds processed (Monk is not complete):
+   assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon druid.zon ../Zones/monk.zon
+*/
+
+%zone guilds
+
+reset RESET_NOT
+
+creators {"Papi"}
+
+notes "The DIL functions needed to manage Guilds."
+
+help 
+"MS 2022. High level description of guilds.<br/>
+
+When a player first joins the game they choose a profession.
+The profession automatically enrolls them in a guild matching
+the profession.<br/>
+
+Some guilds exclude other guilds. For example you cannot become
+a Paladin if you're in the Necromancer, Thief or Dark Knight guilds.<br/>
+
+A player can thereafter join as many guilds as they want. Joining a 
+guild should require something from the player, e.g. at least completing
+a quest.<br/>
+
+Training cost is determined by the player's profession, so joining a new
+guild will not make it cheaper to practice e.g. your strength, but new
+guilds and teachers might offer training in skills not in your current guild
+or even have higher maximums than your current guild. For example, at mage
+teacher can typically train your brain to a higher maximum than a fighter
+teacher.<br/>
+
+Along with this we will also introduce the ability to switch profession.
+For example from a fighter to a mage. This will
+allow you to make a combination character as you build up to level 100 and beyond.
+E.g. Fighter / Mage.
+
+The data structure is as follows:
+
+pc.guild
+   Holds the GUILD_ string of the player's current 'default' guild.
+
+pc.info
+   Has the following entry for each guild that the player is a member of:
+
+   {'$guild/paladin', '7', '50', '$guild'}
+
+   .[0] is the guild name prepended with '$guild/'
+   .[1] is the current guild level
+   .[2] was the player's vlvl when the joined the guild. 
+   .[3] is the guild string (I considered prepending $g_ but will just try this)
+        (in case we need to iterate throught them all)
+
+Notes on switching profession. Idea:
+
+Perhaps when you start a new character you can only choose 
+   Fighter, Mage, Cleric, Thief
+
+Those are the four classical archetypes. As per the guild description
+you can of course join new guilds (if you can complete the quests).
+For example as a fighter you may join the Barbarian guild and explore it.
+
+Then when you reach some medium level, e.g. level 25 you can change profession
+the first time. But you can only change profession to a related profession:
+
+Fighter -> Barbarian, Ranger
+Thief   -> Assassin, 
+Cleric  -> Druid, Necromancer
+Mage    -> Sorcerer
+
+Later, when you reach a higher level, e.g. 50 or 75, you can change profession
+again. But this time I suggest you can either freely choose your final profession
+or you can choose more broadly than above. If we were to restrict it and not make
+it completely free, then how about something like this:
+
+Fighter, Barbarian, Ranger ->
+   Paladin,  Dark Knight, Assassin, Cleric, Druid
+
+Mage / Sorcerer -> 
+   Thief, Assassin, Fighter 
+
+Cleric, Necromancer, Druid ->
+   Fighter, Paladin, Dark Knight, Necromancer
+"
+
+
+%dil
+
+//
+// Guild Masters:
+//    Except for your starting guild, you join new guilds at the guild master.
+//
+// DIL setup:
+//    [nokill]
+//         - optional DIL to avoid having guild members murdered.
+//    quest blocking DIL(s)
+//         - e.g. quest_block@guilds(); you can only join if you completed X
+//    join DIL
+//         - We're missing a generic join DIL I think.
+//         - e.g. master_join@paladin_guild
+//
+//     MurderBanish()  (replaces SFUN_GUILD_BASIS)
+//        - Any player killing a guild master / teacher will get banished
+//
+//     AlertMembers()  (replaces SFUN_GUILD_BASIS)
+//        - Alert guild members that guild is under attack
+//
+//     guild_titles@guild_paths()
+
+
+// Guild teachers:
+//   Offer teachings, abilities, skills, spells, weapons that you can practice.
+//
+// - setup:
+
+// #define _WEAPON
+// #include "guilddef.h"
+// #undef _WEAPON
+//
+
+//
+// =================================================================
+//
+
+// Plan:
+//   in block.zon ?
+//
+// quest_block@guilds(cmd : string, quest : string, sExec : stringlist);
+//    used to blocks the join command unless player has list of quests
+//
+// alignment@block - 
+//    blocks the join command unless player has alignment GOOD, EVIL or NEUTRAL
+//
+// guild@block({commands}, guild, {actions}) - 
+//    used to block player {commands} unless the player is in the guild
+// 
+// move@block({directions}, guild, {actions}) - 
+//    used to block player moving in direction unless the player is in the guild
+// 
+// guild_wield()
+//    if not in guild, unequip and drop
+//
+
+//
+// =================================================================
+// New guild helper functions per 2022 MS to add / remove
+// guilds from player's info.
+//
+// integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+// integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+// integer IsBanished@guilds(pc : unitptr, sGuild : string);
+// string GuildString@guilds(pc : unitptr);
+// string GuildStrings@guilds(pc : unitptr);
+// JoinGuild@guilds(pc : unitptr, sGuild : string);
+// LeaveGuild@guilds(pc : unitptr, sGuild : string);
+// BanishGuild@guilds(pc : unitptr, sGuild : string);
+// MurderBanish@guilds(sGuild : string);
+// AlertMembers@guilds(sGuild : string, sMsg : string);
+// integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+
+//
+// Blockers:
+// TrainMemberChk@guilds(sGuild : string, sMsg : string);
+// quest_block@guilds(cmd : string, quest : string, sExec : stringlist);
+//
+// SetAutoTrain@guilds(pc : unitptr, sGuild : string);
+// AdvGuildLevel@guilds(ch : unitptr);
+
+// Do not use, for basis only
+//
+// login_clean@guilds();
+// SetGuildLevel(pc : unitptr, sGuild : string, lvl : integer); // Do not use, for login_clean only
+//
+
+
+
+
+// 'sGuild' - the guild you must be a member of
+// 'drink'  - Is the drink that will transform the character
+// self is for example the guild master.
+//
+dilbegin Specialize(sGuild : string, drink : string, expl : stringlist);
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+   integer ReadySpecialize@professions(pc : unitptr);
+
+var
+   pc : unitptr;
+   u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+
+:start:
+   wait(SFB_CMD, command("say"));
+
+   if ((not ("specialize" in argument)) and (not ("specialise" in argument)))
+      goto start;
+
+   pc := activator;
+   secure(pc, start);
+
+   if (not IsInGuild@guilds(activator, sGuild))
+   {
+      pause;
+   	Explain@quests(pc, null, "say $1N, in order to specialize, you must first become a guild member.");
+      goto start;
+   }
+
+   if (not ReadySpecialize@professions(activator))
+   {
+      pause;
+   	Explain@quests(pc, null, "say $1N, to specialize, you must at least be level 25 in your main guild.");
+      goto start;
+   }
+
+   // We are in the right guild
+   //
+   pause;
+   Explainer@quests(pc, expl);
+   u := load(drink);
+   link(u, pc);
+   goto start;
+}
+dilend
+
+
+// dilcopy this function to the drink that transforms the player
+//
+dilbegin Transform(fromProfession : integer, newProfession : integer, msgs : stringlist);
+external
+   integer ReadySpecialize@professions(pc : unitptr);
+   SpecializeProf@professions(pc : unitptr, newProf : integer);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+
+var
+   i : integer;
+   pc : unitptr;
+code
+{
+   heartbeat := 1;
+:start:
+   wait(SFB_CMD, command("drink"));
+   pc := activator;
+   secure(pc, lostpc);
+
+   if (pc.type != UNIT_ST_PC)
+      goto start;
+
+   i := self.value[0]; // How much was in the drink
+   wait(SFB_TICK, TRUE);
+
+   if (self.value[0] >= i)  // Nothing was drunk
+      goto start;
+
+   // Something was drunk
+   if ((self.profession != fromProfession) or (not ReadySpecialize@professions(pc)))
+   {
+      pc.position := POSITION_STUNNED;
+      pc.hp := 0;
+      act("Your overwhelmed with agony and pass out.", A_ALWAYS, pc, self, null, TO_CHAR);
+      act("$1n drinks $2n then $1e screams out in pain and passes out.", A_ALWAYS, pc, self, null, TO_CHAR);
+      quit;
+   }
+
+   SpecializeProf@professions(pc, newProfession);
+   Explainer@quests(pc, msgs);
+
+:lostpc:
+   quit;
+}
+dilend
+
+
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin string GuildString(pc : unitptr);
+code
+{
+   return (pc.guild);
+}
+dilend
+
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin integer IsInGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+      return (0);
+
+   return (1);
+}
+dilend
+
+
+// Checks if player pc is in any of the guilds in 'sGuilds'
+// 0 = not in any of the guild, 1 = in one of the guilds
+//
+dilbegin integer IsInGuilds(pc : unitptr, sGuilds : stringlist);
+var
+   ln : integer;
+
+code
+{
+   ln := length(sGuilds) - 1;
+   while (ln >= 0)
+   {
+      if ((GUILD_KEY_PREPEND+sGuilds.[ln]) in pc.info)
+         return (1);
+
+      ln := ln-1;
+   }
+
+   return (0);
+}
+dilend
+
+
+// Checks if player pc is in guild sGuild
+// 0 = not in guild, 1 = in guild
+//
+dilbegin integer IsBanished(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := GUILD_KEY_BANISHED in pc.info;
+
+   if (exd == null)
+      return (0);
+
+   if ((GUILD_KEY_PREPEND + sGuild) in exd.names)
+      return (1);
+
+   return (0);
+}
+dilend
+
+
+// Joins player pc to guild sGuild
+//
+dilbegin JoinGuild(pc : unitptr, sGuild : string);
+external
+   SetDefaultGuild(pc : unitptr, sGuild : string);
+
+var
+   exd : extraptr;
+   sl : stringlist;
+code
+{
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+
+   if (exd)
+   {
+      log("Error in JoinGuild. Guild was already in player guild list");
+      return;
+   }
+
+   addstring(sl, GUILD_KEY_PREPEND + sGuild);
+   addstring(sl, "0");
+   addstring(sl, itoa(pc.vlevel));
+   addstring(sl, GUILD_KEY);
+   
+   addextra(pc.info, sl, "");
+
+   SetDefaultGuild(pc, sGuild);
+
+   return;
+}
+dilend
+
+
+// Player pc leaves the guild sGuild (moved to GUILD_KEY_LEFT)
+//
+dilbegin LeaveGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+   exdleft : extraptr;
+code
+{
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in LeaveGuild. $guild to leave not found for " + pc.name);
+      return;
+   }
+
+   subextra(pc.info, GUILD_KEY_PREPEND + sGuild);
+
+   // Now add to GUILD_KEY_LEFT
+
+   exdleft := GUILD_KEY_LEFT in pc.info;
+
+   if (exdleft == null)
+   {
+      addextra(pc.info, {GUILD_KEY_LEFT}, "");
+      exdleft := GUILD_KEY_LEFT in pc.info;
+   }
+
+   if (sGuild in exdleft.names)
+   {
+      log("Error in LeaveGuild. The guild was already left for : " + pc.name);
+      return;
+   }
+
+   addstring(exdleft.names, sGuild);
+   return;
+}
+dilend
+
+
+// Player pc is banished from his guild sGuild (moved to GUILD_KEY_BANISHED)
+// If player is not in the guild, they are still added as banished.
+//
+dilbegin BanishGuild(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+   exdbanished : extraptr;
+code
+{
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+
+   if (exd)
+   {
+      subextra(pc.info, GUILD_KEY_PREPEND + sGuild);
+   }
+
+   exdbanished := GUILD_KEY_BANISHED in pc.info;
+
+   if (exdbanished == null)
+   {
+      addextra(pc.info, {GUILD_KEY_BANISHED}, "");
+      exdbanished := GUILD_KEY_BANISHED in pc.info;
+   }
+
+   if (not (sGuild in exdbanished.names))
+   {
+      // Banish the player, regardless if they're a member or not.
+      addstring(exdbanished.names, sGuild);
+   }
+
+   return;
+}
+dilend
+
+
+// =================================================================
+// Replacing SFUN_GUILD_BASIS
+
+// kill_banish
+// Purpose: If someone attacks a guild master, make them banished,
+//    even if they are not members.
+//
+dilbegin fnpri(FN_PRI_BLOCK-2) MurderBanish(sGuild : string);
+external
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+var
+   u : unitptr;
+code
+{
+:loop:
+   wait(SFB_DEAD, self == activator);
+
+   u := self.outside;
+
+   while (u)
+   {
+      if ((u.type == UNIT_ST_PC) and (u.fighting == self) and (visible(self, u)))
+      {
+         BanishGuild@guilds(u, sGuild);
+      }
+      u := u.next;
+   }
+
+   goto loop;
+}
+dilend
+
+
+
+// Alert all guild members if guild is under attack
+//    NOT YET IMPLEMENTED
+dilbegin fnpri(FN_PRI_BLOCK-2) AlertMembers(sGuild : string, sMsg : string);
+external
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+var
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC * 60;
+
+:loop:
+   wait(SFB_COM, TRUE);
+
+    if (self.fighting)
+    {
+       if (sMsg == "")
+         sMsg := "$3n tells you, 'Help! Our guild is attacked by $1n'";
+
+      s := sact(sMsg, A_SOMEONE, self.fighting, null, self, TO_CHAR);
+
+      // Need to write code to send to guild members. Use Channels? XXX
+
+      pause;
+    }
+
+     goto loop;
+}
+dilend
+
+
+// =================================================================
+// quest@block(cmd, quest, {exec}) - 
+//    If a char does the command 'cmd':
+//       Allow command if char has the quest 'quest'
+//       block it otherwise
+//
+// Sample: 
+//    dilcopy quest_block@guilds("join", WIGHT_COMPLETE, {"say If you wish to join you must prove yourself worthy by completing the Wight Warren's quest"});
+//
+//    The player can only join if they have completed the WIGHT_COMPLETE quest.
+//
+
+dilbegin fnpri(FN_PRI_BLOCK-1) quest_block(cmd : string, quest : string, sExec : stringlist);
+external
+   Explainer@quests(pc : unitptr, sl : stringlist);
+
+code
+{
+:loop:
+   wait(SFB_CMD, command(cmd));
+
+   if (not ((quest+" Complete") in activator.quests))
+   {
+      block;
+      Explainer@quests(activator, sExec);
+   }
+
+   goto loop;
+}
+dilend
+
+
+
+dilbegin fnpri(FN_PRI_BLOCK+1) TrainMemberChk(sGuild : string, sMsg : string);
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+var
+  pc   : unitptr;
+code
+{
+:start:
+   wait (SFB_CMD, command ("practice") and (activator.type == UNIT_ST_PC));
+
+   if (not IsInGuild@guilds(activator, sGuild))
+   {
+      block;
+      if ((self.position > POSITION_SLEEPING) or (self.position != POSITION_FIGHTING))
+      {
+         if (sMsg == "")
+            sMsg := "say You're not a member of our guild, go speak with the guild master.";
+         exec(sMsg, self);
+      }
+   }
+   goto start;
+}
+dilend
+
+
+
+// =================================================================
+
+// Call this to set the auto-train values to the guild name given
+//
+dilbegin SetAutoTrain(pc : unitptr, sGuild : string);
+var
+   sl : stringlist;
+code
+{
+   if (sGuild == GUILD_UDG_FIGHTER)
+      sl := {"$autotrain", GUILD_UDG_FIGHTER_ATL};
+   else if (sGuild == GUILD_KNIGHT)
+      sl := {"$autotrain", GUILD_KNIGHT_ATL};
+   else if (sGuild == GUILD_PALADIN)
+      sl := {"$autotrain", GUILD_PALADIN_ATL};
+   else if (sGuild == GUILD_NYM_RANGER)
+      sl := {"$autotrain", GUILD_RANGER_ATL};
+   else if (sGuild == GUILD_UDG_THIEF)
+      sl := {"$autotrain", GUILD_THIEF_ATL};
+   else if (sGuild == GUILD_ASSASSIN)
+      sl := {"$autotrain", GUILD_ASSASSIN_ATL};
+   else if (sGuild == GUILD_UDG_CLERIC)
+      sl := {"$autotrain", GUILD_CLERIC_ATL};
+   else if (sGuild == GUILD_NYM_DRUID)
+      sl := {"$autotrain", GUILD_DRUID_ATL};
+   else if (sGuild == GUILD_NECROMANCER)
+      sl := {"$autotrain", GUILD_NECROMANCER_ATL};
+   else if (sGuild == GUILD_UDG_MAGE)
+      sl := {"$autotrain", GUILD_MAGE_ATL};
+   else if (sGuild == GUILD_SORCERER)
+      sl := {"$autotrain", GUILD_SORCERER_ATL};
+   else if (sGuild == GUILD_BARBARIAN)
+      sl := {"$autotrain", GUILD_BARBARIAN_ATL};
+   else
+   {
+      log("ERROR: setautotrain: invalid sGuild");
+      return;
+   }
+
+   subextra(pc.info, "$autotrain");
+   addextra(pc.info, sl, "");
+   return;
+}
+dilend
+
+
+
+// Set / changes the player's current default guild.
+// Also sets up the Auto-train.
+// The player must already be in the guild for this
+// to work.
+//
+dilbegin SetDefaultGuild(pc : unitptr, sGuild : string);
+external
+   SetAutoTrain(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+   {
+      log("Error setting ["+sGuild+"] as the new default for player: "+pc.name);
+      return;
+   }
+
+   pc.guild := sGuild;
+   SetAutoTrain(pc, sGuild);
+
+   if (pc.level > 0)
+   {
+      sendtext(sGuild + " is now your main guild (request a guild title to switch main guild).<br/>", pc);
+   }
+   return;
+}
+dilend
+
+
+dilbegin AdvGuildLevel(pc : unitptr);
+var
+   exd : extraptr;
+   s : string;
+code
+{
+   exd := (GUILD_KEY_PREPEND + pc.guild) in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in AdvGuildLevel(): Unable to find ["+pc.guild+"] in pc.info");
+      return;
+   }
+
+   s := itoa(1+atoi(exd.names.[1]));
+   exd.names.[1] := s;
+   sendtext("You are now level " + s + " in the " + pc.guild + " guild.<br/>", pc);
+   return;
+}
+dilend
+
+
+// Returns the level of the player's guild 'sGuild'
+// -1 if no such guild found
+//
+dilbegin integer GetGuildLevel(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+      return (-1);
+
+   return (atoi(exd.names.[1]));
+}
+dilend
+
+
+
+dilbegin do_join(arg : string);
+code
+{
+   sendtext("You think about joining something.<br/>", self);
+   quit;
+}
+dilend /* join_dil */
+
+
+dilbegin do_guilds(arg : string);
+external
+   string ProfessionName@professions(prof_xxx : integer);
+   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+   integer ReadySpecialize@professions(pc : unitptr);
+
+var
+   exd : extraptr;
+   sl : stringlist;
+   i : integer;
+   s : string;
+
+code
+{
+   if (self.type != UNIT_ST_PC)
+   {
+      sendtext("Only for players.<br/>", self);
+      quit;
+   }
+
+   sendtext("You are a member of the following guilds:<br/>", self);
+   exd := GUILD_KEY in self.info;
+   i := 0;
+   while (exd)
+   {
+      sl := split(exd.names.[0], "/");
+      if (sl.[1] == self.guild)
+         s := " - Main Guild";
+      else
+         s := "";
+      sendtext(sl.[1] + " (level "+exd.names.[1]+")"+s+"<br/>", self);
+
+      exd := GUILD_KEY in exd.next;
+      i := i + 1;
+   }
+
+   if (i == 0)
+   {
+      sendtext("None. Seems like an error. Contact an adminsitrator.<br/>", self);
+   }
+   else
+   {
+      if (i > 1)
+         sendtext("<br/>Request a guild title from a guild master to change your main guild.<br/>", self);
+   }
+
+   if (GetGuildLevel(self, self.guild) == -1)
+      sendtext("Your default guild is [" + self.guild + "] and seems incorrectly setup. Please contact an administrator.<br/>", self);
+
+   exd := GUILD_KEY_BANISHED in self.info;
+   if (exd)
+   {
+      sendtext("<br/>You have been banished from the following guilds:<br/>", self);
+
+      i := length(exd.names)-2;
+      while (i >= 0)
+      {
+         sendtext(exd.names.[i+1] + "<br/>", self);
+         i := i - 1;
+      }
+   }
+
+
+   exd := GUILD_KEY_LEFT in self.info;
+   if (exd)
+   {
+      sendtext("<br/>You have left the following guilds:<br/>", self);
+
+      i := length(exd.names)-2;
+      while (i >= 0)
+      {
+         sendtext(exd.names.[i+1] + "<br/>", self);
+         i := i - 1;
+      }
+   }
+
+   // =========================================
+   // Show the character's profession
+   //
+   sendtext("Your profession is: " + ProfessionName@professions(self.profession) + ".<br/>", self);
+
+   //
+   // When the character has 25 guild levels in his main profession, he can 
+   // choose a specialization (e.g. a fighter may become a barbarian)
+   //
+   if (ReadySpecialize@professions(self))
+   {
+      sendtext("You are ready to specialize your profession.<br/>", self);
+   }
+
+
+   quit;
+}
+dilend
+
+
+
+
+dilbegin SetTitles(the_guild : string, title_list : stringlist);
+external
+   integer GetGuildLevel(pc : unitptr, sGuild : string);
+   SetDefaultGuild(pc : unitptr, sGuild : string);
+var
+   ln:integer;
+   male_list    : stringlist;
+   female_list  : stringlist;
+   pc           : unitptr;
+   pclevel      : integer;
+   pcsex        : integer;
+   i            : integer;
+   newtit       : string;
+   my_race      : string;
+
+code
+{
+:init:
+   /* Sort the list into two different lists and add gaps for even levels */
+   addstring(male_list, "-");
+   addstring(female_list, "-");
+
+   i := 0;
+   ln:=length(title_list);
+   while(i < ln)
+   {
+      addstring(male_list, title_list.[i]);
+      if (i+1<ln)
+         addstring(female_list, title_list.[i+1]);
+      i := i + 2;
+   }
+
+
+:start:
+   wait(SFB_CMD, command("title") and (activator.level < 235) and (activator.type == UNIT_ST_PC));
+   block;
+   pc := activator;
+   secure(pc, lost_pc);
+
+   pclevel := GetGuildLevel(pc, the_guild);
+   if (pclevel == -1)
+   {
+      exec("say " + pc.name + ", you're not a guild member.", self);
+      goto start;
+   }
+
+   SetDefaultGuild(pc, the_guild);
+
+:do_title:
+   pcsex   := pc.sex;
+   if (pc.race == RACE_HUMAN)
+      my_race := "Human";
+   else if (pc.race == RACE_ELF)
+      my_race := "Elf";
+   else if (pc.race == RACE_DWARF)
+      my_race := "Dwarf";
+   else if (pc.race == RACE_HALFLING)
+      my_race := "Halfling";
+   else if (pc.race == RACE_GNOME)
+      my_race := "Gnome";
+   else if (pc.race == RACE_HALF_ORC)
+      my_race := "Half-Orc";
+   else if (pc.race == RACE_HALF_OGRE)
+      my_race := "Half-Ogre";
+   else if (pc.race == RACE_HALF_ELF)
+      my_race := "Half-Elf";
+   else if (pc.race == RACE_BROWNIE)
+      my_race := "Brownie";
+   else if (pc.race == RACE_GROLL)
+      my_race := "Groll";
+   else
+      my_race := "Darkelf";
+
+   pclevel := pclevel/5;
+
+   if (pcsex < 2)
+   {
+      if (pclevel>(length(male_list)-1))
+         pclevel:=(length(male_list)-1);
+      newtit := male_list.[pclevel];
+   }
+   else
+   {
+      if (pclevel>(length(female_list)-1))
+         pclevel:=(length(female_list)-1);
+      newtit := female_list.[pclevel];
+   }
+
+   if (newtit == "-")
+   {
+      if (pcsex < 2)
+      {
+         if (pclevel<1)
+            goto jumpbug;
+         if (not(male_list.[pclevel - 1] in pc.title))
+         {
+            exec("say Enjoy the title, " + pc.name + "!", self);
+            pc.title := "the " + my_race + " " + male_list.[pclevel - 1];
+            goto lost_pc;
+         }
+         else
+         {
+            :jumpbug:
+            exec("say You need to attain a higher level before you " +
+                 "can receive a new title, " + pc.name + ".", self);
+            goto lost_pc;
+         }
+      }
+      else if (pcsex > 1)
+      {
+         if (pclevel<1)
+            goto jumpbug2;
+
+         if (not(female_list.[pclevel - 1] in pc.title))
+         {
+            exec("say Enjoy the title, " + pc.name + "!", self);
+            pc.title := "the " + my_race + " " + female_list.[pclevel - 1];
+            goto lost_pc;
+         }
+         else
+         {
+            :jumpbug2:
+            exec("say You need to attain a higher level before you " +
+                 "can receive a new title, " + pc.name + ".", self);
+            goto lost_pc;
+         }
+      }
+   }
+   else if (newtit in pc.title)
+   {
+      exec("say You have already attained the appropriate title for " +
+           "this guild level, " + pc.name + ".", self);
+      goto lost_pc;
+   }
+   else
+   {
+      pc.title := "the " + my_race + " " + newtit;
+      exec("say Enjoy the title, " + pc.name + "!", self);
+      goto lost_pc;
+   }
+
+:lost_pc:
+   unsecure(pc);
+   goto start;
+}
+dilend /* guild_titles */
+
+
+
+// Do not use, only for conversion from old system (below)
+dilbegin SetGuildLevel(pc : unitptr, sGuild : string, lvl : integer);
+var
+   exd : extraptr;
+   s : string;
+code
+{
+   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+
+   if (exd == null)
+   {
+      log("Error in AdvGuildLevel(): Unable to find ["+sGuild+"] in pc.info");
+      return;
+   }
+
+   exd.names.[1] := itoa(lvl);
+   return;
+}
+dilend
+
+
+// Used to convert old players
+//
+dilbegin login_clean();
+external
+   JoinGuild(pc : unitptr, sGuild : string);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   SetGuildLevel(ch : unitptr, sGuild : string, lvl : integer);
+   integer ProfessionIdx@professions(sGuild : string);
+   login_clean@professions(prof : integer, desc : string);
+
+var
+   exd : extraptr;
+   i : integer;
+   prof : integer;
+   desc : string;
+
+code
+{
+   if (GUILD_KEY in self.info)
+      return;
+
+   log("guild login_clean()");
+   subextra(self.quests, "$autotrain");
+   exd := "$path" in self.quests;
+
+   desc := "Converted from existing profession in range";
+   
+   if (exd)
+   {
+      prof := self.profession;
+      if (prof >= PROFESSION_COUNT)
+         prof := -1;
+
+      i := length(exd.names);
+
+      if (i != 8)
+      {
+         log("Unable to convert. Unexpected number of names in $path for player "+self.name);
+         return;
+      }
+
+      if (exd.names.[1] != "")
+      {
+         JoinGuild(self, exd.names.[1]);
+         SetGuildLevel(self, exd.names.[1], atoi(exd.names.[4]));
+         if (prof < 0)
+         {
+            prof := ProfessionIdx@professions(exd.names.[1]);
+            desc := "Converted from guild path #1";
+         }
+      }
+
+      if (exd.names.[2] != "")
+      {
+         JoinGuild(self, exd.names.[2]);
+         SetGuildLevel(self, exd.names.[2], atoi(exd.names.[5]));
+         if (prof < 0)
+         {
+            prof := ProfessionIdx@professions(exd.names.[2]);
+            desc := "Converted from guild path #2";
+         }
+      }
+
+      if (exd.names.[3] != "")
+      {
+         JoinGuild(self, exd.names.[3]);
+         SetGuildLevel(self, exd.names.[3], atoi(exd.names.[6]));
+         if (prof < 0)
+         {
+            prof := ProfessionIdx@professions(exd.names.[3]);
+            desc := "Converted from guild path #3";
+         }
+      }
+
+      if (self.guild != "")
+      {
+         if (not IsInGuild(self, self.guild))
+         {
+            JoinGuild(self, self.guild);
+            SetGuildLevel(self, self.guild, self.vlevel);
+            if (prof < 0)
+            {
+               prof := ProfessionIdx@professions(self.guild);
+               desc := "Converted from self.guild, apparently no guild path even though $path";
+            }
+         }
+      }
+      else
+      {
+         self.guild := exd.names.[1];
+      }
+
+      subextra(self.quests, "$path");
+   }
+   else if (self.guild != "")
+   {
+      log(self.name + " had no $path but had default guild info.");
+      JoinGuild(self, self.guild);
+      SetGuildLevel(self, self.guild, self.vlevel);
+      if (prof < 0)
+      {
+         prof := ProfessionIdx@professions(self.guild);
+         desc := "Converted from self.guild, there was no $path";
+      }
+   }
+   else
+   {
+      log(self.name + " has no $path or guild info.");
+   }
+
+   login_clean@professions(prof, desc);
+
+   return;
+}
+dilend
+
+
+// slExpBan     : Banished
+// slExpAlready : ALready member
+// slExpExclude : Guild choices exclude
+// slExpQuest   : Quest not completed
+// slExpWelcome : Welcome message
+//
+dilbegin MasterJoin(sGuild : string, sGuildExclude : stringlist, sJoinQuest : string,
+                     slExpBan : stringlist,
+                     slExpAlready : stringlist,
+                     slExpExclude : stringlist,
+                     slExpQuest : stringlist,
+                     slExpWelcome : stringlist);
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+var
+	pc : unitptr;
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
+   block;
+
+   if (IsBanished@guilds(pc, sGuild))
+   {
+      Explainer@quests(pc, slExpBan);
+      goto start;
+   }
+
+   if (IsInGuild@guilds(pc, sGuild))
+   {
+      Explainer@quests(pc, slExpAlready);
+      goto start; 
+   }
+
+   if (IsInGuilds@guilds(pc, sGuildExclude))
+   {
+      Explainer@quests(pc, slExpExclude);
+   }
+
+   if (not ((sJoinQuest+" Complete") in pc.quests))
+   {
+      Explainer@quests(pc, slExpQuest);
+      goto start;  
+   }
+
+   JoinGuild@guilds(pc, sGuild);
+
+   Explainer@quests(pc, slExpWelcome);
+   goto start;
+}
+dilend
+
+
+%end

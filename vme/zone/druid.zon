@@ -11,6 +11,9 @@ END HEADER*/
 
 #define _GUILD_NYM_DRUID
 #define GUILD_NYM_DRUID "Nymgaard Druid"
+#define QUEST_DRUID_ENTRY "Druid Guild Entry"
+
+
 #define GROVE_FLAGS \
 {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_SACRED,UNIT_FL_NO_TELEPORT}
 
@@ -238,7 +241,10 @@ many tons. You don't think you could move them even if you tried!"
 extra {"glowing runes", "runes", "sign", "rune", "rock"}
 "<pre>                            The Druid Guild<br/>
 <br/>
-   'title'      - to get a new title (if you deserve it!).<br/>
+   'join'           - join this guild (if you qualify!).
+   'title'          - changes your title to a new and better one.
+   'worship'        - ... 
+   'say specialize' - To change profession (if you qualify).
 <br/>
 Members, remember to show respect to you master by bowing or worshipping<br/>
 him. The Druid Guild is wealthy and can aid you with minor items, should<br/>
@@ -441,61 +447,17 @@ happens to be the guildmaster as well as the teacher for abilities."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 M_TREE_LARGE(100,SEX_NEUTRAL)
-dilbegin worship_me();
-var
- gift : unitptr;
- pc   : unitptr;
- gs   : extraptr;
-code
-{
-heartbeat := PULSE_SEC * 10;
-:start:
-/* log("druid worship started");*/
-wait(SFB_DONE, ((command("worship")) and (self == target)));
-pc := activator;
-secure(pc, gone);
-gs := "$path" in pc.quests;
-if (gs == null)
-{
-log("not a druid! quiting");
-goto gone;
-}
 
-if ((GUILD_NYM_DRUID in gs.names))
-{
-exec("say Greetings, Druid.  I welcome you to our home.", self);
-pause;
-exec("say I have been alive in this world for many years, and I know "+
-     "that you face great peril beyond the borders of this sanctuary.", self);
-pause;
-exec("say As a token of friendship and goodwill towards a true Druid, I "+
-     "wish to give you this helpful tool.", self);
-pause;
-gift := load("herb_staff@druid");
-gift.height := pc.height;
-
-dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",gift);
-link(gift, pc);
-act("$1n gives you $2n.", A_ALWAYS, self, gift, pc, TO_VICT);
-act("$1n gives $2n to $3n.", A_SOMEONE, self, gift, pc, TO_NOTVICT);
-log("<div class='cpy'>a real druid he got a staff!</div>");
-pause;
-exec("say I hope this will serve you well in your travels.  Return when "+
-     "you are ready to continue your education with us.", self);
-goto start;
-}
-pause;
-pause;
-:gone:
-unsecure(pc);
-goto start;
-}
-dilend
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
 dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
-dilcopy guild_titles@guild_paths(GUILD_NYM_DRUID, {"Novice Druid",
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+dilcopy SetTitles@guilds(GUILD_NYM_DRUID, {"Novice Druid",
 "Novice Druidess", "Nature Student", "Nature Student", "Scholar of Nature",
 "Scholar of Nature", "Master of Fungi", "Mistress of Fungi",
 "Learner of Trees", "Learner of Trees", "Forest Speaker", "Forest Speaker",
@@ -509,10 +471,83 @@ dilcopy guild_titles@guild_paths(GUILD_NYM_DRUID, {"Novice Druid",
 "Protector of the Forest", "Druid Lord", "Druid Lady", "Archdruid",
 "Archdruidess"});
 
-#define _ABILITY
-#include "guilddef.h"
-#undef _ABILITY
+dilcopy Specialize@guilds(GUILD_NYM_DRUID, "alespec@druid",
+    { "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
+      "say Once you commit this process will alter your body permanently.",
+      "say I'll give you a mug of green liquid. Once you cosume it the change will occur.",
+      "say Remember, this will only work for healers.",
+      "::$3n hands you a mug of green liquid.::$3n hands a mug of green liquid to $1n."});
 
+dilbegin  fnpri(FN_PRI_BLOCK-1) block_evil_join();
+code
+{
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+
+   if (activator.alignment <= -350)
+   {
+      block;
+      exec("say You are not pure enough to become a druid.", self);
+   }
+
+   goto start;
+}
+dilend
+
+dilcopy MasterJoin@guilds(GUILD_NYM_DRUID, GUILD_DRUID_EXCL, QUEST_DRUID_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Druid's Guild quest.","say Go speak with the Willow tree."},
+ {"handshake $1N", "say Welcome to the Druid's Guild, $1N."});
+
+
+
+dilbegin worship_me();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+var
+   gift : unitptr;
+   pc   : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 10;
+
+:start:
+   /* log("druid worship started");*/
+   wait(SFB_DONE, ((command("worship")) and (self == target)));
+   pc := activator;
+   secure(pc, gone);
+
+   if (IsInGuild@guilds(pc, GUILD_NYM_DRUID))
+   {
+      exec("say Greetings, Druid.  I welcome you to our home.", self);
+      pause;
+      exec("say I have been alive in this world for many years, and I know "+
+      "that you face great peril beyond the borders of this sanctuary.", self);
+      pause;
+      exec("say As a token of friendship and goodwill towards a true Druid, I "+
+      "wish to give you this helpful tool.", self);
+      pause;
+      gift := load("herb_staff@druid");
+      gift.height := pc.height;
+      dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",gift);
+      link(gift, pc);
+      act("$1n gives you $2n.", A_ALWAYS, self, gift, pc, TO_VICT);
+      act("$1n gives $2n to $3n.", A_SOMEONE, self, gift, pc, TO_NOTVICT);
+      log("<div class='cpy'>a real druid he got a staff!</div>");
+      pause;
+      exec("say I hope this will serve you well in your travels.  Return when "+
+      "you are ready to continue your education with us.", self);
+      goto start;
+   }
+   pause;
+   pause;
+:gone:
+   unsecure(pc);
+   goto start;
+}
+dilend
 
 end
 
@@ -529,9 +564,11 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 M_TREE_LARGE(100,SEX_NEUTRAL)
 alignment 0
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
+
 dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
 #define _WEAPON
 #include "guilddef.h"
@@ -548,11 +585,13 @@ extra {}
 "Elm trees are magical. They provide the best materials for wands and
 other thaumaturgical implements. This wise old elm can teach you spells."
 M_TREE_LARGE(90,SEX_NEUTRAL)
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
-dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
+
+dilcopy nokill@druid();
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
 #define _SPELL
 #include "guilddef.h"
@@ -571,17 +610,30 @@ most others trees cannot, such as violent windstorms. This hardy tree
 can teach you survival skills."
 M_TREE_LARGE(94,SEX_NEUTRAL)
 alignment 0
-dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
-dilcopy nokill@druid();
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
+
+dilcopy nokill@druid();
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
+dilcopy TrainMemberChk@guilds(GUILD_NYM_DRUID, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
 
+dilcopy qstSimpleQuest@quests(QUEST_DRUID_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "The locust tree in the Druid's Guild has asked you to bring it the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. You should go speak with the guild master now."},
+          800, 1 * COPPER_MULT, {""});
 
+dilcopy qstItemsWanted@quests(QUEST_DRUID_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
 end
 
 guard
@@ -597,15 +649,36 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
 alignment 0
-special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+
+dilcopy nokill@druid();
+dilcopy MurderBanish@guilds(GUILD_NYM_DRUID);
+dilcopy AlertMembers@guilds(GUILD_NYM_DRUID, "");
 dilcopy rescue@function("black locust tree");
 dilcopy teamwork@function("black locust tree");
-dilcopy guild_guard@guild_paths(GUILD_NYM_DRUID, "north");
-dilcopy nokill@druid();
-
+// dilcopy guild_guard@guild_paths(GUILD_NYM_DRUID, "north");
 end
 
+
 %objects
+
+
+alespec
+names {"mug of green liquid","mug", "green liquid", "liquid"}
+title "a wooden mug"
+descr "A wooden mug stands here."
+extra {}
+"A large, wooden mug."
+LIQ_DEF("green", 0,1,1,5,2,5,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+dilcopy Transform@guilds(PROFESSION_PRIEST, PROFESSION_DRUID, 
+   {"::The green liquid flows down your throat.::",
+    "::You get a warm feeling.::",
+    "::You can hear plants talking::",
+    "::You're now a Druid::"});
+end
+
+
 
 herb_staff
 names {"staff of herbs","staff"}

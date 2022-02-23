@@ -343,8 +343,6 @@
 
 #define PC_PROFESSION(pc) (UPC(pc)->profession)
 
-#define PC_GUILD_TIME(pc) (UPC(pc)->guild_time)
-
 #define PC_QUEST(pc) (UPC(pc)->quest)
 
 #define PC_COND(ch, i) (UPC(ch)->conditions[i])

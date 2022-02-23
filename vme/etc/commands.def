@@ -844,11 +844,11 @@ minpos        = POSITION_RESTING
 
 
 command       = guilds
-func          = guilds_dil@guild_paths
+func          = do_guilds@guilds
 minpos        = POSITION_SLEEPING
 
 command       = join
-func          = join_dil@guild_paths
+func          = do_join@guilds
 minpos        = POSITION_RESTING
 
 command       = insult

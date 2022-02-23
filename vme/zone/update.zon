@@ -427,8 +427,9 @@ dilend
 
 dilbegin unique aware fnpri(FN_PRI_SYS) send_prompt();
 external
-    string racestring@commands (x:integer);
-    string prompt_data();
+   string racestring@commands (x:integer);
+   string prompt_data();
+   string GuildString@guilds(pc : unitptr);
 var
     temp:string;
     cp:string;
@@ -623,7 +624,7 @@ cp:=replace("%h%",itoa(self.hp),cp);
   else if (plist.[i]=="%me%")
   cp:=replace("%me%",itoa(self.max_endurance),cp);
   else if (plist.[i]=="%g%")
-  cp:=replace("%g%",self.guild,cp);
+  cp:=replace("%g%", GuildString@guilds(self),cp);
     else if (plist.[i]=="%t%")
   cp:=replace("%t%",self.title,cp);
     else if (plist.[i]=="%a%")

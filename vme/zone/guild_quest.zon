@@ -49,67 +49,11 @@ Contact whistler@blinksoft.com
 %dil
 
 dilbegin adv_guild_lvl(ch : unitptr);
-var
-	pathp, guildptr : extraptr;
-	guildstr, guilddescr, e : string;
-	guildlvl, i : integer;
-	sl, pl : stringlist;
+external
+   AdvGuildLevel@guilds(pc : unitptr);
 code
 {
-:start:
-
-	pathp := ("$path" in ch.quests);
-	if(pathp)
-	{
-		pl := pathp.names;
-		i := 1;
-		while(i <= 3)
-		{
-			:loop:
-			guildstr := pl.[i];
-			if(guildstr == "")
-				goto update;
-			e := "$"+guildstr;
-			guildptr := (e in ch.quests);
-			if(guildptr)
-			{
-				guildlvl := atoi(guildptr.names.[1]);
-				guilddescr := guildptr.descr;
-				guildlvl := guildlvl + 1;
-				
-				sl := {""};
-				addstring(sl,e);
-				addstring(sl,itoa(guildlvl));
-				addstring(sl,"$guild");
-				substring(sl,"");
-				
-				guildptr.names := sl;
-				guildptr := (e in ch.quests);
-				guildlvl := atoi(guildptr.names.[1]);
-				if(i == 1)
-					pl.[7] := itoa(guildlvl);
-				pl.[i+3] := itoa(guildlvl);
-			}
-			else
-			{
-				// Guild exists, but doesnt have extra. create it.
-				guildlvl := guildlvl-39;
-				if(guildlvl < 1)
-					guildlvl := 1;
-				sl := {""};
-				addstring(sl,e);
-				addstring(sl,itoa(guildlvl));
-				addstring(sl,"$guild");
-				substring(sl,"");
-				addextra(ch.quests, sl, "");
-				goto loop;
-			}
-			i := i+1;
-		}
-		:update:
-		pathp := ("$path" in ch.quests);
-		pathp.names := pl;
-	}
+   AdvGuildLevel@guilds(ch);
 	quit;
 }
 dilend // advance_guild_level
@@ -608,6 +552,9 @@ Now will not kill or attack players below level 4.
 
 
 dilbegin fam_obey ();
+external
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
   pcname:string;
   extra_ptr:extraptr;
@@ -647,17 +594,14 @@ if ((activator == self.master) and (activator.name != pcname))
     }
 
 heartbeat:=PULSE_SEC*3;
-   extra_ptr:= "$path" in activator.quests;
 
-if ((not(GUILD_UDG_MAGE in extra_ptr.names))  and
-    (not (GUILD_SORCERER in extra_ptr.names)) and
-    (not(GUILD_NECROMANCER in  extra_ptr.names)) and
-	(not(activator.level > IMMORTAL_LEVEL)))
-        {
-        exec ("say You're a mundane.  I will not serve you "+activator.name+"!",self);
-        exec ("kill "+activator.name,self);
-        goto start;
-        }
+   if ((not IsInGuilds@guilds(activator, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
+         and (activator.level < IMMORTAL_LEVEL))
+   {
+      exec ("say You're a mundane.  I will not serve you "+activator.name+"!",self);
+      exec ("kill "+activator.name,self);
+      goto start;
+   }
 
 if (findunit(activator,argument ,FIND_UNIT_HERE,null)!=self) goto start;
 block;
@@ -678,15 +622,17 @@ else
 }
 dilend
 
+
 dilbegin fam_unbonded();
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
 
 var
-tf:integer;
-  pcowner: unitptr;
-	expd:extraptr;
-  str : string;
+   tf:integer;
+   pcowner: unitptr;
+   expd:extraptr;
+   str : string;
 
 code
 {
@@ -725,33 +671,19 @@ code
       }
 
    /* MUST BE A MAGIC USER - Mage, Sorcerer or Necromancer */
-   expd := "$path" in pcowner.quests;
-
-   if (expd == null)
+   if (not IsInGuilds@guilds(pcowner, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
    {
 	 :mund:
-      exec ("say I will not serve you,"+pcowner.name+
-	    ", because you are a mundane.", self);
+      exec ("say I will not serve you,"+pcowner.name+", because you are a mundane.", self);
       pause;
       goto rouge;
    }
 
-
-   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
-       (expd.names.[3] == null) or (expd.names.[4] == null) or
-       (expd.names.[5] == null) or (expd.names.[6] == null) or
-       (expd.names.[7] == null))
-      goto mund;
-
-   if ((not(GUILD_UDG_MAGE in expd.names))  and
-       (not (GUILD_SORCERER in expd.names)) and
-       (not(GUILD_NECROMANCER in  expd.names)))
-			 goto mund;
    secure(pcowner, rouge);
 
 
    /* MUST BE ABOVE LEVEL 20 */
-   if (not (pcowner.level > 19) )
+   if (pcowner.level <= 19)
    {
       exec ("say You lack enough power to be my master, "+
 	    pcowner.name+".", self);
@@ -820,6 +752,7 @@ dilend
 dilbegin fam_brain();
 external
    integer walk_room@function (s:string,i:integer);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
 
 var
    tf:integer;
@@ -865,16 +798,10 @@ code
       familiars would really eat up the system resources. */
 
    wait (SFB_CMD, (command("status") or command("tell")) and
-	 (activator #= pcowner) and (findunit(activator, argument, FIND_UNIT_SURRO|FIND_UNIT_INVEN, null) == self));
+	 (activator == pcowner) and (findunit(activator, argument, FIND_UNIT_SURRO|FIND_UNIT_INVEN, null) == self));
 
-   exd := "$path" in pcowner.quests;
 
-   if (exd == null)
-      goto lostbond;
-
-   if ((not(GUILD_UDG_MAGE in exd.names))  and
-       (not (GUILD_SORCERER in exd.names)) and
-       (not(GUILD_NECROMANCER in  exd.names)))
+   if (not IsInGuilds@guilds(pcowner, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
      goto lostbond;
 
    /* MANA FEEDING ROUTINE: it really should drain a small amount of mana
@@ -1647,6 +1574,8 @@ Quest status and those with Familiar Bonded status */
 dilbegin hexica_quest();
 external
 	integer level_guild_chk@guild_paths(u:unitptr,s:string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
   pc:     unitptr;
 	expd:extraptr;
@@ -1679,28 +1608,14 @@ code
    {
       pause;
 
-   expd := "$path" in pc.quests;
-
-   if (expd == null)
+      if (not IsInGuilds@guilds(pc, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
 	 	{
-		:mund:
-	 exec ("say I will have nothing to do with a mundane such as you, "+pc.name+"!", self);
-	 unsecure (pc);
-	 goto waitawhile;
+   		:mund:
+         exec ("say I will have nothing to do with a mundane such as you, "+pc.name+"!", self);
+         unsecure (pc);
+         goto waitawhile;
       }
 
-
-   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
-       (expd.names.[3] == null) or (expd.names.[4] == null) or
-       (expd.names.[5] == null) or (expd.names.[6] == null) or
-       (expd.names.[7] == null))
-      goto mund;
-
-
-   if ((not(GUILD_UDG_MAGE in expd.names))  and
-       (not (GUILD_SORCERER in expd.names)) and
-       (not(GUILD_NECROMANCER in  expd.names)))
-			 goto mund;
 glevel:=0;
 glevel:=level_guild_chk@guild_paths(pc,GUILD_UDG_MAGE);
 if (glevel<20)
@@ -1787,6 +1702,7 @@ is criticised...*/
 dilbegin familiar_main();
 external
 	integer create_fam(pc:unitptr);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
 var
 
 	tf:integer;
@@ -1818,22 +1734,8 @@ if ((not((FAMILIAR_COMPLETE in activator.quests)) and
 	 ("familiar" in activator.inside.name))
 	 	goto start;
 
-   expd := "$path" in activator.quests;
-
-   if (expd == null)
-	 goto start;
-
-   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
-       (expd.names.[3] == null) or (expd.names.[4] == null) or
-       (expd.names.[5] == null) or (expd.names.[6] == null) or
-       (expd.names.[7] == null))
+   if (not IsInGuilds@guilds(activator, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
       goto start;
-
-
-   if ((not(GUILD_UDG_MAGE in expd.names))  and
-       (not (GUILD_SORCERER in expd.names)) and
-       (not(GUILD_NECROMANCER in  expd.names)))
-     goto start;
 
 :setup:
    pc := activator;

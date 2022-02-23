@@ -1,24 +1,50 @@
-<h1>Change</h1>
-<br/>
-Usage change &lt;type&gt; [arguments]<br/>
-&lt;type&gt; being one of:<br/>
-<br/>
-See also:<br/>
-Brief</br>
-Compact</br>
-Expert</br>
-Inform</br>
-Shout</br>
-Tell</br>
-Communications</br>
-Wimpy</br>
-Peaceful</br>
-Prompt</br>
-Exits</br>
-Columns</br>
-Rows</br>
-Terminal</br>
-Telnet</br>
-Character echo</br>
-Redraw prompt</br>
-<br/>
+<div class="mw-parser-output"><h1>Change</h1>
+<p>Usage:
+</p>
+<pre> change &lt;type&gt; [arguments]
+</pre>
+<p>&lt;type&gt; being one of:
+</p>
+<ul><li>brief</li>
+<li>compact</li>
+<li>expert</li>
+<li>inform</li>
+<li>shout</li>
+<li>tell</li>
+<li>communications</li>
+<li>wimpy</li>
+<li>peaceful</li>
+<li>prompt</li>
+<li>exits</li>
+<li>columns</li>
+<li>rows</li>
+<li>terminal</li>
+<li>telnet</li>
+<li>character echo</li>
+<li>redraw prompt</li></ul>
+<p><br />
+See also:
+</p>
+<pre>&gt; <a cmd='#'>Help Brief</a>
+&gt; <a cmd='#'>Help Compact</a>
+&gt; <a cmd='#'>Help Expert</a>
+&gt; <a cmd='#'>Help Inform</a>
+&gt; <a cmd='#'>Help Shout</a>
+&gt; <a cmd='#'>Help Tell</a>
+&gt; <a cmd='#'>Help Communications</a>
+&gt; <a cmd='#'>Help Wimpy</a>
+&gt; <a cmd='#'>Help Peaceful</a>
+&gt; <a cmd='#'>Help Prompt</a>
+&gt; <a cmd='#'>Help Exits</a>
+&gt; <a cmd='#'>Help Columns</a>
+&gt; <a cmd='#'>Help Rows</a>
+&gt; <a cmd='#'>Help Terminal</a>
+&gt; <a cmd='#'>Help Telnet</a>
+&gt; <a cmd='#'>Help Character echo</a>
+&gt; <a cmd='#'>Help Redraw prompt</a>
+</pre>
+
+
+
+
+</div>

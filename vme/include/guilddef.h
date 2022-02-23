@@ -41,7 +41,12 @@
 #if defined(_GUILD_NYM_DRUID)
 
 /* Each guild can have at most 2 stats at 100, it can have 2 cheap stats,
-   2 average stats and the rest above average. */
+   2 average stats and the rest above average.
+
+
+min guild level; max skill; name of skill; min cost; max cost; 0; to end
+   
+ */
 
 #if defined(_ABILITY)
 special SFUN_TEACH_INIT

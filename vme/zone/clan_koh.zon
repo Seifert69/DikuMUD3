@@ -505,65 +505,65 @@ load clan_board into clan_enter max 1
 load portal  into clan_enter max 1
 load aohshopkeeper into clan_fount max 1      //paid by doggy
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY   
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY   
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
 load issashopkeep into clan_secret max 1
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY   
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY   
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD          //paid by issa
          }
 load guard into clan_guard@clan_koh max 3
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY    
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY    
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
 load guard into clan_guard@clan_koh max 3
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY    
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY    
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
 load guard into clan_guard@clan_koh max 3
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY   
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY   
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
 load guard2 into clan_guard@clan_koh max 3
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY    
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY    
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
 load guard2 into clan_guard@clan_koh max 3
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY    
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY    
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
 load guard2 into clan_guard@clan_koh max 3
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY    
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY    
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
 load guard3 into clan_enter@clan_koh max 1
 {
-   equip lth_sleeves1@midgaard position WEAR_ARMS
-   equip lth_jerkin1@midgaard position WEAR_BODY    
-   equip lth_pants1@midgaard position WEAR_LEGS
+   equip lth_sleeves@midgaard position WEAR_ARMS
+   equip lth_jerkin@midgaard position WEAR_BODY    
+   equip lth_pants@midgaard position WEAR_LEGS
    equip spear0@midgaard position WEAR_WIELD
          }
  

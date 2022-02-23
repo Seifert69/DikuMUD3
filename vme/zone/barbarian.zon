@@ -10,6 +10,7 @@ END HEADER*/
 
 #define _GUILD_BARBARIAN
 #define BARBARIAN_ITEM "$Barbarian Gauntlet Given"
+#define QUEST_BEAR_BRAWL "Barbarian Bear Brawl"
 
 /* This zone is the Barbarians Guild, skillful and agile warriors. */
 
@@ -63,6 +64,94 @@ the game of life and death.<br/>
 /* ================================================================== */
 
 %dil
+
+// hilka_cloth
+dilbegin aware brawl_det();
+external
+   integer qstMarkComplete@quests(pc : unitptr, qname : string);
+var 
+   u : unitptr;
+code
+{
+:init:
+	wait(SFB_COM, self.equip != 0);
+
+   if (activator != self.outside)
+      goto init;
+
+   if (self.outside.fighting == null)
+      goto init;
+
+   if (self.outside.fighting.race != RACE_BEAR)
+      goto init;
+
+   // Make sure the player fights a healthy opponent
+   if (self.outside.fighting.hp < (self.outside.fighting.max_hp*5)/10)
+   {
+      goto init;
+   }
+
+
+:checkfair:
+   u := self.outside.inside;
+
+   while (u)
+   {
+      if (u != self)
+      {
+         if (u.equip)
+            break;
+      }
+
+      u := u.next;
+   }
+
+   if (u)
+   {
+      goto init;
+   }
+
+   u := self.outside.outside.inside;
+
+   while (u)
+   {
+      if (u != self.outside)
+      {
+         if (u.fighting == self.outside.fighting)
+         {
+            goto init;
+         }
+      }
+
+      u := u.next;
+   }
+
+:loop:
+	wait(SFB_COM|SFB_DEAD, TRUE);
+
+   if (self.equip == 0)
+      goto init;
+
+   if (command(CMD_AUTO_COMBAT))
+   {
+      if (activator != self.outside)
+         goto loop;
+
+      goto checkfair;
+   }
+
+   if (command(CMD_AUTO_DEATH))
+   {
+      qstMarkComplete@quests(self.outside, QUEST_BEAR_BRAWL);
+		act("Your instincts feel awakened.", A_ALWAYS, self.outside, null, null, TO_CHAR);
+      quit;
+   }
+
+   log("HUH??? Shouldnt be possible");
+
+	goto init;
+}
+dilend
 
 /* Nokill dil for Guild Staff - ejects the sinner out with 0 hp and
 mana + incapacitated */
@@ -381,8 +470,12 @@ more than strong enough to support the roof and its heavy seasonal snows. "
 extra {"table","food"}
 "Here the guildmaster's table dominates the space. Best approach carefully. "
 extra {"small sign","sign"}
-"This is the great hall of the Barbarians Guild. <br><br>
-'title'		- changes your title to a new and better one.<br><br>
+"This is the great hall of the Barbarians Guild. <br/><pre>
+	'join'           - join this guild (if you qualify!).
+	'title'          - changes your title to a new and better one.
+	'worship'        - ... 
+	'say specialize' - To change profession (if you qualify).
+</pre><br/>
 Members, pay respect to your Chief by worshipping her. 
 The power of our guild may be shared with those who show respect."
 
@@ -595,12 +688,13 @@ M_HUMAN_WARRIOR_POLE(160,SEX_MALE)
 alignment 0
 money 1 SILVER_PIECE
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
 dilcopy rescue@function("guard");
 dilcopy teamwork@function("guard");
-dilcopy guild_guard@guild_paths(GUILD_BARBARIAN, "east");
-
+// dilcopy guild_guard@guild_paths(GUILD_BARBARIAN, "east");
 end
+
 
 hilka
 names {"hilka","guild master","master","chief","barbarian"}
@@ -618,25 +712,47 @@ alignment 0
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
 
-dilcopy guild_titles@guild_paths(GUILD_BARBARIAN, {"Young Blood",
-"Young Blood", "Apprentice Berserker", "Apprentice Berserker", "Journeyman Berserker",
-"Journeywoman Berserker", "Rage Seeker", "Rage Seeker",
+dilcopy SetTitles@guilds(GUILD_BARBARIAN, 
+{"Young Blood", "Young Blood", "Apprentice Berserker", "Apprentice Berserker",
+ "Journeyman Berserker", "Journeywoman Berserker", "Rage Seeker", "Rage Seeker",
 "Blood Seeker", "Blood Seeker", "Whirlwind", "Whirlwind",
 "Enraged One", "Enraged One", "Bloodletter", "Bloodletter", "Barbarian Warrior", "Barbarian Warrior",
-"Charger", "Chargeress", "Way of Blood", "Way of Blood", "Cleaver", "Cleaveress", "The Enraged",
-"The Enraged", "Mark of Blood", "Mark of Blood", "The Blood Eye",
-"The Blood Eye", "Render", "Renderess", "Master Berserker", "Master Berserker", "Barbarian Mistress",
-"Barbarian Master", "Master of Rage", "Mistress of Rage", "Master of the Enraged", "Mistress of the Enraged"});
+"Charger", "Chargeress", "Way of Blood", "Way of Blood", "Cleaver", "Cleaveress", 
+"The Enraged", "The Enraged", "Mark of Blood", "Mark of Blood", 
+"The Blood Eye", "The Blood Eye", "Render", "Renderess", "Master Berserker", "Master Berserker",
+"Barbarian Mistress", "Barbarian Master", "Master of Rage", "Mistress of Rage",
+"Master of the Enraged", "Mistress of the Enraged"});
+
+dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian",
+    { "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
+      "say Once you commit this process will alter your body permanently.",
+      "say I'll give you a mug of black ale. Once you cosume it the change will occur.",
+      "say Remember, this will only work for thieves.",
+      "::$3n hands you a mug of black ale.::$3n hands a mug of black ale to $1n."});
+
+dilcopy MasterJoin@guilds(GUILD_BARBARIAN, GUILD_BARBARIAN_EXCL, QUEST_BEAR_BRAWL, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Bear Brawl quest.","say Go speak with Raz."},
+ {"handshake $1N", "say Welcome to the Barbarian's Guild, $1N."});
+
 
 /* Barbarian Master DIL - gives out the Bloody Gauntlets. */
 
 dilbegin barb_give();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
 	pc : unitptr;
 	item : unitptr;
-	expd : extraptr;
+
 code
 {
 	heartbeat := PULSE_SEC * 5;
@@ -646,12 +762,10 @@ code
 	wait (SFB_DONE, (command("worship")or(command("bow")))and(self==target));
 		pc := activator;
 		secure(pc, lost);
-		expd := "$path" in pc.quests;
-		if (expd == null)
-			goto lost;
-		if ((GUILD_BARBARIAN in expd.names))
+
+		if (IsInGuild@guilds(pc, GUILD_BARBARIAN))
 		{
-			if(BARBARIAN_ITEM in pc.quests)
+			if (BARBARIAN_ITEM in pc.quests)
 			{
 				exec("say Well, if it isnt "+pc.name+". Back for more handouts I presume?",self);pause;
 				exec("sigh",self);
@@ -740,11 +854,14 @@ code
 dilend
 
 dilbegin barb_quest2();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
 var
 	pc : unitptr;
 	item : unitptr;
 	gift : unitptr;
-	expd: extraptr;
+
 code
 {
 	heartbeat := PULSE_SEC * 4;
@@ -755,10 +872,8 @@ code
 	pc := activator;
 	secure(pc, lost);
 	gift := medium;
-	expd := "$path" in pc.quests;
-	if (expd == null)
-		goto lost;
-	if ((GUILD_BARBARIAN in expd.names) and (BARBARIAN_ITEM in pc.quests))
+
+	if (IsInGuild@guilds(pc, GUILD_BARBARIAN) and (BARBARIAN_ITEM in pc.quests))
 	{
 		if((gift.nameidx $= "blood_bowl")and(gift.zoneidx $= "lostlands"))
 		{
@@ -801,10 +916,8 @@ code
 	goto start;
 }
 dilend
-
-dilcopy nokill@barbarian();
-
 end
+
 
 ethror
 names {"ethror","training master","trainer","barbarian"}
@@ -817,22 +930,21 @@ and is more than willing to share his knowledge with those interested in
 exploring the way of the enraged. "
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
-
 M_HUMAN_WARRIOR_SPECIAL(90, SEX_MALE)
 alignment 0
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
-
-dilcopy teacher_prac@guild_paths( GUILD_BARBARIAN );
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk@guilds(GUILD_BARBARIAN, "");
 
 #define _ABILITY
 #include "guilddef.h"
 #undef _ABILITY
-dilcopy nokill@barbarian();
-
 end
+
 
 faeld
 names {"faeld","weapon master","master","barbarian"}
@@ -851,16 +963,16 @@ alignment 1000
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
-
-dilcopy teacher_prac@guild_paths( GUILD_BARBARIAN );
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk@guilds(GUILD_BARBARIAN, "");
 
 #define _WEAPON
 #include "guilddef.h"
 #undef _WEAPON
-dilcopy nokill@barbarian();
-
 end
+
 
 monn
 names {"monn","trainer","barbarian"}
@@ -877,16 +989,16 @@ alignment 0
 money 1 GOLD_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
-
-dilcopy teacher_prac@guild_paths( GUILD_BARBARIAN );
+dilcopy nokill@barbarian();
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+dilcopy TrainMemberChk@guilds(GUILD_BARBARIAN, "");
 
 #define _SKILL
 #include "guilddef.h"
 #undef _SKILL
-dilcopy nokill@barbarian();
-
 end
+
 
 raz
 names {"raz","shopkeeper","trader"}
@@ -903,7 +1015,10 @@ romflags {CHAR_PROTECTED}
 alignment 0
 money 3 SILVER_PIECE
 exp 0
-special SFUN_GUILD_BASIS GUILD_BARBARIAN
+
+dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
+dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
+
 dilcopy shopkeeper@function(
 {"coffee@barbarian 20 20"
 ,"ale@barbarian 20 20","tuborg@udgaard 20 50"},
@@ -919,6 +1034,59 @@ dilcopy shopkeeper@function(
 );
 dilcopy nokill@barbarian();
 
+
+// Assign Brawl quest to players wanting to join the Barbarian's guild
+// 
+dilbegin assignBrawl();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+var
+   pc     : unitptr;
+   u      : unitptr;
+   exdp   : extraptr;
+
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   if (IsInGuild@guilds(activator, QUEST_BEAR_BRAWL))
+      goto start;
+
+   pc := qstWaitDone@quests(QUEST_BEAR_BRAWL, activator, 
+            {"cheer $1N", 
+            "say Excellent, $1N! You have the instincts of a Barbarian in your blood."}, 800, 2 * COPPER_MULT, {""});
+
+	pc := qstWaitHero@quests(QUEST_BEAR_BRAWL, activator, 
+		{"look $1N",
+		"say To join the Barbarian's guild you have to prove your raw instincts.",
+      "say We require that you kill a bear with your bare hands wearing nothing but a loin cloth.",
+      "say Are you up for the challenge, $1n?"}, "");
+
+   if (pc == null)
+      goto start;
+
+   secure(pc, start);
+
+   // Quest accepted
+   exdp := qstAssign@quests(QUEST_BEAR_BRAWL, pc, 
+      {"say Excellent!", "clap $1N"},
+      "Raz in the Barbarian guild has requested that you kill a bear with your bare hands wearing only a loin cloth.");
+
+   u := load("barb_cloth@barbarian");
+   link(u, pc);
+   act("$3n gives you $2n.", A_ALWAYS, pc, u, self, TO_CHAR);
+
+   goto start;
+}
+dilend
 end
 
 %objects
@@ -1238,6 +1406,22 @@ manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 cost 3 IRON_PIECE
 end
 
+alespec
+names {"mug of black ale","mug", "black ale", "ale"}
+title "a mug of ale"
+descr "A wooden mug stands here."
+extra {}
+"A large, wooden mug."
+LIQ_DEF("black", 0,1,1,5,2,5,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+dilcopy Transform@guilds(PROFESSION_FIGHTER, PROFESSION_BARBARIAN, 
+   {"::The black ale flows down your throat.::",
+    "::You get a warm feeling.::",
+    "::You muscles tense up::",
+    "::You're now a Barbarian::"});
+end
+
 barb_bracer
 names {"barbarians bracers", "bracers"}
 title "a barbarian's bracers"
@@ -1258,6 +1442,7 @@ ARMOUR_LEATHER(BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 2,2
 weight 3
 extra {}
 "This soft leather loin cloth has a bloodshot eye inscribed upon it."
+dilcopy brawl_det@barbarian();
 end
 
 barb_jerkin

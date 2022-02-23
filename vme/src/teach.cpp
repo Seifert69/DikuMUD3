@@ -105,19 +105,19 @@ int practice_skill_gain(int skill)
     // and the number is 5.
     assert(PRACTICE_SKILL_GAIN == 5);
 
-    if (skill < 40)
+    if (skill < 10)
     {
         return PRACTICE_SKILL_GAIN;
     }
-    else if (skill < 60)
+    else if (skill < 20)
     {
         return PRACTICE_SKILL_GAIN - 1;
     }
-    else if (skill < 75)
+    else if (skill < 40)
     {
         return PRACTICE_SKILL_GAIN - 2;
     }
-    else if (skill < 100)
+    else if (skill < 75)
     {
         return PRACTICE_SKILL_GAIN - 3;
     }
@@ -1151,7 +1151,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
             teach_packet *p[4];
             extra_descr_data *exd = nullptr;
 
-            exd = PC_QUEST(sarg->activator).find_raw("$autotrain");
+            exd = PC_INFO(sarg->activator).find_raw("$autotrain");
 
             if (!exd)
             {

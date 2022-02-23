@@ -1157,8 +1157,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_HOME(u));
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_GUILD(u));
-
-                g_nCorrupt += pBuf->Read32(&PC_GUILD_TIME(u));
+                
+                g_nCorrupt += pBuf->Read32(&t32); // was: PC_GUILD_TIME(u) obsolete
 
                 if (unit_version >= 38)
                 {

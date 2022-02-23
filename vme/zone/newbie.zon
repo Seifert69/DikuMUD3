@@ -2843,6 +2843,9 @@ external
    integer newbie_part5u(u : unitptr);
    integer newbie_help (u:unitptr);
    integer stop_test (pc:unitptr,i:integer);
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+
 var
   pc : unitptr;
   pc_name:string;
@@ -3050,13 +3053,13 @@ n:=stop_test (pc,4);
   goto stop;
 
 :part5:
-if (pc.guild == GUILD_UDG_CLERIC)
+if (IsInGuild@guilds(pc, GUILD_UDG_CLERIC))
   goto part5c;
-else if (pc.guild == GUILD_UDG_FIGHTER)
+else if (IsInGuild@guilds(pc, GUILD_UDG_FIGHTER))
   goto part5f;
-else if (pc.guild == GUILD_UDG_MAGE)
+else if (IsInGuild@guilds(pc, GUILD_UDG_MAGE))
   goto part5m;
-else if (pc.guild == GUILD_UDG_THIEF)
+else if (IsInGuild@guilds(pc, GUILD_UDG_THIEF))
   goto part5t;
 else
   goto part5u;

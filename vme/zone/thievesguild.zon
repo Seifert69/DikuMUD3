@@ -14,6 +14,9 @@ END HEADER*/
 /* For use with the teacher-include file! */
 #define _GUILD_UDGAARD_THIEF
 #define THIEVES_DIRK "$Thieves Dirk given"
+#define QUEST_THIEVES_ENTRY "Thieves Guild Entry"
+
+
 #include <macros.h>
 
 /* Training value sets (USE THESE). Special permission required to
@@ -71,44 +74,45 @@ endurance + incapacitated and with some cash loss...*/
 
 dilbegin nokill();
 var
-        pc 	: unitptr;
-        room 	: unitptr;
+   pc 	: unitptr;
+   room 	: unitptr;
 	i	: integer;
 code
 {
-        heartbeat := 3 * PULSE_SEC;
+   heartbeat := 3 * PULSE_SEC;
 
-        :start:
-        wait(SFB_COM,  self.position == POSITION_FIGHTING );
-        pc := self.fighting;
-	if (pc.level >200) goto start;
-	secure(pc,gone);
-        if (command("flee"))
-                block;
+   :start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING );
+   pc := self.fighting;
+   if (pc.level >200) goto start;
+   secure(pc,gone);
+   if (command("flee"))
+         block;
 
-self.hp := self.max_hp;
-act("The sounds of battle attract the attention of the thieves.",
-A_ALWAYS, pc, self, null, TO_ALL);
-act("Suddenly, several large thugs charge into the room, beating you "+
-"into a bloody pulp!", A_ALWAYS, pc, self, null, TO_CHAR);
-act("Several large thugs charge into the room, beating $3n into a bloody "+
-"pulp!",A_SOMEONE, pc, self, null, TO_REST);
-pc.hp := 0;
-pc.endurance := 0;
-act("Half-conscious, you can feel hands going through your pockets as "+
-"you are dragged away...",A_ALWAYS, pc, self, null, TO_CHAR);
-position_update(pc);
-i:=transfermoney(pc,null,(rnd(1,100)*COPPER_MULT));
-act("Two of the thugs grab $1n and drag $1m out of the Guild, dumping "+
-"$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
-room := findroom("grub_barrel@midgaard");
-link(pc,room);
-act("Two thugs appear, dragging an unconscious figure between them and "+
-"dump $1m unceremoniously on the street, giving $1m a kick as they leave."
-,A_SOMEONE,pc,self,null,TO_REST);
-        :gone:
-unsecure(pc);
-goto start;
+   self.hp := self.max_hp;
+   act("The sounds of battle attract the attention of the thieves.",
+   A_ALWAYS, pc, self, null, TO_ALL);
+   act("Suddenly, several large thugs charge into the room, beating you "+
+   "into a bloody pulp!", A_ALWAYS, pc, self, null, TO_CHAR);
+   act("Several large thugs charge into the room, beating $3n into a bloody "+
+   "pulp!",A_SOMEONE, pc, self, null, TO_REST);
+   pc.hp := 0;
+   pc.endurance := 0;
+   act("Half-conscious, you can feel hands going through your pockets as "+
+   "you are dragged away...",A_ALWAYS, pc, self, null, TO_CHAR);
+   position_update(pc);
+   i:=transfermoney(pc,null,(rnd(1,100)*COPPER_MULT));
+   act("Two of the thugs grab $1n and drag $1m out of the Guild, dumping "+
+   "$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
+   room := findroom("grub_barrel@midgaard");
+   link(pc,room);
+   act("Two thugs appear, dragging an unconscious figure between them and "+
+   "dump $1m unceremoniously on the street, giving $1m a kick as they leave."
+   ,A_SOMEONE,pc,self,null,TO_REST);
+
+:gone:
+   unsecure(pc);
+   goto start;
 }
 dilend
 
@@ -323,7 +327,9 @@ ALWAYS_LIGHT
 extra {"sign", "big sign"}
 "<pre>                            The Thieves Guild<br/>
 <br/>
-   'title'      - to get a new title (if you deserve it!).<br/>
+   'join'           - join this guild (if you qualify!).
+   'title'          - changes your title to a new and better one.
+   'worship'        - ... 
 <br/>
   All current members - show respect to your guild master by worshipping<br/>
   him or bowing to him and perhaps he will care to share a bit of the<br/>
@@ -338,7 +344,7 @@ end
 /* ================================================================== */
 /*                              MOBILES                               */
 /* ================================================================== */
-%mobiles
+
 %mobiles
 
                               oliver
@@ -355,18 +361,11 @@ alignment 1000
 money 2 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_THIEF
-/*
-special SFUN_GUILD_MASTER
-"Guild               = ~"+GUILD_UDG_THIEF+"~
-Guild Enter Quest    = ~~
-Guild Enter Cost     = "+(1*GOLD_MULT)+"<br/>
-Guild Leave Quest    = ~~
-Guild Leave Cost     = "+(5*GOLD_MULT)+"<br/>
-Guild Exclude Quest  = ~Udgaard Thief Quitter~"
-*/
+dilcopy nokill@thievesguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_THIEF);
+dilcopy AlertMembers@guilds(GUILD_UDG_THIEF, "");
 
-dilcopy guild_titles@guild_paths(GUILD_UDG_THIEF, {"Pilferer", "Pilferers",
+dilcopy SetTitles@guilds(GUILD_UDG_THIEF, {"Pilferer", "Pilferers",
 "Footpad", "Footpad", "Filcher", "Filcheress", "Pick-Pocket", "Pick-Pocket",
 "Sneak", "Sneak", "Pincher", "Pincheress", "Cut-Purse", "Cut-Purse",
 "Snatcher", "Snatcheress", "Sharper", "Sharpress", "Rogue", "Rogue", "Robber",
@@ -375,146 +374,141 @@ dilcopy guild_titles@guild_paths(GUILD_UDG_THIEF, {"Pilferer", "Pilferers",
 "Quick-Blade", "Killer", "Murderess", "Brigand", "Brigand", "Cut-Throat",
 "Cut-Throat"});
 
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_THIEF+"#$1n says, 'Bugger ye off, $3n'"
-*/
-/*
-dilcopy teacher_prac@guild_paths( GUILD_UDG_THIEF );
-#define _SPELL
-#include <guilddef.h>
-#undef _SPELL
-*/
-dilcopy nokill@thievesguild();
+dilcopy MasterJoin@guilds(GUILD_UDG_THIEF, GUILD_THIEF_EXCL, QUEST_THIEVES_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Thieve's Guild quest.","say Go speak with Marie."},
+ {"handshake $1N", "say Welcome to the Thieve's Guild, $1N."});
+
 
 /*  Thieves Master DIL - gives out a Thieves' Dirk. */
-
 dilbegin thieves_give();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
-        pc : unitptr;
-expd : extraptr;
-        item : unitptr;
+   pc : unitptr;
+   expd : extraptr;
+   item : unitptr;
 code
 {
-        heartbeat := PULSE_SEC * 5;
+   heartbeat := PULSE_SEC * 5;
 
-        :start:
+:start:
+   wait (SFB_DONE, (command ("worship")or(command("bow"))) and(self ==target));
+   pc := activator;
+   secure(pc, lost);
 
-wait (SFB_DONE, (command ("worship")or(command("bow")))
-and(self ==target));
-        pc := activator;
-        secure(pc, lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-        if ((GUILD_UDG_THIEF in expd.names) )
-        {
-exec("say Yes, yes, yes, I've seen you, no reason to grovel on the floor."
-,self);pause;
-if (THIEVES_DIRK in pc.quests)
-{
-exec("say Say, I've seen you here before, "+pc.name+".",self);pause;
-exec("say And since I doubt sincerely you come to me because of "+
-"my beautiful green eyes, you must want something.",self);pause;
-exec("say As I recall, I gave you once a Thieves' Dirk, do you wish "+
-"to get another one of me?",self);pause;
-exec("say Tell me, do I have the distinct look of a gift-shop?",self);
-pause;
-exec("say But okay, I will give you another one. If you prove to me "+
-"that you are NOT a miserable excuse for a thief, who loses his weapon."
-,self);pause;
-exec("emote thinks for a moment.",self);pause;
-exec("say I will make it easy on you. Bring me an amethyst of first "+
-"sorting and I will give you another dirk.",self);pause;
-exec("emote shakes his head and mumbles something about stupid gits."
-,self);
-goto start;
-}
-exec("say Let's cut straight to business.",self);pause;
-exec("say As you know, our last year was rather prosperous, thanks to our "+
-"devoted and hard-working members.",self);
-exec("wink "+pc.name,self);pause;
-exec("say Thus now I am able to present you with an item of the Guild... "+
-"It will aid you in your... assignments.",self);
-exec("grin "+pc.name,self);pause;
-exec("say Of course, it is a mere toy for the more experienced members, "+
-"but a valuable aid for promising, young urchins.",self);
-exec("nod "+pc.name,self);pause;
-exec("say Here you go... test it yourself.",self);
-        item := load("thief_dirk@thievesguild");
-        item.height := pc.height;
-        link(item, pc);
-sendtext(self.name+" hands you a small dirk.<br/>",pc);
-act("$3n hands $1n a small dirk.",A_SOMEONE,pc,null,self,TO_REST);
-pause;
-exec("say Hope you can use it. Be careful with the poison.",self);pause;
-addextra(pc.quests, {THIEVES_DIRK}, "");
-exec("emote waves goodbye. This conversation is apparently over.",self);
-goto start;
-}
-else
+   if (IsInGuild@guilds(pc, GUILD_UDG_THIEF))
+   {
+      exec("say Yes, yes, yes, I've seen you, no reason to grovel on the floor.",self);
+      pause;
+      if (THIEVES_DIRK in pc.quests)
       {
-        unsecure(pc);
-        exec ("say Scram, bum. Do I look like a gift-shop?", self);
-	goto start;
+         exec("say Say, I've seen you here before, "+pc.name+".",self);pause;
+         exec("say And since I doubt sincerely you come to me because of "+
+         "my beautiful green eyes, you must want something.",self);pause;
+         exec("say As I recall, I gave you once a Thieves' Dirk, do you wish "+
+         "to get another one of me?",self);pause;
+         exec("say Tell me, do I have the distinct look of a gift-shop?",self);
+         pause;
+         exec("say But okay, I will give you another one. If you prove to me "+
+         "that you are NOT a miserable excuse for a thief, who loses his weapon."
+         ,self);pause;
+         exec("emote thinks for a moment.",self);pause;
+         exec("say I will make it easy on you. Bring me an amethyst of first "+
+         "sorting and I will give you another dirk.",self);pause;
+         exec("emote shakes his head and mumbles something about stupid gits."
+         ,self);
+         goto start;
       }
+      exec("say Let's cut straight to business.",self);pause;
+      exec("say As you know, our last year was rather prosperous, thanks to our "+
+      "devoted and hard-working members.",self);
+      exec("wink "+pc.name,self);pause;
+      exec("say Thus now I am able to present you with an item of the Guild... "+
+      "It will aid you in your... assignments.",self);
+      exec("grin "+pc.name,self);pause;
+      exec("say Of course, it is a mere toy for the more experienced members, "+
+      "but a valuable aid for promising, young urchins.",self);
+      exec("nod "+pc.name,self);pause;
+      exec("say Here you go... test it yourself.",self);
+      item := load("thief_dirk@thievesguild");
+      item.height := pc.height;
+      link(item, pc);
+      sendtext(self.name+" hands you a small dirk.<br/>",pc);
+      act("$3n hands $1n a small dirk.",A_SOMEONE,pc,null,self,TO_REST);
+      pause;
+      exec("say Hope you can use it. Be careful with the poison.",self);pause;
+      addextra(pc.quests, {THIEVES_DIRK}, "");
+      exec("emote waves goodbye. This conversation is apparently over.",self);
+      goto start;
+   }
+   else
+   {
+      unsecure(pc);
+      exec ("say Scram, bum. Do I look like a gift-shop?", self);
+      goto start;
+   }
 
-unsecure(pc);
-goto start;
+   unsecure(pc);
+   goto start;
 
 :lost:
-
-unsecure(pc);
-exec("shrug", self);
-goto start;
-
+   unsecure(pc);
+   exec("shrug", self);
+   goto start;
 }
 dilend
 
+
 dilbegin dirk_replace();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
-        pc : unitptr;
-expd : extraptr;
-        item : unitptr;
-        gift : unitptr;
+   pc : unitptr;
+   item : unitptr;
+   gift : unitptr;
 code
 {
-        heartbeat := PULSE_SEC * 4;
+   heartbeat := PULSE_SEC * 4;
 
-        :start:
+:start:
+   wait (SFB_DONE, (command("give")and(self ==target)));
+   pc := activator;
+   secure(pc, lost);
+   gift := medium;
+   secure(pc,lost);
 
-wait (SFB_DONE, (command("give")and(self ==target)));
-        pc := activator;
-        secure(pc, lost);
-        gift := medium;
-secure(pc,lost);
-        expd := "$path" in pc.quests;
-        if (expd == null) goto lost;
-        if ((GUILD_UDG_THIEF in expd.names) and(THIEVES_DIRK in pc.quests))
-{
-if(gift.name == "amethyst")
-{
-exec("say Beautiful.",self);pause;
-exec("emote examines the gemstone and hides it in his pocket.",self);
-destroy(gift);pause;
-exec("say Guess you are not such a fluff head after all.",self);
-exec("say Here is your new dirk, now, DON'T lose this one!",self);
-        item := load("thief_dirk@thievesguild");
-        item.height := pc.height;
-        link(item, self);
-exec("give dirk "+pc.name, self);pause;
-exec("say Good, now beat it.",self);
-}
-else
-{
-exec("say Thank you, but bribery will get you nowhere.",self);pause;
-exec("emote examines "+gift.title+" and hides it away.",self);pause;
-exec("emote grins wickedly.",self);
-}
-        :lost:
-destroy(gift);
-unsecure(pc);
-goto start;
-}
-goto start;
+   if (IsInGuild@guilds(pc, GUILD_UDG_THIEF) and (THIEVES_DIRK in pc.quests))
+   {
+      if(gift.name == "amethyst")
+      {
+         exec("say Beautiful.",self);pause;
+         exec("emote examines the gemstone and hides it in his pocket.",self);
+         destroy(gift);pause;
+         exec("say Guess you are not such a fluff head after all.",self);
+         exec("say Here is your new dirk, now, DON'T lose this one!",self);
+         item := load("thief_dirk@thievesguild");
+         item.height := pc.height;
+         link(item, self);
+         exec("give dirk "+pc.name, self);pause;
+         exec("say Good, now beat it.",self);
+      }
+      else
+      {
+         exec("say Thank you, but bribery will get you nowhere.",self);pause;
+         exec("emote examines "+gift.title+" and hides it away.",self);pause;
+         exec("emote grins wickedly.",self);
+      }
+:lost:
+      destroy(gift);
+      unsecure(pc);
+      goto start;
+   }
+   goto start;
 }
 dilend
 
@@ -536,17 +530,14 @@ M_HUMAN_THIEF_CLUB(80, SEX_MALE)
 alignment 0
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_THIEF
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_THIEF+"#$1n says, 'Begone $3n!'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_UDG_THIEF );
+dilcopy nokill@thievesguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_THIEF);
+dilcopy AlertMembers@guilds(GUILD_UDG_THIEF, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_THIEF, "");
 
 #define _SKILL
 #include <guilddef.h>
 #undef _SKILL
-dilcopy nokill@thievesguild();
 
 end
 
@@ -566,18 +557,14 @@ alignment 350
 money 70 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_THIEF
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_THIEF+"#$1n says, 'Bugger ye off,
-$3n. This ain't a gift-shop.'"
-*/
-dilcopy teacher_prac@guild_paths( GUILD_UDG_THIEF );
+dilcopy nokill@thievesguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_THIEF);
+dilcopy AlertMembers@guilds(GUILD_UDG_THIEF, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_THIEF, "");
 
 #define _WEAPON
 #include <guilddef.h>
 #undef _WEAPON
-dilcopy nokill@thievesguild();
-
 end
 
 
@@ -597,18 +584,14 @@ alignment 0
 money 8 IRON_PIECE
 exp -100
 
-special SFUN_GUILD_BASIS GUILD_UDG_THIEF
-/*
-special SFUN_MEMBERS_ONLY GUILD_UDG_THIEF+"#$1n barks, 'Bugger ye off, $3n.'"
-*/
-
-dilcopy teacher_prac@guild_paths( GUILD_UDG_THIEF );
+dilcopy nokill@thievesguild();
+dilcopy MurderBanish@guilds(GUILD_UDG_THIEF);
+dilcopy AlertMembers@guilds(GUILD_UDG_THIEF, "");
+dilcopy TrainMemberChk@guilds(GUILD_UDG_THIEF, "");
 
 #define _ABILITY
 #include <guilddef.h>
 #undef _ABILITY
-dilcopy nokill@thievesguild();
-
 end
 
 
@@ -624,6 +607,7 @@ M_HUMAN_THIEF_SWORD(50, SEX_FEMALE)
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 money 8 IRON_PIECE
+dilcopy nokill@thievesguild();
 dilcopy shopkeeper@function(
 {"firebreather@midgaard 20 20","beer_bottle@midgaard 20 20"
 ,"ale_bottle@midgaard 20 20"
@@ -638,7 +622,20 @@ dilcopy shopkeeper@function(
    "$1n asks, 'I'm having a quick lunch, gimme a break.'" },
 {},"",100,10,2*PLATINUM_MULT,"",""
 );
-dilcopy nokill@thievesguild();
+
+
+dilcopy qstSimpleQuest@quests(QUEST_THIEVES_ENTRY,
+         {"say Hey $1N, want to prove yourself worth to our guild?",
+          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+         {"say Excellent! Best of luck, $1N."},
+         "Maria in the Thieve's Guild has asked you to bring her the head of the Green Dragon from Haon-Dor.",
+         {"emote looks at the head of the Green Dragon.",
+          "say Impressive! Well done, $1N. Welcome to the Thieve's guild."},
+          800, 1 * COPPER_MULT, {""});
+
+dilcopy qstItemsWanted@quests(QUEST_THIEVES_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+         {"say Excellent, thank you $1N."},
+          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
 
 end
 
@@ -659,18 +656,11 @@ romflags {CHAR_PROTECTED}
 M_HUMAN_THIEF_SWORD(160, SEX_MALE)
 money 7 IRON_PIECE
 
-special SFUN_GUILD_BASIS GUILD_UDG_THIEF
+dilcopy MurderBanish@guilds(GUILD_UDG_THIEF);
+dilcopy AlertMembers@guilds(GUILD_UDG_THIEF, "");
 dilcopy rescue@function("guard");
-dilcopy teamwork@function ( "guard");
-
-/*special SFUN_GUILD_GUARD_WAY
-""+"down"+"#"+GUILD_UDG_THIEF+"#entrance#guard
-#$1n stops you and says, 'Beat it or have it beaten for you!'
-#$1n stops $3n, and says 'Beat it of have it beaten for you!'"*/
-
-dilcopy guild_guard@guild_paths(GUILD_UDG_THIEF, "down");
-
-
+dilcopy teamwork@function("guard");
+// dilcopy guild_guard@guild_paths(GUILD_UDG_THIEF, "down");
 end
 
 

@@ -54,8 +54,15 @@ END HEADER*/
 #define ITEM_SKIN   26
 #define ITEM_BOARD   27
 
+
 #define POLICE_ACADEMY    "$Police Member"
 #define POLICE_BANNED     "$Police Banned"
+
+#define GUILD_KEY           "$guild"
+#define GUILD_KEY_PREPEND   "$guild/"
+#define GUILD_KEY_BANISHED  "$guilds_ban"
+#define GUILD_KEY_LEFT      "$guilds_left"
+
 
 #define GUILD_UDG_FIGHTER     "Udgaard Fighter"
 #define GUILD_UDG_FIGHTER_ATL "jones@fightersguild","lancelot@fightersguild","robin@fightersguild" //  Abi, Wpn, Ski
@@ -63,31 +70,31 @@ END HEADER*/
 
 #define GUILD_KNIGHT      "Midgaard Dark Knight"
 #define GUILD_KNIGHT_ATL  "matthew@knight", "aramand@knight", "hilary@knight", "soroth@knight" //  Abi, Wpn, Spl, Ski
-#define GUILD_KNIGHT_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_KNIGHT_EXCL {GUILD_PALADIN, GUILD_UDG_MAGE, GUILD_SORCERER}
 
 #define GUILD_PALADIN     "Midgaard Paladin"
 #define GUILD_PALADIN_ATL  "joan@paladin_guild", "edmund@paladin_guild", "alex@paladin_guild", "corbin@paladin_guild" //  Abi, Wpn, Spl, Ski
-#define GUILD_PALADIN_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_KNIGHT, GUILD_ASSASSIN, GUILD_UDG_THIEF}
+#define GUILD_PALADIN_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_KNIGHT, GUILD_ASSASSIN, GUILD_UDG_THIEF, GUILD_NECROMANCER}
 
 #define GUILD_NYM_RANGER  "Nymgaard Ranger"
 #define GUILD_RANGER_ATL  "mountain_man@ranger", "justifier@ranger", "guardian@ranger", "pathfinder@ranger" //  Abi, Wpn, Spl, Ski
-#define GUILD_KNIGHT_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_RANGER_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER, GUILD_KNIGHT}
 
 #define GUILD_UDG_THIEF   "Udgaard Thief"
 #define GUILD_THIEF_ATL   "bisse@thievesguild","pirate@thievesguild","gryma@thievesguild" //  Abi, Wpn, Ski
-#define GUILD_THIEF_EXCL  {}
+#define GUILD_THIEF_EXCL  {GUILD_PALADIN}
 
 #define GUILD_ASSASSIN     "Khorsabad Assassin"
 #define GUILD_ASSASSIN_ATL "ability_trainer@assassin", "weapon_trainer@assassin", "spell_trainer@assassin", "skill_trainer@assassin" //  Abi, Wpn, Spl, Ski
-#define GUILD_ASSASSIN_EXCL  {}
+#define GUILD_ASSASSIN_EXCL  {GUILD_PALADIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID}
 
 #define GUILD_UDG_CLERIC  "Udgaard Healer"
 #define GUILD_CLERIC_ATL  "tack@clericguild", "tick@clericguild", "isabella@clericguild", "bartholomew@clericguild" //  Abi, Wpn, Spl, Ski
-#define GUILD_CLERIC_EXCL  {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_CLERIC_EXCL  {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
 
 #define GUILD_NYM_DRUID   "Nymgaard Druid"
 #define GUILD_DRUID_ATL   "oak@druid", "elm@druid", "maple@druid", "willow@druid" //  Abi, Wpn, Spl, Ski
-#define GUILD_DRUID_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_DRUID_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}
 
 #define GUILD_MYSTIC      "obsolete"
 #define GUILD_MYSTIC_ATL  "", "", "", "" //  Abi, Wpn, Spl, Ski
@@ -112,28 +119,6 @@ END HEADER*/
 #define GUILD_SL   {GUILD_UDG_FIGHTER, GUILD_KNIGHT, GUILD_PALADIN, GUILD_NYM_RANGER,   \
 	                GUILD_UDG_THIEF, GUILD_ASSASSIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID, \
 	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_BARBARIAN}
-#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N", "C", "S", "B"}
-
-
-//
-// The bonus scale that builders use to assign weapon quality, magic bonus, shields, armours,
-// skills, attributes,etc.
-//
-#define BONUS_ARTIFACT        7
-#define BONUS_SUPERIOR        6
-#define BONUS_EXCELLENT_PLUS  5
-#define BONUS_EXCELLENT       4
-#define BONUS_GOOD_PLUS       3
-#define BONUS_GOOD            2
-#define BONUS_AVERAGE_PLUS    1
-#define BONUS_AVERAGE         0
-#define BONUS_AVERAGE_MINUS  -1
-#define BONUS_BAD            -2
-#define BONUS_BAD_MINUS      -3
-#define BONUS_TERRIBLE       -4
-#define BONUS_TERRIBLE_MINUS -5
-#define BONUS_JUNK_ALMOST    -6
-#define BONUS_JUNK           -7
 
 
 //
@@ -156,11 +141,39 @@ END HEADER*/
 #define PROFESSION_CONJURER    10
 #define PROFESSION_SORCERER    11
 #define PROFESSION_BARBARIAN   12
+#define PROFESSION_COUNT       13
 #define PROFESSION_MAX         13 /* 12+1 */
+
+
+#define PROFESSION_KEY      "$profession"
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
                            "Priest", "Druid", "Obsolete - Do Not Select","Necromancer", "Conjurer", "Sorcerer", \
 						   "Barbarian"
+
+
+
+
+//
+// The bonus scale that builders use to assign weapon quality, magic bonus, shields, armours,
+// skills, attributes,etc.
+//
+#define BONUS_ARTIFACT        7
+#define BONUS_SUPERIOR        6
+#define BONUS_EXCELLENT_PLUS  5
+#define BONUS_EXCELLENT       4
+#define BONUS_GOOD_PLUS       3
+#define BONUS_GOOD            2
+#define BONUS_AVERAGE_PLUS    1
+#define BONUS_AVERAGE         0
+#define BONUS_AVERAGE_MINUS  -1
+#define BONUS_BAD            -2
+#define BONUS_BAD_MINUS      -3
+#define BONUS_TERRIBLE       -4
+#define BONUS_TERRIBLE_MINUS -5
+#define BONUS_JUNK_ALMOST    -6
+#define BONUS_JUNK           -7
+
 
 
 #define QUEST_WW              "Wight warrens quest"

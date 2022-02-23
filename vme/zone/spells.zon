@@ -5351,22 +5351,26 @@ if (t_recall==0)
 }
 dilend
 
+
+
 // locate wanted
 dilbegin loc_want(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
-  unitptr unit_room (u : unitptr);
-  string npc_name@justice(cr_name : string);
+   unitptr unit_room (u : unitptr);
+   string npc_name@justice(cr_name : string);
+
 var
-  u : unitptr;
-  n_name : string;
+   u : unitptr;
+   n_name : string;
+   i : integer;
 
 code
 {
    if (tgt.type == UNIT_ST_NPC)
    {
-     n_name := npc_name@justice(tgt.name);
+      n_name := npc_name@justice(tgt.name);
       if(n_name)
-       tgt := findunit(self, n_name, FIND_UNIT_GLOBAL, null);
+         tgt := findunit(self, n_name, FIND_UNIT_GLOBAL, null);
    }
 
    if (hm < 0)
@@ -5382,7 +5386,7 @@ code
 
    u := unit_room(tgt);
 
-   if (isset(tgt.charflags,CHAR_OUTLAW))
+   if (isset(tgt.charflags, CHAR_OUTLAW))
       act("$2n at $3t", A_SOMEONE, self, tgt, u.title, TO_CHAR);
    else
       act("$2n doesn't seem to be wanted.", A_ALWAYS, self, tgt, null, TO_CHAR);

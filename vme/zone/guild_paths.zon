@@ -5,7 +5,7 @@ changedby   Mesmer
 EmailAdd
 request     compile
 version     22
-END HEADER*/
+END HEADER */
 
 #include <macros.h>
 %zone guild_paths
@@ -26,656 +26,81 @@ created by eirinn
 
 %dil
 
-/* $path extra in quests format:
-   names: $path, 1st guild, 2nd guild, 3rd guild,
-          0            1          2          3
-          1st level, 2nd level, 3rd level, overall level.
-          4          5          6          7
 
-   descr: "F/A/S" etc
+// =================================================================
+
+/* $ path is OBSOLETE. Use functions in guilds.zon to figure out if 
+   a player is in a guild for example 
 */
 
 #define GUILD_PATH "$path"
 
 dilbegin guild_guard(the_guild : string, the_dir : string);
-
-var
-   pc     : unitptr;
-   gp     : extraptr;
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 
 code
 {
 :start:
    wait(SFB_CMD, command(the_dir) and (activator.level < 230));
 
-   pc := activator;
-   secure (pc, lost_pc);
-
-   if (not("$path" in pc.quests))
-   {
-      block;
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto lost_pc;
-   }
-
-   gp := "$path" in pc.quests;
-
-   if (the_guild in gp.names)
-      goto lost_pc;
-   else
+   if (not IsInGuild@guilds(activator, the_guild))
    {
       block;
       act("You are prevented from going any further " + the_dir + " by " +
           "$3n! (Members Only).",
-          A_ALWAYS, pc, null, self, TO_CHAR);
-      goto lost_pc;
+          A_ALWAYS, activator, null, self, TO_CHAR);
    }
-
-:lost_pc:
-   unsecure(pc);
    goto start;
 }
 dilend /* guild_guard */
 
+
+
 /* DIL for rogue teacher to prevent training. */
 dilbegin rogue_restrict(guilds : stringlist);
-var
-pc : unitptr;
-exq : extraptr;
+external
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
 code
 {
+   :start:
+   wait(SFB_CMD,(command("practice") and (activator.type == UNIT_ST_PC)));
 
-:start:
+   if (not IsInGuilds@guilds(activator, guilds))
+   {
+      block;
+      exec("say You are not in the correct guild to train here.", self);
+   }
 
-wait(SFB_CMD,(command("practice") and (activator.type == UNIT_ST_PC)));
-
-pc := activator;
-
-secure(pc,start);
-exq := "$path" in pc.quests;
-
-if(not exq)
-{
- block;
- exec("say Your guild paths are not set-up, please "+
- "contact an administrator!", self);
- goto done;
-}
-else
-{
-
- if(exq.names.[1] in guilds) goto start;
- else if(exq.names.[2] in guilds)
- {
- 	if(atoi(exq.names.[4]) < 1)
- 	{
- 	block;
- 	exec("say You must complete 40 levels in the "+
- 	exq.names.[1]+" guild before you can train in the "+
- 	exq.names.[2]+" guild.", self);
-	}
-  }
-  else if(exq.names.[3] in guilds)
-  {
-  	if(atoi(exq.names.[5]) < 1)
-  	{
-  	block;
-  	exec("say You must complete 40 levels in the "+
-  	exq.names.[2]+" guild before you can train in the "+
-  	exq.names.[3]+" guild.", self);
-  	}
-  }
-  else
-  {
-  	block;
-  	exec("say You are not in the correct guild to train here.",self);
-  }
- }
-  :done:
-  unsecure(pc);
-  goto start;
+   goto start;
  }
  dilend
 
 
 
-dilbegin fnpri(FN_PRI_BLOCK) teacher_prac(the_guild : string);
-external path_update@guild_paths( u : unitptr);
-
-var
-   pc   : unitptr;
-   gp   : extraptr;
-   test : extraptr;
-
-   last_lev     : integer;
-   gl1          : integer;
-   gl2          : integer;
-   gl3          : integer;
-
-   data_list    : stringlist;
-
-   guild1       : string;
-   guild2       : string;
-   guild3       : string;
-   desc         : string;
-
-code
-{
-:start:
-   data_list := null;
-   wait(SFB_CMD, (command("practice") or command("info")) and
-                 (activator.level < 230));
-
-   pc := activator;
-   secure (pc, lost_pc);
-   pc.guild := the_guild;
-/*
-   if (GUILD_PATHS == 0)
-   {
-      test := "$guild" in pc.quests;
-      if ((test == null) or (not(the_guild in test.names)))
-      {
-         block;
-         act("This guild is not on your guild path - you are not allowed " +
-             "to practice here.",
-             A_ALWAYS, pc, null, null, TO_CHAR);
-         exec(", calls for the guards.", self);
-         goto lost_pc;
-      }
-      else goto lost_pc;
-   }
-*/
-
-   if (not("$path" in pc.quests))
-   {
-      block;
-      exec("say Just a second, " + pc.name + ", I need to check your " +
-           "record.", self);
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto lost_pc;
-   }
-
-   if (command("info"))
-   {
-      path_update(pc);
-      goto lost_pc;
-   }
-   else
-      path_update(pc);
-
-   gp := "$path" in pc.quests;
-   if (gp == null)
-   {
-:error:
-block;
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if ((gp.names.[1] == null) or (gp.names.[2] == null) or
-       (gp.names.[3] == null) or (gp.names.[4] == null) or
-       (gp.names.[5] == null) or (gp.names.[6] == null) or
-       (gp.names.[7] == null))
-      goto error;
-
-
-   if (not(the_guild in gp.names))
-   {
-      block;
-      act("This guild is not on your guild path - you are not allowed " +
-          "to practice here.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      exec(", calls for the guards.", self);
-      goto lost_pc;
-   }
-
-/*
-   if (pc.vlevel <= atoi(gp.names.[7])) goto go_on;
-
-   guild1 := gp.names.[1];
-   guild2 := gp.names.[2];
-   guild3 := gp.names.[3];
-   desc   := gp.descr;
-
-      gl1 := pc.vlevel;
-
-      if (gl1 > 39)
-      {
-         gl2 := gl1 - 39;
-      }
-
-      if (gl2 > 39)
-      {
-         gl3 := gl2 - 39;
-      }
-
-      subextra(pc.quests, "$path");
-      addstring(data_list, "$path");
-      addstring(data_list, guild1);
-      addstring(data_list, guild2);
-      addstring(data_list, guild3);
-      addstring(data_list, itoa(gl1));
-      addstring(data_list, itoa(gl2));
-      addstring(data_list, itoa(gl3));
-      addstring(data_list, itoa(gl1));
-
-      addextra(pc.quests, data_list, desc);
-
-*/
-
-:go_on:
-
-   gp := "$path" in pc.quests;
-   if (gp == null) goto start;
-
-   if (the_guild == gp.names.[1])
-      goto do_it;
-   else if (the_guild == gp.names.[2])
-   {
-      if (atoi(gp.names.[5]) < 1)
-      {
-         block;
-         act("You must complete 40 levels in the " + gp.names.[1] +
-             " guild before you can begin practicing in the " +
-             gp.names.[2] + " guild. That means you need to complete " +
-             itoa(40 - atoi(gp.names.[4])) + " more levels.",
-             A_ALWAYS, pc, null, null, TO_CHAR);
-         goto lost_pc;
-      }
-      else goto do_it;
-   }
-   else if (the_guild == gp.names.[3])
-   {
-      if (atoi(gp.names.[6]) < 1)
-      {
-         block;
-         act("You must complete 40 levels in the " + gp.names.[2] +
-             " guild before you can begin practicing in the " +
-             gp.names.[3] + " guild. That means you need to complete " +
-             itoa(40 - atoi(gp.names.[5])) + " more levels.",
-             A_ALWAYS, pc, null, null, TO_CHAR);
-         goto lost_pc;
-      }
-      else goto do_it;
-   }
-
-:do_it:
-
-:lost_pc:
-   unsecure(pc);
-   goto start;
-}
-dilend /* teacher_practice */
-
 /* THIS FOLLOWING DIL IS A COMMAND */
-
 dilbegin admin_gp(arg : string);
-/* This dil takes input made by the admin for setting up a player on a
-guild path */
-
-external path_update@guild_paths( u : unitptr);
-
-var
-   pc        : unitptr;
-
-   expd : extraptr;
-   arglist   : stringlist;
-
-   data_list : stringlist;
-   choosef   : stringlist;
-   initials  : stringlist;
-
-   who_desc  : string;
-
-   playername : string;
-
-   i      : integer;
-   count : integer;
-
+/* This dil takes input made by the admin for setting up a player on a guild path */
 code
 {
-   who_desc := "";
-
-   addstring(choosef, "-");
-   addstring(choosef, "Udgaard Fighter");    /* 1 */
-   addstring(choosef, "Udgaard Thief");      /* 2 */
-   addstring(choosef, "Udgaard Healer");     /* 3 */
-   addstring(choosef, "Udgaard Conjurer");   /* 4 */
-   addstring(choosef, "Nymgaard Ranger");    /* 5 */
-   addstring(choosef, "Midgaard Paladin");   /* 6 */
-   addstring(choosef, "Midgaard Sorcerer");  /* 7 */
-   addstring(choosef, "Khorsabad Assassin"); /* 8 */
-   addstring(choosef, "Necromancer");        /* 9 */
-   addstring(choosef, "Nymgaard Druid");     /*10 */
-   addstring(choosef, "Midgaard Dark Knight"); /*11 */
-
-   addstring(initials, "-");
-   addstring(initials, "F");    /* 1 */
-   addstring(initials, "T");    /* 2 */
-   addstring(initials, "H");    /* 3 */
-   addstring(initials, "C");    /* 4 */
-   addstring(initials, "R");    /* 5 */
-   addstring(initials, "P");    /* 6 */
-   addstring(initials, "S");    /* 7 */
-   addstring(initials, "A");     /* 8 */
-   addstring(initials, "N");     /* 9 */
-   addstring(initials, "D");     /*10 */
-   addstring(initials, "K");     /*11 */
-   heartbeat := PULSE_SEC * 2;
-
-   if (self.level < 253)
-   {
-      act("Argle Bargle, etc, etc ?",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if (arg == "")
-   {
-:syntax_show:
-      act("Usage: 'gp <player> <guild #1> <guild #2> <guild #3> " +
-          "<guild #1 level> <guild #2 level> <guild #3 level>'<br/><br/>" +
-          "The guild numbers are as follows:<br/>" +
-      "1: Udgaard Fighter, 2: Udgaard Thief, 3: Udgaard Healer, 4: Udgaard " +
-      "Conjurer, 5: Nymgaard Ranger, 6: Midgaard Paladin, " +
-      "7: Midgaard Sorcerer, 8: Khorsabad Assassin, 9: Necromancer, "+
-      "10: Nymgaard Druid. 11: Midgaard Dark Knight<br/>", A_ALWAYS, self, null, null, TO_CHAR);
-
-      act("NOTE: You can remove the path quest by typing 'gp remove " +
-      "<player>.<br/><br/>You can get a list of the guild the person was in "+
-      "before guild paths (and their current path) " +
-      "by typing gp list player_name.<br/>If you wish to add 0 level guilds "+
-      "to _newbies_ then add the word <b>newbie</b> at the end of the command!",
-      A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   arglist := getwords(arg);
-
-   if ((length(arglist) < 6) and (not((arglist.[0] in "remove") or
-     (arglist.[0] in "list"))))
-   {
-:not_enough:
-      act("Not enough arguments entered!",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      goto syntax_show;
-   }
-
-   if (((arglist.[0] in "remove") and (arglist.[1] == "")) or
-       ((arglist.[0] in "list") and (arglist.[1] == "")))
-      goto not_enough;
-
-   if ((arglist.[0] in "remove") or  (arglist.[0] in "list"))
-   {
-      playername := arglist.[1];
-   }
-   else
-      playername := arglist.[0];
-
-   pc := findunit(self, playername, FIND_UNIT_GLOBAL, null);
-
-   if ((pc == null) or (pc.type != UNIT_ST_PC))
-   {
-      act("No such player online.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if (arglist.[0] in "remove")
-   {
-      if (not("$path" in pc.quests))
-      {
-         act("That would be a bit pointless since he doesn't have " +
-             "a path extra.",
-             A_ALWAYS, self, null, null, TO_CHAR);
-             quit;
-      }
-      else
-      {
-         subextra(pc.quests, "$path");
-         act("The path extra has been removed from " + pc.name + ".",
-             A_ALWAYS, self, null, null, TO_CHAR);
-         quit;
-      }
-   }
-
-:list_em:
-
-   count := 0;
-   if (arglist.[0] in "list")
-   {
-      if (not("$path" in pc.quests))
-      {
-         act("Old guilds as follows (not in order):",
-             A_ALWAYS, self, null, null, TO_CHAR);
-
-         if ("$Udgaard Fighter" in pc.quests)
-         {
-            expd := "$Udgaard Fighter" in pc.quests;
-            act("Udgaard Fighter       " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Udgaard Thief" in pc.quests)
-         {
-            expd := "$Udgaard Thief" in pc.quests;
-            act("Udgaard Thief         " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Udgaard Healer" in pc.quests)
-         {
-            expd := "$Udgaard Healer" in pc.quests;
-            act("Udgaard Healer        " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Udgaard Conjurer" in pc.quests)
-         {
-            expd := "$Udgaard Conjurer" in pc.quests;
-            act("Udgaard Conjurer      " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Nymgaard Ranger" in pc.quests)
-         {
-            expd := "$Nymgaard Ranger" in pc.quests;
-            act("Nymgaard Ranger       " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Midgaard Paladin" in pc.quests)
-         {
-            expd := "$Midgaard Paladin" in pc.quests;
-            act("Midgaard Paladin      " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Midgaard Sorcerer" in pc.quests)
-         {
-            expd := "$Midgaard Sorcerer" in pc.quests;
-            act("Midgaard Sorcerer     " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Khorsabad Assassin" in pc.quests)
-         {
-            expd := "$Khorsabad Assassin" in pc.quests;
-            act("Khorsabad Assassin    " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-         if ("$Necromancer" in pc.quests)
-         {
-            expd := "$Necromancer" in pc.quests;
-            act("Necromancer           " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-
-            count := count + 1;
-         }
-         if ("$Nymgaard Druid" in pc.quests)
-         {
-            expd := "$Nymgaard Druid" in pc.quests;
-            act("Nymgaard Druid       " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }     
-         if ("$Midgaard Dark Knight" in pc.quests)
-         {
-            expd := "$Midgaard Dark Knight" in pc.quests;
-            act("Midgaard Dark Knight       " + expd.names.[1],
-                A_ALWAYS, self, null, null, TO_CHAR);
-            count := count + 1;
-         }
-
-         if (count < 1)
-            act("NONE! Possible guild wipe.",
-                A_ALWAYS, self, null, null, TO_CHAR);
-         else
-            act("Total guilds: " + itoa(count) + ".",
-                A_ALWAYS, self, null, null, TO_CHAR);
-         quit;
-      }
-
-      else
-      {
-         path_update(pc);
-         expd := "$path" in pc.quests;
-         act("Guild Path Details:",
-             A_ALWAYS, self, null, null, TO_CHAR);
-         act(expd.names.[1] + "   " + expd.names.[4] + "<br/>" +
-             expd.names.[2] + "   " + expd.names.[5] + "<br/>" +
-             expd.names.[3] + "   " + expd.names.[6] + "<br/>",
-             A_ALWAYS, self, null, null, TO_CHAR);
-         quit;
-      }
-   }
-
-
-   i := 0;
-   addstring(data_list, "$path");
-
-:set_up:
-
-   i := i + 1;
-
-   if (i == 4)
-   {
-      i := i - 1;
-      goto set_up2;
-   }
-   else if ((atoi(arglist.[i]) < 1) or (atoi(arglist.[i]) > 10))
-   {
-      act("Guild '" + arglist.[i] + "' is invalid!",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-   else
-   {
-      addstring(data_list, choosef.[atoi(arglist.[i])]);
-
-      if (i == 1)
-         who_desc := initials.[atoi(arglist.[i])] + " / ";
-      else if (i == 2)
-         who_desc := who_desc + initials.[atoi(arglist.[i])] + " / ";
-      else if (i == 3)
-         who_desc := who_desc + initials.[atoi(arglist.[i])];
-
-      goto set_up;
-   }
-
-:set_up2:
-
-   i := i + 1;
-
-   if (i > 6)
-      goto end;
-   else if (((atoi(arglist.[i]) < 0) or (atoi(arglist.[i]) > 1000)) and
-            (arglist.[7] == "newbie"))
-   {
-      act("Level '" + arglist.[i] + "' is invalid!",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-   else if (((atoi(arglist.[i]) < 1) or (atoi(arglist.[i]) > 1000)) and
-            (arglist.[7] != "newbie"))
-   {
-      act("Level '" + arglist.[i] + "' is invalid except for a newbie!",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-   else
-   {
-         addstring(data_list, arglist.[i]);
-      goto set_up2;
-   }
-
-:end:
-
-   pc := findunit(self, playername, FIND_UNIT_GLOBAL, null);
-
-   if ((pc == null) or (pc.type != UNIT_ST_PC))
-   {
-      act("No such player online.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if (pc.vlevel > 100)
-      who_desc := who_desc + " Elder";
-
-   who_desc := who_desc;
-
-   addstring(data_list, itoa(pc.vlevel));
-
-   addextra(pc.quests, data_list, who_desc);
-/*
-   pc.guild := who_desc;
-*/
-
-   act("Successful addition of path extra to $3n.",
-       A_ALWAYS, self, null, pc, TO_CHAR);
-   act("You have been set up for guild paths.",
-       A_ALWAYS, pc, null, null, TO_CHAR);
-
+   log("OBSOLETE admin_gp called");
    quit;
 }
 dilend /* admin_gp */
 
 
 /* The following is a command */
-
 dilbegin join_dil(arg : string); /* Block the join command */
-
 code
 {
-   act("Guilds can no longer be quit or joined. The only way to leave " +
-       "a guild and join a new one is to rebirth, then you can choose " +
-       "another guild path.",
-       A_ALWAYS, self, null, null, TO_CHAR);
+   log("[" + self.symname + "] - OBSOLETE join_dil in guild_paths called: ["+arg+"]");
    quit;
 }
 dilend /* join_dil */
 
-/* The following is a command */
 
-dilbegin insult_dil(arg : string); /* Block the insult command */
-
+/* The following is a social command, guess it should be in another zone */
+dilbegin insult_dil(arg : string);
 var
    pc   : unitptr;
 
@@ -723,63 +148,19 @@ code
 }
 dilend /* insult_dil */
 
+
 /* The following dil is a command: guilds */
-
 dilbegin guilds_dil(arg : string);
-external path_update(u : unitptr);
-
-var
-   expd    : extraptr;
-   buf     : string;
-
+external
+   do_guilds@guilds(arg : string);
 code
 {
-   if (self.level >= 235)
-   {
-      act("You're too high in level for normal guilds.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   path_update(self);
-
-   expd := "$path" in self.quests;
-
-   if (expd == null)
-   {
-:error:
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-
-   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
-       (expd.names.[3] == null) or (expd.names.[4] == null) or
-       (expd.names.[5] == null) or (expd.names.[6] == null) or
-       (expd.names.[7] == null))
-      goto error;
-
-   buf := "Your Guild Path is:<br/>";
-
-   if (expd.names.[1] != "")
-      buf := buf + "First: " + expd.names.[1] + "   " + expd.names.[4] + "<br/>";
-
-   if (expd.names.[2] != "")
-      buf := buf + "Second: " + expd.names.[2] + "   " + expd.names.[5] + "<br/>";
-
-   if (expd.names.[3] != "")
-      buf := buf + "Third: " + expd.names.[3] + "   " + expd.names.[6] + "<br/>";
-
-   buf := buf + "Your overall level is " + itoa(self.vlevel) + ".<br/>";
-   sendtext(buf, self);
+   do_guilds@guilds(arg);
    quit;
 }
 dilend /* guilds_dil */
+
+
 
 
 dilbegin hand_hold(); /* Take people to their guilds and Udgaard */
@@ -971,497 +352,29 @@ if (pc.level > 15)
 }
 dilend /* hand_hold */
 
+
+
 dilbegin guild_titles( the_guild : string, title_list : stringlist );
-external path_update(u : unitptr);
-
-var
-ln:integer;
-   male_list    : stringlist;
-   female_list  : stringlist;
-
-   expd         : extraptr;
-
-   pc           : unitptr;
-
-   pclevel      : integer;
-   pcsex        : integer;
-   i            : integer;
-
-   newtit       : string;
-   my_race      : string;
-
+external
+   SetTitles@guilds(the_guild : string, title_list : stringlist);
 code
 {
-:init:
-/* Sort the list into two different lists and add gaps for even levels */
-
-   addstring(male_list, "-");
-   addstring(female_list, "-");
-
-   i := 0;
-   ln:=length(title_list);
-   while(i < ln)
-   {
-      addstring(male_list, title_list.[i]);
-      if (i+1<ln)
-      addstring(female_list, title_list.[i+1]);
-      i := i + 2;
-   }
-
-
-:start:
-   wait(SFB_CMD, command("title") and (activator.level < 235) and
-                 (activator.type == UNIT_ST_PC));
-   pc := activator;
-   secure(pc, lost_pc);
-
-   block;
-
-   if (not("$path" in pc.quests))
-   {
-      exec("say Just a second, " + pc.name + ", I need to check your " +
-           "record.", self);
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto lost_pc;
-   }
-
-   path_update(pc);
-
-   expd := "$path" in pc.quests;
-   if (expd == null) goto start;
-
-   if (the_guild == expd.names.[1])
-   {
-      pclevel := atoi(expd.names.[4]);
-      goto do_title;
-   }
-   else if (the_guild == expd.names.[2])
-   {
-      if (atoi(expd.names.[5]) < 1)
-      {
-         act("You must complete 40 levels in the " + expd.names.[1] +
-             " guild before you can begin receiving titles in the " +
-             expd.names.[2] + " guild. That means you need to complete " +
-             itoa(40 - atoi(expd.names.[4])) + " more levels.",
-             A_ALWAYS, pc, null, null, TO_CHAR);
-         goto lost_pc;
-      }
-      else
-      {
-         pclevel := atoi(expd.names.[5]);
-         goto do_title;
-      }
-   }
-   else if (the_guild == expd.names.[3])
-   {
-      if (atoi(expd.names.[6]) < 1)
-      {
-         act("You must complete 40 levels in the " + expd.names.[2] +
-             " guild before you can begin receiving titles in the " +
-             expd.names.[3] + " guild. That means you need to complete " +
-             itoa(40 - atoi(expd.names.[5])) + " more levels.",
-             A_ALWAYS, pc, null, null, TO_CHAR);
-         goto lost_pc;
-      }
-      else
-      {
-         pclevel := atoi(expd.names.[6]);
-         goto do_title;
-      }
-   }
-
-:do_title:
-
-   pcsex   := pc.sex;
-
-   if (pc.race == RACE_HUMAN)
-      my_race := "Human";
-   else if (pc.race == RACE_ELF)
-      my_race := "Elf";
-   else if (pc.race == RACE_DWARF)
-      my_race := "Dwarf";
-   else if (pc.race == RACE_HALFLING)
-      my_race := "Halfling";
-   else if (pc.race == RACE_GNOME)
-      my_race := "Gnome";
-   else if (pc.race == RACE_HALF_ORC)
-      my_race := "Half-Orc";
-   else if (pc.race == RACE_HALF_OGRE)
-      my_race := "Half-Ogre";
-   else if (pc.race == RACE_HALF_ELF)
-      my_race := "Half-Elf";
-   else if (pc.race == RACE_BROWNIE)
-      my_race := "Brownie";
-   else if (pc.race == RACE_GROLL)
-      my_race := "Groll";
-   else
-      my_race := "Darkelf";
-
-
-pclevel:=pclevel/5;
-
-   if (pcsex < 2)
-   {
-   if (pclevel>(length(male_list)-1))
-   pclevel:=(length(male_list)-1);
-      newtit := male_list.[pclevel];
-   }
-   else
-   {
-      if (pclevel>(length(female_list)-1))
-   pclevel:=(length(female_list)-1);
-      newtit := female_list.[pclevel];
-	  }
-
-
-   if (newtit == "-")
-   {
-      if (pcsex < 2)
-      {
-      if (pclevel<1)
-      goto jumpbug;
-         if (not(male_list.[pclevel - 1] in pc.title))
-         {
-
-            exec("say Enjoy the title, " + pc.name + "!", self);
-            pc.title := "the " + my_race + " " + male_list.[pclevel - 1];
-            goto lost_pc;
-         }
-         else
-         {
-                     :jumpbug:
-            exec("say You need to attain a higher level before you " +
-
-                 "can receive a new title, " + pc.name + ".", self);
-            goto lost_pc;
-         }
-      }
-      else if (pcsex > 1)
-      {
-            if (pclevel<1)
-goto jumpbug2;
-
-         if (not(female_list.[pclevel - 1] in pc.title))
-         {
-
-            exec("say Enjoy the title, " + pc.name + "!", self);
-            pc.title := "the " + my_race + " " + female_list.[pclevel - 1];
-            goto lost_pc;
-         }
-         else
-         {
-                  :jumpbug2:
-            exec("say You need to attain a higher level before you " +
-                 "can receive a new title, " + pc.name + ".", self);
-            goto lost_pc;
-         }
-      }
-   }
-
-   else if (newtit in pc.title)
-   {
-      exec("say You have already attained the appropriate title for " +
-           "this guild level, " + pc.name + ".",
-           self);
-      goto lost_pc;
-   }
-
-   else
-   {
-      pc.title := "the " + my_race + " " + newtit;
-      exec("say Enjoy the title, " + pc.name + "!", self);
-      goto lost_pc;
-   }
-
-:lost_pc:
-   unsecure(pc);
-   goto start;
-}
-dilend /* guild_titles */
-
-dilbegin path_fix();
-external path_update@guild_paths( person : unitptr );
-
-var
-   gp   : extraptr;
-   gex  : extraptr;
-
-   my_vlevel    : integer;
-   gl1          : integer;
-   gl2          : integer;
-   gl3          : integer;
-   diff         : integer;
-   diff_mod     : integer;
-
-   data_list    : stringlist;
-
-   guild1       : string;
-   guild2       : string;
-   guild3       : string;
-   desc         : string;
-
-code
-{
-   path_update(self);
-
-   gp := "$path" in self.quests;
-
-   guild1 := gp.names.[1];
-   guild2 := gp.names.[2];
-   guild3 := gp.names.[3];
-   desc   := gp.descr;
-
-   my_vlevel := self.vlevel;
-
-   diff := my_vlevel - atoi(gp.names.[7]);
-
-   gl1 := atoi(gp.names.[4]);
-   gl2 := atoi(gp.names.[5]);
-   gl3 := atoi(gp.names.[6]);
-
-   if (my_vlevel != gl1) goto end; /*Is an oldbie */
-
-   if (gl1 > 39)
-   {
-      if (gl2 != (gl1 - 39))
-      {
-         gl2 := gl1 - 39;
-         if (gl2 > 39)
-            gl3 := gl2 - 39;
-         goto re_add;
-      }
-   }
-
-   if (gl2 < 40)
-   {
-      if ((gl2 != 0) or (gl3 != 0))
-      {
-         gl2 := 0;
-         gl3 := 0;
-         goto re_add;
-      }
-   }
-
-   else goto end;
-
-:re_add:
-      subextra(self.quests, "$path");
-      addstring(data_list, "$path");
-      addstring(data_list, guild1);
-      addstring(data_list, guild2);
-      addstring(data_list, guild3);
-      addstring(data_list, itoa(gl1));
-      addstring(data_list, itoa(gl2));
-      addstring(data_list, itoa(gl3));
-      addstring(data_list, itoa(my_vlevel));
-
-      addextra(self.quests, data_list, desc);
-
-
-      while("$guild" in self.quests)
-      {
-         subextra(self.quests, "$guild");
-      }
-
-      data_list := null;
-      if (gl1 > 0)
-      {
-         addstring(data_list, "$" + guild1);
-         addstring(data_list, itoa(gl1));
-         addstring(data_list, "$guild");
-         addextra(self.quests, data_list, itoa(realtime - 1000));
-      }
-
-      data_list := null;
-      if (gl2 > 0)
-      {
-         addstring(data_list, "$" + guild2);
-         addstring(data_list, itoa(gl2));
-         addstring(data_list, "$guild");
-         addextra(self.quests, data_list, itoa(realtime - 1000));
-      }
-
-      data_list := null;
-      if (gl3 > 0)
-      {
-         addstring(data_list, "$" + guild3);
-         addstring(data_list, itoa(gl3));
-         addstring(data_list, "$guild");
-         addextra(self.quests, data_list, itoa(realtime - 1000));
-      }
-
-:end:
+   SetTitles@guilds(the_guild, title_list);
    quit;
 }
-dilend /* path_fix */
+dilend
 
-dilbegin path_update( u  :  unitptr );
-
-var
-   gp   : extraptr;
-
-   my_vlevel    : integer;
-   gl1          : integer;
-   gl2          : integer;
-   gl3          : integer;
-   diff         : integer;
-   diff_mod     : integer;
-
-   data_list    : stringlist;
-
-   guild1       : string;
-   guild2       : string;
-   guild3       : string;
-   desc         : string;
-
-code
-{
-   gp := "$path" in u.quests;
-   if (gp == null)
-   {
-:error:
-      act("WARNING: Please contact an administrator as soon as " +
-          "possible and tell him/her you need to be set up for guild paths." +
-          "If you mudmail or email him/her with the last guilds you were/are " +
-          "in and the levels you quit at or were last at, it will speed " +
-          "the process up. Sorry for any inconvenience.",
-          A_ALWAYS, u, null, null, TO_CHAR);
-      quit;
-   }
-
-   if ((gp.names.[1] == null) or (gp.names.[2] == null) or
-       (gp.names.[3] == null) or (gp.names.[4] == null) or
-       (gp.names.[5] == null) or (gp.names.[6] == null) or
-       (gp.names.[7] == null))
-      goto error;
-
-/*   act("Your vlevel is " + itoa(u.vlevel) + " and your old one was " +
-       gp.names.[7] + ".",
-       A_ALWAYS, u, null, null, TO_CHAR);*/
-
-/* We have to check if this is an oldbie */
-
-   guild1 := gp.names.[1];
-   guild2 := gp.names.[2];
-   guild3 := gp.names.[3];
-   desc   := gp.descr;
-
-   my_vlevel := u.vlevel;
-
-   diff := my_vlevel - atoi(gp.names.[7]);
-
-   gl1 := atoi(gp.names.[4]);
-   gl2 := atoi(gp.names.[5]);
-   gl3 := atoi(gp.names.[6]);
-
-   if (u.vlevel <= atoi(gp.names.[7])) goto re_add;
-
-/*   act("My gl1 is " + itoa(gl1) + " and my_vlevel is " + itoa(my_vlevel),
-       A_ALWAYS, u, null, null, TO_CHAR);*/
-
-   if ((gl1 + diff) != my_vlevel)
-   {
-/* Is an oldbie */
-      gl1 := gl1 + diff;
-      gl2 := gl2 + diff;
-      gl3 := gl3 + diff;
-      goto re_add;
-   }
-
-   gl1 := gl1 + diff;
-   gl2 := gl1 - 39;
-   gl3 := gl2 - 39;
-
-   if (gl2 < 0) gl2 := 0;
-   if (gl3 < 0) gl3 := 0;
-/*
-   if (not(gl1 > 39))
-   {
-      if ((gl1 + diff) >= 39)
-      {
-         diff_mod := 39 - gl1;
-         gl1 := gl1 + diff;
-         diff := diff - diff_mod;
-      }
-      else
-         gl1 := gl1+ diff;
-   }
-   else
-      gl1 := gl1 + diff;
-
-      if (gl1 > 39)
-         gl2 := gl1gl2 + diff;
-
-      if (gl2 > 39)
-         gl3 := gl2 + diff;
-*/
-
-:re_add:
-
-      subextra(u.quests, "$path");
-      addstring(data_list, "$path");
-      addstring(data_list, guild1);
-      addstring(data_list, guild2);
-      addstring(data_list, guild3);
-      addstring(data_list, itoa(gl1));
-      addstring(data_list, itoa(gl2));
-      addstring(data_list, itoa(gl3));
-      addstring(data_list, itoa(my_vlevel));
-
-      addextra(u.quests, data_list, desc);
-
-
-      while("$guild" in u.quests)
-      {
-         subextra(u.quests, "$guild");
-      }
-
-      data_list := null;
-      if (gl1 > 0)
-      {
-         addstring(data_list, "$" + guild1);
-         addstring(data_list, itoa(gl1));
-         addstring(data_list, "$guild");
-         addextra(u.quests, data_list, itoa(realtime - 1000));
-      }
-
-      data_list := null;
-      if (gl2 > 0)
-      {
-         addstring(data_list, "$" + guild2);
-         addstring(data_list, itoa(gl2));
-         addstring(data_list, "$guild");
-         addextra(u.quests, data_list, itoa(realtime - 1000));
-      }
-
-      data_list := null;
-      if (gl3 > 0)
-      {
-         addstring(data_list, "$" + guild3);
-         addstring(data_list, itoa(gl3));
-         addstring(data_list, "$guild");
-         addextra(u.quests, data_list, itoa(realtime - 1000));
-      }
-
-:end:
-      return;
-}
-dilend /* path_update */
 
 /*
 Something I added for familiars but can be used in anything wanting to check
 a guild level if you already have something sorry but I couldn't find it.
 */
-dilbegin integer level_guild_chk (pc: unitptr,s:string);
+dilbegin integer level_guild_chk(pc: unitptr,s:string);
 var
 	expd:extraptr;
 code
 {
+   log("level_guild_chk needs to be rewritten and moved to guilds");
 if (pc==null)
 	return (-2);
 
