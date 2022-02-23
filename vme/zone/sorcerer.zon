@@ -1204,8 +1204,6 @@ exp -300
 
 dilcopy no_kill@sorcerer();
 dilcopy restoration@sorcerer();
-dilcopy quest_block@guilds("join", QUEST_SORCERER_ENTRY,
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Sorcerer Guild quest. Go speak with Master Forbin."});
 dilcopy MurderBanish@guilds(SORCERER_GUILD);
 dilcopy AlertMembers@guilds(SORCERER_GUILD, "");
 
@@ -1226,66 +1224,14 @@ dilcopy SetTitles@guilds(GUILD_SORCERER, {"Third Order Mesmerist",
 "Sorceress Prime", "Master Sorcerer of the Ages",
 "Sorceress Mistress of the Ages"});
 
-dilbegin master_join();
-external
-   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
-   integer IsBanished@guilds(pc : unitptr, sGuild : string);
-   JoinGuild@guilds(pc : unitptr, sGuild : string);
-   LeaveGuild@guilds(pc : unitptr, sGuild : string);
-   BanishGuild@guilds(pc : unitptr, sGuild : string);
-var
-   pc : unitptr;
-code
-{
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+dilcopy Specialize@guilds(GUILD_SORCERER, "alespec@sorcerer");
 
-   heartbeat := PULSE_SEC*5;
-
-   :start:
-   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
-   self.position := POSITION_STANDING;
-   pc := activator;
-   secure(pc, start);
-
-   if (IsBanished@guilds(pc, SORCERER_GUILD))
-   {
-      block;
-      exec ("say Why do you stand before me? you have been "+
-      "told to leave our midst!", self);
-      exec ("spit " + pc.name, self);
-      pause;
-      goto start;
-   }
-
-   if (IsInGuild@guilds(pc, SORCERER_GUILD))
-   {
-      block;
-      exec ("sigh " + pc.name, self);
-      pause;
-      exec ("say Perhaps you have been hitting your head  too much? " +
-      "You don't even know who " +
-      "you are now " + pc.name+ ". You're already a member of  "+
-      "the guild!" , self);
-      pause;
-      goto start; 
-   }
-
-   if (IsInGuilds@guilds(pc, GUILD_SORCERER_EXCL))
-   {
-      block;
-      exec("say Your other guild choices exclude you from becoming a Sorcerer.", self);
-      pause;
-      goto start;  
-   }
-
-   JoinGuild@guilds(pc, SORCERER_GUILD);
-
-   exec ("say The power of the Sorcerers now coarses in your veins.", self);
-   goto start;
-}
-dilend
-
+dilcopy MasterJoin@guilds(GUILD_SORCERER, GUILD_SORCERER_EXCL, QUEST_SORCERER_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Sorcerer's Guild quest.","say Go speak with Master Forbin."},
+ {"handshake $1N", "say Welcome to the Sorcerer's Guild, $1N."});
 
 
 
@@ -1478,6 +1424,25 @@ end
 /* **********        Objects Def. Section        ********** */
 %objects
 /* Guild Items	*/
+
+
+alespec
+names {"mug of red ale","mug", "red ale", "ale"}
+title "a mug of ale"
+descr "A wooden mug stands here."
+extra {}
+"A large, wooden mug."
+LIQ_DEF("red", 0,1,1,5,2,5,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+dilcopy Transform@guilds(PROFESSION_CONJURER, PROFESSION_SORCERER, 
+   {"::The red ale flows down your throat.::",
+    "::You get a warm feeling.::",
+    "::You feel more powerful::",
+    "::You're now a Sorcerer::"});
+end
+
+
 
         sorc_pendant
 names {"sorcerer pendant","pendant"}

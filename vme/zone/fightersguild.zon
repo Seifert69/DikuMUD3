@@ -612,8 +612,6 @@ alignment 1000
 money 2 IRON_PIECE
 
 dilcopy nokill@fightersguild();
-dilcopy quest_block@guilds("join", QUEST_FIGHTER_ENTRY,
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Fighter's Guild quest. Go speak with Maia."});
 dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 
@@ -627,66 +625,12 @@ dilcopy SetTitles@guilds(GUILD_UDG_FIGHTER, {"Swordpupil",
 "Lady Champion", "Dragoon", "Lady Dragoon", "Cavalier", "Cavalier", "Knight",
 "Lady Knight"});
 
-dilbegin master_join();
-external
-   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
-   integer IsBanished@guilds(pc : unitptr, sGuild : string);
-   JoinGuild@guilds(pc : unitptr, sGuild : string);
-   LeaveGuild@guilds(pc : unitptr, sGuild : string);
-   BanishGuild@guilds(pc : unitptr, sGuild : string);
-
-var
-   pc : unitptr;
-
-code
-{
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-
-   heartbeat := PULSE_SEC*5;
-
-   :start:
-   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
-   self.position := POSITION_STANDING;
-   pc := activator;
-   secure(pc, start);
-
-   if (IsBanished@guilds(pc, GUILD_UDG_FIGHTER))
-   {
-      block;
-      exec ("say Why do you stand before me? you have been "+
-      "told to leave our midst!", self);
-      exec ("spit " + pc.name, self);
-      pause;
-      goto start;
-   }
-
-   if (IsInGuild@guilds(pc, GUILD_UDG_FIGHTER))
-   {
-      block;
-      exec ("sigh " + pc.name, self);
-      pause;
-      exec ("say Perhaps you have been hitting your head  too much? " +
-      "You don't even know who you are now " + pc.name+ ". You're already a member of  "+
-      "the guild!" , self);
-      pause;
-      goto start; 
-   }
-
-   /*if (IsInGuilds@guilds(pc, GUILD_UDG_FIGHTER_EXCL))
-   {
-      block;
-      exec("say Your other guild choices exclude you from becoming a Fighter.", self);
-      pause;
-      goto start;  
-   }*/
-
-   JoinGuild@guilds(pc, GUILD_UDG_FIGHTER);
-
-   exec ("say The strength of the fighter now coarses in your veins.", self);
-   goto start;
-}
-dilend
+dilcopy MasterJoin@guilds(GUILD_UDG_FIGHTER, GUILD_UDG_FIGHTER_EXCL, QUEST_FIGHTER_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Fighter's Guild quest.","say Go speak with Maia."},
+ {"handshake $1N", "say Welcome to the Fighter's Guild, $1N."});
 
 
 

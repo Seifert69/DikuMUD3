@@ -657,8 +657,6 @@ exp -100
 dilcopy nokill@mageguild();
 dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
-dilcopy quest_block@guilds("join", QUEST_MAGE_ENTRY,
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Conjurer Entry quest. Go speak with Mr. Backspindle."});
 
 dilcopy SetTitles@guilds(GUILD_UDG_MAGE, {"Apprentice of Magic",
 "Apprentice of Magic", "Spell Student", "Spell Student", "Scholar of Magic",
@@ -670,69 +668,14 @@ dilcopy SetTitles@guilds(GUILD_UDG_MAGE, {"Apprentice of Magic",
 "Mistress of Arcane Arts", "Savant", "Savant", "Magus", "Craftess", "Wizard",
 "Wizard", "Warlock", "War Witch", "Archmagus", "Archcraftess"});
 
+dilcopy MasterJoin@guilds(GUILD_UDG_MAGE, GUILD_MAGE_EXCL, QUEST_MAGE_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Conjurer's Guild quest.","say Go speak with Mr. Backspindle."},
+ {"handshake $1N", "say Welcome to the Conjurer's Guild, $1N."});
+
 /* Conjurer Master DIL - gives out the Spellweaver Charm. */
-
-dilbegin master_join();
-external
-   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
-   integer IsBanished@guilds(pc : unitptr, sGuild : string);
-   JoinGuild@guilds(pc : unitptr, sGuild : string);
-   LeaveGuild@guilds(pc : unitptr, sGuild : string);
-   BanishGuild@guilds(pc : unitptr, sGuild : string);
-var 
-   pc : unitptr;
-code
-{
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-
-   heartbeat := PULSE_SEC*5;
-
-   :start:
-   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
-   self.position := POSITION_STANDING;
-   pc := activator;
-   secure(pc, start);
-
-   if (IsBanished@guilds(activator, GUILD_UDG_MAGE))
-   {
-      block;
-      exec ("say Why do you stand before me? you have been "+
-      "told to leave our midst!", self);
-      exec ("spit " + activator.name, self);
-      pause;
-      goto start;
-   }
-
-   if (IsInGuild@guilds(activator, GUILD_UDG_MAGE))
-   {
-      block;
-      exec ("sigh " + activator.name, self);
-      pause;
-      exec ("say Perhaps you have been reading too many books? " +
-      "You don't even know who " +
-      "you are now " + activator.name+ ". You're already a member of  "+
-      "the guild!" , self);
-      pause;
-      goto start; 
-   }
-
-   if (IsInGuilds@guilds(activator, GUILD_MAGE_EXCL))
-   {
-      block;
-      exec("say Your other guild choices exclude you from becoming a Fighter.", self);
-      pause;
-      goto start;  
-   }
-
-   JoinGuild@guilds(activator, GUILD_UDG_MAGE);
-
-   exec ("say The power of the Mages now coarses in your veins.", self);
-   goto start;
-}
-dilend
-
-
 
 dilbegin conj_give();
 external

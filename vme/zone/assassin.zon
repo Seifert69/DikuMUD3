@@ -158,15 +158,12 @@ to hide.  A desk stands near the north wall, but is currently free of any
 adornments. A sign hangs on the wall."
 
 extra {"sign"}
-"  JOIN to join this guild.<br/>If you are worthy, TITLE will grant you a new title."
-
-/*&A board hangs on the east wall."
-
-extra {"board"}
-"  This is a chalkboard, and written on it are a few imperative commands:
-	WORSHIP :   To get the Assassin quest, you must worship the master"
-
-*/
+"This is the great hall of the Barbarians Guild. <br/><pre>
+'join'           - join this guild (if you qualify!).
+'title'          - changes your title to a new and better one.
+'worship'        - ... ?
+'say specialize' - Change profession to Barbarian.
+</pre><br/>"
 
 ROOM_BASICS
 south to hallway_2;
@@ -216,72 +213,17 @@ M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 exp -100
 
 dilcopy nokill@assassin();
-dilcopy quest_block@guilds("join", QUEST_ASSASSIN_ENTRY,
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Assassin quest. Go speak with Sharki."});
 dilcopy MurderBanish@guilds(GUILD_ASSASSIN);
 dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
 
-dilbegin master_join();
-external
-   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
-   integer IsBanished@guilds(pc : unitptr, sGuild : string);
-   JoinGuild@guilds(pc : unitptr, sGuild : string);
-   LeaveGuild@guilds(pc : unitptr, sGuild : string);
-   BanishGuild@guilds(pc : unitptr, sGuild : string);
-var
-   pc : unitptr;
-code
-{
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+dilcopy Specialize@guilds(GUILD_ASSASSIN, "alespec@assassin");
+dilcopy MasterJoin@guilds(GUILD_ASSASSIN, GUILD_ASSASSIN_EXCL, QUEST_ASSASSIN_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Assassin Guild quest.","say Go speak with Sharki."},
+ {"handshake $1N", "say Welcome to the Assassin's Guild, $1N."});
 
-   heartbeat := PULSE_SEC*5;
-
-   :start:
-   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
-   self.position := POSITION_STANDING;
-   pc := activator;
-   secure(pc, start);
-
-   if (IsBanished@guilds(pc, GUILD_ASSASSIN))
-   {
-      block;
-      exec ("say Why do you stand before me? you have been "+
-      "told to leave our midst!", self);
-      exec ("spit " + pc.name, self);
-      pause;
-      goto start;
-   }
-
-   if (IsInGuild@guilds(pc, GUILD_ASSASSIN))
-   {
-      block;
-      exec ("sigh " + pc.name, self);
-      pause;
-      exec ("say I have told you about getting lost in the dark ways " +
-      "You don't even know who " +
-      "you are now " + pc.name+ ". You already hold the position "+
-      "of mighty assassin!" , self);
-      pause;
-      goto start; 
-   }
-
-   if (IsInGuilds@guilds(pc, GUILD_ASSASSIN_EXCL))
-   {
-      block;
-      exec("say Your other guild choices exclude you from becoming an Assassin.", self);
-      pause;
-      goto start;  
-   }
-
-   JoinGuild@guilds(pc, GUILD_ASSASSIN);
-
-   exec ("say The vitality of the forest, and the strength of the tree " +
-         "flows through your spirit.", self);
-
-  goto start;
-}
-dilend
 
 dilbegin guilditem();
 external
@@ -380,8 +322,8 @@ dilcopy TrainMemberChk@guilds(GUILD_ASSASSIN, "");
 #include "guilddef.h"
 #undef _WEAPON
 dilcopy nokill@assassin();
-
 end
+
 
 		spell_trainer
 names {"Aziza","assassin","teacher","woman"}
@@ -818,6 +760,23 @@ cost 3 GOLD_PIECE
 rent 68 IRON_PIECE
 dilcopy guild_restrict@function({GUILD_ASSASSIN},0,10,"");
 dilcopy abi_restrict@function(ABIL_DEX,70,0,0,"dex_rest@skaven");
+end
+
+
+alespec
+names {"mug of grey ale","mug", "grey ale", "ale"}
+title "a mug of ale"
+descr "A wooden mug stands here."
+extra {}
+"A large, wooden mug."
+LIQ_DEF("grey", 0,1,1,5,2,5,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+dilcopy Transform@guilds(PROFESSION_THIEF, PROFESSION_ASSASSIN, 
+   {"::The grey ale flows down your throat.::",
+    "::You get a warm feeling.::",
+    "::You feel more sneaky::",
+    "::You're now an Assassin::"});
 end
 
 %reset

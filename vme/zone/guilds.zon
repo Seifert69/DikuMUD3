@@ -3,15 +3,11 @@
 /*
 test mud delete the zon_file... before git pull?
 
-Ask for help with heads.
-
-Add SPECIALIZE command to four guild masters, starting with Barbarians
-
-grep guild_paths in all guilds
-
-why is it so easy to kill a bear as Dwili level 15 vs 15 bear?
-
-Check all PROFESSION_MAX tests
+Add SPECIALIZE command to four guild masters:
+   Fighter / Barbarians DONE
+   Thieves / Assassin
+   Cleric / Druid
+   Mage / Sorcerer
 
 All the guilds processed (Monk is not complete):
    assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon druid.zon ../Zones/monk.zon
@@ -1116,5 +1112,72 @@ code
    return;
 }
 dilend
+
+
+// slExpBan     : Banished
+// slExpAlready : ALready member
+// slExpExclude : Guild choices exclude
+// slExpQuest   : Quest not completed
+// slExpWelcome : Welcome message
+//
+dilbegin MasterJoin(sGuild : string, sGuildExclude : stringlist, sJoinQuest : string,
+                     slExpBan : stringlist,
+                     slExpAlready : stringlist,
+                     slExpExclude : stringlist,
+                     slExpQuest : stringlist,
+                     slExpWelcome : stringlist);
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+   integer IsBanished@guilds(pc : unitptr, sGuild : string);
+   JoinGuild@guilds(pc : unitptr, sGuild : string);
+   LeaveGuild@guilds(pc : unitptr, sGuild : string);
+   BanishGuild@guilds(pc : unitptr, sGuild : string);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+var
+	pc : unitptr;
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+   self.position := POSITION_STANDING;
+   pc := activator;
+   secure(pc, start);
+   block;
+
+   if (IsBanished@guilds(pc, sGuild))
+   {
+      Explainer@quests(pc, slExpBan);
+      goto start;
+   }
+
+   if (IsInGuild@guilds(pc, sGuild))
+   {
+      Explainer@quests(pc, slExpAlready);
+      goto start; 
+   }
+
+   if (IsInGuilds@guilds(pc, sGuildExclude))
+   {
+      Explainer@quests(pc, slExpExclude);
+   }
+
+   if (not ((sJoinQuest+" Complete") in pc.quests))
+   {
+      Explainer@quests(pc, slExpQuest);
+      goto start;  
+   }
+
+   JoinGuild@guilds(pc, sGuild);
+
+   Explainer@quests(pc, slExpWelcome);
+   goto start;
+}
+dilend
+
 
 %end

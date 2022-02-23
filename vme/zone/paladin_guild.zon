@@ -693,97 +693,37 @@ exp -300
 
 dilcopy combat_mag@function("","heal",25,2);
 dilcopy nokill@paladin_guild();
-dilcopy quest_block@guilds("join", QUEST_PALADIN_ENTRY, 
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Paladin Guild quest. Go speak with Joan."});
 dilcopy MurderBanish@guilds(GUILD_PALADIN);
 dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 
-dilbegin master_join();
-external
-   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
-   integer IsBanished@guilds(pc : unitptr, sGuild : string);
-   JoinGuild@guilds(pc : unitptr, sGuild : string);
-   LeaveGuild@guilds(pc : unitptr, sGuild : string);
-   BanishGuild@guilds(pc : unitptr, sGuild : string);
-var
-   pc : unitptr;
+dilbegin  fnpri(FN_PRI_BLOCK-1) block_evil_join();
 code
 {
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-
-   heartbeat := PULSE_SEC*5;
-
    :start:
-   wait (SFB_CMD, TRUE);
-   pc := activator;
-   secure(pc, start);
+   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
 
-   if ((pc.type ==  UNIT_ST_PC) and command ("join"))
+   if (activator.alignment < 350)
    {
-      if (pc.level < 5)
+      block;
+      if (activator.alignment < -350)
       {
-         block;
-         exec ("say You must fight more battles to prove your worth. Do " +
-               "not bother me again until you are level 5, at least...", self);
-         pause;
+         exec("say You, Evil One, must not be allowed to survive.", self);
+         // exec("kill " + activator.name, self);
          goto start;
       }
-
-      if (IsBanished@guilds(pc, GUILD_PALADIN))
-      { 
-         block;
-         exec ("say You are foolish, Fallen One, to even show your face " +
-               "to me again, let alone lavish false and misleading praise " +
-               "upon me. You're like a serpent, and must be taught a lesson.", self);
-         exec("spit " + pc.name, self);
-         pause;
-         goto start;
-      }
-
-      if (pc.alignment < 350)
-      {
-         if (pc.alignment < -350)
-         {
-            block;
-            exec("say You, Evil One, must not be allowed to survive.", self);
-            exec("spit " + pc.name, self);
-            goto start;
-         }
-         block;
-         exec("say You are not pure enough to join our order.", self);
-         pause;
-         goto start;
-      }
-
-      if (IsInGuild@guilds(pc, GUILD_PALADIN))
-      {
-         block;
-         exec("say Me thinks your head has been rattled too many times in your "+
-              "helmet, "+pc.name+". You are already a member of the "+
-              "Holy Order!", self);
-         pause;
-         goto start;
-      }
-
-      if (IsInGuilds@guilds(pc, GUILD_PALADIN_EXCL))
-      {
-         block;
-         exec("say Your other guild choices exclude you from joining the Paladin's Guild.", self);
-         pause;
-         goto start;  
-      }
-
-      JoinGuild@guilds(pc, GUILD_PALADIN);
-      exec ("say Welcome to the Holy Order of Paladins, "+pc.name+
-            ". May you walk paths of honor and be diligent in your protection "+
-            "of Midgaard and it's people.", self);
+      exec("say You are not pure enough to join our order.", self);
    }
 
    goto start;
 }
 dilend
 
+dilcopy MasterJoin@guilds(GUILD_PALADIN, GUILD_PALADIN_EXCL, QUEST_PALADIN_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Paladin's Guild quest.","say Go speak with Joan."},
+ {"handshake $1N", "say Welcome to the Paladin's Guild, $1N."});
 
 dilbegin paladin_quest1();
 external

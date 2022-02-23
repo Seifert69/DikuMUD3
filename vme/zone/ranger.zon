@@ -370,8 +370,6 @@ money 2 IRON_PIECE
 exp -100
 
 dilcopy nokill@ranger();
-dilcopy quest_block@guilds("join", QUEST_RANGER_ENTRY,
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Ranger Entry quest. Go speak with Sholdin."});
 dilcopy MurderBanish@guilds(GUILD_NYM_RANGER);
 dilcopy AlertMembers@guilds(GUILD_NYM_RANGER, "");
 
@@ -384,67 +382,28 @@ dilcopy SetTitles@guilds(GUILD_NYM_RANGER, {"Master of the Hunt",
 "Warden", "Lady Warden", "Justifier", "Justifier", "Protector Of The Lands",
 "Protector Of The Lands", "Guardian", "Guardian", "Ranger", "Lady Ranger"});
 
-dilbegin master_join();
-external
-   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
-   integer IsBanished@guilds(pc : unitptr, sGuild : string);
-   JoinGuild@guilds(pc : unitptr, sGuild : string);
-   LeaveGuild@guilds(pc : unitptr, sGuild : string);
-   BanishGuild@guilds(pc : unitptr, sGuild : string);
-
-var
-   pc : unitptr;
+dilbegin  fnpri(FN_PRI_BLOCK-1) block_evil_join();
 code
 {
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-
-   heartbeat := PULSE_SEC*5;
-
    :start:
    wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
-   self.position := POSITION_STANDING;
-   pc := activator;
 
-   if (IsBanished@guilds(pc, GUILD_NYM_RANGER))
+   if (activator.alignment <= -350)
    {
       block;
-      exec ("say Why do you stand before me? you have been "+
-      "told to leave our midst!", self);
-      exec ("spit " + pc.name, self);
-      pause;
-      goto start;
+      exec("say You are not pure enough to become a ranger.", self);
    }
 
-   if (IsInGuild@guilds(pc, GUILD_NYM_RANGER))
-   {
-      block;
-      exec ("sigh " + pc.name, self);
-      pause;
-      exec ("say I have told you about eating those magic " +
-      "mushrooms. You don't even know who " +
-      "you are now " + pc.name+ ". You already hold the position "+
-      "of mighty ranger!" , self);
-      pause;
-      goto start;
-   }
-
-   if (IsInGuilds@guilds(pc, GUILD_RANGER_EXCL))
-   {
-      block;
-      exec("say Your other guild choices exclude you from becoming a Ranger.", self);
-      pause;
-      goto start;  
-   }
-
-   JoinGuild@guilds(pc, GUILD_NYM_RANGER);
-
-   exec ("say The vitality of the forest, and the strength of the tree " +
-         "flows through your spirit.", self);
-
-  goto start;
+   goto start;
 }
 dilend
+
+dilcopy MasterJoin@guilds(GUILD_NYM_RANGER, GUILD_RANGER_EXCL, QUEST_RANGER_ENTRY, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Ranger's Guild quest.","say Go speak with Sholdin."},
+ {"handshake $1N", "say Welcome to the Ranger's Guild, $1N."});
 
 
 dilbegin ranger_dil();

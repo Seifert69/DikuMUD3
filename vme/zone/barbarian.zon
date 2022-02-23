@@ -711,84 +711,28 @@ alignment 0
 money 1 GOLD_PIECE
 exp -100
 
-dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian");
-
 dilcopy nokill@barbarian();
 dilcopy MurderBanish@guilds(GUILD_BARBARIAN);
 dilcopy AlertMembers@guilds(GUILD_BARBARIAN, "");
-dilcopy quest_block@guilds("join", QUEST_BEAR_BRAWL,
-           {"say If you wish to join $1n, then you must first prove yourself worthy by completing the Bear Brawl quest. Go speak with Raz."});
 
-dilcopy SetTitles@guilds(GUILD_BARBARIAN, {"Young Blood",
-"Young Blood", "Apprentice Berserker", "Apprentice Berserker", "Journeyman Berserker",
-"Journeywoman Berserker", "Rage Seeker", "Rage Seeker",
+dilcopy SetTitles@guilds(GUILD_BARBARIAN, 
+{"Young Blood", "Young Blood", "Apprentice Berserker", "Apprentice Berserker",
+ "Journeyman Berserker", "Journeywoman Berserker", "Rage Seeker", "Rage Seeker",
 "Blood Seeker", "Blood Seeker", "Whirlwind", "Whirlwind",
 "Enraged One", "Enraged One", "Bloodletter", "Bloodletter", "Barbarian Warrior", "Barbarian Warrior",
-"Charger", "Chargeress", "Way of Blood", "Way of Blood", "Cleaver", "Cleaveress", "The Enraged",
-"The Enraged", "Mark of Blood", "Mark of Blood", "The Blood Eye",
-"The Blood Eye", "Render", "Renderess", "Master Berserker", "Master Berserker", "Barbarian Mistress",
-"Barbarian Master", "Master of Rage", "Mistress of Rage", "Master of the Enraged", "Mistress of the Enraged"});
+"Charger", "Chargeress", "Way of Blood", "Way of Blood", "Cleaver", "Cleaveress", 
+"The Enraged", "The Enraged", "Mark of Blood", "Mark of Blood", 
+"The Blood Eye", "The Blood Eye", "Render", "Renderess", "Master Berserker", "Master Berserker",
+"Barbarian Mistress", "Barbarian Master", "Master of Rage", "Mistress of Rage",
+"Master of the Enraged", "Mistress of the Enraged"});
 
-
-dilbegin master_join();
-external
-   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
-   integer IsBanished@guilds(pc : unitptr, sGuild : string);
-   JoinGuild@guilds(pc : unitptr, sGuild : string);
-   LeaveGuild@guilds(pc : unitptr, sGuild : string);
-   BanishGuild@guilds(pc : unitptr, sGuild : string);
-var
-	pc : unitptr;
-code
-{
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-
-   heartbeat := PULSE_SEC*5;
-
-   :start:
-   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
-   self.position := POSITION_STANDING;
-   pc := activator;
-   secure(pc, start);
-
-   if (IsBanished@guilds(pc, GUILD_BARBARIAN))
-   {
-      block;
-      exec ("say Why do you stand before me? you have been "+
-      "told to leave our midst!", self);
-      exec ("spit " + pc.name, self);
-      pause;
-      goto start;
-   }
-
-   if (IsInGuild@guilds(pc, GUILD_BARBARIAN))
-   {
-      block;
-      exec ("sigh " + pc.name, self);
-      pause;
-      exec ("say Perhaps you have been hitting your head  too much? " +
-      "You don't even know who " +
-      "you are now " + pc.name+ ". You're already a member of  "+
-      "the guild!" , self);
-      pause;
-      goto start; 
-   }
-
-   if (IsInGuilds@guilds(pc, GUILD_BARBARIAN_EXCL))
-   {
-      block;
-      exec("say Your other guild choices exclude you from becoming a Fighter.", self);
-      pause;
-      goto start;  
-   }
-
-   JoinGuild@guilds(pc, GUILD_BARBARIAN);
-
-   exec ("say The power of the Barbarian now coarse in your veins.", self);
-   goto start;
-}
-dilend
+dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian");
+dilcopy MasterJoin@guilds(GUILD_BARBARIAN, GUILD_BARBARIAN_EXCL, QUEST_BEAR_BRAWL, 
+ {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
+ {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
+ {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"say To join $1N, you must prove yourself worthy by completing the Bear Brawl quest.","say Go speak with Raz."},
+ {"handshake $1N", "say Welcome to the Barbarian's Guild, $1N."});
 
 
 /* Barbarian Master DIL - gives out the Bloody Gauntlets. */
