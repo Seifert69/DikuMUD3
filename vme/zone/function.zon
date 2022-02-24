@@ -2377,7 +2377,7 @@ var
    sl : stringlist;
 code
 {
-   if ((dr<0) or  (dr>13))
+   if ((dr<0) or  (dr>14))
       return ("illegal direction");
 
    sl := DIR_SL_LONG;
