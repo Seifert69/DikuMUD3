@@ -198,7 +198,7 @@ flags {UNIT_FL_NO_TELEPORT}
 ALWAYS_LIGHT
 end
 
-/*
+
 field_gath2
 title "A Lush Green Field"
 descr
@@ -220,8 +220,8 @@ area.";
 south to chapel descr "To the south you see a small building used as a
 chapel.";
 end
-*/
 
+/*
 field_gath2
 title "A Lush Green Field"
 descr
@@ -241,7 +241,7 @@ the rangers non-human followers during their stay.";
 north to field_gath1 descr "To the north you see the dining and sleeping
 area.";
 flags {UNIT_FL_NO_TELEPORT}
-end
+end*/
 
 sholdin_tent
 title "Sholdin's Mystical Tent"
@@ -277,7 +277,7 @@ ALWAYS_LIGHT
 in field_gath2
 end
 
-/*
+
 chapel
 names {"chapel"}
 title "A Small Wooden Chapel"
@@ -293,7 +293,7 @@ extra {"north window"}
 "The north window looks out into a large field."
 north to field_gath2 descr "You see the field to the north.";
 end
-*/
+
 
 chal_area
 names {"challenge area"}

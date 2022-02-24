@@ -1,9 +1,7 @@
 #include <macros.h>
 
 /*
-test mud delete the zon_file... before git pull?
-
-Write help
+Hedge_wall - NPC attack it if in the way?
 
 All the guilds processed (Monk is not complete):
    assassin.zon mageguild.zon necro_guild.zon fightersguild.zon clericguild.zon thievesguild.zon paladin_guild.zon ranger.zon knight.zon sorcerer.zon barbarian.zon druid.zon ../Zones/monk.zon
