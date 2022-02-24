@@ -2333,6 +2333,9 @@ gmap(209,373)
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
+
+// Load ONE random treasure item every 30 minutes if the cave is empty
+dilcopy rndchest@randomt(BONUS_GOOD_PLUS, 1, 30);
 end
 
 
