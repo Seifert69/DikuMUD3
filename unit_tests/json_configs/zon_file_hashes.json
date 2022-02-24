@@ -397,7 +397,7 @@
         {
             "source_file": {
                 "filename": "guilds.zon",
-                "sha512": "0a29fd4fa5a83d1dcda02da53537dc6cf668cbd375e079ef60f8c294808707418706d60660e588292cfda38e2ca0bbdb5f2f0d31d40c6b60de812e6194a42146"
+                "sha512": "270dbbe5ace21ef0c565e75314d7da5a074ea477d9156c704685ee4847ee6c583f04ef0fadaa67c4e086b7bda633e2fe77a38d539d0ecb50d72fec5d2de75f3e"
             },
             "output": [
                 {
@@ -429,12 +429,12 @@
         {
             "source_file": {
                 "filename": "haon-dor.zon",
-                "sha512": "7c97a0ce55947e04f13658f820b4a375793ffbce86f9ca95c3ab7510d29adc5ac0cdb0068894aab13a7f78252e9c5b58655f25d93d31290a079e925c7d8795c4"
+                "sha512": "0d9388aa7ac4eb163bd7fee475303d4490bad0d4d0da54ee60ebb339f9d2eef27c714866a4787ce8fa21a5ea7593070ebf9fb250db2dc82b1e79f48c0d5fd52d"
             },
             "output": [
                 {
                     "filename": "haon-dor.data",
-                    "sha512": "a525454a6f60474af2e48eacf994d4d9e7dfced87c116d20a66c0ab6c02aa3196ac2d0e31f79ad7a22dd07a70f8c36a0f7299c19fb28d47a650d0e72a026e5ae"
+                    "sha512": "8834e8266a9cec653df71a7c8880bad166bd87199046dc8f89ed01a4083d4cb8b54f732f821c7e186302b51bb9792871cd699661e023cc2902ac233b15c43105"
                 },
                 {
                     "filename": "haon-dor.reset",
@@ -733,12 +733,12 @@
         {
             "source_file": {
                 "filename": "ranger.zon",
-                "sha512": "37a020bcb08abaefec8c0b5716dbfe19151bea720c42379e5f487646a12e149a8a5ebf5e84cc4ad344999dc6092e325261f41f2d8fcfb7af8753b2f7ce18fc30"
+                "sha512": "30fd3ac2fd39458691b871d0562c0c50facd4fcc97568401c3a5eb83c6246fc516fc34f3ff4c8321fe6e4bb6b1babf9842cbd2a388c78fc9320bb9d2eb7233e9"
             },
             "output": [
                 {
                     "filename": "ranger.data",
-                    "sha512": "5317d92cf275c58909a52a73e81980b2eba42ff3cf7a10551bf88d85224b58275d0abac414bb3bba3f6361dbcab434eaf8a45b368a0c871448abb5e3ad7d6d3e"
+                    "sha512": "8220c45ddf9b72a28e722792de5c2bc2743b75e021c262f82ac7a8861dfa5a27f431191239dbb39535ecea9ffd7ec61fbd4b295907a59c68f6d2e81cb5ae1e6a"
                 },
                 {
                     "filename": "ranger.reset",
