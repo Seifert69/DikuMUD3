@@ -841,16 +841,16 @@ dilcopy shopkeeper@function(
 
 dilcopy qstSimpleQuest@quests(QUEST_NECROMANCER_ENTRY,
          {"say Hey $1N, want to prove yourself to our guild?",
-          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+          "say All you need to do is to bring me the head of the Mage of Goodness from the Pits."},
          {"say Excellent! Best of luck, $1N."},
-         "Murim in the Necromancer's Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
-         {"emote looks at the head of the Green Dragon.",
+         "Murim in the Necromancer's Guild has asked you to bring him the head of the Mage of Goodness from the Pits.",
+         {"emote looks at the head of the Mage of Goodness.",
           "say Impressive! Well done, $1N. Welcome to the Necromancer's guild."},
           800, 1 * COPPER_MULT, {""});
 
-dilcopy qstItemsWanted@quests(QUEST_NECROMANCER_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+dilcopy qstItemsWanted@quests(QUEST_NECROMANCER_ENTRY, {"head@death"}, {"decapCheck@quests 0 mob_26@pit"},
          {"say Excellent, thank you $1N."},
-          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+          "say I can't accept that, maybe you could bring me the head of the Mage of Goodness from the Pits?");
 end
 
                                   krain

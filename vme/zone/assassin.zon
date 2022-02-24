@@ -397,16 +397,16 @@ dilcopy nokill@assassin();
 
 dilcopy qstSimpleQuest@quests(QUEST_ASSASSIN_ENTRY,
          {"say Hey $1N, want to prove yourself worth to our guild?",
-          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+          "say All you need to do is to bring me the head of Ploscik from the Clouds."},
          {"say Excellent! Best of luck, $1N."},
-         "Sharki in the Assassin's Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
-         {"emote looks at the head of the Green Dragon.",
+         "Sharki in the Assassin's Guild has asked you to bring him the head of Ploscik from the Clouds.",
+         {"emote looks at the head of Ploscik.",
           "say Impressive! Well done, $1N. You should go speak with the guild master now."},
           800, 1 * COPPER_MULT, {""});
 
-dilcopy qstItemsWanted@quests(QUEST_ASSASSIN_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+dilcopy qstItemsWanted@quests(QUEST_ASSASSIN_ENTRY, {"head@death"}, {"decapCheck@quests 0 ploscik@cloud"},
          {"say Excellent, thank you $1N."},
-          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+          "say I can't accept that, maybe you could bring me the head of Ploscik from the Clouds?");
 
 end
 

@@ -626,16 +626,16 @@ dilcopy shopkeeper@function(
 
 dilcopy qstSimpleQuest@quests(QUEST_THIEVES_ENTRY,
          {"say Hey $1N, want to prove yourself worth to our guild?",
-          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+          "say All you need to do is to bring me the head of Shaun the guard from Midgaard."},
          {"say Excellent! Best of luck, $1N."},
-         "Maria in the Thieve's Guild has asked you to bring her the head of the Green Dragon from Haon-Dor.",
-         {"emote looks at the head of the Green Dragon.",
+         "Maria in the Thieve's Guild has asked you to bring her the head of Shaun the guard from Midgaard.",
+         {"emote looks at the head of Shaun.",
           "say Impressive! Well done, $1N. Welcome to the Thieve's guild."},
           800, 1 * COPPER_MULT, {""});
 
-dilcopy qstItemsWanted@quests(QUEST_THIEVES_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+dilcopy qstItemsWanted@quests(QUEST_THIEVES_ENTRY, {"head@death"}, {"decapCheck@quests 0 gate_w2@midwalls"},
          {"say Excellent, thank you $1N."},
-          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+          "say I can't accept that, maybe you could bring me the head of Shaun the guard from Midgaard?");
 
 end
 

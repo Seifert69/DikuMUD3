@@ -723,16 +723,16 @@ dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
 
 dilcopy qstSimpleQuest@quests(QUEST_CLERIC_ENTRY,
          {"say Hey $1N, want to prove yourself worth to our guild?",
-          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+          "say All you need to do is to bring me the head of the Fiend from the Isle of Dead."},
          {"say Excellent! Best of luck, $1N."},
-         "Sister Morenae in the Healer's Guild has asked you to bring her the head of the Green Dragon from Haon-Dor.",
-         {"emote looks at the head of the Green Dragon.",
+         "Sister Morenae in the Healer's Guild has asked you to bring her the head of the Fiend from the Isle of Dead.",
+         {"emote looks at the head of the Fiend.",
           "say Impressive! Well done, $1N. You should go speak with the guild master now."},
           800, 1 * COPPER_MULT, {""});
 
-dilcopy qstItemsWanted@quests(QUEST_CLERIC_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+dilcopy qstItemsWanted@quests(QUEST_CLERIC_ENTRY, {"head@death"}, {"decapCheck@quests 0 fiend2@isledead"},
          {"say Excellent, thank you $1N."},
-          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+          "say I can't accept that, maybe you could bring me the head of the Fiend from the Isle of Dead?");
 
 
 /* The DIL for the Sister Morenae - gives replacement Silver Torc to Healers.*/

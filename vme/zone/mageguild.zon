@@ -972,16 +972,16 @@ dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 
 dilcopy qstSimpleQuest@quests(QUEST_MAGE_ENTRY,
          {"say Hey $1N, want to prove yourself worth to our guild?",
-          "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
+          "say All you need to do is to bring me the head of the Xad of the Academy."},
          {"say Excellent! Best of luck, $1N."},
-         "Mr. Backspindle in the Conjurer's Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
-         {"emote looks at the head of the Green Dragon.",
+         "Mr. Backspindle in the Conjurer's Guild has asked you to bring him the head of Xad of the Academy.",
+         {"emote looks at the head of Xad.",
           "say Impressive! Well done, $1N. You should go speak with the guild master now."},
           800, 1 * COPPER_MULT, {""});
 
-dilcopy qstItemsWanted@quests(QUEST_MAGE_ENTRY, {"head@death"}, {"decapCheck@quests 0 green_dragon@haon_dor"},
+dilcopy qstItemsWanted@quests(QUEST_MAGE_ENTRY, {"head@death"}, {"decapCheck@quests 0 conmaster@academy"},
          {"say Excellent, thank you $1N."},
-          "say I can't accept that, maybe you could bring me the head of the Green Dragon from Haon-Dor?");
+          "say I can't accept that, maybe you could bring me the head of Xad from the Academy?");
 end
 
 		rayasa
