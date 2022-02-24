@@ -65,8 +65,8 @@ set(VME_SRCS
         movement.h
         namelist.cpp namelist.h
         nanny.cpp nanny.h
-        nice.cpp nice.h
         OutputCapture.cpp OutputCapture.h
+        nice.cpp nice.h
         path.cpp path.h
         pcsave.cpp pcsave.h
         pipe.cpp pipe.h
@@ -79,6 +79,7 @@ set(VME_SRCS
         slime.cpp slime.h
         slog.h
         slog_raw.cpp slog_raw.h
+        snoop_data.cpp snoop_data.h
         spec_assign.cpp spec_assign.h
         spec_procs.cpp spec_procs.h
         spell_parser.cpp spell_parser.h

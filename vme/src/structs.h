@@ -15,6 +15,7 @@
 #include "namelist.h"
 #include "protocol.h"
 #include "queue.h"
+#include "snoop_data.h"
 
 #include <vme.h>
 
@@ -44,10 +45,10 @@
 #define SD_NULL 1  /* Ignore fptr->data (save as 0 ptr)  */
 #define SD_ASCII 2 /* If pointer, then it's ascii char * */
 
-class unit_data;
-class diltemplate;
 class dilprg;
+class diltemplate;
 class file_index_type;
+class unit_data;
 class zone_reset_cmd;
 
 /* ----------------- DATABASE STRUCTURES ----------------------- */
@@ -55,20 +56,6 @@ class zone_reset_cmd;
 /* ----------------- OTHER STRUCTURES ----------------------- */
 
 /* --------------------- DESCRIPTOR STRUCTURES -------------------- */
-
-class snoop_data
-{
-public:
-    const unit_data *getSnooping() const { return snooping; }
-    const unit_data *getSnoopBy() const { return snoop_by; }
-
-    void setSnooping(const unit_data *value) { snooping = const_cast<unit_data *>(value); }
-    void setSnoopBy(const unit_data *value) { snoop_by = const_cast<unit_data *>(value); }
-
-private:
-    unit_data *snooping{nullptr}; // Who is this char snooping
-    unit_data *snoop_by{nullptr}; // And who is snooping on this char
-};
 
 class descriptor_data
 {
