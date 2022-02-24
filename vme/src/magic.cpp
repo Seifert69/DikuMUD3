@@ -413,6 +413,12 @@ int spell_ability(unit_data *u, int ability, int spell)
 /*                                                                     */
 int spell_resistance(unit_data *att, unit_data *def, int spell)
 {
+    if ((att == nullptr) || (def == nullptr))
+    {
+        slog(LOG_ALL, 0, "Attacker or defender NULL in spell_resistance for spell %d.", spell);
+        return -1;
+    }
+
     if (IS_CHAR(att) && IS_CHAR(def))
     {
         return resistance_skill_check(spell_attack_ability(att, spell),
