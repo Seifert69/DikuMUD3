@@ -5354,42 +5354,63 @@ dilend
 
 
 // locate wanted
+//
 dilbegin loc_want(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
-   unitptr unit_room (u : unitptr);
-   string npc_name@justice(cr_name : string);
-
+   unitptr unit_room(u : unitptr);
+   unitptr FindCriminal@justice(criminalName : string);
+   integer spellresist@spells(aa : integer, ad : integer,
+                              sa : integer, sd : integer);
 var
-   u : unitptr;
-   n_name : string;
+   skilla : integer;
+   skillb : integer;
+   skillc : integer;
+   skilld : integer;
+   targ : unitptr;
+   rm : unitptr;
    i : integer;
-
 code
 {
-   if (tgt.type == UNIT_ST_NPC)
+   // log("Locate wanted ["+arg+"]" + effect);
+
+   targ := FindCriminal@justice(arg);
+
+   if (targ == null)
    {
-      n_name := npc_name@justice(tgt.name);
-      if(n_name)
-         tgt := findunit(self, n_name, FIND_UNIT_GLOBAL, null);
+      act("There seems to be no such '"+arg+"' with a reward.", A_SOMEONE, self, null, null, TO_CHAR);
+      quit;
    }
 
-   if (hm < 0)
+   if(self.type == UNIT_ST_PC)
+      skillc:=self.spells[SPL_LOCATE_WANTED];
+   else
+      skillc:=self.abilities[ABIL_BRA];
+
+   if (targ.type==UNIT_ST_PC)
+      skilld:=targ.spells[SPL_LOCATE_ANIMAL];
+   else
+      skilld:=targ.abilities[ABIL_BRA];
+
+   skilla := self.abilities[ABIL_BRA];
+   skillb := targ.abilities[ABIL_BRA];
+
+   hm:=spellresist (skilla,skillb,skillc,skilld);
+
+   if (hm >= 0)
+   {
+      // log("FindCriminal() = " + u.symname);
+      rm := unit_room(targ);
+      act("$2n at $3t", A_SOMEONE, self, targ, rm.title, TO_CHAR);
+   }
+   else
    {
       act("You feel confused.", A_ALWAYS, self, null, null, TO_CHAR);
 
       if (hm < -50)
       {
-         act("You realize that $2n attempted to locate you.", A_ALWAYS, tgt, self, null, TO_CHAR);
+         act("You realize that $2n attempted to locate you.", A_ALWAYS, targ, self, null, TO_CHAR);
       }
-      quit;
    }
-
-   u := unit_room(tgt);
-
-   if (isset(tgt.charflags, CHAR_OUTLAW))
-      act("$2n at $3t", A_SOMEONE, self, tgt, u.title, TO_CHAR);
-   else
-      act("$2n doesn't seem to be wanted.", A_ALWAYS, self, tgt, null, TO_CHAR);
    quit;
 }
 dilend
@@ -5398,27 +5419,28 @@ dilend
 
 dilbegin find_want(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
-   string dirstring   (dr:integer);
-   string npc_name@justice(cr_name : string);
+   string dirstring(dr:integer);
+   unitptr FindCriminal@justice(criminalName : string);
 var
    dir_string:string;
    i:integer;
    n_name : string;
 code
 {
-  if (tgt.type == UNIT_ST_NPC)
-  {
-     n_name := npc_name@justice(tgt.name);
-      if(n_name)
-       tgt := findunit(self, n_name, FIND_UNIT_GLOBAL, null);
-  }
-  if (hm < 0)
+/*   if (tgt.type == UNIT_ST_NPC)
+   {
+      n_name := npc_name@justice(tgt.name);
+      if (n_name)
+         tgt := findunit(self, n_name, FIND_UNIT_GLOBAL, null);
+   }
+
+   if (hm < 0)
    {
       act("You feel confused.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
-
-   if (not isset(tgt.charflags,CHAR_OUTLAW))
+*/
+   if (not isset(tgt.charflags, CHAR_OUTLAW))
    {
       act("$2n doesn't seem to be wanted.", A_ALWAYS, self, tgt, null, TO_CHAR);
       quit;
