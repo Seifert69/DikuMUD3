@@ -1592,7 +1592,7 @@ names {"crime database", "database"}
 title "the crime database"
 descr  "A global crime database is standing on the floor."
 
-extra {}
+extra {"crime database", "database"} // Filled out to avoid OOB errs.
 "This is a global crime database. Do not zap this board unless you need a justice reset.
 Do a 'wstat board extra' to see the crime data on this board"
 
