@@ -1342,6 +1342,8 @@ code
 }
 dilend
 
+
+
 dilbegin dbclear_npc(u : unitptr);
 var
    j_extra : extraptr;
@@ -1354,12 +1356,18 @@ code
    {
       nextdude := j_extra.next;
 
-     if (left(j_extra.names.[0], 7) == "$reward")    
+      if (length(j_extra.names) < 1)
+         goto skipit;
+
+      if (left(j_extra.names.[0], 7) == "$reward")
+      {
          if ("@_players" in j_extra.names.[0])
-           goto end; 
-          else
-             subextra(u.extra, j_extra.names.[0]);
-     :end:
+            goto skipit; 
+         else
+            subextra(u.extra, j_extra.names.[0]);
+      }
+
+      :skipit:
       j_extra := nextdude;      
    }
 
