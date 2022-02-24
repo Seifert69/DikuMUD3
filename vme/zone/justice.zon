@@ -520,6 +520,46 @@ else
 }
 dilend
 
+// FindCriminal
+//    Given a name, locate it in the reward list.
+//
+dilbegin unitptr FindCriminal(criminalName : string);
+var
+   jd : unitptr;
+   u : unitptr;
+   jd_exp : extraptr;
+   sl : stringlist;
+
+code
+{
+   jd := findsymbolic("database@justice");
+   jd_exp := jd.extra;
+
+   while (jd_exp)
+   {
+      if (length(jd_exp.names) < 1)
+         goto skipit;
+
+      sl := split(jd_exp.name, " ");
+
+      if (sl.[0] == "$reward")
+      {          
+         u := findsymbolic(sl.[1], atoi(sl.[2]));
+
+         if (u)
+            if (criminalName in u.names)
+               return (u);
+      } 
+
+      :skipit:
+      jd_exp := jd_exp.next;
+   }
+
+   u := null;
+   return (u);
+}
+dilend
+
 
 // Check the $reward status of a char in a jurisdiction
 //
@@ -686,12 +726,14 @@ return(FALSE);
 }
 dilend
 
+
+
 //DIL to set char flags for criminals
 // "normal" - sets outlaw off and protected on.
 // "arrest" - sets outlaw on and protected on.
 // "wanted" - outlaw is on and protected os off.
 // "onnotice" - sets outlaw off and protected off.
-
+//
 dilbegin set_char_flags(char : unitptr, setting : string);
 
 code
@@ -722,9 +764,8 @@ code
    else 
       log("ERROR: Unknown char flag setting: "+setting+"  in set_char_flags.");
 
-return;
+   return;
 }
-
 dilend
 
 // Called when a PC logs in
@@ -859,6 +900,8 @@ code
    return(s);
 }
 dilend
+
+
 
 
 
@@ -1002,8 +1045,6 @@ dilend
 // data matches it will call update_criminal. It also removes the $witness extra from the accuser
 // once a sucessful accusation is made.
 //
-
-
 dilbegin fnpri(FN_PRI_MISSION-1) accuse();
 external
    integer add_reward(criminal_symname : string, criminal_idx : integer, crime_type: integer);   
@@ -1056,7 +1097,10 @@ code
       w_ptr := activator.extra;
       while (w_ptr)
       {
-          if (left(w_ptr.names.[0], 8) == "$witness") //if ("$witness" in w_ptr.name)
+         if (length(w_ptr.names) < 1)
+            goto skipit;
+
+         if (left(w_ptr.names.[0], 8) == "$witness") //if ("$witness" in w_ptr.name)
          {
             if (atoi(w_ptr.names.[3]) == CRIME_STEALING)
                crime := "stealing";
@@ -1067,6 +1111,8 @@ code
             i := i + 1;
 
          }
+
+         :skipit:
          w_ptr := w_ptr.next;
       }
       if (i == 0)
