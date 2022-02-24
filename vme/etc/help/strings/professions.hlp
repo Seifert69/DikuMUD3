@@ -1,10 +1,47 @@
-<h1>Professions</h1>
-<p>Your character has precisely one profession. The profession determines
-how easy or hard it is for your character to learn abilities, skills,
-weapons, spells. For example it's easy for a fighter profession to train
-strength and weapon skills and very hard to learn magic. The reverse would
-be true for a mage profession.</p>
-<p>A profession is really what's in your characters DNA, where your natural
-talents are. This is not to be confused with guilds. Guilds are more like a 
-club of people that are for example all thieves.</p>
-<br/>
+<div class="mw-parser-output"><h1>Professions</h1>
+<p>Your profession determines how expensive it is to learn a new skill. For example, the fighter profession generally has a low cost for weapons and strength. The conjurer profession generally has a low cost for learning magic, but a high cost for learning weapons. Using the 'guilds' command you can see your guilds and current profession.
+</p><p>When you first start a new character, you can choose one of four guilds / professions. After that you can join as many guilds as you want, but your cost of training remains the same no matter which guild you go to.
+</p><p>Upon reaching a certain level (25 at time of writing), you get the opportunity to specialize your character:
+</p>
+<pre> * Fighter can become a Barbarian
+ * Thief can become an Assassin
+ * Healer can become a Druid
+ * Conjurer can become a Sorcerer
+</pre>
+<p>These for specializations are of course closely related to your initial profession (hence, a specialization). You don't have to specialize. And you definitely shouldn't change your profession until you're very ready. When switching profession, something that was previously accessible might become inaccessible.
+</p><p>At a later stage (e.g. level 75) in the game you'll have the opportunity to one last profession change. This will allow you to make a complete career change:
+</p><p><br />
+fighter / barbarian:
+</p>
+<pre>  thief, cleric, mage, knight, paladin, ranger.
+</pre>
+<p>thief / assassin:
+</p>
+<pre>  fighter, cleric, mage, ranger
+</pre>
+<p>cleric:
+</p>
+<pre>  fighter, thief, mage, paladin
+</pre>
+<p>mage:
+</p>
+<pre>  fighter, thief, cleric, necromancer
+</pre>
+<p>Thus, you could end up with a character that is for example a fighter / barbarian / mage.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Guilds</a>
+ &gt; <a cmd='#'>Help Status</a>
+ &gt; <a cmd='#'>Help Info</a>
+ &gt; <a cmd='#'>Help Practice</a>
+ &gt; <a cmd='#'>Help Level</a>
+ &gt; <a cmd='#'>Help Skills</a>
+ &gt; <a cmd='#'>Help Spells</a>
+ &gt; <a cmd='#'>Help Abilities</a>
+</pre>
+
+
+
+
+</div>

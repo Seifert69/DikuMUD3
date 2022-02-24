@@ -21,16 +21,18 @@
      Assassin
      Necromancer
 </pre>
-<p>When you start the game you're automatically enrolled in a guild. All guilds have a guild master and a number of guild teachers. This is your first main guild.
+<p>When you start the game you're automatically enrolled in the guild you selected during character creation. All guilds have a guild master and a number of guild teachers. This is your first main guild.
 </p><p>Each time you level up in the game, your guild level also increases.
 </p><p>The guild master is where you can 'join' a guild or get yourself a new guild 'title'. 
 </p><p>Requirements for joining a new guild varies. The guild master will tell you what they are. Typically you need to solve a quest for the guild master.
 </p><p>Once you join a new guild it becomes your new primary guild. To switch primary guilds, request a title from the guild in question.
 </p><p>Guilds also contain guild teachers. There are typically four teachers, an ability, a skill, a spell and a weapon teacher. Each time you earn enough experience points to raise a level you should go to your guild and train in these abilities, skills, and spells, thus increasing your ability to battle tougher and tougher monsters.
-</p><p>Even though you can join as many guilds as you want, some guilds
+</p><p>Even though you can join as many guilds as you want, your starting profession determines how much it costs your to practice a skill. 
+</p><p>See Professions for more information.
 </p><p>See Also:
 </p>
-<pre> &gt; <a cmd='#'>Help Status</a>
+<pre> &gt; <a cmd='#'>Help Professions</a>
+ &gt; <a cmd='#'>Help Status</a>
  &gt; <a cmd='#'>Help Info</a>
  &gt; <a cmd='#'>Help Practice</a>
  &gt; <a cmd='#'>Help Level</a>
