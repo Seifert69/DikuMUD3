@@ -7143,6 +7143,16 @@ code
       quit;
    }
 
+   // set outside to manage the boat condition
+   if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
+   {
+      self_outside := self.outside.outside;
+   }
+   else
+   {
+      self_outside := self.outside;
+   }
+
    atoied := getword(arg);
 
    if ((atoied == "north") or (atoied == "n"))
@@ -7246,16 +7256,6 @@ code
       act("I don't think so.",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
-   }
-
-   // set outside to manage the boat condition
-   if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
-   {
-      self_outside := self.outside.outside;
-   }
-   else
-   {
-      self_outside := self.outside;
    }
 
    if (self_outside.type != UNIT_ST_ROOM)
