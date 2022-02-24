@@ -29,12 +29,12 @@
         {
             "source_file": {
                 "filename": "assassin.zon",
-                "sha512": "b8b4e7641a24c54c7b866a90b29d348a59983599f69261e2f63b6cd69e6e4f14eacfa3c672e4d30380ae094ed8effa77ad7b1eaff4978c20038283e88843c088"
+                "sha512": "2249fe0c4c002cebff618fa5a9f2a0310d1df6fc8402b2fbfa091d7638c0e3c01505e5f0cd1a95070f671391a77ddc6d6d7e80b40cba03b7b2fdae49122ff4fd"
             },
             "output": [
                 {
                     "filename": "assassin.data",
-                    "sha512": "2fd97eae5e3c8e70fb22548f47310532fbd60d615e3f5a379825c88611978c3641e324738a43aca3436d34830d1e4305ed182bccad2e857a1bd8b860547c152b"
+                    "sha512": "cf897ef4a348ae00172d923e0d31d81e51cda0dbaeaeefb123bb313ab269c5068efeff985bd69148bb5c876324bb46a356d7e645699dda4ddc010a4458878aa5"
                 },
                 {
                     "filename": "assassin.reset",
@@ -189,12 +189,12 @@
         {
             "source_file": {
                 "filename": "clericguild.zon",
-                "sha512": "ef9e520ee294c7deeac883793372ca4b31a1d3aca174ce683b13238c730f3c9bf20252244ecf507c458b55e728447e4dfc042959345c6102acda3d04b4bbd2c7"
+                "sha512": "8d6a9e82a50a65628f9edea802d1d42691a15a54c3bc8caac134798993e80ccf5cdd893ad7656f14f43ff42041fbec133cc1fbffc463084171c0ef2913a50572"
             },
             "output": [
                 {
                     "filename": "clericguild.data",
-                    "sha512": "b0d3908f9380baa5c30b8de292706c6e3b8d83e8760ac324c68033b5c46b937f1ca1e2e681847200f16c955d8fe7f4d9b403038d48f2e2d1dbe6811d3748a575"
+                    "sha512": "ebe0c0ddcd3a4ad40a8fae0d7cdf833dd731abb2c29c6a9496eddb9d045167ab32b540377fd566b17078214d0c5463ee0a6bdfe5437d6fd3a241c691c8f5ab3b"
                 },
                 {
                     "filename": "clericguild.reset",
@@ -285,12 +285,12 @@
         {
             "source_file": {
                 "filename": "druid.zon",
-                "sha512": "d5525781a18617f76f77beee2c3133172c89a18211d093a97ecdc16d614cf64708e7d502f86ff04cc670e3f148ece39cbe9c5a06747ff8fec4b368bd2b0d8bf3"
+                "sha512": "391416fd3994ebbcf339baf5107d83b4de8b2ee94ade1b5c967ed89ddc5e0f1de593a04d291e340df6ac5cd7b697b386b44992cbbd4e171e7b9e166af5680ac4"
             },
             "output": [
                 {
                     "filename": "druid.data",
-                    "sha512": "91445136483a4cf9b6d095515636ffee1ab0019291322ba66c8dead18d19ec2f1c294ae5af8a3ae7c115a875c66a6fecad094a6685b645a09c6df3e09f2c152a"
+                    "sha512": "5a90d803cb2a8a43914e8253f4503e3004c679e11327a3c5a8635c3fe66ee6a12fdf6ead24259e90f52beb21244e3dbdcb83ce887f046b179a269352ad8f36b0"
                 },
                 {
                     "filename": "druid.reset",
@@ -301,12 +301,12 @@
         {
             "source_file": {
                 "filename": "fightersguild.zon",
-                "sha512": "890b22aca15c13e3800754d12124a143800a3df319705681e9cd720d7b837ba32fc2057dd679bba97c94fa185cd155d7dc5ffa4e0a44360fc214074ce2a06b96"
+                "sha512": "44c929a44de72bbdfd0013b17fed0c09bf4beab7b37e23e61bb17a7d4af2b9dd8c243bd6292bbc5f96ec732cb08a5fd81d5f01d1a261a3672997f0a442dca548"
             },
             "output": [
                 {
                     "filename": "fightersguild.data",
-                    "sha512": "925b7c957f342d54595097461366a097306d4a03a373240bc7f5ec589294df695979861ba283f480b6030157c2fb85cce7f23c69f5fd572e8cc4b8821cba0df6"
+                    "sha512": "e4325214904d98b24585b320f1869efa469a44292113b3895a27e8445d5b5b874e3af8bf045d6c8355b2a542f6e3eef32e2b75c4d9b3322483f39d67f840993e"
                 },
                 {
                     "filename": "fightersguild.reset",
@@ -541,12 +541,12 @@
         {
             "source_file": {
                 "filename": "knight.zon",
-                "sha512": "a0e9d746d796d1542941f5281c19202a9e95fded8709cda8b597daf211243a055f07665a86a0db0fa6d2e98ef540dee9980433b644ec4bb966bbe9f3a1ed0fe5"
+                "sha512": "c5a2be3985d601f35589c1a4cb7d03b8ef598d4a23455b56fb64b599a2c33465a32a2b97ec14349d62f8e6356754f4b2b129ecb10813104be10db19a68706987"
             },
             "output": [
                 {
                     "filename": "knight.data",
-                    "sha512": "480ddca6d8022a8abfe0905484a37c061a3c57c48a6ba4dfe1e1ad83e449ee42ac7a991608372579c703e9f769cdd1362d784e99f1ab15e796991f3904110520"
+                    "sha512": "5ea505094d23d0d4f1359d974fe8a294457f17a604a7f4849f73ca15c262b95d3d484868667dd59985a720cb850bf6815529a482c432077aece36a4a9c42be69"
                 },
                 {
                     "filename": "knight.reset",
@@ -557,12 +557,12 @@
         {
             "source_file": {
                 "filename": "mageguild.zon",
-                "sha512": "5b92e3d847dc74d14a80417fdb9c5d0839b61f968435898953e240dc4066cb25a9f5bd75b33df8ffb53d498f10df7ad4dd68ad8072955319091f33c71824c045"
+                "sha512": "9e8317ea44e409f14089dc16b7a8e5d51e72bb0b8ad8758d275fd65d773796d79b9169b6518d9359f5b02f385bcce1cc7ae3b5671991ba3b341625458eed61b5"
             },
             "output": [
                 {
                     "filename": "mageguild.data",
-                    "sha512": "90529e1653ba221dd817bbc002ded020d42445c34213ebdb2b8618a8844b579f192938aaafbdb34eb615ac975da68890c24c0df4eec23345195b14bc2f210eef"
+                    "sha512": "1b3d900ca0e08d35f92aa47adeb93ad22d803db8ffff9e911ae3c773c3928551f8ab16f701a1ff1d9b75d6da5929376305e527b1b7e0c67346b529aecc4f3988"
                 },
                 {
                     "filename": "mageguild.reset",
@@ -621,12 +621,12 @@
         {
             "source_file": {
                 "filename": "necro_guild.zon",
-                "sha512": "104d2dcb775446c5477561e07786962d73de18799b96ebb2a2eac42831f0d9a17d35998c2455ec8ef4d24ccb8f41272f0b72bf9dd2ec4a187e2b612d2c1c9b81"
+                "sha512": "7829050910f47b3850fdda74f4312745b2f155ede3c21fdf0919262098a4d85c218e4335e69ed6fcc92a0e87ea7789dfc8f1937e9ba889615837f5c6bfe56004"
             },
             "output": [
                 {
                     "filename": "necro_guild.data",
-                    "sha512": "83d48ad2db4dedbe8f0ec01072196822c2dd6cfe0735d6cba8dfb3b633abfe8860f023a6b9bd6e40b454b80df947d5923ee1d7827c8ecd96a2981bda05ce145a"
+                    "sha512": "14b442d5485d2bbbf63aa8ad23739e4d9de965eb8fcc1c0e670616e66f29af751bfc25ddafb6f80c8e30df9823890b0cea30286007b26ad6acbc0718da90e161"
                 },
                 {
                     "filename": "necro_guild.reset",
@@ -669,12 +669,12 @@
         {
             "source_file": {
                 "filename": "paladin_guild.zon",
-                "sha512": "e324ee86233bf36823c95dced0bd0dfc2a14ae8007078d5cd022e02586dd24518aa8cf58c3d1166527e911c903439bdb5cf8952b2a933cc4a1a96bbfffe0d37c"
+                "sha512": "023841e7bd5370231de2661a3e801f4488e2d13edda28a0509b6cb531449f4f69c7efbc6b28d0a301b9a4f1a76d50362ebcd1e1fa067dadbaadd4853069367a4"
             },
             "output": [
                 {
                     "filename": "paladin_guild.data",
-                    "sha512": "f1c0c033e2b97f8407ae3f6ae5ef9ed303a5c3fcc37a0059da314c5a0d16462fadff414aebec7d0d1e03ccad7a14471d21df3eaccaefd9d79ab4c4a66b7973b2"
+                    "sha512": "bf491aafe066e04bda586ac2b8e986ae8c993bd1e21c7488aecb86e5b22ba0b00f03a002d288caf9b16e835ecc6b43f4115c19a44b14d0d815978f3336eea2df"
                 },
                 {
                     "filename": "paladin_guild.reset",
@@ -845,12 +845,12 @@
         {
             "source_file": {
                 "filename": "sorcerer.zon",
-                "sha512": "71d9de61999d6c377f582e113eac18ee78f2484c66230f5c34353bd6ed3095d6e2e15e57a0e8e3c4da0dd13932fd8a0c1e3b5aab56262ec474cf48d0fc62182b"
+                "sha512": "b7a3294bcb2633eafc3c4ba5e0e5422995aae95ee50864184c1b40016dd72130e4eb2675c06dcf0d38c0fd42fe4d4a4ab4bb47accb3fe46d4275579ac06cd00b"
             },
             "output": [
                 {
                     "filename": "sorcerer.data",
-                    "sha512": "3ed675a5afa1385e8e5af68705124fe2dbf1aa22e4a607e485c79882713327efe202e3abe4f3b42b5dbe184b44c27b00043e733b82da77c01d8aeeb90f0096e4"
+                    "sha512": "4bdf0d0181e663b11f3892e568782258f025ff8c7ceb8b41c7fc23963157da74d5bbd98deede89e178be37ee8b4cedda5d6dc8904e7215d1574746de9be46726"
                 },
                 {
                     "filename": "sorcerer.reset",
@@ -893,12 +893,12 @@
         {
             "source_file": {
                 "filename": "thievesguild.zon",
-                "sha512": "89225d1cd492793da303d8ac2f9c3688d3e567879728b116df5f40a9a612ed11fd9a7569381bd07390ee6e5f527bb993bd3566dbbdf6f9c1f5ccc21f31648a97"
+                "sha512": "ecae3b301aaa0e9542c508ab90761725a5a9583e34cfa9af3953511c2e5b4dd8a6e991702bf45d7115b3ed6708d2edf5efc20618dc44606958111a06b65491b8"
             },
             "output": [
                 {
                     "filename": "thievesguild.data",
-                    "sha512": "d4892d7c1d8cc0680eba3b14aa3adbc41a1b51d5656350d8592743ecb1854b1ffee5598a9a7254bcd0facf5069e19346018d0663eecec70eb02af9ef0f920cc9"
+                    "sha512": "b1d8f3c4b0255e3dade4e6df6f4593eeee7f1a6ceb5c2281fa635b704dac749ce2b4a6814a49ae88c987d2586b654f8f72e57a3ac4ff21be1b2e6ef7c3fb6faa"
                 },
                 {
                     "filename": "thievesguild.reset",
