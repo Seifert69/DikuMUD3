@@ -685,12 +685,12 @@
         {
             "source_file": {
                 "filename": "professions.zon",
-                "sha512": "648350605c806f85ed53b3709eb2ab9ed9a0d4b3ab4dc990123d0df7a5038e80797cdf64f14c7122f9cfb8ddbc737d82b29aca696d848a3e8e7bcf483f09d557"
+                "sha512": "69501964e54f8734fd9aaa32e192d83845def5f6eaac840edf32a92d59836e2feb3a7eeaaf5d79a00be314b492837c86eef16b82b70b996e1a019f1ac1fb81b3"
             },
             "output": [
                 {
                     "filename": "professions.data",
-                    "sha512": "c4aaa7408490876ce788f22c8d2251841de5e4f0fcd5d89ebefade3cc7ae4f214dcb8ebcd26c202e786eff31f44d8d44bf293e92978ef7331b81081830e6dd27"
+                    "sha512": "881faddc644a14b5a2101d1c4ab678aa1dd37ab27aa1880c8c097868d2dbd063d6e4736592307c0266260a5499789c0e645eaf705a6a50157d162908fd39aa56"
                 },
                 {
                     "filename": "professions.reset",

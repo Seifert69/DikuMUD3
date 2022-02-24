@@ -132,13 +132,21 @@ code
 {
    if (ProfCount@professions(pc) == 1)
    {
-      // We only have one profession
-      // Now find the guild matching pc.profession
-      // and if that guild level is >= 25 we can specialize
-
-      if (GetGuildLevel@guilds(pc, pc.guild) >= 25)
+      // You can only specialize if this is one of your starting professions.
+      //
+      if ((pc.profession == PROFESSION_FIGHTER) or
+          (pc.profession == PROFESSION_PRIEST) or
+          (pc.profession == PROFESSION_CONJURER) or
+          (pc.profession == PROFESSION_THIEF))
       {
-         return (1);
+         // We only have one profession
+         // Now find the guild matching pc.profession
+         // and if that guild level is >= 25 we can specialize
+
+         if (GetGuildLevel@guilds(pc, pc.guild) >= 25)
+         {
+            return (1);
+         }         
       }
    }
 
