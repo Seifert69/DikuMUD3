@@ -317,12 +317,12 @@
         {
             "source_file": {
                 "filename": "function.zon",
-                "sha512": "3278037f54ab18e28036289544a8f3f4b7fc60291d7a79c562a452d71544a47938966c0618978669c6c878cc4c7cd237c2a2c5c5dcb9cbf71e74e2b2f4186d74"
+                "sha512": "943aea07ee7ecfec2637128416cd22392bc33c35a537fe2518797f14441e90bfc4d3b2dbbea8cb83ad311e8011fbcf0c73f1d9bd71a2cf7765c0e669872a8bca"
             },
             "output": [
                 {
                     "filename": "function.data",
-                    "sha512": "dbf68784fdbdd0fe8320d59a47b9d765427e840010296847022753d2a7b1844392976fe77be26904941ab13d38f0381489cf47f31efc2b46fc38ed4f4b8619fb"
+                    "sha512": "a7d5d629aba93ded6b605cedb877c11cfe0cb08865ee4ce994b0f795576e6c14f04711607ff85e45c7a0458fc0656e55880b51290577bfc3443385f6819aaf49"
                 },
                 {
                     "filename": "function.reset",
@@ -509,12 +509,12 @@
         {
             "source_file": {
                 "filename": "justice.zon",
-                "sha512": "bfa0e70bd5d09ef139a7b7aa77c085067de8029319d5e8eddedc0931f231f13b8e0939c048260df7faf8283977f121d44c9ce9e7c203e79de13c38bcd6461185"
+                "sha512": "64680f6b490e48e8744e02357b69ac0ea50952d4dc4064efef7d943d7ed624f1066edc242f3684baa81251100f7019a1b0a0bf648f6e67cecf7d272c0a78f9eb"
             },
             "output": [
                 {
                     "filename": "justice.data",
-                    "sha512": "4c9f6b7784caeab529e6ec4122d82584458bf7cbb51a3fd2786687bbbbe93633eb51f4e7ba3da613c5b2ed015d9f2822e7d8a21ca8026558775f82fc97fcdb6c"
+                    "sha512": "2176d670bd612be846f04331767fd70246205402a7aa78eea035c3ec789d10c6354e5e8b002651a36545993069fb23742d23bf5c5dcdf0626e70a3cff164d8bb"
                 },
                 {
                     "filename": "justice.reset",
@@ -669,12 +669,12 @@
         {
             "source_file": {
                 "filename": "paladin_guild.zon",
-                "sha512": "023841e7bd5370231de2661a3e801f4488e2d13edda28a0509b6cb531449f4f69c7efbc6b28d0a301b9a4f1a76d50362ebcd1e1fa067dadbaadd4853069367a4"
+                "sha512": "6a837690d172c1e09eb984bb4af83dd67de9a316b55e75c7785ffefbbd5a11f277d9ecbed7d96af559fd54436c3691f1a27038ac65c0381251da29a3d5f40e5f"
             },
             "output": [
                 {
                     "filename": "paladin_guild.data",
-                    "sha512": "bf491aafe066e04bda586ac2b8e986ae8c993bd1e21c7488aecb86e5b22ba0b00f03a002d288caf9b16e835ecc6b43f4115c19a44b14d0d815978f3336eea2df"
+                    "sha512": "a6f8cfc821a3e5ab74a5b0659fc25371e8a17b9a5b4154d2517ad237e23c3e5e3f589ceab7004a4573d4c1f65cc38ec1ef18fb63580feda40efeb9cc4fca928a"
                 },
                 {
                     "filename": "paladin_guild.reset",
@@ -813,12 +813,12 @@
         {
             "source_file": {
                 "filename": "skills.zon",
-                "sha512": "caf5d9ea23df4156631bf6d1bd43a89b5fc3479563f902db0a51a3f0db5e552175757624037f23f02da2e8aa021747c87556adb8b93500ae05d54e0a1e610266"
+                "sha512": "fa9d1d9d51ed60223333a1d424b2e46861044ffb80d379289b25e7fceeecf7919bc34dc1a5024c01ccd4abd20481fb72e4dfd82926c0596cda722376de012919"
             },
             "output": [
                 {
                     "filename": "skills.data",
-                    "sha512": "37acd86def6ea8389eec858e09bad180fb6a6d0f74c531b4d245fb41f201579cf85dec25c445c2c0467091e4798c5f851cfae304ad019859acca46a15e1e1699"
+                    "sha512": "f97d5e1db1f07c433ba1ea7a05cec495fcbc69acf8520efece4ac4f8fcdd5ea421c59077f1f494c340385718e5f8a0f191c5b455f6882351f85ef66d496503a0"
                 },
                 {
                     "filename": "skills.reset",
@@ -861,12 +861,12 @@
         {
             "source_file": {
                 "filename": "spells.zon",
-                "sha512": "a8d98e414167a1684d79d78b8725ab3040bc752cd3774b7763326bae199a049355bd0dd493256423666192c3749a603646628a799b5c6a30cb26353c6b1c8698"
+                "sha512": "ba77c967c0abf833c8b85ace97dc910337ef4aaf2833aa834e52764a17ac84c6cf5475e42c58373550607027ec804d2d3cbaff78bba1aac32591df0806c3a23e"
             },
             "output": [
                 {
                     "filename": "spells.data",
-                    "sha512": "75b58d8c644bbab7b70902e8debb3b8e7e73c1893613d04729feb5bb4609dbb0a998da036e1d1ac6b35c1e6a729322a36d5bc6e6ec2cdb1fd2732cb6a437b129"
+                    "sha512": "f3d25f4ca3b4cfb80a0961624f73c39edf69d1308fb55c3107c5640449958bdc332f9cd98df045e74b122dd9dcf30e35af352a9b9404d337cbf355463298cca2"
                 },
                 {
                     "filename": "spells.reset",

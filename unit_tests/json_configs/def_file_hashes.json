@@ -75,12 +75,12 @@
         {
             "source_file": {
                 "filename": "spells.def",
-                "sha512": "412ec8261b40722825a4b3eec3ef49c87c1b5fa8e2f2bfaf568939e22ebeec35b6a9a28e1c1165ead074cde5c6aa3bd27c5c06452fc3558e7a2e2977e8b64242"
+                "sha512": "5015d75977a648e4e6ce956e9ff8287ad94e7c970b66b36e3098ad94eb6903e5645ae21054ac80cd2cc5049c1b72ccbe305db4ea5de5d3cdf59cfbbe70d9defc"
             },
             "output": [
                 {
                     "filename": "spells.dat",
-                    "sha512": "ce8faaa9adcd6ea7f24befe0220288ac6ddd6b04445f356fb3ad56f614952830f8c8e0b68200eedc5ca2a17e530a3a94f90cfe5f91a4668c5148a31e04d41b6c"
+                    "sha512": "e6db01cba9cb722f33279efef6384efc983f544d037470ad81be8ebe5c24d2dfdad2678ff7c48bb2bd9cf1cdb607532eb946a4a66662c561c99aa27a50b33714"
                 }
             ]
         },

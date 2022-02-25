@@ -699,6 +699,10 @@ dilcopy MurderBanish@guilds(GUILD_PALADIN);
 dilcopy AlertMembers@guilds(GUILD_PALADIN, "Our Holy order is under attack, quickly come to assistance.");
 
 dilbegin  fnpri(FN_PRI_BLOCK-1) block_evil_join();
+external
+   integer check_protected@justice(char : unitptr, juris : string);
+   integer check_outlaw@justice(char : unitptr, juris : string);
+
 code
 {
    :start:
@@ -714,6 +718,27 @@ code
          goto start;
       }
       exec("say You are not pure enough to join our order.", self);
+   }
+
+   if (not check_protected@justice(activator, "midgaard"))
+   {
+      block;
+      exec("say You must be a protected citizen of Midgaard to join our order.", self);
+      goto start;
+   }
+
+   if (check_outlaw@justice(activator, "midgaard"))
+   {
+      block;
+      exec("say You cannot be an outlaw of Midgaard to join our order.", self);
+      goto start;
+   }
+
+   if (check_outlaw@justice(activator, "udgaard"))
+   {
+      block;
+      exec("say You cannot be an outlaw of Udgaard to join our order.", self);
+      goto start;
    }
 
    goto start;
