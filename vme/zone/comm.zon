@@ -581,7 +581,7 @@ i : integer;
 
 if (arg=="")
   {
-  act ("<div class='respond'>Respond what?</div>",A_ALWAYS,self,null,null,TO_CHAR);
+  act ("<div class='tell_self'>Respond what?</div>",A_ALWAYS,self,null,null,TO_CHAR);
   quit;
   }
 
@@ -589,7 +589,7 @@ person:="$reply" in self.quests;
 
 if (person==null)
   {
-  act ("<div class='respond'>No one to respond to.</div>",
+  act ("<div class='tell_self'>No one to respond to.</div>",
   	A_ALWAYS,self,null,null,TO_CHAR);
   quit;
   }
@@ -601,7 +601,7 @@ pc := findunit(self,person.descr,FIND_UNIT_HERE,null,UNIT_ST_NPC);
 
 if (pc==null)
 {
-act ("<div class='respond'>No one to respond to.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+act ("<div class='tell_self'>No one to respond to.</div>",A_ALWAYS,self,null,null,TO_CHAR);
 quit;
  }
 
@@ -638,20 +638,20 @@ quit;
 punct:=exclaim_ask(arg);
 
    if (visible(self,pc))
-      sendtext("<div class='respond'>You respond to "+pc.name+" "+punct+"'"+arg+"'</div><br/>", self);
+      sendtext("<div class='tell_self'>You respond to "+pc.name+" "+punct+"'"+arg+"'</div><br/>", self);
    else
    {
       if ((pc.sex==SEX_MALE) or (pc.sex==SEX_FEMALE))
          sx:="Someone";
       else
          sx:="Something";
-      sendtext("<div class='respond'>You respond to "+sx+" "+punct+"'"+arg+"'</div><br/>", self);
+      sendtext("<div class='tell_self'>You respond to "+sx+" "+punct+"'"+arg+"'</div><br/>", self);
    }
 
    if (visible (pc,self))
    {
-      sendtext("<div class='respond'>"+self.name+" responds "+punct+"'"+arg+"'</div><br/>",pc);
-      add_history(pc,"<div class='respond'>"+self.name+" responds "+punct+"'"+arg+"'</div>");
+      sendtext("<div class='tell_other'>"+self.name+" responds "+punct+"'"+arg+"'</div><br/>",pc);
+      add_history(pc,"<div class='tell_other'>"+self.name+" responds "+punct+"'"+arg+"'</div>");
 	}
    else
    {
@@ -659,8 +659,8 @@ punct:=exclaim_ask(arg);
          sx:="Someone";
       else
          sx:="Something";
-      sendtext("<div class='respond'>"+sx+" responds "+punct+"'"+arg+"'</div><br/>",pc);
-      add_history(pc,"<div class='respond'>"+sx+" responds "+punct+"'"+arg+"'</div>");
+      sendtext("<div class='tell_other'>"+sx+" responds "+punct+"'"+arg+"'</div><br/>",pc);
+      add_history(pc,"<div class='tell_other'>"+sx+" responds "+punct+"'"+arg+"'</div>");
    }
 
    subextra (pc.quests,"$reply");
