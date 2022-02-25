@@ -295,7 +295,7 @@ void cHook::PushWrite()
 
     while (!qTX.IsEmpty())
     {
-        len = MIN(sizeof(buf), qTX.Bytes());
+        len = MIN(sizeof(buf)-1, qTX.Bytes());
 
         qTX.CutCopy(buf, len);
 
@@ -351,7 +351,8 @@ void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
         return;
     }
 
-    qTX.Append(new cQueueElem(pData, nLen, bCopy));
+    cQueueElem *q = new cQueueElem(pData, nLen, bCopy);
+    qTX.Append(q);
 
     PushWrite();
 }
@@ -367,7 +368,7 @@ int cHook::ReadToQueue()
 
     for (;;)
     {
-        thisround = this->read(buf, sizeof(buf));
+        thisround = this->read(buf, sizeof(buf)-1);
 
         if (thisround > 0)
         {
