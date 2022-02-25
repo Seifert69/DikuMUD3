@@ -8152,7 +8152,7 @@ title "the Mayor"
 descr "The Mayor is sitting in his huge chair, snoring loudly."
 extra {} 
 "He is a stocky, middle-aged man with thin, grey hair. The mayor can help you
-join guilds. Try the guild command and after that the join command."
+become a respectable citizen in Midgaard."
 
 romflags {CHAR_PROTECTED}
 M_AVG_HUMAN(15, SEX_MALE)
@@ -8243,9 +8243,6 @@ code
    goto start;
 }
 dilend
-
-
-
 end
 
 %objects

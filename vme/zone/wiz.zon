@@ -568,6 +568,20 @@ the north wall and a large rocking chair is placed in front of the fire."
 flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 up to papis_cottage;
+
+// When the server comes up, send a message to the builder channel.
+// I'd like to know when the server (re)boots.
+//
+dilbegin BootToDiscord();
+code
+{
+   heartbeat := PULSE_SEC * 4;
+   pause;
+   pause;
+   dispatch("discord msg #build **BOOTING** Valhalla MUD.");
+   quit;
+}
+dilend
 end
 
 
