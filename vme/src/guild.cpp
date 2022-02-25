@@ -76,7 +76,7 @@ int char_guild_level(unit_data *ch, const char *pGuildName)
     if (str_is_empty(pGuildName))
     {
         // E.g. a rogue teacher, not a guild teacher
-        return PC_VIRTUAL_LEVEL(ch);
+        return MAX(CHAR_LEVEL(ch), PC_VIRTUAL_LEVEL(ch));
     }
 
     exd = find_info(str_cc("$guild/", pGuildName), ch);
