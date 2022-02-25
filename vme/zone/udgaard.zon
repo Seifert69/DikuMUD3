@@ -11155,7 +11155,7 @@ end
 
 names {"Ben", "skin trader","trader","shopkeeper"}
 title "Ben the skin trader"
-extra {} "He is a burly looking man with a scruffy beard and unkempt hair"
+extra {} "He is a burly looking man with a scruffy beard and unkempt hair. Maybe he can teach you how to skin?"
 descr "Ben is waiting to buy some skins"
 exp -500
 M_SHOP_KEEPER(10, SEX_MALE, RACE_HUMAN)
@@ -11180,7 +11180,7 @@ dilcopy shopkeeper@function(
 
 
 special SFUN_TEACH_INIT
-"skills;;
+"skills;;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13432,7 +13432,7 @@ extra {}
 "Rune is here to teach you abilities. Try the <a cmd='#'>info</a> command."
 
 special SFUN_TEACH_INIT
-"abilities;;
+"abilities;;;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13462,7 +13462,7 @@ extra {}
 "Gustav is here to teach you skills. Try the <a cmd='#'>info</a> command."
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
-"skills;;
+"skills;;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13506,7 +13506,7 @@ extra {}
 flags {UNIT_FL_NO_TELEPORT}
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
-"weapons;;
+"weapons;;;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13535,7 +13535,7 @@ M_SHOP_KEEPER(35,SEX_MALE,RACE_HUMAN)
 flags {UNIT_FL_NO_TELEPORT}
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
-"spells;;
+"spells;;;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for me.';

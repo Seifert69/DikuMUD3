@@ -63,7 +63,7 @@ struct teacher_msg
 struct teach_packet
 {
     ubit8 type; /* Ability, spell, skill, weapon */
-    // Obsolete, only guild level in teachers 0 for guild-level, 1 for ordinary level
+    const char *pGuildName; // Empty or set to the name of the guild
     teacher_msg msgs;
     skill_teach_type *teaches; /* Array of skills */
     tree_type *tree;
@@ -263,7 +263,7 @@ int teaches_index(skill_teach_type *teaches_skills, int node)
     return -1;
 }
 
-const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int minguildlevel)
+const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int minguildlevel, const char *pCurrentGuild)
 {
     static char buf[MAX_STRING_LENGTH];
     char *c = nullptr;
@@ -280,7 +280,7 @@ const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int m
         TAIL(c);
     }
 
-    if (char_guild_level(pupil) < minguildlevel)
+    if (char_guild_level(pupil, pCurrentGuild) < minguildlevel)
     {
         sprintf(c, "Guild level:%d ", minguildlevel);
         TAIL(c);
@@ -319,12 +319,13 @@ void info_show_one(unit_data *teacher,
                    ubit8 isleaf,
                    int min_level,
                    profession_cost *cost_entry,
-                   std::vector<std::pair<int, std::string>> &vect)
+                   std::vector<std::pair<int, std::string>> &vect,
+                   const char *pGuildName)
 {
     if (isleaf)
     {
         const char *req = nullptr;
-        req = trainrestricted(pupil, cost_entry, min_level);
+        req = trainrestricted(pupil, cost_entry, min_level, pGuildName);
 
         if (*req)
         {
@@ -398,7 +399,8 @@ void info_show_roots(unit_data *teacher,
                      unit_data *pupil,
                      skill_collection *pColl,
                      pc_train_values *pTrainValues,
-                     skill_teach_type *teaches_skills)
+                     skill_teach_type *teaches_skills,
+                     const char *pGuildName)
 {
     int i = 0;
     int cost = 0;
@@ -426,7 +428,8 @@ void info_show_roots(unit_data *teacher,
                           TREE_ISLEAF(pColl->tree, teaches_skills[i].node),
                           teaches_skills[i].min_glevel,
                           &pColl->prof_table[teaches_skills[i].node],
-                          vect);
+                          vect,
+                          pGuildName);
         }
     }
 
@@ -452,7 +455,8 @@ void info_show_leaves(unit_data *teacher,
                       unit_data *pupil,
                       skill_collection *pColl,
                       skill_teach_type *teaches_skills,
-                      pc_train_values *pTrainValues)
+                      pc_train_values *pTrainValues,
+                      const char *pGuildName)
 {
     int i = 0;
     int cost = 0;
@@ -479,7 +483,8 @@ void info_show_leaves(unit_data *teacher,
                           TREE_ISLEAF(pColl->tree, teaches_skills[i].node),
                           teaches_skills[i].min_glevel,
                           &pColl->prof_table[teaches_skills[i].node],
-                          vect);
+                          vect,
+                          pGuildName);
         }
     }
 
@@ -509,7 +514,8 @@ void info_one_skill(unit_data *teacher,
                     pc_train_values *pTrainValues,
                     skill_teach_type *teaches_skills,
                     int teach_index,
-                    teacher_msg *msgs)
+                    teacher_msg *msgs,
+                    const char *pGuildName)
 {
     int indent = 0;
     int i = 0;
@@ -556,7 +562,8 @@ void info_one_skill(unit_data *teacher,
                       TREE_ISLEAF(pColl->tree, teaches_skills[teach_index].node),
                       teaches_skills[teach_index].min_glevel,
                       &pColl->prof_table[i],
-                      vect);
+                      vect,
+                      pGuildName);
 
         /* Show children of teach_index category */
         for (j = 0; teaches_skills[j].node != -1; j++)
@@ -582,7 +589,8 @@ void info_one_skill(unit_data *teacher,
                               TREE_ISLEAF(pColl->tree, teaches_skills[j].node),
                               teaches_skills[j].min_glevel,
                               &pColl->prof_table[i],
-                              vect);
+                              vect,
+                              pGuildName);
             }
         }
     }
@@ -612,7 +620,8 @@ void info_one_skill(unit_data *teacher,
                               TREE_ISLEAF(pColl->tree, teaches_skills[j].node),
                               teaches_skills[j].min_glevel,
                               &pColl->prof_table[i],
-                              vect);
+                              vect,
+                              pGuildName);
             }
         }
     }
@@ -758,7 +767,7 @@ int practice(unit_data *teacher,
     }
 
     const char *req = nullptr;
-    req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel);
+    req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel, pckt->pGuildName);
     if (*req)
     {
         auto msg = diku::format_to_str("To practice %s you need to meet the following requirements %s.<br/>",
@@ -892,7 +901,7 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
                 continue;
             }
 
-            req = trainrestricted(pupil, &pColl->prof_table[nodeidx], pckt->teaches[teach_index].min_glevel);
+            req = trainrestricted(pupil, &pColl->prof_table[nodeidx], pckt->teaches[teach_index].min_glevel, pckt->pGuildName);
             if (*req)
             {
                 continue;
@@ -1113,7 +1122,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
     {
         if (is_command(sarg->cmd, "info"))
         {
-            info_show_leaves(sarg->owner, sarg->activator, pColl, pckt->teaches, &TrainValues);
+            info_show_leaves(sarg->owner, sarg->activator, pColl, pckt->teaches, &TrainValues, pckt->pGuildName);
             auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
             send_to_char(msg, sarg->activator);
         }
@@ -1133,7 +1142,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
 
     if (str_ccmp(arg, "roots") == 0)
     {
-        info_show_roots(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches);
+        info_show_roots(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, pckt->pGuildName);
         auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
         send_to_char(msg, sarg->activator);
         return SFR_BLOCK;
@@ -1207,7 +1216,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
 
     if (is_command(sarg->cmd, "info"))
     {
-        info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs);
+        info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs, pckt->pGuildName);
         auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
         send_to_char(msg, sarg->activator);
     }
@@ -1218,7 +1227,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
         /* If hpp changed, then update no of maximum hitpoints */
         UNIT_MAX_HIT(sarg->activator) = hit_limit(sarg->activator);
 
-        info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs);
+        info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs, pckt->pGuildName);
         auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
         send_to_char(msg, sarg->activator);
     }
@@ -1367,7 +1376,9 @@ int teach_init(spec_arg *sarg)
     // --- Next field ---
 
     c = get_next_str(c, buf);
+
     // This used to be the guild level type for teachers. Obsoleted. So packet->level_type is obsoleted.
+    // 2022: This is now once again in the game.
     //
     // Now this is used where the empty string means only teach what's in the text.
     // Otherwise the string must be set to a profession. And in that case, all skills from that profession
@@ -1385,6 +1396,10 @@ int teach_init(spec_arg *sarg)
                      buf);
         }
     }
+
+    // Guild name (empty if not a guild?)
+    c = get_next_str(c, buf);
+    packet->pGuildName = str_dup(buf);
 
     c = get_next_str(c, buf);
     packet->msgs.unknown_skill = str_dup(buf);

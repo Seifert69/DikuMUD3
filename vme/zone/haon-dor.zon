@@ -2709,7 +2709,7 @@ dilend
 dilcopy teach_q_block@function(QUEST_POT_COMPLETE, "say I will only teach you if you have helped me retrieve my cooking pot.");
 
 special SFUN_TEACH_INIT
-"skills;;
+"skills;;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';

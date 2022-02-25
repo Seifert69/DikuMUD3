@@ -6194,7 +6194,7 @@ end
 
 names {"tailor","Tom"}
 title "Tom"
-descr "Tom the Tailor is sitting on the table, sewing busily."
+descr "Tom the Tailor is sitting on the table, sewing busily. Maybe he can teach you how to resize clothes?"
 extra {}
 "He looks as an honest, hard-working artisan."
 
@@ -6231,7 +6231,7 @@ dilcopy resize_func@midgaard (ITEM_ARMOR,ITEM_WORN,ITEM_WORN,
 
 
 special SFUN_TEACH_INIT
-"skills;;
+"skills;;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -6254,7 +6254,7 @@ descr "Myrna the Leather Worker is sitting by the table, sewing a leather
 cap."
 extra {}
 "She looks as an honest, hard-working artisan who only just earns enough to
-keep herself going."
+keep herself going. Maybe she can teach you how to resize."
 
 M_SHOP_KEEPER(44, SEX_FEMALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE
@@ -6295,7 +6295,7 @@ dilcopy shopkeepernew@function(
 dilcopy resize_func@midgaard (ITEM_ARMOR, ITEM_WORN, ITEM_WORN,
 ARM_LEATHER,ARM_HLEATHER,3*IRON_MULT,"leather worker");
 special SFUN_TEACH_INIT
-"skills;;
+"skills;;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -6548,7 +6548,7 @@ descr "The venerable Sam Blacksmith is here."
 extra {}
 "The smith is so old and experienced, that he can judge the quality of your
 armour and weapons merely by glancing at it.  He looks as if he has retired
-from being an active smith, though."
+from being an active smith, though. Maybe he can teach you how to resize."
 flags {UNIT_FL_NO_TELEPORT}
 M_SHOP_KEEPER(47, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE
@@ -6556,7 +6556,7 @@ dilcopy evaluate@function(64);
 dilcopy resize_func@midgaard (ITEM_ARMOR, ITEM_WEAPON, ITEM_SHIELD,ARM_CHAIN,
                               ARM_PLATE,COPPER_MULT,"smith");
 special SFUN_TEACH_INIT
-"skills;;
+"skills;;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
