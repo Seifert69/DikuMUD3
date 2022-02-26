@@ -71,10 +71,6 @@ dilend
 // ======================== UTILITY =========================
 //
 
-// Use QUOTE(ITEM_WEAPON) to get -> "15". Useful in a stringlist with integers
-#define Q(x) #x
-#define QUOTE(x) Q(x)
-
 dilbegin identify(u :unitptr, norm : string, improved: string);
 var
     exd : extraptr;
