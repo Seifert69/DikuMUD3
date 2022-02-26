@@ -94,9 +94,9 @@ public:
     int predecrementLoopWaitCounter();
     void setLoopWaitCounter(int value);
 
-    ubit16 getHoursPlayerIdle() const;
-    void setHoursPlayerIdle(ubit16 value);
-    void incrementHoursPlayerIdle();
+    ubit16 getMinutesPlayerIdle() const;
+    void setMinutesPlayerIdle(ubit16 value);
+    void incrementMinutesPlayerIdle();
 
     void clearLocalString();
     const char *getLocalString() const;

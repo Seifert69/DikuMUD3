@@ -271,7 +271,7 @@ void game_event()
             delete qe;
 
             point->setLoopWaitCounter(1);
-            point->setHoursPlayerIdle(0);
+            point->setMinutesPlayerIdle(0);
             point->setPromptMode(PROMPT_EXPECT);
 
             if (point->cgetSnoopData().getSnoopBy())
