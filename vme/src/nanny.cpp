@@ -46,8 +46,6 @@
 #include <cstdio>
 #include <cstdlib>
 
-//#define STATE(d) ((d)->getState())
-
 int g_dilmenu;
 
 char *m_pBadNames = nullptr;
