@@ -301,12 +301,12 @@
         {
             "source_file": {
                 "filename": "fightersguild.zon",
-                "sha512": "44c929a44de72bbdfd0013b17fed0c09bf4beab7b37e23e61bb17a7d4af2b9dd8c243bd6292bbc5f96ec732cb08a5fd81d5f01d1a261a3672997f0a442dca548"
+                "sha512": "616a962e0a6b37980aa870d014c4b570e055bd18f7ff45e68b877747e7ec016c438084d289055d69f90ce3ee4562cd4a0af496f5d9b93c04137400b8497b0086"
             },
             "output": [
                 {
                     "filename": "fightersguild.data",
-                    "sha512": "cb964d020e4a92da4efb8fcd95629b170f4ea3c3aaff02f63e1fc97358c5d964c5d66c854c52f79a46d061b34945d9aeb962cda764e9db6f27a334c21e51bdad"
+                    "sha512": "ea81914dab18219b2f6d998af834833c10c84c0705c678e7bd6894b5e6e03e211c6bc1c5cdd914b8d6c8fecf5c2df1445ed211c73dbde87d44cd0741a958e5fb"
                 },
                 {
                     "filename": "fightersguild.reset",
