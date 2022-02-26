@@ -365,12 +365,12 @@
         {
             "source_file": {
                 "filename": "guild_paths.zon",
-                "sha512": "db51faf2ca7e715d23a7050d64316261143b1bfc74893f77f4912a650e4f929e77d89f61f30f77e4c54b375ed61fcbe9fe386754fc38a399cfc599c2c9582a5b"
+                "sha512": "382665a5bc200fcbf8e6968c4748ca1a18905fb1e13794fc1f9cdad2dc095067aa19b69278a8780c11756bf1b49df40aafdd10fd84427f95469057761142697f"
             },
             "output": [
                 {
                     "filename": "guild_paths.data",
-                    "sha512": "d7504b97985c067f39c3c9232e51ea972062ca9d5e16d1cd343d0c3aee549c9b6ba400bdbd6c0689217aac7c0b716c1835ec46706870420f6cd36963c9cc600f"
+                    "sha512": "989919f00f2fccfd27ef38659d6b6a9bbb2972507fc91966d1b6801c509d64c4fdedfbac8abe13e53d9f0bf66f3c04606a7c2dfb1a399de7e43bb181e3e6dd23"
                 },
                 {
                     "filename": "guild_paths.reset",
@@ -717,7 +717,7 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "6a69d5360e1f8cbb8c47b1e7048b1015da7ed4194371cbe0125628ab6fa55f50b1a9e830e5315f7bd5c35008c19a237ad2f9737a4ba8caa9a8b81d608a19fd91"
+                "sha512": "d0aa3e1c96c090597942bef6a67f54b343b06faf7e8d2f1ec43e3afa253229b6b84989bbdecb40353da86b0b07d47cd8291c657be973b1d30d810450d7927329"
             },
             "output": [
                 {
@@ -909,12 +909,12 @@
         {
             "source_file": {
                 "filename": "udgaard.zon",
-                "sha512": "80f18b7b8b7d6809eae11a83307b5a5361768ba5ddd37b3f0227664b91520e86e251edcd983bad02c34d27a298c9849318783be8d3eba2b10c5aaa9904c08288"
+                "sha512": "5a9aad6bb920b4edc36a55cd5e3f9e0f82ac8340067ff1b6d3a0130321335948b3e0b5d4e416453f1c7f672f66587da17c2e520a809ed902b254d198d5dac377"
             },
             "output": [
                 {
                     "filename": "udgaard.data",
-                    "sha512": "25a67c5087926ef2b39b74694a2ba98d594e2252fa9059bd8f05beecd4d48ffea82fa03e04d34cb5444611163beae6d40ef1df439029030b5d010fa9879743ac"
+                    "sha512": "ffcd29950d1b348ef19ddbbf4108a88d9d67ab1f80289a3eb1cdd08fd349ee098289eba35e6602e02daa50658a3c70ce86216004799857227763759b7f10624d"
                 },
                 {
                     "filename": "udgaard.reset",
