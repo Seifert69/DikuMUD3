@@ -33,8 +33,6 @@ created by eirinn
    a player is in a guild for example 
 */
 
-#define GUILD_PATH "$path"
-
 dilbegin guild_guard(the_guild : string, the_dir : string);
 external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
@@ -164,51 +162,33 @@ dilend /* guilds_dil */
 
 
 dilbegin hand_hold(); /* Take people to their guilds and Udgaard */
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+
 var
    the_room   : string;
    dest       : string;
    pc         : unitptr;
    dest_list  : stringlist;
    g_list     : stringlist;
+   room_list  : stringlist;
    expd       : extraptr;
    i          : integer;
 code
 {
    heartbeat := PULSE_SEC * 3;
 
-   dest_list := null;
-   addstring(dest_list, "fighter"); 	// 0
-   addstring(dest_list, "thief"); 		// 1
-   addstring(dest_list, "healer"); 		// 2
-   addstring(dest_list, "conjurer"); 		// 3
-   addstring(dest_list, "ranger"); 		// 4
-   addstring(dest_list, "paladin"); 	// 5
-   addstring(dest_list, "sorcerer"); 	// 6
-   addstring(dest_list, "assassin"); 	// 7
-   addstring(dest_list, "necromancer"); // 8
-   addstring(dest_list, "druid"); 		// 9
-   addstring(dest_list, "knight"); 		// 10
-   addstring(dest_list, "barbarian"); 	// 11
-   addstring(dest_list, "udgaard"); 	// 12
+   dest_list := {"fighter", "thief", "healer", "conjurer", "ranger",
+                 "paladin", "sorcerer", "assassin", "necromancer", "druid",
+                 "knight", "barbarian", "udgaard"};
 
-   g_list := null;
-   addstring(g_list, GUILD_UDG_FIGHTER); 	// 0
-   addstring(g_list, GUILD_UDG_THIEF); 		// 1
-   addstring(g_list, GUILD_UDG_CLERIC); 	// 2
-   addstring(g_list, GUILD_UDG_MAGE); 		// 3
-   addstring(g_list, GUILD_NYM_RANGER); 	// 4
-   addstring(g_list, GUILD_PALADIN); 		// 5
-   addstring(g_list, GUILD_SORCERER); 		// 6
-   addstring(g_list, GUILD_ASSASSIN); 		// 7 
-   addstring(g_list, GUILD_NECROMANCER); 	// 8
-   addstring(g_list, GUILD_NYM_DRUID); 		// 9
-   addstring(g_list, GUILD_KNIGHT); 		// 10
-   addstring(g_list, GUILD_BARBARIAN); 		// 11
+   g_list := {GUILD_UDG_FIGHTER, GUILD_UDG_THIEF, GUILD_UDG_CLERIC, GUILD_UDG_MAGE, GUILD_NYM_RANGER,
+              GUILD_PALADIN, GUILD_SORCERER, GUILD_ASSASSIN, GUILD_NECROMANCER, GUILD_NYM_DRUID,
+              GUILD_KNIGHT, GUILD_BARBARIAN};
 
 
 :start:
-   wait(SFB_CMD, command("return") and (activator == self.outside)
-   and (self.equip != 0));
+   wait(SFB_CMD, command("return") and (activator == self.outside) and (self.equip != 0));
    block;
 
    pc := self.outside;
@@ -216,42 +196,46 @@ code
 
    if (pc.position == POSITION_FIGHTING)
    {
-      act("You can't do that while you're fighting.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("You can't do that while you're fighting.", A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
 
-   if (argument == "")
-       {
-       act ("What about you try returning somewhere?",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-       goto start;
-       }
-
    dest := argument;
 
-   expd := "$path" in pc.quests;
-   if (expd == null)
+   if (dest == "")
    {
-      act("You have no guild path. Please see an administrator.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto lost_pc;
+      i := pc.guild in g_list - 1;
+
+      if (i >= 0)
+         dest := dest_list.[i];  // Well if we reordered them to match zone order, this wouldn't be necessary
    }
-	
-	i := -1;
-	while (i < 13)
+
+   if (dest == "")
+   {
+      act("What about you try returning somewhere?", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+
+   i := (dest in dest_list) - 1;
+
+   if (i < 0)
+   {
+		act("Please look at $2n to see possible destinations.",
+			A_ALWAYS, pc, self, null, TO_CHAR);
+		goto start;
+   }
+
+   if (i >= 12) // Udgaard
+      goto okay;
+
+   if (not IsInGuild@guilds(pc, g_list.[i]))
 	{
-		i := i+1;
-		if (((dest_list.[i] in dest) and (g_list.[i] in expd.names)) or (dest_list.[12] in dest))
-			i := 777;
-	}
-	if (i != 777)
-	{
-		:no2:
-		act("That guild is not in your guild path. You cannot go there.",
+		act("You're not a member of that guild. You cannot go there.",
 			A_ALWAYS, pc, null, null, TO_CHAR);
 		goto lost_pc;
 	}
+
+:okay:
    if (pc.outside.type != UNIT_ST_ROOM)
    {
       act("You must be in the open for the medallion's powers to work. If " +
@@ -260,76 +244,29 @@ code
       goto lost_pc;
    }
 
-if (pc.level > 15)
-	{
-	act("This only works for players less than or equal to level 15.",
-		A_ALWAYS,pc,null,null,TO_CHAR);
-	act ("Your medallion explodes in a flash of light!",
-		A_ALWAYS,pc,null,null,TO_CHAR);
-	destroy (self);
-	}
-   if ((pc.outside.zoneidx != "fightersguild") and
-       (pc.outside.zoneidx != "thievesguild") and
-       (pc.outside.zoneidx != "clericguild") and
-       (pc.outside.zoneidx != "mageguild") and
-       (pc.outside.zoneidx != "ranger") and
-       (pc.outside.zoneidx != "paladin_guild") and
-       (pc.outside.zoneidx != "sorcerer") and
-       (pc.outside.zoneidx != "assassin") and
-       (pc.outside.zoneidx != "necro_guild") and
-       (pc.outside.zoneidx != "druid") and
-       (pc.outside.zoneidx != "knight") and
-       (pc.outside.zoneidx != "barbarian") and
-       (pc.outside.zoneidx != "udgaard") and
-       (pc.outside.zoneidx != "midgaard"))
+   if (pc.level > 15)
    {
-:no_no:
+      act("This only works for players less than or equal to level 15.",
+         A_ALWAYS,pc,null,null,TO_CHAR);
+      act ("Your medallion explodes in a flash of light!",
+         A_ALWAYS,pc,null,null,TO_CHAR);
+      destroy (self);
+   }
+   if (not (pc.outside.zoneidx in {"fightersguild", "thievesguild", "clericguild", "mageguild",
+               "ranger", "paladin_guild", "sorcerer", "assassin", "necro_guild", "druid",
+               "knight", "barbarian", "udgaard", "midgaard"}))
+   {
       act("You must be in a guild or in Udgaard or Midgaard for the medallion to work.",
           A_ALWAYS, pc, null, null, TO_CHAR);
       goto lost_pc;
    }
-/*
-   if ((pc.outside.nameidx + pc.outside.zoneidx) == "templeudgaard")
-      goto cont;
-   if (((pc.outside.type == UNIT_ST_ROOM) and
-        (isset(pc.outside.flags, UNIT_FL_NO_TELEPORT))) or
-       (isset(pc.flags, UNIT_FL_NO_TELEPORT)))
-   {
-      act("Powers beyond your control prevent the teleportation.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto lost_pc;
-   }
-*/
 
 :cont:
-
-   if (dest in dest_list.[0])
-      the_room := "outlook@fightersguild";
-   else if (dest in dest_list.[1])
-      the_room := "study@thievesguild";
-   else if (dest in dest_list.[2])
-      the_room := "sanctuary@clericguild";
-   else if (dest in dest_list.[3])
-      the_room := "chan_office@mageguild";
-   else if (dest in dest_list.[4])
-      the_room := "tent_1@ranger";
-   else if (dest in dest_list.[5])
-      the_room := "meditat@paladin_guild";
-   else if (dest in dest_list.[6])
-      the_room := "grotto@sorcerer";
-   else if (dest in dest_list.[7])
-      the_room := "master_room@assassin";
-   else if (dest in dest_list.[8])
-      the_room := "up_damp_crypt@necro_guild";
-   else if (dest in dest_list.[9])
-      the_room := "henge@druid";
-   else if (dest in dest_list.[10])
-      the_room := "room_5@knight";
-   else if (dest in dest_list.[11])
-      the_room := "hall_01@barbarian";
-   else if (dest in dest_list.[12])
-      the_room := "temple@udgaard";
-   else goto no2;
+   room_list := {
+      "outlook@fightersguild", "study@thievesguild", "sanctuary@clericguild", "chan_office@mageguild",
+      "tent_1@ranger", "meditat@paladin_guild", "grotto@sorcerer", "master_room@assassin", "up_damp_crypt@necro_guild",
+      "henge@druid", "room_5@knight", "hall_01@barbarian", "temple@udgaard"};
+   the_room := room_list.[i];
 
 :trans_me:
 
@@ -370,15 +307,22 @@ Something I added for familiars but can be used in anything wanting to check
 a guild level if you already have something sorry but I couldn't find it.
 */
 dilbegin integer level_guild_chk(pc: unitptr,s:string);
+external
+   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
 var
-	expd:extraptr;
+   i : integer;
 code
 {
+   i := GetGuildLevel@guilds(pc, s);
+
+   return (i);
+
+/*
    log("level_guild_chk needs to be rewritten and moved to guilds");
 if (pc==null)
 	return (-2);
 
-expd := "$path" in pc.quests;
+expd := " $ p a t h " in pc.quests;
 
    if (expd == null)
 	 	return (-2);
@@ -400,7 +344,7 @@ else if (expd.names.[2]==s)
 else if (expd.names.[3]==s)
 	return (atoi(expd.names.[6]));
 
-return (-2);
+return (-2);*/
 }
 dilend
 

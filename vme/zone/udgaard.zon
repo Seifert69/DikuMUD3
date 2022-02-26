@@ -1140,21 +1140,23 @@ code
    if (self.outside.position == POSITION_FIGHTING)
    {
       act("The $2N does not work in combat.",
-   A_ALWAYS, self.outside, self, null, TO_CHAR);
+         A_ALWAYS, self.outside, self, null, TO_CHAR);
       goto start;
    }
+
    if (self.equip == 0)
    {
       act("The $2N must be worn for it to work.",
-   A_ALWAYS, self.outside, self, null, TO_CHAR);
+         A_ALWAYS, self.outside, self, null, TO_CHAR);
       goto start;
    }
+
    if (activator.level > 3)
    {
       act("As you attempt to use $2n it suddenly dissolves.",
-   A_ALWAYS, self.outside, self, null, TO_CHAR);
+         A_ALWAYS, self.outside, self, null, TO_CHAR);
       act("$1n's $2n suddenly dissolves as $1e attempts to use it,",
-   A_ALWAYS, self.outside, self, null, TO_REST);
+         A_ALWAYS, self.outside, self, null, TO_REST);
       destroy(self);
    }
    i := hour - (mudhour + mudday * MUD_DAY);
@@ -1163,7 +1165,7 @@ code
    if (i < 6)
    {
       act("The $2N has not charged enough power yet.",
-   A_ALWAYS, self.outside, self, null, TO_CHAR);
+         A_ALWAYS, self.outside, self, null, TO_CHAR);
       goto start;
    }
    hour := mudhour + mudday * MUD_DAY;
