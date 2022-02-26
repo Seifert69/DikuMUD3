@@ -163,9 +163,9 @@ void edit_extra(descriptor_data *d)
 {
     extra_descr_data *exd = nullptr;
 
-    for (exd = UNIT_EXTRA(d->editing).m_pList; exd; exd = exd->next)
+    for (exd = UNIT_EXTRA(d->cgetEditing()).m_pList; exd; exd = exd->next)
     {
-        if (exd == d->editref)
+        if (exd == d->getEditingReference())
         {
             break; // It still exists!
         }
@@ -173,7 +173,7 @@ void edit_extra(descriptor_data *d)
 
     if (exd)
     {
-        exd->descr = (d->localstr);
+        exd->descr = d->getLocalString();
     }
 }
 
@@ -182,9 +182,9 @@ void edit_info(descriptor_data *d)
 {
     extra_descr_data *exd = nullptr;
 
-    for (exd = PC_INFO(d->editing).m_pList; exd; exd = exd->next)
+    for (exd = PC_INFO(d->cgetEditing()).m_pList; exd; exd = exd->next)
     {
-        if (exd == d->editref)
+        if (exd == d->getEditingReference())
         {
             break; // It still exists!
         }
@@ -192,18 +192,18 @@ void edit_info(descriptor_data *d)
 
     if (exd)
     {
-        exd->descr = (d->localstr);
+        exd->descr = d->getLocalString();
     }
 }
 
 void edit_outside_descr(descriptor_data *d)
 {
-    UNIT_OUT_DESCR(d->editing) = (d->localstr);
+    UNIT_OUT_DESCR(d->getEditing()) = d->getLocalString();
 }
 
 void edit_inside_descr(descriptor_data *d)
 {
-    UNIT_IN_DESCR(d->editing) = (d->localstr);
+    UNIT_IN_DESCR(d->getEditing()) = d->getLocalString();
 }
 
 int search_block_set(char *arg, const char **list, bool exact)
@@ -467,7 +467,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Unit is already being edited.<br/>", ch);
                 return;
             }
-            CHAR_DESCRIPTOR(ch)->editing = unt;
+            CHAR_DESCRIPTOR(ch)->setEditing(unt);
             /* handle this later */
             break;
 
@@ -543,7 +543,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Unit is already being edited.<br/>", ch);
                 return;
             }
-            CHAR_DESCRIPTOR(ch)->editing = unt;
+            CHAR_DESCRIPTOR(ch)->setEditing(unt);
             /* handle takes care of the rest */
             break;
 
@@ -656,7 +656,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Unit is already being edited.<br/>", ch);
                 return;
             }
-            CHAR_DESCRIPTOR(ch)->editing = unt;
+            CHAR_DESCRIPTOR(ch)->setEditing(unt);
             /* handle rest later */
         }
         break;
@@ -707,7 +707,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 3: /* "outside description" */
             send_to_char("Modifying long description.<br/>", ch);
-            CHAR_DESCRIPTOR(ch)->postedit = edit_outside_descr;
+            CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_outside_descr);
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
             return;
 
@@ -745,9 +745,9 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Modifying existing description.<br/>", ch);
             }
 
-            CHAR_DESCRIPTOR(ch)->editref = ed;
-            CHAR_DESCRIPTOR(ch)->postedit = edit_extra;
-            CHAR_DESCRIPTOR(ch)->editing = unt;
+            CHAR_DESCRIPTOR(ch)->setEditReference(ed);
+            CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_extra);
+            CHAR_DESCRIPTOR(ch)->setEditing(unt);
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
             return;
 
@@ -1262,9 +1262,9 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Modifying existing description.<br/>", ch);
             }
 
-            CHAR_DESCRIPTOR(ch)->editref = ed;
-            CHAR_DESCRIPTOR(ch)->postedit = edit_info;
-            CHAR_DESCRIPTOR(ch)->editing = unt;
+            CHAR_DESCRIPTOR(ch)->setEditReference(ed);
+            CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_info);
+            CHAR_DESCRIPTOR(ch)->setEditing(unt);
             set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
             return;
 

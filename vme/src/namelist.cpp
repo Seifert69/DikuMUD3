@@ -419,7 +419,7 @@ const int cNamelist::IsNameIdx(const char *name)
     }
 }
 
-const char *cNamelist::Name(ubit32 idx)
+const char *cNamelist::Name(ubit32 idx) const
 {
     const char *test = nullptr;
 

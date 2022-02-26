@@ -214,24 +214,24 @@ void game_loop()
     }
 
     slog(LOG_ALL, 0, "Saving all players before exiting");
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
-        if (d->original != nullptr)
+        if (d->cgetOriginalCharacter() != nullptr)
         {
-            if (IS_PC(d->original) && UNIT_IN(d->original))
+            if (IS_PC(d->cgetOriginalCharacter()) && UNIT_IN(d->cgetOriginalCharacter()))
             {
-                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->original));
-                save_player(d->original);
-                save_player_contents(d->original, TRUE);
+                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetOriginalCharacter()));
+                save_player(d->getOriginalCharacter());
+                save_player_contents(d->getOriginalCharacter(), TRUE);
             }
         }
         else
         {
-            if (IS_PC(d->character) && UNIT_IN(d->character))
+            if (IS_PC(d->cgetCharacter()) && UNIT_IN(d->cgetCharacter()))
             {
-                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->character));
-                save_player(d->character);
-                save_player_contents(d->character, TRUE);
+                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetCharacter()));
+                save_player(d->getCharacter());
+                save_player_contents(d->getCharacter(), TRUE);
             }
         }
     }
@@ -261,38 +261,38 @@ void game_event()
     /* process_commands; */
     for (point = g_descriptor_list; point; point = g_next_to_process)
     {
-        g_next_to_process = point->next;
+        g_next_to_process = point->getNext();
 
-        if (--(point->wait) <= 0 && !point->qInput.IsEmpty())
+        if (point->predecrementLoopWaitCounter() <= 0 && !point->getInputQueue().IsEmpty())
         {
-            cQueueElem *qe = point->qInput.GetHead();
+            cQueueElem *qe = point->getInputQueue().GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
             delete qe;
 
-            point->wait = 1;
-            point->timer = 0;
-            point->prompt_mode = PROMPT_EXPECT;
+            point->setLoopWaitCounter(1);
+            point->setHoursPlayerIdle(0);
+            point->setPromptMode(PROMPT_EXPECT);
 
-            if (point->snoop.getSnoopBy())
+            if (point->cgetSnoopData().getSnoopBy())
             {
                 auto msg = diku::format_to_str("%s%s<br/>", SNOOP_PROMPT, pcomm);
-                send_to_descriptor(msg, CHAR_DESCRIPTOR(point->snoop.getSnoopBy()));
+                send_to_descriptor(msg, CHAR_DESCRIPTOR(point->cgetSnoopData().getSnoopBy()));
             }
 
-            point->fptr(point, pcomm);
+            point->callFunctionPtr(point, pcomm);
             FREE(pcomm);
         }
     }
 
     /* give the people some prompts */
-    for (point = g_descriptor_list; point; point = point->next)
+    for (point = g_descriptor_list; point; point = point->getNext())
     {
-        if (point->prompt_mode == PROMPT_EXPECT)
+        if (point->getPromptMode() == PROMPT_EXPECT)
         {
-            send_prompt(point->character);
+            send_prompt(point->getCharacter());
             send_to_descriptor("<go-ahead/>", point);
-            point->prompt_mode = PROMPT_IGNORE;
+            point->setPromptMode(PROMPT_IGNORE);
         }
     }
 

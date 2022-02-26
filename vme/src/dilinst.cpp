@@ -139,9 +139,9 @@ void dilfi_edit(dilprg *p)
         }
         else
         {
-            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->postedit = dil_edit_done;
-            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->editing = p->owner;
-            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->editref = nullptr;
+            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setPostEditFunctionPtr(dil_edit_done);
+            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setEditing(p->owner);
+            CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setEditReference(nullptr);
 
             set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), interpreter_string_add, TRUE);
         }
@@ -166,16 +166,14 @@ void dilfi_kedit(dilprg *p)
             d = CHAR_DESCRIPTOR((unit_data *)v1->val.ptr);
             if (d)
             {
-                if (d->postedit)
+                if (d->hasPostEditFunctionPtr())
                 {
-                    d->postedit(d);
+                    d->callPostEditFunctionPtr(d);
                 }
-                if (d->localstr)
-                    FREE(d->localstr);
-                d->localstr = nullptr;
-                d->editref = nullptr;
-                d->postedit = nullptr;
-                d->editing = nullptr;
+                d->clearLocalString();
+                d->setEditReference(nullptr);
+                d->setPostEditFunctionPtr(nullptr);
+                d->setEditing(nullptr);
                 set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), descriptor_interpreter, TRUE);
             }
         }
@@ -360,7 +358,7 @@ void dilfi_delpc(dilprg *p)
             {
                 if ((d = find_descriptor(((char *)v1->val.ptr), nullptr)))
                 {
-                    extract_unit(d->character);
+                    extract_unit(d->getCharacter());
                     descriptor_close(d);
                 }
                 else
@@ -1730,8 +1728,8 @@ void dilfi_sete(dilprg *p)
             {
                 if (CHAR_DESCRIPTOR((unit_data *)v2->val.ptr))
                 {
-                    protocol_send_text(CHAR_DESCRIPTOR((unit_data *)v2->val.ptr)->multi,
-                                       CHAR_DESCRIPTOR((unit_data *)v2->val.ptr)->id,
+                    protocol_send_text(CHAR_DESCRIPTOR((unit_data *)v2->val.ptr)->getMultiHookPtr(),
+                                       CHAR_DESCRIPTOR((unit_data *)v2->val.ptr)->getMultiHookID(),
                                        (((const char *)v1->val.ptr) + 2),
                                        MULTI_PROMPT_CHAR);
                 }

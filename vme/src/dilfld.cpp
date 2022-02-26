@@ -1908,11 +1908,11 @@ void dilfe_fld(dilprg *p)
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
-                            for (d = g_descriptor_list; d; d = d->next)
+                            for (d = g_descriptor_list; d; d = d->getNext())
                             {
-                                if (descriptor_is_playing(d) && d->original == vict)
+                                if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
                                 {
-                                    if (d->editing)
+                                    if (d->cgetEditing())
                                     {
                                         editing = TRUE;
                                     }
@@ -1924,7 +1924,7 @@ void dilfe_fld(dilprg *p)
                         {
                             if (IS_PC(vict) && CHAR_DESCRIPTOR(vict))
                             {
-                                if (CHAR_DESCRIPTOR(vict)->editing)
+                                if (CHAR_DESCRIPTOR(vict)->cgetEditing())
                                 {
                                     editing = TRUE;
                                 }
@@ -1964,11 +1964,11 @@ void dilfe_fld(dilprg *p)
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
-                            for (d = g_descriptor_list; d; d = d->next)
+                            for (d = g_descriptor_list; d; d = d->getNext())
                             {
-                                if (descriptor_is_playing(d) && d->original == vict)
+                                if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
                                 {
-                                    switched = d->character;
+                                    switched = d->getCharacter();
                                     break;
                                 }
                             }
@@ -1977,9 +1977,9 @@ void dilfe_fld(dilprg *p)
                         {
                             if (IS_NPC(vict) && CHAR_DESCRIPTOR(vict))
                             {
-                                if (CHAR_DESCRIPTOR(vict)->original)
+                                if (CHAR_DESCRIPTOR(vict)->cgetOriginalCharacter())
                                 {
-                                    switched = CHAR_DESCRIPTOR(vict)->character;
+                                    switched = CHAR_DESCRIPTOR(vict)->getCharacter();
                                 }
                             }
                         }

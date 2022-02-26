@@ -51,7 +51,7 @@ unit_data *get_follower(unit_data *u, int num)
 }
 
 /* Assumes UNIT_IN(room) == NULL */
-static ubit1 same_surroundings_room(unit_data *room, unit_data *u2)
+static ubit1 same_surroundings_room(const unit_data *room, const unit_data *u2)
 {
     if (!UNIT_IN(u2))
     {
@@ -71,7 +71,7 @@ static ubit1 same_surroundings_room(unit_data *room, unit_data *u2)
     return FALSE;
 }
 
-ubit1 same_surroundings(unit_data *u1, unit_data *u2)
+ubit1 same_surroundings(const unit_data *u1, const unit_data *u2)
 {
     if (!UNIT_IN(u1))
     {
@@ -135,7 +135,7 @@ ubit1 same_surroundings(unit_data *u1, unit_data *u2)
 static inline int pcpay(unit_data *u)
 {
     return ((PC_ACCOUNT(u).credit > 0.0) || (PC_ACCOUNT(u).discount == 100) || (PC_ACCOUNT(u).flatrate > (ubit32)time(nullptr)) ||
-            (CHAR_DESCRIPTOR(u) ? g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(u)->host) : 0));
+            (CHAR_DESCRIPTOR(u) ? g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(u)->getHostname()) : 0));
 }
 
 /* returns if ROOM is pay/no pay !0/0 */

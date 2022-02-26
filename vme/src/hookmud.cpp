@@ -127,11 +127,11 @@ int cMultiHook::Read()
 
     if (id != 0)
     {
-        for (d = g_descriptor_list; d; d = d->next)
+        for (d = g_descriptor_list; d; d = d->getNext())
         {
-            if (d->id == id)
+            if (d->getMultiHookID() == id)
             {
-                assert(d->multi == this);
+                assert(d->getMultiHookPtr() == this);
                 break;
             }
         }
@@ -186,7 +186,7 @@ int cMultiHook::Read()
 
         case MULTI_CONNECT_REQ_CHAR:
             d = descriptor_new(this);
-            protocol_send_confirm(this, d->id);
+            protocol_send_confirm(this, d->getMultiHookID());
             send_to_descriptor("<mud-init/>", d);
             send_to_descriptor(g_cServerConfig.getLogo(), d);
             send_to_descriptor("By what name do they call you? ", d);
@@ -197,10 +197,9 @@ int cMultiHook::Read()
             {
                 ubit8 *b = (ubit8 *)data;
 
-                d->nPort = bread_ubit16(&b);
-                d->nLine = bread_ubit8(&b);
-                strncpy(d->host, (char *)b, sizeof(d->host));
-                d->host[sizeof(d->host) - 1] = 0;
+                d->setMplexPortNum(bread_ubit16(&b));
+                d->setSerialLine(bread_ubit8(&b));
+                d->setHostname(reinterpret_cast<const char *>(b));
             }
             if (data)
                 FREE(data);
@@ -214,7 +213,7 @@ int cMultiHook::Read()
                 //
                 char *mystr = html_encode_utf8(data);
 
-                d->qInput.Append(new cQueueElem(mystr, FALSE));
+                d->getInputQueue().Append(new cQueueElem(mystr, FALSE));
                 if (data)
                     FREE(data);
             }
@@ -239,8 +238,8 @@ void multi_clear()
 
     for (d = g_descriptor_list; d; d = nextd)
     {
-        nextd = d->next;
-        if (!d->multi->IsHooked())
+        nextd = d->getNext();
+        if (!d->getMultiHookPtr()->IsHooked())
         {
             descriptor_close(d);
         }

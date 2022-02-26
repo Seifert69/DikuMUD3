@@ -19,7 +19,7 @@
 #include <cstring>
 
 /* also used in "corpses" wizard-command */
-const char *in_string(unit_data *ch, unit_data *u)
+const char *in_string(const unit_data *ch, const unit_data *u)
 {
     static std::string in_str;
     in_str.clear();
@@ -46,13 +46,13 @@ void player_where(unit_data *ch, char *arg)
     descriptor_data *d = nullptr;
     int any = FALSE;
 
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->getNext())
     {
-        if (d->character && (d->character != ch) && UNIT_IN(d->character) && descriptor_is_playing(d) &&
-            (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->character))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
-            d->original == nullptr && CHAR_CAN_SEE(ch, d->character) && unit_zone(ch) == unit_zone(d->character))
+        if (d->cgetCharacter() && (d->cgetCharacter() != ch) && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
+            (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->cgetCharacter()))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
+            d->cgetOriginalCharacter() == nullptr && CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
         {
-            auto msg = diku::format_to_str("%-30s at %s<br/>", UNIT_NAME(d->character), TITLENAME(unit_room(d->character)));
+            auto msg = diku::format_to_str("%-30s at %s<br/>", UNIT_NAME(d->cgetCharacter()), TITLENAME(unit_room(d->getCharacter())));
             send_to_char(msg, ch);
             any = TRUE;
         }
@@ -89,22 +89,23 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
     {
         mystr = "<u>Players</u><br/>";
 
-        for (d = g_descriptor_list; d; d = d->next)
+        for (d = g_descriptor_list; d; d = d->getNext())
         {
-            if (d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
-                (d->original == nullptr || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
+            if (d->cgetCharacter() && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
+                CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
+                (d->cgetOriginalCharacter() == nullptr || CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetOriginalCharacter())))
             {
                 nCount++;
                 std::string whose_body;
-                if (d->original)
+                if (d->cgetOriginalCharacter())
                 { /* If switched */
-                    whose_body = diku::format_to_str(" In body of %s", UNIT_NAME(d->character));
+                    whose_body = diku::format_to_str(" In body of %s", UNIT_NAME(d->cgetCharacter()));
                 }
 
                 mystr += diku::format_to_str("%-20s - %s [%s]%s<br/>",
-                                             UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                                             UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
-                                             in_string(ch, d->character),
+                                             UNIT_NAME(CHAR_ORIGINAL(d->cgetCharacter())),
+                                             UNIT_SEE_TITLE(ch, UNIT_IN(d->cgetCharacter())),
+                                             in_string(ch, d->cgetCharacter()),
                                              whose_body);
             }
         }

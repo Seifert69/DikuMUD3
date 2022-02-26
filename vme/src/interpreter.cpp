@@ -282,7 +282,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
         return;
     }
 
-    if (IS_PC(ch) && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->editing)
+    if (IS_PC(ch) && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->cgetEditing())
     {
         return;
     }
@@ -308,7 +308,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
     {
         if (*arg == '!')
         {
-            arg = CHAR_DESCRIPTOR(ch)->history;
+            arg = CHAR_DESCRIPTOR(ch)->getCommandHistory();
         }
         else
         {
@@ -316,7 +316,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
             {
                 is_say = TRUE;
                 *arg = ' ';
-                strcpy(CHAR_DESCRIPTOR(ch)->history, arg);
+                CHAR_DESCRIPTOR(ch)->setCommandHistory(arg);
             }
             else
             {
@@ -324,11 +324,11 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
                 {
                     is_emote = TRUE;
                     *arg = ' ';
-                    strcpy(CHAR_DESCRIPTOR(ch)->history, arg);
+                    CHAR_DESCRIPTOR(ch)->setCommandHistory(arg);
                 }
                 else
                 {
-                    strcpy(CHAR_DESCRIPTOR(ch)->history, arg);
+                    CHAR_DESCRIPTOR(ch)->setCommandHistory(arg);
                 }
             }
         }
@@ -355,7 +355,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
     if (CHAR_DESCRIPTOR(ch))
     {
-        strcpy(CHAR_DESCRIPTOR(ch)->last_cmd, cmd);
+        CHAR_DESCRIPTOR(ch)->setLastCommand(cmd);
     }
 
     if (!cmd[0])
@@ -498,7 +498,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
 int descriptor_is_playing(descriptor_data *d)
 {
-    return d && d->character && char_is_playing(d->character);
+    return d && d->cgetCharacter() && char_is_playing(d->getCharacter());
 }
 
 // If unit is linked in the global list then it's in the game
@@ -509,14 +509,14 @@ int char_is_playing(unit_data *u)
 
 void descriptor_interpreter(descriptor_data *d, char *arg)
 {
-    assert(d->character);
-    command_interpreter(d->character, arg);
+    assert(d->cgetCharacter());
+    command_interpreter(d->getCharacter(), arg);
 }
 
 /* Check to see if the full command was typed */
 ubit1 cmd_is_abbrev(unit_data *ch, const command_info *cmd)
 {
-    return CHAR_DESCRIPTOR(ch) && str_ccmp(CHAR_DESCRIPTOR(ch)->last_cmd, cmd->cmd_str);
+    return CHAR_DESCRIPTOR(ch) && str_ccmp(CHAR_DESCRIPTOR(ch)->getLastCommand(), cmd->cmd_str);
 }
 
 /* To check for commands by string */
@@ -878,7 +878,7 @@ int send_preprocess(unit_data *ch, const command_info *cmd, char *arg)
     return basic_special(ch, &sarg, SFB_CMD);
 }
 
-int send_edit(unit_data *ch, char *arg)
+int send_edit(unit_data *ch, const char *arg)
 {
     spec_arg sarg;
 

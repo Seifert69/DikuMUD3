@@ -299,7 +299,7 @@ void do_ban(unit_data *ch, char *arg, const command_info *cmd)
 }
 
 /* Complex little recursive bugger */
-bool ban_check(char *ban, char *site) /* TRUE, if banned */
+bool ban_check(char *ban, const char *site) /* TRUE, if banned */
 {
     if (*ban == '\0' && *site == '\0')
     {
@@ -337,7 +337,7 @@ bool ban_check(char *ban, char *site) /* TRUE, if banned */
     }
 }
 
-char site_banned(char *cur_site)
+char site_banned(const char *cur_site)
 {
     ban_t *entry = nullptr;
     ban_t *next_entry = nullptr;
@@ -360,7 +360,7 @@ char site_banned(char *cur_site)
     return NO_BAN;
 }
 
-void show_ban_text(char *site, descriptor_data *d)
+void show_ban_text(const char *site, descriptor_data *d)
 {
     ban_t *entry = nullptr;
     char bantext[MAX_STRING_LENGTH];

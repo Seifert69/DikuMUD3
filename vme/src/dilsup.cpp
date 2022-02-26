@@ -19,7 +19,7 @@ int pay_point_charlie(unit_data *ch, unit_data *to)
     {
         if (CHAR_DESCRIPTOR(ch))
         {
-            if (g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(ch)->host))
+            if (g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(ch)->getHostname()))
             {
                 return TRUE;
             }

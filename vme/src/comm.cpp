@@ -134,23 +134,23 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
 {
     if (d && messg && *messg)
     {
-        if (d->prompt_mode == PROMPT_IGNORE)
+        if (d->getPromptMode() == PROMPT_IGNORE)
         {
-            d->prompt_mode = PROMPT_EXPECT;
+            d->setPromptMode(PROMPT_EXPECT);
             send_to_descriptor("<br/>", d);
         }
 
-        if (d->multi->bWebsockets)
+        if (d->getMultiHookPtr()->bWebsockets)
         {
-            protocol_send_text(d->multi, d->id, messg, MULTI_TEXT_CHAR);
+            protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), messg, MULTI_TEXT_CHAR);
         }
         else
         {
-            unit_data *u = d->character;
+            const unit_data *u = d->cgetCharacter();
 
             if (!u || !IS_PC(u))
             { // switched or snooped?
-                u = d->original;
+                u = d->cgetOriginalCharacter();
             }
 
             assert(IS_PC(u));
@@ -159,13 +159,13 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
             // char buf[strlen(messg) + 10000];
 
             substHTMLcolor(dest, messg, UPC(u)->color);
-            protocol_send_text(d->multi, d->id, dest.c_str(), MULTI_TEXT_CHAR);
+            protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), dest.c_str(), MULTI_TEXT_CHAR);
         }
 
-        if (d->snoop.getSnoopBy())
+        if (d->cgetSnoopData().getSnoopBy())
         {
-            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
-            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
+            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
+            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
         }
     }
 }
@@ -188,12 +188,12 @@ void page_string(descriptor_data *d, const char *messg)
         mystr.append(messg);
         mystr.append("</paged>");
 
-        protocol_send_text(d->multi, d->id, mystr.c_str(), MULTI_PAGE_CHAR);
+        protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), mystr.c_str(), MULTI_PAGE_CHAR);
 
-        if (d->snoop.getSnoopBy())
+        if (d->cgetSnoopData().getSnoopBy())
         {
-            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
-            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.getSnoopBy()));
+            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
+            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
         }
     }
 }
@@ -225,7 +225,7 @@ void send_to_all(const char *messg)
 
     if (messg && *messg)
     {
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i))
             {
@@ -246,11 +246,11 @@ void send_to_zone_outdoor(const zone_type *z, const char *messg)
 
     if (messg && *messg)
     {
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = g_descriptor_list; i; i = i->getNext())
         {
-            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && unit_zone(i->character) == z && CHAR_AWAKE(i->character) &&
-                !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
-                !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
+            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && unit_zone(i->cgetCharacter()) == z &&
+                CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(UNIT_FLAGS(unit_room(i->getCharacter())), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }
@@ -264,11 +264,11 @@ void send_to_outdoor(const char *messg)
 
     if (messg && *messg)
     {
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = g_descriptor_list; i; i = i->getNext())
         {
-            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && CHAR_AWAKE(i->character) &&
-                !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
-                !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
+            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && CHAR_AWAKE(i->cgetCharacter()) &&
+                !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(UNIT_FLAGS(unit_room(i->getCharacter())), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }

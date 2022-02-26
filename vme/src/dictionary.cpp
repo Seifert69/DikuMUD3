@@ -211,7 +211,7 @@ static int push_alias(char *s, char *arg, trie_type *t, unit_data *ch, bool firs
         }
         else
         { /* not a new alias, so it's probably a command */
-            CHAR_DESCRIPTOR(ch)->qInput.Append(new cQueueElem(par));
+            CHAR_DESCRIPTOR(ch)->getInputQueue().Append(new cQueueElem(par));
         }
 
         if (c)
@@ -737,7 +737,8 @@ static int local_dictionary(spec_arg *sarg)
      *  as the user might have typed `in', which the interpreter expands
      *  to `inventory' in the cmd->cmd_str.
      */
-    if (alias_h->trie == nullptr || (al = (alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->last_cmd, alias_h->trie)) == nullptr)
+    if (alias_h->trie == nullptr ||
+        (al = (alias_t *)search_trie(CHAR_DESCRIPTOR(sarg->activator)->getLastCommand(), alias_h->trie)) == nullptr)
     {
         return SFR_SHARE;
     }
@@ -761,11 +762,11 @@ static int local_dictionary(spec_arg *sarg)
     /*  In the unlikely (?) event that one or more commands sneak in on the
      *  command queue before we get to to process, we have to empty it...
      */
-    for (i = 0; !CHAR_DESCRIPTOR(sarg->activator)->qInput.IsEmpty();)
+    for (i = 0; !CHAR_DESCRIPTOR(sarg->activator)->getInputQueue().IsEmpty();)
     {
         if (i < 256) /* 256 should certainly be enough, but check anyway */
         {
-            cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
+            cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->getInputQueue().GetHead();
             cmd_array[i++] = (char *)qe->Data();
             qe->SetNull();
             delete qe;
@@ -778,9 +779,9 @@ static int local_dictionary(spec_arg *sarg)
         /* Execute first of `derived' commands to avoid silly `command lag'
          * This is very ugly
          */
-        if (!CHAR_DESCRIPTOR(sarg->activator)->qInput.IsEmpty())
+        if (!CHAR_DESCRIPTOR(sarg->activator)->getInputQueue().IsEmpty())
         {
-            cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
+            cQueueElem *qe = CHAR_DESCRIPTOR(sarg->activator)->getInputQueue().GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
             delete qe;
@@ -790,7 +791,7 @@ static int local_dictionary(spec_arg *sarg)
     /* Put popped commands back on queue and clean up */
     while (i--)
     {
-        CHAR_DESCRIPTOR(sarg->activator)->qInput.Append(new cQueueElem(cmd_array[i]));
+        CHAR_DESCRIPTOR(sarg->activator)->getInputQueue().Append(new cQueueElem(cmd_array[i]));
     }
 
     /* Ok, now we can safely call command interpreter. */

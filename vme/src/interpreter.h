@@ -104,7 +104,7 @@ int send_ack(unit_data *activator,
              unit_data *extra_target = nullptr,
              char *to = nullptr);
 int send_message(unit_data *ch, char *arg);
-int send_edit(unit_data *ch, char *arg);
+int send_edit(unit_data *ch, const char *arg);
 int send_death(unit_data *ch);
 int send_combat(unit_data *ch);
 int send_prompt(unit_data *pc);

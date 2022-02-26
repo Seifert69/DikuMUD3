@@ -78,9 +78,9 @@ unit_data *find_player(char *name)
 
     d = find_descriptor(name, nullptr);
 
-    if (d && (d->fptr == descriptor_interpreter) && d->character)
+    if (d && (d->getFunctionPtr() == descriptor_interpreter) && d->cgetCharacter())
     {
-        return d->character;
+        return d->getCharacter();
     }
     else
     {
@@ -402,18 +402,18 @@ void save_player(unit_data *pc)
         ubit32 used = 0;
 
         t0 = time(nullptr);
-        if (t0 < CHAR_DESCRIPTOR(pc)->logon)
+        if (t0 < CHAR_DESCRIPTOR(pc)->getLastLogonTime())
         {
             slog(LOG_ALL, 0, "PCSAVE: Current less than last logon");
-            CHAR_DESCRIPTOR(pc)->logon = t0;
+            CHAR_DESCRIPTOR(pc)->setLastLogonTime(t0);
         }
 
-        account_subtract(pc, CHAR_DESCRIPTOR(pc)->logon, t0);
+        account_subtract(pc, CHAR_DESCRIPTOR(pc)->getLastLogonTime(), t0);
 
-        used = t0 - CHAR_DESCRIPTOR(pc)->logon;
+        used = t0 - CHAR_DESCRIPTOR(pc)->getLastLogonTime();
 
         PC_TIME(pc).played += used;
-        CHAR_DESCRIPTOR(pc)->logon = t0;
+        CHAR_DESCRIPTOR(pc)->setLastLogonTime(t0);
 
         if (account_is_closed(pc))
         {

@@ -196,9 +196,9 @@ void destruct_unit(unit_data *unit)
         /* If the PC which is switched is extracted, then unswitch */
         if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
         {
-            for (d = g_descriptor_list; d; d = d->next)
+            for (d = g_descriptor_list; d; d = d->getNext())
             {
-                assert(d->original != unit);
+                assert(d->cgetOriginalCharacter() != unit);
             }
         }
 
