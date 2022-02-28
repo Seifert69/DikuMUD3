@@ -520,6 +520,39 @@ else
 }
 dilend
 
+
+// Called via make_corpse when a unit is killed to clean up justice
+// 'self' is killed. crp is the corpse.
+//
+dilbegin die(crp : unitptr);
+var
+   jd : unitptr;
+   exd : extraptr;
+code
+{
+   // Copy any reward infor to corpse
+   //
+   exd := "$reward" in self.extra;
+
+   while (exd)
+   {
+      addextra(crp.extra, exd.names, exd.descr);
+      exd := "$reward" in exd.next;
+   }
+
+   if (self.type==UNIT_ST_PC)
+   {      
+      jd := findsymbolic("database@justice");
+  
+      //remove all entreis from the justice database
+      subextra(jd.extra, self.name);
+   }
+
+   return;
+}
+dilend
+
+
 // FindCriminal
 //    Given a name, locate it in the reward list.
 //

@@ -45,12 +45,12 @@
         {
             "source_file": {
                 "filename": "barbarian.zon",
-                "sha512": "dff4a9b79c9efe202329569c62f91e7e0e77eb9b6ea7523b1bc79db8dc10e92b8df13851d6d58b8b40c0b3594eae49b67e2419b3bd7016ff0f17bc2f57aa85f8"
+                "sha512": "5a4f0774c37aa2e3decc540767e9b2898566a8bc2483d89bca6a1319e83a3ebd9b181a4915417c1e24a94c9568c4945f23ecb5feee7d01b637ca84d1db9116b5"
             },
             "output": [
                 {
                     "filename": "barbarian.data",
-                    "sha512": "b45b7af121efe66057a97ed88a8fa0aa8af0bcea8eab351a981ca5e9b08d9d7e93b6ac754a712d7eaee2f69a9310650b819fcddc87fe8d67680f80e0c6f6491e"
+                    "sha512": "3044b1fa7d27a6dd99d146e02ea8cba2d9b26654313364d7e6b836a8df5017f9639ff112b377d62233a8310df831a86742ef627e7e4be98770778542c3d8f2e5"
                 },
                 {
                     "filename": "barbarian.reset",
@@ -269,12 +269,12 @@
         {
             "source_file": {
                 "filename": "death.zon",
-                "sha512": "8fafbbab0d929d2cc1f375c6223599fbaac642583a8e3d6e1ec3e1cf99a710d8a22cccfeb8c0e8e2707d52960a42816665e10913cedb6c66405167191418728b"
+                "sha512": "febb2e11291db401966b18db8750e544477f21c1acad38b7a304b165e5a92a6d1149daf57847d5f904f98e0db6db0d45cc0e2e7a54b92a63ab138dd23a464df5"
             },
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "e81b1f8fb61beb809028098b483d107a1b2ef0a2515ad0f69f082fae94ca02832e0a6cf4defd79cd0547ec3bf72c3821f5487e7035804c750888087588627899"
+                    "sha512": "e9c8f9d4f0164e13b33478b28de1fdf2c57cdce9ae293b0fb2acf85671a95d938ecff2cf2f9c66a30eef778123fcdec27b3cc1c0dd944b38b6ad49a12b1efdf2"
                 },
                 {
                     "filename": "death.reset",
@@ -397,7 +397,7 @@
         {
             "source_file": {
                 "filename": "guilds.zon",
-                "sha512": "270dbbe5ace21ef0c565e75314d7da5a074ea477d9156c704685ee4847ee6c583f04ef0fadaa67c4e086b7bda633e2fe77a38d539d0ecb50d72fec5d2de75f3e"
+                "sha512": "13bdd8d652faceba9e233b7aba5d8b71c3f5fc435662f976e39bc2896c1db5f68f3c37c6ba948ba9eb87b8c5ec7c275135110f44d7d7c3407debbd61ea6f7735"
             },
             "output": [
                 {
@@ -509,12 +509,12 @@
         {
             "source_file": {
                 "filename": "justice.zon",
-                "sha512": "64680f6b490e48e8744e02357b69ac0ea50952d4dc4064efef7d943d7ed624f1066edc242f3684baa81251100f7019a1b0a0bf648f6e67cecf7d272c0a78f9eb"
+                "sha512": "519bab6441f29534e31552d8da1614756e62d88a0ad8a8df24add1a0b97e8ce52fb7f33d5b1e86bb3b1f255a4aec8d644e59504270a61ff63038ce1f792313b6"
             },
             "output": [
                 {
                     "filename": "justice.data",
-                    "sha512": "2176d670bd612be846f04331767fd70246205402a7aa78eea035c3ec789d10c6354e5e8b002651a36545993069fb23742d23bf5c5dcdf0626e70a3cff164d8bb"
+                    "sha512": "358ce6ec1d990114975dc5510b48857067d7c926396c83eb8f833240dab674748d4f06eebb6ade4512fbd8c22abf82fffbef76c41573c404325bf00191246f0d"
                 },
                 {
                     "filename": "justice.reset",
@@ -861,12 +861,12 @@
         {
             "source_file": {
                 "filename": "spells.zon",
-                "sha512": "ba77c967c0abf833c8b85ace97dc910337ef4aaf2833aa834e52764a17ac84c6cf5475e42c58373550607027ec804d2d3cbaff78bba1aac32591df0806c3a23e"
+                "sha512": "c16dd737760a959342b30eef966ac68ae70815f63a2f33d96f851f6a0f9f8a00741fbe8b898702140b849887c1aab76620422efa4adbfca03a8ec56c84e60af9"
             },
             "output": [
                 {
                     "filename": "spells.data",
-                    "sha512": "f3d25f4ca3b4cfb80a0961624f73c39edf69d1308fb55c3107c5640449958bdc332f9cd98df045e74b122dd9dcf30e35af352a9b9404d337cbf355463298cca2"
+                    "sha512": "b08d4d6427f879669321e4bdbc4bd995f1edce207b42c79e7beefe3412787d0d2d6a9a2907263316bac7b66aabc1de0681b2b139ce5d40cb5d143f43a6e6360f"
                 },
                 {
                     "filename": "spells.reset",

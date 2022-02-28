@@ -10,7 +10,7 @@ END HEADER*/
 
 #define _GUILD_BARBARIAN
 #define BARBARIAN_ITEM "$Barbarian Gauntlet Given"
-#define QUEST_BEAR_BRAWL "Barbarian Bear Brawl"
+#define QUEST_ENTRY    "Barbarian Entry"
 
 /* This zone is the Barbarians Guild, skillful and agile warriors. */
 
@@ -82,7 +82,7 @@ code
    if (self.outside.fighting == null)
       goto init;
 
-   if (self.outside.fighting.race != RACE_BEAR)
+   if (self.outside.fighting.race != RACE_WOLF)
       goto init;
 
    // Make sure the player fights a healthy opponent
@@ -142,8 +142,8 @@ code
 
    if (command(CMD_AUTO_DEATH))
    {
-      qstMarkComplete@quests(self.outside, QUEST_BEAR_BRAWL);
-		act("Your instincts feel awakened.", A_ALWAYS, self.outside, null, null, TO_CHAR);
+      qstMarkComplete@quests(self.outside, QUEST_ENTRY);
+	  act("Your instincts feel awakened.", A_ALWAYS, self.outside, null, null, TO_CHAR);
       quit;
    }
 
@@ -734,11 +734,11 @@ dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian",
       "say Remember, this will only work for thieves.",
       "::$3n hands you a mug of black ale.::$3n hands a mug of black ale to $1n."});
 
-dilcopy MasterJoin@guilds(GUILD_BARBARIAN, GUILD_BARBARIAN_EXCL, QUEST_BEAR_BRAWL, 
+dilcopy MasterJoin@guilds(GUILD_BARBARIAN, GUILD_BARBARIAN_EXCL, QUEST_ENTRY, 
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
  {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
- {"say To join $1N, you must prove yourself worthy by completing the Bear Brawl quest.","say Go speak with Raz."},
+ {"say To join $1N, you must prove yourself worthy by completing the Barbarian quest.","say Go speak with Raz."},
  {"handshake $1N", "say Welcome to the Barbarian's Guild, $1N."});
 
 
@@ -1057,17 +1057,17 @@ code
    :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   if (IsInGuild@guilds(activator, QUEST_BEAR_BRAWL))
+   if (IsInGuild@guilds(activator, QUEST_ENTRY))
       goto start;
 
-   pc := qstWaitDone@quests(QUEST_BEAR_BRAWL, activator, 
+   pc := qstWaitDone@quests(QUEST_ENTRY, activator, 
             {"cheer $1N", 
             "say Excellent, $1N! You have the instincts of a Barbarian in your blood."}, 800, 2 * COPPER_MULT, {""});
 
-	pc := qstWaitHero@quests(QUEST_BEAR_BRAWL, activator, 
+	pc := qstWaitHero@quests(QUEST_ENTRY, activator, 
 		{"look $1N",
 		"say To join the Barbarian's guild you have to prove your raw instincts.",
-      "say We require that you kill a bear with your bare hands wearing nothing but a loin cloth.",
+      "say We require that you kill an arctic wolf with your bare hands wearing nothing but a loin cloth.",
       "say Are you up for the challenge, $1n?"}, "");
 
    if (pc == null)
@@ -1076,9 +1076,9 @@ code
    secure(pc, start);
 
    // Quest accepted
-   exdp := qstAssign@quests(QUEST_BEAR_BRAWL, pc, 
+   exdp := qstAssign@quests(QUEST_ENTRY, pc, 
       {"say Excellent!", "clap $1N"},
-      "Raz in the Barbarian guild has requested that you kill a bear with your bare hands wearing only a loin cloth.");
+      "Raz in the Barbarian guild has requested that you kill an arctic wolf with your bare hands wearing only a loin cloth.");
 
    u := load("barb_cloth@barbarian");
    link(u, pc);

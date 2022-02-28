@@ -1,6 +1,8 @@
 #include <macros.h>
 
 /*
+Statue@death / Petrify, seems to save NPCs. Do PCs work as one should expect?
+
 Hedge_wall - NPC attack it if in the way?
 
 All the guilds processed (Monk is not complete):

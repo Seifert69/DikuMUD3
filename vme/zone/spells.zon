@@ -102,28 +102,35 @@ dilend
 
 
 dilbegin displace_magic(medi : unitptr, tgt : unitptr, arg : string,
-                       hm : integer, effect : string);
+                        hm : integer, effect : string);
 var
-count:integer;
+   count:integer;
 code
 {
-   if ((hm < 0) or (self.endurance<=20))
+   if (self.endurance <= 20)
    {
-      act("Nothing happens.",
-	  A_ALWAYS, self, null, null, TO_CHAR);
+      act("You're too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
-      hm := hm/10+1;
-      if (hm>15)
-	hm := 15;
+   if (hm < 0)
+   {
+      sendto("spl_displace " + itoa(hm), tgt);
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
 
-count:=0;
-interrupt (SFB_MSG , "inc displace counter" == argument,inc_count);
+   count:=0;
+   interrupt (SFB_MSG , "inc displace counter" == argument,inc_count);
    sendto("spl_displace "+itoa(hm), tgt);
    interrupt(SFB_DEAD, activator == tgt, stop);
 
-   :loop:
+   hm := hm/10+1;
+   if (hm>15)
+   	hm := 15;
+
+
+:loop:
    count:=count+1;
    if (isaff(tgt, ID_BLESS))
      subaff(tgt, ID_BLESS);
@@ -239,23 +246,26 @@ interrupt (SFB_MSG , "inc displace counter" == argument,inc_count);
      subaff(tgt, ID_MIRE);
    else
      quit;
+
 :inc_count:
-if (self.endurance<30) self.endurance:=0;
-else
-self.endurance:=self.endurance-30;
-if (self.endurance==0)
-  {
-   self.position:=POSITION_STUNNED;
-   quit;
+   if (self.endurance<30)
+      self.endurance:=0;
+   else
+      self.endurance:=self.endurance-30;
+   
+   if (self.endurance==0)
+   {
+      self.position:=POSITION_STUNNED;
+      quit;
    }
 
-if (count==hm)
-  quit;
+   if (count >= hm)
+      quit;
 
    goto loop;
 
 :stop:
-quit;
+   quit;
 }
 dilend
 
@@ -12004,7 +12014,7 @@ code
 :castit:
 */  
 
-  amod := {" natural-looking","n angry-looking"," seemingly agonized",
+   amod := {" natural-looking","n angry-looking"," seemingly agonized",
             " visibly terrified"};
    pmod := {"standing","sitting","lying"};
    slist := getwords(tgt.names.[0]);
@@ -12017,14 +12027,23 @@ code
    addstring(tinfo, tgt.outside.zoneidx);
 
    room := tgt.outside;
+
+   addextra(tgt.extra, {"$petrify"}, itoa(self.abilities[ABIL_DIV])); // Needed in make_corpse() if char dies
    hm := attack_spell(SPL_PETRIFY, self, medi, tgt, 0, effect);
-   if(tgt == null) goto stoned;
+   if (tgt == null)
+      goto stoned;
+   subextra(tgt.extra, "$petrify");
    quit;
 
 :stoned:
+   quit;
+
+   // Code below disabled. Replaced with improvement in make_corpse@death
+   // and expanded with use of displace magic spell.
+
    statue := load("stat_corpse@spells");
    link(statue, room);
-
+ 
    set_weight_base(statue, atoi(tinfo.[3]));
    if(atoi(tinfo.[4]) == POSITION_STANDING)
    {
@@ -14682,6 +14701,7 @@ CONTAINER_DEF(1000)
 manipulate {MANIPULATE_ENTER}
 extra {}
 "It is a remarkably life-like statue..."
+
 dilbegin stat_blow();
 var
  r   : integer;
@@ -14728,6 +14748,7 @@ dilend
 dilcopy report_corpse@death();
 dilcopy bob_code@death();
 end
+
 
 bram_bush
 names {"brambles", "bush"}
@@ -14979,7 +15000,14 @@ NATURAL_DEF(WPN_CLAW, ARM_CHAIN)
 MSET_ABILITY(21,21,5,23,5,5,10,10)
 MSET_WEAPON(6,6,6,6,30,6)
 MSET_SPELL(2,2,2,10,2,10,2,2,2,3,3)
-
+dilbegin timer();
+code
+{
+   heartbeat := PULSE_SEC * 120;
+   destroy(self);
+   quit;
+}
+dilend
 end
 
 skeleton
