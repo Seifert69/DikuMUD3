@@ -2677,8 +2677,11 @@ void dilfi_ada(dilprg *p)
             }
             else if (IS_OBJ((unit_data *)v1->val.ptr))
             {
-                if (is_in(-v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
+                if (is_in(v2->val.num, 1, ID_TOP_IDX) &&
+                    is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v11->val.num, APF_NONE, APF_MAX))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                     {
@@ -2710,7 +2713,8 @@ void dilfi_ada(dilprg *p)
                 }
                 else
                 {
-                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect parameters OOB (ada).", p->frame->tmpl->prgname);
+                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
+                             p->frame->tmpl->prgname, v2->val.num, v8->val.num, v9->val.num, v10->val.num, v11->val.num);
                 }
             }
             else
