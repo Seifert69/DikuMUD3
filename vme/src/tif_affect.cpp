@@ -349,7 +349,14 @@ void tif_torch_tick(unit_affected_type *af, unit_data *unit)
     {
         if (IS_CHAR(UNIT_IN(unit)))
         {
-            act("Your $2N is getting dim.", A_HIDEINV, UNIT_IN(unit), unit, cActParameter(), TO_CHAR);
+            if (af->duration <= 0)
+            {
+                act("Your $2N goes out.", A_HIDEINV, UNIT_IN(unit), unit, cActParameter(), TO_CHAR);
+            }
+            else
+            {
+                act("Your $2N is getting dim.", A_HIDEINV, UNIT_IN(unit), unit, cActParameter(), TO_CHAR);
+            }
         }
     }
 }
