@@ -343,13 +343,13 @@ void tif_eyes_tingle(unit_affected_type *af, unit_data *unit)
 void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 {
     if (OBJ_VALUE(unit, 0) > 0)
-        OBJ_VALUE(unit, 0)--;
+        OBJ_VALUE(unit, 0)--;  // Decreash how many hours of burning are left.
 
     if (af->duration <= 4)
     {
         if (IS_CHAR(UNIT_IN(unit)))
         {
-            if (af->duration <= 0)
+            if (af->duration <= 1) // Last tick.
             {
                 act("Your $2N goes out.", A_HIDEINV, UNIT_IN(unit), unit, cActParameter(), TO_CHAR);
             }
