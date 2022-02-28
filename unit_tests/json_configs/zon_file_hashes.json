@@ -269,12 +269,12 @@
         {
             "source_file": {
                 "filename": "death.zon",
-                "sha512": "febb2e11291db401966b18db8750e544477f21c1acad38b7a304b165e5a92a6d1149daf57847d5f904f98e0db6db0d45cc0e2e7a54b92a63ab138dd23a464df5"
+                "sha512": "472fdd8d5f54067a1621114aa27aca7a4d8fa2c39658488961dbb3dbc2ddb4d17417d385a251bc9959b150f47e0106637d507f41b9a0b7776396a285b55491d7"
             },
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "e9c8f9d4f0164e13b33478b28de1fdf2c57cdce9ae293b0fb2acf85671a95d938ecff2cf2f9c66a30eef778123fcdec27b3cc1c0dd944b38b6ad49a12b1efdf2"
+                    "sha512": "016eca0190079255f1675b2d04fcd8d639e10d12c522d1acb96d5dd7901d605425fb36abca82139f46a7bb7feedc9fe6601321ae2391cc342b3a1f3600b77b0b"
                 },
                 {
                     "filename": "death.reset",
@@ -861,12 +861,12 @@
         {
             "source_file": {
                 "filename": "spells.zon",
-                "sha512": "c16dd737760a959342b30eef966ac68ae70815f63a2f33d96f851f6a0f9f8a00741fbe8b898702140b849887c1aab76620422efa4adbfca03a8ec56c84e60af9"
+                "sha512": "b390a31afbc9691286f34adc8a8ecd5879be79c6bb259f1728c2b892e2255bf13f844305502513a2c48da7085fed7f3e4dc7be7b3a08be4dd741431339cda0d9"
             },
             "output": [
                 {
                     "filename": "spells.data",
-                    "sha512": "b08d4d6427f879669321e4bdbc4bd995f1edce207b42c79e7beefe3412787d0d2d6a9a2907263316bac7b66aabc1de0681b2b139ce5d40cb5d143f43a6e6360f"
+                    "sha512": "da8a75e145a4d062d3fa0915e582b0abf49d6ebbb46dee09af832c0d0b55ecdbce18c23f8e97b8e1905356fcd9fa7a68de7c16224ef959f2ccf3517cc3c8d10a"
                 },
                 {
                     "filename": "spells.reset",

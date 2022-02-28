@@ -107,6 +107,9 @@ var
    count:integer;
 code
 {
+   // MS2022. Intentionally changed displace magic to send spl_dispel
+   //    message. So that code reacting to it works either way.
+   //
    if (self.endurance <= 20)
    {
       act("You're too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -115,14 +118,14 @@ code
 
    if (hm < 0)
    {
-      sendto("spl_displace " + itoa(hm), tgt);
+      sendto("spl_dispel " + itoa(hm), tgt);
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
    count:=0;
    interrupt (SFB_MSG , "inc displace counter" == argument,inc_count);
-   sendto("spl_displace "+itoa(hm), tgt);
+   sendto("spl_dispel "+itoa(hm), tgt);
    interrupt(SFB_DEAD, activator == tgt, stop);
 
    hm := hm/10+1;
@@ -7168,27 +7171,34 @@ dilend
 
 
 dilbegin dispel_magic(medi : unitptr, tgt : unitptr,
-		      arg : string,
-		      hm : integer, effect : string);
-          var
-          count:integer;
+                        arg : string,
+                        hm : integer, effect : string);
+                        var
+                        count:integer;
 code
 {
-   if ((hm < 0) or (self.endurance<=20))
+   if (self.endurance <= 20)
    {
-      act("Nothing happens.",
-	  A_ALWAYS, self, null, null, TO_CHAR);
+      act("You're too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
-      hm := hm/10+1;
-      if (hm>15)
-	hm := 15;
+   if (hm < 0)
+   {
+      sendto("spl_dispel " + itoa(hm), tgt);
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
 
-count:=0;
-interrupt (SFB_MSG , "inc despel counter" == argument,inc_count);
+
+   count:=0;
+   interrupt(SFB_MSG , "inc despel counter" == argument,inc_count);
    sendto("spl_dispel "+itoa(hm), tgt);
    interrupt(SFB_DEAD, activator == tgt, stop);
+
+   hm := hm/10+1;
+   if (hm>15)
+   	hm := 15;
 
    :loop:
    count:=count+1;
@@ -7307,24 +7317,29 @@ interrupt (SFB_MSG , "inc despel counter" == argument,inc_count);
    else
      quit;
 :inc_count:
-if (self.endurance<20) self.endurance:=0;
-else
-self.endurance:=self.endurance-20;
-if (self.endurance==0)
-  {
-   self.position:=POSITION_STUNNED;
-   quit;
+   if (self.endurance<20)
+      self.endurance:=0;
+   else
+      self.endurance:=self.endurance-20;
+   
+   if (self.endurance==0)
+   {
+      self.position:=POSITION_STUNNED;
+      quit;
    }
 
-if (count==hm)
-  quit;
+   if (count==hm)
+      quit;
 
    goto loop;
 
 :stop:
-quit;
+   quit;
 }
 dilend
+
+
+
 dilbegin fire_breath(medi : unitptr, tgt : unitptr, arg : string,
 		     hm : integer, effect : string);
 var

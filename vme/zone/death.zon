@@ -1260,7 +1260,7 @@ var
 code
 {
 :start:
-   wait(SFB_MSG, left(argument, 12) == "spl_displace");
+   wait(SFB_MSG, left(argument, 10) == "spl_dispel");
    sl := split(argument, " ");
    pwr := atoi(sl.[1]);
 
