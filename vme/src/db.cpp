@@ -1752,7 +1752,7 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
 
     while (((cmdno = (ubit8)fgetc(f)) != 255) && !feof(f))
     {
-        CREATE(cmd, zone_reset_cmd, 1);
+        cmd=new zone_reset_cmd();
         cmd->setCommandNum(cmdno);
 
         fstrcpy(&cBuf, f);
