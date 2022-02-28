@@ -131,4 +131,4 @@ echo "*** $EXECUTABLE exited with code [$res] ***" >> $VME_ROOT/log/mplex-$PORT.
 
 script_name=$(basename -- "$0")
 #echo "exec $VME_ROOT/bin/$script_name"
-exec $VME_ROOT/bin/$script_name >/dev/null 2>&1
+exec $VME_ROOT/bin/$script_name $1 $2 >/dev/null 2>&1
