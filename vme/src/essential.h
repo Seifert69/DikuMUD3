@@ -101,11 +101,19 @@ using ubit1 = bool;      /* Boolean */
 
 #define CREATE(res, type, num)                                                                                                             \
     if (((res) = (type *)calloc((num), sizeof(type))) == NULL)                                                                             \
-        assert(FALSE);
+    {                                                                                                                                      \
+        /* Make sure CREATE isn't being used to create the new classes instead of the structs they used to be */                           \
+        static_assert(std::is_pod<type>::value);                                                                                           \
+        assert(FALSE);                                                                                                                     \
+    }
 
 #define RECREATE(res, type, num)                                                                                                           \
     if (((res) = (type *)realloc((res), sizeof(type) * (num))) == NULL)                                                                    \
-        assert(FALSE);
+    {                                                                                                                                      \
+        /* Make sure RECREATE isn't being used to create the new classes instead of the structs they used to be */                         \
+        static_assert(std::is_pod<type>::value);                                                                                           \
+        assert(FALSE);                                                                                                                     \
+    }
 
 #define FREE(p)                                                                                                                            \
     {                                                                                                                                      \
