@@ -123,12 +123,12 @@ void check_idle()
     for (d = g_descriptor_list; d; d = next_d)
     {
         next_d = d->getNext();
-        d->incrementHoursPlayerIdle();
+        d->incrementMinutesPlayerIdle();
         if (!descriptor_is_playing(d)) /* Not in game yet */
         {
             if (d->getFunctionPtr() == nanny_get_name)
             {
-                if (d->getHoursPlayerIdle() >= 2)
+                if (d->getMinutesPlayerIdle() >= 2)
                 {
                     slog(LOG_ALL, 0, "Kicking out idle player waiting for name.");
                     descriptor_close(d);
@@ -136,7 +136,7 @@ void check_idle()
             }
             else
             {
-                if (d->getHoursPlayerIdle() >= 10)
+                if (d->getMinutesPlayerIdle() >= 10)
                 {
                     slog(LOG_ALL, 0, "Kicking out player from menu.");
                     descriptor_close(d);
@@ -145,7 +145,7 @@ void check_idle()
         }
         else
         {
-            if (d->getHoursPlayerIdle() >= 20 && IS_MORTAL(d->cgetCharacter()))
+            if (d->getMinutesPlayerIdle() >= 20 && IS_MORTAL(d->cgetCharacter()))
             {
                 slog(LOG_ALL, 0, "Kicking out idle player and making link-dead.");
                 descriptor_close(d);
@@ -350,7 +350,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     {
         update_lasthost(this, inet_addr(CHAR_DESCRIPTOR(this)->getHostname()));
 
-        CHAR_DESCRIPTOR(this)->setHoursPlayerIdle(0);
+        CHAR_DESCRIPTOR(this)->setMinutesPlayerIdle(0);
         CHAR_DESCRIPTOR(this)->setPromptMode(PROMPT_EXPECT);
         CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
         PC_TIME(this).connect = ::time(nullptr);

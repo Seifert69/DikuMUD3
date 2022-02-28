@@ -308,17 +308,17 @@ void descriptor_data::setLoopWaitCounter(int value)
     wait = value;
 }
 
-ubit16 descriptor_data::getHoursPlayerIdle() const
+ubit16 descriptor_data::getMinutesPlayerIdle() const
 {
     return timer;
 }
 
-void descriptor_data::setHoursPlayerIdle(ubit16 value)
+void descriptor_data::setMinutesPlayerIdle(ubit16 value)
 {
     timer = value;
 }
 
-void descriptor_data::incrementHoursPlayerIdle()
+void descriptor_data::incrementMinutesPlayerIdle()
 {
     ++timer;
 }
@@ -350,7 +350,7 @@ void descriptor_data::setLocalString(const char *str)
 
 void descriptor_data::appendLocalString(const char *str)
 {
-    strcat(localstr, "<br/>");
+    strcat(localstr, str);
 }
 
 bool descriptor_data::hasPostEditFunctionPtr() const
