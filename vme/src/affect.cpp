@@ -84,7 +84,8 @@ void create_affect(unit_data *unit, unit_affected_type *af)
                 (*g_tif[af->firstf_i].func)(af, unit);
             }
 
-            if (af->duration > 0)
+            // If there is no beat, decrease duration on creation
+            if ((af->beat <= 0) && (af->duration > 0))
             {
                 af->duration--; /* When 1 it means stop next tick... */
             }
@@ -97,6 +98,7 @@ void create_affect(unit_data *unit, unit_affected_type *af)
                 }
                 af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
             }
+
         }
         else
         {

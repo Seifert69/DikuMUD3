@@ -2677,7 +2677,7 @@ void dilfi_ada(dilprg *p)
             }
             else if (IS_OBJ((unit_data *)v1->val.ptr))
             {
-                if (is_in(-v2->val.num, 1, ID_TOP_IDX) &&
+                if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) &&
                     is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
@@ -2697,8 +2697,8 @@ void dilfi_ada(dilprg *p)
                         unit_affected_type af;
 
                         af.id = v2->val.num;  // Negative for object transfers
-                        af.duration = -1; // v3->val.num;
-                        af.beat = 0;      // v4->val.num;
+                        af.duration = v3->val.num;
+                        af.beat = v4->val.num;
 
                         af.data[0] = v5->val.num;
                         af.data[1] = v6->val.num;

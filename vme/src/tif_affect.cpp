@@ -342,8 +342,8 @@ void tif_eyes_tingle(unit_affected_type *af, unit_data *unit)
 
 void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 {
-    OBJ_VALUE(unit, 0)
-    --;
+    if (OBJ_VALUE(unit, 0) > 0)
+        OBJ_VALUE(unit, 0)--;
 
     if (af->duration <= 4)
     {
@@ -1142,7 +1142,7 @@ void tif_naught(unit_affected_type *af, unit_data *unit)
     slog(LOG_ALL, 0, "Obsoleted affect called with ID %d on %s@%s.", af->applyf_i, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
 }
 
-tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},
+tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},  // 0
                               {"Destroy Corpse", tif_destroy_corpse},
                               {"Valhalla Return", tif_valhalla_ret},
                               {"Hitpoints On", tif_hit_on},
@@ -1151,26 +1151,26 @@ tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},
                               {"Magic Mod Off", tif_mag_off},
                               {"Divine Mod On", tif_div_on},
                               {"Divine Mod Off", tif_div_off},
-                              {"Strength Mod On", tif_str_on},
+                              {"Strength Mod On", tif_str_on}, // 9
                               {"Strength Mod Off", tif_str_off},
                               {"Dexterity Mod On", tif_dex_on},
                               {"Dexterity Mod Off", tif_dex_off},
                               {"Constitution Mod On", tif_con_on},
                               {"Constitution Mod Off", tif_con_off},
-                              {"Charisma Mod On", tif_cha_on},
+                              {"Charisma Mod On", tif_cha_on}, // 15
                               {"Charisma Mod Off", tif_cha_off},
                               {"Brain Mod On", tif_bra_on},
                               {"Brain Mod Off", tif_bra_off},
                               {"XXX", tif_armour_on},
-                              {"XXX", tif_armour_on},
+                              {"XXX", tif_armour_on}, // 20
                               {"Spell-skill Mod On", tif_protect_on},
                               {"Spell-skill Mod Off", tif_protect_off},
                               {"Poison On", tif_poison_on},
                               {"Poison Off", tif_poison_off},
-                              {"Poison Suffer", tif_poison_suffer},
-                              {"Light/Dark Add", tif_light_add},
-                              {"Light/Dark Sub", tif_light_sub},
-                              {"Torch burning countdown", tif_torch_tick},
+                              {"Poison Suffer", tif_poison_suffer}, // 25
+                              {"Light/Dark Add", tif_light_add}, // 26
+                              {"Light/Dark Sub", tif_light_sub}, // 27
+                              {"Torch burning countdown", tif_torch_tick}, // 28
                               {"Eyes tingles", tif_eyes_tingle},
                               {"Blind On", tif_blind_on},
                               {"Blind Off", tif_blind_off},

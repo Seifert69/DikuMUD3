@@ -2962,20 +2962,20 @@ code
       return;
    }
 
-   if (isaff(torch, -ID_LIGHT_EXTINGUISH))
+   if (isaff(torch, ID_LIGHT_EXTINGUISH))
    {
       sendtext("How silly, it is already lit.<br/>",self);
       return;
    }
 
-   if (torch.value[0] <= 0)
+   if (torch.value[0] <= 0) // Hours left
    {
-      sendtext("It wont ignite.<br/>",self);
+      sendtext("It is used up, it wont ignite.<br/>",self);
       return;
    }
 
-  	addaff(torch, -ID_LIGHT_EXTINGUISH, torch.value[0], SECS_PER_MUD_HOUR*WAIT_SEC,
-	          2, 0, 0, TIF_NONE, TIF_TORCH_TICK, TIF_NONE, APF_LIGHT_DARK);
+  	addaff(torch, ID_LIGHT_EXTINGUISH, torch.value[0], SECS_PER_MUD_HOUR*WAIT_SEC,
+	          torch.value[1], 0, 0, TIF_NONE, TIF_TORCH_TICK, TIF_NONE, APF_LIGHT_DARK);
    act("You light $2n.", A_SOMEONE, self, torch, null, TO_CHAR);
    act("$1n lights $2n.", A_SOMEONE, self, torch, null, TO_ROOM);
    quit;
