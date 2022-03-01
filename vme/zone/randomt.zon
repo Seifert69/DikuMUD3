@@ -27,46 +27,6 @@ help
 
 %dil
 
-// Copy on a chest. 
-// bonuslvl : [0..+7], number of items
-dilbegin rndchest(bonuslvl : integer, num : integer, mins : integer);
-external
-    unitptr RndTreasure(lvl : integer);
-var 
-    i : integer;
-    u : unitptr;
-code
-{
-    pause;
-
-:generate:
-    heartbeat := PULSE_SEC;
-    i := num;
-    while (i > 0)
-    {
-        u := RndTreasure(bonuslvl);
-        link(u, self);
-        i := i - 1;
-        pause;
-    }
-
-:waitforloot:
-    wait(SFB_CMD, TRUE);
-    // debug log(self.name + " got signal");
-
-    if (self.inside)
-    {
-        u := findsymbolic(self, "weapon_rnd@randomt", FIND_UNIT_INVEN);
-        if (u)
-            goto waitforloot;
-    }
-
-    heartbeat := PULSE_SEC * 60 * mins;
-    pause;
-    goto generate;
-}
-dilend
-
 //
 // ======================== UTILITY =========================
 //
@@ -924,17 +884,6 @@ code
 dilend
 
 
-//  Possible enchantment expansions
-//    NEW: All, maybe go through affect list and pick more such as bless, etc?
-//    NEW: All, has embedded spells that can be used X times / day
-//    NEW: All, add magic bonus to a skill
-//    NEW: All, add magic bonus to a spell
-//    NEW: non-weapon, add magic bonus to a weapon skill (silly to wield an axe and get + to long sword)
-//    NEW: Weapon Fireblade, Coldblade, Electricity, (how?)
-//    NEW: Weapon Soul saver? When you die your soul is saved.
-//    NEW: Weapon Intelligent. Weapon fights for you while you're down.
-//
-
 //
 // ======================== ENCHANT SUPER FUNCTIONS =========================
 //
@@ -1435,106 +1384,122 @@ var
     il : intlist;
 code
 {
-    // debug log("treasureroll");
-    if (u.extra == null)
-        addextra(u.extra, {""}, "");
+   // debug log("treasureroll");
+   if (u.extra == null)
+      addextra(u.extra, {""}, "");
 
-    rollmat := (7*(successroll_oe({45,70,90}, 0) + bonuslvl))/10;
-    rollmat := minmax7(rollmat);
-    mat1 := minmax7(rollmat + rnd(-1,1));
-    mat2 := minmax7(rollmat + rnd(-1,1));
-    mat3 := minmax7(rollmat + rnd(-1,1));
+   rollmat := (7*(successroll_oe({45,70,90}, 0) + bonuslvl))/10;
+   rollmat := minmax7(rollmat);
+   mat1 := minmax7(rollmat + rnd(-1,1));
+   mat2 := minmax7(rollmat + rnd(-1,1));
+   mat3 := minmax7(rollmat + rnd(-1,1));
 
-    rollenc := (7*(successroll_oe({45,70,90}, 0) + bonuslvl))/10;
-    rollenc := minmax7(rollenc);
-    enc1 := minmax7(rollenc + rnd(-1,1));
-    enc2 := minmax7(rollenc + rnd(-1,1));
-    enc3 := minmax7(rollenc + rnd(-1,1));
+   rollenc := (7*(successroll_oe({45,70,90}, 0) + bonuslvl))/10;
+   rollenc := minmax7(rollenc);
+   enc1 := minmax7(rollenc + rnd(-1,1));
+   enc2 := minmax7(rollenc + rnd(-1,1));
+   enc3 := minmax7(rollenc + rnd(-1,1));
 
-    // Adjust weight, cost, hits
+   // Adjust weight, cost, hits
 
-    set_weight_base(u, u.weight - (u.weight * rollmat*5) / 100);  // +7 means 35% less weight, -7 +35% weight
+   set_weight_base(u, u.weight - (u.weight * rollmat*5) / 100);  // +7 means 35% less weight, -7 +35% weight
 
-    u.max_hp := 1000;
+   u.max_hp := 1000;
 
-    if (rollmat > 0)
-    {
-        u.max_hp := u.max_hp + (rollmat * 1000);
-        u.cost   := u.cost * rollmat * 50;  // +7 means x350 cost.
-    }
+   if (rollmat > 0)
+   {
+      u.max_hp := u.max_hp + (rollmat * 1000);
+      u.cost   := u.cost * rollmat * 50;  // +7 means x350 cost.
+   }
 
-    if (rollmat < 0)
-    {
-        u.max_hp := u.max_hp + (rollmat * 125);  // Down to 125 hits for -7
-        u.cost := u.cost + (u.cost * rollmat * 10) / 100;  // -7 means 70% reduced cost.
-    }
+   if (rollmat < 0)
+   {
+      u.max_hp := u.max_hp + (rollmat * 125);  // Down to 125 hits for -7
+      u.cost := u.cost + (u.cost * rollmat * 10) / 100;  // -7 means 70% reduced cost.
+   }
 
-    u.hp := u.max_hp;
+   u.hp := u.max_hp;
 
-    // Human, elf, dwarf, halfling, gnome, half-orc, half-ogre, half-elf, brownie, groll, dark elf
-    il := {175, 147, 120, 90, 98, 172, 205, 150, 75, 227, 148};
-    u.height := il.[rnd(0, length(il))];
+   if (u.outside.type == UNIT_ST_NPC)
+   {
+      u.height := u.outside.height;
+   }
+   else
+   {
+      // Human, elf, dwarf, halfling, gnome, half-orc, half-ogre, half-elf, brownie, groll, dark elf
+      il := {175, 147, 120, 90, 98, 172, 205, 150, 75, 227, 148};
+      u.height := il.[rnd(0, length(il))];
+   }
 
-    il := {};
-    insert(il, 0, rollmat);
-    insert(il, 1, mat1);
-    insert(il, 2, mat2);
-    insert(il, 3, mat3);
-    insert(il, 4, rollenc);
-    insert(il, 5, enc1);
-    insert(il, 6, enc2);
-    insert(il, 7, enc3);
+   il := {};
+   insert(il, 0, rollmat);
+   insert(il, 1, mat1);
+   insert(il, 2, mat2);
+   insert(il, 3, mat3);
+   insert(il, 4, rollenc);
+   insert(il, 5, enc1);
+   insert(il, 6, enc2);
+   insert(il, 7, enc3);
 
-    u.extra.vals := il;
+   u.extra.vals := il;
+
+   return;
+}
+dilend
+
+
+
+dilbegin treasureize(bonuslvl : integer,
+                     matDil : string, matArg : string, 
+                     encDil : string, encArg : string);
+external
+   treasureroll(u : unitptr, bonuslvl : integer);
+var
+   i : integer;
+   exd : extraptr;
+code
+{
+   treasureroll(self, bonuslvl);
+
+   if (matDil != "")
+      i := dilcall(matDil)(self, bonuslvl, matArg); 
+
+   if (encDil != "")
+      i := dilcall(encDil)(self, bonuslvl, encArg);
+
+   exd := "" in self.extra;
+   exd.vals := {};  // remove temporary storage of rolls
+
+   return;
+}
+dilend
+
+
+// 'self' must be the item to create and must be from this zone
+//
+//
+dilbegin createItem(itemname : string,
+                    item_type : integer, price : integer, size : integer, lbs : integer);
+code
+{
+   if ((self.zoneidx != "randomt") or (self.type != UNIT_ST_OBJ))
+   {
+      log("error in createItem(). Can only be used on item shells from @randomt");
+      quit;
+   }
+
+   self.objecttype := item_type;
+   self.names.[0] := itemname;
+
+   self.cost := price;
+   set_weight_base(self, lbs);
+
+   if (self.outside.type == UNIT_ST_NPC)
+      self.height := self.outside.height;
+   else
+      self.height := size;
 
     return;
-}
-dilend
-
-
-
-dilbegin unitptr treasureize(u : unitptr, bonuslvl : integer,
-                             matDil : string, matArg : string, 
-                             encDil : string, encArg : string);
-external
-    treasureroll(u : unitptr, bonuslvl : integer);
-var
-    i : integer;
-    exd : extraptr;
-code
-{
-    treasureroll(u, bonuslvl);
-
-    if (matDil != "")
-        i := dilcall(matDil)(u, bonuslvl, matArg); 
-
-    if (encDil != "")
-        i := dilcall(encDil)(u, bonuslvl, encArg);
-
-    exd := "" in u.extra;
-    exd.vals := {};  // remove temporary storage of rolls
-
-    return(u);
-}
-dilend
-
-
-dilbegin unitptr createItem(itemname : string,
-                            item_type : integer, price : integer, size : integer, lbs : integer);
-var
-    u : unitptr;
-code
-{
-    u := load("weapon_rnd@randomt");
-
-    u.objecttype := item_type;
-    u.names.[0] := itemname;
-
-    u.cost := price;
-    set_weight_base(u, lbs);
-    u.height := size;
-
-    return (u);
 }
 dilend
 
@@ -1545,99 +1510,99 @@ dilend
 
 dilbegin integer matJewelry(u : unitptr, bonuslvl : integer, data : string);
 external
-    string matMetal(roll : integer);
-    setMatDescr(u : unitptr, mat : string);
-    setJewelrySmith(u : unitptr, mat : string, smithlvl : integer);
-    setJewelryGem(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
+   string matMetal(roll : integer);
+   setMatDescr(u : unitptr, mat : string);
+   setJewelrySmith(u : unitptr, mat : string, smithlvl : integer);
+   setJewelryGem(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
 
 var
-    rollsmith : integer;
-    mat1 : integer;
-    mat2 : integer;
-    mat3 : integer;
-    rollenc : integer;
-    enc1 : integer;
-    s : string;
-    t : string;
-    i : integer;
-    sl : stringlist;
+   rollsmith : integer;
+   mat1 : integer;
+   mat2 : integer;
+   mat3 : integer;
+   rollenc : integer;
+   enc1 : integer;
+   s : string;
+   t : string;
+   i : integer;
+   sl : stringlist;
 
 code
 {
-    // debug log("matJewelry");
+   // debug log("matJewelry");
 
-    rollsmith := u.extra.vals.[0];  // Smithing roll
-    mat1 := u.extra.vals.[1];  // Primary jewelry material
-    mat2 := u.extra.vals.[2];  // Secondary jewelry material
-    mat3 := u.extra.vals.[3];  // Tertiary jewelry material
-    rollenc := u.extra.vals.[4];  // 
-    enc1 := u.extra.vals.[5];  // 
+   rollsmith := u.extra.vals.[0];  // Smithing roll
+   mat1 := u.extra.vals.[1];  // Primary jewelry material
+   mat2 := u.extra.vals.[2];  // Secondary jewelry material
+   mat3 := u.extra.vals.[3];  // Tertiary jewelry material
+   rollenc := u.extra.vals.[4];  // 
+   enc1 := u.extra.vals.[5];  // 
 
-    // Get the main jewelry material
-    s := matMetal(mat1);
+   // Get the main jewelry material
+   s := matMetal(mat1);
 
-    setMatDescr(u, s);
+   setMatDescr(u, s);
 
-    setJewelrySmith(u, s, i);
-    setJewelryGem(u, mat2, mat3, "");
+   setJewelrySmith(u, s, i);
+   setJewelryGem(u, mat2, mat3, "");
 
-    return (0);
+   return (0);
 }
 dilend
 
 
 dilbegin integer matWpnBlade(u : unitptr, bonuslvl : integer, data : string);
 external
-    string matMetal(roll : integer);
-    identify(u :unitptr, norm : string, improved: string);
-    setMatDescr(u : unitptr, mat : string);
-    setWpnSmithing(u : unitptr, mat : string, smithlvl : integer);
-    setWpnHilt(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
-    setWpnBlade(u : unitptr, lvl1 : integer, lvl2 : integer, kind : string);
+   string matMetal(roll : integer);
+   identify(u :unitptr, norm : string, improved: string);
+   setMatDescr(u : unitptr, mat : string);
+   setWpnSmithing(u : unitptr, mat : string, smithlvl : integer);
+   setWpnHilt(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
+   setWpnBlade(u : unitptr, lvl1 : integer, lvl2 : integer, kind : string);
 
 var
-    rollsmith : integer;
-    mat1 : integer;
-    mat2 : integer;
-    mat3 : integer;
-    rollenc : integer;
-    enc1 : integer;
-    s : string;
-    t : string;
-    i : integer;
-    sl : stringlist;
+   rollsmith : integer;
+   mat1 : integer;
+   mat2 : integer;
+   mat3 : integer;
+   rollenc : integer;
+   enc1 : integer;
+   s : string;
+   t : string;
+   i : integer;
+   sl : stringlist;
 
 code
 {
-    // debug log("matWpnBlade");
+   // debug log("matWpnBlade");
 
-    rollsmith := u.extra.vals.[0];  // Smithing roll
-    mat1 := u.extra.vals.[1];  // Primary blade material
-    mat2 := u.extra.vals.[2];  // Primary hilt material
-    mat3 := u.extra.vals.[3];  // [Primary hilt gemstone]
-    rollenc := u.extra.vals.[4];  // 
-    enc1 := u.extra.vals.[5];  // 
+   rollsmith := u.extra.vals.[0];  // Smithing roll
+   mat1 := u.extra.vals.[1];  // Primary blade material
+   mat2 := u.extra.vals.[2];  // Primary hilt material
+   mat3 := u.extra.vals.[3];  // [Primary hilt gemstone]
+   rollenc := u.extra.vals.[4];  // 
+   enc1 := u.extra.vals.[5];  // 
 
-    // Get the main bladed weapon material
-    s := matMetal(mat1);
+   // Get the main bladed weapon material
+   s := matMetal(mat1);
 
-    setMatDescr(u, s);
-    
-    i := (rollsmith + mat1) / 2; // Set average weapon material bonus [-7..+7]
-    u.value[1] := getinteger(DIL_GINT_BONUS_A, null, i);
-    if (u.value[1] > 0)
-        identify(u, "Weapon has a quality bonus.", "Weapon has a quality bonus of +" + itoa(u.value[1]) + ".");
-    else if (u.value[1] < 0)
-        identify(u, "Weapon has a quality penalty.", "Weapon has a quality penalty of " + itoa(u.value[1]) + ".");
+   setMatDescr(u, s);
+   
+   i := (rollsmith + mat1) / 2; // Set average weapon material bonus [-7..+7]
+   u.value[1] := getinteger(DIL_GINT_BONUS_A, null, i);
+   if (u.value[1] > 0)
+      identify(u, "Weapon has a quality bonus.", "Weapon has a quality bonus of +" + itoa(u.value[1]) + ".");
+   else if (u.value[1] < 0)
+      identify(u, "Weapon has a quality penalty.", "Weapon has a quality penalty of " + itoa(u.value[1]) + ".");
 
-    setWpnSmithing(u, s, i);
+   setWpnSmithing(u, s, i);
 
-    sl := split(data, "//");
+   sl := split(data, "//");
 
-    setWpnBlade(u, rollsmith, mat1, sl.[0]);
-    setWpnHilt(u, mat2, mat3, sl.[1]);
+   setWpnBlade(u, rollsmith, mat1, sl.[0]);
+   setWpnHilt(u, mat2, mat3, sl.[1]);
 
-    return (0);
+   return (0);
 }
 dilend
 
@@ -1645,15 +1610,14 @@ dilend
 
 // ========================= CREATE ITEM TYPE ==========================
 
-dilbegin unitptr createWeapon(bonuslvl : integer);
+dilbegin createWeapon(bonuslvl : integer);
 external
-    unitptr treasureize(u : unitptr, bonuslvl : integer,
-                             matDil : string, matArg : string, 
-                             encDil : string, encArg : string);
-    unitptr createItem(itemname : string,
-                            item_type : integer, price : integer, size : integer, lbs : integer);
+    treasureize(bonuslvl : integer,
+                  matDil : string, matArg : string, 
+                  encDil : string, encArg : string);
+    createItem(itemname : string,
+                item_type : integer, price : integer, size : integer, lbs : integer);
 var
-    u : unitptr;
     wpns : stringlist;
     idxWpn : integer;
     s : string;
@@ -1696,27 +1660,25 @@ code
     // debug log("Random weapon");
     idxWpn := rnd(0,length(wpns)/5-1) * 5;
 
-    u := createItem(weapon_name(atoi(wpns.[idxWpn])), ITEM_WEAPON, atoi(wpns.[idxWpn+1]), 180, atoi(wpns.[idxWpn+2]));
-    u.manipulate := u.manipulate | MANIPULATE_WIELD;
-    u.value[0] := atoi(wpns.[idxWpn]); // Set the weapon type
+    createItem(weapon_name(atoi(wpns.[idxWpn])), ITEM_WEAPON, atoi(wpns.[idxWpn+1]), 180, atoi(wpns.[idxWpn+2]));
+    self.manipulate := self.manipulate | MANIPULATE_WIELD;
+    self.value[0] := atoi(wpns.[idxWpn]); // Set the weapon type
 
-    treasureize(u, bonuslvl, wpns.[idxWpn+4], wpns.[idxWpn+3], "encWpn@randomt", wpns.[idxWpn+3]);
+    treasureize(bonuslvl, wpns.[idxWpn+4], wpns.[idxWpn+3], "encWpn@randomt", wpns.[idxWpn+3]);
 
-    return(u);
+    return;
 }
 dilend
 
 
-dilbegin unitptr createJewelry(bonuslvl : integer);
+dilbegin createJewelry(bonuslvl : integer);
 external
-    unitptr treasureize(u : unitptr, bonuslvl : integer,
-                             matDil : string, matArg : string, 
-                             encDil : string, encArg : string);
-    unitptr createItem(itemname : string,
-                            item_type : integer, price : integer, size : integer, lbs : integer);
+    treasureize(bonuslvl : integer,
+                matDil : string, matArg : string, 
+                encDil : string, encArg : string);
+    createItem(itemname : string,
+                item_type : integer, price : integer, size : integer, lbs : integer);
 var
-    u : unitptr;
-
     i : integer;
     s : string;
     sl : stringlist;
@@ -1766,12 +1728,12 @@ code
     }
 
     // debug log("Random Jewelry");
-    u := createItem(s, ITEM_TREASURE, price, 180, 0);
-    u.manipulate := u.manipulate | wear;
+    createItem(s, ITEM_TREASURE, price, 180, 0);
+    self.manipulate := self.manipulate | wear;
     
-    treasureize(u, bonuslvl, "matJewelry@randomt", "", "encJewelry@randomt", "");
+    treasureize(bonuslvl, "matJewelry@randomt", "", "encJewelry@randomt", "");
 
-    return(u);
+    return;
 }
 dilend
 
@@ -1805,17 +1767,23 @@ dilend
 // ========================= CREATE ITEM TYPE ==========================
 //
 
-dilbegin unitptr RndTreasure(lvl : integer);
+dilbegin RndTreasure(lvl : integer);
 external
-    unitptr createJewelry(bonuslvl : integer);
-    unitptr createWeapon(bonuslvl : integer);
+    createJewelry(bonuslvl : integer);
+    createWeapon(bonuslvl : integer);
 
 code
 {
-    if (rnd(0,1) == 1)
-        return (createWeapon(lvl));
-    else
-        return (createJewelry(lvl));
+   heartbeat := PULSE_SEC;
+   pause;
+
+   if (rnd(0,1) == 1)
+      createWeapon(lvl);
+   else
+      createJewelry(lvl);
+
+   // Wear it if applicable?   
+   quit;
 }
 dilend
 
@@ -1828,42 +1796,139 @@ title "Test treasury"
 descr
 "You are in the treasury, its a huge square room with no exits. Apparently
 the room is empty - obviously the treasures are beyond the reach of mere
-mortals.
-
-Bounce to generate a non-wood weapon."
+mortals."
 
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB}
 ALWAYS_LIGHT
 
-dilbegin bouncegenerator();
-external
-    unitptr RndTreasure(lvl : integer);
+// Thoughts in progess, these are not used.
+extra {"$iron",
+         "copper",
+         "bronze",
+         "iron",
+         "silver",
+         "steel",
+         "high steel",
+         "black steel",
+         "true steel",
+         "adamantium",
+         "mithril"} ""
 
-var
-    u : unitptr;
-code
-{
-    :loop:
-    wait(SFB_CMD, command("bounce"));
-    // debug log("BOUNCE RECEIVED");
-    u := RndTreasure(rnd(0,7));
-    link(u, self);
-    act("$2n appears.", A_ALWAYS, activator, u, null, TO_ALL);
-    goto loop;
-}
-dilend
+extra {"$pmetal",
+         "copper",
+         "bronze",
+         "iron",
+         "silver",
+         "steel",
+         "high steel",
+         "black steel",
+         "true steel",
+         "red gold",
+         "gold",
+         "adamantium",
+         "platinum",
+         "mithril"} ""
+
+extra {"$wood",
+         "pine",
+         "oak",
+         "black oak",
+         "ente wood"} 
+         "Woods"
+
+
+extra {"$hilt",
+        "wood",
+        "bone",
+        "iron",
+        "silver",
+        "steel",
+        "high steel",
+        "black steel",
+        "true steel",
+        "adamantium",
+        "mithril"} 
+        "Materials that can adorn a hilt"
 
 end
 
 
 %objects
 
-weapon_rnd
+anklet // A thought experiment
+names {"$2n anklet", "anklet"}
+title "$2a $2n anklet"
+descr "$2a $2n anklet has is lying here."
+extra {} ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_AVERAGE);
+end
+
+
+rnd0_avg
 names {""}
 title ""
 descr ""
 manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_AVERAGE);
 end
+
+rnd1_avgplus
+names {""}
+title ""
+descr ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_AVERAGE_PLUS);
+end
+
+rnd2_good
+names {""}
+title ""
+descr ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_GOOD);
+end
+
+rnd3_goodplus
+names {""}
+title ""
+descr ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_GOOD_PLUS);
+end
+
+rnd4_exel
+names {""}
+title ""
+descr ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_EXCELLENT);
+end
+
+rnd5_exelplus
+names {""}
+title ""
+descr ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_EXCELLENT_PLUS);
+end
+
+rnd6_superior
+names {""}
+title ""
+descr ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_SUPERIOR);
+end
+
+rnd7_artifact
+names {""}
+title ""
+descr ""
+manipulate {MANIPULATE_TAKE}
+dilcopy RndTreasure@randomt(BONUS_ARTIFACT);
+end
+
 
 treasure0
 names {"treasure0"}
@@ -1871,7 +1936,6 @@ title "the treasure chest"
 descr "treasure0 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
-dilcopy rndchest@randomt(BONUS_AVERAGE, 10, 1);
 end
 
 treasure4
@@ -1880,8 +1944,6 @@ title "the tresure4 chest"
 descr "treasure4 is here, open it"
 CONTAINER_DEF(10)
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
-
-dilcopy rndchest@randomt(BONUS_EXCELLENT, 10, 1);
 end
 
 treasure7
@@ -1890,19 +1952,42 @@ title "the tresure7 chest"
 descr "treasure7 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
-dilcopy rndchest@randomt(BONUS_ARTIFACT, 10, 1);
 end
+
+
 
 %reset
 
 load treasure0 into treasury max 1
+{
+   load rnd0_avg local 5
+   load rnd0_avg local 5
+   load rnd0_avg local 5
+   load rnd0_avg local 5
+   load rnd0_avg local 5
+}
+
 load treasure4 into treasury max 1
+{
+   load rnd4_exel local 5
+   load rnd4_exel local 5
+   load rnd4_exel local 5
+   load rnd4_exel local 5
+   load rnd4_exel local 5
+}
+
 load treasure7 into treasury max 1
+{
+   load rnd7_artifact local 5
+   load rnd7_artifact local 5
+   load rnd7_artifact local 5
+   load rnd7_artifact local 5
+   load rnd7_artifact local 5
+}
 
 %end
 
 // TODO:
-// Enhanced slaying weapons, add "$slaying" extra and store races in extra.vals as probably ranges {from, to}+
 // Cost
 // Weight
 // Hitpoints
@@ -1914,3 +1999,15 @@ load treasure7 into treasury max 1
 // Other body wear, such as cloak, quivers, backpacks, belts, hold, etc.
 // 
 // Maybe even predesigned treasure, e.g. "The holy avenger of San Luis Obispo"
+
+//  Possible enchantment expansions
+//    NEW: All, maybe go through affect list and pick more such as bless, etc?
+//    NEW: All, has embedded spells that can be used X times / day
+//    NEW: All, add magic bonus to a skill
+//    NEW: All, add magic bonus to a spell
+//    NEW: non-weapon, add magic bonus to a weapon skill (silly to wield an axe and get + to long sword)
+//    NEW: Weapon Fireblade, Coldblade, Electricity, (how?)
+//    NEW: Weapon Soul saver? When you die your soul is saved.
+//    NEW: Weapon Intelligent. Weapon fights for you while you're down.
+//
+

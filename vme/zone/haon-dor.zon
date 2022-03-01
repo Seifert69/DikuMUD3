@@ -1204,9 +1204,6 @@ of damp earth and dirty orcs compete quite equally.  The only exit is east."
 east to orc_cave_other descr
 "The cave continues east.";
 
-// Load ONE random treasure item every 30 minutes if the cave is empty
-dilcopy rndchest@randomt(BONUS_AVERAGE, 1, 30);
-
 movement SECT_INSIDE
 gmap(441,207)
 
@@ -2333,9 +2330,6 @@ gmap(209,373)
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
-
-// Load ONE random treasure item every 30 minutes if the cave is empty
-dilcopy rndchest@randomt(BONUS_GOOD_PLUS, 1, 30);
 end
 
 
@@ -3934,6 +3928,7 @@ load nasty_orc into rn_6028 max 1 /* into rn_6028 */
 
 load orc_chief into orc_cave_chief max 1
 {
+   load rnd0_avg@randomt local 1
    equip orc_scimitar position WEAR_WIELD
 
    follow ugly_orc max 1
@@ -3949,6 +3944,7 @@ load orc_chief into orc_cave_chief max 1
       equip orc_scimitar position WEAR_WIELD
    }
 }
+
 
 /* -------------------- DARK FOREST STUFF -------------------- */
 
@@ -3971,20 +3967,23 @@ load tree2 into rn_6105 zonemax 4
 
 load green_dragon into dragon_cave max 1
 {
-    load yellow_potion max 10
-    load iron_crown max 1
-    load large_shield into dragon_cave max 10
+   load rnd3_goodplus@randomt local 1
+   load yellow_potion max 10
+   load iron_crown max 1
+   load large_shield into dragon_cave max 10
 }
-load spider into on_web max 3
-load spider into on_web max 3
-load spider into on_web max 3
+
+load spider into rn_6132 max 4
+load spider into on_web max 4
+load spider into on_web max 4
+load spider into on_web max 4
 load spider2 into on_web max 1
-load spider into rn_6132 max 3
 
 load queen_spider into spider_den max 1
 {
-    load blue_potion max 10
-    load iron_sceptre max 1
+   load rnd2_good@randomt local 1
+   load blue_potion max 10
+   load iron_sceptre max 1
 }
 
 load shargugh into rn_6100 max 1
