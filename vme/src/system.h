@@ -16,6 +16,7 @@ void descriptor_close(descriptor_data *d, int bSendClose = TRUE, int bReconnect 
 void MplexSendSetup(descriptor_data *d);
 descriptor_data *descriptor_new(cMultiHook *pe);
 void system_memory(unit_data *ch);
+void init_char(unit_data *ch);
 
 extern int g_no_connections;
 extern int g_max_no_connections;

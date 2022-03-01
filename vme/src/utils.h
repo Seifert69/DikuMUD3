@@ -7,6 +7,7 @@
 #pragma once
 
 #include "constants.h"
+#include "descriptor_data.h"
 #include "essential.h"
 #include "file_index_type.h"
 #include "structs.h"

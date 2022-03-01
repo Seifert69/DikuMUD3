@@ -2,6 +2,7 @@
 
 #include "comm.h"
 #include "db.h"
+#include "descriptor_data.h"
 #include "error.h"
 #include "files.h"
 #include "main_functions.h"
