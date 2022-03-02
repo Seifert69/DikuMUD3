@@ -1170,7 +1170,6 @@ void boot_ability()
     {
         ability_dump(); // Saved in case someone needs to dump it out to excel or something
         ability_dump_alternate();
-        exit(0);
     }
 }
 

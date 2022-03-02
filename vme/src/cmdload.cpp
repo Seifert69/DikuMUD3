@@ -72,7 +72,7 @@ cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_mo
                             {"wizlock", do_wizlock, 0, 0},   {"wstat", do_wstat, 0, 0},
                             {"wedit", do_wedit, 0, 0},       {"", nullptr, 0, 0}};
 
-void skill_dump()
+void skill_dump_alternate()
 {
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
@@ -117,6 +117,67 @@ void skill_dump()
     }
 }
 
+
+
+void skill_dump()
+{
+    printf("Skill Profession Tables\n");
+
+    // Profession Headers
+    for (int j = 0; j < PROFESSION_MAX; j++)
+    {
+        printf(",%s", g_professions[j]);
+    }
+    printf(",level,");
+#undef PC_RACE_MAX
+#define PC_RACE_MAX 11
+    for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+    {
+        printf("%s,", g_pc_races[ridx]);
+    }
+
+    for (int i = 0; i < SKI_TREE_MAX; i++)
+    {
+        if (g_SkiColl.text[i] == nullptr)
+        {
+            continue;
+        }
+
+        printf("\n%s,", g_SkiColl.text[i]);
+
+        for (int j = 0; j < PROFESSION_MAX; j++)
+        {
+            printf("%s%d,", (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                                       g_SkiColl.prof_table[i].profession_cost[j]);
+        }
+
+        printf("%s,", (g_SkiColl.prof_table[i].min_level == 0) ? "" : itoa(g_SkiColl.prof_table[i].min_level));
+
+        for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+        {
+            if (g_SkiColl.racial[ridx][i] > 0)
+            {
+                printf("%d,", g_SkiColl.racial[ridx][i]);
+            }
+            else
+            {
+                printf(",");
+            }
+        }
+
+        // Dump variable tail of ability restrictions
+        for (int k=0; k < ABIL_TREE_MAX; k++)
+        {
+            if (g_SkiColl.prof_table[i].min_abil[k] > 0)
+            {
+                printf("%s=%d,", g_AbiColl.text[k], g_SkiColl.prof_table[i].min_abil[k]);
+            }   
+        }
+    }
+    printf("\n");
+}
+
+
 void cmd_base_load()
 {
     int i = 0;
@@ -137,7 +198,11 @@ void cmd_base_load()
 
     command_read();
     if (g_dumptables)
+    {
         skill_dump();
+        exit(0);
+        skill_dump_alternate();
+    }
 }
 
 void command_read()
