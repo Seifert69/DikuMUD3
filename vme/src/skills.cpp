@@ -1097,13 +1097,12 @@ void ability_dump_alternate()
             printf("%s", it->second.c_str());
         }
     }
-    exit(0);
 }
 
 
 void ability_dump()
 {
-    printf("Ability Tables\n");
+    printf("Ability Profession Tables\n");
 
     // Profession Headers
     for (int j = 0; j < PROFESSION_MAX; j++)
@@ -1139,7 +1138,27 @@ void ability_dump()
     }
 
     printf("\n");
-    exit(0);
+    printf("Ability Race Tables\n");
+
+#undef PC_RACE_MAX
+#define PC_RACE_MAX 11
+
+    // Profession Headers
+    for (int j = 0; j < PC_RACE_MAX; j++)
+        printf(",%s", g_pc_races[j]);
+
+    for (int i = 0; i < ABIL_TREE_MAX; i++)
+    {
+        printf("\n%s,", g_AbiColl.text[i]);
+
+        for (int j = 0; j < PC_RACE_MAX; j++)
+        {
+            printf("%s%d,", (g_AbiColl.racial[j][i] >= 0) ? "+" : "",
+                             g_AbiColl.racial[j][i]);
+        }
+    }
+
+    printf("\n");
 }
 
 void boot_ability()
@@ -1148,7 +1167,11 @@ void boot_ability()
     ability_read();
 
     if (g_dumptables)
+    {
         ability_dump(); // Saved in case someone needs to dump it out to excel or something
+        ability_dump_alternate();
+        exit(0);
+    }
 }
 
 /* ========================================================================= */
