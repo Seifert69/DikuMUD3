@@ -59,6 +59,7 @@ int g_mud_shutdown = 0; /* clean shutdown */
 int g_mud_reboot = 0;   /* reboot the game after a shutdown */
 int g_wizlock = 0;      /* no mortals on now */
 int g_tics = 60;        /* number of tics since boot-time */
+bool g_dumptables = false;  // If true, dump all profession tables to stdout and exit(0)
 
 std::string g_world_boottime; /* boottime of world */
 
@@ -448,5 +449,6 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -L: List player files\n");
     fprintf(stderr, "  -s: Location of the server.cfg file\n");
     fprintf(stderr, "  -p: Persistant containers list\n");
+    fprintf(stderr, "  -d: dump all profession tables.\n");
     fprintf(stderr, "Copyright (C) 1994 - 1996 by Valhalla.\n");
 }

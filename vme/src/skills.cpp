@@ -12,6 +12,7 @@
 #include "db.h"
 #include "files.h"
 #include "interpreter.h"
+#include "main_functions.h"
 #include "modify.h"
 #include "slog.h"
 #include "spelldef.h"
@@ -1054,7 +1055,7 @@ bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair
     return firstElem.first > secondElem.first;
 }
 
-void ability_dump()
+void ability_dump_alternate()
 {
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
@@ -1099,11 +1100,55 @@ void ability_dump()
     exit(0);
 }
 
+
+void ability_dump()
+{
+    printf("Ability Tables\n");
+
+    // Profession Headers
+    for (int j = 0; j < PROFESSION_MAX; j++)
+        printf(",%s", g_professions[j]);
+
+    for (int i = 0; i < ABIL_TREE_MAX; i++)
+    {
+        printf("\n%s,", g_AbiColl.text[i]);
+
+        for (int j = 0; j < PROFESSION_MAX; j++)
+        {
+            printf("%s%d,", (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                             g_AbiColl.prof_table[i].profession_cost[j]);
+
+            // For abilities this shouldn't happen, if it does, output will break
+            if (g_AbiColl.prof_table[i].min_level > 0)
+            {
+                printf("AIAI restrict level          = %d\n", g_AbiColl.prof_table[i].min_level);
+            }
+
+            for (int i2 = 0; i2 < ABIL_TREE_MAX; i2++)
+            {
+                if (g_AbiColl.prof_table[i].min_abil[i2] > 0)
+                {
+                    printf("AIAI restrict %s%s    = %s%d\n",
+                                                g_AbiColl.text[i],
+                                                spc(12 - strlen(g_professions[j])),
+                                                (g_AbiColl.prof_table[i].min_abil[i2] >= 0) ? "+" : "",
+                                                g_AbiColl.prof_table[i].min_abil[i2]);
+                }
+            }
+        }
+    }
+
+    printf("\n");
+    exit(0);
+}
+
 void boot_ability()
 {
     ability_init();
     ability_read();
-    // ability_dump(); // Saved in case someone needs to dump it out to excel or something
+
+    if (g_dumptables)
+        ability_dump(); // Saved in case someone needs to dump it out to excel or something
 }
 
 /* ========================================================================= */
@@ -1525,14 +1570,14 @@ void weapon_dump()
             printf("%s", it->second.c_str());
         }
     }
-    exit(0);
 }
 
 void boot_weapon()
 {
     weapon_init();
     weapon_read();
-    // weapon_dump();
+    if (g_dumptables)
+        weapon_dump();
 }
 
 /* ========================================================================= */

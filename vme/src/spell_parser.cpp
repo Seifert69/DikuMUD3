@@ -12,6 +12,7 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "justice.h"
+#include "main_functions.h"
 #include "magic.h"
 #include "modify.h"
 #include "skills.h"
@@ -979,15 +980,14 @@ void spell_dump()
             printf("%s", it->second.c_str());
         }
     }
-
-    exit(0);
 }
 
 void boot_spell()
 {
     spell_init();
     spell_read();
-    // spell_dump();
+    if (g_dumptables)
+        spell_dump();
 
 #define SPELLO(a, b) g_spell_info[a].spell_pointer = (b)
 

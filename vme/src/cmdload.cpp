@@ -23,6 +23,7 @@
 #include "files.h"
 #include "formatter.h"
 #include "interpreter.h"
+#include "main_functions.h"
 #include "modify.h"
 #include "reception.h"
 #include "skills.h"
@@ -114,8 +115,6 @@ void skill_dump()
             printf("%s", it->second.c_str());
         }
     }
-
-    exit(0);
 }
 
 void cmd_base_load()
@@ -137,7 +136,8 @@ void cmd_base_load()
     }
 
     command_read();
-    // skill_dump();
+    if (g_dumptables)
+        skill_dump();
 }
 
 void command_read()

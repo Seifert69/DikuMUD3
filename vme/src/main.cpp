@@ -86,6 +86,10 @@ int main(int argc, char **argv)
                     }
                     break;
 
+                case 'd':
+                    g_dumptables = true;
+                    break;
+
                 case 'l':
                     if (*(argv[pos] + 2))
                     {

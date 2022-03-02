@@ -36,5 +36,7 @@ extern int g_wizlock;
 extern int g_tics;
 extern int g_mudboot;
 extern long g_nTickUsec;
+extern bool g_dumptables;
+
 extern const char *g_compile_date;
 extern const char *g_compile_time;
