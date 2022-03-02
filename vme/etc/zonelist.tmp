@@ -1,0 +1,76 @@
+# Format:
+#   <zone> <pwd> <pri1> <pri2> <load> <pay> <path>
+#
+#   zone: name of the zonefile (on disk) not including .zon
+#   pwd : not used by vme, used for FTP scripts if you have any
+#   pri1: not used by vme (Probably used by a script)
+#   pri2: access level of the zone. [0..255]
+#         For certain DIL fields, e.g. PC_LIFESPAN if this value
+#         is high enough then the field can be modified, otherwise
+#         it can only be read. Generally it looks like the value
+#         used is 1..10. 
+#   load: Load level [200..255]. This field sets the level a wiz 
+#         needs in order to load items from the zone.
+#   pay : Pay only. [0..1]. Used if you have pay zones in the game.
+#   path: This is the path to where data from this zone will be loaded / saved (DIL)
+#
+basis 1120tw0008         1   0 250 0 ../etc
+death 1120tw0008         1   0 250 0 ../lib/death
+spells 1120tw0008        1   0 250 0 ../lib/dilfiles/spells
+randomt 1120tw0008       1   0 250 0
+skills 1120tw0008        1   0 250 0
+commands 1120tw0008      1   0 250 0 ../etc
+baseget  1120tw0008      1   0 250 0
+basemove 1120tw0008      1   1   0 0
+wiz 1120tw0008           1   0 250 0
+baselook 1120tw0008      1   1   0 0
+update 1120tw0008        1   0 250 0
+help 1120tw0008          1   0 250 0 ../etc/help
+boards 1120tw0008        1   0 250 0 ../lib/boards
+comm 1120tw0008          1   0 250 0
+socials 1120tw0008       1   0 250 0
+set 1120tw0008           1   0 250 0
+mail 1120tw0008          1   0 250 0 ../lib/mail
+function 1120tw0008      1   0 250 0
+restrict 1120tw0008      1   0 250 0
+bounty release           1 250 0 0
+quests release           1   2   0 0
+guilds release           1   0 250 0
+professions release      1   0 250 0
+#
+newbie 1120tw0008        1   0 250 0 ../lib/newbie
+justice 1120tw0008       1   0 250 0 ../lib/justice
+arena release            1   0 250 0
+clan 1120tw0008          1   0 250 0 ../lib/clan
+competition 1120tw0008   1   0 250 0 ../lib/competition
+holiday20 release    1   0 250 0
+holiday21 release		 1   0 250 0 
+guild_quest release		 1	 0 250 0 
+#
+guild_paths  release 1 2 0 0
+assassin release 1 2 0 0
+clericguild release 1 2 0 0
+cypress release 1 3 0 0
+fightersguild release 1 2 0 0
+goblin_cave release 1 255 0 0
+halfzon release 1 255 0 0
+haon-dor release 1 3 0 0
+hobgob release 1 255 0 0
+kingc release 1 255 0 0
+mageguild release 1 2 0 0
+midgaard release 1 1 0 0
+midwalls release 1 1 0 0
+necro_guild release 1 2 0 0
+offices release 1 255 0 0
+paladin_guild release 1 2 0 0
+ratswarf release 1 255 0 0
+sorcerer release 1 2 0 0
+thievesguild release 1 2 0 0
+udgaard release 1 1 0 0
+druid 1120tw0008 1 255 0 0 
+knight   1120tw0008      1 2 0 0
+ranger 1120tw0008        1 2 0 0   
+rebirth 1120tw0008       1 0 250 0     
+barbarian release 1 2 0 0 
+gremlin release 1 2 0 0 
+clan_koh release 1 2 0 0

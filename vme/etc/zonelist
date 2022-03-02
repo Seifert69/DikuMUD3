@@ -1,76 +1,242 @@
-# Format:
-#   <zone> <pwd> <pri1> <pri2> <load> <pay> <path>
-#
-#   zone: name of the zonefile (on disk) not including .zon
-#   pwd : not used by vme, used for FTP scripts if you have any
-#   pri1: not used by vme (Probably used by a script)
-#   pri2: access level of the zone. [0..255]
-#         For certain DIL fields, e.g. PC_LIFESPAN if this value
-#         is high enough then the field can be modified, otherwise
-#         it can only be read. Generally it looks like the value
-#         used is 1..10. 
-#   load: Load level [200..255]. This field sets the level a wiz 
-#         needs in order to load items from the zone.
-#   pay : Pay only. [0..1]. Used if you have pay zones in the game.
-#   path: This is the path to where data from this zone will be loaded / saved (DIL)
-#
-basis 1120tw0008         1   0 250 0 ../etc
-death 1120tw0008         1   0 250 0 ../lib/death
-spells 1120tw0008        1   0 250 0 ../lib/dilfiles/spells
-randomt 1120tw0008       1   0 250 0
-skills 1120tw0008        1   0 250 0
-commands 1120tw0008      1   0 250 0 ../etc
-baseget  1120tw0008      1   0 250 0
-basemove 1120tw0008      1   1   0 0
-wiz 1120tw0008           1   0 250 0
-baselook 1120tw0008      1   1   0 0
-update 1120tw0008        1   0 250 0
-help 1120tw0008          1   0 250 0 ../etc/help
-boards 1120tw0008        1   0 250 0 ../lib/boards
-comm 1120tw0008          1   0 250 0
-socials 1120tw0008       1   0 250 0
-set 1120tw0008           1   0 250 0
-mail 1120tw0008          1   0 250 0 ../lib/mail
-function 1120tw0008      1   0 250 0
-restrict 1120tw0008      1   0 250 0
-bounty release           1 250 0 0
+basis 1120tw0008         1 0 250 0 ../etc
+death 1120tw0008         1 0 250 0 ../lib/death
+spells 1120tw0008        1 0 250 0 ../lib/dilfiles/spells
+skills 1120tw0008        1 0 250 0
+commands 1120tw0008      1 0 250 0 ../etc
+baseget  1120tw0008      1 0 250 0
+basemove 1120tw0008      1 1 0 0
+wiz 1120tw0008           1 0 250 0
+baselook 1120tw0008          1 1 0 0
+update 1120tw0008        1 0 250 0
+help 1120tw0008          1 0 250 0 ../etc/help
+boards 1120tw0008        1 0 250 0 ../lib/boards
+comm 1120tw0008          1 0 250 0
+socials 1120tw0008       1 0 250 0
+set 1120tw0008           1 0 250 0
+mail 1120tw0008          1 0 250 0 ../lib/mail
+newbie 1120tw0008        1 0 250 0 ../lib/newbie
+function 1120tw0008      1 0 250 0
+restrict 1120tw0008      1 0 250 0
 quests release           1   2   0 0
 guilds release           1   0 250 0
 professions release      1   0 250 0
 #
-newbie 1120tw0008        1   0 250 0 ../lib/newbie
-justice 1120tw0008       1   0 250 0 ../lib/justice
-arena release            1   0 250 0
-clan 1120tw0008          1   0 250 0 ../lib/clan
-competition 1120tw0008   1   0 250 0 ../lib/competition
-holiday20 release    1   0 250 0
-holiday21 release		 1   0 250 0 
-guild_quest release		 1	 0 250 0 
+justice 1120tw0008       1 0 250 0
+arena 1120tw0008         1 0 250 0
+clan 1120tw0008          1 0 250 0 ../lib/clan
+competition 1120tw0008   1 0 250 0 ../lib/competition
+holiday20 release        1 0 220 0 
+holiday21 release        1 0 220 0 
+guild_quest release      1 255 254 0 
 #
-guild_paths  release 1 2 0 0
-assassin release 1 2 0 0
-clericguild release 1 2 0 0
-cypress release 1 3 0 0
-fightersguild release 1 2 0 0
-goblin_cave release 1 255 0 0
-halfzon release 1 255 0 0
-haon-dor release 1 3 0 0
-hobgob release 1 255 0 0
-kingc release 1 255 0 0
-mageguild release 1 2 0 0
-midgaard release 1 1 0 0
-midwalls release 1 1 0 0
-necro_guild release 1 2 0 0
-offices release 1 255 0 0
-paladin_guild release 1 2 0 0
-ratswarf release 1 255 0 0
-sorcerer release 1 2 0 0
-thievesguild release 1 2 0 0
-udgaard release 1 1 0 0
-druid 1120tw0008 1 255 0 0 
+bounty release           1 250 0 0
+udgaard 1120tw0008       1 1 0 0
+midgaard 1120tw0008      1 1 0 0
+hallows10 d15turb3d      1 1 0 0
+holidays  k1tk4tc1u      1 255 0 0
+holiday10 m3t4lh34d      1 1 0 0
+holiday09 s1ckn355       1 1 0 0
+holiday08 1120tw0008     1 1 0 0
+holiday05 1120tw0008     1 1 0 0
+mageguild 1120tw0008     1 2 0 0
+clericguild 1120tw0008   1 2 0 0
+thievesguild 1120tw0008  1 2 0 0
+fightersguild 1120tw0008 1 2 0 0
+paladin_guild 1120tw0008       1 2 0 0
+sorcerer 1120tw0008      1 2 0 0
+necro_guild 1120tw0008         1 2 0 0
+assassin 1120tw0008      1 2 0 0
 knight   1120tw0008      1 2 0 0
+cypress 1120tw0008       1 3 0 0
+haon-dor 1120tw0008      1 3 0 0
+midsewer 1120tw0008      1 1 0 0
+midwalls 1120tw0008      1 1 0 0
+hamlet 1120tw0008        1 1 0 0
+galgachus 1120tw0008     1 255 0 0
+holes 1120tw0008         1 255 0 0
+cenedal 1120tw0008       1 255 0 0
+nymgaard 1120tw0008      1 255 0 0
+talen 1120tw0008         1 255 0 0
+toy 1120tw0008           1 1 0 0
+farm 1120tw0008          1 255 0 0
+farm1 1120tw0008         1 255 0 0
+farm2 1120tw0008         1 255 0 0
+farm3 1120tw0008         1 255 0 0
+gobtown1 1120tw0008      1 255 0 0 
+gobtown 1120tw0008       1 255 0 0 
+vine 1120tw0008          1 255 0 0 
 ranger 1120tw0008        1 2 0 0   
+monk 1120tw0008          1 255 0 0 
+foothill 1120tw0008      1 255 0 0 
+trees 1120tw0008         1 255 0 0 
+darkravine thrtn         1 255 0 0 
+darkhollow thrtn         1 255 0 0 
+druid 1120tw0008         1 255 0 0 
+sand 1120tw0008          1 255 0 0 
+sands2 1120tw0008        1 255 0 0 
+neptune 1120tw0008       1 255 0 0 
+hobgob 1120tw0008        1 255 0 0 
+deadl1 1120tw0008        1 255 0 0 
+offices 1120tw0008       1 255 0 0 
+fjord 1120tw0008         1 255 0 0 
+halfzon 1120tw0008       1 255 0 0 
+ogre 1120tw0008          1 255 0 0 
+ogre1 1120tw0008         1 255 0 0 
+udsewer 1120tw0008       1 255 0 0 
+torsbay 1120tw0008       1 255 0 0 
+urland 1120tw0008        1 255 0 0 
+casino 1120tw0008        1 255 0 0 
+valley1 1120tw0008       1 255 0 0 
+valley2 1120tw0008       1 255 0 0 
+valley3 1120tw0008       1 255 0 0 
+valley4 1120tw0008       1 255 0 0 
+kingc 1120tw0008         1 255 0 0
+elfdom 1120tw0008        1 255 0 0
+goblin_cave 1120tw0008   1 255 0 0
+hill 1120tw0008          1 255 0 0
+moor 1120tw0008          1 255 0 0                 
+ratswarf 1120tw0008      1 255 0 0                 
+gnome 1120tw0008         1 255 0 0                 
+timezon 1120tw0008       1 255 0 0                 
+tiamat 1120tw0008        1 0 250 2                 
+treasure 1120tw0008      1 0 254 0 ../lib/treasure 
+cthulu 1120tw0008        1 255 0 2
+desert 1120tw0008        1 255 0 2
+etznab 1120tw0008        1 255 0 0
+skaven 1120tw0008        1 255 0 2
+citadel 1120tw0008       1 255 0 0
+arma 1120tw0008          1 255 0 0
+hades1 1120tw0008        1 255 0 2
+hades2 1120tw0008        1 255 0 2
+hades3 1120tw0008        1 255 0 2
+hades4 1120tw0008        1 255 0 2
+hades5 1120tw0008        1 255 0 2
+hades6 1120tw0008        1 255 0 2
+hades7 1120tw0008        1 255 0 2
+hades8 1120tw0008        1 255 0 2
+abyss1 1120tw0008        1 255 0 2
+cemetery 1120tw0008      1 255 0 2  
+atlantis 1120tw0008      1 255 0 2  
+atl_misc 1120tw0008      1 255 0 2  
+atl_beach 1120tw0008     1 255 0 2  
+atl_sea 1120tw0008       1 255 0 2  
+serpents 1120tw0008      1 255 246 0
+seren 1120tw0008         1 255 246 0
+seren1 1120tw0008        1 255 0 0  
+darkelf 1120tw0008       1 255 0 2  
+arabian 1120tw0008       1 255 0 2  
+asgaard 1120tw0008       1 255 0 2  
+dwarves 1120tw0008       1 255 0 2  
+oxiyang 1120tw0008       1 255 0 0  
+tobas_manse 1120tw0008   1 255 0 0
+lost 1120tw0008          1 255 0 2     
+ww1 1120tw0008           1 255 0 2     
+ww2 1120tw0008           1 255 0 2     
+volcano 1120tw0008       1 255 0 2     
+keep 1120tw0008          1 255 0 0     
+center 1120tw0008        1 255 0 2     
+deathlink 1120tw0008     1 255 0 2     
+isledead 1120tw0008      1 255 0 0     
+pit 1120tw0008           1 255 254 2   
+pit2 1120tw0008          1 255 254 2   
+garden 1120tw0008        1 255 0 2     
+tower 1120tw0008         1 255 0 2     
+arctic 1120tw0008        1 255 0 2     
+gazha 1120tw0008         1 255 0 2     
+xiyang 1120tw0008        1 255 0 0     
+xiyang2 1120tw0008       1 255 0 0     
+akaren 1120tw0008        1 255 0 0     
+reslab 1120tw0008        1 255 0 2     
+cloud 1120tw0008         1 255 0 2     
+chess1 1120tw0008        1 255 0 0     
+chess2 1120tw0008        1 255 254 0   
+chess4 1120tw0008        1 255 0 0     
+chess3 1120tw0008        1 255 0 0     
+rotten 1120tw0008        1 255 0 2     
+warntz 1120tw0008        1 255 0 2     
+demon 1120tw0008         1 255 0 2     
+daemon 1120tw0008        1 255 0 2     
+academy 1120tw0008       1 255 0 0     
+haunted 1120tw0008       1 255 0 0     
+night 1120tw0008         1 255 0 0     
+night1 1120tw0008        1 255 0 0     
+elenia 1120tw0008        1 255 0 0     
+zemoch 1120tw0008        1 255 0 0     
+korandin 1120tw0008      1 255 0 0     
+clan_hf  1120tw0008      1 255 0 0
+clan_bus 1120tw0008      1 255 0 0     
+clan_kin 1120tw0008      1 255 0 0     
+clan_wom 1120tw0008      1 255 0 0     
+clan_dra 1120tw0008      1 255 0 0
+clan_aoh 1120tw0008      1 255 0 0
+clan_uch 1120tw0008      1 255 0 0
+clan_koh 1120tw0008      1 255 0 0 
+vendetta 1120tw0008      1 255 0 0     
+kaio 1120tw0008          1 255 254 0   
 rebirth 1120tw0008       1 0 250 0     
+guild_paths 1120tw0008   1 0 250 0
+vasklor 1120tw0008       1 1 0 0
+nether 1120tw0008        1 255 0 0
+vasklor1 1120tw0008      1 1 0 0
+troi 1120tw0008          1 1 0 0
+albula 1120tw0008       1 1 0 0      
+tolanna 1120tw0008       1 1 0 0   
+troi1 1120tw0008         1 1 0 0   
+tolanna1 1120tw0008      1 1 0 0   
+split 1120tw0008         1 0 250 0 
+mount 1120tw0008         1 255 0 0 
+aocean1 1120tw0008       1 255 0 0 
+aocean2 1120tw0008       1 255 0 0 
+aocean3 1120tw0008       1 255 0 0 
+aocean4 1120tw0008       1 255 0 0 
+skavship 1120tw0008      1 0 250 0 
+dracship 1120tw0008      1 0 250 0 
+serpship 1120tw0008      1 0 250 0 
+arctship 1120tw0008      1 0 250 0 
+drasil  1120tw0008       1 1 0 0   
+fthieves 1120tw0008      1 255 0 2 
+bazaar   1120tw0008      1 255 0 0 
+wallace  1120tw0008      1 1 0 0   
+fortress 1120tw0008      1 0 0 0   
+hoy_mts  1120tw0008      1 255 0 2 
+mt_chen  1120tw0008      1 255 0 2 
+yamato   1120tw0008      1 255 0 2 
+korinshi 1120tw0008      1 255 0 2 
+swamps   1120tw0008      1 0 0 0   
+egypt    1120tw0008      1 255 0 0 
+cocytus  1120tw0008      1 255 0 2 
+yamruins 1120tw0008      1 255 0 2 
+faerie    1120tw0008      1 255 0 0
+faeries2  1120tw0008      1 255 0 0 
+ego       1120tw0008      1 255 0 0
+ego1      1120tw0008      1 255 0 0
+ego2      1120tw0008      1 255 0 0
+ego3      1120tw0008      1 255 0 0
+ego4      1120tw0008      1 255 0 0
+ego5      1120tw0008      1 255 0 0
+ego6      1120tw0008      1 255 0 0
+ego7      1120tw0008      1 255 0 0
+ego8      1120tw0008      1 255 0 0
+ego9      1120tw0008      1 255 0 0
+ego10     1120tw0008      1 255 0 0
+pelagiris 1120tw0008      1 255 0 0
+kuan_hador 1120tw0008     1 255 0 0
+mordenkin 1120tw0008      1 255 0 0
+udplhome  g0at33          1 255 0 0
+moccihome th15tl3         1 255 0 0 
+anthill2  jump1ng         1 255 0 0
+mjorngar  eagl35          1 255 0 0 
+valte     ra1n1ng         1 0 0 0 ../lib/valte
+murhabi   ra1n1ng   	  1 255 0 2
+titanzon  ra1n1ng	      1 255 0 2
+soullake  5unny2010       1 0 250 2
+demsiege  gh14rd311i      1 255 0 2
+mforest   c4nn0nb411      1 255 0 0
+mushcaps  c4nn0nb411      1 255 0 0
+glowcave  c4nn0nb411      1 255 0 0
+arcisle   h3115b3115	  1 255 0 0
+duinveld  sandman         1 255 0 2     
 barbarian release 1 2 0 0 
-gremlin release 1 2 0 0 
-clan_koh release 1 2 0 0
+gremlin   release 1 2 0 0 
+randomt   release 1 0 250 0
+
