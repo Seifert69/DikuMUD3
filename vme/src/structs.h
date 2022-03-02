@@ -59,15 +59,21 @@ class zone_reset_cmd;
 
 /* ----------------- UNIT GENERAL STRUCTURES ----------------------- */
 
-struct unit_dil_affected_type
+class unit_dil_affected_type
 {
-    ubit16 beat;
-    ubit16 duration;
-    ubit16 transfer;
+    // TODO This is completely unused anywhere - but it must have been used for something
+    //  once so I am leaving it here all private and uncreatable.
+public:
+    unit_dil_affected_type() = delete;
+
+private:
+    ubit16 beat{0};
+    ubit16 duration{0};
+    ubit16 transfer{0};
     cNamelist data;
-    char *apply;  /* Apply DIL  */
-    char *remove; /* Remove DIL */
-    unit_dil_affected_type *next;
+    char *apply{nullptr};  // Apply DIL
+    char *remove{nullptr}; // Remove DIL
+    unit_dil_affected_type *next{nullptr};
 };
 
 class unit_affected_type : public basedestruct
