@@ -7,6 +7,7 @@
 
 #include "comm.h"
 #include "db.h"
+#include "descriptor_data.h"
 #include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"

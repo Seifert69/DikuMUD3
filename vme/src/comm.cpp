@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include "constants.h"
+#include "descriptor_data.h"
 #include "handler.h"
 #include "hookmud.h"
 #include "interpreter.h"

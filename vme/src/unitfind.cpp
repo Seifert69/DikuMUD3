@@ -9,6 +9,7 @@
 
 #include "common.h"
 #include "db.h"
+#include "descriptor_data.h"
 #include "handler.h"
 #include "slog.h"
 #include "textutil.h"

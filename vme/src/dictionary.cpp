@@ -8,6 +8,7 @@
 
 #include "comm.h"
 #include "config.h"
+#include "descriptor_data.h"
 #include "formatter.h"
 #include "interpreter.h"
 #include "queue.h"

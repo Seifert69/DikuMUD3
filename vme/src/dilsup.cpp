@@ -7,6 +7,7 @@
 
 #include "account.h"
 #include "db.h"
+#include "descriptor_data.h"
 #include "interpreter.h"
 #include "structs.h"
 #include "utils.h"

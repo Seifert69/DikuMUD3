@@ -10,6 +10,7 @@
 #include "comm.h"
 #include "common.h"
 #include "db.h"
+#include "descriptor_data.h"
 #include "dilrun.h"
 #include "mobact.h"
 #include "slog.h"

@@ -28,6 +28,7 @@ set(VME_SRCS
         db.cpp db.h
         db_file.cpp db_file.h
         dbfind.cpp dbfind.h
+        descriptor_data.cpp descriptor_data.h
         destruct.cpp destruct.h
         dictionary.cpp dictionary.h
         diku_exception.h

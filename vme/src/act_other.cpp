@@ -8,6 +8,7 @@
 #include "account.h"
 #include "comm.h"
 #include "common.h"
+#include "descriptor_data.h"
 #include "dilrun.h"
 #include "handler.h"
 #include "interpreter.h"

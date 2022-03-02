@@ -7,6 +7,7 @@
 #include "dbfind.h"
 
 #include "db.h"
+#include "descriptor_data.h"
 #include "dil.h"
 #include "file_index_type.h"
 #include "handler.h"
