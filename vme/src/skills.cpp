@@ -1557,6 +1557,74 @@ static void weapon_init()
 
 void weapon_dump()
 {
+    printf("Weapon Tables\n");
+
+    // Profession Headers
+    for (int j = 0; j < PROFESSION_MAX; j++)
+    {
+        printf(",%s", g_professions[j]);
+    }
+    printf(",level,");
+#undef PC_RACE_MAX
+#define PC_RACE_MAX 11
+    for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+    {
+        printf("%s,", g_pc_races[ridx]);
+    }
+    // Dump variable tail of ability restrictions
+    for (int k=0; k < ABIL_TREE_MAX; k++)
+    {
+        printf("%s,", g_AbiColl.text[k]);
+    }
+
+    for (int i = 0; i < WPN_TREE_MAX; i++)
+    {
+        if (g_WpnColl.text[i] == nullptr)
+        {
+            continue;
+        }
+
+        printf("\n%s,", g_WpnColl.text[i]);
+
+        for (int j = 0; j < PROFESSION_MAX; j++)
+        {
+            printf("%s%d,", (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                                       g_WpnColl.prof_table[i].profession_cost[j]);
+        }
+
+        printf("%s,", (g_WpnColl.prof_table[i].min_level == 0) ? "" : itoa(g_WpnColl.prof_table[i].min_level));
+
+        for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+        {
+            if (g_WpnColl.racial[ridx][i] > 0)
+            {
+                printf("%d,", g_WpnColl.racial[ridx][i]);
+            }
+            else
+            {
+                printf(",");
+            }
+        }
+
+        // Dump variable tail of ability restrictions
+        for (int k=0; k < ABIL_TREE_MAX; k++)
+        {
+            if (g_WpnColl.prof_table[i].min_abil[k] > 0)
+            {
+                printf("%d,", g_WpnColl.prof_table[i].min_abil[k]);
+            }
+            else
+            {
+                printf(",");
+            }
+        }
+    }
+    printf("\n");
+}
+
+
+void weapon_dump_alternate()
+{
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
@@ -1599,7 +1667,10 @@ void boot_weapon()
     weapon_init();
     weapon_read();
     if (g_dumptables)
+    {
+        weapon_dump_alternate();
         weapon_dump();
+    }
 }
 
 /* ========================================================================= */

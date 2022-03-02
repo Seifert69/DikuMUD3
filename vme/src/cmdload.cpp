@@ -74,6 +74,7 @@ cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_mo
 
 void skill_dump_alternate()
 {
+    printf("Skill Profession Tables Alternate\n");
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
@@ -135,6 +136,11 @@ void skill_dump()
     {
         printf("%s,", g_pc_races[ridx]);
     }
+    // Dump variable tail of ability restrictions
+    for (int k=0; k < ABIL_TREE_MAX; k++)
+    {
+        printf("%s,", g_AbiColl.text[k]);
+    }
 
     for (int i = 0; i < SKI_TREE_MAX; i++)
     {
@@ -170,8 +176,12 @@ void skill_dump()
         {
             if (g_SkiColl.prof_table[i].min_abil[k] > 0)
             {
-                printf("%s=%d,", g_AbiColl.text[k], g_SkiColl.prof_table[i].min_abil[k]);
-            }   
+                printf("%d,", g_SkiColl.prof_table[i].min_abil[k]);
+            }
+            else
+            {
+                printf(",");
+            }
         }
     }
     printf("\n");
@@ -199,9 +209,9 @@ void cmd_base_load()
     command_read();
     if (g_dumptables)
     {
+        skill_dump_alternate();
         skill_dump();
         exit(0);
-        skill_dump_alternate();
     }
 }
 
