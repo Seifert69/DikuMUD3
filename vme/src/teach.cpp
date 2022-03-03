@@ -1801,7 +1801,7 @@ int teach_init(spec_arg *sarg)
 
     sarg->fptr->setFunctionPointerIndex(SFUN_TEACHING);
     sarg->fptr->flags = SFB_CMD;
-    sarg->fptr->heart_beat = PULSE_SEC;
+    sarg->fptr->setHeartBeat( PULSE_SEC);
 
     assert(sarg->fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL);
     FREE(sarg->fptr->data); /* Free the text string! */

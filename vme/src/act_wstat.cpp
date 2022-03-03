@@ -697,7 +697,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
                                        g_unit_function_array[f->getFunctionPointerIndex()].name,
                                        sprintbit(bits, f->flags, g_sfb_flags),
                                        f->getFunctionPointerIndex(),
-                                       f->heart_beat,
+                                       f->getHeartBeat(),
                                        f->data ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data."
                                                : "No data.");
         send_to_char(msg, ch);

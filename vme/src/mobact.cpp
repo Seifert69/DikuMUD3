@@ -27,7 +27,7 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
     assert(!u->is_destructed());
     assert(!fptr->is_destructed());
 
-    if ((ticks = fptr->heart_beat) > 0)
+    if ((ticks = fptr->getHeartBeat()) > 0)
     {
         if (ticks < PULSE_SEC)
         {
@@ -42,7 +42,8 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
                     szonelog(g_boot_zone, "DIL [%s] had heartbeat issue", p->fp->tmpl->prgname);
                 }
             }
-            ticks = fptr->heart_beat = PULSE_SEC * 3;
+            ticks = PULSE_SEC * 3;
+            fptr->setHeartBeat(PULSE_SEC * 3);
         }
 
         if (IS_SET(fptr->flags, SFB_RANTIME))
@@ -166,9 +167,9 @@ void special_event(void *p1, void *p2)
     {
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
-            if (fptr->heart_beat == 1)
+            if (fptr->getHeartBeat() == 1)
             {
-                fptr->heart_beat = 5 * PULSE_SEC;
+                fptr->setHeartBeat(5 * PULSE_SEC);
             }
         }
     }
@@ -178,9 +179,9 @@ void special_event(void *p1, void *p2)
         return;
     }
 
-    if (fptr->heart_beat < PULSE_SEC)
+    if (fptr->getHeartBeat() < PULSE_SEC)
     {
-        slog(LOG_ALL, 0, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), fptr->heart_beat);
+        slog(LOG_ALL, 0, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), fptr->getHeartBeat());
     }
 
     if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
@@ -249,9 +250,9 @@ void start_special(unit_data *u, unit_fptr *fptr)
     if (IS_SET(fptr->flags, SFB_TICK) || fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
         /* If people forget to set the ticking functions... */
-        if (fptr->heart_beat <= 0)
+        if (fptr->getHeartBeat() <= 0)
         {
-            fptr->heart_beat = g_unit_function_array[fptr->getFunctionPointerIndex()].tick;
+            fptr->setHeartBeat( g_unit_function_array[fptr->getFunctionPointerIndex()].tick);
 
             /* Well, the builders are supposed to fix it! That's why it is
                sent to the log, so they can see it! */
@@ -273,7 +274,7 @@ void start_special(unit_data *u, unit_fptr *fptr)
 
         if (!u->is_destructed() && !fptr->is_destructed())
         {
-            fptr->event = g_events.add(fptr->heart_beat, special_event, u, fptr);
+            fptr->event = g_events.add(fptr->getHeartBeat(), special_event, u, fptr);
         }
     }
 }

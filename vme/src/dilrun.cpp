@@ -1107,7 +1107,7 @@ int run_dil(spec_arg *sarg)
     }
 
     /* For optimization purposes */
-    ubit16 OrgHeartBeat = sarg->fptr->heart_beat;
+    ubit16 OrgHeartBeat = sarg->fptr->getHeartBeat();
 
     activates++;
 
@@ -1254,12 +1254,12 @@ int run_dil(spec_arg *sarg)
 
     if (prg->nest <= 0)
     {
-        sarg->fptr->heart_beat = MAX(PULSE_SEC * 1, sarg->fptr->heart_beat);
+        sarg->fptr->setHeartBeat(MAX(PULSE_SEC * 1, sarg->fptr->getHeartBeat()));
 
         if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
         {
             /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
-            if ((OrgHeartBeat != sarg->fptr->heart_beat) && (sarg->cmd->no != CMD_AUTO_TICK))
+            if ((OrgHeartBeat != sarg->fptr->getHeartBeat()) && (sarg->cmd->no != CMD_AUTO_TICK))
             {
                 ResetFptrTimer(sarg->owner, sarg->fptr);
             }

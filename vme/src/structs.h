@@ -71,15 +71,20 @@ public:
     int readFunctionPointerIndexFrom(CByteBuffer &buf) { return buf.Read16(&index); }
     void setFunctionPointerIndex(ubit16 value) { index = value; }
 
-    ubit8 getFunctionPriority() { return priority; }
+    ubit8 getFunctionPriority() const { return priority; }
     int readFunctionPriorityFrom(CByteBuffer &buf) { return buf.Read8(&priority); }
     void setFunctionPriority(ubit8 value) { priority = value; }
 
+    ubit16 getHeartBeat() const { return heart_beat; }
+    ubit16 *getHeartBeatPtr()  { return &heart_beat; }
+    int readHeartBeatFrom(CByteBuffer &buf) { return buf.Read16(&heart_beat); }
+    void setHeartBeat(ubit16 value) { heart_beat = value; }
+
 private:
-    ubit16 index{0};   // Index to function pointer array
-    ubit8 priority{0}; // Order to insert ftpr on unit (2020)
+    ubit16 index{0};      // Index to function pointer array
+    ubit8 priority{0};    // Order to insert ftpr on unit (2020)
+    ubit16 heart_beat{0}; // in 1/4 of a sec
 public:
-    ubit16 heart_beat;  /* in 1/4 of a sec                             */
     ubit16 flags;       /* When to override next function (boolean)    */
     void *data;         /* Pointer to data local for this unit         */
     unit_fptr *next;    /* Next in linked list                         */

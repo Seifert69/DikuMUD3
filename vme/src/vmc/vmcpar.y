@@ -629,7 +629,7 @@ unit_field  : NAMES stringlist
             }
             cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
             cur_func->data = idargcopy;
-            cur_func->heart_beat = WAIT_SEC * 10;
+            cur_func->setHeartBeat(WAIT_SEC * 10);
             cur_func->flags = SFB_ALL;
         }
     }
@@ -654,7 +654,7 @@ unit_field  : NAMES stringlist
         }
         cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
         cur_func->data = argcopy;
-        cur_func->heart_beat = WAIT_SEC * 10;
+        cur_func->setHeartBeat(WAIT_SEC * 10);
         cur_func->flags = SFB_ALL;
     }
     | TITLE STRING
@@ -922,7 +922,7 @@ optfuncarg  : STRINGT STRING
     }
     | TIME number
     {
-        cur_func->heart_beat = $2;
+        cur_func->setHeartBeat($2);
     }
     | BITS flags
     {

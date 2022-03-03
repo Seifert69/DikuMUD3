@@ -663,8 +663,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr->setFunctionPriority(43);
         }
 
-        fptr->heart_beat = pBuf->ReadU16(&g_nCorrupt);
-        fptr->flags = pBuf->ReadU16(&g_nCorrupt);
+        g_nCorrupt +=fptr->readHeartBeatFrom(*pBuf);
+        g_nCorrupt += pBuf->Read16(&fptr->flags);
 
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
@@ -726,14 +726,14 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             pBuf->ReadStringAlloc((char **)&fptr->data);
         }
 
-        if ((fptr->heart_beat) && (fptr->heart_beat < WAIT_SEC))
+        if ((fptr->getHeartBeat()) && (fptr->getHeartBeat() < WAIT_SEC))
         {
             if (fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL)
             {
                 slog(LOG_ALL,
                      0,
                      "WARNING: HEARTBEAT LOW (%d) SAVE on %s@%s \n",
-                     fptr->heart_beat,
+                     fptr->getHeartBeat(),
                      UNIT_FI_NAME(owner),
                      UNIT_FI_ZONENAME(owner));
             }
@@ -744,7 +744,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON LOAD",
                      (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
                      (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
-                     fptr->heart_beat);
+                     fptr->getHeartBeat());
             }
         }
 
@@ -1003,11 +1003,11 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
         i++;
         pBuf->Append16(fptr->getFunctionPointerIndex());
 
-        if ((fptr->heart_beat) && (fptr->heart_beat < WAIT_SEC))
+        if ((fptr->getHeartBeat()) && (fptr->getHeartBeat() < WAIT_SEC))
         {
             if (fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL)
             {
-                slog(LOG_ALL, 0, "WARNING: HEARTBEAT LOW (%d)\n", fptr->heart_beat);
+                slog(LOG_ALL, 0, "WARNING: HEARTBEAT LOW (%d)\n", fptr->getHeartBeat());
             }
             else
             {
@@ -1016,12 +1016,12 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON SAVE",
                      (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
                      (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
-                     fptr->heart_beat);
+                     fptr->getHeartBeat());
             }
         }
 
         pBuf->Append8(fptr->getFunctionPriority()); // MS2020 added priority, version 70+
-        pBuf->Append16(fptr->heart_beat);
+        pBuf->Append16(fptr->getHeartBeat());
         pBuf->Append16(fptr->flags);
 
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
