@@ -693,7 +693,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
 
         auto msg = diku::format_to_str("[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
                                        "%s<br/><br/>",
-                                       f->priority,
+                                       f->getFunctionPriority(),
                                        g_unit_function_array[f->getFunctionPointerIndex()].name,
                                        sprintbit(bits, f->flags, g_sfb_flags),
                                        f->getFunctionPointerIndex(),

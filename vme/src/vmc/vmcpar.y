@@ -868,7 +868,7 @@ unit_field  : NAMES stringlist
             break;
         }
         cur_func->setFunctionPointerIndex($3);
-        cur_func->priority = g_unit_function_array[cur_func->getFunctionPointerIndex()].priority;
+        cur_func->setFunctionPriority(g_unit_function_array[cur_func->getFunctionPointerIndex()].priority);
     }
     optfuncargs | AFFECT
     {

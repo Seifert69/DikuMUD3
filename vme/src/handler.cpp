@@ -231,10 +231,10 @@ unit_fptr *find_fptr(unit_data *u, ubit16 idx)
 // 2020: Add it prioritized
 void insert_fptr(unit_data *u, unit_fptr *f)
 {
-    if (f->priority == 0)
+    if (f->getFunctionPriority() == 0)
     {
         slog(LOG_ALL, 0, "fptr_priotity not set, setting to chores");
-        f->priority = FN_PRI_CHORES;
+        f->setFunctionPriority(FN_PRI_CHORES);
     }
 
     // If there are no funcs, just add it.
@@ -246,7 +246,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     }
 
     // See if we are higher priority than head element
-    if (f->priority < UNIT_FUNC(u)->priority)
+    if (f->getFunctionPriority() < UNIT_FUNC(u)->getFunctionPriority())
     {
         f->next = UNIT_FUNC(u);
         UNIT_FUNC(u) = f;
@@ -260,7 +260,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     prev = UNIT_FUNC(u);
     for (p = UNIT_FUNC(u)->next; p; p = p->next)
     {
-        if (f->priority < p->priority)
+        if (f->getFunctionPriority() < p->getFunctionPriority())
         {
             f->next = p;
             prev->next = f;
@@ -284,7 +284,7 @@ unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat,
     assert(!f->is_destructed());
 
     f->setFunctionPointerIndex(index);
-    f->priority = priority;
+    f->setFunctionPriority(priority);
     f->heart_beat = beat;
     f->flags = flags;
     f->data = data;
