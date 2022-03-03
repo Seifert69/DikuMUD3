@@ -32,7 +32,7 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
         if (ticks < PULSE_SEC)
         {
             szonelog(g_boot_zone, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
-            if ((fptr->index == SFUN_DILCOPY_INTERNAL) || (fptr->index == SFUN_DIL_INTERNAL))
+            if ((fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL) || (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 dilprg *p = nullptr;
                 p = (dilprg *)fptr->data;
@@ -136,7 +136,7 @@ void special_event(void *p1, void *p2)
     /* If switched, disable all tick functions, so we can control the mother fucker!
            if (!IS_CHAR (u) || !CHAR_IS_SWITCHED (u)) */
     {
-        if (g_unit_function_array[fptr->index].func)
+        if (g_unit_function_array[fptr->getFunctionPointerIndex()].func)
         {
             if (IS_SET(fptr->flags, SFB_TICK))
             {
@@ -153,7 +153,7 @@ void special_event(void *p1, void *p2)
                 sarg.target = nullptr;
                 sarg.pInt = nullptr;
 
-                ret = (*(g_unit_function_array[fptr->index].func))(&sarg);
+                ret = (*(g_unit_function_array[fptr->getFunctionPointerIndex()].func))(&sarg);
             }
             assert((ret == SFR_SHARE) || (ret == SFR_BLOCK));
         }
@@ -164,7 +164,7 @@ void special_event(void *p1, void *p2)
     }
     else // Not executed because SFUN Before it raised priority
     {
-        if (fptr->index == SFUN_DIL_INTERNAL)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
             if (fptr->heart_beat == 1)
             {
@@ -183,7 +183,7 @@ void special_event(void *p1, void *p2)
         slog(LOG_ALL, 0, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), fptr->heart_beat);
     }
 
-    if (fptr->index == SFUN_DIL_INTERNAL)
+    if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
         int diltick = 0;
         int i = 0;
@@ -223,7 +223,7 @@ void start_special(unit_data *u, unit_fptr *fptr)
 {
     int diltick = 0;
     int i = 0;
-    if (fptr->index == SFUN_DIL_INTERNAL)
+    if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
         if (IS_SET(fptr->flags, SFB_TICK))
         {
@@ -246,12 +246,12 @@ void start_special(unit_data *u, unit_fptr *fptr)
         }
     }
 
-    if (IS_SET(fptr->flags, SFB_TICK) || fptr->index == SFUN_DIL_INTERNAL)
+    if (IS_SET(fptr->flags, SFB_TICK) || fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
         /* If people forget to set the ticking functions... */
         if (fptr->heart_beat <= 0)
         {
-            fptr->heart_beat = g_unit_function_array[fptr->index].tick;
+            fptr->heart_beat = g_unit_function_array[fptr->getFunctionPointerIndex()].tick;
 
             /* Well, the builders are supposed to fix it! That's why it is
                sent to the log, so they can see it! */

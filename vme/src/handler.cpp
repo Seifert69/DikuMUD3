@@ -219,7 +219,7 @@ unit_fptr *find_fptr(unit_data *u, ubit16 idx)
 
     for (tf = UNIT_FUNC(u); tf; tf = tf->next)
     {
-        if (tf->index == idx)
+        if (tf->getFunctionPointerIndex() == idx)
         {
             return tf;
         }
@@ -283,7 +283,7 @@ unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat,
     assert(f);
     assert(!f->is_destructed());
 
-    f->index = index;
+    f->setFunctionPointerIndex(index);
     f->priority = priority;
     f->heart_beat = beat;
     f->flags = flags;
@@ -331,7 +331,7 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     sarg.arg = "";
     sarg.mflags = ((ubit16)0);
 
-    (*(g_unit_function_array[f->index].func))(&sarg);
+    (*(g_unit_function_array[f->getFunctionPointerIndex()].func))(&sarg);
 
     /* Data is free'ed in destruct() if it is not NULL now */
 
@@ -594,7 +594,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
         {
             newaf = *af;
             newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
-            newaf.setDuration(-1);       /* Permanent until unequip */
+            newaf.setDuration(-1);           /* Permanent until unequip */
             create_affect(ch, &newaf);
         }
     }

@@ -82,7 +82,7 @@ eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1,
             assert(!f->is_destructed());
         }
 
-        if (f->index == 82)
+        if (f->getFunctionPointerIndex() == 82)
         {
             dilprg *prg = (dilprg *)f->data;
             membug_verify(prg);
@@ -250,7 +250,7 @@ void eventqueue::process()
             int bDestructed = 0;
 
             if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->data &&
-                (((unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL))
+                (((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 strcpy(dilname, "NO NAME");
                 strcpy(dilzname, "NO ZONE");
@@ -312,7 +312,7 @@ void eventqueue::process()
                 {
                     if (tfunc == special_event)
                     {
-                        if (((unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL)
+                        if (((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
                         {
                             slog(LOG_DIL,
                                  0,
@@ -322,8 +322,8 @@ void eventqueue::process()
                                  dilzname,
                                  diloname,
                                  dilozname,
-                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->index].name,
-                                 ((unit_fptr *)tmp_event->arg2)->index);
+                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex()].name,
+                                 ((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex());
                         }
                         else
                         {
@@ -331,8 +331,8 @@ void eventqueue::process()
                                  0,
                                  "Internal process took %1.4f seconds to complete: %s (%d)'",
                                  loop_time,
-                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->index].name,
-                                 ((unit_fptr *)tmp_event->arg2)->index);
+                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex()].name,
+                                 ((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex());
                         }
                     }
                     else

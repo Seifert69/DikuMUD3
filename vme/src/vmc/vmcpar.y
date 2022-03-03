@@ -627,7 +627,7 @@ unit_field  : NAMES stringlist
                 cur_func->next = mcreate_func();
                 cur_func = cur_func->next;
             }
-            cur_func->index = SFUN_DILCOPY_INTERNAL;
+            cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
             cur_func->data = idargcopy;
             cur_func->heart_beat = WAIT_SEC * 10;
             cur_func->flags = SFB_ALL;
@@ -652,7 +652,7 @@ unit_field  : NAMES stringlist
             cur_func->next = mcreate_func();
             cur_func = cur_func->next;
         }
-        cur_func->index = SFUN_DILCOPY_INTERNAL;
+        cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
         cur_func->data = argcopy;
         cur_func->heart_beat = WAIT_SEC * 10;
         cur_func->flags = SFB_ALL;
@@ -867,8 +867,8 @@ unit_field  : NAMES stringlist
             }
             break;
         }
-        cur_func->index = $3;
-        cur_func->priority = g_unit_function_array[cur_func->index].priority;
+        cur_func->setFunctionPointerIndex($3);
+        cur_func->priority = g_unit_function_array[cur_func->getFunctionPointerIndex()].priority;
     }
     optfuncargs | AFFECT
     {

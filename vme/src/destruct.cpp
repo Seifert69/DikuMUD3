@@ -272,7 +272,7 @@ void clear_destructed()
     {
         f = (unit_fptr *)destructed[DR_FUNC][i];
 
-        if (f->index == 82)
+        if (f->getFunctionPointerIndex() == 82)
         {
             assert(f->data == nullptr);
         }

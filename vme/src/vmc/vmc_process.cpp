@@ -858,10 +858,10 @@ void process_funcs(unit_data *u)
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
     {
-        if (!is_in(fptr->index, 0, SFUN_TOP_IDX))
+        if (!is_in(fptr->getFunctionPointerIndex(), 0, SFUN_TOP_IDX))
         {
             dmc_error(TRUE, "%s: Function index not in legal SFUN_XX range.", UNIT_IDENT(u), (float)fptr->heart_beat / (float)PULSE_SEC);
-            fptr->index = 0;
+            fptr->setFunctionPointerIndex(0);
         }
 
         if (fptr->heart_beat != 0)

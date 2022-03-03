@@ -67,7 +67,13 @@ public:
     unit_fptr();
     ~unit_fptr();
 
-    ubit16 index;       /* Index to function pointer array             */
+    ubit16 getFunctionPointerIndex() const { return index; }
+    int readFunctionPointerIndexFrom(CByteBuffer &buf) { return buf.Read16(&index); }
+    void setFunctionPointerIndex(ubit16 value) { index = value; }
+
+private:
+    ubit16 index{0}; // Index to function pointer array
+public:
     ubit8 priority;     /* Order to insert ftpr on unit (2020)         */
     ubit16 heart_beat;  /* in 1/4 of a sec                             */
     ubit16 flags;       /* When to override next function (boolean)    */

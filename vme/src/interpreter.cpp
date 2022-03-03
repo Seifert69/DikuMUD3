@@ -552,13 +552,13 @@ int function_activate(unit_data *u, spec_arg *sarg)
             add_func_history(u, sarg->fptr->index, sarg->mflags);
 #endif
             assert(!sarg->fptr->is_destructed());
-            if (g_unit_function_array[sarg->fptr->index].func)
+            if (g_unit_function_array[sarg->fptr->getFunctionPointerIndex()].func)
             {
-                return (*(g_unit_function_array[sarg->fptr->index].func))(sarg);
+                return (*(g_unit_function_array[sarg->fptr->getFunctionPointerIndex()].func))(sarg);
             }
             else
             {
-                slog(LOG_ALL, 0, "Interpreter: Null function call! (%d)", sarg->fptr->index);
+                slog(LOG_ALL, 0, "Interpreter: Null function call! (%d)", sarg->fptr->getFunctionPointerIndex());
             }
         }
     }
@@ -608,7 +608,7 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
             return SFR_SHARE;
         }
 
-        if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
+        if ((orgflag != sarg->fptr->flags) && (sarg->fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
         {
             int diltick = 0;
             int i = 0;

@@ -1022,7 +1022,7 @@ teach_packet *get_teacher(const char *pName)
 
     for (f = UNIT_FUNC(u); f; f = f->next)
     {
-        if (f->index == SFUN_TEACHING)
+        if (f->getFunctionPointerIndex() == SFUN_TEACHING)
         {
             break;
         }
@@ -1799,11 +1799,11 @@ int teach_init(spec_arg *sarg)
     packet->teaches[count - 1].min_cost_per_point = -1;
     packet->teaches[count - 1].max_cost_per_point = -1;
 
-    sarg->fptr->index = SFUN_TEACHING;
+    sarg->fptr->setFunctionPointerIndex(SFUN_TEACHING);
     sarg->fptr->flags = SFB_CMD;
     sarg->fptr->heart_beat = PULSE_SEC;
 
-    assert(sarg->fptr->index != SFUN_DIL_INTERNAL);
+    assert(sarg->fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL);
     FREE(sarg->fptr->data); /* Free the text string! */
     sarg->fptr->data = packet;
 

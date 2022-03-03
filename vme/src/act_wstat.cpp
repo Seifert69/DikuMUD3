@@ -678,7 +678,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
     for (f = UNIT_FUNC(u); f; f = f->next)
 
     {
-        if (f->index == SFUN_DIL_INTERNAL)
+        if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
             dilprg *prg = nullptr;
 
@@ -694,11 +694,11 @@ static void stat_func(const unit_data *ch, unit_data *u)
         auto msg = diku::format_to_str("[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
                                        "%s<br/><br/>",
                                        f->priority,
-                                       g_unit_function_array[f->index].name,
+                                       g_unit_function_array[f->getFunctionPointerIndex()].name,
                                        sprintbit(bits, f->flags, g_sfb_flags),
-                                       f->index,
+                                       f->getFunctionPointerIndex(),
                                        f->heart_beat,
-                                       f->data ? g_unit_function_array[f->index].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data."
+                                       f->data ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data."
                                                : "No data.");
         send_to_char(msg, ch);
     }

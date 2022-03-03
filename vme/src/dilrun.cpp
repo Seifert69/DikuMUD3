@@ -950,7 +950,7 @@ void ActivateDil(unit_data *pc)
         {
             assert(FALSE);
         }
-        if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->data)
         {
             prg = (dilprg *)fptr->data;
             REMOVE_BIT(prg->flags, DILFL_DEACTIVATED);
@@ -969,7 +969,7 @@ void DeactivateDil(unit_data *pc, dilprg *aprg)
 
     for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
     {
-        if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->data)
         {
             if (aprg && (aprg == fptr->data))
             {
@@ -1510,7 +1510,7 @@ dilprg *dil_copy_template(diltemplate *tmpl, unit_data *u, unit_fptr **pfptr)
         unit_fptr *f = nullptr;
         for (f = UNIT_FUNC(u); f; f = f->next)
         {
-            if (f->index == SFUN_DIL_INTERNAL)
+            if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
             {
                 dilprg *uprg = nullptr;
                 if ((uprg = (dilprg *)f->data))
@@ -1650,12 +1650,12 @@ void dil_loadtime_activate(unit_data *u)
     for (f = UNIT_FUNC(u); f; f = fnext)
     {
         fnext = f->next;
-        if (f->index == SFUN_DILCOPY_INTERNAL)
+        if (f->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
         {
             g_events.remove(special_event, u, f);
             special_event(u, f);
         }
-        else if ((f->index == SFUN_DIL_INTERNAL) && f->data)
+        else if ((f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL) && f->data)
         {
             g_events.remove(special_event, u, f);
             special_event(u, f);
@@ -1799,7 +1799,7 @@ unit_fptr *dil_find(const char *name, unit_data *u)
     {
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         {
-            if ((!fptr->is_destructed()) && (fptr->index == SFUN_DIL_INTERNAL))
+            if ((!fptr->is_destructed()) && (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 if ((((dilprg *)fptr->data)->frame[0].tmpl == tmpl) && ((dilprg *)fptr->data)->waitcmd > WAITCMD_QUIT)
                 {

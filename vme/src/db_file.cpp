@@ -645,9 +645,9 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr = head;
         }
 
-        fptr->index = pBuf->ReadU16(&g_nCorrupt);
+        g_nCorrupt += fptr->readFunctionPointerIndexFrom(*pBuf);
 
-        if (fptr->index > SFUN_TOP_IDX)
+        if (fptr->getFunctionPointerIndex() > SFUN_TOP_IDX)
         {
             slog(LOG_ALL, 0, "Illegal func index in bread_func index - corrupt.");
             g_nCorrupt = TRUE;
@@ -666,11 +666,11 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
         fptr->heart_beat = pBuf->ReadU16(&g_nCorrupt);
         fptr->flags = pBuf->ReadU16(&g_nCorrupt);
 
-        if (fptr->index == SFUN_DIL_INTERNAL)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
             fptr->data = bread_dil(pBuf, owner, version, fptr, stspec);
         }
-        else if (fptr->index == SFUN_DILCOPY_INTERNAL)
+        else if (fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
         {
             char name[256];
             char *c = nullptr;
@@ -721,14 +721,14 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
         {
 #ifdef DMSERVER
             REMOVE_BIT(fptr->flags, SFB_ALL);
-            SET_BIT(fptr->flags, g_unit_function_array[fptr->index].sfb);
+            SET_BIT(fptr->flags, g_unit_function_array[fptr->getFunctionPointerIndex()].sfb);
 #endif
             pBuf->ReadStringAlloc((char **)&fptr->data);
         }
 
         if ((fptr->heart_beat) && (fptr->heart_beat < WAIT_SEC))
         {
-            if (fptr->index != SFUN_DIL_INTERNAL)
+            if (fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL)
             {
                 slog(LOG_ALL,
                      0,
@@ -983,17 +983,17 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
 
     for (; fptr; fptr = fptr->next)
     {
-        assert(fptr->index <= SFUN_TOP_IDX);
+        assert(fptr->getFunctionPointerIndex() <= SFUN_TOP_IDX);
 
         data = (char *)fptr->data;
 
 #ifdef DMSERVER
-        if (g_unit_function_array[fptr->index].save_w_d == SD_NEVER)
+        if (g_unit_function_array[fptr->getFunctionPointerIndex()].save_w_d == SD_NEVER)
         {
             continue; /* DONT SAVE THIS FROM INSIDE THE GAME! */
         }
 
-        if (fptr->data && g_unit_function_array[fptr->index].save_w_d == SD_NULL)
+        if (fptr->data && g_unit_function_array[fptr->getFunctionPointerIndex()].save_w_d == SD_NULL)
         {
             data = nullptr;
         }
@@ -1001,11 +1001,11 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
         /* Else this is SD_ASCII and we can save anything we like ... :-) */
 #endif
         i++;
-        pBuf->Append16(fptr->index);
+        pBuf->Append16(fptr->getFunctionPointerIndex());
 
         if ((fptr->heart_beat) && (fptr->heart_beat < WAIT_SEC))
         {
-            if (fptr->index != SFUN_DIL_INTERNAL)
+            if (fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL)
             {
                 slog(LOG_ALL, 0, "WARNING: HEARTBEAT LOW (%d)\n", fptr->heart_beat);
             }
@@ -1024,12 +1024,12 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
         pBuf->Append16(fptr->heart_beat);
         pBuf->Append16(fptr->flags);
 
-        if (fptr->index == SFUN_DIL_INTERNAL)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
             assert(fptr->data);
             bwrite_dil(pBuf, (dilprg *)fptr->data);
         }
-        else if (fptr->index == SFUN_DILCOPY_INTERNAL)
+        else if (fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
         {
 #ifdef VMC_SRC
             assert(fptr->data);

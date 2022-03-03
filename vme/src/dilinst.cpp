@@ -2906,7 +2906,7 @@ void dilfi_sntadil(dilprg *p)
 
                         for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->next)
                         {
-                            if (fptr->index == SFUN_DIL_INTERNAL && fptr->data && ((dilprg *)fptr->data)->fp &&
+                            if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->data && ((dilprg *)fptr->data)->fp &&
                                 ((dilprg *)fptr->data)->fp->tmpl == tmpl)
                             {
                                 break;
