@@ -63,7 +63,7 @@ struct teacher_msg
 
 struct teach_packet
 {
-    ubit8 type; /* Ability, spell, skill, weapon */
+    ubit8 type;             /* Ability, spell, skill, weapon */
     const char *pGuildName; // Empty or set to the name of the guild
     teacher_msg msgs;
     skill_teach_type *teaches; /* Array of skills */
@@ -768,7 +768,10 @@ int practice(unit_data *teacher,
     }
 
     const char *req = nullptr;
-    req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel, pckt->pGuildName);
+    req = trainrestricted(pupil,
+                          &pColl->prof_table[pckt->teaches[teach_index].node],
+                          pckt->teaches[teach_index].min_glevel,
+                          pckt->pGuildName);
     if (*req)
     {
         auto msg = diku::format_to_str("To practice %s you need to meet the following requirements %s.<br/>",
@@ -1800,8 +1803,8 @@ int teach_init(spec_arg *sarg)
     packet->teaches[count - 1].max_cost_per_point = -1;
 
     sarg->fptr->setFunctionPointerIndex(SFUN_TEACHING);
-    sarg->fptr->flags = SFB_CMD;
-    sarg->fptr->setHeartBeat( PULSE_SEC);
+    sarg->fptr->setAllActivateOnEventFlags(SFB_CMD);
+    sarg->fptr->setHeartBeat(PULSE_SEC);
 
     assert(sarg->fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL);
     FREE(sarg->fptr->data); /* Free the text string! */

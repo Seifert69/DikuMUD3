@@ -544,9 +544,9 @@ void argument_interpreter(const char *argument, char *first_arg, char *second_ar
 
 int function_activate(unit_data *u, spec_arg *sarg)
 {
-    if ((u != sarg->activator) || IS_SET(sarg->fptr->flags, SFB_AWARE) || IS_SET(sarg->mflags, SFB_AWARE))
+    if ((u != sarg->activator) || sarg->fptr->isActivateOnEventFlagSet(SFB_AWARE) || IS_SET(sarg->mflags, SFB_AWARE))
     {
-        if (IS_SET(sarg->fptr->flags, sarg->mflags & (~SFB_AWARE | SFB_PROMPT))) // MS2020 added ()
+        if (sarg->fptr->isActivateOnEventFlagSet(sarg->mflags & (~SFB_AWARE | SFB_PROMPT))) // MS2020 added ()
         {
 #ifdef DEBUG_HISTORY
             add_func_history(u, sarg->fptr->index, sarg->mflags);
@@ -589,7 +589,7 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
     for (sarg->fptr = UNIT_FUNC(u); !priority && sarg->fptr; sarg->fptr = next)
     {
         next = sarg->fptr->next; /* Next dude trick */
-        orgflag = sarg->fptr->flags;
+        orgflag = sarg->fptr->getAllActivateOnEventFlags();
 
         if (u->is_destructed())
         {
@@ -608,12 +608,12 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
             return SFR_SHARE;
         }
 
-        if ((orgflag != sarg->fptr->flags) && (sarg->fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
+        if ((orgflag != sarg->fptr->getAllActivateOnEventFlags()) && (sarg->fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
         {
             int diltick = 0;
             int i = 0;
             diltick = FALSE;
-            if (IS_SET(sarg->fptr->flags, SFB_TICK))
+            if (sarg->fptr->isActivateOnEventFlagSet(SFB_TICK))
             {
                 diltick = TRUE;
             }
@@ -639,7 +639,7 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
             return res;
         }
 
-        priority |= IS_SET(sarg->fptr->flags, SFB_PRIORITY);
+        priority |= sarg->fptr->isActivateOnEventFlagSet(SFB_PRIORITY);
     }
 
     return SFR_SHARE;

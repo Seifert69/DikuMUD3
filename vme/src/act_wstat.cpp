@@ -695,7 +695,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
                                        "%s<br/><br/>",
                                        f->getFunctionPriority(),
                                        g_unit_function_array[f->getFunctionPointerIndex()].name,
-                                       sprintbit(bits, f->flags, g_sfb_flags),
+                                       sprintbit(bits, f->getAllActivateOnEventFlags(), g_sfb_flags),
                                        f->getFunctionPointerIndex(),
                                        f->getHeartBeat(),
                                        f->data ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data."

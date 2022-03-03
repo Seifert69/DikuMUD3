@@ -1233,7 +1233,7 @@ int run_dil(spec_arg *sarg)
 
     for (i = 0; i < prg->fp->intrcount; i++)
     {
-        SET_BIT(prg->sarg->fptr->flags, prg->fp->intr[i].flags);
+        prg->sarg->fptr->setActivateOnEventFlag(prg->fp->intr[i].flags);
     }
 
     /* Okay this is the problem:
@@ -1256,7 +1256,7 @@ int run_dil(spec_arg *sarg)
     {
         sarg->fptr->setHeartBeat(MAX(PULSE_SEC * 1, sarg->fptr->getHeartBeat()));
 
-        if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
+        if (prg->sarg->fptr->isActivateOnEventFlagSet(SFB_TICK))
         {
             /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
             if ((OrgHeartBeat != sarg->fptr->getHeartBeat()) && (sarg->cmd->no != CMD_AUTO_TICK))

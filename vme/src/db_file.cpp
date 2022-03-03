@@ -408,7 +408,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
     if (fptr && IS_SET(prg->flags, DILFL_AWARE))
     {
-        SET_BIT(fptr->flags, SFB_AWARE);
+        fptr->setActivateOnEventFlag(SFB_AWARE);
     }
 
     if (!IS_SET(prg->flags, DILFL_COPY))
@@ -663,8 +663,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr->setFunctionPriority(43);
         }
 
-        g_nCorrupt +=fptr->readHeartBeatFrom(*pBuf);
-        g_nCorrupt += pBuf->Read16(&fptr->flags);
+        g_nCorrupt += fptr->readHeartBeatFrom(*pBuf);
+        g_nCorrupt += fptr->readActivateOnEventFlagsFrom(*pBuf);
 
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
@@ -720,8 +720,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
         else
         {
 #ifdef DMSERVER
-            REMOVE_BIT(fptr->flags, SFB_ALL);
-            SET_BIT(fptr->flags, g_unit_function_array[fptr->getFunctionPointerIndex()].sfb);
+            fptr->removeActivateOnEventFlag(SFB_ALL);
+            fptr->setActivateOnEventFlag(g_unit_function_array[fptr->getFunctionPointerIndex()].sfb);
 #endif
             pBuf->ReadStringAlloc((char **)&fptr->data);
         }
@@ -1022,7 +1022,7 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
 
         pBuf->Append8(fptr->getFunctionPriority()); // MS2020 added priority, version 70+
         pBuf->Append16(fptr->getHeartBeat());
-        pBuf->Append16(fptr->flags);
+        pBuf->Append16(fptr->getAllActivateOnEventFlags());
 
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {

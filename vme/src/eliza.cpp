@@ -692,7 +692,7 @@ int oracle(spec_arg *sarg)
 
     if (od->patient && !scan4_ref(sarg->owner, od->patient))
     {
-        REMOVE_BIT(sarg->fptr->flags, SFB_PRIORITY);
+        sarg->fptr->removeActivateOnEventFlag(SFB_PRIORITY);
         od->patient = nullptr;
     }
 
@@ -728,7 +728,7 @@ int oracle(spec_arg *sarg)
             comms = 0;
             eliza_log(sarg->owner, nullptr, comms);
             eliza_log(sarg->owner, "========== oOo ============", comms);
-            SET_BIT(sarg->fptr->flags, SFB_PRIORITY);
+            sarg->fptr->setActivateOnEventFlag(SFB_PRIORITY);
         }
         return SFR_SHARE;
     }

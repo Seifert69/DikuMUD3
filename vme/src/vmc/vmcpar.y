@@ -630,7 +630,7 @@ unit_field  : NAMES stringlist
             cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
             cur_func->data = idargcopy;
             cur_func->setHeartBeat(WAIT_SEC * 10);
-            cur_func->flags = SFB_ALL;
+            cur_func->setAllActivateOnEventFlags(SFB_ALL);
         }
     }
     | DILCOPY reference '(' dilargs ')' ';'
@@ -655,7 +655,7 @@ unit_field  : NAMES stringlist
         cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
         cur_func->data = argcopy;
         cur_func->setHeartBeat(WAIT_SEC * 10);
-        cur_func->flags = SFB_ALL;
+        cur_func->setAllActivateOnEventFlags(SFB_ALL);
     }
     | TITLE STRING
     {
@@ -926,7 +926,7 @@ optfuncarg  : STRINGT STRING
     }
     | BITS flags
     {
-        cur_func->flags = $2;
+        cur_func->setAllActivateOnEventFlags($2);
     }
     ;
 

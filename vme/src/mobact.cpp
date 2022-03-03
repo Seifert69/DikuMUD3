@@ -46,7 +46,7 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
             fptr->setHeartBeat(PULSE_SEC * 3);
         }
 
-        if (IS_SET(fptr->flags, SFB_RANTIME))
+        if (fptr->isActivateOnEventFlagSet( SFB_RANTIME))
         {
             ticks = number(ticks - ticks / 2, ticks + ticks / 2);
         }
@@ -127,7 +127,7 @@ void special_event(void *p1, void *p2)
             break;
         }
 
-        if (IS_SET(ftmp->flags, SFB_PRIORITY))
+        if (ftmp->isActivateOnEventFlagSet( SFB_PRIORITY))
         {
             priority = TRUE;
         }
@@ -139,7 +139,7 @@ void special_event(void *p1, void *p2)
     {
         if (g_unit_function_array[fptr->getFunctionPointerIndex()].func)
         {
-            if (IS_SET(fptr->flags, SFB_TICK))
+            if (fptr->isActivateOnEventFlagSet( SFB_TICK))
             {
 #ifdef DEBUG_HISTORY
                 add_func_history(u, fptr->index, SFB_TICK);
@@ -189,7 +189,7 @@ void special_event(void *p1, void *p2)
         int diltick = 0;
         int i = 0;
         diltick = FALSE;
-        if (IS_SET(fptr->flags, SFB_TICK))
+        if (fptr->isActivateOnEventFlagSet( SFB_TICK))
         {
             diltick = TRUE;
         }
@@ -226,7 +226,7 @@ void start_special(unit_data *u, unit_fptr *fptr)
     int i = 0;
     if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
-        if (IS_SET(fptr->flags, SFB_TICK))
+        if (fptr->isActivateOnEventFlagSet( SFB_TICK))
         {
             diltick = 1;
         }
@@ -247,7 +247,7 @@ void start_special(unit_data *u, unit_fptr *fptr)
         }
     }
 
-    if (IS_SET(fptr->flags, SFB_TICK) || fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
+    if (fptr->isActivateOnEventFlagSet(SFB_TICK) || fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
         /* If people forget to set the ticking functions... */
         if (fptr->getHeartBeat() <= 0)
