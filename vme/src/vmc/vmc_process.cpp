@@ -9,6 +9,7 @@
 #include "money.h"
 #include "skills.h"
 #include "textutil.h"
+#include "unit_affected_type.h"
 #include "utility.h"
 #include "vmc.h"
 

@@ -33,6 +33,7 @@
 #include "system.h"
 #include "textutil.h"
 #include "tif_affect.h"
+#include "unit_affected_type.h"
 #include "utility.h"
 #include "utils.h"
 #include "vmelimits.h"

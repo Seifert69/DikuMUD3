@@ -18,6 +18,7 @@
 #include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
+#include "unit_affected_type.h"
 #include "utils.h"
 #include "vme.h"
 #include "vmelimits.h"

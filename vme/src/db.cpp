@@ -33,6 +33,7 @@
 #include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
+#include "unit_affected_type.h"
 #include "utils.h"
 #include "weather.h"
 #include "zon_basis.h"

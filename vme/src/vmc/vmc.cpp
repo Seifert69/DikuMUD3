@@ -12,6 +12,7 @@
 #include "dil.h"
 #include "error.h"
 #include "pp.h"
+#include "unit_affected_type.h"
 #include "vmc_process.h"
 
 #include <sys/stat.h>
