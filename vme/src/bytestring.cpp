@@ -366,9 +366,11 @@ int CByteBuffer::ReadIntList(int **ilist)
 
 int CByteBuffer::ReadBlock(ubit8 **ppData, ubit32 *pnLen)
 {
+    int corrupt = 0;
     *ppData = nullptr;
 
-    if (Read32(pnLen))
+    *pnLen = ReadS32(&corrupt);
+    if (corrupt)
     {
         return 1;
     }
@@ -430,8 +432,11 @@ int CByteBuffer::SkipNames()
     char *c = nullptr;
     unsigned int len = 0;
     unsigned int i = 0;
+    int corrupt = 0;
 
-    if (Read32(&len) == 1)
+    len = ReadS32(&corrupt);
+
+    if (corrupt)
     {
         assert(FALSE);
     }
@@ -448,8 +453,11 @@ int CByteBuffer::SkipVals()
 {
     unsigned int len = 0;
     unsigned int i = 0;
+    int corrupt = 0;
 
-    if (Read32(&len) == 1)
+    len = ReadS32(&corrupt);
+
+    if (corrupt)
     {
         assert(FALSE);
     }

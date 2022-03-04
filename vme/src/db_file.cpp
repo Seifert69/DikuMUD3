@@ -41,13 +41,15 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     ubit8 x = 0;
     ubit32 i = 0; // for 32 bit extra lists
     char *c = nullptr;
+    int corrupt = 0;
 
     assert(cExtra.isempty());
     te = nullptr;
 
     if (unit_version > 62)
     {
-        if (pBuf->Read32(&i))
+        i = pBuf->ReadU32(&corrupt);
+        if (corrupt)
         {
             return 1; /* No of extra descriptions */
         }
@@ -131,7 +133,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     }
     else
     {
-        pBuf->Read32(&tmpl->flags);
+         tmpl->flags = pBuf->ReadU32();
     }
 
     if (version >= 70)
@@ -295,11 +297,11 @@ void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
         for (i = 0; i < prg->frame[0].intrcount; i++)
         {
             pBuf->Read16(&prg->frame[0].intr[i].flags);
-            pBuf->Read32(&lab);
+            lab = pBuf->ReadU32();
             prg->frame[0].intr[i].lab = &(prg->frame[0].tmpl->core[lab]);
             if (version > 64)
             {
-                pBuf->Read32(&lab);
+                lab = pBuf->ReadU32();
             }
             prg->frame[0].intr[i].elab = &(prg->frame[0].tmpl->core[lab]);
         }
@@ -405,7 +407,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     }
     else
     {
-        pBuf->Read32(&prg->flags);
+        prg->flags = pBuf->ReadU32();
     }
 
     REMOVE_BIT(prg->flags, DILFL_EXECUTING | DILFL_CMDBLOCK);
@@ -452,7 +454,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     prg->waitcmd = WAITCMD_MAXINST - 1; /* Command countdown          */
     pBuf->Read16(&prg->varcrc);         /* variable crc from compiler */
     pBuf->Read16(&prg->corecrc);        /* core crc from compiler     */
-    pBuf->Read32(&recallpc);            /* recalled PC                */
+    recallpc = pBuf->ReadU32();         /* recalled PC                */
 
     if (!IS_SET(prg->flags, DILFL_RECALL))
     {
@@ -497,7 +499,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
                 pBuf->ReadStringAlloc(&prg->fp->vars[i].val.string);
                 break;
             case DILV_INT:
-                pBuf->Read32(&prg->fp->vars[i].val.integer);
+                prg->fp->vars[i].val.integer = pBuf->ReadS32();
                 break;
             default:
                 prg->fp->vars[i].val.integer = 0;
@@ -715,7 +717,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                         break;
 
                     case DILV_INT:
-                        pBuf->Read32(&dilargs->dilarg[j].data.num);
+                        dilargs->dilarg[j].data.num = pBuf->ReadS32();
                         break;
 
                     case DILV_ILP:

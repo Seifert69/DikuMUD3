@@ -98,7 +98,11 @@ int cNamelist::ReadBuffer(CByteBuffer *pBuf, int unit_version)
     {
         ubit32 len = 0;
         ubit32 i = 0;
-        if (pBuf->Read32(&len))
+        int corrupt = 0;
+
+        len = pBuf->ReadU32(&corrupt);
+
+        if (corrupt)
         {
             return 1;
         }

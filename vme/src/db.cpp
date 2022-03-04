@@ -828,7 +828,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
     else
     {
-        g_nCorrupt += pBuf->Read32(&UNIT_MANIPULATE(u));
+        UNIT_MANIPULATE(u) = pBuf->ReadU32(&g_nCorrupt);
     }
 
     g_nCorrupt += pBuf->Read16(&UNIT_FLAGS(u));
@@ -977,8 +977,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
 
                 g_nCorrupt += pBuf->ReadFloat(&PC_ACCOUNT(u).credit);
-                g_nCorrupt += pBuf->Read32(&PC_ACCOUNT(u).credit_limit);
-                g_nCorrupt += pBuf->Read32(&PC_ACCOUNT(u).total_credit);
+                PC_ACCOUNT(u).credit_limit = pBuf->ReadU32(&g_nCorrupt);
+                PC_ACCOUNT(u).total_credit = pBuf->ReadU32(&g_nCorrupt);
 
                 if (unit_version >= 44)
                 {
@@ -999,7 +999,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     if (unit_version >= 52)
                     {
-                        g_nCorrupt += pBuf->Read32(&PC_ACCOUNT(u).flatrate);
+                        PC_ACCOUNT(u).flatrate = pBuf->ReadU32(&g_nCorrupt);
                     }
                     else
                     {
@@ -1127,7 +1127,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     for (i = 0; i < 5; i++)
                     {
-                        g_nCorrupt += pBuf->Read32(&PC_LASTHOST(u)[i]);
+                        PC_LASTHOST(u)[i] = pBuf->ReadU32(&g_nCorrupt);
                     }
                 }
                 else
@@ -1148,8 +1148,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_HOME(u));
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_GUILD(u));
 
-                ubit32 t32;
-                g_nCorrupt += pBuf->Read32(&t32); // was: PC_GUILD_TIME(u) obsolete
+                g_nCorrupt += pBuf->Skip32(); // skip value, was: PC_GUILD_TIME(u) obsolete
 
                 if (unit_version >= 38)
                 {
@@ -1173,15 +1172,10 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     }
                 }
 
-                g_nCorrupt += pBuf->Read32(&t32);
-                PC_TIME(u).creation = t32;
-
-                g_nCorrupt += pBuf->Read32(&t32);
-                PC_TIME(u).connect = t32;
-                g_nCorrupt += pBuf->Read32(&t32);
-                PC_TIME(u).birth = t32;
-                g_nCorrupt += pBuf->Read32(&t32);
-                PC_TIME(u).played = t32;
+                PC_TIME(u).creation = pBuf->ReadU32(&g_nCorrupt);
+                PC_TIME(u).connect = pBuf->ReadU32(&g_nCorrupt);
+                PC_TIME(u).birth = pBuf->ReadU32(&g_nCorrupt);
+                PC_TIME(u).played = pBuf->ReadU32(&g_nCorrupt);
 
                 if (unit_version < 44)
                 {
@@ -1357,8 +1351,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             OBJ_VALUE(u, 4) = pBuf->ReadS32(&g_nCorrupt);
 
             OBJ_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
-            g_nCorrupt += pBuf->Read32(&OBJ_PRICE(u));
-            g_nCorrupt += pBuf->Read32(&OBJ_PRICE_DAY(u));
+            OBJ_PRICE(u) = pBuf->ReadU32(&g_nCorrupt);
+            OBJ_PRICE_DAY(u) = pBuf->ReadU32(&g_nCorrupt);
 
             g_nCorrupt += pBuf->Read8(&OBJ_TYPE(u));
             OBJ_EQP_POS(u) = 0;
