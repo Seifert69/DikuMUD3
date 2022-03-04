@@ -137,10 +137,10 @@ eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1,
 void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
 {
     int i = 0;
-    if ((func == special_event) && arg2 && (((unit_fptr *)arg2)->event))
+    if ((func == special_event) && arg2 && (((unit_fptr *)arg2)->getEventQueue()))
     {
-        ((unit_fptr *)arg2)->event->func = nullptr;
-        ((unit_fptr *)arg2)->event = nullptr;
+        ((unit_fptr *)arg2)->getEventQueue()->func = nullptr;
+        ((unit_fptr *)arg2)->setEventQueue(nullptr);
     }
     else if ((func == affect_beat) && arg1 && (((unit_affected_type *)arg1)->cgetEventQueueElement()))
     {
@@ -151,7 +151,7 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     {
         return;
     }
-    else if ((func == special_event) && arg2 && (!((unit_fptr *)arg2)->event))
+    else if ((func == special_event) && arg2 && (!((unit_fptr *)arg2)->getEventQueue()))
     {
         return;
     }

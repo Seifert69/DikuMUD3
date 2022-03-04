@@ -94,16 +94,18 @@ public:
     unit_fptr *getNext() { return next; }
     void setNext(unit_fptr *value) { next = value; }
 
-private:
-    ubit16 index{0};          // Index to function pointer array
-    ubit8 priority{0};        // Order to insert ftpr on unit (2020)
-    ubit16 heart_beat{0};     // in 1/4 of a sec
-    ubit16 flags{0};          // When to override next function (boolean)
-    void *data{nullptr};      // Pointer to data local for this unit
-    unit_fptr *next{nullptr}; // Next in linked list
-public:
-    eventq_elem *event; /* pointer to eventq for quick removing        */
+    eventq_elem *getEventQueue() { return event; }
+    void setEventQueue(eventq_elem *value) { event = value; }
 
+private:
+    ubit16 index{0};             // Index to function pointer array
+    ubit8 priority{0};           // Order to insert ftpr on unit (2020)
+    ubit16 heart_beat{0};        // in 1/4 of a sec
+    ubit16 flags{0};             // When to override next function (boolean)
+    void *data{nullptr};         // Pointer to data local for this unit
+    unit_fptr *next{nullptr};    // Next in linked list
+    eventq_elem *event{nullptr}; // pointer to eventq for quick removing
+public:
     int destruct_classindex();
 };
 

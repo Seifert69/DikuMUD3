@@ -288,7 +288,7 @@ unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat,
     f->setHeartBeat(beat);
     f->setAllActivateOnEventFlags(flags);
     f->setData(data);
-    f->event = nullptr;
+    f->setEventQueue(nullptr);
 
     membug_verify(f->data);
     insert_fptr(u, f);
@@ -358,7 +358,7 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     }
 
     f->setNext(nullptr);
-    assert(f->event == nullptr);
+    assert(f->getEventQueue() == nullptr);
 }
 
 /* Stop the 'ch' from following his master    */

@@ -277,7 +277,7 @@ void clear_destructed()
             assert(f->getData() == nullptr);
         }
 
-        assert(f->event == nullptr);
+        assert(f->getEventQueue() == nullptr);
 
         if (f->getData())
         {

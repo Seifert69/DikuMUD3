@@ -46,15 +46,15 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
             fptr->setHeartBeat(PULSE_SEC * 3);
         }
 
-        if (fptr->isActivateOnEventFlagSet( SFB_RANTIME))
+        if (fptr->isActivateOnEventFlagSet(SFB_RANTIME))
         {
             ticks = number(ticks - ticks / 2, ticks + ticks / 2);
         }
-        if (fptr->event)
+        if (fptr->getEventQueue())
         {
             g_events.remove(special_event, u, fptr);
         }
-        fptr->event = g_events.add(ticks, special_event, u, fptr);
+        fptr->setEventQueue(g_events.add(ticks, special_event, u, fptr));
         //      g_events.add(ticks, special_event, u, fptr);
         membug_verify_class(fptr);
         membug_verify(fptr->data);
@@ -112,12 +112,12 @@ void special_event(void *p1, void *p2)
     {
         return;
     }
-    if (fptr->event)
+    if (fptr->getEventQueue())
     {
-        fptr->event->func = nullptr;
+        fptr->getEventQueue()->func = nullptr;
     }
 
-    fptr->event = nullptr;
+    fptr->setEventQueue(nullptr);
     priority = FALSE;
 
     for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->getNext())
@@ -127,7 +127,7 @@ void special_event(void *p1, void *p2)
             break;
         }
 
-        if (ftmp->isActivateOnEventFlagSet( SFB_PRIORITY))
+        if (ftmp->isActivateOnEventFlagSet(SFB_PRIORITY))
         {
             priority = TRUE;
         }
@@ -139,7 +139,7 @@ void special_event(void *p1, void *p2)
     {
         if (g_unit_function_array[fptr->getFunctionPointerIndex()].func)
         {
-            if (fptr->isActivateOnEventFlagSet( SFB_TICK))
+            if (fptr->isActivateOnEventFlagSet(SFB_TICK))
             {
 #ifdef DEBUG_HISTORY
                 add_func_history(u, fptr->index, SFB_TICK);
@@ -189,7 +189,7 @@ void special_event(void *p1, void *p2)
         int diltick = 0;
         int i = 0;
         diltick = FALSE;
-        if (fptr->isActivateOnEventFlagSet( SFB_TICK))
+        if (fptr->isActivateOnEventFlagSet(SFB_TICK))
         {
             diltick = TRUE;
         }
@@ -226,7 +226,7 @@ void start_special(unit_data *u, unit_fptr *fptr)
     int i = 0;
     if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
-        if (fptr->isActivateOnEventFlagSet( SFB_TICK))
+        if (fptr->isActivateOnEventFlagSet(SFB_TICK))
         {
             diltick = 1;
         }
@@ -252,7 +252,7 @@ void start_special(unit_data *u, unit_fptr *fptr)
         /* If people forget to set the ticking functions... */
         if (fptr->getHeartBeat() <= 0)
         {
-            fptr->setHeartBeat( g_unit_function_array[fptr->getFunctionPointerIndex()].tick);
+            fptr->setHeartBeat(g_unit_function_array[fptr->getFunctionPointerIndex()].tick);
 
             /* Well, the builders are supposed to fix it! That's why it is
                sent to the log, so they can see it! */
@@ -267,14 +267,14 @@ void start_special(unit_data *u, unit_fptr *fptr)
         }
 
         //      g_events.add(fptr->heart_beat, special_event, u, fptr);
-        if (fptr->event)
+        if (fptr->getEventQueue())
         {
             g_events.remove(special_event, u, fptr);
         }
 
         if (!u->is_destructed() && !fptr->is_destructed())
         {
-            fptr->event = g_events.add(fptr->getHeartBeat(), special_event, u, fptr);
+            fptr->setEventQueue(g_events.add(fptr->getHeartBeat(), special_event, u, fptr));
         }
     }
 }
