@@ -146,12 +146,12 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->priority = 42;
     }
 
-    pBuf->Read16(&tmpl->intrcount);
+    tmpl->intrcount = pBuf->ReadU16();
 
     REMOVE_BIT(tmpl->flags, DILFL_EXECUTING | DILFL_CMDBLOCK);
 
-    pBuf->Read16(&tmpl->varcrc);
-    pBuf->Read16(&tmpl->corecrc);
+    tmpl->varcrc = pBuf->ReadU16();
+    tmpl->corecrc = pBuf->ReadU16();
     pBuf->Read8(&tmpl->rtnt);
     pBuf->Read8(&tmpl->argc);
 
@@ -171,7 +171,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     pBuf->ReadBlock(&tmpl->core, &tmpl->coresz);
 
-    pBuf->Read16(&tmpl->varc); /* number of variables */
+    tmpl->varc = pBuf->ReadU16(); /* number of variables */
 
     if (tmpl->varc)
     {
@@ -187,7 +187,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->vart = nullptr;
     }
 
-    pBuf->Read16(&tmpl->xrefcount);
+    tmpl->xrefcount = pBuf->ReadU16();
 
     if (tmpl->xrefcount)
     {
@@ -288,7 +288,7 @@ void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
     ubit32 lab = 0;
 
     /* read interrupts */
-    pBuf->Read16(&prg->frame[0].intrcount);
+    prg->frame[0].intrcount = pBuf->ReadU16();
 
     if (prg->frame[0].intrcount)
     {
@@ -296,7 +296,7 @@ void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
 
         for (i = 0; i < prg->frame[0].intrcount; i++)
         {
-            pBuf->Read16(&prg->frame[0].intr[i].flags);
+            prg->frame[0].intr[i].flags = pBuf->ReadU16();
             lab = pBuf->ReadU32();
             prg->frame[0].intr[i].lab = &(prg->frame[0].tmpl->core[lab]);
             if (version > 64)
@@ -388,7 +388,6 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     dilprg *prg = nullptr;
     diltemplate *tmpl = nullptr;
     ubit32 recallpc = 0;
-    ubit16 t16 = 0;
     int i = 0;
     int novar = 0;
     ubit8 t = 0;
@@ -452,8 +451,8 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     }
 
     prg->waitcmd = WAITCMD_MAXINST - 1; /* Command countdown          */
-    pBuf->Read16(&prg->varcrc);         /* variable crc from compiler */
-    pBuf->Read16(&prg->corecrc);        /* core crc from compiler     */
+    prg->varcrc = pBuf->ReadU16();      /* variable crc from compiler */
+    prg->corecrc = pBuf->ReadU16();     /* core crc from compiler     */
     recallpc = pBuf->ReadU32();         /* recalled PC                */
 
     if (!IS_SET(prg->flags, DILFL_RECALL))
@@ -469,8 +468,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         prg->link(tmpl);
     }
 
-    pBuf->Read16(&t16); /* the SAVED #vars             */
-    novar = t16;
+    novar = pBuf->ReadU16(); /* the SAVED #vars             */
 
     if (novar)
     {
@@ -630,7 +628,6 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
     unit_fptr *head = nullptr;
     int i = 0;
     ubit8 t8 = 0;
-    ubit16 t16 = 0;
 
     fptr = nullptr;
     head = nullptr;
@@ -642,8 +639,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
     }
     else
     {
-        g_nCorrupt += pBuf->Read16(&t16);
-        i = t16;
+        i = pBuf->ReadU16(&g_nCorrupt);
     }
 
     for (; i > 0; i--)
@@ -659,7 +655,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr = head;
         }
 
-        g_nCorrupt += pBuf->Read16(&fptr->index);
+        fptr->index = pBuf->ReadU16(&g_nCorrupt);
 
         if (fptr->index > SFUN_TOP_IDX)
         {
@@ -677,8 +673,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr->priority = 43;
         }
 
-        g_nCorrupt += pBuf->Read16(&fptr->heart_beat);
-        g_nCorrupt += pBuf->Read16(&fptr->flags);
+        fptr->heart_beat = pBuf->ReadU16(&g_nCorrupt);
+        fptr->flags = pBuf->ReadU16(&g_nCorrupt);
 
         if (fptr->index == SFUN_DIL_INTERNAL)
         {

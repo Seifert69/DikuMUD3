@@ -601,6 +601,7 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
     int i = 0;
     ubit8 t8 = 0;
     ubit16 t16 = 0;
+    int corrupt = 0;
 
     if (nVersion <= 56)
     {
@@ -612,7 +613,8 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
     }
     else
     {
-        if (pBuf->Read16(&t16))
+        t16 = pBuf->ReadU16(&corrupt);
+        if (corrupt)
         {
             return 1;
         }
@@ -831,8 +833,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         UNIT_MANIPULATE(u) = pBuf->ReadU32(&g_nCorrupt);
     }
 
-    g_nCorrupt += pBuf->Read16(&UNIT_FLAGS(u));
-
+    UNIT_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
     UNIT_BASE_WEIGHT(u) = pBuf->ReadU16(&g_nCorrupt);
     UNIT_WEIGHT(u) = pBuf->ReadU16(&g_nCorrupt);
     UNIT_CAPACITY(u) = pBuf->ReadS16(&g_nCorrupt);
@@ -865,7 +866,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     if (unit_version >= 53)
     {
-        g_nCorrupt += pBuf->Read16(&UNIT_SIZE(u));
+        UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
     }
     else
     {
@@ -934,9 +935,9 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
             if (unit_version <= 52)
             {
-                g_nCorrupt += pBuf->Read16(&UNIT_SIZE(u));
+                UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
             }
-            g_nCorrupt += pBuf->Read16(&CHAR_RACE(u));
+            CHAR_RACE(u) = pBuf->ReadU16(&g_nCorrupt);
 
             CHAR_OFFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
             CHAR_DEFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
@@ -1017,12 +1018,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 48)
                 {
-                    g_nCorrupt += pBuf->Read16(&PC_LIFESPAN(u));
+                    PC_LIFESPAN(u) = pBuf->ReadU16(&g_nCorrupt);
                 }
                 else
                 {
-                    CHAR_RACE(u)
-                    --; /* spooky */
+                    CHAR_RACE(u)--; /* spooky */
 
                     base_race_info_type *sex_race = nullptr;
 
@@ -1142,7 +1142,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 40)
                 {
-                    g_nCorrupt += pBuf->Read16(&PC_CRACK_ATTEMPTS(u));
+                    PC_CRACK_ATTEMPTS(u) = pBuf->ReadU16(&g_nCorrupt);
                 }
 
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_HOME(u));
@@ -1152,7 +1152,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 38)
                 {
-                    g_nCorrupt += pBuf->Read16(&PC_VIRTUAL_LEVEL(u));
+                    PC_VIRTUAL_LEVEL(u) = pBuf->ReadU16(&g_nCorrupt);
                 }
                 else
                 {
@@ -1287,7 +1287,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     PC_SKI_SKILL(u, SKI_KICK) = 0;
                 }
 
-                g_nCorrupt += pBuf->Read16(&PC_CRIMES(u));
+                PC_CRIMES(u) = pBuf->ReadU16(&g_nCorrupt);
 
                 j = pBuf->ReadU8(&g_nCorrupt);
 
