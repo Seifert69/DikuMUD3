@@ -46,12 +46,21 @@ public:
 
     int ReadBlock(ubit8 **pData, ubit32 *nLen);
 
-    int Read8(ubit8 *pNum);
-    int Read16(ubit16 *pNum);
-    int Read32(ubit32 *pNum);
-    int Read8(sbit8 *pNum);
-    int Read16(sbit16 *pNum);
-    int Read32(sbit32 *pNum);
+
+    // The Read8 format drove me a little mad to read, trying this.
+    ubit8 ReadU8(int *nError = nullptr);
+    sbit8 ReadS8(int *nError = nullptr);
+    ubit16 ReadU16(int *nError = nullptr);
+    sbit16 ReadS16(int *nError = nullptr);
+    ubit32 ReadU32(int *nError = nullptr);
+    sbit32 ReadS32(int *nError = nullptr);
+
+    /* [[deprecated("Replace with ReadU8")]] */  int Read8(ubit8 *pNum);
+    /* [[deprecated("Replace with ReadU16")]] */ int Read16(ubit16 *pNum);
+    /* [[deprecated("Replace with ReadU32")]] */ int Read32(ubit32 *pNum);
+    [[deprecated("Replace with ReadS8")]] int Read8(sbit8 *pNum);
+    /* [[deprecated("Replace with ReadS16")]] */ int Read16(sbit16 *pNum);
+    /* [[deprecated("Replace with ReadS32")]] */ int Read32(sbit32 *pNum);
     int ReadFloat(float *pFloat);
     int ReadStringAlloc(char **pStr);
     int ReadStringCopy(char *pStr, ubit32 nSize);

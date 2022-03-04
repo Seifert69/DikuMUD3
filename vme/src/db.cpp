@@ -734,11 +734,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     int i = 0;
     int j = 0;
     ubit8 unit_version = 0;
-    ubit8 t8 = 0;
-    sbit8 st8 = 0;
-    ubit16 t16 = 0;
-    sbit16 ts16 = 0;
-    ubit32 t32 = 0;
     ubit32 nStart = 0;
     char tmpbuf[2 * MAX_STRING_LENGTH];
 
@@ -829,8 +824,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     if (unit_version < 46)
     {
-        g_nCorrupt += pBuf->Read16(&t16);
-        UNIT_MANIPULATE(u) = t16;
+        UNIT_MANIPULATE(u) = pBuf->ReadU16(&g_nCorrupt);
     }
     else
     {
@@ -838,10 +832,9 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
 
     g_nCorrupt += pBuf->Read16(&UNIT_FLAGS(u));
-    g_nCorrupt += pBuf->Read16(&ts16);
-    UNIT_BASE_WEIGHT(u) = ts16;
-    g_nCorrupt += pBuf->Read16(&ts16);
-    UNIT_WEIGHT(u) = ts16;
+
+    UNIT_BASE_WEIGHT(u) = pBuf->ReadU16(&g_nCorrupt);
+    UNIT_WEIGHT(u) = pBuf->ReadU16(&g_nCorrupt);
     g_nCorrupt += pBuf->Read16(&UNIT_CAPACITY(u));
 
     g_nCorrupt += pBuf->Read32(&UNIT_MAX_HIT(u));
@@ -863,12 +856,10 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         g_nCorrupt += pBuf->Read8(&UNIT_OPEN_DIFF(u));
     }
 
-    g_nCorrupt += pBuf->Read8(&st8);
-    UNIT_LIGHTS(u) = st8;
-    g_nCorrupt += pBuf->Read8(&st8);
-    UNIT_BRIGHT(u) = st8;
-    g_nCorrupt += pBuf->Read8(&st8);
-    UNIT_ILLUM(u) = st8;
+    UNIT_LIGHTS(u) = pBuf->ReadS8(&g_nCorrupt);
+    UNIT_BRIGHT(u) = pBuf->ReadS8(&g_nCorrupt);
+    UNIT_ILLUM(u) = pBuf->ReadS8(&g_nCorrupt);
+
     g_nCorrupt += pBuf->Read8(&UNIT_CHARS(u));
     g_nCorrupt += pBuf->Read8(&UNIT_MINV(u));
 
@@ -939,8 +930,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 CHAR_SPEED(u) = SPEED_DEFAULT;
             }
 
-            g_nCorrupt += pBuf->Read16(&t16);
-            CHAR_ATTACK_TYPE(u) = t16;
+            CHAR_ATTACK_TYPE(u) = pBuf->ReadU16(&g_nCorrupt);
 
             if (unit_version <= 52)
             {
@@ -955,16 +945,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             g_nCorrupt += pBuf->Read8(&CHAR_LEVEL(u));
             g_nCorrupt += pBuf->Read8(&CHAR_POS(u));
 
-            g_nCorrupt += pBuf->Read8(&t8);
-            j = t8;
+            j = pBuf->ReadU8(&g_nCorrupt);;
 
             for (i = 0; i < j; i++)
             {
                 if (unit_version < 69)
                 {
-                    ubit8 temp = 0;
-                    g_nCorrupt += pBuf->Read8(&temp);
-                    CHAR_ABILITY(u, i) = temp;
+                    CHAR_ABILITY(u, i) = pBuf->ReadU8(&g_nCorrupt);;
                 }
                 else
                 {
@@ -976,6 +963,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     g_nCorrupt += pBuf->Read8(&PC_ABI_LVL(u, i));
                     if (unit_version < 72)
                     {
+                        ubit8 t8;
                         g_nCorrupt += pBuf->Read8(&t8);
                     }
                 }
@@ -985,7 +973,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (unit_version >= 72)
                 {
-                    g_nCorrupt += pBuf->Read8(&PC_PROFESSION(u));
+                    PC_PROFESSION(u) = pBuf->ReadS8(&g_nCorrupt);
                 }
 
                 g_nCorrupt += pBuf->ReadFloat(&PC_ACCOUNT(u).credit);
@@ -1159,7 +1147,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_HOME(u));
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_GUILD(u));
-                
+
+                ubit32 t32;
                 g_nCorrupt += pBuf->Read32(&t32); // was: PC_GUILD_TIME(u) obsolete
 
                 if (unit_version >= 38)
@@ -1204,27 +1193,22 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 g_nCorrupt += pBuf->Read32(&PC_SKILL_POINTS(u));
                 g_nCorrupt += pBuf->Read32(&PC_ABILITY_POINTS(u));
 
-                g_nCorrupt += pBuf->Read16(&t16);
-                PC_FLAGS(u) = t16;
+                PC_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
 
                 if (unit_version < 61)
                 {
-                    g_nCorrupt += pBuf->Read8(&t8);
-                    j = t8;
+                    j = pBuf->ReadU8(&g_nCorrupt);
                 }
                 else
                 {
-                    g_nCorrupt += pBuf->Read16(&t16);
-                    j = t16;
+                    j = pBuf->ReadU16(&g_nCorrupt);;
                 }
 
                 for (i = 0; i < j; i++)
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp = 0;
-                        g_nCorrupt += pBuf->Read8(&temp);
-                        PC_SPL_SKILL(u, i) = temp;
+                        PC_SPL_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
                     }
                     else
                     {
@@ -1234,6 +1218,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     if (unit_version < 72)
                     {
+                        ubit8 t8;
                         g_nCorrupt += pBuf->Read8(&t8);
                     }
 
@@ -1248,22 +1233,18 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version < 61)
                 {
-                    g_nCorrupt += pBuf->Read8(&t8);
-                    j = t8;
+                    j = pBuf->ReadU8(&g_nCorrupt);
                 }
                 else
                 {
-                    g_nCorrupt += pBuf->Read16(&t16);
-                    j = t16;
+                    j = pBuf->ReadU16(&g_nCorrupt);
                 }
 
                 for (i = 0; i < j; i++)
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp = 0;
-                        g_nCorrupt += pBuf->Read8(&temp);
-                        PC_SKI_SKILL(u, i) = temp;
+                        PC_SKI_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
                     }
                     else
                     {
@@ -1273,20 +1254,18 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     g_nCorrupt += pBuf->Read8(&PC_SKI_LVL(u, i));
                     if (unit_version < 72)
                     {
+                        ubit8 t8;
                         g_nCorrupt += pBuf->Read8(&t8);
                     }
                 }
 
-                g_nCorrupt += pBuf->Read8(&t8);
-                j = t8;
+                j = pBuf->ReadU8(&g_nCorrupt);
 
                 for (i = 0; i < j; i++)
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp = 0;
-                        g_nCorrupt += pBuf->Read8(&temp);
-                        PC_WPN_SKILL(u, i) = temp;
+                        PC_WPN_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
                     }
                     else
                     {
@@ -1296,6 +1275,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     g_nCorrupt += pBuf->Read8(&PC_WPN_LVL(u, i));
                     if (unit_version < 72)
                     {
+                        ubit8 t8;
                         g_nCorrupt += pBuf->Read8(&t8);
                     }
                     if (unit_version < 46)
@@ -1315,12 +1295,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 g_nCorrupt += pBuf->Read16(&PC_CRIMES(u));
 
-                g_nCorrupt += pBuf->Read8(&t8);
-                j = t8;
+                j = pBuf->ReadU8(&g_nCorrupt);
 
                 for (i = 0; i < j; i++)
                 {
-                    g_nCorrupt += pBuf->Read8(&PC_COND(u, i));
+                    PC_COND(u, i) = pBuf->ReadS8(&g_nCorrupt);
                 }
 
                 if (unit_version >= 56)
@@ -1345,9 +1324,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp = 0;
-                        g_nCorrupt += pBuf->Read8(&temp);
-                        NPC_WPN_SKILL(u, i) = temp;
+                        NPC_WPN_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
                     }
                     else
                     {
@@ -1359,9 +1336,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        ubit8 temp = 0;
-                        g_nCorrupt += pBuf->Read8(&temp);
-                        NPC_SPL_SKILL(u, i) = temp;
+                        NPC_SPL_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
                     }
                     else
                     {
@@ -1381,8 +1356,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             g_nCorrupt += pBuf->Read32(&OBJ_VALUE(u, 3));
             g_nCorrupt += pBuf->Read32(&OBJ_VALUE(u, 4));
 
-            g_nCorrupt += pBuf->Read32(&t32);
-            OBJ_FLAGS(u) = t32;
+            OBJ_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
             g_nCorrupt += pBuf->Read32(&OBJ_PRICE(u));
             g_nCorrupt += pBuf->Read32(&OBJ_PRICE_DAY(u));
 
@@ -1431,12 +1405,10 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         ROOM_EXIT(u, i) = new (room_direction_data);
                         g_nCorrupt += ROOM_EXIT(u, i)->open_name.ReadBuffer(pBuf, unit_version);
 
-                        g_nCorrupt += pBuf->Read16(&t16);
-                        ROOM_EXIT(u, i)->exit_info = t16;
+                        ROOM_EXIT(u, i)->exit_info = pBuf->ReadU16(&g_nCorrupt);
                         if (unit_version >= 71)
                         {
-                            g_nCorrupt += pBuf->Read8(&t8);
-                            ROOM_EXIT(u, i)->difficulty = t8; // V71
+                            ROOM_EXIT(u, i)->difficulty = pBuf->ReadU8(&g_nCorrupt); // V71
                         }
 
                         g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
@@ -1473,8 +1445,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
             }
 
-            g_nCorrupt += pBuf->Read16(&t16);
-            ROOM_FLAGS(u) = t16;
+            ROOM_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
             g_nCorrupt += pBuf->Read8(&ROOM_LANDSCAPE(u));
             g_nCorrupt += pBuf->Read8(&ROOM_RESISTANCE(u));
             if (unit_version >= 70)

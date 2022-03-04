@@ -152,6 +152,75 @@ int CByteBuffer::Read(ubit8 *pBuf, ubit32 nLen)
     return 0;
 }
 
+
+ubit8 CByteBuffer::ReadU8(int *nError)
+{
+    ubit8 n;
+
+    if (Read((ubit8 *) &n, sizeof(ubit8)))
+        if (nError)
+            (*nError)++;
+
+    return n;
+}
+
+sbit8 CByteBuffer::ReadS8(int *nError)
+{
+    sbit8 n;
+
+    if (Read((ubit8 *) &n, sizeof(sbit8)))
+        if (nError)
+            (*nError)++;
+
+    return n;
+}
+
+
+ubit16 CByteBuffer::ReadU16(int *nError)
+{
+    ubit16 n;
+
+    if (Read((ubit8 *) &n, sizeof(ubit16)))
+        if (nError)
+            (*nError)++;
+
+    return n;
+}
+
+sbit16 CByteBuffer::ReadS16(int *nError)
+{
+    sbit16 n;
+
+    if (Read((ubit8 *) &n, sizeof(sbit16)))
+        if (nError)
+            (*nError)++;
+
+    return n;
+}
+
+ubit32 CByteBuffer::ReadU32(int *nError)
+{
+    ubit32 n;
+
+    if (Read((ubit8 *) &n, sizeof(ubit32)))
+        if (nError)
+            (*nError)++;
+
+    return n;
+}
+
+sbit32 CByteBuffer::ReadS32(int *nError)
+{
+    sbit32 n;
+
+    if (Read((ubit8 *) &n, sizeof(sbit32)))
+        if (nError)
+            (*nError)++;
+
+    return n;
+}
+
+
 int CByteBuffer::Read8(ubit8 *pNum)
 {
     return Read(pNum, sizeof(ubit8));
