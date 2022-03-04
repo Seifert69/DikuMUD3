@@ -12,16 +12,15 @@ class unit_affected_type : public basedestruct
 public:
     sbit16 getID() const;
     void setID(sbit16 value);
-    int readIDFrom(CByteBuffer &buf);
+
+    void bread(CByteBuffer *pBuf, int *nError);
 
     ubit16 getBeat() const;
     void setBeat(ubit16 value);
-    int readBeatFrom(CByteBuffer &buf);
 
     sbit16 getDuration() const;
     void setDuration(sbit16 value);
     void decrementDuration();
-    int readDurationFrom(CByteBuffer &buf);
 
     int getDataAtIndex(size_t index) const;
     void setDataAtIndex(size_t index, int value);
@@ -30,19 +29,15 @@ public:
 
     sbit16 getFirstFI() const;
     void setFirstFI(sbit16 value);
-    int readFirstFIFrom(CByteBuffer &buf);
 
     sbit16 getTickFI() const;
     void setTickFI(sbit16 value);
-    int readTickFIFrom(CByteBuffer &buf);
 
     sbit16 getLastFI() const;
     void setLastFI(sbit16 value);
-    int readLastFIFrom(CByteBuffer &buf);
 
     sbit16 getApplyFI() const;
     void setApplyFI(sbit16 value);
-    int readApplyFIFrom(CByteBuffer &buf);
 
     const eventq_elem *cgetEventQueueElement() const;
     eventq_elem *getEventQueueElement();
@@ -67,7 +62,7 @@ private:
     sbit16 id{0};                           //
     ubit16 beat{0};                         // Beat in 1/4 of secs, 0 = None
     sbit16 duration{0};                     // How many beats until end
-    int data[3]{0};                         //
+    sbit32 data[3]{0};                      //
     sbit16 firstf_i{0};                     //
     sbit16 tickf_i{0};                      //
     sbit16 lastf_i{0};                      //

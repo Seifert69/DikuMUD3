@@ -17,10 +17,26 @@ void unit_affected_type::setID(sbit16 value)
     id = value;
 }
 
-int unit_affected_type::readIDFrom(CByteBuffer &buf)
+void unit_affected_type::bread(CByteBuffer *pBuf, int *nError)
 {
-    return buf.Read16(&id);
+   // This is incredibly readable and very easy to maintain
+   // It makes it easy and less error prone to change data
+   // format between version changes.
+   //
+   this->duration = pBuf->ReadS16(nError);
+   this->id       = pBuf->ReadS16(nError);
+   this->beat     = pBuf->ReadU16(nError);
+
+   this->data[0]  = pBuf->ReadS32(nError);
+   this->data[1]  = pBuf->ReadS32(nError);
+   this->data[2]  = pBuf->ReadS32(nError);
+
+   this->firstf_i = pBuf->ReadS16(nError);
+   this->tickf_i  = pBuf->ReadS16(nError);
+   this->lastf_i  = pBuf->ReadS16(nError);
+   this->applyf_i = pBuf->ReadS16(nError);
 }
+
 
 ubit16 unit_affected_type::getBeat() const
 {
@@ -30,11 +46,6 @@ ubit16 unit_affected_type::getBeat() const
 void unit_affected_type::setBeat(ubit16 value)
 {
     beat = value;
-}
-
-int unit_affected_type::readBeatFrom(CByteBuffer &buf)
-{
-    return buf.Read16(&beat);
 }
 
 sbit16 unit_affected_type::getDuration() const
@@ -50,11 +61,6 @@ void unit_affected_type::setDuration(sbit16 value)
 void unit_affected_type::decrementDuration()
 {
     duration--;
-}
-
-int unit_affected_type::readDurationFrom(CByteBuffer &buf)
-{
-    return buf.Read16(&duration);
 }
 
 int unit_affected_type::getDataAtIndex(size_t index) const
@@ -87,11 +93,6 @@ void unit_affected_type::setFirstFI(sbit16 value)
     firstf_i = value;
 }
 
-int unit_affected_type::readFirstFIFrom(CByteBuffer &buf)
-{
-    return buf.Read16(&firstf_i);
-}
-
 sbit16 unit_affected_type::getTickFI() const
 {
     return tickf_i;
@@ -100,11 +101,6 @@ sbit16 unit_affected_type::getTickFI() const
 void unit_affected_type::setTickFI(sbit16 value)
 {
     tickf_i = value;
-}
-
-int unit_affected_type::readTickFIFrom(CByteBuffer &buf)
-{
-    return buf.Read16(&tickf_i);
 }
 
 sbit16 unit_affected_type::getLastFI() const
@@ -117,11 +113,6 @@ void unit_affected_type::setLastFI(sbit16 value)
     lastf_i = value;
 }
 
-int unit_affected_type::readLastFIFrom(CByteBuffer &buf)
-{
-    return buf.Read16(&lastf_i);
-}
-
 sbit16 unit_affected_type::getApplyFI() const
 {
     return applyf_i;
@@ -130,11 +121,6 @@ sbit16 unit_affected_type::getApplyFI() const
 void unit_affected_type::setApplyFI(sbit16 value)
 {
     applyf_i = value;
-}
-
-int unit_affected_type::readApplyFIFrom(CByteBuffer &buf)
-{
-    return buf.Read16(&applyf_i);
 }
 
 const eventq_elem *unit_affected_type::cgetEventQueueElement() const
