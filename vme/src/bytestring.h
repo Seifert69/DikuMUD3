@@ -59,8 +59,8 @@ public:
     /* [[deprecated("Replace with ReadU16")]] */ int Read16(ubit16 *pNum);
     /* [[deprecated("Replace with ReadU32")]] */ int Read32(ubit32 *pNum);
     [[deprecated("Replace with ReadS8")]]  int Read8(sbit8 *pNum);
-    /* [[deprecated("Replace with ReadS16")]] */ int Read16(sbit16 *pNum);
-    /* [[deprecated("Replace with ReadS32")]] */ int Read32(sbit32 *pNum);
+    [[deprecated("Replace with ReadS16")]] int Read16(sbit16 *pNum);
+    [[deprecated("Replace with ReadS32")]] int Read32(sbit32 *pNum);
     int ReadFloat(float *pFloat);
     int ReadStringAlloc(char **pStr);
     int ReadStringCopy(char *pStr, ubit32 nSize);

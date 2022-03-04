@@ -155,7 +155,7 @@ int CByteBuffer::Read(ubit8 *pBuf, ubit32 nLen)
 
 ubit8 CByteBuffer::ReadU8(int *nError)
 {
-    ubit8 n;
+    ubit8 n = 0;
 
     if (Read((ubit8 *) &n, sizeof(ubit8)))
         if (nError)
@@ -166,7 +166,7 @@ ubit8 CByteBuffer::ReadU8(int *nError)
 
 sbit8 CByteBuffer::ReadS8(int *nError)
 {
-    sbit8 n;
+    sbit8 n = 0;
 
     if (Read((ubit8 *) &n, sizeof(sbit8)))
         if (nError)
@@ -178,7 +178,7 @@ sbit8 CByteBuffer::ReadS8(int *nError)
 
 ubit16 CByteBuffer::ReadU16(int *nError)
 {
-    ubit16 n;
+    ubit16 n = 0;
 
     if (Read((ubit8 *) &n, sizeof(ubit16)))
         if (nError)
@@ -189,7 +189,7 @@ ubit16 CByteBuffer::ReadU16(int *nError)
 
 sbit16 CByteBuffer::ReadS16(int *nError)
 {
-    sbit16 n;
+    sbit16 n = 0;
 
     if (Read((ubit8 *) &n, sizeof(sbit16)))
         if (nError)
@@ -200,7 +200,7 @@ sbit16 CByteBuffer::ReadS16(int *nError)
 
 ubit32 CByteBuffer::ReadU32(int *nError)
 {
-    ubit32 n;
+    ubit32 n = 0;
 
     if (Read((ubit8 *) &n, sizeof(ubit32)))
         if (nError)
@@ -211,7 +211,7 @@ ubit32 CByteBuffer::ReadU32(int *nError)
 
 sbit32 CByteBuffer::ReadS32(int *nError)
 {
-    sbit32 n;
+    sbit32 n = 0;
 
     if (Read((ubit8 *) &n, sizeof(sbit32)))
         if (nError)
@@ -317,7 +317,7 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
         int Corrupt = 0;
         char buf[MAX_STRING_LENGTH];
 
-        Corrupt = Read32(&l);
+        l = ReadS32(&Corrupt);
 
         int i = 0;
 
@@ -335,12 +335,15 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
 int CByteBuffer::ReadIntList(int **ilist)
 {
     sbit32 len = 0;
+    int corrupt = 0;
     int c = 0;
     int i = 0;
     int *intlist = nullptr;
     intlist = *ilist;
 
-    if (Read32(&len))
+    len = ReadS32(&corrupt);
+
+    if (corrupt)
     {
         return 1;
     }
@@ -349,7 +352,8 @@ int CByteBuffer::ReadIntList(int **ilist)
     intlist[0] = len;
     for (i = 1; i <= len; i++)
     {
-        if (Read32(&c) == 1)
+        c = ReadS32(&corrupt);
+        if (corrupt)
         {
             assert(FALSE);
         }

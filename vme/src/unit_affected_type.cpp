@@ -80,7 +80,9 @@ void unit_affected_type::incrementDataAtIndex(size_t index)
 
 int unit_affected_type::readFromIntoDataAtIndex(CByteBuffer &buf, size_t index)
 {
-    return buf.Read32(&data[index]);
+    int corrupt = 0;
+    data[index] = buf.ReadS32(&corrupt);
+    return corrupt;
 }
 
 sbit16 unit_affected_type::getFirstFI() const

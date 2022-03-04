@@ -837,8 +837,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     UNIT_WEIGHT(u) = pBuf->ReadU16(&g_nCorrupt);
     UNIT_CAPACITY(u) = pBuf->ReadS16(&g_nCorrupt);
 
-    g_nCorrupt += pBuf->Read32(&UNIT_MAX_HIT(u));
-    g_nCorrupt += pBuf->Read32(&UNIT_HIT(u));
+    UNIT_MAX_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
+    UNIT_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
 
     if (unit_version <= 54)
     {
@@ -906,8 +906,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             /* fallthru */
 
         case UNIT_ST_PC:
-            g_nCorrupt += pBuf->Read32(&CHAR_EXP(u));
-            g_nCorrupt += pBuf->Read32(&CHAR_FLAGS(u));
+            CHAR_EXP(u) = pBuf->ReadS32(&g_nCorrupt);
+            CHAR_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
 
             CHAR_MANA(u) = pBuf->ReadS16(&g_nCorrupt);
             CHAR_ENDURANCE(u) = pBuf->ReadS16(&g_nCorrupt);
@@ -1138,7 +1138,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     }
                 }
 
-                g_nCorrupt += pBuf->Read32(&PC_ID(u));
+                PC_ID(u) = pBuf->ReadS32(&g_nCorrupt);
 
                 if (unit_version >= 40)
                 {
@@ -1190,8 +1190,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 g_nCorrupt += pBuf->ReadStringAlloc(&PC_BANK(u));
 
-                g_nCorrupt += pBuf->Read32(&PC_SKILL_POINTS(u));
-                g_nCorrupt += pBuf->Read32(&PC_ABILITY_POINTS(u));
+                PC_SKILL_POINTS(u) = pBuf->ReadS32(&g_nCorrupt);
+                PC_ABILITY_POINTS(u) = pBuf->ReadS32(&g_nCorrupt);
 
                 PC_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
 
@@ -1350,11 +1350,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             break;
 
         case UNIT_ST_OBJ:
-            g_nCorrupt += pBuf->Read32(&OBJ_VALUE(u, 0));
-            g_nCorrupt += pBuf->Read32(&OBJ_VALUE(u, 1));
-            g_nCorrupt += pBuf->Read32(&OBJ_VALUE(u, 2));
-            g_nCorrupt += pBuf->Read32(&OBJ_VALUE(u, 3));
-            g_nCorrupt += pBuf->Read32(&OBJ_VALUE(u, 4));
+            OBJ_VALUE(u, 0) = pBuf->ReadS32(&g_nCorrupt);
+            OBJ_VALUE(u, 1) = pBuf->ReadS32(&g_nCorrupt);
+            OBJ_VALUE(u, 2) = pBuf->ReadS32(&g_nCorrupt);
+            OBJ_VALUE(u, 3) = pBuf->ReadS32(&g_nCorrupt);
+            OBJ_VALUE(u, 4) = pBuf->ReadS32(&g_nCorrupt);
 
             OBJ_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
             g_nCorrupt += pBuf->Read32(&OBJ_PRICE(u));

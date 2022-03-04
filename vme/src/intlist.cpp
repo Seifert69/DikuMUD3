@@ -48,20 +48,21 @@ int cintlist::ReadBuffer(CByteBuffer *pBuf)
     sbit32 len = 0;
     sbit32 i = 0;
     sbit32 c = 0;
-    int n = 0;
+    int corrupt = 0;
 
-    if (pBuf->Read32(&len))
+    len = pBuf->ReadS32(&corrupt);
+    if (corrupt)
     {
         return 1;
     }
 
     for (i = 0; i < len; i++)
     {
-        n += pBuf->Read32(&c); // MS ought to sum corrupt here
+        c = pBuf->ReadS32(&corrupt);
         Append(c);
     }
 
-    return n;
+    return corrupt;
 }
 
 void cintlist::bread(ubit8 **b)
