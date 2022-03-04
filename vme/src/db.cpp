@@ -735,6 +735,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     int j = 0;
     ubit8 unit_version = 0;
     ubit8 t8 = 0;
+    sbit8 st8 = 0;
     ubit16 t16 = 0;
     sbit16 ts16 = 0;
     ubit32 t32 = 0;
@@ -862,12 +863,12 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         g_nCorrupt += pBuf->Read8(&UNIT_OPEN_DIFF(u));
     }
 
-    g_nCorrupt += pBuf->Read8(&t8);
-    UNIT_LIGHTS(u) = t8;
-    g_nCorrupt += pBuf->Read8(&t8);
-    UNIT_BRIGHT(u) = t8;
-    g_nCorrupt += pBuf->Read8(&t8);
-    UNIT_ILLUM(u) = t8;
+    g_nCorrupt += pBuf->Read8(&st8);
+    UNIT_LIGHTS(u) = st8;
+    g_nCorrupt += pBuf->Read8(&st8);
+    UNIT_BRIGHT(u) = st8;
+    g_nCorrupt += pBuf->Read8(&st8);
+    UNIT_ILLUM(u) = st8;
     g_nCorrupt += pBuf->Read8(&UNIT_CHARS(u));
     g_nCorrupt += pBuf->Read8(&UNIT_MINV(u));
 
