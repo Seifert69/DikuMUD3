@@ -636,8 +636,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
     {
         if (fptr)
         {
-            fptr->next = new EMPLACE(unit_fptr) unit_fptr;
-            fptr = fptr->next;
+            fptr->setNext(new EMPLACE(unit_fptr) unit_fptr);
+            fptr = fptr->getNext();
         }
         else
         {
@@ -748,7 +748,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             }
         }
 
-        fptr->next = nullptr;
+        fptr->setNext(nullptr);
     }
 
     return head;
@@ -981,7 +981,7 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
     ubit32 nOrgPos = pBuf->GetLength();
     pBuf->Append16(0); /* Assume no affects by default */
 
-    for (; fptr; fptr = fptr->next)
+    for (; fptr; fptr = fptr->getNext())
     {
         assert(fptr->getFunctionPointerIndex() <= SFUN_TOP_IDX);
 

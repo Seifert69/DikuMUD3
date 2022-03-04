@@ -675,7 +675,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
     }
 
     send_to_char("Unit functions:<br/>", ch);
-    for (f = UNIT_FUNC(u); f; f = f->next)
+    for (f = UNIT_FUNC(u); f; f = f->getNext())
 
     {
         if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)

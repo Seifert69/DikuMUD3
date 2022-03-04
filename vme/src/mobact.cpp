@@ -120,7 +120,7 @@ void special_event(void *p1, void *p2)
     fptr->event = nullptr;
     priority = FALSE;
 
-    for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->next)
+    for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->getNext())
     {
         if (ftmp == fptr)
         {
@@ -283,7 +283,7 @@ void start_all_special(unit_data *u)
 {
     unit_fptr *fptr = nullptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
     {
         start_special(u, fptr);
     }
@@ -293,7 +293,7 @@ void stop_all_special(unit_data *u)
 {
     unit_fptr *fptr = nullptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
     {
         stop_special(u, fptr);
     }

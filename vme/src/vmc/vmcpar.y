@@ -624,8 +624,8 @@ unit_field  : NAMES stringlist
             }
             else
             {
-                cur_func->next = mcreate_func();
-                cur_func = cur_func->next;
+                cur_func->setNext(mcreate_func());
+                cur_func = cur_func->getNext();
             }
             cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
             cur_func->setData(idargcopy);
@@ -649,8 +649,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            cur_func->next = mcreate_func();
-            cur_func = cur_func->next;
+            cur_func->setNext(mcreate_func());
+            cur_func = cur_func->getNext();
         }
         cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
         cur_func->setData(argcopy);
@@ -848,8 +848,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            cur_func->next = mcreate_func();
-            cur_func = cur_func->next;
+            cur_func->setNext(mcreate_func());
+            cur_func = cur_func->getNext();
         }
     }
     PNUM

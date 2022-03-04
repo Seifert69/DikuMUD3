@@ -588,7 +588,7 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
 
     for (sarg->fptr = UNIT_FUNC(u); !priority && sarg->fptr; sarg->fptr = next)
     {
-        next = sarg->fptr->next; /* Next dude trick */
+        next = sarg->fptr->getNext(); /* Next dude trick */
         orgflag = sarg->fptr->getAllActivateOnEventFlags();
 
         if (u->is_destructed())

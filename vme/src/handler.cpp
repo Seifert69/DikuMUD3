@@ -217,7 +217,7 @@ unit_fptr *find_fptr(unit_data *u, ubit16 idx)
 {
     unit_fptr *tf = nullptr;
 
-    for (tf = UNIT_FUNC(u); tf; tf = tf->next)
+    for (tf = UNIT_FUNC(u); tf; tf = tf->getNext())
     {
         if (tf->getFunctionPointerIndex() == idx)
         {
@@ -240,7 +240,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     // If there are no funcs, just add it.
     if (UNIT_FUNC(u) == nullptr)
     {
-        f->next = UNIT_FUNC(u);
+        f->setNext(UNIT_FUNC(u));
         UNIT_FUNC(u) = f;
         return;
     }
@@ -248,7 +248,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     // See if we are higher priority than head element
     if (f->getFunctionPriority() < UNIT_FUNC(u)->getFunctionPriority())
     {
-        f->next = UNIT_FUNC(u);
+        f->setNext(UNIT_FUNC(u));
         UNIT_FUNC(u) = f;
         return;
     }
@@ -258,21 +258,21 @@ void insert_fptr(unit_data *u, unit_fptr *f)
 
     // Find location to insert
     prev = UNIT_FUNC(u);
-    for (p = UNIT_FUNC(u)->next; p; p = p->next)
+    for (p = UNIT_FUNC(u)->getNext(); p; p = p->getNext())
     {
         if (f->getFunctionPriority() < p->getFunctionPriority())
         {
-            f->next = p;
-            prev->next = f;
+            f->setNext(p);
+            prev->setNext(f);
             return;
         }
         prev = p;
     }
 
     // We are the lowest priority, insert at the
-    assert(prev->next == nullptr);
-    prev->next = f;
-    f->next = nullptr;
+    assert(prev->getNext() == nullptr);
+    prev->setNext(f);
+    f->setNext(nullptr);
 }
 
 unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat, ubit16 flags, void *data)
@@ -342,22 +342,22 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     /* Only unlink function, do not free it! */
     if (UNIT_FUNC(u) == f)
     {
-        UNIT_FUNC(u) = f->next;
+        UNIT_FUNC(u) = f->getNext();
     }
     else
     {
-        for (tf = UNIT_FUNC(u); tf && (tf->next != f); tf = tf->next)
+        for (tf = UNIT_FUNC(u); tf && (tf->getNext() != f); tf = tf->getNext())
         {
             ;
         }
         if (tf)
         {
-            assert(tf->next == f);
-            tf->next = f->next;
+            assert(tf->getNext() == f);
+            tf->setNext(f->getNext());
         }
     }
 
-    f->next = nullptr;
+    f->setNext(nullptr);
     assert(f->event == nullptr);
 }
 
