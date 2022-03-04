@@ -617,9 +617,9 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
             {
                 diltick = TRUE;
             }
-            else if (sarg->fptr->data)
+            else if (sarg->fptr->getData())
             {
-                dilprg *prg = (dilprg *)sarg->fptr->data;
+                dilprg *prg = (dilprg *)sarg->fptr->getData();
                 for (i = 0; i < prg->fp->intrcount; i++)
                 {
                     if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))

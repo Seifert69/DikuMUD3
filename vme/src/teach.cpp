@@ -1037,7 +1037,7 @@ teach_packet *get_teacher(const char *pName)
         return nullptr;
     }
 
-    pckt = (teach_packet *)f->data;
+    pckt = (teach_packet *)f->getData();
     assert(pckt);
 
     return pckt;
@@ -1243,7 +1243,7 @@ int teaching(spec_arg *sarg)
 {
     teach_packet *packet = nullptr;
 
-    packet = (teach_packet *)sarg->fptr->data;
+    packet = (teach_packet *)sarg->fptr->getData();
     assert(packet);
 
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
@@ -1274,7 +1274,7 @@ int teaching(spec_arg *sarg)
 
         FREE(packet);
 
-        sarg->fptr->data = nullptr;
+        sarg->fptr->setData(nullptr);
         return SFR_BLOCK;
     }
 
@@ -1350,7 +1350,7 @@ int teach_init(spec_arg *sarg)
 
     static const char *teach_types[] = {"abilities", "spells", "skills", "weapons", nullptr};
 
-    if (!(c = (char *)sarg->fptr->data))
+    if (!(c = (char *)sarg->fptr->getData()))
     {
         szonelog(UNIT_FI_ZONE(sarg->owner),
                  "%s@%s: No text data for teacher-init!",
@@ -1807,8 +1807,8 @@ int teach_init(spec_arg *sarg)
     sarg->fptr->setHeartBeat(PULSE_SEC);
 
     assert(sarg->fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL);
-    FREE(sarg->fptr->data); /* Free the text string! */
-    sarg->fptr->data = packet;
+    free(sarg->fptr->getData()); /* Free the text string! */
+    sarg->fptr->setData(packet);
 
     /* Call teaching in case initialization occurs with first command! */
     return teaching(sarg);

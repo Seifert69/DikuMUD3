@@ -950,9 +950,9 @@ void ActivateDil(unit_data *pc)
         {
             assert(FALSE);
         }
-        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->data)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData())
         {
-            prg = (dilprg *)fptr->data;
+            prg = (dilprg *)fptr->getData();
             REMOVE_BIT(prg->flags, DILFL_DEACTIVATED);
         }
     }
@@ -969,13 +969,13 @@ void DeactivateDil(unit_data *pc, dilprg *aprg)
 
     for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
     {
-        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->data)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData())
         {
-            if (aprg && (aprg == fptr->data))
+            if (aprg && (aprg == fptr->getData()))
             {
                 continue;
             }
-            prg = (dilprg *)fptr->data;
+            prg = (dilprg *)fptr->getData();
             SET_BIT(prg->flags, DILFL_DEACTIVATED);
         }
     }
@@ -988,7 +988,7 @@ void DeactivateDil(unit_data *pc, dilprg *aprg)
 //
 int run_dil(spec_arg *sarg)
 {
-    dilprg *prg = (dilprg *)sarg->fptr->data;
+    dilprg *prg = (dilprg *)sarg->fptr->getData();
     char *orgarg = (char *)sarg->arg; /* Because fndu may mess with it!!! */
 
     int i = 0;
@@ -1032,7 +1032,7 @@ int run_dil(spec_arg *sarg)
         {
             /* Set so as to notify command loop! Extracted recursively! */
 
-            sarg->fptr->data = nullptr;
+            sarg->fptr->setData(nullptr);
 
             /* The very very very dirty static template hack... :-) */
             if (IS_SET(prg->fp->tmpl->flags, DILFL_FREEME))
@@ -1046,7 +1046,7 @@ int run_dil(spec_arg *sarg)
         }
         else
         {
-            sarg->fptr->data = nullptr;
+            sarg->fptr->setData(nullptr);
             if (prg->canfree())
             {
                 DELETE(dilprg, prg);
@@ -1055,7 +1055,7 @@ int run_dil(spec_arg *sarg)
         }
 
         // CMD_AUTO_EXTRACT is only given to run_dil via destroy_fptr
-        assert(sarg->fptr->data == nullptr);
+        assert(sarg->fptr->getData() == nullptr);
         assert(sarg->fptr->is_destructed());
         // destroy_fptr(sarg->owner, sarg->fptr);
         return SFR_BLOCK;
@@ -1144,7 +1144,7 @@ int run_dil(spec_arg *sarg)
         {
             DELETE(dilprg, prg);
             prg = nullptr;
-            sarg->fptr->data = nullptr;
+            sarg->fptr->setData(nullptr);
             destroy_fptr(sarg->owner, sarg->fptr);
         }
 
@@ -1166,7 +1166,7 @@ int run_dil(spec_arg *sarg)
         {
             DELETE(dilprg, prg);
             prg = nullptr;
-            sarg->fptr->data = nullptr;
+            sarg->fptr->setData(nullptr);
             destroy_fptr(sarg->owner, sarg->fptr);
         }
 
@@ -1199,7 +1199,7 @@ int run_dil(spec_arg *sarg)
         {
             DELETE(dilprg, prg);
             prg = nullptr;
-            sarg->fptr->data = nullptr;
+            sarg->fptr->setData(nullptr);
             destroy_fptr(sarg->owner, sarg->fptr);
         }
 
@@ -1225,7 +1225,7 @@ int run_dil(spec_arg *sarg)
         {
             DELETE(dilprg, prg);
             prg = nullptr;
-            sarg->fptr->data = nullptr;
+            sarg->fptr->setData(nullptr);
             destroy_fptr(sarg->owner, sarg->fptr);
         }
         return SFR_SHARE;
@@ -1285,9 +1285,9 @@ int dil_init(spec_arg *sarg)
 {
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
-        if (sarg->fptr->data)
+        if (sarg->fptr->getData())
         {
-            dil_copy((char *)sarg->fptr->data, sarg->owner);
+            dil_copy((char *)sarg->fptr->getData(), sarg->owner);
         }
         else
         {
@@ -1334,7 +1334,7 @@ static void dil_free_dilargs(dilargstype *dilargs)
 
 int dil_direct_init(spec_arg *sarg)
 {
-    dilargstype *dilargs = (dilargstype *)sarg->fptr->data;
+    dilargstype *dilargs = (dilargstype *)sarg->fptr->getData();
 
     assert(dilargs);
 
@@ -1433,7 +1433,7 @@ int dil_direct_init(spec_arg *sarg)
         dil_free_dilargs(dilargs);
     }
 
-    sarg->fptr->data = nullptr;
+    sarg->fptr->setData(nullptr);
 
     return SFR_SHARE;
 }
@@ -1447,8 +1447,8 @@ int dil_destroy(const char *name, unit_data *u)
     fptr = dil_find(name, u);
     if (fptr && !fptr->is_destructed())
     {
-        assert(fptr->data); /* MUST or ged! */
-        prg = ((dilprg *)fptr->data);
+        assert(fptr->getData()); /* MUST or ged! */
+        prg = ((dilprg *)fptr->getData());
 
         //  This is to send the dildestroy SFB to any listening DILs
         sarg.owner = prg->owner;
@@ -1464,7 +1464,7 @@ int dil_destroy(const char *name, unit_data *u)
         run_dil(&sarg);
 
         //  We finished the signalling, now lets really destroy it.
-        if (!fptr->is_destructed() && fptr && fptr->data)
+        if (!fptr->is_destructed() && fptr && fptr->getData())
         {
             REMOVE_BIT(prg->flags, DILFL_DEACTIVATED); // We're going to destroy it
             prg->waitcmd = WAITCMD_QUIT;
@@ -1513,7 +1513,7 @@ dilprg *dil_copy_template(diltemplate *tmpl, unit_data *u, unit_fptr **pfptr)
             if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
             {
                 dilprg *uprg = nullptr;
-                if ((uprg = (dilprg *)f->data))
+                if ((uprg = (dilprg *)f->getData()))
                 {
                     if (uprg->frame[0].tmpl == tmpl)
                     {
@@ -1582,7 +1582,7 @@ void dil_activate(dilprg *prg)
 
     for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
     {
-        if (fptr->data == prg)
+        if (fptr->getData() == prg)
         {
             break;
         }
@@ -1617,7 +1617,7 @@ void dil_activate_cmd(dilprg *prg, command_info *cmd_ptr)
 
     for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
     {
-        if (fptr->data == prg)
+        if (fptr->getData() == prg)
         {
             break;
         }
@@ -1655,7 +1655,7 @@ void dil_loadtime_activate(unit_data *u)
             g_events.remove(special_event, u, f);
             special_event(u, f);
         }
-        else if ((f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL) && f->data)
+        else if ((f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL) && f->getData())
         {
             g_events.remove(special_event, u, f);
             special_event(u, f);
@@ -1801,7 +1801,7 @@ unit_fptr *dil_find(const char *name, unit_data *u)
         {
             if ((!fptr->is_destructed()) && (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
-                if ((((dilprg *)fptr->data)->frame[0].tmpl == tmpl) && ((dilprg *)fptr->data)->waitcmd > WAITCMD_QUIT)
+                if ((((dilprg *)fptr->getData())->frame[0].tmpl == tmpl) && ((dilprg *)fptr->getData())->waitcmd > WAITCMD_QUIT)
                 {
                     return fptr;
                 }

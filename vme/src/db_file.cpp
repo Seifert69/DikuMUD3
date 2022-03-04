@@ -668,7 +668,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
-            fptr->data = bread_dil(pBuf, owner, version, fptr, stspec);
+            fptr->setData(bread_dil(pBuf, owner, version, fptr, stspec));
         }
         else if (fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
         {
@@ -715,7 +715,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                 }
             }
 
-            fptr->data = dilargs;
+            fptr->setData(dilargs);
         }
         else
         {
@@ -723,7 +723,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr->removeActivateOnEventFlag(SFB_ALL);
             fptr->setActivateOnEventFlag(g_unit_function_array[fptr->getFunctionPointerIndex()].sfb);
 #endif
-            pBuf->ReadStringAlloc((char **)&fptr->data);
+            fptr->readDataFrom(*pBuf);
         }
 
         if ((fptr->getHeartBeat()) && (fptr->getHeartBeat() < WAIT_SEC))
@@ -742,8 +742,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                 slog(LOG_ALL,
                      0,
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON LOAD",
-                     (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
-                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
+                     (((dilprg *)fptr->getData())->fp->tmpl->prgname ? ((dilprg *)fptr->getData())->fp->tmpl->prgname : "NO NAME"),
+                     (((dilprg *)fptr->getData())->fp->tmpl->zone ? ((dilprg *)fptr->getData())->fp->tmpl->zone->getName() : "NO ZONE"),
                      fptr->getHeartBeat());
             }
         }
@@ -985,7 +985,7 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
     {
         assert(fptr->getFunctionPointerIndex() <= SFUN_TOP_IDX);
 
-        data = (char *)fptr->data;
+        data = (char *)fptr->getData();
 
 #ifdef DMSERVER
         if (g_unit_function_array[fptr->getFunctionPointerIndex()].save_w_d == SD_NEVER)
@@ -993,7 +993,7 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
             continue; /* DONT SAVE THIS FROM INSIDE THE GAME! */
         }
 
-        if (fptr->data && g_unit_function_array[fptr->getFunctionPointerIndex()].save_w_d == SD_NULL)
+        if (fptr->getData() && g_unit_function_array[fptr->getFunctionPointerIndex()].save_w_d == SD_NULL)
         {
             data = nullptr;
         }
@@ -1014,8 +1014,8 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
                 slog(LOG_ALL,
                      0,
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON SAVE",
-                     (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
-                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
+                     (((dilprg *)fptr->getData())->fp->tmpl->prgname ? ((dilprg *)fptr->getData())->fp->tmpl->prgname : "NO NAME"),
+                     (((dilprg *)fptr->getData())->fp->tmpl->zone ? ((dilprg *)fptr->getData())->fp->tmpl->zone->getName() : "NO ZONE"),
                      fptr->getHeartBeat());
             }
         }
@@ -1026,14 +1026,14 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
 
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
-            assert(fptr->data);
-            bwrite_dil(pBuf, (dilprg *)fptr->data);
+            assert(fptr->getData());
+            bwrite_dil(pBuf, (dilprg *)fptr->getData());
         }
         else if (fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
         {
 #ifdef VMC_SRC
-            assert(fptr->data);
-            dilargstype *dilargs = (dilargstype *)fptr->data;
+            assert(fptr->getData());
+            dilargstype *dilargs = (dilargstype *)fptr->getData();
 
             pBuf->AppendDoubleString(dilargs->name);
 

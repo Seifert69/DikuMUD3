@@ -35,7 +35,7 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
             if ((fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL) || (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 dilprg *p = nullptr;
-                p = (dilprg *)fptr->data;
+                p = (dilprg *)fptr->getData();
 
                 if (p)
                 {
@@ -193,9 +193,9 @@ void special_event(void *p1, void *p2)
         {
             diltick = TRUE;
         }
-        else if (fptr->data)
+        else if (fptr->getData())
         {
-            dilprg *prg = (dilprg *)fptr->data;
+            dilprg *prg = (dilprg *)fptr->getData();
             for (i = 0; i < prg->fp->intrcount; i++)
             {
                 if IS_SET (prg->fp->intr[i].flags, SFB_TICK)
@@ -230,9 +230,9 @@ void start_special(unit_data *u, unit_fptr *fptr)
         {
             diltick = 1;
         }
-        else if (fptr->data)
+        else if (fptr->getData())
         {
-            dilprg *prg = (dilprg *)fptr->data;
+            dilprg *prg = (dilprg *)fptr->getData();
             for (i = 0; i < prg->fp->intrcount; i++)
             {
                 if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))

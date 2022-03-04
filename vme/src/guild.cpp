@@ -153,7 +153,7 @@ int guard_guild_way(spec_arg *sarg)
     char *guild_no = nullptr;
     int guild_cmp = 0;
 
-    if ((str = (char *)sarg->fptr->data) && (sarg->cmd->inttype == DIR_CMD) && (sarg->cmd->dir == (*str - '0')) &&
+    if ((str = (char *)sarg->fptr->getData()) && (sarg->cmd->inttype == DIR_CMD) && (sarg->cmd->dir == (*str - '0')) &&
         CHAR_IS_READY(sarg->owner))
     {
         guild_no = str + 2;

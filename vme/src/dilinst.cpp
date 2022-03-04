@@ -65,7 +65,7 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
         DeactivateDil(u, aprg);
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         {
-            if (aprg && (aprg == fptr->data))
+            if (aprg && (aprg == fptr->getData()))
             {
                 continue;
             }
@@ -91,7 +91,7 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
         ActivateDil(u);
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         {
-            if (aprg && (aprg == fptr->data))
+            if (aprg && (aprg == fptr->getData()))
             {
                 continue;
             }
@@ -2912,8 +2912,8 @@ void dilfi_sntadil(dilprg *p)
 
                         for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->next)
                         {
-                            if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->data && ((dilprg *)fptr->data)->fp &&
-                                ((dilprg *)fptr->data)->fp->tmpl == tmpl)
+                            if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData() && ((dilprg *)fptr->getData())->fp &&
+                                ((dilprg *)fptr->getData())->fp->tmpl == tmpl)
                             {
                                 break;
                             }

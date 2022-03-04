@@ -143,17 +143,17 @@ int log_object(spec_arg *sarg)
     char c = 0;
     unit_data *ch = UNIT_IN(sarg->owner);
 
-    if (sarg->fptr->data == nullptr)
+    if (sarg->fptr->getData() == nullptr)
     {
         CREATE(ip, ubit8, 1);
         *ip = 0;
 
         OBJ_VALUE(sarg->owner, 0) = 'a';
-        sarg->fptr->data = ip;
+        sarg->fptr->setData(ip);
     }
     else
     {
-        ip = (ubit8 *)sarg->fptr->data;
+        ip = (ubit8 *)sarg->fptr->getData();
     }
 
     c = OBJ_VALUE(sarg->owner, 0);
@@ -162,7 +162,7 @@ int log_object(spec_arg *sarg)
     {
         case CMD_AUTO_EXTRACT:
             FREE(ip);
-            sarg->fptr->data = nullptr;
+            sarg->fptr->setData(nullptr);
             return SFR_SHARE;
 
         case CMD_AUTO_TICK:

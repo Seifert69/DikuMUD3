@@ -287,7 +287,7 @@ unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat,
     f->setFunctionPriority(priority);
     f->setHeartBeat(beat);
     f->setAllActivateOnEventFlags(flags);
-    f->data = data;
+    f->setData(data);
     f->event = nullptr;
 
     membug_verify(f->data);

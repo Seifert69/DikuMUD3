@@ -84,7 +84,7 @@ eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1,
 
         if (f->getFunctionPointerIndex() == 82)
         {
-            dilprg *prg = (dilprg *)f->data;
+            dilprg *prg = (dilprg *)f->getData();
             membug_verify(prg);
 
             assert(prg);
@@ -249,7 +249,7 @@ void eventqueue::process()
             tfunc = tmp_event->func;
             int bDestructed = 0;
 
-            if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->data &&
+            if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->getData() &&
                 (((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 strcpy(dilname, "NO NAME");
@@ -267,7 +267,7 @@ void eventqueue::process()
 
                 if (!bDestructed)
                 {
-                    dilprg *prg = (dilprg *)fptr->data;
+                    dilprg *prg = (dilprg *)fptr->getData();
 
                     assert(prg);
                     membug_verify(prg);

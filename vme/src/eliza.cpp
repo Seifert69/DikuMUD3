@@ -638,7 +638,7 @@ int oracle(spec_arg *sarg)
     oracle_data *od = nullptr;
     int i = 0;
 
-    od = (oracle_data *)sarg->fptr->data;
+    od = (oracle_data *)sarg->fptr->getData();
 
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
@@ -647,12 +647,12 @@ int oracle(spec_arg *sarg)
             FREE(od->nextrep);
             FREE(od);
         }
-        sarg->fptr->data = nullptr;
+        sarg->fptr->setData(nullptr);
         g_events.remove_relaxed(delayed_action, sarg->owner, nullptr);
         return SFR_BLOCK;
     }
 
-    if (sarg->fptr->data == nullptr)
+    if (sarg->fptr->getData() == nullptr)
     {
         if (eliza_booted == FALSE)
         {
@@ -665,8 +665,8 @@ int oracle(spec_arg *sarg)
             eliza_booted = TRUE;
         }
 
-        CREATE(sarg->fptr->data, oracle_data, 1);
-        od = (oracle_data *)sarg->fptr->data;
+        CREATE(od, oracle_data, 1);
+        sarg->fptr->setData(od);
         od->laststr[0] = 0;
         od->lastrep[0] = 0;
         strcpy(od->own_name, UNIT_NAME(sarg->owner));

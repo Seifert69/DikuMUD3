@@ -682,7 +682,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
         {
             dilprg *prg = nullptr;
 
-            if ((prg = (dilprg *)f->data))
+            if ((prg = (dilprg *)f->getData()))
             {
                 auto msg = diku::format_to_str("DIL Name: %s@%s<br/>",
                                                prg->frame[0].tmpl->prgname,
@@ -698,7 +698,7 @@ static void stat_func(const unit_data *ch, unit_data *u)
                                        sprintbit(bits, f->getAllActivateOnEventFlags(), g_sfb_flags),
                                        f->getFunctionPointerIndex(),
                                        f->getHeartBeat(),
-                                       f->data ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data."
+                                       f->getData() ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->getData() : "Has raw data."
                                                : "No data.");
         send_to_char(msg, ch);
     }

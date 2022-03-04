@@ -628,7 +628,7 @@ unit_field  : NAMES stringlist
                 cur_func = cur_func->next;
             }
             cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
-            cur_func->data = idargcopy;
+            cur_func->setData(idargcopy);
             cur_func->setHeartBeat(WAIT_SEC * 10);
             cur_func->setAllActivateOnEventFlags(SFB_ALL);
         }
@@ -653,7 +653,7 @@ unit_field  : NAMES stringlist
             cur_func = cur_func->next;
         }
         cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
-        cur_func->data = argcopy;
+        cur_func->setData(argcopy);
         cur_func->setHeartBeat(WAIT_SEC * 10);
         cur_func->setAllActivateOnEventFlags(SFB_ALL);
     }
@@ -905,20 +905,20 @@ optfuncargs : /* naught */
 
 optfuncarg  : STRINGT STRING
     {
-        if (cur_func->data)
+        if (cur_func->getData())
         {
             fatal("Redefinition of data for special.");
         }
 
-        cur_func->data = $2;
+        cur_func->setData($2);
     }
     | stringcomp
     {
-        if (cur_func->data)
+        if (cur_func->getData())
         {
             fatal("Redefinition of data for special.");
         }
-        cur_func->data = $1;
+        cur_func->setData($1);
     }
     | TIME number
     {

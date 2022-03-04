@@ -274,14 +274,16 @@ void clear_destructed()
 
         if (f->getFunctionPointerIndex() == 82)
         {
-            assert(f->data == nullptr);
+            assert(f->getData() == nullptr);
         }
 
         assert(f->event == nullptr);
 
-        if (f->data)
-            FREE(f->data);
-
+        if (f->getData())
+        {
+            free(f->getData());
+            f->setData(nullptr);
+        }
         DELETE(unit_fptr, f);
         destructed[DR_FUNC][i] = nullptr;
     }
