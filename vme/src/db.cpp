@@ -620,17 +620,17 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
 
     for (; 0 < i; i--)
     {
-        if (pBuf->Read16(&af.duration))
+        if (af.readDurationFrom(*pBuf))
         {
             return 1;
         }
 
-        if (pBuf->Read16(&af.id))
+        if (af.readIDFrom(*pBuf))
         {
             return 1;
         }
 
-        if (pBuf->Read16(&af.beat))
+        if (af.readBeatFrom(*pBuf))
         {
             return 1;
         }
@@ -642,43 +642,43 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
              return;
              } */
 
-        if (pBuf->Read32(&af.data[0]))
+        if (af.readFromIntoDataAtIndex(*pBuf, 0))
         {
             return 1;
         }
 
-        if (pBuf->Read32(&af.data[1]))
+        if (af.readFromIntoDataAtIndex(*pBuf, 1))
         {
             return 1;
         }
 
-        if (pBuf->Read32(&af.data[2]))
+        if (af.readFromIntoDataAtIndex(*pBuf, 2))
         {
             return 1;
         }
 
-        if (pBuf->Read16(&af.firstf_i))
+        if (af.readFirstFIFrom(*pBuf))
         {
             return 1;
         }
 
-        if (pBuf->Read16(&af.tickf_i))
+        if (af.readTickFIFrom(*pBuf))
         {
             return 1;
         }
 
-        if (pBuf->Read16(&af.lastf_i))
+        if (af.readLastFIFrom(*pBuf))
         {
             return 1;
         }
 
-        if (pBuf->Read16(&af.applyf_i))
+        if (af.readApplyFIFrom(*pBuf))
         {
             return 1;
         }
 
         /* Don't call, don't apply and don't set up tick for this affect (yet) */
-        af.event = nullptr;
+        af.setEventQueueElement(nullptr);
         link_alloc_affect(u, &af);
     }
 
@@ -1578,13 +1578,18 @@ void bonus_setup(unit_data *u)
             OBJ_VALUE(u, 2) = bonus_map_a(OBJ_VALUE(u, 2));
         }
 
-        for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->next)
+        for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->getNext())
         {
-            if ((af->id == ID_TRANSFER_STR) || (af->id == ID_TRANSFER_DEX) || (af->id == ID_TRANSFER_CON) || (af->id == ID_TRANSFER_CHA) ||
-                (af->id == ID_TRANSFER_BRA) || (af->id == ID_TRANSFER_MAG) || (af->id == ID_TRANSFER_DIV) || (af->id == ID_TRANSFER_HPP))
-                af->data[1] = bonus_map_b(af->data[1]);
-            else if ((af->id == ID_SKILL_TRANSFER) || (af->id == ID_SPELL_TRANSFER) || (af->id == ID_WEAPON_TRANSFER))
-                af->data[1] = bonus_map_b(af->data[1]);
+            if ((af->getID() == ID_TRANSFER_STR) || (af->getID() == ID_TRANSFER_DEX) || (af->getID() == ID_TRANSFER_CON) ||
+                (af->getID() == ID_TRANSFER_CHA) || (af->getID() == ID_TRANSFER_BRA) || (af->getID() == ID_TRANSFER_MAG) ||
+                (af->getID() == ID_TRANSFER_DIV) || (af->getID() == ID_TRANSFER_HPP))
+            {
+                af->setDataAtIndex(1, bonus_map_b(af->getDataAtIndex(1)));
+            }
+            else if ((af->getID() == ID_SKILL_TRANSFER) || (af->getID() == ID_SPELL_TRANSFER) || (af->getID() == ID_WEAPON_TRANSFER))
+            {
+                af->setDataAtIndex(1, bonus_map_b(af->getDataAtIndex(1)));
+            }
         }
     }
 }

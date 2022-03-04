@@ -98,7 +98,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
 
         if ((paf = affected_by_spell(vict, ID_BACKSTABBED)))
         {
-            skillb += 50 * paf->data[0];
+            skillb += 50 * paf->getDataAtIndex(0);
         }
 
         hm = resistance_skill_check(effective_dex(ch), CHAR_DEX(vict), skilla, skillb);
@@ -110,21 +110,21 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
 
     if (paf == nullptr)
     {
-        af.id = ID_BACKSTABBED;
-        af.duration = 15;
-        af.beat = WAIT_SEC * 60;
-        af.firstf_i = TIF_NONE;
-        af.tickf_i = TIF_NONE;
-        af.lastf_i = TIF_NONE;
-        af.applyf_i = APF_NONE;
-        af.data[0] = 1;
+        af.setID(ID_BACKSTABBED);
+        af.setDuration(15);
+        af.setBeat(WAIT_SEC * 60);
+        af.setFirstFI(TIF_NONE);
+        af.setTickFI(TIF_NONE);
+        af.setLastFI(TIF_NONE);
+        af.setApplyFI(APF_NONE);
+        af.setDataAtIndex(0, 1);
         create_affect(vict, &af);
     }
     else
     {
-        paf->duration = 15;
-        paf->beat = WAIT_SEC * 60;
-        paf->data[0]++;
+        paf->setDuration(15);
+        paf->setBeat(WAIT_SEC * 60);
+        paf->incrementDataAtIndex(0);
     }
 
     if (hm < 0)

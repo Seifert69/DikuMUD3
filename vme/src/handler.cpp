@@ -587,13 +587,13 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     OBJ_EQP_POS(obj) = pos;
     modify_bright(ch, UNIT_BRIGHT(obj)); /* Update light sources */
 
-    for (af = UNIT_AFFECTED(obj); af; af = af->next)
+    for (af = UNIT_AFFECTED(obj); af; af = af->getNext())
     {
-        if (af->id < 0) /* It is a transfer affect! */
+        if (af->getID() < 0) /* It is a transfer affect! */
         {
             newaf = *af;
-            newaf.id = -newaf.id; /* No longer a transfer    */
-            newaf.duration = -1;  /* Permanent until unequip */
+            newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
+            newaf.setDuration(-1);       /* Permanent until unequip */
             create_affect(ch, &newaf);
         }
     }
@@ -613,16 +613,17 @@ unit_data *unequip_object(unit_data *obj)
     OBJ_EQP_POS(obj) = 0;
     modify_bright(ch, -UNIT_BRIGHT(obj)); /* Update light sources */
 
-    for (af = UNIT_AFFECTED(obj); af; af = af->next)
+    for (af = UNIT_AFFECTED(obj); af; af = af->getNext())
     {
-        if (af->id < 0) /* It is a transfer affect! */
+        if (af->getID() < 0) /* It is a transfer affect! */
         {
-            for (caf = UNIT_AFFECTED(ch); caf; caf = caf->next)
+            for (caf = UNIT_AFFECTED(ch); caf; caf = caf->getNext())
             {
-                if ((-caf->id == af->id) && (caf->duration == -1) && (caf->data[0] == af->data[0]) && (caf->data[1] == af->data[1]) &&
+                if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->getDataAtIndex(0) == af->getDataAtIndex(0)) &&
+                    (caf->getDataAtIndex(1) == af->getDataAtIndex(1)) &&
                     // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
-                    (caf->applyf_i == af->applyf_i) && (caf->firstf_i == af->firstf_i) && (caf->lastf_i == af->lastf_i) &&
-                    (caf->tickf_i == af->tickf_i))
+                    (caf->getApplyFI() == af->getApplyFI()) && (caf->getFirstFI() == af->getFirstFI()) &&
+                    (caf->getLastFI() == af->getLastFI()) && (caf->getTickFI() == af->getTickFI()))
                 {
                     destroy_affect(caf);
                     break; /* Skip inner for loop since we found the affect */

@@ -294,14 +294,17 @@ room_direction_data *mcreate_exit()
 
 unit_affected_type *mcreate_affect()
 {
-    unit_affected_type *rs = nullptr;
-
-    MCREATE(rs, unit_affected_type, 1);
-    rs->next = nullptr;
-    rs->id = 0;
-    rs->duration = 0;
-    rs->data[0] = rs->data[1] = rs->data[2] = 0;
-    rs->firstf_i = rs->tickf_i = rs->lastf_i = rs->applyf_i = 0;
+    unit_affected_type *rs=new EMPLACE(unit_affected_type) unit_affected_type;
+    rs->setNext(nullptr);
+    rs->setID(0);
+    rs->setDuration(0);
+    rs->setDataAtIndex(0, 0);
+    rs->setDataAtIndex(1, 0);
+    rs->setDataAtIndex(2, 0);
+    rs->setFirstFI(0);
+    rs->setTickFI(0);
+    rs->setLastFI(0);
+    rs->setApplyFI(0);
     return rs;
 }
 

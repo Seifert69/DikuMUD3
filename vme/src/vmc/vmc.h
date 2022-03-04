@@ -89,8 +89,6 @@ void mem_init();
 void ShowUsage(char *name);
 void fix(char *file);
 
-#define MCREATE(result, type, number) ((result) = (type *)mmalloc(sizeof(type) * number))
-
 #define UNIT_IDENT(unit) ((char *)(unit)->gnext) /* can you say 'filth'? */
 /* You betcha... */
 #define UNIT_IDENT_ASSIGN(unit, val) ((unit)->gnext = (class unit_data *)(val))

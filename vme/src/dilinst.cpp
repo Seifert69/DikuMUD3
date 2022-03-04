@@ -2637,7 +2637,7 @@ void dilfi_ada(dilprg *p)
         {
             if (IS_CHAR((unit_data *)v1->val.ptr))
             {
-                if (is_in(v2->val.num, 1, ID_TOP_IDX) && 
+                if (is_in(v2->val.num, 1, ID_TOP_IDX) &&
                     is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
@@ -2654,18 +2654,18 @@ void dilfi_ada(dilprg *p)
                     {
                         unit_affected_type af;
 
-                        af.id = v2->val.num;
-                        af.duration = v3->val.num;
-                        af.beat = v4->val.num;
+                        af.setID(v2->val.num);
+                        af.setDuration(v3->val.num);
+                        af.setBeat(v4->val.num);
 
-                        af.data[0] = v5->val.num;
-                        af.data[1] = v6->val.num;
-                        af.data[2] = v7->val.num;
+                        af.setDataAtIndex(0, v5->val.num);
+                        af.setDataAtIndex(1, v6->val.num);
+                        af.setDataAtIndex(2, v7->val.num);
 
-                        af.firstf_i = v8->val.num;
-                        af.tickf_i = v9->val.num;
-                        af.lastf_i = v10->val.num;
-                        af.applyf_i = v11->val.num;
+                        af.setFirstFI(v8->val.num);
+                        af.setTickFI(v9->val.num);
+                        af.setLastFI(v10->val.num);
+                        af.setApplyFI(v11->val.num);
                         create_affect((unit_data *)v1->val.ptr, &af);
                     }
                 }
@@ -2696,18 +2696,18 @@ void dilfi_ada(dilprg *p)
 
                         unit_affected_type af;
 
-                        af.id = v2->val.num;  // Negative for object transfers
-                        af.duration = v3->val.num;
-                        af.beat = v4->val.num;
+                        af.setID(v2->val.num);  // Negative for object transfers
+                        af.setDuration(v3->val.num);
+                        af.setBeat(v4->val.num);
 
-                        af.data[0] = v5->val.num;
-                        af.data[1] = v6->val.num;
-                        af.data[2] = v7->val.num;
+                        af.setDataAtIndex(0, v5->val.num);
+                        af.setDataAtIndex(1, v6->val.num);
+                        af.setDataAtIndex(2, v7->val.num);
 
-                        af.firstf_i = v8->val.num;
-                        af.tickf_i = v9->val.num;
-                        af.lastf_i = v10->val.num;
-                        af.applyf_i = v11->val.num;
+                        af.setFirstFI(v8->val.num);
+                        af.setTickFI(v9->val.num);
+                        af.setLastFI(v10->val.num);
+                        af.setApplyFI(v11->val.num);
                         create_affect((unit_data *)v1->val.ptr, &af);
                     }
                 }

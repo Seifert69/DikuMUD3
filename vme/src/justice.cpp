@@ -1105,10 +1105,10 @@ int reward_give(spec_arg *sarg)
 
     if (IS_PC(sarg->activator))
     {
-        gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
+        gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->getDataAtIndex(0)));
     }
 
-    money_to_unit(sarg->activator, paf->data[1], cur);
+    money_to_unit(sarg->activator, paf->getDataAtIndex(1), cur);
 
     extract_unit(UNIT_CONTAINS(sarg->owner));
 

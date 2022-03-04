@@ -25,30 +25,28 @@ void link_affect(unit_data *unit, unit_affected_type *af)
        UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit),
        UNIT_NAME(unit), af->id); */
 
-    af->gprevious = nullptr;
+    af->setG_Previous(nullptr);
 
     if (affected_list)
     {
-        af->gnext = affected_list;
-        affected_list->gprevious = af;
+        af->setG_Next(affected_list);
+        affected_list->setG_Previous(af);
     }
     else
     {
-        af->gnext = nullptr;
+        af->setG_Next(nullptr);
     }
 
     affected_list = af;
 
-    af->next = UNIT_AFFECTED(unit);
+    af->setNext(UNIT_AFFECTED(unit));
     UNIT_AFFECTED(unit) = af;
-    af->owner = unit;
+    af->setOwner(unit);
 }
 
 unit_affected_type *link_alloc_affect(unit_data *unit, unit_affected_type *orgaf)
 {
-    unit_affected_type *af = nullptr;
-
-    af = new unit_affected_type;
+    unit_affected_type *af = new unit_affected_type;
     assert(!af->is_destructed());
 
     *af = *orgaf;
@@ -67,42 +65,41 @@ void create_affect(unit_data *unit, unit_affected_type *af)
     if (!unit->is_destructed())
     {
         af = link_alloc_affect(unit, af);
-        af->event = nullptr;
+        af->setEventQueueElement(nullptr);
         /* If less than zero it is a transfer! */
-        if (af->id >= 0)
+        if (af->getID() >= 0)
         {
-            if (af->applyf_i >= 0)
+            if (af->getApplyFI() >= 0)
             {
-                if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
+                if (!(*g_apf[af->getApplyFI()].func)(af, unit, TRUE))
                 {
                     return;
                 }
             }
 
-            if (af->firstf_i >= 0)
+            if (af->getFirstFI() >= 0)
             {
-                (*g_tif[af->firstf_i].func)(af, unit);
+                (*g_tif[af->getFirstFI()].func)(af, unit);
             }
 
             // If there is no beat, decrease duration on creation
-            if ((af->beat <= 0) && (af->duration > 0))
+            if ((af->getBeat() <= 0) && (af->getDuration() > 0))
             {
-                af->duration--; /* When 1 it means stop next tick... */
+                af->decrementDuration(); /* When 1 it means stop next tick... */
             }
 
-            if (af->beat > 0)
+            if (af->getBeat() > 0)
             {
-                if (af->event)
+                if (af->cgetEventQueueElement())
                 {
                     g_events.remove(affect_beat, (void *)af, nullptr);
                 }
-                af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
+                af->setEventQueueElement(g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr));
             }
-
         }
         else
         {
-            af->event = nullptr;
+            af->setEventQueueElement(nullptr);
         }
     }
 }
@@ -121,44 +118,44 @@ void unlink_affect(unit_affected_type *af)
 
     if (next_affected_dude == af)
     {
-        next_affected_dude = af->gnext;
+        next_affected_dude = af->getG_Next();
     }
 
     /* Unlink affect structure from global list of affects */
 
     if (affected_list == af)
     {
-        affected_list = af->gnext;
+        affected_list = af->getG_Next();
     }
 
-    if (af->gnext)
+    if (af->getG_Next())
     {
-        af->gnext->gprevious = af->gprevious;
+        af->getG_Next()->setG_Previous(af->getG_Previous());
     }
 
-    if (af->gprevious)
+    if (af->getG_Previous())
     {
-        af->gprevious->gnext = af->gnext;
+        af->getG_Previous()->setG_Next(af->getG_Next());
     }
 
     /* Unlink affect structure from local list */
 
-    i = UNIT_AFFECTED(af->owner);
+    i = UNIT_AFFECTED(af->cgetOwner());
     if (i)
     {
         if (i == af)
         {
-            UNIT_AFFECTED(af->owner) = i->next;
+            UNIT_AFFECTED(af->getOwner()) = i->getNext();
         }
         else
         {
-            for (; i->next != af; i = i->next)
+            for (; i->getNext() != af; i = i->getNext())
             {
                 ;
             }
 
             assert(i);
-            i->next = af->next;
+            i->setNext(af->getNext());
         }
     }
 }
@@ -170,26 +167,26 @@ void destroy_affect(unit_affected_type *af)
 {
     /* It is assumed that none of these function calls can */
     /* destroy the affect.                                 */
-    if (af->id >= 0)
+    if (af->getID() >= 0)
     {
-        if (af->applyf_i >= 0)
+        if (af->getApplyFI() >= 0)
         {
-            if (!(*g_apf[af->applyf_i].func)(af, af->owner, FALSE))
+            if (!(*g_apf[af->getApplyFI()].func)(af, af->getOwner(), FALSE))
             {
-                af->duration = 0;
-                af->beat = WAIT_SEC * 5;
-                if (af->event)
+                af->setDuration(0);
+                af->setBeat(WAIT_SEC * 5);
+                if (af->cgetEventQueueElement())
                 {
                     g_events.remove(affect_beat, (void *)af, nullptr);
                 }
-                af->event = g_events.add(number(120, 240), affect_beat, (void *)af, nullptr);
+                af->setEventQueueElement(g_events.add(number(120, 240), affect_beat, (void *)af, nullptr));
                 return;
             }
         }
 
-        if (af->lastf_i >= 0 && !af->owner->is_destructed())
+        if (af->getLastFI() >= 0 && !af->getOwner()->is_destructed())
         {
-            (*g_tif[af->lastf_i].func)(af, af->owner);
+            (*g_tif[af->getLastFI()].func)(af, af->getOwner());
         }
     }
 
@@ -209,7 +206,7 @@ void affect_clear_unit(unit_data *unit)
     {
         for (taf1 = UNIT_AFFECTED(unit); taf1; taf1 = taf2)
         {
-            taf2 = taf1->next;
+            taf2 = taf1->getNext();
             destroy_affect(taf1);
         }
     }
@@ -224,9 +221,9 @@ unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
-        if (af->id == id)
+        if (af->getID() == id)
         {
             return af;
         }
@@ -241,20 +238,20 @@ void affect_beat(void *p1, void *p2)
     unit_affected_type *af = (unit_affected_type *)p1;
     int destroyed = 0;
 
-    assert(af->id >= 0); /* Negative ids (transfer) dont have beats */
+    assert(af->getID() >= 0); /* Negative ids (transfer) dont have beats */
 
     /* Used to be assert(af->beat > 0);  */
     /* But crashes game, I've set 0 to 8 */
-    if (af->beat <= 0)
+    if (af->getBeat() <= 0)
     {
-        af->beat = 2 * WAIT_SEC;
+        af->setBeat(2 * WAIT_SEC);
     }
 
     destroyed = FALSE;
 
-    if (!IS_PC(af->owner) || CHAR_DESCRIPTOR(af->owner))
+    if (!IS_PC(af->cgetOwner()) || CHAR_DESCRIPTOR(af->cgetOwner()))
     {
-        if (af->duration == 0)
+        if (af->getDuration() == 0)
         {
             /* 'destroy_affect' will try to destroy the event, but there */
             /* is none. It doesn't matter though                         */
@@ -263,26 +260,26 @@ void affect_beat(void *p1, void *p2)
         }
         else
         {
-            if (af->tickf_i >= 0)
+            if (af->getTickFI() >= 0)
             {
-                (*g_tif[af->tickf_i].func)(af, af->owner);
+                (*g_tif[af->getTickFI()].func)(af, af->getOwner());
             }
 
             destroyed = af->is_destructed();
 
-            if (!destroyed && (af->duration > 0))
+            if (!destroyed && (af->getDuration() > 0))
             {
-                af->duration--;
+                af->decrementDuration();
             }
         }
     }
     if (!destroyed)
     {
-        if (af->event)
+        if (af->cgetEventQueueElement())
         {
             g_events.remove(affect_beat, (void *)af, nullptr);
         }
-        af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
+        af->setEventQueueElement(g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr));
     }
 }
 
@@ -293,11 +290,11 @@ void apply_affect(unit_data *unit)
     unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
-        if ((af->id >= 0) && (af->applyf_i >= 0))
+        if ((af->getID() >= 0) && (af->getApplyFI() >= 0))
         {
-            if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
+            if (!(*g_apf[af->getApplyFI()].func)(af, unit, TRUE))
             {
                 continue;
             }
@@ -310,19 +307,19 @@ void start_affect(unit_data *unit)
     unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
-        if ((af->id >= 0) && (af->beat > 0))
+        if ((af->getID() >= 0) && (af->getBeat() > 0))
         {
-            if (af->event)
+            if (af->cgetEventQueueElement())
             {
                 g_events.remove(affect_beat, (void *)af, nullptr);
             }
-            af->event = g_events.add(af->beat, affect_beat, (void *)af, nullptr);
+            af->setEventQueueElement(g_events.add(af->getBeat(), affect_beat, (void *)af, nullptr));
         }
         else
         {
-            af->event = nullptr;
+            af->setEventQueueElement(nullptr);
         }
     }
 }
@@ -331,9 +328,9 @@ void stop_affect(unit_data *unit)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
     {
-        if (af->event != nullptr)
+        if (af->cgetEventQueueElement() != nullptr)
         {
             g_events.remove(affect_beat, (void *)af, nullptr);
         }

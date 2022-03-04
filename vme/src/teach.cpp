@@ -641,9 +641,9 @@ int pupil_magic(unit_data *pupil)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(pupil); af; af = af->next)
+    for (af = UNIT_AFFECTED(pupil); af; af = af->getNext())
     {
-        switch (af->id)
+        switch (af->getID())
         {
             case ID_BLESS:
             case ID_UNHOLY_BLESSING:

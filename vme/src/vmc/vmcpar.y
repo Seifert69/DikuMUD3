@@ -878,8 +878,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            cur_aff->next = mcreate_affect();
-            cur_aff = cur_aff->next;
+            cur_aff->setNext(mcreate_affect());
+            cur_aff = cur_aff->getNext();
         }
     }
     affect_fields ';'
@@ -935,35 +935,35 @@ affect_fields   : affect_field
 
 affect_field    : ID number
     {
-        cur_aff->id = $2;
+        cur_aff->setID($2);
     }
     | DURATION number
     {
-        cur_aff->duration = $2;
+        cur_aff->setDuration($2);
     }
     | DATA index number
     {
-        cur_aff->data[$2] = $3;
+        cur_aff->setDataAtIndex($2, $3);
     }
     | FIRSTF number
     {
-        cur_aff->firstf_i = $2;
+        cur_aff->setFirstFI($2);
     }
     | TICKF number
     {
-        cur_aff->tickf_i = $2;
+        cur_aff->setTickFI($2);
     }
     | LASTF number
     {
-        cur_aff->lastf_i = $2;
+        cur_aff->setLastFI($2);
     }
     | APPLYF number
     {
-        cur_aff->applyf_i = $2;
+        cur_aff->setApplyFI($2);
     }
     | TIME number
     {
-        cur_aff->beat = $2;
+        cur_aff->setBeat($2);
     }
     ;
 

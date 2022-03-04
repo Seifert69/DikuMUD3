@@ -638,7 +638,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
 
     send_to_char("Unit affects:<br/>", ch);
 
-    for (af = UNIT_AFFECTED(u); af; af = af->next)
+    for (af = UNIT_AFFECTED(u); af; af = af->getNext())
     {
         auto msg = diku::format_to_str("----------------------------------------------------<br/>"
                                        "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
@@ -647,17 +647,17 @@ static void stat_affect(const unit_data *ch, unit_data *u)
                                        "Last  f() %s<br/>"
                                        "Apply f() %s<br/>"
                                        "%s",
-                                       af->id,
-                                       af->duration,
-                                       af->beat,
-                                       af->data[0],
-                                       af->data[1],
-                                       af->data[2],
-                                       af->firstf_i >= 0 ? STR(g_tif[af->firstf_i].descr) : "Not used (-1)",
-                                       af->tickf_i >= 0 ? STR(g_tif[af->tickf_i].descr) : "Not used (-1)",
-                                       af->lastf_i >= 0 ? STR(g_tif[af->lastf_i].descr) : "Not used (-1)",
-                                       af->applyf_i >= 0 ? STR(g_apf[af->applyf_i].descr) : "Not used (-1)",
-                                       u == af->owner ? "" : "Serious error in owner pointer!<br/>");
+                                       af->getID(),
+                                       af->getDuration(),
+                                       af->getBeat(),
+                                       af->getDataAtIndex(0),
+                                       af->getDataAtIndex(1),
+                                       af->getDataAtIndex(2),
+                                       af->getFirstFI() >= 0 ? STR(g_tif[af->getFirstFI()].descr) : "Not used (-1)",
+                                       af->getTickFI() >= 0 ? STR(g_tif[af->getTickFI()].descr) : "Not used (-1)",
+                                       af->getLastFI() >= 0 ? STR(g_tif[af->getLastFI()].descr) : "Not used (-1)",
+                                       af->getApplyFI() >= 0 ? STR(g_apf[af->getApplyFI()].descr) : "Not used (-1)",
+                                       u == af->cgetOwner() ? "" : "Serious error in owner pointer!<br/>");
         send_to_char(msg, ch);
     }
 }

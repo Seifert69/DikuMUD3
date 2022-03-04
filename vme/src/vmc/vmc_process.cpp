@@ -385,42 +385,42 @@ bool affect_vector_string(unit_data *obj, std::string &s)
 
     memset(bonusvector, 0, sizeof(bonusvector));
 
-    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
+    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->getNext())
     {
-        switch (af->id)
+        switch (af->getID())
         {
             case ID_TRANSFER_STR:
-                bonusvector[0] += af->data[1];
+                bonusvector[0] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_DEX:
-                bonusvector[1] += af->data[1];
+                bonusvector[1] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_CON:
-                bonusvector[2] += af->data[1];
+                bonusvector[2] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_CHA:
-                bonusvector[3] += af->data[1];
+                bonusvector[3] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_BRA:
-                bonusvector[4] += af->data[1];
+                bonusvector[4] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_MAG:
-                bonusvector[5] += af->data[1];
+                bonusvector[5] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_DIV:
-                bonusvector[6] += af->data[1];
+                bonusvector[6] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_HPP:
-                bonusvector[7] += af->data[1];
+                bonusvector[7] += af->getDataAtIndex(1);
                 break;
             case ID_PROT_GOOD_TRANSFER:
-                bonusvector[8] += af->data[1];
+                bonusvector[8] += af->getDataAtIndex(1);
                 break;
             case ID_PROT_EVIL_TRANSFER:
-                bonusvector[9] += af->data[1];
+                bonusvector[9] += af->getDataAtIndex(1);
                 break;
             case ID_TRANSFER_CHARFLAGS:
-                bonusvector[10] += af->data[1];
+                bonusvector[10] += af->getDataAtIndex(1);
                 break;
         }
     }
@@ -445,29 +445,29 @@ bool affect_vector_list(unit_data *obj, std::string &s)
 {
     s.clear();
 
-    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->next)
+    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->getNext())
     {
-        switch (af->id)
+        switch (af->getID())
         {
             case ID_SPELL_TRANSFER:
                 s += "Spl,";
-                s += itoa(af->data[0]);
+                s += itoa(af->getDataAtIndex(0));
                 s += ",";
-                s += itoa(af->data[1]);
+                s += itoa(af->getDataAtIndex(1));
                 s += ",";
                 break;
             case ID_SKILL_TRANSFER:
                 s += "Ski,";
-                s += itoa(af->data[0]);
+                s += itoa(af->getDataAtIndex(0));
                 s += ",";
-                s += itoa(af->data[1]);
+                s += itoa(af->getDataAtIndex(1));
                 s += ",";
                 break;
             case ID_WEAPON_TRANSFER:
                 s += "Wpn,";
-                s += itoa(af->data[0]);
+                s += itoa(af->getDataAtIndex(0));
                 s += ",";
-                s += itoa(af->data[1]);
+                s += itoa(af->getDataAtIndex(1));
                 s += ",";
                 break;
         }
@@ -620,233 +620,233 @@ void process_affects(unit_data *pUnit)
     int lastf = 0;
     int applyf = 0;
 
-    for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->next)
+    for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->getNext())
     {
-        firstf = (pAf->firstf_i == TIF_NONE);
-        tickf = (pAf->tickf_i == TIF_NONE);
-        lastf = (pAf->lastf_i == TIF_NONE);
-        applyf = (pAf->applyf_i == APF_NONE);
+        firstf = (pAf->getFirstFI() == TIF_NONE);
+        tickf = (pAf->getTickFI() == TIF_NONE);
+        lastf = (pAf->getLastFI() == TIF_NONE);
+        applyf = (pAf->getApplyFI() == APF_NONE);
 
-        switch (pAf->id)
+        switch (pAf->getID())
         {
             case ID_TRANSFER_MAG:
-                firstf = (pAf->firstf_i == TIF_MAG_INC);
-                lastf = (pAf->lastf_i == TIF_MAG_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_MAG)
+                firstf = (pAf->getFirstFI() == TIF_MAG_INC);
+                lastf = (pAf->getLastFI() == TIF_MAG_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_MAG)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_TRANSFER_DIV:
-                firstf = (pAf->firstf_i == TIF_DIV_INC);
-                lastf = (pAf->lastf_i == TIF_DIV_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_DIV)
+                firstf = (pAf->getFirstFI() == TIF_DIV_INC);
+                lastf = (pAf->getLastFI() == TIF_DIV_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_DIV)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_TRANSFER_STR:
-                firstf = (pAf->firstf_i == TIF_STR_INC);
-                lastf = (pAf->lastf_i == TIF_STR_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_STR)
+                firstf = (pAf->getFirstFI() == TIF_STR_INC);
+                lastf = (pAf->getLastFI() == TIF_STR_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_STR)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_TRANSFER_DEX:
-                firstf = (pAf->firstf_i == TIF_DEX_INC);
-                lastf = (pAf->lastf_i == TIF_DEX_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_DEX)
+                firstf = (pAf->getFirstFI() == TIF_DEX_INC);
+                lastf = (pAf->getLastFI() == TIF_DEX_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_DEX)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_TRANSFER_CON:
-                firstf = (pAf->firstf_i == TIF_CON_INC);
-                lastf = (pAf->lastf_i == TIF_CON_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_CON)
+                firstf = (pAf->getFirstFI() == TIF_CON_INC);
+                lastf = (pAf->getLastFI() == TIF_CON_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_CON)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_TRANSFER_CHA:
-                firstf = (pAf->firstf_i == TIF_CHA_INC);
-                lastf = (pAf->lastf_i == TIF_CHA_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_CHA)
+                firstf = (pAf->getFirstFI() == TIF_CHA_INC);
+                lastf = (pAf->getLastFI() == TIF_CHA_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_CHA)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_TRANSFER_BRA:
-                firstf = (pAf->firstf_i == TIF_BRA_INC);
-                lastf = (pAf->lastf_i == TIF_BRA_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_BRA)
+                firstf = (pAf->getFirstFI() == TIF_BRA_INC);
+                lastf = (pAf->getLastFI() == TIF_BRA_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_BRA)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_TRANSFER_HPP:
-                firstf = (pAf->firstf_i == TIF_HIT_INC);
-                lastf = (pAf->lastf_i == TIF_HIT_DEC);
-                applyf = (pAf->applyf_i == APF_ABILITY);
-                if (pAf->data[0] != ABIL_HP)
+                firstf = (pAf->getFirstFI() == TIF_HIT_INC);
+                lastf = (pAf->getLastFI() == TIF_HIT_DEC);
+                applyf = (pAf->getApplyFI() == APF_ABILITY);
+                if (pAf->getDataAtIndex(0) != ABIL_HP)
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_HIDDEN_DIFFICULTY:
-                if (!is_in(pAf->data[0], 0, 5))
+                if (!is_in(pAf->getDataAtIndex(0), 0, 5))
                 {
-                    dmc_error(TRUE, "%s: Illegal direction %d!", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
-                    pAf->data[0] = 0;
+                    dmc_error(TRUE, "%s: Illegal direction %d!", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
+                    pAf->setDataAtIndex(0, 0);
                 }
-                if (!is_in(pAf->data[1], 0, SKILL_MAX))
+                if (!is_in(pAf->getDataAtIndex(1), 0, SKILL_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal skill %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
-                    pAf->data[0] = 0;
+                    dmc_error(TRUE, "%s: Illegal skill %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
+                    pAf->setDataAtIndex(0, 0);
                 }
                 break;
 
             case ID_CURSE:
-                applyf = (pAf->applyf_i == APF_MOD_OBJ_FLAGS);
+                applyf = (pAf->getApplyFI() == APF_MOD_OBJ_FLAGS);
                 break;
 
             case ID_TRANSFER_CHARFLAGS:
-                firstf = (pAf->firstf_i == TIF_EYES_TINGLE);
-                lastf = (pAf->lastf_i == TIF_EYES_TINGLE);
-                applyf = (pAf->applyf_i == APF_MOD_CHAR_FLAGS);
+                firstf = (pAf->getFirstFI() == TIF_EYES_TINGLE);
+                lastf = (pAf->getLastFI() == TIF_EYES_TINGLE);
+                applyf = (pAf->getApplyFI() == APF_MOD_CHAR_FLAGS);
                 break;
 
             case ID_SPELL_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_SPL_INC);
-                lastf = (pAf->lastf_i == TIF_SPL_DEC);
-                applyf = (pAf->applyf_i == APF_SPELL_ADJ);
-                if (!is_in(pAf->data[0], 0, SPL_TREE_MAX))
+                firstf = (pAf->getFirstFI() == TIF_SPL_INC);
+                lastf = (pAf->getLastFI() == TIF_SPL_DEC);
+                applyf = (pAf->getApplyFI() == APF_SPELL_ADJ);
+                if (!is_in(pAf->getDataAtIndex(0), 0, SPL_TREE_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_SKILL_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_SKI_INC);
-                lastf = (pAf->lastf_i == TIF_SKI_DEC);
-                applyf = (pAf->applyf_i == APF_SKILL_ADJ);
-                if (!is_in(pAf->data[0], 0, SKI_TREE_MAX))
+                firstf = (pAf->getFirstFI() == TIF_SKI_INC);
+                lastf = (pAf->getLastFI() == TIF_SKI_DEC);
+                applyf = (pAf->getApplyFI() == APF_SKILL_ADJ);
+                if (!is_in(pAf->getDataAtIndex(0), 0, SKI_TREE_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_WEAPON_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_WPN_INC);
-                lastf = (pAf->lastf_i == TIF_WPN_DEC);
-                applyf = (pAf->applyf_i == APF_WEAPON_ADJ);
-                if (!is_in(pAf->data[0], 0, WPN_TREE_MAX))
+                firstf = (pAf->getFirstFI() == TIF_WPN_INC);
+                lastf = (pAf->getLastFI() == TIF_WPN_DEC);
+                applyf = (pAf->getApplyFI() == APF_WEAPON_ADJ);
+                if (!is_in(pAf->getDataAtIndex(0), 0, WPN_TREE_MAX))
                 {
-                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->data[0], pAf->id);
+                    dmc_error(TRUE, "%s: Illegal data[0] = %d in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(0), pAf->getID());
                 }
-                if (!is_in(pAf->data[1], BONUS_JUNK, BONUS_ARTIFACT))
+                if (!is_in(pAf->getDataAtIndex(1), BONUS_JUNK, BONUS_ARTIFACT))
                 {
-                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->data[1], pAf->id);
+                    dmc_error(TRUE, "%s: Adjustment %d outside -7..+7 in ID %d.", UNIT_IDENT(pUnit), pAf->getDataAtIndex(1), pAf->getID());
                 }
                 break;
 
             case ID_PROT_EVIL_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_PROT_EVIL_ON);
-                lastf = (pAf->lastf_i == TIF_PROT_EVIL_OFF);
-                tickf = (pAf->tickf_i == TIF_NONE);
-                applyf = (pAf->applyf_i == APF_NONE);
+                firstf = (pAf->getFirstFI() == TIF_PROT_EVIL_ON);
+                lastf = (pAf->getLastFI() == TIF_PROT_EVIL_OFF);
+                tickf = (pAf->getTickFI() == TIF_NONE);
+                applyf = (pAf->getApplyFI() == APF_NONE);
                 break;
 
             case ID_PROT_GOOD_TRANSFER:
-                firstf = (pAf->firstf_i == TIF_PROT_GOOD_ON);
-                lastf = (pAf->lastf_i == TIF_PROT_GOOD_OFF);
-                tickf = (pAf->tickf_i == TIF_NONE);
-                applyf = (pAf->applyf_i == APF_NONE);
+                firstf = (pAf->getFirstFI() == TIF_PROT_GOOD_ON);
+                lastf = (pAf->getLastFI() == TIF_PROT_GOOD_OFF);
+                tickf = (pAf->getTickFI() == TIF_NONE);
+                applyf = (pAf->getApplyFI() == APF_NONE);
                 break;
 
             case ID_TRANSFER_SPEED:
-                firstf = ((pAf->firstf_i == TIF_SPEED_BETTER) || (pAf->firstf_i == TIF_SPEED_WORSE));
-                lastf = ((pAf->lastf_i == TIF_SPEED_BETTER) || (pAf->lastf_i == TIF_SPEED_WORSE));
-                tickf = (pAf->tickf_i == TIF_NONE);
-                applyf = (pAf->applyf_i == APF_SPEED);
+                firstf = ((pAf->getFirstFI() == TIF_SPEED_BETTER) || (pAf->getFirstFI() == TIF_SPEED_WORSE));
+                lastf = ((pAf->getLastFI() == TIF_SPEED_BETTER) || (pAf->getLastFI() == TIF_SPEED_WORSE));
+                tickf = (pAf->getTickFI() == TIF_NONE);
+                applyf = (pAf->getApplyFI() == APF_SPEED);
                 break;
 
             default:
-                dmc_error(TRUE, "%s: Illegal affect ID (%d).", UNIT_IDENT(pUnit), pAf->id);
+                dmc_error(TRUE, "%s: Illegal affect ID (%d).", UNIT_IDENT(pUnit), pAf->getID());
                 break;
         }
 
         if (firstf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal firstf %d in id %d.", UNIT_IDENT(pUnit), pAf->firstf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal firstf %d in id %d.", UNIT_IDENT(pUnit), pAf->getFirstFI(), pAf->getID());
         }
         if (tickf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal tickf %d in id %d.", UNIT_IDENT(pUnit), pAf->tickf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal tickf %d in id %d.", UNIT_IDENT(pUnit), pAf->getTickFI(), pAf->getID());
         }
         if (lastf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal lastf %d in id %d.", UNIT_IDENT(pUnit), pAf->lastf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal lastf %d in id %d.", UNIT_IDENT(pUnit), pAf->getLastFI(), pAf->getID());
         }
         if (applyf == FALSE)
         {
-            dmc_error(TRUE, "%s: Illegal applyf %d in id %d.", UNIT_IDENT(pUnit), pAf->applyf_i, pAf->id);
+            dmc_error(TRUE, "%s: Illegal applyf %d in id %d.", UNIT_IDENT(pUnit), pAf->getApplyFI(), pAf->getID());
         }
     }
 }

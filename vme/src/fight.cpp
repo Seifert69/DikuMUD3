@@ -141,7 +141,7 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 {
     if (obj && IS_OBJ(obj) && (OBJ_TYPE(obj) == ITEM_WEAPON) && (OBJ_VALUE(obj, 3) != RACE_DO_NOT_USE))
     {
-        if (OBJ_VALUE(obj, 3) == opponent_race)  
+        if (OBJ_VALUE(obj, 3) == opponent_race)
         {
             return true;
         }
@@ -153,9 +153,9 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
             return false;
         }
 
-        for (int i=0; i+1 < exd->vals.Length(); i += 2)
+        for (int i = 0; i + 1 < exd->vals.Length(); i += 2)
         {
-            if ((opponent_race >= exd->vals.Value(i) && (opponent_race <= exd->vals.Value(i+1))))
+            if ((opponent_race >= exd->vals.Value(i) && (opponent_race <= exd->vals.Value(i + 1))))
             {
                 return true;
             }
@@ -164,7 +164,6 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 
     return false;
 }
-
 
 /* Given an amount of experience, what is the 'virtual' level of the char? */
 int virtual_level(unit_data *ch)
@@ -909,7 +908,7 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
 
         if (paf)
         {
-            maxlevel = MAX(virtual_level(head), paf->data[0]);
+            maxlevel = MAX(virtual_level(head), paf->getDataAtIndex(0));
         }
         else
         {
@@ -1177,21 +1176,22 @@ void damage(unit_data *ch,
     {
         if ((paf = affected_by_spell(victim, ID_MAX_ATTACKER)))
         {
-            paf->data[0] = MAX(CHAR_LEVEL(ch), paf->data[0]);
+            paf->setDataAtIndex(0, MAX(CHAR_LEVEL(ch), paf->getDataAtIndex(0)));
         }
         else
         {
             unit_affected_type af;
 
-            af.id = ID_MAX_ATTACKER;
-            af.duration = 4;
-            af.beat = WAIT_SEC * 60 * 5;
-            af.firstf_i = TIF_NONE;
-            af.tickf_i = TIF_NONE;
-            af.lastf_i = TIF_NONE;
-            af.applyf_i = APF_NONE;
-            af.data[0] = CHAR_LEVEL(ch);
-            af.data[1] = af.data[2] = 0;
+            af.setID(ID_MAX_ATTACKER);
+            af.setDuration(4);
+            af.setBeat(WAIT_SEC * 60 * 5);
+            af.setFirstFI(TIF_NONE);
+            af.setTickFI(TIF_NONE);
+            af.setLastFI(TIF_NONE);
+            af.setApplyFI(APF_NONE);
+            af.setDataAtIndex(0, CHAR_LEVEL(ch));
+            af.setDataAtIndex(1, 0);
+            af.setDataAtIndex(2, 0);
 
             create_affect(victim, &af);
         }
