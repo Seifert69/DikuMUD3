@@ -130,7 +130,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     }
     else
     {
-         tmpl->flags = pBuf->ReadU32();
+        tmpl->flags = pBuf->ReadU32();
     }
 
     if (version >= 70)
@@ -645,7 +645,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr = head;
         }
 
-        g_nCorrupt += fptr->readFunctionPointerIndexFrom(*pBuf);
+        fptr->readFunctionPointerIndexFrom(*pBuf, g_nCorrupt);
 
         if (fptr->getFunctionPointerIndex() > SFUN_TOP_IDX)
         {
@@ -656,15 +656,15 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
         if (version >= 70)
         {
-            g_nCorrupt += fptr->readFunctionPriorityFrom(*pBuf); // MS2020 added
+            fptr->readFunctionPriorityFrom(*pBuf, g_nCorrupt); // MS2020 added
         }
         else
         {
             fptr->setFunctionPriority(43);
         }
 
-        g_nCorrupt += fptr->readHeartBeatFrom(*pBuf);
-        g_nCorrupt += fptr->readActivateOnEventFlagsFrom(*pBuf);
+        fptr->readHeartBeatFrom(*pBuf, g_nCorrupt);
+        fptr->readActivateOnEventFlagsFrom(*pBuf, g_nCorrupt);
 
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {

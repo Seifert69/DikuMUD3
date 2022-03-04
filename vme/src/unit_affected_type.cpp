@@ -19,24 +19,23 @@ void unit_affected_type::setID(sbit16 value)
 
 void unit_affected_type::bread(CByteBuffer *pBuf, int *nError)
 {
-   // This is incredibly readable and very easy to maintain
-   // It makes it easy and less error prone to change data
-   // format between version changes.
-   //
-   this->duration = pBuf->ReadS16(nError);
-   this->id       = pBuf->ReadS16(nError);
-   this->beat     = pBuf->ReadU16(nError);
+    // This is incredibly readable and very easy to maintain
+    // It makes it easy and less error prone to change data
+    // format between version changes.
+    //
+    duration = pBuf->ReadS16(nError);
+    id = pBuf->ReadS16(nError);
+    beat = pBuf->ReadU16(nError);
 
-   this->data[0]  = pBuf->ReadS32(nError);
-   this->data[1]  = pBuf->ReadS32(nError);
-   this->data[2]  = pBuf->ReadS32(nError);
+    data[0] = pBuf->ReadS32(nError);
+    data[1] = pBuf->ReadS32(nError);
+    data[2] = pBuf->ReadS32(nError);
 
-   this->firstf_i = pBuf->ReadS16(nError);
-   this->tickf_i  = pBuf->ReadS16(nError);
-   this->lastf_i  = pBuf->ReadS16(nError);
-   this->applyf_i = pBuf->ReadS16(nError);
+    firstf_i = pBuf->ReadS16(nError);
+    tickf_i = pBuf->ReadS16(nError);
+    lastf_i = pBuf->ReadS16(nError);
+    applyf_i = pBuf->ReadS16(nError);
 }
-
 
 ubit16 unit_affected_type::getBeat() const
 {

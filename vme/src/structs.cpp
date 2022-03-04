@@ -486,7 +486,7 @@ unit_fptr::unit_fptr()
 {
     index = 0;
     priority = FN_PRI_CHORES;
-    heart_beat = PULSE_SEC;
+    heart_beat = PULSE_SEC * 5;
     flags = 0;
     data = nullptr;
     next = nullptr;
@@ -495,7 +495,7 @@ unit_fptr::unit_fptr()
 
 unit_fptr::~unit_fptr()
 {
-    data = nullptr;
+    free(data);
 }
 
 #ifndef VMC_SRC

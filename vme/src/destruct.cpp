@@ -279,11 +279,7 @@ void clear_destructed()
 
         assert(f->getEventQueue() == nullptr);
 
-        if (f->getData())
-        {
-            free(f->getData());
-            f->setData(nullptr);
-        }
+        f->setData(nullptr);
         DELETE(unit_fptr, f);
         destructed[DR_FUNC][i] = nullptr;
     }

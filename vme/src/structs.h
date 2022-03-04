@@ -68,28 +68,36 @@ public:
     ~unit_fptr();
 
     ubit16 getFunctionPointerIndex() const { return index; }
-    int readFunctionPointerIndexFrom(CByteBuffer &buf) { return buf.Read16(&index); }
+    void readFunctionPointerIndexFrom(CByteBuffer &buf, int &nError) { index = buf.ReadU16(&nError); }
     void setFunctionPointerIndex(ubit16 value) { index = value; }
 
     ubit8 getFunctionPriority() const { return priority; }
-    int readFunctionPriorityFrom(CByteBuffer &buf) { return buf.Read8(&priority); }
+    void readFunctionPriorityFrom(CByteBuffer &buf, int &nError) { priority = buf.ReadU8(&nError); }
     void setFunctionPriority(ubit8 value) { priority = value; }
 
     ubit16 getHeartBeat() const { return heart_beat; }
     ubit16 *getHeartBeatPtr() { return &heart_beat; }
-    int readHeartBeatFrom(CByteBuffer &buf) { return buf.Read16(&heart_beat); }
+    void readHeartBeatFrom(CByteBuffer &buf, int &nError) { heart_beat = buf.ReadU16(&nError); }
     void setHeartBeat(ubit16 value) { heart_beat = value; }
 
     bool isActivateOnEventFlagSet(ubit16 value) { return flags & value; }
     void setActivateOnEventFlag(ubit16 value) { flags |= value; }
     void setAllActivateOnEventFlags(ubit16 value) { flags = value; }
     void removeActivateOnEventFlag(ubit16 value) { flags &= ~value; }
-    int readActivateOnEventFlagsFrom(CByteBuffer &buf) { return buf.Read16(&flags); }
+    void readActivateOnEventFlagsFrom(CByteBuffer &buf, int &nError) { flags = buf.ReadU16(&nError); }
     ubit16 getAllActivateOnEventFlags() const { return flags; }
 
     void *getData() { return data; }
-    void setData(void *value) { data = value; }
-    int readDataFrom(CByteBuffer &buf) { return buf.ReadStringAlloc((char **)&data); }
+    void setData(void *value)
+    {
+        free(data);
+        data = value;
+    }
+    void readDataFrom(CByteBuffer &buf)
+    {
+        free(data);
+        buf.ReadStringAlloc((char **)&data);
+    }
 
     unit_fptr *getNext() { return next; }
     void setNext(unit_fptr *value) { next = value; }
@@ -97,16 +105,16 @@ public:
     eventq_elem *getEventQueue() { return event; }
     void setEventQueue(eventq_elem *value) { event = value; }
 
-private:
-    ubit16 index{0};             // Index to function pointer array
-    ubit8 priority{0};           // Order to insert ftpr on unit (2020)
-    ubit16 heart_beat{0};        // in 1/4 of a sec
-    ubit16 flags{0};             // When to override next function (boolean)
-    void *data{nullptr};         // Pointer to data local for this unit
-    unit_fptr *next{nullptr};    // Next in linked list
-    eventq_elem *event{nullptr}; // pointer to eventq for quick removing
-public:
     int destruct_classindex();
+
+private:
+    ubit16 index{0};                  // Index to function pointer array
+    ubit8 priority{FN_PRI_CHORES};    // Order to insert ftpr on unit (2020)
+    ubit16 heart_beat{PULSE_SEC * 5}; // in 1/4 of a sec
+    ubit16 flags{0};                  // When to override next function (boolean)
+    void *data{nullptr};              // Pointer to data local for this unit
+    unit_fptr *next{nullptr};         // Next in linked list
+    eventq_elem *event{nullptr};      // pointer to eventq for quick removing
 };
 
 class unit_data : public basedestruct
