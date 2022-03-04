@@ -38,7 +38,6 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     extra_descr_data *e = nullptr;
     extra_descr_data *te = nullptr;
     extra_descr_data *first = nullptr;
-    ubit8 x = 0;
     ubit32 i = 0; // for 32 bit extra lists
     char *c = nullptr;
     int corrupt = 0;
@@ -56,11 +55,11 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     }
     else
     {
-        if (pBuf->Read8(&x))
+        i = pBuf->ReadU8(&corrupt);
+        if (corrupt)
         {
             return 1; /* No of extra descriptions */
         }
-        i = x;
     }
 
     first = nullptr;
@@ -115,7 +114,6 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 #endif
     int i = 0;
     int j = 0;
-    ubit8 t = 0;
     diltemplate *tmpl = nullptr;
 
     /* read a template */
@@ -128,8 +126,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     pBuf->ReadStringAlloc(&tmpl->prgname);
     if (version < 64)
     {
-        pBuf->Read8(&t);
-        tmpl->flags = t;
+        tmpl->flags = pBuf->ReadU8();
     }
     else
     {
@@ -138,7 +135,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     if (version >= 70)
     {
-        pBuf->Read8(&tmpl->priority);
+        tmpl->priority = pBuf->ReadU8();
     }
     else
     {
@@ -152,8 +149,8 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     tmpl->varcrc = pBuf->ReadU16();
     tmpl->corecrc = pBuf->ReadU16();
-    pBuf->Read8(&tmpl->rtnt);
-    pBuf->Read8(&tmpl->argc);
+    tmpl->rtnt = pBuf->ReadU8();
+    tmpl->argc = pBuf->ReadU8();
 
     if (tmpl->argc)
     {
@@ -161,7 +158,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->argc; i++)
         {
-            pBuf->Read8(&tmpl->argt[i]); /* argument types */
+            tmpl->argt[i] = pBuf->ReadU8(); /* argument types */
         }
     }
     else
@@ -179,7 +176,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->varc; i++)
         {
-            pBuf->Read8(&tmpl->vart[i]);
+            tmpl->vart[i] = pBuf->ReadU8();
         }
     }
     else
@@ -197,15 +194,15 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         for (i = 0; i < tmpl->xrefcount; i++)
         {
             pBuf->ReadStringAlloc(&tmpl->xrefs[i].name);
-            pBuf->Read8(&tmpl->xrefs[i].rtnt);
-            pBuf->Read8(&tmpl->xrefs[i].argc);
+            tmpl->xrefs[i].rtnt = pBuf->ReadU8();
+            tmpl->xrefs[i].argc = pBuf->ReadU8();
 
             if (tmpl->xrefs[i].argc)
             {
                 CREATE(tmpl->xrefs[i].argt, ubit8, tmpl->xrefs[i].argc);
                 for (j = 0; j < tmpl->xrefs[i].argc; j++)
                 {
-                    pBuf->Read8(&tmpl->xrefs[i].argt[j]);
+                    tmpl->xrefs[i].argt[j] = pBuf->ReadU8();
                 }
             }
             else
@@ -390,7 +387,6 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     ubit32 recallpc = 0;
     int i = 0;
     int novar = 0;
-    ubit8 t = 0;
     char name[255];
     int bNameRead = 0;
 
@@ -401,8 +397,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     /* read new version */
     if (version < 64)
     {
-        pBuf->Read8(&t);
-        prg->flags = t;
+        prg->flags = pBuf->ReadU8();
     }
     else
     {
@@ -481,7 +476,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
     for (i = 0; i < novar; i++)
     {
-        pBuf->Read8(&prg->fp->vars[i].type);
+        prg->fp->vars[i].type = pBuf->ReadU8();
 
         switch (prg->fp->vars[i].type)
         {
@@ -627,15 +622,10 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
     unit_fptr *fptr = nullptr;
     unit_fptr *head = nullptr;
     int i = 0;
-    ubit8 t8 = 0;
-
-    fptr = nullptr;
-    head = nullptr;
 
     if (version < 66)
     {
-        g_nCorrupt += pBuf->Read8(&t8);
-        i = t8;
+        i = pBuf->ReadU8(&g_nCorrupt);
     }
     else
     {
@@ -666,7 +656,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
         if (version >= 70)
         {
-            g_nCorrupt += pBuf->Read8(&fptr->priority); // MS2020 added
+            fptr->priority = pBuf->ReadU8(&g_nCorrupt); // MS2020 added
         }
         else
         {
@@ -696,11 +686,11 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
             dilargs->name = str_dup(name);
 
-            pBuf->Read8(&dilargs->no);
+            dilargs->no = pBuf->ReadU8();
 
             for (int j = 0; j < dilargs->no; j++)
             {
-                pBuf->Read8(&dilargs->dilarg[j].type);
+                dilargs->dilarg[j].type = pBuf->ReadU8();
 
                 switch (dilargs->dilarg[j].type)
                 {

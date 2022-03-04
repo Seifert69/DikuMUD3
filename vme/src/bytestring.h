@@ -55,7 +55,7 @@ public:
     ubit32 ReadU32(int *nError = nullptr);
     sbit32 ReadS32(int *nError = nullptr);
 
-    /* [[deprecated("Replace with ReadU8")]] */  int Read8(ubit8 *pNum);
+    [[deprecated("Replace with ReadU8")]]  int Read8(ubit8 *pNum);
     [[deprecated("Replace with ReadU16")]] int Read16(ubit16 *pNum);
     [[deprecated("Replace with ReadU32")]] int Read32(ubit32 *pNum);
     [[deprecated("Replace with ReadS8")]]  int Read8(sbit8 *pNum);
