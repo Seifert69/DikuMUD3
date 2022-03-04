@@ -44,6 +44,7 @@
 #include "szonelog.h"
 #include "textutil.h"
 #include "trie.h"
+#include "unit_affected_type.h"
 #include "utils.h"
 #include "vmelimits.h"
 #include "zon_basis.h"

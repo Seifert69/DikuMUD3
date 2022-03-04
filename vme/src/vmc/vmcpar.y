@@ -16,6 +16,7 @@
 #include "money.h"
 #include "spec_assign.h"
 #include "textutil.h"
+#include "unit_affected_type.h"
 #include "utils.h"
 #include "vmc.h"
 
