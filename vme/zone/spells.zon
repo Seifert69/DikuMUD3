@@ -15019,6 +15019,7 @@ dilbegin timer();
 code
 {
    heartbeat := PULSE_SEC * 120;
+   pause;
    destroy(self);
    quit;
 }

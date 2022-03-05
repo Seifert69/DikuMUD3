@@ -1580,39 +1580,39 @@ code
    {
       if (i != self)
       {
-	 if (i.type == UNIT_ST_OBJ)
-	 {
-	    if ((i.objecttype == ITEM_CONTAINER) and isaff(i, ID_CORPSE))
-	    {
-	       act("$1n savagely devour $2n.",
-		   A_SOMEONE, self, i, null, TO_ROOM);
+         if (i.type == UNIT_ST_OBJ)
+         {
+            if ((i.objecttype == ITEM_CONTAINER) and isaff(i, ID_CORPSE))
+            {
+               act("$1n savagely devour $2n.",
+               A_SOMEONE, self, i, null, TO_ROOM);
 
-	       while (i.inside)
-		 link(i.inside, i.outside);
+               while (i.inside)
+               link(i.inside, i.outside);
 
-	       destroy(i);
-	       goto loop;
-	    }
-	 }
-	 else if (rnd(0,1000) == 0)  /* Make it RARE */
-	 {
-	    on rnd(1,3) goto c1, c2, c3;
+               destroy(i);
+               goto loop;
+            }
+         }
+         else if (rnd(0,1000) == 0)  /* Make it RARE */
+         {
+            on rnd(1,3) goto c1, c2, c3;
 
-	    :c1:
-	    exec("fart", self);
-	    goto loop;
+            :c1:
+            exec("fart", self);
+            goto loop;
 
-	    :c2:
-	    exec("drool", self);
-	    goto loop;
+            :c2:
+            exec("drool", self);
+            goto loop;
 
-	    :c3:
-	    act("$1n wets on $3n.",
-		A_SOMEONE, self, null, i, TO_NOTVICT);
-	    act("$1n wets on you! Eeewww!",
-		A_SOMEONE, self, null, i, TO_VICT);
-	    goto loop;
-	 }
+            :c3:
+            act("$1n wets on $3n.",
+            A_SOMEONE, self, null, i, TO_NOTVICT);
+            act("$1n wets on you! Eeewww!",
+            A_SOMEONE, self, null, i, TO_VICT);
+            goto loop;
+         }
       }
    }
 }
@@ -1726,16 +1726,15 @@ code
 	item := target;
 	pc := activator;
 
-	if(target.outside == self)
-		{
-		if(((item.objecttype == ITEM_FOOD) or (item.objecttype ==
-ITEM_DRINKCON)) and (pc.level > 20))
-			{
+	if (target.outside == self)
+   {
+		if(((item.objecttype == ITEM_FOOD) or (item.objecttype == ITEM_DRINKCON)) and (pc.level > 20))
+      {
 			act("Your can't bring yourself to take from the needy.",
 				A_ALWAYS, pc, null, null, TO_CHAR);
 			exec("drop "+item.name, pc);
-			}
-		}
+      }
+   }
 	goto start;
 }
 dilend
@@ -6834,8 +6833,6 @@ dilcopy teach_q_block@function(POLICE_ACADEMY, "say Deputies only!");
 #define _SPELL
 #include "guilddef.h"
 #undef _SPELL
-
-
 end
 
 
@@ -7008,6 +7005,8 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
+
+
 /*                                                                     */
 /* Route for a patroling guard to visit all shops and important places */
 /*                                                                     */
@@ -7020,7 +7019,7 @@ var
 tf:integer;
 code
 {
-   on_activation((self.position <= POSITION_SLEEPING) or
+   on_activation((self.position < POSITION_SLEEPING) or
 		 (self.position == POSITION_FIGHTING), skip);
 
    :start:
@@ -8122,7 +8121,7 @@ code
 dilend
 
 
-// Get items to complete Stew quest
+// Get items to complete citizenship
 //
 dilbegin citizenDone();
 external
@@ -8155,6 +8154,8 @@ code
 }
 dilend
 end
+
+
 
 %objects
 
@@ -8234,17 +8235,15 @@ title "a large sign"
 descr "A large sign sways gently in front of the engraving shop to the east."
 extra {}
 "<pre>The sign proclaims:<div class='cpw'>
-			_	  _
+		             _         _
  	 ______________(_))______(_))_____________
-	[					  ]]
-	[   	Veejay's Engraving Services.	  ]]
-	[  ------------------------------------&gt;  ]]
-	[	  Personalize your outfit!	  ]]
-	[	    Dazzle your friends!	  ]]
-	[	   Suprise your loved one!	  ]]
-	[_________________________________________]]</div><div class='cw'>
-
-&f</div></pre>"
+	[					                           ]]
+	[   	Veejay's Engraving Services.	      ]]
+	[  ------------------------------------&gt;   ]]
+	[	  Personalize your outfit!	            ]]
+	[	    Dazzle your friends!	            ]]
+	[	   Suprise your loved one!	            ]]
+	[_________________________________________]]</div></pre>"
 weight 20
 
 dilbegin sign_sway();

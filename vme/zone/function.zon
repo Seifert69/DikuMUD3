@@ -2335,14 +2335,17 @@ code
    else
       nreps := 0;
 
-   if (nreps >= 10)
+   if (nreps > 0)
    {
-      if (nreps >= 20)
+      if (nreps == 2)
+         goto amiblocked;
+      else if (nreps >= 20)
       {
          log(self.nameidx+"@"+self.zoneidx+" is stuck in "+inroom.nameidx+"@"+inroom.zoneidx+". Giving up.");
          return(FALSE);
       }
-      goto takeabreak;
+      else if (nreps >= 10)
+         goto takeabreak;
    }
 
    lstroom := inroom.nameidx;
@@ -2351,7 +2354,7 @@ code
 
    /* Something else is moving this NPC around, take a break */
    /* and see if it stopped                                  */
-   :takeabreak:
+:takeabreak:
    //log(self.nameidx + " is heading to " + place + " was in " + lstroom + " but is now in "+ self.outside.nameidx);
    lstroom := self.outside.nameidx;
    heartbeat := PULSE_SEC * 10;
@@ -2362,6 +2365,21 @@ code
       goto takeabreak;
 
    //log(self.nameidx + " trying again from " + self.outside.nameidx);
+   goto start;
+
+:amiblocked:
+   u := findsymbolic(self, "hedge_wall@spells", FIND_UNIT_SURRO);
+   if (u)
+   {
+      exec("growl " + u.name, self);
+      pause;
+      u := findsymbolic(self, "hedge_wall@spells", FIND_UNIT_SURRO);
+      exec("kill " + u.name, self);
+   }
+   else
+      log(self.symname + " is blocked  in " + self.outside.symname);
+   pause;
+
    goto start;
 }
 dilend
