@@ -1196,7 +1196,7 @@ var
    wasin : string;
 code
 {
-   on_activation((self.position <= POSITION_SLEEPING) or
+   on_activation((self.position < POSITION_SLEEPING) or
                  (self.position == POSITION_FIGHTING), skip);
 
    u := unit_room@function(self);
@@ -7684,8 +7684,7 @@ tf:integer;
 
 code
 {
-   on_activation((self.position <= POSITION_SLEEPING) or
-		 (self.position == POSITION_FIGHTING), skip);
+   on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    /* Quasi shall react only on ticks (variable time)  */
    wait(SFB_TICK | SFB_RANTIME, TRUE);

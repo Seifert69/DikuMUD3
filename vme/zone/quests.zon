@@ -272,11 +272,11 @@ dilend
 // Executes the msg, also interprets :: codes for acts(). See Explainer()
 //    returns 0 if not done.
 //    returns 1 if successful
-// 'self' is the mob explaining (arg3, i.e. $3n)
-// 'arg1' is the involved character ($1n)
-// 'arg2' is optional, e.g. an object ($2n)
+// 'self' is the mob unit (arg3, i.e. $1n)
+// 'arg2' is a string ($2t)
+// 'arg3' is a unit ($3n)
 //
-dilbegin integer Action(arg1 : unitptr, arg2 : string, msg : string);
+dilbegin integer Action(msg : string, arg2 : string, arg3 : unitptr);
 external 
    integer walk_room@function(room : string, spd : integer);
 var
@@ -291,20 +291,20 @@ code
       {
          if (tsl.[1] == "walkto")
          {
-            s := sact(tsl.[2], A_ALWAYS, self, arg2, null, TO_CHAR);
+            s := sact(tsl.[2], A_ALWAYS, self, arg2, arg3, TO_CHAR);
             // log("walkto room = " + s);
             walk_room@function(s, 5);
          }
          else if (tsl.[1] == "descr")
          {
-            s := sact(tsl.[2], A_ALWAYS, self, arg2, null, TO_CHAR);
+            s := sact(tsl.[2], A_ALWAYS, self, arg2, arg3, TO_CHAR);
             // log("outside descr = " + s);
             self.outside_descr := s;
          }
          else
          {
-            act(tsl.[1], A_SOMEONE, arg1, arg2, self, TO_CHAR);
-            act(tsl.[2], A_SOMEONE, arg1, arg2, self, TO_REST);
+            act(tsl.[1], A_SOMEONE, self, arg2, arg3, TO_CHAR);
+            act(tsl.[2], A_SOMEONE, self, arg2, arg3, TO_REST);
          }
       }
       else
@@ -315,8 +315,8 @@ code
    }
    else
    {
-      exec(sact(msg, A_SOMEONE, arg1, arg2, self, TO_CHAR), self);
-   }
+      exec(sact(msg, A_SOMEONE, self, arg2, arg3, TO_CHAR), self);
+   }  
    return (1);
 }
 dilend
@@ -327,7 +327,7 @@ dilend
 //
 dilbegin DailyRoutine(sl : stringlist, sarg2 : string);
 external
-   integer Action@quests(arg1 : unitptr, arg2 : string, msg : string);
+   integer Action@quests(msg : string, arg2 : string, arg3 : unitptr);
 
 var
    i : integer;
@@ -349,7 +349,7 @@ code
    while (i < ln)
    {
       pause;
-      Action@quests(null, sarg2, sl.[i]);
+      Action@quests(sl.[i], sarg2, null);
    	heartbeat := phb;
       i := i + 1;
    }
