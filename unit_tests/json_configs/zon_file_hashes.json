@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "eee9017a02a8cefe0890f08e14014147451d7128fde5a00b2a0045235556d1798f3231e6522ea754d17ac55cea71cc33cb68227d3b366dfc4d7cb67b4ff55a7f"
+                "sha512": "b13d8a5cd583d9d4b8f53512c4b26d6d66de30c91c8f68607b938a7050f46f1e05aca4bcd9dc3017508d6e761625b571339bfcd77c13bf2119b50dc89529d65d"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "ad27eb3e1ed5b4b2edcef6b88f05a9f187ae4735a7abc52ffb3e726ab8954b51fb74de5eca982e3962e13b9038ee2aff6ec77953388c74d601cc25e5681756aa"
+                    "sha512": "69c8ae14635130cb3e95a926f165d6a437d1ef7a642def965c4a21e76ff4c620b1c5a0396b75165e5ac44205214391220a39adfd1325e307532ce1e6ce0ca617"
                 },
                 {
                     "filename": "basis.reset",
@@ -317,12 +317,12 @@
         {
             "source_file": {
                 "filename": "function.zon",
-                "sha512": "943aea07ee7ecfec2637128416cd22392bc33c35a537fe2518797f14441e90bfc4d3b2dbbea8cb83ad311e8011fbcf0c73f1d9bd71a2cf7765c0e669872a8bca"
+                "sha512": "7b40e30bbcef3a2dc88ca5164f4ab6ea69ec03e1da4f1ec9e693635b6a1c453653244f824f299e6eca4e3d9874ba1f38c85e988810395bb92fa7d560da220564"
             },
             "output": [
                 {
                     "filename": "function.data",
-                    "sha512": "a7d5d629aba93ded6b605cedb877c11cfe0cb08865ee4ce994b0f795576e6c14f04711607ff85e45c7a0458fc0656e55880b51290577bfc3443385f6819aaf49"
+                    "sha512": "8aa7d31c79d762fefb549f934eecb6e09fb8690d10696e7d20d06fbb477a88b59727be49825e3ef196aee8a7639be663489ed02703fff1db6ee4852af57e9ea0"
                 },
                 {
                     "filename": "function.reset",
@@ -589,12 +589,12 @@
         {
             "source_file": {
                 "filename": "midgaard.zon",
-                "sha512": "4ce2ea5d66352950bc5f4935aeb56ab93140450560f81e99ca25ee013e33cb29e3d89610eca3479f9a6265b37134131c988347da54ffd05a2ce5b0aeabbcdb72"
+                "sha512": "fed7183e36f996d090066435fa82f95361e6a9cfa42d4a652a556e9f2948a67b74a2b1a3f7137b010b9b717344a95585a7d0841609af59babebc3a940402f3e4"
             },
             "output": [
                 {
                     "filename": "midgaard.data",
-                    "sha512": "308574732aec5a81fffb5df5967c5f3873d28ead781133053bbdcafa9c357cac2e6f9471a14a2a0ceb4e37beef5f540f62b95488a8550a3f960f5f3326f5b2cd"
+                    "sha512": "a070f990d1f4c3583e8c0c901a6dbece253fa381171e2e48cbab467b548695793e78ccede9e66bb975257d3b2896a13b58bf60a3cd96d75b5a470b117b4b8223"
                 },
                 {
                     "filename": "midgaard.reset",
@@ -701,12 +701,12 @@
         {
             "source_file": {
                 "filename": "quests.zon",
-                "sha512": "0a7337e737fc2e36708d37765de748f068f1132e3b51a9d4b84e34b2a5042a4cc1451c227fe3b868e1a002168e066faed7ba3645be6ebfbf50b1bba66b16b569"
+                "sha512": "71e8d4fbf87fe0d903e7a4fa871280060a85240733ffcdee0b039f8d75092a300281df95123c3c40c660fd843d41f41814dbb52bf65f4ac4a58e13fe02374706"
             },
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "a12f728a04c1bfe84b33fec5b8a4db601afb2486710ae192425c8c2d89756ca4b8068c80f0edefa971aea7e4ff83f656fd76265a0bbf8c499897c1883e9ccab7"
+                    "sha512": "11c8348ebf158e18c9c2942370d8f7c79668211768701d1a7460b34053e1c58eae7b62478623cc0b6ac8976234790b35d54ce8534d35a41d0936c0ecb29944f0"
                 },
                 {
                     "filename": "quests.reset",
@@ -909,12 +909,12 @@
         {
             "source_file": {
                 "filename": "udgaard.zon",
-                "sha512": "5c73959eeeb58011c5632f115ce181e44404d637812ca7003f8e0535343ea26eb66978cd703f0360f5b27b04926d924f4c4aff5aa8ad9a3bb89f3644c5dffe65"
+                "sha512": "8ed5ac5c13b6352ddfbba64792101863f5ac273e10ace2f316c7947f2e065d2bc4e57bae14909fa0958819177bd7e0595b6fcacd4fcf3901671ea22211cb568d"
             },
             "output": [
                 {
                     "filename": "udgaard.data",
-                    "sha512": "ffcd29950d1b348ef19ddbbf4108a88d9d67ab1f80289a3eb1cdd08fd349ee098289eba35e6602e02daa50658a3c70ce86216004799857227763759b7f10624d"
+                    "sha512": "78416da671f40c614ec0db2e6a22859151703e947a1394525a7228dd2eb757f2b2a62a1baf853dad0f5d0a7b58ae288588a321217daaff42a6dbfe6571bc9083"
                 },
                 {
                     "filename": "udgaard.reset",
