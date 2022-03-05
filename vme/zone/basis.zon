@@ -2967,8 +2967,16 @@ external
 var
    i : integer;
    ext : extraptr;
+   s : string;
 code
 {
+   :start:
+   log("deadbug here");
+   s := sact("yo me $3N is $3s", A_ALWAYS, null, null, self, TO_REST);
+   self.outside_descr := s;
+   pause;
+   goto start;
+
    quit;
    heartbeat := PULSE_SEC;
    :loop:

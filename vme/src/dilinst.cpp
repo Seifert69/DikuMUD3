@@ -1407,11 +1407,17 @@ void dilfi_ass(dilprg *p)
                     break;
 
                 case DILV_SP:
-                    (*(std::string *)v1->ref) = ((char *)v2->val.ptr);
+                    if (v2->val.ptr == nullptr)
+                        ((std::string *)v1->ref)->clear();
+                    else
+                        (*(std::string *)v1->ref) = ((char *)v2->val.ptr);
                     break;
 
                 case DILV_HASHSTR:
-                    (*(std::string *)v1->ref) = (*(std::string *)v2->ref);
+                    if (v2->ref == nullptr)
+                        ((std::string *)v1->ref)->clear();
+                    else
+                        (*(std::string *)v1->ref) = (*(std::string *)v2->ref);
                     break;
 
                 default:

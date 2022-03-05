@@ -95,6 +95,94 @@ Zone by Papi and Quifael </pre>"
 %dil
 
 
+dilbegin guardroutine(guardloc : string, dayguard : integer);
+external
+   DailyRoutine@quests(sl : stringlist, arg2 : string);
+var
+   i  : integer;
+   sch : intlist;
+code
+{
+   on_activation((self.position == POSITION_FIGHTING), skip);
+
+   if (dayguard)
+      sch := {5, 18};  // Wake up at 5, go back at 6pm
+   else
+      sch := {17,6};   // Wake up at 17, go home at 6
+
+:start:
+   heartbeat := WAIT_SEC*5;
+   pause;
+   if (mudhour == sch.[0])
+   {
+      DailyRoutine@quests({
+         "wake", 
+         "::descr::A $1N is here heading to work.",
+         "yawn",
+         "say Time to get going guys!", 
+         "::walkto::$2t",
+         "::descr::A $1N is here guarding the gate."
+      }, guardloc);
+   }
+
+   if(mudhour == sch.[1])
+   {
+      i := rnd(1,3);
+      if (i == 1) goto bar1;
+      if (i == 2) goto bar2;
+      if (i == 3) goto bar3;
+      else goto start;
+
+:bar1:
+      pause;
+      DailyRoutine@quests({
+      "::walkto::grunting_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy beer", 
+      "drink beer",
+      "stretch", 
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "yawn",
+      "::descr::A $1N is here resting.",
+      "sleep"
+   }, "");
+   goto start;
+
+   :bar2:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::grub_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy firebreather", 
+      "drink firebreather",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+
+   goto start;
+
+
+   :bar3:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::park_cafe@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy coffee", 
+      "drink coffee",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+   goto start;
+  }
+}
+dilend
+
+
 // Call this function for CHAR 'self' to cuff targ
 //  cuffs must be the unitptr to the handcuffs to be used.
 //
@@ -135,6 +223,7 @@ var
    roomorg : string;
    roomto  : string;
    tf      : integer;
+   descorg : string;
 
 code
 {
@@ -145,12 +234,15 @@ code
       quit;
    }
 
-   roomorg := self.outside.nameidx + "@" + self.outside.zoneidx;
+   roomorg := self.outside.symname;
+   descorg := self.outside_descr;
    roomto  := sroomto;
 
    :torescue:
    priority;
+   self.outside_descr := sact("$1n is hurrying along.", A_ALWAYS, self, null, null, TO_CHAR);
    tf:=walk_room@function(roomto, 5);
+   self.outside_descr := sact("$1n is on the lookout.", A_ALWAYS, self, null, null, TO_CHAR);
 
    // Stay a little
    act("$1n alertly scans $1s surroundings.",A_ALWAYS, self, null, null, TO_ALL);
@@ -166,8 +258,10 @@ code
       goto nowwhat;
 
    :gohome:
+   self.outside_descr := sact("$1n is trodding along.", A_ALWAYS, self, null, null, TO_CHAR);
    priority;
    tf:=walk_room@function(roomorg, 8);
+   self.outside_descr := descorg;
    nopriority;
    return;
 }
@@ -6919,7 +7013,8 @@ dilcopy arrest_check@midgaard("accuse_room@midgaard");
 /*                                                                     */
 dilbegin patrol1();
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
+   integer walk_route@function(places : stringlist, spd : integer);
 
 var
 tf:integer;
@@ -6929,32 +7024,14 @@ code
 		 (self.position == POSITION_FIGHTING), skip);
 
    :start:
-   tf:=walk_room@function("cth_sanctum@midgaard",4);
-   tf:=walk_room@function("grub_inn@midgaard",4);
-   tf:=walk_room@function("baker_shop@midgaard",4);
-   tf:=walk_room@function("pet_shop@midgaard",4);
-   tf:=walk_room@function("ironmon_shop@midgaard",4);
-   tf:=walk_room@function("boat_shop@midgaard",4);
-   tf:=walk_room@function("warehouse@midgaard",4);
-   tf:=walk_room@function("fish_shop@midgaard",4);
-   tf:=walk_room@function("mortician_shop@midgaard",4);
-   tf:=walk_room@function("carp_shop@midgaard",4);
-   tf:=walk_room@function("entrance@arena",4);
-   tf:=walk_room@function("weapon_shop@midgaard",4);
-   tf:=walk_room@function("bsmith_shop@midgaard",4);
-   tf:=walk_room@function("armour_shop@midgaard",4);
-   tf:=walk_room@function("jewel_shop@midgaard",4);
-   tf:=walk_room@function("bank@midgaard",4);
-   tf:=walk_room@function("park_cafe@midgaard",4);
-   tf:=walk_room@function("postoffice@midgaard",4);
-   tf:=walk_room@function("butcher_shop@midgaard",4);
-   tf:=walk_room@function("leather_shop@midgaard",4);
-   tf:=walk_room@function("tailor_shop@midgaard",4);
-   tf:=walk_room@function("accuse_room@midgaard",4);
-   tf:=walk_room@function("grunting_inn@midgaard",4);
-   tf:=walk_room@function("greeng_shop@midgaard",4);
-   tf:=walk_room@function("th_library@midgaard",4);
-   tf:=walk_room@function("mag_hall@midgaard",4);
+   tf := walk_route@function({"cth_sanctum@midgaard", "grub_inn@midgaard",
+            "baker_shop@midgaard", "pet_shop@midgaard", "ironmon_shop@midgaard",
+            "boat_shop@midgaard", "warehouse@midgaard", "fish_shop@midgaard",
+            "mortician_shop@midgaard", "carp_shop@midgaard", "entrance@arena",
+            "weapon_shop@midgaard", "bsmith_shop@midgaard", "armour_shop@midgaard",
+            "jewel_shop@midgaard", "bank@midgaard", "park_cafe@midgaard", "postoffice@midgaard",
+            "butcher_shop@midgaard", "leather_shop@midgaard", "tailor_shop@midgaard", "accuse_room@midgaard",
+            "grunting_inn@midgaard", "greeng_shop@midgaard", "th_library@midgaard", "mag_hall@midgaard"}, 5);
    goto start;
 }
 dilend
@@ -7001,90 +7078,14 @@ money 8 IRON_PIECE
 exp 0
 position POSITION_SLEEPING
 default POSITION_SITTING
+
 dilcopy blow_whistle@justice();
 dilcopy whistlisten@justice({"midgaard"});
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilbegin guard1();
-external
- integer walk_room@function (s:string,i:integer);
-
-var
-tf:integer;
-  i   : integer;
-code
-{
-   on_activation((self.position == POSITION_FIGHTING), skip);
-
-  :start:
-  heartbeat := WAIT_SEC*5;
-	pause;
-  if(mudhour == 5)
-  {
-   exec("wake", self);
-   pause;
-   exec("yawn", self);
-   pause;
-   exec("say Time to get going guys!", self);
-   pause;
-   tf:=walk_room@function("in_ngate@midgaard",4);
-  }
-
-  if(mudhour == 18)
-  {
-   i := rnd(1,3);
-   if (i == 1) goto bar1;
-   if (i == 2) goto bar2;
-   if (i == 3) goto bar3;
-   else goto start;
-
-   :bar1:
-   pause;
-   tf:=walk_room@function("grunting_inn@midgaard",4);
-   pause;
-   exec("buy beer", self);
-   pause;
-   exec("drink beer", self);
-   pause;
-   tf:=walk_room@function("guard_dorm@midgaard",4);
-   exec("yawn", self);
-   pause;
-   exec("sleep", self);
-   goto start;
-
-   :bar2:
-   pause;
-   tf:=walk_room@function("grub_inn@midgaard",4);
-   pause;
-   exec("buy firebreather", self);
-   pause;
-   exec("drink firebreather", self);
-   pause;
-   tf:=walk_room@function("guard_dorm@midgaard",4);
-   exec("yawn", self);
-   pause;
-   exec("sleep", self);
-   goto start;
-
-
-   :bar3:
-   pause;
-   tf:=walk_room@function("park_cafe@midgaard",4);
-   pause;
-   exec("buy coffee", self);
-   pause;
-   exec("drink coffee", self);
-   pause;
-   tf:=walk_room@function("guard_dorm@midgaard",4);
-   exec("yawn", self);
-   pause;
-   exec("sleep", self);
-   goto start;
-  }
-}
-dilend
 dilcopy protect_lawful@justice();
 
+dilcopy guardroutine("in_ngate@midgaard", 1);
 end
 
                            ngate_nguard
@@ -7107,85 +7108,8 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilbegin guard2();
-external
- integer walk_room@function (s:string,i:integer);
 
-var
-tf:integer;
-  i   : integer;
-code
-{
-   on_activation((self.position == POSITION_FIGHTING), skip);
-
-  :start:
-  heartbeat := WAIT_SEC*5;
-	pause;
-  if(mudhour == 17)
-  {
-   exec("wake", self);
-   pause;
-   exec("yawn", self);
-   pause;
-   exec("say Time to get going guys!", self);
-   pause;
-   tf:=walk_room@function("in_ngate@midgaard",4);
-  }
-
-  if(mudhour == 6)
-  {
-   i := rnd(1,3);
-   if (i == 1) goto bar1;
-   if (i == 2) goto bar2;
-   if (i == 3) goto bar3;
-   else goto start;
-
-   :bar1:
-   pause;
-   tf:=walk_room@function("grunting_inn@midgaard",4);
-   pause;
-   exec("buy beer", self);
-   pause;
-   exec("drink beer", self);
-   pause;
-   tf:=walk_room@function("guard_dorm@midgaard",4);
-   exec("yawn", self);
-   pause;
-   exec("sleep", self);
-   goto start;
-
-   :bar2:
-   pause;
-   tf:=walk_room@function("grub_inn@midgaard",4);
-   pause;
-   exec("buy firebreather", self);
-   pause;
-   exec("drink firebreather", self);
-   pause;
-   tf:=walk_room@function("guard_dorm@midgaard",4);
-   exec("yawn", self);
-   pause;
-   exec("sleep", self);
-   goto start;
-
-
-   :bar3:
-   pause;
-   tf:=walk_room@function("park_cafe@midgaard",4);
-   pause;
-   exec("buy coffee", self);
-   pause;
-   exec("drink coffee", self);
-   pause;
-   tf:=walk_room@function("guard_dorm@midgaard",4);
-   exec("yawn", self);
-   pause;
-   exec("sleep", self);
-   goto start;
-  }
-}
-dilend
-
+dilcopy guardroutine("in_ngate@midgaard", 0);
 end
 
                            egate_dguard
@@ -7209,8 +7133,7 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilcopy guard1();
-
+dilcopy guardroutine("in_egate@midgaard", 1);
 end
 
                            egate_nguard
@@ -7233,8 +7156,7 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilcopy guard2();
-
+dilcopy guardroutine("in_egate@midgaard", 0);
 end
 
                            wgate_dguard
@@ -7257,8 +7179,7 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilcopy guard1();
-
+dilcopy guardroutine("in_wgate@midgaard", 1);
 end
 
                            wgate_nguard
@@ -7281,9 +7202,7 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilcopy guard2();
-
-
+dilcopy guardroutine("in_wgate@midgaard", 0);
 end
 
                            sgate_dguard
@@ -7306,8 +7225,7 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilcopy guard1();
-
+dilcopy guardroutine("in_sgate@midgaard", 1);
 end
 
                            sgate_nguard
@@ -7330,8 +7248,7 @@ dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilcopy guard2();
-
+dilcopy guardroutine("in_sgate@midgaard", 0);
 end
 
 /* -------------------------- Grubby Inn ----------------------------- */
@@ -7396,7 +7313,7 @@ dilcopy janitors(15);
 
 dilbegin janitor1();
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_route@function(places : stringlist, spd : integer);
 
 var
 tf:integer;
@@ -7406,15 +7323,9 @@ code
    heartbeat := WAIT_SEC*10; // heartbeat for pickup is 15..
 
    :start:
-   tf:=walk_room@function("wall_rd14@midgaard",4);
-   tf:=walk_room@function("elm_street2@midgaard",4);
-   tf:=walk_room@function("park_cafe@midgaard",4);
-   tf:=walk_room@function("palace_sq@midgaard",4);
-   tf:=walk_room@function("glad_rd2@midgaard",4);
-   tf:=walk_room@function("wharf2@midgaard",4);
-   tf:=walk_room@function("n_prom2@midgaard",4);
-   tf:=walk_room@function("wall_rd11@midgaard",4);
-   tf:=walk_room@function("cth_se_tower@midgaard",4);
+   tf := walk_route@function({"wall_rd14@midgaard", "elm_street2@midgaard",
+         "park_cafe@midgaard", "palace_sq@midgaard", "glad_rd2@midgaard", "wharf2@midgaard",
+         "n_prom2@midgaard", "wall_rd11@midgaard", "cth_se_tower@midgaard"}, 5);
    goto start;
 }
 dilend

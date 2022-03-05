@@ -172,6 +172,8 @@ dilend
 
 // ========== EXPLAINER - GENERIC REALLY NICE ============
 
+//Explain() is the atomic form of Explainer.
+//
 // Executes the msg, also interprets :: codes for acts(). See Explainer()
 //    returns 0 if not done.
 //    returns 1 if successful
@@ -180,6 +182,8 @@ dilend
 // 'arg2' is optional, e.g. an object ($2n)
 //
 dilbegin integer Explain(arg1 : unitptr, arg2 : unitptr, msg : string);
+external 
+   integer walk_room@function(room : string, spd : integer);
 var
    tsl : stringlist;
 code
@@ -192,8 +196,15 @@ code
       tsl := split(msg, "::");
       if (length(tsl) == 3)
       {
-         act(tsl.[1], A_SOMEONE, arg1, arg2, self, TO_CHAR);
-         act(tsl.[2], A_SOMEONE, arg1, arg2, self, TO_REST);
+         if (tsl.[1] == "walkto")
+         {
+            walk_room@function(tsl.[2], 5);
+         }
+         else
+         {
+            act(tsl.[1], A_SOMEONE, arg1, arg2, self, TO_CHAR);
+            act(tsl.[2], A_SOMEONE, arg1, arg2, self, TO_REST);
+         }
       }
       else
       {
@@ -219,6 +230,9 @@ dilend
 //   {"say $1n, do you want this quest?", "jump", "hug $1n", 
 //    "say <a cmd='"'>nod</a> if you wish to accept",
 //    "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."}
+//
+// Special commands you can put in '::'
+//    "::walkto::room@zone::  -- Will walk to the specified room.
 //
 dilbegin Explainer(pc : unitptr, sl : stringlist);
 external
@@ -248,6 +262,94 @@ code
    }
  
 :lostpc:
+   return;
+}
+dilend
+
+
+//Action() is the atomic form of DailyRoutine.
+//
+// Executes the msg, also interprets :: codes for acts(). See Explainer()
+//    returns 0 if not done.
+//    returns 1 if successful
+// 'self' is the mob explaining (arg3, i.e. $3n)
+// 'arg1' is the involved character ($1n)
+// 'arg2' is optional, e.g. an object ($2n)
+//
+dilbegin integer Action(arg1 : unitptr, arg2 : string, msg : string);
+external 
+   integer walk_room@function(room : string, spd : integer);
+var
+   tsl : stringlist;
+   s : string;
+code
+{
+   if ((msg.[0] == ":") and (msg.[1] == ":"))
+   {
+      tsl := split(msg, "::");
+      if (length(tsl) == 3)
+      {
+         if (tsl.[1] == "walkto")
+         {
+            s := sact(tsl.[2], A_ALWAYS, self, arg2, null, TO_CHAR);
+            // log("walkto room = " + s);
+            walk_room@function(s, 5);
+         }
+         else if (tsl.[1] == "descr")
+         {
+            s := sact(tsl.[2], A_ALWAYS, self, arg2, null, TO_CHAR);
+            // log("outside descr = " + s);
+            self.outside_descr := s;
+         }
+         else
+         {
+            act(tsl.[1], A_SOMEONE, arg1, arg2, self, TO_CHAR);
+            act(tsl.[2], A_SOMEONE, arg1, arg2, self, TO_REST);
+         }
+      }
+      else
+      {
+         log("Found act code :: in Explain() but not the two expected strings = " + msg);
+         return (0);
+      }
+   }
+   else
+   {
+      exec(sact(msg, A_SOMEONE, arg1, arg2, self, TO_CHAR), self);
+   }
+   return (1);
+}
+dilend
+
+
+
+// Same as Explainer() except it is a daily routine and doesn't pause on "sleeping", etc.
+//
+dilbegin DailyRoutine(sl : stringlist, sarg2 : string);
+external
+   integer Action@quests(arg1 : unitptr, arg2 : string, msg : string);
+
+var
+   i : integer;
+   ln : integer;
+code
+{
+   on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   i := 0;
+   ln := length(sl);
+
+	heartbeat := 1;
+
+   // Do the chores
+   while (i < ln)
+   {
+      pause;
+      Action@quests(null, sarg2, sl.[i]);
+   	heartbeat := PULSE_SEC * 4;
+      i := i + 1;
+   }
+ 
    return;
 }
 dilend

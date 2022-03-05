@@ -1306,7 +1306,7 @@ code
    i := dildestroy("hunt@udgaard", self);
    i := dildestroy("checkaround@udgaard", self);
    i := dildestroy("inter_target@udgaard", self);
-tf:=     walk_room@function ("accuse_room@midgaard",4);
+   tf := walk_room@function ("accuse_room@midgaard",4);
 
    dilcopy("wait_for_bounty@udgaard", self);
    quit;
@@ -1378,7 +1378,7 @@ temp : unitptr;
 code
 {
    heartbeat := PULSE_SEC * 10;
-tf:=     walk_room@function ("accuse_room@midgaard",4);
+   tf := walk_room@function("accuse_room@midgaard",4);
 
    :again:
    u := findunit(self, "head", FIND_UNIT_INVEN, null);

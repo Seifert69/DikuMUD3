@@ -2163,7 +2163,10 @@ code
 dilend
 
 
-/*
+
+
+/* SEE ALSO: walk_route
+ *
  * function: walk_room
  * purpose:  allow a mob to walk to a room even if he/she has to unlock open and close doors.
  * Spd is number of seconds between walk, minimum 5.
@@ -2202,7 +2205,7 @@ code
    }
 
    :init:
-   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+   on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    if (spd < 5)
    {
@@ -2360,6 +2363,33 @@ code
 
    //log(self.nameidx + " trying again from " + self.outside.nameidx);
    goto start;
+}
+dilend
+
+
+// places is a stringlist of symname destinations
+// spd is in seconds (at least 5)
+// return true if at last location in list, false otherwise.
+//
+dilbegin integer walk_route(places : stringlist, spd : integer);
+external
+   integer walk_room@function(place : string, spd : integer);
+var
+   ln : integer;
+   i : integer;
+   tf : integer;
+code
+{
+   ln := length(places);
+   i := 0;
+
+   while (i < ln)
+   {
+      tf := walk_room@function(places.[i], spd);
+      i := i + 1;
+   }
+
+   return (self.outside.symname == places.[ln-1]);
 }
 dilend
 
