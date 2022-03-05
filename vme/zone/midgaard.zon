@@ -7674,7 +7674,8 @@ money 5 IRON_PIECE
 
 dilbegin quasimodo();
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
+   DailyRoutine@quests(sl : stringlist, arg2 : string);
 
 var
 tf:integer;
@@ -7683,7 +7684,6 @@ tf:integer;
 
 code
 {
-   heartbeat := WAIT_SEC*15;
    on_activation((self.position <= POSITION_SLEEPING) or
 		 (self.position == POSITION_FIGHTING), skip);
 
@@ -7691,18 +7691,11 @@ code
    wait(SFB_TICK | SFB_RANTIME, TRUE);
 
    :start:
-   tf:=walk_room@function("cth_sw_tower@midgaard",4);
-   if (self.position > POSITION_SLEEPING)
-   {
-      exec("sigh", self);
-      pause;
-      exec("sit", self);
-      pause;
-      exec("yawn", self);
-      pause;
-      exec("sleep", self);
-      pause;
-   }
+   heartbeat := WAIT_SEC*15;
+   DailyRoutine@quests({
+      "wake",
+      "::walkto::cth_sw_tower@midgaard",
+      "sigh", "sit", "yawn", "sleep"}, "");
 
    heartbeat := WAIT_SEC*SECS_PER_MUD_HOUR/2;
    while ((mudhour != 4) and (mudhour != 16))
@@ -7712,66 +7705,47 @@ code
    }
    heartbeat := WAIT_SEC*15;
 
-   exec("wake", self);
-   pause;
-
-   tf:=walk_room@function("cth_altar@midgaard",4);
-   exec("sulk", self);
-   pause;
+   DailyRoutine@quests({
+      "wake",
+      "::walkto::cth_altar@midgaard",
+      "sulk"}, "");
 
    u := findunit(self, "bronze key", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
    if (u #= null)
    {
-      exec("cry", self);
-      pause;
-      exec("say swomeone stwole our kwey!", self);
-      pause;
+      DailyRoutine@quests({
+         "cry",
+         "say swomeone stwole our kwey!"}, "");
       goto start;
    }
 
-   exec("unlock east door", self);
-   pause;
-   exec("open east door", self);
-   pause;
-   exec("east", self);
-   pause;
-   exec("close west door", self);
-   pause;
-   exec("lock west door", self);
-   pause;
-
-   tf:=walk_room@function("cth_n_tower@midgaard",4);
-   exec("bounce", self);
-   pause;
+   DailyRoutine@quests({
+      "unlock east door",
+      "open east door",
+      "east",
+      "close west door",
+      "lock west door",
+      "::walkto::cth_n_tower@midgaard",
+      "bounce"}, "");
 
    heartbeat := WAIT_SEC*SECS_PER_MUD_HOUR/2;
    while ((mudhour != 6) and (mudhour != 18))
      pause;
    heartbeat := WAIT_SEC*15;
 
-   exec("giggle", self);
-   pause;
-   exec("emote tries to ring the bells.", self);
-   pause;
-   exec("clap", self);
-   pause;
+   DailyRoutine@quests({
+      "giggle",
+      "emote tries to ring the bells.",
+      "clap",
+      "::walkto::cth_n_stairs1@midgaard",
+      "sulk",
+      "unlock west door",
+      "open west door",
+      "west",
+      "close east door",
+      "lock east door",
+      "sniff"}, "");
 
-   tf:=walk_room@function("cth_n_stairs1@midgaard",4);
-   exec("sulk", self);
-   pause;
-   exec("unlock west door", self);
-   pause;
-   exec("open west door", self);
-   pause;
-   exec("west", self);
-   pause;
-   exec("close east door", self);
-   pause;
-   exec("lock east door", self);
-   pause;
-
-   exec("sniff", self);
-   pause;
    goto start;
 }
 dilend

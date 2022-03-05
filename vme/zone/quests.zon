@@ -332,6 +332,7 @@ external
 var
    i : integer;
    ln : integer;
+   phb : integer;
 code
 {
    on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -339,6 +340,9 @@ code
    i := 0;
    ln := length(sl);
 
+   phb := heartbeat;
+   if (phb < 4*PULSE_SEC)
+      phb := 4*PULSE_SEC;
 	heartbeat := 1;
 
    // Do the chores
@@ -346,7 +350,7 @@ code
    {
       pause;
       Action@quests(null, sarg2, sl.[i]);
-   	heartbeat := PULSE_SEC * 4;
+   	heartbeat := phb;
       i := i + 1;
    }
  
