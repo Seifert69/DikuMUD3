@@ -1223,6 +1223,7 @@ code
 
    :losthim:
    tf:=walk_room@function(wasin,4);
+   nopriority;
    return;
 }
 dilend
@@ -1247,16 +1248,16 @@ code
    on_activation((self.position <= POSITION_SLEEPING) or
                  (self.position == POSITION_FIGHTING), skip);
 
-   :loop:
+:loop:
    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
    juris := get_juris@justice();
    if (activator == self)
       goto loop;
    outlaw_status := check_outlaw@justice(activator, juris);
- if (outlaw_status == 0)
+   if (outlaw_status == 0)
       goto loop; 
 
-  u := equipment(activator,  WEAR_WRIST_R);
+   u := equipment(activator,  WEAR_WRIST_R);
 
    if (u)
      if ((u.nameidx == "cuffs") and (u.zoneidx == "midgaard"))
@@ -1279,7 +1280,7 @@ code
    }
 
    goto loop;
-  }
+}
 dilend
 
 
