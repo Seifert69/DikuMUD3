@@ -2628,9 +2628,15 @@ code
    //  Not a real percentage when scaling down, cut in half so 100->50 = 50%, not 100%
    //
    if (tgt_pc.height > tgt.height)
+   {
+      size:="enlarges";
       scale := (100*tgt_pc.height) / tgt.height - 100;  // Enlarge %
+   }
    else
+   {
+      size:="shrinks";
       scale := (((100*tgt.height) / tgt_pc.height)-100) / 2; // Shrink %, ½ = easier to shrink
+   }
 
    if (scale > 50)
       scale := 50; // 125% resize is the most difficult for anyone
@@ -2658,11 +2664,6 @@ code
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
-
-   if (tgt_pc.height>tgt.height)
-      size:="enlarges"
-   else
-      size:="shrinks";
 
    //tgt.max_hp := tgt.max_hp-diff;
    //tgt.hp := tgt.hp-diff;
@@ -2693,10 +2694,8 @@ code
    tgt.hp := tgt.hp + hm;
    if (tgt.hp < 1)
       goto major_fail;
-   act("You try to $3t $2n but you make a mistake and damage it instead",
-      A_ALWAYS, self, tgt, size, TO_CHAR);
-   act ("$1n tries to $3t but $1e makes a mistake and damages it instead.",
-	   A_SOMEONE, self, tgt, size, TO_REST);
+   act("You try to $3t $2n but you make a mistake and damage it instead", A_ALWAYS, self, tgt, size, TO_CHAR);
+   act("$1n tries to $3t but $1e makes a mistake and damages it instead.",A_SOMEONE,self, tgt, size, TO_REST);
    quit;
 
    :major_fail:
