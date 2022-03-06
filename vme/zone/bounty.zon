@@ -2248,11 +2248,11 @@ code
 			act ("<div class='cpr'>$1n steps through the portal, and looks around for a fight.</div>", A_SOMEONE, u, null, null, TO_ALL);
 			item := load("spear0@midgaard");
 			link(item,u);
-			item := load("lth_pants1@midgaard");
+			item := load("lth_pants@midgaard");
 			link(item,u);
-			item := load("lth_jerkin1@midgaard");
+			item := load("lth_jerkin@midgaard");
 			link(item,u);
-			item := load("lth_sleeves1@midgaard");
+			item := load("lth_sleeves@midgaard");
 			link(item,u);
 			exec("wear all",u);
 		}
@@ -5198,7 +5198,7 @@ code
 }
 dilend
 
-dilbegin hint (which : string, htype : string);
+dilbegin hint(which : string, htype : string);
 var
 	pc : unitptr;
 	zn : string;
