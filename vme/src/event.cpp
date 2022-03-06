@@ -16,6 +16,7 @@
 #include "spec_assign.h"
 #include "structs.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "utils.h"
 #include "weather.h"
 #include "zone_reset.h"

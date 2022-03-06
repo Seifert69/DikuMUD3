@@ -19,6 +19,7 @@
 #include "structs.h"
 #include "textutil.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "utils.h"
 
 #include <cstdio>

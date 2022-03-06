@@ -18,6 +18,7 @@
 #include "structs.h"
 #include "textutil.h"
 #include "trie.h"
+#include "unit_fptr.h"
 #include "unitfind.h"
 #include "utils.h"
 

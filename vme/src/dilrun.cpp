@@ -20,6 +20,7 @@
 #include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
+#include "unit_fptr.h"
 #include "utils.h"
 
 #include <math.h>

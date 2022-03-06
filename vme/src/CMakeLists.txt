@@ -97,6 +97,7 @@ set(VME_SRCS
         trie.cpp trie.h
         unit_affected_type.cpp unit_affected_type.h
         unit_dil_affected_type.cpp unit_dil_affected_type.h
+        unit_fptr.cpp unit_fptr.h
         unitfind.cpp unitfind.h
         utility.cpp utility.h
         utils.h

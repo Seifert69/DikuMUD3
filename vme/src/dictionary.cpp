@@ -16,6 +16,7 @@
 #include "structs.h"
 #include "textutil.h"
 #include "trie.h"
+#include "unit_fptr.h"
 #include "utils.h"
 
 #include <cctype>

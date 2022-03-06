@@ -13,6 +13,7 @@
 #include "error.h"
 #include "pp.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "vmc_process.h"
 
 #include <sys/stat.h>
@@ -295,7 +296,7 @@ room_direction_data *mcreate_exit()
 
 unit_affected_type *mcreate_affect()
 {
-    unit_affected_type *rs=new EMPLACE(unit_affected_type) unit_affected_type;
+    unit_affected_type *rs = new EMPLACE(unit_affected_type) unit_affected_type;
     rs->setNext(nullptr);
     rs->setID(0);
     rs->setDuration(0);
