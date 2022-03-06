@@ -5329,7 +5329,7 @@ code
 	sale := {"10","10","10","10","10","8","9","12","14","17","20"};
 	sdate := stringdate(3);
 	
-	r := rnd(0,length(sale));
+	r := rnd(0,length(sale)-1);
 	r := atoi(sale.[r]);
 	if(self.symname == "shopkeep@bounty")
 	{
