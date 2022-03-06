@@ -142,3 +142,4 @@ void dilfe_strcmp(dilprg *);
 void dilfe_strncmp(dilprg *);
 void dilfe_wepinfo(dilprg *);
 void dilfe_gfol(dilprg *);
+void dilfe_getaffects(dilprg *);

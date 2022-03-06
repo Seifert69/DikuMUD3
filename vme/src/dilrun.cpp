@@ -859,7 +859,8 @@ dil_func_type g_dilfe_func[DILI_MAX + 1] = {
     {dilfe_sact}, // 196
     {dilfe_gint},     {dilfe_shell},     {dilfi_set_weight},
     {dilfi_dispatch},                                 // 200
-    {dilfe_fndz},     {dilfe_fndsidx},   {dilfe_call} // 203
+    {dilfe_fndz},     {dilfe_fndsidx},   {dilfe_call}, // 203
+    {dilfe_getaffects}
 };
 
 static int check_interrupt(dilprg *prg)

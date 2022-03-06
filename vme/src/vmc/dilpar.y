@@ -208,7 +208,7 @@ void make_code(struct exptype *dest);
 %token DILSE_CMDS DILSE_FNDS DILSE_FNDSI DILSE_GETWS DILSE_LEN DILSE_PURS DILSE_TRMO
 %token DILSE_DLD  DILSE_DLF  DILSE_CALL  DILSE_LAND DILSE_LOR DILSE_VISI DILSE_OPPO
 %token DILSE_RTI  DILSE_PCK  DILSE_ISLT DILSE_GETCLR DILSE_ADDCLR
-%token DILSE_SPLIT DILSE_GHEAD DILSE_REPLACE DILSE_DELCLR DILSE_CHGCLR
+%token DILSE_SPLIT DILSE_GHEAD DILSE_REPLACE DILSE_DELCLR DILSE_CHGCLR DILSE_GETAFFECTS
 %token DILSE_ZHEAD DILSE_CHEAD DILSE_UDIR DILSE_SDIR  DILSE_GETCMD
 %token DILSE_AND DILSE_OR DILSE_NOT DILSE_ISPLAYER
 %token DILSE_WPNTXT DILSE_SKITXT DILSE_SENDPRE DILSE_GOPP
@@ -5067,6 +5067,24 @@ dilfun  :  funcall
         }
         FREEEXP($3);
         FREEEXP($5);
+    }
+    | DILSE_GETAFFECTS '(' dilexp ')'
+    {
+        INITEXP($$);
+        if ($3.typ != DILV_UP)
+        {
+            dilfatal("Arg 1 of 'getaffcets' not unitptr");
+        }
+        else
+        {
+            /* Type is ok */
+            /* Make nodes dynamic */
+            $$.dsl = DSL_DYN;
+            $$.typ = DILV_SLP;
+            add_code(&($$), &($3));
+            add_ubit8(&($$), DILE_GETAFFECTS);
+        }
+        FREEEXP($3);
     }
     | DILSE_SDIR '(' dilexp ')'
     {

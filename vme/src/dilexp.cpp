@@ -3785,6 +3785,41 @@ void dilfe_getws(dilprg *p)
     delete v1;
 }
 
+
+void dilfe_getaffects(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    dilval *v = new dilval;
+    v->type = DILV_FAIL;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (v1->val.ptr)
+            {
+                v->atyp = DILA_EXP;
+                v->type = DILV_SLP;
+                cNamelist *words = new cNamelist;
+                get_affects((unit_data *) v1->val.ptr, words);
+                v->val.ptr = words;
+            }
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+}
+
+
+
 void dilfe_split(dilprg *p)
 {
     dilval *v = new dilval;
@@ -3796,7 +3831,7 @@ void dilfe_split(dilprg *p)
     char *c = nullptr;
     char *spbuf = nullptr;
 
-    v->type = DILV_SLP;
+    v->type = DILV_FAIL;
 
     switch (dil_getval(v1))
     {

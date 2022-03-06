@@ -275,7 +275,8 @@ struct dilargstype
 #define DILE_FNDZ 201     /* findroom(#,#) */
 #define DILE_FNDSIDX 202
 #define DILE_CALL 203 // dilcall(#)(#,#,#)
-#define DILI_MAX 203  /* The maximum node number */
+#define DILE_GETAFFECTS 204   /* getaffects(#) */
+#define DILI_MAX 204  /* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS 0  /* .names */

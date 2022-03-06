@@ -218,6 +218,21 @@ void affect_clear_unit(unit_data *unit)
     }
 }
 
+
+void get_affects(const unit_data *unit, cNamelist *sl)
+{
+    unit_affected_type *af = nullptr;
+    char buf[256];
+
+    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
+    {
+        sl->AppendName(g_apf[af->getApplyFI()].descr);
+        sprintf(buf, "%d,%d,%d,%d", af->getDataAtIndex(0), af->getDataAtIndex(1), af->getDataAtIndex(2), af->getDuration());
+        sl->AppendName(buf);
+    }
+}
+
+
 unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 {
     unit_affected_type *af = nullptr;

@@ -2966,16 +2966,38 @@ external
 
 var
    i : integer;
+   ln : integer;
    ext : extraptr;
    s : string;
+   sl : stringlist;
+   u : unitptr;
 code
 {
+
    :start:
-   log("deadbug here");
-   s := sact("yo me $3N is $3s", A_ALWAYS, null, null, self, TO_REST);
-   self.outside_descr := s;
-   pause;
+   wait(SFB_CMD, TRUE);
+
+   u := self.outside.inside;
+
+   while (u)
+   {
+      act("Affects on $2n", A_ALWAYS, activator, u, null, TO_CHAR);
+      sl := getaffects(u);
+      ln := length(sl);
+      i := 0;
+      
+      while (i < ln)
+      {
+         act("data: $2t $3t", A_ALWAYS, activator, sl.[i], sl.[i+1], TO_CHAR);
+         i := i + 2;
+      }
+
+      u := u.next;
+   }
+   act("Done scanning room.", A_ALWAYS, activator, u, null, TO_CHAR);
    goto start;
+
+
 
    quit;
    heartbeat := PULSE_SEC;

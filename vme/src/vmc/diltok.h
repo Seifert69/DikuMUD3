@@ -123,7 +123,8 @@ struct symbols
     {"strncmp", DILSE_STRNCMP},
     {"sact", DILSE_SACT},       // MS2020
     {"getinteger", DILSE_GINT}, // MS2020
-    {"shell", DILSE_SHELL},
+    {"shell", DILSE_SHELL},     // MS2021
+    {"getaffects", DILSE_GETAFFECTS}, // MS2022
 
     /* DIL Symbol Inst (procedures) */
 
