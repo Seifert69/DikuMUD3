@@ -29,12 +29,12 @@
         {
             "source_file": {
                 "filename": "assassin.zon",
-                "sha512": "2249fe0c4c002cebff618fa5a9f2a0310d1df6fc8402b2fbfa091d7638c0e3c01505e5f0cd1a95070f671391a77ddc6d6d7e80b40cba03b7b2fdae49122ff4fd"
+                "sha512": "866b26cdbd91b5308ed062ff0a5cf73a90a50b73d0e47b9a0e9e65827f150cb82019dc19f8beed719d95f928a057d969466a94c82efc32ef3e9c685045544765"
             },
             "output": [
                 {
                     "filename": "assassin.data",
-                    "sha512": "68c09905e0f4fbe2f0ac84b726c84906b226a9ffbc8495138c57427d456292b08709a440f86db56e7dbefe1d06efafc7eb4e97a2a1f5c912c729269d75f70331"
+                    "sha512": "4d0edbb3caa93ac6e4e1a43d2b8f967fb82ba52abb6862866984fa325871c8eb71767b06238472d1e199ae996a9107304cfea2b470b1fa919d81d59c3fa495bd"
                 },
                 {
                     "filename": "assassin.reset",
@@ -77,12 +77,12 @@
         {
             "source_file": {
                 "filename": "baselook.zon",
-                "sha512": "9a1ee8cdd9f12d8e2cfecc2b98a0bdb362b0c358004879ac364f33afbd79088fbe90ffaeed3d97dcca755a395d2c2cfda71c6093d4676562569e71d279a11291"
+                "sha512": "5b6ef7180ec676534aa5e09d5d78b1230bdf5aa30984ef752e94ccf9899f81c5eec5196dfe5db26af57fab26ff6d815d621ef388097a94f8145b122c6fda6101"
             },
             "output": [
                 {
                     "filename": "baselook.data",
-                    "sha512": "3e1231d1cc11304e297a0d9537aa0905c17a9d73c6c951b776d571055cab5cbf3c40118fd847a6d7e1e21fa9e33fd3c18b34e9a5430d367f497e1881a52f0a64"
+                    "sha512": "212d163874d4cd5a894c29e33a8939fcd4ef268e721ee2526cb42c9283044e90a3415ae540d24f88f3778add497446ba87db03e75ebe90b463e24bd37b58ef2a"
                 },
                 {
                     "filename": "baselook.reset",
@@ -701,12 +701,12 @@
         {
             "source_file": {
                 "filename": "quests.zon",
-                "sha512": "a3c29b418504d4ec9bc7abba473b7c5cf00d795a7ffb9fc1a71db9b538cba0665a3b2a86df68a070744436ea7a39573c937ff5d236c715b5ceb3972bd2fa028e"
+                "sha512": "3d709a9ceaf55884b62ba87cb15d537c5c77e8882e24b6456e3457fbe0d88fd35183902121f068fd18cde01d984b354746877908073a75736a484912c5bc4ca9"
             },
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "79751f7c9dda363b01ed61bb141f7af10076df0ce2dd5a90403782188a167699118a419b24dcad06e4fd46d942e4b898819f6825bbe5b79910e99294913d85a5"
+                    "sha512": "ab59f9d3ed4d900be72a955ca8630b1308ae1701830dadadc13a63000f199204c2e1cd54e23f03e2a363b9cbd10e17e1269afa09c7709f09037d453ff952ead5"
                 },
                 {
                     "filename": "quests.reset",
