@@ -589,12 +589,12 @@
         {
             "source_file": {
                 "filename": "midgaard.zon",
-                "sha512": "7ae923f59e3c3d4c4ddbfa25deedf03b6524e4faa8e8768ba59f2d051b082e1accf06ee19d556552aac6781f433af6913d63a6ab1773a8289bd1f7f6a31b3d32"
+                "sha512": "ac2a81fadd40b02b49c55df4416a6c5f565c410434d30bc58ba53802cdc33a93953dea358a1f6b88996479b93711576e11e917131def4ed5288516743f688f2d"
             },
             "output": [
                 {
                     "filename": "midgaard.data",
-                    "sha512": "cb5eaede654056c7fa135293175cbaabe7e628f1d8b10342e780bc3e572ca870af8078c11c2df188c2cc469f4f6c7ccfa74001f3a56fcbc57e6ba68183ab945a"
+                    "sha512": "8fc4cbcbff1ce766c642050655a5a4af5fb674440c8567174aef30546e742694db195233cda5eb0dac19177a3113034d629317a6ce8a487c7fbee3e0cfed8eeb"
                 },
                 {
                     "filename": "midgaard.reset",

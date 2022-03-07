@@ -375,7 +375,7 @@ code
          if (length(args)>1)
             look_at(self, arg);
          else
-            sendtext("<div class='exit'>No such direction here?</div>", self);
+            sendtext("<div class='exit'>No such direction here?</div><br/>", self);
       }
       quit;
    }
@@ -1143,10 +1143,8 @@ return(0);
 
 /* look_dir : This shows what a player sees when he does a 'look east' */
 
-dilbegin integer look_dir (looker : unitptr, arg : string);
-
+dilbegin integer look_dir(looker : unitptr, arg : string);
 external
-
    integer is_hidden@basemove(unit1 : unitptr, int1 : integer, unit2 : unitptr);
 
 var
@@ -1157,48 +1155,51 @@ var
 
 code
 {
-    /* if we cant see the exits, we get none */
-if ((looker.outside.type != UNIT_ST_ROOM) and (not isset(looker.outside.flags, UNIT_FL_TRANS)))
-return(FALSE);
+   /* if we cant see the exits, we get none */
+   if ((looker.outside.type != UNIT_ST_ROOM) and (not isset(looker.outside.flags, UNIT_FL_TRANS)))
+      return(FALSE);
 
-if ((looker.outside.type != UNIT_ST_ROOM) and (looker.outside.outside.type != UNIT_ST_ROOM))
-     return (FALSE);
-
-
-room := looker.outside;
-
-while (room.type != UNIT_ST_ROOM)
-   room := room.outside;
-
-dir := -1;         /* Initialize counter */
-
-if(arg == "north") dir := NORTH;
-else if(arg == "up") dir := UP;
-else if(arg == "south") dir := SOUTH;
-else if(arg == "east") dir := EAST;
-else if(arg == "west") dir := WEST;
-else if(arg == "down") dir := DOWN;
-else if(arg == "northeast") dir := NORTHEAST;
-else if(arg == "northwest") dir := NORTHWEST;
-else if(arg == "southeast") dir := SOUTHEAST;
-else if(arg == "southwest") dir := SOUTHWEST;
+   if ((looker.outside.type != UNIT_ST_ROOM) and (looker.outside.outside.type != UNIT_ST_ROOM))
+      return (FALSE);
 
 
-test := is_hidden@basemove(looker, dir, room);
+   room := looker.outside;
 
-if ((isset(room.exit_info[dir], EX_CLOSED)) and (not(test)))
-sendtext ("<div class='exit'>You see a closed "+room.exit_names[dir].[0]+".</div>",looker);
-else if ((room.extra.[arg]) and (not test))
-    sendtext ("<div class='exit'>" + arg + " - " + room.extra.[arg].descr +"</div>",looker);
-else if (room.exit_to[dir].extra.["$exit_descr"]!=null)
-    sendtext ("<div class='exit'>" + arg + " - " + room.exit_to[dir].extra.["$exit_descr"].descr +"</div>",looker);
-else if ((room.exit_to[dir]) and (not test))
-    sendtext ("<div class='exit'>" + arg + " - You see nothing special.</div>",looker);
-else
-return (FALSE);
-send_done ("look", looker, null, null, 0, arg, null);
-return(TRUE);
-}dilend
+   while (room.type != UNIT_ST_ROOM)
+      room := room.outside;
+
+   dir := -1;         /* Initialize counter */
+
+   if(arg == "north") dir := NORTH;
+   else if(arg == "up") dir := UP;
+   else if(arg == "south") dir := SOUTH;
+   else if(arg == "east") dir := EAST;
+   else if(arg == "west") dir := WEST;
+   else if(arg == "down") dir := DOWN;
+   else if(arg == "northeast") dir := NORTHEAST;
+   else if(arg == "northwest") dir := NORTHWEST;
+   else if(arg == "southeast") dir := SOUTHEAST;
+   else if(arg == "southwest") dir := SOUTHWEST;
+
+
+   test := is_hidden@basemove(looker, dir, room);
+
+   if ((isset(room.exit_info[dir], EX_CLOSED)) and (not(test)))
+      sendtext("<div class='exit'>You see a closed "+room.exit_names[dir].[0]+".</div><br/>",looker);
+   else if ((room.extra.[arg]) and (not test))
+      sendtext("<div class='exit'>" + arg + " - " + room.extra.[arg].descr +"</div><br/>",looker);
+   else if (room.exit_to[dir].extra.["$exit_descr"]!=null)
+      sendtext("<div class='exit'>" + arg + " - " + room.exit_to[dir].extra.["$exit_descr"].descr +"</div><br/>",looker);
+   else if ((room.exit_to[dir]) and (not test))
+      sendtext("<div class='exit'>" + arg + " - You see nothing special.</div><br/>",looker);
+   else
+      return (FALSE);
+
+   send_done("look", looker, null, null, 0, arg, null);
+
+   return(TRUE);
+}
+dilend
 
 
 
