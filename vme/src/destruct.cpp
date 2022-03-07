@@ -16,6 +16,7 @@
 #include "slog.h"
 #include "structs.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "utils.h"
 
 #include <cstdlib>
@@ -138,11 +139,6 @@ int basedestruct::destruct_classindex()
 int unit_data::destruct_classindex()
 {
     return DR_UNIT;
-}
-
-int unit_fptr::destruct_classindex()
-{
-    return DR_FUNC;
 }
 
 /* ======================================= */

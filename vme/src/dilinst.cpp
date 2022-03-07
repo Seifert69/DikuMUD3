@@ -45,6 +45,7 @@
 #include "textutil.h"
 #include "trie.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "utils.h"
 #include "vmelimits.h"
 #include "zon_basis.h"
@@ -2912,8 +2913,8 @@ void dilfi_sntadil(dilprg *p)
 
                         for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->getNext())
                         {
-                            if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData() && ((dilprg *)fptr->getData())->fp &&
-                                ((dilprg *)fptr->getData())->fp->tmpl == tmpl)
+                            if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData() &&
+                                ((dilprg *)fptr->getData())->fp && ((dilprg *)fptr->getData())->fp->tmpl == tmpl)
                             {
                                 break;
                             }

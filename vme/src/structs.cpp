@@ -482,22 +482,6 @@ void file_index_type::Remove(unit_data *value)
     fi_unit_list.remove(value);
 }
 
-unit_fptr::unit_fptr()
-{
-    index = 0;
-    priority = FN_PRI_CHORES;
-    heart_beat = PULSE_SEC * 5;
-    flags = 0;
-    data = nullptr;
-    next = nullptr;
-    event = nullptr;
-}
-
-unit_fptr::~unit_fptr()
-{
-    free(data);
-}
-
 #ifndef VMC_SRC
 unit_data *unit_data::copy()
 {

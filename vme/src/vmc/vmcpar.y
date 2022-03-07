@@ -17,6 +17,7 @@
 #include "spec_assign.h"
 #include "textutil.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "utils.h"
 #include "vmc.h"
 

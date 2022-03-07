@@ -45,6 +45,7 @@ $Revision: 2.18 $
 #include "szonelog.h"
 #include "textutil.h"
 #include "trie.h"
+#include "unit_fptr.h"
 #include "utils.h"
 #include "vmelimits.h"
 #include "weather.h"
@@ -4171,7 +4172,7 @@ void dilfe_load(dilprg *p)
                 }
                 else
                 {
-                    slog(LOG_ALL, 0, "DIL load(%s) - unit does not exist.", (char *) v1->val.ptr);
+                    slog(LOG_ALL, 0, "DIL load(%s) - unit does not exist.", (char *)v1->val.ptr);
                 }
 
                 if (v->val.ptr)

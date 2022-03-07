@@ -10,6 +10,7 @@
 #include "skills.h"
 #include "textutil.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "utility.h"
 #include "vmc.h"
 
@@ -860,7 +861,10 @@ void process_funcs(unit_data *u)
     {
         if (!is_in(fptr->getFunctionPointerIndex(), 0, SFUN_TOP_IDX))
         {
-            dmc_error(TRUE, "%s: Function index not in legal SFUN_XX range.", UNIT_IDENT(u), (float)fptr->getHeartBeat() / (float)PULSE_SEC);
+            dmc_error(TRUE,
+                      "%s: Function index not in legal SFUN_XX range.",
+                      UNIT_IDENT(u),
+                      (float)fptr->getHeartBeat() / (float)PULSE_SEC);
             fptr->setFunctionPointerIndex(0);
         }
 
@@ -874,7 +878,7 @@ void process_funcs(unit_data *u)
                           "(use minimum 3 seconds).",
                           UNIT_IDENT(u),
                           (float)fptr->getHeartBeat() / (float)PULSE_SEC);
-                fptr->setHeartBeat( PULSE_SEC * 10);
+                fptr->setHeartBeat(PULSE_SEC * 10);
             }
             else if (fptr->getHeartBeat() > 60000)
             {
@@ -883,7 +887,7 @@ void process_funcs(unit_data *u)
                           "%.1f seconds! That's probably an error?",
                           UNIT_IDENT(u),
                           (float)fptr->getHeartBeat() / (float)PULSE_SEC);
-                fptr->setHeartBeat( PULSE_SEC * 60 * 60);
+                fptr->setHeartBeat(PULSE_SEC * 60 * 60);
             }
         }
     }

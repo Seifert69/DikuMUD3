@@ -34,6 +34,7 @@
 #include "textutil.h"
 #include "tif_affect.h"
 #include "unit_affected_type.h"
+#include "unit_fptr.h"
 #include "utility.h"
 #include "utils.h"
 #include "vmelimits.h"
@@ -691,15 +692,16 @@ static void stat_func(const unit_data *ch, unit_data *u)
             }
         }
 
-        auto msg = diku::format_to_str("[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
-                                       "%s<br/><br/>",
-                                       f->getFunctionPriority(),
-                                       g_unit_function_array[f->getFunctionPointerIndex()].name,
-                                       sprintbit(bits, f->getAllActivateOnEventFlags(), g_sfb_flags),
-                                       f->getFunctionPointerIndex(),
-                                       f->getHeartBeat(),
-                                       f->getData() ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->getData() : "Has raw data."
-                                               : "No data.");
+        auto msg = diku::format_to_str(
+            "[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
+            "%s<br/><br/>",
+            f->getFunctionPriority(),
+            g_unit_function_array[f->getFunctionPointerIndex()].name,
+            sprintbit(bits, f->getAllActivateOnEventFlags(), g_sfb_flags),
+            f->getFunctionPointerIndex(),
+            f->getHeartBeat(),
+            f->getData() ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->getData() : "Has raw data."
+                         : "No data.");
         send_to_char(msg, ch);
     }
 }

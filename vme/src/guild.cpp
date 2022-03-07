@@ -19,6 +19,7 @@
 #include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
+#include "unit_fptr.h"
 #include "utils.h"
 
 #include <cctype>
@@ -108,7 +109,6 @@ int char_guild_level(unit_data *ch)
 
     return char_guild_level(ch, PC_GUILD(ch));
 }
-
 
 /* Send the string 'msg' to all players that are members of the guild  */
 /* 'guild'. Uses the act() function to send string with $1 as 'member' */
