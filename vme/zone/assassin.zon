@@ -97,7 +97,7 @@ place.  Doorways lead in all directions, including west back out on to the
 street."
 ROOM_BASICS
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
-west to a65@arabian;
+west to a65@arabian keyword {"wooden door", "door"};
 east to hallway_1;
 north to skill_room descr "A dark room.";
 south to weapon_room descr "A dark room.";
