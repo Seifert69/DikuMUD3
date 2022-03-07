@@ -17,7 +17,7 @@ unit_fptr::unit_fptr()
 
 unit_fptr::~unit_fptr()
 {
-    free(data);
+    data = nullptr;
 }
 
 int unit_fptr::destruct_classindex()
@@ -112,13 +112,11 @@ void *unit_fptr::getData()
 
 void unit_fptr::setData(void *value)
 {
-    free(data);
     data = value;
 }
 
 void unit_fptr::readDataFrom(CByteBuffer &buf)
 {
-    free(data);
     buf.ReadStringAlloc((char **)&data);
 }
 
