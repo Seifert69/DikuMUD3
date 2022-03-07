@@ -1205,6 +1205,11 @@ code
 
    heartbeat := PULSE_SEC * 10;
 
+   if (prisoner == null)
+   {
+      log("prisoner is NULL ?!");
+   }
+
    secure(prisoner, losthim);
 
    i := 0;
@@ -1214,7 +1219,12 @@ code
    priority;
 
    :loop:
-   tf:=walk_room@function(office,4);
+
+   tf := walk_room@function(office,4);
+
+   if (prisoner == null)
+      goto losthim;
+
    if (i == 0)
    {
       exec("say Got another prisoner, Captain, Sir!", self);
