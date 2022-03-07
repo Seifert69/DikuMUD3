@@ -819,12 +819,12 @@ code
    if (not exdp)
       return(u);
 
-   log("Got ongoing " + qname);
+   // log("Got ongoing " + qname);
 
    if (not ("$done" in exdp.names))
       return(u);
 
-   log("found $done  " + qname);
+   // log("found $done  " + qname);
    // We collected all the items
    secure(pc, lostpc);
 
