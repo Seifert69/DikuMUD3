@@ -217,9 +217,9 @@ unit_fptr *find_fptr(unit_data *u, ubit16 idx)
 {
     unit_fptr *tf = nullptr;
 
-    for (tf = UNIT_FUNC(u); tf; tf = tf->next)
+    for (tf = UNIT_FUNC(u); tf; tf = tf->getNext())
     {
-        if (tf->index == idx)
+        if (tf->getFunctionPointerIndex() == idx)
         {
             return tf;
         }
@@ -231,24 +231,24 @@ unit_fptr *find_fptr(unit_data *u, ubit16 idx)
 // 2020: Add it prioritized
 void insert_fptr(unit_data *u, unit_fptr *f)
 {
-    if (f->priority == 0)
+    if (f->getFunctionPriority() == 0)
     {
         slog(LOG_ALL, 0, "fptr_priotity not set, setting to chores");
-        f->priority = FN_PRI_CHORES;
+        f->setFunctionPriority(FN_PRI_CHORES);
     }
 
     // If there are no funcs, just add it.
     if (UNIT_FUNC(u) == nullptr)
     {
-        f->next = UNIT_FUNC(u);
+        f->setNext(UNIT_FUNC(u));
         UNIT_FUNC(u) = f;
         return;
     }
 
     // See if we are higher priority than head element
-    if (f->priority < UNIT_FUNC(u)->priority)
+    if (f->getFunctionPriority() < UNIT_FUNC(u)->getFunctionPriority())
     {
-        f->next = UNIT_FUNC(u);
+        f->setNext(UNIT_FUNC(u));
         UNIT_FUNC(u) = f;
         return;
     }
@@ -258,21 +258,21 @@ void insert_fptr(unit_data *u, unit_fptr *f)
 
     // Find location to insert
     prev = UNIT_FUNC(u);
-    for (p = UNIT_FUNC(u)->next; p; p = p->next)
+    for (p = UNIT_FUNC(u)->getNext(); p; p = p->getNext())
     {
-        if (f->priority < p->priority)
+        if (f->getFunctionPriority() < p->getFunctionPriority())
         {
-            f->next = p;
-            prev->next = f;
+            f->setNext(p);
+            prev->setNext(f);
             return;
         }
         prev = p;
     }
 
     // We are the lowest priority, insert at the
-    assert(prev->next == nullptr);
-    prev->next = f;
-    f->next = nullptr;
+    assert(prev->getNext() == nullptr);
+    prev->setNext(f);
+    f->setNext(nullptr);
 }
 
 unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat, ubit16 flags, void *data)
@@ -283,12 +283,12 @@ unit_fptr *create_fptr(unit_data *u, ubit16 index, ubit16 priority, ubit16 beat,
     assert(f);
     assert(!f->is_destructed());
 
-    f->index = index;
-    f->priority = priority;
-    f->heart_beat = beat;
-    f->flags = flags;
-    f->data = data;
-    f->event = nullptr;
+    f->setFunctionPointerIndex(index);
+    f->setFunctionPriority(priority);
+    f->setHeartBeat(beat);
+    f->setAllActivateOnEventFlags(flags);
+    f->setData(data);
+    f->setEventQueue(nullptr);
 
     membug_verify(f->data);
     insert_fptr(u, f);
@@ -331,7 +331,7 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     sarg.arg = "";
     sarg.mflags = ((ubit16)0);
 
-    (*(g_unit_function_array[f->index].func))(&sarg);
+    (*(g_unit_function_array[f->getFunctionPointerIndex()].func))(&sarg);
 
     /* Data is free'ed in destruct() if it is not NULL now */
 
@@ -342,23 +342,23 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     /* Only unlink function, do not free it! */
     if (UNIT_FUNC(u) == f)
     {
-        UNIT_FUNC(u) = f->next;
+        UNIT_FUNC(u) = f->getNext();
     }
     else
     {
-        for (tf = UNIT_FUNC(u); tf && (tf->next != f); tf = tf->next)
+        for (tf = UNIT_FUNC(u); tf && (tf->getNext() != f); tf = tf->getNext())
         {
             ;
         }
         if (tf)
         {
-            assert(tf->next == f);
-            tf->next = f->next;
+            assert(tf->getNext() == f);
+            tf->setNext(f->getNext());
         }
     }
 
-    f->next = nullptr;
-    assert(f->event == nullptr);
+    f->setNext(nullptr);
+    assert(f->getEventQueue() == nullptr);
 }
 
 /* Stop the 'ch' from following his master    */
@@ -594,7 +594,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
         {
             newaf = *af;
             newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
-            newaf.setDuration(-1);       /* Permanent until unequip */
+            newaf.setDuration(-1);           /* Permanent until unequip */
             create_affect(ch, &newaf);
         }
     }

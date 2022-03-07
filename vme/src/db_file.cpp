@@ -130,7 +130,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     }
     else
     {
-         tmpl->flags = pBuf->ReadU32();
+        tmpl->flags = pBuf->ReadU32();
     }
 
     if (version >= 70)
@@ -408,7 +408,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
     if (fptr && IS_SET(prg->flags, DILFL_AWARE))
     {
-        SET_BIT(fptr->flags, SFB_AWARE);
+        fptr->setActivateOnEventFlag(SFB_AWARE);
     }
 
     if (!IS_SET(prg->flags, DILFL_COPY))
@@ -636,8 +636,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
     {
         if (fptr)
         {
-            fptr->next = new EMPLACE(unit_fptr) unit_fptr;
-            fptr = fptr->next;
+            fptr->setNext(new EMPLACE(unit_fptr) unit_fptr);
+            fptr = fptr->getNext();
         }
         else
         {
@@ -645,9 +645,9 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
             fptr = head;
         }
 
-        fptr->index = pBuf->ReadU16(&g_nCorrupt);
+        fptr->readFunctionPointerIndexFrom(*pBuf, g_nCorrupt);
 
-        if (fptr->index > SFUN_TOP_IDX)
+        if (fptr->getFunctionPointerIndex() > SFUN_TOP_IDX)
         {
             slog(LOG_ALL, 0, "Illegal func index in bread_func index - corrupt.");
             g_nCorrupt = TRUE;
@@ -656,21 +656,21 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
         if (version >= 70)
         {
-            fptr->priority = pBuf->ReadU8(&g_nCorrupt); // MS2020 added
+            fptr->readFunctionPriorityFrom(*pBuf, g_nCorrupt); // MS2020 added
         }
         else
         {
-            fptr->priority = 43;
+            fptr->setFunctionPriority(43);
         }
 
-        fptr->heart_beat = pBuf->ReadU16(&g_nCorrupt);
-        fptr->flags = pBuf->ReadU16(&g_nCorrupt);
+        fptr->readHeartBeatFrom(*pBuf, g_nCorrupt);
+        fptr->readActivateOnEventFlagsFrom(*pBuf, g_nCorrupt);
 
-        if (fptr->index == SFUN_DIL_INTERNAL)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
-            fptr->data = bread_dil(pBuf, owner, version, fptr, stspec);
+            fptr->setData(bread_dil(pBuf, owner, version, fptr, stspec));
         }
-        else if (fptr->index == SFUN_DILCOPY_INTERNAL)
+        else if (fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
         {
             char name[256];
             char *c = nullptr;
@@ -715,25 +715,25 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                 }
             }
 
-            fptr->data = dilargs;
+            fptr->setData(dilargs);
         }
         else
         {
 #ifdef DMSERVER
-            REMOVE_BIT(fptr->flags, SFB_ALL);
-            SET_BIT(fptr->flags, g_unit_function_array[fptr->index].sfb);
+            fptr->removeActivateOnEventFlag(SFB_ALL);
+            fptr->setActivateOnEventFlag(g_unit_function_array[fptr->getFunctionPointerIndex()].sfb);
 #endif
-            pBuf->ReadStringAlloc((char **)&fptr->data);
+            fptr->readDataFrom(*pBuf);
         }
 
-        if ((fptr->heart_beat) && (fptr->heart_beat < WAIT_SEC))
+        if ((fptr->getHeartBeat()) && (fptr->getHeartBeat() < WAIT_SEC))
         {
-            if (fptr->index != SFUN_DIL_INTERNAL)
+            if (fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL)
             {
                 slog(LOG_ALL,
                      0,
                      "WARNING: HEARTBEAT LOW (%d) SAVE on %s@%s \n",
-                     fptr->heart_beat,
+                     fptr->getHeartBeat(),
                      UNIT_FI_NAME(owner),
                      UNIT_FI_ZONENAME(owner));
             }
@@ -742,13 +742,13 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                 slog(LOG_ALL,
                      0,
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON LOAD",
-                     (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
-                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
-                     fptr->heart_beat);
+                     (((dilprg *)fptr->getData())->fp->tmpl->prgname ? ((dilprg *)fptr->getData())->fp->tmpl->prgname : "NO NAME"),
+                     (((dilprg *)fptr->getData())->fp->tmpl->zone ? ((dilprg *)fptr->getData())->fp->tmpl->zone->getName() : "NO ZONE"),
+                     fptr->getHeartBeat());
             }
         }
 
-        fptr->next = nullptr;
+        fptr->setNext(nullptr);
     }
 
     return head;
@@ -981,19 +981,19 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
     ubit32 nOrgPos = pBuf->GetLength();
     pBuf->Append16(0); /* Assume no affects by default */
 
-    for (; fptr; fptr = fptr->next)
+    for (; fptr; fptr = fptr->getNext())
     {
-        assert(fptr->index <= SFUN_TOP_IDX);
+        assert(fptr->getFunctionPointerIndex() <= SFUN_TOP_IDX);
 
-        data = (char *)fptr->data;
+        data = (char *)fptr->getData();
 
 #ifdef DMSERVER
-        if (g_unit_function_array[fptr->index].save_w_d == SD_NEVER)
+        if (g_unit_function_array[fptr->getFunctionPointerIndex()].save_w_d == SD_NEVER)
         {
             continue; /* DONT SAVE THIS FROM INSIDE THE GAME! */
         }
 
-        if (fptr->data && g_unit_function_array[fptr->index].save_w_d == SD_NULL)
+        if (fptr->getData() && g_unit_function_array[fptr->getFunctionPointerIndex()].save_w_d == SD_NULL)
         {
             data = nullptr;
         }
@@ -1001,39 +1001,39 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
         /* Else this is SD_ASCII and we can save anything we like ... :-) */
 #endif
         i++;
-        pBuf->Append16(fptr->index);
+        pBuf->Append16(fptr->getFunctionPointerIndex());
 
-        if ((fptr->heart_beat) && (fptr->heart_beat < WAIT_SEC))
+        if ((fptr->getHeartBeat()) && (fptr->getHeartBeat() < WAIT_SEC))
         {
-            if (fptr->index != SFUN_DIL_INTERNAL)
+            if (fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL)
             {
-                slog(LOG_ALL, 0, "WARNING: HEARTBEAT LOW (%d)\n", fptr->heart_beat);
+                slog(LOG_ALL, 0, "WARNING: HEARTBEAT LOW (%d)\n", fptr->getHeartBeat());
             }
             else
             {
                 slog(LOG_ALL,
                      0,
                      "WARNING: DIL (%s@%s) HEARTBEAT LOW (%d) ON SAVE",
-                     (((dilprg *)fptr->data)->fp->tmpl->prgname ? ((dilprg *)fptr->data)->fp->tmpl->prgname : "NO NAME"),
-                     (((dilprg *)fptr->data)->fp->tmpl->zone ? ((dilprg *)fptr->data)->fp->tmpl->zone->getName() : "NO ZONE"),
-                     fptr->heart_beat);
+                     (((dilprg *)fptr->getData())->fp->tmpl->prgname ? ((dilprg *)fptr->getData())->fp->tmpl->prgname : "NO NAME"),
+                     (((dilprg *)fptr->getData())->fp->tmpl->zone ? ((dilprg *)fptr->getData())->fp->tmpl->zone->getName() : "NO ZONE"),
+                     fptr->getHeartBeat());
             }
         }
 
-        pBuf->Append8(fptr->priority); // MS2020 added priority, version 70+
-        pBuf->Append16(fptr->heart_beat);
-        pBuf->Append16(fptr->flags);
+        pBuf->Append8(fptr->getFunctionPriority()); // MS2020 added priority, version 70+
+        pBuf->Append16(fptr->getHeartBeat());
+        pBuf->Append16(fptr->getAllActivateOnEventFlags());
 
-        if (fptr->index == SFUN_DIL_INTERNAL)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
-            assert(fptr->data);
-            bwrite_dil(pBuf, (dilprg *)fptr->data);
+            assert(fptr->getData());
+            bwrite_dil(pBuf, (dilprg *)fptr->getData());
         }
-        else if (fptr->index == SFUN_DILCOPY_INTERNAL)
+        else if (fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
         {
 #ifdef VMC_SRC
-            assert(fptr->data);
-            dilargstype *dilargs = (dilargstype *)fptr->data;
+            assert(fptr->getData());
+            dilargstype *dilargs = (dilargstype *)fptr->getData();
 
             pBuf->AppendDoubleString(dilargs->name);
 
@@ -1289,7 +1289,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 pBuf->AppendString(PC_HOME(u));
                 pBuf->AppendString(PC_GUILD(u));
 
-                pBuf->Append32((ubit32) 0); // OBSOLETE pBuf->Append32((ubit32)PC_GUILD_TIME(u));
+                pBuf->Append32((ubit32)0); // OBSOLETE pBuf->Append32((ubit32)PC_GUILD_TIME(u));
                 pBuf->Append16(PC_VIRTUAL_LEVEL(u));
 
                 pBuf->Append32((ubit32)PC_TIME(u).creation);

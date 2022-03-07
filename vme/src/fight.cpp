@@ -1732,7 +1732,7 @@ int hunting(spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    h = (hunt_data *)sarg->fptr->data;
+    h = (hunt_data *)sarg->fptr->getData();
     assert(h);
 
     h->no--;

@@ -27,33 +27,34 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
     assert(!u->is_destructed());
     assert(!fptr->is_destructed());
 
-    if ((ticks = fptr->heart_beat) > 0)
+    if ((ticks = fptr->getHeartBeat()) > 0)
     {
         if (ticks < PULSE_SEC)
         {
             szonelog(g_boot_zone, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
-            if ((fptr->index == SFUN_DILCOPY_INTERNAL) || (fptr->index == SFUN_DIL_INTERNAL))
+            if ((fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL) || (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 dilprg *p = nullptr;
-                p = (dilprg *)fptr->data;
+                p = (dilprg *)fptr->getData();
 
                 if (p)
                 {
                     szonelog(g_boot_zone, "DIL [%s] had heartbeat issue", p->fp->tmpl->prgname);
                 }
             }
-            ticks = fptr->heart_beat = PULSE_SEC * 3;
+            ticks = PULSE_SEC * 3;
+            fptr->setHeartBeat(PULSE_SEC * 3);
         }
 
-        if (IS_SET(fptr->flags, SFB_RANTIME))
+        if (fptr->isActivateOnEventFlagSet(SFB_RANTIME))
         {
             ticks = number(ticks - ticks / 2, ticks + ticks / 2);
         }
-        if (fptr->event)
+        if (fptr->getEventQueue())
         {
             g_events.remove(special_event, u, fptr);
         }
-        fptr->event = g_events.add(ticks, special_event, u, fptr);
+        fptr->setEventQueue(g_events.add(ticks, special_event, u, fptr));
         //      g_events.add(ticks, special_event, u, fptr);
         membug_verify_class(fptr);
         membug_verify(fptr->data);
@@ -111,22 +112,22 @@ void special_event(void *p1, void *p2)
     {
         return;
     }
-    if (fptr->event)
+    if (fptr->getEventQueue())
     {
-        fptr->event->func = nullptr;
+        fptr->getEventQueue()->func = nullptr;
     }
 
-    fptr->event = nullptr;
+    fptr->setEventQueue(nullptr);
     priority = FALSE;
 
-    for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->next)
+    for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->getNext())
     {
         if (ftmp == fptr)
         {
             break;
         }
 
-        if (IS_SET(ftmp->flags, SFB_PRIORITY))
+        if (ftmp->isActivateOnEventFlagSet(SFB_PRIORITY))
         {
             priority = TRUE;
         }
@@ -136,9 +137,9 @@ void special_event(void *p1, void *p2)
     /* If switched, disable all tick functions, so we can control the mother fucker!
            if (!IS_CHAR (u) || !CHAR_IS_SWITCHED (u)) */
     {
-        if (g_unit_function_array[fptr->index].func)
+        if (g_unit_function_array[fptr->getFunctionPointerIndex()].func)
         {
-            if (IS_SET(fptr->flags, SFB_TICK))
+            if (fptr->isActivateOnEventFlagSet(SFB_TICK))
             {
 #ifdef DEBUG_HISTORY
                 add_func_history(u, fptr->index, SFB_TICK);
@@ -153,7 +154,7 @@ void special_event(void *p1, void *p2)
                 sarg.target = nullptr;
                 sarg.pInt = nullptr;
 
-                ret = (*(g_unit_function_array[fptr->index].func))(&sarg);
+                ret = (*(g_unit_function_array[fptr->getFunctionPointerIndex()].func))(&sarg);
             }
             assert((ret == SFR_SHARE) || (ret == SFR_BLOCK));
         }
@@ -164,11 +165,11 @@ void special_event(void *p1, void *p2)
     }
     else // Not executed because SFUN Before it raised priority
     {
-        if (fptr->index == SFUN_DIL_INTERNAL)
+        if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
-            if (fptr->heart_beat == 1)
+            if (fptr->getHeartBeat() == 1)
             {
-                fptr->heart_beat = 5 * PULSE_SEC;
+                fptr->setHeartBeat(5 * PULSE_SEC);
             }
         }
     }
@@ -178,23 +179,23 @@ void special_event(void *p1, void *p2)
         return;
     }
 
-    if (fptr->heart_beat < PULSE_SEC)
+    if (fptr->getHeartBeat() < PULSE_SEC)
     {
-        slog(LOG_ALL, 0, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), fptr->heart_beat);
+        slog(LOG_ALL, 0, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), fptr->getHeartBeat());
     }
 
-    if (fptr->index == SFUN_DIL_INTERNAL)
+    if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
         int diltick = 0;
         int i = 0;
         diltick = FALSE;
-        if (IS_SET(fptr->flags, SFB_TICK))
+        if (fptr->isActivateOnEventFlagSet(SFB_TICK))
         {
             diltick = TRUE;
         }
-        else if (fptr->data)
+        else if (fptr->getData())
         {
-            dilprg *prg = (dilprg *)fptr->data;
+            dilprg *prg = (dilprg *)fptr->getData();
             for (i = 0; i < prg->fp->intrcount; i++)
             {
                 if IS_SET (prg->fp->intr[i].flags, SFB_TICK)
@@ -223,15 +224,15 @@ void start_special(unit_data *u, unit_fptr *fptr)
 {
     int diltick = 0;
     int i = 0;
-    if (fptr->index == SFUN_DIL_INTERNAL)
+    if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
-        if (IS_SET(fptr->flags, SFB_TICK))
+        if (fptr->isActivateOnEventFlagSet(SFB_TICK))
         {
             diltick = 1;
         }
-        else if (fptr->data)
+        else if (fptr->getData())
         {
-            dilprg *prg = (dilprg *)fptr->data;
+            dilprg *prg = (dilprg *)fptr->getData();
             for (i = 0; i < prg->fp->intrcount; i++)
             {
                 if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
@@ -246,12 +247,12 @@ void start_special(unit_data *u, unit_fptr *fptr)
         }
     }
 
-    if (IS_SET(fptr->flags, SFB_TICK) || fptr->index == SFUN_DIL_INTERNAL)
+    if (fptr->isActivateOnEventFlagSet(SFB_TICK) || fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
     {
         /* If people forget to set the ticking functions... */
-        if (fptr->heart_beat <= 0)
+        if (fptr->getHeartBeat() <= 0)
         {
-            fptr->heart_beat = g_unit_function_array[fptr->index].tick;
+            fptr->setHeartBeat(g_unit_function_array[fptr->getFunctionPointerIndex()].tick);
 
             /* Well, the builders are supposed to fix it! That's why it is
                sent to the log, so they can see it! */
@@ -266,14 +267,14 @@ void start_special(unit_data *u, unit_fptr *fptr)
         }
 
         //      g_events.add(fptr->heart_beat, special_event, u, fptr);
-        if (fptr->event)
+        if (fptr->getEventQueue())
         {
             g_events.remove(special_event, u, fptr);
         }
 
         if (!u->is_destructed() && !fptr->is_destructed())
         {
-            fptr->event = g_events.add(fptr->heart_beat, special_event, u, fptr);
+            fptr->setEventQueue(g_events.add(fptr->getHeartBeat(), special_event, u, fptr));
         }
     }
 }
@@ -282,7 +283,7 @@ void start_all_special(unit_data *u)
 {
     unit_fptr *fptr = nullptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
     {
         start_special(u, fptr);
     }
@@ -292,7 +293,7 @@ void stop_all_special(unit_data *u)
 {
     unit_fptr *fptr = nullptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
     {
         stop_special(u, fptr);
     }

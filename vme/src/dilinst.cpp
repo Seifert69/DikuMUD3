@@ -63,9 +63,9 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
     for (u = unt; u; u = u->next)
     {
         DeactivateDil(u, aprg);
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
         {
-            if (aprg && (aprg == fptr->data))
+            if (aprg && (aprg == fptr->getData()))
             {
                 continue;
             }
@@ -89,9 +89,9 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
     for (u = unt; u; u = u->next)
     {
         ActivateDil(u);
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
         {
-            if (aprg && (aprg == fptr->data))
+            if (aprg && (aprg == fptr->getData()))
             {
                 continue;
             }
@@ -2396,11 +2396,10 @@ void dilfi_wit(dilprg *p)
             REMOVE_BIT(v1->val.num,
                        ~(SFB_DONE | SFB_PRE | SFB_CMD | SFB_TICK | SFB_RANTIME | SFB_DEAD | SFB_COM | SFB_MSG | SFB_EDIT | SFB_PROMPT));
 
-            REMOVE_BIT(p->sarg->fptr->flags,
-                       SFB_CMD | SFB_TICK | SFB_DEAD | SFB_DONE | SFB_PRE | SFB_COM | SFB_MSG | SFB_SAVE | SFB_ACTIVATE | SFB_EDIT |
-                           SFB_PROMPT);
+            p->sarg->fptr->removeActivateOnEventFlag(SFB_CMD | SFB_TICK | SFB_DEAD | SFB_DONE | SFB_PRE | SFB_COM | SFB_MSG | SFB_SAVE |
+                                                     SFB_ACTIVATE | SFB_EDIT | SFB_PROMPT);
 
-            SET_BIT(p->sarg->fptr->flags, v1->val.num);
+            p->sarg->fptr->setActivateOnEventFlag(v1->val.num);
 
             p->waitcmd = WAITCMD_FINISH;
             p->fp->pc = oldpc; /* rewind pc to just before wait command */
@@ -2644,11 +2643,8 @@ void dilfi_ada(dilprg *p)
         {
             if (IS_CHAR((unit_data *)v1->val.ptr))
             {
-                if (is_in(v2->val.num, 1, ID_TOP_IDX) &&
-                    is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v11->val.num, APF_NONE, APF_MAX))
+                if (is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                     {
@@ -2678,16 +2674,20 @@ void dilfi_ada(dilprg *p)
                 }
                 else
                 {
-                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
-                             p->frame->tmpl->prgname, v2->val.num, v8->val.num, v9->val.num, v10->val.num, v11->val.num);
+                    szonelog(p->frame->tmpl->zone,
+                             "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
+                             p->frame->tmpl->prgname,
+                             v2->val.num,
+                             v8->val.num,
+                             v9->val.num,
+                             v10->val.num,
+                             v11->val.num);
                 }
             }
             else if (IS_OBJ((unit_data *)v1->val.ptr))
             {
-                if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) &&
-                    is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
+                if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v11->val.num, APF_NONE, APF_MAX))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
@@ -2703,7 +2703,7 @@ void dilfi_ada(dilprg *p)
 
                         unit_affected_type af;
 
-                        af.setID(v2->val.num);  // Negative for object transfers
+                        af.setID(v2->val.num); // Negative for object transfers
                         af.setDuration(v3->val.num);
                         af.setBeat(v4->val.num);
 
@@ -2720,8 +2720,14 @@ void dilfi_ada(dilprg *p)
                 }
                 else
                 {
-                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
-                             p->frame->tmpl->prgname, v2->val.num, v8->val.num, v9->val.num, v10->val.num, v11->val.num);
+                    szonelog(p->frame->tmpl->zone,
+                             "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
+                             p->frame->tmpl->prgname,
+                             v2->val.num,
+                             v8->val.num,
+                             v9->val.num,
+                             v10->val.num,
+                             v11->val.num);
                 }
             }
             else
@@ -2751,13 +2757,13 @@ void dilfi_ada(dilprg *p)
 void dilfi_pri(dilprg *p)
 {
     p->waitcmd--;
-    SET_BIT(p->sarg->fptr->flags, SFB_PRIORITY);
+    p->sarg->fptr->setActivateOnEventFlag(SFB_PRIORITY);
 }
 
 /* No Priority */
 void dilfi_npr(dilprg *p)
 {
-    REMOVE_BIT(p->sarg->fptr->flags, SFB_PRIORITY);
+    p->sarg->fptr->removeActivateOnEventFlag(SFB_PRIORITY);
 }
 
 /* Send message to DIL programs in local environment */
@@ -2904,10 +2910,10 @@ void dilfi_sntadil(dilprg *p)
                         /* If it is destructed, then it cant be found because data
                            will be null */
 
-                        for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->next)
+                        for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->getNext())
                         {
-                            if (fptr->index == SFUN_DIL_INTERNAL && fptr->data && ((dilprg *)fptr->data)->fp &&
-                                ((dilprg *)fptr->data)->fp->tmpl == tmpl)
+                            if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData() && ((dilprg *)fptr->getData())->fp &&
+                                ((dilprg *)fptr->getData())->fp->tmpl == tmpl)
                             {
                                 break;
                             }

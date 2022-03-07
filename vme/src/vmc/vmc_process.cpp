@@ -856,34 +856,34 @@ void process_funcs(unit_data *u)
 {
     unit_fptr *fptr = nullptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
     {
-        if (!is_in(fptr->index, 0, SFUN_TOP_IDX))
+        if (!is_in(fptr->getFunctionPointerIndex(), 0, SFUN_TOP_IDX))
         {
-            dmc_error(TRUE, "%s: Function index not in legal SFUN_XX range.", UNIT_IDENT(u), (float)fptr->heart_beat / (float)PULSE_SEC);
-            fptr->index = 0;
+            dmc_error(TRUE, "%s: Function index not in legal SFUN_XX range.", UNIT_IDENT(u), (float)fptr->getHeartBeat() / (float)PULSE_SEC);
+            fptr->setFunctionPointerIndex(0);
         }
 
-        if (fptr->heart_beat != 0)
+        if (fptr->getHeartBeat() != 0)
         {
-            if (fptr->heart_beat < WAIT_SEC * 3)
+            if (fptr->getHeartBeat() < WAIT_SEC * 3)
             {
                 dmc_error(TRUE,
                           "%s: Heartbeat in function is only "
                           "%.1f seconds! You'll use too much CPU "
                           "(use minimum 3 seconds).",
                           UNIT_IDENT(u),
-                          (float)fptr->heart_beat / (float)PULSE_SEC);
-                fptr->heart_beat = PULSE_SEC * 10;
+                          (float)fptr->getHeartBeat() / (float)PULSE_SEC);
+                fptr->setHeartBeat( PULSE_SEC * 10);
             }
-            else if (fptr->heart_beat > 60000)
+            else if (fptr->getHeartBeat() > 60000)
             {
                 dmc_error(TRUE,
                           "%s: Heartbeat in function is "
                           "%.1f seconds! That's probably an error?",
                           UNIT_IDENT(u),
-                          (float)fptr->heart_beat / (float)PULSE_SEC);
-                fptr->heart_beat = PULSE_SEC * 60 * 60;
+                          (float)fptr->getHeartBeat() / (float)PULSE_SEC);
+                fptr->setHeartBeat( PULSE_SEC * 60 * 60);
             }
         }
     }

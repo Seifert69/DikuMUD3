@@ -277,7 +277,7 @@ unit_data *mcreate_unit(int type)
 
 unit_fptr *mcreate_func()
 {
-    return (unit_fptr *)mmalloc(sizeof(unit_fptr));
+    return new EMPLACE(unit_fptr) unit_fptr;
 }
 
 room_direction_data *mcreate_exit()

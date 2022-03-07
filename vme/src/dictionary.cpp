@@ -658,11 +658,11 @@ static int local_dictionary(spec_arg *sarg)
     extra_descr_data *exd = nullptr;
 
     /* specproc initialization */
-    if ((alias_h = (alias_head *)sarg->fptr->data) == nullptr)
+    if ((alias_h = (alias_head *)sarg->fptr->getData()) == nullptr)
     {
         exd = UNIT_EXTRA(sarg->owner).find_raw("$alias");
-        sarg->fptr->data = str_to_alias(exd ? exd->descr.c_str() : nullptr);
-        alias_h = (alias_head *)sarg->fptr->data;
+        sarg->fptr->setData(str_to_alias(exd ? exd->descr.c_str() : nullptr));
+        alias_h = (alias_head *)sarg->fptr->getData();
     }
 
     /* clean up if destroyed */
@@ -673,7 +673,7 @@ static int local_dictionary(spec_arg *sarg)
             free_trie(alias_h->trie, free_alias);
         }
         FREE(alias_h);
-        sarg->fptr->data = nullptr;
+        sarg->fptr->setData(nullptr);
         return SFR_BLOCK;
     }
 

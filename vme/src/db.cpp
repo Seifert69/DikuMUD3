@@ -625,57 +625,9 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
         af.bread(pBuf, &nError);
 
         if (nError)
-            return 1;
-/*        
-        if (af.readDurationFrom(*pBuf))
         {
             return 1;
         }
-
-        if (af.readIDFrom(*pBuf))
-        {
-            return 1;
-        }
-
-        if (af.readBeatFrom(*pBuf))
-        {
-            return 1;
-        }
-
-        if (af.readFromIntoDataAtIndex(*pBuf, 0))
-        {
-            return 1;
-        }
-
-        if (af.readFromIntoDataAtIndex(*pBuf, 1))
-        {
-            return 1;
-        }
-
-        if (af.readFromIntoDataAtIndex(*pBuf, 2))
-        {
-            return 1;
-        }
-
-        if (af.readFirstFIFrom(*pBuf))
-        {
-            return 1;
-        }
-
-        if (af.readTickFIFrom(*pBuf))
-        {
-            return 1;
-        }
-
-        if (af.readLastFIFrom(*pBuf))
-        {
-            return 1;
-        }
-
-        if (af.readApplyFIFrom(*pBuf))
-        {
-            return 1;
-        }*/
 
         /* Don't call, don't apply and don't set up tick for this affect (yet) */
         af.setEventQueueElement(nullptr);

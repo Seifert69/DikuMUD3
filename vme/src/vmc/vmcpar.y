@@ -624,13 +624,13 @@ unit_field  : NAMES stringlist
             }
             else
             {
-                cur_func->next = mcreate_func();
-                cur_func = cur_func->next;
+                cur_func->setNext(mcreate_func());
+                cur_func = cur_func->getNext();
             }
-            cur_func->index = SFUN_DILCOPY_INTERNAL;
-            cur_func->data = idargcopy;
-            cur_func->heart_beat = WAIT_SEC * 10;
-            cur_func->flags = SFB_ALL;
+            cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
+            cur_func->setData(idargcopy);
+            cur_func->setHeartBeat(WAIT_SEC * 10);
+            cur_func->setAllActivateOnEventFlags(SFB_ALL);
         }
     }
     | DILCOPY reference '(' dilargs ')' ';'
@@ -649,13 +649,13 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            cur_func->next = mcreate_func();
-            cur_func = cur_func->next;
+            cur_func->setNext(mcreate_func());
+            cur_func = cur_func->getNext();
         }
-        cur_func->index = SFUN_DILCOPY_INTERNAL;
-        cur_func->data = argcopy;
-        cur_func->heart_beat = WAIT_SEC * 10;
-        cur_func->flags = SFB_ALL;
+        cur_func->setFunctionPointerIndex(SFUN_DILCOPY_INTERNAL);
+        cur_func->setData(argcopy);
+        cur_func->setHeartBeat(WAIT_SEC * 10);
+        cur_func->setAllActivateOnEventFlags(SFB_ALL);
     }
     | TITLE STRING
     {
@@ -848,8 +848,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            cur_func->next = mcreate_func();
-            cur_func = cur_func->next;
+            cur_func->setNext(mcreate_func());
+            cur_func = cur_func->getNext();
         }
     }
     PNUM
@@ -867,8 +867,8 @@ unit_field  : NAMES stringlist
             }
             break;
         }
-        cur_func->index = $3;
-        cur_func->priority = g_unit_function_array[cur_func->index].priority;
+        cur_func->setFunctionPointerIndex($3);
+        cur_func->setFunctionPriority(g_unit_function_array[cur_func->getFunctionPointerIndex()].priority);
     }
     optfuncargs | AFFECT
     {
@@ -905,28 +905,28 @@ optfuncargs : /* naught */
 
 optfuncarg  : STRINGT STRING
     {
-        if (cur_func->data)
+        if (cur_func->getData())
         {
             fatal("Redefinition of data for special.");
         }
 
-        cur_func->data = $2;
+        cur_func->setData($2);
     }
     | stringcomp
     {
-        if (cur_func->data)
+        if (cur_func->getData())
         {
             fatal("Redefinition of data for special.");
         }
-        cur_func->data = $1;
+        cur_func->setData($1);
     }
     | TIME number
     {
-        cur_func->heart_beat = $2;
+        cur_func->setHeartBeat($2);
     }
     | BITS flags
     {
-        cur_func->flags = $2;
+        cur_func->setAllActivateOnEventFlags($2);
     }
     ;
 

@@ -6779,7 +6779,7 @@ void dilfe_hrt(dilprg *p)
 
     v->type = DILV_SINT2R;
     v->atyp = DILA_NONE;
-    v->ref = (sbit16 *)&(p->sarg->fptr->heart_beat);
+    v->ref = p->sarg->fptr->getHeartBeatPtr();
     p->stack.push(v);
 }
 

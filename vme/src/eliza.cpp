@@ -638,7 +638,7 @@ int oracle(spec_arg *sarg)
     oracle_data *od = nullptr;
     int i = 0;
 
-    od = (oracle_data *)sarg->fptr->data;
+    od = (oracle_data *)sarg->fptr->getData();
 
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
@@ -647,12 +647,12 @@ int oracle(spec_arg *sarg)
             FREE(od->nextrep);
             FREE(od);
         }
-        sarg->fptr->data = nullptr;
+        sarg->fptr->setData(nullptr);
         g_events.remove_relaxed(delayed_action, sarg->owner, nullptr);
         return SFR_BLOCK;
     }
 
-    if (sarg->fptr->data == nullptr)
+    if (sarg->fptr->getData() == nullptr)
     {
         if (eliza_booted == FALSE)
         {
@@ -665,8 +665,8 @@ int oracle(spec_arg *sarg)
             eliza_booted = TRUE;
         }
 
-        CREATE(sarg->fptr->data, oracle_data, 1);
-        od = (oracle_data *)sarg->fptr->data;
+        CREATE(od, oracle_data, 1);
+        sarg->fptr->setData(od);
         od->laststr[0] = 0;
         od->lastrep[0] = 0;
         strcpy(od->own_name, UNIT_NAME(sarg->owner));
@@ -692,7 +692,7 @@ int oracle(spec_arg *sarg)
 
     if (od->patient && !scan4_ref(sarg->owner, od->patient))
     {
-        REMOVE_BIT(sarg->fptr->flags, SFB_PRIORITY);
+        sarg->fptr->removeActivateOnEventFlag(SFB_PRIORITY);
         od->patient = nullptr;
     }
 
@@ -728,7 +728,7 @@ int oracle(spec_arg *sarg)
             comms = 0;
             eliza_log(sarg->owner, nullptr, comms);
             eliza_log(sarg->owner, "========== oOo ============", comms);
-            SET_BIT(sarg->fptr->flags, SFB_PRIORITY);
+            sarg->fptr->setActivateOnEventFlag(SFB_PRIORITY);
         }
         return SFR_SHARE;
     }

@@ -63,7 +63,7 @@ struct teacher_msg
 
 struct teach_packet
 {
-    ubit8 type; /* Ability, spell, skill, weapon */
+    ubit8 type;             /* Ability, spell, skill, weapon */
     const char *pGuildName; // Empty or set to the name of the guild
     teacher_msg msgs;
     skill_teach_type *teaches; /* Array of skills */
@@ -768,7 +768,10 @@ int practice(unit_data *teacher,
     }
 
     const char *req = nullptr;
-    req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel, pckt->pGuildName);
+    req = trainrestricted(pupil,
+                          &pColl->prof_table[pckt->teaches[teach_index].node],
+                          pckt->teaches[teach_index].min_glevel,
+                          pckt->pGuildName);
     if (*req)
     {
         auto msg = diku::format_to_str("To practice %s you need to meet the following requirements %s.<br/>",
@@ -1020,9 +1023,9 @@ teach_packet *get_teacher(const char *pName)
         return nullptr;
     }
 
-    for (f = UNIT_FUNC(u); f; f = f->next)
+    for (f = UNIT_FUNC(u); f; f = f->getNext())
     {
-        if (f->index == SFUN_TEACHING)
+        if (f->getFunctionPointerIndex() == SFUN_TEACHING)
         {
             break;
         }
@@ -1034,7 +1037,7 @@ teach_packet *get_teacher(const char *pName)
         return nullptr;
     }
 
-    pckt = (teach_packet *)f->data;
+    pckt = (teach_packet *)f->getData();
     assert(pckt);
 
     return pckt;
@@ -1240,7 +1243,7 @@ int teaching(spec_arg *sarg)
 {
     teach_packet *packet = nullptr;
 
-    packet = (teach_packet *)sarg->fptr->data;
+    packet = (teach_packet *)sarg->fptr->getData();
     assert(packet);
 
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
@@ -1271,7 +1274,7 @@ int teaching(spec_arg *sarg)
 
         FREE(packet);
 
-        sarg->fptr->data = nullptr;
+        sarg->fptr->setData(nullptr);
         return SFR_BLOCK;
     }
 
@@ -1347,7 +1350,7 @@ int teach_init(spec_arg *sarg)
 
     static const char *teach_types[] = {"abilities", "spells", "skills", "weapons", nullptr};
 
-    if (!(c = (char *)sarg->fptr->data))
+    if (!(c = (char *)sarg->fptr->getData()))
     {
         szonelog(UNIT_FI_ZONE(sarg->owner),
                  "%s@%s: No text data for teacher-init!",
@@ -1799,13 +1802,13 @@ int teach_init(spec_arg *sarg)
     packet->teaches[count - 1].min_cost_per_point = -1;
     packet->teaches[count - 1].max_cost_per_point = -1;
 
-    sarg->fptr->index = SFUN_TEACHING;
-    sarg->fptr->flags = SFB_CMD;
-    sarg->fptr->heart_beat = PULSE_SEC;
+    sarg->fptr->setFunctionPointerIndex(SFUN_TEACHING);
+    sarg->fptr->setAllActivateOnEventFlags(SFB_CMD);
+    sarg->fptr->setHeartBeat(PULSE_SEC);
 
-    assert(sarg->fptr->index != SFUN_DIL_INTERNAL);
-    FREE(sarg->fptr->data); /* Free the text string! */
-    sarg->fptr->data = packet;
+    assert(sarg->fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL);
+    free(sarg->fptr->getData()); /* Free the text string! */
+    sarg->fptr->setData(packet);
 
     /* Call teaching in case initialization occurs with first command! */
     return teaching(sarg);

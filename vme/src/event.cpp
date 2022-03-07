@@ -82,9 +82,9 @@ eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1,
             assert(!f->is_destructed());
         }
 
-        if (f->index == 82)
+        if (f->getFunctionPointerIndex() == 82)
         {
-            dilprg *prg = (dilprg *)f->data;
+            dilprg *prg = (dilprg *)f->getData();
             membug_verify(prg);
 
             assert(prg);
@@ -137,10 +137,10 @@ eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1,
 void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
 {
     int i = 0;
-    if ((func == special_event) && arg2 && (((unit_fptr *)arg2)->event))
+    if ((func == special_event) && arg2 && (((unit_fptr *)arg2)->getEventQueue()))
     {
-        ((unit_fptr *)arg2)->event->func = nullptr;
-        ((unit_fptr *)arg2)->event = nullptr;
+        ((unit_fptr *)arg2)->getEventQueue()->func = nullptr;
+        ((unit_fptr *)arg2)->setEventQueue(nullptr);
     }
     else if ((func == affect_beat) && arg1 && (((unit_affected_type *)arg1)->cgetEventQueueElement()))
     {
@@ -151,7 +151,7 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     {
         return;
     }
-    else if ((func == special_event) && arg2 && (!((unit_fptr *)arg2)->event))
+    else if ((func == special_event) && arg2 && (!((unit_fptr *)arg2)->getEventQueue()))
     {
         return;
     }
@@ -249,8 +249,8 @@ void eventqueue::process()
             tfunc = tmp_event->func;
             int bDestructed = 0;
 
-            if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->data &&
-                (((unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL))
+            if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->getData() &&
+                (((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 strcpy(dilname, "NO NAME");
                 strcpy(dilzname, "NO ZONE");
@@ -267,7 +267,7 @@ void eventqueue::process()
 
                 if (!bDestructed)
                 {
-                    dilprg *prg = (dilprg *)fptr->data;
+                    dilprg *prg = (dilprg *)fptr->getData();
 
                     assert(prg);
                     membug_verify(prg);
@@ -312,7 +312,7 @@ void eventqueue::process()
                 {
                     if (tfunc == special_event)
                     {
-                        if (((unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL)
+                        if (((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
                         {
                             slog(LOG_DIL,
                                  0,
@@ -322,8 +322,8 @@ void eventqueue::process()
                                  dilzname,
                                  diloname,
                                  dilozname,
-                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->index].name,
-                                 ((unit_fptr *)tmp_event->arg2)->index);
+                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex()].name,
+                                 ((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex());
                         }
                         else
                         {
@@ -331,8 +331,8 @@ void eventqueue::process()
                                  0,
                                  "Internal process took %1.4f seconds to complete: %s (%d)'",
                                  loop_time,
-                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->index].name,
-                                 ((unit_fptr *)tmp_event->arg2)->index);
+                                 g_unit_function_array[((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex()].name,
+                                 ((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex());
                         }
                     }
                     else

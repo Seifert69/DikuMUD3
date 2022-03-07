@@ -675,14 +675,14 @@ static void stat_func(const unit_data *ch, unit_data *u)
     }
 
     send_to_char("Unit functions:<br/>", ch);
-    for (f = UNIT_FUNC(u); f; f = f->next)
+    for (f = UNIT_FUNC(u); f; f = f->getNext())
 
     {
-        if (f->index == SFUN_DIL_INTERNAL)
+        if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
             dilprg *prg = nullptr;
 
-            if ((prg = (dilprg *)f->data))
+            if ((prg = (dilprg *)f->getData()))
             {
                 auto msg = diku::format_to_str("DIL Name: %s@%s<br/>",
                                                prg->frame[0].tmpl->prgname,
@@ -693,12 +693,12 @@ static void stat_func(const unit_data *ch, unit_data *u)
 
         auto msg = diku::format_to_str("[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
                                        "%s<br/><br/>",
-                                       f->priority,
-                                       g_unit_function_array[f->index].name,
-                                       sprintbit(bits, f->flags, g_sfb_flags),
-                                       f->index,
-                                       f->heart_beat,
-                                       f->data ? g_unit_function_array[f->index].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data."
+                                       f->getFunctionPriority(),
+                                       g_unit_function_array[f->getFunctionPointerIndex()].name,
+                                       sprintbit(bits, f->getAllActivateOnEventFlags(), g_sfb_flags),
+                                       f->getFunctionPointerIndex(),
+                                       f->getHeartBeat(),
+                                       f->getData() ? g_unit_function_array[f->getFunctionPointerIndex()].save_w_d == SD_ASCII ? (char *)f->getData() : "Has raw data."
                                                : "No data.");
         send_to_char(msg, ch);
     }
