@@ -1110,35 +1110,6 @@ dilend
 
 
 
-/* srchlist : This is used to replace the "x in list" as it seems to get
-confused when 'x' has a period in the middle of the string. */
-
-
-dilbegin integer srchlist(list : stringlist, st : string);
-
-var
-
-    counter  :  integer;
-
-code{
-
-counter := 0;
-
-while (counter < length(list))
-   {
-     if (st == list.[counter])
-        return(counter + 1);
-
-     counter := counter + 1;
-
-   }
-
-return(0);
-
-}dilend
-
-
-
 /* look_dir : This shows what a player sees when he does a 'look east' */
 
 dilbegin integer look_dir(looker : unitptr, arg : string);
@@ -1264,7 +1235,6 @@ external
    string get_pos (l3 : unitptr, u:unitptr);
    string obj_content(l : unitptr, u:unitptr);
    string display_exits (l4 : unitptr, u:unitptr);
-   integer srchlist(sl1 : stringlist, st1 : string);
    string exits_h(looker : unitptr);
 
 var
@@ -1478,7 +1448,6 @@ code
                temp := temp  + tpbuff;
             }
 
-            /*temp_in := srchlist(npc, temp);*/
 			   temp_in:=temp in npc;
 
             if (temp_in > 0)
@@ -1496,8 +1465,7 @@ code
          {
             temp := "You sense a hidden life form in the room.<br/>";
 
-            /*temp_in := srchlist(npc, temp);*/
-                  temp_in:=temp in npc;
+            temp_in:=temp in npc;
 
             if (temp_in > 0)
             {
@@ -1654,10 +1622,9 @@ dilend
 
 
 
-dilbegin string obj_content (looker : unitptr, item:unitptr);
+dilbegin string obj_content(looker : unitptr, item:unitptr);
 external
     string carried_by(l1 : unitptr, u:unitptr);
-    integer srchlist(sl1 : stringlist, st1 : string);
 
 var
     u        : unitptr;
@@ -1673,24 +1640,27 @@ var
 
 code
 {
+   u := item.inside;
 
-u := item.inside;
+   if ((u == looker) or (u == looker.outside))
+      u := u.next;
 
-if ((u == looker) or (u == looker.outside))
-   u := u.next;
+   if (u == null)
+      goto null_inside;
 
-if (u == null)
-    goto null_inside;
+   while (u)
+   {
+      if ((u == looker) or (u == looker.outside) or isset(u.flags,UNIT_FL_BURIED) or (not visible(looker, u)))
+      {
+         u := u.next;
+         continue;
+      }
 
-while (u!=null)
-   {if ((u == looker ) or (u == looker.outside) or (isset (u.flags,UNIT_FL_BURIED)) or (not visible(looker, u)))
-       {u := u.next;
-        continue;
-       }
-
-    if (u.type == UNIT_ST_PC)
-       {if (u.level >= IMMORTAL_LEVEL)
-           {temp := "<div class='immort_title'>" + u.name + " " + u.title;
+      if (u.type == UNIT_ST_PC)
+      {
+         if (u.level >= IMMORTAL_LEVEL)
+         {
+            temp := "<div class='immort_title'>" + u.name + " " + u.title;
 
             if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
                 temp := temp + " (wizinv)";
@@ -1700,8 +1670,7 @@ while (u!=null)
 
             temp := temp + "</div><br/>";
          }
-
-        else
+         else
          {
             temp := "<div class='pc_title'>" + u.name + " " + u.title;
 
@@ -1715,112 +1684,118 @@ while (u!=null)
          }
 
          addstring (pc, temp);
-       }
-    else if (u.type == UNIT_ST_NPC)
-       {if (visible (looker, u))
-           {
-              temp := "";
+      }
+      else if (u.type == UNIT_ST_NPC)
+      {
+         if (visible (looker, u))
+         {
+            temp := "";
             if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
                 temp := temp + " (wizinv)";
 
             if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
                 temp := temp + " (hidden)";
 
-              temp := sact("$2n" + temp, A_SOMEONE, looker, u, null, TO_CHAR); 
-
-            temp_in := srchlist(npc, temp);
+            temp := sact("$2n" + temp, A_SOMEONE, looker, u, null, TO_CHAR); 
+            temp_in := temp in npc;
 
             if (temp_in > 0)
-               {i := atoi(n_npc.[temp_in - 1]) + 1;
-                n_npc.[temp_in - 1] := itoa(i);
-               }
+            {
+               i := atoi(n_npc.[temp_in - 1]) + 1;
+               n_npc.[temp_in - 1] := itoa(i);
+            }
             else
-               {addstring(npc, temp);
-                addstring(n_npc, "1");
-               }
-           }
-        else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level < IMMORTAL_LEVEL))
-   {addstring(pc, "You sense a hidden life form somewhere near by.</div>");
+            {
+               addstring(npc, temp);
+               addstring(n_npc, "1");
+            }
+         }
+         else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level < IMMORTAL_LEVEL))
+         {
+            addstring(pc, "You sense a hidden life form somewhere near by.</div>");
             addstring( n_npc,"1");
-           }
-       }
-    else if (u.type == UNIT_ST_OBJ)
-       {
-          temp := "";
+         }
+      }
+      else if (u.type == UNIT_ST_OBJ)
+      {
+         temp := "";
 
          if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
-               temp := temp + " (wizinv)";
+            temp := temp + " (wizinv)";
 
          if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
-               temp := temp + " (hidden)";
+            temp := temp + " (hidden)";
 
          temp := sact("$2n"+temp+"<br/>", A_SOMEONE, looker, u, null, TO_CHAR);
 
-	temp_in := srchlist(obj, temp);
+	      temp_in := temp in obj;
 
-        if (temp_in > 0)
-           {i := atoi(n_obj.[temp_in - 1]) + 1;
+         if (temp_in > 0)
+         {
+            i := atoi(n_obj.[temp_in - 1]) + 1;
             n_obj.[temp_in - 1] := itoa(i);
-           }
-        else
-           {addstring(obj, temp);
+         }
+         else
+         {
+            addstring(obj, temp);
             addstring(n_obj, "1");
-           }
-       }
-
-
-    u := u.next;
+         }
+      }
+      
+      u := u.next;
    }
 
-buff := "";
+   buff := "";
 
-temp_in := length (obj);
+   temp_in := length (obj);
 
-i := 0;
+   i := 0;
 
-while (i < temp_in)
-    {if (atoi(n_obj.[i]) > 1)
+   while (i < temp_in)
+   {
+      if (atoi(n_obj.[i]) > 1)
          buff := buff + "<div class='obj_title'>[x" + n_obj.[i] + "] " + obj.[i];
-     else
+      else
          buff := buff + "<div class='obj_title'>" + obj.[i];
       buff := buff + "</div>";
 
      i := i + 1;
-    }
+   }
 
-temp_in := length (npc);
+   temp_in := length(npc);
 
-i := 0;
+   i := 0;
 
-while(i < temp_in)
-    {if (atoi(n_npc.[i]) > 1)
+   while(i < temp_in)
+   {
+      if (atoi(n_npc.[i]) > 1)
          buff := buff + "<div class='npc_title'>[x" + n_npc.[i] + "] " + npc.[i];
      else
          buff := buff + "<div class='npc_title'>" + npc.[i];
       buff := buff + "</div><br/>";
-     i := i + 1;
-    }
+      i := i + 1;
+   }
 
-temp_in := length (pc);
+   temp_in := length(pc);
 
-i := 0;
+   i := 0;
 
    while (i < temp_in)
-   {buff := buff + pc.[i];
-     i := i + 1;
+   {
+      buff := buff + pc.[i];
+      i := i + 1;
    }
    return (buff);
 
-   :null_inside:
+:null_inside:
    buff := "<div class='obj_title'>Nothing.</div><br/>";
    return(buff);
-}dilend
+}
+dilend
 
 
 
 dilbegin string carried_by(looker : unitptr, item:unitptr);
-external
-   integer srchlist(sl1 : stringlist, st1 : string);
 var
    u        : unitptr;
    pc       : stringlist;
@@ -1899,7 +1874,7 @@ code
 
             temp := sact("$2n"+temp, A_SOMEONE, looker, u, null, TO_CHAR);
 
-            temp_in := srchlist(npc, temp);
+            temp_in := temp in npc;
 
             if (temp_in > 0)
             {
@@ -1915,7 +1890,7 @@ code
          else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level < IMMORTAL_LEVEL))
          {
             temp := "You sense a hidden life form somewhere near by.<br/>";
-            temp_in := srchlist(npc, temp);
+            temp_in := temp in npc;
 
             if (temp_in > 0)
             {
