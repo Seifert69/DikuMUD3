@@ -29,6 +29,7 @@
 #include "skills.h"
 #include "slog.h"
 #include "spell_parser.h"
+#include "teach.h"
 #include "textutil.h"
 #include "trie.h"
 #include "vmelimits.h"
@@ -184,6 +185,21 @@ void skill_dump()
             }
         }
     }
+    printf("\n");
+
+    printf("Progression training costs\n");
+    printf(",");
+    for (int i=7; i >= -7; i--)
+        printf("%d,", i);
+    printf("\n1st,");
+    for (int i=7; i >= -7; i--)
+        printf("%d,", actual_cost(i, 0, 0, 10));
+    printf("\n2nd,");
+    for (int i=7; i >= -7; i--)
+        printf("%d,", actual_cost(i, 0, 1, 10));
+    printf("\n3rd,");
+    for (int i=7; i >= -7; i--)
+        printf("%d,", actual_cost(i, 0, 2, 10));
     printf("\n");
 }
 
