@@ -783,8 +783,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
 
     UNIT_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
-    UNIT_BASE_WEIGHT(u) = pBuf->ReadU16(&g_nCorrupt);
-    UNIT_WEIGHT(u) = pBuf->ReadU16(&g_nCorrupt);
+    UNIT_BASE_WEIGHT(u) = pBuf->ReadS16(&g_nCorrupt);
+    UNIT_WEIGHT(u) = pBuf->ReadS16(&g_nCorrupt);
     UNIT_CAPACITY(u) = pBuf->ReadS16(&g_nCorrupt);
 
     UNIT_MAX_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
