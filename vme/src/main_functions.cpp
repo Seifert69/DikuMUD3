@@ -91,6 +91,11 @@ void type_validate_64()
     assert(sizeof(ubit16) == 2);
     assert(sizeof(ubit32) == 4);
     assert(sizeof(ubit64) == 8);
+    assert(sizeof(ubit1) == 1);
+    assert(sizeof(sbit8) == 1);
+    assert(sizeof(sbit16) == 2);
+    assert(sizeof(sbit32) == 4);
+    assert(sizeof(sbit64) == 8);
     assert(sizeof(int) == 4); // Hell will probably freeze over if this isn't true
 }
 
