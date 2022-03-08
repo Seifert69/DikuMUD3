@@ -10808,59 +10808,60 @@ code
 
 dilend
 
+
+
+// do_storage
+//
 dilbegin ctnstorage(arg: string);
+external
+   string obj_content@baselook(looker : unitptr, container : unitptr);
+
 var
    clerk: unitptr;
    cont : unitptr;
-   item : unitptr;
    ext  : extraptr;
    town : string;
    i    : integer;
+   s    : string;
 
 code
 {
+   clerk := findunit(self, "clerk", FIND_UNIT_SURRO, null);
 
-clerk:= findunit (self, "clerk", FIND_UNIT_SURRO, null);
+   if (not visible(self, clerk))
+   {
+      sendtext ("You see no clerk around here.<br/>", self);
+      return;
+   }
 
-if (not visible(self, clerk))
-    {
-    sendtext ("You see no clerk around here.<br/>", self);
-    return;
-    }
+   if (not ("$storage clerk" in clerk.extra) )
+   {
+      sendtext ("This clerk is not a storage clerk.<br/>", self);
+      return;
+   }
 
-if (not ("$storage clerk" in clerk.extra) )
-    {
-    sendtext ("This clerk is not a storage clerk.<br/>", self);
-    return;
-    }
+   town:= left (clerk.zoneidx, 3);
+   cont:= findunit (self, town+"container", FIND_UNIT_IN_ME, null);
 
-town:= left (clerk.zoneidx, 3);
-cont:= findunit (self, town+"container", FIND_UNIT_IN_ME, null);
+   if ((cont == null) or not ("$storage container" in cont.extra))
+   {
+      sendtext ("You do not have storage space in this town; rent some!<br/>", self);
+      return;
+   }
 
-if ((cont == null) or not ("$storage container" in cont.extra))
-    {
-    sendtext ("You do not have storage space in this town; rent some!<br/>",
-self);
-    return;
-    }
+   if (cont.inside == null)
+   {
+      sendtext ("Your storage container is empty.<br/>", self);
+      return;
+   }
 
-item:= cont.inside;
+   sendtext("Your storage contains : <br/>", self);
 
-if (item == null)
-    {
-    sendtext ("Your storage container is empty.<br/>", self);
-    return;
-    }
+   s := obj_content@baselook(self, cont);
 
-sendtext ("Your storage contains : <br/>", self);
+   sendtext(s, self);
 
-while (item != null) {
-    sendtext (item.title+"<br/>", self);
-    item := item.next;
-    }
-
-return;
-
+   return;
 }
 dilend
 

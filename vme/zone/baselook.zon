@@ -567,14 +567,12 @@ dilend
 
 
 
-
-
-/* look_in : This allows a player to look inside of a container, a boat, a vehicle or a water container. */
-
+//
+// look_in : This allows a player to look inside of a container, a boat, a vehicle or a water container.
+//
 dilbegin look_in(looker : unitptr, arg:string);
-
 external
-	string obj_content (l : unitptr, u:unitptr);
+	string obj_content(l : unitptr, u:unitptr);
 	unitptr find_here(pc:unitptr,a:string);
 
 var
