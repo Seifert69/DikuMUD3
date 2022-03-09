@@ -150,7 +150,7 @@ sbit16 *char_point_data::getManaPtr()
 
 void char_point_data::readManaFrom(CByteBuffer &buf, int &error)
 {
-    mana = buf.ReadS16(&error)
+    mana = buf.ReadS16(&error);
 }
 
 void char_point_data::setMana(sbit16 value)
@@ -183,7 +183,7 @@ void char_point_data::readEnduranceFrom(CByteBuffer &buf, int &error)
     endurance = buf.ReadS16(&error);
 }
 
-void char_point_data::decreaseEndurance(sbit16 value)
+void char_point_data::decreaseEnduranceBy(sbit16 value)
 {
     endurance -= value;
 }
@@ -403,7 +403,7 @@ void char_point_data::setAbilityAtIndexTo(size_t index, sbit16 value)
     abilities[index] = value;
 }
 
-int char_point_data::readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index)
+void char_point_data::readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index)
 {
     if (unit_version < 69)
     {

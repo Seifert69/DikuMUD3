@@ -238,7 +238,7 @@ public:
     sbit16 *getEndurancePtr();
     void setEndurance(sbit16 value);
     void readEnduranceFrom(CByteBuffer &buf, int &error);
-    void decreaseEndurance(sbit16 value);
+    void decreaseEnduranceBy(sbit16 value);
 
     sbit16 getOffensiveBonus() const;
     void setOffensiveBonus(sbit16 value);
@@ -299,7 +299,7 @@ public:
     void setDIV(sbit16 value);
     void setHPP(sbit16 value);
     void setAbilityAtIndexTo(size_t index, sbit16 value);
-    int readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index);
+    void readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index);
     void increaseAbilityAtIndexBy(size_t index, sbit16 value);
     void decreaseAbilityAtIndexBy(size_t index, sbit16 value);
     std::array<sbit16, ABIL_TREE_MAX> &getAbilitiesArray();

@@ -640,7 +640,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         if (CHAR_LEVEL(ch) < 200)
         {
             auto *character = dynamic_cast<char_data *>(ch);
-            character->points.decreaseEndurance(need_movement);
+            character->points.decreaseEnduranceBy(need_movement);
         }
     }
 

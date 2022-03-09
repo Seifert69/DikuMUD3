@@ -857,7 +857,7 @@ void tif_poison_suffer(unit_affected_type *af, unit_data *unit)
 {
     auto *character = dynamic_cast<char_data *>(unit);
     character->points.decreaseManaBy(af->getDataAtIndex(1));
-    character->points.decreaseEndurance(af->getDataAtIndex(2));
+    character->points.decreaseEnduranceBy(af->getDataAtIndex(2));
     damage(unit, unit, nullptr, af->getDataAtIndex(0), MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
     /* unit can be destructed now, but no problemo */
 }
