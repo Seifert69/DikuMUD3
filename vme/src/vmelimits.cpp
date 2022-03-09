@@ -372,7 +372,7 @@ void advance_level(unit_data *ch)
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
     {
         auto *character = dynamic_cast<char_data *>(ch);
-        character->points.incLevel();
+        character->points.incrementLevel();
     }
 
     PC_SKILL_POINTS(ch) += skill_point_gain();
@@ -517,7 +517,7 @@ void gain_exp_regardless(unit_data *ch, int gain)
                          ch);
         }
 
-        character->points.incrementPlayerExperienceBy(gain);
+        character->points.increasePlayerExperienceBy(gain);
     }
     else /* gain <= 0 */
     {
@@ -527,7 +527,7 @@ void gain_exp_regardless(unit_data *ch, int gain)
         }
         else
         {
-            character->points.incrementPlayerExperienceBy(gain);
+            character->points.increasePlayerExperienceBy(gain);
         }
     }
 }

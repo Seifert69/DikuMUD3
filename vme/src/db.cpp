@@ -858,17 +858,17 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         case UNIT_ST_PC:
         {
             auto *character = dynamic_cast<char_data *>(u);
-            g_nCorrupt += character->points.readPlayerExperienceFrom(*pBuf);
-            g_nCorrupt += character->points.readCharacterFlagsFrom(*pBuf);
+            character->points.readPlayerExperienceFrom(*pBuf, g_nCorrupt);
+            character->points.readCharacterFlagsFrom(*pBuf, g_nCorrupt);
 
-            g_nCorrupt += character->points.readManaFrom(*pBuf);
-            g_nCorrupt += character->points.readEnduranceFrom(*pBuf);
+            character->points.readManaFrom(*pBuf, g_nCorrupt);
+            character->points.readEnduranceFrom(*pBuf, g_nCorrupt);
 
-            g_nCorrupt += character->points.readNaturalArmorFrom(*pBuf);
+            character->points.readNaturalArmorFrom(*pBuf, g_nCorrupt);
 
             if (unit_version >= 39)
             {
-                g_nCorrupt += character->points.readSpeedFrom(*pBuf);
+                character->points.readSpeedFrom(*pBuf, g_nCorrupt);
                 if (IS_PC(u))
                 {
                     if (CHAR_SPEED(u) < SPEED_MIN)
@@ -882,36 +882,26 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 character->points.setSpeed(SPEED_DEFAULT);
             }
 
-            g_nCorrupt += character->points.readAttackTypeFrom(*pBuf);
+            character->points.readAttackTypeFrom(*pBuf, g_nCorrupt);
 
             if (unit_version <= 52)
             {
                 UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
             }
-            g_nCorrupt += character->points.readRaceFrom(*pBuf);
+            character->points.readRaceFrom(*pBuf, g_nCorrupt);
 
-            g_nCorrupt += character->points.readOffensiveBonusFrom(*pBuf);
-            g_nCorrupt += character->points.readDefensiveBonusFrom(*pBuf);
+            character->points.readOffensiveBonusFrom(*pBuf, g_nCorrupt);
+            character->points.readDefensiveBonusFrom(*pBuf, g_nCorrupt);
 
-            g_nCorrupt += character->points.readSexFrom(*pBuf);
-            g_nCorrupt += character->points.readLevelFrom(*pBuf);
-            g_nCorrupt += character->points.readPositionFrom(*pBuf);
+            character->points.readSexFrom(*pBuf, g_nCorrupt);
+            character->points.readLevelFrom(*pBuf, g_nCorrupt);
+            character->points.readPositionFrom(*pBuf, g_nCorrupt);
 
             j = pBuf->ReadU8(&g_nCorrupt);
-            ;
 
             for (i = 0; i < j; i++)
             {
-                if (unit_version < 69)
-                {
-                    ubit8 temp = 0;
-                    g_nCorrupt += pBuf->Read8(&temp);
-                    character->points.setAbilityAtIndexTo(i, temp);
-                }
-                else
-                {
-                    g_nCorrupt += character->points.readAbilityFromAtIndex(*pBuf, i);
-                }
+                character->points.readAbilityFromAtIndex(unit_version, g_nCorrupt, *pBuf, i);
 
                 if (IS_PC(u))
                 {
@@ -1151,7 +1141,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 else
                 {
                     j = pBuf->ReadU16(&g_nCorrupt);
-                    ;
                 }
 
                 for (i = 0; i < j; i++)

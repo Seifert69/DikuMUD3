@@ -73,9 +73,9 @@ void char_point_data::setAllCharacterFlags(ubit32 value)
     flags = value;
 }
 
-int char_point_data::readCharacterFlagsFrom(CByteBuffer &buf)
+void char_point_data::readCharacterFlagsFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read32(&flags);
+    flags = buf.ReadU32(&error);
 }
 
 void char_point_data::setCharacterFlag(ubit32 value)
@@ -108,12 +108,12 @@ void char_point_data::setPlayerExperience(sbit32 value)
     exp = value;
 }
 
-int char_point_data::readPlayerExperienceFrom(CByteBuffer &buf)
+void char_point_data::readPlayerExperienceFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read32(&exp);
+    exp = buf.ReadS32(&error);
 }
 
-void char_point_data::incrementPlayerExperienceBy(sbit32 value)
+void char_point_data::increasePlayerExperienceBy(sbit32 value)
 {
     exp += value;
 }
@@ -128,9 +128,9 @@ ubit16 *char_point_data::getRacePtr()
     return &race;
 }
 
-int char_point_data::readRaceFrom(CByteBuffer &buf)
+void char_point_data::readRaceFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read16(&race);
+    race = buf.ReadU16(&error);
 }
 
 void char_point_data::setRace(ubit16 value)
@@ -148,9 +148,9 @@ sbit16 *char_point_data::getManaPtr()
     return &mana;
 }
 
-int char_point_data::readManaFrom(CByteBuffer &buf)
+void char_point_data::readManaFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read16(&mana);
+    mana = buf.ReadS16(&error)
 }
 
 void char_point_data::setMana(sbit16 value)
@@ -178,12 +178,12 @@ void char_point_data::setEndurance(sbit16 value)
     endurance = value;
 }
 
-int char_point_data::readEnduranceFrom(CByteBuffer &buf)
+void char_point_data::readEnduranceFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read16(&endurance);
+    endurance = buf.ReadS16(&error);
 }
 
-void char_point_data::decrementEndurance(sbit16 value)
+void char_point_data::decreaseEndurance(sbit16 value)
 {
     endurance -= value;
 }
@@ -198,9 +198,9 @@ void char_point_data::setOffensiveBonus(sbit16 value)
     offensive = value;
 }
 
-int char_point_data::readOffensiveBonusFrom(CByteBuffer &buf)
+void char_point_data::readOffensiveBonusFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read16(&offensive);
+    offensive = buf.ReadS16(&error);
 }
 
 sbit16 *char_point_data::getOffensiveBonusPtr()
@@ -218,9 +218,9 @@ void char_point_data::setDefensiveBonus(sbit16 value)
     defensive = value;
 }
 
-int char_point_data::readDefensiveBonusFrom(CByteBuffer &buf)
+void char_point_data::readDefensiveBonusFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read16(&defensive);
+    defensive = buf.ReadS16(&error);
 }
 
 sbit16 *char_point_data::getDefensiveBonusPtr()
@@ -238,9 +238,9 @@ void char_point_data::setSpeed(ubit8 value)
     speed = value;
 }
 
-int char_point_data::readSpeedFrom(CByteBuffer &buf)
+void char_point_data::readSpeedFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read8(&speed);
+    speed = buf.ReadU8(&error);
 }
 
 ubit8 char_point_data::getNaturalArmor() const
@@ -258,9 +258,9 @@ ubit8 *char_point_data::getNaturalArmorPtr()
     return &natural_armour;
 }
 
-int char_point_data::readNaturalArmorFrom(CByteBuffer &buf)
+void char_point_data::readNaturalArmorFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read8(&natural_armour);
+    natural_armour = buf.ReadU8(&error);
 }
 
 ubit8 char_point_data::getAttackType() const
@@ -278,12 +278,9 @@ ubit8 *char_point_data::getAttackTypePtr()
     return &attack_type;
 }
 
-int char_point_data::readAttackTypeFrom(CByteBuffer &buf)
+void char_point_data::readAttackTypeFrom(CByteBuffer &buf, int &error)
 {
-    ubit16 temp{0};
-    auto retval = buf.Read16(&temp);
-    attack_type = temp;
-    return retval;
+    attack_type = buf.ReadU16(&error); // TODO Why is attack_type 8 bit it really should be 16 it looks like
 }
 
 ubit8 char_point_data::getSex() const
@@ -301,9 +298,9 @@ ubit8 *char_point_data::getSexPtr()
     return &sex;
 }
 
-int char_point_data::readSexFrom(CByteBuffer &buf)
+void char_point_data::readSexFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read8(&sex);
+    sex = buf.ReadU8(&error);
 }
 
 ubit8 char_point_data::getLevel() const
@@ -321,12 +318,12 @@ ubit8 *char_point_data::getLevelPtr()
     return &level;
 }
 
-int char_point_data::readLevelFrom(CByteBuffer &buf)
+void char_point_data::readLevelFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read8(&level);
+    level = buf.ReadU8(&error);
 }
 
-void char_point_data::incLevel()
+void char_point_data::incrementLevel()
 {
     ++level;
 }
@@ -341,9 +338,9 @@ void char_point_data::setPosition(ubit8 value)
     position = value;
 }
 
-int char_point_data::readPositionFrom(CByteBuffer &buf)
+void char_point_data::readPositionFrom(CByteBuffer &buf, int &error)
 {
-    return buf.Read8(&position);
+    position = buf.ReadU8(&error);
 }
 
 ubit8 *char_point_data::getPositionPtr()
@@ -406,9 +403,16 @@ void char_point_data::setAbilityAtIndexTo(size_t index, sbit16 value)
     abilities[index] = value;
 }
 
-int char_point_data::readAbilityFromAtIndex(CByteBuffer &buf, size_t index)
+int char_point_data::readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index)
 {
-    return buf.Read16(&abilities[index]);
+    if (unit_version < 69)
+    {
+        abilities[index] = buf.ReadU8(&error);
+    }
+    else
+    {
+        abilities[index] = buf.ReadS16(&error);
+    }
 }
 
 void char_point_data::increaseAbilityAtIndexBy(size_t index, sbit16 value)
@@ -965,25 +969,26 @@ unit_data *unit_data::copy()
     }
     else if (IS_CHAR(this))
     {
-        auto *u_upcast = dynamic_cast<char_data *>(u);
-        auto *this_upcast = dynamic_cast<char_data *>(this);
+        // TODO These should all move down to char_data
+        auto *u_downcast = dynamic_cast<char_data *>(u);
+        auto *this_downcast = dynamic_cast<char_data *>(this);
 
-        u_upcast->points.setAllCharacterFlags(this_upcast->points.getCharacterFlags());
-        u_upcast->points.setPlayerExperience(this_upcast->points.getPlayerExperience());
-        u_upcast->points.setMana(this_upcast->points.getMana());
-        u_upcast->points.setEndurance(this_upcast->points.getEndurance());
-        u_upcast->points.setRace(this_upcast->points.getRace());
-        u_upcast->points.setOffensiveBonus(this_upcast->points.getOffensiveBonus());
-        u_upcast->points.setDefensiveBonus(this_upcast->points.getDefensiveBonus());
-        u_upcast->points.setSpeed(this_upcast->points.getSpeed());
-        u_upcast->points.setNaturalArmor(this_upcast->points.getNaturalArmor());
-        u_upcast->points.setAttackType(this_upcast->points.getAttackType());
-        u_upcast->points.setSex(this_upcast->points.getSex());
-        u_upcast->points.setLevel(this_upcast->points.getLevel());
-        u_upcast->points.setPosition(this_upcast->points.getPosition());
+        u_downcast->points.setAllCharacterFlags(this_downcast->points.getCharacterFlags());
+        u_downcast->points.setPlayerExperience(this_downcast->points.getPlayerExperience());
+        u_downcast->points.setMana(this_downcast->points.getMana());
+        u_downcast->points.setEndurance(this_downcast->points.getEndurance());
+        u_downcast->points.setRace(this_downcast->points.getRace());
+        u_downcast->points.setOffensiveBonus(this_downcast->points.getOffensiveBonus());
+        u_downcast->points.setDefensiveBonus(this_downcast->points.getDefensiveBonus());
+        u_downcast->points.setSpeed(this_downcast->points.getSpeed());
+        u_downcast->points.setNaturalArmor(this_downcast->points.getNaturalArmor());
+        u_downcast->points.setAttackType(this_downcast->points.getAttackType());
+        u_downcast->points.setSex(this_downcast->points.getSex());
+        u_downcast->points.setLevel(this_downcast->points.getLevel());
+        u_downcast->points.setPosition(this_downcast->points.getPosition());
         for (x = 0; x < ABIL_TREE_MAX; x++)
         {
-            u_upcast->points.setAbilityAtIndexTo(x, this_upcast->points.getAbilityAtIndex(x));
+            u_downcast->points.setAbilityAtIndexTo(x, this_downcast->points.getAbilityAtIndex(x));
         }
         if (IS_PC(this))
         {

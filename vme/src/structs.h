@@ -212,7 +212,7 @@ public:
     ubit32 getCharacterFlags() const;
     ubit32 *getCharacterFlagsPtr();
     void setAllCharacterFlags(ubit32 value);
-    int readCharacterFlagsFrom(CByteBuffer &buf);
+    void readCharacterFlagsFrom(CByteBuffer &buf, int &error);
     void setCharacterFlag(ubit32 value);
     void removeCharacterFlag(ubit32 value);
     void toggleCharacterFlag(ubit32 value);
@@ -220,64 +220,64 @@ public:
     sbit32 getPlayerExperience() const;
     sbit32 *getPlayerExperiencePtr();
     void setPlayerExperience(sbit32 value);
-    void incrementPlayerExperienceBy(sbit32 value);
-    int readPlayerExperienceFrom(CByteBuffer &buf);
+    void increasePlayerExperienceBy(sbit32 value);
+    void readPlayerExperienceFrom(CByteBuffer &buf, int &error);
 
     ubit16 getRace() const;
     ubit16 *getRacePtr();
-    int readRaceFrom(CByteBuffer &buf);
+    void readRaceFrom(CByteBuffer &buf, int &error);
     void setRace(ubit16 value);
 
     sbit16 getMana() const;
     sbit16 *getManaPtr();
-    int readManaFrom(CByteBuffer &buf);
+    void readManaFrom(CByteBuffer &buf, int &error);
     void setMana(sbit16 value);
     void decreaseManaBy(sbit16 value);
 
     sbit16 getEndurance() const;
     sbit16 *getEndurancePtr();
     void setEndurance(sbit16 value);
-    int readEnduranceFrom(CByteBuffer &buf);
-    void decrementEndurance(sbit16 value);
+    void readEnduranceFrom(CByteBuffer &buf, int &error);
+    void decreaseEndurance(sbit16 value);
 
     sbit16 getOffensiveBonus() const;
     void setOffensiveBonus(sbit16 value);
-    int readOffensiveBonusFrom(CByteBuffer &buf);
+    void readOffensiveBonusFrom(CByteBuffer &buf, int &error);
     sbit16 *getOffensiveBonusPtr();
 
     sbit16 getDefensiveBonus() const;
     void setDefensiveBonus(sbit16 value);
-    int readDefensiveBonusFrom(CByteBuffer &buf);
+    void readDefensiveBonusFrom(CByteBuffer &buf, int &error);
     sbit16 *getDefensiveBonusPtr();
 
     ubit8 getSpeed() const;
     void setSpeed(ubit8 value);
-    int readSpeedFrom(CByteBuffer &buf);
+    void readSpeedFrom(CByteBuffer &buf, int &error);
 
     ubit8 getNaturalArmor() const;
     void setNaturalArmor(ubit8 value);
     ubit8 *getNaturalArmorPtr();
-    int readNaturalArmorFrom(CByteBuffer &buf);
+    void readNaturalArmorFrom(CByteBuffer &buf, int &error);
 
     ubit8 getAttackType() const;
     void setAttackType(ubit8 value);
-    int readAttackTypeFrom(CByteBuffer &buf);
+    void readAttackTypeFrom(CByteBuffer &buf, int &error);
     ubit8 *getAttackTypePtr();
 
     ubit8 getSex() const;
     void setSex(ubit8 value);
     ubit8 *getSexPtr();
-    int readSexFrom(CByteBuffer &buf);
+    void readSexFrom(CByteBuffer &buf, int &error);
 
     ubit8 getLevel() const;
     void setLevel(ubit8 value);
     ubit8 *getLevelPtr();
-    int readLevelFrom(CByteBuffer &buf);
-    void incLevel();
+    void readLevelFrom(CByteBuffer &buf, int &error);
+    void incrementLevel();
 
     ubit8 getPosition() const;
     void setPosition(ubit8 value);
-    int readPositionFrom(CByteBuffer &buf);
+    void readPositionFrom(CByteBuffer &buf, int &error);
     ubit8 *getPositionPtr();
 
     sbit16 getAbilityAtIndex(size_t index) const;
@@ -299,7 +299,7 @@ public:
     void setDIV(sbit16 value);
     void setHPP(sbit16 value);
     void setAbilityAtIndexTo(size_t index, sbit16 value);
-    int readAbilityFromAtIndex(CByteBuffer &buf, size_t index);
+    int readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index);
     void increaseAbilityAtIndexBy(size_t index, sbit16 value);
     void decreaseAbilityAtIndexBy(size_t index, sbit16 value);
     std::array<sbit16, ABIL_TREE_MAX> &getAbilitiesArray();
