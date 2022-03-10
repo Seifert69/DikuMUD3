@@ -253,12 +253,12 @@
         {
             "source_file": {
                 "filename": "cypress.zon",
-                "sha512": "7ab220f8b7e6e244e09ead393e9c180d6d287d3de1df3a2a7cdcff0d913e9919f19db475d0555f1682f402b5a1fa3b910fae581d20482360614c6e7b3b503715"
+                "sha512": "7c5bcefd11545982d92da9a17d290e39989a1c5c0e193c33f4f44cfbe9793696e06081d5e1d268aa20fed94f9c53f1a2b7df51eaebaf11d348bd28ba5b4af075"
             },
             "output": [
                 {
                     "filename": "cypress.data",
-                    "sha512": "b5c9636f3433f7ea010133bf4272061514d778bd09dd6ec4cc53b731498813606dba1547bde70a3b86b97ba09e8f470dc473430a1cc4c73d0a659b92e4f6ee2d"
+                    "sha512": "3d163e38df8f9977882668dd6d3d3b3460ff49191b6d38a4d06a3d8e023050b36a59823fee2b66667e9a844730c8e984ef28310fb8207897edc566a5020a5772"
                 },
                 {
                     "filename": "cypress.reset",
@@ -951,6 +951,22 @@
                 {
                     "filename": "wiz.reset",
                     "sha512": "d9ac55256695dcd6e164766810cdfc7285e6df6409750bf9ff34a0eac678b3e0f0c8c2a407772c1ee787aa07f9422e7b404fd8857dc79e10cb5c12d0367d4400"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "youth.zon",
+                "sha512": "d3a8163f4cf2592d690214eb4eb3e4e6a368ea762ae7619341b777cdca7dd72e583a707721366fc312bc35b51a4cf4ff06dcf8e5714fcf770f69aebf62112504"
+            },
+            "output": [
+                {
+                    "filename": "youth.data",
+                    "sha512": "c8cb2882c3d5b7fad1fe5b6d76128b049994be516462e16d88bed0c935a1ecf27c2e3b9dbb910168924aaf8fef04ac64053ad350db69bc79d86af16608103561"
+                },
+                {
+                    "filename": "youth.reset",
+                    "sha512": "88b979249e5e3e8d8f144ad9fa8d49805e6dcb034871425456f26be8157f91a4778b1e2b0f30748a55b2cb5cc671eec83cd7fc4854cb6b5643c8293aa523a781"
                 }
             ]
         }
