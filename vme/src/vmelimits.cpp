@@ -123,7 +123,7 @@ static int hit_limit_number(unit_data *ch, int point)
     {
         if (!PC_IMMORTAL(ch) && age(ch).getYear() > PC_LIFESPAN(ch))
         {
-            return -1;
+            return 1;
         }
 
         return 3 * point + 20;

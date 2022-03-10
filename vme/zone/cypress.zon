@@ -477,10 +477,11 @@ end
 
 title "Top of Hill"
 descr
-"   Standing at the very top of a small hill in the cypress forest you have
+"   Standing at the very top of a hill in the cypress forest you have
 a magnificent view. The hill is just tall enough for you to peek above the
 tree crowns of the cypress trees. Udgaard is just west of here and a
-stable is to the north."
+stable is to the north. A path leads down the hill but the view is
+obstructed by the trees."
 
 /* XXX If you plant a cone here something shall happen */
 
@@ -494,10 +495,13 @@ along the moist forest trail.";
 south to ct_18 descr
 "The cypress forest seems quite large stretching out to the south. You notice
 a clearing further south and a strange greenish light in a southeast
-direction";
+direction.";
+
 north to stable1 descr
 "You see a stable to the north";
 
+down to intro@youth descr
+"Down the hill your view is obstructed by trees.";
 
 extra {"east"}
 "The Cypress forest stretches out eastwards and in the distance you can make

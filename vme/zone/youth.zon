@@ -1,0 +1,357 @@
+/*
+filename    youth
+password    ******
+changedby   Aja
+EmailAdd
+request     compile
+version     1
+END HEADER*/
+
+#include <macros.h>
+
+
+/* 
+DONE: Create spring of youth as a disk saved object
+DONE: Create rooms for the fountain
+TODO: Create a way for others to 'pay' for the life of some and a way for imms to assist.
+TODO: Method for determining how much life to give back from an extra on the spring so that it can be modified in game. 
+TODO: Logs and cleanup
+TODO: Test
+
+
+
+Credit to Horkval & Vega from Valheru for the idea and probably some code snippets. 
+
+*/
+#define ROOM_MACRO_OUTDOOR \
+    ALWAYS_LIGHT \
+    movement SECT_CITY \
+    flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}  // UNIT_FL_OUTDOORS doesn't exist. UNIT_FL_INDOORS exists. When absent, it's outdoors 
+
+
+
+%zone youth
+
+lifespan 10
+reset RESET_ANYHOW
+title "Eternal Spring of Youth"
+creators {"Aja"}
+
+%dil
+
+
+
+/*In case you want to brute force the age change - dilcopy change_age(i)@youth*/
+
+dilbegin change_age(years : integer);
+var 
+   s : string;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC) {
+      log("Can't adjust the age of not a player.");
+      quit;  
+   }
+   if (self.level >= IMMORTAL_LEVEL) {
+      log("They're immortal....");
+      quit;
+   }
+   if ((realtime - self.birth) > (self.lifespan * SECS_PER_MUD_YEAR))
+   {
+      i := self.birth + (years * SECS_PER_MUD_YEAR);
+      i := realtime - ((self.lifespan * SECS_PER_MUD_YEAR) - (50 * SECS_PER_MUD_YEAR));
+      log (self.name + " changed age from " +  itoa((realtime - self.birth) / (SECS_PER_MUD_YEAR)) + " to " +  itoa((realtime-i) / (SECS_PER_MUD_YEAR)) + " mud years. ");
+      self.birth := i;
+      self.hp := self.max_hp;
+      self.mana := self.max_mana;
+      self.endurance := self.max_endurance;
+      sendtext("All of sudden, a wave rushes over you and you feel....alive!", self); 
+   }
+   quit;
+}
+dilend
+
+
+dilbegin load_save();
+var
+   item : unitptr;
+code
+{
+   :start:
+   item := restore("spring_saveobj@youth", null);
+   if(item == null)
+   {
+      log(self.zoneidx + ": no eternal spring found - loading new.");
+      item := load("spring_saveobj@youth");
+      store(item, "spring_saveobj@youth", TRUE);
+   } 
+   quit;
+}
+dilend
+
+
+
+%objects
+
+spring
+    names {"Eternal Spring", "spring eternal", "spring", "pool", "water"}
+    title "the <div class='cpy'>Eternal Spring</div>"
+    descr "A small pool of exceptionally clear water from a spring sparkles here."
+    extra {} "Sparkling, no matter the weather, you sense this naturally occuring spring does more than just hydrate your mortal body. The pool below the spring has a gentle current that provides just enough movement to catch the eye with sparks of gold, violet, and pink at the peaks of the ripples. This spring may just be the one of legends, taking an adventurer back in time. You can try to drink from it, for a price."
+    extra {"$price_per_drink"}  "10" // 10 gold ...
+    extra {"$years_to_restore"} "10"
+    extra {"$interactions_1"} ""
+    extra {"$interactions_2"} ""
+    type ITEM_TREASURE
+    weight 40000
+
+   dilbegin restore_youth();
+   var
+      payer : unitptr;
+      drinker : unitptr;
+      s : string;
+      u : unitptr;
+      i : integer;
+      j : integer;
+      k : integer;
+      price : integer;
+      years : integer;
+      
+  code
+  {
+      interrupt(SFB_CMD, (command("drink") and (argument in self.names) and (activator.type == UNIT_ST_PC)), drink);
+      heartbeat := 60 * PULSE_SEC;
+      j := 0;
+      
+      :start:
+      wait(SFB_TICK, TRUE);
+      j := j + 1;
+      if (j == 3)
+      {
+         subextra(self.extra, "$interactions_1");
+         addextra(self.extra, {"$interactions_1"}, "");
+      }
+      else if (j == 4)
+      {
+         subextra(self.extra, "$interactions_2");
+         addextra(self.extra, {"$interactions_2"}, "");        
+      }
+      if (j == 6)
+         j := 0;
+      goto start;
+      
+      
+      :drink:
+      block;
+      if (activator.level >= IMMORTAL_LEVEL)
+      {
+          sendtext("No need. You've already got everlasting life!<br/>", activator);
+          goto start;
+      }
+      
+      price := atoi(self.extra.["$price_per_drink"].descr);
+      years := atoi(self.extra.["$years_to_restore"].descr);
+      
+      if ( (not(price)) or (not(years)) )
+      {
+        log("Missing extra on eternal spring. Make sure $price_per_drink and $years_to_restore extra exist on spring@youth.");
+        act("You attempt to drink from the fountain and find that you just can't quite reach. Ask an immortal for help.", A_SOMEONE, activator, self, null, TO_CHAR);
+        goto start;
+      }
+      /* if ( ((price) * 100) > activator.acc_balance)
+      {
+          act("Your will to drink from the $2N is strong but you realize you can't afford it.", A_SOMEONE, activator, self, null, TO_CHAR);
+          goto start;
+      }*/
+
+      if (not ((activator.name in self.extra.["$interactions_1"].names) or (activator.name in self.extra.["$interactions_2"].names)))
+      {
+          addstring(self.extra.["$interactions_1"].names, activator.name);
+          addstring(self.extra.["$interactions_2"].names, activator.name);        
+          sendtext("<div class='cpr'>Drinking from the spring will cost you " +  itoa(price) + " powerpoints. It will make you younger by " +  itoa(years) + " mud years. If you are sure you want to continue, drink again.</div><br/>", activator);
+          goto start;
+      }
+
+      i := activator.birth + SECS_PER_REAL_YEAR;
+      if ((realtime - i) < (activator.lifespan * SECS_PER_MUD_YEAR / 6))
+      {    
+          act("You try to drink from the spring but find that it simply dissapears before it hits your lips.", A_SOMEONE, activator,  self, null, TO_CHAR);
+          goto start;
+      }
+
+      drinker := activator;
+      substring(self.extra.["$interactions_1"].names, drinker.name);
+      substring(self.extra.["$interactions_2"].names, drinker.name);
+      act("You scoop a handful of water to your lips and sip, feeling renewed!", A_ALWAYS, drinker, self, null, TO_CHAR);
+      act("$1n scoops a handful of water to $1s lips and instantly looks " + itoa(years) + "younger.", A_SOMEONE, drinker, self, null, TO_REST);
+      i := drinker.birth + (years * SECS_PER_MUD_YEAR);
+      if ((realtime - drinker.birth) > (drinker.lifespan * SECS_PER_MUD_YEAR))
+      i := realtime - ((drinker.lifespan * SECS_PER_MUD_YEAR) - (years * SECS_PER_MUD_YEAR));
+      log (self.name + ": " + drinker.name + " changed age from " +  itoa((realtime - drinker.birth) / (SECS_PER_MUD_YEAR)) + " to " +  itoa((realtime-i) / (SECS_PER_MUD_YEAR)) + " mud years.");
+      
+      s := asctime(realtime);
+      s := s + 
+      " Drinker:" + 
+      drinker.name + 
+      " age from " + 
+      itoa((realtime - drinker.birth) / (SECS_PER_MUD_YEAR)) + 
+      " to " + 
+      itoa((realtime-i) / (SECS_PER_MUD_YEAR)) + 
+      " price: " + 
+      itoa(price) + 
+      " lifespan: " + 
+      itoa(drinker.lifespan) + "<br/>";
+      k := savestr("youth.log", s, "a");
+      
+      drinker.birth := i;
+      drinker.hp := drinker.max_hp;
+      drinker.mana := drinker.max_mana;
+      drinker.endurance := drinker.max_endurance;
+      acc_modify(payer, -((price) * 100));
+      goto start;    
+  }
+  dilend
+end
+
+
+spring_saveobj
+  title "the eternal spring's save object"
+  names {"spring save object", "save object", "object", "spring", "saveobj"}
+  descr "Etchings on the rock wall of the eternal spring glitter here."
+  extra {} "This is a save object."
+  extra {"$imm_info"} "This is a save object for the eternal spring. Don't muck about with it. You can toggle it on and off by typing 'togglespring'."
+
+  minv 200
+
+  extra {"$status"} "ON"
+
+  dilbegin save_spring();
+  var
+    pc   : unitptr;
+    item : unitptr;
+  code
+  {
+    if(self.extra.["$status"].descr == "ON"){
+      item := findsymbolic("spring@youth");
+      if(item == null){
+        item := load("spring@youth");
+        link(item, findroom("springroom@youth"));
+      }
+    }
+
+    :start:
+    interrupt(SFB_MSG, ("savespring" in argument), do_save);
+    wait(SFB_CMD, (command("togglespring") or command("savespring") )and (activator.level >= IMMORTAL_LEVEL) );
+    block;
+    if(command("savespring")){goto do_save;}
+    pc := activator;
+    if(self.extra.["$status"].descr == "OFF"){
+        self.extra.["$status"].descr := "ON";
+        sendtext("The Eternal Spring now: On.", pc);
+        item := load("spring@youth");
+        link(item, findroom("springroom@youth"));
+        act("You command $1n into existence.", A_SOMEONE, item, null, null, TO_ALL);
+    }
+    else{
+        self.extra.["$status"].descr := "OFF";
+        sendtext("The Eternal Spring now: Off.", pc);
+        item := findsymbolic("spring@youth");
+        while(item){
+          act("You command $1n out of existence.", A_SOMEONE, item, null, null, TO_ALL);
+          destroy(item);
+          item := findsymbolic("spring@youth");
+        }
+    }
+
+    :do_save:
+    store(self, self.nameidx + "." + self.zoneidx, TRUE);
+    goto start;
+  }
+
+  dilend
+end
+
+
+%rooms
+/*x1
+  x2
+ 4x3x7x
+ 5x 
+ 6x
+Takes place in a sandstone formation (think* arches national park).
+*/
+
+intro //x1
+    title "Outside Cypress Forest"
+    descr "You find yourself looking up a massive hill in Cypress forest. When standing at the top of the hill you would not be able to see this section as it is almost completely obstructed by the trees, however standing here to your south is a massive wall of sandstone spires and geologic formations in reds and golds. A few steps to the south you could come right up to the wall and come in contact with millenia-aged formations."
+    ROOM_MACRO_OUTDOOR
+
+    up to hill@cypress descr "Up the hill towards cypress forest.";
+    south to entrance descr "At the base of the rocky spires.";
+end
+
+
+entrance //x2
+    title "At the base of natural rock spires"
+    descr "You are standing in the shadow of a wall of massive sandstone rock spires. As you look up to the south you take note of the impressive horizontally varigated peaks, valleys, and indentations that are colored in stripes of red, gold, ocre, and tan. The protrusion directly in front of you contains cracks that almost create the outline of rectangle."
+    extra {"protrusion", "rectangle", "cracks", "crack", "indentations"} "Looking closely you notice what could be the outline of a door just large enough for you to fit through if you could search for an opening."
+    ROOM_MACRO_OUTDOOR
+    south to chamber
+      keyword {"opening", "protrusion", "rectangle", "cracks", "crack", "indentations"}
+      open {EX_HIDDEN, EX_OPEN_CLOSE, EX_CLOSED}
+      difficulty 70;
+    north to intro;
+end
+
+
+chamber //3
+  title "A hidden antechamber"
+  descr "You find yourself inside a wall of sandstone spires in a spherical room that is cool, but not cold. There is a wall to the south with glyphs that you cannot decipher from here. To the east is a wide, welcoming tunnel that curves so you can't see very deep into its path and to the west is a tiny passageway that you could probably squeeze through if necessary. The ceiling is pleasantly curved and mostly smooth, with a honeycomb of tafoni etched in its surface."
+  extra {"ceiling", "tafoni", "honeycomb"} "The natural rock formations have created a honeycomb effect in the ceiling and along the tops of the walls where the curvature of the ceiling meets the vertical surface of the walls."
+  extra {"glyphs", "glyph", "wall"} "Squinting to make out the faded marks you can see that it not just writing but bits of a scene. You can make out only the right section in which a diety is bleeding in a pool of water." 
+  ROOM_MACRO_OUTDOOR
+
+  north to entrance 
+  keyword{"opening"}
+      open {EX_OPEN_CLOSE, EX_CLOSED};
+  east to wide_pass;
+  west to narrow_pass;
+end
+
+wide_pass //7
+  title "A large sandstone room"
+  descr "You are standing in a partially open alcove with a curved entrance to the west. The air here is slightly warmer. In front of you, you can see the sky above. The floor and walls on three sides of you are blocking any movement outside of this large area."
+  extra {"ceiling", "tafoni", "honeycomb"} "The natural rock formations have created a honeycomb effect in the ceiling and along the tops of the walls where the curvature of the ceiling meets the vertical surface of the walls."
+  extra {"glyphs", "glyph", "wall"} "Squinting to make out the faded marks you can see that it not just writing but bits of a scene. You can make out only the right section in which a diety is bleeding in a pool of water." 
+  ROOM_MACRO_OUTDOOR
+  west to chamber;
+end
+
+narrow_pass //4
+  title "A narrow passageway"
+  descr "This tiny, sandstone hallway scrapes against your shoulders no matter which direction you move. You are hunched over just to keep from hitting your head and your knees have to bend significantly just to make a forward motion possible. To the east is a large open chamber under the rock spires and the to the south you can see a bright light shining around a curved wall. "
+  ROOM_MACRO_OUTDOOR
+  south to opening; 
+  east to chamber;
+end
+
+opening //5
+  title "A hidden oasis"
+  descr "You are surrounded on all sides by tall vertical spires of striated sandstone jutting into the horizon. To your north is an unscalable wall with a narrow entrance leading into the wall of rock. Surrounding you along the walls of rock are vines, air plants, succulents, and other vegetation that sprouted. To your north is a large sparkling pool which draws your eye with the flora thickening toward the pool despite the rocky footing. "
+  ROOM_MACRO_OUTDOOR
+  south to springroom; 
+  north to narrow_pass;
+end
+
+springroom //6
+  title "At the Eternal Spring"
+  descr "Amid the lush greenery in stark contrast to the reddened and aged sandstone walls there is a spring-fed pool that seems to begin within the walls and end in an ephemeral pond in this secluded place."
+  ROOM_MACRO_OUTDOOR
+  dilcopy load_save();
+  north to opening;
+end
+
+// %reset
+
+%end
