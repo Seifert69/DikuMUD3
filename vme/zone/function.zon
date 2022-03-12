@@ -1069,102 +1069,99 @@ dilend
  * boolean whether or not the tick is to be SFB_RANDOM_TIME'd, ie. +/- 50%
  * variation.
  */
-dilbegin force_move (tick: integer, strings: string,
-random: integer);
-
-var rmstr: string;
-    act_s: string;
-    ln:integer;
-
-    sl   : stringlist;
-    i    : integer;
-    u,t    : unitptr;
-	temp:unitptr;
+dilbegin force_move (tick: integer, strings: string, random: integer);
+var
+   rmstr: string;
+   act_s: string;
+   ln:integer;
+   sl   : stringlist;
+   i    : integer;
+   u,t    : unitptr;
+   temp:unitptr;
 
 code
 {
+   if (tick < 12)
+      tick := 12;
 
-if (tick < 12) tick := 12;
+   heartbeat:= tick;
+   sl := split(strings, "!");
 
-heartbeat:= tick;
-sl:= split(strings, "!");
-if (length(sl)<2)
-{
-log ("Force move error on "+self.nameidx+"@"+self.zoneidx);
-quit;
-}
+   if (length(sl) < 2)
+   {
+      log ("Force move error on "+self.nameidx+"@"+self.zoneidx);
+      quit;
+   }
 
-rmstr:= sl.[0];
-act_s:="";
-    i := 1;
-    ln:=length(sl);
-    while (i<ln)
+   rmstr := sl.[0];
+   act_s := "";
+   i := 1;
+   ln := length(sl);
+   while (i < ln)
+   {
+      act_s := act_s + sl.[i];
+      i := i + 1;
+   }
+
+   if (not findroom(rmstr))
+   {
+      log ("Could not find room "+rmstr+" (force move)");
+      quit;
+   }
+
+   while (TRUE)
+   {
+      if (not random)
+         wait (SFB_TICK, TRUE);
+      else
+         wait (SFB_TICK|SFB_RANTIME, TRUE); // pause
+
+      u:=self.inside;
+      while (u!=null)
+      {
+         temp:=u.next;
+         if (u.type ==UNIT_ST_ROOM)
+         {
+            u:=temp;
+            continue;
+         }
+         if ("$no force move" in u.extra)
+         {
+            u:=temp;
+            continue;
+         }
+
+         if (act_s == "")
+         {
+            act ("You are moved.", A_ALWAYS, u, null, null, TO_CHAR);
+            act ("You are moved.", A_ALWAYS, u.inside, null, null, TO_ALL);
+         }
+         else
+         {
+            act (act_s, A_ALWAYS, u, null, null, TO_CHAR);
+            act (act_s, A_ALWAYS, u.inside, null, null, TO_ALL);
+         }
+
+         link (u, findroom(rmstr));
+         if (u.type == UNIT_ST_PC)
+            exec ("look", u);
+         else
+         {
+            t:=u.inside;
+            while (t!=null)
             {
-        act_s := act_s + sl.[i];
-        i := i + 1;
-        }
-if (not findroom(rmstr))
-    {
-    log ("Could not find room "+rmstr+" (force move)");
-    quit;
-    }
+               if (t.type == UNIT_ST_PC)
+               exec("look", t);
+               t:=t.next;
+            }
+         }
 
-while (TRUE)
-{
-if (not random)
-    wait (SFB_TICK, TRUE);
-else
-    wait (SFB_TICK|SFB_RANTIME, TRUE); // pause
- u:=self.inside;
- while (u!=null)
- {
- temp:=u.next;
-	if (u.type ==UNIT_ST_ROOM)
-	{
-	u:=temp;
-	continue;
-	}
-    if ("$no force move" in u.extra)
-	{
-	u:=temp;
-	continue;
-	}
+         act ("$1n has arrived.", A_HIDEINV, u, null, null, TO_REST);
+         u:=temp;
+      }
 
-
-    if (act_s == "")
-	{
-        act ("You are moved.", A_ALWAYS, u, null, null, TO_CHAR);
-		        act ("You are moved.", A_ALWAYS, u.inside, null, null, TO_ALL);
-		}
-    else
-	{
-        act (act_s, A_ALWAYS, u, null, null, TO_CHAR);
-				        act (act_s, A_ALWAYS, u.inside, null, null, TO_ALL);
-						}
-
-    link (u, findroom(rmstr));
-    if (u.type == UNIT_ST_PC)
-	exec ("look", u);
-else
-{
-				t:=u.inside;
-				while (t!=null)
-				{
-				    if (t.type == UNIT_ST_PC)
-	exec ("look", t);
-	t:=t.next;
-	}
-        }
-
-
-
-    act ("$1n has arrived.", A_HIDEINV, u, null, null, TO_REST);
-	u:=temp;
-	    }
-
+   }
 }
-}
-
 dilend
 
 
