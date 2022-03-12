@@ -269,12 +269,12 @@
         {
             "source_file": {
                 "filename": "death.zon",
-                "sha512": "472fdd8d5f54067a1621114aa27aca7a4d8fa2c39658488961dbb3dbc2ddb4d17417d385a251bc9959b150f47e0106637d507f41b9a0b7776396a285b55491d7"
+                "sha512": "c37204c2685a40ddc2eea6991f9896d38e1a0b0bb014732b6a85cf1bc5a2cc745b78d084c5e66dc4b10ef22118883843a8d1f12d320d9d2c7d7b575bda9f5570"
             },
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "688ea05ef6d426ecd050f86e491e09a2cd9e84237e559e51a1e47caa156086ee8cd4210694c90992cb4faf373bbd2e69ff06aca595d6f50ef7f85637ad99a16d"
+                    "sha512": "65a9c8b85ac0aba144b2e860dc1331f03cff42730d0e16397a41e8de5b3d5bcb5ef58819568846cfa31e9c68bdd6bf607e2903f574b2db49747a9acb79cbed03"
                 },
                 {
                     "filename": "death.reset",
@@ -317,7 +317,7 @@
         {
             "source_file": {
                 "filename": "function.zon",
-                "sha512": "3a809b07d51601e5f49ff908ae08ecb264a8ee04e05b3f712ed32bd0d2d8f2240fb0444445166f63485fecc60b2f81f44f7e3be10059f3157e2b25f1142275a9"
+                "sha512": "462e740b51552fe06b48cdef8137e265676bd00682be19baf54108d1507ea088eb0fffb482a57a3f9aa2556b26cd2abcc8cdbda4885694bafd3ad28758e70276"
             },
             "output": [
                 {

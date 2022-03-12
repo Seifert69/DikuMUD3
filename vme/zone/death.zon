@@ -402,20 +402,23 @@ code
       if (bHometown)
       {
          i := PULSE_SEC * SECS_PER_REAL_MIN * 20; // roughly 4*20m before potential player corpse recall
+         log("player corpse hometown, 4 * 20 minutes");
       }
       else
       {
          i := PULSE_SEC * SECS_PER_REAL_HOUR * 8; // ~4*8 hours
+         log("player corpse no hometown,  4 * 8 hours");
       }
    }
    else
       i := PULSE_SEC * SECS_PER_REAL_MIN * 5; // 4*5 minutes
 
+
    n := atoi(self.extra.[CORPSE_TIME].descr);
 
+:start:
    heartbeat := i;  // first a pause, then 3 states / pause, then dissolve (or restart) 
 
-:start:
    /* if (self.value[2] == 1)
    {
       if (self.inside == null) 
@@ -426,6 +429,7 @@ code
    } */
 
    pause;
+   log("player corpse 1st tick");
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[1], A_HIDEINV, self, null, null, TO_ALL);
@@ -433,6 +437,7 @@ code
    }
 
    pause;
+   log("player corpse 2nd tick");
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[2], A_HIDEINV,self,null,null,TO_ALL);
@@ -440,6 +445,7 @@ code
    }
 
    pause;
+   log("player corpse 3rd tick");
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[3], A_HIDEINV,self,null,null,TO_ALL);
@@ -447,14 +453,13 @@ code
    }
 
    pause;
-   if ((self.value[2] == 1) and bHometown and (self.inside != null))
+   log("player corpse 4th tick");
+
+   if ((self.value[2] == 1) and bHometown)
    {
       corpse_room := findroom(self.extra.[CORPSE_HOMETOWN].descr);
       if (corpse_room == null)
          corpse_room := findroom("temple@udgaard");
-
-      if (self.outside == corpse_room)
-         goto dissolve;  // Must be the second time we are here, remove it.
 
       act("$1n and everything in it dissolve into magical dust, floating away into the air.", A_HIDEINV, self, null, null, TO_ALL);
       link(self, corpse_room);
