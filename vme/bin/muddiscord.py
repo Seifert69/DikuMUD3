@@ -147,7 +147,7 @@ class MyClient(discord.Client):
     async def pipelistener(self):
         await self.wait_until_ready()
 
-        print('pipeLIstener running')
+        print('pipeListener running')
 
         if self.resolveChannel('mud') == None:
             print('Cant find the default channel (MUD).')
@@ -185,7 +185,7 @@ class MyClient(discord.Client):
                         break
                     else:
                         content = line.decode("utf-8")
-                        print('Debug: Got line:', content)
+                        print('Debug: Got line: [', content, "]")
                         line = content.split("\n")
                         result.extend(line)
                 except OSError as e:
@@ -206,7 +206,7 @@ class MyClient(discord.Client):
                     if (line) and (line.strip()):
                         words = line.split(" ")
                         channel = None
-                        print("Line = ", line)
+                        print("Line = ", "["+line+"]")
 
                         if words[2][0] == "#":
                             print('words[2][1:] = ', words[2][1:])
@@ -221,10 +221,10 @@ class MyClient(discord.Client):
                         if words[1] == "who":
                             line = line[14:]  # remove "<discord> who " 
                             line = line.replace('&&', '\n')
-                            print('WHO update:\n', line)
+                            print('WHO update:\n', "["+line+"]")
                             await whomsg.edit(content=line)
                         elif words[1] == "msg":
-                            print('Msg Line = ', line)
+                            print('Msg Line = ', "["+line+"]")
                             print('Partition = ', line.split(' ', 3)[-1])
                             await channel.send(line.split(' ', 3)[-1])
                         else:
