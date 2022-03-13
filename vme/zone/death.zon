@@ -380,9 +380,7 @@ dilend
 //
 dilbegin recall rot_corpse();
 var
-   n : integer; /*amount of hours since created*/
-   i : integer;
-   s : string;
+   hb : integer;
    bHometown : integer;
    corpse_room : unitptr;
    item : unitptr;
@@ -395,70 +393,68 @@ code
 
    bHometown := 0;
 
+   hb := PULSE_SEC * SECS_PER_REAL_MIN * 5; // 4*5 minutes
+
    if (self.value[2] == 1) // corpse is a player corpse
    {
       bHometown := (self.extra.[CORPSE_HOMETOWN] != null);
 
       if (bHometown)
       {
-         i := PULSE_SEC * SECS_PER_REAL_MIN * 20; // roughly 4*20m before potential player corpse recall
+         hb := PULSE_SEC * SECS_PER_REAL_MIN * 20; // roughly 4*20m before potential player corpse recall
          log("player corpse hometown, 4 * 20 minutes");
       }
       else
       {
-         i := PULSE_SEC * SECS_PER_REAL_HOUR * 8; // ~4*8 hours
+         hb := PULSE_SEC * SECS_PER_REAL_HOUR * 8; // ~4*8 hours
          log("player corpse no hometown,  4 * 8 hours");
       }
    }
-   else
-      i := PULSE_SEC * SECS_PER_REAL_MIN * 5; // 4*5 minutes
-
-
-   n := atoi(self.extra.[CORPSE_TIME].descr);
 
 :start:
-   heartbeat := i;  // first a pause, then 3 states / pause, then dissolve (or restart) 
+   heartbeat := hb;  // first a pause, then 3 states / pause, then dissolve (or restart) 
 
-   /* if (self.value[2] == 1)
-   {
-      if (self.inside == null) 
-         s := " empty ";
-      else
-         s := " has inventory ";
-      log("Player: " + self.name + s + " begins to rot extra: " + self.extra.[CORPSE_TIME].descr + " realtime="+itoa(realtime));
-   } */
-
+   if (self.inside == null)
+      heartbeat := PULSE_SEC*300;
    pause;
-   log("player corpse 1st tick");
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[1], A_HIDEINV, self, null, null, TO_ALL);
       self.outside_descr := self.extra.["$rot"].names.[1];
    }
 
+   if (self.inside == null)
+      heartbeat := PULSE_SEC*300;
    pause;
-   log("player corpse 2nd tick");
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[2], A_HIDEINV,self,null,null,TO_ALL);
       self.outside_descr := self.extra.["$rot"].names.[2];
    }
 
+   if (self.inside == null)
+      heartbeat := PULSE_SEC*300;
    pause;
-   log("player corpse 3rd tick");
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[3], A_HIDEINV,self,null,null,TO_ALL);
       self.outside_descr := self.extra.["$rot"].names.[3];
    }
 
+   if (self.inside == null)
+      heartbeat := PULSE_SEC*300;
    pause;
-   log("player corpse 4th tick");
-
-   if ((self.value[2] == 1) and bHometown)
+   if ((self.value[2] == 1) and bHometown and (self.inside != null))
    {
       corpse_room := findroom(self.extra.[CORPSE_HOMETOWN].descr);
-      if (corpse_room == null)
+
+      if (corpse_room)
+      {
+         item := findroom("crypt@"+corpse_room.zoneidx);  // If there is a crypt in the hometown, leave it there
+         if (item)
+            corpse_room := item;
+      }
+      else
          corpse_room := findroom("temple@udgaard");
 
       act("$1n and everything in it dissolve into magical dust, floating away into the air.", A_HIDEINV, self, null, null, TO_ALL);
@@ -466,31 +462,29 @@ code
       act("The ashes of a body float down from the sky and form into $1n.", A_HIDEINV, self, null, null, TO_ALL);
       log("Rescued " + self.name + " instead of destroying it.");
       bHometown := 0; // Important, this round we begin to 'rot'
-      i := PULSE_SEC * SECS_PER_REAL_HOUR * 8; // ~4*8 hours
+      hb := PULSE_SEC * SECS_PER_REAL_HOUR * 12; // ~4*12 hours
       goto start; // Do it all again, but this time in the corpse_room
    }
-   else
-   {
+
 :dissolve:
-      if (not (isset(self.flags, UNIT_FL_BURIED)))
-         act(self.extra.["$rotact"].names.[4], A_HIDEINV, self, null,null,TO_ALL);
+   if (not (isset(self.flags, UNIT_FL_BURIED)))
+      act(self.extra.["$rotact"].names.[4], A_HIDEINV, self, null,null,TO_ALL);
 
-      if (self.extra.[CORPSE_FILE] != null)
-      {
-         i := delunit(self.extra.[CORPSE_FILE].descr);
-         log("DELETED stored player corpse " + self.extra.[CORPSE_FILE].descr + " " + itoa(i));
-      }
+   if (self.extra.[CORPSE_FILE] != null)
+   {
+      hb := delunit(self.extra.[CORPSE_FILE].descr);
+      log("DELETED stored player corpse " + self.extra.[CORPSE_FILE].descr + " " + itoa(hb));
+   }
 
-      if (self.value[2] == 1) // player
+   if (self.value[2] == 1) // player
+   {
+      // Last chance to resuce equipment
+      item := self.inside;
+      while (item)
       {
-         // Last chance to resuce equipment
-         item := self.inside;
-         while (item)
-         {
-            nxt := item.next;
-            link(item, self.outside);
-            item := nxt;
-         }
+         nxt := item.next;
+         link(item, self.outside);
+         item := nxt;
       }
 
       destroy(self);

@@ -4095,8 +4095,9 @@ end
 
 /*--------------------------------------------------------------------------
                         cth_crypt is moved to goj clan
+                        2022: Crypt restored - need it for corpses.
  -------------------------------------------------------------------------*/
-/*                              cth_crypt
+                              crypt
 
 names {"cathedral crypt"}
 title "Cathedral Crypt"
@@ -4105,10 +4106,9 @@ descr
 low-ceilinged room with old pillars supporting the crumbling arches."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(509,283)
 up to cth_n_stairs1;
-ALWAYS_LIGHT
 end
-*/
 
                               cth_n_stairs1
 
@@ -4119,6 +4119,7 @@ descr
 Cathedral.  The stairs lead up, and there is a heavy wooden door is to the
 west."
 up to cth_n_stairs2;
+down to crypt;
 west to cth_altar open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
         key altar_key keyword {"heavy wooden door", "door"} difficulty 75;
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}

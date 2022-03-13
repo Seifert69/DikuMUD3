@@ -2064,7 +2064,22 @@ goto start;
 }
 dilend
 
+
 %rooms
+
+crypt
+names {"crypt"}
+descr
+"You're in the cold crypt beneath the temple of Udgaard. A pair of torches
+illuminate this othewise dark and cold place. Many stone shelves are built
+into the walls. Stairs lead back up."
+gmap(424,420)
+movement SECT_INSIDE
+ALWAYS_LIGHT
+up to temple descr "Stairs lead up to the Temple of Udgaard";
+end
+
+
 post_path
 names {"path"}
 title "A Small Dirt Path"
@@ -4268,6 +4283,7 @@ gmap(424,420)
 south to square;
 east to udonate;
 north to heal_room;
+down to crypt descr "Stairs along the west wall lead down into darkness.";
 ALWAYS_LIGHT
 extra {"stone altar", "altar"}
 "The stone altar is very simple and engraved in it are a lots of strange
@@ -4276,7 +4292,7 @@ symbols. Perhaps the symbols are worth examining."
 extra {"symbols", "stone carvings", "carvings"}
 "Some of the symbols clearly represents various Gods while other appear
 to be normal text. You notice some of the largest symbols have been
-laid in gold and they read ᚡᚨᛚᚺᚯᛚᛚ  The symbols you do understand looks
+laid in gold and they read ᚡᚨᛚᚺᚯᛚᛚ. The symbols you do understand looks
 like this:<pre>
 
       Pray to odin if you are new and helpless.</pre>"
