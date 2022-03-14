@@ -406,8 +406,8 @@ code
       }
       else
       {
-         hb := PULSE_SEC * SECS_PER_REAL_HOUR * 8; // ~4*8 hours
-         log("player corpse no hometown,  4 * 8 hours");
+         hb := PULSE_SEC * SECS_PER_REAL_HOUR * 12; // ~4*8 hours
+         log("player corpse no hometown,  4 * 12 hours");
       }
    }
 
