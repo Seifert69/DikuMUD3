@@ -833,6 +833,7 @@ code
       {
          // How many full days is it old?
          daysold := (now - atoi(exd.names.[2])) / (3600*24);
+         log("daysold : " + itoa(daysold));
 
          if  ("@_players" in exd.names.[0])  // It's a PC
          {           
