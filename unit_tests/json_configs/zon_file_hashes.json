@@ -509,12 +509,12 @@
         {
             "source_file": {
                 "filename": "justice.zon",
-                "sha512": "8cd617d9707e38b466f6199b1e2c4e96ccc2051a0b399226334db1e9a888189624e1b045182ce57eac22f6751502ac98d977141f73d2bf2c848869d5e38183a3"
+                "sha512": "7786926718be8b29d44f9d5a1e1963df5f548b01fe1513f39a84c93b12fbda74180b517d7c05fe824fa3f99eeab0dfcc28d2139603645d4918295e90b947affd"
             },
             "output": [
                 {
                     "filename": "justice.data",
-                    "sha512": "e4072c6e624d86dcde9b5b6c6c573419718183cb77b58c5ff5cfcc1b243d815822a8c21b6b748f1756fb6376f4688745e1b2c697aee02c5d03f7f2a97a76cbb9"
+                    "sha512": "c2cb029ef33c532a6952958fd956bf2d91d3681c3a8a0e37e011714cd44b16539f56a63891639c1e43e9f0aff4f9671ebe5f4660d296b5fe16010b2efb424243"
                 },
                 {
                     "filename": "justice.reset",
