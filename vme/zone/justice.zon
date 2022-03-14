@@ -819,13 +819,10 @@ var
    exd : extraptr;
    nextdude : extraptr;
    now : integer;
-   i : integer;
-   u : unitptr;
-   sl : stringlist;
-   t : string;
+   daysold : integer;
 code
 {
-   exd := "$witness" in self.info;
+   exd := self.extra;
    now := realtime;
 
    while (exd)
@@ -834,22 +831,25 @@ code
 
       if (left(exd.names.[0], 8) == "$witness")
       {
-         if ("@_players" in exd.names.[0])
-         {
-            // How many full days is it old?
-            i := (now - atoi(exd.names.[2])) / (3600*24);
-           
+         // How many full days is it old?
+         daysold := (now - atoi(exd.names.[2])) / (3600*24);
+
+         if  ("@_players" in exd.names.[0])  // It's a PC
+         {           
             // Delete witness a player after 14 days
-            if (i > 1)
-               subextra(self.info, exd.names.[0]);
+            if (daysold > 14)
+              subextra(self.info, exd.names.[0]);
          }
          else  // It's a NPC
          {
-            sl := getwords(exd.names.[0]);
+            if (daysold > 2)  // Delete NPCs after 2 days
+              subextra(self.info, exd.names.[0]);
+
+            /* OBSOLETE sl := getwords(exd.names.[0]);
             // .[1] is jurisdiction, .[2] is symname, .[3] is idx
             u := findsymbolic(sl.[2], atoi(sl.[3]));
             if (u == null)
-               subextra(self.info, exd.names.[0]);
+               subextra(self.info, exd.names.[0]);*/
          }
       }
 
