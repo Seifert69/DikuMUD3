@@ -171,9 +171,6 @@ dilend
 
 // Clean old junk away
 dilbegin login_scrub(tgt : unitptr);
-external
-   login_clean@justice();
-   login_clean@guilds();
 var
    i : integer;
    ext : extraptr;
@@ -296,8 +293,6 @@ code
    subextra (tgt.extra,"$NOXMAS2");
    subextra (tgt.extra,"$NO_DEC06");
 
-   login_clean@justice();
-   login_clean@guilds();
    return;
 }
 dilend
@@ -535,6 +530,8 @@ external
    login_modify(tgt : unitptr);
    string dlrdump@commands(pfx : string);
    login_event@bounty();
+   login_clean@justice();
+   login_clean@guilds();
 
 
 var
@@ -579,6 +576,9 @@ code
       login_event@bounty();
       quit;
    }
+   
+   login_clean@justice();
+   login_clean@guilds();
 
    //gamestate(self, GS_MENU);
 

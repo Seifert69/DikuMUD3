@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "e7c91306858a7a9765db91367cd71ee6e07ad807d968596a5a5be541e032ed211a2f7a779a88ce3374955ea9815cb9a3d744a238545328acc1964c3f2d299bf7"
+                "sha512": "9691835d82a9b0b4547e25976e56f5131e8047094af75874aa0f41f49349eb4b6b2f466c3b0113312fdd611eddfebf75709f82dd4198b098906cf1777e46ea28"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "7579b5a876d5015739bb0880c1bfda3b77061124ec06a68d6a568a610daacd515f806c9246cf61aa558e0987ceb7b9501edbe59635d85a33e3812cbe966292b7"
+                    "sha512": "578eae00830ecdf20c763857f5d04785a01fc2d945ff778227f66e3e3dfbc98625688864461e73b717f2480de7bd38bdc82d5db538f2ff91fe1cccdfef173dc3"
                 },
                 {
                     "filename": "basis.reset",
