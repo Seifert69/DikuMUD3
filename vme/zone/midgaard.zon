@@ -4107,7 +4107,7 @@ low-ceilinged room with old pillars supporting the crumbling arches."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 gmap(509,283)
-up to cth_n_stairs1;
+up to cth_w_aisle;
 end
 
                               cth_n_stairs1
@@ -4119,7 +4119,6 @@ descr
 Cathedral.  The stairs lead up, and there is a heavy wooden door is to the
 west."
 up to cth_n_stairs2;
-down to crypt;
 west to cth_altar open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
         key altar_key keyword {"heavy wooden door", "door"} difficulty 75;
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -4269,6 +4268,7 @@ movement SECT_INSIDE
 gmap(452,311)
 east to cth_nave;
 up to cth_sw_stairs1;
+down to crypt;
 ALWAYS_LIGHT
 end
 
@@ -9552,7 +9552,7 @@ type ITEM_KEY
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 1
 extra {}
-"You notice the inscription `Crypt' on the key."
+"You notice the inscription 'Tower' on the key."
 end
 
 
