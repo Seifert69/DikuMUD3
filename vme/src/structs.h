@@ -216,7 +216,7 @@ public:
      * @param unit We have to pass this in because there data in the middle that doesn't belong to char_point_data
      * @param errors Error count
      */
-    void readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &errors);
+    void readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &error);
 
     ubit32 getCharacterFlags() const;
     ubit32 *getCharacterFlagsPtr();
@@ -254,7 +254,6 @@ public:
 
     ubit8 getSpeed() const;
     void setSpeed(ubit8 value);
-    void readSpeedFrom(CByteBuffer &buf, int &error);
 
     ubit8 getNaturalArmor() const;
     void setNaturalArmor(ubit8 value);
@@ -301,20 +300,6 @@ public:
     std::array<sbit16, ABIL_TREE_MAX> &getAbilitiesArray();
 
 private:
-    void readCharacterFlagsFrom(CByteBuffer &buf, int &error);
-    void readPlayerExperienceFrom(CByteBuffer &buf, int &error);
-    void readRaceFrom(CByteBuffer &buf, int &error);
-    void readManaFrom(CByteBuffer &buf, int &error);
-    void readEnduranceFrom(CByteBuffer &buf, int &error);
-    void readOffensiveBonusFrom(CByteBuffer &buf, int &error);
-    void readDefensiveBonusFrom(CByteBuffer &buf, int &error);
-    void readNaturalArmorFrom(CByteBuffer &buf, int &error);
-    void readAttackTypeFrom(CByteBuffer &buf, int &error);
-    void readSexFrom(CByteBuffer &buf, int &error);
-    void readLevelFrom(CByteBuffer &buf, int &error);
-    void readPositionFrom(CByteBuffer &buf, int &error);
-    void readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index);
-
     ubit32 flags{0};                                // Char flags
     sbit32 exp{0};                                  // The experience of the player
     ubit16 race{0};                                 // PC/NPC race, Humanoid, Animal, etc.

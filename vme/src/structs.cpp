@@ -73,11 +73,6 @@ void char_point_data::setAllCharacterFlags(ubit32 value)
     flags = value;
 }
 
-void char_point_data::readCharacterFlagsFrom(CByteBuffer &buf, int &error)
-{
-    flags = buf.ReadU32(&error);
-}
-
 void char_point_data::setCharacterFlag(ubit32 value)
 {
     flags |= value;
@@ -108,11 +103,6 @@ void char_point_data::setPlayerExperience(sbit32 value)
     exp = value;
 }
 
-void char_point_data::readPlayerExperienceFrom(CByteBuffer &buf, int &error)
-{
-    exp = buf.ReadS32(&error);
-}
-
 void char_point_data::increasePlayerExperienceBy(sbit32 value)
 {
     exp += value;
@@ -128,11 +118,6 @@ ubit16 *char_point_data::getRacePtr()
     return &race;
 }
 
-void char_point_data::readRaceFrom(CByteBuffer &buf, int &error)
-{
-    race = buf.ReadU16(&error);
-}
-
 void char_point_data::setRace(ubit16 value)
 {
     race = value;
@@ -146,11 +131,6 @@ sbit16 char_point_data::getMana() const
 sbit16 *char_point_data::getManaPtr()
 {
     return &mana;
-}
-
-void char_point_data::readManaFrom(CByteBuffer &buf, int &error)
-{
-    mana = buf.ReadS16(&error);
 }
 
 void char_point_data::setMana(sbit16 value)
@@ -178,11 +158,6 @@ void char_point_data::setEndurance(sbit16 value)
     endurance = value;
 }
 
-void char_point_data::readEnduranceFrom(CByteBuffer &buf, int &error)
-{
-    endurance = buf.ReadS16(&error);
-}
-
 void char_point_data::decreaseEnduranceBy(sbit16 value)
 {
     endurance -= value;
@@ -196,11 +171,6 @@ sbit16 char_point_data::getOffensiveBonus() const
 void char_point_data::setOffensiveBonus(sbit16 value)
 {
     offensive = value;
-}
-
-void char_point_data::readOffensiveBonusFrom(CByteBuffer &buf, int &error)
-{
-    offensive = buf.ReadS16(&error);
 }
 
 sbit16 *char_point_data::getOffensiveBonusPtr()
@@ -218,11 +188,6 @@ void char_point_data::setDefensiveBonus(sbit16 value)
     defensive = value;
 }
 
-void char_point_data::readDefensiveBonusFrom(CByteBuffer &buf, int &error)
-{
-    defensive = buf.ReadS16(&error);
-}
-
 sbit16 *char_point_data::getDefensiveBonusPtr()
 {
     return &defensive;
@@ -236,11 +201,6 @@ ubit8 char_point_data::getSpeed() const
 void char_point_data::setSpeed(ubit8 value)
 {
     speed = value;
-}
-
-void char_point_data::readSpeedFrom(CByteBuffer &buf, int &error)
-{
-    speed = buf.ReadU8(&error);
 }
 
 ubit8 char_point_data::getNaturalArmor() const
@@ -258,11 +218,6 @@ ubit8 *char_point_data::getNaturalArmorPtr()
     return &natural_armour;
 }
 
-void char_point_data::readNaturalArmorFrom(CByteBuffer &buf, int &error)
-{
-    natural_armour = buf.ReadU8(&error);
-}
-
 ubit8 char_point_data::getAttackType() const
 {
     return attack_type;
@@ -276,11 +231,6 @@ void char_point_data::setAttackType(ubit8 value)
 ubit8 *char_point_data::getAttackTypePtr()
 {
     return &attack_type;
-}
-
-void char_point_data::readAttackTypeFrom(CByteBuffer &buf, int &error)
-{
-    attack_type = buf.ReadU16(&error); // TODO Why is attack_type 8 bit it really should be 16 it looks like
 }
 
 ubit8 char_point_data::getSex() const
@@ -298,11 +248,6 @@ ubit8 *char_point_data::getSexPtr()
     return &sex;
 }
 
-void char_point_data::readSexFrom(CByteBuffer &buf, int &error)
-{
-    sex = buf.ReadU8(&error);
-}
-
 ubit8 char_point_data::getLevel() const
 {
     return level;
@@ -318,11 +263,6 @@ ubit8 *char_point_data::getLevelPtr()
     return &level;
 }
 
-void char_point_data::readLevelFrom(CByteBuffer &buf, int &error)
-{
-    level = buf.ReadU8(&error);
-}
-
 void char_point_data::incrementLevel()
 {
     ++level;
@@ -336,11 +276,6 @@ ubit8 char_point_data::getPosition() const
 void char_point_data::setPosition(ubit8 value)
 {
     position = value;
-}
-
-void char_point_data::readPositionFrom(CByteBuffer &buf, int &error)
-{
-    position = buf.ReadU8(&error);
 }
 
 ubit8 *char_point_data::getPositionPtr()
@@ -403,18 +338,6 @@ void char_point_data::setAbilityAtIndexTo(size_t index, sbit16 value)
     abilities[index] = value;
 }
 
-void char_point_data::readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index)
-{
-    if (unit_version < 69)
-    {
-        abilities[index] = buf.ReadU8(&error);
-    }
-    else
-    {
-        abilities[index] = buf.ReadS16(&error);
-    }
-}
-
 void char_point_data::increaseAbilityAtIndexBy(size_t index, sbit16 value)
 {
     abilities[index] += value;
@@ -470,59 +393,68 @@ void char_point_data::setHPP(sbit16 value)
     abilities[ABIL_HP] = value;
 }
 
-void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &errors)
+// TODO unit should not need to be based it but looks like there are parent fields in middle of char_point_data
+//      in the binary file
+void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &error)
 {
-    readPlayerExperienceFrom(buf, errors);
-    readCharacterFlagsFrom(buf, errors);
+    exp = buf.ReadS32(&error);
+    flags = buf.ReadU32(&error);
 
-    readManaFrom(buf, errors);
-    readEnduranceFrom(buf, errors);
+    mana = buf.ReadS16(&error);
+    endurance = buf.ReadS16(&error);
 
-    readNaturalArmorFrom(buf, errors);
+    natural_armour = buf.ReadU8(&error);
 
     if (unit_version >= 39)
     {
-        readSpeedFrom(buf, errors);
+        speed = buf.ReadU8(&error);
         if (IS_PC(unit))
         {
-            if (getSpeed() < SPEED_MIN)
+            if (speed < SPEED_MIN)
             {
-                setSpeed(SPEED_DEFAULT);
+                speed = SPEED_DEFAULT;
             }
         }
     }
     else
     {
-        setSpeed(SPEED_DEFAULT);
+        speed = SPEED_DEFAULT;
     }
 
-    readAttackTypeFrom(buf, errors);
+    attack_type = buf.ReadU16(&error); // TODO Why is attack_type 8 bit it really should be 16 it looks like
 
     if (unit_version <= 52)
     {
-        UNIT_SIZE(unit) = buf.ReadU16(&errors);
+        UNIT_SIZE(unit) = buf.ReadU16(&error);
     }
-    readRaceFrom(buf, errors);
+    race = buf.ReadU16(&error);
 
-    readOffensiveBonusFrom(buf, errors);
-    readDefensiveBonusFrom(buf, errors);
+    offensive = buf.ReadS16(&error);
+    defensive = buf.ReadS16(&error);
 
-    readSexFrom(buf, errors);
-    readLevelFrom(buf, errors);
-    readPositionFrom(buf, errors);
+    sex = buf.ReadU8(&error);
+    level = buf.ReadU8(&error);
+    position = buf.ReadU8(&error);
 
-    int j = buf.ReadU8(&errors);
+    int j = buf.ReadU8(&error);
 
     for (int i = 0; i < j; i++)
     {
-        readAbilityFromAtIndex(unit_version, errors, buf, i);
+        if (unit_version < 69)
+        {
+            abilities[i] = buf.ReadU8(&error);
+        }
+        else
+        {
+            abilities[i] = buf.ReadS16(&error);
+        }
 
         if (IS_PC(unit))
         {
-            PC_ABI_LVL(unit, i) = buf.ReadU8(&errors);
+            PC_ABI_LVL(unit, i) = buf.ReadU8(&error);
             if (unit_version < 72)
             {
-                errors += buf.Skip8();
+                error += buf.Skip8();
             }
         }
     }
