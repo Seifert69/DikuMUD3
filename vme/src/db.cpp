@@ -853,65 +853,12 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     {
         case UNIT_ST_NPC:
             g_nCorrupt += pBuf->ReadStringAlloc(&CHAR_MONEY(u));
-            /* fallthru */
+            [[fallthrough]];
 
         case UNIT_ST_PC:
         {
             auto *character = dynamic_cast<char_data *>(u);
-            character->points.readPlayerExperienceFrom(*pBuf, g_nCorrupt);
-            character->points.readCharacterFlagsFrom(*pBuf, g_nCorrupt);
-
-            character->points.readManaFrom(*pBuf, g_nCorrupt);
-            character->points.readEnduranceFrom(*pBuf, g_nCorrupt);
-
-            character->points.readNaturalArmorFrom(*pBuf, g_nCorrupt);
-
-            if (unit_version >= 39)
-            {
-                character->points.readSpeedFrom(*pBuf, g_nCorrupt);
-                if (IS_PC(u))
-                {
-                    if (CHAR_SPEED(u) < SPEED_MIN)
-                    {
-                        character->points.setSpeed(SPEED_DEFAULT);
-                    }
-                }
-            }
-            else
-            {
-                character->points.setSpeed(SPEED_DEFAULT);
-            }
-
-            character->points.readAttackTypeFrom(*pBuf, g_nCorrupt);
-
-            if (unit_version <= 52)
-            {
-                UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
-            }
-            character->points.readRaceFrom(*pBuf, g_nCorrupt);
-
-            character->points.readOffensiveBonusFrom(*pBuf, g_nCorrupt);
-            character->points.readDefensiveBonusFrom(*pBuf, g_nCorrupt);
-
-            character->points.readSexFrom(*pBuf, g_nCorrupt);
-            character->points.readLevelFrom(*pBuf, g_nCorrupt);
-            character->points.readPositionFrom(*pBuf, g_nCorrupt);
-
-            j = pBuf->ReadU8(&g_nCorrupt);
-
-            for (i = 0; i < j; i++)
-            {
-                character->points.readAbilityFromAtIndex(unit_version, g_nCorrupt, *pBuf, i);
-
-                if (IS_PC(u))
-                {
-                    PC_ABI_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
-                    if (unit_version < 72)
-                    {
-                        g_nCorrupt += pBuf->Skip8();
-                    }
-                }
-            }
+            character->points.readFrom(*pBuf, unit_version, u, g_nCorrupt);
 
             if (IS_PC(u))
             {

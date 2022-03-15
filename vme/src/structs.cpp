@@ -470,6 +470,64 @@ void char_point_data::setHPP(sbit16 value)
     abilities[ABIL_HP] = value;
 }
 
+void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &errors)
+{
+    readPlayerExperienceFrom(buf, errors);
+    readCharacterFlagsFrom(buf, errors);
+
+    readManaFrom(buf, errors);
+    readEnduranceFrom(buf, errors);
+
+    readNaturalArmorFrom(buf, errors);
+
+    if (unit_version >= 39)
+    {
+        readSpeedFrom(buf, errors);
+        if (IS_PC(unit))
+        {
+            if (getSpeed() < SPEED_MIN)
+            {
+                setSpeed(SPEED_DEFAULT);
+            }
+        }
+    }
+    else
+    {
+        setSpeed(SPEED_DEFAULT);
+    }
+
+    readAttackTypeFrom(buf, errors);
+
+    if (unit_version <= 52)
+    {
+        UNIT_SIZE(unit) = buf.ReadU16(&errors);
+    }
+    readRaceFrom(buf, errors);
+
+    readOffensiveBonusFrom(buf, errors);
+    readDefensiveBonusFrom(buf, errors);
+
+    readSexFrom(buf, errors);
+    readLevelFrom(buf, errors);
+    readPositionFrom(buf, errors);
+
+    int j = buf.ReadU8(&errors);
+
+    for (int i = 0; i < j; i++)
+    {
+        readAbilityFromAtIndex(unit_version, errors, buf, i);
+
+        if (IS_PC(unit))
+        {
+            PC_ABI_LVL(unit, i) = buf.ReadU8(&errors);
+            if (unit_version < 72)
+            {
+                errors += buf.Skip8();
+            }
+        }
+    }
+}
+
 char_data::char_data()
 {
     g_world_nochars++;

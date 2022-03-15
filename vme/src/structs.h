@@ -209,10 +209,18 @@ public:
     char_point_data();
     /*~char_point_data(void); not needed yet all base types they destroy themselves*/
 
+    /**
+     *
+     * @param buf Buffer to read from
+     * @param unit_version Version number of data object
+     * @param unit We have to pass this in because there data in the middle that doesn't belong to char_point_data
+     * @param errors Error count
+     */
+    void readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &errors);
+
     ubit32 getCharacterFlags() const;
     ubit32 *getCharacterFlagsPtr();
     void setAllCharacterFlags(ubit32 value);
-    void readCharacterFlagsFrom(CByteBuffer &buf, int &error);
     void setCharacterFlag(ubit32 value);
     void removeCharacterFlag(ubit32 value);
     void toggleCharacterFlag(ubit32 value);
@@ -221,33 +229,27 @@ public:
     sbit32 *getPlayerExperiencePtr();
     void setPlayerExperience(sbit32 value);
     void increasePlayerExperienceBy(sbit32 value);
-    void readPlayerExperienceFrom(CByteBuffer &buf, int &error);
 
     ubit16 getRace() const;
     ubit16 *getRacePtr();
-    void readRaceFrom(CByteBuffer &buf, int &error);
     void setRace(ubit16 value);
 
     sbit16 getMana() const;
     sbit16 *getManaPtr();
-    void readManaFrom(CByteBuffer &buf, int &error);
     void setMana(sbit16 value);
     void decreaseManaBy(sbit16 value);
 
     sbit16 getEndurance() const;
     sbit16 *getEndurancePtr();
     void setEndurance(sbit16 value);
-    void readEnduranceFrom(CByteBuffer &buf, int &error);
     void decreaseEnduranceBy(sbit16 value);
 
     sbit16 getOffensiveBonus() const;
     void setOffensiveBonus(sbit16 value);
-    void readOffensiveBonusFrom(CByteBuffer &buf, int &error);
     sbit16 *getOffensiveBonusPtr();
 
     sbit16 getDefensiveBonus() const;
     void setDefensiveBonus(sbit16 value);
-    void readDefensiveBonusFrom(CByteBuffer &buf, int &error);
     sbit16 *getDefensiveBonusPtr();
 
     ubit8 getSpeed() const;
@@ -257,27 +259,22 @@ public:
     ubit8 getNaturalArmor() const;
     void setNaturalArmor(ubit8 value);
     ubit8 *getNaturalArmorPtr();
-    void readNaturalArmorFrom(CByteBuffer &buf, int &error);
 
     ubit8 getAttackType() const;
     void setAttackType(ubit8 value);
-    void readAttackTypeFrom(CByteBuffer &buf, int &error);
     ubit8 *getAttackTypePtr();
 
     ubit8 getSex() const;
     void setSex(ubit8 value);
     ubit8 *getSexPtr();
-    void readSexFrom(CByteBuffer &buf, int &error);
 
     ubit8 getLevel() const;
     void setLevel(ubit8 value);
     ubit8 *getLevelPtr();
-    void readLevelFrom(CByteBuffer &buf, int &error);
     void incrementLevel();
 
     ubit8 getPosition() const;
     void setPosition(ubit8 value);
-    void readPositionFrom(CByteBuffer &buf, int &error);
     ubit8 *getPositionPtr();
 
     sbit16 getAbilityAtIndex(size_t index) const;
@@ -299,12 +296,25 @@ public:
     void setDIV(sbit16 value);
     void setHPP(sbit16 value);
     void setAbilityAtIndexTo(size_t index, sbit16 value);
-    void readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index);
     void increaseAbilityAtIndexBy(size_t index, sbit16 value);
     void decreaseAbilityAtIndexBy(size_t index, sbit16 value);
     std::array<sbit16, ABIL_TREE_MAX> &getAbilitiesArray();
 
 private:
+    void readCharacterFlagsFrom(CByteBuffer &buf, int &error);
+    void readPlayerExperienceFrom(CByteBuffer &buf, int &error);
+    void readRaceFrom(CByteBuffer &buf, int &error);
+    void readManaFrom(CByteBuffer &buf, int &error);
+    void readEnduranceFrom(CByteBuffer &buf, int &error);
+    void readOffensiveBonusFrom(CByteBuffer &buf, int &error);
+    void readDefensiveBonusFrom(CByteBuffer &buf, int &error);
+    void readNaturalArmorFrom(CByteBuffer &buf, int &error);
+    void readAttackTypeFrom(CByteBuffer &buf, int &error);
+    void readSexFrom(CByteBuffer &buf, int &error);
+    void readLevelFrom(CByteBuffer &buf, int &error);
+    void readPositionFrom(CByteBuffer &buf, int &error);
+    void readAbilityFromAtIndex(int unit_version, int &error, CByteBuffer &buf, size_t index);
+
     ubit32 flags{0};                                // Char flags
     sbit32 exp{0};                                  // The experience of the player
     ubit16 race{0};                                 // PC/NPC race, Humanoid, Animal, etc.
