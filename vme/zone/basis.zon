@@ -565,9 +565,12 @@ code
    s := dlrdump@commands("$trigger");
    sendtext(s, self);
 
+   login_clean@justice();
+   login_clean@guilds();
+
    if (self.level < 200)
    {
-      if(err > 0)
+      if (err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
       gamestate(self, GS_PLAY);
       informer();
@@ -577,9 +580,6 @@ code
       quit;
    }
    
-   login_clean@justice();
-   login_clean@guilds();
-
    //gamestate(self, GS_MENU);
 
    :wiz_menu:
