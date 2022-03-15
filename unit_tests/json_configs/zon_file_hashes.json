@@ -957,12 +957,12 @@
         {
             "source_file": {
                 "filename": "youth.zon",
-                "sha512": "d3a8163f4cf2592d690214eb4eb3e4e6a368ea762ae7619341b777cdca7dd72e583a707721366fc312bc35b51a4cf4ff06dcf8e5714fcf770f69aebf62112504"
+                "sha512": "812503610c503a66ba138068930b1ca3e03207afe762cb726c1256efdd8aaf24c27018e8b31b2a849f8f35dfeec4aa2dfac229c6ac41aba9146bc41397c247e8"
             },
             "output": [
                 {
                     "filename": "youth.data",
-                    "sha512": "c8cb2882c3d5b7fad1fe5b6d76128b049994be516462e16d88bed0c935a1ecf27c2e3b9dbb910168924aaf8fef04ac64053ad350db69bc79d86af16608103561"
+                    "sha512": "98032792c3b2716481627660b39eb1374415f6ca6608acc80f20b35cee22e537d1b35ced196d121b0b52f1144e76f7165f571cc40b772a09336bdecfbe4bf1d6"
                 },
                 {
                     "filename": "youth.reset",

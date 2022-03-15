@@ -79,12 +79,12 @@ var
 code
 {
    :start:
-   item := restore("spring_saveobj@youth", null);
+   item := restore("spring_saveobj", null);
    if(item == null)
    {
       log(self.zoneidx + ": no eternal spring found - loading new.");
-      item := load("spring_saveobj@youth");
-      store(item, "spring_saveobj@youth", TRUE);
+      item := load("spring_saveobj");
+      store(item, "spring_saveobj", TRUE);
    } 
    quit;
 }
