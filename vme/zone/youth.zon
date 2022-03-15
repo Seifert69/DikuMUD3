@@ -83,7 +83,7 @@ code
    if(item == null)
    {
       log(self.zoneidx + ": no eternal spring found - loading new.");
-      item := load("spring_saveobj");
+      item := load("spring_saveobj@youth");
       store(item, "spring_saveobj", TRUE);
    } 
    quit;
