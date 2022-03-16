@@ -378,7 +378,9 @@ dilend
 // I'm wondering why we're using realtime rather than just pauses... ?
 //    Probably because the corpse can be stored and loaded...
 //
-dilbegin recall rot_corpse();
+// Recall wont work because corpse isn't saved on each tick.
+//
+dilbegin rot_corpse();
 var
    hb : integer;
    bHometown : integer;
@@ -402,12 +404,12 @@ code
       if (bHometown)
       {
          hb := PULSE_SEC * SECS_PER_REAL_MIN * 20; // roughly 4*20m before potential player corpse recall
-         log("player corpse hometown, 4 * 20 minutes");
+         log(self.name + " player corpse hometown, 4 * 20 minutes");
       }
       else
       {
          hb := PULSE_SEC * SECS_PER_REAL_HOUR * 12; // ~4*8 hours
-         log("player corpse no hometown,  4 * 12 hours");
+         log(self.name + "player corpse no hometown,  4 * 12 hours");
       }
    }
 
@@ -416,6 +418,8 @@ code
 
    if (self.inside == null)
       heartbeat := PULSE_SEC*300;
+   if (self.value[2] == 1)
+      log(self.name + " first tick heartbeat = " + itoa(heartbeat));
    pause;
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
@@ -425,6 +429,8 @@ code
 
    if (self.inside == null)
       heartbeat := PULSE_SEC*300;
+   if (self.value[2] == 1)
+      log(self.name + " second tick heartbeat = " + itoa(heartbeat));
    pause;
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
@@ -434,6 +440,8 @@ code
 
    if (self.inside == null)
       heartbeat := PULSE_SEC*300;
+   if (self.value[2] == 1)
+      log(self.name + " third tick heartbeat = " + itoa(heartbeat));
    pause;
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
@@ -443,6 +451,8 @@ code
 
    if (self.inside == null)
       heartbeat := PULSE_SEC*300;
+   if (self.value[2] == 1)
+      log(self.name + " fourth tick heartbeat = " + itoa(heartbeat));
    pause;
    if ((self.value[2] == 1) and bHometown and (self.inside != null))
    {
@@ -460,7 +470,7 @@ code
       act("$1n and everything in it dissolve into magical dust, floating away into the air.", A_HIDEINV, self, null, null, TO_ALL);
       link(self, corpse_room);
       act("The ashes of a body float down from the sky and form into $1n.", A_HIDEINV, self, null, null, TO_ALL);
-      log("Rescued " + self.name + " instead of destroying it.");
+      log(self.name + " rescued " + self.name + " instead of destroying it.");
       bHometown := 0; // Important, this round we begin to 'rot'
       hb := PULSE_SEC * SECS_PER_REAL_HOUR * 12; // ~4*12 hours
       goto start; // Do it all again, but this time in the corpse_room

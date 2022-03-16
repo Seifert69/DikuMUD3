@@ -217,10 +217,10 @@ end
 
 spring_saveobj
   title "the eternal spring's save object"
-  names {"spring save object", "save object", "object", "spring", "saveobj"}
+  names {"spring save object"}
   descr "Etchings on the rock wall of the eternal spring glitter here."
   extra {} "This is a save object."
-  extra {"$imm_info"} "This is a save object for the eternal spring. Don't muck about with it. You can toggle it on and off by typing 'togglespring'."
+  extra {"etchings", "rock wall", "wall"} "This is a save object for the eternal spring. Don't muck about with it. You can toggle it on and off by typing 'togglespring'."
 
   minv 200
 

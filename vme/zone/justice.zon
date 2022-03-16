@@ -833,18 +833,21 @@ code
       {
          // How many full days is it old?
          daysold := (now - atoi(exd.names.[2])) / (3600*24);
-         // log("daysold : " + itoa(daysold));
 
          if  ("@_players" in exd.names.[0])  // It's a PC
          {           
             // Delete witness a player after 14 days
             if (daysold > 14)
-              subextra(self.extra, exd.names.[0]);
+            {
+               subextra(self.extra, exd.names.[0]);
+            }
          }
          else  // It's a NPC
          {
             if (daysold > 2)  // Delete NPCs after 2 days
-              subextra(self.extra, exd.names.[0]);
+            {
+               subextra(self.extra, exd.names.[0]);
+            }
 
             /* OBSOLETE sl := getwords(exd.names.[0]);
             // .[1] is jurisdiction, .[2] is symname, .[3] is idx

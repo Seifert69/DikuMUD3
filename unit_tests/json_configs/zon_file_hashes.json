@@ -269,12 +269,12 @@
         {
             "source_file": {
                 "filename": "death.zon",
-                "sha512": "bf20b7554071cbe5eb9b48d407903b2f32fa57ff2beeda08168b62453dbe7637abb7fec291101424720704717934bc838c6c501bb4ef36df040fddbe37d3e26b"
+                "sha512": "6a93f009298c13ecd40603774461de8147d6de42433422ccc432fe9c8c7ef7be4886a3ae543d3e667da172e372564eb784c10bc15e08cd0acb618cf3b74ae005"
             },
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "f7f0314cd9999d90e61def201176cb0bdf76c0fa47c26c8c2488266b0a03b0ee928f26b01c0e2d43abd6f9bc6a3d193a55bdda8601864aee95c1f1cac88041a6"
+                    "sha512": "d446ac519e391d1c0cd6d85ed23ff72fb630022bb78244911121b67c1feceae5204cba3e99c17afc0820f9b61be0a03b380d3bc8cbee72b9d1d001928bde8fae"
                 },
                 {
                     "filename": "death.reset",
@@ -509,7 +509,7 @@
         {
             "source_file": {
                 "filename": "justice.zon",
-                "sha512": "7786926718be8b29d44f9d5a1e1963df5f548b01fe1513f39a84c93b12fbda74180b517d7c05fe824fa3f99eeab0dfcc28d2139603645d4918295e90b947affd"
+                "sha512": "af91e854ad4f48b87327831470bda233b99959499aca8945852c435b0cd9e8eb526d5d974a4ace6d69adf479ff0966487a4652f1f547fa16cb596316289da82a"
             },
             "output": [
                 {
@@ -957,12 +957,12 @@
         {
             "source_file": {
                 "filename": "youth.zon",
-                "sha512": "b476b8bcbab757c04f3b431a5c51eaef770b05554881acd30c903244c73729bf38627bc05d50b86e23c6c498f3233e92ccad55a410f45166c1528eca2eb51a43"
+                "sha512": "112fda13793574d204223d66c6c7d3b258a2d0551502465b5fad313db6520eb80fe4fe25ff097e656fc50fde376c5d2a135832ccc562a4a6ed3be7925100f3a7"
             },
             "output": [
                 {
                     "filename": "youth.data",
-                    "sha512": "e79d2010c1463fd073b943a814a32a9e0bb50dbe62957ec01db5d3dc84873d25a9d99d755722b8d2673e71b6c2c8535e0d3d7ddf19999bd0de20cfb4afb177d4"
+                    "sha512": "bede336e7f644b2d58d8f3adefc3e74ee85ac156ebe191437aa85866a08ca68f08ac311efabab483e49bb82a50c3efac4632c03d58def08ce8478768d533e3c7"
                 },
                 {
                     "filename": "youth.reset",
