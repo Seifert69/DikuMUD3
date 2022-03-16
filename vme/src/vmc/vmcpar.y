@@ -479,7 +479,7 @@ mobile_field    : unit_field
 
 omobile_field   : MANA number
     {
-        CHAR_MANA(cur) = $2;
+        getCharPoints(cur).setMana($2);
     }
     | ACT flags
     {
@@ -505,27 +505,27 @@ omobile_field   : MANA number
     }
     | EXP number
     {
-        CHAR_EXP(cur) = $2;
+        getCharPoints(cur).setPlayerExperience($2);
     }
     | SEX number
     {
-        CHAR_SEX(cur) = $2;
+        getCharPoints(cur).setSex($2);
     }
     | LEVEL number
     {
-        CHAR_LEVEL(cur) = $2;
+        getCharPoints(cur).setLevel($2);
     }
     | RACE number
     {
-        CHAR_RACE(cur) = $2;
+        getCharPoints(cur).setRace($2);
     }
     | ATTACK number
     {
-        CHAR_ATTACK_TYPE(cur) = $2;
+        getCharPoints(cur).setAttackType($2);
     }
     | POSITION number
     {
-        CHAR_POS(cur) = $2;
+        getCharPoints(cur).setPosition($2);
     }
     | DEFAULT number
     {
@@ -533,27 +533,27 @@ omobile_field   : MANA number
     }
     | FLAGS flags
     {
-        CHAR_FLAGS(cur) = $2;
+        getCharPoints(cur).setAllCharacterFlags($2);
     }
     | ARMOUR number
     {
-        CHAR_NATURAL_ARMOUR(cur) = $2;
+        getCharPoints(cur).setNaturalArmor($2);
     }
     | SPEED number
     {
-        CHAR_SPEED(cur) = $2;
+        getCharPoints(cur).setSpeed($2);
     }
     | DEFENSIVE number
     {
-        CHAR_DEFENSIVE(cur) = $2;
+        getCharPoints(cur).setDefensiveBonus($2);
     }
     | OFFENSIVE number
     {
-        CHAR_OFFENSIVE(cur) = $2;
+        getCharPoints(cur).setOffensiveBonus($2);
     }
     | ABILITY index number
     {
-        CHAR_ABILITY(cur, $2) = $3;
+        getCharPoints(cur).setAbilityAtIndexTo($2, $3);
     }
     | WEAPON index number
     {

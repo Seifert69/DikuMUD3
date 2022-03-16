@@ -766,11 +766,12 @@ void dilfi_rslv(dilprg *p)
         }
         else
         {
-            if (IS_PC((unit_data *)v1->val.ptr))
+            auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+            if (IS_PC(character))
             {
-                if (!IS_IMMORTAL((unit_data *)v1->val.ptr))
+                if (!IS_IMMORTAL(character))
                 {
-                    CHAR_LEVEL((unit_data *)v1->val.ptr) = 1;
+                    character->points.setLevel(1);
                 }
             }
         }

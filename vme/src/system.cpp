@@ -71,17 +71,17 @@ void init_char(unit_data *ch)
 
     account_defaults(ch);
 
-    CHAR_POS(ch) = POSITION_STANDING;
-    CHAR_SPEED(ch) = SPEED_DEFAULT;
-    CHAR_RACE(ch) = RACE_HUMAN;
-    CHAR_SEX(ch) = SEX_MALE;
+    getCharPoints(ch).setPosition(POSITION_STANDING);
+    getCharPoints(ch).setSpeed(SPEED_DEFAULT);
+    getCharPoints(ch).setRace(RACE_HUMAN);
+    getCharPoints(ch).setSex(SEX_MALE);
 
     PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(nullptr);
     PC_TIME(ch).played = 0;
     PC_LIFESPAN(ch) = 100;
 
-    CHAR_EXP(ch) = 0;
-    CHAR_LEVEL(ch) = 0;
+    getCharPoints(ch).setPlayerExperience(0);
+    getCharPoints(ch).setLevel(0);
     PC_ID(ch) = -1;
     PC_CRIMES(ch) = 0;
 
@@ -95,17 +95,17 @@ void init_char(unit_data *ch)
         PC_ID(ch) = new_player_id();
     }
 
-    CHAR_ATTACK_TYPE(ch) = WPN_FIST;
-    CHAR_NATURAL_ARMOUR(ch) = ARM_CLOTHES;
+    getCharPoints(ch).setAttackType(WPN_FIST);
+    getCharPoints(ch).setNaturalArmor(ARM_CLOTHES);
 
     UNIT_HIT(ch) = UNIT_MAX_HIT(ch) = 1;
 
-    CHAR_MANA(ch) = mana_limit(ch);
-    CHAR_ENDURANCE(ch) = move_limit(ch);
+    getCharPoints(ch).setMana(mana_limit(ch));
+    getCharPoints(ch).setEndurance(move_limit(ch));
     CHAR_LAST_ROOM(ch) = nullptr;
 
-    CHAR_FLAGS(ch) = 0;
-    SET_BIT(CHAR_FLAGS(ch), CHAR_PROTECTED);
+    getCharPoints(ch).setAllCharacterFlags(0);
+    getCharPoints(ch).setCharacterFlag(CHAR_PROTECTED);
 
     for (i = 0; i < 3; i++)
     {

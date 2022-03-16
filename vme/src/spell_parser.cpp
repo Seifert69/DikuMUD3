@@ -12,8 +12,8 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "justice.h"
-#include "main_functions.h"
 #include "magic.h"
+#include "main_functions.h"
 #include "modify.h"
 #include "skills.h"
 #include "slog.h"
@@ -438,8 +438,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
                          ch);
             return;
         }
-
-        CHAR_MANA(ch) -= g_spell_info[spl].usesmana;
+        getCharPoints(ch).decreaseManaBy(g_spell_info[spl].usesmana);
     }
 
     // Spells take time too!
@@ -950,12 +949,12 @@ void spell_dump()
     printf(",level,");
 #undef PC_RACE_MAX
 #define PC_RACE_MAX 11
-    for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+    for (int ridx = 0; ridx < PC_RACE_MAX; ridx++)
     {
         printf("%s,", g_pc_races[ridx]);
     }
     // Dump variable tail of ability restrictions
-    for (int k=0; k < ABIL_TREE_MAX; k++)
+    for (int k = 0; k < ABIL_TREE_MAX; k++)
     {
         printf("%s,", g_AbiColl.text[k]);
     }
@@ -971,13 +970,12 @@ void spell_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                                       g_SplColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_SplColl.prof_table[i].profession_cost[j]);
         }
 
         printf("%s,", (g_SplColl.prof_table[i].min_level == 0) ? "" : itoa(g_SplColl.prof_table[i].min_level));
 
-        for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+        for (int ridx = 0; ridx < PC_RACE_MAX; ridx++)
         {
             if (g_SplColl.racial[ridx][i] > 0)
             {
@@ -990,7 +988,7 @@ void spell_dump()
         }
 
         // Dump variable tail of ability restrictions
-        for (int k=0; k < ABIL_TREE_MAX; k++)
+        for (int k = 0; k < ABIL_TREE_MAX; k++)
         {
             if (g_SplColl.prof_table[i].min_abil[k] > 0)
             {
@@ -1004,8 +1002,6 @@ void spell_dump()
     }
     printf("\n");
 }
-
-
 
 void spell_dump_alternate()
 {

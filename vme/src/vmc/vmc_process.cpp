@@ -274,13 +274,13 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_FIST, WPN_CRUSH))
     {
         dmc_error(TRUE, "Illegal hand attack type %d.", CHAR_ATTACK_TYPE(u));
-        CHAR_ATTACK_TYPE(u) = WPN_FIST;
+        getCharPoints(u).setAttackType(WPN_FIST);
     }
 
     if (!is_in(CHAR_LEVEL(u), 0, 199))
     {
         dmc_error(TRUE, "Illegal level in  '%s'.", UNIT_IDENT(u));
-        CHAR_LEVEL(u) = 0;
+        getCharPoints(u).setLevel(0);
     }
 
     for (i = sum = 0; i < ABIL_TREE_MAX; i++)
@@ -324,12 +324,12 @@ void set_points(unit_data *u)
 
     // spoints = ((100+20-CHAR_LEVEL(u)/10)*spoints) / 100; /* 120% - 100% */
 
-    if ((i = distribute_points(&CHAR_ABILITY(u, 0), ABIL_TREE_MAX, apoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(getCharPoints(u).getAbilitiesArray(), getCharPoints(u).getAbilitiesArray().size(), apoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - An ability is %d points.", UNIT_IDENT(u), i);
     }
 
-    if ((i = distribute_points(&NPC_WPN_SKILL(u, 0), WPN_GROUP_MAX, spoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UNPC(u)->weapons, UNPC(u)->weapons.size(), spoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - A weapon skill exceeds %d points.", UNIT_IDENT(u), i);
     }
@@ -344,7 +344,7 @@ void set_points(unit_data *u)
 
     NPC_WPN_SKILL(u, WPN_ROOT) = max / 4;
 
-    if ((i = distribute_points(&NPC_SPL_SKILL(u, 0), SPL_GROUP_MAX, spoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UNPC(u)->spells, UNPC(u)->spells.size(), spoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - A spell skill exceeds %d points.", UNIT_IDENT(u), i);
     }
@@ -362,13 +362,13 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_NATURAL_ARMOUR(u), ARM_CLOTHES, ARM_PLATE))
     {
         dmc_error(TRUE, "%s, Illegal natural armour type.", UNIT_IDENT(u));
-        CHAR_NATURAL_ARMOUR(u) = ARM_PLATE;
+        getCharPoints(u).setNaturalArmor(ARM_PLATE);
     }
 
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
         dmc_error(TRUE, "Illegal attack category in '%s'.", UNIT_IDENT(u));
-        CHAR_ATTACK_TYPE(u) = WPN_FIST;
+        getCharPoints(u).setAttackType(WPN_FIST);
     }
 
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = hitpoint_total(CHAR_HPP(u));
@@ -1086,9 +1086,10 @@ void process_unit(unit_data *u)
             break;
 
         case UNIT_ST_NPC:
+        {
             set_points(u);
-            CHAR_MANA(u) = 100;
-            CHAR_ENDURANCE(u) = 100;
+            getCharPoints(u).setMana(100);
+            getCharPoints(u).setEndurance(100);
 
             if (!is_in(CHAR_SPEED(u), SPEED_MIN, SPEED_MAX))
             {
@@ -1102,7 +1103,7 @@ void process_unit(unit_data *u)
                           " the 100 default!",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                CHAR_EXP(u) = 100;
+                getCharPoints(u).setPlayerExperience(100);
             }
             else if (CHAR_EXP(u) < -500)
             {
@@ -1111,7 +1112,7 @@ void process_unit(unit_data *u)
                           "-500 XP.",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                CHAR_EXP(u) = -500;
+                getCharPoints(u).setPlayerExperience(-500);
             }
 
             if (!is_in(CHAR_OFFENSIVE(u), -1000, 1000))
@@ -1153,7 +1154,8 @@ void process_unit(unit_data *u)
             {
                 show_npc_info(u);
             }
-            break;
+        }
+        break;
     }
 }
 
@@ -1180,28 +1182,29 @@ void init_unit(unit_data *u)
     switch (UNIT_TYPE(u))
     {
         case UNIT_ST_NPC:
+        {
             UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
             CHAR_MONEY(u) = nullptr;
-            CHAR_EXP(u) = 100; /* 100 XP per default at your own level */
-            CHAR_FLAGS(u) = 0;
-            CHAR_ATTACK_TYPE(u) = WPN_FIST;
-            CHAR_NATURAL_ARMOUR(u) = ARM_HLEATHER;
-            CHAR_SPEED(u) = 12;
-            CHAR_RACE(u) = RACE_HUMAN;
-            CHAR_SEX(u) = SEX_NEUTRAL;
-            CHAR_LEVEL(u) = 1;
-            CHAR_POS(u) = POSITION_STANDING;
+            getCharPoints(u).setPlayerExperience(100); // 100 XP per default at your own level
+            getCharPoints(u).setAllCharacterFlags(0);
+            getCharPoints(u).setAttackType(WPN_FIST);
+            getCharPoints(u).setNaturalArmor(ARM_HLEATHER);
+            getCharPoints(u).setSpeed(12);
+            getCharPoints(u).setRace(RACE_HUMAN);
+            getCharPoints(u).setSex(SEX_NEUTRAL);
+            getCharPoints(u).setLevel(1);
+            getCharPoints(u).setPosition(POSITION_STANDING);
             NPC_DEFAULT(u) = POSITION_STANDING;
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {
-                CHAR_ABILITY(u, i) = 0;
+                getCharPoints(u).setAbilityAtIndexTo(i, 0);
             }
-            CHAR_STR(u) = 40; /* % */
-            CHAR_DEX(u) = 30;
-            CHAR_CON(u) = 10;
-            CHAR_CHA(u) = 2;
-            CHAR_BRA(u) = 3;
-            CHAR_HPP(u) = 15;
+            getCharPoints(u).setSTR(40); /* % */
+            getCharPoints(u).setDEX(30);
+            getCharPoints(u).setCON(10);
+            getCharPoints(u).setCHA(2);
+            getCharPoints(u).setBRA(3);
+            getCharPoints(u).setHPP(15);
 
             for (i = 0; i < WPN_GROUP_MAX; i++)
             {
@@ -1214,10 +1217,10 @@ void init_unit(unit_data *u)
                 NPC_SPL_SKILL(u, i) = 0;
             }
             NPC_FLAGS(u) = 0;
-            CHAR_OFFENSIVE(u) = 0;
-            CHAR_DEFENSIVE(u) = 0;
-
-            break;
+            getCharPoints(u).setOffensiveBonus(0);
+            getCharPoints(u).setDefensiveBonus(0);
+        }
+        break;
 
         case UNIT_ST_OBJ:
             for (i = 0; i <= 3; i++)

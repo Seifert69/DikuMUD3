@@ -40,22 +40,424 @@ room_direction_data::~room_direction_data()
 }
 
 char_point_data::char_point_data()
+    : flags{0}          // Char flags
+    , exp{0}            // The experience of the player
+    , race{0}           // PC/NPC race, Humanoid, Animal, etc.
+    , mana{0}           // How many mana points are left?
+    , endurance{0}      // How many endurance points are left?
+    , offensive{0}      // The OB of a character.
+    , defensive{0}      // The DB of a character.
+    , speed{0}          // The default speed for natural combat
+    , natural_armour{0} // The natural built-in armour (ARM_)
+    , attack_type{0}    // PC/NPC Attack Type for bare hands (WPN_)
+    , dex_reduction{0}  // For speed of armour calculations only
+    , sex{0}            // PC / NPC s sex
+    , level{0}          // PC / NPC s level
+    , position{0}       // Standing, sitting, fighting...
 {
-    flags = 0;          /* Char flags                               */
-    exp = 0;            /* The experience of the player             */
-    race = 0;           /* PC/NPC race, Humanoid, Animal, etc.     */
-    mana = 0;           /* How many mana points are left?           */
-    endurance = 0;      /* How many endurance points are left?      */
-    offensive = 0;      /* The OB of a character.                   */
-    defensive = 0;      /* The DB of a character.                   */
-    speed = 0;          /* The default speed for natural combat     */
-    natural_armour = 0; /* The natural built-in armour (ARM_)       */
-    attack_type = 0;    /* PC/NPC Attack Type for bare hands (WPN_) */
-    dex_reduction = 0;  /* For speed of armour calculations only    */
-    sex = 0;            /* PC / NPC s sex                           */
-    level = 0;          /* PC / NPC s level                         */
-    position = 0;       /* Standing, sitting, fighting...           */
-    memset(abilities, 0, sizeof(abilities));
+    memset(abilities.data(), 0, abilities.size());
+}
+
+ubit32 char_point_data::getCharacterFlags() const
+{
+    return flags;
+}
+
+ubit32 *char_point_data::getCharacterFlagsPtr()
+{
+    return &flags;
+}
+
+void char_point_data::setAllCharacterFlags(ubit32 value)
+{
+    flags = value;
+}
+
+void char_point_data::setCharacterFlag(ubit32 value)
+{
+    flags |= value;
+}
+
+void char_point_data::removeCharacterFlag(ubit32 value)
+{
+    flags &= ~value;
+}
+
+void char_point_data::toggleCharacterFlag(ubit32 value)
+{
+    flags ^= value;
+}
+
+sbit32 char_point_data::getPlayerExperience() const
+{
+    return exp;
+}
+
+sbit32 *char_point_data::getPlayerExperiencePtr()
+{
+    return &exp;
+}
+
+void char_point_data::setPlayerExperience(sbit32 value)
+{
+    exp = value;
+}
+
+void char_point_data::increasePlayerExperienceBy(sbit32 value)
+{
+    exp += value;
+}
+
+ubit16 char_point_data::getRace() const
+{
+    return race;
+}
+
+ubit16 *char_point_data::getRacePtr()
+{
+    return &race;
+}
+
+void char_point_data::setRace(ubit16 value)
+{
+    race = value;
+}
+
+sbit16 char_point_data::getMana() const
+{
+    return mana;
+}
+
+sbit16 *char_point_data::getManaPtr()
+{
+    return &mana;
+}
+
+void char_point_data::setMana(sbit16 value)
+{
+    mana = value;
+}
+
+void char_point_data::decreaseManaBy(sbit16 value)
+{
+    mana -= value;
+}
+
+sbit16 char_point_data::getEndurance() const
+{
+    return endurance;
+}
+
+sbit16 *char_point_data::getEndurancePtr()
+{
+    return &endurance;
+}
+
+void char_point_data::setEndurance(sbit16 value)
+{
+    endurance = value;
+}
+
+void char_point_data::decreaseEnduranceBy(sbit16 value)
+{
+    endurance -= value;
+}
+
+sbit16 char_point_data::getOffensiveBonus() const
+{
+    return offensive;
+}
+
+void char_point_data::setOffensiveBonus(sbit16 value)
+{
+    offensive = value;
+}
+
+sbit16 *char_point_data::getOffensiveBonusPtr()
+{
+    return &offensive;
+}
+
+sbit16 char_point_data::getDefensiveBonus() const
+{
+    return defensive;
+}
+
+void char_point_data::setDefensiveBonus(sbit16 value)
+{
+    defensive = value;
+}
+
+sbit16 *char_point_data::getDefensiveBonusPtr()
+{
+    return &defensive;
+}
+
+ubit8 char_point_data::getSpeed() const
+{
+    return speed;
+}
+
+void char_point_data::setSpeed(ubit8 value)
+{
+    speed = value;
+}
+
+ubit8 char_point_data::getNaturalArmor() const
+{
+    return natural_armour;
+}
+
+void char_point_data::setNaturalArmor(ubit8 value)
+{
+    natural_armour = value;
+}
+
+ubit8 *char_point_data::getNaturalArmorPtr()
+{
+    return &natural_armour;
+}
+
+ubit8 char_point_data::getAttackType() const
+{
+    return attack_type;
+}
+
+void char_point_data::setAttackType(ubit8 value)
+{
+    attack_type = value;
+}
+
+ubit8 *char_point_data::getAttackTypePtr()
+{
+    return &attack_type;
+}
+
+ubit8 char_point_data::getSex() const
+{
+    return sex;
+}
+
+void char_point_data::setSex(ubit8 value)
+{
+    sex = value;
+}
+
+ubit8 *char_point_data::getSexPtr()
+{
+    return &sex;
+}
+
+ubit8 char_point_data::getLevel() const
+{
+    return level;
+}
+
+void char_point_data::setLevel(ubit8 value)
+{
+    level = value;
+}
+
+ubit8 *char_point_data::getLevelPtr()
+{
+    return &level;
+}
+
+void char_point_data::incrementLevel()
+{
+    ++level;
+}
+
+ubit8 char_point_data::getPosition() const
+{
+    return position;
+}
+
+void char_point_data::setPosition(ubit8 value)
+{
+    position = value;
+}
+
+ubit8 *char_point_data::getPositionPtr()
+{
+    return &position;
+}
+
+sbit16 char_point_data::getAbilityAtIndex(size_t index) const
+{
+    return abilities[index];
+}
+
+sbit16 char_point_data::getSTR() const
+{
+    return abilities[ABIL_STR];
+}
+
+sbit16 char_point_data::getDEX() const
+{
+    return abilities[ABIL_DEX];
+}
+
+sbit16 char_point_data::getCON() const
+{
+    return abilities[ABIL_CON];
+}
+
+sbit16 char_point_data::getCHA() const
+{
+    return abilities[ABIL_CHA];
+}
+
+sbit16 char_point_data::getBRA() const
+{
+    return abilities[ABIL_BRA];
+}
+
+sbit16 char_point_data::getMAG() const
+{
+    return abilities[ABIL_MAG];
+}
+
+sbit16 char_point_data::getDIV() const
+{
+    return abilities[ABIL_DIV];
+}
+
+sbit16 char_point_data::getHPP() const
+{
+    return abilities[ABIL_HP];
+}
+
+sbit16 *char_point_data::getAbilityAtIndexPtr(size_t index)
+{
+    return &abilities[index];
+}
+
+void char_point_data::setAbilityAtIndexTo(size_t index, sbit16 value)
+{
+    abilities[index] = value;
+}
+
+void char_point_data::increaseAbilityAtIndexBy(size_t index, sbit16 value)
+{
+    abilities[index] += value;
+}
+
+void char_point_data::decreaseAbilityAtIndexBy(size_t index, sbit16 value)
+{
+    abilities[index] -= value;
+}
+
+std::array<sbit16, ABIL_TREE_MAX> &char_point_data::getAbilitiesArray()
+{
+    return abilities;
+}
+
+void char_point_data::setSTR(sbit16 value)
+{
+    abilities[ABIL_STR] = value;
+}
+
+void char_point_data::setDEX(sbit16 value)
+{
+    abilities[ABIL_DEX] = value;
+}
+
+void char_point_data::setCON(sbit16 value)
+{
+    abilities[ABIL_CON] = value;
+}
+
+void char_point_data::setCHA(sbit16 value)
+{
+    abilities[ABIL_CHA] = value;
+}
+
+void char_point_data::setBRA(sbit16 value)
+{
+    abilities[ABIL_BRA] = value;
+}
+
+void char_point_data::setMAG(sbit16 value)
+{
+    abilities[ABIL_MAG] = value;
+}
+
+void char_point_data::setDIV(sbit16 value)
+{
+    abilities[ABIL_DIV] = value;
+}
+
+void char_point_data::setHPP(sbit16 value)
+{
+    abilities[ABIL_HP] = value;
+}
+
+// TODO unit should not need to be based it but looks like there are parent fields in middle of char_point_data
+//      in the binary file
+void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &error)
+{
+    exp = buf.ReadS32(&error);
+    flags = buf.ReadU32(&error);
+
+    mana = buf.ReadS16(&error);
+    endurance = buf.ReadS16(&error);
+
+    natural_armour = buf.ReadU8(&error);
+
+    if (unit_version >= 39)
+    {
+        speed = buf.ReadU8(&error);
+        if (IS_PC(unit))
+        {
+            if (speed < SPEED_MIN)
+            {
+                speed = SPEED_DEFAULT;
+            }
+        }
+    }
+    else
+    {
+        speed = SPEED_DEFAULT;
+    }
+
+    attack_type = buf.ReadU16(&error); // TODO Why is attack_type 8 bit it really should be 16 it looks like
+
+    if (unit_version <= 52)
+    {
+        UNIT_SIZE(unit) = buf.ReadU16(&error);
+    }
+    race = buf.ReadU16(&error);
+
+    offensive = buf.ReadS16(&error);
+    defensive = buf.ReadS16(&error);
+
+    sex = buf.ReadU8(&error);
+    level = buf.ReadU8(&error);
+    position = buf.ReadU8(&error);
+
+    int j = buf.ReadU8(&error);
+
+    for (int i = 0; i < j; i++)
+    {
+        if (unit_version < 69)
+        {
+            abilities[i] = buf.ReadU8(&error);
+        }
+        else
+        {
+            abilities[i] = buf.ReadS16(&error);
+        }
+
+        if (IS_PC(unit))
+        {
+            PC_ABI_LVL(unit, i) = buf.ReadU8(&error);
+            if (unit_version < 72)
+            {
+                error += buf.Skip8();
+            }
+        }
+    }
 }
 
 char_data::char_data()
@@ -200,8 +602,8 @@ npc_data::npc_data()
 
     g_world_nonpc++;
 
-    memset(weapons, 0, sizeof(weapons));
-    memset(spells, 0, sizeof(spells));
+    memset(weapons.data(), 0, weapons.size());
+    memset(spells.data(), 0, spells.size());
     default_pos = POSITION_STANDING;
     flags = 0;
 }
@@ -557,22 +959,26 @@ unit_data *unit_data::copy()
     }
     else if (IS_CHAR(this))
     {
-        CHAR_FLAGS(u) = CHAR_FLAGS(this);
-        CHAR_EXP(u) = CHAR_EXP(this);
-        CHAR_MANA(u) = CHAR_MANA(this);
-        CHAR_ENDURANCE(u) = CHAR_ENDURANCE(this);
-        CHAR_RACE(u) = CHAR_RACE(this);
-        CHAR_OFFENSIVE(u) = CHAR_OFFENSIVE(this);
-        CHAR_DEFENSIVE(u) = CHAR_DEFENSIVE(this);
-        CHAR_SPEED(u) = CHAR_SPEED(this);
-        CHAR_NATURAL_ARMOUR(u) = CHAR_NATURAL_ARMOUR(this);
-        CHAR_ATTACK_TYPE(u) = CHAR_ATTACK_TYPE(this);
-        CHAR_SEX(u) = CHAR_SEX(this);
-        CHAR_LEVEL(u) = CHAR_LEVEL(this);
-        CHAR_POS(u) = CHAR_POS(this);
+        // TODO These should all move down to char_data
+        auto *u_downcast = dynamic_cast<char_data *>(u);
+        auto *this_downcast = dynamic_cast<char_data *>(this);
+
+        u_downcast->points.setAllCharacterFlags(this_downcast->points.getCharacterFlags());
+        u_downcast->points.setPlayerExperience(this_downcast->points.getPlayerExperience());
+        u_downcast->points.setMana(this_downcast->points.getMana());
+        u_downcast->points.setEndurance(this_downcast->points.getEndurance());
+        u_downcast->points.setRace(this_downcast->points.getRace());
+        u_downcast->points.setOffensiveBonus(this_downcast->points.getOffensiveBonus());
+        u_downcast->points.setDefensiveBonus(this_downcast->points.getDefensiveBonus());
+        u_downcast->points.setSpeed(this_downcast->points.getSpeed());
+        u_downcast->points.setNaturalArmor(this_downcast->points.getNaturalArmor());
+        u_downcast->points.setAttackType(this_downcast->points.getAttackType());
+        u_downcast->points.setSex(this_downcast->points.getSex());
+        u_downcast->points.setLevel(this_downcast->points.getLevel());
+        u_downcast->points.setPosition(this_downcast->points.getPosition());
         for (x = 0; x < ABIL_TREE_MAX; x++)
         {
-            CHAR_ABILITY(u, x) = CHAR_ABILITY(this, x);
+            u_downcast->points.setAbilityAtIndexTo(x, this_downcast->points.getAbilityAtIndex(x));
         }
         if (IS_PC(this))
         {

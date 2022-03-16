@@ -113,14 +113,15 @@ void points_reset(unit_data *ch)
 {
     int i = 0;
 
-    PC_VIRTUAL_LEVEL(ch) = CHAR_LEVEL(ch) = START_LEVEL;
+    PC_VIRTUAL_LEVEL(ch) = START_LEVEL;
+    getCharPoints(ch).setLevel(START_LEVEL);
 
     PC_ABILITY_POINTS(ch) = 0;
     PC_SKILL_POINTS(ch) = 0;
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
-        CHAR_ABILITY(ch, i) = 0;
+        getCharPoints(ch).setAbilityAtIndexTo(i, 0);
         PC_ABI_LVL(ch, i) = 0;
     }
 
@@ -170,12 +171,12 @@ void start_player(unit_data *ch)
     // Obsolete race_cost(ch);
     points_reset(ch);
 
-    CHAR_EXP(ch) = required_xp(PC_VIRTUAL_LEVEL(ch));
+    getCharPoints(ch).setPlayerExperience(required_xp(PC_VIRTUAL_LEVEL(ch)));
 
     set_title(ch);
 
-    CHAR_ATTACK_TYPE(ch) = WPN_FIST;
-    CHAR_NATURAL_ARMOUR(ch) = ARM_CLOTHES;
+    getCharPoints(ch).setAttackType(WPN_FIST);
+    getCharPoints(ch).setNaturalArmor(ARM_CLOTHES);
 
     PC_COND(ch, THIRST) = 24;
     PC_COND(ch, FULL) = 24;
@@ -188,7 +189,7 @@ void start_player(unit_data *ch)
 
     if (!UNIT_IS_EVIL(ch))
     {
-        SET_BIT(CHAR_FLAGS(ch), CHAR_PEACEFUL);
+        getCharPoints(ch).setCharacterFlag(CHAR_PEACEFUL);
     }
 
     if (g_playerinit_tmpl)
@@ -204,6 +205,6 @@ void start_player(unit_data *ch)
     }
 
     UNIT_MAX_HIT(ch) = UNIT_HIT(ch) = hit_limit(ch);
-    CHAR_MANA(ch) = mana_limit(ch);
-    CHAR_ENDURANCE(ch) = move_limit(ch);
+    getCharPoints(ch).setMana(mana_limit(ch));
+    getCharPoints(ch).setEndurance(move_limit(ch));
 }
