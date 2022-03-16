@@ -1254,13 +1254,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             if (IS_PC(u))
             {
                 pBuf->Append8(PC_PROFESSION(u));
-                pBuf->AppendFloat(PC_ACCOUNT(u).getAccountBalance());
-                pBuf->Append32(PC_ACCOUNT(u).getCreditLimit());
-                pBuf->Append32(PC_ACCOUNT(u).getTotalCredit());
-                pBuf->Append16(PC_ACCOUNT(u).getLastFourDigitsofCreditCard());
-                pBuf->Append8(PC_ACCOUNT(u).getDiscountPercentage());
-                pBuf->Append32(PC_ACCOUNT(u).getFlatRateExpirationDate());
-                pBuf->Append8(PC_ACCOUNT(u).getCrackAttempts());
+                PC_ACCOUNT(u).writeTo(*pBuf);
 
                 pBuf->Append16(PC_LIFESPAN(u));
 

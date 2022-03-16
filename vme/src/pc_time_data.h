@@ -1,9 +1,6 @@
 #pragma once
 
 #include "bytestring.h"
-#include "essential.h"
-
-#include <ctime>
 
 class pc_time_data
 {

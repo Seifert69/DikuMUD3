@@ -230,38 +230,85 @@ public:
 class pc_account_data
 {
 public:
+    pc_account_data() = default;
+
+    void readFrom(CByteBuffer &buf, ubit8 unit_version, int &error)
+    {
+        error += buf.ReadFloat(&credit);
+        credit_limit = buf.ReadU32(&error);
+        total_credit = buf.ReadU32(&error);
+
+        if (unit_version >= 44)
+        {
+            last4 = buf.ReadS16(&error);
+        }
+        else
+        {
+            if (unit_version >= 41)
+            {
+                error += buf.Skip32(); /* cc_time */
+            }
+            last4 = -1;
+        }
+
+        if (unit_version >= 45)
+        {
+            discount = buf.ReadU8(&error);
+
+            if (unit_version >= 52)
+            {
+                flatrate = buf.ReadU32(&error);
+            }
+            else
+            {
+                flatrate = 0;
+            }
+
+            cracks = buf.ReadU8(&error);
+        }
+        else
+        {
+            flatrate = 0;
+            discount = 0;
+            cracks = 0;
+        }
+    }
+
+    void writeTo(CByteBuffer &buf)
+    {
+        buf.AppendFloat(credit);
+        buf.Append32(credit_limit);
+        buf.Append32(total_credit);
+        buf.Append16(last4);
+        buf.Append8(discount);
+        buf.Append32(flatrate);
+        buf.Append8(cracks);
+    }
     float getAccountBalance() const { return credit; }
     void setAccountBalance(float value) { credit = value; }
     void reduceAccountBalanceBy(float value) { credit -= value; }
     void increaseAccountBalanceBy(float value) { credit += value; }
-    int readAccountBalanceFrom(CByteBuffer &buf) { return buf.ReadFloat(&credit); }
 
     ubit32 getCreditLimit() const { return credit_limit; }
     void setCreditLimit(ubit32 value) { credit_limit = value; }
-    void readCreditLimitFrom(CByteBuffer &buf, int &error) { credit_limit = buf.ReadU32(&error); }
 
     ubit32 getTotalCredit() const { return total_credit; }
     void increaseTotalCreditBy(ubit32 value) { total_credit += value; }
     void reduceTotalCreditBy(ubit32 value) { total_credit -= value; }
     void setTotalCredit(ubit32 value) { total_credit = value; }
-    void readTotalCreditFrom(CByteBuffer &buf, int &error) { total_credit = buf.ReadU32(&error); }
 
     sbit16 getLastFourDigitsofCreditCard() { return last4; }
     void setLastFourDigitsofCreditCard(sbit16 value) { last4 = value; }
-    void readLastFourDigitsofCreditCardFrom(CByteBuffer &buf, int &error) { last4 = buf.ReadS16(&error); }
 
     ubit8 getCrackAttempts() const { return cracks; }
     void setCrackAttempts(ubit8 value) { cracks = value; }
-    void readCrackAttemptsFrom(CByteBuffer &buf, int &error) { cracks = buf.ReadU8(&error); }
 
     ubit8 getDiscountPercentage() const { return discount; }
     void setDiscountPercentage(ubit8 value) { discount = value; }
-    void readDiscountPercentageFrom(CByteBuffer &buf, int &error) { discount = buf.ReadU8(&error); }
 
     const ubit32 &getFlatRateExpirationDate() const { return flatrate; }
     void incFlatRateExpirationDate(ubit32 value) { flatrate += value; }
     void setFlatRateExpirationDate(ubit32 value) { flatrate = value; }
-    void readFlatRateExpirationDateFrom(CByteBuffer &buf, int &error) { flatrate = buf.ReadU32(&error); }
 
 private:
     float credit{0.0f};     // How many coin units are left on account?

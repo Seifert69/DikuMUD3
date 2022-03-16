@@ -866,44 +866,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     PC_PROFESSION(u) = pBuf->ReadS8(&g_nCorrupt);
                 }
 
-                g_nCorrupt += PC_ACCOUNT(u).readAccountBalanceFrom(*pBuf);
-                PC_ACCOUNT(u).readCreditLimitFrom(*pBuf, g_nCorrupt);
-                PC_ACCOUNT(u).readTotalCreditFrom(*pBuf, g_nCorrupt);
-
-                if (unit_version >= 44)
-                {
-                    PC_ACCOUNT(u).readLastFourDigitsofCreditCardFrom(*pBuf, g_nCorrupt);
-                }
-                else
-                {
-                    if (unit_version >= 41)
-                    {
-                        g_nCorrupt += pBuf->Skip32(); /* cc_time */
-                    }
-                    PC_ACCOUNT(u).setLastFourDigitsofCreditCard(-1);
-                }
-
-                if (unit_version >= 45)
-                {
-                    PC_ACCOUNT(u).readDiscountPercentageFrom(*pBuf, g_nCorrupt);
-
-                    if (unit_version >= 52)
-                    {
-                        PC_ACCOUNT(u).readFlatRateExpirationDateFrom(*pBuf, g_nCorrupt);
-                    }
-                    else
-                    {
-                        PC_ACCOUNT(u).setFlatRateExpirationDate(0);
-                    }
-
-                    PC_ACCOUNT(u).readCrackAttemptsFrom(*pBuf, g_nCorrupt);
-                }
-                else
-                {
-                    PC_ACCOUNT(u).setFlatRateExpirationDate(0);
-                    PC_ACCOUNT(u).setDiscountPercentage(0);
-                    PC_ACCOUNT(u).setCrackAttempts(0);
-                }
+                PC_ACCOUNT(u).readFrom(*pBuf, unit_version, g_nCorrupt);
 
                 if (unit_version >= 48)
                 {
