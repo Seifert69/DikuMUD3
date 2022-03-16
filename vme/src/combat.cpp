@@ -223,8 +223,7 @@ cCombat::~cCombat()
 
     g_CombatList.sub(this);
 
-    auto *owner = dynamic_cast<char_data *>(pOwner);
-    owner->points.setPosition(POSITION_STANDING);
+    getCharPoints(pOwner).setPosition(POSITION_STANDING);
     update_pos(pOwner);
 
     pOwner = nullptr;
@@ -434,8 +433,7 @@ void set_fighting(unit_data *ch, unit_data *vict, int bMelee)
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
 
-    auto *character = dynamic_cast<char_data *>(ch);
-    character->points.setPosition(POSITION_FIGHTING);
+    getCharPoints(ch).setPosition(POSITION_FIGHTING);
 }
 
 /* start one char fighting another (yes, it is horrible, I know... )  */
@@ -478,9 +476,8 @@ void stop_fighting(unit_data *ch, unit_data *victim)
 
     if (CHAR_COMBAT(ch) == nullptr)
     {
-        auto *character = dynamic_cast<char_data *>(ch);
-        character->points.removeCharacterFlag(CHAR_SELF_DEFENCE);
-        character->points.setPosition(POSITION_STANDING);
+        getCharPoints(ch).removeCharacterFlag(CHAR_SELF_DEFENCE);
+        getCharPoints(ch).setPosition(POSITION_STANDING);
         update_pos(ch);
     }
 }

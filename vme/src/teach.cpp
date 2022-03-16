@@ -1046,12 +1046,11 @@ teach_packet *get_teacher(const char *pName)
 
 skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_values *pValues)
 {
-    auto *the_pupil = dynamic_cast<char_data *>(pupil);
     switch (type)
     {
         case TEACH_ABILITIES:
-            pValues->values = the_pupil->points.getAbilitiesArray().data(); // Current ability
-            pValues->lvl = &PC_ABI_LVL(pupil, 0);                           // How many times you've trained this level on this ability
+            pValues->values = getCharPoints(pupil).getAbilitiesArray().data(); // Current ability
+            pValues->lvl = &PC_ABI_LVL(pupil, 0);                              // How many times you've trained this level on this ability
             pValues->practice_points = &PC_ABILITY_POINTS(pupil);
             return &g_AbiColl;
 

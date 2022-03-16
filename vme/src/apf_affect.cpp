@@ -44,14 +44,13 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     assert(IS_CHAR(unit));
 
-    auto *character = dynamic_cast<char_data *>(unit);
     if (set)
     {
-        character->points.setCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
+        getCharPoints(unit).setCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
     }
     else
     {
-        character->points.removeCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
+        getCharPoints(unit).removeCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -63,7 +62,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_CHAR_FLAGS))
             {
-                character->points.setCharacterFlag(static_cast<ubit32>(taf->getDataAtIndex(0)));
+                getCharPoints(unit).setCharacterFlag(static_cast<ubit32>(taf->getDataAtIndex(0)));
             }
         }
     }
@@ -277,14 +276,13 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     assert(IS_CHAR(unit));
 
-    auto *character = dynamic_cast<char_data *>(unit);
     if (set)
     {
         if (skill_overflow(CHAR_ABILITY(unit, af->getDataAtIndex(0)), af->getDataAtIndex(1), set))
         {
             return raw_destruct_affect(af);
         }
-        character->points.increaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
+        getCharPoints(unit).increaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {
@@ -293,7 +291,7 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        character->points.decreaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
+        getCharPoints(unit).decreaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {
@@ -342,7 +340,6 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
         return TRUE;
     }
 
-    auto *character = dynamic_cast<char_data *>(unit);
     if (set)
     {
         unit_affected_type *taf = nullptr;
@@ -356,12 +353,12 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
             }
         }
 
-        character->points.setNaturalArmor(MAX(CHAR_NATURAL_ARMOUR(unit), af->getDataAtIndex(0)));
+        getCharPoints(unit).setNaturalArmor(MAX(CHAR_NATURAL_ARMOUR(unit), af->getDataAtIndex(0)));
     }
     else
     {
         /* Restore value... */
-        character->points.setNaturalArmor(af->getDataAtIndex(1));
+        getCharPoints(unit).setNaturalArmor(af->getDataAtIndex(1));
     }
 
     return TRUE;
@@ -382,7 +379,6 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
         return TRUE;
     }
 
-    auto *character = dynamic_cast<char_data *>(unit);
     if (set)
     {
         unit_affected_type *taf = nullptr;
@@ -400,12 +396,12 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 
         if (taf == nullptr)
         {
-            character->points.setSpeed(af->getDataAtIndex(0));
+            getCharPoints(unit).setSpeed(af->getDataAtIndex(0));
         }
     }
     else
     {
-        character->points.setSpeed(af->getDataAtIndex(2));
+        getCharPoints(unit).setSpeed(af->getDataAtIndex(2));
     }
 
     return TRUE;

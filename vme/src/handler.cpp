@@ -401,8 +401,7 @@ void start_following(unit_data *ch, unit_data *leader)
     assert(!leader->is_destructed());
     assert(!ch->is_destructed());
 
-    auto *character = dynamic_cast<char_data *>(ch);
-    character->points.removeCharacterFlag(CHAR_GROUP);
+    getCharPoints(ch).removeCharacterFlag(CHAR_GROUP);
     if (CHAR_MASTER(ch))
     {
         stop_following(ch);

@@ -111,8 +111,7 @@ ubit1 use_mana(unit_data *medium, int mana)
     {
         if (CHAR_MANA(medium) >= mana)
         {
-            auto *the_medium = dynamic_cast<char_data *>(medium);
-            the_medium->points.decreaseManaBy(mana);
+            getCharPoints(medium).decreaseManaBy(mana);
             return TRUE;
         }
         else

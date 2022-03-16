@@ -718,30 +718,29 @@ void combat_message(unit_data *att, unit_data *def, unit_data *medium, int damag
 
 void update_pos(unit_data *victim)
 {
-    auto *the_victim = dynamic_cast<char_data *>(victim);
     if ((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
     {
         return;
     }
     else if (UNIT_HIT(victim) > 0)
     {
-        the_victim->points.setPosition(POSITION_STANDING);
+        getCharPoints(victim).setPosition(POSITION_STANDING);
     }
     else if (UNIT_HIT(victim) <= -11)
     {
-        the_victim->points.setPosition(POSITION_DEAD);
+        getCharPoints(victim).setPosition(POSITION_DEAD);
     }
     else if (UNIT_HIT(victim) <= -6)
     {
-        the_victim->points.setPosition(POSITION_MORTALLYW);
+        getCharPoints(victim).setPosition(POSITION_MORTALLYW);
     }
     else if (UNIT_HIT(victim) <= -3)
     {
-        the_victim->points.setPosition(POSITION_INCAP);
+        getCharPoints(victim).setPosition(POSITION_INCAP);
     }
     else
     {
-        the_victim->points.setPosition(POSITION_STUNNED);
+        getCharPoints(victim).setPosition(POSITION_STUNNED);
     }
 }
 
@@ -1100,10 +1099,9 @@ void damage(unit_data *ch,
         dam = 0;
     }
 
-    auto *the_victim = dynamic_cast<char_data *>(victim);
     if ((CHAR_POS(victim) == POSITION_SLEEPING) && (dam > 0))
     {
-        the_victim->points.setPosition(POSITION_RESTING);
+        getCharPoints(victim).setPosition(POSITION_RESTING);
         send_to_char("OUCH! You wake up!<br/>", victim);
     }
 
@@ -1122,7 +1120,7 @@ void damage(unit_data *ch,
             {
                 destroy_affect(paf);
             }
-            the_victim->points.removeCharacterFlag(CHAR_HIDE);
+            getCharPoints(victim).removeCharacterFlag(CHAR_HIDE);
         }
 
         if (IS_SET(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE))
@@ -1349,8 +1347,7 @@ void damage(unit_data *ch,
 
         if (victim == ch)
         {
-            auto *character = dynamic_cast<char_data *>(ch);
-            character->points.setCharacterFlag(CHAR_KILL_SELF);
+            getCharPoints(ch).setCharacterFlag(CHAR_KILL_SELF);
             die(ch);
         }
         else
@@ -1563,8 +1560,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
 
         if (CHAR_POS(att) != POSITION_FIGHTING)
         {
-            auto *attacker = dynamic_cast<char_data *>(att);
-            attacker->points.setPosition(POSITION_FIGHTING);
+            getCharPoints(att).setPosition(POSITION_FIGHTING);
         }
         add_fighting(att, def, TRUE);
     }
@@ -1705,8 +1701,7 @@ void melee_violence(unit_data *ch, int primary)
     {
         act("You get back in a fighting position, ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n gets back in a fighting position ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_ROOM);
-        auto *character = dynamic_cast<char_data *>(ch);
-        character->points.setPosition(POSITION_FIGHTING);
+        getCharPoints(ch).setPosition(POSITION_FIGHTING);
     }
 }
 
@@ -1774,8 +1769,7 @@ int hunting(spec_arg *sarg)
             /* again                                                  */
             if (h->was_legal)
             {
-                auto *victim = dynamic_cast<char_data *>(h->victim);
-                victim->points.setCharacterFlag(CHAR_LEGAL_TARGET);
+                getCharPoints(h->victim).setCharacterFlag(CHAR_LEGAL_TARGET);
             }
 
             if (!CHAR_COMBAT(sarg->owner) || !CHAR_COMBAT(sarg->owner)->FindOpponent(h->victim))

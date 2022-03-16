@@ -479,7 +479,7 @@ mobile_field    : unit_field
 
 omobile_field   : MANA number
     {
-        dynamic_cast<char_data*>(cur)->points.setMana($2);
+        getCharPoints(cur).setMana($2);
     }
     | ACT flags
     {
@@ -505,27 +505,27 @@ omobile_field   : MANA number
     }
     | EXP number
     {
-        dynamic_cast<char_data*>(cur)->points.setPlayerExperience($2);
+        getCharPoints(cur).setPlayerExperience($2);
     }
     | SEX number
     {
-        dynamic_cast<char_data*>(cur)->points.setSex($2);
+        getCharPoints(cur).setSex($2);
     }
     | LEVEL number
     {
-        dynamic_cast<char_data*>(cur)->points.setLevel($2);
+        getCharPoints(cur).setLevel($2);
     }
     | RACE number
     {
-        dynamic_cast<char_data*>(cur)->points.setRace($2);
+        getCharPoints(cur).setRace($2);
     }
     | ATTACK number
     {
-        dynamic_cast<char_data*>(cur)->points.setAttackType($2);
+        getCharPoints(cur).setAttackType($2);
     }
     | POSITION number
     {
-        dynamic_cast<char_data*>(cur)->points.setPosition($2);
+        getCharPoints(cur).setPosition($2);
     }
     | DEFAULT number
     {
@@ -533,27 +533,27 @@ omobile_field   : MANA number
     }
     | FLAGS flags
     {
-        dynamic_cast<char_data*>(cur)->points.setAllCharacterFlags($2);
+        getCharPoints(cur).setAllCharacterFlags($2);
     }
     | ARMOUR number
     {
-        dynamic_cast<char_data*>(cur)->points.setNaturalArmor($2);
+        getCharPoints(cur).setNaturalArmor($2);
     }
     | SPEED number
     {
-        dynamic_cast<char_data*>(cur)->points.setSpeed($2);
+        getCharPoints(cur).setSpeed($2);
     }
     | DEFENSIVE number
     {
-        dynamic_cast<char_data*>(cur)->points.setDefensiveBonus($2);
+        getCharPoints(cur).setDefensiveBonus($2);
     }
     | OFFENSIVE number
     {
-        dynamic_cast<char_data*>(cur)->points.setOffensiveBonus($2);
+        getCharPoints(cur).setOffensiveBonus($2);
     }
     | ABILITY index number
     {
-        dynamic_cast<char_data*>(cur)->points.setAbilityAtIndexTo($2, $3);
+        getCharPoints(cur).setAbilityAtIndexTo($2, $3);
     }
     | WEAPON index number
     {

@@ -672,7 +672,6 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     strip_trailing_spaces(argument);
 
     /* insert data read in argument */
-    auto *character = dynamic_cast<char_data *>(unt);
     switch (type)
     {
         case 0: /* "add-name" */
@@ -1115,24 +1114,24 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                character->points.setPlayerExperience(valarg);
+                getCharPoints(unt).setPlayerExperience(valarg);
             }
             return;
 
         case 46: /* "affected-by" */
-            character->points.setAllCharacterFlags(bitarg);
+            getCharPoints(unt).setAllCharacterFlags(bitarg);
             return;
 
         case 47: /* "mana" */
-            character->points.setMana(valarg);
+            getCharPoints(unt).setMana(valarg);
             return;
 
         case 48: /* "endurance" */
-            character->points.setEndurance(valarg);
+            getCharPoints(unt).setEndurance(valarg);
             return;
 
         case 49: /* "attack-type" */
-            character->points.setAttackType(typarg);
+            getCharPoints(unt).setAttackType(typarg);
             return;
 
         case 50: /* "hand-quality" OBSOLETE */
@@ -1148,17 +1147,17 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 52: /* "race" */
-            character->points.setRace(typarg);
+            getCharPoints(unt).setRace(typarg);
             return;
 
         case 53: /* "sex" */
-            character->points.setSex(typarg);
+            getCharPoints(unt).setSex(typarg);
             return;
 
         case 54: /* "level" */
             if (is_in(valarg, 0, 199))
             {
-                character->points.setLevel(valarg);
+                getCharPoints(unt).setLevel(valarg);
             }
             else
             {
@@ -1167,13 +1166,13 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 55: /* "position" */
-            character->points.setPosition(typarg);
+            getCharPoints(unt).setPosition(typarg);
             return;
 
         case 56: /* "ability" */
             if (is_in(valarg, 0, 250))
             {
-                character->points.setAbilityAtIndexTo(typarg, valarg);
+                getCharPoints(unt).setAbilityAtIndexTo(typarg, valarg);
             }
             else
             {
@@ -1221,7 +1220,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 62: /* "speed" */
             if (is_in(valarg, SPEED_MIN, SPEED_MAX))
             {
-                character->points.setSpeed(valarg);
+                getCharPoints(unt).setSpeed(valarg);
             }
             else
             {

@@ -438,8 +438,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
                          ch);
             return;
         }
-        auto *character = dynamic_cast<char_data *>(ch);
-        character->points.decreaseManaBy(g_spell_info[spl].usesmana);
+        getCharPoints(ch).decreaseManaBy(g_spell_info[spl].usesmana);
     }
 
     // Spells take time too!

@@ -857,8 +857,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
         case UNIT_ST_PC:
         {
-            auto *character = dynamic_cast<char_data *>(u);
-            character->points.readFrom(*pBuf, unit_version, u, g_nCorrupt);
+            getCharPoints(u).readFrom(*pBuf, unit_version, u, g_nCorrupt);
 
             if (IS_PC(u))
             {
@@ -914,7 +913,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     // TODO worse than spooky - why decrement a race??
                     //      Also could be really bad if race==0
-                    character->points.setRace(character->points.getRace() - 1);
+                    getCharPoints(u).setRace(getCharPoints(u).getRace() - 1);
 
                     base_race_info_type *sex_race = nullptr;
 
@@ -1059,7 +1058,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     if (CHAR_EXP(u) < xpfloor)
                     {
                         slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", UNIT_NAME(u), CHAR_EXP(u), xpfloor);
-                        character->points.setPlayerExperience(xpfloor);
+                        getCharPoints(u).setPlayerExperience(xpfloor);
                         // xxx
                     }
                 }

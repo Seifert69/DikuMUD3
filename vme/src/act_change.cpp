@@ -28,8 +28,7 @@ static void chg_wimpy(unit_data *ch)
         send_to_char("Ok, you'll flee when death is near.<br/>", ch);
     }
 
-    auto *character = dynamic_cast<char_data *>(ch);
-    character->points.toggleCharacterFlag(CHAR_WIMPY);
+    getCharPoints(ch).toggleCharacterFlag(CHAR_WIMPY);
 }
 
 static void chg_expert(unit_data *ch)
@@ -85,8 +84,7 @@ static void chg_peaceful(unit_data *ch)
         send_to_char("You will no longer attack aggressors.<br/>", ch);
     }
 
-    auto *character = dynamic_cast<char_data *>(ch);
-    character->points.toggleCharacterFlag(CHAR_PEACEFUL);
+    getCharPoints(ch).toggleCharacterFlag(CHAR_PEACEFUL);
 }
 
 static void chg_prompt(unit_data *ch)
