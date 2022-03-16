@@ -269,12 +269,12 @@
         {
             "source_file": {
                 "filename": "death.zon",
-                "sha512": "6a93f009298c13ecd40603774461de8147d6de42433422ccc432fe9c8c7ef7be4886a3ae543d3e667da172e372564eb784c10bc15e08cd0acb618cf3b74ae005"
+                "sha512": "bc36d7d9f6e68eda8d0812a16dd1565532f6f9a2664cc2949ae548005c476c3fcebd2561cbf9d07efcd02727fffa967697524e110633a0b0560c0f5054cf2180"
             },
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "d446ac519e391d1c0cd6d85ed23ff72fb630022bb78244911121b67c1feceae5204cba3e99c17afc0820f9b61be0a03b380d3bc8cbee72b9d1d001928bde8fae"
+                    "sha512": "094da1f02e87d5a9a83efb199cf9893374044f34ae32445854539db4b22101c9fb926ee3f30453f2d79482a041854d8b0bbb18e2c4a0b57bb64188bc1d672112"
                 },
                 {
                     "filename": "death.reset",
