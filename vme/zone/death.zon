@@ -520,9 +520,8 @@ code
          link(item, self.outside);
          item := nxt;
       }
-
-      destroy(self);
    }
+   destroy(self);
 
    quit;
 }
