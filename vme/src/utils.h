@@ -213,15 +213,29 @@
 
 /*#define CHAR_DEX_RED(ch)     \  (UCHAR(ch)->points.dex_reduction)*/
 
+inline char_point_data &getCharPoints(unit_data *unit)
+{
+    auto character = dynamic_cast<char_data *>(unit);
+    assert(character != nullptr);
+    return character->points;
+}
+
+inline const char_point_data &getCharPoints(const unit_data *unit)
+{
+    auto character = dynamic_cast<const char_data *>(unit);
+    assert(character != nullptr);
+    return character->points;
+}
+
 #define CHAR_DESCRIPTOR(ch) (UCHAR(ch)->descriptor)
 
-#define CHAR_OFFENSIVE(unit) (UCHAR(unit)->points.offensive)
+#define CHAR_OFFENSIVE(unit) (getCharPoints(unit).getOffensiveBonus())
 
-#define CHAR_DEFENSIVE(unit) (UCHAR(unit)->points.defensive)
+#define CHAR_DEFENSIVE(unit) (getCharPoints(unit).getDefensiveBonus())
 
-#define CHAR_FLAGS(unit) (UCHAR(unit)->points.flags)
+#define CHAR_FLAGS(unit) (getCharPoints(unit).getCharacterFlags())
 
-#define CHAR_SEX(ch) (UCHAR(ch)->points.sex)
+#define CHAR_SEX(ch) (getCharPoints(ch).getSex())
 
 #define CHAR_LAST_ROOM(unit) (UCHAR(unit)->last_room)
 
@@ -229,44 +243,44 @@
 
 #define CHAR_LAST_ATTACKER_TYPE(unit) (UCHAR(unit)->last_attacker_type)
 
-#define CHAR_POS(ch) (UCHAR(ch)->points.position)
+#define CHAR_POS(ch) (getCharPoints(ch).getPosition())
 
-#define CHAR_LEVEL(ch) (UCHAR(ch)->points.level)
+#define CHAR_LEVEL(ch) (getCharPoints(ch).getLevel())
 
-#define CHAR_RACE(ch) (UCHAR(ch)->points.race)
+#define CHAR_RACE(ch) (getCharPoints(ch).getRace())
 
-#define CHAR_ABILITY(ch, index) (UCHAR(ch)->points.abilities[index])
+#define CHAR_ABILITY(ch, index) (getCharPoints(ch).getAbilityAtIndex(index))
 
-#define CHAR_STR(ch) (CHAR_ABILITY(ch, ABIL_STR))
+#define CHAR_STR(ch) (getCharPoints(ch).getSTR())
 
-#define CHAR_DEX(ch) (CHAR_ABILITY(ch, ABIL_DEX))
+#define CHAR_DEX(ch) (getCharPoints(ch).getDEX())
 
-#define CHAR_CON(ch) (CHAR_ABILITY(ch, ABIL_CON))
+#define CHAR_CON(ch) (getCharPoints(ch).getCON())
 
-#define CHAR_CHA(ch) (CHAR_ABILITY(ch, ABIL_CHA))
+#define CHAR_CHA(ch) (getCharPoints(ch).getCHA())
 
-#define CHAR_BRA(ch) (CHAR_ABILITY(ch, ABIL_BRA))
+#define CHAR_BRA(ch) (getCharPoints(ch).getBRA())
 
-#define CHAR_MAG(ch) (CHAR_ABILITY(ch, ABIL_MAG))
+#define CHAR_MAG(ch) (getCharPoints(ch).getMAG())
 
-#define CHAR_DIV(ch) (CHAR_ABILITY(ch, ABIL_DIV))
+#define CHAR_DIV(ch) (getCharPoints(ch).getDIV())
 
-#define CHAR_HPP(ch) (CHAR_ABILITY(ch, ABIL_HP))
+#define CHAR_HPP(ch) (getCharPoints(ch).getHPP())
 
-#define CHAR_ENDURANCE(ch) (UCHAR(ch)->points.endurance)
+#define CHAR_ENDURANCE(ch) (getCharPoints(ch).getEndurance())
 
-#define CHAR_MANA(ch) (UCHAR(ch)->points.mana)
+#define CHAR_MANA(ch) (getCharPoints(ch).getMana())
 
 /* NOT to be used unless by db.... */
 #define CHAR_MONEY(ch) (UCHAR(ch)->money)
 
-#define CHAR_EXP(ch) (UCHAR(ch)->points.exp)
+#define CHAR_EXP(ch) (getCharPoints(ch).getPlayerExperience())
 
-#define CHAR_ATTACK_TYPE(ch) (UCHAR(ch)->points.attack_type)
+#define CHAR_ATTACK_TYPE(ch) (getCharPoints(ch).getAttackType())
 
-#define CHAR_NATURAL_ARMOUR(ch) (UCHAR(ch)->points.natural_armour)
+#define CHAR_NATURAL_ARMOUR(ch) (getCharPoints(ch).getNaturalArmor())
 
-#define CHAR_SPEED(ch) (UCHAR(ch)->points.speed)
+#define CHAR_SPEED(ch) (getCharPoints(ch).getSpeed())
 
 #define CHAR_COMBAT(ch) (UCHAR(ch)->Combat)
 

@@ -2789,17 +2789,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &CHAR_OFFENSIVE((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getOffensiveBonusPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -2817,17 +2820,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &CHAR_DEFENSIVE((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getDefensiveBonusPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -2845,17 +2851,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &CHAR_SEX((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getSexPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -2873,17 +2882,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &CHAR_RACE((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getRacePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -2928,28 +2940,29 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                if (character && IS_CHAR(character) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
-                    if (IS_PC((unit_data *)v1->val.ptr))
+                    if (IS_PC(character))
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_SINT2R;
-                            v->ref = &CHAR_ABILITY((unit_data *)v1->val.ptr, v2->val.num);
+                            v->ref = character->points.getAbilityAtIndexPtr(v2->val.num);
                         }
                         else
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
-                            v->val.num = CHAR_ABILITY((unit_data *)v1->val.ptr, v2->val.num);
+                            v->val.num = character->points.getAbilityAtIndex(v2->val.num);
                         }
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &CHAR_ABILITY((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = character->points.getAbilityAtIndexPtr(v2->val.num);
                     }
                 }
                 else
@@ -3466,26 +3479,29 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_SINT4R;
-                            v->ref = &CHAR_EXP((unit_data *)v1->val.ptr);
+                            v->ref = character->points.getPlayerExperiencePtr();
                         }
                         else
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
-                            v->val.num = CHAR_EXP((unit_data *)v1->val.ptr);
+                            v->val.num = character->points.getPlayerExperience();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -3530,24 +3546,27 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
-                        if ((IS_PC((unit_data *)v1->val.ptr)) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
+                        if (IS_PC(character) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
                         {
                             v->type = DILV_INT;
-                            v->val.num = CHAR_LEVEL((unit_data *)v1->val.ptr);
+                            v->val.num = CHAR_LEVEL(character);
                         }
                         else
                         {
                             v->type = DILV_UINT1R;
-                            v->ref = &CHAR_LEVEL((unit_data *)v1->val.ptr);
+                            v->ref = character->points.getLevelPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 case DILV_CP:
                     if (v1->val.ptr)
@@ -3679,17 +3698,20 @@ void dilfe_fld(dilprg *p)
                     break;
 
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &CHAR_POS((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getPositionPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 case DILV_CP:
                     if (v1->val.ptr)
                     {
@@ -3719,17 +3741,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &CHAR_ATTACK_TYPE((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getAttackTypePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -3747,17 +3772,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &CHAR_MANA((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getManaPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -3775,17 +3803,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &CHAR_ENDURANCE((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getEndurancePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -3803,17 +3834,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &CHAR_NATURAL_ARMOUR((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getNaturalArmorPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -3831,17 +3865,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = &CHAR_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = character->points.getCharacterFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

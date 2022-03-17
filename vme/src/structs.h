@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include "char_point_data.h"
 #include "color.h"
 #include "combat.h"
 #include "destruct.h"
@@ -203,33 +204,6 @@ public:
 
 /* ----------------- CHAR SPECIFIC STRUCTURES ----------------------- */
 
-class char_point_data
-{
-public:
-    char_point_data();
-    /*~char_point_data(void); not needed yet all base types they destroy themselves*/
-
-    ubit32 flags; /* Char flags                               */
-
-    sbit32 exp; /* The experience of the player             */
-
-    ubit16 race; /* PC/NPC race, Humanoid, Animal, etc.     */
-
-    sbit16 mana;      /* How many mana points are left?           */
-    sbit16 endurance; /* How many endurance points are left?      */
-    sbit16 offensive; /* The OB of a character.                   */
-    sbit16 defensive; /* The DB of a character.                   */
-
-    ubit8 speed;                     /* The default speed for natural combat     */
-    ubit8 natural_armour;            /* The natural built-in armour (ARM_)       */
-    ubit8 attack_type;               /* PC/NPC Attack Type for bare hands (WPN_) */
-    ubit8 dex_reduction;             /* For speed of armour calculations only    */
-    ubit8 sex;                       /* PC / NPC s sex                           */
-    ubit8 level;                     /* PC / NPC s level                         */
-    ubit8 position;                  /* Standing, sitting, fighting...           */
-    sbit16 abilities[ABIL_TREE_MAX]; /* Str/dex etc.                 */
-};
-
 struct char_follow_type
 {
     unit_data *follower; /* Must be a char */
@@ -342,8 +316,8 @@ public:
     npc_data();
     ~npc_data();
 
-    sbit16 weapons[WPN_GROUP_MAX];
-    sbit16 spells[SPL_GROUP_MAX];
+    std::array<sbit16, WPN_GROUP_MAX> weapons;
+    std::array<sbit16, SPL_GROUP_MAX> spells;
 
     ubit8 default_pos; /* Default position for NPC               */
     ubit8 flags;       /* flags for NPC behavior                 */

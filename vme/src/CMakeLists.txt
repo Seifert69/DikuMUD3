@@ -16,6 +16,7 @@ set(VME_SRCS
         ban.cpp ban.h
         bank.cpp bank.h
         bytestring.cpp bytestring.h
+        char_point_data.cpp char_point_data.h
         cmdload.cpp cmdload.h
         color.cpp color.h
         combat.cpp combat.h

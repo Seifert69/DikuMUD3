@@ -39,11 +39,41 @@ int required_xp(int level);
 int level_xp(int level);
 void set_hits(unit_data *obj, int craftsmanship);
 int skill_point_gain();
+int buy_points(int points, int level, int *error);
 int ability_point_gain(unit_data *ch);
 int ability_point_total(unit_data *ch);
-int distribute_points(sbit16 *skills, int max, int points, int level);
+/**
+ * Algorithm PS 5
+ * Used to distribute points after a given percentage scheme. Each
+ * ability (8 of them) contains the percentage number. The percentage
+ * must add up to 100%.
+ *
+ * @tparam T Type in array
+ * @tparam MAX_ARRAY Max size of array
+ * @param skills Reference to the array to fill
+ * @param max Max size of array
+ * @param points
+ * @param level
+ * @return Returns true if error
+ */
+template<class T, size_t MAX_ARRAY>
+int distribute_points(std::array<T, MAX_ARRAY> &skills, int max, int points, int level)
+{
+    int error = 0;
+    int sumerror = 0;
+
+    for (int i = 0; i < max; i++)
+    {
+        skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
+        if (error > sumerror)
+        {
+            sumerror = error;
+        }
+    }
+
+    return sumerror;
+}
 int distribute_points(ubit8 *skills, int max, int points, int level);
-int buy_points(int points, int level, int *error);
 void set_weapon(unit_data *o);
 void set_shield(unit_data *o);
 void set_armour(unit_data *o);

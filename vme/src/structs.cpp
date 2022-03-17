@@ -39,25 +39,6 @@ room_direction_data::~room_direction_data()
 {
 }
 
-char_point_data::char_point_data()
-{
-    flags = 0;          /* Char flags                               */
-    exp = 0;            /* The experience of the player             */
-    race = 0;           /* PC/NPC race, Humanoid, Animal, etc.     */
-    mana = 0;           /* How many mana points are left?           */
-    endurance = 0;      /* How many endurance points are left?      */
-    offensive = 0;      /* The OB of a character.                   */
-    defensive = 0;      /* The DB of a character.                   */
-    speed = 0;          /* The default speed for natural combat     */
-    natural_armour = 0; /* The natural built-in armour (ARM_)       */
-    attack_type = 0;    /* PC/NPC Attack Type for bare hands (WPN_) */
-    dex_reduction = 0;  /* For speed of armour calculations only    */
-    sex = 0;            /* PC / NPC s sex                           */
-    level = 0;          /* PC / NPC s level                         */
-    position = 0;       /* Standing, sitting, fighting...           */
-    memset(abilities, 0, sizeof(abilities));
-}
-
 char_data::char_data()
 {
     g_world_nochars++;
@@ -200,8 +181,8 @@ npc_data::npc_data()
 
     g_world_nonpc++;
 
-    memset(weapons, 0, sizeof(weapons));
-    memset(spells, 0, sizeof(spells));
+    memset(weapons.data(), 0, weapons.size());
+    memset(spells.data(), 0, spells.size());
     default_pos = POSITION_STANDING;
     flags = 0;
 }
@@ -557,22 +538,26 @@ unit_data *unit_data::copy()
     }
     else if (IS_CHAR(this))
     {
-        CHAR_FLAGS(u) = CHAR_FLAGS(this);
-        CHAR_EXP(u) = CHAR_EXP(this);
-        CHAR_MANA(u) = CHAR_MANA(this);
-        CHAR_ENDURANCE(u) = CHAR_ENDURANCE(this);
-        CHAR_RACE(u) = CHAR_RACE(this);
-        CHAR_OFFENSIVE(u) = CHAR_OFFENSIVE(this);
-        CHAR_DEFENSIVE(u) = CHAR_DEFENSIVE(this);
-        CHAR_SPEED(u) = CHAR_SPEED(this);
-        CHAR_NATURAL_ARMOUR(u) = CHAR_NATURAL_ARMOUR(this);
-        CHAR_ATTACK_TYPE(u) = CHAR_ATTACK_TYPE(this);
-        CHAR_SEX(u) = CHAR_SEX(this);
-        CHAR_LEVEL(u) = CHAR_LEVEL(this);
-        CHAR_POS(u) = CHAR_POS(this);
+        // TODO These should all move down to char_data
+        auto *u_downcast = dynamic_cast<char_data *>(u);
+        auto *this_downcast = dynamic_cast<char_data *>(this);
+
+        u_downcast->points.setAllCharacterFlags(this_downcast->points.getCharacterFlags());
+        u_downcast->points.setPlayerExperience(this_downcast->points.getPlayerExperience());
+        u_downcast->points.setMana(this_downcast->points.getMana());
+        u_downcast->points.setEndurance(this_downcast->points.getEndurance());
+        u_downcast->points.setRace(this_downcast->points.getRace());
+        u_downcast->points.setOffensiveBonus(this_downcast->points.getOffensiveBonus());
+        u_downcast->points.setDefensiveBonus(this_downcast->points.getDefensiveBonus());
+        u_downcast->points.setSpeed(this_downcast->points.getSpeed());
+        u_downcast->points.setNaturalArmor(this_downcast->points.getNaturalArmor());
+        u_downcast->points.setAttackType(this_downcast->points.getAttackType());
+        u_downcast->points.setSex(this_downcast->points.getSex());
+        u_downcast->points.setLevel(this_downcast->points.getLevel());
+        u_downcast->points.setPosition(this_downcast->points.getPosition());
         for (x = 0; x < ABIL_TREE_MAX; x++)
         {
-            CHAR_ABILITY(u, x) = CHAR_ABILITY(this, x);
+            u_downcast->points.setAbilityAtIndexTo(x, this_downcast->points.getAbilityAtIndex(x));
         }
         if (IS_PC(this))
         {

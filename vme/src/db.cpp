@@ -853,70 +853,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     {
         case UNIT_ST_NPC:
             g_nCorrupt += pBuf->ReadStringAlloc(&CHAR_MONEY(u));
-            /* fallthru */
+            [[fallthrough]];
 
         case UNIT_ST_PC:
-            CHAR_EXP(u) = pBuf->ReadS32(&g_nCorrupt);
-            CHAR_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
-
-            CHAR_MANA(u) = pBuf->ReadS16(&g_nCorrupt);
-            CHAR_ENDURANCE(u) = pBuf->ReadS16(&g_nCorrupt);
-
-            CHAR_NATURAL_ARMOUR(u) = pBuf->ReadU8(&g_nCorrupt);
-
-            if (unit_version >= 39)
-            {
-                CHAR_SPEED(u) = pBuf->ReadU8(&g_nCorrupt);
-                if (IS_PC(u))
-                {
-                    if (CHAR_SPEED(u) < SPEED_MIN)
-                    {
-                        CHAR_SPEED(u) = SPEED_DEFAULT;
-                    }
-                }
-            }
-            else
-            {
-                CHAR_SPEED(u) = SPEED_DEFAULT;
-            }
-
-            CHAR_ATTACK_TYPE(u) = pBuf->ReadU16(&g_nCorrupt);
-
-            if (unit_version <= 52)
-            {
-                UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
-            }
-            CHAR_RACE(u) = pBuf->ReadU16(&g_nCorrupt);
-
-            CHAR_OFFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
-            CHAR_DEFENSIVE(u) = pBuf->ReadS16(&g_nCorrupt);
-
-            CHAR_SEX(u) = pBuf->ReadU8(&g_nCorrupt);
-            CHAR_LEVEL(u) = pBuf->ReadU8(&g_nCorrupt);
-            CHAR_POS(u) = pBuf->ReadU8(&g_nCorrupt);
-
-            j = pBuf->ReadU8(&g_nCorrupt);;
-
-            for (i = 0; i < j; i++)
-            {
-                if (unit_version < 69)
-                {
-                    CHAR_ABILITY(u, i) = pBuf->ReadU8(&g_nCorrupt);;
-                }
-                else
-                {
-                    CHAR_ABILITY(u, i) = pBuf->ReadS16(&g_nCorrupt);
-                }
-
-                if (IS_PC(u))
-                {
-                    PC_ABI_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
-                    if (unit_version < 72)
-                    {
-                        g_nCorrupt += pBuf->Skip8();
-                    }
-                }
-            }
+        {
+            getCharPoints(u).readFrom(*pBuf, unit_version, u, g_nCorrupt);
 
             if (IS_PC(u))
             {
@@ -970,7 +911,9 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    CHAR_RACE(u)--; /* spooky */
+                    // TODO worse than spooky - why decrement a race??
+                    //      Also could be really bad if race==0
+                    getCharPoints(u).setRace(getCharPoints(u).getRace() - 1);
 
                     base_race_info_type *sex_race = nullptr;
 
@@ -1115,7 +1058,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     if (CHAR_EXP(u) < xpfloor)
                     {
                         slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", UNIT_NAME(u), CHAR_EXP(u), xpfloor);
-                        CHAR_EXP(u) = xpfloor;
+                        getCharPoints(u).setPlayerExperience(xpfloor);
                         // xxx
                     }
                 }
@@ -1143,7 +1086,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    j = pBuf->ReadU16(&g_nCorrupt);;
+                    j = pBuf->ReadU16(&g_nCorrupt);
                 }
 
                 for (i = 0; i < j; i++)
@@ -1286,7 +1229,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 NPC_DEFAULT(u) = pBuf->ReadU8(&g_nCorrupt);
                 NPC_FLAGS(u) = pBuf->ReadU8(&g_nCorrupt);
             }
-            break;
+        }
+        break;
 
         case UNIT_ST_OBJ:
             OBJ_VALUE(u, 0) = pBuf->ReadS32(&g_nCorrupt);
@@ -1669,7 +1613,7 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
 
     while (((cmdno = (ubit8)fgetc(f)) != 255) && !feof(f))
     {
-        cmd=new zone_reset_cmd();
+        cmd = new zone_reset_cmd();
         cmd->setCommandNum(cmdno);
 
         fstrcpy(&cBuf, f);

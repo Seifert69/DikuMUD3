@@ -223,7 +223,7 @@ cCombat::~cCombat()
 
     g_CombatList.sub(this);
 
-    CHAR_POS(pOwner) = POSITION_STANDING;
+    getCharPoints(pOwner).setPosition(POSITION_STANDING);
     update_pos(pOwner);
 
     pOwner = nullptr;
@@ -433,7 +433,7 @@ void set_fighting(unit_data *ch, unit_data *vict, int bMelee)
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
 
-    CHAR_POS(ch) = POSITION_FIGHTING;
+    getCharPoints(ch).setPosition(POSITION_FIGHTING);
 }
 
 /* start one char fighting another (yes, it is horrible, I know... )  */
@@ -476,8 +476,8 @@ void stop_fighting(unit_data *ch, unit_data *victim)
 
     if (CHAR_COMBAT(ch) == nullptr)
     {
-        REMOVE_BIT(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE);
-        CHAR_POS(ch) = POSITION_STANDING;
+        getCharPoints(ch).removeCharacterFlag(CHAR_SELF_DEFENCE);
+        getCharPoints(ch).setPosition(POSITION_STANDING);
         update_pos(ch);
     }
 }

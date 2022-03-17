@@ -6,6 +6,7 @@
  */
 
 #include "common.h"
+
 #include "error.h"
 #include "skills.h"
 #include "structs.h"
@@ -28,7 +29,6 @@ shi_info_type g_shi_info[] = {
     {20}, /* SHIELD_MEDIUM */
     {25}  /* SHIELD_LARGE  */
 };
-
 
 // Translate BONUS_XXX for weapons, shields, armors, skills -> ]-20..+20[
 //
@@ -81,8 +81,6 @@ int bonus_map_b(int bonus)
 
     return b;
 }
-
-
 
 /* PS Algorithm 2                                                      */
 /* This algorithm returns the amount of points gained at a particular  */
@@ -206,27 +204,6 @@ int buy_points(int points, int level, int *error)
 /* ability (8 of them) contains the percentage number. The percentage  */
 /* must add up to 100%.                                                */
 /* Returns true if error */
-
-int distribute_points(sbit16 *skills, int max, int points, int level)
-{
-    int i = 0;
-    int error = 0;
-    int sumerror = 0;
-
-    sumerror = 0;
-
-    for (i = 0; i < max; i++)
-    {
-        skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
-        if (error > sumerror)
-        {
-            sumerror = error;
-        }
-    }
-
-    return sumerror;
-}
-
 int distribute_points(ubit8 *skills, int max, int points, int level)
 {
     int i = 0;

@@ -348,7 +348,7 @@ void tif_eyes_tingle(unit_affected_type *af, unit_data *unit)
 void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 {
     if (OBJ_VALUE(unit, 0) > 0)
-        OBJ_VALUE(unit, 0)--;  // Decreash how many hours of burning are left.
+        OBJ_VALUE(unit, 0)--; // Decreash how many hours of burning are left.
 
     if (af->getDuration() <= 4)
     {
@@ -416,7 +416,7 @@ void tif_sleep_on(unit_affected_type *af, unit_data *unit)
 
         act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n falls asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_ROOM);
-        CHAR_POS(unit) = POSITION_SLEEPING;
+        getCharPoints(unit).setPosition(POSITION_SLEEPING);
     }
 }
 
@@ -438,7 +438,7 @@ void tif_sleep_check(unit_affected_type *af, unit_data *unit)
             }
             act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             act("$1n falls asleep.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-            CHAR_POS(unit) = POSITION_SLEEPING;
+            getCharPoints(unit).setPosition(POSITION_SLEEPING);
         }
     }
 }
@@ -853,8 +853,8 @@ void tif_poison_on(unit_affected_type *af, unit_data *unit)
 /* Data[2] The amount of Endurance points to loose (>=0) */
 void tif_poison_suffer(unit_affected_type *af, unit_data *unit)
 {
-    CHAR_MANA(unit) -= af->getDataAtIndex(1);
-    CHAR_ENDURANCE(unit) -= af->getDataAtIndex(2);
+    getCharPoints(unit).decreaseManaBy(af->getDataAtIndex(1));
+    getCharPoints(unit).decreaseEnduranceBy(af->getDataAtIndex(2));
     damage(unit, unit, nullptr, af->getDataAtIndex(0), MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
     /* unit can be destructed now, but no problemo */
 }
@@ -996,9 +996,9 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
         return;
     }
 
-    CHAR_POS(unit) = POSITION_STANDING;
+    getCharPoints(unit).setPosition(POSITION_STANDING);
     REMOVE_BIT(PC_FLAGS(unit), PC_SPIRIT);
-    REMOVE_BIT(CHAR_FLAGS(unit), CHAR_KILL_SELF);
+    getCharPoints(unit).removeCharacterFlag(CHAR_KILL_SELF);
 
     act("You have a strange feeling...", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     act("$1n materializes and vanish.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
@@ -1013,8 +1013,8 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
     PC_COND(unit, THIRST) = 24;
     PC_COND(unit, DRUNK) = 0;
 
-    CHAR_MANA(unit) = mana_limit(unit);
-    CHAR_ENDURANCE(unit) = move_limit(unit);
+    getCharPoints(unit).setMana(mana_limit(unit));
+    getCharPoints(unit).setEndurance(move_limit(unit));
     UNIT_HIT(unit) = UNIT_MAX_HIT(unit);
 
     if (!unit->is_destructed())
@@ -1174,7 +1174,7 @@ void tif_naught(unit_affected_type *af, unit_data *unit)
     slog(LOG_ALL, 0, "Obsoleted affect called with ID %d on %s@%s.", af->getApplyFI(), UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
 }
 
-tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},  // 0
+tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse}, // 0
                               {"Destroy Corpse", tif_destroy_corpse},
                               {"Valhalla Return", tif_valhalla_ret},
                               {"Hitpoints On", tif_hit_on},
@@ -1199,9 +1199,9 @@ tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse},  // 0
                               {"Spell-skill Mod Off", tif_protect_off},
                               {"Poison On", tif_poison_on},
                               {"Poison Off", tif_poison_off},
-                              {"Poison Suffer", tif_poison_suffer}, // 25
-                              {"Light/Dark Add", tif_light_add}, // 26
-                              {"Light/Dark Sub", tif_light_sub}, // 27
+                              {"Poison Suffer", tif_poison_suffer},        // 25
+                              {"Light/Dark Add", tif_light_add},           // 26
+                              {"Light/Dark Sub", tif_light_sub},           // 27
                               {"Torch burning countdown", tif_torch_tick}, // 28
                               {"Eyes tingles", tif_eyes_tingle},
                               {"Blind On", tif_blind_on},

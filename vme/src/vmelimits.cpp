@@ -371,7 +371,7 @@ void advance_level(unit_data *ch)
     PC_VIRTUAL_LEVEL(ch)++;
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
     {
-        CHAR_LEVEL(ch)++;
+        getCharPoints(ch).incrementLevel();
     }
 
     PC_SKILL_POINTS(ch) += skill_point_gain();
@@ -515,17 +515,17 @@ void gain_exp_regardless(unit_data *ch, int gain)
                          ch);
         }
 
-        CHAR_EXP(ch) += gain;
+        getCharPoints(ch).increasePlayerExperienceBy(gain);
     }
     else /* gain <= 0 */
     {
         if ((((sbit32)CHAR_EXP(ch)) + gain) < required_xp(START_LEVEL))
         {
-            CHAR_EXP(ch) = required_xp(START_LEVEL);
+            getCharPoints(ch).setPlayerExperience(required_xp(START_LEVEL));
         }
         else
         {
-            CHAR_EXP(ch) += gain;
+            getCharPoints(ch).increasePlayerExperienceBy(gain);
         }
     }
 }

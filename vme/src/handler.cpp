@@ -401,7 +401,7 @@ void start_following(unit_data *ch, unit_data *leader)
     assert(!leader->is_destructed());
     assert(!ch->is_destructed());
 
-    REMOVE_BIT(CHAR_FLAGS(ch), CHAR_GROUP);
+    getCharPoints(ch).removeCharacterFlag(CHAR_GROUP);
     if (CHAR_MASTER(ch))
     {
         stop_following(ch);
