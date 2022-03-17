@@ -33,9 +33,9 @@ struct money_type
 #define money_singularis_type(type) (g_money_types[(type)].strings[0])
 #define money_singularis(unit) (money_singularis_type(MONEY_TYPE(unit)))
 
-#define money_from_unit(unit, amt, currency) (money_transfer((unit), NULL, (amt), (currency)))
+#define money_from_unit(unit, amt, currency) (money_transfer((unit), nullptr, (amt), (currency)))
 
-#define money_to_unit(unit, amt, currency) (money_transfer(NULL, (unit), (amt), (currency)))
+#define money_to_unit(unit, amt, currency) (money_transfer(nullptr, (unit), (amt), (currency)))
 
 #define IS_MONEY(unit) (IS_OBJ(unit) && OBJ_TYPE(unit) == ITEM_MONEY)
 

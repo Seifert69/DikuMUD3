@@ -18,7 +18,7 @@ private:
 public:
     t_array();
     ~t_array();
-    t_array(int esz);
+    explicit t_array(int esz);
     void init(int esz);
     void destroy();
     void push(T *ob);
@@ -27,34 +27,27 @@ public:
     T *operator[](int i);
 };
 
-#ifndef CREATE
-    #define CREATE(res, type, num)                                                                                                         \
-        if (((res) = (type *)calloc((num), sizeof(type))) == NULL)                                                                         \
-            assert(0);
-#endif
-
-#ifndef RECREATE
-    #define RECREATE(res, type, num)                                                                                                       \
-        if (((res) = (type *)realloc((res), sizeof(type) * (num))) == NULL)                                                                \
-            assert(0);
-#endif
 // Indexs of the elements are from 1-x not 0-x, this allows for
 // negative indexs as well as positive, ie:  myarray[-1] would be the
 // last element in the list, and myarray[1] would be the first element.
 // Since zero would be an unknown on the intended top or bottom it will
-// return NULL, anything outside the length will also return NULL.
+// return nullptr, anything outside the length will also return nullptr.
 template<class T>
 T *t_array<T>::operator[](int i)
 {
     if (i > 0)
     {
         if (i <= len)
+        {
             return (t_ary[i - 1]);
+        }
     }
     else if (-i <= len)
+    {
         return (t_ary[len + i]);
+    }
     assert(1 == 0);
-    return NULL;
+    return nullptr;
 }
 
 template<class T>
@@ -70,22 +63,44 @@ template<class T>
 t_array<T>::~t_array<T>()
 {
     for (int i = 0; i < len; i++)
-        delete t_ary[i];
+    {
+        if constexpr (std::is_pod_v<T>)
+        {
+            FREE(t_ary[i]);
+        }
+        else
+        {
+            DELETE(T, t_ary[i]);
+        }
+    }
 
     if (t_ary)
-        free(t_ary);
-    t_ary = NULL;
+    {
+        FREE(t_ary);
+    }
+    t_ary = nullptr;
 }
 
 template<class T>
 void t_array<T>::destroy()
 {
     for (int i = 0; i < len; i++)
-        delete t_ary[i];
+    {
+        if constexpr (std::is_pod_v<T>)
+        {
+            FREE(t_ary[i]);
+        }
+        else
+        {
+            DELETE(T, t_ary[i]);
+        }
+    }
 
     if (t_ary)
-        free(t_ary);
-    t_ary = NULL;
+    {
+        FREE(t_ary);
+    }
+    t_ary = nullptr;
 }
 
 template<class T>
@@ -97,10 +112,12 @@ t_array<T>::t_array(int esz)
     if (esz == 0)
     {
         esize++;
-        t_ary = NULL;
+        t_ary = nullptr;
     }
     else
+    {
         CREATE(t_ary, T *, size);
+    }
 }
 
 template<class T>
@@ -112,10 +129,12 @@ void t_array<T>::init(int esz)
     if (esz == 0)
     {
         esize++;
-        t_ary = NULL;
+        t_ary = nullptr;
     }
     else
+    {
         CREATE(t_ary, T *, size);
+    }
 }
 
 template<class T>

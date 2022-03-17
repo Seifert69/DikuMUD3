@@ -919,8 +919,8 @@ static void stat_ip(const unit_data *ch, unit_data *u)
 #define STR_DATA(num)                                                                                                                      \
     (pobjdata[idx].v[num] == 0                                                                                                             \
          ? int_str[num]                                                                                                                    \
-         : (pobjdata[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None")                 \
-                                      : (pobjdata[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
+         : (pobjdata[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(nullptr, OBJ_VALUE(u, num), g_SplColl.text) : "None")              \
+                                      : (pobjdata[idx].v[num] == 2 ? sprinttype(nullptr, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
 
 const char *stat_obj_data(unit_data *u, obj_type_t *pobjdata)
 {

@@ -128,11 +128,11 @@ int main(int argc, char **argv)
         if (!g_log_file_fd)
         {
             fprintf(stderr, "Error in opening the log:  '%s'", log_name);
-            free(log_name);
+            FREE(log_name);
             exit(7);
         }
 
-        free(log_name);
+        FREE(log_name);
 
         type_validate_64(); // MS2020
 

@@ -51,7 +51,9 @@ int bonus_map_a(int bonus)
     int b = map[bonus + 7];
 
     if (b != 0)
+    {
         b += 2 * (open100() / 100);
+    }
 
     return b;
 }
@@ -77,7 +79,9 @@ int bonus_map_b(int bonus)
     int b = map[bonus + 7];
 
     if (b != 0)
+    {
         b += open100() / 100;
+    }
 
     return b;
 }

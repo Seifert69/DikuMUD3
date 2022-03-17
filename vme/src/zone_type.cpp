@@ -76,7 +76,7 @@ zone_type::~zone_type()
     for (pzri = zri; pzri; pzri = nextzri)
     {
         nextzri = pzri->getNext();
-        FREE(pzri);
+        DELETE(zone_type, pzri);
     }
 
     auto nextpt = mmp_tmpl.begin();
@@ -207,7 +207,7 @@ zone_reset_cmd *zone_type::getZoneResetCommands()
 
 void zone_type::setZoneResetCommands(zone_reset_cmd *value)
 {
-    FREE(zri);
+    DELETE(zone_type, zri);
     zri = value;
 }
 

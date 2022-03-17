@@ -348,7 +348,9 @@ void tif_eyes_tingle(unit_affected_type *af, unit_data *unit)
 void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 {
     if (OBJ_VALUE(unit, 0) > 0)
+    {
         OBJ_VALUE(unit, 0)--; // Decreash how many hours of burning are left.
+    }
 
     if (af->getDuration() <= 4)
     {

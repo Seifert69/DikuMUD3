@@ -33,6 +33,7 @@ public:
     ubit16 getAllActivateOnEventFlags() const;
 
     void *getData();
+    void freeData();
     void setData(void *value);
     void readDataFrom(CByteBuffer &buf);
 

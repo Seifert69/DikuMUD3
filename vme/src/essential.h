@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <type_traits>
 
 #ifdef _WINDOWS
     #include <ctype.h>
@@ -100,23 +101,25 @@ using ubit64 = uint64_t; // MS2020
 using ubit1 = bool;      /* Boolean */
 
 #define CREATE(res, type, num)                                                                                                             \
-    if (((res) = (type *)calloc((num), sizeof(type))) == NULL)                                                                             \
+    if (((res) = (type *)calloc((num), sizeof(type))) == nullptr)                                                                          \
     {                                                                                                                                      \
         /* Make sure CREATE isn't being used to create the new classes instead of the structs they used to be */                           \
-        static_assert(std::is_pod<type>::value);                                                                                           \
+        static_assert(std::is_pod_v<type>);                                                                                                \
         assert(FALSE);                                                                                                                     \
     }
 
 #define RECREATE(res, type, num)                                                                                                           \
-    if (((res) = (type *)realloc((res), sizeof(type) * (num))) == NULL)                                                                    \
+    if (((res) = (type *)realloc((res), sizeof(type) * (num))) == nullptr)                                                                 \
     {                                                                                                                                      \
         /* Make sure RECREATE isn't being used to create the new classes instead of the structs they used to be */                         \
-        static_assert(std::is_pod<type>::value);                                                                                           \
+        static_assert(std::is_pod_v<type>);                                                                                                \
         assert(FALSE);                                                                                                                     \
     }
 
 #define FREE(p)                                                                                                                            \
     {                                                                                                                                      \
+        static_assert(std::is_same_v<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>, void *> ||                           \
+                      std::is_pod_v<std::remove_pointer_t<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>>>);              \
         free(p);                                                                                                                           \
-        p = NULL;                                                                                                                          \
+        p = nullptr;                                                                                                                       \
     }

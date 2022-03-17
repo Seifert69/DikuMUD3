@@ -59,7 +59,7 @@ char *str_list[MAXLIST];
 int int_list[MAXLIST];
 char empty_ref[] = {'\0', '\0'};
 int istemplate = 1;
-char **g_tmplnames = NULL;
+char **g_tmplnames = nullptr;
 char tzone[30], tname[30];
 
 CByteBuffer *vpBuf = &g_FileBuffer;
@@ -150,7 +150,7 @@ void warning(const char *str);
 
 file    :
     {
-        cur = NULL;
+        cur = nullptr;
         g_tmplnames = create_namelist();
     }
     sections ENDMARK
