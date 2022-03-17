@@ -1808,7 +1808,7 @@ int teach_init(spec_arg *sarg)
     sarg->fptr->setHeartBeat(PULSE_SEC);
 
     assert(sarg->fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL);
-    free(sarg->fptr->getData()); /* XXXX Need to get fixed. Free the text string! */
+    sarg->fptr->freeData(); // XXXX Need to get fixed. Free the text string!
     sarg->fptr->setData(packet);
 
     /* Call teaching in case initialization occurs with first command! */

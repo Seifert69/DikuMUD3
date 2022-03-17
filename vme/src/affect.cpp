@@ -218,7 +218,6 @@ void affect_clear_unit(unit_data *unit)
     }
 }
 
-
 void get_affects(const unit_data *unit, cNamelist *sl)
 {
     unit_affected_type *af = nullptr;
@@ -231,7 +230,6 @@ void get_affects(const unit_data *unit, cNamelist *sl)
         sl->AppendName(buf);
     }
 }
-
 
 unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 {

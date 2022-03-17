@@ -989,7 +989,7 @@ int do_simple_move(class unit_data *ch, int direction, int following)
 
 void do_follow(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    class unit_data *leader = NULL;
+    class unit_data *leader = nullptr;
 
     void stop_follower(class unit_data * ch);
     void add_follower(class unit_data * ch, class unit_data * leader);
@@ -1009,7 +1009,7 @@ void do_follow(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
-    if ((leader == NULL) || !IS_CHAR(leader))
+    if ((leader == nullptr) || !IS_CHAR(leader))
     {
         send_to_char("You see no person by that name here!<br/>", ch);
         return;

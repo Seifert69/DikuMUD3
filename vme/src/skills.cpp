@@ -1099,14 +1099,15 @@ void ability_dump_alternate()
     }
 }
 
-
 void ability_dump()
 {
     printf("Ability Profession Tables\n");
 
     // Profession Headers
     for (int j = 0; j < PROFESSION_MAX; j++)
+    {
         printf(",%s", g_professions[j]);
+    }
 
     for (int i = 0; i < ABIL_TREE_MAX; i++)
     {
@@ -1114,8 +1115,7 @@ void ability_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                             g_AbiColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_AbiColl.prof_table[i].profession_cost[j]);
 
             // For abilities this shouldn't happen, if it does, output will break
             if (g_AbiColl.prof_table[i].min_level > 0)
@@ -1128,10 +1128,10 @@ void ability_dump()
                 if (g_AbiColl.prof_table[i].min_abil[i2] > 0)
                 {
                     printf("AIAI restrict %s%s    = %s%d\n",
-                                                g_AbiColl.text[i],
-                                                spc(12 - strlen(g_professions[j])),
-                                                (g_AbiColl.prof_table[i].min_abil[i2] >= 0) ? "+" : "",
-                                                g_AbiColl.prof_table[i].min_abil[i2]);
+                           g_AbiColl.text[i],
+                           spc(12 - strlen(g_professions[j])),
+                           (g_AbiColl.prof_table[i].min_abil[i2] >= 0) ? "+" : "",
+                           g_AbiColl.prof_table[i].min_abil[i2]);
                 }
             }
         }
@@ -1145,7 +1145,9 @@ void ability_dump()
 
     // Profession Headers
     for (int j = 0; j < PC_RACE_MAX; j++)
+    {
         printf(",%s", g_pc_races[j]);
+    }
 
     for (int i = 0; i < ABIL_TREE_MAX; i++)
     {
@@ -1153,8 +1155,7 @@ void ability_dump()
 
         for (int j = 0; j < PC_RACE_MAX; j++)
         {
-            printf("%s%d,", (g_AbiColl.racial[j][i] >= 0) ? "+" : "",
-                             g_AbiColl.racial[j][i]);
+            printf("%s%d,", (g_AbiColl.racial[j][i] >= 0) ? "+" : "", g_AbiColl.racial[j][i]);
         }
     }
 
@@ -1567,12 +1568,12 @@ void weapon_dump()
     printf(",level,");
 #undef PC_RACE_MAX
 #define PC_RACE_MAX 11
-    for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+    for (int ridx = 0; ridx < PC_RACE_MAX; ridx++)
     {
         printf("%s,", g_pc_races[ridx]);
     }
     // Dump variable tail of ability restrictions
-    for (int k=0; k < ABIL_TREE_MAX; k++)
+    for (int k = 0; k < ABIL_TREE_MAX; k++)
     {
         printf("%s,", g_AbiColl.text[k]);
     }
@@ -1588,13 +1589,12 @@ void weapon_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                                       g_WpnColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_WpnColl.prof_table[i].profession_cost[j]);
         }
 
         printf("%s,", (g_WpnColl.prof_table[i].min_level == 0) ? "" : itoa(g_WpnColl.prof_table[i].min_level));
 
-        for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+        for (int ridx = 0; ridx < PC_RACE_MAX; ridx++)
         {
             if (g_WpnColl.racial[ridx][i] > 0)
             {
@@ -1607,7 +1607,7 @@ void weapon_dump()
         }
 
         // Dump variable tail of ability restrictions
-        for (int k=0; k < ABIL_TREE_MAX; k++)
+        for (int k = 0; k < ABIL_TREE_MAX; k++)
         {
             if (g_WpnColl.prof_table[i].min_abil[k] > 0)
             {
@@ -1621,7 +1621,6 @@ void weapon_dump()
     }
     printf("\n");
 }
-
 
 void weapon_dump_alternate()
 {

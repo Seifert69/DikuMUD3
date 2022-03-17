@@ -367,7 +367,7 @@ int cMudHook::read_mud()
         case MULTI_TERMINATE_CHAR:
             if (data)
             {
-                free(data);
+                FREE(data);
             }
             for (con = g_connection_list; con; con = con->m_pNext)
             {
@@ -388,7 +388,7 @@ int cMudHook::read_mud()
             // slog(LOG_OFF,0,"MULTI_CON_CHAR: Received id=%d", id);
             if (data)
             {
-                free(data);
+                FREE(data);
             }
             for (con = g_connection_list; con; con = con->m_pNext)
             {
@@ -468,7 +468,7 @@ int cMudHook::read_mud()
 
     if (data)
     {
-        free(data);
+        FREE(data);
     }
 
     return 1;

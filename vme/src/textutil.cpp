@@ -1046,7 +1046,7 @@ void free_namelist(char **list)
 
     while (*list)
     {
-        free(*list);
+        FREE(*list);
         list++;
         /* MS: Well, ugly but we have to do while free macro is in use! */
     }

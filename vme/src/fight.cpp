@@ -150,7 +150,7 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 
         extra_descr_data *exd = UNIT_EXTRA(obj).find_raw("$slayer");
 
-        if (exd == NULL)
+        if (exd == nullptr)
         {
             return false;
         }

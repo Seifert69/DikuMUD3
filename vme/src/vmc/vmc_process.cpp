@@ -434,10 +434,14 @@ bool affect_vector_string(unit_data *obj, std::string &s)
         s += itoa(bonusvector[i]);
 
         if (bonusvector[i] != 0)
+        {
             bHasData = true;
+        }
 
         if (i < 10)
+        {
             s += ",";
+        }
     }
 
     return bHasData;
@@ -1145,7 +1149,7 @@ void process_unit(unit_data *u)
                           buf);
 
                 /* Eventually (?):
-                free(CHAR_MONEY(u));
+                FREE(CHAR_MONEY(u));
                 CHAR_MONEY(u) = str_dup(convert_back_money(legal_amount(u)));
                 */
             }

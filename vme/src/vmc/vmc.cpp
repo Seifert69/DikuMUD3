@@ -595,12 +595,17 @@ void dil_free_prg(dilprg *prg, int dil)
     {
         dil_free_frame(frm);
     }
+
     if (!dil)
+    {
         FREE(prg->frame);
+    }
 
     dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY), dil);
     if (!dil)
-        FREE(prg);
+    {
+        DELETE(dilprg, prg);
+    }
 }
 
 void dil_free_var(dilvar *v)

@@ -110,6 +110,11 @@ void *unit_fptr::getData()
     return data;
 }
 
+void unit_fptr::freeData()
+{
+    FREE(data);
+}
+
 void unit_fptr::setData(void *value)
 {
     data = value;

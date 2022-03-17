@@ -150,7 +150,7 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
             case 'l':
                 i++;
                 Assert(i < argc, "No argument to Mplex log.");
-                free(log_name);
+                FREE(log_name);
                 log_name = str_dup(argv[i]);
                 break;
             case 'a':
@@ -198,11 +198,11 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
     if (!g_log_file_fd)
     {
         fprintf(stderr, "Failed to open Log file:  %s", log_name);
-        free(log_name);
+        FREE(log_name);
         exit(0);
     }
 
-    free(log_name);
+    FREE(log_name);
 
     return TRUE;
 }

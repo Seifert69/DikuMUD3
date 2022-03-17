@@ -119,8 +119,6 @@ void skill_dump_alternate()
     }
 }
 
-
-
 void skill_dump()
 {
     printf("Skill Profession Tables\n");
@@ -133,12 +131,12 @@ void skill_dump()
     printf(",level,");
 #undef PC_RACE_MAX
 #define PC_RACE_MAX 11
-    for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+    for (int ridx = 0; ridx < PC_RACE_MAX; ridx++)
     {
         printf("%s,", g_pc_races[ridx]);
     }
     // Dump variable tail of ability restrictions
-    for (int k=0; k < ABIL_TREE_MAX; k++)
+    for (int k = 0; k < ABIL_TREE_MAX; k++)
     {
         printf("%s,", g_AbiColl.text[k]);
     }
@@ -154,13 +152,12 @@ void skill_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                                       g_SkiColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_SkiColl.prof_table[i].profession_cost[j]);
         }
 
         printf("%s,", (g_SkiColl.prof_table[i].min_level == 0) ? "" : itoa(g_SkiColl.prof_table[i].min_level));
 
-        for (int ridx=0; ridx < PC_RACE_MAX; ridx++)
+        for (int ridx = 0; ridx < PC_RACE_MAX; ridx++)
         {
             if (g_SkiColl.racial[ridx][i] > 0)
             {
@@ -173,7 +170,7 @@ void skill_dump()
         }
 
         // Dump variable tail of ability restrictions
-        for (int k=0; k < ABIL_TREE_MAX; k++)
+        for (int k = 0; k < ABIL_TREE_MAX; k++)
         {
             if (g_SkiColl.prof_table[i].min_abil[k] > 0)
             {
@@ -189,20 +186,27 @@ void skill_dump()
 
     printf("Progression training costs\n");
     printf(",");
-    for (int i=7; i >= -7; i--)
+    for (int i = 7; i >= -7; i--)
+    {
         printf("%d,", i);
+    }
     printf("\n1st,");
-    for (int i=7; i >= -7; i--)
+    for (int i = 7; i >= -7; i--)
+    {
         printf("%d,", actual_cost(i, 0, 0, 10));
+    }
     printf("\n2nd,");
-    for (int i=7; i >= -7; i--)
+    for (int i = 7; i >= -7; i--)
+    {
         printf("%d,", actual_cost(i, 0, 1, 10));
+    }
     printf("\n3rd,");
-    for (int i=7; i >= -7; i--)
+    for (int i = 7; i >= -7; i--)
+    {
         printf("%d,", actual_cost(i, 0, 2, 10));
+    }
     printf("\n");
 }
-
 
 void cmd_base_load()
 {
@@ -360,7 +364,8 @@ void command_read()
         {
             if (g_SkiColl.text[idx])
             {
-                free((char *)g_SkiColl.text[idx]);
+                auto tmp = (char *)g_SkiColl.text[idx]; // TODO this is suspect casting anyway, now showing with this change
+                FREE(tmp);
                 g_SkiColl.text[idx] = nullptr;
             }
             g_SkiColl.text[idx] = str_dup(pCh);

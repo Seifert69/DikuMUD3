@@ -3786,7 +3786,6 @@ void dilfe_getws(dilprg *p)
     delete v1;
 }
 
-
 void dilfe_getaffects(dilprg *p)
 {
     dilval *v1 = p->stack.pop();
@@ -3802,7 +3801,7 @@ void dilfe_getaffects(dilprg *p)
                 v->atyp = DILA_EXP;
                 v->type = DILV_SLP;
                 cNamelist *words = new cNamelist;
-                get_affects((unit_data *) v1->val.ptr, words);
+                get_affects((unit_data *)v1->val.ptr, words);
                 v->val.ptr = words;
             }
             break;
@@ -3818,8 +3817,6 @@ void dilfe_getaffects(dilprg *p)
     p->stack.push(v);
     delete v1;
 }
-
-
 
 void dilfe_split(dilprg *p)
 {
@@ -3897,12 +3894,12 @@ void dilfe_split(dilprg *p)
 
     if (buf)
     {
-        free(buf);
+        FREE(buf);
         buf = nullptr;
     }
     if (spbuf)
     {
-        free(spbuf);
+        FREE(spbuf);
         spbuf = nullptr;
     }
 

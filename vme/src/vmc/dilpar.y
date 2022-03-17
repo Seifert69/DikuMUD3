@@ -140,7 +140,7 @@ struct sSyms
 
 #define FREEEXP(v)                                                             \
     free(v.code);                                                              \
-    v.code = NULL;
+    v.code = nullptr;
 
 #define checkbool(s, v)                                                        \
     do                                                                         \
@@ -319,7 +319,7 @@ file    : program
             char fname[255];
 
             sprintf(fname, "%s.dh", cur_zonename);
-            if ((f = fopen(fname, "a")) == NULL)
+            if ((f = fopen(fname, "a")) == nullptr)
             {
                 dilfatal("Could not append to .dh file");
             }
@@ -331,7 +331,7 @@ file    : program
         free_namelist(label_names);
         if (label_no)
         {
-            free(label_adr);
+            FREE(label_adr);
         }
 
         label_no = 0;
@@ -369,7 +369,7 @@ program : DILSC_BEG dilinit diloptions fundef dilrefs dildecls DILSC_COD block D
         }
         else
         {
-            frm.intr = NULL;
+            frm.intr = nullptr;
         }
     }
     ;
@@ -420,7 +420,7 @@ dilinit : /* nothing */
         tmpl.argc = 0;
         tmpl.xrefcount = 0;
         CREATE(tmpl.xrefs, struct dilxref, REFMAX);
-        tmpl.extprg = NULL;
+        tmpl.extprg = nullptr;
         tmpl.varcrc = 0;
         tmpl.corecrc = 0;
         tmpl.intrcount = 0;
@@ -430,7 +430,7 @@ dilinit : /* nothing */
         /* setup tmp. reference */
         CREATE(ref.argt, ubit8, ARGMAX);
         CREATE(ref.argv, char *, ARGMAX);
-        ref.name = NULL;
+        ref.name = nullptr;
         ref.rtnt = DILV_ERR;
         ref.argc = 0;
 
@@ -448,7 +448,7 @@ dilinit : /* nothing */
         /* not used: */
         frm.pc = tmpl.core;
         frm.securecount = 0;
-        frm.secure = NULL;
+        frm.secure = nullptr;
         frm.intrcount = 0;
 
         /* compiler variables */
@@ -459,17 +459,17 @@ dilinit : /* nothing */
         /* labels */
         labelgen = 0;
         label_names = create_namelist();
-        label_adr = NULL;
+        label_adr = nullptr;
         label_no = 0;
         /* label uses */
         label_use_no = 0;
-        label_use_adr = NULL;
-        label_use_idx = NULL;
+        label_use_adr = nullptr;
+        label_use_idx = nullptr;
         /* break and continue */
         break_no = 0;
         cont_no = 0;
-        break_idx = NULL;
-        cont_idx = NULL;
+        break_idx = nullptr;
+        cont_idx = nullptr;
         *cur_tmplref = '\0';
     }
     ;
@@ -526,7 +526,7 @@ decl    : syminit symlist ':' type
     }
     | // empty
     {
-        $$ = NULL;
+        $$ = nullptr;
     }
     ;
 
@@ -668,7 +668,7 @@ fundef   : ref
         }
         else
         {
-            tmpl.argt = NULL;
+            tmpl.argt = nullptr;
         }
 
         /* create template reference line for .dh file */
@@ -698,8 +698,8 @@ fundef   : ref
         strcat(cur_tmplref, ");");
 
         /* clear used names !
-        ref_usednames[0]=NULL;
-        ref_names[0]=NULL;
+        ref_usednames[0]=nullptr;
+        ref_names[0]=nullptr;
         refcount=0;
         */
     }
@@ -7595,8 +7595,8 @@ void add_ref(struct dilref *ref)
     }
     else
     {
-        refs[refcount].argv = NULL;
-        refs[refcount].argt = NULL;
+        refs[refcount].argv = nullptr;
+        refs[refcount].argt = nullptr;
     }
 
     sprintf(nbuf, "%s@%s", ref->name, ref->zname);

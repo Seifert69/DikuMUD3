@@ -95,10 +95,10 @@ void logsig(int signal)
 
 void dump_debug_history(void);
 
-void (*sigiot_func)(int) = NULL;
-void (*sigsegv_func)(int) = NULL;
-void (*sigbus_func)(int) = NULL;
-void (*sigabrt_func)(int) = NULL;
+void (*sigiot_func)(int) = nullptr;
+void (*sigsegv_func)(int) = nullptr;
+void (*sigbus_func)(int) = nullptr;
+void (*sigabrt_func)(int) = nullptr;
 
 void sig_debugdump(int tsignal)
 {

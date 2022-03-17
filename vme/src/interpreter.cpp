@@ -172,7 +172,7 @@ public:
     command_hist(void)
     {
         str[0] = pcname[0] = 0;
-        fi = NULL;
+        fi = nullptr;
     }
 
     char str[MAX_INPUT_LENGTH + 50];
@@ -219,7 +219,7 @@ public:
     {
         idx = 0;
         flags = 0;
-        fi = NULL;
+        fi = nullptr;
     }
     ubit16 idx;
     ubit16 flags;
