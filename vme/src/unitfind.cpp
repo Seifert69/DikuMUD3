@@ -7,6 +7,7 @@
 
 #include "unitfind.h"
 
+#include "char_follow_type.h"
 #include "common.h"
 #include "db.h"
 #include "descriptor_data.h"

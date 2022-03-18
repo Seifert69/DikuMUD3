@@ -36,6 +36,7 @@
 /* 23/08/93 jubal  : Added messages to leader when start/stop follow       */
 /* 23/08/93 jubal  : Fixed (nearly - still acttrouble) msgs around open etc*/
 
+#include "char_follow_type.h"
 #include "comm.h"
 #include "common.h"
 #include "constants.h"

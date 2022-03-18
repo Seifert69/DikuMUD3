@@ -14,6 +14,7 @@
 #include "affect.h"
 #include "apf_affect.h"
 #include "bank.h"
+#include "char_follow_type.h"
 #include "comm.h"
 #include "common.h"
 #include "constants.h"

@@ -45,6 +45,7 @@
 #define SD_NULL 1  /* Ignore fptr->data (save as 0 ptr)  */
 #define SD_ASCII 2 /* If pointer, then it's ascii char * */
 
+class char_follow_type;
 class descriptor_data;
 class dilprg;
 class diltemplate;
@@ -203,24 +204,6 @@ public:
 };
 
 /* ----------------- CHAR SPECIFIC STRUCTURES ----------------------- */
-
-class char_follow_type
-{
-public:
-    char_follow_type() = default;
-    ~char_follow_type() = default;
-
-    unit_data *getFollower() { return follower; }
-    void setFollower(unit_data *value) { follower = value; }
-    unit_data **getFollowerPtr() { return &follower; }
-
-    char_follow_type *getNext() { return next; }
-    void setNext(char_follow_type *value) { next = value; }
-
-private:
-    unit_data *follower{nullptr}; // Must be a char
-    char_follow_type *next{nullptr};
-};
 
 class char_data : public unit_data
 {

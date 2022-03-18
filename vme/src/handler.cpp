@@ -7,6 +7,7 @@
 #include "handler.h"
 
 #include "affect.h"
+#include "char_follow_type.h"
 #include "comm.h"
 #include "db.h"
 #include "dilrun.h"
