@@ -371,21 +371,21 @@ void stop_following(unit_data *ch)
 
     assert(CHAR_MASTER(ch));
 
-    if (CHAR_FOLLOWERS(CHAR_MASTER(ch))->follower == ch) /* Head of list? */
+    if (CHAR_FOLLOWERS(CHAR_MASTER(ch))->getFollower() == ch) /* Head of list? */
     {
         k = CHAR_FOLLOWERS(CHAR_MASTER(ch));
-        CHAR_FOLLOWERS(CHAR_MASTER(ch)) = k->next;
-        FREE(k);
+        CHAR_FOLLOWERS(CHAR_MASTER(ch)) = k->getNext();
+        DELETE(char_follow_type, k);
     }
     else
     { /* locate follower who is not head of list */
-        for (k = CHAR_FOLLOWERS(CHAR_MASTER(ch)); k->next->follower != ch; k = k->next)
+        for (k = CHAR_FOLLOWERS(CHAR_MASTER(ch)); k->getNext()->getFollower() != ch; k = k->getNext())
         {
             ;
         }
-        j = k->next;
-        k->next = j->next;
-        FREE(j);
+        j = k->getNext();
+        k->setNext(j->getNext());
+        DELETE(char_follow_type, j);
     }
 
     CHAR_MASTER(ch) = nullptr;
@@ -407,9 +407,9 @@ void start_following(unit_data *ch, unit_data *leader)
         stop_following(ch);
     }
     CHAR_MASTER(ch) = leader;
-    CREATE(k, char_follow_type, 1);
-    k->follower = ch;
-    k->next = CHAR_FOLLOWERS(leader);
+    k = new EMPLACE(char_follow_type) char_follow_type;
+    k->setFollower(ch);
+    k->setNext(CHAR_FOLLOWERS(leader));
     CHAR_FOLLOWERS(leader) = k;
 
     send_done(ch, nullptr, leader, 0, g_cmd_follow, "");
@@ -428,8 +428,8 @@ void die_follower(unit_data *ch)
 
     for (k = CHAR_FOLLOWERS(ch); k; k = j)
     {
-        j = k->next;
-        stop_following(k->follower);
+        j = k->getNext();
+        stop_following(k->getFollower());
     }
 }
 

@@ -24,7 +24,7 @@ int follower_count(unit_data *u)
 
     if (IS_CHAR(u))
     {
-        for (f = CHAR_FOLLOWERS(u); f; f = f->next)
+        for (f = CHAR_FOLLOWERS(u); f; f = f->getNext())
         {
             x++;
         }
@@ -39,11 +39,11 @@ unit_data *get_follower(unit_data *u, int num)
 
     if (IS_CHAR(u))
     {
-        for (f = CHAR_FOLLOWERS(u); f; f = f->next)
+        for (f = CHAR_FOLLOWERS(u); f; f = f->getNext())
         {
             if (x == num)
             {
-                return (f->follower);
+                return (f->getFollower());
             }
             x++;
         }

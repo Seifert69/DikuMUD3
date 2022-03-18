@@ -688,7 +688,7 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
 
             for (i = 0;; i++) /* This shit is needed because the follow  */
             {                 /* structure can be destroyed by this move */
-                for (j = 0, k = CHAR_FOLLOWERS(u); k && j < i; j++, k = k->next)
+                for (j = 0, k = CHAR_FOLLOWERS(u); k && j < i; j++, k = k->getNext())
                 {
                     ;
                 }
@@ -698,16 +698,16 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
                     break;
                 }
 
-                if (room_from == in_room(k->follower) && CHAR_POS(k->follower) >= POSITION_STANDING)
+                if (room_from == in_room(k->getFollower()) && CHAR_POS(k->getFollower()) >= POSITION_STANDING)
                 {
-                    act("You follow $3n.<br/>", A_SOMEONE, k->follower, cActParameter(), ch, TO_CHAR);
-                    if (IS_ROOM(UNIT_IN(k->follower)))
+                    act("You follow $3n.<br/>", A_SOMEONE, k->getFollower(), cActParameter(), ch, TO_CHAR);
+                    if (IS_ROOM(UNIT_IN(k->getFollower())))
                     {
-                        self_walk(k->follower, k->follower, direction, TRUE);
+                        self_walk(k->getFollower(), k->getFollower(), direction, TRUE);
                     }
                     else
                     {
-                        self_walk(k->follower, UNIT_IN(k->follower), direction, TRUE);
+                        self_walk(k->getFollower(), UNIT_IN(k->getFollower()), direction, TRUE);
                     }
                 }
             }
