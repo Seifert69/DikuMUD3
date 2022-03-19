@@ -229,6 +229,13 @@ public:
 class pc_time_data
 {
 public:
+    pc_time_data() = default;
+    ~pc_time_data() = default;
+    pc_time_data(const pc_time_data &) = default;
+    pc_time_data &operator=(const pc_time_data &) = default;
+    pc_time_data(pc_time_data &&) = default;
+    pc_time_data &operator=(pc_time_data &&) = default;
+
     void readFrom(CByteBuffer &buf, int &errors)
     {
         creation = buf.ReadU32(&errors);
