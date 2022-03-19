@@ -82,13 +82,10 @@ void race_adjust(unit_data *ch)
 
     PC_LIFESPAN(ch) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
 
-    PC_TIME(ch).birth = PC_TIME(ch).creation;
+    const int years = my_race->age + dice(my_race->age_dice.reps, my_race->age_dice.size);
 
-    int years = 0;
-
-    years = my_race->age + dice(my_race->age_dice.reps, my_race->age_dice.size);
-
-    PC_TIME(ch).birth -= years * SECS_PER_MUD_YEAR;
+    const auto value = PC_TIME(ch).getPlayerCharacterCreationTime() - years * SECS_PER_MUD_YEAR;
+    PC_TIME(ch).setPlayerBirthday(value);
 }
 
 /* OBSOLETE. Should only be called when initializing a new player (or rerolling)
@@ -182,7 +179,7 @@ void start_player(unit_data *ch)
     PC_COND(ch, FULL) = 24;
     PC_COND(ch, DRUNK) = 0;
 
-    PC_TIME(ch).played = 0;
+    PC_TIME(ch).setTotalTimePlayedInSeconds(0);
 
     SET_BIT(PC_FLAGS(ch), PC_ECHO);
     SET_BIT(PC_FLAGS(ch), PC_PROMPT);

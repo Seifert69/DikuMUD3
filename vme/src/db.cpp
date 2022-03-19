@@ -1063,10 +1063,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     }
                 }
 
-                PC_TIME(u).creation = pBuf->ReadU32(&g_nCorrupt);
-                PC_TIME(u).connect = pBuf->ReadU32(&g_nCorrupt);
-                PC_TIME(u).birth = pBuf->ReadU32(&g_nCorrupt);
-                PC_TIME(u).played = pBuf->ReadU32(&g_nCorrupt);
+                PC_TIME(u).readFrom(*pBuf, g_nCorrupt);
 
                 if (unit_version < 44)
                 {

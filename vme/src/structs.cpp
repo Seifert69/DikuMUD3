@@ -128,7 +128,6 @@ pc_data::pc_data()
     promptstr = nullptr;
 
     memset(&setup, 0, sizeof(setup));
-    memset(&m_time, 0, sizeof(m_time));
     memset(&account, 0, sizeof(account));
 
     profession = -1;

@@ -196,13 +196,13 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (PC_TIME(u).creation > time(nullptr))
+    if (PC_TIME(u).getPlayerCharacterCreationTime() > time(nullptr))
     {
         printf("Corrupted creation time.");
         return FALSE;
     }
 
-    if (PC_TIME(u).connect > time(nullptr))
+    if (PC_TIME(u).getPlayerLastConnectTime() > time(nullptr))
     {
         printf("Corrupted connect time.");
         return FALSE;
@@ -227,7 +227,7 @@ int shall_delete(unit_data *pc)
 {
     int days = 0;
 
-    days = days_old(PC_TIME(pc).connect);
+    days = days_old(PC_TIME(pc).getPlayerLastConnectTime());
 
     /* Player which have paid at some point in time remain almost permanent. */
     if (PC_ACCOUNT(pc).total_credit > 0)
@@ -414,7 +414,7 @@ void clist()
                         }
 
                         std::cout << PC_ID(pc) << ";" << (int)CHAR_LEVEL(pc) << ";" << (IS_MORTAL(pc) ? " PLY  " : "ADMIN") << ";"
-                                  << days_old(PC_TIME(pc).connect) << ";";
+                                  << days_old(PC_TIME(pc).getPlayerLastConnectTime()) << ";";
 
                         if (ids[PC_ID(pc)])
                         {
@@ -442,13 +442,15 @@ void clist()
 
                         bool tmp = false;
 
-                        tm *t = gmtime(&PC_TIME(pc).creation);
+                        const auto creation_time = PC_TIME(pc).getPlayerCharacterCreationTime();
+                        tm *t = gmtime(&creation_time);
                         std::cout << isodate(t) << ";";
 
-                        t = gmtime(&PC_TIME(pc).birth);
+                        const auto birthday = PC_TIME(pc).getPlayerBirthday();
+                        t = gmtime(&birthday);
                         std::cout << isodate(t) << ";";
 
-                        time_t secs = (time_t)PC_TIME(pc).played;
+                        time_t secs = static_cast<time_t>(PC_TIME(pc).getTotalTimePlayedInSeconds());
 
                         convert_free_unit(pc);
 
