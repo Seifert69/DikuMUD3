@@ -276,15 +276,17 @@ const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int m
     c = buf;
     TAIL(c);
 
-    if (PC_VIRTUAL_LEVEL(pupil) < cost_entry->min_level)
+    // You must have at least the minimum GUILD level from the .def files or the teacher's def.
+    if (char_guild_level(pupil, pCurrentGuild) < MAX(minguildlevel, cost_entry->min_level))
     {
-        sprintf(c, "Level:%d ", cost_entry->min_level);
+        sprintf(c, "Guild level:%d ", MAX(minguildlevel, cost_entry->min_level));
         TAIL(c);
     }
 
-    if (char_guild_level(pupil, pCurrentGuild) < minguildlevel)
+    // This should never trigger, should always be caught above.
+    if (PC_VIRTUAL_LEVEL(pupil) < cost_entry->min_level)
     {
-        sprintf(c, "Guild level:%d ", minguildlevel);
+        sprintf(c, "Level:%d ", cost_entry->min_level);
         TAIL(c);
     }
 
