@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "33f86a8173f05ba01e23d516d2339974fe2c5644447c8999a042e89e24b1c4f246736fcb89f41ce1d47e27687ca12bb039a4b9726b2f8c28aa7ebaf72b28f908"
+                "sha512": "de80a1ec0cce745821866d498138728ab7f91db2c789acd33dcd7522320ddf09bbfc6b7e5444995c0095cc9975b534b55c27b13206adccbb18663c3b11326cca"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "c7c417b799ffa6650d3b5e36324fdd772e25a342eafcfe680fe888161358b4699f784f9e6276a4609bce4bf7ba9c3f5a9c5dffa489d2aaeebbb9d8f02a0089c6"
+                    "sha512": "b27d94419b7d2bf64ce50052623dc7757df482997ba4e241dec0760b88887e910c7ec971194673bea94ac2ffa66b3b1880b41bbcd703b324c4203b16ff08e159"
                 },
                 {
                     "filename": "basis.reset",
@@ -909,12 +909,12 @@
         {
             "source_file": {
                 "filename": "udgaard.zon",
-                "sha512": "e1385383a40ecc2aa9a5b48dbb57db9491abb82cf44fb75d3500ced18c03dee1f37d28d4a2981f1f9799d387eda814fe34b411aa2a9e605fef3391b11b2472d4"
+                "sha512": "1e51a773e87ae7933f3cd71cdae65217506d254910a146a9421e4d255d0eedb08ae718d955127e402b47ab00aca234a6586f2ba95c6be93eea0ffc735cde2c33"
             },
             "output": [
                 {
                     "filename": "udgaard.data",
-                    "sha512": "991c4eaf3879546da12699b8236c0c9dda45ea35405dda5229529744439f3f5f5d4336fe685769994b1b229408e222a98008b0cbbac1fcb656d23e89c9e1f62b"
+                    "sha512": "a9430baa56c01853d25325ad739d08e45eff7161788dd2758344d197db3dab6b6b4f9b5a1a139416d10f400da1101dbbeb7202e48dfc8941ad587961c424b38b"
                 },
                 {
                     "filename": "udgaard.reset",

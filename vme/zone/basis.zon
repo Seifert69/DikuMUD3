@@ -1252,7 +1252,7 @@ code
 
       // Now let's move Nanny to the next step
       substring(exdp.names, "login guilds");
-      addstring(exdp.names, "personality");
+      addstring(exdp.names, "login races");
       exdp.descr := "0";
    }
    return;
@@ -2087,19 +2087,77 @@ code
 
    if (state == 0)
    {
-      sendtext("<br/>Please choose your race:<br/>"
-         +"  1) Human<br/>"
-         +"  2) Dwarf<br/>"
-         +"  3) Halfling<br/>"
+      if (self.profession == PROFESSION_FIGHTER)
+      {
+         s := 
+          "  1) Human<br/>"
+         +"  2) Dwarf (good choice)<br/>"
+         +"     Halfling - not recommended<br/>"
+         +"     Gnome - not recommended<br/>"
+         +"  5) Elf<br/>"
+         +"  6) Half-elf<br/>"
+         +"  7) Dark-Elf<br/>"
+         +"     Brownie - not recommended<br/>"
+         +"  9) Groll<br/>"
+         +" 10) Half-Orc<br/>"
+         +" 11) Half-Ogre<br/>";
+      }
+      else if (self.profession == PROFESSION_THIEF)
+      {
+         s := 
+          "  1) Human<br/>"
+         +"     Dwarf - not recommended<br/>"
+         +"  3) Halfling (good choice)<br/>"
          +"  4) Gnome<br/>"
          +"  5) Elf<br/>"
          +"  6) Half-elf<br/>"
          +"  7) Dark-Elf<br/>"
          +"  8) Brownie<br/>"
-         +"  9) Groll<br/>"
+         +"     Groll - not recommended<br/>"
+         +"     Half-Orc - not recommended<br/>"
+         +"     Half-Ogre - not recommended<br/>";
+      }
+      else if (self.profession == PROFESSION_PRIEST)
+      {
+         s := 
+          "  1) Human<br/>"
+         +"  2) Dwarf<br/>"
+         +"     Halfling - not recommended<br/>"
+         +"     Gnome - not recommended<br/>"
+         +"     Elf - not recommended<br/>"
+         +"  6) Half-elf (good choice)<br/>"
+         +"  7) Dark-Elf<br/>"
+         +"     Brownie<br/>"
+         +"     Groll - not recommended<br/>"
          +" 10) Half-Orc<br/>"
-         +" 11) Half-Ogre<br/>"
-         +"Please select 1 - 11 or Help: ", self);
+         +"     Half-Ogre - not recommended<br/>";
+      }
+      else if (self.profession == PROFESSION_CONJURER)
+      {
+         s := 
+          "  1) Human<br/>"
+         +"     Dwarf - not recommended<br/>"
+         +"  3) Halfling<br/>"
+         +"  4) Gnome (good choice)<br/>"
+         +"  5) Elf<br/>"
+         +"     Half-elf - not recommended<br/>"
+         +"     Dark-Elf - not recommended<br/>"
+         +"  8) Brownie<br/>"
+         +"     Groll - not recommended<br/>"
+         +"     Half-Orc - not recommended<br/>"
+         +"     Half-Ogre - not recommended<br/>";
+      }
+      else
+      {
+         s := "Some kind of unexpected error in picking race.";
+      }
+
+      sendtext("<br/>Please choose your race:<br/>"
+         + s
+         +"Please select number above or Help: ", self);
+
+      // I know, right now you can still choose the races not
+      // recommended. Considering it a feature for now.
 
       exdp.descr := "1";
       return;
@@ -2109,7 +2167,7 @@ code
 
    if (s=="next")
    {
-      sendtext("Please choose 1 - 11 or Help: ", self);
+      sendtext("Please choose numeric value above or Help: ", self);
       return;
    }
    else if (s=="help")
@@ -2119,7 +2177,7 @@ code
       if (err<1)
       {
          sendtext ("The races logon help is not set please tell an admin when you log on.<br/>",self);
-         sendtext("Please choose 1 - 11 or Help: ", self);
+         sendtext("Please choose numeric value or Help: ", self);
       }
       else
       {
@@ -2193,7 +2251,7 @@ code
    }
 
    substring(exdp.names, "login races");
-   addstring(exdp.names, "login guilds");
+   addstring(exdp.names, "personality");
    exdp.descr := "0";
    return;
 }
@@ -2255,7 +2313,7 @@ code
    }
 
    substring(exdp.names, "genders");
-   addstring(exdp.names, "login races");
+   addstring(exdp.names, "login guilds");
    exdp.descr := "0";
    return;
 }
@@ -2532,11 +2590,11 @@ code
    if ("genders" in exdp.names)
      nanny_sex( arg );
 
-   if ("login races" in exdp.names)
-     nanny_race( arg );
-
    if ("login guilds" in exdp.names)
      nanny_guild( arg );
+
+   if ("login races" in exdp.names)
+     nanny_race( arg );
 
    if ("personality" in exdp.names)
      nanny_alignment( arg );

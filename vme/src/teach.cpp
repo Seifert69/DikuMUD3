@@ -1306,32 +1306,64 @@ const char *get_next_str(const char *data, char *dest)
 
 //
 // Given a profession's cost nCost what is the maximum delta to 100.
-// 0 = 0, 1 = +5, 2 = +8, 3 = +10
-// < 0 is -10 per point
+//
 int max_skill_mod(int nCost)
 {
     if (nCost == 0)
     {
-        return 0;
+        return -20;  // 80 max
     }
     else if (nCost == 1)
     {
-        return +5;
+        return -10;  // 90 max
     }
     else if (nCost == 2)
     {
-        return +8;
+        return 0;  // 100 max
     }
     else if (nCost == 3)
     {
-        return +10;
+        return +5;  // 105 max
     }
-    else if (nCost > 3)
+    else if (nCost == 4)
     {
-        return 10 + nCost - 3;
+        return +8;  // 108 max
+    }
+    else if (nCost >= 5)
+    {
+        return 10 + nCost - 5;  // 110 max for 5, 111 max for 6, etc.
+    }
+    else if (nCost == -1)
+    {
+        return -30; // 70 max
+    }
+    else if (nCost == -2)
+    {
+        return -40;  // 60 max
+    }
+    else if (nCost == -3)
+    {
+        return -50;  // 50 max
+    }
+    else if (nCost == -4)
+    {
+        return -60;  // 40 max
+    }
+    else if (nCost == -5)
+    {
+        return -70;  // 30 max
+    }
+    else if (nCost == -6)
+    {
+        return -85; // 15 max
+    }
+    else if (nCost <= -7)
+    {
+        return -100;  // 0 max
     }
 
-    return nCost * 10; // Will be negative by -10 per point
+    // We should never get here
+    return -100;
 }
 
 // level, max-train, <skill>, min_cost_per_point (gold), max_cost_per_point (gold), {costs}, 0

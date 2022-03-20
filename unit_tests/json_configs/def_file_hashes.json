@@ -15,12 +15,12 @@
         {
             "source_file": {
                 "filename": "abilities.def",
-                "sha512": "a9b2ab4e06fd9f0d0cc803dfc848ef8737f1ba4aeb8768e85dac94a8f90a2b22daf03ab4f8b7f3c7ca0a6964105895ba61b9b2ff7f4a259c0941ae2d0f750f3c"
+                "sha512": "5c710222c25541901844537d6283f1bf9a5d697f1326492934f4f39a9a28fbbec73ff95a8a71eb2db29871ba43135b4c64456dcfe26d381609b0a737ad913990"
             },
             "output": [
                 {
                     "filename": "abilities.dat",
-                    "sha512": "4f7a820fc8ea48780af1dbf5bca1f7a36382018175b559bf58322455bb3faf85764508ee03163d3d08cd4a64eeb0a84101a62b2df81f54ef28f45d6cd9469580"
+                    "sha512": "8e539009f0ce9e0485396d309e35e2844c62fde759037b2df9440b02059097e161f5d62a7e22b6ebf8537993991cd6e838aa908512848fc120254d913a339b23"
                 }
             ]
         },
