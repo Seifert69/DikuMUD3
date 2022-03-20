@@ -87,7 +87,7 @@
         {
             "source_file": {
                 "filename": "weapons.def",
-                "sha512": "1ded84b4b1e9767632af0f20faa47cf969db592223e0c410c00503c0e48ff51204511e241f96399add80749150574ea7ec46902bfb03f37a6022f449a1444554"
+                "sha512": "e21bdd195e08ada2d0c0ad4dabca68620dce667180396fa59b1b84d0f431c266e4c0c29c8e624290b1d01b2f5c07c6f60a75e3cd4ae087c81b849f04187ae689"
             },
             "output": [
                 {
