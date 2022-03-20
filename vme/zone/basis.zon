@@ -2153,7 +2153,7 @@ code
       }
 
       sendtext("<br/>Please choose your race:<br/>"
-         + s
+         + "<pre>" + s + "</pre>"
          +"Please select number above or Help: ", self);
 
       // I know, right now you can still choose the races not
