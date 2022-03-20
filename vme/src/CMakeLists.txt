@@ -68,9 +68,10 @@ set(VME_SRCS
         movement.h
         namelist.cpp namelist.h
         nanny.cpp nanny.h
-        OutputCapture.cpp OutputCapture.h
         nice.cpp nice.h
+        OutputCapture.cpp OutputCapture.h
         path.cpp path.h
+        pc_time_data.cpp pc_time_data.h
         pcsave.cpp pcsave.h
         pipe.cpp pipe.h
         protocol.cpp protocol.h
