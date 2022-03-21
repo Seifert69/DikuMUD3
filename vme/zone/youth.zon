@@ -66,7 +66,7 @@ code
       self.hp := self.max_hp;
       self.mana := self.max_mana;
       self.endurance := self.max_endurance;
-      sendtext("All of sudden, a wave rushes over you and you feel....alive!", self); 
+      sendtext("All of sudden, a wave rushes over you and you feel....alive!<br/>", self); 
    }
    quit;
 }
@@ -248,14 +248,14 @@ spring_saveobj
     pc := activator;
     if(self.extra.["$status"].descr == "OFF"){
         self.extra.["$status"].descr := "ON";
-        sendtext("The Eternal Spring now: On.", pc);
+        sendtext("The Eternal Spring now: On.<br/>", pc);
         item := load("spring@youth");
         link(item, findroom("springroom@youth"));
         act("You command $1n into existence.", A_SOMEONE, item, null, null, TO_ALL);
     }
     else{
         self.extra.["$status"].descr := "OFF";
-        sendtext("The Eternal Spring now: Off.", pc);
+        sendtext("The Eternal Spring now: Off.<br/>", pc);
         item := findsymbolic("spring@youth");
         while(item){
           act("You command $1n out of existence.", A_SOMEONE, item, null, null, TO_ALL);

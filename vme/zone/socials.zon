@@ -7438,12 +7438,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Who is upsetting you?.",self);
+                sendtext ("<div class='social_self'>Who is upsetting you?.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Who is upsetting you?.",self);
+                sendtext ("<div class='social_self'>Who is upsetting you?.</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)

@@ -37,7 +37,7 @@ code
 
 if (arg=="")
 {
-sendtext ("Log who?",self);
+sendtext ("Log who?<br/>",self);
 quit;
 }
 
@@ -112,7 +112,7 @@ block;
 if (argument=="off")
   quit;
 
-  sendtext ("You must type tester off",self);
+  sendtext ("You must type tester off<br/>",self);
 
   goto start;
 
@@ -242,7 +242,7 @@ if (self.outside.zoneidx=="g_q")
 	{
 	log (self.outside.name+" cheating with power items and familiar");
 	sendtext ("You were caught cheating with your familiar and power items and are logged<br/>",self.outside.outside);
-	sendtext ("Your familiar and all on it have been destroyed.",self.outside.outside);
+	sendtext ("Your familiar and all on it have been destroyed.<br/>",self.outside.outside);
 	destroy (self);
 	}
 

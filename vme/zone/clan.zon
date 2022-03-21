@@ -2120,7 +2120,7 @@ code
 	}
 	if (arg!="now")
 	{
-		sendtext ("<div class='clan'>You must type 'cdefect now' to defect from your clan.</div>",self);
+		sendtext ("<div class='clan'>You must type 'cdefect now' to defect from your clan.</div><br/>",self);
 		quit;
 	}
 	subextra (self.extra,CLAN_NAME);
@@ -2717,8 +2717,7 @@ code
 
 	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[3]!="$quartermaster"))
 	{
-		sendtext ("<div class='clan'>You do not have access to take from the secret clan
-		storage.</div><div class='default'><br/></div>",self);
+		sendtext ("<div class='clan'>You do not have access to take from the secret clan storage.</div><br/>",self);
 		quit;
 	}
 	if (chest.inside==null)

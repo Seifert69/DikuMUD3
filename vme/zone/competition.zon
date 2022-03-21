@@ -442,9 +442,9 @@ code
 	if ((i<1) or (i>(ln-1)))
 	{
 		if (ln==1)
-			sendtext ("No such competition found, try 'list 1'.",activator);
+			sendtext ("No such competition found, try 'list 1'.<br/>",activator);
 		else
-			sendtext ("No such competition found, try 'list 1' to 'list "+itoa(ln-1) +"'.<br>",activator);
+			sendtext ("No such competition found, try 'list 1' to 'list "+itoa(ln-1) +"'.<br/>",activator);
 		goto start;
 	}
 	cname:=itoa(rm.extra.["competitions"].vals.[i]);

@@ -735,7 +735,7 @@ f_name:=getword(temp);
 i:=loadstr (brdname+"."+f_name,buff);
 if (i==0)
 	{
-	sendtext("You have to let the poster finish the post before reading it.",self);
+	sendtext("You have to let the poster finish the post before reading it.<br/>",self);
 	quit;
 	}
 if (i<1)

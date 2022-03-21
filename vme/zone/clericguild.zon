@@ -908,7 +908,7 @@ pause;
 exec("emote places the hand in the center of the semi-circle.",self);
 exec("chants a mantra as she prays.",self);
 pause;
-sendtext("The potion starts to glow. ", self.outside);
+sendtext("The potion starts to glow.<br/>", self.outside);
 exec("emote takes the grave beater in her hand and gestures, a bright light surrounds the grave beater.", self);
 pause;
 sendtext("The gravebeater flares with bright light and starts disinegrate. ", self.outside);
@@ -919,7 +919,7 @@ exec("emote continues chanting calmly.", self);
 sendtext("There is a blinding flash in the center of the room "+
           "when the light clears a Silver Torc glows where the "+
 		  "semi-circle had been. ", self.outside);
-sendtext("emote pick up the glowing torc.", self);
+exec("emote picks up the glowing torc.", self);
 act ("Sister Morenae gives you your torc.",
 A_SOMEONE, pc, null, null, TO_CHAR);
 act ("The Sister gives $1n a silver torc.",

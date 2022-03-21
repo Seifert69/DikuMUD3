@@ -11069,7 +11069,77 @@ romflags {CHAR_PROTECTED}
 M_HUMAN_CLERIC_HAMMER(12, SEX_MALE, "cast harm", "cast heal")
 alignment 1000
 
-dilcopy profess_choose@basis();
+// dilcopy profess_choose@basis();
+
+#define NICHOLAS_QUEST "Father Nicholas Quest"
+
+dilbegin newProfession();
+external
+   Explainer@quests(pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+var
+   pc : unitptr;
+   exdp : extraptr;
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC*4;
+
+:start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   if (activator.level < 50)
+      goto start;
+
+	pc := qstWaitHero@quests(NICHOLAS_QUEST, activator,
+      {"::Father Nicholas looks at you.::",
+      "think",
+      "say $1N, I think you're finally ready. I can see you have learned a lot.",
+      "say Once in a lifetime one can consider walking on a new path.",
+      "say I did so myself, when I was a young man I was a warrior and then only later did I become a man of the Gods.",
+      "whisper $1N If you want to consider treading new path just <a cmd='#'>nod</a> your head, and I'll give you the details."
+      }, ""
+   );
+
+   if (pc == null)
+      goto start;
+
+   secure(pc, lostpc);
+
+   Explainer@quests(pc, 
+      {"say Well first let us see if you have learned enough.",
+       "say Ready for the first question?",
+       "say Here we go...",
+       "emote one eye seems to grow larger.",
+       "say $3n, what is your favorite color?"});
+
+:q1:
+   wait(SFB_CMD, activator == pc);
+   if (command("say") or command("tell") or command("whisper"))
+   {
+      pause;
+      Explainer@quests(pc, 
+         {"say Are you sure that is your answer?",
+         "::$1n looks at you intensely.::$1n looks intensely at $3n."});
+   }
+   else
+      goto q1;
+
+   Explainer@quests(pc, 
+      {"point $3n",
+      "::Suddenly youre lifted up in the air at great speed. You scream at the top of your lungs.::$3n screams as $3e is lifted up into the air at great speed and vanishes."});
+
+   unsecure(pc);
+   // link(pc, );
+
+:lostpc:
+   exec("sigh", self);
+   goto start;
+}
+dilend
 end
 
 
