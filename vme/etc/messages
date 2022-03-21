@@ -305,7 +305,7 @@ $1n pierces the air with a wild stab.~
 
 You stab $3n's $2N.~
 You block $1n's stab with your $2N.~
-$3n blocks $1n's stab with $1s $2N.~
+$3n blocks $1n's stab with $3s $2N.~
 
 You stab $3n with your $2N, but in vain.~
 $1n stabs you with $1s $2N, but you are unharmed.~
@@ -485,7 +485,7 @@ $1n punches holes in the air trying to hit $3n.~
 
 You hit $3n's $2N as $3e blocks your punch.~
 You block $1n's punch with your $2N.~
-$3n blocks $1n's punch with $1s $2N.~
+$3n blocks $1n's punch with $3s $2N.~
 
 You hit $3n, but $3e seems unaffected.~
 $1n hits you, but you feel nothing.~
@@ -530,7 +530,7 @@ $1n bites holes in the air trying to hit $3n.~
 
 You bite in $3n's $2N.~
 You block $1n's bite with your $2N.~
-$3n blocks $1n's bite with $1s $2N.~
+$3n blocks $1n's bite with $3s $2N.~
 
 You bite $3n, but $3e seems unaffected.~
 $1n bites you, but you feel no pain.~
@@ -575,7 +575,7 @@ $1n uses $1s claws to scratch the air, trying to rip $3n.~
 
 You claw on $3n's $2N.~
 You block $1n's claws with your $2N.~
-$3n blocks $1n's claws with $1s $2N.~
+$3n blocks $1n's claws with $3s $2N.~
 
 You claw $3n, but $3e seems unaffected.~
 $1n claws you, but you feel no pain.~
@@ -620,7 +620,7 @@ $1n crushes the air, trying to rip $3n.~
 
 You crush $3n's $2N.~
 You block $1n's crush with your $2N.~
-$3n blocks $1n's crush with $1s $2N.~
+$3n blocks $1n's crush with $3s $2N.~
 
 You try to crush $3n, but $3e seems unaffected.~
 $1n tries to crush you, but you feel no pain.~
