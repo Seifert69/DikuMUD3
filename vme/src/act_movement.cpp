@@ -112,7 +112,7 @@ int has_found_door(unit_data *pc, int dir)
         return TRUE;
     }
 
-    if (!IS_SET(ROOM_EXIT(UNIT_IN(pc), dir)->exit_info, EX_HIDDEN))
+    if (!ROOM_EXIT(UNIT_IN(pc), dir)->isDoorFlagSet(EX_HIDDEN))
     {
         return TRUE;
     }
@@ -129,7 +129,7 @@ int has_found_door(unit_data *pc, int dir)
 
     return exd->names.IsName(UNIT_NAMES(pc).Name(0)) != nullptr;
 
-    if (IS_SET(ROOM_EXIT(UNIT_IN(pc), dir)->exit_info, EX_CLOSED))
+    if (ROOM_EXIT(UNIT_IN(pc), dir)->isDoorFlagSet(EX_CLOSED))
     {
         for (af = UNIT_AFFECTED(UNIT_IN(pc)); af; af = af->getNext())
         {
@@ -337,13 +337,13 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
 
     /* Next room exists? */
-    if (ROOM_EXIT(room_from, direction)->to_room == nullptr)
+    if (ROOM_EXIT(room_from, direction)->getToRoom() == nullptr)
     {
         send_to_char(ALAS_NOWAY, ch);
         return 0;
     }
 
-    room_to = ROOM_EXIT(room_from, direction)->to_room;
+    room_to = ROOM_EXIT(room_from, direction)->getToRoom();
 
     if (CHAR_POS(ch) == POSITION_FIGHTING)
     {
@@ -481,7 +481,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }
     }
 
-    if (IS_SET(ROOM_EXIT(room_from, direction)->exit_info, EX_CLOSED))
+    if (ROOM_EXIT(room_from, direction)->isDoorFlagSet(EX_CLOSED))
     {
         if (!has_found_door(ch, direction))
         {
@@ -494,7 +494,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         return 0;
     }
 
-    if (IS_SET(ROOM_EXIT(room_from, direction)->exit_info, EX_CLIMB))
+    if (ROOM_EXIT(room_from, direction)->isDoorFlagSet(EX_CLIMB))
     {
         act("Alas, you must climb to go that way.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         return 0;
@@ -545,7 +545,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                 skillbonus = 100;
             }
 
-            int diff = ROOM_EXIT(room_from, direction)->difficulty;
+            int diff = ROOM_EXIT(room_from, direction)->getSkillDifficulty();
 
             if (bOceanEscape)
             {
@@ -826,7 +826,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 
         if (ROOM_EXIT(UNIT_IN(ch), door))
         {
-            if (ROOM_EXIT(UNIT_IN(ch), door)->open_name.IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(UNIT_IN(ch), door)->getOpenName().IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }
@@ -852,7 +852,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
     {
         if (ROOM_EXIT(UNIT_IN(ch), door))
         {
-            if (ROOM_EXIT(UNIT_IN(ch), door)->open_name.IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(UNIT_IN(ch), door)->getOpenName().IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }

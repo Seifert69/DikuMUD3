@@ -287,7 +287,7 @@ unit_data *zone_door(unit_data *u, zone_reset_cmd *cmd)
     }
     else
     {
-        ROOM_EXIT(cmd->getFileIndexType(0)->Front(), cmd->getNum(0))->exit_info = cmd->getNum(1);
+        ROOM_EXIT(cmd->getFileIndexType(0)->Front(), cmd->getNum(0))->setDoorFlags(cmd->getNum(1));
     }
 
     return nullptr;

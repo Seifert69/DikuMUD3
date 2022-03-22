@@ -1366,20 +1366,20 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 char *c1 = nullptr;
                 char *c2 = nullptr;
 
-                if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
+                if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->getToRoom())
                 {
-                    c1 = (char *)ROOM_EXIT(u, i)->to_room;
+                    c1 = (char *)ROOM_EXIT(u, i)->getToRoom();
                     c2 = c1;
                     TAIL(c2);
                     c2++;
                 }
                 if (ROOM_EXIT(u, i) && c1 && c2)
                 {
-                    pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->to_room);
-                    ROOM_EXIT(u, i)->open_name.AppendBuffer(pBuf);
-                    pBuf->Append16(ROOM_EXIT(u, i)->exit_info);
-                    pBuf->Append8(ROOM_EXIT(u, i)->difficulty); // V71 MS2020
-                    pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->key);
+                    pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->getToRoom());
+                    ROOM_EXIT(u, i)->getOpenName().AppendBuffer(pBuf);
+                    pBuf->Append16(ROOM_EXIT(u, i)->getDoorFlags());
+                    pBuf->Append8(ROOM_EXIT(u, i)->getSkillDifficulty()); // V71 MS2020
+                    pBuf->AppendDoubleString((char *)ROOM_EXIT(u, i)->getKey());
                 }
                 else
                 {

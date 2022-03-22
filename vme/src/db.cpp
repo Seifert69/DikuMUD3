@@ -1246,12 +1246,12 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     if ((fi = find_file_index(zone, name)))
                     {
                         ROOM_EXIT(u, i) = new (room_direction_data);
-                        g_nCorrupt += ROOM_EXIT(u, i)->open_name.ReadBuffer(pBuf, unit_version);
+                        g_nCorrupt += ROOM_EXIT(u, i)->getOpenName().ReadBuffer(pBuf, unit_version);
 
-                        ROOM_EXIT(u, i)->exit_info = pBuf->ReadU16(&g_nCorrupt);
+                        ROOM_EXIT(u, i)->setDoorFlags(pBuf->ReadU16(&g_nCorrupt));
                         if (unit_version >= 71)
                         {
-                            ROOM_EXIT(u, i)->difficulty = pBuf->ReadU8(&g_nCorrupt); // V71
+                            ROOM_EXIT(u, i)->setSkillDifficulty(pBuf->ReadU8(&g_nCorrupt)); // V71
                         }
 
                         g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
@@ -1262,15 +1262,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         if (!str_is_empty(name))
                         {
                             snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
-                            ROOM_EXIT(u, i)->key = str_dup(tmpbuf);
+                            ROOM_EXIT(u, i)->setKey(str_dup(tmpbuf));
                         }
                         else
                         {
-                            ROOM_EXIT(u, i)->key = nullptr;
+                            ROOM_EXIT(u, i)->setKey(nullptr);
                         }
 
                         /* NOT fi->unit! Done later */
-                        ROOM_EXIT(u, i)->to_room = (unit_data *)fi;
+                        ROOM_EXIT(u, i)->setToRoom((unit_data *)fi);
                     }
                     else
                     { /* Exit not existing, skip the junk info! */
@@ -1513,13 +1513,13 @@ void normalize_world()
             {
                 if (ROOM_EXIT(u, i))
                 {
-                    if (((file_index_type *)ROOM_EXIT(u, i)->to_room)->Empty())
+                    if (((file_index_type *)ROOM_EXIT(u, i)->getToRoom())->Empty())
                     {
-                        ROOM_EXIT(u, i)->to_room = nullptr;
+                        ROOM_EXIT(u, i)->setToRoom(nullptr);
                     }
                     else
                     {
-                        ROOM_EXIT(u, i)->to_room = ((file_index_type *)ROOM_EXIT(u, i)->to_room)->Front();
+                        ROOM_EXIT(u, i)->setToRoom(((file_index_type *)ROOM_EXIT(u, i)->getToRoom())->Front());
                     }
                 }
             }

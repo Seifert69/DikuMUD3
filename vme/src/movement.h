@@ -8,7 +8,8 @@
 
 #include "interpreter.h"
 
-#define ROOM_DOOR_NAME(room, dir) (ROOM_EXIT((room), (dir))->open_name.Name() ? ROOM_EXIT((room), (dir))->open_name.Name() : "UNDEFINED")
+#define ROOM_DOOR_NAME(room, dir)                                                                                                          \
+    (ROOM_EXIT((room), (dir))->getOpenName().Name() ? ROOM_EXIT((room), (dir))->getOpenName().Name() : "UNDEFINED")
 
 #define MOVE_GOAL 0   /* The NPC is now at it's destination         */
 #define MOVE_CLOSER 1 /* The NPC was moved closer to destination    */

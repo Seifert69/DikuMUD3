@@ -51,9 +51,9 @@ void create_worldgraph()
     {
         for (i = 0; i <= MAX_EXIT; i++)
         {
-            if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
+            if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->getToRoom())
             {
-                add_edge(ROOM_NUM(u), ROOM_NUM(ROOM_EXIT(u, i)->to_room), 1, WorldGraph);
+                add_edge(ROOM_NUM(u), ROOM_NUM(ROOM_EXIT(u, i)->getToRoom()), 1, WorldGraph);
             }
         }
 
@@ -177,11 +177,11 @@ void create_sc_graph(int num_of_sc)
         {
             for (i = 0; i <= MAX_EXIT; i++)
             {
-                if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room && (ROOM_SC(u) == sc) && (ROOM_SC(ROOM_EXIT(u, i)->to_room) == sc))
+                if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->getToRoom() && (ROOM_SC(u) == sc) && (ROOM_SC(ROOM_EXIT(u, i)->getToRoom()) == sc))
                 {
                     tie(ed, success) = add_edge(ROOM_NUM(u),
-                                                ROOM_NUM(ROOM_EXIT(u, i)->to_room),
-                                                path_weight(u, ROOM_EXIT(u, i)->to_room, i),
+                                                ROOM_NUM(ROOM_EXIT(u, i)->getToRoom()),
+                                                path_weight(u, ROOM_EXIT(u, i)->getToRoom(), i),
                                                 g_sc_graphs[sc]);
                     dir[ed] = i;
                 }
@@ -220,17 +220,17 @@ int path_weight(unit_data *from, unit_data *to, int dir)
 
     if (dir <= DIR_SOUTHWEST)
     {
-        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_OPEN_CLOSE))
+        if (ROOM_EXIT(from, dir)->isDoorFlagSet(EX_OPEN_CLOSE))
         {
             weight += 10;
         }
 
-        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_LOCKED))
+        if (ROOM_EXIT(from, dir)->isDoorFlagSet(EX_LOCKED))
         {
             weight += 50;
         }
 
-        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_HIDDEN))
+        if (ROOM_EXIT(from, dir)->isDoorFlagSet(EX_HIDDEN))
         {
             weight += 200;
         }

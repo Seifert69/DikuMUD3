@@ -2467,7 +2467,7 @@ void dilfe_fld(dilprg *p)
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
-                    v->ref = &(ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->key);
+                    v->ref = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getKeyPtr();
                 }
                 else
                 {
@@ -2517,7 +2517,7 @@ void dilfe_fld(dilprg *p)
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
-                    v->ref = &(ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->open_name);
+                    v->ref = &(ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getOpenName());
                 }
                 else
                 {
@@ -2566,7 +2566,7 @@ void dilfe_fld(dilprg *p)
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NONE;
-                    v->ref = &(ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->exit_info);
+                    v->ref = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getDoorFlagsPtr();
                 }
                 else
                 {
@@ -2614,7 +2614,7 @@ void dilfe_fld(dilprg *p)
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NONE;
-                    v->ref = &(ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->difficulty);
+                    v->ref = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getSkillDifficultyPtr();
                 }
                 else
                 {
@@ -2661,7 +2661,7 @@ void dilfe_fld(dilprg *p)
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
-                    v->val.ptr = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->to_room;
+                    v->val.ptr = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getToRoom();
                 }
                 else
                 {

@@ -304,7 +304,7 @@ exit_fields : /* naught */
 
 exit_field  : TO reference
     {
-        ROOM_EXIT(cur, cur_ex)->to_room = (struct unit_data *)$2;
+        ROOM_EXIT(cur, cur_ex)->setToRoom((unit_data *)$2);
     }
     | KEY reference
     {
@@ -312,13 +312,14 @@ exit_field  : TO reference
         tzone[30] = 0;
         strncpy(tname, $2 + strlen((char *)$2) + 1, 30);
         tname[30] = 0;
-        ROOM_EXIT(cur, cur_ex)->key = (char *)malloc(strlen(tzone) + strlen(tname) + 2);
-        strcpy(ROOM_EXIT(cur, cur_ex)->key, (char *)tzone);
-        strcpy(ROOM_EXIT(cur, cur_ex)->key + strlen(tzone) + 1, (char *)tname);
+        char *key=(char *)malloc(strlen(tzone) + strlen(tname) + 2);
+        strcpy(key, (char *)tzone);
+        strcpy(key + strlen(tzone) + 1, (char *)tname);
+        ROOM_EXIT(cur, cur_ex)->setKey(key);
     }
     | KEYWORD stringlist
     {
-        ROOM_EXIT(cur, cur_ex)->open_name.CopyList((const char **)$2);
+        ROOM_EXIT(cur, cur_ex)->getOpenName().CopyList((const char **)$2);
     }
     | DIFFICULTY number
     {
@@ -328,11 +329,11 @@ exit_field  : TO reference
             sprintf(buf, "Exit difficulty %d must be in [0..250]", $2);
             fatal(buf);
         }
-        ROOM_EXIT(cur, cur_ex)->difficulty = $2;
+        ROOM_EXIT(cur, cur_ex)->setSkillDifficulty($2);
     }
     | OPEN flags
     {
-        ROOM_EXIT(cur, cur_ex)->exit_info = $2;
+        ROOM_EXIT(cur, cur_ex)->setDoorFlags($2);
     }
     | DESCR STRING
     {

@@ -288,9 +288,9 @@ room_direction_data *mcreate_exit()
     rslt = new (room_direction_data);
 
     //   rslt->open_name = NULL;
-    rslt->exit_info = 0;
-    rslt->key = nullptr;
-    rslt->to_room = nullptr;
+    rslt->setDoorFlags(0);
+    rslt->setKey(nullptr);
+    rslt->setToRoom(nullptr);
     return rslt;
 }
 
@@ -777,9 +777,9 @@ void write_dot(char *prefix)
                     const char *c1 = "";
                     const char *c2 = "";
 
-                    if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
+                    if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->getToRoom())
                     {
-                        c1 = (char *)ROOM_EXIT(u, i)->to_room;
+                        c1 = (char *)ROOM_EXIT(u, i)->getToRoom();
                         c2 = c1;
                         TAIL(c2);
                         c2++;
