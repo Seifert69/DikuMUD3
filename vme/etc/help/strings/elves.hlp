@@ -1,22 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Second oldest mortal race (dragons are first). The eleven race is<br/>
-closest to nature. The are very smart and divine, also dextrous due to<br/>
-their smaller sizes. They tend to be less robust than humans and have<br/>
-an understanding with brownies. Elves<br/>
-maintain the forests through gentler spell<br/>
-weaving while brownies use their sorcery to protect them. Elves despise<br/>
-all of goblin-kind (orcs, hob-goblins, goblins).<br/>
-<br/><br/><br/>
-<br/>
-    magic              -1         constitution          -1<br/>
-    divine             +2         charisma              +2<br/>
-    dexterity          +2         brain                 +1<br/>
-    strength           0          hit points            -1<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Elves</h1>
+<p>Elves are the second oldest mortal race (dragons are first). The eleven race is
+closest to nature. The are very smart and magical, also dextrous due to
+their smaller sizes. They tend to be less robust than humans and have
+an understanding with brownies. Elves maintain the forests through gentler spell
+weaving while brownies use their sorcery to protect them. Elves despise
+all of goblin-kind (orcs, hob-goblins, goblins).
+</p>
+<pre> magic +2
+ divine -2 
+ strength 0 
+ dexterity 0 
+ constitution -1
+ charisma +1
+ brain 0
+ hit points 0
+</pre>
+<p>See also:
+</p>
+<pre> &gt; <a cmd='#'>Help Races</a>
+</pre>
+
+
+
+
+</div>

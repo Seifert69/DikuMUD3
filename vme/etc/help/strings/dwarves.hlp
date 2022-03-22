@@ -1,25 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Dwarves and Gnomes share the third oldest<br/>
-race spot. The are often<br/>
-mistaken  for dwellers of the earth (thats just where they tend to work)<br/>
-They have an affinity for precious and rare metals. Dwarves tend to<br/>
-be exceptionally skilled at making weapons<br/>
-and armor. They have an inborn<br/>
-hatred for giants and their kin. Dwarves are a very strong and hardy<br/>
-race thus they make excellent fighters. They tend to rely on force of arm<br/>
-rather than spells so dwarves mages are<br/>
-rare, though a few dwarves healers are<br/>
-known to travel the world.<br/>
-<br/><br/><br/>
-<br/>
-    magic              -2         constitution          +2<br/>
-    divine             0          charisma              -1<br/>
-    dexterity          -1         brain                 0<br/>
-    strength           +2         hit points            +2<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Dwarves</h1>
+<p>Dwarves and Gnomes share the third oldest race spot. The are often
+mistaken for dwellers of the earth (thats just where they tend to work)
+They have an affinity for precious and rare metals. Dwarves tend to
+be exceptionally skilled at making weapons and armor. They have an inborn
+hatred for giants and their kin. Dwarves are a very strong and hardy
+race thus they make excellent fighters. They tend to rely on force of arm
+rather than spells so dwarves mages are rare, though a few dwarves healers are
+known to travel the world.
+</p><p><br />
+</p>
+<pre> magic -3
+ divine 0 
+ strength +3
+ dexterity -1 
+ constitution +1
+ charisma -2
+ brain 0
+ hit points +2
+</pre>
+<p>See also:
+</p>
+<pre> &gt; <a cmd='#'>Help Races</a>
+</pre>
+
+
+
+
+</div>
