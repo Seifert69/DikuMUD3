@@ -227,16 +227,97 @@ public:
 };
 
 /* ------------------  PC SPECIFIC STRUCTURES ------------------------ */
-
-struct pc_account_data
+class pc_account_data
 {
-    float credit;        /* How many coin units are left on account?       */
-    ubit32 credit_limit; /* In coin units (i.e. cents / oerer)             */
-    ubit32 total_credit; /* Accumulated credit to date (coin units)        */
-    sbit16 last4;        /* The last four digits of his credit card, or -1 */
-    ubit8 cracks;        /* Crack-attempts on CC last4                     */
-    ubit8 discount;      /* 0 - 100% discount                              */
-    ubit32 flatrate;     /* The expiration date of a flat rate service     */
+public:
+    pc_account_data() = default;
+
+    void readFrom(CByteBuffer &buf, ubit8 unit_version, int &error)
+    {
+        error += buf.ReadFloat(&credit);
+        credit_limit = buf.ReadU32(&error);
+        total_credit = buf.ReadU32(&error);
+
+        if (unit_version >= 44)
+        {
+            last4 = buf.ReadS16(&error);
+        }
+        else
+        {
+            if (unit_version >= 41)
+            {
+                error += buf.Skip32(); /* cc_time */
+            }
+            last4 = -1;
+        }
+
+        if (unit_version >= 45)
+        {
+            discount = buf.ReadU8(&error);
+
+            if (unit_version >= 52)
+            {
+                flatrate = buf.ReadU32(&error);
+            }
+            else
+            {
+                flatrate = 0;
+            }
+
+            cracks = buf.ReadU8(&error);
+        }
+        else
+        {
+            flatrate = 0;
+            discount = 0;
+            cracks = 0;
+        }
+    }
+
+    void writeTo(CByteBuffer &buf)
+    {
+        buf.AppendFloat(credit);
+        buf.Append32(credit_limit);
+        buf.Append32(total_credit);
+        buf.Append16(last4);
+        buf.Append8(discount);
+        buf.Append32(flatrate);
+        buf.Append8(cracks);
+    }
+    float getAccountBalance() const { return credit; }
+    void setAccountBalance(float value) { credit = value; }
+    void reduceAccountBalanceBy(float value) { credit -= value; }
+    void increaseAccountBalanceBy(float value) { credit += value; }
+
+    ubit32 getCreditLimit() const { return credit_limit; }
+    void setCreditLimit(ubit32 value) { credit_limit = value; }
+
+    ubit32 getTotalCredit() const { return total_credit; }
+    void increaseTotalCreditBy(ubit32 value) { total_credit += value; }
+    void reduceTotalCreditBy(ubit32 value) { total_credit -= value; }
+    void setTotalCredit(ubit32 value) { total_credit = value; }
+
+    sbit16 getLastFourDigitsofCreditCard() { return last4; }
+    void setLastFourDigitsofCreditCard(sbit16 value) { last4 = value; }
+
+    ubit8 getCrackAttempts() const { return cracks; }
+    void setCrackAttempts(ubit8 value) { cracks = value; }
+
+    ubit8 getDiscountPercentage() const { return discount; }
+    void setDiscountPercentage(ubit8 value) { discount = value; }
+
+    const ubit32 &getFlatRateExpirationDate() const { return flatrate; }
+    void incFlatRateExpirationDate(ubit32 value) { flatrate += value; }
+    void setFlatRateExpirationDate(ubit32 value) { flatrate = value; }
+
+private:
+    float credit{0.0f};     // How many coin units are left on account?
+    ubit32 credit_limit{0}; // In coin units (i.e. cents / oerer)
+    ubit32 total_credit{0}; // Accumulated credit to date (coin units)
+    sbit16 last4{-1};       // The last four digits of his credit card, or -1
+    ubit8 cracks{0};        // Crack-attempts on CC last4
+    ubit8 discount{0};      // 0 - 100% discount
+    ubit32 flatrate{0};     // The expiration date of a flat rate service
 };
 
 class pc_data : public char_data
@@ -254,8 +335,8 @@ public:
 
     terminal_setup_type setup;
 
-    pc_time_data m_time{};   /* PCs time info  */
-    pc_account_data account; /* Accounting     */
+    pc_time_data m_time{};     /* PCs time info  */
+    pc_account_data account{}; /* Accounting     */
 
     char *guild;     // Player's current default guild (guilds in .info)
     char *bank;      /* How much money in bank?                 */

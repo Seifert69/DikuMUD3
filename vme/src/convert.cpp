@@ -230,7 +230,7 @@ int shall_delete(unit_data *pc)
     days = days_old(PC_TIME(pc).getPlayerLastConnectTime());
 
     /* Player which have paid at some point in time remain almost permanent. */
-    if (PC_ACCOUNT(pc).total_credit > 0)
+    if (PC_ACCOUNT(pc).getTotalCredit() > 0)
     {
         return FALSE;
     }

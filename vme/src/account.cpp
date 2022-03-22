@@ -96,7 +96,7 @@ static void account_log(char action, unit_data *god, unit_data *pc, int amount)
     }
 
     pid = PC_ID(pc) ^ (vxor << 1);
-    total = PC_ACCOUNT(pc).total_credit;
+    total = PC_ACCOUNT(pc).getTotalCredit();
 
     amount += 13;
     amount ^= vxor << 2;
@@ -142,7 +142,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
         return;
     }
 
-    char *pTmstr = ctime((time_t *)&PC_ACCOUNT(u).flatrate);
+    char *pTmstr = ctime((time_t *)&PC_ACCOUNT(u).getFlatRateExpirationDate());
     time_t now = time(nullptr);
 
     if (IS_ADMINISTRATOR(ch))
@@ -154,19 +154,19 @@ void account_local_stat(const unit_data *ch, unit_data *u)
                                        "Discount       : %3d%%\n\r"
                                        "Flat Rate      : %s%s"
                                        "Crack counter  : %3d\n\r",
-                                       (float)PC_ACCOUNT(u).credit / 100.0,
-                                       (float)PC_ACCOUNT(u).credit_limit / 100.0,
-                                       (float)PC_ACCOUNT(u).total_credit / 100.0,
-                                       PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
-                                       PC_ACCOUNT(u).discount,
-                                       PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
-                                       PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
-                                       PC_ACCOUNT(u).cracks);
+                                       PC_ACCOUNT(u).getAccountBalance() / 100.0,
+                                       PC_ACCOUNT(u).getCreditLimit() / 100.0,
+                                       PC_ACCOUNT(u).getTotalCredit() / 100.0,
+                                       PC_ACCOUNT(u).getLastFourDigitsofCreditCard() == -1 ? "NONE" : "REGISTERED",
+                                       PC_ACCOUNT(u).getDiscountPercentage(),
+                                       PC_ACCOUNT(u).getFlatRateExpirationDate() < (ubit32)now ? "Expired" : "Expires on ",
+                                       PC_ACCOUNT(u).getFlatRateExpirationDate() < (ubit32)now ? " (none)\n\r" : pTmstr,
+                                       PC_ACCOUNT(u).getCrackAttempts());
         send_to_char(msg, ch);
     }
     else
     {
-        if (PC_ACCOUNT(u).total_credit > 0)
+        if (PC_ACCOUNT(u).getTotalCredit() > 0)
         {
             send_to_char("Has paid for playing.\n\r", ch);
         }
@@ -234,7 +234,7 @@ void account_overdue(const unit_data *ch)
 
     if (g_cServerConfig.isAccounting())
     {
-        ubit32 discount = PC_ACCOUNT(ch).discount;
+        ubit32 discount = PC_ACCOUNT(ch).getDiscountPercentage();
         ubit32 lcharge = ((100 - discount) * g_cAccountConfig.m_nHourlyRate) / 100;
 
         if (lcharge == 0)
@@ -244,7 +244,7 @@ void account_overdue(const unit_data *ch)
         }
         else
         {
-            i = (int)(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).credit);
+            i = static_cast<int>(PC_ACCOUNT(ch).getCreditLimit() + PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
         }
@@ -252,9 +252,9 @@ void account_overdue(const unit_data *ch)
         auto msg = diku::format_to_str("Your account is overdue by %.2f %s with a "
                                        "limit of %.2f %s.\n\r"
                                        "The account will expire in %d hours and %d minutes.\n\r\n\r",
-                                       (float)-PC_ACCOUNT(ch).credit / 100.0,
+                                       (PC_ACCOUNT(ch).getAccountBalance() * -1) / 100.0,
                                        g_cAccountConfig.m_pCoinName,
-                                       (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                       PC_ACCOUNT(ch).getCreditLimit() / 100.0,
                                        g_cAccountConfig.m_pCoinName,
                                        i,
                                        j);
@@ -330,7 +330,7 @@ static void account_calc(unit_data *pc, tm *b, tm *e)
     tm t;
     ubit32 secs = 0;
 
-    if (PC_ACCOUNT(pc).flatrate > (ubit32)time(nullptr))
+    if (PC_ACCOUNT(pc).getFlatRateExpirationDate() > (ubit32)time(nullptr))
     {
         return;
     }
@@ -360,13 +360,13 @@ static void account_calc(unit_data *pc, tm *b, tm *e)
 
     float amt = (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / (float)3600.0);
 
-    if (is_in(PC_ACCOUNT(pc).discount, 1, 99))
+    if (is_in(PC_ACCOUNT(pc).getDiscountPercentage(), 1, 99))
     {
-        PC_ACCOUNT(pc).credit -= (((float)(100 - PC_ACCOUNT(pc).discount)) * amt) / (float)100.0;
+        PC_ACCOUNT(pc).reduceAccountBalanceBy((((float)(100 - PC_ACCOUNT(pc).getDiscountPercentage())) * amt) / 100.0f);
     }
     else
     {
-        PC_ACCOUNT(pc).credit -= amt;
+        PC_ACCOUNT(pc).reduceAccountBalanceBy(amt);
     }
 
 #ifdef ACCOUNT_DEBUG
@@ -444,12 +444,12 @@ int account_is_overdue(const unit_data *ch)
 {
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+        if (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))
         {
             return FALSE;
         }
 
-        return (PC_ACCOUNT(ch).credit < 0.0);
+        return (PC_ACCOUNT(ch).getAccountBalance() < 0.0);
     }
 
     return FALSE;
@@ -460,7 +460,7 @@ static void account_status(const unit_data *ch)
     int j = 0;
     int i = 0;
     char *pTmstr = nullptr;
-    ubit32 discount = PC_ACCOUNT(ch).discount;
+    ubit32 discount = PC_ACCOUNT(ch).getDiscountPercentage();
     ubit32 lcharge = ((100 - discount) * g_cAccountConfig.m_nHourlyRate) / 100;
 
     if (account_is_overdue(ch))
@@ -475,41 +475,42 @@ static void account_status(const unit_data *ch)
         send_to_char(msg, ch);
     }
 
-    if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+    if (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))
     {
-        pTmstr = ctime((time_t *)&PC_ACCOUNT(ch).flatrate);
+        pTmstr = ctime((time_t *)&PC_ACCOUNT(ch).getFlatRateExpirationDate());
         auto msg = diku::format_to_str("Your account is on a flat rate until %s", pTmstr);
         send_to_char(msg, ch);
 
-        if (PC_ACCOUNT(ch).credit >= 0.0)
+        if (PC_ACCOUNT(ch).getAccountBalance() >= 0.0)
         {
             auto msg2 = diku::format_to_str("You have a positive balance of %.2f %s.\n\r",
-                                            PC_ACCOUNT(ch).credit / 100.0,
+                                            PC_ACCOUNT(ch).getAccountBalance() / 100.0,
                                             g_cAccountConfig.m_pCoinName);
             send_to_char(msg2, ch);
         }
         return;
     }
 
-    if (PC_ACCOUNT(ch).credit >= 0.0)
+    if (PC_ACCOUNT(ch).getAccountBalance() >= 0.0)
     {
-        auto msg =
-            diku::format_to_str("You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+        auto msg = diku::format_to_str("You have a positive balance of %.2f %s.\n\r",
+                                       PC_ACCOUNT(ch).getAccountBalance() / 100.0,
+                                       g_cAccountConfig.m_pCoinName);
         send_to_char(msg, ch);
 
         if (lcharge > 0)
         {
-            i = (int)PC_ACCOUNT(ch).credit;
+            i = static_cast<int>(PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
             act("At the current rate that is $2d hours and $3d minutes.", A_ALWAYS, ch, &i, &j, TO_CHAR);
 
-            i = (int)(((float)PC_ACCOUNT(ch).credit_limit / (float)(lcharge)));
+            i = static_cast<int>(PC_ACCOUNT(ch).getCreditLimit() / static_cast<float>(lcharge));
 
             auto msg = diku::format_to_str("Your credit limit is %d hours (%.2f %s).\n\r",
                                            i,
-                                           (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                           PC_ACCOUNT(ch).getCreditLimit() / 100.0,
                                            g_cAccountConfig.m_pCoinName);
             send_to_char(msg, ch);
         }
@@ -518,16 +519,16 @@ static void account_status(const unit_data *ch)
     {
         if (lcharge > 0)
         {
-            i = (int)(PC_ACCOUNT(ch).credit_limit + PC_ACCOUNT(ch).credit);
+            i = static_cast<int>(PC_ACCOUNT(ch).getCreditLimit() + PC_ACCOUNT(ch).getAccountBalance());
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
             auto msg = diku::format_to_str("Your account is overdue by %.2f %s with a "
                                            "limit of %.2f %s.\n\r"
                                            "The account will expire in %d hours and %d minutes.\n\r",
-                                           (float)-PC_ACCOUNT(ch).credit / 100.0,
+                                           (PC_ACCOUNT(ch).getAccountBalance() * -1) / 100.0,
                                            g_cAccountConfig.m_pCoinName,
-                                           (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                                           PC_ACCOUNT(ch).getCreditLimit() / 100.0,
                                            g_cAccountConfig.m_pCoinName,
                                            i,
                                            j);
@@ -536,7 +537,7 @@ static void account_status(const unit_data *ch)
         else
         {
             auto msg = diku::format_to_str("You have a negative balance of %.2f %s.\n\r",
-                                           PC_ACCOUNT(ch).credit / 100.0,
+                                           PC_ACCOUNT(ch).getAccountBalance() / 100.0,
                                            g_cAccountConfig.m_pCoinName);
             send_to_char(msg, ch);
         }
@@ -550,13 +551,13 @@ int account_is_closed(unit_data *ch)
 
     if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
-        if (PC_ACCOUNT(ch).flatrate > (ubit32)time(nullptr))
+        if (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))
         {
             return FALSE;
         }
 
-        i = (int)PC_ACCOUNT(ch).credit;
-        j = PC_ACCOUNT(ch).credit_limit;
+        i = static_cast<int>(PC_ACCOUNT(ch).getAccountBalance());
+        j = PC_ACCOUNT(ch).getCreditLimit();
 
         return (i < -j);
     }
@@ -566,8 +567,8 @@ int account_is_closed(unit_data *ch)
 
 void account_insert(unit_data *god, unit_data *whom, ubit32 amount)
 {
-    PC_ACCOUNT(whom).credit += (float)amount;
-    PC_ACCOUNT(whom).total_credit += amount;
+    PC_ACCOUNT(whom).increaseAccountBalanceBy(static_cast<float>(amount));
+    PC_ACCOUNT(whom).increaseTotalCreditBy(amount);
 
     slog(LOG_ALL, 255, "%s inserted %d on account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
     account_log('I', god, whom, amount);
@@ -575,14 +576,14 @@ void account_insert(unit_data *god, unit_data *whom, ubit32 amount)
 
 void account_withdraw(unit_data *god, unit_data *whom, ubit32 amount)
 {
-    PC_ACCOUNT(whom).credit -= (float)amount;
-    if ((ubit32)amount > PC_ACCOUNT(whom).total_credit)
+    PC_ACCOUNT(whom).reduceAccountBalanceBy(static_cast<float>(amount));
+    if ((ubit32)amount > PC_ACCOUNT(whom).getTotalCredit())
     {
-        PC_ACCOUNT(whom).total_credit = 0;
+        PC_ACCOUNT(whom).setTotalCredit(0);
     }
     else
     {
-        PC_ACCOUNT(whom).total_credit -= amount;
+        PC_ACCOUNT(whom).reduceTotalCreditBy(amount);
     }
 
     slog(LOG_ALL, 255, "%s withdrew %d from account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
@@ -599,29 +600,29 @@ void account_flatrate_change(unit_data *god, unit_data *whom, sbit32 days)
     std::string msg;
     if (days > 0)
     {
-        if (PC_ACCOUNT(whom).flatrate > (ubit32)now)
+        if (PC_ACCOUNT(whom).getFlatRateExpirationDate() > (ubit32)now)
         {
             msg = diku::format_to_str("\n\rAdding %d days to the flatrate.\n\r\n\r", days);
-            PC_ACCOUNT(whom).flatrate += add;
+            PC_ACCOUNT(whom).incFlatRateExpirationDate(add);
         }
         else
         {
             assert(add > 0);
             msg = diku::format_to_str("\n\rSetting flatrate to %d days.\n\r\n\r", days);
-            PC_ACCOUNT(whom).flatrate = now + add;
+            PC_ACCOUNT(whom).setFlatRateExpirationDate(now + add);
         }
     }
     else /* days < 0 */
     {
-        if ((sbit32)PC_ACCOUNT(whom).flatrate + add < now)
+        if ((sbit32)PC_ACCOUNT(whom).getFlatRateExpirationDate() + add < now)
         {
             msg = "\n\rDisabling flatrate, enabling measure rate.\n\r\n\r";
-            PC_ACCOUNT(whom).flatrate = 0;
+            PC_ACCOUNT(whom).setFlatRateExpirationDate(0);
         }
         else
         {
             msg = diku::format_to_str("\n\rSubtracting %d days from the flatrate.\n\r\n\r", days);
-            PC_ACCOUNT(whom).flatrate += add;
+            PC_ACCOUNT(whom).incFlatRateExpirationDate(add);
         }
     }
 
@@ -767,7 +768,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
             send_to_char(msg, ch);
 
-            PC_ACCOUNT(u).credit_limit = amount;
+            PC_ACCOUNT(u).setCreditLimit(amount);
 
             account_local_stat(ch, u);
 
@@ -790,7 +791,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
             send_to_char(msg, ch);
 
-            PC_ACCOUNT(u).discount = amount;
+            PC_ACCOUNT(u).setDiscountPercentage(amount);
 
             account_local_stat(ch, u);
 
@@ -835,13 +836,13 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
 void account_defaults(unit_data *pc)
 {
-    PC_ACCOUNT(pc).credit = (float)g_cAccountConfig.m_nAccountFree;
-    PC_ACCOUNT(pc).credit_limit = (int)g_cAccountConfig.m_nAccountLimit;
-    PC_ACCOUNT(pc).total_credit = 0;
-    PC_ACCOUNT(pc).last4 = -1;
-    PC_ACCOUNT(pc).discount = 0;
-    PC_ACCOUNT(pc).cracks = 0;
-    PC_ACCOUNT(pc).flatrate = 0;
+    PC_ACCOUNT(pc).setAccountBalance(static_cast<float>(g_cAccountConfig.m_nAccountFree));
+    PC_ACCOUNT(pc).setCreditLimit(static_cast<int>(g_cAccountConfig.m_nAccountLimit));
+    PC_ACCOUNT(pc).setTotalCredit(0);
+    PC_ACCOUNT(pc).setLastFourDigitsofCreditCard(-1);
+    PC_ACCOUNT(pc).setDiscountPercentage(0);
+    PC_ACCOUNT(pc).setCrackAttempts(0);
+    PC_ACCOUNT(pc).setFlatRateExpirationDate(0);
 }
 
 void charge_sanity(ubit8 b_hr, ubit8 b_min, ubit8 e_hr, ubit8 e_min, int charge)

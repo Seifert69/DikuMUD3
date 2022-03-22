@@ -1119,7 +1119,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                             PC_COND(u, DRUNK),
                                             PC_COND(u, FULL),
                                             PC_COND(u, THIRST),
-                                            PC_ACCOUNT(u).last4 == -1 ? "NONE" : "SET",
+                                            PC_ACCOUNT(u).getLastFourDigitsofCreditCard() == -1 ? "NONE" : "SET",
                                             sprintbit(bits1, PC_FLAGS(u), g_pc_flags),
                                             tid1.getYear(),
                                             tid1.getMonth(),

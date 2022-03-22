@@ -866,44 +866,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     PC_PROFESSION(u) = pBuf->ReadS8(&g_nCorrupt);
                 }
 
-                g_nCorrupt += pBuf->ReadFloat(&PC_ACCOUNT(u).credit);
-                PC_ACCOUNT(u).credit_limit = pBuf->ReadU32(&g_nCorrupt);
-                PC_ACCOUNT(u).total_credit = pBuf->ReadU32(&g_nCorrupt);
-
-                if (unit_version >= 44)
-                {
-                    PC_ACCOUNT(u).last4 = pBuf->ReadS16(&g_nCorrupt);
-                }
-                else
-                {
-                    if (unit_version >= 41)
-                    {
-                        g_nCorrupt += pBuf->Skip32(); /* cc_time */
-                    }
-                    PC_ACCOUNT(u).last4 = -1;
-                }
-
-                if (unit_version >= 45)
-                {
-                    PC_ACCOUNT(u).discount = pBuf->ReadU8(&g_nCorrupt);
-
-                    if (unit_version >= 52)
-                    {
-                        PC_ACCOUNT(u).flatrate = pBuf->ReadU32(&g_nCorrupt);
-                    }
-                    else
-                    {
-                        PC_ACCOUNT(u).flatrate = 0;
-                    }
-
-                    PC_ACCOUNT(u).cracks = pBuf->ReadU8(&g_nCorrupt);
-                }
-                else
-                {
-                    PC_ACCOUNT(u).flatrate = 0;
-                    PC_ACCOUNT(u).discount = 0;
-                    PC_ACCOUNT(u).cracks = 0;
-                }
+                PC_ACCOUNT(u).readFrom(*pBuf, unit_version, g_nCorrupt);
 
                 if (unit_version >= 48)
                 {
