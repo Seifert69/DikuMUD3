@@ -71,6 +71,7 @@ set(VME_SRCS
         nice.cpp nice.h
         OutputCapture.cpp OutputCapture.h
         path.cpp path.h
+        pc_account_data.cpp pc_account_data.h
         pc_time_data.cpp pc_time_data.h
         pcsave.cpp pcsave.h
         pipe.cpp pipe.h
