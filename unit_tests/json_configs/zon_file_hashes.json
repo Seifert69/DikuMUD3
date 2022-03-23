@@ -909,12 +909,12 @@
         {
             "source_file": {
                 "filename": "udgaard.zon",
-                "sha512": "1e51a773e87ae7933f3cd71cdae65217506d254910a146a9421e4d255d0eedb08ae718d955127e402b47ab00aca234a6586f2ba95c6be93eea0ffc735cde2c33"
+                "sha512": "d3a0c944d7c4a3a4b6e4a09b6591a54bc1e838ef087ad5b1d720964575f0c39dfc0de458e5f299a574750584687704702042063fe980311e75da7b6fbb9ab46a"
             },
             "output": [
                 {
                     "filename": "udgaard.data",
-                    "sha512": "a9430baa56c01853d25325ad739d08e45eff7161788dd2758344d197db3dab6b6b4f9b5a1a139416d10f400da1101dbbeb7202e48dfc8941ad587961c424b38b"
+                    "sha512": "7a8a9dfdd8e984e0810eea6679734f2c3dc1a8dc60e264b1847f0297d803b62742a74861054203501fbdfcb8e66bcd151467a2ee23d4b39efc4ea2cbf395513e"
                 },
                 {
                     "filename": "udgaard.reset",
