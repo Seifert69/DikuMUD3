@@ -11098,9 +11098,9 @@ code
       {"::Father Nicholas looks at you.::",
       "think",
       "say $1N, I think you're finally ready. I can see you have learned a lot.",
-      "say Once in a lifetime one can consider walking on a new path.",
-      "say I did so myself, when I was a young man I was a warrior and then only later did I become a man of the Gods.",
-      "whisper $1N If you want to consider treading new path just <a cmd='#'>nod</a> your head, and I'll give you the details."
+      "say Only once in a lifetime can one consider treading a new path.",
+      "say I did so myself. When I was a young man, I was a warrior and then only later did I become a man of the Gods.",
+      "whisper $1N If you want to consider treading a new path just <a cmd='#'>nod</a> your head, and I'll give you the details."
       }, ""
    );
 
@@ -11128,12 +11128,15 @@ code
    else
       goto q1;
 
+   s := pc.name;
    Explainer@quests(pc, 
       {"point $3n",
       "::Suddenly youre lifted up in the air at great speed. You scream at the top of your lungs.::$3n screams as $3e is lifted up into the air at great speed and vanishes."});
 
    unsecure(pc);
-   // link(pc, );
+   link(pc, findsymbolic("dock1@xiyang2"));   
+   exec("tell "+s+" seek out a grocer on Xiyang City and bring me a small shrubbery.", self);
+   goto start;
 
 :lostpc:
    exec("sigh", self);
