@@ -78,6 +78,7 @@ set(VME_SRCS
         protocol.cpp protocol.h
         queue.cpp queue.h
         reception.cpp reception.h
+        room_direction_data.cpp room_direction_data.h
         sector.cpp sector.h
         signals.cpp signals.h
         skills.cpp skills.h
