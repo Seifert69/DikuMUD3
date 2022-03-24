@@ -1,5 +1,9 @@
 /*
  ~
+ 2022: Took sender's excellent work and put it in an Excel sheet.
+       Sheet has a macro to dump values to emacs-macro into this
+       sheet. More consistency, fewer errors. Edit the sheet...
+
  Reworked by Sender 2021. Recognizing state of mud and implementation
  impacts of Darg's 2001 deployment, we decided to implement a much simpler
  version of weapon balancing. This may be an interim solution, but addresses
@@ -342,6 +346,8 @@ NEW Power organization by Darg these are the alpha numbers only:
 
  ================= WEAPON CATEGORIES =====================
 
+/* BEGIN */
+
 index           = WPN_ROOT
 name            = theory
 sphere          = WPN_ROOT
@@ -349,17 +355,22 @@ auto train      = 0
 hands           =   1
 type            = WPNT_NONE
 speed           =   0
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
+//_CUTBEGIN theory
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// no attack circle
+//_CUTEND theory
 fumble          =   2
 attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
@@ -375,17 +386,22 @@ auto train      = 0
 hands           =   1
 type            =  WPNT_NONE
 speed           =   0
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
+//_CUTBEGIN category axe hammer
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// no attack circle
+//_CUTEND category axe hammer
 fumble          =   2
 attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
@@ -400,17 +416,22 @@ auto train      = 0
 hands           =   1
 type            =  WPNT_NONE
 speed           =   0
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
+//_CUTBEGIN category sword
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// no attack circle
+//_CUTEND category sword
 fumble          =   2
 attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
@@ -425,17 +446,22 @@ auto train      = 0
 hands           =   1
 type            =  WPNT_NONE
 speed           =   0
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
+//_CUTBEGIN category club mace
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// no attack circle
+//_CUTEND category club mace
 fumble          =   2
 attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
@@ -450,17 +476,22 @@ auto train      = 0
 hands           =   1
 type            =  WPNT_NONE
 speed           =   0
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
+//_CUTBEGIN category polearm
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// no attack circle
+//_CUTEND category polearm
 fumble          =   2
 attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
@@ -475,17 +506,22 @@ auto train      = 0
 hands           =   1
 type            =  WPNT_NONE
 speed           =   0
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
+//_CUTBEGIN category natural
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// no attack circle
+//_CUTEND category natural
 fumble          =   2
 attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
@@ -500,17 +536,22 @@ auto train      = 0
 hands           =   1
 type            =  WPNT_NONE
 speed           =   0
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
+//_CUTBEGIN category special
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// no attack circle
+//_CUTEND category special
 fumble          =   2
 attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
@@ -531,29 +572,38 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR, ABIL_STR, ABIL_DEX}
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  +2
-race halfling   =  -2
-race gnome      =  -2
-race half-orc   =  +1
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   +2
-race darkelf    =   0
-restrict level          = 22
-restrict strength       = 75
-profession fighter      = +4
-profession knight       = +0
-profession ranger       = -2
-profession barbarian    = +4
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8} //bat axe
+//_CUTBEGIN battle axe
+profession fighter = 2
+profession knight = 2
+profession paladin = -7
+profession ranger = -2
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 3
 
+race elf = -1
+race dwarf = 3
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race half-orc = -1
+race half-ogre = 1
+race groll = 2
+restrict strength = 60
+restrict level = 22
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
+//_CUTEND battle axe
 
 
 index           = WPN_HAND_AXE
@@ -565,28 +615,32 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  +2
-race halfling   =   0
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-profession fighter      = +2
-profession knight       = +0
-profession paladin      = +0
-profession ranger       = -2
-profession assassin     = -3
-profession barbarian    = +3
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //Hand Axe
+//_CUTBEGIN hand axe
+profession fighter = 2
+profession knight = 1
+profession paladin = 0
+profession ranger = 0
+profession thief = -7
+profession assassin = -1
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 3
+race elf = -1
+race dwarf = 3
+race halfling = 0
+race gnome = -1
+race brownie = -2
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND hand axe
 
 index           = WPN_WAR_MATTOCK // 2H Mattock
 name            = war mattock
@@ -597,28 +651,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =  -2
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   0
-race darkelf    =   0
-restrict level          = 25
-restrict strength       = 75
-profession fighter      = +0
-profession paladin      = +0
-profession knight       = -1
-profession barbarian    = +2
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8} //w matto
+//_CUTBEGIN war mattock
+profession fighter = 2
+profession knight = 2
+profession paladin = 0
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = -1
+race dwarf = 3
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race half-ogre = 1
+race groll = -1
+restrict strength = 55
+restrict level = 25
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
+//_CUTEND war mattock
 
 
 index           = WPN_ADZE
@@ -629,26 +691,34 @@ type            = WPNT_SLASH
 shield          = SHIELD_M_BLOCK
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-restrict level          = 14
-profession fighter      = +1
-profession paladin      = +0
-profession knight       = -1
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} // azde 
+//_CUTBEGIN adze mattock
+profession fighter = 2
+profession knight = 1
+profession paladin = 0
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = -1
+race dwarf = 3
+race halfling = -2
+race gnome = -3
+race brownie = -4
+race half-orc = 1
+restrict level = 14
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND adze mattock
 
 
 index           = WPN_WAR_MAUL
@@ -659,30 +729,40 @@ type            =  WPNT_BLUDGEON
 shield          = SHIELD_M_BLOCK
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =  -2
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   0
-race darkelf    =   0
-restrict level          = 24
-restrict strength       = 90
-profession fighter      = +0
-profession knight       = -1
-profession paladin      = -2
-profession priest       = -2
-profession barbarian    = +2
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8} // maul 
-
+//_CUTBEGIN maul
+profession fighter = 0
+profession knight = 0
+profession paladin = -2
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race human = -1
+race half-elf = -1
+race elf = -3
+race darkelf = -1
+race dwarf = -2
+race halfling = -5
+race gnome = -7
+race brownie = -7
+race half-orc = -1
+race half-ogre = 1
+race groll = 2
+restrict strength = 90
+restrict level = 24
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
+//_CUTEND maul
 
 
 index           = WPN_WAR_HAMMER  // 1H Hammer, e.g. Mjolnir
@@ -694,29 +774,40 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =   0
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 10
-restrict strength       = 90  // Superbly heavy weapon to use in one hand
-profession paladin      = +2
-profession fighter      = +1
-profession priest       = +0
-profession knight       = +0
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //w hammer
+//_CUTBEGIN war hammer
+profession fighter = 2
+profession knight = 0
+profession paladin = 2
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = 0
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race human = -1
+race half-elf = -1
+race elf = -1
+race darkelf = -1
+race dwarf = 1
+race halfling = -7
+race gnome = -7
+race brownie = -7
+race half-orc = -1
+race half-ogre = 2
+race groll = 3
+restrict strength = 90
+restrict level = 10
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND war hammer
 
 
 
@@ -729,27 +820,31 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   1
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-restrict level          = 12
-profession assassin     = +2
-profession fighter      = +0
-profession thief        = -1
-profession barbarian    = +1
-attack clothes  = {43, 2,13}
-attack sleather = {64, 2,14}
-attack hleather = {61, 1,15}
-attack chain    = {74, 0,16}
-attack plate    = {100,0,17} // knuckles 
+//_CUTBEGIN brass knuckles
+profession fighter = 0
+profession knight = -1
+profession paladin = -7
+profession ranger = -7
+profession thief = -1
+profession assassin = 2
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 1
+race halfling = -1
+race gnome = -2
+race brownie = -3
+restrict level = 12
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
+//_CUTEND brass knuckles
 
 
 // ====================== SWORDS ========================== 
@@ -763,28 +858,38 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -2
-race halfling   =  -2
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +2
-race half-elf   =   0
-race brownie    =  -3
-race groll      =  +4
-race darkelf    =   0
-restrict level          = 25
-restrict strength       = 75
-profession knight       = +2
-profession paladin      = +2
-profession fighter      = +0
-profession barbarian    = +3
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8} //gr sword
+//_CUTBEGIN great sword
+profession fighter = 2
+profession knight = 2
+profession paladin = 3
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 3
+race elf = 1
+race dwarf = -3
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race half-orc = -1
+race half-ogre = 2
+race groll = -1
+restrict strength = 60
+restrict level = 25
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
+//_CUTEND great sword
+
 
 index           = WPN_CLAYMORE
 name            = claymore
@@ -794,27 +899,35 @@ type            =  WPNT_SLASH
 shield          = SHIELD_M_BLOCK
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -2
-race halfling   =  -2
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +2
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   0
-race darkelf    =   0
-restrict level          = 45
-profession fighter      = +2
-profession knight       = +1
-profession paladin      = +1
-profession barbarian    = +3
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8}//claymore
+//_CUTBEGIN claymore
+profession fighter = 2
+profession knight = 2
+profession paladin = 3
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 3
+race elf = 1
+race dwarf = -3
+race halfling = -4
+race gnome = -5
+race brownie = -6
+restrict strength = 60
+restrict level = 45
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
+//_CUTEND claymore
+
 
 index           = WPN_LONG_SWORD
 name            = long sword
@@ -825,28 +938,37 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =  -2
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -2
-race groll      =   0
-race darkelf    =  +1
-restrict level          = 20
-profession fighter      = +2
-profession knight       = +2
-profession paladin      = +2
-profession ranger       = +2
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //lo sword
+//_CUTBEGIN long sword
+profession fighter = 2
+profession knight = 2
+profession paladin = 2
+profession ranger = 2
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = 1
+race dwarf = -1
+race halfling = -2
+race gnome = -3
+race brownie = -4
+race half-orc = -1
+race half-ogre = -1
+race groll = -1
+restrict level = 20
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND long sword
+
 
 index           = WPN_BROAD_SWORD
 name            = broad sword
@@ -856,27 +978,34 @@ type            =  WPNT_SLASH
 shield          = SHIELD_M_BLOCK
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =  -2
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 8
-profession fighter      = +3
-profession knight       = +2
-profession paladin      = +2
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //br sword
+//_CUTBEGIN broad sword
+profession fighter = 2
+profession knight = 2
+profession paladin = 2
+profession ranger = -1
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = 1
+race dwarf = -1
+race halfling = -2
+race gnome = -3
+race brownie = -4
+restrict level = 8
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND broad sword
+
 
 index           = WPN_RAPIER
 name            = rapier
@@ -887,28 +1016,33 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =  -1
-race gnome      =  -1
-race half-orc   =  -1
-race half-ogre  =  -1
-race half-elf   =   0
-race brownie    =  -1
-race groll      =  -1
-race darkelf    =   0
-restrict level          = 4
-profession thief        = +2
-profession fighter      = -1
-profession ranger       = -1
-profession assassin     = -2
-profession barbarian    = +0
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} // rapier 
+//_CUTBEGIN rapier
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = -1
+profession thief = 3
+profession assassin = 1
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race dwarf = -2
+race half-orc = -2
+race half-ogre = -5
+race groll = -7
+restrict dexterity = 30
+restrict level = 4
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND rapier
 
 
 
@@ -921,30 +1055,33 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =  +1
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =  -1
-race half-elf   =   0
-race brownie    =  +1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 1
-profession fighter      = +2
-profession ranger       = +2
-profession thief        = +2
-profession knight       = +0
-profession paladin      = +0
-profession assassin     = +1
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //sh sword
+//_CUTBEGIN short sword
+profession fighter = 2
+profession knight = 0
+profession paladin = 0
+profession ranger = 2
+profession thief = 2
+profession assassin = 2
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 1
+race elf = 1
+race dwarf = 0
+race halfling = 1
+race half-ogre = -2
+race groll = -3
+restrict level = 1
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND short sword
 
 
 index           = WPN_STILETTO
@@ -956,29 +1093,35 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   2
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-restrict level          = 40
-profession thief        = +2
-profession assassin     = +0
-profession fighter      = -1
-profession necromancer  = -2
-profession barbarian    = -1
-attack clothes  = {43, 2,13}
-attack sleather = {64, 2,14}
-attack hleather = {61, 1,15}
-attack chain    = {74, 0,16}
-attack plate    = {100,0,17} // stiletto 
-
+//_CUTBEGIN stiletto
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 2
+profession assassin = 2
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = 3
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+race elf = 1
+race dwarf = -1
+race halfling = 1
+race gnome = 1
+race brownie = 1
+race half-ogre = -2
+race groll = -3
+restrict level = 40
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
+//_CUTEND stiletto
 
 
 index           = WPN_DAGGER
@@ -990,33 +1133,34 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   2
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =  +1
-race gnome      =  +1
-race half-orc   =   0
-race half-ogre  =  -2
-race half-elf   =   0
-race brownie    =  +2
-race groll      =   0
-race darkelf    =   0
-profession ranger       = +2
-profession thief        = +2
-profession assassin     = +2
-profession fighter      = +0
-profession paladin      = +0
-profession knight       = +0
-profession necromancer  = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession barbarian    = +2
-attack clothes  = {43, 2,13}
-attack sleather = {64, 2,14}
-attack hleather = {61, 1,15}
-attack chain    = {74, 0,16}
-attack plate    = {100,0,17} //dagger
-
+//_CUTBEGIN dagger
+profession fighter = 2
+profession knight = 0
+profession paladin = 0
+profession ranger = 2
+profession thief = 2
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 2
+race elf = 1
+race dwarf = 0
+race halfling = 1
+race gnome = 1
+race brownie = 1
+race half-ogre = -2
+race groll = -3
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
+//_CUTEND dagger
 
 
 index           = WPN_SCIMITAR
@@ -1028,30 +1172,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =  -1
-race gnome      =  -1
-race half-orc   =  +3
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 16
-profession fighter      = +2
-profession knight       = +2
-profession paladin      = -2
-profession ranger       = +1
-profession thief        = +0
-profession assassin     = +0
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} // scimit 
+//_CUTBEGIN scimitar
+profession fighter = 2
+profession knight = 2
+profession paladin = -2
+profession ranger = 1
+profession thief = 0
+profession assassin = 0
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = 1
+race dwarf = -1
+race halfling = -1
+race gnome = -2
+race brownie = -2
+race half-orc = 3
+race groll = -2
+restrict level = 16
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND scimitar
+
 
 index           = WPN_SICKLE
 name            = sickle
@@ -1059,31 +1209,41 @@ sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_SLASH
 shield          = SHIELD_M_BLOCK
-ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+ability         = {ABIL_STR,ABIL_DEX,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  -2
-race halfling   =  -2
-race gnome      =  -1
-race half-orc   =  +1
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -2
-race groll      =   0
-race darkelf    =   0
-restrict level          = 10
-profession ranger       = +1
-profession druid        = +1
-profession necromancer  = +0
-profession fighter      = -1
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //sickle 
-
+//_CUTBEGIN sickle
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = 1
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 3
+profession obsolete = -7
+profession necromancer = 0
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race half-elf = 1
+race elf = 2
+race darkelf = 1
+race halfling = 1
+race gnome = 1
+race brownie = 2
+race half-orc = -1
+race half-ogre = -2
+race groll = -3
+restrict dexterity = 40
+restrict level = 10
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
+//_CUTEND sickle
 
 
 index           = WPN_FALCHION
@@ -1095,30 +1255,35 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =  -1
-race gnome      =  -1
-race half-orc   =  +2
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 8
-profession fighter      = +2
-profession ranger       = +1
-profession assassin     = +0
-profession knight       = -2
-profession paladin      = -2
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} // falchi 
-
+//_CUTBEGIN falchion
+profession fighter = 2
+profession knight = -2
+profession paladin = -2
+profession ranger = 1
+profession thief = -7
+profession assassin = 0
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = 1
+race dwarf = -1
+race halfling = -1
+race gnome = -2
+race brownie = -2
+race half-orc = 2
+race groll = -2
+restrict level = 8
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND falchion
 
 
 index           = WPN_MAIN_GAUCHE
@@ -1130,30 +1295,33 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   2
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-restrict level          = 14
-profession assassin     = +2
-profession fighter      = +0
-profession thief        = -1
-profession barbarian    = +0
-attack clothes  = {43, 2,13}
-attack sleather = {64, 2,14}
-attack hleather = {61, 1,15}
-attack chain    = {74, 0,16}
-attack plate    = {100,0,17} // main gauche 
-
-
-
+//_CUTBEGIN main gauche
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 0
+profession assassin = 2
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race dwarf = -1
+race half-orc = -1
+race half-ogre = -2
+race groll = -3
+restrict level = 14
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
+//_CUTEND main gauche
 
 
 
@@ -1168,29 +1336,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =  -2
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +2
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   0
-race darkelf    =   0
-restrict level          = 18
-restrict strength       = 75
-profession fighter      = +1
-profession knight       = +0
-profession paladin      = +2
-profession priest       = -2
-profession barbarian    = +2
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8}//b mace
+//_CUTBEGIN battle mace
+profession fighter = 2
+profession knight = 2
+profession paladin = 2
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -1
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = -1
+race dwarf = 2
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race half-ogre = 2
+race groll = 3
+restrict strength = 75
+restrict level = 18
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
+//_CUTEND battle mace
 
 
 
@@ -1239,28 +1414,35 @@ shield          = SHIELD_M_REDUCE // because its chained
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =  -1
-race gnome      =  -2
-race half-orc   =  +1
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -2
-race groll      =   0
-race darkelf    =   0
-restrict level          = 15
-restrict strength       = 75
-profession fighter      = +0
-profession knight       = -1
-profession paladin      = +0
-profession barbarian    = +1
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8} // flail 
+//_CUTBEGIN flail
+profession fighter = 2
+profession knight = 0
+profession paladin = 1
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 1
+race elf = -1
+race dwarf = 2
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race groll = -2
+restrict strength = 65
+restrict level = 15
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
+//_CUTEND flail
 
 
 
@@ -1274,28 +1456,34 @@ shield          = SHIELD_M_REDUCE // because it's chained
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-restrict level          = 20
-profession fighter      = +3
-profession knight       = +0
-profession paladin      = +2
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} // morning star
-
+//_CUTBEGIN morning star
+profession fighter = 2
+profession knight = 0
+profession paladin = 2
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = -1
+race dwarf = 3
+race halfling = -2
+race gnome = -3
+race brownie = -4
+race half-orc = 1
+restrict level = 20
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND morning star
 
 
 index           = WPN_BATTLE_CLUB
@@ -1307,29 +1495,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   8
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =  -2
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +2
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   0
-race darkelf    =   0
-restrict level          = 16
-restrict strength       = 75
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = -2
-profession priest       = -3
-profession barbarian    = +0
-attack clothes  = {61,10, 4}
-attack sleather = {51, 9, 5}
-attack hleather = {42, 8, 6}
-attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8} //b club 
+//_CUTBEGIN battle club
+profession fighter = 2
+profession knight = 1
+profession paladin = -2
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -1
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race elf = -1
+race dwarf = 2
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race half-ogre = 2
+race groll = 3
+restrict strength = 70
+restrict level = 16
+// Circle 2, 2H polearms
+attack clothes  = {65, 10,  4}
+attack sleather = {55,  9,  5}
+attack hleather = {45,  8,  6}
+attack chain    = {40,  7,  7}
+attack plate    = {35,  6,  8}
+//_CUTEND battle club
 
 
 
@@ -1342,30 +1537,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =   0
-race gnome      =  -1
-race half-orc   =  +2
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 5
-profession fighter      = +2
-profession ranger       = +2
-profession thief        = +0
-profession priest       = +0
-profession druid        = -2
-profession knight       = -2
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //club
+//_CUTBEGIN club
+profession fighter = 2
+profession knight = -2
+profession paladin = -7
+profession ranger = 2
+profession thief = 0
+profession assassin = -7
+profession priest = 0
+profession druid = -2
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = -1
+race dwarf = 2
+race halfling = -1
+race gnome = -1
+race brownie = -1
+race half-orc = 3
+race half-ogre = 2
+race groll = 1
+restrict level = 5
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND club
 
 
 
@@ -1381,34 +1582,27 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =   0
-race gnome      =  +1
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 0
-profession ranger       = +2
-profession assassin     = +2
-profession fighter      = +1
-profession priest       = +0
-profession druid        = +0
-profession necromancer  = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession knight       = -2
-profession paladin      = -4
-profession barbarian    = +1
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8}  // staff 
+//_CUTBEGIN quarterstaff
+profession fighter = 2
+profession knight = -2
+profession paladin = -3
+profession ranger = 3
+profession thief = 0
+profession assassin = 2
+profession priest = 0
+profession druid = 0
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 1
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND quarterstaff
 
 
 index           = WPN_SPEAR
@@ -1420,31 +1614,35 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 10
-profession fighter      = +1
-profession knight       = +2
-profession paladin      = +0
-profession ranger       = +1
-profession assassin     = -3
-profession barbarian    = +2
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8}  // spear 
-
-
+//_CUTBEGIN spear
+profession fighter = 2
+profession knight = 2
+profession paladin = 0
+profession ranger = 1
+profession thief = -7
+profession assassin = -3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race elf = 1
+race dwarf = -1
+race halfling = -2
+race gnome = -3
+race brownie = -4
+race half-ogre = -1
+race groll = -2
+restrict level = 10
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND spear
 
 
 index           = WPN_JAVELIN
@@ -1456,24 +1654,34 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-profession fighter      = +0
-profession barbarian    = +0
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8}  // javelin 
+//_CUTBEGIN javelin
+profession fighter = 1
+profession knight = 0
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race half-elf = 1
+race elf = 1
+race darkelf = 1
+race dwarf = 0
+race halfling = -2
+race gnome = -3
+race brownie = -4
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND javelin
 
 
 
@@ -1486,28 +1694,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =  -1
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +2
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   0
-race darkelf    =   0
-restrict level          = 28
-profession fighter      = +0
-profession knight       = -2
-profession paladin      = -2
-profession barbarian    = +0
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8} //halberd
-
+//_CUTBEGIN halberd
+profession fighter = 2
+profession knight = 0
+profession paladin = -1
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race elf = 1
+race dwarf = -1
+race halfling = -3
+race gnome = -4
+race brownie = -5
+race half-ogre = 1
+race groll = -1
+restrict strength = 50
+restrict level = 20
+// Circle 2, 2H polearms
+attack clothes  = {65, 10,  4}
+attack sleather = {55,  9,  5}
+attack hleather = {45,  8,  6}
+attack chain    = {40,  7,  7}
+attack plate    = {35,  6,  8}
+//_CUTEND halberd
 
 
 index           = WPN_BARDICHE  // Axe like head
@@ -1519,28 +1735,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =  -1
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -3
-race groll      =   0
-race darkelf    =   0
-restrict level          = 26
-profession fighter      = +0
-profession knight       = -2
-profession paladin      = -2
-profession barbarian    = +0
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8}  //bardiche
-
+//_CUTBEGIN bardiche
+profession fighter = 2
+profession knight = 0
+profession paladin = -1
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race elf = 1
+race dwarf = -1
+race halfling = -3
+race gnome = -4
+race brownie = -5
+race half-ogre = 1
+race groll = -1
+restrict strength = 50
+restrict level = 20
+// Circle 2, 2H polearms
+attack clothes  = {65, 10,  4}
+attack sleather = {55,  9,  5}
+attack hleather = {45,  8,  6}
+attack chain    = {40,  7,  7}
+attack plate    = {35,  6,  8}
+//_CUTEND bardiche
 
 
 index           = WPN_SCYTHE
@@ -1552,27 +1776,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -2
-race halfling   =  -2
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -2
-race groll      =   0
-race darkelf    =   0
-restrict level          = 20
-profession fighter      = +0
-profession knight       = -2
-profession necromancer  = -4
-profession barbarian    = +0
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8}  //scythe 
+//_CUTBEGIN scythe
+profession fighter = -1
+profession knight = -2
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -2
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race elf = -1
+race dwarf = -3
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race half-ogre = 2
+race groll = -2
+restrict strength = 40
+restrict level = 20
+// Circle 2, 2H polearms
+attack clothes  = {65, 10,  4}
+attack sleather = {55,  9,  5}
+attack hleather = {45,  8,  6}
+attack chain    = {40,  7,  7}
+attack plate    = {35,  6,  8}
+//_CUTEND scythe
 
 
 
@@ -1585,25 +1818,34 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =   0
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -2
-race groll      =  +3
-race darkelf    =   0
-restrict level          = 16
-profession fighter      = +0
-profession barbarian    = +0
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8} //trident
+//_CUTBEGIN trident
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+race elf = -2
+race dwarf = -3
+race halfling = -4
+race gnome = -5
+race brownie = -6
+restrict strength = 40
+restrict level = 16
+// Circle 2, 2H polearms
+attack clothes  = {65, 10,  4}
+attack sleather = {55,  9,  5}
+attack hleather = {45,  8,  6}
+attack chain    = {40,  7,  7}
+attack plate    = {35,  6,  8}
+//_CUTEND trident
 
 
 
@@ -1616,103 +1858,40 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   6
 fumble          =   5
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 21
-profession fighter      = -2
-profession knight       = +2
-profession paladin      = +2
-profession barbarian    = +2
-attack clothes  = {68,10, 4}
-attack sleather = {65, 9, 5}
-attack hleather = {58, 8, 6}
-attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8}  // lance 
-
-
+//_CUTBEGIN lance
+profession fighter = -1
+profession knight = 2
+profession paladin = 3
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race elf = -1
+race darkelf = -1
+race dwarf = -2
+race halfling = -4
+race gnome = -5
+race brownie = -6
+race half-ogre = 1
+race groll = -3
+restrict level = 21
+// Circle 2, 2H polearms
+attack clothes  = {65, 10,  4}
+attack sleather = {55,  9,  5}
+attack hleather = {45,  8,  6}
+attack chain    = {40,  7,  7}
+attack plate    = {35,  6,  8}
+//_CUTEND lance
 
 
 
 // ====================== NATURAL ==================== 
-
-index           = WPN_FIST
-name            = fist
-sphere          = WPN_UNARMED
-hands           =   1
-type            =  WPNT_BLUDGEON
-shield          = SHIELD_M_BLOCK
-ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
-speed           =   1
-fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =  +2
-race halfling   =  +1
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =  +2
-race half-elf   =   0
-race brownie    =  -1
-race groll      =  +1
-race darkelf    =   0
-profession fighter      = +0
-profession knight       = +1
-profession paladin      = +0
-profession ranger       = -1
-profession thief        = -2
-profession assassin     = +3
-profession priest       = -3
-profession barbarian    = +0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // fist 
-
-
-
-index           = WPN_KICK
-name            = kick
-sphere          = WPN_UNARMED
-hands           =   1
-type            =  WPNT_BLUDGEON
-shield          = SHIELD_M_BLOCK
-ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
-speed           =   1
-fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =  -2
-race halfling   =  +1
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -2
-race groll      =  +2
-race darkelf    =   0
-restrict level          = 12
-profession fighter      = -1
-profession assassin     = +0
-profession ranger       = +0
-profession thief        = -2
-profession barbarian    = +0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // kick 
-
-
 
 index           = WPN_ELBOW
 name            = elbow
@@ -1723,27 +1902,32 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =  -2
-race halfling   =  +1
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -2
-race groll      =  +2
-race darkelf    =   0
-restrict level          = 8
-profession assassin     = +0
-profession fighter      = -2
-profession thief        = -2
-profession barbarian    = +0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // elbow 
+//_CUTBEGIN elbow
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 1
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race dwarf = 1
+race halfling = 1
+race groll = 1
+restrict dexterity = 40
+restrict level = 8
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND elbow
 
 
 
@@ -1756,87 +1940,287 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =  -2
-race halfling   =  +1
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =  +1
-race half-elf   =   0
-race brownie    =  -2
-race groll      =  +2
-race darkelf    =   0
-restrict level          = 35
-profession assassin     = +0
-profession fighter      = -2
-profession thief        = -2
-profession barbarian    = +0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // knee 
+//_CUTBEGIN knee
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 1
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race dwarf = 0
+race halfling = 1
+race groll = 1
+restrict dexterity = 40
+restrict level = 35
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND knee
 
 
-
-index           = WPN_BITE
-name            = bite
+index           = WPN_FIST
+name            = fist
 sphere          = WPN_UNARMED
 hands           =   1
-type            =  WPNT_PIERCE
+type            =  WPNT_BLUDGEON
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =  +2
-race darkelf    =   0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // bite 
+//_CUTBEGIN fist
+profession fighter = 1
+profession knight = 1
+profession paladin = -1
+profession ranger = 0
+profession thief = 1
+profession assassin = 3
+profession priest = -2
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race dwarf = 1
+race half-ogre = 1
+race groll = 2
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND fist
 
 
-
-index           = WPN_STING
-name            = sting
+index           = WPN_KICK_TINY
+name            = kick tiny
 sphere          = WPN_UNARMED
 hands           =   1
-type            =  WPNT_PIERCE
+type            =  WPNT_BLUDGEON
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // sting 
+//_CUTBEGIN kick tiny
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 1
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race dwarf = 0
+race halfling = 1
+race groll = 1
+restrict dexterity = 40
+restrict level = 12
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND kick tiny
 
 
+index           = WPN_KICK_SMALL  // player skill too (fighter, etc.)
+name            = kick
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN kick small
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 1
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race dwarf = 0
+race halfling = 1
+race groll = 1
+restrict dexterity = 40
+restrict level = 12
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND kick small
 
-index           = WPN_CLAW
+
+index           = WPN_KICK_MEDUIM
+name            = kick medium
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN kick medium
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 1
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race dwarf = 0
+race halfling = 1
+race groll = 1
+restrict dexterity = 40
+restrict level = 12
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND kick medium
+
+
+index           = WPN_KICK_LARGE
+name            = kick large
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN kick large
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 1
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race dwarf = 0
+race halfling = 1
+race groll = 1
+restrict dexterity = 40
+restrict level = 12
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND kick large
+
+
+index           = WPN_KICK_HUGE
+name            = kick huge
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN kick huge
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 1
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race dwarf = 0
+race halfling = 1
+race groll = 1
+restrict dexterity = 40
+restrict level = 12
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
+//_CUTEND kick huge
+
+
+index           = WPN_CLAW_TINY
+name            = claw tiny
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN claw tiny
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND claw tiny
+
+
+index           = WPN_CLAW_SMALL   // player skill too (assassin)
 name            = claw
 sphere          = WPN_UNARMED
 hands           =   1
@@ -1845,27 +2229,447 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =   0
-race groll      =  +3
-race darkelf    =   0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // claw 
+//_CUTBEGIN claw small
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND claw small
 
 
+index           = WPN_CLAW_MEDIUM
+name            = claw medium
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN claw medium
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND claw medium
 
-index           = WPN_CRUSH
-name            = crush
+
+index           = WPN_CLAW_LARGE
+name            = claw large
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN claw large
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND claw large
+
+
+index           = WPN_CLAW_HUGE
+name            = claw huge
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN claw huge
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND claw huge
+
+
+index           = WPN_BITE_TINY
+name            = bite tiny
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN bite tiny
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND bite tiny
+
+
+index           = WPN_BITE_SMALL
+name            = bite small
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN bite small
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND bite small
+
+
+index           = WPN_BITE_MEDIUM
+name            = bite medium
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN bite medium
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND bite medium
+
+
+index           = WPN_BITE_LARGE
+name            = bite large
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN bite large
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND bite large
+
+
+index           = WPN_BITE_HUGE
+name            = bite huge
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN bite huge
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND bite huge
+
+
+index           = WPN_STING_TINY
+name            = sting tiny
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN sting tiny
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND sting tiny
+
+
+index           = WPN_STING_SMALL
+name            = sting small
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN sting small
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND sting small
+
+
+index           = WPN_STING_MEDIUM
+name            = sting medium
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN sting medium
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND sting medium
+
+
+index           = WPN_STING_LARGE
+name            = sting large
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN sting large
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND sting large
+
+
+index           = WPN_STING_HUGE
+name            = sting huge
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN sting huge
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND sting huge
+
+
+index           = WPN_CRUSH_TINY
+name            = crush tiny
 sphere          = WPN_UNARMED
 hands           =   1
 type            =  WPNT_BLUDGEON
@@ -1873,23 +2677,155 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =   0
-race halfling   =   0
-race gnome      =   0
-race half-orc   =   0
-race half-ogre  =  +2
-race half-elf   =   0
-race brownie    =   0
-race groll      =   0
-race darkelf    =   0
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} // crush 
+//_CUTBEGIN crush tiny
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND crush tiny
 
+
+index           = WPN_CRUSH_SMALL
+name            = crush small
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN crush small
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND crush small
+
+
+index           = WPN_CRUSH_MEDIUM
+name            = crush medium
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN crush medium
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND crush medium
+
+
+index           = WPN_CRUSH_LARGE
+name            = crush large
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN crush large
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND crush large
+
+
+index           = WPN_CRUSH_HUGE
+name            = crush huge
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+//_CUTBEGIN crush huge
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND crush huge
 
 
 // ====================== SPECIAL ========================= 
@@ -1903,29 +2839,33 @@ shield          = SHIELD_M_USELESS // because its a whip...
 ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   2
 fumble          =   2
-race human      =   0
-race elf        =   0
-race dwarf      =  -1
-race halfling   =   0
-race gnome      =  -2
-race half-orc   =   0
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 9
-restrict dexterity      = +30
-profession fighter      = -2
-profession ranger       = +2
-profession thief        = +2
-profession assassin     = +1
-profession barbarian    = +0
-attack clothes  = {43, 2,13}
-attack sleather = {64, 2,14}
-attack hleather = {61, 1,15}
-attack chain    = {74, 0,16}
-attack plate    = {100,0,17} // whip 
+//_CUTBEGIN whip
+profession fighter = -2
+profession knight = -7
+profession paladin = -7
+profession ranger = 2
+profession thief = 2
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+race half-elf = 1
+race elf = -1
+race dwarf = -3
+race groll = -3
+restrict dexterity = 50
+restrict level = 9
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
+//_CUTEND whip
 
 
 
@@ -1938,28 +2878,39 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   4
 fumble          =   3
-race human      =   0
-race elf        =  +2
-race dwarf      =  -1
-race halfling   =   0
-race gnome      =  -1
-race half-orc   =   0
-race half-ogre  =  -2
-race half-elf   =  +1
-race brownie    =   0
-race groll      =  -1
-race darkelf    =  +2
-restrict level          = 10
-restrict dexterity      = +30
-profession ranger       = +2
-profession thief        = +0
-profession fighter      = -2
-profession barbarian    = -2
-attack clothes  = {59, 3,11}
-attack sleather = {67, 2,12}
-attack hleather = {64, 1,13}
-attack chain    = {76, 0,14}
-attack plate    = {100,0,15} //bow
+//_CUTBEGIN bow
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = 3
+profession thief = 0
+profession assassin = 0
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -2
+race half-elf = 1
+race elf = 2
+race darkelf = 1
+race dwarf = -2
+race halfling = -1
+race gnome = -2
+race brownie = -1
+race half-orc = -1
+race half-ogre = -3
+race groll = -3
+restrict dexterity = 30
+restrict level = 10
+// Circle 5, Ranged weapons
+attack clothes  = {40,  3,  8}
+attack sleather = {45,  2,  9}
+attack hleather = {50,  1, 10}
+attack chain    = {60,  1, 11}
+attack plate    = {70,  1, 12}
+//_CUTEND bow
 
 
 
@@ -1972,28 +2923,37 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   6
 fumble          =   5
-race human      =  +2
-race elf        =  +1
-race dwarf      =   0
-race halfling   =  -1
-race gnome      =  -1
-race half-orc   =  -1
-race half-ogre  =  -2
-race half-elf   =   0
-race brownie    =   0
-race groll      =  -1
-race darkelf    =  +1
-restrict level          = 20
-restrict dexterity      = +30
-profession ranger       = +0
-profession fighter      = -1
-profession barbarian    = -1
-attack clothes  = {50, 3, 8}
-attack sleather = {40, 5, 9}
-attack hleather = {30, 4,10}
-attack chain    = {20, 3,11}
-attack plate    = {10, 2,12} //crossbow
-
+//_CUTBEGIN crossbow
+profession fighter = 1
+profession knight = 0
+profession paladin = -7
+profession ranger = 0
+profession thief = -7
+profession assassin = 1
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+race half-elf = -1
+race elf = -1
+race dwarf = 2
+race halfling = -2
+race gnome = -3
+race brownie = -4
+race half-ogre = -1
+race groll = -2
+restrict dexterity = 30
+restrict level = 20
+// Circle 5, Ranged weapons
+attack clothes  = {40,  3,  8}
+attack sleather = {45,  2,  9}
+attack hleather = {50,  1, 10}
+attack chain    = {60,  1, 11}
+attack plate    = {70,  1, 12}
+//_CUTEND crossbow
 
 
 index           = WPN_SLING
@@ -2005,30 +2965,36 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   3
 fumble          =   4
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =  +2
-race gnome      =  -1
-race half-orc   =  +2
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 1
-restrict dexterity      = +10
-profession fighter      = -1
-profession ranger       = +2
-profession thief        = +0
-profession assassin     = +0
-profession druid        = -3
-profession barbarian    = -1
+//_CUTBEGIN sling
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = 2
+profession thief = 2
+profession assassin = 2
+profession priest = -7
+profession druid = 0
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -3
+race dwarf = 0
+race halfling = 2
+race gnome = 2
+race brownie = 1
+race half-orc = 1
+race half-ogre = -2
+race groll = -4
+restrict dexterity = 20
+restrict level = 1
+// Circle 5, Ranged weapons
 attack clothes  = {51, 1,13}
 attack sleather = {76, 1,14}
 attack hleather = {74, 0,15}
 attack chain    = {100,0,16}
 attack plate    = {100,0,17} //sling
+//_CUTEND sling
 
 
 /*
