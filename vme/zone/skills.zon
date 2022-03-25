@@ -1702,6 +1702,7 @@ dilend
 #define  SKIN_NONE    "NONE"
 
 
+// do_glance
 dilbegin ski_glance(arg : string);
 external
 	integer skillresist (aa : integer, ad : integer,
@@ -8765,8 +8766,9 @@ wait (SFB_PRE, (command(CMD_AUTO_DAMAGE) and
 }
 dilend /* weapon_curare */
 
-dilbegin shoot(arg : string);
 
+// do_shoot
+dilbegin shoot(arg : string);
 external
    integer skillresist@skills(aa : integer, ad : integer, sa : integer,
                              sd : integer);
