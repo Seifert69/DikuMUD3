@@ -1314,7 +1314,7 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_WHITE_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE,, WPN_CLAW_HUGE)
+   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          BLUE DRAGONS                                            */
