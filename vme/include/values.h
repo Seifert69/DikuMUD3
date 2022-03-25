@@ -257,31 +257,33 @@ END HEADER*/
 #define WPN_WHIP         40
 
 
-#define WPN_KICK_TINY     81
+#define WPN_KICK_TINY     100
 #define WPN_KICK_SMALL    WPN_KICK  // This is also the humanoid kick practiced, naming issue
-#define WPN_KICK_MEDIUM   83
-#define WPN_KICK_LARGE    84
-#define WPN_KICK_HUGE     85
-#define WPN_BITE_TINY     81
-#define WPN_BITE_SMALL    82
-#define WPN_BITE_MEDIUM   83
-#define WPN_BITE_LARGE    84
-#define WPN_BITE_HUGE     85
-#define WPN_STING_TINY    86
-#define WPN_STING_SMALL   87
-#define WPN_STING_MEDIUM  88
-#define WPN_STING_LARGE   89
-#define WPN_STING_HUGE    90
-#define WPN_CLAW_TINY     91
+#define WPN_KICK_MEDIUM   102
+#define WPN_KICK_LARGE    103
+#define WPN_KICK_HUGE     104
+#define WPN_BITE_TINY     105
+#define WPN_BITE_SMALL    106
+#define WPN_BITE_MEDIUM   107
+#define WPN_BITE_LARGE    108
+#define WPN_BITE_HUGE     109
+#define WPN_STING_TINY    110
+#define WPN_STING_SMALL   111
+#define WPN_STING_MEDIUM  112
+#define WPN_STING_LARGE   113
+#define WPN_STING_HUGE    114
+#define WPN_CLAW_TINY     115
 #define WPN_CLAW_SMALL    WPN_CLAW  // This is also the humanoid claw practiced (assassins), naming issue
-#define WPN_CLAW_MEDIUM   93
-#define WPN_CLAW_LARGE    94
-#define WPN_CLAW_HUGE     95
-#define WPN_CRUSH_TINY    96
-#define WPN_CRUSH_SMALL   97
-#define WPN_CRUSH_MEDIUM  98
-#define WPN_CRUSH_LARGE   99
-#define WPN_CRUSH_HUGE   100
+#define WPN_CLAW_MEDIUM   117
+#define WPN_CLAW_LARGE    118
+#define WPN_CLAW_HUGE     119
+#define WPN_CRUSH_TINY    120
+#define WPN_CRUSH_SMALL   121
+#define WPN_CRUSH_MEDIUM  122
+#define WPN_CRUSH_LARGE   123
+#define WPN_CRUSH_HUGE    124
+
+#define LAST_WEAPON       125
 
 // MISSING WEAPONS ?
 
@@ -339,7 +341,6 @@ END HEADER*/
 #define WPN_STAFF WPN_QUARTERSTAFF
 
 
-#define LAST_WEAPON       101
 
 // #define WPN_HAND_HAMMER  72  
 ///#define WPN_KATANA       13
