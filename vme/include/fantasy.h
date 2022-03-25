@@ -1207,7 +1207,7 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
 dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 1, "ANY",\
                {"$1n attacks $3n!", "$1n attacks you!"}); \
 
-#define BASE_DRAGON_GREEN(MLVL, GENDER, ARM, WPN  \
+#define BASE_DRAGON_GREEN(MLVL, GENDER, ARM, WPN)  \
    BASE_DRAGON(MLVL, GENDER,ARM, "gas breath", WPN)  \
    MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(5,5,5,5,15,5) \
