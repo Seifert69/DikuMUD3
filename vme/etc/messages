@@ -343,7 +343,7 @@ Your $2N pins $3n like an insect, and kills $3m instantly.~
 You die instantly as $1n's $2N pins you like an insect.~
 $1n pins $3n with $1s $2N, and kills $3m instantly.~
 
- 0 35 -1 /* KICK (Weapon) */
+ 0 35 100 102 103 104 -1 /* KICK (Weapon) */
 You kick at the passing wind.~
 $1n kicks in the air, swinging $1s feet wildly at you.~
 $1n kicks air, trying to hit $3n.~
@@ -523,7 +523,7 @@ You kill $3n with your punch.~
 $1n kills you with $1s punch.~
 $1n kills $3n with a deadly punch.~
 
-   0 36 37 -1      /* WEAPON: BITE STING */
+   0 105 106 107 108 109 110 111 112 113 114  -1      /* WEAPON: BITE STING */
 You bite holes in the air.~
 $1n bites holes in the air, instead of your body.~
 $1n bites holes in the air trying to hit $3n.~
@@ -568,7 +568,7 @@ You take a huge bite of $3n, and kill $3m instantly.~
 $1n takes a big bite of you, killing you instantly.~
 $1n takes a big bite of $3n, killing $3m instantly.~
 
-   0 38 -1      /* WEAPON: CLAW */
+   0 38 115 117 118 119 -1      /* WEAPON: CLAW */
 You scratch the air with your claws.~
 $1n uses $1s claws to scratch the air, instead of your body.~
 $1n uses $1s claws to scratch the air, trying to rip $3n.~
@@ -613,7 +613,7 @@ You shred $3n with your claw, and kill $3m instantly.~
 $1n shreds you with $1s claws, killing you instantly.~
 $1n shreds $3n, killing $3m instantly.~
 
-   0 39 -1      /* WEAPON: CRUSH */
+   0 120 121 122 123 124 -1      /* WEAPON: CRUSH */
 You crush the air.~
 $1n crushes the air, instead of your body.~
 $1n crushes the air, trying to rip $3n.~
