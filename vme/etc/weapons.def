@@ -2080,7 +2080,7 @@ attack plate    = {95,  2, 12}
 //_CUTEND kick small
 
 
-index           = WPN_KICK_MEDUIM
+index           = WPN_KICK_MEDIUM
 name            = kick medium
 sphere          = WPN_UNARMED
 hands           =   1

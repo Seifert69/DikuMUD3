@@ -967,9 +967,9 @@ static void ability_read()
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
             dummy = atoi(pCh);
-            if (!is_in(dummy, -3, +3))
+            if (!is_in(dummy, -3, +4))
             {
-                slog(LOG_ALL, 0, "Abilities: race modifier %d for %s not in [-3..+3]", dummy, pTmp);
+                slog(LOG_ALL, 0, "Abilities: race modifier %d for %s not in [-3..+4]", dummy, pTmp);
                 continue;
             }
 

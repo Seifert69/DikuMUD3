@@ -148,7 +148,7 @@ END HEADER*/
 #define PROFESSION_KEY      "$profession"
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Obsolete - Do Not Select","Necromancer", "Conjurer", "Sorcerer", \
+                           "Priest", "Druid", "Obsolete","Necromancer", "Conjurer", "Sorcerer", \
 						   "Barbarian"
 
 
