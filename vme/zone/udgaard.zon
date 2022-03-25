@@ -11091,13 +11091,13 @@ code
 :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   if (activator.level < 50)
+   if (activator.level < 250)
       goto start;
 
 	pc := qstWaitHero@quests(NICHOLAS_QUEST, activator,
       {"::Father Nicholas looks at you.::",
       "think",
-      "say $1N, I think you're finally ready. I can see you have learned a lot.",
+      "say $1N, I think you're finally ready. I can see you've learned a lot.",
       "say Only once in a lifetime can one consider treading a new path.",
       "say I did so myself. When I was a young man, I was a warrior and then only later did I become a man of the Gods.",
       "whisper $1N If you want to consider treading a new path just <a cmd='#'>nod</a> your head, and I'll give you the details."
@@ -11128,14 +11128,26 @@ code
    else
       goto q1;
 
+:q2:
+   wait(SFB_CMD, activator == pc);
+   if (command("say") or command("tell") or command("whisper") or command("nod") or command("shake"))
+   {
+      pause;
+      exec("grunt", self);
+   }
+   else
+      goto q2;
+
    s := pc.name;
    Explainer@quests(pc, 
-      {"point $3n",
-      "::Suddenly youre lifted up in the air at great speed. You scream at the top of your lungs.::$3n screams as $3e is lifted up into the air at great speed and vanishes."});
+      {"point $1N",
+      "::Suddenly you're lifted up in the air at great speed. You scream at the top of your lungs.::$3n screams as $3e is lifted up into the air at great speed and vanishes."});
 
    unsecure(pc);
-   link(pc, findsymbolic("dock1@xiyang2"));   
+   link(pc, findsymbolic("ship_hire@xiyang2"));   
    exec("tell "+s+" seek out a grocer on Xiyang City and bring me a small shrubbery.", self);
+
+   // Make the shrubbery break if you teleport. You need to sail back.
    goto start;
 
 :lostpc:
