@@ -1639,12 +1639,12 @@ race brownie = -4
 race half-ogre = -1
 race groll = -2
 restrict level = 10
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// 2H
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND spear
 
 

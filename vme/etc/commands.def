@@ -619,29 +619,21 @@ minpos         = POSITION_RESTING
 turns          = PULSE_VIOLENCE/2
 internal       = consider
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-profession fighter      = +0
-profession knight       = +2
-profession paladin      = +2
-profession ranger       = +5
-profession thief        = +5
-profession assassin     = +5
-profession priest       = +2
-profession druid        = +4
-profession mage         = +5
-profession sorcerer     = +0
-profession barbarian 	= +4
-
+//_CUTBEGIN consider
+profession fighter = 0
+profession knight = 1
+profession paladin = 1
+profession ranger = 5
+profession thief = 5
+profession assassin = 5
+profession priest = 2
+profession druid = 3
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 2
+profession sorcerer = 1
+profession barbarian = 0
+//_CUTEND consider
 
 
 command  = contract
@@ -910,18 +902,22 @@ command       = glance
 minpos        = POSITION_STANDING
 func          = ski_glance@skills
 type          = TYPE_SKILL
-race human    =  0
-race elf      =  0
-race dwarf    =  0
-race halfling =  0
-race gnome    =  0
-race half-orc  = 0
-race half-ogre = 0
-race half-elf  = 0
-race brownie   = 0
-race groll     = 0
-race darkelf   = 0
 turns          = 0
+//_CUTBEGIN glance
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 3
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+//_CUTEND glance
 
 index         = SKI_RESIZE_CLOTHES
 name          = resize clothes
@@ -929,88 +925,79 @@ command       = resize
 minpos        = POSITION_STANDING
 func          = resize@skills
 type = TYPE_SKILL
-race human    =  0
-race elf      = +2
-race dwarf    = -2
-race halfling =  0
-race gnome    =  0
-race half-orc  =  -1
-race half-ogre =  -2
-race half-elf  =  +1
-race brownie   =  +2
-race groll     =  -3
-race darkelf   =  +1
 turns    = 0
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = +0
-profession ranger       = +0
-profession thief        = +0
-profession assassin     = +0
-profession priest       = +0
-profession druid        = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession barbarian 	= +0
 auto teacher no add     =  1 // Don't add automatically
+//_CUTBEGIN resize clothes
+profession fighter = 0
+profession knight = 0
+profession paladin = 0
+profession ranger = 0
+profession thief = 0
+profession assassin = 0
+profession priest = 0
+profession druid = 0
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 0
+race elf = 2
+race half-elf = 1
+race brownie = 2
+race darkelf = 1
+//_CUTEND resize clothes
+
 
 /* - - - - Yet another definition of a skill - - - - */
 
 index         = SKI_RESIZE_LEATHER
 name          = resize leather
 type = TYPE_SKILL
-race human    =   0
-race elf      =   0
-race dwarf    =   0
-race halfling =   0
-race gnome    =   0
-race half-orc  =   0
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -3
-race darkelf   =  +1
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = +0
-profession ranger       = +0
-profession thief        = +0
-profession assassin     = +0
-profession priest       = +0
-profession druid        = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession barbarian 	= +0
 auto teacher no add     =  1 // Don't add automatically
+//_CUTBEGIN resize leather
+profession fighter = 0
+profession knight = 0
+profession paladin = 0
+profession ranger = 0
+profession thief = 0
+profession assassin = 0
+profession priest = 0
+profession druid = 0
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 0
+race half-elf = 1
+race brownie = 1
+race darkelf = 1
+//_CUTEND resize leather
 
 /* - - - - Yet another definition of a skill - - - - */
 
 index         = SKI_RESIZE_METAL
 name          = resize metal
 type = TYPE_SKILL
-race human    =  0
-race elf      =  0
-race dwarf    = +3
-race halfling =  0
-race gnome    =  0
-race half-orc  =   0
-race half-ogre =  +1
-race half-elf  =  +1
-race brownie   =  -1
-race groll     =  -2
-race darkelf   =  +1
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = +0
-profession ranger       = +0
-profession thief        = +0
-profession assassin     = +0
-profession priest       = +0
-profession druid        = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession barbarian 	= +0
 auto teacher no add     =  1 // Don't add automatically
+//_CUTBEGIN resize metal
+profession fighter = 0
+profession knight = 0
+profession paladin = 0
+profession ranger = 0
+profession thief = 0
+profession assassin = 0
+profession priest = 0
+profession druid = 0
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 0
+race dwarf = 3
+race half-ogre = 1
+race half-elf = 1
+race darkelf = 1
+//_CUTEND resize metal
 
 /* - - - - Yet another definition of a skill - - - - */
 index         = SKI_EVALUATE
@@ -1019,30 +1006,23 @@ command       = evaluate
 func          = evaluate@commands
 minpos        = POSITION_STANDING
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  +1
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
 turns    = 6
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = +0
-profession ranger       = +0
-profession thief        = +0
-profession assassin     = +0
-profession priest       = +0
-profession druid        = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession barbarian 	= +0
-
+//_CUTBEGIN Evaluating
+profession fighter = -1
+profession knight = -1
+profession paladin = -1
+profession ranger = 0
+profession thief = 3
+profession assassin = 3
+profession priest = -2
+profession druid = -2
+profession obsolete = -7
+profession necromancer = -1
+profession mage = -1
+profession sorcerer = -1
+profession barbarian = -3
+race half-ogre = 1
+//_CUTEND Evaluating
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1053,52 +1033,49 @@ minpos         = POSITION_STANDING
 turns          = PULSE_VIOLENCE/2
 func           = cuff@commands
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  +1
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = +0
-profession ranger       = +0
-profession thief        = +0
-profession assassin     = +0
-profession priest       = +0
-profession druid        = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession barbarian 	= +0
 auto teacher no add     =  1 // Don't add automatically
+//_CUTBEGIN hand cuffing
+profession fighter = 0
+profession knight = 0
+profession paladin = 0
+profession ranger = 0
+profession thief = 0
+profession assassin = 0
+profession priest = 0
+profession druid = 0
+profession obsolete = -7
+profession necromancer = -7
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 0
+race half-ogre = 1
+//_CUTEND hand cuffing
 
 /* - - - - Yet another definition of a skill - - - - */
 
 index          = SKI_DUAL_WIELD
 name           = two weapon style
 type = TYPE_SKILL
-race human     =   0
-race elf       =  +1
-race dwarf     =  -1
-race halfling  =  +1
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  +2
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =  +1
-restrict dexterity      = 30
-profession assassin     = +2
-profession thief        = +0
-profession ranger       = +0
-profession fighter      = -1
-profession barbarian	= +1
+//_CUTBEGIN two weapon style
+profession fighter = -1
+profession knight = -7
+profession paladin = -7
+profession ranger = 3
+profession thief = 0
+profession assassin = 2
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+race elf = 1
+race halfling = 1
+race half-ogre = 2
+race darkelf = 1
+restrict dexterity = 30
+//_CUTEND two weapon style
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1110,21 +1087,32 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = ski_turn@skills
 type = TYPE_SKILL
-race human     =  +1
-race elf       =   0
-race dwarf     =  +1
-race halfling  =  -1
-race gnome     =  -1
-race half-orc  =  -1
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =  +2
-restrict divine         = 10
-profession priest       = +5
-profession knight       = -3
-profession paladin      = -3
+//_CUTBEGIN turn undead
+profession fighter = -7
+profession knight = -7
+profession paladin = 1
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = 5
+profession druid = 3
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race human = 2
+race elf = 1
+race dwarf = 1
+race half-orc = -1
+race half-ogre = -1
+race half-elf = 1
+race brownie = 0
+race groll = -1
+race darkelf = -1
+restrict divine = 20
+restrict level = 5
+//_CUTEND turn undead
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1136,24 +1124,27 @@ minpos         = POSITION_RESTING
 turns          = 2*PULSE_VIOLENCE
 func           = ski_scroll_use@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =  +1
-race dwarf     =  -1
-race halfling  =   0
-race gnome     =  +1
-race half-orc  =  -2
-race half-ogre =  -3
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -3
-race darkelf   =  +2
-restrict brain          = 35
-profession mage         = +5
-profession sorcerer     = +5
-profession druid        = +2
-profession necromancer  = +2
-profession priest       = +2
-profession assassin     = -3
+//_CUTBEGIN scroll use
+profession fighter = -7
+profession knight = 0
+profession paladin = 0
+profession ranger = 0
+profession thief = -3
+profession assassin = 0
+profession priest = 2
+profession druid = 2
+profession obsolete = -7
+profession necromancer = 2
+profession mage = 5
+profession sorcerer = 5
+profession barbarian = -7
+race elf = 1
+race gnome = 1
+race half-elf = 1
+race brownie = 1
+race darkelf = 2
+restrict brain = 35
+//_CUTEND scroll use
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1164,22 +1155,27 @@ minpos         = POSITION_SITTING
 turns          = PULSE_VIOLENCE/2
 func           = do_use@skills
 type           = TYPE_SKILL
-race human     =  +1
-race elf       =   0
-race dwarf     =  -1
-race halfling  =  +1
-race gnome     =  +1
-race half-orc  =  -1
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  +2
-race groll     =  -2
-race darkelf   =  +1
-restrict brain          =  5
-profession mage         = +5
-profession sorcerer     = +5
-profession druid        = +3
-profession necromancer  = +0
+//_CUTBEGIN wand use
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 3
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 5
+profession sorcerer = 5
+profession barbarian = -7
+race human = 1
+race halfling = 1
+race gnome = 1
+race brownie = 2
+race darkelf = 1
+restrict brain = 20
+//_CUTEND wand use
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1191,30 +1187,22 @@ minpos        = POSITION_RESTING
 turns         = PULSE_VIOLENCE/2
 func          = diagnose@skills
 type          = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
 turns    = 6
-profession priest       = +5
-profession necromancer  = +5
-profession thief        = +4
-profession assassin     = +4
-profession druid        = +4
-profession mage         = +3
-profession sorcerer     = +3
-profession knight       = +2
-profession paladin      = +2
-profession ranger       = +2
-profession fighter      = +0
-profession barbarian 	= +0
+//_CUTBEGIN diagnostics
+profession fighter = 0
+profession knight = 0
+profession paladin = 1
+profession ranger = 1
+profession thief = 3
+profession assassin = 3
+profession priest = 5
+profession druid = 4
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 0
+//_CUTEND diagnostics
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1226,20 +1214,21 @@ minpos         = POSITION_RESTING
 turns          = PULSE_VIOLENCE/2
 func           = ski_appraise@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-profession ranger       = +5
-profession thief        = +5
-profession assassin     = +0
+//_CUTBEGIN appraisal
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 5
+profession assassin = 4
+profession priest = -1
+profession druid = -2
+profession obsolete = -7
+profession necromancer = -2
+profession mage = 1
+profession sorcerer = 2
+profession barbarian = -7
+//_CUTEND appraisal
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1249,18 +1238,24 @@ command        = ventriloquate
 minpos         = POSITION_RESTING
 func           = ski_ventril@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =  -1
-race halfling  =  +1
-race gnome     =  +1
-race half-orc  =   0
-race half-ogre =  -1
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =   0
-profession thief        = +5
+//_CUTBEGIN ventriloquate
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 5
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 1
+race gnome = 1
+race brownie = 1
+//_CUTEND ventriloquate
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1270,21 +1265,28 @@ command        = weather
 minpos         = POSITION_RESTING
 func           = ski_weather@skills
 type = TYPE_SKILL
-race human     =  +1
-race elf       =  +2
-race dwarf     =  -2
-race halfling  =   0
-race gnome     =  -1
-race half-orc  =  -1
-race half-ogre =  +1
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =   0
-race darkelf   =  +1
-restrict brain          = 30
-profession druid        = +5
-profession sorcerer     = +3
-
+//_CUTBEGIN weather watching
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 5
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = 2
+profession barbarian = -7
+race human = 1
+race elf = 2
+race half-ogre = 1
+race half-elf = 1
+race brownie = 1
+race darkelf = 1
+restrict brain = 30
+//_CUTEND weather watching
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1295,29 +1297,26 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 type           = TYPE_SKILL
 func           = flee@skills
-race human     =   0
-race elf       =  +1
-race dwarf     =  -1
-race halfling  =  +1
-race gnome     =   0
-race half-orc  =  +1
-race half-ogre =  -1
-race half-elf  =   0
-race brownie   =  +2
-race groll     =  -2
-race darkelf   =  +2
-profession thief        = +4
-profession assassin     = +4
-profession ranger       = +3
-profession fighter      = +0
-profession priest       = +0
-profession druid        = +0
-profession necromancer  = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession knight       = -4
-profession paladin      = -4
-profession barbarian 	= +0
+//_CUTBEGIN fleeing
+profession fighter = 1
+profession knight = -2
+profession paladin = -4
+profession ranger = 2
+profession thief = 4
+profession assassin = 4
+profession priest = 0
+profession druid = 0
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 0
+race elf = 1
+race halfling = 1
+race half-orc = 1
+race brownie = 2
+race darkelf = 2
+//_CUTEND fleeing
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1327,20 +1326,25 @@ command        = sneak
 minpos        = POSITION_STANDING
 func           = ski_sneak@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  +2
-race dwarf     =  -1
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -2
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -1
-race darkelf   =   0
-profession thief        = +2
-profession assassin     = +2
-profession ranger       = +0
+//_CUTBEGIN sneak
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 3
+profession assassin = 5
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 2
+race halfling = 2
+race half-elf = 1
+race brownie = 1
+//_CUTEND sneak
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1351,20 +1355,25 @@ minpos         = POSITION_STANDING
 turns          = PULSE_VIOLENCE*3
 internal       = backstab
 type           = TYPE_SKILL
-race human     =   0
-race elf       =  +0
-race dwarf     =  -1
-race halfling  =  +1
-race gnome     =  -1
-race half-orc  =  +2
-race half-ogre =  -1
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =   0
-restrict dexterity      = 10
-profession assassin     = +5
-profession thief        = +2
+//_CUTBEGIN backstab
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 2
+profession assassin = 5
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 1
+race half-orc = 2
+race brownie = 1
+restrict dexterity = 10
+//_CUTEND backstab
 
 /* - - - - Yet another definition of a skill - - - - */
 index          = SKI_BASH
@@ -1374,23 +1383,27 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func = ski_bash@skills
 type = TYPE_SKILL
-race human     =  +1
-race elf       =   0
-race dwarf     =  +1
-race halfling  =  -2
-race gnome     =  -1
-race half-orc  =  +1
-race half-ogre =  +2
-race half-elf  =   0
-race brownie   =  -2
-race groll     =  +1
-race darkelf   =   0
-restrict strength       = 10
-profession fighter      = +2
-profession knight       = +2
-profession paladin      = +2
-profession ranger       = +2
-profession druid        = -4
+//_CUTBEGIN bash
+profession fighter = 2
+profession knight = 2
+profession paladin = 2
+profession ranger = 0
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race human = 1
+race dwarf = 1
+race half-orc = 1
+race half-ogre = 2
+race groll = 1
+restrict strength = 10
+//_CUTEND bash
 
 
 command  = break
@@ -1407,21 +1420,25 @@ command        = butcher
 minpos         = POSITION_STANDING
 func           = butcher@skills
 type = TYPE_SKILL
-race human     =  -1
-race elf       =  +1
-race dwarf     =   0
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =   0
-restrict dexterity      = 15
-profession ranger       = +3
-profession thief        = +0
-profession priest       = +0
+//_CUTBEGIN butcher
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 3
+profession thief = 0
+profession assassin = -7
+profession priest = 0
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race halfling = 2
+race brownie = 1
+restrict dexterity = 15
+//_CUTEND butcher
 
 
 command  = bury
@@ -1451,20 +1468,27 @@ command        = hide
 minpos         = POSITION_RESTING
 func           = ski_hide@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  +2
-race dwarf     =   0
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =  +1
-race half-ogre =  -2
-race half-elf  =  +1
-race brownie   =  +3
-race groll     =  -1
-race darkelf   =  +1
-profession ranger       = +0
-profession thief        = +2
-profession assassin     = +5
+//_CUTBEGIN hide
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = 2
+profession assassin = 5
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 2
+race halfling = 2
+race half-orc = 1
+race half-elf = 1
+race brownie = 3
+race darkelf = 1
+//_CUTEND hide
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1475,24 +1499,23 @@ minpos         = POSITION_RESTING
 turns          = PULSE_VIOLENCE
 func           = ski_first_aid@skills
 type = TYPE_SKILL
-race human     =  +1
-race elf       =   0
-race dwarf     =   0
-race halfling  =  -1
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =  -1
-race groll     =   0
-race darkelf   =   0
-restrict brain          = 15
-profession knight       = +2
-profession paladin      = +2
-profession ranger       = +2
-profession thief        = +0
-profession priest       = +5
-profession druid        = +2
+//_CUTBEGIN first aid
+profession fighter = -7
+profession knight = 1
+profession paladin = 2
+profession ranger = 2
+profession thief = 0
+profession assassin = -1
+profession priest = 5
+profession druid = 2
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race human = 1
+restrict brain = 15
+//_CUTEND first aid
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1502,19 +1525,25 @@ command        = pick
 minpos         = POSITION_STANDING
 func           = picklock@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =  -1
-race dwarf     =  +2
-race halfling  =  +1
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  +1
-race groll     =  -1
-race darkelf   =   0
-restrict dexterity       = 10
-profession thief         = +2
+//_CUTBEGIN pick lock
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 3
+profession assassin = 1
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race dwarf = 2
+race halfling = 1
+race brownie = 1
+restrict dexterity = 10
+//_CUTEND pick lock
 
 
 index          = SKI_RESCUE
@@ -1524,22 +1553,24 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = do_rescue@skills
 type           = TYPE_SKILL
-race human     =  +1
-race elf       =  -1
-race dwarf     =  +2
-race halfling  =  -2
-race gnome     =  -2
-race half-orc  =   0
-race half-ogre =  +2
-race half-elf  =   0
-race brownie   =  -1
-race groll     =   0
-race darkelf   =   0
-profession fighter      = +0
-profession knight       = +5
-profession paladin      = +5
-profession ranger       = +5
-profession barbarian 	= +5
+//_CUTBEGIN rescue
+profession fighter = 0
+profession knight = 4
+profession paladin = 5
+profession ranger = 3
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+race human = 1
+race dwarf = 2
+race half-ogre = 2
+//_CUTEND rescue
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1549,21 +1580,27 @@ command        = search
 minpos         = POSITION_STANDING
 func           = search_dil@basemove
 type           = TYPE_SKILL
-race human     =   0
-race elf       =  +2
-race dwarf     =  +2
-race halfling  =  +1
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =  +2
-race groll     =   0
-race darkelf   =  +1
-profession thief        = +5
-profession ranger       = +3
-profession assassin     = +2
-profession druid        = +0
+//_CUTBEGIN search
+profession fighter = -1
+profession knight = -1
+profession paladin = -1
+profession ranger = 3
+profession thief = 5
+profession assassin = 3
+profession priest = 0
+profession druid = 0
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = -2
+race elf = 2
+race dwarf = 2
+race halfling = 1
+race half-elf = 1
+race brownie = 2
+race darkelf = 1
+//_CUTEND search
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1571,25 +1608,25 @@ index          = SKI_LEADERSHIP
 name           = leadership
 /* func          =  */
 type = TYPE_SKILL
-race human     =  +1
-race elf       =   0
-race dwarf     =  +2
-race halfling  =  -1
-race gnome     =  -2
-race half-orc  =  -2
-race half-ogre =  -3
-race half-elf  =   0
-race brownie   =   0
-race groll     =  -2
-race darkelf   =  +2
-restrict charisma       = 20
-profession knight       = +5
-profession paladin      = +5
-profession fighter      = +2
-profession ranger       = +0
-profession necromancer  = +0
-profession priest       = +0
-profession barbarian 	= +5
+//_CUTBEGIN leadership
+profession fighter = 2
+profession knight = 5
+profession paladin = 5
+profession ranger = 0
+profession thief = -7
+profession assassin = -7
+profession priest = 0
+profession druid = -7
+profession obsolete = -7
+profession necromancer = 0
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 3
+race human = 1
+race dwarf = 2
+race darkelf = 2
+restrict charisma = 20
+//_CUTEND leadership
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1600,24 +1637,22 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = kick@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =  -1
-race dwarf     =  -2
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =  -1
-race groll     =  +1
-race darkelf   =   0
-profession thief        = +0
-profession assassin     = +0
-profession fighter      = +0
-profession knight       = -1
-profession paladin      = -2
-profession ranger       = -2
-profession barbarian 	= +2
+//_CUTBEGIN kick
+profession fighter = 0
+profession knight = -1
+profession paladin = -2
+profession ranger = -2
+profession thief = 2
+profession assassin = 0
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 0
+race groll = 1
+//_CUTEND kick
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1628,24 +1663,22 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = elbow@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  -1
-race dwarf     =  -2
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =  -1
-race groll     =  +1
-race darkelf   =   0
-profession thief        = +0
-profession assassin     = +0
-profession fighter      = +0
-profession knight       = -1
-profession paladin      = -2
-profession ranger       = -2
-profession barbarian 	= +2
+//_CUTBEGIN elbow
+profession fighter = 0
+profession knight = -1
+profession paladin = -2
+profession ranger = -2
+profession thief = 3
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+race groll = 1
+//_CUTEND elbow
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1656,24 +1689,22 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = knee@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  -1
-race dwarf     =  -2
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =  -1
-race groll     =  +1
-race darkelf   =   0
-profession thief        = +0
-profession assassin     = +0
-profession fighter      = +0
-profession knight       = -1
-profession paladin      = -2
-profession ranger       = -2
-profession barbarian 	= +2
+//_CUTBEGIN knee
+profession fighter = 0
+profession knight = -1
+profession paladin = -2
+profession ranger = -2
+profession thief = 3
+profession assassin = 3
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+race groll = 1
+//_CUTEND knee
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1684,18 +1715,23 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = punch@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  -1
-race dwarf     =  -2
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =  -1
-race groll     =  +1
-race darkelf   =   0
-profession barbarian 	= +2
+//_CUTBEGIN hit
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race groll = 1
+//_CUTEND hit
+
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1706,18 +1742,22 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = punch@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  -1
-race dwarf     =  -2
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =  -1
-race groll     =  +1
-race darkelf   =   0
-profession barbarian 	= +2
+//_CUTBEGIN punch
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race groll = 1
+//_CUTEND punch
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1726,29 +1766,23 @@ name           = swimming
 command        = swim
 type           = TYPE_SKILL
 func           = do_swim@basemove
-race human     =   0
-race elf       =  +1
-race dwarf     =  -1
-race halfling  =  -1
-race gnome     =  -1
-race half-orc  =  -1
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  -1
-race groll     =  -3
-race darkelf   =   0
-profession druid        = +2
-profession ranger       = +1
-profession thief        = +1
-profession assassin     = +1
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = +0
-profession priest       = -1
-profession necromancer  = -2
-profession mage         = -2
-profession sorcerer     = -2
-profession barbarian 	= +0
+//_CUTBEGIN swimming
+profession fighter = 0
+profession knight = 0
+profession paladin = 0
+profession ranger = 1
+profession thief = 1
+profession assassin = 1
+profession priest = -1
+profession druid = 2
+profession obsolete = -7
+profession necromancer = -2
+profession mage = -2
+profession sorcerer = -2
+profession barbarian = 0
+race elf = 1
+race dwarf = -3
+//_CUTEND swimming
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1758,29 +1792,24 @@ command        = climb
 minpos         = POSITION_STANDING
 func           = climb_dil@basemove
 type = TYPE_SKILL
-race human     =  -1
-race elf       =  +1
-race dwarf     =   0
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =   0
-profession thief        = +2
-profession assassin     = +2
-profession fighter      = +0
-profession ranger       = +0
-profession druid        = -2
-profession knight       = -2
-profession paladin      = -2
-profession priest       = -3
-profession necromancer  = -3
-profession mage         = -3
-profession sorcerer     = -3
-profession barbarian 	= +0
+//_CUTBEGIN climb
+profession fighter = 0
+profession knight = -2
+profession paladin = -2
+profession ranger = 0
+profession thief = 3
+profession assassin = 5
+profession priest = -3
+profession druid = -2
+profession obsolete = -7
+profession necromancer = -3
+profession mage = -3
+profession sorcerer = -3
+profession barbarian = 0
+race elf = 1
+race halfling = 2
+race brownie = 1
+//_CUTEND climb
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1792,45 +1821,50 @@ minpos         = POSITION_FIGHTING
 turns          = 4
 func           = trip@skills
 type = TYPE_SKILL
-race human     =  0
-race elf       =  +1
-race dwarf     =  +3
-race halfling  =  +1
-race gnome     =  +1
-race half-orc  =  -2
-race half-ogre =  -2
-race half-elf  =   +1
-race brownie   =   +4
-race groll     =   -4
-race darkelf   =   +1
-restrict dexterity      = 20
-profession thief        = +0
+//_CUTBEGIN tripping
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 3
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race dwarf = 3
+race halfling = 1
+race gnome = 1
+race half-elf = 1
+race darkelf = 1
+restrict dexterity = 20
+//_CUTEND tripping
 
 /* - - - - Yet another definition of a skill - - - - */
 
 index          = SKI_SHIELD
 name           = shield
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict strength       = 10
-profession fighter      = +5
-profession knight       = +2
-profession paladin      = +2
-profession ranger       = +2
-profession thief        = +0
-profession assassin     = +0
-profession priest       = +0
-profession druid        = -4
+//_CUTBEGIN shield
+profession fighter = 5
+profession knight = 2
+profession paladin = 2
+profession ranger = 2
+profession thief = 0
+profession assassin = 0
+profession priest = 0
+profession druid = -4
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+restrict strength = 10
+//_CUTEND shield
 
 
 /* skill def for peek */
@@ -1840,19 +1874,25 @@ command        = peek
 minpos         = POSITION_STANDING
 func           = peek@skills
 type = TYPE_SKILL
-race human     = 0
-race elf       = 0
-race dwarf     = -1
-race halfling  = +2
-race gnome     = 0
-race half-orc  = +1
-race half-ogre = -1
-race half-elf  = 0
-race brownie   = +1
-race groll     = -1
-race darkelf   = 0
-restrict brain          = 15
-profession thief        = +0
+//_CUTBEGIN peeking
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 3
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 2
+race half-orc = 1
+race brownie = 1
+restrict brain = 15
+//_CUTEND peeking
 
 /* skill def for disarm */
 /* original before darg change 2/1/06
@@ -1884,21 +1924,25 @@ minpos         = POSITION_FIGHTING
 turns          = 14
 func           = disarm@skills
 type = TYPE_SKILL
-race human     = 0
-race elf       = -3
-race dwarf     = +2
-race halfling  = -1
-race gnome     = -3
-race half-orc  = +2
-race half-ogre = +3
-race half-elf  = -1
-race brownie   = -2
-race groll     = +4
-race darkelf   = 0
-restrict dexterity      = 10
-profession fighter      = +2
-profession assassin     = +0
-profession thief        = -1
+//_CUTBEGIN disarming
+profession fighter = 2
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -1
+profession assassin = 0
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race dwarf = 2
+race half-orc = 2
+race half-ogre = 3
+restrict dexterity = 10
+//_CUTEND disarming
 
 
 /* skill def for filch */
@@ -1909,19 +1953,25 @@ minpos         = POSITION_STANDING
 func           = filch@skills
 turns    = 0
 type = TYPE_SKILL
-race human     = 0
-race elf       = +1
-race dwarf     = 0
-race halfling  = +3
-race gnome     = 0
-race half-orc  = 0
-race half-ogre = -2
-race half-elf  = 0
-race brownie   = +2
-race groll     = -1
-race darkelf   = 0
-restrict level          = 5
-profession thief        = +5
+//_CUTBEGIN filching
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 5
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race halfling = 3
+race brownie = 2
+restrict level = 5
+//_CUTEND filching
 
 
 /* skill def for new steal */
@@ -1932,19 +1982,23 @@ minpos         = POSITION_STANDING
 func           = steal@skills
 turns    = 0
 type = TYPE_SKILL
-race human     = 0
-race elf       = 0
-race dwarf     = -1
-race halfling  = +2
-race gnome     = 0
-race half-orc  = 0
-race half-ogre = -2
-race half-elf  = 0
-race brownie   = +4
-race groll     = -1
-race darkelf   = 0
-restrict dexterity      = 30
-profession thief        = +0
+//_CUTBEGIN stealing
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 0
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 2
+restrict dexterity = 30
+//_CUTEND stealing
 
 
 /* skill def for pickpocket */
@@ -1955,19 +2009,24 @@ minpos         = POSITION_STANDING
 func           = pickpocket@skills
 turns    = 0
 type = TYPE_SKILL
-race human     = 0
-race elf       = +1
-race dwarf     = -1
-race halfling  = +3
-race gnome     = 0
-race half-orc  = 0
-race half-ogre = -2
-race half-elf  = 0
-race brownie   = +4
-race groll     = -1
-race darkelf   = 0
-restrict dexterity      = 20
-profession thief        = +2
+//_CUTBEGIN pick pockets
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 2
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race halfling = 3
+restrict dexterity = 20
+//_CUTEND pick pockets
 
 
 index          = SKI_SKIN
@@ -1976,27 +2035,33 @@ command        = skin
 minpos         = POSITION_STANDING
 func           = skin@skills
 type           = TYPE_SKILL
-race human     =  -1
-race elf       =  +1
-race dwarf     =   0
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =   0
-restrict dexterity      = 10
-profession ranger       = +2
-profession druid        = +0
+//_CUTBEGIN skin
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 5
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 3
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race halfling = 2
+race brownie = 1
+restrict dexterity = 10
+//_CUTEND skin
+
+
 command  = skills
 func = ski_dil@commands
 minpos   = POSITION_DEAD
 minlevel = 0
 loglevel = 0
 type     = 0
-
 
 
 command       = seize
@@ -2016,20 +2081,27 @@ command       = curare
 minpos        = POSITION_STANDING
 func          = curare@skills
 type = TYPE_SKILL
-race human     =   +3
-race elf       =   0
-race dwarf     =  -1
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =  -2
-race half-ogre =  -3
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -3
-race darkelf   =  +2
-restrict level          = 40
-profession ranger       = +3
-profession druid        = +3
+//_CUTBEGIN curare
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 3
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 3
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race human = 3
+race halfling = 2
+race half-elf = 1
+race brownie = 1
+race darkelf = 2
+restrict level = 40
+//_CUTEND curare
 
 
 index          = SKI_COOK
@@ -2038,20 +2110,25 @@ command        = cook
 minpos         = POSITION_RESTING
 func           = cook@skills
 type = TYPE_SKILL
-race human     =  -1
-race elf       =  +1
-race dwarf     =   0
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =   0
-restrict brain          = 10
-profession ranger       = +2
-profession druid        = +0
+//_CUTBEGIN cook
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 2
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 0
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race halfling = 2
+race brownie = 1
+restrict brain = 10
+//_CUTEND cook
 
 
 index          = SKI_DOWSE
@@ -2060,20 +2137,26 @@ command        = dowse
 minpos         = POSITION_STANDING
 func           = dowse@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =  -1
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =  -2
-race half-ogre =  -3
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -3
-race darkelf   =  +2
-restrict level          = 5
-profession ranger       = +0
-profession druid        = +2
+//_CUTBEGIN dowse
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 2
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 2
+race half-elf = 1
+race brownie = 1
+race darkelf = 2
+restrict level = 5
+//_CUTEND dowse
 
 
 index          = SKI_HERBS
@@ -2082,20 +2165,25 @@ command        = herbs
 minpos         = POSITION_STANDING
 func           = herbs@skills
 type           = TYPE_SKILL
-race human     =  -2
-race elf       =  -2
-race dwarf     =  -1
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =  -2
-race half-ogre =  -3
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -3
-race darkelf   =  +4
-restrict level          = 12
-profession ranger       = +0
-profession druid        = +5
+//_CUTBEGIN herbs
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 0
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 5
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 2
+race half-elf = 1
+race brownie = 1
+restrict level = 12
+//_CUTEND herbs
 
 
 index          = SKI_FORAGE
@@ -2104,20 +2192,25 @@ command        = forage
 minpos         = POSITION_STANDING
 func           = forage@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =  -1
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =  -2
-race half-ogre =  -3
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -3
-race darkelf   =  +4
-restrict level          = 3
-profession ranger       = +1
-profession druid        = +1
+//_CUTBEGIN forage
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 1
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 1
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 2
+race half-elf = 1
+race brownie = 1
+restrict level = 3
+//_CUTEND forage
 
 
 index          = SKI_AMBUSH
@@ -2127,19 +2220,26 @@ minpos         = POSITION_STANDING
 turns          = PULSE_VIOLENCE
 func           = ambush@skills
 type = TYPE_SKILL
-race human     =  +3
-race elf       =  +1
-race dwarf     =  -1
-race halfling  =  +1
-race gnome     =  -1
-race half-orc  =  +2
-race half-ogre =  -1
-race half-elf  =   0
-race brownie   =  +4
-race groll     =  -3
-race darkelf   =   0
-restrict level          = 18
-profession ranger       = +5
+//_CUTBEGIN ambush
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 5
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race human = 3
+race elf = 1
+race halfling = 1
+race half-orc = 2
+restrict level = 18
+//_CUTEND ambush
 
 
 index          = SKI_SHELTER
@@ -2148,19 +2248,25 @@ command        = shelter
 minpos         = POSITION_STANDING
 func           = shelter@skills
 type = TYPE_SKILL
-race human     =  -1
-race elf       =  +1
-race dwarf     =   0
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =  -2
-race half-elf  =   0
-race brownie   =  +1
-race groll     =   0
-race darkelf   =   0
-restrict level          = 8
-profession ranger       = +5
+//_CUTBEGIN shelter
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 5
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race halfling = 2
+race brownie = 1
+restrict level = 8
+//_CUTEND shelter
 
 
 index          = SKI_SOOTHE
@@ -2169,20 +2275,22 @@ command        = soothe
 minpos         = POSITION_STANDING
 func           = soothe@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict level          = 3
-profession ranger       = +2
-profession druid        = +2
+//_CUTBEGIN soothe
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 2
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 2
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+restrict level = 3
+//_CUTEND soothe
 
 
 index          = SKI_FASHION
@@ -2191,19 +2299,26 @@ command        = fashion
 minpos         = POSITION_STANDING
 func           = fashion_weapon@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =  -1
-race halfling  =  +2
-race gnome     =   0
-race half-orc  =  -2
-race half-ogre =  -3
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -3
-race darkelf   =  +2
-restrict level          = 1
-profession ranger       = +3
+//_CUTBEGIN fashion weapon
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 3
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race halfling = 2
+race half-elf = 1
+race brownie = 1
+race darkelf = 2
+restrict level = 1
+//_CUTEND fashion weapon
 
 
 index          = SKI_SHOOT
@@ -2213,17 +2328,25 @@ minpos         = POSITION_STANDING
 func           = shoot@skills
 type = TYPE_SKILL
 turns          = PULSE_VIOLENCE
-race human     =   0
-race elf       =  +1
-race dwarf     =  -1
-race halfling  =   0
-race gnome     =  -1
-race half-orc  =   0
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =   0
-race groll     =  -2
-race darkelf   =  +1
+//_CUTBEGIN shoot
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 1
+race half-elf = 1
+race darkelf = 1
+//_CUTEND shoot
+
 
 index          = SKI_TRACK
 name           = track
@@ -2231,19 +2354,26 @@ command        = track
 minpos         = POSITION_STANDING
 func           = track@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  +2
-race dwarf     =  -1
-race halfling  =   0
-race gnome     =  -1
-race half-orc  =  +1
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -2
-race darkelf   =   0
-restrict level          = 6
-profession ranger       = +5
+//_CUTBEGIN track
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 5
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 2
+race half-orc = 1
+race half-elf = 1
+race brownie = 1
+restrict level = 6
+//_CUTEND track
 
 
 index          = SKI_HUNT
@@ -2252,19 +2382,26 @@ command        = hunt
 minpos         = POSITION_STANDING
 func           = hunt@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  +2
-race dwarf     =  -1
-race halfling  =   0
-race gnome     =  -1
-race half-orc  =  +1
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -2
-race darkelf   =   0
-restrict level          = 14
-profession ranger       = +2
+//_CUTBEGIN hunt
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 2
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 2
+race half-orc = 1
+race half-elf = 1
+race brownie = 1
+restrict level = 14
+//_CUTEND hunt
 
 
 index          = SKI_SCAN
@@ -2273,19 +2410,25 @@ command        = scan
 minpos         = POSITION_STANDING
 func           = scan@skills
 type = TYPE_SKILL
-race human     =   0
-race elf       =  +2
-race dwarf     =  -1
-race halfling  =   0
-race gnome     =  -1
-race half-orc  =  +1
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -2
-race darkelf   =   0
-profession ranger       = +3
-profession druid        = +3
+//_CUTBEGIN scan
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 3
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = 3
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race elf = 2
+race half-orc = 1
+race half-elf = 1
+race brownie = 1
+//_CUTEND scan
 
 
 index          = SKI_LAY_TRAP
@@ -2295,19 +2438,27 @@ minpos         = POSITION_STANDING
 func           = lay_trap@skills
 turns          = PULSE_VIOLENCE
 type = TYPE_SKILL
-race human     =   1
-race elf       =  +2
-race dwarf     =  -1
-race halfling  =   0
-race gnome     =  -1
-race half-orc  =  +1
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =  +1
-race groll     =  -2
-race darkelf   =   0
-restrict level          = 28
-profession ranger       = +4
+//_CUTBEGIN lay trap
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 4
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race human = 1
+race elf = 2
+race half-orc = 1
+race half-elf = 1
+race brownie = 1
+restrict level = 28
+//_CUTEND lay trap
 
 
 index          = SKI_THROW
@@ -2317,19 +2468,26 @@ minpos         = POSITION_STANDING
 func           = throw@skills
 turns          = PULSE_VIOLENCE
 type = TYPE_SKILL
-race human     =  +3
-race elf       =  +1
-race dwarf     =  -1
-race halfling  =   0
-race gnome     =  -1
-race half-orc  =   0
-race half-ogre =  -1
-race half-elf  =  +1
-race brownie   =   0
-race groll     =  -2
-race darkelf   =  +1
-restrict level          = 20
-profession ranger       = +3
+//_CUTBEGIN throw
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = 3
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+race human = 3
+race elf = 1
+race half-elf = 1
+race darkelf = 1
+restrict level = 20
+//_CUTEND throw
 
 
 index          = SKI_SLIP
@@ -2339,19 +2497,22 @@ minpos         = POSITION_STANDING
 turns          = 12
 func           = slip@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict level          = 15
-profession thief        = +1
+//_CUTBEGIN slip
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 1
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+restrict level = 15
+//_CUTEND slip
 
 
 index          = SKI_PALM
@@ -2361,19 +2522,22 @@ minpos         = POSITION_RESTING
 turns          = 12
 func           = palm@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict level          = 10
-profession thief        = +1
+//_CUTBEGIN palm
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 1
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+restrict level = 10
+//_CUTEND palm
 
 
 command = plan
@@ -2389,19 +2553,23 @@ minpos         = POSITION_STANDING
 turns          = 12
 func           = plant@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict level          = 25
-profession thief        = +0
+//_CUTBEGIN plant
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = 0
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+restrict level = 25
+//_CUTEND plant
+
 
 index          = SKI_STALK
 name           = stalk
@@ -2410,19 +2578,22 @@ minpos         = POSITION_RESTING
 turns          = 0
 func           = ski_stalk@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict level          = 22
-profession assassin     = +2
+//_CUTBEGIN stalk
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = 2
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -7
+restrict level = 22
+//_CUTEND stalk
 
 /* Barbarian Skills */
 /* Original concepts and implementation by Sender */
@@ -2436,20 +2607,23 @@ minpos         = POSITION_FIGHTING
 turns          = 1
 func           = ski_frenzy@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict strength       = 50
-restrict constitution   = 50
-profession barbarian      = +5
+//_CUTBEGIN frenzy
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict strength = 50
+restrict constitution = 50
+//_CUTEND frenzy
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -2460,18 +2634,21 @@ minpos         = POSITION_STANDING
 turns          = PULSE_VIOLENCE/2
 func           = ski_berserk@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-profession barbarian      = +5
+//_CUTBEGIN berserk
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+//_CUTEND berserk
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -2482,20 +2659,23 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = ski_taunt@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict strength       = 10
-restrict constitution   = 30
-profession barbarian      = +5
+//_CUTBEGIN taunt
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict strength = 10
+restrict constitution = 30
+//_CUTEND taunt
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -2505,20 +2685,24 @@ command        = rage
 minpos         = POSITION_STANDING
 func           = ski_rage@skills
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict strength       = 30
-restrict constitution   = 30
-profession barbarian      = +5
+//_CUTBEGIN rage
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict strength = 30
+restrict constitution = 30
+//_CUTEND rage
+
 
 index          = SKI_LEAP
 name           = leap
@@ -2527,19 +2711,23 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = ski_leap@skills
 type 		   = TYPE_SKILL
-race human     =  0
-race elf       =  0
-race dwarf     =  0
-race halfling  =  0
-race gnome     =  0
-race half-orc  =  0
-race half-ogre =  0
-race half-elf  =  0
-race brownie   =  0
-race groll     =  0
-race darkelf   =  0
-restrict level          = 10
-profession barbarian       = +5
+//_CUTBEGIN leap
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict level = 10
+//_CUTEND leap
+
 
 index          = SKI_CHARGE
 name           = charge
@@ -2548,19 +2736,22 @@ minpos         = POSITION_STANDING
 turns          = PULSE_VIOLENCE
 func           = ski_charge@skills
 type 		   = TYPE_SKILL
-race human     =  0
-race elf       =  0
-race dwarf     =  0
-race halfling  =  0
-race gnome     =  0
-race half-orc  =  0
-race half-ogre =  0
-race half-elf  =  0
-race brownie   =  0
-race groll     =  0
-race darkelf   =  0
-restrict level          = 10
-profession barbarian      = +5
+//_CUTBEGIN charge
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict level = 10
+//_CUTEND charge
 
 index          = SKI_DEFEND
 name           = defend
@@ -2569,20 +2760,23 @@ minpos         = POSITION_STANDING
 turns          = PULSE_VIOLENCE
 func           = ski_defend@skills
 type 		   = TYPE_SKILL
-race human     =  0
-race elf       =  0
-race dwarf     =  0
-race halfling  =  0
-race gnome     =  0
-race half-orc  =  0
-race half-ogre =  0
-race half-elf  =  0
-race brownie   =  0
-race groll     =  0
-race darkelf   =  0
-restrict constitution   = 50
-restrict level          = 40
-profession barbarian      = +5
+//_CUTBEGIN defend
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict constitution = 50
+restrict level = 40
+//_CUTEND defend
 
 index          = SKI_WHIRL
 name           = whirl
@@ -2591,20 +2785,23 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = ski_whirl@skills
 type 		   = TYPE_SKILL
-race human     =  0
-race elf       =  0
-race dwarf     =  0
-race halfling  =  0
-race gnome     =  0
-race half-orc  =  0
-race half-ogre =  0
-race half-elf  =  0
-race brownie   =  0
-race groll     =  0
-race darkelf   =  0
-restrict constitution   = 40
-restrict level          = 50
-profession barbarian    = +3
+//_CUTBEGIN whirl
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 3
+restrict constitution = 40
+restrict level = 50
+//_CUTEND whirl
 
 index          = SKI_CLEAVE
 name           = cleave
@@ -2613,20 +2810,24 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = ski_cleave@skills
 type 		   = TYPE_SKILL
-race human     =  0
-race elf       =  0
-race dwarf     =  0
-race halfling  =  0
-race gnome     =  0
-race half-orc  =  0
-race half-ogre =  0
-race half-elf  =  0
-race brownie   =  0
-race groll     =  0
-race darkelf   =  0
-restrict constitution   = 30
-restrict level          = 35
-profession barbarian      = +5
+//_CUTBEGIN cleave
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict constitution = 30
+restrict level = 35
+//_CUTEND cleave
+
 
 index          = SKI_REND
 name           = rend
@@ -2635,20 +2836,24 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = ski_rend@skills
 type 		   = TYPE_SKILL
-race human     =  0
-race elf       =  0
-race dwarf     =  0
-race halfling  =  0
-race gnome     =  0
-race half-orc  =  0
-race half-ogre =  0
-race half-elf  =  0
-race brownie   =  0
-race groll     =  0
-race darkelf   =  0
-restrict constitution   = 40
-restrict level          = 30
-profession barbarian      = +5
+//_CUTBEGIN rend
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict constitution = 40
+restrict level = 30
+//_CUTEND rend
+
 
 index          = SKI_SLAM
 name           = slam
@@ -2657,19 +2862,22 @@ minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE
 func           = ski_slam@skills
 type 		   = TYPE_SKILL
-race human     =  0
-race elf       =  0
-race dwarf     =  0
-race halfling  =  0
-race gnome     =  0
-race half-orc  =  0
-race half-ogre =  0
-race half-elf  =  0
-race brownie   =  0
-race groll     =  0
-race darkelf   =  0
-restrict constitution   = 50
-profession barbarian      = +5
+//_CUTBEGIN slam
+profession fighter = -7
+profession knight = -7
+profession paladin = -7
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -7
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 5
+restrict constitution = 50
+//_CUTEND slam
 
 /* END Barbarian Skills */
 
@@ -4499,116 +4707,83 @@ type     = 0
 index          = SKI_ARM_LEATHER
 name           = armor soft leather
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-
-profession fighter      = +3
-profession knight       = +3
-profession paladin      = +3
-profession ranger       = +3
-profession thief        = +2
-profession assassin     = +2
-profession priest       = +1
-profession druid        = +1
-profession necromancer  = +0
-profession mage         = +0
-profession sorcerer     = +0
-profession barbarian    = +4
+//_CUTBEGIN armor soft leather
+profession fighter = 3
+profession knight = 3
+profession paladin = 3
+profession ranger = 5
+profession thief = 3
+profession assassin = 3
+profession priest = 1
+profession druid = 1
+profession obsolete = -7
+profession necromancer = 0
+profession mage = 0
+profession sorcerer = 0
+profession barbarian = 5
+//_CUTEND armor soft leather
 
 index          = SKI_ARM_HLEATHER
 name           = armor hard leather
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict strength    = 15
-profession fighter      = +3
-profession knight       = +3
-profession paladin      = +3
-profession ranger       = +3
-profession thief        =  0
-profession assassin     =  0
-profession priest       =  0
-profession druid        = -1
-profession necromancer  = -2
-profession mage         = -2
-profession sorcerer     = -2
-profession barbarian    = +4
+//_CUTBEGIN armor hard leather
+profession fighter = 3
+profession knight = 3
+profession paladin = 3
+profession ranger = 5
+profession thief = 0
+profession assassin = 0
+profession priest = 0
+profession druid = -1
+profession obsolete = -7
+profession necromancer = -2
+profession mage = -2
+profession sorcerer = -2
+profession barbarian = 5
+restrict strength = 15
+//_CUTEND armor hard leather
 
 
 index          = SKI_ARM_CHAIN
 name           = armor chain
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict strength    = 30
-profession fighter      = +3
-profession knight       = +3
-profession paladin      = +3
-profession ranger       =  0
-profession thief        = -2
-profession assassin     = -2
-profession priest       =  0
-profession druid        = -2
-profession necromancer  = -2
-profession mage         = -2
-profession sorcerer     = -2
-profession barbarian    = +4
+//_CUTBEGIN armor chain
+profession fighter = 3
+profession knight = 3
+profession paladin = 3
+profession ranger = 0
+profession thief = -2
+profession assassin = -2
+profession priest = 0
+profession druid = -2
+profession obsolete = -7
+profession necromancer = -5
+profession mage = -5
+profession sorcerer = -5
+profession barbarian = 1
+restrict strength = 30
+//_CUTEND armor chain
 
 
 index          = SKI_ARM_PLATE
 name           = armor plate
 type           = TYPE_SKILL
-race human     =   0
-race elf       =   0
-race dwarf     =   0
-race halfling  =   0
-race gnome     =   0
-race half-orc  =   0
-race half-ogre =   0
-race half-elf  =   0
-race brownie   =   0
-race groll     =   0
-race darkelf   =   0
-restrict strength    = 50
-profession fighter      =  0
-profession knight       =  0
-profession paladin      =  0
-profession ranger       = -3
-profession thief        = -7
-profession assassin     = -7
-profession priest       = -3
-profession druid        = -7
-profession necromancer  = -7
-profession mage         = -7
-profession sorcerer     = -7
-profession barbarian    = +3
+//_CUTBEGIN armor plate
+profession fighter = 0
+profession knight = 5
+profession paladin = 5
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
+profession priest = -3
+profession druid = -7
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = -1
+restrict strength = 50
+//_CUTEND armor plate
 
 
 / ******************************** */
