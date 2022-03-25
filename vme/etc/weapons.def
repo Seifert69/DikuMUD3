@@ -2044,7 +2044,7 @@ attack plate    = {95,  2, 12}
 
 
 index           = WPN_KICK_SMALL  // player skill too (fighter, etc.)
-name            = kick
+name            = kick small
 sphere          = WPN_UNARMED
 hands           =   1
 type            =  WPNT_BLUDGEON
@@ -2209,7 +2209,7 @@ attack plate    = {100,  1, 17}
 
 
 index           = WPN_CLAW_SMALL   // player skill too (assassin)
-name            = claw
+name            = claw small
 sphere          = WPN_UNARMED
 hands           =   1
 type            =  WPNT_SLASH

@@ -238,7 +238,6 @@ $1n tells you, 'You must be unaffected by magic, else I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
   0;   70; fist                          ;  14; 14000;  12;          0;
-  0;   70; crush                         ;  14; 14000;  12;          0;
   0;   80; dagger                        ;   4;  4000;   8;          0;
   0;  100; quarterstaff                  ;   9;  9000;   8;          0;
   1;  100; rapier                        ;   4;  4000;   8;          0;
@@ -1105,7 +1104,6 @@ $1n tells you, 'You must be unaffected by magic, else I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
   0;   70; fist                          ;  14; 14000;  12;          0;
-  0;   70; crush                         ;  14; 14000;  12;          0;
   0;   80; dagger                        ;   4;  4000;   8;          0;
   0;  100; quarterstaff                  ;   9;  9000;   8;          0;
   1;  100; rapier                        ;   4;  4000;   8;          0;
