@@ -1,5 +1,4 @@
 /*
- ~
  2022: Took sender's excellent work and put it in an Excel sheet.
        Sheet has a macro to dump values to emacs-macro into this
        sheet. More consistency, fewer errors. Edit the sheet...
@@ -586,7 +585,6 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = 3
-
 race elf = -1
 race dwarf = 3
 race halfling = -4
@@ -595,7 +593,7 @@ race brownie = -6
 race half-orc = -1
 race half-ogre = 1
 race groll = 2
-restrict strength = 60
+restrict strength = 30
 restrict level = 22
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
@@ -672,7 +670,7 @@ race gnome = -5
 race brownie = -6
 race half-ogre = 1
 race groll = -1
-restrict strength = 55
+restrict strength = 26
 restrict level = 25
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
@@ -754,7 +752,7 @@ race brownie = -7
 race half-orc = -1
 race half-ogre = 1
 race groll = 2
-restrict strength = 90
+restrict strength = 70
 restrict level = 24
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
@@ -880,7 +878,7 @@ race brownie = -6
 race half-orc = -1
 race half-ogre = 2
 race groll = -1
-restrict strength = 60
+restrict strength = 30
 restrict level = 25
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
@@ -918,7 +916,7 @@ race dwarf = -3
 race halfling = -4
 race gnome = -5
 race brownie = -6
-restrict strength = 60
+restrict strength = 30
 restrict level = 45
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
@@ -1357,7 +1355,7 @@ race gnome = -5
 race brownie = -6
 race half-ogre = 2
 race groll = 3
-restrict strength = 75
+restrict strength = 37
 restrict level = 18
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
@@ -1378,30 +1376,35 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   7
-race human      =   0
-race elf        =   0
-race dwarf      =  +1
-race halfling   =   0
-race gnome      =  -1
-race half-orc   =  +1
-race half-ogre  =   0
-race half-elf   =   0
-race brownie    =  -1
-race groll      =   0
-race darkelf    =   0
-restrict level          = 3
-profession fighter      = +2
-profession knight       = +2
-profession paladin      = +2
-profession ranger       = +0
-profession priest       = +0
-profession druid        = -3
-profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} //mace
+//_CUTBEGIN mace
+profession fighter = 2
+profession knight = 2
+profession paladin = 2
+profession ranger = 0
+profession thief = -7
+profession assassin = -7
+profession priest = 0
+profession druid = -2
+profession obsolete = -7
+profession necromancer = -7
+profession mage = -7
+profession sorcerer = -7
+profession barbarian = 2
+race half-elf = 1
+race elf = -1
+race dwarf = 2
+race halfling = -2
+race gnome = -2
+race brownie = -2
+race half-orc = 1
+restrict level = 3
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
+//_CUTEND mace
 
 
 
@@ -1434,7 +1437,7 @@ race halfling = -4
 race gnome = -5
 race brownie = -6
 race groll = -2
-restrict strength = 65
+restrict strength = 32
 restrict level = 15
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
@@ -1516,14 +1519,14 @@ race gnome = -5
 race brownie = -6
 race half-ogre = 2
 race groll = 3
-restrict strength = 70
+restrict strength = 35
 restrict level = 16
-// Circle 2, 2H polearms
-attack clothes  = {65, 10,  4}
-attack sleather = {55,  9,  5}
-attack hleather = {45,  8,  6}
-attack chain    = {40,  7,  7}
-attack plate    = {35,  6,  8}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND battle club
 
 
@@ -1715,14 +1718,14 @@ race gnome = -4
 race brownie = -5
 race half-ogre = 1
 race groll = -1
-restrict strength = 50
+restrict strength = 25
 restrict level = 20
-// Circle 2, 2H polearms
-attack clothes  = {65, 10,  4}
-attack sleather = {55,  9,  5}
-attack hleather = {45,  8,  6}
-attack chain    = {40,  7,  7}
-attack plate    = {35,  6,  8}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND halberd
 
 
@@ -1756,14 +1759,14 @@ race gnome = -4
 race brownie = -5
 race half-ogre = 1
 race groll = -1
-restrict strength = 50
+restrict strength = 25
 restrict level = 20
-// Circle 2, 2H polearms
-attack clothes  = {65, 10,  4}
-attack sleather = {55,  9,  5}
-attack hleather = {45,  8,  6}
-attack chain    = {40,  7,  7}
-attack plate    = {35,  6,  8}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND bardiche
 
 
@@ -1797,14 +1800,14 @@ race gnome = -5
 race brownie = -6
 race half-ogre = 2
 race groll = -2
-restrict strength = 40
+restrict strength = 20
 restrict level = 20
-// Circle 2, 2H polearms
-attack clothes  = {65, 10,  4}
-attack sleather = {55,  9,  5}
-attack hleather = {45,  8,  6}
-attack chain    = {40,  7,  7}
-attack plate    = {35,  6,  8}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND scythe
 
 
@@ -1837,14 +1840,14 @@ race dwarf = -3
 race halfling = -4
 race gnome = -5
 race brownie = -6
-restrict strength = 40
+restrict strength = 20
 restrict level = 16
-// Circle 2, 2H polearms
-attack clothes  = {65, 10,  4}
-attack sleather = {55,  9,  5}
-attack hleather = {45,  8,  6}
-attack chain    = {40,  7,  7}
-attack plate    = {35,  6,  8}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND trident
 
 
@@ -1881,12 +1884,12 @@ race brownie = -6
 race half-ogre = 1
 race groll = -3
 restrict level = 21
-// Circle 2, 2H polearms
-attack clothes  = {65, 10,  4}
-attack sleather = {55,  9,  5}
-attack hleather = {45,  8,  6}
-attack chain    = {40,  7,  7}
-attack plate    = {35,  6,  8}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND lance
 
 
@@ -2012,7 +2015,7 @@ shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
-//_CUTBEGIN kick tiny
+//_CUTBEGIN kick
 profession fighter = -2
 profession knight = -7
 profession paladin = -7
@@ -2037,7 +2040,7 @@ attack sleather = {45,  5,  9}
 attack hleather = {55,  4, 10}
 attack chain    = {75,  3, 11}
 attack plate    = {95,  2, 12}
-//_CUTEND kick tiny
+//_CUTEND kick
 
 
 index           = WPN_KICK_SMALL  // player skill too (fighter, etc.)
@@ -2087,30 +2090,25 @@ ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
 //_CUTBEGIN kick medium
-profession fighter = -2
+profession fighter = -7
 profession knight = -7
 profession paladin = -7
-profession ranger = 0
-profession thief = 1
-profession assassin = 3
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
 profession priest = -7
 profession druid = -7
 profession obsolete = -7
 profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
-profession barbarian = -2
-race dwarf = 0
-race halfling = 1
-race groll = 1
-restrict dexterity = 40
-restrict level = 12
-// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
-attack clothes  = {35,  6,  8}
-attack sleather = {45,  5,  9}
-attack hleather = {55,  4, 10}
-attack chain    = {75,  3, 11}
-attack plate    = {95,  2, 12}
+profession barbarian = -7
+// Circle 3, 1H Normal weapons (swords, maces, etc)
+attack clothes  = {50,  7,  7}
+attack sleather = {50,  6,  8}
+attack hleather = {50,  5,  9}
+attack chain    = {50,  4, 10}
+attack plate    = {50,  3, 11}
 //_CUTEND kick medium
 
 
@@ -2124,30 +2122,25 @@ ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
 //_CUTBEGIN kick large
-profession fighter = -2
+profession fighter = -7
 profession knight = -7
 profession paladin = -7
-profession ranger = 0
-profession thief = 1
-profession assassin = 3
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
 profession priest = -7
 profession druid = -7
 profession obsolete = -7
 profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
-profession barbarian = -2
-race dwarf = 0
-race halfling = 1
-race groll = 1
-restrict dexterity = 40
-restrict level = 12
-// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
-attack clothes  = {35,  6,  8}
-attack sleather = {45,  5,  9}
-attack hleather = {55,  4, 10}
-attack chain    = {75,  3, 11}
-attack plate    = {95,  2, 12}
+profession barbarian = -7
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND kick large
 
 
@@ -2161,30 +2154,25 @@ ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   1
 fumble          =   2
 //_CUTBEGIN kick huge
-profession fighter = -2
+profession fighter = -7
 profession knight = -7
 profession paladin = -7
-profession ranger = 0
-profession thief = 1
-profession assassin = 3
+profession ranger = -7
+profession thief = -7
+profession assassin = -7
 profession priest = -7
 profession druid = -7
 profession obsolete = -7
 profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
-profession barbarian = -2
-race dwarf = 0
-race halfling = 1
-race groll = 1
-restrict dexterity = 40
-restrict level = 12
-// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
-attack clothes  = {35,  6,  8}
-attack sleather = {45,  5,  9}
-attack hleather = {55,  4, 10}
-attack chain    = {75,  3, 11}
-attack plate    = {95,  2, 12}
+profession barbarian = -7
+// Circle 7, Huge attacks
+attack clothes  = {50, 10,  3}
+attack sleather = {40,  9,  3}
+attack hleather = {30,  8,  4}
+attack chain    = {20,  7,  4}
+attack plate    = {10,  6,  5}
 //_CUTEND kick huge
 
 
@@ -2211,12 +2199,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
 //_CUTEND claw tiny
 
 
@@ -2243,12 +2231,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
 //_CUTEND claw small
 
 
@@ -2307,12 +2295,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND claw large
 
 
@@ -2339,12 +2327,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 7, Huge attacks
+attack clothes  = {50, 10,  3}
+attack sleather = {40,  9,  3}
+attack hleather = {30,  8,  4}
+attack chain    = {20,  7,  4}
+attack plate    = {10,  6,  5}
 //_CUTEND claw huge
 
 
@@ -2371,12 +2359,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
 //_CUTEND bite tiny
 
 
@@ -2403,12 +2391,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
 //_CUTEND bite small
 
 
@@ -2467,12 +2455,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND bite large
 
 
@@ -2499,12 +2487,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 7, Huge attacks
+attack clothes  = {50, 10,  3}
+attack sleather = {40,  9,  3}
+attack hleather = {30,  8,  4}
+attack chain    = {20,  7,  4}
+attack plate    = {10,  6,  5}
 //_CUTEND bite huge
 
 
@@ -2531,12 +2519,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
 //_CUTEND sting tiny
 
 
@@ -2563,12 +2551,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
 //_CUTEND sting small
 
 
@@ -2627,12 +2615,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND sting large
 
 
@@ -2659,12 +2647,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 7, Huge attacks
+attack clothes  = {50, 10,  3}
+attack sleather = {40,  9,  3}
+attack hleather = {30,  8,  4}
+attack chain    = {20,  7,  4}
+attack plate    = {10,  6,  5}
 //_CUTEND sting huge
 
 
@@ -2691,12 +2679,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
 //_CUTEND crush tiny
 
 
@@ -2723,12 +2711,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 6, Natural attacks (needs work, huge bite, tiny bite, etc)
+attack clothes  = {35,  6,  8}
+attack sleather = {45,  5,  9}
+attack hleather = {55,  4, 10}
+attack chain    = {75,  3, 11}
+attack plate    = {95,  2, 12}
 //_CUTEND crush small
 
 
@@ -2787,12 +2775,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND crush large
 
 
@@ -2819,12 +2807,12 @@ profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+// Circle 7, Huge attacks
+attack clothes  = {50, 10,  3}
+attack sleather = {40,  9,  3}
+attack hleather = {30,  8,  4}
+attack chain    = {20,  7,  4}
+attack plate    = {10,  6,  5}
 //_CUTEND crush huge
 
 
@@ -2988,12 +2976,12 @@ race half-ogre = -2
 race groll = -4
 restrict dexterity = 20
 restrict level = 1
-// Circle 5, Ranged weapons
-attack clothes  = {51, 1,13}
-attack sleather = {76, 1,14}
-attack hleather = {74, 0,15}
-attack chain    = {100,0,16}
-attack plate    = {100,0,17} //sling
+// Circle 4, 1H light weapons (daggers,etc)
+attack clothes  = { 40,  3, 13}
+attack sleather = { 50,  2, 14}
+attack hleather = { 60,  1, 15}
+attack chain    = { 80,  1, 16}
+attack plate    = {100,  1, 17}
 //_CUTEND sling
 
 

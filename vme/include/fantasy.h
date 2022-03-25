@@ -1140,10 +1140,10 @@ exp 125
 
 /* DRAGONS */
 
-#define BASE_DRAGON(MLVL, GENDER,ARM, BREATH)  \
+#define BASE_DRAGON(MLVL, GENDER,ARM, BREATH, WPN)  \
 sex GENDER \
 level MLVL \
-NATURAL_DEF(WPN_CLAW, ARM) \
+NATURAL_DEF(WPN, ARM) \
 SETWEIGHT(MLVL,800,30000) \
 SETHEIGHT(MLVL,150,3000) \
 MSET_ABILITY(25,10,10,10,20,10,15,0)  \
@@ -1159,8 +1159,8 @@ dilcopy command_block@basis("backstab", \
 
 
 
-#define BASE_DRAGON_BLACK(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM,"acid breath")  \
+#define BASE_DRAGON_BLACK(MLVL, GENDER, ARM, WPN)  \
+   BASE_DRAGON(MLVL, GENDER,ARM,"acid breath", WPN)  \
    alignment -750 \
    race RACE_DRAGON_BLACK \
 MSET_ABILITY(25,10,10,10,20,10,15,0)  \
@@ -1172,8 +1172,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 2, "ANY",\
                {"$1n attacks $3n!", "$1n attacks you!"}); \
 
 
-#define BASE_DRAGON_RED(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM, "shard breath")   \
+#define BASE_DRAGON_RED(MLVL, GENDER, ARM, WPN)  \
+   BASE_DRAGON(MLVL, GENDER,ARM, "shard breath", WPN)   \
    MSET_WEAPON(5,5,5,5,15,5) \
    MSET_SPELL(5,5,5,10,5,5,5,5,5,5,5) \
    alignment -750 \
@@ -1183,8 +1183,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 2, "ANY",\
 dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY",\
                {"$1n attacks $3n!", "$1n attacks you!"}); \
 
-#define BASE_DRAGON_WHITE(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM, "frost breath")   \
+#define BASE_DRAGON_WHITE(MLVL, GENDER, ARM, WPN)  \
+   BASE_DRAGON(MLVL, GENDER,ARM, "frost breath", WPN)   \
    MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(5,5,5,5,15,5) \
    MSET_SPELL(5,5,5,5,5,5,5,10,5,5,5) \
@@ -1195,8 +1195,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY",\
 dilcopy aggressive@function(0, -1, 0, 0, 3, 45, -2, "ANY",\
                {"$1n attacks $3n!", "$1n attacks you!"}); \
 
-#define BASE_DRAGON_BLUE(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM, "lightning breath")  \
+#define BASE_DRAGON_BLUE(MLVL, GENDER, ARM, WPN)  \
+   BASE_DRAGON(MLVL, GENDER,ARM, "lightning breath", WPN)  \
 MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(5,5,5,5,15,5) \
    MSET_SPELL(5,5,5,5,5,5,5,5,10,5,5) \
@@ -1207,8 +1207,8 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
 dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 1, "ANY",\
                {"$1n attacks $3n!", "$1n attacks you!"}); \
 
-#define BASE_DRAGON_GREEN(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM, "gas breath")  \
+#define BASE_DRAGON_GREEN(MLVL, GENDER, ARM, WPN  \
+   BASE_DRAGON(MLVL, GENDER,ARM, "gas breath", WPN)  \
    MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(5,5,5,5,15,5) \
    MSET_SPELL(5,5,5,5,5,5,5,5,5,10,5) \
@@ -1219,8 +1219,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 1, "ANY",\
 dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 0, "ANY",\
                {"$1n attacks $3n!", "$1n attacks you!"}); \
 
-#define BASE_DRAGON_SILVER(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM, "sonic breath")   \
+#define BASE_DRAGON_SILVER(MLVL, GENDER, ARM, WPN)  \
+   BASE_DRAGON(MLVL, GENDER,ARM, "sonic breath", WPN)   \
    MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(5,5,5,5,15,5) \
    MSET_SPELL(5,5,5,5,5,10,5,5,5,5,5) \
@@ -1231,8 +1231,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 0, "ANY",\
 dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 0, "ANY",\
                {"$1n attacks $3n!", "$1n attacks you!"}); \
 
-#define BASE_DRAGON_LAVA(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM, "fire breath")   \
+#define BASE_DRAGON_LAVA(MLVL, GENDER, ARM, WPN)  \
+   BASE_DRAGON(MLVL, GENDER,ARM, "fire breath", WPN)   \
    MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(5,5,5,5,15,5) \
    MSET_SPELL(5,5,5,5,5,5,10,5,5,5,5) \
@@ -1242,8 +1242,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 45, 0, "ANY",\
    SETHEIGHT(MLVL,180,1950) \
    exp 150
 
-#define BASE_DRAGON_TURTLE(MLVL, GENDER, ARM)  \
-   BASE_DRAGON(MLVL, GENDER,ARM, "light breath")/*change to colour */ \
+#define BASE_DRAGON_TURTLE(MLVL, GENDER, ARM, WPN)  \
+   BASE_DRAGON(MLVL, GENDER,ARM, "light breath", WPN)/*change to colour */ \
 MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(5,5,5,5,15,5) \
    MSET_SPELL(5,5,5,5,5,10,5,5,5,5,5) \
@@ -1257,169 +1257,169 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
 /*                          BLACK DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_BLACK_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_BLACK_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_BLACK_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_BLACK_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_BLACK_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_BLACK_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          RED DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_RED_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_RED(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_RED(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_RED_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_RED(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_RED(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_RED_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_RED_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_RED_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_RED_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_RED(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          WHITE DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_WHITE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_WHITE_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_WHITE_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_WHITE_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_WHITE_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_WHITE_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_WHITE(MLVL,GENDER,ARM_PLATE,, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          BLUE DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_BLUE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_BLUE_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_BLUE_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_BLUE_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_BLUE_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_BLUE_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_BLUE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          GREEN DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_GREEN_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_GREEN_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_GREEN_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_GREEN_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_GREEN_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_GREEN_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_GREEN(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          SILVER DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_SILVER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_SILVER_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_SILVER_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_SILVER_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_SILVER_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_SILVER_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_SILVER(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          LAVA DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_LAVA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_LAVA_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_LAVA_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_LAVA_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_LAVA_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_LAVA_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_LAVA(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 /* -------------------------------------------------------------------- */
 /*                          TURTLE DRAGONS                                            */
 /* -------------------------------------------------------------------- */
 #define M_DRAGON_TURTLE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
-   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_HLEATHER)
+   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_HLEATHER, WPN_CLAW_TINY)
 
 #define M_DRAGON_TURTLE_SMALL(MLVL,GENDER) /* level 26 to 50 */ \
-   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_CHAIN)
+   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_CHAIN, WPN_CLAW_SMALL)
 
 #define M_DRAGON_TURTLE_MEDIUM(MLVL,GENDER) /* level 51 to 75 */ \
-   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_TURTLE_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_TURTLE_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
-   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 #define M_DRAGON_TURTLE_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
-   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE)
+   BASE_DRAGON_TURTLE(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE)
 
 
 

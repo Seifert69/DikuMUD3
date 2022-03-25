@@ -68,73 +68,73 @@
 /*----------------------------BASE DRAGONS--------------------------*/
 
 
-#define BASE_DRAGON(MLVL, GENDER, BREATH)  \
+#define BASE_DRAGON(MLVL, GENDER, BREATH, WPN)  \
    sex GENDER \
    level MLVL \
    height    400 + MLVL*15 \
    weight    800 + MLVL*30 \
-   NATURAL_DEF(WPN_CLAW, ARM_PLATE) \
+   NATURAL_DEF(WPN, ARM_PLATE) \
    exp       150  /* For breath weapon */ \
    dilcopy combat_mag@function(BREATH, "", 25, 2);
 
-#define BASE_DRAGON_BLACK(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "acid breath")  \
+#define BASE_DRAGON_BLACK(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "acid breath", WPN)  \
    MSET_ABILITY(20,12,12,12,12,12,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,0,0,0,0,0,30) \
    alignment -750 \
    race RACE_DRAGON_BLACK
 
-#define BASE_DRAGON_BLUE(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "lightning breath")  \
+#define BASE_DRAGON_BLUE(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "lightning breath", WPN)  \
    MSET_ABILITY(20,12,12,12,14,10,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,0,0,0,30,0,0) \
    alignment -1000 \
    race RACE_DRAGON_BLUE
 
-#define BASE_DRAGON_GREEN(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "gas breath")  \
+#define BASE_DRAGON_GREEN(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "gas breath", WPN)  \
    MSET_ABILITY(20,12,12,12,14,10,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,0,0,0,0,30,0) \
    alignment -1000 \
    race RACE_DRAGON_GREEN
 
-#define BASE_DRAGON_LAVA(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "fire breath")   \
+#define BASE_DRAGON_LAVA(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "fire breath", WPN)   \
    MSET_ABILITY(20,12,12,12,14,10,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,0,30,0,0,0,0) \
    alignment -1000 \
    race RACE_DRAGON_LAVA
 
-#define BASE_DRAGON_RED(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "fire breath")   \
+#define BASE_DRAGON_RED(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "fire breath", WPN)   \
    MSET_ABILITY(20,12,12,12,16,8,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,0,30,0,0,0,0) \
    alignment -750 \
    race RACE_DRAGON_RED
 
-#define BASE_DRAGON_WHITE(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "frost breath")   \
+#define BASE_DRAGON_WHITE(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "frost breath", WPN)   \
    MSET_ABILITY(20,14,12,12,10,12,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,0,0,30,0,0,0) \
    alignment -750 \
    race RACE_DRAGON_WHITE
 
-#define BASE_DRAGON_SILVER(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "light breath")   \
+#define BASE_DRAGON_SILVER(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "light breath", WPN)   \
    MSET_ABILITY(20,12,12,12,16,8,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,30,0,0,0,0,0) \
    alignment 1000 \
    race RACE_DRAGON_SILVER
 
-#define BASE_DRAGON_TURTLE(MLVL, GENDER)  \
-   BASE_DRAGON(MLVL, GENDER, "fire breath")   \
+#define BASE_DRAGON_TURTLE(MLVL, GENDER, WPN)  \
+   BASE_DRAGON(MLVL, GENDER, "fire breath", WPN)   \
    MSET_ABILITY(20,12,12,12,14,10,20,0)  \
    MSET_WEAPON(10,10,10,5,30,5) \
    MSET_SPELL(0,0,0,0,0,0,30,0,0,0,0) \

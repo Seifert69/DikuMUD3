@@ -239,12 +239,14 @@ END HEADER*/
 #define WPN_LANCE        49
 
 
+#define WPN_BITE         WPN_BITE_MEDIUM
+#define WPN_STING        WPN_STING_MEDIUM
+#define WPN_CRUSH        WPN_CRUSH_MEDIUM
+
+// These are humanoid martial arts attacks
 #define WPN_FIST         34
 #define WPN_KICK         35
-#define WPN_BITE         36
-#define WPN_STING        37
 #define WPN_CLAW         38
-#define WPN_CRUSH        39
 #define WPN_KNEE         55
 #define WPN_ELBOW        56
 #define WPN_KNUCKLES     99  // metal on your knuckles
@@ -253,6 +255,33 @@ END HEADER*/
 #define WPN_CROSSBOW     43
 #define WPN_SLING        44
 #define WPN_WHIP         40
+
+
+#define WPN_KICK_TINY     81
+#define WPN_KICK_SMALL    WPN_KICK  // This is also the humanoid kick practiced, naming issue
+#define WPN_KICK_MEDIUM   83
+#define WPN_KICK_LARGE    84
+#define WPN_KICK_HUGE     85
+#define WPN_BITE_TINY     81
+#define WPN_BITE_SMALL    82
+#define WPN_BITE_MEDIUM   83
+#define WPN_BITE_LARGE    84
+#define WPN_BITE_HUGE     85
+#define WPN_STING_TINY    86
+#define WPN_STING_SMALL   87
+#define WPN_STING_MEDIUM  88
+#define WPN_STING_LARGE   89
+#define WPN_STING_HUGE    90
+#define WPN_CLAW_TINY     91
+#define WPN_CLAW_SMALL    WPN_CLAW  // This is also the humanoid claw practiced (assassins), naming issue
+#define WPN_CLAW_MEDIUM   93
+#define WPN_CLAW_LARGE    94
+#define WPN_CLAW_HUGE     95
+#define WPN_CRUSH_TINY    96
+#define WPN_CRUSH_SMALL   97
+#define WPN_CRUSH_MEDIUM  98
+#define WPN_CRUSH_LARGE   99
+#define WPN_CRUSH_HUGE   100
 
 // MISSING WEAPONS ?
 
