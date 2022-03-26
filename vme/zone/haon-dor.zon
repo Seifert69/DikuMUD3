@@ -2759,7 +2759,7 @@ extra {}
 "This small, furry creature with long ears and big feet has been attacked by
 the dreaded rabbit rabies, a horrible disease that turns helpless and innocent
 rabbits into ferocious and bloodthirsty monsters."
-M_RABBIT_MAD(15,SEX_MALE)
+M_RABBIT_MAD(15,SEX_MALE, ARM_HLEATHER, WPN_BITE_SMALL)
 alignment -150
 position POSITION_SLEEPING
 default POSITION_STANDING
@@ -3068,7 +3068,7 @@ descr "A vicious warg is here, snarling angrily at you."
 extra {}
 "It is an exceptionally large wolf with thick, black fur.  Saliva is dripping
 quickly from its long, white fangs.  It looks quite dangerous and very angry."
-M_WOLF_MAD(12,SEX_NEUTRAL)
+M_WOLF_MAD(12, SEX_NEUTRAL, ARM_HLEATHER, WPN_BITE_SMALL)
 alignment -350 /* Override default */
 dilcopy wander_zones@function ("@loadzone", 18, 0, 0);
 

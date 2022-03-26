@@ -1944,7 +1944,7 @@ extra {}
 "As it oozes slowly at you, you can make out items undigested within it.  From
 past unfortunates, you presume."
 flags {UNIT_FL_NO_TELEPORT}
-M_SPIDER_MAD(10, SEX_NEUTRAL)
+M_SPIDER_MAD(10, SEX_NEUTRAL, ARM_CLOTHES, WPN_STING_TINY)
 alignment -700
 dilcopy wander_zones@function ("@loadzone", 70, 0,0);
 money 30 IRON_PIECE
