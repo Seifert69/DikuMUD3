@@ -15,24 +15,24 @@
         {
             "source_file": {
                 "filename": "abilities.def",
-                "sha512": "5c710222c25541901844537d6283f1bf9a5d697f1326492934f4f39a9a28fbbec73ff95a8a71eb2db29871ba43135b4c64456dcfe26d381609b0a737ad913990"
+                "sha512": "d3d8aa0611cdfb47b22717cca72ffdf7264f43fea50c9f1ceedd6cddf2893e1c3741fd980ad36ceb8a39d61b559a9bd767a1b8e1119f1148d856829f9b6387fa"
             },
             "output": [
                 {
                     "filename": "abilities.dat",
-                    "sha512": "8e539009f0ce9e0485396d309e35e2844c62fde759037b2df9440b02059097e161f5d62a7e22b6ebf8537993991cd6e838aa908512848fc120254d913a339b23"
+                    "sha512": "80e2f2b86db65df34dec253a43a719f955ddffbb53e512ea4b82b165d0c1ffbc852a056465acb6a30925489cc3f61c8e1070948fb31280f530a4781bcce2fa1e"
                 }
             ]
         },
         {
             "source_file": {
                 "filename": "commands.def",
-                "sha512": "8b0274be1fe930ca7c9221f00dcb4b35d4ae66b03de91ed21987602c3e8bb76cf8d403b14a25a701a20da972a1d6b8a665dc6b7d4e758e059941c458f23c8449"
+                "sha512": "616eb615e44aeedf736d02117242cfdaa0469377fae3ddef1f0bd118c0e50ce30f87089ef5cb32e592a387be764270997ebe30d8adaee93bfd763439d6e7ac56"
             },
             "output": [
                 {
                     "filename": "commands.dat",
-                    "sha512": "8a252d66c389eef697a9db5f337bab724effb622b0df3b3d793c7f338983127cc56840351e6ace68aa6d14ff1c3df1d0aa2a9d1ad9e8baeeeb54c769b3eff8e5"
+                    "sha512": "487bc35c4f887e4f17cb7c779003d1167f3424ddcf9ec9c68c19683ab5f5b20dccbdeb8c0d88f299981b10b27ad5d301f1c07dec996482f8194428e6190cfab0"
                 }
             ]
         },
@@ -87,12 +87,12 @@
         {
             "source_file": {
                 "filename": "weapons.def",
-                "sha512": "e21bdd195e08ada2d0c0ad4dabca68620dce667180396fa59b1b84d0f431c266e4c0c29c8e624290b1d01b2f5c07c6f60a75e3cd4ae087c81b849f04187ae689"
+                "sha512": "713266c357ffca8181f9feb17344935b127c4f1c992b25521db7fef76b0c6b2e0d1bebc544599b9be1f17a30d396669d0003981eff956421f40dfb14d9a867af"
             },
             "output": [
                 {
                     "filename": "weapons.dat",
-                    "sha512": "a4b8b3de061d132db51f778e3119b7d12186f565bc98465ba60683211603d5865f7882013bd51da158b69a328af3280f0130a7bc3aaab83168e9722f270ccf6a"
+                    "sha512": "0a168261b4719393566a457d541d8b51c77eaffeec70230d432c9ef6cad1ff78f21e8f1467de7161f1af9a53020bc43255f7fb62b958b75b2f366a5b820e0d05"
                 }
             ]
         }
