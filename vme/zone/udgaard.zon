@@ -14206,7 +14206,7 @@ load eliza into jail@midgaard local 1
 
 load adolf into accuse_room max 1 complete
 {
-   load rnd_artifact@randomt
+   load rnd2_good@randomt
 
    load jail_key
    load safe_key
