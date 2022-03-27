@@ -824,6 +824,10 @@
 */
 
 #define SPEED_DEFAULT   12
+#define SPEED_150        8
+#define SPEED_200        6
+#define SPEED_240        5
+#define SPEED_300        4
 #define SPEED_MIN        4
 #define SPEED_MAX      200
 
