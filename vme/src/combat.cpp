@@ -193,7 +193,7 @@ void cCombatList::PerformViolence()
                     {
                         int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(2, IS_PC(pElems[nIdx]->pOwner));
 
-                        if (pElems[nIdx]->nAttackNo <= n)
+                        if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen < SPEED_DEFAULT))
                         {
                             bAnyaction = true;
                             melee_violence(pElems[nIdx]->pOwner, (pElems[nIdx]->nAttackNo & 1));
@@ -208,7 +208,7 @@ void cCombatList::PerformViolence()
                     {
                         int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(1, IS_PC(pElems[nIdx]->pOwner));
 
-                        if (pElems[nIdx]->nAttackNo <= n)
+                        if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen < SPEED_DEFAULT))
                         {
                             bAnyaction = true;
                             melee_violence(pElems[nIdx]->pOwner, TRUE);
