@@ -19,17 +19,19 @@ fighter / barbarian:
 </p>
 <pre>  fighter, cleric, mage, ranger
 </pre>
-<p>cleric:
+<p>cleric / druid:
 </p>
-<pre>  fighter, thief, mage, paladin
+<pre>  fighter, thief, mage, paladin, necromancer
 </pre>
-<p>mage:
+<p>mage / sorcerer:
 </p>
-<pre>  fighter, thief, cleric, necromancer
+<pre>  fighter, thief, cleric
 </pre>
 <p>Thus, you could end up with a character that is for example a fighter / barbarian / mage.
-</p><p><br />
-See Also:
+Note, that necromancy is only possible if your starting class is a cleric.
+Also, you can only achieve a specialization in your own class. A fighter can specialize as
+a barbarian. But a thief cannot later become a Barbarian.
+</p><p>See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Guilds</a>
  &gt; <a cmd='#'>Help Status</a>
