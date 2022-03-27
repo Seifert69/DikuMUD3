@@ -276,13 +276,14 @@ int dikuii_melee_bonus(unit_data *att,
             dual_skill = CHAR_DEX(att);
         }
 
-        if (primary)
+        // The dual skill is the floor of how well your attack works
+        if (att_bonus > dual_skill)
+            att_bonus = dual_skill;
+
+        if (!primary)
         {
-            att_bonus -= MAX(0, 25 - (dual_skill / 4));
-        }
-        else
-        {
-            att_bonus -= MAX(0, 50 - (dual_skill / 4));
+            // The secondary weapon gets a penalty of 25
+            att_bonus -= 25; // MAX(0, 50 - (dual_skill / 4));
         }
     }
 

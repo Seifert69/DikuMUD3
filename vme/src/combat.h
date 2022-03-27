@@ -46,7 +46,7 @@ public:
     inline int When() { return nWhen; }
     inline int NoOpponents() { return nNoOpponents; }
 
-    void changeSpeed(int delta);
+    void changeSpeed(int delta, int speedPercentage);
     void setMelee(unit_data *victim);
     void setCommand(const char *arg);
 
@@ -59,6 +59,7 @@ private:
     void sub(int idx);
     int findOpponentIdx(unit_data *tmp);
 
+    int nAttackNo;                  // Counter for which attack is being performed
     int nWhen;                      // What tick to attack / command at
     unit_data *pOwner;              // The owning unit
     unit_data *pMelee;              // The melee or kill pointer

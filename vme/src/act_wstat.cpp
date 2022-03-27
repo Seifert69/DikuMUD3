@@ -1041,7 +1041,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        "Race [%s]  Can Carry W [%d]  Can Carry N [%d]<br/>"
                                        "Char Flags [%s]<br/>"
                                        "Exp: [%ld] Offensive Bonus [%d] Defensive Bonus [%d]<br/>"
-                                       "Attack [%s]   Speed [%d]   Natural-Armour [%d]<br/>"
+                                       "Attack [%s]   Speed [%d%%=%d]   Natural-Armour [%d]<br/>"
                                        "HP [H%ld/L%d/G%d]   Mana [H%d/L%d/G%d]  END [H%d/L%d/G%d]<br/>"
                                        "STR [%d]  DEX [%d]  CON [%d]  CHA [%d]<br/>"
                                        "BRA [%d]  MAG [%d]  DIV [%d]  HP  [%d]<br/>",
@@ -1061,7 +1061,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_OFFENSIVE(u),
                                        CHAR_DEFENSIVE(u),
                                        sprinttype(nullptr, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
-                                       CHAR_SPEED(u),
+                                       getCharPoints(u).getSpeedPercentage(IS_PC(u)), CHAR_SPEED(u),
                                        CHAR_NATURAL_ARMOUR(u),
                                        (signed long)UNIT_HIT(u),
                                        hit_limit(u),

@@ -1594,7 +1594,8 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
 
     if (CHAR_COMBAT(att))
     {
-        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed);
+        // The weapon's speed is subtracted
+        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed, getCharPoints(att).getSpeedPercentage(IS_PC(att)));
     }
 
     if (!check_combat(att))

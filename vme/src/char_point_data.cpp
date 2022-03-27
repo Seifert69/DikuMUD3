@@ -1,6 +1,7 @@
 #include "char_point_data.h"
 
 #include "utils.h"
+#include "utility.h"
 
 char_point_data::char_point_data()
     : flags{0}          // Char flags
@@ -159,6 +160,33 @@ sbit16 *char_point_data::getDefensiveBonusPtr()
 ubit8 char_point_data::getSpeed() const
 {
     return speed;
+}
+
+
+//       N1  N2
+// 100% = 1   2
+// 200% = 2   4
+// 300% = 3   6
+// 
+int char_point_data::getNumberOfMeleeAttacks(int naturalAttacks, bool isPC)
+{
+    return MAX(1, (naturalAttacks*getSpeedPercentage(isPC))/100);
+}
+
+// Calculate the speed percentage. 200% max for players,
+// 300% max for NPCs. 25% is the worst possible (4x slowed)
+int char_point_data::getSpeedPercentage(bool isPC)
+{
+    if (speed < SPEED_MIN)
+        speed = SPEED_MIN;
+        
+    if (speed == SPEED_DEFAULT)
+        return 100;
+
+    if (isPC)
+        return MAX(MIN(200, (100*SPEED_DEFAULT)/speed), 25);
+    else
+        return MAX(MIN(300, (100*SPEED_DEFAULT)/speed), 25);
 }
 
 void char_point_data::setSpeed(ubit8 value)

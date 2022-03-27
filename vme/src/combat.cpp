@@ -12,6 +12,7 @@
 #include "interpreter.h"
 #include "modify.h"
 #include "skills.h"
+#include "slog.h"
 #include "structs.h"
 #include "textutil.h"
 #include "unitfind.h"
@@ -104,10 +105,37 @@ void cCombatList::Sort()
     }
 }
 
+
+// Need to document here how character speed, weapons speed, combat command speed
+// works together. I've looked at it for an hour and it remains elusive... :-)
+//
+// This is what it says in vme.h
+//   The combat speed is 12 by default and is lower when faster.
+//   4 is the fastest speed and means 3 attacks per combat round.
+//   200 is slowest and means 1 attack per 200/12 combat rounds.
+//   SPEED_DEFAULT is also the same as the duration of one combat round.
+//
+// So think this is how it works. 
+//   Characters has default speed of 12. Haste will make this number
+//   lower (4 minimum).
+//
+//   In each combat round, first all combatants have their actions set to zero.
+//     Then we loop through all combatants, each combat action will add to their
+//     action count.
+//     Then we repeat the loop until everyone has spent at least 12 actions
+//
+//     If a character is hasted, their CHAR_SPEED is lower. And they'll spend
+//     less actions on a melee attack.
+//
+//     The number of actions consumed by an action such as kick happens in the
+//     interpreter; the CHAR_SPEED is unrelated to this.
+//
+//     The speed of a weapon doesn't currenty seem to impact these actions.
+//
+//      It is a little bit odd ...
+//
 void cCombatList::PerformViolence()
 {
-    int bAnyaction = FALSE;
-
     if (nTop < 1)
     {
         return;
@@ -115,35 +143,43 @@ void cCombatList::PerformViolence()
 
     Sort();
 
-    // Happens just ONCE per turn, give everybody 12 actions...
+    // Happens just ONCE per turn, give everybody 12 actions... 
     for (nIdx = 0; nIdx < nTop; nIdx++)
     {
-        if (pElems[nIdx]->nWhen > 0)
-        {
-            pElems[nIdx]->nWhen = MAX(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
-        }
+        pElems[nIdx]->nAttackNo = 0;
+        // if (pElems[nIdx]->nWhen > 0)  -- Removed, I don't understand it's purpose
+        pElems[nIdx]->nWhen = MAX(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
+        // send_to_char("Combat begin<br/>", pElems[nIdx]->pOwner);
     }
+
+    bool bAnyaction;
 
     do
     {
+        bAnyaction = false;
+
         for (nIdx = 0; nIdx < nTop; nIdx++)
         {
-            bAnyaction = FALSE;
-
             if (pElems[nIdx]->nWhen >= SPEED_DEFAULT)
             {
-                break; // The rest are larger...
+                break; // The rest are larger... Always sorted, see end of while
             }
 
-            cCombat *tmp = pElems[nIdx];
+            cCombat *tmp = pElems[nIdx]; // In case element is destroyed
 
             if (pElems[nIdx]->cmd[0]) // Execute a combat command...
             {
+                bAnyaction = true;
+
+                int t = pElems[nIdx]->nWhen;
+
                 char *c = str_dup(pElems[nIdx]->cmd);
 
                 pElems[nIdx]->cmd[0] = 0;
                 command_interpreter(pElems[nIdx]->pOwner, c);
-                bAnyaction = TRUE;
+
+                if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
+                    slog(LOG_ALL, 0, "Combat action %s didn't use any combat time", c);
 
                 FREE(c);
             }
@@ -151,32 +187,52 @@ void cCombatList::PerformViolence()
             {
                 if (CHAR_FIGHTING(pElems[nIdx]->pOwner))
                 {
+                    pElems[nIdx]->nAttackNo++;
+                    int t = pElems[nIdx]->nWhen;
                     if (char_dual_wield(pElems[nIdx]->pOwner))
                     {
-                        bAnyaction = TRUE;
-                        melee_violence(pElems[nIdx]->pOwner, tmp->nWhen <= (SPEED_DEFAULT + 1) / 2);
-                        if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                        int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(2, IS_PC(pElems[nIdx]->pOwner));
+
+                        if (pElems[nIdx]->nAttackNo <= n)
                         {
-                            tmp->nWhen += MAX(2, (1 + CHAR_SPEED(tmp->pOwner)) / 2);
+                            bAnyaction = true;
+                            melee_violence(pElems[nIdx]->pOwner, (pElems[nIdx]->nAttackNo & 1));
+                            if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
+                                slog(LOG_ALL, 0, "Dual wield melee action didn't use any combat time");
+
+                            //if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                            //  tmp->changeSpeed(SPEED_DEFAULT / 2, IS_PC(tmp->pOwner)); // Use weapon speed instead
                         }
                     }
                     else
                     {
-                        bAnyaction = TRUE;
-                        melee_violence(pElems[nIdx]->pOwner, TRUE);
-                        if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                        int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(1, IS_PC(pElems[nIdx]->pOwner));
+
+                        if (pElems[nIdx]->nAttackNo <= n)
                         {
-                            tmp->nWhen += MAX(4, CHAR_SPEED(tmp->pOwner));
+                            bAnyaction = true;
+                            melee_violence(pElems[nIdx]->pOwner, TRUE);
+
+                            if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
+                                slog(LOG_ALL, 0, "Normal melee  action didn't use any combat time");
+                            // if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
+                            //    tmp->changeSpeed(SPEED_DEFAULT, IS_PC(tmp->pOwner));
                         }
                     }
                 }
             }
-        }
-        Sort();
-    } while (bAnyaction && nTop > 0 && pElems[0]->nWhen < SPEED_DEFAULT);
+        } // for
+
+        if (bAnyaction)
+           Sort();
+    }
+    while (bAnyaction && nTop > 0 && pElems[0]->nWhen < SPEED_DEFAULT);
+
+    // for (nIdx = 0; nIdx < nTop; nIdx++) { send_to_char("Combat end<br/>", pElems[nIdx]->pOwner); }
 
     nIdx = -1;
 }
+
 
 void cCombatList::status(const unit_data *ch)
 {
@@ -235,9 +291,22 @@ void cCombat::setCommand(const char *arg)
     cmd[MAX_INPUT_LENGTH] = 0;
 }
 
-void cCombat::changeSpeed(int delta)
+void cCombat::changeSpeed(int delta, int speedPercentage)
 {
-    nWhen += delta;
+    if (!is_in(speedPercentage, 25, 300))
+    {
+        slog(LOG_ALL, 0, "speedPercentage is invalid", speedPercentage);
+        speedPercentage = 100;
+    }
+
+    if (speedPercentage == 100)
+    {
+        nWhen += MAX(4, delta);
+    }
+    else
+    {
+        nWhen += MAX((4*100)/speedPercentage, (delta*100)/speedPercentage);
+    }
 }
 
 int cCombat::findOpponentIdx(unit_data *target)
@@ -327,6 +396,8 @@ void cCombat::sub(int idx)
 
 void cCombat::setMelee(unit_data *victim)
 {
+    if (pMelee != victim)
+        CHAR_COMBAT(pOwner)->changeSpeed((3*SPEED_DEFAULT)/4, 100);  // Prevent hasted dual wields from killing 4 / round
     pMelee = victim;
 }
 

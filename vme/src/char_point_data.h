@@ -56,8 +56,11 @@ public:
     void setDefensiveBonus(sbit16 value);
     sbit16 *getDefensiveBonusPtr();
 
+    int getNumberOfMeleeAttacks(int naturalAttacks, bool isPC);
+
     ubit8 getSpeed() const;
     void setSpeed(ubit8 value);
+    int getSpeedPercentage(bool isPC);
 
     ubit8 getNaturalArmor() const;
     void setNaturalArmor(ubit8 value);

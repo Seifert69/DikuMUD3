@@ -745,7 +745,7 @@ void dilfi_chas(dilprg *p)
     {
         if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && CHAR_COMBAT((unit_data *)v1->val.ptr))
         {
-            CHAR_COMBAT((unit_data *)v1->val.ptr)->changeSpeed(v2->val.num);
+            CHAR_COMBAT((unit_data *)v1->val.ptr)->changeSpeed(v2->val.num,  getCharPoints((unit_data *) v1->val.ptr).getSpeedPercentage(IS_PC((unit_data *)v1->val.ptr)));
         }
     }
     delete v1;

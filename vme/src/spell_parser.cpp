@@ -444,7 +444,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
     // Spells take time too!
     if (CHAR_COMBAT(ch))
     {
-        CHAR_COMBAT(ch)->changeSpeed(g_spell_info[spl].beats);
+        CHAR_COMBAT(ch)->changeSpeed(g_spell_info[spl].beats,getCharPoints(ch).getSpeedPercentage(IS_PC(ch)));
     }
 
     say_spell(ch, unit, spl);
