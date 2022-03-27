@@ -742,6 +742,7 @@ python2 getwikihelppage.py Tripping
 python2 getwikihelppage.py Tsunami &
 python2 getwikihelppage.py Tuborg &
 python2 getwikihelppage.py Turnundead &
+python2 getwikihelppage.py TwoWeaponStyle &
 python2 getwikihelppage.py Typo &
 python2 getwikihelppage.py Udgaardconjurer
 python2 getwikihelppage.py Udgaard &
