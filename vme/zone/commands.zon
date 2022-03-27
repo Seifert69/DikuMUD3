@@ -3941,6 +3941,7 @@ quit;
 }
 dilend
 
+
 dilbegin do_hold(arg : string);
 external
 	integer wear(ch : unitptr, obj : unitptr,
@@ -4380,20 +4381,19 @@ return(ret);
 }
 dilend
 
+
+// Returns TRUE if a weapon is two-handed.
 dilbegin integer two_handed(i : integer);
 var
-wpns : intlist;
+   wpns : intlist;
 code
 {
-wpns:=weapon_info(i);
+   wpns := weapon_info(i);
 
-if (wpns.[0]==2)
-	return (TRUE);
+   if (wpns.[0] == 2)
+	   return (TRUE);
 
-return (FALSE);
-
-
-
+   return (FALSE);
 }
 dilend
 
@@ -7101,6 +7101,7 @@ code
        "You are in " + couragestring() + " mode.<br/>"+
        "More: '<a cmd='#'>status skills</a>', '<a cmd='#'>status weapons</a>' and '<a cmd='#'>status spells</a>'."
        , A_ALWAYS, self, null, null, TO_CHAR);
+   // XXX Add some speed info here.
    quit;
 
 
