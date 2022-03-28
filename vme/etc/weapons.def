@@ -638,11 +638,11 @@ race halfling = 0
 race gnome = -1
 race brownie = -2
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND hand axe
 
 index           = WPN_WAR_MATTOCK // 2H Mattock
@@ -716,11 +716,11 @@ race brownie = -4
 race half-orc = 1
 restrict level = 14
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND adze mattock
 
 
@@ -805,11 +805,11 @@ race groll = 3
 restrict strength = 90
 restrict level = 10
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND war hammer
 
 
@@ -842,11 +842,11 @@ race gnome = -2
 race brownie = -3
 restrict level = 12
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND brass knuckles
 
 
@@ -965,11 +965,11 @@ race half-ogre = -1
 race groll = -1
 restrict level = 20
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND long sword
 
 
@@ -1002,11 +1002,11 @@ race gnome = -3
 race brownie = -4
 restrict level = 8
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND broad sword
 
 
@@ -1040,11 +1040,11 @@ race groll = -7
 restrict dexterity = 30
 restrict level = 4
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND rapier
 
 
@@ -1079,11 +1079,11 @@ race half-ogre = -2
 race groll = -3
 restrict level = 1
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND short sword
 
 
@@ -1119,11 +1119,11 @@ race half-ogre = -2
 race groll = -3
 restrict level = 40
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND stiletto
 
 
@@ -1158,11 +1158,11 @@ race brownie = 1
 race half-ogre = -2
 race groll = -3
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND dagger
 
 
@@ -1198,11 +1198,11 @@ race half-orc = 3
 race groll = -2
 restrict level = 16
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND scimitar
 
 
@@ -1241,11 +1241,11 @@ race groll = -3
 restrict dexterity = 40
 restrict level = 10
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND sickle
 
 
@@ -1281,11 +1281,11 @@ race half-orc = 2
 race groll = -2
 restrict level = 8
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND falchion
 
 
@@ -1319,11 +1319,11 @@ race half-ogre = -2
 race groll = -3
 restrict level = 14
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND main gauche
 
 
@@ -1404,11 +1404,11 @@ race brownie = -2
 race half-orc = 1
 restrict level = 3
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND mace
 
 
@@ -1486,11 +1486,11 @@ race brownie = -4
 race half-orc = 1
 restrict level = 20
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND morning star
 
 
@@ -1569,11 +1569,11 @@ race half-ogre = 2
 race groll = 1
 restrict level = 5
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND club
 
 
@@ -1605,11 +1605,11 @@ profession mage = 0
 profession sorcerer = 0
 profession barbarian = 1
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND quarterstaff
 
 
@@ -1644,7 +1644,7 @@ race brownie = -4
 race half-ogre = -1
 race groll = -2
 restrict level = 10
-// 2H
+// Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
 attack sleather = {50,  9,  5}
 attack hleather = {40,  8,  6}
@@ -1684,11 +1684,11 @@ race halfling = -2
 race gnome = -3
 race brownie = -4
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND javelin
 
 
@@ -2109,11 +2109,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND kick medium
 
 
@@ -2205,11 +2205,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND claw tiny
 
 
@@ -2269,11 +2269,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND claw medium
 
 
@@ -2365,11 +2365,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND bite tiny
 
 
@@ -2429,11 +2429,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND bite medium
 
 
@@ -2525,11 +2525,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND sting tiny
 
 
@@ -2589,11 +2589,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND sting medium
 
 
@@ -2685,11 +2685,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND crush tiny
 
 
@@ -2749,11 +2749,11 @@ profession mage = -7
 profession sorcerer = -7
 profession barbarian = -7
 // Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  7}
-attack sleather = {50,  6,  8}
-attack hleather = {50,  5,  9}
-attack chain    = {50,  4, 10}
-attack plate    = {50,  3, 11}
+attack clothes  = {50,  7,  6}
+attack sleather = {50,  6,  7}
+attack hleather = {50,  5,  8}
+attack chain    = {50,  4,  9}
+attack plate    = {50,  3, 10}
 //_CUTEND crush medium
 
 
@@ -2853,11 +2853,11 @@ race groll = -3
 restrict dexterity = 50
 restrict level = 9
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND whip
 
 
@@ -2982,10 +2982,10 @@ race groll = -4
 restrict dexterity = 20
 restrict level = 1
 // Circle 4, 1H light weapons (daggers,etc)
-attack clothes  = { 40,  3, 13}
-attack sleather = { 50,  2, 14}
-attack hleather = { 60,  1, 15}
-attack chain    = { 80,  1, 16}
-attack plate    = {100,  1, 17}
+attack clothes  = { 40,  3, 12}
+attack sleather = { 50,  2, 13}
+attack hleather = { 60,  1, 14}
+attack chain    = { 80,  1, 15}
+attack plate    = {100,  1, 16}
 //_CUTEND sling
 

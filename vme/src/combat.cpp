@@ -182,7 +182,7 @@ void cCombatList::PerformViolence()
                 s.append(itoa(pElems[nIdx]->nWhen));
                 s.append("<br/>");
                 send_to_char(s, pElems[nIdx]->pOwner);*/
-                
+
                 pElems[nIdx]->cmd[0] = 0;
                 command_interpreter(pElems[nIdx]->pOwner, c);
 
@@ -206,7 +206,6 @@ void cCombatList::PerformViolence()
                 if (CHAR_FIGHTING(pElems[nIdx]->pOwner))
                 {
                     pElems[nIdx]->nAttackNo++;
-                    int t = pElems[nIdx]->nWhen;
                     if (char_dual_wield(pElems[nIdx]->pOwner))
                     {
                         int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(2, IS_PC(pElems[nIdx]->pOwner));
@@ -241,8 +240,8 @@ void cCombatList::PerformViolence()
                                 send_to_char(s, pElems[nIdx]->pOwner);
                             }*/
 
-                            if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
-                                slog(LOG_ALL, 0, "Dual wield melee action didn't use any combat time");
+                            //if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
+                            //    slog(LOG_ALL, 0, "Dual wield melee action didn't use any combat time");
 
                             //if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
                             //  tmp->changeSpeed(SPEED_DEFAULT / 2, IS_PC(tmp->pOwner)); // Use weapon speed instead
@@ -282,8 +281,8 @@ void cCombatList::PerformViolence()
                                 send_to_char(s, pElems[nIdx]->pOwner);
                             }*/
 
-                            if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
-                                slog(LOG_ALL, 0, "Normal melee  action didn't use any combat time");
+                            //if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
+                            //    slog(LOG_ALL, 0, "Normal melee  action didn't use any combat time");
                             // if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
                             //    tmp->changeSpeed(SPEED_DEFAULT, IS_PC(tmp->pOwner));
                         }

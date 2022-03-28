@@ -1267,16 +1267,15 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_MEDIUM)
 
 #define M_DRAGON_BLACK_LARGE(MLVL,GENDER) /* level 76 to 100 */ \
-   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE) \
-   speed SPEED_150
+   BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_LARGE)
 
 #define M_DRAGON_BLACK_XLARGE(MLVL,GENDER) /* level 101 to 120 */ \
    BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE) \
-   speed SPEED_200
+   speed SPEED_150
 
 #define M_DRAGON_BLACK_GODLY(MLVL,GENDER) /* level 121 to 199 */ \
    BASE_DRAGON_BLACK(MLVL,GENDER,ARM_PLATE, WPN_CLAW_HUGE) \
-   speed SPEED_300
+   speed SPEED_200
 
 /* -------------------------------------------------------------------- */
 /*                          RED DRAGONS                                            */
