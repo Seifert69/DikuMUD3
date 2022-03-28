@@ -6632,8 +6632,8 @@ dead_jim := dead_jim - bonus;
 }
 dilend /* throw */
 
-dilbegin lay_trap (arg : string); /* Lay the trap */
 
+dilbegin lay_trap (arg : string); /* Lay the trap */
 var
    my_trap      : unitptr;
 
@@ -6813,20 +6813,20 @@ code
       spring_other := "default";
 
    if (isset(self.pcflags, PC_PK_RELAXED))
-      dilcopy ("trap_laid@skills(1, " + itoa(pow) + ", " + spring_self + ", " +
-               spring_other + ", " + self.name + ")", my_trap);
+      dilcopy ("trap_laid@skills(1," + itoa(pow) + "," + spring_self + "," +
+               spring_other + "," + self.name + ")", my_trap);
    else
-      dilcopy ("trap_laid@skills(0, " + itoa(pow) + ", " + spring_self + ", " +
-               spring_other + ", " + self.name + ")", my_trap);
+      dilcopy ("trap_laid@skills(0, " + itoa(pow) + "," + spring_self + "," +
+               spring_other + "," + self.name + ")", my_trap);
    link(my_trap, self.outside);
 
    quit;
 }
 dilend /* lay_trap */
 
+
 dilbegin aware trap_laid(pk : integer, pow : integer, spring_self : string,
                          spring_other : string, owner : string);
-
 var
    pc        : unitptr;
    tempu     : unitptr;
@@ -6869,11 +6869,8 @@ code
 
    if (activator.name in ppl_list)
    {
-      pc := activator;
-      secure(pc, pre_start);
-      act("You carefully avoid the " + self.name + " here.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto pre_start;
+      act("You carefully avoid $2n here.", A_ALWAYS, pc, self, null, TO_CHAR);
+      goto start;
    }
 
    if (activator.level >= IMMORTAL_LEVEL) goto start;
@@ -6881,11 +6878,9 @@ code
 
    if (NO_TRAP in activator.extra)
    {
-    act("$1n spots a trap and dances like a ballerina around it.",
-          A_SOMEONE, activator, null, null, TO_REST);
-   goto start;
+      act("$1n spots a trap and dances like a ballerina around it.", A_SOMEONE, activator, null, null, TO_REST);
+      goto start;
    }
-
 
    pc := activator;
    secure(pc, pre_start);
@@ -13586,7 +13581,7 @@ end /* arrow */
 
 man_trap
   names{"man trap", "trap"}
-  title " man trap"
+  title "a man trap"
   descr "A small man trap lies nearly undetectable here."
   extra{}
   "This trap looks purposeful and nasty, hunting rabbit with it would be
