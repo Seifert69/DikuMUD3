@@ -87,12 +87,12 @@
         {
             "source_file": {
                 "filename": "weapons.def",
-                "sha512": "0214a4880bb7161eb3eceaae61a43ad20499ba6d3a3a2521afb5464c22f703beced657994ab0672a7170bdd541ea825637129c38588361e2d0683aa931495540"
+                "sha512": "ba52c21596d9de0ff0c5d49d3e228bfa32776cf846cfca4115c7aab00e85e1b7dc3638e20a5f764318f7199e9cc61fe538eb2e7330f95a8664428d4178d81d2a"
             },
             "output": [
                 {
                     "filename": "weapons.dat",
-                    "sha512": "8d1781c6a27e533df1dabab35753422b2a2f92d31d24bd5a859df90dc17105c05ceb3423fe8ec2b7656ab65a74162c606b82874bf071242b9ad8ebc32f360f3e"
+                    "sha512": "796b1ff8e9f822e9e02143b7a0271b96e5707621abbd586586f6015d60623c698dafde7b493ea64d63d2b925c82349105bea67a1ffa103a3746b02828140bdbb"
                 }
             ]
         }
