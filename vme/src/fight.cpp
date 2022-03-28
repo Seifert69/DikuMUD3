@@ -1578,24 +1578,29 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
 
     roll = open100();
 
+    if (CHAR_COMBAT(att))
+    {
+        // The weapon's speed is subtracted
+        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed, getCharPoints(att).getSpeedPercentage(IS_PC(att)));
+    }
+
     if (att_weapon && weapon_fumble(att_weapon, roll))
     {
         cact("You fumble with your $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_CHAR, "miss_me");
         cact("$1n fumbles with $1s $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_ROOM, "miss_other");
         hm = MIN(-10, roll - open100());
         damage_object(att, att_weapon, hm);
+        if (CHAR_COMBAT(att))
+        {
+            CHAR_COMBAT(att)->changeSpeed(SPEED_DEFAULT/2, 100); // Lose ½ round when you fumble
+        }
+
         return 0;
     }
     else
     {
         roll_description(att, "hit", roll);
         hm += roll_boost(roll, CHAR_LEVEL(att));
-    }
-
-    if (CHAR_COMBAT(att))
-    {
-        // The weapon's speed is subtracted
-        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed, getCharPoints(att).getSpeedPercentage(IS_PC(att)));
     }
 
     if (!check_combat(att))

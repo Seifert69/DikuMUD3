@@ -529,6 +529,42 @@ int spell_bonus(unit_data *att,
     return MAX(-50, hm);
 }
 
+// if primary is true, retrieves data for primary weapon, otherwise secondary.
+// if *pWeapon is set, then that's the weapon.
+// pWeaponType and pWeaponSpeed will always be set, regresses to natural if no weapon
+//
+void getWeapon(unit_data *ch, unit_data **pWeapon, int *pWeaponType, int *pWeaponSpeed, bool primary)
+{
+    assert(IS_CHAR(ch));
+    assert(pWeaponType != nullptr);
+    assert(pWeapon != nullptr);
+    assert(pWeaponSpeed != nullptr);
+
+    *pWeapon = nullptr;
+
+    if (primary)
+    {
+        *pWeapon = equipment_type(ch, WEAR_WIELD, ITEM_WEAPON);
+    }
+    else
+    {
+        *pWeapon = equipment_type(ch, WEAR_HOLD, ITEM_WEAPON);
+    }
+
+    if (*pWeapon)
+    {
+        *pWeaponType = OBJ_VALUE(*pWeapon, 0); // [0] is weapon category
+    }
+    else
+    {
+        *pWeaponType = CHAR_ATTACK_TYPE(ch);
+    }
+
+    *pWeaponSpeed = g_wpn_info[*pWeaponType].speed;
+}
+
+
+
 /* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
 /* modification? This value should then be added to an open roll  */
 /* and looked up upon the damage_charts. If armour type points    */

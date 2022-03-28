@@ -46,6 +46,7 @@ public:
     inline int When() { return nWhen; }
     inline int NoOpponents() { return nNoOpponents; }
 
+    int calculateHastedActions(int actions, int hastePercentage);
     void changeSpeed(int delta, int speedPercentage);
     void setMelee(unit_data *victim);
     void setCommand(const char *arg);

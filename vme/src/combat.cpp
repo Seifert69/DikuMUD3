@@ -175,8 +175,26 @@ void cCombatList::PerformViolence()
 
                 char *c = str_dup(pElems[nIdx]->cmd);
 
+                /*std::string s;
+                s = "Combat before command ";
+                s.append(pElems[nIdx]->pOwner->names.Name());
+                s.append(" ");
+                s.append(itoa(pElems[nIdx]->nWhen));
+                s.append("<br/>");
+                send_to_char(s, pElems[nIdx]->pOwner);*/
+                
                 pElems[nIdx]->cmd[0] = 0;
                 command_interpreter(pElems[nIdx]->pOwner, c);
+
+                /*if (pElems[nIdx] == tmp)
+                {
+                    s = "Combat after command ";
+                    s.append(pElems[nIdx]->pOwner->names.Name());
+                    s.append(" ");
+                    s.append(itoa(pElems[nIdx]->nWhen));
+                    s.append("<br/>");
+                    send_to_char(s, pElems[nIdx]->pOwner);
+                }*/
 
                 if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
                     slog(LOG_ALL, 0, "Combat action %s didn't use any combat time", c);
@@ -193,10 +211,36 @@ void cCombatList::PerformViolence()
                     {
                         int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(2, IS_PC(pElems[nIdx]->pOwner));
 
-                        if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen < SPEED_DEFAULT))
+                        unit_data *pWeapon = nullptr;
+                        int nWeaponType;
+                        int nWeaponSpeed;
+
+                        getWeapon(pElems[nIdx]->pOwner, &pWeapon, &nWeaponType, &nWeaponSpeed, (pElems[nIdx]->nAttackNo & 1));
+                        int actions = pElems[nIdx]->calculateHastedActions(nWeaponSpeed, getCharPoints(pElems[nIdx]->pOwner).getSpeedPercentage(IS_PC(pElems[nIdx]->pOwner)));
+
+                        if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen+actions <= SPEED_DEFAULT))
                         {
+                            /* std::string s;
+                            s = "Combat before dual wield melee ";
+                            s.append(pElems[nIdx]->pOwner->names.Name());
+                            s.append(" ");
+                            s.append(itoa(pElems[nIdx]->nWhen));
+                            s.append("<br/>");
+                            send_to_char(s, pElems[nIdx]->pOwner);*/
+
                             bAnyaction = true;
                             melee_violence(pElems[nIdx]->pOwner, (pElems[nIdx]->nAttackNo & 1));
+
+                            /* if (pElems[nIdx] == tmp)
+                            {
+                                s = "Combat after dual wield melee ";
+                                s.append(pElems[nIdx]->pOwner->names.Name());
+                                s.append(" ");
+                                s.append(itoa(pElems[nIdx]->nWhen));
+                                s.append("<br/>");
+                                send_to_char(s, pElems[nIdx]->pOwner);
+                            }*/
+
                             if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
                                 slog(LOG_ALL, 0, "Dual wield melee action didn't use any combat time");
 
@@ -208,10 +252,35 @@ void cCombatList::PerformViolence()
                     {
                         int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(1, IS_PC(pElems[nIdx]->pOwner));
 
-                        if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen < SPEED_DEFAULT))
+                        unit_data *pWeapon = nullptr;
+                        int nWeaponType;
+                        int nWeaponSpeed;
+
+                        getWeapon(pElems[nIdx]->pOwner, &pWeapon, &nWeaponType, &nWeaponSpeed, (pElems[nIdx]->nAttackNo & 1));
+                        int actions = pElems[nIdx]->calculateHastedActions(nWeaponSpeed, getCharPoints(pElems[nIdx]->pOwner).getSpeedPercentage(IS_PC(pElems[nIdx]->pOwner)));
+
+                        if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen+actions <= SPEED_DEFAULT))
                         {
                             bAnyaction = true;
+                            /* std::string s;
+                            s = "Combat before normal wield melee ";
+                            s.append(pElems[nIdx]->pOwner->names.Name());
+                            s.append(" ");
+                            s.append(itoa(pElems[nIdx]->nWhen));
+                            s.append("<br/>");
+                            send_to_char(s, pElems[nIdx]->pOwner);*/
+
                             melee_violence(pElems[nIdx]->pOwner, TRUE);
+
+                            /* if (pElems[nIdx] == tmp)
+                            {
+                                s = "Combat after normal wield melee ";
+                                s.append(pElems[nIdx]->pOwner->names.Name());
+                                s.append(" ");
+                                s.append(itoa(pElems[nIdx]->nWhen));
+                                s.append("<br/>");
+                                send_to_char(s, pElems[nIdx]->pOwner);
+                            }*/
 
                             if ((tmp == pElems[nIdx]) && (t == tmp->nWhen))
                                 slog(LOG_ALL, 0, "Normal melee  action didn't use any combat time");
@@ -291,23 +360,31 @@ void cCombat::setCommand(const char *arg)
     cmd[MAX_INPUT_LENGTH] = 0;
 }
 
-void cCombat::changeSpeed(int delta, int speedPercentage)
+
+int cCombat::calculateHastedActions(int actions, int hastePercentage)
 {
-    if (!is_in(speedPercentage, 25, 300))
+    if (!is_in(hastePercentage, 25, 300))
     {
-        slog(LOG_ALL, 0, "speedPercentage is invalid", speedPercentage);
-        speedPercentage = 100;
+        slog(LOG_ALL, 0, "hastePercentage is invalid", hastePercentage);
+        hastePercentage = 100;
     }
 
-    if (speedPercentage == 100)
+    if (hastePercentage == 100)
     {
-        nWhen += MAX(4, delta);
+        return MAX(4, actions);
     }
     else
     {
-        nWhen += MAX((4*100)/speedPercentage, (delta*100)/speedPercentage);
+        return MAX(ceil((4*100.0)/hastePercentage), ceil((actions*100.0)/hastePercentage));
     }
 }
+
+
+void cCombat::changeSpeed(int actions, int speedPercentage)
+{
+    nWhen += calculateHastedActions(actions, speedPercentage);
+}
+
 
 int cCombat::findOpponentIdx(unit_data *target)
 {

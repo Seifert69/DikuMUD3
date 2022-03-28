@@ -6,6 +6,7 @@
 
 #include <string>
 
+void getWeapon(unit_data *ch, unit_data **pWeapon, int *pWeaponType, int *pWeaponSpeed, bool primary);
 int experience_modification(unit_data *att, unit_data *def);
 int spell_bonus(unit_data *att,
                 unit_data *medium,
