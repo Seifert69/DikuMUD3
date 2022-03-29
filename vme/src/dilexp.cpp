@@ -3972,7 +3972,7 @@ void dilfe_udir(dilprg *p)
 
                             if (regex_match(dir_itr->path().filename().c_str(), what, expression))
                             {
-                                words->AppendNameTrim(dir_itr->path().filename().c_str());
+                                words->AppendName(dir_itr->path().filename().c_str());
                             }
                         }
                     }
@@ -4065,7 +4065,7 @@ void dilfe_sdir(dilprg *p)
 
                             if (regex_match(dir_itr->path().filename().c_str(), what, expression))
                             {
-                                words->AppendNameTrim(dir_itr->path().filename().c_str());
+                                words->AppendName(dir_itr->path().filename().c_str());
                             }
                         }
                     }

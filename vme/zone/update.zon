@@ -449,132 +449,132 @@ code
     {
         if (tlist.[i]==left("hp",length(tlist.[i])))
         {
-            if (not("%h%" in  plist))
-                addstring(plist,"%h%");
-            tlist.[i]:="%h%";
+            if (not("%hp%" in  plist))
+                addstring(plist,"%hp%");
+            tlist.[i]:="%hp%";
         }
         else if (tlist.[i]==left("maxhp",length(tlist.[i])))
         {
-            if (not("%mh%" in  plist))
-                addstring(plist,"%mh%");
-            tlist.[i]:="%mh%";
+            if (not("%maxhp%" in  plist))
+                addstring(plist,"%maxhp%");
+            tlist.[i]:="%maxhp%";
         }
         else   if (tlist.[i]==left("mana",length(tlist.[i])))
         {
-            if (not("%m%" in  plist))
-                addstring(plist,"%m%");
-            tlist.[i]:="%m%";
+            if (not("%mana%" in  plist))
+                addstring(plist,"%mana%");
+            tlist.[i]:="%mana%";
         }
 else if (tlist.[i]==left("maxmana",length(tlist.[i])))
 {
-  if (not("%mm%" in  plist))
-  addstring (plist,"%mm%");
-       tlist.[i]:="%mm%";
+  if (not("%maxmana%" in  plist))
+  addstring (plist,"%maxmana%");
+       tlist.[i]:="%maxmana%";
     }
   else   if (tlist.[i]==left("endurance",length(tlist.[i])))
   {
-    if (not("%e%" in  plist))
-  addstring (plist,"%e%");
-         tlist.[i]:="%e%";
+    if (not("%endurance%" in  plist))
+  addstring (plist,"%endurance%");
+         tlist.[i]:="%endurance%";
     }
   else   if (tlist.[i]==left("maxendurance",length(tlist.[i])))
   {
-    if (not("%me%" in  plist))
-  addstring (plist,"%me%");
-       tlist.[i]:="%me%";
+    if (not("%maxendurance%" in  plist))
+  addstring (plist,"%maxendurance%");
+       tlist.[i]:="%maxendurance%";
     }
   else   if (tlist.[i]==left("guild",length(tlist.[i])))
   {
-    if (not("%g%" in  plist))
-  addstring (plist,"%g%");
-       tlist.[i]:="%g%";
+    if (not("%guild%" in  plist))
+  addstring (plist,"%guild%");
+       tlist.[i]:="%guild%";
     }
   else   if (tlist.[i]==left("title",length(tlist.[i])))
   {
-    if (not("%t%" in  plist))
-  addstring (plist,"%t%");
-       tlist.[i]:="%t%";
+    if (not("%title%" in  plist))
+  addstring (plist,"%title%");
+       tlist.[i]:="%title%";
     }
       else   if (tlist.[i]==left("age",length(tlist.[i])))
   {
-    if (not("%a%" in  plist))
-  addstring (plist,"%a%");
-       tlist.[i]:="%a%";
+    if (not("%age%" in  plist))
+  addstring (plist,"%age%");
+       tlist.[i]:="%age%";
     }
   else   if (tlist.[i]==left("race",length(tlist.[i])))
   {
-    if (not("%r%" in  plist))
-  addstring (plist,"%r%");
-       tlist.[i]:="%r%";
+    if (not("%race%" in  plist))
+  addstring (plist,"%race%");
+       tlist.[i]:="%race%";
     }
   else   if (tlist.[i]==left("xp",length(tlist.[i])))
   {
-    if (not("%x%" in  plist))
-  addstring (plist,"%x%");
-       tlist.[i]:="%x%";
+    if (not("%xp%" in  plist))
+  addstring (plist,"%xp%");
+       tlist.[i]:="%xp%";
     }
       else   if (tlist.[i]==left("xptolvl",length(tlist.[i])))
   {
-    if (not("%xl%" in  plist))
-  addstring (plist,"%xl%");
-       tlist.[i]:="%xl%";
+    if (not("%xptolvl%" in  plist))
+  addstring (plist,"%xptolvl%");
+       tlist.[i]:="%xptolvl%";
     }
   else   if (tlist.[i]==left("level",length(tlist.[i])))
   {
-    if (not("%l%" in  plist))
-  addstring (plist,"%l%");
-       tlist.[i]:="%l%";
+    if (not("%level%" in  plist))
+  addstring (plist,"%level%");
+       tlist.[i]:="%level%";
     }
       else   if (tlist.[i]==left("vlevel",length(tlist.[i])))
   {
-    if (not("%l%" in  plist))
-  addstring (plist,"%l%");
-       tlist.[i]:="%l%";
+    if (not("%level%" in  plist))
+  addstring (plist,"%level%");
+       tlist.[i]:="%level%";
     }
   else   if (tlist.[i]==left("oppname",length(tlist.[i])))
   {
-    if (not("%o%" in  plist))
-  addstring (plist,"%o%");
-       tlist.[i]:="%o%";
+    if (not("%oppname%" in  plist))
+  addstring (plist,"%oppname%");
+       tlist.[i]:="%oppname%";
     }
   else   if (tlist.[i]==left("oppdiag",length(tlist.[i])))
   {
-    if (not("%od%" in  plist))
-  addstring (plist,"%od%");
-       tlist.[i]:="%od%";
+    if (not("%oppdiag%" in  plist))
+  addstring (plist,"%oppdiag%");
+       tlist.[i]:="%oppdiag%";
     }
   else   if (tlist.[i]==left("tankname",length(tlist.[i])))
   {
-    if (not("%tn%" in  plist))
-  addstring (plist,"%tn%");
-       tlist.[i]:="%tn%";
+    if (not("%tankname%" in  plist))
+  addstring (plist,"%tankname%");
+       tlist.[i]:="%tankname%";
     }
   else   if (tlist.[i]==left("tankdiag",length(tlist.[i])))
   {
-    if (not("%td%" in  plist))
-  addstring (plist,"%td%");
-       tlist.[i]:="%td%";
+    if (not("%tankdiag%" in  plist))
+  addstring (plist,"%tankdiag%");
+       tlist.[i]:="%tankdiag%";
     }
   else   if ((tlist.[i]==left("zone",length(tlist.[i]))) and
 (self.level >= IMMORTAL_LEVEL))
   {
-    if (not("%z%" in  plist))
-  addstring (plist,"%z%");
-       tlist.[i]:="%z%";
+    if (not("%zone%" in  plist))
+  addstring (plist,"%zone%");
+       tlist.[i]:="%zone%";
     }
   else   if ((tlist.[i]==left("room",length(tlist.[i]))) and
 (self.level >= IMMORTAL_LEVEL))
   {
-    if (not("%ro%" in  plist))
-  addstring (plist,"%ro%");
-       tlist.[i]:="%ro%";
+    if (not("%room%" in  plist))
+  addstring (plist,"%room%");
+       tlist.[i]:="%room%";
     }
   else   if ((tlist.[i]==left("wizinv",length(tlist.[i]))) and
 (self.level >= IMMORTAL_LEVEL))
   {
-    if (not("%w%" in  plist))
-  addstring (plist,"%w%");
-       tlist.[i]:="%w%";
+    if (not("%wizinv%" in  plist))
+  addstring (plist,"%wizinv%");
+       tlist.[i]:="%wizinv%";
     }
     else
     {
@@ -586,137 +586,140 @@ else if (tlist.[i]==left("maxmana",length(tlist.[i])))
       i:=i+2;
   }
 
+/*
 i:=0;
 sp:="";
 while(i<ln)
 {
 sp:=sp+tlist.[i];
 i:=i+1;
-}
+}*/
+  sp := self.prompt;
   ln:=length(plist);
-goto start_prompt;
+  goto start_prompt;
 
 :start:
-    wait(SFB_PROMPT, TRUE);
-    if (self.editing)
-    {
-        sendtext("<div class='prompt'>]</div>",self);
-        goto start;
-    }
+   wait(SFB_PROMPT, TRUE);
+   if (self.editing)
+   {
+      sendtext("<div class='prompt'>]</div>",self);
+      goto start;
+   }
 
-    :start_prompt:
+:start_prompt:
+   cp := sp;
+   log(cp);
+   i := 0;
+   while (i < ln)
+   {
+      if (plist.[i]== "%hp%")
+      {
+         log("matching %hp%");
+         cp := replace("%hp%", itoa(self.hp), cp);
+         log("replaced %hp% " + cp);         
+      }
+      else if (plist.[i]=="%maxhp%")
+         cp:=replace("%maxhp%",itoa(self.max_hp),cp);
+      else if (plist.[i]=="%mana%")
+         cp:=replace("%mana%",itoa(self.mana),cp);
+      else if (plist.[i]=="%maxmana%")
+         cp :=replace("%maxmana%",itoa(self.max_mana),cp);
+      else if (plist.[i]=="%endurance%")
+         cp := replace("%endurance%",itoa(self.endurance),cp);
+      else if (plist.[i]=="%maxendurance%")
+         cp:=replace("%maxendurance%",itoa(self.max_endurance),cp);
+      else if (plist.[i]=="%guild%")
+         cp:=replace("%guild%", GuildString@guilds(self),cp);
+      else if (plist.[i]=="%title%")
+         cp:=replace("%title%",self.title,cp);
+      else if (plist.[i]=="%age%")
+         cp:=replace("%age%",itoa((realtime - self.birth) / SECS_PER_MUD_YEAR),cp);/*fuck*/
+      else if (plist.[i]=="%race%")
+      {
+         temp:=racestring@commands(self.race);
+         cp:=replace("%race%",temp,cp);
+      }
+      else if (plist.[i]=="%xp%")
+         cp:=replace("%xp%",itoa(self.exp),cp);
+      else if (plist.[i]=="%xptolvl%")
+         cp:=replace("%xptolvl%",itoa(self.exptol),cp);
+      else if (plist.[i]=="%level%")
+         cp:=replace("%level%",itoa(self.vlevel),cp);
+      else if (plist.[i]=="%oppname%")
+      {
+         if (self.fighting !=null)
+            cp:=replace("%oppname%","[Opponent: "+self.fighting.name+"]",cp);
+         else
+            cp:=replace("%oppname%","",cp);
+      }
+      else if (plist.[i]=="%tankname%")
+      {
+         if (self.fighting.fighting !=null)
+            cp:=replace("%tankname%","[Tank: "+self.fighting.fighting.name+"]",cp);
+         else
+            cp:=replace("%tankname%","",cp);
+      }
+      else if (plist.[i]=="%oppdiag%")
+      {
+         if (self.fighting !=null)
+         {
+            x :=self.fighting.max_hp/4;
+            x := self.fighting.hp/ x;
+            x :=4 - x;
+            if (x <= 0)
+               temp:="healthy";
+            else if (x==1)
+               temp:="bruised";
+            else if (x==2)
+               temp:="scraped";
+            else if (x==3)
+               temp:="bleeding";
+            else if (x>=4)
+               temp:="gushing";
 
-    cp:=sp;
-    i:=0;
-    while (i<ln)
-    {
-
-    if (plist.[i]=="%h%")
-cp:=replace("%h%",itoa(self.hp),cp);
-  else if (plist.[i]=="%mh%")
-  cp:=replace("%mh%",itoa(self.max_hp),cp);
-    else if (plist.[i]=="%m%")
-  cp:=replace("%m%",itoa(self.mana),cp);
-  else if (plist.[i]=="%mm%")
-  cp:=replace("%mm%",itoa(self.max_mana),cp);
-  else if (plist.[i]=="%e%")
-  cp:=replace("%e%",itoa(self.endurance),cp);
-  else if (plist.[i]=="%me%")
-  cp:=replace("%me%",itoa(self.max_endurance),cp);
-  else if (plist.[i]=="%g%")
-  cp:=replace("%g%", GuildString@guilds(self),cp);
-    else if (plist.[i]=="%t%")
-  cp:=replace("%t%",self.title,cp);
-    else if (plist.[i]=="%a%")
-  cp:=replace("%a%",itoa((realtime - self.birth) / SECS_PER_MUD_YEAR),cp);/*fuck*/
-    else if (plist.[i]=="%r%")
-    {
-    temp:=racestring@commands(self.race);
-  cp:=replace("%r%",temp,cp);
-  }
-    else if (plist.[i]=="%x%")
-  cp:=replace("%x%",itoa(self.exp),cp);
-    else if (plist.[i]=="%xl%")
-  cp:=replace("%xl%",itoa(self.exptol),cp);
-    else if (plist.[i]=="%l%")
-  cp:=replace("%l%",itoa(self.vlevel),cp);
-    else if (plist.[i]=="%o%")
-    {
-    if (self.fighting !=null)
-  cp:=replace("%o%","[Opponent: "+self.fighting.name+"]",cp);
-    else
-    cp:=replace("%o%","",cp);
-        }
-    else if (plist.[i]=="%tn%")
-    {
-    if (self.fighting.fighting !=null)
-  cp:=replace("%tn%","[Tank: "+self.fighting.fighting.name+"]",cp);
-    else
-    cp:=replace("%tn%","",cp);
-        }
-    else if (plist.[i]=="%od%")
-    {
-    if (self.fighting !=null)
-    {
-      x :=self.fighting.max_hp/4;
-  x := self.fighting.hp/ x;
-  x :=4 - x;
-  if (x <= 0)
-temp:="healthy";
-else if (x==1)
-temp:="bruised";
-else if (x==2)
-temp:="scraped";
-else if (x==3)
-temp:="bleeding";
-else if (x>=4)
-temp:="gushing";
-
-    cp:=replace("%od%","[Opponent diag:  "+temp+"]",cp);
-  }
-    else
-    cp:=replace("%od%","",cp);
-        }
-    else if (plist.[i]=="%td%")
-    {
-    if (self.fighting.fighting !=null)
-    {
-          x :=self.fighting.fighting.max_hp/4;
-  x := self.fighting.fighting.hp/ x;
-  x :=4 - x;
-  if (x <= 0)
-temp:="healthy";
-else if (x==1)
-temp:="bruised";
-else if (x==2)
-temp:="scraped";
-else if (x==3)
-temp:="bleeding";
-else if (x>=4)
-temp:="gushing";
-
-    cp:=replace("%td%","[Tank diag:  "+temp+"]",cp);
-    }
-    else
-    cp:=replace("%td%","",cp);
-        }
-    else if (plist.[i]=="%z%")
-      cp:=replace("%z%",self.outside.zoneidx,cp);
-      else if (plist.[i]=="%ro%")
-      cp:=replace("%ro%",self.outside.nameidx,cp);
-            else if (plist.[i]=="%w%")
-      cp:=replace("%w%",itoa(self.minv),cp);
+            cp:=replace("%oppdiag%","[Opponent diag:  "+temp+"]",cp);
+         }
+         else
+            cp:=replace("%oppdiag%","",cp);
+      }
+      else if (plist.[i]=="%tankdiag%")
+      {
+         if (self.fighting.fighting !=null)
+         {
+            x :=self.fighting.fighting.max_hp/4;
+            x := self.fighting.fighting.hp/ x;
+            x :=4 - x;
+            if (x <= 0)
+               temp:="healthy";
+            else if (x==1)
+               temp:="bruised";
+            else if (x==2)
+               temp:="scraped";
+            else if (x==3)
+               temp:="bleeding";
+            else if (x>=4)
+               temp:="gushing";
+            cp:=replace("%tankdiag%","[Tank diag:  "+temp+"]",cp);
+         }
+         else
+            cp:=replace("%tankdiag%","",cp);
+      }
+      else if (plist.[i]=="%zone%")
+         cp:=replace("%zone%",self.outside.zoneidx,cp);
+      else if (plist.[i]=="%room%")
+         cp:=replace("%room%",self.outside.nameidx,cp);
+      else if (plist.[i]=="%wizinv%")
+         cp:=replace("%wizinv%",itoa(self.minv),cp);
       else if (plist.[i]=="%er%")
-      cp:=replace("%er%","ERROR",cp);
+         cp:=replace("%er%","ERROR",cp);
 
+      i:=i+1;
+   }
 
-  i:=i+1;
-  }
-
-    if (not isset(self.pcflags,PC_COMPACT))
-        sendtext("<br/>", self);
-    sendtext("<div class='prompt' "+prompt_data()+">"+cp+"</div>", self);
-    goto start;
+   if (not isset(self.pcflags,PC_COMPACT))
+      sendtext("<br/>", self);
+   sendtext("<div class='prompt' "+prompt_data()+">"+cp+"</div>", self);
+   goto start;
 }
 dilend
 
