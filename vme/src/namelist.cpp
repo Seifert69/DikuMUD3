@@ -9,6 +9,7 @@
 
 #include "db_file.h"
 #include "essential.h"
+#include "slog.h"
 #include "textutil.h"
 
 #include <cctype>
@@ -453,14 +454,10 @@ std::string *cNamelist::InstanceName(ubit32 idx)
     return nullptr;
 }
 
-void cNamelist::dAppendName(const char *name)
+
+void cNamelist::AppendNameTrim(const char *name)
 {
     length++;
-
-    if (name)
-    {
-        assert((*name == 0) || (*name != 0)); // Ensure valid string (debug)
-    }
 
     if (namelist == nullptr)
     {
@@ -470,7 +467,23 @@ void cNamelist::dAppendName(const char *name)
     {
         RECREATE(namelist, std::string *, length);
     }
-    namelist[length - 1] = new std::string(name ? name : "");
+
+    const char *c = name;
+
+    while (isblank(*c))
+      c++;
+
+    std::string *s = new std::string(c);
+
+    str_remspc(s->data());
+    strip_trailing_blanks(s->data());
+
+    if (strcmp(s->c_str(), name) != 0)
+    {
+        slog(LOG_ALL, 0, "Trimmed AppendName string [%s]", name);
+    }
+
+    namelist[length - 1] = s;
 }
 
 void cNamelist::AppendName(const char *name)

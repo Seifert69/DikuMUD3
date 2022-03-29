@@ -37,8 +37,8 @@ public:
     const char *Name(ubit32 idx = 0) const;
     std::string *InstanceName(ubit32 idx = 0);
 
+    void AppendNameTrim(const char *name);
     void AppendName(const char *name);
-    void dAppendName(const char *name);
     void PrependName(const char *name);
     void InsertName(const char *name, ubit32 loc);
 

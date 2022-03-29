@@ -12661,7 +12661,7 @@ alignment 1000
 exp -500
 dilcopy reward_give@function();
 dilcopy blow_whistle@justice();
-dilcopy rescue@function("cityguard / captain / thargarad / kazeem / daf ");
+dilcopy rescue@function("cityguard / captain / thargarad / kazeem / daf");
 dilcopy protect_lawful@justice();
 dilcopy accuse@justice();
 dilcopy guard_dir@function("south", {""}, {""}, "");
@@ -12713,7 +12713,7 @@ exp -400
 alignment 400  /* Just above neutral */
 money 3 IRON_PIECE
 
-dilcopy rescue@function("cityguard / captain / mayor / kazeem / daf ");
+dilcopy rescue@function("cityguard / captain / mayor / kazeem / daf");
 dilcopy protect_lawful@justice();
 dilcopy blow_whistle@justice();
 dilcopy whistlisten@justice({"udgaard"});

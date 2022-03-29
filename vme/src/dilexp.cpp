@@ -3766,7 +3766,7 @@ void dilfe_getws(dilprg *p)
                 ptr = tmp;
                 for (c = strtok(tmp, " "); c && *c; c = strtok(nullptr, " "))
                 {
-                    words->dAppendName(c);
+                    words->AppendNameTrim(c);
                 }
                 FREE(ptr);
 
@@ -3853,7 +3853,7 @@ void dilfe_split(dilprg *p)
                             slen = strlen(buf);
                             strncpy(spbuf, buf, slen - strlen(c) + 1);
                             spbuf[slen - strlen(c)] = 0;
-                            words->dAppendName(spbuf);
+                            words->AppendNameTrim(spbuf);
                             spbuf[0] = 0;
                             strcpy(spbuf, c + strlen((char *)v2->val.ptr));
                             strcpy(buf, spbuf);
@@ -3862,7 +3862,7 @@ void dilfe_split(dilprg *p)
 
                         if (buf)
                         {
-                            words->dAppendName(buf);
+                            words->AppendNameTrim(buf);
                         }
 
                         v->val.ptr = words;
@@ -3972,7 +3972,7 @@ void dilfe_udir(dilprg *p)
 
                             if (regex_match(dir_itr->path().filename().c_str(), what, expression))
                             {
-                                words->dAppendName(dir_itr->path().filename().c_str());
+                                words->AppendNameTrim(dir_itr->path().filename().c_str());
                             }
                         }
                     }
@@ -4065,7 +4065,7 @@ void dilfe_sdir(dilprg *p)
 
                             if (regex_match(dir_itr->path().filename().c_str(), what, expression))
                             {
-                                words->dAppendName(dir_itr->path().filename().c_str());
+                                words->AppendNameTrim(dir_itr->path().filename().c_str());
                             }
                         }
                     }

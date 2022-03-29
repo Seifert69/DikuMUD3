@@ -1964,7 +1964,7 @@ void dilfi_adl(dilprg *p)
                     if (isblank(*(char*)v2->val.ptr))
                         slog(LOG_ALL, 0, "DIL addstring [%s] has whitespace", (char *) v2->val.ptr);
 
-                    ((cNamelist *)v1->ref)->dAppendName((char *)v2->val.ptr);
+                    ((cNamelist *)v1->ref)->AppendNameTrim((char *)v2->val.ptr);
                 }
             }
             break;

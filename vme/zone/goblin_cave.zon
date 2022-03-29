@@ -590,7 +590,7 @@ sceptre. Around his shoulders there is very fine robe."
 money 30 IRON_PIECE
 M_GOBLIN_WARRIOR_SWORD(6, SEX_MALE)
 
-dilcopy teamwork@function(" fool / cook");
+dilcopy teamwork@function("fool/cook");
 dilbegin kingprg();
 var
   char  : unitptr;

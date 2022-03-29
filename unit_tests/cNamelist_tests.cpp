@@ -762,7 +762,7 @@ BOOST_AUTO_TEST_CASE(dAppendName_tests)
 
     BOOST_TEST(list.Length() == 0);
     ////////////////////////// Test Subject //////////////////////////////
-    list.dAppendName("Thor");
+    list.AppendNameTrim(" Thor ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_TEST(list.Length() == 1);
     {
@@ -772,7 +772,7 @@ BOOST_AUTO_TEST_CASE(dAppendName_tests)
     }
 
     ////////////////////////// Test Subject //////////////////////////////
-    list.dAppendName("Loki");
+    list.AppendName("Loki");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_TEST(list.Length() == 2);
     {
@@ -782,21 +782,21 @@ BOOST_AUTO_TEST_CASE(dAppendName_tests)
     }
 
     ////////////////////////// Test Subject //////////////////////////////
-    list.dAppendName("Heimdall");
+    list.AppendNameTrim("  Heimdall  Vision  ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_TEST(list.Length() == 3);
     {
         auto rc = list.json();
-        std::string expected = R"("namelist": ["Thor","Loki","Heimdall"])";
+        std::string expected = R"("namelist": ["Thor","Loki","Heimdall Vision"])";
         BOOST_TEST(rc == expected);
     }
 
     ////////////////////////// Test Subject //////////////////////////////
-    list.dAppendName(nullptr);
+    list.AppendName(nullptr);
     ////////////////////////// Test Subject //////////////////////////////
     {
         auto rc = list.json();
-        std::string expected = R"("namelist": ["Thor","Loki","Heimdall",""])";
+        std::string expected = R"("namelist": ["Thor","Loki","Heimdall Vision",""])";
         BOOST_TEST(rc == expected);
         BOOST_TEST(true, "Cool, didn't crash");
     }
@@ -804,10 +804,10 @@ BOOST_AUTO_TEST_CASE(dAppendName_tests)
     {
         char buffer[10]{};
         ////////////////////////// Test Subject //////////////////////////////
-        list.dAppendName(buffer);
+        list.AppendName(buffer);
         ////////////////////////// Test Subject //////////////////////////////
         auto rc = list.json();
-        std::string expected = R"("namelist": ["Thor","Loki","Heimdall","",""])";
+        std::string expected = R"("namelist": ["Thor","Loki","Heimdall Vision","",""])";
         BOOST_TEST(rc == expected);
         BOOST_TEST(true, "Cool, didn't crash");
     }
