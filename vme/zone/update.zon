@@ -613,11 +613,7 @@ i:=i+1;
    while (i < ln)
    {
       if (plist.[i]== "%hp%")
-      {
-         log("matching %hp%");
          cp := replace("%hp%", itoa(self.hp), cp);
-         log("replaced %hp% " + cp);         
-      }
       else if (plist.[i]=="%maxhp%")
          cp:=replace("%maxhp%",itoa(self.max_hp),cp);
       else if (plist.[i]=="%mana%")
