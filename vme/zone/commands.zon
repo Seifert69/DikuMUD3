@@ -6972,10 +6972,28 @@ code
 dilend
 
 
-/* do_status */
+
+dilbegin integer speed_percent(u : unitptr);
+var
+   i : integer;
+code
+{
+   i := u.speed;
+   if (i == SPEED_DEFAULT)
+      return (100);
+
+   if ((i < SPEED_MIN) or (i > SPEED_MAX))
+      return (-1);
+
+   return ((100 * SPEED_DEFAULT) / i);
+}
+dilend
+
+
+// do_status
 dilbegin cmd_stat(arg:string);
 external
-   path_update@guild_paths(u : unitptr);
+   integer speed_percent@commands(u : unitptr);
    string wpn_rating (wpn:integer);
    string ski_rating (ski:integer);
    string sp_rating (sp:integer);
@@ -7067,7 +7085,7 @@ code
 
    }
    else
-      prof_string := "Your profession is undefined, please visit father Nicholas in the Udgaard temple healer room.<br/>";
+      prof_string := "Your profession is undefined, please contact an administrator.<br/>";
 
    /* MS2020 ???  remain:=self.level*40;
    if (remain >2000)
@@ -7101,7 +7119,12 @@ code
        "You are in " + couragestring() + " mode.<br/>"+
        "More: '<a cmd='#'>status skills</a>', '<a cmd='#'>status weapons</a>' and '<a cmd='#'>status spells</a>'."
        , A_ALWAYS, self, null, null, TO_CHAR);
-   // XXX Add some speed info here.
+
+   if (self.speed != SPEED_DEFAULT)
+   {
+      i := speed_percent@commands(self);
+      act("Your speed is " + itoa(i) + "%", A_ALWAYS, self, null, null, TO_CHAR);
+   }
    quit;
 
 
