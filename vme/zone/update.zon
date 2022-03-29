@@ -608,7 +608,6 @@ i:=i+1;
 
 :start_prompt:
    cp := sp;
-   log(cp);
    i := 0;
    while (i < ln)
    {
