@@ -454,7 +454,9 @@ std::string *cNamelist::InstanceName(ubit32 idx)
     return nullptr;
 }
 
-
+// Trims preceeding blanks, trailing blanks, double spaces ' ' in the string
+// Does not trim newlines, etc.
+//
 void cNamelist::AppendNameTrim(const char *name)
 {
     length++;
@@ -470,7 +472,7 @@ void cNamelist::AppendNameTrim(const char *name)
 
     const char *c = name;
 
-    while (isblank(*c))
+    while (isspace(*c))
       c++;
 
     std::string *s = new std::string(c);
@@ -478,13 +480,14 @@ void cNamelist::AppendNameTrim(const char *name)
     str_remspc(s->data());
     strip_trailing_blanks(s->data());
 
-    if (strcmp(s->c_str(), name) != 0)
+    /*if (strcmp(s->c_str(), name) != 0)
     {
         slog(LOG_ALL, 0, "Trimmed AppendName string [%s]", name);
-    }
+    }*/
 
     namelist[length - 1] = s;
 }
+
 
 void cNamelist::AppendName(const char *name)
 {
