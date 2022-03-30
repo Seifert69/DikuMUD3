@@ -829,34 +829,37 @@ code
    {
       nextdude := exd.next;
 
-      if (left(exd.names.[0], 8) == "$witness")
+      if (length(exd.names) >= 1)
       {
-         // How many full days is it old?
-         daysold := (now - atoi(exd.names.[2])) / (3600*24);
-
-         if  ("@_players" in exd.names.[0])  // It's a PC
-         {           
-            // Delete witness a player after 14 days
-            if (daysold > 14)
-            {
-               subextra(self.extra, exd.names.[0]);
-            }
-         }
-         else  // It's a NPC
+         if (left(exd.names.[0], 8) == "$witness")
          {
-            if (daysold > 2)  // Delete NPCs after 2 days
-            {
-               subextra(self.extra, exd.names.[0]);
-            }
+            // How many full days is it old?
+            daysold := (now - atoi(exd.names.[2])) / (3600*24);
 
-            /* OBSOLETE sl := getwords(exd.names.[0]);
-            // .[1] is jurisdiction, .[2] is symname, .[3] is idx
-            u := findsymbolic(sl.[2], atoi(sl.[3]));
-            if (u == null)
-               subextra(self.info, exd.names.[0]);*/
+            if  ("@_players" in exd.names.[0])  // It's a PC
+            {           
+               // Delete witness a player after 14 days
+               if (daysold > 14)
+               {
+                  subextra(self.extra, exd.names.[0]);
+               }
+            }
+            else  // It's a NPC
+            {
+               if (daysold > 2)  // Delete NPCs after 2 days
+               {
+                  subextra(self.extra, exd.names.[0]);
+               }
+
+               /* OBSOLETE sl := getwords(exd.names.[0]);
+               // .[1] is jurisdiction, .[2] is symname, .[3] is idx
+               u := findsymbolic(sl.[2], atoi(sl.[3]));
+               if (u == null)
+                  subextra(self.info, exd.names.[0]);*/
+            }
          }
       }
-
+      
       exd := nextdude;
    }
    
