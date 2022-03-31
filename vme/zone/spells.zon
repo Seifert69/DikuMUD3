@@ -2406,6 +2406,8 @@ if (argument=="lookin")
 }
 dilend /* gate_dil */
 
+
+
 dilbegin portal (med : unitptr, targ : unitptr, arg : string,
                  hm : integer, effect : string);
 var
@@ -2413,12 +2415,10 @@ var
   dest   : unitptr;
   room   : unitptr;
   u      : unitptr;
-
   dura   : integer;
 
 code
 {
-
    if (self.type != UNIT_ST_PC)
    {
       act("$1n cannot contain the power and explodes in a pile of smoke!",
@@ -2544,17 +2544,18 @@ if (self.type==UNIT_ST_PC)
 }
 dilend /* portal */
 
-dilbegin aware portal_dil(destin : string, location : string, dura : integer);
 
+
+dilbegin aware portal_dil(destin : string, location : string, dura : integer);
 var
    pc : unitptr;
    tempu:unitptr;
    tempu2:unitptr;
-nxt:unitptr;
+   nxt:unitptr;
 code
 {
    heartbeat := PULSE_SEC * 60 * dura;
-   interrupt(SFB_TICK, TRUE, stop);
+   interrupt(SFB_TICK, TRUE, tickstop);
    interrupt(SFB_MSG, TRUE, test);
 
 :start:
@@ -2587,6 +2588,8 @@ if (pc.type==UNIT_ST_PC)
    act("You step into $2n and vanish...",
        A_ALWAYS, pc, self, null, TO_CHAR);
    link (pc, findroom(destin));
+   //send_done("cast", pc, self, pc, 0, "portal", null);
+   
    act("$1n appears from nothingness...",
        A_SOMEONE, pc, self, null, TO_REST);
    act("You appear somewhere else...",
@@ -2629,8 +2632,11 @@ if (argument=="lookin")
    else goto start;
 
 :stop:
-   act("$1n flickers and then vanishes.",
-       A_SOMEONE, self, null, null, TO_ALL);
+   interrupt(SFB_TICK, FALSE, tickstop);
+   heartbeat := 1;
+   wait(SFB_TICK, TRUE);
+:tickstop:
+   act("$1n flickers and then vanishes.", A_SOMEONE, self, null, null, TO_ALL);
    destroy(self);
 
 :lost_pc:
@@ -2638,6 +2644,8 @@ if (argument=="lookin")
    goto start;
 }
 dilend /* portal_dil */
+
+
 
 dilbegin raise_horde(medi : unitptr, tgt : unitptr, arg : string,
                     hm : integer, effect : string);

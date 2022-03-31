@@ -137,6 +137,22 @@ dilcopy smoke_dil@udgaard();
 
 %dil
 
+// Special for checking condition of shrubbery
+//
+dilbegin integer shrubberyok(u : unitptr, i : integer, s : string);
+code
+{
+   if ("$roughed" in u.extra)
+   {
+      exec("say Oh dear, what did you do with the shrubbery? Look at the leaves! Terrible.", self);
+      return(0);
+   }
+
+   return (1);
+}
+dilend
+
+
 /* This dil is used to fix equipment on players that were impacted by the
 DIKU3 transition to HTML/CSS coloring. Items can be given to mob (fixer) with this
 dil loaded, and he will return a new version of the item. Understood that
@@ -5189,6 +5205,66 @@ extra {"small sign","sign"}
 end
 
 %objects
+
+
+shrubbery
+title "a fine shrubbery"
+names {"shrubbery", "fine shrubbery", "small shrubbery"}
+descr "A fine small shrubbery has been put here."
+extra {}
+"What an extraordinarily fine little shrubbery. The leaves are nearly pure white
+and look frail and beautiful. It would most definitely look lovely in someone's garden."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+type ITEM_OTHER
+weight 5
+cost 42 COPPER_PIECE
+
+dilbegin frail();
+var
+   sPC : string;
+code
+{
+   wait(SFB_CMD, (self.outside == activator) and (activator.type == UNIT_ST_PC) and (activator.level < 200));
+   sPC := self.outside.name;
+   log("shrubbery bonded to " + sPC);
+
+   heartbeat := 10 * PULSE_SEC;
+
+:loopit:
+   wait(SFB_CMD|SFB_TICK, TRUE);
+   if (command(CMD_AUTO_TICK))
+   {
+      if (self.outside.name != sPC)
+         goto wither;
+      else
+         goto loopit;      
+   }
+
+   if (activator.name != sPC)
+      goto loopit;
+
+   if (command("cast"))
+      goto wither;
+
+   log("something else");
+   log(cmdstr);
+   log(excmdstr);
+   log(argument);
+
+   goto loopit;
+
+:wither:
+   self.extra.descr := self.extra.descr + " There are some small brown spots on the leaves.";
+   addextra(self.extra, {"$roughed"}, "");
+   heartbeat := 2 * PULSE_SEC;
+   pause;
+   act("The shrubbery shivers ever so slightly.", A_HIDEINV, self.outside, null, null, TO_ALL);
+   quit;
+}
+dilend
+
+end
+
 
 kurt
 names {"Kurt"}
@@ -11073,6 +11149,11 @@ alignment 1000
 
 #define NICHOLAS_QUEST "Father Nicholas Quest"
 
+dilcopy qstItemsWanted@quests(NICHOLAS_QUEST, {"shrubbery@udgaard"},
+            {"shrubberyok@udgaard"},
+            {"say Thank you $1N, this is a beautiful specimen. Look at those leaves!"},
+            "say Fetch me a nice shrubbery, please.");
+
 dilbegin newProfession();
 external
    Explainer@quests(pc : unitptr, sl : stringlist);
@@ -11080,6 +11161,8 @@ external
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+   extraptr qstSetOngoing@quests(qname : string, pc : unitptr, qdescr : string);
+
 var
    pc : unitptr;
    exdp : extraptr;
@@ -11114,7 +11197,7 @@ code
        "say Ready for the first question?",
        "say Here we go...",
        "emote one eye seems to grow larger.",
-       "say $3n, what is your favorite color?"});
+       "say $1n, what is your favorite color?"});
 
 :q1:
    wait(SFB_CMD, activator == pc);
@@ -11122,8 +11205,8 @@ code
    {
       pause;
       Explainer@quests(pc, 
-         {"say Are you sure that is your answer?",
-         "::$1n looks at you intensely.::$1n looks intensely at $3n."});
+         {"say But are you sure that is your final answer?",
+         "::$3n looks at you intensely.::$3n looks intensely at $1n."});
    }
    else
       goto q1;
@@ -11141,11 +11224,13 @@ code
    s := pc.name;
    Explainer@quests(pc, 
       {"point $1N",
-      "::Suddenly you're lifted up in the air at great speed. You scream at the top of your lungs.::$3n screams as $3e is lifted up into the air at great speed and vanishes."});
+      "::Suddenly you're lifted up in the air at great speed. You scream at the top of your lungs.::$1n screams as $1e is lifted up into the air at great speed and vanishes."});
 
    unsecure(pc);
-   link(pc, findsymbolic("ship_hire@xiyang2"));   
-   exec("tell "+s+" seek out a grocer on Xiyang City and bring me a small shrubbery.", self);
+   exdp := qstSetOngoing@quests(NICHOLAS_QUEST, pc, "Seek out a grocer in Xiyang City, buy a shrubbery and bring it back to father Nicholas in Udgaard.");
+   link(pc, findsymbolic("ship_hire@xiyang2"));
+   exec("tell "+s+" seek out a grocer in Xiyang City and bring me a small shrubbery with white leaves.", self);
+   heartbeat := PULSE_SEC;
 
    // Make the shrubbery break if you teleport. You need to sail back.
    goto start;

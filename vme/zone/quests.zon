@@ -7,10 +7,7 @@ request     compile
 version     1
 END HEADER*/
 
-/*
-2021 Helpers for quests
-
-*/
+/* 2021 Helpers for quests */
 
 %zone quests
 
@@ -454,6 +451,43 @@ code
 dilend
 
 
+// Add quest to pc and set it to "ongoing"
+//
+dilbegin extraptr qstSetOngoing(qname : string, pc : unitptr, qdescr : string);
+var
+   s : string;
+   sl : stringlist;
+   exd : extraptr;
+code
+{
+   s := qname + " Ongoing";
+   addstring(sl, s);
+   addextra(pc.quests, sl, qdescr);
+   exd := s in pc.quests;
+   sendtext("<div class='cpy'>New Quest: " + qname +"</div><br/>", pc);
+   return (exd);
+}
+dilend
+
+
+// Mark the pc's ongoing quest as 'done' (e.g. all items received)
+//
+dilbegin extraptr qstSetDone(qname : string, pc : unitptr);
+var
+   exdp : extraptr;
+code
+{
+   exdp := (qname + " Ongoing") in pc.quests;
+
+   if (not ("$done" in exdp.names))
+      addstring(exdp.names, "$done");
+
+   return(exdp);
+}
+dilend
+
+
+
 
 // pc : The player that is the target of this explanation
 // expl: list of strings for the NPC to execute to explain the quest.
@@ -465,6 +499,9 @@ dilend
 // Return unitptr to the hero that wants the quest
 //
 dilbegin extraptr qstAssign(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+external
+   extraptr qstSetOngoing@quests(qname : string, pc : unitptr, qdescr : string);
+
 var
    i : integer;
    ln : integer;
@@ -520,31 +557,11 @@ code
       i := i + 1;
    }
 
-   s := qname + " Ongoing";
-   sl := null;
-   addstring(sl, s);
-   addextra(pc.quests, sl, qdescr);
-   exd := s in pc.quests;
-   sendtext("<div class='cpy'>New Quest: " + qname +"</div><br/>", pc);
+   exd := qstSetOngoing@quests(qname, pc, qdescr);
 
 :lostpc:
    nopriority;
    return(exd);
-}
-dilend
-
-
-dilbegin extraptr qstSetDone(qname : string, pc : unitptr);
-var
-   exdp : extraptr;
-code
-{
-   exdp := (qname + " Ongoing") in pc.quests;
-
-   if (not ("$done" in exdp.names))
-      addstring(exdp.names, "$done");
-
-   return(exdp);
 }
 dilend
 

@@ -321,7 +321,7 @@ cCombat::cCombat(unit_data *owner, int bMelee)
     pOwner = owner;
     pMelee = nullptr;
 
-    nWhen = SPEED_DEFAULT;
+    nWhen = 0;
     cmd[0] = 0;
 
     pOpponents = nullptr;
