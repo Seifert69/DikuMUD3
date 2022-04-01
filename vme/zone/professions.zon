@@ -56,11 +56,12 @@ mage:<br/>
 // string ProfessionName@professions(prof_xxx : integer);
 // integer ProfessionIdx@professions(sGuild : string);
 // integer ProfCount@professions(pc : unitptr);
+// integer ReadyCareer(pc : unitptr);
+// integer ReadySpecialize(pc : unitptr);
 // NewPlayerProf@professions(pc : unitptr, prof : integer);
 //
 
 // ===============================================================
-
 
 // Given a profession number (PROFESSION_XXX) return the name.
 //
@@ -77,23 +78,24 @@ code
 dilend
 
 
-// Given guild name, return profession index
+// Given profession name, return profession index PROFESSION_XXX
 //
 //
-dilbegin integer ProfessionIdx(sGuild : string);
+dilbegin integer ProfessionIdx(sName : string);
 var
    sl : stringlist;
    i : integer;
 code
 {
    sl := {PROFESSION_STRINGS};
-   i := sGuild in sl;
+   i := sName in sl;
    i := i - 1;
 
    return (i);
 }
 dilend
 
+// ===============================================================
 
 // Counts number of professions. 
 //
@@ -115,6 +117,126 @@ code
    return (i);
 }
 dilend
+
+
+// Returns 1 if the player is has had a starting profession 
+// and optionally a specialization. Used to know when we can
+// switch career
+//
+dilbegin string CareerChoices(pc : unitptr);
+external
+   integer ProfCount@professions(pc : unitptr);
+   integer ProfessionIdx@professions(sName : string);
+   string ProfessionName@professions(prof_xxx : integer);
+
+var
+   exd : extraptr;
+   s : string;
+   n : integer;
+code
+{
+   // Wish I had int in intlist...
+
+   exd := PROFESSION_KEY in pc.info;
+   n := ProfessionIdx(exd.names.[1]);
+
+   if ((n == PROFESSION_FIGHTER) or (n == PROFESSION_BARBARIAN))
+   {
+      s := ProfessionName(PROFESSION_THIEF) + "<br/>" +
+           ProfessionName(PROFESSION_PRIEST) + "<br/>" +
+           ProfessionName(PROFESSION_CONJURER) + "<br/>" +
+           ProfessionName(PROFESSION_KNIGHT) + "<br/>" +
+           ProfessionName(PROFESSION_PALADIN) + "<br/>" +
+           ProfessionName(PROFESSION_RANGER) + "<br/>";
+   }
+   else if ((n == PROFESSION_THIEF) or (n == PROFESSION_ASSASSIN))
+   {
+      s := ProfessionName(PROFESSION_FIGHTER) + "<br/>" +
+           ProfessionName(PROFESSION_PRIEST) + "<br/>" +
+           ProfessionName(PROFESSION_CONJURER) + "<br/>" +
+           ProfessionName(PROFESSION_KNIGHT) + "<br/>" +
+           ProfessionName(PROFESSION_RANGER) + "<br/>";
+   }
+   else if ((n == PROFESSION_PRIEST) or (n == PROFESSION_DRUID))
+   {
+      s := ProfessionName(PROFESSION_FIGHTER) + "<br/>" +
+           ProfessionName(PROFESSION_THIEF) + "<br/>" +
+           ProfessionName(PROFESSION_CONJURER) + "<br/>" +
+           ProfessionName(PROFESSION_PALADIN) + "<br/>" +
+           ProfessionName(PROFESSION_NECROMANCER) + "<br/>" +
+           ProfessionName(PROFESSION_RANGER) + "<br/>";
+   }
+   else if ((n == PROFESSION_CONJURER) or (n == PROFESSION_SORCERER))
+   {
+      s := ProfessionName(PROFESSION_FIGHTER) + "<br/>" +
+           ProfessionName(PROFESSION_THIEF) + "<br/>" +
+           ProfessionName(PROFESSION_PRIEST) + "<br/>";
+   }
+   else
+   {
+      s := "Something is messed up, not supposed to be here.<br/>";
+   }
+
+   return (s);
+}
+dilend
+
+
+
+// Returns 1 if the player is has had a starting profession 
+// and optionally a specialization. Used to know when we can
+// switch career
+//
+dilbegin integer ReadyCareer(pc : unitptr);
+external
+   integer ProfCount@professions(pc : unitptr);
+   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+   integer ProfessionIdx(sGuild : string);
+   string ProfessionName@professions(prof_xxx : integer);
+
+var
+   exd : extraptr;
+   sl : stringlist;
+   n : integer;
+code
+{
+#define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
+                           "Priest", "Druid", "Obsolete","Necromancer", "Conjurer", "Sorcerer", \
+						   "Barbarian"
+
+   sl := {"Fighter",
+          "Barbarian",
+          "Conjurer",
+          "Sorcerer",
+          "Priest",
+          "Druid",
+          "Thief",
+          "Assassin"};
+
+   n := ProfCount@professions(pc); 
+   log("count = " + itoa(n));
+
+   if (n <= 2)
+   {
+      exd := PROFESSION_KEY in pc.info;
+
+      while (n > 0)
+      {
+         if (not (exd.names.[n] in sl))
+         {
+            log(exd.names.[n] + " not in index for profession switch");
+            return (0);
+         }
+         n := n - 1;
+      }
+   }
+
+   return (1);
+}
+dilend
+
+
+
 
 
 // Returns 1 if the player is ready to move from one of the four 

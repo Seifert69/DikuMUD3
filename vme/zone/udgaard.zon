@@ -11156,6 +11156,63 @@ dilcopy qstItemsWanted@quests(NICHOLAS_QUEST, {"shrubbery@udgaard"},
 
 dilbegin newProfession();
 external
+   integer ReadyCareer@professions(pc : unitptr);
+   string CareerChoices@professions(pc : unitptr);
+code
+{
+:start:
+   wait(SFB_CMD, command("professions") and (activator.type == UNIT_ST_PC));
+   block;
+
+   if (not ((NICHOLAS_QUEST+" Complete") in activator.quests))
+      goto start;
+
+   if (ReadyCareer@professions(activator))
+   {
+      // Figure out what the player can choose
+      //
+      sendtext(CareerChoices@professions(activator), activator);
+   }
+   else
+   {
+      exec("say You're not ready for a profession change " + activator.name, self);
+   }
+
+   goto start;
+}
+dilend
+
+
+// Get items to complete Stew quest
+//
+dilbegin WaitQuestDone();
+external
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+var
+  pcname : string;
+  item   : unitptr;
+  pc     : unitptr;
+  i      : integer;
+  exdp   : extraptr;
+
+code
+{
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitDone@quests(NICHOLAS_QUEST, activator, 
+            {"say This will look so nice.",
+            "thank $1N", 
+            "say Now if you want to talk about changing your profession just type 'profession'."}, 800, 2 * COPPER_MULT, null);
+   goto start;
+}
+dilend
+
+
+
+dilbegin newProfQuest();
+external
    Explainer@quests(pc : unitptr, sl : stringlist);
    unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
