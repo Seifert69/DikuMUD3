@@ -379,7 +379,6 @@ code
    insert(exd.vals, length(exd.names), newProf);
    addstring(exd.names, sl.[newProf]);
    exd.descr := exd.descr + desc + "<br/>";
-   insert(exd.vals, length(exd.names)-1, newProf);
    return;
 }
 dilend
