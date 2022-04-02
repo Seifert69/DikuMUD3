@@ -11314,7 +11314,7 @@ code
 :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   if (activator.level < 250)
+   if (activator.level < 50)
       goto start;
 
 	pc := qstWaitHero@quests(NICHOLAS_QUEST, activator,
