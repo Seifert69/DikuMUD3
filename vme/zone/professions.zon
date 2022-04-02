@@ -213,9 +213,10 @@ code
          }
          n := n - 1;
       }
+      return (1);
    }
 
-   return (1);
+   return (0);
 }
 dilend
 
@@ -429,6 +430,7 @@ code
 
 :profok:
    AddFinal(pc, newProf, "Final profession change."); // xxxx
+   return;
 }
 dilend
 
