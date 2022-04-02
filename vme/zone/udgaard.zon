@@ -5226,8 +5226,6 @@ code
 {
    wait(SFB_CMD, (self.outside == activator) and (activator.type == UNIT_ST_PC) and (activator.level < 200));
    sPC := self.outside.name;
-   log("shrubbery bonded to " + sPC);
-
    heartbeat := 10 * PULSE_SEC;
 
 :loopit:
@@ -5245,12 +5243,6 @@ code
 
    if (command("cast"))
       goto wither;
-
-   log("something else");
-   log(cmdstr);
-   log(excmdstr);
-   log(argument);
-
    goto loopit;
 
 :wither:
