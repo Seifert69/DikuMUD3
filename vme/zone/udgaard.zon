@@ -11157,9 +11157,22 @@ dilcopy qstItemsWanted@quests(NICHOLAS_QUEST, {"shrubbery@udgaard"},
 dilbegin newProfession();
 external
    integer ReadyCareer@professions(pc : unitptr);
-   string CareerChoices@professions(pc : unitptr);
+   intlist CareerChoices@professions(pc : unitptr);
+   string ProfessionName@professions(prof_xxx : integer);
+   string listselector@basis(sl : stringlist);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+   ChangeProf@professions(pc : unitptr, newProf : integer);
+
+var
+   il : intlist;
+   sl : stringlist;
+   s : string;
+   n : integer;
+   pc : unitptr;
 code
 {
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
 :start:
    wait(SFB_CMD, command("professions") and (activator.type == UNIT_ST_PC));
    block;
@@ -11169,9 +11182,79 @@ code
 
    if (ReadyCareer@professions(activator))
    {
-      // Figure out what the player can choose
-      //
-      sendtext(CareerChoices@professions(activator), activator);
+      if (argument == "")
+      {
+         // Figure out what the player can choose
+         //
+         il := CareerChoices@professions(activator);
+
+         if (il == null)
+         {
+            exec("sleep", self);
+            log("Oh no, something is bizarre.");
+            goto start;
+         }
+
+         sl := null;
+         n := 0;
+
+         while (n < length(il))
+         {
+            addstring(sl, ProfessionName@professions(il.[n]));
+            n := n + 1;
+         }
+
+         s := "Type 'profession' and the number that you would like to choose:<br/>" + listselector@basis(sl) + "<br/>";
+         sendtext(s, activator);
+      }
+      else // argument is not null
+      {
+         n := atoi(argument);
+         if (n <= 0)
+         {
+            exec("say type 'profession' and then a number from the list.", self);
+            goto start;            
+         }
+
+         il := CareerChoices@professions(activator);
+
+         if (n > length(il))
+         {
+            exec("say type 'profession' and then a number from the list.", self);
+            goto start;
+         }
+
+         s := ProfessionName@professions(il.[n-1]);
+
+         exec("say nod your head if you want to change to "+s, self);
+
+         pc := activator;
+         secure(pc, start);
+         wait(SFB_CMD, activator == pc);
+         if (not command("nod"))
+         {
+            unsecure(pc);
+            heartbeat := 1;
+            pause;
+            exec("say Just start over when you're ready.", self);
+            goto start;
+         }
+
+         Explainer@quests(pc, 
+            {"say Prepare thyself.",
+            "cough",
+            "emote closes his eyes and begins praying.",
+            "look $1n",
+            "emote chants.",
+            "emote turns around and touchings some of the etchings on the walls.",
+            "emote inspects his shrubbery.",
+            "look $1n",
+            "emote raises his hands towards the ceiling.",
+            "::You're blinded by a white light.::There's a flash of white light around $1n."});
+         ChangeProf@professions(pc, il.[n-1]);
+         act("You feel overwhelmed and fall asleep.", A_ALWAYS, pc, null, null, TO_CHAR);
+         pc.position := POSITION_SLEEPING;
+      }
    }
    else
    {

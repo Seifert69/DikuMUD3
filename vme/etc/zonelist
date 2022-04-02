@@ -6,7 +6,7 @@ commands 1120tw0008      1 0 250 0 ../etc
 baseget  1120tw0008      1 0 250 0
 basemove 1120tw0008      1 1 0 0
 wiz 1120tw0008           1 0 250 0
-baselook 1120tw0008          1 1 0 0
+baselook 1120tw0008      1 1 0 0
 update 1120tw0008        1 0 250 0
 help 1120tw0008          1 0 250 0 ../etc/help
 boards 1120tw0008        1 0 250 0 ../lib/boards
@@ -17,9 +17,9 @@ mail 1120tw0008          1 0 250 0 ../lib/mail
 newbie 1120tw0008        1 0 250 0 ../lib/newbie
 function 1120tw0008      1 0 250 0
 restrict 1120tw0008      1 0 250 0
-quests release           1   2   0 0
-guilds release           1   0 250 0
-professions release      1   0 250 0
+quests release           1 2   0 0
+guilds release           1 0 250 0
+professions release      1 0 250 0
 #
 justice 1120tw0008       1 0 250 0
 arena 1120tw0008         1 0 250 0
@@ -30,7 +30,7 @@ holiday21 release        1 0 220 0
 guild_quest release      1 255 254 0 
 #
 bounty release           1 250 0 0
-udgaard 1120tw0008       1 1 0 0
+udgaard 1120tw0008       1 0 250 0
 midgaard 1120tw0008      1 1 0 0
 hallows10 d15turb3d      1 1 0 0
 holidays  k1tk4tc1u      1 255 0 0

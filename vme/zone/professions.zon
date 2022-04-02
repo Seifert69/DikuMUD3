@@ -123,16 +123,14 @@ dilend
 // and optionally a specialization. Used to know when we can
 // switch career
 //
-dilbegin string CareerChoices(pc : unitptr);
+dilbegin intlist CareerChoices(pc : unitptr);
 external
-   integer ProfCount@professions(pc : unitptr);
    integer ProfessionIdx@professions(sName : string);
-   string ProfessionName@professions(prof_xxx : integer);
 
 var
    exd : extraptr;
-   s : string;
    n : integer;
+   il : intlist;
 code
 {
    // Wish I had int in intlist...
@@ -142,42 +140,29 @@ code
 
    if ((n == PROFESSION_FIGHTER) or (n == PROFESSION_BARBARIAN))
    {
-      s := ProfessionName(PROFESSION_THIEF) + "<br/>" +
-           ProfessionName(PROFESSION_PRIEST) + "<br/>" +
-           ProfessionName(PROFESSION_CONJURER) + "<br/>" +
-           ProfessionName(PROFESSION_KNIGHT) + "<br/>" +
-           ProfessionName(PROFESSION_PALADIN) + "<br/>" +
-           ProfessionName(PROFESSION_RANGER) + "<br/>";
+      il := {PROFESSION_THIEF, PROFESSION_PRIEST, PROFESSION_CONJURER, PROFESSION_KNIGHT,
+             PROFESSION_PALADIN, PROFESSION_RANGER};
    }
    else if ((n == PROFESSION_THIEF) or (n == PROFESSION_ASSASSIN))
    {
-      s := ProfessionName(PROFESSION_FIGHTER) + "<br/>" +
-           ProfessionName(PROFESSION_PRIEST) + "<br/>" +
-           ProfessionName(PROFESSION_CONJURER) + "<br/>" +
-           ProfessionName(PROFESSION_KNIGHT) + "<br/>" +
-           ProfessionName(PROFESSION_RANGER) + "<br/>";
+      il := {PROFESSION_FIGHTER, PROFESSION_PRIEST, PROFESSION_CONJURER,
+             PROFESSION_KNIGHT, PROFESSION_RANGER };
    }
    else if ((n == PROFESSION_PRIEST) or (n == PROFESSION_DRUID))
    {
-      s := ProfessionName(PROFESSION_FIGHTER) + "<br/>" +
-           ProfessionName(PROFESSION_THIEF) + "<br/>" +
-           ProfessionName(PROFESSION_CONJURER) + "<br/>" +
-           ProfessionName(PROFESSION_PALADIN) + "<br/>" +
-           ProfessionName(PROFESSION_NECROMANCER) + "<br/>" +
-           ProfessionName(PROFESSION_RANGER) + "<br/>";
+      il := {PROFESSION_FIGHTER, PROFESSION_THIEF, PROFESSION_CONJURER, 
+             PROFESSION_PALADIN, PROFESSION_NECROMANCER, PROFESSION_RANGER};
    }
    else if ((n == PROFESSION_CONJURER) or (n == PROFESSION_SORCERER))
    {
-      s := ProfessionName(PROFESSION_FIGHTER) + "<br/>" +
-           ProfessionName(PROFESSION_THIEF) + "<br/>" +
-           ProfessionName(PROFESSION_PRIEST) + "<br/>";
+      il := {PROFESSION_FIGHTER, PROFESSION_THIEF, PROFESSION_PRIEST};
    }
    else
    {
-      s := "Something is messed up, not supposed to be here.<br/>";
+      il := null;
    }
 
-   return (s);
+   return (il);
 }
 dilend
 
@@ -224,7 +209,6 @@ code
       {
          if (not (exd.names.[n] in sl))
          {
-            log(exd.names.[n] + " not in index for profession switch");
             return (0);
          }
          n := n - 1;
@@ -362,6 +346,91 @@ code
 }
 dilend
 
+
+// ONLY CALL FROM INSIDE PROFESSIONS ZONE. PRIVATE FUNCTION.
+// To be called on a player to add a profession.
+//
+dilbegin AddFinal(pc : unitptr, newProf : integer, desc : string);
+var
+   sl : stringlist;
+   i : integer;
+   exd : extraptr;
+
+code
+{
+   exd := PROFESSION_KEY in pc.info;
+
+   // If there is a $professions, then this doesn't apply.
+   if (exd == null)
+   {
+      log("AddFinal() called but $profession did not exist for player " + pc.name);
+      return;
+   }
+
+   if ((i < 0) or (i >= PROFESSION_COUNT))
+   {
+      log("AddFinal() called but prof OOB.");
+      return;
+   }
+
+   pc.profession := newProf;  // Zone's DIL calling access level must be set to 0
+   sl := {PROFESSION_STRINGS};
+   insert(exd.vals, length(exd.names), newProf);
+   addstring(exd.names, sl.[newProf]);
+   exd.descr := exd.descr + desc + "<br/>";
+   insert(exd.vals, length(exd.names)-1, newProf);
+   return;
+}
+dilend
+
+
+// Call to allow player to do the final profession change.
+//
+dilbegin ChangeProf(pc : unitptr, newProf : integer);
+external
+   AddFinal(pc : unitptr, newProf : integer, desc : string);
+   integer ReadyCareer(pc : unitptr);
+   intlist CareerChoices(pc : unitptr);
+var
+   sl : stringlist;
+   il : intlist;
+   i : integer;
+   exd : extraptr;
+
+code
+{
+   // Do a final sanity check just to be double sure
+   //
+
+   if (ReadyCareer(pc) == 0)
+   {
+      log("something unexpected happened... dc");
+      return;
+   }
+
+   il := CareerChoices@professions(pc);
+
+   if (il == null)
+   {
+      log("something unexpected happened... ab");
+      return;
+   }
+
+   i := 0;
+
+   while (i < length(il))
+   {
+      if (il.[i] == newProf)
+         goto profok;
+      i := i + 1;
+   }
+   log("something unexpected happened... ac");
+   return;
+
+:profok:
+   AddFinal(pc, newProf, "Final profession change."); // xxxx
+}
+dilend
 
 // Call to allow player to specialize from starting position to specializaiton.
 // Only.
