@@ -1229,7 +1229,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             pBuf->Append16((ubit16)CHAR_ENDURANCE(u));
 
             pBuf->Append8(CHAR_NATURAL_ARMOUR(u));
-            pBuf->Append8(CHAR_SPEED(u));
+            pBuf->Append16(CHAR_SPEED(u));
 
             pBuf->Append16(CHAR_ATTACK_TYPE(u));
             pBuf->Append16(CHAR_RACE(u));

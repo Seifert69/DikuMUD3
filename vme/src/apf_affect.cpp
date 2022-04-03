@@ -364,9 +364,7 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
     return TRUE;
 }
 
-/* Data[0] = The new speed            */
-/* Data[2] = The original speed - [2] because it is not tested in the
-             unequip_object affect remove match. */
+// Data[0] = The amount to modify speed by (-8 .. +8)
 ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     if (!IS_CHAR(unit))
@@ -374,34 +372,19 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
         return TRUE;
     }
 
-    if ((af->getDataAtIndex(0) < 4) || (af->getDataAtIndex(2) < 0))
+    if ((af->getDataAtIndex(0) < -8) || (af->getDataAtIndex(0) > 8))
     {
+        slog(LOG_ALL, 0, "ERROR: Affect speed on room/obj %s@%s invalid range %d", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit), af->getDataAtIndex(0));
         return TRUE;
     }
 
     if (set)
     {
-        unit_affected_type *taf = nullptr;
-
-        af->setDataAtIndex(2, CHAR_SPEED(unit));
-
-        for (taf = UNIT_AFFECTED(unit); taf; taf = taf->getNext())
-        {
-            if ((taf->getID() == ID_SPEED) && (taf != af))
-            {
-                af->setDataAtIndex(2, -1);
-                break;
-            }
-        }
-
-        if (taf == nullptr)
-        {
-            getCharPoints(unit).setSpeed(af->getDataAtIndex(0));
-        }
+        getCharPoints(unit).modifySpeedBy(af->getDataAtIndex(0));
     }
     else
     {
-        getCharPoints(unit).setSpeed(af->getDataAtIndex(2));
+        getCharPoints(unit).modifySpeedBy(-af->getDataAtIndex(0));
     }
 
     return TRUE;

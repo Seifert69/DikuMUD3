@@ -462,16 +462,16 @@ var
     spd : integer;
 code
 {
-    spd := ((SPEED_DEFAULT/3)*bonuslvl)/7;
+    spd := ((SPEED_DEFAULT/2)*bonuslvl)/7; // Max double speed
 
     if (spd == 0)
         spd := 1;
 
 	addaff(u, ID_TRANSFER_SPEED, -1, 0,
-	       SPEED_DEFAULT - spd, 0, 0,
+	       spd, 0, 0,
            TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
 
-    identify(u, "Makes you hasted.", "Improved haste with " + itoa((100*spd)/SPEED_DEFAULT) + "%.");
+    identify(u, "Makes you hasted.", "Improved haste with " + itoa((100*SPEED_DEFAULT) / (SPEED_DEFAULT-spd)) + "%.");
 
     return (1);
 }
@@ -486,16 +486,16 @@ var
     spd : integer;
 code
 {
-    spd := ((SPEED_DEFAULT/3)*bonuslvl)/7;
+    spd := -((SPEED_DEFAULT/2)*bonuslvl)/7; // Max double speed
 
     if (spd == 0)
-        spd := 1;
+        spd := -1;
 
 	addaff(u, ID_TRANSFER_SPEED, -1, 0,
-	       SPEED_DEFAULT+spd, 0, 0,
+	       spd, 0, 0,
            TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
 
-    identify(u, "Makes you slower.", "Slows you " + itoa((100*spd)/SPEED_DEFAULT) + "%.");
+    identify(u, "Makes you slower.", "Slows you " + itoa((100*SPEED_DEFAULT) / (SPEED_DEFAULT-spd)) + "%.");
 
     return (1);
 }

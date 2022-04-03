@@ -2245,7 +2245,7 @@ ARMOUR_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 2
 cost 1 COPPER_PIECE
-SPEED_TRANSFER(4)
+SPEED_TRANSFER(+4)
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end

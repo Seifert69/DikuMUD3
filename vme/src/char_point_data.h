@@ -58,8 +58,9 @@ public:
 
     int getNumberOfMeleeAttacks(int naturalAttacks, bool isPC);
 
-    ubit8 getSpeed() const;
-    void setSpeed(ubit8 value);
+    sbit16 getSpeed() const;
+    void setSpeed(sbit16 value);
+    void modifySpeedBy(sbit16 delta);
     int getSpeedPercentage(bool isPC);
 
     ubit8 getNaturalArmor() const;
@@ -114,7 +115,7 @@ private:
     sbit16 endurance{0};                            // How many endurance points are left?
     sbit16 offensive{0};                            // The OB of a character.
     sbit16 defensive{0};                            // The DB of a character.
-    ubit8 speed{0};                                 // The default speed for natural combat
+    sbit16 speed{0};                                // The speed for combat
     ubit8 natural_armour{0};                        // The natural built-in armour (ARM_)
     ubit8 attack_type{0};                           // PC/NPC Attack Type for bare hands (WPN_)
     ubit8 dex_reduction{0};                         // For speed of armour calculations only

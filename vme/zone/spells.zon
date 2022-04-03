@@ -403,7 +403,7 @@ code
 {
    provoked_attack (tgt, self);
 
-   if ((hm < 0) or (tgt.speed >= 16))
+   if (hm < 0)
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       if (effect != "")
@@ -411,15 +411,11 @@ code
       quit;
    }
 
-   spd := tgt.speed + 4;
-   if (spd > 16)
-     spd := 16;
-
    if (isaff(tgt, ID_MIRE))
      subaff(tgt, ID_MIRE);
 
    addaff(tgt, ID_MIRE, 1 + hm / 25, WAIT_SEC*15,
-	  spd, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER,
+	  -4, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER,
 	  APF_SPEED);
    if (effect != "")
       effect(tgt, medi, hm);
@@ -9207,21 +9203,17 @@ code
 {
    provoked_attack (tgt, self);
 
-   if ((hm < 0) or (tgt.speed >= 20))
+   if (hm < 0)
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
-   spd := tgt.speed + 8;
-   if (spd > 20)
-     spd := 20;
-
    if (isaff(tgt, ID_SPEED))
      subaff(tgt, ID_SPEED);
 
    addaff(tgt, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
-	  spd, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER,
+	  -8, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER,
 	  APF_SPEED);
    quit;
 }
@@ -9229,16 +9221,16 @@ dilend
 
 
 dilbegin slow(medi:unitptr, tgt : unitptr, arg : string,
-	      hm : integer, effect : string);
+	            hm : integer, effect : string);
 external
-provoked_attack (victim : unitptr, ch : unitptr);
+   provoked_attack (victim : unitptr, ch : unitptr);
 var
    spd : integer;
 code
 {
    provoked_attack (tgt, self);
 
-   if ((hm < 0) or (tgt.speed >= 16))
+   if (hm < 0)
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       if (effect != "")
@@ -9246,16 +9238,11 @@ code
       quit;
    }
 
-   spd := tgt.speed + 4;
-   if (spd > 16)
-     spd := 16;
-
    if (isaff(tgt, ID_SPEED))
      subaff(tgt, ID_SPEED);
 
    addaff(tgt, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
-	  spd, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER,
-	  APF_SPEED);
+          -6, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
    if (effect != "")
       effect(tgt, medi, hm);
    quit;
@@ -9269,7 +9256,7 @@ var
    spd : integer;
 code
 {
-   if ((hm < 0) or (tgt.speed <= 6))
+   if (hm < 0)
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       if (effect != "")
@@ -9277,16 +9264,11 @@ code
       quit;
    }
 
-   spd := tgt.speed - 6;
-   if (spd < 6)
-     spd := 6;
-
    if (isaff(tgt, ID_SPEED))
      subaff(tgt, ID_SPEED);
 
    addaff(tgt, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
-	  spd, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE,
-	  APF_SPEED);
+	  +6, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
 
    if (effect != "")
       effect(tgt, medi, hm);
@@ -9302,21 +9284,17 @@ var
    spd : integer;
 code
 {
-   if ((hm < 0) or (tgt.speed <= 9))
+   if (hm < 0)
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
-   spd := tgt.speed - 3;
-   if (spd < 9)
-     spd := 9;
-
    if (isaff(tgt, ID_SPEED))
      subaff(tgt, ID_SPEED);
 
    addaff(tgt, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
-	  spd, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE,
+	  +3, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE,
 	  APF_SPEED);
    quit;
 }
@@ -9325,11 +9303,10 @@ dilend
 
 /* Improves the speed of a character by 3. Is not accumulative with other  */
 /* speed spells such as haste.                                             */
-
 dilbegin stun(medi : unitptr, tgt : unitptr, arg : string,
-	      hm : integer, effect : string);
+              hm : integer, effect : string);
 external
-provoked_attack (victim : unitptr, ch : unitptr);
+   provoked_attack (victim : unitptr, ch : unitptr);
 
 code
 {
@@ -9392,15 +9369,16 @@ code
 dilend
 
 
- dilbegin hold_monster(medi : unitptr, tgt : unitptr,
+dilbegin hold_monster(medi : unitptr, tgt : unitptr,
          arg : string,
          hm : integer, effect : string);
 
- external
- provoked_attack(victim : unitptr, ch : unitptr);
+external
+   provoked_attack(victim : unitptr, ch : unitptr);
 
-var mod: integer;
-    dump: integer;
+var
+   mod: integer;
+   dump: integer;
 
  code
  {
@@ -11769,19 +11747,20 @@ act("The ground becomes a mire of quicksand!",
     if(u.minv > 200) continue;
     if(u.level >= IMMORTAL_LEVEL) continue;
 
-      if ((hm < 0) or (tgt.speed >= 16))
+      if (hm < 0)
        {
         if (effect != "") effect(tgt, medi, -1);
         quit;
        }
     act("The quicksand severely hampers your movement...",
          A_ALWAYS, u, null, null, TO_CHAR);
-    spd := tgt.speed + 4;
+
     if (spd > 16) spd := 16;
 
-    if (isaff(tgt, ID_SPEED)) subaff(tgt, ID_SPEED);
+    if (isaff(tgt, ID_SPEED)) 
+      subaff(tgt, ID_SPEED);
     addaff(tgt, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
-           spd, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
+           -4, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
     if (effect != "") effect(tgt, medi, hm);
    }
   quit;

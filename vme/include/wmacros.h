@@ -565,23 +565,24 @@ affect                       \
    lastf   TIF_HIT_DEC       \
    applyf  APF_ABILITY;
 
-#define SPEED_TRANSFER(newspeed) \
+#define SPEED_TRANSFER(delta_speed) \
 flags {UNIT_FL_MAGIC}       \
 affect                       \
    id ID_TRANSFER_SPEED      \
    duration -1                /* Must be permanent in the object */  \
-   data[0] newspeed          \
+   data[0] delta_speed       \
    firstf  TIF_SPEED_BETTER  \
    tickf   TIF_NONE          \
    lastf   TIF_SPEED_WORSE   \
    applyf  APF_SPEED;
 
-#define SLOW_TRANSFER(amount) \
+// Must be negative
+#define SLOW_TRANSFER(delta_speed) \
 flags {UNIT_FL_MAGIC}         \
 affect                        \
    id ID_TRANSFER_SPEED       \
    duration -1                \
-   data[0] newspeed           \
+   data[0] delta_speed        \
    firstf  TIF_SPEED_WORSE    \
    tickf   TIF_NONE           \
    lastf   TIF_SPEED_BETTER   \

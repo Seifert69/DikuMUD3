@@ -1,5 +1,6 @@
 #include "char_point_data.h"
 
+#include "slog.h"
 #include "utils.h"
 #include "utility.h"
 
@@ -157,7 +158,7 @@ sbit16 *char_point_data::getDefensiveBonusPtr()
     return &defensive;
 }
 
-ubit8 char_point_data::getSpeed() const
+sbit16 char_point_data::getSpeed() const
 {
     return speed;
 }
@@ -177,19 +178,39 @@ int char_point_data::getNumberOfMeleeAttacks(int naturalAttacks, bool isPC)
 // 300% max for NPCs. 25% is the worst possible (4x slowed)
 int char_point_data::getSpeedPercentage(bool isPC)
 {
-    if (speed < SPEED_MIN)
-        speed = SPEED_MIN;
+    sbit16 s = speed;
+
+    if (s < SPEED_MIN)
+        s = SPEED_MIN;
         
-    if (speed == SPEED_DEFAULT)
+    if (s == SPEED_DEFAULT)
         return 100;
 
     if (isPC)
-        return MAX(MIN(200, (100*SPEED_DEFAULT)/speed), 25);
+        return MAX(MIN(200, (100*SPEED_DEFAULT)/s), 25);
     else
-        return MAX(MIN(300, (100*SPEED_DEFAULT)/speed), 25);
+        return MAX(MIN(300, (100*SPEED_DEFAULT)/s), 25);
 }
 
-void char_point_data::setSpeed(ubit8 value)
+
+// max values are -8 to +8
+// +1.. increases the speed
+// -1.. decreases the speed
+//
+void char_point_data::modifySpeedBy(sbit16 delta)
+{
+    if ((delta > 8) or (delta < -8))
+    {
+        slog(LOG_ALL, 0, "Attempt to modify speed by an invalid amount %d", delta);
+        return;
+    }
+
+    speed -= delta;
+}
+
+
+// Should only be called from raw operations 
+void char_point_data::setSpeed(sbit16 value)
 {
     speed = value;
 }
@@ -396,20 +417,29 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     natural_armour = buf.ReadU8(&error);
 
-    if (unit_version >= 39)
+    if (unit_version <= 74)
     {
-        speed = buf.ReadU8(&error);
-        if (IS_PC(unit))
+        if (unit_version >= 39)
         {
-            if (speed < SPEED_MIN)
+            ubit8 spd = buf.ReadU8(&error); // Ensure correct conversion
+            speed = spd;
+            if (IS_PC(unit))
             {
-                speed = SPEED_DEFAULT;
+                if (speed < SPEED_MIN)
+                {
+                    speed = SPEED_DEFAULT;
+                }
             }
         }
+        else
+        {
+            speed = SPEED_DEFAULT;
+        }        
     }
-    else
+    else // Speed for version 75 and up 
     {
-        speed = SPEED_DEFAULT;
+        // Speed is fluid, minimum is applied in function, not in storage
+        speed = buf.ReadS16(&error);
     }
 
     attack_type = buf.ReadU16(&error); // TODO Why is attack_type 8 bit it really should be 16 it looks like
