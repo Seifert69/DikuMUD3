@@ -26,6 +26,18 @@ v87.01 3919.19.24 ETNA  Restricted entangle to outdoor non frozen rooms.
 #define CORPSE_EXTRA  "$CORPSE_EXTRA"
 
 %dil
+
+// Copy onto object to emit this message.
+// Used e.g. to signal when someone has teleported
+dilbegin sendmsg(s : string);
+code
+{
+   send(s);
+   quit;
+}
+dilend
+
+
 dilbegin integer spellresist(aa : integer, ad : integer,
 			     sa : integer, sd : integer);
 code
@@ -2031,6 +2043,7 @@ if ((targ.type==UNIT_ST_PC) or (targ.type == UNIT_ST_NPC))
         "into the void!",
         A_SOMEONE, self, null, null, TO_CHAR);
     link(self, findroom("void@basis"));
+    dilcopy("sendmsg@spells(teleport)", self);
     self.mana := 0;
     exec("look", self);
     quit;
@@ -2092,6 +2105,7 @@ if ((targ.type==UNIT_ST_PC) or (targ.type == UNIT_ST_NPC))
   quit;
 }
 dilend /* travel */
+
 
 dilbegin aware gate_dil(destin : string, location : string, ownr : string,
                         dura : integer, poor : integer);
@@ -2184,6 +2198,8 @@ if (pc.type==UNIT_ST_PC)
    act("You step through $2n...",
        A_ALWAYS, pc, self, null, TO_CHAR);
    link (pc, findroom(destin));
+   dilcopy("sendmsg@spells(teleport)", pc);
+
    act("$1n steps out of $2n...",
        A_SOMEONE, pc, self, null, TO_REST);
    exec("look", pc);
@@ -2488,6 +2504,7 @@ if (self.type==UNIT_ST_PC)
         "great disturbance in the powers of magic!",
         A_SOMEONE, self, null, null, TO_REST);
     link(self, findroom("void@basis"));
+    dilcopy("sendmsg@spells(teleport)", self);
     self.mana := 0;
     exec("look", self);
     quit;
@@ -2584,7 +2601,7 @@ if (pc.type==UNIT_ST_PC)
    act("You step into $2n and vanish...",
        A_ALWAYS, pc, self, null, TO_CHAR);
    link (pc, findroom(destin));
-   //send_done("cast", pc, self, pc, 0, "portal", null);
+   dilcopy("sendmsg@spells(teleport)", pc);
    
    act("$1n appears from nothingness...",
        A_SOMEONE, pc, self, null, TO_REST);
@@ -3133,7 +3150,9 @@ if (not(paycheck(self,room)))
           A_ALWAYS, self, null, null, TO_CHAR); */
 
       link(targ, (findrndunit(targ, FIND_UNIT_WORLD, UNIT_ST_ROOM)));
+      dilcopy("sendmsg@spells(teleport)", targ);
       link(self, (findrndunit(self, FIND_UNIT_WORLD, UNIT_ST_ROOM)));
+      dilcopy("sendmsg@spells(teleport)", self);
       exec("look", targ);
       exec("look", self);
 
@@ -3163,7 +3182,9 @@ if (not(paycheck(self,room)))
 
   dest := targ.outside;
   link(targ, self.outside);
+  dilcopy("sendmsg@spells(teleport)", targ);
   link(self, dest);
+  dilcopy("sendmsg@spells(teleport)", self);
 
   act("You are surrounded by a purple glow...",
       A_ALWAYS, self, null, null, TO_CHAR);
@@ -3250,6 +3271,7 @@ if (not(paycheck(self,targ)))
        A_ALWAYS, self, null, null, TO_CHAR);
 
       link(self, targ);
+   dilcopy("sendmsg@spells(teleport)", self);
 
    act("$1n appears from a puff of blue smoke!",
         A_SOMEONE, self, null, null, TO_REST);
@@ -5354,6 +5376,7 @@ if (t_recall==0)
        A_ALWAYS,self,null,null,TO_CHAR);
 
    link(self, u);
+   dilcopy("sendmsg@spells(teleport)", self);
    act("$1n appears in a cloud of blue sparks.",
        A_ALWAYS,self,null,null,TO_ROOM);
 
@@ -6901,6 +6924,7 @@ code
        A_SOMEONE, self, targ, null, TO_ALL);
 
    link(targ, recept.outside);
+   dilcopy("sendmsg@spells(teleport)", targ);
 
    act("Suddenly, a swirling grey rift forms above you...", A_SOMEONE, recept,
        targ, null, TO_CHAR);
@@ -10223,6 +10247,7 @@ if ("$no_leaving_clan" in self.outside.extra)
        A_SOMEONE, self, null, null, TO_CHAR);
 
    link(self, u.exit_to[i]);
+   dilcopy("sendmsg@spells(teleport)", self);
 
    act("$1n appears from thin air.",
        A_HIDEINV, self, null, null, TO_ROOM);
@@ -10369,6 +10394,7 @@ unset (tgt.pcflags,PC_SPIRIT);
 unset (tgt.charflags,CHAR_KILL_SELF);
 
 	 link(tgt, self.outside);
+    dilcopy("sendmsg@spells(teleport)", tgt);
 
 	 while (u.inside)
 	   link(u.inside, tgt);
@@ -12768,6 +12794,7 @@ code
      dilcopy("capture_room@spells("+roomstr+")", mob);
 
      link(mob,u.outside);
+     dilcopy("sendmsg@spells(teleport)", mob);
 
      act("$1n appears through a rift!",
          A_SOMEONE, mob, null, null, TO_ROOM);
@@ -12839,6 +12866,7 @@ code
   act("$1n disappears into a rift!",
        A_SOMEONE, self, null, null, TO_ROOM);
   link(self,dest);
+   dilcopy("sendmsg@spells(teleport)", self);
   act("$1n appears through a rift!",
       A_SOMEONE, self, null, null, TO_ROOM);
   quit;
@@ -13013,6 +13041,7 @@ code
     act("$1n disappears in a puff of green smoke.",
          A_ALWAYS, self, null, null, TO_REST);
     link(self,plce);
+    dilcopy("sendmsg@spells(teleport)", self);
     act("$1n appears in a puff of green smoke.",
          A_SOMEONE, self, null, null, TO_REST);
     act("You feel confused.",
@@ -13101,6 +13130,7 @@ if (not(paycheck(self,plce))){
          A_SOMEONE, self, null, null, TO_REST);
 
     link(self,plce);
+    dilcopy("sendmsg@spells(teleport)", self);
 
     act("$1n appears in a puff of green smoke.",
          A_SOMEONE, self, null, null, TO_REST);
@@ -13178,6 +13208,7 @@ if (not(paycheck(self,room))){
       A_SOMEONE, self, null, null, TO_REST);
 
  link(self,room);
+dilcopy("sendmsg@spells(teleport)", self);
 
  act("$1n appears in a puff of green smoke.",
      A_SOMEONE, self, null, null, TO_REST);
@@ -13255,7 +13286,9 @@ if (not(paycheck(self,tgt))){
       A_SOMEONE, tgt, null, self, TO_REST);
 
   link(self,room_tgt);
+   dilcopy("sendmsg@spells(teleport)", self);
   link(tgt,room_me);
+   dilcopy("sendmsg@spells(teleport)", tgt);
 
   exec("look", self);
   exec("look", tgt);
@@ -13362,6 +13395,7 @@ if (not (paycheck(tgt,pay))){
          A_SOMEONE, tgt, null, null, TO_REST);
 
    link(tgt,room_me);
+   dilcopy("sendmsg@spells(teleport)", tgt);
 
    exec("look", tgt);
 
@@ -13472,6 +13506,7 @@ if (not (paycheck(tgt,pay))){
             A_SOMEONE, tgt, null, null, TO_REST);
 
       link(tgt,room_me);
+   dilcopy("sendmsg@spells(teleport)", tgt);
       exec("look",tgt);
       act("$1n appears in a flash of light!",
             A_HIDEINV, tgt, null, null, TO_REST);

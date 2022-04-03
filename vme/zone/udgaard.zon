@@ -5222,14 +5222,25 @@ cost 42 COPPER_PIECE
 dilbegin frail();
 var
    sPC : string;
+   s : string;
 code
 {
    wait(SFB_CMD, (self.outside == activator) and (activator.type == UNIT_ST_PC) and (activator.level < 200));
    sPC := self.outside.name;
-   heartbeat := 10 * PULSE_SEC;
+   heartbeat := 4 * PULSE_SEC;
 
 :loopit:
-   wait(SFB_CMD|SFB_TICK, TRUE);
+   wait(SFB_CMD|SFB_TICK|SFB_MSG, TRUE);
+
+   if (command(CMD_AUTO_MSG))
+   {
+      log("MESSAGE " + argument);
+      if (argument == "teleport")
+         goto wither;
+      else
+         goto loopit;      
+   }
+
    if (command(CMD_AUTO_TICK))
    {
       if (self.outside.name != sPC)
