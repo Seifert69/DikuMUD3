@@ -6976,16 +6976,27 @@ dilend
 dilbegin integer speed_percent(u : unitptr);
 var
    i : integer;
+   n : integer;
 code
 {
    i := u.speed;
    if (i == SPEED_DEFAULT)
       return (100);
 
-   if ((i < SPEED_MIN) or (i > SPEED_MAX))
-      return (-1);
+   if (i < SPEED_MIN)
+      i := SPEED_MIN;
 
-   return ((100 * SPEED_DEFAULT) / i);
+   if (i > SPEED_MAX)
+      i := SPEED_MAX;
+
+   n := ((100 * SPEED_DEFAULT) / i);
+
+   if (n > 200)
+      n := 200;
+   if (n < 25)
+      n := 25;
+
+   return (n);
 }
 dilend
 
