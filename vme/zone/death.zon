@@ -407,20 +407,20 @@ code
       if (bHometown)
       {
          hb := PULSE_SEC * SECS_PER_REAL_MIN * 3; // roughly 4*20m before potential player corpse recall
-         log(self.name + " player corpse hometown, 4 * 20 minutes");
+         // log(self.name + " player corpse hometown, 4 * 20 minutes");
       }
       else
       {
          hb := PULSE_SEC * SECS_PER_REAL_HOUR * 2; // 2 hours is close to MAX is SBIT16
-         log(self.name + "player corpse no hometown,  4 * 8 hours");
+         // log(self.name + "player corpse no hometown,  4 * 8 hours");
       }
    }
 
 :start:
    heartbeat := hb;  // first a pause, then 3 states / pause, then dissolve (or restart) 
 
-   if (self.value[2] == 1)
-      log(self.name + " first tick heartbeat = " + itoa(heartbeat));
+   //if (self.value[2] == 1)
+   //   log(self.name + " first tick heartbeat = " + itoa(heartbeat));
    cnt := 0;
    while (cnt < 6)
    {
@@ -435,8 +435,8 @@ code
       self.outside_descr := self.extra.["$rot"].names.[1];
    }
 
-   if (self.value[2] == 1)
-      log(self.name + " second tick heartbeat = " + itoa(heartbeat));
+   //if (self.value[2] == 1)
+   //   log(self.name + " second tick heartbeat = " + itoa(heartbeat));
    cnt := 0;
    while (cnt < 6)
    {
@@ -451,8 +451,8 @@ code
       self.outside_descr := self.extra.["$rot"].names.[2];
    }
 
-   if (self.value[2] == 1)
-      log(self.name + " third tick heartbeat = " + itoa(heartbeat));
+   //if (self.value[2] == 1)
+   //   log(self.name + " third tick heartbeat = " + itoa(heartbeat));
    cnt := 0;
    while (cnt < 6)
    {
@@ -467,8 +467,8 @@ code
       self.outside_descr := self.extra.["$rot"].names.[3];
    }
 
-   if (self.value[2] == 1)
-      log(self.name + " fourth tick heartbeat = " + itoa(heartbeat));
+   //if (self.value[2] == 1)
+   //   log(self.name + " fourth tick heartbeat = " + itoa(heartbeat));
    cnt := 0;
    while (cnt < 6)
    {
@@ -494,7 +494,7 @@ code
       act("$1n and everything in it dissolve into magical dust, floating away into the air.", A_HIDEINV, self, null, null, TO_ALL);
       link(self, corpse_room);
       act("The ashes of a body float down from the sky and form into $1n.", A_HIDEINV, self, null, null, TO_ALL);
-      log(self.name + " rescued " + self.name + " instead of destroying it.");
+      //log(self.name + " rescued " + self.name + " instead of destroying it.");
       bHometown := 0; // Important, this round we begin to 'rot'
       hb := PULSE_SEC * SECS_PER_REAL_HOUR * 2; 
       goto start; // Do it all again, but this time in the corpse_room
@@ -507,7 +507,7 @@ code
    if (self.extra.[CORPSE_FILE] != null)
    {
       hb := delunit(self.extra.[CORPSE_FILE].descr);
-      log("DELETED stored player corpse " + self.extra.[CORPSE_FILE].descr + " " + itoa(hb));
+      //log("DELETED stored player corpse " + self.extra.[CORPSE_FILE].descr + " " + itoa(hb));
    }
 
    if (self.value[2] == 1) // player
@@ -1064,26 +1064,26 @@ code
    /* This first line takes care of any xp earned above required level. */
    l0 := getinteger(DIL_GINT_REQXP, null, u.vlevel);
    l1 := getinteger(DIL_GINT_REQXP, null, u.vlevel+1);
-   log("l1 = " + itoa(l1) + "   l0 = " + itoa(l0) + "   l1-l0 = " + itoa(l1-l0));
+   // log("l1 = " + itoa(l1) + "   l0 = " + itoa(l0) + "   l1-l0 = " + itoa(l1-l0));
 
    // Lose half the XP earned above your current level (you should level up)
    loss := max(0, (u.exp-l0)/2);
-   log("loss 1 = " + itoa(loss));
+   // log("loss 1 = " + itoa(loss));
 
    /* This line makes sure, that you lose at most half a level...       */
    loss := min(loss, (l1-l0)/2);
-   log("loss 2 = " + itoa(loss));
+   // log("loss 2 = " + itoa(loss));
 
    /* This line takes care of the case where you have less or almost    */
    /* equal XP to your required. You thus lose at least 1/5th your      */
    /* level.                                                            */
    loss := max(loss, (l1-l0)/5);
-   log("loss 3 = " + itoa(loss));
+   // log("loss 3 = " + itoa(loss));
 
    if (loss < 0)
       loss:=0;
 
-   log("loss result = " + itoa(loss));
+   // log("loss result = " + itoa(loss));
 
    return(loss);
 }

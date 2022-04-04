@@ -374,13 +374,10 @@ dilend
 dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
 external
    integer default_accept@quests(pc : unitptr, ip : integer, s : string);
-
 var
    i : integer;
    ln : integer;
    s : string;
-
-
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -399,7 +396,7 @@ code
    {
       pause;
       exec("peer", self);
-      log("odd peer in qstWaitHero()");
+      // log("odd peer in qstWaitHero()");
       pc := null;
       return(pc);
    }
