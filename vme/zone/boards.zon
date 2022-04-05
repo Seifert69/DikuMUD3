@@ -161,7 +161,10 @@ code
    xn:="$BOARD_MAX" in u.extra;
    if ((msg_num<=0) or (msg_num>atoi(xn.descr)))
    {
-      act ("You must Reply to a post between 1 - "+xn.descr+".",
+	   brdname := xn.descr;
+	   if (brdname == null)
+	   	brdname := "999";
+      act ("You must Reply to a post between 1 - "+brdname+".",
       A_ALWAYS,self,null,null,TO_CHAR);
       quit;
    }
