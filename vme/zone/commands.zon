@@ -1053,7 +1053,7 @@ code
    }
 
    if (arg=="default")
-      self.prompt:= "%mana%m/%e%e/%hp%h> ";
+      self.prompt:= "%mana%m/%endurance%e/%hp%h> ";
    else if (arg=="blank")
       self.prompt:= "";
    else 

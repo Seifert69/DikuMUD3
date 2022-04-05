@@ -1905,7 +1905,7 @@ code
 
    informer();
 
-   self.prompt:= "%mana%m/%e%e/%hp%h> ";
+   self.prompt:= "%mana%m/%endurance%e/%hp%h> ";
    i:=dildestroy("send_prompt@update",self);
    dilcopy("send_prompt@update",self);
 
