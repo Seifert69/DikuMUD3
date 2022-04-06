@@ -519,7 +519,7 @@ code
    if (not visible(self, pc))
    {
       exec("peer", self);
-      log("odd peer in qstAssign()");
+      //log("odd peer in qstAssign()");
       return(exd);
    }
 
