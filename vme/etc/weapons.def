@@ -922,7 +922,7 @@ race halfling = -4
 race gnome = -5
 race brownie = -6
 restrict strength = 30
-restrict level = 45
+restrict level = 25
 // Circle 1, 2H swords, maces, etc
 attack clothes  = {60, 10,  4}
 attack sleather = {50,  9,  5}
@@ -963,7 +963,7 @@ race brownie = -4
 race half-orc = -1
 race half-ogre = -1
 race groll = -1
-restrict level = 20
+restrict level = 15
 // Circle 3, 1H Normal weapons (swords, maces, etc)
 attack clothes  = {50,  7,  6}
 attack sleather = {50,  6,  7}
