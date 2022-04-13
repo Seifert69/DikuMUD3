@@ -1017,7 +1017,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
 
     getCharPoints(unit).setMana(mana_limit(unit));
     getCharPoints(unit).setEndurance(move_limit(unit));
-    UNIT_HIT(unit) = UNIT_MAX_HIT(unit);
+    unit->setCurrentHitpoints(UNIT_MAX_HIT(unit));
 
     if (!unit->is_destructed())
     {

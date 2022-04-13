@@ -1861,18 +1861,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* sbit32 hp; */
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
-                        v->ref = &UNIT_HIT((unit_data *)v1->val.ptr);
+                        v->ref = unit->getCurrentHitpointsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

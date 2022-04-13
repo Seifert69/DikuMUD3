@@ -371,7 +371,7 @@ void set_points(unit_data *u)
         getCharPoints(u).setAttackType(WPN_FIST);
     }
 
-    UNIT_HIT(u) = hitpoint_total(CHAR_HPP(u));
+    u->setCurrentHitpoints(hitpoint_total(CHAR_HPP(u)));
     u->setMaximumHitpoints(hitpoint_total(CHAR_HPP(u)));
 }
 
@@ -1175,7 +1175,7 @@ void init_unit(unit_data *u)
     u->setAllManipulateFlags(0);
     u->setBaseWeight(1);
     u->setCapacity(0);
-    UNIT_HIT(u) = 100;
+    u->setCurrentHitpoints(100);
     u->setMaximumHitpoints(100);
     UNIT_ALIGNMENT(u) = 0;
     u->setAllOpenFlags(0);

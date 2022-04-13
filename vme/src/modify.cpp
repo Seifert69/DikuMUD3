@@ -810,7 +810,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 11: /* "hp" */
-            UNIT_HIT(unt) = valarg;
+            unt->setCurrentHitpoints(valarg);
             return;
 
         case 12: /* "key" */

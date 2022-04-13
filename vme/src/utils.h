@@ -107,7 +107,7 @@
 
 #define UNIT_ALIGNMENT(unit) ((unit)->alignment)
 
-#define UNIT_HIT(unit) ((unit)->hp)
+#define UNIT_HIT(unit) ((unit)->getCurrentHitpoints())
 
 #define UNIT_MAX_HIT(unit) ((unit)->getMaximumHitpoints())
 

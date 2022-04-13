@@ -1056,8 +1056,8 @@ void modify_hit(unit_data *ch, int hit)
 {
     if (CHAR_POS(ch) > POSITION_DEAD)
     {
-        UNIT_HIT(ch) += hit;
-        UNIT_HIT(ch) = MIN(hit_limit(ch), UNIT_HIT(ch));
+        ch->increaseCurrentHitpointsBy(hit);
+        ch->setCurrentHitpoints(MIN(hit_limit(ch), UNIT_HIT(ch)));
 
         update_pos(ch);
 
@@ -1199,7 +1199,7 @@ void damage(unit_data *ch,
             create_affect(victim, &af);
         }
     }
-    UNIT_HIT(victim) -= dam;
+    victim->decreaseCurrentHitpointsBy(dam);
 
     update_pos(victim);
 
@@ -1446,7 +1446,7 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
 
     if (dam > 0)
     {
-        UNIT_HIT(obj) -= dam;
+        obj->decreaseCurrentHitpointsBy(dam);
 
         if (UNIT_HIT(obj) < 0)
         {

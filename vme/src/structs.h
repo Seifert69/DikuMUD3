@@ -182,6 +182,24 @@ public:
     void setMaximumHitpoints(sbit32 value) { max_hp = value; }
     void readMaximumHitpointsFrom(CByteBuffer &buf, int &errors) { max_hp = buf.ReadS32(&errors); }
 
+    sbit32 getCurrentHitpoints() const { return hp; }
+    sbit32 *getCurrentHitpointsPtr() { return &hp; }
+    void setCurrentHitpoints(sbit32 value) { hp = value; }
+    void increaseCurrentHitpointsBy(sbit32 value) { hp += value; }
+    void decreaseCurrentHitpointsBy(sbit32 value) { hp -= value; }
+    void readCurrentHitpointsFrom(CByteBuffer &buf, ubit8 unit_version, int &errors)
+    {
+        hp = buf.ReadS32(&errors);
+        if (unit_version <= 54)
+        {
+            if (max_hp <= 0)
+            {
+                hp = 1000;
+                max_hp = 1000;
+            }
+        }
+    }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -223,9 +241,8 @@ private:
     ubit8 chars{0};        // How many chars is inside the unit
     ubit8 minv{0};         // Level of wizard invisible
     sbit32 max_hp{0};      // The maximum number of hitpoints
+    sbit32 hp{0};          // The actual amount of hitpoints left
 public:
-    sbit32 hp; /* The actual amount of hitpoints left           */
-
     sbit16 alignment; /* +-1000 for alignments                         */
 
     /* Room title, Char title, Obj "the barrel", NPC "the Beastly Fido" */
