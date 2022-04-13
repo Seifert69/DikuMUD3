@@ -117,7 +117,7 @@
 
 #define UNIT_OUT_DESCR(unit) ((unit)->getDescriptionOfOutside())
 
-#define UNIT_IN_DESCR(unit) ((unit)->in_descr)
+#define UNIT_IN_DESCR(unit) ((unit)->getDescriptionOfInside())
 
 #define UNIT_EXTRA(unit) ((unit)->extra)
 

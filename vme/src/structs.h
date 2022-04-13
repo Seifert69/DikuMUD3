@@ -215,6 +215,10 @@ public:
     std::string *getDescriptionOfOutsidePtr() { return &out_descr; }
     void setDescriptionOfOutside(std::string value) { out_descr = std::move(value); }
 
+    const std::string &getDescriptionOfInside() const { return in_descr; }
+    std::string *getDescriptionOfInsidePtr() { return &in_descr; }
+    void setDescriptionOfInside(std::string value) { in_descr = std::move(value); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -260,10 +264,8 @@ private:
     sbit16 alignment{0};   // +-1000 for alignments
     std::string title;     // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
     std::string out_descr; // The outside description of a unit
+    std::string in_descr;  // The inside description of a unit
 public:
-    /* The inside description of a unit            */
-    std::string in_descr;
-
     extra_list extra; /* All the look 'at' stuff                     */
 
     int destruct_classindex();

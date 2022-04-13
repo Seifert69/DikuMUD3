@@ -678,7 +678,7 @@ unit_field  : NAMES stringlist
             $2[2] = ' ';
         }
 
-        UNIT_IN_DESCR(cur) = ($2);
+        cur->setDescriptionOfInside($2);
     }
     | DESCR STRING
     {
@@ -690,7 +690,7 @@ unit_field  : NAMES stringlist
             $2[1] = ' ';
             $2[2] = ' ';
 
-            UNIT_IN_DESCR(cur) = ($2);
+            cur->setDescriptionOfInside($2);
         }
         else
         {

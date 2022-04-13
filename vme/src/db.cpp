@@ -751,10 +751,10 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     {
         g_nCorrupt++;
     }
-    UNIT_IN_DESCR(u) = c;
+    u->setDescriptionOfInside(c);
     if (unit_version < 70)
     {
-        UNIT_IN_DESCR(u) = fix_old_codes_to_html(UNIT_IN_DESCR(u).c_str());
+        u->setDescriptionOfInside(fix_old_codes_to_html(UNIT_IN_DESCR(u)));
     }
 
     g_nCorrupt += bread_extra(pBuf, UNIT_EXTRA(u), unit_version);

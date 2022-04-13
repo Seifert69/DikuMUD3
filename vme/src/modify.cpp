@@ -203,7 +203,7 @@ void edit_outside_descr(descriptor_data *d)
 
 void edit_inside_descr(descriptor_data *d)
 {
-    UNIT_IN_DESCR(d->getEditing()) = d->getLocalString();
+    d->getEditing()->setDescriptionOfInside(d->getLocalString());
 }
 
 int search_block_set(char *arg, const char **list, bool exact)

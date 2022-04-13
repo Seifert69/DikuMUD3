@@ -483,7 +483,7 @@ unit_data *unit_data::copy()
 
     u->title = title;
     u->out_descr = out_descr;
-    UNIT_IN_DESCR(u) = UNIT_IN_DESCR(this);
+    u->in_descr = in_descr;
     UNIT_EXTRA(u).copyfrom(UNIT_EXTRA(this));
 
     if (IS_ROOM(this))
