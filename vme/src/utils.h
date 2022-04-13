@@ -69,7 +69,7 @@
 
 #define UNIT_MANIPULATE(unit) ((unit)->getManipulate())
 
-#define UNIT_FLAGS(unit) ((unit)->flags)
+#define UNIT_FLAGS(unit) ((unit)->getUnitFlags())
 
 #define UNIT_WEIGHT(unit) ((unit)->weight)
 

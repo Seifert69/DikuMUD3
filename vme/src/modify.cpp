@@ -776,7 +776,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 trans_set(unt);
             }
 
-            UNIT_FLAGS(unt) = bitarg;
+            unt->setAllUnitFlags(bitarg);
             return;
 
         case 8: /* "weight" */

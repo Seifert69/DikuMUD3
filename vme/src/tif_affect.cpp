@@ -967,7 +967,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
         {
             unit_affected_type naf;
 
-            SET_BIT(UNIT_FLAGS(UNIT_CONTAINS(unit)), UNIT_FL_BURIED);
+            UNIT_CONTAINS(unit)->setUnitFlag(UNIT_FL_BURIED);
 
             naf.setID(ID_BURIED);
             naf.setDuration(0);

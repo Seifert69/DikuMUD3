@@ -96,6 +96,13 @@ public:
     }
     void setManipulateFlag(ubit32 value) { manipulate |= value; }
 
+    ubit16 getUnitFlags() const { return flags; }
+    ubit16 *getUnitFlagsPtr() { return &flags; }
+    void setAllUnitFlags(ubit16 value) { flags = value; }
+    void setUnitFlag(ubit16 value) { flags |= value; }
+    void removeUnitFlag(ubit16 value) { flags &= ~value; }
+    void readFlagsFrom(CByteBuffer &buf, int &errors) { flags = buf.ReadU16(&errors); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -123,8 +130,8 @@ public:
 
 private:
     ubit32 manipulate{0}; // WEAR_XXX macros
+    ubit16 flags{0};      // Invisible, can_bury, burried...
 public:
-    ubit16 flags;       /* Invisible, can_bury, burried...               */
     sbit32 base_weight; /* The "empty" weight of a room/char/obj (lbs)   */
     sbit32 weight;      /* Current weight of a room/obj/char             */
     sbit16 capacity;    /* Capacity of obj/char/room, -1 => any          */

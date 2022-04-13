@@ -112,11 +112,11 @@ ubit1 apf_mod_unit_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        SET_BIT(UNIT_FLAGS(unit), (ubit16)af->getDataAtIndex(0));
+        unit->setUnitFlag((ubit16)af->getDataAtIndex(0));
     }
     else
     {
-        REMOVE_BIT(UNIT_FLAGS(unit), (ubit16)af->getDataAtIndex(0));
+        unit->removeUnitFlag((ubit16)af->getDataAtIndex(0));
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -128,7 +128,7 @@ ubit1 apf_mod_unit_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_UNIT_FLAGS))
             {
-                SET_BIT(UNIT_FLAGS(unit), (ubit16)taf->getDataAtIndex(0));
+                unit->setUnitFlag((ubit16)taf->getDataAtIndex(0));
             }
         }
     }
@@ -374,7 +374,12 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if ((af->getDataAtIndex(0) < -8) || (af->getDataAtIndex(0) > 8))
     {
-        slog(LOG_ALL, 0, "ERROR: Affect speed on room/obj %s@%s invalid range %d", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit), af->getDataAtIndex(0));
+        slog(LOG_ALL,
+             0,
+             "ERROR: Affect speed on room/obj %s@%s invalid range %d",
+             UNIT_FI_NAME(unit),
+             UNIT_FI_ZONENAME(unit),
+             af->getDataAtIndex(0));
         return TRUE;
     }
 

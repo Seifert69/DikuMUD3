@@ -1171,7 +1171,7 @@ void init_unit(unit_data *u)
 
     UNIT_KEY(u) = nullptr;
     u->setAllManipulateFlags(0);
-    UNIT_FLAGS(u) = 0;
+    u->setAllManipulateFlags(0);
     UNIT_BASE_WEIGHT(u) = 1;
     UNIT_CAPACITY(u) = 0;
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = 100;

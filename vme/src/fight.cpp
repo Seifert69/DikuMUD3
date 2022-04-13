@@ -1130,7 +1130,7 @@ void damage(unit_data *ch,
             {
                 destroy_affect(paf);
             }
-            REMOVE_BIT(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE);
+            victim->removeUnitFlag(UNIT_FL_INVISIBLE);
         }
 
         if ((paf = affected_by_spell(ch, ID_SANCTUARY)))

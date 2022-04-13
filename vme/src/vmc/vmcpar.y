@@ -811,7 +811,7 @@ unit_field  : NAMES stringlist
     }
     | UFLAGS flags
     {
-        UNIT_FLAGS(cur) |= $2;
+        cur->setUnitFlag($2);
     }
     | WEIGHT number
     {
