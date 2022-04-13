@@ -247,7 +247,7 @@ unit_data *set_money(unit_data *money, amount_t amt)
     int mwgt = amt / MONEY_WEIGHT(money);
     int dif = mwgt - UNIT_BASE_WEIGHT(money);
 
-    UNIT_BASE_WEIGHT(money) = mwgt;
+    money->setBaseWeight(mwgt);
     weight_change_unit(money, dif);
 
     dif = mwgt - UNIT_WEIGHT(money);

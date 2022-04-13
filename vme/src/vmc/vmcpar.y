@@ -815,7 +815,7 @@ unit_field  : NAMES stringlist
     }
     | WEIGHT number
     {
-        UNIT_BASE_WEIGHT(cur) = $2;
+        cur->setBaseWeight($2);
     }
     | CAPACITY number
     {

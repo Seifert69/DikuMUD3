@@ -76,7 +76,9 @@ void race_adjust(unit_data *ch)
         sex_race = &my_race->female;
     }
 
-    UNIT_WEIGHT(ch) = UNIT_BASE_WEIGHT(ch) = sex_race->weight + dice(sex_race->weight_dice.reps, sex_race->weight_dice.size);
+    auto weight = sex_race->weight + dice(sex_race->weight_dice.reps, sex_race->weight_dice.size);
+    UNIT_WEIGHT(ch) = weight;
+    ch->setBaseWeight(weight);
 
     UNIT_SIZE(ch) = sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size);
 

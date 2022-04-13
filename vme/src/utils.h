@@ -73,7 +73,7 @@
 
 #define UNIT_WEIGHT(unit) ((unit)->weight)
 
-#define UNIT_BASE_WEIGHT(unit) ((unit)->base_weight)
+#define UNIT_BASE_WEIGHT(unit) ((unit)->getBaseWeight())
 
 #define UNIT_SIZE(unit) ((unit)->size)
 

@@ -103,6 +103,10 @@ public:
     void removeUnitFlag(ubit16 value) { flags &= ~value; }
     void readFlagsFrom(CByteBuffer &buf, int &errors) { flags = buf.ReadU16(&errors); }
 
+    sbit32 getBaseWeight() const { return base_weight; }
+    void setBaseWeight(sbit32 value) { base_weight = value; }
+    void readBaseWeightFrom(CByteBuffer &buf, int &errors) { base_weight = buf.ReadS16(&errors); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -129,13 +133,13 @@ public:
         *gprevious;
 
 private:
-    ubit32 manipulate{0}; // WEAR_XXX macros
-    ubit16 flags{0};      // Invisible, can_bury, burried...
+    ubit32 manipulate{0};  // WEAR_XXX macros
+    ubit16 flags{0};       // Invisible, can_bury, burried...
+    sbit32 base_weight{0}; // The "empty" weight of a room/char/obj (lbs)
 public:
-    sbit32 base_weight; /* The "empty" weight of a room/char/obj (lbs)   */
-    sbit32 weight;      /* Current weight of a room/obj/char             */
-    sbit16 capacity;    /* Capacity of obj/char/room, -1 => any          */
-    ubit16 size;        /* (cm) MOBs height, weapons size, ropes length  */
+    sbit32 weight;   /* Current weight of a room/obj/char             */
+    sbit16 capacity; /* Capacity of obj/char/room, -1 => any          */
+    ubit16 size;     /* (cm) MOBs height, weapons size, ropes length  */
 
     ubit8 status;     /* IS_ROOM, IS_OBJ, IS_PC, IS_NPC                */
     ubit8 open_flags; /* In general OPEN will mean can "enter"?        */

@@ -1172,7 +1172,7 @@ void init_unit(unit_data *u)
     UNIT_KEY(u) = nullptr;
     u->setAllManipulateFlags(0);
     u->setAllManipulateFlags(0);
-    UNIT_BASE_WEIGHT(u) = 1;
+    u->setBaseWeight(1);
     UNIT_CAPACITY(u) = 0;
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = 100;
     UNIT_ALIGNMENT(u) = 0;
@@ -1187,7 +1187,8 @@ void init_unit(unit_data *u)
     {
         case UNIT_ST_NPC:
         {
-            UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
+            u->setBaseWeight(120); // lbs default
+            UNIT_WEIGHT(u) = 120;  // lbs default
             CHAR_MONEY(u) = nullptr;
             getCharPoints(u).setPlayerExperience(100); // 100 XP per default at your own level
             getCharPoints(u).setAllCharacterFlags(0);
@@ -1240,7 +1241,7 @@ void init_unit(unit_data *u)
 
         case UNIT_ST_ROOM:
             UNIT_CAPACITY(u) = 30000;
-            UNIT_BASE_WEIGHT(u) = 10;
+            u->setBaseWeight(10);
             UNIT_WEIGHT(u) = 10;
             UNIT_IN(u) = nullptr;
             for (i = 0; i <= MAX_EXIT; i++)

@@ -664,15 +664,16 @@ void dilfi_set_weight_base(dilprg *p)
 
     if (dil_type_check("set_weight_base", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr)
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit)
         {
-            int dif = v2->val.num - UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr);
+            int dif = v2->val.num - UNIT_BASE_WEIGHT(unit);
 
             /* set new baseweight */
-            UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr) = v2->val.num;
+            unit->setBaseWeight(v2->val.num);
 
             /* update weight */
-            weight_change_unit((unit_data *)v1->val.ptr, dif);
+            weight_change_unit(unit, dif);
         }
     }
     delete v1;
@@ -720,15 +721,16 @@ void dilfi_swt(dilprg *p)
 
     if (dil_type_check("setweight", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr)
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit)
         {
-            int dif = v2->val.num - UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr);
+            int dif = v2->val.num - UNIT_BASE_WEIGHT(unit);
 
             /* set new baseweight */
-            UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr) = v2->val.num;
+            unit->setBaseWeight(v2->val.num);
 
             /* update weight */
-            weight_change_unit((unit_data *)v1->val.ptr, dif);
+            weight_change_unit(unit, dif);
         }
     }
     delete v1;
@@ -745,7 +747,8 @@ void dilfi_chas(dilprg *p)
     {
         if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && CHAR_COMBAT((unit_data *)v1->val.ptr))
         {
-            CHAR_COMBAT((unit_data *)v1->val.ptr)->changeSpeed(v2->val.num,  getCharPoints((unit_data *) v1->val.ptr).getSpeedPercentage(IS_PC((unit_data *)v1->val.ptr)));
+            CHAR_COMBAT((unit_data *)v1->val.ptr)
+                ->changeSpeed(v2->val.num, getCharPoints((unit_data *)v1->val.ptr).getSpeedPercentage(IS_PC((unit_data *)v1->val.ptr)));
         }
     }
     delete v1;
@@ -1961,8 +1964,8 @@ void dilfi_adl(dilprg *p)
             {
                 if (v2->val.ptr)
                 {
-                    if (isblank(*(char*)v2->val.ptr))
-                        slog(LOG_ALL, 0, "DIL addstring [%s] has whitespace", (char *) v2->val.ptr);
+                    if (isblank(*(char *)v2->val.ptr))
+                        slog(LOG_ALL, 0, "DIL addstring [%s] has whitespace", (char *)v2->val.ptr);
 
                     ((cNamelist *)v1->ref)->AppendNameTrim((char *)v2->val.ptr);
                 }

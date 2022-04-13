@@ -789,7 +789,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             int dif = valarg - UNIT_BASE_WEIGHT(unt);
 
             /* set new baseweight */
-            UNIT_BASE_WEIGHT(unt) = valarg;
+            unt->setBaseWeight(valarg);
 
             /* update weight */
             weight_change_unit(unt, dif);
