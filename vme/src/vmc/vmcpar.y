@@ -897,7 +897,7 @@ optopendiff : /* naught */
             sprintf(buf, "Exit difficulty %d must be in [0..250]", $2);
             fatal(buf);
         }
-        UNIT_OPEN_DIFF(cur) = $2;
+        cur->setOpenDifficulty($2);
     }
     ;
 

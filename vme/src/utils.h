@@ -99,7 +99,7 @@
 
 #define UNIT_OPEN_FLAGS(unit) ((unit)->getOpenFlags())
 
-#define UNIT_OPEN_DIFF(unit) ((unit)->open_diff)
+#define UNIT_OPEN_DIFF(unit) ((unit)->getOpenDifficulty())
 
 #define UNIT_TYPE(unit) ((unit)->getUnitType())
 

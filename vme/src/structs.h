@@ -137,6 +137,17 @@ public:
     void readOpenFlagsFrom(CByteBuffer &buf, int &errors) { open_flags = buf.ReadU8(&errors); }
     void setOpenFlag(ubit8 value) { open_flags |= value; }
 
+    ubit8 getOpenDifficulty() const { return open_diff; }
+    ubit8 *getOpenDifficultyPtr() { return &open_diff; }
+    void setOpenDifficulty(ubit8 value) { open_diff = value; }
+    void readOpenDifficultyFrom(CByteBuffer &buf, ubit8 unit_version, int &errors)
+    {
+        if (unit_version >= 71)
+        {
+            open_diff = buf.ReadU8(&errors);
+        }
+    }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -171,15 +182,15 @@ private:
     ubit16 size{0};        // (cm) MOBs height, weapons size, ropes length
     ubit8 status{0};       // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
     ubit8 open_flags{0};   // In general OPEN will mean can "enter"?
+    ubit8 open_diff{0};    // Open difficulty
 public:
-    ubit8 open_diff; /* Open dificulty                                */
-    sbit16 light;    /* Number of active light sources in unit        */
-    sbit16 bright;   /* How much the unit shines                      */
-    sbit16 illum;    /* how much bright is by transparency            */
-    ubit8 chars;     /* How many chars is inside the unit             */
-    ubit8 minv;      /* Level of wizard invisible                     */
-    sbit32 max_hp;   /* The maximum number of hitpoint                */
-    sbit32 hp;       /* The actual amount of hitpoints left           */
+    sbit16 light;  /* Number of active light sources in unit        */
+    sbit16 bright; /* How much the unit shines                      */
+    sbit16 illum;  /* how much bright is by transparency            */
+    ubit8 chars;   /* How many chars is inside the unit             */
+    ubit8 minv;    /* Level of wizard invisible                     */
+    sbit32 max_hp; /* The maximum number of hitpoint                */
+    sbit32 hp;     /* The actual amount of hitpoints left           */
 
     sbit16 alignment; /* +-1000 for alignments                         */
 
