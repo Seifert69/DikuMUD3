@@ -166,6 +166,12 @@ public:
     void decreaseTransparentLightOutputBy(sbit16 value) { illum -= value; }
     void readTransparentLightOutputFrom(CByteBuffer &buf, int &errors) { illum = buf.ReadS8(&errors); }
 
+    sbit8 getNumberOfCharactersInsideUnit() const { return chars; }
+    void readNumberOfCharactersInsideUnitFrom(CByteBuffer &buf, int &errors) { chars = buf.ReadU8(&errors); }
+    void decrementNumberOfCharactersInsideUnit() { --chars; }
+    void incrementNumberOfCharactersInsideUnit() { ++chars; }
+    void setNumberOfCharactersInsideUnit(sbit8 value) { chars = value; }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -204,8 +210,8 @@ private:
     sbit16 light{0};       // Number of active light sources in unit
     sbit16 bright{0};      // How much the unit shines
     sbit16 illum{0};       // how much bright is by transparency
+    ubit8 chars{0};        // How many chars is inside the unit
 public:
-    ubit8 chars;   /* How many chars is inside the unit             */
     ubit8 minv;    /* Level of wizard invisible                     */
     sbit32 max_hp; /* The maximum number of hitpoint                */
     sbit32 hp;     /* The actual amount of hitpoints left           */

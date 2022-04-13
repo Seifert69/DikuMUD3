@@ -85,7 +85,7 @@
 
 #define UNIT_ILLUM(unit) ((unit)->getTransparentLightOutput())
 
-#define UNIT_CHARS(unit) ((unit)->chars)
+#define UNIT_CHARS(unit) ((unit)->getNumberOfCharactersInsideUnit())
 
 #define UNIT_CONTAINS(unit) ((unit)->inside)
 

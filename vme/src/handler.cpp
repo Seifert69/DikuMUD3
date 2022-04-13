@@ -767,7 +767,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
 
     if (IS_CHAR(unit))
     {
-        --UNIT_CHARS(UNIT_IN(unit));
+        UNIT_IN(unit)->decrementNumberOfCharactersInsideUnit();
     }
     /*fuck*/
     UNIT_IN(unit)->reduceWeightBy(UNIT_WEIGHT(unit));
@@ -793,7 +793,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
         UNIT_CONTAINS(UNIT_IN(unit)) = unit;
         if (IS_CHAR(unit))
         {
-            ++UNIT_CHARS(UNIT_IN(unit));
+            UNIT_IN(unit)->incrementNumberOfCharactersInsideUnit();
         }
     }
 
@@ -858,7 +858,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     {
         if (IS_CHAR(unit))
         {
-            --UNIT_CHARS(UNIT_IN(unit));
+            UNIT_IN(unit)->decrementNumberOfCharactersInsideUnit();
         }
         if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
         {
@@ -880,7 +880,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
 
     if (IS_CHAR(unit))
     {
-        ++UNIT_CHARS(UNIT_IN(unit));
+        UNIT_IN(unit)->incrementNumberOfCharactersInsideUnit();
     }
     to->increaseWeightBy(UNIT_WEIGHT(unit));
 

@@ -1179,7 +1179,7 @@ void init_unit(unit_data *u)
     u->setAllOpenFlags(0);
     u->setNumberOfActiveLightSources(0);
     u->setLightOutput(0);
-    UNIT_CHARS(u) = 0;
+    u->setNumberOfCharactersInsideUnit(0);
     UNIT_AFFECTED(u) = nullptr;
     u->setSize(180); // 180cm default
 
