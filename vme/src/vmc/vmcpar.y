@@ -803,7 +803,7 @@ unit_field  : NAMES stringlist
     optopendiff;
     | MANIPULATE flags
     {
-        UNIT_MANIPULATE(cur) |= $2;
+        cur->setManipulateFlag($2);
     }
     | HIT number
     {

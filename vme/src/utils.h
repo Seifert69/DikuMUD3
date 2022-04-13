@@ -67,7 +67,7 @@
 
 #define UNIT_FILE_INDEX(unit) ((unit)->fi)
 
-#define UNIT_MANIPULATE(unit) ((unit)->manipulate)
+#define UNIT_MANIPULATE(unit) ((unit)->getManipulate())
 
 #define UNIT_FLAGS(unit) ((unit)->flags)
 

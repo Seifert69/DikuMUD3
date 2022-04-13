@@ -763,7 +763,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 6: /* "manipulate-flags" */
-            UNIT_MANIPULATE(unt) = bitarg;
+            unt->setAllManipulateFlags(bitarg);
             return;
 
         case 7: /* "unit-flags" */

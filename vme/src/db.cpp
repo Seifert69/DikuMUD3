@@ -773,14 +773,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         UNIT_KEY(u) = nullptr;
     }
 
-    if (unit_version < 46)
-    {
-        UNIT_MANIPULATE(u) = pBuf->ReadU16(&g_nCorrupt);
-    }
-    else
-    {
-        UNIT_MANIPULATE(u) = pBuf->ReadU32(&g_nCorrupt);
-    }
+    u->readManipulateFrom(*pBuf, unit_version, g_nCorrupt);
 
     UNIT_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
     UNIT_BASE_WEIGHT(u) = pBuf->ReadS16(&g_nCorrupt);

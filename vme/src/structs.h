@@ -78,6 +78,24 @@ public:
     cNamelist &getNames() { return names; }
     const cNamelist &getNames() const { return names; }
 
+    /// HERE FOR PTR
+
+    ubit32 getManipulate() const { return manipulate; }
+    ubit32 *getManipulatePtr() { return &manipulate; }
+    void setAllManipulateFlags(ubit32 value) { manipulate = value; }
+    void readManipulateFrom(CByteBuffer &buf, ubit8 unit_version, int &errors)
+    {
+        if (unit_version < 46)
+        {
+            manipulate = buf.ReadU16(&errors);
+        }
+        else
+        {
+            manipulate = buf.ReadU32(&errors);
+        }
+    }
+    void setManipulateFlag(ubit32 value) { manipulate |= value; }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -103,7 +121,9 @@ public:
         *gnext,
         *gprevious;
 
-    ubit32 manipulate;  /* WEAR_XXX macros                               */
+private:
+    ubit32 manipulate{0}; // WEAR_XXX macros
+public:
     ubit16 flags;       /* Invisible, can_bury, burried...               */
     sbit32 base_weight; /* The "empty" weight of a room/char/obj (lbs)   */
     sbit32 weight;      /* Current weight of a room/obj/char             */

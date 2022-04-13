@@ -376,7 +376,7 @@ void set_points(unit_data *u)
 
 void set_room_data(unit_data *u)
 {
-    SET_BIT(UNIT_MANIPULATE(u), MANIPULATE_ENTER);
+    u->setManipulateFlag(MANIPULATE_ENTER);
 }
 
 bool affect_vector_string(unit_data *obj, std::string &s)
@@ -1170,7 +1170,7 @@ void init_unit(unit_data *u)
     u->next = nullptr;
 
     UNIT_KEY(u) = nullptr;
-    UNIT_MANIPULATE(u) = 0;
+    u->setAllManipulateFlags(0);
     UNIT_FLAGS(u) = 0;
     UNIT_BASE_WEIGHT(u) = 1;
     UNIT_CAPACITY(u) = 0;
