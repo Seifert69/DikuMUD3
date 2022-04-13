@@ -839,7 +839,7 @@ unit_field  : NAMES stringlist
     }
     | MINV number
     {
-        UNIT_MINV(cur) = $2;
+        cur->setLevelOfWizardInvisibility($2);
     }
     | SPECIAL
     {

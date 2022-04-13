@@ -172,6 +172,11 @@ public:
     void incrementNumberOfCharactersInsideUnit() { ++chars; }
     void setNumberOfCharactersInsideUnit(sbit8 value) { chars = value; }
 
+    ubit8 getLevelOfWizardInvisibility() const { return minv; }
+    ubit8 *getLevelOfWizardInvisibilityPtr() { return &minv; }
+    void readLevelOfWizardInvisibilityFrom(CByteBuffer &buf, int &errors) { minv = buf.ReadU8(&errors); }
+    void setLevelOfWizardInvisibility(ubit8 value) { minv = value; }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -211,8 +216,8 @@ private:
     sbit16 bright{0};      // How much the unit shines
     sbit16 illum{0};       // how much bright is by transparency
     ubit8 chars{0};        // How many chars is inside the unit
+    ubit8 minv{0};         // Level of wizard invisible
 public:
-    ubit8 minv;    /* Level of wizard invisible                     */
     sbit32 max_hp; /* The maximum number of hitpoint                */
     sbit32 hp;     /* The actual amount of hitpoints left           */
 

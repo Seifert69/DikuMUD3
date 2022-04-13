@@ -111,7 +111,7 @@
 
 #define UNIT_MAX_HIT(unit) ((unit)->max_hp)
 
-#define UNIT_MINV(u) ((u)->minv)
+#define UNIT_MINV(u) ((u)->getLevelOfWizardInvisibility())
 
 #define UNIT_TITLE(unit) ((unit)->title)
 

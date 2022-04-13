@@ -801,7 +801,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->readTransparentLightOutputFrom(*pBuf, g_nCorrupt);
 
     u->readNumberOfCharactersInsideUnitFrom(*pBuf, g_nCorrupt);
-    UNIT_MINV(u) = pBuf->ReadU8(&g_nCorrupt);
+    u->readLevelOfWizardInvisibilityFrom(*pBuf, g_nCorrupt);
 
     if (unit_version >= 53)
     {
