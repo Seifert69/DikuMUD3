@@ -1011,9 +1011,9 @@ void process_unit(unit_data *u)
     if (!is_in(UNIT_WEIGHT(u), 0, 2000))
     {
         dmc_error(TRUE, "%s: Illegal weight %d (expected 0..2000).", UNIT_IDENT(u), UNIT_WEIGHT(u));
-        UNIT_WEIGHT(u) = 0;
+        u->setWeight(0);
     }
-    UNIT_WEIGHT(u) = UNIT_BASE_WEIGHT(u);
+    u->setWeight(UNIT_BASE_WEIGHT(u));
 
     if (!is_in(UNIT_ALIGNMENT(u), -1000, +1000))
     {
@@ -1188,7 +1188,7 @@ void init_unit(unit_data *u)
         case UNIT_ST_NPC:
         {
             u->setBaseWeight(120); // lbs default
-            UNIT_WEIGHT(u) = 120;  // lbs default
+            u->setWeight(120);     // lbs default
             CHAR_MONEY(u) = nullptr;
             getCharPoints(u).setPlayerExperience(100); // 100 XP per default at your own level
             getCharPoints(u).setAllCharacterFlags(0);
@@ -1242,7 +1242,7 @@ void init_unit(unit_data *u)
         case UNIT_ST_ROOM:
             UNIT_CAPACITY(u) = 30000;
             u->setBaseWeight(10);
-            UNIT_WEIGHT(u) = 10;
+            u->setWeight(10);
             UNIT_IN(u) = nullptr;
             for (i = 0; i <= MAX_EXIT; i++)
             {

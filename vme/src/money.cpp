@@ -280,7 +280,7 @@ static unit_data *make_money(file_index_type *fi, amount_t amt)
 
     assert(IS_OBJ(money));
 
-    UNIT_WEIGHT(money) = 0; /* Init money-weight */
+    money->setWeight(0); // Init money-weight
 
     auto str = diku::format_to_str(cur_strings[MONEY_CURRENCY(money)], g_money_types[MONEY_TYPE(money)].tails);
 

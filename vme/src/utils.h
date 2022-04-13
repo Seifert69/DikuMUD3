@@ -71,7 +71,7 @@
 
 #define UNIT_FLAGS(unit) ((unit)->getUnitFlags())
 
-#define UNIT_WEIGHT(unit) ((unit)->weight)
+#define UNIT_WEIGHT(unit) ((unit)->getWeight())
 
 #define UNIT_BASE_WEIGHT(unit) ((unit)->getBaseWeight())
 

@@ -107,6 +107,12 @@ public:
     void setBaseWeight(sbit32 value) { base_weight = value; }
     void readBaseWeightFrom(CByteBuffer &buf, int &errors) { base_weight = buf.ReadS16(&errors); }
 
+    sbit32 getWeight() const { return weight; }
+    void reduceWeightBy(sbit16 value) { weight -= value; }
+    void increaseWeightBy(sbit16 value) { weight += value; }
+    void setWeight(sbit32 value) { weight = value; }
+    void readWeightFrom(CByteBuffer &buf, int &errors) { weight = buf.ReadS16(&errors); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -136,8 +142,8 @@ private:
     ubit32 manipulate{0};  // WEAR_XXX macros
     ubit16 flags{0};       // Invisible, can_bury, burried...
     sbit32 base_weight{0}; // The "empty" weight of a room/char/obj (lbs)
+    sbit32 weight{0};      // Current weight of a room/obj/char
 public:
-    sbit32 weight;   /* Current weight of a room/obj/char             */
     sbit16 capacity; /* Capacity of obj/char/room, -1 => any          */
     ubit16 size;     /* (cm) MOBs height, weapons size, ropes length  */
 

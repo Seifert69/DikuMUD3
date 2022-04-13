@@ -770,7 +770,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
         --UNIT_CHARS(UNIT_IN(unit));
     }
     /*fuck*/
-    UNIT_WEIGHT(UNIT_IN(unit)) -= UNIT_WEIGHT(unit);
+    UNIT_IN(unit)->reduceWeightBy(UNIT_WEIGHT(unit));
 
     if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
     {
@@ -882,7 +882,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     {
         ++UNIT_CHARS(UNIT_IN(unit));
     }
-    UNIT_WEIGHT(to) += UNIT_WEIGHT(unit);
+    to->increaseWeightBy(UNIT_WEIGHT(unit));
 
     if (pile && IS_MONEY(unit))
     {
@@ -1170,7 +1170,7 @@ void weight_change_unit(unit_data *unit, int weight)
 {
     for (; unit; unit = UNIT_IN(unit))
     {
-        UNIT_WEIGHT(unit) += weight;
+        unit->increaseWeightBy(weight);
     }
 }
 
