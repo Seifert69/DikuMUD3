@@ -113,6 +113,11 @@ public:
     void setWeight(sbit32 value) { weight = value; }
     void readWeightFrom(CByteBuffer &buf, int &errors) { weight = buf.ReadS16(&errors); }
 
+    sbit16 getCapacity() const { return capacity; }
+    sbit16 *getCapacityPtr() { return &capacity; }
+    void readCapacityFrom(CByteBuffer &buf, int &errors) { capacity = buf.ReadS16(&errors); }
+    void setCapacity(sbit16 value) { capacity = value; }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -143,9 +148,9 @@ private:
     ubit16 flags{0};       // Invisible, can_bury, burried...
     sbit32 base_weight{0}; // The "empty" weight of a room/char/obj (lbs)
     sbit32 weight{0};      // Current weight of a room/obj/char
+    sbit16 capacity{0};    // Capacity of obj/char/room, -1 => any
 public:
-    sbit16 capacity; /* Capacity of obj/char/room, -1 => any          */
-    ubit16 size;     /* (cm) MOBs height, weapons size, ropes length  */
+    ubit16 size; /* (cm) MOBs height, weapons size, ropes length  */
 
     ubit8 status;     /* IS_ROOM, IS_OBJ, IS_PC, IS_NPC                */
     ubit8 open_flags; /* In general OPEN will mean can "enter"?        */

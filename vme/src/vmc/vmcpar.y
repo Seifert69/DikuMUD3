@@ -819,7 +819,7 @@ unit_field  : NAMES stringlist
     }
     | CAPACITY number
     {
-        UNIT_CAPACITY(cur) = $2;
+        cur->setCapacity($2);
     }
     | HEIGHT number
     {

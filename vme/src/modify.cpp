@@ -802,7 +802,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         }
 
         case 9: /* "capacity" */
-            UNIT_CAPACITY(unt) = valarg;
+            unt->setCapacity(valarg);
             return;
 
         case 10: /* "max_hp" */

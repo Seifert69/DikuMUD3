@@ -778,7 +778,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->readFlagsFrom(*pBuf, g_nCorrupt);
     u->readBaseWeightFrom(*pBuf, g_nCorrupt);
     u->readWeightFrom(*pBuf, g_nCorrupt);
-    UNIT_CAPACITY(u) = pBuf->ReadS16(&g_nCorrupt);
+    u->readCapacityFrom(*pBuf, g_nCorrupt);
 
     UNIT_MAX_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
     UNIT_HIT(u) = pBuf->ReadS32(&g_nCorrupt);

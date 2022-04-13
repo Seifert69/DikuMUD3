@@ -77,7 +77,7 @@
 
 #define UNIT_SIZE(unit) ((unit)->size)
 
-#define UNIT_CAPACITY(unit) ((unit)->capacity)
+#define UNIT_CAPACITY(unit) ((unit)->getCapacity())
 
 #define UNIT_BRIGHT(unit) ((unit)->bright)
 

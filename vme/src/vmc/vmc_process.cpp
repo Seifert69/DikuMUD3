@@ -1173,7 +1173,7 @@ void init_unit(unit_data *u)
     u->setAllManipulateFlags(0);
     u->setAllManipulateFlags(0);
     u->setBaseWeight(1);
-    UNIT_CAPACITY(u) = 0;
+    u->setCapacity(0);
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = 100;
     UNIT_ALIGNMENT(u) = 0;
     UNIT_OPEN_FLAGS(u) = 0;
@@ -1240,7 +1240,7 @@ void init_unit(unit_data *u)
             break;
 
         case UNIT_ST_ROOM:
-            UNIT_CAPACITY(u) = 30000;
+            u->setCapacity(30000);
             u->setBaseWeight(10);
             u->setWeight(10);
             UNIT_IN(u) = nullptr;
