@@ -1345,7 +1345,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
     else
     {
-        slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->names.Name());
+        slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->getNames().Name());
 
         if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
         {

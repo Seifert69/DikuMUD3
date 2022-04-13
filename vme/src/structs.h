@@ -75,8 +75,12 @@ public:
     unit_data *copy();
     void set_fi(file_index_type *f);
 
-    cNamelist names; /* Name Keyword list for get, enter, etc.      */
+    cNamelist &getNames() { return names; }
+    const cNamelist &getNames() const { return names; }
 
+private:
+    cNamelist names; // Name Keyword list for get, enter, etc.
+public:
     unit_fptr /* Function pointer type                      */
         *func;
 

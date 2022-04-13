@@ -103,7 +103,7 @@
 
 #define UNIT_TYPE(unit) ((unit)->status)
 
-#define UNIT_NAMES(unit) ((unit)->names)
+#define UNIT_NAMES(unit) ((unit)->getNames())
 
 #define UNIT_ALIGNMENT(unit) ((unit)->alignment)
 

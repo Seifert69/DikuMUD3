@@ -1110,9 +1110,9 @@ void damage(unit_data *ch,
     {
         if (CHAR_LAST_ATTACKER(victim))
             FREE(CHAR_LAST_ATTACKER(victim));
-        if (ch->names.Name())
+        if (ch->getNames().Name())
         {
-            CHAR_LAST_ATTACKER(victim) = str_dup(ch->names.Name());
+            CHAR_LAST_ATTACKER(victim) = str_dup(ch->getNames().Name());
         }
         CHAR_LAST_ATTACKER_TYPE(victim) = UNIT_TYPE(ch);
         if (IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))
@@ -1294,9 +1294,9 @@ void damage(unit_data *ch,
             {
                 for (sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->next)
                 {
-                    if (CHAR_LAST_ATTACKER(victim) && sch->names.Name())
+                    if (CHAR_LAST_ATTACKER(victim) && sch->getNames().Name())
                     {
-                        if (strcmp(CHAR_LAST_ATTACKER(victim), sch->names.Name()) == 0)
+                        if (strcmp(CHAR_LAST_ATTACKER(victim), sch->getNames().Name()) == 0)
                         {
                             if (CHAR_LAST_ATTACKER_TYPE(victim) == UNIT_TYPE(sch))
                             {
@@ -1592,7 +1592,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
         damage_object(att, att_weapon, hm);
         if (CHAR_COMBAT(att))
         {
-            CHAR_COMBAT(att)->changeSpeed(SPEED_DEFAULT/2, 100); // Lose ½ round when you fumble
+            CHAR_COMBAT(att)->changeSpeed(SPEED_DEFAULT / 2, 100); // Lose ½ round when you fumble
         }
 
         return 0;
