@@ -1030,7 +1030,7 @@ void process_unit(unit_data *u)
     if (!is_in(UNIT_BRIGHT(u), -6, 6))
     {
         dmc_error(TRUE, "%s: Illegal bright %d (expected -6..+6).", UNIT_IDENT(u), UNIT_BRIGHT(u));
-        UNIT_BRIGHT(u) = 0;
+        u->setLightOutput(0);
     }
 
     switch (UNIT_TYPE(u))
@@ -1178,7 +1178,7 @@ void init_unit(unit_data *u)
     UNIT_ALIGNMENT(u) = 0;
     u->setAllOpenFlags(0);
     u->setNumberOfActiveLightSources(0);
-    UNIT_BRIGHT(u) = 0;
+    u->setLightOutput(0);
     UNIT_CHARS(u) = 0;
     UNIT_AFFECTED(u) = nullptr;
     u->setSize(180); // 180cm default

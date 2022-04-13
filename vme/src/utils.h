@@ -79,7 +79,7 @@
 
 #define UNIT_CAPACITY(unit) ((unit)->getCapacity())
 
-#define UNIT_BRIGHT(unit) ((unit)->bright)
+#define UNIT_BRIGHT(unit) ((unit)->getLightOutput())
 
 #define UNIT_LIGHTS(unit) ((unit)->getNumberOfActiveLightSources())
 

@@ -485,7 +485,7 @@ void modify_bright(unit_data *unit, int bright)
     unit_data *ext = nullptr;
     unit_data *in = nullptr;
 
-    UNIT_BRIGHT(unit) += bright;
+    unit->increaseLightOutputBy(bright);
 
     if ((in = UNIT_IN(unit)))
     { /* Light up what the unit is inside */
@@ -503,7 +503,7 @@ void modify_bright(unit_data *unit, int bright)
     {
         /* the unit is inside a transperant unit, so it lights up too */
         /* this works with actions in unit-up/down                    */
-        UNIT_BRIGHT(in) += bright;
+        in->increaseLightOutputBy(bright);
         if ((ext = UNIT_IN(in)))
         {
             ext->increaseNumberOfActiveLightSourcesBy(bright);
@@ -523,7 +523,7 @@ void trans_set(unit_data *u)
     }
 
     UNIT_ILLUM(u) = sum;
-    UNIT_BRIGHT(u) += sum;
+    u->increaseLightOutputBy(sum);
 
     if (UNIT_IN(u))
     {
@@ -533,7 +533,7 @@ void trans_set(unit_data *u)
 
 void trans_unset(unit_data *u)
 {
-    UNIT_BRIGHT(u) -= UNIT_ILLUM(u);
+    u->decreaseLightOutputBy(UNIT_ILLUM(u));
 
     if (UNIT_IN(u))
     {
@@ -748,7 +748,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     if (UNIT_IS_TRANSPARENT(in))
     {
         UNIT_ILLUM(in) -= selfb;
-        UNIT_BRIGHT(in) -= selfb;
+        in->decreaseLightOutputBy(selfb);
     }
     else if (toin)
     {
@@ -757,7 +757,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
 
     if (toin && UNIT_IS_TRANSPARENT(toin))
     {
-        UNIT_BRIGHT(toin) += selfb;
+        toin->increaseLightOutputBy(selfb);
         UNIT_ILLUM(toin) += selfb;
         if (extin)
         {
@@ -836,7 +836,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     to->increaseNumberOfActiveLightSourcesBy(bright);
     if (UNIT_IS_TRANSPARENT(to))
     {
-        UNIT_BRIGHT(to) += selfb;
+        to->increaseLightOutputBy(selfb);
         UNIT_ILLUM(to) += selfb;
     }
     else if (in)
@@ -846,7 +846,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
 
     if (in && UNIT_IS_TRANSPARENT(in))
     {
-        UNIT_BRIGHT(in) -= selfb;
+        in->decreaseLightOutputBy(selfb);
         UNIT_ILLUM(in) -= selfb;
         if (extin)
         {

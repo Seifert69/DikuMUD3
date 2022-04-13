@@ -797,7 +797,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->readOpenDifficultyFrom(*pBuf, unit_version, g_nCorrupt);
 
     u->readNumberOfActiveLightSourcesFrom(*pBuf, g_nCorrupt);
-    UNIT_BRIGHT(u) = pBuf->ReadS8(&g_nCorrupt);
+    u->readLightOutputFrom(*pBuf, g_nCorrupt);
     UNIT_ILLUM(u) = pBuf->ReadS8(&g_nCorrupt);
 
     UNIT_CHARS(u) = pBuf->ReadU8(&g_nCorrupt);

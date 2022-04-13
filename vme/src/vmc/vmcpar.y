@@ -835,7 +835,7 @@ unit_field  : NAMES stringlist
     }
     | BRIGHT number
     {
-        UNIT_BRIGHT(cur) = $2;
+        cur->setLightOutput($2);
     }
     | MINV number
     {

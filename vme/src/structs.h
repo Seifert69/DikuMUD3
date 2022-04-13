@@ -154,6 +154,12 @@ public:
     void setNumberOfActiveLightSources(sbit16 value) { light = value; }
     void readNumberOfActiveLightSourcesFrom(CByteBuffer &buf, int &errors) { light = buf.ReadS8(&errors); }
 
+    sbit16 getLightOutput() const { return bright; }
+    void setLightOutput(sbit16 value) { bright = value; }
+    void increaseLightOutputBy(sbit16 value) { bright += value; }
+    void decreaseLightOutputBy(sbit16 value) { bright -= value; }
+    void readLightOutputFrom(CByteBuffer &buf, int &errors) { bright = buf.ReadS8(&errors); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -190,8 +196,8 @@ private:
     ubit8 open_flags{0};   // In general OPEN will mean can "enter"?
     ubit8 open_diff{0};    // Open difficulty
     sbit16 light{0};       // Number of active light sources in unit
+    sbit16 bright{0};      // How much the unit shines
 public:
-    sbit16 bright; /* How much the unit shines                      */
     sbit16 illum;  /* how much bright is by transparency            */
     ubit8 chars;   /* How many chars is inside the unit             */
     ubit8 minv;    /* Level of wizard invisible                     */
