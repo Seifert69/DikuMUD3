@@ -1143,7 +1143,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 51: /* "height" */
-            UNIT_SIZE(unt) = valarg;
+            unt->setSize(valarg);
             return;
 
         case 52: /* "race" */

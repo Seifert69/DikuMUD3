@@ -1181,7 +1181,7 @@ void init_unit(unit_data *u)
     UNIT_BRIGHT(u) = 0;
     UNIT_CHARS(u) = 0;
     UNIT_AFFECTED(u) = nullptr;
-    UNIT_SIZE(u) = 180; /* 180cm default */
+    u->setSize(180); // 180cm default
 
     switch (UNIT_TYPE(u))
     {

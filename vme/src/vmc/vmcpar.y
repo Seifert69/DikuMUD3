@@ -823,7 +823,7 @@ unit_field  : NAMES stringlist
     }
     | HEIGHT number
     {
-        UNIT_SIZE(cur) = $2;
+        cur->setSize($2);
     }
     /* | TOUGHNESS number
     {

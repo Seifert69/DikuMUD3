@@ -113,7 +113,7 @@ unit_data *convert_item(unit_data *u, unit_data *pc, int bList)
 
     if (IS_OBJ(u))
     {
-        UNIT_SIZE(u) = UNIT_SIZE(pc);
+        u->setSize(UNIT_SIZE(pc));
     }
 
     return u;

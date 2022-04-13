@@ -808,11 +808,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     if (unit_version >= 53)
     {
-        UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
+        u->readSizeFrom(*pBuf, g_nCorrupt);
     }
     else
     {
-        UNIT_SIZE(u) = 180;
+        u->setSize(180);
     }
 
     if (unit_version >= 51) // Get the unit the unit is in

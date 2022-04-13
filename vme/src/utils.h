@@ -75,7 +75,7 @@
 
 #define UNIT_BASE_WEIGHT(unit) ((unit)->getBaseWeight())
 
-#define UNIT_SIZE(unit) ((unit)->size)
+#define UNIT_SIZE(unit) ((unit)->getSize())
 
 #define UNIT_CAPACITY(unit) ((unit)->getCapacity())
 

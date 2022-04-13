@@ -1,8 +1,8 @@
 #include "char_point_data.h"
 
 #include "slog.h"
-#include "utils.h"
 #include "utility.h"
+#include "utils.h"
 
 char_point_data::char_point_data()
     : flags{0}          // Char flags
@@ -163,15 +163,14 @@ sbit16 char_point_data::getSpeed() const
     return speed;
 }
 
-
 //       N1  N2
 // 100% = 1   2
 // 200% = 2   4
 // 300% = 3   6
-// 
+//
 int char_point_data::getNumberOfMeleeAttacks(int naturalAttacks, bool isPC)
 {
-    return MAX(1, (naturalAttacks*getSpeedPercentage(isPC))/100);
+    return MAX(1, (naturalAttacks * getSpeedPercentage(isPC)) / 100);
 }
 
 // Calculate the speed percentage. 200% max for players,
@@ -182,16 +181,15 @@ int char_point_data::getSpeedPercentage(bool isPC)
 
     if (s < SPEED_MIN)
         s = SPEED_MIN;
-        
+
     if (s == SPEED_DEFAULT)
         return 100;
 
     if (isPC)
-        return MAX(MIN(200, (100*SPEED_DEFAULT)/s), 25);
+        return MAX(MIN(200, (100 * SPEED_DEFAULT) / s), 25);
     else
-        return MAX(MIN(300, (100*SPEED_DEFAULT)/s), 25);
+        return MAX(MIN(300, (100 * SPEED_DEFAULT) / s), 25);
 }
-
 
 // max values are -8 to +8
 // +1.. increases the speed
@@ -208,8 +206,7 @@ void char_point_data::modifySpeedBy(sbit16 delta)
     speed -= delta;
 }
 
-
-// Should only be called from raw operations 
+// Should only be called from raw operations
 void char_point_data::setSpeed(sbit16 value)
 {
     speed = value;
@@ -434,9 +431,9 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
         else
         {
             speed = SPEED_DEFAULT;
-        }        
+        }
     }
-    else // Speed for version 75 and up 
+    else // Speed for version 75 and up
     {
         // Speed is fluid, minimum is applied in function, not in storage
         speed = buf.ReadS16(&error);
@@ -446,7 +443,7 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     if (unit_version <= 52)
     {
-        UNIT_SIZE(unit) = buf.ReadU16(&error);
+        unit->readSizeFrom(buf, error);
     }
     race = buf.ReadU16(&error);
 

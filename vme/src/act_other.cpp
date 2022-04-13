@@ -80,7 +80,7 @@ void race_adjust(unit_data *ch)
     ch->setWeight(weight);
     ch->setBaseWeight(weight);
 
-    UNIT_SIZE(ch) = sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size);
+    ch->setSize(sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size));
 
     PC_LIFESPAN(ch) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
 

@@ -118,6 +118,12 @@ public:
     void readCapacityFrom(CByteBuffer &buf, int &errors) { capacity = buf.ReadS16(&errors); }
     void setCapacity(sbit16 value) { capacity = value; }
 
+    ubit16 getSize() const { return size; }
+    ubit16 *getSizePtr() { return &size; }
+    void setSize(sbit16 value) { size = value; }
+    void readSizeFrom(CByteBuffer &buf, int &errors) { size = buf.ReadU16(&errors); }
+    void increaseSizeBy(sbit16 value) { size += value; }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -149,9 +155,8 @@ private:
     sbit32 base_weight{0}; // The "empty" weight of a room/char/obj (lbs)
     sbit32 weight{0};      // Current weight of a room/obj/char
     sbit16 capacity{0};    // Capacity of obj/char/room, -1 => any
+    ubit16 size{0};        // (cm) MOBs height, weapons size, ropes length
 public:
-    ubit16 size; /* (cm) MOBs height, weapons size, ropes length  */
-
     ubit8 status;     /* IS_ROOM, IS_OBJ, IS_PC, IS_NPC                */
     ubit8 open_flags; /* In general OPEN will mean can "enter"?        */
     ubit8 open_diff;  /* Open dificulty                                */
