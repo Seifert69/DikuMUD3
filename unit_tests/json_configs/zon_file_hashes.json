@@ -141,12 +141,12 @@
         {
             "source_file": {
                 "filename": "bounty.zon",
-                "sha512": "a37a391292f3f6339a7cda97ea5109397116169dcec049bfa9a7e9f7655ac94ad6d793ed47b23f327656a04fb02a66a086d45249b8eed59c616ce305ec702b23"
+                "sha512": "06a3a4baf658fafa61e933c98195099ca79000954f37a4ef7d93c41694de8af45e3a319a164d0c30a1e1164fff26892b7698ad8a208f15511a6deeef7556b3af"
             },
             "output": [
                 {
                     "filename": "bounty.data",
-                    "sha512": "a5ac6548d2840c442e9f50e37191093d8141d87008f0bb6d9540882dff4ff94aded93cb06cc9b4d8de8dbbbd6c929d06481fc2eb68714cf45d022399e8ca51ad"
+                    "sha512": "34e2dcc2f95ef74d25bf321da7764ae07d427e3e8ec0357a1b10f9a90d225a6ad4688d629116a159840e76d130278cb44834818effdd01d5232b37bee82ed9aa"
                 },
                 {
                     "filename": "bounty.reset",

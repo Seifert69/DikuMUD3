@@ -6831,6 +6831,7 @@ cost 1 IRON_PIECE
 extra {}
 ""
 end
+
 //  longest active monthly streak
 mnth_sign
 names {"monthly assassin sign","monthly assassin","sign","2"}
@@ -7546,7 +7547,7 @@ title "a Bounty Hunter's enchanted short sword"
 descr "A Bounty Hunter's enchanted short sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
-WEAPON_DEF(WPN_MACE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -7696,7 +7697,7 @@ title "a Bounty Hunter's magical short sword"
 descr "A Bounty Hunter's magical short sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
-WEAPON_DEF(WPN_MACE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -7849,7 +7850,7 @@ title "a Bounty Hunter's powerful short sword"
 descr "A Bounty Hunter's powerful short sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
-WEAPON_DEF(WPN_MACE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -8466,7 +8467,7 @@ title "a Bounty Hunter's long sword"
 descr "A Bounty Hunter's long sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
-WEAPON_DEF(WPN_MACE, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_EXCELLENT_PLUS, BONUS_EXCELLENT_PLUS)  // Xyzzy: +10,+10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -8617,7 +8618,7 @@ title "a Bounty Hunter's strong long sword"
 descr "A Bounty Hunter's strong long sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
-WEAPON_DEF(WPN_MACE, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_SUPERIOR, BONUS_SUPERIOR)  // Xyzzy: +15,+15
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -8770,7 +8771,7 @@ title "a Bounty Hunter's elite long sword"
 descr "A Bounty Hunter's elite long sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
-WEAPON_DEF(WPN_MACE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
+WEAPON_DEF(WPN_LONG_SWORD, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +20,+20
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
