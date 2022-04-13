@@ -198,7 +198,7 @@ void edit_info(descriptor_data *d)
 
 void edit_outside_descr(descriptor_data *d)
 {
-    UNIT_OUT_DESCR(d->getEditing()) = d->getLocalString();
+    d->getEditing()->setDescriptionOfOutside(d->getLocalString());
 }
 
 void edit_inside_descr(descriptor_data *d)

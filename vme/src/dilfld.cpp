@@ -846,17 +846,20 @@ void dilfe_fld(dilprg *p)
                     break;
 
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE; // Dont dealloc!
                         v->type = DILV_HASHSTR;
-                        v->ref = &UNIT_OUT_DESCR((unit_data *)v1->val.ptr);
+                        v->ref = unit->getDescriptionOfOutsidePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

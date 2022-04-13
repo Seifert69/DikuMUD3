@@ -211,6 +211,10 @@ public:
     std::string *getTitlePtr() { return &title; }
     void setTitle(std::string value) { title = std::move(value); }
 
+    const std::string &getDescriptionOfOutside() const { return out_descr; }
+    std::string *getDescriptionOfOutsidePtr() { return &out_descr; }
+    void setDescriptionOfOutside(std::string value) { out_descr = std::move(value); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -255,10 +259,8 @@ private:
     sbit32 hp{0};          // The actual amount of hitpoints left
     sbit16 alignment{0};   // +-1000 for alignments
     std::string title;     // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
+    std::string out_descr; // The outside description of a unit
 public:
-    /* The outside description of a unit           */
-    std::string out_descr;
-
     /* The inside description of a unit            */
     std::string in_descr;
 

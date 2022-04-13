@@ -665,7 +665,7 @@ unit_field  : NAMES stringlist
     }
     | OUT_DESCR STRING
     {
-        UNIT_OUT_DESCR(cur) = ($2);
+        cur->setDescriptionOfOutside($2);
     }
     | IN_DESCR STRING
     {
@@ -694,7 +694,7 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            UNIT_OUT_DESCR(cur) = ($2);
+            cur->setDescriptionOfOutside($2);
         }
     }
     | ALIGNMENT number

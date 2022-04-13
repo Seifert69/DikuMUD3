@@ -257,18 +257,18 @@ unit_data *set_money(unit_data *money, amount_t amt)
 
     if (amt == 1)
     {
-        UNIT_OUT_DESCR(money) = diku::format_to_str("A single %s has been left here.", money_singularis(money));
+        money->setDescriptionOfOutside(diku::format_to_str("A single %s has been left here.", money_singularis(money)));
     }
     else
     {
-        UNIT_OUT_DESCR(money) = diku::format_to_str("A %s %s has been left here.",
-                                                    amt == 2      ? "couple of"
-                                                    : amt < 10    ? "few"
-                                                    : amt < 100   ? "small pile of"
-                                                    : amt < 1000  ? "pile of"
-                                                    : amt < 50000 ? "large pile of"
-                                                                  : "mountain of",
-                                                    money_pluralis(money));
+        money->setDescriptionOfOutside(diku::format_to_str("A %s %s has been left here.",
+                                                           amt == 2      ? "couple of"
+                                                           : amt < 10    ? "few"
+                                                           : amt < 100   ? "small pile of"
+                                                           : amt < 1000  ? "pile of"
+                                                           : amt < 50000 ? "large pile of"
+                                                                         : "mountain of",
+                                                           money_pluralis(money)));
     }
 
     return money;

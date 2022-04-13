@@ -78,7 +78,7 @@ static void set_owner(unit_data *obj, alias_head *ah, unit_data *ch)
 {
     strcpy(ah->owner, UNIT_NAME(ch));
 
-    UNIT_OUT_DESCR(obj) = diku::format_to_str("On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj));
+    obj->setDescriptionOfOutside(diku::format_to_str("On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj)));
 
     obj->setTitle(diku::format_to_str("%s's %s", ah->owner, UNIT_NAME(obj)));
 }
