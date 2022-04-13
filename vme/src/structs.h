@@ -219,6 +219,12 @@ public:
     std::string *getDescriptionOfInsidePtr() { return &in_descr; }
     void setDescriptionOfInside(std::string value) { in_descr = std::move(value); }
 
+    const extra_list &getExtraList() const { return extra; }
+    extra_list &getExtraList() { return extra; }
+
+    int destruct_classindex();
+    std::string json();
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -265,11 +271,7 @@ private:
     std::string title;     // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
     std::string out_descr; // The outside description of a unit
     std::string in_descr;  // The inside description of a unit
-public:
-    extra_list extra; /* All the look 'at' stuff                     */
-
-    int destruct_classindex();
-    std::string json();
+    extra_list extra;      // All the look 'at' stuff
 };
 
 /* ----------------- ROOM SPECIFIC STRUCTURES ----------------------- */

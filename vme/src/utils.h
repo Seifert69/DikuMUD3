@@ -119,7 +119,7 @@
 
 #define UNIT_IN_DESCR(unit) ((unit)->getDescriptionOfInside())
 
-#define UNIT_EXTRA(unit) ((unit)->extra)
+#define UNIT_EXTRA(unit) ((unit)->getExtraList())
 
 /* ..................................................................... */
 
