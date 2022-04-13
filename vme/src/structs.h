@@ -71,6 +71,11 @@ class unit_data : public basedestruct
 {
 public:
     unit_data();
+    explicit unit_data(ubit8 unit_type)
+        : unit_data()
+    {
+        status = unit_type;
+    }
     virtual ~unit_data();
     unit_data *copy();
     void set_fi(file_index_type *f);
@@ -124,6 +129,8 @@ public:
     void readSizeFrom(CByteBuffer &buf, int &errors) { size = buf.ReadU16(&errors); }
     void increaseSizeBy(sbit16 value) { size += value; }
 
+    ubit8 getUnitType() const { return status; }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -156,8 +163,8 @@ private:
     sbit32 weight{0};      // Current weight of a room/obj/char
     sbit16 capacity{0};    // Capacity of obj/char/room, -1 => any
     ubit16 size{0};        // (cm) MOBs height, weapons size, ropes length
+    ubit8 status{0};       // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
 public:
-    ubit8 status;     /* IS_ROOM, IS_OBJ, IS_PC, IS_NPC                */
     ubit8 open_flags; /* In general OPEN will mean can "enter"?        */
     ubit8 open_diff;  /* Open dificulty                                */
     sbit16 light;     /* Number of active light sources in unit        */
@@ -246,7 +253,7 @@ public:
 class char_data : public unit_data
 {
 public:
-    char_data();
+    char_data(ubit8 unit_type);
     virtual ~char_data();
 
     descriptor_data *descriptor;

@@ -101,7 +101,7 @@
 
 #define UNIT_OPEN_DIFF(unit) ((unit)->open_diff)
 
-#define UNIT_TYPE(unit) ((unit)->status)
+#define UNIT_TYPE(unit) ((unit)->getUnitType())
 
 #define UNIT_NAMES(unit) ((unit)->getNames())
 

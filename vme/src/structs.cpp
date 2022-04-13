@@ -27,7 +27,8 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 /* Descriptor stuff is in system.c */
 
-char_data::char_data()
+char_data::char_data(ubit8 unit_type)
+    : unit_data(unit_type)
 {
     g_world_nochars++;
 
@@ -60,9 +61,8 @@ char_data::~char_data()
 }
 
 room_data::room_data()
+    : unit_data(UNIT_ST_ROOM)
 {
-    status = UNIT_ST_ROOM;
-
     g_world_norooms++;
     mapx = -1;
     mapy = -1;
@@ -85,9 +85,8 @@ room_data::~room_data()
 }
 
 obj_data::obj_data()
+    : unit_data(UNIT_ST_OBJ)
 {
-    status = UNIT_ST_OBJ;
-
     g_world_noobjects++;
 
     memset(value, 0, sizeof(value));
@@ -105,9 +104,8 @@ obj_data::~obj_data()
 }
 
 pc_data::pc_data()
+    : char_data(UNIT_ST_PC)
 {
-    status = UNIT_ST_PC;
-
     g_world_nopc++;
 
     bank = nullptr;
@@ -162,9 +160,8 @@ pc_data::~pc_data()
 }
 
 npc_data::npc_data()
+    : char_data(UNIT_ST_NPC)
 {
-    status = UNIT_ST_NPC;
-
     g_world_nonpc++;
 
     memset(weapons.data(), 0, weapons.size());
