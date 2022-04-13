@@ -507,7 +507,7 @@ void modify_bright(unit_data *unit, int bright)
         if ((ext = UNIT_IN(in)))
         {
             ext->increaseNumberOfActiveLightSourcesBy(bright);
-            UNIT_ILLUM(in) += bright;
+            in->increaseTransparentLightOutputBy(bright);
         }
     }
 }
@@ -522,7 +522,7 @@ void trans_set(unit_data *u)
         sum += UNIT_BRIGHT(u2);
     }
 
-    UNIT_ILLUM(u) = sum;
+    u->setTransparentLightOutput(sum);
     u->increaseLightOutputBy(sum);
 
     if (UNIT_IN(u))
@@ -540,7 +540,7 @@ void trans_unset(unit_data *u)
         UNIT_IN(u)->decreaseNumberOfActiveLightSourcesBy(UNIT_ILLUM(u));
     }
 
-    UNIT_ILLUM(u) = 0;
+    u->setTransparentLightOutput(0);
 }
 
 unit_data *equipment(unit_data *ch, ubit8 pos)
@@ -747,7 +747,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     in->decreaseNumberOfActiveLightSourcesBy(bright); // Subtract Light
     if (UNIT_IS_TRANSPARENT(in))
     {
-        UNIT_ILLUM(in) -= selfb;
+        in->decreaseTransparentLightOutputBy(selfb);
         in->decreaseLightOutputBy(selfb);
     }
     else if (toin)
@@ -758,7 +758,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     if (toin && UNIT_IS_TRANSPARENT(toin))
     {
         toin->increaseLightOutputBy(selfb);
-        UNIT_ILLUM(toin) += selfb;
+        toin->increaseTransparentLightOutputBy(selfb);
         if (extin)
         {
             extin->increaseNumberOfActiveLightSourcesBy(selfb);
@@ -837,7 +837,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     if (UNIT_IS_TRANSPARENT(to))
     {
         to->increaseLightOutputBy(selfb);
-        UNIT_ILLUM(to) += selfb;
+        to->increaseTransparentLightOutputBy(selfb);
     }
     else if (in)
     {
@@ -847,7 +847,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     if (in && UNIT_IS_TRANSPARENT(in))
     {
         in->decreaseLightOutputBy(selfb);
-        UNIT_ILLUM(in) -= selfb;
+        in->decreaseTransparentLightOutputBy(selfb);
         if (extin)
         {
             extin->decreaseNumberOfActiveLightSourcesBy(selfb);

@@ -83,7 +83,7 @@
 
 #define UNIT_LIGHTS(unit) ((unit)->getNumberOfActiveLightSources())
 
-#define UNIT_ILLUM(unit) ((unit)->illum)
+#define UNIT_ILLUM(unit) ((unit)->getTransparentLightOutput())
 
 #define UNIT_CHARS(unit) ((unit)->chars)
 
