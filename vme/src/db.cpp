@@ -780,14 +780,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->readWeightFrom(*pBuf, g_nCorrupt);
     u->readCapacityFrom(*pBuf, g_nCorrupt);
 
-    UNIT_MAX_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
+    u->readMaximumHitpointsFrom(*pBuf, g_nCorrupt);
     UNIT_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
 
     if (unit_version <= 54)
     {
         if (UNIT_MAX_HIT(u) <= 0)
         {
-            UNIT_HIT(u) = UNIT_MAX_HIT(u) = 1000;
+            UNIT_HIT(u) = 1000;
+            u->setMaximumHitpoints(1000);
         }
     }
 

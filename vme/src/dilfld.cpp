@@ -1814,34 +1814,37 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE;
 
-                        if (IS_PC((unit_data *)v1->val.ptr))
+                        if (IS_PC(unit))
                         {
                             if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                             {
                                 v->type = DILV_INT;
-                                v->val.num = UNIT_MAX_HIT((unit_data *)v1->val.ptr);
+                                v->val.num = unit->getMaximumHitpoints();
                             }
                             else
                             {
                                 v->type = DILV_SINT4R;
-                                v->ref = &UNIT_MAX_HIT((unit_data *)v1->val.ptr);
+                                v->ref = unit->getMaximumHitpointsPtr();
                             }
                         }
                         else
                         {
                             v->type = DILV_SINT4R;
-                            v->ref = &UNIT_MAX_HIT((unit_data *)v1->val.ptr);
+                            v->ref = unit->getMaximumHitpointsPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

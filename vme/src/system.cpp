@@ -101,7 +101,8 @@ void init_char(unit_data *ch)
     getCharPoints(ch).setAttackType(WPN_FIST);
     getCharPoints(ch).setNaturalArmor(ARM_CLOTHES);
 
-    UNIT_HIT(ch) = UNIT_MAX_HIT(ch) = 1;
+    UNIT_HIT(ch) = 1;
+    ch->setMaximumHitpoints(1);
 
     getCharPoints(ch).setMana(mana_limit(ch));
     getCharPoints(ch).setEndurance(move_limit(ch));

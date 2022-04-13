@@ -203,7 +203,8 @@ void start_player(unit_data *ch)
         }
     }
 
-    UNIT_MAX_HIT(ch) = UNIT_HIT(ch) = hit_limit(ch);
+    ch->setMaximumHitpoints(hit_limit(ch));
+    UNIT_HIT(ch) = hit_limit(ch);
     getCharPoints(ch).setMana(mana_limit(ch));
     getCharPoints(ch).setEndurance(move_limit(ch));
 }

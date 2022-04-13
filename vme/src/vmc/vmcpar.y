@@ -807,7 +807,7 @@ unit_field  : NAMES stringlist
     }
     | HIT number
     {
-        UNIT_MAX_HIT(cur) = $2;
+        cur->setMaximumHitpoints($2);
     }
     | UFLAGS flags
     {

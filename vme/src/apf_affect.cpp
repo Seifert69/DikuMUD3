@@ -286,7 +286,7 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {
-            UNIT_MAX_HIT(unit) = hit_limit(unit);
+            unit->setMaximumHitpoints(hit_limit(unit));
         }
     }
     else
@@ -295,7 +295,7 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {
-            UNIT_MAX_HIT(unit) = hit_limit(unit);
+            unit->setMaximumHitpoints(hit_limit(unit));
         }
     }
 

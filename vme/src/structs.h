@@ -177,6 +177,11 @@ public:
     void readLevelOfWizardInvisibilityFrom(CByteBuffer &buf, int &errors) { minv = buf.ReadU8(&errors); }
     void setLevelOfWizardInvisibility(ubit8 value) { minv = value; }
 
+    sbit32 getMaximumHitpoints() const { return max_hp; }
+    sbit32 *getMaximumHitpointsPtr() { return &max_hp; }
+    void setMaximumHitpoints(sbit32 value) { max_hp = value; }
+    void readMaximumHitpointsFrom(CByteBuffer &buf, int &errors) { max_hp = buf.ReadS32(&errors); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -217,9 +222,9 @@ private:
     sbit16 illum{0};       // how much bright is by transparency
     ubit8 chars{0};        // How many chars is inside the unit
     ubit8 minv{0};         // Level of wizard invisible
+    sbit32 max_hp{0};      // The maximum number of hitpoints
 public:
-    sbit32 max_hp; /* The maximum number of hitpoint                */
-    sbit32 hp;     /* The actual amount of hitpoints left           */
+    sbit32 hp; /* The actual amount of hitpoints left           */
 
     sbit16 alignment; /* +-1000 for alignments                         */
 

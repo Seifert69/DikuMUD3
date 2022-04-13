@@ -169,7 +169,7 @@ void reset_char(unit_data *ch)
     //  assert (CHAR_SEX (ch) != 255);
     //  assert (CHAR_POS (ch) != 255);
 
-    UNIT_MAX_HIT(ch) = hit_limit(ch);
+    ch->setMaximumHitpoints(hit_limit(ch));
 }
 
 void pc_data::connect_game()

@@ -806,7 +806,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 10: /* "max_hp" */
-            UNIT_MAX_HIT(unt) = valarg;
+            unt->setMaximumHitpoints(valarg);
             return;
 
         case 11: /* "hp" */

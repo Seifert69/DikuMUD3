@@ -1256,7 +1256,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
         practice(sarg->owner, sarg->activator, pColl, &TrainValues, pckt, index);
 
         /* If hpp changed, then update no of maximum hitpoints */
-        UNIT_MAX_HIT(sarg->activator) = hit_limit(sarg->activator);
+        sarg->activator->setMaximumHitpoints(hit_limit(sarg->activator));
 
         info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs, pckt->pGuildName);
         auto msg = diku::format_to_str("<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
@@ -1337,27 +1337,27 @@ int max_skill_mod(int nCost)
 {
     if (nCost == 0)
     {
-        return -20;  // 80 max
+        return -20; // 80 max
     }
     else if (nCost == 1)
     {
-        return -10;  // 90 max
+        return -10; // 90 max
     }
     else if (nCost == 2)
     {
-        return 0;  // 100 max
+        return 0; // 100 max
     }
     else if (nCost == 3)
     {
-        return +5;  // 105 max
+        return +5; // 105 max
     }
     else if (nCost == 4)
     {
-        return +8;  // 108 max
+        return +8; // 108 max
     }
     else if (nCost >= 5)
     {
-        return 10 + nCost - 5;  // 110 max for 5, 111 max for 6, etc.
+        return 10 + nCost - 5; // 110 max for 5, 111 max for 6, etc.
     }
     else if (nCost == -1)
     {
@@ -1365,19 +1365,19 @@ int max_skill_mod(int nCost)
     }
     else if (nCost == -2)
     {
-        return -40;  // 60 max
+        return -40; // 60 max
     }
     else if (nCost == -3)
     {
-        return -50;  // 50 max
+        return -50; // 50 max
     }
     else if (nCost == -4)
     {
-        return -60;  // 40 max
+        return -60; // 40 max
     }
     else if (nCost == -5)
     {
-        return -70;  // 30 max
+        return -70; // 30 max
     }
     else if (nCost == -6)
     {
@@ -1385,7 +1385,7 @@ int max_skill_mod(int nCost)
     }
     else if (nCost <= -7)
     {
-        return -100;  // 0 max
+        return -100; // 0 max
     }
 
     // We should never get here
