@@ -783,7 +783,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->readMaximumHitpointsFrom(*pBuf, g_nCorrupt);
     u->readCurrentHitpointsFrom(*pBuf, unit_version, g_nCorrupt);
 
-    UNIT_ALIGNMENT(u) = pBuf->ReadS16(&g_nCorrupt);
+    u->readAlignmentFrom(*pBuf, g_nCorrupt);
 
     u->readOpenFlagsFrom(*pBuf, g_nCorrupt);
     u->readOpenDifficultyFrom(*pBuf, unit_version, g_nCorrupt);

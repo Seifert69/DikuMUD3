@@ -2096,18 +2096,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* sbit16 capacity */
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &UNIT_ALIGNMENT((unit_data *)v1->val.ptr);
+                        v->ref = unit->getAlignmentPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

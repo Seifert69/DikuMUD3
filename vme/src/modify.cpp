@@ -821,7 +821,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 13: /* "alignment" */
             if (is_in(valarg, -1000, 1000))
             {
-                UNIT_ALIGNMENT(unt) = valarg;
+                unt->setAlignment(valarg);
             }
             else
             {

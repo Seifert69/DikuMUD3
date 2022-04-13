@@ -1019,7 +1019,7 @@ void process_unit(unit_data *u)
     if (!is_in(UNIT_ALIGNMENT(u), -1000, +1000))
     {
         dmc_error(TRUE, "%s: Illegal alignment %d (expected -1000..+1000).", UNIT_IDENT(u), UNIT_ALIGNMENT(u));
-        UNIT_ALIGNMENT(u) = 0;
+        u->setAlignment(0);
     }
 
     if (!is_in(UNIT_LIGHTS(u), -6, 6))
@@ -1177,7 +1177,7 @@ void init_unit(unit_data *u)
     u->setCapacity(0);
     u->setCurrentHitpoints(100);
     u->setMaximumHitpoints(100);
-    UNIT_ALIGNMENT(u) = 0;
+    u->setAlignment(0);
     u->setAllOpenFlags(0);
     u->setNumberOfActiveLightSources(0);
     u->setLightOutput(0);

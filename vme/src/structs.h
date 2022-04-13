@@ -200,6 +200,13 @@ public:
         }
     }
 
+    sbit16 getAlignment() const { return alignment; }
+    sbit16 *getAlignmentPtr() { return &alignment; }
+    void increaseAlignmentBy(sbit16 value) { alignment += value; }
+    void decreaseAlignmentBy(sbit16 value) { alignment -= value; }
+    void setAlignment(sbit16 value) { alignment = value; }
+    void readAlignmentFrom(CByteBuffer &buf, int &errors) { alignment = buf.ReadS16(&errors); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -242,9 +249,8 @@ private:
     ubit8 minv{0};         // Level of wizard invisible
     sbit32 max_hp{0};      // The maximum number of hitpoints
     sbit32 hp{0};          // The actual amount of hitpoints left
+    sbit16 alignment{0};   // +-1000 for alignments
 public:
-    sbit16 alignment; /* +-1000 for alignments                         */
-
     /* Room title, Char title, Obj "the barrel", NPC "the Beastly Fido" */
     std::string title;
 

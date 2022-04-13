@@ -105,7 +105,7 @@
 
 #define UNIT_NAMES(unit) ((unit)->getNames())
 
-#define UNIT_ALIGNMENT(unit) ((unit)->alignment)
+#define UNIT_ALIGNMENT(unit) ((unit)->getAlignment())
 
 #define UNIT_HIT(unit) ((unit)->getCurrentHitpoints())
 
