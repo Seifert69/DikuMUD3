@@ -131,6 +131,12 @@ public:
 
     ubit8 getUnitType() const { return status; }
 
+    ubit8 getOpenFlags() const { return open_flags; }
+    ubit8 *getOpenFlagsPtr() { return &open_flags; }
+    void setAllOpenFlags(ubit8 value) { open_flags = value; }
+    void readOpenFlagsFrom(CByteBuffer &buf, int &errors) { open_flags = buf.ReadU8(&errors); }
+    void setOpenFlag(ubit8 value) { open_flags |= value; }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -164,16 +170,16 @@ private:
     sbit16 capacity{0};    // Capacity of obj/char/room, -1 => any
     ubit16 size{0};        // (cm) MOBs height, weapons size, ropes length
     ubit8 status{0};       // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
+    ubit8 open_flags{0};   // In general OPEN will mean can "enter"?
 public:
-    ubit8 open_flags; /* In general OPEN will mean can "enter"?        */
-    ubit8 open_diff;  /* Open dificulty                                */
-    sbit16 light;     /* Number of active light sources in unit        */
-    sbit16 bright;    /* How much the unit shines                      */
-    sbit16 illum;     /* how much bright is by transparency            */
-    ubit8 chars;      /* How many chars is inside the unit             */
-    ubit8 minv;       /* Level of wizard invisible                     */
-    sbit32 max_hp;    /* The maximum number of hitpoint                */
-    sbit32 hp;        /* The actual amount of hitpoints left           */
+    ubit8 open_diff; /* Open dificulty                                */
+    sbit16 light;    /* Number of active light sources in unit        */
+    sbit16 bright;   /* How much the unit shines                      */
+    sbit16 illum;    /* how much bright is by transparency            */
+    ubit8 chars;     /* How many chars is inside the unit             */
+    ubit8 minv;      /* Level of wizard invisible                     */
+    sbit32 max_hp;   /* The maximum number of hitpoint                */
+    sbit32 hp;       /* The actual amount of hitpoints left           */
 
     sbit16 alignment; /* +-1000 for alignments                         */
 

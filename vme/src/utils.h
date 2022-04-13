@@ -97,7 +97,7 @@
 
 #define UNIT_KEY(unit) ((unit)->key)
 
-#define UNIT_OPEN_FLAGS(unit) ((unit)->open_flags)
+#define UNIT_OPEN_FLAGS(unit) ((unit)->getOpenFlags())
 
 #define UNIT_OPEN_DIFF(unit) ((unit)->open_diff)
 

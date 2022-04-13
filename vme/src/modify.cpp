@@ -830,7 +830,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 14: /* "open_flags" */
-            UNIT_OPEN_FLAGS(unt) = bitarg;
+            unt->setAllOpenFlags(bitarg);
             return;
 
         case 15: /* "tgh" OBSOLETE */

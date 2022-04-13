@@ -793,7 +793,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     UNIT_ALIGNMENT(u) = pBuf->ReadS16(&g_nCorrupt);
 
-    UNIT_OPEN_FLAGS(u) = pBuf->ReadU8(&g_nCorrupt);
+    u->readOpenFlagsFrom(*pBuf, g_nCorrupt);
     if (unit_version >= 71)
     {
         UNIT_OPEN_DIFF(u) = pBuf->ReadU8(&g_nCorrupt);

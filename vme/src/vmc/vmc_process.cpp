@@ -1176,7 +1176,7 @@ void init_unit(unit_data *u)
     u->setCapacity(0);
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = 100;
     UNIT_ALIGNMENT(u) = 0;
-    UNIT_OPEN_FLAGS(u) = 0;
+    u->setAllOpenFlags(0);
     UNIT_LIGHTS(u) = 0;
     UNIT_BRIGHT(u) = 0;
     UNIT_CHARS(u) = 0;

@@ -798,7 +798,7 @@ unit_field  : NAMES stringlist
     }
     | OPEN flags
     {
-        UNIT_OPEN_FLAGS(cur) |= $2;
+        cur->setOpenFlag($2);
     }
     optopendiff;
     | MANIPULATE flags
