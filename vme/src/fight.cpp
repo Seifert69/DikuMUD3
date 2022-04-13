@@ -1392,7 +1392,7 @@ void break_object(unit_data *obj)
         unequip_object(obj);
     }
 
-    UNIT_TITLE(obj) = diku::format_to_str("%s (broken)", STR(UNIT_TITLE_STRING(obj)));
+    obj->setTitle(diku::format_to_str("%s (broken)", obj->getTitle()));
 
     OBJ_VALUE(obj, 0) = 0;
     OBJ_VALUE(obj, 1) = 0;

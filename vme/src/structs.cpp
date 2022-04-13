@@ -481,7 +481,7 @@ unit_data *unit_data::copy()
     bwrite_func(&fbuf, UNIT_FUNC(this));
     UNIT_FUNC(u) = bread_func(&fbuf, 61, u, TRUE); // WTF 61?
 
-    UNIT_TITLE(u) = UNIT_TITLE(this);
+    u->title = title;
     UNIT_OUT_DESCR(u) = UNIT_OUT_DESCR(this);
     UNIT_IN_DESCR(u) = UNIT_IN_DESCR(this);
     UNIT_EXTRA(u).copyfrom(UNIT_EXTRA(this));

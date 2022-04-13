@@ -731,10 +731,10 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     {
         g_nCorrupt++;
     }
-    UNIT_TITLE(u) = c;
+    u->setTitle(c);
     if (unit_version < 70)
     {
-        UNIT_TITLE(u) = fix_old_codes_to_html(UNIT_TITLE(u).c_str());
+        u->setTitle(fix_old_codes_to_html(UNIT_TITLE(u)));
     }
 
     if (pBuf->SkipString(&c))

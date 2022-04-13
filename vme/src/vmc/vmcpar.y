@@ -661,7 +661,7 @@ unit_field  : NAMES stringlist
     }
     | TITLE STRING
     {
-        UNIT_TITLE(cur) = ($2);
+        cur->setTitle($2);
     }
     | OUT_DESCR STRING
     {

@@ -207,6 +207,10 @@ public:
     void setAlignment(sbit16 value) { alignment = value; }
     void readAlignmentFrom(CByteBuffer &buf, int &errors) { alignment = buf.ReadS16(&errors); }
 
+    const std::string &getTitle() const { return title; }
+    std::string *getTitlePtr() { return &title; }
+    void setTitle(std::string value) { title = std::move(value); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -250,10 +254,8 @@ private:
     sbit32 max_hp{0};      // The maximum number of hitpoints
     sbit32 hp{0};          // The actual amount of hitpoints left
     sbit16 alignment{0};   // +-1000 for alignments
+    std::string title;     // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
 public:
-    /* Room title, Char title, Obj "the barrel", NPC "the Beastly Fido" */
-    std::string title;
-
     /* The outside description of a unit           */
     std::string out_descr;
 

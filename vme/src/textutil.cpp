@@ -1539,6 +1539,11 @@ int my_str_replace_space(char *sbuf)
 // Changes old codes such as &l &c to HTML
 // Only used in char conversion of units < v70
 // so no bother with mem leaks of strings
+char *fix_old_codes_to_html(const std::string &c)
+{
+    return fix_old_codes_to_html(c.c_str());
+}
+
 char *fix_old_codes_to_html(const char *c)
 {
     char buf[2 * MAX_STRING_LENGTH];

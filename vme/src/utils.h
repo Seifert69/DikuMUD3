@@ -113,7 +113,7 @@
 
 #define UNIT_MINV(u) ((u)->getLevelOfWizardInvisibility())
 
-#define UNIT_TITLE(unit) ((unit)->title)
+#define UNIT_TITLE(unit) ((unit)->getTitle())
 
 #define UNIT_OUT_DESCR(unit) ((unit)->out_descr)
 

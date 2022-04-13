@@ -700,7 +700,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 2: /* "title",   */
-            UNIT_TITLE(unt) = (argument);
+            unt->setTitle(argument);
 
             send_to_char("Title modified.<br/>", ch);
             return;

@@ -87,6 +87,7 @@ std::string str_json_encode_quote(const char *str);
 
 int pwdcompare(const char *p1, const char *p2, int nMax);
 
+char *fix_old_codes_to_html(const std::string &c);
 char *fix_old_codes_to_html(const char *c);
 
 extern const char *g_fillwords[];
