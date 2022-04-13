@@ -838,7 +838,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 16: /* "lights" */
-            UNIT_LIGHTS(unt) = valarg;
+            unt->setNumberOfActiveLightSources(valarg);
             UNIT_BRIGHT(unt) = valarg;
             UNIT_ILLUM(unt) = valarg;
             send_to_char("WARNING: This value is absolute and will cause 'darkness' "

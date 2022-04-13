@@ -831,7 +831,7 @@ unit_field  : NAMES stringlist
     } */
     | LIGHT number
     {
-        UNIT_LIGHTS(cur) = $2;
+        cur->setNumberOfActiveLightSources($2);
     }
     | BRIGHT number
     {

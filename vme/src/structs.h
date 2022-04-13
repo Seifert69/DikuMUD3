@@ -148,6 +148,12 @@ public:
         }
     }
 
+    sbit16 getNumberOfActiveLightSources() const { return light; }
+    void increaseNumberOfActiveLightSourcesBy(sbit16 value) { light += value; }
+    void decreaseNumberOfActiveLightSourcesBy(sbit16 value) { light -= value; }
+    void setNumberOfActiveLightSources(sbit16 value) { light = value; }
+    void readNumberOfActiveLightSourcesFrom(CByteBuffer &buf, int &errors) { light = buf.ReadS8(&errors); }
+
 private:
     cNamelist names; // Name Keyword list for get, enter, etc.
 public:
@@ -183,8 +189,8 @@ private:
     ubit8 status{0};       // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
     ubit8 open_flags{0};   // In general OPEN will mean can "enter"?
     ubit8 open_diff{0};    // Open difficulty
+    sbit16 light{0};       // Number of active light sources in unit
 public:
-    sbit16 light;  /* Number of active light sources in unit        */
     sbit16 bright; /* How much the unit shines                      */
     sbit16 illum;  /* how much bright is by transparency            */
     ubit8 chars;   /* How many chars is inside the unit             */

@@ -489,7 +489,7 @@ void modify_bright(unit_data *unit, int bright)
 
     if ((in = UNIT_IN(unit)))
     { /* Light up what the unit is inside */
-        UNIT_LIGHTS(in) += bright;
+        in->increaseNumberOfActiveLightSourcesBy(bright);
     }
 
     if (IS_OBJ(unit) && OBJ_EQP_POS(unit))
@@ -506,7 +506,7 @@ void modify_bright(unit_data *unit, int bright)
         UNIT_BRIGHT(in) += bright;
         if ((ext = UNIT_IN(in)))
         {
-            UNIT_LIGHTS(ext) += bright;
+            ext->increaseNumberOfActiveLightSourcesBy(bright);
             UNIT_ILLUM(in) += bright;
         }
     }
@@ -527,7 +527,7 @@ void trans_set(unit_data *u)
 
     if (UNIT_IN(u))
     {
-        UNIT_LIGHTS(UNIT_IN(u)) += sum;
+        UNIT_IN(u)->increaseNumberOfActiveLightSourcesBy(sum);
     }
 }
 
@@ -537,7 +537,7 @@ void trans_unset(unit_data *u)
 
     if (UNIT_IN(u))
     {
-        UNIT_LIGHTS(UNIT_IN(u)) -= UNIT_ILLUM(u);
+        UNIT_IN(u)->decreaseNumberOfActiveLightSourcesBy(UNIT_ILLUM(u));
     }
 
     UNIT_ILLUM(u) = 0;
@@ -744,7 +744,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     bright = UNIT_BRIGHT(unit);             /* brightness inc. trans    */
     selfb = bright - UNIT_ILLUM(unit);      /* brightness excl. trans   */
 
-    UNIT_LIGHTS(in) -= bright; /* Subtract Light */
+    in->decreaseNumberOfActiveLightSourcesBy(bright); // Subtract Light
     if (UNIT_IS_TRANSPARENT(in))
     {
         UNIT_ILLUM(in) -= selfb;
@@ -752,7 +752,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     }
     else if (toin)
     {
-        UNIT_LIGHTS(toin) += bright;
+        toin->increaseNumberOfActiveLightSourcesBy(bright);
     }
 
     if (toin && UNIT_IS_TRANSPARENT(toin))
@@ -761,7 +761,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
         UNIT_ILLUM(toin) += selfb;
         if (extin)
         {
-            UNIT_LIGHTS(extin) += selfb;
+            extin->increaseNumberOfActiveLightSourcesBy(selfb);
         }
     }
 
@@ -833,7 +833,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     bright = UNIT_BRIGHT(unit);
     selfb = bright - UNIT_ILLUM(unit);
 
-    UNIT_LIGHTS(to) += bright;
+    to->increaseNumberOfActiveLightSourcesBy(bright);
     if (UNIT_IS_TRANSPARENT(to))
     {
         UNIT_BRIGHT(to) += selfb;
@@ -841,7 +841,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     }
     else if (in)
     {
-        UNIT_LIGHTS(in) -= bright;
+        in->decreaseNumberOfActiveLightSourcesBy(bright);
     }
 
     if (in && UNIT_IS_TRANSPARENT(in))
@@ -850,7 +850,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         UNIT_ILLUM(in) -= selfb;
         if (extin)
         {
-            UNIT_LIGHTS(extin) -= selfb;
+            extin->decreaseNumberOfActiveLightSourcesBy(selfb);
         }
     }
 

@@ -81,7 +81,7 @@
 
 #define UNIT_BRIGHT(unit) ((unit)->bright)
 
-#define UNIT_LIGHTS(unit) ((unit)->light)
+#define UNIT_LIGHTS(unit) ((unit)->getNumberOfActiveLightSources())
 
 #define UNIT_ILLUM(unit) ((unit)->illum)
 

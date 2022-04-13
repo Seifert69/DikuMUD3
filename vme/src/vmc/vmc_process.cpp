@@ -1024,7 +1024,7 @@ void process_unit(unit_data *u)
     if (!is_in(UNIT_LIGHTS(u), -6, 6))
     {
         dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), UNIT_LIGHTS(u));
-        UNIT_LIGHTS(u) = 0;
+        u->setNumberOfActiveLightSources(0);
     }
 
     if (!is_in(UNIT_BRIGHT(u), -6, 6))
@@ -1177,7 +1177,7 @@ void init_unit(unit_data *u)
     UNIT_HIT(u) = UNIT_MAX_HIT(u) = 100;
     UNIT_ALIGNMENT(u) = 0;
     u->setAllOpenFlags(0);
-    UNIT_LIGHTS(u) = 0;
+    u->setNumberOfActiveLightSources(0);
     UNIT_BRIGHT(u) = 0;
     UNIT_CHARS(u) = 0;
     UNIT_AFFECTED(u) = nullptr;
