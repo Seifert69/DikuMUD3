@@ -28,7 +28,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#define PRACTICE_COST_LEVEL (START_LEVEL + 5)
+#define PRACTICE_COST_LEVEL (25)
 
 #define TEACH_ABILITIES 0
 #define TEACH_SPELLS 1
@@ -64,6 +64,7 @@ struct teacher_msg
 
 struct teach_packet
 {
+    unit_data *teacher;     // Points to the teacher
     ubit8 type;             /* Ability, spell, skill, weapon */
     const char *pGuildName; // Empty or set to the name of the guild
     teacher_msg msgs;
@@ -79,8 +80,12 @@ struct pc_train_values
     sbit32 *practice_points;
 };
 
-static int gold_cost(skill_teach_type *s, int level)
+static int gold_cost(unit_data *ch, skill_teach_type *s, int level)
 {
+    //It is free to practice < level 25.
+    if (IS_CHAR(ch) && CHAR_LEVEL(ch) < PRACTICE_COST_LEVEL)
+        return 0;
+
     if (level < 1)
     {
         return s->min_cost_per_point;
@@ -425,7 +430,7 @@ void info_show_roots(unit_data *teacher,
                           pTrainValues->values[teaches_skills[i].node],
                           teaches_skills[i].max_skill,
                           cost,
-                          gold_cost(&teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
+                          gold_cost(pupil, &teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
                           pTrainValues->lvl[teaches_skills[i].node],
                           pColl->text[teaches_skills[i].node],
                           0,
@@ -480,7 +485,7 @@ void info_show_leaves(unit_data *teacher,
                           pTrainValues->values[teaches_skills[i].node],
                           teaches_skills[i].max_skill,
                           cost,
-                          gold_cost(&teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
+                          gold_cost(pupil, &teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
                           pTrainValues->lvl[teaches_skills[i].node],
                           pColl->text[teaches_skills[i].node],
                           0,
@@ -559,7 +564,7 @@ void info_one_skill(unit_data *teacher,
                       pTrainValues->values[i],
                       teaches_skills[teach_index].max_skill,
                       cost,
-                      gold_cost(&teaches_skills[teach_index], pTrainValues->values[i]),
+                      gold_cost(pupil, &teaches_skills[teach_index], pTrainValues->values[i]),
                       pTrainValues->lvl[i],
                       pColl->text[i],
                       indent++,
@@ -586,7 +591,7 @@ void info_one_skill(unit_data *teacher,
                               pTrainValues->values[i],
                               teaches_skills[j].max_skill,
                               cost,
-                              gold_cost(&teaches_skills[j], pTrainValues->values[i]),
+                              gold_cost(pupil, &teaches_skills[j], pTrainValues->values[i]),
                               pTrainValues->lvl[i],
                               pColl->text[i],
                               indent,
@@ -617,7 +622,7 @@ void info_one_skill(unit_data *teacher,
                               pTrainValues->values[i],
                               teaches_skills[j].max_skill,
                               cost,
-                              gold_cost(&teaches_skills[j], pTrainValues->values[i]),
+                              gold_cost(pupil, &teaches_skills[j], pTrainValues->values[i]),
                               pTrainValues->lvl[i],
                               pColl->text[i],
                               indent,
@@ -823,17 +828,17 @@ int practice(unit_data *teacher,
 
     /* Ok, now we can teach */
 
-    amt = money_round(TRUE, gold_cost(&pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]), currency, 1);
-
-    if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL && !char_can_afford(pupil, amt, currency))
-    {
-        auto str = diku::format_to_str(pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
-        act(str.c_str(), A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
-        return TRUE;
-    }
+    amt = money_round(TRUE, gold_cost(pupil, &pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]), currency, 1);
 
     if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL)
     {
+        if (!char_can_afford(pupil, amt, currency))
+        {
+            auto str = diku::format_to_str(pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
+            act(str.c_str(), A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+            return TRUE;
+        }
+
         money_from_unit(pupil, amt, currency);
     }
 
@@ -988,6 +993,23 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
                 continue;
             }
 
+            if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL)
+            {
+                currency_t currency = local_currency(pckt->teacher);
+
+                /* Ok, now we pay for training */
+                int amt = money_round(TRUE, gold_cost(pupil, &pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]), currency, 1);
+
+                if (!char_can_afford(pupil, amt, currency))
+                {
+                    auto str = diku::format_to_str(pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
+                    act(str.c_str(), A_ALWAYS, pckt->teacher, cActParameter(), pupil, TO_VICT);
+                    continue;
+                }
+
+                money_from_unit(pupil, amt, currency);
+            }
+
             nTrained++;
 
             practice_base(type, pckt, pTrainValues, teach_index, cost);
@@ -999,6 +1021,8 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
     return nTrained;
 }
 
+
+// Pass symbolic name, get teach packet back
 teach_packet *get_teacher(const char *pName)
 {
     unit_data *u = nullptr;
@@ -1410,6 +1434,8 @@ int teach_init(spec_arg *sarg)
     }
 
     CREATE(packet, teach_packet, 1);
+
+    packet->teacher = sarg->owner;
     packet->type = i;
 
     // --- Next field ---
