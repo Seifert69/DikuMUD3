@@ -1555,7 +1555,7 @@ descr
 "Stepping into the cave the fresh air of the hills is replaced by a slightly 
 dank and somewhat acrid smell. Cool air can be felt moving towards the exit, 
 though it brings with it more reek. The ground is firm beneath your feet, 
-and from the darnkess, sounds of... something. This cave does not have the 
+and from the darkness, sounds of... something. This cave does not have the 
 comforting feel of a safe place. It seems there are two paths leading deeper 
 into this cave, one to the south, the other to the west. Exiting the cave to 
 the east will lead towards the trail from Barnham's farm."
@@ -1639,9 +1639,9 @@ descr
 "The narrow tunnel opens here into a large cavern. The ceiling climbs up and 
 becomes lost in the darkness high above. Here and there, a steady heartbeat of 
 a water dripping can be heard as the moisture falls from distant stalactites. 
-The darnkess feels complete and almost smothering, and every noise echoes 
+The darkness feels complete and almost smothering, and every noise echoes 
 through the space. And noises there are. There are things moving in the 
-darnkess, somewhere. It seems that the cavern contiues north, or back through 
+darkness, somewhere. It seems that the cavern contiues north, or back through 
 the narrow passage west."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
@@ -1656,9 +1656,9 @@ title "Inside the Cave"
 descr
 "The large cavern disappears into the darkness high above. Here and there, a 
 steady heartbeat of a water dripping can be heard as the moisture falls from 
-distant stalactites. The darnkess feels complete and almost smothering, and 
+distant stalactites. The darkness feels complete and almost smothering, and 
 every noise echoes through the space. Somewhere, there are things moving in 
-the darnkess. It seems that the cavern contiues south and east."
+the darkness. It seems that the cavern contiues south and east."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1670,7 +1670,7 @@ fcave_04
 names {"inside cave", "cave"}
 title "Inside the Cave"
 descr
-"The darnkess here encompasses you, and within it, sounds of... something. 
+"The darkness here encompasses you, and within it, sounds of... something. 
 This cave does not have the comforting feel of a safe place. It seems the 
 cave winds and turns as you follow this path. The air that was flowing 
 in other parts of the cavern, seems to be stale here, and the smell is 
@@ -1686,7 +1686,7 @@ fcave_10
 names {"inside cave", "cave"}
 title "Inside the Cave"
 descr
-"The darnkess here encompasses you, and within it, sounds of... something. 
+"The darkness here encompasses you, and within it, sounds of... something. 
 This cave does not have the comforting feel of a safe place. The ground 
 underfoot is wet, whether from moisture leaking through the cave or otherwise 
 is impossible to tell with the little available light. The air that was flowing 
@@ -1708,7 +1708,7 @@ forever, comes to an abrupt end. Travel is no longer possible along this trail.
 The stale rank air in this end of the cave is overwhelming, where that smell 
 comes from, is perhaps better not explored. The damp accumulates into pools 
 here and you suspect that they may be related to the smell. The sounds of 
-something, or someone moving in the darnkess leaves hair raised on end."
+something, or someone moving in the darkness leaves hair raised on end."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1725,7 +1725,7 @@ of fresh air, tickles the senses here. The cave wall before you is evidently
 the end of the path. Where is that fresh air coming from however. The rocks on 
 the cave wall may be worth looking at further. The damp accumulates into pools 
 here and you suspect that they may be related to the smell. The sounds of 
-something, or someone moving in the darnkess leaves hair raised on end."
+something, or someone moving in the darkness leaves hair raised on end."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
