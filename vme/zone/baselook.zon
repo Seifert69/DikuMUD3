@@ -301,12 +301,14 @@ external
    look_at(l3 : unitptr, s:string);
    look_in(l4 : unitptr, s:string);
    integer look_dir(l5 : unitptr, s:string);
+	unitptr find_here(pc:unitptr,a:string);
 
 var
    arg1    :  string;
    args:stringlist;
    temp    :  string;
    dir     :  string;
+   u : unitptr;
 
 code
 {
@@ -380,7 +382,18 @@ code
       quit;
    }
    else
-      look_at(self, arg);
+   {
+      // We don't know if the user means look at or look in
+      // Generally this will be look_at, except if it's a container, then we look in
+      arg1 := arg;
+      u := find_here(self, arg1);
+      if (u.objecttype == ITEM_CONTAINER)
+      {
+         look_in(self, arg);
+      }
+      else
+         look_at(self, arg);
+   }
 
    quit;
 }
@@ -701,7 +714,7 @@ external
    unitptr find_equip(u:unitptr,s:string);
    search_item(l1 : unitptr, unit1 : unitptr,  string1 : string,truearg:string);
    show_eq(l2 : unitptr, unit2 : unitptr);
-
+   look_in(looker : unitptr, s:string);
 var
     item     :  unitptr;
     pc       :  unitptr;

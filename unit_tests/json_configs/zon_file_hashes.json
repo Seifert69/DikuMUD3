@@ -77,12 +77,12 @@
         {
             "source_file": {
                 "filename": "baselook.zon",
-                "sha512": "4d6a4890515e92cb04e8d6a5ca9ac144dcfd151a56af00bf5c1e720e3518023c7a937fc04fcd255a3eaca62b44f829d9bbb1563951d288ed41ee00d04e7d1b14"
+                "sha512": "a994693875d986aa346e0d8410953861b0d1fbef02471328fe10d4d6aa50e51d7a8a35da47e4aebe9a41ff57dda6a304a7fd53a4a70df9d1e16f9d04984ffcbc"
             },
             "output": [
                 {
                     "filename": "baselook.data",
-                    "sha512": "eaf5dd9d84339c287ba1c9fd37cde4af6dc99b715b46e0f14042652aae1c636bcc376492c6f72873aa8c9aa22e490230783487597de0fb35d8bc2e40a24260fc"
+                    "sha512": "1b646f9b6ec39524b16035fd43cdb938a1624168ce92f6de96038592eb4d8de8541a30df8a1b5d2ea009c0dfd0cb85f9f3e8cf6b4974bf3ae4015a0f7092292b"
                 },
                 {
                     "filename": "baselook.reset",
