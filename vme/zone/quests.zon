@@ -254,7 +254,7 @@ code
    {
       pause;
       Explain@quests(pc, null, sl.[i]);
-   	heartbeat := PULSE_SEC * 4;
+   	heartbeat := PULSE_SEC * 3;
       i := i + 1;
    }
  
@@ -338,8 +338,8 @@ code
    ln := length(sl);
 
    phb := heartbeat;
-   if (phb < 4*PULSE_SEC)
-      phb := 4*PULSE_SEC;
+   if (phb < 3*PULSE_SEC)
+      phb := 3*PULSE_SEC;
 	heartbeat := 1;
 
    // Do the chores
@@ -405,7 +405,7 @@ code
 
    i := 0;
    ln := length(sl);
-	heartbeat := PULSE_SEC * 4;
+	heartbeat := PULSE_SEC * 3;
 
    priority;
    // Give the explanation
@@ -526,7 +526,7 @@ code
    i := 0;
    ln := length(sl);
 	pause;
-	heartbeat := PULSE_SEC * 4;
+	heartbeat := PULSE_SEC * 3;
 
    priority;
 
@@ -845,7 +845,7 @@ code
    i := 0;
    ln := length(sl);
 	pause;
-	heartbeat := PULSE_SEC * 4;
+	heartbeat := PULSE_SEC * 3;
 
    priority;
 
@@ -990,7 +990,7 @@ code
    i := 0;
    ln := length(sl);
 	pause;
-	heartbeat := PULSE_SEC * 4;
+	heartbeat := PULSE_SEC * 3;
 
    priority;
 
@@ -1082,7 +1082,7 @@ var
 
 code
 {
-   heartbeat := PULSE_SEC *4;
+   heartbeat := PULSE_SEC *3;
    
    :start:
    wait(SFB_CMD | SFB_MSG, TRUE);
