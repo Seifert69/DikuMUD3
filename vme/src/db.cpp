@@ -770,7 +770,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
     else
     {
-        u->setKey(nullptr); // TODO this is probably a memory leak if key has been set with str_dup before
+        u->setKey(nullptr);
     }
 
     u->readManipulateFrom(*pBuf, unit_version, g_nCorrupt);

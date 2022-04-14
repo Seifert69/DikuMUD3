@@ -70,12 +70,7 @@ class zone_reset_cmd;
 class unit_data : public basedestruct
 {
 public:
-    unit_data();
-    explicit unit_data(ubit8 unit_type)
-        : unit_data()
-    {
-        status = unit_type;
-    }
+    explicit unit_data(ubit8 unit_type);
     virtual ~unit_data();
     unit_data *copy();
     void set_fi(file_index_type *f);
@@ -300,16 +295,16 @@ public:
     room_data();
     ~room_data();
 
-    room_direction_data *dir_option[MAX_EXIT + 1]; // Why 11? Why not MAX_EXIT+1?
+    room_direction_data *dir_option[MAX_EXIT + 1]{}; // Why 11? Why not MAX_EXIT+1?
 
-    ubit8 flags;         /* Room flags                              */
-    ubit8 movement_type; /* The type of movement (city, hills etc.) */
-    ubit8 resistance;    /* Magic resistance of the room            */
+    ubit8 flags{};         /* Room flags                              */
+    ubit8 movement_type{}; /* The type of movement (city, hills etc.) */
+    ubit8 resistance{};    /* Magic resistance of the room            */
 
     sbit16 mapx, mapy; /* Graphical map coordinates */
 
-    int sc;  /*strong component, used for shortest path */
-    int num; /*room number, used for shortest path */
+    int sc{};  /*strong component, used for shortest path */
+    int num{}; /*room number, used for shortest path */
 #ifndef MPLEX_COMPILE
     enum edge_dir_t
     {
@@ -353,7 +348,7 @@ public:
 class char_data : public unit_data
 {
 public:
-    char_data(ubit8 unit_type);
+    explicit char_data(ubit8 unit_type);
     virtual ~char_data();
 
     descriptor_data *descriptor;
@@ -408,7 +403,7 @@ public:
     ubit16 flags;          /* flags for PC setup (brief, noshout...)  */
     ubit16 nr_of_crimes;   /* Number of crimes committed              */
     ubit16 crack_attempts; /* Number of wrong passwords entered       */
-    ubit16 lifespan;       /* How many year to live....               */
+    ubit16 lifespan{};     /* How many year to live....               */
 
     sbit16 spells[SPL_TREE_MAX];   /* The spells learned                  */
     ubit8 spell_lvl[SPL_TREE_MAX]; /* Practiced within that level         */

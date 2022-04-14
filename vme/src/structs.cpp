@@ -29,17 +29,16 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 char_data::char_data(ubit8 unit_type)
     : unit_data(unit_type)
+    , descriptor{nullptr}
+    , Combat{nullptr}
+    , master{nullptr}
+    , last_room{nullptr}
+    , followers{nullptr}
+    , last_attacker{nullptr}
+    , money{nullptr}
+    , last_attacker_type{0}
 {
     g_world_nochars++;
-
-    money = nullptr;
-    descriptor = nullptr;
-    Combat = nullptr;
-    followers = nullptr;
-    master = nullptr;
-    last_room = nullptr;
-    last_attacker = nullptr;
-    last_attacker_type = 0;
 
     // MS2020 memset(&points, 0, sizeof (points));
     // Removed because class constructor already initialize class variables.
@@ -62,13 +61,11 @@ char_data::~char_data()
 
 room_data::room_data()
     : unit_data(UNIT_ST_ROOM)
+    , mapx{-1}
+    , mapy{-1}
+    , waiting_dijkstra{FALSE}
 {
     g_world_norooms++;
-    mapx = -1;
-    mapy = -1;
-#ifdef DMSERVER
-    waiting_dijkstra = FALSE;
-#endif
 }
 
 room_data::~room_data()
@@ -86,16 +83,15 @@ room_data::~room_data()
 
 obj_data::obj_data()
     : unit_data(UNIT_ST_OBJ)
+    , value{0}
+    , cost{0}
+    , cost_per_day{0}
+    , flags{0}
+    , type{0}
+    , equip_pos{0}
+    , resistance{0}
 {
     g_world_noobjects++;
-
-    memset(value, 0, sizeof(value));
-    cost = 0;
-    cost_per_day = 0;
-    flags = 0;
-    type = 0;
-    equip_pos = 0;
-    resistance = 0;
 }
 
 obj_data::~obj_data()
@@ -105,41 +101,33 @@ obj_data::~obj_data()
 
 pc_data::pc_data()
     : char_data(UNIT_ST_PC)
+    , setup{0, 0, 0, 0, 0, 0, 0, 0}
+    , guild{nullptr}
+    , bank{nullptr}
+    , hometown{nullptr}
+    , promptstr{nullptr}
+    , profession{-1}
+    , vlvl{0}
+    , id{-1}
+    , skill_points{0}
+    , ability_points{0}
+    , flags{0}
+    , nr_of_crimes{0}
+    , crack_attempts{0}
+    , spells{0}
+    , spell_lvl{0}
+    , skills{0}
+    , skill_lvl{0}
+    , weapons{0}
+    , weapon_lvl{0}
+    , ability_lvl{0}
+    , conditions{0}
+    , nAccessLevel{0}
+    , pwd{0}
+    , filename{0}
+    , lasthosts{0}
 {
     g_world_nopc++;
-
-    bank = nullptr;
-    guild = nullptr;
-    hometown = nullptr;
-    promptstr = nullptr;
-
-    memset(&setup, 0, sizeof(setup));
-
-    profession = -1;
-    vlvl = 0;
-    id = -1;
-
-    skill_points = 0;
-    ability_points = 0;
-    flags = 0;
-
-    nr_of_crimes = 0;
-    crack_attempts = 0;
-    memset(spells, 0, sizeof(spells));
-    memset(spell_lvl, 0, sizeof(spell_lvl));
-    memset(skills, 0, sizeof(skills));
-    memset(skill_lvl, 0, sizeof(skill_lvl));
-    memset(weapons, 0, sizeof(weapons));
-    memset(weapon_lvl, 0, sizeof(weapon_lvl));
-    memset(ability_lvl, 0, sizeof(ability_lvl));
-
-    memset(conditions, 0, sizeof(conditions));
-#ifdef DMSERVER
-    memset(lasthosts, 0, sizeof(lasthosts));
-#endif
-    nAccessLevel = 0;
-    pwd[0] = 0;
-    filename[0] = 0;
 }
 
 pc_data::~pc_data()
@@ -161,13 +149,12 @@ pc_data::~pc_data()
 
 npc_data::npc_data()
     : char_data(UNIT_ST_NPC)
+    , weapons{0}
+    , spells{0}
+    , default_pos{POSITION_STANDING}
+    , flags{0}
 {
     g_world_nonpc++;
-
-    memset(weapons.data(), 0, weapons.size());
-    memset(spells.data(), 0, spells.size());
-    default_pos = POSITION_STANDING;
-    flags = 0;
 }
 
 npc_data::~npc_data()
@@ -599,33 +586,34 @@ unit_data *new_unit_data(ubit8 type)
     }
 }
 
-unit_data::unit_data()
+unit_data::unit_data(ubit8 unit_type)
+    : func{nullptr}
+    , affected{nullptr}
+    , fi{nullptr}
+    , key{nullptr}
+    , outside{nullptr}
+    , inside{nullptr}
+    , next{nullptr}
+    , gnext{nullptr}
+    , gprevious{nullptr}
+    , manipulate{0}
+    , flags{0}
+    , base_weight{0}
+    , weight{0}
+    , capacity{0}
+    , size{0}
+    , status{unit_type}
+    , open_flags{0}
+    , open_diff{0}
+    , light{0}
+    , bright{0}
+    , illum{0}
+    , chars{0}
+    , minv{0}
+    , max_hp{0}
+    , hp{0}
+    , alignment{0}
 {
-    func = nullptr;
-    affected = nullptr;
-    fi = nullptr;
-    key = nullptr;
-    outside = nullptr;
-    inside = nullptr;
-    next = nullptr;
-    gnext = nullptr;
-    gprevious = nullptr;
-    chars = 0;
-    manipulate = 0;
-    flags = 0;
-    base_weight = 0;
-    weight = 0;
-    capacity = 0;
-    open_flags = 0;
-    open_diff = 0;
-    light = 0;
-    bright = 0;
-    illum = 0;
-    chars = 0;
-    minv = 0;
-    max_hp = 0;
-    hp = 0;
-    alignment = 0;
 }
 
 unit_data::~unit_data()
