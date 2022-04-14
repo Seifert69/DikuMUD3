@@ -1391,13 +1391,10 @@ npc.position:=POSITION_STANDING;
 tf:=walk_room@function("heal_room@udgaard",4);
     pause;
     act ("$1n says 'If you find you need some helping spells come and sit here for "+
-         "a bit and the healer will be more then willing to help you.'",
-A_ALWAYS , self, null , pc ,TO_VICT);
-   pause;
-act ("$1n says 'If you go one north of here you can type 'FEAST' and if you are "+
-         "below level 20 and hungry or thirsty you will be magically fed.'",
-A_ALWAYS , self, null , pc ,TO_VICT);
-   pause;
+         "a bit and the healer will be more then willing to help you.'", A_ALWAYS , self, null , pc ,TO_VICT);
+//   pause;
+// act ("$1n says 'If you go one north of here you can type 'FEAST' and if you are "+
+//         "below level 20 and hungry or thirsty you will be magically fed.'", A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
    act ("$1n says 'I will finish by taking you back to the Temple where we started and "+
    "explain one more nice thing.'",
