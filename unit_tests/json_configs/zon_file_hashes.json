@@ -349,12 +349,12 @@
         {
             "source_file": {
                 "filename": "gremlin.zon",
-                "sha512": "4c1d7885eac1766f5a35d4e42813370f00077ba431627409fae58eef795ecfc3888b72e35a191e05b099eff02be0688944870786582032c85a0ccac2f6adb1be"
+                "sha512": "1321257d1366d6a385cdb99d7c88d914a62042283fa2daf77795db1d85c8bd9fbbb43db897756a9a8425e2e9e4e8dd82f934723c0808e0378190a7c69ecfe247"
             },
             "output": [
                 {
                     "filename": "gremlin.data",
-                    "sha512": "bcfc5ba881b96027d693273f7fc2ad4d77ee4e8641239c568018ec23b6e806e8e477ed3be2ac4aeeff97432a09c96f28ef31f8b19afef660543357a7e294eaf1"
+                    "sha512": "e89f57d15baf548db07868cdab11ace73f902e2be3a2a01864aec1a4d18997e3b7f09687e3af0173c4f98c33cfaa39635709eccda116dacd7738f2eaf5f8d0ac"
                 },
                 {
                     "filename": "gremlin.reset",
@@ -637,12 +637,12 @@
         {
             "source_file": {
                 "filename": "newbie.zon",
-                "sha512": "759010c330a11aeb4eac29fac1509ac366b79b7cf56ac7101c3deb404399491aba5a55ae588d6de06ae9fd62febadf80ccf3d4956ef05ed6f5840e3858fc5d20"
+                "sha512": "37e88935e450ecc2044e053b55c93f88b1e87f648ad5b3f1fe760191e5d564954648f7b3dc3758d6959de93216df0bb3d80becabda2235d8187e6fd61b73ae52"
             },
             "output": [
                 {
                     "filename": "newbie.data",
-                    "sha512": "e687eafe726e5e9140478b594ccb27effa239464cf7fe9b0adeb88e2ddecae18fe07877a9134d90e207664fa9d82227801cec1af3bf4809fa75ebe68dce4af29"
+                    "sha512": "75f056aee0b1b48d3e0131f372969eb69eb4fc17a3eb35ebd0d88ccfb38db550417a733ce71d46979452c064c3cfaceee3f0662da194c4995ecc0256528eb0dc"
                 },
                 {
                     "filename": "newbie.reset",
@@ -701,12 +701,12 @@
         {
             "source_file": {
                 "filename": "quests.zon",
-                "sha512": "4657a3f8c82cf41390d615da36fa8c72d6ba658d988c489e82f260177ab3d6a5b2de2216950d5601320088dc091d6ff3e46a02e4411574e9bf93146505c11162"
+                "sha512": "8bc21122929111ad79a83e41593c33af13bc0eccf118fe159ed0fbe3b6ffe5eb63bd05ee2d0fc26957869a0a2cd732bf28139c1b1d108cdde6724773e7097cd8"
             },
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "be496e54de142591df57632470c44f5481017dd7bfcde39a832b2b3602d5a410bd1755b5e40b2cf10fe1a6b6641e61d87a350506b3b5ea4dd2d665a435b3c444"
+                    "sha512": "33fc1dd2f52ca29a5388a609b060fc0c85f3625e43e15839ec7d7c02dd9771089c10b60bc09b6525326d1c1c45e3cc90c510373e88d7ef5f80e63d14197476cd"
                 },
                 {
                     "filename": "quests.reset",
