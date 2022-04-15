@@ -823,13 +823,13 @@ void tif_bra_on(unit_affected_type *af, unit_data *unit)
                 act("You feel idiotic.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
             case 3:
-                act("You feel like a imbecile.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
+                act("You feel more imbecillic.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
             case 4:
                 act("A lesser medulla oblongata fills your grey matter.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
             case 5:
-                act("You suddenly realize your a moron.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
+                act("You suddenly realize you're a moron.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
         };
     }
@@ -1129,24 +1129,24 @@ void tif_wpn_off(unit_affected_type *af, unit_data *unit)
 
 void tif_armour_on(unit_affected_type *af, unit_data *unit)
 {
-    const char *c = "pale skin like";
+    const char *c = "back to normal skin.";
 
     switch (CHAR_NATURAL_ARMOUR(unit))
     {
         case ARM_LEATHER:
-            c = "a dark leather like";
+            c = "into a dark leather like hide.";
             break;
 
         case ARM_HLEATHER:
-            c = "a dark bark like";
+            c = "into a dark bark like hide.";
             break;
 
         case ARM_CHAIN:
-            c = "an ebony coloured bone like";
+            c = "into an ebony coloured bone like shell.";
             break;
 
         case ARM_PLATE:
-            c = "a grey stone like";
+            c = "into a grey stone like shell.";
             break;
 
         default:
@@ -1154,9 +1154,9 @@ void tif_armour_on(unit_affected_type *af, unit_data *unit)
             break;
     }
 
-    act("Your skin transforms into $2t substance.", A_ALWAYS, unit, c, cActParameter(), TO_CHAR);
+    act("Your skin transforms $2t", A_ALWAYS, unit, c, cActParameter(), TO_CHAR);
 
-    act("$1n's skin transforms into $2t substance.", A_ALWAYS, unit, c, cActParameter(), TO_ROOM);
+    act("$1n's skin transforms $2t", A_ALWAYS, unit, c, cActParameter(), TO_ROOM);
 }
 
 void tif_speed_on(unit_affected_type *af, unit_data *unit)
