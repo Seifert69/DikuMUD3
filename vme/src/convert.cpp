@@ -54,7 +54,7 @@ void convert_free_unit(unit_data *u)
         convert_free_unit(UNIT_CONTAINS(u));
     }
 
-    UNIT_AFFECTED(u) = nullptr;
+    u->setUnitAffectedType(nullptr);
     u->setFunctionPointer(nullptr);
 
     unit_from_unit(u);

@@ -1182,7 +1182,7 @@ void init_unit(unit_data *u)
     u->setNumberOfActiveLightSources(0);
     u->setLightOutput(0);
     u->setNumberOfCharactersInsideUnit(0);
-    UNIT_AFFECTED(u) = nullptr;
+    u->setUnitAffectedType(nullptr);
     u->setSize(180); // 180cm default
 
     switch (UNIT_TYPE(u))

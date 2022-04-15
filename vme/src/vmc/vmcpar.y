@@ -876,7 +876,7 @@ unit_field  : NAMES stringlist
     {
         if (!UNIT_AFFECTED(cur))
         {
-            UNIT_AFFECTED(cur) = mcreate_affect();
+            cur->setUnitAffectedType(mcreate_affect());
             cur_aff = UNIT_AFFECTED(cur);
         }
         else

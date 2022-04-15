@@ -91,7 +91,7 @@
 
 #define UNIT_IN(unit) ((unit)->outside)
 
-#define UNIT_AFFECTED(unit) ((unit)->affected)
+#define UNIT_AFFECTED(unit) ((unit)->getUnitAffectedType())
 
 #define UNIT_NAME(unit) (UNIT_NAMES(unit).Name())
 

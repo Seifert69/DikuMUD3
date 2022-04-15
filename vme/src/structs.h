@@ -86,6 +86,9 @@ public:
     unit_fptr *getFunctionPointer() { return func; }
     void setFunctionPointer(unit_fptr *value) { func = value; }
 
+    unit_affected_type *getUnitAffectedType() { return affected; }
+    void setUnitAffectedType(unit_affected_type *value) { affected = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -232,10 +235,8 @@ private:
     cNamelist names;                            // Name Keyword list for get, enter, etc.
     unit_fptr *func{nullptr};                   // Function pointer type
     unit_dil_affected_type *dilaffect{nullptr}; //
-
+    unit_affected_type *affected{nullptr};      //
 public:
-    unit_affected_type *affected;
-
     file_index_type *fi; /* Unit file-index                               */
 
     char *key; /* Pointer to fileindex to Unit which is the key */
