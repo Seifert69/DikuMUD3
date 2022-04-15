@@ -194,6 +194,26 @@ code
       subextra(self.extra, "$RES_TIMER");
 
   
+   if ("Eiyonel's Quest Finnished" in tgt.quests)
+   {
+      subextra(tgt.quests, "Eiyonel's Quest Finnished");
+      addextra(tgt.quests, {"Eiyonel's Quest Finished"}, "");
+      log("Eiyonel's Quest Finnished subed and added");
+   }
+  
+   if ("Aristol's Quest Finnished" in tgt.quests)
+   {
+      subextra(tgt.quests, "Aristol's Quest Finnished");
+      addextra(tgt.quests, {"Aristol's Quest Finished"}, "");
+      log("Aristol's Quest Finnished subed and added");
+   }
+  
+   if ("Drynmyr's Quest Finnished" in tgt.quests)
+   {
+      subextra(tgt.quests, "Drynmyr's Quest Finnished");
+      addextra(tgt.quests, {"Drynmyr's Quest Finished"}, "");
+      log("Drynmyr's Quest Finnished subed and added");
+   }
   
    /* to fix a bjorni quest mess */
    if ("Nidhogg's prize given" in tgt.quests)
