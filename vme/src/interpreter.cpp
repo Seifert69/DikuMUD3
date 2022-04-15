@@ -506,7 +506,7 @@ int descriptor_is_playing(descriptor_data *d)
 // If unit is linked in the global list then it's in the game
 int char_is_playing(unit_data *u)
 {
-    return (u->getGlobalNext() || u->gprevious || (g_unit_list == u));
+    return (u->getGlobalNext() || u->getGlobalPrevious() || (g_unit_list == u));
 }
 
 void descriptor_interpreter(descriptor_data *d, char *arg)

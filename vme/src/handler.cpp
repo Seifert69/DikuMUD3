@@ -48,7 +48,7 @@ descriptor_data *unit_is_edited(unit_data *u)
 /* By using this, we can easily sort the list if ever needed */
 void insert_in_unit_list(unit_data *u)
 {
-    assert(u->getGlobalNext() == nullptr && u->gprevious == nullptr && g_unit_list != u);
+    assert(u->getGlobalNext() == nullptr && u->getGlobalPrevious() == nullptr && g_unit_list != u);
 
     if (UNIT_FILE_INDEX(u))
     {
@@ -60,7 +60,7 @@ void insert_in_unit_list(unit_data *u)
     if (!g_unit_list)
     {
         u->setGlobalNext(nullptr);
-        u->gprevious = nullptr;
+        u->setGlobalPrevious(nullptr);
         g_unit_list = u;
         g_npc_head = u;
         g_room_head = u;
@@ -74,8 +74,8 @@ void insert_in_unit_list(unit_data *u)
         {
             tmp_u = g_unit_list;
             u->setGlobalNext(tmp_u);
-            u->gprevious = tmp_u->gprevious;
-            tmp_u->gprevious = u;
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -99,12 +99,12 @@ void insert_in_unit_list(unit_data *u)
             }
 
             u->setGlobalNext(tmp_u);
-            u->gprevious = tmp_u->gprevious;
-            if (tmp_u->gprevious)
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            if (tmp_u->getGlobalPrevious())
             {
-                tmp_u->gprevious->setGlobalNext(u);
+                tmp_u->getGlobalPrevious()->setGlobalNext(u);
             }
-            tmp_u->gprevious = u;
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -129,12 +129,12 @@ void insert_in_unit_list(unit_data *u)
             }
 
             u->setGlobalNext(tmp_u);
-            u->gprevious = tmp_u->gprevious;
-            if (tmp_u->gprevious)
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            if (tmp_u->getGlobalPrevious())
             {
-                tmp_u->gprevious->setGlobalNext(u);
+                tmp_u->getGlobalPrevious()->setGlobalNext(u);
             }
-            tmp_u->gprevious = u;
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -159,12 +159,12 @@ void insert_in_unit_list(unit_data *u)
             }
 
             u->setGlobalNext(tmp_u);
-            u->gprevious = tmp_u->gprevious;
-            if (tmp_u->gprevious)
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            if (tmp_u->getGlobalPrevious())
             {
-                tmp_u->gprevious->setGlobalNext(u);
+                tmp_u->getGlobalPrevious()->setGlobalNext(u);
             }
-            tmp_u->gprevious = u;
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -179,7 +179,7 @@ void insert_in_unit_list(unit_data *u)
 /* Remove a unit from the g_unit_list */
 void remove_from_unit_list(unit_data *unit)
 {
-    assert(unit->gprevious || unit->getGlobalNext() || (g_unit_list == unit));
+    assert(unit->getGlobalPrevious() || unit->getGlobalNext() || (g_unit_list == unit));
 
     if (UNIT_FILE_INDEX(unit))
     {
@@ -204,16 +204,16 @@ void remove_from_unit_list(unit_data *unit)
     }
     else
     { /* Then this is always true 'if (unit->gprevious)'  */
-        unit->gprevious->setGlobalNext(unit->getGlobalNext());
+        unit->getGlobalPrevious()->setGlobalNext(unit->getGlobalNext());
     }
 
     if (unit->getGlobalNext())
     {
-        unit->getGlobalNext()->gprevious = unit->gprevious;
+        unit->getGlobalNext()->setGlobalPrevious(unit->getGlobalPrevious());
     }
 
     unit->setGlobalNext(nullptr);
-    unit->gprevious = nullptr;
+    unit->setGlobalPrevious(nullptr);
 }
 
 unit_fptr *find_fptr(unit_data *u, ubit16 idx)

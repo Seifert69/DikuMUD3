@@ -113,7 +113,9 @@ public:
     const unit_data *getGlobalNext() const { return gnext; }
     void setGlobalNext(unit_data *value) { gnext = value; }
 
-    /// HERE FOR PTR
+    unit_data *getGlobalPrevious() { return gprevious; }
+    const unit_data *getGlobalPrevious() const { return gprevious; }
+    void setGlobalPrevious(unit_data *value) { gprevious = value; }
 
     ubit32 getManipulate() const { return manipulate; }
     ubit32 *getManipulatePtr() { return &manipulate; }
@@ -266,32 +268,28 @@ private:
     unit_data *inside{nullptr};                 // Linked list of chars,rooms & objs
     unit_data *next{nullptr};                   // For next unit in 'inside' linked list
     unit_data *gnext{nullptr};                  // global l-list of objects, chars & rooms
-public:
-    unit_data /* global l-list of objects, chars & rooms       */
-        *gprevious;
-
-private:
-    ubit32 manipulate{0};  // WEAR_XXX macros
-    ubit16 flags{0};       // Invisible, can_bury, burried...
-    sbit32 base_weight{0}; // The "empty" weight of a room/char/obj (lbs)
-    sbit32 weight{0};      // Current weight of a room/obj/char
-    sbit16 capacity{0};    // Capacity of obj/char/room, -1 => any
-    ubit16 size{0};        // (cm) MOBs height, weapons size, ropes length
-    ubit8 status{0};       // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
-    ubit8 open_flags{0};   // In general OPEN will mean can "enter"?
-    ubit8 open_diff{0};    // Open difficulty
-    sbit16 light{0};       // Number of active light sources in unit
-    sbit16 bright{0};      // How much the unit shines
-    sbit16 illum{0};       // how much bright is by transparency
-    ubit8 chars{0};        // How many chars is inside the unit
-    ubit8 minv{0};         // Level of wizard invisible
-    sbit32 max_hp{0};      // The maximum number of hitpoints
-    sbit32 hp{0};          // The actual amount of hitpoints left
-    sbit16 alignment{0};   // +-1000 for alignments
-    std::string title;     // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
-    std::string out_descr; // The outside description of a unit
-    std::string in_descr;  // The inside description of a unit
-    extra_list extra;      // All the look 'at' stuff
+    unit_data *gprevious{nullptr};              // global l-list of objects, chars & rooms
+    ubit32 manipulate{0};                       // WEAR_XXX macros
+    ubit16 flags{0};                            // Invisible, can_bury, burried...
+    sbit32 base_weight{0};                      // The "empty" weight of a room/char/obj (lbs)
+    sbit32 weight{0};                           // Current weight of a room/obj/char
+    sbit16 capacity{0};                         // Capacity of obj/char/room, -1 => any
+    ubit16 size{0};                             // (cm) MOBs height, weapons size, ropes length
+    ubit8 status{0};                            // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
+    ubit8 open_flags{0};                        // In general OPEN will mean can "enter"?
+    ubit8 open_diff{0};                         // Open difficulty
+    sbit16 light{0};                            // Number of active light sources in unit
+    sbit16 bright{0};                           // How much the unit shines
+    sbit16 illum{0};                            // how much bright is by transparency
+    ubit8 chars{0};                             // How many chars is inside the unit
+    ubit8 minv{0};                              // Level of wizard invisible
+    sbit32 max_hp{0};                           // The maximum number of hitpoints
+    sbit32 hp{0};                               // The actual amount of hitpoints left
+    sbit16 alignment{0};                        // +-1000 for alignments
+    std::string title;                          // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
+    std::string out_descr;                      // The outside description of a unit
+    std::string in_descr;                       // The inside description of a unit
+    extra_list extra;                           // All the look 'at' stuff
 };
 
 /* ----------------- ROOM SPECIFIC STRUCTURES ----------------------- */

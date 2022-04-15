@@ -149,7 +149,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
     {
         assert(!UNIT_IN(d->cgetCharacter()));
         assert(!d->cgetCharacter()->getGlobalNext());
-        assert(!d->cgetCharacter()->gprevious);
+        assert(!d->cgetCharacter()->getGlobalPrevious());
 
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */

@@ -48,7 +48,7 @@ zone_type::~zone_type()
         nextut = ut->getNext();
         ut->setNext(nullptr);
         ut->setGlobalNext(nullptr);
-        ut->gprevious = nullptr;
+        ut->setGlobalPrevious(nullptr);
         delete ut;
     }
 
@@ -57,7 +57,7 @@ zone_type::~zone_type()
         nextut = ut->getNext();
         ut->setNext(nullptr);
         ut->setGlobalNext(nullptr);
-        ut->gprevious = nullptr;
+        ut->setGlobalPrevious(nullptr);
         delete ut;
     }
 
