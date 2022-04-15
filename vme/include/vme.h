@@ -571,9 +571,10 @@
 #define CHAR_DETECT_CURSE      0x02000
 #define CHAR_DETECT_LIFE       0x04000
 #define CHAR_WIMPY             0x08000
+                            // 0x1000 Unused
 #define CHAR_SELF_DEFENCE      0x20000
 #define CHAR_PEACEFUL          0x40000	/* Auto-attack stuff? */
-#define CHAR_KILL_SELF     (0x80000)	/*For death if NPC/PC kills self or no exploss */
+#define CHAR_KILL_SELF        (0x80000)	/*For death if NPC/PC kills self or no exploss */
 
 
 /* ------------------------- ITEM Types ------------------------------

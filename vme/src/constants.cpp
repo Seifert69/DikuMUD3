@@ -299,7 +299,7 @@ const char *g_room_flags[] = {"save",
 const char *g_char_flags[] = {
     "law-protected",     "legal-target",     "outlaw",       "group",         "blind",         "hide",         "mute",        "sneak",
     "detect-alignments", "detect-invisible", "detect-magic", "detect-poison", "detect-undead", "detect-curse", "detect-life", "wimpy",
-    "not-used",          "self-defence",     "peaceful",     nullptr};
+    "not-used",          "self-defence",     "peaceful",     "kill-self", nullptr};
 
 /* PC_FLAGS */
 const char *g_pc_flags[] = {"brief",
