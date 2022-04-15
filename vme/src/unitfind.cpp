@@ -422,7 +422,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
 
                 if (--number == 0)
                 {
-                    best = UNIT_IN(ch);
+                    best = UNIT_IN(const_cast<unit_data *>(ch));
                 }
             }
 
@@ -471,7 +471,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
             } /* End for */
 
             /* Run through units in local environment if upwards transparent */
-            if ((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
+            if ((u = const_cast<unit_data*>(UNIT_IN(UNIT_IN(ch)))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
             {
                 for (u = UNIT_CONTAINS(u); u; u = u->next)
                 {
@@ -708,7 +708,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
                     if (--number == 0)
                     {
-                        best = UNIT_IN(ch);
+                        best = UNIT_IN(const_cast<unit_data *>(ch));
                     }
                 }
 
@@ -757,7 +757,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 } /* End for */
 
                 /* Run through units in local environment if upwards transparent */
-                if ((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
+                if ((u = const_cast<unit_data *>(UNIT_IN(UNIT_IN(ch)))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
                 {
                     for (u = UNIT_CONTAINS(u); u; u = u->next)
                     {

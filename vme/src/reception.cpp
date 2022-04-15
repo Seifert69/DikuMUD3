@@ -591,7 +591,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             }
         }
 
-        UNIT_IN(pnew) = nullptr;
+        pnew->setMyContainerTo(nullptr);
         if (pnew == pstack[frame])
         {
             slog(LOG_ALL, 0, "ERROR. Loading inventory, recursive linking. Please report.");

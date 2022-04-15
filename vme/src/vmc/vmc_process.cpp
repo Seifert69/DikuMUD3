@@ -1245,7 +1245,7 @@ void init_unit(unit_data *u)
             u->setCapacity(30000);
             u->setBaseWeight(10);
             u->setWeight(10);
-            UNIT_IN(u) = nullptr;
+            u->setMyContainerTo(nullptr);
             for (i = 0; i <= MAX_EXIT; i++)
             {
                 ROOM_EXIT(u, i) = nullptr;

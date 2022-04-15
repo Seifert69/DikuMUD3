@@ -89,7 +89,7 @@
 
 #define UNIT_CONTAINS(unit) ((unit)->inside)
 
-#define UNIT_IN(unit) ((unit)->outside)
+#define UNIT_IN(unit) ((unit)->getMyContainer())
 
 #define UNIT_AFFECTED(unit) ((unit)->getUnitAffectedType())
 

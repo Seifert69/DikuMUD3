@@ -767,18 +767,18 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
 
     if (IS_CHAR(unit))
     {
-        UNIT_IN(unit)->decrementNumberOfCharactersInsideUnit();
+        unit->getMyContainer()->decrementNumberOfCharactersInsideUnit();
     }
     /*fuck*/
-    UNIT_IN(unit)->reduceWeightBy(UNIT_WEIGHT(unit));
+    unit->getMyContainer()->reduceWeightBy(UNIT_WEIGHT(unit));
 
     if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
     {
-        UNIT_CONTAINS(UNIT_IN(unit)) = unit->next;
+        unit->getMyContainer()->inside = unit->next;
     }
     else
     {
-        for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit; u = u->next)
+        for (u = unit->getMyContainer()->inside; u->next != unit; u = u->next)
         {
             ;
         }
@@ -787,17 +787,18 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
 
     unit->next = nullptr;
 
-    if ((UNIT_IN(unit) = UNIT_IN(UNIT_IN(unit))))
+    unit->setMyContainerTo(unit->getMyContainer()->getMyContainer());
+    if (unit->getMyContainer())
     {
-        unit->next = UNIT_CONTAINS(UNIT_IN(unit));
-        UNIT_CONTAINS(UNIT_IN(unit)) = unit;
+        unit->next = unit->getMyContainer()->inside;
+        unit->getMyContainer()->inside = unit;
         if (IS_CHAR(unit))
         {
-            UNIT_IN(unit)->incrementNumberOfCharactersInsideUnit();
+            unit->getMyContainer()->incrementNumberOfCharactersInsideUnit();
         }
     }
 
-    if (pile && IS_MONEY(unit) && UNIT_IN(unit))
+    if (pile && IS_MONEY(unit) && unit->getMyContainer())
     {
         pile_money(unit);
     }
@@ -874,7 +875,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         }
     }
 
-    UNIT_IN(unit) = to;
+    unit->setMyContainerTo(to);
     unit->next = UNIT_CONTAINS(to);
     UNIT_CONTAINS(to) = unit;
 

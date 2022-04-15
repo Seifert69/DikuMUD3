@@ -754,7 +754,7 @@ void move_dir(unit_data *ch, int dir)
         act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         if (UNIT_IN(UNIT_IN(ch)))
         {
-            UNIT_IN(ch) = UNIT_IN(UNIT_IN(ch));
+            ch->setMyContainerTo(UNIT_IN(UNIT_IN(ch)));
         }
         command_interpreter(ch, "look");
         act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);

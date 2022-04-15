@@ -278,7 +278,7 @@ oroom_field : MOVEMENT PNUM
     }
     | VIN reference
     {
-        UNIT_IN(cur) = (struct unit_data *)$2;
+        cur->setMyContainerTo(reinterpret_cast<unit_data*>($2));
     }
     | SPELL number
     {

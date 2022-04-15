@@ -97,6 +97,10 @@ public:
     char **getKeyPtr() { return &key; }
     void setKey(char *value) { key = value; }
 
+    unit_data *getMyContainer() { return outside; }
+    const unit_data *getMyContainer() const { return outside; }
+    void setMyContainerTo(unit_data *value) { outside = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -246,9 +250,8 @@ private:
     unit_affected_type *affected{nullptr};      //
     file_index_type *fi{nullptr};               // Unit file-index
     char *key{nullptr};                         // Pointer to fileindex to Unit which is the key
+    unit_data *outside{nullptr};                // Pointer out of the unit, ie. from an object out to the char carrying it
 public:
-    unit_data *outside; /* Pointer out of the unit, ei. from an object   */
-    /* out to the char carrying it                   */
     unit_data *inside; /* Linked list of chars,rooms & objs             */
 
     unit_data /* For next unit in 'inside' linked list         */

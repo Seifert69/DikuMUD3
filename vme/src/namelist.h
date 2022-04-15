@@ -47,7 +47,9 @@ public:
     const int IsNameIdx(const char *name);
     const int IsNameRawIdx(const char *name);
     const char *IsNameRaw(const char *name);
+    const char *IsNameRaw(const char *name) const;
     const char *IsNameRawAbbrev(const char *name);
+    const char *IsNameRawAbbrev(const char *name) const;
     const char *IsName(const char *name);
 
     const char *StrStrRaw(const char *name);

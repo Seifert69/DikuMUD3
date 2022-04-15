@@ -815,7 +815,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         {
             if (UNIT_TYPE(u) == UNIT_ST_ROOM)
             {
-                UNIT_IN(u) = (unit_data *)tmpfi; /* To be normalized! */
+                u->setMyContainerTo(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
             }
             else
             {
@@ -825,7 +825,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    UNIT_IN(u) = tmpfi->Front();
+                    u->setMyContainerTo(tmpfi->Front());
                 }
             }
         }
@@ -1206,11 +1206,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
                 if ((fi = find_file_index(zone, name)))
                 {
-                    UNIT_IN(u) = (unit_data *)fi; /* A file index */
+                    u->setMyContainerTo(reinterpret_cast<unit_data *>(fi)); // A file index
                 }
                 else
                 {
-                    UNIT_IN(u) = nullptr;
+                    u->setMyContainerTo(nullptr);
                 }
             }
 
@@ -1487,7 +1487,7 @@ void normalize_world()
 
                 assert(!fi->Empty());
 
-                UNIT_IN(u) = fi->Front();
+                u->setMyContainerTo(fi->Front());
             }
 
             /* Change directions into unit_data points from file_index_type */
@@ -1513,7 +1513,7 @@ void normalize_world()
         if (IS_ROOM(u) && UNIT_IN(u))
         {
             tmpu = UNIT_IN(u);
-            UNIT_IN(u) = nullptr;
+            u->setMyContainerTo(nullptr);
 
             if (unit_recursive(u, tmpu))
             {
