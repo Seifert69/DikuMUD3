@@ -229,12 +229,11 @@ public:
     std::string json();
 
 private:
-    cNamelist names;          // Name Keyword list for get, enter, etc.
-    unit_fptr *func{nullptr}; // Function pointer type
+    cNamelist names;                            // Name Keyword list for get, enter, etc.
+    unit_fptr *func{nullptr};                   // Function pointer type
+    unit_dil_affected_type *dilaffect{nullptr}; //
 
 public:
-    unit_dil_affected_type *dilaffect;
-
     unit_affected_type *affected;
 
     file_index_type *fi; /* Unit file-index                               */
