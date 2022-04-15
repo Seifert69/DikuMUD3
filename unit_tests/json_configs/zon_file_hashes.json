@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "8cbaa2f22692bb137933ab83eebb4cbbc24065f6eaa81427428238999f84a48b76164188d2b1feb1077d3d905f9b5c4d86c4f2f981a2ed2440651cca206c84dd"
+                "sha512": "d5736697afbcc8ee13ef1bba44a754b937cec34d689f5a93c7424d15f8b76b74301965a168beb4e55e5f86d56a5fc1328dfee9851c880f9768b8edbfc46c7144"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "a80e63e9fcf8c74daec09bd0900615a9e18fcd455e7eb199f0eea439f22dca9a3c9e574e10ea1e094acf9225f502060154808a44f983c144cf25ab04e401d59f"
+                    "sha512": "4adf6c17c370997133a1db2590e87c7119327285b35aae0fc863428e6aa9e798beea45780e2d9fa519e2cb6fa8e0c0681146cfea09d826be504c0ed2443d2fb6"
                 },
                 {
                     "filename": "basis.reset",
@@ -813,12 +813,12 @@
         {
             "source_file": {
                 "filename": "skills.zon",
-                "sha512": "4f67a7b11b7bb9a782d4342159ee4909ef0e39928540a327960b65180b8c1254b951b63b3f6a54b3967fc4cbb4aaa65ef13be45baf1d6a07f128494cd7ff6397"
+                "sha512": "c609f8938b906b95cb29bf29bdf43df1588c35f5a0890338cd8bb3e360a354374c6e283d6386b3a63d9127012a406cde7750707977f12900600e26b4cdd38a67"
             },
             "output": [
                 {
                     "filename": "skills.data",
-                    "sha512": "dcb8da80592f36caefae81bdce785fb71d524e8f6135a07a01ed65bb7e21b6c43a650833da0c5316d6258eb33deb158d5accaeadab11fa8fcbe54bc03d555954"
+                    "sha512": "0322f5b08b109e37b0f6de8454b0f9555a220dcbaf85c931005696938b7c6235cb6e03272e90d40626978a73221755ff2e1afc54dadb6386dcf7f6335b182dda"
                 },
                 {
                     "filename": "skills.reset",
