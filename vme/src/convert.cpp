@@ -70,7 +70,7 @@ void free_inventory(unit_data *u)
 
     for (tmp = u; tmp; tmp = nxt)
     {
-        nxt = tmp->next;
+        nxt = tmp->getNext();
         convert_free_unit(tmp);
     }
 }
@@ -130,7 +130,7 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
 
     convert_inventory(UNIT_CONTAINS(u), pc, bList);
 
-    convert_inventory(u->next, pc, bList);
+    convert_inventory(u->getNext(), pc, bList);
 
     bla = convert_item(u, pc, bList);
 

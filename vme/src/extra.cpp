@@ -438,7 +438,7 @@ extra_descr_data *char_unit_find_extra(unit_data *ch, unit_data **target, char *
         }
     }
 
-    for (; list; list = list->next)
+    for (; list; list = list->getNext())
     {
         if (CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
         {

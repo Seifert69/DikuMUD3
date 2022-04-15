@@ -235,8 +235,8 @@ rooms   : /* naught */
     {
         if (cur)
         {
-            cur->next = mcreate_unit(UNIT_ST_ROOM);
-            cur = cur->next;
+            cur->setNext(mcreate_unit(UNIT_ST_ROOM));
+            cur = cur->getNext();
         }
         else
         {
@@ -385,8 +385,8 @@ objects : /* naught */
     {
         if (cur)
         {
-            cur->next = mcreate_unit(UNIT_ST_OBJ);
-            cur = cur->next;
+            cur->setNext(mcreate_unit(UNIT_ST_OBJ));
+            cur = cur->getNext();
         }
         else
         {
@@ -450,8 +450,8 @@ mobiles : /* naught */
     {
         if (cur)
         {
-            cur->next = mcreate_unit(UNIT_ST_NPC);
-            cur = cur->next;
+            cur->setNext(mcreate_unit(UNIT_ST_NPC));
+            cur = cur->getNext();
         }
         else
         {

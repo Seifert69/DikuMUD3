@@ -61,7 +61,7 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
 {
     unit_fptr *fptr = nullptr;
     unit_data *u = nullptr;
-    for (u = unt; u; u = u->next)
+    for (u = unt; u; u = u->getNext())
     {
         DeactivateDil(u, aprg);
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
@@ -87,7 +87,7 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
 {
     unit_fptr *fptr = nullptr;
     unit_data *u = nullptr;
-    for (u = unt; u; u = u->next)
+    for (u = unt; u; u = u->getNext())
     {
         ActivateDil(u);
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())

@@ -563,17 +563,20 @@ void dilfe_fld(dilprg *p)
                     }
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = ((unit_data *)v1->val.ptr)->next;
+                        v->val.ptr = unit->getNext();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 case DILV_ZP:
                     if (v1->val.ptr)
                     {

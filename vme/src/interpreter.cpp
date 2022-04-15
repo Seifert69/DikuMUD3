@@ -727,7 +727,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
         for (u = UNIT_CONTAINS(ch); u; u = next)
         {
-            next = u->next; /* Next dude trick */
+            next = u->getNext(); /* Next dude trick */
             if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
             {
                 return SFR_BLOCK;
@@ -756,7 +756,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     /* special in inventory or equipment? */
     for (u = UNIT_CONTAINS(ch); u; u = next)
     {
-        next = u->next; /* Next dude trick */
+        next = u->getNext(); /* Next dude trick */
         if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
         {
             return SFR_BLOCK;
@@ -768,7 +768,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         /* special in room present? */
         for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = next)
         {
-            next = u->next; /* Next dude trick */
+            next = u->getNext(); /* Next dude trick */
 
             if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
             {
@@ -781,7 +781,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                 {
                     for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                     {
-                        nextt = uu->next; /* next dude double trick */
+                        nextt = uu->getNext(); /* next dude double trick */
                         if (UNIT_FUNC(uu) && (unit_function_scan(uu, sarg)) != SFR_SHARE)
                         {
                             return SFR_BLOCK;
@@ -793,7 +793,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                     /* in equipment? */
                     for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                     {
-                        nextt = uu->next; /* Next dude trick */
+                        nextt = uu->getNext(); /* Next dude trick */
                         if (UNIT_FUNC(uu) && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
                         {
                             return SFR_BLOCK;
@@ -819,7 +819,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
             {
                 for (u = UNIT_CONTAINS(UNIT_IN(UNIT_IN(ch))); u; u = next)
                 {
-                    next = u->next; /* Next dude trick */
+                    next = u->getNext(); /* Next dude trick */
 
                     /* No self activation except when dying... */
                     if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
@@ -838,7 +838,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                         {
                             for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                             {
-                                nextt = uu->next; /* next dude double trick */
+                                nextt = uu->getNext(); /* next dude double trick */
                                 if (UNIT_FUNC(uu) && (unit_function_scan(uu, sarg)) != SFR_SHARE)
                                 {
                                     return SFR_BLOCK;
@@ -850,7 +850,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                             /* in equipment? */
                             for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                             {
-                                nextt = uu->next; /* Next dude trick */
+                                nextt = uu->getNext(); /* Next dude trick */
                                 if (UNIT_FUNC(uu) && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
                                 {
                                     return SFR_BLOCK;

@@ -1168,7 +1168,7 @@ void init_unit(unit_data *u)
 {
     int i = 0;
 
-    u->next = nullptr;
+    u->setNext(nullptr);
 
     u->setKey(nullptr);
     u->setAllManipulateFlags(0);

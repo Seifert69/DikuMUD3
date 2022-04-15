@@ -611,7 +611,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     }
 
     /* same unit or to person */
-    for (; to; to = to->next)
+    for (; to; to = to->getNext())
     {
         if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
         {
@@ -625,7 +625,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
         }
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
         {
-            for (u = UNIT_CONTAINS(to); u; u = u->next)
+            for (u = UNIT_CONTAINS(to); u; u = u->getNext())
             {
                 if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                 {
@@ -639,7 +639,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     /* other units outside transparent unit */
     if (UNIT_IN(arg1.m_u) && (to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
     {
-        for (to = UNIT_CONTAINS(to); to; to = to->next)
+        for (to = UNIT_CONTAINS(to); to; to = to->getNext())
         {
             if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
             {
@@ -649,7 +649,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
             {
-                for (u = UNIT_CONTAINS(to); u; u = u->next)
+                for (u = UNIT_CONTAINS(to); u; u = u->getNext())
                 {
                     if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                     {
@@ -696,7 +696,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     }
 
     /* same unit or to person */
-    for (; to; to = to->next)
+    for (; to; to = to->getNext())
     {
         if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
         {
@@ -723,7 +723,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
 
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
         {
-            for (u = UNIT_CONTAINS(to); u; u = u->next)
+            for (u = UNIT_CONTAINS(to); u; u = u->getNext())
             {
                 if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                 {
@@ -744,7 +744,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     /* other units outside transparent unit */
     if ((to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
     {
-        for (to = UNIT_CONTAINS(to); to; to = to->next)
+        for (to = UNIT_CONTAINS(to); to; to = to->getNext())
         {
             if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
             {
@@ -760,7 +760,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
             {
-                for (u = UNIT_CONTAINS(to); u; u = u->next)
+                for (u = UNIT_CONTAINS(to); u; u = u->getNext())
                 {
                     if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                     {

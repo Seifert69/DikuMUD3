@@ -517,7 +517,7 @@ void trans_set(unit_data *u)
     unit_data *u2 = nullptr;
     int sum = 0;
 
-    for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->next)
+    for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->getNext())
     {
         sum += UNIT_BRIGHT(u2);
     }
@@ -549,7 +549,7 @@ unit_data *equipment(unit_data *ch, ubit8 pos)
 
     assert(IS_CHAR(ch));
 
-    for (u = UNIT_CONTAINS(ch); u; u = u->next)
+    for (u = UNIT_CONTAINS(ch); u; u = u->getNext())
     {
         if (IS_OBJ(u) && pos == OBJ_EQP_POS(u))
         {
@@ -774,23 +774,23 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
 
     if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
     {
-        unit->getMyContainer()->setContainedUnit(unit->next);
+        unit->getMyContainer()->setContainedUnit(unit->getNext());
     }
     else
     {
-        for (u = unit->getMyContainer()->getContainedUnits(); u->next != unit; u = u->next)
+        for (u = unit->getMyContainer()->getContainedUnits(); u->getNext() != unit; u = u->getNext())
         {
             ;
         }
-        u->next = unit->next;
+        u->setNext(unit->getNext());
     }
 
-    unit->next = nullptr;
+    unit->setNext(nullptr);
 
     unit->setMyContainerTo(unit->getMyContainer()->getMyContainer());
     if (unit->getMyContainer())
     {
-        unit->next = unit->getMyContainer()->getContainedUnits();
+        unit->setNext(unit->getMyContainer()->getContainedUnits());
         unit->getMyContainer()->setContainedUnit(unit);
         if (IS_CHAR(unit))
         {
@@ -863,20 +863,20 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         }
         if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
         {
-            UNIT_IN(unit)->setContainedUnit(unit->next);
+            UNIT_IN(unit)->setContainedUnit(unit->getNext());
         }
         else
         {
-            for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit; u = u->next)
+            for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->getNext() != unit; u = u->getNext())
             {
                 ;
             }
-            u->next = unit->next;
+            u->setNext(unit->getNext());
         }
     }
 
     unit->setMyContainerTo(to);
-    unit->next = UNIT_CONTAINS(to);
+    unit->setNext(UNIT_CONTAINS(to));
     to->setContainedUnit(unit);
 
     if (IS_CHAR(unit))

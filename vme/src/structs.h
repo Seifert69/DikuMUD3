@@ -105,6 +105,10 @@ public:
     unit_data *getContainedUnits() { return inside; }
     void setContainedUnit(unit_data *value) { inside = value; }
 
+    const unit_data *getNext() const { return next; }
+    unit_data *getNext() { return next; }
+    void setNext(unit_data *value) { next = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -256,10 +260,8 @@ private:
     char *key{nullptr};                         // Pointer to fileindex to Unit which is the key
     unit_data *outside{nullptr};                // Pointer out of the unit, ie. from an object out to the char carrying it
     unit_data *inside{nullptr};                 // Linked list of chars,rooms & objs
+    unit_data *next{nullptr};                   // For next unit in 'inside' linked list
 public:
-    unit_data /* For next unit in 'inside' linked list         */
-        *next;
-
     unit_data /* global l-list of objects, chars & rooms       */
         *gnext,
         *gprevious;

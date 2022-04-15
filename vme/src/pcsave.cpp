@@ -285,7 +285,7 @@ void save_player_file(unit_data *pc)
             OBJ_EQP_POS(tmp_u) = tmp_i;
         }
         unit_from_unit(tmp_u);
-        tmp_u->next = list;
+        tmp_u->setNext(list);
         list = tmp_u;
     }
 
@@ -299,8 +299,8 @@ void save_player_file(unit_data *pc)
     /* Restore all inventory and equipment */
     while ((tmp_u = list))
     {
-        list = list->next;
-        tmp_u->next = nullptr;
+        list = list->getNext();
+        tmp_u->setNext(nullptr);
 
         unit_to_unit(tmp_u, pc);
 

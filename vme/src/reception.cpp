@@ -82,7 +82,7 @@ static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, v
         sum += subtract_recurse(ch, UNIT_CONTAINS(item), seconds, fptr);
     }
 
-    sum += subtract_recurse(ch, item->next, seconds, fptr);
+    sum += subtract_recurse(ch, item->getNext(), seconds, fptr);
 
     if (IS_OBJ(item) && !UNIT_MINV(item))
     {
@@ -335,7 +335,7 @@ void send_saves(unit_data *parent, unit_data *unit)
     }
 
     send_saves(parent, UNIT_CONTAINS(unit));
-    send_saves(parent, unit->next);
+    send_saves(parent, unit->getNext());
 
     if ((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
     {

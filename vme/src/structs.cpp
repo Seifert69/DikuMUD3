@@ -187,7 +187,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_EQUIP))
     {
-        for (u = UNIT_CONTAINS(ref); u; u = u->next)
+        for (u = UNIT_CONTAINS(ref); u; u = u->getNext())
         {
             if ((UNIT_FILE_INDEX(u) == this) && UNIT_IS_EQUIPPED(u))
             {
@@ -198,7 +198,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_INVEN))
     {
-        for (u = UNIT_CONTAINS(ref); u; u = u->next)
+        for (u = UNIT_CONTAINS(ref); u; u = u->getNext())
         {
             if ((UNIT_FILE_INDEX(u) == this) && !UNIT_IS_EQUIPPED(u))
             {
@@ -215,7 +215,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
 
         /* Run through units in local environment */
-        for (u = UNIT_CONTAINS(UNIT_IN(ref)); u; u = u->next)
+        for (u = UNIT_CONTAINS(UNIT_IN(ref)); u; u = u->getNext())
         {
             if (UNIT_FILE_INDEX(u) == this)
             {
@@ -225,7 +225,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             /* check tranparancy */
             if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
             {
-                for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                 {
                     if (UNIT_FILE_INDEX(uu) == this)
                     {
@@ -238,7 +238,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         /* Run through units in local environment if upwards transparent */
         if ((u = UNIT_IN(UNIT_IN(ref))) && UNIT_IS_TRANSPARENT(UNIT_IN(ref)))
         {
-            for (u = UNIT_CONTAINS(u); u; u = u->next)
+            for (u = UNIT_CONTAINS(u); u; u = u->getNext())
             {
                 if (u != UNIT_IN(ref))
                 {
@@ -250,7 +250,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
                     /* check down into transparent unit */
                     if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
                     {
-                        for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                        for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                         {
                             if (this == UNIT_FILE_INDEX(uu))
                             {

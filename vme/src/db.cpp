@@ -1855,7 +1855,7 @@ void db_shutdown()
         stop_affect(tmpu);
         //      unit_from_unit(tmpu);
         remove_from_unit_list(tmpu);
-        tmpu->next = nullptr;
+        tmpu->setNext(nullptr);
         delete tmpu;
 
         clear_destructed();

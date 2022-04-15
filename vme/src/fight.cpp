@@ -1292,7 +1292,7 @@ void damage(unit_data *ch,
         {
             if (CHAR_LAST_ATTACKER(victim))
             {
-                for (sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->next)
+                for (sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->getNext())
                 {
                     if (CHAR_LAST_ATTACKER(victim) && sch->getNames().Name())
                     {

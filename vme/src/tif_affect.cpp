@@ -92,7 +92,7 @@ void tif_fear_check(unit_affected_type *af, unit_data *unit)
     else
     {
         /* Find someone else */
-        for (ch = UNIT_CONTAINS(UNIT_IN(unit)); ch; ch = ch->next)
+        for (ch = UNIT_CONTAINS(UNIT_IN(unit)); ch; ch = ch->getNext())
         {
             if (ch != unit && IS_CHAR(ch))
             {
