@@ -9283,7 +9283,7 @@ code
       }
    if ("$fashioning" in self.extra)
    {act("You are busy making a weapon and decide not to start "
-   +"another project until one is finnished!",
+   +"another project until this one is finished!",
     A_ALWAYS, self, null, null, TO_CHAR);
     quit;
    }
@@ -9292,7 +9292,7 @@ code
 
 /*if (dilfind("fashion_weapon@skills", self))
    {act("You are busy making a weapon and decide not to start "
-   +"another project until one is finnished!",
+   +"another project until this one is finished!",
     A_ALWAYS, self, null, null, TO_CHAR);
     quit;
    }
