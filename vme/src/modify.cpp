@@ -815,7 +815,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 12: /* "key" */
             argument = str_next_word(argument, strarg);
-            UNIT_KEY(unt) = str_dup(strarg);
+            unt->setKey(str_dup(strarg));
             return;
 
         case 13: /* "alignment" */

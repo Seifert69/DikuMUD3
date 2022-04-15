@@ -93,6 +93,10 @@ public:
     const file_index_type *getFileIndex() const { return fi; }
     void setFileIndex(file_index_type *value) { fi = value; }
 
+    const char *getKey() const { return key; }
+    char **getKeyPtr() { return &key; }
+    void setKey(char *value) { key = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -241,9 +245,8 @@ private:
     unit_dil_affected_type *dilaffect{nullptr}; //
     unit_affected_type *affected{nullptr};      //
     file_index_type *fi{nullptr};               // Unit file-index
+    char *key{nullptr};                         // Pointer to fileindex to Unit which is the key
 public:
-    char *key; /* Pointer to fileindex to Unit which is the key */
-
     unit_data *outside; /* Pointer out of the unit, ei. from an object   */
     /* out to the char carrying it                   */
     unit_data *inside; /* Linked list of chars,rooms & objs             */

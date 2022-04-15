@@ -1170,7 +1170,7 @@ void init_unit(unit_data *u)
 
     u->next = nullptr;
 
-    UNIT_KEY(u) = nullptr;
+    u->setKey(nullptr);
     u->setAllManipulateFlags(0);
     u->setAllManipulateFlags(0);
     u->setBaseWeight(1);

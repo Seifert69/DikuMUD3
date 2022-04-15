@@ -766,11 +766,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     if (!str_is_empty(name))
     {
         snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
-        UNIT_KEY(u) = str_dup(tmpbuf);
+        u->setKey(str_dup(tmpbuf));
     }
     else
     {
-        UNIT_KEY(u) = nullptr;
+        u->setKey(nullptr); // TODO this is probably a memory leak if key has been set with str_dup before
     }
 
     u->readManipulateFrom(*pBuf, unit_version, g_nCorrupt);

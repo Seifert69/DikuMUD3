@@ -95,7 +95,7 @@
 
 #define UNIT_NAME(unit) (UNIT_NAMES(unit).Name())
 
-#define UNIT_KEY(unit) ((unit)->key)
+#define UNIT_KEY(unit) ((unit)->getKey())
 
 #define UNIT_OPEN_FLAGS(unit) ((unit)->getOpenFlags())
 
