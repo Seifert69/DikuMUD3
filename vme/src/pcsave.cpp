@@ -38,7 +38,7 @@ void assign_player_file_index(unit_data *pc)
 
     if (it != z->cgetFileIndexMap().end())
     {
-        UNIT_FILE_INDEX(pc) = it->second;
+        pc->setFileIndex(it->second);
     }
     else
     {
@@ -50,7 +50,7 @@ void assign_player_file_index(unit_data *pc)
 
         z->getFileIndexMap().insert(std::make_pair(fi->getName(), fi));
 
-        UNIT_FILE_INDEX(pc) = fi;
+        pc->setFileIndex(fi);
     }
 }
 

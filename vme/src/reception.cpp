@@ -546,7 +546,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                     break;
                 }
 
-                if (pnew->fi == nullptr)
+                if (pnew->getFileIndex() == nullptr)
                 {
                     pnew->set_fi(g_slime_fi);
                 }

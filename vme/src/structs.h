@@ -89,6 +89,10 @@ public:
     unit_affected_type *getUnitAffectedType() { return affected; }
     void setUnitAffectedType(unit_affected_type *value) { affected = value; }
 
+    file_index_type *getFileIndex() { return fi; }
+    const file_index_type *getFileIndex() const { return fi; }
+    void setFileIndex(file_index_type *value) { fi = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -236,9 +240,8 @@ private:
     unit_fptr *func{nullptr};                   // Function pointer type
     unit_dil_affected_type *dilaffect{nullptr}; //
     unit_affected_type *affected{nullptr};      //
+    file_index_type *fi{nullptr};               // Unit file-index
 public:
-    file_index_type *fi; /* Unit file-index                               */
-
     char *key; /* Pointer to fileindex to Unit which is the key */
 
     unit_data *outside; /* Pointer out of the unit, ei. from an object   */

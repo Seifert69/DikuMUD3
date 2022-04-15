@@ -65,7 +65,7 @@
 
 #define UNIT_FUNC(unit) ((unit)->getFunctionPointer())
 
-#define UNIT_FILE_INDEX(unit) ((unit)->fi)
+#define UNIT_FILE_INDEX(unit) ((unit)->getFileIndex())
 
 #define UNIT_MANIPULATE(unit) ((unit)->getManipulate())
 
@@ -144,7 +144,7 @@
 #define UNIT_IS_TRANSPARENT(u)                                                                                                             \
     (!IS_SET(UNIT_FLAGS(u), UNIT_FL_BURIED) && IS_SET(UNIT_FLAGS(u), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED))
 
-#define UNIT_FI_ZONE(unit) ((unit)->fi->getZone())
+#define UNIT_FI_ZONE(unit) ((unit)->getFileIndex()->getZone())
 
 #define UNIT_FI_ZONENAME(unit) (UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE")
 
