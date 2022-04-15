@@ -352,7 +352,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
     /* Equipment can only be objects. */
     if (IS_SET(bitvectorm, FIND_UNIT_EQUIP))
     {
-        for (u = UNIT_CONTAINS(ch); u; u = u->next)
+        for (u = const_cast<unit_data*>(UNIT_CONTAINS(ch)); u; u = u->next)
         {
             if (IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                 (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && (ct - c >= best_len))
@@ -373,7 +373,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
 
     if (IS_SET(bitvectorm, FIND_UNIT_INVEN))
     {
-        for (u = UNIT_CONTAINS(ch); u; u = u->next)
+        for (u = const_cast<unit_data*>(UNIT_CONTAINS(ch)); u; u = u->next)
         {
             if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                 !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
@@ -427,7 +427,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
             }
 
             /* Run through units in local environment */
-            for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
+            for (u = const_cast<unit_data*>(UNIT_CONTAINS(UNIT_IN(ch))); u; u = u->next)
             {
                 if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                 {
@@ -638,7 +638,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         /* Equipment can only be objects. */
         if (IS_SET(bitvectorm, FIND_UNIT_EQUIP))
         {
-            for (u = UNIT_CONTAINS(ch); u; u = u->next)
+            for (u = const_cast<unit_data *>(UNIT_CONTAINS(ch)); u; u = u->next)
             {
                 if (IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                     (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
@@ -659,7 +659,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
         if (IS_SET(bitvectorm, FIND_UNIT_INVEN))
         {
-            for (u = UNIT_CONTAINS(ch); u; u = u->next)
+            for (u = const_cast<unit_data *>(UNIT_CONTAINS(ch)); u; u = u->next)
             {
                 if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                     !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
@@ -713,7 +713,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 }
 
                 /* Run through units in local environment */
-                for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
+                for (u = const_cast<unit_data *>(UNIT_CONTAINS(UNIT_IN(ch))); u; u = u->next)
                 {
                     if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                     {

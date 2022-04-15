@@ -101,6 +101,10 @@ public:
     const unit_data *getMyContainer() const { return outside; }
     void setMyContainerTo(unit_data *value) { outside = value; }
 
+    const unit_data *getContainedUnits() const { return inside; }
+    unit_data *getContainedUnits() { return inside; }
+    void setContainedUnit(unit_data *value) { inside = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -251,9 +255,8 @@ private:
     file_index_type *fi{nullptr};               // Unit file-index
     char *key{nullptr};                         // Pointer to fileindex to Unit which is the key
     unit_data *outside{nullptr};                // Pointer out of the unit, ie. from an object out to the char carrying it
+    unit_data *inside{nullptr};                 // Linked list of chars,rooms & objs
 public:
-    unit_data *inside; /* Linked list of chars,rooms & objs             */
-
     unit_data /* For next unit in 'inside' linked list         */
         *next;
 

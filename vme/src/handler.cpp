@@ -774,11 +774,11 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
 
     if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
     {
-        unit->getMyContainer()->inside = unit->next;
+        unit->getMyContainer()->setContainedUnit(unit->next);
     }
     else
     {
-        for (u = unit->getMyContainer()->inside; u->next != unit; u = u->next)
+        for (u = unit->getMyContainer()->getContainedUnits(); u->next != unit; u = u->next)
         {
             ;
         }
@@ -790,8 +790,8 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     unit->setMyContainerTo(unit->getMyContainer()->getMyContainer());
     if (unit->getMyContainer())
     {
-        unit->next = unit->getMyContainer()->inside;
-        unit->getMyContainer()->inside = unit;
+        unit->next = unit->getMyContainer()->getContainedUnits();
+        unit->getMyContainer()->setContainedUnit(unit);
         if (IS_CHAR(unit))
         {
             unit->getMyContainer()->incrementNumberOfCharactersInsideUnit();
@@ -863,7 +863,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         }
         if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
         {
-            UNIT_CONTAINS(UNIT_IN(unit)) = unit->next;
+            UNIT_IN(unit)->setContainedUnit(unit->next);
         }
         else
         {
@@ -877,7 +877,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
 
     unit->setMyContainerTo(to);
     unit->next = UNIT_CONTAINS(to);
-    UNIT_CONTAINS(to) = unit;
+    to->setContainedUnit(unit);
 
     if (IS_CHAR(unit))
     {

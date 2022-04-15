@@ -434,7 +434,7 @@ extra_descr_data *char_unit_find_extra(unit_data *ch, unit_data **target, char *
         }
         else
         {
-            list = list->inside;
+            list = list->getContainedUnits();
         }
     }
 

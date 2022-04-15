@@ -428,7 +428,7 @@ void clist()
                         shall_exclude(UNIT_NAME(pc));
                         // shall_delete(pc);
 
-                        UNIT_CONTAINS(void_char) = nullptr;
+                        void_char->setContainedUnit(nullptr);
                         /* load_contents(temp, void_char);
 
                         if (UNIT_CONTAINS(void_char))
@@ -703,7 +703,7 @@ void cleanup()
 
                         std::cout.flush();
 
-                        UNIT_CONTAINS(void_char) = nullptr;
+                        void_char->setContainedUnit(nullptr);
                         load_contents(temp, void_char);
                         if (UNIT_CONTAINS(void_char))
                         {

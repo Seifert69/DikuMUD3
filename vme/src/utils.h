@@ -87,7 +87,7 @@
 
 #define UNIT_CHARS(unit) ((unit)->getNumberOfCharactersInsideUnit())
 
-#define UNIT_CONTAINS(unit) ((unit)->inside)
+#define UNIT_CONTAINS(unit) ((unit)->getContainedUnits())
 
 #define UNIT_IN(unit) ((unit)->getMyContainer())
 
