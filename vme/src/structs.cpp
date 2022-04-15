@@ -479,7 +479,7 @@ unit_data *unit_data::copy()
     bwrite_affect(&abuf, UNIT_AFFECTED(this), 61); // WTF 61?
     bread_affect(&abuf, u, 61);
     bwrite_func(&fbuf, UNIT_FUNC(this));
-    UNIT_FUNC(u) = bread_func(&fbuf, 61, u, TRUE); // WTF 61?
+    u->setFunctionPointer(bread_func(&fbuf, 61, u, TRUE)); // WTF 61?
 
     u->title = title;
     u->out_descr = out_descr;

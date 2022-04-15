@@ -83,6 +83,9 @@ public:
     cNamelist &getNames() { return names; }
     const cNamelist &getNames() const { return names; }
 
+    unit_fptr *getFunctionPointer() { return func; }
+    void setFunctionPointer(unit_fptr *value) { func = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -226,11 +229,10 @@ public:
     std::string json();
 
 private:
-    cNamelist names; // Name Keyword list for get, enter, etc.
-public:
-    unit_fptr /* Function pointer type                      */
-        *func;
+    cNamelist names;          // Name Keyword list for get, enter, etc.
+    unit_fptr *func{nullptr}; // Function pointer type
 
+public:
     unit_dil_affected_type *dilaffect;
 
     unit_affected_type *affected;

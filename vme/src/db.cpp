@@ -1287,7 +1287,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     g_nCorrupt += bread_affect(pBuf, u, unit_version);
 
-    UNIT_FUNC(u) = bread_func(pBuf, unit_version, u, stspec);
+    u->setFunctionPointer(bread_func(pBuf, unit_version, u, stspec));
 
     if (len != (int)(pBuf->GetReadPosition() - nStart))
     {

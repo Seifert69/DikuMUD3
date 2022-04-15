@@ -55,7 +55,7 @@ void convert_free_unit(unit_data *u)
     }
 
     UNIT_AFFECTED(u) = nullptr;
-    UNIT_FUNC(u) = nullptr;
+    u->setFunctionPointer(nullptr);
 
     unit_from_unit(u);
     remove_from_unit_list(u);

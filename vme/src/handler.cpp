@@ -243,7 +243,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     if (UNIT_FUNC(u) == nullptr)
     {
         f->setNext(UNIT_FUNC(u));
-        UNIT_FUNC(u) = f;
+        u->setFunctionPointer(f);
         return;
     }
 
@@ -251,7 +251,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     if (f->getFunctionPriority() < UNIT_FUNC(u)->getFunctionPriority())
     {
         f->setNext(UNIT_FUNC(u));
-        UNIT_FUNC(u) = f;
+        u->setFunctionPointer(f);
         return;
     }
 
@@ -344,7 +344,7 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     /* Only unlink function, do not free it! */
     if (UNIT_FUNC(u) == f)
     {
-        UNIT_FUNC(u) = f->getNext();
+        u->setFunctionPointer(f->getNext());
     }
     else
     {

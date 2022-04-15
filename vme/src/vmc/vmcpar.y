@@ -621,7 +621,7 @@ unit_field  : NAMES stringlist
 
             if (!UNIT_FUNC(cur))
             {
-                UNIT_FUNC(cur) = mcreate_func();
+                cur->setFunctionPointer(mcreate_func());
                 cur_func = UNIT_FUNC(cur);
             }
             else
@@ -646,7 +646,7 @@ unit_field  : NAMES stringlist
 
         if (!UNIT_FUNC(cur))
         {
-            UNIT_FUNC(cur) = mcreate_func();
+            cur->setFunctionPointer(mcreate_func());
             cur_func = UNIT_FUNC(cur);
         }
         else
@@ -845,7 +845,7 @@ unit_field  : NAMES stringlist
     {
         if (!UNIT_FUNC(cur))
         {
-            UNIT_FUNC(cur) = mcreate_func();
+            cur->setFunctionPointer(mcreate_func());
             cur_func = UNIT_FUNC(cur);
         }
         else

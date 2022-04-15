@@ -63,7 +63,7 @@
 
 /* ..................................................................... */
 
-#define UNIT_FUNC(unit) ((unit)->func)
+#define UNIT_FUNC(unit) ((unit)->getFunctionPointer())
 
 #define UNIT_FILE_INDEX(unit) ((unit)->fi)
 
