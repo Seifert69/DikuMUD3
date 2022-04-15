@@ -115,7 +115,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
     {
         mystr.clear();
 
-        for (i = g_unit_list; i; i = i->gnext)
+        for (i = g_unit_list; i; i = i->getGlobalNext())
         {
             if (UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
             {

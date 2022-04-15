@@ -206,7 +206,7 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
 
     if (sflags == FIND_UNIT_WORLD)
     {
-        for (u = g_unit_list; u; u = u->gnext)
+        for (u = g_unit_list; u; u = u->getGlobalNext())
         {
             if ((u != ref) && findcheck(u, pset, tflags))
             {
@@ -233,7 +233,7 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
             z = unit_zone(ref);
         }
 
-        for (u = g_unit_list; u; u = u->gnext)
+        for (u = g_unit_list; u; u = u->getGlobalNext())
         {
             if ((u != ref) && ((IS_PC(u) && unit_zone(u) == z) || (UNIT_FI_ZONE(u) == z)) && findcheck(u, pset, tflags))
             {
@@ -806,7 +806,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
         if (IS_SET(bitvectorm, FIND_UNIT_ZONE))
         {
-            for (u = g_unit_list; u; u = u->gnext)
+            for (u = g_unit_list; u; u = u->getGlobalNext())
             {
                 if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) &&
                     unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
@@ -827,7 +827,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
         if (IS_SET(bitvectorm, FIND_UNIT_WORLD))
         {
-            for (u = g_unit_list; u; u = u->gnext)
+            for (u = g_unit_list; u; u = u->getGlobalNext())
             {
                 if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
                 {

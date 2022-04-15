@@ -1476,7 +1476,7 @@ void normalize_world()
     unit_data *tmpu = nullptr;
     int i = 0;
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (IS_ROOM(u))
         {
@@ -1508,7 +1508,7 @@ void normalize_world()
         }
     }
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (IS_ROOM(u) && UNIT_IN(u))
         {

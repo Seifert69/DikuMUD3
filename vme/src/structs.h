@@ -109,6 +109,10 @@ public:
     unit_data *getNext() { return next; }
     void setNext(unit_data *value) { next = value; }
 
+    unit_data *getGlobalNext() { return gnext; }
+    const unit_data *getGlobalNext() const { return gnext; }
+    void setGlobalNext(unit_data *value) { gnext = value; }
+
     /// HERE FOR PTR
 
     ubit32 getManipulate() const { return manipulate; }
@@ -261,9 +265,9 @@ private:
     unit_data *outside{nullptr};                // Pointer out of the unit, ie. from an object out to the char carrying it
     unit_data *inside{nullptr};                 // Linked list of chars,rooms & objs
     unit_data *next{nullptr};                   // For next unit in 'inside' linked list
+    unit_data *gnext{nullptr};                  // global l-list of objects, chars & rooms
 public:
     unit_data /* global l-list of objects, chars & rooms       */
-        *gnext,
         *gprevious;
 
 private:

@@ -57,7 +57,7 @@ int ball(spec_arg *sarg)
 
         send_to_char(msg, sarg->activator);
 
-        for (u = g_unit_list; u; u = u->gnext)
+        for (u = g_unit_list; u; u = u->getGlobalNext())
         {
             if (IS_OBJ(u) && (OBJ_TYPE(u) == v1))
             {

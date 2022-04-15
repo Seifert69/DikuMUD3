@@ -57,7 +57,7 @@ void zone_update_no_in_zone()
         }
     }
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (UNIT_FILE_INDEX(u) && (unit_zone(u) == g_boot_zone))
         {

@@ -148,7 +148,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
     if (!char_is_playing(d->getCharacter())) /* In menu - extract completely */
     {
         assert(!UNIT_IN(d->cgetCharacter()));
-        assert(!d->cgetCharacter()->gnext);
+        assert(!d->cgetCharacter()->getGlobalNext());
         assert(!d->cgetCharacter()->gprevious);
 
         /* Important that we set to NULL before calling extract,

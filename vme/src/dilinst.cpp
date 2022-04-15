@@ -365,7 +365,7 @@ void dilfi_delpc(dilprg *p)
                 }
                 else
                 {
-                    for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
+                    for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
                     {
                         if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), ((char *)v1->val.ptr)))
                         {

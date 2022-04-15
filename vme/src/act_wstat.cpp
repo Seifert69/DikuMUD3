@@ -57,7 +57,7 @@ static void stat_world_count(const unit_data *ch, char *arg)
     auto msg = diku::format_to_str("The first 40 units containing at least %d units:<br/>", nMinCount);
 
     int n = 0;
-    for (unit_data *u = g_unit_list; u; u = u->gnext)
+    for (unit_data *u = g_unit_list; u; u = u->getGlobalNext())
     {
         int i = 0;
         for (unit_data *t = UNIT_CONTAINS(u); t; t = t->getNext())

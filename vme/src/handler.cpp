@@ -48,7 +48,7 @@ descriptor_data *unit_is_edited(unit_data *u)
 /* By using this, we can easily sort the list if ever needed */
 void insert_in_unit_list(unit_data *u)
 {
-    assert(u->gnext == nullptr && u->gprevious == nullptr && g_unit_list != u);
+    assert(u->getGlobalNext() == nullptr && u->gprevious == nullptr && g_unit_list != u);
 
     if (UNIT_FILE_INDEX(u))
     {
@@ -59,7 +59,7 @@ void insert_in_unit_list(unit_data *u)
 
     if (!g_unit_list)
     {
-        u->gnext = nullptr;
+        u->setGlobalNext(nullptr);
         u->gprevious = nullptr;
         g_unit_list = u;
         g_npc_head = u;
@@ -73,7 +73,7 @@ void insert_in_unit_list(unit_data *u)
         case UNIT_ST_PC:
         {
             tmp_u = g_unit_list;
-            u->gnext = tmp_u;
+            u->setGlobalNext(tmp_u);
             u->gprevious = tmp_u->gprevious;
             tmp_u->gprevious = u;
 
@@ -88,7 +88,7 @@ void insert_in_unit_list(unit_data *u)
             if (UNIT_TYPE(g_npc_head) != UNIT_ST_NPC)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->gnext)
+                for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -98,11 +98,11 @@ void insert_in_unit_list(unit_data *u)
                 tmp_u = g_npc_head;
             }
 
-            u->gnext = tmp_u;
+            u->setGlobalNext(tmp_u);
             u->gprevious = tmp_u->gprevious;
             if (tmp_u->gprevious)
             {
-                tmp_u->gprevious->gnext = u;
+                tmp_u->gprevious->setGlobalNext(u);
             }
             tmp_u->gprevious = u;
 
@@ -118,7 +118,7 @@ void insert_in_unit_list(unit_data *u)
             if (UNIT_TYPE(g_obj_head) != UNIT_ST_OBJ)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->gnext)
+                for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -128,11 +128,11 @@ void insert_in_unit_list(unit_data *u)
                 tmp_u = g_obj_head;
             }
 
-            u->gnext = tmp_u;
+            u->setGlobalNext(tmp_u);
             u->gprevious = tmp_u->gprevious;
             if (tmp_u->gprevious)
             {
-                tmp_u->gprevious->gnext = u;
+                tmp_u->gprevious->setGlobalNext(u);
             }
             tmp_u->gprevious = u;
 
@@ -148,7 +148,7 @@ void insert_in_unit_list(unit_data *u)
             if (UNIT_TYPE(g_room_head) != UNIT_ST_ROOM)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->gnext)
+                for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -158,11 +158,11 @@ void insert_in_unit_list(unit_data *u)
                 tmp_u = g_room_head;
             }
 
-            u->gnext = tmp_u;
+            u->setGlobalNext(tmp_u);
             u->gprevious = tmp_u->gprevious;
             if (tmp_u->gprevious)
             {
-                tmp_u->gprevious->gnext = u;
+                tmp_u->gprevious->setGlobalNext(u);
             }
             tmp_u->gprevious = u;
 
@@ -179,7 +179,7 @@ void insert_in_unit_list(unit_data *u)
 /* Remove a unit from the g_unit_list */
 void remove_from_unit_list(unit_data *unit)
 {
-    assert(unit->gprevious || unit->gnext || (g_unit_list == unit));
+    assert(unit->gprevious || unit->getGlobalNext() || (g_unit_list == unit));
 
     if (UNIT_FILE_INDEX(unit))
     {
@@ -188,31 +188,32 @@ void remove_from_unit_list(unit_data *unit)
 
     if (g_npc_head == unit)
     {
-        g_npc_head = unit->gnext;
+        g_npc_head = unit->getGlobalNext();
     }
     if (g_obj_head == unit)
     {
-        g_obj_head = unit->gnext;
+        g_obj_head = unit->getGlobalNext();
     }
     if (g_room_head == unit)
     {
-        g_room_head = unit->gnext;
+        g_room_head = unit->getGlobalNext();
     }
     if (g_unit_list == unit)
     {
-        g_unit_list = unit->gnext;
+        g_unit_list = unit->getGlobalNext();
     }
     else
     { /* Then this is always true 'if (unit->gprevious)'  */
-        unit->gprevious->gnext = unit->gnext;
+        unit->gprevious->setGlobalNext(unit->getGlobalNext());
     }
 
-    if (unit->gnext)
+    if (unit->getGlobalNext())
     {
-        unit->gnext->gprevious = unit->gprevious;
+        unit->getGlobalNext()->gprevious = unit->gprevious;
     }
 
-    unit->gnext = unit->gprevious = nullptr;
+    unit->setGlobalNext(nullptr);
+    unit->gprevious = nullptr;
 }
 
 unit_fptr *find_fptr(unit_data *u, ubit16 idx)

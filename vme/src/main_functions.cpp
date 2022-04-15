@@ -358,7 +358,7 @@ void check_overpopulation_event(void *p1, void *p2)
     int i = 0;
     int nUnits = 0;
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         membug_verify_class(u);
         nUnits++;
