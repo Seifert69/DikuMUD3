@@ -282,41 +282,114 @@ cNamelist *cNamelist::Duplicate()
 
     for (i = 0; i < length; i++)
     {
-        pNl->AppendName((char *)namelist[i]->c_str());
+        pNl->AppendName(namelist[i]->c_str());
     }
 
     return pNl;
 }
 
+
+// See IsNameRaw.
+// Will match non-full words, so
+//   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
+// will return " guard" because "de" matches the beginning of "deer"
+//
+const char *cNamelist::IsNameRawAbbrev(const char *name)
+{
+    ubit32 i = 0;
+    ubit32 j = 0;
+
+    if (name == nullptr)
+        return nullptr;
+
+    for (i = 0; i < length; i++)
+    {
+        for (j = 0; namelist[i]->c_str()[j]; j++)
+        {
+            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            {
+                break;
+            }
+        }
+
+        if (j > 0)
+        {
+            return name + j;
+        }
+    }
+
+    return nullptr;
+}
+
+// Find a match for 'name' in this namelist.
+// Will match full name only.
+// Case insensitive.
+// Then it will return a pointer to "Boar" because there was 
+// a match on the full word fallow.
+//
+// If name is nullptr function returns nullptr.
+// If name is empty function returns nullptr (I believe).
 const char *cNamelist::IsNameRaw(const char *name)
 {
     ubit32 i = 0;
     ubit32 j = 0;
 
+    if (name == nullptr)
+        return nullptr;
+        
     for (i = 0; i < length; i++)
     {
-        if (namelist)
+        for (j = 0; namelist[i]->c_str()[j]; j++)
         {
-            for (j = 0; namelist[i]->c_str()[j]; j++)
+            /*fuck look at thes isnameraw functions */
+            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
             {
-                /*fuck look at thes isnameraw functions */
-                if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
-                {
-                    break;
-                }
+                break;
             }
+        }
 
-            if (!namelist[i]->c_str()[j])
+        if (namelist[i]->c_str()[j] == 0)
+        {
+            if (!name[j] || isaspace(name[j]))
             {
-                if (!name[j] || isaspace(name[j]))
-                {
-                    return ((char *)name) + j;
-                }
+                return name + j;
             }
         }
     }
 
     return nullptr;
+}
+
+
+/* Returns -1 if no name matches, or 0.. for the index in the namelist */
+const int cNamelist::IsNameRawIdx(const char *name)
+{
+    ubit32 i = 0;
+    ubit32 j = 0;
+
+    if (name == nullptr)
+        return -1;
+        
+    for (i = 0; i < length; i++)
+    {
+        for (j = 0; namelist[i]->c_str()[j]; j++)
+        {
+            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            {
+                break;
+            }
+        }
+
+        if (namelist[i]->c_str()[j] == 0)
+        {
+            if (!name[j] || isaspace(name[j]))
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1;
 }
 
 const char *cNamelist::IsName(const char *name)
@@ -381,34 +454,6 @@ const char *cNamelist::StrStr(const char *name)
     {
         return nullptr;
     }
-}
-
-/* Returns -1 if no name matches, or 0.. for the index in the namelist */
-const int cNamelist::IsNameRawIdx(const char *name)
-{
-    ubit32 i = 0;
-    ubit32 j = 0;
-
-    for (i = 0; i < length; i++)
-    {
-        for (j = 0; namelist[i]->c_str()[j]; j++)
-        {
-            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
-            {
-                break;
-            }
-        }
-
-        if (!namelist[i]->c_str()[j])
-        {
-            if (!name[j] || isaspace(name[j]))
-            {
-                return i;
-            }
-        }
-    }
-
-    return -1;
 }
 
 /* As IsNameRawIdx */
