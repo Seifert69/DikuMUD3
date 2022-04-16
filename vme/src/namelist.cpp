@@ -396,6 +396,9 @@ const char *cNamelist::IsName(const char *name)
 {
     char buf[MAX_STRING_LENGTH];
 
+    if (name == nullptr)
+        return nullptr;
+
     name = skip_spaces(name);
 
     if (!name)
@@ -415,6 +418,9 @@ const char *cNamelist::StrStrRaw(const char *name)
 {
     ubit32 i = 0;
 
+    if (name == nullptr)
+        return nullptr;
+
     for (i = 0; i < length; i++)
     {
         if (namelist)
@@ -433,6 +439,9 @@ const char *cNamelist::StrStrRaw(const char *name)
 const char *cNamelist::StrStr(const char *name)
 {
     char buf[MAX_STRING_LENGTH];
+
+    if (name == nullptr)
+        return nullptr;
 
     name = skip_spaces(name);
 
