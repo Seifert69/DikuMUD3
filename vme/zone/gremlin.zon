@@ -442,19 +442,28 @@ var
   pc: unitptr;
   exdp: extraptr;
   i : integer;
+  pcname : string;
+  words : stringlist;
+  s : string;
 
 code
 {
+	interrupt(SFB_MSG, TRUE, check_msg);
 	heartbeat:= PULSE_SEC*3;
 
 :start:
    unsecure(pc);
-	wait(SFB_CMD|SFB_MSG,(activator.type == UNIT_ST_PC) and (not (BOLDIN_COMPLETE in activator.quests)));
+	wait(SFB_CMD, TRUE);
+	pc := activator;
 
-   if (not (BOLDIN_ONGOING in activator.quests))
+:msgskipin:
+	if (pc.type != UNIT_ST_PC)
+      goto start;
+	if (BOLDIN_COMPLETE in pc.quests)
+	   goto start;
+   if (not (BOLDIN_ONGOING in pc.quests))
       goto boldingo;
 
-	pc := activator;
 	secure(pc, lostpc);
 
    if (not (BOLDIN_BREAD_COMPLETE in pc.quests))
@@ -489,7 +498,7 @@ code
    goto start;
 
 :boldingo: 
-	pc := qstWaitHero@quests(BOLDIN_QUEST, activator,
+	pc := qstWaitHero@quests(BOLDIN_QUEST, pc,
       {"say Ahoy there traveller!",
       "say you look to be somewhat new around here.",
       "whisper $1N I could use some help. And I'm guessing you could as well!",
@@ -661,6 +670,23 @@ code
 :lostpc:
    exec("sigh", self);
    goto start;
+
+:check_msg:
+	words := getwords(argument);
+	s := words.[0];
+	pcname := words.[1];
+
+	if (s != "quest$done")
+		goto start;
+	
+	pc := findsymbolic(pcname); // The player activator
+
+	if (pc == null) {
+		// log("PC is null...");
+		goto start;
+	}
+	goto msgskipin;
+
 }
 dilend // END boldin_request
 

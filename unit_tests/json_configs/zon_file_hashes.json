@@ -349,12 +349,12 @@
         {
             "source_file": {
                 "filename": "gremlin.zon",
-                "sha512": "907ad12bb7da6dbd94a3ac030e09739d3a96166582e5ea0b788481c45deccd1c05858a8222a835549b3cdaac8e109b4327454814592db7a313815a26cf1c3f9b"
+                "sha512": "b5a35a11f40e31bd92f8c1c7060c1a6a013e8a7585f31d6f186db602c8e496eecf72fb7ffc841c52e36cc56d7f4b642106a02e328809cdbc21d83552547ebdef"
             },
             "output": [
                 {
                     "filename": "gremlin.data",
-                    "sha512": "96dbc61c7d111ac3075fe11e906652827597a8ee112952e30ceb63b9f71d7631f10f651f5ac18352f8a19c208465b90dbe35b530a3f6ebbd0fad944424f2543a"
+                    "sha512": "42caa4781fa353d35462a294832c3a7cb8dd2aa86cd2276b6e9a620a90eef085e3075cb522bcbd33bfec11b3b08efc766376f6a78c8853d4d5501f9c09f9c968"
                 },
                 {
                     "filename": "gremlin.reset",
