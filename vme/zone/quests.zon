@@ -920,7 +920,7 @@ dilend
 // Similar to qstWaitDone but can be applied directly on the npc
 // with dilcopy()
 //
-dilbegin aware qstOnComplete(qname : string,
+dilbegin  aware fnpri(FN_PRI_MISSION+8) qstOnComplete(qname : string,
                        sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 external
    Explainer(pc : unitptr, sl : stringlist);
