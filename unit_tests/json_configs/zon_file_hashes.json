@@ -349,12 +349,12 @@
         {
             "source_file": {
                 "filename": "gremlin.zon",
-                "sha512": "b5a35a11f40e31bd92f8c1c7060c1a6a013e8a7585f31d6f186db602c8e496eecf72fb7ffc841c52e36cc56d7f4b642106a02e328809cdbc21d83552547ebdef"
+                "sha512": "f0430496b8ececed00522ddf5dc5f79aebd60d2a5cb7d1ff521bffac87f13971abc8998453d75bc9e39f8a47697f9e0adfaf35e77bc911e7c9e577557fd44653"
             },
             "output": [
                 {
                     "filename": "gremlin.data",
-                    "sha512": "42caa4781fa353d35462a294832c3a7cb8dd2aa86cd2276b6e9a620a90eef085e3075cb522bcbd33bfec11b3b08efc766376f6a78c8853d4d5501f9c09f9c968"
+                    "sha512": "5c5c264f29d9ff9a6d9d84de642575b9dca7f2bff8e994c59c9393f6d848aab522bde3ee483e2cf8ab0d24a90d540bdeee27317111382fad081b5b7bf30e5469"
                 },
                 {
                     "filename": "gremlin.reset",
@@ -701,12 +701,12 @@
         {
             "source_file": {
                 "filename": "quests.zon",
-                "sha512": "8bc21122929111ad79a83e41593c33af13bc0eccf118fe159ed0fbe3b6ffe5eb63bd05ee2d0fc26957869a0a2cd732bf28139c1b1d108cdde6724773e7097cd8"
+                "sha512": "aa39ae5e9c705f93d7c541ff8a5900a477f7997bd92dc5a85e711b09207655f28e161dc4db104e67745accc9056961c8fc67ee742fc1c4af6de2ff8ad1c47d5d"
             },
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "33fc1dd2f52ca29a5388a609b060fc0c85f3625e43e15839ec7d7c02dd9771089c10b60bc09b6525326d1c1c45e3cc90c510373e88d7ef5f80e63d14197476cd"
+                    "sha512": "0602b49efc82de74463652db9751913931f0784195a36ec8b1ce85d8b60684b9250bdf3379056a66320487c49d6a4f02308498d9849514129dec20f0630d43af"
                 },
                 {
                     "filename": "quests.reset",

@@ -470,22 +470,16 @@ code
    {
       if (not (BOLDIN_BREAD_ONGOING in pc.quests))
          goto bread;
-      else
-         goto bread_ongoing;
    }
    else if (not (BOLDIN_WATER_COMPLETE in pc.quests))
    {
       if (not (BOLDIN_WATER_ONGOING in pc.quests))
          goto water;
-      else
-         goto water_ongoing;
    }
    else if (not (BOLDIN_HANDOFF_COMPLETE in pc.quests))
    {
       if (not (BOLDIN_HANDOFF_ONGOING in pc.quests))
          goto handoff;
-      else
-         goto handoffdone;
    }
    else if (not (BOLDIN_ROGUE_COMPLETE in pc.quests))
    {
@@ -541,16 +535,6 @@ code
 	unsecure(pc);
 	goto start;
 
-:bread_ongoing:
-   pc := qstWaitDone@quests(BOLDIN_BREAD, pc, 
-         {"smile $1N",
-          "say Quest complete, brave adventurer!",
-          "whisper $1N I suspect you'll need these coins sooner or later."},
-          500, 2 * COPPER_MULT,{""});
-	unsecure(pc);
-	goto start;
-	
-
 
 :water:	
    pc  := qstWaitHero@quests(BOLDIN_WATER, pc,
@@ -588,18 +572,6 @@ code
 	goto start;
 
 
-:water_ongoing:
-   pc := qstWaitDone@quests(BOLDIN_WATER, pc, 
-         {"smile $1N",
-          "emote takes a long drink from the barrel, completely emptying it!",
-          "say I think you're going to need these sooner or later",
-          "emote quite slips you some coins and gives you an empty barrel."
-          },
-          500, 2 * COPPER_MULT, {"water_barrel@gremlin"});
-	unsecure(pc);
-	goto start;
-
-
 :handoff:
    pc  := qstWaitHero@quests(BOLDIN_HANDOFF, pc,
       {"say Now that was refreshing, $1N!",
@@ -625,15 +597,6 @@ code
 	goto start;
 
 	
-:handoffdone:
-   pc := qstWaitDone@quests(BOLDIN_HANDOFF, pc, 
-         {"say I see you have returned, $1N.",
-          "say I am truly saddened by the news that has reached me.",
-          "whisper $1N Bernhard will be deeply missed. He was the last of a long line of heroic adventurers."},
-          500, 2 * COPPER_MULT, {""});
-	unsecure(pc);
-	goto start;
-
 :rogue:
    pc  := qstWaitHero@quests(BOLDIN_ROGUE, pc,
       {
@@ -1866,6 +1829,26 @@ dilcopy qstItemsWanted@quests(BOLDIN_BREAD, {"bread@midgaard"}, {""},
 dilcopy qstItemsWanted@quests(BOLDIN_WATER, {"water_barrel@gremlin"}, {"fluidcheck@quests 24"},
 		{"say A barrel full of water. Thank you $1N."},
       "say Please bring me back my barrel filled with water.");
+
+dilcopy qstOnComplete@quests(BOLDIN_BREAD, 
+         {"smile $1N",
+          "say Quest complete, brave adventurer!",
+          "whisper $1N I suspect you'll need these coins sooner or later."},
+          500, 2 * COPPER_MULT, {""});
+
+dilcopy qstOnComplete@quests(BOLDIN_WATER,
+         {"smile $1N",
+          "emote takes a long drink from the barrel, completely emptying it!",
+          "say I think you're going to need these sooner or later",
+          "emote quite slips you some coins and gives you an empty barrel."},
+          500, 2 * COPPER_MULT, {"water_barrel@gremlin"});
+
+dilcopy qstOnComplete@quests(BOLDIN_HANDOFF,
+         {"say I see you have returned, $1N.",
+          "say I am truly saddened by the news that has reached me.",
+          "whisper $1N Bernhard will be deeply missed. He was the last of a long line of heroic adventurers."},
+          500, 2 * COPPER_MULT, {""});
+
 
 // dilcopy boldin_give@gremlin();
 
