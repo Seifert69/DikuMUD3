@@ -773,31 +773,50 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         u->setKey(nullptr);
     }
 
-    u->readManipulateFrom(*pBuf, unit_version, g_nCorrupt);
+    if (unit_version < 46)
+    {
+        u->setManipulateFlag(pBuf->ReadU16(&g_nCorrupt));
+    }
+    else
+    {
+        u->setManipulateFlag(pBuf->ReadU32(&g_nCorrupt));
+    }
 
-    u->readFlagsFrom(*pBuf, g_nCorrupt);
-    u->readBaseWeightFrom(*pBuf, g_nCorrupt);
-    u->readWeightFrom(*pBuf, g_nCorrupt);
-    u->readCapacityFrom(*pBuf, g_nCorrupt);
+    u->setAllUnitFlags(pBuf->ReadU16(&g_nCorrupt));
+    u->setBaseWeight(pBuf->ReadS16(&g_nCorrupt));
+    u->setWeight(pBuf->ReadS16(&g_nCorrupt));
+    u->setCapacity(pBuf->ReadS16(&g_nCorrupt));
 
-    u->readMaximumHitpointsFrom(*pBuf, g_nCorrupt);
-    u->readCurrentHitpointsFrom(*pBuf, unit_version, g_nCorrupt);
+    u->setMaximumHitpoints(pBuf->ReadS32(&g_nCorrupt));
+    u->setCurrentHitpoints(pBuf->ReadS32(&g_nCorrupt));
 
-    u->readAlignmentFrom(*pBuf, g_nCorrupt);
+    if (unit_version <= 54)
+    {
+        if (UNIT_MAX_HIT(u) <= 0)
+        {
+            u->setCurrentHitpoints(1000);
+            u->setMaximumHitpoints(1000);
+        }
+    }
 
-    u->readOpenFlagsFrom(*pBuf, g_nCorrupt);
-    u->readOpenDifficultyFrom(*pBuf, unit_version, g_nCorrupt);
+    u->setAlignment(pBuf->ReadS16(&g_nCorrupt));
 
-    u->readNumberOfActiveLightSourcesFrom(*pBuf, g_nCorrupt);
-    u->readLightOutputFrom(*pBuf, g_nCorrupt);
-    u->readTransparentLightOutputFrom(*pBuf, g_nCorrupt);
+    u->setAllOpenFlags(pBuf->ReadU8(&g_nCorrupt));
+    if (unit_version >= 71)
+    {
+        u->setOpenDifficulty(pBuf->ReadU8(&g_nCorrupt));
+    }
 
-    u->readNumberOfCharactersInsideUnitFrom(*pBuf, g_nCorrupt);
-    u->readLevelOfWizardInvisibilityFrom(*pBuf, g_nCorrupt);
+    u->setNumberOfActiveLightSources(pBuf->ReadS8(&g_nCorrupt));
+    u->setLightOutput(pBuf->ReadS8(&g_nCorrupt));
+    u->setTransparentLightOutput(pBuf->ReadS8(&g_nCorrupt));
+
+    u->setNumberOfCharactersInsideUnit(pBuf->ReadU8(&g_nCorrupt));
+    u->setLevelOfWizardInvisibility(pBuf->ReadU8(&g_nCorrupt));
 
     if (unit_version >= 53)
     {
-        u->readSizeFrom(*pBuf, g_nCorrupt);
+        u->setSize(pBuf->ReadU16(&g_nCorrupt));
     }
     else
     {

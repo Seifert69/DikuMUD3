@@ -115,17 +115,6 @@ public:
     ubit32 getManipulate() const { return manipulate; }
     ubit32 *getManipulatePtr() { return &manipulate; }
     void setAllManipulateFlags(ubit32 value) { manipulate = value; }
-    void readManipulateFrom(CByteBuffer &buf, ubit8 unit_version, int &errors)
-    {
-        if (unit_version < 46)
-        {
-            manipulate = buf.ReadU16(&errors);
-        }
-        else
-        {
-            manipulate = buf.ReadU32(&errors);
-        }
-    }
     void setManipulateFlag(ubit32 value) { manipulate |= value; }
 
     ubit16 getUnitFlags() const { return flags; }
@@ -133,106 +122,70 @@ public:
     void setAllUnitFlags(ubit16 value) { flags = value; }
     void setUnitFlag(ubit16 value) { flags |= value; }
     void removeUnitFlag(ubit16 value) { flags &= ~value; }
-    void readFlagsFrom(CByteBuffer &buf, int &errors) { flags = buf.ReadU16(&errors); }
 
     sbit32 getBaseWeight() const { return base_weight; }
     void setBaseWeight(sbit32 value) { base_weight = value; }
-    void readBaseWeightFrom(CByteBuffer &buf, int &errors) { base_weight = buf.ReadS16(&errors); }
 
     sbit32 getWeight() const { return weight; }
-    void reduceWeightBy(sbit16 value) { weight -= value; }
-    void increaseWeightBy(sbit16 value) { weight += value; }
+    void reduceWeightBy(sbit32 value) { weight -= value; }
+    void increaseWeightBy(sbit32 value) { weight += value; }
     void setWeight(sbit32 value) { weight = value; }
-    void readWeightFrom(CByteBuffer &buf, int &errors) { weight = buf.ReadS16(&errors); }
 
     sbit16 getCapacity() const { return capacity; }
     sbit16 *getCapacityPtr() { return &capacity; }
-    void readCapacityFrom(CByteBuffer &buf, int &errors) { capacity = buf.ReadS16(&errors); }
     void setCapacity(sbit16 value) { capacity = value; }
 
     ubit16 getSize() const { return size; }
     ubit16 *getSizePtr() { return &size; }
-    void setSize(sbit16 value) { size = value; }
-    void readSizeFrom(CByteBuffer &buf, int &errors) { size = buf.ReadU16(&errors); }
-    void increaseSizeBy(sbit16 value) { size += value; }
+    void setSize(ubit16 value) { size = value; }
+    void increaseSizeBy(ubit16 value) { size += value; }
 
     ubit8 getUnitType() const { return status; }
 
     ubit8 getOpenFlags() const { return open_flags; }
     ubit8 *getOpenFlagsPtr() { return &open_flags; }
     void setAllOpenFlags(ubit8 value) { open_flags = value; }
-    void readOpenFlagsFrom(CByteBuffer &buf, int &errors) { open_flags = buf.ReadU8(&errors); }
     void setOpenFlag(ubit8 value) { open_flags |= value; }
 
     ubit8 getOpenDifficulty() const { return open_diff; }
     ubit8 *getOpenDifficultyPtr() { return &open_diff; }
     void setOpenDifficulty(ubit8 value) { open_diff = value; }
-    void readOpenDifficultyFrom(CByteBuffer &buf, ubit8 unit_version, int &errors)
-    {
-        if (unit_version >= 71)
-        {
-            open_diff = buf.ReadU8(&errors);
-        }
-    }
 
     sbit16 getNumberOfActiveLightSources() const { return light; }
-    void increaseNumberOfActiveLightSourcesBy(sbit16 value) { light += value; }
-    void decreaseNumberOfActiveLightSourcesBy(sbit16 value) { light -= value; }
+    void changeNumberOfActiveLightSourcesBy(sbit16 value) { light += value; }
     void setNumberOfActiveLightSources(sbit16 value) { light = value; }
-    void readNumberOfActiveLightSourcesFrom(CByteBuffer &buf, int &errors) { light = buf.ReadS8(&errors); }
 
     sbit16 getLightOutput() const { return bright; }
     void setLightOutput(sbit16 value) { bright = value; }
-    void increaseLightOutputBy(sbit16 value) { bright += value; }
-    void decreaseLightOutputBy(sbit16 value) { bright -= value; }
-    void readLightOutputFrom(CByteBuffer &buf, int &errors) { bright = buf.ReadS8(&errors); }
+    void changeLightOutputBy(sbit16 value) { bright += value; }
 
     sbit16 getTransparentLightOutput() const { return illum; }
     void setTransparentLightOutput(sbit16 value) { illum = value; }
-    void increaseTransparentLightOutputBy(sbit16 value) { illum += value; }
-    void decreaseTransparentLightOutputBy(sbit16 value) { illum -= value; }
-    void readTransparentLightOutputFrom(CByteBuffer &buf, int &errors) { illum = buf.ReadS8(&errors); }
+    void changeTransparentLightOutputBy(sbit16 value) { illum += value; }
 
-    sbit8 getNumberOfCharactersInsideUnit() const { return chars; }
-    void readNumberOfCharactersInsideUnitFrom(CByteBuffer &buf, int &errors) { chars = buf.ReadU8(&errors); }
+    ubit8 getNumberOfCharactersInsideUnit() const { return chars; }
     void decrementNumberOfCharactersInsideUnit() { --chars; }
     void incrementNumberOfCharactersInsideUnit() { ++chars; }
-    void setNumberOfCharactersInsideUnit(sbit8 value) { chars = value; }
+    void setNumberOfCharactersInsideUnit(ubit8 value) { chars = value; }
 
     ubit8 getLevelOfWizardInvisibility() const { return minv; }
     ubit8 *getLevelOfWizardInvisibilityPtr() { return &minv; }
-    void readLevelOfWizardInvisibilityFrom(CByteBuffer &buf, int &errors) { minv = buf.ReadU8(&errors); }
     void setLevelOfWizardInvisibility(ubit8 value) { minv = value; }
 
     sbit32 getMaximumHitpoints() const { return max_hp; }
     sbit32 *getMaximumHitpointsPtr() { return &max_hp; }
     void setMaximumHitpoints(sbit32 value) { max_hp = value; }
-    void readMaximumHitpointsFrom(CByteBuffer &buf, int &errors) { max_hp = buf.ReadS32(&errors); }
 
     sbit32 getCurrentHitpoints() const { return hp; }
     sbit32 *getCurrentHitpointsPtr() { return &hp; }
     void setCurrentHitpoints(sbit32 value) { hp = value; }
-    void increaseCurrentHitpointsBy(sbit32 value) { hp += value; }
-    void decreaseCurrentHitpointsBy(sbit32 value) { hp -= value; }
-    void readCurrentHitpointsFrom(CByteBuffer &buf, ubit8 unit_version, int &errors)
-    {
-        hp = buf.ReadS32(&errors);
-        if (unit_version <= 54)
-        {
-            if (max_hp <= 0)
-            {
-                hp = 1000;
-                max_hp = 1000;
-            }
-        }
-    }
+    void changeCurrentHitpointsBy(sbit32 value) { hp += value; }
 
     sbit16 getAlignment() const { return alignment; }
     sbit16 *getAlignmentPtr() { return &alignment; }
     void increaseAlignmentBy(sbit16 value) { alignment += value; }
     void decreaseAlignmentBy(sbit16 value) { alignment -= value; }
     void setAlignment(sbit16 value) { alignment = value; }
-    void readAlignmentFrom(CByteBuffer &buf, int &errors) { alignment = buf.ReadS16(&errors); }
 
     const std::string &getTitle() const { return title; }
     std::string *getTitlePtr() { return &title; }

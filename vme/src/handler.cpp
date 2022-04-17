@@ -486,11 +486,11 @@ void modify_bright(unit_data *unit, int bright)
     unit_data *ext = nullptr;
     unit_data *in = nullptr;
 
-    unit->increaseLightOutputBy(bright);
+    unit->changeLightOutputBy(bright);
 
     if ((in = UNIT_IN(unit)))
     { /* Light up what the unit is inside */
-        in->increaseNumberOfActiveLightSourcesBy(bright);
+        in->changeNumberOfActiveLightSourcesBy(bright);
     }
 
     if (IS_OBJ(unit) && OBJ_EQP_POS(unit))
@@ -504,11 +504,11 @@ void modify_bright(unit_data *unit, int bright)
     {
         /* the unit is inside a transperant unit, so it lights up too */
         /* this works with actions in unit-up/down                    */
-        in->increaseLightOutputBy(bright);
+        in->changeLightOutputBy(bright);
         if ((ext = UNIT_IN(in)))
         {
-            ext->increaseNumberOfActiveLightSourcesBy(bright);
-            in->increaseTransparentLightOutputBy(bright);
+            ext->changeNumberOfActiveLightSourcesBy(bright);
+            in->changeTransparentLightOutputBy(bright);
         }
     }
 }
@@ -524,21 +524,21 @@ void trans_set(unit_data *u)
     }
 
     u->setTransparentLightOutput(sum);
-    u->increaseLightOutputBy(sum);
+    u->changeLightOutputBy(sum);
 
     if (UNIT_IN(u))
     {
-        UNIT_IN(u)->increaseNumberOfActiveLightSourcesBy(sum);
+        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(sum);
     }
 }
 
 void trans_unset(unit_data *u)
 {
-    u->decreaseLightOutputBy(UNIT_ILLUM(u));
+    u->changeLightOutputBy(-1 * UNIT_ILLUM(u));
 
     if (UNIT_IN(u))
     {
-        UNIT_IN(u)->decreaseNumberOfActiveLightSourcesBy(UNIT_ILLUM(u));
+        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(-1 * UNIT_ILLUM(u));
     }
 
     u->setTransparentLightOutput(0);
@@ -745,24 +745,24 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     bright = UNIT_BRIGHT(unit);             /* brightness inc. trans    */
     selfb = bright - UNIT_ILLUM(unit);      /* brightness excl. trans   */
 
-    in->decreaseNumberOfActiveLightSourcesBy(bright); // Subtract Light
+    in->changeNumberOfActiveLightSourcesBy(-1 * bright); // Subtract Light
     if (UNIT_IS_TRANSPARENT(in))
     {
-        in->decreaseTransparentLightOutputBy(selfb);
-        in->decreaseLightOutputBy(selfb);
+        in->changeTransparentLightOutputBy(-1 * selfb);
+        in->changeLightOutputBy(-1 * selfb);
     }
     else if (toin)
     {
-        toin->increaseNumberOfActiveLightSourcesBy(bright);
+        toin->changeNumberOfActiveLightSourcesBy(bright);
     }
 
     if (toin && UNIT_IS_TRANSPARENT(toin))
     {
-        toin->increaseLightOutputBy(selfb);
-        toin->increaseTransparentLightOutputBy(selfb);
+        toin->changeLightOutputBy(selfb);
+        toin->changeTransparentLightOutputBy(selfb);
         if (extin)
         {
-            extin->increaseNumberOfActiveLightSourcesBy(selfb);
+            extin->changeNumberOfActiveLightSourcesBy(selfb);
         }
     }
 
@@ -835,24 +835,24 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     bright = UNIT_BRIGHT(unit);
     selfb = bright - UNIT_ILLUM(unit);
 
-    to->increaseNumberOfActiveLightSourcesBy(bright);
+    to->changeNumberOfActiveLightSourcesBy(bright);
     if (UNIT_IS_TRANSPARENT(to))
     {
-        to->increaseLightOutputBy(selfb);
-        to->increaseTransparentLightOutputBy(selfb);
+        to->changeLightOutputBy(selfb);
+        to->changeTransparentLightOutputBy(selfb);
     }
     else if (in)
     {
-        in->decreaseNumberOfActiveLightSourcesBy(bright);
+        in->changeNumberOfActiveLightSourcesBy(-1 * bright);
     }
 
     if (in && UNIT_IS_TRANSPARENT(in))
     {
-        in->decreaseLightOutputBy(selfb);
-        in->decreaseTransparentLightOutputBy(selfb);
+        in->changeLightOutputBy(-1 * selfb);
+        in->changeTransparentLightOutputBy(-1 * selfb);
         if (extin)
         {
-            extin->decreaseNumberOfActiveLightSourcesBy(selfb);
+            extin->changeNumberOfActiveLightSourcesBy(-1 * selfb);
         }
     }
 

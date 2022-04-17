@@ -443,7 +443,7 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     if (unit_version <= 52)
     {
-        unit->readSizeFrom(buf, error);
+        unit->setSize(buf.ReadU16(&error));
     }
     race = buf.ReadU16(&error);
 
