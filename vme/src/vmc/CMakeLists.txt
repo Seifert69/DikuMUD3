@@ -78,7 +78,6 @@ target_link_libraries(vmc
         vmc_objs
         pp_objs
         vme_objs
-        ${FLEX_LIBRARIES}
         crypt
         Boost::filesystem
         Boost::regex
