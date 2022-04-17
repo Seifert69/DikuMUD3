@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_long_name_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_long_amount_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -351,7 +351,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_long_name_and_amount_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_neg_amount_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -401,7 +401,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_no_name_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
