@@ -113,7 +113,7 @@ set(VME_SRCS
         zone_reset.cpp zone_reset.h
         zone_reset_cmd.cpp zone_reset_cmd.h
         zone_type.cpp zone_type.h
-        )
+        unit_data.cpp unit_data.h)
 
 # Add all sources to a library file so we can link with other projects and test suites
 add_library(vme_objs STATIC ${VME_SRCS})

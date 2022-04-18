@@ -22,6 +22,7 @@ set(VMC_SRCS
         ../spec_assign.cpp ../spec_assign.h
         ../structs.cpp ../structs.h
         ../textutil.cpp ../textutil.h
+        ../unit_data.cpp ../unit_data.h
         ../utility.cpp ../utility.h
         ../OutputCapture.cpp ../OutputCapture.h
         )
