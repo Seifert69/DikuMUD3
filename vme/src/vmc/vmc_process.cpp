@@ -1016,12 +1016,6 @@ void process_unit(unit_data *u)
     }
     u->setWeight(UNIT_BASE_WEIGHT(u));
 
-    if (!is_in(UNIT_ALIGNMENT(u), -1000, +1000))
-    {
-        dmc_error(TRUE, "%s: Illegal alignment %d (expected -1000..+1000).", UNIT_IDENT(u), UNIT_ALIGNMENT(u));
-        u->setAlignment(0);
-    }
-
     if (!is_in(UNIT_LIGHTS(u), -6, 6))
     {
         dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), UNIT_LIGHTS(u));

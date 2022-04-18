@@ -813,10 +813,7 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
     adjust = MIN(200, adjust);
     adjust = MAX(-200, adjust);
 
-    slayer->increaseAlignmentBy(adjust);
-    /// @todo move limits into the setter
-    slayer->setAlignment(MIN(1000, UNIT_ALIGNMENT(slayer)));
-    slayer->setAlignment(MAX(-1000, UNIT_ALIGNMENT(slayer)));
+    slayer->changeAlignmentBy(adjust);
 }
 
 /* Do all the gain stuff for CH where no is the number of players */
