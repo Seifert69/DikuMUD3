@@ -136,11 +136,6 @@ int basedestruct::destruct_classindex()
     return -1;
 }
 
-int unit_data::destruct_classindex()
-{
-    return DR_UNIT;
-}
-
 /* ======================================= */
 
 /* May only be called by clear_destuct! */
