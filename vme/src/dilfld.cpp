@@ -563,17 +563,20 @@ void dilfe_fld(dilprg *p)
                     }
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = ((unit_data *)v1->val.ptr)->next;
+                        v->val.ptr = unit->getNext();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 case DILV_ZP:
                     if (v1->val.ptr)
                     {
@@ -846,17 +849,20 @@ void dilfe_fld(dilprg *p)
                     break;
 
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE; // Dont dealloc!
                         v->type = DILV_HASHSTR;
-                        v->ref = &UNIT_OUT_DESCR((unit_data *)v1->val.ptr);
+                        v->ref = unit->getDescriptionOfOutsidePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -875,17 +881,20 @@ void dilfe_fld(dilprg *p)
                     break;
 
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE; // Dont dealloc!
                         v->type = DILV_HASHSTR;
-                        v->ref = &UNIT_IN_DESCR((unit_data *)v1->val.ptr);
+                        v->ref = unit->getDescriptionOfInsidePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -903,17 +912,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE; // Dont dealloc!
                         v->type = DILV_HASHSTR;
-                        v->ref = &UNIT_TITLE((unit_data *)v1->val.ptr);
+                        v->ref = unit->getTitlePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 case DILV_ZP:
                     if (v1->val.ptr)
                     {
@@ -1216,17 +1228,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = ((unit_data *)v1->val.ptr)->gnext;
+                        v->val.ptr = unit->getGlobalNext();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -1357,17 +1372,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = ((unit_data *)v1->val.ptr)->gprevious;
+                        v->val.ptr = unit->getGlobalPrevious();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -1467,18 +1485,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* ubit16 flags; */
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &UNIT_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = unit->getUnitFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1495,17 +1516,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = &UNIT_MANIPULATE((unit_data *)v1->val.ptr);
+                        v->ref = unit->getManipulatePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1630,18 +1654,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* ubit8 openflags */
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &UNIT_OPEN_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = unit->getOpenFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1658,18 +1685,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* ubit8 openflags */
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &UNIT_OPEN_DIFF((unit_data *)v1->val.ptr);
+                        v->ref = unit->getOpenDifficultyPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1802,34 +1832,37 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE;
 
-                        if (IS_PC((unit_data *)v1->val.ptr))
+                        if (IS_PC(unit))
                         {
                             if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                             {
                                 v->type = DILV_INT;
-                                v->val.num = UNIT_MAX_HIT((unit_data *)v1->val.ptr);
+                                v->val.num = unit->getMaximumHitpoints();
                             }
                             else
                             {
                                 v->type = DILV_SINT4R;
-                                v->ref = &UNIT_MAX_HIT((unit_data *)v1->val.ptr);
+                                v->ref = unit->getMaximumHitpointsPtr();
                             }
                         }
                         else
                         {
                             v->type = DILV_SINT4R;
-                            v->ref = &UNIT_MAX_HIT((unit_data *)v1->val.ptr);
+                            v->ref = unit->getMaximumHitpointsPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1846,18 +1879,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* sbit32 hp; */
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
-                        v->ref = &UNIT_HIT((unit_data *)v1->val.ptr);
+                        v->ref = unit->getCurrentHitpointsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2047,18 +2083,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* sbit16 capacity */
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &UNIT_CAPACITY((unit_data *)v1->val.ptr);
+                        v->ref = unit->getCapacityPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2075,18 +2114,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         /* sbit16 capacity */
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &UNIT_ALIGNMENT((unit_data *)v1->val.ptr);
+                        v->ref = unit->getAlignmentPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -3676,17 +3718,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &UNIT_SIZE((unit_data *)v1->val.ptr);
+                        v->ref = unit->getSizePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4355,17 +4400,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
-                        v->ref = &UNIT_KEY((unit_data *)v1->val.ptr);
+                        v->ref = unit->getKeyPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4670,17 +4718,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &UNIT_MINV((unit_data *)v1->val.ptr);
+                        v->ref = unit->getLevelOfWizardInvisibilityPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

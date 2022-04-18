@@ -76,9 +76,11 @@ void race_adjust(unit_data *ch)
         sex_race = &my_race->female;
     }
 
-    UNIT_WEIGHT(ch) = UNIT_BASE_WEIGHT(ch) = sex_race->weight + dice(sex_race->weight_dice.reps, sex_race->weight_dice.size);
+    auto weight = sex_race->weight + dice(sex_race->weight_dice.reps, sex_race->weight_dice.size);
+    ch->setWeight(weight);
+    ch->setBaseWeight(weight);
 
-    UNIT_SIZE(ch) = sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size);
+    ch->setSize(sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size));
 
     PC_LIFESPAN(ch) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
 
@@ -201,7 +203,8 @@ void start_player(unit_data *ch)
         }
     }
 
-    UNIT_MAX_HIT(ch) = UNIT_HIT(ch) = hit_limit(ch);
+    ch->setMaximumHitpoints(hit_limit(ch));
+    ch->setCurrentHitpoints(hit_limit(ch));
     getCharPoints(ch).setMana(mana_limit(ch));
     getCharPoints(ch).setEndurance(move_limit(ch));
 }

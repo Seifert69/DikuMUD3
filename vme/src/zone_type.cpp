@@ -45,19 +45,19 @@ zone_type::~zone_type()
 
     for (ut = objects; ut; ut = nextut)
     {
-        nextut = ut->next;
-        ut->next = nullptr;
-        ut->gnext = nullptr;
-        ut->gprevious = nullptr;
+        nextut = ut->getNext();
+        ut->setNext(nullptr);
+        ut->setGlobalNext(nullptr);
+        ut->setGlobalPrevious(nullptr);
         delete ut;
     }
 
     for (ut = npcs; ut; ut = nextut)
     {
-        nextut = ut->next;
-        ut->next = nullptr;
-        ut->gnext = nullptr;
-        ut->gprevious = nullptr;
+        nextut = ut->getNext();
+        ut->setNext(nullptr);
+        ut->setGlobalNext(nullptr);
+        ut->setGlobalPrevious(nullptr);
         delete ut;
     }
 

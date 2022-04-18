@@ -731,30 +731,30 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     {
         g_nCorrupt++;
     }
-    UNIT_TITLE(u) = c;
+    u->setTitle(c);
     if (unit_version < 70)
     {
-        UNIT_TITLE(u) = fix_old_codes_to_html(UNIT_TITLE(u).c_str());
+        u->setTitle(fix_old_codes_to_html(UNIT_TITLE(u)));
     }
 
     if (pBuf->SkipString(&c))
     {
         g_nCorrupt++;
     }
-    UNIT_OUT_DESCR(u) = c;
+    u->setDescriptionOfOutside(c);
     if (unit_version < 70)
     {
-        UNIT_OUT_DESCR(u) = fix_old_codes_to_html(UNIT_OUT_DESCR(u).c_str());
+        u->setDescriptionOfOutside(fix_old_codes_to_html(UNIT_OUT_DESCR(u)));
     }
 
     if (pBuf->SkipString(&c))
     {
         g_nCorrupt++;
     }
-    UNIT_IN_DESCR(u) = c;
+    u->setDescriptionOfInside(c);
     if (unit_version < 70)
     {
-        UNIT_IN_DESCR(u) = fix_old_codes_to_html(UNIT_IN_DESCR(u).c_str());
+        u->setDescriptionOfInside(fix_old_codes_to_html(UNIT_IN_DESCR(u)));
     }
 
     g_nCorrupt += bread_extra(pBuf, UNIT_EXTRA(u), unit_version);
@@ -766,60 +766,61 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     if (!str_is_empty(name))
     {
         snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
-        UNIT_KEY(u) = str_dup(tmpbuf);
+        u->setKey(str_dup(tmpbuf));
     }
     else
     {
-        UNIT_KEY(u) = nullptr;
+        u->setKey(nullptr);
     }
 
     if (unit_version < 46)
     {
-        UNIT_MANIPULATE(u) = pBuf->ReadU16(&g_nCorrupt);
+        u->setManipulateFlag(pBuf->ReadU16(&g_nCorrupt));
     }
     else
     {
-        UNIT_MANIPULATE(u) = pBuf->ReadU32(&g_nCorrupt);
+        u->setManipulateFlag(pBuf->ReadU32(&g_nCorrupt));
     }
 
-    UNIT_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
-    UNIT_BASE_WEIGHT(u) = pBuf->ReadS16(&g_nCorrupt);
-    UNIT_WEIGHT(u) = pBuf->ReadS16(&g_nCorrupt);
-    UNIT_CAPACITY(u) = pBuf->ReadS16(&g_nCorrupt);
+    u->setAllUnitFlags(pBuf->ReadU16(&g_nCorrupt));
+    u->setBaseWeight(pBuf->ReadS16(&g_nCorrupt));
+    u->setWeight(pBuf->ReadS16(&g_nCorrupt));
+    u->setCapacity(pBuf->ReadS16(&g_nCorrupt));
 
-    UNIT_MAX_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
-    UNIT_HIT(u) = pBuf->ReadS32(&g_nCorrupt);
+    u->setMaximumHitpoints(pBuf->ReadS32(&g_nCorrupt));
+    u->setCurrentHitpoints(pBuf->ReadS32(&g_nCorrupt));
 
     if (unit_version <= 54)
     {
         if (UNIT_MAX_HIT(u) <= 0)
         {
-            UNIT_HIT(u) = UNIT_MAX_HIT(u) = 1000;
+            u->setCurrentHitpoints(1000);
+            u->setMaximumHitpoints(1000);
         }
     }
 
-    UNIT_ALIGNMENT(u) = pBuf->ReadS16(&g_nCorrupt);
+    u->setAlignment(pBuf->ReadS16(&g_nCorrupt));
 
-    UNIT_OPEN_FLAGS(u) = pBuf->ReadU8(&g_nCorrupt);
+    u->setAllOpenFlags(pBuf->ReadU8(&g_nCorrupt));
     if (unit_version >= 71)
     {
-        UNIT_OPEN_DIFF(u) = pBuf->ReadU8(&g_nCorrupt);
+        u->setOpenDifficulty(pBuf->ReadU8(&g_nCorrupt));
     }
 
-    UNIT_LIGHTS(u) = pBuf->ReadS8(&g_nCorrupt);
-    UNIT_BRIGHT(u) = pBuf->ReadS8(&g_nCorrupt);
-    UNIT_ILLUM(u) = pBuf->ReadS8(&g_nCorrupt);
+    u->setNumberOfActiveLightSources(pBuf->ReadS8(&g_nCorrupt));
+    u->setLightOutput(pBuf->ReadS8(&g_nCorrupt));
+    u->setTransparentLightOutput(pBuf->ReadS8(&g_nCorrupt));
 
-    UNIT_CHARS(u) = pBuf->ReadU8(&g_nCorrupt);
-    UNIT_MINV(u) = pBuf->ReadU8(&g_nCorrupt);
+    u->setNumberOfCharactersInsideUnit(pBuf->ReadU8(&g_nCorrupt));
+    u->setLevelOfWizardInvisibility(pBuf->ReadU8(&g_nCorrupt));
 
     if (unit_version >= 53)
     {
-        UNIT_SIZE(u) = pBuf->ReadU16(&g_nCorrupt);
+        u->setSize(pBuf->ReadU16(&g_nCorrupt));
     }
     else
     {
-        UNIT_SIZE(u) = 180;
+        u->setSize(180);
     }
 
     if (unit_version >= 51) // Get the unit the unit is in
@@ -833,7 +834,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         {
             if (UNIT_TYPE(u) == UNIT_ST_ROOM)
             {
-                UNIT_IN(u) = (unit_data *)tmpfi; /* To be normalized! */
+                u->setMyContainerTo(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
             }
             else
             {
@@ -843,7 +844,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    UNIT_IN(u) = tmpfi->Front();
+                    u->setMyContainerTo(tmpfi->Front());
                 }
             }
         }
@@ -1224,11 +1225,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
                 if ((fi = find_file_index(zone, name)))
                 {
-                    UNIT_IN(u) = (unit_data *)fi; /* A file index */
+                    u->setMyContainerTo(reinterpret_cast<unit_data *>(fi)); // A file index
                 }
                 else
                 {
-                    UNIT_IN(u) = nullptr;
+                    u->setMyContainerTo(nullptr);
                 }
             }
 
@@ -1305,7 +1306,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     g_nCorrupt += bread_affect(pBuf, u, unit_version);
 
-    UNIT_FUNC(u) = bread_func(pBuf, unit_version, u, stspec);
+    u->setFunctionPointer(bread_func(pBuf, unit_version, u, stspec));
 
     if (len != (int)(pBuf->GetReadPosition() - nStart))
     {
@@ -1345,7 +1346,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
     else
     {
-        slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->names.Name());
+        slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->getNames().Name());
 
         if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
         {
@@ -1494,7 +1495,7 @@ void normalize_world()
     unit_data *tmpu = nullptr;
     int i = 0;
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (IS_ROOM(u))
         {
@@ -1505,7 +1506,7 @@ void normalize_world()
 
                 assert(!fi->Empty());
 
-                UNIT_IN(u) = fi->Front();
+                u->setMyContainerTo(fi->Front());
             }
 
             /* Change directions into unit_data points from file_index_type */
@@ -1526,12 +1527,12 @@ void normalize_world()
         }
     }
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (IS_ROOM(u) && UNIT_IN(u))
         {
             tmpu = UNIT_IN(u);
-            UNIT_IN(u) = nullptr;
+            u->setMyContainerTo(nullptr);
 
             if (unit_recursive(u, tmpu))
             {
@@ -1873,7 +1874,7 @@ void db_shutdown()
         stop_affect(tmpu);
         //      unit_from_unit(tmpu);
         remove_from_unit_list(tmpu);
-        tmpu->next = nullptr;
+        tmpu->setNext(nullptr);
         delete tmpu;
 
         clear_destructed();

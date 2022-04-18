@@ -57,7 +57,7 @@ void zone_update_no_in_zone()
         }
     }
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (UNIT_FILE_INDEX(u) && (unit_zone(u) == g_boot_zone))
         {
@@ -116,7 +116,7 @@ bool zone_limit(unit_data *u, file_index_type *fi, zone_reset_cmd *cmd)
     /* Check for local maxima */
     if ((i = cmd->getNum(2)))
     {
-        for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->next)
+        for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->getNext())
         {
             if (UNIT_FILE_INDEX(tmp) == fi)
             {
@@ -180,7 +180,7 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
             if (IS_CHAR(loaded))
             {
                 act("$1n has arrived.", A_HIDEINV, loaded, cActParameter(), cActParameter(), TO_ROOM);
-                UNIT_SIZE(loaded) += (UNIT_SIZE(loaded) * (55 - dice(10, 10))) / 300;
+                loaded->increaseSizeBy((UNIT_SIZE(loaded) * (55 - dice(10, 10))) / 300);
             }
         }
         else
@@ -262,7 +262,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
             }
 #endif
             equip_char(u, loaded, cmd->getNum(1));
-            UNIT_SIZE(loaded) = UNIT_SIZE(u); /* Autofit */
+            loaded->setSize(UNIT_SIZE(u)); // Autofit
         }
     }
 
@@ -306,7 +306,7 @@ unit_data *zone_purge(unit_data *u, zone_reset_cmd *cmd)
     {
         for (u = UNIT_CONTAINS(cmd->getFileIndexType(0)->Front()); u; u = next)
         {
-            next = u->next;
+            next = u->getNext();
             if (!IS_PC(u) && !IS_ROOM(u))
             {
                 extract_unit(u);
@@ -331,7 +331,7 @@ unit_data *zone_remove(unit_data *u, zone_reset_cmd *cmd)
     {
         for (u = UNIT_CONTAINS(cmd->getFileIndexType(1)->Front()); u; u = next)
         {
-            next = u->next;
+            next = u->getNext();
             if (UNIT_FILE_INDEX(u) == cmd->getFileIndexType(0) && !IS_ROOM(u))
             {
                 extract_unit(u);

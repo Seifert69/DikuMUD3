@@ -235,8 +235,8 @@ rooms   : /* naught */
     {
         if (cur)
         {
-            cur->next = mcreate_unit(UNIT_ST_ROOM);
-            cur = cur->next;
+            cur->setNext(mcreate_unit(UNIT_ST_ROOM));
+            cur = cur->getNext();
         }
         else
         {
@@ -278,7 +278,7 @@ oroom_field : MOVEMENT PNUM
     }
     | VIN reference
     {
-        UNIT_IN(cur) = (struct unit_data *)$2;
+        cur->setMyContainerTo(reinterpret_cast<unit_data*>($2));
     }
     | SPELL number
     {
@@ -385,8 +385,8 @@ objects : /* naught */
     {
         if (cur)
         {
-            cur->next = mcreate_unit(UNIT_ST_OBJ);
-            cur = cur->next;
+            cur->setNext(mcreate_unit(UNIT_ST_OBJ));
+            cur = cur->getNext();
         }
         else
         {
@@ -450,8 +450,8 @@ mobiles : /* naught */
     {
         if (cur)
         {
-            cur->next = mcreate_unit(UNIT_ST_NPC);
-            cur = cur->next;
+            cur->setNext(mcreate_unit(UNIT_ST_NPC));
+            cur = cur->getNext();
         }
         else
         {
@@ -621,7 +621,7 @@ unit_field  : NAMES stringlist
 
             if (!UNIT_FUNC(cur))
             {
-                UNIT_FUNC(cur) = mcreate_func();
+                cur->setFunctionPointer(mcreate_func());
                 cur_func = UNIT_FUNC(cur);
             }
             else
@@ -646,7 +646,7 @@ unit_field  : NAMES stringlist
 
         if (!UNIT_FUNC(cur))
         {
-            UNIT_FUNC(cur) = mcreate_func();
+            cur->setFunctionPointer(mcreate_func());
             cur_func = UNIT_FUNC(cur);
         }
         else
@@ -661,11 +661,11 @@ unit_field  : NAMES stringlist
     }
     | TITLE STRING
     {
-        UNIT_TITLE(cur) = ($2);
+        cur->setTitle($2);
     }
     | OUT_DESCR STRING
     {
-        UNIT_OUT_DESCR(cur) = ($2);
+        cur->setDescriptionOfOutside($2);
     }
     | IN_DESCR STRING
     {
@@ -678,7 +678,7 @@ unit_field  : NAMES stringlist
             $2[2] = ' ';
         }
 
-        UNIT_IN_DESCR(cur) = ($2);
+        cur->setDescriptionOfInside($2);
     }
     | DESCR STRING
     {
@@ -690,16 +690,16 @@ unit_field  : NAMES stringlist
             $2[1] = ' ';
             $2[2] = ' ';
 
-            UNIT_IN_DESCR(cur) = ($2);
+            cur->setDescriptionOfInside($2);
         }
         else
         {
-            UNIT_OUT_DESCR(cur) = ($2);
+            cur->setDescriptionOfOutside($2);
         }
     }
     | ALIGNMENT number
     {
-        UNIT_ALIGNMENT(cur) = $2;
+        cur->setAlignment($2);
     }
     | EXTRA stringlist intlist STRING
     {
@@ -792,38 +792,39 @@ unit_field  : NAMES stringlist
         tzone[30] = 0;
         strncpy(tname, $2 + strlen((char *)$2) + 1, 30);
         tname[30] = 0;
-        UNIT_KEY(cur) = (char *)malloc(strlen(tzone) + strlen(tname) + 2);
-        strcpy(UNIT_KEY(cur), (char *)tzone);
-        strcpy(UNIT_KEY(cur) + strlen(tzone) + 1, (char *)tname);
+        auto *key_reference = (char *)malloc(strlen(tzone) + strlen(tname) + 2);
+        strcpy(key_reference, (char *)tzone);
+        strcpy(key_reference + strlen(tzone) + 1, (char *)tname);
+        cur->setKey(key_reference);
     }
     | OPEN flags
     {
-        UNIT_OPEN_FLAGS(cur) |= $2;
+        cur->setOpenFlag($2);
     }
     optopendiff;
     | MANIPULATE flags
     {
-        UNIT_MANIPULATE(cur) |= $2;
+        cur->setManipulateFlag($2);
     }
     | HIT number
     {
-        UNIT_MAX_HIT(cur) = $2;
+        cur->setMaximumHitpoints($2);
     }
     | UFLAGS flags
     {
-        UNIT_FLAGS(cur) |= $2;
+        cur->setUnitFlag($2);
     }
     | WEIGHT number
     {
-        UNIT_BASE_WEIGHT(cur) = $2;
+        cur->setBaseWeight($2);
     }
     | CAPACITY number
     {
-        UNIT_CAPACITY(cur) = $2;
+        cur->setCapacity($2);
     }
     | HEIGHT number
     {
-        UNIT_SIZE(cur) = $2;
+        cur->setSize($2);
     }
     /* | TOUGHNESS number
     {
@@ -831,21 +832,21 @@ unit_field  : NAMES stringlist
     } */
     | LIGHT number
     {
-        UNIT_LIGHTS(cur) = $2;
+        cur->setNumberOfActiveLightSources($2);
     }
     | BRIGHT number
     {
-        UNIT_BRIGHT(cur) = $2;
+        cur->setLightOutput($2);
     }
     | MINV number
     {
-        UNIT_MINV(cur) = $2;
+        cur->setLevelOfWizardInvisibility($2);
     }
     | SPECIAL
     {
         if (!UNIT_FUNC(cur))
         {
-            UNIT_FUNC(cur) = mcreate_func();
+            cur->setFunctionPointer(mcreate_func());
             cur_func = UNIT_FUNC(cur);
         }
         else
@@ -876,7 +877,7 @@ unit_field  : NAMES stringlist
     {
         if (!UNIT_AFFECTED(cur))
         {
-            UNIT_AFFECTED(cur) = mcreate_affect();
+            cur->setUnitAffectedType(mcreate_affect());
             cur_aff = UNIT_AFFECTED(cur);
         }
         else
@@ -897,7 +898,7 @@ optopendiff : /* naught */
             sprintf(buf, "Exit difficulty %d must be in [0..250]", $2);
             fatal(buf);
         }
-        UNIT_OPEN_DIFF(cur) = $2;
+        cur->setOpenDifficulty($2);
     }
     ;
 

@@ -63,64 +63,72 @@
 
 /* ..................................................................... */
 
-#define UNIT_FUNC(unit) ((unit)->func)
+// clang-format off
+inline unit_fptr *UNIT_FUNC(unit_data *unit) { return unit->getFunctionPointer(); }
 
-#define UNIT_FILE_INDEX(unit) ((unit)->fi)
+inline file_index_type *UNIT_FILE_INDEX(unit_data *unit) { return unit->getFileIndex(); }
+inline const file_index_type *UNIT_FILE_INDEX(const unit_data *unit) { return unit->getFileIndex(); }
 
-#define UNIT_MANIPULATE(unit) ((unit)->manipulate)
+inline ubit32 UNIT_MANIPULATE(unit_data *unit) { return unit->getManipulate(); }
 
-#define UNIT_FLAGS(unit) ((unit)->flags)
+inline ubit16 UNIT_FLAGS(unit_data *unit) { return unit->getUnitFlags(); }
+inline ubit16 UNIT_FLAGS(const unit_data *unit) { return unit->getUnitFlags(); }
 
-#define UNIT_WEIGHT(unit) ((unit)->weight)
+inline sbit32 UNIT_WEIGHT(unit_data *unit) { return unit->getWeight(); }
 
-#define UNIT_BASE_WEIGHT(unit) ((unit)->base_weight)
+inline sbit32 UNIT_BASE_WEIGHT(unit_data *unit) {return unit->getBaseWeight(); }
 
-#define UNIT_SIZE(unit) ((unit)->size)
+inline ubit16 UNIT_SIZE(unit_data *unit) { return unit->getSize(); }
 
-#define UNIT_CAPACITY(unit) ((unit)->capacity)
+inline sbit16 UNIT_CAPACITY(unit_data *unit) { return unit->getCapacity(); }
 
-#define UNIT_BRIGHT(unit) ((unit)->bright)
+inline sbit16 UNIT_BRIGHT(unit_data *unit) { return unit->getLightOutput(); }
 
-#define UNIT_LIGHTS(unit) ((unit)->light)
+inline sbit16 UNIT_LIGHTS(unit_data *unit) { return unit->getNumberOfActiveLightSources(); }
 
-#define UNIT_ILLUM(unit) ((unit)->illum)
+inline sbit16 UNIT_ILLUM(unit_data *unit) { return unit->getTransparentLightOutput(); }
 
-#define UNIT_CHARS(unit) ((unit)->chars)
+inline sbit8 UNIT_CHARS(const unit_data *unit) { return unit->getNumberOfCharactersInsideUnit(); }
 
-#define UNIT_CONTAINS(unit) ((unit)->inside)
+inline unit_data *UNIT_CONTAINS(unit_data *unit) { return unit->getContainedUnits(); }
+inline const unit_data *UNIT_CONTAINS(const unit_data *unit) { return unit->getContainedUnits(); }
 
-#define UNIT_IN(unit) ((unit)->outside)
+inline unit_data *UNIT_IN(unit_data *unit) { return unit->getMyContainer(); }
+inline unit_data *UNIT_IN(const unit_data *unit) { return const_cast<unit_data*>(unit)->getMyContainer(); }
 
-#define UNIT_AFFECTED(unit) ((unit)->affected)
+inline unit_affected_type *UNIT_AFFECTED(unit_data *unit) { return unit->getUnitAffectedType(); }
 
-#define UNIT_NAME(unit) (UNIT_NAMES(unit).Name())
+inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
 
-#define UNIT_KEY(unit) ((unit)->key)
+inline const char *UNIT_KEY(unit_data *unit) { return unit->getKey(); }
 
-#define UNIT_OPEN_FLAGS(unit) ((unit)->open_flags)
+inline ubit8 UNIT_OPEN_FLAGS(const unit_data *unit) { return unit->getOpenFlags(); }
 
-#define UNIT_OPEN_DIFF(unit) ((unit)->open_diff)
+inline ubit8 UNIT_OPEN_DIFF(unit_data *unit) { return unit->getOpenDifficulty(); }
 
-#define UNIT_TYPE(unit) ((unit)->status)
+inline ubit8 UNIT_TYPE(unit_data *unit) { return unit->getUnitType(); }
+inline ubit8 UNIT_TYPE(const unit_data *unit) { return unit->getUnitType(); }
 
-#define UNIT_NAMES(unit) ((unit)->names)
+inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
 
-#define UNIT_ALIGNMENT(unit) ((unit)->alignment)
+inline sbit16 UNIT_ALIGNMENT(unit_data *unit) { return unit->getAlignment(); }
 
-#define UNIT_HIT(unit) ((unit)->hp)
+inline sbit32 UNIT_HIT(unit_data *unit) { return unit->getCurrentHitpoints(); }
 
-#define UNIT_MAX_HIT(unit) ((unit)->max_hp)
+inline sbit32 UNIT_MAX_HIT(unit_data *unit) { return unit->getMaximumHitpoints(); }
 
-#define UNIT_MINV(u) ((u)->minv)
+inline ubit8 UNIT_MINV(unit_data *unit) { return unit->getLevelOfWizardInvisibility(); }
+inline ubit8 UNIT_MINV(const unit_data *unit) { return unit->getLevelOfWizardInvisibility(); }
 
-#define UNIT_TITLE(unit) ((unit)->title)
+inline const std::string &UNIT_TITLE(const unit_data *unit) { return unit->getTitle(); }
 
-#define UNIT_OUT_DESCR(unit) ((unit)->out_descr)
+inline const std::string &UNIT_OUT_DESCR(const unit_data *unit) { return unit->getDescriptionOfOutside(); }
 
-#define UNIT_IN_DESCR(unit) ((unit)->in_descr)
+inline const std::string &UNIT_IN_DESCR(const unit_data *unit) { return unit->getDescriptionOfInside(); }
 
-#define UNIT_EXTRA(unit) ((unit)->extra)
-
+inline extra_list &UNIT_EXTRA(unit_data *unit) { return unit->getExtraList(); }
+inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExtraList(); }
+// clang-format on
 /* ..................................................................... */
 
 #define IS_ROOM(unit) (UNIT_TYPE(unit) == UNIT_ST_ROOM)
@@ -144,7 +152,7 @@
 #define UNIT_IS_TRANSPARENT(u)                                                                                                             \
     (!IS_SET(UNIT_FLAGS(u), UNIT_FL_BURIED) && IS_SET(UNIT_FLAGS(u), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED))
 
-#define UNIT_FI_ZONE(unit) ((unit)->fi->getZone())
+#define UNIT_FI_ZONE(unit) ((unit)->getFileIndex()->getZone())
 
 #define UNIT_FI_ZONENAME(unit) (UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE")
 

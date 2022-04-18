@@ -48,7 +48,7 @@ descriptor_data *unit_is_edited(unit_data *u)
 /* By using this, we can easily sort the list if ever needed */
 void insert_in_unit_list(unit_data *u)
 {
-    assert(u->gnext == nullptr && u->gprevious == nullptr && g_unit_list != u);
+    assert(u->getGlobalNext() == nullptr && u->getGlobalPrevious() == nullptr && g_unit_list != u);
 
     if (UNIT_FILE_INDEX(u))
     {
@@ -59,8 +59,8 @@ void insert_in_unit_list(unit_data *u)
 
     if (!g_unit_list)
     {
-        u->gnext = nullptr;
-        u->gprevious = nullptr;
+        u->setGlobalNext(nullptr);
+        u->setGlobalPrevious(nullptr);
         g_unit_list = u;
         g_npc_head = u;
         g_room_head = u;
@@ -73,9 +73,9 @@ void insert_in_unit_list(unit_data *u)
         case UNIT_ST_PC:
         {
             tmp_u = g_unit_list;
-            u->gnext = tmp_u;
-            u->gprevious = tmp_u->gprevious;
-            tmp_u->gprevious = u;
+            u->setGlobalNext(tmp_u);
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -88,7 +88,7 @@ void insert_in_unit_list(unit_data *u)
             if (UNIT_TYPE(g_npc_head) != UNIT_ST_NPC)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->gnext)
+                for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -98,13 +98,13 @@ void insert_in_unit_list(unit_data *u)
                 tmp_u = g_npc_head;
             }
 
-            u->gnext = tmp_u;
-            u->gprevious = tmp_u->gprevious;
-            if (tmp_u->gprevious)
+            u->setGlobalNext(tmp_u);
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            if (tmp_u->getGlobalPrevious())
             {
-                tmp_u->gprevious->gnext = u;
+                tmp_u->getGlobalPrevious()->setGlobalNext(u);
             }
-            tmp_u->gprevious = u;
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -118,7 +118,7 @@ void insert_in_unit_list(unit_data *u)
             if (UNIT_TYPE(g_obj_head) != UNIT_ST_OBJ)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->gnext)
+                for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -128,13 +128,13 @@ void insert_in_unit_list(unit_data *u)
                 tmp_u = g_obj_head;
             }
 
-            u->gnext = tmp_u;
-            u->gprevious = tmp_u->gprevious;
-            if (tmp_u->gprevious)
+            u->setGlobalNext(tmp_u);
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            if (tmp_u->getGlobalPrevious())
             {
-                tmp_u->gprevious->gnext = u;
+                tmp_u->getGlobalPrevious()->setGlobalNext(u);
             }
-            tmp_u->gprevious = u;
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -148,7 +148,7 @@ void insert_in_unit_list(unit_data *u)
             if (UNIT_TYPE(g_room_head) != UNIT_ST_ROOM)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->gnext)
+                for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -158,13 +158,13 @@ void insert_in_unit_list(unit_data *u)
                 tmp_u = g_room_head;
             }
 
-            u->gnext = tmp_u;
-            u->gprevious = tmp_u->gprevious;
-            if (tmp_u->gprevious)
+            u->setGlobalNext(tmp_u);
+            u->setGlobalPrevious(tmp_u->getGlobalPrevious());
+            if (tmp_u->getGlobalPrevious())
             {
-                tmp_u->gprevious->gnext = u;
+                tmp_u->getGlobalPrevious()->setGlobalNext(u);
             }
-            tmp_u->gprevious = u;
+            tmp_u->setGlobalPrevious(u);
 
             if (tmp_u == g_unit_list)
             {
@@ -179,7 +179,7 @@ void insert_in_unit_list(unit_data *u)
 /* Remove a unit from the g_unit_list */
 void remove_from_unit_list(unit_data *unit)
 {
-    assert(unit->gprevious || unit->gnext || (g_unit_list == unit));
+    assert(unit->getGlobalPrevious() || unit->getGlobalNext() || (g_unit_list == unit));
 
     if (UNIT_FILE_INDEX(unit))
     {
@@ -188,31 +188,32 @@ void remove_from_unit_list(unit_data *unit)
 
     if (g_npc_head == unit)
     {
-        g_npc_head = unit->gnext;
+        g_npc_head = unit->getGlobalNext();
     }
     if (g_obj_head == unit)
     {
-        g_obj_head = unit->gnext;
+        g_obj_head = unit->getGlobalNext();
     }
     if (g_room_head == unit)
     {
-        g_room_head = unit->gnext;
+        g_room_head = unit->getGlobalNext();
     }
     if (g_unit_list == unit)
     {
-        g_unit_list = unit->gnext;
+        g_unit_list = unit->getGlobalNext();
     }
     else
     { /* Then this is always true 'if (unit->gprevious)'  */
-        unit->gprevious->gnext = unit->gnext;
+        unit->getGlobalPrevious()->setGlobalNext(unit->getGlobalNext());
     }
 
-    if (unit->gnext)
+    if (unit->getGlobalNext())
     {
-        unit->gnext->gprevious = unit->gprevious;
+        unit->getGlobalNext()->setGlobalPrevious(unit->getGlobalPrevious());
     }
 
-    unit->gnext = unit->gprevious = nullptr;
+    unit->setGlobalNext(nullptr);
+    unit->setGlobalPrevious(nullptr);
 }
 
 unit_fptr *find_fptr(unit_data *u, ubit16 idx)
@@ -243,7 +244,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     if (UNIT_FUNC(u) == nullptr)
     {
         f->setNext(UNIT_FUNC(u));
-        UNIT_FUNC(u) = f;
+        u->setFunctionPointer(f);
         return;
     }
 
@@ -251,7 +252,7 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     if (f->getFunctionPriority() < UNIT_FUNC(u)->getFunctionPriority())
     {
         f->setNext(UNIT_FUNC(u));
-        UNIT_FUNC(u) = f;
+        u->setFunctionPointer(f);
         return;
     }
 
@@ -344,7 +345,7 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     /* Only unlink function, do not free it! */
     if (UNIT_FUNC(u) == f)
     {
-        UNIT_FUNC(u) = f->getNext();
+        u->setFunctionPointer(f->getNext());
     }
     else
     {
@@ -485,11 +486,11 @@ void modify_bright(unit_data *unit, int bright)
     unit_data *ext = nullptr;
     unit_data *in = nullptr;
 
-    UNIT_BRIGHT(unit) += bright;
+    unit->changeLightOutputBy(bright);
 
     if ((in = UNIT_IN(unit)))
     { /* Light up what the unit is inside */
-        UNIT_LIGHTS(in) += bright;
+        in->changeNumberOfActiveLightSourcesBy(bright);
     }
 
     if (IS_OBJ(unit) && OBJ_EQP_POS(unit))
@@ -503,11 +504,11 @@ void modify_bright(unit_data *unit, int bright)
     {
         /* the unit is inside a transperant unit, so it lights up too */
         /* this works with actions in unit-up/down                    */
-        UNIT_BRIGHT(in) += bright;
+        in->changeLightOutputBy(bright);
         if ((ext = UNIT_IN(in)))
         {
-            UNIT_LIGHTS(ext) += bright;
-            UNIT_ILLUM(in) += bright;
+            ext->changeNumberOfActiveLightSourcesBy(bright);
+            in->changeTransparentLightOutputBy(bright);
         }
     }
 }
@@ -517,30 +518,30 @@ void trans_set(unit_data *u)
     unit_data *u2 = nullptr;
     int sum = 0;
 
-    for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->next)
+    for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->getNext())
     {
         sum += UNIT_BRIGHT(u2);
     }
 
-    UNIT_ILLUM(u) = sum;
-    UNIT_BRIGHT(u) += sum;
+    u->setTransparentLightOutput(sum);
+    u->changeLightOutputBy(sum);
 
     if (UNIT_IN(u))
     {
-        UNIT_LIGHTS(UNIT_IN(u)) += sum;
+        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(sum);
     }
 }
 
 void trans_unset(unit_data *u)
 {
-    UNIT_BRIGHT(u) -= UNIT_ILLUM(u);
+    u->changeLightOutputBy(-1 * UNIT_ILLUM(u));
 
     if (UNIT_IN(u))
     {
-        UNIT_LIGHTS(UNIT_IN(u)) -= UNIT_ILLUM(u);
+        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(-1 * UNIT_ILLUM(u));
     }
 
-    UNIT_ILLUM(u) = 0;
+    u->setTransparentLightOutput(0);
 }
 
 unit_data *equipment(unit_data *ch, ubit8 pos)
@@ -549,7 +550,7 @@ unit_data *equipment(unit_data *ch, ubit8 pos)
 
     assert(IS_CHAR(ch));
 
-    for (u = UNIT_CONTAINS(ch); u; u = u->next)
+    for (u = UNIT_CONTAINS(ch); u; u = u->getNext())
     {
         if (IS_OBJ(u) && pos == OBJ_EQP_POS(u))
         {
@@ -744,60 +745,61 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     bright = UNIT_BRIGHT(unit);             /* brightness inc. trans    */
     selfb = bright - UNIT_ILLUM(unit);      /* brightness excl. trans   */
 
-    UNIT_LIGHTS(in) -= bright; /* Subtract Light */
+    in->changeNumberOfActiveLightSourcesBy(-1 * bright); // Subtract Light
     if (UNIT_IS_TRANSPARENT(in))
     {
-        UNIT_ILLUM(in) -= selfb;
-        UNIT_BRIGHT(in) -= selfb;
+        in->changeTransparentLightOutputBy(-1 * selfb);
+        in->changeLightOutputBy(-1 * selfb);
     }
     else if (toin)
     {
-        UNIT_LIGHTS(toin) += bright;
+        toin->changeNumberOfActiveLightSourcesBy(bright);
     }
 
     if (toin && UNIT_IS_TRANSPARENT(toin))
     {
-        UNIT_BRIGHT(toin) += selfb;
-        UNIT_ILLUM(toin) += selfb;
+        toin->changeLightOutputBy(selfb);
+        toin->changeTransparentLightOutputBy(selfb);
         if (extin)
         {
-            UNIT_LIGHTS(extin) += selfb;
+            extin->changeNumberOfActiveLightSourcesBy(selfb);
         }
     }
 
     if (IS_CHAR(unit))
     {
-        --UNIT_CHARS(UNIT_IN(unit));
+        unit->getMyContainer()->decrementNumberOfCharactersInsideUnit();
     }
     /*fuck*/
-    UNIT_WEIGHT(UNIT_IN(unit)) -= UNIT_WEIGHT(unit);
+    unit->getMyContainer()->reduceWeightBy(UNIT_WEIGHT(unit));
 
     if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
     {
-        UNIT_CONTAINS(UNIT_IN(unit)) = unit->next;
+        unit->getMyContainer()->setContainedUnit(unit->getNext());
     }
     else
     {
-        for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit; u = u->next)
+        for (u = unit->getMyContainer()->getContainedUnits(); u->getNext() != unit; u = u->getNext())
         {
             ;
         }
-        u->next = unit->next;
+        u->setNext(unit->getNext());
     }
 
-    unit->next = nullptr;
+    unit->setNext(nullptr);
 
-    if ((UNIT_IN(unit) = UNIT_IN(UNIT_IN(unit))))
+    unit->setMyContainerTo(unit->getMyContainer()->getMyContainer());
+    if (unit->getMyContainer())
     {
-        unit->next = UNIT_CONTAINS(UNIT_IN(unit));
-        UNIT_CONTAINS(UNIT_IN(unit)) = unit;
+        unit->setNext(unit->getMyContainer()->getContainedUnits());
+        unit->getMyContainer()->setContainedUnit(unit);
         if (IS_CHAR(unit))
         {
-            ++UNIT_CHARS(UNIT_IN(unit));
+            unit->getMyContainer()->incrementNumberOfCharactersInsideUnit();
         }
     }
 
-    if (pile && IS_MONEY(unit) && UNIT_IN(unit))
+    if (pile && IS_MONEY(unit) && unit->getMyContainer())
     {
         pile_money(unit);
     }
@@ -833,24 +835,24 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     bright = UNIT_BRIGHT(unit);
     selfb = bright - UNIT_ILLUM(unit);
 
-    UNIT_LIGHTS(to) += bright;
+    to->changeNumberOfActiveLightSourcesBy(bright);
     if (UNIT_IS_TRANSPARENT(to))
     {
-        UNIT_BRIGHT(to) += selfb;
-        UNIT_ILLUM(to) += selfb;
+        to->changeLightOutputBy(selfb);
+        to->changeTransparentLightOutputBy(selfb);
     }
     else if (in)
     {
-        UNIT_LIGHTS(in) -= bright;
+        in->changeNumberOfActiveLightSourcesBy(-1 * bright);
     }
 
     if (in && UNIT_IS_TRANSPARENT(in))
     {
-        UNIT_BRIGHT(in) -= selfb;
-        UNIT_ILLUM(in) -= selfb;
+        in->changeLightOutputBy(-1 * selfb);
+        in->changeTransparentLightOutputBy(-1 * selfb);
         if (extin)
         {
-            UNIT_LIGHTS(extin) -= selfb;
+            extin->changeNumberOfActiveLightSourcesBy(-1 * selfb);
         }
     }
 
@@ -858,31 +860,31 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     {
         if (IS_CHAR(unit))
         {
-            --UNIT_CHARS(UNIT_IN(unit));
+            UNIT_IN(unit)->decrementNumberOfCharactersInsideUnit();
         }
         if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
         {
-            UNIT_CONTAINS(UNIT_IN(unit)) = unit->next;
+            UNIT_IN(unit)->setContainedUnit(unit->getNext());
         }
         else
         {
-            for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit; u = u->next)
+            for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->getNext() != unit; u = u->getNext())
             {
                 ;
             }
-            u->next = unit->next;
+            u->setNext(unit->getNext());
         }
     }
 
-    UNIT_IN(unit) = to;
-    unit->next = UNIT_CONTAINS(to);
-    UNIT_CONTAINS(to) = unit;
+    unit->setMyContainerTo(to);
+    unit->setNext(UNIT_CONTAINS(to));
+    to->setContainedUnit(unit);
 
     if (IS_CHAR(unit))
     {
-        ++UNIT_CHARS(UNIT_IN(unit));
+        UNIT_IN(unit)->incrementNumberOfCharactersInsideUnit();
     }
-    UNIT_WEIGHT(to) += UNIT_WEIGHT(unit);
+    to->increaseWeightBy(UNIT_WEIGHT(unit));
 
     if (pile && IS_MONEY(unit))
     {
@@ -1170,7 +1172,7 @@ void weight_change_unit(unit_data *unit, int weight)
 {
     for (; unit; unit = UNIT_IN(unit))
     {
-        UNIT_WEIGHT(unit) += weight;
+        unit->increaseWeightBy(weight);
     }
 }
 

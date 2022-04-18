@@ -296,6 +296,16 @@ cNamelist *cNamelist::Duplicate()
 //
 const char *cNamelist::IsNameRawAbbrev(const char *name)
 {
+    return std::as_const(*this).IsNameRawAbbrev(name);
+}
+
+// See IsNameRaw.
+// Will match non-full words, so
+//   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
+// will return " guard" because "de" matches the beginning of "deer"
+//
+const char *cNamelist::IsNameRawAbbrev(const char *name) const
+{
     ubit32 i = 0;
     ubit32 j = 0;
 
@@ -330,6 +340,19 @@ const char *cNamelist::IsNameRawAbbrev(const char *name)
 // If name is nullptr function returns nullptr.
 // If name is empty function returns nullptr (I believe).
 const char *cNamelist::IsNameRaw(const char *name)
+{
+    return std::as_const(*this).IsNameRaw(name);
+}
+
+// Find a match for 'name' in this namelist.
+// Will match full name only.
+// Case insensitive.
+// Then it will return a pointer to "Boar" because there was
+// a match on the full word fallow.
+//
+// If name is nullptr function returns nullptr.
+// If name is empty function returns nullptr (I believe).
+const char *cNamelist::IsNameRaw(const char *name) const
 {
     ubit32 i = 0;
     ubit32 j = 0;
@@ -527,7 +550,7 @@ void cNamelist::AppendNameTrim(const char *name)
     const char *c = name;
 
     while (isspace(*c))
-      c++;
+        c++;
 
     std::string *s = new std::string(c);
 
@@ -541,7 +564,6 @@ void cNamelist::AppendNameTrim(const char *name)
 
     namelist[length - 1] = s;
 }
-
 
 void cNamelist::AppendName(const char *name)
 {

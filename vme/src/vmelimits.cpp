@@ -30,7 +30,7 @@ int char_carry_n(unit_data *unit)
 {
     int i = 0;
 
-    for (unit = UNIT_CONTAINS(unit), i = 0; unit; unit = unit->next)
+    for (unit = UNIT_CONTAINS(unit), i = 0; unit; unit = unit->getNext())
     {
         if (!IS_OBJ(unit) || ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
         {
@@ -482,16 +482,16 @@ void set_title(unit_data *ch)
 
     if (CHAR_LEVEL(ch) == 0)
     {
-        UNIT_TITLE(ch) = "the guest";
+        ch->setTitle("the guest");
     }
     else if (CHAR_LEVEL(ch) <= START_LEVEL)
     {
         assert(CHAR_RACE(ch) < PC_RACE_MAX);
-        UNIT_TITLE(ch) = diku::format_to_str("the %s", g_pc_races[CHAR_RACE(ch)]);
+        ch->setTitle(diku::format_to_str("the %s", g_pc_races[CHAR_RACE(ch)]));
     }
     else if (IS_IMMORTAL(ch))
     {
-        UNIT_TITLE(ch) = ("the Admin");
+        ch->setTitle("the Admin");
     }
 }
 

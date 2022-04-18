@@ -70,68 +70,174 @@ class zone_reset_cmd;
 class unit_data : public basedestruct
 {
 public:
-    unit_data();
+    explicit unit_data(ubit8 unit_type);
     virtual ~unit_data();
     unit_data *copy();
     void set_fi(file_index_type *f);
 
-    cNamelist names; /* Name Keyword list for get, enter, etc.      */
+    cNamelist &getNames() { return names; }
+    const cNamelist &getNames() const { return names; }
 
-    unit_fptr /* Function pointer type                      */
-        *func;
+    unit_fptr *getFunctionPointer() { return func; }
+    void setFunctionPointer(unit_fptr *value) { func = value; }
 
-    unit_dil_affected_type *dilaffect;
+    unit_affected_type *getUnitAffectedType() { return affected; }
+    void setUnitAffectedType(unit_affected_type *value) { affected = value; }
 
-    unit_affected_type *affected;
+    file_index_type *getFileIndex() { return fi; }
+    const file_index_type *getFileIndex() const { return fi; }
+    void setFileIndex(file_index_type *value) { fi = value; }
 
-    file_index_type *fi; /* Unit file-index                               */
+    const char *getKey() const { return key; }
+    char **getKeyPtr() { return &key; }
+    void setKey(char *value) { key = value; }
 
-    char *key; /* Pointer to fileindex to Unit which is the key */
+    unit_data *getMyContainer() { return outside; }
+    const unit_data *getMyContainer() const { return outside; }
+    void setMyContainerTo(unit_data *value) { outside = value; }
 
-    unit_data *outside; /* Pointer out of the unit, ei. from an object   */
-    /* out to the char carrying it                   */
-    unit_data *inside; /* Linked list of chars,rooms & objs             */
+    const unit_data *getContainedUnits() const { return inside; }
+    unit_data *getContainedUnits() { return inside; }
+    void setContainedUnit(unit_data *value) { inside = value; }
 
-    unit_data /* For next unit in 'inside' linked list         */
-        *next;
+    const unit_data *getNext() const { return next; }
+    unit_data *getNext() { return next; }
+    void setNext(unit_data *value) { next = value; }
 
-    unit_data /* global l-list of objects, chars & rooms       */
-        *gnext,
-        *gprevious;
+    unit_data *getGlobalNext() { return gnext; }
+    const unit_data *getGlobalNext() const { return gnext; }
+    void setGlobalNext(unit_data *value) { gnext = value; }
 
-    ubit32 manipulate;  /* WEAR_XXX macros                               */
-    ubit16 flags;       /* Invisible, can_bury, burried...               */
-    sbit32 base_weight; /* The "empty" weight of a room/char/obj (lbs)   */
-    sbit32 weight;      /* Current weight of a room/obj/char             */
-    sbit16 capacity;    /* Capacity of obj/char/room, -1 => any          */
-    ubit16 size;        /* (cm) MOBs height, weapons size, ropes length  */
+    unit_data *getGlobalPrevious() { return gprevious; }
+    const unit_data *getGlobalPrevious() const { return gprevious; }
+    void setGlobalPrevious(unit_data *value) { gprevious = value; }
 
-    ubit8 status;     /* IS_ROOM, IS_OBJ, IS_PC, IS_NPC                */
-    ubit8 open_flags; /* In general OPEN will mean can "enter"?        */
-    ubit8 open_diff;  /* Open dificulty                                */
-    sbit16 light;     /* Number of active light sources in unit        */
-    sbit16 bright;    /* How much the unit shines                      */
-    sbit16 illum;     /* how much bright is by transparency            */
-    ubit8 chars;      /* How many chars is inside the unit             */
-    ubit8 minv;       /* Level of wizard invisible                     */
-    sbit32 max_hp;    /* The maximum number of hitpoint                */
-    sbit32 hp;        /* The actual amount of hitpoints left           */
+    ubit32 getManipulate() const { return manipulate; }
+    ubit32 *getManipulatePtr() { return &manipulate; }
+    void setAllManipulateFlags(ubit32 value) { manipulate = value; }
+    void setManipulateFlag(ubit32 value) { manipulate |= value; }
 
-    sbit16 alignment; /* +-1000 for alignments                         */
+    ubit16 getUnitFlags() const { return flags; }
+    ubit16 *getUnitFlagsPtr() { return &flags; }
+    void setAllUnitFlags(ubit16 value) { flags = value; }
+    void setUnitFlag(ubit16 value) { flags |= value; }
+    void removeUnitFlag(ubit16 value) { flags &= ~value; }
 
-    /* Room title, Char title, Obj "the barrel", NPC "the Beastly Fido" */
-    std::string title;
+    sbit32 getBaseWeight() const { return base_weight; }
+    void setBaseWeight(sbit32 value) { base_weight = value; }
 
-    /* The outside description of a unit           */
-    std::string out_descr;
+    sbit32 getWeight() const { return weight; }
+    void reduceWeightBy(sbit32 value) { weight -= value; }
+    void increaseWeightBy(sbit32 value) { weight += value; }
+    void setWeight(sbit32 value) { weight = value; }
 
-    /* The inside description of a unit            */
-    std::string in_descr;
+    sbit16 getCapacity() const { return capacity; }
+    sbit16 *getCapacityPtr() { return &capacity; }
+    void setCapacity(sbit16 value) { capacity = value; }
 
-    extra_list extra; /* All the look 'at' stuff                     */
+    ubit16 getSize() const { return size; }
+    ubit16 *getSizePtr() { return &size; }
+    void setSize(ubit16 value) { size = value; }
+    void increaseSizeBy(ubit16 value) { size += value; }
+
+    ubit8 getUnitType() const { return status; }
+
+    ubit8 getOpenFlags() const { return open_flags; }
+    ubit8 *getOpenFlagsPtr() { return &open_flags; }
+    void setAllOpenFlags(ubit8 value) { open_flags = value; }
+    void setOpenFlag(ubit8 value) { open_flags |= value; }
+
+    ubit8 getOpenDifficulty() const { return open_diff; }
+    ubit8 *getOpenDifficultyPtr() { return &open_diff; }
+    void setOpenDifficulty(ubit8 value) { open_diff = value; }
+
+    sbit16 getNumberOfActiveLightSources() const { return light; }
+    void changeNumberOfActiveLightSourcesBy(sbit16 value) { light += value; }
+    void setNumberOfActiveLightSources(sbit16 value) { light = value; }
+
+    sbit16 getLightOutput() const { return bright; }
+    void setLightOutput(sbit16 value) { bright = value; }
+    void changeLightOutputBy(sbit16 value) { bright += value; }
+
+    sbit16 getTransparentLightOutput() const { return illum; }
+    void setTransparentLightOutput(sbit16 value) { illum = value; }
+    void changeTransparentLightOutputBy(sbit16 value) { illum += value; }
+
+    ubit8 getNumberOfCharactersInsideUnit() const { return chars; }
+    void decrementNumberOfCharactersInsideUnit() { --chars; }
+    void incrementNumberOfCharactersInsideUnit() { ++chars; }
+    void setNumberOfCharactersInsideUnit(ubit8 value) { chars = value; }
+
+    ubit8 getLevelOfWizardInvisibility() const { return minv; }
+    ubit8 *getLevelOfWizardInvisibilityPtr() { return &minv; }
+    void setLevelOfWizardInvisibility(ubit8 value) { minv = value; }
+
+    sbit32 getMaximumHitpoints() const { return max_hp; }
+    sbit32 *getMaximumHitpointsPtr() { return &max_hp; }
+    void setMaximumHitpoints(sbit32 value) { max_hp = value; }
+
+    sbit32 getCurrentHitpoints() const { return hp; }
+    sbit32 *getCurrentHitpointsPtr() { return &hp; }
+    void setCurrentHitpoints(sbit32 value) { hp = value; }
+    void changeCurrentHitpointsBy(sbit32 value) { hp += value; }
+
+    sbit16 getAlignment() const { return alignment; }
+    sbit16 *getAlignmentPtr() { return &alignment; }
+    void increaseAlignmentBy(sbit16 value) { alignment += value; }
+    void decreaseAlignmentBy(sbit16 value) { alignment -= value; }
+    void setAlignment(sbit16 value) { alignment = value; }
+
+    const std::string &getTitle() const { return title; }
+    std::string *getTitlePtr() { return &title; }
+    void setTitle(std::string value) { title = std::move(value); }
+
+    const std::string &getDescriptionOfOutside() const { return out_descr; }
+    std::string *getDescriptionOfOutsidePtr() { return &out_descr; }
+    void setDescriptionOfOutside(std::string value) { out_descr = std::move(value); }
+
+    const std::string &getDescriptionOfInside() const { return in_descr; }
+    std::string *getDescriptionOfInsidePtr() { return &in_descr; }
+    void setDescriptionOfInside(std::string value) { in_descr = std::move(value); }
+
+    const extra_list &getExtraList() const { return extra; }
+    extra_list &getExtraList() { return extra; }
 
     int destruct_classindex();
     std::string json();
+
+private:
+    cNamelist names;                            // Name Keyword list for get, enter, etc.
+    unit_fptr *func{nullptr};                   // Function pointer type
+    unit_dil_affected_type *dilaffect{nullptr}; //
+    unit_affected_type *affected{nullptr};      //
+    file_index_type *fi{nullptr};               // Unit file-index
+    char *key{nullptr};                         // Pointer to fileindex to Unit which is the key
+    unit_data *outside{nullptr};                // Pointer out of the unit, ie. from an object out to the char carrying it
+    unit_data *inside{nullptr};                 // Linked list of chars,rooms & objs
+    unit_data *next{nullptr};                   // For next unit in 'inside' linked list
+    unit_data *gnext{nullptr};                  // global l-list of objects, chars & rooms
+    unit_data *gprevious{nullptr};              // global l-list of objects, chars & rooms
+    ubit32 manipulate{0};                       // WEAR_XXX macros
+    ubit16 flags{0};                            // Invisible, can_bury, burried...
+    sbit32 base_weight{0};                      // The "empty" weight of a room/char/obj (lbs)
+    sbit32 weight{0};                           // Current weight of a room/obj/char
+    sbit16 capacity{0};                         // Capacity of obj/char/room, -1 => any
+    ubit16 size{0};                             // (cm) MOBs height, weapons size, ropes length
+    ubit8 status{0};                            // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
+    ubit8 open_flags{0};                        // In general OPEN will mean can "enter"?
+    ubit8 open_diff{0};                         // Open difficulty
+    sbit16 light{0};                            // Number of active light sources in unit
+    sbit16 bright{0};                           // How much the unit shines
+    sbit16 illum{0};                            // how much bright is by transparency
+    ubit8 chars{0};                             // How many chars is inside the unit
+    ubit8 minv{0};                              // Level of wizard invisible
+    sbit32 max_hp{0};                           // The maximum number of hitpoints
+    sbit32 hp{0};                               // The actual amount of hitpoints left
+    sbit16 alignment{0};                        // +-1000 for alignments
+    std::string title;                          // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
+    std::string out_descr;                      // The outside description of a unit
+    std::string in_descr;                       // The inside description of a unit
+    extra_list extra;                           // All the look 'at' stuff
 };
 
 /* ----------------- ROOM SPECIFIC STRUCTURES ----------------------- */
@@ -142,16 +248,16 @@ public:
     room_data();
     ~room_data();
 
-    room_direction_data *dir_option[MAX_EXIT + 1]; // Why 11? Why not MAX_EXIT+1?
+    room_direction_data *dir_option[MAX_EXIT + 1]{}; // Why 11? Why not MAX_EXIT+1?
 
-    ubit8 flags;         /* Room flags                              */
-    ubit8 movement_type; /* The type of movement (city, hills etc.) */
-    ubit8 resistance;    /* Magic resistance of the room            */
+    ubit8 flags{};         /* Room flags                              */
+    ubit8 movement_type{}; /* The type of movement (city, hills etc.) */
+    ubit8 resistance{};    /* Magic resistance of the room            */
 
     sbit16 mapx, mapy; /* Graphical map coordinates */
 
-    int sc;  /*strong component, used for shortest path */
-    int num; /*room number, used for shortest path */
+    int sc{};  /*strong component, used for shortest path */
+    int num{}; /*room number, used for shortest path */
 #ifndef MPLEX_COMPILE
     enum edge_dir_t
     {
@@ -195,7 +301,7 @@ public:
 class char_data : public unit_data
 {
 public:
-    char_data();
+    explicit char_data(ubit8 unit_type);
     virtual ~char_data();
 
     descriptor_data *descriptor;
@@ -250,7 +356,7 @@ public:
     ubit16 flags;          /* flags for PC setup (brief, noshout...)  */
     ubit16 nr_of_crimes;   /* Number of crimes committed              */
     ubit16 crack_attempts; /* Number of wrong passwords entered       */
-    ubit16 lifespan;       /* How many year to live....               */
+    ubit16 lifespan{};     /* How many year to live....               */
 
     sbit16 spells[SPL_TREE_MAX];   /* The spells learned                  */
     ubit8 spell_lvl[SPL_TREE_MAX]; /* Practiced within that level         */

@@ -31,13 +31,13 @@ struct AccountCPPFixture : public unit_tests::FixtureBase
         g_cAccountConfig.Boot();
 
         god = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC)));
-        god->names.AppendName("Thor");
+        god->getNames().AppendName("Thor");
 
         whom = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC)));
-        whom->names.AppendName("Bilbo");
+        whom->getNames().AppendName("Bilbo");
 
         npc = std::unique_ptr<npc_data>(dynamic_cast<npc_data *>(new_unit_data(UNIT_ST_NPC)));
-        npc->names.AppendName("Red Shirt 1");
+        npc->getNames().AppendName("Red Shirt 1");
 
         // Booting the server config and account config create log messsage so start with clean slate
         unit_tests::OutputCapture::Instance()->Clear();
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -291,14 +291,14 @@ BOOST_AUTO_TEST_CASE(account_cclog_long_name_test)
     unlink(logfile.c_str());
 
     int amount = 123456789;
-    whom->names.InsertName("ThisIsAReallyLongNameMoreThanItShouldBe", 0);
+    whom->getNames().InsertName("ThisIsAReallyLongNameMoreThanItShouldBe", 0);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_cclog(whom.get(), amount);
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_long_amount_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -344,14 +344,14 @@ BOOST_AUTO_TEST_CASE(account_cclog_long_name_and_amount_test)
     unlink(logfile.c_str());
 
     int amount = INT_MAX;
-    whom->names.InsertName("ThisIsAReallyLongNameMoreThanItShouldBe", 0);
+    whom->getNames().InsertName("ThisIsAReallyLongNameMoreThanItShouldBe", 0);
 
     ////////////////////////// Test Subject //////////////////////////////
     account_cclog(whom.get(), amount);
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE(account_cclog_neg_amount_test)
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -394,14 +394,14 @@ BOOST_AUTO_TEST_CASE(account_cclog_no_name_test)
     unlink(logfile.c_str());
 
     int amount = INT_MIN;
-    whom->names.Free();
+    whom->getNames().Free();
 
     ////////////////////////// Test Subject //////////////////////////////
     account_cclog(whom.get(), amount);
     ////////////////////////// Test Subject //////////////////////////////
 
     char buf[1024]{};
-    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    snprintf(buf, sizeof(buf), "%-16s %6.2f %s\n", UNIT_NAME(whom.get()), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     std::ifstream in(logfile.c_str(), std::ios::binary);
     BOOST_TEST(in.good());
@@ -469,7 +469,7 @@ BOOST_DATA_TEST_CASE(account_withdraw_test, withdrawal_amounts, amount)
     }
     BOOST_TEST(whom->account.getTotalCredit() == expected_total_credit);
 
-    auto expected = diku::format_to_str("%s withdrew %d from account %s.", god->names.Name(), amount, whom->names.Name());
+    auto expected = diku::format_to_str("%s withdrew %d from account %s.", god->getNames().Name(), amount, whom->getNames().Name());
 
     const auto &slog = unit_tests::OutputCapture::Instance()->getSLogData();
     BOOST_TEST(slog.m_level == LOG_ALL);

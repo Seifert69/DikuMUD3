@@ -38,7 +38,7 @@ void assign_player_file_index(unit_data *pc)
 
     if (it != z->cgetFileIndexMap().end())
     {
-        UNIT_FILE_INDEX(pc) = it->second;
+        pc->setFileIndex(it->second);
     }
     else
     {
@@ -50,7 +50,7 @@ void assign_player_file_index(unit_data *pc)
 
         z->getFileIndexMap().insert(std::make_pair(fi->getName(), fi));
 
-        UNIT_FILE_INDEX(pc) = fi;
+        pc->setFileIndex(fi);
     }
 }
 
@@ -285,7 +285,7 @@ void save_player_file(unit_data *pc)
             OBJ_EQP_POS(tmp_u) = tmp_i;
         }
         unit_from_unit(tmp_u);
-        tmp_u->next = list;
+        tmp_u->setNext(list);
         list = tmp_u;
     }
 
@@ -299,8 +299,8 @@ void save_player_file(unit_data *pc)
     /* Restore all inventory and equipment */
     while ((tmp_u = list))
     {
-        list = list->next;
-        tmp_u->next = nullptr;
+        list = list->getNext();
+        tmp_u->setNext(nullptr);
 
         unit_to_unit(tmp_u, pc);
 

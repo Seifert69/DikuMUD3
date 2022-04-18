@@ -169,7 +169,7 @@ void reset_char(unit_data *ch)
     //  assert (CHAR_SEX (ch) != 255);
     //  assert (CHAR_POS (ch) != 255);
 
-    UNIT_MAX_HIT(ch) = hit_limit(ch);
+    ch->setMaximumHitpoints(hit_limit(ch));
 }
 
 void pc_data::connect_game()
@@ -567,7 +567,7 @@ void nanny_throw(descriptor_data *d, char *arg)
 
         // Scan the game for a unit that is a PCs and hold the same name
         // they should all be descriptorless now (except for d trying to login)
-        for (u = g_unit_list; u; u = u->gnext)
+        for (u = g_unit_list; u; u = u->getGlobalNext())
         {
             if (!IS_PC(u))
             {
@@ -691,7 +691,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
 
     /* See if guest is in game, if so - a guest was LD       */
     /* Password has now been redefined                       */
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->cgetCharacter())) == 0))
         {
@@ -990,7 +990,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     /* See if player is in game (guests are not created in file entries) */
     /* Enters game (reconnects) if true                                  */
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (!IS_PC(u))
         {

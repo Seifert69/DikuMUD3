@@ -54,8 +54,8 @@ void convert_free_unit(unit_data *u)
         convert_free_unit(UNIT_CONTAINS(u));
     }
 
-    UNIT_AFFECTED(u) = nullptr;
-    UNIT_FUNC(u) = nullptr;
+    u->setUnitAffectedType(nullptr);
+    u->setFunctionPointer(nullptr);
 
     unit_from_unit(u);
     remove_from_unit_list(u);
@@ -70,7 +70,7 @@ void free_inventory(unit_data *u)
 
     for (tmp = u; tmp; tmp = nxt)
     {
-        nxt = tmp->next;
+        nxt = tmp->getNext();
         convert_free_unit(tmp);
     }
 }
@@ -113,7 +113,7 @@ unit_data *convert_item(unit_data *u, unit_data *pc, int bList)
 
     if (IS_OBJ(u))
     {
-        UNIT_SIZE(u) = UNIT_SIZE(pc);
+        u->setSize(UNIT_SIZE(pc));
     }
 
     return u;
@@ -130,7 +130,7 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
 
     convert_inventory(UNIT_CONTAINS(u), pc, bList);
 
-    convert_inventory(u->next, pc, bList);
+    convert_inventory(u->getNext(), pc, bList);
 
     bla = convert_item(u, pc, bList);
 
@@ -217,7 +217,7 @@ int sanity_check(unit_data *u)
     if (!UNIT_CONTAINS(u) && (UNIT_WEIGHT(u) != UNIT_BASE_WEIGHT(u)))
     {
         printf("Fixed illegal weight.");
-        UNIT_WEIGHT(u) = UNIT_BASE_WEIGHT(u);
+        u->setWeight(UNIT_BASE_WEIGHT(u));
     }
 
     return TRUE;
@@ -428,7 +428,7 @@ void clist()
                         shall_exclude(UNIT_NAME(pc));
                         // shall_delete(pc);
 
-                        UNIT_CONTAINS(void_char) = nullptr;
+                        void_char->setContainedUnit(nullptr);
                         /* load_contents(temp, void_char);
 
                         if (UNIT_CONTAINS(void_char))
@@ -703,7 +703,7 @@ void cleanup()
 
                         std::cout.flush();
 
-                        UNIT_CONTAINS(void_char) = nullptr;
+                        void_char->setContainedUnit(nullptr);
                         load_contents(temp, void_char);
                         if (UNIT_CONTAINS(void_char))
                         {

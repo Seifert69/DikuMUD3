@@ -371,12 +371,13 @@ void set_points(unit_data *u)
         getCharPoints(u).setAttackType(WPN_FIST);
     }
 
-    UNIT_HIT(u) = UNIT_MAX_HIT(u) = hitpoint_total(CHAR_HPP(u));
+    u->setCurrentHitpoints(hitpoint_total(CHAR_HPP(u)));
+    u->setMaximumHitpoints(hitpoint_total(CHAR_HPP(u)));
 }
 
 void set_room_data(unit_data *u)
 {
-    SET_BIT(UNIT_MANIPULATE(u), MANIPULATE_ENTER);
+    u->setManipulateFlag(MANIPULATE_ENTER);
 }
 
 bool affect_vector_string(unit_data *obj, std::string &s)
@@ -1011,26 +1012,26 @@ void process_unit(unit_data *u)
     if (!is_in(UNIT_WEIGHT(u), 0, 2000))
     {
         dmc_error(TRUE, "%s: Illegal weight %d (expected 0..2000).", UNIT_IDENT(u), UNIT_WEIGHT(u));
-        UNIT_WEIGHT(u) = 0;
+        u->setWeight(0);
     }
-    UNIT_WEIGHT(u) = UNIT_BASE_WEIGHT(u);
+    u->setWeight(UNIT_BASE_WEIGHT(u));
 
     if (!is_in(UNIT_ALIGNMENT(u), -1000, +1000))
     {
         dmc_error(TRUE, "%s: Illegal alignment %d (expected -1000..+1000).", UNIT_IDENT(u), UNIT_ALIGNMENT(u));
-        UNIT_ALIGNMENT(u) = 0;
+        u->setAlignment(0);
     }
 
     if (!is_in(UNIT_LIGHTS(u), -6, 6))
     {
         dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), UNIT_LIGHTS(u));
-        UNIT_LIGHTS(u) = 0;
+        u->setNumberOfActiveLightSources(0);
     }
 
     if (!is_in(UNIT_BRIGHT(u), -6, 6))
     {
         dmc_error(TRUE, "%s: Illegal bright %d (expected -6..+6).", UNIT_IDENT(u), UNIT_BRIGHT(u));
-        UNIT_BRIGHT(u) = 0;
+        u->setLightOutput(0);
     }
 
     switch (UNIT_TYPE(u))
@@ -1167,27 +1168,29 @@ void init_unit(unit_data *u)
 {
     int i = 0;
 
-    u->next = nullptr;
+    u->setNext(nullptr);
 
-    UNIT_KEY(u) = nullptr;
-    UNIT_MANIPULATE(u) = 0;
-    UNIT_FLAGS(u) = 0;
-    UNIT_BASE_WEIGHT(u) = 1;
-    UNIT_CAPACITY(u) = 0;
-    UNIT_HIT(u) = UNIT_MAX_HIT(u) = 100;
-    UNIT_ALIGNMENT(u) = 0;
-    UNIT_OPEN_FLAGS(u) = 0;
-    UNIT_LIGHTS(u) = 0;
-    UNIT_BRIGHT(u) = 0;
-    UNIT_CHARS(u) = 0;
-    UNIT_AFFECTED(u) = nullptr;
-    UNIT_SIZE(u) = 180; /* 180cm default */
+    u->setKey(nullptr);
+    u->setAllManipulateFlags(0);
+    u->setAllManipulateFlags(0);
+    u->setBaseWeight(1);
+    u->setCapacity(0);
+    u->setCurrentHitpoints(100);
+    u->setMaximumHitpoints(100);
+    u->setAlignment(0);
+    u->setAllOpenFlags(0);
+    u->setNumberOfActiveLightSources(0);
+    u->setLightOutput(0);
+    u->setNumberOfCharactersInsideUnit(0);
+    u->setUnitAffectedType(nullptr);
+    u->setSize(180); // 180cm default
 
     switch (UNIT_TYPE(u))
     {
         case UNIT_ST_NPC:
         {
-            UNIT_BASE_WEIGHT(u) = UNIT_WEIGHT(u) = 120; /* lbs default */
+            u->setBaseWeight(120); // lbs default
+            u->setWeight(120);     // lbs default
             CHAR_MONEY(u) = nullptr;
             getCharPoints(u).setPlayerExperience(100); // 100 XP per default at your own level
             getCharPoints(u).setAllCharacterFlags(0);
@@ -1239,10 +1242,10 @@ void init_unit(unit_data *u)
             break;
 
         case UNIT_ST_ROOM:
-            UNIT_CAPACITY(u) = 30000;
-            UNIT_BASE_WEIGHT(u) = 10;
-            UNIT_WEIGHT(u) = 10;
-            UNIT_IN(u) = nullptr;
+            u->setCapacity(30000);
+            u->setBaseWeight(10);
+            u->setWeight(10);
+            u->setMyContainerTo(nullptr);
             for (i = 0; i <= MAX_EXIT; i++)
             {
                 ROOM_EXIT(u, i) = nullptr;

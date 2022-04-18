@@ -198,12 +198,12 @@ void edit_info(descriptor_data *d)
 
 void edit_outside_descr(descriptor_data *d)
 {
-    UNIT_OUT_DESCR(d->getEditing()) = d->getLocalString();
+    d->getEditing()->setDescriptionOfOutside(d->getLocalString());
 }
 
 void edit_inside_descr(descriptor_data *d)
 {
-    UNIT_IN_DESCR(d->getEditing()) = d->getLocalString();
+    d->getEditing()->setDescriptionOfInside(d->getLocalString());
 }
 
 int search_block_set(char *arg, const char **list, bool exact)
@@ -700,7 +700,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 2: /* "title",   */
-            UNIT_TITLE(unt) = (argument);
+            unt->setTitle(argument);
 
             send_to_char("Title modified.<br/>", ch);
             return;
@@ -763,7 +763,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 6: /* "manipulate-flags" */
-            UNIT_MANIPULATE(unt) = bitarg;
+            unt->setAllManipulateFlags(bitarg);
             return;
 
         case 7: /* "unit-flags" */
@@ -776,7 +776,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 trans_set(unt);
             }
 
-            UNIT_FLAGS(unt) = bitarg;
+            unt->setAllUnitFlags(bitarg);
             return;
 
         case 8: /* "weight" */
@@ -789,7 +789,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             int dif = valarg - UNIT_BASE_WEIGHT(unt);
 
             /* set new baseweight */
-            UNIT_BASE_WEIGHT(unt) = valarg;
+            unt->setBaseWeight(valarg);
 
             /* update weight */
             weight_change_unit(unt, dif);
@@ -802,26 +802,26 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         }
 
         case 9: /* "capacity" */
-            UNIT_CAPACITY(unt) = valarg;
+            unt->setCapacity(valarg);
             return;
 
         case 10: /* "max_hp" */
-            UNIT_MAX_HIT(unt) = valarg;
+            unt->setMaximumHitpoints(valarg);
             return;
 
         case 11: /* "hp" */
-            UNIT_HIT(unt) = valarg;
+            unt->setCurrentHitpoints(valarg);
             return;
 
         case 12: /* "key" */
             argument = str_next_word(argument, strarg);
-            UNIT_KEY(unt) = str_dup(strarg);
+            unt->setKey(str_dup(strarg));
             return;
 
         case 13: /* "alignment" */
             if (is_in(valarg, -1000, 1000))
             {
-                UNIT_ALIGNMENT(unt) = valarg;
+                unt->setAlignment(valarg);
             }
             else
             {
@@ -830,7 +830,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 14: /* "open_flags" */
-            UNIT_OPEN_FLAGS(unt) = bitarg;
+            unt->setAllOpenFlags(bitarg);
             return;
 
         case 15: /* "tgh" OBSOLETE */
@@ -838,9 +838,9 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 16: /* "lights" */
-            UNIT_LIGHTS(unt) = valarg;
-            UNIT_BRIGHT(unt) = valarg;
-            UNIT_ILLUM(unt) = valarg;
+            unt->setNumberOfActiveLightSources(valarg);
+            unt->setLightOutput(valarg);
+            unt->setTransparentLightOutput(valarg);
             send_to_char("WARNING: This value is absolute and will cause 'darkness' "
                          "bugs if not used properly! Only use this to fix darkness "
                          "- use bright for changing the illumination!<br/>",
@@ -1143,7 +1143,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 51: /* "height" */
-            UNIT_SIZE(unt) = valarg;
+            unt->setSize(valarg);
             return;
 
         case 52: /* "race" */

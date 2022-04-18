@@ -810,12 +810,14 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
         adjust += (adjust * MAX(-10, diff)) / 20;
     }
 
+    // TODO move limits into the setter
     adjust = MIN(200, adjust);
     adjust = MAX(-200, adjust);
 
-    UNIT_ALIGNMENT(slayer) += adjust;
-    UNIT_ALIGNMENT(slayer) = MIN(1000, UNIT_ALIGNMENT(slayer));
-    UNIT_ALIGNMENT(slayer) = MAX(-1000, UNIT_ALIGNMENT(slayer));
+    slayer->increaseAlignmentBy(adjust);
+    // TODO move limits into the setter
+    slayer->setAlignment(MIN(1000, UNIT_ALIGNMENT(slayer)));
+    slayer->setAlignment(MAX(-1000, UNIT_ALIGNMENT(slayer)));
 }
 
 /* Do all the gain stuff for CH where no is the number of players */
@@ -1056,8 +1058,9 @@ void modify_hit(unit_data *ch, int hit)
 {
     if (CHAR_POS(ch) > POSITION_DEAD)
     {
-        UNIT_HIT(ch) += hit;
-        UNIT_HIT(ch) = MIN(hit_limit(ch), UNIT_HIT(ch));
+        ch->changeCurrentHitpointsBy(hit);
+        // TODO move limits into the setter
+        ch->setCurrentHitpoints(MIN(hit_limit(ch), UNIT_HIT(ch)));
 
         update_pos(ch);
 
@@ -1110,9 +1113,9 @@ void damage(unit_data *ch,
     {
         if (CHAR_LAST_ATTACKER(victim))
             FREE(CHAR_LAST_ATTACKER(victim));
-        if (ch->names.Name())
+        if (ch->getNames().Name())
         {
-            CHAR_LAST_ATTACKER(victim) = str_dup(ch->names.Name());
+            CHAR_LAST_ATTACKER(victim) = str_dup(ch->getNames().Name());
         }
         CHAR_LAST_ATTACKER_TYPE(victim) = UNIT_TYPE(ch);
         if (IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))
@@ -1130,7 +1133,7 @@ void damage(unit_data *ch,
             {
                 destroy_affect(paf);
             }
-            REMOVE_BIT(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE);
+            victim->removeUnitFlag(UNIT_FL_INVISIBLE);
         }
 
         if ((paf = affected_by_spell(ch, ID_SANCTUARY)))
@@ -1199,7 +1202,7 @@ void damage(unit_data *ch,
             create_affect(victim, &af);
         }
     }
-    UNIT_HIT(victim) -= dam;
+    victim->changeCurrentHitpointsBy(-1 * dam);
 
     update_pos(victim);
 
@@ -1292,11 +1295,11 @@ void damage(unit_data *ch,
         {
             if (CHAR_LAST_ATTACKER(victim))
             {
-                for (sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->next)
+                for (sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->getNext())
                 {
-                    if (CHAR_LAST_ATTACKER(victim) && sch->names.Name())
+                    if (CHAR_LAST_ATTACKER(victim) && sch->getNames().Name())
                     {
-                        if (strcmp(CHAR_LAST_ATTACKER(victim), sch->names.Name()) == 0)
+                        if (strcmp(CHAR_LAST_ATTACKER(victim), sch->getNames().Name()) == 0)
                         {
                             if (CHAR_LAST_ATTACKER_TYPE(victim) == UNIT_TYPE(sch))
                             {
@@ -1392,7 +1395,7 @@ void break_object(unit_data *obj)
         unequip_object(obj);
     }
 
-    UNIT_TITLE(obj) = diku::format_to_str("%s (broken)", STR(UNIT_TITLE_STRING(obj)));
+    obj->setTitle(diku::format_to_str("%s (broken)", obj->getTitle()));
 
     OBJ_VALUE(obj, 0) = 0;
     OBJ_VALUE(obj, 1) = 0;
@@ -1446,7 +1449,7 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
 
     if (dam > 0)
     {
-        UNIT_HIT(obj) -= dam;
+        obj->changeCurrentHitpointsBy(-1 * dam);
 
         if (UNIT_HIT(obj) < 0)
         {
@@ -1592,7 +1595,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
         damage_object(att, att_weapon, hm);
         if (CHAR_COMBAT(att))
         {
-            CHAR_COMBAT(att)->changeSpeed(SPEED_DEFAULT/2, 100); // Lose ½ round when you fumble
+            CHAR_COMBAT(att)->changeSpeed(SPEED_DEFAULT / 2, 100); // Lose ½ round when you fumble
         }
 
         return 0;

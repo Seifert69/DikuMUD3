@@ -211,7 +211,7 @@ int room_move(unit_data *ch,
         return 0;
     }
 
-    for (u = UNIT_CONTAINS(ch); u; u = u->next)
+    for (u = UNIT_CONTAINS(ch); u; u = u->getNext())
     {
         if (!pay_point_charlie(u, room_to))
         {
@@ -259,7 +259,7 @@ int room_move(unit_data *ch,
             command_interpreter(mover, "look :brief:");
         }
 
-        for (u = UNIT_CONTAINS(mover); u; u = u->next)
+        for (u = UNIT_CONTAINS(mover); u; u = u->getNext())
         {
             if ((u != ch) && IS_CHAR(u))
             {
@@ -372,7 +372,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else // Steed or boat code (shares scan for passenger combat)
     {
-        for (unit_data *u = UNIT_CONTAINS(mover); u; u = u->next)
+        for (unit_data *u = UNIT_CONTAINS(mover); u; u = u->getNext())
         {
             if (IS_CHAR(u) && CHAR_FIGHTING(u))
             {
@@ -754,7 +754,7 @@ void move_dir(unit_data *ch, int dir)
         act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         if (UNIT_IN(UNIT_IN(ch)))
         {
-            UNIT_IN(ch) = UNIT_IN(UNIT_IN(ch));
+            ch->setMyContainerTo(UNIT_IN(UNIT_IN(ch)));
         }
         command_interpreter(ch, "look");
         act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);

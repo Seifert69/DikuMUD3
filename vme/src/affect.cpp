@@ -41,7 +41,7 @@ void link_affect(unit_data *unit, unit_affected_type *af)
     affected_list = af;
 
     af->setNext(UNIT_AFFECTED(unit));
-    UNIT_AFFECTED(unit) = af;
+    unit->setUnitAffectedType(af);
     af->setOwner(unit);
 }
 
@@ -141,12 +141,12 @@ void unlink_affect(unit_affected_type *af)
 
     /* Unlink affect structure from local list */
 
-    i = UNIT_AFFECTED(af->cgetOwner());
+    i = UNIT_AFFECTED(af->getOwner());
     if (i)
     {
         if (i == af)
         {
-            UNIT_AFFECTED(af->getOwner()) = i->getNext();
+            af->getOwner()->setUnitAffectedType(i->getNext());
         }
         else
         {
@@ -223,7 +223,8 @@ void get_affects(const unit_data *unit, cNamelist *sl)
     unit_affected_type *af = nullptr;
     char buf[256];
 
-    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
+    // TODO fix unit_data so const member funcs are returns const pointers to members
+    for (af = const_cast<unit_data *>(unit)->getUnitAffectedType(); af; af = af->getNext())
     {
         sl->AppendName(g_apf[af->getApplyFI()].descr);
         sprintf(buf, "%d,%d,%d,%d", af->getDataAtIndex(0), af->getDataAtIndex(1), af->getDataAtIndex(2), af->getDuration());
@@ -235,7 +236,8 @@ unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
+    // TODO fix unit_data so const member funcs are returns const pointers to members
+    for (af = const_cast<unit_data *>(unit)->getUnitAffectedType(); af; af = af->getNext())
     {
         if (af->getID() == id)
         {

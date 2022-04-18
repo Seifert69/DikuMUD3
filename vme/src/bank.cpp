@@ -425,7 +425,7 @@ static bool move_money_up(unit_data *ch, unit_data *u)
 
     for (tmp = UNIT_CONTAINS(u); tmp; tmp = next)
     {
-        next = tmp->next;
+        next = tmp->getNext();
 
         if (IS_MONEY(tmp))
         {

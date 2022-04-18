@@ -284,14 +284,14 @@ void set_hits(unit_data *obj, int craftsmanship)
 
         if (craftsmanship >= 0)
         {
-            UNIT_MAX_HIT(obj) = 1000 + (1000 * craftsmanship) / 5;
+            obj->setMaximumHitpoints(1000 + (1000 * craftsmanship) / 5);
         }
         else
         {
-            UNIT_MAX_HIT(obj) = 1000 - (175 * -craftsmanship) / 5;
+            obj->setMaximumHitpoints(1000 - (175 * -craftsmanship) / 5);
         }
 
-        UNIT_HIT(obj) = UNIT_MAX_HIT(obj);
+        obj->setCurrentHitpoints(UNIT_MAX_HIT(obj));
     }
 }
 

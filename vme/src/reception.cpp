@@ -82,7 +82,7 @@ static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, v
         sum += subtract_recurse(ch, UNIT_CONTAINS(item), seconds, fptr);
     }
 
-    sum += subtract_recurse(ch, item->next, seconds, fptr);
+    sum += subtract_recurse(ch, item->getNext(), seconds, fptr);
 
     if (IS_OBJ(item) && !UNIT_MINV(item))
     {
@@ -335,7 +335,7 @@ void send_saves(unit_data *parent, unit_data *unit)
     }
 
     send_saves(parent, UNIT_CONTAINS(unit));
-    send_saves(parent, unit->next);
+    send_saves(parent, unit->getNext());
 
     if ((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
     {
@@ -546,7 +546,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                     break;
                 }
 
-                if (pnew->fi == nullptr)
+                if (pnew->getFileIndex() == nullptr)
                 {
                     pnew->set_fi(g_slime_fi);
                 }
@@ -567,8 +567,8 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             if (pnew_tmp && pnew)
             {
                 auto str = diku::format_to_str("The slimy remains of %s", TITLENAME(pnew_tmp));
-                UNIT_OUT_DESCR(pnew) = str;
-                UNIT_TITLE(pnew) = str;
+                pnew->setDescriptionOfOutside(str);
+                pnew->setTitle(str);
                 UNIT_NAMES(pnew).PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));
                 delete pnew_tmp;
             }
@@ -591,7 +591,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             }
         }
 
-        UNIT_IN(pnew) = nullptr;
+        pnew->setMyContainerTo(nullptr);
         if (pnew == pstack[frame])
         {
             slog(LOG_ALL, 0, "ERROR. Loading inventory, recursive linking. Please report.");

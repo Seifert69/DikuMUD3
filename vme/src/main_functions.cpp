@@ -54,12 +54,12 @@ int g_mudboot = 1;        /* Used when booting & resolving DIL templts */
 int g_no_players = 0;     /* Statistics                                */
 int g_max_no_players = 0; /* Statistics                                */
 int g_player_convert = 0;
-int g_slow_death = 0;   /* Shut her down, Martha, she's sucking mud */
-int g_mud_shutdown = 0; /* clean shutdown */
-int g_mud_reboot = 0;   /* reboot the game after a shutdown */
-int g_wizlock = 0;      /* no mortals on now */
-int g_tics = 60;        /* number of tics since boot-time */
-bool g_dumptables = false;  // If true, dump all profession tables to stdout and exit(0)
+int g_slow_death = 0;      /* Shut her down, Martha, she's sucking mud */
+int g_mud_shutdown = 0;    /* clean shutdown */
+int g_mud_reboot = 0;      /* reboot the game after a shutdown */
+int g_wizlock = 0;         /* no mortals on now */
+int g_tics = 60;           /* number of tics since boot-time */
+bool g_dumptables = false; // If true, dump all profession tables to stdout and exit(0)
 
 std::string g_world_boottime; /* boottime of world */
 
@@ -358,7 +358,7 @@ void check_overpopulation_event(void *p1, void *p2)
     int i = 0;
     int nUnits = 0;
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->getGlobalNext())
     {
         membug_verify_class(u);
         nUnits++;
@@ -378,7 +378,7 @@ void check_overpopulation_event(void *p1, void *p2)
         }
 
         i = 0;
-        for (t = UNIT_CONTAINS(u); t; t = t->next)
+        for (t = UNIT_CONTAINS(u); t; t = t->getNext())
         { // count top layer
             i++;
         }

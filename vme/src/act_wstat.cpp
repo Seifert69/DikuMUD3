@@ -57,10 +57,10 @@ static void stat_world_count(const unit_data *ch, char *arg)
     auto msg = diku::format_to_str("The first 40 units containing at least %d units:<br/>", nMinCount);
 
     int n = 0;
-    for (unit_data *u = g_unit_list; u; u = u->gnext)
+    for (unit_data *u = g_unit_list; u; u = u->getGlobalNext())
     {
         int i = 0;
-        for (unit_data *t = UNIT_CONTAINS(u); t; t = t->next)
+        for (unit_data *t = UNIT_CONTAINS(u); t; t = t->getNext())
         { // count top layer
             i++;
         }
@@ -123,7 +123,7 @@ static void stat_memory(unit_data *ch)
     // Also do a unit sanity check here, not memory related, just a hack
     //
 
-    for (unit_data *u = g_unit_list; u; u = u->next)
+    for (unit_data *u = g_unit_list; u; u = u->getNext())
     {
         if (UNIT_TYPE(u) != UNIT_ST_ROOM)
         {
@@ -1061,7 +1061,8 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_OFFENSIVE(u),
                                        CHAR_DEFENSIVE(u),
                                        sprinttype(nullptr, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
-                                       getCharPoints(u).getSpeedPercentage(IS_PC(u)), CHAR_SPEED(u),
+                                       getCharPoints(u).getSpeedPercentage(IS_PC(u)),
+                                       CHAR_SPEED(u),
                                        CHAR_NATURAL_ARMOUR(u),
                                        (signed long)UNIT_HIT(u),
                                        hit_limit(u),
@@ -1231,7 +1232,7 @@ static void stat_contents(const unit_data *ch, unit_data *u)
 
     if (UNIT_CONTAINS(u))
     {
-        for (u = UNIT_CONTAINS(u); u; u = u->next)
+        for (u = UNIT_CONTAINS(u); u; u = u->getNext())
         {
             if (CHAR_LEVEL(ch) >= UNIT_MINV(u))
             {

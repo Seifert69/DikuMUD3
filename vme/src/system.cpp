@@ -101,7 +101,8 @@ void init_char(unit_data *ch)
     getCharPoints(ch).setAttackType(WPN_FIST);
     getCharPoints(ch).setNaturalArmor(ARM_CLOTHES);
 
-    UNIT_HIT(ch) = UNIT_MAX_HIT(ch) = 1;
+    ch->setCurrentHitpoints(1);
+    ch->setMaximumHitpoints(1);
 
     getCharPoints(ch).setMana(mana_limit(ch));
     getCharPoints(ch).setEndurance(move_limit(ch));
@@ -147,8 +148,8 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
     if (!char_is_playing(d->getCharacter())) /* In menu - extract completely */
     {
         assert(!UNIT_IN(d->cgetCharacter()));
-        assert(!d->cgetCharacter()->gnext);
-        assert(!d->cgetCharacter()->gprevious);
+        assert(!d->cgetCharacter()->getGlobalNext());
+        assert(!d->cgetCharacter()->getGlobalPrevious());
 
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */

@@ -392,7 +392,7 @@ void dump_zone(char *prefix)
                   g_zone.z_zone.weather);
     }
 
-    for (u = g_zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->getNext())
     {
         if (IS_ROOM(u))
         {
@@ -411,13 +411,13 @@ void dump_zone(char *prefix)
                   no_rooms);
     }
 
-    for (u = g_zone.z_objects; u; u = u->next)
+    for (u = g_zone.z_objects; u; u = u->getNext())
     {
         check_unique_ident(u);
         process_unit(u);
     }
 
-    for (u = g_zone.z_mobiles; u; u = u->next)
+    for (u = g_zone.z_mobiles; u; u = u->getNext())
     {
         check_unique_ident(u);
         process_unit(u);
@@ -498,7 +498,7 @@ void dump_zone(char *prefix)
     }
 
     write_dot(prefix);
-    for (u = g_zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->getNext())
     {
         write_unit(fl, u, UNIT_IDENT(u));
     }
@@ -506,12 +506,12 @@ void dump_zone(char *prefix)
     u = g_zone.z_rooms;
     while (u)
     {
-        v = u->next;
+        v = u->getNext();
         delete u;
         u = v;
     }
 
-    for (u = g_zone.z_objects; u; u = u->next)
+    for (u = g_zone.z_objects; u; u = u->getNext())
     {
         write_unit(fl, u, UNIT_IDENT(u));
     }
@@ -519,12 +519,12 @@ void dump_zone(char *prefix)
     u = g_zone.z_objects;
     while (u)
     {
-        v = u->next;
+        v = u->getNext();
         delete u;
         u = v;
     }
 
-    for (u = g_zone.z_mobiles; u; u = u->next)
+    for (u = g_zone.z_mobiles; u; u = u->getNext())
     {
         write_unit(fl, u, UNIT_IDENT(u));
     }
@@ -532,7 +532,7 @@ void dump_zone(char *prefix)
     u = g_zone.z_mobiles;
     while (u)
     {
-        v = u->next;
+        v = u->getNext();
         delete u;
         u = v;
     }
@@ -719,7 +719,7 @@ void graph_sc(char *prefix)
 {
     unit_data *u = nullptr;
     int x = 0;
-    for (x = 0, u = g_zone.z_rooms; u; u = u->next, x++)
+    for (x = 0, u = g_zone.z_rooms; u; u = u->getNext(), x++)
     {
         if (IS_ROOM(u))
         {
@@ -730,7 +730,7 @@ void graph_sc(char *prefix)
     typedef boost::adjacency_list<> ZoneGraph;
 
     ZoneGraph G(x);
-    for (u = g_zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->getNext())
     {
         if (IS_ROOM(u))
         {
@@ -756,7 +756,7 @@ void write_dot(char *prefix)
 
     dotfl << std::endl << "  /* Room Labels */" << std::endl;
 
-    for (u = g_zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->getNext())
     {
         if (IS_ROOM(u))
         {
@@ -766,7 +766,7 @@ void write_dot(char *prefix)
     }
 
     dotfl << std::endl << "/* Room Interconnects */" << std::endl;
-    for (u = g_zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->getNext())
     {
         if (IS_ROOM(u))
         {

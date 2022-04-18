@@ -89,9 +89,9 @@ void mem_init();
 void ShowUsage(char *name);
 void fix(char *file);
 
-#define UNIT_IDENT(unit) ((char *)(unit)->gnext) /* can you say 'filth'? */
+#define UNIT_IDENT(unit) ((char *)(unit)->getGlobalNext()) /* can you say 'filth'? */
 /* You betcha... */
-#define UNIT_IDENT_ASSIGN(unit, val) ((unit)->gnext = (class unit_data *)(val))
+#define UNIT_IDENT_ASSIGN(unit, val) ((unit)->setGlobalNext((unit_data *)(val)))
 
 extern char **g_tmplnames;
 extern const char *g_error_zone_name;

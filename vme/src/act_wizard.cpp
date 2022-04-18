@@ -375,7 +375,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
 
     if ((fi = pc_str_to_file_index(ch, buf)) == nullptr)
     {
-        for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
+        for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
         {
             if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), buf))
             {

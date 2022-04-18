@@ -92,7 +92,7 @@ void tif_fear_check(unit_affected_type *af, unit_data *unit)
     else
     {
         /* Find someone else */
-        for (ch = UNIT_CONTAINS(UNIT_IN(unit)); ch; ch = ch->next)
+        for (ch = UNIT_CONTAINS(UNIT_IN(unit)); ch; ch = ch->getNext())
         {
             if (ch != unit && IS_CHAR(ch))
             {
@@ -967,7 +967,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
         {
             unit_affected_type naf;
 
-            SET_BIT(UNIT_FLAGS(UNIT_CONTAINS(unit)), UNIT_FL_BURIED);
+            UNIT_CONTAINS(unit)->setUnitFlag(UNIT_FL_BURIED);
 
             naf.setID(ID_BURIED);
             naf.setDuration(0);
@@ -1017,7 +1017,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
 
     getCharPoints(unit).setMana(mana_limit(unit));
     getCharPoints(unit).setEndurance(move_limit(unit));
-    UNIT_HIT(unit) = UNIT_MAX_HIT(unit);
+    unit->setCurrentHitpoints(UNIT_MAX_HIT(unit));
 
     if (!unit->is_destructed())
     {
