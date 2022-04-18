@@ -33,7 +33,7 @@ CByteBuffer g_FileBuffer(16384);
 // int filbuffer_length = 0;             /* The length of filbuffer         */
 // ubit8 *filbuffer = 0;                 /* Buffer for read/write unit      */
 
-// Return 1 on error, 0 if OK
+/// @returns 1 on error, 0 if OK
 int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
 {
     extra_descr_data *e = nullptr;
@@ -105,7 +105,7 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     return 0;
 }
 
-/*
+/**
  * This function reads a DIL template
  */
 diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
@@ -279,7 +279,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     return tmpl;
 }
 
-/* Reads DIL interrupt list */
+/** Reads DIL interrupt list */
 void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
 {
     int i = 0;
@@ -347,7 +347,7 @@ void bwrite_dilintr(CByteBuffer *pBuf, dilprg *prg)
     }
 }
 
-/*
+/**
  * This function reads a DIL program
  *
  * Implementation notes:
@@ -821,7 +821,7 @@ void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version)
     }
 }
 
-/*
+/**
  * This function writes a DIL template
  */
 void bwrite_diltemplate(CByteBuffer *pBuf, diltemplate *tmpl)
@@ -886,7 +886,7 @@ void bwrite_diltemplate(CByteBuffer *pBuf, diltemplate *tmpl)
     /* resolved references are runtime */
 }
 
-/*
+/**
  * This function writes a DIL program
  */
 void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
@@ -1104,7 +1104,7 @@ void bwrite_block(FILE *datafile, int length, void *buffer)
     }
 }
 
-/* Write unit to string. */
+/** Write unit to string. */
 int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 {
     int i = 0;
@@ -1406,8 +1406,10 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     return pBuf->GetLength() - nPos;
 }
 
-/* Appends unit 'u' to file 'f'. Name is the unique name */
-/* Used only by dmc.                                     */
+/**
+ * Appends unit 'u' to file 'f'. Name is the unique name
+ * Used only by dmc.
+ */
 void write_unit(FILE *f, unit_data *u, char *fname)
 {
     CByteBuffer *pBuf = nullptr;
@@ -1454,8 +1456,10 @@ void write_unit(FILE *f, unit_data *u, char *fname)
     pBuf->FileWrite(f);
 }
 
-/* Append template 'tmpl' to file 'f'                    */
-/* Used only by dmc. for writing zones                   */
+/**
+ * Append template 'tmpl' to file 'f'
+ * Used only by dmc. for writing zones
+ */
 void write_diltemplate(FILE *f, diltemplate *tmpl)
 {
     CByteBuffer *pBuf = nullptr;

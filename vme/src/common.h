@@ -25,7 +25,7 @@
 
 struct shi_info_type
 {
-    int melee; /* Protection against melee attacks */
+    int melee; ///< Protection against melee attacks
 };
 
 struct arm_info_type

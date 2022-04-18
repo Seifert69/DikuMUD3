@@ -646,10 +646,11 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
     return SFR_SHARE;
 }
 
-/* TODO: Specials may cause movement of one unit to another unit.
-   All next-dude tricks below are therefore not good enough,
-   they ought to check if the nextdude is still in the same
-   location before activating it ?! */
+/** @todo: Specials may cause movement of one unit to another unit.
+ *  All next-dude tricks below are therefore not good enough,
+ *  they ought to check if the nextdude is still in the same
+ *  location before activating it ?!
+ */
 
 /* Explanation of the spec_arg stuff:
 

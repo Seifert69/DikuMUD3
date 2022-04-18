@@ -16,6 +16,6 @@ public:
     void setNext(char_follow_type *value);
 
 private:
-    unit_data *follower{nullptr}; // Must be a char
+    unit_data *follower{nullptr}; ///< Must be a char
     char_follow_type *next{nullptr};
 };

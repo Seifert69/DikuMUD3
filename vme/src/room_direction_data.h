@@ -31,10 +31,10 @@ public:
     ubit8 *getDoorFlagsPtr();
 
 private:
-    cNamelist open_name;         // For Open & Enter
-    char *key{nullptr};          //
-    unit_data *to_room{nullptr}; //
-    ubit8 difficulty{0};         // Skill needed for swim, climb, search, pick-lock
-    int weight{0};               // Used for shortest path algorithm
-    ubit8 exit_info{0};          // Door info flags
+    cNamelist open_name;         ///< For Open & Enter
+    char *key{nullptr};          ///<
+    unit_data *to_room{nullptr}; ///<
+    ubit8 difficulty{0};         ///< Skill needed for swim, climb, search, pick-lock
+    int weight{0};               ///< Used for shortest path algorithm
+    ubit8 exit_info{0};          ///< Door info flags
 };

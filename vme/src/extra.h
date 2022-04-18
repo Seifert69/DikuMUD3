@@ -58,9 +58,9 @@ public:
     extra_descr_data *find_raw(const char *word);
 
     cintlist vals;
-    cNamelist names;        /* Keyword in look/examine          */
-    std::string descr;      /* What to see                      */
-    extra_descr_data *next; /* Next in list                     */
+    cNamelist names;        ///< Keyword in look/examine
+    std::string descr;      ///< What to see
+    extra_descr_data *next; ///< Next in list
 };
 
 const char *unit_find_extra_string(unit_data *ch, char *word, unit_data *list);

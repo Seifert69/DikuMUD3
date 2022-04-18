@@ -132,3 +132,15 @@ target_link_libraries(vme
         Boost::regex
         pthread
         )
+
+if (DOXYGEN_FOUND)
+    set(DOXYGEN_PROJECT_NAME "Diku MUD III - VME")
+    set(DOXYGEN_HTML_OUTPUT ".")
+    set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/vme)
+    doxygen_add_docs(
+            vme_docs
+            ${VME_SRCS} main.cpp
+            ALL
+            COMMENT "Building VME docs"
+    )
+endif ()

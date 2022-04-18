@@ -53,10 +53,9 @@ void do_save(unit_data *ch, char *arg, const command_info *cmd)
     save_player_contents(ch, TRUE);
 }
 
-/*
- This function is also called from DIL
- from the dil function reset_race()
-*/
+/**
+ * @note  This function is also called from DIL  from the dil function reset_race()
+ */
 void race_adjust(unit_data *ch)
 {
     base_race_info_type *sex_race = nullptr;
@@ -157,8 +156,9 @@ void points_reset(unit_data *ch)
     }
 }
 
-/* Can be called once when a new player is created from nanny().  */
-
+/**
+ * Can be called once when a new player is created from nanny().
+ */
 void start_player(unit_data *ch)
 {
     assert(CHAR_LEVEL(ch) == 0);

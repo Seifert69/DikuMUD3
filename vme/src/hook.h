@@ -45,7 +45,7 @@ public:
     int write(const void *buf, int count);
     int read(void *buf, int count);
 
-    int fd; // This should be private, but to not introduce bugs I'm just leaving it here for now
+    int fd; ///< This should be private, but to not introduce bugs I'm just leaving it here for now
     // private:
 };
 

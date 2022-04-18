@@ -36,10 +36,10 @@ public:
 
 struct profession_cost
 {
-    ubit16 sanity; /* Used for sanity check */
+    ubit16 sanity; ///< Used for sanity check
     ubit8 min_level;
     ubit8 min_abil[ABIL_TREE_MAX];
-    sbit8 profession_cost[PROFESSION_MAX]; // 0 is middle, +1 easier to learn, -1 more dificult, etc.
+    sbit8 profession_cost[PROFESSION_MAX]; ///< 0 is middle, +1 easier to learn, -1 more dificult, etc.
 };
 
 /* ---------------- COMBAT MESSAGE SYSTEM -------------------- */
@@ -94,14 +94,14 @@ struct race_info_type
 
 struct damage_chart_element_type
 {
-    int offset;  /* When does damage start         */
-    int basedam; /* The damage given at 'offset'   */
-    int alpha;   /* Step size of damage as 1/alpha */
+    int offset;  ///< When does damage start
+    int basedam; ///< The damage given at 'offset'
+    int alpha;   ///< Step size of damage as 1/alpha
 };
 
 struct damage_chart_type
 {
-    int fumble; /* from 01 - fuble => fumble      */
+    int fumble; ///< from 01 - fuble => fumble
 
     damage_chart_element_type element[5];
 };
@@ -122,11 +122,11 @@ struct tree_type
 /* Tree has a pointer to parent for each node. 0 pointer from root */
 struct wpn_info_type
 {
-    int hands;        /* 0=N/A, 1 = 1, 2 = 1.5, 3 = 2          */
-    int speed;        /* Speed modification by weapon 0..      */
-    int type;         /* Is the weapon slashing/piercing...    */
-    ubit8 ability[3]; // Primary abilities, e.g. [0]=ABIL_STR, [1]=ABIL_STR, [2]=ABIL_DEX
-    ubit8 shield;     /* Shield method SHIELD_M_XXX            */
+    int hands;        ///< 0=N/A, 1 = 1, 2 = 1.5, 3 = 2
+    int speed;        ///< Speed modification by weapon 0..
+    int type;         ///< Is the weapon slashing/piercing...
+    ubit8 ability[3]; ///< Primary abilities, e.g. [0]=ABIL_STR, [1]=ABIL_STR, [2]=ABIL_DEX
+    ubit8 shield;     ///< Shield method SHIELD_M_XXX
 };
 
 #define DEMIGOD_LEVEL_XP (40000000)

@@ -5,6 +5,16 @@
  $Revision: 2.4 $
  */
 
+/** @mainpage Multiplexer
+ *
+ * @section intro_sec Introduction
+ *
+ * This is the introduction.
+ *
+ * @authors All
+ * @date 2003/12/31 01:21:59
+ * @remark This text is located in mplex/main.cpp
+ */
 #ifdef _WINDOWS
     #include "string.h"
     #include "telnet.h"

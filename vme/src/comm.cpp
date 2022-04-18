@@ -72,7 +72,7 @@ int cActParameter::isNull()
     return (m_u == nullptr) && (m_i == nullptr) && (m_p == nullptr);
 }
 
-/*
+/**
  *  Given HTML string src find all <div and all <h1 and replace class='default' with
  *  user's color preferences.  You probably only want to do this for telnet users.
  *  web users can rely on the styles defined in the CSS
@@ -127,7 +127,7 @@ void substHTMLcolor(std::string &dest, const char *src, color_type &color)
     //*dest = 0;
 }
 
-/*
+/**
  *  Public routines for system-to-player communication
  *  Sends directly to multiplexer.
  */
@@ -540,11 +540,11 @@ void act_generate(char *buf,
     *point = toupper(*point);
 }
 
-// Executes exactly like act() for TO_VICT and TO_CHAR. But never adds newline
-// Can't handle other
-// because of variance with each target's ability to e.g. see.
-// Is there a need for sactother which takes a "to" argument? If we add
-// to argument here it will be confusing for TO_VICT and TO_CHAR scenarios.
+/// Executes exactly like act() for TO_VICT and TO_CHAR. But never adds newline
+/// Can't handle other
+/// because of variance with each target's ability to e.g. see.
+/// Is there a need for sactother which takes a "to" argument? If we add
+/// to argument here it will be confusing for TO_VICT and TO_CHAR scenarios.
 void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type)
 {
     const unit_data *to = nullptr;
@@ -578,7 +578,7 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
     }
 }
 
-// Always adds <br/> at the end
+/// @note Always adds <br/> at the end
 void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type)
 {
     const unit_data *to = nullptr;

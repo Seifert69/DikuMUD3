@@ -12,12 +12,12 @@ class zone_type;
 class file_index_type
 {
 public:
-    file_index_type() = default;                                  // Default ctor
-    ~file_index_type() = default;                                 // Default dtor
-    file_index_type(const file_index_type &) = delete;            // Delete copy ctor
-    file_index_type &operator=(const file_index_type &) = delete; // Delete assignment
-    file_index_type(file_index_type &&) = delete;                 // Delete move ctor
-    file_index_type &operator=(file_index_type &&) = delete;      // Delete move assignment
+    file_index_type() = default;                                  ///< Default ctor
+    ~file_index_type() = default;                                 ///< Default dtor
+    file_index_type(const file_index_type &) = delete;            ///< Delete copy ctor
+    file_index_type &operator=(const file_index_type &) = delete; ///< Delete assignment
+    file_index_type(file_index_type &&) = delete;                 ///< Delete move ctor
+    file_index_type &operator=(file_index_type &&) = delete;      ///< Delete move assignment
 
     [[nodiscard]] unit_data *find_symbolic_instance();
     [[nodiscard]] unit_data *find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector);
@@ -59,14 +59,14 @@ public:
     void setRoomNum(ubit16 value);
 
 private:
-    std::forward_list<unit_data *> fi_unit_list; // This list of units that match this file_index
-    std::string name{};                          // Unique within this list
-    zone_type *zone{nullptr};                    // Pointer to owner of structure
-    long filepos{};                              // Byte offset into file
-    ubit32 length{};                             // No of bytes to read
-    ubit32 crc{};                                // CRC check for compressed items
-    sbit16 no_in_zone{};                         // Updated in zone reset for reset
-    ubit16 no_in_mem{};                          // Number of these in the game
-    ubit16 room_no{};                            // The number of the room
-    ubit8 type{};                                // Room/Obj/Char or other?
+    std::forward_list<unit_data *> fi_unit_list; ///< This list of units that match this file_index
+    std::string name{};                          ///< Unique within this list
+    zone_type *zone{nullptr};                    ///< Pointer to owner of structure
+    long filepos{};                              ///< Byte offset into file
+    ubit32 length{};                             ///< No of bytes to read
+    ubit32 crc{};                                ///< CRC check for compressed items
+    sbit16 no_in_zone{};                         ///< Updated in zone reset for reset
+    ubit16 no_in_mem{};                          ///< Number of these in the game
+    ubit16 room_no{};                            ///< The number of the room
+    ubit8 type{};                                ///< Room/Obj/Char or other?
 };

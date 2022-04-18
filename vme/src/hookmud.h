@@ -15,7 +15,7 @@ public:
     int Read();
     void Ping();
 
-    int succ_err; /* Number of successive errors */
+    int succ_err; ///< Number of successive errors
     ubit8 bWebsockets;
 };
 

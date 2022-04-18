@@ -359,9 +359,9 @@ void file_index_type::setName(const char *value, bool to_lower)
 
 void file_index_type::DecrementNumInMemory()
 {
-    // TODO find out why code is trying to decrement no_in_mem below 0
-    // I tried this but somewhere it goes below zero
-    //    assert(no_in_mem > 0);
+    /// @todo find out why code is trying to decrement no_in_mem below 0
+    /// I tried this but somewhere it goes below zero
+    ///    assert(no_in_mem > 0);
     if (no_in_mem > 0)
     {
         --no_in_mem;

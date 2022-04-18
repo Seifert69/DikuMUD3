@@ -1073,7 +1073,7 @@ void ability_dump_alternate()
 
             vect.push_back(std::make_pair(g_AbiColl.prof_table[i].profession_cost[j], str));
 
-            // TODO This looks broken str is never used again in the old code
+            /// @todo This looks broken str is never used again in the old code
             if (g_AbiColl.prof_table[i].min_level > 0)
             {
                 str += diku::format_to_str("restrict level          = %d\n", g_AbiColl.prof_table[i].min_level);

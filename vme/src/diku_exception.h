@@ -119,19 +119,21 @@ public:
 
     /**
      * Helper functions
+     * @{
      */
     auto filename() const noexcept -> std::string { return m_filename.value_or("not set"); }
     auto function() const noexcept -> std::string { return m_function.value_or("not set"); }
     auto line_number() const noexcept -> int { return m_line_number.value_or(-1); }
+    /// @}
 
 private:
     // Stream construction is expensive to use pointer to avoid unneeded ctor/dtor calls
     // as the exception is propagated
-    mutable std::shared_ptr<std::stringstream> m_stream; // Pointer to stream for messages
-    mutable std::string m_message;
-    std::optional<std::string> m_filename;
-    std::optional<std::string> m_function;
-    std::optional<int> m_line_number;
+    mutable std::shared_ptr<std::stringstream> m_stream; ///< Pointer to stream for messages
+    mutable std::string m_message;                       ///< Message associated with exception
+    std::optional<std::string> m_filename;               ///< Filename thrown from
+    std::optional<std::string> m_function;               ///< Function thrown from
+    std::optional<int> m_line_number;                    ///< Line number thrown from
 };
 
 // clang-format off

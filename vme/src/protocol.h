@@ -17,13 +17,13 @@
 
 struct terminal_setup_type
 {
-    ubit8 redraw;         // Redraw the users prompt?
-    ubit8 echo;           // Echo chars to user?
-    ubit8 width, height;  // The colour of his nose
-    ubit8 emulation;      // TERM_XXX
-    ubit8 telnet;         // Is telnet used?
-    ubit8 colour_convert; // Colour conversion (mapping) used
-    ubit8 websockets;     // Using websockets (HTML)?
+    ubit8 redraw;         ///< Redraw the users prompt?
+    ubit8 echo;           ///< Echo chars to user?
+    ubit8 width, height;  ///< The colour of his nose
+    ubit8 emulation;      ///< TERM_XXX
+    ubit8 telnet;         ///< Is telnet used?
+    ubit8 colour_convert; ///< Colour conversion (mapping) used
+    ubit8 websockets;     ///< Using websockets (HTML)?
 };
 
 // These definitions are used by the mplex protocol

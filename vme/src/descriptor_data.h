@@ -91,27 +91,27 @@ public:
     void setNext(descriptor_data *value);
 
 private:
-    time_t logon{0};                        // Time of last connect
-    cMultiHook *multi{nullptr};             // Multi element pointer
-    ubit16 id{0};                           // The ID for the multi
-    FunctionPtr fptr{nullptr};              //
-    int state{0};                           // Locally used in each fptr
-    char host[50]{0};                       // hostname
-    ubit16 nPort{0};                        // Mplex port
-    ubit8 nLine{0};                         // Serial Line
-    int wait{0};                            // wait for how many loops
-    ubit16 timer{0};                        // num of hours idleness for mortals
-    ubit32 replyid{0};                      // Used for 'tell reply'
-    char *localstr{nullptr};                // For the 'modify-string' system. This string is expanded while editing
-    PostEditFunctionPtr postedit{nullptr};  //
-    unit_data *editing{nullptr};            //
-    void *editref{nullptr};                 // pointer to "where we are editing". when using (volatile) extras + boards
-    int prompt_mode{0};                     // control of prompt-printing
-    char last_cmd[MAX_INPUT_LENGTH + 1]{0}; // the last entered cmd_str
-    char history[MAX_INPUT_LENGTH + 1]{0};  // simple command history
-    cQueue qInput;                          // q of unprocessed input
-    unit_data *character{nullptr};          // linked to char
-    unit_data *original{nullptr};           // original char
-    snoop_data snoop;                       // to snoop people.
-    descriptor_data *next{nullptr};         // link to next descriptor
+    time_t logon{0};                        ///< Time of last connect
+    cMultiHook *multi{nullptr};             ///< Multi element pointer
+    ubit16 id{0};                           ///< The ID for the multi
+    FunctionPtr fptr{nullptr};              ///<
+    int state{0};                           ///< Locally used in each fptr
+    char host[50]{0};                       ///< hostname
+    ubit16 nPort{0};                        ///< Mplex port
+    ubit8 nLine{0};                         ///< Serial Line
+    int wait{0};                            ///< wait for how many loops
+    ubit16 timer{0};                        ///< num of hours idleness for mortals
+    ubit32 replyid{0};                      ///< Used for 'tell reply'
+    char *localstr{nullptr};                ///< For the 'modify-string' system. This string is expanded while editing
+    PostEditFunctionPtr postedit{nullptr};  ///<
+    unit_data *editing{nullptr};            ///<
+    void *editref{nullptr};                 ///< pointer to "where we are editing". when using (volatile) extras + boards
+    int prompt_mode{0};                     ///< control of prompt-printing
+    char last_cmd[MAX_INPUT_LENGTH + 1]{0}; ///< the last entered cmd_str
+    char history[MAX_INPUT_LENGTH + 1]{0};  ///< simple command history
+    cQueue qInput;                          ///< q of unprocessed input
+    unit_data *character{nullptr};          ///< linked to char
+    unit_data *original{nullptr};           ///< original char
+    snoop_data snoop;                       ///< to snoop people.
+    descriptor_data *next{nullptr};         ///< link to next descriptor
 };

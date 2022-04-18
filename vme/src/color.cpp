@@ -131,7 +131,7 @@ std::string color_type::get(const char *key, char *full_key) const
     return ret;
 }
 
-// TODO write a test that covers the partial key match scenario
+/// @todo write a test that covers the partial key match scenario
 std::string color_type::get(const std::string &key, std::string &full_key) const
 {
     if (auto it = m_map.lower_bound(key); it != m_map.end())

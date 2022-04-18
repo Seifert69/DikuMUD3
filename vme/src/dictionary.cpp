@@ -46,7 +46,7 @@ struct alias_t
     char *value;
 };
 
-/* Procedure supplied to free_trie and del_trie */
+/** Procedure supplied to free_trie and del_trie */
 void free_alias(void *data)
 {
     alias_t *al = (alias_t *)data;
@@ -56,7 +56,7 @@ void free_alias(void *data)
     FREE(al);
 }
 
-/* Word is here defined as an unbroken sequence of nonspaces */
+/** Word is here defined as an unbroken sequence of nonspaces */
 static char *get_next_word(const char *argument, char *first_arg)
 {
     /* Find first non blank */
@@ -73,7 +73,7 @@ static char *get_next_word(const char *argument, char *first_arg)
     return (char *)argument;
 }
 
-/* Setup owner-ship of dictionary. */
+/** Setup owner-ship of dictionary. */
 static void set_owner(unit_data *obj, alias_head *ah, unit_data *ch)
 {
     strcpy(ah->owner, UNIT_NAME(ch));
@@ -83,8 +83,10 @@ static void set_owner(unit_data *obj, alias_head *ah, unit_data *ch)
     obj->setTitle(diku::format_to_str("%s's %s", ah->owner, UNIT_NAME(obj)));
 }
 
-/* Allocate `exd', and erase old description */
-/* MS2020 rewritten */
+/**
+ * Allocate `exd', and erase old description
+ * MS2020 rewritten
+ */
 static extra_descr_data *make_alias_extra(unit_data *u)
 {
     extra_descr_data *exd = nullptr;
@@ -103,7 +105,7 @@ static extra_descr_data *make_alias_extra(unit_data *u)
     return exd;
 }
 
-/* Parse the alias, according to the &-rule sketched out in help-page */
+/** Parse the alias, according to the &-rule sketched out in help-page */
 static char *parse_alias(char *src, char *arg)
 {
     static char buf[2 * MAX_INPUT_LENGTH + 2];
@@ -158,8 +160,9 @@ static char *parse_alias(char *src, char *arg)
     return buf;
 }
 
-/*  Pars
-the alias-substitution in s, using the arguments from arg, and
+/**
+ * Pars
+ * the alias-substitution in s, using the arguments from arg, and
  *  looking up nested alias-calls in the alias-trie t.
  *  check_count makes sure that the user doesn't make nasty (!) computationally
  *  heavy (!!!) aliases that will bog the mud enormously.
@@ -227,14 +230,15 @@ static int push_alias(char *s, char *arg, trie_type *t, unit_data *ch, bool firs
     return 0;
 }
 
-/* Merely prints a formatted alias-definition out to the char */
+/** Merely prints a formatted alias-definition out to the char */
 static void alias_to_char(alias_t *al, unit_data *ch)
 {
     auto buf = diku::format_to_str(" %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
     act("$2t", A_ALWAYS, ch, buf.c_str(), cActParameter(), TO_CHAR);
 }
 
-/*  Prints all defined aliases in `t' alphabetically to char by
+/**
+ * Prints all defined aliases in `t' alphabetically to char by
  *  recursively walking the trie
  */
 static int print_alias(trie_type *t, unit_data *ch)
@@ -258,9 +262,10 @@ static int print_alias(trie_type *t, unit_data *ch)
     return count;
 }
 
-/*  Add the new alias `key' to `ah'.
- *  single says if we plan to add only one alias or several at `boottime'.
- *  If false, it is assumed the user sorts the trie himself
+/**
+ * Add the new alias `key' to `ah'.
+ * single says if we plan to add only one alias or several at `boottime'.
+ * If false, it is assumed the user sorts the trie himself
  */
 static int add_alias(alias_head *ah, char *key, char *val, bool single)
 {
@@ -290,7 +295,7 @@ static int add_alias(alias_head *ah, char *key, char *val, bool single)
     return 1;
 }
 
-/* Delete an alias, using the free_alias procedure */
+/** Delete an alias, using the free_alias procedure */
 static bool del_alias(alias_head *ah, char *key)
 {
     alias_t *al = nullptr;
@@ -307,7 +312,8 @@ static bool del_alias(alias_head *ah, char *key)
     return FALSE;
 }
 
-/*  Parse the alias to see if `val' calls something that will eventually call
+/**
+ * Parse the alias to see if `val' calls something that will eventually call
  *  `key', or if it contains state-changing commands.
  *  check_count makes sure that the user doesn't make nasty (!) computationally
  *  heavy (!!!) aliases that will bog the mud enormously.
@@ -374,7 +380,8 @@ static ubit8 circle_alias(char *key, char *val, trie_type *t, bool first)
     return 0;
 }
 
-/*  Is `key' a legal new alias or not?
+/**
+ * Is `key' a legal new alias or not?
  *  This should all be linear, except for the recursion check,
  *  which has a fixed upper bound.
  */
@@ -460,7 +467,8 @@ static bool alias_is_ok(alias_head *ah, char *key, char *val, unit_data *ch)
     return TRUE;
 }
 
-/*  This walks the trie recursively to note down the aliases in the buffer
+/**
+ * This walks the trie recursively to note down the aliases in the buffer
  *  pointed to by bufp
  */
 static void rec_alias_to_str(trie_type *t, char **bufp)
@@ -483,7 +491,7 @@ static void rec_alias_to_str(trie_type *t, char **bufp)
     }
 }
 
-/* Convert a trie to a string.  Needed for saving the aliases */
+/** Convert a trie to a string.  Needed for saving the aliases */
 static char *alias_to_str(alias_head *ah)
 {
     static char buf[MAX_ALIAS_COUNT + ALIAS_NAME + 2 + 500];
@@ -499,7 +507,7 @@ static char *alias_to_str(alias_head *ah)
     return buf;
 }
 
-/* Take the above constructed string and turn it into an alias-set. */
+/** Take the above constructed string and turn it into an alias-set. */
 static alias_head *str_to_alias(const char *str)
 {
     alias_head *ah = nullptr;

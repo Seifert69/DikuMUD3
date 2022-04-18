@@ -810,12 +810,11 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
         adjust += (adjust * MAX(-10, diff)) / 20;
     }
 
-    // TODO move limits into the setter
     adjust = MIN(200, adjust);
     adjust = MAX(-200, adjust);
 
     slayer->increaseAlignmentBy(adjust);
-    // TODO move limits into the setter
+    /// @todo move limits into the setter
     slayer->setAlignment(MIN(1000, UNIT_ALIGNMENT(slayer)));
     slayer->setAlignment(MAX(-1000, UNIT_ALIGNMENT(slayer)));
 }
@@ -1059,7 +1058,7 @@ void modify_hit(unit_data *ch, int hit)
     if (CHAR_POS(ch) > POSITION_DEAD)
     {
         ch->changeCurrentHitpointsBy(hit);
-        // TODO move limits into the setter
+        /// @todo move limits into the setter
         ch->setCurrentHitpoints(MIN(hit_limit(ch), UNIT_HIT(ch)));
 
         update_pos(ch);

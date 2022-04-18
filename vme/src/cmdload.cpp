@@ -364,7 +364,7 @@ void command_read()
         {
             if (g_SkiColl.text[idx])
             {
-                auto tmp = (char *)g_SkiColl.text[idx]; // TODO this is suspect casting anyway, now showing with this change
+                auto tmp = (char *)g_SkiColl.text[idx]; /// @todo this is suspect casting anyway, now showing with this change
                 FREE(tmp);
                 g_SkiColl.text[idx] = nullptr;
             }

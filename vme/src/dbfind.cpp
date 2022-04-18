@@ -34,7 +34,9 @@ descriptor_data *find_descriptor(const char *name, descriptor_data *except)
     return nullptr;
 }
 
-/* Find a named zone */
+/**
+ * Find a named zone
+ */
 zone_type *find_zone(const char *zonename)
 {
     // bin_search_type *ba;
@@ -59,7 +61,10 @@ zone_type *find_zone(const char *zonename)
         return ba ? (class zone_type *)ba->block : NULL;*/
 }
 
-/* Zonename & name must point to non-empty strings. Must be lower case */
+/**
+ * @param zonenameust point to non-empty string. Must be lower case
+ * @param name must point to non-empty strings. Must be lower case
+ */
 file_index_type *find_file_index(const char *zonename, const char *name)
 {
     zone_type *zone = nullptr;
@@ -100,7 +105,9 @@ file_index_type *find_file_index(const char *zonename, const char *name)
     return (class file_index_type *)ba->block;*/
 }
 
-/* Zonename & name must point to non-empty strings */
+/**
+ * Zonename & name must point to non-empty strings
+ */
 diltemplate *find_dil_index(const char *zonename, const char *name)
 {
     zone_type *zone = nullptr;
@@ -133,7 +140,7 @@ diltemplate *find_dil_index(const char *zonename, const char *name)
         return (struct diltemplate *)ba->block;*/
 }
 
-/*
+/**
  * This function searches for the
  * defined DIL template for external
  * call by a DIL program.
@@ -154,7 +161,8 @@ diltemplate *find_dil_template(const char *name)
     return find_dil_index(zbuf, pbuf);
 }
 
-/*  Find a room in the world based on zone name and name e.g.
+/**
+ * Find a room in the world based on zone name and name e.g.
  *  "midgaard", "prison" and return a pointer to the room
  */
 unit_data *world_room(const char *zone, const char *name)
@@ -170,8 +178,9 @@ unit_data *world_room(const char *zone, const char *name)
     return nullptr;
 }
 
-/*  Find file index.
- *  String MUST be in format 'name@zone\0' or 'zone/name'.
+/**
+ * Find file index.
+ * String MUST be in format 'name@zone\0' or 'zone/name'.
  */
 file_index_type *str_to_file_index(const char *str)
 {
@@ -183,8 +192,9 @@ file_index_type *str_to_file_index(const char *str)
     return find_file_index(zone, name);
 }
 
-/*  As str_to_file_index, except that if no zone is given, the
- *  zone of the 'ch' is assumed
+/**
+ * As str_to_file_index, except that if no zone is given, the
+ * zone of the 'ch' is assumed
  */
 file_index_type *pc_str_to_file_index(unit_data *ch, const char *str)
 {

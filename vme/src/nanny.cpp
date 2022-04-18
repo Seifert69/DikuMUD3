@@ -465,7 +465,7 @@ void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, cha
     d->setFunctionPtr(fptr);
     if (call)
     {
-        char constStr[] = ""; // cheat to get rid of warnings.  todo fix correctly
+        char constStr[] = ""; /// cheat to get rid of warnings.  @todo fix correctly
         d->setState(0);
         d->callFunctionPtr(d, constStr);
     }

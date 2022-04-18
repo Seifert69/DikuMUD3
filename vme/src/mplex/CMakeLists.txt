@@ -42,3 +42,15 @@ target_include_directories(mplex
         PRIVATE . ${CMAKE_SOURCE_DIR}/vme/src
         PUBLIC ${CMAKE_SOURCE_DIR}/vme/include
         )
+
+if (DOXYGEN_FOUND)
+    set(DOXYGEN_PROJECT_NAME "Diku MUD III - mplex")
+    set(DOXYGEN_HTML_OUTPUT ".")
+    set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/mplex)
+    doxygen_add_docs(
+            mplex_docs
+            ${MPLEX_SRCS} main.cpp
+            ALL
+            COMMENT "Building MPLEX docs"
+    )
+endif ()

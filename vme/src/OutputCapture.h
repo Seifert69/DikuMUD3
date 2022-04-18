@@ -66,11 +66,11 @@ public:
 private:
     OutputCapture() = default;
 
-    static std::unique_ptr<OutputCapture> m_instance; // Only created during unit testing
-    std::vector<slog_data> m_slog;                    // Captured log messages to slog
-    std::vector<account_log_data> m_account_log;      // Captured log messages to account_log
-    std::vector<send_to_char_data> m_send_to_char;    // Captured messages to send_to_char
-    std::vector<page_string_data> m_page_string;      // Captured message to page_string
+    static std::unique_ptr<OutputCapture> m_instance; ///< Only created during unit testing
+    std::vector<slog_data> m_slog;                    ///< Captured log messages to slog
+    std::vector<account_log_data> m_account_log;      ///< Captured log messages to account_log
+    std::vector<send_to_char_data> m_send_to_char;    ///< Captured messages to send_to_char
+    std::vector<page_string_data> m_page_string;      ///< Captured message to page_string
 };
 
 } // namespace unit_tests

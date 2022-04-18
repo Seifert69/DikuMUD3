@@ -47,14 +47,16 @@
 
 const char *g_player_zone = "_players";
 
-int g_room_number;                /* For counting numbers in rooms */
-unit_data *g_unit_list = nullptr; /* The global unit_list          */
+int g_room_number;                ///< For counting numbers in rooms
+unit_data *g_unit_list = nullptr; ///< The global unit_list
 unit_data *g_npc_head = nullptr;
 unit_data *g_obj_head = nullptr;
 unit_data *g_room_head = nullptr;
 
 cSector g_sector_dat;
-/* Global permanent element of zone info */
+/**
+ * Global permanent element of zone info
+ */
 zone_info_type g_zone_info = {0, nullptr};
 
 /* By using this, we can easily sort the list if ever needed
@@ -107,8 +109,9 @@ void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
       return;
 }*/
 
-/*  Generate array of bin_search_type for the zone_list, and for each
- *  zone's file_index's.
+/**
+ * Generate array of bin_search_type for the zone_list, and for each
+ * zone's file_index's.
  */
 void generate_bin_arrays()
 {
@@ -159,7 +162,9 @@ void generate_bin_arrays()
     }*/
 }
 
-/* Resolves DIL templates loaded boottime */
+/**
+ * Resolves DIL templates loaded boottime
+ */
 void resolve_templates()
 {
     int i = 0;
@@ -211,7 +216,9 @@ void resolve_templates()
     }
 }
 
-/* Generate and read DIL templates */
+/**
+ * Generate and read DIL templates
+ */
 diltemplate *generate_templates(FILE *f, zone_type *zone)
 {
     diltemplate *tmpllist = nullptr;
@@ -265,7 +272,9 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
     return tmpllist;
 }
 
-/* Generate index's for each unit in the file 'f', zone 'zone' */
+/**
+ * Generate index's for each unit in the file 'f', zone 'zone'
+ */
 void generate_file_indexes(FILE *f, zone_type *zone)
 {
     file_index_type *fi = nullptr;
@@ -356,7 +365,9 @@ void generate_file_indexes(FILE *f, zone_type *zone)
     }
 }
 
-/* Call this routine at boot time, to index all zones */
+/**
+ * Call this routine at boot time, to index all zones
+ */
 void generate_zone_indexes()
 {
     zone_type *z = nullptr;
@@ -578,7 +589,8 @@ void generate_zone_indexes()
     // slog(LOG_OFF, 0, "Max length for filebuffer is %d bytes.", filbuffer_length);
 }
 
-/* Reason why here, and not in db_file.c: Dmc.c would then need affect.c
+/**
+ * Reason why here, and not in db_file.c: Dmc.c would then need affect.c
  *
  * Stored As:
  *   <no of affects (0..255)>
@@ -639,8 +651,8 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion)
 
 zone_type *unit_error_zone = nullptr;
 
-/* After a unit has been read, this is an opportunity to do stuff on it
- *
+/**
+ * After a unit has been read, this is an opportunity to do stuff on it
  */
 void post_read_unit(unit_data *u)
 {
@@ -670,7 +682,8 @@ void post_read_unit(unit_data *u)
     }
 }
 
-/*  Room directions points to file_indexes instead of units
+/**
+ * Room directions points to file_indexes instead of units
  *  after a room has been read, due to initialization considerations
  *  Unit is NOT inserted in g_unit_list
  *
@@ -875,8 +888,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    // TODO worse than spooky - why decrement a race??
-                    //      Also could be really bad if race==0
+                    /// @todo worse than spooky - why decrement a race?? Also could be really bad if race==0
                     getCharPoints(u).setRace(getCharPoints(u).getRace() - 1);
 
                     base_race_info_type *sex_race = nullptr;
@@ -1363,8 +1375,9 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     return u;
 }
 
-/*  Room directions points to file_indexes instead of units
- *  after a room has been read, due to initialization considerations
+/**
+ * Room directions points to file_indexes instead of units
+ * after a room has been read, due to initialization considerations
  */
 void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
 {
@@ -1411,8 +1424,9 @@ void bonus_setup(unit_data *u)
     }
 }
 
-/*  Room directions points to file_indexes instead of units
- *  after a room has been read, due to initialization considerations
+/**
+ * Room directions points to file_indexes instead of units
+ * after a room has been read, due to initialization considerations
  */
 unit_data *read_unit(file_index_type *org_fi, int ins_list)
 {
@@ -1487,7 +1501,9 @@ void read_all_rooms()
     g_boot_zone = nullptr;
 }
 
-/* After boot time, normalize all room exits */
+/**
+ * After boot time, normalize all room exits
+ */
 void normalize_world()
 {
     file_index_type *fi = nullptr;
@@ -1556,7 +1572,7 @@ void normalize_world()
 #define ZON_DIR_NEST 1
 #define ZON_DIR_UNNEST 2
 
-/* For local error purposes */
+/** For local error purposes */
 static zone_type *read_zone_error = nullptr;
 
 zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)

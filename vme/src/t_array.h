@@ -11,10 +11,10 @@ template<class T>
 class t_array
 {
 private:
-    int size;  // Malloc'd Size of the current array
-    int esize; // Extending size, how many elements to allocate
-    int len;   // Current Number of Elements
-    T **t_ary; // The actual array
+    int size;  ///< Malloc'd Size of the current array
+    int esize; ///< Extending size, how many elements to allocate
+    int len;   ///< Current Number of Elements
+    T **t_ary; ///< The actual array
 public:
     t_array();
     ~t_array();
