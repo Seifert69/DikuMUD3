@@ -358,6 +358,7 @@ var
 
 code
 {
+   log("add_reward debug i0");
    // Lookup the $reward on the justice database and the char
    juris := get_juris@justice();
 
@@ -389,6 +390,7 @@ code
       }
    }
 
+   log("add_reward debug i1");
    // Criminal != null
 
    s := "$reward "+juris;
@@ -405,9 +407,12 @@ code
       exd_char_reward := s in criminal.extra;
    }
 
+   log("add_reward debug i2");
    s := "$reward "+criminal.symname+" "+itoa(criminal.idx);
    sj:= s + " "+juris; 
    exd_db_reward := sj in database.extra;
+
+   log("add_reward debug i3");
 
    if (exd_db_reward == null)
    {
