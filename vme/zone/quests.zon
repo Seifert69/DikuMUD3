@@ -959,14 +959,14 @@ code
    
    words := getwords(argument);
    s := words.[0];
+   if (s != "quest$done")
+      goto start;
+   
    pcname := words.[1];
 
    // log("ARG: " + s);
    // log("PC: " + pcname);
 
-   if (s != "quest$done")
-      goto start;
-   
    pc := findsymbolic(pcname); // The player activator
 
    if (pc == null) {
