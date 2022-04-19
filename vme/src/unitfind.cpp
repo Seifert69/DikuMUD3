@@ -627,6 +627,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
     {
         number = original_number = atoi(name);
         c += i + 1;
+        first_letter = c;
     }
     else
     {
