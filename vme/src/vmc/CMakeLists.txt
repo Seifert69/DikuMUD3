@@ -88,3 +88,14 @@ target_include_directories(vmc
         PRIVATE . ${CMAKE_SOURCE_DIR}/vme/src ${CMAKE_SOURCE_DIR}/vme/src/pp
         PUBLIC ${CMAKE_SOURCE_DIR}/vme/include
         )
+if (DOXYGEN_FOUND)
+    set(DOXYGEN_PROJECT_NAME "Diku MUD III - vmc")
+    set(DOXYGEN_HTML_OUTPUT ".")
+    set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/vmc)
+    doxygen_add_docs(
+            vmc_docs
+            ${VMC_SRCS} main.cpp
+            ALL
+            COMMENT "Building VMC docs"
+    )
+endif ()

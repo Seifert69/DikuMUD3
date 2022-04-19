@@ -17,9 +17,9 @@
 #include "utility.h"
 #include "utils.h"
 
-#include <cstring>
-
-/* also used in "corpses" wizard-command */
+/**
+ * @note also used in "corpses" wizard-command
+ */
 const char *in_string(const unit_data *ch, const unit_data *u)
 {
     static std::string in_str;

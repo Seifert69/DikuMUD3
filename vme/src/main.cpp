@@ -4,6 +4,18 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.10 $
  */
+
+/** @mainpage Valhalla Mud Engine
+ *
+ * @section intro_sec Introduction
+ *
+ * This is the introduction.
+ *
+ * @authors All
+ * @date 2004/09/18 19:52:56
+ * @remark This text is located in main.cpp
+ */
+
 #include "main.h"
 
 #include "comm.h"

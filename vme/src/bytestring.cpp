@@ -138,7 +138,7 @@ int CByteBuffer::FileRead(FILE *f, long nOffset, ubit32 nLength)
     return n;
 }
 
-// Return 0 if OK, return 1 if not OK
+/// @returns 0 if OK, return 1 if not OK
 int CByteBuffer::Read(ubit8 *pBuf, ubit32 nLen)
 {
     if (m_nReadPos + nLen > m_nLength)
@@ -656,8 +656,10 @@ ubit8 *bread_data(ubit8 **b, ubit32 *plen)
     return data;
 }
 
-/* Stored: as Null terminated string            */
-/* Copy string from **b into *str               */
+/**
+ * Stored: as Null terminated string
+ * Copy string from **b into *str
+ */
 void bread_strcpy(ubit8 **b, char *str)
 {
     for (; (*str++ = **b); (*b)++)
@@ -667,7 +669,8 @@ void bread_strcpy(ubit8 **b, char *str)
     (*b)++;
 }
 
-/*  Stored: as Null terminated string
+/**
+ * Stored: as Null terminated string
  *  Will allocate space for string, if the read
  *  string is one or more characters, and return
  *  pointer to allocated string (or 0)
@@ -690,8 +693,10 @@ char *bread_str_alloc(ubit8 **b)
     return nullptr;
 }
 
-/* Returns pointer to the string and skips past the end to next
-   point in buffer */
+/**
+ * @returns pointer to the string and skips past the end to next
+ * point in buffer
+ */
 char *bread_str_skip(ubit8 **b)
 {
     char *o = (char *)*b;
@@ -702,11 +707,12 @@ char *bread_str_skip(ubit8 **b)
     return o;
 }
 
-/* Stored: As 'N' strings followed by the empty */
-/* string ("")                                  */
-/* Returns * to nameblock, nameblock may be     */
-/* but is never null ({""}).                    */
-
+/**
+ * Stored: As 'N' strings followed by the empty
+ * string ("")
+ * @returns * to nameblock, nameblock may be
+ * but is never null ({""}).
+ */
 char **bread_nameblock(ubit8 **b, int bOld)
 {
     char buf[MAX_STRING_LENGTH];
@@ -789,9 +795,11 @@ void bwrite_data(ubit8 **b, ubit8 *data, ubit32 len)
     }
 }
 
-/* String is stored as Null terminated string   */
-/* Space is NOT allocated if string is 0 length */
-/* but NIL is returned                          */
+/**
+ * String is stored as Null terminated string
+ * Space is NOT allocated if string is 0 length
+ * but NIL is returned
+ */
 void bwrite_string(ubit8 **b, const char *str)
 {
     if (str)
@@ -811,7 +819,9 @@ void bwrite_string(ubit8 **b, const char *str)
     }
 }
 
-/* Write a string of the format:  ssss\0ssss\0 */
+/**
+ * Write a string of the format:  ssss\0ssss\0
+ */
 void bwrite_double_string(ubit8 **b, char *str)
 {
     int i = 0;
@@ -833,7 +843,9 @@ void bwrite_double_string(ubit8 **b, char *str)
     }
 }
 
-/* Stored: As 'N' strings followed by the empty string ("") */
+/**
+ * Stored: As 'N' strings followed by the empty string ("")
+ */
 void bwrite_nameblock(ubit8 **b, char **nb, int bOld)
 {
     if (bOld)
@@ -862,7 +874,9 @@ void bwrite_nameblock(ubit8 **b, char **nb, int bOld)
     }
 }
 
-/* number of ints, followed by ints */
+/**
+ * number of ints, followed by ints
+ */
 void bwrite_intblock(ubit8 **b, int *ib)
 {
     int i = 0;

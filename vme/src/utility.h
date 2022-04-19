@@ -41,7 +41,8 @@ private:
     ubit8 m_wizinv_level{};
 };
 
-/* For the printing of obj_type information, as used by the identify spell and
+/**
+ * For the printing of obj_type information, as used by the identify spell and
  * wstat command.  Look in act_stat.c for details.
  */
 struct obj_type_t

@@ -15,10 +15,12 @@
 #include "utility.h"
 #include "utils.h"
 
-unit_affected_type *affected_list = nullptr; /* Global list pointer       */
-unit_affected_type *next_affected_dude;      /* dirty - very dirty indeed */
+unit_affected_type *affected_list = nullptr; ///< Global list pointer
+unit_affected_type *next_affected_dude;      ///< dirty - very dirty indeed
 
-/* Link an affected structure into the units affected structure */
+/**
+ * Link an affected structure into the units affected structure
+ */
 void link_affect(unit_data *unit, unit_affected_type *af)
 {
     /*if (af->id > ID_TOP_IDX)
@@ -57,10 +59,12 @@ unit_affected_type *link_alloc_affect(unit_data *unit, unit_affected_type *orgaf
     return af;
 }
 
-/* Allocate memory, link and call functions of new affect   */
-/* If the apf function returns TRUE then the tif - function */
-/* is *not* called - but the structure is still alloced and */
-/* linked.                                                  */
+/**
+ * Allocate memory, link and call functions of new affect
+ * If the apf function returns TRUE then the tif - function
+ * is *not* called - but the structure is still alloced and
+ * linked.
+ */
 void create_affect(unit_data *unit, unit_affected_type *af)
 {
     if (!unit->is_destructed())
@@ -105,8 +109,10 @@ void create_affect(unit_data *unit, unit_affected_type *af)
     }
 }
 
-/* Unlink  an affect structure from lists        */
-/* It is freed by 'clear_destruct' automatically */
+/**
+ * Unlink  an affect structure from lists
+ * It is freed by 'clear_destruct' automatically
+ */
 void unlink_affect(unit_affected_type *af)
 {
     unit_affected_type *i = nullptr;
@@ -161,9 +167,11 @@ void unlink_affect(unit_affected_type *af)
     }
 }
 
-/* Call apply (unset), Unlink, and last function, then free structure */
-/* If the apf funtion returns TRUE then the affect will neither be    */
-/* Unliked nor freed nor will the tif funtion be called               */
+/**
+ * Call apply (unset), Unlink, and last function, then free structure
+ * If the apf funtion returns TRUE then the affect will neither be
+ * Unliked nor freed nor will the tif funtion be called
+ */
 void destroy_affect(unit_affected_type *af)
 {
     /* It is assumed that none of these function calls can */
@@ -194,7 +202,9 @@ void destroy_affect(unit_affected_type *af)
     unlink_affect(af);
 }
 
-/* Attempts to clear a unit entirely of affects */
+/**
+ * Attempts to clear a unit entirely of affects
+ */
 void affect_clear_unit(unit_data *unit)
 {
     int i = 0;
@@ -223,7 +233,7 @@ void get_affects(const unit_data *unit, cNamelist *sl)
     unit_affected_type *af = nullptr;
     char buf[256];
 
-    // TODO fix unit_data so const member funcs are returns const pointers to members
+    /// @todo fix unit_data so const member funcs are returns const pointers to members
     for (af = const_cast<unit_data *>(unit)->getUnitAffectedType(); af; af = af->getNext())
     {
         sl->AppendName(g_apf[af->getApplyFI()].descr);
@@ -236,7 +246,7 @@ unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
 {
     unit_affected_type *af = nullptr;
 
-    // TODO fix unit_data so const member funcs are returns const pointers to members
+    /// @todo fix unit_data so const member funcs are returns const pointers to members
     for (af = const_cast<unit_data *>(unit)->getUnitAffectedType(); af; af = af->getNext())
     {
         if (af->getID() == id)
@@ -248,7 +258,9 @@ unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
     return nullptr;
 }
 
-/* Called by event handler when its ticking time */
+/**
+ * Called by event handler when its ticking time
+ */
 void affect_beat(void *p1, void *p2)
 {
     unit_affected_type *af = (unit_affected_type *)p1;
@@ -299,8 +311,10 @@ void affect_beat(void *p1, void *p2)
     }
 }
 
-/* ONLY USED WHEN LOADING UNITS                          */
-/* If 'apply' is TRUE then apply function will be called */
+/**
+ * ONLY USED WHEN LOADING UNITS
+ * If 'apply' is TRUE then apply function will be called
+ */
 void apply_affect(unit_data *unit)
 {
     unit_affected_type *af = nullptr;

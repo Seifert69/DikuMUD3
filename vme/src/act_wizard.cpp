@@ -103,7 +103,9 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-/* Reset the zone in which the char is in! */
+/**
+ * Reset the zone in which the char is in!
+ */
 void do_reset(unit_data *ch, char *arg, const command_info *cmd)
 {
     zone_type *zone = nullptr;
@@ -459,7 +461,8 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
     dil_loadtime_activate(u);
 }
 
-/*  0: free access
+/**
+ * @returns 0: free access<br>
  * >0: locked for below this level
  */
 void do_wizlock(unit_data *ch, char *arg, const command_info *cmd)

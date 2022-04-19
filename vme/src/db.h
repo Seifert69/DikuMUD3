@@ -76,9 +76,9 @@
 
 struct zone_info_type
 {
-    int no_of_zones; /* Total number of zones       */
+    int no_of_zones; ///< Total number of zones
     // class zone_type *zone_list;	Replaced by ::map below
-    void **spmatrix; /* Inter zone shortest paths   */
+    void **spmatrix; ///< Inter zone shortest paths
     std::map<const char *, zone_type *, cmp_str> mmp;
 };
 

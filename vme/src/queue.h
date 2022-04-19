@@ -34,7 +34,7 @@ public:
 
 private:
     ubit8 *pData;
-    ubit32 nSize; // Optional number of bytes
+    ubit32 nSize; ///< Optional number of bytes
     cQueueElem *pNext;
 };
 

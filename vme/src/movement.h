@@ -24,9 +24,9 @@ struct door_data
 {
     unit_data *thing;
     unit_data *room;
-    unit_data *reverse; /* Reverse Room or Inside thing */
+    unit_data *reverse; ///< Reverse Room or Inside thing
     char *key;
-    ubit8 direction; /* For rooms, which direction was picked? */
+    ubit8 direction; ///< For rooms, which direction was picked?
     ubit8 *flags;
     ubit8 *rev_flags;
     const char *name;
@@ -46,5 +46,5 @@ struct visit_data
     int (*what_now)(const unit_data *, visit_data *);
 
     void *data;
-    int non_tick_return; /* What to return upon non-ticks (SFR_...) */
+    int non_tick_return; ///< What to return upon non-ticks (SFR_...)
 };

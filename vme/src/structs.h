@@ -76,16 +76,16 @@ public:
     room_data();
     ~room_data();
 
-    room_direction_data *dir_option[MAX_EXIT + 1]{}; // Why 11? Why not MAX_EXIT+1?
+    room_direction_data *dir_option[MAX_EXIT + 1]{}; ///< Why 11? Why not MAX_EXIT+1?
 
-    ubit8 flags{};         /* Room flags                              */
-    ubit8 movement_type{}; /* The type of movement (city, hills etc.) */
-    ubit8 resistance{};    /* Magic resistance of the room            */
+    ubit8 flags{};         ///< Room flags
+    ubit8 movement_type{}; ///< The type of movement (city, hills etc.)
+    ubit8 resistance{};    ///< Magic resistance of the room
 
-    sbit16 mapx, mapy; /* Graphical map coordinates */
+    sbit16 mapx, mapy; ///< Graphical map coordinates
 
-    int sc{};  /*strong component, used for shortest path */
-    int num{}; /*room number, used for shortest path */
+    int sc{};  ///< strong component, used for shortest path
+    int num{}; ///< room number, used for shortest path
 #ifndef MPLEX_COMPILE
     enum edge_dir_t
     {
@@ -114,14 +114,14 @@ public:
     obj_data();
     ~obj_data();
 
-    sbit32 value[5];     /* Values of the item (see list)       */
-    ubit32 cost;         /* Value when sold (gp.)               */
-    ubit32 cost_per_day; /* Cost to keep pr. real day           */
+    sbit32 value[5];     ///< Values of the item (see list)
+    ubit32 cost;         ///< Value when sold (gp.)
+    ubit32 cost_per_day; ///< Cost to keep pr. real day
 
-    ubit8 flags;      /* Various special object flags        */
-    ubit8 type;       /* Type of item (ITEM_XXX)             */
-    ubit8 equip_pos;  /* 0 or position of item in equipment  */
-    ubit8 resistance; /* Magic resistance                    */
+    ubit8 flags;      ///< Various special object flags
+    ubit8 type;       ///< Type of item (ITEM_XXX)
+    ubit8 equip_pos;  ///< 0 or position of item in equipment
+    ubit8 resistance; ///< Magic resistance
 };
 
 /* ----------------- CHAR SPECIFIC STRUCTURES ----------------------- */
@@ -134,16 +134,16 @@ public:
 
     descriptor_data *descriptor;
     cCombat *Combat;
-    unit_data *master;    /* Must be a char */
-    unit_data *last_room; /* Last location of character */
+    unit_data *master;    ///< Must be a char
+    unit_data *last_room; ///< Last location of character
     char_point_data points;
 
     char_follow_type *followers;
 
-    char *last_attacker; /* Last attacker of character */
-    char *money;         /*  Money transfer from db-files. */
+    char *last_attacker; ///< Last attacker of character
+    char *money;         ///<  Money transfer from db-files.
 
-    ubit8 last_attacker_type; /* Last attacker type of character */
+    ubit8 last_attacker_type; ///< Last attacker type of character
 };
 
 /* ------------------  PC SPECIFIC STRUCTURES ------------------------ */
@@ -163,47 +163,47 @@ public:
 
     terminal_setup_type setup;
 
-    pc_time_data m_time{};     /* PCs time info  */
-    pc_account_data account{}; /* Accounting     */
+    pc_time_data m_time{};     ///< PCs time info
+    pc_account_data account{}; ///< Accounting
 
-    char *guild;     // Player's current default guild (guilds in .info)
-    char *bank;      /* How much money in bank?                 */
-    char *hometown;  /* PCs Hometown (symbolic reference)       */
-    char *promptstr; /* A PC's Prompt                           */
+    char *guild;     ///< Player's current default guild (guilds in .info)
+    char *bank;      ///< How much money in bank?
+    char *hometown;  ///< PCs Hometown (symbolic reference)
+    char *promptstr; ///< A PC's Prompt
 
-    extra_list info;  /* For saving Admin information             */
-    extra_list quest; /* For saving QUEST information            */
+    extra_list info;  ///< For saving Admin information
+    extra_list quest; ///< For saving QUEST information
 
-    sbit8 profession; // The player's chosen profession, -1 means unknown
-    ubit16 vlvl;      /* Virtual Level for player                */
+    sbit8 profession; ///< The player's chosen profession, -1 means unknown
+    ubit16 vlvl;      ///< Virtual Level for player
 
-    sbit32 id;             /* Unique identifier for each player (-1 guest) */
-    sbit32 skill_points;   /* No of practice points left              */
-    sbit32 ability_points; /* No of practice points left              */
+    sbit32 id;             ///< Unique identifier for each player (-1 guest)
+    sbit32 skill_points;   ///< No of practice points left
+    sbit32 ability_points; ///< No of practice points left
 
-    ubit16 flags;          /* flags for PC setup (brief, noshout...)  */
-    ubit16 nr_of_crimes;   /* Number of crimes committed              */
-    ubit16 crack_attempts; /* Number of wrong passwords entered       */
-    ubit16 lifespan{};     /* How many year to live....               */
+    ubit16 flags;          ///< flags for PC setup (brief, noshout...)
+    ubit16 nr_of_crimes;   ///< Number of crimes committed
+    ubit16 crack_attempts; ///< Number of wrong passwords entered
+    ubit16 lifespan{};     ///< How many year to live....
 
-    sbit16 spells[SPL_TREE_MAX];   /* The spells learned                  */
-    ubit8 spell_lvl[SPL_TREE_MAX]; /* Practiced within that level         */
+    sbit16 spells[SPL_TREE_MAX];   ///< The spells learned
+    ubit8 spell_lvl[SPL_TREE_MAX]; ///< Practiced within that level
 
-    sbit16 skills[SKI_TREE_MAX];   /* The skills learned                  */
-    ubit8 skill_lvl[SKI_TREE_MAX]; /* The skills practiced within level   */
+    sbit16 skills[SKI_TREE_MAX];   ///< The skills learned
+    ubit8 skill_lvl[SKI_TREE_MAX]; ///< The skills practiced within level
 
-    sbit16 weapons[WPN_TREE_MAX];   /* The weapons learned                 */
-    ubit8 weapon_lvl[WPN_TREE_MAX]; /* The weapons learned                  */
+    sbit16 weapons[WPN_TREE_MAX];   ///< The weapons learned
+    ubit8 weapon_lvl[WPN_TREE_MAX]; ///< The weapons learned
 
-    ubit8 ability_lvl[ABIL_TREE_MAX]; /* The abilities learned                  */
+    ubit8 ability_lvl[ABIL_TREE_MAX]; ///< The abilities learned
 
-    sbit8 conditions[3]; /* Drunk full etc.                     */
-    ubit8 nAccessLevel;  /* Access Level for BBS use            */
+    sbit8 conditions[3]; ///< Drunk full etc.
+    ubit8 nAccessLevel;  ///< Access Level for BBS use
 
-    char pwd[PC_MAX_PASSWORD];  /* Needed when loaded w/o descriptor   */
-    char filename[PC_MAX_NAME]; /* The name on disk...                 */
-    ubit32 lasthosts[5];        /* last 5 different IPs                */
-    color_type color;           /* Players default colors              */
+    char pwd[PC_MAX_PASSWORD];  ///< Needed when loaded w/o descriptor
+    char filename[PC_MAX_NAME]; ///< The name on disk...
+    ubit32 lasthosts[5];        ///< last 5 different IPs
+    color_type color;           ///< Players default colors
 };
 
 /* ------------------ NPC SPECIFIC STRUCTURES ----------------------- */
@@ -217,8 +217,8 @@ public:
     std::array<sbit16, WPN_GROUP_MAX> weapons;
     std::array<sbit16, SPL_GROUP_MAX> spells;
 
-    ubit8 default_pos; /* Default position for NPC               */
-    ubit8 flags;       /* flags for NPC behavior                 */
+    ubit8 default_pos; ///< Default position for NPC
+    ubit8 flags;       ///< flags for NPC behavior
 };
 
 /* ----------------- Destructed decalrations ----------------------- */

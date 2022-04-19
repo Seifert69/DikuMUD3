@@ -1,3 +1,12 @@
+/** @mainpage Defines Compiler
+ *
+ * @section intro_sec Introduction
+ *
+ * This is the introduction.
+ *
+ * @remark This text is located in defcomp/main.cpp
+ */
+
 #define FALSE 0
 #define TRUE 1
 #include "../compile_defines.h"

@@ -19,8 +19,8 @@
 #include "unitfind.h"
 #include "utils.h"
 
-/*
- * coded: Mon Jun 22 00:22:44 MET DST 1992 [HH]
+/**
+ * @date coded: Mon Jun 22 00:22:44 MET DST 1992 [HH]
  * tested: No
  */
 void do_backstab(unit_data *ch, char *arg, const command_info *cmd)

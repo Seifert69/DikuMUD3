@@ -2,7 +2,7 @@
 
 #include <ostream>
 
-/*
+/**
  * This structure is purely intended to be an easy way to transfer
  * and return information about time (real or mudwise).
  */

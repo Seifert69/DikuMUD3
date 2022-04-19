@@ -34,7 +34,7 @@ namespace fs = boost::filesystem;
 char player_directory[1024] = "\0";
 int max_id = -1;
 int top_id = -1;
-ubit8 *ids = nullptr; /* For checking duplicate players... */
+ubit8 *ids = nullptr; /** For checking duplicate players... */
 
 #define OUTPUT_DIR "lib/"
 
@@ -156,14 +156,18 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
     }
 }
 
-/* This procedure makes any conversion you might want on every player in   *
- * the playerfile, including affects and inventory                         */
+/**
+ * This procedure makes any conversion you might want on every player in
+ * the playerfile, including affects and inventory
+ */
 void convert_player(unit_data *pc)
 {
     ;
 }
 
-/* Return TRUE if Ok. */
+/**
+ * @returns TRUE if Ok.
+ */
 int sanity_check(unit_data *u)
 {
     if (g_nCorrupt == TRUE)

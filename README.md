@@ -23,7 +23,9 @@ Pre-requisites:
    * Rapidjson devel (sudo apt-get install rapidjson-dev)
    * Debian users look here for flex: https://github.com/Seifert69/DikuMUD3/issues?q=70
 
-
+Optional:
+ * Doxygen (sudo apt-get install doxygen graphviz dia mscgen)
+   
 How to build & launch (using the new cmake)
 
 1) First build the binaries:
@@ -34,6 +36,8 @@ How to build & launch (using the new cmake)
        cmake .
        make all -j8 # -j8 to compile on 8 threads in parallel
        make test # optionally run the unit tests
+
+*Code documentation will be generated in docs/ after the build completes. [docs/index.html](docs/index.html)*
 
 4) Now you're ready to launch, open four tabs in shell:
 

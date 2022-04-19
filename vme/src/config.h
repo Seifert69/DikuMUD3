@@ -75,7 +75,7 @@ public:
     [[nodiscard]] std::string getFileInEtcDir(const std::string &filename) const;
     [[nodiscard]] std::string getFileInLibDir(const std::string &filename) const;
     [[nodiscard]] std::string getFileInLogDir(const std::string &filename) const;
-    /** }@ */
+    /** @} */
 
     /**
      * Same as above, but designed to catch nullptr's
@@ -87,7 +87,7 @@ public:
     [[nodiscard]] std::string getFileInEtcDir(const char *filename) const;
     [[nodiscard]] std::string getFileInLibDir(const char *filename) const;
     [[nodiscard]] std::string getFileInLogDir(const char *filename) const;
-    /** }@ */
+    /** @} */
 private:
     static std::string parse_match_name(const char **pData, const char *pMatch, std::string default_value);
     static std::vector<std::string> parse_match_namelist(const char **pData, const char *pMatch);
@@ -107,31 +107,31 @@ private:
      */
     static void checkDirectoryExists(const std::string &name, const std::string &directory);
 
-    int m_nMotherPort{4999};                             // TCP port number
-    int m_nRentModifier{10};                             //
-    bool m_bAccounting{false};                           //
-    bool m_bAliasShout{true};                            //
-    bool m_bBBS{false};                                  //
-    bool m_bLawful{false};                               // Unused apart from unit_tests so far
-    bool m_bNoSpecials{false};                           //
-    bool m_bBOB{false};                                  //
-    int m_nShout{1};                                     // Unused apart from unit_tests so far
-    int m_hReboot{0};                                    // Hour 0-24 to reboot server on
-    color_type color{};                                  //
-    in_addr m_sSubnetMask{};                             // Unused apart from unit_tests so far
-    in_addr m_sLocalhost{};                              // Unused apart from unit_tests so far
-    std::vector<in_addr> m_aMplexHosts{MAX_MPLEX_HOSTS}; // Unused apart from unit_tests so far
-    std::string m_promptstr{};                           // Unused apart from unit_tests so far
-    std::string m_libdir{};                              // The path to lib directory
-    std::string m_plydir{};                              // The path to player directory
-    std::string m_etcdir{};                              // The path to etc directory
-    std::string m_logdir{};                              // The path to log directory
-    std::string m_zondir{};                              // The path to zone directory
-    std::string m_dilfiledir{};                          // The path to dil file director
-    std::string m_mudname{};                             // The mud name
-    std::string m_pLogo{};                               // Intro screen
-    std::string m_pColor{};                              //
-    std::string m_pImmortName{};                         // Name of the Immortal of the mud
+    int m_nMotherPort{4999};                             ///< TCP port number
+    int m_nRentModifier{10};                             ///<
+    bool m_bAccounting{false};                           ///<
+    bool m_bAliasShout{true};                            ///<
+    bool m_bBBS{false};                                  ///<
+    bool m_bLawful{false};                               ///< Unused apart from unit_tests so far
+    bool m_bNoSpecials{false};                           ///<
+    bool m_bBOB{false};                                  ///<
+    int m_nShout{1};                                     ///< Unused apart from unit_tests so far
+    int m_hReboot{0};                                    ///< Hour 0-24 to reboot server on
+    color_type color{};                                  ///<
+    in_addr m_sSubnetMask{};                             ///< Unused apart from unit_tests so far
+    in_addr m_sLocalhost{};                              ///< Unused apart from unit_tests so far
+    std::vector<in_addr> m_aMplexHosts{MAX_MPLEX_HOSTS}; ///< Unused apart from unit_tests so far
+    std::string m_promptstr{};                           ///< Unused apart from unit_tests so far
+    std::string m_libdir{};                              ///< The path to lib directory
+    std::string m_plydir{};                              ///< The path to player directory
+    std::string m_etcdir{};                              ///< The path to etc directory
+    std::string m_logdir{};                              ///< The path to log directory
+    std::string m_zondir{};                              ///< The path to zone directory
+    std::string m_dilfiledir{};                          ///< The path to dil file director
+    std::string m_mudname{};                             ///< The mud name
+    std::string m_pLogo{};                               ///< Intro screen
+    std::string m_pColor{};                              ///<
+    std::string m_pImmortName{};                         ///< Name of the Immortal of the mud
 };
 
 extern CServerConfiguration g_cServerConfig;

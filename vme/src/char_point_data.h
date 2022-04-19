@@ -108,19 +108,19 @@ public:
     std::array<sbit16, ABIL_TREE_MAX> &getAbilitiesArray();
 
 private:
-    ubit32 flags{0};                                // Char flags
-    sbit32 exp{0};                                  // The experience of the player
-    ubit16 race{0};                                 // PC/NPC race, Humanoid, Animal, etc.
-    sbit16 mana{0};                                 // How many mana points are left?
-    sbit16 endurance{0};                            // How many endurance points are left?
-    sbit16 offensive{0};                            // The OB of a character.
-    sbit16 defensive{0};                            // The DB of a character.
-    sbit16 speed{0};                                // The speed for combat
-    ubit8 natural_armour{0};                        // The natural built-in armour (ARM_)
-    ubit8 attack_type{0};                           // PC/NPC Attack Type for bare hands (WPN_)
-    ubit8 dex_reduction{0};                         // For speed of armour calculations only
-    ubit8 sex{0};                                   // PC / NPC s sex
-    ubit8 level{0};                                 // PC / NPC s level
-    ubit8 position{0};                              // Standing, sitting, fighting...
-    std::array<sbit16, ABIL_TREE_MAX> abilities{0}; // Str/dex etc.
+    ubit32 flags{0};                                ///< Char flags
+    sbit32 exp{0};                                  ///< The experience of the player
+    ubit16 race{0};                                 ///< PC/NPC race, Humanoid, Animal, etc.
+    sbit16 mana{0};                                 ///< How many mana points are left?
+    sbit16 endurance{0};                            ///< How many endurance points are left?
+    sbit16 offensive{0};                            ///< The OB of a character.
+    sbit16 defensive{0};                            ///< The DB of a character.
+    sbit16 speed{0};                                ///< The speed for combat
+    ubit8 natural_armour{0};                        ///< The natural built-in armour (ARM_)
+    ubit8 attack_type{0};                           ///< PC/NPC Attack Type for bare hands (WPN_)
+    ubit8 dex_reduction{0};                         ///< For speed of armour calculations only
+    ubit8 sex{0};                                   ///< PC / NPC s sex
+    ubit8 level{0};                                 ///< PC / NPC s level
+    ubit8 position{0};                              ///< Standing, sitting, fighting...
+    std::array<sbit16, ABIL_TREE_MAX> abilities{0}; ///< Str/dex etc.
 };

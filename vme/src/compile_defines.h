@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Creates a string to print out what options were set when a file was compiler
+ */
 #pragma once
 
 #include <sstream>

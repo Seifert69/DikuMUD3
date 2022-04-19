@@ -25,9 +25,9 @@ private:
     void Sort();
 
     cCombat **pElems;
-    int nMaxTop; // No of allocated elements
-    int nTop;    // Current Max
-    int nIdx;    // Updated when in Perform() and doing Sub()
+    int nMaxTop; ///< No of allocated elements
+    int nTop;    ///< Current Max
+    int nIdx;    ///< Updated when in Perform() and doing Sub()
 };
 
 class cCombat
@@ -60,13 +60,13 @@ private:
     void sub(int idx);
     int findOpponentIdx(unit_data *tmp);
 
-    int nAttackNo;                  // Counter for which attack is being performed
-    int nWhen;                      // What tick to attack / command at
-    unit_data *pOwner;              // The owning unit
-    unit_data *pMelee;              // The melee or kill pointer
-    unit_data **pOpponents;         // Array of opponents (given damage)
-    int nNoOpponents;               // Number of opponents
-    char cmd[MAX_INPUT_LENGTH + 1]; // A combat command
+    int nAttackNo;                  ///< Counter for which attack is being performed
+    int nWhen;                      ///< What tick to attack / command at
+    unit_data *pOwner;              ///< The owning unit
+    unit_data *pMelee;              ///< The melee or kill pointer
+    unit_data **pOpponents;         ///< Array of opponents (given damage)
+    int nNoOpponents;               ///< Number of opponents
+    char cmd[MAX_INPUT_LENGTH + 1]; ///< A combat command
 };
 
 void set_fighting(unit_data *ch, unit_data *vict, int bMelee = FALSE);

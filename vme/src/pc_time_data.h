@@ -31,8 +31,8 @@ public:
     void incTotalTimePlayedInSecondsBy(ubit32 seconds);
 
 private:
-    time_t creation{0}; // This represents time when the pc was created.
-    time_t connect{0};  // This is the last time that the pc connected.
-    time_t birth{0};    // This represents the characters age
-    ubit32 played{0};   // This is the total accumulated time played in secs
+    time_t creation{0}; ///< This represents time when the pc was created.
+    time_t connect{0};  ///< This is the last time that the pc connected.
+    time_t birth{0};    ///< This represents the characters age
+    ubit32 played{0};   ///< This is the total accumulated time played in secs
 };

@@ -147,36 +147,36 @@ public:
     std::string json();
 
 private:
-    cNamelist names;                            // Name Keyword list for get, enter, etc.
-    unit_fptr *func{nullptr};                   // Function pointer type
-    unit_dil_affected_type *dilaffect{nullptr}; //
-    unit_affected_type *affected{nullptr};      //
-    file_index_type *fi{nullptr};               // Unit file-index
-    char *key{nullptr};                         // Pointer to fileindex to Unit which is the key
-    unit_data *outside{nullptr};                // Pointer out of the unit, ie. from an object out to the char carrying it
-    unit_data *inside{nullptr};                 // Linked list of chars,rooms & objs
-    unit_data *next{nullptr};                   // For next unit in 'inside' linked list
-    unit_data *gnext{nullptr};                  // global l-list of objects, chars & rooms
-    unit_data *gprevious{nullptr};              // global l-list of objects, chars & rooms
-    ubit32 manipulate{0};                       // WEAR_XXX macros
-    ubit16 flags{0};                            // Invisible, can_bury, burried...
-    sbit32 base_weight{0};                      // The "empty" weight of a room/char/obj (lbs)
-    sbit32 weight{0};                           // Current weight of a room/obj/char
-    sbit16 capacity{0};                         // Capacity of obj/char/room, -1 => any
-    ubit16 size{0};                             // (cm) MOBs height, weapons size, ropes length
-    ubit8 status{0};                            // IS_ROOM, IS_OBJ, IS_PC, IS_NPC
-    ubit8 open_flags{0};                        // In general OPEN will mean can "enter"?
-    ubit8 open_diff{0};                         // Open difficulty
-    sbit16 light{0};                            // Number of active light sources in unit
-    sbit16 bright{0};                           // How much the unit shines
-    sbit16 illum{0};                            // how much bright is by transparency
-    ubit8 chars{0};                             // How many chars is inside the unit
-    ubit8 minv{0};                              // Level of wizard invisible
-    sbit32 max_hp{0};                           // The maximum number of hitpoints
-    sbit32 hp{0};                               // The actual amount of hitpoints left
-    sbit16 alignment{0};                        // +-1000 for alignments
-    std::string title;                          // Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
-    std::string out_descr;                      // The outside description of a unit
-    std::string in_descr;                       // The inside description of a unit
-    extra_list extra;                           // All the look 'at' stuff
+    cNamelist names;                            ///< Name Keyword list for get, enter, etc.
+    unit_fptr *func{nullptr};                   ///< Function pointer type
+    unit_dil_affected_type *dilaffect{nullptr}; ///<
+    unit_affected_type *affected{nullptr};      ///<
+    file_index_type *fi{nullptr};               ///< Unit file-index
+    char *key{nullptr};                         ///< Pointer to fileindex to Unit which is the key
+    unit_data *outside{nullptr};                ///< Pointer out of the unit, ie. from an object out to the char carrying it
+    unit_data *inside{nullptr};                 ///< Linked list of chars,rooms & objs
+    unit_data *next{nullptr};                   ///< For next unit in 'inside' linked list
+    unit_data *gnext{nullptr};                  ///< global l-list of objects, chars & rooms
+    unit_data *gprevious{nullptr};              ///< global l-list of objects, chars & rooms
+    ubit32 manipulate{0};                       ///< WEAR_XXX macros
+    ubit16 flags{0};                            ///< Invisible, can_bury, burried...
+    sbit32 base_weight{0};                      ///< The "empty" weight of a room/char/obj (lbs)
+    sbit32 weight{0};                           ///< Current weight of a room/obj/char
+    sbit16 capacity{0};                         ///< Capacity of obj/char/room, -1 => any
+    ubit16 size{0};                             ///< (cm) MOBs height, weapons size, ropes length
+    ubit8 status{0};                            ///< IS_ROOM, IS_OBJ, IS_PC, IS_NPC
+    ubit8 open_flags{0};                        ///< In general OPEN will mean can "enter"?
+    ubit8 open_diff{0};                         ///< Open difficulty
+    sbit16 light{0};                            ///< Number of active light sources in unit
+    sbit16 bright{0};                           ///< How much the unit shines
+    sbit16 illum{0};                            ///< how much bright is by transparency
+    ubit8 chars{0};                             ///< How many chars is inside the unit
+    ubit8 minv{0};                              ///< Level of wizard invisible
+    sbit32 max_hp{0};                           ///< The maximum number of hitpoints
+    sbit32 hp{0};                               ///< The actual amount of hitpoints left
+    sbit16 alignment{0};                        ///< +-1000 for alignments
+    std::string title;                          ///< Room title, Char title, Obj "the barrel", NPC "the Beastly Fido"
+    std::string out_descr;                      ///< The outside description of a unit
+    std::string in_descr;                       ///< The inside description of a unit
+    extra_list extra;                           ///< All the look 'at' stuff
 };

@@ -30,7 +30,7 @@ public:
     ~cConHook();
 
     void Unhook();
-    int IsHooked(); // At this level we also need to check for websockets
+    int IsHooked(); ///< At this level we also need to check for websockets
     void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
 
     void Close(int bNotifyMud);
@@ -73,12 +73,12 @@ public:
     ubit16 m_nId;
     int m_nFirst;
     ubit8 m_nLine;
-    int m_nPromptMode; /* 0 none, 1 press return */
-    int m_nPromptLen;  /* Prompt length          */
+    int m_nPromptMode; ///< 0 none, 1 press return
+    int m_nPromptLen;  ///< Prompt length
     int m_nSequenceCompare;
 
     int m_nState;
-    int m_nEscapeCode; /* Very simplified state diagram assistance */
+    int m_nEscapeCode; ///< Very simplified state diagram assistance
     char m_aOutput[4096];
     char m_aInputBuf[2 * MAX_INPUT_LENGTH];
     char m_aHost[50];
@@ -91,12 +91,12 @@ public:
 
     terminal_setup_type m_sSetup;
 
-    ubit8 m_nBgColor; /* Stupid bitching ANSI   */
+    ubit8 m_nBgColor; ///< Stupid bitching ANSI
 
-    cQueue m_qInput; /* Input from user        */
-    cQueue m_qPaged; /* Paged text output      */
+    cQueue m_qInput; ///< Input from user
+    cQueue m_qPaged; ///< Paged text output
 private:
-    std::mutex m_mtx; // Mutex for websockets threading
+    std::mutex m_mtx; ///< Mutex for websockets threading
 };
 
 std::string mplex_getcolor(cConHook *hook, const char *colorstr);

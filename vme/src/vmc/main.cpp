@@ -4,7 +4,16 @@
  $Date: 2004/09/21 08:45:46 $
  $Revision: 2.10 $
  */
-
+/** @mainpage Valhalla Mud Compiler
+ *
+ * @section intro_sec Introduction
+ *
+ * This is the introduction.
+ *
+ * @authors All
+ * @date 2004/09/21 08:45:46
+ * @remark This text is located in vmc/main.cpp
+ */
 #include "common.h"
 #include "compile_defines.h"
 #include "money.h"

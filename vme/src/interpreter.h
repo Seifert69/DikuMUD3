@@ -16,23 +16,23 @@ class command_info;
 
 struct spec_arg
 {
-    unit_data *owner;     /* Who is this?                       */
-    unit_data *activator; /* Who performed the operation        */
-    unit_data *medium;    /* Possibly what is used in operation */
-    unit_data *target;    /* Possible target of operation       */
+    unit_data *owner;     ///< Who is this?
+    unit_data *activator; ///< Who performed the operation
+    unit_data *medium;    ///< Possibly what is used in operation
+    unit_data *target;    ///< Possible target of operation
 
     command_info *cmd;
-    unit_fptr *fptr; /* The fptr is allowed to be modified, destroyed */
+    unit_fptr *fptr; ///< The fptr is allowed to be modified, destroyed
 
-    int *pInt; /* Potential int to modify */
+    int *pInt; ///< Potential int to modify
     const char *arg;
-    ubit32 mflags; /* Would like to make constant, but then can't define.. */
+    ubit32 mflags; ///< Would like to make constant, but then can't define..
 };
 
 struct command_info
 {
-    ubit8 combat_speed;  /* The speed of a combat command         */
-    ubit8 combat_buffer; /* Use the combat speed / buffer system? */
+    ubit8 combat_speed;  ///< The speed of a combat command
+    ubit8 combat_buffer; ///< Use the combat speed / buffer system?
 
     char *cmd_str;
 
@@ -43,9 +43,9 @@ struct command_info
     void (*cmd_fptr)(unit_data *ch, char *arg, const command_info *c);
 
     ubit8 minimum_level;
-    ubit8 log_level; /* For logging certain immortal commands */
+    ubit8 log_level; ///<  For logging certain immortal commands
 
-    diltemplate *tmpl; /* Perhaps a DIL template...         */
+    diltemplate *tmpl; ///< Perhaps a DIL template...
     ubit32 type;
     int inttype;
     int dir;
@@ -63,21 +63,24 @@ struct unit_function_array_type
     const char *name;
     int (*func)(spec_arg *sarg);
     ubit16 priority;
-    int save_w_d; /* May it be saved if it has data? True/false */
-    ubit16 sfb;   /* what kind of messages should be send */
-    sbit16 tick;  /* Default tick count */
+    int save_w_d; ///< May it be saved if it has data? True/false
+    ubit16 sfb;   ///< what kind of messages should be send
+    sbit16 tick;  ///< Default tick count
 };
 
-/* To check for commands by string */
+/** To check for commands by string */
 ubit1 is_command(const command_info *cmd, const char *str);
 
-/* Check to see if typed command is abbreviated */
+/** Check to see if typed command is abbreviated */
 ubit1 cmd_is_abbrev(unit_data *ch, const command_info *cmd);
 
-/* Interpreter routines */
+/** Interpreter routines
+ * @{
+ */
 void wrong_position(unit_data *ch);
 void command_interpreter(unit_data *ch, const char *cmdArg);
 void argument_interpreter(const char *argument, char *first_arg, char *second_arg);
+///@}
 
 /* The routine to check for special routines */
 

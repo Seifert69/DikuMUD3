@@ -89,8 +89,10 @@ const char *single_unit_messg(unit_data *unit, const char *type, int direction, 
     return mesg;
 }
 
-/* Has 'pc' found the door at 'dir'? If direction exits and it is closed  */
-/* and hidden then the door is found if it has been searched for.         */
+/**
+ * Has 'pc' found the door at 'dir'? If direction exits and it is closed
+ * and hidden then the door is found if it has been searched for.
+ */
 int has_found_door(unit_data *pc, int dir)
 {
     extra_descr_data *exd = nullptr;
@@ -159,11 +161,25 @@ unit_data *in_room(unit_data *u)
 }
 
 #define ALAS_NOWAY "Alas, you cannot go that way...<br/>"
-/* Other logic has figured out if there was a direction, if it was open, if you're sleeping, mesgs, etc. */
-/* This is the actual move between two rooms. Direction only needed for command_info event. */
-/* Endurance is calculated and subtracted here */
-/* ch is the CHAR doing the move command. mover is the vehicle, steed or boat or the char itself */
-/* 1 = success, 0 = fail, -1 = dead */
+/**
+ * Other logic has figured out if there was a direction, if it was open, if you're sleeping, mesgs, etc.
+ * This is the actual move between two rooms. Direction only needed for command_info event.
+ * Endurance is calculated and subtracted here
+ * @param ch is the CHAR doing the move command.
+ * @param mover is the vehicle, steed or boat or the char itself
+ * @param room_from
+ * @param room_to
+ * @param bIsFollower
+ * @param direction
+ * @param pLeaveSelf
+ * @param pLeaveOther
+ * @param pArrSelf
+ * @param pArrOther
+ * @param pPassengersO
+ * @returns 1 = success,<br>
+ * 0 = fail,<br>
+ * -1 = dead
+ */
 int room_move(unit_data *ch,
               unit_data *mover,
               unit_data *room_from,
@@ -280,22 +296,27 @@ int room_move(unit_data *ch,
 
 #define S_IS_AMPHIB "$is_amphib"
 
+/**
+ *
+ * Asserts:<br>
+ *      0. ch is in a room, going in a direction n,e,s,w,u or d
+ *      1. Does not assert anything about position.
+ *      2. That the direction exists.
+ *      3. Tests if the door is closed (to make follow work correctly
+ *         after special is called!)
+ *
+ *      Followers won't follow.
+ * Following indicates if this is a follower moving because it is following another char.
+ *
+ * @param ch
+ * @param mover
+ * @param direction
+ * @param following
+ * @returns 1 : If success.<br>
+ *          0 : If fail<br>
+ *          -1 : If dead.<br>
+ */
 int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
-/* Asserts:
-        0. ch is in a room, going in a direction n,e,s,w,u or d
-        1. Does not assert anything about position.
-        2. That the direction exists.
-        3. Tests if the door is closed (to make follow work correctly
-           after special is called!)
-
-        Followers won't follow.
-   Following indicates if this is a follower moving because it is following another char.
-
-        Returns :
-        1 : If succes.
-        0 : If fail
-        -1 : If dead.
-        */
 {
     unit_data *room_from = nullptr;
     unit_data *room_to = nullptr;
@@ -646,15 +667,17 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     return room_move(ch, mover, room_from, room_to, following, direction, ls, lo, as, ao, aPassengersOther);
 }
 
-/* Following defaults to false. If it is set to TRUE, then it will generate
-   the special to check if the move is allowed. */
+/**
+ * @param ch
+ * @param mover
+ * @param direction
+ * @param following Following defaults to false. If it is set to TRUE, then it will generate
+ * the special to check if the move is allowed.
+ * @returns 1 : If success.<br>
+ * 0 : If fail<br>
+ * -1 : If dead.
+ */
 int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
-/*
-       Returns :
-       1 : If succes.
-       0 : If fail
-       -1 : If dead.
-       */
 {
     unit_data *room_from = nullptr;
 
@@ -718,7 +741,9 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
     return res;
 }
 
-/* dir must be one of [CMD_NORTH..MAX_EXIT]              */
+/**
+ * @param dir must be one of [CMD_NORTH..MAX_EXIT]
+ */
 void move_dir(unit_data *ch, int dir)
 {
     assert((dir >= 0) && (dir <= MAX_EXIT));
@@ -771,14 +796,14 @@ void do_move(unit_data *ch, char *argument, const command_info *cmd)
     move_dir(ch, cmd->no);
 }
 
-/* Returns -1 if door is not found, otherwise 0..5 for door exit     */
-/* If err_msg points to anything, an appropriate message is copied   */
-/* into it (which should be sent in case -1 is returned)             */
-/* Will find ALL doors, including hidden doors.                      */
-/* check_hidden: if FALSE, hidden doors will be ignored, otherwise   */
-/*               hidden doors will be considered.                    */
-/* err_msg:      if TRUE, error messages will be shown.              */
-
+/**
+ *  Will find ALL doors, including hidden doors.
+ * @param ch
+ * @param doorstr
+ * @param err_msg if TRUE, error messages will be shown.
+ * @param check_hidden: if FALSE, hidden doors will be ignored, otherwise hidden doors will be considered.
+ * @returns -1 if door is not found, otherwise 0..5 for door exit
+ */
 int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 {
     char buf[256];

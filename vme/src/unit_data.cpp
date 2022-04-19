@@ -282,7 +282,7 @@ unit_data *unit_data::copy()
     }
     else if (IS_CHAR(this))
     {
-        // TODO These should all move down to char_data
+        /// @todo These should all move down to char_data
         auto *u_downcast = dynamic_cast<char_data *>(u);
         auto *this_downcast = dynamic_cast<char_data *>(this);
 

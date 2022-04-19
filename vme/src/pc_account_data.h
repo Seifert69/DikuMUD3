@@ -37,11 +37,11 @@ public:
     void setFlatRateExpirationDate(ubit32 value);
 
 private:
-    float credit{0.0f};     // How many coin units are left on account?
-    ubit32 credit_limit{0}; // In coin units (i.e. cents / oerer)
-    ubit32 total_credit{0}; // Accumulated credit to date (coin units)
-    sbit16 last4{-1};       // The last four digits of his credit card, or -1
-    ubit8 cracks{0};        // Crack-attempts on CC last4
-    ubit8 discount{0};      // 0 - 100% discount
-    ubit32 flatrate{0};     // The expiration date of a flat rate service
+    float credit{0.0f};     ///< How many coin units are left on account?
+    ubit32 credit_limit{0}; ///< In coin units (i.e. cents / oerer)
+    ubit32 total_credit{0}; ///< Accumulated credit to date (coin units)
+    sbit16 last4{-1};       ///< The last four digits of his credit card, or -1
+    ubit8 cracks{0};        ///< Crack-attempts on CC last4
+    ubit8 discount{0};      ///< 0 - 100% discount
+    ubit32 flatrate{0};     ///< The expiration date of a flat rate service
 };
