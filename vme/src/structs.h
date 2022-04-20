@@ -207,11 +207,18 @@ public:
     std::vector<vertex_descriptor> &getDistance() { return distance; }
     const std::vector<vertex_descriptor> &getDistance() const { return distance; }
     /// @}
+
+    /**
+     * @name
+     * @{
+     */
+    bool getWaitingDijkstra() const { return waiting_dijkstra; }
+    void setWaitingDijkstra(bool value) { waiting_dijkstra = value; }
+    /// @}
 private:
     std::vector<vertex_descriptor> path;     ///<
     std::vector<vertex_descriptor> distance; ///<
-public:
-    int waiting_dijkstra;
+    bool waiting_dijkstra{false};            ///<
 #endif
 };
 

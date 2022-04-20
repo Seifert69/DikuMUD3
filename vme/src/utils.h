@@ -190,8 +190,6 @@ inline int ROOM_NUM(const unit_data *unit) { return UROOM(unit)->getRoomNumber()
 
 inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongComponent(); }
 
-#define ROOM_WAITD(unit) (UROOM(unit)->waiting_dijkstra)
-
 #ifndef MPLEX_COMPILE
     inline std::vector<room_data::vertex_descriptor> &ROOM_PATH(unit_data *unit) { return UROOM(unit)->getPath(); }
     inline std::vector<room_data::vertex_descriptor> &ROOM_DISTANCE(unit_data *unit) { return UROOM(unit)->getDistance();}
