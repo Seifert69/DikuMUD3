@@ -265,7 +265,7 @@ room_field  : unit_field
 
 oroom_field : MOVEMENT PNUM
     {
-        UROOM(cur)->setTerrainMovementType($2);
+        UROOM(cur)->setLandscapeTerrain($2);
     }
     | GMAP '(' PNUM ',' PNUM ')'
     {

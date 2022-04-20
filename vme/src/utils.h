@@ -178,9 +178,10 @@ inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExt
 
 /* ..................................................................... */
 // clang-format off
+
 inline ubit8 ROOM_RESISTANCE(unit_data *room) { return UROOM(room)->getRoomMagicalResistance(); }
 
-inline ubit8 ROOM_LANDSCAPE(const unit_data *unit) { return UROOM(unit)->getTerrainMovementType(); }
+inline ubit8 ROOM_LANDSCAPE(const unit_data *unit) { return UROOM(unit)->getLandscapeTerrain(); }
 
 inline ubit8 ROOM_FLAGS(const unit_data *unit) { return UROOM(unit)->getRoomFlags(); }
 
@@ -194,6 +195,7 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
     inline std::vector<room_data::vertex_descriptor> &ROOM_PATH(unit_data *unit) { return UROOM(unit)->getPath(); }
     inline std::vector<room_data::vertex_descriptor> &ROOM_DISTANCE(unit_data *unit) { return UROOM(unit)->getDistance();}
 #endif
+
 // clang-format on
 /* ..................................................................... */
 

@@ -61,9 +61,9 @@ char_data::~char_data()
 
 room_data::room_data()
     : unit_data(UNIT_ST_ROOM)
-    , mapx{-1}
-    , mapy{-1}
-    , waiting_dijkstra{FALSE}
+    , m_mapx{-1}
+    , m_mapy{-1}
+    , m_waiting_dijkstra{false}
 {
     g_world_norooms++;
 }

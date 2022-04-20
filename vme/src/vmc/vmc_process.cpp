@@ -1256,7 +1256,7 @@ void init_unit(unit_data *u)
                 UROOM(u)->setRoomDirectionDataForExitTo(i, nullptr);
             }
             UROOM(u)->setAllRoomFlags(0);
-            UROOM(u)->setTerrainMovementType(SECT_CITY);
+            UROOM(u)->setLandscapeTerrain(SECT_CITY);
             UROOM(u)->setRoomMagicalResistance(0);
             break;
     }

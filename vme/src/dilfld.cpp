@@ -2824,7 +2824,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = room->getTerrainMovementTypePtr();
+                        v->ref = room->getLandscapeTerrainPtr();
                     }
                     else
                     {

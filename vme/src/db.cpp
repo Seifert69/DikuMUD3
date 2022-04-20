@@ -1302,7 +1302,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             }
 
             UROOM(u)->setAllRoomFlags(pBuf->ReadU16(&g_nCorrupt));
-            UROOM(u)->setTerrainMovementType(pBuf->ReadU8(&g_nCorrupt));
+            UROOM(u)->setLandscapeTerrain(pBuf->ReadU8(&g_nCorrupt));
             UROOM(u)->setRoomMagicalResistance(pBuf->ReadU8(&g_nCorrupt));
             if (unit_version >= 70)
             {

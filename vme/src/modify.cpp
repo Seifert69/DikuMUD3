@@ -859,7 +859,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 19: /* "movement" */
-            UROOM(unt)->setTerrainMovementType(typarg);
+            UROOM(unt)->setLandscapeTerrain(typarg);
             return;
 
         case 20: /* "ccinfo" */
