@@ -194,9 +194,8 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
 
 #ifndef MPLEX_COMPILE
     inline std::vector<room_data::vertex_descriptor> &ROOM_PATH(unit_data *unit) { return UROOM(unit)->getPath(); }
+    inline std::vector<room_data::vertex_descriptor> &ROOM_DISTANCE(unit_data *unit) { return UROOM(unit)->getDistance();}
 #endif
-
-#define ROOM_DISTANCE(unit) (UROOM(unit)->distance)
 // clang-format on
 /* ..................................................................... */
 

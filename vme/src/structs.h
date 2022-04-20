@@ -199,11 +199,18 @@ public:
     std::vector<vertex_descriptor> &getPath() { return path; }
     const std::vector<vertex_descriptor> &getPath() const { return path; }
     ///@}
-private:
-    std::vector<vertex_descriptor> path; ///<
 
+    /**
+     * @name Distance
+     * @{
+     */
+    std::vector<vertex_descriptor> &getDistance() { return distance; }
+    const std::vector<vertex_descriptor> &getDistance() const { return distance; }
+    /// @}
+private:
+    std::vector<vertex_descriptor> path;     ///<
+    std::vector<vertex_descriptor> distance; ///<
 public:
-    std::vector<vertex_descriptor> distance;
     int waiting_dijkstra;
 #endif
 };
