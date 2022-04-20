@@ -723,7 +723,7 @@ void graph_sc(char *prefix)
     {
         if (IS_ROOM(u))
         {
-            ROOM_NUM(u) = x;
+            UROOM(u)->setRoomNumber(x);
         }
     }
 

@@ -44,7 +44,7 @@ void create_worldgraph()
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
     {
         vd = add_vertex(WorldGraph);
-        ROOM_NUM(u) = vd;
+        UROOM(u)->setRoomNumber(vd);
     }
 
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
@@ -167,7 +167,7 @@ void create_sc_graph(int num_of_sc)
             {
                 vd = add_vertex(g_sc_graphs[sc]);
                 g_sc_room_ptr.back().push_back(u);
-                ROOM_NUM(u) = vd;
+                UROOM(u)->setRoomNumber(vd);
             }
         }
 

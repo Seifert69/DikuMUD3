@@ -159,6 +159,14 @@ public:
     int getStrongComponent() const { return sc; }
     void setStrongComponent(int value) { sc = value; }
     /// @}
+
+    /**
+     * @name Room Number
+     * @{
+     */
+    int getRoomNumber() const { return num; }
+    void setRoomNumber(int value) { num = value; }
+    /// @}
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
     ubit8 flags{0};                                                        ///< Room flags
@@ -167,8 +175,8 @@ private:
     sbit16 mapx{0};                                                        ///< Graphical map coordinates
     sbit16 mapy{0};                                                        ///< Graphical map coordinates
     int sc{0};                                                             ///< strong component, used for shortest path
+    int num{0};                                                            ///< room number, used for shortest path
 public:
-    int num{}; ///< room number, used for shortest path
 #ifndef MPLEX_COMPILE
     enum edge_dir_t
     {

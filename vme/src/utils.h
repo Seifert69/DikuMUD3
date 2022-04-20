@@ -186,7 +186,7 @@ inline ubit8 ROOM_FLAGS(const unit_data *unit) { return UROOM(unit)->getRoomFlag
 
 inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit) { return UROOM(unit)->getRoomDirectionDataForExit(exit); }
 
-#define ROOM_NUM(unit) (UROOM(unit)->num)
+inline int ROOM_NUM(const unit_data *unit) { return UROOM(unit)->getRoomNumber(); }
 
 inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongComponent(); }
 
