@@ -184,7 +184,11 @@ inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExt
 
 #define ROOM_FLAGS(unit) (UROOM(unit)->flags)
 
-#define ROOM_EXIT(unit, exit) (UROOM(unit)->dir_option[exit])
+//#define ROOM_EXIT(unit, exit) (UROOM(unit)->m_dir_option[exit])
+inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit)
+{
+    return UROOM(unit)->getRoomDirectionDataForExit(exit);
+}
 
 #define ROOM_NUM(unit) (UROOM(unit)->num)
 

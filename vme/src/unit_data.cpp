@@ -179,26 +179,26 @@ std::string unit_data::json()
 
         for (int i = 0; i < MAX_EXIT + 1; i++)
         {
-            if (UROOM(this)->dir_option[i])
+            if (UROOM(this)->getRoomDirectionDataForExit(i))
             {
                 s.append(",\n");
                 s.append(str_json_encode_quote(g_dirs[i]));
                 s.append(": {\n");
-                if (UROOM(this)->dir_option[i]->getToRoom())
+                if (UROOM(this)->getRoomDirectionDataForExit(i)->getToRoom())
                 {
                     t = UNIT_FI_NAME(ROOM_EXIT(this, i)->getToRoom());
                     t.append("@");
-                    t.append(UNIT_FI_ZONENAME(UROOM(this)->dir_option[i]->getToRoom()));
+                    t.append(UNIT_FI_ZONENAME(UROOM(this)->getRoomDirectionDataForExit(i)->getToRoom()));
                     s.append(str_json("toroom", t));
                     s.append(",\n");
                 }
-                s.append(UROOM(this)->dir_option[i]->getOpenName().json());
+                s.append(UROOM(this)->getRoomDirectionDataForExit(i)->getOpenName().json());
                 s.append(",\n");
-                s.append(str_json("difficulty", UROOM(this)->dir_option[i]->getSkillDifficulty()));
+                s.append(str_json("difficulty", UROOM(this)->getRoomDirectionDataForExit(i)->getSkillDifficulty()));
                 s.append(",\n");
-                s.append(str_json("exitflags", UROOM(this)->dir_option[i]->getDoorFlags()));
+                s.append(str_json("exitflags", UROOM(this)->getRoomDirectionDataForExit(i)->getDoorFlags()));
                 s.append(",\n");
-                s.append(str_json("key", UROOM(this)->dir_option[i]->getKey()));
+                s.append(str_json("key", UROOM(this)->getRoomDirectionDataForExit(i)->getKey()));
                 s.append("\n");
                 s.append("}\n");
             }
@@ -262,10 +262,10 @@ unit_data *unit_data::copy()
         uroom->flags = thisroom->flags;
         for (x = 0; x < MAX_EXIT + 1; x++)
         {
-            uroom->dir_option[x]->getOpenName() = thisroom->dir_option[x]->getOpenName();
-            uroom->dir_option[x]->setKey(str_dup(thisroom->dir_option[x]->getKey()));
-            uroom->dir_option[x]->setDoorFlags(thisroom->dir_option[x]->getDoorFlags());
-            uroom->dir_option[x]->setSkillDifficulty(thisroom->dir_option[x]->getSkillDifficulty());
+            uroom->getRoomDirectionDataForExit(x)->getOpenName() = thisroom->getRoomDirectionDataForExit(x)->getOpenName();
+            uroom->getRoomDirectionDataForExit(x)->setKey(str_dup(thisroom->getRoomDirectionDataForExit(x)->getKey()));
+            uroom->getRoomDirectionDataForExit(x)->setDoorFlags(thisroom->getRoomDirectionDataForExit(x)->getDoorFlags());
+            uroom->getRoomDirectionDataForExit(x)->setSkillDifficulty(thisroom->getRoomDirectionDataForExit(x)->getSkillDifficulty());
         }
     }
     else if (IS_OBJ(this))

@@ -294,7 +294,7 @@ oroom_field : MOVEMENT PNUM
 
 exitindex   : EXIT index
     {
-        ROOM_EXIT(cur, cur_ex = $2) = mcreate_exit();
+        UROOM(cur)->setRoomDirectionDataForExitTo(cur_ex = $2,  mcreate_exit());
     }
     ;
 

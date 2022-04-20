@@ -1248,7 +1248,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             /* Read N, S, E, W, U and D directions */
             for (i = 0; i <= MAX_EXIT; i++)
             {
-                ROOM_EXIT(u, i) = nullptr;
+                UROOM(u)->setRoomDirectionDataForExitTo(i, nullptr);
                 g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
                 g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
                 str_lower(zone);
@@ -1258,7 +1258,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if ((fi = find_file_index(zone, name)))
                     {
-                        ROOM_EXIT(u, i) = new (room_direction_data);
+                        UROOM(u)->setRoomDirectionDataForExitTo(i, new (room_direction_data));
                         g_nCorrupt += ROOM_EXIT(u, i)->getOpenName().ReadBuffer(pBuf, unit_version);
 
                         ROOM_EXIT(u, i)->setDoorFlags(pBuf->ReadU16(&g_nCorrupt));

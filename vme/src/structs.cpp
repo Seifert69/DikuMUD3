@@ -74,9 +74,9 @@ room_data::~room_data()
 
     for (int i = 0; i < MAX_EXIT + 1; i++)
     {
-        if (dir_option[i])
+        if (m_dir_option[i])
         {
-            delete dir_option[i];
+            delete m_dir_option[i];
         }
     }
 }

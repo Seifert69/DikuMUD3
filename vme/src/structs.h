@@ -76,8 +76,29 @@ public:
     room_data();
     ~room_data();
 
-    room_direction_data *dir_option[MAX_EXIT + 1]{}; ///< Why 11? Why not MAX_EXIT+1?
+    /**
+     * @name Room Exit Information
+     * @{
+     */
+    /**
+     * Gets information about room exit
+     * @param index Direction of exit
+     * @throws std::out_of_range
+     * @return room_direction_data * with information
+     */
+    room_direction_data *getRoomDirectionDataForExit(size_t index) { return m_dir_option.at(index); }
+    /**
+     * Sets data for a room exit
+     * @param index Direction of exit
+     * @throws std::out_of_range
+     * @param value Room Direction Data
+     */
+    void setRoomDirectionDataForExitTo(size_t index, room_direction_data *value) { m_dir_option.at(index) = value; }
+    ///@}
 
+private:
+    std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
+public:
     ubit8 flags{};         ///< Room flags
     ubit8 movement_type{}; ///< The type of movement (city, hills etc.)
     ubit8 resistance{};    ///< Magic resistance of the room
