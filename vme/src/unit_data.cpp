@@ -173,9 +173,9 @@ std::string unit_data::json()
         s.append(",\n");
         s.append(str_json("resistance", UROOM(this)->getRoomMagicalResistance()));
         s.append(",\n");
-        s.append(str_json("mapx", UROOM(this)->mapx));
+        s.append(str_json("mapx", UROOM(this)->getMapXCoordinate()));
         s.append(",\n");
-        s.append(str_json("mapy", UROOM(this)->mapy));
+        s.append(str_json("mapy", UROOM(this)->getMapYCoordinate()));
 
         for (int i = 0; i < MAX_EXIT + 1; i++)
         {

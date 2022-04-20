@@ -269,8 +269,8 @@ oroom_field : MOVEMENT PNUM
     }
     | GMAP '(' PNUM ',' PNUM ')'
     {
-        UROOM(cur)->mapx = $3;
-        UROOM(cur)->mapy = $5;
+        UROOM(cur)->setMapXCoordinate($3);
+        UROOM(cur)->setMapYCoordinate($5);
     }
     | FLAGS flags
     {

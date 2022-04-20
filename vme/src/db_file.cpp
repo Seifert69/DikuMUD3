@@ -1390,8 +1390,8 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             pBuf->Append16(ROOM_FLAGS(u));
             pBuf->Append8(ROOM_LANDSCAPE(u));
             pBuf->Append8(ROOM_RESISTANCE(u));
-            pBuf->Append16(UROOM(u)->mapx); // Version 70
-            pBuf->Append16(UROOM(u)->mapy);
+            pBuf->Append16(UROOM(u)->getMapXCoordinate()); // Version 70
+            pBuf->Append16(UROOM(u)->getMapYCoordinate());
             break;
 
         default:

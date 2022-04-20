@@ -140,14 +140,25 @@ public:
     ubit8 *getRoomMagicalResistancePtr() { return &resistance; }
     void setRoomMagicalResistance(ubit8 value) { resistance = value; }
     /// @}
+
+    /**
+     * @name Graphical Map Coordinates
+     * @{
+     */
+    sbit16 getMapXCoordinate() const { return mapx; }
+    void setMapXCoordinate(sbit16 value) { mapx = value; }
+
+    sbit16 getMapYCoordinate() const { return mapy; }
+    void setMapYCoordinate(sbit16 value) { mapy = value; }
+    /// @}
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
     ubit8 flags{0};                                                        ///< Room flags
     ubit8 movement_type{0};                                                ///< The type of movement (city, hills etc.)
     ubit8 resistance{0};                                                   ///< Magic resistance of the room
+    sbit16 mapx{0};                                                        ///< Graphical map coordinates
+    sbit16 mapy{0};                                                        ///< Graphical map coordinates
 public:
-    sbit16 mapx, mapy; ///< Graphical map coordinates
-
     int sc{};  ///< strong component, used for shortest path
     int num{}; ///< room number, used for shortest path
 #ifndef MPLEX_COMPILE

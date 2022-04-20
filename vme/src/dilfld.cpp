@@ -2756,20 +2756,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
+                {
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
-                    if ((v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr)))
+                    if (room && IS_ROOM(room))
                     {
-                        v->val.num = UROOM((unit_data *)v1->val.ptr)->mapx;
+                        v->val.num = room->getMapXCoordinate();
                     }
                     else
                     {
                         v->val.num = -1;
                     }
+                }
+                break;
 
-                    break;
-                    v->type = DILV_FAIL; /* not applicable */
-                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2786,20 +2787,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
+                {
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
-                    if ((v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr)))
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+                    if (room && IS_ROOM(room))
                     {
-                        v->val.num = UROOM((unit_data *)v1->val.ptr)->mapy;
+                        v->val.num = room->getMapYCoordinate();
                     }
                     else
                     {
                         v->val.num = -1;
                     }
+                }
+                break;
 
-                    break;
-                    v->type = DILV_FAIL; /* not applicable */
-                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
