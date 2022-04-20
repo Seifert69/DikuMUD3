@@ -3900,6 +3900,12 @@ code
    heartbeat := PULSE_SEC*4;
    log("Energy worms checking location " + self.outside.symname);
 
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      log("Energy worms loaded into a non-room. Quitting. " + self.outside.symname);
+      quit;
+   }
+
    :init:
    wait(SFB_ALL, TRUE);
 
