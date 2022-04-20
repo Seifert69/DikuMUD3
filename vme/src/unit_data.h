@@ -256,9 +256,10 @@ public:
      * If the change exceeds alignment limits, alignment is set to 0 and dmc_error is called
      *
      * @param value Amount to set alignment to.
+     * @param is_vmc If true - no validation is done of the value it is just set - used from VMC
      * @return true if the change was accepted as is, false if the change overflowed limits and was truncated
      */
-    bool setAlignment(int64_t value);
+    bool setAlignment(int64_t value, bool is_vmc = false);
     ///@}
 
     /**

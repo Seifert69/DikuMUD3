@@ -1016,6 +1016,17 @@ void process_unit(unit_data *u)
     }
     u->setWeight(UNIT_BASE_WEIGHT(u));
 
+    if (!is_in(UNIT_ALIGNMENT(u), unit_data::MinAlignment, unit_data::MaxAlignment))
+    {
+        dmc_error(TRUE,
+                  "%s: Illegal alignment %d (expected %+d..%+d).",
+                  u->getNames().Name(),
+                  u->getAlignment(),
+                  unit_data::MinAlignment,
+                  unit_data::MaxAlignment);
+        u->setAlignment(0);
+    }
+
     if (!is_in(UNIT_LIGHTS(u), -6, 6))
     {
         dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), UNIT_LIGHTS(u));
