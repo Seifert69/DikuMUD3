@@ -314,7 +314,7 @@ const char *cNamelist::IsNameRawAbbrev(const char *name) const
 
     for (i = 0; i < length; i++)
     {
-        for (j = 0; namelist[i]->c_str()[j]; j++)
+        for (j = 0; name[j]; j++)
         {
             if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
             {
@@ -322,7 +322,7 @@ const char *cNamelist::IsNameRawAbbrev(const char *name) const
             }
         }
 
-        if (j > 0)
+        if ((j > 0) && ((name[j] == 0) || isspace(name[j])))
         {
             return name + j;
         }
