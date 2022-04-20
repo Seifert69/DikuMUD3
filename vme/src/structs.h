@@ -151,6 +151,14 @@ public:
     sbit16 getMapYCoordinate() const { return mapy; }
     void setMapYCoordinate(sbit16 value) { mapy = value; }
     /// @}
+
+    /**
+     * @name Strong component
+     * @{
+     */
+    int getStrongComponent() const { return sc; }
+    void setStrongComponent(int value) { sc = value; }
+    /// @}
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
     ubit8 flags{0};                                                        ///< Room flags
@@ -158,8 +166,8 @@ private:
     ubit8 resistance{0};                                                   ///< Magic resistance of the room
     sbit16 mapx{0};                                                        ///< Graphical map coordinates
     sbit16 mapy{0};                                                        ///< Graphical map coordinates
+    int sc{0};                                                             ///< strong component, used for shortest path
 public:
-    int sc{};  ///< strong component, used for shortest path
     int num{}; ///< room number, used for shortest path
 #ifndef MPLEX_COMPILE
     enum edge_dir_t

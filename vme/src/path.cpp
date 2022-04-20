@@ -87,7 +87,7 @@ void create_worldgraph()
     slog(LOG_ALL, 0, "Completed Strong Connected Components");
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
     {
-        ROOM_SC(u) = sc[ROOM_NUM(u)];
+        UROOM(u)->setStrongComponent(sc[ROOM_NUM(u)]);
         //			slog (LOG_ALL, 0, "%d - %d - %s@%s", ROOM_SC (u), ROOM_NUM (u),
         //						UNIT_FI_NAME (u), UNIT_FI_ZONENAME (u));
         sc_num[ROOM_SC(u)]++;

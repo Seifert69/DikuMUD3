@@ -188,7 +188,7 @@ inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit) { return URO
 
 #define ROOM_NUM(unit) (UROOM(unit)->num)
 
-#define ROOM_SC(unit) (UROOM(unit)->sc)
+inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongComponent(); }
 
 #define ROOM_WAITD(unit) (UROOM(unit)->waiting_dijkstra)
 
