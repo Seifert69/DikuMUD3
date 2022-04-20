@@ -176,22 +176,33 @@ private:
     sbit16 mapy{0};                                                        ///< Graphical map coordinates
     int sc{0};                                                             ///< strong component, used for shortest path
     int num{0};                                                            ///< room number, used for shortest path
-public:
+
 #ifndef MPLEX_COMPILE
+public:
     enum edge_dir_t
     {
         edge_dir = 101
     };
 
-    typedef boost::adjacency_list<boost::vecS,
-                                  boost::vecS,
-                                  boost::directedS,
-                                  boost::no_property,
-                                  boost::property<boost::edge_weight_t, int, boost::property<edge_dir_t, int>>>
-        graph_t;
+    using graph_t = boost::adjacency_list<boost::vecS,
+                                          boost::vecS,
+                                          boost::directedS,
+                                          boost::no_property,
+                                          boost::property<boost::edge_weight_t, int, boost::property<edge_dir_t, int>>>;
 
-    typedef boost::graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
-    std::vector<vertex_descriptor> path;
+    using vertex_descriptor = boost::graph_traits<graph_t>::vertex_descriptor;
+
+    /**
+     * @name Path
+     * @{
+     */
+    std::vector<vertex_descriptor> &getPath() { return path; }
+    const std::vector<vertex_descriptor> &getPath() const { return path; }
+    ///@}
+private:
+    std::vector<vertex_descriptor> path; ///<
+
+public:
     std::vector<vertex_descriptor> distance;
     int waiting_dijkstra;
 #endif

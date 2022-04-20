@@ -192,7 +192,9 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
 
 #define ROOM_WAITD(unit) (UROOM(unit)->waiting_dijkstra)
 
-#define ROOM_PATH(unit) (UROOM(unit)->path)
+#ifndef MPLEX_COMPILE
+    inline std::vector<room_data::vertex_descriptor> &ROOM_PATH(unit_data *unit) { return UROOM(unit)->getPath(); }
+#endif
 
 #define ROOM_DISTANCE(unit) (UROOM(unit)->distance)
 // clang-format on
