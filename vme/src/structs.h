@@ -96,10 +96,28 @@ public:
     void setRoomDirectionDataForExitTo(size_t index, room_direction_data *value) { m_dir_option.at(index) = value; }
     ///@}
 
+    /**
+     * @name Room flags
+     * @{
+     */
+    /**
+     * @return All room flags
+     */
+    ubit8 getRoomFlags() const { return flags; }
+    /**
+     * @return Pointer to all room flags
+     */
+    ubit8 *getRoomFlagsPtr() { return &flags; }
+    /**
+     * Sets all room flags to value
+     * @param value NB this is cast down to ubit8
+     */
+    void setAllRoomFlags(ubit16 value) { flags = static_cast<ubit8>(value); }
+    /// @}
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
+    ubit8 flags{0};                                                        ///< Room flags
 public:
-    ubit8 flags{};         ///< Room flags
     ubit8 movement_type{}; ///< The type of movement (city, hills etc.)
     ubit8 resistance{};    ///< Magic resistance of the room
 

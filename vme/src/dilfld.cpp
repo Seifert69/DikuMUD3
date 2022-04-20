@@ -2722,17 +2722,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr))
+                {
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+                    if (room && IS_ROOM(room))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &ROOM_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = room->getRoomFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

@@ -1301,7 +1301,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
             }
 
-            ROOM_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
+            UROOM(u)->setAllRoomFlags(pBuf->ReadU16(&g_nCorrupt));
             ROOM_LANDSCAPE(u) = pBuf->ReadU8(&g_nCorrupt);
             ROOM_RESISTANCE(u) = pBuf->ReadU8(&g_nCorrupt);
             if (unit_version >= 70)

@@ -167,7 +167,7 @@ std::string unit_data::json()
     if (m_status == UNIT_ST_ROOM)
     {
         s.append("\"room\": {\n");
-        s.append(str_json("roomflags", UROOM(this)->flags));
+        s.append(str_json("roomflags", UROOM(this)->getRoomFlags()));
         s.append(",\n");
         s.append(str_json("movementtype", UROOM(this)->movement_type));
         s.append(",\n");
@@ -259,7 +259,7 @@ unit_data *unit_data::copy()
 
         uroom->resistance = thisroom->resistance;
         uroom->movement_type = thisroom->movement_type;
-        uroom->flags = thisroom->flags;
+        uroom->setAllRoomFlags(thisroom->getRoomFlags());
         for (x = 0; x < MAX_EXIT + 1; x++)
         {
             uroom->getRoomDirectionDataForExit(x)->getOpenName() = thisroom->getRoomDirectionDataForExit(x)->getOpenName();

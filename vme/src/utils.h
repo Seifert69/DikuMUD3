@@ -182,7 +182,11 @@ inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExt
 
 #define ROOM_LANDSCAPE(unit) (UROOM(unit)->movement_type)
 
-#define ROOM_FLAGS(unit) (UROOM(unit)->flags)
+//#define ROOM_FLAGS(unit) (UROOM(unit)->flags)
+inline ubit8 ROOM_FLAGS(const unit_data *unit)
+{
+    return UROOM(unit)->getRoomFlags();
+}
 
 //#define ROOM_EXIT(unit, exit) (UROOM(unit)->m_dir_option[exit])
 inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit)

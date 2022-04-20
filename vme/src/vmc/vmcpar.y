@@ -274,7 +274,7 @@ oroom_field : MOVEMENT PNUM
     }
     | FLAGS flags
     {
-        ROOM_FLAGS(cur) = $2;
+        UROOM(cur)->setAllRoomFlags($2);
     }
     | VIN reference
     {

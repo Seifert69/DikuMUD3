@@ -1255,7 +1255,7 @@ void init_unit(unit_data *u)
             {
                 UROOM(u)->setRoomDirectionDataForExitTo(i, nullptr);
             }
-            ROOM_FLAGS(u) = 0;
+            UROOM(u)->setAllRoomFlags(0);
             ROOM_LANDSCAPE(u) = SECT_CITY;
             ROOM_RESISTANCE(u) = 0;
             break;
