@@ -819,13 +819,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 13: /* "alignment" */
-            if (is_in(valarg, -1000, 1000))
+            if (!unt->setAlignment(valarg))
             {
-                unt->setAlignment(valarg);
-            }
-            else
-            {
-                send_to_char("Shame on you: Value must be in -1000..+1000!<br/>", ch);
+                auto msg =
+                    diku::format_to_str("Shame on you: Value must be in %+d..%+d!<br/>", unit_data::MinAlignment, unit_data::MaxAlignment);
+                send_to_char(msg, ch);
             }
             return;
 

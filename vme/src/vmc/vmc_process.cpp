@@ -1016,9 +1016,14 @@ void process_unit(unit_data *u)
     }
     u->setWeight(UNIT_BASE_WEIGHT(u));
 
-    if (!is_in(UNIT_ALIGNMENT(u), -1000, +1000))
+    if (!is_in(UNIT_ALIGNMENT(u), unit_data::MinAlignment, unit_data::MaxAlignment))
     {
-        dmc_error(TRUE, "%s: Illegal alignment %d (expected -1000..+1000).", UNIT_IDENT(u), UNIT_ALIGNMENT(u));
+        dmc_error(TRUE,
+                  "%s: Illegal alignment %d (expected %+d..%+d).",
+                  u->getNames().Name(),
+                  u->getAlignment(),
+                  unit_data::MinAlignment,
+                  unit_data::MaxAlignment);
         u->setAlignment(0);
     }
 
