@@ -1257,7 +1257,7 @@ void init_unit(unit_data *u)
             }
             UROOM(u)->setAllRoomFlags(0);
             UROOM(u)->setTerrainMovementType(SECT_CITY);
-            ROOM_RESISTANCE(u) = 0;
+            UROOM(u)->setRoomMagicalResistance(0);
             break;
     }
 }

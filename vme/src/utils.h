@@ -178,7 +178,7 @@ inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExt
 
 /* ..................................................................... */
 // clang-format off
-#define ROOM_RESISTANCE(room) (UROOM(room)->resistance)
+inline ubit8 ROOM_RESISTANCE(unit_data *room) { return UROOM(room)->getRoomMagicalResistance(); }
 
 inline ubit8 ROOM_LANDSCAPE(const unit_data *unit) { return UROOM(unit)->getTerrainMovementType(); }
 

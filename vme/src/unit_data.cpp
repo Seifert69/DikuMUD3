@@ -171,7 +171,7 @@ std::string unit_data::json()
         s.append(",\n");
         s.append(str_json("movementtype", UROOM(this)->getTerrainMovementType()));
         s.append(",\n");
-        s.append(str_json("resistance", UROOM(this)->resistance));
+        s.append(str_json("resistance", UROOM(this)->getRoomMagicalResistance()));
         s.append(",\n");
         s.append(str_json("mapx", UROOM(this)->mapx));
         s.append(",\n");
@@ -257,7 +257,7 @@ unit_data *unit_data::copy()
         room_data *thisroom = UROOM(this);
         room_data *uroom = UROOM(u);
 
-        uroom->resistance = thisroom->resistance;
+        uroom->setRoomMagicalResistance(thisroom->getRoomMagicalResistance());
         uroom->setTerrainMovementType(thisroom->getTerrainMovementType());
         uroom->setAllRoomFlags(thisroom->getRoomFlags());
         for (x = 0; x < MAX_EXIT + 1; x++)

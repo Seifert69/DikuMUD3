@@ -131,13 +131,21 @@ public:
      */
     void setTerrainMovementType(ubit8 value) { movement_type = value; }
     /// @}
+
+    /**
+     * @name Magical Resistance
+     * @{
+     */
+    ubit8 getRoomMagicalResistance() const { return resistance; }
+    ubit8 *getRoomMagicalResistancePtr() { return &resistance; }
+    void setRoomMagicalResistance(ubit8 value) { resistance = value; }
+    /// @}
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
     ubit8 flags{0};                                                        ///< Room flags
     ubit8 movement_type{0};                                                ///< The type of movement (city, hills etc.)
+    ubit8 resistance{0};                                                   ///< Magic resistance of the room
 public:
-    ubit8 resistance{}; ///< Magic resistance of the room
-
     sbit16 mapx, mapy; ///< Graphical map coordinates
 
     int sc{};  ///< strong component, used for shortest path

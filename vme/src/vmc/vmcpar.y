@@ -282,7 +282,7 @@ oroom_field : MOVEMENT PNUM
     }
     | SPELL number
     {
-        ROOM_RESISTANCE(cur) = $2;
+        UROOM(cur)->setRoomMagicalResistance($2);
     }
     | exitindex exit_fields ';'
 

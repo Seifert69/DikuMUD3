@@ -2175,10 +2175,13 @@ void dilfe_fld(dilprg *p)
                     switch (UNIT_TYPE((unit_data *)v1->val.ptr))
                     {
                         case UNIT_ST_ROOM:
+                        {
+                            auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
                             v->atyp = DILA_NONE;
                             v->type = DILV_UINT1R;
-                            v->ref = &ROOM_RESISTANCE((unit_data *)v1->val.ptr);
-                            break;
+                            v->ref = room->getRoomMagicalResistancePtr();
+                        }
+                        break;
 
                         case UNIT_ST_OBJ:
                             v->atyp = DILA_NONE;
