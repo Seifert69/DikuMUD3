@@ -177,22 +177,14 @@ inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExt
 #define UNIT_CONTAINING_W(u) (UNIT_WEIGHT(u) - UNIT_BASE_WEIGHT(u))
 
 /* ..................................................................... */
-
+// clang-format off
 #define ROOM_RESISTANCE(room) (UROOM(room)->resistance)
 
-#define ROOM_LANDSCAPE(unit) (UROOM(unit)->movement_type)
+inline ubit8 ROOM_LANDSCAPE(const unit_data *unit) { return UROOM(unit)->getTerrainMovementType(); }
 
-//#define ROOM_FLAGS(unit) (UROOM(unit)->flags)
-inline ubit8 ROOM_FLAGS(const unit_data *unit)
-{
-    return UROOM(unit)->getRoomFlags();
-}
+inline ubit8 ROOM_FLAGS(const unit_data *unit) { return UROOM(unit)->getRoomFlags(); }
 
-//#define ROOM_EXIT(unit, exit) (UROOM(unit)->m_dir_option[exit])
-inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit)
-{
-    return UROOM(unit)->getRoomDirectionDataForExit(exit);
-}
+inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit) { return UROOM(unit)->getRoomDirectionDataForExit(exit); }
 
 #define ROOM_NUM(unit) (UROOM(unit)->num)
 
@@ -203,6 +195,7 @@ inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit)
 #define ROOM_PATH(unit) (UROOM(unit)->path)
 
 #define ROOM_DISTANCE(unit) (UROOM(unit)->distance)
+// clang-format on
 /* ..................................................................... */
 
 #define OBJ_RESISTANCE(obj) (UOBJ(obj)->resistance)

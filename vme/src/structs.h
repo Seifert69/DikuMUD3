@@ -114,12 +114,29 @@ public:
      */
     void setAllRoomFlags(ubit16 value) { flags = static_cast<ubit8>(value); }
     /// @}
+
+    /**
+     * @name Room terrain movement type
+     * @{
+     */
+    /**
+     * Returns terrain type for the room
+     * @return one of SECT_* types
+     */
+    ubit8 getTerrainMovementType() const { return movement_type; }
+    ubit8 *getTerrainMovementTypePtr() { return &movement_type; }
+    /**
+     * Sets room terrain movement type
+     * @param value
+     */
+    void setTerrainMovementType(ubit8 value) { movement_type = value; }
+    /// @}
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
     ubit8 flags{0};                                                        ///< Room flags
+    ubit8 movement_type{0};                                                ///< The type of movement (city, hills etc.)
 public:
-    ubit8 movement_type{}; ///< The type of movement (city, hills etc.)
-    ubit8 resistance{};    ///< Magic resistance of the room
+    ubit8 resistance{}; ///< Magic resistance of the room
 
     sbit16 mapx, mapy; ///< Graphical map coordinates
 
