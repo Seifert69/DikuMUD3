@@ -333,15 +333,28 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
         return nullptr;
     }
 
-    if ((strlen(*arg) < 1) || (strlen(*arg) > 3))
-    {
-        return nullptr;
-    }
-
     // Skip all blanks at the beginning of the string
     for (c = *arg; isaspace(*c); c++)
     {
         ;
+    }
+
+    if (strlen(c) < 1)
+    {
+        return nullptr;
+    }
+
+    // How long is the next word?
+    int i;
+    for (i=0; c[i] && !isspace(c[i]); i++)
+    {
+        ;
+    }
+
+    // We only do 3 letter abbrevs at least for now
+    if (i > 3)
+    {
+        return nullptr;
     }
 
     number = original_number;
