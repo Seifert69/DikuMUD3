@@ -3491,7 +3491,6 @@ dilend
 
 dilbegin lock_dil(arg : string);
 external
-   unitptr find_here@baselook(looker:unitptr,arg:string);
    integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
    string  dirstring@function(i2 : integer);
    integer checkdoor(arg : string);
@@ -3528,7 +3527,7 @@ code
 
    arg1 := arg;       /* saves the string in case we need it later */
 
-   item :=find_here@baselook(self,arg1);
+   item :=findunit(self, arg1, FIND_UNIT_HERE, null);
 
       /* If there is no item or we cant see it, check the doors in the room */
    if (item == null)
@@ -3690,7 +3689,6 @@ code
 
 dilbegin unlock_dil(arg : string);
 external
-   unitptr find_here@baselook(looker:unitptr,arg:string);
    integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
    string  dirstring@function(i2 : integer);
    integer checkdoor(arg : string);
@@ -3729,7 +3727,7 @@ code
 
    arg1 := arg;       /* saves the string in case we need it later */
 
-   item :=find_here@baselook(self,arg1);
+   item :=findunit(self, arg1, FIND_UNIT_HERE, null);
 
 
    /* If there is no item or we cant see it, check the doors in the room */

@@ -8080,72 +8080,8 @@ code
 }
 dilend
 
-dilbegin unitptr find_here(arg:string);
-var
- ln:integer;
- count:integer;
- item:unitptr;
- args:stringlist;
-
-code
-{
-  args:=split(arg,".");
-  ln:=length (args);
-  if (ln>1)
-  {
-  	arg:=args.[1];
-	count:=atoi(args.[0]);
-	}
-else
-count:=1;
-
-item:=self.inside;
-while (item!=null){
-if (not(visible(self,item))){
-
-item:=item.next;
-continue;
-}
-
-if (arg in item.names){
-if (count>1){
-count:=count-1;
-item:=item.next;
-continue;
-}
-
-return (item);
-}
-
-item:=item.next;
-}
-
-item:=self.outside.inside;
-while (item!=null){
-if ((not(visible(self,item))) or
-(isset(item.flags,UNIT_FL_BURIED))){
-item:=item.next;
-continue;
-}
-
- if (arg in item.names){
- if (count>1){
- count:=count-1;
- item:=item.next;
- continue;
- }
- return (item);
- }
- item:=item.next;
-}
-item:=null;
-return (item);
-}
-dilend
-
-dilbegin do_eat (arg:string);
+dilbegin do_eat(arg:string);
 external
-	unitptr find_here (s:string);
 	apply_poison (pc:unitptr,pois:integer,amount:integer);
 	 gain_cond(pc:unitptr,cond:string,i:integer);
 var
@@ -8163,7 +8099,7 @@ code
 		quit;
 	}
 
-	food:=find_here(arg);
+	food := findunit(self, arg, FIND_UNIT_HERE, null);
 
 	if (food==null)
 	{
@@ -8231,7 +8167,6 @@ dilend
 
 dilbegin do_sip(arg:string);
 external
-unitptr find_here (s:string);
  sub_drink_info (u:unitptr);
 apply_poison (pc:unitptr,pois:integer,amount:integer);
  gain_cond(pc:unitptr,cond:string,i:integer);
@@ -8246,7 +8181,7 @@ code
 if (arg=="")
  act("What do you want to sip?",
   A_SOMEONE, self, null, null, TO_CHAR);
-d_obj:=find_here(arg);
+d_obj:=findunit(self, arg, FIND_UNIT_HERE, null);
 
 if (d_obj==null)
  {
@@ -8335,7 +8270,6 @@ dilend
 
 dilbegin do_taste(arg:string);
 external
-unitptr find_here (s:string);
  sub_drink_info (u:unitptr);
 apply_poison (pc:unitptr,pois:integer,amount:integer);
  gain_cond(pc:unitptr,cond:string,i:integer);
@@ -8353,7 +8287,7 @@ if (arg=="")
  quit;
  }
 
-food:=find_here(arg);
+food:=findunit(self, arg, FIND_UNIT_HERE, null);
 
 if (food==null)
  {
@@ -8497,7 +8431,6 @@ dilend
 
 dilbegin do_pour (arg:string);
 external
-unitptr find_here (s:string);
  sub_drink_info (u:unitptr);
  integer dv (d_obj:unitptr,s:string);
 var
@@ -8543,11 +8476,11 @@ TO_CHAR);
    if ("out"==right(arg,3))
    {
    arg:=left(arg,length(arg)-4);
-f_obj:=find_here (arg);
+f_obj:=findunit(self, arg, FIND_UNIT_HERE, null);
 arg:="out";
 }
 else
-                       f_obj:=find_here (arg);
+                       f_obj:=findunit(self, arg, FIND_UNIT_HERE, null);
 
  
 if (f_obj==null)
@@ -8595,7 +8528,7 @@ send_done ("pour",self,f_obj,self.outside,0,"",null);
 
 
  :pour_in:
-                        f_obj:=find_here (args.[0]);
+                        f_obj:=findunit(self, args.[0], FIND_UNIT_HERE, null);
 
 if (f_obj==null)
  {
@@ -8616,7 +8549,7 @@ if (f_obj.value[0]<=0)
  quit;
  }
 temp:=args.[1];
-t_obj:=find_here(args.[1]);
+t_obj:=findunit(self, args.[1], FIND_UNIT_HERE, null);
 if (t_obj==null)
  {
  act ("You can't find "+temp+" to pour into.", A_ALWAYS,self,null,null,TO_CHAR);

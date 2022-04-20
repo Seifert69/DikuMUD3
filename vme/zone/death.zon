@@ -161,9 +161,6 @@ The following two dils are commands that had to be modified to work for death.
 // host in life. This is useful for quests, and stuff.
 // do_decapitate
 dilbegin decap(arg : string); /* Decapitating corpses */
-external
-   unitptr find_here@commands (s:string);
-
 var
    item      : unitptr;
    corpse    : unitptr;
@@ -186,7 +183,7 @@ code
       quit;
    }
 
-   corpse := find_here@commands(arg);
+   corpse := findunit(self, arg, FIND_UNIT_HERE, null);
 
    if ((not(corpse)) or (corpse.type != UNIT_ST_OBJ))
    {

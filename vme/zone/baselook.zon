@@ -39,7 +39,6 @@ external
              exam_in (u1 : unitptr);
              liq_content(u1 : unitptr);
              show_eq(u1 : unitptr, u2 : unitptr);
-	unitptr find_here(pc:unitptr,a:string);
 var
   item       :  unitptr;
   cnt        :  integer;
@@ -57,7 +56,7 @@ code
 
    temp := arg;
 
-   item:=find_here(self,temp);
+   item:=findunit(self, temp, FIND_UNIT_HERE, null);
    temp:="";
    if (item == null)
    {
@@ -301,7 +300,6 @@ external
    look_at(l3 : unitptr, s:string);
    look_in(l4 : unitptr, s:string);
    integer look_dir(l5 : unitptr, s:string);
-	unitptr find_here(pc:unitptr,a:string);
 
 var
    arg1    :  string;
@@ -386,7 +384,7 @@ code
       // We don't know if the user means look at or look in
       // Generally this will be look_at, except if it's a container, then we look in
       arg1 := arg;
-      u := find_here(self, arg1);
+      u := findunit(self, arg1, FIND_UNIT_HERE, null);
       if (u.objecttype == ITEM_CONTAINER)
       {
          look_in(self, arg);
@@ -545,25 +543,6 @@ code
 dilend
 
 
-// MS2020 Why does this not use findunit?
-//
-dilbegin unitptr find_here(looker:unitptr, arg:string);
-var
-   item:unitptr;
-
-code
-{
-   item := findunit(looker, arg, FIND_UNIT_HERE, null);
-   return(item);
-
-   // MS2020. This function was broken. E.g. returns Mary when
-   // she's in a closed (trans) coffin.
-   // I've tested the above lightly and so far it acts appropriately
-}
-dilend
-
-
-
 dilbegin unitptr find_equip(looker:unitptr, arg:string);
 var
    item:unitptr;
@@ -586,7 +565,6 @@ dilend
 dilbegin look_in(looker : unitptr, arg:string);
 external
 	string obj_content(l : unitptr, u:unitptr);
-	unitptr find_here(pc:unitptr,a:string);
 
 var
      buff      :  string;
@@ -596,7 +574,7 @@ var
 
 code
 {
-   u := find_here(looker, arg);
+   u := findunit(looker, arg, FIND_UNIT_HERE, null);
 
    if ((u == null) or (not visible(looker, u)))
    {
@@ -710,7 +688,6 @@ as we will have to scan all items in this order :
 
 dilbegin look_at(looker : unitptr, arg:string);
 external
-   unitptr find_here(u:unitptr,s:string);
    unitptr find_equip(u:unitptr,s:string);
    search_item(l1 : unitptr, unit1 : unitptr,  string1 : string,truearg:string);
    show_eq(l2 : unitptr, unit2 : unitptr);
@@ -730,7 +707,7 @@ code
    if (right(temp, 2) == "'s")     /* Looking at temp's someting, so we need to concentrate on temp */
    {
       temp := left(temp, (length(temp) - 2));  /* Get temp's real name */
-      pc := find_here(looker, temp);
+      pc := findunit(looker, temp, FIND_UNIT_HERE, null);
 
       if ((pc == null) or (not visible(looker, pc)))
       {
@@ -804,7 +781,7 @@ code
 
    arg1 := arg; /* Ok, now we need to scan the room for arg1 */
 
-   item := find_here(looker, arg1);
+   item := findunit(looker, arg1, FIND_UNIT_HERE, null);
 
    if ((item != null) and (visible(looker, item)))
    /* we found an item with the name of arg1, going to look at it */
