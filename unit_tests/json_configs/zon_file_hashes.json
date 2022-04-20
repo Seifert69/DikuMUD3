@@ -61,12 +61,12 @@
         {
             "source_file": {
                 "filename": "baseget.zon",
-                "sha512": "00639653cc797193e57291eb5800ea35c4b65ddf4e3283b4f96f1ade6d7ca091c3f1644428bce3588ae54674da4a36e6f2803c3f155c8c5817adbe7560533865"
+                "sha512": "44bc06dcf20fa39e990c5bba2c408936d95a19ed51065e12043e0e4b5bbe00f278ef58240397e5f06fea966fe2eb1f56a038b98eefd9c48ba9d6c065c8348fdf"
             },
             "output": [
                 {
                     "filename": "baseget.data",
-                    "sha512": "cd01c0d9d078470b6923ef75a25ceaca16c90c9dd0dabcad687a18e83145a302880fdde2f95576a79b45663d22519b10bae7b675392f416236466dfe6ac21cf3"
+                    "sha512": "d0e1e808076e70dd18465c25a997c56d433927690795ea0597e26526747a30f0959ed5646382de628a1ea1990f4c6b497c59cd6abb8b6802ef72e111a3391d95"
                 },
                 {
                     "filename": "baseget.reset",

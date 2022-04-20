@@ -166,15 +166,12 @@ code{
 /* do_get : This is the beginning dil and will decide which action to call */
 
 dilbegin do_get(arg : string);
-
 external
-
    unitptr find_item(u1: unitptr, s1 : string, i1 : integer, u2 : unitptr);
    integer get_item(u1 : unitptr, u2 : unitptr, i1 : integer);
    integer get_extra(u1 : unitptr, s1 : string);
 
 var
-
    temp      :  string;
    wrdlst    :  stringlist;
    fromitem  :  unitptr;
@@ -184,179 +181,168 @@ var
    pick      :  integer;
    amnt      :  string;
 
-code {
+code
+{
 
- if (arg == "")
-    {
+   if (arg == "")
+   {
       sendtext("What do you wish to get?<br/>", self);
       quit;
-    }
+   }
 
 
- if (" from " in arg)
+    if (" from " in arg)
     {
       temp := arg;
 
       wrdlst := split(temp, " from ");
 
       if (wrdlst.[1] != "")
+      {
+         fromitem := find_item(self, wrdlst.[1], FIND_UNIT_HERE, null);
+
+         if (fromitem == null)
          {
-           fromitem := find_item(self, wrdlst.[1], FIND_UNIT_HERE, null);
-
-           if (fromitem == null)
-              {
-                sendtext("No such item to get things from.<br/>", self);
-                quit;
-              }
-           else if ((fromitem.type == UNIT_ST_PC) or (fromitem.type == UNIT_ST_NPC))
-              {
-                act("$3e would probably object to you doing that.", A_ALWAYS, self, null, fromitem, TO_CHAR);
-                quit;
-              }
-else if ((IS_CORPSE(fromitem)) or
-((fromitem.nameidx=="stat_corpse") and (fromitem.zoneidx=="spells")))
-
-			  {
-
-
-
-if ((("corpse of "+self.name) != fromitem.names.[0]) and
-(("statue of "+self.name) != fromitem.names.[0]) and
-(fromitem.value[2]==1))
-{
-	sendtext ("You can only get stuff from your own players remains	.<br/>",self);
-					  quit;
-					  }
-					  }
-
-           arg := wrdlst.[0];
+            sendtext("No such item to get things from.<br/>", self);
+            quit;
+         }
+         else if ((fromitem.type == UNIT_ST_PC) or (fromitem.type == UNIT_ST_NPC))
+         {
+            act("$3e would probably object to you doing that.", A_ALWAYS, self, null, fromitem, TO_CHAR);
+            quit;
+         }
+         else if ((IS_CORPSE(fromitem)) or ((fromitem.nameidx=="stat_corpse") and (fromitem.zoneidx=="spells")))
+         {
+            if ((("corpse of "+self.name) != fromitem.names.[0]) and
+               (("statue of "+self.name) != fromitem.names.[0]) and (fromitem.value[2]==1))
+            {
+               sendtext ("You can only get stuff from your own players remains.<br/>",self);
+               quit;
+            }
          }
 
-     }
+         arg := wrdlst.[0];
+      }
+   }
 
-
- if (arg == "all")
-    {
+   if (arg == "all")
+   {
       if (fromitem)
-           item := fromitem.inside;
+         item := fromitem.inside;
       else
-           item := self.outside.inside;
+         item := self.outside.inside;
 
       while(item)
+      {
+         item2 := item.next;
+
+         if (not visible(self, item))
          {
-           item2 := item.next;
-
-           if (not visible(self, item))
-              {
-                item := item2;
-                continue;
-              }
-
-           if (isset(item.manipulate, MANIPULATE_TAKE))
-              {
-                cnt := get_item(item, fromitem, 0);
-
-                if (cnt == 2)
-                     break;
-
-                pick := pick + 1;
-              }
-
-
-           item := item2;
+            item := item2;
+            continue;
          }
+
+         if (isset(item.manipulate, MANIPULATE_TAKE))
+         {
+            cnt := get_item(item, fromitem, 0);
+
+            if (cnt == 2)
+               break;
+
+            pick := pick + 1;
+         }
+
+
+         item := item2;
+      }
 
       if (pick == 0)
-         {
-           sendtext("Nothing to get.<br/>", self);
-           quit;
-         }
-
-    }
- else if (arg == "money")
-    {
+      {
+         sendtext("Nothing to get.<br/>", self);
+         quit;
+      }
+   }
+   else if (arg == "money")
+   {
       if (fromitem)
            item := fromitem.inside;
       else
            item := self.outside.inside;
 
       while(item)
+      {
+         item2 := item.next;
+
+         if (not visible(self, item))
          {
-           item2 := item.next;
+            item := item2;
+            continue;
+         }
 
-           if (not visible(self, item))
-              {
-                item := item2;
-                continue;
-              }
+         if (item.objecttype == ITEM_MONEY)
+         {
+            cnt := get_item(item, fromitem, 0);
 
-           if (item.objecttype == ITEM_MONEY)
-              {
-                cnt := get_item(item, fromitem, 0);
+            if (cnt == 2)
+               break;
 
-                if (cnt == 2)
-                   break;
+            pick := pick + 1;
+         }
 
-                pick := pick + 1;
-              }
-
-           item := item2;
-        }
+         item := item2;
+      }
 
       if (not pick)
-         {
-           sendtext("No money to get.<br/>", self);
-           quit;
-         }
-    }
- else
-    {
-
+      {
+         sendtext("No money to get.<br/>", self);
+         quit;
+      }
+   }
+   else
+   {
       temp := arg;
       amnt := getword(temp);
 
       pick := atoi(amnt);
 
       if ((amnt == "0") or (pick))
+      {
+         if (pick < 1)
          {
-           if (pick < 1)
-              {
-                sendtext("How can you get " + itoa(pick) + " of something?<br/>", self);
-                quit;
-              }
-
-           if ("." in amnt)
-                pick := 0;
-           else
-                arg := temp;
+            sendtext("How can you get " + itoa(pick) + " of something?<br/>", self);
+            quit;
          }
 
+         if ("." in amnt)
+            pick := 0;
+         else
+            arg := temp;
+      }
 
       if (fromitem)
-           item := find_item(self, arg, 0, fromitem.inside);
+         item := find_item(self, arg, 0, fromitem.inside);
       else
-           item := find_item(self, arg, FIND_UNIT_SURRO, null);
+         item := find_item(self, arg, FIND_UNIT_SURRO, null);
 
 
       if (item)
+      {
+         if (item.objecttype == ITEM_MONEY)
          {
-           if (item.objecttype == ITEM_MONEY)
-              {
-                cnt := get_item(item, fromitem, pick);
-                quit;
-              }
-           else if (pick > 0)
-              {
-                sendtext("Sorry, you cannot do that.<br/>", self);
-                quit;
-              }
-
-           cnt := get_item(item, fromitem, 0);
-
-           quit;
+            cnt := get_item(item, fromitem, pick);
+            quit;
          }
+         else if (pick > 0)
+         {
+            sendtext("Sorry, you cannot do that.<br/>", self);
+            quit;
+         }
+
+         cnt := get_item(item, fromitem, 0);
+         quit;
+      }
       else
-           cnt := get_extra(self, arg);
+         cnt := get_extra(self, arg);
 
       if (not cnt)
            sendtext("No such thing here.<br/>", self);
@@ -364,9 +350,9 @@ if ((("corpse of "+self.name) != fromitem.names.[0]) and
       quit;
    }
 
- quit;
-
-}dilend
+   quit;
+}
+dilend
 
 
 

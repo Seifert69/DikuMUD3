@@ -860,10 +860,10 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         }
     }
 
-    for (; list; list = list->getNext())
+    for (unit_data *myu = (unit_data *) list; myu; myu = myu->getNext())
     {
-        if (IS_SET(type, UNIT_TYPE((unit_data *)list)) && (ct = UNIT_NAMES((unit_data *)list).IsNameRaw(c)) && (ct - c >= best_len) &&
-            CHAR_CAN_SEE(viewer, list))
+        if (IS_SET(type, UNIT_TYPE(myu)) && (ct = UNIT_NAMES(myu).IsNameRaw(c)) && (ct - c >= best_len) &&
+            CHAR_CAN_SEE(viewer, myu))
         {
             if (ct - c > best_len)
             {
@@ -873,7 +873,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
             if (--number == 0)
             {
-                best = (unit_data *)list;
+                best = myu;
             }
         }
     }
