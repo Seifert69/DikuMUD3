@@ -1178,8 +1178,8 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        UNIT_FI_NAME(u),
                                        UNIT_FI_ZONENAME(u),
                                        sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
-                                       UROOM(u)->mapx,
-                                       UROOM(u)->mapy,
+                                       UROOM(u)->getMapXCoordinate(),
+                                       UROOM(u)->getMapYCoordinate(),
                                        ROOM_RESISTANCE(u),
                                        UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing");
         send_to_char(msg, ch);

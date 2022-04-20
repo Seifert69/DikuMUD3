@@ -265,16 +265,16 @@ room_field  : unit_field
 
 oroom_field : MOVEMENT PNUM
     {
-        ROOM_LANDSCAPE(cur) = $2;
+        UROOM(cur)->setLandscapeTerrain($2);
     }
     | GMAP '(' PNUM ',' PNUM ')'
     {
-        UROOM(cur)->mapx = $3;
-        UROOM(cur)->mapy = $5;
+        UROOM(cur)->setMapXCoordinate($3);
+        UROOM(cur)->setMapYCoordinate($5);
     }
     | FLAGS flags
     {
-        ROOM_FLAGS(cur) = $2;
+        UROOM(cur)->setAllRoomFlags($2);
     }
     | VIN reference
     {
@@ -282,7 +282,7 @@ oroom_field : MOVEMENT PNUM
     }
     | SPELL number
     {
-        ROOM_RESISTANCE(cur) = $2;
+        UROOM(cur)->setRoomMagicalResistance($2);
     }
     | exitindex exit_fields ';'
 
@@ -294,7 +294,7 @@ oroom_field : MOVEMENT PNUM
 
 exitindex   : EXIT index
     {
-        ROOM_EXIT(cur, cur_ex = $2) = mcreate_exit();
+        UROOM(cur)->setRoomDirectionDataForExitTo(cur_ex = $2,  mcreate_exit());
     }
     ;
 

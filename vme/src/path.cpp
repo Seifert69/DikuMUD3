@@ -18,6 +18,7 @@
 #include <pthread.h>
 
 #include <list>
+#include <tuple>
 #include <vector>
 
 #include <boost/graph/adjacency_list.hpp>
@@ -44,7 +45,7 @@ void create_worldgraph()
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
     {
         vd = add_vertex(WorldGraph);
-        ROOM_NUM(u) = vd;
+        UROOM(u)->setRoomNumber(vd);
     }
 
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
@@ -87,7 +88,7 @@ void create_worldgraph()
     slog(LOG_ALL, 0, "Completed Strong Connected Components");
     for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
     {
-        ROOM_SC(u) = sc[ROOM_NUM(u)];
+        UROOM(u)->setStrongComponent(sc[ROOM_NUM(u)]);
         //			slog (LOG_ALL, 0, "%d - %d - %s@%s", ROOM_SC (u), ROOM_NUM (u),
         //						UNIT_FI_NAME (u), UNIT_FI_ZONENAME (u));
         sc_num[ROOM_SC(u)]++;
@@ -129,7 +130,9 @@ void *create_sc_dijkstra(void *thread)
             dijkstra_shortest_paths(g_sc_graphs[ROOM_SC(u)],
                                     ROOM_NUM(u),
                                     boost::predecessor_map(&ROOM_PATH(u)[0]).distance_map(&ROOM_DISTANCE(u)[0]));
-            ROOM_WAITD(u) = FALSE;
+            pthread_mutex_lock(&dijkstra_queue_mutex);
+            UROOM(u)->setWaitingDijkstra(false);
+            pthread_mutex_unlock(&dijkstra_queue_mutex);
         }
         usleep(10000);
     }
@@ -167,7 +170,7 @@ void create_sc_graph(int num_of_sc)
             {
                 vd = add_vertex(g_sc_graphs[sc]);
                 g_sc_room_ptr.back().push_back(u);
-                ROOM_NUM(u) = vd;
+                UROOM(u)->setRoomNumber(vd);
             }
         }
 
@@ -285,8 +288,10 @@ int move_to(unit_data *from, unit_data *to)
     {
         return DIR_IMPOSSIBLE;
     }
-
-    if (ROOM_WAITD(from) == TRUE)
+    pthread_mutex_lock(&dijkstra_queue_mutex);
+    auto is_waiting = UROOM(from)->getWaitingDijkstra();
+    pthread_mutex_unlock(&dijkstra_queue_mutex);
+    if (is_waiting == true)
     {
         return DIR_TRYAGAIN;
     }
@@ -294,7 +299,7 @@ int move_to(unit_data *from, unit_data *to)
     if (ROOM_PATH(from).size() != num_vertices(g_sc_graphs[ROOM_SC(from)]))
     {
         pthread_mutex_lock(&dijkstra_queue_mutex);
-        ROOM_WAITD(from) = TRUE;
+        UROOM(from)->setWaitingDijkstra(true);
         dijkstra_queue.push_back(from);
         pthread_mutex_unlock(&dijkstra_queue_mutex);
         return DIR_TRYAGAIN;

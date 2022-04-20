@@ -2175,10 +2175,13 @@ void dilfe_fld(dilprg *p)
                     switch (UNIT_TYPE((unit_data *)v1->val.ptr))
                     {
                         case UNIT_ST_ROOM:
+                        {
+                            auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
                             v->atyp = DILA_NONE;
                             v->type = DILV_UINT1R;
-                            v->ref = &ROOM_RESISTANCE((unit_data *)v1->val.ptr);
-                            break;
+                            v->ref = room->getRoomMagicalResistancePtr();
+                        }
+                        break;
 
                         case UNIT_ST_OBJ:
                             v->atyp = DILA_NONE;
@@ -2722,17 +2725,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr))
+                {
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+                    if (room && IS_ROOM(room))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &ROOM_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = room->getRoomFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -2750,20 +2756,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
+                {
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
-                    if ((v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr)))
+                    if (room && IS_ROOM(room))
                     {
-                        v->val.num = UROOM((unit_data *)v1->val.ptr)->mapx;
+                        v->val.num = room->getMapXCoordinate();
                     }
                     else
                     {
                         v->val.num = -1;
                     }
+                }
+                break;
 
-                    break;
-                    v->type = DILV_FAIL; /* not applicable */
-                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2780,20 +2787,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
+                {
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
-                    if ((v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr)))
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+                    if (room && IS_ROOM(room))
                     {
-                        v->val.num = UROOM((unit_data *)v1->val.ptr)->mapy;
+                        v->val.num = room->getMapYCoordinate();
                     }
                     else
                     {
                         v->val.num = -1;
                     }
+                }
+                break;
 
-                    break;
-                    v->type = DILV_FAIL; /* not applicable */
-                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2810,17 +2818,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr))
+                {
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+                    if (room && IS_ROOM(room))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &ROOM_LANDSCAPE((unit_data *)v1->val.ptr);
+                        v->ref = room->getLandscapeTerrainPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

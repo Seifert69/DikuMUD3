@@ -177,24 +177,26 @@ inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExt
 #define UNIT_CONTAINING_W(u) (UNIT_WEIGHT(u) - UNIT_BASE_WEIGHT(u))
 
 /* ..................................................................... */
+// clang-format off
 
-#define ROOM_RESISTANCE(room) (UROOM(room)->resistance)
+inline ubit8 ROOM_RESISTANCE(unit_data *room) { return UROOM(room)->getRoomMagicalResistance(); }
 
-#define ROOM_LANDSCAPE(unit) (UROOM(unit)->movement_type)
+inline ubit8 ROOM_LANDSCAPE(const unit_data *unit) { return UROOM(unit)->getLandscapeTerrain(); }
 
-#define ROOM_FLAGS(unit) (UROOM(unit)->flags)
+inline ubit8 ROOM_FLAGS(const unit_data *unit) { return UROOM(unit)->getRoomFlags(); }
 
-#define ROOM_EXIT(unit, exit) (UROOM(unit)->dir_option[exit])
+inline room_direction_data *ROOM_EXIT(unit_data *unit, size_t exit) { return UROOM(unit)->getRoomDirectionDataForExit(exit); }
 
-#define ROOM_NUM(unit) (UROOM(unit)->num)
+inline int ROOM_NUM(const unit_data *unit) { return UROOM(unit)->getRoomNumber(); }
 
-#define ROOM_SC(unit) (UROOM(unit)->sc)
+inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongComponent(); }
 
-#define ROOM_WAITD(unit) (UROOM(unit)->waiting_dijkstra)
+#ifndef MPLEX_COMPILE
+    inline std::vector<room_data::vertex_descriptor> &ROOM_PATH(unit_data *unit) { return UROOM(unit)->getPath(); }
+    inline std::vector<room_data::vertex_descriptor> &ROOM_DISTANCE(unit_data *unit) { return UROOM(unit)->getDistance();}
+#endif
 
-#define ROOM_PATH(unit) (UROOM(unit)->path)
-
-#define ROOM_DISTANCE(unit) (UROOM(unit)->distance)
+// clang-format on
 /* ..................................................................... */
 
 #define OBJ_RESISTANCE(obj) (UOBJ(obj)->resistance)

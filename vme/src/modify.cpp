@@ -855,11 +855,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 18: /* "room_flags" */
-            ROOM_FLAGS(unt) = bitarg;
+            UROOM(unt)->setAllRoomFlags(bitarg);
             return;
 
         case 19: /* "movement" */
-            ROOM_LANDSCAPE(unt) = typarg;
+            UROOM(unt)->setLandscapeTerrain(typarg);
             return;
 
         case 20: /* "ccinfo" */

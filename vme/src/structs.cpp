@@ -61,9 +61,9 @@ char_data::~char_data()
 
 room_data::room_data()
     : unit_data(UNIT_ST_ROOM)
-    , mapx{-1}
-    , mapy{-1}
-    , waiting_dijkstra{FALSE}
+    , m_mapx{-1}
+    , m_mapy{-1}
+    , m_waiting_dijkstra{false}
 {
     g_world_norooms++;
 }
@@ -74,9 +74,9 @@ room_data::~room_data()
 
     for (int i = 0; i < MAX_EXIT + 1; i++)
     {
-        if (dir_option[i])
+        if (m_dir_option[i])
         {
-            delete dir_option[i];
+            delete m_dir_option[i];
         }
     }
 }

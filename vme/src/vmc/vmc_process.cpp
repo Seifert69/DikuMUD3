@@ -1253,11 +1253,11 @@ void init_unit(unit_data *u)
             u->setMyContainerTo(nullptr);
             for (i = 0; i <= MAX_EXIT; i++)
             {
-                ROOM_EXIT(u, i) = nullptr;
+                UROOM(u)->setRoomDirectionDataForExitTo(i, nullptr);
             }
-            ROOM_FLAGS(u) = 0;
-            ROOM_LANDSCAPE(u) = SECT_CITY;
-            ROOM_RESISTANCE(u) = 0;
+            UROOM(u)->setAllRoomFlags(0);
+            UROOM(u)->setLandscapeTerrain(SECT_CITY);
+            UROOM(u)->setRoomMagicalResistance(0);
             break;
     }
 }

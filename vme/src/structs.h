@@ -73,36 +73,161 @@ class zone_reset_cmd;
 class room_data : public unit_data
 {
 public:
+    /**
+     * @name Constructors/Destructor
+     * @{
+     */
     room_data();
-    ~room_data();
+    room_data(const room_data &) = delete;
+    room_data(room_data &&) = delete;
+    room_data &operator=(const room_data &) = delete;
+    room_data &operator=(room_data &&) = delete;
+    ~room_data() override;
+    ///@}
 
-    room_direction_data *dir_option[MAX_EXIT + 1]{}; ///< Why 11? Why not MAX_EXIT+1?
+    /**
+     * @name Room Exit Information
+     * @{
+     */
+    /**
+     * Gets information about room exit
+     * @param index Direction of exit
+     * @throws std::out_of_range
+     * @return room_direction_data * with information
+     */
+    room_direction_data *getRoomDirectionDataForExit(size_t index) { return m_dir_option.at(index); }
+    /**
+     * Sets data for a room exit
+     * @param index Direction of exit
+     * @throws std::out_of_range
+     * @param value Room Direction Data
+     */
+    void setRoomDirectionDataForExitTo(size_t index, room_direction_data *value) { m_dir_option.at(index) = value; }
+    ///@}
 
-    ubit8 flags{};         ///< Room flags
-    ubit8 movement_type{}; ///< The type of movement (city, hills etc.)
-    ubit8 resistance{};    ///< Magic resistance of the room
+    /**
+     * @name Room flags
+     * @{
+     */
+    /**
+     * @return All room flags
+     */
+    ubit8 getRoomFlags() const { return m_flags; }
+    /**
+     * @return Pointer to all room flags
+     */
+    ubit8 *getRoomFlagsPtr() { return &m_flags; }
+    /**
+     * Sets all room flags to value
+     * @param value NB this is cast down to ubit8
+     */
+    void setAllRoomFlags(ubit16 value) { m_flags = static_cast<ubit8>(value); }
+    /// @}
 
-    sbit16 mapx, mapy; ///< Graphical map coordinates
+    /**
+     * @name Room terrain movement type
+     * @{
+     */
+    /**
+     * Returns terrain type for the room
+     * @return one of SECT_* types
+     */
+    ubit8 getLandscapeTerrain() const { return m_movement_type; }
+    ubit8 *getLandscapeTerrainPtr() { return &m_movement_type; }
+    /**
+     * Sets room terrain movement type
+     * @param value
+     */
+    void setLandscapeTerrain(ubit8 value) { m_movement_type = value; }
+    /// @}
 
-    int sc{};  ///< strong component, used for shortest path
-    int num{}; ///< room number, used for shortest path
+    /**
+     * @name Magical Resistance
+     * @{
+     */
+    ubit8 getRoomMagicalResistance() const { return m_resistance; }
+    ubit8 *getRoomMagicalResistancePtr() { return &m_resistance; }
+    void setRoomMagicalResistance(ubit8 value) { m_resistance = value; }
+    /// @}
+
+    /**
+     * @name Graphical Map Coordinates
+     * @{
+     */
+    sbit16 getMapXCoordinate() const { return m_mapx; }
+    void setMapXCoordinate(sbit16 value) { m_mapx = value; }
+
+    sbit16 getMapYCoordinate() const { return m_mapy; }
+    void setMapYCoordinate(sbit16 value) { m_mapy = value; }
+    /// @}
+
+    /**
+     * @name Strong component
+     * @{
+     */
+    int getStrongComponent() const { return m_sc; }
+    void setStrongComponent(int value) { m_sc = value; }
+    /// @}
+
+    /**
+     * @name Room Number
+     * @{
+     */
+    int getRoomNumber() const { return m_num; }
+    void setRoomNumber(int value) { m_num = value; }
+    /// @}
+private:
+    std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
+    ubit8 m_flags{0};                                                      ///< Room flags
+    ubit8 m_movement_type{0};                                              ///< The type of movement (city, hills etc.)
+    ubit8 m_resistance{0};                                                 ///< Magic resistance of the room
+    sbit16 m_mapx{-1};                                                     ///< Graphical map coordinates
+    sbit16 m_mapy{-1};                                                     ///< Graphical map coordinates
+    int m_sc{0};                                                           ///< strong component, used for shortest path
+    int m_num{0};                                                          ///< room number, used for shortest path
+
 #ifndef MPLEX_COMPILE
+public:
     enum edge_dir_t
     {
         edge_dir = 101
     };
 
-    typedef boost::adjacency_list<boost::vecS,
-                                  boost::vecS,
-                                  boost::directedS,
-                                  boost::no_property,
-                                  boost::property<boost::edge_weight_t, int, boost::property<edge_dir_t, int>>>
-        graph_t;
+    using graph_t = boost::adjacency_list<boost::vecS,
+                                          boost::vecS,
+                                          boost::directedS,
+                                          boost::no_property,
+                                          boost::property<boost::edge_weight_t, int, boost::property<edge_dir_t, int>>>;
 
-    typedef boost::graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
-    std::vector<vertex_descriptor> path;
-    std::vector<vertex_descriptor> distance;
-    int waiting_dijkstra;
+    using vertex_descriptor = boost::graph_traits<graph_t>::vertex_descriptor;
+
+    /**
+     * @name Path
+     * @{
+     */
+    std::vector<vertex_descriptor> &getPath() { return m_path; }
+    const std::vector<vertex_descriptor> &getPath() const { return m_path; }
+    ///@}
+
+    /**
+     * @name Distance
+     * @{
+     */
+    std::vector<vertex_descriptor> &getDistance() { return m_distance; }
+    const std::vector<vertex_descriptor> &getDistance() const { return m_distance; }
+    /// @}
+
+    /**
+     * @name
+     * @{
+     */
+    bool getWaitingDijkstra() const { return m_waiting_dijkstra; }
+    void setWaitingDijkstra(bool value) { m_waiting_dijkstra = value; }
+    /// @}
+private:
+    std::vector<vertex_descriptor> m_path;     ///<
+    std::vector<vertex_descriptor> m_distance; ///<
+    bool m_waiting_dijkstra{false};            ///<
 #endif
 };
 
