@@ -1239,7 +1239,7 @@ void init_unit(unit_data *u)
             {
                 UOBJ(u)->setValueAtIndexTo(i, 0);
             }
-            OBJ_FLAGS(u) = 0;
+            UOBJ(u)->setAllObjectFlags(0);
             UOBJ(u)->setPriceInGP(0);
             UOBJ(u)->setPricePerDay(0);
             OBJ_TYPE(u) = ITEM_OTHER;

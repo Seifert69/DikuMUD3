@@ -431,7 +431,7 @@ oobject_field   : VALUE index flags
     }
     | FLAGS flags
     {
-        OBJ_FLAGS(cur) = $2;
+        UOBJ(cur)->setAllObjectFlags($2);
     }
     | SPELL number
     {

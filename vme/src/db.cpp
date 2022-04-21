@@ -1212,7 +1212,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             UOBJ(u)->setValueAtIndexTo(3, pBuf->ReadS32(&g_nCorrupt));
             UOBJ(u)->setValueAtIndexTo(4, pBuf->ReadS32(&g_nCorrupt));
 
-            OBJ_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
+            UOBJ(u)->setAllObjectFlags(pBuf->ReadU32(&g_nCorrupt));
             UOBJ(u)->setPriceInGP(pBuf->ReadU32(&g_nCorrupt));
             UOBJ(u)->setPricePerDay(pBuf->ReadU32(&g_nCorrupt));
 

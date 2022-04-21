@@ -160,12 +160,41 @@ public:
      */
     void setPricePerDay(ubit32 value) { m_cost_per_day = value; }
     /// @}
+
+    /**
+     * @name Object Flag related functions
+     * @{
+     */
+    /**
+     * @return All object flags
+     */
+    ubit8 getObjectFlags() const { return m_flags; }
+    /**
+     * @return pointer to object flags for DIL
+     */
+    ubit8 *getObjectFlagsPtr() { return &m_flags; }
+    /**
+     * @todo Find out why a 32bit value is being passed to this function and the flags are 8bit
+     * @param value Sets bits from value in object flags
+     */
+    void setObjectFlag(ubit8 value) { m_flags |= value; }
+    /**
+     * @todo Find out why a 32bit value is being passed to this function and the flags are 8bit
+     * @param value Unsets bit from value in object flags
+     */
+    void removeObjectFlag(ubit8 value) { m_flags &= ~value; }
+    /**
+     * @todo Find out why a 32bit value is being passed to this function and the flags are 8bit
+     * @param value Overwrites all flags with value
+     */
+    void setAllObjectFlags(ubit32 value) { m_flags = static_cast<ubit8>(value); }
+    /// @}
 private:
     std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
     ubit32 m_cost{0};                 ///< Value when sold (gp.)
     ubit32 m_cost_per_day{0};         ///< Cost to keep pr. real day
+    ubit8 m_flags{0};                 ///< Various special object flags
 public:
-    ubit8 flags;      ///< Various special object flags
     ubit8 type;       ///< Type of item (ITEM_XXX)
     ubit8 equip_pos;  ///< 0 or position of item in equipment
     ubit8 resistance; ///< Magic resistance

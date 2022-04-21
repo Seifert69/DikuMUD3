@@ -64,7 +64,7 @@ obj_data::obj_data()
     , m_value{0}
     , m_cost{0}
     , m_cost_per_day{0}
-    , flags{0}
+    , m_flags{0}
     , type{0}
     , equip_pos{0}
     , resistance{0}

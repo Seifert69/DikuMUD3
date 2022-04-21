@@ -222,7 +222,10 @@ inline ubit32 OBJ_PRICE_DAY(unit_data *unit)
 
 #define OBJ_EQP_POS(unit) (UOBJ(unit)->equip_pos)
 
-#define OBJ_FLAGS(obj) (UOBJ(obj)->flags)
+inline ubit8 OBJ_FLAGS(unit_data *obj)
+{
+    return UOBJ(obj)->getObjectFlags();
+}
 
 // clang-format
 /* ...........................OBJECT SUPERSTRUCTURES..................... */

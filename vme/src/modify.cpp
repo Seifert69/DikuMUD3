@@ -984,7 +984,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 30: /* "obj-flags" */
-            OBJ_FLAGS(unt) = bitarg;
+            UOBJ(unt)->setAllObjectFlags(bitarg);
             return;
 
         case 31: /* "cost" */
