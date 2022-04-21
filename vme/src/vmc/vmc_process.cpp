@@ -1243,7 +1243,7 @@ void init_unit(unit_data *u)
             UOBJ(u)->setPriceInGP(0);
             UOBJ(u)->setPricePerDay(0);
             UOBJ(u)->setObjectItemType(ITEM_OTHER);
-            OBJ_RESISTANCE(u) = 0;
+            UOBJ(u)->setMagicResistance(0);
             break;
 
         case UNIT_ST_ROOM:

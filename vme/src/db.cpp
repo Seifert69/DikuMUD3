@@ -1219,7 +1219,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             UOBJ(u)->setObjectItemType(pBuf->ReadU8(&g_nCorrupt));
             UOBJ(u)->setEquipmentPosition(0);
 
-            OBJ_RESISTANCE(u) = pBuf->ReadU8(&g_nCorrupt);
+            UOBJ(u)->setMagicResistance(pBuf->ReadU8(&g_nCorrupt));
             if (unit_version < 49)
             {
                 if (OBJ_TYPE(u) == ITEM_WEAPON && (OBJ_VALUE(u, 3) == 0))

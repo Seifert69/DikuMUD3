@@ -1403,7 +1403,7 @@ void break_object(unit_data *obj)
 
     UOBJ(obj)->setPriceInGP(0);
     UOBJ(obj)->setPricePerDay(0);
-    OBJ_RESISTANCE(obj) = 0;
+    UOBJ(obj)->setMagicResistance(0);
 }
 
 /* 'ch' is optional, and will receive a message if 'obj' breaks */

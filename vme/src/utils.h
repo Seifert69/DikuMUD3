@@ -201,7 +201,10 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
 /* ..................................................................... */
 // clang-format
 
-#define OBJ_RESISTANCE(obj) (UOBJ(obj)->resistance)
+inline ubit8 OBJ_RESISTANCE(unit_data *obj)
+{
+    return UOBJ(obj)->getMagicResistance();
+}
 
 inline sbit32 OBJ_VALUE(unit_data *unit, size_t index)
 {

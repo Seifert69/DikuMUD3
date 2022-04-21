@@ -67,7 +67,7 @@ obj_data::obj_data()
     , m_flags{0}
     , m_type{0}
     , m_equip_pos{0}
-    , resistance{0}
+    , m_resistance{0}
 {
     g_world_noobjects++;
 }

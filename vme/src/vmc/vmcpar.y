@@ -435,7 +435,7 @@ oobject_field   : VALUE index flags
     }
     | SPELL number
     {
-        OBJ_RESISTANCE(cur) = $2;
+        UOBJ(cur)->setMagicResistance($2);
     }
     ;
 

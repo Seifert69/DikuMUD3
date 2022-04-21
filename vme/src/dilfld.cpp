@@ -2184,10 +2184,13 @@ void dilfe_fld(dilprg *p)
                         break;
 
                         case UNIT_ST_OBJ:
+                        {
+                            auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
                             v->atyp = DILA_NONE;
                             v->type = DILV_UINT1R;
-                            v->ref = &OBJ_RESISTANCE((unit_data *)v1->val.ptr);
-                            break;
+                            v->ref = object->getMagicResistancePtr();
+                        }
+                        break;
 
                         case UNIT_ST_NPC:
                             if (is_in(v2->val.num, 0, SPL_GROUP_MAX - 1))

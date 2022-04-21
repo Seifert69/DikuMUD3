@@ -223,6 +223,24 @@ public:
      */
     void setEquipmentPosition(ubit8 value) { m_equip_pos = value; }
     /// @}
+    /**
+     * @name Magic Resistance related functions
+     * @{
+     */
+
+    /**
+     * @return magic resistance
+     */
+    ubit8 getMagicResistance() const { return m_resistance; }
+    /**
+     * @return pointer to magic resistance
+     */
+    ubit8 *getMagicResistancePtr() { return &m_resistance; }
+    /**
+     * @param value Set magic resistance to
+     */
+    void setMagicResistance(ubit8 value) { m_resistance = value; }
+    /// @}
 private:
     std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
     ubit32 m_cost{0};                 ///< Value when sold (gp.)
@@ -230,8 +248,7 @@ private:
     ubit8 m_flags{0};                 ///< Various special object flags
     ubit8 m_type{ITEM_TRASH};         ///< Type of item (ITEM_XXX)
     ubit8 m_equip_pos{0};             ///< 0 or position of item in equipment
-public:
-    ubit8 resistance; ///< Magic resistance
+    ubit8 m_resistance{0};            ///< Magic resistance
 };
 
 /* ----------------- CHAR SPECIFIC STRUCTURES ----------------------- */

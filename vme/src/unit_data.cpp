@@ -283,7 +283,7 @@ unit_data *unit_data::copy()
         uobj->setAllObjectFlags(thisobj->getObjectFlags());
         uobj->setObjectItemType(thisobj->getObjectItemType());
         uobj->setEquipmentPosition(thisobj->getEquipmentPosition());
-        uobj->resistance = thisobj->resistance;
+        uobj->setMagicResistance(thisobj->getMagicResistance());
     }
     else if (IS_CHAR(this))
     {
