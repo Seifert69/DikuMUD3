@@ -1020,7 +1020,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 34: /* "equip" */
-            OBJ_EQP_POS(unt) = typarg;
+            UOBJ(unt)->setEquipmentPosition(typarg);
             return;
 
         case 35: /* "guild-name" */

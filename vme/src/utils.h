@@ -223,7 +223,10 @@ inline ubit8 OBJ_TYPE(unit_data *unit)
     return UOBJ(unit)->getObjectItemType();
 }
 
-#define OBJ_EQP_POS(unit) (UOBJ(unit)->equip_pos)
+inline ubit8 OBJ_EQP_POS(unit_data *unit)
+{
+    return UOBJ(unit)->getEquipmentPosition();
+}
 
 inline ubit8 OBJ_FLAGS(unit_data *obj)
 {

@@ -588,7 +588,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     assert(!equipment(ch, pos));
     assert(UNIT_IN(obj) == ch); /* Must carry object in inventory */
 
-    OBJ_EQP_POS(obj) = pos;
+    UOBJ(obj)->setEquipmentPosition(pos);
     modify_bright(ch, UNIT_BRIGHT(obj)); /* Update light sources */
 
     for (af = UNIT_AFFECTED(obj); af; af = af->getNext())
@@ -614,7 +614,7 @@ unit_data *unequip_object(unit_data *obj)
     assert(IS_OBJ(obj) && OBJ_EQP_POS(obj));
     assert(IS_CHAR(ch));
 
-    OBJ_EQP_POS(obj) = 0;
+    UOBJ(obj)->setEquipmentPosition(0);
     modify_bright(ch, -UNIT_BRIGHT(obj)); /* Update light sources */
 
     for (af = UNIT_AFFECTED(obj); af; af = af->getNext())

@@ -297,7 +297,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
         if (IS_OBJ(tmp_u) && (tmp_i = OBJ_EQP_POS(tmp_u)))
         {
             unequip_object(tmp_u);
-            OBJ_EQP_POS(tmp_u) = tmp_i;
+            UOBJ(tmp_u)->setEquipmentPosition(tmp_i);
         }
 
         unit_from_unit(tmp_u);
@@ -313,7 +313,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
 
         if (IS_OBJ(tmp_u) && tmp_i)
         {
-            OBJ_EQP_POS(tmp_u) = 0;
+            UOBJ(tmp_u)->setEquipmentPosition(0);
             equip_char(unit, tmp_u, tmp_i);
         }
     }

@@ -282,7 +282,7 @@ unit_data *unit_data::copy()
         uobj->setPricePerDay(thisobj->getPricePerDay());
         uobj->setAllObjectFlags(thisobj->getObjectFlags());
         uobj->setObjectItemType(thisobj->getObjectItemType());
-        uobj->equip_pos = thisobj->equip_pos;
+        uobj->setEquipmentPosition(thisobj->getEquipmentPosition());
         uobj->resistance = thisobj->resistance;
     }
     else if (IS_CHAR(this))

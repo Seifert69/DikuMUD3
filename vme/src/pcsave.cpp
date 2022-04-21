@@ -282,7 +282,7 @@ void save_player_file(unit_data *pc)
             {
                 unequip_object(tmp_u);
             }
-            OBJ_EQP_POS(tmp_u) = tmp_i;
+            UOBJ(tmp_u)->setEquipmentPosition(tmp_i);
         }
         unit_from_unit(tmp_u);
         tmp_u->setNext(list);
@@ -307,7 +307,7 @@ void save_player_file(unit_data *pc)
         if (IS_OBJ(tmp_u))
         {
             tmp_i = OBJ_EQP_POS(tmp_u);
-            OBJ_EQP_POS(tmp_u) = 0;
+            UOBJ(tmp_u)->setEquipmentPosition(0);
             if (tmp_i)
             {
                 equip_char(pc, tmp_u, tmp_i);

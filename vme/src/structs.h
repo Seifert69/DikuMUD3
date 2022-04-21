@@ -209,14 +209,28 @@ public:
      */
     void setObjectItemType(ubit8 value) { m_type = value; }
     /// @}
+
+    /**
+     * @name Equipment position related functions
+     * @{
+     */
+    /**
+     * @return 0 or position of item in equipment
+     */
+    ubit8 getEquipmentPosition() const { return m_equip_pos; }
+    /**
+     * @param value 0 or position of item in equipment
+     */
+    void setEquipmentPosition(ubit8 value) { m_equip_pos = value; }
+    /// @}
 private:
     std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
     ubit32 m_cost{0};                 ///< Value when sold (gp.)
     ubit32 m_cost_per_day{0};         ///< Cost to keep pr. real day
     ubit8 m_flags{0};                 ///< Various special object flags
     ubit8 m_type{ITEM_TRASH};         ///< Type of item (ITEM_XXX)
+    ubit8 m_equip_pos{0};             ///< 0 or position of item in equipment
 public:
-    ubit8 equip_pos;  ///< 0 or position of item in equipment
     ubit8 resistance; ///< Magic resistance
 };
 
