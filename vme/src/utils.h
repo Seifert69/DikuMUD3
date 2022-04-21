@@ -213,7 +213,10 @@ inline ubit32 OBJ_PRICE(unit_data *unit)
     return UOBJ(unit)->getPriceInGP();
 }
 
-#define OBJ_PRICE_DAY(unit) (UOBJ(unit)->cost_per_day)
+inline ubit32 OBJ_PRICE_DAY(unit_data *unit)
+{
+    return UOBJ(unit)->getPricePerDay();
+}
 
 #define OBJ_TYPE(unit) (UOBJ(unit)->type)
 

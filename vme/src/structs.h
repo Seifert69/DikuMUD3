@@ -142,12 +142,29 @@ public:
      */
     void setPriceInGP(ubit32 value) { m_cost = value; }
     /// @}
+
+    /**
+     * @name Price per day functions
+     * @{
+     */
+    /**
+     * @return Cost to keep per real day
+     */
+    ubit32 getPricePerDay() const { return m_cost_per_day; }
+    /**
+     * @return Pointer to cost per real day
+     */
+    ubit32 *getPricePerDayPtr() { return &m_cost_per_day; }
+    /**
+     * @param value Price to keep per real day
+     */
+    void setPricePerDay(ubit32 value) { m_cost_per_day = value; }
+    /// @}
 private:
     std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
     ubit32 m_cost{0};                 ///< Value when sold (gp.)
+    ubit32 m_cost_per_day{0};         ///< Cost to keep pr. real day
 public:
-    ubit32 cost_per_day; ///< Cost to keep pr. real day
-
     ubit8 flags;      ///< Various special object flags
     ubit8 type;       ///< Type of item (ITEM_XXX)
     ubit8 equip_pos;  ///< 0 or position of item in equipment

@@ -999,7 +999,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 32: /* "rent" */
-            OBJ_PRICE_DAY(unt) = valarg;
+            UOBJ(unt)->setPricePerDay(valarg);
             return;
 
         case 33: /* "type" */

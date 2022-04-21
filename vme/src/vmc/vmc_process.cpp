@@ -1241,7 +1241,7 @@ void init_unit(unit_data *u)
             }
             OBJ_FLAGS(u) = 0;
             UOBJ(u)->setPriceInGP(0);
-            OBJ_PRICE_DAY(u) = 0;
+            UOBJ(u)->setPricePerDay(0);
             OBJ_TYPE(u) = ITEM_OTHER;
             OBJ_RESISTANCE(u) = 0;
             break;

@@ -423,7 +423,7 @@ oobject_field   : VALUE index flags
     }
     | RENT moneylist
     {
-        OBJ_PRICE_DAY(cur) = $2;
+        UOBJ(cur)->setPricePerDay($2);
     }
     | TYPE number
     {

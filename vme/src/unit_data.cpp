@@ -279,7 +279,7 @@ unit_data *unit_data::copy()
         }
 
         uobj->setPriceInGP(thisobj->getPriceInGP());
-        uobj->cost_per_day = thisobj->cost_per_day;
+        uobj->setPricePerDay(thisobj->getPricePerDay());
         uobj->flags = thisobj->flags;
         uobj->type = thisobj->type;
         uobj->equip_pos = thisobj->equip_pos;

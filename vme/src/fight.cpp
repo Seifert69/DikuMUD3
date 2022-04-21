@@ -1402,7 +1402,7 @@ void break_object(unit_data *obj)
     affect_clear_unit(obj);
 
     UOBJ(obj)->setPriceInGP(0);
-    OBJ_PRICE_DAY(obj) = 0;
+    UOBJ(obj)->setPricePerDay(0);
     OBJ_RESISTANCE(obj) = 0;
 }
 
