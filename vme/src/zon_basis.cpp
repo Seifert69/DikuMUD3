@@ -149,7 +149,7 @@ int log_object(spec_arg *sarg)
         CREATE(ip, ubit8, 1);
         *ip = 0;
 
-        OBJ_VALUE(sarg->owner, 0) = 'a';
+        UOBJ(sarg->owner)->setValueAtIndexTo(0, 'a');
         sarg->fptr->setData(ip);
     }
     else
@@ -223,7 +223,7 @@ int log_object(spec_arg *sarg)
                 else if (is_abbrev(sarg->arg, "off"))
                 {
                     cact("Ok, log is now off.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR, "log");
-                    OBJ_VALUE(sarg->owner, 0) = 'o';
+                    UOBJ(sarg->owner)->setValueAtIndexTo(0, 'o');
                     return SFR_BLOCK;
                 }
                 else if (is_abbrev(sarg->arg, "help"))
@@ -260,7 +260,7 @@ int log_object(spec_arg *sarg)
                                : "extensive",
                     cActParameter(),
                     TO_CHAR);
-                OBJ_VALUE(sarg->owner, 0) = c;
+                UOBJ(sarg->owner)->setValueAtIndexTo(0, c);
                 return SFR_BLOCK;
             }
 

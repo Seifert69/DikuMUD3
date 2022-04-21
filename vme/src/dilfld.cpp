@@ -2352,10 +2352,11 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_UINT4R)
             {
-                if ((v1->val.ptr) && IS_OBJ((unit_data *)v1->val.ptr) && (v2->val.num >= 0) && (v2->val.num < 5))
+                auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                if (object && IS_OBJ(object) && (v2->val.num >= 0 && v2->val.num < static_cast<sbit32>(object->getValueArraySize())))
                 {
                     v->atyp = DILA_NONE;
-                    v->ref = &OBJ_VALUE((unit_data *)v1->val.ptr, v2->val.num);
+                    v->ref = object->getValueAtIndexPtr(v2->val.num);
                 }
                 else
                 {

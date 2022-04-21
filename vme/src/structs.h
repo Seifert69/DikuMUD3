@@ -73,7 +73,58 @@ public:
     obj_data();
     ~obj_data();
 
-    sbit32 value[5];     ///< Values of the item (see list)
+    /**
+     * @name Value related functions
+     * @{
+     */
+
+    /**
+     * Gets the value at index for the object
+     *
+     * WEAPONS
+     *     * index = 0 is weapon category
+     *     * index = 1 is weapon material bonus
+     *     * index = 2 is magic bonus
+     *     * index = 3 is slaying race
+     *
+     * ARMOURS
+     *     * index = 0 is armour category
+     *     * index = 1 is armour material bonus
+     *     * index = 2 is magic bonus
+     *
+     * SHIELDS
+     *     * index = 0 is shield category
+     *     * index = 1 is shield material bonus
+     *     * index = 2 is magic bonus
+     *
+     * @throws std::out_of_range if index is greater than array size
+     * @param index
+     * @return Bonus/Value at index
+     */
+    sbit32 getValueAtIndex(size_t index) const { return m_value.at(index); }
+
+    /**
+     * @throws std::out_of_range if index is greater than array size
+     * @param index Array index see getValueAtIndex() for index values
+     * @return Pointer to value at index - its a DIL thing
+     */
+    sbit32 *getValueAtIndexPtr(size_t index) { return &m_value.at(index); }
+
+    /**
+     * @return Upper bound of array size (5)
+     */
+    size_t getValueArraySize() const { return m_value.size(); }
+
+    /**
+     * @throws std::out_of_range if index is greater than array size
+     * @param index Array index see getValueAtIndex() for index values
+     * @param value Value to set
+     */
+    void setValueAtIndexTo(size_t index, sbit32 value) { m_value.at(index) = value; }
+    /// @}
+private:
+    std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
+public:
     ubit32 cost;         ///< Value when sold (gp.)
     ubit32 cost_per_day; ///< Cost to keep pr. real day
 

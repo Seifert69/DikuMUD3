@@ -415,7 +415,7 @@ object_field    : unit_field
 
 oobject_field   : VALUE index flags
     {
-        OBJ_VALUE(cur, $2) = $3;
+        UOBJ(cur)->setValueAtIndexTo($2, $3);
     }
     | COST moneylist
     {

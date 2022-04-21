@@ -1206,11 +1206,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         break;
 
         case UNIT_ST_OBJ:
-            OBJ_VALUE(u, 0) = pBuf->ReadS32(&g_nCorrupt);
-            OBJ_VALUE(u, 1) = pBuf->ReadS32(&g_nCorrupt);
-            OBJ_VALUE(u, 2) = pBuf->ReadS32(&g_nCorrupt);
-            OBJ_VALUE(u, 3) = pBuf->ReadS32(&g_nCorrupt);
-            OBJ_VALUE(u, 4) = pBuf->ReadS32(&g_nCorrupt);
+            UOBJ(u)->setValueAtIndexTo(0, pBuf->ReadS32(&g_nCorrupt));
+            UOBJ(u)->setValueAtIndexTo(1, pBuf->ReadS32(&g_nCorrupt));
+            UOBJ(u)->setValueAtIndexTo(2, pBuf->ReadS32(&g_nCorrupt));
+            UOBJ(u)->setValueAtIndexTo(3, pBuf->ReadS32(&g_nCorrupt));
+            UOBJ(u)->setValueAtIndexTo(4, pBuf->ReadS32(&g_nCorrupt));
 
             OBJ_FLAGS(u) = pBuf->ReadU32(&g_nCorrupt);
             OBJ_PRICE(u) = pBuf->ReadU32(&g_nCorrupt);
@@ -1224,7 +1224,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (OBJ_TYPE(u) == ITEM_WEAPON && (OBJ_VALUE(u, 3) == 0))
                 {
-                    OBJ_VALUE(u, 3) = RACE_DO_NOT_USE;
+                    UOBJ(u)->setValueAtIndexTo(3, RACE_DO_NOT_USE);
                 }
             }
             break;
@@ -1404,8 +1404,8 @@ void bonus_setup(unit_data *u)
     {
         if ((OBJ_TYPE(u) == ITEM_WEAPON) || (OBJ_TYPE(u) == ITEM_SHIELD) || (OBJ_TYPE(u) == ITEM_ARMOR))
         {
-            OBJ_VALUE(u, 1) = bonus_map_a(OBJ_VALUE(u, 1));
-            OBJ_VALUE(u, 2) = bonus_map_a(OBJ_VALUE(u, 2));
+            UOBJ(u)->setValueAtIndexTo(1, bonus_map_a(OBJ_VALUE(u, 1)));
+            UOBJ(u)->setValueAtIndexTo(2, bonus_map_a(OBJ_VALUE(u, 2)));
         }
 
         for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->getNext())

@@ -1393,10 +1393,10 @@ void break_object(unit_data *obj)
 
     obj->setTitle(diku::format_to_str("%s (broken)", obj->getTitle()));
 
-    OBJ_VALUE(obj, 0) = 0;
-    OBJ_VALUE(obj, 1) = 0;
-    OBJ_VALUE(obj, 2) = 0;
-    OBJ_VALUE(obj, 3) = 0;
+    UOBJ(obj)->setValueAtIndexTo(0, 0);
+    UOBJ(obj)->setValueAtIndexTo(1, 0);
+    UOBJ(obj)->setValueAtIndexTo(2, 0);
+    UOBJ(obj)->setValueAtIndexTo(3, 0);
     OBJ_TYPE(obj) = ITEM_TRASH;
 
     affect_clear_unit(obj);

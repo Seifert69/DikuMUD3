@@ -61,7 +61,7 @@ char_data::~char_data()
 
 obj_data::obj_data()
     : unit_data(UNIT_ST_OBJ)
-    , value{0}
+    , m_value{0}
     , cost{0}
     , cost_per_day{0}
     , flags{0}

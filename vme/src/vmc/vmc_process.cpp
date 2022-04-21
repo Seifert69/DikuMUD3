@@ -1050,7 +1050,7 @@ void process_unit(unit_data *u)
             {
                 case ITEM_MONEY:
                     OBJ_PRICE(u) = OBJ_VALUE(u, 0);
-                    OBJ_VALUE(u, 0) = 0;
+                    UOBJ(u)->setValueAtIndexTo(0, 0);
 
                     if (!UNIT_TITLE(u).empty())
                     {
@@ -1070,7 +1070,7 @@ void process_unit(unit_data *u)
                         }
                         else
                         {
-                            OBJ_VALUE(u, 0) = i;
+                            UOBJ(u)->setValueAtIndexTo(0, i);
                         }
                     }
                     else
@@ -1237,7 +1237,7 @@ void init_unit(unit_data *u)
         case UNIT_ST_OBJ:
             for (i = 0; i <= 3; i++)
             {
-                OBJ_VALUE(u, i) = 0;
+                UOBJ(u)->setValueAtIndexTo(i, 0);
             }
             OBJ_FLAGS(u) = 0;
             OBJ_PRICE(u) = 0;

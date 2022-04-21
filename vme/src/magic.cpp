@@ -127,7 +127,7 @@ ubit1 use_mana(unit_data *medium, int mana)
             case ITEM_WAND:
                 if (OBJ_VALUE(medium, 1))
                 {
-                    --OBJ_VALUE(medium, 1);
+                    UOBJ(medium)->setValueAtIndexTo(1, OBJ_VALUE(medium, 1) - 1);
                     return TRUE;
                 }
                 else

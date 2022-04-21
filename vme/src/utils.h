@@ -199,10 +199,14 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
 
 // clang-format on
 /* ..................................................................... */
+// clang-format
 
 #define OBJ_RESISTANCE(obj) (UOBJ(obj)->resistance)
 
-#define OBJ_VALUE(unit, index) (UOBJ(unit)->value[index])
+inline sbit32 OBJ_VALUE(unit_data *unit, size_t index)
+{
+    return UOBJ(unit)->getValueAtIndex(index);
+}
 
 #define OBJ_PRICE(unit) (UOBJ(unit)->cost)
 
@@ -214,6 +218,7 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
 
 #define OBJ_FLAGS(obj) (UOBJ(obj)->flags)
 
+// clang-format
 /* ...........................OBJECT SUPERSTRUCTURES..................... */
 
 #define OBJ_HAS_EXTRA(obj, stat) (IS_SET(OBJ_EXTRA(obj), stat))

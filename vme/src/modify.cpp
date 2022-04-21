@@ -936,7 +936,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 0) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(0, valarg);
             return;
 
         case 26: /* "value1" */
@@ -947,7 +947,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 1) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(1, valarg);
             return;
 
         case 27: /* "value2" */
@@ -958,7 +958,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 2) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(2, valarg);
             return;
 
         case 28: /* "value3" */
@@ -969,7 +969,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 3) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(3, valarg);
             return;
 
         case 29: /* "value4" */
@@ -980,7 +980,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 4) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(4, valarg);
             return;
 
         case 30: /* "obj-flags" */
