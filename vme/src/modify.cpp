@@ -1016,7 +1016,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 return;
             }
 
-            OBJ_TYPE(unt) = typarg;
+            UOBJ(unt)->setObjectItemType(typarg);
             return;
 
         case 34: /* "equip" */

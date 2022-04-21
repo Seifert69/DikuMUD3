@@ -189,13 +189,33 @@ public:
      */
     void setAllObjectFlags(ubit32 value) { m_flags = static_cast<ubit8>(value); }
     /// @}
+
+    /**
+     * @name Item type related functions
+     * @todo Create ENUM for ITEM_* types
+     * @{
+     */
+
+    /**
+     * @return the ITEM_* type
+     */
+    ubit8 getObjectItemType() const { return m_type; }
+    /**
+     * @return pointer to the item type
+     */
+    ubit8 *getObjectItemTypePtr() { return &m_type; }
+    /**
+     * @param value ITEM_* value (see vme.h)
+     */
+    void setObjectItemType(ubit8 value) { m_type = value; }
+    /// @}
 private:
     std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
     ubit32 m_cost{0};                 ///< Value when sold (gp.)
     ubit32 m_cost_per_day{0};         ///< Cost to keep pr. real day
     ubit8 m_flags{0};                 ///< Various special object flags
+    ubit8 m_type{ITEM_TRASH};         ///< Type of item (ITEM_XXX)
 public:
-    ubit8 type;       ///< Type of item (ITEM_XXX)
     ubit8 equip_pos;  ///< 0 or position of item in equipment
     ubit8 resistance; ///< Magic resistance
 };

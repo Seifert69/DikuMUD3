@@ -2299,17 +2299,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr))
+                {
+                    auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                    if (object && IS_OBJ(object))
                     {
                         v->type = DILV_UINT1R;
                         v->atyp = DILA_NONE;
-                        v->ref = &OBJ_TYPE((unit_data *)v1->val.ptr);
+                        v->ref = object->getObjectItemTypePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

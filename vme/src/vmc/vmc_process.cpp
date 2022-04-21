@@ -156,21 +156,21 @@ void dmc_set_weapon(unit_data *weapon)
     if (!is_in(category, WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
         dmc_error(TRUE, "Illegal weapon category in '%s'.", UNIT_IDENT(weapon));
-        OBJ_TYPE(weapon) = ITEM_TRASH;
+        UOBJ(weapon)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
     if (!is_in(craftsmanship, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(weapon));
-        OBJ_TYPE(weapon) = ITEM_TRASH;
+        UOBJ(weapon)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
     if (!is_in(magic_bonus, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..7 allowed) in '%s'.", UNIT_IDENT(weapon));
-        OBJ_TYPE(weapon) = ITEM_TRASH;
+        UOBJ(weapon)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
@@ -178,7 +178,7 @@ void dmc_set_weapon(unit_data *weapon)
     if (!is_in(slay, 0, 50000))
     {
         dmc_error(TRUE, "Slay race appears uset (1..50000 allowed) in '%s'.", UNIT_IDENT(weapon));
-        OBJ_TYPE(weapon) = ITEM_TRASH;
+        UOBJ(weapon)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
@@ -202,21 +202,21 @@ void dmc_set_armour(unit_data *armour)
     if (!is_in(category, ARM_CLOTHES, ARM_PLATE))
     {
         dmc_error(TRUE, "Illegal armour category in '%s'.", UNIT_IDENT(armour));
-        OBJ_TYPE(armour) = ITEM_TRASH;
+        UOBJ(armour)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
     if (!is_in(craftsmanship, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(armour));
-        OBJ_TYPE(armour) = ITEM_TRASH;
+        UOBJ(armour)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
     if (!is_in(magic_bonus, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(armour));
-        OBJ_TYPE(armour) = ITEM_TRASH;
+        UOBJ(armour)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
@@ -242,21 +242,21 @@ void dmc_set_shield(unit_data *shield)
     if (!is_in(category, SHIELD_SMALL, SHIELD_LARGE))
     {
         dmc_error(TRUE, "Illegal shield category in '%s'.", UNIT_IDENT(shield));
-        OBJ_TYPE(shield) = ITEM_TRASH;
+        UOBJ(shield)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
     if (!is_in(craftsmanship, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(shield));
-        OBJ_TYPE(shield) = ITEM_TRASH;
+        UOBJ(shield)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
     if (!is_in(magic_bonus, BONUS_JUNK, BONUS_ARTIFACT))
     {
         dmc_error(TRUE, "Illegal bonus (-7..+7 allowed) in '%s'.", UNIT_IDENT(shield));
-        OBJ_TYPE(shield) = ITEM_TRASH;
+        UOBJ(shield)->setObjectItemType(ITEM_TRASH);
         return;
     }
 
@@ -1242,7 +1242,7 @@ void init_unit(unit_data *u)
             UOBJ(u)->setAllObjectFlags(0);
             UOBJ(u)->setPriceInGP(0);
             UOBJ(u)->setPricePerDay(0);
-            OBJ_TYPE(u) = ITEM_OTHER;
+            UOBJ(u)->setObjectItemType(ITEM_OTHER);
             OBJ_RESISTANCE(u) = 0;
             break;
 

@@ -427,7 +427,7 @@ oobject_field   : VALUE index flags
     }
     | TYPE number
     {
-        OBJ_TYPE(cur) = $2;
+        UOBJ(cur)->setObjectItemType($2);
     }
     | FLAGS flags
     {

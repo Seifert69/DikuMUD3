@@ -281,7 +281,7 @@ unit_data *unit_data::copy()
         uobj->setPriceInGP(thisobj->getPriceInGP());
         uobj->setPricePerDay(thisobj->getPricePerDay());
         uobj->setAllObjectFlags(thisobj->getObjectFlags());
-        uobj->type = thisobj->type;
+        uobj->setObjectItemType(thisobj->getObjectItemType());
         uobj->equip_pos = thisobj->equip_pos;
         uobj->resistance = thisobj->resistance;
     }

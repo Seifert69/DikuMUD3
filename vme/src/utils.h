@@ -218,7 +218,10 @@ inline ubit32 OBJ_PRICE_DAY(unit_data *unit)
     return UOBJ(unit)->getPricePerDay();
 }
 
-#define OBJ_TYPE(unit) (UOBJ(unit)->type)
+inline ubit8 OBJ_TYPE(unit_data *unit)
+{
+    return UOBJ(unit)->getObjectItemType();
+}
 
 #define OBJ_EQP_POS(unit) (UOBJ(unit)->equip_pos)
 

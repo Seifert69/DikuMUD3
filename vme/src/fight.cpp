@@ -1397,7 +1397,7 @@ void break_object(unit_data *obj)
     UOBJ(obj)->setValueAtIndexTo(1, 0);
     UOBJ(obj)->setValueAtIndexTo(2, 0);
     UOBJ(obj)->setValueAtIndexTo(3, 0);
-    OBJ_TYPE(obj) = ITEM_TRASH;
+    UOBJ(obj)->setObjectItemType(ITEM_TRASH);
 
     affect_clear_unit(obj);
 

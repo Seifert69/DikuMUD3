@@ -1216,7 +1216,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             UOBJ(u)->setPriceInGP(pBuf->ReadU32(&g_nCorrupt));
             UOBJ(u)->setPricePerDay(pBuf->ReadU32(&g_nCorrupt));
 
-            OBJ_TYPE(u) = pBuf->ReadU8(&g_nCorrupt);
+            UOBJ(u)->setObjectItemType(pBuf->ReadU8(&g_nCorrupt));
             OBJ_EQP_POS(u) = 0;
 
             OBJ_RESISTANCE(u) = pBuf->ReadU8(&g_nCorrupt);
