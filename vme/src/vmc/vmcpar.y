@@ -699,7 +699,7 @@ unit_field  : NAMES stringlist
     }
     | ALIGNMENT number
     {
-        cur->setAlignment($2, true);
+        cur->setAlignment($2);
     }
     | EXTRA stringlist intlist STRING
     {

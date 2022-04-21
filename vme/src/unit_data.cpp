@@ -754,31 +754,28 @@ sbit16 *unit_data::getAlignmentPtr()
     return &m_alignment;
 }
 
-bool unit_data::changeAlignmentBy(int64_t value)
+void unit_data::changeAlignmentBy(int64_t value)
 {
-    return setAlignment(m_alignment + value);
+    setAlignment(m_alignment + value);
 }
 
-bool unit_data::setAlignment(int64_t value, bool is_vmc)
+bool unit_data::setAlignment(int64_t value)
 {
     bool change_is_ok = true;
 
     m_alignment = static_cast<sbit16>(value);
 
-    if (!is_vmc)
+    if (m_alignment > MaxAlignment)
     {
-        if (m_alignment > MaxAlignment)
-        {
-            m_alignment = MaxAlignment;
-            change_is_ok = false;
-        }
-
-        if (m_alignment < MinAlignment)
-        {
-            m_alignment = MinAlignment;
-            change_is_ok = false;
-        }
+        m_alignment = MaxAlignment;
+        change_is_ok = false;
     }
+    else if (m_alignment < MinAlignment)
+    {
+        m_alignment = MinAlignment;
+        change_is_ok = false;
+    }
+
     return change_is_ok;
 }
 
