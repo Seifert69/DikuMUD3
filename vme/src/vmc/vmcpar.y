@@ -419,7 +419,7 @@ oobject_field   : VALUE index flags
     }
     | COST moneylist
     {
-        OBJ_PRICE(cur) = $2;
+        UOBJ(cur)->setPriceInGP($2);
     }
     | RENT moneylist
     {

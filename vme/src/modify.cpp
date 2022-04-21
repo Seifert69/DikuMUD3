@@ -995,7 +995,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
 
-            OBJ_PRICE(unt) = valarg;
+            UOBJ(unt)->setPriceInGP(valarg);
             return;
 
         case 32: /* "rent" */

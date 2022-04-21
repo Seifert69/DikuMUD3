@@ -122,10 +122,30 @@ public:
      */
     void setValueAtIndexTo(size_t index, sbit32 value) { m_value.at(index) = value; }
     /// @}
+
+    /**
+     * @name Price related functions
+     * @{
+     */
+
+    /**
+     * @return Price in GP
+     */
+    ubit32 getPriceInGP() const { return m_cost; }
+    /**
+     * @return Pointer to price in GP
+     */
+    ubit32 *getPriceInGPPtr() { return &m_cost; }
+
+    /**
+     * @param value Price in GP
+     */
+    void setPriceInGP(ubit32 value) { m_cost = value; }
+    /// @}
 private:
     std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
+    ubit32 m_cost{0};                 ///< Value when sold (gp.)
 public:
-    ubit32 cost;         ///< Value when sold (gp.)
     ubit32 cost_per_day; ///< Cost to keep pr. real day
 
     ubit8 flags;      ///< Various special object flags

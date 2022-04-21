@@ -1049,7 +1049,7 @@ void process_unit(unit_data *u)
             switch (OBJ_TYPE(u))
             {
                 case ITEM_MONEY:
-                    OBJ_PRICE(u) = OBJ_VALUE(u, 0);
+                    UOBJ(u)->setPriceInGP(OBJ_VALUE(u, 0));
                     UOBJ(u)->setValueAtIndexTo(0, 0);
 
                     if (!UNIT_TITLE(u).empty())
@@ -1240,7 +1240,7 @@ void init_unit(unit_data *u)
                 UOBJ(u)->setValueAtIndexTo(i, 0);
             }
             OBJ_FLAGS(u) = 0;
-            OBJ_PRICE(u) = 0;
+            UOBJ(u)->setPriceInGP(0);
             OBJ_PRICE_DAY(u) = 0;
             OBJ_TYPE(u) = ITEM_OTHER;
             OBJ_RESISTANCE(u) = 0;

@@ -208,7 +208,10 @@ inline sbit32 OBJ_VALUE(unit_data *unit, size_t index)
     return UOBJ(unit)->getValueAtIndex(index);
 }
 
-#define OBJ_PRICE(unit) (UOBJ(unit)->cost)
+inline ubit32 OBJ_PRICE(unit_data *unit)
+{
+    return UOBJ(unit)->getPriceInGP();
+}
 
 #define OBJ_PRICE_DAY(unit) (UOBJ(unit)->cost_per_day)
 

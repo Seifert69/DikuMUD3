@@ -278,7 +278,7 @@ unit_data *unit_data::copy()
             uobj->setValueAtIndexTo(x, thisobj->getValueAtIndex(x));
         }
 
-        uobj->cost = thisobj->cost;
+        uobj->setPriceInGP(thisobj->getPriceInGP());
         uobj->cost_per_day = thisobj->cost_per_day;
         uobj->flags = thisobj->flags;
         uobj->type = thisobj->type;
