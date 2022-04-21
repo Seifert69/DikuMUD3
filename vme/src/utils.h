@@ -199,44 +199,23 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
 
 // clang-format on
 /* ..................................................................... */
-// clang-format
+// clang-format off
 
-inline ubit8 OBJ_RESISTANCE(unit_data *obj)
-{
-    return UOBJ(obj)->getMagicResistance();
-}
+inline ubit8 OBJ_RESISTANCE(unit_data *obj) { return UOBJ(obj)->getMagicResistance(); }
 
-inline sbit32 OBJ_VALUE(unit_data *unit, size_t index)
-{
-    return UOBJ(unit)->getValueAtIndex(index);
-}
+inline sbit32 OBJ_VALUE(unit_data *unit, size_t index) { return UOBJ(unit)->getValueAtIndex(index); }
 
-inline ubit32 OBJ_PRICE(unit_data *unit)
-{
-    return UOBJ(unit)->getPriceInGP();
-}
+inline ubit32 OBJ_PRICE(unit_data *unit) { return UOBJ(unit)->getPriceInGP(); }
 
-inline ubit32 OBJ_PRICE_DAY(unit_data *unit)
-{
-    return UOBJ(unit)->getPricePerDay();
-}
+inline ubit32 OBJ_PRICE_DAY(unit_data *unit) { return UOBJ(unit)->getPricePerDay(); }
 
-inline ubit8 OBJ_TYPE(unit_data *unit)
-{
-    return UOBJ(unit)->getObjectItemType();
-}
+inline ubit8 OBJ_TYPE(unit_data *unit) { return UOBJ(unit)->getObjectItemType(); }
 
-inline ubit8 OBJ_EQP_POS(unit_data *unit)
-{
-    return UOBJ(unit)->getEquipmentPosition();
-}
+inline ubit8 OBJ_EQP_POS(unit_data *unit) { return UOBJ(unit)->getEquipmentPosition(); }
 
-inline ubit8 OBJ_FLAGS(unit_data *obj)
-{
-    return UOBJ(obj)->getObjectFlags();
-}
+inline ubit8 OBJ_FLAGS(unit_data *obj) { return UOBJ(obj)->getObjectFlags(); }
 
-// clang-format
+// clang-format on
 /* ...........................OBJECT SUPERSTRUCTURES..................... */
 
 #define OBJ_HAS_EXTRA(obj, stat) (IS_SET(OBJ_EXTRA(obj), stat))

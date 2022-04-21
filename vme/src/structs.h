@@ -70,8 +70,17 @@ class zone_reset_cmd;
 class obj_data : public unit_data
 {
 public:
-    obj_data();
-    ~obj_data();
+    /**
+     * @name Constructors / Destructor
+     * @{
+     */
+    obj_data();                                     ///< Constructor
+    obj_data(const obj_data &) = delete;            ///< Delete copy constructor
+    obj_data(obj_data &&) = delete;                 ///< Delete move constructor
+    obj_data &operator=(const obj_data &) = delete; ///< Delete assignment operator
+    obj_data &operator=(obj_data &&) = delete;      ///< Delete move assignment operator
+    ~obj_data() override;                           ///< Destructor
+    /// @}
 
     /**
      * @name Value related functions

@@ -65,7 +65,7 @@ obj_data::obj_data()
     , m_cost{0}
     , m_cost_per_day{0}
     , m_flags{0}
-    , m_type{0}
+    , m_type{ITEM_TRASH}
     , m_equip_pos{0}
     , m_resistance{0}
 {
