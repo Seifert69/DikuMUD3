@@ -59,28 +59,6 @@ char_data::~char_data()
     g_world_nochars--;
 }
 
-room_data::room_data()
-    : unit_data(UNIT_ST_ROOM)
-    , m_mapx{-1}
-    , m_mapy{-1}
-    , m_waiting_dijkstra{false}
-{
-    g_world_norooms++;
-}
-
-room_data::~room_data()
-{
-    g_world_norooms--;
-
-    for (int i = 0; i < MAX_EXIT + 1; i++)
-    {
-        if (m_dir_option[i])
-        {
-            delete m_dir_option[i];
-        }
-    }
-}
-
 obj_data::obj_data()
     : unit_data(UNIT_ST_OBJ)
     , value{0}

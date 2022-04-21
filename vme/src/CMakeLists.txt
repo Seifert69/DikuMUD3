@@ -78,6 +78,7 @@ set(VME_SRCS
         protocol.cpp protocol.h
         queue.cpp queue.h
         reception.cpp reception.h
+        room_data.cpp room_data.h
         room_direction_data.cpp room_direction_data.h
         sector.cpp sector.h
         signals.cpp signals.h
@@ -101,6 +102,7 @@ set(VME_SRCS
         time_info_data.cpp time_info_data.h
         trie.cpp trie.h
         unit_affected_type.cpp unit_affected_type.h
+        unit_data.cpp unit_data.h
         unit_dil_affected_type.cpp unit_dil_affected_type.h
         unit_fptr.cpp unit_fptr.h
         unitfind.cpp unitfind.h
@@ -113,7 +115,7 @@ set(VME_SRCS
         zone_reset.cpp zone_reset.h
         zone_reset_cmd.cpp zone_reset_cmd.h
         zone_type.cpp zone_type.h
-        unit_data.cpp unit_data.h)
+        )
 
 # Add all sources to a library file so we can link with other projects and test suites
 add_library(vme_objs STATIC ${VME_SRCS})
