@@ -10,6 +10,7 @@
 #include "descriptor_data.h"
 #include "essential.h"
 #include "file_index_type.h"
+#include "room_data.h"
 #include "structs.h"
 #include "weather.h"
 
