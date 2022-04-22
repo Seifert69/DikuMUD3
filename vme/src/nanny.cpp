@@ -200,9 +200,9 @@ void pc_data::disconnect_game()
     if (CHAR_DESCRIPTOR(this))
     {
         CHAR_DESCRIPTOR(this)->RemoveBBS();
-
-        g_no_players--;
     }
+
+    g_no_players--;
 }
 
 void pc_data::reconnect_game(descriptor_data *d)
