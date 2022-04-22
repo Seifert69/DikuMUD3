@@ -67,14 +67,15 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -c  Deprecated. Always on. ANSI Colour when set, TTY when not.\n");
     fprintf(stderr, "  -e  Echo mode (echo chars locally).\n");
     fprintf(stderr, "  -r  Redraw prompt lcoally (usually only in -e mode).\n");
-    fprintf(stderr, "  -t  Deprecated. Always on. Telnet mode when set (IAC negotiation).\n");
     fprintf(stderr, "  -p  Player port number, default is 4242.\n");
     fprintf(stderr, "  -a  Internet address of server (localhost default).\n");
     fprintf(stderr, "  -s  Internet port of server (4999 default).\n");
     fprintf(stderr, "  -l  Name of the logfile (default: ./mplex.log).\n");
     fprintf(stderr, "  -x  Output raw HTML on telnet (nice for debugging).\n");
     fprintf(stderr, "  -w  Use Websockets.\n");
+    fprintf(stderr, "  -t  Use TLS (can only be used with Websockets).\n");
     fprintf(stderr, "  -m  Use mud protocol (experimental).\n");
+    
     exit(0);
 }
 
@@ -90,6 +91,7 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
     arg->nMudPort = 4999;    /* Default port */
     arg->nMotherPort = 4242; /* Default port */
     arg->pAddress = str_dup(DEF_SERVER_ADDR);
+    arg->g_bUseTLS = false;
 
     arg->g_bModeANSI = TRUE;   // Beginning of deprecating support for TTY
     arg->g_bModeTelnet = TRUE; // Beginning of deprecating support for TTY
@@ -134,13 +136,12 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
                 arg->g_bModeRedraw = TRUE;
                 break;
 
-            case 't':
-                fprintf(stderr, "-t is deprecated, it's always on.\n");
-                arg->g_bModeTelnet = TRUE;
-                break;
-
             case 'w':
                 arg->bWebSockets = TRUE;
+                break;
+
+            case 't':
+                arg->g_bUseTLS = true;
                 break;
 
             case 'm':

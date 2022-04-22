@@ -30,6 +30,7 @@ struct arg_type
     int g_bModeRawHTML;
     int bWebSockets;
     int bMudProtocol;
+    bool g_bUseTLS;
 };
 
 #define Assert(a, b)                                                                                                                       \
