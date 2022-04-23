@@ -19,6 +19,7 @@ set(VMC_SRCS
         ../membug.cpp ../membug.h
         ../money.cpp ../money.h
         ../namelist.cpp ../namelist.h
+        ../obj_data.cpp ../obj_data.h
         ../room_data.cpp ../room_data.h
         ../spec_assign.cpp ../spec_assign.h
         ../structs.cpp ../structs.h
