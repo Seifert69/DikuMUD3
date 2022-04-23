@@ -146,7 +146,7 @@ int hit_gain(unit_data *ch)
     assert(IS_CHAR(ch));
 
     /* 10 turns to regenerate */
-    if (CHAR_POS(ch) != POSITION_FIGHTING)
+    if (CHAR_POS(ch) != Position_e::Fighting)
     {
         gain = 1 + hit_limit_number(ch, CHAR_CON(ch)) / 10;
     }
@@ -157,12 +157,12 @@ int hit_gain(unit_data *ch)
 
     switch (CHAR_POS(ch))
     {
-        case POSITION_SLEEPING:
-        case POSITION_RESTING:
+        case Position_e::Sleeping:
+        case Position_e::Resting:
             gain += gain / 2; /* gain *= 1.5  */
             break;
 
-        case POSITION_SITTING:
+        case Position_e::Sitting:
             gain += gain / 4; /* gain *= 1.25 */
             break;
     }
@@ -220,7 +220,7 @@ int move_gain(unit_data *ch)
 
     assert(IS_CHAR(ch));
 
-    if (CHAR_POS(ch) != POSITION_FIGHTING)
+    if (CHAR_POS(ch) != Position_e::Fighting)
     {
         gain = 1 + move_limit(ch) / 10; /* 10 turns to regenerate */
     }
@@ -232,12 +232,12 @@ int move_gain(unit_data *ch)
     /* Position calculations    */
     switch (CHAR_POS(ch))
     {
-        case POSITION_SLEEPING:
-        case POSITION_RESTING:
+        case Position_e::Sleeping:
+        case Position_e::Resting:
             gain += gain / 2; /* Divide by 4 */
             break;
 
-        case POSITION_SITTING:
+        case Position_e::Sitting:
             gain += gain / 4; /* Divide by 8 */
             break;
     }
@@ -298,7 +298,7 @@ int mana_gain(unit_data *ch)
     assert(IS_CHAR(ch));
 
     /* 10 turns to regenerate is default when CHA == LEVEL */
-    if (CHAR_POS(ch) != POSITION_FIGHTING)
+    if (CHAR_POS(ch) != Position_e::Fighting)
     {
         gain = 1 + mana_limit(ch) / 10;
         gain += (CHAR_CHA(ch) - MAX(CHAR_MAG(ch), CHAR_DIV(ch))) / 3;
@@ -311,11 +311,11 @@ int mana_gain(unit_data *ch)
 
     switch (CHAR_POS(ch))
     {
-        case POSITION_SLEEPING:
-        case POSITION_RESTING:
+        case Position_e::Sleeping:
+        case Position_e::Resting:
             gain += gain / 2; /* Divide by 2 */
             break;
-        case POSITION_SITTING:
+        case Position_e::Sitting:
             gain += gain / 4; /* Divide by 4 */
             break;
     }

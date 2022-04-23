@@ -1238,7 +1238,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
             pBuf->Append8(CHAR_SEX(u));
             pBuf->Append8(CHAR_LEVEL(u));
-            pBuf->Append8(CHAR_POS(u));
+            pBuf->Append8(static_cast<ubit8>(CHAR_POS(u)));
 
             pBuf->Append8(ABIL_TREE_MAX);
             for (i = 0; i < ABIL_TREE_MAX; i++)

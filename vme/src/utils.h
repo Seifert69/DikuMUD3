@@ -246,7 +246,7 @@ inline const char *CHAR_LAST_ATTACKER(const unit_data *unit) { return UCHAR(unit
 
 inline ubit8 CHAR_LAST_ATTACKER_TYPE(const unit_data *unit) { return UCHAR(unit)->getLastAttackerType(); }
 
-inline ubit8 CHAR_POS(const unit_data *ch) { return UCHAR(ch)->getPosition(); }
+inline Position_e CHAR_POS(const unit_data *ch) { return UCHAR(ch)->getPosition(); }
 
 inline ubit8 CHAR_LEVEL(const unit_data *ch) { return UCHAR(ch)->getLevel(); }
 
@@ -297,7 +297,7 @@ inline char_follow_type *CHAR_FOLLOWERS(const unit_data *ch) { return UCHAR(ch)-
 // clang-format on
 /* ...........................CHAR SUPERSTRUCTURES....................... */
 
-#define CHAR_IS_READY(ch) (CHAR_AWAKE(ch) && (CHAR_POS(ch) != POSITION_FIGHTING))
+#define CHAR_IS_READY(ch) (CHAR_AWAKE(ch) && (CHAR_POS(ch) != Position_e::Fighting))
 
 #define CHAR_IS_SNOOPING(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping()) : (unit_data *)nullptr)
 
@@ -314,7 +314,7 @@ inline unit_data *CHAR_ORIGINAL(unit_data *ch)
     return CHAR_IS_SWITCHED(ch) ? CHAR_DESCRIPTOR(ch)->getOriginalCharacter() : ch;
 }
 
-#define CHAR_AWAKE(ch) (CHAR_POS(ch) > POSITION_SLEEPING)
+#define CHAR_AWAKE(ch) (CHAR_POS(ch) > Position_e::Sleeping)
 
 #define CHAR_HAS_FLAG(ch, flags) (IS_SET(CHAR_FLAGS(ch), (flags)))
 

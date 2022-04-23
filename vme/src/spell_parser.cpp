@@ -286,16 +286,16 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
     {
         switch (CHAR_POS(ch))
         {
-            case POSITION_SLEEPING:
+            case Position_e::Sleeping:
                 send_to_char("In your dreams?<br/>", ch);
                 break;
-            case POSITION_RESTING:
+            case Position_e::Resting:
                 send_to_char("You can't concentrate enough while resting.<br/>", ch);
                 break;
-            case POSITION_SITTING:
+            case Position_e::Sitting:
                 send_to_char("You can't do this sitting!<br/>", ch);
                 break;
-            case POSITION_FIGHTING:
+            case Position_e::Fighting:
                 send_to_char("Impossible! You can't concentrate enough!.<br/>", ch);
                 break;
             default:
@@ -678,11 +678,7 @@ static void spell_read()
         }
         else if (strncmp(pTmp, "minpos", 6) == 0)
         {
-            dummy = atoi(pCh);
-            if (is_in(dummy, POSITION_DEAD, POSITION_STANDING))
-            {
-                g_spell_info[idx].minimum_position = dummy;
-            }
+            g_spell_info[idx].minimum_position = Position_int_to_enum(atoi(pCh));
         }
         else if (strncmp(pTmp, "mana", 4) == 0)
         {
@@ -891,7 +887,7 @@ static void spell_init()
         }
 
         g_spell_info[i].spell_pointer = nullptr;
-        g_spell_info[i].minimum_position = POSITION_STANDING;
+        g_spell_info[i].minimum_position = Position_e::Standing;
         g_spell_info[i].usesmana = 20;
         g_spell_info[i].beats = PULSE_VIOLENCE;
         g_spell_info[i].targets = 0;

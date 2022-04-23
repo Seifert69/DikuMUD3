@@ -833,16 +833,15 @@ int melee_bonus(unit_data *att,
 
 int base_melee(unit_data *att, unit_data *def, int hit_loc)
 {
-    int ocp = 0;
     int bonus = 0;
     unit_data *ocf = nullptr;
 
     assert(CHAR_COMBAT(def));
 
-    ocp = CHAR_POS(def);
+    auto ocp = CHAR_POS(def);
     ocf = CHAR_FIGHTING(def);
     CHAR_COMBAT(def)->setMelee(att);
-    UCHAR(def)->setPosition(POSITION_FIGHTING);
+    UCHAR(def)->setPosition(Position_e::Fighting);
 
     bonus = melee_bonus(att, def, hit_loc, nullptr, nullptr, nullptr, nullptr);
 
@@ -858,15 +857,14 @@ int base_melee(unit_data *att, unit_data *def, int hit_loc)
 
 int base_consider(unit_data *att, unit_data *def, std::string *pStr)
 {
-    int ocp = 0;
     int bonus = 0;
     int att_wpn_type = 0;
     int def_arm_type = 0;
     int dam = 0;
 
-    ocp = CHAR_POS(def);
+    auto ocp = CHAR_POS(def);
     CHAR_FIGHTING(def);
-    UCHAR(def)->setPosition(POSITION_FIGHTING);
+    UCHAR(def)->setPosition(Position_e::Fighting);
 
     att_wpn_type = WPN_ROOT;
 

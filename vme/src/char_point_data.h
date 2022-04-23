@@ -83,9 +83,9 @@ public:
     ubit8 *getLevelPtr();
     void incrementLevel();
 
-    ubit8 getPosition() const;
-    void setPosition(ubit8 value);
-    ubit8 *getPositionPtr();
+    Position_e getPosition() const;
+    void setPosition(Position_e value);
+    Position_e *getPositionPtr();
 
     sbit16 getAbilityAtIndex(size_t index) const;
     sbit16 *getAbilityAtIndexPtr(size_t index);
@@ -124,6 +124,6 @@ private:
     ubit8 dex_reduction{0};                         ///< For speed of armour calculations only
     ubit8 sex{0};                                   ///< PC / NPC s sex
     ubit8 level{0};                                 ///< PC / NPC s level
-    ubit8 position{0};                              ///< Standing, sitting, fighting...
+    Position_e position{Position_e::Dead};          ///< Standing, sitting, fighting...
     std::array<sbit16, ABIL_TREE_MAX> abilities{0}; ///< Str/dex etc.
 };

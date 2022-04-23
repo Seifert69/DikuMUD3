@@ -122,9 +122,9 @@ public:
     ubit8 *getLevelPtr();
     void incrementLevel();
 
-    ubit8 getPosition() const;
-    void setPosition(ubit8 value);
-    ubit8 *getPositionPtr();
+    Position_e getPosition() const;
+    void setPosition(Position_e value);
+    Position_e *getPositionPtr();
 
     sbit16 getAbilityAtIndex(size_t index) const;
     sbit16 *getAbilityAtIndexPtr(size_t index);

@@ -31,7 +31,7 @@ command_info g_cmd_auto_tick = {
     0,
     nullptr,
     CMD_AUTO_TICK,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -41,7 +41,7 @@ command_info g_cmd_auto_enter = {
     0,
     nullptr,
     CMD_AUTO_ENTER,
-    POSITION_STANDING,
+    Position_e::Standing,
     nullptr,
     0,
 };
@@ -51,7 +51,7 @@ command_info g_cmd_auto_play = {
     0,
     nullptr,
     CMD_AUTO_PLAY,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -61,7 +61,7 @@ command_info g_cmd_auto_leave = {
     0,
     nullptr,
     CMD_AUTO_LEAVE,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -71,7 +71,7 @@ command_info g_cmd_auto_extract = {
     0,
     nullptr,
     CMD_AUTO_EXTRACT,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -81,7 +81,7 @@ command_info g_cmd_auto_death = {
     0,
     nullptr,
     CMD_AUTO_DEATH,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -91,7 +91,7 @@ command_info g_cmd_auto_combat = {
     0,
     nullptr,
     CMD_AUTO_COMBAT,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -101,7 +101,7 @@ command_info g_cmd_auto_unknown = {
     0,
     nullptr,
     CMD_AUTO_UNKNOWN,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -111,7 +111,7 @@ command_info g_cmd_auto_save = {
     0,
     nullptr,
     CMD_AUTO_SAVE,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -121,7 +121,7 @@ command_info g_cmd_auto_msg = {
     0,
     nullptr,
     CMD_AUTO_MSG,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
@@ -131,12 +131,12 @@ command_info g_cmd_auto_edit = {
     0,
     nullptr,
     CMD_AUTO_EDIT,
-    POSITION_DEAD,
+    Position_e::Dead,
     nullptr,
     0,
 };
 
-command_info g_cmd_auto_damage = {0, 0, nullptr, CMD_AUTO_DAMAGE, POSITION_DEAD, nullptr, 0};
+command_info g_cmd_auto_damage = {0, 0, nullptr, CMD_AUTO_DAMAGE, Position_e::Dead, nullptr, 0};
 
 command_info *g_cmd_follow = nullptr;
 
@@ -155,9 +155,9 @@ void wrong_position(unit_data *ch)
         "No way! You are fighting for your life!<br/>"                        /* Fighting */
     };
 
-    if (CHAR_POS(ch) < POSITION_STANDING)
+    if (CHAR_POS(ch) < Position_e::Standing)
     {
-        send_to_char(strings[CHAR_POS(ch)], ch);
+        send_to_char(strings[static_cast<size_t>(CHAR_POS(ch))], ch);
     }
 }
 
@@ -370,7 +370,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
     if ((cmd_ptr = (command_info *)search_trie(cmd, g_intr_trie)) == nullptr)
     {
-        command_info the_cmd = {0, 0, nullptr, CMD_AUTO_UNKNOWN, POSITION_DEAD, nullptr, 0};
+        command_info the_cmd = {0, 0, nullptr, CMD_AUTO_UNKNOWN, Position_e::Dead, nullptr, 0};
 
         the_cmd.cmd_str = str_dup(cmd);
         the_cmd.excmd = str_dup(cmd);

@@ -3088,7 +3088,7 @@ void dilfi_pup(dilprg *p)
         if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
         {
             update_pos((unit_data *)v1->val.ptr);
-            if (CHAR_POS((unit_data *)v1->val.ptr) == POSITION_DEAD)
+            if (CHAR_POS((unit_data *)v1->val.ptr) == Position_e::Dead)
             {
                 die((unit_data *)v1->val.ptr);
                 dil_test_secure(p);

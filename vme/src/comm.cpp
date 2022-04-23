@@ -441,7 +441,7 @@ void act_generate(char *buf,
                         {
                             if (IS_CHAR(sub->m_u))
                             {
-                                i = g_char_pos[CHAR_POS(sub->m_u)];
+                                i = g_char_pos[static_cast<size_t>(CHAR_POS(sub->m_u))];
                             }
                             else
                             {

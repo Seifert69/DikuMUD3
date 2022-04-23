@@ -40,7 +40,7 @@ struct command_info
 
     sbit32 no;
 
-    ubit8 minimum_position;
+    Position_e minimum_position;
 
     void (*cmd_fptr)(unit_data *ch, char *arg, const command_info *c);
 

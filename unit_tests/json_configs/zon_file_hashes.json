@@ -114,7 +114,7 @@
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "51b4aeddd97112932e2f6c8c75e76bc1c18b6ec674d52b427c13a348a97948024cfaba6ff8c1a0e2592590f027ae2b5c97ef3040a63c2b9aa8acf50b9847730c"
+                    "sha512": "e74e05fe495b83c3d80fe1dcba0c4c96de51390b3921df75c37d25c973b47f84d4b376d633a4ccf44ff7b5804b0262148568ad629e8e2e53157fa2a8674d1ee1"
                 },
                 {
                     "filename": "basis.reset",
@@ -530,7 +530,7 @@
             "output": [
                 {
                     "filename": "kingc.data",
-                    "sha512": "ac3329a5bc03ce52770f3fe4da2ad2953bcfd548200827939d3247642bbd4a4dada3e325a1ef1527979b1cf49665d96f38e681f92493918379df6ee9070841a6"
+                    "sha512": "ff52fde9583e13a442e73b5ff624b3b45f0ac5ce096fcff561603b4440f712b7ae9afea583f6bc6d0650a5ab1c76fcf07d0a9e47dbbed60c0fb43f27a3fa31f7"
                 },
                 {
                     "filename": "kingc.reset",
@@ -594,7 +594,7 @@
             "output": [
                 {
                     "filename": "midgaard.data",
-                    "sha512": "6fd99145c74f826e6ff8839dced37ba2bafb9c62f532f160b1a226a47c5d4c5c81ec1d91f61f389dd747de35fa174eccc74a6137b932b9a731bef8b45e63f38d"
+                    "sha512": "976fd982ac04313b9cc18b90413566320836aa6904e263b2ef8f76699d1c84c7cb46d150b97dd253125d93934afdeb1bc7ba327cb5fe6eb79d06503aa524de8a"
                 },
                 {
                     "filename": "midgaard.reset",
@@ -914,7 +914,7 @@
             "output": [
                 {
                     "filename": "udgaard.data",
-                    "sha512": "975c75aef6e7bf75dbbde43913d763512e5052153ceb478c174d55b725544f266edc519c00ddf0b10a93df278ae1f1f8c6267a31f350000856cdb848fc7661fc"
+                    "sha512": "4085d95248652735768f25c9b835aea0673e8801acb9662129b8800faa129e24e199b4aac6d9f4907eefd2d311f970f34eb76cb3beb7b6c36e87e87f45e3b9f7"
                 },
                 {
                     "filename": "udgaard.reset",

@@ -1051,7 +1051,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
                                        CHAR_LEVEL(u),
                                        sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
-                                       sprinttype(nullptr, CHAR_POS(u), g_char_pos),
+                                       sprinttype(nullptr, CHAR_POS(u), nullptr),
                                        IS_PC(u) ? sprinttype(nullptr, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
                                        char_carry_w_limit(u),
                                        char_carry_n_limit(u),

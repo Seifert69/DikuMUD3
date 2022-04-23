@@ -1205,7 +1205,7 @@ void init_unit(unit_data *u)
             UCHAR(u)->setRace(RACE_HUMAN);
             UCHAR(u)->setSex(SEX_NEUTRAL);
             UCHAR(u)->setLevel(1);
-            UCHAR(u)->setPosition(POSITION_STANDING);
+            UCHAR(u)->setPosition(Position_e::Standing);
             UNPC(u)->setDefaultPosition(POSITION_STANDING);
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {

@@ -12,6 +12,7 @@ set(MPLEX_SRCS
         # Source files from other parts to link with mplex
         ../bytestring.cpp ../bytestring.h
         ../color.cpp ../color.h
+        ../constants.cpp ../constants.h
         ../hook.cpp ../hook.h
         ../membug.cpp ../membug.h
         ../protocol.cpp ../protocol.h

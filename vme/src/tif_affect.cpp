@@ -408,7 +408,7 @@ void tif_light_sub(unit_affected_type *af, unit_data *unit)
 void tif_sleep_on(unit_affected_type *af, unit_data *unit)
 {
     act("You feel very tired.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
-    if (CHAR_POS(unit) > POSITION_SLEEPING)
+    if (CHAR_POS(unit) > Position_e::Sleeping)
     {
         if (CHAR_FIGHTING(unit))
         {
@@ -417,7 +417,7 @@ void tif_sleep_on(unit_affected_type *af, unit_data *unit)
 
         act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n falls asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_ROOM);
-        UCHAR(unit)->setPosition(POSITION_SLEEPING);
+        UCHAR(unit)->setPosition(Position_e::Sleeping);
     }
 }
 
@@ -425,7 +425,7 @@ void tif_sleep_check(unit_affected_type *af, unit_data *unit)
 {
     int hm = 0;
 
-    if (CHAR_POS(unit) > POSITION_SLEEPING)
+    if (CHAR_POS(unit) > Position_e::Sleeping)
     {
         hm = resistance_skill_check(af->getDataAtIndex(0),
                                     spell_ability(unit, ABIL_BRA, SPL_SLEEP),
@@ -439,7 +439,7 @@ void tif_sleep_check(unit_affected_type *af, unit_data *unit)
             }
             act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             act("$1n falls asleep.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-            UCHAR(unit)->setPosition(POSITION_SLEEPING);
+            UCHAR(unit)->setPosition(Position_e::Sleeping);
         }
     }
 }
@@ -997,7 +997,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
         return;
     }
 
-    UCHAR(unit)->setPosition(POSITION_STANDING);
+    UCHAR(unit)->setPosition(Position_e::Standing);
     UPC(unit)->removePCFlag(PC_SPIRIT);
     UCHAR(unit)->removeCharacterFlag(CHAR_KILL_SELF);
 

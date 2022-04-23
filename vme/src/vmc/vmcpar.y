@@ -526,7 +526,7 @@ omobile_field   : MANA number
     }
     | POSITION number
     {
-        UCHAR(cur)->setPosition($2);
+        UCHAR(cur)->setPosition(Position_int_to_enum($2));
     }
     | DEFAULT number
     {

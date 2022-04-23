@@ -351,17 +351,17 @@ void char_data::incrementLevel()
     m_points.incrementLevel();
 }
 
-ubit8 char_data::getPosition() const
+Position_e char_data::getPosition() const
 {
     return m_points.getPosition();
 }
 
-void char_data::setPosition(ubit8 value)
+void char_data::setPosition(Position_e value)
 {
     m_points.setPosition(value);
 }
 
-ubit8 *char_data::getPositionPtr()
+Position_e *char_data::getPositionPtr()
 {
     return m_points.getPositionPtr();
 }

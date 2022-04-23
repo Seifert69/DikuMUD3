@@ -365,7 +365,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
     room_to = ROOM_EXIT(room_from, direction)->getToRoom();
 
-    if (CHAR_POS(ch) == POSITION_FIGHTING)
+    if (CHAR_POS(ch) == Position_e::Fighting)
     {
         send_to_char("You are fighting for your life!<br/>", ch);
         return 0;
@@ -373,9 +373,9 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
     if (ch == mover) // Old fashioned walking on own legs
     {
-        if (CHAR_POS(ch) < POSITION_STANDING)
+        if (CHAR_POS(ch) < Position_e::Standing)
         {
-            if (CHAR_POS(ch) >= POSITION_RESTING)
+            if (CHAR_POS(ch) >= Position_e::Resting)
             {
                 send_to_char("Perhaps you should get on your feet first?<br/>", mover);
             }
@@ -409,9 +409,9 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             snprintf(aArrOther, sizeof(aArrOther), "$2n rides $2s $3N in from %s.", g_enter_dirs[g_rev_dir[direction]]);
             snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n rides $2s $3N %s.", g_dirs[direction]);
 
-            if (CHAR_POS(mover) < POSITION_STANDING)
+            if (CHAR_POS(mover) < Position_e::Standing)
             {
-                if (CHAR_POS(mover) == POSITION_FIGHTING)
+                if (CHAR_POS(mover) == Position_e::Fighting)
                 {
                     send_to_char("You are fighting for your life!<br/>", mover);
                     if (ch != mover)
@@ -419,7 +419,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                         act("Your $3n is busy fighting!", A_ALWAYS, ch, cActParameter(), mover, TO_CHAR);
                     }
                 }
-                else if (CHAR_POS(mover) >= POSITION_RESTING)
+                else if (CHAR_POS(mover) >= Position_e::Resting)
                 {
                     send_to_char("Perhaps you should get on your feet first?<br/>", mover);
                     if (ch != mover)
@@ -453,13 +453,13 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                 snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n sails $2s $3N %s.", g_dirs[direction]);
             }
 
-            if (CHAR_POS(ch) < POSITION_STANDING)
+            if (CHAR_POS(ch) < Position_e::Standing)
             {
-                if (CHAR_POS(ch) == POSITION_FIGHTING)
+                if (CHAR_POS(ch) == Position_e::Fighting)
                 {
                     send_to_char("You are fighting for your life!<br/>", ch);
                 }
-                else if (CHAR_POS(ch) < POSITION_RESTING)
+                else if (CHAR_POS(ch) < Position_e::Resting)
                 {
                     send_to_char("Twinkling stars...<br/>", ch);
                 }
@@ -594,7 +594,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                 act("$1n tries to swim, but flounders and takes in water!", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_REST);
                 modify_hit(mover, (skilltest / 10));
 
-                if (mover->is_destructed() || (CHAR_POS(mover) == POSITION_DEAD))
+                if (mover->is_destructed() || (CHAR_POS(mover) == Position_e::Dead))
                 {
                     return -1;
                 }
@@ -721,7 +721,7 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
                     break;
                 }
 
-                if (room_from == in_room(k->getFollower()) && CHAR_POS(k->getFollower()) >= POSITION_STANDING)
+                if (room_from == in_room(k->getFollower()) && CHAR_POS(k->getFollower()) >= Position_e::Standing)
                 {
                     act("You follow $3n.<br/>", A_SOMEONE, k->getFollower(), cActParameter(), ch, TO_CHAR);
                     if (IS_ROOM(UNIT_IN(k->getFollower())))
@@ -748,9 +748,9 @@ void move_dir(unit_data *ch, int dir)
 {
     assert((dir >= 0) && (dir <= MAX_EXIT));
 
-    if (CHAR_POS(ch) < POSITION_STANDING)
+    if (CHAR_POS(ch) < Position_e::Standing)
     {
-        if (CHAR_POS(ch) == POSITION_FIGHTING)
+        if (CHAR_POS(ch) == Position_e::Fighting)
         {
             send_to_char("You are fighting for your life!<br/>", ch);
         }

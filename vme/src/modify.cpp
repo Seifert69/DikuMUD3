@@ -1143,7 +1143,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 55: /* "position" */
-            UCHAR(unt)->setPosition(typarg);
+            UCHAR(unt)->setPosition(Position_int_to_enum(typarg));
             return;
 
         case 56: /* "ability" */

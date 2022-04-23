@@ -5,6 +5,7 @@
  $Revision: 2.7 $
  */
 
+#include "constants.h"
 #include "slog.h"
 
 #include <cstdio>
@@ -132,4 +133,9 @@ char *sprinttype(char *buf, int type, const char *names[])
     {
         return str;
     }
+}
+
+char *sprinttype(char * /* unused */, Position_e value, const char *[] /* unused */)
+{
+    return const_cast<char *>(g_char_pos[static_cast<size_t>(value)]);
 }

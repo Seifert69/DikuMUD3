@@ -718,29 +718,29 @@ void combat_message(unit_data *att, unit_data *def, unit_data *medium, int damag
 
 void update_pos(unit_data *victim)
 {
-    if ((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
+    if ((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > Position_e::Stunned))
     {
         return;
     }
     else if (UNIT_HIT(victim) > 0)
     {
-        UCHAR(victim)->setPosition(POSITION_STANDING);
+        UCHAR(victim)->setPosition(Position_e::Standing);
     }
     else if (UNIT_HIT(victim) <= -11)
     {
-        UCHAR(victim)->setPosition(POSITION_DEAD);
+        UCHAR(victim)->setPosition(Position_e::Dead);
     }
     else if (UNIT_HIT(victim) <= -6)
     {
-        UCHAR(victim)->setPosition(POSITION_MORTALLYW);
+        UCHAR(victim)->setPosition(Position_e::Mortally_Wounded);
     }
     else if (UNIT_HIT(victim) <= -3)
     {
-        UCHAR(victim)->setPosition(POSITION_INCAP);
+        UCHAR(victim)->setPosition(Position_e::Incapacitated);
     }
     else
     {
-        UCHAR(victim)->setPosition(POSITION_STUNNED);
+        UCHAR(victim)->setPosition(Position_e::Stunned);
     }
 }
 
@@ -1051,7 +1051,7 @@ void die(unit_data *ch)
 /* Call when adding or subtracting hitpoints to/from a character */
 void modify_hit(unit_data *ch, int hit)
 {
-    if (CHAR_POS(ch) > POSITION_DEAD)
+    if (CHAR_POS(ch) > Position_e::Dead)
     {
         ch->changeCurrentHitpointsBy(hit);
         /// @todo move limits into the setter
@@ -1059,7 +1059,7 @@ void modify_hit(unit_data *ch, int hit)
 
         update_pos(ch);
 
-        if (CHAR_POS(ch) == POSITION_DEAD)
+        if (CHAR_POS(ch) == Position_e::Dead)
         {
             die(ch);
         }
@@ -1098,9 +1098,9 @@ void damage(unit_data *ch,
         dam = 0;
     }
 
-    if ((CHAR_POS(victim) == POSITION_SLEEPING) && (dam > 0))
+    if ((CHAR_POS(victim) == Position_e::Sleeping) && (dam > 0))
     {
-        UCHAR(victim)->setPosition(POSITION_RESTING);
+        UCHAR(victim)->setPosition(Position_e::Resting);
         send_to_char("OUCH! You wake up!<br/>", victim);
     }
 
@@ -1202,7 +1202,7 @@ void damage(unit_data *ch,
 
     if (bDisplay)
     {
-        if (CHAR_POS(victim) > POSITION_DEAD)
+        if (CHAR_POS(victim) > Position_e::Dead)
         {
             combat_message(ch, victim, medium, dam, attack_group, attack_number, hit_location);
         }
@@ -1214,17 +1214,17 @@ void damage(unit_data *ch,
 
     switch (CHAR_POS(victim))
     {
-        case POSITION_MORTALLYW:
+        case Position_e::Mortally_Wounded:
             send_to_char("You are mortally wounded!<br/>", victim);
             act("$1n is mortally wounded!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
             break;
 
-        case POSITION_INCAP:
+        case Position_e::Incapacitated:
             send_to_char("You are incapacitated!<br/>", victim);
             act("$1n is incapacitated!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
             break;
 
-        case POSITION_STUNNED:
+        case Position_e::Stunned:
             act("$1n is stunned, but will probably regain consciousness again.",
                 A_HIDEINV,
                 victim,
@@ -1239,12 +1239,12 @@ void damage(unit_data *ch,
                 TO_CHAR);
             break;
 
-        case POSITION_DEAD:
+        case Position_e::Dead:
             act("$1n is dead!", A_HIDEINV, victim, cActParameter(), cActParameter(), TO_ROOM);
             break;
 
         default: /* >= POSITION SLEEPING */
-            assert(CHAR_POS(victim) >= POSITION_SLEEPING);
+            assert(CHAR_POS(victim) >= Position_e::Sleeping);
 
             max_hit = hit_limit(victim);
 
@@ -1282,7 +1282,7 @@ void damage(unit_data *ch,
         it is supposed to equal one self... */
 
     /* Murder! */
-    if (CHAR_POS(victim) == POSITION_DEAD)
+    if (CHAR_POS(victim) == Position_e::Dead)
     {
         sch = nullptr;
         if (ch == victim)
@@ -1360,7 +1360,7 @@ void damage(unit_data *ch,
         return;
     }
 
-    if (CHAR_POS(victim) <= POSITION_STUNNED)
+    if (CHAR_POS(victim) <= Position_e::Stunned)
     {
         if (CHAR_FIGHTING(victim))
         {
@@ -1375,7 +1375,7 @@ void damage(unit_data *ch,
     if (IS_PC(victim) && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
     {
         command_interpreter(victim, "flee");
-        if (victim->is_destructed() || CHAR_POS(victim) == POSITION_DEAD)
+        if (victim->is_destructed() || CHAR_POS(victim) == Position_e::Dead)
         {
             return;
         }
@@ -1529,12 +1529,12 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
 
     assert(IS_CHAR(att) && IS_CHAR(def));
 
-    if (CHAR_POS(att) < POSITION_SLEEPING)
+    if (CHAR_POS(att) < Position_e::Sleeping)
     {
         return -1;
     }
 
-    if (CHAR_POS(def) <= POSITION_DEAD)
+    if (CHAR_POS(def) <= Position_e::Dead)
     {
         return -1;
     }
@@ -1556,9 +1556,9 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
             set_fighting(att, def, TRUE);
         }
 
-        if (CHAR_POS(att) != POSITION_FIGHTING)
+        if (CHAR_POS(att) != Position_e::Fighting)
         {
-            UCHAR(att)->setPosition(POSITION_FIGHTING);
+            UCHAR(att)->setPosition(Position_e::Fighting);
         }
         add_fighting(att, def, TRUE);
     }
@@ -1697,7 +1697,7 @@ void melee_violence(unit_data *ch, int primary)
         return;
     }
 
-    if (CHAR_POS(ch) == POSITION_FIGHTING)
+    if (CHAR_POS(ch) == Position_e::Fighting)
     {
         one_hit(ch, CHAR_FIGHTING(ch), 0, WPN_ROOT, primary, TRUE);
     }
@@ -1705,7 +1705,7 @@ void melee_violence(unit_data *ch, int primary)
     {
         act("You get back in a fighting position, ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n gets back in a fighting position ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_ROOM);
-        UCHAR(ch)->setPosition(POSITION_FIGHTING);
+        UCHAR(ch)->setPosition(Position_e::Fighting);
     }
 }
 

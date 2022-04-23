@@ -70,7 +70,7 @@ void init_char(unit_data *ch)
 
     account_defaults(ch);
 
-    UCHAR(ch)->setPosition(POSITION_STANDING);
+    UCHAR(ch)->setPosition(Position_e::Standing);
     UCHAR(ch)->setSpeed(SPEED_DEFAULT);
     UCHAR(ch)->setRace(RACE_HUMAN);
     UCHAR(ch)->setSex(SEX_MALE);

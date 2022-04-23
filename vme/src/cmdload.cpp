@@ -309,7 +309,7 @@ void command_read()
             cmdptr->next = nullptr;
             cmdptr->prev = nullptr;
             cmdptr->minimum_level = 0;
-            cmdptr->minimum_position = POSITION_DEAD;
+            cmdptr->minimum_position = Position_e::Dead;
             cmdptr->log_level = 0;
             cmdptr->tmpl = nullptr;
             cmdptr->cmd_fptr = nullptr;
@@ -479,11 +479,7 @@ void command_read()
         {
             if (cmdptr)
             {
-                dummy = atoi(pCh);
-                if (is_in(dummy, POSITION_DEAD, POSITION_STANDING))
-                {
-                    cmdptr->minimum_position = dummy;
-                }
+                cmdptr->minimum_position = Position_int_to_enum(atoi(pCh));
             }
             continue;
         }

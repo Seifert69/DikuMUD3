@@ -5,20 +5,20 @@
 #include "utils.h"
 
 char_point_data::char_point_data()
-    : flags{0}          ///< Char flags
-    , exp{0}            ///< The experience of the player
-    , race{0}           ///< PC/NPC race, Humanoid, Animal, etc.
-    , mana{0}           ///< How many mana points are left?
-    , endurance{0}      ///< How many endurance points are left?
-    , offensive{0}      ///< The OB of a character.
-    , defensive{0}      ///< The DB of a character.
-    , speed{0}          ///< The default speed for natural combat
-    , natural_armour{0} ///< The natural built-in armour (ARM_)
-    , attack_type{0}    ///< PC/NPC Attack Type for bare hands (WPN_)
-    , dex_reduction{0}  ///< For speed of armour calculations only
-    , sex{0}            ///< PC / NPC s sex
-    , level{0}          ///< PC / NPC s level
-    , position{0}       ///< Standing, sitting, fighting...
+    : flags{0}                   ///< Char flags
+    , exp{0}                     ///< The experience of the player
+    , race{0}                    ///< PC/NPC race, Humanoid, Animal, etc.
+    , mana{0}                    ///< How many mana points are left?
+    , endurance{0}               ///< How many endurance points are left?
+    , offensive{0}               ///< The OB of a character.
+    , defensive{0}               ///< The DB of a character.
+    , speed{0}                   ///< The default speed for natural combat
+    , natural_armour{0}          ///< The natural built-in armour (ARM_)
+    , attack_type{0}             ///< PC/NPC Attack Type for bare hands (WPN_)
+    , dex_reduction{0}           ///< For speed of armour calculations only
+    , sex{0}                     ///< PC / NPC s sex
+    , level{0}                   ///< PC / NPC s level
+    , position{Position_e::Dead} ///< Standing, sitting, fighting...
 {
     memset(abilities.data(), 0, abilities.size());
 }
@@ -275,17 +275,17 @@ void char_point_data::incrementLevel()
     ++level;
 }
 
-ubit8 char_point_data::getPosition() const
+Position_e char_point_data::getPosition() const
 {
     return position;
 }
 
-void char_point_data::setPosition(ubit8 value)
+void char_point_data::setPosition(Position_e value)
 {
     position = value;
 }
 
-ubit8 *char_point_data::getPositionPtr()
+Position_e *char_point_data::getPositionPtr()
 {
     return &position;
 }
@@ -449,7 +449,7 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     sex = buf.ReadU8(&error);
     level = buf.ReadU8(&error);
-    position = buf.ReadU8(&error);
+    position = Position_int_to_enum(buf.ReadU8(&error));
 
     int j = buf.ReadU8(&error);
 

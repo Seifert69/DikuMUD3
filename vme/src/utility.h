@@ -5,8 +5,9 @@
  $Revision: 2.1 $
  */
 #pragma once
-
 #include "essential.h"
+
+#include <vme.h>
 
 #include <string>
 
@@ -60,6 +61,7 @@ int dice(int number, int size);
 
 const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
 char *sprinttype(char *buf, int type, const char *names[]);
+char *sprinttype(char * /* unused */, Position_e value, const char *[] /* unused */);
 
 extern log_buffer g_log_buf[];
 extern FILE *g_log_file_fd;

@@ -7,6 +7,10 @@
 #ifndef _MUD_VME_H
 #define _MUD_VME_H
 
+#ifdef __cplusplus
+    #include <stdexcept>
+#endif
+// clang-format off
 /*
 	*  Nothing in this file should be changed all Admin definable aspects of
 	* 	vme are in the values.h file.
@@ -434,7 +438,46 @@
 #define POSITION_FIGHTING   7
 #define POSITION_STANDING   8
 
+#ifdef __cplusplus
+enum class Position_e
+{
+    Dead             = POSITION_DEAD,
+    Mortally_Wounded = POSITION_MORTALLYW,
+    Incapacitated    = POSITION_INCAP,
+    Stunned          = POSITION_STUNNED,
+    Sleeping         = POSITION_SLEEPING,
+    Resting          = POSITION_RESTING,
+    Sitting          = POSITION_SITTING,
+    Fighting         = POSITION_FIGHTING,
+    Standing         = POSITION_STANDING
+};
 
+inline Position_e Position_int_to_enum(int value)
+{
+    switch (value)
+    {
+        case POSITION_DEAD:
+            return Position_e::Dead;
+        case POSITION_MORTALLYW:
+            return Position_e::Mortally_Wounded;
+        case POSITION_INCAP:
+            return Position_e::Incapacitated;
+        case POSITION_STUNNED:
+            return Position_e::Stunned;
+        case POSITION_SLEEPING:
+            return Position_e::Sleeping;
+        case POSITION_RESTING:
+            return Position_e::Resting;
+        case POSITION_SITTING:
+            return Position_e::Sleeping;
+        case POSITION_FIGHTING:
+            return Position_e::Fighting;
+        case POSITION_STANDING:
+            return Position_e::Standing;
+    }
+    throw std::out_of_range("Position integer is not valid");
+}
+#endif
 
 /* ------------------------- MANIPULATE Flags ------------------------------
  MANIPULATE_TAKE
