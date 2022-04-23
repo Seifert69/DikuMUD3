@@ -59,24 +59,6 @@ char_data::~char_data()
     g_world_nochars--;
 }
 
-obj_data::obj_data()
-    : unit_data(UNIT_ST_OBJ)
-    , m_value{0}
-    , m_cost{0}
-    , m_cost_per_day{0}
-    , m_flags{0}
-    , m_type{ITEM_TRASH}
-    , m_equip_pos{0}
-    , m_resistance{0}
-{
-    g_world_noobjects++;
-}
-
-obj_data::~obj_data()
-{
-    g_world_noobjects--;
-}
-
 pc_data::pc_data()
     : char_data(UNIT_ST_PC)
     , setup{0, 0, 0, 0, 0, 0, 0, 0}

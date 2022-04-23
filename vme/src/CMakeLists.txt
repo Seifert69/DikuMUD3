@@ -69,6 +69,7 @@ set(VME_SRCS
         namelist.cpp namelist.h
         nanny.cpp nanny.h
         nice.cpp nice.h
+        obj_data.cpp obj_data.h
         OutputCapture.cpp OutputCapture.h
         path.cpp path.h
         pc_account_data.cpp pc_account_data.h
