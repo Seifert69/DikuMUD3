@@ -241,7 +241,7 @@ unit_data *set_money(unit_data *money, amount_t amt)
         }
     }
 
-    OBJ_PRICE(money) = amt;
+    UOBJ(money)->setPriceInGP(amt);
 
     /* set new baseweight */
     int mwgt = amt / MONEY_WEIGHT(money);

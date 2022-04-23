@@ -70,17 +70,194 @@ class zone_reset_cmd;
 class obj_data : public unit_data
 {
 public:
-    obj_data();
-    ~obj_data();
+    /**
+     * @name Constructors / Destructor
+     * @{
+     */
+    obj_data();                                     ///< Constructor
+    obj_data(const obj_data &) = delete;            ///< Delete copy constructor
+    obj_data(obj_data &&) = delete;                 ///< Delete move constructor
+    obj_data &operator=(const obj_data &) = delete; ///< Delete assignment operator
+    obj_data &operator=(obj_data &&) = delete;      ///< Delete move assignment operator
+    ~obj_data() override;                           ///< Destructor
+    /// @}
 
-    sbit32 value[5];     ///< Values of the item (see list)
-    ubit32 cost;         ///< Value when sold (gp.)
-    ubit32 cost_per_day; ///< Cost to keep pr. real day
+    /**
+     * @name Value related functions
+     * @{
+     */
 
-    ubit8 flags;      ///< Various special object flags
-    ubit8 type;       ///< Type of item (ITEM_XXX)
-    ubit8 equip_pos;  ///< 0 or position of item in equipment
-    ubit8 resistance; ///< Magic resistance
+    /**
+     * Gets the value at index for the object
+     *
+     * WEAPONS
+     *     * index = 0 is weapon category
+     *     * index = 1 is weapon material bonus
+     *     * index = 2 is magic bonus
+     *     * index = 3 is slaying race
+     *
+     * ARMOURS
+     *     * index = 0 is armour category
+     *     * index = 1 is armour material bonus
+     *     * index = 2 is magic bonus
+     *
+     * SHIELDS
+     *     * index = 0 is shield category
+     *     * index = 1 is shield material bonus
+     *     * index = 2 is magic bonus
+     *
+     * @throws std::out_of_range if index is greater than array size
+     * @param index
+     * @return Bonus/Value at index
+     */
+    sbit32 getValueAtIndex(size_t index) const { return m_value.at(index); }
+
+    /**
+     * @throws std::out_of_range if index is greater than array size
+     * @param index Array index see getValueAtIndex() for index values
+     * @return Pointer to value at index - its a DIL thing
+     */
+    sbit32 *getValueAtIndexPtr(size_t index) { return &m_value.at(index); }
+
+    /**
+     * @return Upper bound of array size (5)
+     */
+    size_t getValueArraySize() const { return m_value.size(); }
+
+    /**
+     * @throws std::out_of_range if index is greater than array size
+     * @param index Array index see getValueAtIndex() for index values
+     * @param value Value to set
+     */
+    void setValueAtIndexTo(size_t index, sbit32 value) { m_value.at(index) = value; }
+    /// @}
+
+    /**
+     * @name Price related functions
+     * @{
+     */
+
+    /**
+     * @return Price in GP
+     */
+    ubit32 getPriceInGP() const { return m_cost; }
+    /**
+     * @return Pointer to price in GP
+     */
+    ubit32 *getPriceInGPPtr() { return &m_cost; }
+
+    /**
+     * @param value Price in GP
+     */
+    void setPriceInGP(ubit32 value) { m_cost = value; }
+    /// @}
+
+    /**
+     * @name Price per day functions
+     * @{
+     */
+    /**
+     * @return Cost to keep per real day
+     */
+    ubit32 getPricePerDay() const { return m_cost_per_day; }
+    /**
+     * @return Pointer to cost per real day
+     */
+    ubit32 *getPricePerDayPtr() { return &m_cost_per_day; }
+    /**
+     * @param value Price to keep per real day
+     */
+    void setPricePerDay(ubit32 value) { m_cost_per_day = value; }
+    /// @}
+
+    /**
+     * @name Object Flag related functions
+     * @{
+     */
+    /**
+     * @return All object flags
+     */
+    ubit8 getObjectFlags() const { return m_flags; }
+    /**
+     * @return pointer to object flags for DIL
+     */
+    ubit8 *getObjectFlagsPtr() { return &m_flags; }
+    /**
+     * @todo Find out why a 32bit value is being passed to this function and the flags are 8bit
+     * @param value Sets bits from value in object flags
+     */
+    void setObjectFlag(ubit8 value) { m_flags |= value; }
+    /**
+     * @todo Find out why a 32bit value is being passed to this function and the flags are 8bit
+     * @param value Unsets bit from value in object flags
+     */
+    void removeObjectFlag(ubit8 value) { m_flags &= ~value; }
+    /**
+     * @todo Find out why a 32bit value is being passed to this function and the flags are 8bit
+     * @param value Overwrites all flags with value
+     */
+    void setAllObjectFlags(ubit32 value) { m_flags = static_cast<ubit8>(value); }
+    /// @}
+
+    /**
+     * @name Item type related functions
+     * @todo Create ENUM for ITEM_* types
+     * @{
+     */
+
+    /**
+     * @return the ITEM_* type
+     */
+    ubit8 getObjectItemType() const { return m_type; }
+    /**
+     * @return pointer to the item type
+     */
+    ubit8 *getObjectItemTypePtr() { return &m_type; }
+    /**
+     * @param value ITEM_* value (see vme.h)
+     */
+    void setObjectItemType(ubit8 value) { m_type = value; }
+    /// @}
+
+    /**
+     * @name Equipment position related functions
+     * @{
+     */
+    /**
+     * @return 0 or position of item in equipment
+     */
+    ubit8 getEquipmentPosition() const { return m_equip_pos; }
+    /**
+     * @param value 0 or position of item in equipment
+     */
+    void setEquipmentPosition(ubit8 value) { m_equip_pos = value; }
+    /// @}
+    /**
+     * @name Magic Resistance related functions
+     * @{
+     */
+
+    /**
+     * @return magic resistance
+     */
+    ubit8 getMagicResistance() const { return m_resistance; }
+    /**
+     * @return pointer to magic resistance
+     */
+    ubit8 *getMagicResistancePtr() { return &m_resistance; }
+    /**
+     * @param value Set magic resistance to
+     */
+    void setMagicResistance(ubit8 value) { m_resistance = value; }
+    /// @}
+private:
+    std::array<sbit32, 5> m_value{0}; ///< Values of the item (see list)
+    ubit32 m_cost{0};                 ///< Value when sold (gp.)
+    ubit32 m_cost_per_day{0};         ///< Cost to keep pr. real day
+    ubit8 m_flags{0};                 ///< Various special object flags
+    ubit8 m_type{ITEM_TRASH};         ///< Type of item (ITEM_XXX)
+    ubit8 m_equip_pos{0};             ///< 0 or position of item in equipment
+    ubit8 m_resistance{0};            ///< Magic resistance
 };
 
 /* ----------------- CHAR SPECIFIC STRUCTURES ----------------------- */

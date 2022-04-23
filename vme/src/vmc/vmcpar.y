@@ -415,27 +415,27 @@ object_field    : unit_field
 
 oobject_field   : VALUE index flags
     {
-        OBJ_VALUE(cur, $2) = $3;
+        UOBJ(cur)->setValueAtIndexTo($2, $3);
     }
     | COST moneylist
     {
-        OBJ_PRICE(cur) = $2;
+        UOBJ(cur)->setPriceInGP($2);
     }
     | RENT moneylist
     {
-        OBJ_PRICE_DAY(cur) = $2;
+        UOBJ(cur)->setPricePerDay($2);
     }
     | TYPE number
     {
-        OBJ_TYPE(cur) = $2;
+        UOBJ(cur)->setObjectItemType($2);
     }
     | FLAGS flags
     {
-        OBJ_FLAGS(cur) = $2;
+        UOBJ(cur)->setAllObjectFlags($2);
     }
     | SPELL number
     {
-        OBJ_RESISTANCE(cur) = $2;
+        UOBJ(cur)->setMagicResistance($2);
     }
     ;
 

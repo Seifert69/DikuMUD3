@@ -141,7 +141,7 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/vme)
     doxygen_add_docs(
             vme_docs
-            ${VME_SRCS} main.cpp
+            ${VME_SRCS} main.cpp ${CMAKE_SOURCE_DIR}/vme/include
             ALL
             COMMENT "Building VME docs"
     )

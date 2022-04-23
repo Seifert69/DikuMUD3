@@ -1393,17 +1393,17 @@ void break_object(unit_data *obj)
 
     obj->setTitle(diku::format_to_str("%s (broken)", obj->getTitle()));
 
-    OBJ_VALUE(obj, 0) = 0;
-    OBJ_VALUE(obj, 1) = 0;
-    OBJ_VALUE(obj, 2) = 0;
-    OBJ_VALUE(obj, 3) = 0;
-    OBJ_TYPE(obj) = ITEM_TRASH;
+    UOBJ(obj)->setValueAtIndexTo(0, 0);
+    UOBJ(obj)->setValueAtIndexTo(1, 0);
+    UOBJ(obj)->setValueAtIndexTo(2, 0);
+    UOBJ(obj)->setValueAtIndexTo(3, 0);
+    UOBJ(obj)->setObjectItemType(ITEM_TRASH);
 
     affect_clear_unit(obj);
 
-    OBJ_PRICE(obj) = 0;
-    OBJ_PRICE_DAY(obj) = 0;
-    OBJ_RESISTANCE(obj) = 0;
+    UOBJ(obj)->setPriceInGP(0);
+    UOBJ(obj)->setPricePerDay(0);
+    UOBJ(obj)->setMagicResistance(0);
 }
 
 /* 'ch' is optional, and will receive a message if 'obj' breaks */

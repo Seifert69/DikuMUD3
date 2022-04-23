@@ -2184,10 +2184,13 @@ void dilfe_fld(dilprg *p)
                         break;
 
                         case UNIT_ST_OBJ:
+                        {
+                            auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
                             v->atyp = DILA_NONE;
                             v->type = DILV_UINT1R;
-                            v->ref = &OBJ_RESISTANCE((unit_data *)v1->val.ptr);
-                            break;
+                            v->ref = object->getMagicResistancePtr();
+                        }
+                        break;
 
                         case UNIT_ST_NPC:
                             if (is_in(v2->val.num, 0, SPL_GROUP_MAX - 1))
@@ -2299,17 +2302,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr))
+                {
+                    auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                    if (object && IS_OBJ(object))
                     {
                         v->type = DILV_UINT1R;
                         v->atyp = DILA_NONE;
-                        v->ref = &OBJ_TYPE((unit_data *)v1->val.ptr);
+                        v->ref = object->getObjectItemTypePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2352,10 +2358,11 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_UINT4R)
             {
-                if ((v1->val.ptr) && IS_OBJ((unit_data *)v1->val.ptr) && (v2->val.num >= 0) && (v2->val.num < 5))
+                auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                if (object && IS_OBJ(object) && (v2->val.num >= 0 && v2->val.num < static_cast<sbit32>(object->getValueArraySize())))
                 {
                     v->atyp = DILA_NONE;
-                    v->ref = &OBJ_VALUE((unit_data *)v1->val.ptr, v2->val.num);
+                    v->ref = object->getValueAtIndexPtr(v2->val.num);
                 }
                 else
                 {
@@ -2374,17 +2381,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr))
+                {
+                    auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                    if (object && IS_OBJ(object))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &OBJ_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = object->getObjectFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2401,17 +2411,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr))
+                {
+                    auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                    if (object && IS_OBJ(object))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = &OBJ_PRICE((unit_data *)v1->val.ptr);
+                        v->ref = object->getPriceInGPPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2428,17 +2441,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr))
+                {
+                    auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                    if (object && IS_OBJ(object))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = &OBJ_PRICE_DAY((unit_data *)v1->val.ptr);
+                        v->ref = object->getPricePerDayPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

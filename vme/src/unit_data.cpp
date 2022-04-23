@@ -273,17 +273,17 @@ unit_data *unit_data::copy()
         obj_data *thisobj = UOBJ(this);
         obj_data *uobj = UOBJ(u);
 
-        for (x = 0; x < 5; x++)
+        for (size_t x = 0; x < uobj->getValueArraySize(); x++)
         {
-            uobj->value[x] = thisobj->value[x];
+            uobj->setValueAtIndexTo(x, thisobj->getValueAtIndex(x));
         }
 
-        uobj->cost = thisobj->cost;
-        uobj->cost_per_day = thisobj->cost_per_day;
-        uobj->flags = thisobj->flags;
-        uobj->type = thisobj->type;
-        uobj->equip_pos = thisobj->equip_pos;
-        uobj->resistance = thisobj->resistance;
+        uobj->setPriceInGP(thisobj->getPriceInGP());
+        uobj->setPricePerDay(thisobj->getPricePerDay());
+        uobj->setAllObjectFlags(thisobj->getObjectFlags());
+        uobj->setObjectItemType(thisobj->getObjectItemType());
+        uobj->setEquipmentPosition(thisobj->getEquipmentPosition());
+        uobj->setMagicResistance(thisobj->getMagicResistance());
     }
     else if (IS_CHAR(this))
     {

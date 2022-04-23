@@ -80,11 +80,13 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        SET_BIT(OBJ_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
+        UOBJ(unit)->setObjectFlag(
+            static_cast<ubit32>(af->getDataAtIndex(0))); ///< @todo Check why this is cast to 32bit when flags are 8bit
     }
     else
     {
-        REMOVE_BIT(OBJ_FLAGS(unit), (ubit32)af->getDataAtIndex(0));
+        UOBJ(unit)->removeObjectFlag(
+            static_cast<ubit32>(af->getDataAtIndex(0))); ///< @todo Check why this is cast to 32bit when flags are 8bit
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -96,7 +98,8 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_OBJ_FLAGS))
             {
-                SET_BIT(OBJ_FLAGS(unit), (ubit32)taf->getDataAtIndex(0));
+                UOBJ(unit)->setObjectFlag(
+                    static_cast<ubit32>(taf->getDataAtIndex(0))); ///< @todo Check why this is cast to 32bit when flags are 8bit
             }
         }
     }

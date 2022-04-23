@@ -936,7 +936,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 0) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(0, valarg);
             return;
 
         case 26: /* "value1" */
@@ -947,7 +947,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 1) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(1, valarg);
             return;
 
         case 27: /* "value2" */
@@ -958,7 +958,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 2) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(2, valarg);
             return;
 
         case 28: /* "value3" */
@@ -969,7 +969,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 3) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(3, valarg);
             return;
 
         case 29: /* "value4" */
@@ -980,11 +980,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
             /* Should be expanded to handle the different object-types */
-            OBJ_VALUE(unt, 4) = valarg;
+            UOBJ(unt)->setValueAtIndexTo(4, valarg);
             return;
 
         case 30: /* "obj-flags" */
-            OBJ_FLAGS(unt) = bitarg;
+            UOBJ(unt)->setAllObjectFlags(bitarg);
             return;
 
         case 31: /* "cost" */
@@ -995,11 +995,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     return;
             }
 
-            OBJ_PRICE(unt) = valarg;
+            UOBJ(unt)->setPriceInGP(valarg);
             return;
 
         case 32: /* "rent" */
-            OBJ_PRICE_DAY(unt) = valarg;
+            UOBJ(unt)->setPricePerDay(valarg);
             return;
 
         case 33: /* "type" */
@@ -1016,11 +1016,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 return;
             }
 
-            OBJ_TYPE(unt) = typarg;
+            UOBJ(unt)->setObjectItemType(typarg);
             return;
 
         case 34: /* "equip" */
-            OBJ_EQP_POS(unt) = typarg;
+            UOBJ(unt)->setEquipmentPosition(typarg);
             return;
 
         case 35: /* "guild-name" */

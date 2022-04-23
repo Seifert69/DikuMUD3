@@ -87,12 +87,12 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
         if (!is_in(OBJ_VALUE(def_shield, 0), SHIELD_SMALL, SHIELD_LARGE))
         {
             slog(LOG_ALL, 0, "Illegal shield type.");
-            OBJ_TYPE(def_shield) = ITEM_TRASH;
+            UOBJ(def_shield)->setObjectItemType(ITEM_TRASH);
         }
         else if (!is_in(OBJ_VALUE(def_shield, 1), -25, 25) || !is_in(OBJ_VALUE(def_shield, 2), -25, 25))
         {
             slog(LOG_ALL, 0, "Illegal shield bonus");
-            OBJ_TYPE(def_shield) = ITEM_TRASH;
+            UOBJ(def_shield)->setObjectItemType(ITEM_TRASH);
         }
         else
         {
@@ -562,8 +562,6 @@ void getWeapon(unit_data *ch, unit_data **pWeapon, int *pWeaponType, int *pWeapo
 
     *pWeaponSpeed = g_wpn_info[*pWeaponType].speed;
 }
-
-
 
 /* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
 /* modification? This value should then be added to an open roll  */

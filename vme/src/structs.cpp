@@ -61,13 +61,13 @@ char_data::~char_data()
 
 obj_data::obj_data()
     : unit_data(UNIT_ST_OBJ)
-    , value{0}
-    , cost{0}
-    , cost_per_day{0}
-    , flags{0}
-    , type{0}
-    , equip_pos{0}
-    , resistance{0}
+    , m_value{0}
+    , m_cost{0}
+    , m_cost_per_day{0}
+    , m_flags{0}
+    , m_type{ITEM_TRASH}
+    , m_equip_pos{0}
+    , m_resistance{0}
 {
     g_world_noobjects++;
 }
