@@ -157,7 +157,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         {
             g_possible_saves--;
         }
-        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+        UCHAR(d->getCharacter())->setDescriptor(nullptr);
         extract_unit(d->getCharacter());
         d->setCharacter(nullptr);
         /* Too much log slog(LOG_ALL, "Losing descriptor from menu."); */
@@ -200,7 +200,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
                     link_dead = find_dil_template("link_dead@basis");
                     if (link_dead)
                     {
-                        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+                        UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
                         dilprg *prg = dil_copy_template(link_dead, d->getCharacter(), nullptr);
                         if (prg)
                         {
@@ -211,15 +211,15 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
                 }
                 else
                 {
-                    CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr; // Prevent counting down players, we did above
-                    extract_unit(d->getCharacter());               /* We extract guests */
+                    UCHAR(d->cgetCharacter())->setDescriptor(nullptr); // Prevent counting down players, we did above
+                    extract_unit(d->getCharacter());                   /* We extract guests */
                     g_possible_saves--;
                 }
             }
         }
         /* Important we set tp null AFTER calling save - otherwise
            time played does not get updated. */
-        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+        UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
         d->setCharacter(nullptr);
     }
 

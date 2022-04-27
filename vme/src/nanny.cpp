@@ -215,10 +215,10 @@ void pc_data::reconnect_game(descriptor_data *d)
         return;
     }
 
-    CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+    UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
     extract_unit(d->getCharacter()); // Toss out the temporary unit and take over the new one
     d->setCharacter(this);
-    CHAR_DESCRIPTOR(this) = d;
+    UCHAR(this)->setDescriptor(d);
 
     dil_destroy("link_dead@basis", this);
 
@@ -310,14 +310,14 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     stop_snoopwrite(this);
 
     descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
-    CHAR_DESCRIPTOR(this) = nullptr;
+    UCHAR(this)->setDescriptor(nullptr);
 
     while (UNIT_CONTAINS(this))
     {
         extract_unit(UNIT_CONTAINS(this));
     }
 
-    CHAR_DESCRIPTOR(this) = tmp_descr;
+    UCHAR(this)->setDescriptor(tmp_descr);
 
     unit_from_unit(this);
     remove_from_unit_list(this);
@@ -382,8 +382,8 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 
         for (i = g_descriptor_list; i; i = i->getNext())
         {
-            if (descriptor_is_playing(i) && i->cgetCharacter() != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->cgetCharacter()), this) &&
-                IS_PC(CHAR_ORIGINAL(i->cgetCharacter())) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->cgetCharacter())), PC_INFORM) &&
+            if (descriptor_is_playing(i) && i->cgetCharacter() != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->getCharacter()), this) &&
+                IS_PC(CHAR_ORIGINAL(i->getCharacter())) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->getCharacter())), PC_INFORM) &&
                 !same_surroundings(this, i->cgetCharacter()))
             {
                 send_to_descriptor(msg, i);
@@ -1102,10 +1102,10 @@ void nanny_get_name(descriptor_data *d, char *arg)
             return;
         }
 
-        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+        UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
         extract_unit(d->getCharacter());
 
-        CHAR_DESCRIPTOR(ch) = d;
+        UCHAR(ch)->setDescriptor(d);
         d->setCharacter(ch);
 
         if (g_wizlock && CHAR_LEVEL(d->cgetCharacter()) < g_wizlock)

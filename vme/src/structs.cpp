@@ -29,7 +29,7 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 char_data::char_data(ubit8 unit_type)
     : unit_data(unit_type)
-    , descriptor{nullptr}
+    , m_descriptor{nullptr}
     , Combat{nullptr}
     , master{nullptr}
     , last_room{nullptr}

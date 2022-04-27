@@ -368,7 +368,7 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
     if (IS_CHAR(unit))
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
-        CHAR_DESCRIPTOR(unit) = nullptr;
+        UCHAR(unit)->setDescriptor(nullptr);
     }
 
     CByteBuffer *pBuf = &g_FileBuffer;
@@ -385,7 +385,7 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
 
     if (IS_CHAR(unit))
     {
-        CHAR_DESCRIPTOR(unit) = tmp_descr;
+        UCHAR(unit)->setDescriptor(tmp_descr);
     }
 
     if (pBuf->GetLength() > 0)
@@ -482,8 +482,8 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
 
     if (unit && IS_CHAR(unit))
     {
-        tmp_descr = CHAR_DESCRIPTOR(unit);
-        CHAR_DESCRIPTOR(unit) = nullptr;
+        tmp_descr = CHAR_DESCRIPTOR(const_cast<unit_data *>(unit));
+        UCHAR(unit)->setDescriptor(nullptr);
     }
 
     for (init = TRUE; InvBuf.GetReadPosition() < InvBuf.GetLength();)
@@ -526,7 +526,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
             if (unit && IS_CHAR(unit))
             {
-                CHAR_DESCRIPTOR(unit) = tmp_descr;
+                UCHAR(unit)->setDescriptor(tmp_descr);
                 send_to_char("Your inventory was corrupt, please contact the Admin.<br/>", unit);
             }
 
@@ -623,7 +623,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
 
     if (unit && IS_CHAR(unit))
     {
-        CHAR_DESCRIPTOR(unit) = tmp_descr;
+        UCHAR(unit)->setDescriptor(tmp_descr);
     }
 
     return topu;

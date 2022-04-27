@@ -75,7 +75,13 @@ public:
     explicit char_data(ubit8 unit_type);
     virtual ~char_data();
 
-    descriptor_data *descriptor;
+    const descriptor_data *getDescriptor() const { return m_descriptor; }
+    descriptor_data *getDescriptor() { return m_descriptor; }
+    void setDescriptor(descriptor_data *value) { m_descriptor = value; }
+
+private:
+    descriptor_data *m_descriptor{nullptr}; ///<
+public:
     cCombat *Combat;
     unit_data *master;    ///< Must be a char
     unit_data *last_room; ///< Last location of character

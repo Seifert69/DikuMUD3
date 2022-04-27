@@ -950,7 +950,7 @@ void unsnoop(unit_data *ch, int mode)
     if (CHAR_IS_SNOOPING(ch))
     {
         act("You no longer snoop $3n.", A_SOMEONE, ch, cActParameter(), CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnooping(), TO_CHAR);
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnooping())->getSnoopData().setSnoopBy(nullptr);
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping())->getSnoopData().setSnoopBy(nullptr);
         CHAR_DESCRIPTOR(ch)->getSnoopData().setSnooping(nullptr);
     }
 
@@ -962,7 +962,7 @@ void unsnoop(unit_data *ch, int mode)
             cActParameter(),
             ch,
             TO_CHAR);
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnoopBy())->getSnoopData().setSnooping(nullptr);
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy())->getSnoopData().setSnooping(nullptr);
         CHAR_DESCRIPTOR(ch)->getSnoopData().setSnoopBy(nullptr);
     }
 }
@@ -984,15 +984,15 @@ void switchbody(unit_data *ch, unit_data *vict)
     }
     if (CHAR_IS_SNOOPING(ch))
     {
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnooping())->getSnoopData().setSnoopBy(vict);
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping())->getSnoopData().setSnoopBy(vict);
     }
     if (CHAR_IS_SNOOPED(ch))
     {
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnoopBy())->getSnoopData().setSnooping(vict);
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy())->getSnoopData().setSnooping(vict);
     }
 
-    CHAR_DESCRIPTOR(vict) = CHAR_DESCRIPTOR(ch);
-    CHAR_DESCRIPTOR(ch) = nullptr;
+    UCHAR(vict)->setDescriptor(CHAR_DESCRIPTOR(ch));
+    UCHAR(ch)->setDescriptor(nullptr);
     CHAR_LAST_ROOM(vict) = nullptr;
 }
 
@@ -1007,19 +1007,19 @@ void unswitchbody(unit_data *npc)
 
     if (CHAR_IS_SNOOPING(npc))
     {
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->cgetSnoopData().getSnooping())->getSnoopData().setSnoopBy(CHAR_ORIGINAL(npc));
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->getSnoopData().getSnooping())->getSnoopData().setSnoopBy(CHAR_ORIGINAL(npc));
     }
 
     if (CHAR_IS_SNOOPED(npc))
     {
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->cgetSnoopData().getSnoopBy())->getSnoopData().setSnooping(CHAR_ORIGINAL(npc));
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->getSnoopData().getSnoopBy())->getSnoopData().setSnooping(CHAR_ORIGINAL(npc));
     }
 
     CHAR_DESCRIPTOR(npc)->setCharacter(CHAR_ORIGINAL(npc));
     CHAR_DESCRIPTOR(npc)->setOriginalCharacter(nullptr);
 
-    CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(npc)->cgetCharacter()) = CHAR_DESCRIPTOR(npc);
-    CHAR_DESCRIPTOR(npc) = nullptr;
+    UCHAR(CHAR_DESCRIPTOR(npc)->cgetCharacter())->setDescriptor(CHAR_DESCRIPTOR(npc));
+    UCHAR(npc)->setDescriptor(nullptr);
 }
 
 void stop_fightfollow(unit_data *unit)

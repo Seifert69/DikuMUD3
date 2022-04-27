@@ -271,7 +271,7 @@ void save_player_file(unit_data *pc)
     }
 
     tmp_descr = CHAR_DESCRIPTOR(pc);
-    CHAR_DESCRIPTOR(pc) = nullptr; /* Do this to turn off all messages! */
+    UCHAR(pc)->setDescriptor(nullptr); // Do this to turn off all messages!
 
     /* Remove all inventory and equipment in order to make a CLEAN save */
     while ((tmp_u = UNIT_CONTAINS(pc)))
@@ -315,7 +315,7 @@ void save_player_file(unit_data *pc)
         }
     }
 
-    CHAR_DESCRIPTOR(pc) = tmp_descr; /* Turn msgs back on */
+    UCHAR(pc)->setDescriptor(tmp_descr); // Turn msgs back on
 
     locked = FALSE;
 }

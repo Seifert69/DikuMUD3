@@ -241,7 +241,15 @@ inline const char_point_data &getCharPoints(const unit_data *unit)
     return character->points;
 }
 
-#define CHAR_DESCRIPTOR(ch) (UCHAR(ch)->descriptor)
+inline const descriptor_data *CHAR_DESCRIPTOR(const unit_data *ch)
+{
+    return UCHAR(ch)->getDescriptor();
+}
+
+inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch)
+{
+    return UCHAR(ch)->getDescriptor();
+}
 
 #define CHAR_OFFENSIVE(unit) (getCharPoints(unit).getOffensiveBonus())
 
@@ -318,7 +326,10 @@ inline const char_point_data &getCharPoints(const unit_data *unit)
 
 #define CHAR_SNOOPED(ch) (CHAR_IS_SNOOPED(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy()) : (ch))
 
-#define CHAR_ORIGINAL(ch) (CHAR_IS_SWITCHED(ch) ? (CHAR_DESCRIPTOR(ch)->getOriginalCharacter()) : (ch))
+inline unit_data *CHAR_ORIGINAL(unit_data *ch)
+{
+    return CHAR_IS_SWITCHED(ch) ? CHAR_DESCRIPTOR(ch)->getOriginalCharacter() : ch;
+}
 
 #define CHAR_AWAKE(ch) (CHAR_POS(ch) > POSITION_SLEEPING)
 

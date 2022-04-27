@@ -104,7 +104,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
                 }
 
                 mystr += diku::format_to_str("%-20s - %s [%s]%s<br/>",
-                                             UNIT_NAME(CHAR_ORIGINAL(d->cgetCharacter())),
+                                             UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
                                              UNIT_SEE_TITLE(ch, UNIT_IN(d->cgetCharacter())),
                                              in_string(ch, d->cgetCharacter()),
                                              whose_body);
