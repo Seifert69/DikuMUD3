@@ -459,7 +459,7 @@ void tax_player(unit_data *ch)
 
     *(b = buf) = '\0';
 
-    UCHAR(ch)->setDescriptor(nullptr); // To avoid getting text output to the player *
+    UCHAR(ch)->setDescriptor(nullptr); // To avoid getting text output to the player
 
     init_bank(ch, nullptr, TRUE);
 

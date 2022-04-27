@@ -226,173 +226,74 @@ inline ubit8 OBJ_FLAGS(unit_data *obj) { return UOBJ(obj)->getObjectFlags(); }
 /* ..................................................................... */
 
 /*#define CHAR_DEX_RED(ch)     \  (UCHAR(ch)->points.dex_reduction)*/
+// clang-format off
+inline const descriptor_data *CHAR_DESCRIPTOR(const unit_data *ch) { return UCHAR(ch)->getDescriptor(); }
 
-inline const descriptor_data *CHAR_DESCRIPTOR(const unit_data *ch)
-{
-    return UCHAR(ch)->getDescriptor();
-}
+inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch) { return UCHAR(ch)->getDescriptor(); }
 
-inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch)
-{
-    return UCHAR(ch)->getDescriptor();
-}
+inline sbit16 CHAR_OFFENSIVE(const unit_data *unit) { return UCHAR(unit)->getOffensiveBonus(); }
 
-inline sbit16 CHAR_OFFENSIVE(const unit_data *unit)
-{
-    return UCHAR(unit)->getOffensiveBonus();
-}
+inline sbit16 CHAR_DEFENSIVE(const unit_data *unit) { return UCHAR(unit)->getDefensiveBonus(); }
 
-inline sbit16 CHAR_DEFENSIVE(const unit_data *unit)
-{
-    return UCHAR(unit)->getDefensiveBonus();
-}
+inline ubit32 CHAR_FLAGS(const unit_data *unit) { return UCHAR(unit)->getCharacterFlags(); }
 
-inline ubit32 CHAR_FLAGS(const unit_data *unit)
-{
-    return UCHAR(unit)->getCharacterFlags();
-}
+inline ubit8 CHAR_SEX(const unit_data *ch) { return UCHAR(ch)->getSex(); }
 
-inline ubit8 CHAR_SEX(const unit_data *ch)
-{
-    return UCHAR(ch)->getSex();
-}
+inline unit_data *CHAR_LAST_ROOM(unit_data *unit) { return UCHAR(unit)->getLastLocation(); }
 
-inline unit_data *CHAR_LAST_ROOM(unit_data *unit)
-{
-    return UCHAR(unit)->getLastLocation();
-}
+inline const char *CHAR_LAST_ATTACKER(const unit_data *unit) { return UCHAR(unit)->getLastAttacker(); }
 
-inline const char *CHAR_LAST_ATTACKER(const unit_data *unit)
-{
-    return UCHAR(unit)->getLastAttacker();
-}
+inline ubit8 CHAR_LAST_ATTACKER_TYPE(const unit_data *unit) { return UCHAR(unit)->getLastAttackerType(); }
 
-inline ubit8 CHAR_LAST_ATTACKER_TYPE(const unit_data *unit)
-{
-    return UCHAR(unit)->getLastAttackerType();
-}
+inline ubit8 CHAR_POS(const unit_data *ch) { return UCHAR(ch)->getPosition(); }
 
-inline ubit8 CHAR_POS(const unit_data *ch)
-{
-    return UCHAR(ch)->getPosition();
-}
+inline ubit8 CHAR_LEVEL(const unit_data *ch) { return UCHAR(ch)->getLevel(); }
 
-inline ubit8 CHAR_LEVEL(const unit_data *ch)
-{
-    return UCHAR(ch)->getLevel();
-}
+inline ubit16 CHAR_RACE(const unit_data *ch) { return UCHAR(ch)->getRace(); }
 
-inline ubit16 CHAR_RACE(const unit_data *ch)
-{
-    return UCHAR(ch)->getRace();
-}
+inline sbit16 CHAR_ABILITY(const unit_data *ch, size_t index) { return UCHAR(ch)->getAbilityAtIndex(index); }
 
-inline sbit16 CHAR_ABILITY(const unit_data *ch, size_t index)
-{
-    return UCHAR(ch)->getAbilityAtIndex(index);
-}
+inline sbit16 CHAR_STR(const unit_data *ch) { return UCHAR(ch)->getSTR(); }
 
-inline sbit16 CHAR_STR(const unit_data *ch)
-{
-    return UCHAR(ch)->getSTR();
-}
+inline sbit16 CHAR_DEX(const unit_data *ch) { return UCHAR(ch)->getDEX(); }
 
-inline sbit16 CHAR_DEX(const unit_data *ch)
-{
-    return UCHAR(ch)->getDEX();
-}
+inline sbit16 CHAR_CON(const unit_data *ch) { return UCHAR(ch)->getCON(); }
 
-inline sbit16 CHAR_CON(const unit_data *ch)
-{
-    return UCHAR(ch)->getCON();
-}
+inline sbit16 CHAR_CHA(const unit_data *ch) { return UCHAR(ch)->getCHA(); }
 
-inline sbit16 CHAR_CHA(const unit_data *ch)
-{
-    return UCHAR(ch)->getCHA();
-}
+inline sbit16 CHAR_BRA(const unit_data *ch) { return UCHAR(ch)->getBRA(); }
 
-inline sbit16 CHAR_BRA(const unit_data *ch)
-{
-    return UCHAR(ch)->getBRA();
-}
+inline sbit16 CHAR_MAG(const unit_data *ch) { return UCHAR(ch)->getMAG(); }
 
-inline sbit16 CHAR_MAG(const unit_data *ch)
-{
-    return UCHAR(ch)->getMAG();
-}
+inline sbit16 CHAR_DIV(const unit_data *ch) { return UCHAR(ch)->getDIV(); }
 
-inline sbit16 CHAR_DIV(const unit_data *ch)
-{
-    return UCHAR(ch)->getDIV();
-}
+inline sbit16 CHAR_HPP(const unit_data *ch) { return UCHAR(ch)->getHPP(); }
 
-inline sbit16 CHAR_HPP(const unit_data *ch)
-{
-    return UCHAR(ch)->getHPP();
-}
+inline sbit16 CHAR_ENDURANCE(const unit_data *ch) { return UCHAR(ch)->getEndurance(); }
 
-inline sbit16 CHAR_ENDURANCE(const unit_data *ch)
-{
-    return UCHAR(ch)->getEndurance();
-}
-
-inline sbit16 CHAR_MANA(const unit_data *ch)
-{
-    return UCHAR(ch)->getMana();
-}
+inline sbit16 CHAR_MANA(const unit_data *ch) { return UCHAR(ch)->getMana(); }
 
 /* NOT to be used unless by db.... */
-inline const char *CHAR_MONEY(const unit_data *ch)
-{
-    return UCHAR(ch)->getMoney();
-}
+inline const char *CHAR_MONEY(const unit_data *ch) { return UCHAR(ch)->getMoney(); }
 
-inline char *CHAR_MONEY(unit_data *ch)
-{
-    return UCHAR(ch)->getMoney();
-}
+inline char *CHAR_MONEY(unit_data *ch) { return UCHAR(ch)->getMoney(); }
 
-inline sbit32 CHAR_EXP(const unit_data *ch)
-{
-    return UCHAR(ch)->getPlayerExperience();
-}
+inline sbit32 CHAR_EXP(const unit_data *ch) { return UCHAR(ch)->getPlayerExperience(); }
 
-inline ubit8 CHAR_ATTACK_TYPE(const unit_data *ch)
-{
-    return UCHAR(ch)->getAttackType();
-}
+inline ubit8 CHAR_ATTACK_TYPE(const unit_data *ch) { return UCHAR(ch)->getAttackType(); }
 
-inline ubit8 CHAR_NATURAL_ARMOUR(const unit_data *ch)
-{
-    return UCHAR(ch)->getNaturalArmor();
-}
+inline ubit8 CHAR_NATURAL_ARMOUR(const unit_data *ch) { return UCHAR(ch)->getNaturalArmor(); }
 
-inline sbit16 CHAR_SPEED(const unit_data *ch)
-{
-    return UCHAR(ch)->getSpeed();
-}
+inline sbit16 CHAR_SPEED(const unit_data *ch) { return UCHAR(ch)->getSpeed(); }
 
-inline cCombat *CHAR_COMBAT(unit_data *ch)
-{
-    return UCHAR(ch)->getCombat();
-}
+inline cCombat *CHAR_COMBAT(unit_data *ch) { return UCHAR(ch)->getCombat(); }
 
-inline unit_data *CHAR_FIGHTING(unit_data *ch)
-{
-    return UCHAR(ch)->getCombat() ? CHAR_COMBAT(ch)->Melee() : nullptr;
-}
+inline unit_data *CHAR_FIGHTING(unit_data *ch) { return UCHAR(ch)->getCombat() ? CHAR_COMBAT(ch)->Melee() : nullptr; }
 
-inline unit_data *CHAR_MASTER(unit_data *ch)
-{
-    return UCHAR(ch)->getMaster();
-}
+inline unit_data *CHAR_MASTER(unit_data *ch) { return UCHAR(ch)->getMaster(); }
 
-inline char_follow_type *CHAR_FOLLOWERS(const unit_data *ch)
-{
-    return UCHAR(ch)->getFollowers();
-}
-
+inline char_follow_type *CHAR_FOLLOWERS(const unit_data *ch) { return UCHAR(ch)->getFollowers(); }
+// clang-format on
 /* ...........................CHAR SUPERSTRUCTURES....................... */
 
 #define CHAR_IS_READY(ch) (CHAR_AWAKE(ch) && (CHAR_POS(ch) != POSITION_FIGHTING))

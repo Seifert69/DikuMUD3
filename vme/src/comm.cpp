@@ -178,7 +178,7 @@ void send_to_descriptor(const std::string &messg, descriptor_data *d)
 
 void send_to_descriptor(const std::string &messg, const descriptor_data *d)
 {
-    send_to_descriptor(messg.c_str(), d);
+    send_to_descriptor(messg.c_str(), const_cast<descriptor_data *>(d));
 }
 
 void page_string(descriptor_data *d, const char *messg)
