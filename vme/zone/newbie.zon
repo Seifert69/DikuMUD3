@@ -3414,7 +3414,7 @@ end
 guide_book
 names {"guide book", "manual","book", "guide"}
 title "a player help manual"
-descr "A manual is laying here."
+descr "A manual is lying here."
 extra {}
 "This manual will give you an understanding of what is and is not
 expected of you as a player helper. New pages will be added as we go.
@@ -3542,7 +3542,7 @@ end
 guide_bplate1
 names {"guide plate","breastplate","grey","guide","plate"}
 title "a Player Guide Plate"
-descr "A glowing grey breastplate is laying on the ground."
+descr "A glowing grey breastplate is lying on the ground."
 
 extra {}
 "The plate is a glowing grey and denotes a very special person,
@@ -3577,7 +3577,7 @@ end
 guide_bplate2
 names {"guide plate","breastplate","white","glowing","guide","plate"}
 title "a Player Guide Plate"
-descr "A glowing white breastplate is laying on the ground."
+descr "A glowing white breastplate is lying on the ground."
 
 extra {}
 "The plate is a glowing white and denotes a very special person,
@@ -3611,7 +3611,7 @@ end
 guide_bplate3
 names {"guide plate","breastplate","blue","glowing","guide","plate"}
 title "a Player Guide Plate"
-descr "A glowing blue breastplate is laying on the ground."
+descr "A glowing blue breastplate is lying on the ground."
 
 extra {}
 "The plate is a glowing blue and denotes a very special person,
@@ -3645,7 +3645,7 @@ end
 guide_bplate4
 names {"guide plate","breastplate","green","glowing","guide","plate"}
 title "a Player Guide Plate"
-descr "A glowing green breastplate is laying on the ground."
+descr "A glowing green breastplate is lying on the ground."
 
 extra {}
 "The plate is a glowing green and denotes a very special person,
@@ -3679,7 +3679,7 @@ end
 guide_bplate5
 names {"guide plate","breastplate","gold","glowing","golden","guide","plate"}
 title "a Player Guide Plate"
-descr "A glowing golden breastplate is laying on the ground."
+descr "A glowing golden breastplate is lying on the ground."
 
 extra {}
 "The plate is a solid gold and denotes a very special person,
@@ -3713,7 +3713,7 @@ end
 guide_bplate6
 names {"guide plate","breastplate","purple","guide","plate"}
 title "a Player Guide Plate"
-descr "A glowing purple breastplate is laying on the ground."
+descr "A glowing purple breastplate is lying on the ground."
 
 extra {}
 "The plate is a glowing purple and denotes a very special person,
@@ -3748,7 +3748,7 @@ end
 builder_plate
 names {"builder plate","breastplate","blue","glowing","guide","plate"}
 title "a Valhalla Builder Plate"
-descr "A glowing blue breastplate is laying on the ground."
+descr "A glowing blue breastplate is lying on the ground."
 
 extra {}
 "The plate is a glowing blue and denotes a very special person,

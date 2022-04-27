@@ -2609,7 +2609,7 @@ descr
 "The hospital rooms is small and filthy with a cot along one wall.  Piles
 of body parts are around the room, and the floor is slick with blood. On
 the shelves sit jars of internal organs and there are some tortuous looking
-instruments laying about in total disregard around the room.  There doesn't
+instruments lying about in total disregard around the room.  There doesn't
 seem to be any exits but there is a big red sign you might want to read."
 extra {"big red sign","big sign","red sign","sign"}
 "The sign reads: 
@@ -2731,7 +2731,7 @@ end
 phoenixcla1
 title "a bloody phoenix claw"
 names {"phoenix claw","claw"}
-descr "A bloody birds claw is laying here."
+descr "A bloody birds claw is lying here."
 extra {}
 "The claw is  the bloody stump from some poor bird."
 WEAPON_DEF(WPN_CLAW, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 16,10
@@ -2893,7 +2893,7 @@ end
 ravencla1
 title "Raven Claw"
 names {"raven claw","claw"}
-descr "A bloody birds claw is laying here."
+descr "A bloody birds claw is lying here."
 extra {}
 "The claw is  the bloody stump from some poor bird."
 WEAPON_DEF(WPN_CLAW, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 16,10
@@ -2954,7 +2954,7 @@ hamme1
 
 names {"warhammer","war hammer","hammer"}
 title "the Huge Warhammer"
-descr "The huge Warhammer is laying here."
+descr "The huge Warhammer is lying here."
 extra {}
 "This warhammer is fashioned from the finest metal with a large blunt
 head. The handle is inlaid with diamond that sparkle with the slightest
@@ -2970,7 +2970,7 @@ end
 dagger1
 names {"dagger"}
 title "the Dagger of bone"
-descr "A dagger made from human bone is laying here."
+descr "A dagger made from human bone is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 16,20
 MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
@@ -3301,7 +3301,7 @@ end
 hellma1
 title "a War Mattock From Hell"
 names {"war mattock from hell","mattock","hell"}
-descr "The war mattock from hell is laying here."
+descr "The war mattock from hell is lying here."
 extra {}
 "The mattock is huge and looks like it can do some serious damage when
 wielded."
@@ -3455,7 +3455,7 @@ end
 dragcla1
 names {"boots","claws"}
 title "a pair of dragon claws"
-descr "A pair of dragon claws are laying here."
+descr "A pair of dragon claws are lying here."
 extra {}
 "The dragon claws are very big and very sharp."
 
@@ -3537,7 +3537,7 @@ end
 loinclot1
 title "a  loin cloth"
 names {"loin cloth","cloth","loin"}
-descr "A leather cloth is laying here"
+descr "A leather cloth is lying here"
 extra{}
 "This little pile of leather looks as if it might give you some protection.
 Not much but some."
@@ -3580,7 +3580,7 @@ title "a rusty plate"
 descr "A rusted breast plate lies here."
 extra {}
 "This breast plate is old and rusted It looks like it has been left
-laying in a puddle of water or worse."
+lying in a puddle of water or worse."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+23
 SPELL_TRANSFER(SPL_PROTECTION, BONUS_ARTIFACT)  // Xyzzy: +20
@@ -3635,7 +3635,7 @@ end
 ratcloa1
 title "a Rat Skin Cloak"
 names {"rat skin cloak","cloak","skin"}
-descr "A rat skin cloak is laying here."
+descr "A rat skin cloak is lying here."
 extra {}
 "The cloak is made out of the fur of old brown rats."
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +24,+24
@@ -3653,9 +3653,9 @@ end
 moldcloa1
 title "a Molding Cloak"
 names {"molding cloak","cloak","mold"}
-descr "A pile mold is laying here."
+descr "A pile mold is lying here."
 extra {}
-"The cloak looks like it has been laying out in the rain too long.  Green
+"The cloak looks like it has been lying out in the rain too long.  Green
 fungi has started to grow on the surface of the cloak"
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+25
 DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
@@ -3681,7 +3681,7 @@ names {"muddy boots","boots"}
 title "Muddy boots"
 descr "A pair of muddy boots lie here."
 extra {}
-"These boots look like they have been left laying about in the mud. They
+"These boots look like they have been left lying about in the mud. They
 are just caked with a deep rich red mud."
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,+23
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}

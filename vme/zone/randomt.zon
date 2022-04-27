@@ -1126,7 +1126,7 @@ code
     // Set name, title, description, extra
     addstring(u.names, mat + " " + u.name);
     u.title := ana + mat + " " + u.name;
-    u.outside_descr := ana + mat + " " + u.name + " is laying here.";
+    u.outside_descr := ana + mat + " " + u.name + " is lying here.";
 
     return;
 }

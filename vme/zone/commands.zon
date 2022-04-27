@@ -5623,7 +5623,7 @@ if ((item.type!=UNIT_ST_OBJ) or
 	{
 	buried:=buried+1;
 	  act ("$1n buries $3n.",A_SOMEONE,self,null,item,TO_REST);
-  act ("You bury $3n that was laying on the ground.",A_SOMEONE,self,null,item,TO_CHAR);
+  act ("You bury $3n that was lying on the ground.",A_SOMEONE,self,null,item,TO_CHAR);
   set (item.flags,UNIT_FL_BURIED);
   dilcopy("buried_timer@commands(60)", item);
   link (item,self.outside);

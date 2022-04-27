@@ -3821,8 +3821,7 @@ code
 
 if ( self.position== POSITION_STUNNED)
 {
-      act("There doesn't seem to be a way to effectively trip $3n while your
-	  laying face down in the muck!",
+      act("There doesn't seem to be a way to effectively trip $3n while you're lying face down in the muck!",
           A_SOMEONE, self, null, targ, TO_CHAR);
 quit;
 }
@@ -5046,12 +5045,12 @@ code
 
       if (beheaded==0){
          targ.title:="a poorly skinned " + targ.names.[0];
-         targ.outside_descr:="a poorly skinned "+targ.names.[0] + " is laying here.";
+         targ.outside_descr:="a poorly skinned "+targ.names.[0] + " is lying here.";
       }
       else
       {
          targ.title:="a poorly skinned, headless " + targ.names.[0];
-         targ.outside_descr:="a poorly skinned and headless "+targ.names.[0] + " is laying here.";
+         targ.outside_descr:="a poorly skinned and headless "+targ.names.[0] + " is lying here.";
       }
       quit;
    }
@@ -5062,7 +5061,7 @@ code
 
    race_name := race_name(targ.value[4]);
    targ.title:="a skinned " + targ.names.[0];
-   targ.outside_descr:="a skinned " + targ.names.[0] + " is laying here.";
+   targ.outside_descr:="a skinned " + targ.names.[0] + " is lying here.";
    addstring(targ.names, "skinned "+ targ.names.[1]);
 
    skin := load("base_skin@skills");
@@ -5070,7 +5069,7 @@ code
    secure(skin, lostskin);
    // addstring(skin.names,corpse_name);
    addstring(skin.names, skin_name);
-   skin.outside_descr := race_name + " " + skin_name + " is laying here.";
+   skin.outside_descr := race_name + " " + skin_name + " is lying here.";
    skin.title := race_name + " " + skin_name;
    addextra (skin.extra,{"$living_sym"},targ.extra.["$living_sym"].descr);
 

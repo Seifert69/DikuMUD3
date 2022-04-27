@@ -4971,7 +4971,7 @@ end
 black_cloak
 title "a black cloak"
 names {"cloaker","cloak"}
-descr "A pile of black cloth is laying on the floor."
+descr "A pile of black cloth is lying on the floor."
 extra {}
 "As you look closer at the pile of cloth you realize that it is not a
 ordinary cloak but indead a 'cloaker' which nature has made to resemble a
@@ -4999,7 +4999,7 @@ end
 teddy_bear
 title "a Teddy Bear"
 names {"teddy bear","joo-joo","teddy","bear"}
-descr "A stuffed animal is laying here"
+descr "A stuffed animal is lying here"
 extra {}
 "Joo Joo is a small stuffed Datcog. It's so ugly it is almost cute. The
 princess is almost sure to be looking for this, although holding it will
@@ -5125,7 +5125,7 @@ end
 back_pack
 title "a burlap back pack"
 names {"back pack","napsack","backpack","sack","pack"}
-descr "A back pack is laying on the ground."
+descr "A back pack is lying on the ground."
 extra {}
 "The bag is a fair size with two arm bands so that you can sling it over
 your shoulders onto your back."
@@ -5139,7 +5139,7 @@ end
 dragon_scale1
 title "Dragon Scale"
 names {"dragon scale"}
-descr "A single reddish brown dragon scale is laying here."
+descr "A single reddish brown dragon scale is lying here."
 extra {}
 "This dragon scale looks very special. It has a glow of magic about it.
 You get the feeling that if you hold this scale you will become
@@ -5155,7 +5155,7 @@ end
 cloak_skin1
 title "Cloak skin"
 names {"cloak skin","cloak","skin"}
-descr "A raggy old cloak is laying here."
+descr "A raggy old cloak is lying here."
 extra {}
 "The raggy old cloak has two rows of buttons on the back of it
 resembling eyes."
@@ -5347,7 +5347,7 @@ end
 wings
 title "dragons wings"
 names {"dragons wings","dragon wings", "wings"}
-descr "A dragons wing is laying here"
+descr "A dragons wing is lying here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 dilcopy quest_restrict@function (CROMWELL_COMPLETE,0,25,"");
 
@@ -5525,7 +5525,7 @@ end
 tear
 title "a tear drop"
 names {"heart tear","tear drop","tear"}
-descr "A glittering tear drop is laying here"
+descr "A glittering tear drop is lying here"
 extra {"$identify"}
 "This looks like a tear drop"
 extra {}
@@ -5551,7 +5551,7 @@ end
 feather
 title "an eagles feather"
 names {"flight feather","feather"}
-descr "A feather is laying here"
+descr "A feather is lying here"
 extra {"$identify"}
 "Give you +2 MAG and +3 to your summoning. You must have at least 50 MAG
 to use this."
@@ -5572,7 +5572,7 @@ end
 fish
 title "a delicious fish"
 names {"mikisiw fish","fish"}
-descr "a fish is laying here"
+descr "a fish is lying here"
 extra {"$identify"}
 "This makes you a sit stupider and a bit weaker."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -5740,7 +5740,7 @@ end
 pbull_cage
 names {"pit bull cage","cage"}
 title "a wooden Pit Bull cage"
-descr "A wooden Pit Bull cage is laying here."
+descr "A wooden Pit Bull cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5757,7 +5757,7 @@ end
 monkey_cage
 names {"monkey cage","cage"}
 title "a wooden chimpanzee  cage"
-descr "A wooden chimpanzee cage is laying here."
+descr "A wooden chimpanzee cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra   {}
@@ -5776,7 +5776,7 @@ end
 rot_cage
 names {"rottweiler cage","cage"}
 title "a wooden Rottweiler cage"
-descr "A wooden Rottweiler cage is laying here."
+descr "A wooden Rottweiler cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5793,7 +5793,7 @@ end
 puppy_cage
 names {"puppy cage","cage"}
 title "a wooden Puppy cage"
-descr "A wooden Puppy cage is laying here."
+descr "A wooden Puppy cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5810,7 +5810,7 @@ end
 pig_crate
 names {"pig crate","crate"}
 title "a wooden pig crate"
-descr "A wooden pig crate is laying here."
+descr "A wooden pig crate is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5826,7 +5826,7 @@ end
 cat_home
 names {"cat cage","cage"}
 title "a cat cage"
-descr "A cat cage is laying here."
+descr "A cat cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra {}
@@ -5844,7 +5844,7 @@ end
 skunk_cage
 names {"skunk cage","cage"}
 title "a wooden skunk cage"
-descr "A wooden skunk cage is laying here."
+descr "A wooden skunk cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5879,7 +5879,7 @@ end
 lizard_cage
 names {"lizard cage","cage"}
 title "a lizard cage"
-descr "A lizard cage is laying here."
+descr "A lizard cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra {}
@@ -5896,7 +5896,7 @@ end
 spider_cage
 names {"spider cage","cage"}
 title "a spider cage"
-descr "A spider cage is laying here."
+descr "A spider cage is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5912,7 +5912,7 @@ end
 pole
 title "a fishing pole"
 names"pole"
-descr "a fishing pole is laying here"
+descr "a fishing pole is lying here"
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 2
 extra {"$identify"}

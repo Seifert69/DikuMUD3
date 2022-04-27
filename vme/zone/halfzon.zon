@@ -2956,7 +2956,7 @@ small cushions which seem to be part of the floor.  This room is
 made for many hours of comfortable reading.  There is plenty of
 light which is provided by the glowing stones which line the
 shelves.  Maybe you should come here from time to time and see
-what books are laying around.  The only exit is to the west."
+what books are lying around.  The only exit is to the west."
 movement SECT_INSIDE
 ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER}
@@ -6000,7 +6000,7 @@ nitanis
 
 names {"bracelet","nitanis"}
 title "Nitanis bracelet"
-descr "A small Nitanis bracelet is laying here."
+descr "A small Nitanis bracelet is lying here."
 MATERIAL_METAL("Gold, and other precious metals")
 extra {}
 "Tiny gold leaves are wooven together to form a beautiful bracelet.  It

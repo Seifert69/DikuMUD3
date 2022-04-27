@@ -1920,7 +1920,7 @@ end
 candy_cane2
 title "a Candy Cane"
 names {"a candy cane","candy cane","candy","staff"}
-descr "A large candy cane is laying here."
+descr "A large candy cane is lying here."
 extra {}
 "A huge piece of candy with red and white strips."
 manipulate {MANIPULATE_TAKE}
@@ -2113,7 +2113,7 @@ end
 gift_newbie
 title "a Miniature City Guard"
 names {"city guard","statue","guard"}
-descr "A small statue of a city guard is laying here."
+descr "A small statue of a city guard is lying here."
 extra {}
 "A small version of a city guard"
 CHA_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
@@ -2133,7 +2133,7 @@ end
 diaper
 title "a diaper"
 names {"a diaper","diaper"}
-descr "A white diaper is laying here."
+descr "A white diaper is lying here."
 extra {}
 "A white diaper."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
@@ -2142,7 +2142,7 @@ end
 sash_98
 title "a white sash with 1998 printed on it."
 names {"sash"}
-descr "A white sash with 1998 printed on it is laying here."
+descr "A white sash with 1998 printed on it is lying here."
 extra {}
 "A white sash with 1998 printed on it."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
@@ -2151,7 +2151,7 @@ end
 sash_97
 title "a tattered white sash with 1997 printed on it."
 names {"sash"}
-descr "A tattered white sash with 1997 printed on it is laying here."
+descr "A tattered white sash with 1997 printed on it is lying here."
 extra {}
 "A tattered white sash with 1997 printed on it."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}

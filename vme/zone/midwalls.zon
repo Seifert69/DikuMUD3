@@ -867,8 +867,7 @@ extra {"fire"}
 extra {"large bar", "bar"}
 "The bar is covered with mugs and bottles."
 extra {"chairs", "tables"}
-"Here and there, someone is passed out in a chair, or laying face
-down on a table."
+"Here and there, someone is passed out in a chair, or lying face down on a table."
 extra {"staircase"}
 "This stone staircase leads upwards to the city walls."
 extra {"bastion"}

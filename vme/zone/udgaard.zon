@@ -2119,7 +2119,7 @@ names {"trading post"}
 title "Ben's Trading"
 descr
 "Although the cabin is fairly large, there are so many furs and pelts
-laying around that it is difficult to move. A wood stove along the north
+lying around that it is difficult to move. A wood stove along the north
 wall of the cabin provides heat to help dry some of the newer hides."
 gmap(644,200)
 movement SECT_INSIDE

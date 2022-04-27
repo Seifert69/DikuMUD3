@@ -13,12 +13,12 @@
         {
             "source_file": {
                 "filename": "arena.zon",
-                "sha512": "e033a3933a8786922bd7a50f5e636bcee6ea0b16d4018efe9fb1ea867e68016535d37930081788aa8044bff5720c48561bc727450743d66086c1c94cf8076592"
+                "sha512": "13ec42210d43d47a3759866c9f924cf2c1f6e450a3a512ca9b713f93ca2eb5ca816bff63235e9b7d1de23aa15506546521fcc47bff430d0bc8653dc44d0c31d4"
             },
             "output": [
                 {
                     "filename": "arena.data",
-                    "sha512": "4dcf2b6228e141acfdc11ea6425a3cee8e9289ff98fdb9b95ad59ee43dcb9bb9ebed0f5a1794f66fd8c266e3adb5b5009feb7e6b2da3e47fbbba3811c2ec5227"
+                    "sha512": "4c61819f3956e6284477dcb8a33a13039139d63df10d3de20f5c754aa09a66348ef46dbe230b464044d61707f80ca090a1b2adaaef0f621fd95fb8d7425e31d3"
                 },
                 {
                     "filename": "arena.reset",
@@ -221,12 +221,12 @@
         {
             "source_file": {
                 "filename": "commands.zon",
-                "sha512": "eb09160d7f1a5163e53d65118dd69c75e0804f0950d036882b36d42733ad9dce8033eeb9a252ba0fb620611e7d71ba6b886c506eda3c405c50a30c8204513a13"
+                "sha512": "997f1f90697791d2c7a558ec4ecc0267f7c25cae868001504eccc4461ecfcf285e156e392cbe94fb120158c07315e154f4f72f3cc833ffbeb4f5f30bda0c7d7a"
             },
             "output": [
                 {
                     "filename": "commands.data",
-                    "sha512": "0f6c6b9b51a388d5bd85d7e92d89f7815b1535cce345d87679773359edf50e982c908a6ae6039889716bc22776cce72100098ed41d7b08eef001207129ab64b6"
+                    "sha512": "cc0ba1b2c1955c1470d0b85ffbf87da3153f745f281525a0a5e87ae6b09eb8ce96e1d07d4e564720647816b87501529f0560c1e51b518075ac6d23c419bef313"
                 },
                 {
                     "filename": "commands.reset",
@@ -381,12 +381,12 @@
         {
             "source_file": {
                 "filename": "guild_quest.zon",
-                "sha512": "1c0ba63257d2c1df9c78bb2101a722fcdc0e0164e36b02955a51f04463cce6fd867f3da4a4b1cef762a1433050a9b365c90839ee9a6b24839d576938014548e5"
+                "sha512": "0a6e4741df00e5b3176da2612dd4b7a1b74281815de9bc8097f72ba634c3bf57afc2e7edf55fe35324a00f2d3edfd7d8eba5158b47d83f1a2ef23807e9dc892f"
             },
             "output": [
                 {
                     "filename": "guild_quest.data",
-                    "sha512": "702e558f1db72bffe24b169560b09a90d681a5c1c22fff435a8e76e289cb2a9aa918cd1e9fc00e8360b028079da793908776d0e273d6c27fe9645a635d7f11be"
+                    "sha512": "451768d39d5c4b761db75d54e289b6aef5f1d762855e808f95c67824529aa8b2109cf0ca9760aa96d675315616bdbd166e9bdd4e19c923b791632f26a74c0594"
                 },
                 {
                     "filename": "guild_quest.reset",
@@ -413,12 +413,12 @@
         {
             "source_file": {
                 "filename": "halfzon.zon",
-                "sha512": "6b5612cbf162dc6564da03945068958661ea3d0eafdb44a27a26c71f22e785970e0d0f4bb7a69c77358b7fa967ac3edf92dbc8878a3cfb0f9b078fff762e1365"
+                "sha512": "67b1eb0966f96080f20950aecee90032cf33f39ffdd417a0a0250de11238d3c7fff2246fa58f92da46ce5cf840fe96b2ada41f7126fa6e7f6b1768240341d7bb"
             },
             "output": [
                 {
                     "filename": "halfzon.data",
-                    "sha512": "c64a4d714ed1d999dc653edba1c1b0da0a49fdd77e202573022f5d8bf01534c8bbf9b38da1a71bc4eb4269a3f215eae5e2ae30b82a99c17f20d47819e06b4de4"
+                    "sha512": "c4ec260eb0f8dd678e8751007014442214ed52c20e1f9ca1dba5a2ad40b5847562c48b6017bf4676a8f51ce76a4f13f0a4296ecb9940bcf45393c9c2d1d031fe"
                 },
                 {
                     "filename": "halfzon.reset",
@@ -461,12 +461,12 @@
         {
             "source_file": {
                 "filename": "hobgob.zon",
-                "sha512": "e31b461574f60fa41a72dd5739d46cb3baf494c083ed44c9d1bf4bbffbc524bd15c7c0b81d340d533d6e98a6ca767c13d9653b01766dc3954c9b10cb598076c2"
+                "sha512": "30cf10b4d6b7f0f5f7051a4fdc16e1304c0dfb018df540f2120dd2724e3ebe52b6403746732077fe3b9f076416f75a49a0f534b83d9e1adb1e0307662b197efa"
             },
             "output": [
                 {
                     "filename": "hobgob.data",
-                    "sha512": "05482679e7dbe1cb9be5fce5289d52a4467a15811db7d445142d573f519dccce55e0d2ad498f00d1d155736620315bb4833fcb194ebd54b5ab9900437f7386c4"
+                    "sha512": "572b632a79e353d7141d0cf7a86f82e752c0e5be8820a1d5c13ef169be1f60f1915ef9f49215a99d45eeec5631ea9463bd54e9996705064d5f22a70a61674665"
                 },
                 {
                     "filename": "hobgob.reset",
@@ -477,12 +477,12 @@
         {
             "source_file": {
                 "filename": "holiday20.zon",
-                "sha512": "dea0d406665803ccfffd733bff0a6fa82b95dcde19f4c733c9bb5a1e5f8919a64ed03c969df49859c5e40ad559419adbc1e294a618924cb955dd309ce038ffa6"
+                "sha512": "73f7bf8041d224db189cda62d926e38bf294f0914891fc37bcf0b70b88c08d1072c280773ba99e38b952971feef0e121e1561d740067040c8d44cdeffab6a715"
             },
             "output": [
                 {
                     "filename": "holiday20.data",
-                    "sha512": "b23a83481a6a0971999231a83ab18ae485e0162c197697015e898034a8c7e1f435d2a6db4e178318bb420c834fd76f1d0a51c558043dd198140cddb4e59d6f94"
+                    "sha512": "443124e4fc236227bc4639eb53aaeaf822667c40d97fd84e5b688f266005a6ae6d1102978b6c35a350a6ed54af86b55936cb5f6bdc0dea6ca526c785a97f5f11"
                 },
                 {
                     "filename": "holiday20.reset",
@@ -493,12 +493,12 @@
         {
             "source_file": {
                 "filename": "holiday21.zon",
-                "sha512": "95b5d8f1f60beec07630f5a074e827b04c7ee3495442bd6ec6353f789a00f0ee341a1ebce029daeb7d529f98c5ff8e1cb38fd11e1618257eef977cb9622c6348"
+                "sha512": "174ebdb0f70d8471d13d29eec2c40c0b4e18dcecbb1e12c2df3fe5c88b8437cb3380c9e828b8785eda97de95020614af1662866ceb7c44fd7aed08be07e51996"
             },
             "output": [
                 {
                     "filename": "holiday21.data",
-                    "sha512": "cd64b72fb24bd77d24c6bb6753bc66361b03e53355a4725eec97ed14bf1661bad8954f8b0296e1cf610935a7362794b6bfd0391b42930b2d19f03a0f1a9cc6c6"
+                    "sha512": "7de2478dddbc194b5792fe554d6bf1d5cf21b371dd6e7f8bd4a2de48c23b94c38a6e3b645340b4c4853fb22b06519bacfb4aeac20e4fbb89c587d80528d9e7b8"
                 },
                 {
                     "filename": "holiday21.reset",
@@ -605,12 +605,12 @@
         {
             "source_file": {
                 "filename": "midwalls.zon",
-                "sha512": "f3477bafe0055d158e53b5a23ee8c8e2a5f050cf72a6ad12ea38e46e1f31c07057a8174ee6ab941d240455e9d14025567ccfeb0c5c75ea9365c8f5db69be1cf2"
+                "sha512": "b451b041691e533e2ec0b8b0cac4149f513de2b28715e4c48ba0d7e4a2e0ee58654f8f912febb1e33bbb59de8af67b377433d840e49cef9c01a5c0ae8d740484"
             },
             "output": [
                 {
                     "filename": "midwalls.data",
-                    "sha512": "84c730de2d9c23635c26848a1fef92d083187b69eb16056e5558754ad1b05a86419759e0c1afc47c36616a032c39ee6df74025089f2e291a243b4d9d4d232002"
+                    "sha512": "511788d78a0008d713efc192dc7c40631dfa1572e12d8fd605b6a464b9b7de1f5447e48a4e30da9b4ff68560c0ee2e1f348d52dbe162d2bc9ef758aa9f35d2d6"
                 },
                 {
                     "filename": "midwalls.reset",
@@ -637,12 +637,12 @@
         {
             "source_file": {
                 "filename": "newbie.zon",
-                "sha512": "37e88935e450ecc2044e053b55c93f88b1e87f648ad5b3f1fe760191e5d564954648f7b3dc3758d6959de93216df0bb3d80becabda2235d8187e6fd61b73ae52"
+                "sha512": "525f9b4abfd4f01a19da044319bb7e1e3cf9ae65ce978cc0fa167699900de0634d95acc86f31681818cca9e5121992654534d48eda7d68ba8bd5456c4e0a68ec"
             },
             "output": [
                 {
                     "filename": "newbie.data",
-                    "sha512": "75f056aee0b1b48d3e0131f372969eb69eb4fc17a3eb35ebd0d88ccfb38db550417a733ce71d46979452c064c3cfaceee3f0662da194c4995ecc0256528eb0dc"
+                    "sha512": "a643526474d367bd2b37622e3e01a18d9e506572d3ed68a4b5946f4bc10ceebc639808f0534ad2dbce10308c6c4f8b1756bd9af501a365dca7c18ff0837b16ca"
                 },
                 {
                     "filename": "newbie.reset",
@@ -717,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "523e95c76e95636121c369d6d0bc26066a6b9cb78143de0b94a76b7528f02e81188e6ed98724e526c14448c54c873ed9d328793b79f263c010f90a7c1cef294e"
+                "sha512": "cdccf051202d4ee46027308e83bb5e8c2e55ac5e06aeedee5b9da6a45ea5a7b4f36ca98b8243bb50060cc0862172401b2422402f2fcc497daf4eb7fe88c38a59"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "1eddff814ee4dbe03814a002a3bc8b03fe389785c45f836887b202d67653ed113775c99ccce835d479a17e53748d3cd75cb93dd12270d08dad3568a5c05e4134"
+                    "sha512": "714c47f1ceb1dc50c7d3a439f8c3c7816a946e53e581e033bb178d5dfd7090a4277fe906bfc94452504f2d9fc87cabd613c1a12a1d14ee97e06ccf59dbf38565"
                 },
                 {
                     "filename": "randomt.reset",
@@ -813,12 +813,12 @@
         {
             "source_file": {
                 "filename": "skills.zon",
-                "sha512": "c609f8938b906b95cb29bf29bdf43df1588c35f5a0890338cd8bb3e360a354374c6e283d6386b3a63d9127012a406cde7750707977f12900600e26b4cdd38a67"
+                "sha512": "0aa47c71ae72367f84066f362c4bc9bd61736cb952865513a1ca97d58fbcc93b3cb2c8a12dd2ad3124f6c685f8c6af72fbdc48d8ce62988b9009b750d50ae086"
             },
             "output": [
                 {
                     "filename": "skills.data",
-                    "sha512": "0322f5b08b109e37b0f6de8454b0f9555a220dcbaf85c931005696938b7c6235cb6e03272e90d40626978a73221755ff2e1afc54dadb6386dcf7f6335b182dda"
+                    "sha512": "654f0773420f6e5b5b1f3da70db7eb3e3171d923190a4d63dd20ca043013a6d460e98845aba2e81fa07229b14d9917b4cf22c5a460db256e2e765c8e181804eb"
                 },
                 {
                     "filename": "skills.reset",
@@ -909,12 +909,12 @@
         {
             "source_file": {
                 "filename": "udgaard.zon",
-                "sha512": "af97725a46e37b1cf7d6209a461335e7026a953da773f42094dbf9367c0a029d8583a760380d2e718e28e62545bae2f8b136d38e4e313ea6e07716e5160b0d8b"
+                "sha512": "dc98844a644ef15259e2cb47a5044d752bec9f14c97693610cf5fe928f467580651e8c7d29c7d0016ed515e264bfaca6815cef3b64e8e3a4d2302f075402d802"
             },
             "output": [
                 {
                     "filename": "udgaard.data",
-                    "sha512": "f6e7b893d972aea67330be97a7837e4b9cfde409938d890c2ea16be79affabec963f294205643906acf138e194906d449f68e07af4dd6059461435f31582feed"
+                    "sha512": "58e3c927fe7624d28bbaa9dc8d23d579da564a95be45e241dcde0a864e8d4636e92179d429fe51b04d4911711f118946df5ed698f0072e8c435881660589f4b0"
                 },
                 {
                     "filename": "udgaard.reset",
