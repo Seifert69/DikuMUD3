@@ -1112,24 +1112,24 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                getCharPoints(unt).setPlayerExperience(valarg);
+                UCHAR(unt)->setPlayerExperience(valarg);
             }
             return;
 
         case 46: /* "affected-by" */
-            getCharPoints(unt).setAllCharacterFlags(bitarg);
+            UCHAR(unt)->setAllCharacterFlags(bitarg);
             return;
 
         case 47: /* "mana" */
-            getCharPoints(unt).setMana(valarg);
+            UCHAR(unt)->setMana(valarg);
             return;
 
         case 48: /* "endurance" */
-            getCharPoints(unt).setEndurance(valarg);
+            UCHAR(unt)->setEndurance(valarg);
             return;
 
         case 49: /* "attack-type" */
-            getCharPoints(unt).setAttackType(typarg);
+            UCHAR(unt)->setAttackType(typarg);
             return;
 
         case 50: /* "hand-quality" OBSOLETE */
@@ -1145,17 +1145,17 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 52: /* "race" */
-            getCharPoints(unt).setRace(typarg);
+            UCHAR(unt)->setRace(typarg);
             return;
 
         case 53: /* "sex" */
-            getCharPoints(unt).setSex(typarg);
+            UCHAR(unt)->setSex(typarg);
             return;
 
         case 54: /* "level" */
             if (is_in(valarg, 0, 199))
             {
-                getCharPoints(unt).setLevel(valarg);
+                UCHAR(unt)->setLevel(valarg);
             }
             else
             {
@@ -1164,13 +1164,13 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 55: /* "position" */
-            getCharPoints(unt).setPosition(typarg);
+            UCHAR(unt)->setPosition(typarg);
             return;
 
         case 56: /* "ability" */
             if (is_in(valarg, 0, 250))
             {
-                getCharPoints(unt).setAbilityAtIndexTo(typarg, valarg);
+                UCHAR(unt)->setAbilityAtIndexTo(typarg, valarg);
             }
             else
             {
@@ -1218,7 +1218,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 62: /* "speed" */
             if (is_in(valarg, SPEED_MIN, SPEED_MAX))
             {
-                getCharPoints(unt).setSpeed(valarg);
+                UCHAR(unt)->setSpeed(valarg);
             }
             else
             {

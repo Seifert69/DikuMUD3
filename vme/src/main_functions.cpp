@@ -283,7 +283,7 @@ void game_event()
             if (point->cgetSnoopData().getSnoopBy())
             {
                 auto msg = diku::format_to_str("%s%s<br/>", SNOOP_PROMPT, pcomm);
-                send_to_descriptor(msg, CHAR_DESCRIPTOR(point->cgetSnoopData().getSnoopBy()));
+                send_to_descriptor(msg, CHAR_DESCRIPTOR(point->getSnoopData().getSnoopBy()));
             }
 
             point->callFunctionPtr(point, pcomm);

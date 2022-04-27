@@ -163,10 +163,10 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
             protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), dest.c_str(), MULTI_TEXT_CHAR);
         }
 
-        if (d->cgetSnoopData().getSnoopBy())
+        if (d->getSnoopData().getSnoopBy())
         {
-            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
-            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
+            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
+            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
         }
     }
 }
@@ -174,6 +174,11 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
 void send_to_descriptor(const std::string &messg, descriptor_data *d)
 {
     send_to_descriptor(messg.c_str(), d);
+}
+
+void send_to_descriptor(const std::string &messg, const descriptor_data *d)
+{
+    send_to_descriptor(messg.c_str(), const_cast<descriptor_data *>(d));
 }
 
 void page_string(descriptor_data *d, const char *messg)
@@ -193,13 +198,18 @@ void page_string(descriptor_data *d, const char *messg)
 
         if (d->cgetSnoopData().getSnoopBy())
         {
-            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
-            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->cgetSnoopData().getSnoopBy()));
+            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
+            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
         }
     }
 }
 
 void page_string(descriptor_data *d, const std::string &messg)
+{
+    page_string(d, messg.c_str());
+}
+
+void page_string(const descriptor_data *d, const std::string &messg)
 {
     page_string(d, messg.c_str());
 }
@@ -211,7 +221,7 @@ void send_to_char(const char *messg, const unit_data *ch)
 
     if (IS_CHAR(ch))
     {
-        send_to_descriptor(messg, CHAR_DESCRIPTOR(ch));
+        send_to_descriptor(messg, const_cast<descriptor_data *>(CHAR_DESCRIPTOR(ch)));
     }
 }
 

@@ -981,17 +981,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_PC(character))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
-                        v->ref = &CHAR_LAST_ROOM((unit_data *)v1->val.ptr);
+                        v->ref = character->getLastLocation();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2871,7 +2874,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = character->points.getOffensiveBonusPtr();
+                        v->ref = character->getOffensiveBonusPtr();
                     }
                     else
                     {
@@ -2902,7 +2905,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = character->points.getDefensiveBonusPtr();
+                        v->ref = character->getDefensiveBonusPtr();
                     }
                     else
                     {
@@ -2933,7 +2936,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = character->points.getSexPtr();
+                        v->ref = character->getSexPtr();
                     }
                     else
                     {
@@ -2964,7 +2967,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = character->points.getRacePtr();
+                        v->ref = character->getRacePtr();
                     }
                     else
                     {
@@ -3025,20 +3028,20 @@ void dilfe_fld(dilprg *p)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_SINT2R;
-                            v->ref = character->points.getAbilityAtIndexPtr(v2->val.num);
+                            v->ref = character->getAbilityAtIndexPtr(v2->val.num);
                         }
                         else
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
-                            v->val.num = character->points.getAbilityAtIndex(v2->val.num);
+                            v->val.num = character->getAbilityAtIndex(v2->val.num);
                         }
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = character->points.getAbilityAtIndexPtr(v2->val.num);
+                        v->ref = character->getAbilityAtIndexPtr(v2->val.num);
                     }
                 }
                 else
@@ -3563,13 +3566,13 @@ void dilfe_fld(dilprg *p)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_SINT4R;
-                            v->ref = character->points.getPlayerExperiencePtr();
+                            v->ref = character->getPlayerExperiencePtr();
                         }
                         else
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
-                            v->val.num = character->points.getPlayerExperience();
+                            v->val.num = character->getPlayerExperience();
                         }
                     }
                     else
@@ -3634,7 +3637,7 @@ void dilfe_fld(dilprg *p)
                         else
                         {
                             v->type = DILV_UINT1R;
-                            v->ref = character->points.getLevelPtr();
+                            v->ref = character->getLevelPtr();
                         }
                     }
                     else
@@ -3783,7 +3786,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = character->points.getPositionPtr();
+                        v->ref = character->getPositionPtr();
                     }
                     else
                     {
@@ -3826,7 +3829,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = character->points.getAttackTypePtr();
+                        v->ref = character->getAttackTypePtr();
                     }
                     else
                     {
@@ -3857,7 +3860,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = character->points.getManaPtr();
+                        v->ref = character->getManaPtr();
                     }
                     else
                     {
@@ -3888,7 +3891,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = character->points.getEndurancePtr();
+                        v->ref = character->getEndurancePtr();
                     }
                     else
                     {
@@ -3919,7 +3922,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = character->points.getNaturalArmorPtr();
+                        v->ref = character->getNaturalArmorPtr();
                     }
                     else
                     {
@@ -3950,7 +3953,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = character->points.getCharacterFlagsPtr();
+                        v->ref = character->getCharacterFlagsPtr();
                     }
                     else
                     {
@@ -4677,17 +4680,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
-                        v->ref = &CHAR_MASTER((unit_data *)v1->val.ptr);
+                        v->ref = character->getMasterPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4713,7 +4719,7 @@ void dilfe_fld(dilprg *p)
                         {
                             v->atyp = DILA_NORM;
                             v->type = DILV_UPR;
-                            v->ref = character->followers->getFollowerPtr();
+                            v->ref = character->getFollowers()->getFollowerPtr();
                         }
                         else
                         {

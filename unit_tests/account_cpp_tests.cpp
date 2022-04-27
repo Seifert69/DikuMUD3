@@ -667,7 +667,7 @@ BOOST_AUTO_TEST_CASE(account_local_stat_funds_test)
 
 BOOST_AUTO_TEST_CASE(account_local_stat_admin_test)
 {
-    god->points.setLevel(ADMINISTRATOR_LEVEL);
+    god->setLevel(ADMINISTRATOR_LEVEL);
     whom->account.setLastFourDigitsofCreditCard(4444);
     whom->account.setTotalCredit(5000);
 
@@ -731,7 +731,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_false_false)
 {
     g_cServerConfig.disableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 1;
-    whom->points.setLevel(10);
+    whom->setLevel(10);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -743,7 +743,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_false_true)
 {
     g_cServerConfig.disableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -755,7 +755,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_true_false)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 1;
-    whom->points.setLevel(10);
+    whom->setLevel(10);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_overdue(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -767,7 +767,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_1)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     whom->account.setFlatRateExpirationDate(time(nullptr) + 10000);
     whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
@@ -781,7 +781,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_2)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     whom->account.setFlatRateExpirationDate(time(nullptr) - 10000);
     whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
@@ -795,7 +795,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_3)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     whom->account.setFlatRateExpirationDate(time(nullptr) + 10000);
     whom->account.setAccountBalance(1000.00);
     ////////////////////////// Test Subject //////////////////////////////
@@ -809,7 +809,7 @@ BOOST_AUTO_TEST_CASE(account_is_overdue_test_4)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     whom->account.setFlatRateExpirationDate(time(nullptr) - 10000);
     whom->account.setAccountBalance(-1000.00);
     ////////////////////////// Test Subject //////////////////////////////
@@ -902,7 +902,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_1)
 {
     g_cServerConfig.disableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -912,7 +912,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_2)
 {
     g_cServerConfig.disableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 1;
-    whom->points.setLevel(10);
+    whom->setLevel(10);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -923,7 +923,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_3)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 1;
-    whom->points.setLevel(10);
+    whom->setLevel(10);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
     ////////////////////////// Test Subject //////////////////////////////
@@ -934,7 +934,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_4)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     whom->account.setFlatRateExpirationDate(time(nullptr) + 1000);
     ////////////////////////// Test Subject //////////////////////////////
     auto rc = account_is_closed(whom.get());
@@ -946,7 +946,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_5)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     whom->account.setFlatRateExpirationDate(time(nullptr) - 1000);
     whom->account.setAccountBalance(-50);
     whom->account.setCreditLimit(100);
@@ -960,7 +960,7 @@ BOOST_AUTO_TEST_CASE(account_is_closed_test_6)
 {
     g_cServerConfig.enableAccounting();
     g_cAccountConfig.m_nFreeFromLevel = 10;
-    whom->points.setLevel(1);
+    whom->setLevel(1);
     whom->account.setFlatRateExpirationDate(time(nullptr) - 1000);
     whom->account.setAccountBalance(-500);
     whom->account.setCreditLimit(100);

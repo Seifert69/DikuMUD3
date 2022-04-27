@@ -26,6 +26,7 @@ public:
 
 void page_string(descriptor_data *d, const char *);
 void page_string(descriptor_data *d, const std::string &);
+void page_string(const descriptor_data *d, const std::string &);
 
 void send_to_outdoor(const char *messg);
 void send_to_zone_outdoor(const zone_type *z, const char *messg);

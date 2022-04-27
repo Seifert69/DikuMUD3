@@ -480,7 +480,7 @@ mobile_field    : unit_field
 
 omobile_field   : MANA number
     {
-        getCharPoints(cur).setMana($2);
+        UCHAR(cur)->setMana($2);
     }
     | ACT flags
     {
@@ -501,32 +501,32 @@ omobile_field   : MANA number
             strcat(buf, tmp);
         }
 
-        CHAR_MONEY(cur) = (char *)mmalloc(strlen(buf) + 1);
+        UCHAR(cur)->setMoney((char *)mmalloc(strlen(buf) + 1));
         strcpy(CHAR_MONEY(cur), buf);
     }
     | EXP number
     {
-        getCharPoints(cur).setPlayerExperience($2);
+        UCHAR(cur)->setPlayerExperience($2);
     }
     | SEX number
     {
-        getCharPoints(cur).setSex($2);
+        UCHAR(cur)->setSex($2);
     }
     | LEVEL number
     {
-        getCharPoints(cur).setLevel($2);
+        UCHAR(cur)->setLevel($2);
     }
     | RACE number
     {
-        getCharPoints(cur).setRace($2);
+        UCHAR(cur)->setRace($2);
     }
     | ATTACK number
     {
-        getCharPoints(cur).setAttackType($2);
+        UCHAR(cur)->setAttackType($2);
     }
     | POSITION number
     {
-        getCharPoints(cur).setPosition($2);
+        UCHAR(cur)->setPosition($2);
     }
     | DEFAULT number
     {
@@ -534,27 +534,27 @@ omobile_field   : MANA number
     }
     | FLAGS flags
     {
-        getCharPoints(cur).setAllCharacterFlags($2);
+        UCHAR(cur)->setAllCharacterFlags($2);
     }
     | ARMOUR number
     {
-        getCharPoints(cur).setNaturalArmor($2);
+        UCHAR(cur)->setNaturalArmor($2);
     }
     | SPEED number
     {
-        getCharPoints(cur).setSpeed($2);
+        UCHAR(cur)->setSpeed($2);
     }
     | DEFENSIVE number
     {
-        getCharPoints(cur).setDefensiveBonus($2);
+        UCHAR(cur)->setDefensiveBonus($2);
     }
     | OFFENSIVE number
     {
-        getCharPoints(cur).setOffensiveBonus($2);
+        UCHAR(cur)->setOffensiveBonus($2);
     }
     | ABILITY index number
     {
-        getCharPoints(cur).setAbilityAtIndexTo($2, $3);
+        UCHAR(cur)->setAbilityAtIndexTo($2, $3);
     }
     | WEAPON index number
     {

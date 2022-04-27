@@ -1061,7 +1061,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_OFFENSIVE(u),
                                        CHAR_DEFENSIVE(u),
                                        sprinttype(nullptr, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
-                                       getCharPoints(u).getSpeedPercentage(IS_PC(u)),
+                                       UCHAR(u)->getSpeedPercentage(),
                                        CHAR_SPEED(u),
                                        CHAR_NATURAL_ARMOUR(u),
                                        (signed long)UNIT_HIT(u),

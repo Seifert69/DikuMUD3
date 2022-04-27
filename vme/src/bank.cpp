@@ -459,7 +459,7 @@ void tax_player(unit_data *ch)
 
     *(b = buf) = '\0';
 
-    CHAR_DESCRIPTOR(ch) = nullptr; /* To avoid getting text output to the player */
+    UCHAR(ch)->setDescriptor(nullptr); // To avoid getting text output to the player
 
     init_bank(ch, nullptr, TRUE);
 
@@ -515,7 +515,7 @@ void tax_player(unit_data *ch)
         limit -= (holds_sum + holds);
     }
 
-    CHAR_DESCRIPTOR(ch) = d;
+    UCHAR(ch)->setDescriptor(d);
 
     if (b != buf)
     {

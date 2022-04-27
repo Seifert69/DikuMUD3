@@ -206,16 +206,14 @@ void cCombatList::PerformViolence()
                     pElems[nIdx]->nAttackNo++;
                     if (char_dual_wield(pElems[nIdx]->pOwner))
                     {
-                        int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(2, IS_PC(pElems[nIdx]->pOwner));
+                        int n = UCHAR(pElems[nIdx]->pOwner)->getNumberOfMeleeAttacks(2);
 
                         unit_data *pWeapon = nullptr;
                         int nWeaponType;
                         int nWeaponSpeed;
 
                         getWeapon(pElems[nIdx]->pOwner, &pWeapon, &nWeaponType, &nWeaponSpeed, (pElems[nIdx]->nAttackNo & 1));
-                        int actions = pElems[nIdx]->calculateHastedActions(
-                            nWeaponSpeed,
-                            getCharPoints(pElems[nIdx]->pOwner).getSpeedPercentage(IS_PC(pElems[nIdx]->pOwner)));
+                        int actions = pElems[nIdx]->calculateHastedActions(nWeaponSpeed, UCHAR(pElems[nIdx]->pOwner)->getSpeedPercentage());
 
                         if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen + actions <= SPEED_DEFAULT))
                         {
@@ -249,16 +247,14 @@ void cCombatList::PerformViolence()
                     }
                     else
                     {
-                        int n = getCharPoints(pElems[nIdx]->pOwner).getNumberOfMeleeAttacks(1, IS_PC(pElems[nIdx]->pOwner));
+                        int n = UCHAR(pElems[nIdx]->pOwner)->getNumberOfMeleeAttacks(1);
 
                         unit_data *pWeapon = nullptr;
                         int nWeaponType;
                         int nWeaponSpeed;
 
                         getWeapon(pElems[nIdx]->pOwner, &pWeapon, &nWeaponType, &nWeaponSpeed, (pElems[nIdx]->nAttackNo & 1));
-                        int actions = pElems[nIdx]->calculateHastedActions(
-                            nWeaponSpeed,
-                            getCharPoints(pElems[nIdx]->pOwner).getSpeedPercentage(IS_PC(pElems[nIdx]->pOwner)));
+                        int actions = pElems[nIdx]->calculateHastedActions(nWeaponSpeed, UCHAR(pElems[nIdx]->pOwner)->getSpeedPercentage());
 
                         if ((pElems[nIdx]->nAttackNo <= n) && (pElems[nIdx]->nWhen + actions <= SPEED_DEFAULT))
                         {
@@ -343,11 +339,11 @@ cCombat::~cCombat()
         pOpponents = nullptr;
     }
 
-    CHAR_COMBAT(pOwner) = nullptr;
+    UCHAR(pOwner)->setCombat(nullptr);
 
     g_CombatList.sub(this);
 
-    getCharPoints(pOwner).setPosition(POSITION_STANDING);
+    UCHAR(pOwner)->setPosition(POSITION_STANDING);
     update_pos(pOwner);
 
     pOwner = nullptr;
@@ -486,7 +482,7 @@ void cCombat::addOpponent(unit_data *victim, int bMelee = FALSE)
 
         if (!CHAR_COMBAT(victim))
         {
-            CHAR_COMBAT(victim) = new cCombat(victim, bMelee);
+            UCHAR(victim)->setCombat(new cCombat(victim, bMelee));
         }
 
         CHAR_COMBAT(victim)->add(pOwner);
@@ -571,12 +567,12 @@ void set_fighting(unit_data *ch, unit_data *vict, int bMelee)
 
     if (CHAR_COMBAT(ch) == nullptr)
     {
-        CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+        UCHAR(ch)->setCombat(new cCombat(ch, bMelee));
     }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
 
-    getCharPoints(ch).setPosition(POSITION_FIGHTING);
+    UCHAR(ch)->setPosition(POSITION_FIGHTING);
 }
 
 /* start one char fighting another (yes, it is horrible, I know... )  */
@@ -596,7 +592,7 @@ void add_fighting(unit_data *ch, unit_data *vict, int bMelee)
 
     if (CHAR_COMBAT(ch) == nullptr)
     {
-        CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+        UCHAR(ch)->setCombat(new cCombat(ch, bMelee));
     }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
@@ -619,8 +615,8 @@ void stop_fighting(unit_data *ch, unit_data *victim)
 
     if (CHAR_COMBAT(ch) == nullptr)
     {
-        getCharPoints(ch).removeCharacterFlag(CHAR_SELF_DEFENCE);
-        getCharPoints(ch).setPosition(POSITION_STANDING);
+        UCHAR(ch)->removeCharacterFlag(CHAR_SELF_DEFENCE);
+        UCHAR(ch)->setPosition(POSITION_STANDING);
         update_pos(ch);
     }
 }

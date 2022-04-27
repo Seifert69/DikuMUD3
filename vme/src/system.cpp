@@ -71,10 +71,10 @@ void init_char(unit_data *ch)
 
     account_defaults(ch);
 
-    getCharPoints(ch).setPosition(POSITION_STANDING);
-    getCharPoints(ch).setSpeed(SPEED_DEFAULT);
-    getCharPoints(ch).setRace(RACE_HUMAN);
-    getCharPoints(ch).setSex(SEX_MALE);
+    UCHAR(ch)->setPosition(POSITION_STANDING);
+    UCHAR(ch)->setSpeed(SPEED_DEFAULT);
+    UCHAR(ch)->setRace(RACE_HUMAN);
+    UCHAR(ch)->setSex(SEX_MALE);
 
     const auto now = time(nullptr);
     PC_TIME(ch).setPlayerLastConnectTime(now);
@@ -83,8 +83,8 @@ void init_char(unit_data *ch)
     PC_TIME(ch).setTotalTimePlayedInSeconds(0);
     PC_LIFESPAN(ch) = 100;
 
-    getCharPoints(ch).setPlayerExperience(0);
-    getCharPoints(ch).setLevel(0);
+    UCHAR(ch)->setPlayerExperience(0);
+    UCHAR(ch)->setLevel(0);
     PC_ID(ch) = -1;
     PC_CRIMES(ch) = 0;
 
@@ -98,18 +98,18 @@ void init_char(unit_data *ch)
         PC_ID(ch) = new_player_id();
     }
 
-    getCharPoints(ch).setAttackType(WPN_FIST);
-    getCharPoints(ch).setNaturalArmor(ARM_CLOTHES);
+    UCHAR(ch)->setAttackType(WPN_FIST);
+    UCHAR(ch)->setNaturalArmor(ARM_CLOTHES);
 
     ch->setCurrentHitpoints(1);
     ch->setMaximumHitpoints(1);
 
-    getCharPoints(ch).setMana(mana_limit(ch));
-    getCharPoints(ch).setEndurance(move_limit(ch));
-    CHAR_LAST_ROOM(ch) = nullptr;
+    UCHAR(ch)->setMana(mana_limit(ch));
+    UCHAR(ch)->setEndurance(move_limit(ch));
+    UCHAR(ch)->setLastLocation(nullptr);
 
-    getCharPoints(ch).setAllCharacterFlags(0);
-    getCharPoints(ch).setCharacterFlag(CHAR_PROTECTED);
+    UCHAR(ch)->setAllCharacterFlags(0);
+    UCHAR(ch)->setCharacterFlag(CHAR_PROTECTED);
 
     for (i = 0; i < 3; i++)
     {
@@ -157,7 +157,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         {
             g_possible_saves--;
         }
-        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+        UCHAR(d->getCharacter())->setDescriptor(nullptr);
         extract_unit(d->getCharacter());
         d->setCharacter(nullptr);
         /* Too much log slog(LOG_ALL, "Losing descriptor from menu."); */
@@ -200,7 +200,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
                     link_dead = find_dil_template("link_dead@basis");
                     if (link_dead)
                     {
-                        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+                        UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
                         dilprg *prg = dil_copy_template(link_dead, d->getCharacter(), nullptr);
                         if (prg)
                         {
@@ -211,15 +211,15 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
                 }
                 else
                 {
-                    CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr; // Prevent counting down players, we did above
-                    extract_unit(d->getCharacter());               /* We extract guests */
+                    UCHAR(d->cgetCharacter())->setDescriptor(nullptr); // Prevent counting down players, we did above
+                    extract_unit(d->getCharacter());                   /* We extract guests */
                     g_possible_saves--;
                 }
             }
         }
         /* Important we set tp null AFTER calling save - otherwise
            time played does not get updated. */
-        CHAR_DESCRIPTOR(d->cgetCharacter()) = nullptr;
+        UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
         d->setCharacter(nullptr);
     }
 

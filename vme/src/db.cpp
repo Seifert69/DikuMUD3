@@ -853,7 +853,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (IS_PC(u))
                 {
-                    CHAR_LAST_ROOM(u) = tmpfi->Front();
+                    UCHAR(u)->setLastLocation(tmpfi->Front());
                 }
                 else
                 {
@@ -866,12 +866,12 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     switch (UNIT_TYPE(u))
     {
         case UNIT_ST_NPC:
-            g_nCorrupt += pBuf->ReadStringAlloc(&CHAR_MONEY(u));
+            g_nCorrupt += pBuf->ReadStringAlloc(UCHAR(u)->getMoneyPtr());
             [[fallthrough]];
 
         case UNIT_ST_PC:
         {
-            getCharPoints(u).readFrom(*pBuf, unit_version, u, g_nCorrupt);
+            UCHAR(u)->readFrom(*pBuf, unit_version, u, g_nCorrupt);
 
             if (IS_PC(u))
             {
@@ -889,7 +889,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 else
                 {
                     /// @todo worse than spooky - why decrement a race?? Also could be really bad if race==0
-                    getCharPoints(u).setRace(getCharPoints(u).getRace() - 1);
+                    UCHAR(u)->setRace(UCHAR(u)->getRace() - 1);
 
                     base_race_info_type *sex_race = nullptr;
 
@@ -967,7 +967,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     if ((fi = find_file_index(zone, name)))
                     {
-                        CHAR_LAST_ROOM(u) = fi->Front();
+                        UCHAR(u)->setLastLocation(fi->Front());
                     }
                 }
 
@@ -1034,7 +1034,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     if (CHAR_EXP(u) < xpfloor)
                     {
                         slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", UNIT_NAME(u), CHAR_EXP(u), xpfloor);
-                        getCharPoints(u).setPlayerExperience(xpfloor);
+                        UCHAR(u)->setPlayerExperience(xpfloor);
                         // xxx
                     }
                 }
@@ -1346,7 +1346,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 prev = c + 1;
             }
 
-            FREE(CHAR_MONEY(u));
+            UCHAR(u)->freeMoney();
         }
 
         /* We dare not start if unit is corrupt! */

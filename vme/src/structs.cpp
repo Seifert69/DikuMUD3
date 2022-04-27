@@ -29,14 +29,15 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 char_data::char_data(ubit8 unit_type)
     : unit_data(unit_type)
-    , descriptor{nullptr}
-    , Combat{nullptr}
-    , master{nullptr}
-    , last_room{nullptr}
-    , followers{nullptr}
-    , last_attacker{nullptr}
-    , money{nullptr}
-    , last_attacker_type{0}
+    , m_descriptor{nullptr}
+    , m_combat{nullptr}
+    , m_master{nullptr}
+    , m_last_room{nullptr}
+    , m_points{}
+    , m_followers{nullptr}
+    , m_last_attacker{nullptr}
+    , m_money{nullptr}
+    , m_last_attacker_type{0}
 {
     g_world_nochars++;
 
@@ -47,13 +48,13 @@ char_data::char_data(ubit8 unit_type)
 char_data::~char_data()
 {
 #ifdef DMSERVER
-    if (money)
+    if (m_money)
     {
-        FREE(money);
+        FREE(m_money);
     }
-    if (last_attacker)
+    if (m_last_attacker)
     {
-        FREE(last_attacker);
+        FREE(m_last_attacker);
     }
 #endif
     g_world_nochars--;

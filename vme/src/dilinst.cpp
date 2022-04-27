@@ -745,10 +745,10 @@ void dilfi_chas(dilprg *p)
 
     if (dil_type_check("change_speed", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && CHAR_COMBAT((unit_data *)v1->val.ptr))
+        auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+        if (character && IS_CHAR(character) && CHAR_COMBAT(character))
         {
-            CHAR_COMBAT((unit_data *)v1->val.ptr)
-                ->changeSpeed(v2->val.num, getCharPoints((unit_data *)v1->val.ptr).getSpeedPercentage(IS_PC((unit_data *)v1->val.ptr)));
+            CHAR_COMBAT(character)->changeSpeed(v2->val.num, character->getSpeedPercentage());
         }
     }
     delete v1;
@@ -774,7 +774,7 @@ void dilfi_rslv(dilprg *p)
             {
                 if (!IS_IMMORTAL(character))
                 {
-                    character->points.setLevel(1);
+                    character->setLevel(1);
                 }
             }
         }

@@ -48,7 +48,7 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     /* Make a new PC struct */
     character = new EMPLACE(pc_data) pc_data;
     init_char(character);
-    CHAR_DESCRIPTOR(character) = this;
+    UCHAR(character)->setDescriptor(this);
 
     /* prepend to list */
     next = g_descriptor_list;

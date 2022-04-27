@@ -226,84 +226,74 @@ inline ubit8 OBJ_FLAGS(unit_data *obj) { return UOBJ(obj)->getObjectFlags(); }
 /* ..................................................................... */
 
 /*#define CHAR_DEX_RED(ch)     \  (UCHAR(ch)->points.dex_reduction)*/
+// clang-format off
+inline const descriptor_data *CHAR_DESCRIPTOR(const unit_data *ch) { return UCHAR(ch)->getDescriptor(); }
 
-inline char_point_data &getCharPoints(unit_data *unit)
-{
-    auto character = dynamic_cast<char_data *>(unit);
-    assert(character != nullptr);
-    return character->points;
-}
+inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch) { return UCHAR(ch)->getDescriptor(); }
 
-inline const char_point_data &getCharPoints(const unit_data *unit)
-{
-    auto character = dynamic_cast<const char_data *>(unit);
-    assert(character != nullptr);
-    return character->points;
-}
+inline sbit16 CHAR_OFFENSIVE(const unit_data *unit) { return UCHAR(unit)->getOffensiveBonus(); }
 
-#define CHAR_DESCRIPTOR(ch) (UCHAR(ch)->descriptor)
+inline sbit16 CHAR_DEFENSIVE(const unit_data *unit) { return UCHAR(unit)->getDefensiveBonus(); }
 
-#define CHAR_OFFENSIVE(unit) (getCharPoints(unit).getOffensiveBonus())
+inline ubit32 CHAR_FLAGS(const unit_data *unit) { return UCHAR(unit)->getCharacterFlags(); }
 
-#define CHAR_DEFENSIVE(unit) (getCharPoints(unit).getDefensiveBonus())
+inline ubit8 CHAR_SEX(const unit_data *ch) { return UCHAR(ch)->getSex(); }
 
-#define CHAR_FLAGS(unit) (getCharPoints(unit).getCharacterFlags())
+inline unit_data *CHAR_LAST_ROOM(unit_data *unit) { return UCHAR(unit)->getLastLocation(); }
 
-#define CHAR_SEX(ch) (getCharPoints(ch).getSex())
+inline const char *CHAR_LAST_ATTACKER(const unit_data *unit) { return UCHAR(unit)->getLastAttacker(); }
 
-#define CHAR_LAST_ROOM(unit) (UCHAR(unit)->last_room)
+inline ubit8 CHAR_LAST_ATTACKER_TYPE(const unit_data *unit) { return UCHAR(unit)->getLastAttackerType(); }
 
-#define CHAR_LAST_ATTACKER(unit) (UCHAR(unit)->last_attacker)
+inline ubit8 CHAR_POS(const unit_data *ch) { return UCHAR(ch)->getPosition(); }
 
-#define CHAR_LAST_ATTACKER_TYPE(unit) (UCHAR(unit)->last_attacker_type)
+inline ubit8 CHAR_LEVEL(const unit_data *ch) { return UCHAR(ch)->getLevel(); }
 
-#define CHAR_POS(ch) (getCharPoints(ch).getPosition())
+inline ubit16 CHAR_RACE(const unit_data *ch) { return UCHAR(ch)->getRace(); }
 
-#define CHAR_LEVEL(ch) (getCharPoints(ch).getLevel())
+inline sbit16 CHAR_ABILITY(const unit_data *ch, size_t index) { return UCHAR(ch)->getAbilityAtIndex(index); }
 
-#define CHAR_RACE(ch) (getCharPoints(ch).getRace())
+inline sbit16 CHAR_STR(const unit_data *ch) { return UCHAR(ch)->getSTR(); }
 
-#define CHAR_ABILITY(ch, index) (getCharPoints(ch).getAbilityAtIndex(index))
+inline sbit16 CHAR_DEX(const unit_data *ch) { return UCHAR(ch)->getDEX(); }
 
-#define CHAR_STR(ch) (getCharPoints(ch).getSTR())
+inline sbit16 CHAR_CON(const unit_data *ch) { return UCHAR(ch)->getCON(); }
 
-#define CHAR_DEX(ch) (getCharPoints(ch).getDEX())
+inline sbit16 CHAR_CHA(const unit_data *ch) { return UCHAR(ch)->getCHA(); }
 
-#define CHAR_CON(ch) (getCharPoints(ch).getCON())
+inline sbit16 CHAR_BRA(const unit_data *ch) { return UCHAR(ch)->getBRA(); }
 
-#define CHAR_CHA(ch) (getCharPoints(ch).getCHA())
+inline sbit16 CHAR_MAG(const unit_data *ch) { return UCHAR(ch)->getMAG(); }
 
-#define CHAR_BRA(ch) (getCharPoints(ch).getBRA())
+inline sbit16 CHAR_DIV(const unit_data *ch) { return UCHAR(ch)->getDIV(); }
 
-#define CHAR_MAG(ch) (getCharPoints(ch).getMAG())
+inline sbit16 CHAR_HPP(const unit_data *ch) { return UCHAR(ch)->getHPP(); }
 
-#define CHAR_DIV(ch) (getCharPoints(ch).getDIV())
+inline sbit16 CHAR_ENDURANCE(const unit_data *ch) { return UCHAR(ch)->getEndurance(); }
 
-#define CHAR_HPP(ch) (getCharPoints(ch).getHPP())
-
-#define CHAR_ENDURANCE(ch) (getCharPoints(ch).getEndurance())
-
-#define CHAR_MANA(ch) (getCharPoints(ch).getMana())
+inline sbit16 CHAR_MANA(const unit_data *ch) { return UCHAR(ch)->getMana(); }
 
 /* NOT to be used unless by db.... */
-#define CHAR_MONEY(ch) (UCHAR(ch)->money)
+inline const char *CHAR_MONEY(const unit_data *ch) { return UCHAR(ch)->getMoney(); }
 
-#define CHAR_EXP(ch) (getCharPoints(ch).getPlayerExperience())
+inline char *CHAR_MONEY(unit_data *ch) { return UCHAR(ch)->getMoney(); }
 
-#define CHAR_ATTACK_TYPE(ch) (getCharPoints(ch).getAttackType())
+inline sbit32 CHAR_EXP(const unit_data *ch) { return UCHAR(ch)->getPlayerExperience(); }
 
-#define CHAR_NATURAL_ARMOUR(ch) (getCharPoints(ch).getNaturalArmor())
+inline ubit8 CHAR_ATTACK_TYPE(const unit_data *ch) { return UCHAR(ch)->getAttackType(); }
 
-#define CHAR_SPEED(ch) (getCharPoints(ch).getSpeed())
+inline ubit8 CHAR_NATURAL_ARMOUR(const unit_data *ch) { return UCHAR(ch)->getNaturalArmor(); }
 
-#define CHAR_COMBAT(ch) (UCHAR(ch)->Combat)
+inline sbit16 CHAR_SPEED(const unit_data *ch) { return UCHAR(ch)->getSpeed(); }
 
-#define CHAR_FIGHTING(ch) (UCHAR(ch)->Combat ? CHAR_COMBAT(ch)->Melee() : (unit_data *)nullptr)
+inline cCombat *CHAR_COMBAT(unit_data *ch) { return UCHAR(ch)->getCombat(); }
 
-#define CHAR_MASTER(ch) (UCHAR(ch)->master)
+inline unit_data *CHAR_FIGHTING(unit_data *ch) { return UCHAR(ch)->getCombat() ? CHAR_COMBAT(ch)->Melee() : nullptr; }
 
-#define CHAR_FOLLOWERS(ch) (UCHAR(ch)->followers)
+inline unit_data *CHAR_MASTER(unit_data *ch) { return UCHAR(ch)->getMaster(); }
 
+inline char_follow_type *CHAR_FOLLOWERS(const unit_data *ch) { return UCHAR(ch)->getFollowers(); }
+// clang-format on
 /* ...........................CHAR SUPERSTRUCTURES....................... */
 
 #define CHAR_IS_READY(ch) (CHAR_AWAKE(ch) && (CHAR_POS(ch) != POSITION_FIGHTING))
@@ -318,7 +308,10 @@ inline const char_point_data &getCharPoints(const unit_data *unit)
 
 #define CHAR_SNOOPED(ch) (CHAR_IS_SNOOPED(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy()) : (ch))
 
-#define CHAR_ORIGINAL(ch) (CHAR_IS_SWITCHED(ch) ? (CHAR_DESCRIPTOR(ch)->getOriginalCharacter()) : (ch))
+inline unit_data *CHAR_ORIGINAL(unit_data *ch)
+{
+    return CHAR_IS_SWITCHED(ch) ? CHAR_DESCRIPTOR(ch)->getOriginalCharacter() : ch;
+}
 
 #define CHAR_AWAKE(ch) (CHAR_POS(ch) > POSITION_SLEEPING)
 
