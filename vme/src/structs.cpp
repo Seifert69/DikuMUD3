@@ -27,39 +27,6 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 /* Descriptor stuff is in system.c */
 
-char_data::char_data(ubit8 unit_type)
-    : unit_data(unit_type)
-    , m_descriptor{nullptr}
-    , m_combat{nullptr}
-    , m_master{nullptr}
-    , m_last_room{nullptr}
-    , m_points{}
-    , m_followers{nullptr}
-    , m_last_attacker{nullptr}
-    , m_money{nullptr}
-    , m_last_attacker_type{0}
-{
-    g_world_nochars++;
-
-    // MS2020 memset(&points, 0, sizeof (points));
-    // Removed because class constructor already initialize class variables.
-}
-
-char_data::~char_data()
-{
-#ifdef DMSERVER
-    if (m_money)
-    {
-        FREE(m_money);
-    }
-    if (m_last_attacker)
-    {
-        FREE(m_last_attacker);
-    }
-#endif
-    g_world_nochars--;
-}
-
 pc_data::pc_data()
     : char_data(UNIT_ST_PC)
     , setup{0, 0, 0, 0, 0, 0, 0, 0}

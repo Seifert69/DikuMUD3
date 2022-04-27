@@ -1,6 +1,6 @@
 #pragma once
 
-#include "structs.h"
+#include "unit_data.h"
 
 class char_follow_type
 {
