@@ -361,7 +361,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_INT;
                         if (g_cServerConfig.isAccounting())
                         {
-                            v->val.num = player->account.getTotalCredit();
+                            v->val.num = player->getPCAccountData().getTotalCredit();
                         }
                         else
                         {
@@ -398,7 +398,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_INT;
                         if (g_cServerConfig.isAccounting())
                         {
-                            v->val.num = static_cast<int>(player->account.getAccountBalance());
+                            v->val.num = static_cast<int>(player->getPCAccountData().getAccountBalance());
                         }
                         else
                         {

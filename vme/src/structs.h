@@ -79,15 +79,22 @@ public:
 
     /**
      * @name PC time related code
+     * @{
      */
     pc_time_data &getPCTimeInformation() { return m_time; }
+    /// @}
+
+    /**
+     * @name Accounting related code
+     * @{
+     */
+    pc_account_data &getPCAccountData() { return m_account; }
     /// @}
 private:
     terminal_setup_type m_setup{}; ///<
     pc_time_data m_time{};         ///< PCs time info
+    pc_account_data m_account{};   ///< Accounting
 public:
-    pc_account_data account{}; ///< Accounting
-
     char *guild;     ///< Player's current default guild (guilds in .info)
     char *bank;      ///< How much money in bank?
     char *hometown;  ///< PCs Hometown (symbolic reference)

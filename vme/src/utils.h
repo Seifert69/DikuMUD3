@@ -343,7 +343,15 @@ inline terminal_setup_type &PC_SETUP(unit_data *pc)
 
 #define PC_LIFESPAN(pc) (UPC(pc)->lifespan)
 
-#define PC_ACCOUNT(pc) (UPC(pc)->account)
+inline pc_account_data &PC_ACCOUNT(unit_data *pc)
+{
+    return UPC(pc)->getPCAccountData();
+}
+
+inline pc_account_data &PC_ACCOUNT(const unit_data *pc)
+{
+    return UPC(pc)->getPCAccountData();
+}
 
 #define PC_VIRTUAL_LEVEL(pc) (UPC(pc)->vlvl)
 
