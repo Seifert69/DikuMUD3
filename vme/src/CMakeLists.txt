@@ -16,6 +16,7 @@ set(VME_SRCS
         ban.cpp ban.h
         bank.cpp bank.h
         bytestring.cpp bytestring.h
+        char_data.cpp char_data.h
         char_follow_type.cpp char_follow_type.h
         char_point_data.cpp char_point_data.h
         cmdload.cpp cmdload.h

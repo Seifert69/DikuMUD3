@@ -8,6 +8,7 @@ set(VMC_SRCS
         vmctok.h
         # Source files from other parts to link with vmc
         ../bytestring.cpp ../bytestring.h
+        ../char_data.cpp ../char_data.h
         ../color.cpp ../color.h
         ../common.cpp ../common.h
         ../db_file.cpp ../db_file.h
