@@ -169,6 +169,13 @@ public:
         }
     }
     /// @}
+
+    /**
+     * @name
+     * @{
+     */
+    extra_list &getAdministrationInformation() { return m_info; }
+    /// @}
 private:
     terminal_setup_type m_setup{}; ///<
     pc_time_data m_time{};         ///< PCs time info
@@ -177,8 +184,8 @@ private:
     char *m_bank{nullptr};         ///< How much money in bank?
     char *m_hometown{nullptr};     ///< PCs Hometown (symbolic reference)
     char *m_promptstr{nullptr};    ///< A PC's Prompt
+    extra_list m_info;             ///< For saving Admin information
 public:
-    extra_list info;  ///< For saving Admin information
     extra_list quest; ///< For saving QUEST information
 
     sbit8 profession; ///< The player's chosen profession, -1 means unknown

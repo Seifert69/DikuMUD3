@@ -182,7 +182,7 @@ void edit_info(descriptor_data *d)
 {
     extra_descr_data *exd = nullptr;
 
-    for (exd = PC_INFO(d->cgetEditing()).m_pList; exd; exd = exd->next)
+    for (exd = PC_INFO(d->getEditing()).m_pList; exd; exd = exd->next)
     {
         if (exd == d->getEditingReference())
         {

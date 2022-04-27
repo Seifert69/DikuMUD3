@@ -355,7 +355,10 @@ inline pc_account_data &PC_ACCOUNT(const unit_data *pc)
 
 #define PC_VIRTUAL_LEVEL(pc) (UPC(pc)->vlvl)
 
-#define PC_INFO(pc) (UPC(pc)->info)
+inline extra_list &PC_INFO(unit_data *pc)
+{
+    return UPC(pc)->getAdministrationInformation();
+}
 
 inline ubit8 PC_SETUP_ECHO(unit_data *pc)
 {
