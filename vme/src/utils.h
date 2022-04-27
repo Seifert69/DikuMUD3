@@ -340,7 +340,15 @@ inline sbit16 CHAR_MANA(const unit_data *ch)
 }
 
 /* NOT to be used unless by db.... */
-#define CHAR_MONEY(ch) (UCHAR(ch)->money)
+inline const char *CHAR_MONEY(const unit_data *ch)
+{
+    return UCHAR(ch)->getMoney();
+}
+
+inline char *CHAR_MONEY(unit_data *ch)
+{
+    return UCHAR(ch)->getMoney();
+}
 
 inline sbit32 CHAR_EXP(const unit_data *ch)
 {

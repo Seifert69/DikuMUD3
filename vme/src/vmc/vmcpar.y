@@ -501,7 +501,7 @@ omobile_field   : MANA number
             strcat(buf, tmp);
         }
 
-        CHAR_MONEY(cur) = (char *)mmalloc(strlen(buf) + 1);
+        UCHAR(cur)->setMoney((char *)mmalloc(strlen(buf) + 1));
         strcpy(CHAR_MONEY(cur), buf);
     }
     | EXP number

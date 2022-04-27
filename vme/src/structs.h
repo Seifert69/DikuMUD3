@@ -255,6 +255,16 @@ public:
     };
     void setLastAttacker(char *value) { m_last_attacker = value; }
     ///@}
+
+    /**
+     * @name Money related functions
+     */
+    const char *getMoney() const { return m_money; }
+    char *getMoney() { return m_money; }
+    char **getMoneyPtr() { return &m_money; }
+    void freeMoney() { FREE(m_money); }
+    void setMoney(char *value) { m_money = value; }
+    ///@}
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
     cCombat *m_combat{nullptr};             ///<
@@ -263,9 +273,8 @@ private:
     char_point_data m_points;               ///<
     char_follow_type *m_followers{nullptr}; ///<
     char *m_last_attacker{nullptr};         ///< Last attacker of character
+    char *m_money{nullptr};                 ///<  Money transfer from db-files.
 public:
-    char *money; ///<  Money transfer from db-files.
-
     ubit8 last_attacker_type; ///< Last attacker type of character
 };
 

@@ -1196,7 +1196,7 @@ void init_unit(unit_data *u)
         {
             u->setBaseWeight(120); // lbs default
             u->setWeight(120);     // lbs default
-            CHAR_MONEY(u) = nullptr;
+            UCHAR(u)->setMoney(nullptr);
             UCHAR(u)->setPlayerExperience(100); // 100 XP per default at your own level
             UCHAR(u)->setAllCharacterFlags(0);
             UCHAR(u)->setAttackType(WPN_FIST);

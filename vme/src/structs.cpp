@@ -36,7 +36,7 @@ char_data::char_data(ubit8 unit_type)
     , m_points{}
     , m_followers{nullptr}
     , m_last_attacker{nullptr}
-    , money{nullptr}
+    , m_money{nullptr}
     , last_attacker_type{0}
 {
     g_world_nochars++;
@@ -48,9 +48,9 @@ char_data::char_data(ubit8 unit_type)
 char_data::~char_data()
 {
 #ifdef DMSERVER
-    if (money)
+    if (m_money)
     {
-        FREE(money);
+        FREE(m_money);
     }
     if (m_last_attacker)
     {

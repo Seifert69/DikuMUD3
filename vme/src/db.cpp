@@ -866,7 +866,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     switch (UNIT_TYPE(u))
     {
         case UNIT_ST_NPC:
-            g_nCorrupt += pBuf->ReadStringAlloc(&CHAR_MONEY(u));
+            g_nCorrupt += pBuf->ReadStringAlloc(UCHAR(u)->getMoneyPtr());
             [[fallthrough]];
 
         case UNIT_ST_PC:
@@ -1346,7 +1346,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 prev = c + 1;
             }
 
-            FREE(CHAR_MONEY(u));
+            UCHAR(u)->freeMoney();
         }
 
         /* We dare not start if unit is corrupt! */
