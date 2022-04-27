@@ -1012,7 +1012,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     PC_CRACK_ATTEMPTS(u) = pBuf->ReadU16(&g_nCorrupt);
                 }
 
-                g_nCorrupt += pBuf->ReadStringAlloc(&PC_HOME(u));
+                g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getHometownPtr());
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getGuildPtr());
 
                 g_nCorrupt += pBuf->Skip32(); // skip value, was: PC_GUILD_TIME(u) obsolete

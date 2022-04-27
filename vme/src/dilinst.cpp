@@ -3149,7 +3149,7 @@ void dilfi_cast(dilprg *p)
     delete v4;
 }
 
-unit_data *hometown_unit(char *str)
+unit_data *hometown_unit(const char *str)
 {
     if (str)
     {

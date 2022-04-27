@@ -1080,15 +1080,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 44: /* hometown */
-            if (PC_HOME(unt) == nullptr)
-            {
-                CREATE(PC_HOME(unt), char, strlen(argument) + 1);
-            }
-            else
-            {
-                RECREATE(PC_HOME(unt), char, strlen(argument) + 1);
-            }
-            strcpy(PC_HOME(unt), argument);
+            UPC(unt)->setHometown(argument);
             send_to_char("Changed.<br/>", ch);
             return;
 

@@ -134,14 +134,34 @@ public:
     }
     void setBank(char *value) { m_bank = value; }
     /// @}
+
+    /**
+     * @name Hometown related code
+     * @{
+     */
+    const char *getHometown() const { return m_hometown; }
+    char **getHometownPtr() { return &m_hometown; }
+    void setHometown(char *value)
+    {
+        if (m_hometown == nullptr)
+        {
+            CREATE(m_hometown, char, strlen(value) + 1);
+        }
+        else
+        {
+            RECREATE(m_hometown, char, strlen(value) + 1);
+        }
+        strcpy(m_hometown, value);
+    }
+    /// @}
 private:
     terminal_setup_type m_setup{}; ///<
     pc_time_data m_time{};         ///< PCs time info
     pc_account_data m_account{};   ///< Accounting
     char *m_guild{nullptr};        ///< Player's current default guild (guilds in .info)
     char *m_bank{nullptr};         ///< How much money in bank?
+    char *m_hometown{nullptr};     ///< PCs Hometown (symbolic reference)
 public:
-    char *hometown;  ///< PCs Hometown (symbolic reference)
     char *promptstr; ///< A PC's Prompt
 
     extra_list info;  ///< For saving Admin information

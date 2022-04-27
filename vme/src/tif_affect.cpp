@@ -1006,7 +1006,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
     act("$1n materializes and vanish.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 
     unit_from_unit(unit);
-    unit_to_unit(unit, hometown_unit(PC_HOME(unit)));
+    unit_to_unit(unit, hometown_unit(UPC(unit)->getHometown()));
 
     act("The spirit of $1n materializes.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     act("You feel dizzy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);

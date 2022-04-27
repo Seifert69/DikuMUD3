@@ -445,7 +445,10 @@ inline pc_time_data &PC_TIME(unit_data *unit)
     return UPC(unit)->getPCTimeInformation();
 }
 
-#define PC_HOME(ch) (UPC(ch)->hometown)
+inline const char *PC_HOME(unit_data *ch)
+{
+    return UPC(ch)->getHometown();
+}
 /* .................... PC SUPER STRUCTURE ............................. */
 
 #define PC_IMMORTAL(ch) (IS_PC(ch) && CHAR_LEVEL(ch) >= 200)

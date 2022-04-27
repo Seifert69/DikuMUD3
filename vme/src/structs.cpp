@@ -32,7 +32,7 @@ pc_data::pc_data()
     , m_setup{0, 0, 0, 0, 0, 0, 0, 0}
     , m_guild{nullptr}
     , m_bank{nullptr}
-    , hometown{nullptr}
+    , m_hometown{nullptr}
     , promptstr{nullptr}
     , profession{-1}
     , vlvl{0}
@@ -65,8 +65,8 @@ pc_data::~pc_data()
     if (m_guild)
         FREE(m_guild);
 
-    if (hometown)
-        FREE(hometown);
+    if (m_hometown)
+        FREE(m_hometown);
 
     if (m_bank)
         FREE(m_bank);

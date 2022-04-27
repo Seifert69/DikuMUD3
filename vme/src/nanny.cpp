@@ -368,7 +368,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
     else
     {
-        load_room = hometown_unit(PC_HOME(this));
+        load_room = hometown_unit(m_hometown);
     }
 
     reset_char(this);
