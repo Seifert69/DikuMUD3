@@ -46,11 +46,11 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        getCharPoints(unit).setCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
+        UCHAR(unit)->setCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
     }
     else
     {
-        getCharPoints(unit).removeCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
+        UCHAR(unit)->removeCharacterFlag(static_cast<ubit32>(af->getDataAtIndex(0)));
 
         /* After bit has been removed, call all apply functions  */
         /* which will set bits [and one of these may be the bit  */
@@ -62,7 +62,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_CHAR_FLAGS))
             {
-                getCharPoints(unit).setCharacterFlag(static_cast<ubit32>(taf->getDataAtIndex(0)));
+                UCHAR(unit)->setCharacterFlag(static_cast<ubit32>(taf->getDataAtIndex(0)));
             }
         }
     }
@@ -285,7 +285,7 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
         {
             return raw_destruct_affect(af);
         }
-        getCharPoints(unit).increaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
+        UCHAR(unit)->increaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {
@@ -294,7 +294,7 @@ ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        getCharPoints(unit).decreaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
+        UCHAR(unit)->decreaseAbilityAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
 
         if (af->getDataAtIndex(0) == ABIL_HP)
         {
@@ -356,12 +356,12 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
             }
         }
 
-        getCharPoints(unit).setNaturalArmor(MAX(CHAR_NATURAL_ARMOUR(unit), af->getDataAtIndex(0)));
+        UCHAR(unit)->setNaturalArmor(MAX(CHAR_NATURAL_ARMOUR(unit), af->getDataAtIndex(0)));
     }
     else
     {
         /* Restore value... */
-        getCharPoints(unit).setNaturalArmor(af->getDataAtIndex(1));
+        UCHAR(unit)->setNaturalArmor(af->getDataAtIndex(1));
     }
 
     return TRUE;
@@ -388,11 +388,11 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        getCharPoints(unit).modifySpeedBy(af->getDataAtIndex(0));
+        UCHAR(unit)->modifySpeedBy(af->getDataAtIndex(0));
     }
     else
     {
-        getCharPoints(unit).modifySpeedBy(-af->getDataAtIndex(0));
+        UCHAR(unit)->modifySpeedBy(-af->getDataAtIndex(0));
     }
 
     return TRUE;

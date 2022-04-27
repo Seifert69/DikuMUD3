@@ -438,13 +438,13 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
                          ch);
             return;
         }
-        getCharPoints(ch).decreaseManaBy(g_spell_info[spl].usesmana);
+        UCHAR(ch)->decreaseManaBy(g_spell_info[spl].usesmana);
     }
 
     // Spells take time too!
     if (CHAR_COMBAT(ch))
     {
-        CHAR_COMBAT(ch)->changeSpeed(g_spell_info[spl].beats,getCharPoints(ch).getSpeedPercentage(IS_PC(ch)));
+        CHAR_COMBAT(ch)->changeSpeed(g_spell_info[spl].beats, UCHAR(ch)->getSpeedPercentage());
     }
 
     say_spell(ch, unit, spl);

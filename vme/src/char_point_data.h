@@ -56,13 +56,16 @@ public:
     void setDefensiveBonus(sbit16 value);
     sbit16 *getDefensiveBonusPtr();
 
-    int getNumberOfMeleeAttacks(int naturalAttacks, bool isPC);
-
     sbit16 getSpeed() const;
     void setSpeed(sbit16 value);
     void modifySpeedBy(sbit16 delta);
+
+private:
+    /// @todo moving this up to char_data where it should be - will be deleted after
+    int getNumberOfMeleeAttacks(int naturalAttacks, bool isPC);
     int getSpeedPercentage(bool isPC);
 
+public:
     ubit8 getNaturalArmor() const;
     void setNaturalArmor(ubit8 value);
     ubit8 *getNaturalArmorPtr();

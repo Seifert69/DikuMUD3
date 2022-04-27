@@ -250,7 +250,7 @@ int room_move(unit_data *ch,
 
     unit_from_unit(mover);
     // These two volatile flags are removed when you move.
-    getCharPoints(ch).removeCharacterFlag(CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
+    UCHAR(ch)->removeCharacterFlag(CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
     unit_to_unit(mover, room_to);
 
     if (UNIT_CONTAINS(room_to) && !str_is_empty(pArrOther))
@@ -660,7 +660,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }
         if (CHAR_LEVEL(ch) < 200)
         {
-            getCharPoints(ch).decreaseEnduranceBy(need_movement);
+            UCHAR(ch)->decreaseEnduranceBy(need_movement);
         }
     }
 

@@ -28,7 +28,7 @@ static void chg_wimpy(unit_data *ch)
         send_to_char("Ok, you'll flee when death is near.<br/>", ch);
     }
 
-    getCharPoints(ch).toggleCharacterFlag(CHAR_WIMPY);
+    UCHAR(ch)->toggleCharacterFlag(CHAR_WIMPY);
 }
 
 static void chg_expert(unit_data *ch)
@@ -84,7 +84,7 @@ static void chg_peaceful(unit_data *ch)
         send_to_char("You will no longer attack aggressors.<br/>", ch);
     }
 
-    getCharPoints(ch).toggleCharacterFlag(CHAR_PEACEFUL);
+    UCHAR(ch)->toggleCharacterFlag(CHAR_PEACEFUL);
 }
 
 static void chg_prompt(unit_data *ch)

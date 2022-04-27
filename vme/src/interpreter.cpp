@@ -400,7 +400,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
         }
         else
         {
-            CHAR_COMBAT(ch)->changeSpeed(cmd_ptr->combat_speed, getCharPoints(ch).getSpeedPercentage(IS_PC(ch)));
+            CHAR_COMBAT(ch)->changeSpeed(cmd_ptr->combat_speed, UCHAR(ch)->getSpeedPercentage());
         }
     }
 

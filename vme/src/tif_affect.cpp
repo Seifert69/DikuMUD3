@@ -418,7 +418,7 @@ void tif_sleep_on(unit_affected_type *af, unit_data *unit)
 
         act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n falls asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_ROOM);
-        getCharPoints(unit).setPosition(POSITION_SLEEPING);
+        UCHAR(unit)->setPosition(POSITION_SLEEPING);
     }
 }
 
@@ -440,7 +440,7 @@ void tif_sleep_check(unit_affected_type *af, unit_data *unit)
             }
             act("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             act("$1n falls asleep.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-            getCharPoints(unit).setPosition(POSITION_SLEEPING);
+            UCHAR(unit)->setPosition(POSITION_SLEEPING);
         }
     }
 }
@@ -855,8 +855,8 @@ void tif_poison_on(unit_affected_type *af, unit_data *unit)
 /* Data[2] The amount of Endurance points to loose (>=0) */
 void tif_poison_suffer(unit_affected_type *af, unit_data *unit)
 {
-    getCharPoints(unit).decreaseManaBy(af->getDataAtIndex(1));
-    getCharPoints(unit).decreaseEnduranceBy(af->getDataAtIndex(2));
+    UCHAR(unit)->decreaseManaBy(af->getDataAtIndex(1));
+    UCHAR(unit)->decreaseEnduranceBy(af->getDataAtIndex(2));
     damage(unit, unit, nullptr, af->getDataAtIndex(0), MSG_TYPE_OTHER, MSG_OTHER_POISON, COM_MSG_EBODY);
     /* unit can be destructed now, but no problemo */
 }
@@ -998,9 +998,9 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
         return;
     }
 
-    getCharPoints(unit).setPosition(POSITION_STANDING);
+    UCHAR(unit)->setPosition(POSITION_STANDING);
     REMOVE_BIT(PC_FLAGS(unit), PC_SPIRIT);
-    getCharPoints(unit).removeCharacterFlag(CHAR_KILL_SELF);
+    UCHAR(unit)->removeCharacterFlag(CHAR_KILL_SELF);
 
     act("You have a strange feeling...", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     act("$1n materializes and vanish.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
@@ -1015,8 +1015,8 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
     PC_COND(unit, THIRST) = 24;
     PC_COND(unit, DRUNK) = 0;
 
-    getCharPoints(unit).setMana(mana_limit(unit));
-    getCharPoints(unit).setEndurance(move_limit(unit));
+    UCHAR(unit)->setMana(mana_limit(unit));
+    UCHAR(unit)->setEndurance(move_limit(unit));
     unit->setCurrentHitpoints(UNIT_MAX_HIT(unit));
 
     if (!unit->is_destructed())

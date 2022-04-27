@@ -725,23 +725,23 @@ void update_pos(unit_data *victim)
     }
     else if (UNIT_HIT(victim) > 0)
     {
-        getCharPoints(victim).setPosition(POSITION_STANDING);
+        UCHAR(victim)->setPosition(POSITION_STANDING);
     }
     else if (UNIT_HIT(victim) <= -11)
     {
-        getCharPoints(victim).setPosition(POSITION_DEAD);
+        UCHAR(victim)->setPosition(POSITION_DEAD);
     }
     else if (UNIT_HIT(victim) <= -6)
     {
-        getCharPoints(victim).setPosition(POSITION_MORTALLYW);
+        UCHAR(victim)->setPosition(POSITION_MORTALLYW);
     }
     else if (UNIT_HIT(victim) <= -3)
     {
-        getCharPoints(victim).setPosition(POSITION_INCAP);
+        UCHAR(victim)->setPosition(POSITION_INCAP);
     }
     else
     {
-        getCharPoints(victim).setPosition(POSITION_STUNNED);
+        UCHAR(victim)->setPosition(POSITION_STUNNED);
     }
 }
 
@@ -1101,7 +1101,7 @@ void damage(unit_data *ch,
 
     if ((CHAR_POS(victim) == POSITION_SLEEPING) && (dam > 0))
     {
-        getCharPoints(victim).setPosition(POSITION_RESTING);
+        UCHAR(victim)->setPosition(POSITION_RESTING);
         send_to_char("OUCH! You wake up!<br/>", victim);
     }
 
@@ -1120,7 +1120,7 @@ void damage(unit_data *ch,
             {
                 destroy_affect(paf);
             }
-            getCharPoints(victim).removeCharacterFlag(CHAR_HIDE);
+            UCHAR(victim)->removeCharacterFlag(CHAR_HIDE);
         }
 
         if (IS_SET(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE))
@@ -1347,7 +1347,7 @@ void damage(unit_data *ch,
 
         if (victim == ch)
         {
-            getCharPoints(ch).setCharacterFlag(CHAR_KILL_SELF);
+            UCHAR(ch)->setCharacterFlag(CHAR_KILL_SELF);
             die(ch);
         }
         else
@@ -1560,7 +1560,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
 
         if (CHAR_POS(att) != POSITION_FIGHTING)
         {
-            getCharPoints(att).setPosition(POSITION_FIGHTING);
+            UCHAR(att)->setPosition(POSITION_FIGHTING);
         }
         add_fighting(att, def, TRUE);
     }
@@ -1580,7 +1580,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
     if (CHAR_COMBAT(att))
     {
         // The weapon's speed is subtracted
-        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed, getCharPoints(att).getSpeedPercentage(IS_PC(att)));
+        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed, UCHAR(att)->getSpeedPercentage());
     }
 
     if (att_weapon && weapon_fumble(att_weapon, roll))
@@ -1707,7 +1707,7 @@ void melee_violence(unit_data *ch, int primary)
     {
         act("You get back in a fighting position, ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
         act("$1n gets back in a fighting position ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_ROOM);
-        getCharPoints(ch).setPosition(POSITION_FIGHTING);
+        UCHAR(ch)->setPosition(POSITION_FIGHTING);
     }
 }
 
@@ -1775,7 +1775,7 @@ int hunting(spec_arg *sarg)
             /* again                                                  */
             if (h->was_legal)
             {
-                getCharPoints(h->victim).setCharacterFlag(CHAR_LEGAL_TARGET);
+                UCHAR(h->victim)->setCharacterFlag(CHAR_LEGAL_TARGET);
             }
 
             if (!CHAR_COMBAT(sarg->owner) || !CHAR_COMBAT(sarg->owner)->FindOpponent(h->victim))

@@ -291,22 +291,22 @@ unit_data *unit_data::copy()
         auto *u_downcast = dynamic_cast<char_data *>(u);
         auto *this_downcast = dynamic_cast<char_data *>(this);
 
-        u_downcast->points.setAllCharacterFlags(this_downcast->points.getCharacterFlags());
-        u_downcast->points.setPlayerExperience(this_downcast->points.getPlayerExperience());
-        u_downcast->points.setMana(this_downcast->points.getMana());
-        u_downcast->points.setEndurance(this_downcast->points.getEndurance());
-        u_downcast->points.setRace(this_downcast->points.getRace());
-        u_downcast->points.setOffensiveBonus(this_downcast->points.getOffensiveBonus());
-        u_downcast->points.setDefensiveBonus(this_downcast->points.getDefensiveBonus());
-        u_downcast->points.setSpeed(this_downcast->points.getSpeed());
-        u_downcast->points.setNaturalArmor(this_downcast->points.getNaturalArmor());
-        u_downcast->points.setAttackType(this_downcast->points.getAttackType());
-        u_downcast->points.setSex(this_downcast->points.getSex());
-        u_downcast->points.setLevel(this_downcast->points.getLevel());
-        u_downcast->points.setPosition(this_downcast->points.getPosition());
+        u_downcast->setAllCharacterFlags(this_downcast->getCharacterFlags());
+        u_downcast->setPlayerExperience(this_downcast->getPlayerExperience());
+        u_downcast->setMana(this_downcast->getMana());
+        u_downcast->setEndurance(this_downcast->getEndurance());
+        u_downcast->setRace(this_downcast->getRace());
+        u_downcast->setOffensiveBonus(this_downcast->getOffensiveBonus());
+        u_downcast->setDefensiveBonus(this_downcast->getDefensiveBonus());
+        u_downcast->setSpeed(this_downcast->getSpeed());
+        u_downcast->setNaturalArmor(this_downcast->getNaturalArmor());
+        u_downcast->setAttackType(this_downcast->getAttackType());
+        u_downcast->setSex(this_downcast->getSex());
+        u_downcast->setLevel(this_downcast->getLevel());
+        u_downcast->setPosition(this_downcast->getPosition());
         for (x = 0; x < ABIL_TREE_MAX; x++)
         {
-            u_downcast->points.setAbilityAtIndexTo(x, this_downcast->points.getAbilityAtIndex(x));
+            u_downcast->setAbilityAtIndexTo(x, this_downcast->getAbilityAtIndex(x));
         }
         if (IS_PC(this))
         {

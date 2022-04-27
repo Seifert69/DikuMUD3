@@ -274,13 +274,13 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_FIST, WPN_CRUSH))
     {
         dmc_error(TRUE, "Illegal hand attack type %d.", CHAR_ATTACK_TYPE(u));
-        getCharPoints(u).setAttackType(WPN_FIST);
+        UCHAR(u)->setAttackType(WPN_FIST);
     }
 
     if (!is_in(CHAR_LEVEL(u), 0, 199))
     {
         dmc_error(TRUE, "Illegal level in  '%s'.", UNIT_IDENT(u));
-        getCharPoints(u).setLevel(0);
+        UCHAR(u)->setLevel(0);
     }
 
     for (i = sum = 0; i < ABIL_TREE_MAX; i++)
@@ -324,7 +324,7 @@ void set_points(unit_data *u)
 
     // spoints = ((100+20-CHAR_LEVEL(u)/10)*spoints) / 100; /* 120% - 100% */
 
-    if ((i = distribute_points(getCharPoints(u).getAbilitiesArray(), getCharPoints(u).getAbilitiesArray().size(), apoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UCHAR(u)->getAbilitiesArray(), UCHAR(u)->getAbilitiesArray().size(), apoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - An ability is %d points.", UNIT_IDENT(u), i);
     }
@@ -362,13 +362,13 @@ void set_points(unit_data *u)
     if (!is_in(CHAR_NATURAL_ARMOUR(u), ARM_CLOTHES, ARM_PLATE))
     {
         dmc_error(TRUE, "%s, Illegal natural armour type.", UNIT_IDENT(u));
-        getCharPoints(u).setNaturalArmor(ARM_PLATE);
+        UCHAR(u)->setNaturalArmor(ARM_PLATE);
     }
 
     if (!is_in(CHAR_ATTACK_TYPE(u), WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
         dmc_error(TRUE, "Illegal attack category in '%s'.", UNIT_IDENT(u));
-        getCharPoints(u).setAttackType(WPN_FIST);
+        UCHAR(u)->setAttackType(WPN_FIST);
     }
 
     u->setCurrentHitpoints(hitpoint_total(CHAR_HPP(u)));
@@ -1098,8 +1098,8 @@ void process_unit(unit_data *u)
         case UNIT_ST_NPC:
         {
             set_points(u);
-            getCharPoints(u).setMana(100);
-            getCharPoints(u).setEndurance(100);
+            UCHAR(u)->setMana(100);
+            UCHAR(u)->setEndurance(100);
 
             if (!is_in(CHAR_SPEED(u), SPEED_MIN, SPEED_MAX))
             {
@@ -1113,7 +1113,7 @@ void process_unit(unit_data *u)
                           " the 100 default!",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                getCharPoints(u).setPlayerExperience(100);
+                UCHAR(u)->setPlayerExperience(100);
             }
             else if (CHAR_EXP(u) < -500)
             {
@@ -1122,7 +1122,7 @@ void process_unit(unit_data *u)
                           "-500 XP.",
                           UNIT_IDENT(u),
                           CHAR_EXP(u));
-                getCharPoints(u).setPlayerExperience(-500);
+                UCHAR(u)->setPlayerExperience(-500);
             }
 
             if (!is_in(CHAR_OFFENSIVE(u), -1000, 1000))
@@ -1197,26 +1197,26 @@ void init_unit(unit_data *u)
             u->setBaseWeight(120); // lbs default
             u->setWeight(120);     // lbs default
             CHAR_MONEY(u) = nullptr;
-            getCharPoints(u).setPlayerExperience(100); // 100 XP per default at your own level
-            getCharPoints(u).setAllCharacterFlags(0);
-            getCharPoints(u).setAttackType(WPN_FIST);
-            getCharPoints(u).setNaturalArmor(ARM_HLEATHER);
-            getCharPoints(u).setSpeed(12);
-            getCharPoints(u).setRace(RACE_HUMAN);
-            getCharPoints(u).setSex(SEX_NEUTRAL);
-            getCharPoints(u).setLevel(1);
-            getCharPoints(u).setPosition(POSITION_STANDING);
+            UCHAR(u)->setPlayerExperience(100); // 100 XP per default at your own level
+            UCHAR(u)->setAllCharacterFlags(0);
+            UCHAR(u)->setAttackType(WPN_FIST);
+            UCHAR(u)->setNaturalArmor(ARM_HLEATHER);
+            UCHAR(u)->setSpeed(12);
+            UCHAR(u)->setRace(RACE_HUMAN);
+            UCHAR(u)->setSex(SEX_NEUTRAL);
+            UCHAR(u)->setLevel(1);
+            UCHAR(u)->setPosition(POSITION_STANDING);
             NPC_DEFAULT(u) = POSITION_STANDING;
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {
-                getCharPoints(u).setAbilityAtIndexTo(i, 0);
+                UCHAR(u)->setAbilityAtIndexTo(i, 0);
             }
-            getCharPoints(u).setSTR(40); /* % */
-            getCharPoints(u).setDEX(30);
-            getCharPoints(u).setCON(10);
-            getCharPoints(u).setCHA(2);
-            getCharPoints(u).setBRA(3);
-            getCharPoints(u).setHPP(15);
+            UCHAR(u)->setSTR(40); /* % */
+            UCHAR(u)->setDEX(30);
+            UCHAR(u)->setCON(10);
+            UCHAR(u)->setCHA(2);
+            UCHAR(u)->setBRA(3);
+            UCHAR(u)->setHPP(15);
 
             for (i = 0; i < WPN_GROUP_MAX; i++)
             {
@@ -1229,8 +1229,8 @@ void init_unit(unit_data *u)
                 NPC_SPL_SKILL(u, i) = 0;
             }
             NPC_FLAGS(u) = 0;
-            getCharPoints(u).setOffensiveBonus(0);
-            getCharPoints(u).setDefensiveBonus(0);
+            UCHAR(u)->setOffensiveBonus(0);
+            UCHAR(u)->setDefensiveBonus(0);
         }
         break;
 

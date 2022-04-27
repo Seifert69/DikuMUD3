@@ -95,7 +95,7 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
         act("$3n chops you to pieces!", A_SOMEONE, victim, cActParameter(), ch, TO_CHAR);
         act("$1n brutally slays $3n.", A_SOMEONE, ch, cActParameter(), victim, TO_NOTVICT);
         set_fighting(ch, victim, TRUE); /* Point to the killer! */
-        getCharPoints(ch).setCharacterFlag(CHAR_KILL_SELF);
+        UCHAR(ch)->setCharacterFlag(CHAR_KILL_SELF);
 
         diltemplate *death = nullptr;
         death = find_dil_template("death@death");

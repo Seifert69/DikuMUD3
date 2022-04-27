@@ -227,20 +227,6 @@ inline ubit8 OBJ_FLAGS(unit_data *obj) { return UOBJ(obj)->getObjectFlags(); }
 
 /*#define CHAR_DEX_RED(ch)     \  (UCHAR(ch)->points.dex_reduction)*/
 
-inline char_point_data &getCharPoints(unit_data *unit)
-{
-    auto character = dynamic_cast<char_data *>(unit);
-    assert(character != nullptr);
-    return character->points;
-}
-
-inline const char_point_data &getCharPoints(const unit_data *unit)
-{
-    auto character = dynamic_cast<const char_data *>(unit);
-    assert(character != nullptr);
-    return character->points;
-}
-
 inline const descriptor_data *CHAR_DESCRIPTOR(const unit_data *ch)
 {
     return UCHAR(ch)->getDescriptor();
@@ -251,13 +237,25 @@ inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch)
     return UCHAR(ch)->getDescriptor();
 }
 
-#define CHAR_OFFENSIVE(unit) (getCharPoints(unit).getOffensiveBonus())
+inline sbit16 CHAR_OFFENSIVE(const unit_data *unit)
+{
+    return UCHAR(unit)->getOffensiveBonus();
+}
 
-#define CHAR_DEFENSIVE(unit) (getCharPoints(unit).getDefensiveBonus())
+inline sbit16 CHAR_DEFENSIVE(const unit_data *unit)
+{
+    return UCHAR(unit)->getDefensiveBonus();
+}
 
-#define CHAR_FLAGS(unit) (getCharPoints(unit).getCharacterFlags())
+inline ubit32 CHAR_FLAGS(const unit_data *unit)
+{
+    return UCHAR(unit)->getCharacterFlags();
+}
 
-#define CHAR_SEX(ch) (getCharPoints(ch).getSex())
+inline ubit8 CHAR_SEX(const unit_data *ch)
+{
+    return UCHAR(ch)->getSex();
+}
 
 inline unit_data *CHAR_LAST_ROOM(unit_data *unit)
 {
@@ -268,44 +266,98 @@ inline unit_data *CHAR_LAST_ROOM(unit_data *unit)
 
 #define CHAR_LAST_ATTACKER_TYPE(unit) (UCHAR(unit)->last_attacker_type)
 
-#define CHAR_POS(ch) (getCharPoints(ch).getPosition())
+inline ubit8 CHAR_POS(const unit_data *ch)
+{
+    return UCHAR(ch)->getPosition();
+}
 
-#define CHAR_LEVEL(ch) (getCharPoints(ch).getLevel())
+inline ubit8 CHAR_LEVEL(const unit_data *ch)
+{
+    return UCHAR(ch)->getLevel();
+}
 
-#define CHAR_RACE(ch) (getCharPoints(ch).getRace())
+inline ubit16 CHAR_RACE(const unit_data *ch)
+{
+    return UCHAR(ch)->getRace();
+}
 
-#define CHAR_ABILITY(ch, index) (getCharPoints(ch).getAbilityAtIndex(index))
+inline sbit16 CHAR_ABILITY(const unit_data *ch, size_t index)
+{
+    return UCHAR(ch)->getAbilityAtIndex(index);
+}
 
-#define CHAR_STR(ch) (getCharPoints(ch).getSTR())
+inline sbit16 CHAR_STR(const unit_data *ch)
+{
+    return UCHAR(ch)->getSTR();
+}
 
-#define CHAR_DEX(ch) (getCharPoints(ch).getDEX())
+inline sbit16 CHAR_DEX(const unit_data *ch)
+{
+    return UCHAR(ch)->getDEX();
+}
 
-#define CHAR_CON(ch) (getCharPoints(ch).getCON())
+inline sbit16 CHAR_CON(const unit_data *ch)
+{
+    return UCHAR(ch)->getCON();
+}
 
-#define CHAR_CHA(ch) (getCharPoints(ch).getCHA())
+inline sbit16 CHAR_CHA(const unit_data *ch)
+{
+    return UCHAR(ch)->getCHA();
+}
 
-#define CHAR_BRA(ch) (getCharPoints(ch).getBRA())
+inline sbit16 CHAR_BRA(const unit_data *ch)
+{
+    return UCHAR(ch)->getBRA();
+}
 
-#define CHAR_MAG(ch) (getCharPoints(ch).getMAG())
+inline sbit16 CHAR_MAG(const unit_data *ch)
+{
+    return UCHAR(ch)->getMAG();
+}
 
-#define CHAR_DIV(ch) (getCharPoints(ch).getDIV())
+inline sbit16 CHAR_DIV(const unit_data *ch)
+{
+    return UCHAR(ch)->getDIV();
+}
 
-#define CHAR_HPP(ch) (getCharPoints(ch).getHPP())
+inline sbit16 CHAR_HPP(const unit_data *ch)
+{
+    return UCHAR(ch)->getHPP();
+}
 
-#define CHAR_ENDURANCE(ch) (getCharPoints(ch).getEndurance())
+inline sbit16 CHAR_ENDURANCE(const unit_data *ch)
+{
+    return UCHAR(ch)->getEndurance();
+}
 
-#define CHAR_MANA(ch) (getCharPoints(ch).getMana())
+inline sbit16 CHAR_MANA(const unit_data *ch)
+{
+    return UCHAR(ch)->getMana();
+}
 
 /* NOT to be used unless by db.... */
 #define CHAR_MONEY(ch) (UCHAR(ch)->money)
 
-#define CHAR_EXP(ch) (getCharPoints(ch).getPlayerExperience())
+inline sbit32 CHAR_EXP(const unit_data *ch)
+{
+    return UCHAR(ch)->getPlayerExperience();
+}
 
-#define CHAR_ATTACK_TYPE(ch) (getCharPoints(ch).getAttackType())
+inline ubit8 CHAR_ATTACK_TYPE(const unit_data *ch)
+{
+    return UCHAR(ch)->getAttackType();
+}
 
-#define CHAR_NATURAL_ARMOUR(ch) (getCharPoints(ch).getNaturalArmor())
+inline ubit8 CHAR_NATURAL_ARMOUR(const unit_data *ch)
+{
+    return UCHAR(ch)->getNaturalArmor();
+}
 
-#define CHAR_SPEED(ch) (getCharPoints(ch).getSpeed())
+inline sbit16 CHAR_SPEED(const unit_data *ch)
+{
+    return UCHAR(ch)->getSpeed();
+}
 
 inline cCombat *CHAR_COMBAT(unit_data *ch)
 {

@@ -82,7 +82,7 @@ struct pc_train_values
 
 static int gold_cost(unit_data *ch, skill_teach_type *s, int level)
 {
-    //It is free to practice < level 25.
+    // It is free to practice < level 25.
     if (IS_CHAR(ch) && CHAR_LEVEL(ch) < PRACTICE_COST_LEVEL)
         return 0;
 
@@ -828,7 +828,10 @@ int practice(unit_data *teacher,
 
     /* Ok, now we can teach */
 
-    amt = money_round(TRUE, gold_cost(pupil, &pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]), currency, 1);
+    amt = money_round(TRUE,
+                      gold_cost(pupil, &pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]),
+                      currency,
+                      1);
 
     if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL)
     {
@@ -998,7 +1001,10 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
                 currency_t currency = local_currency(pckt->teacher);
 
                 /* Ok, now we pay for training */
-                int amt = money_round(TRUE, gold_cost(pupil, &pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]), currency, 1);
+                int amt = money_round(TRUE,
+                                      gold_cost(pupil, &pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]),
+                                      currency,
+                                      1);
 
                 if (!char_can_afford(pupil, amt, currency))
                 {
@@ -1020,7 +1026,6 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
 
     return nTrained;
 }
-
 
 // Pass symbolic name, get teach packet back
 teach_packet *get_teacher(const char *pName)
@@ -1075,8 +1080,8 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
     switch (type)
     {
         case TEACH_ABILITIES:
-            pValues->values = getCharPoints(pupil).getAbilitiesArray().data(); // Current ability
-            pValues->lvl = &PC_ABI_LVL(pupil, 0);                              // How many times you've trained this level on this ability
+            pValues->values = UCHAR(pupil)->getAbilitiesArray().data(); // Current ability
+            pValues->lvl = &PC_ABI_LVL(pupil, 0);                       // How many times you've trained this level on this ability
             pValues->practice_points = &PC_ABILITY_POINTS(pupil);
             return &g_AbiColl;
 
