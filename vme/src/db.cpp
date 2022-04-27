@@ -877,7 +877,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (unit_version >= 72)
                 {
-                    PC_PROFESSION(u) = pBuf->ReadS8(&g_nCorrupt);
+                    UPC(u)->setProfession(pBuf->ReadS8(&g_nCorrupt));
                 }
 
                 PC_ACCOUNT(u).readFrom(*pBuf, unit_version, g_nCorrupt);

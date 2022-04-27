@@ -183,6 +183,15 @@ public:
      */
     extra_list &getQuestInformation() { return m_quest; }
     /// @}
+
+    /**
+     * @name Profession related code
+     * @{
+     */
+    sbit8 getProfession() const { return m_profession; }
+    sbit8 *getProfessionPtr() { return &m_profession; }
+    void setProfession(sbit8 value) { m_profession = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{}; ///<
     pc_time_data m_time{};         ///< PCs time info
@@ -193,9 +202,9 @@ private:
     char *m_promptstr{nullptr};    ///< A PC's Prompt
     extra_list m_info;             ///< For saving Admin information
     extra_list m_quest;            ///< For saving QUEST information
+    sbit8 m_profession{-1};        ///< The player's chosen profession, -1 means unknown
 public:
-    sbit8 profession; ///< The player's chosen profession, -1 means unknown
-    ubit16 vlvl;      ///< Virtual Level for player
+    ubit16 vlvl; ///< Virtual Level for player
 
     sbit32 id;             ///< Unique identifier for each player (-1 guest)
     sbit32 skill_points;   ///< No of practice points left

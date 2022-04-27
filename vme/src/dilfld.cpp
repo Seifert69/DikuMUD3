@@ -3679,25 +3679,28 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
-                        if ((IS_PC((unit_data *)v1->val.ptr)) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
+                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
-                            v->val.num = PC_PROFESSION((unit_data *)v1->val.ptr);
+                            v->val.num = pc->getProfession();
                         }
                         else
                         {
                             v->type = DILV_UINT1R;
-                            v->ref = &PC_PROFESSION((unit_data *)v1->val.ptr);
+                            v->ref = pc->getPromptStringPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

@@ -1325,7 +1325,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                      UNIT_NAME(unt),
                      PC_PROFESSION(unt),
                      valarg);
-                PC_PROFESSION(unt) = valarg;
+                UPC(unt)->setProfession(valarg);
             }
             else
             {

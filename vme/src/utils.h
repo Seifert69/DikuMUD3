@@ -405,7 +405,10 @@ inline const char *PC_PROMPTSTR(unit_data *pc)
     return UPC(pc)->getPromptString();
 }
 
-#define PC_PROFESSION(pc) (UPC(pc)->profession)
+inline sbit8 PC_PROFESSION(unit_data *pc)
+{
+    return UPC(pc)->getProfession();
+}
 
 inline extra_list &PC_QUEST(unit_data *pc)
 {
