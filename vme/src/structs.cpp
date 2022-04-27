@@ -32,7 +32,7 @@ char_data::char_data(ubit8 unit_type)
     , m_descriptor{nullptr}
     , m_combat{nullptr}
     , m_master{nullptr}
-    , last_room{nullptr}
+    , m_last_room{nullptr}
     , followers{nullptr}
     , last_attacker{nullptr}
     , money{nullptr}

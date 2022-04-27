@@ -993,7 +993,7 @@ void switchbody(unit_data *ch, unit_data *vict)
 
     UCHAR(vict)->setDescriptor(CHAR_DESCRIPTOR(ch));
     UCHAR(ch)->setDescriptor(nullptr);
-    CHAR_LAST_ROOM(vict) = nullptr;
+    UCHAR(vict)->setLastLocation(nullptr);
 }
 
 void unswitchbody(unit_data *npc)

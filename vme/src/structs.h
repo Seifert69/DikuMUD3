@@ -88,12 +88,17 @@ public:
     unit_data **getMasterPtr() { return &m_master; }
     void setMaster(unit_data *value) { m_master = value; }
 
+    const unit_data *getLastLocation() const { return m_last_room; }
+    unit_data *getLastLocation() { return m_last_room; }
+    unit_data **getLastLocationPtr() { return &m_last_room; }
+    void setLastLocation(unit_data *value) { m_last_room = value; }
+
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
     cCombat *m_combat{nullptr};             ///<
     unit_data *m_master{nullptr};           ///< Must be a char
+    unit_data *m_last_room{nullptr};        ///< Last location of character
 public:
-    unit_data *last_room; ///< Last location of character
     char_point_data points;
 
     char_follow_type *followers;

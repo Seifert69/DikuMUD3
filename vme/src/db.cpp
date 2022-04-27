@@ -853,7 +853,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (IS_PC(u))
                 {
-                    CHAR_LAST_ROOM(u) = tmpfi->Front();
+                    UCHAR(u)->setLastLocation(tmpfi->Front());
                 }
                 else
                 {
@@ -967,7 +967,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     if ((fi = find_file_index(zone, name)))
                     {
-                        CHAR_LAST_ROOM(u) = fi->Front();
+                        UCHAR(u)->setLastLocation(fi->Front());
                     }
                 }
 

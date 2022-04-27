@@ -106,7 +106,7 @@ void init_char(unit_data *ch)
 
     getCharPoints(ch).setMana(mana_limit(ch));
     getCharPoints(ch).setEndurance(move_limit(ch));
-    CHAR_LAST_ROOM(ch) = nullptr;
+    UCHAR(ch)->setLastLocation(nullptr);
 
     getCharPoints(ch).setAllCharacterFlags(0);
     getCharPoints(ch).setCharacterFlag(CHAR_PROTECTED);

@@ -248,7 +248,7 @@ void pc_data::reconnect_game(descriptor_data *d)
             TO_ROOM);
         unit_from_unit(this);
         unit_to_unit(this, CHAR_LAST_ROOM(this));
-        CHAR_LAST_ROOM(this) = nullptr;
+        setLastLocation(nullptr);
     }
     act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
     slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
@@ -304,7 +304,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
         save_player_contents(this, TRUE);
     }
 
-    CHAR_LAST_ROOM(this) = unit_room(this);
+    setLastLocation(unit_room(this));
 
     stop_fightfollow(this);
     stop_snoopwrite(this);
@@ -361,10 +361,10 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
 
     unit_data *load_room = nullptr;
-    if (CHAR_LAST_ROOM(this))
+    if (getLastLocation())
     {
-        load_room = CHAR_LAST_ROOM(this);
-        CHAR_LAST_ROOM(this) = nullptr;
+        load_room = getLastLocation();
+        setLastLocation(nullptr);
     }
     else
     {
@@ -593,7 +593,7 @@ void nanny_throw(descriptor_data *d, char *arg)
                    break; // Break so that the guest gets purged
                 } */
 
-                CHAR_LAST_ROOM(u) = UNIT_IN(u);
+                UCHAR(u)->setLastLocation(UNIT_IN(u));
                 UPC(u)->reconnect_game(d);
                 return;
             }

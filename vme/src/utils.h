@@ -259,7 +259,10 @@ inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch)
 
 #define CHAR_SEX(ch) (getCharPoints(ch).getSex())
 
-#define CHAR_LAST_ROOM(unit) (UCHAR(unit)->last_room)
+inline unit_data *CHAR_LAST_ROOM(unit_data *unit)
+{
+    return UCHAR(unit)->getLastLocation();
+}
 
 #define CHAR_LAST_ATTACKER(unit) (UCHAR(unit)->last_attacker)
 

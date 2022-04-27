@@ -267,7 +267,7 @@ void save_player_file(unit_data *pc)
 
     if (UNIT_IN(pc) && !IS_SET(UNIT_FLAGS(unit_room(pc)), UNIT_FL_NOSAVE))
     {
-        CHAR_LAST_ROOM(pc) = unit_room(pc);
+        UCHAR(pc)->setLastLocation(unit_room(pc));
     }
 
     tmp_descr = CHAR_DESCRIPTOR(pc);

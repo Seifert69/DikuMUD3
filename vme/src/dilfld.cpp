@@ -981,17 +981,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_PC(character))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
-                        v->ref = &CHAR_LAST_ROOM((unit_data *)v1->val.ptr);
+                        v->ref = character->getLastLocation();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
