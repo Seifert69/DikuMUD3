@@ -407,7 +407,10 @@ inline const char *PC_PROMPTSTR(unit_data *pc)
 
 #define PC_PROFESSION(pc) (UPC(pc)->profession)
 
-#define PC_QUEST(pc) (UPC(pc)->quest)
+inline extra_list &PC_QUEST(unit_data *pc)
+{
+    return UPC(pc)->getQuestInformation();
+}
 
 #define PC_COND(ch, i) (UPC(ch)->conditions[i])
 

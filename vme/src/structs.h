@@ -171,10 +171,17 @@ public:
     /// @}
 
     /**
-     * @name
+     * @name Admin related code
      * @{
      */
     extra_list &getAdministrationInformation() { return m_info; }
+    /// @}
+
+    /**
+     * @name Quest related code
+     * @{
+     */
+    extra_list &getQuestInformation() { return m_quest; }
     /// @}
 private:
     terminal_setup_type m_setup{}; ///<
@@ -185,9 +192,8 @@ private:
     char *m_hometown{nullptr};     ///< PCs Hometown (symbolic reference)
     char *m_promptstr{nullptr};    ///< A PC's Prompt
     extra_list m_info;             ///< For saving Admin information
+    extra_list m_quest;            ///< For saving QUEST information
 public:
-    extra_list quest; ///< For saving QUEST information
-
     sbit8 profession; ///< The player's chosen profession, -1 means unknown
     ubit16 vlvl;      ///< Virtual Level for player
 
