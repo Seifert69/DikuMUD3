@@ -153,7 +153,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
-        if (PC_IS_UNSAVED(d->cgetCharacter()))
+        if (PC_IS_UNSAVED(d->getCharacter()))
         {
             g_possible_saves--;
         }
@@ -192,7 +192,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
             }
             if (!bReconnect)
             {
-                if (!PC_IS_UNSAVED(d->cgetCharacter()))
+                if (!PC_IS_UNSAVED(d->getCharacter()))
                 {
                     /* We need to save player to update his time status! */
                     save_player(d->getCharacter()); /* Save non-guests */

@@ -86,7 +86,7 @@ void race_adjust(unit_data *ch)
     const int years = my_race->age + dice(my_race->age_dice.reps, my_race->age_dice.size);
 
     const auto value = PC_TIME(ch).getPlayerCharacterCreationTime() - years * SECS_PER_MUD_YEAR;
-    PC_TIME(ch).setPlayerBirthday(value);
+    UPC(ch)->getPCTimeInformation().setPlayerBirthday(value);
 }
 
 /* OBSOLETE. Should only be called when initializing a new player (or rerolling)

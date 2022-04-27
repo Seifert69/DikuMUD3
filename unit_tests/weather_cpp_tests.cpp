@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(age_pc_test)
 {
     auto age_time = time(nullptr) - 7654321;
     auto unit = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC)));
-    unit->m_time.setPlayerBirthday(age_time);
+    unit->getPCTimeInformation().setPlayerBirthday(age_time);
 
     ////////////////////////// Test Subject //////////////////////////////
     auto result = age(unit.get());

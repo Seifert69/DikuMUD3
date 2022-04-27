@@ -4181,7 +4181,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = player->m_time.getPlayerBirthdayPtr();
+                        v->ref = player->getPCTimeInformation().getPlayerBirthdayPtr();
                     }
                     else
                     {
@@ -4212,7 +4212,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = player->m_time.getTotalTimePlayedInSeconds();
+                        v->val.num = player->getPCTimeInformation().getTotalTimePlayedInSeconds();
                     }
                     else
                     {

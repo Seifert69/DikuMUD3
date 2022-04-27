@@ -600,7 +600,7 @@ void nanny_throw(descriptor_data *d, char *arg)
         }
 
         // Reconnecting character was NOT in the game, in the menu, so for guests, just close
-        if (PC_IS_UNSAVED(d->cgetCharacter()) || !player_exists(PC_FILENAME(d->cgetCharacter())))
+        if (PC_IS_UNSAVED(d->getCharacter()) || !player_exists(PC_FILENAME(d->cgetCharacter())))
         {
             send_to_descriptor("Menu Guest, purging all connections - please retry.<br/>", d);
             set_descriptor_fptr(d, nanny_close, TRUE);
@@ -962,7 +962,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
                 PC_CRACK_ATTEMPTS(td->cgetCharacter())++;
                 d->setLoopWaitCounter(PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->cgetCharacter()) * PULSE_SEC);
             }
-            else if (!PC_IS_UNSAVED(d->cgetCharacter()))
+            else if (!PC_IS_UNSAVED(d->getCharacter()))
             {
                 save_player_file(d->getCharacter());
             }
@@ -975,7 +975,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     PC_CRACK_ATTEMPTS(d->cgetCharacter()) = 0;
 
-    const auto last_connect = PC_TIME(d->cgetCharacter()).getPlayerLastConnectTime();
+    const auto last_connect = PC_TIME(d->getCharacter()).getPlayerLastConnectTime();
     auto msg2 = diku::format_to_str("<br/>Welcome back %s, you last visited %s on %s<br/>",
                                     UNIT_NAME(d->cgetCharacter()),
                                     g_cServerConfig.getMudName().c_str(),

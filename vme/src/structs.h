@@ -70,12 +70,22 @@ public:
     void connect_game();
     void reconnect_game(descriptor_data *d);
 
+    /**
+     * @name Terminal related code
+     * @{
+     */
     terminal_setup_type &getTerminalSetupType() { return m_setup; }
+    /// @}
 
+    /**
+     * @name PC time related code
+     */
+    pc_time_data &getPCTimeInformation() { return m_time; }
+    /// @}
 private:
     terminal_setup_type m_setup{}; ///<
+    pc_time_data m_time{};         ///< PCs time info
 public:
-    pc_time_data m_time{};     ///< PCs time info
     pc_account_data account{}; ///< Accounting
 
     char *guild;     ///< Player's current default guild (guilds in .info)

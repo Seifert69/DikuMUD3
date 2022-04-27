@@ -426,7 +426,10 @@ inline ubit8 PC_SETUP_COLOUR(unit_data *pc)
 
 #define PC_FLAGS(unit) (UPC(unit)->flags)
 
-#define PC_TIME(unit) (UPC(unit)->m_time)
+inline pc_time_data &PC_TIME(unit_data *unit)
+{
+    return UPC(unit)->getPCTimeInformation();
+}
 
 #define PC_HOME(ch) (UPC(ch)->hometown)
 /* .................... PC SUPER STRUCTURE ............................. */
@@ -435,7 +438,10 @@ inline ubit8 PC_SETUP_COLOUR(unit_data *pc)
 
 #define PC_MORTAL(ch) (IS_PC(ch) && CHAR_LEVEL(ch) < 200)
 
-#define PC_IS_UNSAVED(ch) (PC_TIME(ch).getTotalTimePlayedInSeconds() == 0)
+inline bool PC_IS_UNSAVED(unit_data *ch)
+{
+    return PC_TIME(ch).getTotalTimePlayedInSeconds() == 0;
+}
 
 /* ..................................................................... */
 
