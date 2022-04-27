@@ -1026,23 +1026,12 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 35: /* "guild-name" */
             if (str_ccmp_next_word(argument, "none"))
             {
-                if (PC_GUILD(unt))
-                {
-                    FREE(PC_GUILD(unt));
-                    PC_GUILD(unt) = nullptr;
-                }
+                UPC(unt)->freeGuild();
                 send_to_char("Changed.<br/>", ch);
                 return;
             }
-            if (PC_GUILD(unt) == nullptr)
-            {
-                CREATE(PC_GUILD(unt), char, strlen(argument) + 1);
-            }
-            else
-            {
-                RECREATE(PC_GUILD(unt), char, strlen(argument) + 1);
-            }
-            strcpy(PC_GUILD(unt), argument);
+
+            UPC(unt)->setGuild(argument);
             send_to_char("Changed.<br/>", ch);
             return;
 

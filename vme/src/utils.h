@@ -392,7 +392,10 @@ inline ubit8 PC_SETUP_COLOUR(unit_data *pc)
     return UPC(pc)->getTerminalSetupType().colour_convert;
 }
 
-#define PC_GUILD(pc) (UPC(pc)->guild)
+inline const char *PC_GUILD(unit_data *pc)
+{
+    return UPC(pc)->getGuild();
+}
 
 #define PC_PROMPTSTR(pc) (UPC(pc)->promptstr)
 

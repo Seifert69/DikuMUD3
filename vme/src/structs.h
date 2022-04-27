@@ -90,12 +90,40 @@ public:
      */
     pc_account_data &getPCAccountData() { return m_account; }
     /// @}
+
+    /**
+     * @name Guild related code
+     * @{
+     */
+    const char *getGuild() const { return m_guild; }
+    char **getGuildPtr() { return &m_guild; }
+    void freeGuild()
+    {
+        if (m_guild)
+        {
+            FREE(m_guild);
+            m_guild = nullptr;
+        }
+    }
+    void setGuild(const char *value)
+    {
+        if (m_guild == nullptr)
+        {
+            CREATE(m_guild, char, strlen(value) + 1);
+        }
+        else
+        {
+            RECREATE(m_guild, char, strlen(value) + 1);
+        }
+        strcpy(m_guild, value);
+    }
+    /// @}
 private:
     terminal_setup_type m_setup{}; ///<
     pc_time_data m_time{};         ///< PCs time info
     pc_account_data m_account{};   ///< Accounting
+    char *m_guild{nullptr};        ///< Player's current default guild (guilds in .info)
 public:
-    char *guild;     ///< Player's current default guild (guilds in .info)
     char *bank;      ///< How much money in bank?
     char *hometown;  ///< PCs Hometown (symbolic reference)
     char *promptstr; ///< A PC's Prompt

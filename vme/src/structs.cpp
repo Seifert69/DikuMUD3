@@ -30,7 +30,7 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 pc_data::pc_data()
     : char_data(UNIT_ST_PC)
     , m_setup{0, 0, 0, 0, 0, 0, 0, 0}
-    , guild{nullptr}
+    , m_guild{nullptr}
     , bank{nullptr}
     , hometown{nullptr}
     , promptstr{nullptr}
@@ -62,8 +62,8 @@ pc_data::~pc_data()
 {
     g_world_nopc--;
 
-    if (guild)
-        FREE(guild);
+    if (m_guild)
+        FREE(m_guild);
 
     if (hometown)
         FREE(hometown);
