@@ -4677,17 +4677,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && IS_CHAR(character))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
-                        v->ref = &CHAR_MASTER((unit_data *)v1->val.ptr);
+                        v->ref = character->getMasterPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

@@ -31,7 +31,7 @@ char_data::char_data(ubit8 unit_type)
     : unit_data(unit_type)
     , m_descriptor{nullptr}
     , m_combat{nullptr}
-    , master{nullptr}
+    , m_master{nullptr}
     , last_room{nullptr}
     , followers{nullptr}
     , last_attacker{nullptr}

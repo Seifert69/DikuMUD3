@@ -390,7 +390,7 @@ void stop_following(unit_data *ch)
         DELETE(char_follow_type, j);
     }
 
-    CHAR_MASTER(ch) = nullptr;
+    UCHAR(ch)->setMaster(nullptr);
 
     send_done(ch, nullptr, nullptr, 0, g_cmd_follow, "");
 }
@@ -408,7 +408,7 @@ void start_following(unit_data *ch, unit_data *leader)
     {
         stop_following(ch);
     }
-    CHAR_MASTER(ch) = leader;
+    UCHAR(ch)->setMaster(leader);
     k = new EMPLACE(char_follow_type) char_follow_type;
     k->setFollower(ch);
     k->setNext(CHAR_FOLLOWERS(leader));

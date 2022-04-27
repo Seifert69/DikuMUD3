@@ -314,7 +314,10 @@ inline unit_data *CHAR_FIGHTING(unit_data *ch)
     return UCHAR(ch)->getCombat() ? CHAR_COMBAT(ch)->Melee() : nullptr;
 }
 
-#define CHAR_MASTER(ch) (UCHAR(ch)->master)
+inline unit_data *CHAR_MASTER(unit_data *ch)
+{
+    return UCHAR(ch)->getMaster();
+}
 
 #define CHAR_FOLLOWERS(ch) (UCHAR(ch)->followers)
 

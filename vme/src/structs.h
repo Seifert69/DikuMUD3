@@ -83,11 +83,16 @@ public:
     cCombat *getCombat() { return m_combat; }
     void setCombat(cCombat *value) { m_combat = value; }
 
+    const unit_data *getMaster() const { return m_master; }
+    unit_data *getMaster() { return m_master; }
+    unit_data **getMasterPtr() { return &m_master; }
+    void setMaster(unit_data *value) { m_master = value; }
+
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
     cCombat *m_combat{nullptr};             ///<
+    unit_data *m_master{nullptr};           ///< Must be a char
 public:
-    unit_data *master;    ///< Must be a char
     unit_data *last_room; ///< Last location of character
     char_point_data points;
 
