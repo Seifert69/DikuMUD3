@@ -321,8 +321,9 @@ inline unit_data *CHAR_ORIGINAL(unit_data *ch)
 
 #define CHAR_VISION(ch) (!CHAR_HAS_FLAG(ch, CHAR_BLIND))
 
+// Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
 #define CHAR_CAN_SEE(ch, unit)                                                                                                             \
-    (!IS_CHAR(ch) || (CHAR_VISION(ch) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) && (CHAR_LEVEL(ch) >= UNIT_MINV(unit)) &&               \
+    (!IS_CHAR(ch) || (CHAR_VISION(ch) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) || (UNIT_IN(ch) == unit)) && (CHAR_LEVEL(ch) >= UNIT_MINV(unit)) &&               \
                       (CHAR_LEVEL(ch) >= CREATOR_LEVEL || (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE) ||  \
                                                                                           CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE))))))
 
