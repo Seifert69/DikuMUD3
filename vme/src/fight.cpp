@@ -1107,11 +1107,10 @@ void damage(unit_data *ch,
 
     if (victim != ch)
     {
-        if (CHAR_LAST_ATTACKER(victim))
-            FREE(CHAR_LAST_ATTACKER(victim));
+        UCHAR(victim)->freeLastAttacker();
         if (ch->getNames().Name())
         {
-            CHAR_LAST_ATTACKER(victim) = str_dup(ch->getNames().Name());
+            UCHAR(victim)->setLastAttacker(str_dup(ch->getNames().Name()));
         }
         CHAR_LAST_ATTACKER_TYPE(victim) = UNIT_TYPE(ch);
         if (IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))

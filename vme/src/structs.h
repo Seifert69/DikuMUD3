@@ -240,6 +240,21 @@ public:
     char_follow_type *getFollowers() { return m_followers; }
     void setFollowers(char_follow_type *value) { m_followers = value; }
     /// @}
+
+    /**
+     * @name
+     * @{
+     */
+    const char *getLastAttacker() const { return m_last_attacker; }
+    void freeLastAttacker()
+    {
+        if (m_last_attacker)
+        {
+            FREE(m_last_attacker);
+        }
+    };
+    void setLastAttacker(char *value) { m_last_attacker = value; }
+    ///@}
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
     cCombat *m_combat{nullptr};             ///<
@@ -247,9 +262,9 @@ private:
     unit_data *m_last_room{nullptr};        ///< Last location of character
     char_point_data m_points;               ///<
     char_follow_type *m_followers{nullptr}; ///<
+    char *m_last_attacker{nullptr};         ///< Last attacker of character
 public:
-    char *last_attacker; ///< Last attacker of character
-    char *money;         ///<  Money transfer from db-files.
+    char *money; ///<  Money transfer from db-files.
 
     ubit8 last_attacker_type; ///< Last attacker type of character
 };

@@ -262,7 +262,10 @@ inline unit_data *CHAR_LAST_ROOM(unit_data *unit)
     return UCHAR(unit)->getLastLocation();
 }
 
-#define CHAR_LAST_ATTACKER(unit) (UCHAR(unit)->last_attacker)
+inline const char *CHAR_LAST_ATTACKER(const unit_data *unit)
+{
+    return UCHAR(unit)->getLastAttacker();
+}
 
 #define CHAR_LAST_ATTACKER_TYPE(unit) (UCHAR(unit)->last_attacker_type)
 

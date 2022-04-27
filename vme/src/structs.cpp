@@ -35,7 +35,7 @@ char_data::char_data(ubit8 unit_type)
     , m_last_room{nullptr}
     , m_points{}
     , m_followers{nullptr}
-    , last_attacker{nullptr}
+    , m_last_attacker{nullptr}
     , money{nullptr}
     , last_attacker_type{0}
 {
@@ -52,9 +52,9 @@ char_data::~char_data()
     {
         FREE(money);
     }
-    if (last_attacker)
+    if (m_last_attacker)
     {
-        FREE(last_attacker);
+        FREE(m_last_attacker);
     }
 #endif
     g_world_nochars--;
