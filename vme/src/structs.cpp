@@ -34,7 +34,7 @@ char_data::char_data(ubit8 unit_type)
     , m_master{nullptr}
     , m_last_room{nullptr}
     , m_points{}
-    , followers{nullptr}
+    , m_followers{nullptr}
     , last_attacker{nullptr}
     , money{nullptr}
     , last_attacker_type{0}

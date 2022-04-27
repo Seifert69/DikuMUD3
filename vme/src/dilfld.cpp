@@ -4719,7 +4719,7 @@ void dilfe_fld(dilprg *p)
                         {
                             v->atyp = DILA_NORM;
                             v->type = DILV_UPR;
-                            v->ref = character->followers->getFollowerPtr();
+                            v->ref = character->getFollowers()->getFollowerPtr();
                         }
                         else
                         {

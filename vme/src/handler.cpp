@@ -376,7 +376,7 @@ void stop_following(unit_data *ch)
     if (CHAR_FOLLOWERS(CHAR_MASTER(ch))->getFollower() == ch) /* Head of list? */
     {
         k = CHAR_FOLLOWERS(CHAR_MASTER(ch));
-        CHAR_FOLLOWERS(CHAR_MASTER(ch)) = k->getNext();
+        UCHAR(CHAR_MASTER(ch))->setFollowers(k->getNext());
         DELETE(char_follow_type, k);
     }
     else
@@ -412,7 +412,7 @@ void start_following(unit_data *ch, unit_data *leader)
     k = new EMPLACE(char_follow_type) char_follow_type;
     k->setFollower(ch);
     k->setNext(CHAR_FOLLOWERS(leader));
-    CHAR_FOLLOWERS(leader) = k;
+    UCHAR(leader)->setFollowers(k);
 
     send_done(ch, nullptr, leader, 0, g_cmd_follow, "");
 }

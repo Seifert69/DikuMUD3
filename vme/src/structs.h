@@ -231,15 +231,23 @@ public:
     void decreaseAbilityAtIndexBy(size_t index, sbit16 value) { m_points.decreaseAbilityAtIndexBy(index, value); }
     std::array<sbit16, ABIL_TREE_MAX> &getAbilitiesArray() { return m_points.getAbilitiesArray(); }
     /// @}
+
+    /**
+     * @name Follower related code
+     * @{
+     */
+    const char_follow_type *getFollowers() const { return m_followers; }
+    char_follow_type *getFollowers() { return m_followers; }
+    void setFollowers(char_follow_type *value) { m_followers = value; }
+    /// @}
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
     cCombat *m_combat{nullptr};             ///<
     unit_data *m_master{nullptr};           ///< Must be a char
     unit_data *m_last_room{nullptr};        ///< Last location of character
     char_point_data m_points;               ///<
+    char_follow_type *m_followers{nullptr}; ///<
 public:
-    char_follow_type *followers;
-
     char *last_attacker; ///< Last attacker of character
     char *money;         ///<  Money transfer from db-files.
 

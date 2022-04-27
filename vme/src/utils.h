@@ -374,7 +374,10 @@ inline unit_data *CHAR_MASTER(unit_data *ch)
     return UCHAR(ch)->getMaster();
 }
 
-#define CHAR_FOLLOWERS(ch) (UCHAR(ch)->followers)
+inline char_follow_type *CHAR_FOLLOWERS(const unit_data *ch)
+{
+    return UCHAR(ch)->getFollowers();
+}
 
 /* ...........................CHAR SUPERSTRUCTURES....................... */
 
