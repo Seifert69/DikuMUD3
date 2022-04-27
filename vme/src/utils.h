@@ -304,9 +304,15 @@ inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch)
 
 #define CHAR_SPEED(ch) (getCharPoints(ch).getSpeed())
 
-#define CHAR_COMBAT(ch) (UCHAR(ch)->Combat)
+inline cCombat *CHAR_COMBAT(unit_data *ch)
+{
+    return UCHAR(ch)->getCombat();
+}
 
-#define CHAR_FIGHTING(ch) (UCHAR(ch)->Combat ? CHAR_COMBAT(ch)->Melee() : (unit_data *)nullptr)
+inline unit_data *CHAR_FIGHTING(unit_data *ch)
+{
+    return UCHAR(ch)->getCombat() ? CHAR_COMBAT(ch)->Melee() : nullptr;
+}
 
 #define CHAR_MASTER(ch) (UCHAR(ch)->master)
 

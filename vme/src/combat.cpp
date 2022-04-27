@@ -343,7 +343,7 @@ cCombat::~cCombat()
         pOpponents = nullptr;
     }
 
-    CHAR_COMBAT(pOwner) = nullptr;
+    UCHAR(pOwner)->setCombat(nullptr);
 
     g_CombatList.sub(this);
 
@@ -486,7 +486,7 @@ void cCombat::addOpponent(unit_data *victim, int bMelee = FALSE)
 
         if (!CHAR_COMBAT(victim))
         {
-            CHAR_COMBAT(victim) = new cCombat(victim, bMelee);
+            UCHAR(victim)->setCombat(new cCombat(victim, bMelee));
         }
 
         CHAR_COMBAT(victim)->add(pOwner);
@@ -571,7 +571,7 @@ void set_fighting(unit_data *ch, unit_data *vict, int bMelee)
 
     if (CHAR_COMBAT(ch) == nullptr)
     {
-        CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+        UCHAR(ch)->setCombat(new cCombat(ch, bMelee));
     }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);
@@ -596,7 +596,7 @@ void add_fighting(unit_data *ch, unit_data *vict, int bMelee)
 
     if (CHAR_COMBAT(ch) == nullptr)
     {
-        CHAR_COMBAT(ch) = new cCombat(ch, bMelee);
+        UCHAR(ch)->setCombat(new cCombat(ch, bMelee));
     }
 
     CHAR_COMBAT(ch)->addOpponent(vict, bMelee);

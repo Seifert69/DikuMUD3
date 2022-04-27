@@ -79,10 +79,14 @@ public:
     descriptor_data *getDescriptor() { return m_descriptor; }
     void setDescriptor(descriptor_data *value) { m_descriptor = value; }
 
+    const cCombat *getCombat() const { return m_combat; }
+    cCombat *getCombat() { return m_combat; }
+    void setCombat(cCombat *value) { m_combat = value; }
+
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
+    cCombat *m_combat{nullptr};             ///<
 public:
-    cCombat *Combat;
     unit_data *master;    ///< Must be a char
     unit_data *last_room; ///< Last location of character
     char_point_data points;
