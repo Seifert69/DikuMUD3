@@ -265,6 +265,14 @@ public:
     void freeMoney() { FREE(m_money); }
     void setMoney(char *value) { m_money = value; }
     ///@}
+
+    /**
+     * @name Last Attacker type functions
+     * @{
+     */
+    ubit8 getLastAttackerType() const { return m_last_attacker_type; }
+    void setLastAttackerType(ubit8 value) { m_last_attacker_type = value; }
+    ///@}
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
     cCombat *m_combat{nullptr};             ///<
@@ -274,8 +282,7 @@ private:
     char_follow_type *m_followers{nullptr}; ///<
     char *m_last_attacker{nullptr};         ///< Last attacker of character
     char *m_money{nullptr};                 ///<  Money transfer from db-files.
-public:
-    ubit8 last_attacker_type; ///< Last attacker type of character
+    ubit8 m_last_attacker_type{0};          ///< Last attacker type of character
 };
 
 /* ------------------  PC SPECIFIC STRUCTURES ------------------------ */

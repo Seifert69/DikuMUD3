@@ -267,7 +267,10 @@ inline const char *CHAR_LAST_ATTACKER(const unit_data *unit)
     return UCHAR(unit)->getLastAttacker();
 }
 
-#define CHAR_LAST_ATTACKER_TYPE(unit) (UCHAR(unit)->last_attacker_type)
+inline ubit8 CHAR_LAST_ATTACKER_TYPE(const unit_data *unit)
+{
+    return UCHAR(unit)->getLastAttackerType();
+}
 
 inline ubit8 CHAR_POS(const unit_data *ch)
 {

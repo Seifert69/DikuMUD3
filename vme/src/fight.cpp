@@ -1112,7 +1112,7 @@ void damage(unit_data *ch,
         {
             UCHAR(victim)->setLastAttacker(str_dup(ch->getNames().Name()));
         }
-        CHAR_LAST_ATTACKER_TYPE(victim) = UNIT_TYPE(ch);
+        UCHAR(victim)->setLastAttackerType(UNIT_TYPE(ch));
         if (IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))
         {
             if ((paf = affected_by_spell(victim, ID_HIDE)))

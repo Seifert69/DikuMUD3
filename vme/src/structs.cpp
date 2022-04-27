@@ -37,7 +37,7 @@ char_data::char_data(ubit8 unit_type)
     , m_followers{nullptr}
     , m_last_attacker{nullptr}
     , m_money{nullptr}
-    , last_attacker_type{0}
+    , m_last_attacker_type{0}
 {
     g_world_nochars++;
 
