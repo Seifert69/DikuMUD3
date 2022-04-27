@@ -118,13 +118,29 @@ public:
         strcpy(m_guild, value);
     }
     /// @}
+
+    /**
+     * @name Bank related code
+     * @{
+     */
+    const char *getBank() const { return m_bank; }
+    char **getBankPtr() { return &m_bank; }
+    void freeBank()
+    {
+        if (m_bank)
+        {
+            FREE(m_bank);
+        }
+    }
+    void setBank(char *value) { m_bank = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{}; ///<
     pc_time_data m_time{};         ///< PCs time info
     pc_account_data m_account{};   ///< Accounting
     char *m_guild{nullptr};        ///< Player's current default guild (guilds in .info)
+    char *m_bank{nullptr};         ///< How much money in bank?
 public:
-    char *bank;      ///< How much money in bank?
     char *hometown;  ///< PCs Hometown (symbolic reference)
     char *promptstr; ///< A PC's Prompt
 

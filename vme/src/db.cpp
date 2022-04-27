@@ -1046,7 +1046,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     race_adjust(u);
                 }
 
-                g_nCorrupt += pBuf->ReadStringAlloc(&PC_BANK(u));
+                g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getBankPtr());
 
                 PC_SKILL_POINTS(u) = pBuf->ReadS32(&g_nCorrupt);
                 PC_ABILITY_POINTS(u) = pBuf->ReadS32(&g_nCorrupt);

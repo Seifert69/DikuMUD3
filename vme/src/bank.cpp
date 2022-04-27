@@ -45,7 +45,7 @@ static bool init_bank(const unit_data *pc, unit_data *clerk, bool init)
     {
         if (init)
         {
-            char *c = PC_BANK(pc);
+            const char *c = PC_BANK(pc);
             long amt = 0;
             int cur = 0;
             int i = 0;
@@ -402,8 +402,7 @@ int bank(spec_arg *sarg)
         char *b = nullptr;
         int i = 0;
 
-        if (PC_BANK(sarg->activator))
-            FREE(PC_BANK(sarg->activator));
+        UPC(sarg->activator)->freeBank();
 
         for (i = 0, *buf = '\0', b = buf; i <= MAX_CURRENCY; ++i)
         {
@@ -411,7 +410,7 @@ int bank(spec_arg *sarg)
             TAIL(b);
         }
 
-        PC_BANK(sarg->activator) = str_dup(buf);
+        UPC(sarg->activator)->setBank(str_dup(buf));
     }
 
     return SFR_BLOCK;
@@ -463,11 +462,7 @@ void tax_player(unit_data *ch)
 
     init_bank(ch, nullptr, TRUE);
 
-    if (PC_BANK(ch))
-    {
-        FREE(PC_BANK(ch)); /* clear the bank... */
-        PC_BANK(ch) = nullptr;
-    }
+    UPC(ch)->freeBank();
 
     for (i = 0; i <= MAX_CURRENCY; ++i)
     {

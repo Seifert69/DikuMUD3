@@ -433,7 +433,10 @@ inline const char *PC_GUILD(unit_data *pc)
 
 #define PC_ID(unit) (UPC(unit)->id)
 
-#define PC_BANK(unit) (UPC(unit)->bank)
+inline const char *PC_BANK(const unit_data *unit)
+{
+    return UPC(unit)->getBank();
+}
 
 #define PC_FLAGS(unit) (UPC(unit)->flags)
 

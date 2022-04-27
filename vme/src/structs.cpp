@@ -31,7 +31,7 @@ pc_data::pc_data()
     : char_data(UNIT_ST_PC)
     , m_setup{0, 0, 0, 0, 0, 0, 0, 0}
     , m_guild{nullptr}
-    , bank{nullptr}
+    , m_bank{nullptr}
     , hometown{nullptr}
     , promptstr{nullptr}
     , profession{-1}
@@ -68,8 +68,8 @@ pc_data::~pc_data()
     if (hometown)
         FREE(hometown);
 
-    if (bank)
-        FREE(bank);
+    if (m_bank)
+        FREE(m_bank);
 
     if (promptstr)
         FREE(promptstr);
