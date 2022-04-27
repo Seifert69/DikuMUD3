@@ -1118,7 +1118,7 @@ void nanny_get_name(descriptor_data *d, char *arg)
             return;
         }
 
-        PC_SETUP_COLOUR(d->cgetCharacter()) = 0;
+        UPC(d->getCharacter())->getTerminalSetupType().colour_convert = 0;
         MplexSendSetup(d);
         set_descriptor_fptr(d, nanny_existing_pwd, TRUE);
         return;

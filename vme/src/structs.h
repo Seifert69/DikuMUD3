@@ -61,7 +61,7 @@ class pc_data : public char_data
 {
 public:
     pc_data();
-    ~pc_data();
+    ~pc_data() override;
 
     void gstate_tomenu(dilprg *pdontstop);
     void gstate_togame(dilprg *pdontstart);
@@ -70,8 +70,11 @@ public:
     void connect_game();
     void reconnect_game(descriptor_data *d);
 
-    terminal_setup_type setup;
+    terminal_setup_type &getTerminalSetupType() { return m_setup; }
 
+private:
+    terminal_setup_type m_setup{}; ///<
+public:
     pc_time_data m_time{};     ///< PCs time info
     pc_account_data account{}; ///< Accounting
 

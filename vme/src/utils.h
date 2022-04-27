@@ -336,7 +336,10 @@ inline unit_data *CHAR_ORIGINAL(unit_data *ch)
 
 #define PC_CRACK_ATTEMPTS(pc) (UPC(pc)->crack_attempts)
 
-#define PC_SETUP(pc) (UPC(pc)->setup)
+inline terminal_setup_type &PC_SETUP(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType();
+}
 
 #define PC_LIFESPAN(pc) (UPC(pc)->lifespan)
 
@@ -346,19 +349,40 @@ inline unit_data *CHAR_ORIGINAL(unit_data *ch)
 
 #define PC_INFO(pc) (UPC(pc)->info)
 
-#define PC_SETUP_ECHO(pc) (UPC(pc)->setup.echo)
+inline ubit8 PC_SETUP_ECHO(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType().echo;
+}
 
-#define PC_SETUP_REDRAW(pc) (UPC(pc)->setup.redraw)
+inline ubit8 PC_SETUP_REDRAW(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType().redraw;
+}
 
-#define PC_SETUP_WIDTH(pc) (UPC(pc)->setup.width)
+inline ubit8 PC_SETUP_WIDTH(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType().width;
+}
 
-#define PC_SETUP_HEIGHT(pc) (UPC(pc)->setup.height)
+inline ubit8 PC_SETUP_HEIGHT(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType().height;
+}
 
-#define PC_SETUP_TELNET(pc) (UPC(pc)->setup.telnet)
+inline ubit8 PC_SETUP_TELNET(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType().telnet;
+}
 
-#define PC_SETUP_EMULATION(pc) (UPC(pc)->setup.emulation)
+inline ubit8 PC_SETUP_EMULATION(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType().emulation;
+}
 
-#define PC_SETUP_COLOUR(pc) (UPC(pc)->setup.colour_convert)
+inline ubit8 PC_SETUP_COLOUR(unit_data *pc)
+{
+    return UPC(pc)->getTerminalSetupType().colour_convert;
+}
 
 #define PC_GUILD(pc) (UPC(pc)->guild)
 

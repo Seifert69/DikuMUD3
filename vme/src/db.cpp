@@ -910,14 +910,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     g_nCorrupt += pBuf->SkipString();
                 }
 
-                PC_SETUP_ECHO(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_REDRAW(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_WIDTH(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_HEIGHT(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_EMULATION(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_TELNET(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_TELNET(u) = TRUE; // 2020 we shouldn't allow this to change (BBS support)
-                PC_SETUP_COLOUR(u) = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().echo = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().redraw = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().width = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().height = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().emulation = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().telnet = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().telnet = TRUE; // 2020 we shouldn't allow this to change (BBS support)
+                UPC(u)->getTerminalSetupType().colour_convert = pBuf->ReadU8(&g_nCorrupt);
 
                 if (unit_version > 59)
                 {

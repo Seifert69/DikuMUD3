@@ -33,7 +33,7 @@ void MplexSendSetup(descriptor_data *d)
 {
     assert(d);
 
-    protocol_send_setup(d->getMultiHookPtr(), d->getMultiHookID(), &PC_SETUP(d->cgetCharacter()));
+    protocol_send_setup(d->getMultiHookPtr(), d->getMultiHookID(), &PC_SETUP(d->getCharacter()));
 }
 
 /* ----------------------------------------------------------------- */
@@ -49,24 +49,24 @@ void init_char(unit_data *ch)
 
     if (g_cServerConfig.isBBS())
     {
-        PC_SETUP_ECHO(ch) = TRUE;
-        PC_SETUP_REDRAW(ch) = TRUE;
-        PC_SETUP_EMULATION(ch) = TERM_ANSI;
-        PC_SETUP_TELNET(ch) = FALSE;
+        UPC(ch)->getTerminalSetupType().echo = TRUE;
+        UPC(ch)->getTerminalSetupType().redraw = TRUE;
+        UPC(ch)->getTerminalSetupType().emulation = TERM_ANSI;
+        UPC(ch)->getTerminalSetupType().telnet = FALSE;
 
         SET_BIT(PC_FLAGS(ch), PC_INFORM);
     }
     else
     {
-        PC_SETUP_ECHO(ch) = FALSE;
-        PC_SETUP_REDRAW(ch) = FALSE;
-        PC_SETUP_EMULATION(ch) = TERM_TTY;
-        PC_SETUP_TELNET(ch) = TRUE;
+        UPC(ch)->getTerminalSetupType().echo = FALSE;
+        UPC(ch)->getTerminalSetupType().redraw = FALSE;
+        UPC(ch)->getTerminalSetupType().emulation = TERM_TTY;
+        UPC(ch)->getTerminalSetupType().telnet = TRUE;
     }
 
-    PC_SETUP_WIDTH(ch) = 80;
-    PC_SETUP_HEIGHT(ch) = 15;
-    PC_SETUP_COLOUR(ch) = 0;
+    UPC(ch)->getTerminalSetupType().width = 80;
+    UPC(ch)->getTerminalSetupType().height = 15;
+    UPC(ch)->getTerminalSetupType().colour_convert = 0;
     PC_CRACK_ATTEMPTS(ch) = 0;
 
     account_defaults(ch);

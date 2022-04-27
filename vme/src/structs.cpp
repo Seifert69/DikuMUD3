@@ -29,7 +29,7 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 
 pc_data::pc_data()
     : char_data(UNIT_ST_PC)
-    , setup{0, 0, 0, 0, 0, 0, 0, 0}
+    , m_setup{0, 0, 0, 0, 0, 0, 0, 0}
     , guild{nullptr}
     , bank{nullptr}
     , hometown{nullptr}
