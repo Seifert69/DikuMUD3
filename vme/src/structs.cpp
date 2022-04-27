@@ -33,7 +33,7 @@ pc_data::pc_data()
     , m_guild{nullptr}
     , m_bank{nullptr}
     , m_hometown{nullptr}
-    , promptstr{nullptr}
+    , m_promptstr{nullptr}
     , profession{-1}
     , vlvl{0}
     , id{-1}
@@ -71,8 +71,8 @@ pc_data::~pc_data()
     if (m_bank)
         FREE(m_bank);
 
-    if (promptstr)
-        FREE(promptstr);
+    if (m_promptstr)
+        FREE(m_promptstr);
 }
 
 npc_data::npc_data()

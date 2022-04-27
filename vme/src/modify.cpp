@@ -1264,11 +1264,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 66: /* "promptstr" */
-            if (UPC(unt)->promptstr != nullptr)
+            if (UPC(unt)->getPromptString() != nullptr)
             {
-                FREE(UPC(unt)->promptstr);
+                UPC(unt)->freePromptString();
             }
-            UPC(unt)->promptstr = str_dup(argument);
+            UPC(unt)->setPromptString(str_dup(argument));
             send_to_char("Prompt String Modified.<br/>", ch);
             return;
 

@@ -950,11 +950,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     g_nCorrupt += pBuf->ReadStringCopy(tmpbuf, MAX_STRING_LENGTH);
                     if (str_is_empty(tmpbuf))
                     {
-                        UPC(u)->promptstr = nullptr;
+                        UPC(u)->setPromptString(nullptr);
                     }
                     else
                     {
-                        UPC(u)->promptstr = str_dup(tmpbuf);
+                        UPC(u)->setPromptString(str_dup(tmpbuf));
                     }
                 }
 

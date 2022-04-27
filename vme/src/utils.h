@@ -397,7 +397,10 @@ inline const char *PC_GUILD(unit_data *pc)
     return UPC(pc)->getGuild();
 }
 
-#define PC_PROMPTSTR(pc) (UPC(pc)->promptstr)
+inline const char *PC_PROMPTSTR(unit_data *pc)
+{
+    return UPC(pc)->getPromptString();
+}
 
 #define PC_PROFESSION(pc) (UPC(pc)->profession)
 

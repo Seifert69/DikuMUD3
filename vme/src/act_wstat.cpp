@@ -1110,7 +1110,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                             (signed long)PC_ABILITY_POINTS(u),
                                             PC_CRIMES(u),
                                             STR(PC_HOME(u)),
-                                            STR(UPC(u)->promptstr),
+                                            STR(UPC(u)->getPromptString()),
                                             PC_VIRTUAL_LEVEL(u),
                                             required_xp(PC_VIRTUAL_LEVEL(u) + 1) - required_xp(PC_VIRTUAL_LEVEL(u)),
                                             PC_PROFESSION(u),

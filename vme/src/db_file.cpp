@@ -1269,7 +1269,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 auto temp = UPC(u)->color.save_string();
                 pBuf->AppendString(temp.c_str());
 #endif
-                pBuf->AppendString(UPC(u)->promptstr);
+                pBuf->AppendString(UPC(u)->getPromptString());
                 pBuf->AppendString(PC_FILENAME(u));
                 pBuf->AppendString(PC_PWD(u));
 

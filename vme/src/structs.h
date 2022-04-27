@@ -154,6 +154,21 @@ public:
         strcpy(m_hometown, value);
     }
     /// @}
+
+    /** @name Prompt String related code
+     * @{
+     */
+    const char *getPromptString() const { return m_promptstr; }
+    char **getPromptStringPtr() { return &m_promptstr; }
+    void setPromptString(char *value) { m_promptstr = value; }
+    void freePromptString()
+    {
+        if (m_promptstr)
+        {
+            FREE(m_promptstr);
+        }
+    }
+    /// @}
 private:
     terminal_setup_type m_setup{}; ///<
     pc_time_data m_time{};         ///< PCs time info
@@ -161,9 +176,8 @@ private:
     char *m_guild{nullptr};        ///< Player's current default guild (guilds in .info)
     char *m_bank{nullptr};         ///< How much money in bank?
     char *m_hometown{nullptr};     ///< PCs Hometown (symbolic reference)
+    char *m_promptstr{nullptr};    ///< A PC's Prompt
 public:
-    char *promptstr; ///< A PC's Prompt
-
     extra_list info;  ///< For saving Admin information
     extra_list quest; ///< For saving QUEST information
 
