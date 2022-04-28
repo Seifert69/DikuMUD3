@@ -1192,11 +1192,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        NPC_SPL_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UNPC(u)->setSpellSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        NPC_SPL_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UNPC(u)->setSpellSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
                 }
 

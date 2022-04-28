@@ -76,12 +76,25 @@ public:
     void increaseWeaponSkillAtIndexBy(size_t index, sbit16 value) { m_weapons[index] += value; }
     void decreaseWeaponSkillAtIndexBy(size_t index, sbit16 value) { m_weapons[index] -= value; }
     /// @}
+
+    /**
+     * Spells
+     * @todo Add range checking to indexes
+     * @{
+     */
+    sbit16 getSpellSkillAtIndex(size_t index) const { return m_spells[index]; }
+    sbit16 *getSpellSkillAtIndexPtr(size_t index) { return &m_spells[index]; }
+    std::array<sbit16, SPL_GROUP_MAX> &getSpellSkillArray() { return m_spells; }
+    size_t getSpellSkillArraySize() const { return m_spells.size(); }
+    void setSpellSkillAtIndexTo(size_t index, sbit16 value) { m_spells[index] = value; }
+    void increaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] += value; }
+    void decreaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] += value; }
+    /// @}
 private:
     std::array<sbit16, WPN_GROUP_MAX> m_weapons{0};
+    std::array<sbit16, SPL_GROUP_MAX> m_spells{0};
 
 public:
-    std::array<sbit16, SPL_GROUP_MAX> spells;
-
     ubit8 default_pos; ///< Default position for NPC
     ubit8 flags;       ///< flags for NPC behavior
 };

@@ -7,13 +7,8 @@
 
 #include "structs.h"
 
-#include "affect.h"
 #include "color.h"
-#include "db.h"
-#include "db_file.h"
 #include "handler.h"
-#include "mobact.h"
-#include "slog.h"
 #include "textutil.h"
 #include "utils.h"
 #include "zone_reset_cmd.h"
@@ -30,7 +25,7 @@ int g_world_nozones = 0;   /* number of zones in the world   */
 npc_data::npc_data()
     : char_data(UNIT_ST_NPC)
     , m_weapons{0}
-    , spells{0}
+    , m_spells{0}
     , default_pos{POSITION_STANDING}
     , flags{0}
 {

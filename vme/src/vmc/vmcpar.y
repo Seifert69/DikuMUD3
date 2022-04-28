@@ -562,7 +562,7 @@ omobile_field   : MANA number
     }
     | SPELL index number
     {
-        NPC_SPL_SKILL(cur, $2) = $3;
+        UNPC(cur)->setSpellSkillAtIndexTo($2, $3);
     }
     ;
 

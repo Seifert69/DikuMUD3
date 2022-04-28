@@ -2202,17 +2202,20 @@ void dilfe_fld(dilprg *p)
                         break;
 
                         case UNIT_ST_NPC:
+                        {
+                            auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
                             if (is_in(v2->val.num, 0, SPL_GROUP_MAX - 1))
                             {
                                 v->atyp = DILA_NONE;
                                 v->type = DILV_SINT2R;
-                                v->ref = &NPC_SPL_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                v->ref = npc->getSpellSkillAtIndexPtr(v2->val.num);
                             }
                             else
                             {
                                 v->type = DILV_FAIL; /* illegal index */
                             }
-                            break;
+                        }
+                        break;
 
                         case UNIT_ST_PC:
                             if (is_in(v2->val.num, 0, SPL_TREE_MAX - 1))

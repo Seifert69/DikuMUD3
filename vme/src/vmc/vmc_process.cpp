@@ -344,7 +344,7 @@ void set_points(unit_data *u)
 
     UNPC(u)->setWeaponSkillAtIndexTo(WPN_ROOT, max / 4);
 
-    if ((i = distribute_points(UNPC(u)->spells, UNPC(u)->spells.size(), spoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UNPC(u)->getSpellSkillArray(), UNPC(u)->getSpellSkillArraySize(), spoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - A spell skill exceeds %d points.", UNIT_IDENT(u), i);
     }
@@ -357,7 +357,7 @@ void set_points(unit_data *u)
         }
     }
 
-    NPC_SPL_SKILL(u, SPL_ALL) = max / 4;
+    UNPC(u)->setSpellSkillAtIndexTo(SPL_ALL, max / 4);
 
     if (!is_in(CHAR_NATURAL_ARMOUR(u), ARM_CLOTHES, ARM_PLATE))
     {
@@ -1226,7 +1226,7 @@ void init_unit(unit_data *u)
 
             for (i = 0; i < SPL_GROUP_MAX; i++)
             {
-                NPC_SPL_SKILL(u, i) = 0;
+                UNPC(u)->setSpellSkillAtIndexTo(i, 0);
             }
             NPC_FLAGS(u) = 0;
             UCHAR(u)->setOffensiveBonus(0);

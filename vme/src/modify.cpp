@@ -1436,7 +1436,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                NPC_SPL_SKILL(unt, skillarg) = valarg;
+                UNPC(unt)->setSpellSkillAtIndexTo(skillarg, valarg);
             }
             break;
 

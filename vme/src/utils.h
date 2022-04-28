@@ -424,7 +424,10 @@ inline sbit16 NPC_WPN_SKILL(unit_data *ch, size_t index)
     return UNPC(ch)->getWeaponSkillAtIndex(index);
 }
 
-#define NPC_SPL_SKILL(ch, index) (UNPC(ch)->spells[index])
+inline sbit16 NPC_SPL_SKILL(unit_data *ch, size_t index)
+{
+    return UNPC(ch)->getSpellSkillAtIndex(index);
+}
 
 #define NPC_DEFAULT(unit) (UNPC(unit)->default_pos)
 

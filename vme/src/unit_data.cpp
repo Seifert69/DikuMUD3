@@ -321,7 +321,7 @@ unit_data *unit_data::copy()
             }
             for (x = 0; x < SPL_GROUP_MAX; x++)
             {
-                U_NPC(u)->spells[x] = U_NPC(this)->spells[x];
+                U_NPC(u)->setSpellSkillAtIndexTo(x, U_NPC(this)->getSpellSkillAtIndex(x));
             }
             U_NPC(u)->default_pos = U_NPC(this)->default_pos;
             U_NPC(u)->flags = U_NPC(this)->flags;
