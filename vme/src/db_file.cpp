@@ -1266,7 +1266,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 pBuf->Append8(PC_SETUP_TELNET(u));
                 pBuf->Append8(PC_SETUP_COLOUR(u));
 #ifdef DMSERVER
-                auto temp = UPC(u)->color.save_string();
+                auto temp = UPC(u)->getColor().save_string();
                 pBuf->AppendString(temp.c_str());
 #endif
                 pBuf->AppendString(UPC(u)->getPromptString());

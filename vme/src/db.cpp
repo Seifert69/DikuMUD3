@@ -922,7 +922,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 if (unit_version > 59)
                 {
                     g_nCorrupt += pBuf->ReadStringCopy(tmpbuf, MAX_STRING_LENGTH * 2);
-                    UPC(u)->color.create(tmpbuf);
+                    UPC(u)->getColor().create(tmpbuf);
                 }
                 else if (unit_version > 57)
                 {

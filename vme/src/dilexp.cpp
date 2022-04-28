@@ -821,7 +821,8 @@ void dilfe_clradd(dilprg *p)
 
                             if (v->type != DILV_FAIL)
                             {
-                                if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name).empty() == false)
+                                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                                if (UPC(pc)->getColor().get((char *)v2->val.ptr, full_name).empty() == false)
                                 {
                                     v->type = DILV_INT;
                                     v->val.num = FALSE;
@@ -829,7 +830,7 @@ void dilfe_clradd(dilprg *p)
                                 else
                                 {
                                     color = str_escape_format((char *)v3->val.ptr, FALSE);
-                                    auto unused = UPC((unit_data *)v1->val.ptr)->color.insert((char *)v2->val.ptr, color);
+                                    auto unused = UPC(pc)->getColor().insert((char *)v2->val.ptr, color);
                                     FREE(color);
                                     v->type = DILV_INT;
                                     v->val.num = TRUE;
@@ -924,10 +925,11 @@ void dilfe_clrchg(dilprg *p)
 
                             if (v->type != DILV_FAIL)
                             {
-                                if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name).empty() == false)
+                                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                                if (UPC(pc)->getColor().get((char *)v2->val.ptr, full_name).empty() == false)
                                 {
                                     color = str_escape_format((char *)v3->val.ptr, FALSE);
-                                    auto unused = UPC((unit_data *)v1->val.ptr)->color.change((char *)v2->val.ptr, color);
+                                    auto unused = UPC(pc)->getColor().change((char *)v2->val.ptr, color);
                                     FREE(color);
                                     v->type = DILV_INT;
                                     v->val.num = TRUE;
@@ -1019,9 +1021,10 @@ void dilfe_clrdel(dilprg *p)
 
                     if (v->type != DILV_FAIL)
                     {
-                        if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name).empty() == false)
+                        auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                        if (UPC(pc)->getColor().get((char *)v2->val.ptr, full_name).empty() == false)
                         {
-                            UPC((unit_data *)v1->val.ptr)->color.remove(full_name);
+                            UPC(pc)->getColor().remove(full_name);
                             v->type = DILV_INT;
                             v->val.num = TRUE;
                         }

@@ -426,6 +426,14 @@ public:
         m_lasthosts[4] = value;
     }
     /// @}
+
+    /**
+     * @name Color
+     * @{
+     */
+    const color_type &getColor() const { return m_color; }
+    color_type &getColor() { return m_color; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -457,8 +465,7 @@ private:
     char m_pwd[PC_MAX_PASSWORD]{0};                      ///< Needed when loaded w/o descriptor
     char m_filename[PC_MAX_NAME]{0};                     ///< The name on disk...
     ubit32 m_lasthosts[5]{0};                            ///< last 5 different IPs
-public:
-    color_type color; ///< Players default colors
+    color_type m_color;                                  ///< Players default colors
 };
 
 /* ------------------ NPC SPECIFIC STRUCTURES ----------------------- */
