@@ -241,7 +241,7 @@ void clear_training_level(unit_data *ch)
 
     for (i = 0; i < WPN_TREE_MAX; i++)
     {
-        PC_WPN_LVL(ch, i) = 0;
+        UPC(ch)->setWeaponSkillLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < SKI_TREE_MAX; i++)
@@ -1100,7 +1100,7 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
 
         case TEACH_WEAPONS:
             pValues->values = UPC(pupil)->getWeaponSkillArrayPtr();
-            pValues->lvl = &PC_WPN_LVL(pupil, 0);
+            pValues->lvl = UPC(pupil)->getWeaponSkillLevelArrayPtr();
             pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_WpnColl;
             break;

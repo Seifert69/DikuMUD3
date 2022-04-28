@@ -144,7 +144,7 @@ void points_reset(unit_data *ch)
 
     for (i = 0; i < WPN_TREE_MAX; i++)
     {
-        PC_WPN_LVL(ch, i) = 0;
+        UPC(ch)->setWeaponSkillLevelAtIndexTo(i, 0);
         if (i < WPN_GROUP_MAX)
         {
             UPC(ch)->setWeaponSkillAtIndexTo(i, 1); // So resistance spells work!

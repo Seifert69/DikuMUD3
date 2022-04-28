@@ -330,6 +330,17 @@ public:
     void increaseWeaponSkillAtIndexBy(size_t index, sbit16 value) { m_weapons[index] += value; }
     void decreaseWeaponSkillAtIndexBy(size_t index, sbit16 value) { m_weapons[index] -= value; }
     /// @}
+
+    /**
+     * @name Weapon Skill Level
+     * @todo Add range checking to indexes
+     * @{
+     */
+    ubit8 getWeaponSkillLevelAtIndex(size_t index) const { return m_weapon_lvl[index]; }
+    ubit8 *getWeaponSkillLevelAtIndexPtr(size_t index) { return &m_weapon_lvl[index]; }
+    ubit8 *getWeaponSkillLevelArrayPtr() { return &m_weapon_lvl[0]; }
+    void setWeaponSkillLevelAtIndexTo(size_t index, ubit8 value) { m_weapon_lvl[index] = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -354,9 +365,8 @@ private:
     sbit16 m_skills[SKI_TREE_MAX]{0};                    ///< The skills learned
     ubit8 m_skill_lvl[SKI_TREE_MAX]{0};                  ///< The skills practiced within level
     sbit16 m_weapons[WPN_TREE_MAX]{0};                   ///< The weapons learned
+    ubit8 m_weapon_lvl[WPN_TREE_MAX]{0};                 ///< The weapons learned
 public:
-    ubit8 weapon_lvl[WPN_TREE_MAX]; ///< The weapons learned
-
     ubit8 ability_lvl[ABIL_TREE_MAX]; ///< The abilities learned
 
     sbit8 conditions[3]; ///< Drunk full etc.

@@ -1128,7 +1128,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
 
-                    PC_WPN_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                    UPC(u)->setWeaponSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
