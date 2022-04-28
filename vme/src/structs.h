@@ -341,6 +341,17 @@ public:
     ubit8 *getWeaponSkillLevelArrayPtr() { return &m_weapon_lvl[0]; }
     void setWeaponSkillLevelAtIndexTo(size_t index, ubit8 value) { m_weapon_lvl[index] = value; }
     /// @}
+
+    /**
+     * @name Ability Level
+     * @todo Add range checking to indexes
+     * @{
+     */
+    ubit8 getAbilityLevelAtIndex(size_t index) const { return m_ability_lvl[index]; }
+    ubit8 *getAbilityLevelAtIndexPtr(size_t index) { return &m_ability_lvl[index]; }
+    ubit8 *getAbilityLevelArrayPtr() { return &m_ability_lvl[0]; }
+    void setAbilityLevelAtIndexTo(size_t index, ubit8 value) { m_ability_lvl[index] = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -366,9 +377,8 @@ private:
     ubit8 m_skill_lvl[SKI_TREE_MAX]{0};                  ///< The skills practiced within level
     sbit16 m_weapons[WPN_TREE_MAX]{0};                   ///< The weapons learned
     ubit8 m_weapon_lvl[WPN_TREE_MAX]{0};                 ///< The weapons learned
+    ubit8 m_ability_lvl[ABIL_TREE_MAX]{0};               ///< The abilities learned
 public:
-    ubit8 ability_lvl[ABIL_TREE_MAX]; ///< The abilities learned
-
     sbit8 conditions[3]; ///< Drunk full etc.
     ubit8 nAccessLevel;  ///< Access Level for BBS use
 

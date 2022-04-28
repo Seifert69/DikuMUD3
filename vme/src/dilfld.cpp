@@ -3095,19 +3095,20 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &PC_ABI_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = pc->getAbilityLevelAtIndexPtr(v2->val.num);
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = PC_ABI_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->val.num = pc->getAbilityLevelAtIndex(v2->val.num);
                     }
                 }
                 else

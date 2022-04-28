@@ -49,7 +49,7 @@ pc_data::pc_data()
     , m_skill_lvl{0}
     , m_weapons{0}
     , m_weapon_lvl{0}
-    , ability_lvl{0}
+    , m_ability_lvl{0}
     , conditions{0}
     , nAccessLevel{0}
     , pwd{0}

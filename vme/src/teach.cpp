@@ -251,7 +251,7 @@ void clear_training_level(unit_data *ch)
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
-        PC_ABI_LVL(ch, i) = 0;
+        UPC(ch)->setAbilityLevelAtIndexTo(i, 0);
     }
 }
 
@@ -1081,7 +1081,7 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
     {
         case TEACH_ABILITIES:
             pValues->values = UCHAR(pupil)->getAbilitiesArray().data(); // Current ability
-            pValues->lvl = &PC_ABI_LVL(pupil, 0);                       // How many times you've trained this level on this ability
+            pValues->lvl = UPC(pupil)->getAbilityLevelArrayPtr();       // How many times you've trained this level on this ability
             pValues->practice_points = UPC(pupil)->getAbilityPointsPtr();
             return &g_AbiColl;
 

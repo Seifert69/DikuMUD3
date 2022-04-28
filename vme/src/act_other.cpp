@@ -120,7 +120,7 @@ void points_reset(unit_data *ch)
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
         UCHAR(ch)->setAbilityAtIndexTo(i, 0);
-        PC_ABI_LVL(ch, i) = 0;
+        UPC(ch)->setAbilityLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < SKI_TREE_MAX; i++)
