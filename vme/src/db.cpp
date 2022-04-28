@@ -1148,7 +1148,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     PC_SKI_SKILL(u, SKI_KICK) = 0;
                 }
 
-                PC_CRIMES(u) = pBuf->ReadU16(&g_nCorrupt);
+                UPC(u)->setNumberOfCrimesCommitted(pBuf->ReadU16(&g_nCorrupt));
 
                 j = pBuf->ReadU8(&g_nCorrupt);
 

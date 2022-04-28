@@ -444,7 +444,10 @@ inline sbit32 PC_SKILL_POINTS(unit_data *ch)
 
 #define PC_SPL_SKILL(ch, index) (UPC(ch)->spells[index])
 
-#define PC_CRIMES(unit) (UPC(unit)->nr_of_crimes)
+inline ubit16 PC_CRIMES(unit_data *unit)
+{
+    return UPC(unit)->getNumberOfCrimesCommitted();
+}
 
 #define PC_PWD(unit) (UPC(unit)->pwd)
 

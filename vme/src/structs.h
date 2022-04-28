@@ -242,6 +242,15 @@ public:
     void togglePCFlag(ubit16 value) { m_flags ^= value; }
     void removePCFlag(ubit16 value) { m_flags &= ~value; }
     /// @}
+
+    /**
+     * @name Crimes Committed
+     * @{
+     */
+    ubit16 getNumberOfCrimesCommitted() const { return m_nr_of_crimes; }
+    ubit16 *getNumberOfCrimesCommittedPtr() { return &m_nr_of_crimes; }
+    void setNumberOfCrimesCommitted(ubit16 value) { m_nr_of_crimes = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -258,8 +267,8 @@ private:
     sbit32 m_skill_points{0};                            ///< No of practice points left
     sbit32 m_ability_points{0};                          ///< No of practice points left
     ubit16 m_flags{0};                                   ///< flags for PC setup (brief, noshout...)
+    ubit16 m_nr_of_crimes{0};                            ///< Number of crimes committed
 public:
-    ubit16 nr_of_crimes;   ///< Number of crimes committed
     ubit16 crack_attempts; ///< Number of wrong passwords entered
     ubit16 lifespan{};     ///< How many year to live....
 

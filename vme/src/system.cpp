@@ -86,7 +86,7 @@ void init_char(unit_data *ch)
     UCHAR(ch)->setPlayerExperience(0);
     UCHAR(ch)->setLevel(0);
     UPC(ch)->setPlayerUID(-1);
-    PC_CRIMES(ch) = 0;
+    UPC(ch)->setNumberOfCrimesCommitted(0);
 
     UPC(ch)->setAbilityPoints(0);
     UPC(ch)->setSkillPoints(0);

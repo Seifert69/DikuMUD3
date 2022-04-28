@@ -4566,17 +4566,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &PC_CRIMES((unit_data *)v1->val.ptr);
+                        v->ref = pc->getNumberOfCrimesCommittedPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

@@ -1056,7 +1056,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 38: /* "crimes" */
-            PC_CRIMES(unt) = valarg;
+            UPC(unt)->setNumberOfCrimesCommitted(valarg);
             return;
 
         case 39: /* "drunk" */
