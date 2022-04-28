@@ -317,7 +317,7 @@ unit_data *unit_data::copy()
         {
             for (x = 0; x < WPN_GROUP_MAX; x++)
             {
-                U_NPC(u)->weapons[x] = U_NPC(this)->weapons[x];
+                U_NPC(u)->setWeaponSkillAtIndexTo(x, U_NPC(this)->getWeaponSkillAtIndex(x));
             }
             for (x = 0; x < SPL_GROUP_MAX; x++)
             {

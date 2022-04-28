@@ -558,7 +558,7 @@ omobile_field   : MANA number
     }
     | WEAPON index number
     {
-        NPC_WPN_SKILL(cur, $2) = $3;
+        UNPC(cur)->setWeaponSkillAtIndexTo($2, $3);
     }
     | SPELL index number
     {

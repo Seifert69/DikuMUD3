@@ -419,7 +419,10 @@ inline bool PC_IS_UNSAVED(unit_data *ch) { return PC_TIME(ch).getTotalTimePlayed
 // clang-format on
 /* ..................................................................... */
 
-#define NPC_WPN_SKILL(ch, index) (UNPC(ch)->weapons[index])
+inline sbit16 NPC_WPN_SKILL(unit_data *ch, size_t index)
+{
+    return UNPC(ch)->getWeaponSkillAtIndex(index);
+}
 
 #define NPC_SPL_SKILL(ch, index) (UNPC(ch)->spells[index])
 

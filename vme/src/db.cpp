@@ -1180,11 +1180,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        NPC_WPN_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UNPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        NPC_WPN_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UNPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
                 }
 

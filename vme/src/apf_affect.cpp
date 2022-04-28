@@ -170,7 +170,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
         }
         else
         {
-            NPC_WPN_SKILL(unit, modify) += af->getDataAtIndex(1);
+            UNPC(unit)->increaseWeaponSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
     }
     else
@@ -181,7 +181,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
         }
         else
         {
-            NPC_WPN_SKILL(unit, modify) -= af->getDataAtIndex(1);
+            UNPC(unit)->decreaseWeaponSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
     }
 

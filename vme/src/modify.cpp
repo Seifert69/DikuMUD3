@@ -1461,7 +1461,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                NPC_WPN_SKILL(unt, skillarg) = valarg;
+                UNPC(unt)->setWeaponSkillAtIndexTo(skillarg, valarg);
             }
     }
 

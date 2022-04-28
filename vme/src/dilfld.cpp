@@ -4053,17 +4053,20 @@ void dilfe_fld(dilprg *p)
                     switch (UNIT_TYPE((unit_data *)v1->val.ptr))
                     {
                         case UNIT_ST_NPC:
+                        {
+                            auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
                             if (is_in(v2->val.num, 0, WPN_GROUP_MAX - 1))
                             {
                                 v->atyp = DILA_NONE;
                                 v->type = DILV_SINT2R;
-                                v->ref = &NPC_WPN_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                v->ref = npc->getWeaponSkillAtIndexPtr(v2->val.num);
                             }
                             else
                             {
                                 v->type = DILV_FAIL;
                             }
-                            break;
+                        }
+                        break;
                         case UNIT_ST_PC:
                             if (is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                             {

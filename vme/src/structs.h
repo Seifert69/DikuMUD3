@@ -61,9 +61,25 @@ class npc_data : public char_data
 {
 public:
     npc_data();
-    ~npc_data();
+    ~npc_data() override;
 
-    std::array<sbit16, WPN_GROUP_MAX> weapons;
+    /**
+     * @name Weapons
+     * @todo Add range checking to indexes
+     * @{
+     */
+    sbit16 getWeaponSkillAtIndex(size_t index) const { return m_weapons[index]; }
+    sbit16 *getWeaponSkillAtIndexPtr(size_t index) { return &m_weapons[index]; }
+    std::array<sbit16, WPN_GROUP_MAX> &getWeaponSkillArray() { return m_weapons; }
+    size_t getWeaponsSkillArraySize() const { return m_weapons.size(); }
+    void setWeaponSkillAtIndexTo(size_t index, sbit16 value) { m_weapons[index] = value; }
+    void increaseWeaponSkillAtIndexBy(size_t index, sbit16 value) { m_weapons[index] += value; }
+    void decreaseWeaponSkillAtIndexBy(size_t index, sbit16 value) { m_weapons[index] -= value; }
+    /// @}
+private:
+    std::array<sbit16, WPN_GROUP_MAX> m_weapons{0};
+
+public:
     std::array<sbit16, SPL_GROUP_MAX> spells;
 
     ubit8 default_pos; ///< Default position for NPC
