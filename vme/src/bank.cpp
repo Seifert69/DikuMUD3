@@ -462,7 +462,7 @@ void tax_player(unit_data *ch)
 
     init_bank(ch, nullptr, TRUE);
 
-    UPC(ch)->freeBank();
+    UPC(ch)->freeBank(); // clear the bank...
 
     for (i = 0; i <= MAX_CURRENCY; ++i)
     {

@@ -18,7 +18,7 @@ public:
      * @param buf Buffer to read from
      * @param unit_version Version number of data object
      * @param unit We have to pass this in because there data in the middle that doesn't belong to char_point_data
-     * @param errors Error count
+     * @param error Error count
      */
     void readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *unit, int &error);
 

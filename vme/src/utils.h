@@ -323,215 +323,99 @@ inline unit_data *CHAR_ORIGINAL(unit_data *ch)
 
 // Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
 #define CHAR_CAN_SEE(ch, unit)                                                                                                             \
-    (!IS_CHAR(ch) || (CHAR_VISION(ch) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) || (UNIT_IN(ch) == unit)) && (CHAR_LEVEL(ch) >= UNIT_MINV(unit)) &&               \
-                      (CHAR_LEVEL(ch) >= CREATOR_LEVEL || (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE) ||  \
-                                                                                          CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE))))))
+    (!IS_CHAR(ch) ||                                                                                                                       \
+     (CHAR_VISION(ch) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) || (UNIT_IN(ch) == unit)) && (CHAR_LEVEL(ch) >= UNIT_MINV(unit)) &&    \
+      (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||                                                                                                  \
+       (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE))))))
 
 #define CHAR_CAN_GO(ch, door)                                                                                                              \
     (ROOM_EXIT(UNIT_IN(ch), door) && (ROOM_EXIT(UNIT_IN(ch), door)->to_room) && !IS_SET(ROOM_EXIT(UNIT_IN(ch), door)->exit_info, EX_CLOSED))
 
 /* ..................................................................... */
+// clang-format off
 
-inline ubit8 PC_ACCESS_LEVEL(unit_data *pc)
-{
-    return UPC(pc)->getAccessLevel();
-}
+inline ubit8 PC_ACCESS_LEVEL(unit_data *pc) { return UPC(pc)->getAccessLevel(); }
 
-inline ubit16 PC_CRACK_ATTEMPTS(unit_data *pc)
-{
-    return UPC(pc)->getNumberOfCrackAttempts();
-}
+inline ubit16 PC_CRACK_ATTEMPTS(unit_data *pc) { return UPC(pc)->getNumberOfCrackAttempts(); }
 
-inline terminal_setup_type &PC_SETUP(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType();
-}
+inline terminal_setup_type &PC_SETUP(unit_data *pc) { return UPC(pc)->getTerminalSetupType(); }
 
-inline ubit16 PC_LIFESPAN(unit_data *pc)
-{
-    return UPC(pc)->getLifespan();
-}
+inline ubit16 PC_LIFESPAN(unit_data *pc) { return UPC(pc)->getLifespan(); }
 
-inline pc_account_data &PC_ACCOUNT(unit_data *pc)
-{
-    return UPC(pc)->getPCAccountData();
-}
+inline pc_account_data &PC_ACCOUNT(unit_data *pc) { return UPC(pc)->getPCAccountData(); }
 
-inline pc_account_data &PC_ACCOUNT(const unit_data *pc)
-{
-    return UPC(pc)->getPCAccountData();
-}
+inline pc_account_data &PC_ACCOUNT(const unit_data *pc) { return UPC(pc)->getPCAccountData(); }
 
-inline ubit16 PC_VIRTUAL_LEVEL(unit_data *pc)
-{
-    return UPC(pc)->getVirtualPlayerLevel();
-}
+inline ubit16 PC_VIRTUAL_LEVEL(unit_data *pc) { return UPC(pc)->getVirtualPlayerLevel(); }
 
-inline extra_list &PC_INFO(unit_data *pc)
-{
-    return UPC(pc)->getAdministrationInformation();
-}
+inline extra_list &PC_INFO(unit_data *pc) { return UPC(pc)->getAdministrationInformation(); }
 
-inline ubit8 PC_SETUP_ECHO(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType().echo;
-}
+inline ubit8 PC_SETUP_ECHO(unit_data *pc) { return UPC(pc)->getTerminalSetupType().echo; }
 
-inline ubit8 PC_SETUP_REDRAW(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType().redraw;
-}
+inline ubit8 PC_SETUP_REDRAW(unit_data *pc) { return UPC(pc)->getTerminalSetupType().redraw; }
 
-inline ubit8 PC_SETUP_WIDTH(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType().width;
-}
+inline ubit8 PC_SETUP_WIDTH(unit_data *pc) { return UPC(pc)->getTerminalSetupType().width; }
 
-inline ubit8 PC_SETUP_HEIGHT(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType().height;
-}
+inline ubit8 PC_SETUP_HEIGHT(unit_data *pc) { return UPC(pc)->getTerminalSetupType().height; }
 
-inline ubit8 PC_SETUP_TELNET(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType().telnet;
-}
+inline ubit8 PC_SETUP_TELNET(unit_data *pc) { return UPC(pc)->getTerminalSetupType().telnet; }
 
-inline ubit8 PC_SETUP_EMULATION(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType().emulation;
-}
+inline ubit8 PC_SETUP_EMULATION(unit_data *pc) { return UPC(pc)->getTerminalSetupType().emulation; }
 
-inline ubit8 PC_SETUP_COLOUR(unit_data *pc)
-{
-    return UPC(pc)->getTerminalSetupType().colour_convert;
-}
+inline ubit8 PC_SETUP_COLOUR(unit_data *pc) { return UPC(pc)->getTerminalSetupType().colour_convert; }
 
-inline const char *PC_GUILD(unit_data *pc)
-{
-    return UPC(pc)->getGuild();
-}
+inline const char *PC_GUILD(unit_data *pc) { return UPC(pc)->getGuild(); }
 
-inline const char *PC_PROMPTSTR(unit_data *pc)
-{
-    return UPC(pc)->getPromptString();
-}
+inline const char *PC_PROMPTSTR(unit_data *pc) { return UPC(pc)->getPromptString(); }
 
-inline sbit8 PC_PROFESSION(unit_data *pc)
-{
-    return UPC(pc)->getProfession();
-}
+inline sbit8 PC_PROFESSION(unit_data *pc) { return UPC(pc)->getProfession(); }
 
-inline extra_list &PC_QUEST(unit_data *pc)
-{
-    return UPC(pc)->getQuestInformation();
-}
+inline extra_list &PC_QUEST(unit_data *pc) { return UPC(pc)->getQuestInformation(); }
 
-inline sbit8 PC_COND(unit_data *ch, size_t i)
-{
-    return UPC(ch)->getConditionAtIndex(i);
-}
+inline sbit8 PC_COND(unit_data *ch, size_t i) { return UPC(ch)->getConditionAtIndex(i); }
 
-inline sbit32 PC_ABILITY_POINTS(unit_data *ch)
-{
-    return UPC(ch)->getAbilityPoints();
-}
+inline sbit32 PC_ABILITY_POINTS(unit_data *ch) { return UPC(ch)->getAbilityPoints(); }
 
-inline sbit32 PC_SKILL_POINTS(unit_data *ch)
-{
-    return UPC(ch)->getSkillPoints();
-}
+inline sbit32 PC_SKILL_POINTS(unit_data *ch) { return UPC(ch)->getSkillPoints(); }
 
-inline ubit8 PC_ABI_LVL(unit_data *ch, size_t index)
-{
-    return UPC(ch)->getAbilityLevelAtIndex(index);
-}
+inline ubit8 PC_ABI_LVL(unit_data *ch, size_t index) { return UPC(ch)->getAbilityLevelAtIndex(index); }
 
-inline sbit16 PC_SKI_SKILL(unit_data *ch, size_t index)
-{
-    return UPC(ch)->getSkillAtIndex(index);
-}
+inline sbit16 PC_SKI_SKILL(unit_data *ch, size_t index) { return UPC(ch)->getSkillAtIndex(index); }
 
-inline ubit8 PC_SKI_LVL(unit_data *ch, size_t index)
-{
-    return UPC(ch)->getSpellSkillAtIndex(index);
-}
+inline ubit8 PC_SKI_LVL(unit_data *ch, size_t index) { return UPC(ch)->getSpellSkillAtIndex(index); }
 
-inline ubit8 PC_WPN_LVL(unit_data *ch, size_t index)
-{
-    return UPC(ch)->getWeaponSkillLevelAtIndex(index);
-}
+inline ubit8 PC_WPN_LVL(unit_data *ch, size_t index) { return UPC(ch)->getWeaponSkillLevelAtIndex(index); }
 
-inline sbit16 PC_WPN_SKILL(unit_data *ch, size_t index)
-{
-    return UPC(ch)->getWeaponSkillAtIndex(index);
-}
+inline sbit16 PC_WPN_SKILL(unit_data *ch, size_t index) { return UPC(ch)->getWeaponSkillAtIndex(index); }
 
-inline ubit8 PC_SPL_LVL(unit_data *ch, size_t index)
-{
-    return UPC(ch)->getSpellLevelAtIndex(index);
-}
+inline ubit8 PC_SPL_LVL(unit_data *ch, size_t index) { return UPC(ch)->getSpellLevelAtIndex(index); }
 
-inline sbit16 PC_SPL_SKILL(unit_data *ch, size_t index)
-{
-    return UPC(ch)->getSpellSkillAtIndex(index);
-}
+inline sbit16 PC_SPL_SKILL(unit_data *ch, size_t index) { return UPC(ch)->getSpellSkillAtIndex(index); }
 
-inline ubit16 PC_CRIMES(unit_data *unit)
-{
-    return UPC(unit)->getNumberOfCrimesCommitted();
-}
+inline ubit16 PC_CRIMES(unit_data *unit) { return UPC(unit)->getNumberOfCrimesCommitted(); }
 
-inline const char *PC_PWD(unit_data *unit)
-{
-    return UPC(unit)->getPassword();
-}
+inline const char *PC_PWD(unit_data *unit) { return UPC(unit)->getPassword(); }
 
-// inline ubit32 PC_LASTHOST(unit_data *unit)
-//{
-//     (UPC(unit)->lasthosts)
-// }
+inline const char *PC_FILENAME(unit_data *unit) { return UPC(unit)->getFilename(); }
 
-inline const char *PC_FILENAME(unit_data *unit)
-{
-    return UPC(unit)->getFilename();
-}
+inline sbit32 PC_ID(unit_data *unit) { return UPC(unit)->getPlayerUID(); }
 
-inline sbit32 PC_ID(unit_data *unit)
-{
-    return UPC(unit)->getPlayerUID();
-}
+inline const char *PC_BANK(const unit_data *unit) { return UPC(unit)->getBank(); }
 
-inline const char *PC_BANK(const unit_data *unit)
-{
-    return UPC(unit)->getBank();
-}
+inline ubit16 PC_FLAGS(unit_data *unit) { return UPC(unit)->getAllPCFlags(); }
 
-inline ubit16 PC_FLAGS(unit_data *unit)
-{
-    return UPC(unit)->getAllPCFlags();
-}
+inline pc_time_data &PC_TIME(unit_data *unit) { return UPC(unit)->getPCTimeInformation(); }
 
-inline pc_time_data &PC_TIME(unit_data *unit)
-{
-    return UPC(unit)->getPCTimeInformation();
-}
-
-inline const char *PC_HOME(unit_data *ch)
-{
-    return UPC(ch)->getHometown();
-}
+inline const char *PC_HOME(unit_data *ch) { return UPC(ch)->getHometown(); }
 /* .................... PC SUPER STRUCTURE ............................. */
 
 #define PC_IMMORTAL(ch) (IS_PC(ch) && CHAR_LEVEL(ch) >= 200)
 
 #define PC_MORTAL(ch) (IS_PC(ch) && CHAR_LEVEL(ch) < 200)
 
-inline bool PC_IS_UNSAVED(unit_data *ch)
-{
-    return PC_TIME(ch).getTotalTimePlayedInSeconds() == 0;
-}
+inline bool PC_IS_UNSAVED(unit_data *ch) { return PC_TIME(ch).getTotalTimePlayedInSeconds() == 0; }
 
+// clang-format on
 /* ..................................................................... */
 
 #define NPC_WPN_SKILL(ch, index) (UNPC(ch)->weapons[index])

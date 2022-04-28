@@ -742,6 +742,7 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
 }
 
 /**
+ * @param ch
  * @param dir must be one of [CMD_NORTH..MAX_EXIT]
  */
 void move_dir(unit_data *ch, int dir)

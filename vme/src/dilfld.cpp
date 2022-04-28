@@ -4701,13 +4701,13 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = pc->getSpellSkillAtIndexPtr(v2->val.num);
+                        v->ref = pc->getSkillAtIndexPtr(v2->val.num);
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = pc->getSpellSkillAtIndex(v2->val.num);
+                        v->val.num = pc->getSkillAtIndex(v2->val.num);
                     }
                 }
                 else

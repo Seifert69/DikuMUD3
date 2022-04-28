@@ -594,14 +594,14 @@ void generate_zone_indexes()
  *
  * Stored As:
  *   <no of affects (0..255)>
- *   <duration>
- *   <id>
- *   <beat>
- *   <data[3]>
- *   <firstf_i>
- *   <tickf_i>
- *   <lastf_i>
- *   <applyf_i>
+ *   `<duration>`
+ *   `<id>`
+ *   `<beat>`
+ *   `<data[3]>`
+ *   `<firstf_i>`
+ *   `<tickf_i>`
+ *   `<lastf_i>`
+ *   `<applyf_i>`
  *
  *  Will only link the affect since it is used by both players and by
  *  other units. If the affect should also have an actual effect, then it

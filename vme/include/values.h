@@ -6,10 +6,11 @@ EmailAdd    marco2@cyberzone.net
 request     header
 version     2
 END HEADER*/
-
+// clang-format off
 #include  "vme.h"
 #ifndef _MUD_VALUES_H
 #define _MUD_VALUES_H
+
 /* *********************************************************************** *
  * File   : values.h                                  Part of Valhalla MUD *
  * Version: 2                                                           *
@@ -343,55 +344,55 @@ END HEADER*/
 
 
 // #define WPN_HAND_HAMMER  72  
-///#define WPN_KATANA       13
-///#define WPN_KOPESH       15
-///#define WPN_WAKIZASHI    41
-/// #define WPN_FIGHTING_STAFF 45 /* Two handed */
-/// #define WPN_SABER        46
-/// #define WPN_CUTLASS      47
-/// #define WPN_MACHETE      48
-///#define WPN_SHOCK_LANCE  50
-/// #define WPN_PIKE         51
-///#define WPN_GREAT_AXE    52
-///#define WPN_FAUCHARD     57
-///#define WPN_SAPPARA      58
-///#define WPN_POLE_CLEAVER 59
-///#define WPN_CROWBILL     60
-/// #define WPN_ESTOC        61
-///#define WPN_BILL_GUISARME 62
-///#define WPN_GUISARME     63
-///#define WPN_NAGINATA     64
-///#define WPN_SPETUM       65
-///#define WPN_LUCERN_HAMMER 66
-///#define WPN_BASTARD_SWORD2 67 /* SPECIAL USE FLAMETONGUE AND AVENGER */
-///#define WPN_BASTARD_SWORD1 68   /* DITTO */
-/// #define WPN_PARTISAN       69
-///#define WPN_PILUM          70
-///#define WPN_JEDDART_AXE    71
-///#define WPN_COMMON_MAUL    74
-///#define WPN_POLE_AXE       75
-///#define WPN_ADZE           76
-///#define WPN_STAFF          77
-///#define WPN_BACULUS        78
-///#define WPN_FISH_SPINE     79
-///#define WPN_GAFF           80
-/// #define WPN_FLAMBERGE      81
-/// #define WPN_BEC_DE_CORBIN  82
-/// #define WPN_VOULGE         83
-///#define WPN_WAR_AXE        84
-///#define WPN_MILITARY_FORK  86
-/// #define WPN_ICE_PICK       87
-/// #define WPN_DIRK           88
-/// #define WPN_SHAMSHIR       89
-/// #define WPN_FAUCHARD_FORK  90
-///#define WPN_CUDGEL         92
-///#define WPN_RANSEUR        93
-///#define WPN_FOOT_LANCE     94
-/// #define WPN_BILL_HOOK      95
-///#define WPN_TALWAR         96
-/// #define WPN_CLEAVER        98
-/// #define WPN_LOCHABER_AXE  100
-/// #define WPN_GLAIVE        101
+//#define WPN_KATANA       13
+//#define WPN_KOPESH       15
+//#define WPN_WAKIZASHI    41
+// #define WPN_FIGHTING_STAFF 45 /* Two handed */
+// #define WPN_SABER        46
+// #define WPN_CUTLASS      47
+// #define WPN_MACHETE      48
+//#define WPN_SHOCK_LANCE  50
+// #define WPN_PIKE         51
+//#define WPN_GREAT_AXE    52
+//#define WPN_FAUCHARD     57
+//#define WPN_SAPPARA      58
+//#define WPN_POLE_CLEAVER 59
+//#define WPN_CROWBILL     60
+// #define WPN_ESTOC        61
+//#define WPN_BILL_GUISARME 62
+//#define WPN_GUISARME     63
+//#define WPN_NAGINATA     64
+//#define WPN_SPETUM       65
+//#define WPN_LUCERN_HAMMER 66
+//#define WPN_BASTARD_SWORD2 67 /* SPECIAL USE FLAMETONGUE AND AVENGER */
+//#define WPN_BASTARD_SWORD1 68   /* DITTO */
+// #define WPN_PARTISAN       69
+//#define WPN_PILUM          70
+//#define WPN_JEDDART_AXE    71
+//#define WPN_COMMON_MAUL    74
+//#define WPN_POLE_AXE       75
+//#define WPN_ADZE           76
+//#define WPN_STAFF          77
+//#define WPN_BACULUS        78
+//#define WPN_FISH_SPINE     79
+//#define WPN_GAFF           80
+// #define WPN_FLAMBERGE      81
+// #define WPN_BEC_DE_CORBIN  82
+// #define WPN_VOULGE         83
+//#define WPN_WAR_AXE        84
+//#define WPN_MILITARY_FORK  86
+// #define WPN_ICE_PICK       87
+// #define WPN_DIRK           88
+// #define WPN_SHAMSHIR       89
+// #define WPN_FAUCHARD_FORK  90
+//#define WPN_CUDGEL         92
+//#define WPN_RANSEUR        93
+//#define WPN_FOOT_LANCE     94
+// #define WPN_BILL_HOOK      95
+//#define WPN_TALWAR         96
+// #define WPN_CLEAVER        98
+// #define WPN_LOCHABER_AXE  100
+// #define WPN_GLAIVE        101
 /*check vme.h for max number of weapons.*/
 /* keep in mind if you need more ask the vme coders.*/
 
@@ -1306,3 +1307,4 @@ ACTION
 
 #endif /* _MUD_VALUES_H */
 
+// clang-format on
