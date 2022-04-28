@@ -36,7 +36,7 @@ pc_data::pc_data()
     , m_promptstr{nullptr}
     , m_profession{-1}
     , m_vlvl{0}
-    , id{-1}
+    , m_id{-1}
     , skill_points{0}
     , ability_points{0}
     , flags{0}

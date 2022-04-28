@@ -398,7 +398,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     {
         slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
 
-        PC_ID(this) = new_player_id();
+        m_id = new_player_id();
 
         start_player(this);
     }

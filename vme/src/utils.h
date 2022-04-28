@@ -446,7 +446,10 @@ inline extra_list &PC_QUEST(unit_data *pc)
 
 #define PC_FILENAME(unit) (UPC(unit)->filename)
 
-#define PC_ID(unit) (UPC(unit)->id)
+inline sbit32 PC_ID(unit_data *unit)
+{
+    return UPC(unit)->getPlayerUID();
+}
 
 inline const char *PC_BANK(const unit_data *unit)
 {

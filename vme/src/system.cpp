@@ -85,7 +85,7 @@ void init_char(unit_data *ch)
 
     UCHAR(ch)->setPlayerExperience(0);
     UCHAR(ch)->setLevel(0);
-    PC_ID(ch) = -1;
+    UPC(ch)->setPlayerUID(-1);
     PC_CRIMES(ch) = 0;
 
     PC_ABILITY_POINTS(ch) = 0;
@@ -95,7 +95,7 @@ void init_char(unit_data *ch)
     if (g_player_id == -7)
     {
         g_player_id = 1;
-        PC_ID(ch) = new_player_id();
+        UPC(ch)->setPlayerUID(new_player_id());
     }
 
     UCHAR(ch)->setAttackType(WPN_FIST);
