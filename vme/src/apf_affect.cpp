@@ -243,13 +243,14 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
+        /// @todo Remove the 'if' and make these pure virtual in char_data and implement in pc_data/npc_data
         if (IS_PC(unit))
         {
             if (skill_overflow(PC_SPL_SKILL(unit, modify), af->getDataAtIndex(1), set))
             {
                 return raw_destruct_affect(af);
             }
-            PC_SPL_SKILL(unit, modify) += af->getDataAtIndex(1);
+            UPC(unit)->increaseSpellSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
         else
         {
@@ -260,7 +261,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         if (IS_PC(unit))
         {
-            PC_SPL_SKILL(unit, modify) -= af->getDataAtIndex(1);
+            UPC(unit)->decreaseSpellSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
         else
         {

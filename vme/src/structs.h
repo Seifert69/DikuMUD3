@@ -269,6 +269,18 @@ public:
     ubit16 *getLifespanPtr() { return &m_lifespan; }
     void setLifespan(ubit16 value) { m_lifespan = value; }
     /// @}
+
+    /**
+     * @name Spells skills Learned
+     * @[
+     */
+    sbit16 getSpellSkillAtIndex(size_t index) const { return m_spells[index]; }
+    sbit16 *getSpellSkillArrayPtr() { return &m_spells[0]; }
+    sbit16 *getSpellSkillAtIndexPtr(size_t index) { return &m_spells[index]; }
+    void setSpellSKillAtIndexTo(size_t index, sbit16 value) { m_spells[index] = value; }
+    void increaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] += value; }
+    void decreaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] -= value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -288,8 +300,8 @@ private:
     ubit16 m_nr_of_crimes{0};                            ///< Number of crimes committed
     ubit16 m_crack_attempts{0};                          ///< Number of wrong passwords entered
     ubit16 m_lifespan{0};                                ///< How many year to live....
+    sbit16 m_spells[SPL_TREE_MAX]{0};                    ///< The spells learned
 public:
-    sbit16 spells[SPL_TREE_MAX];   ///< The spells learned
     ubit8 spell_lvl[SPL_TREE_MAX]; ///< Practiced within that level
 
     sbit16 skills[SKI_TREE_MAX];   ///< The skills learned

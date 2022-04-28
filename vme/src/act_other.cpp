@@ -134,11 +134,11 @@ void points_reset(unit_data *ch)
         PC_SPL_LVL(ch, i) = 0;
         if (i < SPL_GROUP_MAX)
         {
-            PC_SPL_SKILL(ch, i) = 1; /* So resistance spells work! */
+            UPC(ch)->setSpellSKillAtIndexTo(i, 1); // So resistance spells work!
         }
         else
         {
-            PC_SPL_SKILL(ch, i) = 0;
+            UPC(ch)->setSpellSKillAtIndexTo(i, 0);
         }
     }
 

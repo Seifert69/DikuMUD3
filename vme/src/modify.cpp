@@ -1433,7 +1433,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
 
             if (IS_PC(unt))
             {
-                PC_SPL_SKILL(unt, skillarg) = valarg;
+                UPC(unt)->setSpellSKillAtIndexTo(skillarg, valarg);
             }
             else
             {

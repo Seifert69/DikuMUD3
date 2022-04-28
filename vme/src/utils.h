@@ -448,7 +448,10 @@ inline sbit32 PC_SKILL_POINTS(unit_data *ch)
 
 #define PC_SPL_LVL(ch, index) (UPC(ch)->spell_lvl[index])
 
-#define PC_SPL_SKILL(ch, index) (UPC(ch)->spells[index])
+inline sbit16 PC_SPL_SKILL(unit_data *ch, size_t index)
+{
+    return UPC(ch)->getSpellSkillAtIndex(index);
+}
 
 inline ubit16 PC_CRIMES(unit_data *unit)
 {

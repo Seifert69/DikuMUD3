@@ -1066,11 +1066,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        PC_SPL_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        PC_SPL_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
                     PC_SPL_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
 
@@ -1083,7 +1083,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     {
                         if ((i < SPL_GROUP_MAX) && (PC_SPL_SKILL(u, i) == 0))
                         {
-                            PC_SPL_SKILL(u, i) = 1;
+                            UPC(u)->setSpellSKillAtIndexTo(i, 1);
                         }
                     }
                 }
