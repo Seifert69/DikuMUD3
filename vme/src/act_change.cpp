@@ -42,7 +42,7 @@ static void chg_expert(unit_data *ch)
         send_to_char("You are now in expert mode.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_EXPERT);
+    UPC(ch)->togglePCFlag(PC_EXPERT);
 }
 
 static void chg_brief(unit_data *ch)
@@ -56,7 +56,7 @@ static void chg_brief(unit_data *ch)
         send_to_char("Brief mode on.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_BRIEF);
+    UPC(ch)->togglePCFlag(PC_BRIEF);
 }
 
 static void chg_compact(unit_data *ch)
@@ -70,7 +70,7 @@ static void chg_compact(unit_data *ch)
         send_to_char("You are now in compact mode.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_COMPACT);
+    UPC(ch)->togglePCFlag(PC_COMPACT);
 }
 
 static void chg_peaceful(unit_data *ch)
@@ -89,13 +89,13 @@ static void chg_peaceful(unit_data *ch)
 
 static void chg_prompt(unit_data *ch)
 {
-    TOGGLE_BIT(PC_FLAGS(ch), PC_PROMPT);
+    UPC(ch)->togglePCFlag(PC_PROMPT);
     send_to_char("Prompt changed.<br/>", ch);
 }
 
 static void chg_inform(unit_data *ch)
 {
-    TOGGLE_BIT(PC_FLAGS(ch), PC_INFORM);
+    UPC(ch)->togglePCFlag(PC_INFORM);
 
     if (IS_SET(PC_FLAGS(ch), PC_INFORM))
     {
@@ -118,7 +118,7 @@ static void chg_shout(unit_data *ch)
         send_to_char("From now on, you won't hear shouts.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_NOSHOUT);
+    UPC(ch)->togglePCFlag(PC_NOSHOUT);
 }
 
 static void chg_tell(unit_data *ch)
@@ -132,7 +132,7 @@ static void chg_tell(unit_data *ch)
         send_to_char("From now on, you won't hear tells.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_NOTELL);
+    UPC(ch)->togglePCFlag(PC_NOTELL);
 }
 
 static void chg_exits(unit_data *ch)
@@ -146,7 +146,7 @@ static void chg_exits(unit_data *ch)
         send_to_char("Exit information enabled.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_EXITS);
+    UPC(ch)->togglePCFlag(PC_EXITS);
 }
 
 static void chg_columns(unit_data *ch, const char *arg)
@@ -305,7 +305,7 @@ static void chg_redraw_prompt(unit_data *ch)
 
 static void chg_echo_say(unit_data *ch)
 {
-    TOGGLE_BIT(PC_FLAGS(ch), PC_ECHO);
+    UPC(ch)->togglePCFlag(PC_ECHO);
 
     if (IS_SET(PC_FLAGS(ch), PC_ECHO))
     {

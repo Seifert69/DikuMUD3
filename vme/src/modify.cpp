@@ -1052,7 +1052,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 37: /* "setup-flags" */
-            PC_FLAGS(unt) = bitarg;
+            UPC(unt)->setAllPCFlags(bitarg);
             return;
 
         case 38: /* "crimes" */

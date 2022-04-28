@@ -54,7 +54,7 @@ void init_char(unit_data *ch)
         UPC(ch)->getTerminalSetupType().emulation = TERM_ANSI;
         UPC(ch)->getTerminalSetupType().telnet = FALSE;
 
-        SET_BIT(PC_FLAGS(ch), PC_INFORM);
+        UPC(ch)->setPCFlag(PC_INFORM);
     }
     else
     {

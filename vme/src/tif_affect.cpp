@@ -999,7 +999,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
     }
 
     UCHAR(unit)->setPosition(POSITION_STANDING);
-    REMOVE_BIT(PC_FLAGS(unit), PC_SPIRIT);
+    UPC(unit)->removePCFlag(PC_SPIRIT);
     UCHAR(unit)->removeCharacterFlag(CHAR_KILL_SELF);
 
     act("You have a strange feeling...", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);

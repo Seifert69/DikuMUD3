@@ -462,7 +462,10 @@ inline const char *PC_BANK(const unit_data *unit)
     return UPC(unit)->getBank();
 }
 
-#define PC_FLAGS(unit) (UPC(unit)->flags)
+inline ubit16 PC_FLAGS(unit_data *unit)
+{
+    return UPC(unit)->getAllPCFlags();
+}
 
 inline pc_time_data &PC_TIME(unit_data *unit)
 {

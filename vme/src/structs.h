@@ -223,11 +223,24 @@ public:
 
     /**
      * @name Ability Points
+     * @{
      */
     sbit32 getAbilityPoints() const { return m_ability_points; }
     sbit32 *getAbilityPointsPtr() { return &m_ability_points; }
     void setAbilityPoints(sbit32 value) { m_ability_points = value; }
     void increaseAbilityPointsBy(sbit32 value) { m_ability_points += value; }
+    /// @}
+
+    /**
+     * @name Flags
+     * @{
+     */
+    ubit16 getAllPCFlags() const { return m_flags; }
+    ubit16 *getAllPCFlagsPtr() { return &m_flags; }
+    void setPCFlag(ubit16 value) { m_flags |= value; }
+    void setAllPCFlags(ubit16 value) { m_flags = value; }
+    void togglePCFlag(ubit16 value) { m_flags ^= value; }
+    void removePCFlag(ubit16 value) { m_flags &= ~value; }
     /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
@@ -244,8 +257,8 @@ private:
     sbit32 m_id{-1};                                     ///< Unique identifier for each player (-1 guest)
     sbit32 m_skill_points{0};                            ///< No of practice points left
     sbit32 m_ability_points{0};                          ///< No of practice points left
+    ubit16 m_flags{0};                                   ///< flags for PC setup (brief, noshout...)
 public:
-    ubit16 flags;          ///< flags for PC setup (brief, noshout...)
     ubit16 nr_of_crimes;   ///< Number of crimes committed
     ubit16 crack_attempts; ///< Number of wrong passwords entered
     ubit16 lifespan{};     ///< How many year to live....

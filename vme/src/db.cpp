@@ -1051,7 +1051,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 UPC(u)->setSkillPoints(pBuf->ReadS32(&g_nCorrupt));
                 UPC(u)->setAbilityPoints(pBuf->ReadS32(&g_nCorrupt));
 
-                PC_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
+                UPC(u)->setAllPCFlags(pBuf->ReadU16(&g_nCorrupt));
 
                 if (unit_version < 61)
                 {

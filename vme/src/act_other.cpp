@@ -183,8 +183,8 @@ void start_player(unit_data *ch)
 
     PC_TIME(ch).setTotalTimePlayedInSeconds(0);
 
-    SET_BIT(PC_FLAGS(ch), PC_ECHO);
-    SET_BIT(PC_FLAGS(ch), PC_PROMPT);
+    UPC(ch)->setPCFlag(PC_ECHO);
+    UPC(ch)->setPCFlag(PC_PROMPT);
 
     if (!UNIT_IS_EVIL(ch))
     {
