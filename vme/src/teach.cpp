@@ -236,7 +236,7 @@ void clear_training_level(unit_data *ch)
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
-        PC_SPL_LVL(ch, i) = 0;
+        UPC(ch)->setSpellLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < WPN_TREE_MAX; i++)
@@ -1093,7 +1093,7 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
 
         case TEACH_SPELLS:
             pValues->values = UPC(pupil)->getSpellSkillArrayPtr();
-            pValues->lvl = &PC_SPL_LVL(pupil, 0);
+            pValues->lvl = UPC(pupil)->getSpellLevelArrayPtr();
             pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_SplColl;
             break;

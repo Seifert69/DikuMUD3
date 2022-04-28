@@ -44,7 +44,7 @@ pc_data::pc_data()
     , m_crack_attempts{0}
     , m_lifespan{0}
     , m_spells{0}
-    , spell_lvl{0}
+    , m_spell_lvl{0}
     , skills{0}
     , skill_lvl{0}
     , weapons{0}

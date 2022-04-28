@@ -446,7 +446,10 @@ inline sbit32 PC_SKILL_POINTS(unit_data *ch)
 
 #define PC_WPN_SKILL(ch, index) (UPC(ch)->weapons[index])
 
-#define PC_SPL_LVL(ch, index) (UPC(ch)->spell_lvl[index])
+inline ubit8 PC_SPL_LVL(unit_data *ch, size_t index)
+{
+    return UPC(ch)->getSpellLevelAtIndex(index);
+}
 
 inline sbit16 PC_SPL_SKILL(unit_data *ch, size_t index)
 {

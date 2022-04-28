@@ -281,6 +281,16 @@ public:
     void increaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] += value; }
     void decreaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] -= value; }
     /// @}
+
+    /**
+     * @name Spell level
+     * @{
+     */
+    ubit8 getSpellLevelAtIndex(size_t index) const { return m_spell_lvl[index]; }
+    ubit8 *getSpellLevelAtIndexPtr(size_t index) { return &m_spell_lvl[index]; }
+    ubit8 *getSpellLevelArrayPtr() { return &m_spell_lvl[0]; }
+    void setSpellLevelAtIndexTo(size_t index, ubit8 value) { m_spell_lvl[index] = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -301,9 +311,8 @@ private:
     ubit16 m_crack_attempts{0};                          ///< Number of wrong passwords entered
     ubit16 m_lifespan{0};                                ///< How many year to live....
     sbit16 m_spells[SPL_TREE_MAX]{0};                    ///< The spells learned
+    ubit8 m_spell_lvl[SPL_TREE_MAX]{0};                  ///< Practiced within that level
 public:
-    ubit8 spell_lvl[SPL_TREE_MAX]; ///< Practiced within that level
-
     sbit16 skills[SKI_TREE_MAX];   ///< The skills learned
     ubit8 skill_lvl[SKI_TREE_MAX]; ///< The skills practiced within level
 

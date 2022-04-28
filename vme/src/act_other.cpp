@@ -131,7 +131,7 @@ void points_reset(unit_data *ch)
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
-        PC_SPL_LVL(ch, i) = 0;
+        UPC(ch)->setSpellLevelAtIndexTo(i, 0);
         if (i < SPL_GROUP_MAX)
         {
             UPC(ch)->setSpellSKillAtIndexTo(i, 1); // So resistance spells work!
