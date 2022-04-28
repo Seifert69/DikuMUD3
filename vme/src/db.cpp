@@ -1159,11 +1159,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 56)
                 {
-                    PC_ACCESS_LEVEL(u) = pBuf->ReadU8(&g_nCorrupt);
+                    UPC(u)->setAccessLevel(pBuf->ReadU8(&g_nCorrupt));
                 }
                 else
                 {
-                    PC_ACCESS_LEVEL(u) = 0;
+                    UPC(u)->setAccessLevel(0);
                 }
 
                 g_nCorrupt += bread_extra(pBuf, PC_QUEST(u), unit_version);

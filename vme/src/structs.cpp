@@ -51,7 +51,7 @@ pc_data::pc_data()
     , m_weapon_lvl{0}
     , m_ability_lvl{0}
     , m_conditions{0}
-    , nAccessLevel{0}
+    , m_nAccessLevel{0}
     , pwd{0}
     , filename{0}
     , lasthosts{0}

@@ -364,6 +364,14 @@ public:
     void increaseConditionAtIndexBy(size_t index, sbit8 value) { m_conditions[index] += value; }
     void decreaseConditionAtIndexBy(size_t index, sbit8 value) { m_conditions[index] -= value; }
     /// @}
+
+    /**
+     * @name Access Level
+     * @{
+     */
+    ubit8 getAccessLevel() const { return m_nAccessLevel; }
+    void setAccessLevel(ubit8 value) { m_nAccessLevel = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -391,9 +399,8 @@ private:
     ubit8 m_weapon_lvl[WPN_TREE_MAX]{0};                 ///< The weapons learned
     ubit8 m_ability_lvl[ABIL_TREE_MAX]{0};               ///< The abilities learned
     sbit8 m_conditions[3]{0};                            ///< Drunk full etc.
+    ubit8 m_nAccessLevel{0};                             ///< Access Level for BBS use
 public:
-    ubit8 nAccessLevel; ///< Access Level for BBS use
-
     char pwd[PC_MAX_PASSWORD];  ///< Needed when loaded w/o descriptor
     char filename[PC_MAX_NAME]; ///< The name on disk...
     ubit32 lasthosts[5];        ///< last 5 different IPs

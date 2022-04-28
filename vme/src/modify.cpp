@@ -1260,7 +1260,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 65: /* "access" */
-            PC_ACCESS_LEVEL(unt) = valarg;
+            UPC(unt)->setAccessLevel(valarg);
             return;
 
         case 66: /* "promptstr" */

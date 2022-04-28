@@ -332,7 +332,10 @@ inline unit_data *CHAR_ORIGINAL(unit_data *ch)
 
 /* ..................................................................... */
 
-#define PC_ACCESS_LEVEL(pc) (UPC(pc)->nAccessLevel)
+inline ubit8 PC_ACCESS_LEVEL(unit_data *pc)
+{
+    return UPC(pc)->getAccessLevel();
+}
 
 inline ubit16 PC_CRACK_ATTEMPTS(unit_data *pc)
 {
