@@ -973,14 +973,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 42)
                 {
-                    g_nCorrupt += pBuf->ReadStringCopy(PC_FILENAME(u), PC_MAX_NAME);
-                    PC_FILENAME(u)[PC_MAX_NAME - 1] = 0;
+                    g_nCorrupt += UPC(u)->readFilenameFrom(*pBuf);
                 }
                 else
                 {
-                    memcpy(PC_FILENAME(u), UNIT_NAME(u), PC_MAX_NAME);
-                    PC_FILENAME(u)[PC_MAX_NAME - 1] = 0;
-                    str_lower(PC_FILENAME(u));
+                    char temp[PC_MAX_NAME];
+                    memcpy(temp, UNIT_NAME(u), PC_MAX_NAME);
+                    temp[PC_MAX_NAME - 1] = 0;
+                    str_lower(temp);
+                    UPC(u)->setFilename(temp);
                 }
 
                 g_nCorrupt += UPC(u)->readPasswordFrom(*pBuf);

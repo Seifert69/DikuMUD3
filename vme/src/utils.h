@@ -489,7 +489,10 @@ inline const char *PC_PWD(unit_data *unit)
 
 #define PC_LASTHOST(unit) (UPC(unit)->lasthosts)
 
-#define PC_FILENAME(unit) (UPC(unit)->filename)
+inline const char *PC_FILENAME(unit_data *unit)
+{
+    return UPC(unit)->getFilename();
+}
 
 inline sbit32 PC_ID(unit_data *unit)
 {

@@ -394,6 +394,24 @@ public:
         m_pwd[10] = '\0'; // This will allow me to later extend the password length
     }
     /// @}
+
+    /**
+     * @name Filename
+     * @{
+     */
+    const char *getFilename() const { return m_filename; }
+    int readFilenameFrom(CByteBuffer &buf)
+    {
+        auto retval = buf.ReadStringCopy(m_filename, PC_MAX_NAME);
+        m_filename[PC_MAX_NAME - 1] = 0;
+        return retval;
+    }
+    void setFilename(const char *value)
+    {
+        strncpy(m_filename, value, PC_MAX_NAME);
+        m_filename[PC_MAX_NAME - 1] = 0;
+    }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -423,10 +441,10 @@ private:
     sbit8 m_conditions[3]{0};                            ///< Drunk full etc.
     ubit8 m_nAccessLevel{0};                             ///< Access Level for BBS use
     char m_pwd[PC_MAX_PASSWORD]{0};                      ///< Needed when loaded w/o descriptor
+    char m_filename[PC_MAX_NAME]{0};                     ///< The name on disk...
 public:
-    char filename[PC_MAX_NAME]; ///< The name on disk...
-    ubit32 lasthosts[5];        ///< last 5 different IPs
-    color_type color;           ///< Players default colors
+    ubit32 lasthosts[5]; ///< last 5 different IPs
+    color_type color;    ///< Players default colors
 };
 
 /* ------------------ NPC SPECIFIC STRUCTURES ----------------------- */
