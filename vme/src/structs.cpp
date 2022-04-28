@@ -46,7 +46,7 @@ pc_data::pc_data()
     , m_spells{0}
     , m_spell_lvl{0}
     , m_skills{0}
-    , skill_lvl{0}
+    , m_skill_lvl{0}
     , weapons{0}
     , weapon_lvl{0}
     , ability_lvl{0}

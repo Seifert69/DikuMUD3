@@ -246,7 +246,7 @@ void clear_training_level(unit_data *ch)
 
     for (i = 0; i < SKI_TREE_MAX; i++)
     {
-        PC_SKI_LVL(ch, i) = 0;
+        UPC(ch)->setSkillLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
@@ -1087,7 +1087,7 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
 
         case TEACH_SKILLS:
             pValues->values = UPC(pupil)->getSkillArrayPtr();
-            pValues->lvl = &PC_SKI_LVL(pupil, 0);
+            pValues->lvl = UPC(pupil)->getSkillLevelArrayPtr();
             pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_SkiColl;
 

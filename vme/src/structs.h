@@ -306,6 +306,17 @@ public:
     void increaseSkillAtIndexBy(size_t index, sbit16 value) { m_skills[index] += value; }
     void decreaseSkillAtIndexBy(size_t index, sbit16 value) { m_skills[index] -= value; }
     /// @}
+
+    /**
+     * @name Skill Level
+     * @todo Add range checking to indexes
+     * @{
+     */
+    ubit8 getSkillLevelAtIndex(size_t index) const { return m_skill_lvl[index]; }
+    ubit8 *getSkillLevelAtIndexPtr(size_t index) { return &m_skill_lvl[index]; }
+    ubit8 *getSkillLevelArrayPtr() { return &m_skill_lvl[0]; }
+    void setSkillLevelAtIndexTo(size_t index, ubit8 value) { m_skill_lvl[index] = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -328,9 +339,8 @@ private:
     sbit16 m_spells[SPL_TREE_MAX]{0};                    ///< The spells learned
     ubit8 m_spell_lvl[SPL_TREE_MAX]{0};                  ///< Practiced within that level
     sbit16 m_skills[SKI_TREE_MAX]{0};                    ///< The skills learned
+    ubit8 m_skill_lvl[SKI_TREE_MAX]{0};                  ///< The skills practiced within level
 public:
-    ubit8 skill_lvl[SKI_TREE_MAX]; ///< The skills practiced within level
-
     sbit16 weapons[WPN_TREE_MAX];   ///< The weapons learned
     ubit8 weapon_lvl[WPN_TREE_MAX]; ///< The weapons learned
 

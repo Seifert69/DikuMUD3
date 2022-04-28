@@ -126,7 +126,7 @@ void points_reset(unit_data *ch)
     for (i = 0; i < SKI_TREE_MAX; i++)
     {
         UPC(ch)->setSkillAtIndexTo(i, 0);
-        PC_SKI_LVL(ch, i) = 0;
+        UPC(ch)->setSkillLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < SPL_TREE_MAX; i++)
