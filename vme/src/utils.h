@@ -450,7 +450,10 @@ inline ubit8 PC_SKI_LVL(unit_data *ch, size_t index)
 
 #define PC_WPN_LVL(ch, index) (UPC(ch)->weapon_lvl[index])
 
-#define PC_WPN_SKILL(ch, index) (UPC(ch)->weapons[index])
+inline sbit16 PC_WPN_SKILL(unit_data *ch, size_t index)
+{
+    return UPC(ch)->getWeaponSkillAtIndex(index);
+}
 
 inline ubit8 PC_SPL_LVL(unit_data *ch, size_t index)
 {

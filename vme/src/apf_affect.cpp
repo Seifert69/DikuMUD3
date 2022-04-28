@@ -157,6 +157,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
         }
     }
 
+    /// @todo Remove 'if' and make this pure virtual in char_data and implement in pc_data/npc_data
     if (set)
     {
         if (IS_PC(unit))
@@ -165,7 +166,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
             {
                 return raw_destruct_affect(af);
             }
-            PC_WPN_SKILL(unit, modify) += af->getDataAtIndex(1);
+            UPC(unit)->increaseWeaponSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
         else
         {
@@ -176,7 +177,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         if (IS_PC(unit))
         {
-            PC_WPN_SKILL(unit, modify) -= af->getDataAtIndex(1);
+            UPC(unit)->decreaseWeaponSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
         else
         {

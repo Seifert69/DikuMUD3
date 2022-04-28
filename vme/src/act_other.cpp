@@ -147,11 +147,11 @@ void points_reset(unit_data *ch)
         PC_WPN_LVL(ch, i) = 0;
         if (i < WPN_GROUP_MAX)
         {
-            PC_WPN_SKILL(ch, i) = 1; /* So resistance spells work! */
+            UPC(ch)->setWeaponSkillAtIndexTo(i, 1); // So resistance spells work!
         }
         else
         {
-            PC_WPN_SKILL(ch, i) = 0;
+            UPC(ch)->setWeaponSkillAtIndexTo(i, 0);
         }
     }
 }

@@ -4065,17 +4065,18 @@ void dilfe_fld(dilprg *p)
                         case UNIT_ST_PC:
                             if (is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                             {
+                                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
                                 if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_SINT2R;
-                                    v->ref = &PC_WPN_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                    v->ref = pc->getWeaponSkillAtIndexPtr(v2->val.num);
                                 }
                                 else
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_INT;
-                                    v->val.num = PC_WPN_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                    v->val.num = pc->getWeaponSkillAtIndex(v2->val.num);
                                 }
                             }
                             else

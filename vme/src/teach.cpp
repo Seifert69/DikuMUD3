@@ -1099,7 +1099,7 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
             break;
 
         case TEACH_WEAPONS:
-            pValues->values = &PC_WPN_SKILL(pupil, 0);
+            pValues->values = UPC(pupil)->getWeaponSkillArrayPtr();
             pValues->lvl = &PC_WPN_LVL(pupil, 0);
             pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_WpnColl;

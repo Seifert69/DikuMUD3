@@ -1458,7 +1458,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
 
             if (IS_PC(unt))
             {
-                PC_WPN_SKILL(unt, skillarg) = valarg;
+                UPC(unt)->setWeaponSkillAtIndexTo(skillarg, valarg);
             }
             else
             {
