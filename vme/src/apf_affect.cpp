@@ -204,14 +204,14 @@ ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
             {
                 return raw_destruct_affect(af);
             }
-            PC_SKI_SKILL(unit, af->getDataAtIndex(0)) += af->getDataAtIndex(1);
+            UPC(unit)->increaseSkillAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
         }
     }
     else
     {
         if (IS_PC(unit))
         {
-            PC_SKI_SKILL(unit, af->getDataAtIndex(0)) -= af->getDataAtIndex(1);
+            UPC(unit)->decreaseSkillAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
         }
     }
 

@@ -1086,7 +1086,7 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
             return &g_AbiColl;
 
         case TEACH_SKILLS:
-            pValues->values = &PC_SKI_SKILL(pupil, 0);
+            pValues->values = UPC(pupil)->getSkillArrayPtr();
             pValues->lvl = &PC_SKI_LVL(pupil, 0);
             pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_SkiColl;

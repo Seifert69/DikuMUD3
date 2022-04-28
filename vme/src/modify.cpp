@@ -1413,7 +1413,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             }
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
-            PC_SKI_SKILL(unt, skillarg) = valarg;
+            UPC(unt)->setSkillAtIndexTo(skillarg, valarg);
             break;
 
         case SET_SPELL:

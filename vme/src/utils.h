@@ -438,7 +438,10 @@ inline sbit32 PC_SKILL_POINTS(unit_data *ch)
 
 #define PC_ABI_LVL(ch, index) (UPC(ch)->ability_lvl[index])
 
-#define PC_SKI_SKILL(ch, index) (UPC(ch)->skills[index])
+inline sbit16 PC_SKI_SKILL(unit_data *ch, size_t index)
+{
+    return UPC(ch)->getSkillAtIndex(index);
+}
 
 #define PC_SKI_LVL(ch, index) (UPC(ch)->skill_lvl[index])
 

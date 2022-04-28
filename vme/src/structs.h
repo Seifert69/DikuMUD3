@@ -272,7 +272,8 @@ public:
 
     /**
      * @name Spells skills Learned
-     * @[
+     * @todo Add range checking to indexes
+     * @{
      */
     sbit16 getSpellSkillAtIndex(size_t index) const { return m_spells[index]; }
     sbit16 *getSpellSkillArrayPtr() { return &m_spells[0]; }
@@ -284,12 +285,26 @@ public:
 
     /**
      * @name Spell level
+     * @todo Add range checking to indexes
      * @{
      */
     ubit8 getSpellLevelAtIndex(size_t index) const { return m_spell_lvl[index]; }
     ubit8 *getSpellLevelAtIndexPtr(size_t index) { return &m_spell_lvl[index]; }
     ubit8 *getSpellLevelArrayPtr() { return &m_spell_lvl[0]; }
     void setSpellLevelAtIndexTo(size_t index, ubit8 value) { m_spell_lvl[index] = value; }
+    /// @}
+
+    /**
+     * @name Skills
+     * @todo Add range checking to indexes
+     * @{
+     */
+    sbit16 getSkillAtIndex(size_t index) const { return m_skills[index]; }
+    sbit16 *getSkillAtIndexPtr(size_t index) { return &m_skills[index]; }
+    sbit16 *getSkillArrayPtr() { return &m_skills[0]; }
+    void setSkillAtIndexTo(size_t index, sbit16 value) { m_skills[index] = value; }
+    void increaseSkillAtIndexBy(size_t index, sbit16 value) { m_skills[index] += value; }
+    void decreaseSkillAtIndexBy(size_t index, sbit16 value) { m_skills[index] -= value; }
     /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
@@ -312,8 +327,8 @@ private:
     ubit16 m_lifespan{0};                                ///< How many year to live....
     sbit16 m_spells[SPL_TREE_MAX]{0};                    ///< The spells learned
     ubit8 m_spell_lvl[SPL_TREE_MAX]{0};                  ///< Practiced within that level
+    sbit16 m_skills[SKI_TREE_MAX]{0};                    ///< The skills learned
 public:
-    sbit16 skills[SKI_TREE_MAX];   ///< The skills learned
     ubit8 skill_lvl[SKI_TREE_MAX]; ///< The skills practiced within level
 
     sbit16 weapons[WPN_TREE_MAX];   ///< The weapons learned

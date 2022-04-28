@@ -1101,11 +1101,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        PC_SKI_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        PC_SKI_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
 
                     PC_SKI_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
@@ -1145,7 +1145,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 if (unit_version < 47)
                 {
                     PC_WPN_SKILL(u, WPN_KICK) = PC_SKI_SKILL(u, SKI_KICK);
-                    PC_SKI_SKILL(u, SKI_KICK) = 0;
+                    UPC(u)->setSkillAtIndexTo(SKI_KICK, 0);
                 }
 
                 UPC(u)->setNumberOfCrimesCommitted(pBuf->ReadU16(&g_nCorrupt));
