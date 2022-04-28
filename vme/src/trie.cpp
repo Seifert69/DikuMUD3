@@ -8,7 +8,6 @@
 #include "trie.h"
 
 #include "slog.h"
-#include "structs.h"
 
 #include <cstdlib>
 #include <cstring>

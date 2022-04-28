@@ -13,7 +13,6 @@
 #include "interpreter.h"
 #include "magic.h"
 #include "skills.h"
-#include "structs.h"
 #include "textutil.h"
 #include "unit_affected_type.h"
 #include "unitfind.h"

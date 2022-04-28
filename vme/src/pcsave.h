@@ -1,7 +1,6 @@
 #pragma once
 
 #include "essential.h"
-#include "structs.h"
 
 #include <string>
 

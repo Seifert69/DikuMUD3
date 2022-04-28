@@ -12,7 +12,6 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utility.h"
 #include "utils.h"

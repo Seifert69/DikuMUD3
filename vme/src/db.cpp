@@ -30,7 +30,6 @@
 #include "skills.h"
 #include "slime.h"
 #include "spell_parser.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "unit_affected_type.h"
@@ -57,6 +56,7 @@ cSector g_sector_dat;
 /**
  * Global permanent element of zone info
  */
+size_t zone_info_type::g_world_nozones = 0; // number of zones in the world
 zone_info_type g_zone_info = {0, nullptr};
 
 /* By using this, we can easily sort the list if ever needed
@@ -977,9 +977,9 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    char temp[PC_MAX_NAME];
-                    memcpy(temp, UNIT_NAME(u), PC_MAX_NAME);
-                    temp[PC_MAX_NAME - 1] = 0;
+                    char temp[pc_data::PC_MAX_NAME];
+                    memcpy(temp, UNIT_NAME(u), pc_data::PC_MAX_NAME);
+                    temp[pc_data::PC_MAX_NAME - 1] = 0;
                     str_lower(temp);
                     UPC(u)->setFilename(temp);
                 }

@@ -13,7 +13,6 @@
 #include "interpreter.h"
 #include "queue.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "trie.h"
 #include "unit_fptr.h"

@@ -10,7 +10,6 @@
 #include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 

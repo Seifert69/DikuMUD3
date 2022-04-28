@@ -12,7 +12,6 @@
 #include "files.h"
 #include "formatter.h"
 #include "interpreter.h"
-#include "structs.h"
 #include "textutil.h"
 
 #include <cctype>

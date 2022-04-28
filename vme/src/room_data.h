@@ -11,6 +11,8 @@
 class room_data : public unit_data
 {
 public:
+    static size_t g_world_norooms; ///< number of rooms in the world
+public:
     /**
      * @name Constructors/Destructor
      * @{

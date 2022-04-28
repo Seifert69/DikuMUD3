@@ -2,7 +2,7 @@
 
 #include "dil.h"
 #include "file_index_type.h"
-#include "structs.h"
+#include "unit_data.h"
 #include "zone_reset_cmd.h"
 
 zone_type::zone_type()

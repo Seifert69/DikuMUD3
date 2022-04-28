@@ -1,7 +1,7 @@
 #pragma once
 
+#include "descriptor_data.h"
 #include "event.h"
-#include "structs.h"
 
 #include <string>
 

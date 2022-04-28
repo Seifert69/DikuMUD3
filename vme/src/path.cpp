@@ -12,7 +12,6 @@
 #include "main_functions.h"
 #include "sector.h"
 #include "slog.h"
-#include "structs.h"
 #include "utils.h"
 
 #include <pthread.h>

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "structs.h"
+#include "descriptor_data.h"
 #include "utility.h"
 
 #include <memory>
+#include <vector>
 
 namespace unit_tests
 {

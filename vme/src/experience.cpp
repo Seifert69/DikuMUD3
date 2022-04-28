@@ -17,7 +17,6 @@
 #include "modify.h"
 #include "skills.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 

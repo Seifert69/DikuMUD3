@@ -1,6 +1,6 @@
 #pragma once
 
-#include "structs.h"
+#include "unit_data.h"
 
 #include <boost/graph/adjacency_list.hpp>
 

@@ -11,7 +11,6 @@
 #include "formatter.h"
 #include "interpreter.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 

@@ -2,6 +2,10 @@
 
 #include "essential.h"
 
+#define DR_UNIT 0
+#define DR_AFFECT 1
+#define DR_FUNC 2
+
 class basedestruct
 {
 public:

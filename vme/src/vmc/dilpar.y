@@ -24,7 +24,6 @@
 #include "dilpar.h"
 #include "intlist.h"
 #include "namelist.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 extern char *diltext;

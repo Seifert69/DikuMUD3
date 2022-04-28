@@ -6,9 +6,10 @@
  */
 #pragma once
 
+#include "descriptor_data.h"
 #include "dil.h"
 #include "essential.h"
-#include "structs.h"
+#include "unit_fptr.h"
 
 #include <cstddef>
 

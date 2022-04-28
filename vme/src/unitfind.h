@@ -7,7 +7,7 @@
 #pragma once
 
 #include "essential.h"
-#include "structs.h"
+#include "unit_data.h"
 
 #include <vme.h>
 

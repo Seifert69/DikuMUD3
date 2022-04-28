@@ -6,8 +6,8 @@
  */
 #pragma once
 
+#include "descriptor_data.h"
 #include "essential.h"
-#include "structs.h"
 
 #define MAX_HOSTNAME 256
 #define SNOOP_PROMPT "snoop&gt; " /* probably not very nice to have here, but hey! */

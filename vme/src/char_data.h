@@ -9,6 +9,9 @@
 class char_data : public unit_data
 {
 public:
+    static size_t g_world_nochars; // number of chars in the world
+
+public:
     explicit char_data(ubit8 unit_type);
     virtual ~char_data();
 

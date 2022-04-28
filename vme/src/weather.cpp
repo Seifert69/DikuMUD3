@@ -12,7 +12,6 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "slog.h"
-#include "structs.h"
 #include "utils.h"
 
 #include <ctime>

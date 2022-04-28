@@ -14,7 +14,6 @@
 #include "interpreter.h"
 #include "pcsave.h"
 #include "skills.h"
-#include "structs.h"
 #include "utility.h"
 #include "utils.h"
 #include "vmelimits.h"

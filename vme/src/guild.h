@@ -7,7 +7,6 @@
 #pragma once
 
 #include "interpreter.h"
-#include "structs.h"
 
 int char_guild_level(unit_data *ch);
 int char_guild_level(unit_data *ch, const char *pGuildName);

@@ -8,7 +8,6 @@
 
 #include "essential.h"
 #include "interpreter.h"
-#include "structs.h"
 
 #define CRIME_LIFE 12   /* Remember crime for (5 mins * CRIME_LIFE)    */
 #define CRIME_NONPRO 8  /* Person will be non-protected                */

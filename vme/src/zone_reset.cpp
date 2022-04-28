@@ -14,7 +14,6 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "money.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "utils.h"
 #include "zone_reset_cmd.h"
@@ -435,7 +434,7 @@ void reset_all_zones()
         {
             if (j == 0)
             {
-                g_world_nozones++;
+                zone_info_type::g_world_nozones++;
             }
 
             if (zone->second->getAccessLevel() != j)

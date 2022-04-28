@@ -2,7 +2,6 @@
 
 #include "essential.h"
 #include "interpreter.h"
-#include "structs.h"
 
 #include <string>
 

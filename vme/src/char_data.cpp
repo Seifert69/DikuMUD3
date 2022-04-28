@@ -1,6 +1,6 @@
 #include "char_data.h"
 
-#include "structs.h"
+size_t char_data::g_world_nochars = 0;
 
 char_data::char_data(ubit8 unit_type)
     : unit_data(unit_type)

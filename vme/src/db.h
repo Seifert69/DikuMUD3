@@ -10,7 +10,6 @@
 #include "config.h"
 #include "dbfind.h"
 #include "sector.h"
-#include "structs.h"
 
 #include <map>
 #include <string>
@@ -74,9 +73,13 @@
 
 #define ZONE_FILE_LIST "zonelist"
 
+#define FI_MAX_ZONENAME 30 /* Max length of any zone-name    */
+#define FI_MAX_UNITNAME 15 /* Max length of any unit-name    */
+
 struct zone_info_type
 {
-    int no_of_zones; ///< Total number of zones
+    static size_t g_world_nozones; ///< number of zones in the world
+    int no_of_zones;               ///< Total number of zones
     // class zone_type *zone_list;	Replaced by ::map below
     void **spmatrix; ///< Inter zone shortest paths
     std::map<const char *, zone_type *, cmp_str> mmp;

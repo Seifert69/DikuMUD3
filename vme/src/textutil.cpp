@@ -8,9 +8,9 @@
 #include "textutil.h"
 
 #include "common.h"
+#include "db.h"
 #include "formatter.h"
 #include "slog.h"
-#include "structs.h"
 
 #include <cctype>
 #include <cstdio>

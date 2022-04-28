@@ -12,7 +12,6 @@
 #include "file_index_type.h"
 #include "handler.h"
 #include "main_functions.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 

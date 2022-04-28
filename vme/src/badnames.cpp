@@ -7,8 +7,8 @@
 #include "badnames.h"
 
 #include "essential.h"
+#include "pc_data.h"
 #include "slog.h"
-#include "structs.h"
 
 #include <cctype>
 #include <cstring>
@@ -127,7 +127,7 @@ char *badnames_list::equal(char *n)
 
 char *badnames_list::in(char *n)
 {
-    char tname[PC_MAX_NAME];
+    char tname[pc_data::PC_MAX_NAME];
     int i = 0;
     tname[0] = 0;
 

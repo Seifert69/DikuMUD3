@@ -8,7 +8,6 @@
 
 #include "essential.h"
 #include "interpreter.h"
-#include "structs.h"
 
 #include <cstring>
 #include <string>

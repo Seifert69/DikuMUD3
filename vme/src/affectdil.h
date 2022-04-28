@@ -7,7 +7,6 @@
 #pragma once
 
 #include "essential.h"
-#include "structs.h"
 
 /**
  * affect a units values

@@ -7,7 +7,8 @@
 #pragma once
 
 #include "essential.h"
-#include "structs.h"
+#include "namelist.h"
+#include "unit_affected_type.h"
 
 /**
  * These functions may not send messages - nor destroy units. Only

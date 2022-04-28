@@ -1,10 +1,19 @@
 #pragma once
 
 #include "char_data.h"
+#include "color.h"
 #include "dil.h"
+#include "pc_account_data.h"
+#include "pc_time_data.h"
+#include "protocol.h"
 
 class pc_data : public char_data
 {
+public:
+    static constexpr auto PC_MAX_PASSWORD = 13; ///< Max length of any pc-password
+    static constexpr auto PC_MAX_NAME = 15;     ///< 14 Characters + Null
+    static size_t g_world_nopc;                 ///< number of chars in the world
+
 public:
     pc_data();
     ~pc_data() override;

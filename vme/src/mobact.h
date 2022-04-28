@@ -1,6 +1,7 @@
 #pragma once
 
-#include "structs.h"
+#include "unit_data.h"
+#include "unit_fptr.h"
 
 void ResetFptrTimer(unit_data *u, unit_fptr *fptr);
 void SetFptrTimer(unit_data *u, unit_fptr *fptr);

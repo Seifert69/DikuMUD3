@@ -8,7 +8,8 @@
 
 #include "bytestring.h"
 #include "dil.h"
-#include "structs.h"
+#include "unit_affected_type.h"
+#include "unit_fptr.h"
 
 void *bread_dil(CByteBuffer *pBuf, unit_data *, ubit8 version, unit_fptr *fptr, int stspec = TRUE);
 

@@ -19,7 +19,6 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "str_parse.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 #include "zon_basis.h"

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "interpreter.h"
-#include "structs.h"
 
 int system_check(unit_data *pc, const char *buf);
 void basis_boot();

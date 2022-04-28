@@ -30,7 +30,6 @@
 #include "spec_assign.h"
 #include "spell_parser.h"
 #include "spells.h"
-#include "structs.h"
 #include "system.h"
 #include "textutil.h"
 #include "tif_affect.h"
@@ -157,13 +156,13 @@ static void stat_world(unit_data *ch)
                                    g_tics,
                                    g_tics / (PULSE_SEC * 3600),
                                    g_nTickUsec < 1 ? "time-warped" : "",
-                                   g_world_norooms,
-                                   g_world_noobjects,
-                                   g_world_nochars,
-                                   g_world_nonpc,
-                                   g_world_nopc,
-                                   g_world_norooms + g_world_noobjects + g_world_nochars,
-                                   g_world_nozones,
+                                   room_data::g_world_norooms,
+                                   obj_data::g_world_noobjects,
+                                   char_data::g_world_nochars,
+                                   npc_data::g_world_nonpc,
+                                   pc_data::g_world_nopc,
+                                   room_data::g_world_norooms + obj_data::g_world_noobjects + char_data::g_world_nochars,
+                                   zone_info_type::g_world_nozones,
                                    g_no_connections,
                                    g_max_no_connections,
                                    g_no_players,

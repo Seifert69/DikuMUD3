@@ -1,6 +1,6 @@
 #include "obj_data.h"
 
-#include "structs.h"
+size_t obj_data::g_world_noobjects; // number of objects in the world
 
 obj_data::obj_data()
     : unit_data(UNIT_ST_OBJ)

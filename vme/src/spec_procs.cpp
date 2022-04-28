@@ -6,7 +6,6 @@
  */
 
 #include "cmdload.h"
-#include "structs.h"
 #include "trie.h"
 #include "utils.h"
 

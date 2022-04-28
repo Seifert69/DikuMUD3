@@ -12,7 +12,6 @@
 #include "nanny.h"
 #include "pcsave.h"
 #include "reception.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 #include "zon_basis.h"
@@ -406,7 +405,7 @@ void clist()
                         ++file_count;
 
                         std::cout << dir_itr->path() << ";";
-                        temp = new char[PC_MAX_NAME];
+                        temp = new char[pc_data::PC_MAX_NAME];
 
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
@@ -564,7 +563,7 @@ void convert_file()
                     {
                         ++file_count;
                         std::cout << dir_itr->path() << "\n";
-                        temp = new char[PC_MAX_NAME];
+                        temp = new char[pc_data::PC_MAX_NAME];
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
 
@@ -670,7 +669,7 @@ void cleanup()
                     {
                         ++file_count;
                         std::cout << dir_itr->path() << "\n";
-                        temp = new char[PC_MAX_NAME];
+                        temp = new char[pc_data::PC_MAX_NAME];
                         strcpy(temp, dir_itr->path().filename().c_str());
                         std::cout << temp;
                         pc = convert_load_player(temp);

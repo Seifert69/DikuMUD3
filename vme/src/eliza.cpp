@@ -14,7 +14,6 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "unit_fptr.h"
 #include "utils.h"

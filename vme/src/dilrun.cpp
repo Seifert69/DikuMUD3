@@ -17,7 +17,6 @@
 #include "intlist.h"
 #include "main_functions.h"
 #include "mobact.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "unit_fptr.h"

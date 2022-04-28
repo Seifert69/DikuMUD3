@@ -2,7 +2,6 @@
 
 #include "essential.h"
 #include "interpreter.h"
-#include "structs.h"
 
 const char *ContentsFileName(const char *);
 unit_data *restore_all_unit(char *filename, unit_data *udest);

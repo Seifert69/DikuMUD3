@@ -7,7 +7,6 @@
 #pragma once
 
 #include "interpreter.h"
-#include "structs.h"
 
 #include <vme.h>
 

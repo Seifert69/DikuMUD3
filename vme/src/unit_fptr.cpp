@@ -1,7 +1,5 @@
 #include "unit_fptr.h"
 
-#include "structs.h"
-
 #include <cstdlib>
 
 unit_fptr::unit_fptr()

@@ -1,7 +1,5 @@
 #include "unit_affected_type.h"
 
-#include "structs.h"
-
 int unit_affected_type::destruct_classindex()
 {
     return DR_AFFECT;
