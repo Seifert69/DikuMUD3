@@ -904,14 +904,14 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     if (d->getState() == 1)
     {
-        if (PC_CRACK_ATTEMPTS(d->cgetCharacter()) > 2)
+        if (PC_CRACK_ATTEMPTS(d->getCharacter()) > 2)
         {
             auto msg = diku::format_to_str("<br/>ATTENTION: Your password has been "
                                            "attempted cracked %d times since your last logon."
                                            " Press [enter] and wait for the password prompt.",
-                                           PC_CRACK_ATTEMPTS(d->cgetCharacter()));
+                                           PC_CRACK_ATTEMPTS(d->getCharacter()));
             send_to_descriptor(msg, d);
-            d->setLoopWaitCounter(MIN(30, PC_CRACK_ATTEMPTS(d->cgetCharacter())) * 2 * PULSE_SEC);
+            d->setLoopWaitCounter(MIN(30, PC_CRACK_ATTEMPTS(d->getCharacter())) * 2 * PULSE_SEC);
             return;
         }
         d->postincrementState();
@@ -952,15 +952,15 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
         if (!str_is_empty(arg))
         {
             slog(LOG_ALL, 0, "%s entered a wrong password [%s].", PC_FILENAME(d->cgetCharacter()), d->getHostname());
-            PC_CRACK_ATTEMPTS(d->cgetCharacter())++;
+            UPC(d->getCharacter())->incrementNumberOfCrackAttempts();
 
             if ((td = find_descriptor(PC_FILENAME(d->cgetCharacter()), d)))
             {
                 send_to_descriptor("<br/>Someone just attempted to login under "
                                    "your name using an illegal password.<br/>",
                                    td);
-                PC_CRACK_ATTEMPTS(td->cgetCharacter())++;
-                d->setLoopWaitCounter(PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->cgetCharacter()) * PULSE_SEC);
+                UPC(td->cgetCharacter())->incrementNumberOfCrackAttempts();
+                d->setLoopWaitCounter(PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->getCharacter()) * PULSE_SEC);
             }
             else if (!PC_IS_UNSAVED(d->getCharacter()))
             {
@@ -973,7 +973,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
         return;
     }
 
-    PC_CRACK_ATTEMPTS(d->cgetCharacter()) = 0;
+    UPC(d->getCharacter())->setNumberOfCrackAttempts(0);
 
     const auto last_connect = PC_TIME(d->getCharacter()).getPlayerLastConnectTime();
     auto msg2 = diku::format_to_str("<br/>Welcome back %s, you last visited %s on %s<br/>",

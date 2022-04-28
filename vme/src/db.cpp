@@ -1009,7 +1009,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 40)
                 {
-                    PC_CRACK_ATTEMPTS(u) = pBuf->ReadU16(&g_nCorrupt);
+                    UPC(u)->setNumberOfCrackAttempts(pBuf->ReadU16(&g_nCorrupt));
                 }
 
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getHometownPtr());

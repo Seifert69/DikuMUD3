@@ -334,7 +334,10 @@ inline unit_data *CHAR_ORIGINAL(unit_data *ch)
 
 #define PC_ACCESS_LEVEL(pc) (UPC(pc)->nAccessLevel)
 
-#define PC_CRACK_ATTEMPTS(pc) (UPC(pc)->crack_attempts)
+inline ubit16 PC_CRACK_ATTEMPTS(unit_data *pc)
+{
+    return UPC(pc)->getNumberOfCrackAttempts();
+}
 
 inline terminal_setup_type &PC_SETUP(unit_data *pc)
 {

@@ -251,6 +251,15 @@ public:
     ubit16 *getNumberOfCrimesCommittedPtr() { return &m_nr_of_crimes; }
     void setNumberOfCrimesCommitted(ubit16 value) { m_nr_of_crimes = value; }
     /// @}
+
+    /**
+     * @name Crack Attempts
+     * @{
+     */
+    ubit16 getNumberOfCrackAttempts() const { return m_crack_attempts; }
+    void setNumberOfCrackAttempts(ubit16 value) { m_crack_attempts = value; }
+    void incrementNumberOfCrackAttempts() { m_crack_attempts++; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -268,9 +277,9 @@ private:
     sbit32 m_ability_points{0};                          ///< No of practice points left
     ubit16 m_flags{0};                                   ///< flags for PC setup (brief, noshout...)
     ubit16 m_nr_of_crimes{0};                            ///< Number of crimes committed
+    ubit16 m_crack_attempts{0};                          ///< Number of wrong passwords entered
 public:
-    ubit16 crack_attempts; ///< Number of wrong passwords entered
-    ubit16 lifespan{};     ///< How many year to live....
+    ubit16 lifespan{}; ///< How many year to live....
 
     sbit16 spells[SPL_TREE_MAX];   ///< The spells learned
     ubit8 spell_lvl[SPL_TREE_MAX]; ///< Practiced within that level

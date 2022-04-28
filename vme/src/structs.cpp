@@ -41,7 +41,7 @@ pc_data::pc_data()
     , m_ability_points{0}
     , m_flags{0}
     , m_nr_of_crimes{0}
-    , crack_attempts{0}
+    , m_crack_attempts{0}
     , spells{0}
     , spell_lvl{0}
     , skills{0}

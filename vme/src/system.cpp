@@ -67,7 +67,7 @@ void init_char(unit_data *ch)
     UPC(ch)->getTerminalSetupType().width = 80;
     UPC(ch)->getTerminalSetupType().height = 15;
     UPC(ch)->getTerminalSetupType().colour_convert = 0;
-    PC_CRACK_ATTEMPTS(ch) = 0;
+    UPC(ch)->setNumberOfCrackAttempts(0);
 
     account_defaults(ch);
 
