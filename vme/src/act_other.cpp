@@ -115,7 +115,7 @@ void points_reset(unit_data *ch)
     UCHAR(ch)->setLevel(START_LEVEL);
 
     PC_ABILITY_POINTS(ch) = 0;
-    PC_SKILL_POINTS(ch) = 0;
+    UPC(ch)->setSkillPoints(0);
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {

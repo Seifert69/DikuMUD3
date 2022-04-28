@@ -422,7 +422,10 @@ inline extra_list &PC_QUEST(unit_data *pc)
 
 #define PC_ABILITY_POINTS(ch) (UPC(ch)->ability_points)
 
-#define PC_SKILL_POINTS(ch) (UPC(ch)->skill_points)
+inline sbit32 PC_SKILL_POINTS(unit_data *ch)
+{
+    return UPC(ch)->getSkillPoints();
+}
 
 #define PC_ABI_LVL(ch, index) (UPC(ch)->ability_lvl[index])
 

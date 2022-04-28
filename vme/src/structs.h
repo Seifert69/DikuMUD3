@@ -210,6 +210,16 @@ public:
     sbit32 getPlayerUID() const { return m_id; }
     void setPlayerUID(sbit32 value) { m_id = value; }
     /// @}
+
+    /**
+     * @name Skill points
+     * @{
+     */
+    sbit32 getSkillPoints() const { return m_skill_points; }
+    sbit32 *getSkillPointsPtr() { return &m_skill_points; }
+    void setSkillPoints(sbit32 value) { m_skill_points = value; }
+    void increaseSkillPointsBy(sbit32 value) { m_skill_points += value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -223,8 +233,8 @@ private:
     sbit8 m_profession{-1};                              ///< The player's chosen profession, -1 means unknown
     ubit16 m_vlvl{0};                                    ///< Virtual Level for player
     sbit32 m_id{-1};                                     ///< Unique identifier for each player (-1 guest)
+    sbit32 m_skill_points{0};                            ///< No of practice points left
 public:
-    sbit32 skill_points;   ///< No of practice points left
     sbit32 ability_points; ///< No of practice points left
 
     ubit16 flags;          ///< flags for PC setup (brief, noshout...)

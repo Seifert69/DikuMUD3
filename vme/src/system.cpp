@@ -89,7 +89,7 @@ void init_char(unit_data *ch)
     PC_CRIMES(ch) = 0;
 
     PC_ABILITY_POINTS(ch) = 0;
-    PC_SKILL_POINTS(ch) = 0;
+    UPC(ch)->setSkillPoints(0);
 
     /* *** if this is our first player --- he be God *** */
     if (g_player_id == -7)

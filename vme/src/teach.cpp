@@ -1088,20 +1088,20 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
         case TEACH_SKILLS:
             pValues->values = &PC_SKI_SKILL(pupil, 0);
             pValues->lvl = &PC_SKI_LVL(pupil, 0);
-            pValues->practice_points = &PC_SKILL_POINTS(pupil);
+            pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_SkiColl;
 
         case TEACH_SPELLS:
             pValues->values = &PC_SPL_SKILL(pupil, 0);
             pValues->lvl = &PC_SPL_LVL(pupil, 0);
-            pValues->practice_points = &PC_SKILL_POINTS(pupil);
+            pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_SplColl;
             break;
 
         case TEACH_WEAPONS:
             pValues->values = &PC_WPN_SKILL(pupil, 0);
             pValues->lvl = &PC_WPN_LVL(pupil, 0);
-            pValues->practice_points = &PC_SKILL_POINTS(pupil);
+            pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_WpnColl;
             break;
 

@@ -374,7 +374,7 @@ void advance_level(unit_data *ch)
         UCHAR(ch)->incrementLevel();
     }
 
-    PC_SKILL_POINTS(ch) += skill_point_gain();
+    UPC(ch)->increaseSkillPointsBy(skill_point_gain());
     PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
 
     diltemplate *dt = nullptr;

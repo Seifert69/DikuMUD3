@@ -37,7 +37,7 @@ pc_data::pc_data()
     , m_profession{-1}
     , m_vlvl{0}
     , m_id{-1}
-    , skill_points{0}
+    , m_skill_points{0}
     , ability_points{0}
     , flags{0}
     , nr_of_crimes{0}

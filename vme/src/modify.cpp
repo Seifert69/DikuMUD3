@@ -1160,7 +1160,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 57: /* "skill-points" */
-            PC_SKILL_POINTS(unt) = valarg;
+            UPC(unt)->setSkillPoints(valarg);
             return;
 
         case 58: /* "ability-points" */
