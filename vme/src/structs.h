@@ -372,6 +372,28 @@ public:
     ubit8 getAccessLevel() const { return m_nAccessLevel; }
     void setAccessLevel(ubit8 value) { m_nAccessLevel = value; }
     /// @}
+
+    /**
+     * @name Passwords
+     * @{
+     */
+    const char *getPassword() const { return m_pwd; }
+    void setPassword(const char *value)
+    {
+        strncpy(m_pwd, value, PC_MAX_PASSWORD);
+        m_pwd[PC_MAX_PASSWORD - 1] = 0;
+    }
+    int readPasswordFrom(CByteBuffer &buf)
+    {
+        auto retval = buf.ReadStringCopy(m_pwd, PC_MAX_PASSWORD);
+        m_pwd[PC_MAX_PASSWORD - 1] = '\0';
+        return retval;
+    }
+    void truncatePassword()
+    {
+        m_pwd[10] = '\0'; // This will allow me to later extend the password length
+    }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -400,8 +422,8 @@ private:
     ubit8 m_ability_lvl[ABIL_TREE_MAX]{0};               ///< The abilities learned
     sbit8 m_conditions[3]{0};                            ///< Drunk full etc.
     ubit8 m_nAccessLevel{0};                             ///< Access Level for BBS use
+    char m_pwd[PC_MAX_PASSWORD]{0};                      ///< Needed when loaded w/o descriptor
 public:
-    char pwd[PC_MAX_PASSWORD];  ///< Needed when loaded w/o descriptor
     char filename[PC_MAX_NAME]; ///< The name on disk...
     ubit32 lasthosts[5];        ///< last 5 different IPs
     color_type color;           ///< Players default colors

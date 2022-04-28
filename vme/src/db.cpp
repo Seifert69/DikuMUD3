@@ -983,11 +983,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     str_lower(PC_FILENAME(u));
                 }
 
-                g_nCorrupt += pBuf->ReadStringCopy(PC_PWD(u), PC_MAX_PASSWORD);
-                PC_PWD(u)[PC_MAX_PASSWORD - 1] = '\0';
+                g_nCorrupt += UPC(u)->readPasswordFrom(*pBuf);
+
                 if (unit_version <= 72)
                 {
-                    PC_PWD(u)[10] = '\0'; // This will allow me to later extend the password length
+                    UPC(u)->truncatePassword(); // This will allow me to later extend the password length
                 }
 
                 if (unit_version >= 54)

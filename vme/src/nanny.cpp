@@ -668,7 +668,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
         return;
     }
 
-    if (pwdcompare(crypt(arg, PC_FILENAME(d->cgetCharacter())), PC_PWD(d->cgetCharacter()), PC_MAX_PASSWORD))
+    if (pwdcompare(crypt(arg, PC_FILENAME(d->cgetCharacter())), PC_PWD(d->getCharacter()), PC_MAX_PASSWORD))
     {
         auto str = diku::format_to_str("PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
         send_to_descriptor(scriptwrap(str), d);
@@ -776,8 +776,7 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
         return;
     }
 
-    strncpy(PC_PWD(d->cgetCharacter()), crypt(arg, PC_FILENAME(d->cgetCharacter())), PC_MAX_PASSWORD);
-    PC_PWD(d->cgetCharacter())[PC_MAX_PASSWORD - 1] = 0;
+    UPC(d->getCharacter())->setPassword(crypt(arg, PC_FILENAME(d->cgetCharacter())));
 
     set_descriptor_fptr(d, nanny_pwd_confirm, TRUE);
 }
@@ -945,7 +944,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     // Which would allow any pwd length but not work on Macs. Or as Ken suggests we could
     // have two iterations of the default to support up to 16 chars pwd.
     int nCmp = 0;
-    nCmp = pwdcompare(crypt(arg, PC_PWD(d->cgetCharacter())), PC_PWD(d->cgetCharacter()), PC_MAX_PASSWORD);
+    nCmp = pwdcompare(crypt(arg, PC_PWD(d->getCharacter())), PC_PWD(d->getCharacter()), PC_MAX_PASSWORD);
 
     if (nCmp != 0)
     {
@@ -1144,15 +1143,15 @@ void nanny_get_name(descriptor_data *d, char *arg)
 
         CAPC(tmp_name);
         UNIT_NAMES(d->getCharacter()).AppendName(tmp_name);
-        strcpy(PC_PWD(d->cgetCharacter()), "");
+        UPC(d->cgetCharacter())->setPassword("");
 
         /* If someone is connected, we borrow his pwd */
         if ((td = find_descriptor(tmp_name, d)))
         {
             // Only borrow a password if its already been set
-            if (*PC_PWD(td->cgetCharacter()))
+            if (*PC_PWD(td->getCharacter()))
             {
-                strcpy(PC_PWD(d->cgetCharacter()), PC_PWD(td->cgetCharacter()));
+                UPC(d->getCharacter())->setPassword(PC_PWD(td->getCharacter()));
                 set_descriptor_fptr(d, nanny_existing_pwd, TRUE);
                 return;
             }

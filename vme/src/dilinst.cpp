@@ -333,8 +333,8 @@ void dilfi_setpwd(dilprg *p)
         }
         else if (v1->val.ptr && v2->val.ptr)
         {
-            strncpy(PC_PWD((unit_data *)v1->val.ptr), crypt((char *)v2->val.ptr, PC_FILENAME((unit_data *)v1->val.ptr)), PC_MAX_PASSWORD);
-            PC_PWD((unit_data *)v1->val.ptr)[PC_MAX_PASSWORD - 1] = 0;
+            auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+            pc->setPassword(crypt(reinterpret_cast<char *>(v2->val.ptr), PC_FILENAME(pc)));
         }
     }
     delete v1;

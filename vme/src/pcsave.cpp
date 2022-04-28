@@ -294,7 +294,7 @@ void save_player_file(unit_data *pc)
     /* Player is now clean (empty and unequipped) */
     nPlyLen = write_unit_string(pBuf, pc);
 
-    save_player_disk(PC_FILENAME(pc), PC_PWD(pc), PC_ID(pc), nPlyLen, pBuf->GetData());
+    save_player_disk(PC_FILENAME(pc), const_cast<char *>(PC_PWD(pc)), PC_ID(pc), nPlyLen, pBuf->GetData());
 
     /* Restore all inventory and equipment */
     while ((tmp_u = list))
