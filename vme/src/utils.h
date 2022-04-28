@@ -487,7 +487,10 @@ inline const char *PC_PWD(unit_data *unit)
     return UPC(unit)->getPassword();
 }
 
-#define PC_LASTHOST(unit) (UPC(unit)->lasthosts)
+// inline ubit32 PC_LASTHOST(unit_data *unit)
+//{
+//     (UPC(unit)->lasthosts)
+// }
 
 inline const char *PC_FILENAME(unit_data *unit)
 {

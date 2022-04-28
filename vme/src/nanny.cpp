@@ -271,14 +271,13 @@ void update_lasthost(unit_data *pc, ubit32 s_addr)
 
     for (int i = 0; i < 5; i++)
     {
-        if (PC_LASTHOST(pc)[i] == s_addr)
+        if (UPC(pc)->getLastHostAtIndex(i) == s_addr)
         {
             return;
         }
     }
 
-    memmove(&PC_LASTHOST(pc)[0], &PC_LASTHOST(pc)[1], sizeof(ubit32) * 4);
-    PC_LASTHOST(pc)[4] = s_addr;
+    UPC(pc)->pushBackLastHost(s_addr);
 }
 
 // Take a player which is in the game and move to the menu

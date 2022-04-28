@@ -1275,7 +1275,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
                 for (i = 0; i < 5; i++)
                 {
-                    pBuf->Append32(PC_LASTHOST(u)[i]);
+                    pBuf->Append32(UPC(u)->getLastHostAtIndex(i));
                 }
 
                 pBuf->Append32((ubit32)PC_ID(u));

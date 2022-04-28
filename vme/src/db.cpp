@@ -995,14 +995,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     for (i = 0; i < 5; i++)
                     {
-                        PC_LASTHOST(u)[i] = pBuf->ReadU32(&g_nCorrupt);
+                        UPC(u)->setLastHostAtIndexTo(i, pBuf->ReadU32(&g_nCorrupt));
                     }
                 }
                 else
                 {
                     for (i = 0; i < 5; i++)
                     {
-                        PC_LASTHOST(u)[i] = 0;
+                        UPC(u)->setLastHostAtIndexTo(i, 0);
                     }
                 }
 

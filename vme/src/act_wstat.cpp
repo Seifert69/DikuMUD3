@@ -906,7 +906,7 @@ static void stat_ip(const unit_data *ch, unit_data *u)
 
         for (int i = 0; i < 5; i++)
         {
-            sock.sin_addr.s_addr = PC_LASTHOST(u)[i];
+            sock.sin_addr.s_addr = UPC(u)->getLastHostAtIndex(i);
             auto msg = diku::format_to_str("IP [%s]<br/>", inet_ntoa(sock.sin_addr));
             send_to_char(msg, ch);
         }

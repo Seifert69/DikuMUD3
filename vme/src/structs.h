@@ -412,6 +412,20 @@ public:
         m_filename[PC_MAX_NAME - 1] = 0;
     }
     /// @}
+
+    /**
+     * @name Last hosts
+     * @todo Add range checking to indexes
+     * @{
+     */
+    ubit32 getLastHostAtIndex(size_t index) const { return m_lasthosts[index]; }
+    void setLastHostAtIndexTo(size_t index, ubit32 value) { m_lasthosts[index] = value; }
+    void pushBackLastHost(ubit32 value)
+    {
+        memmove(&m_lasthosts[0], &m_lasthosts[1], sizeof(ubit32) * 4);
+        m_lasthosts[4] = value;
+    }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -442,9 +456,9 @@ private:
     ubit8 m_nAccessLevel{0};                             ///< Access Level for BBS use
     char m_pwd[PC_MAX_PASSWORD]{0};                      ///< Needed when loaded w/o descriptor
     char m_filename[PC_MAX_NAME]{0};                     ///< The name on disk...
+    ubit32 m_lasthosts[5]{0};                            ///< last 5 different IPs
 public:
-    ubit32 lasthosts[5]; ///< last 5 different IPs
-    color_type color;    ///< Players default colors
+    color_type color; ///< Players default colors
 };
 
 /* ------------------ NPC SPECIFIC STRUCTURES ----------------------- */

@@ -54,7 +54,7 @@ pc_data::pc_data()
     , m_nAccessLevel{0}
     , m_pwd{0}
     , m_filename{0}
-    , lasthosts{0}
+    , m_lasthosts{0}
 {
     g_world_nopc++;
 }
