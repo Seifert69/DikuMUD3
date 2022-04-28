@@ -177,9 +177,9 @@ void start_player(unit_data *ch)
     UCHAR(ch)->setAttackType(WPN_FIST);
     UCHAR(ch)->setNaturalArmor(ARM_CLOTHES);
 
-    PC_COND(ch, THIRST) = 24;
-    PC_COND(ch, FULL) = 24;
-    PC_COND(ch, DRUNK) = 0;
+    UPC(ch)->setConditionAtIndexTo(THIRST, 24);
+    UPC(ch)->setConditionAtIndexTo(FULL, 24);
+    UPC(ch)->setConditionAtIndexTo(DRUNK, 0);
 
     PC_TIME(ch).setTotalTimePlayedInSeconds(0);
 

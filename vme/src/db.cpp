@@ -1154,7 +1154,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    PC_COND(u, i) = pBuf->ReadS8(&g_nCorrupt);
+                    UPC(u)->setConditionAtIndexTo(i, pBuf->ReadS8(&g_nCorrupt));
                 }
 
                 if (unit_version >= 56)

@@ -352,6 +352,18 @@ public:
     ubit8 *getAbilityLevelArrayPtr() { return &m_ability_lvl[0]; }
     void setAbilityLevelAtIndexTo(size_t index, ubit8 value) { m_ability_lvl[index] = value; }
     /// @}
+
+    /**
+     * @name Conditions
+     * @todo Add range checking to indexes
+     * @{
+     */
+    sbit8 getConditionAtIndex(size_t index) const { return m_conditions[index]; }
+    sbit8 *getConditionAtIndexPtr(size_t index) { return &m_conditions[index]; }
+    void setConditionAtIndexTo(size_t index, sbit8 value) { m_conditions[index] = value; }
+    void increaseConditionAtIndexBy(size_t index, sbit8 value) { m_conditions[index] += value; }
+    void decreaseConditionAtIndexBy(size_t index, sbit8 value) { m_conditions[index] -= value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -378,9 +390,9 @@ private:
     sbit16 m_weapons[WPN_TREE_MAX]{0};                   ///< The weapons learned
     ubit8 m_weapon_lvl[WPN_TREE_MAX]{0};                 ///< The weapons learned
     ubit8 m_ability_lvl[ABIL_TREE_MAX]{0};               ///< The abilities learned
+    sbit8 m_conditions[3]{0};                            ///< Drunk full etc.
 public:
-    sbit8 conditions[3]; ///< Drunk full etc.
-    ubit8 nAccessLevel;  ///< Access Level for BBS use
+    ubit8 nAccessLevel; ///< Access Level for BBS use
 
     char pwd[PC_MAX_PASSWORD];  ///< Needed when loaded w/o descriptor
     char filename[PC_MAX_NAME]; ///< The name on disk...

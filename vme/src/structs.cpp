@@ -50,7 +50,7 @@ pc_data::pc_data()
     , m_weapons{0}
     , m_weapon_lvl{0}
     , m_ability_lvl{0}
-    , conditions{0}
+    , m_conditions{0}
     , nAccessLevel{0}
     , pwd{0}
     , filename{0}

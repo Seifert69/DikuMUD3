@@ -1060,15 +1060,15 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 39: /* "drunk" */
-            PC_COND(unt, DRUNK) = valarg;
+            UPC(unt)->setConditionAtIndexTo(DRUNK, valarg);
             return;
 
         case 40: /* "full" */
-            PC_COND(unt, FULL) = valarg;
+            UPC(unt)->setConditionAtIndexTo(FULL, valarg);
             return;
 
         case 41: /* "thirsty" */
-            PC_COND(unt, THIRST) = valarg;
+            UPC(unt)->setConditionAtIndexTo(THIRST, valarg);
             return;
 
         case 42: /* "default-pos" */

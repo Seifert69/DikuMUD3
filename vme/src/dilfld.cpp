@@ -4258,17 +4258,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &PC_COND((unit_data *)v1->val.ptr, FULL);
+                        v->ref = pc->getConditionAtIndexPtr(FULL);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4286,17 +4289,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &PC_COND((unit_data *)v1->val.ptr, THIRST);
+                        v->ref = pc->getConditionAtIndexPtr(THIRST);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4314,17 +4320,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &PC_COND((unit_data *)v1->val.ptr, DRUNK);
+                        v->ref = pc->getConditionAtIndexPtr(DRUNK);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

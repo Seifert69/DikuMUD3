@@ -113,10 +113,10 @@ void init_char(unit_data *ch)
 
     for (i = 0; i < 3; i++)
     {
-        PC_COND(ch, i) = (CHAR_LEVEL(ch) >= 200 ? 48 : 24);
+        UPC(ch)->setConditionAtIndexTo(i, (CHAR_LEVEL(ch) >= 200 ? 48 : 24));
     }
 
-    PC_COND(ch, DRUNK) = 0;
+    UPC(ch)->setConditionAtIndexTo(DRUNK, 0);
 
     set_title(ch);
 }

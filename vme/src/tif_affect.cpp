@@ -929,9 +929,9 @@ void tif_sustain_tick(unit_affected_type *af, unit_data *unit)
     {
         return;
     }
-    PC_COND(unit, 0) = af->getDataAtIndex(0);
-    PC_COND(unit, 1) = af->getDataAtIndex(1);
-    PC_COND(unit, 2) = af->getDataAtIndex(2);
+    UPC(unit)->setConditionAtIndexTo(DRUNK, af->getDataAtIndex(0));
+    UPC(unit)->setConditionAtIndexTo(FULL, af->getDataAtIndex(1));
+    UPC(unit)->setConditionAtIndexTo(THIRST, af->getDataAtIndex(2));
 }
 
 void tif_sustain_off(unit_affected_type *af, unit_data *unit)
@@ -1011,9 +1011,9 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
     act("The spirit of $1n materializes.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     act("You feel dizzy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 
-    PC_COND(unit, FULL) = 24;
-    PC_COND(unit, THIRST) = 24;
-    PC_COND(unit, DRUNK) = 0;
+    UPC(unit)->setConditionAtIndexTo(FULL, 24);
+    UPC(unit)->setConditionAtIndexTo(THIRST, 24);
+    UPC(unit)->setConditionAtIndexTo(DRUNK, 0);
 
     UCHAR(unit)->setMana(mana_limit(unit));
     UCHAR(unit)->setEndurance(move_limit(unit));
