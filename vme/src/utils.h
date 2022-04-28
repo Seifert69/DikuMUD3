@@ -420,7 +420,10 @@ inline extra_list &PC_QUEST(unit_data *pc)
 
 #define PC_COND(ch, i) (UPC(ch)->conditions[i])
 
-#define PC_ABILITY_POINTS(ch) (UPC(ch)->ability_points)
+inline sbit32 PC_ABILITY_POINTS(unit_data *ch)
+{
+    return UPC(ch)->getAbilityPoints();
+}
 
 inline sbit32 PC_SKILL_POINTS(unit_data *ch)
 {

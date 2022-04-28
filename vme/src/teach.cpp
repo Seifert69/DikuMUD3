@@ -1082,7 +1082,7 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
         case TEACH_ABILITIES:
             pValues->values = UCHAR(pupil)->getAbilitiesArray().data(); // Current ability
             pValues->lvl = &PC_ABI_LVL(pupil, 0);                       // How many times you've trained this level on this ability
-            pValues->practice_points = &PC_ABILITY_POINTS(pupil);
+            pValues->practice_points = UPC(pupil)->getAbilityPointsPtr();
             return &g_AbiColl;
 
         case TEACH_SKILLS:

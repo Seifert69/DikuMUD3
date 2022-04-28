@@ -88,7 +88,7 @@ void init_char(unit_data *ch)
     UPC(ch)->setPlayerUID(-1);
     PC_CRIMES(ch) = 0;
 
-    PC_ABILITY_POINTS(ch) = 0;
+    UPC(ch)->setAbilityPoints(0);
     UPC(ch)->setSkillPoints(0);
 
     /* *** if this is our first player --- he be God *** */

@@ -4360,18 +4360,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
-                        v->ref = &PC_ABILITY_POINTS((unit_data *)v1->val.ptr);
+                        v->ref = pc->getAbilityPointsPtr();
                         /*	    v->val.num = &PC_ABILITY_POINTS((class unit_data *) v1->val.ptr);*/
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

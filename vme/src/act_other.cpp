@@ -114,7 +114,7 @@ void points_reset(unit_data *ch)
     UPC(ch)->setVirtualPlayerLevel(START_LEVEL);
     UCHAR(ch)->setLevel(START_LEVEL);
 
-    PC_ABILITY_POINTS(ch) = 0;
+    UPC(ch)->setAbilityPoints(0);
     UPC(ch)->setSkillPoints(0);
 
     for (i = 0; i < ABIL_TREE_MAX; i++)

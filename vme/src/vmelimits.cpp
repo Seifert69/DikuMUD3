@@ -375,7 +375,7 @@ void advance_level(unit_data *ch)
     }
 
     UPC(ch)->increaseSkillPointsBy(skill_point_gain());
-    PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
+    UPC(ch)->increaseAbilityPointsBy(ability_point_gain(ch));
 
     diltemplate *dt = nullptr;
     dt = find_dil_template("advance_level@basis");

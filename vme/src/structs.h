@@ -220,6 +220,15 @@ public:
     void setSkillPoints(sbit32 value) { m_skill_points = value; }
     void increaseSkillPointsBy(sbit32 value) { m_skill_points += value; }
     /// @}
+
+    /**
+     * @name Ability Points
+     */
+    sbit32 getAbilityPoints() const { return m_ability_points; }
+    sbit32 *getAbilityPointsPtr() { return &m_ability_points; }
+    void setAbilityPoints(sbit32 value) { m_ability_points = value; }
+    void increaseAbilityPointsBy(sbit32 value) { m_ability_points += value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -234,9 +243,8 @@ private:
     ubit16 m_vlvl{0};                                    ///< Virtual Level for player
     sbit32 m_id{-1};                                     ///< Unique identifier for each player (-1 guest)
     sbit32 m_skill_points{0};                            ///< No of practice points left
+    sbit32 m_ability_points{0};                          ///< No of practice points left
 public:
-    sbit32 ability_points; ///< No of practice points left
-
     ubit16 flags;          ///< flags for PC setup (brief, noshout...)
     ubit16 nr_of_crimes;   ///< Number of crimes committed
     ubit16 crack_attempts; ///< Number of wrong passwords entered
