@@ -344,7 +344,10 @@ inline terminal_setup_type &PC_SETUP(unit_data *pc)
     return UPC(pc)->getTerminalSetupType();
 }
 
-#define PC_LIFESPAN(pc) (UPC(pc)->lifespan)
+inline ubit16 PC_LIFESPAN(unit_data *pc)
+{
+    return UPC(pc)->getLifespan();
+}
 
 inline pc_account_data &PC_ACCOUNT(unit_data *pc)
 {

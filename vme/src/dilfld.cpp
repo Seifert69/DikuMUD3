@@ -1722,26 +1722,29 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
 
                         if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
                             v->type = DILV_INT;
-                            v->val.num = PC_LIFESPAN((unit_data *)v1->val.ptr);
+                            v->val.num = pc->getLifespan();
                         }
                         else
                         {
                             v->type = DILV_UINT2R;
-                            v->ref = &PC_LIFESPAN((unit_data *)v1->val.ptr);
+                            v->ref = pc->getLifespanPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

@@ -884,7 +884,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 48)
                 {
-                    PC_LIFESPAN(u) = pBuf->ReadU16(&g_nCorrupt);
+                    UPC(u)->setLifespan(pBuf->ReadU16(&g_nCorrupt));
                 }
                 else
                 {
@@ -902,7 +902,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         sex_race = &g_race_info[CHAR_RACE(u)].female;
                     }
 
-                    PC_LIFESPAN(u) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
+                    UPC(u)->setLifespan(sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size));
                 }
 
                 if (unit_version < 50)

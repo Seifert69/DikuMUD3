@@ -81,7 +81,7 @@ void race_adjust(unit_data *ch)
 
     ch->setSize(sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size));
 
-    PC_LIFESPAN(ch) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
+    UPC(ch)->setLifespan(sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size));
 
     const int years = my_race->age + dice(my_race->age_dice.reps, my_race->age_dice.size);
 

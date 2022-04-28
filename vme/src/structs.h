@@ -260,6 +260,15 @@ public:
     void setNumberOfCrackAttempts(ubit16 value) { m_crack_attempts = value; }
     void incrementNumberOfCrackAttempts() { m_crack_attempts++; }
     /// @}
+
+    /**
+     * @name Lifespan
+     * @{
+     */
+    ubit16 getLifespan() const { return m_lifespan; }
+    ubit16 *getLifespanPtr() { return &m_lifespan; }
+    void setLifespan(ubit16 value) { m_lifespan = value; }
+    /// @}
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info
@@ -278,9 +287,8 @@ private:
     ubit16 m_flags{0};                                   ///< flags for PC setup (brief, noshout...)
     ubit16 m_nr_of_crimes{0};                            ///< Number of crimes committed
     ubit16 m_crack_attempts{0};                          ///< Number of wrong passwords entered
+    ubit16 m_lifespan{0};                                ///< How many year to live....
 public:
-    ubit16 lifespan{}; ///< How many year to live....
-
     sbit16 spells[SPL_TREE_MAX];   ///< The spells learned
     ubit8 spell_lvl[SPL_TREE_MAX]; ///< Practiced within that level
 

@@ -81,7 +81,7 @@ void init_char(unit_data *ch)
     PC_TIME(ch).setPlayerBirthday(now);
     PC_TIME(ch).setPlayerCharacterCreationTime(now);
     PC_TIME(ch).setTotalTimePlayedInSeconds(0);
-    PC_LIFESPAN(ch) = 100;
+    UPC(ch)->setLifespan(100);
 
     UCHAR(ch)->setPlayerExperience(0);
     UCHAR(ch)->setLevel(0);

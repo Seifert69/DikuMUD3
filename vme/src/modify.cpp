@@ -1307,7 +1307,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                      UNIT_NAME(unt),
                      PC_LIFESPAN(unt),
                      valarg);
-                PC_LIFESPAN(unt) = valarg;
+                UPC(unt)->setLifespan(valarg);
             }
             else
             {
