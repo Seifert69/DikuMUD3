@@ -1200,7 +1200,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     }
                 }
 
-                NPC_DEFAULT(u) = pBuf->ReadU8(&g_nCorrupt);
+                UNPC(u)->setDefaultPosition(pBuf->ReadU8(&g_nCorrupt));
                 NPC_FLAGS(u) = pBuf->ReadU8(&g_nCorrupt);
             }
         }

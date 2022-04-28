@@ -90,13 +90,21 @@ public:
     void increaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] += value; }
     void decreaseSpellSkillAtIndexBy(size_t index, sbit16 value) { m_spells[index] += value; }
     /// @}
-private:
-    std::array<sbit16, WPN_GROUP_MAX> m_weapons{0};
-    std::array<sbit16, SPL_GROUP_MAX> m_spells{0};
 
+    /**
+     * @name Default Position
+     * @{
+     */
+    ubit8 getDefaultPosition() const { return m_default_pos; }
+    ubit8 *getDefaultPositionPtr() { return &m_default_pos; }
+    void setDefaultPosition(ubit8 value) { m_default_pos = value; }
+    /// @}
+private:
+    std::array<sbit16, WPN_GROUP_MAX> m_weapons{0}; ///<
+    std::array<sbit16, SPL_GROUP_MAX> m_spells{0};  ///<
+    ubit8 m_default_pos{POSITION_STANDING};         ///< Default position for NPC
 public:
-    ubit8 default_pos; ///< Default position for NPC
-    ubit8 flags;       ///< flags for NPC behavior
+    ubit8 flags; ///< flags for NPC behavior
 };
 
 /* ----------------- Destructed decalrations ----------------------- */

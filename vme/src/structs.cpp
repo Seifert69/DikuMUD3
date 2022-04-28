@@ -26,7 +26,7 @@ npc_data::npc_data()
     : char_data(UNIT_ST_NPC)
     , m_weapons{0}
     , m_spells{0}
-    , default_pos{POSITION_STANDING}
+    , m_default_pos{POSITION_STANDING}
     , flags{0}
 {
     g_world_nonpc++;

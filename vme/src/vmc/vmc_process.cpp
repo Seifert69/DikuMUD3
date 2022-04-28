@@ -1206,7 +1206,7 @@ void init_unit(unit_data *u)
             UCHAR(u)->setSex(SEX_NEUTRAL);
             UCHAR(u)->setLevel(1);
             UCHAR(u)->setPosition(POSITION_STANDING);
-            NPC_DEFAULT(u) = POSITION_STANDING;
+            UNPC(u)->setDefaultPosition(POSITION_STANDING);
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {
                 UCHAR(u)->setAbilityAtIndexTo(i, 0);

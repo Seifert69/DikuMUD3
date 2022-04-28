@@ -429,7 +429,10 @@ inline sbit16 NPC_SPL_SKILL(unit_data *ch, size_t index)
     return UNPC(ch)->getSpellSkillAtIndex(index);
 }
 
-#define NPC_DEFAULT(unit) (UNPC(unit)->default_pos)
+inline ubit8 NPC_DEFAULT(unit_data *unit)
+{
+    return UNPC(unit)->getDefaultPosition();
+}
 
 #define NPC_FLAGS(unit) (UNPC(unit)->flags)
 

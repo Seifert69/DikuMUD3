@@ -530,7 +530,7 @@ omobile_field   : MANA number
     }
     | DEFAULT number
     {
-        NPC_DEFAULT(cur) = $2;
+        UNPC(cur)->setDefaultPosition($2);
     }
     | FLAGS flags
     {
