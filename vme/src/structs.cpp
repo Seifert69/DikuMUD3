@@ -35,7 +35,7 @@ pc_data::pc_data()
     , m_hometown{nullptr}
     , m_promptstr{nullptr}
     , m_profession{-1}
-    , vlvl{0}
+    , m_vlvl{0}
     , id{-1}
     , skill_points{0}
     , ability_points{0}

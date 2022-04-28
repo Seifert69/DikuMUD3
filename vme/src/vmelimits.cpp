@@ -368,7 +368,7 @@ void advance_level(unit_data *ch)
     }
 
     clear_training_level(ch);
-    PC_VIRTUAL_LEVEL(ch)++;
+    UPC(ch)->incrementVirtualPlayerLevel();
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
     {
         UCHAR(ch)->incrementLevel();

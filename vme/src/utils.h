@@ -353,7 +353,10 @@ inline pc_account_data &PC_ACCOUNT(const unit_data *pc)
     return UPC(pc)->getPCAccountData();
 }
 
-#define PC_VIRTUAL_LEVEL(pc) (UPC(pc)->vlvl)
+inline ubit16 PC_VIRTUAL_LEVEL(unit_data *pc)
+{
+    return UPC(pc)->getVirtualPlayerLevel();
+}
 
 inline extra_list &PC_INFO(unit_data *pc)
 {

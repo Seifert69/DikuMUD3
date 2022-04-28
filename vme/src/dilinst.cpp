@@ -796,11 +796,12 @@ void dilfi_rsvlv(dilprg *p)
         }
         else
         {
-            if (IS_PC((unit_data *)v1->val.ptr))
+            auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+            if (IS_PC(pc))
             {
-                if (!IS_IMMORTAL((unit_data *)v1->val.ptr))
+                if (!IS_IMMORTAL(pc))
                 {
-                    PC_VIRTUAL_LEVEL((unit_data *)v1->val.ptr) = 1;
+                    pc->setVirtualPlayerLevel(1);
                 }
             }
         }

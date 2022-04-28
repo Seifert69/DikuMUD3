@@ -192,20 +192,29 @@ public:
     sbit8 *getProfessionPtr() { return &m_profession; }
     void setProfession(sbit8 value) { m_profession = value; }
     /// @}
-private:
-    terminal_setup_type m_setup{}; ///<
-    pc_time_data m_time{};         ///< PCs time info
-    pc_account_data m_account{};   ///< Accounting
-    char *m_guild{nullptr};        ///< Player's current default guild (guilds in .info)
-    char *m_bank{nullptr};         ///< How much money in bank?
-    char *m_hometown{nullptr};     ///< PCs Hometown (symbolic reference)
-    char *m_promptstr{nullptr};    ///< A PC's Prompt
-    extra_list m_info;             ///< For saving Admin information
-    extra_list m_quest;            ///< For saving QUEST information
-    sbit8 m_profession{-1};        ///< The player's chosen profession, -1 means unknown
-public:
-    ubit16 vlvl; ///< Virtual Level for player
 
+    /**
+     * @name Virtual Player level code
+     * @{
+     */
+    ubit16 getVirtualPlayerLevel() const { return m_vlvl; }
+    ubit16 *getVirtualPlayerLevelPtr() { return &m_vlvl; }
+    void setVirtualPlayerLevel(ubit16 value) { m_vlvl = value; }
+    void incrementVirtualPlayerLevel() { m_vlvl++; }
+    /// @}
+private:
+    terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
+    pc_time_data m_time{};                               ///< PCs time info
+    pc_account_data m_account{};                         ///< Accounting
+    char *m_guild{nullptr};                              ///< Player's current default guild (guilds in .info)
+    char *m_bank{nullptr};                               ///< How much money in bank?
+    char *m_hometown{nullptr};                           ///< PCs Hometown (symbolic reference)
+    char *m_promptstr{nullptr};                          ///< A PC's Prompt
+    extra_list m_info;                                   ///< For saving Admin information
+    extra_list m_quest;                                  ///< For saving QUEST information
+    sbit8 m_profession{-1};                              ///< The player's chosen profession, -1 means unknown
+    ubit16 m_vlvl{0};                                    ///< Virtual Level for player
+public:
     sbit32 id;             ///< Unique identifier for each player (-1 guest)
     sbit32 skill_points;   ///< No of practice points left
     sbit32 ability_points; ///< No of practice points left

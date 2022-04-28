@@ -1019,11 +1019,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 38)
                 {
-                    PC_VIRTUAL_LEVEL(u) = pBuf->ReadU16(&g_nCorrupt);
+                    UPC(u)->setVirtualPlayerLevel(pBuf->ReadU16(&g_nCorrupt));
                 }
                 else
                 {
-                    PC_VIRTUAL_LEVEL(u) = CHAR_LEVEL(u);
+                    UPC(u)->setVirtualPlayerLevel(CHAR_LEVEL(u));
                 }
 
                 if (unit_version <= 72)

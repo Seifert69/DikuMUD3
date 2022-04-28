@@ -111,7 +111,7 @@ void points_reset(unit_data *ch)
 {
     int i = 0;
 
-    PC_VIRTUAL_LEVEL(ch) = START_LEVEL;
+    UPC(ch)->setVirtualPlayerLevel(START_LEVEL);
     UCHAR(ch)->setLevel(START_LEVEL);
 
     PC_ABILITY_POINTS(ch) = 0;
