@@ -1075,7 +1075,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 43: /* "act-flags" */
-            NPC_FLAGS(unt) = bitarg;
+            UNPC(unt)->setAllNPCFlags(bitarg);
             return;
 
         case 44: /* hometown */

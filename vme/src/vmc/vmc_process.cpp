@@ -1228,7 +1228,7 @@ void init_unit(unit_data *u)
             {
                 UNPC(u)->setSpellSkillAtIndexTo(i, 0);
             }
-            NPC_FLAGS(u) = 0;
+            UNPC(u)->setAllNPCFlags(0);
             UCHAR(u)->setOffensiveBonus(0);
             UCHAR(u)->setDefensiveBonus(0);
         }

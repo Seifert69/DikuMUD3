@@ -484,7 +484,7 @@ omobile_field   : MANA number
     }
     | ACT flags
     {
-        NPC_FLAGS(cur) = $2;
+        UNPC(cur)->setAllNPCFlags($2);
     }
     | MONEY moneylist
     {

@@ -4146,17 +4146,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_NPC((unit_data *)v1->val.ptr))
+                {
+                    auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
+                    if (npc && IS_NPC(npc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &NPC_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = npc->getAllNPCFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */

@@ -99,12 +99,20 @@ public:
     ubit8 *getDefaultPositionPtr() { return &m_default_pos; }
     void setDefaultPosition(ubit8 value) { m_default_pos = value; }
     /// @}
+
+    /**
+     * @name NPC Flags
+     * @{
+     */
+    ubit8 getAllNPCFlags() const { return m_flags; }
+    ubit8 *getAllNPCFlagsPtr() { return &m_flags; }
+    void setAllNPCFlags(ubit8 value) { m_flags = value; }
+    /// @}
 private:
     std::array<sbit16, WPN_GROUP_MAX> m_weapons{0}; ///<
     std::array<sbit16, SPL_GROUP_MAX> m_spells{0};  ///<
     ubit8 m_default_pos{POSITION_STANDING};         ///< Default position for NPC
-public:
-    ubit8 flags; ///< flags for NPC behavior
+    ubit8 m_flags{0};                               ///< flags for NPC behavior
 };
 
 /* ----------------- Destructed decalrations ----------------------- */

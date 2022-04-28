@@ -27,7 +27,7 @@ npc_data::npc_data()
     , m_weapons{0}
     , m_spells{0}
     , m_default_pos{POSITION_STANDING}
-    , flags{0}
+    , m_flags{0}
 {
     g_world_nonpc++;
 }

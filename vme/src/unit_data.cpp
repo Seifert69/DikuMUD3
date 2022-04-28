@@ -324,7 +324,7 @@ unit_data *unit_data::copy()
                 U_NPC(u)->setSpellSkillAtIndexTo(x, U_NPC(this)->getSpellSkillAtIndex(x));
             }
             U_NPC(u)->setDefaultPosition(U_NPC(this)->getDefaultPosition());
-            U_NPC(u)->flags = U_NPC(this)->flags;
+            U_NPC(u)->setAllNPCFlags(U_NPC(this)->getAllNPCFlags());
         }
     }
     else

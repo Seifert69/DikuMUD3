@@ -434,7 +434,10 @@ inline ubit8 NPC_DEFAULT(unit_data *unit)
     return UNPC(unit)->getDefaultPosition();
 }
 
-#define NPC_FLAGS(unit) (UNPC(unit)->flags)
+inline ubit8 NPC_FLAGS(unit_data *unit)
+{
+    return UNPC(unit)->getAllNPCFlags();
+}
 
 /* ..................................................................... */
 
