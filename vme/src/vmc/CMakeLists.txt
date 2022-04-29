@@ -20,15 +20,15 @@ set(VMC_SRCS
         ../membug.cpp ../membug.h
         ../money.cpp ../money.h
         ../namelist.cpp ../namelist.h
+        ../npc_data.cpp ../npc_data.h
         ../obj_data.cpp ../obj_data.h
+        ../OutputCapture.cpp ../OutputCapture.h
         ../pc_data.cpp ../pc_data.h
         ../room_data.cpp ../room_data.h
         ../spec_assign.cpp ../spec_assign.h
-        ../structs.cpp ../structs.h
         ../textutil.cpp ../textutil.h
         ../unit_data.cpp ../unit_data.h
         ../utility.cpp ../utility.h
-        ../OutputCapture.cpp ../OutputCapture.h
         )
 
 BISON_TARGET(vmcpar vmcpar.y

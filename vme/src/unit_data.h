@@ -8,6 +8,13 @@
 #include "unit_dil_affected_type.h"
 #include "unit_fptr.h"
 
+/**
+ * Creates a new unit of the specified type
+ * @param type One of UNIT_ST_ROOM, UNIT_ST_OBJ, UNIT_ST_PC, UNIT_ST_NPC
+ * @return new'ed pointer to clasee
+ */
+unit_data *new_unit_data(ubit8 type);
+
 class unit_data : public basedestruct
 {
 public:
