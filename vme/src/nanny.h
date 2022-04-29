@@ -13,5 +13,6 @@ void nanny_new_pwd(descriptor_data *d, char *arg);
 void reset_char(unit_data *ch);
 void set_descriptor_fptr(descriptor_data *d, void (*fptr)(descriptor_data *, char *), ubit1 call);
 void interpreter_string_add(descriptor_data *d, char *str);
+void update_lasthost(unit_data *pc, ubit32 s_addr);
 
 extern int g_dilmenu;

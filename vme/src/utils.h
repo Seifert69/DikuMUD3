@@ -11,6 +11,7 @@
 #include "essential.h"
 #include "file_index_type.h"
 #include "obj_data.h"
+#include "pc_data.h"
 #include "room_data.h"
 #include "structs.h"
 #include "weather.h"
