@@ -211,7 +211,7 @@ void page_string(descriptor_data *d, const std::string &messg)
 
 void page_string(const descriptor_data *d, const std::string &messg)
 {
-    page_string(d, messg.c_str());
+    page_string(const_cast<descriptor_data *>(d), messg);
 }
 
 void send_to_char(const char *messg, const unit_data *ch)
