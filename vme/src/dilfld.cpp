@@ -3700,7 +3700,7 @@ void dilfe_fld(dilprg *p)
                         else
                         {
                             v->type = DILV_UINT1R;
-                            v->ref = pc->getPromptStringPtr();
+                            v->ref = pc->getProfessionPtr();
                         }
                     }
                     else
