@@ -466,7 +466,7 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
         if (IS_PC(unit))
         {
-            PC_ABI_LVL(unit, i) = buf.ReadU8(&error);
+            UPC(unit)->setAbilityLevelAtIndexTo(i, buf.ReadU8(&error));
             if (unit_version < 72)
             {
                 error += buf.Skip8();

@@ -167,6 +167,7 @@ public:
 
     /**
      * @name Money related functions
+     * @{
      */
     const char *getMoney() const;
     char *getMoney();

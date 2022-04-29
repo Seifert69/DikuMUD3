@@ -33,7 +33,7 @@ void MplexSendSetup(descriptor_data *d)
 {
     assert(d);
 
-    protocol_send_setup(d->getMultiHookPtr(), d->getMultiHookID(), &PC_SETUP(d->cgetCharacter()));
+    protocol_send_setup(d->getMultiHookPtr(), d->getMultiHookID(), &PC_SETUP(d->getCharacter()));
 }
 
 /* ----------------------------------------------------------------- */
@@ -49,25 +49,25 @@ void init_char(unit_data *ch)
 
     if (g_cServerConfig.isBBS())
     {
-        PC_SETUP_ECHO(ch) = TRUE;
-        PC_SETUP_REDRAW(ch) = TRUE;
-        PC_SETUP_EMULATION(ch) = TERM_ANSI;
-        PC_SETUP_TELNET(ch) = FALSE;
+        UPC(ch)->getTerminalSetupType().echo = TRUE;
+        UPC(ch)->getTerminalSetupType().redraw = TRUE;
+        UPC(ch)->getTerminalSetupType().emulation = TERM_ANSI;
+        UPC(ch)->getTerminalSetupType().telnet = FALSE;
 
-        SET_BIT(PC_FLAGS(ch), PC_INFORM);
+        UPC(ch)->setPCFlag(PC_INFORM);
     }
     else
     {
-        PC_SETUP_ECHO(ch) = FALSE;
-        PC_SETUP_REDRAW(ch) = FALSE;
-        PC_SETUP_EMULATION(ch) = TERM_TTY;
-        PC_SETUP_TELNET(ch) = TRUE;
+        UPC(ch)->getTerminalSetupType().echo = FALSE;
+        UPC(ch)->getTerminalSetupType().redraw = FALSE;
+        UPC(ch)->getTerminalSetupType().emulation = TERM_TTY;
+        UPC(ch)->getTerminalSetupType().telnet = TRUE;
     }
 
-    PC_SETUP_WIDTH(ch) = 80;
-    PC_SETUP_HEIGHT(ch) = 15;
-    PC_SETUP_COLOUR(ch) = 0;
-    PC_CRACK_ATTEMPTS(ch) = 0;
+    UPC(ch)->getTerminalSetupType().width = 80;
+    UPC(ch)->getTerminalSetupType().height = 15;
+    UPC(ch)->getTerminalSetupType().colour_convert = 0;
+    UPC(ch)->setNumberOfCrackAttempts(0);
 
     account_defaults(ch);
 
@@ -81,21 +81,21 @@ void init_char(unit_data *ch)
     PC_TIME(ch).setPlayerBirthday(now);
     PC_TIME(ch).setPlayerCharacterCreationTime(now);
     PC_TIME(ch).setTotalTimePlayedInSeconds(0);
-    PC_LIFESPAN(ch) = 100;
+    UPC(ch)->setLifespan(100);
 
     UCHAR(ch)->setPlayerExperience(0);
     UCHAR(ch)->setLevel(0);
-    PC_ID(ch) = -1;
-    PC_CRIMES(ch) = 0;
+    UPC(ch)->setPlayerUID(-1);
+    UPC(ch)->setNumberOfCrimesCommitted(0);
 
-    PC_ABILITY_POINTS(ch) = 0;
-    PC_SKILL_POINTS(ch) = 0;
+    UPC(ch)->setAbilityPoints(0);
+    UPC(ch)->setSkillPoints(0);
 
     /* *** if this is our first player --- he be God *** */
     if (g_player_id == -7)
     {
         g_player_id = 1;
-        PC_ID(ch) = new_player_id();
+        UPC(ch)->setPlayerUID(new_player_id());
     }
 
     UCHAR(ch)->setAttackType(WPN_FIST);
@@ -113,10 +113,10 @@ void init_char(unit_data *ch)
 
     for (i = 0; i < 3; i++)
     {
-        PC_COND(ch, i) = (CHAR_LEVEL(ch) >= 200 ? 48 : 24);
+        UPC(ch)->setConditionAtIndexTo(i, (CHAR_LEVEL(ch) >= 200 ? 48 : 24));
     }
 
-    PC_COND(ch, DRUNK) = 0;
+    UPC(ch)->setConditionAtIndexTo(DRUNK, 0);
 
     set_title(ch);
 }
@@ -153,7 +153,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
-        if (PC_IS_UNSAVED(d->cgetCharacter()))
+        if (PC_IS_UNSAVED(d->getCharacter()))
         {
             g_possible_saves--;
         }
@@ -192,7 +192,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
             }
             if (!bReconnect)
             {
-                if (!PC_IS_UNSAVED(d->cgetCharacter()))
+                if (!PC_IS_UNSAVED(d->getCharacter()))
                 {
                     /* We need to save player to update his time status! */
                     save_player(d->getCharacter()); /* Save non-guests */

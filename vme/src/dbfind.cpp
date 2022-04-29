@@ -62,7 +62,7 @@ zone_type *find_zone(const char *zonename)
 }
 
 /**
- * @param zonenameust point to non-empty string. Must be lower case
+ * @param zonename must point to non-empty string. Must be lower case
  * @param name must point to non-empty strings. Must be lower case
  */
 file_index_type *find_file_index(const char *zonename, const char *name)
@@ -180,7 +180,7 @@ unit_data *world_room(const char *zone, const char *name)
 
 /**
  * Find file index.
- * String MUST be in format 'name@zone\0' or 'zone/name'.
+ * String MUST be in format `name@zone\0` or `zone/name`.
  */
 file_index_type *str_to_file_index(const char *str)
 {

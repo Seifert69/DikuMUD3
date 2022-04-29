@@ -182,7 +182,7 @@ void edit_info(descriptor_data *d)
 {
     extra_descr_data *exd = nullptr;
 
-    for (exd = PC_INFO(d->cgetEditing()).m_pList; exd; exd = exd->next)
+    for (exd = PC_INFO(d->getEditing()).m_pList; exd; exd = exd->next)
     {
         if (exd == d->getEditingReference())
         {
@@ -1026,23 +1026,12 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 35: /* "guild-name" */
             if (str_ccmp_next_word(argument, "none"))
             {
-                if (PC_GUILD(unt))
-                {
-                    FREE(PC_GUILD(unt));
-                    PC_GUILD(unt) = nullptr;
-                }
+                UPC(unt)->freeGuild();
                 send_to_char("Changed.<br/>", ch);
                 return;
             }
-            if (PC_GUILD(unt) == nullptr)
-            {
-                CREATE(PC_GUILD(unt), char, strlen(argument) + 1);
-            }
-            else
-            {
-                RECREATE(PC_GUILD(unt), char, strlen(argument) + 1);
-            }
-            strcpy(PC_GUILD(unt), argument);
+
+            UPC(unt)->setGuild(argument);
             send_to_char("Changed.<br/>", ch);
             return;
 
@@ -1056,30 +1045,29 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             else
             {
                 slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", UNIT_NAME(ch), UNIT_NAME(unt));
-                strncpy(PC_PWD(unt), crypt(strarg, PC_FILENAME(unt)), PC_MAX_PASSWORD);
-                PC_PWD(unt)[PC_MAX_PASSWORD - 1] = 0;
+                UPC(unt)->setPassword(crypt(strarg, PC_FILENAME(unt)));
                 send_to_char("The password has been set.<br/>", ch);
             }
             return;
 
         case 37: /* "setup-flags" */
-            PC_FLAGS(unt) = bitarg;
+            UPC(unt)->setAllPCFlags(bitarg);
             return;
 
         case 38: /* "crimes" */
-            PC_CRIMES(unt) = valarg;
+            UPC(unt)->setNumberOfCrimesCommitted(valarg);
             return;
 
         case 39: /* "drunk" */
-            PC_COND(unt, DRUNK) = valarg;
+            UPC(unt)->setConditionAtIndexTo(DRUNK, valarg);
             return;
 
         case 40: /* "full" */
-            PC_COND(unt, FULL) = valarg;
+            UPC(unt)->setConditionAtIndexTo(FULL, valarg);
             return;
 
         case 41: /* "thirsty" */
-            PC_COND(unt, THIRST) = valarg;
+            UPC(unt)->setConditionAtIndexTo(THIRST, valarg);
             return;
 
         case 42: /* "default-pos" */
@@ -1091,15 +1079,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 44: /* hometown */
-            if (PC_HOME(unt) == nullptr)
-            {
-                CREATE(PC_HOME(unt), char, strlen(argument) + 1);
-            }
-            else
-            {
-                RECREATE(PC_HOME(unt), char, strlen(argument) + 1);
-            }
-            strcpy(PC_HOME(unt), argument);
+            UPC(unt)->setHometown(argument);
             send_to_char("Changed.<br/>", ch);
             return;
 
@@ -1179,11 +1159,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 57: /* "skill-points" */
-            PC_SKILL_POINTS(unt) = valarg;
+            UPC(unt)->setSkillPoints(valarg);
             return;
 
         case 58: /* "ability-points" */
-            PC_ABILITY_POINTS(unt) = valarg;
+            UPC(unt)->setAbilityPoints(valarg);
             return;
 
         case 59: /* "remove-affect" */
@@ -1279,15 +1259,15 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 65: /* "access" */
-            PC_ACCESS_LEVEL(unt) = valarg;
+            UPC(unt)->setAccessLevel(valarg);
             return;
 
         case 66: /* "promptstr" */
-            if (UPC(unt)->promptstr != nullptr)
+            if (UPC(unt)->getPromptString() != nullptr)
             {
-                FREE(UPC(unt)->promptstr);
+                UPC(unt)->freePromptString();
             }
-            UPC(unt)->promptstr = str_dup(argument);
+            UPC(unt)->setPromptString(str_dup(argument));
             send_to_char("Prompt String Modified.<br/>", ch);
             return;
 
@@ -1326,7 +1306,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                      UNIT_NAME(unt),
                      PC_LIFESPAN(unt),
                      valarg);
-                PC_LIFESPAN(unt) = valarg;
+                UPC(unt)->setLifespan(valarg);
             }
             else
             {
@@ -1344,7 +1324,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                      UNIT_NAME(unt),
                      PC_PROFESSION(unt),
                      valarg);
-                PC_PROFESSION(unt) = valarg;
+                UPC(unt)->setProfession(valarg);
             }
             else
             {
@@ -1432,7 +1412,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             }
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
-            PC_SKI_SKILL(unt, skillarg) = valarg;
+            UPC(unt)->setSkillAtIndexTo(skillarg, valarg);
             break;
 
         case SET_SPELL:
@@ -1452,7 +1432,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
 
             if (IS_PC(unt))
             {
-                PC_SPL_SKILL(unt, skillarg) = valarg;
+                UPC(unt)->setSpellSKillAtIndexTo(skillarg, valarg);
             }
             else
             {
@@ -1477,7 +1457,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
 
             if (IS_PC(unt))
             {
-                PC_WPN_SKILL(unt, skillarg) = valarg;
+                UPC(unt)->setWeaponSkillAtIndexTo(skillarg, valarg);
             }
             else
             {

@@ -42,7 +42,7 @@ static void chg_expert(unit_data *ch)
         send_to_char("You are now in expert mode.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_EXPERT);
+    UPC(ch)->togglePCFlag(PC_EXPERT);
 }
 
 static void chg_brief(unit_data *ch)
@@ -56,7 +56,7 @@ static void chg_brief(unit_data *ch)
         send_to_char("Brief mode on.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_BRIEF);
+    UPC(ch)->togglePCFlag(PC_BRIEF);
 }
 
 static void chg_compact(unit_data *ch)
@@ -70,7 +70,7 @@ static void chg_compact(unit_data *ch)
         send_to_char("You are now in compact mode.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_COMPACT);
+    UPC(ch)->togglePCFlag(PC_COMPACT);
 }
 
 static void chg_peaceful(unit_data *ch)
@@ -89,13 +89,13 @@ static void chg_peaceful(unit_data *ch)
 
 static void chg_prompt(unit_data *ch)
 {
-    TOGGLE_BIT(PC_FLAGS(ch), PC_PROMPT);
+    UPC(ch)->togglePCFlag(PC_PROMPT);
     send_to_char("Prompt changed.<br/>", ch);
 }
 
 static void chg_inform(unit_data *ch)
 {
-    TOGGLE_BIT(PC_FLAGS(ch), PC_INFORM);
+    UPC(ch)->togglePCFlag(PC_INFORM);
 
     if (IS_SET(PC_FLAGS(ch), PC_INFORM))
     {
@@ -118,7 +118,7 @@ static void chg_shout(unit_data *ch)
         send_to_char("From now on, you won't hear shouts.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_NOSHOUT);
+    UPC(ch)->togglePCFlag(PC_NOSHOUT);
 }
 
 static void chg_tell(unit_data *ch)
@@ -132,7 +132,7 @@ static void chg_tell(unit_data *ch)
         send_to_char("From now on, you won't hear tells.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_NOTELL);
+    UPC(ch)->togglePCFlag(PC_NOTELL);
 }
 
 static void chg_exits(unit_data *ch)
@@ -146,7 +146,7 @@ static void chg_exits(unit_data *ch)
         send_to_char("Exit information enabled.<br/>", ch);
     }
 
-    TOGGLE_BIT(PC_FLAGS(ch), PC_EXITS);
+    UPC(ch)->togglePCFlag(PC_EXITS);
 }
 
 static void chg_columns(unit_data *ch, const char *arg)
@@ -167,7 +167,7 @@ static void chg_columns(unit_data *ch, const char *arg)
 
     act("Your screen width is now $2d columns.", A_ALWAYS, ch, &width, cActParameter(), TO_CHAR);
 
-    PC_SETUP_WIDTH(ch) = (ubit8)width;
+    UPC(ch)->getTerminalSetupType().width = (ubit8)width;
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
@@ -188,7 +188,7 @@ static void chg_rows(unit_data *ch, const char *arg)
         return;
     }
 
-    PC_SETUP_HEIGHT(ch) = (ubit8)height;
+    UPC(ch)->getTerminalSetupType().height = (ubit8)height;
 
     act("Your screen height is $2d rows.", A_ALWAYS, ch, &height, cActParameter(), TO_CHAR);
 
@@ -215,17 +215,17 @@ static void chg_terminal(unit_data *ch, const char *arg)
     switch (n)
     {
         case 0:
-            PC_SETUP_EMULATION(ch) = TERM_DUMB;
+            UPC(ch)->getTerminalSetupType().emulation = TERM_DUMB;
             send_to_char("Now using no emulation (dumb).<br/>", ch);
             break;
 
         case 1:
-            PC_SETUP_EMULATION(ch) = TERM_TTY;
+            UPC(ch)->getTerminalSetupType().emulation = TERM_TTY;
             send_to_char("Now using TTY emulation.<br/>", ch);
             break;
 
         case 2:
-            PC_SETUP_EMULATION(ch) = TERM_ANSI;
+            UPC(ch)->getTerminalSetupType().emulation = TERM_ANSI;
             send_to_char("Now using ANSI emulation.<br/>", ch);
             break;
 
@@ -245,7 +245,7 @@ static void chg_telnet(unit_data *ch)
         return;
     }
 
-    PC_SETUP_TELNET(ch) = !PC_SETUP_TELNET(ch);
+    UPC(ch)->getTerminalSetupType().telnet = !PC_SETUP_TELNET(ch);
 
     if (PC_SETUP_TELNET(ch))
     {
@@ -267,7 +267,7 @@ static void chg_character_echo(unit_data *ch)
         return;
     }
 
-    PC_SETUP_ECHO(ch) = !PC_SETUP_ECHO(ch);
+    UPC(ch)->getTerminalSetupType().echo = !PC_SETUP_ECHO(ch);
 
     if (PC_SETUP_ECHO(ch))
     {
@@ -289,7 +289,7 @@ static void chg_redraw_prompt(unit_data *ch)
         return;
     }
 
-    PC_SETUP_REDRAW(ch) = !PC_SETUP_REDRAW(ch);
+    UPC(ch)->getTerminalSetupType().redraw = !PC_SETUP_REDRAW(ch);
 
     if (PC_SETUP_REDRAW(ch))
     {
@@ -305,7 +305,7 @@ static void chg_redraw_prompt(unit_data *ch)
 
 static void chg_echo_say(unit_data *ch)
 {
-    TOGGLE_BIT(PC_FLAGS(ch), PC_ECHO);
+    UPC(ch)->togglePCFlag(PC_ECHO);
 
     if (IS_SET(PC_FLAGS(ch), PC_ECHO))
     {

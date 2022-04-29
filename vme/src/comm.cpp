@@ -159,7 +159,7 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
             dest.reserve(strlen(messg) * 1.1);
             // char buf[strlen(messg) + 10000];
 
-            substHTMLcolor(dest, messg, UPC(u)->color);
+            substHTMLcolor(dest, messg, UPC(u)->getColor());
             protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), dest.c_str(), MULTI_TEXT_CHAR);
         }
 

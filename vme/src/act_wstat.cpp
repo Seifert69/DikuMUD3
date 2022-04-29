@@ -906,7 +906,7 @@ static void stat_ip(const unit_data *ch, unit_data *u)
 
         for (int i = 0; i < 5; i++)
         {
-            sock.sin_addr.s_addr = PC_LASTHOST(u)[i];
+            sock.sin_addr.s_addr = UPC(u)->getLastHostAtIndex(i);
             auto msg = diku::format_to_str("IP [%s]<br/>", inet_ntoa(sock.sin_addr));
             send_to_char(msg, ch);
         }
@@ -1110,7 +1110,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                             (signed long)PC_ABILITY_POINTS(u),
                                             PC_CRIMES(u),
                                             STR(PC_HOME(u)),
-                                            STR(UPC(u)->promptstr),
+                                            STR(UPC(u)->getPromptString()),
                                             PC_VIRTUAL_LEVEL(u),
                                             required_xp(PC_VIRTUAL_LEVEL(u) + 1) - required_xp(PC_VIRTUAL_LEVEL(u)),
                                             PC_PROFESSION(u),

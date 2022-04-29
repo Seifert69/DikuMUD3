@@ -361,7 +361,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_INT;
                         if (g_cServerConfig.isAccounting())
                         {
-                            v->val.num = player->account.getTotalCredit();
+                            v->val.num = player->getPCAccountData().getTotalCredit();
                         }
                         else
                         {
@@ -398,7 +398,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_INT;
                         if (g_cServerConfig.isAccounting())
                         {
-                            v->val.num = static_cast<int>(player->account.getAccountBalance());
+                            v->val.num = static_cast<int>(player->getPCAccountData().getAccountBalance());
                         }
                         else
                         {
@@ -954,17 +954,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
-                        v->ref = &PC_HOME((unit_data *)v1->val.ptr);
+                        v->ref = pc->getHometownPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1719,26 +1722,29 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
 
                         if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
                             v->type = DILV_INT;
-                            v->val.num = PC_LIFESPAN((unit_data *)v1->val.ptr);
+                            v->val.num = pc->getLifespan();
                         }
                         else
                         {
                             v->type = DILV_UINT2R;
-                            v->ref = &PC_LIFESPAN((unit_data *)v1->val.ptr);
+                            v->ref = pc->getLifespanPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2211,17 +2217,18 @@ void dilfe_fld(dilprg *p)
                         case UNIT_ST_PC:
                             if (is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                             {
+                                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
                                 if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_SINT2R;
-                                    v->ref = &PC_SPL_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                    v->ref = pc->getSpellSkillAtIndexPtr(v2->val.num);
                                 }
                                 else
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_INT;
-                                    v->val.num = PC_SPL_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                    v->val.num = pc->getSpellSkillAtIndex(v2->val.num);
                                 }
                             }
                             else
@@ -3088,19 +3095,20 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &PC_ABI_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = pc->getAbilityLevelAtIndexPtr(v2->val.num);
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = PC_ABI_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->val.num = pc->getAbilityLevelAtIndex(v2->val.num);
                     }
                 }
                 else
@@ -3214,20 +3222,21 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
+                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
 
-                        v->ref = &PC_SPL_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = pc->getSpellLevelAtIndexPtr(v2->val.num);
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = PC_SPL_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->val.num = pc->getSpellLevelAtIndex(v2->val.num);
                     }
                 }
                 else
@@ -3339,19 +3348,20 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &PC_SKI_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = pc->getSkillLevelAtIndexPtr(v2->val.num);
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = PC_SKI_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->val.num = pc->getSkillLevelAtIndex(v2->val.num);
                     }
                 }
                 else
@@ -3462,19 +3472,20 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
+                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
-                        v->ref = &PC_WPN_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = pc->getWeaponSkillLevelAtIndexPtr(v2->val.num);
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = PC_WPN_LVL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->val.num = pc->getWeaponSkillLevelAtIndex(v2->val.num);
                     }
                 }
                 else
@@ -3676,25 +3687,28 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
-                        if ((IS_PC((unit_data *)v1->val.ptr)) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
+                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
                             v->atyp = DILA_NONE;
                             v->type = DILV_INT;
-                            v->val.num = PC_PROFESSION((unit_data *)v1->val.ptr);
+                            v->val.num = pc->getProfession();
                         }
                         else
                         {
                             v->type = DILV_UINT1R;
-                            v->ref = &PC_PROFESSION((unit_data *)v1->val.ptr);
+                            v->ref = pc->getProfessionPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -3712,25 +3726,28 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
                             v->type = DILV_INT;
-                            v->val.num = PC_VIRTUAL_LEVEL((unit_data *)v1->val.ptr);
+                            v->val.num = pc->getVirtualPlayerLevel();
                         }
                         else
                         {
                             v->type = DILV_UINT2R;
-                            v->ref = &PC_VIRTUAL_LEVEL((unit_data *)v1->val.ptr);
+                            v->ref = pc->getVirtualPlayerLevelPtr();
                         }
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4050,17 +4067,18 @@ void dilfe_fld(dilprg *p)
                         case UNIT_ST_PC:
                             if (is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                             {
+                                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
                                 if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_SINT2R;
-                                    v->ref = &PC_WPN_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                    v->ref = pc->getWeaponSkillAtIndexPtr(v2->val.num);
                                 }
                                 else
                                 {
                                     v->atyp = DILA_NONE;
                                     v->type = DILV_INT;
-                                    v->val.num = PC_WPN_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                                    v->val.num = pc->getWeaponSkillAtIndex(v2->val.num);
                                 }
                             }
                             else
@@ -4147,17 +4165,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &PC_FLAGS((unit_data *)v1->val.ptr);
+                        v->ref = pc->getAllPCFlagsPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4181,7 +4202,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
-                        v->ref = player->m_time.getPlayerBirthdayPtr();
+                        v->ref = player->getPCTimeInformation().getPlayerBirthdayPtr();
                     }
                     else
                     {
@@ -4212,7 +4233,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = player->m_time.getTotalTimePlayedInSeconds();
+                        v->val.num = player->getPCTimeInformation().getTotalTimePlayedInSeconds();
                     }
                     else
                     {
@@ -4237,17 +4258,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &PC_COND((unit_data *)v1->val.ptr, FULL);
+                        v->ref = pc->getConditionAtIndexPtr(FULL);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4265,17 +4289,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &PC_COND((unit_data *)v1->val.ptr, THIRST);
+                        v->ref = pc->getConditionAtIndexPtr(THIRST);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4293,17 +4320,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
-                        v->ref = &PC_COND((unit_data *)v1->val.ptr, DRUNK);
+                        v->ref = pc->getConditionAtIndexPtr(DRUNK);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4320,18 +4350,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
-                        v->ref = &PC_SKILL_POINTS((unit_data *)v1->val.ptr);
+                        v->ref = pc->getSkillPointsPtr();
                         /*	    v->val.num = &PC_SKILL_POINTS((class unit_data *) v1->val.ptr);*/
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4348,18 +4381,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
-                        v->ref = &PC_ABILITY_POINTS((unit_data *)v1->val.ptr);
+                        v->ref = pc->getAbilityPointsPtr();
                         /*	    v->val.num = &PC_ABILITY_POINTS((class unit_data *) v1->val.ptr);*/
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4376,17 +4412,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
-                        v->ref = &PC_GUILD((unit_data *)v1->val.ptr);
+                        v->ref = pc->getGuildPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4403,17 +4442,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
-                        v->ref = &PC_PROMPTSTR((unit_data *)v1->val.ptr);
+                        v->ref = pc->getPromptStringPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4541,17 +4584,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && IS_PC(pc))
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
-                        v->ref = &PC_CRIMES((unit_data *)v1->val.ptr);
+                        v->ref = pc->getNumberOfCrimesCommittedPtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4648,19 +4694,20 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
-                        v->ref = &PC_SKI_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->ref = pc->getSkillAtIndexPtr(v2->val.num);
                     }
                     else
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = PC_SKI_SKILL((unit_data *)v1->val.ptr, v2->val.num);
+                        v->val.num = pc->getSkillAtIndex(v2->val.num);
                     }
                 }
                 else

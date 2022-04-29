@@ -43,7 +43,7 @@ void do_color(unit_data *ch, char *aaa, const command_info *cmd)
 
     if (str_is_empty(buf))
     {
-        auto print_str = UPC(ch)->color.key_string(g_cServerConfig.getColorType());
+        auto print_str = UPC(ch)->getColor().key_string(g_cServerConfig.getColorType());
         page_string(CHAR_DESCRIPTOR(ch), print_str.c_str());
         send_to_char("<br/><br/>", ch);
         send_to_char("Example: color default <forground color> <background color><br/>", ch);
@@ -52,11 +52,11 @@ void do_color(unit_data *ch, char *aaa, const command_info *cmd)
     if (strcmp(buf, "reset") == 0)
     {
         send_to_char("Resetting your colors to default system colors.<br/>", ch);
-        UPC(ch)->color.remove_all();
+        UPC(ch)->getColor().remove_all();
         return;
     }
 
-    if (UPC(ch)->color.get(buf, full_name).empty() == false)
+    if (UPC(ch)->getColor().get(buf, full_name).empty() == false)
     {
         change = TRUE;
     }
@@ -77,7 +77,7 @@ void do_color(unit_data *ch, char *aaa, const command_info *cmd)
         std::string msg;
         if ((change == TRUE) && (add == TRUE))
         {
-            if (UPC(ch)->color.remove(full_name))
+            if (UPC(ch)->getColor().remove(full_name))
             {
                 msg = diku::format_to_str("Reseting %s to sytem colors.<br/>", full_name);
                 // send_to_char(color, ch);
@@ -120,7 +120,7 @@ void do_color(unit_data *ch, char *aaa, const command_info *cmd)
 
     if (change == TRUE)
     {
-        auto result = UPC(ch)->color.change(full_name, color);
+        auto result = UPC(ch)->getColor().change(full_name, color);
         auto msg = diku::format_to_str("Color %s changed.<br/>", result);
         send_to_char(msg, ch);
         return;
@@ -128,7 +128,7 @@ void do_color(unit_data *ch, char *aaa, const command_info *cmd)
 
     if ((add == TRUE) && (change == FALSE))
     {
-        auto result = UPC(ch)->color.insert(full_name, color);
+        auto result = UPC(ch)->getColor().insert(full_name, color);
         auto msg = diku::format_to_str("Color %s changed.<br/>", result);
         send_to_char(msg, ch);
     }

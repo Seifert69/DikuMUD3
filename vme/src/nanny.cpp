@@ -271,14 +271,13 @@ void update_lasthost(unit_data *pc, ubit32 s_addr)
 
     for (int i = 0; i < 5; i++)
     {
-        if (PC_LASTHOST(pc)[i] == s_addr)
+        if (UPC(pc)->getLastHostAtIndex(i) == s_addr)
         {
             return;
         }
     }
 
-    memmove(&PC_LASTHOST(pc)[0], &PC_LASTHOST(pc)[1], sizeof(ubit32) * 4);
-    PC_LASTHOST(pc)[4] = s_addr;
+    UPC(pc)->pushBackLastHost(s_addr);
 }
 
 // Take a player which is in the game and move to the menu
@@ -368,7 +367,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
     else
     {
-        load_room = hometown_unit(PC_HOME(this));
+        load_room = hometown_unit(m_hometown);
     }
 
     reset_char(this);
@@ -398,7 +397,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     {
         slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
 
-        PC_ID(this) = new_player_id();
+        m_id = new_player_id();
 
         start_player(this);
     }
@@ -557,7 +556,7 @@ void nanny_throw(descriptor_data *d, char *arg)
     if (*arg == 'y' || *arg == 'Y')
     {
         // Close all descriptors except the one that just said YES
-        while ((td = find_descriptor(PC_FILENAME(d->cgetCharacter()), d)))
+        while ((td = find_descriptor(PC_FILENAME(d->getCharacter()), d)))
         {
             send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
             descriptor_close(td, TRUE, TRUE);
@@ -574,7 +573,7 @@ void nanny_throw(descriptor_data *d, char *arg)
                 break; // PCs are always first in the list
             }
 
-            if (str_ccmp(PC_FILENAME(d->cgetCharacter()), PC_FILENAME(u)) == 0)
+            if (str_ccmp(PC_FILENAME(d->getCharacter()), PC_FILENAME(u)) == 0)
             {
                 //	      assert (!CHAR_DESCRIPTOR (u));
                 //	      assert (UNIT_IN (u));
@@ -600,7 +599,7 @@ void nanny_throw(descriptor_data *d, char *arg)
         }
 
         // Reconnecting character was NOT in the game, in the menu, so for guests, just close
-        if (PC_IS_UNSAVED(d->cgetCharacter()) || !player_exists(PC_FILENAME(d->cgetCharacter())))
+        if (PC_IS_UNSAVED(d->getCharacter()) || !player_exists(PC_FILENAME(d->getCharacter())))
         {
             send_to_descriptor("Menu Guest, purging all connections - please retry.<br/>", d);
             set_descriptor_fptr(d, nanny_close, TRUE);
@@ -668,7 +667,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
         return;
     }
 
-    if (pwdcompare(crypt(arg, PC_FILENAME(d->cgetCharacter())), PC_PWD(d->cgetCharacter()), PC_MAX_PASSWORD))
+    if (pwdcompare(crypt(arg, PC_FILENAME(d->getCharacter())), PC_PWD(d->getCharacter()), PC_MAX_PASSWORD))
     {
         auto str = diku::format_to_str("PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
         send_to_descriptor(scriptwrap(str), d);
@@ -677,11 +676,11 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
         return;
     }
 
-    auto str = diku::format_to_str("PasswordOff('%s', '%s')", PC_FILENAME(d->cgetCharacter()), g_cServerConfig.getMudName().c_str());
+    auto str = diku::format_to_str("PasswordOff('%s', '%s')", PC_FILENAME(d->getCharacter()), g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(str), d);
 
     descriptor_data *td = nullptr;
-    while ((td = find_descriptor(PC_FILENAME(d->cgetCharacter()), d)))
+    while ((td = find_descriptor(PC_FILENAME(d->getCharacter()), d)))
     {
         send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
         descriptor_close(td, TRUE, TRUE);
@@ -693,7 +692,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
     /* Password has now been redefined                       */
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->cgetCharacter())) == 0))
+        if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->getCharacter())) == 0))
         {
             UPC(u)->reconnect_game(d);
             return;
@@ -776,8 +775,7 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
         return;
     }
 
-    strncpy(PC_PWD(d->cgetCharacter()), crypt(arg, PC_FILENAME(d->cgetCharacter())), PC_MAX_PASSWORD);
-    PC_PWD(d->cgetCharacter())[PC_MAX_PASSWORD - 1] = 0;
+    UPC(d->getCharacter())->setPassword(crypt(arg, PC_FILENAME(d->getCharacter())));
 
     set_descriptor_fptr(d, nanny_pwd_confirm, TRUE);
 }
@@ -904,14 +902,14 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     if (d->getState() == 1)
     {
-        if (PC_CRACK_ATTEMPTS(d->cgetCharacter()) > 2)
+        if (PC_CRACK_ATTEMPTS(d->getCharacter()) > 2)
         {
             auto msg = diku::format_to_str("<br/>ATTENTION: Your password has been "
                                            "attempted cracked %d times since your last logon."
                                            " Press [enter] and wait for the password prompt.",
-                                           PC_CRACK_ATTEMPTS(d->cgetCharacter()));
+                                           PC_CRACK_ATTEMPTS(d->getCharacter()));
             send_to_descriptor(msg, d);
-            d->setLoopWaitCounter(MIN(30, PC_CRACK_ATTEMPTS(d->cgetCharacter())) * 2 * PULSE_SEC);
+            d->setLoopWaitCounter(MIN(30, PC_CRACK_ATTEMPTS(d->getCharacter())) * 2 * PULSE_SEC);
             return;
         }
         d->postincrementState();
@@ -945,24 +943,24 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     // Which would allow any pwd length but not work on Macs. Or as Ken suggests we could
     // have two iterations of the default to support up to 16 chars pwd.
     int nCmp = 0;
-    nCmp = pwdcompare(crypt(arg, PC_PWD(d->cgetCharacter())), PC_PWD(d->cgetCharacter()), PC_MAX_PASSWORD);
+    nCmp = pwdcompare(crypt(arg, PC_PWD(d->getCharacter())), PC_PWD(d->getCharacter()), PC_MAX_PASSWORD);
 
     if (nCmp != 0)
     {
         if (!str_is_empty(arg))
         {
-            slog(LOG_ALL, 0, "%s entered a wrong password [%s].", PC_FILENAME(d->cgetCharacter()), d->getHostname());
-            PC_CRACK_ATTEMPTS(d->cgetCharacter())++;
+            slog(LOG_ALL, 0, "%s entered a wrong password [%s].", PC_FILENAME(d->getCharacter()), d->getHostname());
+            UPC(d->getCharacter())->incrementNumberOfCrackAttempts();
 
-            if ((td = find_descriptor(PC_FILENAME(d->cgetCharacter()), d)))
+            if ((td = find_descriptor(PC_FILENAME(d->getCharacter()), d)))
             {
                 send_to_descriptor("<br/>Someone just attempted to login under "
                                    "your name using an illegal password.<br/>",
                                    td);
-                PC_CRACK_ATTEMPTS(td->cgetCharacter())++;
-                d->setLoopWaitCounter(PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->cgetCharacter()) * PULSE_SEC);
+                UPC(td->cgetCharacter())->incrementNumberOfCrackAttempts();
+                d->setLoopWaitCounter(PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->getCharacter()) * PULSE_SEC);
             }
-            else if (!PC_IS_UNSAVED(d->cgetCharacter()))
+            else if (!PC_IS_UNSAVED(d->getCharacter()))
             {
                 save_player_file(d->getCharacter());
             }
@@ -973,16 +971,16 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
         return;
     }
 
-    PC_CRACK_ATTEMPTS(d->cgetCharacter()) = 0;
+    UPC(d->getCharacter())->setNumberOfCrackAttempts(0);
 
-    const auto last_connect = PC_TIME(d->cgetCharacter()).getPlayerLastConnectTime();
+    const auto last_connect = PC_TIME(d->getCharacter()).getPlayerLastConnectTime();
     auto msg2 = diku::format_to_str("<br/>Welcome back %s, you last visited %s on %s<br/>",
                                     UNIT_NAME(d->cgetCharacter()),
                                     g_cServerConfig.getMudName().c_str(),
                                     ctime(&last_connect));
     send_to_descriptor(msg2, d);
 
-    if ((td = find_descriptor(PC_FILENAME(d->cgetCharacter()), d)))
+    if ((td = find_descriptor(PC_FILENAME(d->getCharacter()), d)))
     {
         set_descriptor_fptr(d, nanny_throw, TRUE);
         return;
@@ -997,7 +995,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
             break;
         }
 
-        if (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->cgetCharacter())) == 0)
+        if (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->getCharacter())) == 0)
         {
             //	  assert (!CHAR_DESCRIPTOR (u));
             //	  assert (UNIT_IN (u));
@@ -1008,7 +1006,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     }
 
     /* Ok, he wasn't Link Dead, lets enter the game via menu */
-    slog(LOG_BRIEF, CHAR_LEVEL(d->cgetCharacter()), "%s[%s] has connected.", PC_FILENAME(d->cgetCharacter()), d->getHostname());
+    slog(LOG_BRIEF, CHAR_LEVEL(d->cgetCharacter()), "%s[%s] has connected.", PC_FILENAME(d->getCharacter()), d->getHostname());
 
     send_to_descriptor("<br/>", d);
     set_descriptor_fptr(d, nanny_motd, TRUE);
@@ -1044,9 +1042,9 @@ void nanny_name_confirm(descriptor_data *d, char *arg)
     }
     else if (*arg == 'n' || *arg == 'N')
     {
-        if (PC_FILENAME(d->cgetCharacter()))
+        if (PC_FILENAME(d->getCharacter()))
         {
-            strcpy(PC_FILENAME(d->cgetCharacter()), "");
+            UPC(d->cgetCharacter())->setFilename("");
         }
         UNIT_NAMES(d->getCharacter()).Free();
         send_to_descriptor("Ok, what IS it, then? ", d);
@@ -1113,12 +1111,12 @@ void nanny_get_name(descriptor_data *d, char *arg)
             send_to_descriptor("Sorry, the game is wizlocked for "
                                "your level.<br/>",
                                d);
-            slog(LOG_BRIEF, 0, "Wizlock lockout for %s.", PC_FILENAME(d->cgetCharacter()));
+            slog(LOG_BRIEF, 0, "Wizlock lockout for %s.", PC_FILENAME(d->getCharacter()));
             set_descriptor_fptr(d, nanny_close, TRUE);
             return;
         }
 
-        PC_SETUP_COLOUR(d->cgetCharacter()) = 0;
+        UPC(d->getCharacter())->getTerminalSetupType().colour_convert = 0;
         MplexSendSetup(d);
         set_descriptor_fptr(d, nanny_existing_pwd, TRUE);
         return;
@@ -1131,7 +1129,7 @@ void nanny_get_name(descriptor_data *d, char *arg)
             send_to_descriptor("Sorry, no new players now, the game "
                                "is wizlocked!<br/>",
                                d);
-            slog(LOG_BRIEF, 0, "Wizlock lockout for %s.", PC_FILENAME(d->cgetCharacter()));
+            slog(LOG_BRIEF, 0, "Wizlock lockout for %s.", PC_FILENAME(d->getCharacter()));
             set_descriptor_fptr(d, nanny_close, TRUE);
             return;
         }
@@ -1140,19 +1138,19 @@ void nanny_get_name(descriptor_data *d, char *arg)
         /* Check for both duplicate descriptors, and link death */
 
         /* all in lowercase... */
-        strcpy(PC_FILENAME(d->cgetCharacter()), tmp_name);
+        UPC(d->getCharacter())->setFilename(tmp_name);
 
         CAPC(tmp_name);
         UNIT_NAMES(d->getCharacter()).AppendName(tmp_name);
-        strcpy(PC_PWD(d->cgetCharacter()), "");
+        UPC(d->cgetCharacter())->setPassword("");
 
         /* If someone is connected, we borrow his pwd */
         if ((td = find_descriptor(tmp_name, d)))
         {
             // Only borrow a password if its already been set
-            if (*PC_PWD(td->cgetCharacter()))
+            if (*PC_PWD(td->getCharacter()))
             {
-                strcpy(PC_PWD(d->cgetCharacter()), PC_PWD(td->cgetCharacter()));
+                UPC(d->getCharacter())->setPassword(PC_PWD(td->getCharacter()));
                 set_descriptor_fptr(d, nanny_existing_pwd, TRUE);
                 return;
             }
