@@ -527,9 +527,9 @@ else if (tlist.[i]==left("maxmana",length(tlist.[i])))
     }
       else   if (tlist.[i]==left("vlevel",length(tlist.[i])))
   {
-    if (not("%level%" in  plist))
-  addstring (plist,"%level%");
-       tlist.[i]:="%level%";
+    if (not("%vlevel%" in  plist))
+  addstring (plist,"%vlevel%");
+       tlist.[i]:="%vlevel%";
     }
   else   if (tlist.[i]==left("oppname",length(tlist.[i])))
   {
@@ -638,8 +638,10 @@ i:=i+1;
          cp:=replace("%xp%",itoa(self.exp),cp);
       else if (plist.[i]=="%xptolvl%")
          cp:=replace("%xptolvl%",itoa(self.exptol),cp);
+      else if (plist.[i]=="%vlevel%")
+         cp:=replace("%vlevel%",itoa(self.vlevel),cp);
       else if (plist.[i]=="%level%")
-         cp:=replace("%level%",itoa(self.vlevel),cp);
+         cp:=replace("%level%",itoa(self.level),cp);
       else if (plist.[i]=="%oppname%")
       {
          if (self.fighting !=null)
