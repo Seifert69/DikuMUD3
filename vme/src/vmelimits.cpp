@@ -368,14 +368,14 @@ void advance_level(unit_data *ch)
     }
 
     clear_training_level(ch);
-    PC_VIRTUAL_LEVEL(ch)++;
+    UPC(ch)->incrementVirtualPlayerLevel();
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
     {
         UCHAR(ch)->incrementLevel();
     }
 
-    PC_SKILL_POINTS(ch) += skill_point_gain();
-    PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
+    UPC(ch)->increaseSkillPointsBy(skill_point_gain());
+    UPC(ch)->increaseAbilityPointsBy(ability_point_gain(ch));
 
     diltemplate *dt = nullptr;
     dt = find_dil_template("advance_level@basis");
@@ -414,17 +414,18 @@ void gain_condition(unit_data *ch, int condition, int value)
 
     intoxicated = (PC_COND(ch, DRUNK) > 0);
 
-    PC_COND(ch, condition) += value;
+    UPC(ch)->increaseConditionAtIndexBy(condition, value);
 
-    PC_COND(ch, condition) = MIN(24, PC_COND(ch, condition));
+    /// @todo move this logic into the setter
+    UPC(ch)->setConditionAtIndexTo(condition, MIN(24, PC_COND(ch, condition)));
 
     if (condition == DRUNK)
     { /* How can one be less sober than 0? */
-        PC_COND(ch, condition) = MAX(0, PC_COND(ch, condition));
+        UPC(ch)->setConditionAtIndexTo(condition, MAX(0, PC_COND(ch, condition)));
     }
     else
     {
-        PC_COND(ch, condition) = MAX(-96, PC_COND(ch, condition));
+        UPC(ch)->setConditionAtIndexTo(condition, MAX(-96, PC_COND(ch, condition)));
     }
 
     if (PC_COND(ch, condition) > 3)

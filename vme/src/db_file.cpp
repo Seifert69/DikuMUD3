@@ -1266,16 +1266,16 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                 pBuf->Append8(PC_SETUP_TELNET(u));
                 pBuf->Append8(PC_SETUP_COLOUR(u));
 #ifdef DMSERVER
-                auto temp = UPC(u)->color.save_string();
+                auto temp = UPC(u)->getColor().save_string();
                 pBuf->AppendString(temp.c_str());
 #endif
-                pBuf->AppendString(UPC(u)->promptstr);
+                pBuf->AppendString(UPC(u)->getPromptString());
                 pBuf->AppendString(PC_FILENAME(u));
                 pBuf->AppendString(PC_PWD(u));
 
                 for (i = 0; i < 5; i++)
                 {
-                    pBuf->Append32(PC_LASTHOST(u)[i]);
+                    pBuf->Append32(UPC(u)->getLastHostAtIndex(i));
                 }
 
                 pBuf->Append32((ubit32)PC_ID(u));

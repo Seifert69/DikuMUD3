@@ -81,12 +81,12 @@ void race_adjust(unit_data *ch)
 
     ch->setSize(sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size));
 
-    PC_LIFESPAN(ch) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
+    UPC(ch)->setLifespan(sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size));
 
     const int years = my_race->age + dice(my_race->age_dice.reps, my_race->age_dice.size);
 
     const auto value = PC_TIME(ch).getPlayerCharacterCreationTime() - years * SECS_PER_MUD_YEAR;
-    PC_TIME(ch).setPlayerBirthday(value);
+    UPC(ch)->getPCTimeInformation().setPlayerBirthday(value);
 }
 
 /* OBSOLETE. Should only be called when initializing a new player (or rerolling)
@@ -111,47 +111,47 @@ void points_reset(unit_data *ch)
 {
     int i = 0;
 
-    PC_VIRTUAL_LEVEL(ch) = START_LEVEL;
+    UPC(ch)->setVirtualPlayerLevel(START_LEVEL);
     UCHAR(ch)->setLevel(START_LEVEL);
 
-    PC_ABILITY_POINTS(ch) = 0;
-    PC_SKILL_POINTS(ch) = 0;
+    UPC(ch)->setAbilityPoints(0);
+    UPC(ch)->setSkillPoints(0);
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
         UCHAR(ch)->setAbilityAtIndexTo(i, 0);
-        PC_ABI_LVL(ch, i) = 0;
+        UPC(ch)->setAbilityLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < SKI_TREE_MAX; i++)
     {
-        PC_SKI_SKILL(ch, i) = 0;
-        PC_SKI_LVL(ch, i) = 0;
+        UPC(ch)->setSkillAtIndexTo(i, 0);
+        UPC(ch)->setSkillLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
-        PC_SPL_LVL(ch, i) = 0;
+        UPC(ch)->setSpellLevelAtIndexTo(i, 0);
         if (i < SPL_GROUP_MAX)
         {
-            PC_SPL_SKILL(ch, i) = 1; /* So resistance spells work! */
+            UPC(ch)->setSpellSKillAtIndexTo(i, 1); // So resistance spells work!
         }
         else
         {
-            PC_SPL_SKILL(ch, i) = 0;
+            UPC(ch)->setSpellSKillAtIndexTo(i, 0);
         }
     }
 
     for (i = 0; i < WPN_TREE_MAX; i++)
     {
-        PC_WPN_LVL(ch, i) = 0;
+        UPC(ch)->setWeaponSkillLevelAtIndexTo(i, 0);
         if (i < WPN_GROUP_MAX)
         {
-            PC_WPN_SKILL(ch, i) = 1; /* So resistance spells work! */
+            UPC(ch)->setWeaponSkillAtIndexTo(i, 1); // So resistance spells work!
         }
         else
         {
-            PC_WPN_SKILL(ch, i) = 0;
+            UPC(ch)->setWeaponSkillAtIndexTo(i, 0);
         }
     }
 }
@@ -177,14 +177,14 @@ void start_player(unit_data *ch)
     UCHAR(ch)->setAttackType(WPN_FIST);
     UCHAR(ch)->setNaturalArmor(ARM_CLOTHES);
 
-    PC_COND(ch, THIRST) = 24;
-    PC_COND(ch, FULL) = 24;
-    PC_COND(ch, DRUNK) = 0;
+    UPC(ch)->setConditionAtIndexTo(THIRST, 24);
+    UPC(ch)->setConditionAtIndexTo(FULL, 24);
+    UPC(ch)->setConditionAtIndexTo(DRUNK, 0);
 
     PC_TIME(ch).setTotalTimePlayedInSeconds(0);
 
-    SET_BIT(PC_FLAGS(ch), PC_ECHO);
-    SET_BIT(PC_FLAGS(ch), PC_PROMPT);
+    UPC(ch)->setPCFlag(PC_ECHO);
+    UPC(ch)->setPCFlag(PC_PROMPT);
 
     if (!UNIT_IS_EVIL(ch))
     {

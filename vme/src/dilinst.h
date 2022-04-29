@@ -86,4 +86,4 @@ void dilfi_dispatch(dilprg *);
 void dil_push_frame(dilprg *p, diltemplate *rtmpl);
 void dil_start_special(unit_data *unt, dilprg *aprg);
 void dil_stop_special(unit_data *unt, dilprg *aprg);
-unit_data *hometown_unit(char *str);
+unit_data *hometown_unit(const char *str);

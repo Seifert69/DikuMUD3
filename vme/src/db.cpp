@@ -594,14 +594,14 @@ void generate_zone_indexes()
  *
  * Stored As:
  *   <no of affects (0..255)>
- *   <duration>
- *   <id>
- *   <beat>
- *   <data[3]>
- *   <firstf_i>
- *   <tickf_i>
- *   <lastf_i>
- *   <applyf_i>
+ *   `<duration>`
+ *   `<id>`
+ *   `<beat>`
+ *   `<data[3]>`
+ *   `<firstf_i>`
+ *   `<tickf_i>`
+ *   `<lastf_i>`
+ *   `<applyf_i>`
  *
  *  Will only link the affect since it is used by both players and by
  *  other units. If the affect should also have an actual effect, then it
@@ -877,14 +877,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 if (unit_version >= 72)
                 {
-                    PC_PROFESSION(u) = pBuf->ReadS8(&g_nCorrupt);
+                    UPC(u)->setProfession(pBuf->ReadS8(&g_nCorrupt));
                 }
 
                 PC_ACCOUNT(u).readFrom(*pBuf, unit_version, g_nCorrupt);
 
                 if (unit_version >= 48)
                 {
-                    PC_LIFESPAN(u) = pBuf->ReadU16(&g_nCorrupt);
+                    UPC(u)->setLifespan(pBuf->ReadU16(&g_nCorrupt));
                 }
                 else
                 {
@@ -902,7 +902,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         sex_race = &g_race_info[CHAR_RACE(u)].female;
                     }
 
-                    PC_LIFESPAN(u) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
+                    UPC(u)->setLifespan(sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size));
                 }
 
                 if (unit_version < 50)
@@ -910,19 +910,19 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     g_nCorrupt += pBuf->SkipString();
                 }
 
-                PC_SETUP_ECHO(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_REDRAW(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_WIDTH(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_HEIGHT(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_EMULATION(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_TELNET(u) = pBuf->ReadU8(&g_nCorrupt);
-                PC_SETUP_TELNET(u) = TRUE; // 2020 we shouldn't allow this to change (BBS support)
-                PC_SETUP_COLOUR(u) = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().echo = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().redraw = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().width = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().height = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().emulation = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().telnet = pBuf->ReadU8(&g_nCorrupt);
+                UPC(u)->getTerminalSetupType().telnet = TRUE; // 2020 we shouldn't allow this to change (BBS support)
+                UPC(u)->getTerminalSetupType().colour_convert = pBuf->ReadU8(&g_nCorrupt);
 
                 if (unit_version > 59)
                 {
                     g_nCorrupt += pBuf->ReadStringCopy(tmpbuf, MAX_STRING_LENGTH * 2);
-                    UPC(u)->color.create(tmpbuf);
+                    UPC(u)->getColor().create(tmpbuf);
                 }
                 else if (unit_version > 57)
                 {
@@ -950,11 +950,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     g_nCorrupt += pBuf->ReadStringCopy(tmpbuf, MAX_STRING_LENGTH);
                     if (str_is_empty(tmpbuf))
                     {
-                        UPC(u)->promptstr = nullptr;
+                        UPC(u)->setPromptString(nullptr);
                     }
                     else
                     {
-                        UPC(u)->promptstr = str_dup(tmpbuf);
+                        UPC(u)->setPromptString(str_dup(tmpbuf));
                     }
                 }
 
@@ -973,57 +973,58 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 if (unit_version >= 42)
                 {
-                    g_nCorrupt += pBuf->ReadStringCopy(PC_FILENAME(u), PC_MAX_NAME);
-                    PC_FILENAME(u)[PC_MAX_NAME - 1] = 0;
+                    g_nCorrupt += UPC(u)->readFilenameFrom(*pBuf);
                 }
                 else
                 {
-                    memcpy(PC_FILENAME(u), UNIT_NAME(u), PC_MAX_NAME);
-                    PC_FILENAME(u)[PC_MAX_NAME - 1] = 0;
-                    str_lower(PC_FILENAME(u));
+                    char temp[PC_MAX_NAME];
+                    memcpy(temp, UNIT_NAME(u), PC_MAX_NAME);
+                    temp[PC_MAX_NAME - 1] = 0;
+                    str_lower(temp);
+                    UPC(u)->setFilename(temp);
                 }
 
-                g_nCorrupt += pBuf->ReadStringCopy(PC_PWD(u), PC_MAX_PASSWORD);
-                PC_PWD(u)[PC_MAX_PASSWORD - 1] = '\0';
+                g_nCorrupt += UPC(u)->readPasswordFrom(*pBuf);
+
                 if (unit_version <= 72)
                 {
-                    PC_PWD(u)[10] = '\0'; // This will allow me to later extend the password length
+                    UPC(u)->truncatePassword(); // This will allow me to later extend the password length
                 }
 
                 if (unit_version >= 54)
                 {
                     for (i = 0; i < 5; i++)
                     {
-                        PC_LASTHOST(u)[i] = pBuf->ReadU32(&g_nCorrupt);
+                        UPC(u)->setLastHostAtIndexTo(i, pBuf->ReadU32(&g_nCorrupt));
                     }
                 }
                 else
                 {
                     for (i = 0; i < 5; i++)
                     {
-                        PC_LASTHOST(u)[i] = 0;
+                        UPC(u)->setLastHostAtIndexTo(i, 0);
                     }
                 }
 
-                PC_ID(u) = pBuf->ReadS32(&g_nCorrupt);
+                UPC(u)->setPlayerUID(pBuf->ReadS32(&g_nCorrupt));
 
                 if (unit_version >= 40)
                 {
-                    PC_CRACK_ATTEMPTS(u) = pBuf->ReadU16(&g_nCorrupt);
+                    UPC(u)->setNumberOfCrackAttempts(pBuf->ReadU16(&g_nCorrupt));
                 }
 
-                g_nCorrupt += pBuf->ReadStringAlloc(&PC_HOME(u));
-                g_nCorrupt += pBuf->ReadStringAlloc(&PC_GUILD(u));
+                g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getHometownPtr());
+                g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getGuildPtr());
 
                 g_nCorrupt += pBuf->Skip32(); // skip value, was: PC_GUILD_TIME(u) obsolete
 
                 if (unit_version >= 38)
                 {
-                    PC_VIRTUAL_LEVEL(u) = pBuf->ReadU16(&g_nCorrupt);
+                    UPC(u)->setVirtualPlayerLevel(pBuf->ReadU16(&g_nCorrupt));
                 }
                 else
                 {
-                    PC_VIRTUAL_LEVEL(u) = CHAR_LEVEL(u);
+                    UPC(u)->setVirtualPlayerLevel(CHAR_LEVEL(u));
                 }
 
                 if (unit_version <= 72)
@@ -1046,12 +1047,12 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     race_adjust(u);
                 }
 
-                g_nCorrupt += pBuf->ReadStringAlloc(&PC_BANK(u));
+                g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getBankPtr());
 
-                PC_SKILL_POINTS(u) = pBuf->ReadS32(&g_nCorrupt);
-                PC_ABILITY_POINTS(u) = pBuf->ReadS32(&g_nCorrupt);
+                UPC(u)->setSkillPoints(pBuf->ReadS32(&g_nCorrupt));
+                UPC(u)->setAbilityPoints(pBuf->ReadS32(&g_nCorrupt));
 
-                PC_FLAGS(u) = pBuf->ReadU16(&g_nCorrupt);
+                UPC(u)->setAllPCFlags(pBuf->ReadU16(&g_nCorrupt));
 
                 if (unit_version < 61)
                 {
@@ -1066,13 +1067,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        PC_SPL_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        PC_SPL_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
-                    PC_SPL_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                    UPC(u)->setSpellLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
 
                     if (unit_version < 72)
                     {
@@ -1083,7 +1084,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     {
                         if ((i < SPL_GROUP_MAX) && (PC_SPL_SKILL(u, i) == 0))
                         {
-                            PC_SPL_SKILL(u, i) = 1;
+                            UPC(u)->setSpellSKillAtIndexTo(i, 1);
                         }
                     }
                 }
@@ -1101,14 +1102,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        PC_SKI_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        PC_SKI_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
 
-                    PC_SKI_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                    UPC(u)->setSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
@@ -1121,14 +1122,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        PC_WPN_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        PC_WPN_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
 
-                    PC_WPN_LVL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                    UPC(u)->setWeaponSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
@@ -1137,33 +1138,33 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     {
                         if ((i < WPN_GROUP_MAX) && (PC_WPN_SKILL(u, i) == 0))
                         {
-                            PC_WPN_SKILL(u, i) = 1;
+                            UPC(u)->setWeaponSkillAtIndexTo(i, 1);
                         }
                     }
                 }
 
                 if (unit_version < 47)
                 {
-                    PC_WPN_SKILL(u, WPN_KICK) = PC_SKI_SKILL(u, SKI_KICK);
-                    PC_SKI_SKILL(u, SKI_KICK) = 0;
+                    UPC(u)->setWeaponSkillAtIndexTo(WPN_KICK, PC_SKI_SKILL(u, SKI_KICK));
+                    UPC(u)->setSkillAtIndexTo(SKI_KICK, 0);
                 }
 
-                PC_CRIMES(u) = pBuf->ReadU16(&g_nCorrupt);
+                UPC(u)->setNumberOfCrimesCommitted(pBuf->ReadU16(&g_nCorrupt));
 
                 j = pBuf->ReadU8(&g_nCorrupt);
 
                 for (i = 0; i < j; i++)
                 {
-                    PC_COND(u, i) = pBuf->ReadS8(&g_nCorrupt);
+                    UPC(u)->setConditionAtIndexTo(i, pBuf->ReadS8(&g_nCorrupt));
                 }
 
                 if (unit_version >= 56)
                 {
-                    PC_ACCESS_LEVEL(u) = pBuf->ReadU8(&g_nCorrupt);
+                    UPC(u)->setAccessLevel(pBuf->ReadU8(&g_nCorrupt));
                 }
                 else
                 {
-                    PC_ACCESS_LEVEL(u) = 0;
+                    UPC(u)->setAccessLevel(0);
                 }
 
                 g_nCorrupt += bread_extra(pBuf, PC_QUEST(u), unit_version);

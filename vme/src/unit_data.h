@@ -24,10 +24,11 @@ public:
      * @param unit_type One of UNIT_ST_NPC, UNIT_ST_PC, UNIT_ST_ROOM, UNIT_ST_OBJ
      */
     explicit unit_data(ubit8 unit_type);
-    unit_data(const unit_data &) = delete;
-    unit_data(unit_data &&) = delete;
-    unit_data &operator=(const unit_data &) = delete;
-    unit_data &operator=(unit_data &&) = delete;
+
+    unit_data(const unit_data &) = delete;            ///< Delete copy ctor
+    unit_data(unit_data &&) = delete;                 ///< Delete move ctor
+    unit_data &operator=(const unit_data &) = delete; ///< Delete assignment
+    unit_data &operator=(unit_data &&) = delete;      ///< Delete move assignment
     ~unit_data() override;
     /// @}
 
@@ -189,6 +190,7 @@ public:
 
     /**
      * @name
+     * @{
      */
     ubit8 getNumberOfCharactersInsideUnit() const;
     void decrementNumberOfCharactersInsideUnit();
@@ -250,7 +252,7 @@ public:
      * eg. current alignment = -900 and value = -200
      * result alignment = -1000 and false is returned.
      *
-     * For VMC (#define VMC is set)
+     * For VMC (`#define VMC` is set)
      *
      * If the change exceeds alignment limits, alignment is set to 0 and dmc_error is called
      *

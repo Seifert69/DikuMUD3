@@ -236,22 +236,22 @@ void clear_training_level(unit_data *ch)
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
-        PC_SPL_LVL(ch, i) = 0;
+        UPC(ch)->setSpellLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < WPN_TREE_MAX; i++)
     {
-        PC_WPN_LVL(ch, i) = 0;
+        UPC(ch)->setWeaponSkillLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < SKI_TREE_MAX; i++)
     {
-        PC_SKI_LVL(ch, i) = 0;
+        UPC(ch)->setSkillLevelAtIndexTo(i, 0);
     }
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
-        PC_ABI_LVL(ch, i) = 0;
+        UPC(ch)->setAbilityLevelAtIndexTo(i, 0);
     }
 }
 
@@ -1081,27 +1081,27 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
     {
         case TEACH_ABILITIES:
             pValues->values = UCHAR(pupil)->getAbilitiesArray().data(); // Current ability
-            pValues->lvl = &PC_ABI_LVL(pupil, 0);                       // How many times you've trained this level on this ability
-            pValues->practice_points = &PC_ABILITY_POINTS(pupil);
+            pValues->lvl = UPC(pupil)->getAbilityLevelArrayPtr();       // How many times you've trained this level on this ability
+            pValues->practice_points = UPC(pupil)->getAbilityPointsPtr();
             return &g_AbiColl;
 
         case TEACH_SKILLS:
-            pValues->values = &PC_SKI_SKILL(pupil, 0);
-            pValues->lvl = &PC_SKI_LVL(pupil, 0);
-            pValues->practice_points = &PC_SKILL_POINTS(pupil);
+            pValues->values = UPC(pupil)->getSkillArrayPtr();
+            pValues->lvl = UPC(pupil)->getSkillLevelArrayPtr();
+            pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_SkiColl;
 
         case TEACH_SPELLS:
-            pValues->values = &PC_SPL_SKILL(pupil, 0);
-            pValues->lvl = &PC_SPL_LVL(pupil, 0);
-            pValues->practice_points = &PC_SKILL_POINTS(pupil);
+            pValues->values = UPC(pupil)->getSpellSkillArrayPtr();
+            pValues->lvl = UPC(pupil)->getSpellLevelArrayPtr();
+            pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_SplColl;
             break;
 
         case TEACH_WEAPONS:
-            pValues->values = &PC_WPN_SKILL(pupil, 0);
-            pValues->lvl = &PC_WPN_LVL(pupil, 0);
-            pValues->practice_points = &PC_SKILL_POINTS(pupil);
+            pValues->values = UPC(pupil)->getWeaponSkillArrayPtr();
+            pValues->lvl = UPC(pupil)->getWeaponSkillLevelArrayPtr();
+            pValues->practice_points = UPC(pupil)->getSkillPointsPtr();
             return &g_WpnColl;
             break;
 

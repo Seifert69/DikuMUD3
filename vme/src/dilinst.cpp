@@ -333,8 +333,8 @@ void dilfi_setpwd(dilprg *p)
         }
         else if (v1->val.ptr && v2->val.ptr)
         {
-            strncpy(PC_PWD((unit_data *)v1->val.ptr), crypt((char *)v2->val.ptr, PC_FILENAME((unit_data *)v1->val.ptr)), PC_MAX_PASSWORD);
-            PC_PWD((unit_data *)v1->val.ptr)[PC_MAX_PASSWORD - 1] = 0;
+            auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+            pc->setPassword(crypt(reinterpret_cast<char *>(v2->val.ptr), PC_FILENAME(pc)));
         }
     }
     delete v1;
@@ -796,11 +796,12 @@ void dilfi_rsvlv(dilprg *p)
         }
         else
         {
-            if (IS_PC((unit_data *)v1->val.ptr))
+            auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+            if (IS_PC(pc))
             {
-                if (!IS_IMMORTAL((unit_data *)v1->val.ptr))
+                if (!IS_IMMORTAL(pc))
                 {
-                    PC_VIRTUAL_LEVEL((unit_data *)v1->val.ptr) = 1;
+                    pc->setVirtualPlayerLevel(1);
                 }
             }
         }
@@ -3149,7 +3150,7 @@ void dilfi_cast(dilprg *p)
     delete v4;
 }
 
-unit_data *hometown_unit(char *str)
+unit_data *hometown_unit(const char *str)
 {
     if (str)
     {
