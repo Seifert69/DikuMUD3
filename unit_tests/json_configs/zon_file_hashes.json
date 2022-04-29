@@ -925,12 +925,12 @@
         {
             "source_file": {
                 "filename": "update.zon",
-                "sha512": "c632703431e09dfa478e81b8dfa4c6c42f2cfc55d8b2516aa23341ce72dabe534755102bfe6859fe9b0f107d9716315eafc305556d7103ebf64d20028d5ab191"
+                "sha512": "f761910ae5ae64f23e07d719d03e687264cfcf9415d8db04a964f3a08c61c9650d2ffae4bd5c70e5a0459ad4db909c57dbeecaad13bf38d7a8c1de41bc6b1b4b"
             },
             "output": [
                 {
                     "filename": "update.data",
-                    "sha512": "630ad01fdaf90fb8d72f223e40dae3187fdba2a1c584c108af20016dbdcbd3d3bb8b0650c80b40f0e4cdaa3075ef1e32a2b29b0ad9d3b03a2156ef0b56f9bf20"
+                    "sha512": "44a6f044e201169013013dea8348c8697024317b07fb49f2d8792a69d21470d2f44828a877cc29d05f0b8c262112d37f7e0dca1c65b4daf41976c02af5c6f202"
                 },
                 {
                     "filename": "update.reset",
