@@ -26,7 +26,8 @@ notes
 
 // For getting a decapitated head:
 //
-// You'll want to pass on s as the sym-name of the head
+// You'll want to pass on s as the sym-name of the head, e.g. "mob@zone"
+// i is not used (but needed for the dilcall function because I'm too lazy to make it dynamic)
 //
 dilbegin integer decapCheck(u : unitptr, i : integer, s : string);
 var
