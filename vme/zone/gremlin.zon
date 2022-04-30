@@ -256,7 +256,12 @@ code
 	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ROGUE_ONGOING in activator.quests) and (activator.position == POSITION_STANDING));
 
 	pc := activator;
+
+	if (ROGUE_COMPLETE in pc.quests)
+		goto start;
+
 	secure(pc, lostpc);
+
 
 	if (ROGUE_ONGOING in pc.quests)
 		goto rogue_ongoing;
@@ -1007,7 +1012,7 @@ code
 	{
 		addstring(exdp.names, "dagger");
 		destroy(self.inside);
-		exec("say I see. It is as I feared, then.", self);
+		// exec("say I see. It is as I feared, then.", self);
 		pause;
 		exec("cry", self);
 		pause;
