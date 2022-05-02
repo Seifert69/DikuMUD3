@@ -908,22 +908,6 @@
         },
         {
             "source_file": {
-                "filename": "torsbay.zon",
-                "sha512": "312f4ad84c0faf78e2914e46b573534a445f0a06e52594a032a1cd2d9d2632d22b673fffbe19aa507f2e87bbb7cde35b1d8fc28c7047e76defcade88cd4c462c"
-            },
-            "output": [
-                {
-                    "filename": "torsbay.data",
-                    "sha512": "3ba3a90c66a711085ced137df793821b82ebb8ce4d484bb4ddb1981626fb4acc568d7310c9b3c42e3c460bdd467ec61e2b04b8a6b3d407a2f72399fbefba01c1"
-                },
-                {
-                    "filename": "torsbay.reset",
-                    "sha512": "ea83e4832a83f1ff1c00e88f0ab65d548be514f9cc7a38461b5e18c2bcd0aa3750d7854311dd3c119210d709e58986aceca100e1b34e618b8eaefc17bac85339"
-                }
-            ]
-        },
-        {
-            "source_file": {
                 "filename": "udgaard.zon",
                 "sha512": "793ff7a59a6ef8df560dd80355b25be79f2906f7a9572d5bb7c0a45e293ad4d4dd45a350a202c4009a6f6b7cc7ad0989f44f6c3904034ea7dc24142c812dc30e"
             },
