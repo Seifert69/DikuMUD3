@@ -489,6 +489,9 @@ code
    // Give the explanation
    Explainer(pc, sl);
 
+   if (pc == null)
+      goto lostpc;
+
    log("qstWaitHero Accept");
    if (acptfunc == "")
       acptfunc := "default_accept@quests";
