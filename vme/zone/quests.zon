@@ -444,19 +444,14 @@ code
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
    on_activation((pc.position <= POSITION_SLEEPING) or (pc.position == POSITION_FIGHTING), skip);
 
-   log("qstWaitHero entry");
-
    if (((qname+" Ongoing") in pc.quests) or ((qname+" Complete") in pc.quests))
    {
       pc := null;
       return(pc);
    }
 
-   log("qstWaitHero passed Ongoing / Complete");
-
    if (prereqfunc != "")
    {
-      log("prereqfunc");
       s := getword(prereqfunc);       // Get the function
       t := getword(prereqfunc);       // Get the function
       i := atoi(getword(t)); // get the integer
@@ -487,23 +482,18 @@ code
 
    priority;
 
-   log("qstWaitHero Explainer");
-
    // Give the explanation
    Explainer(pc, sl);
 
    if (pc == null)
       goto lostpc;
 
-   log("qstWaitHero Accept");
    if (acptfunc == "")
       acptfunc := "default_accept@quests";
 
-   log("qstWaitHero Dilcall");
    ln := length(sl);
    i := dilcall(acptfunc)(pc, 0, sl.[ln-1]);
 
-   log("qstWaitHero Done");
    nopriority;
 
    if (i == 0)
