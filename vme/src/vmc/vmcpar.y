@@ -484,7 +484,7 @@ omobile_field   : MANA number
     }
     | ACT flags
     {
-        NPC_FLAGS(cur) = $2;
+        UNPC(cur)->setAllNPCFlags($2);
     }
     | MONEY moneylist
     {
@@ -530,7 +530,7 @@ omobile_field   : MANA number
     }
     | DEFAULT number
     {
-        NPC_DEFAULT(cur) = $2;
+        UNPC(cur)->setDefaultPosition($2);
     }
     | FLAGS flags
     {
@@ -558,11 +558,11 @@ omobile_field   : MANA number
     }
     | WEAPON index number
     {
-        NPC_WPN_SKILL(cur, $2) = $3;
+        UNPC(cur)->setWeaponSkillAtIndexTo($2, $3);
     }
     | SPELL index number
     {
-        NPC_SPL_SKILL(cur, $2) = $3;
+        UNPC(cur)->setSpellSkillAtIndexTo($2, $3);
     }
     ;
 

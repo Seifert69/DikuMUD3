@@ -329,7 +329,7 @@ void set_points(unit_data *u)
         dmc_error(FALSE, "%s - An ability is %d points.", UNIT_IDENT(u), i);
     }
 
-    if ((i = distribute_points(UNPC(u)->weapons, UNPC(u)->weapons.size(), spoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UNPC(u)->getWeaponSkillArray(), UNPC(u)->getWeaponsSkillArraySize(), spoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - A weapon skill exceeds %d points.", UNIT_IDENT(u), i);
     }
@@ -342,9 +342,9 @@ void set_points(unit_data *u)
         }
     }
 
-    NPC_WPN_SKILL(u, WPN_ROOT) = max / 4;
+    UNPC(u)->setWeaponSkillAtIndexTo(WPN_ROOT, max / 4);
 
-    if ((i = distribute_points(UNPC(u)->spells, UNPC(u)->spells.size(), spoints, CHAR_LEVEL(u))))
+    if ((i = distribute_points(UNPC(u)->getSpellSkillArray(), UNPC(u)->getSpellSkillArraySize(), spoints, CHAR_LEVEL(u))))
     {
         dmc_error(FALSE, "%s - A spell skill exceeds %d points.", UNIT_IDENT(u), i);
     }
@@ -357,7 +357,7 @@ void set_points(unit_data *u)
         }
     }
 
-    NPC_SPL_SKILL(u, SPL_ALL) = max / 4;
+    UNPC(u)->setSpellSkillAtIndexTo(SPL_ALL, max / 4);
 
     if (!is_in(CHAR_NATURAL_ARMOUR(u), ARM_CLOTHES, ARM_PLATE))
     {
@@ -1206,7 +1206,7 @@ void init_unit(unit_data *u)
             UCHAR(u)->setSex(SEX_NEUTRAL);
             UCHAR(u)->setLevel(1);
             UCHAR(u)->setPosition(POSITION_STANDING);
-            NPC_DEFAULT(u) = POSITION_STANDING;
+            UNPC(u)->setDefaultPosition(POSITION_STANDING);
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {
                 UCHAR(u)->setAbilityAtIndexTo(i, 0);
@@ -1220,15 +1220,15 @@ void init_unit(unit_data *u)
 
             for (i = 0; i < WPN_GROUP_MAX; i++)
             {
-                NPC_WPN_SKILL(u, i) = 0;
+                UNPC(u)->setWeaponSkillAtIndexTo(i, 0);
             }
-            NPC_WPN_SKILL(u, WPN_UNARMED) = 100; /* % */
+            UNPC(u)->setWeaponSkillAtIndexTo(WPN_UNARMED, 100); /* % */
 
             for (i = 0; i < SPL_GROUP_MAX; i++)
             {
-                NPC_SPL_SKILL(u, i) = 0;
+                UNPC(u)->setSpellSkillAtIndexTo(i, 0);
             }
-            NPC_FLAGS(u) = 0;
+            UNPC(u)->setAllNPCFlags(0);
             UCHAR(u)->setOffensiveBonus(0);
             UCHAR(u)->setDefensiveBonus(0);
         }

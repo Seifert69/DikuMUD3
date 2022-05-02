@@ -1180,11 +1180,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        NPC_WPN_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UNPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        NPC_WPN_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UNPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
                 }
 
@@ -1192,16 +1192,16 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 {
                     if (unit_version < 69)
                     {
-                        NPC_SPL_SKILL(u, i) = pBuf->ReadU8(&g_nCorrupt);
+                        UNPC(u)->setSpellSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     }
                     else
                     {
-                        NPC_SPL_SKILL(u, i) = pBuf->ReadS16(&g_nCorrupt);
+                        UNPC(u)->setSpellSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
                     }
                 }
 
-                NPC_DEFAULT(u) = pBuf->ReadU8(&g_nCorrupt);
-                NPC_FLAGS(u) = pBuf->ReadU8(&g_nCorrupt);
+                UNPC(u)->setDefaultPosition(pBuf->ReadU8(&g_nCorrupt));
+                UNPC(u)->setAllNPCFlags(pBuf->ReadU8(&g_nCorrupt));
             }
         }
         break;

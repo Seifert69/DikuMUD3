@@ -1071,11 +1071,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 42: /* "default-pos" */
-            NPC_DEFAULT(unt) = valarg;
+            UNPC(unt)->setDefaultPosition(valarg);
             return;
 
         case 43: /* "act-flags" */
-            NPC_FLAGS(unt) = bitarg;
+            UNPC(unt)->setAllNPCFlags(bitarg);
             return;
 
         case 44: /* hometown */
@@ -1436,7 +1436,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                NPC_SPL_SKILL(unt, skillarg) = valarg;
+                UNPC(unt)->setSpellSkillAtIndexTo(skillarg, valarg);
             }
             break;
 
@@ -1461,7 +1461,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                NPC_WPN_SKILL(unt, skillarg) = valarg;
+                UNPC(unt)->setWeaponSkillAtIndexTo(skillarg, valarg);
             }
     }
 

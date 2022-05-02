@@ -317,14 +317,14 @@ unit_data *unit_data::copy()
         {
             for (x = 0; x < WPN_GROUP_MAX; x++)
             {
-                U_NPC(u)->weapons[x] = U_NPC(this)->weapons[x];
+                U_NPC(u)->setWeaponSkillAtIndexTo(x, U_NPC(this)->getWeaponSkillAtIndex(x));
             }
             for (x = 0; x < SPL_GROUP_MAX; x++)
             {
-                U_NPC(u)->spells[x] = U_NPC(this)->spells[x];
+                U_NPC(u)->setSpellSkillAtIndexTo(x, U_NPC(this)->getSpellSkillAtIndex(x));
             }
-            U_NPC(u)->default_pos = U_NPC(this)->default_pos;
-            U_NPC(u)->flags = U_NPC(this)->flags;
+            U_NPC(u)->setDefaultPosition(U_NPC(this)->getDefaultPosition());
+            U_NPC(u)->setAllNPCFlags(U_NPC(this)->getAllNPCFlags());
         }
     }
     else
