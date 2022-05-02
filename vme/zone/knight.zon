@@ -472,7 +472,7 @@ dilcopy qstSimpleQuest@quests(QUEST_KNIGHT_ENTRY,
          "Lady Soroth in the Knight's Guild has asked you to bring her the head of the White Queen.",
          {"emote looks at the head of the White Queen.",
           "say Impressive! Well done, $1N.  You should go speak with the guild master now."},
-          800, 1 * COPPER_MULT, {""});
+          800, 1 * COPPER_MULT, {""}, "");
 
 dilcopy qstItemsWanted@quests(QUEST_KNIGHT_ENTRY, {"head@death"}, {"decapCheck@quests 0 queen@wcastle"},
          {"say Excellent, thank you $1N."},

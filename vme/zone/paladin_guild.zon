@@ -1071,7 +1071,7 @@ dilcopy qstSimpleQuest@quests(QUEST_PALADIN_ENTRY,
          "Joan in the Paladin's Guild has asked you to bring her the head of the Frozen Shade from the Fourth Plane of Hades.",
          {"emote looks at the head of the Frozen Shade.",
           "say Impressive! Well done, $1N. You should go speak with the guild master now."},
-          800, 1 * COPPER_MULT, {""});
+          800, 1 * COPPER_MULT, {""}, "");
 
 dilcopy qstItemsWanted@quests(QUEST_PALADIN_ENTRY, {"head@death"}, {"decapCheck@quests 0 frozen_shade@hades4"},
          {"say Excellent, thank you $1N."},

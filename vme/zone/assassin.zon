@@ -402,7 +402,7 @@ dilcopy qstSimpleQuest@quests(QUEST_ASSASSIN_ENTRY,
          "Sharki in the Assassin's Guild has asked you to bring him the head of Ploscik from the Clouds.",
          {"emote looks at the head of Ploscik.",
           "say Impressive! Well done, $1N. You should go speak with the guild master now."},
-          800, 1 * COPPER_MULT, {""});
+          800, 1 * COPPER_MULT, {""}, "");
 
 dilcopy qstItemsWanted@quests(QUEST_ASSASSIN_ENTRY, {"head@death"}, {"decapCheck@quests 0 ploscik@cloud"},
          {"say Excellent, thank you $1N."},

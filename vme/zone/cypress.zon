@@ -835,7 +835,7 @@ dilcopy qstSimpleQuest@quests(GWYN_QUEST,
          "Retrieve Gwyn's yellow robe and return it.",
          {"emote sings, 'The hero $1N is born, please do not yawn'",
           "emote sings, 'Here is your mace, my lord of space!'"},
-          500, 1 * COPPER_MULT, {"goblin_slayer@cypress"});
+          500, 1 * COPPER_MULT, {"goblin_slayer@cypress"}, "");
 
 dilcopy qstItemsWanted@quests(GWYN_QUEST, {"robe_gwyn@goblin_cave"}, {""},
          {"emote starts singing again!"},

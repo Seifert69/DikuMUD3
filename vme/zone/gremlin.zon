@@ -240,205 +240,9 @@ dilend
 
 
 
-dilbegin rogue_request();
-external
-   extraptr qstSetDone@quests(qname : string, pc : unitptr);
-
-var
-  pc: unitptr;
-  exdp: extraptr;
-
-code
-{
-	heartbeat:= PULSE_SEC*4;
-
-:start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ROGUE_ONGOING in activator.quests) and (activator.position == POSITION_STANDING));
-
-	pc := activator;
-
-	if (ROGUE_COMPLETE in pc.quests)
-		goto start;
-
-	secure(pc, lostpc);
-
-
-	if (ROGUE_ONGOING in pc.quests)
-		goto rogue_ongoing;
-	
-    pause;
-    exec("say Ahoy "+pc.name+". So you be another of Boldin's youngsters then, eh?.", self);
-    pause;
-	exec("say If he's sent you to me it means he wants you to see what an adventurer has to do to keep the wolf from the door...", self);
-	pause;
-	exec("say Apart from killing it, of course.", self);
-	pause;
-	exec("say First things first, boats.", self);
-	pause;
-	exec("say Running hither and yon on those legs of yours is all well and good but sooner or later you'll need to take to the water.", self);
-	pause;
-	exec("emote scans the seaward horizon where a galleon can be seen under full sail.", self);
-	pause;
-	exec("say Ah, how I wish I was there!", self);
-	pause;
-	exec("emote brushes away an anguished tear but then turns to you with a hopeful smile.", self);
-	pause;
-	exec("say Hold hard, me hearty. How'd you like to do a favour for an old salt who's down on his luck?", self);
-	pause;
-	exec("say I could easily rejoin me old crew if I had a boat and the right equipment to get me there safely.", self);
-	pause;
-	exec("say Perhaps you could fetch a few things for me?", self);
-	pause;
-	exec("say You might want to make notes of the things I asks for. People round here aren't much minded to repeat themselves when they asks favours of an obliging cove.", self);
-	pause;
-	exec("say Let me see... I need a boat, of course. There be plenty of boat shops around, and a couple of folk even keep rafts themselves.", self);
-	pause;
-	exec("say Next I need a nice piece of thick hemp rope. They make good rope up in Whesland.", self);
-	pause;
-	exec("say I mustn't forget a drop of something to warm me up after a squall. A mug of hobgoblin whiskey will be just the thing. They sells it in their town in the mountains to the south of the King's Road.", self);
-	pause;
-	exec("emote smacks his lips appreciatively.", self);
-	pause;
-	exec("say Lastly, I'd like me old serrated cutlass back. I lost it playing cards against those orcs underneath the Midgaard sewers. And if that scurvy knave Branneth says he wants it then don't listen to him. I asked first!", self);
-	pause;
-	act("<div class='whisper'>Sventer the rogue whispers to you, 'Just <div class='hint'>nod</div> if you'll be happy to help a poor lubber out of the scuppers and back into some honest buccaneering.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	
-	goto accept_rogue;
-	
-:accept_rogue:
-
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto rogue_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Sventer the rogue whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_rogue;
-	}
-
-:no_quest:
-
-	exec("say So be it!", self);
-	unsecure(pc);
-	goto start;
-
-:rogue_accepted:
-
-	pause;
-	exec("say Thank ye kindly, mate.", self);
-	pause;
-	exec("say Some of the boats around aren't exactly cheap though.", self);
-	pause;
-	exec("say If you can't afford all of my supplies, try roughing up one of those good-for-nothing fishermen on the eastern beach and selling their rods to Fred at the fishing supply store in the harbour market.", self);
-	pause;
-	exec("say Now look lively and fetch me them things, or I'll miss me ship.", self);
-	addextra(pc.quests, {ROGUE_ONGOING}, "");
-
-	unsecure(pc);
-	goto start;
-	
-:rogue_ongoing:
-
-	exdp := ROGUE_ONGOING in pc.quests;
-	if(("boat" in exdp.names) and ("cutlass" in exdp.names) and ("rope" in exdp.names))
-	{
-		subextra(pc.quests, ROGUE_ONGOING);
-		addextra(pc.quests, {ROGUE_COMPLETE}, "");
-		exdp := qstSetDone@quests(BOLDIN_ROGUE, pc);
-		experience(3000, pc);
-		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		act("<br><div class='xpgain'>You recieve 3000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-
-		exec("say That's the way, me hearty! And did you have to sell any of those fishing rods to pay for me dunnage?", self);
-		pause;
-		exec("say Even if you didn't this time, you should bear them in mind if you find yourself in a fix in future.", self);
-		pause;
-		exec("say I'd have done the same already, only I'm not so handy without me trusty cutlass.", self);
-		pause;
-		exec("emote turns his attention to provisioning his boat, giving you a dismissive wave.", self);
-		// give a treasure map to find buried treasure. Treasure dil to be applied to map, faking a load in a room. 
-		// small_hill@tower is the treasure room 4gp 32 sp 128 cp. item that is a necklace of mana in some way.
-	}
-
-	unsecure(pc);
-	goto start;	
-:lostpc:
-
-	exec("sigh", self);
-	goto start;
-}
-dilend // END rogue_request
-
-dilbegin rogue_give();
-var
-	pc: unitptr;
-	item: unitptr;
-	exdp: extraptr;
-
-code
-{
-	heartbeat:= PULSE_SEC*3;
-
-:start:
-
-	wait(SFB_DONE, (command("give")) and (target == self) and (ROGUE_ONGOING in activator.quests));
-
-:give:
-
-	pc:= activator;
-	item:= medium;
-	secure(pc, lostpc);
-	exdp:= ROGUE_ONGOING in pc.quests;
-	if (("sercutlass@midsewers" == self.inside.symname) and (not(ROGUE_COMPLETE in activator.quests)))
-	{
-		addstring(exdp.names, "cutlass");
-		exec("say Ah-har, matey. That's the very thing!", self);
-		destroy(self.inside);
-	}
-	else if (("rope@korandin" == self.inside.symname) and (not(ROGUE_COMPLETE in activator.quests)))
-	{
-		addstring(exdp.names, "rope");
-		exec("say Ah-har, matey. A strong one at that!", self);
-		destroy(self.inside);
-	}
-	else if (("whisky@hobgob" == self.inside.symname) and (not(ROGUE_COMPLETE in activator.quests)))
-	{
-		addstring(exdp.names, "whisky");
-		exec("say Ah-har, matey. This smells like it could strip the paint off a hull!", self);
-		destroy(self.inside);
-	}
-	else if ((ITEM_BOAT == self.inside.objecttype) and (not(ROGUE_COMPLETE in activator.quests)))
-	{
-		addstring(exdp.names, "boat");
-		exec("say Ah-har, matey. She aint pretty, but she looks to float.", self);
-		destroy(self.inside);
-	}
-	else
-	{
-		destroy(self.inside);
-		exec("say No, "+pc.name +", I dont need this.", self);
-		pause;
-	}
-
-:rejected:	
-	
-	unsecure(pc);
-	goto start;
-
-:lostpc:
-
-	exec("say bah!", self);
-	goto start;
-}
-dilend // END rogue_give
-
-
-
 dilbegin aware boldin_request();
 external
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
@@ -504,7 +308,7 @@ code
       "whisper $1N You see, the older I get, the harder it seems it is to get around.",
       "whisper $1N Would you be so kind as to help me out?",
       "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
-      }, ""
+      }, "", ""
    );
 
    if (pc == null)
@@ -549,7 +353,7 @@ code
       "whisper $1N You see, I'm feeling rather parched.",
       "whisper $1N A dash of water would do me well!",
       "whisper $1N Would you be so kind as to help me out?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 
@@ -583,7 +387,7 @@ code
       "say A dark rumour has been spreading, and I think you're up to helping with it.",
       "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
       "whisper $1N What do you think, do you have it in you to help?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
 
    if (pc == null)
       goto start;
@@ -607,7 +411,7 @@ code
       {
       "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
       "whisper $1N Can I count on you for one more request?"
-      },"");
+      },"", "");
 
    if (pc == null)
       goto start;
@@ -642,11 +446,11 @@ code
 :check_msg:
 	words := getwords(argument);
 	s := words.[0];
-	pcname := words.[1];
 
 	if (s != "quest$done")
 		goto start;
-	
+
+	pcname := words.[1];
 	pc := findsymbolic(pcname); // The player activator
 
 	if (pc == null) {
@@ -1998,8 +1802,127 @@ M_HUMAN_THIEF_AXE(30,SEX_MALE)
 money 1 GOLD_PIECE
 
 dilcopy wander_zones@function ("torsbay", 180, 0,0);
-dilcopy rogue_request@gremlin();
-dilcopy rogue_give@gremlin();
+
+dilbegin fnpri(FN_PRI_MISSION) rogue_request();
+external
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
+   extraptr qstSetDone@quests(qname : string, pc : unitptr);
+
+var
+  pc: unitptr;
+  exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*4;
+
+:start:
+	wait(SFB_CMD, activator.type == UNIT_ST_PC);
+
+	pc := qstWaitHero@quests(ROGUE_QUEST, activator, 
+		{"say Ahoy $1N. So you be another of Boldin's youngsters then, eh?.",
+		 "say If he's sent you to me it means he wants you to see what an adventurer has to do to keep the wolf from the door...",
+		 "say Apart from killing it, of course.",
+		 "say First things first, boats.",
+		 "say Running hither and yon on those legs of yours is all well and good but sooner or later you'll need to take to the water.",
+		 "emote scans the seaward horizon where a galleon can be seen under full sail.",
+	     "say Ah, how I wish I was there!",
+		 "emote brushes away an anguished tear but then turns to you with a hopeful smile.",
+		 "say Hold hard, me hearty. How'd you like to do a favour for an old salt who's down on his luck?",
+		 "say I could easily rejoin me old crew if I had a boat and the right equipment to get me there safely.",
+		 "say Perhaps you could fetch a few things for me?",
+		 "say You might want to make notes of the things I asks for. People round here aren't much minded to repeat themselves when they asks favours of an obliging cove.",
+		 "say Let me see... I need a boat, of course. There be plenty of boat shops around, and a couple of folk even keep rafts themselves.",
+		 "say Next I need a nice piece of thick hemp rope. They make good rope up in Whesland.",
+		 "say I mustn't forget a drop of something to warm me up after a squall. A mug of hobgoblin whiskey will be just the thing. They sells it in their town in the mountains to the south of the King's Road.",
+		 "emote smacks his lips appreciatively.",
+		 "say Lastly, I'd like me old serrated cutlass back. I lost it playing cards against those orcs underneath the Midgaard sewers. And if that scurvy knave Branneth says he wants it then don't listen to him. I asked first!",
+		 "whisper $1N Just <div class='hint'>nod</div> if you'll be happy to help a poor lubber out of the scuppers and back into some honest buccaneering."
+		 },
+		 "", "hasquest@quests 0 "+BOLDIN_ROGUE_ONGOING);
+		 
+
+	if (pc == null)
+		goto start;
+
+	secure(pc, lostpc);
+
+	exdp := qstAssign@quests(ROGUE_QUEST, pc, 
+		{"say Thank ye kindly, mate.",
+		 "say Some of the boats around aren't exactly cheap though.", 
+		 "say If you can't afford all of my supplies, try roughing up one of those good-for-nothing fishermen on the eastern beach and selling their rods to Fred at the fishing supply store in the harbour market.",
+		 "say Now look lively and fetch me them things, or I'll miss me ship."
+        },
+		"Bring Sventer: a boat, an old serrated cutlass lost in the Sewers of Midgaard, a piece of good rope from Whesland, a mug of hobgoblin whiskey sold in the mountains south of Kind's Cross road.");
+
+	unsecure(pc);
+
+	if (exdp == null)
+	{
+		exec("say So be it!", self);
+	}
+	goto start;
+	
+:lostpc:
+	exec("sigh", self);
+	goto start;
+}
+dilend // END rogue_request
+
+
+
+// Check if the rogue quest is complete
+//
+dilbegin fnpri(FN_PRI_MISSION) CompleteCheck();
+external
+	extraptr qstSetDone@quests(qname : string, pc : unitptr);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+
+var
+  pcname : string;
+  item   : unitptr;
+  pc     : unitptr;
+  i      : integer;
+  exdp   : extraptr;
+
+code
+{
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitDone@quests(ROGUE_QUEST, activator, 
+            {"say That's the way, me hearty! And did you have to sell any of those fishing rods to pay for me dunnage?", 
+ 			 "say Even if you didn't this time, you should bear them in mind if you find yourself in a fix in future.",
+			 "say I'd have done the same already, only I'm not so handy without me trusty cutlass.",
+			 "emote turns his attention to provisioning his boat, giving you a dismissive wave.",
+			 "::<br><div class='hint'>Quest Completed!</div>::", 
+			 "::<br><div class='xpgain'>You recieve 3000 experience.</div><br>::"
+             }, 3000, 0, {""});
+
+	if (pc == null)
+		goto start;
+
+	exdp := qstSetDone@quests(BOLDIN_ROGUE, pc);
+
+	// give a treasure map to find buried treasure. Treasure dil to be applied to map, faking a load in a room. 
+	// small_hill@tower is the treasure room 4gp 32 sp 128 cp. item that is a necklace of mana in some way.
+
+	goto start;	
+}
+dilend
+
+
+dilcopy qstItemsWanted@quests(ROGUE_QUEST,
+            {"sercutlass@midsewers", "rope@korandin", "whisky@hobgob", "$anyboat"}, {"", "", "", "boatcheck@quests 0"},
+            {"say say Ah-har, matey. That's the very thing!",
+ 			 "say Ah-har, matey. A strong one at that!",
+  		     "say Ah-har, matey. This smells like it could strip the paint off a hull!",
+			 "say Ah-har, matey. She aint pretty, but she looks to float." 
+			},
+             "say Bah!");
+
 end
 
 %objects

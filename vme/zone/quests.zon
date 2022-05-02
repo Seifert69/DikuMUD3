@@ -22,6 +22,24 @@ notes
 
 %dil
 
+// ============ GENERIC prereqfunc() helper functions ===============
+
+// HasQuest() returns (1) if the character has the specified quest string, otherwith (0)
+// quest string is in the string s.
+//
+dilbegin integer hasQuest(u : unitptr, i : integer, s : string);
+var
+   exd : extraptr;
+code
+{
+   if (s in u.quests)
+      return (1);
+   else
+      return (0);
+}
+dilend
+
+
 // ============ GENERIC qstItemsWait() Helper function
 
 // For getting a decapitated head:
@@ -104,6 +122,22 @@ code
 dilend
 
 
+dilbegin integer boatcheck(u : unitptr, i : integer, s : string);
+code
+{
+   if (u.objecttype != ITEM_BOAT)
+   {
+      exec("say That's not a boat.", self);
+      return(0);
+   }
+
+   return(1);
+}
+dilend
+
+
+
+
 // ===========================================================
 
 
@@ -179,6 +213,10 @@ dilend
 // 'arg1' is the involved character ($1n)
 // 'arg2' is optional, e.g. an object ($2n)
 //
+// :: commands::
+//    ::$3n pats you on the head.::$3n pats $1n on the head.::
+//    ::walkto::sym@name::
+//  
 dilbegin integer Explain(arg1 : unitptr, arg2 : unitptr, msg : string);
 external 
    integer walk_room@function(room : string, spd : integer);
@@ -220,17 +258,16 @@ dilend
 
 
 
-// expl: list of strings for the NPC to execute to explain the quest.
-//       YOu can use $ variables, e.g. $1n = self (npc), $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
-//       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
+// expl:
+//   list of strings for the NPC to execute to explain the quest.
+//   You can use $ variables, e.g. $1n = self (npc), $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//   You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
 //
 // Example:
 //   {"say $1n, do you want this quest?", "jump", "hug $1n", 
 //    "say <a cmd='"'>nod</a> if you wish to accept",
-//    "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."}
-//
-// Special commands you can put in '::'
-//    "::walkto::room@zone::  -- Will walk to the specified room.
+//    "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n.",
+//    "::walkto::temple@udgaard"}
 //
 dilbegin Explainer(pc : unitptr, sl : stringlist);
 external
@@ -239,6 +276,7 @@ external
 var
    i : integer;
    ln : integer;
+   hb : integer;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -248,6 +286,7 @@ code
    i := 0;
    ln := length(sl);
 
+   hb := heartbeat;
 	heartbeat := 1;
 
    // Give the explanation
@@ -258,8 +297,9 @@ code
    	heartbeat := PULSE_SEC * 3;
       i := i + 1;
    }
- 
+
 :lostpc:
+   heartbeat := hb;
    return;
 }
 dilend
@@ -362,23 +402,40 @@ dilend
 
 // Try to see if "pc" is willing to take on this quest
 //
-// pc : The player that is the target of this quest request
-// sl:  List of strings for the NPC to execute to explain the quest.
-//       YOu can use $ variables, e.g. $1n. $1 = player, $3 = self. Strings formatted with "TO_CHAR", "SOMEONE"
-//       The very last string should be "nod to accept..." as it will be repeated
-//   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
-//  acptfunc: if blank uses default acceptance function, otherwise write your own. Copy default_accept@quests
-//            and make your own code. Use the name of your function in acptfunc, e.g. "myfunc@myzone".
+// qName :
+//    The base name of the quest. E.g. "Mary's Pot". 
+//    The system will append " Ongoing" and " Complete" as needed.
+//
+// pc :
+//    The player that is the target of this quest request
+//
+// sl:
+//     List of Explainer strings for the NPC to execute to explain the quest.
+//     See Explainer() (You can use $ variables, :: commands, etc)
+//     The very last string is normally a "nod to accept..." and will be repeated.
+//     e.g. {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
+//
+// acptfunc:
+//     Optional. if blank uses default acceptance function, otherwise write your own. Copy default_accept@quests
+//     and make your own code. Use the name of your function in acptfunc, e.g. "myfunc@myzone".
+//
+// prereqfunc:
+//     Optional. If set, the dilfunc() to call to check if the quest is to be given or not. 
+//     If nothing given, then no check will be performed.
+//     Example: "hasquest@quests 0 Boldin Rogue Ongoing"
 //
 // Return unitptr to the hero that wants the quest
 //
-dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
 external
    integer default_accept@quests(pc : unitptr, ip : integer, s : string);
+   Explainer@quests(pc : unitptr, sl : stringlist);
 var
    i : integer;
+   hb : integer;
    ln : integer;
    s : string;
+   t : string;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -390,37 +447,49 @@ code
       return(pc);
    }
 
-	heartbeat := PULSE_SEC * 1;
+   if (prereqfunc != "")
+   {
+      log(prereqfunc);
+      s := getword(prereqfunc);       // Get the function
+      log(s);
+      t := getword(prereqfunc);       // Get the function
+      log(t);
+      log(prereqfunc);
+      i := atoi(getword(t)); // get the integer
+      i := dilcall(s)(pc, i, prereqfunc);
+      if (i == 0)
+      {
+         pc := null;
+         return(pc);
+      }
+   }
+
+
+   hb := heartbeat;
 
    // Only deal with visible creatures
    if (not visible(self, pc))
    {
+   	heartbeat := PULSE_SEC * 1;
       pause;
       exec("peer", self);
       // log("odd peer in qstWaitHero()");
       pc := null;
+   	heartbeat := hb;
       return(pc);
    }
 
    secure(pc, lostpc);
 
-   i := 0;
-   ln := length(sl);
-	heartbeat := PULSE_SEC * 3;
-
    priority;
+
    // Give the explanation
-   while (i < ln)
-   {
-      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
-      pause;
-      exec(s, self);
-      i := i + 1;
-   }
+   Explainer(pc, sl);
 
    if (acptfunc == "")
       acptfunc := "default_accept@quests";
 
+   ln := length(sl);
    i := dilcall(acptfunc)(pc, 0, sl.[ln-1]);
 
    nopriority;
@@ -436,6 +505,7 @@ code
 	exec("sulk", self);
 	unsecure(pc);
    pc := null;
+   heartbeat := hb;
 	return(pc);
 
 :lostpc:
@@ -444,6 +514,7 @@ code
    pause;
 	exec("sigh", self);
    pc := null;
+   heartbeat := hb;
 	return(pc);
 }
 dilend
@@ -599,7 +670,9 @@ dilend
 //   itemsl: String list of items to accept. Either the symname or a substring. 
 //           E.g. {"mushroom", "black_berries@haon_dor", "garlic", "corpse of rabbit"};
 //           For non-symnames if any name in the given item matches the substrings in 
-//           the list then it's a match.  
+//           the list then it's a match. If the name begins with $ it will match ANY name.
+//           That's useful to e.g. accept any kind of drink container, and then check
+//           validity in the func call (see sventer@gremlin, $anyboat).
 //   itemfunc:  String list of DIL functions that can validate something special. 
 //              Must match the itemsl. Not needed for normal items. Needed e.g. for 
 //              money or to check if e.g. a barrel is full of water.
@@ -671,7 +744,7 @@ code
 
    while (i < ln)
    {
-      if ((itemsl.[i] == item.symname) or (itemsl.[i] in item.names))
+      if ((itemsl.[i] == item.symname) or (itemsl.[i] in item.names) or (itemsl.[i].[0] == "$"))
       {
          if (itemfunc.[i] != "")
          {
@@ -1061,15 +1134,20 @@ code
 
 dilend
 
+
+// Copy this to an NPC to get an "all in one" quest.
+//
+// prereqfunc : See qstWaitHero
+//
 dilbegin fnpri(FN_PRI_MISSION+7)
           qstSimpleQuest(qname : string,
                         qstAsk : stringlist,
                         qstAccepted : stringlist,
                         qstDescr : string,
                         qstDone : stringlist,
-                        xp : integer, gold : integer, itemsl : stringlist);
+                        xp : integer, gold : integer, itemsl : stringlist, prereqfunc : string);
 external
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
@@ -1112,7 +1190,7 @@ code
    if (activator.type != UNIT_ST_PC)
       goto start;
 
-   pc := qstWaitHero@quests(qname, activator, qstAsk, "");
+   pc := qstWaitHero@quests(qname, activator, qstAsk, "", prereqfunc);
 
    if (pc != null)
    {

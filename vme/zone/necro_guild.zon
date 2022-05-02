@@ -846,7 +846,7 @@ dilcopy qstSimpleQuest@quests(QUEST_NECROMANCER_ENTRY,
          "Murim in the Necromancer's Guild has asked you to bring him the head of the Mage of Goodness from the Pits.",
          {"emote looks at the head of the Mage of Goodness.",
           "say Impressive! Well done, $1N. Welcome to the Necromancer's guild."},
-          800, 1 * COPPER_MULT, {""});
+          800, 1 * COPPER_MULT, {""}, "");
 
 dilcopy qstItemsWanted@quests(QUEST_NECROMANCER_ENTRY, {"head@death"}, {"decapCheck@quests 0 mob_26@pit"},
          {"say Excellent, thank you $1N."},

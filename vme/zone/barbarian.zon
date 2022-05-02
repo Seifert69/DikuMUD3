@@ -1040,7 +1040,7 @@ dilcopy nokill@barbarian();
 dilbegin assignBrawl();
 external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
@@ -1068,7 +1068,7 @@ code
 		{"look $1N",
 		"say To join the Barbarian's guild you have to prove your raw instincts.",
       "say We require that you kill an arctic wolf with your bare hands wearing nothing but a loin cloth.",
-      "say Are you up for the challenge, $1n?"}, "");
+      "say Are you up for the challenge, $1n?"}, "", "");
 
    if (pc == null)
       goto start;

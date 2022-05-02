@@ -564,10 +564,11 @@ end
 title "Papi's Cosy Cottage"
 descr
 " You are inside Papi's small wooden cottage. A fireplace is placed against
-the north wall and a large rocking chair is placed in front of the fire."
+the north wall and a large rocking chair is placed in front of the fire.
+A flight of stone stairs lead down below."
 flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
-up to papis_cottage;
+down to temple@udgaard;
 
 // When the server comes up, send a message to the builder channel.
 // I'd like to know when the server (re)boots.
