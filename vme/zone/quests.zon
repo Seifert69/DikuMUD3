@@ -152,6 +152,9 @@ var
    t : string;
 code
 {
+   if (pc == null)
+      return (0);
+
    i := 0;
    secure(pc, lostpc);
 

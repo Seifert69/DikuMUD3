@@ -701,12 +701,12 @@
         {
             "source_file": {
                 "filename": "quests.zon",
-                "sha512": "afb38a1017cff778ec6afac1f1ea5e8a8e6116096f2c1fc1bc38709b5dac3c9bf591fbfd45205a95135aefa20aa4185619bf92d5cbaedfbcc4f788d11b9546ee"
+                "sha512": "b2033e4e9efa9f7ff7dedcbb88bed97dba44c61e0e0969f78f8e5f4dc22de997ca92e8c97c212fe38702006dfce51b20c2d75302ecf9a8ca8d570bc15154835c"
             },
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "8a3a3366001403f615574a93ff79c685056e06c194bc0f5594b2279207867626a7a8a5df4e3f9bd4daa8c0fbb781aa72946afcad29b99ae7ffe354c451adb98d"
+                    "sha512": "cea07d60cfd82c7a8c1ca85ff472b2703c6d23de34db4fd109a7e6707dbd8fd96f1888961600e63cf6befe96e9a69052e1b8941c2f0f4715a6e6427e0b2fe4a3"
                 },
                 {
                     "filename": "quests.reset",
