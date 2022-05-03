@@ -52,14 +52,7 @@ code
 
 :init:
    set_weight_base(self, bweight);
-   if (capac-(pct*capac)/100 <= 0)
-      self.capacity := 2000;
-   else
-      self.capacity := (capac*capac) / (capac-(pct*capac)/100);
-
-   if (self.capacity > 2000)
-      self.capacity := 2000;
-
+   self.capacity := capac;
    totalwgt := 0;
    prevwgt := self.weight;
 
@@ -74,7 +67,7 @@ code
       set_weight(self, i);
       prevwgt := self.weight;
 
-      if (self.weight > capac)
+      if (totalwgt > capac)
          goto burp;
    }
    goto start;
