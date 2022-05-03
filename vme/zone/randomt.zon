@@ -32,17 +32,28 @@ help
 // pct : How many percent you want to shrink the weight (0..100)
 //   0 means don't reduce the weight
 // 100 means reduce weight by 100%
-dilbegin aware recall bagofholding(pct : integer);
+// Capac is how many lbs the bag can hold max (it will weigh less).
+// Baseweight is how much the bag weighs when empty
+dilbegin aware recall bagofholding(pct : integer, bweight : integer, capac : integer);
 var
    totalwgt : integer;
    prevwgt : integer;
    i : integer;
+   u : unitptr;
+   r : unitptr;
 code
 {
    if (self.weight != self.baseweight)
    {
       log("confusing weight start scenario");
+      // Add code to empty the bag, reset the weight, and refill the bag
    }
+
+   set_weight_base(self, bweight);
+   if (capac-(pct*capac)/100 <= 0)
+      self.capacity := 2000;
+   else
+      self.capacity := capac / (capac-(pct*capac)/100);
 
    totalwgt := 0;
    prevwgt := self.weight;
@@ -57,7 +68,29 @@ code
       i := self.baseweight + (totalwgt * (100-pct))/100;
       set_weight(self, i);
       prevwgt := self.weight;
+
+      if (self.weight > capac)
+         goto burp;
    }
+   goto start;
+
+:burp:
+   act("There is a large burping sound as items pop out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
+   
+   r := self.outside;
+   while (r.type != UNIT_ST_ROOM)
+      r := self.outside;
+
+   while (self.inside)
+   {
+      link(self.inside, r);
+   }
+
+   if (self.weight != bweight)
+   {
+      log("I think this is not supposed to happen.");
+   }
+
    goto start;
 }
 dilend
