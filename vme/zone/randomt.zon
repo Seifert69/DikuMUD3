@@ -73,7 +73,7 @@ code
    goto start;
 
 :burp:
-   act("There is a large burping sound as items pop out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
+   act("There is a large burping sound as items pour out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
    
    r := self.outside;
    while (r.type != UNIT_ST_ROOM)
