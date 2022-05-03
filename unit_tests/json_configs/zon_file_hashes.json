@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "d79df4bff5a42cd40e2c9be97bc7e90277dad7328c920f766bb5a38aae9029ba2daa4d9a4eecc1e61ff07c6adb845cec37e62ad89acda4a98214a276c1ef33e3"
+                "sha512": "644d5d0a032bebbe29b3f72ea51c1a9de64dff2ae97da8e61b8cda088c8b20816c57b4ab9e206c73d0faff407e9595ed1d4a783ba36e9c3c4756d88fe30081c8"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "db7037cc489f75a46c93af29dd95bf2c28c569a208e45f75104aee530f00c0a6f2b10911dc07d4e199026052ef1bd44cd2d30519da271f391862d31ce9daba05"
+                    "sha512": "51b4aeddd97112932e2f6c8c75e76bc1c18b6ec674d52b427c13a348a97948024cfaba6ff8c1a0e2592590f027ae2b5c97ef3040a63c2b9aa8acf50b9847730c"
                 },
                 {
                     "filename": "basis.reset",
@@ -717,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "0f794f803f055eff7184b656fbbf63a14dd0a5e101c45f2a8eba0265d26cbc05d8687e2a091cb1c018d9a36a7f62c9e35cb2fb96257f7210e708eda1e21cd507"
+                "sha512": "3782bb553297e1161b709db60b854c25f48053eec40e9f39086c7fa7e93e17185e821f9827b10e84752c980d9d5fd482ffabe3113a8b1e6a007cd68815f01cf0"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "19452b3cea48ce173de963d757998e9127295c94b7b0720b5a1ef9904d5240ad5d0311ff7f85e9e94601ab8563f40611affe3c429ecfbdceae6f0a0837ff8215"
+                    "sha512": "c5aae1788d2d31865db3ae67b40b99e7b6e5225549bc1eb0bbfeba384f7906ac8fb16961a923d420e60dd315ba9e833a3949ac0f5d58bdd9099afe71f954153c"
                 },
                 {
                     "filename": "randomt.reset",
