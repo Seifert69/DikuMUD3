@@ -9008,6 +9008,7 @@ weight 10
 cost 25 GOLD_PIECE
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 CONTAINER_DEF(600)
+dilcopy bagofholding@randomt(75);
 end /* rebirth_bag */
 
 /*

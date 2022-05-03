@@ -27,6 +27,41 @@ help
 
 %dil
 
+// dilvar mimi : integer
+
+// pct : How many percent you want to shrink the weight (0..100)
+//   0 means don't reduce the weight
+// 100 means reduce weight by 100%
+dilbegin aware recall bagofholding(pct : integer);
+var
+   totalwgt : integer;
+   prevwgt : integer;
+   i : integer;
+code
+{
+   if (self.weight != self.baseweight)
+   {
+      log("confusing weight start scenario");
+   }
+
+   totalwgt := 0;
+   prevwgt := self.weight;
+
+:start:
+   wait(SFB_DONE, command("put") or command("get"));
+
+   if (prevwgt != self.weight)
+   {
+      totalwgt := totalwgt + (self.weight - prevwgt);
+      // log("totalwgt is now " + itoa(totalwgt));
+      i := self.baseweight + (totalwgt * (100-pct))/100;
+      set_weight(self, i);
+      prevwgt := self.weight;
+   }
+   goto start;
+}
+dilend
+
 //
 // ======================== UTILITY =========================
 //
