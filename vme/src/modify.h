@@ -8,7 +8,6 @@
 
 #include "interpreter.h"
 #include "skills.h"
-#include "structs.h"
 
 void edit_extra(descriptor_data *d);
 void do_set(unit_data *, char *, const command_info *);

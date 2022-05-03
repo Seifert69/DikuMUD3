@@ -18,7 +18,6 @@
 #include "skills.h"
 #include "slog.h"
 #include "spells.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "trie.h"

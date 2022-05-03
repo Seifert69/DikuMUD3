@@ -6,8 +6,8 @@
  */
 #pragma once
 
+#include "dil.h"
 #include "essential.h"
-#include "structs.h"
 #include "values.h"
 
 #include <csignal>

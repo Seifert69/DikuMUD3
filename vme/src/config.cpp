@@ -18,9 +18,9 @@
 #include "essential.h"
 #include "files.h"
 #include "formatter.h"
+#include "pc_data.h"
 #include "slog.h"
 #include "str_parse.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utility.h"
 #include "values.h"
@@ -91,9 +91,9 @@ void CServerConfiguration::Boot(const std::string &srvcfg)
     slog(LOG_ALL, 0, "The Mud Name is %s.", m_mudname);
 
     m_pImmortName = parse_match_name((const char **)&c, "immortal_name", "immortal");
-    if (m_pImmortName.length() > PC_MAX_NAME)
+    if (m_pImmortName.length() > pc_data::PC_MAX_NAME)
     {
-        m_pImmortName.resize(PC_MAX_NAME);
+        m_pImmortName.resize(pc_data::PC_MAX_NAME);
     }
 
     m_libdir = parse_match_name((const char **)&c, "libdir", "../lib/");

@@ -7,7 +7,6 @@
 #pragma once
 
 #include "interpreter.h"
-#include "structs.h"
 
 int char_can_carry_unit(unit_data *ch, unit_data *unit);
 

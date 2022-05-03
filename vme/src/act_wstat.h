@@ -1,7 +1,6 @@
 #pragma once
 
 #include "interpreter.h"
-#include "structs.h"
 #include "utility.h"
 
 void do_wstat(unit_data *, char *, const command_info *);

@@ -15,7 +15,6 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "skills.h"
-#include "structs.h"
 #include "teach.h"
 #include "textutil.h"
 #include "utility.h"

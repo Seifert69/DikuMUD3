@@ -18,6 +18,8 @@
 
 #include <arpa/inet.h>
 
+size_t pc_data::g_world_nopc = 0; // number of chars in the world
+
 pc_data::pc_data()
     : char_data(UNIT_ST_PC)
     , m_setup{0, 0, 0, 0, 0, 0, 0, 0}

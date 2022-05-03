@@ -15,7 +15,6 @@
 #include "main_functions.h"
 #include "slog.h"
 #include "spec_assign.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "unit_fptr.h"
 #include "utils.h"

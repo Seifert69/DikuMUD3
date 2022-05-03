@@ -1,14 +1,15 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "cert-err58-cpp"
-#include "../vme/include/vme.h"
+
 #include "FixtureBase.h"
 #include "OutputCapture.h"
 #include "account.h"
 #include "config.h"
 #include "db.h"
 #include "formatter.h"
-#include "structs.h"
 #include "utils.h"
+
+#include <vme.h>
 
 #include <cstdarg>
 #include <fstream>

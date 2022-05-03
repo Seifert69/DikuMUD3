@@ -21,7 +21,6 @@
 #include "justice.h"
 #include "skills.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "unit_affected_type.h"
 #include "unit_fptr.h"

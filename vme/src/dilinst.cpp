@@ -39,7 +39,6 @@
 #include "reception.h"
 #include "spell_parser.h"
 #include "spells.h"
-#include "structs.h"
 #include "system.h"
 #include "szonelog.h"
 #include "textutil.h"

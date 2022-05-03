@@ -8,7 +8,6 @@
 
 #include "essential.h"
 #include "spells.h"
-#include "structs.h"
 
 /* #define MAGIC_POWER(ch)  \
    MAX(CHAR_MAG(ch), CHAR_DIV(ch)) */

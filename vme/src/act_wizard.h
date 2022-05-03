@@ -1,7 +1,6 @@
 #pragma once
 
 #include "interpreter.h"
-#include "structs.h"
 
 void do_snoop(unit_data *, char *, const command_info *);
 void do_reset(unit_data *, char *, const command_info *);

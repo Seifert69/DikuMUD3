@@ -15,7 +15,6 @@
 #include "money.h"
 #include "skills.h"
 #include "slog.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "unit_affected_type.h"

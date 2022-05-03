@@ -9,7 +9,6 @@
 
 #include "error.h"
 #include "skills.h"
-#include "structs.h"
 #include "utility.h"
 #include "utils.h"
 

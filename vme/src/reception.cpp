@@ -16,7 +16,6 @@
 #include "pcsave.h"
 #include "slime.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 #include "zon_basis.h"

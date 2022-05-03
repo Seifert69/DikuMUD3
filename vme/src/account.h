@@ -8,7 +8,6 @@
 
 #include "essential.h"
 #include "interpreter.h"
-#include "structs.h"
 
 #define MAX_FLATRATE 2
 

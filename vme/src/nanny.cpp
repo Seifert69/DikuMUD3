@@ -34,7 +34,6 @@
 #include "pcsave.h"
 #include "reception.h"
 #include "slog.h"
-#include "structs.h"
 #include "system.h"
 #include "textutil.h"
 #include "utils.h"
@@ -71,7 +70,7 @@ int _parse_name(const char *arg, char *name)
 
     for (i = 0; (*name = *arg); arg++, i++, name++)
     {
-        if ((*arg <= ' ') || !isalpha(*arg) || (i + 1) > (PC_MAX_NAME - 1))
+        if ((*arg <= ' ') || !isalpha(*arg) || (i + 1) > (pc_data::PC_MAX_NAME - 1))
         {
             return 1;
         }
@@ -416,7 +415,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
         return;
     }
 
-    if (pwdcompare(crypt(arg, PC_FILENAME(d->getCharacter())), PC_PWD(d->getCharacter()), PC_MAX_PASSWORD))
+    if (pwdcompare(crypt(arg, PC_FILENAME(d->getCharacter())), PC_PWD(d->getCharacter()), pc_data::PC_MAX_PASSWORD))
     {
         auto str = diku::format_to_str("PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
         send_to_descriptor(scriptwrap(str), d);
@@ -466,7 +465,7 @@ int check_pwd(descriptor_data *d, char *pwd)
         return FALSE;
     }
 
-    pwd[PC_MAX_PASSWORD - 1] = 0;
+    pwd[pc_data::PC_MAX_PASSWORD - 1] = 0;
 
     bA = FALSE;
     bNA = FALSE;
@@ -692,7 +691,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     // Which would allow any pwd length but not work on Macs. Or as Ken suggests we could
     // have two iterations of the default to support up to 16 chars pwd.
     int nCmp = 0;
-    nCmp = pwdcompare(crypt(arg, PC_PWD(d->getCharacter())), PC_PWD(d->getCharacter()), PC_MAX_PASSWORD);
+    nCmp = pwdcompare(crypt(arg, PC_PWD(d->getCharacter())), PC_PWD(d->getCharacter()), pc_data::PC_MAX_PASSWORD);
 
     if (nCmp != 0)
     {

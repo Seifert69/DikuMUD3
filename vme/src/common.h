@@ -7,7 +7,9 @@
 #pragma once
 
 #include "essential.h"
-#include "structs.h"
+#include "unit_data.h"
+
+#include <array>
 
 /* ..................................................................... */
 /*                           A B I L I T I E S                           */

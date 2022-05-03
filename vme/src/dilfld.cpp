@@ -18,7 +18,6 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "skills.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "utils.h"

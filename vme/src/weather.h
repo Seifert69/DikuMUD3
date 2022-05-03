@@ -6,8 +6,8 @@
  */
 #pragma once
 
-#include "structs.h"
 #include "time_info_data.h"
+#include "unit_data.h"
 
 #include <ctime>
 

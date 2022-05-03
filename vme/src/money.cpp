@@ -13,7 +13,6 @@
 #include "formatter.h"
 #include "handler.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "vmelimits.h"
 

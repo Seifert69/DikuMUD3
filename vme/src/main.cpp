@@ -24,7 +24,6 @@
 #include "main_functions.h"
 #include "pipe.h"
 #include "slog.h"
-#include "structs.h"
 #include "system.h"
 #include "textutil.h"
 

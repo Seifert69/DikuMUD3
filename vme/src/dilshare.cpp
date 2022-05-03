@@ -10,7 +10,6 @@
 #include "intlist.h"
 #include "namelist.h"
 #include "slog.h"
-#include "structs.h"
 #include "utils.h"
 #include "zone_type.h"
 

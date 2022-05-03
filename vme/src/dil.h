@@ -7,10 +7,8 @@
 #pragma once
 
 #include "extra.h"
-#include "interpreter.h"
 #include "intlist.h"
 #include "namelist.h"
-#include "structs.h"
 #include "t_array.h"
 
 #define WAITCMD_MAXINST 32000
@@ -274,9 +272,9 @@ struct dilargstype
 #define DILI_DISPATCH 200 /* dispatch(message) */
 #define DILE_FNDZ 201     /* findroom(#,#) */
 #define DILE_FNDSIDX 202
-#define DILE_CALL 203 // dilcall(#)(#,#,#)
-#define DILE_GETAFFECTS 204   /* getaffects(#) */
-#define DILI_MAX 204  /* The maximum node number */
+#define DILE_CALL 203       // dilcall(#)(#,#,#)
+#define DILE_GETAFFECTS 204 /* getaffects(#) */
+#define DILI_MAX 204        /* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS 0  /* .names */
@@ -465,6 +463,7 @@ struct dilargstype
 #define DILT_ARG 3
 
 class zone_type;
+class command_info;
 /* DIL variable structure */
 struct dilvar
 {
@@ -601,6 +600,7 @@ struct dilframe
 
 #define DIL_FRAMEINC 8 /* # of stackframes to inc stack with */
 
+class spec_arg;
 class dilprg
 {
 public:

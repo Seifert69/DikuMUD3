@@ -16,7 +16,6 @@
 #include "slog.h"
 #include "spec_procs.h"
 #include "str_parse.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "unit_fptr.h"

@@ -19,7 +19,6 @@
 #include "pcsave.h"
 #include "protocol.h"
 #include "slog.h"
-#include "structs.h"
 #include "utils.h"
 #include "vmelimits.h"
 

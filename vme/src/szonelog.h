@@ -2,7 +2,6 @@
 
 #include "formatter.h"
 #include "slog.h"
-#include "structs.h"
 #include "szonelog_raw.h"
 
 #include <boost/format.hpp>

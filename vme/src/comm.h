@@ -6,8 +6,8 @@
  */
 #pragma once
 
+#include "descriptor_data.h"
 #include "dil.h"
-#include "structs.h"
 
 class cActParameter
 {

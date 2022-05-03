@@ -13,14 +13,8 @@
 #include "utils.h"
 #include "zone_reset_cmd.h"
 
-int g_world_norooms = 0;   /* number of rooms in the world   */
-int g_world_noobjects = 0; /* number of objects in the world */
-int g_world_nochars = 0;   /* number of chars in the world   */
-int g_world_nonpc = 0;     /* number of chars in the world   */
-int g_world_nopc = 0;      /* number of chars in the world   */
-int g_world_nozones = 0;   /* number of zones in the world   */
-
 /* Descriptor stuff is in system.c */
+size_t npc_data::g_world_nonpc = 0; // number of chars in the world
 
 npc_data::npc_data()
     : char_data(UNIT_ST_NPC)

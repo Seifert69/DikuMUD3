@@ -12,7 +12,6 @@
 #include "db.h"
 #include "formatter.h"
 #include "interpreter.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 

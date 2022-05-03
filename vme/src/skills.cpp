@@ -16,7 +16,6 @@
 #include "modify.h"
 #include "slog.h"
 #include "spelldef.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 

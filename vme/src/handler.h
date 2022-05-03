@@ -5,7 +5,10 @@
  $Revision: 2.3 $
  */
 #pragma once
-#include "structs.h"
+
+#include "descriptor_data.h"
+#include "extra.h"
+#include "unit_fptr.h"
 #include "unitfind.h"
 #include "zone_type.h"
 

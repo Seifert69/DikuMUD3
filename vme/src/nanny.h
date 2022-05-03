@@ -1,7 +1,6 @@
 #pragma once
 
 #include "essential.h"
-#include "structs.h"
 
 int _parse_name(const char *arg, char *name);
 void check_idle();

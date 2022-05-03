@@ -1,6 +1,6 @@
 #include "room_data.h"
 
-#include "structs.h"
+size_t room_data::g_world_norooms = 0; // number of rooms in the world
 
 room_data::room_data()
     : unit_data(UNIT_ST_ROOM)

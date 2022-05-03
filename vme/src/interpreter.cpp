@@ -15,7 +15,6 @@
 #include "mobact.h"
 #include "slog.h"
 #include "spec_assign.h"
-#include "structs.h"
 #include "textutil.h"
 #include "trie.h"
 #include "unit_fptr.h"

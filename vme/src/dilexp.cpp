@@ -41,7 +41,6 @@ $Revision: 2.18 $
 #include "skills.h"
 #include "spell_parser.h"
 #include "spells.h"
-#include "structs.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "trie.h"
@@ -1073,7 +1072,7 @@ void dilfe_ckpwd(dilprg *p)
                     v->type = DILV_INT;
                     if (pwdcompare(crypt((char *)v2->val.ptr, PC_FILENAME((unit_data *)v1->val.ptr)),
                                    PC_PWD((unit_data *)v1->val.ptr),
-                                   PC_MAX_PASSWORD))
+                                   pc_data::PC_MAX_PASSWORD))
                     {
                         v->val.num = FALSE;
                     }

@@ -20,7 +20,6 @@
 #include "money.h"
 #include "reception.h"
 #include "slog.h"
-#include "structs.h"
 #include "textutil.h"
 #include "utils.h"
 
@@ -240,7 +239,7 @@ void save_player_file(unit_data *pc)
     pBuf->Clear();
 
     assert(IS_PC(pc));
-    assert(strlen(PC_FILENAME(pc)) < PC_MAX_NAME);
+    assert(strlen(PC_FILENAME(pc)) < pc_data::PC_MAX_NAME);
     assert(!pc->is_destructed());
 
     if (pc->is_destructed())

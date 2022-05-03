@@ -9,7 +9,6 @@
 #include "apf_affect.h"
 #include "main_functions.h"
 #include "slog.h"
-#include "structs.h"
 #include "tif_affect.h"
 #include "unit_affected_type.h"
 #include "utility.h"
