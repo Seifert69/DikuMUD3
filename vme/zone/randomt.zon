@@ -77,7 +77,7 @@ code
    
    r := self.outside;
    while (r.type != UNIT_ST_ROOM)
-      r := self.outside;
+      r := r.outside;
 
    while (self.inside)
    {
