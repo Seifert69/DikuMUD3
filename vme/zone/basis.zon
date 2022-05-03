@@ -3895,6 +3895,7 @@ var
    sl : stringlist;
    s : string;
    nCount : integer;
+   exdp : extraptr;
 code
 {
    heartbeat := PULSE_SEC*4;
@@ -3902,7 +3903,35 @@ code
 
    if (self.outside.type != UNIT_ST_ROOM)
    {
-      log("Energy worms loaded into a non-room. Quitting. " + self.outside.symname);
+      u := self.outside;
+
+      while (u)
+      {
+         if (u.type == UNIT_ST_PC)
+         {
+            log("Energy worms loaded into a player. Quitting. " + self.outside.symname);
+            destroy(self);
+         }
+
+         if (u.type == UNIT_ST_OBJ)
+         {
+            if (u.value[2] == 1) // corpse is a player corpse
+            {
+               exdp := "$living_sym" in u.extra;
+
+               if (exdp)
+               {
+                  if ("@_players" in exdp.descr)
+                  {
+                     log("Energy worms loaded into a player corpse. Quitting. " + self.outside.symname);
+                     destroy(self);
+                  }
+               }
+            }
+         }
+
+         u := u.outside;
+      }
       quit;
    }
 
