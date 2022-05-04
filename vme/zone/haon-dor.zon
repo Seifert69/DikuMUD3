@@ -2464,7 +2464,7 @@ dilcopy qstSimpleQuest@quests(QUEST_JOHN,
          {"thank $1N",
           "emote wields your axe.",
           "emote looks around for some trees to chop down."},
-          800, 1 * COPPER_MULT, {""});
+          800, 1 * COPPER_MULT, {""}, "");
 
 dilcopy qstItemsWanted@quests(QUEST_JOHN, {"axe"}, {""},
          {"say Thank you $1N, that's such a nice axe."},

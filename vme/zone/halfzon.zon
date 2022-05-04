@@ -5618,7 +5618,7 @@ code
 
 :add_grapes:
   grapes := grapes +1;
-  log ("grapes added");
+  //log ("grapes added");
   goto start;
 
 :del_grapes:
@@ -5627,7 +5627,7 @@ code
 
 :add_bottle:
   bottle := bottle +1;
-  log ("bottle added");
+  //log ("bottle added");
   goto start;
 
 :del_bottle:
@@ -5636,7 +5636,7 @@ code
 
 :add_sugar:
   sugar := sugar +1;
-  log ("sugar added");
+  //log ("sugar added");
   goto start;
 
 :del_sugar:
@@ -5645,7 +5645,7 @@ code
 
 :add_yeast:
   yeast := yeast +1;
-  log ("yeast added");
+  //log ("yeast added");
   goto start;
 
 :del_yeast:
