@@ -413,12 +413,12 @@
         {
             "source_file": {
                 "filename": "halfzon.zon",
-                "sha512": "67b1eb0966f96080f20950aecee90032cf33f39ffdd417a0a0250de11238d3c7fff2246fa58f92da46ce5cf840fe96b2ada41f7126fa6e7f6b1768240341d7bb"
+                "sha512": "e338a46bc48bab30386d7b10b0c370a0f6e22569058ef4bd19f606238fc137eacf692d9a83cdac98c038ef02e651e34f7b4d9f5fe4e33ab7254f2fb8dd0bf16f"
             },
             "output": [
                 {
                     "filename": "halfzon.data",
-                    "sha512": "c4ec260eb0f8dd678e8751007014442214ed52c20e1f9ca1dba5a2ad40b5847562c48b6017bf4676a8f51ce76a4f13f0a4296ecb9940bcf45393c9c2d1d031fe"
+                    "sha512": "85d6e6d894c59fc271cf6ba8869d76fd07853b349df7f73f6e3ec3214fb195bb0300e0a608733831535b69f47a57b57f0460141e4d9f5e4f36881ed7349cfb6f"
                 },
                 {
                     "filename": "halfzon.reset",
@@ -429,12 +429,12 @@
         {
             "source_file": {
                 "filename": "haon-dor.zon",
-                "sha512": "c77911cdb243967a9cb1efeb8d38f255460c8dd4541f76efc1c0b92bdeb199d80ddddd9cfd35665ea21fbf98bcdf4a9687711fb342d5e5ad6943cf2fba6c2db0"
+                "sha512": "e277832f6c10f3fb984d50f8b5227807c6e2ec4681eeffaa1748256842e95906455211bd58ee71b567c9560f01012c9c9a867da12024a5e63b58b2c02641f05c"
             },
             "output": [
                 {
                     "filename": "haon-dor.data",
-                    "sha512": "5e1d663f0b9118b8c084653e6ec17a7a4181b1be3a6f7f74833b21766536629c46c9f2bea8996be4769401add78bb90246ba0f236b4e853cb16a187f4ba7a8e8"
+                    "sha512": "5506631666ace551b4f0a7dbadec08be46e308f075619c2136ca36724891faa7b3d1eba933b9a965c730a4448de6df88d1c1aca1e82a98c9500b63de3a65876f"
                 },
                 {
                     "filename": "haon-dor.reset",
