@@ -717,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "685664cc89e5a709658e19d38ee27385c59d3b49c82b9c9f7b5a0ef1a8a544439e9e028ec30546521f9c6cb2b5db085c18f6ce70e7a93c2a0ad92001faf0a8c3"
+                "sha512": "eb2fe2a5f4f697e8bb0161df9583e0cbee14dfe3496304a5fc306aac4e70815f67b93a5a757e1e2a7f44cde9bd29ab1ace5af013339c0402b6b5bb0e6a69a25d"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "3f8e6045b42c015b694fd96a9da4707785c33b0069c9c1c147346010694c9cf0deae28ed6606f64269757919de40eabac06971830287afcfa90a602735b2334a"
+                    "sha512": "2966050eeb2ff81cb1431bee0c853631220abfbba6de730478fa904a91b3b4ad732316067388d2e57baeff244cb2c51258ef80faa9c8c8fd05f746d1bd947f2a"
                 },
                 {
                     "filename": "randomt.reset",

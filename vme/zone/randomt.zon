@@ -34,7 +34,7 @@ help
 // 100 means reduce weight by 100%
 // Capac is how many lbs the bag can hold max (it will weigh less).
 // Baseweight is how much the bag weighs when empty
-dilbegin aware recall bagofholding(pct : integer, bweight : integer, capac : integer);
+dilbegin aware bagofholding(pct : integer, bweight : integer, capac : integer);
 var
    totalwgt : integer;
    prevwgt : integer;
@@ -42,19 +42,30 @@ var
    u : unitptr;
    r : unitptr;
 code
-{
-   if (self.weight != self.baseweight)
-   {
-      log("confusing weight start scenario");
-      goto burp;
-      // Add code to empty the bag, reset the weight, and refill the bag
-   }
+{   
+   self.capacity := capac;
 
 :init:
-   set_weight_base(self, bweight);
-   self.capacity := capac;
-   totalwgt := 0;
-   prevwgt := self.weight;
+   if (self.inside == null)
+   {
+      // Bag is empty
+      set_weight_base(self, bweight);
+      prevwgt := self.weight;
+      totalwgt := 0;
+   }
+   else
+   {
+      totalwgt := 0;
+      u := self.inside;
+      while (u)
+      {
+         totalwgt := totalwgt + u.weight;
+         u := u.next;
+      }
+      set_weight(self, bweight + (totalwgt * (100-pct))/100);
+      prevwgt := self.weight;
+   }
+
 
 :start:
    wait(SFB_DONE, command("put") or command("get"));
@@ -87,20 +98,6 @@ code
    set_weight_base(self, bweight);
    set_weight(self, bweight);
    goto init;
-
-:recountweight:
-   i := 0;
-   u := self.inside;
-   while (u)
-   {
-      i := i + u.weight;
-      u := u.next;
-   }
-
-   set_weight(self, bweight + (i * (100-pct))/100);
-   prevwgt := self.weight;
-   goto start;
-
 }
 dilend
 
