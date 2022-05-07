@@ -439,7 +439,7 @@
 #define POSITION_STANDING   8
 
 #ifdef __cplusplus
-enum class Position_e
+enum class  Position_e : int8_t
 {
     Dead             = POSITION_DEAD,
     Mortally_Wounded = POSITION_MORTALLYW,
