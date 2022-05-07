@@ -477,6 +477,16 @@ inline Position_e Position_int_to_enum(int value)
     }
     throw std::out_of_range("Position integer is not valid");
 }
+// Remove macros from C++ code to stop mistakes
+#undef POSITION_DEAD       
+#undef POSITION_MORTALLYW 
+#undef POSITION_INCAP     
+#undef POSITION_STUNNED   
+#undef POSITION_SLEEPING  
+#undef POSITION_RESTING   
+#undef POSITION_SITTING   
+#undef POSITION_FIGHTING  
+#undef POSITION_STANDING  
 #endif
 
 /* ------------------------- MANIPULATE Flags ------------------------------

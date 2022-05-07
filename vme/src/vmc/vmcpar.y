@@ -530,7 +530,7 @@ omobile_field   : MANA number
     }
     | DEFAULT number
     {
-        UNPC(cur)->setDefaultPosition($2);
+        UNPC(cur)->setDefaultPosition(Position_int_to_enum($2));
     }
     | FLAGS flags
     {

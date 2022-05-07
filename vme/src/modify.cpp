@@ -1070,7 +1070,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 42: /* "default-pos" */
-            UNPC(unt)->setDefaultPosition(valarg);
+            UNPC(unt)->setDefaultPosition(Position_int_to_enum(valarg));
             return;
 
         case 43: /* "act-flags" */

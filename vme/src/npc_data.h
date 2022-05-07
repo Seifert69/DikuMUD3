@@ -44,9 +44,9 @@ public:
      * @name Default Position
      * @{
      */
-    ubit8 getDefaultPosition() const;
-    ubit8 *getDefaultPositionPtr();
-    void setDefaultPosition(ubit8 value);
+    Position_e getDefaultPosition() const;
+    Position_e *getDefaultPositionPtr();
+    void setDefaultPosition(Position_e value);
     /// @}
 
     /**
@@ -60,6 +60,6 @@ public:
 private:
     std::array<sbit16, WPN_GROUP_MAX> m_weapons{0}; ///<
     std::array<sbit16, SPL_GROUP_MAX> m_spells{0};  ///<
-    ubit8 m_default_pos{POSITION_STANDING};         ///< Default position for NPC
+    Position_e m_default_pos{Position_e::Standing}; ///< Default position for NPC
     ubit8 m_flags{0};                               ///< flags for NPC behavior
 };

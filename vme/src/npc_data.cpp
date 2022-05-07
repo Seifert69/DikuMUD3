@@ -6,7 +6,7 @@ npc_data::npc_data()
     : char_data(UNIT_ST_NPC)
     , m_weapons{0}
     , m_spells{0}
-    , m_default_pos{POSITION_STANDING}
+    , m_default_pos{Position_e::Standing}
     , m_flags{0}
 {
     g_world_nonpc++;
@@ -87,17 +87,17 @@ void npc_data::decreaseSpellSkillAtIndexBy(size_t index, sbit16 value)
     m_spells[index] += value;
 }
 
-ubit8 npc_data::getDefaultPosition() const
+Position_e npc_data::getDefaultPosition() const
 {
     return m_default_pos;
 }
 
-ubit8 *npc_data::getDefaultPositionPtr()
+Position_e *npc_data::getDefaultPositionPtr()
 {
     return &m_default_pos;
 }
 
-void npc_data::setDefaultPosition(ubit8 value)
+void npc_data::setDefaultPosition(Position_e value)
 {
     m_default_pos = value;
 }

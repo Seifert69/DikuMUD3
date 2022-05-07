@@ -1339,7 +1339,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
                     pBuf->Append16(NPC_SPL_SKILL(u, i));
                 }
 
-                pBuf->Append8(NPC_DEFAULT(u));
+                pBuf->Append8(static_cast<sbit8>(NPC_DEFAULT(u)));
                 pBuf->Append8(NPC_FLAGS(u));
             }
             break;
