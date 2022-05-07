@@ -358,7 +358,6 @@ var
 
 code
 {
-   log("add_reward debug i0");
    // Lookup the $reward on the justice database and the char
    juris := get_juris@justice();
 
@@ -390,7 +389,7 @@ code
       }
    }
 
-   log("add_reward debug i1");
+   // log("add_reward debug i1");
    // Criminal != null
 
    s := "$reward "+juris;
@@ -407,12 +406,9 @@ code
       exd_char_reward := s in criminal.extra;
    }
 
-   log("add_reward debug i2");
    s := "$reward "+criminal.symname+" "+itoa(criminal.idx);
    sj:= s + " "+juris; 
    exd_db_reward := sj in database.extra;
-
-   log("add_reward debug i3");
 
    if (exd_db_reward == null)
    {
@@ -428,8 +424,6 @@ code
 
       exd_db_reward := s in database.extra;
    }
-
-   log("add_reward debug 1");
 
    // Now we got the extraptr for the criminal and the database
    // so let's update them. We know for sure we have the DB.
@@ -454,7 +448,6 @@ code
          cnt := 32;
       cnt := cnt + crime_type;
    }
-   log("add_reward debug 2");
 
    //
    // Suggest a new DIL function for setting CHAR_FLAGS (outlaw, etc).
@@ -479,14 +472,11 @@ code
 
    s := moneystring(gold, 1);
 
-   log("add_reward debug 3");
-
    // [8..31]  You'll lose the benefit of being protected by the law and order system (see below).
    // [32..63] You're wanted alive by the guards. They'll try to arrest you.
    // [64..]   You're wanted dead or alive.
    if ((cnt > 31) and (cnt < 64))
    {
-      log("add_reward debug S1");
       // s := "A reward of " + s + " has been offered for the arrest of "+criminal.name;
       // Changed this to fit this into the Arrest and jail time jailstay@midgaard DIL.
       // --Dave
@@ -495,13 +485,11 @@ code
    }
    else if (cnt >= 64)
    {
-      log("add_reward debug S2");
       s := "A reward of " + s + " has been offered for the head of "+criminal.name;
       set_char_flags@justice(criminal, "wanted");
    }
    else
    {
-      log("add_reward debug S3");
        // I think it would be cool if players what have this score would start getting comments
        // from guards letting them know they are being watched.  Currently this score will not
        // be displayed on the wanted_poster.
@@ -511,8 +499,6 @@ code
        set_char_flags@justice(criminal, "onnotice");
    }
 
-   log("add_reward debug A");
-
    exd_db_reward.descr := s;
    if (exd_char_reward)
       exd_char_reward.descr := s;
@@ -521,7 +507,6 @@ code
    if (xp > 1000)
        xp := 1000;  // Make sure some glitch doesn't cause excessive XP
 
-   log("add_reward debug B");
    exd_db_reward.names.[3] := itoa(xp);
    if (exd_char_reward)
       exd_char_reward.names.[3] := itoa(xp);
@@ -1157,6 +1142,12 @@ code
 
          if (left(w_ptr.names.[0], 8) == "$witness") //if ("$witness" in w_ptr.name)
          {
+            if (length(w_ptr.names) < 4)
+            {
+               log("inconsistent $witness extra");
+               goto skipit;
+            }
+
             if (atoi(w_ptr.names.[3]) == CRIME_STEALING)
                crime := "stealing";
             else 
@@ -1174,15 +1165,22 @@ code
          act("None.", A_SOMEONE, activator, null, null, TO_CHAR);
       block;
       goto start;
-   }   
+   }
+
+   if (length(args) < 1)
+   {
+      act("$1n says, 'Yes... who?'", A_SOMEONE, self, null, null, TO_ROOM);
+      block;
+      goto start;
+   }
 
    // this is to deal with NPCs that have spaces in their names 
    criminal := args.[0];
    arg_count := 1;
    while (arg_count < length(args) -1)
    {
-    criminal := criminal +" "+ args.[arg_count];
-    arg_count := arg_count +1;
+      criminal := criminal +" "+ args.[arg_count];
+      arg_count := arg_count +1;
    }
   
    crime := args.[length(args)-1];
@@ -1198,7 +1196,7 @@ code
    {
       if (crime == "")
       {
-         act("$1n says, 'What do you wish to accuse $3t of?'",
+         act("$1n says, 'What do you wish to accuse $3t of. Murder or stealing?'",
                A_SOMEONE, self, activator, criminal, TO_ROOM);
          block;
          goto start;
@@ -1228,8 +1226,17 @@ code
    w_ptr := activator.extra;
    while (w_ptr)
    {
+      if (length(w_ptr.names) < 1)
+         goto skipit2;
+
       if (left(w_ptr.names.[0], 8) == "$witness") 
       {
+         if (length(w_ptr.names) < 2)
+         {
+            log("$witness inconsistency 2");
+            goto skipit2;
+         }
+         log("d7");
          if (w_ptr.names.[1] == criminal)
          {
             c_data := getwords(w_ptr.names.[0]);
@@ -1241,12 +1248,15 @@ code
             else
                goto goneaccuse;
          }
+         log("d8");
       }
+      :skipit2:
       w_ptr := w_ptr.next;
    }
 goto end;
 
 :doaccuse:
+   log("d9");
    found := 1;
    act("$1n says, 'Thank you very much $3N, I will stop $2t.'", A_SOMEONE, self, criminal, activator, TO_ROOM);
    if (activator.alignment > -1000)
@@ -1254,9 +1264,11 @@ goto end;
    subextra(activator.extra,w_ptr.names.[0]);
    add_reward@justice(accused.symname, accused.idx, crime_type);    
    block; 
+   log("d10");
    goto start;  
 
 :goneaccuse: // Offline player or Dead monster
+   log("d11");
    found := 1;
    if ("@_players" in c_data.[2])
    {
@@ -1272,6 +1284,7 @@ goto end;
    subextra(activator.extra, w_ptr.names.[0]);
    add_reward@justice(c_data.[2], atoi(c_data.[3]), crime_type);
    block; 
+   log("d12");
    goto start;  
 
 :notmyproblem:
@@ -1285,7 +1298,6 @@ goto end;
 
    block;
    goto start;
-
 }
 dilend
 
