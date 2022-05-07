@@ -70,10 +70,12 @@ set(VME_SRCS
         namelist.cpp namelist.h
         nanny.cpp nanny.h
         nice.cpp nice.h
+        npc_data.cpp npc_data.h
         obj_data.cpp obj_data.h
         OutputCapture.cpp OutputCapture.h
         path.cpp path.h
         pc_account_data.cpp pc_account_data.h
+        pc_data.cpp pc_data.h
         pc_time_data.cpp pc_time_data.h
         pcsave.cpp pcsave.h
         pipe.cpp pipe.h
@@ -94,7 +96,6 @@ set(VME_SRCS
         spell_parser.cpp spell_parser.h
         spells.h
         str_parse.cpp str_parse.h
-        structs.cpp structs.h
         system.cpp system.h
         szonelog.h
         szonelog_raw.cpp szonelog_raw.h
@@ -117,7 +118,7 @@ set(VME_SRCS
         zone_reset.cpp zone_reset.h
         zone_reset_cmd.cpp zone_reset_cmd.h
         zone_type.cpp zone_type.h
-        pc_data.cpp pc_data.h)
+        )
 
 # Add all sources to a library file so we can link with other projects and test suites
 add_library(vme_objs STATIC ${VME_SRCS})

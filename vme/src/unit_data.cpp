@@ -5,12 +5,42 @@
 #include "db_file.h"
 #include "handler.h"
 #include "mobact.h"
+#include "npc_data.h"
+#include "obj_data.h"
+#include "pc_data.h"
+#include "room_data.h"
 #include "slog.h"
 #include "textutil.h"
 #include "utils.h"
+
 #ifdef VMC
     #include "vmc/vmc_process.h"
 #endif
+
+unit_data *new_unit_data(ubit8 type)
+{
+    if (type == UNIT_ST_ROOM)
+    {
+        return new EMPLACE(room_data) room_data;
+    }
+    else if (type == UNIT_ST_OBJ)
+    {
+        return new EMPLACE(obj_data) obj_data;
+    }
+    else if (type == UNIT_ST_PC)
+    {
+        return new EMPLACE(pc_data) pc_data;
+    }
+    else if (type == UNIT_ST_NPC)
+    {
+        return new EMPLACE(npc_data) npc_data;
+    }
+    else
+    {
+        assert(FALSE);
+    }
+    return nullptr; // Need to avoid warning on Git actions.
+}
 
 unit_data::unit_data(ubit8 unit_type)
     : m_func{nullptr}
