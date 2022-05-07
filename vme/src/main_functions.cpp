@@ -84,18 +84,24 @@ void type_validate_64()
 
     // If any of these checks fail, update the type-defs so that they match your
     // particular architecture.
-    assert(sizeof(char) == 1);
-    assert(sizeof(ubit1) == 1);
-    assert(sizeof(ubit8) == 1);
-    assert(sizeof(ubit16) == 2);
-    assert(sizeof(ubit32) == 4);
-    assert(sizeof(ubit64) == 8);
-    assert(sizeof(ubit1) == 1);
-    assert(sizeof(sbit8) == 1);
-    assert(sizeof(sbit16) == 2);
-    assert(sizeof(sbit32) == 4);
-    assert(sizeof(sbit64) == 8);
-    assert(sizeof(int) == 4); // Hell will probably freeze over if this isn't true
+    static_assert(sizeof(char) == 1);
+    static_assert(sizeof(ubit1) == 1);
+    static_assert(sizeof(ubit8) == 1);
+    static_assert(sizeof(ubit16) == 2);
+    static_assert(sizeof(ubit32) == 4);
+    static_assert(sizeof(ubit64) == 8);
+    static_assert(sizeof(ubit1) == 1);
+    static_assert(sizeof(sbit8) == 1);
+    static_assert(sizeof(sbit16) == 2);
+    static_assert(sizeof(sbit32) == 4);
+    static_assert(sizeof(sbit64) == 8);
+    static_assert(sizeof(int) == 4); // Hell will probably freeze over if this isn't true
+
+    /**
+     * Test enums that are used in DIL are correct size as they are
+     * converted from #defines
+     */
+    static_assert(sizeof(Position_e) == 1);
 }
 
 /* Init sockets, run game, and cleanup sockets */
