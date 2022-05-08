@@ -1057,7 +1057,7 @@ code
    :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   if (IsInGuild@guilds(activator, QUEST_ENTRY))
+   if (IsInGuild@guilds(activator, GUILD_BARBARIAN))
       goto start;
 
    pc := qstWaitDone@quests(QUEST_ENTRY, activator, 
