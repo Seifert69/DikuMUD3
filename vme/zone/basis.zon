@@ -200,7 +200,45 @@ code
       addextra(tgt.quests, {"Eiyonel's Quest Finished"}, "");
       log("Eiyonel's Quest Finnished subed and added");
    }
-  
+
+   ext := "Searching for Ingredients" in tgt.quests;
+   if (ext)
+   {
+      ext.names.[0] := "Bisquit Lady Ongoing";
+
+      i := length(ext.names)-1;
+
+      while (i >= 0)
+      {
+         if (ext.names.[i] == "large_egg1")
+            ext.names.[i] := "one_egg@farm1";
+         else if (ext.names.[i] == "large_egg2")
+            ext.names.[i] := "two_egg@farm1";
+         else if (ext.names.[i] == "large_egg3")
+            ext.names.[i] := "three_egg@farm1";
+         else if (ext.names.[i] == "silver_bowl")
+            ext.names.[i] := "silver_bowl@farm1";
+         else if (ext.names.[i] == "flour")
+            ext.names.[i] := "sack@hamlet";
+         else if (ext.names.[i] == "cutter")
+            ext.names.[i] := "cutter@farm1";
+         else if (ext.names.[i] == "milk")
+            ext.names.[i] := "milk_bottle@farm1";
+         else if (ext.names.[i] == "wooden_spoon")
+            ext.names.[i] := "spoon@fortress";
+         else if (ext.names.[i] == "rolling_pin")
+            ext.names.[i] := "rolling_pin@haon_dor";
+         i := i - 1;
+      }
+
+   }
+
+   ext := "Ingredients Found" in tgt.quests;
+   if (ext)
+   {
+      ext.names.[0] := "Bisquit Lady Complete";
+   }
+
    if ("Aristol's Quest Finnished" in tgt.quests)
    {
       subextra(tgt.quests, "Aristol's Quest Finnished");
