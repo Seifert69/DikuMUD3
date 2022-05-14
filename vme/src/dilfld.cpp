@@ -2730,11 +2730,20 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_UP)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
-                    ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
+                auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+
+                if (room && IS_ROOM(room) && is_in(v2->val.num, 0, MAX_EXIT))
                 {
-                    v->atyp = DILA_NORM;
-                    v->val.ptr = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getToRoom();
+                    if (ROOM_EXIT(room, v2->val.num))
+                    {
+                        v->atyp = DILA_NORM;
+                        v->val.ptr = ROOM_EXIT(room, v2->val.num)->getToRoom();
+                    }
+                    else // There is no exit, the result is the null pointer
+                    {
+                        v->type = DILV_NULL;
+                        v->val.ptr = nullptr;
+                    }
                 }
                 else
                 {
