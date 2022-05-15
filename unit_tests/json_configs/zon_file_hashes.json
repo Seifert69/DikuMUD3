@@ -349,7 +349,7 @@
         {
             "source_file": {
                 "filename": "gremlin.zon",
-                "sha512": "0e710a33a2e0ab17723c1a9474677879bcea377074e8f98956fecc9a5c85b882f71691a3f0013456e90dcbf450e44c5858f9ebd26a5bebb3a72c808df8474c11"
+                "sha512": "c2064b95492e887ca3fcc66e66334d7c3727a0cbb774c05c9cc7e8bddf6b22ea5f38c7328335bc74d64da52a63262f69773070238a1cb77d5f6fc23a65571845"
             },
             "output": [
                 {
@@ -685,12 +685,12 @@
         {
             "source_file": {
                 "filename": "professions.zon",
-                "sha512": "da654a0b07dd11cb2a769d0a2e75beaeb553c6b56a385ee224e1e9ee803c7b847729c8e292cbe0a84f004f4f35014890e49e97c264fd5c3f07a7d19907359214"
+                "sha512": "7d3efe42d6526835b28923f33f367746348630d250b37830be446416b95ecf151b9fbde9a9a3e20a2199c1b9b7ba37bd33f946b808139bfd3a2855f38dafc739"
             },
             "output": [
                 {
                     "filename": "professions.data",
-                    "sha512": "a9e0ed849c5383573238c92c8d7109366571ca5f148b83bef00b16fe88b4f85678c9c5db7d452cbfd80476dbc487d1d94708b1eec8199e9900127e24be6fa7cc"
+                    "sha512": "b32b66229f62eba58f6bab7415e23d705d7008aa3acf567f0ba1d3b1cbb107259e802fc125ea0ffecbaaa5ef603c302de85e0e14d8903736683f8fb675421d81"
                 },
                 {
                     "filename": "professions.reset",

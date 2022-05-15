@@ -30,8 +30,6 @@ END HEADER*/
 #define BOLDIN_ROGUE_COMPLETE  "Boldin Seeking Rogue Complete"
 
 #define ROGUE_QUEST        "Rogue Quest"
-#define ROGUE_ONGOING      "Rogue Ongoing"
-#define ROGUE_COMPLETE     "Rogue Complete"
 
 #define EXPLORE_ONGOING  "Seeking Bernhard"
 #define EXPLORE_COMPLETE "Seeking Bernhard Complete"

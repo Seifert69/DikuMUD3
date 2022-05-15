@@ -250,7 +250,10 @@ code
          // Now find the guild matching pc.profession
          // and if that guild level is >= 25 we can specialize
 
-         if (GetGuildLevel@guilds(pc, pc.guild) >= 25)
+         // It got a little too complicated to have the guild level requirement here.
+         // SO simply checking the level of the player.
+         // if (GetGuildLevel@guilds(pc, pc.guild) >= 25)
+         if (pc. level >= 25)
          {
             return (1);
          }         
