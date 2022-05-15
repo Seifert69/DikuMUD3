@@ -45,12 +45,12 @@
         {
             "source_file": {
                 "filename": "barbarian.zon",
-                "sha512": "7c0a779f99b19818477bbbcbde280e2f451343b02243da207ebe6bfb74be36056ec7039996e7645d5f4870dc1736c098158c272e550a203de62c1cdf7c633aa7"
+                "sha512": "ec4ead1c17122b87e6ef2529127a17e3908b4f8247bf34d3608c2d4462bb50302c0cd061f4260d50a5ff1dd54b8cbb0c754273c285a66b4b6b1ec5aba24af40d"
             },
             "output": [
                 {
                     "filename": "barbarian.data",
-                    "sha512": "26f2a3914c7bcc2b91b8046a6d058757df83869dcaf2b9f45cbd58f79b63192145100e206e9952c6b5e8135dcc4c5be58376aa70fa401a2d6031c9cc9c10f480"
+                    "sha512": "8b3da291f7fed8c818da73fc35474523b372d08efda669e3cf14466302ecde516730d69cdcd4c30b4141e1c8435a05e10d8be437d14b286b75df31cf1a2dd313"
                 },
                 {
                     "filename": "barbarian.reset",
