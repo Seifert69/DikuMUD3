@@ -23,37 +23,110 @@ struct money_type
     ubit16 coins_per_weight; ///< How many coins per weight unit
     file_index_type *fi;     ///< Where is coin object in file
 };
+/**
+ * You shouldn't have to refer to this array yourself.
+ * Use the functions instead.
+ */
+extern money_type g_money_types[];
 
-#define money_round_up(a, c, t) (money_round(TRUE, (a), (c), (t)))
-#define money_round_down(a, c, t) (money_round(FALSE, (a), (c), (t)))
-#define money_pluralis_type(type) (g_money_types[(type)].strings[g_money_types[(type)].pl_idx])
-#define money_pluralis(unit) (money_pluralis_type(MONEY_TYPE(unit)))
+/**
+ * Round amount down/up to nearest `types' number of coins
+ */
+amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types);
 
-#define money_singularis_type(type) (g_money_types[(type)].strings[0])
-#define money_singularis(unit) (money_singularis_type(MONEY_TYPE(unit)))
+inline amount_t money_round_up(amount_t a, currency_t c, int t)
+{
+    return money_round(TRUE, a, c, t);
+}
 
-#define money_from_unit(unit, amt, currency) (money_transfer((unit), nullptr, (amt), (currency)))
+[[maybe_unused]] inline amount_t money_round_down(amount_t a, currency_t c, int t)
+{
+    return money_round(FALSE, a, c, t);
+}
 
-#define money_to_unit(unit, amt, currency) (money_transfer(nullptr, (unit), (amt), (currency)))
-
-#define IS_MONEY(unit) (IS_OBJ(unit) && OBJ_TYPE(unit) == ITEM_MONEY)
-
-#define MONEY_AMOUNT(unit) ((amount_t)OBJ_PRICE(unit))
+inline char *money_pluralis_type(size_t type)
+{
+    return g_money_types[type].strings[g_money_types[type].pl_idx];
+}
 
 /** Index into money-array */
-#define MONEY_TYPE(obj) (OBJ_VALUE((obj), 0))
+inline sbit32 MONEY_TYPE(const unit_data *obj)
+{
+    return OBJ_VALUE(obj, 0);
+}
 
-#define MONEY_CURRENCY(obj) (g_money_types[MONEY_TYPE(obj)].currency)
+inline char *money_pluralis(const unit_data *unit)
+{
+    return money_pluralis_type(MONEY_TYPE(unit));
+}
 
-#define MONEY_RELATIVE(obj) (g_money_types[MONEY_TYPE(obj)].relative_value)
+inline char *money_singularis_type(size_t type)
+{
+    return g_money_types[type].strings[0];
+}
 
-#define MONEY_MIN_VALUE(obj) (g_money_types[MONEY_TYPE(obj)].min_value)
+inline char *money_singularis(const unit_data *unit)
+{
+    return money_singularis_type(MONEY_TYPE(unit));
+}
 
-#define MONEY_WEIGHT(obj) (g_money_types[MONEY_TYPE(obj)].coins_per_weight)
+/**
+ * Use this if an amount needs to be physically transfered.
+ * Money is created/deleted if either unit is NULL.
+ *
+ * Impossible amounts are converted automagically
+ */
+void money_transfer(unit_data *from, unit_data *to, amount_t amt, currency_t currency);
 
-#define MONEY_VALUE(obj) (MONEY_AMOUNT(obj) * MONEY_RELATIVE(obj))
+inline void money_from_unit(unit_data *unit, amount_t amt, currency_t currency)
+{
+    money_transfer(unit, nullptr, amt, currency);
+}
 
-#define MONEY_WEIGHT_SUM(obj1, obj2) ((MONEY_AMOUNT(obj1) + MONEY_AMOUNT(obj2)) / MONEY_WEIGHT(obj1))
+[[maybe_unused]] inline void money_to_unit(unit_data *unit, amount_t amt, currency_t currency)
+{
+    money_transfer(nullptr, unit, amt, currency);
+}
+
+inline bool IS_MONEY(const unit_data *unit)
+{
+    return IS_OBJ(unit) && OBJ_TYPE(unit) == ITEM_MONEY;
+}
+
+inline amount_t MONEY_AMOUNT(const unit_data *unit)
+{
+    return static_cast<amount_t>(OBJ_PRICE(unit));
+}
+
+inline currency_t MONEY_CURRENCY(const unit_data *obj)
+{
+    return g_money_types[MONEY_TYPE(obj)].currency;
+}
+
+inline sbit32 MONEY_RELATIVE(const unit_data *obj)
+{
+    return g_money_types[MONEY_TYPE(obj)].relative_value;
+}
+
+[[maybe_unused]] inline sbit32 MONEY_MIN_VALUE(const unit_data *obj)
+{
+    return g_money_types[MONEY_TYPE(obj)].min_value;
+}
+
+inline ubit16 MONEY_WEIGHT(const unit_data *obj)
+{
+    return g_money_types[MONEY_TYPE(obj)].coins_per_weight;
+}
+
+inline sbit32 MONEY_VALUE(const unit_data *obj)
+{
+    return MONEY_AMOUNT(obj) * MONEY_RELATIVE(obj);
+}
+
+[[maybe_unused]] inline sbit32 MONEY_WEIGHT_SUM(const unit_data *obj1, const unit_data *obj2)
+{
+    return (MONEY_AMOUNT(obj1) + MONEY_AMOUNT(obj2)) / MONEY_WEIGHT(obj1);
+}
 
 /**
  * Local currency of unit, or DEF_CURRENCY if not defined.
@@ -86,14 +159,6 @@ amount_t unit_can_hold_amount(unit_data *unit, unit_data *money);
  *  Used for database backwards compatibility...)
  */
 void coins_to_unit(unit_data *, amount_t amt, int type);
-
-/**
- * Use this if an amount needs to be physically transfered.
- * Money is created/deleted if either unit is NULL.
- *
- * Impossible amounts are converted automagically
- */
-void money_transfer(unit_data *from, unit_data *to, amount_t amt, currency_t currency);
 
 /**
  *  Counts up what amount of a given currency a unit holds recursively in
@@ -137,19 +202,8 @@ unit_data *set_money(unit_data *money, amount_t amt);
  */
 void pile_money(unit_data *money);
 
-/**
- * Round amount down/up to nearest `types' number of coins
- */
-amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types);
-
 #ifdef VMC_SRC
 void boot_money(char *moneyfile);
 #else
 void boot_money();
 #endif
-
-/**
- * You shouldn't have to refer to this array yourself.
- * Use the macros instead.
- */
-extern money_type g_money_types[];

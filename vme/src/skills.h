@@ -8,6 +8,7 @@
 
 #include "dil.h"
 #include "essential.h"
+#include "utils.h"
 #include "values.h"
 
 #include <csignal>
@@ -53,17 +54,37 @@ struct profession_cost
 
 /* ---------------- RACES -------------------- */
 
-#define RACE_IS_HUMANOID(race) ((race) <= RACE_OTHER_HUMANOID)
+inline bool RACE_IS_HUMANOID(int64_t race)
+{
+    return race <= RACE_OTHER_HUMANOID;
+}
 
-#define CHAR_IS_MAMMAL(ch) RACE_IS_MAMMAL(CHAR_RACE(ch))
+inline bool RACE_IS_MAMMAL(int64_t race)
+{
+    return race > RACE_OTHER_HUMANOID && race <= RACE_OTHER_MAMMAL;
+}
 
-#define RACE_IS_MAMMAL(race) (((race) > RACE_OTHER_HUMANOID) && ((race) <= RACE_OTHER_MAMMAL))
+[[maybe_unused]] inline bool CHAR_IS_MAMMAL(const unit_data *ch)
+{
+    return RACE_IS_MAMMAL(CHAR_RACE(ch));
+}
 
-#define RACE_IS_UNDEAD(race) (((race) > RACE_OTHER_CREATURE) && ((race) <= RACE_OTHER_UNDEAD))
+// Hmm RACE_OTHER_UNDEAD doesn't exist so commented out after converting
+// inline bool RACE_IS_UNDEAD(int64_t race)
+//{
+//    return race > RACE_OTHER_CREATURE && race <= RACE_OTHER_UNDEAD;
+//}
 
-#define CHAR_IS_HUMANOID(ch) RACE_IS_HUMANOID(CHAR_RACE(ch))
+inline bool CHAR_IS_HUMANOID(const unit_data *ch)
+{
+    return RACE_IS_HUMANOID(CHAR_RACE(ch));
+}
 
-#define CHAR_IS_UNDEAD(ch) RACE_IS_UNDEAD(CHAR_RACE(ch))
+// See RACE_IS_UNDEAD above
+// inline bool CHAR_IS_UNDEAD(const unit_data *ch)
+//{
+//    return RACE_IS_UNDEAD(CHAR_RACE(ch));
+//}
 
 struct dice_type
 {

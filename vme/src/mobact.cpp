@@ -198,8 +198,10 @@ void special_event(void *p1, void *p2)
             dilprg *prg = (dilprg *)fptr->getData();
             for (i = 0; i < prg->fp->intrcount; i++)
             {
-                if IS_SET (prg->fp->intr[i].flags, SFB_TICK)
+                if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
+                {
                     diltick = TRUE;
+                }
             }
         }
         if (!diltick)

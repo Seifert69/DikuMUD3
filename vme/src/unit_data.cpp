@@ -104,24 +104,24 @@ unit_data::~unit_data()
 
     if (IS_OBJ(this))
     {
-        delete U_OBJ(this);
+        delete UOBJ(this);
     }
     else if (IS_ROOM(this))
     {
-        delete U_ROOM(this);
+        delete UROOM(this);
     }
     else if (IS_CHAR(this))
     {
         if (IS_NPC(this))
         {
-            delete U_NPC(this);
+            delete UNPC(this);
         }
         else
         {
-            delete U_PC(this);
+            delete UPC(this);
         }
 
-        delete U_CHAR(this);
+        delete UCHAR(this);
     }
     else
     {
@@ -347,14 +347,14 @@ unit_data *unit_data::copy()
         {
             for (x = 0; x < WPN_GROUP_MAX; x++)
             {
-                U_NPC(u)->setWeaponSkillAtIndexTo(x, U_NPC(this)->getWeaponSkillAtIndex(x));
+                UNPC(u)->setWeaponSkillAtIndexTo(x, UNPC(this)->getWeaponSkillAtIndex(x));
             }
             for (x = 0; x < SPL_GROUP_MAX; x++)
             {
-                U_NPC(u)->setSpellSkillAtIndexTo(x, U_NPC(this)->getSpellSkillAtIndex(x));
+                UNPC(u)->setSpellSkillAtIndexTo(x, UNPC(this)->getSpellSkillAtIndex(x));
             }
-            U_NPC(u)->setDefaultPosition(U_NPC(this)->getDefaultPosition());
-            U_NPC(u)->setAllNPCFlags(U_NPC(this)->getAllNPCFlags());
+            UNPC(u)->setDefaultPosition(UNPC(this)->getDefaultPosition());
+            UNPC(u)->setAllNPCFlags(UNPC(this)->getAllNPCFlags());
         }
     }
     else

@@ -11,9 +11,11 @@
 #include <sys/types.h>
 
 #include <cassert>
+#include <cctype>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <type_traits>
 
@@ -37,53 +39,111 @@ enum log_level
 #define TRUE 1
 #define FALSE 0
 
-#define BITCONV16(i) ((((ubit16)i) >> 8) | ((((ubit16)i) & 255) << 8))
-#define BITCONV32(i) ((((ubit32)i) >> 16) | ((((ubit32)i) & 65535) << 16))
+template<typename T>
+[[maybe_unused]] T BITCONV16(T i)
+{
+    return (((uint16_t)i >> 8) | (((uint16_t)i & 255) << 8));
+}
+template<typename T>
+[[maybe_unused]] T BITCONV32(T i)
+{
+    return (((uint32_t)i >> 16) | (((uint32_t)i & 65535) << 16));
+}
 
-#define ISNEWL(ch) ((ch) == '\n' || (ch) == '\r')
+inline bool ISNEWL(char ch)
+{
+    return ch == '\n' || ch == '\r';
+}
 
-#define SGN(i) (((i) >= 0) ? 1 : -1)
+[[maybe_unused]] inline int SGN(int64_t i)
+{
+    return i >= 0 ? 1 : -1;
+}
 
-#define ODD(i) ((i)&1)
-#define EVEN(i) (!((i)&1))
+template<typename Type>
+inline bool ODD(Type i)
+{
+    return i & 1;
+}
+template<typename Type>
+[[maybe_unused]] inline bool EVEN(Type i)
+{
+    return !(i & 1);
+}
 
-#define TAIL(str) for (; *(str); (str)++)
-
-#define STRCAT(p, c)                                                                                                                       \
-    strcat(p, c);                                                                                                                          \
-    TAIL(p)
-
-#define STR(str) (str ? str : "(NIL POINTER)")
-
-#define IF_STR(st) ((st) ? (st) : "")
-
-#define ANA(c) (strchr("aeiouyAEIOUY", c) ? "an" : "a")
-
-#define CAPC(st) (*(st) = toupper(*(st)))
-#define CAP(st) (CAPC(st), (st))
-
-/*define CREATE(res, type, num) \
-  do { if (((res) = (type *) calloc((num), sizeof(type))) == NULL) \
-         assert(FALSE); } while(0)
-*/
-/*define RECREATE(res, type, num) \
-  do { if (((res) = (type *) realloc((res), sizeof(type) * (num))) == NULL) \
-         assert(FALSE); } while(0)*/
-
-#define IS_SET(flag, bit) ((flag) & (bit))
-
-#define SET_BIT(var, bit) ((var) |= (bit))
-
-#define REMOVE_BIT(var, bit) ((var) &= ~(bit))
-
-#define TOGGLE_BIT(var, bit) ((var) ^= (bit))
-
-#define SWITCH(a, b)                                                                                                                       \
-    {                                                                                                                                      \
-        (a) ^= (b);                                                                                                                        \
-        (b) ^= (a);                                                                                                                        \
-        (a) ^= (b);                                                                                                                        \
+template<typename T>
+inline void TAIL(T *&str)
+{
+    for (; *str; str++)
+    {
+        ;
     }
+}
+
+[[maybe_unused]] inline void STRCAT(char *&p, const char *c)
+{
+    strcat(p, c);
+    TAIL(p);
+}
+
+inline const char *STR(const char *str)
+{
+    return str ? str : "(NIL POINTER)";
+}
+
+inline const char *IF_STR(const char *st)
+{
+    return st ? st : "";
+}
+
+inline const char *ANA(char c)
+{
+    return strchr("aeiouyAEIOUY", c) ? "an" : "a";
+}
+
+inline void CAPC(char *st)
+{
+    *st = static_cast<char>(toupper(*st));
+}
+
+inline char *CAP(char *st)
+{
+    CAPC(st);
+    return st;
+}
+
+template<typename Flag, typename Bit>
+inline bool IS_SET(Flag flag, Bit bit)
+{
+    return flag & bit;
+}
+
+template<typename Flag, typename Bit>
+inline void SET_BIT(Flag &&var, Bit bit)
+{
+    var |= bit;
+}
+
+template<typename Flag, typename Bit>
+inline Flag REMOVE_BIT(Flag &&var, Bit bit)
+{
+    var &= ~bit;
+    return var;
+}
+
+template<typename Flag, typename Bit>
+[[maybe_unused]] inline void TOGGLE_BIT(Flag &&var, Bit bit)
+{
+    var ^= bit;
+}
+
+template<typename T>
+[[maybe_unused]] inline void SWITCH(T &a, T &b)
+{
+    a ^= b;
+    b ^= a;
+    a ^= b;
+}
 #define DEBUG(a)                                                                                                                           \
     do                                                                                                                                     \
     {                                                                                                                                      \
@@ -100,27 +160,36 @@ using sbit64 = int64_t;  // MS2020
 using ubit64 = uint64_t; // MS2020
 using ubit1 = bool;      /* Boolean */
 
-#define CREATE(res, type, num)                                                                                                             \
-    if (((res) = (type *)calloc((num), sizeof(type))) == nullptr)                                                                          \
-    {                                                                                                                                      \
-        /* Make sure CREATE isn't being used to create the new classes instead of the structs they used to be */                           \
-        static_assert(std::is_pod_v<type>);                                                                                                \
-        assert(FALSE);                                                                                                                     \
+template<typename Type, typename Result>
+inline void create_memory(Result &&res, size_t num)
+{
+    /* Make sure CREATE isn't being used to create the new classes instead of the structs they used to be */
+    static_assert(std::is_pod_v<Type>);
+    if (res = reinterpret_cast<Type *>(calloc(num, sizeof(Type))); res == nullptr)
+    {
+        assert(FALSE);
     }
+}
+#define CREATE(res, type, num) create_memory<type>(res, num)
 
-#define RECREATE(res, type, num)                                                                                                           \
-    if (((res) = (type *)realloc((res), sizeof(type) * (num))) == nullptr)                                                                 \
-    {                                                                                                                                      \
-        /* Make sure RECREATE isn't being used to create the new classes instead of the structs they used to be */                         \
-        static_assert(std::is_pod_v<type>);                                                                                                \
-        assert(FALSE);                                                                                                                     \
+template<typename Type, typename Result>
+inline void recreate_memory(Result &&res, size_t num)
+{
+    /* Make sure RECREATE isn't being used to create the new classes instead of the structs they used to be */
+    static_assert(std::is_pod_v<Type>);
+    if (res = reinterpret_cast<Type *>(realloc(res, sizeof(Type) * num)); res == nullptr)
+    {
+        assert(FALSE);
     }
+}
+#define RECREATE(res, type, num) recreate_memory<type>(res, num)
 
-#define FREE(p)                                                                                                                            \
-    {                                                                                                                                      \
-        /* Make sure FREE isn't being used to free class items created with EMPLACE */                                                     \
-        static_assert(std::is_same_v<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>, void *> ||                           \
-                      std::is_pod_v<std::remove_pointer_t<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>>>);              \
-        free(p);                                                                                                                           \
-        p = nullptr;                                                                                                                       \
-    }
+template<typename Type>
+inline void FREE(Type &&p)
+{
+    /* Make sure FREE isn't being used to free class items created with EMPLACE */
+    static_assert(std::is_same_v<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>, void *> ||
+                  std::is_pod_v<std::remove_pointer_t<std::remove_reference_t<std::remove_all_extents_t<decltype(p)>>>>);
+    free(p);
+    p = nullptr;
+}
