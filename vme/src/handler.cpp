@@ -534,11 +534,11 @@ void trans_set(unit_data *u)
 
 void trans_unset(unit_data *u)
 {
-    u->changeLightOutputBy(-1 * UNIT_ILLUM(u));
+    u->changeLightOutputBy(-1 * u->getTransparentLightOutput());
 
     if (UNIT_IN(u))
     {
-        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(-1 * UNIT_ILLUM(u));
+        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(-1 * u->getTransparentLightOutput());
     }
 
     u->setTransparentLightOutput(0);
@@ -739,11 +739,11 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     assert(UNIT_IN(unit));
 
     /* resolve *ALL* light!!! */
-    in = UNIT_IN(unit);                     /* where to move unit up to */
-    toin = UNIT_IN(in);                     /* unit around in           */
-    extin = toin ? UNIT_IN(toin) : nullptr; /* unit around toin         */
-    bright = unit->getLightOutput();        /* brightness inc. trans    */
-    selfb = bright - UNIT_ILLUM(unit);      /* brightness excl. trans   */
+    in = UNIT_IN(unit);                                 /* where to move unit up to */
+    toin = UNIT_IN(in);                                 /* unit around in           */
+    extin = toin ? UNIT_IN(toin) : nullptr;             /* unit around toin         */
+    bright = unit->getLightOutput();                    /* brightness inc. trans    */
+    selfb = bright - unit->getTransparentLightOutput(); /* brightness excl. trans   */
 
     in->changeNumberOfActiveLightSourcesBy(-1 * bright); // Subtract Light
     if (UNIT_IS_TRANSPARENT(in))
@@ -833,7 +833,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     in = UNIT_IN(unit);
     extin = in ? UNIT_IN(in) : nullptr;
     bright = unit->getLightOutput();
-    selfb = bright - UNIT_ILLUM(unit);
+    selfb = bright - unit->getTransparentLightOutput();
 
     to->changeNumberOfActiveLightSourcesBy(bright);
     if (UNIT_IS_TRANSPARENT(to))

@@ -741,7 +741,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               "Hitpoints/max: [%ld/%ld]  Alignment: [%d]<br/>",
                               u->getNumberOfActiveLightSources(),
                               u->getLightOutput(),
-                              UNIT_ILLUM(u),
+                              u->getTransparentLightOutput(),
                               UNIT_CHARS(u),
                               UNIT_MINV(u),
                               UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",

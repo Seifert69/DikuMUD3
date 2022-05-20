@@ -93,8 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline sbit16 UNIT_ILLUM(unit_data *unit) { return unit->getTransparentLightOutput(); }
-
 inline ubit8 UNIT_CHARS(const unit_data *unit) { return unit->getNumberOfCharactersInsideUnit(); }
 
 inline unit_data *UNIT_CONTAINS(unit_data *unit) { return unit->getContainedUnits(); }
