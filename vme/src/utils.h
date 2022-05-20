@@ -93,8 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline sbit32 UNIT_BASE_WEIGHT(unit_data *unit) {return unit->getBaseWeight(); }
-
 inline ubit16 UNIT_SIZE(unit_data *unit) { return unit->getSize(); }
 
 inline sbit16 UNIT_CAPACITY(unit_data *unit) { return unit->getCapacity(); }
@@ -195,7 +193,7 @@ inline bool UNIT_IS_GOOD(unit_data *ch) { return UNIT_ALIGNMENT(ch) >= 350; }
 inline bool UNIT_IS_EVIL(unit_data *ch) { return UNIT_ALIGNMENT(ch) <= -350; }
 inline bool UNIT_IS_NEUTRAL(unit_data *ch) { return !UNIT_IS_GOOD(ch) && !UNIT_IS_EVIL(ch); }
 
-inline sbit32 UNIT_CONTAINING_W(unit_data *u) { return u->getWeight() - UNIT_BASE_WEIGHT(u); }
+inline sbit32 UNIT_CONTAINING_W(unit_data *u) { return u->getWeight() - u->getBaseWeight(); }
 
 /* ..................................................................... */
 

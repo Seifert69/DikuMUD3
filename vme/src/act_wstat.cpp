@@ -758,7 +758,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               UNIT_KEY(u) ? UNIT_KEY(u) : "none",
                               sprintbit(bits1, UNIT_OPEN_FLAGS(u), g_unit_open_flags),
                               UNIT_OPEN_DIFF(u),
-                              UNIT_BASE_WEIGHT(u),
+                              u->getBaseWeight(),
                               u->getWeight(),
                               UNIT_CAPACITY(u),
                               UNIT_SIZE(u));

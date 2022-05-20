@@ -1014,7 +1014,7 @@ void process_unit(unit_data *u)
         dmc_error(TRUE, "%s: Illegal weight %d (expected 0..2000).", UNIT_IDENT(u), u->getWeight());
         u->setWeight(0);
     }
-    u->setWeight(UNIT_BASE_WEIGHT(u));
+    u->setWeight(u->getBaseWeight());
 
     if (!is_in(UNIT_ALIGNMENT(u), unit_data::MinAlignment, unit_data::MaxAlignment))
     {

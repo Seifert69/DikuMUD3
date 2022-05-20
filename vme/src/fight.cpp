@@ -1637,7 +1637,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
         }
         else
         {
-            dam = natural_damage(hm, att_weapon_type, def_armour_type, UNIT_BASE_WEIGHT(att));
+            dam = natural_damage(hm, att_weapon_type, def_armour_type, att->getBaseWeight());
         }
 
         if (dam > 0)

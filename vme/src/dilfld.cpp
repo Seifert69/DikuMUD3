@@ -1923,7 +1923,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr);
+                        v->val.num = ((unit_data *)v1->val.ptr)->getBaseWeight();
 
                         // v->atyp = DILA_NONE;
                         // v->type = DILV_SINT2R;

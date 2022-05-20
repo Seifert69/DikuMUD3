@@ -787,7 +787,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("The unit isn't empty. Setting weight is supposed to happen on empty units only. Setting anyway<br/>", ch);
             }
 
-            int dif = valarg - UNIT_BASE_WEIGHT(unt);
+            int dif = valarg - unt->getBaseWeight();
 
             /* set new baseweight */
             unt->setBaseWeight(valarg);
@@ -796,7 +796,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             weight_change_unit(unt, dif);
 
             // Now make weight and base weight equal
-            dif = UNIT_BASE_WEIGHT(unt) - unt->getWeight();
+            dif = unt->getBaseWeight() - unt->getWeight();
             weight_change_unit(unt, dif);
             // UNIT_BASE_WEIGHT(unt) = UNIT_WEIGHT(unt) = valarg;
             return;

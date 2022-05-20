@@ -666,7 +666,7 @@ void dilfi_set_weight_base(dilprg *p)
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
         if (unit)
         {
-            int dif = v2->val.num - UNIT_BASE_WEIGHT(unit);
+            int dif = v2->val.num - unit->getBaseWeight();
 
             /* set new baseweight */
             unit->setBaseWeight(v2->val.num);
@@ -690,22 +690,23 @@ void dilfi_set_weight(dilprg *p)
 
     if (dil_type_check("set_weight", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr)
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit)
         {
-            if (v2->val.num < UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr))
+            if (v2->val.num < unit->getBaseWeight())
             {
                 szonelog(p->frame->tmpl->zone,
                          "DIL '%s' setting unit %s weight to %d less than base weight of %d.",
                          p->frame->tmpl->prgname,
-                         UNIT_FI_NAME((unit_data *)v1->val.ptr),
+                         UNIT_FI_NAME(unit),
                          v2->val.num,
-                         UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr));
+                         unit->getBaseWeight());
             }
 
-            int dif = v2->val.num - ((unit_data *)v1->val.ptr)->getWeight();
+            int dif = v2->val.num - unit->getWeight();
 
             /* update weight */
-            weight_change_unit((unit_data *)v1->val.ptr, dif);
+            weight_change_unit(unit, dif);
         }
     }
     delete v1;
@@ -723,7 +724,7 @@ void dilfi_swt(dilprg *p)
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
         if (unit)
         {
-            int dif = v2->val.num - UNIT_BASE_WEIGHT(unit);
+            int dif = v2->val.num - unit->getBaseWeight();
 
             /* set new baseweight */
             unit->setBaseWeight(v2->val.num);

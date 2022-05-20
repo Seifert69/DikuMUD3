@@ -52,7 +52,7 @@ int char_can_carry_n(unit_data *ch, int n)
 
 int char_carry_w_limit(unit_data *ch)
 {
-    return 50 + MAX(50, UNIT_BASE_WEIGHT(ch) / 2) + CHAR_STR(ch) * 2;
+    return 50 + MAX(50, ch->getBaseWeight() / 2) + CHAR_STR(ch) * 2;
 }
 
 int char_can_carry_w(unit_data *ch, int weight)
