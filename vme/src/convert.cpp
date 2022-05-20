@@ -48,9 +48,9 @@ int sel_name(const dirent *dptr)
 
 void convert_free_unit(unit_data *u)
 {
-    while (UNIT_CONTAINS(u))
+    while (u->getContainedUnits())
     {
-        convert_free_unit(UNIT_CONTAINS(u));
+        convert_free_unit(u->getContainedUnits());
     }
 
     u->setUnitAffectedType(nullptr);
@@ -127,7 +127,7 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
         return;
     }
 
-    convert_inventory(UNIT_CONTAINS(u), pc, bList);
+    convert_inventory(u->getContainedUnits(), pc, bList);
 
     convert_inventory(u->getNext(), pc, bList);
 
@@ -143,9 +143,9 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
 
         unit_to_unit(bla, UNIT_IN(u));
 
-        while (UNIT_CONTAINS(u))
+        while (u->getContainedUnits())
         {
-            tmpu = UNIT_CONTAINS(u);
+            tmpu = u->getContainedUnits();
             unit_from_unit(tmpu);
             unit_to_unit(tmpu, bla);
         }
@@ -217,7 +217,7 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (!UNIT_CONTAINS(u) && (u->getWeight() != u->getBaseWeight()))
+    if (!u->getContainedUnits() && (u->getWeight() != u->getBaseWeight()))
     {
         printf("Fixed illegal weight.");
         u->setWeight(u->getBaseWeight());
@@ -708,11 +708,11 @@ void cleanup()
 
                         void_char->setContainedUnit(nullptr);
                         load_contents(temp, void_char);
-                        if (UNIT_CONTAINS(void_char))
+                        if (void_char->getContainedUnits())
                         {
                             std::cout << "  INV";
-                            convert_inventory(UNIT_CONTAINS(void_char), pc, TRUE);
-                            free_inventory(UNIT_CONTAINS(void_char));
+                            convert_inventory(void_char->getContainedUnits(), pc, TRUE);
+                            free_inventory(void_char->getContainedUnits());
                         }
 
                         convert_free_unit(pc);

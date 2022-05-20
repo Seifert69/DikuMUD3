@@ -91,7 +91,7 @@ void tif_fear_check(unit_affected_type *af, unit_data *unit)
     else
     {
         /* Find someone else */
-        for (ch = UNIT_CONTAINS(UNIT_IN(unit)); ch; ch = ch->getNext())
+        for (ch = UNIT_IN(unit)->getContainedUnits(); ch; ch = ch->getNext())
         {
             if (ch != unit && IS_CHAR(ch))
             {
@@ -380,9 +380,12 @@ void tif_light_add(unit_affected_type *af, unit_data *unit)
         act("Your $3N starts to glow.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
         act("$1n's $3n starts to glow.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_ROOM);
     }
-    else if (UNIT_CONTAINS(UNIT_IN(unit)))
+    else
     {
-        act("The $3N starts to glow.", A_HIDEINV, UNIT_CONTAINS(UNIT_IN(unit)), cActParameter(), unit, TO_ALL);
+        if (UNIT_IN(unit)->getContainedUnits())
+        {
+            act("The $3N starts to glow.", A_HIDEINV, UNIT_IN(unit)->getContainedUnits(), cActParameter(), unit, TO_ALL);
+        }
     }
 }
 
@@ -399,9 +402,12 @@ void tif_light_sub(unit_affected_type *af, unit_data *unit)
         act("Your $3N gets dimmer.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
         act("$1n's $3N gets dimmer.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_ROOM);
     }
-    else if (UNIT_CONTAINS(UNIT_IN(unit)))
+    else
     {
-        act("The $3N gets dimmer.", A_HIDEINV, UNIT_CONTAINS(UNIT_IN(unit)), cActParameter(), unit, TO_ALL);
+        if (UNIT_IN(unit)->getContainedUnits())
+        {
+            act("The $3N gets dimmer.", A_HIDEINV, UNIT_IN(unit)->getContainedUnits(), cActParameter(), unit, TO_ALL);
+        }
     }
 }
 
@@ -962,11 +968,11 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
     {
         /* Empty the container and set buried status of contents */
 
-        while (UNIT_CONTAINS(unit))
+        while (unit->getContainedUnits())
         {
             unit_affected_type naf;
 
-            UNIT_CONTAINS(unit)->setUnitFlag(UNIT_FL_BURIED);
+            unit->getContainedUnits()->setUnitFlag(UNIT_FL_BURIED);
 
             naf.setID(ID_BURIED);
             naf.setDuration(0);
@@ -976,14 +982,14 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
             naf.setLastFI(TIF_BURIED_DESTRUCT);
             naf.setApplyFI(APF_NONE);
 
-            create_affect(UNIT_CONTAINS(unit), &naf);
+            create_affect(unit->getContainedUnits(), &naf);
 
-            if (UNIT_IS_EQUIPPED(UNIT_CONTAINS(unit)))
+            if (UNIT_IS_EQUIPPED(unit->getContainedUnits()))
             {
-                unequip_object(UNIT_CONTAINS(unit));
+                unequip_object(unit->getContainedUnits());
             }
 
-            unit_up(UNIT_CONTAINS(unit));
+            unit_up(unit->getContainedUnits());
         }
 
         extract_unit(unit);

@@ -274,7 +274,7 @@ void save_player_file(unit_data *pc)
     UCHAR(pc)->setDescriptor(nullptr); // Do this to turn off all messages!
 
     /* Remove all inventory and equipment in order to make a CLEAN save */
-    while ((tmp_u = UNIT_CONTAINS(pc)))
+    while ((tmp_u = pc->getContainedUnits()))
     {
         if (IS_OBJ(tmp_u))
         {

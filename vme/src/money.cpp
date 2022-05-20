@@ -331,7 +331,7 @@ void money_transfer(unit_data *from, unit_data *to, amount_t amt, currency_t cur
         }
 
         /* Note down money-objects in from, and their values */
-        for (tmp = UNIT_CONTAINS(from); tmp; tmp = tmp->getNext())
+        for (tmp = from->getContainedUnits(); tmp; tmp = tmp->getNext())
         {
             if (IS_MONEY(tmp) && MONEY_CURRENCY(tmp) == currency)
             {
@@ -423,7 +423,7 @@ void money_transfer(unit_data *from, unit_data *to, amount_t amt, currency_t cur
                 assert(0 < i && i <= last);
 
                 /* Get that coin from `to' */
-                for (tmp = UNIT_CONTAINS(to); tmp; tmp = tmp->getNext())
+                for (tmp = to->getContainedUnits(); tmp; tmp = tmp->getNext())
                 {
                     if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == i)
                     {
@@ -510,7 +510,7 @@ amount_t unit_holds_total(unit_data *u, currency_t currency)
 
     if (IS_ROOM(u) || IS_CHAR(u) || (IS_OBJ(u) && OBJ_TYPE(u) == ITEM_CONTAINER))
     {
-        for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->getNext())
+        for (tmp = u->getContainedUnits(); tmp; tmp = tmp->getNext())
         {
             if (IS_MONEY(tmp) && (currency == ANY_CURRENCY || MONEY_CURRENCY(tmp) == currency))
             {
@@ -545,7 +545,7 @@ amount_t char_holds_amount(unit_data *ch, currency_t currency)
 
     assert(IS_CHAR(ch));
 
-    for (tmp = UNIT_CONTAINS(ch); tmp; tmp = tmp->getNext())
+    for (tmp = ch->getContainedUnits(); tmp; tmp = tmp->getNext())
     {
         if (IS_MONEY(tmp) && (currency == ANY_CURRENCY || MONEY_CURRENCY(tmp) == currency))
         {
@@ -570,7 +570,7 @@ ubit1 char_can_afford(unit_data *ch, amount_t amt, currency_t currency)
 
     amt = adjust_money(amt, currency);
 
-    for (tmp = UNIT_CONTAINS(ch); tmp; tmp = tmp->getNext())
+    for (tmp = ch->getContainedUnits(); tmp; tmp = tmp->getNext())
     {
         if (IS_MONEY(tmp) && MONEY_CURRENCY(tmp) == currency)
         {
@@ -593,7 +593,7 @@ unit_data *unit_has_money_type(unit_data *unit, ubit8 type)
 {
     unit_data *tmp = nullptr;
 
-    for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->getNext())
+    for (tmp = unit->getContainedUnits(); tmp; tmp = tmp->getNext())
     {
         if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == type)
         {
@@ -647,7 +647,7 @@ void pile_money(unit_data *money)
 
     assert(IS_MONEY(money) && unit);
 
-    for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->getNext())
+    for (tmp = unit->getContainedUnits(); tmp; tmp = tmp->getNext())
     {
         if (tmp != money && IS_MONEY(tmp) && MONEY_TYPE(tmp) == MONEY_TYPE(money))
         {

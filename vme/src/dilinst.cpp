@@ -75,9 +75,9 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
             }
         }
 
-        if (UNIT_CONTAINS(u))
+        if (u->getContainedUnits())
         {
-            dil_stop_special(UNIT_CONTAINS(u), aprg);
+            dil_stop_special(u->getContainedUnits(), aprg);
         }
     }
 }
@@ -101,9 +101,9 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
             }
         }
 
-        if (UNIT_CONTAINS(u))
+        if (u->getContainedUnits())
         {
-            dil_start_special(UNIT_CONTAINS(u), aprg);
+            dil_start_special(u->getContainedUnits(), aprg);
         }
     }
 }

@@ -422,7 +422,7 @@ static bool move_money_up(unit_data *ch, unit_data *u)
     unit_data *next = nullptr;
     bool found = FALSE;
 
-    for (tmp = UNIT_CONTAINS(u); tmp; tmp = next)
+    for (tmp = u->getContainedUnits(); tmp; tmp = next)
     {
         next = tmp->getNext();
 

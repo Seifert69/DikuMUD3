@@ -1082,18 +1082,18 @@ int reward_give(spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    u = UNIT_CONTAINS(sarg->owner);
+    u = sarg->owner->getContainedUnits();
 
     buf = "give ";
     buf = buf + (char *)sarg->arg;
     command_interpreter(sarg->activator, (const char *)buf.c_str());
 
-    if (UNIT_CONTAINS(sarg->owner) == u)
+    if (sarg->owner->getContainedUnits() == u)
     { /* Was it given nothing? */
         return SFR_BLOCK;
     }
 
-    if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == nullptr)
+    if ((paf = affected_by_spell(sarg->owner->getContainedUnits(), ID_REWARD)) == nullptr)
     {
         act("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;
@@ -1110,7 +1110,7 @@ int reward_give(spec_arg *sarg)
 
     money_to_unit(sarg->activator, paf->getDataAtIndex(1), cur);
 
-    extract_unit(UNIT_CONTAINS(sarg->owner));
+    extract_unit(sarg->owner->getContainedUnits());
 
     return SFR_BLOCK;
 }

@@ -93,9 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline unit_data *UNIT_CONTAINS(unit_data *unit) { return unit->getContainedUnits(); }
-inline const unit_data *UNIT_CONTAINS(const unit_data *unit) { return unit->getContainedUnits(); }
-
 inline unit_data *UNIT_IN(unit_data *unit) { return unit->getMyContainer(); }
 inline unit_data *UNIT_IN(const unit_data *unit) { return const_cast<unit_data*>(unit)->getMyContainer(); }
 

@@ -198,13 +198,13 @@ void destruct_unit(unit_data *unit)
         assert(FALSE);
     }
 
-    while (UNIT_CONTAINS(unit))
+    while (unit->getContainedUnits())
     {
-        if (IS_OBJ(UNIT_CONTAINS(unit)) && OBJ_EQP_POS(UNIT_CONTAINS(unit)))
+        if (IS_OBJ(unit->getContainedUnits()) && OBJ_EQP_POS(unit->getContainedUnits()))
         {
-            unequip_object(UNIT_CONTAINS(unit));
+            unequip_object(unit->getContainedUnits());
         }
-        destruct_unit(UNIT_CONTAINS(unit));
+        destruct_unit(unit->getContainedUnits());
     }
 
     if (!in_menu)

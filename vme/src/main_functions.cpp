@@ -377,7 +377,7 @@ void check_overpopulation_event(void *p1, void *p2)
         }
 
         i = 0;
-        for (t = UNIT_CONTAINS(u); t; t = t->getNext())
+        for (t = u->getContainedUnits(); t; t = t->getNext())
         { // count top layer
             i++;
         }

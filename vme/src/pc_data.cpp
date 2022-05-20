@@ -74,7 +74,7 @@ pc_data::~pc_data()
 //
 void pc_data::gstate_tomenu(dilprg *pdontstop)
 {
-    if (this->is_destructed())
+    if (is_destructed())
     {
         return;
     }
@@ -100,9 +100,9 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
     UCHAR(this)->setDescriptor(nullptr);
 
-    while (UNIT_CONTAINS(this))
+    while (getContainedUnits())
     {
-        extract_unit(UNIT_CONTAINS(this));
+        extract_unit(getContainedUnits());
     }
 
     UCHAR(this)->setDescriptor(tmp_descr);

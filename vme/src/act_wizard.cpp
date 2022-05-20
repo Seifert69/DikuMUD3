@@ -399,7 +399,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
             unit_to_unit(u, UNIT_IN(ch));
             send_to_char("You have loaded the player.<br/>", ch);
 
-            if (UNIT_CONTAINS(u))
+            if (u->getContainedUnits())
             {
                 send_to_char("Inventory loaded.<br/>", ch);
             }

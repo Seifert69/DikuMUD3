@@ -78,7 +78,7 @@ static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, v
 
     if (!UNIT_MINV(item))
     {
-        sum += subtract_recurse(ch, UNIT_CONTAINS(item), seconds, fptr);
+        sum += subtract_recurse(ch, item->getContainedUnits(), seconds, fptr);
     }
 
     sum += subtract_recurse(ch, item->getNext(), seconds, fptr);
@@ -128,7 +128,7 @@ ubit32 rent_calc(unit_data *ch, time_t savetime)
 
             if (t > SECS_PER_REAL_MIN * 10)
             {
-                sum = subtract_recurse(ch, UNIT_CONTAINS(ch), t, subtract_rent);
+                sum = subtract_recurse(ch, ch->getContainedUnits(), t, subtract_rent);
             }
         }
     }
@@ -142,7 +142,7 @@ void do_rent(unit_data *ch, char *arg, const command_info *cmd)
 
     rent_info = FALSE;
 
-    sum = subtract_recurse(ch, UNIT_CONTAINS(ch), SECS_PER_REAL_DAY, show_items);
+    sum = subtract_recurse(ch, ch->getContainedUnits(), SECS_PER_REAL_DAY, show_items);
 
     if (!rent_info)
     {
@@ -291,7 +291,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
         return;
     }
 
-    if ((tmp_u = UNIT_CONTAINS(unit)))
+    if ((tmp_u = unit->getContainedUnits()))
     {
         if (IS_OBJ(tmp_u) && (tmp_i = OBJ_EQP_POS(tmp_u)))
         {
@@ -333,7 +333,7 @@ void send_saves(unit_data *parent, unit_data *unit)
         return;
     }
 
-    send_saves(parent, UNIT_CONTAINS(unit));
+    send_saves(parent, unit->getContainedUnits());
     send_saves(parent, unit->getNext());
 
     if ((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
@@ -378,7 +378,7 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
         send_save_to(unit, unit);
     }
 
-    send_saves(unit, UNIT_CONTAINS(unit));
+    send_saves(unit, unit->getContainedUnits());
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 
@@ -416,7 +416,7 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 
     strcpy(name, ContentsFileName(pFileName));
 
-    if (!UNIT_CONTAINS(unit))
+    if (!unit->getContainedUnits())
     {
         remove(name);
         return 0;
@@ -424,7 +424,7 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 
     basic_save_contents(name, unit, fast, bContainer);
 
-    return subtract_recurse(unit, UNIT_CONTAINS(unit), SECS_PER_REAL_DAY, nullptr);
+    return subtract_recurse(unit, unit->getContainedUnits(), SECS_PER_REAL_DAY, nullptr);
 }
 
 /* From the block_file 'bf' at index 'blk_idx' load the objects    */

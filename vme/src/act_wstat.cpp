@@ -59,7 +59,7 @@ static void stat_world_count(const unit_data *ch, char *arg)
     for (unit_data *u = g_unit_list; u; u = u->getGlobalNext())
     {
         int i = 0;
-        for (unit_data *t = UNIT_CONTAINS(u); t; t = t->getNext())
+        for (unit_data *t = u->getContainedUnits(); t; t = t->getNext())
         { // count top layer
             i++;
         }
@@ -745,7 +745,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               u->getNumberOfCharactersInsideUnit(),
                               UNIT_MINV(u),
                               UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
-                              UNIT_CONTAINS(u) ? "has contents" : "is empty",
+                              u->getContainedUnits() ? "has contents" : "is empty",
                               sprintbit(bits2, u->getManipulate(), g_unit_manipulate),
                               sprintbit(bits1, u->getUnitFlags(), g_unit_flags),
                               (signed long)UNIT_HIT(u),
@@ -1229,9 +1229,9 @@ static void stat_contents(const unit_data *ch, unit_data *u)
 
     orgu = u;
 
-    if (UNIT_CONTAINS(u))
+    if (u->getContainedUnits())
     {
-        for (u = UNIT_CONTAINS(u); u; u = u->getNext())
+        for (u = u->getContainedUnits(); u; u = u->getNext())
         {
             if (CHAR_LEVEL(ch) >= UNIT_MINV(u))
             {

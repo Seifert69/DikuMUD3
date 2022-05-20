@@ -782,7 +782,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 8: /* "weight" */
         {
-            if (UNIT_CONTAINS(unt))
+            if (unt->getContainedUnits())
             {
                 send_to_char("The unit isn't empty. Setting weight is supposed to happen on empty units only. Setting anyway<br/>", ch);
             }

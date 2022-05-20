@@ -115,7 +115,7 @@ bool zone_limit(unit_data *u, file_index_type *fi, zone_reset_cmd *cmd)
     /* Check for local maxima */
     if ((i = cmd->getNum(2)))
     {
-        for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->getNext())
+        for (tmp = u->getContainedUnits(); tmp; tmp = tmp->getNext())
         {
             if (tmp->getFileIndex() == fi)
             {
@@ -303,7 +303,7 @@ unit_data *zone_purge(unit_data *u, zone_reset_cmd *cmd)
     }
     else
     {
-        for (u = UNIT_CONTAINS(cmd->getFileIndexType(0)->Front()); u; u = next)
+        for (u = cmd->getFileIndexType(0)->Front()->getContainedUnits(); u; u = next)
         {
             next = u->getNext();
             if (!IS_PC(u) && !IS_ROOM(u))
@@ -328,7 +328,7 @@ unit_data *zone_remove(unit_data *u, zone_reset_cmd *cmd)
     }
     else
     {
-        for (u = UNIT_CONTAINS(cmd->getFileIndexType(1)->Front()); u; u = next)
+        for (u = cmd->getFileIndexType(1)->Front()->getContainedUnits(); u; u = next)
         {
             next = u->getNext();
             if (u->getFileIndex() == cmd->getFileIndexType(0) && !IS_ROOM(u))

@@ -58,7 +58,7 @@ void create_worldgraph()
         }
 
         // DIR_ENTER
-        for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
+        for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
         {
             if (IS_ROOM(uu) && IS_SET(uu->getManipulate(), MANIPULATE_ENTER))
             {
@@ -189,7 +189,7 @@ void create_sc_graph(int num_of_sc)
                 }
             }
             // DIR_ENTER
-            for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
+            for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
             {
                 if (IS_ROOM(uu) && IS_SET(uu->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(uu) == sc))
                 {

@@ -518,7 +518,7 @@ void trans_set(unit_data *u)
     unit_data *u2 = nullptr;
     int sum = 0;
 
-    for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->getNext())
+    for (u2 = u->getContainedUnits(); u2; u2 = u2->getNext())
     {
         sum += u2->getLightOutput();
     }
@@ -550,7 +550,7 @@ unit_data *equipment(unit_data *ch, ubit8 pos)
 
     assert(IS_CHAR(ch));
 
-    for (u = UNIT_CONTAINS(ch); u; u = u->getNext())
+    for (u = ch->getContainedUnits(); u; u = u->getNext())
     {
         if (IS_OBJ(u) && pos == OBJ_EQP_POS(u))
         {
@@ -773,7 +773,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     /*fuck*/
     unit->getMyContainer()->reduceWeightBy(unit->getWeight());
 
-    if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
+    if (unit == UNIT_IN(unit)->getContainedUnits())
     {
         unit->getMyContainer()->setContainedUnit(unit->getNext());
     }
@@ -862,13 +862,13 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         {
             UNIT_IN(unit)->decrementNumberOfCharactersInsideUnit();
         }
-        if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
+        if (unit == UNIT_IN(unit)->getContainedUnits())
         {
             UNIT_IN(unit)->setContainedUnit(unit->getNext());
         }
         else
         {
-            for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->getNext() != unit; u = u->getNext())
+            for (u = UNIT_IN(unit)->getContainedUnits(); u->getNext() != unit; u = u->getNext())
             {
                 ;
             }
@@ -877,7 +877,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     }
 
     unit->setMyContainerTo(to);
-    unit->setNext(UNIT_CONTAINS(to));
+    unit->setNext(to->getContainedUnits());
     to->setContainedUnit(unit);
 
     if (IS_CHAR(unit))
@@ -1114,9 +1114,9 @@ void extract_unit(unit_data *unit)
     stop_all_special(unit);
     stop_affect(unit);
 
-    while (UNIT_CONTAINS(unit))
+    while (unit->getContainedUnits())
     {
-        extract_unit(UNIT_CONTAINS(unit));
+        extract_unit(unit->getContainedUnits());
     }
 
     /*	void unlink_affect(class unit_affected_type *af);

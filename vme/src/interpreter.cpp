@@ -725,7 +725,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
             return SFR_BLOCK;
         }
 
-        for (u = UNIT_CONTAINS(ch); u; u = next)
+        for (u = ch->getContainedUnits(); u; u = next)
         {
             next = u->getNext(); /* Next dude trick */
             if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
@@ -754,7 +754,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     }
 
     /* special in inventory or equipment? */
-    for (u = UNIT_CONTAINS(ch); u; u = next)
+    for (u = ch->getContainedUnits(); u; u = next)
     {
         next = u->getNext(); /* Next dude trick */
         if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
@@ -766,7 +766,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     if (UNIT_IN(ch))
     {
         /* special in room present? */
-        for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = next)
+        for (u = UNIT_IN(ch)->getContainedUnits(); u; u = next)
         {
             next = u->getNext(); /* Next dude trick */
 
@@ -779,7 +779,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
             {
                 if (UNIT_IS_TRANSPARENT(u))
                 {
-                    for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
+                    for (uu = u->getContainedUnits(); uu; uu = nextt)
                     {
                         nextt = uu->getNext(); /* next dude double trick */
                         if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
@@ -791,7 +791,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                 else if (IS_CHAR(u))
                 {
                     /* in equipment? */
-                    for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
+                    for (uu = u->getContainedUnits(); uu; uu = nextt)
                     {
                         nextt = uu->getNext(); /* Next dude trick */
                         if (uu->getFunctionPointer() && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
@@ -817,7 +817,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
             if (UNIT_IN(UNIT_IN(ch)))
             {
-                for (u = UNIT_CONTAINS(UNIT_IN(UNIT_IN(ch))); u; u = next)
+                for (u = UNIT_IN(UNIT_IN(ch))->getContainedUnits(); u; u = next)
                 {
                     next = u->getNext(); /* Next dude trick */
 
@@ -836,7 +836,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                     {
                         if (UNIT_IS_TRANSPARENT(u))
                         {
-                            for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
+                            for (uu = u->getContainedUnits(); uu; uu = nextt)
                             {
                                 nextt = uu->getNext(); /* next dude double trick */
                                 if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
@@ -848,7 +848,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                         else if (IS_CHAR(u))
                         {
                             /* in equipment? */
-                            for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
+                            for (uu = u->getContainedUnits(); uu; uu = nextt)
                             {
                                 nextt = uu->getNext(); /* Next dude trick */
                                 if (uu->getFunctionPointer() && IS_OBJ(uu) && OBJ_EQP_POS(uu) &&

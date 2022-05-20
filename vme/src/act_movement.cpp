@@ -226,7 +226,7 @@ int room_move(unit_data *ch,
         return 0;
     }
 
-    for (u = UNIT_CONTAINS(ch); u; u = u->getNext())
+    for (u = ch->getContainedUnits(); u; u = u->getNext())
     {
         if (!pay_point_charlie(u, room_to))
         {
@@ -239,7 +239,7 @@ int room_move(unit_data *ch,
         act(pLeaveSelf, A_ALWAYS, ch, room_from, mover, TO_CHAR);
     }
 
-    if (UNIT_CONTAINS(room_from) && !str_is_empty(pLeaveOther))
+    if (room_from->getContainedUnits() && !str_is_empty(pLeaveOther))
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
@@ -252,7 +252,7 @@ int room_move(unit_data *ch,
     UCHAR(ch)->removeCharacterFlag(CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
     unit_to_unit(mover, room_to);
 
-    if (UNIT_CONTAINS(room_to) && !str_is_empty(pArrOther))
+    if (room_to->getContainedUnits() && !str_is_empty(pArrOther))
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
@@ -274,7 +274,7 @@ int room_move(unit_data *ch,
             command_interpreter(mover, "look :brief:");
         }
 
-        for (u = UNIT_CONTAINS(mover); u; u = u->getNext())
+        for (u = mover->getContainedUnits(); u; u = u->getNext())
         {
             if ((u != ch) && IS_CHAR(u))
             {
@@ -392,7 +392,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else // Steed or boat code (shares scan for passenger combat)
     {
-        for (unit_data *u = UNIT_CONTAINS(mover); u; u = u->getNext())
+        for (unit_data *u = mover->getContainedUnits(); u; u = u->getNext())
         {
             if (IS_CHAR(u) && CHAR_FIGHTING(u))
             {

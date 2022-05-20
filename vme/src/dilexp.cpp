@@ -2585,7 +2585,7 @@ void dilfe_purs(dilprg *p)
                             if (i <= MAX_MONEY)
                             {
                                 /* Note down money-objects in from, and their values */
-                                for (unit_data *tmp = UNIT_CONTAINS((unit_data *)v1->val.ptr); tmp; tmp = tmp->getNext())
+                                for (unit_data *tmp = ((unit_data *)v1->val.ptr)->getContainedUnits(); tmp; tmp = tmp->getNext())
                                 {
                                     if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == i)
                                     {
