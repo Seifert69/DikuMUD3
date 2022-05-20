@@ -369,7 +369,7 @@ int CByteBuffer::ReadIntList(int **ilist)
         return 1;
     }
 
-    CREATE(intlist, int, len + 1)
+    CREATE(intlist, int, len + 1);
     intlist[0] = len;
     for (i = 1; i <= len; i++)
     {

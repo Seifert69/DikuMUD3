@@ -6,9 +6,10 @@
  */
 #pragma once
 
-#include "skills.h"
+#include "essential.h"
 #include "values.h"
 
+class skill_interval;
 extern const skill_interval g_how_good[];
 extern const skill_interval g_weapon_skills[];
 extern const skill_interval g_spell_skills[];

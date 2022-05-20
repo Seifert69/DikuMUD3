@@ -341,7 +341,9 @@ void command_read()
             else
             {
                 if (cmdptr->cmd_str)
-                    FREE(cmdptr->cmd_str)
+                {
+                    FREE(cmdptr->cmd_str);
+                }
                 cmdptr = nullptr;
                 slog(LOG_ALL, 0, "COMMAND LOAD ERROR: %s not a defined internal funciton.", pCh);
                 ignore = TRUE;

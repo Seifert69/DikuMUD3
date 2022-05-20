@@ -292,7 +292,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    zone->getNotes(),
                                    errors ? "Errors in zone (stat zone error)" : "No errors registered in zone.",
                                    info ? "User info feedback in zone (stat zone info)." : "No user info (feedback) in zone.");
-    FREE(cname)
+    FREE(cname);
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 

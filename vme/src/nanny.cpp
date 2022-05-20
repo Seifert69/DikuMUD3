@@ -16,8 +16,6 @@
     #include <arpa/telnet.h>
 #endif
 
-#include "act_other.h"
-#include "affect.h"
 #include "badnames.h"
 #include "ban.h"
 #include "comm.h"
@@ -33,6 +31,7 @@
 #include "nanny.h"
 #include "pcsave.h"
 #include "reception.h"
+#include "skills.h"
 #include "slog.h"
 #include "system.h"
 #include "textutil.h"

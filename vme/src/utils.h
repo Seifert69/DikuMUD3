@@ -7,66 +7,94 @@
 #pragma once
 
 #include "constants.h"
-#include "descriptor_data.h"
-#include "essential.h"
-#include "file_index_type.h"
 #include "npc_data.h"
 #include "obj_data.h"
 #include "pc_data.h"
 #include "room_data.h"
 #include "weather.h"
+#include "zone_type.h"
 
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
 
+// clang-format off
 /* ..................................................................... */
+// Forward declarations
+inline ubit8 CHAR_SEX(const unit_data *ch);
+inline ubit8 CHAR_LEVEL(const unit_data *ch);
+inline bool CHAR_AWAKE(const unit_data *ch);
+inline bool IS_ROOM(const unit_data *unit);
+inline bool IS_OBJ(const unit_data *unit);
+inline bool IS_NPC(const unit_data *unit);
+inline bool IS_PC(const unit_data *unit);
+inline bool IS_CHAR(const unit_data *unit);
 
 #define PK_RELAXED 0
 #define PK_STRICT 1
 
-#define IS_BEGINNER(ch) (CHAR_LEVEL(ch) <= START_LEVEL)
-#define IS_MORTAL(ch) (CHAR_LEVEL(ch) < IMMORTAL_LEVEL)
-#define IS_IMMORTAL(ch) (CHAR_LEVEL(ch) >= IMMORTAL_LEVEL)
-#define IS_GOD(ch) (CHAR_LEVEL(ch) >= GOD_LEVEL)
-#define IS_CREATOR(ch) (CHAR_LEVEL(ch) >= CREATOR_LEVEL)
-#define IS_OVERSEER(ch) (CHAR_LEVEL(ch) >= OVERSEER_LEVEL)
-#define IS_ADMINISTRATOR(ch) (CHAR_LEVEL(ch) >= ADMINISTRATOR_LEVEL)
-#define IS_ULTIMATE(ch) (CHAR_LEVEL(ch) == ULTIMATE_LEVEL)
+[[maybe_unused]] inline bool IS_BEGINNER(const unit_data *ch) { return CHAR_LEVEL(ch) <= START_LEVEL; }
+inline bool IS_MORTAL(const unit_data *ch) { return CHAR_LEVEL(ch) < IMMORTAL_LEVEL; }
+inline bool IS_IMMORTAL(const unit_data *ch) { return CHAR_LEVEL(ch) >= IMMORTAL_LEVEL; }
+inline bool IS_GOD(const unit_data *ch) { return CHAR_LEVEL(ch) >= GOD_LEVEL; }
+[[maybe_unused]] inline bool IS_CREATOR(const unit_data *ch) { return CHAR_LEVEL(ch) >= CREATOR_LEVEL; }
+inline bool IS_OVERSEER(const unit_data *ch) { return CHAR_LEVEL(ch) >= OVERSEER_LEVEL; }
+inline bool IS_ADMINISTRATOR(const unit_data *ch) { return CHAR_LEVEL(ch) >= ADMINISTRATOR_LEVEL; }
+inline bool IS_ULTIMATE(const unit_data *ch) { return CHAR_LEVEL(ch) == ULTIMATE_LEVEL;}
 
 /* ..................................................................... */
 
-/*  Do NOT use these macros unless you know PRECISELY what you are doing!!!
+/*  Do NOT use these functions unless you know PRECISELY what you are doing!!!
  *  and only if you have to assign directly to them (as in db_utils.c)
  */
-#define U_CHAR(u) ((char_data *)(dynamic_cast<const char_data *>(u)))
-#define U_NPC(u) ((npc_data *)(dynamic_cast<const npc_data *>(u)))
-#define U_PC(u) ((pc_data *)(dynamic_cast<const pc_data *>(u)))
-#define U_OBJ(u) ((obj_data *)(dynamic_cast<const obj_data *>(u)))
-#define U_ROOM(u) ((room_data *)(dynamic_cast<const room_data *>(u)))
 
 #ifdef MUD_DEBUG
     #define DEBUG_HISTORY
     #define UNIT_TYPE_DEBUG
 #endif
 
+inline char_data *UCHAR(const unit_data *u)
+{
 #ifdef UNIT_TYPE_DEBUG
-    #define UCHAR(u) (assert(u &&IS_CHAR(u)), U_CHAR(u))
-    #define UNPC(u) (assert(u &&IS_NPC(u)), U_NPC(u))
-    #define UPC(u) (assert(u &&IS_PC(u)), U_PC(u))
-    #define UOBJ(u) (assert(u &&IS_OBJ(u)), U_OBJ(u))
-    #define UROOM(u) (assert(u &&IS_ROOM(u)), U_ROOM(u))
-#else
-    #define UCHAR(u) U_CHAR(u)
-    #define UNPC(u) U_NPC(u)
-    #define UPC(u) U_PC(u)
-    #define UOBJ(u) U_OBJ(u)
-    #define UROOM(u) U_ROOM(u)
+    assert(u && IS_CHAR(u));
 #endif
+    return const_cast<char_data *>(dynamic_cast<const char_data *>(u));
+}
+
+inline npc_data *UNPC(const unit_data *u)
+{
+#ifdef UNIT_TYPE_DEBUG
+    assert(u && IS_NPC(u));
+#endif
+    return const_cast<npc_data *>(dynamic_cast<const npc_data *>(u));
+}
+
+inline pc_data *UPC(const unit_data *u)
+{
+#ifdef UNIT_TYPE_DEBUG
+    assert(u && IS_PC(u));
+#endif
+    return const_cast<pc_data *>(dynamic_cast<const pc_data *>(u));
+}
+
+inline obj_data *UOBJ(const unit_data *u)
+{
+#ifdef UNIT_TYPE_DEBUG
+    assert(u && IS_OBJ(u));
+#endif
+    return const_cast<obj_data *>(dynamic_cast<const obj_data *>(u));
+}
+
+inline room_data *UROOM(const unit_data *u)
+{
+#ifdef UNIT_TYPE_DEBUG
+    assert(u && IS_ROOM(u));
+#endif
+    return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
+}
 
 /* ..................................................................... */
 
-// clang-format off
 inline unit_fptr *UNIT_FUNC(unit_data *unit) { return unit->getFunctionPointer(); }
 
 inline file_index_type *UNIT_FILE_INDEX(unit_data *unit) { return unit->getFileIndex(); }
@@ -91,7 +119,7 @@ inline sbit16 UNIT_LIGHTS(unit_data *unit) { return unit->getNumberOfActiveLight
 
 inline sbit16 UNIT_ILLUM(unit_data *unit) { return unit->getTransparentLightOutput(); }
 
-inline sbit8 UNIT_CHARS(const unit_data *unit) { return unit->getNumberOfCharactersInsideUnit(); }
+inline ubit8 UNIT_CHARS(const unit_data *unit) { return unit->getNumberOfCharactersInsideUnit(); }
 
 inline unit_data *UNIT_CONTAINS(unit_data *unit) { return unit->getContainedUnits(); }
 inline const unit_data *UNIT_CONTAINS(const unit_data *unit) { return unit->getContainedUnits(); }
@@ -120,7 +148,6 @@ inline sbit32 UNIT_HIT(unit_data *unit) { return unit->getCurrentHitpoints(); }
 
 inline sbit32 UNIT_MAX_HIT(unit_data *unit) { return unit->getMaximumHitpoints(); }
 
-inline ubit8 UNIT_MINV(unit_data *unit) { return unit->getLevelOfWizardInvisibility(); }
 inline ubit8 UNIT_MINV(const unit_data *unit) { return unit->getLevelOfWizardInvisibility(); }
 
 inline const std::string &UNIT_TITLE(const unit_data *unit) { return unit->getTitle(); }
@@ -131,56 +158,60 @@ inline const std::string &UNIT_IN_DESCR(const unit_data *unit) { return unit->ge
 
 inline extra_list &UNIT_EXTRA(unit_data *unit) { return unit->getExtraList(); }
 inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExtraList(); }
-// clang-format on
 /* ..................................................................... */
 
-#define IS_ROOM(unit) (UNIT_TYPE(unit) == UNIT_ST_ROOM)
+inline bool IS_ROOM(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_ROOM; }
 
-#define IS_OBJ(unit) (UNIT_TYPE(unit) == UNIT_ST_OBJ)
+inline bool IS_OBJ(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_OBJ; }
 
-#define IS_NPC(unit) (UNIT_TYPE(unit) == UNIT_ST_NPC)
+inline bool IS_NPC(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_NPC; }
 
-#define IS_PC(unit) (UNIT_TYPE(unit) == UNIT_ST_PC)
+inline bool IS_PC(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_PC; }
 
-#define IS_CHAR(unit) (IS_SET(UNIT_TYPE(unit), UNIT_ST_PC | UNIT_ST_NPC))
+inline bool IS_CHAR(const unit_data *unit)
+{
+    auto type = UNIT_TYPE(unit);
+    return type == UNIT_ST_PC || type == UNIT_ST_NPC;
+}
 
 /* ............................FILE INDEX STUFF..................... */
 
-#define FI_ZONENAME(fi) ((fi)->getZone()->getName())
+inline const char *FI_ZONENAME(const file_index_type *fi) { return fi->getZone()->getName(); }
 
-#define FI_NAME(fi) ((fi)->getName())
+inline const char *FI_NAME(const file_index_type *fi) { return fi->getName(); }
 
 /* ............................UNIT SUPERSTRUCTURES..................... */
 
-#define UNIT_IS_TRANSPARENT(u)                                                                                                             \
-    (!IS_SET(UNIT_FLAGS(u), UNIT_FL_BURIED) && IS_SET(UNIT_FLAGS(u), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED))
+inline bool UNIT_IS_TRANSPARENT(const unit_data *u)
+{
+    return !IS_SET(UNIT_FLAGS(u), UNIT_FL_BURIED) && IS_SET(UNIT_FLAGS(u), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED);
+}
 
-#define UNIT_FI_ZONE(unit) ((unit)->getFileIndex()->getZone())
+inline zone_type *UNIT_FI_ZONE(unit_data *unit) { return (unit)->getFileIndex()->getZone(); }
 
-#define UNIT_FI_ZONENAME(unit) (UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE")
+inline const char *UNIT_FI_ZONENAME(const unit_data *unit) { return UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE"; }
 
-#define UNIT_FI_NAME(unit) (UNIT_FILE_INDEX(unit) ? FI_NAME(UNIT_FILE_INDEX(unit)) : "NO-NAME")
+inline const char *UNIT_FI_NAME(const unit_data *unit) { return UNIT_FILE_INDEX(unit) ? FI_NAME(UNIT_FILE_INDEX(unit)) : "NO-NAME"; }
 
-#define UNIT_WEAR(unit, part) (IS_SET(UNIT_MANIPULATE(unit), part))
+inline bool UNIT_WEAR(unit_data *unit, ubit32 part) { return IS_SET(UNIT_MANIPULATE(unit), part); }
 
-#define UNIT_IS_OUTSIDE(unit) (!IS_SET(UNIT_FLAGS(UNIT_IN(unit)), UNIT_FL_INDOORS))
+inline bool UNIT_IS_OUTSIDE(const unit_data *unit) { return !IS_SET(UNIT_FLAGS(UNIT_IN(unit)), UNIT_FL_INDOORS); }
 
-#define UNIT_OUTSIDE_LIGHT(unit) (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0)
+inline sbit8 UNIT_OUTSIDE_LIGHT(unit_data *unit) { return !IS_SET(UNIT_FLAGS(unit), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
 
-#define UNIT_IS_DARK(unit) (UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) < 0)
+[[maybe_unused]] inline sbit16 UNIT_IS_DARK(unit_data *unit) { return UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) < 0; }
 
-#define UNIT_IS_LIGHT(unit) (UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) >= 0)
+inline sbit16 UNIT_IS_LIGHT(unit_data *unit) { return UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) >= 0; }
 
-#define UNIT_SEX(unit) (IS_CHAR(unit) ? CHAR_SEX(unit) : SEX_NEUTRAL)
+inline ubit8 UNIT_SEX(const unit_data *unit) { return IS_CHAR(unit) ? CHAR_SEX(unit) : SEX_NEUTRAL; }
 
-#define UNIT_IS_GOOD(ch) (UNIT_ALIGNMENT(ch) >= 350)
-#define UNIT_IS_EVIL(ch) (UNIT_ALIGNMENT(ch) <= -350)
-#define UNIT_IS_NEUTRAL(ch) (!UNIT_IS_GOOD(ch) && !UNIT_IS_EVIL(ch))
+inline bool UNIT_IS_GOOD(unit_data *ch) { return UNIT_ALIGNMENT(ch) >= 350; }
+inline bool UNIT_IS_EVIL(unit_data *ch) { return UNIT_ALIGNMENT(ch) <= -350; }
+inline bool UNIT_IS_NEUTRAL(unit_data *ch) { return !UNIT_IS_GOOD(ch) && !UNIT_IS_EVIL(ch); }
 
-#define UNIT_CONTAINING_W(u) (UNIT_WEIGHT(u) - UNIT_BASE_WEIGHT(u))
+inline sbit32 UNIT_CONTAINING_W(unit_data *u) { return UNIT_WEIGHT(u) - UNIT_BASE_WEIGHT(u); }
 
 /* ..................................................................... */
-// clang-format off
 
 inline ubit8 ROOM_RESISTANCE(unit_data *room) { return UROOM(room)->getRoomMagicalResistance(); }
 
@@ -199,35 +230,28 @@ inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongCompone
     inline std::vector<room_data::vertex_descriptor> &ROOM_DISTANCE(unit_data *unit) { return UROOM(unit)->getDistance();}
 #endif
 
-// clang-format on
 /* ..................................................................... */
-// clang-format off
 
 inline ubit8 OBJ_RESISTANCE(unit_data *obj) { return UOBJ(obj)->getMagicResistance(); }
 
-inline sbit32 OBJ_VALUE(unit_data *unit, size_t index) { return UOBJ(unit)->getValueAtIndex(index); }
+inline sbit32 OBJ_VALUE(const unit_data *unit, size_t index) { return UOBJ(unit)->getValueAtIndex(index); }
 
-inline ubit32 OBJ_PRICE(unit_data *unit) { return UOBJ(unit)->getPriceInGP(); }
+inline ubit32 OBJ_PRICE(const unit_data *unit) { return UOBJ(unit)->getPriceInGP(); }
 
 inline ubit32 OBJ_PRICE_DAY(unit_data *unit) { return UOBJ(unit)->getPricePerDay(); }
 
-inline ubit8 OBJ_TYPE(unit_data *unit) { return UOBJ(unit)->getObjectItemType(); }
+inline ubit8 OBJ_TYPE(const unit_data *unit) { return UOBJ(unit)->getObjectItemType(); }
 
 inline ubit8 OBJ_EQP_POS(unit_data *unit) { return UOBJ(unit)->getEquipmentPosition(); }
 
 inline ubit8 OBJ_FLAGS(unit_data *obj) { return UOBJ(obj)->getObjectFlags(); }
 
-// clang-format on
 /* ...........................OBJECT SUPERSTRUCTURES..................... */
 
-#define OBJ_HAS_EXTRA(obj, stat) (IS_SET(OBJ_EXTRA(obj), stat))
-
-#define UNIT_IS_EQUIPPED(obj) (IS_OBJ(obj) && OBJ_EQP_POS(obj))
+inline bool UNIT_IS_EQUIPPED(unit_data *obj) { return IS_OBJ(obj) && OBJ_EQP_POS(obj); }
 
 /* ..................................................................... */
 
-/*#define CHAR_DEX_RED(ch)     \  (UCHAR(ch)->points.dex_reduction)*/
-// clang-format off
 inline const descriptor_data *CHAR_DESCRIPTOR(const unit_data *ch) { return UCHAR(ch)->getDescriptor(); }
 
 inline descriptor_data *CHAR_DESCRIPTOR(unit_data *ch) { return UCHAR(ch)->getDescriptor(); }
@@ -275,7 +299,7 @@ inline sbit16 CHAR_ENDURANCE(const unit_data *ch) { return UCHAR(ch)->getEnduran
 inline sbit16 CHAR_MANA(const unit_data *ch) { return UCHAR(ch)->getMana(); }
 
 /* NOT to be used unless by db.... */
-inline const char *CHAR_MONEY(const unit_data *ch) { return UCHAR(ch)->getMoney(); }
+[[maybe_unused]] inline const char *CHAR_MONEY(const unit_data *ch) { return UCHAR(ch)->getMoney(); }
 
 inline char *CHAR_MONEY(unit_data *ch) { return UCHAR(ch)->getMoney(); }
 
@@ -294,46 +318,50 @@ inline unit_data *CHAR_FIGHTING(unit_data *ch) { return UCHAR(ch)->getCombat() ?
 inline unit_data *CHAR_MASTER(unit_data *ch) { return UCHAR(ch)->getMaster(); }
 
 inline char_follow_type *CHAR_FOLLOWERS(const unit_data *ch) { return UCHAR(ch)->getFollowers(); }
-// clang-format on
 /* ...........................CHAR SUPERSTRUCTURES....................... */
 
-#define CHAR_IS_READY(ch) (CHAR_AWAKE(ch) && (CHAR_POS(ch) != POSITION_FIGHTING))
+inline bool CHAR_IS_READY(unit_data *ch) { return CHAR_AWAKE(ch) && (CHAR_POS(ch) != POSITION_FIGHTING); }
 
-#define CHAR_IS_SNOOPING(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping()) : (unit_data *)nullptr)
+inline unit_data *CHAR_IS_SNOOPING(unit_data *ch) { return CHAR_DESCRIPTOR(ch) ? CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping() : nullptr; }
 
-#define CHAR_IS_SNOOPED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy()) : (unit_data *)nullptr)
+inline unit_data *CHAR_IS_SNOOPED(unit_data *ch) { return CHAR_DESCRIPTOR(ch) ? CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy() : nullptr; }
 
-#define CHAR_IS_SWITCHED(ch) (CHAR_DESCRIPTOR(ch) ? (CHAR_DESCRIPTOR(ch)->cgetOriginalCharacter()) : (unit_data *)nullptr)
+inline unit_data *CHAR_IS_SWITCHED(unit_data *ch) { return CHAR_DESCRIPTOR(ch) ? CHAR_DESCRIPTOR(ch)->getOriginalCharacter() : nullptr; }
 
-#define CHAR_SNOOPING(ch) (CHAR_IS_SNOOPING(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping()) : (ch))
+[[maybe_unused]] inline unit_data *CHAR_SNOOPING(unit_data *ch) { return CHAR_IS_SNOOPING(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping()) : (ch); }
 
-#define CHAR_SNOOPED(ch) (CHAR_IS_SNOOPED(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy()) : (ch))
+[[maybe_unused]] inline unit_data *CHAR_SNOOPED(unit_data *ch) { return CHAR_IS_SNOOPED(ch) ? (CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy()) : (ch); }
 
 inline unit_data *CHAR_ORIGINAL(unit_data *ch)
 {
     return CHAR_IS_SWITCHED(ch) ? CHAR_DESCRIPTOR(ch)->getOriginalCharacter() : ch;
 }
 
-#define CHAR_AWAKE(ch) (CHAR_POS(ch) > POSITION_SLEEPING)
+inline bool CHAR_AWAKE(const unit_data *ch) { return CHAR_POS(ch) > POSITION_SLEEPING; }
 
-#define CHAR_HAS_FLAG(ch, flags) (IS_SET(CHAR_FLAGS(ch), (flags)))
+inline bool CHAR_HAS_FLAG(const unit_data *ch, ubit32 flags) { return IS_SET(CHAR_FLAGS(ch), (flags)); }
 
-#define CHAR_ROOM_EXIT(ch, door) (IS_ROOM(UNIT_IN(ch)) ? ROOM_EXIT(UNIT_IN(ch), (door)) : (unit_data *)nullptr)
+[[maybe_unused]] inline room_direction_data *CHAR_ROOM_EXIT(unit_data *ch, size_t door) { return IS_ROOM(UNIT_IN(ch)) ? ROOM_EXIT(UNIT_IN(ch), door) : nullptr; }
 
-#define CHAR_VISION(ch) (!CHAR_HAS_FLAG(ch, CHAR_BLIND))
+inline bool CHAR_VISION(const unit_data *ch) { return !CHAR_HAS_FLAG(ch, CHAR_BLIND); }
 
-// Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
-#define CHAR_CAN_SEE(ch, unit)                                                                                                             \
-    (!IS_CHAR(ch) ||                                                                                                                       \
-     (CHAR_VISION(ch) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) || (UNIT_IN(ch) == unit)) && (CHAR_LEVEL(ch) >= UNIT_MINV(unit)) &&    \
-      (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||                                                                                                  \
-       (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE))))))
+inline bool CHAR_CAN_SEE(const unit_data *ch, const unit_data *unit)
+{
+    // Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
+    return !IS_CHAR(ch) ||
+           (CHAR_VISION(ch) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) || UNIT_IN(ch) == unit) && CHAR_LEVEL(ch) >= UNIT_MINV(unit) &&
+            (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||
+             (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
+}
 
-#define CHAR_CAN_GO(ch, door)                                                                                                              \
-    (ROOM_EXIT(UNIT_IN(ch), door) && (ROOM_EXIT(UNIT_IN(ch), door)->to_room) && !IS_SET(ROOM_EXIT(UNIT_IN(ch), door)->exit_info, EX_CLOSED))
+inline bool CHAR_CAN_SEE(unit_data *ch, unit_data *unit)
+{
+    return CHAR_CAN_SEE(const_cast<const unit_data *>(ch), const_cast<const unit_data *>(unit));
+}
+
+[[maybe_unused]] inline bool CHAR_CAN_GO(unit_data *ch, size_t door) { return ROOM_EXIT(UNIT_IN(ch), door) && ROOM_EXIT(UNIT_IN(ch), door)->getToRoom() && !IS_SET(ROOM_EXIT(UNIT_IN(ch), door)->getDoorFlags(), EX_CLOSED); }
 
 /* ..................................................................... */
-// clang-format off
 
 inline ubit8 PC_ACCESS_LEVEL(unit_data *pc) { return UPC(pc)->getAccessLevel(); }
 
@@ -367,7 +395,7 @@ inline ubit8 PC_SETUP_COLOUR(unit_data *pc) { return UPC(pc)->getTerminalSetupTy
 
 inline const char *PC_GUILD(unit_data *pc) { return UPC(pc)->getGuild(); }
 
-inline const char *PC_PROMPTSTR(unit_data *pc) { return UPC(pc)->getPromptString(); }
+[[maybe_unused]] inline const char *PC_PROMPTSTR(unit_data *pc) { return UPC(pc)->getPromptString(); }
 
 inline sbit8 PC_PROFESSION(unit_data *pc) { return UPC(pc)->getProfession(); }
 
@@ -410,13 +438,12 @@ inline pc_time_data &PC_TIME(unit_data *unit) { return UPC(unit)->getPCTimeInfor
 inline const char *PC_HOME(unit_data *ch) { return UPC(ch)->getHometown(); }
 /* .................... PC SUPER STRUCTURE ............................. */
 
-#define PC_IMMORTAL(ch) (IS_PC(ch) && CHAR_LEVEL(ch) >= 200)
+inline bool PC_IMMORTAL(unit_data *ch) { return IS_PC(ch) && CHAR_LEVEL(ch) >= 200; }
 
-#define PC_MORTAL(ch) (IS_PC(ch) && CHAR_LEVEL(ch) < 200)
+[[maybe_unused]] inline bool PC_MORTAL(unit_data *ch) { return IS_PC(ch) && CHAR_LEVEL(ch) < 200; }
 
 inline bool PC_IS_UNSAVED(unit_data *ch) { return PC_TIME(ch).getTotalTimePlayedInSeconds() == 0; }
 
-// clang-format on
 /* ..................................................................... */
 
 inline sbit16 NPC_WPN_SKILL(unit_data *ch, size_t index)
@@ -440,36 +467,36 @@ inline ubit8 NPC_FLAGS(unit_data *unit)
 }
 
 /* ..................................................................... */
+inline const char *UNIT_TITLE_STRING(unit_data *unit) { return UNIT_TITLE(unit).c_str(); }
 
-#define UNIT_TITLE_STRING(unit) (UNIT_TITLE(unit).c_str())
+inline const char *UNIT_OUT_DESCR_STRING(unit_data *unit) { return UNIT_OUT_DESCR(unit).c_str(); }
 
-#define UNIT_OUT_DESCR_STRING(unit) (UNIT_OUT_DESCR(unit).c_str())
+inline const char *UNIT_IN_DESCR_STRING(unit_data *unit) { return UNIT_IN_DESCR(unit).c_str(); }
 
-#define UNIT_IN_DESCR_STRING(unit) (UNIT_IN_DESCR(unit).c_str())
+inline const char *TITLENAME(unit_data *unit) { return IS_PC(unit) ? UNIT_NAME(unit) : UNIT_TITLE_STRING(unit); }
 
-#define TITLENAME(unit) (IS_PC(unit) ? UNIT_NAME(unit) : UNIT_TITLE_STRING(unit))
-
-#define SOMETON(unit) ((UNIT_SEX(unit) == SEX_NEUTRAL) ? "something" : "someone")
+inline const char *SOMETON(const unit_data *unit) { return UNIT_SEX(unit) == SEX_NEUTRAL ? "something" : "someone"; }
 
 /* Title, Name or Someone/Something */
-#define UNIT_SEE_TITLE(ch, unit) (CHAR_CAN_SEE(ch, unit) ? TITLENAME(unit) : SOMETON(unit))
+inline const char *UNIT_SEE_TITLE(unit_data *ch, unit_data *unit) { return CHAR_CAN_SEE(ch, unit) ? TITLENAME(unit) : SOMETON(unit); }
 
-#define UNIT_SEE_NAME(ch, unit) (CHAR_CAN_SEE(ch, unit) ? UNIT_NAME(unit) : SOMETON(unit))
-
+inline const char *UNIT_SEE_NAME(const unit_data *ch, const unit_data *unit) { return CHAR_CAN_SEE(ch, unit) ? UNIT_NAME(unit) : SOMETON(unit); }
 /* ..................................................................... */
 
 /* Invis people aren't supposed to have sex... /gnort */
 
-#define B_HSHR(ch) ((UNIT_SEX(ch) == SEX_NEUTRAL) ? "its" : ((CHAR_SEX(ch) == SEX_MALE) ? "his" : "her"))
+inline const char *B_HSHR(const unit_data *ch) { return UNIT_SEX(ch) == SEX_NEUTRAL ? "its" : (CHAR_SEX(ch) == SEX_MALE) ? "his" : "her"; }
 
-#define HSHR(to, ch) (CHAR_CAN_SEE((to), (ch)) ? B_HSHR(ch) : "their")
+inline const char *HSHR(const unit_data *to, const unit_data *ch) { return CHAR_CAN_SEE((to), (ch)) ? B_HSHR(ch) : "their"; }
 
-#define B_HESH(ch) ((UNIT_SEX(ch) == SEX_NEUTRAL) ? "it" : ((CHAR_SEX(ch) == SEX_MALE) ? "he" : "she"))
+inline const char *B_HESH(const unit_data *ch) { return UNIT_SEX(ch) == SEX_NEUTRAL ? "it" : (CHAR_SEX(ch) == SEX_MALE) ? "he" : "she"; }
 
-#define HESH(to, ch) (CHAR_CAN_SEE((to), (ch)) ? B_HESH(ch) : "they")
+inline const char *HESH(const unit_data *to, const unit_data *ch) { return CHAR_CAN_SEE(to, ch) ? B_HESH(ch) : "they"; }
 
-#define B_HMHR(ch) ((UNIT_SEX(ch) == SEX_NEUTRAL) ? "it" : ((CHAR_SEX(ch) == SEX_MALE) ? "him" : "her"))
+inline const char *B_HMHR(const unit_data *ch) { return UNIT_SEX(ch) == SEX_NEUTRAL ? "it" : CHAR_SEX(ch) == SEX_MALE ? "him" : "her"; }
 
-#define HMHR(to, ch) (CHAR_CAN_SEE((to), (ch)) ? B_HMHR(ch) : "them")
+inline const char *HMHR(const unit_data *to, const unit_data *ch) { return CHAR_CAN_SEE(to, ch) ? B_HMHR(ch) : "them"; }
 
-#define UNIT_ANA(unit) ANA(*UNIT_NAME(unit))
+inline const char *UNIT_ANA(unit_data *unit) { return ANA(*UNIT_NAME(unit)); }
+
+// clang-format on
