@@ -635,7 +635,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
         {
             return;
         }
-        if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
+        if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to))
         {
             for (u = UNIT_CONTAINS(to); u; u = u->getNext())
             {
@@ -659,7 +659,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
             }
 
-            if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
+            if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
             {
                 for (u = UNIT_CONTAINS(to); u; u = u->getNext())
                 {
@@ -733,7 +733,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
             return;
         }
 
-        if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
+        if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to))
         {
             for (u = UNIT_CONTAINS(to); u; u = u->getNext())
             {
@@ -770,7 +770,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
             }
 
-            if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
+            if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
             {
                 for (u = UNIT_CONTAINS(to); u; u = u->getNext())
                 {

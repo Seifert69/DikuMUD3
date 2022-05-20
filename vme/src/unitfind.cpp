@@ -314,9 +314,13 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
     return nullptr;
 }
 
-
-unit_data *
-find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **arg, const unit_data *list, const ubit32 bitvector, ubit8 type, int original_number)
+unit_data *find_unit_general_abbrev(const unit_data *viewer,
+                                    const unit_data *ch,
+                                    char **arg,
+                                    const unit_data *list,
+                                    const ubit32 bitvector,
+                                    ubit8 type,
+                                    int original_number)
 {
     unit_data *best = nullptr;
     int best_len = 0;
@@ -346,7 +350,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
 
     // How long is the next word?
     int i;
-    for (i=0; c[i] && !isspace(c[i]); i++)
+    for (i = 0; c[i] && !isspace(c[i]); i++)
     {
         ;
     }
@@ -365,7 +369,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
     /* Equipment can only be objects. */
     if (IS_SET(bitvectorm, FIND_UNIT_EQUIP))
     {
-        for (u = const_cast<unit_data*>(UNIT_CONTAINS(ch)); u; u = u->getNext())
+        for (u = const_cast<unit_data *>(UNIT_CONTAINS(ch)); u; u = u->getNext())
         {
             if (IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                 (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && (ct - c >= best_len))
@@ -386,7 +390,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
 
     if (IS_SET(bitvectorm, FIND_UNIT_INVEN))
     {
-        for (u = const_cast<unit_data*>(UNIT_CONTAINS(ch)); u; u = u->getNext())
+        for (u = const_cast<unit_data *>(UNIT_CONTAINS(ch)); u; u = u->getNext())
         {
             if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                 !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
@@ -440,7 +444,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
             }
 
             /* Run through units in local environment */
-            for (u = const_cast<unit_data*>(UNIT_CONTAINS(UNIT_IN(ch))); u; u = u->getNext())
+            for (u = const_cast<unit_data *>(UNIT_CONTAINS(UNIT_IN(ch))); u; u = u->getNext())
             {
                 if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                 {
@@ -459,7 +463,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
                     }
 
                     /* check tranparancy */
-                    if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                    if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
                     {
                         for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                         {
@@ -484,7 +488,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
             } /* End for */
 
             /* Run through units in local environment if upwards transparent */
-            if ((u = const_cast<unit_data*>(UNIT_IN(UNIT_IN(ch)))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
+            if ((u = const_cast<unit_data *>(UNIT_IN(UNIT_IN(ch)))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
             {
                 for (u = UNIT_CONTAINS(u); u; u = u->getNext())
                 {
@@ -505,7 +509,7 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
                         }
 
                         /* check down into transparent unit */
-                        if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                        if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
                         {
                             for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                             {
@@ -553,7 +557,6 @@ find_unit_general_abbrev(const unit_data *viewer, const unit_data *ch, char **ar
 
     return best;
 }
-
 
 /* As find_unit below, except visibility is relative to
    viewer with respect to CHAR_CAN_SEE */
@@ -746,7 +749,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                         }
 
                         /* check tranparancy */
-                        if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                        if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
                         {
                             for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                             {
@@ -792,7 +795,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                             }
 
                             /* check down into transparent unit */
-                            if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                            if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
                             {
                                 for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                                 {
@@ -860,10 +863,9 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         }
     }
 
-    for (unit_data *myu = (unit_data *) list; myu; myu = myu->getNext())
+    for (unit_data *myu = (unit_data *)list; myu; myu = myu->getNext())
     {
-        if (IS_SET(type, UNIT_TYPE(myu)) && (ct = UNIT_NAMES(myu).IsNameRaw(c)) && (ct - c >= best_len) &&
-            CHAR_CAN_SEE(viewer, myu))
+        if (IS_SET(type, UNIT_TYPE(myu)) && (ct = UNIT_NAMES(myu).IsNameRaw(c)) && (ct - c >= best_len) && CHAR_CAN_SEE(viewer, myu))
         {
             if (ct - c > best_len)
             {

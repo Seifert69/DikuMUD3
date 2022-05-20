@@ -742,7 +742,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               u->getNumberOfActiveLightSources(),
                               u->getLightOutput(),
                               u->getTransparentLightOutput(),
-                              UNIT_CHARS(u),
+                              u->getNumberOfCharactersInsideUnit(),
                               UNIT_MINV(u),
                               UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
                               UNIT_CONTAINS(u) ? "has contents" : "is empty",

@@ -52,7 +52,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             }
 
             /* check tranparancy */
-            if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+            if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
             {
                 for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                 {
@@ -77,7 +77,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
                     }
 
                     /* check down into transparent unit */
-                    if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                    if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
                     {
                         for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                         {

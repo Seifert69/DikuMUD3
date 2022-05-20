@@ -1174,7 +1174,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     pBuf->Append8(u->getNumberOfActiveLightSources());
     pBuf->Append8(u->getLightOutput());
     pBuf->Append8(u->getTransparentLightOutput());
-    pBuf->Append8(UNIT_CHARS(u));
+    pBuf->Append8(u->getNumberOfCharactersInsideUnit());
     pBuf->Append8(UNIT_MINV(u));
 
     pBuf->Append16(u->getSize());
