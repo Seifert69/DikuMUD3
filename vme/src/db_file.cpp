@@ -1177,7 +1177,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     pBuf->Append8(UNIT_CHARS(u));
     pBuf->Append8(UNIT_MINV(u));
 
-    pBuf->Append16(UNIT_SIZE(u));
+    pBuf->Append16(u->getSize());
 
     if (UNIT_TYPE(u) == UNIT_ST_ROOM)
     {

@@ -761,7 +761,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               u->getBaseWeight(),
                               u->getWeight(),
                               UNIT_CAPACITY(u),
-                              UNIT_SIZE(u));
+                              u->getSize());
     send_to_char(msg, ch);
 }
 

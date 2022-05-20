@@ -179,7 +179,7 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
             if (IS_CHAR(loaded))
             {
                 act("$1n has arrived.", A_HIDEINV, loaded, cActParameter(), cActParameter(), TO_ROOM);
-                loaded->increaseSizeBy((UNIT_SIZE(loaded) * (55 - dice(10, 10))) / 300);
+                loaded->increaseSizeBy((loaded->getSize() * (55 - dice(10, 10))) / 300);
             }
         }
         else
@@ -261,7 +261,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
             }
 #endif
             equip_char(u, loaded, cmd->getNum(1));
-            loaded->setSize(UNIT_SIZE(u)); // Autofit
+            loaded->setSize(u->getSize()); // Autofit
         }
     }
 

@@ -128,20 +128,20 @@ static int getkeyword(unit_data *obj)
 /* Return NULL if unit fits, pointer to string otherwise */
 static const char *wear_size(unit_data *ch, unit_data *obj, int var)
 {
-    if (UNIT_SIZE(ch) == 0)
+    if (ch->getSize() == 0)
     {
         return "error";
     }
 
     int percent = 0;
 
-    if (UNIT_SIZE(ch) > 0)
+    if (ch->getSize() > 0)
     {
-        percent = (100 * UNIT_SIZE(obj)) / UNIT_SIZE(ch);
+        percent = (100 * obj->getSize()) / ch->getSize();
     }
     else
     {
-        percent = (100 * UNIT_SIZE(obj));
+        percent = (100 * obj->getSize());
     }
 
     if (percent < 100 - var - (100 - var) / 2)
