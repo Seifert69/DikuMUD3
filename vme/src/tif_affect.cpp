@@ -49,7 +49,7 @@ void tif_confusion_off(unit_affected_type *af, unit_data *unit)
 
 void tif_invisibility_on(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE))
+    if (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE))
     {
         send_to_char("Your body appears ghostly.<br/>", unit);
         act("$1n vanish into thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
@@ -58,7 +58,7 @@ void tif_invisibility_on(unit_affected_type *af, unit_data *unit)
 
 void tif_invisibility_off(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE))
+    if (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE))
     {
         send_to_char("Your body is once again visible.<br/>", unit);
         act("$1n appears from thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
@@ -941,7 +941,7 @@ void tif_sustain_off(unit_affected_type *af, unit_data *unit)
 void tif_decay_corpse(unit_affected_type *af, unit_data *unit)
 {
     /* Make routine to change the description of a corpse instead */
-    if (ODD(af->getDuration()) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
+    if (ODD(af->getDuration()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED))
     {
         act("The rotten stench of $1n is here.", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
@@ -949,7 +949,7 @@ void tif_decay_corpse(unit_affected_type *af, unit_data *unit)
 
 void tif_destroy_corpse(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
+    if (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED))
     {
         act("A quivering horde of maggots consume $1n.", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
@@ -958,7 +958,7 @@ void tif_destroy_corpse(unit_affected_type *af, unit_data *unit)
 
 void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
 {
-    if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
+    if (IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED))
     {
         /* Empty the container and set buried status of contents */
 

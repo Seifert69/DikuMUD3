@@ -202,14 +202,14 @@ int variation(int num, int d, int u)
 /* i.e. if a player is allowed to transfer out of jail, etc.           */
 ubit1 may_teleport_away(unit_data *unit)
 {
-    if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+    if (IS_SET(unit->getUnitFlags(), UNIT_FL_NO_TELEPORT))
     {
         return FALSE;
     }
 
     while ((unit = UNIT_IN(unit)))
     {
-        if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+        if (IS_SET(unit->getUnitFlags(), UNIT_FL_NO_TELEPORT))
         {
             return FALSE;
         }
@@ -221,7 +221,7 @@ ubit1 may_teleport_away(unit_data *unit)
 /* See if unit is allowed to be transferred to 'dest' */
 ubit1 may_teleport_to(unit_data *unit, unit_data *dest)
 {
-    if (unit == dest || IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
+    if (unit == dest || IS_SET(dest->getUnitFlags(), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
         UNIT_WEIGHT(unit) + UNIT_WEIGHT(dest) > UNIT_CAPACITY(dest))
     {
         return FALSE;
@@ -229,7 +229,7 @@ ubit1 may_teleport_to(unit_data *unit, unit_data *dest)
 
     do
     {
-        if (IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT))
+        if (IS_SET(dest->getUnitFlags(), UNIT_FL_NO_TELEPORT))
         {
             return FALSE;
         }
@@ -506,7 +506,7 @@ void spell_clear_skies(spell_args *sa)
 {
     unit_data *room = unit_room(sa->caster);
 
-    if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
+    if ((sa->hm / 20 <= 0) || (IS_SET(room->getUnitFlags(), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
         act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;
@@ -522,7 +522,7 @@ void spell_storm_call(spell_args *sa)
 {
     unit_data *room = unit_room(sa->caster);
 
-    if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
+    if ((sa->hm / 20 <= 0) || (IS_SET(room->getUnitFlags(), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
         act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;

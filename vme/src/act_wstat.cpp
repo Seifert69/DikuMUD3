@@ -747,7 +747,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
                               UNIT_CONTAINS(u) ? "has contents" : "is empty",
                               sprintbit(bits2, u->getManipulate(), g_unit_manipulate),
-                              sprintbit(bits1, UNIT_FLAGS(u), g_unit_flags),
+                              sprintbit(bits1, u->getUnitFlags(), g_unit_flags),
                               (signed long)UNIT_HIT(u),
                               (signed long)UNIT_MAX_HIT(u),
                               UNIT_ALIGNMENT(u));

@@ -766,14 +766,16 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 7: /* "unit-flags" */
-            if (IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
+        {
+            if (IS_SET(unt->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
             {
                 trans_unset(unt);
             }
-            else if (!IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && IS_SET(bitarg, UNIT_FL_TRANS))
+            else if (!IS_SET(unt->getUnitFlags(), UNIT_FL_TRANS) && IS_SET(bitarg, UNIT_FL_TRANS))
             {
                 trans_set(unt);
             }
+        }
 
             unt->setAllUnitFlags(bitarg);
             return;

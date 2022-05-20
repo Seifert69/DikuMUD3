@@ -171,7 +171,7 @@ int hit_gain(unit_data *ch)
 
     while (u)
     {
-        if (IS_SET(UNIT_FLAGS(u), UNIT_FL_SACRED))
+        if (IS_SET(u->getUnitFlags(), UNIT_FL_SACRED))
         {
             gain *= 2;
             break;
@@ -246,7 +246,7 @@ int move_gain(unit_data *ch)
 
     while (u)
     {
-        if (IS_SET(UNIT_FLAGS(u), UNIT_FL_SACRED))
+        if (IS_SET(u->getUnitFlags(), UNIT_FL_SACRED))
         {
             gain *= 2;
             break;
@@ -324,7 +324,7 @@ int mana_gain(unit_data *ch)
 
     while (u)
     {
-        if (IS_SET(UNIT_FLAGS(u), UNIT_FL_SACRED))
+        if (IS_SET(u->getUnitFlags(), UNIT_FL_SACRED))
         {
             gain *= 2;
             break;

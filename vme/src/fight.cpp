@@ -1121,7 +1121,7 @@ void damage(unit_data *ch,
             UCHAR(victim)->removeCharacterFlag(CHAR_HIDE);
         }
 
-        if (IS_SET(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE))
+        if (IS_SET(victim->getUnitFlags(), UNIT_FL_INVISIBLE))
         {
             while ((paf = affected_by_spell(victim, ID_INVISIBILITY)))
             {

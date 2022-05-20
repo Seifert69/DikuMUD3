@@ -93,9 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline ubit16 UNIT_FLAGS(unit_data *unit) { return unit->getUnitFlags(); }
-inline ubit16 UNIT_FLAGS(const unit_data *unit) { return unit->getUnitFlags(); }
-
 inline sbit32 UNIT_WEIGHT(unit_data *unit) { return unit->getWeight(); }
 
 inline sbit32 UNIT_BASE_WEIGHT(unit_data *unit) {return unit->getBaseWeight(); }
@@ -175,7 +172,7 @@ inline const char *FI_NAME(const file_index_type *fi) { return fi->getName(); }
 
 inline bool UNIT_IS_TRANSPARENT(const unit_data *u)
 {
-    return !IS_SET(UNIT_FLAGS(u), UNIT_FL_BURIED) && IS_SET(UNIT_FLAGS(u), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED);
+    return !IS_SET(u->getUnitFlags(), UNIT_FL_BURIED) && IS_SET(u->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED);
 }
 
 inline zone_type *UNIT_FI_ZONE(unit_data *unit) { return (unit)->getFileIndex()->getZone(); }
@@ -186,9 +183,9 @@ inline const char *UNIT_FI_NAME(const unit_data *unit) { return unit->getFileInd
 
 inline bool UNIT_WEAR(unit_data *unit, ubit32 part) { return IS_SET(unit->getManipulate(), part); }
 
-inline bool UNIT_IS_OUTSIDE(const unit_data *unit) { return !IS_SET(UNIT_FLAGS(UNIT_IN(unit)), UNIT_FL_INDOORS); }
+inline bool UNIT_IS_OUTSIDE(const unit_data *unit) { return !IS_SET(UNIT_IN(unit)->getUnitFlags(), UNIT_FL_INDOORS); }
 
-inline sbit8 UNIT_OUTSIDE_LIGHT(unit_data *unit) { return !IS_SET(UNIT_FLAGS(unit), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
+inline sbit8 UNIT_OUTSIDE_LIGHT(unit_data *unit) { return !IS_SET(unit->getUnitFlags(), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
 
 [[maybe_unused]] inline sbit16 UNIT_IS_DARK(unit_data *unit) { return UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) < 0; }
 
@@ -340,9 +337,9 @@ inline bool CHAR_CAN_SEE(const unit_data *ch, const unit_data *unit)
 {
     // Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
     return !IS_CHAR(ch) ||
-           (CHAR_VISION(ch) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) || UNIT_IN(ch) == unit) && CHAR_LEVEL(ch) >= UNIT_MINV(unit) &&
+           (CHAR_VISION(ch) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED) || UNIT_IN(ch) == unit) && CHAR_LEVEL(ch) >= UNIT_MINV(unit) &&
             (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||
-             (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
+             (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
 }
 
 inline bool CHAR_CAN_SEE(unit_data *ch, unit_data *unit)

@@ -466,13 +466,13 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                 return 0;
             }
 
-            if (IS_SET(UNIT_FLAGS(mover), UNIT_FL_BURIED))
+            if (IS_SET(mover->getUnitFlags(), UNIT_FL_BURIED))
             {
                 act("Your $2N is buried! It cannot move.", A_ALWAYS, ch, mover, cActParameter(), TO_CHAR);
                 return 0;
             }
 
-            if (!IS_SET(UNIT_FLAGS(mover), UNIT_FL_TRANS))
+            if (!IS_SET(mover->getUnitFlags(), UNIT_FL_TRANS))
             {
                 act("Alas, you cannot go that way...", A_SOMEONE, mover, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
