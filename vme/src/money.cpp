@@ -740,7 +740,7 @@ amount_t char_can_carry_amount(unit_data *ch, unit_data *money)
 
 amount_t unit_can_hold_amount(unit_data *unit, unit_data *money)
 {
-    int d_wgt = UNIT_CAPACITY(unit) - UNIT_CONTAINING_W(unit);
+    int d_wgt = unit->getCapacity() - UNIT_CONTAINING_W(unit);
 
     return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }

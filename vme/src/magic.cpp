@@ -222,7 +222,7 @@ ubit1 may_teleport_away(unit_data *unit)
 ubit1 may_teleport_to(unit_data *unit, unit_data *dest)
 {
     if (unit == dest || IS_SET(dest->getUnitFlags(), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
-        unit->getWeight() + dest->getWeight() > UNIT_CAPACITY(dest))
+        unit->getWeight() + dest->getWeight() > dest->getCapacity())
     {
         return FALSE;
     }

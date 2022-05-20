@@ -760,7 +760,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               UNIT_OPEN_DIFF(u),
                               u->getBaseWeight(),
                               u->getWeight(),
-                              UNIT_CAPACITY(u),
+                              u->getCapacity(),
                               u->getSize());
     send_to_char(msg, ch);
 }
