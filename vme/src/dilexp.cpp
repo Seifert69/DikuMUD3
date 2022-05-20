@@ -2756,14 +2756,17 @@ void dilfe_cary(dilprg *p)
                                         {
                                             v->val.num = 1;
                                         }
-                                        else if (!char_can_carry_w((unit_data *)v1->val.ptr,
-                                                                   v3->val.num * UNIT_WEIGHT((unit_data *)v2->val.ptr)))
-                                        {
-                                            v->val.num = 2;
-                                        }
                                         else
                                         {
-                                            v->val.num = 0;
+                                            if (!char_can_carry_w((unit_data *)v1->val.ptr,
+                                                                  v3->val.num * ((unit_data *)v2->val.ptr)->getWeight()))
+                                            {
+                                                v->val.num = 2;
+                                            }
+                                            else
+                                            {
+                                                v->val.num = 0;
+                                            }
                                         }
                                     }
                                     break;

@@ -249,7 +249,7 @@ unit_data *set_money(unit_data *money, amount_t amt)
     money->setBaseWeight(mwgt);
     weight_change_unit(money, dif);
 
-    dif = mwgt - UNIT_WEIGHT(money);
+    dif = mwgt - money->getWeight();
     weight_change_unit(money, dif);
 
     money->setTitle(obj_money_string(money, amt));

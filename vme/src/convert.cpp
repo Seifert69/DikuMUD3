@@ -217,7 +217,7 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (!UNIT_CONTAINS(u) && (UNIT_WEIGHT(u) != UNIT_BASE_WEIGHT(u)))
+    if (!UNIT_CONTAINS(u) && (u->getWeight() != UNIT_BASE_WEIGHT(u)))
     {
         printf("Fixed illegal weight.");
         u->setWeight(UNIT_BASE_WEIGHT(u));

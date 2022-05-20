@@ -702,7 +702,7 @@ void dilfi_set_weight(dilprg *p)
                          UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr));
             }
 
-            int dif = v2->val.num - UNIT_WEIGHT((unit_data *)v1->val.ptr);
+            int dif = v2->val.num - ((unit_data *)v1->val.ptr)->getWeight();
 
             /* update weight */
             weight_change_unit((unit_data *)v1->val.ptr, dif);

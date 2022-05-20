@@ -62,7 +62,7 @@ int char_can_carry_w(unit_data *ch, int weight)
 
 int char_can_carry_unit(unit_data *ch, unit_data *unit)
 {
-    return (char_can_carry_w(ch, UNIT_WEIGHT(unit)) && char_can_carry_n(ch, 1));
+    return (char_can_carry_w(ch, unit->getWeight()) && char_can_carry_n(ch, 1));
 }
 
 /* For lifespan 100 (Human), result is                     */

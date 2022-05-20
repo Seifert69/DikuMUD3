@@ -796,7 +796,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             weight_change_unit(unt, dif);
 
             // Now make weight and base weight equal
-            dif = UNIT_BASE_WEIGHT(unt) - UNIT_WEIGHT(unt);
+            dif = UNIT_BASE_WEIGHT(unt) - unt->getWeight();
             weight_change_unit(unt, dif);
             // UNIT_BASE_WEIGHT(unt) = UNIT_WEIGHT(unt) = valarg;
             return;

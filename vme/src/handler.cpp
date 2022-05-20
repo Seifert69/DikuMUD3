@@ -771,7 +771,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
         unit->getMyContainer()->decrementNumberOfCharactersInsideUnit();
     }
     /*fuck*/
-    unit->getMyContainer()->reduceWeightBy(UNIT_WEIGHT(unit));
+    unit->getMyContainer()->reduceWeightBy(unit->getWeight());
 
     if (unit == UNIT_CONTAINS(UNIT_IN(unit)))
     {
@@ -884,7 +884,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     {
         UNIT_IN(unit)->incrementNumberOfCharactersInsideUnit();
     }
-    to->increaseWeightBy(UNIT_WEIGHT(unit));
+    to->increaseWeightBy(unit->getWeight());
 
     if (pile && IS_MONEY(unit))
     {
