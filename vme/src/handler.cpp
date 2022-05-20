@@ -520,7 +520,7 @@ void trans_set(unit_data *u)
 
     for (u2 = UNIT_CONTAINS(u); u2; u2 = u2->getNext())
     {
-        sum += UNIT_BRIGHT(u2);
+        sum += u2->getLightOutput();
     }
 
     u->setTransparentLightOutput(sum);
@@ -589,7 +589,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     assert(UNIT_IN(obj) == ch); /* Must carry object in inventory */
 
     UOBJ(obj)->setEquipmentPosition(pos);
-    modify_bright(ch, UNIT_BRIGHT(obj)); /* Update light sources */
+    modify_bright(ch, obj->getLightOutput()); /* Update light sources */
 
     for (af = UNIT_AFFECTED(obj); af; af = af->getNext())
     {
@@ -615,7 +615,7 @@ unit_data *unequip_object(unit_data *obj)
     assert(IS_CHAR(ch));
 
     UOBJ(obj)->setEquipmentPosition(0);
-    modify_bright(ch, -UNIT_BRIGHT(obj)); /* Update light sources */
+    modify_bright(ch, -obj->getLightOutput()); /* Update light sources */
 
     for (af = UNIT_AFFECTED(obj); af; af = af->getNext())
     {
@@ -742,7 +742,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     in = UNIT_IN(unit);                     /* where to move unit up to */
     toin = UNIT_IN(in);                     /* unit around in           */
     extin = toin ? UNIT_IN(toin) : nullptr; /* unit around toin         */
-    bright = UNIT_BRIGHT(unit);             /* brightness inc. trans    */
+    bright = unit->getLightOutput();        /* brightness inc. trans    */
     selfb = bright - UNIT_ILLUM(unit);      /* brightness excl. trans   */
 
     in->changeNumberOfActiveLightSourcesBy(-1 * bright); // Subtract Light
@@ -832,7 +832,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     /* do *ALL* light here!!!! */
     in = UNIT_IN(unit);
     extin = in ? UNIT_IN(in) : nullptr;
-    bright = UNIT_BRIGHT(unit);
+    bright = unit->getLightOutput();
     selfb = bright - UNIT_ILLUM(unit);
 
     to->changeNumberOfActiveLightSourcesBy(bright);

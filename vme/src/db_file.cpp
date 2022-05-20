@@ -1172,7 +1172,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     pBuf->Append8(UNIT_OPEN_FLAGS(u));
     pBuf->Append8(UNIT_OPEN_DIFF(u));
     pBuf->Append8(UNIT_LIGHTS(u));
-    pBuf->Append8(UNIT_BRIGHT(u));
+    pBuf->Append8(u->getLightOutput());
     pBuf->Append8(UNIT_ILLUM(u));
     pBuf->Append8(UNIT_CHARS(u));
     pBuf->Append8(UNIT_MINV(u));

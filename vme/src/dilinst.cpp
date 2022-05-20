@@ -592,7 +592,7 @@ void dilfi_sbt(dilprg *p)
     {
         if (v1->val.ptr)
         {
-            dif = v2->val.num - UNIT_BRIGHT((unit_data *)v1->val.ptr);
+            dif = v2->val.num - ((unit_data *)v1->val.ptr)->getLightOutput();
 
             modify_bright((unit_data *)v1->val.ptr, dif);
         }

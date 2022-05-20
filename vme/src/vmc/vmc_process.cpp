@@ -1033,9 +1033,9 @@ void process_unit(unit_data *u)
         u->setNumberOfActiveLightSources(0);
     }
 
-    if (!is_in(UNIT_BRIGHT(u), -6, 6))
+    if (!is_in(u->getLightOutput(), -6, 6))
     {
-        dmc_error(TRUE, "%s: Illegal bright %d (expected -6..+6).", UNIT_IDENT(u), UNIT_BRIGHT(u));
+        dmc_error(TRUE, "%s: Illegal bright %d (expected -6..+6).", UNIT_IDENT(u), u->getLightOutput());
         u->setLightOutput(0);
     }
 

@@ -852,7 +852,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Expected -6..+6<br/>", ch);
                 return;
             }
-            modify_bright(unt, valarg - UNIT_BRIGHT(unt));
+            modify_bright(unt, valarg - unt->getLightOutput());
             return;
 
         case 18: /* "room_flags" */
