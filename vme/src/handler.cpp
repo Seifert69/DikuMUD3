@@ -220,7 +220,7 @@ unit_fptr *find_fptr(unit_data *u, ubit16 idx)
 {
     unit_fptr *tf = nullptr;
 
-    for (tf = UNIT_FUNC(u); tf; tf = tf->getNext())
+    for (tf = u->getFunctionPointer(); tf; tf = tf->getNext())
     {
         if (tf->getFunctionPointerIndex() == idx)
         {
@@ -241,17 +241,17 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     }
 
     // If there are no funcs, just add it.
-    if (UNIT_FUNC(u) == nullptr)
+    if (u->getFunctionPointer() == nullptr)
     {
-        f->setNext(UNIT_FUNC(u));
+        f->setNext(u->getFunctionPointer());
         u->setFunctionPointer(f);
         return;
     }
 
     // See if we are higher priority than head element
-    if (f->getFunctionPriority() < UNIT_FUNC(u)->getFunctionPriority())
+    if (f->getFunctionPriority() < u->getFunctionPointer()->getFunctionPriority())
     {
-        f->setNext(UNIT_FUNC(u));
+        f->setNext(u->getFunctionPointer());
         u->setFunctionPointer(f);
         return;
     }
@@ -260,8 +260,8 @@ void insert_fptr(unit_data *u, unit_fptr *f)
     unit_fptr *prev = nullptr;
 
     // Find location to insert
-    prev = UNIT_FUNC(u);
-    for (p = UNIT_FUNC(u)->getNext(); p; p = p->getNext())
+    prev = u->getFunctionPointer();
+    for (p = u->getFunctionPointer()->getNext(); p; p = p->getNext())
     {
         if (f->getFunctionPriority() < p->getFunctionPriority())
         {
@@ -343,13 +343,13 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     membug_verify(f);
 
     /* Only unlink function, do not free it! */
-    if (UNIT_FUNC(u) == f)
+    if (u->getFunctionPointer() == f)
     {
         u->setFunctionPointer(f->getNext());
     }
     else
     {
-        for (tf = UNIT_FUNC(u); tf && (tf->getNext() != f); tf = tf->getNext())
+        for (tf = u->getFunctionPointer(); tf && (tf->getNext() != f); tf = tf->getNext())
         {
             ;
         }

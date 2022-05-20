@@ -63,7 +63,7 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
     for (u = unt; u; u = u->getNext())
     {
         DeactivateDil(u, aprg);
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+        for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
         {
             if (aprg && (aprg == fptr->getData()))
             {
@@ -89,7 +89,7 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
     for (u = unt; u; u = u->getNext())
     {
         ActivateDil(u);
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+        for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
         {
             if (aprg && (aprg == fptr->getData()))
             {
@@ -2926,7 +2926,7 @@ void dilfi_sntadil(dilprg *p)
                         /* If it is destructed, then it cant be found because data
                            will be null */
 
-                        for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->getNext())
+                        for (fptr = tp->owner->getFunctionPointer(); fptr; fptr = fptr->getNext())
                         {
                             if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData() &&
                                 ((dilprg *)fptr->getData())->fp && ((dilprg *)fptr->getData())->fp->tmpl == tmpl)

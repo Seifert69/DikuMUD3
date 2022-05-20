@@ -586,7 +586,7 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
     //   if (IS_PC(u) && !char_is_playing(u))
     //     return SFR_SHARE;
 
-    for (sarg->fptr = UNIT_FUNC(u); !priority && sarg->fptr; sarg->fptr = next)
+    for (sarg->fptr = u->getFunctionPointer(); !priority && sarg->fptr; sarg->fptr = next)
     {
         next = sarg->fptr->getNext(); /* Next dude trick */
         orgflag = sarg->fptr->getAllActivateOnEventFlags();
@@ -720,7 +720,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
     if (IS_ROOM(ch))
     {
-        if (UNIT_FUNC(ch) && (unit_function_scan(ch, sarg)) != SFR_SHARE)
+        if (ch->getFunctionPointer() && (unit_function_scan(ch, sarg)) != SFR_SHARE)
         {
             return SFR_BLOCK;
         }
@@ -728,7 +728,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         for (u = UNIT_CONTAINS(ch); u; u = next)
         {
             next = u->getNext(); /* Next dude trick */
-            if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+            if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
             {
                 return SFR_BLOCK;
             }
@@ -745,7 +745,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     }
 
     /* special in room? */
-    if (UNIT_IN(ch) && UNIT_FUNC(UNIT_IN(ch)))
+    if (UNIT_IN(ch) && UNIT_IN(ch)->getFunctionPointer())
     {
         if ((unit_function_scan(UNIT_IN(ch), sarg)) != SFR_SHARE)
         {
@@ -757,7 +757,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     for (u = UNIT_CONTAINS(ch); u; u = next)
     {
         next = u->getNext(); /* Next dude trick */
-        if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+        if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
         {
             return SFR_BLOCK;
         }
@@ -770,7 +770,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         {
             next = u->getNext(); /* Next dude trick */
 
-            if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+            if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
             {
                 return SFR_BLOCK;
             }
@@ -782,7 +782,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                     for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                     {
                         nextt = uu->getNext(); /* next dude double trick */
-                        if (UNIT_FUNC(uu) && (unit_function_scan(uu, sarg)) != SFR_SHARE)
+                        if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
                         {
                             return SFR_BLOCK;
                         }
@@ -794,7 +794,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                     for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                     {
                         nextt = uu->getNext(); /* Next dude trick */
-                        if (UNIT_FUNC(uu) && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
+                        if (uu->getFunctionPointer() && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
                         {
                             return SFR_BLOCK;
                         }
@@ -807,7 +807,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         if (UNIT_IN(ch) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)) && UNIT_IN(UNIT_IN(ch)))
         {
             /* special in outside room? */
-            if (UNIT_FUNC(UNIT_IN(UNIT_IN(ch))))
+            if (UNIT_IN(UNIT_IN(ch))->getFunctionPointer())
             {
                 if (unit_function_scan(UNIT_IN(UNIT_IN(ch)), sarg) != SFR_SHARE)
                 {
@@ -822,7 +822,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                     next = u->getNext(); /* Next dude trick */
 
                     /* No self activation except when dying... */
-                    if (UNIT_FUNC(u) && (unit_function_scan(u, sarg)) != SFR_SHARE)
+                    if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
                     {
                         return SFR_BLOCK;
                     }
@@ -839,7 +839,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                             for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                             {
                                 nextt = uu->getNext(); /* next dude double trick */
-                                if (UNIT_FUNC(uu) && (unit_function_scan(uu, sarg)) != SFR_SHARE)
+                                if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
                                 {
                                     return SFR_BLOCK;
                                 }
@@ -851,7 +851,8 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                             for (uu = UNIT_CONTAINS(u); uu; uu = nextt)
                             {
                                 nextt = uu->getNext(); /* Next dude trick */
-                                if (UNIT_FUNC(uu) && IS_OBJ(uu) && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
+                                if (uu->getFunctionPointer() && IS_OBJ(uu) && OBJ_EQP_POS(uu) &&
+                                    (unit_function_scan(uu, sarg) != SFR_SHARE))
                                 {
                                     return SFR_BLOCK;
                                 }

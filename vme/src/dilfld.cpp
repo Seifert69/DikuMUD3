@@ -2264,7 +2264,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = (UNIT_FUNC((unit_data *)v1->val.ptr) != nullptr);
+                        v->val.num = (((unit_data *)v1->val.ptr)->getFunctionPointer() != nullptr);
                     }
                     else
                     {

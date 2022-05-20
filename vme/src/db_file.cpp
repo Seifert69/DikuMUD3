@@ -1400,7 +1400,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
     bwrite_affect(pBuf, UNIT_AFFECTED(u), nVersion);
 
-    bwrite_func(pBuf, UNIT_FUNC(u));
+    bwrite_func(pBuf, u->getFunctionPointer());
 
     return pBuf->GetLength() - nPos;
 }

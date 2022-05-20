@@ -862,7 +862,7 @@ void process_funcs(unit_data *u)
 {
     unit_fptr *fptr = nullptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+    for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (!is_in(fptr->getFunctionPointerIndex(), 0, SFUN_TOP_IDX))
         {

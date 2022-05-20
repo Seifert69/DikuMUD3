@@ -93,10 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-/* ..................................................................... */
-
-inline unit_fptr *UNIT_FUNC(unit_data *unit) { return unit->getFunctionPointer(); }
-
 inline file_index_type *UNIT_FILE_INDEX(unit_data *unit) { return unit->getFileIndex(); }
 inline const file_index_type *UNIT_FILE_INDEX(const unit_data *unit) { return unit->getFileIndex(); }
 

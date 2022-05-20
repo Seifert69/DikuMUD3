@@ -669,14 +669,14 @@ static void stat_func(const unit_data *ch, unit_data *u)
     std::string bits;
     unit_fptr *f = nullptr;
 
-    if (!UNIT_FUNC(u))
+    if (!u->getFunctionPointer())
     {
         send_to_char("It has no special routines.<br/>", ch);
         return;
     }
 
     send_to_char("Unit functions:<br/>", ch);
-    for (f = UNIT_FUNC(u); f; f = f->getNext())
+    for (f = u->getFunctionPointer(); f; f = f->getNext())
 
     {
         if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)

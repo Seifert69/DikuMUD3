@@ -1054,7 +1054,7 @@ teach_packet *get_teacher(const char *pName)
         return nullptr;
     }
 
-    for (f = UNIT_FUNC(u); f; f = f->getNext())
+    for (f = u->getFunctionPointer(); f; f = f->getNext())
     {
         if (f->getFunctionPointerIndex() == SFUN_TEACHING)
         {

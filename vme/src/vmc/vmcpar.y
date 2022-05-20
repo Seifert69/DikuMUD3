@@ -619,10 +619,10 @@ unit_field  : NAMES stringlist
             idargcopy->no = 0;
             idargcopy->name = prgname;
 
-            if (!UNIT_FUNC(cur))
+            if (!cur->getFunctionPointer())
             {
                 cur->setFunctionPointer(mcreate_func());
-                cur_func = UNIT_FUNC(cur);
+                cur_func = cur->getFunctionPointer();
             }
             else
             {
@@ -644,10 +644,10 @@ unit_field  : NAMES stringlist
         *argcopy = *($4);
         argcopy->name = $2;
 
-        if (!UNIT_FUNC(cur))
+        if (!cur->getFunctionPointer())
         {
             cur->setFunctionPointer(mcreate_func());
-            cur_func = UNIT_FUNC(cur);
+            cur_func = cur->getFunctionPointer();
         }
         else
         {
@@ -844,10 +844,10 @@ unit_field  : NAMES stringlist
     }
     | SPECIAL
     {
-        if (!UNIT_FUNC(cur))
+        if (!cur->getFunctionPointer())
         {
             cur->setFunctionPointer(mcreate_func());
-            cur_func = UNIT_FUNC(cur);
+            cur_func = cur->getFunctionPointer();
         }
         else
         {

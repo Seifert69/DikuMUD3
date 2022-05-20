@@ -942,7 +942,7 @@ void ActivateDil(unit_data *pc)
     unit_fptr *fptr = nullptr;
     dilprg *prg = nullptr;
 
-    for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->getNext())
+    for (fptr = pc->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->is_destructed())
         {
@@ -965,7 +965,7 @@ void DeactivateDil(unit_data *pc, dilprg *aprg)
     unit_fptr *fptr = nullptr;
     dilprg *prg = nullptr;
 
-    for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->getNext())
+    for (fptr = pc->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData())
         {
@@ -1506,7 +1506,7 @@ dilprg *dil_copy_template(diltemplate *tmpl, unit_data *u, unit_fptr **pfptr)
     if (IS_SET(tmpl->flags, DILFL_UNIQUE))
     {
         unit_fptr *f = nullptr;
-        for (f = UNIT_FUNC(u); f; f = f->getNext())
+        for (f = u->getFunctionPointer(); f; f = f->getNext())
         {
             if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
             {
@@ -1578,7 +1578,7 @@ void dil_activate(dilprg *prg)
 
     assert(prg);
 
-    for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->getNext())
+    for (fptr = prg->owner->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->getData() == prg)
         {
@@ -1613,7 +1613,7 @@ void dil_activate_cmd(dilprg *prg, command_info *cmd_ptr)
 
     assert(prg);
 
-    for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->getNext())
+    for (fptr = prg->owner->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->getData() == prg)
         {
@@ -1645,7 +1645,7 @@ void dil_loadtime_activate(unit_data *u)
 {
     unit_fptr *f = nullptr;
     unit_fptr *fnext = nullptr;
-    for (f = UNIT_FUNC(u); f; f = fnext)
+    for (f = u->getFunctionPointer(); f; f = fnext)
     {
         fnext = f->getNext();
         if (f->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
@@ -1801,7 +1801,7 @@ unit_fptr *dil_find(const char *name, unit_data *u)
 
     if ((tmpl = find_dil_template(name)))
     {
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+        for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
         {
             if ((!fptr->is_destructed()) && (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {

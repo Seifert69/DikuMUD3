@@ -211,9 +211,9 @@ void destruct_unit(unit_data *unit)
     {
         /* Call functions of the unit which have any data                     */
         /* that they might want to work on.                                   */
-        while (UNIT_FUNC(unit))
+        while (unit->getFunctionPointer())
         {
-            destroy_fptr(unit, UNIT_FUNC(unit)); /* Unlinks, no free */
+            destroy_fptr(unit, unit->getFunctionPointer()); /* Unlinks, no free */
         }
 
         while (UNIT_AFFECTED(unit))
