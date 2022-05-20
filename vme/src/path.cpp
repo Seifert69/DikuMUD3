@@ -60,7 +60,7 @@ void create_worldgraph()
         // DIR_ENTER
         for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
         {
-            if (IS_ROOM(uu) && IS_SET(UNIT_MANIPULATE(uu), MANIPULATE_ENTER))
+            if (IS_ROOM(uu) && IS_SET(uu->getManipulate(), MANIPULATE_ENTER))
             {
                 add_edge(ROOM_NUM(u), ROOM_NUM(uu), 10, WorldGraph);
             }
@@ -69,7 +69,7 @@ void create_worldgraph()
         // DIR_EXIT
         if (UNIT_IN(u) && IS_ROOM(UNIT_IN(u)))
         {
-            if (IS_SET(UNIT_MANIPULATE(UNIT_IN(u)), MANIPULATE_ENTER))
+            if (IS_SET(UNIT_IN(u)->getManipulate(), MANIPULATE_ENTER))
             {
                 add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), 10, WorldGraph);
             }
@@ -191,7 +191,7 @@ void create_sc_graph(int num_of_sc)
             // DIR_ENTER
             for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
             {
-                if (IS_ROOM(uu) && IS_SET(UNIT_MANIPULATE(uu), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(uu) == sc))
+                if (IS_ROOM(uu) && IS_SET(uu->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(uu) == sc))
                 {
                     tie(ed, success) = add_edge(ROOM_NUM(u), ROOM_NUM(uu), path_weight(u, uu, DIR_ENTER) + 10, g_sc_graphs[sc]);
                     dir[ed] = DIR_ENTER;
@@ -200,7 +200,7 @@ void create_sc_graph(int num_of_sc)
             // DIR_EXIT
             if (UNIT_IN(u) && IS_ROOM(UNIT_IN(u)))
             {
-                if (IS_SET(UNIT_MANIPULATE(UNIT_IN(u)), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(UNIT_IN(u)) == sc))
+                if (IS_SET(UNIT_IN(u)->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(UNIT_IN(u)) == sc))
                 {
                     tie(ed, success) =
                         add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), path_weight(u, UNIT_IN(u), DIR_EXIT) + 10, g_sc_graphs[sc]);

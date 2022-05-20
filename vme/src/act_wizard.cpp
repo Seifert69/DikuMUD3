@@ -446,7 +446,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
         set_money(u, MONEY_AMOUNT(u));
     }
 
-    if (IS_OBJ(u) && IS_SET(UNIT_MANIPULATE(u), MANIPULATE_TAKE))
+    if (IS_OBJ(u) && IS_SET(u->getManipulate(), MANIPULATE_TAKE))
     {
         unit_to_unit(u, ch);
         act("You secretly load $2n.", A_SOMEONE, ch, u, cActParameter(), TO_CHAR);

@@ -1158,7 +1158,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     }
 #endif
 
-    pBuf->Append32(UNIT_MANIPULATE(u));
+    pBuf->Append32(u->getManipulate());
     pBuf->Append16(UNIT_FLAGS(u));
     pBuf->Append16(UNIT_BASE_WEIGHT(u));
     pBuf->Append16(UNIT_WEIGHT(u));
