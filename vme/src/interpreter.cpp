@@ -694,7 +694,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         {
             for (tou = g_unit_list; tou; tou = tou->getGlobalNext())
             {
-                if (UNIT_FILE_INDEX(tou) == fi)
+                if (tou->getFileIndex() == fi)
                 {
                     ch = tou;
                 }

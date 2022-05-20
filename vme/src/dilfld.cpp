@@ -1269,7 +1269,7 @@ void dilfe_fld(dilprg *p)
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
                         v->val.num =
-                            UNIT_FILE_INDEX((unit_data *)v1->val.ptr) ? UNIT_FILE_INDEX((unit_data *)v1->val.ptr)->getNumInMem() : 1;
+                            ((unit_data *)v1->val.ptr)->getFileIndex() ? ((unit_data *)v1->val.ptr)->getFileIndex()->getNumInMem() : 1;
                     }
                     else
                     {

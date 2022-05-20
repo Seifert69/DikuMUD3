@@ -18,7 +18,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
     {
         for (u = UNIT_CONTAINS(ref); u; u = u->getNext())
         {
-            if ((UNIT_FILE_INDEX(u) == this) && UNIT_IS_EQUIPPED(u))
+            if ((u->getFileIndex() == this) && UNIT_IS_EQUIPPED(u))
             {
                 return u;
             }
@@ -29,7 +29,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
     {
         for (u = UNIT_CONTAINS(ref); u; u = u->getNext())
         {
-            if ((UNIT_FILE_INDEX(u) == this) && !UNIT_IS_EQUIPPED(u))
+            if ((u->getFileIndex() == this) && !UNIT_IS_EQUIPPED(u))
             {
                 return u;
             }
@@ -38,7 +38,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_SURRO) && UNIT_IN(ref))
     {
-        if (this == UNIT_FILE_INDEX(UNIT_IN(ref)))
+        if (this == UNIT_IN(ref)->getFileIndex())
         {
             return UNIT_IN(ref);
         }
@@ -46,7 +46,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         /* Run through units in local environment */
         for (u = UNIT_CONTAINS(UNIT_IN(ref)); u; u = u->getNext())
         {
-            if (UNIT_FILE_INDEX(u) == this)
+            if (u->getFileIndex() == this)
             {
                 return u;
             }
@@ -56,7 +56,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             {
                 for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                 {
-                    if (UNIT_FILE_INDEX(uu) == this)
+                    if (uu->getFileIndex() == this)
                     {
                         return uu;
                     }
@@ -71,7 +71,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             {
                 if (u != UNIT_IN(ref))
                 {
-                    if (this == UNIT_FILE_INDEX(u))
+                    if (this == u->getFileIndex())
                     {
                         return u;
                     }
@@ -81,7 +81,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
                     {
                         for (uu = UNIT_CONTAINS(u); uu; uu = uu->getNext())
                         {
-                            if (this == UNIT_FILE_INDEX(uu))
+                            if (this == uu->getFileIndex())
                             {
                                 return uu;
                             }
@@ -98,7 +98,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         {
             for (auto it = fi_unit_list.begin(); it != fi_unit_list.end(); it++)
             {
-                if (UNIT_FILE_INDEX(*it) == this)
+                if ((*it)->getFileIndex() == this)
                 {
                     return u;
                 }

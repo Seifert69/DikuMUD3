@@ -227,9 +227,9 @@ void destruct_unit(unit_data *unit)
         unit_from_unit(unit);
     }
 
-    if (UNIT_FILE_INDEX(unit))
+    if (unit->getFileIndex())
     {
-        UNIT_FILE_INDEX(unit)->DecrementNumInMemory();
+        unit->getFileIndex()->DecrementNumInMemory();
     }
 
     if ((g_unit_list == unit) || unit->getGlobalNext() || unit->getGlobalPrevious())

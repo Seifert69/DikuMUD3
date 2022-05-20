@@ -93,9 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline file_index_type *UNIT_FILE_INDEX(unit_data *unit) { return unit->getFileIndex(); }
-inline const file_index_type *UNIT_FILE_INDEX(const unit_data *unit) { return unit->getFileIndex(); }
-
 inline ubit32 UNIT_MANIPULATE(unit_data *unit) { return unit->getManipulate(); }
 
 inline ubit16 UNIT_FLAGS(unit_data *unit) { return unit->getUnitFlags(); }
@@ -185,9 +182,9 @@ inline bool UNIT_IS_TRANSPARENT(const unit_data *u)
 
 inline zone_type *UNIT_FI_ZONE(unit_data *unit) { return (unit)->getFileIndex()->getZone(); }
 
-inline const char *UNIT_FI_ZONENAME(const unit_data *unit) { return UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE"; }
+inline const char *UNIT_FI_ZONENAME(const unit_data *unit) { return unit->getFileIndex() ? FI_ZONENAME(unit->getFileIndex()) : "NO-ZONE"; }
 
-inline const char *UNIT_FI_NAME(const unit_data *unit) { return UNIT_FILE_INDEX(unit) ? FI_NAME(UNIT_FILE_INDEX(unit)) : "NO-NAME"; }
+inline const char *UNIT_FI_NAME(const unit_data *unit) { return unit->getFileIndex() ? FI_NAME(unit->getFileIndex()) : "NO-NAME"; }
 
 inline bool UNIT_WEAR(unit_data *unit, ubit32 part) { return IS_SET(UNIT_MANIPULATE(unit), part); }
 

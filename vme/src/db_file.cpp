@@ -1201,7 +1201,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 #endif
         }
 
-        if (inu && UNIT_FILE_INDEX(inu))
+        if (inu && inu->getFileIndex())
         {
             pBuf->AppendString(UNIT_FI_ZONENAME(inu));
             pBuf->AppendString(UNIT_FI_NAME(inu));

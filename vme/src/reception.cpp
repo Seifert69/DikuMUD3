@@ -235,7 +235,7 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
 
     len = write_unit_string(&TmpBuf, unit);
 
-    if (fast || !UNIT_FILE_INDEX(unit))
+    if (fast || !unit->getFileIndex())
     {
         hn.compressed = 0;
     }

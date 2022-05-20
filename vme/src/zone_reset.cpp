@@ -58,9 +58,9 @@ void zone_update_no_in_zone()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (UNIT_FILE_INDEX(u) && (unit_zone(u) == g_boot_zone))
+        if (u->getFileIndex() && (unit_zone(u) == g_boot_zone))
         {
-            UNIT_FILE_INDEX(u)->IncrementNumInZone();
+            u->getFileIndex()->IncrementNumInZone();
         }
     }
 }
@@ -70,7 +70,7 @@ void zone_loaded_a_unit(unit_data *u)
 {
     if (unit_zone(u) == g_boot_zone)
     {
-        UNIT_FILE_INDEX(u)->IncrementNumInZone();
+        u->getFileIndex()->IncrementNumInZone();
     }
 }
 
@@ -117,7 +117,7 @@ bool zone_limit(unit_data *u, file_index_type *fi, zone_reset_cmd *cmd)
     {
         for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->getNext())
         {
-            if (UNIT_FILE_INDEX(tmp) == fi)
+            if (tmp->getFileIndex() == fi)
             {
                 --i;
             }
@@ -331,7 +331,7 @@ unit_data *zone_remove(unit_data *u, zone_reset_cmd *cmd)
         for (u = UNIT_CONTAINS(cmd->getFileIndexType(1)->Front()); u; u = next)
         {
             next = u->getNext();
-            if (UNIT_FILE_INDEX(u) == cmd->getFileIndexType(0) && !IS_ROOM(u))
+            if (u->getFileIndex() == cmd->getFileIndexType(0) && !IS_ROOM(u))
             {
                 extract_unit(u);
             }
