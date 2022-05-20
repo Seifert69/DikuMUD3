@@ -80,7 +80,7 @@ inline void TAIL(T *&str)
     }
 }
 
-[[maybe_unused]] inline void STRCAT(char *p, const char *c)
+[[maybe_unused]] inline void STRCAT(char *&p, const char *c)
 {
     strcat(p, c);
     TAIL(p);
