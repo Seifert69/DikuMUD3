@@ -1027,9 +1027,9 @@ void process_unit(unit_data *u)
         u->setAlignment(0);
     }
 
-    if (!is_in(UNIT_LIGHTS(u), -6, 6))
+    if (!is_in(u->getNumberOfActiveLightSources(), -6, 6))
     {
-        dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), UNIT_LIGHTS(u));
+        dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), u->getNumberOfActiveLightSources());
         u->setNumberOfActiveLightSources(0);
     }
 

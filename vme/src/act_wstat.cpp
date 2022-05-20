@@ -739,7 +739,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               "Manipulate: %s<br/>"
                               "Flags: %s<br/>"
                               "Hitpoints/max: [%ld/%ld]  Alignment: [%d]<br/>",
-                              UNIT_LIGHTS(u),
+                              u->getNumberOfActiveLightSources(),
                               u->getLightOutput(),
                               UNIT_ILLUM(u),
                               UNIT_CHARS(u),
@@ -1241,16 +1241,18 @@ static void stat_contents(const unit_data *ch, unit_data *u)
                                                UNIT_NAME(u),
                                                UNIT_TITLE_STRING(u),
                                                IS_OBJ(u) && OBJ_EQP_POS(u) ? "Equipped" : "",
-                                               UNIT_LIGHTS(u),
+                                               u->getNumberOfActiveLightSources(),
                                                u->getLightOutput());
                 send_to_char(msg, ch);
                 bright += u->getLightOutput();
-                light += UNIT_LIGHTS(u);
+                light += u->getNumberOfActiveLightSources();
             }
         }
         auto msg = diku::format_to_str("Contents lights sum = %d, bright sum = %d<br/>", light, bright);
         send_to_char(msg, ch);
-        msg = diku::format_to_str("Parent unit lights total = %d (bright %d)<br/>", UNIT_LIGHTS(orgu), orgu->getLightOutput());
+        msg = diku::format_to_str("Parent unit lights total = %d (bright %d)<br/>",
+                                  orgu->getNumberOfActiveLightSources(),
+                                  orgu->getLightOutput());
         send_to_char(msg, ch);
     }
     else

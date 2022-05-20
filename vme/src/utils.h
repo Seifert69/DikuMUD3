@@ -93,8 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline sbit16 UNIT_LIGHTS(unit_data *unit) { return unit->getNumberOfActiveLightSources(); }
-
 inline sbit16 UNIT_ILLUM(unit_data *unit) { return unit->getTransparentLightOutput(); }
 
 inline ubit8 UNIT_CHARS(const unit_data *unit) { return unit->getNumberOfCharactersInsideUnit(); }
@@ -177,9 +175,9 @@ inline bool UNIT_IS_OUTSIDE(const unit_data *unit) { return !IS_SET(UNIT_IN(unit
 
 inline sbit8 UNIT_OUTSIDE_LIGHT(unit_data *unit) { return !IS_SET(unit->getUnitFlags(), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
 
-[[maybe_unused]] inline sbit16 UNIT_IS_DARK(unit_data *unit) { return UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) < 0; }
+[[maybe_unused]] inline sbit16 UNIT_IS_DARK(unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_IN(unit)->getNumberOfActiveLightSources() : 0) < 0; }
 
-inline sbit16 UNIT_IS_LIGHT(unit_data *unit) { return UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) >= 0; }
+inline sbit16 UNIT_IS_LIGHT(unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_IN(unit)->getNumberOfActiveLightSources() : 0) >= 0; }
 
 inline ubit8 UNIT_SEX(const unit_data *unit) { return IS_CHAR(unit) ? CHAR_SEX(unit) : SEX_NEUTRAL; }
 
