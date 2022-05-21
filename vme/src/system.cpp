@@ -146,7 +146,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
     /* (affects, etc) and he shall not be saved!                    */
     if (!char_is_playing(d->getCharacter())) /* In menu - extract completely */
     {
-        assert(!d->cgetCharacter()->getMyContainer());
+        assert(!d->cgetCharacter()->getUnitIn());
         assert(!d->cgetCharacter()->getGlobalNext());
         assert(!d->cgetCharacter()->getGlobalPrevious());
 

@@ -223,7 +223,7 @@ void game_loop()
     {
         if (d->cgetOriginalCharacter() != nullptr)
         {
-            if (d->cgetOriginalCharacter()->isPC() && d->cgetOriginalCharacter()->getMyContainer())
+            if (d->cgetOriginalCharacter()->isPC() && d->cgetOriginalCharacter()->getUnitIn())
             {
                 slog(LOG_ALL, 0, "Saving %s.", d->cgetOriginalCharacter()->getNames().Name());
                 save_player(d->getOriginalCharacter());
@@ -232,7 +232,7 @@ void game_loop()
         }
         else
         {
-            if (d->cgetCharacter()->isPC() && d->cgetCharacter()->getMyContainer())
+            if (d->cgetCharacter()->isPC() && d->cgetCharacter()->getUnitIn())
             {
                 slog(LOG_ALL, 0, "Saving %s.", d->cgetCharacter()->getNames().Name());
                 save_player(d->getCharacter());
@@ -369,7 +369,7 @@ void check_overpopulation_event(void *p1, void *p2)
             {
                 break;
             }
-            t = t->getMyContainer();
+            t = t->getUnitIn();
         }
         if (t)
         {
@@ -377,7 +377,7 @@ void check_overpopulation_event(void *p1, void *p2)
         }
 
         i = 0;
-        for (t = u->getContainedUnits(); t; t = t->getNext())
+        for (t = u->getUnitContains(); t; t = t->getNext())
         { // count top layer
             i++;
         }

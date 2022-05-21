@@ -422,13 +422,13 @@ static bool move_money_up(unit_data *ch, unit_data *u)
     unit_data *next = nullptr;
     bool found = FALSE;
 
-    for (tmp = u->getContainedUnits(); tmp; tmp = next)
+    for (tmp = u->getUnitContains(); tmp; tmp = next)
     {
         next = tmp->getNext();
 
         if (IS_MONEY(tmp))
         {
-            while (tmp->getMyContainer() != ch)
+            while (tmp->getUnitIn() != ch)
             {
                 found = TRUE;
                 unit_up(tmp);

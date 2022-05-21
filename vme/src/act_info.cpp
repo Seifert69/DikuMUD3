@@ -23,7 +23,7 @@ const char *in_string(const unit_data *ch, const unit_data *u)
 {
     static std::string in_str;
     in_str.clear();
-    while ((u = u->getMyContainer()))
+    while ((u = u->getUnitIn()))
     {
         if (u->isRoom())
         {
@@ -48,7 +48,7 @@ void player_where(unit_data *ch, char *arg)
 
     for (d = g_descriptor_list; d; d = d->getNext())
     {
-        if (d->cgetCharacter() && (d->cgetCharacter() != ch) && d->cgetCharacter()->getMyContainer() && descriptor_is_playing(d) &&
+        if (d->cgetCharacter() && (d->cgetCharacter() != ch) && d->cgetCharacter()->getUnitIn() && descriptor_is_playing(d) &&
             (str_is_empty(arg) || !str_ccmp(arg, d->cgetCharacter()->getNames().Name())) &&
             CHAR_LEVEL(ch) >= d->cgetCharacter()->getLevelOfWizardInvisibility() && d->cgetOriginalCharacter() == nullptr &&
             CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
@@ -93,7 +93,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (d = g_descriptor_list; d; d = d->getNext())
         {
-            if (d->cgetCharacter() && d->cgetCharacter()->getMyContainer() && descriptor_is_playing(d) &&
+            if (d->cgetCharacter() && d->cgetCharacter()->getUnitIn() && descriptor_is_playing(d) &&
                 CHAR_LEVEL(ch) >= d->cgetCharacter()->getLevelOfWizardInvisibility() &&
                 (d->cgetOriginalCharacter() == nullptr || CHAR_LEVEL(ch) >= d->cgetOriginalCharacter()->getLevelOfWizardInvisibility()))
             {
@@ -106,7 +106,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
                 mystr += diku::format_to_str("%-20s - %s [%s]%s<br/>",
                                              CHAR_ORIGINAL(d->getCharacter())->getNames().Name(),
-                                             UNIT_SEE_TITLE(ch, d->getCharacter()->getMyContainer()),
+                                             UNIT_SEE_TITLE(ch, d->getCharacter()->getUnitIn()),
                                              in_string(ch, d->cgetCharacter()),
                                              whose_body);
             }
@@ -118,7 +118,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (i = g_unit_list; i; i = i->getGlobalNext())
         {
-            if (i->getMyContainer() && i->getNames().IsName(arg) && CHAR_LEVEL(ch) >= i->getLevelOfWizardInvisibility())
+            if (i->getUnitIn() && i->getNames().IsName(arg) && CHAR_LEVEL(ch) >= i->getLevelOfWizardInvisibility())
             {
                 nCount++;
                 if (nCount++ > 100)
@@ -128,7 +128,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
                 mystr += diku::format_to_str("%-30s - %s [%s]<br/>",
                                              TITLENAME(i),
-                                             UNIT_SEE_TITLE(ch, i->getMyContainer()),
+                                             UNIT_SEE_TITLE(ch, i->getUnitIn()),
                                              (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
             }
         }

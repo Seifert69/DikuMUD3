@@ -516,7 +516,7 @@ int effective_dex(unit_data *ch)
     int p = 0;
     int psum = 0;
 
-    for (u = ch->getContainedUnits(); u; u = u->getNext())
+    for (u = ch->getUnitContains(); u; u = u->getNext())
     {
         if (u->isObj() && (OBJ_EQP_POS(u) != 0) && (OBJ_TYPE(u) == ITEM_ARMOR))
         {

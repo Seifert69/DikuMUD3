@@ -91,7 +91,7 @@ void tif_fear_check(unit_affected_type *af, unit_data *unit)
     else
     {
         /* Find someone else */
-        for (ch = unit->getMyContainer()->getContainedUnits(); ch; ch = ch->getNext())
+        for (ch = unit->getUnitIn()->getUnitIn(); ch; ch = ch->getNext())
         {
             if (ch != unit && ch->isChar())
             {
@@ -293,9 +293,9 @@ void tif_curse_on(unit_affected_type *af, unit_data *unit)
         send_to_char("You feel that the gods are against you.<br/>", unit);
     }
     act("A shadow falls upon $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-    if (unit->getMyContainer() && unit->getMyContainer()->isChar())
+    if (unit->getUnitIn() && unit->getUnitIn()->isChar())
     {
-        act("A shadow falls upon $3n.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
+        act("A shadow falls upon $3n.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
     }
 }
 
@@ -307,9 +307,9 @@ void tif_curse_off(unit_affected_type *af, unit_data *unit)
     }
 
     act("A shadow lifts from $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-    if (unit->getMyContainer() && unit->getMyContainer()->isChar())
+    if (unit->getUnitIn() && unit->getUnitIn()->isChar())
     {
-        act("A shadow lifts from $3n.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
+        act("A shadow lifts from $3n.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
     }
 }
 
@@ -353,15 +353,15 @@ void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 
     if (af->getDuration() <= 4)
     {
-        if (unit->getMyContainer()->isChar())
+        if (unit->getUnitIn()->isChar())
         {
             if (af->getDuration() <= 1) // Last tick.
             {
-                act("Your $2N goes out.", A_HIDEINV, unit->getMyContainer(), unit, cActParameter(), TO_CHAR);
+                act("Your $2N goes out.", A_HIDEINV, unit->getUnitIn(), unit, cActParameter(), TO_CHAR);
             }
             else
             {
-                act("Your $2N is getting dim.", A_HIDEINV, unit->getMyContainer(), unit, cActParameter(), TO_CHAR);
+                act("Your $2N is getting dim.", A_HIDEINV, unit->getUnitIn(), unit, cActParameter(), TO_CHAR);
             }
         }
     }
@@ -369,39 +369,39 @@ void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 
 void tif_light_add(unit_affected_type *af, unit_data *unit)
 {
-    if (!unit->getMyContainer())
+    if (!unit->getUnitIn())
     {
         return;
     }
 
     /* If the thing is carried by a character */
-    if (unit->getMyContainer()->isChar())
+    if (unit->getUnitIn()->isChar())
     {
-        act("Your $3N starts to glow.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
-        act("$1n's $3n starts to glow.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_ROOM);
+        act("Your $3N starts to glow.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
+        act("$1n's $3n starts to glow.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_ROOM);
     }
-    else if (unit->getMyContainer()->getContainedUnits())
+    else if (unit->getUnitIn()->getUnitIn())
     {
-        act("The $3N starts to glow.", A_HIDEINV, unit->getMyContainer()->getContainedUnits(), cActParameter(), unit, TO_ALL);
+        act("The $3N starts to glow.", A_HIDEINV, unit->getUnitIn()->getUnitIn(), cActParameter(), unit, TO_ALL);
     }
 }
 
 void tif_light_sub(unit_affected_type *af, unit_data *unit)
 {
-    if (!unit->getMyContainer())
+    if (!unit->getUnitIn())
     {
         return;
     }
 
     /* If the thing is carried by a character */
-    if (unit->getMyContainer()->isChar())
+    if (unit->getUnitIn()->isChar())
     {
-        act("Your $3N gets dimmer.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
-        act("$1n's $3N gets dimmer.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_ROOM);
+        act("Your $3N gets dimmer.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
+        act("$1n's $3N gets dimmer.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_ROOM);
     }
-    else if (unit->getMyContainer()->getContainedUnits())
+    else if (unit->getUnitIn()->getUnitIn())
     {
-        act("The $3N gets dimmer.", A_HIDEINV, unit->getMyContainer()->getContainedUnits(), cActParameter(), unit, TO_ALL);
+        act("The $3N gets dimmer.", A_HIDEINV, unit->getUnitIn()->getUnitIn(), cActParameter(), unit, TO_ALL);
     }
 }
 
@@ -962,11 +962,11 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
     {
         /* Empty the container and set buried status of contents */
 
-        while (unit->getContainedUnits())
+        while (unit->getUnitContains())
         {
             unit_affected_type naf;
 
-            unit->getContainedUnits()->setUnitFlag(UNIT_FL_BURIED);
+            unit->getUnitContains()->setUnitFlag(UNIT_FL_BURIED);
 
             naf.setID(ID_BURIED);
             naf.setDuration(0);
@@ -976,14 +976,14 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
             naf.setLastFI(TIF_BURIED_DESTRUCT);
             naf.setApplyFI(APF_NONE);
 
-            create_affect(unit->getContainedUnits(), &naf);
+            create_affect(unit->getUnitContains(), &naf);
 
-            if (UNIT_IS_EQUIPPED(unit->getContainedUnits()))
+            if (UNIT_IS_EQUIPPED(unit->getUnitContains()))
             {
-                unequip_object(unit->getContainedUnits());
+                unequip_object(unit->getUnitContains());
             }
 
-            unit_up(unit->getContainedUnits());
+            unit_up(unit->getUnitContains());
         }
 
         extract_unit(unit);

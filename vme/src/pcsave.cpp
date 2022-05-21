@@ -264,7 +264,7 @@ void save_player_file(unit_data *pc)
     slog(LOG_ALL, 0, "Saving PC %s id =%d", pc->getNames().Name(), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
-    if (pc->getMyContainer() && !IS_SET(unit_room(pc)->getUnitFlags(), UNIT_FL_NOSAVE))
+    if (pc->getUnitIn() && !IS_SET(unit_room(pc)->getUnitFlags(), UNIT_FL_NOSAVE))
     {
         UCHAR(pc)->setLastLocation(unit_room(pc));
     }
@@ -273,7 +273,7 @@ void save_player_file(unit_data *pc)
     UCHAR(pc)->setDescriptor(nullptr); // Do this to turn off all messages!
 
     /* Remove all inventory and equipment in order to make a CLEAN save */
-    while ((tmp_u = pc->getContainedUnits()))
+    while ((tmp_u = pc->getUnitContains()))
     {
         if (tmp_u->isObj())
         {

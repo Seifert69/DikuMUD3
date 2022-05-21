@@ -847,7 +847,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         {
             if (u->getUnitType() == UNIT_ST_ROOM)
             {
-                u->setMyContainerTo(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
+                u->setUnitIn(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
             }
             else
             {
@@ -857,7 +857,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
                 else
                 {
-                    u->setMyContainerTo(tmpfi->Front());
+                    u->setUnitIn(tmpfi->Front());
                 }
             }
         }
@@ -1238,11 +1238,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
                 if ((fi = find_file_index(zone, name)))
                 {
-                    u->setMyContainerTo(reinterpret_cast<unit_data *>(fi)); // A file index
+                    u->setUnitIn(reinterpret_cast<unit_data *>(fi)); // A file index
                 }
                 else
                 {
-                    u->setMyContainerTo(nullptr);
+                    u->setUnitIn(nullptr);
                 }
             }
 
@@ -1409,7 +1409,7 @@ void bonus_setup(unit_data *u)
             UOBJ(u)->setValueAtIndexTo(2, bonus_map_a(OBJ_VALUE(u, 2)));
         }
 
-        for (unit_affected_type *af = u->getUnitAffectedType(); af; af = af->getNext())
+        for (unit_affected_type *af = u->getUnitAffected(); af; af = af->getNext())
         {
             if ((af->getID() == ID_TRANSFER_STR) || (af->getID() == ID_TRANSFER_DEX) || (af->getID() == ID_TRANSFER_CON) ||
                 (af->getID() == ID_TRANSFER_CHA) || (af->getID() == ID_TRANSFER_BRA) || (af->getID() == ID_TRANSFER_MAG) ||
@@ -1458,7 +1458,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
 
     if (!u->isRoom())
     {
-        assert(u->getMyContainer() == nullptr);
+        assert(u->getUnitIn() == nullptr);
     }
 
     unit_error_zone = nullptr;
@@ -1517,13 +1517,13 @@ void normalize_world()
         if (u->isRoom())
         {
             /* Place room inside another room? */
-            if (u->getMyContainer())
+            if (u->getUnitIn())
             {
-                fi = (file_index_type *)u->getMyContainer();
+                fi = (file_index_type *)u->getUnitIn();
 
                 assert(!fi->Empty());
 
-                u->setMyContainerTo(fi->Front());
+                u->setUnitIn(fi->Front());
             }
 
             /* Change directions into unit_data points from file_index_type */
@@ -1546,10 +1546,10 @@ void normalize_world()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (u->isRoom() && u->getMyContainer())
+        if (u->isRoom() && u->getUnitIn())
         {
-            tmpu = u->getMyContainer();
-            u->setMyContainerTo(nullptr);
+            tmpu = u->getUnitIn();
+            u->setUnitIn(nullptr);
 
             if (unit_recursive(u, tmpu))
             {

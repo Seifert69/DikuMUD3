@@ -207,7 +207,7 @@ ubit1 may_teleport_away(unit_data *unit)
         return FALSE;
     }
 
-    while ((unit = unit->getMyContainer()))
+    while ((unit = unit->getUnitIn()))
     {
         if (IS_SET(unit->getUnitFlags(), UNIT_FL_NO_TELEPORT))
         {
@@ -233,7 +233,7 @@ ubit1 may_teleport_to(unit_data *unit, unit_data *dest)
         {
             return FALSE;
         }
-    } while ((dest = dest->getMyContainer()));
+    } while ((dest = dest->getUnitIn()));
 
     return TRUE;
 }

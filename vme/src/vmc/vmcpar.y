@@ -278,7 +278,7 @@ oroom_field : MOVEMENT PNUM
     }
     | VIN reference
     {
-        cur->setMyContainerTo(reinterpret_cast<unit_data*>($2));
+        cur->setUnitIn(reinterpret_cast<unit_data*>($2));
     }
     | SPELL number
     {
@@ -875,10 +875,10 @@ unit_field  : NAMES stringlist
     }
     optfuncargs | AFFECT
     {
-        if (!cur->getUnitAffectedType())
+        if (!cur->getUnitAffected())
         {
-            cur->setUnitAffectedType(mcreate_affect());
-            cur_aff = cur->getUnitAffectedType();
+            cur->setUnitAffected(mcreate_affect());
+            cur_aff = cur->getUnitAffected();
         }
         else
         {

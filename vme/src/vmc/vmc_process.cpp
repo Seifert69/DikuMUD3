@@ -388,7 +388,7 @@ bool affect_vector_string(unit_data *obj, std::string &s)
 
     memset(bonusvector, 0, sizeof(bonusvector));
 
-    for (unit_affected_type *af = obj->getUnitAffectedType(); af; af = af->getNext())
+    for (unit_affected_type *af = obj->getUnitAffected(); af; af = af->getNext())
     {
         switch (af->getID())
         {
@@ -452,7 +452,7 @@ bool affect_vector_list(unit_data *obj, std::string &s)
 {
     s.clear();
 
-    for (unit_affected_type *af = obj->getUnitAffectedType(); af; af = af->getNext())
+    for (unit_affected_type *af = obj->getUnitAffected(); af; af = af->getNext())
     {
         switch (af->getID())
         {
@@ -627,7 +627,7 @@ void process_affects(unit_data *pUnit)
     int lastf = 0;
     int applyf = 0;
 
-    for (pAf = pUnit->getUnitAffectedType(); pAf; pAf = pAf->getNext())
+    for (pAf = pUnit->getUnitAffected(); pAf; pAf = pAf->getNext())
     {
         firstf = (pAf->getFirstFI() == TIF_NONE);
         tickf = (pAf->getTickFI() == TIF_NONE);
@@ -1187,7 +1187,7 @@ void init_unit(unit_data *u)
     u->setNumberOfActiveLightSources(0);
     u->setLightOutput(0);
     u->setNumberOfCharactersInsideUnit(0);
-    u->setUnitAffectedType(nullptr);
+    u->setUnitAffected(nullptr);
     u->setSize(180); // 180cm default
 
     switch (u->getUnitType())
@@ -1250,7 +1250,7 @@ void init_unit(unit_data *u)
             u->setCapacity(30000);
             u->setBaseWeight(10);
             u->setWeight(10);
-            u->setMyContainerTo(nullptr);
+            u->setUnitIn(nullptr);
             for (i = 0; i <= MAX_EXIT; i++)
             {
                 UROOM(u)->setRoomDirectionDataForExitTo(i, nullptr);

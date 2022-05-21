@@ -163,7 +163,7 @@ void destruct_unit(unit_data *unit)
 
             in_menu = TRUE;
 
-            if (unit->getMyContainer() && !g_dilmenu)
+            if (unit->getUnitIn() && !g_dilmenu)
             {
                 set_descriptor_fptr(CHAR_DESCRIPTOR(unit), nanny_menu, TRUE);
                 unit->undo_destruct();
@@ -198,13 +198,13 @@ void destruct_unit(unit_data *unit)
         assert(FALSE);
     }
 
-    while (unit->getContainedUnits())
+    while (unit->getUnitContains())
     {
-        if (unit->getContainedUnits()->isObj() && OBJ_EQP_POS(unit->getContainedUnits()))
+        if (unit->getUnitContains()->isObj() && OBJ_EQP_POS(unit->getUnitContains()))
         {
-            unequip_object(unit->getContainedUnits());
+            unequip_object(unit->getUnitContains());
         }
-        destruct_unit(unit->getContainedUnits());
+        destruct_unit(unit->getUnitContains());
     }
 
     if (!in_menu)
@@ -216,13 +216,13 @@ void destruct_unit(unit_data *unit)
             destroy_fptr(unit, unit->getFunctionPointer()); /* Unlinks, no free */
         }
 
-        while (unit->getUnitAffectedType())
+        while (unit->getUnitAffected())
         {
-            unlink_affect(unit->getUnitAffectedType());
+            unlink_affect(unit->getUnitAffected());
         }
     }
 
-    if (unit->getMyContainer())
+    if (unit->getUnitIn())
     {
         unit_from_unit(unit);
     }

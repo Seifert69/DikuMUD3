@@ -48,12 +48,12 @@ int sel_name(const dirent *dptr)
 
 void convert_free_unit(unit_data *u)
 {
-    while (u->getContainedUnits())
+    while (u->getUnitContains())
     {
-        convert_free_unit(u->getContainedUnits());
+        convert_free_unit(u->getUnitContains());
     }
 
-    u->setUnitAffectedType(nullptr);
+    u->setUnitAffected(nullptr);
     u->setFunctionPointer(nullptr);
 
     unit_from_unit(u);
@@ -127,7 +127,7 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
         return;
     }
 
-    convert_inventory(u->getContainedUnits(), pc, bList);
+    convert_inventory(u->getUnitContains(), pc, bList);
 
     convert_inventory(u->getNext(), pc, bList);
 
@@ -139,13 +139,13 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
     {
         unit_data *tmpu = nullptr;
 
-        assert(u->getMyContainer());
+        assert(u->getUnitIn());
 
-        unit_to_unit(bla, u->getMyContainer());
+        unit_to_unit(bla, u->getUnitIn());
 
-        while (u->getContainedUnits())
+        while (u->getUnitContains())
         {
-            tmpu = u->getContainedUnits();
+            tmpu = u->getUnitContains();
             unit_from_unit(tmpu);
             unit_to_unit(tmpu, bla);
         }
@@ -217,7 +217,7 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (!u->getContainedUnits() && (u->getWeight() != u->getBaseWeight()))
+    if (!u->getUnitContains() && (u->getWeight() != u->getBaseWeight()))
     {
         printf("Fixed illegal weight.");
         u->setWeight(u->getBaseWeight());
@@ -431,7 +431,7 @@ void clist()
                         shall_exclude(pc->getNames().Name());
                         // shall_delete(pc);
 
-                        void_char->setContainedUnit(nullptr);
+                        void_char->setUnitContains(nullptr);
                         /* load_contents(temp, void_char);
 
                         if (UNIT_CONTAINS(void_char))
@@ -707,13 +707,13 @@ void cleanup()
 
                         std::cout.flush();
 
-                        void_char->setContainedUnit(nullptr);
+                        void_char->setUnitContains(nullptr);
                         load_contents(temp, void_char);
-                        if (void_char->getContainedUnits())
+                        if (void_char->getUnitContains())
                         {
                             std::cout << "  INV";
-                            convert_inventory(void_char->getContainedUnits(), pc, TRUE);
-                            free_inventory(void_char->getContainedUnits());
+                            convert_inventory(void_char->getUnitContains(), pc, TRUE);
+                            free_inventory(void_char->getUnitContains());
                         }
 
                         convert_free_unit(pc);

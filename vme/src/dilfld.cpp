@@ -1054,7 +1054,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = ((unit_data *)v1->val.ptr)->getMyContainer();
+                        v->val.ptr = ((unit_data *)v1->val.ptr)->getUnitIn();
                     }
                     else
                     {
@@ -1081,7 +1081,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = ((unit_data *)v1->val.ptr)->getContainedUnits();
+                        v->val.ptr = ((unit_data *)v1->val.ptr)->getUnitContains();
                     }
                     else
                     {

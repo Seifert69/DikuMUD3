@@ -100,9 +100,9 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
     UCHAR(this)->setDescriptor(nullptr);
 
-    while (getContainedUnits())
+    while (getUnitContains())
     {
-        extract_unit(getContainedUnits());
+        extract_unit(getUnitContains());
     }
 
     UCHAR(this)->setDescriptor(tmp_descr);
@@ -296,7 +296,7 @@ void pc_data::reconnect_game(descriptor_data *d)
  */
     send_to_char("Reconnecting.<br/>", this);
 
-    if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != getMyContainer()))
+    if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != getUnitIn()))
     {
         act("$1n has reconnected, and is moved to another location.",
             A_HIDEINV,

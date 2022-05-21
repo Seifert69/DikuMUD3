@@ -1289,7 +1289,7 @@ void damage(unit_data *ch,
         {
             if (CHAR_LAST_ATTACKER(victim))
             {
-                for (sch = victim->getMyContainer()->getContainedUnits(); sch; sch = sch->getNext())
+                for (sch = victim->getUnitIn()->getUnitIn(); sch; sch = sch->getNext())
                 {
                     if (CHAR_LAST_ATTACKER(victim) && sch->getNames().Name())
                     {
@@ -1340,7 +1340,7 @@ void damage(unit_data *ch,
                  "%s killed by %s at %s",
                  STR(victim->getNames().Name()),
                  TITLENAME(ch),
-                 STR(TITLENAME(ch->getMyContainer())));
+                 STR(TITLENAME(ch->getUnitIn())));
         }
 
         if (victim == ch)

@@ -59,7 +59,7 @@ static void stat_world_count(const unit_data *ch, char *arg)
     for (unit_data *u = g_unit_list; u; u = u->getGlobalNext())
     {
         int i = 0;
-        for (unit_data *t = u->getContainedUnits(); t; t = t->getNext())
+        for (unit_data *t = u->getUnitContains(); t; t = t->getNext())
         { // count top layer
             i++;
         }
@@ -126,7 +126,7 @@ static void stat_memory(unit_data *ch)
     {
         if (u->getUnitType() != UNIT_ST_ROOM)
         {
-            if (u->getMyContainer() == nullptr)
+            if (u->getUnitIn() == nullptr)
             {
                 msg = diku::format_to_str("%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
                 send_to_char(msg, ch);
@@ -632,7 +632,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
 {
     unit_affected_type *af = nullptr;
 
-    if (!u->getUnitAffectedType())
+    if (!u->getUnitAffected())
     {
         send_to_char("It is not affected by anything.<br/>", ch);
         return;
@@ -640,7 +640,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
 
     send_to_char("Unit affects:<br/>", ch);
 
-    for (af = u->getUnitAffectedType(); af; af = af->getNext())
+    for (af = u->getUnitAffected(); af; af = af->getNext())
     {
         auto msg = diku::format_to_str("----------------------------------------------------<br/>"
                                        "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
@@ -744,8 +744,8 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               u->getTransparentLightOutput(),
                               u->getNumberOfCharactersInsideUnit(),
                               u->getLevelOfWizardInvisibility(),
-                              u->getMyContainer() ? STR(TITLENAME(u->getMyContainer())) : "Nothing",
-                              u->getContainedUnits() ? "has contents" : "is empty",
+                              u->getUnitIn() ? STR(TITLENAME(u->getUnitIn())) : "Nothing",
+                              u->getUnitContains() ? "has contents" : "is empty",
                               sprintbit(bits2, u->getManipulate(), g_unit_manipulate),
                               sprintbit(bits1, u->getUnitFlags(), g_unit_flags),
                               (signed long)u->getCurrentHitpoints(),
@@ -1180,7 +1180,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        UROOM(u)->getMapXCoordinate(),
                                        UROOM(u)->getMapYCoordinate(),
                                        ROOM_RESISTANCE(u),
-                                       u->getMyContainer() ? STR(TITLENAME(u->getMyContainer())) : "Nothing");
+                                       u->getUnitIn() ? STR(TITLENAME(u->getUnitIn())) : "Nothing");
         send_to_char(msg, ch);
 
         for (i = 0; i <= MAX_EXIT; i++)
@@ -1229,9 +1229,9 @@ static void stat_contents(const unit_data *ch, unit_data *u)
 
     orgu = u;
 
-    if (u->getContainedUnits())
+    if (u->getUnitContains())
     {
-        for (u = u->getContainedUnits(); u; u = u->getNext())
+        for (u = u->getUnitContains(); u; u = u->getNext())
         {
             if (CHAR_LEVEL(ch) >= u->getLevelOfWizardInvisibility())
             {
@@ -1277,7 +1277,7 @@ void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
 
     if (str_ccmp("room", argument) == 0)
     {
-        u = ch->getMyContainer();
+        u = ch->getUnitIn();
     }
     else
     {
@@ -1335,7 +1335,7 @@ void do_wstat(unit_data *ch, char *argument, const command_info *cmd)
 
     if (!str_nccmp("room", argument, 4))
     {
-        u = ch->getMyContainer();
+        u = ch->getUnitIn();
         argument += 4;
     }
     else if (!strncmp("zone", argument, 4))

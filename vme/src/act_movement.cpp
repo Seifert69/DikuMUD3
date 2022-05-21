@@ -98,12 +98,12 @@ int has_found_door(unit_data *pc, int dir)
     unit_affected_type *af = nullptr;
     char buf[MAX_INPUT_LENGTH];
 
-    if (!pc->getMyContainer()->isRoom())
+    if (!pc->getUnitIn()->isRoom())
     {
         return FALSE;
     }
 
-    if (!ROOM_EXIT(pc->getMyContainer(), dir))
+    if (!ROOM_EXIT(pc->getUnitIn(), dir))
     {
         return FALSE;
     }
@@ -113,7 +113,7 @@ int has_found_door(unit_data *pc, int dir)
         return TRUE;
     }
 
-    if (!ROOM_EXIT(pc->getMyContainer(), dir)->isDoorFlagSet(EX_HIDDEN))
+    if (!ROOM_EXIT(pc->getUnitIn(), dir)->isDoorFlagSet(EX_HIDDEN))
     {
         return TRUE;
     }
@@ -121,7 +121,7 @@ int has_found_door(unit_data *pc, int dir)
     strcpy(buf, SECRET_DOOR);
     strcat(buf, itoa(dir));
 
-    exd = pc->getMyContainer()->getExtraList().find_raw(buf);
+    exd = pc->getUnitIn()->getExtraList().find_raw(buf);
 
     if (exd == nullptr)
     {
@@ -130,9 +130,9 @@ int has_found_door(unit_data *pc, int dir)
 
     return exd->names.IsName(pc->getNames().Name(0)) != nullptr;
 
-    if (ROOM_EXIT(pc->getMyContainer(), dir)->isDoorFlagSet(EX_CLOSED))
+    if (ROOM_EXIT(pc->getUnitIn(), dir)->isDoorFlagSet(EX_CLOSED))
     {
-        for (af = pc->getMyContainer()->getUnitAffectedType(); af; af = af->getNext())
+        for (af = pc->getUnitIn()->getUnitAffected(); af; af = af->getNext())
         {
             if (af->getID() == ID_SPOTTED_SECRET && PC_ID(pc) == af->getDataAtIndex(0))
             {
@@ -151,7 +151,7 @@ unit_data *in_room(unit_data *u)
 {
     while (u && !u->isRoom())
     {
-        u = u->getMyContainer();
+        u = u->getUnitIn();
     }
 
     assert(u);
@@ -226,7 +226,7 @@ int room_move(unit_data *ch,
         return 0;
     }
 
-    for (u = ch->getContainedUnits(); u; u = u->getNext())
+    for (u = ch->getUnitContains(); u; u = u->getNext())
     {
         if (!pay_point_charlie(u, room_to))
         {
@@ -239,7 +239,7 @@ int room_move(unit_data *ch,
         act(pLeaveSelf, A_ALWAYS, ch, room_from, mover, TO_CHAR);
     }
 
-    if (room_from->getContainedUnits() && !str_is_empty(pLeaveOther))
+    if (room_from->getUnitContains() && !str_is_empty(pLeaveOther))
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
@@ -252,7 +252,7 @@ int room_move(unit_data *ch,
     UCHAR(ch)->removeCharacterFlag(CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
     unit_to_unit(mover, room_to);
 
-    if (room_to->getContainedUnits() && !str_is_empty(pArrOther))
+    if (room_to->getUnitContains() && !str_is_empty(pArrOther))
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
@@ -274,7 +274,7 @@ int room_move(unit_data *ch,
             command_interpreter(mover, "look :brief:");
         }
 
-        for (u = mover->getContainedUnits(); u; u = u->getNext())
+        for (u = mover->getUnitContains(); u; u = u->getNext())
         {
             if ((u != ch) && u->isChar())
             {
@@ -341,9 +341,9 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
     room_from = in_room(ch);
 
-    assert((ch == mover) || (ch->getMyContainer() == mover));
+    assert((ch == mover) || (ch->getUnitIn() == mover));
 
-    if (!mover->getMyContainer()->isRoom())
+    if (!mover->getUnitIn()->isRoom())
     {
         send_to_char(ALAS_NOWAY, ch);
         return 0;
@@ -392,7 +392,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else // Steed or boat code (shares scan for passenger combat)
     {
-        for (unit_data *u = mover->getContainedUnits(); u; u = u->getNext())
+        for (unit_data *u = mover->getUnitContains(); u; u = u->getNext())
         {
             if (u->isChar() && CHAR_FIGHTING(u))
             {
@@ -724,13 +724,13 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
                 if (room_from == in_room(k->getFollower()) && CHAR_POS(k->getFollower()) >= POSITION_STANDING)
                 {
                     act("You follow $3n.<br/>", A_SOMEONE, k->getFollower(), cActParameter(), ch, TO_CHAR);
-                    if (k->getFollower()->getMyContainer()->isRoom())
+                    if (k->getFollower()->getUnitIn()->isRoom())
                     {
                         self_walk(k->getFollower(), k->getFollower(), direction, TRUE);
                     }
                     else
                     {
-                        self_walk(k->getFollower(), k->getFollower()->getMyContainer(), direction, TRUE);
+                        self_walk(k->getFollower(), k->getFollower()->getUnitIn(), direction, TRUE);
                     }
                 }
             }
@@ -761,25 +761,25 @@ void move_dir(unit_data *ch, int dir)
         return;
     }
 
-    if (ch->getMyContainer()->isObj())
+    if (ch->getUnitIn()->isObj())
     {
-        self_walk(ch, ch->getMyContainer(), dir, 0);
+        self_walk(ch, ch->getUnitIn(), dir, 0);
     }
-    else if (ch->getMyContainer()->isChar())
+    else if (ch->getUnitIn()->isChar())
     {
-        self_walk(ch, ch->getMyContainer(), dir, 0);
+        self_walk(ch, ch->getUnitIn(), dir, 0);
     }
-    else if (ch->getMyContainer()->isRoom())
+    else if (ch->getUnitIn()->isRoom())
     {
         self_walk(ch, ch, dir, 0);
     }
     else
     {
-        slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", ch->getNames().Name(), ch->getMyContainer()->getNames().Name());
+        slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", ch->getNames().Name(), ch->getUnitIn()->getNames().Name());
         act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
-        if (ch->getMyContainer()->getMyContainer())
+        if (ch->getUnitIn()->getUnitIn())
         {
-            ch->setMyContainerTo(ch->getMyContainer()->getMyContainer());
+            ch->setUnitIn(ch->getUnitIn()->getUnitIn());
         }
         command_interpreter(ch, "look");
         act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
@@ -822,7 +822,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
         return -1;
     }
 
-    if (!ch->getMyContainer()->isRoom())
+    if (!ch->getUnitIn()->isRoom())
     {
         if (err_msg)
         {
@@ -836,7 +836,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
         /* A direction and name was specified */
         if (str_is_empty(dirdoorstr))
         {
-            if (ROOM_EXIT(ch->getMyContainer(), door) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(ch->getUnitIn(), door) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }
@@ -849,9 +849,9 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
             return -1;
         }
 
-        if (ROOM_EXIT(ch->getMyContainer(), door))
+        if (ROOM_EXIT(ch->getUnitIn(), door))
         {
-            if (ROOM_EXIT(ch->getMyContainer(), door)->getOpenName().IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(ch->getUnitIn(), door)->getOpenName().IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }
@@ -875,9 +875,9 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 
     for (door = 0; door <= MAX_EXIT; door++)
     {
-        if (ROOM_EXIT(ch->getMyContainer(), door))
+        if (ROOM_EXIT(ch->getUnitIn(), door))
         {
-            if (ROOM_EXIT(ch->getMyContainer(), door)->getOpenName().IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(ch->getUnitIn(), door)->getOpenName().IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }

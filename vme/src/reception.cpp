@@ -78,7 +78,7 @@ static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, v
 
     if (!item->getLevelOfWizardInvisibility())
     {
-        sum += subtract_recurse(ch, item->getContainedUnits(), seconds, fptr);
+        sum += subtract_recurse(ch, item->getUnitContains(), seconds, fptr);
     }
 
     sum += subtract_recurse(ch, item->getNext(), seconds, fptr);
@@ -128,7 +128,7 @@ ubit32 rent_calc(unit_data *ch, time_t savetime)
 
             if (t > SECS_PER_REAL_MIN * 10)
             {
-                sum = subtract_recurse(ch, ch->getContainedUnits(), t, subtract_rent);
+                sum = subtract_recurse(ch, ch->getUnitContains(), t, subtract_rent);
             }
         }
     }
@@ -142,7 +142,7 @@ void do_rent(unit_data *ch, char *arg, const command_info *cmd)
 
     rent_info = FALSE;
 
-    sum = subtract_recurse(ch, ch->getContainedUnits(), SECS_PER_REAL_DAY, show_items);
+    sum = subtract_recurse(ch, ch->getUnitContains(), SECS_PER_REAL_DAY, show_items);
 
     if (!rent_info)
     {
@@ -291,7 +291,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
         return;
     }
 
-    if ((tmp_u = unit->getContainedUnits()))
+    if ((tmp_u = unit->getUnitContains()))
     {
         if (tmp_u->isObj() && (tmp_i = OBJ_EQP_POS(tmp_u)))
         {
@@ -333,7 +333,7 @@ void send_saves(unit_data *parent, unit_data *unit)
         return;
     }
 
-    send_saves(parent, unit->getContainedUnits());
+    send_saves(parent, unit->getUnitContains());
     send_saves(parent, unit->getNext());
 
     if ((unit->isObj() || unit->isNPC()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
@@ -378,7 +378,7 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
         send_save_to(unit, unit);
     }
 
-    send_saves(unit, unit->getContainedUnits());
+    send_saves(unit, unit->getUnitContains());
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 
@@ -416,7 +416,7 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 
     strcpy(name, ContentsFileName(pFileName));
 
-    if (!unit->getContainedUnits())
+    if (!unit->getUnitContains())
     {
         remove(name);
         return 0;
@@ -424,7 +424,7 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 
     basic_save_contents(name, unit, fast, bContainer);
 
-    return subtract_recurse(unit, unit->getContainedUnits(), SECS_PER_REAL_DAY, nullptr);
+    return subtract_recurse(unit, unit->getUnitContains(), SECS_PER_REAL_DAY, nullptr);
 }
 
 /* From the block_file 'bf' at index 'blk_idx' load the objects    */
@@ -580,9 +580,9 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         }
         if (pstack[frame] == nullptr)
         {
-            if (pnew->getMyContainer())
+            if (pnew->getUnitIn())
             {
-                pstack[frame] = pnew->getMyContainer();
+                pstack[frame] = pnew->getUnitIn();
             }
             else
             {
@@ -590,7 +590,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             }
         }
 
-        pnew->setMyContainerTo(nullptr);
+        pnew->setUnitIn(nullptr);
         if (pnew == pstack[frame])
         {
             slog(LOG_ALL, 0, "ERROR. Loading inventory, recursive linking. Please report.");
@@ -607,13 +607,13 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             else
             {
                 frame = hn.level;
-                unit_to_unit(pnew, pstack[frame]->getMyContainer());
+                unit_to_unit(pnew, pstack[frame]->getUnitIn());
             }
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
-            if (hn.equip && equip_ok && pnew->getMyContainer()->isChar())
+            if (hn.equip && equip_ok && pnew->getUnitIn()->isChar())
             {
-                equip_char(pnew->getMyContainer(), pnew, hn.equip);
+                equip_char(pnew->getUnitIn(), pnew, hn.equip);
             }
 
             pstack[frame] = pnew;

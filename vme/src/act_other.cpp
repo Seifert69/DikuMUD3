@@ -161,7 +161,7 @@ void points_reset(unit_data *ch)
 void start_player(unit_data *ch)
 {
     assert(CHAR_LEVEL(ch) == 0);
-    assert(ch->getContainedUnits() == nullptr);
+    assert(ch->getUnitContains() == nullptr);
     assert(ch->isPC());
     assert(CHAR_DESCRIPTOR(ch)); // Needed to copy pwd
 

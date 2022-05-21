@@ -75,9 +75,9 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
             }
         }
 
-        if (u->getContainedUnits())
+        if (u->getUnitContains())
         {
-            dil_stop_special(u->getContainedUnits(), aprg);
+            dil_stop_special(u->getUnitContains(), aprg);
         }
     }
 }
@@ -101,9 +101,9 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
             }
         }
 
-        if (u->getContainedUnits())
+        if (u->getUnitContains())
         {
-            dil_start_special(u->getContainedUnits(), aprg);
+            dil_start_special(u->getUnitContains(), aprg);
         }
     }
 }
@@ -415,7 +415,7 @@ void dilfi_foe(dilprg *p)
                 }
             }
 
-            if (p->sarg->owner->getMyContainer())
+            if (p->sarg->owner->getUnitIn())
             {
                 scan4_unit(p->sarg->owner, v1->val.num);
             }
@@ -3040,11 +3040,10 @@ void dilfi_eqp(dilprg *p)
     if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
-        if (unit && unit->getMyContainer() && unit->getMyContainer()->isChar() && unit->isObj() &&
-            !equipment(unit->getMyContainer(), v2->val.num))
+        if (unit && unit->getUnitIn() && unit->getUnitIn()->isChar() && unit->isObj() && !equipment(unit->getUnitIn(), v2->val.num))
         {
             /* Then equip char */
-            equip_char(unit->getMyContainer(), unit, v2->val.num);
+            equip_char(unit->getUnitIn(), unit, v2->val.num);
         }
     }
     delete v1;

@@ -394,12 +394,12 @@ void unit_data::setFunctionPointer(unit_fptr *value)
     m_func = value;
 }
 
-unit_affected_type *unit_data::getUnitAffectedType()
+unit_affected_type *unit_data::getUnitAffected()
 {
     return m_affected;
 }
 
-void unit_data::setUnitAffectedType(unit_affected_type *value)
+void unit_data::setUnitAffected(unit_affected_type *value)
 {
     m_affected = value;
 }
@@ -434,32 +434,32 @@ void unit_data::setKey(char *value)
     m_key = value;
 }
 
-unit_data *unit_data::getMyContainer()
+unit_data *unit_data::getUnitIn()
 {
     return m_outside;
 }
 
-const unit_data *unit_data::getMyContainer() const
+const unit_data *unit_data::getUnitIn() const
 {
     return m_outside;
 }
 
-void unit_data::setMyContainerTo(unit_data *value)
+void unit_data::setUnitIn(unit_data *value)
 {
     m_outside = value;
 }
 
-const unit_data *unit_data::getContainedUnits() const
+const unit_data *unit_data::getUnitContains() const
 {
     return m_inside;
 }
 
-unit_data *unit_data::getContainedUnits()
+unit_data *unit_data::getUnitContains()
 {
     return m_inside;
 }
 
-void unit_data::setContainedUnit(unit_data *value)
+void unit_data::setUnitContains(unit_data *value)
 {
     m_inside = value;
 }

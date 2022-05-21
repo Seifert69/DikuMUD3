@@ -29,7 +29,7 @@ int char_carry_n(unit_data *unit)
 {
     int i = 0;
 
-    for (unit = unit->getContainedUnits(), i = 0; unit; unit = unit->getNext())
+    for (unit = unit->getUnitContains(), i = 0; unit; unit = unit->getNext())
     {
         if (!unit->isObj() || ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
         {
@@ -176,7 +176,7 @@ int hit_gain(unit_data *ch)
             gain *= 2;
             break;
         }
-        u = u->getMyContainer();
+        u = u->getUnitIn();
     }
 
     if (ch->isPC())
@@ -251,7 +251,7 @@ int move_gain(unit_data *ch)
             gain *= 2;
             break;
         }
-        u = u->getMyContainer();
+        u = u->getUnitIn();
     }
 
     if (ch->isPC())
@@ -329,7 +329,7 @@ int mana_gain(unit_data *ch)
             gain *= 2;
             break;
         }
-        u = u->getMyContainer();
+        u = u->getUnitIn();
     }
 
     if (ch->isPC())

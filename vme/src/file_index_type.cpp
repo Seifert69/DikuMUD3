@@ -16,7 +16,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_EQUIP))
     {
-        for (u = ref->getContainedUnits(); u; u = u->getNext())
+        for (u = ref->getUnitContains(); u; u = u->getNext())
         {
             if ((u->getFileIndex() == this) && UNIT_IS_EQUIPPED(u))
             {
@@ -27,7 +27,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_INVEN))
     {
-        for (u = ref->getContainedUnits(); u; u = u->getNext())
+        for (u = ref->getUnitContains(); u; u = u->getNext())
         {
             if ((u->getFileIndex() == this) && !UNIT_IS_EQUIPPED(u))
             {
@@ -36,15 +36,15 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
     }
 
-    if (IS_SET(bitvector, FIND_UNIT_SURRO) && ref->getMyContainer())
+    if (IS_SET(bitvector, FIND_UNIT_SURRO) && ref->getUnitIn())
     {
-        if (this == ref->getMyContainer()->getFileIndex())
+        if (this == ref->getUnitIn()->getFileIndex())
         {
-            return ref->getMyContainer();
+            return ref->getUnitIn();
         }
 
         /* Run through units in local environment */
-        for (u = ref->getMyContainer()->getContainedUnits(); u; u = u->getNext())
+        for (u = ref->getUnitIn()->getUnitIn(); u; u = u->getNext())
         {
             if (u->getFileIndex() == this)
             {
@@ -54,7 +54,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             /* check tranparancy */
             if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
             {
-                for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
+                for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                 {
                     if (uu->getFileIndex() == this)
                     {
@@ -65,11 +65,11 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
 
         /* Run through units in local environment if upwards transparent */
-        if ((u = ref->getMyContainer()->getMyContainer()) && UNIT_IS_TRANSPARENT(ref->getMyContainer()))
+        if ((u = ref->getUnitIn()->getUnitIn()) && UNIT_IS_TRANSPARENT(ref->getUnitIn()))
         {
-            for (u = u->getContainedUnits(); u; u = u->getNext())
+            for (u = u->getUnitContains(); u; u = u->getNext())
             {
-                if (u != ref->getMyContainer())
+                if (u != ref->getUnitIn())
                 {
                     if (this == u->getFileIndex())
                     {
@@ -79,7 +79,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
                     /* check down into transparent unit */
                     if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
                     {
-                        for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
+                        for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                         {
                             if (this == uu->getFileIndex())
                             {

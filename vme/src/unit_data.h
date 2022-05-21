@@ -74,8 +74,8 @@ public:
      * @name Unit affected type related code
      * @{
      */
-    unit_affected_type *getUnitAffectedType();
-    void setUnitAffectedType(unit_affected_type *value);
+    unit_affected_type *getUnitAffected();
+    void setUnitAffected(unit_affected_type *value);
     /// @}
 
     /**
@@ -100,13 +100,13 @@ public:
      * @name Contains / Contained related code
      * @{
      */
-    unit_data *getMyContainer();
-    const unit_data *getMyContainer() const;
-    void setMyContainerTo(unit_data *value);
+    unit_data *getUnitIn();
+    const unit_data *getUnitIn() const;
+    void setUnitIn(unit_data *value);
 
-    const unit_data *getContainedUnits() const;
-    unit_data *getContainedUnits();
-    void setContainedUnit(unit_data *value);
+    const unit_data *getUnitContains() const;
+    unit_data *getUnitContains();
+    void setUnitContains(unit_data *value);
     /// @}
 
     /**

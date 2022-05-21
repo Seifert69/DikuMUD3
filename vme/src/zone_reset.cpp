@@ -115,7 +115,7 @@ bool zone_limit(unit_data *u, file_index_type *fi, zone_reset_cmd *cmd)
     /* Check for local maxima */
     if ((i = cmd->getNum(2)))
     {
-        for (tmp = u->getContainedUnits(); tmp; tmp = tmp->getNext())
+        for (tmp = u->getUnitContains(); tmp; tmp = tmp->getNext())
         {
             if (tmp->getFileIndex() == fi)
             {
@@ -170,7 +170,7 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
             {
                 set_money(loaded, MONEY_AMOUNT(loaded));
             }
-            if (!loaded->getMyContainer())
+            if (!loaded->getUnitIn())
             {
                 unit_to_unit(loaded, u);
             }
@@ -303,7 +303,7 @@ unit_data *zone_purge(unit_data *u, zone_reset_cmd *cmd)
     }
     else
     {
-        for (u = cmd->getFileIndexType(0)->Front()->getContainedUnits(); u; u = next)
+        for (u = cmd->getFileIndexType(0)->Front()->getUnitContains(); u; u = next)
         {
             next = u->getNext();
             if (!u->isPC() && !u->isRoom())
@@ -328,7 +328,7 @@ unit_data *zone_remove(unit_data *u, zone_reset_cmd *cmd)
     }
     else
     {
-        for (u = cmd->getFileIndexType(1)->Front()->getContainedUnits(); u; u = next)
+        for (u = cmd->getFileIndexType(1)->Front()->getUnitContains(); u; u = next)
         {
             next = u->getNext();
             if (u->getFileIndex() == cmd->getFileIndexType(0) && !u->isRoom())
@@ -367,7 +367,7 @@ unit_data *zone_follow(unit_data *u, zone_reset_cmd *cmd)
     {
         loaded = read_unit(cmd->getFileIndexType(0));
 
-        unit_to_unit(loaded, u->getMyContainer());
+        unit_to_unit(loaded, u->getUnitIn());
         start_following(loaded, u);
         zone_loaded_a_unit(loaded);
 

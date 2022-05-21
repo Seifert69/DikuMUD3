@@ -325,7 +325,7 @@ void nanny_throw(descriptor_data *d, char *arg)
                 //	      assert (!CHAR_DESCRIPTOR (u));
                 //	      assert (UNIT_IN (u));
 
-                if (!u->getMyContainer())
+                if (!u->getUnitIn())
                 {
                     slog(LOG_ALL, 0, "nanny_throw() player found but not in any units. Debug info - inspect me.");
                 }
@@ -339,7 +339,7 @@ void nanny_throw(descriptor_data *d, char *arg)
                    break; // Break so that the guest gets purged
                 } */
 
-                UCHAR(u)->setLastLocation(u->getMyContainer());
+                UCHAR(u)->setLastLocation(u->getUnitIn());
                 UPC(u)->reconnect_game(d);
                 return;
             }

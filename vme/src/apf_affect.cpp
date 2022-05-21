@@ -57,7 +57,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* implies that a character can not permanently have     */
         /* these bits set, since a call of this function will    */
         /* remove them                                           */
-        for (taf = af->getOwner()->getUnitAffectedType(); taf; taf = taf->getNext())
+        for (taf = af->getOwner()->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_CHAR_FLAGS))
             {
@@ -93,7 +93,7 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* implies that a object can not permanently have these  */
         /* bits set, since a call of this function will remove   */
         /* them                                                  */
-        for (taf = af->getOwner()->getUnitAffectedType(); taf; taf = taf->getNext())
+        for (taf = af->getOwner()->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_OBJ_FLAGS))
             {
@@ -126,7 +126,7 @@ ubit1 apf_mod_unit_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* implies that a character can not permanently have     */
         /* these bits set, since a call of this function will    */
         /* remove them                                           */
-        for (taf = af->getOwner()->getUnitAffectedType(); taf; taf = taf->getNext())
+        for (taf = af->getOwner()->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_UNIT_FLAGS))
             {
@@ -348,7 +348,7 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         unit_affected_type *taf = nullptr;
 
-        for (taf = unit->getUnitAffectedType(); taf; taf = taf->getNext())
+        for (taf = unit->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf->getID() == ID_NATURAL_ARMOUR) && (taf != af))
             {

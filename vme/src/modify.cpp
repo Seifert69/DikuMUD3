@@ -394,7 +394,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     if (str_ccmp(arg, "room") == 0)
     {
         argument = str_next_word(argument, arg);
-        unt = ch->getMyContainer();
+        unt = ch->getUnitIn();
     }
     else
     {
@@ -780,7 +780,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 8: /* "weight" */
         {
-            if (unt->getContainedUnits())
+            if (unt->getUnitContains())
             {
                 send_to_char("The unit isn't empty. Setting weight is supposed to happen on empty units only. Setting anyway<br/>", ch);
             }
