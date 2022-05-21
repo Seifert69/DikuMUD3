@@ -24,7 +24,6 @@
 inline ubit8 CHAR_SEX(const unit_data *ch);
 inline ubit8 CHAR_LEVEL(const unit_data *ch);
 inline bool CHAR_AWAKE(const unit_data *ch);
-inline bool IS_NPC(const unit_data *unit);
 inline bool IS_PC(const unit_data *unit);
 inline bool IS_CHAR(const unit_data *unit);
 
@@ -62,7 +61,7 @@ inline char_data *UCHAR(const unit_data *u)
 inline npc_data *UNPC(const unit_data *u)
 {
 #ifdef UNIT_TYPE_DEBUG
-    assert(u && IS_NPC(u));
+    assert(u && u->isNPC());
 #endif
     return const_cast<npc_data *>(dynamic_cast<const npc_data *>(u));
 }
@@ -90,8 +89,6 @@ inline room_data *UROOM(const unit_data *u)
 #endif
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
-
-inline bool IS_NPC(const unit_data *unit) { return unit->isNPC(); }
 
 inline bool IS_PC(const unit_data *unit) { return unit->isPC(); }
 

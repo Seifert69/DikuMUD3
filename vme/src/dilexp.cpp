@@ -567,7 +567,7 @@ void dilfe_ohead(dilprg *p)
 void dilfe_nhead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_NPC(g_npc_head))
+    if (g_npc_head->isNPC())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;

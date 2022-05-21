@@ -97,7 +97,7 @@ int bonus_map_b(int bonus)
  */
 int ability_point_gain(unit_data *ch)
 {
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
     }
@@ -132,7 +132,7 @@ int ability_point_gain(unit_data *ch)
  */
 int ability_point_total(unit_data *ch)
 {
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * CHAR_LEVEL(ch);
     }

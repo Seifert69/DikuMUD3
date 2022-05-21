@@ -301,7 +301,7 @@ void dilfi_pgstr(dilprg *p)
 
     if (dil_type_check("pagestring", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!IS_PC((unit_data *)v2->val.ptr) && !IS_NPC((unit_data *)v2->val.ptr))
+        if (!IS_PC((unit_data *)v2->val.ptr) && !((unit_data *)v2->val.ptr)->isNPC())
         {
             dil_typeerr(p, "not a pc/npc unit");
         }

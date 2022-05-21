@@ -170,7 +170,7 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 /* Given an amount of experience, what is the 'virtual' level of the char? */
 int virtual_level(unit_data *ch)
 {
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return CHAR_LEVEL(ch);
     }
@@ -1339,7 +1339,7 @@ void damage(unit_data *ch,
             }
         }
 
-        if (!IS_NPC(victim))
+        if (!victim->isNPC())
         {
             slog(LOG_EXTENSIVE,
                  MAX(ch->getLevelOfWizardInvisibility(), victim->getLevelOfWizardInvisibility()),

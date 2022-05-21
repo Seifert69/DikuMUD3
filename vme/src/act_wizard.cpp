@@ -330,7 +330,7 @@ void do_switch(unit_data *ch, char *argument, const command_info *cmd)
 
     victim = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD | FIND_UNIT_SURRO);
 
-    if (!victim || !IS_NPC(victim))
+    if (!victim || !victim->isNPC())
     {
         send_to_char("No such monster around.<br/>", ch);
         return;

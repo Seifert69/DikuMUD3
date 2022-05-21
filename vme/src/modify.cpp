@@ -440,7 +440,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
     /* see if field is valid for unit */
     if ((unit_field_data[type].utype == UT_ROOM && !unt->isRoom()) || (unit_field_data[type].utype == UT_OBJ && !unt->isObj()) ||
-        (unit_field_data[type].utype == UT_NPC && !IS_NPC(unt)) || (unit_field_data[type].utype == UT_PC && !IS_PC(unt)) ||
+        (unit_field_data[type].utype == UT_NPC && !unt->isNPC()) || (unit_field_data[type].utype == UT_PC && !IS_PC(unt)) ||
         (unit_field_data[type].utype == UT_CHAR && !IS_CHAR(unt)))
     {
         send_to_char("Field invalid for type of unit.<br/>", ch);
@@ -1423,7 +1423,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
                 show_structure(g_SplColl.text, ch);
                 return;
             }
-            if (skillarg > SPL_EXTERNAL && IS_NPC(unt))
+            if (skillarg > SPL_EXTERNAL && unt->isNPC())
             {
                 send_to_char("Only spell-groups for NPC<br/>", ch);
                 return;
@@ -1448,7 +1448,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
                 show_structure(g_WpnColl.text, ch);
                 return;
             }
-            if (skillarg > WPN_SPECIAL && IS_NPC(unt))
+            if (skillarg > WPN_SPECIAL && unt->isNPC())
             {
                 send_to_char("Only weapon-groups for NPC<br/>", ch);
                 return;

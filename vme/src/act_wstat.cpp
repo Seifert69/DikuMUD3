@@ -541,7 +541,7 @@ static void stat_spell(const unit_data *ch, unit_data *u)
 
     std::string msg{"Char magic skill<br/><pre>"};
 
-    max = IS_NPC(u) ? SPL_GROUP_MAX : SPL_TREE_MAX;
+    max = u->isNPC() ? SPL_GROUP_MAX : SPL_TREE_MAX;
 
     for (i = 0; i < max; i++)
     {
@@ -567,8 +567,8 @@ static void stat_spell(const unit_data *ch, unit_data *u)
                                    IS_SET(g_spell_info[i].media, MEDIA_POTION) ? 'P' : '-',
                                    IS_SET(g_spell_info[i].media, MEDIA_WAND) ? 'W' : '-',
                                    IS_SET(g_spell_info[i].media, MEDIA_STAFF) ? 'R' : '-',
-                                   IS_NPC(u) ? NPC_SPL_SKILL(u, i) : PC_SPL_SKILL(u, i),
-                                   IS_NPC(u) ? 0 : PC_SPL_LVL(u, i),
+                                   u->isNPC() ? NPC_SPL_SKILL(u, i) : PC_SPL_SKILL(u, i),
+                                   u->isNPC() ? 0 : PC_SPL_LVL(u, i),
                                    g_spell_info[i].realm == ABIL_DIV ? 'D' : (g_spell_info[i].realm == ABIL_MAG ? 'M' : '!'),
                                    tmpbuf2,
                                    get_racial_spells(CHAR_RACE(u), i));
@@ -584,24 +584,27 @@ static void stat_skill(const unit_data *ch, unit_data *u)
     {
         send_to_char("Unit is not a char<br/>", ch);
     }
-    else if (IS_NPC(u))
-    {
-        send_to_char("NPC's have no skills.<br/>", ch);
-    }
     else
     {
-        std::string msg{"Other skills:<br/>"};
-
-        for (int i = 0; i < SKI_TREE_MAX; i++)
+        if (u->isNPC())
         {
-            msg += diku::format_to_str("%20s: %3d%% Lvl %3d Racial %3d<br/>",
-                                       g_SkiColl.text[i],
-                                       PC_SKI_SKILL(u, i),
-                                       PC_SKI_LVL(u, i),
-                                       get_racial_skill(CHAR_RACE(u), i));
+            send_to_char("NPC's have no skills.<br/>", ch);
         }
+        else
+        {
+            std::string msg{"Other skills:<br/>"};
 
-        page_string(CHAR_DESCRIPTOR(ch), msg);
+            for (int i = 0; i < SKI_TREE_MAX; i++)
+            {
+                msg += diku::format_to_str("%20s: %3d%% Lvl %3d Racial %3d<br/>",
+                                           g_SkiColl.text[i],
+                                           PC_SKI_SKILL(u, i),
+                                           PC_SKI_LVL(u, i),
+                                           get_racial_skill(CHAR_RACE(u), i));
+            }
+
+            page_string(CHAR_DESCRIPTOR(ch), msg);
+        }
     }
 }
 
@@ -615,14 +618,14 @@ static void stat_wskill(const unit_data *ch, unit_data *u)
 
     std::string msg{"Char weapon skill:<br/>"};
 
-    int max = IS_NPC(u) ? WPN_GROUP_MAX : WPN_TREE_MAX;
+    int max = u->isNPC() ? WPN_GROUP_MAX : WPN_TREE_MAX;
 
     for (int i = 0; i < max; i++)
     {
         msg += diku::format_to_str("%20s : %3d%% Lvl %3d Racial %3d<br/>",
                                    g_WpnColl.text[i],
-                                   IS_NPC(u) ? NPC_WPN_SKILL(u, i) : PC_WPN_SKILL(u, i),
-                                   IS_NPC(u) ? 0 : PC_WPN_LVL(u, i),
+                                   u->isNPC() ? NPC_WPN_SKILL(u, i) : PC_WPN_SKILL(u, i),
+                                   u->isNPC() ? 0 : PC_WPN_LVL(u, i),
                                    get_racial_weapon(CHAR_RACE(u), i));
     }
     page_string(CHAR_DESCRIPTOR(ch), msg);

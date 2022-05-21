@@ -2029,7 +2029,7 @@ void dilfe_fld(dilprg *p)
                         }
                         else
                         {
-                            if (IS_NPC(vict) && CHAR_DESCRIPTOR(vict))
+                            if (vict->isNPC() && CHAR_DESCRIPTOR(vict))
                             {
                                 if (CHAR_DESCRIPTOR(vict)->cgetOriginalCharacter())
                                 {
@@ -4129,7 +4129,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
-                    if (npc && IS_NPC(npc))
+                    if (npc && npc->isNPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -4160,7 +4160,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
-                    if (npc && IS_NPC(npc))
+                    if (npc && npc->isNPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;

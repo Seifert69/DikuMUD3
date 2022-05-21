@@ -148,7 +148,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
 
     modify = af->getDataAtIndex(0);
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         while (modify > WPN_GROUP_MAX)
         {
@@ -233,7 +233,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
 
     modify = af->getDataAtIndex(0);
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         while (modify > SPL_GROUP_MAX)
         {

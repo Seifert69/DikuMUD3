@@ -183,7 +183,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
     }
 
     // It's OK to kill NPCs that are not "protected"
-    if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+    if (victim->isNPC() && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
     {
         return;
     }

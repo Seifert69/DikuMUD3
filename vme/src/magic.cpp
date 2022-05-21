@@ -316,7 +316,7 @@ int spell_defense_skill(unit_data *unit, int spell)
         return object_power(unit); //  Philosophical... / 2 ?
     }
 
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
         {
@@ -365,7 +365,7 @@ int spell_attack_skill(unit_data *unit, int spell)
         return object_power(unit);
     }
 
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
         {

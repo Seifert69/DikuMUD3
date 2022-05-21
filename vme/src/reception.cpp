@@ -303,7 +303,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
 
         add_units(pBuf, parent, unit, level, fast);
 
-        if (tmp_u->isObj() || IS_NPC(tmp_u))
+        if (tmp_u->isObj() || tmp_u->isNPC())
         {
             add_units(pBuf, parent, tmp_u, level + 1, fast);
         }
@@ -319,7 +319,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
     else
     {
         /* UNIT CONTAINS NOTHING */
-        if ((level != 0) && (unit->isObj() || IS_NPC(unit)) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
+        if ((level != 0) && (unit->isObj() || unit->isNPC()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
         {
             enlist(pBuf, unit, level, fast);
         }
@@ -336,7 +336,7 @@ void send_saves(unit_data *parent, unit_data *unit)
     send_saves(parent, unit->getContainedUnits());
     send_saves(parent, unit->getNext());
 
-    if ((unit->isObj() || IS_NPC(unit)) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
+    if ((unit->isObj() || unit->isNPC()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
     {
         send_save_to(parent, unit);
     }

@@ -430,7 +430,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
                 return 0;
             }
-            if (!IS_NPC(mover))
+            if (!mover->isNPC())
             {
                 send_to_char("You must be on a mount if you wish to ride.<br/>", ch);
                 return 0;

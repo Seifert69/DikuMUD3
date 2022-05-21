@@ -68,7 +68,7 @@ int char_guild_level(unit_data *ch, const char *pGuildName)
 
     assert(IS_CHAR(ch));
 
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return CHAR_LEVEL(ch);
     }
@@ -101,7 +101,7 @@ int char_guild_level(unit_data *ch)
 {
     assert(IS_CHAR(ch));
 
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return CHAR_LEVEL(ch);
     }

@@ -114,7 +114,7 @@ unit_data::~unit_data()
         }
         else if (IS_CHAR(this))
         {
-            if (IS_NPC(this))
+            if (isNPC())
             {
                 delete UNPC(this);
             }

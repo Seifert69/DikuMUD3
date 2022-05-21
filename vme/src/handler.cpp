@@ -969,7 +969,7 @@ void unsnoop(unit_data *ch, int mode)
 
 void switchbody(unit_data *ch, unit_data *vict)
 {
-    assert(CHAR_DESCRIPTOR(ch) && IS_NPC(vict));
+    assert(CHAR_DESCRIPTOR(ch) && vict->isNPC());
     assert(!CHAR_DESCRIPTOR(vict));
     assert(!CHAR_IS_SNOOPING(ch) || CHAR_DESCRIPTOR(CHAR_IS_SNOOPING(ch)));
     assert(!CHAR_IS_SNOOPED(ch) || CHAR_DESCRIPTOR(CHAR_IS_SNOOPED(ch)));
@@ -998,7 +998,7 @@ void switchbody(unit_data *ch, unit_data *vict)
 
 void unswitchbody(unit_data *npc)
 {
-    assert(IS_NPC(npc) && CHAR_DESCRIPTOR(npc));
+    assert(npc->isNPC() && CHAR_DESCRIPTOR(npc));
     assert(CHAR_IS_SWITCHED(npc));
     assert(!CHAR_IS_SNOOPING(npc) || CHAR_DESCRIPTOR(CHAR_IS_SNOOPING(npc)));
     assert(!CHAR_IS_SNOOPED(npc) || CHAR_DESCRIPTOR(CHAR_IS_SNOOPED(npc)));
