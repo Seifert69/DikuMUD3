@@ -1143,7 +1143,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
        }*/
 
 #ifdef VMC_SRC
-    pBuf->AppendDoubleString((char *)UNIT_KEY(u));
+    pBuf->AppendDoubleString((char *)u->getKey());
 #else
     if (u->getKey())
     {
@@ -1169,7 +1169,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
     pBuf->Append16((ubit16)UNIT_ALIGNMENT(u));
 
-    pBuf->Append8(UNIT_OPEN_FLAGS(u));
+    pBuf->Append8(u->getOpenFlags());
     pBuf->Append8(UNIT_OPEN_DIFF(u));
     pBuf->Append8(u->getNumberOfActiveLightSources());
     pBuf->Append8(u->getLightOutput());

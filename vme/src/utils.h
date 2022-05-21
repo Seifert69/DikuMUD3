@@ -95,8 +95,6 @@ inline room_data *UROOM(const unit_data *u)
 
 inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
 
-inline ubit8 UNIT_OPEN_FLAGS(const unit_data *unit) { return unit->getOpenFlags(); }
-
 inline ubit8 UNIT_OPEN_DIFF(unit_data *unit) { return unit->getOpenDifficulty(); }
 
 inline ubit8 UNIT_TYPE(unit_data *unit) { return unit->getUnitType(); }
@@ -146,7 +144,7 @@ inline const char *FI_NAME(const file_index_type *fi) { return fi->getName(); }
 
 inline bool UNIT_IS_TRANSPARENT(const unit_data *u)
 {
-    return !IS_SET(u->getUnitFlags(), UNIT_FL_BURIED) && IS_SET(u->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(UNIT_OPEN_FLAGS(u), EX_CLOSED);
+    return !IS_SET(u->getUnitFlags(), UNIT_FL_BURIED) && IS_SET(u->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(u->getOpenFlags(), EX_CLOSED);
 }
 
 inline zone_type *UNIT_FI_ZONE(unit_data *unit) { return (unit)->getFileIndex()->getZone(); }
