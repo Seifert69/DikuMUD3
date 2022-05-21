@@ -163,7 +163,7 @@ static inline int findcheck(unit_data *u, int pset, int tflags)
                 return 1;
             }
 
-            if (IS_ROOM(u) && roompay(u))
+            if (u->isRoom() && roompay(u))
             {
                 return 1;
             }
@@ -177,7 +177,7 @@ static inline int findcheck(unit_data *u, int pset, int tflags)
                 return 1;
             }
 
-            if (IS_ROOM(u) && !roompay(u))
+            if (u->isRoom() && !roompay(u))
             {
                 return 1;
             }
@@ -451,7 +451,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
             /* Run through units in local environment */
             for (u = const_cast<unit_data *>(ch->getMyContainer()->getContainedUnits()); u; u = u->getNext())
             {
-                if (IS_SET(type, u->getUnitType()) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+                if (IS_SET(type, u->getUnitType()) && (u->isRoom() || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                 {
                     if ((ct = u->getNames().IsNameRawAbbrev(c)) && (ct - c >= best_len))
                     {
@@ -738,7 +738,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 /* Run through units in local environment */
                 for (u = const_cast<unit_data *>(ch->getMyContainer()->getContainedUnits()); u; u = u->getNext())
                 {
-                    if (IS_SET(type, u->getUnitType()) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+                    if (IS_SET(type, u->getUnitType()) && (u->isRoom() || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                     {
                         if ((ct = u->getNames().IsNameRaw(c)) && (ct - c >= best_len))
                         {
@@ -1166,7 +1166,7 @@ static unit_data *scan4_ref_room(unit_data *room, unit_data *fu)
 
     for (u = room->getContainedUnits(); u; u = u->getNext())
     {
-        if (((IS_ROOM(u) || IS_OBJ(u)) && (!UNIT_IS_TRANSPARENT(u))))
+        if (((u->isRoom() || IS_OBJ(u)) && (!UNIT_IS_TRANSPARENT(u))))
         {
             continue;
         }
@@ -1193,7 +1193,7 @@ unit_data *scan4_ref(unit_data *ch, unit_data *fu)
     }
     else
     {
-        if (((IS_ROOM(ch->getMyContainer()) || IS_OBJ(ch->getMyContainer())) && (!UNIT_IS_TRANSPARENT(ch->getMyContainer()))))
+        if (((ch->getMyContainer()->isRoom() || IS_OBJ(ch->getMyContainer())) && (!UNIT_IS_TRANSPARENT(ch->getMyContainer()))))
         {
             return (scan4_ref_room(ch->getMyContainer(), fu));
         }

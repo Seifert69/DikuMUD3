@@ -667,7 +667,7 @@ zone_type *unit_zone(const unit_data *unit)
         if (!unit->getMyContainer())
         {
             //      assert(IS_ROOM(unit));
-            if (!IS_ROOM(unit))
+            if (!unit->isRoom())
             {
                 slog(LOG_ALL, 0, "ZONE: FATAL(1): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
                 return nullptr;
@@ -717,7 +717,7 @@ unit_data *unit_room(unit_data *unit)
 
     for (; unit; unit = unit->getMyContainer())
     {
-        if (IS_ROOM(unit))
+        if (unit->isRoom())
         {
             return unit;
         }
@@ -1089,7 +1089,7 @@ void extract_unit(unit_data *unit)
     }
 
     /* We can't extract rooms! Sanity, MS 300595, wierd bug... */
-    assert(!IS_ROOM(unit));
+    assert(!unit->isRoom());
 
     if (IS_PC(unit))
     {

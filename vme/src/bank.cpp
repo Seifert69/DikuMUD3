@@ -434,9 +434,12 @@ static bool move_money_up(unit_data *ch, unit_data *u)
                 unit_up(tmp);
             }
         }
-        else if ((IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER) || IS_ROOM(tmp) || IS_CHAR(tmp))
+        else
         {
-            found = found || move_money_up(ch, tmp);
+            if ((IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER) || tmp->isRoom() || IS_CHAR(tmp))
+            {
+                found = found || move_money_up(ch, tmp);
+            }
         }
     }
 

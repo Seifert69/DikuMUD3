@@ -98,7 +98,7 @@ int has_found_door(unit_data *pc, int dir)
     unit_affected_type *af = nullptr;
     char buf[MAX_INPUT_LENGTH];
 
-    if (!IS_ROOM(pc->getMyContainer()))
+    if (!pc->getMyContainer()->isRoom())
     {
         return FALSE;
     }
@@ -149,7 +149,7 @@ int has_found_door(unit_data *pc, int dir)
 
 unit_data *in_room(unit_data *u)
 {
-    while (u && !IS_ROOM(u))
+    while (u && !u->isRoom())
     {
         u = u->getMyContainer();
     }
@@ -196,8 +196,8 @@ int room_move(unit_data *ch,
 
     room_from = in_room(ch);
 
-    assert(IS_ROOM(room_from));
-    assert(IS_ROOM(room_to));
+    assert(room_from->isRoom());
+    assert(room_to->isRoom());
 
     /* If we are not following, then we already issued the special
        in command interpreter! */
@@ -343,7 +343,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
     assert((ch == mover) || (ch->getMyContainer() == mover));
 
-    if (!IS_ROOM(mover->getMyContainer()))
+    if (!mover->getMyContainer()->isRoom())
     {
         send_to_char(ALAS_NOWAY, ch);
         return 0;
@@ -724,7 +724,7 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
                 if (room_from == in_room(k->getFollower()) && CHAR_POS(k->getFollower()) >= POSITION_STANDING)
                 {
                     act("You follow $3n.<br/>", A_SOMEONE, k->getFollower(), cActParameter(), ch, TO_CHAR);
-                    if (IS_ROOM(k->getFollower()->getMyContainer()))
+                    if (k->getFollower()->getMyContainer()->isRoom())
                     {
                         self_walk(k->getFollower(), k->getFollower(), direction, TRUE);
                     }
@@ -771,24 +771,27 @@ void move_dir(unit_data *ch, int dir)
         {
             self_walk(ch, ch->getMyContainer(), dir, 0);
         }
-        else if (IS_ROOM(ch->getMyContainer()))
-        {
-            self_walk(ch, ch, dir, 0);
-        }
         else
         {
-            slog(LOG_ALL,
-                 0,
-                 "Unit %s is inside an unexpected unit type %s",
-                 ch->getNames().Name(),
-                 ch->getMyContainer()->getNames().Name());
-            act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
-            if (ch->getMyContainer()->getMyContainer())
+            if (ch->getMyContainer()->isRoom())
             {
-                ch->setMyContainerTo(ch->getMyContainer()->getMyContainer());
+                self_walk(ch, ch, dir, 0);
             }
-            command_interpreter(ch, "look");
-            act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
+            else
+            {
+                slog(LOG_ALL,
+                     0,
+                     "Unit %s is inside an unexpected unit type %s",
+                     ch->getNames().Name(),
+                     ch->getMyContainer()->getNames().Name());
+                act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
+                if (ch->getMyContainer()->getMyContainer())
+                {
+                    ch->setMyContainerTo(ch->getMyContainer()->getMyContainer());
+                }
+                command_interpreter(ch, "look");
+                act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
+            }
         }
     }
 }
@@ -829,7 +832,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
         return -1;
     }
 
-    if (!IS_ROOM(ch->getMyContainer()))
+    if (!ch->getMyContainer()->isRoom())
     {
         if (err_msg)
         {

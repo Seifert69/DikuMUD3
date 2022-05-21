@@ -106,26 +106,29 @@ unit_data::~unit_data()
     {
         delete UOBJ(this);
     }
-    else if (IS_ROOM(this))
+    else
     {
-        delete UROOM(this);
-    }
-    else if (IS_CHAR(this))
-    {
-        if (IS_NPC(this))
+        if (isRoom())
         {
-            delete UNPC(this);
+            delete UROOM(this);
+        }
+        else if (IS_CHAR(this))
+        {
+            if (IS_NPC(this))
+            {
+                delete UNPC(this);
+            }
+            else
+            {
+                delete UPC(this);
+            }
+
+            delete UCHAR(this);
         }
         else
         {
-            delete UPC(this);
+            assert(FALSE);
         }
-
-        delete UCHAR(this);
-    }
-    else
-    {
-        assert(FALSE);
     }
 }
 
@@ -282,7 +285,7 @@ unit_data *unit_data::copy()
     u->m_in_descr = m_in_descr;
     u->getExtraList().copyfrom(m_extra);
 
-    if (IS_ROOM(this))
+    if (isRoom())
     {
         room_data *thisroom = UROOM(this);
         room_data *uroom = UROOM(u);

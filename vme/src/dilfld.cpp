@@ -2538,7 +2538,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_SPR)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
@@ -2588,7 +2588,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_SLPR)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
@@ -2637,7 +2637,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_UINT1R)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NONE;
@@ -2685,7 +2685,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_UINT1R)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NONE;
@@ -2734,7 +2734,7 @@ void dilfe_fld(dilprg *p)
             {
                 auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
 
-                if (room && IS_ROOM(room) && is_in(v2->val.num, 0, MAX_EXIT))
+                if (room && room->isRoom() && is_in(v2->val.num, 0, MAX_EXIT))
                 {
                     if (ROOM_EXIT(room, v2->val.num))
                     {
@@ -2766,7 +2766,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -2799,7 +2799,7 @@ void dilfe_fld(dilprg *p)
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->val.num = room->getMapXCoordinate();
                     }
@@ -2830,7 +2830,7 @@ void dilfe_fld(dilprg *p)
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->val.num = room->getMapYCoordinate();
                     }
@@ -2859,7 +2859,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;

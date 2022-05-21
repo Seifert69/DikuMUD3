@@ -557,7 +557,7 @@ void dilfi_stora(dilprg *p)
 
                     if (v3->val.num >= 1)
                     {
-                        if (IS_ROOM((unit_data *)v1->val.ptr) || IS_PC((unit_data *)v1->val.ptr))
+                        if (((unit_data *)v1->val.ptr)->isRoom() || IS_PC((unit_data *)v1->val.ptr))
                         {
                             szonelog(p->frame->tmpl->zone,
                                      "DIL '%s' attempt to save a container that is either a room or pc",
@@ -1703,7 +1703,7 @@ void dilfi_lnk(dilprg *p)
                 unequip_object((unit_data *)v1->val.ptr);
             }
             if (!unit_recursive((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr) &&
-                (!IS_ROOM((unit_data *)v1->val.ptr) || IS_ROOM((unit_data *)v2->val.ptr)))
+                (!((unit_data *)v1->val.ptr)->isRoom() || ((unit_data *)v2->val.ptr)->isRoom()))
             {
                 unit_from_unit((unit_data *)v1->val.ptr);
                 unit_to_unit((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
@@ -2293,7 +2293,7 @@ void dilfi_dst(dilprg *p)
 
     if (dil_type_check("purge", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && !IS_ROOM((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && !((unit_data *)v1->val.ptr)->isRoom())
         {
             if (v1->val.ptr == p->sarg->owner)
             {

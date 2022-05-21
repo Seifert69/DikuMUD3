@@ -24,7 +24,6 @@
 inline ubit8 CHAR_SEX(const unit_data *ch);
 inline ubit8 CHAR_LEVEL(const unit_data *ch);
 inline bool CHAR_AWAKE(const unit_data *ch);
-inline bool IS_ROOM(const unit_data *unit);
 inline bool IS_OBJ(const unit_data *unit);
 inline bool IS_NPC(const unit_data *unit);
 inline bool IS_PC(const unit_data *unit);
@@ -88,26 +87,18 @@ inline obj_data *UOBJ(const unit_data *u)
 inline room_data *UROOM(const unit_data *u)
 {
 #ifdef UNIT_TYPE_DEBUG
-    assert(u && IS_ROOM(u));
+    assert(u && u->isRoom());
 #endif
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-/* ..................................................................... */
+inline bool IS_OBJ(const unit_data *unit) { return unit->isObj(); }
 
-inline bool IS_ROOM(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_ROOM; }
+inline bool IS_NPC(const unit_data *unit) { return unit->isNPC(); }
 
-inline bool IS_OBJ(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_OBJ; }
+inline bool IS_PC(const unit_data *unit) { return unit->isPC(); }
 
-inline bool IS_NPC(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_NPC; }
-
-inline bool IS_PC(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_PC; }
-
-inline bool IS_CHAR(const unit_data *unit)
-{
-    auto type = unit->getUnitType();
-    return type == UNIT_ST_PC || type == UNIT_ST_NPC;
-}
+inline bool IS_CHAR(const unit_data *unit) { return unit->isChar(); }
 
 /* ............................FILE INDEX STUFF..................... */
 
@@ -274,7 +265,7 @@ inline bool CHAR_AWAKE(const unit_data *ch) { return CHAR_POS(ch) > POSITION_SLE
 
 inline bool CHAR_HAS_FLAG(const unit_data *ch, ubit32 flags) { return IS_SET(CHAR_FLAGS(ch), (flags)); }
 
-[[maybe_unused]] inline room_direction_data *CHAR_ROOM_EXIT(unit_data *ch, size_t door) { return IS_ROOM(ch->getMyContainer()) ? ROOM_EXIT(ch->getMyContainer(), door) : nullptr; }
+[[maybe_unused]] inline room_direction_data *CHAR_ROOM_EXIT(unit_data *ch, size_t door) { return ch->getMyContainer()->isRoom() ? ROOM_EXIT(ch->getMyContainer(), door) : nullptr; }
 
 inline bool CHAR_VISION(const unit_data *ch) { return !CHAR_HAS_FLAG(ch, CHAR_BLIND); }
 

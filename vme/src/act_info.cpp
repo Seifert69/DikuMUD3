@@ -25,7 +25,7 @@ const char *in_string(const unit_data *ch, const unit_data *u)
     in_str.clear();
     while ((u = u->getMyContainer()))
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             in_str = diku::format_to_str("<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
             return in_str.c_str();

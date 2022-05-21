@@ -165,7 +165,7 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if (!IS_ROOM(target))
+    if (!target->isRoom())
     {
         send_to_char("Sorry, you may only 'at' at a room!<br/>", ch);
         return;

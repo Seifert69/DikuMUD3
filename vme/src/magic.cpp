@@ -267,7 +267,7 @@ int object_power(unit_data *unit)
 
 int room_power(unit_data *unit)
 {
-    if (IS_ROOM(unit))
+    if (unit->isRoom())
     {
         return ROOM_RESISTANCE(unit);
     }

@@ -285,7 +285,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
     int tmp_i = 0;
     unit_data *tmp_u = nullptr;
 
-    if (IS_ROOM(unit))
+    if (unit->isRoom())
     {
         slog(LOG_ALL, 0, "BAD ERROR: Room attempted saved as inventory!");
         return;

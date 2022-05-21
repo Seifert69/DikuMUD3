@@ -60,14 +60,14 @@ void create_worldgraph()
         // DIR_ENTER
         for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
         {
-            if (IS_ROOM(uu) && IS_SET(uu->getManipulate(), MANIPULATE_ENTER))
+            if (uu->isRoom() && IS_SET(uu->getManipulate(), MANIPULATE_ENTER))
             {
                 add_edge(ROOM_NUM(u), ROOM_NUM(uu), 10, WorldGraph);
             }
         }
 
         // DIR_EXIT
-        if (u->getMyContainer() && IS_ROOM(u->getMyContainer()))
+        if (u->getMyContainer() && u->getMyContainer()->isRoom())
         {
             if (IS_SET(u->getMyContainer()->getManipulate(), MANIPULATE_ENTER))
             {
@@ -191,14 +191,14 @@ void create_sc_graph(int num_of_sc)
             // DIR_ENTER
             for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
             {
-                if (IS_ROOM(uu) && IS_SET(uu->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(uu) == sc))
+                if (uu->isRoom() && IS_SET(uu->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(uu) == sc))
                 {
                     tie(ed, success) = add_edge(ROOM_NUM(u), ROOM_NUM(uu), path_weight(u, uu, DIR_ENTER) + 10, g_sc_graphs[sc]);
                     dir[ed] = DIR_ENTER;
                 }
             }
             // DIR_EXIT
-            if (u->getMyContainer() && IS_ROOM(u->getMyContainer()))
+            if (u->getMyContainer() && u->getMyContainer()->isRoom())
             {
                 if (IS_SET(u->getMyContainer()->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) &&
                     (ROOM_SC(u->getMyContainer()) == sc))
@@ -276,7 +276,7 @@ int move_to(unit_data *from, unit_data *to)
     }
 
     /* Assertion is that both from and to are rooms! */
-    if (!IS_ROOM(from) || !IS_ROOM(to))
+    if (!from->isRoom() || !to->isRoom())
     {
         return DIR_IMPOSSIBLE;
     }

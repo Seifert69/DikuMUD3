@@ -977,7 +977,7 @@ void process_unit(unit_data *u)
         check_namelist(u, &exd->names);
     }
 
-    if (IS_ROOM(u))
+    if (u->isRoom())
     {
         for (i = 0; i <= MAX_EXIT; i++)
         {
@@ -988,7 +988,7 @@ void process_unit(unit_data *u)
         }
     }
 
-    if (!IS_ROOM(u) && !u->getTitle().empty())
+    if (!u->isRoom() && !u->getTitle().empty())
     {
         if (isupper(*u->getTitle().c_str()))
         {

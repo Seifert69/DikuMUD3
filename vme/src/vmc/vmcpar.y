@@ -669,7 +669,7 @@ unit_field  : NAMES stringlist
     }
     | IN_DESCR STRING
     {
-        if (IS_ROOM(cur) && !str_is_empty($2))
+        if (cur->isRoom() && !str_is_empty($2))
         {
             memmove($2 + 3, $2, strlen($2) + 1);
 
@@ -682,7 +682,7 @@ unit_field  : NAMES stringlist
     }
     | DESCR STRING
     {
-        if (IS_ROOM(cur) && !str_is_empty($2))
+        if (cur->isRoom() && !str_is_empty($2))
         {
             memmove($2 + 3, $2, strlen($2) + 1);
 

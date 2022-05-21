@@ -583,7 +583,7 @@ void dilfe_nhead(dilprg *p)
 void dilfe_rhead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_ROOM(g_room_head))
+    if (g_room_head->isRoom())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;

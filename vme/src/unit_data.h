@@ -42,12 +42,17 @@ public:
     unit_data *copy();
     void set_fi(file_index_type *f);
 
+    /**
+     * @name What type is this object related code
+     * @{
+     */
     ubit8 getUnitType() const;
     bool isRoom() const { return m_status == UNIT_ST_ROOM; }
     bool isObj() const { return m_status == UNIT_ST_OBJ; }
     bool isNPC() const { return m_status == UNIT_ST_NPC; }
     bool isPC() const { return m_status == UNIT_ST_PC; }
     bool isChar() const { return isPC() || isNPC(); }
+    ///@}
 
     /**
      * @name Name related code

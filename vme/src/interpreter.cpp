@@ -718,7 +718,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         return SFR_BLOCK;
     }
 
-    if (IS_ROOM(ch))
+    if (ch->isRoom())
     {
         if (ch->getFunctionPointer() && (unit_function_scan(ch, sarg)) != SFR_SHARE)
         {

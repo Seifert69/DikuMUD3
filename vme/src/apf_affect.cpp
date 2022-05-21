@@ -314,7 +314,7 @@ ubit1 apf_light(unit_affected_type *af, unit_data *unit, ubit1 set)
         af->setDataAtIndex(0, -af->getDataAtIndex(0));
     }
 
-    if (IS_ROOM(unit))
+    if (unit->isRoom())
     {
         unit->changeNumberOfActiveLightSourcesBy(af->getDataAtIndex(0));
     }

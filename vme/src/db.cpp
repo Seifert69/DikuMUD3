@@ -1456,7 +1456,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
 
     bonus_setup(u);
 
-    if (!IS_ROOM(u))
+    if (!u->isRoom())
     {
         assert(u->getMyContainer() == nullptr);
     }
@@ -1514,7 +1514,7 @@ void normalize_world()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             /* Place room inside another room? */
             if (u->getMyContainer())
@@ -1546,7 +1546,7 @@ void normalize_world()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_ROOM(u) && u->getMyContainer())
+        if (u->isRoom() && u->getMyContainer())
         {
             tmpu = u->getMyContainer();
             u->setMyContainerTo(nullptr);
@@ -1877,7 +1877,7 @@ void db_shutdown()
 
     slog(LOG_OFF, 0, "Destroying unit list.");
 
-    while (!IS_ROOM(g_unit_list))
+    while (!g_unit_list->isRoom())
     {
         tmpu = g_unit_list;
         extract_unit(tmpu);
