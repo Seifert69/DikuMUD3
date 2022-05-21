@@ -91,7 +91,7 @@ static extra_descr_data *make_alias_extra(unit_data *u)
     extra_descr_data *exd = nullptr;
     static const char *aliaslist[] = {"$alias", nullptr};
 
-    exd = UNIT_EXTRA(u).find_raw("$alias");
+    exd = u->getExtraList().find_raw("$alias");
 
     if (exd)
     {
@@ -99,7 +99,7 @@ static extra_descr_data *make_alias_extra(unit_data *u)
     }
 
     exd = new extra_descr_data(aliaslist, nullptr);
-    UNIT_EXTRA(u).add(exd);
+    u->getExtraList().add(exd);
 
     return exd;
 }
@@ -668,7 +668,7 @@ static int local_dictionary(spec_arg *sarg)
     /* specproc initialization */
     if ((alias_h = (alias_head *)sarg->fptr->getData()) == nullptr)
     {
-        exd = UNIT_EXTRA(sarg->owner).find_raw("$alias");
+        exd = sarg->owner->getExtraList().find_raw("$alias");
         sarg->fptr->setData(str_to_alias(exd ? exd->descr.c_str() : nullptr));
         alias_h = (alias_head *)sarg->fptr->getData();
     }

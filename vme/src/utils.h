@@ -95,8 +95,6 @@ inline room_data *UROOM(const unit_data *u)
 
 inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
 
-inline extra_list &UNIT_EXTRA(unit_data *unit) { return unit->getExtraList(); }
-inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExtraList(); }
 /* ..................................................................... */
 
 inline bool IS_ROOM(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_ROOM; }

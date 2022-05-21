@@ -162,7 +162,7 @@ void edit_extra(descriptor_data *d)
 {
     extra_descr_data *exd = nullptr;
 
-    for (exd = UNIT_EXTRA(d->cgetEditing()).m_pList; exd; exd = exd->next)
+    for (exd = d->cgetEditing()->getExtraList().m_pList; exd; exd = exd->next)
     {
         if (exd == d->getEditingReference())
         {
@@ -723,7 +723,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     ed->names.AppendName(strarg);
                     argument = str_next_word(argument, strarg);
                 }
-                UNIT_EXTRA(unt).add(ed);
+                unt->getExtraList().add(ed);
 
                 send_to_char("New field.<br/>", ch);
             }
@@ -757,7 +757,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 return;
             }
 
-            UNIT_EXTRA(unt).remove(argument);
+            unt->getExtraList().remove(argument);
             send_to_char("Trying to delete field.<br/>", ch);
             return;
 

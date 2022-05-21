@@ -62,7 +62,7 @@
 //
 const char *single_unit_messg(unit_data *unit, const char *type, int direction, char *mesg)
 {
-    extra_descr_data *exd = UNIT_EXTRA(unit).m_pList;
+    extra_descr_data *exd = unit->getExtraList().m_pList;
 
     if (exd)
     {
@@ -121,7 +121,7 @@ int has_found_door(unit_data *pc, int dir)
     strcpy(buf, SECRET_DOOR);
     strcat(buf, itoa(dir));
 
-    exd = UNIT_EXTRA(pc->getMyContainer()).find_raw(buf);
+    exd = pc->getMyContainer()->getExtraList().find_raw(buf);
 
     if (exd == nullptr)
     {
@@ -543,8 +543,8 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     {
         if (IS_CHAR(mover))
         {
-            if (!UNIT_EXTRA(mover).find_raw(S_SWIM_ON) &&
-                (!UNIT_EXTRA(mover).find_raw(S_IS_FISH) || !UNIT_EXTRA(mover).find_raw(S_IS_AMPHIB)))
+            if (!mover->getExtraList().find_raw(S_SWIM_ON) &&
+                (!mover->getExtraList().find_raw(S_IS_FISH) || !mover->getExtraList().find_raw(S_IS_AMPHIB)))
             {
                 act("You might want to swim.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
@@ -556,11 +556,11 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             {
                 skillbonus = 50; // Additional bonus for races born to swim :)
             }
-            if (UNIT_EXTRA(mover).find_raw(S_IS_AMPHIB))
+            if (mover->getExtraList().find_raw(S_IS_AMPHIB))
             {
                 skillbonus = 80;
             }
-            if (UNIT_EXTRA(mover).find_raw(S_IS_FISH))
+            if (mover->getExtraList().find_raw(S_IS_FISH))
             {
                 skillbonus = 100;
             }
@@ -615,7 +615,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else // we're not swimming
     {
-        if (UNIT_EXTRA(mover).find_raw(S_IS_FISH))
+        if (mover->getExtraList().find_raw(S_IS_FISH))
         {
             act("No little fishies on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0; // Fish can't walk on land. 2020 I would think checking for race was equally important as extra?

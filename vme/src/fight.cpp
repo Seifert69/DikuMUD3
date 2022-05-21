@@ -148,7 +148,7 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
             return true;
         }
 
-        extra_descr_data *exd = UNIT_EXTRA(obj).find_raw("$slayer");
+        extra_descr_data *exd = obj->getExtraList().find_raw("$slayer");
 
         if (exd == nullptr)
         {

@@ -1022,7 +1022,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_EDPR;
                         if (v1->val.ptr)
                         { // MS2020 BUG
-                            v->ref = &(UNIT_EXTRA((unit_data *)v1->val.ptr).m_pList);
+                            v->ref = &(((unit_data *)v1->val.ptr)->getExtraList().m_pList);
                         }
                         else
                         {

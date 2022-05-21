@@ -770,7 +770,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         u->setDescriptionOfInside(fix_old_codes_to_html(u->getDescriptionOfInside()));
     }
 
-    g_nCorrupt += bread_extra(pBuf, UNIT_EXTRA(u), unit_version);
+    g_nCorrupt += bread_extra(pBuf, u->getExtraList(), unit_version);
 
     /* Read Key Zone, Name */
     g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));

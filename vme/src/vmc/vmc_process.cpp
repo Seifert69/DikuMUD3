@@ -972,7 +972,7 @@ void process_unit(unit_data *u)
 
     check_namelist(u, &u->getNames());
 
-    for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
+    for (exd = u->getExtraList().m_pList; exd; exd = exd->next)
     {
         check_namelist(u, &exd->names);
     }

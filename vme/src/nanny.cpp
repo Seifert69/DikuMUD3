@@ -372,7 +372,7 @@ void nanny_dil(descriptor_data *d, char *arg)
 {
     extra_descr_data *exd = nullptr;
 
-    exd = UNIT_EXTRA(d->getCharacter()).find_raw("$nanny");
+    exd = d->getCharacter()->getExtraList().find_raw("$nanny");
 
     if (exd && !str_is_empty(exd->names.Name(1)))
     {
@@ -396,7 +396,7 @@ void nanny_dil(descriptor_data *d, char *arg)
         }
     }
 
-    if (d->cgetCharacter() && UNIT_EXTRA(d->getCharacter()).find_raw("$nanny") == nullptr)
+    if (d->cgetCharacter() && d->getCharacter()->getExtraList().find_raw("$nanny") == nullptr)
     {
         g_dilmenu = TRUE;
         enter_game(d->getCharacter(), TRUE);
@@ -602,7 +602,7 @@ void nanny_fix_descriptions(unit_data *u)
     extra_descr_data *exd = nullptr;
     char buf[1024];
 
-    for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
+    for (exd = u->getExtraList().m_pList; exd; exd = exd->next)
     {
         if (exd->names.Name())
         {
@@ -617,7 +617,7 @@ void nanny_fix_descriptions(unit_data *u)
         {
             if (str_is_empty(exd->descr.c_str()))
             {
-                UNIT_EXTRA(u).erase(exd);
+                u->getExtraList().erase(exd);
                 nanny_fix_descriptions(u); // MS2020 terrible kludge :)
                 return;
             }

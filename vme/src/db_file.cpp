@@ -1125,13 +1125,13 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     pBuf->AppendString(UNIT_OUT_DESCR_STRING(u));
     pBuf->AppendString(UNIT_IN_DESCR_STRING(u));
 
-    if (UNIT_EXTRA(u).isempty())
+    if (u->getExtraList().isempty())
     { // MS2020, nasty bug, exd could be NULL and class was called.
         pBuf->Append32(0);
     }
     else
     {
-        UNIT_EXTRA(u).AppendBuffer(pBuf);
+        u->getExtraList().AppendBuffer(pBuf);
     }
 
     /*      if (IS_PC (u))

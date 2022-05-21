@@ -283,7 +283,7 @@ static unit_data *make_money(file_index_type *fi, amount_t amt)
 
     auto str = diku::format_to_str(cur_strings[MONEY_CURRENCY(money)], g_money_types[MONEY_TYPE(money)].tails);
 
-    UNIT_EXTRA(money).add("", str.c_str());
+    money->getExtraList().add("", str.c_str());
 
     return set_money(money, amt);
 }

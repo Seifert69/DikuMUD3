@@ -741,7 +741,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
                                       (float)amount / 100.0,
                                       g_cAccountConfig.m_pCoinName);
             note = read_unit(g_letter_fi);
-            UNIT_EXTRA(note).add("", msg.c_str());
+            note->getExtraList().add("", msg.c_str());
             unit_to_unit(note, u);
         }
         break;

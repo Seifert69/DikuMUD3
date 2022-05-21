@@ -854,7 +854,7 @@ static void stat_extra(const unit_data *ch, extra_list &elist, char *grp)
 
 static void stat_extra_descr(const unit_data *ch, unit_data *u, char *grp)
 {
-    stat_extra(ch, UNIT_EXTRA(u), grp);
+    stat_extra(ch, u->getExtraList(), grp);
 }
 
 static void stat_extra_quest(const unit_data *ch, unit_data *u, char *grp)

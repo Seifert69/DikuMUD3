@@ -349,8 +349,8 @@ exit_field  : TO reference
         }
         else
         {
-            UNIT_EXTRA(cur).add(ed);
-            cur_extra = UNIT_EXTRA(cur).m_pList;
+            cur->getExtraList().add(ed);
+            cur_extra = cur->getExtraList().m_pList;
         }
 
         /*
@@ -720,8 +720,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            UNIT_EXTRA(cur).add(ed);
-            cur_extra = UNIT_EXTRA(cur).m_pList;
+            cur->getExtraList().add(ed);
+            cur_extra = cur->getExtraList().m_pList;
         }
 
         /*
@@ -764,8 +764,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            UNIT_EXTRA(cur).add(ed);
-            cur_extra = UNIT_EXTRA(cur).m_pList;
+            cur->getExtraList().add(ed);
+            cur_extra = cur->getExtraList().m_pList;
         }
 
         /*

@@ -389,7 +389,7 @@ extra_descr_data *unit_find_extra(const char *word, unit_data *unit)
 
         word = skip_spaces(word);
 
-        for (i = UNIT_EXTRA(unit).m_pList; i; i = i->next)
+        for (i = unit->getExtraList().m_pList; i; i = i->next)
         {
             if (i->names.Name())
             {
