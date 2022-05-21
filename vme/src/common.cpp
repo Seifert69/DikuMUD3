@@ -290,7 +290,7 @@ int level_xp(int level)
  */
 void set_hits(unit_data *obj, int craftsmanship)
 {
-    if (UNIT_HIT(obj) == 100) // 100 is the *default* and is overridden
+    if (obj->getCurrentHitpoints() == 100) // 100 is the *default* and is overridden
     {
         /* Hits are in [100..6000] based on craft, default == 1000 */
 

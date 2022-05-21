@@ -718,29 +718,32 @@ void combat_message(unit_data *att, unit_data *def, unit_data *medium, int damag
 
 void update_pos(unit_data *victim)
 {
-    if ((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
+    if ((victim->getCurrentHitpoints() > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
     {
         return;
     }
-    else if (UNIT_HIT(victim) > 0)
-    {
-        UCHAR(victim)->setPosition(POSITION_STANDING);
-    }
-    else if (UNIT_HIT(victim) <= -11)
-    {
-        UCHAR(victim)->setPosition(POSITION_DEAD);
-    }
-    else if (UNIT_HIT(victim) <= -6)
-    {
-        UCHAR(victim)->setPosition(POSITION_MORTALLYW);
-    }
-    else if (UNIT_HIT(victim) <= -3)
-    {
-        UCHAR(victim)->setPosition(POSITION_INCAP);
-    }
     else
     {
-        UCHAR(victim)->setPosition(POSITION_STUNNED);
+        if (victim->getCurrentHitpoints() > 0)
+        {
+            UCHAR(victim)->setPosition(POSITION_STANDING);
+        }
+        else if (victim->getCurrentHitpoints() <= -11)
+        {
+            UCHAR(victim)->setPosition(POSITION_DEAD);
+        }
+        else if (victim->getCurrentHitpoints() <= -6)
+        {
+            UCHAR(victim)->setPosition(POSITION_MORTALLYW);
+        }
+        else if (victim->getCurrentHitpoints() <= -3)
+        {
+            UCHAR(victim)->setPosition(POSITION_INCAP);
+        }
+        else
+        {
+            UCHAR(victim)->setPosition(POSITION_STUNNED);
+        }
     }
 }
 
@@ -1058,7 +1061,7 @@ void modify_hit(unit_data *ch, int hit)
     {
         ch->changeCurrentHitpointsBy(hit);
         /// @todo move limits into the setter
-        ch->setCurrentHitpoints(MIN(hit_limit(ch), UNIT_HIT(ch)));
+        ch->setCurrentHitpoints(MIN(hit_limit(ch), ch->getCurrentHitpoints()));
 
         update_pos(ch);
 
@@ -1257,7 +1260,7 @@ void damage(unit_data *ch,
                 cact("$1n screams with agony!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM, "hit_other");
             }
 
-            if (UNIT_HIT(victim) < (max_hit / 5))
+            if (victim->getCurrentHitpoints() < (max_hit / 5))
             {
                 cact("You wish that your wounds would stop BLEEDING that much!",
                      A_SOMEONE,
@@ -1268,7 +1271,7 @@ void damage(unit_data *ch,
                      "hit_me");
             }
 
-            if ((dam > UNIT_HIT(victim) / 4) || (UNIT_HIT(victim) < (max_hit / 4)))
+            if ((dam > victim->getCurrentHitpoints() / 4) || (victim->getCurrentHitpoints() < (max_hit / 4)))
             {
                 if (IS_SET(CHAR_FLAGS(victim), CHAR_WIMPY))
                 {
@@ -1417,7 +1420,7 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
 
     assert(IS_OBJ(obj));
 
-    if (UNIT_HIT(obj) < 0)
+    if (obj->getCurrentHitpoints() < 0)
     { /* Endless */
         return;
     }
@@ -1448,7 +1451,7 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
     {
         obj->changeCurrentHitpointsBy(-1 * dam);
 
-        if (UNIT_HIT(obj) < 0)
+        if (obj->getCurrentHitpoints() < 0)
         {
             if (ch)
             {

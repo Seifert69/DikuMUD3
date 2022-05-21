@@ -748,7 +748,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               u->getContainedUnits() ? "has contents" : "is empty",
                               sprintbit(bits2, u->getManipulate(), g_unit_manipulate),
                               sprintbit(bits1, u->getUnitFlags(), g_unit_flags),
-                              (signed long)UNIT_HIT(u),
+                              (signed long)u->getCurrentHitpoints(),
                               (signed long)UNIT_MAX_HIT(u),
                               u->getAlignment());
     send_to_char(msg, ch);
@@ -1063,7 +1063,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        UCHAR(u)->getSpeedPercentage(),
                                        CHAR_SPEED(u),
                                        CHAR_NATURAL_ARMOUR(u),
-                                       (signed long)UNIT_HIT(u),
+                                       (signed long)u->getCurrentHitpoints(),
                                        hit_limit(u),
                                        hit_gain(u),
                                        CHAR_MANA(u),

@@ -155,7 +155,7 @@ ubit1 cast_magic_now(unit_data *ch, int mana)
         }
         else
         {
-            hleft = (100 * UNIT_HIT(ch)) / UNIT_MAX_HIT(ch);
+            hleft = (100 * ch->getCurrentHitpoints()) / UNIT_MAX_HIT(ch);
         }
 
         sleft = mana ? CHAR_MANA(ch) / mana : 20;
