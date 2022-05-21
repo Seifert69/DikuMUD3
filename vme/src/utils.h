@@ -95,8 +95,6 @@ inline room_data *UROOM(const unit_data *u)
 
 inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
 
-inline ubit8 UNIT_OPEN_DIFF(unit_data *unit) { return unit->getOpenDifficulty(); }
-
 inline ubit8 UNIT_TYPE(unit_data *unit) { return unit->getUnitType(); }
 inline ubit8 UNIT_TYPE(const unit_data *unit) { return unit->getUnitType(); }
 

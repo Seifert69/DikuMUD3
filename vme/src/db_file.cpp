@@ -1170,7 +1170,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     pBuf->Append16((ubit16)UNIT_ALIGNMENT(u));
 
     pBuf->Append8(u->getOpenFlags());
-    pBuf->Append8(UNIT_OPEN_DIFF(u));
+    pBuf->Append8(u->getOpenDifficulty());
     pBuf->Append8(u->getNumberOfActiveLightSources());
     pBuf->Append8(u->getLightOutput());
     pBuf->Append8(u->getTransparentLightOutput());

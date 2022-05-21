@@ -757,7 +757,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               "Base weight : [%d] Weight : [%d] Capacity : [%d] Size [%d]<br/>",
                               u->getKey() ? u->getKey() : "none",
                               sprintbit(bits1, u->getOpenFlags(), g_unit_open_flags),
-                              UNIT_OPEN_DIFF(u),
+                              u->getOpenDifficulty(),
                               u->getBaseWeight(),
                               u->getWeight(),
                               u->getCapacity(),
