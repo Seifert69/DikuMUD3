@@ -683,18 +683,18 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             strip_trailing_blanks(argument);
             str_remspc(argument);
 
-            UNIT_NAMES(unt).AppendName(argument);
+            unt->getNames().AppendName(argument);
             send_to_char("The extra name was added.<br/>", ch);
             return;
 
         case 1: /* "del-name" */
-            if (!UNIT_NAMES(unt).Name(0) || !UNIT_NAMES(unt).Name(1))
+            if (!unt->getNames().Name(0) || !unt->getNames().Name(1))
             {
                 send_to_char("Must have minimum of two names<br/>", ch);
                 return;
             }
             argument = skip_spaces(argument);
-            UNIT_NAMES(unt).RemoveName(argument);
+            unt->getNames().RemoveName(argument);
             send_to_char("Name may have been deleted.<br/>", ch);
             return;
 

@@ -970,7 +970,7 @@ void process_unit(unit_data *u)
     process_affects(u);
     process_funcs(u);
 
-    check_namelist(u, &UNIT_NAMES(u));
+    check_namelist(u, &u->getNames());
 
     for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
     {

@@ -643,7 +643,7 @@ static void cmd_claim(unit_data *ch, char *arg, unit_data *obj, alias_head *alia
 
     one_argument(arg, buf);
 
-    if (str_is_empty(buf) || !UNIT_NAMES(obj).IsName(buf))
+    if (str_is_empty(buf) || !obj->getNames().IsName(buf))
     {
         act("You can only claim $2n.", A_ALWAYS, ch, obj, cActParameter(), TO_CHAR);
     }

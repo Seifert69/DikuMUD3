@@ -117,7 +117,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (i = g_unit_list; i; i = i->getGlobalNext())
         {
-            if (i->getMyContainer() && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= i->getLevelOfWizardInvisibility())
+            if (i->getMyContainer() && i->getNames().IsName(arg) && CHAR_LEVEL(ch) >= i->getLevelOfWizardInvisibility())
             {
                 nCount++;
                 if (nCount++ > 100)

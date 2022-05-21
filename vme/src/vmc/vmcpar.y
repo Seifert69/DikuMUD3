@@ -571,7 +571,7 @@ omobile_field   : MANA number
  */
 unit_field  : NAMES stringlist
     {
-        UNIT_NAMES(cur).CopyList((const char **)$2);
+        cur->getNames().CopyList((const char **)$2);
         /*if (UNIT_NAMES(cur) && UNIT_NAME(cur))
           CAP(UNIT_NAME(cur)); */
     }

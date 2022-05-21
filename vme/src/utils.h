@@ -95,8 +95,6 @@ inline room_data *UROOM(const unit_data *u)
 
 inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
 
-inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
-
 inline extra_list &UNIT_EXTRA(unit_data *unit) { return unit->getExtraList(); }
 inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExtraList(); }
 /* ..................................................................... */

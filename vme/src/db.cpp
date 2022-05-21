@@ -729,7 +729,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         exit(0);
     }
 
-    g_nCorrupt += UNIT_NAMES(u).ReadBuffer(pBuf, unit_version);
+    g_nCorrupt += u->getNames().ReadBuffer(pBuf, unit_version);
 
     if (unit_version < 47 && type == UNIT_ST_PC)
     {
@@ -737,7 +737,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
         strcpy(buf, UNIT_NAME(u));
         CAP(buf);
-        UNIT_NAMES(u).Substitute(0, buf);
+        u->getNames().Substitute(0, buf);
     }
     char *c = nullptr;
     if (pBuf->SkipString(&c))

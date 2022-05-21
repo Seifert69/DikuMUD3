@@ -194,7 +194,7 @@ unit_data *set_money(unit_data *money, amount_t amt)
         amt = 1;
     }
 
-    UNIT_NAMES(money).Free();
+    money->getNames().Free();
 
     /* Set relevant strings as names */
     for (i = 0; g_money_types[MONEY_TYPE(money)].strings[i]; ++i)
@@ -205,7 +205,7 @@ unit_data *set_money(unit_data *money, amount_t amt)
         }
         else
         {
-            UNIT_NAMES(money).AppendName(g_money_types[MONEY_TYPE(money)].strings[i]);
+            money->getNames().AppendName(g_money_types[MONEY_TYPE(money)].strings[i]);
         }
     }
 
@@ -214,14 +214,14 @@ unit_data *set_money(unit_data *money, amount_t amt)
      * Suffice to say that the current string system forces me to sort the
      * strings, or chaos arises...
      */
-    for (i = 0; i < UNIT_NAMES(money).Length(); ++i)
+    for (i = 0; i < money->getNames().Length(); ++i)
     {
         ubit32 j = 0;
         ubit32 m = i;
 
-        for (j = i; j < UNIT_NAMES(money).Length(); ++j)
+        for (j = i; j < money->getNames().Length(); ++j)
         {
-            if (strlen(UNIT_NAMES(money).Name(m)) < strlen(UNIT_NAMES(money).Name(j)))
+            if (strlen(money->getNames().Name(m)) < strlen(money->getNames().Name(j)))
             {
                 m = j;
             }
@@ -229,11 +229,11 @@ unit_data *set_money(unit_data *money, amount_t amt)
 
         if (m != i)
         {
-            char *max = str_dup(UNIT_NAMES(money).Name(m));
-            char *t = str_dup(UNIT_NAMES(money).Name(i));
+            char *max = str_dup(money->getNames().Name(m));
+            char *t = str_dup(money->getNames().Name(i));
 
-            UNIT_NAMES(money).Substitute(i, max);
-            UNIT_NAMES(money).Substitute(m, t);
+            money->getNames().Substitute(i, max);
+            money->getNames().Substitute(m, t);
 
             FREE(max);
             FREE(t);

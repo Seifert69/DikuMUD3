@@ -714,7 +714,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
 
     /* Stat on the unit */
 
-    cname = UNIT_NAMES(u).catnames(); /* Get names into tmpbuf1 */
+    cname = u->getNames().catnames(); /* Get names into tmpbuf1 */
 
     /* Even though type isn't a flag, we'd better show them all in case
      * more than one is set!

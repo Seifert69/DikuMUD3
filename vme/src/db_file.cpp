@@ -1119,7 +1119,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
     pBuf->Append8(nVersion); /* Version Number! */
 
-    UNIT_NAMES(u).AppendBuffer(pBuf);
+    u->getNames().AppendBuffer(pBuf);
 
     pBuf->AppendString(UNIT_TITLE_STRING(u));
     pBuf->AppendString(UNIT_OUT_DESCR_STRING(u));

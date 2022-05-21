@@ -793,7 +793,7 @@ void nanny_name_confirm(descriptor_data *d, char *arg)
         {
             UPC(d->cgetCharacter())->setFilename("");
         }
-        UNIT_NAMES(d->getCharacter()).Free();
+        d->getCharacter()->getNames().Free();
         send_to_descriptor("Ok, what IS it, then? ", d);
         set_descriptor_fptr(d, nanny_get_name, FALSE);
     }
@@ -888,7 +888,7 @@ void nanny_get_name(descriptor_data *d, char *arg)
         UPC(d->getCharacter())->setFilename(tmp_name);
 
         CAPC(tmp_name);
-        UNIT_NAMES(d->getCharacter()).AppendName(tmp_name);
+        d->getCharacter()->getNames().AppendName(tmp_name);
         UPC(d->cgetCharacter())->setPassword("");
 
         /* If someone is connected, we borrow his pwd */

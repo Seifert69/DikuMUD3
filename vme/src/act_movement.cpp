@@ -128,7 +128,7 @@ int has_found_door(unit_data *pc, int dir)
         return FALSE;
     }
 
-    return exd->names.IsName(UNIT_NAMES(pc).Name(0)) != nullptr;
+    return exd->names.IsName(pc->getNames().Name(0)) != nullptr;
 
     if (ROOM_EXIT(pc->getMyContainer(), dir)->isDoorFlagSet(EX_CLOSED))
     {
