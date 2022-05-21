@@ -732,7 +732,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                                    u->getFileIndex() ? (unsigned long)u->getFileIndex()->getCRC() : 0,
                                    cname,
                                    STR(u->getTitle().c_str()),
-                                   STR(UNIT_OUT_DESCR_STRING(u)),
+                                   STR(u->getDescriptionOfOutside().c_str()),
                                    STR(UNIT_IN_DESCR_STRING(u)));
     send_to_char(msg, ch);
     FREE(cname);
