@@ -735,7 +735,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     {
         char buf[256];
 
-        strcpy(buf, UNIT_NAME(u));
+        strcpy(buf, u->getNames().Name());
         CAP(buf);
         u->getNames().Substitute(0, buf);
     }
@@ -978,7 +978,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 else
                 {
                     char temp[pc_data::PC_MAX_NAME];
-                    memcpy(temp, UNIT_NAME(u), pc_data::PC_MAX_NAME);
+                    memcpy(temp, u->getNames().Name(), pc_data::PC_MAX_NAME);
                     temp[pc_data::PC_MAX_NAME - 1] = 0;
                     str_lower(temp);
                     UPC(u)->setFilename(temp);
@@ -1034,7 +1034,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     int xpfloor = xpl + (required_xp(PC_VIRTUAL_LEVEL(u) + 1) - xpl) / 2;
                     if (CHAR_EXP(u) < xpfloor)
                     {
-                        slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", UNIT_NAME(u), CHAR_EXP(u), xpfloor);
+                        slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", u->getNames().Name(), CHAR_EXP(u), xpfloor);
                         UCHAR(u)->setPlayerExperience(xpfloor);
                         // xxx
                     }

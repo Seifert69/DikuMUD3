@@ -777,7 +777,11 @@ void move_dir(unit_data *ch, int dir)
         }
         else
         {
-            slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", UNIT_NAME(ch), UNIT_NAME(ch->getMyContainer()));
+            slog(LOG_ALL,
+                 0,
+                 "Unit %s is inside an unexpected unit type %s",
+                 ch->getNames().Name(),
+                 ch->getMyContainer()->getNames().Name());
             act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
             if (ch->getMyContainer()->getMyContainer())
             {

@@ -568,7 +568,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 auto str = diku::format_to_str("The slimy remains of %s", TITLENAME(pnew_tmp));
                 pnew->setDescriptionOfOutside(str);
                 pnew->setTitle(str);
-                pnew->getNames().PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));
+                pnew->getNames().PrependName(str_cc("slime of ", pnew_tmp->getNames().Name()));
                 delete pnew_tmp;
             }
         }

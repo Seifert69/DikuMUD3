@@ -428,7 +428,7 @@ void clist()
                             ids[PC_ID(pc)] = 1;
                         }
 
-                        shall_exclude(UNIT_NAME(pc));
+                        shall_exclude(pc->getNames().Name());
                         // shall_delete(pc);
 
                         void_char->setContainedUnit(nullptr);
@@ -583,7 +583,8 @@ void convert_file()
                             ids[PC_ID(pc)] = 1;
                         }
 
-                        std::cout << UNIT_NAME(pc) << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN") << std::endl;
+                        std::cout << pc->getNames().Name() << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN")
+                                  << std::endl;
 
                         std::cout.flush();
                         load_contents(temp, pc);
@@ -683,7 +684,7 @@ void cleanup()
                             continue;
                         }
 
-                        if (str_ccmp(temp, UNIT_NAME(pc)))
+                        if (str_ccmp(temp, pc->getNames().Name()))
                         {
                             std::cout << "Name in file doesn't match filename." << std::endl;
                             convert_free_unit(pc);
@@ -693,7 +694,7 @@ void cleanup()
                             continue;
                         }
 
-                        std::cout << UNIT_NAME(pc) << "]  Lvl " << CHAR_LEVEL(pc) << "]  " << (IS_MORTAL(pc) ? "   " : "ADMIN");
+                        std::cout << pc->getNames().Name() << "]  Lvl " << CHAR_LEVEL(pc) << "]  " << (IS_MORTAL(pc) ? "   " : "ADMIN");
 
                         if (shall_delete(pc))
                         {

@@ -507,7 +507,7 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
 {
     if (d->postincrementState() == 0)
     {
-        auto msg = diku::format_to_str("Give me a new password for %s: ", UNIT_NAME(d->cgetCharacter()));
+        auto msg = diku::format_to_str("Give me a new password for %s: ", d->cgetCharacter()->getNames().Name());
         send_to_descriptor(msg, d);
         send_to_descriptor(scriptwrap("PasswordOn()"), d);
         return;
@@ -664,13 +664,13 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     if (d->getState() == 2)
     {
-        auto msg = diku::format_to_str("Welcome back %s, please enter your password: ", UNIT_NAME(d->cgetCharacter()));
+        auto msg = diku::format_to_str("Welcome back %s, please enter your password: ", d->cgetCharacter()->getNames().Name());
         send_to_descriptor(msg, d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
         return;
     }
 
-    auto str = diku::format_to_str("PasswordOff('%s', '%s')", UNIT_NAME(d->cgetCharacter()), g_cServerConfig.getMudName().c_str());
+    auto str = diku::format_to_str("PasswordOff('%s', '%s')", d->cgetCharacter()->getNames().Name(), g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(str), d);
 
     if (str_is_empty(arg))
@@ -722,7 +722,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     const auto last_connect = PC_TIME(d->getCharacter()).getPlayerLastConnectTime();
     auto msg2 = diku::format_to_str("<br/>Welcome back %s, you last visited %s on %s<br/>",
-                                    UNIT_NAME(d->cgetCharacter()),
+                                    d->cgetCharacter()->getNames().Name(),
                                     g_cServerConfig.getMudName().c_str(),
                                     ctime(&last_connect));
     send_to_descriptor(msg2, d);
@@ -764,7 +764,7 @@ void nanny_name_confirm(descriptor_data *d, char *arg)
     if (d->postincrementState() == 0)
     {
         // MS: removed help option since it was not implemented.
-        auto msg = diku::format_to_str("Did I get that right, %s (Y/N)? ", UNIT_NAME(d->cgetCharacter()));
+        auto msg = diku::format_to_str("Did I get that right, %s (Y/N)? ", d->cgetCharacter()->getNames().Name());
         send_to_descriptor(msg, d);
         return;
     }

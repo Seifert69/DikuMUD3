@@ -290,7 +290,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
     if (strlen(cmdArg) > MAX_INPUT_LENGTH)
     {
-        slog(LOG_ALL, 0, "%s issued command which was too long: %s", UNIT_NAME(ch), cmdArg);
+        slog(LOG_ALL, 0, "%s issued command which was too long: %s", ch->getNames().Name(), cmdArg);
         send_to_char("The issued command was aborted because it was too long, "
                      "please report how you made this happen.<br/>",
                      ch);
@@ -461,7 +461,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
     if (cmd_ptr->log_level)
     {
-        slog(LOG_ALL, MAX(CHAR_LEVEL(ch), cmd_ptr->log_level), "CMDLOG %s: %s %s", UNIT_NAME(ch), cmd_ptr->cmd_str, argstr);
+        slog(LOG_ALL, MAX(CHAR_LEVEL(ch), cmd_ptr->log_level), "CMDLOG %s: %s %s", ch->getNames().Name(), cmd_ptr->cmd_str, argstr);
     }
 
     if (cmd_ptr->tmpl)

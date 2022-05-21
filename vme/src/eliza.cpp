@@ -450,9 +450,9 @@ char *response(oracle_data *od, int subjno)
                 break;
 
             case '&':
-                for (i = 0; UNIT_NAME(od->patient)[i] != 0; i++)
+                for (i = 0; od->patient->getNames().Name()[i] != 0; i++)
                 {
-                    resp[k++] = UNIT_NAME(od->patient)[i];
+                    resp[k++] = od->patient->getNames().Name()[i];
                 }
                 break;
 
@@ -603,7 +603,7 @@ void eliza_log(unit_data *who, const char *str, int comms)
 
     if ((comms < 5) && (idx < MAX_ELIBUF))
     {
-        auto tmp = diku::format_to_str("%-12s::  %s\n", UNIT_NAME(who), str);
+        auto tmp = diku::format_to_str("%-12s::  %s\n", who->getNames().Name(), str);
         buf[idx++] = str_dup(tmp.c_str());
         return;
     }
@@ -622,7 +622,7 @@ void eliza_log(unit_data *who, const char *str, int comms)
         idx = MAX_ELIBUF + 1;
     }
 
-    fprintf(f, "%-12s::  %s\n", UNIT_NAME(who), str);
+    fprintf(f, "%-12s::  %s\n", who->getNames().Name(), str);
     fflush(f);
 }
 
@@ -669,7 +669,7 @@ int oracle(spec_arg *sarg)
         sarg->fptr->setData(od);
         od->laststr[0] = 0;
         od->lastrep[0] = 0;
-        strcpy(od->own_name, UNIT_NAME(sarg->owner));
+        strcpy(od->own_name, sarg->owner->getNames().Name());
         str_lower(od->own_name);
         od->patient = nullptr;
         od->doctor = sarg->owner;
@@ -708,19 +708,19 @@ int oracle(spec_arg *sarg)
             switch (number(0, 3))
             {
                 case 0:
-                    snprintf(buf, sizeof(buf), "smile %s", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "smile %s", sarg->activator->getNames().Name());
                     break;
 
                 case 1:
-                    snprintf(buf, sizeof(buf), "hug %s", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "hug %s", sarg->activator->getNames().Name());
                     break;
 
                 case 2:
-                    snprintf(buf, sizeof(buf), "ruffle %s", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "ruffle %s", sarg->activator->getNames().Name());
                     break;
 
                 case 3:
-                    snprintf(buf, sizeof(buf), "bow %s", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "bow %s", sarg->activator->getNames().Name());
                     break;
             }
             od->patient = sarg->activator;

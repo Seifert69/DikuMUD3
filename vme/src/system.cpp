@@ -184,7 +184,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         slog(LOG_BRIEF,
              d->cgetCharacter()->getLevelOfWizardInvisibility(),
              "Closing link and making link dead: %s.",
-             UNIT_NAME(d->cgetCharacter()));
+             d->cgetCharacter()->getNames().Name());
 
         if (!d->getCharacter()->is_destructed())
         {

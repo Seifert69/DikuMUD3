@@ -2879,13 +2879,8 @@ void dilfe_trmo(dilprg *p)
                 strcat(buf, money_string(v3->val.num, i, TRUE));
             }
 
-            slog(LOG_ALL,
-                 0,
-                 "%s was given %s by DIL %s@%s.",
-                 UNIT_NAME((unit_data *)v2->val.ptr),
-                 buf,
-                 UNIT_FI_NAME(p->sarg->owner),
-                 UNIT_FI_ZONENAME(p->sarg->owner));
+            const char *result = ((unit_data *)v2->val.ptr)->getNames().Name();
+            slog(LOG_ALL, 0, "%s was given %s by DIL %s@%s.", result, buf, UNIT_FI_NAME(p->sarg->owner), UNIT_FI_ZONENAME(p->sarg->owner));
             money_transfer(nullptr, (unit_data *)v2->val.ptr, v3->val.num, local_currency((unit_data *)v2->val.ptr));
             v->val.num = 1;
         }

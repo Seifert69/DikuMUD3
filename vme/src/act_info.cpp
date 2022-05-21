@@ -49,11 +49,12 @@ void player_where(unit_data *ch, char *arg)
     for (d = g_descriptor_list; d; d = d->getNext())
     {
         if (d->cgetCharacter() && (d->cgetCharacter() != ch) && d->cgetCharacter()->getMyContainer() && descriptor_is_playing(d) &&
-            (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->cgetCharacter()))) &&
+            (str_is_empty(arg) || !str_ccmp(arg, d->cgetCharacter()->getNames().Name())) &&
             CHAR_LEVEL(ch) >= d->cgetCharacter()->getLevelOfWizardInvisibility() && d->cgetOriginalCharacter() == nullptr &&
             CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
         {
-            auto msg = diku::format_to_str("%-30s at %s<br/>", UNIT_NAME(d->cgetCharacter()), TITLENAME(unit_room(d->getCharacter())));
+            auto msg =
+                diku::format_to_str("%-30s at %s<br/>", d->cgetCharacter()->getNames().Name(), TITLENAME(unit_room(d->getCharacter())));
             send_to_char(msg, ch);
             any = TRUE;
         }
@@ -100,11 +101,11 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
                 std::string whose_body;
                 if (d->cgetOriginalCharacter())
                 { /* If switched */
-                    whose_body = diku::format_to_str(" In body of %s", UNIT_NAME(d->cgetCharacter()));
+                    whose_body = diku::format_to_str(" In body of %s", d->cgetCharacter()->getNames().Name());
                 }
 
                 mystr += diku::format_to_str("%-20s - %s [%s]%s<br/>",
-                                             UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
+                                             CHAR_ORIGINAL(d->getCharacter())->getNames().Name(),
                                              UNIT_SEE_TITLE(ch, d->getCharacter()->getMyContainer()),
                                              in_string(ch, d->cgetCharacter()),
                                              whose_body);

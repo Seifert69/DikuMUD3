@@ -391,8 +391,10 @@ int spell_bonus(unit_data *att,
 
     if (pStat)
     {
-        *pStat =
-            diku::format_to_str("<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
+        *pStat = diku::format_to_str("<u>%s spelling %s with %s:</u><br/><pre>",
+                                     att->getNames().Name(),
+                                     def->getNames().Name(),
+                                     g_SplColl.text[spell_number]);
         pStat->append("                        ATT     DEF<br/>");
     }
 
@@ -593,7 +595,7 @@ int melee_bonus(unit_data *att,
 
     if (pStat)
     {
-        *pStat = diku::format_to_str("<u>%s attacking %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def));
+        *pStat = diku::format_to_str("<u>%s attacking %s:</u><br/><pre>", att->getNames().Name(), def->getNames().Name());
         pStat->append("                        ATT     DEF<br/>");
     }
 
@@ -627,7 +629,7 @@ int melee_bonus(unit_data *att,
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
             if (pStat)
             {
-                pStat->append(diku::format_to_str("Att Weapon          :  %s       <br/>", UNIT_NAME(att_wpn)));
+                pStat->append(diku::format_to_str("Att Weapon          :  %s       <br/>", att_wpn->getNames().Name()));
             }
             if (is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
             {

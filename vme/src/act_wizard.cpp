@@ -75,7 +75,7 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                 msg += diku::format_to_str("&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                                            CHAR_LEVEL(CHAR_ORIGINAL(d->getCharacter())),
                                            CHAR_ORIGINAL(d->getCharacter())->getLevelOfWizardInvisibility(),
-                                           UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
+                                           CHAR_ORIGINAL(d->getCharacter())->getNames().Name(),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),
@@ -88,7 +88,7 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                 msg += diku::format_to_str("&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                                            PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->getCharacter())),
                                            CHAR_ORIGINAL(d->getCharacter())->getLevelOfWizardInvisibility() ? '*' : ' ',
-                                           UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
+                                           CHAR_ORIGINAL(d->getCharacter())->getNames().Name(),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),
@@ -228,7 +228,7 @@ void do_shutdown(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    auto msg = diku::format_to_str("Shutdown by %s.<br/>", UNIT_NAME(ch));
+    auto msg = diku::format_to_str("Shutdown by %s.<br/>", ch->getNames().Name());
     send_to_all(msg);
     g_mud_shutdown = 1;
 }
@@ -378,7 +378,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
     {
         for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
         {
-            if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), buf))
+            if (IS_PC(tmp) && !str_ccmp(tmp->getNames().Name(), buf))
             {
                 send_to_char("A player by that name is linkdead in the game.<br/>", ch);
                 return;
@@ -409,8 +409,8 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
                 slog(LOG_EXTENSIVE,
                      ch->getLevelOfWizardInvisibility(),
                      "LEVEL: %s loaded %s when lower level.",
-                     UNIT_NAME(ch),
-                     UNIT_NAME(u));
+                     ch->getNames().Name(),
+                     u->getNames().Name());
             }
             return;
         }
@@ -427,7 +427,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
 
     if (CHAR_LEVEL(ch) < fi->getZone()->getLevelRequiredToLoadItems())
     {
-        if (!fi->getZone()->getCreators().IsName(UNIT_NAME(ch)))
+        if (!fi->getZone()->getCreators().IsName(ch->getNames().Name()))
         {
             int i = fi->getZone()->getLevelRequiredToLoadItems();
 

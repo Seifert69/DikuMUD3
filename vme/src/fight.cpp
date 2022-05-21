@@ -1344,7 +1344,7 @@ void damage(unit_data *ch,
             slog(LOG_EXTENSIVE,
                  MAX(ch->getLevelOfWizardInvisibility(), victim->getLevelOfWizardInvisibility()),
                  "%s killed by %s at %s",
-                 STR(UNIT_NAME(victim)),
+                 STR(victim->getNames().Name()),
                  TITLENAME(ch),
                  STR(TITLENAME(ch->getMyContainer())));
         }

@@ -93,8 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
-
 /* ..................................................................... */
 
 inline bool IS_ROOM(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_ROOM; }
@@ -410,14 +408,14 @@ inline const char *UNIT_OUT_DESCR_STRING(unit_data *unit) { return unit->getDesc
 
 inline const char *UNIT_IN_DESCR_STRING(unit_data *unit) { return unit->getDescriptionOfInside().c_str(); }
 
-inline const char *TITLENAME(unit_data *unit) { return IS_PC(unit) ? UNIT_NAME(unit) : UNIT_TITLE_STRING(unit); }
+inline const char *TITLENAME(unit_data *unit) { return IS_PC(unit) ? unit->getNames().Name() : UNIT_TITLE_STRING(unit); }
 
 inline const char *SOMETON(const unit_data *unit) { return UNIT_SEX(unit) == SEX_NEUTRAL ? "something" : "someone"; }
 
 /* Title, Name or Someone/Something */
 inline const char *UNIT_SEE_TITLE(unit_data *ch, unit_data *unit) { return CHAR_CAN_SEE(ch, unit) ? TITLENAME(unit) : SOMETON(unit); }
 
-inline const char *UNIT_SEE_NAME(const unit_data *ch, const unit_data *unit) { return CHAR_CAN_SEE(ch, unit) ? UNIT_NAME(unit) : SOMETON(unit); }
+inline const char *UNIT_SEE_NAME(const unit_data *ch, const unit_data *unit) { return CHAR_CAN_SEE(ch, unit) ? unit->getNames().Name() : SOMETON(unit); }
 /* ..................................................................... */
 
 /* Invis people aren't supposed to have sex... /gnort */
@@ -434,6 +432,6 @@ inline const char *B_HMHR(const unit_data *ch) { return UNIT_SEX(ch) == SEX_NEUT
 
 inline const char *HMHR(const unit_data *to, const unit_data *ch) { return CHAR_CAN_SEE(to, ch) ? B_HMHR(ch) : "them"; }
 
-inline const char *UNIT_ANA(unit_data *unit) { return ANA(*UNIT_NAME(unit)); }
+inline const char *UNIT_ANA(unit_data *unit) { return ANA(*unit->getNames().Name()); }
 
 // clang-format on

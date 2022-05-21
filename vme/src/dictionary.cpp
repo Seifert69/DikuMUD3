@@ -75,11 +75,11 @@ static char *get_next_word(const char *argument, char *first_arg)
 /** Setup owner-ship of dictionary. */
 static void set_owner(unit_data *obj, alias_head *ah, unit_data *ch)
 {
-    strcpy(ah->owner, UNIT_NAME(ch));
+    strcpy(ah->owner, ch->getNames().Name());
 
-    obj->setDescriptionOfOutside(diku::format_to_str("On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj)));
+    obj->setDescriptionOfOutside(diku::format_to_str("On the ground lies %s's %s.", ah->owner, obj->getNames().Name()));
 
-    obj->setTitle(diku::format_to_str("%s's %s", ah->owner, UNIT_NAME(obj)));
+    obj->setTitle(diku::format_to_str("%s's %s", ah->owner, obj->getNames().Name()));
 }
 
 /**
@@ -714,7 +714,7 @@ static int local_dictionary(spec_arg *sarg)
         /* This check is needed too, so people can't wreak havoc with another
          * person's dictionary...
          */
-        if (str_ccmp(UNIT_NAME(sarg->activator), alias_h->owner))
+        if (str_ccmp(sarg->activator->getNames().Name(), alias_h->owner))
         {
             act("You can't use the alias command before you type `claim $3N'.",
                 A_ALWAYS,
@@ -756,7 +756,7 @@ static int local_dictionary(spec_arg *sarg)
     /* We now have an alias to parse... */
 
     /* Check if this dictionary belongs to user */
-    if (str_ccmp(UNIT_NAME(sarg->activator), alias_h->owner))
+    if (str_ccmp(sarg->activator->getNames().Name(), alias_h->owner))
     {
         act("You can't use the alias `$2t' before you type `claim $3N'.",
             A_ALWAYS,

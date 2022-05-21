@@ -366,7 +366,7 @@ void dilfi_delpc(dilprg *p)
                 {
                     for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
                     {
-                        if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), ((char *)v1->val.ptr)))
+                        if (IS_PC(tmp) && !str_ccmp(tmp->getNames().Name(), ((char *)v1->val.ptr)))
                         {
                             extract_unit(tmp);
                         }
@@ -1838,7 +1838,7 @@ void dilfi_exp(dilprg *p)
             slog(LOG_ALL,
                  0,
                  "%s gained %d experience from unit %s@%s.",
-                 UNIT_NAME((unit_data *)v2->val.ptr),
+                 ((unit_data *)v2->val.ptr)->getNames().Name(),
                  value,
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner));
@@ -2360,8 +2360,8 @@ void dilfi_exec(dilprg *p)
                              "DIL %s on %s tried "
                              "to make %s do: %s",
                              p->fp->tmpl->prgname,
-                             STR(UNIT_NAME(p->sarg->owner)),
-                             UNIT_NAME((unit_data *)v2->val.ptr),
+                             STR(p->sarg->owner->getNames().Name()),
+                             ((unit_data *)v2->val.ptr)->getNames().Name(),
                              cmd);
                     }
                     else

@@ -529,15 +529,15 @@ void cCombat::status(const unit_data *god)
                                    "Combat Speed [%d]  Turn [%d]<br/>"
                                    "Melee Opponent '%s'<br/>"
                                    "Total of %d Opponents:<br/><br/>",
-                                   STR(UNIT_NAME(pOwner)),
+                                   STR(pOwner->getNames().Name()),
                                    CHAR_SPEED(pOwner),
                                    nWhen,
-                                   CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
+                                   CHAR_FIGHTING(pOwner) ? STR(CHAR_FIGHTING(pOwner)->getNames().Name()) : "NONE",
                                    nNoOpponents);
 
     for (int i = 0; i < nNoOpponents; i++)
     {
-        msg += diku::format_to_str("   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
+        msg += diku::format_to_str("   %s<br/>", STR(pOpponents[i]->getNames().Name()));
     }
 
     send_to_char(msg, god);

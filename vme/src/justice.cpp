@@ -108,13 +108,13 @@ void add_crime(unit_data *criminal, unit_data *victim, int type)
     dilprg *prg = nullptr;
     int crime_no = 0;
 
-    if (str_is_empty(UNIT_NAME(criminal)))
+    if (str_is_empty(criminal->getNames().Name()))
     {
         slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
         return;
     }
 
-    if (str_is_empty(UNIT_NAME(victim)))
+    if (str_is_empty(victim->getNames().Name()))
     {
         slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
         return;
@@ -205,7 +205,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
             prg->fp->vars[2].val.integer = crime_serial_no;
             prg->fp->vars[3].val.integer = crime_type;
             prg->fp->vars[4].val.integer = active;
-            prg->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+            prg->fp->vars[5].val.string = str_dup(victim->getNames().Name());
             dil_add_secure(prg, criminal, prg->fp->tmpl->core);
             dil_add_secure(prg, victim, prg->fp->tmpl->core);
             dil_activate(prg);
@@ -233,7 +233,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
                     prg2->fp->vars[2].val.integer = crime_serial_no;
                     prg2->fp->vars[3].val.integer = crime_type;
                     prg2->fp->vars[4].val.integer = active;
-                    prg2->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+                    prg2->fp->vars[5].val.string = str_dup(victim->getNames().Name());
                     dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
                     dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
                     dil_activate(prg2);
@@ -264,7 +264,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
                         prg3->fp->vars[2].val.integer = crime_serial_no;
                         prg3->fp->vars[3].val.integer = crime_type;
                         prg3->fp->vars[4].val.integer = active;
-                        prg3->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+                        prg3->fp->vars[5].val.string = str_dup(victim->getNames().Name());
                         dil_add_secure(prg3, criminal, prg3->fp->tmpl->core);
                         dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
                         dil_activate(prg3);

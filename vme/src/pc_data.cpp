@@ -122,7 +122,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     descriptor_data *i = nullptr;
     const time_t last_connect = m_time.getPlayerLastConnectTime();
 
-    if (this->is_destructed())
+    if (is_destructed())
     {
         return;
     }
@@ -145,7 +145,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
         dil_destroy("link_dead@basis", this);
 
-        this->connect_game();
+        connect_game();
     }
 
     unit_data *load_room = nullptr;
@@ -166,7 +166,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 
     if (CHAR_DESCRIPTOR(this) && !DILWAY) /* Only do these things if player is connected */
     {
-        auto msg = diku::format_to_str("%s has entered the world.<br/>", UNIT_NAME(this));
+        auto msg = diku::format_to_str("%s has entered the world.<br/>", getNames().Name());
 
         for (i = g_descriptor_list; i; i = i->getNext())
         {
@@ -208,7 +208,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
 
     /*		if (!dilway)*/
-    if (strcmp(g_cServerConfig.getImmortalName().c_str(), UNIT_NAME(this)) == 0)
+    if (strcmp(g_cServerConfig.getImmortalName().c_str(), getNames().Name()) == 0)
     {
         setLevel(ULTIMATE_LEVEL);
     }

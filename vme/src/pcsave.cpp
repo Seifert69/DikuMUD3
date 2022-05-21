@@ -261,7 +261,7 @@ void save_player_file(unit_data *pc)
     }
 
     /* PRIMITIVE SANITY CHECK */
-    slog(LOG_ALL, 0, "Saving PC %s id =%d", UNIT_NAME(pc), PC_ID(pc));
+    slog(LOG_ALL, 0, "Saving PC %s id =%d", pc->getNames().Name(), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
     const unit_data *unit = unit_room(pc);

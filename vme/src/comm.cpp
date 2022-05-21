@@ -382,7 +382,7 @@ void act_generate(char *buf,
                                 {
                                     /* Upper-case it */
                                     // MS 2020 uppercase = TRUE;
-                                    i = UNIT_NAME((unit_data *)sub->m_u);
+                                    i = ((unit_data *)sub->m_u)->getNames().Name();
                                 }
                                 else
                                 {

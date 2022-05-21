@@ -66,7 +66,7 @@ static void stat_world_count(const unit_data *ch, char *arg)
 
         if (i >= nMinCount)
         {
-            msg += diku::format_to_str("%s@%s(%s) : %d units <br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), UNIT_NAME(u), i);
+            msg += diku::format_to_str("%s@%s(%s) : %d units <br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), u->getNames().Name(), i);
             n++;
 
             if (n >= 40)
@@ -1045,9 +1045,9 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        "STR [%d]  DEX [%d]  CON [%d]  CHA [%d]<br/>"
                                        "BRA [%d]  MAG [%d]  DIV [%d]  HP  [%d]<br/>",
                                        CHAR_DESCRIPTOR(u) ? "Yes" : "No",
-                                       CHAR_FIGHTING(u) ? STR(UNIT_NAME(CHAR_FIGHTING(u))) : "Nobody",
-                                       CHAR_MASTER(u) ? STR(UNIT_NAME(CHAR_MASTER(u))) : "Nobody",
-                                       CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->getFollower())) : "Nobody",
+                                       CHAR_FIGHTING(u) ? STR(CHAR_FIGHTING(u)->getNames().Name()) : "Nobody",
+                                       CHAR_MASTER(u) ? STR(CHAR_MASTER(u)->getNames().Name()) : "Nobody",
+                                       CHAR_FOLLOWERS(u) ? STR(CHAR_FOLLOWERS(u)->getFollower()->getNames().Name()) : "Nobody",
                                        CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
                                        CHAR_LEVEL(u),
                                        sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
@@ -1238,7 +1238,7 @@ static void stat_contents(const unit_data *ch, unit_data *u)
                 auto msg = diku::format_to_str("[%s@%s] Name '%s', Title '%s'  %s (L%d B%d)<br/>",
                                                UNIT_FI_NAME(u),
                                                UNIT_FI_ZONENAME(u),
-                                               UNIT_NAME(u),
+                                               u->getNames().Name(),
                                                UNIT_TITLE_STRING(u),
                                                IS_OBJ(u) && OBJ_EQP_POS(u) ? "Equipped" : "",
                                                u->getNumberOfActiveLightSources(),

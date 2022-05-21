@@ -732,7 +732,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SP;
-                        v->val.ptr = (void *)IF_STR(UNIT_NAME((unit_data *)v1->val.ptr));
+                        v->val.ptr = (void *)IF_STR(((unit_data *)v1->val.ptr)->getNames().Name());
                     }
                     else
                     {

@@ -1040,12 +1040,12 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             argument = str_next_word(argument, strarg);
             if (CHAR_LEVEL(ch) < CHAR_LEVEL(unt))
             {
-                slog(LOG_ALL, 0, "WARNING: %s attempted to set %s password", UNIT_NAME(ch), UNIT_NAME(unt));
+                slog(LOG_ALL, 0, "WARNING: %s attempted to set %s password", ch->getNames().Name(), unt->getNames().Name());
                 send_to_char("You can not change a password of a higher level immortal", ch);
             }
             else
             {
-                slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", UNIT_NAME(ch), UNIT_NAME(unt));
+                slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", ch->getNames().Name(), unt->getNames().Name());
                 UPC(unt)->setPassword(crypt(strarg, PC_FILENAME(unt)));
                 send_to_char("The password has been set.<br/>", ch);
             }
@@ -1281,8 +1281,8 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
                      "SET %s set %s's age from %.2f to %d",
-                     UNIT_NAME(ch),
-                     UNIT_NAME(unt),
+                     ch->getNames().Name(),
+                     unt->getNames().Name(),
                      PC_TIME(unt).getPlayerBirthday() / (1.0 * SECS_PER_MUD_YEAR),
                      valarg);
 
@@ -1303,8 +1303,8 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
                      "SET %s set %s's lifespan from %d to %d",
-                     UNIT_NAME(ch),
-                     UNIT_NAME(unt),
+                     ch->getNames().Name(),
+                     unt->getNames().Name(),
                      PC_LIFESPAN(unt),
                      valarg);
                 UPC(unt)->setLifespan(valarg);
@@ -1321,8 +1321,8 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
                      "SET %s set %s's profession from %d to %d",
-                     UNIT_NAME(ch),
-                     UNIT_NAME(unt),
+                     ch->getNames().Name(),
+                     unt->getNames().Name(),
                      PC_PROFESSION(unt),
                      valarg);
                 UPC(unt)->setProfession(valarg);

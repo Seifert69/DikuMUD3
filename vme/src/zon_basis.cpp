@@ -75,7 +75,7 @@ int error_rod(spec_arg *sarg)
 
     zone_type *zone = unit_zone(sarg->activator);
 
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(UNIT_NAME(sarg->activator)))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(sarg->activator->getNames().Name()))
     {
         send_to_char("You are only allowed to erase errors "
                      "in your own zone.<br/>",
@@ -96,7 +96,7 @@ int error_rod(spec_arg *sarg)
 
     act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Error file was erased.<br/>", sarg->activator);
-    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
+    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", sarg->activator->getNames().Name(), filename);
     return SFR_BLOCK;
 }
 
@@ -109,7 +109,7 @@ int info_rod(spec_arg *sarg)
 
     zone_type *zone = unit_zone(sarg->activator);
 
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(UNIT_NAME(sarg->activator)))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(sarg->activator->getNames().Name()))
     {
         send_to_char("You are only allowed to erase user-information"
                      " in your own zone.",
@@ -130,7 +130,7 @@ int info_rod(spec_arg *sarg)
 
     act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Zone user information file was erased.<br/>", sarg->activator);
-    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
+    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", sarg->activator->getNames().Name(), filename);
     return SFR_BLOCK;
 }
 
@@ -276,7 +276,7 @@ int system_check(unit_data *pc, const char *buf)
     if (strchr(buf, '`') || strchr(buf, ';'))
     {
         send_to_char("You can not use the ' and ; characters<br/>", pc);
-        slog(LOG_ALL, 0, "%s may have tried to break security with %s", UNIT_NAME(pc), buf);
+        slog(LOG_ALL, 0, "%s may have tried to break security with %s", pc->getNames().Name(), buf);
         return FALSE;
     }
 
@@ -297,7 +297,7 @@ void execute_append(unit_data *pc, const char *str)
 
     fprintf(f, "%s\n", str);
 
-    slog(LOG_ALL, pc->getLevelOfWizardInvisibility(), "EXECUTE(%s): %s", UNIT_NAME(pc), str);
+    slog(LOG_ALL, pc->getLevelOfWizardInvisibility(), "EXECUTE(%s): %s", pc->getNames().Name(), str);
 
     fclose(f);
 }
@@ -360,7 +360,7 @@ int admin_obj(spec_arg *sarg)
     }
     else
     {
-        if ((!zone->getCreators().IsName(UNIT_NAME(sarg->activator))) && (!IS_OVERSEER(sarg->activator)))
+        if ((!zone->getCreators().IsName(sarg->activator->getNames().Name())) && (!IS_OVERSEER(sarg->activator)))
         {
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;

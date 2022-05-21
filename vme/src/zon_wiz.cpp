@@ -79,7 +79,7 @@ int ball(spec_arg *sarg)
                                                 (signed long)OBJ_VALUE(top[i], v2),
                                                 UNIT_FI_NAME(top[i]),
                                                 UNIT_FI_ZONENAME(top[i]),
-                                                UNIT_NAME(top[i]->getMyContainer()),
+                                                top[i]->getMyContainer()->getNames().Name(),
                                                 UNIT_FI_NAME(top[i]->getMyContainer()),
                                                 UNIT_FI_ZONENAME(top[i]->getMyContainer()));
                 send_to_char(msg2, sarg->activator);
