@@ -200,7 +200,6 @@ int log_object(spec_arg *sarg)
             return SFR_SHARE;
 
         default:
-        {
             if (sarg->cmd->cmd_str && sarg->activator == sarg->owner->getMyContainer() && !strcmp("log", sarg->cmd->cmd_str))
             {
                 sarg->arg = skip_spaces(sarg->arg);
@@ -263,7 +262,6 @@ int log_object(spec_arg *sarg)
                 UOBJ(sarg->owner)->setValueAtIndexTo(0, c);
                 return SFR_BLOCK;
             }
-        }
 
             return SFR_SHARE;
     }

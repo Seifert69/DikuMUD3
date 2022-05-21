@@ -223,7 +223,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
@@ -234,8 +233,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                }
-                break;
+                    break;
                 case DILV_CP:
                     if (v1->val.ptr)
                     {
@@ -264,7 +262,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
@@ -282,8 +279,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                }
-                break;
+                    break;
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 default:
@@ -302,7 +298,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
@@ -313,8 +308,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                }
-                break;
+                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1795,7 +1789,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
@@ -1806,8 +1799,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                }
-                break;
+                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1824,7 +1816,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
@@ -1835,8 +1826,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                }
-                break;
+                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2495,7 +2485,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isObj())
                     {
                         v->atyp = DILA_NONE;
@@ -2506,8 +2495,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                }
-                break;
+                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -3633,7 +3621,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
@@ -3644,8 +3631,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL;
                     }
-                }
-                break;
+                    break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -4022,7 +4008,6 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                {
                     if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
@@ -4033,8 +4018,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL;
                     }
-                }
-                break;
+                    break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

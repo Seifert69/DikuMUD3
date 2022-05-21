@@ -657,7 +657,7 @@ zone_type *unit_error_zone = nullptr;
 void post_read_unit(unit_data *u)
 {
     // Add regenerate to NPCs
-    if (u->getUnitType() == UNIT_ST_NPC)
+    if (u->isNPC())
     {
         static diltemplate *regen = nullptr;
 
@@ -1473,7 +1473,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
     }
     else
     {
-        if (u->getUnitType() != UNIT_ST_ROOM)
+        if (!u->isRoom())
         {
             slog(LOG_ALL, 0, "Bizarro. This probably shouldn't happen");
         }

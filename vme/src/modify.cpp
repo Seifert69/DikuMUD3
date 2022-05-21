@@ -766,7 +766,6 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 7: /* "unit-flags" */
-        {
             if (IS_SET(unt->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
             {
                 trans_unset(unt);
@@ -775,7 +774,6 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             {
                 trans_set(unt);
             }
-        }
 
             unt->setAllUnitFlags(bitarg);
             return;

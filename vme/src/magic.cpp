@@ -118,27 +118,24 @@ ubit1 use_mana(unit_data *medium, int mana)
             return FALSE;
         }
     }
-    else
+    else if (medium->isObj())
     {
-        if (medium->isObj())
+        switch (OBJ_TYPE(medium))
         {
-            switch (OBJ_TYPE(medium))
-            {
-                case ITEM_STAFF:
-                case ITEM_WAND:
-                    if (OBJ_VALUE(medium, 1))
-                    {
-                        UOBJ(medium)->setValueAtIndexTo(1, OBJ_VALUE(medium, 1) - 1);
-                        return TRUE;
-                    }
-                    else
-                    {
-                        return FALSE;
-                    }
-                    break;
-                default:
-                    return FALSE; /* no mana in other objects */
-            }
+            case ITEM_STAFF:
+            case ITEM_WAND:
+                if (OBJ_VALUE(medium, 1))
+                {
+                    UOBJ(medium)->setValueAtIndexTo(1, OBJ_VALUE(medium, 1) - 1);
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+                break;
+            default:
+                return FALSE; /* no mana in other objects */
         }
     }
     return FALSE; /* no mana/charge in this type of unit */

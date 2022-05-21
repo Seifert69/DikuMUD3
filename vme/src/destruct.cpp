@@ -192,13 +192,10 @@ void destruct_unit(unit_data *unit)
         assert(!CHAR_MASTER(unit));
         assert(!CHAR_COMBAT(unit));
     }
-    else
+    else if (!unit->isObj())
     {
-        if (!unit->isObj())
-        {
-            slog(LOG_OFF, 0, "Extract on something not a char or an obj.");
-            assert(FALSE);
-        }
+        slog(LOG_OFF, 0, "Extract on something not a char or an obj.");
+        assert(FALSE);
     }
 
     while (unit->getContainedUnits())

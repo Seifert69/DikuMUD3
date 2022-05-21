@@ -365,7 +365,7 @@ void check_overpopulation_event(void *p1, void *p2)
         t = u;
         while (t)
         {
-            if (t->getUnitType() == UNIT_ST_PC)
+            if (t->isPC())
             {
                 break;
             }

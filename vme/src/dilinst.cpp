@@ -2701,58 +2701,55 @@ void dilfi_ada(dilprg *p)
                              v11->val.num);
                 }
             }
-            else
+            else if (((unit_data *)v1->val.ptr)->isObj())
             {
-                if (((unit_data *)v1->val.ptr)->isObj())
+                if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v11->val.num, APF_NONE, APF_MAX))
                 {
-                    if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) &&
-                        is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
-                        is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
+                    if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                     {
-                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
-                        {
-                            szonelog(p->frame->tmpl->zone,
-                                     "DIL '%s' attempt to violate system access security (ada).",
-                                     p->frame->tmpl->prgname);
-                            p->waitcmd = WAITCMD_QUIT;
-                        }
-                        else
-                        {
-                            // This is a transfer affect
-
-                            unit_affected_type af;
-
-                            af.setID(v2->val.num); // Negative for object transfers
-                            af.setDuration(v3->val.num);
-                            af.setBeat(v4->val.num);
-
-                            af.setDataAtIndex(0, v5->val.num);
-                            af.setDataAtIndex(1, v6->val.num);
-                            af.setDataAtIndex(2, v7->val.num);
-
-                            af.setFirstFI(v8->val.num);
-                            af.setTickFI(v9->val.num);
-                            af.setLastFI(v10->val.num);
-                            af.setApplyFI(v11->val.num);
-                            create_affect((unit_data *)v1->val.ptr, &af);
-                        }
+                        szonelog(p->frame->tmpl->zone,
+                                 "DIL '%s' attempt to violate system access security (ada).",
+                                 p->frame->tmpl->prgname);
+                        p->waitcmd = WAITCMD_QUIT;
                     }
                     else
                     {
-                        szonelog(p->frame->tmpl->zone,
-                                 "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
-                                 p->frame->tmpl->prgname,
-                                 v2->val.num,
-                                 v8->val.num,
-                                 v9->val.num,
-                                 v10->val.num,
-                                 v11->val.num);
+                        // This is a transfer affect
+
+                        unit_affected_type af;
+
+                        af.setID(v2->val.num); // Negative for object transfers
+                        af.setDuration(v3->val.num);
+                        af.setBeat(v4->val.num);
+
+                        af.setDataAtIndex(0, v5->val.num);
+                        af.setDataAtIndex(1, v6->val.num);
+                        af.setDataAtIndex(2, v7->val.num);
+
+                        af.setFirstFI(v8->val.num);
+                        af.setTickFI(v9->val.num);
+                        af.setLastFI(v10->val.num);
+                        af.setApplyFI(v11->val.num);
+                        create_affect((unit_data *)v1->val.ptr, &af);
                     }
                 }
                 else
                 {
-                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect unit is neither char nor object (ada).", p->frame->tmpl->prgname);
+                    szonelog(p->frame->tmpl->zone,
+                             "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
+                             p->frame->tmpl->prgname,
+                             v2->val.num,
+                             v8->val.num,
+                             v9->val.num,
+                             v10->val.num,
+                             v11->val.num);
                 }
+            }
+            else
+            {
+                szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect unit is neither char nor object (ada).", p->frame->tmpl->prgname);
             }
         }
         else

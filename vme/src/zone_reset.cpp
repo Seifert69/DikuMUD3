@@ -206,66 +206,62 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                  cmd->getFileIndexType(0)->getName(),
                  cmd->getFileIndexType(0)->getZone()->getName());
     }
-    else
+    else if (!u->isChar())
     {
-        if (!u->isChar())
-        {
-            szonelog(g_boot_zone,
-                     "Reset Error: %s@%s is not a char in equip.",
-                     UNIT_FI_NAME(u),
-                     UNIT_FI_ZONENAME(u)); // cmd->fi[0]->name, cmd->fi[0]->zone->name);
-        }
-        else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_OBJ)
-        {
-            szonelog(g_boot_zone,
-                     "Reset Error: %s@%s equipping %s@%s is not an object.",
-                     UNIT_FI_NAME(u),
-                     UNIT_FI_ZONENAME(u),
-                     cmd->getFileIndexType(0)->getName(),
-                     cmd->getFileIndexType(0)->getZone()->getName());
-        }
-        else if (cmd->getNum(1) <= 0)
-        {
-            szonelog(g_boot_zone,
-                     "Reset Error: %s@%s equipping %s@%s doesn't have a legal equip position.",
-                     UNIT_FI_NAME(u),
-                     UNIT_FI_ZONENAME(u),
-                     cmd->getFileIndexType(0)->getName(),
-                     cmd->getFileIndexType(0)->getZone()->getName());
-        }
-        else if (!equipment(u, cmd->getNum(1)) &&
-                 !(cmd->getNum(0) && (cmd->getFileIndexType(0)->getNumInMem()) >= (ubit16)(cmd->getNum(0))))
-        {
-            loaded = read_unit(cmd->getFileIndexType(0));
+        szonelog(g_boot_zone,
+                 "Reset Error: %s@%s is not a char in equip.",
+                 UNIT_FI_NAME(u),
+                 UNIT_FI_ZONENAME(u)); // cmd->fi[0]->name, cmd->fi[0]->zone->name);
+    }
+    else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_OBJ)
+    {
+        szonelog(g_boot_zone,
+                 "Reset Error: %s@%s equipping %s@%s is not an object.",
+                 UNIT_FI_NAME(u),
+                 UNIT_FI_ZONENAME(u),
+                 cmd->getFileIndexType(0)->getName(),
+                 cmd->getFileIndexType(0)->getZone()->getName());
+    }
+    else if (cmd->getNum(1) <= 0)
+    {
+        szonelog(g_boot_zone,
+                 "Reset Error: %s@%s equipping %s@%s doesn't have a legal equip position.",
+                 UNIT_FI_NAME(u),
+                 UNIT_FI_ZONENAME(u),
+                 cmd->getFileIndexType(0)->getName(),
+                 cmd->getFileIndexType(0)->getZone()->getName());
+    }
+    else if (!equipment(u, cmd->getNum(1)) && !(cmd->getNum(0) && (cmd->getFileIndexType(0)->getNumInMem()) >= (ubit16)(cmd->getNum(0))))
+    {
+        loaded = read_unit(cmd->getFileIndexType(0));
 
-            unit_to_unit(loaded, u);
-            zone_loaded_a_unit(loaded);
-            if (loaded)
-            {
-                dil_loadtime_activate(loaded);
-            }
+        unit_to_unit(loaded, u);
+        zone_loaded_a_unit(loaded);
+        if (loaded)
+        {
+            dil_loadtime_activate(loaded);
+        }
 
-            if (loaded->isObj())
-            {
+        if (loaded->isObj())
+        {
 #ifdef SUSPEKT
-                if ((cmd->num[1] == WEAR_WIELD) && (OBJ_TYPE(loaded) == ITEM_WEAPON))
-                {
-                    int max = 0, i;
-                    for (i = 0; i < WPN_GROUP_MAX; i++)
-                        if (NPC_WPN_SKILL(u, i) > max)
-                            max = NPC_WPN_SKILL(u, i);
+            if ((cmd->num[1] == WEAR_WIELD) && (OBJ_TYPE(loaded) == ITEM_WEAPON))
+            {
+                int max = 0, i;
+                for (i = 0; i < WPN_GROUP_MAX; i++)
+                    if (NPC_WPN_SKILL(u, i) > max)
+                        max = NPC_WPN_SKILL(u, i);
 
-                    if (weapon_defense_skill(u, OBJ_VALUE(loaded, 0)) < max)
-                        szonelog(UNIT_FI_ZONE(u),
-                                 "%s@%s: Weapon NOT equipped "
-                                 "on best skill",
-                                 UNIT_FI_NAME(u),
-                                 UNIT_FI_ZONENAME(u));
-                }
-#endif
-                equip_char(u, loaded, cmd->getNum(1));
-                loaded->setSize(u->getSize()); // Autofit
+                if (weapon_defense_skill(u, OBJ_VALUE(loaded, 0)) < max)
+                    szonelog(UNIT_FI_ZONE(u),
+                             "%s@%s: Weapon NOT equipped "
+                             "on best skill",
+                             UNIT_FI_NAME(u),
+                             UNIT_FI_ZONENAME(u));
             }
+#endif
+            equip_char(u, loaded, cmd->getNum(1));
+            loaded->setSize(u->getSize()); // Autofit
         }
     }
 
@@ -359,29 +355,26 @@ unit_data *zone_follow(unit_data *u, zone_reset_cmd *cmd)
     {
         szonelog(g_boot_zone, "Reset Error: Non Existant destination-unit in follow");
     }
-    else
+    else if (!u->isChar())
     {
-        if (!u->isChar())
-        {
-            szonelog(g_boot_zone, "Reset Error: Master to follow is not a mobile.");
-        }
-        else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_NPC)
-        {
-            szonelog(g_boot_zone, "Reset Error: Follower %s is not a mobile.", cmd->getFileIndexType(0)->getName());
-        }
-        else if (zone_limit(u, cmd->getFileIndexType(0), cmd))
-        {
-            loaded = read_unit(cmd->getFileIndexType(0));
+        szonelog(g_boot_zone, "Reset Error: Master to follow is not a mobile.");
+    }
+    else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_NPC)
+    {
+        szonelog(g_boot_zone, "Reset Error: Follower %s is not a mobile.", cmd->getFileIndexType(0)->getName());
+    }
+    else if (zone_limit(u, cmd->getFileIndexType(0), cmd))
+    {
+        loaded = read_unit(cmd->getFileIndexType(0));
 
-            unit_to_unit(loaded, u->getMyContainer());
-            start_following(loaded, u);
-            zone_loaded_a_unit(loaded);
+        unit_to_unit(loaded, u->getMyContainer());
+        start_following(loaded, u);
+        zone_loaded_a_unit(loaded);
 
-            act("$1n has arrived.", A_HIDEINV, loaded, cActParameter(), cActParameter(), TO_ROOM);
-            if (loaded)
-            {
-                dil_loadtime_activate(loaded);
-            }
+        act("$1n has arrived.", A_HIDEINV, loaded, cActParameter(), cActParameter(), TO_ROOM);
+        if (loaded)
+        {
+            dil_loadtime_activate(loaded);
         }
     }
 

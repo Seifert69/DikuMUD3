@@ -79,12 +79,9 @@ ubit1 same_surroundings(const unit_data *u1, const unit_data *u2)
     {
         return same_surroundings_room(u1, u2);
     }
-    else
+    else if (!u2->getMyContainer())
     {
-        if (!u2->getMyContainer())
-        {
-            return same_surroundings_room(u2, u1);
-        }
+        return same_surroundings_room(u2, u1);
     }
 
     if (u1->getMyContainer() == u2->getMyContainer())
@@ -148,7 +145,7 @@ static inline int pcpay(unit_data *u)
 /* returns if ROOM is pay/no pay !0/0 */
 static inline int roompay(unit_data *u)
 {
-    return (u->getFileIndex()->getZone()->getPayOnly());
+    return u->getFileIndex()->getZone()->getPayOnly();
 }
 
 /* These functions determine if the units are candidates in find */
@@ -681,7 +678,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
         if (IS_SET(bitvectorm, FIND_UNIT_INVEN))
         {
-            for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
+            for (u = const_cast<unit_data *>(ch)->getContainedUnits(); u; u = u->getNext())
             {
                 if (IS_SET(type, u->getUnitType()) && (ct = u->getNames().IsNameRaw(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                     !(u->isObj() && OBJ_EQP_POS(u)) && (ct - c >= best_len))
@@ -719,8 +716,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
             {
                 /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
                 open rooms from the inside... */
-                if (IS_SET(type, ch->getMyContainer()->getUnitType()) &&
-                    (ct = (const_cast<unit_data *>(ch->getMyContainer()))->getNames().IsNameRaw(c)) &&
+                if (IS_SET(type, ch->getMyContainer()->getUnitType()) && (ct = ch->getMyContainer()->getNames().IsNameRaw(c)) &&
                     CHAR_CAN_SEE(viewer, ch->getMyContainer()) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
@@ -1191,16 +1187,13 @@ unit_data *scan4_ref(unit_data *ch, unit_data *fu)
     {
         return (scan4_ref_room(ch, fu));
     }
+    else if (((ch->getMyContainer()->isRoom() || ch->getMyContainer()->isObj()) && (!UNIT_IS_TRANSPARENT(ch->getMyContainer()))))
+    {
+        return (scan4_ref_room(ch->getMyContainer(), fu));
+    }
     else
     {
-        if (((ch->getMyContainer()->isRoom() || ch->getMyContainer()->isObj()) && (!UNIT_IS_TRANSPARENT(ch->getMyContainer()))))
-        {
-            return (scan4_ref_room(ch->getMyContainer(), fu));
-        }
-        else
-        {
-            return (scan4_ref(ch->getMyContainer(), fu));
-        }
+        return (scan4_ref(ch->getMyContainer(), fu));
     }
 }
 

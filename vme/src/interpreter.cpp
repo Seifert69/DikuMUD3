@@ -788,18 +788,15 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                         }
                     }
                 }
-                else
+                else if (u->isChar())
                 {
-                    if (u->isChar())
+                    /* in equipment? */
+                    for (uu = u->getContainedUnits(); uu; uu = nextt)
                     {
-                        /* in equipment? */
-                        for (uu = u->getContainedUnits(); uu; uu = nextt)
+                        nextt = uu->getNext(); /* Next dude trick */
+                        if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
                         {
-                            nextt = uu->getNext(); /* Next dude trick */
-                            if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
-                            {
-                                return SFR_BLOCK;
-                            }
+                            return SFR_BLOCK;
                         }
                     }
                 }
@@ -848,19 +845,16 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                                 }
                             }
                         }
-                        else
+                        else if (u->isChar())
                         {
-                            if (u->isChar())
+                            /* in equipment? */
+                            for (uu = u->getContainedUnits(); uu; uu = nextt)
                             {
-                                /* in equipment? */
-                                for (uu = u->getContainedUnits(); uu; uu = nextt)
+                                nextt = uu->getNext(); /* Next dude trick */
+                                if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) &&
+                                    (unit_function_scan(uu, sarg) != SFR_SHARE))
                                 {
-                                    nextt = uu->getNext(); /* Next dude trick */
-                                    if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) &&
-                                        (unit_function_scan(uu, sarg) != SFR_SHARE))
-                                    {
-                                        return SFR_BLOCK;
-                                    }
+                                    return SFR_BLOCK;
                                 }
                             }
                         }

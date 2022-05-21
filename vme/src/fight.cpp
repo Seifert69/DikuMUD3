@@ -722,28 +722,25 @@ void update_pos(unit_data *victim)
     {
         return;
     }
+    else if (victim->getCurrentHitpoints() > 0)
+    {
+        UCHAR(victim)->setPosition(POSITION_STANDING);
+    }
+    else if (victim->getCurrentHitpoints() <= -11)
+    {
+        UCHAR(victim)->setPosition(POSITION_DEAD);
+    }
+    else if (victim->getCurrentHitpoints() <= -6)
+    {
+        UCHAR(victim)->setPosition(POSITION_MORTALLYW);
+    }
+    else if (victim->getCurrentHitpoints() <= -3)
+    {
+        UCHAR(victim)->setPosition(POSITION_INCAP);
+    }
     else
     {
-        if (victim->getCurrentHitpoints() > 0)
-        {
-            UCHAR(victim)->setPosition(POSITION_STANDING);
-        }
-        else if (victim->getCurrentHitpoints() <= -11)
-        {
-            UCHAR(victim)->setPosition(POSITION_DEAD);
-        }
-        else if (victim->getCurrentHitpoints() <= -6)
-        {
-            UCHAR(victim)->setPosition(POSITION_MORTALLYW);
-        }
-        else if (victim->getCurrentHitpoints() <= -3)
-        {
-            UCHAR(victim)->setPosition(POSITION_INCAP);
-        }
-        else
-        {
-            UCHAR(victim)->setPosition(POSITION_STUNNED);
-        }
+        UCHAR(victim)->setPosition(POSITION_STUNNED);
     }
 }
 
@@ -769,12 +766,9 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
             {
                 adjust = 1;
             }
-            else
+            else if (victim->getAlignment() >= 100)
             {
-                if (victim->getAlignment() >= 100)
-                {
-                    adjust = -3;
-                }
+                adjust = -3;
             }
         }
         else

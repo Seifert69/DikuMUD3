@@ -584,27 +584,24 @@ static void stat_skill(const unit_data *ch, unit_data *u)
     {
         send_to_char("Unit is not a char<br/>", ch);
     }
+    else if (u->isNPC())
+    {
+        send_to_char("NPC's have no skills.<br/>", ch);
+    }
     else
     {
-        if (u->isNPC())
-        {
-            send_to_char("NPC's have no skills.<br/>", ch);
-        }
-        else
-        {
-            std::string msg{"Other skills:<br/>"};
+        std::string msg{"Other skills:<br/>"};
 
-            for (int i = 0; i < SKI_TREE_MAX; i++)
-            {
-                msg += diku::format_to_str("%20s: %3d%% Lvl %3d Racial %3d<br/>",
-                                           g_SkiColl.text[i],
-                                           PC_SKI_SKILL(u, i),
-                                           PC_SKI_LVL(u, i),
-                                           get_racial_skill(CHAR_RACE(u), i));
-            }
-
-            page_string(CHAR_DESCRIPTOR(ch), msg);
+        for (int i = 0; i < SKI_TREE_MAX; i++)
+        {
+            msg += diku::format_to_str("%20s: %3d%% Lvl %3d Racial %3d<br/>",
+                                       g_SkiColl.text[i],
+                                       PC_SKI_SKILL(u, i),
+                                       PC_SKI_LVL(u, i),
+                                       get_racial_skill(CHAR_RACE(u), i));
         }
+
+        page_string(CHAR_DESCRIPTOR(ch), msg);
     }
 }
 
@@ -1147,81 +1144,78 @@ static void stat_data(const unit_data *ch, unit_data *u)
             send_to_char(msg2, ch);
         }
     }
-    else
+    else if (u->isObj()) /* Stat on an object */
     {
-        if (u->isObj()) /* Stat on an object */
-        {
-            auto msg = diku::format_to_str("Object data:<br/>"
-                                           "Object type: %s (%d)<br/>"
-                                           "Values: [%4ld] [%4ld] [%4ld] [%4ld] [%4ld]<br/>"
-                                           "Magic resistance [%d]<br/><br/>"
-                                           "%s<br/>"
-                                           "Extra flags: %s<br/>"
-                                           "Cost: [%lu]  Cost/day: [%lu]  Equipped: %s<br/>",
-                                           sprinttype(nullptr, OBJ_TYPE(u), g_obj_types),
-                                           OBJ_TYPE(u),
-                                           (signed long)OBJ_VALUE(u, 0),
-                                           (signed long)OBJ_VALUE(u, 1),
-                                           (signed long)OBJ_VALUE(u, 2),
-                                           (signed long)OBJ_VALUE(u, 3),
-                                           (signed long)OBJ_VALUE(u, 4),
-                                           OBJ_RESISTANCE(u),
-                                           stat_obj_data(u, wstat_obj_type),
-                                           sprintbit(bits1, OBJ_FLAGS(u), g_obj_flags),
-                                           (unsigned long)OBJ_PRICE(u),
-                                           (unsigned long)OBJ_PRICE_DAY(u),
-                                           sprinttype(nullptr, OBJ_EQP_POS(u), g_equip_pos));
-            send_to_char(msg, ch);
-        }
-        else /* Stat on a room */
-        {
-            auto msg = diku::format_to_str("Room data:<br/>"
-                                           "%s [%s@%s]  Sector type: %s<br/>"
-                                           "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
-                                           u->getTitle().c_str(),
-                                           UNIT_FI_NAME(u),
-                                           UNIT_FI_ZONENAME(u),
-                                           sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
-                                           UROOM(u)->getMapXCoordinate(),
-                                           UROOM(u)->getMapYCoordinate(),
-                                           ROOM_RESISTANCE(u),
-                                           u->getMyContainer() ? STR(TITLENAME(u->getMyContainer())) : "Nothing");
-            send_to_char(msg, ch);
+        auto msg = diku::format_to_str("Object data:<br/>"
+                                       "Object type: %s (%d)<br/>"
+                                       "Values: [%4ld] [%4ld] [%4ld] [%4ld] [%4ld]<br/>"
+                                       "Magic resistance [%d]<br/><br/>"
+                                       "%s<br/>"
+                                       "Extra flags: %s<br/>"
+                                       "Cost: [%lu]  Cost/day: [%lu]  Equipped: %s<br/>",
+                                       sprinttype(nullptr, OBJ_TYPE(u), g_obj_types),
+                                       OBJ_TYPE(u),
+                                       (signed long)OBJ_VALUE(u, 0),
+                                       (signed long)OBJ_VALUE(u, 1),
+                                       (signed long)OBJ_VALUE(u, 2),
+                                       (signed long)OBJ_VALUE(u, 3),
+                                       (signed long)OBJ_VALUE(u, 4),
+                                       OBJ_RESISTANCE(u),
+                                       stat_obj_data(u, wstat_obj_type),
+                                       sprintbit(bits1, OBJ_FLAGS(u), g_obj_flags),
+                                       (unsigned long)OBJ_PRICE(u),
+                                       (unsigned long)OBJ_PRICE_DAY(u),
+                                       sprinttype(nullptr, OBJ_EQP_POS(u), g_equip_pos));
+        send_to_char(msg, ch);
+    }
+    else /* Stat on a room */
+    {
+        auto msg = diku::format_to_str("Room data:<br/>"
+                                       "%s [%s@%s]  Sector type: %s<br/>"
+                                       "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
+                                       u->getTitle().c_str(),
+                                       UNIT_FI_NAME(u),
+                                       UNIT_FI_ZONENAME(u),
+                                       sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
+                                       UROOM(u)->getMapXCoordinate(),
+                                       UROOM(u)->getMapYCoordinate(),
+                                       ROOM_RESISTANCE(u),
+                                       u->getMyContainer() ? STR(TITLENAME(u->getMyContainer())) : "Nothing");
+        send_to_char(msg, ch);
 
-            for (i = 0; i <= MAX_EXIT; i++)
+        for (i = 0; i <= MAX_EXIT; i++)
+        {
+            if (ROOM_EXIT(u, i))
             {
-                if (ROOM_EXIT(u, i))
-                {
-                    cname = ROOM_EXIT(u, i)->getOpenName().catnames();
-                    sprintbit(bits2, ROOM_EXIT(u, i)->getDoorFlags(), g_unit_open_flags);
+                cname = ROOM_EXIT(u, i)->getOpenName().catnames();
+                sprintbit(bits2, ROOM_EXIT(u, i)->getDoorFlags(), g_unit_open_flags);
 
-                    if (ROOM_EXIT(u, i)->getToRoom())
-                    {
-                        msg = diku::format_to_str("EXIT %-5s to [%s@%s] (%s)<br/>"
-                                                  "   Exit Name: [%s]<br/>"
-                                                  "   Exit Bits: [%s] Difficulty: [%d]<br/>"
-                                                  "   Key: [%s]<br/>",
-                                                  g_dirs[i],
-                                                  UNIT_FI_NAME(ROOM_EXIT(u, i)->getToRoom()),
-                                                  UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->getToRoom()),
-                                                  ROOM_EXIT(u, i)->getToRoom()->getTitle().c_str(),
-                                                  cname,
-                                                  &bits2[0],
-                                                  ROOM_EXIT(u, i)->getSkillDifficulty(),
-                                                  ROOM_EXIT(u, i)->getKey() ? ROOM_EXIT(u, i)->getKey() : "");
-                    }
-                    else
-                    {
-                        msg = diku::format_to_str("EXIT %-5s to [NOWHERE]<br/>"
-                                                  "   Exit Name: [%s]<br/>"
-                                                  "   Exit Bits: [%s]<br/>",
-                                                  g_dirs[i],
-                                                  cname,
-                                                  &bits2[0]);
-                    }
-                    FREE(cname);
-                    send_to_char(msg, ch);
+                if (ROOM_EXIT(u, i)->getToRoom())
+                {
+                    msg = diku::format_to_str("EXIT %-5s to [%s@%s] (%s)<br/>"
+                                              "   Exit Name: [%s]<br/>"
+                                              "   Exit Bits: [%s] Difficulty: [%d]<br/>"
+                                              "   Key: [%s]<br/>",
+                                              g_dirs[i],
+                                              UNIT_FI_NAME(ROOM_EXIT(u, i)->getToRoom()),
+                                              UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->getToRoom()),
+                                              ROOM_EXIT(u, i)->getToRoom()->getTitle().c_str(),
+                                              cname,
+                                              &bits2[0],
+                                              ROOM_EXIT(u, i)->getSkillDifficulty(),
+                                              ROOM_EXIT(u, i)->getKey() ? ROOM_EXIT(u, i)->getKey() : "");
                 }
+                else
+                {
+                    msg = diku::format_to_str("EXIT %-5s to [NOWHERE]<br/>"
+                                              "   Exit Name: [%s]<br/>"
+                                              "   Exit Bits: [%s]<br/>",
+                                              g_dirs[i],
+                                              cname,
+                                              &bits2[0]);
+                }
+                FREE(cname);
+                send_to_char(msg, ch);
             }
         }
     }

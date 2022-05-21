@@ -380,12 +380,9 @@ void tif_light_add(unit_affected_type *af, unit_data *unit)
         act("Your $3N starts to glow.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
         act("$1n's $3n starts to glow.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_ROOM);
     }
-    else
+    else if (unit->getMyContainer()->getContainedUnits())
     {
-        if (unit->getMyContainer()->getContainedUnits())
-        {
-            act("The $3N starts to glow.", A_HIDEINV, unit->getMyContainer()->getContainedUnits(), cActParameter(), unit, TO_ALL);
-        }
+        act("The $3N starts to glow.", A_HIDEINV, unit->getMyContainer()->getContainedUnits(), cActParameter(), unit, TO_ALL);
     }
 }
 
@@ -402,12 +399,9 @@ void tif_light_sub(unit_affected_type *af, unit_data *unit)
         act("Your $3N gets dimmer.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
         act("$1n's $3N gets dimmer.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_ROOM);
     }
-    else
+    else if (unit->getMyContainer()->getContainedUnits())
     {
-        if (unit->getMyContainer()->getContainedUnits())
-        {
-            act("The $3N gets dimmer.", A_HIDEINV, unit->getMyContainer()->getContainedUnits(), cActParameter(), unit, TO_ALL);
-        }
+        act("The $3N gets dimmer.", A_HIDEINV, unit->getMyContainer()->getContainedUnits(), cActParameter(), unit, TO_ALL);
     }
 }
 

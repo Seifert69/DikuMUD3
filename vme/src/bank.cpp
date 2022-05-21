@@ -37,38 +37,35 @@ static bool init_bank(const unit_data *pc, unit_data *clerk, bool init)
             cActParameter(),
             TO_ROOM);
     }
+    else if (!pc->isPC())
+    {
+        send_to_char("Only trustworthy people are served...<br/>", pc);
+    }
     else
     {
-        if (!pc->isPC())
+        if (init)
         {
-            send_to_char("Only trustworthy people are served...<br/>", pc);
-        }
-        else
-        {
-            if (init)
+            const char *c = PC_BANK(pc);
+            long amt = 0;
+            int cur = 0;
+            int i = 0;
+
+            for (i = 0; i <= MAX_CURRENCY; ++i)
             {
-                const char *c = PC_BANK(pc);
-                long amt = 0;
-                int cur = 0;
-                int i = 0;
-
-                for (i = 0; i <= MAX_CURRENCY; ++i)
-                {
-                    balance[i] = 0;
-                }
-
-                if (c)
-                {
-                    while ((c = strchr(c, '~')))
-                    {
-                        sscanf(++c, "%d %ld", &cur, &amt);
-                        balance[cur] = amt;
-                    }
-                }
+                balance[i] = 0;
             }
 
-            return TRUE;
+            if (c)
+            {
+                while ((c = strchr(c, '~')))
+                {
+                    sscanf(++c, "%d %ld", &cur, &amt);
+                    balance[cur] = amt;
+                }
+            }
         }
+
+        return TRUE;
     }
 
     return FALSE;
@@ -437,12 +434,9 @@ static bool move_money_up(unit_data *ch, unit_data *u)
                 unit_up(tmp);
             }
         }
-        else
+        else if ((tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER) || tmp->isRoom() || tmp->isChar())
         {
-            if ((tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER) || tmp->isRoom() || tmp->isChar())
-            {
-                found = found || move_money_up(ch, tmp);
-            }
+            found = found || move_money_up(ch, tmp);
         }
     }
 

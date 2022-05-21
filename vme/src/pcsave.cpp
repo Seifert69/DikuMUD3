@@ -264,8 +264,7 @@ void save_player_file(unit_data *pc)
     slog(LOG_ALL, 0, "Saving PC %s id =%d", pc->getNames().Name(), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
-    const unit_data *unit = unit_room(pc);
-    if (pc->getMyContainer() && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
+    if (pc->getMyContainer() && !IS_SET(unit_room(pc)->getUnitFlags(), UNIT_FL_NOSAVE))
     {
         UCHAR(pc)->setLastLocation(unit_room(pc));
     }

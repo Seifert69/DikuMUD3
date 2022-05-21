@@ -258,11 +258,9 @@ void send_to_zone_outdoor(const zone_type *z, const char *messg)
     {
         for (i = g_descriptor_list; i; i = i->getNext())
         {
-            const unit_data *unit = i->cgetCharacter()->getMyContainer();
-            const unit_data *unit1 = unit_room(i->getCharacter());
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && unit_zone(i->cgetCharacter()) == z &&
-                CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NO_WEATHER) &&
-                !IS_SET(unit1->getUnitFlags(), UNIT_FL_NO_WEATHER))
+                CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(i->cgetCharacter()->getMyContainer()->getUnitFlags(), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(unit_room(i->getCharacter())->getUnitFlags(), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }
@@ -278,10 +276,9 @@ void send_to_outdoor(const char *messg)
     {
         for (i = g_descriptor_list; i; i = i->getNext())
         {
-            const unit_data *unit = unit_room(i->getCharacter());
-            const unit_data *unit1 = i->cgetCharacter()->getMyContainer();
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && CHAR_AWAKE(i->cgetCharacter()) &&
-                !IS_SET(unit1->getUnitFlags(), UNIT_FL_NO_WEATHER) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NO_WEATHER))
+                !IS_SET(i->cgetCharacter()->getMyContainer()->getUnitFlags(), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(unit_room(i->getCharacter())->getUnitFlags(), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }
@@ -613,17 +610,13 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     {
         to = arg1.m_u;
     }
+    else if (arg1.m_u == nullptr || arg1.m_u->getMyContainer() == nullptr)
+    {
+        return;
+    }
     else
     {
-        if (arg1.m_u == nullptr || arg1.m_u->getMyContainer() == nullptr)
-        {
-            return;
-        }
-        else
-        {
-            auto *unit = arg1.m_u->getMyContainer();
-            to = unit->getContainedUnits();
-        }
+        to = arg1.m_u->getMyContainer()->getContainedUnits();
     }
 
     /* same unit or to person */
@@ -703,17 +696,13 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     {
         to = arg1.m_u;
     }
+    else if (arg1.m_u == nullptr || arg1.m_u->getMyContainer() == nullptr)
+    {
+        return;
+    }
     else
     {
-        if (arg1.m_u == nullptr || arg1.m_u->getMyContainer() == nullptr)
-        {
-            return;
-        }
-        else
-        {
-            auto *unit = arg1.m_u->getMyContainer();
-            to = unit->getContainedUnits();
-        }
+        to = arg1.m_u->getMyContainer()->getContainedUnits();
     }
 
     /* same unit or to person */

@@ -403,12 +403,9 @@ extra_descr_data *unit_find_extra(const char *word, unit_data *unit)
                     return i;
                 }
             }
-            else
+            else if (unit->getNames().IsName(word))
             {
-                if (unit->getNames().IsName(word))
-                {
-                    return i;
-                }
+                return i;
             }
         }
     }

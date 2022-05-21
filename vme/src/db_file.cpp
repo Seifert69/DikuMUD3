@@ -1192,16 +1192,13 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
         {
             inu = CHAR_LAST_ROOM(u);
         }
-        else
+        else if (u->getMyContainer())
         {
-            if (u->getMyContainer())
-            {
 #ifdef DMSERVER
-                inu = unit_room(u);
+            inu = unit_room(u);
 #else
-                assert(inu == nullptr);
+            assert(inu == nullptr);
 #endif
-            }
         }
 
         if (inu && inu->getFileIndex())

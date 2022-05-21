@@ -765,35 +765,24 @@ void move_dir(unit_data *ch, int dir)
     {
         self_walk(ch, ch->getMyContainer(), dir, 0);
     }
+    else if (ch->getMyContainer()->isChar())
+    {
+        self_walk(ch, ch->getMyContainer(), dir, 0);
+    }
+    else if (ch->getMyContainer()->isRoom())
+    {
+        self_walk(ch, ch, dir, 0);
+    }
     else
     {
-        const unit_data *unit = ch->getMyContainer();
-        if (unit->isChar())
+        slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", ch->getNames().Name(), ch->getMyContainer()->getNames().Name());
+        act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
+        if (ch->getMyContainer()->getMyContainer())
         {
-            self_walk(ch, ch->getMyContainer(), dir, 0);
+            ch->setMyContainerTo(ch->getMyContainer()->getMyContainer());
         }
-        else
-        {
-            if (ch->getMyContainer()->isRoom())
-            {
-                self_walk(ch, ch, dir, 0);
-            }
-            else
-            {
-                slog(LOG_ALL,
-                     0,
-                     "Unit %s is inside an unexpected unit type %s",
-                     ch->getNames().Name(),
-                     ch->getMyContainer()->getNames().Name());
-                act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
-                if (ch->getMyContainer()->getMyContainer())
-                {
-                    ch->setMyContainerTo(ch->getMyContainer()->getMyContainer());
-                }
-                command_interpreter(ch, "look");
-                act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
-            }
-        }
+        command_interpreter(ch, "look");
+        act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
     }
 }
 

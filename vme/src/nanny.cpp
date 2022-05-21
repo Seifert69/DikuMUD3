@@ -148,16 +148,13 @@ void check_idle()
                 slog(LOG_ALL, 0, "Kicking out idle player and making link-dead.");
                 descriptor_close(d);
             }
-            else
+            else if (d->cgetCharacter()->isPC() && now - d->getLastLogonTime() >= SECS_PER_REAL_HOUR / 3)
             {
-                if (d->cgetCharacter()->isPC() && now - d->getLastLogonTime() >= SECS_PER_REAL_HOUR / 3)
-                {
-                    send_to_char("Autosave.<br/>", d->cgetCharacter());
-                    save_player(d->getCharacter());
-                    save_player_contents(d->getCharacter(), TRUE); /* No compress */
-                    /* Only save one player per autosave... */
-                    return;
-                }
+                send_to_char("Autosave.<br/>", d->cgetCharacter());
+                save_player(d->getCharacter());
+                save_player_contents(d->getCharacter(), TRUE); /* No compress */
+                /* Only save one player per autosave... */
+                return;
             }
         }
     }
