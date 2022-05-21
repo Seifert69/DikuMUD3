@@ -139,7 +139,7 @@ void dilfe_fld(dilprg *p)
                     }
                     else
                     {
-                        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s %s@%s, index of stringlist out of bounds: %d\n",
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -162,7 +162,7 @@ void dilfe_fld(dilprg *p)
                     }
                     else
                     {
-                        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s %s@%s, index of stringlist out of bounds: %d\n",
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -4842,7 +4842,7 @@ void dilfe_fld(dilprg *p)
             break;
 
         default:
-            szonelog(UNIT_FI_ZONE(p->sarg->owner),
+            szonelog(p->sarg->owner->getFileIndex()->getZone(),
                      "DIL %s@%s, unknown field type: %d\n",
                      UNIT_FI_NAME(p->sarg->owner),
                      UNIT_FI_ZONENAME(p->sarg->owner),

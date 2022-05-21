@@ -25,23 +25,27 @@ int pay_point_charlie(unit_data *ch, unit_data *to)
             }
         }
 
-        if (UNIT_FI_ZONE(to) && UNIT_FI_ZONE(to)->getPayOnly())
+        if (to->getFileIndex()->getZone() && to->getFileIndex()->getZone()->getPayOnly())
         {
-            if ((UNIT_FI_ZONE(to)->getPayOnly() == 1) && (PC_ACCOUNT(ch).getTotalCredit() <= 0))
+            if ((to->getFileIndex()->getZone()->getPayOnly() == 1) && (PC_ACCOUNT(ch).getTotalCredit() <= 0))
             {
                 account_paypoint(ch);
                 return FALSE;
             }
-            else if ((UNIT_FI_ZONE(to)->getPayOnly() == 2) && (PC_ACCOUNT(ch).getFlatRateExpirationDate() < (ubit32)time(nullptr)))
+            else
             {
-                account_paypoint(ch);
-                return FALSE;
-            }
-            else if ((UNIT_FI_ZONE(to)->getPayOnly() == 3) &&
-                     ((PC_ACCOUNT(ch).getTotalCredit() > 0) || (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))))
-            {
-                account_paypoint(ch);
-                return FALSE;
+                if ((to->getFileIndex()->getZone()->getPayOnly() == 2) &&
+                    (PC_ACCOUNT(ch).getFlatRateExpirationDate() < (ubit32)time(nullptr)))
+                {
+                    account_paypoint(ch);
+                    return FALSE;
+                }
+                else if ((to->getFileIndex()->getZone()->getPayOnly() == 3) &&
+                         ((PC_ACCOUNT(ch).getTotalCredit() > 0) || (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))))
+                {
+                    account_paypoint(ch);
+                    return FALSE;
+                }
             }
         }
     }

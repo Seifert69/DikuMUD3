@@ -83,7 +83,7 @@ unit_data *convert_item(unit_data *u, unit_data *pc, int bList)
 {
     if (bList)
     {
-        if (strcmp(UNIT_FI_ZONE(u)->getName(), "treasure") == 0)
+        if (strcmp(u->getFileIndex()->getZone()->getName(), "treasure") == 0)
         {
             extra_descr_data *ed = u->getExtraList().m_pList;
             std::cout << std::endl << UNIT_FI_NAME(u) << "@treasure" << std::endl;

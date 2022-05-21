@@ -113,7 +113,7 @@ void dil_insterr(dilprg *p, char *where)
     /* instruction called as an expression! */
     /* This is serous! mess-up in the core.. stop the program */
 
-    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+    szonelog(p->sarg->owner->getFileIndex()->getZone(),
              "DIL %s@%s, Instruction error in %s\n",
              UNIT_FI_NAME(p->sarg->owner),
              UNIT_FI_ZONENAME(p->sarg->owner),
@@ -1102,7 +1102,7 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
         {
             if (tmp != DILV_NULL)
             {
-                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                          "DIL %s@%s Error in %s in remote call to %s where parameter %d has incorrect type. Stopping program.",
                          UNIT_FI_NAME(p->sarg->owner),
                          UNIT_FI_ZONENAME(p->sarg->owner),
@@ -1189,7 +1189,7 @@ void dilfi_rfunc(dilprg *p)
          * stop the DIL program executing,
          * write error, but do not slime it.
          */
-        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                  "DIL %s@%s, dil %s@%s Error in remote call function #%d not valid\n",
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -1306,7 +1306,7 @@ void dilfi_rsfunc(dilprg *p)
 
     if (fail)
     {
-        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                  "DIL %s@%s, dil %s Error in symbolic remote call string=%s\n",
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -2979,7 +2979,7 @@ void dilfi_log(dilprg *p)
     {
         if (v1->val.ptr)
         {
-            szonelog(UNIT_FI_ZONE(p->owner), "%s", (char *)v1->val.ptr);
+            szonelog(p->owner->getFileIndex()->getZone(), "%s", (char *)v1->val.ptr);
         }
     }
     delete v1;

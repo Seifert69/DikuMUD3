@@ -122,8 +122,6 @@ inline bool UNIT_IS_TRANSPARENT(const unit_data *u)
     return !IS_SET(u->getUnitFlags(), UNIT_FL_BURIED) && IS_SET(u->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(u->getOpenFlags(), EX_CLOSED);
 }
 
-inline zone_type *UNIT_FI_ZONE(unit_data *unit) { return (unit)->getFileIndex()->getZone(); }
-
 inline const char *UNIT_FI_ZONENAME(const unit_data *unit) { return unit->getFileIndex() ? FI_ZONENAME(unit->getFileIndex()) : "NO-ZONE"; }
 
 inline const char *UNIT_FI_NAME(const unit_data *unit) { return unit->getFileIndex() ? FI_NAME(unit->getFileIndex()) : "NO-NAME"; }

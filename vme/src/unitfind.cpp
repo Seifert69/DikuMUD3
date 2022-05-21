@@ -148,7 +148,7 @@ static inline int pcpay(unit_data *u)
 /* returns if ROOM is pay/no pay !0/0 */
 static inline int roompay(unit_data *u)
 {
-    return (UNIT_FI_ZONE(u)->getPayOnly());
+    return (u->getFileIndex()->getZone()->getPayOnly());
 }
 
 /* These functions determine if the units are candidates in find */
@@ -228,9 +228,9 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
     {
         zone_type *z = nullptr;
 
-        if (UNIT_FI_ZONE(ref))
+        if (ref->getFileIndex()->getZone())
         {
-            z = UNIT_FI_ZONE(ref);
+            z = ref->getFileIndex()->getZone();
         }
         else
         {
@@ -239,7 +239,7 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
 
         for (u = g_unit_list; u; u = u->getGlobalNext())
         {
-            if ((u != ref) && ((IS_PC(u) && unit_zone(u) == z) || (UNIT_FI_ZONE(u) == z)) && findcheck(u, pset, tflags))
+            if ((u != ref) && ((IS_PC(u) && unit_zone(u) == z) || (u->getFileIndex()->getZone() == z)) && findcheck(u, pset, tflags))
             {
                 count++;
                 if (number(1, count) == 1)

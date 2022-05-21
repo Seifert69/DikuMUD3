@@ -156,7 +156,7 @@ int spell_perform(int spell_no,
                      "be there! Please report.<br/>",
                      caster);
 
-        szonelog(UNIT_FI_ZONE(medium),
+        szonelog(medium->getFileIndex()->getZone(),
                  "Illegal spell type (%d/%d): used on (%s@%s)!",
                  spell_no,
                  spell_type,
