@@ -193,7 +193,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
-                        if (IS_PC((unit_data *)v1->val.ptr))
+                        if (((unit_data *)v1->val.ptr)->isPC())
                         {
                             v->val.num = (int)PC_ID((unit_data *)v1->val.ptr);
                         }
@@ -354,7 +354,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -391,7 +391,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -958,7 +958,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
@@ -988,7 +988,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_PC(character))
+                    if (character && character->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
@@ -1726,7 +1726,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
 
@@ -1849,7 +1849,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
 
-                        if (IS_PC(unit))
+                        if (unit->isPC())
                         {
                             if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                             {
@@ -1959,7 +1959,7 @@ void dilfe_fld(dilprg *p)
                         int editing = FALSE;
                         unit_data *vict = nullptr;
                         vict = ((unit_data *)v1->val.ptr);
-                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
+                        if (vict->isPC() && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->getNext())
@@ -1976,7 +1976,7 @@ void dilfe_fld(dilprg *p)
                         }
                         else
                         {
-                            if (IS_PC(vict) && CHAR_DESCRIPTOR(vict))
+                            if (vict->isPC() && CHAR_DESCRIPTOR(vict))
                             {
                                 if (CHAR_DESCRIPTOR(vict)->cgetEditing())
                                 {
@@ -2015,7 +2015,7 @@ void dilfe_fld(dilprg *p)
                         unit_data *switched = nullptr;
                         unit_data *vict = nullptr;
                         vict = ((unit_data *)v1->val.ptr);
-                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
+                        if (vict->isPC() && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->getNext())
@@ -3044,7 +3044,7 @@ void dilfe_fld(dilprg *p)
                 auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
                 if (character && IS_CHAR(character) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
-                    if (IS_PC(character))
+                    if (character->isPC())
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
@@ -3111,7 +3111,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3170,7 +3170,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3238,7 +3238,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3298,7 +3298,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3364,7 +3364,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3423,7 +3423,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3488,7 +3488,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3547,7 +3547,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3655,7 +3655,7 @@ void dilfe_fld(dilprg *p)
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
                     if (character && IS_CHAR(character))
                     {
-                        if (IS_PC(character) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
+                        if (character->isPC() && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
                         {
                             v->type = DILV_INT;
                             v->val.num = CHAR_LEVEL(character);
@@ -3704,7 +3704,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
@@ -3743,7 +3743,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
@@ -4191,7 +4191,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
@@ -4222,7 +4222,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -4253,7 +4253,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -4284,7 +4284,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -4315,7 +4315,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -4346,7 +4346,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -4376,7 +4376,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
@@ -4407,7 +4407,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
@@ -4438,7 +4438,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
@@ -4469,7 +4469,7 @@ void dilfe_fld(dilprg *p)
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
 
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
@@ -4610,7 +4610,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
@@ -4639,17 +4639,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit && unit->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_EDPR;
-                        v->ref = &(PC_QUEST((unit_data *)v1->val.ptr).m_pList);
+                        v->ref = &(PC_QUEST(unit).m_pList);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4666,17 +4669,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit && unit->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_EDPR;
-                        v->ref = &(PC_INFO((unit_data *)v1->val.ptr).m_pList);
+                        v->ref = &(PC_INFO(unit).m_pList);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4719,7 +4725,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {

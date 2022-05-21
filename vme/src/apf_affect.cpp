@@ -159,7 +159,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     /// @todo Remove 'if' and make this pure virtual in char_data and implement in pc_data/npc_data
     if (set)
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             if (skill_overflow(PC_WPN_SKILL(unit, modify), af->getDataAtIndex(1), set))
             {
@@ -174,7 +174,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             UPC(unit)->decreaseWeaponSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
@@ -198,7 +198,7 @@ ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             if (skill_overflow(PC_SKI_SKILL(unit, af->getDataAtIndex(0)), af->getDataAtIndex(1), set))
             {
@@ -209,7 +209,7 @@ ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             UPC(unit)->decreaseSkillAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
         }
@@ -244,7 +244,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     if (set)
     {
         /// @todo Remove the 'if' and make these pure virtual in char_data and implement in pc_data/npc_data
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             if (skill_overflow(PC_SPL_SKILL(unit, modify), af->getDataAtIndex(1), set))
             {
@@ -259,7 +259,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             UPC(unit)->decreaseSpellSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }

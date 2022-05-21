@@ -39,7 +39,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    skilla = IS_PC(ch) ? PC_SKI_SKILL(ch, SKI_BACKSTAB) : CHAR_BRA(ch);
+    skilla = ch->isPC() ? PC_SKI_SKILL(ch, SKI_BACKSTAB) : CHAR_BRA(ch);
 
     if (skilla == 0)
     {
@@ -92,7 +92,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
 
     if (CHAR_AWAKE(vict))
     {
-        skillb = IS_PC(vict) ? PC_SKI_SKILL(vict, SKI_BACKSTAB) : CHAR_BRA(vict);
+        skillb = vict->isPC() ? PC_SKI_SKILL(vict, SKI_BACKSTAB) : CHAR_BRA(vict);
 
         /* For each recent backstab, victim gets a +50 bonus to resist. */
 

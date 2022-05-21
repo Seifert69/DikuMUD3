@@ -231,7 +231,7 @@ void clear_training_level(unit_data *ch)
 {
     int i = 0;
 
-    assert(IS_PC(ch));
+    assert(ch->isPC());
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
@@ -274,7 +274,7 @@ const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int m
     static char buf[MAX_STRING_LENGTH];
     char *c = nullptr;
 
-    assert(IS_PC(pupil));
+    assert(pupil->isPC());
 
     strcpy(buf, "[REQ: ");
     c = buf;
@@ -1123,7 +1123,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
         return SFR_SHARE;
     }
 
-    if (!IS_PC(sarg->activator))
+    if (!sarg->activator->isPC())
     {
         send_to_char("That wouldn't be wise.<br/>", sarg->activator);
         return SFR_BLOCK;

@@ -733,7 +733,7 @@ int oracle(spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    if (IS_PC(sarg->activator) || ELIZA_DEBUG)
+    if (sarg->activator->isPC() || ELIZA_DEBUG)
     {
         snprintf(buf, sizeof(buf), "%s %s", sarg->cmd->cmd_str, sarg->arg);
         eliza_log(sarg->activator, buf, comms);
@@ -764,7 +764,7 @@ int oracle(spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    if (IS_PC(sarg->activator) || ELIZA_DEBUG)
+    if (sarg->activator->isPC() || ELIZA_DEBUG)
     {
         eliza_log(sarg->owner, response, comms);
     }

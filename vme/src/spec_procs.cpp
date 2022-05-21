@@ -19,7 +19,7 @@ int charname_in_list(unit_data *ch, char *arg)
 {
     char *c = nullptr;
 
-    if (!arg || !*arg || IS_PC(ch))
+    if (!arg || !*arg || ch->isPC())
     {
         return FALSE;
     }

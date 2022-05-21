@@ -193,7 +193,7 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (!IS_PC(u))
+    if (!u->isPC())
     {
         printf("Not a player!");
         return FALSE;

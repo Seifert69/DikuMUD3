@@ -930,7 +930,7 @@ void tif_sustain_on(unit_affected_type *af, unit_data *unit)
 
 void tif_sustain_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_PC(unit))
+    if (!unit->isPC())
     {
         return;
     }
@@ -998,7 +998,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
 
 void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_PC(unit))
+    if (!unit->isPC())
     {
         return;
     }

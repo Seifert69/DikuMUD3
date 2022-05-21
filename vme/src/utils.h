@@ -24,7 +24,6 @@
 inline ubit8 CHAR_SEX(const unit_data *ch);
 inline ubit8 CHAR_LEVEL(const unit_data *ch);
 inline bool CHAR_AWAKE(const unit_data *ch);
-inline bool IS_PC(const unit_data *unit);
 inline bool IS_CHAR(const unit_data *unit);
 
 #define PK_RELAXED 0
@@ -69,7 +68,7 @@ inline npc_data *UNPC(const unit_data *u)
 inline pc_data *UPC(const unit_data *u)
 {
 #ifdef UNIT_TYPE_DEBUG
-    assert(u && IS_PC(u));
+    assert(u && u->isPC());
 #endif
     return const_cast<pc_data *>(dynamic_cast<const pc_data *>(u));
 }
@@ -89,8 +88,6 @@ inline room_data *UROOM(const unit_data *u)
 #endif
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
-
-inline bool IS_PC(const unit_data *unit) { return unit->isPC(); }
 
 inline bool IS_CHAR(const unit_data *unit) { return unit->isChar(); }
 
@@ -356,9 +353,9 @@ inline pc_time_data &PC_TIME(unit_data *unit) { return UPC(unit)->getPCTimeInfor
 inline const char *PC_HOME(unit_data *ch) { return UPC(ch)->getHometown(); }
 /* .................... PC SUPER STRUCTURE ............................. */
 
-inline bool PC_IMMORTAL(unit_data *ch) { return IS_PC(ch) && CHAR_LEVEL(ch) >= 200; }
+inline bool PC_IMMORTAL(unit_data *ch) { return ch->isPC() && CHAR_LEVEL(ch) >= 200; }
 
-[[maybe_unused]] inline bool PC_MORTAL(unit_data *ch) { return IS_PC(ch) && CHAR_LEVEL(ch) < 200; }
+[[maybe_unused]] inline bool PC_MORTAL(unit_data *ch) { return ch->isPC() && CHAR_LEVEL(ch) < 200; }
 
 inline bool PC_IS_UNSAVED(unit_data *ch) { return PC_TIME(ch).getTotalTimePlayedInSeconds() == 0; }
 
@@ -391,7 +388,7 @@ inline const char *UNIT_OUT_DESCR_STRING(unit_data *unit) { return unit->getDesc
 
 inline const char *UNIT_IN_DESCR_STRING(unit_data *unit) { return unit->getDescriptionOfInside().c_str(); }
 
-inline const char *TITLENAME(unit_data *unit) { return IS_PC(unit) ? unit->getNames().Name() : UNIT_TITLE_STRING(unit); }
+inline const char *TITLENAME(unit_data *unit) { return unit->isPC() ? unit->getNames().Name() : UNIT_TITLE_STRING(unit); }
 
 inline const char *SOMETON(const unit_data *unit) { return UNIT_SEX(unit) == SEX_NEUTRAL ? "something" : "someone"; }
 

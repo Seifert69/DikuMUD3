@@ -85,7 +85,7 @@ static void account_log(char action, unit_data *god, unit_data *pc, int amount)
     c = buf;
     sprintf(c, "%c %-15s %-15s %8d ", action, god->getNames().Name(), pc->getNames().Name(), amount);
 
-    if (IS_PC(god))
+    if (god->isPC())
     {
         gid = PC_ID(god) ^ (vxor);
     }
@@ -135,7 +135,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
         return;
     }
 
-    if (!IS_PC(u))
+    if (!u->isPC())
     {
         send_to_char("Only players have accounts.\n\r", ch);
         return;
@@ -415,7 +415,7 @@ void account_subtract(unit_data *pc, time_t from, time_t to)
     tm bt;
     tm et;
 
-    assert(IS_PC(pc));
+    assert(pc->isPC());
 
     if (!g_cServerConfig.isAccounting())
     {
@@ -642,7 +642,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
     int i = 0;
     int amount = 0;
 
-    if (!g_cServerConfig.isAccounting() || !IS_PC(ch))
+    if (!g_cServerConfig.isAccounting() || !ch->isPC())
     {
         send_to_char("That command is not available.<br/>", ch);
         return;
@@ -694,7 +694,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
     u = find_unit(ch, &c, nullptr, FIND_UNIT_SURRO | FIND_UNIT_WORLD);
 
-    if ((u == nullptr) || !IS_PC(u))
+    if ((u == nullptr) || !u->isPC())
     {
         send_to_char("No such player found.\n\r", ch);
         return;

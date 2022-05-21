@@ -158,7 +158,7 @@ static inline int findcheck(unit_data *u, int pset, int tflags)
     {
         if (pset == FIND_UNIT_PAY)
         {
-            if (IS_PC(u) && pcpay(u))
+            if (u->isPC() && pcpay(u))
             {
                 return 1;
             }
@@ -172,7 +172,7 @@ static inline int findcheck(unit_data *u, int pset, int tflags)
         }
         else if (pset == FIND_UNIT_NOPAY)
         {
-            if (IS_PC(u) && !pcpay(u))
+            if (u->isPC() && !pcpay(u))
             {
                 return 1;
             }
@@ -239,7 +239,7 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
 
         for (u = g_unit_list; u; u = u->getGlobalNext())
         {
-            if ((u != ref) && ((IS_PC(u) && unit_zone(u) == z) || (u->getFileIndex()->getZone() == z)) && findcheck(u, pset, tflags))
+            if ((u != ref) && ((u->isPC() && unit_zone(u) == z) || (u->getFileIndex()->getZone() == z)) && findcheck(u, pset, tflags))
             {
                 count++;
                 if (number(1, count) == 1)
@@ -336,7 +336,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
     unit_data *u = nullptr;
     unit_data *uu = nullptr;
 
-    if (!IS_PC(viewer) || (type == 0))
+    if (!viewer->isPC() || (type == 0))
     {
         return nullptr;
     }

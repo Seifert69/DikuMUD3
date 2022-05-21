@@ -15,7 +15,7 @@
 
 int pay_point_charlie(unit_data *ch, unit_data *to)
 {
-    if (IS_PC(ch) && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
+    if (ch->isPC() && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
     {
         if (CHAR_DESCRIPTOR(ch))
         {

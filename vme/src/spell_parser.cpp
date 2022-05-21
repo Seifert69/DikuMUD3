@@ -312,7 +312,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
 
         /* Do this to prevent fighters from taking a chance that av will */
         /* make a natural success                                        */
-        if (IS_PC(ch) && PC_SPL_SKILL(ch, spl) <= 1)
+        if (ch->isPC() && PC_SPL_SKILL(ch, spl) <= 1)
         {
             send_to_char("Thou dost not knoweth of this magick.<br/>", ch);
             return;

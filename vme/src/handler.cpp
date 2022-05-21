@@ -88,7 +88,7 @@ void insert_in_unit_list(unit_data *u)
             if (g_npc_head->getUnitType() != UNIT_ST_NPC)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->getGlobalNext())
+                for (; tmp_u && tmp_u->isPC(); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -978,7 +978,7 @@ void switchbody(unit_data *ch, unit_data *vict)
 
     CHAR_DESCRIPTOR(ch)->setCharacter(vict);
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         CHAR_DESCRIPTOR(ch)->setOriginalCharacter(ch);
     }
@@ -1055,7 +1055,7 @@ void stop_snoopwrite(unit_data *unit)
         }
 
         /* If the PC which is switched is extracted, then unswitch */
-        if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+        if (unit->isPC() && !CHAR_DESCRIPTOR(unit))
         {
             for (d = g_descriptor_list; d; d = d->getNext())
             {
@@ -1091,7 +1091,7 @@ void extract_unit(unit_data *unit)
     /* We can't extract rooms! Sanity, MS 300595, wierd bug... */
     assert(!unit->isRoom());
 
-    if (IS_PC(unit))
+    if (unit->isPC())
     {
         // slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
         UPC(unit)->gstate_tomenu(nullptr);
@@ -1130,7 +1130,7 @@ void extract_unit(unit_data *unit)
     stop_fightfollow(unit);
     stop_snoopwrite(unit);
 
-    if (IS_PC(unit) && CHAR_DESCRIPTOR(unit))
+    if (unit->isPC() && CHAR_DESCRIPTOR(unit))
     {
         UPC(unit)->disconnect_game();
     }
@@ -1151,7 +1151,7 @@ void extract_unit(unit_data *unit)
         unit_from_unit(unit);
     }
 
-    if (!IS_PC(unit))
+    if (!unit->isPC())
     {
         unit_to_unit(unit, g_destroy_room); // Apparently dont place PCs in the destroy room
 

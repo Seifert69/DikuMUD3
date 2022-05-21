@@ -424,14 +424,14 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     }
 
     /* check if level of users is ok */
-    if (CHAR_LEVEL(ch) < unit_field_data[type].minplayer && unt != ch && IS_PC(unt))
+    if (CHAR_LEVEL(ch) < unit_field_data[type].minplayer && unt != ch && unt->isPC())
     {
         send_to_char("Authority to set field for OTHER PLAYERS denied!<br/>", ch);
         return;
     }
 
     /* check if level of users is ok */
-    if ((CHAR_LEVEL(ch) < unit_field_data[type].minother && unt != ch && IS_PC(unt)) ||
+    if ((CHAR_LEVEL(ch) < unit_field_data[type].minother && unt != ch && unt->isPC()) ||
         (CHAR_LEVEL(ch) < unit_field_data[type].minself && unt == ch))
     {
         send_to_char("Authority to set field denied!<br/>", ch);
@@ -440,7 +440,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
     /* see if field is valid for unit */
     if ((unit_field_data[type].utype == UT_ROOM && !unt->isRoom()) || (unit_field_data[type].utype == UT_OBJ && !unt->isObj()) ||
-        (unit_field_data[type].utype == UT_NPC && !unt->isNPC()) || (unit_field_data[type].utype == UT_PC && !IS_PC(unt)) ||
+        (unit_field_data[type].utype == UT_NPC && !unt->isNPC()) || (unit_field_data[type].utype == UT_PC && !unt->isPC()) ||
         (unit_field_data[type].utype == UT_CHAR && !IS_CHAR(unt)))
     {
         send_to_char("Field invalid for type of unit.<br/>", ch);
@@ -674,7 +674,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     switch (type)
     {
         case 0: /* "add-name" */
-            if (IS_PC(unt) && CHAR_LEVEL(ch) < 255)
+            if (unt->isPC() && CHAR_LEVEL(ch) < 255)
             {
                 send_to_char("Not allowed to modify PC's.<br/>", ch);
                 return;
@@ -1400,7 +1400,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
     switch (type)
     {
         case SET_SKILL:
-            if (!IS_PC(unt))
+            if (!unt->isPC())
             {
                 send_to_char("Skills are only for PC's<br/>", ch);
                 return;
@@ -1431,7 +1431,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
 
-            if (IS_PC(unt))
+            if (unt->isPC())
             {
                 UPC(unt)->setSpellSKillAtIndexTo(skillarg, valarg);
             }
@@ -1456,7 +1456,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
 
-            if (IS_PC(unt))
+            if (unt->isPC())
             {
                 UPC(unt)->setWeaponSkillAtIndexTo(skillarg, valarg);
             }

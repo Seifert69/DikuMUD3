@@ -238,7 +238,7 @@ void save_player_file(unit_data *pc)
 
     pBuf->Clear();
 
-    assert(IS_PC(pc));
+    assert(pc->isPC());
     assert(strlen(PC_FILENAME(pc)) < pc_data::PC_MAX_NAME);
     assert(!pc->is_destructed());
 
@@ -329,7 +329,7 @@ void save_player_contents(unit_data *pc, int fast)
     amount_t daily_cost = 0;
     currency_t cur = local_currency(pc);
 
-    assert(IS_PC(pc));
+    assert(pc->isPC());
 
     if (locked)
     {

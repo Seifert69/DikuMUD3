@@ -507,7 +507,7 @@ static void stat_ability(const unit_data *ch, unit_data *u)
 {
     int i = 0;
 
-    if (!IS_PC(u))
+    if (!u->isPC())
     {
         send_to_char("Unit is not a PC - use 'data' for NPC's<br/>", ch);
         return;
@@ -862,7 +862,7 @@ static void stat_extra_descr(const unit_data *ch, unit_data *u, char *grp)
 
 static void stat_extra_quest(const unit_data *ch, unit_data *u, char *grp)
 {
-    if (IS_PC(u))
+    if (u->isPC())
     {
         stat_extra(ch, PC_QUEST(u), grp);
     }
@@ -882,7 +882,7 @@ static void stat_extra_info(const unit_data *ch, unit_data *u, char *grp)
         return;
     }
 
-    if (IS_PC(u))
+    if (u->isPC())
     {
         stat_extra(ch, PC_INFO(u), grp);
     }
@@ -902,7 +902,7 @@ static void stat_ip(const unit_data *ch, unit_data *u)
         return;
     }
 
-    if (IS_PC(u))
+    if (u->isPC())
     {
         sockaddr_in sock;
 
@@ -1055,7 +1055,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_LEVEL(u),
                                        sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
                                        sprinttype(nullptr, CHAR_POS(u), g_char_pos),
-                                       IS_PC(u) ? sprinttype(nullptr, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
+                                       u->isPC() ? sprinttype(nullptr, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
                                        char_carry_w_limit(u),
                                        char_carry_n_limit(u),
                                        sprintbit(bits1, CHAR_FLAGS(u), g_char_flags),
@@ -1085,7 +1085,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_HPP(u));
         send_to_char(msg, ch);
 
-        if (IS_PC(u))
+        if (u->isPC())
         {
             /* Stat on a player  */
             time_info_data tid1 = age(u);

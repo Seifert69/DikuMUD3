@@ -148,7 +148,7 @@ void destruct_unit(unit_data *unit)
         return;
     }
 
-    if (!IS_PC(unit))
+    if (!unit->isPC())
     {
         stop_all_special(unit); // MS2020 reactivated, this is imperative to avoid crash from obsoleted event q events
         stop_affect(unit);      // Reactivated
@@ -159,7 +159,7 @@ void destruct_unit(unit_data *unit)
     {
         if (CHAR_DESCRIPTOR(unit))
         {
-            assert(IS_PC(unit));
+            assert(unit->isPC());
 
             in_menu = TRUE;
 
@@ -180,7 +180,7 @@ void destruct_unit(unit_data *unit)
         assert(!CHAR_IS_SNOOPED(unit));
 
         /* If the PC which is switched is extracted, then unswitch */
-        if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+        if (unit->isPC() && !CHAR_DESCRIPTOR(unit))
         {
             for (d = g_descriptor_list; d; d = d->getNext())
             {

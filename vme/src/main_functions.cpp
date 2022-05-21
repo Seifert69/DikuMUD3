@@ -223,7 +223,7 @@ void game_loop()
     {
         if (d->cgetOriginalCharacter() != nullptr)
         {
-            if (IS_PC(d->cgetOriginalCharacter()) && d->cgetOriginalCharacter()->getMyContainer())
+            if (d->cgetOriginalCharacter()->isPC() && d->cgetOriginalCharacter()->getMyContainer())
             {
                 slog(LOG_ALL, 0, "Saving %s.", d->cgetOriginalCharacter()->getNames().Name());
                 save_player(d->getOriginalCharacter());
@@ -232,7 +232,7 @@ void game_loop()
         }
         else
         {
-            if (IS_PC(d->cgetCharacter()) && d->cgetCharacter()->getMyContainer())
+            if (d->cgetCharacter()->isPC() && d->cgetCharacter()->getMyContainer())
             {
                 slog(LOG_ALL, 0, "Saving %s.", d->cgetCharacter()->getNames().Name());
                 save_player(d->getCharacter());

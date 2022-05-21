@@ -73,7 +73,7 @@ combat_msg_list fight_messages[COM_MAX_MSGS];
 
 int pk_test(unit_data *att, unit_data *def, int message)
 {
-    if (IS_PC(att) && IS_PC(def) && att != def)
+    if (att->isPC() && def->isPC() && att != def)
     {
         if (CHAR_LEVEL(att) <= 3)
         {
@@ -98,7 +98,7 @@ int pk_test(unit_data *att, unit_data *def, int message)
         return FALSE;
     }
 
-    if ((att != def) && IS_PC(att) && IS_PC(def) && (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED) || !IS_SET(PC_FLAGS(def), PC_PK_RELAXED)))
+    if ((att != def) && att->isPC() && def->isPC() && (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED) || !IS_SET(PC_FLAGS(def), PC_PK_RELAXED)))
     {
         /* Ok, he's allowed to attack only if the other guy is rewarded! */
         /* if (affected_by_spell(def, ID_REWARD))
@@ -838,7 +838,7 @@ static void person_gain(unit_data *ch, unit_data *dead, int share, int grouped, 
         }
     }
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         if (share > 0)
         {
@@ -887,7 +887,7 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
 
     maxlevel = CHAR_LEVEL(ch);
 
-    if (IS_PC(victim) && IS_SET(PC_FLAGS(victim), PC_SPIRIT))
+    if (victim->isPC() && IS_SET(PC_FLAGS(victim), PC_SPIRIT))
     {
         act("Oh dear, what a mess!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
         slog(LOG_EXTENSIVE, 0, "Oh dear, a spirit was killed!");
@@ -902,7 +902,7 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
         head = CHAR_MASTER(ch);
     }
 
-    if (IS_PC(victim))
+    if (victim->isPC())
     {
         share = 0;
     }
@@ -1150,7 +1150,7 @@ void damage(unit_data *ch,
 
         if (!CHAR_FIGHTING(victim))
         {
-            if (IS_PC(victim) && IS_IMMORTAL(victim) && IS_PC(ch))
+            if (victim->isPC() && IS_IMMORTAL(victim) && ch->isPC())
             {
                 cact("$1n ignores your feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_VICT, "miss_me");
                 cact("$1n ignores $3n's feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_NOTVICT, "miss_other");
@@ -1322,7 +1322,7 @@ void damage(unit_data *ch,
             /* Except in self defence & legal target makes a crime */
             if (!IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
             {
-                if (IS_PC(victim))
+                if (victim->isPC())
                 {
                     if (!IS_SET(CHAR_FLAGS(victim), CHAR_OUTLAW) || IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
                     {
@@ -1378,7 +1378,7 @@ void damage(unit_data *ch,
         }
     }
 
-    if (IS_PC(victim) && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
+    if (victim->isPC() && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
     {
         command_interpreter(victim, "flee");
         if (victim->is_destructed() || CHAR_POS(victim) == POSITION_DEAD)

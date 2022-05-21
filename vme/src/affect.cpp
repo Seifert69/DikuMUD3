@@ -276,7 +276,7 @@ void affect_beat(void *p1, void *p2)
 
     destroyed = FALSE;
 
-    if (!IS_PC(af->cgetOwner()) || CHAR_DESCRIPTOR(af->cgetOwner()))
+    if (!af->cgetOwner()->isPC() || CHAR_DESCRIPTOR(af->cgetOwner()))
     {
         if (af->getDuration() == 0)
         {

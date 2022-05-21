@@ -1103,7 +1103,7 @@ int reward_give(spec_arg *sarg)
 
     cur = local_currency(sarg->owner);
 
-    if (IS_PC(sarg->activator))
+    if (sarg->activator->isPC())
     {
         gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->getDataAtIndex(0)));
     }

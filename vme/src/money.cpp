@@ -750,7 +750,7 @@ void do_makemoney(unit_data *ch, char *arg, const command_info *cmd)
     currency_t cur = 0;
     amount_t amt = 0;
 
-    if (!IS_PC(ch) || str_is_empty(arg) || (amt = atol(arg)) < 0)
+    if (!ch->isPC() || str_is_empty(arg) || (amt = atol(arg)) < 0)
     {
         send_to_char("Rather silly, isn't it?<br/>", ch);
         return;

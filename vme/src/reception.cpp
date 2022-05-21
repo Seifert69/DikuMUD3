@@ -111,7 +111,7 @@ ubit32 rent_calc(unit_data *ch, time_t savetime)
 {
     ubit32 sum = 0;
 
-    assert(IS_PC(ch));
+    assert(ch->isPC());
 
     if (CHAR_DESCRIPTOR(ch) == nullptr)
     { /* If loading or similar, dont subtract! */

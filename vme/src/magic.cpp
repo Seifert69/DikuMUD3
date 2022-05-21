@@ -287,7 +287,7 @@ int spell_defense_skill(unit_data *unit, int spell)
 {
     int max = 0;
 
-    if (IS_PC(unit))
+    if (unit->isPC())
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
         {
@@ -355,7 +355,7 @@ int spell_defense_skill(unit_data *unit, int spell)
 /*                                                                 */
 int spell_attack_skill(unit_data *unit, int spell)
 {
-    if (IS_PC(unit))
+    if (unit->isPC())
     {
         return PC_SPL_SKILL(unit, spell);
     }

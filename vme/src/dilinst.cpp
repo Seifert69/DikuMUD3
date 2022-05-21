@@ -130,7 +130,7 @@ void dilfi_edit(dilprg *p)
 
     if (dil_type_check("beginedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "not a pc unit");
         }
@@ -158,7 +158,7 @@ void dilfi_kedit(dilprg *p)
 
     if (dil_type_check("killedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "not a pc unit");
         }
@@ -189,7 +189,7 @@ void dilfi_gamestate(dilprg *p)
 
     if (dil_type_check("gamestate", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "gamestate: Not a pc unit");
         }
@@ -301,7 +301,7 @@ void dilfi_pgstr(dilprg *p)
 
     if (dil_type_check("pagestring", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!IS_PC((unit_data *)v2->val.ptr) && !((unit_data *)v2->val.ptr)->isNPC())
+        if (!((unit_data *)v2->val.ptr)->isPC() && !((unit_data *)v2->val.ptr)->isNPC())
         {
             dil_typeerr(p, "not a pc/npc unit");
         }
@@ -321,7 +321,7 @@ void dilfi_setpwd(dilprg *p)
 
     if (dil_type_check("setpassword", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_SP))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "Not a pc unit");
         }
@@ -366,7 +366,7 @@ void dilfi_delpc(dilprg *p)
                 {
                     for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
                     {
-                        if (IS_PC(tmp) && !str_ccmp(tmp->getNames().Name(), ((char *)v1->val.ptr)))
+                        if (tmp->isPC() && !str_ccmp(tmp->getNames().Name(), ((char *)v1->val.ptr)))
                         {
                             extract_unit(tmp);
                         }
@@ -557,7 +557,7 @@ void dilfi_stora(dilprg *p)
 
                     if (v3->val.num >= 1)
                     {
-                        if (((unit_data *)v1->val.ptr)->isRoom() || IS_PC((unit_data *)v1->val.ptr))
+                        if (((unit_data *)v1->val.ptr)->isRoom() || ((unit_data *)v1->val.ptr)->isPC())
                         {
                             szonelog(p->frame->tmpl->zone,
                                      "DIL '%s' attempt to save a container that is either a room or pc",
@@ -610,7 +610,7 @@ void dilfi_amod(dilprg *p)
 
     if (dil_type_check("acc_modify", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
-        if (g_cServerConfig.isAccounting() && v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+        if (g_cServerConfig.isAccounting() && v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC())
         {
             if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
             {
@@ -770,7 +770,7 @@ void dilfi_rslv(dilprg *p)
         else
         {
             auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-            if (IS_PC(character))
+            if (character->isPC())
             {
                 if (!IS_IMMORTAL(character))
                 {
@@ -797,7 +797,7 @@ void dilfi_rsvlv(dilprg *p)
         else
         {
             auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-            if (IS_PC(pc))
+            if (pc->isPC())
             {
                 if (!IS_IMMORTAL(pc))
                 {
@@ -822,7 +822,7 @@ void dilfi_rsrce(dilprg *p)
         }
         else
         {
-            if (IS_PC((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isPC())
             {
                 race_adjust((unit_data *)v1->val.ptr);
             }
@@ -1833,7 +1833,7 @@ void dilfi_exp(dilprg *p)
             value = v1->val.num;
         }
 
-        if (v2->val.ptr && IS_PC((unit_data *)v2->val.ptr))
+        if (v2->val.ptr && ((unit_data *)v2->val.ptr)->isPC())
         {
             slog(LOG_ALL,
                  0,
@@ -2305,7 +2305,7 @@ void dilfi_dst(dilprg *p)
                 extract_unit((unit_data *)v1->val.ptr);
                 dil_test_secure(p);
             }
-            if (IS_PC((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isPC())
             {
                 if (CHAR_DESCRIPTOR((unit_data *)v1->val.ptr))
                 {

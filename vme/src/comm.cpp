@@ -148,12 +148,12 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
         {
             const unit_data *u = d->cgetCharacter();
 
-            if (!u || !IS_PC(u))
+            if (!u || !u->isPC())
             { // switched or snooped?
                 u = d->cgetOriginalCharacter();
             }
 
-            assert(IS_PC(u));
+            assert(u->isPC());
             std::string dest;
             dest.reserve(strlen(messg) * 1.1);
             // char buf[strlen(messg) + 10000];
@@ -378,7 +378,7 @@ void act_generate(char *buf,
                         {
                             if (CHAR_CAN_SEE(to, sub->m_u))
                             {
-                                if (IS_PC(sub->m_u))
+                                if (sub->m_u->isPC())
                                 {
                                     /* Upper-case it */
                                     // MS 2020 uppercase = TRUE;

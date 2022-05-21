@@ -108,7 +108,7 @@ int has_found_door(unit_data *pc, int dir)
         return FALSE;
     }
 
-    if (!IS_PC(pc))
+    if (!pc->isPC())
     {
         return TRUE;
     }

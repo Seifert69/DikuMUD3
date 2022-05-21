@@ -188,7 +188,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 
         if (!d->getCharacter()->is_destructed())
         {
-            if (IS_PC(d->cgetCharacter()))
+            if (d->cgetCharacter()->isPC())
             {
                 UPC(d->cgetCharacter())->disconnect_game();
             }

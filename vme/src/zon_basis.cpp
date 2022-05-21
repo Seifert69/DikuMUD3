@@ -68,7 +68,7 @@ void basis_boot()
 
 int error_rod(spec_arg *sarg)
 {
-    if ((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
+    if ((!is_command(sarg->cmd, "use")) || (!sarg->activator->isPC()) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
     {
         return SFR_SHARE;
     }
@@ -102,7 +102,7 @@ int error_rod(spec_arg *sarg)
 
 int info_rod(spec_arg *sarg)
 {
-    if (!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
+    if (!is_command(sarg->cmd, "wave") || !sarg->activator->isPC() || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
     {
         return SFR_SHARE;
     }
@@ -185,7 +185,7 @@ int log_object(spec_arg *sarg)
                     break;
             }
 
-            if (LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
+            if (LOG_OFF < lev && ch->isPC() && PC_IMMORTAL(ch))
             {
                 while (!g_log_buf[*ip].getString().empty())
                 {
@@ -313,7 +313,7 @@ int admin_obj(spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    if (!IS_PC(sarg->activator))
+    if (!sarg->activator->isPC())
     {
         return SFR_SHARE;
     }

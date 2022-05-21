@@ -171,7 +171,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i) && i->cgetCharacter() != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->getCharacter()), this) &&
-                IS_PC(CHAR_ORIGINAL(i->getCharacter())) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->getCharacter())), PC_INFORM) &&
+                CHAR_ORIGINAL(i->getCharacter())->isPC() && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->getCharacter())), PC_INFORM) &&
                 !same_surroundings(this, i->cgetCharacter()))
             {
                 send_to_descriptor(msg, i);

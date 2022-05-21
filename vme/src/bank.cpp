@@ -37,35 +37,38 @@ static bool init_bank(const unit_data *pc, unit_data *clerk, bool init)
             cActParameter(),
             TO_ROOM);
     }
-    else if (!IS_PC(pc))
-    {
-        send_to_char("Only trustworthy people are served...<br/>", pc);
-    }
     else
     {
-        if (init)
+        if (!pc->isPC())
         {
-            const char *c = PC_BANK(pc);
-            long amt = 0;
-            int cur = 0;
-            int i = 0;
-
-            for (i = 0; i <= MAX_CURRENCY; ++i)
+            send_to_char("Only trustworthy people are served...<br/>", pc);
+        }
+        else
+        {
+            if (init)
             {
-                balance[i] = 0;
-            }
+                const char *c = PC_BANK(pc);
+                long amt = 0;
+                int cur = 0;
+                int i = 0;
 
-            if (c)
-            {
-                while ((c = strchr(c, '~')))
+                for (i = 0; i <= MAX_CURRENCY; ++i)
                 {
-                    sscanf(++c, "%d %ld", &cur, &amt);
-                    balance[cur] = amt;
+                    balance[i] = 0;
+                }
+
+                if (c)
+                {
+                    while ((c = strchr(c, '~')))
+                    {
+                        sscanf(++c, "%d %ld", &cur, &amt);
+                        balance[cur] = amt;
+                    }
                 }
             }
-        }
 
-        return TRUE;
+            return TRUE;
+        }
     }
 
     return FALSE;
@@ -547,7 +550,7 @@ void stat_bank(const unit_data *ch, unit_data *u)
     bool none = TRUE;
     int i = 0;
 
-    if (!IS_PC(u))
+    if (!u->isPC())
     {
         send_to_char("You can only get bank info for PC's<br/>", ch);
         return;

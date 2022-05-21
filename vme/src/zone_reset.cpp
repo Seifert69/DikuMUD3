@@ -306,7 +306,7 @@ unit_data *zone_purge(unit_data *u, zone_reset_cmd *cmd)
         for (u = cmd->getFileIndexType(0)->Front()->getContainedUnits(); u; u = next)
         {
             next = u->getNext();
-            if (!IS_PC(u) && !u->isRoom())
+            if (!u->isPC() && !u->isRoom())
             {
                 extract_unit(u);
             }

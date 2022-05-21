@@ -535,7 +535,7 @@ void dilfe_ghead(dilprg *p)
 void dilfe_phead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_PC(g_unit_list))
+    if (g_unit_list->isPC())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
@@ -785,7 +785,7 @@ void dilfe_clradd(dilprg *p)
                             break;
                         case DILV_SP:
 
-                            if (!IS_PC((unit_data *)v1->val.ptr))
+                            if (!((unit_data *)v1->val.ptr)->isPC())
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s@%s, Illegal: Tried to add a color to a non pc.\n",
@@ -889,7 +889,7 @@ void dilfe_clrchg(dilprg *p)
                             break;
                         case DILV_SP:
 
-                            if (!IS_PC((unit_data *)v1->val.ptr))
+                            if (!((unit_data *)v1->val.ptr)->isPC())
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s@%s, Illegal: Tried to change a color to a non pc.\n",
@@ -985,7 +985,7 @@ void dilfe_clrdel(dilprg *p)
                     v->type = DILV_FAIL;
                     break;
                 case DILV_SP:
-                    if (!IS_PC((unit_data *)v1->val.ptr))
+                    if (!((unit_data *)v1->val.ptr)->isPC())
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s, Illegal: Tried to delete a color to a non pc.\n",
@@ -1059,7 +1059,7 @@ void dilfe_ckpwd(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_SP:
-                    if (!IS_PC((unit_data *)v1->val.ptr))
+                    if (!((unit_data *)v1->val.ptr)->isPC())
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s, Illegal: Unit must be a pc to check password.\n",
@@ -3622,7 +3622,7 @@ void dilfe_gint(dilprg *p)
                 break;
 
             case DIL_GINT_DESCRIPTOR:
-                if ((p_u != nullptr) && IS_PC(p_u))
+                if ((p_u != nullptr) && p_u->isPC())
                 {
                     v->val.num = (CHAR_DESCRIPTOR(p_u) != nullptr);
                 }

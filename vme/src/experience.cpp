@@ -100,8 +100,8 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
             /* Let's make a shield check - CAN_SEE does affect this too */
             hm = resistance_skill_check(def_dex + shield_bonus,
                                         att_dex,
-                                        IS_PC(def) ? PC_SKI_SKILL(def, SKI_SHIELD) : def_dex,
-                                        IS_PC(att) ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
+                                        def->isPC() ? PC_SKI_SKILL(def, SKI_SHIELD) : def_dex,
+                                        att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
 
             if (hm >= 0)
             { /* Successful Shield use */
@@ -266,7 +266,7 @@ int dikuii_melee_bonus(unit_data *att,
     {
         int dual_skill = 0;
 
-        if (IS_PC(att))
+        if (att->isPC())
         {
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
         }
@@ -657,7 +657,7 @@ int melee_bonus(unit_data *att,
     {
         int dual_skill = 0;
 
-        if (IS_PC(att))
+        if (att->isPC())
         {
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
         }
@@ -899,7 +899,7 @@ void do_consider(unit_data *ch, char *arg, const command_info *cmd)
     char *oarg = arg;
     std::string str;
 
-    if (IS_PC(ch) && PC_SKI_SKILL(ch, SKI_CONSIDER) == 0)
+    if (ch->isPC() && PC_SKI_SKILL(ch, SKI_CONSIDER) == 0)
     {
         send_to_char("You must practice first.<br/>", ch);
         return;

@@ -283,7 +283,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
         return;
     }
 
-    if (IS_PC(ch) && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->cgetEditing())
+    if (ch->isPC() && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->cgetEditing())
     {
         return;
     }
@@ -712,7 +712,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     }
 
     sarg->mflags = mflt;
-    if (IS_PC(ch) && !ch->getMyContainer())
+    if (ch->isPC() && !ch->getMyContainer())
     {
         unit_function_scan(ch, sarg);
         return SFR_BLOCK;

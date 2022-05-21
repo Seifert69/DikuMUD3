@@ -343,7 +343,7 @@ unit_data *unit_data::copy()
             {
                 u_downcast->setAbilityAtIndexTo(x, this_downcast->getAbilityAtIndex(x));
             }
-            if (IS_PC(this))
+            if (isPC())
             {
                 ;
                 // Put in PC Copy stuff here

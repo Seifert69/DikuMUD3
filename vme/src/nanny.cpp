@@ -148,13 +148,16 @@ void check_idle()
                 slog(LOG_ALL, 0, "Kicking out idle player and making link-dead.");
                 descriptor_close(d);
             }
-            else if (IS_PC(d->cgetCharacter()) && now - d->getLastLogonTime() >= SECS_PER_REAL_HOUR / 3)
+            else
             {
-                send_to_char("Autosave.<br/>", d->cgetCharacter());
-                save_player(d->getCharacter());
-                save_player_contents(d->getCharacter(), TRUE); /* No compress */
-                /* Only save one player per autosave... */
-                return;
+                if (d->cgetCharacter()->isPC() && now - d->getLastLogonTime() >= SECS_PER_REAL_HOUR / 3)
+                {
+                    send_to_char("Autosave.<br/>", d->cgetCharacter());
+                    save_player(d->getCharacter());
+                    save_player_contents(d->getCharacter(), TRUE); /* No compress */
+                    /* Only save one player per autosave... */
+                    return;
+                }
             }
         }
     }
@@ -315,7 +318,7 @@ void nanny_throw(descriptor_data *d, char *arg)
         // they should all be descriptorless now (except for d trying to login)
         for (u = g_unit_list; u; u = u->getGlobalNext())
         {
-            if (!IS_PC(u))
+            if (!u->isPC())
             {
                 break; // PCs are always first in the list
             }
@@ -439,7 +442,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
     /* Password has now been redefined                       */
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->getCharacter())) == 0))
+        if (u->isPC() && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->getCharacter())) == 0))
         {
             UPC(u)->reconnect_game(d);
             return;
@@ -737,7 +740,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     /* Enters game (reconnects) if true                                  */
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (!IS_PC(u))
+        if (!u->isPC())
         {
             break;
         }

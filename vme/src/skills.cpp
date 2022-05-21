@@ -401,7 +401,7 @@ int weapon_defense_skill(unit_data *ch, int skill)
 {
     int max = 0;
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
         {
@@ -457,7 +457,7 @@ int weapon_defense_skill(unit_data *ch, int skill)
 /* Return [0..200] for skill when attacking with a weapon */
 int weapon_attack_skill(unit_data *ch, int skill)
 {
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         int n = 0;
 
@@ -538,7 +538,7 @@ int effective_dex(unit_data *ch)
             {
                 case ARM_LEATHER:
                     b = (CHAR_ABILITY(ch, ABIL_STR) + 4 * CHAR_ABILITY(ch, ABIL_DEX)) / 5;
-                    if (IS_PC(ch))
+                    if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_LEATHER)) / 2;
                     }
@@ -546,21 +546,21 @@ int effective_dex(unit_data *ch)
 
                 case ARM_HLEATHER:
                     b = (CHAR_ABILITY(ch, ABIL_STR) + 2 * CHAR_ABILITY(ch, ABIL_DEX)) / 3;
-                    if (IS_PC(ch))
+                    if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_HLEATHER)) / 2;
                     }
                     break;
                 case ARM_CHAIN:
                     b = (2 * CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX)) / 3;
-                    if (IS_PC(ch))
+                    if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_CHAIN)) / 2;
                     }
                     break;
                 case ARM_PLATE:
                     b = CHAR_ABILITY(ch, ABIL_STR);
-                    if (IS_PC(ch))
+                    if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_PLATE)) / 2;
                     }

@@ -851,7 +851,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             }
             else
             {
-                if (IS_PC(u))
+                if (u->isPC())
                 {
                     UCHAR(u)->setLastLocation(tmpfi->Front());
                 }
@@ -873,7 +873,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         {
             UCHAR(u)->readFrom(*pBuf, unit_version, u, g_nCorrupt);
 
-            if (IS_PC(u))
+            if (u->isPC())
             {
                 if (unit_version >= 72)
                 {

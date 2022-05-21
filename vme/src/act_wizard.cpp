@@ -132,7 +132,7 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
     unit_data *original_loc = nullptr;
     file_index_type *fi = nullptr;
 
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         return;
     }
@@ -217,7 +217,7 @@ void do_execute(unit_data *ch, char *argument, const command_info *cmd)
 
 void do_shutdown(unit_data *ch, char *argument, const command_info *cmd)
 {
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         return;
     }
@@ -378,7 +378,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
     {
         for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
         {
-            if (IS_PC(tmp) && !str_ccmp(tmp->getNames().Name(), buf))
+            if (tmp->isPC() && !str_ccmp(tmp->getNames().Name(), buf))
             {
                 send_to_char("A player by that name is linkdead in the game.<br/>", ch);
                 return;

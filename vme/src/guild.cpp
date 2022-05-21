@@ -42,7 +42,7 @@ struct guild_type
 
 extra_descr_data *find_quest(char *word, unit_data *unit)
 {
-    if (!IS_PC(unit) || !word)
+    if (!unit->isPC() || !word)
     {
         return nullptr;
     }
@@ -52,7 +52,7 @@ extra_descr_data *find_quest(char *word, unit_data *unit)
 
 extra_descr_data *find_info(char *word, unit_data *unit)
 {
-    if (!IS_PC(unit) || !word)
+    if (!unit->isPC() || !word)
     {
         return nullptr;
     }
@@ -125,7 +125,7 @@ void act_to_guild(const char *msg, char *guild, unit_data *member, unit_data *no
 
     for (d = g_descriptor_list; d; d = d->getNext())
     {
-        if (descriptor_is_playing(d) && (d->cgetCharacter() != nonmember) && IS_PC(d->cgetCharacter()) && PC_GUILD(d->getCharacter()) &&
+        if (descriptor_is_playing(d) && (d->cgetCharacter() != nonmember) && d->cgetCharacter()->isPC() && PC_GUILD(d->getCharacter()) &&
             strcmp(PC_GUILD(d->getCharacter()), guild) == 0)
         {
             act(msg, A_ALWAYS, member, nonmember, d->cgetCharacter(), TO_VICT);
@@ -164,7 +164,7 @@ int guard_guild_way(spec_arg *sarg)
             return SFR_SHARE;
         }
 
-        if (IS_PC(sarg->activator))
+        if (sarg->activator->isPC())
         {
             if ((PC_GUILD(sarg->activator) != nullptr) && (*PC_GUILD(sarg->activator) != '\0'))
             {

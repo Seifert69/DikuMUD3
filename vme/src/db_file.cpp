@@ -1188,7 +1188,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     {
         unit_data *inu = nullptr;
 
-        if (IS_PC(u))
+        if (u->isPC())
         {
             inu = CHAR_LAST_ROOM(u);
         }
@@ -1247,13 +1247,13 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {
                 pBuf->Append16(CHAR_ABILITY(u, i));
-                if (IS_PC(u))
+                if (u->isPC())
                 {
                     pBuf->Append8(PC_ABI_LVL(u, i));
                 }
             }
 
-            if (IS_PC(u))
+            if (u->isPC())
             {
                 pBuf->Append8(PC_PROFESSION(u));
                 PC_ACCOUNT(u).writeTo(*pBuf);
