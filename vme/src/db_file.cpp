@@ -1121,7 +1121,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
     u->getNames().AppendBuffer(pBuf);
 
-    pBuf->AppendString(UNIT_TITLE_STRING(u));
+    pBuf->AppendString(u->getTitle().c_str());
     pBuf->AppendString(UNIT_OUT_DESCR_STRING(u));
     pBuf->AppendString(UNIT_IN_DESCR_STRING(u));
 

@@ -731,7 +731,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                                    u->getFileIndex() ? u->getFileIndex()->getNumInMem() : -1,
                                    u->getFileIndex() ? (unsigned long)u->getFileIndex()->getCRC() : 0,
                                    cname,
-                                   STR(UNIT_TITLE_STRING(u)),
+                                   STR(u->getTitle().c_str()),
                                    STR(UNIT_OUT_DESCR_STRING(u)),
                                    STR(UNIT_IN_DESCR_STRING(u)));
     send_to_char(msg, ch);
@@ -1051,7 +1051,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_FIGHTING(u) ? STR(CHAR_FIGHTING(u)->getNames().Name()) : "Nobody",
                                        CHAR_MASTER(u) ? STR(CHAR_MASTER(u)->getNames().Name()) : "Nobody",
                                        CHAR_FOLLOWERS(u) ? STR(CHAR_FOLLOWERS(u)->getFollower()->getNames().Name()) : "Nobody",
-                                       CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
+                                       CHAR_LAST_ROOM(u) ? STR(CHAR_LAST_ROOM(u)->getTitle().c_str()) : "Nowhere",
                                        CHAR_LEVEL(u),
                                        sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
                                        sprinttype(nullptr, CHAR_POS(u), g_char_pos),
@@ -1178,7 +1178,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
             auto msg = diku::format_to_str("Room data:<br/>"
                                            "%s [%s@%s]  Sector type: %s<br/>"
                                            "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
-                                           UNIT_TITLE_STRING(u),
+                                           u->getTitle().c_str(),
                                            UNIT_FI_NAME(u),
                                            UNIT_FI_ZONENAME(u),
                                            sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
@@ -1204,7 +1204,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                                   g_dirs[i],
                                                   UNIT_FI_NAME(ROOM_EXIT(u, i)->getToRoom()),
                                                   UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->getToRoom()),
-                                                  UNIT_TITLE_STRING(ROOM_EXIT(u, i)->getToRoom()),
+                                                  ROOM_EXIT(u, i)->getToRoom()->getTitle().c_str(),
                                                   cname,
                                                   &bits2[0],
                                                   ROOM_EXIT(u, i)->getSkillDifficulty(),
@@ -1245,7 +1245,7 @@ static void stat_contents(const unit_data *ch, unit_data *u)
                                                UNIT_FI_NAME(u),
                                                UNIT_FI_ZONENAME(u),
                                                u->getNames().Name(),
-                                               UNIT_TITLE_STRING(u),
+                                               u->getTitle().c_str(),
                                                u->isObj() && OBJ_EQP_POS(u) ? "Equipped" : "",
                                                u->getNumberOfActiveLightSources(),
                                                u->getLightOutput());

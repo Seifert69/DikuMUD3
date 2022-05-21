@@ -378,14 +378,11 @@ inline ubit8 NPC_FLAGS(unit_data *unit)
     return UNPC(unit)->getAllNPCFlags();
 }
 
-/* ..................................................................... */
-inline const char *UNIT_TITLE_STRING(unit_data *unit) { return unit->getTitle().c_str(); }
-
 inline const char *UNIT_OUT_DESCR_STRING(unit_data *unit) { return unit->getDescriptionOfOutside().c_str(); }
 
 inline const char *UNIT_IN_DESCR_STRING(unit_data *unit) { return unit->getDescriptionOfInside().c_str(); }
 
-inline const char *TITLENAME(unit_data *unit) { return unit->isPC() ? unit->getNames().Name() : UNIT_TITLE_STRING(unit); }
+inline const char *TITLENAME(unit_data *unit) { return unit->isPC() ? unit->getNames().Name() : unit->getTitle().c_str(); }
 
 inline const char *SOMETON(const unit_data *unit) { return UNIT_SEX(unit) == SEX_NEUTRAL ? "something" : "someone"; }
 
