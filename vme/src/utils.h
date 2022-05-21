@@ -97,8 +97,6 @@ inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Na
 
 inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
 
-inline const std::string &UNIT_TITLE(const unit_data *unit) { return unit->getTitle(); }
-
 inline const std::string &UNIT_OUT_DESCR(const unit_data *unit) { return unit->getDescriptionOfOutside(); }
 
 inline const std::string &UNIT_IN_DESCR(const unit_data *unit) { return unit->getDescriptionOfInside(); }
@@ -414,7 +412,7 @@ inline ubit8 NPC_FLAGS(unit_data *unit)
 }
 
 /* ..................................................................... */
-inline const char *UNIT_TITLE_STRING(unit_data *unit) { return UNIT_TITLE(unit).c_str(); }
+inline const char *UNIT_TITLE_STRING(unit_data *unit) { return unit->getTitle().c_str(); }
 
 inline const char *UNIT_OUT_DESCR_STRING(unit_data *unit) { return UNIT_OUT_DESCR(unit).c_str(); }
 

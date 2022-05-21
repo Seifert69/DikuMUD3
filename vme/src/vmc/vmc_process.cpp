@@ -587,7 +587,7 @@ void show_obj_info(unit_data *obj)
     if (doprint || bHasAffect1 || bHasAffect2)
     {
         s += "//," + sAffectVector + ",//,";
-        std::string title = UNIT_TITLE(obj);
+        std::string title = obj->getTitle();
         std::replace(title.begin(), title.end(), ',', ' ');
         s += title;
         s += ",";
@@ -988,24 +988,24 @@ void process_unit(unit_data *u)
         }
     }
 
-    if (!IS_ROOM(u) && !UNIT_TITLE(u).empty())
+    if (!IS_ROOM(u) && !u->getTitle().empty())
     {
-        if (isupper(*UNIT_TITLE(u).c_str()))
+        if (isupper(*u->getTitle().c_str()))
         {
             char buf[MAX_STRING_LENGTH];
-            str_next_word_copy(UNIT_TITLE(u).c_str(), buf);
+            str_next_word_copy(u->getTitle().c_str(), buf);
             if (fill_word(buf))
             {
-                dmc_error(FALSE, "%s: Title CASE seems to be wrong for '%s'", UNIT_IDENT(u), UNIT_TITLE(u).c_str());
+                dmc_error(FALSE, "%s: Title CASE seems to be wrong for '%s'", UNIT_IDENT(u), u->getTitle().c_str());
             }
         }
 
-        i = strlen(UNIT_TITLE(u).c_str());
+        i = strlen(u->getTitle().c_str());
 
         // Title should end with character or HTML end code >
-        if ((i > 0) && !isalpha(UNIT_TITLE(u).c_str()[i - 1]) && (UNIT_TITLE(u).c_str()[i - 1] != '>'))
+        if ((i > 0) && !isalpha(u->getTitle().c_str()[i - 1]) && (u->getTitle().c_str()[i - 1] != '>'))
         {
-            dmc_error(FALSE, "%s: Title ends with non-alphabet character '%s'", UNIT_IDENT(u), UNIT_TITLE(u).c_str());
+            dmc_error(FALSE, "%s: Title ends with non-alphabet character '%s'", UNIT_IDENT(u), u->getTitle().c_str());
         }
     }
 
@@ -1052,13 +1052,13 @@ void process_unit(unit_data *u)
                     UOBJ(u)->setPriceInGP(OBJ_VALUE(u, 0));
                     UOBJ(u)->setValueAtIndexTo(0, 0);
 
-                    if (!UNIT_TITLE(u).empty())
+                    if (!u->getTitle().empty())
                     {
                         int i = 0;
 
                         for (i = 0; i <= MAX_MONEY; i++)
                         {
-                            if (!strcmp(UNIT_TITLE(u).c_str(), g_money_types[i].abbrev))
+                            if (!strcmp(u->getTitle().c_str(), g_money_types[i].abbrev))
                             {
                                 break;
                             }
@@ -1066,7 +1066,7 @@ void process_unit(unit_data *u)
 
                         if (i > MAX_MONEY)
                         {
-                            dmc_error(TRUE, "Not a legal money denominator (%s) on %s", UNIT_TITLE(u).c_str(), UNIT_IDENT(u));
+                            dmc_error(TRUE, "Not a legal money denominator (%s) on %s", u->getTitle().c_str(), UNIT_IDENT(u));
                         }
                         else
                         {

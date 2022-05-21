@@ -386,7 +386,7 @@ void act_generate(char *buf,
                                 }
                                 else
                                 {
-                                    i = UNIT_TITLE(sub->m_u).c_str();
+                                    i = sub->m_u->getTitle().c_str();
                                 }
                             }
                             else
