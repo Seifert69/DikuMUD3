@@ -733,7 +733,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                                    cname,
                                    STR(u->getTitle().c_str()),
                                    STR(u->getDescriptionOfOutside().c_str()),
-                                   STR(UNIT_IN_DESCR_STRING(u)));
+                                   STR(u->getDescriptionOfInside().c_str()));
     send_to_char(msg, ch);
     FREE(cname);
     msg = diku::format_to_str("Lights: [%d]  Bright: [%d]  TrnIllu: [%d]  "

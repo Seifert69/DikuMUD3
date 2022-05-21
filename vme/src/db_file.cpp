@@ -1123,7 +1123,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
     pBuf->AppendString(u->getTitle().c_str());
     pBuf->AppendString(u->getDescriptionOfOutside().c_str());
-    pBuf->AppendString(UNIT_IN_DESCR_STRING(u));
+    pBuf->AppendString(u->getDescriptionOfInside().c_str());
 
     if (u->getExtraList().isempty())
     { // MS2020, nasty bug, exd could be NULL and class was called.
