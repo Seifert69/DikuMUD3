@@ -1016,7 +1016,7 @@ void process_unit(unit_data *u)
     }
     u->setWeight(u->getBaseWeight());
 
-    if (!is_in(UNIT_ALIGNMENT(u), unit_data::MinAlignment, unit_data::MaxAlignment))
+    if (!is_in(u->getAlignment(), unit_data::MinAlignment, unit_data::MaxAlignment))
     {
         dmc_error(TRUE,
                   "%s: Illegal alignment %d (expected %+d..%+d).",

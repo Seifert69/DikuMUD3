@@ -750,7 +750,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               sprintbit(bits1, u->getUnitFlags(), g_unit_flags),
                               (signed long)UNIT_HIT(u),
                               (signed long)UNIT_MAX_HIT(u),
-                              UNIT_ALIGNMENT(u));
+                              u->getAlignment());
     send_to_char(msg, ch);
 
     msg = diku::format_to_str("Key name: [%s]  Open flags: %s  Open Diff: %d<br/>"

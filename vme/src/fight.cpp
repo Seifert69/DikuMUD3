@@ -752,7 +752,7 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
     int adjust = 0;
     int diff = 0;
 
-    diff = UNIT_ALIGNMENT(slayer) - UNIT_ALIGNMENT(victim);
+    diff = slayer->getAlignment() - victim->getAlignment();
 
     if (UNIT_IS_GOOD(slayer))
     {
@@ -762,18 +762,21 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
         }
         else if (UNIT_IS_NEUTRAL(victim))
         {
-            if (UNIT_ALIGNMENT(victim) <= -100)
+            if (victim->getAlignment() <= -100)
             {
                 adjust = 1;
             }
-            else if (UNIT_ALIGNMENT(victim) >= 100)
+            else
             {
-                adjust = -3;
+                if (victim->getAlignment() >= 100)
+                {
+                    adjust = -3;
+                }
             }
         }
         else
         { /* Victim is good */
-            adjust = -(UNIT_ALIGNMENT(slayer) + UNIT_ALIGNMENT(victim) - 700) / 5 - 3;
+            adjust = -(slayer->getAlignment() + victim->getAlignment() - 700) / 5 - 3;
         }
     }
     else if (UNIT_IS_EVIL(slayer))

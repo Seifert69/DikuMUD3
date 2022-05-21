@@ -97,8 +97,6 @@ inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Na
 
 inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
 
-inline sbit16 UNIT_ALIGNMENT(unit_data *unit) { return unit->getAlignment(); }
-
 inline sbit32 UNIT_HIT(unit_data *unit) { return unit->getCurrentHitpoints(); }
 
 inline sbit32 UNIT_MAX_HIT(unit_data *unit) { return unit->getMaximumHitpoints(); }
@@ -160,8 +158,8 @@ inline sbit16 UNIT_IS_LIGHT(const unit_data *unit) { return unit->getNumberOfAct
 
 inline ubit8 UNIT_SEX(const unit_data *unit) { return IS_CHAR(unit) ? CHAR_SEX(unit) : SEX_NEUTRAL; }
 
-inline bool UNIT_IS_GOOD(unit_data *ch) { return UNIT_ALIGNMENT(ch) >= 350; }
-inline bool UNIT_IS_EVIL(unit_data *ch) { return UNIT_ALIGNMENT(ch) <= -350; }
+inline bool UNIT_IS_GOOD(unit_data *ch) { return ch->getAlignment() >= 350; }
+inline bool UNIT_IS_EVIL(unit_data *ch) { return ch->getAlignment() <= -350; }
 inline bool UNIT_IS_NEUTRAL(unit_data *ch) { return !UNIT_IS_GOOD(ch) && !UNIT_IS_EVIL(ch); }
 
 inline sbit32 UNIT_CONTAINING_W(unit_data *u) { return u->getWeight() - u->getBaseWeight(); }

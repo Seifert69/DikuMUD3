@@ -1167,7 +1167,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     pBuf->Append32((ubit32)UNIT_MAX_HIT(u));
     pBuf->Append32((ubit32)UNIT_HIT(u));
 
-    pBuf->Append16((ubit16)UNIT_ALIGNMENT(u));
+    pBuf->Append16((ubit16)u->getAlignment());
 
     pBuf->Append8(u->getOpenFlags());
     pBuf->Append8(u->getOpenDifficulty());
