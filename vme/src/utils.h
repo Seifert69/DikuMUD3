@@ -97,8 +97,6 @@ inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Na
 
 inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
 
-inline const std::string &UNIT_IN_DESCR(const unit_data *unit) { return unit->getDescriptionOfInside(); }
-
 inline extra_list &UNIT_EXTRA(unit_data *unit) { return unit->getExtraList(); }
 inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExtraList(); }
 /* ..................................................................... */
@@ -414,7 +412,7 @@ inline const char *UNIT_TITLE_STRING(unit_data *unit) { return unit->getTitle().
 
 inline const char *UNIT_OUT_DESCR_STRING(unit_data *unit) { return unit->getDescriptionOfOutside().c_str(); }
 
-inline const char *UNIT_IN_DESCR_STRING(unit_data *unit) { return UNIT_IN_DESCR(unit).c_str(); }
+inline const char *UNIT_IN_DESCR_STRING(unit_data *unit) { return unit->getDescriptionOfInside().c_str(); }
 
 inline const char *TITLENAME(unit_data *unit) { return IS_PC(unit) ? UNIT_NAME(unit) : UNIT_TITLE_STRING(unit); }
 
