@@ -268,7 +268,7 @@ void pc_data::reconnect_game(descriptor_data *d)
     // char *color;
     // char tbuf[MAX_STRING_LENGTH * 2];
 
-    if (this->is_destructed() || !d)
+    if (is_destructed() || !d)
     {
         return;
     }
@@ -282,12 +282,12 @@ void pc_data::reconnect_game(descriptor_data *d)
 
     ActivateDil(this); // ch could potentially get zapped here.
 
-    if (this->is_destructed() || !d)
+    if (is_destructed() || !d)
     {
         return;
     }
 
-    this->connect_game();
+    connect_game();
     /* MS2020
      color = UPC (ch)->color.save_string ();
      s printf (tbuf, "%s%s%s", CONTROL_COLOR_CREATE, color, CONTROL_COLOR_END);
@@ -296,7 +296,7 @@ void pc_data::reconnect_game(descriptor_data *d)
  */
     send_to_char("Reconnecting.<br/>", this);
 
-    if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != UNIT_IN(this)))
+    if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != getMyContainer()))
     {
         act("$1n has reconnected, and is moved to another location.",
             A_HIDEINV,

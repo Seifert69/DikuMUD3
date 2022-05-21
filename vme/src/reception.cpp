@@ -580,9 +580,9 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         }
         if (pstack[frame] == nullptr)
         {
-            if (UNIT_IN(pnew))
+            if (pnew->getMyContainer())
             {
-                pstack[frame] = UNIT_IN(pnew);
+                pstack[frame] = pnew->getMyContainer();
             }
             else
             {
@@ -607,13 +607,13 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             else
             {
                 frame = hn.level;
-                unit_to_unit(pnew, UNIT_IN(pstack[frame]));
+                unit_to_unit(pnew, pstack[frame]->getMyContainer());
             }
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
-            if (hn.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
+            if (hn.equip && equip_ok && IS_CHAR(pnew->getMyContainer()))
             {
-                equip_char(UNIT_IN(pnew), pnew, hn.equip);
+                equip_char(pnew->getMyContainer(), pnew, hn.equip);
             }
 
             pstack[frame] = pnew;

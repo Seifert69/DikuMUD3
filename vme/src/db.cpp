@@ -1458,7 +1458,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
 
     if (!IS_ROOM(u))
     {
-        assert(UNIT_IN(u) == nullptr);
+        assert(u->getMyContainer() == nullptr);
     }
 
     unit_error_zone = nullptr;
@@ -1517,9 +1517,9 @@ void normalize_world()
         if (IS_ROOM(u))
         {
             /* Place room inside another room? */
-            if (UNIT_IN(u))
+            if (u->getMyContainer())
             {
-                fi = (file_index_type *)UNIT_IN(u);
+                fi = (file_index_type *)u->getMyContainer();
 
                 assert(!fi->Empty());
 
@@ -1546,9 +1546,9 @@ void normalize_world()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_ROOM(u) && UNIT_IN(u))
+        if (IS_ROOM(u) && u->getMyContainer())
         {
-            tmpu = UNIT_IN(u);
+            tmpu = u->getMyContainer();
             u->setMyContainerTo(nullptr);
 
             if (unit_recursive(u, tmpu))

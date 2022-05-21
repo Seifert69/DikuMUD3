@@ -36,15 +36,15 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
     }
 
-    if (IS_SET(bitvector, FIND_UNIT_SURRO) && UNIT_IN(ref))
+    if (IS_SET(bitvector, FIND_UNIT_SURRO) && ref->getMyContainer())
     {
-        if (this == UNIT_IN(ref)->getFileIndex())
+        if (this == ref->getMyContainer()->getFileIndex())
         {
-            return UNIT_IN(ref);
+            return ref->getMyContainer();
         }
 
         /* Run through units in local environment */
-        for (u = UNIT_IN(ref)->getContainedUnits(); u; u = u->getNext())
+        for (u = ref->getMyContainer()->getContainedUnits(); u; u = u->getNext())
         {
             if (u->getFileIndex() == this)
             {
@@ -65,11 +65,11 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
 
         /* Run through units in local environment if upwards transparent */
-        if ((u = UNIT_IN(UNIT_IN(ref))) && UNIT_IS_TRANSPARENT(UNIT_IN(ref)))
+        if ((u = ref->getMyContainer()->getMyContainer()) && UNIT_IS_TRANSPARENT(ref->getMyContainer()))
         {
             for (u = u->getContainedUnits(); u; u = u->getNext())
             {
-                if (u != UNIT_IN(ref))
+                if (u != ref->getMyContainer())
                 {
                     if (this == u->getFileIndex())
                     {

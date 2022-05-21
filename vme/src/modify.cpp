@@ -394,7 +394,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     if (str_ccmp(arg, "room") == 0)
     {
         argument = str_next_word(argument, arg);
-        unt = UNIT_IN(ch);
+        unt = ch->getMyContainer();
     }
     else
     {

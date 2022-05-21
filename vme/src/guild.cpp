@@ -188,7 +188,7 @@ int guard_guild_way(spec_arg *sarg)
         }
 
         *excl = '\0';
-        if (*(location + 1) && strcmp(location + 1, UNIT_FI_NAME(UNIT_IN(sarg->owner))))
+        if (*(location + 1) && strcmp(location + 1, UNIT_FI_NAME(sarg->owner->getMyContainer())))
         {
             *excl = '#';
             return SFR_SHARE;

@@ -67,11 +67,11 @@ void create_worldgraph()
         }
 
         // DIR_EXIT
-        if (UNIT_IN(u) && IS_ROOM(UNIT_IN(u)))
+        if (u->getMyContainer() && IS_ROOM(u->getMyContainer()))
         {
-            if (IS_SET(UNIT_IN(u)->getManipulate(), MANIPULATE_ENTER))
+            if (IS_SET(u->getMyContainer()->getManipulate(), MANIPULATE_ENTER))
             {
-                add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), 10, WorldGraph);
+                add_edge(ROOM_NUM(u), ROOM_NUM(u->getMyContainer()), 10, WorldGraph);
             }
         }
     }
@@ -198,12 +198,15 @@ void create_sc_graph(int num_of_sc)
                 }
             }
             // DIR_EXIT
-            if (UNIT_IN(u) && IS_ROOM(UNIT_IN(u)))
+            if (u->getMyContainer() && IS_ROOM(u->getMyContainer()))
             {
-                if (IS_SET(UNIT_IN(u)->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(UNIT_IN(u)) == sc))
+                if (IS_SET(u->getMyContainer()->getManipulate(), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) &&
+                    (ROOM_SC(u->getMyContainer()) == sc))
                 {
-                    tie(ed, success) =
-                        add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), path_weight(u, UNIT_IN(u), DIR_EXIT) + 10, g_sc_graphs[sc]);
+                    tie(ed, success) = add_edge(ROOM_NUM(u),
+                                                ROOM_NUM(u->getMyContainer()),
+                                                path_weight(u, u->getMyContainer(), DIR_EXIT) + 10,
+                                                g_sc_graphs[sc]);
                     dir[ed] = DIR_EXIT;
                 }
             }

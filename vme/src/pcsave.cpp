@@ -265,7 +265,7 @@ void save_player_file(unit_data *pc)
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
     const unit_data *unit = unit_room(pc);
-    if (UNIT_IN(pc) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
+    if (pc->getMyContainer() && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
     {
         UCHAR(pc)->setLastLocation(unit_room(pc));
     }

@@ -1182,7 +1182,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     if (UNIT_TYPE(u) == UNIT_ST_ROOM)
     {
         /* See if room is to be placed inside another room! */
-        pBuf->AppendDoubleString((char *)UNIT_IN(u));
+        pBuf->AppendDoubleString((char *)u->getMyContainer());
     }
     else
     {
@@ -1192,13 +1192,16 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
         {
             inu = CHAR_LAST_ROOM(u);
         }
-        else if (UNIT_IN(u))
+        else
         {
+            if (u->getMyContainer())
+            {
 #ifdef DMSERVER
-            inu = unit_room(u);
+                inu = unit_room(u);
 #else
-            assert(inu == nullptr);
+                assert(inu == nullptr);
 #endif
+            }
         }
 
         if (inu && inu->getFileIndex())

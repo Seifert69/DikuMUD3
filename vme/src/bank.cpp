@@ -428,7 +428,7 @@ static bool move_money_up(unit_data *ch, unit_data *u)
 
         if (IS_MONEY(tmp))
         {
-            while (UNIT_IN(tmp) != ch)
+            while (tmp->getMyContainer() != ch)
             {
                 found = TRUE;
                 unit_up(tmp);

@@ -23,7 +23,7 @@ const char *in_string(const unit_data *ch, const unit_data *u)
 {
     static std::string in_str;
     in_str.clear();
-    while ((u = UNIT_IN(u)))
+    while ((u = u->getMyContainer()))
     {
         if (IS_ROOM(u))
         {
@@ -48,7 +48,7 @@ void player_where(unit_data *ch, char *arg)
 
     for (d = g_descriptor_list; d; d = d->getNext())
     {
-        if (d->cgetCharacter() && (d->cgetCharacter() != ch) && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
+        if (d->cgetCharacter() && (d->cgetCharacter() != ch) && d->cgetCharacter()->getMyContainer() && descriptor_is_playing(d) &&
             (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->cgetCharacter()))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
             d->cgetOriginalCharacter() == nullptr && CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
         {
@@ -91,7 +91,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (d = g_descriptor_list; d; d = d->getNext())
         {
-            if (d->cgetCharacter() && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
+            if (d->cgetCharacter() && d->cgetCharacter()->getMyContainer() && descriptor_is_playing(d) &&
                 CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
                 (d->cgetOriginalCharacter() == nullptr || CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetOriginalCharacter())))
             {
@@ -104,7 +104,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
                 mystr += diku::format_to_str("%-20s - %s [%s]%s<br/>",
                                              UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
-                                             UNIT_SEE_TITLE(ch, UNIT_IN(d->cgetCharacter())),
+                                             UNIT_SEE_TITLE(ch, d->getCharacter()->getMyContainer()),
                                              in_string(ch, d->cgetCharacter()),
                                              whose_body);
             }
@@ -116,7 +116,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (i = g_unit_list; i; i = i->getGlobalNext())
         {
-            if (UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
+            if (i->getMyContainer() && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
             {
                 nCount++;
                 if (nCount++ > 100)
@@ -126,7 +126,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
                 mystr += diku::format_to_str("%-30s - %s [%s]<br/>",
                                              TITLENAME(i),
-                                             UNIT_SEE_TITLE(ch, UNIT_IN(i)),
+                                             UNIT_SEE_TITLE(ch, i->getMyContainer()),
                                              (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
             }
         }

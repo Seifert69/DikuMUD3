@@ -700,7 +700,8 @@ static int local_dictionary(spec_arg *sarg)
     }
 
     /* Not an applicaple command */
-    if (!sarg->activator || !IS_CHAR(sarg->activator) || !CHAR_DESCRIPTOR(sarg->activator) || sarg->activator != UNIT_IN(sarg->owner))
+    if (!sarg->activator || !IS_CHAR(sarg->activator) || !CHAR_DESCRIPTOR(sarg->activator) ||
+        sarg->activator != sarg->owner->getMyContainer())
     {
         return SFR_SHARE;
     }

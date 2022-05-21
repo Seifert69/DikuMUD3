@@ -415,7 +415,7 @@ void dilfi_foe(dilprg *p)
                 }
             }
 
-            if (UNIT_IN(p->sarg->owner))
+            if (p->sarg->owner->getMyContainer())
             {
                 scan4_unit(p->sarg->owner, v1->val.num);
             }
@@ -3039,11 +3039,12 @@ void dilfi_eqp(dilprg *p)
 
     if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr && UNIT_IN((unit_data *)v1->val.ptr) && IS_CHAR(UNIT_IN((unit_data *)v1->val.ptr)) &&
-            IS_OBJ((unit_data *)v1->val.ptr) && !equipment(UNIT_IN((unit_data *)v1->val.ptr), v2->val.num))
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit && unit->getMyContainer() && IS_CHAR(unit->getMyContainer()) && IS_OBJ(unit) &&
+            !equipment(unit->getMyContainer(), v2->val.num))
         {
             /* Then equip char */
-            equip_char(UNIT_IN((unit_data *)v1->val.ptr), (unit_data *)v1->val.ptr, v2->val.num);
+            equip_char(unit->getMyContainer(), unit, v2->val.num);
         }
     }
     delete v1;

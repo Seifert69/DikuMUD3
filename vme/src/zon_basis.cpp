@@ -141,7 +141,7 @@ int log_object(spec_arg *sarg)
     ubit8 *ip = nullptr;
     log_level lev = LOG_OFF;
     char c = 0;
-    unit_data *ch = UNIT_IN(sarg->owner);
+    unit_data *ch = sarg->owner->getMyContainer();
 
     if (sarg->fptr->getData() == nullptr)
     {
@@ -200,7 +200,8 @@ int log_object(spec_arg *sarg)
             return SFR_SHARE;
 
         default:
-            if (sarg->cmd->cmd_str && sarg->activator == UNIT_IN(sarg->owner) && !strcmp("log", sarg->cmd->cmd_str))
+        {
+            if (sarg->cmd->cmd_str && sarg->activator == sarg->owner->getMyContainer() && !strcmp("log", sarg->cmd->cmd_str))
             {
                 sarg->arg = skip_spaces(sarg->arg);
                 if (is_abbrev(sarg->arg, "all"))
@@ -262,6 +263,7 @@ int log_object(spec_arg *sarg)
                 UOBJ(sarg->owner)->setValueAtIndexTo(0, c);
                 return SFR_BLOCK;
             }
+        }
 
             return SFR_SHARE;
     }

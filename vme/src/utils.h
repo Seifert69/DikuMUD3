@@ -93,9 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline unit_data *UNIT_IN(unit_data *unit) { return unit->getMyContainer(); }
-inline unit_data *UNIT_IN(const unit_data *unit) { return const_cast<unit_data*>(unit)->getMyContainer(); }
-
 inline unit_affected_type *UNIT_AFFECTED(unit_data *unit) { return unit->getUnitAffectedType(); }
 
 inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
@@ -164,13 +161,13 @@ inline const char *UNIT_FI_NAME(const unit_data *unit) { return unit->getFileInd
 
 inline bool UNIT_WEAR(unit_data *unit, ubit32 part) { return IS_SET(unit->getManipulate(), part); }
 
-inline bool UNIT_IS_OUTSIDE(const unit_data *unit) { return !IS_SET(UNIT_IN(unit)->getUnitFlags(), UNIT_FL_INDOORS); }
+inline bool UNIT_IS_OUTSIDE(const unit_data *unit) { return !IS_SET(unit->getMyContainer()->getUnitFlags(), UNIT_FL_INDOORS); }
 
-inline sbit8 UNIT_OUTSIDE_LIGHT(unit_data *unit) { return !IS_SET(unit->getUnitFlags(), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
+inline sbit8 UNIT_OUTSIDE_LIGHT(const unit_data *unit) { return !IS_SET(unit->getUnitFlags(), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
 
-[[maybe_unused]] inline sbit16 UNIT_IS_DARK(unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_IN(unit)->getNumberOfActiveLightSources() : 0) < 0; }
+[[maybe_unused]] inline sbit16 UNIT_IS_DARK(unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (unit->getMyContainer() ? unit->getMyContainer()->getNumberOfActiveLightSources() : 0) < 0; }
 
-inline sbit16 UNIT_IS_LIGHT(unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_IN(unit)->getNumberOfActiveLightSources() : 0) >= 0; }
+inline sbit16 UNIT_IS_LIGHT(const unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (unit->getMyContainer() ? unit->getMyContainer()->getNumberOfActiveLightSources() : 0) >= 0; }
 
 inline ubit8 UNIT_SEX(const unit_data *unit) { return IS_CHAR(unit) ? CHAR_SEX(unit) : SEX_NEUTRAL; }
 
@@ -310,7 +307,7 @@ inline bool CHAR_AWAKE(const unit_data *ch) { return CHAR_POS(ch) > POSITION_SLE
 
 inline bool CHAR_HAS_FLAG(const unit_data *ch, ubit32 flags) { return IS_SET(CHAR_FLAGS(ch), (flags)); }
 
-[[maybe_unused]] inline room_direction_data *CHAR_ROOM_EXIT(unit_data *ch, size_t door) { return IS_ROOM(UNIT_IN(ch)) ? ROOM_EXIT(UNIT_IN(ch), door) : nullptr; }
+[[maybe_unused]] inline room_direction_data *CHAR_ROOM_EXIT(unit_data *ch, size_t door) { return IS_ROOM(ch->getMyContainer()) ? ROOM_EXIT(ch->getMyContainer(), door) : nullptr; }
 
 inline bool CHAR_VISION(const unit_data *ch) { return !CHAR_HAS_FLAG(ch, CHAR_BLIND); }
 
@@ -318,9 +315,9 @@ inline bool CHAR_CAN_SEE(const unit_data *ch, const unit_data *unit)
 {
     // Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
     return !IS_CHAR(ch) ||
-           (CHAR_VISION(ch) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED) || UNIT_IN(ch) == unit) && CHAR_LEVEL(ch) >= UNIT_MINV(unit) &&
+           (CHAR_VISION(ch) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED) || ch->getMyContainer() == unit) && CHAR_LEVEL(ch) >= UNIT_MINV(unit) &&
             (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||
-             (UNIT_IS_LIGHT(UNIT_IN(ch)) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
+             (UNIT_IS_LIGHT(ch->getMyContainer()) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
 }
 
 inline bool CHAR_CAN_SEE(unit_data *ch, unit_data *unit)
@@ -328,7 +325,7 @@ inline bool CHAR_CAN_SEE(unit_data *ch, unit_data *unit)
     return CHAR_CAN_SEE(const_cast<const unit_data *>(ch), const_cast<const unit_data *>(unit));
 }
 
-[[maybe_unused]] inline bool CHAR_CAN_GO(unit_data *ch, size_t door) { return ROOM_EXIT(UNIT_IN(ch), door) && ROOM_EXIT(UNIT_IN(ch), door)->getToRoom() && !IS_SET(ROOM_EXIT(UNIT_IN(ch), door)->getDoorFlags(), EX_CLOSED); }
+[[maybe_unused]] inline bool CHAR_CAN_GO(unit_data *ch, size_t door) { return ROOM_EXIT(ch->getMyContainer(), door) && ROOM_EXIT(ch->getMyContainer(), door)->getToRoom() && !IS_SET(ROOM_EXIT(ch->getMyContainer(), door)->getDoorFlags(), EX_CLOSED); }
 
 /* ..................................................................... */
 

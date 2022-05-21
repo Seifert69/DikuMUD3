@@ -152,9 +152,9 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
     {
         if ((target = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD)))
         {
-            if (UNIT_IN(target))
+            if (target->getMyContainer())
             {
-                target = UNIT_IN(target);
+                target = target->getMyContainer();
             }
         }
     }
@@ -171,7 +171,7 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    original_loc = UNIT_IN(ch);
+    original_loc = ch->getMyContainer();
     unit_from_unit(ch);
     unit_to_unit(ch, target);
     command_interpreter(ch, argument);
@@ -396,7 +396,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
             enter_game(u, TRUE);
 
             unit_from_unit(u);
-            unit_to_unit(u, UNIT_IN(ch));
+            unit_to_unit(u, ch->getMyContainer());
             send_to_char("You have loaded the player.<br/>", ch);
 
             if (u->getContainedUnits())
@@ -453,7 +453,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
     }
     else
     {
-        unit_to_unit(u, UNIT_IN(ch));
+        unit_to_unit(u, ch->getMyContainer());
         act("$1n opens an interdimensional gate and fetches $3n.", A_SOMEONE, ch, cActParameter(), u, TO_ROOM);
         act("$1n says, 'Hello World!'", A_SOMEONE, u, cActParameter(), cActParameter(), TO_ROOM);
     }

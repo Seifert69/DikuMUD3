@@ -488,7 +488,7 @@ void modify_bright(unit_data *unit, int bright)
 
     unit->changeLightOutputBy(bright);
 
-    if ((in = UNIT_IN(unit)))
+    if ((in = unit->getMyContainer()))
     { /* Light up what the unit is inside */
         in->changeNumberOfActiveLightSourcesBy(bright);
     }
@@ -505,7 +505,7 @@ void modify_bright(unit_data *unit, int bright)
         /* the unit is inside a transperant unit, so it lights up too */
         /* this works with actions in unit-up/down                    */
         in->changeLightOutputBy(bright);
-        if ((ext = UNIT_IN(in)))
+        if ((ext = in->getMyContainer()))
         {
             ext->changeNumberOfActiveLightSourcesBy(bright);
             in->changeTransparentLightOutputBy(bright);
@@ -526,9 +526,9 @@ void trans_set(unit_data *u)
     u->setTransparentLightOutput(sum);
     u->changeLightOutputBy(sum);
 
-    if (UNIT_IN(u))
+    if (u->getMyContainer())
     {
-        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(sum);
+        u->getMyContainer()->changeNumberOfActiveLightSourcesBy(sum);
     }
 }
 
@@ -536,9 +536,9 @@ void trans_unset(unit_data *u)
 {
     u->changeLightOutputBy(-1 * u->getTransparentLightOutput());
 
-    if (UNIT_IN(u))
+    if (u->getMyContainer())
     {
-        UNIT_IN(u)->changeNumberOfActiveLightSourcesBy(-1 * u->getTransparentLightOutput());
+        u->getMyContainer()->changeNumberOfActiveLightSourcesBy(-1 * u->getTransparentLightOutput());
     }
 
     u->setTransparentLightOutput(0);
@@ -586,7 +586,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
 
     assert(pos > 0 && IS_OBJ(obj) && IS_CHAR(ch));
     assert(!equipment(ch, pos));
-    assert(UNIT_IN(obj) == ch); /* Must carry object in inventory */
+    assert(obj->getMyContainer() == ch); /* Must carry object in inventory */
 
     UOBJ(obj)->setEquipmentPosition(pos);
     modify_bright(ch, obj->getLightOutput()); /* Update light sources */
@@ -609,7 +609,7 @@ unit_data *unequip_object(unit_data *obj)
     unit_affected_type *af = nullptr;
     unit_affected_type *caf = nullptr;
 
-    ch = UNIT_IN(obj);
+    ch = obj->getMyContainer();
 
     assert(IS_OBJ(obj) && OBJ_EQP_POS(obj));
     assert(IS_CHAR(ch));
@@ -647,7 +647,7 @@ int unit_recursive(unit_data *from, unit_data *to)
 {
     unit_data *u = nullptr;
 
-    for (u = to; u; u = UNIT_IN(u))
+    for (u = to; u; u = u->getMyContainer())
     {
         if (u == from)
         {
@@ -662,9 +662,9 @@ zone_type *unit_zone(const unit_data *unit)
 {
     unit_data *org = (unit_data *)unit;
 
-    for (; unit; unit = UNIT_IN(unit))
+    for (; unit; unit = unit->getMyContainer())
     {
-        if (!UNIT_IN(unit))
+        if (!unit->getMyContainer())
         {
             //      assert(IS_ROOM(unit));
             if (!IS_ROOM(unit))
@@ -694,7 +694,7 @@ std::string unit_trace_up(unit_data *unit)
     s.append("@");
     s.append(UNIT_FI_ZONENAME(unit));
 
-    for (u = UNIT_IN(unit); u; u = UNIT_IN(u))
+    for (u = unit->getMyContainer(); u; u = u->getMyContainer())
     {
         t = " in ";
         t.append(UNIT_FI_NAME(u));
@@ -715,7 +715,7 @@ unit_data *unit_room(unit_data *unit)
 
     unit_data *org = unit;
 
-    for (; unit; unit = UNIT_IN(unit))
+    for (; unit; unit = unit->getMyContainer())
     {
         if (IS_ROOM(unit))
         {
@@ -736,12 +736,12 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     sbit8 bright = 0;
     sbit8 selfb = 0;
 
-    assert(UNIT_IN(unit));
+    assert(unit->getMyContainer());
 
     /* resolve *ALL* light!!! */
-    in = UNIT_IN(unit);                                 /* where to move unit up to */
-    toin = UNIT_IN(in);                                 /* unit around in           */
-    extin = toin ? UNIT_IN(toin) : nullptr;             /* unit around toin         */
+    in = unit->getMyContainer();                        /* where to move unit up to */
+    toin = in->getMyContainer();                        /* unit around in           */
+    extin = toin ? toin->getMyContainer() : nullptr;    /* unit around toin         */
     bright = unit->getLightOutput();                    /* brightness inc. trans    */
     selfb = bright - unit->getTransparentLightOutput(); /* brightness excl. trans   */
 
@@ -773,7 +773,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     /*fuck*/
     unit->getMyContainer()->reduceWeightBy(unit->getWeight());
 
-    if (unit == UNIT_IN(unit)->getContainedUnits())
+    if (unit == unit->getMyContainer()->getContainedUnits())
     {
         unit->getMyContainer()->setContainedUnit(unit->getNext());
     }
@@ -812,7 +812,7 @@ void unit_up(unit_data *unit)
 
 void unit_from_unit(unit_data *unit)
 {
-    while (UNIT_IN(unit))
+    while (unit->getMyContainer())
     {
         intern_unit_up(unit, FALSE);
     }
@@ -826,12 +826,12 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     sbit8 bright = 0;
     sbit8 selfb = 0;
 
-    assert(UNIT_IN(unit) == UNIT_IN(to));
+    assert(unit->getMyContainer() == to->getMyContainer());
     assert(unit != to);
 
     /* do *ALL* light here!!!! */
-    in = UNIT_IN(unit);
-    extin = in ? UNIT_IN(in) : nullptr;
+    in = unit->getMyContainer();
+    extin = in ? in->getMyContainer() : nullptr;
     bright = unit->getLightOutput();
     selfb = bright - unit->getTransparentLightOutput();
 
@@ -856,19 +856,19 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         }
     }
 
-    if (UNIT_IN(unit))
+    if (unit->getMyContainer())
     {
         if (IS_CHAR(unit))
         {
-            UNIT_IN(unit)->decrementNumberOfCharactersInsideUnit();
+            unit->getMyContainer()->decrementNumberOfCharactersInsideUnit();
         }
-        if (unit == UNIT_IN(unit)->getContainedUnits())
+        if (unit == unit->getMyContainer()->getContainedUnits())
         {
-            UNIT_IN(unit)->setContainedUnit(unit->getNext());
+            unit->getMyContainer()->setContainedUnit(unit->getNext());
         }
         else
         {
-            for (u = UNIT_IN(unit)->getContainedUnits(); u->getNext() != unit; u = u->getNext())
+            for (u = unit->getMyContainer()->getContainedUnits(); u->getNext() != unit; u = u->getNext())
             {
                 ;
             }
@@ -882,7 +882,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
 
     if (IS_CHAR(unit))
     {
-        UNIT_IN(unit)->incrementNumberOfCharactersInsideUnit();
+        unit->getMyContainer()->incrementNumberOfCharactersInsideUnit();
     }
     to->increaseWeightBy(unit->getWeight());
 
@@ -906,9 +906,9 @@ void intern_unit_to_unit(unit_data *unit, unit_data *to, ubit1 pile)
         assert(to != unit);
     }
 
-    if (UNIT_IN(to))
+    if (to->getMyContainer())
     {
-        intern_unit_to_unit(unit, UNIT_IN(to), FALSE);
+        intern_unit_to_unit(unit, to->getMyContainer(), FALSE);
     }
 
     intern_unit_down(unit, to, FALSE);
@@ -1146,7 +1146,7 @@ void extract_unit(unit_data *unit)
       remove_from_unit_list(unit);
     }*/
 
-    if (UNIT_IN(unit))
+    if (unit->getMyContainer())
     {
         unit_from_unit(unit);
     }
@@ -1170,7 +1170,7 @@ void extract_unit(unit_data *unit)
 /* (It will not change the -basic- weight of a player)   */
 void weight_change_unit(unit_data *unit, int weight)
 {
-    for (; unit; unit = UNIT_IN(unit))
+    for (; unit; unit = unit->getMyContainer())
     {
         unit->increaseWeightBy(weight);
     }

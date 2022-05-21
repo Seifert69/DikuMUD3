@@ -139,9 +139,9 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
     {
         unit_data *tmpu = nullptr;
 
-        assert(UNIT_IN(u));
+        assert(u->getMyContainer());
 
-        unit_to_unit(bla, UNIT_IN(u));
+        unit_to_unit(bla, u->getMyContainer());
 
         while (u->getContainedUnits())
         {

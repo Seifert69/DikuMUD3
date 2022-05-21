@@ -163,7 +163,7 @@ void destruct_unit(unit_data *unit)
 
             in_menu = TRUE;
 
-            if (UNIT_IN(unit) && !g_dilmenu)
+            if (unit->getMyContainer() && !g_dilmenu)
             {
                 set_descriptor_fptr(CHAR_DESCRIPTOR(unit), nanny_menu, TRUE);
                 unit->undo_destruct();
@@ -222,7 +222,7 @@ void destruct_unit(unit_data *unit)
         }
     }
 
-    if (UNIT_IN(unit))
+    if (unit->getMyContainer())
     {
         unit_from_unit(unit);
     }

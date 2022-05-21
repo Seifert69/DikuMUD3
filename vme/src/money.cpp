@@ -625,9 +625,9 @@ unit_data *split_money(unit_data *money, amount_t amt)
         unit_data *pnew = make_money(g_money_types[MONEY_TYPE(money)].fi, amt);
         set_money(money, calc_money(MONEY_AMOUNT(money), '-', amt));
 
-        if (UNIT_IN(money))
+        if (money->getMyContainer())
         {
-            intern_unit_to_unit(pnew, UNIT_IN(money), FALSE);
+            intern_unit_to_unit(pnew, money->getMyContainer(), FALSE);
         }
 
         return pnew;
@@ -643,7 +643,7 @@ unit_data *split_money(unit_data *money, amount_t amt)
 void pile_money(unit_data *money)
 {
     unit_data *tmp = nullptr;
-    unit_data *unit = UNIT_IN(money);
+    unit_data *unit = money->getMyContainer();
 
     assert(IS_MONEY(money) && unit);
 

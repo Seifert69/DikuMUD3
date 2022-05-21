@@ -55,17 +55,17 @@ unit_data *get_follower(unit_data *u, int num)
 /* Assumes UNIT_IN(room) == NULL */
 static ubit1 same_surroundings_room(const unit_data *room, const unit_data *u2)
 {
-    if (!UNIT_IN(u2))
+    if (!u2->getMyContainer())
     {
         return FALSE;
     }
 
-    if (UNIT_IN(u2) == room)
+    if (u2->getMyContainer() == room)
     {
         return TRUE;
     }
 
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u2)) == room)
+    if (UNIT_IS_TRANSPARENT(u2->getMyContainer()) && u2->getMyContainer()->getMyContainer() == room)
     {
         return TRUE;
     }
@@ -75,31 +75,35 @@ static ubit1 same_surroundings_room(const unit_data *room, const unit_data *u2)
 
 ubit1 same_surroundings(const unit_data *u1, const unit_data *u2)
 {
-    if (!UNIT_IN(u1))
+    if (!u1->getMyContainer())
     {
         return same_surroundings_room(u1, u2);
     }
-    else if (!UNIT_IN(u2))
+    else
     {
-        return same_surroundings_room(u2, u1);
+        if (!u2->getMyContainer())
+        {
+            return same_surroundings_room(u2, u1);
+        }
     }
 
-    if (UNIT_IN(u1) == UNIT_IN(u2))
-    {
-        return TRUE;
-    }
-
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u1)) && UNIT_IN(UNIT_IN(u1)) == UNIT_IN(u2))
+    if (u1->getMyContainer() == u2->getMyContainer())
     {
         return TRUE;
     }
 
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u2)) == UNIT_IN(u1))
+    if (UNIT_IS_TRANSPARENT(u1->getMyContainer()) && u1->getMyContainer()->getMyContainer() == u2->getMyContainer())
     {
         return TRUE;
     }
 
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u1)) && UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u1)) == UNIT_IN(UNIT_IN(u2)))
+    if (UNIT_IS_TRANSPARENT(u2->getMyContainer()) && u2->getMyContainer()->getMyContainer() == u1->getMyContainer())
+    {
+        return TRUE;
+    }
+
+    if (UNIT_IS_TRANSPARENT(u1->getMyContainer()) && UNIT_IS_TRANSPARENT(u2->getMyContainer()) &&
+        u1->getMyContainer()->getMyContainer() == u2->getMyContainer()->getMyContainer())
     {
         return TRUE;
     }
@@ -420,7 +424,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
             return (unit_data *)ch;
         }
 
-        if (UNIT_IN(ch) == nullptr)
+        if (ch->getMyContainer() == nullptr)
         {
             slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(ch), UNIT_FI_ZONENAME(ch));
         }
@@ -428,8 +432,9 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
         {
             /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
             open rooms from the inside... */
-            if (IS_SET(type, UNIT_TYPE(UNIT_IN(ch))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRawAbbrev(c)) &&
-                CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
+            if (IS_SET(type, UNIT_TYPE(ch->getMyContainer())) &&
+                (ct = UNIT_NAMES(const_cast<unit_data *>(ch->getMyContainer())).IsNameRawAbbrev(c)) &&
+                CHAR_CAN_SEE(viewer, ch->getMyContainer()) && (ct - c >= best_len))
             {
                 if (ct - c > best_len)
                 {
@@ -439,12 +444,12 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
 
                 if (--number == 0)
                 {
-                    best = UNIT_IN(const_cast<unit_data *>(ch));
+                    best = const_cast<unit_data *>(ch)->getMyContainer();
                 }
             }
 
             /* Run through units in local environment */
-            for (u = const_cast<unit_data *>(UNIT_IN(ch)->getContainedUnits()); u; u = u->getNext())
+            for (u = const_cast<unit_data *>(ch->getMyContainer()->getContainedUnits()); u; u = u->getNext())
             {
                 if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                 {
@@ -488,11 +493,11 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
             } /* End for */
 
             /* Run through units in local environment if upwards transparent */
-            if ((u = const_cast<unit_data *>(UNIT_IN(UNIT_IN(ch)))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
+            if ((u = const_cast<unit_data *>(ch->getMyContainer()->getMyContainer())) && UNIT_IS_TRANSPARENT(ch->getMyContainer()))
             {
                 for (u = u->getContainedUnits(); u; u = u->getNext())
                 {
-                    if (u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
+                    if (u != ch->getMyContainer() && CHAR_CAN_SEE(viewer, u))
                     {
                         if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && (ct - c >= best_len))
                         {
@@ -706,7 +711,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 return (unit_data *)ch;
             }
 
-            if (UNIT_IN(ch) == nullptr)
+            if (ch->getMyContainer() == nullptr)
             {
                 slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(ch), UNIT_FI_ZONENAME(ch));
             }
@@ -714,8 +719,9 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
             {
                 /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
                 open rooms from the inside... */
-                if (IS_SET(type, UNIT_TYPE(UNIT_IN(ch))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) &&
-                    CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
+                if (IS_SET(type, UNIT_TYPE(ch->getMyContainer())) &&
+                    (ct = UNIT_NAMES(const_cast<unit_data *>(ch->getMyContainer())).IsNameRaw(c)) &&
+                    CHAR_CAN_SEE(viewer, ch->getMyContainer()) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
                     {
@@ -725,12 +731,12 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
                     if (--number == 0)
                     {
-                        best = UNIT_IN(const_cast<unit_data *>(ch));
+                        best = const_cast<unit_data *>(ch->getMyContainer());
                     }
                 }
 
                 /* Run through units in local environment */
-                for (u = const_cast<unit_data *>(UNIT_IN(ch)->getContainedUnits()); u; u = u->getNext())
+                for (u = const_cast<unit_data *>(ch->getMyContainer()->getContainedUnits()); u; u = u->getNext())
                 {
                     if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                     {
@@ -774,11 +780,11 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 } /* End for */
 
                 /* Run through units in local environment if upwards transparent */
-                if ((u = const_cast<unit_data *>(UNIT_IN(UNIT_IN(ch)))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
+                if ((u = const_cast<unit_data *>(ch->getMyContainer()->getMyContainer())) && UNIT_IS_TRANSPARENT(ch->getMyContainer()))
                 {
                     for (u = u->getContainedUnits(); u; u = u->getNext())
                     {
-                        if (u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
+                        if (u != ch->getMyContainer() && CHAR_CAN_SEE(viewer, u))
                         {
                             if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                             {
@@ -1067,7 +1073,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
     unit_data *u = nullptr;
     unit_data *uu = nullptr;
 
-    if (!UNIT_IN(ch))
+    if (!ch->getMyContainer())
     {
         scan4_unit_room(ch, type);
         return;
@@ -1080,7 +1086,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
         init_unit_vector();
     }
 
-    for (u = UNIT_IN(ch)->getContainedUnits(); u; u = u->getNext())
+    for (u = ch->getMyContainer()->getContainedUnits(); u; u = u->getNext())
     {
         if (u != ch && IS_SET(UNIT_TYPE(u), type))
         {
@@ -1109,9 +1115,9 @@ void scan4_unit(unit_data *ch, ubit8 type)
     }
 
     /* up through transparent unit */
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(ch)) && UNIT_IN(UNIT_IN(ch)))
+    if (UNIT_IS_TRANSPARENT(ch->getMyContainer()) && ch->getMyContainer()->getMyContainer())
     {
-        for (u = UNIT_IN(UNIT_IN(ch))->getContainedUnits(); u; u = u->getNext())
+        for (u = ch->getMyContainer()->getMyContainer()->getContainedUnits(); u; u = u->getNext())
         {
             if (IS_SET(UNIT_TYPE(u), type))
             {
@@ -1123,7 +1129,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
             }
 
             /* down into transparent unit */
-            if (UNIT_IS_TRANSPARENT(u) && u != UNIT_IN(ch))
+            if (UNIT_IS_TRANSPARENT(u) && u != ch->getMyContainer())
             {
                 for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                 {
@@ -1181,17 +1187,20 @@ static unit_data *scan4_ref_room(unit_data *room, unit_data *fu)
 /* No checks for invisibility and the like                                */
 unit_data *scan4_ref(unit_data *ch, unit_data *fu)
 {
-    if (!UNIT_IN(ch))
+    if (!ch->getMyContainer())
     {
         return (scan4_ref_room(ch, fu));
     }
-    else if (((IS_ROOM(UNIT_IN(ch)) || IS_OBJ(UNIT_IN(ch))) && (!UNIT_IS_TRANSPARENT(UNIT_IN(ch)))))
-    {
-        return (scan4_ref_room(UNIT_IN(ch), fu));
-    }
     else
     {
-        return (scan4_ref(UNIT_IN(ch), fu));
+        if (((IS_ROOM(ch->getMyContainer()) || IS_OBJ(ch->getMyContainer())) && (!UNIT_IS_TRANSPARENT(ch->getMyContainer()))))
+        {
+            return (scan4_ref_room(ch->getMyContainer(), fu));
+        }
+        else
+        {
+            return (scan4_ref(ch->getMyContainer(), fu));
+        }
     }
 }
 

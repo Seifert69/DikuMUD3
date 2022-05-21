@@ -176,7 +176,7 @@ int hit_gain(unit_data *ch)
             gain *= 2;
             break;
         }
-        u = UNIT_IN(u);
+        u = u->getMyContainer();
     }
 
     if (IS_PC(ch))
@@ -251,7 +251,7 @@ int move_gain(unit_data *ch)
             gain *= 2;
             break;
         }
-        u = UNIT_IN(u);
+        u = u->getMyContainer();
     }
 
     if (IS_PC(ch))
@@ -329,7 +329,7 @@ int mana_gain(unit_data *ch)
             gain *= 2;
             break;
         }
-        u = UNIT_IN(u);
+        u = u->getMyContainer();
     }
 
     if (IS_PC(ch))

@@ -223,7 +223,7 @@ void game_loop()
     {
         if (d->cgetOriginalCharacter() != nullptr)
         {
-            if (IS_PC(d->cgetOriginalCharacter()) && UNIT_IN(d->cgetOriginalCharacter()))
+            if (IS_PC(d->cgetOriginalCharacter()) && d->cgetOriginalCharacter()->getMyContainer())
             {
                 slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetOriginalCharacter()));
                 save_player(d->getOriginalCharacter());
@@ -232,7 +232,7 @@ void game_loop()
         }
         else
         {
-            if (IS_PC(d->cgetCharacter()) && UNIT_IN(d->cgetCharacter()))
+            if (IS_PC(d->cgetCharacter()) && d->cgetCharacter()->getMyContainer())
             {
                 slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetCharacter()));
                 save_player(d->getCharacter());
@@ -369,7 +369,7 @@ void check_overpopulation_event(void *p1, void *p2)
             {
                 break;
             }
-            t = UNIT_IN(t);
+            t = t->getMyContainer();
         }
         if (t)
         {

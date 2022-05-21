@@ -170,7 +170,7 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
             {
                 set_money(loaded, MONEY_AMOUNT(loaded));
             }
-            if (!UNIT_IN(loaded))
+            if (!loaded->getMyContainer())
             {
                 unit_to_unit(loaded, u);
             }
@@ -367,7 +367,7 @@ unit_data *zone_follow(unit_data *u, zone_reset_cmd *cmd)
     {
         loaded = read_unit(cmd->getFileIndexType(0));
 
-        unit_to_unit(loaded, UNIT_IN(u));
+        unit_to_unit(loaded, u->getMyContainer());
         start_following(loaded, u);
         zone_loaded_a_unit(loaded);
 

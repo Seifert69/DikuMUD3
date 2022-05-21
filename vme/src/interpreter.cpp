@@ -712,7 +712,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     }
 
     sarg->mflags = mflt;
-    if (IS_PC(ch) && !UNIT_IN(ch))
+    if (IS_PC(ch) && !ch->getMyContainer())
     {
         unit_function_scan(ch, sarg);
         return SFR_BLOCK;
@@ -745,9 +745,9 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     }
 
     /* special in room? */
-    if (UNIT_IN(ch) && UNIT_IN(ch)->getFunctionPointer())
+    if (ch->getMyContainer() && ch->getMyContainer()->getFunctionPointer())
     {
-        if ((unit_function_scan(UNIT_IN(ch), sarg)) != SFR_SHARE)
+        if ((unit_function_scan(ch->getMyContainer(), sarg)) != SFR_SHARE)
         {
             return SFR_BLOCK;
         }
@@ -763,10 +763,10 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         }
     }
 
-    if (UNIT_IN(ch))
+    if (ch->getMyContainer())
     {
         /* special in room present? */
-        for (u = UNIT_IN(ch)->getContainedUnits(); u; u = next)
+        for (u = ch->getMyContainer()->getContainedUnits(); u; u = next)
         {
             next = u->getNext(); /* Next dude trick */
 
@@ -804,20 +804,20 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         }
 
         /* specials outside room */
-        if (UNIT_IN(ch) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)) && UNIT_IN(UNIT_IN(ch)))
+        if (ch->getMyContainer() && UNIT_IS_TRANSPARENT(ch->getMyContainer()) && ch->getMyContainer()->getMyContainer())
         {
             /* special in outside room? */
-            if (UNIT_IN(UNIT_IN(ch))->getFunctionPointer())
+            if (ch->getMyContainer()->getMyContainer()->getFunctionPointer())
             {
-                if (unit_function_scan(UNIT_IN(UNIT_IN(ch)), sarg) != SFR_SHARE)
+                if (unit_function_scan(ch->getMyContainer()->getMyContainer(), sarg) != SFR_SHARE)
                 {
                     return SFR_BLOCK;
                 }
             }
 
-            if (UNIT_IN(UNIT_IN(ch)))
+            if (ch->getMyContainer()->getMyContainer())
             {
-                for (u = UNIT_IN(UNIT_IN(ch))->getContainedUnits(); u; u = next)
+                for (u = ch->getMyContainer()->getMyContainer()->getContainedUnits(); u; u = next)
                 {
                     next = u->getNext(); /* Next dude trick */
 
@@ -827,12 +827,12 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                         return SFR_BLOCK;
                     }
 
-                    if (!UNIT_IN(UNIT_IN(ch)))
+                    if (!ch->getMyContainer()->getMyContainer())
                     {
                         break;
                     }
 
-                    if (u != UNIT_IN(ch))
+                    if (u != ch->getMyContainer())
                     {
                         if (UNIT_IS_TRANSPARENT(u))
                         {

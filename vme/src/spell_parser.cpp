@@ -378,9 +378,9 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
                 target_ok = TRUE;
             }
 
-            if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_ROOM) && IS_ROOM(UNIT_IN(ch)))
+            if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_ROOM) && IS_ROOM(ch->getMyContainer()))
             {
-                unit = UNIT_IN(ch);
+                unit = ch->getMyContainer();
                 target_ok = TRUE;
             }
         }

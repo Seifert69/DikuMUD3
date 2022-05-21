@@ -126,7 +126,7 @@ static void stat_memory(unit_data *ch)
     {
         if (UNIT_TYPE(u) != UNIT_ST_ROOM)
         {
-            if (UNIT_IN(u) == nullptr)
+            if (u->getMyContainer() == nullptr)
             {
                 msg = diku::format_to_str("%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
                 send_to_char(msg, ch);
@@ -744,7 +744,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               u->getTransparentLightOutput(),
                               u->getNumberOfCharactersInsideUnit(),
                               UNIT_MINV(u),
-                              UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
+                              u->getMyContainer() ? STR(TITLENAME(u->getMyContainer())) : "Nothing",
                               u->getContainedUnits() ? "has contents" : "is empty",
                               sprintbit(bits2, u->getManipulate(), g_unit_manipulate),
                               sprintbit(bits1, u->getUnitFlags(), g_unit_flags),
@@ -1180,7 +1180,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        UROOM(u)->getMapXCoordinate(),
                                        UROOM(u)->getMapYCoordinate(),
                                        ROOM_RESISTANCE(u),
-                                       UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing");
+                                       u->getMyContainer() ? STR(TITLENAME(u->getMyContainer())) : "Nothing");
         send_to_char(msg, ch);
 
         for (i = 0; i <= MAX_EXIT; i++)
@@ -1277,7 +1277,7 @@ void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
 
     if (str_ccmp("room", argument) == 0)
     {
-        u = UNIT_IN(ch);
+        u = ch->getMyContainer();
     }
     else
     {
@@ -1335,7 +1335,7 @@ void do_wstat(unit_data *ch, char *argument, const command_info *cmd)
 
     if (!str_nccmp("room", argument, 4))
     {
-        u = UNIT_IN(ch);
+        u = ch->getMyContainer();
         argument += 4;
     }
     else if (!strncmp("zone", argument, 4))
