@@ -222,7 +222,7 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
     memset(&ho, 0, sizeof(ho));
     memset(&hn, 0, sizeof(hn));
 
-    if (!IS_SET(UNIT_TYPE(unit), UNIT_ST_NPC | UNIT_ST_OBJ))
+    if (!IS_SET(unit->getUnitType(), UNIT_ST_NPC | UNIT_ST_OBJ))
     {
         slog(LOG_ALL, 0, "MAJOR ERROR - enlist a non-NPC or non-OBJ is being saved. Aborted");
         return;
@@ -247,7 +247,7 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
     strcpy(hn.zone, UNIT_FI_ZONENAME(unit));
     strcpy(hn.unit, UNIT_FI_NAME(unit));
 
-    hn.type = UNIT_TYPE(unit);
+    hn.type = unit->getUnitType();
     hn.level = level;
 
     if (IS_OBJ(unit))

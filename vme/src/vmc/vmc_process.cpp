@@ -1039,7 +1039,7 @@ void process_unit(unit_data *u)
         u->setLightOutput(0);
     }
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_ROOM:
             set_room_data(u);
@@ -1190,7 +1190,7 @@ void init_unit(unit_data *u)
     u->setUnitAffectedType(nullptr);
     u->setSize(180); // 180cm default
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_NPC:
         {

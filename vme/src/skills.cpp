@@ -236,17 +236,20 @@ int skillchecksa(unit_data *u, int skillidx, int abiidx, int difficulty)
 
     roll = open100();
 
-    if (UNIT_TYPE(u) == UNIT_ST_PC)
+    if (u->getUnitType() == UNIT_ST_PC)
     {
         skl = (PC_SKI_SKILL(u, skillidx) * 2 + CHAR_ABILITY(u, abiidx)) / 3; /* 2/3rd skill, 1/3rd ability */
     }
-    else if (UNIT_TYPE(u) == UNIT_ST_NPC)
-    {
-        skl = CHAR_ABILITY(u, abiidx);
-    }
     else
     {
-        skl = 0;
+        if (u->getUnitType() == UNIT_ST_NPC)
+        {
+            skl = CHAR_ABILITY(u, abiidx);
+        }
+        else
+        {
+            skl = 0;
+        }
     }
 
     hm = roll + skl - difficulty - 50;

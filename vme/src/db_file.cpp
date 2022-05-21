@@ -1179,7 +1179,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
     pBuf->Append16(u->getSize());
 
-    if (UNIT_TYPE(u) == UNIT_ST_ROOM)
+    if (u->getUnitType() == UNIT_ST_ROOM)
     {
         /* See if room is to be placed inside another room! */
         pBuf->AppendDoubleString((char *)u->getMyContainer());
@@ -1216,7 +1216,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
         }
     }
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_NPC:
             pBuf->AppendString(CHAR_MONEY(u) ? CHAR_MONEY(u) : "");
@@ -1424,8 +1424,8 @@ void write_unit(FILE *f, unit_data *u, char *fname)
     pBuf = &g_FileBuffer;
     pBuf->Clear();
 
-    pBuf->AppendString(fname);   /* Write unique name  */
-    pBuf->Append8(UNIT_TYPE(u)); /* Write unit type    */
+    pBuf->AppendString(fname);       /* Write unique name  */
+    pBuf->Append8(u->getUnitType()); /* Write unit type    */
 
     nSizeStart = pBuf->GetLength();
     pBuf->Append32(0); /* Write dummy length */

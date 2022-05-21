@@ -95,9 +95,6 @@ inline room_data *UROOM(const unit_data *u)
 
 inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
 
-inline ubit8 UNIT_TYPE(unit_data *unit) { return unit->getUnitType(); }
-inline ubit8 UNIT_TYPE(const unit_data *unit) { return unit->getUnitType(); }
-
 inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
 
 inline sbit16 UNIT_ALIGNMENT(unit_data *unit) { return unit->getAlignment(); }
@@ -118,17 +115,17 @@ inline extra_list &UNIT_EXTRA(unit_data *unit) { return unit->getExtraList(); }
 inline const extra_list &UNIT_EXTRA(const unit_data *unit) { return unit->getExtraList(); }
 /* ..................................................................... */
 
-inline bool IS_ROOM(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_ROOM; }
+inline bool IS_ROOM(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_ROOM; }
 
-inline bool IS_OBJ(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_OBJ; }
+inline bool IS_OBJ(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_OBJ; }
 
-inline bool IS_NPC(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_NPC; }
+inline bool IS_NPC(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_NPC; }
 
-inline bool IS_PC(const unit_data *unit) { return UNIT_TYPE(unit) == UNIT_ST_PC; }
+inline bool IS_PC(const unit_data *unit) { return unit->getUnitType() == UNIT_ST_PC; }
 
 inline bool IS_CHAR(const unit_data *unit)
 {
-    auto type = UNIT_TYPE(unit);
+    auto type = unit->getUnitType();
     return type == UNIT_ST_PC || type == UNIT_ST_NPC;
 }
 

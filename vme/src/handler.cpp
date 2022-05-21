@@ -68,7 +68,7 @@ void insert_in_unit_list(unit_data *u)
         return;
     }
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_PC:
         {
@@ -85,7 +85,7 @@ void insert_in_unit_list(unit_data *u)
         }
         case UNIT_ST_NPC:
         {
-            if (UNIT_TYPE(g_npc_head) != UNIT_ST_NPC)
+            if (g_npc_head->getUnitType() != UNIT_ST_NPC)
             {
                 tmp_u = g_unit_list;
                 for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->getGlobalNext())
@@ -115,7 +115,7 @@ void insert_in_unit_list(unit_data *u)
         }
         case UNIT_ST_OBJ:
         {
-            if (UNIT_TYPE(g_obj_head) != UNIT_ST_OBJ)
+            if (g_obj_head->getUnitType() != UNIT_ST_OBJ)
             {
                 tmp_u = g_unit_list;
                 for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->getGlobalNext())
@@ -145,7 +145,7 @@ void insert_in_unit_list(unit_data *u)
         }
         case UNIT_ST_ROOM:
         {
-            if (UNIT_TYPE(g_room_head) != UNIT_ST_ROOM)
+            if (g_room_head->getUnitType() != UNIT_ST_ROOM)
             {
                 tmp_u = g_unit_list;
                 for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->getGlobalNext())

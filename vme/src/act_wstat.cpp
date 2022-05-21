@@ -124,7 +124,7 @@ static void stat_memory(unit_data *ch)
 
     for (unit_data *u = g_unit_list; u; u = u->getNext())
     {
-        if (UNIT_TYPE(u) != UNIT_ST_ROOM)
+        if (u->getUnitType() != UNIT_ST_ROOM)
         {
             if (u->getMyContainer() == nullptr)
             {
@@ -722,7 +722,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
     auto msg = diku::format_to_str("Unit status: %s [%s@%s] %d copies (CRC %lu)<br/>Namelist: %s<br/>"
                                    "Title: \"%s\"<br/>Outside_descr:<br/>\"%s\"<br/>"
                                    "Inside_descr:<br/>\"%s\"<br/>",
-                                   sprintbit(bits2, UNIT_TYPE(u), g_unit_status),
+                                   sprintbit(bits2, u->getUnitType(), g_unit_status),
                                    UNIT_FI_NAME(u),
                                    UNIT_FI_ZONENAME(u),
                                    u->getFileIndex() ? u->getFileIndex()->getNumInMem() : -1,

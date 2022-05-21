@@ -154,7 +154,7 @@ static inline int roompay(unit_data *u)
 /* These functions determine if the units are candidates in find */
 static inline int findcheck(unit_data *u, int pset, int tflags)
 {
-    if (IS_SET(UNIT_TYPE(u), tflags))
+    if (IS_SET(u->getUnitType(), tflags))
     {
         if (pset == FIND_UNIT_PAY)
         {
@@ -375,7 +375,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
     {
         for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
         {
-            if (IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+            if (IS_SET(type, u->getUnitType()) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                 (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && (ct - c >= best_len))
             {
                 if (ct - c > best_len)
@@ -396,7 +396,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
     {
         for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
         {
-            if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+            if (IS_SET(type, u->getUnitType()) && (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                 !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
             {
                 if (ct - c > best_len)
@@ -432,7 +432,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
         {
             /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
             open rooms from the inside... */
-            if (IS_SET(type, UNIT_TYPE(ch->getMyContainer())) &&
+            if (IS_SET(type, ch->getMyContainer()->getUnitType()) &&
                 (ct = UNIT_NAMES(const_cast<unit_data *>(ch->getMyContainer())).IsNameRawAbbrev(c)) &&
                 CHAR_CAN_SEE(viewer, ch->getMyContainer()) && (ct - c >= best_len))
             {
@@ -451,7 +451,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
             /* Run through units in local environment */
             for (u = const_cast<unit_data *>(ch->getMyContainer()->getContainedUnits()); u; u = u->getNext())
             {
-                if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+                if (IS_SET(type, u->getUnitType()) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                 {
                     if ((ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && (ct - c >= best_len))
                     {
@@ -472,7 +472,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                     {
                         for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                         {
-                            if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRawAbbrev(c)) &&
+                            if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRawAbbrev(c)) &&
                                 CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                             {
                                 if (ct - c > best_len)
@@ -499,7 +499,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                 {
                     if (u != ch->getMyContainer() && CHAR_CAN_SEE(viewer, u))
                     {
-                        if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && (ct - c >= best_len))
+                        if (IS_SET(type, u->getUnitType()) && (ct = UNIT_NAMES(u).IsNameRawAbbrev(c)) && (ct - c >= best_len))
                         {
                             if (ct - c > best_len)
                             {
@@ -518,7 +518,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                         {
                             for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                             {
-                                if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRawAbbrev(c)) &&
+                                if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRawAbbrev(c)) &&
                                     CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                 {
                                     if (ct - c > best_len)
@@ -542,8 +542,8 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
 
     for (; list; list = list->getNext())
     {
-        if (IS_SET(type, UNIT_TYPE((unit_data *)list)) && (ct = UNIT_NAMES((unit_data *)list).IsNameRawAbbrev(c)) && (ct - c >= best_len) &&
-            CHAR_CAN_SEE(viewer, list))
+        if (IS_SET(type, ((unit_data *)list)->getUnitType()) && (ct = UNIT_NAMES((unit_data *)list).IsNameRawAbbrev(c)) &&
+            (ct - c >= best_len) && CHAR_CAN_SEE(viewer, list))
         {
             if (ct - c > best_len)
             {
@@ -662,7 +662,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         {
             for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
             {
-                if (IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+                if (IS_SET(type, u->getUnitType()) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                     (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
@@ -683,7 +683,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         {
             for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
             {
-                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+                if (IS_SET(type, u->getUnitType()) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                     !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
@@ -719,7 +719,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
             {
                 /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
                 open rooms from the inside... */
-                if (IS_SET(type, UNIT_TYPE(ch->getMyContainer())) &&
+                if (IS_SET(type, ch->getMyContainer()->getUnitType()) &&
                     (ct = UNIT_NAMES(const_cast<unit_data *>(ch->getMyContainer())).IsNameRaw(c)) &&
                     CHAR_CAN_SEE(viewer, ch->getMyContainer()) && (ct - c >= best_len))
                 {
@@ -738,7 +738,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 /* Run through units in local environment */
                 for (u = const_cast<unit_data *>(ch->getMyContainer()->getContainedUnits()); u; u = u->getNext())
                 {
-                    if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+                    if (IS_SET(type, u->getUnitType()) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                     {
                         if ((ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                         {
@@ -759,7 +759,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                         {
                             for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                             {
-                                if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
+                                if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
                                     CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                 {
                                     if (ct - c > best_len)
@@ -786,7 +786,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                     {
                         if (u != ch->getMyContainer() && CHAR_CAN_SEE(viewer, u))
                         {
-                            if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+                            if (IS_SET(type, u->getUnitType()) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                             {
                                 if (ct - c > best_len)
                                 {
@@ -805,7 +805,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                             {
                                 for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                                 {
-                                    if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
+                                    if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
                                         CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                     {
                                         if (ct - c > best_len)
@@ -831,7 +831,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         {
             for (u = g_unit_list; u; u = u->getGlobalNext())
             {
-                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) &&
+                if (IS_SET(type, u->getUnitType()) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) &&
                     unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
@@ -852,7 +852,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         {
             for (u = g_unit_list; u; u = u->getGlobalNext())
             {
-                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
+                if (IS_SET(type, u->getUnitType()) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
                     {
@@ -871,7 +871,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
     for (unit_data *myu = (unit_data *)list; myu; myu = myu->getNext())
     {
-        if (IS_SET(type, UNIT_TYPE(myu)) && (ct = UNIT_NAMES(myu).IsNameRaw(c)) && (ct - c >= best_len) && CHAR_CAN_SEE(viewer, myu))
+        if (IS_SET(type, myu->getUnitType()) && (ct = UNIT_NAMES(myu).IsNameRaw(c)) && (ct - c >= best_len) && CHAR_CAN_SEE(viewer, myu))
         {
             if (ct - c > best_len)
             {
@@ -1035,7 +1035,7 @@ void scan4_unit_room(unit_data *room, ubit8 type)
 
     for (u = room->getContainedUnits(); u; u = u->getNext())
     {
-        if (IS_SET(UNIT_TYPE(u), type))
+        if (IS_SET(u->getUnitType(), type))
         {
             g_unit_vector.units[g_unit_vector.top++] = u;
             if (g_unit_vector.size == g_unit_vector.top)
@@ -1049,7 +1049,7 @@ void scan4_unit_room(unit_data *room, ubit8 type)
         {
             for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
             {
-                if (IS_SET(UNIT_TYPE(uu), type))
+                if (IS_SET(uu->getUnitType(), type))
                 {
                     g_unit_vector.units[g_unit_vector.top++] = uu;
                     if (g_unit_vector.size == g_unit_vector.top)
@@ -1088,7 +1088,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
 
     for (u = ch->getMyContainer()->getContainedUnits(); u; u = u->getNext())
     {
-        if (u != ch && IS_SET(UNIT_TYPE(u), type))
+        if (u != ch && IS_SET(u->getUnitType(), type))
         {
             g_unit_vector.units[g_unit_vector.top++] = u;
             if (g_unit_vector.size == g_unit_vector.top)
@@ -1102,7 +1102,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
         {
             for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
             {
-                if (IS_SET(UNIT_TYPE(uu), type))
+                if (IS_SET(uu->getUnitType(), type))
                 {
                     g_unit_vector.units[g_unit_vector.top++] = uu;
                     if (g_unit_vector.size == g_unit_vector.top)
@@ -1119,7 +1119,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
     {
         for (u = ch->getMyContainer()->getMyContainer()->getContainedUnits(); u; u = u->getNext())
         {
-            if (IS_SET(UNIT_TYPE(u), type))
+            if (IS_SET(u->getUnitType(), type))
             {
                 g_unit_vector.units[g_unit_vector.top++] = u;
                 if (g_unit_vector.size == g_unit_vector.top)
@@ -1133,7 +1133,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
             {
                 for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                 {
-                    if (IS_SET(UNIT_TYPE(uu), type))
+                    if (IS_SET(uu->getUnitType(), type))
                     {
                         g_unit_vector.units[g_unit_vector.top++] = uu; /* MS FIX */
                         if (g_unit_vector.size == g_unit_vector.top)

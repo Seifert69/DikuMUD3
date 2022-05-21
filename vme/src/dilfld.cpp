@@ -515,7 +515,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_TYPE((unit_data *)v1->val.ptr);
+                        v->val.num = ((unit_data *)v1->val.ptr)->getUnitType();
                     }
                     else
                     {
@@ -2179,7 +2179,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr)
                 {
-                    switch (UNIT_TYPE((unit_data *)v1->val.ptr))
+                    switch (((unit_data *)v1->val.ptr)->getUnitType())
                     {
                         case UNIT_ST_ROOM:
                         {
@@ -4060,7 +4060,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr)
                 {
-                    switch (UNIT_TYPE((unit_data *)v1->val.ptr))
+                    switch (((unit_data *)v1->val.ptr)->getUnitType())
                     {
                         case UNIT_ST_NPC:
                         {

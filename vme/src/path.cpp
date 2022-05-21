@@ -41,13 +41,13 @@ void create_worldgraph()
     unit_data *u = nullptr;
     unit_data *uu = nullptr;
     int i = 0;
-    for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
+    for (u = g_room_head; u && u->getUnitType() == UNIT_ST_ROOM; u = u->getGlobalNext())
     {
         vd = add_vertex(WorldGraph);
         UROOM(u)->setRoomNumber(vd);
     }
 
-    for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
+    for (u = g_room_head; u && u->getUnitType() == UNIT_ST_ROOM; u = u->getGlobalNext())
     {
         for (i = 0; i <= MAX_EXIT; i++)
         {
@@ -85,7 +85,7 @@ void create_worldgraph()
     std::vector<vertex_descriptor> sc_num(i);
     slog(LOG_ALL, 0, "Total Number of SC - %d", i);
     slog(LOG_ALL, 0, "Completed Strong Connected Components");
-    for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
+    for (u = g_room_head; u && u->getUnitType() == UNIT_ST_ROOM; u = u->getGlobalNext())
     {
         UROOM(u)->setStrongComponent(sc[ROOM_NUM(u)]);
         //			slog (LOG_ALL, 0, "%d - %d - %s@%s", ROOM_SC (u), ROOM_NUM (u),
@@ -163,7 +163,7 @@ void create_sc_graph(int num_of_sc)
         g_sc_graphs.push_back(base_g);
         g_sc_room_ptr.push_back(rmptr);
 
-        for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
+        for (u = g_room_head; u && u->getUnitType() == UNIT_ST_ROOM; u = u->getGlobalNext())
         {
             if (ROOM_SC(u) == sc)
             {
@@ -175,7 +175,7 @@ void create_sc_graph(int num_of_sc)
 
         boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, g_sc_graphs[sc]);
 
-        for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->getGlobalNext())
+        for (u = g_room_head; u && u->getUnitType() == UNIT_ST_ROOM; u = u->getGlobalNext())
         {
             for (i = 0; i <= MAX_EXIT; i++)
             {

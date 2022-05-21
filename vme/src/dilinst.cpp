@@ -434,7 +434,7 @@ void dilfi_foe(dilprg *p)
             // when it asked only for PCs
             // dil_add_secure(p, p->sarg->owner, NULL);
 
-            if (IS_SET(UNIT_TYPE(p->sarg->owner), v1->val.num))
+            if (IS_SET(p->sarg->owner->getUnitType(), v1->val.num))
             {
                 dil_add_secure(p, p->sarg->owner, nullptr);
             }

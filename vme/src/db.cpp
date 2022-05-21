@@ -657,7 +657,7 @@ zone_type *unit_error_zone = nullptr;
 void post_read_unit(unit_data *u)
 {
     // Add regenerate to NPCs
-    if (UNIT_TYPE(u) == UNIT_ST_NPC)
+    if (u->getUnitType() == UNIT_ST_NPC)
     {
         static diltemplate *regen = nullptr;
 
@@ -845,7 +845,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
         if (tmpfi)
         {
-            if (UNIT_TYPE(u) == UNIT_ST_ROOM)
+            if (u->getUnitType() == UNIT_ST_ROOM)
             {
                 u->setMyContainerTo(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
             }
@@ -863,7 +863,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         }
     }
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_NPC:
             g_nCorrupt += pBuf->ReadStringAlloc(UCHAR(u)->getMoneyPtr());
@@ -1473,7 +1473,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
     }
     else
     {
-        if (UNIT_TYPE(u) != UNIT_ST_ROOM)
+        if (u->getUnitType() != UNIT_ST_ROOM)
         {
             slog(LOG_ALL, 0, "Bizarro. This probably shouldn't happen");
         }

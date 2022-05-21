@@ -1111,7 +1111,7 @@ void damage(unit_data *ch,
         {
             UCHAR(victim)->setLastAttacker(str_dup(ch->getNames().Name()));
         }
-        UCHAR(victim)->setLastAttackerType(UNIT_TYPE(ch));
+        UCHAR(victim)->setLastAttackerType(ch->getUnitType());
         if (IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))
         {
             if ((paf = affected_by_spell(victim, ID_HIDE)))
@@ -1295,7 +1295,7 @@ void damage(unit_data *ch,
                     {
                         if (strcmp(CHAR_LAST_ATTACKER(victim), sch->getNames().Name()) == 0)
                         {
-                            if (CHAR_LAST_ATTACKER_TYPE(victim) == UNIT_TYPE(sch))
+                            if (CHAR_LAST_ATTACKER_TYPE(victim) == sch->getUnitType())
                             {
                                 break;
                             }
