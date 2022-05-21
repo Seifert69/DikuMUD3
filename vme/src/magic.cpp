@@ -149,13 +149,13 @@ ubit1 cast_magic_now(unit_data *ch, int mana)
 
     if (CHAR_MANA(ch) > mana)
     {
-        if (UNIT_MAX_HIT(ch) <= 0)
+        if (ch->getMaximumHitpoints() <= 0)
         {
             hleft = 0;
         }
         else
         {
-            hleft = (100 * ch->getCurrentHitpoints()) / UNIT_MAX_HIT(ch);
+            hleft = (100 * ch->getCurrentHitpoints()) / ch->getMaximumHitpoints();
         }
 
         sleft = mana ? CHAR_MANA(ch) / mana : 20;

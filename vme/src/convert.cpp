@@ -187,7 +187,7 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if ((u->getCurrentHitpoints() > 10000) || (UNIT_MAX_HIT(u) > 10000))
+    if ((u->getCurrentHitpoints() > 10000) || (u->getMaximumHitpoints() > 10000))
     {
         printf("Corrupted UNIT HITPOINTS");
         return FALSE;

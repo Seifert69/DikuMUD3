@@ -805,7 +805,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     if (unit_version <= 54)
     {
-        if (UNIT_MAX_HIT(u) <= 0)
+        if (u->getMaximumHitpoints() <= 0)
         {
             u->setCurrentHitpoints(1000);
             u->setMaximumHitpoints(1000);

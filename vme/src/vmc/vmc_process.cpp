@@ -612,7 +612,7 @@ void show_npc_info(unit_data *npc)
             CHAR_STR(npc),
             CHAR_DEX(npc),
             CHAR_CON(npc),
-            UNIT_MAX_HIT(npc),
+            npc->getMaximumHitpoints(),
             CHAR_BRA(npc),
             CHAR_CHA(npc),
             CHAR_MAG(npc),

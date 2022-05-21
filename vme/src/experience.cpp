@@ -519,7 +519,7 @@ int spell_bonus(unit_data *att,
 
         pStat->append(diku::format_to_str("Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95));
 
-        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3)));
+        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", def->getMaximumHitpoints() / MAX(1, (dam5 + dam50 + dam95) / 3)));
         pStat->append("Defensive Shield bonus not part of stat<br/>");
 
         pStat->append("</pre>");
@@ -823,7 +823,7 @@ int melee_bonus(unit_data *att,
 
         pStat->append(diku::format_to_str("Weapon dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95));
 
-        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3)));
+        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", def->getMaximumHitpoints() / MAX(1, (dam5 + dam50 + dam95) / 3)));
 
         pStat->append("</pre>");
     }
@@ -886,7 +886,7 @@ int base_consider(unit_data *att, unit_data *def, std::string *pStr)
     }
     else
     {
-        return UNIT_MAX_HIT(def) / dam; /* Rounds to die.... */
+        return def->getMaximumHitpoints() / dam; /* Rounds to die.... */
     }
 }
 

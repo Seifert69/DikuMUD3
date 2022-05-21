@@ -97,8 +97,6 @@ inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Na
 
 inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
 
-inline sbit32 UNIT_MAX_HIT(unit_data *unit) { return unit->getMaximumHitpoints(); }
-
 inline ubit8 UNIT_MINV(const unit_data *unit) { return unit->getLevelOfWizardInvisibility(); }
 
 inline const std::string &UNIT_TITLE(const unit_data *unit) { return unit->getTitle(); }

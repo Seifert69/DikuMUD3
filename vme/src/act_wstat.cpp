@@ -749,7 +749,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               sprintbit(bits2, u->getManipulate(), g_unit_manipulate),
                               sprintbit(bits1, u->getUnitFlags(), g_unit_flags),
                               (signed long)u->getCurrentHitpoints(),
-                              (signed long)UNIT_MAX_HIT(u),
+                              (signed long)u->getMaximumHitpoints(),
                               u->getAlignment());
     send_to_char(msg, ch);
 

@@ -610,17 +610,17 @@ static void combat_send(combat_single_msg *msg,
 {
     if (msg->to_char)
     {
-        cact(sub_damage(msg->to_char, dam, UNIT_MAX_HIT(arg3)), A_SOMEONE, arg1, arg2, arg3, TO_CHAR, color1);
+        cact(sub_damage(msg->to_char, dam, arg3->getMaximumHitpoints()), A_SOMEONE, arg1, arg2, arg3, TO_CHAR, color1);
     }
 
     if (msg->to_vict)
     {
-        cact(sub_damage(msg->to_vict, dam, UNIT_MAX_HIT(arg3)), A_ALWAYS, arg1, arg2, arg3, TO_VICT, color2);
+        cact(sub_damage(msg->to_vict, dam, arg3->getMaximumHitpoints()), A_ALWAYS, arg1, arg2, arg3, TO_VICT, color2);
     }
 
     if (msg->to_notvict)
     {
-        cact(sub_damage(msg->to_notvict, dam, UNIT_MAX_HIT(arg3)), A_SOMEONE, arg1, arg2, arg3, TO_NOTVICT, color3);
+        cact(sub_damage(msg->to_notvict, dam, arg3->getMaximumHitpoints()), A_SOMEONE, arg1, arg2, arg3, TO_NOTVICT, color3);
     }
 }
 

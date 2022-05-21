@@ -1022,7 +1022,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
 
     UCHAR(unit)->setMana(mana_limit(unit));
     UCHAR(unit)->setEndurance(move_limit(unit));
-    unit->setCurrentHitpoints(UNIT_MAX_HIT(unit));
+    unit->setCurrentHitpoints(unit->getMaximumHitpoints());
 
     if (!unit->is_destructed())
     {
