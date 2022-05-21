@@ -97,8 +97,6 @@ inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Na
 
 inline cNamelist &UNIT_NAMES(unit_data *unit) { return unit->getNames(); }
 
-inline ubit8 UNIT_MINV(const unit_data *unit) { return unit->getLevelOfWizardInvisibility(); }
-
 inline const std::string &UNIT_TITLE(const unit_data *unit) { return unit->getTitle(); }
 
 inline const std::string &UNIT_OUT_DESCR(const unit_data *unit) { return unit->getDescriptionOfOutside(); }
@@ -298,7 +296,7 @@ inline bool CHAR_CAN_SEE(const unit_data *ch, const unit_data *unit)
 {
     // Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
     return !IS_CHAR(ch) ||
-           (CHAR_VISION(ch) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED) || ch->getMyContainer() == unit) && CHAR_LEVEL(ch) >= UNIT_MINV(unit) &&
+           (CHAR_VISION(ch) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED) || ch->getMyContainer() == unit) && CHAR_LEVEL(ch) >= unit->getLevelOfWizardInvisibility() &&
             (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||
              (UNIT_IS_LIGHT(ch->getMyContainer()) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
 }

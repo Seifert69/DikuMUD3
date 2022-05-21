@@ -96,7 +96,7 @@ int error_rod(spec_arg *sarg)
 
     act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Error file was erased.<br/>", sarg->activator);
-    slog(LOG_ALL, UNIT_MINV(sarg->activator), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
+    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
     return SFR_BLOCK;
 }
 
@@ -130,7 +130,7 @@ int info_rod(spec_arg *sarg)
 
     act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Zone user information file was erased.<br/>", sarg->activator);
-    slog(LOG_ALL, UNIT_MINV(sarg->activator), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
+    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
     return SFR_BLOCK;
 }
 
@@ -297,7 +297,7 @@ void execute_append(unit_data *pc, const char *str)
 
     fprintf(f, "%s\n", str);
 
-    slog(LOG_ALL, UNIT_MINV(pc), "EXECUTE(%s): %s", UNIT_NAME(pc), str);
+    slog(LOG_ALL, pc->getLevelOfWizardInvisibility(), "EXECUTE(%s): %s", UNIT_NAME(pc), str);
 
     fclose(f);
 }

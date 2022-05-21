@@ -309,7 +309,7 @@ void pc_data::reconnect_game(descriptor_data *d)
         setLastLocation(nullptr);
     }
     act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
-    slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
+    slog(LOG_BRIEF, getLevelOfWizardInvisibility(), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
     CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
     m_time.setPlayerLastConnectTime(time(nullptr));
     //      stop_affect(ch);

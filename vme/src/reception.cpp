@@ -76,14 +76,14 @@ static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, v
         return 0;
     }
 
-    if (!UNIT_MINV(item))
+    if (!item->getLevelOfWizardInvisibility())
     {
         sum += subtract_recurse(ch, item->getContainedUnits(), seconds, fptr);
     }
 
     sum += subtract_recurse(ch, item->getNext(), seconds, fptr);
 
-    if (IS_OBJ(item) && !UNIT_MINV(item))
+    if (IS_OBJ(item) && !item->getLevelOfWizardInvisibility())
     {
         ubit32 price = 0;
 

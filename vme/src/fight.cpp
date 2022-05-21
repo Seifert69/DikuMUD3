@@ -1342,7 +1342,7 @@ void damage(unit_data *ch,
         if (!IS_NPC(victim))
         {
             slog(LOG_EXTENSIVE,
-                 MAX(UNIT_MINV(ch), UNIT_MINV(victim)),
+                 MAX(ch->getLevelOfWizardInvisibility(), victim->getLevelOfWizardInvisibility()),
                  "%s killed by %s at %s",
                  STR(UNIT_NAME(victim)),
                  TITLENAME(ch),

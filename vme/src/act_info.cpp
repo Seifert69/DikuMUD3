@@ -49,8 +49,9 @@ void player_where(unit_data *ch, char *arg)
     for (d = g_descriptor_list; d; d = d->getNext())
     {
         if (d->cgetCharacter() && (d->cgetCharacter() != ch) && d->cgetCharacter()->getMyContainer() && descriptor_is_playing(d) &&
-            (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->cgetCharacter()))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
-            d->cgetOriginalCharacter() == nullptr && CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
+            (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->cgetCharacter()))) &&
+            CHAR_LEVEL(ch) >= d->cgetCharacter()->getLevelOfWizardInvisibility() && d->cgetOriginalCharacter() == nullptr &&
+            CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
         {
             auto msg = diku::format_to_str("%-30s at %s<br/>", UNIT_NAME(d->cgetCharacter()), TITLENAME(unit_room(d->getCharacter())));
             send_to_char(msg, ch);
@@ -92,8 +93,8 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
         for (d = g_descriptor_list; d; d = d->getNext())
         {
             if (d->cgetCharacter() && d->cgetCharacter()->getMyContainer() && descriptor_is_playing(d) &&
-                CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
-                (d->cgetOriginalCharacter() == nullptr || CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetOriginalCharacter())))
+                CHAR_LEVEL(ch) >= d->cgetCharacter()->getLevelOfWizardInvisibility() &&
+                (d->cgetOriginalCharacter() == nullptr || CHAR_LEVEL(ch) >= d->cgetOriginalCharacter()->getLevelOfWizardInvisibility()))
             {
                 nCount++;
                 std::string whose_body;
@@ -116,7 +117,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (i = g_unit_list; i; i = i->getGlobalNext())
         {
-            if (i->getMyContainer() && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
+            if (i->getMyContainer() && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= i->getLevelOfWizardInvisibility())
             {
                 nCount++;
                 if (nCount++ > 100)

@@ -743,7 +743,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
                               u->getLightOutput(),
                               u->getTransparentLightOutput(),
                               u->getNumberOfCharactersInsideUnit(),
-                              UNIT_MINV(u),
+                              u->getLevelOfWizardInvisibility(),
                               u->getMyContainer() ? STR(TITLENAME(u->getMyContainer())) : "Nothing",
                               u->getContainedUnits() ? "has contents" : "is empty",
                               sprintbit(bits2, u->getManipulate(), g_unit_manipulate),
@@ -1233,7 +1233,7 @@ static void stat_contents(const unit_data *ch, unit_data *u)
     {
         for (u = u->getContainedUnits(); u; u = u->getNext())
         {
-            if (CHAR_LEVEL(ch) >= UNIT_MINV(u))
+            if (CHAR_LEVEL(ch) >= u->getLevelOfWizardInvisibility())
             {
                 auto msg = diku::format_to_str("[%s@%s] Name '%s', Title '%s'  %s (L%d B%d)<br/>",
                                                UNIT_FI_NAME(u),
