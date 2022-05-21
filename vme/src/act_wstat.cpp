@@ -755,7 +755,7 @@ static void stat_normal(unit_data *ch, unit_data *u)
 
     msg = diku::format_to_str("Key name: [%s]  Open flags: %s  Open Diff: %d<br/>"
                               "Base weight : [%d] Weight : [%d] Capacity : [%d] Size [%d]<br/>",
-                              UNIT_KEY(u) ? UNIT_KEY(u) : "none",
+                              u->getKey() ? u->getKey() : "none",
                               sprintbit(bits1, UNIT_OPEN_FLAGS(u), g_unit_open_flags),
                               UNIT_OPEN_DIFF(u),
                               u->getBaseWeight(),

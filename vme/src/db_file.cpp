@@ -1145,9 +1145,9 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 #ifdef VMC_SRC
     pBuf->AppendDoubleString((char *)UNIT_KEY(u));
 #else
-    if (UNIT_KEY(u))
+    if (u->getKey())
     {
-        split_fi_ref(UNIT_KEY(u), zone, name);
+        split_fi_ref(u->getKey(), zone, name);
         pBuf->AppendString(zone);
         pBuf->AppendString(name);
     }
