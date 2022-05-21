@@ -2318,7 +2318,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->type = DILV_UINT1R;
                         v->atyp = DILA_NONE;
@@ -2373,7 +2373,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_UINT4R)
             {
                 auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                if (object && IS_OBJ(object) && (v2->val.num >= 0 && v2->val.num < static_cast<sbit32>(object->getValueArraySize())))
+                if (object && object->isObj() && (v2->val.num >= 0 && v2->val.num < static_cast<sbit32>(object->getValueArraySize())))
                 {
                     v->atyp = DILA_NONE;
                     v->ref = object->getValueAtIndexPtr(v2->val.num);
@@ -2397,7 +2397,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -2427,7 +2427,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -2457,7 +2457,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -2485,7 +2485,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr))
+                {
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -2495,7 +2496,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;

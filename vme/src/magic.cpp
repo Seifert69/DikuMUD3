@@ -118,24 +118,27 @@ ubit1 use_mana(unit_data *medium, int mana)
             return FALSE;
         }
     }
-    else if (IS_OBJ(medium))
+    else
     {
-        switch (OBJ_TYPE(medium))
+        if (medium->isObj())
         {
-            case ITEM_STAFF:
-            case ITEM_WAND:
-                if (OBJ_VALUE(medium, 1))
-                {
-                    UOBJ(medium)->setValueAtIndexTo(1, OBJ_VALUE(medium, 1) - 1);
-                    return TRUE;
-                }
-                else
-                {
-                    return FALSE;
-                }
-                break;
-            default:
-                return FALSE; /* no mana in other objects */
+            switch (OBJ_TYPE(medium))
+            {
+                case ITEM_STAFF:
+                case ITEM_WAND:
+                    if (OBJ_VALUE(medium, 1))
+                    {
+                        UOBJ(medium)->setValueAtIndexTo(1, OBJ_VALUE(medium, 1) - 1);
+                        return TRUE;
+                    }
+                    else
+                    {
+                        return FALSE;
+                    }
+                    break;
+                default:
+                    return FALSE; /* no mana in other objects */
+            }
         }
     }
     return FALSE; /* no mana/charge in this type of unit */
@@ -248,7 +251,7 @@ ubit1 may_teleport(unit_data *unit, unit_data *dest)
 
 int object_power(unit_data *unit)
 {
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         if (OBJ_TYPE(unit) == ITEM_POTION || OBJ_TYPE(unit) == ITEM_SCROLL || OBJ_TYPE(unit) == ITEM_WAND || OBJ_TYPE(unit) == ITEM_STAFF)
         {
@@ -308,7 +311,7 @@ int spell_defense_skill(unit_data *unit, int spell)
         return max;
     }
 
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         return object_power(unit); //  Philosophical... / 2 ?
     }
@@ -357,7 +360,7 @@ int spell_attack_skill(unit_data *unit, int spell)
         return PC_SPL_SKILL(unit, spell);
     }
 
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         return object_power(unit);
     }

@@ -72,7 +72,7 @@ ubit1 spell_legal_target(int spl, unit_data *caster, unit_data *target)
     }
 
     if ((IS_SET(g_spell_info[spl].targets, TAR_ROOM) && target->isRoom()) ||
-        (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && IS_CHAR(target)) || (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && IS_OBJ(target)))
+        (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && IS_CHAR(target)) || (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && target->isObj()))
     {
         return TRUE;
     }

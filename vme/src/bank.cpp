@@ -436,7 +436,7 @@ static bool move_money_up(unit_data *ch, unit_data *u)
         }
         else
         {
-            if ((IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER) || tmp->isRoom() || IS_CHAR(tmp))
+            if ((tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER) || tmp->isRoom() || IS_CHAR(tmp))
             {
                 found = found || move_money_up(ch, tmp);
             }

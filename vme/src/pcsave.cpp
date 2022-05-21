@@ -276,7 +276,7 @@ void save_player_file(unit_data *pc)
     /* Remove all inventory and equipment in order to make a CLEAN save */
     while ((tmp_u = pc->getContainedUnits()))
     {
-        if (IS_OBJ(tmp_u))
+        if (tmp_u->isObj())
         {
             if ((tmp_i = OBJ_EQP_POS(tmp_u)))
             {
@@ -304,7 +304,7 @@ void save_player_file(unit_data *pc)
 
         unit_to_unit(tmp_u, pc);
 
-        if (IS_OBJ(tmp_u))
+        if (tmp_u->isObj())
         {
             tmp_i = OBJ_EQP_POS(tmp_u);
             UOBJ(tmp_u)->setEquipmentPosition(0);

@@ -58,7 +58,7 @@ int ball(spec_arg *sarg)
 
         for (u = g_unit_list; u; u = u->getGlobalNext())
         {
-            if (IS_OBJ(u) && (OBJ_TYPE(u) == v1))
+            if (u->isObj() && (OBJ_TYPE(u) == v1))
             {
                 for (i = 0; i < TOP_MAX; i++)
                 {

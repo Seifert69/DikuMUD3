@@ -439,7 +439,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     }
 
     /* see if field is valid for unit */
-    if ((unit_field_data[type].utype == UT_ROOM && !unt->isRoom()) || (unit_field_data[type].utype == UT_OBJ && !IS_OBJ(unt)) ||
+    if ((unit_field_data[type].utype == UT_ROOM && !unt->isRoom()) || (unit_field_data[type].utype == UT_OBJ && !unt->isObj()) ||
         (unit_field_data[type].utype == UT_NPC && !IS_NPC(unt)) || (unit_field_data[type].utype == UT_PC && !IS_PC(unt)) ||
         (unit_field_data[type].utype == UT_CHAR && !IS_CHAR(unt)))
     {

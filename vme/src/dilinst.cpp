@@ -1698,7 +1698,7 @@ void dilfi_lnk(dilprg *p)
     {
         if (v1->val.ptr && v2->val.ptr)
         {
-            if (IS_OBJ((unit_data *)v1->val.ptr) && OBJ_EQP_POS((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isObj() && OBJ_EQP_POS((unit_data *)v1->val.ptr))
             {
                 unequip_object((unit_data *)v1->val.ptr);
             }
@@ -2701,55 +2701,58 @@ void dilfi_ada(dilprg *p)
                              v11->val.num);
                 }
             }
-            else if (IS_OBJ((unit_data *)v1->val.ptr))
+            else
             {
-                if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
-                    is_in(v11->val.num, APF_NONE, APF_MAX))
+                if (((unit_data *)v1->val.ptr)->isObj())
                 {
-                    if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+                    if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) &&
+                        is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
+                        is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
                     {
-                        szonelog(p->frame->tmpl->zone,
-                                 "DIL '%s' attempt to violate system access security (ada).",
-                                 p->frame->tmpl->prgname);
-                        p->waitcmd = WAITCMD_QUIT;
+                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+                        {
+                            szonelog(p->frame->tmpl->zone,
+                                     "DIL '%s' attempt to violate system access security (ada).",
+                                     p->frame->tmpl->prgname);
+                            p->waitcmd = WAITCMD_QUIT;
+                        }
+                        else
+                        {
+                            // This is a transfer affect
+
+                            unit_affected_type af;
+
+                            af.setID(v2->val.num); // Negative for object transfers
+                            af.setDuration(v3->val.num);
+                            af.setBeat(v4->val.num);
+
+                            af.setDataAtIndex(0, v5->val.num);
+                            af.setDataAtIndex(1, v6->val.num);
+                            af.setDataAtIndex(2, v7->val.num);
+
+                            af.setFirstFI(v8->val.num);
+                            af.setTickFI(v9->val.num);
+                            af.setLastFI(v10->val.num);
+                            af.setApplyFI(v11->val.num);
+                            create_affect((unit_data *)v1->val.ptr, &af);
+                        }
                     }
                     else
                     {
-                        // This is a transfer affect
-
-                        unit_affected_type af;
-
-                        af.setID(v2->val.num); // Negative for object transfers
-                        af.setDuration(v3->val.num);
-                        af.setBeat(v4->val.num);
-
-                        af.setDataAtIndex(0, v5->val.num);
-                        af.setDataAtIndex(1, v6->val.num);
-                        af.setDataAtIndex(2, v7->val.num);
-
-                        af.setFirstFI(v8->val.num);
-                        af.setTickFI(v9->val.num);
-                        af.setLastFI(v10->val.num);
-                        af.setApplyFI(v11->val.num);
-                        create_affect((unit_data *)v1->val.ptr, &af);
+                        szonelog(p->frame->tmpl->zone,
+                                 "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
+                                 p->frame->tmpl->prgname,
+                                 v2->val.num,
+                                 v8->val.num,
+                                 v9->val.num,
+                                 v10->val.num,
+                                 v11->val.num);
                     }
                 }
                 else
                 {
-                    szonelog(p->frame->tmpl->zone,
-                             "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
-                             p->frame->tmpl->prgname,
-                             v2->val.num,
-                             v8->val.num,
-                             v9->val.num,
-                             v10->val.num,
-                             v11->val.num);
+                    szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect unit is neither char nor object (ada).", p->frame->tmpl->prgname);
                 }
-            }
-            else
-            {
-                szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect unit is neither char nor object (ada).", p->frame->tmpl->prgname);
             }
         }
         else
@@ -3040,7 +3043,7 @@ void dilfi_eqp(dilprg *p)
     if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
-        if (unit && unit->getMyContainer() && IS_CHAR(unit->getMyContainer()) && IS_OBJ(unit) &&
+        if (unit && unit->getMyContainer() && IS_CHAR(unit->getMyContainer()) && unit->isObj() &&
             !equipment(unit->getMyContainer(), v2->val.num))
         {
             /* Then equip char */
@@ -3060,7 +3063,7 @@ void dilfi_ueq(dilprg *p)
 
     if (dil_type_check("unequip", p, 1, v1, FAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr) && OBJ_EQP_POS((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isObj() && OBJ_EQP_POS((unit_data *)v1->val.ptr))
         {
             unequip_object((unit_data *)v1->val.ptr);
         }

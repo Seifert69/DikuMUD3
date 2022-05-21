@@ -31,7 +31,7 @@ int char_carry_n(unit_data *unit)
 
     for (unit = unit->getContainedUnits(), i = 0; unit; unit = unit->getNext())
     {
-        if (!IS_OBJ(unit) || ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
+        if (!unit->isObj() || ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
         {
             i++;
         }

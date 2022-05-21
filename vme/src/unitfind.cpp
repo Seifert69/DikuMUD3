@@ -255,7 +255,7 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
     {
         for (u = ref->getContainedUnits(); u; u = u->getNext())
         {
-            if ((!IS_OBJ(u) || (OBJ_EQP_POS(u) == 0)) && findcheck(u, pset, tflags))
+            if ((!u->isObj() || (OBJ_EQP_POS(u) == 0)) && findcheck(u, pset, tflags))
             {
                 count++;
                 if (number(1, count) == count)
@@ -274,7 +274,7 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
         {
             for (u = ref->getContainedUnits(); u; u = u->getNext())
             {
-                if (IS_OBJ(u) && OBJ_EQP_POS(u))
+                if (u->isObj() && OBJ_EQP_POS(u))
                 {
                     if (number(1, count) == count)
                     {
@@ -375,7 +375,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
     {
         for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
         {
-            if (IS_SET(type, u->getUnitType()) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+            if (IS_SET(type, u->getUnitType()) && u->isObj() && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                 (ct = u->getNames().IsNameRawAbbrev(c)) && (ct - c >= best_len))
             {
                 if (ct - c > best_len)
@@ -397,7 +397,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
         for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
         {
             if (IS_SET(type, u->getUnitType()) && (ct = u->getNames().IsNameRawAbbrev(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
-                !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
+                !(u->isObj() && OBJ_EQP_POS(u)) && (ct - c >= best_len))
             {
                 if (ct - c > best_len)
                 {
@@ -662,7 +662,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         {
             for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
             {
-                if (IS_SET(type, u->getUnitType()) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+                if (IS_SET(type, u->getUnitType()) && u->isObj() && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                     (ct = u->getNames().IsNameRaw(c)) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
@@ -684,7 +684,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
             for (u = const_cast<unit_data *>(ch->getContainedUnits()); u; u = u->getNext())
             {
                 if (IS_SET(type, u->getUnitType()) && (ct = u->getNames().IsNameRaw(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
-                    !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
+                    !(u->isObj() && OBJ_EQP_POS(u)) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
                     {
@@ -1166,7 +1166,7 @@ static unit_data *scan4_ref_room(unit_data *room, unit_data *fu)
 
     for (u = room->getContainedUnits(); u; u = u->getNext())
     {
-        if (((u->isRoom() || IS_OBJ(u)) && (!UNIT_IS_TRANSPARENT(u))))
+        if (((u->isRoom() || u->isObj()) && (!UNIT_IS_TRANSPARENT(u))))
         {
             continue;
         }
@@ -1193,7 +1193,7 @@ unit_data *scan4_ref(unit_data *ch, unit_data *fu)
     }
     else
     {
-        if (((ch->getMyContainer()->isRoom() || IS_OBJ(ch->getMyContainer())) && (!UNIT_IS_TRANSPARENT(ch->getMyContainer()))))
+        if (((ch->getMyContainer()->isRoom() || ch->getMyContainer()->isObj()) && (!UNIT_IS_TRANSPARENT(ch->getMyContainer()))))
         {
             return (scan4_ref_room(ch->getMyContainer(), fu));
         }

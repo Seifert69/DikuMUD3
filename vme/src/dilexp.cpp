@@ -551,7 +551,7 @@ void dilfe_phead(dilprg *p)
 void dilfe_ohead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_OBJ(g_obj_head))
+    if (g_obj_head->isObj())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
@@ -2929,7 +2929,8 @@ void dilfe_fits(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_OBJ((unit_data *)v2->val.ptr))
+                    {
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isObj())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -2948,7 +2949,8 @@ void dilfe_fits(dilprg *p)
                                     break;
                             }
                         }
-                        break;
+                    }
+                    break;
                     case DILV_NULL:
                     case DILV_FAIL:
                         v->type = DILV_FAIL;

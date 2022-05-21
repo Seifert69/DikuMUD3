@@ -148,7 +148,7 @@ void insert_in_unit_list(unit_data *u)
             if (g_room_head->getUnitType() != UNIT_ST_ROOM)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->getGlobalNext())
+                for (; tmp_u && (IS_CHAR(tmp_u) || tmp_u->isObj()); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -493,7 +493,7 @@ void modify_bright(unit_data *unit, int bright)
         in->changeNumberOfActiveLightSourcesBy(bright);
     }
 
-    if (IS_OBJ(unit) && OBJ_EQP_POS(unit))
+    if (unit->isObj() && OBJ_EQP_POS(unit))
     {
         /* The char holding the torch light up the SAME way the torch does! */
         /* this works with the equib/unequib functions. This is NOT a case  */
@@ -552,7 +552,7 @@ unit_data *equipment(unit_data *ch, ubit8 pos)
 
     for (u = ch->getContainedUnits(); u; u = u->getNext())
     {
-        if (IS_OBJ(u) && pos == OBJ_EQP_POS(u))
+        if (u->isObj() && pos == OBJ_EQP_POS(u))
         {
             return u;
         }
@@ -584,7 +584,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     unit_affected_type *af = nullptr;
     unit_affected_type newaf;
 
-    assert(pos > 0 && IS_OBJ(obj) && IS_CHAR(ch));
+    assert(pos > 0 && obj->isObj() && IS_CHAR(ch));
     assert(!equipment(ch, pos));
     assert(obj->getMyContainer() == ch); /* Must carry object in inventory */
 
@@ -611,7 +611,7 @@ unit_data *unequip_object(unit_data *obj)
 
     ch = obj->getMyContainer();
 
-    assert(IS_OBJ(obj) && OBJ_EQP_POS(obj));
+    assert(obj->isObj() && OBJ_EQP_POS(obj));
     assert(IS_CHAR(ch));
 
     UOBJ(obj)->setEquipmentPosition(0);

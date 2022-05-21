@@ -532,7 +532,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }
         else // Sailing in an object
         {
-            if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
+            if (!mover->isObj() || OBJ_TYPE(mover) != ITEM_BOAT)
             {
                 act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
@@ -606,7 +606,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }    // IS_CHAR
         else // Inside an object
         {
-            if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
+            if (!mover->isObj() || OBJ_TYPE(mover) != ITEM_BOAT)
             {
                 act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
@@ -621,7 +621,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             return 0; // Fish can't walk on land. 2020 I would think checking for race was equally important as extra?
         }
 
-        if (IS_OBJ(mover) && (OBJ_TYPE(mover) == ITEM_BOAT))
+        if (mover->isObj() && (OBJ_TYPE(mover) == ITEM_BOAT))
         {
             act("You can't sail your boat on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
@@ -761,7 +761,7 @@ void move_dir(unit_data *ch, int dir)
         return;
     }
 
-    if (IS_OBJ(ch->getMyContainer()))
+    if (ch->getMyContainer()->isObj())
     {
         self_walk(ch, ch->getMyContainer(), dir, 0);
     }

@@ -1401,7 +1401,7 @@ void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
 
 void bonus_setup(unit_data *u)
 {
-    if (IS_OBJ(u))
+    if (u->isObj())
     {
         if ((OBJ_TYPE(u) == ITEM_WEAPON) || (OBJ_TYPE(u) == ITEM_SHIELD) || (OBJ_TYPE(u) == ITEM_ARMOR))
         {

@@ -24,7 +24,6 @@
 inline ubit8 CHAR_SEX(const unit_data *ch);
 inline ubit8 CHAR_LEVEL(const unit_data *ch);
 inline bool CHAR_AWAKE(const unit_data *ch);
-inline bool IS_OBJ(const unit_data *unit);
 inline bool IS_NPC(const unit_data *unit);
 inline bool IS_PC(const unit_data *unit);
 inline bool IS_CHAR(const unit_data *unit);
@@ -79,7 +78,7 @@ inline pc_data *UPC(const unit_data *u)
 inline obj_data *UOBJ(const unit_data *u)
 {
 #ifdef UNIT_TYPE_DEBUG
-    assert(u && IS_OBJ(u));
+    assert(u && u->isObj());
 #endif
     return const_cast<obj_data *>(dynamic_cast<const obj_data *>(u));
 }
@@ -91,8 +90,6 @@ inline room_data *UROOM(const unit_data *u)
 #endif
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
-
-inline bool IS_OBJ(const unit_data *unit) { return unit->isObj(); }
 
 inline bool IS_NPC(const unit_data *unit) { return unit->isNPC(); }
 
@@ -172,7 +169,7 @@ inline ubit8 OBJ_FLAGS(unit_data *obj) { return UOBJ(obj)->getObjectFlags(); }
 
 /* ...........................OBJECT SUPERSTRUCTURES..................... */
 
-inline bool UNIT_IS_EQUIPPED(unit_data *obj) { return IS_OBJ(obj) && OBJ_EQP_POS(obj); }
+inline bool UNIT_IS_EQUIPPED(unit_data *obj) { return obj->isObj() && OBJ_EQP_POS(obj); }
 
 /* ..................................................................... */
 

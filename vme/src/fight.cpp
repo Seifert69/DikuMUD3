@@ -141,7 +141,7 @@ int char_dual_wield(unit_data *ch)
 // returns true if obj is a slaying weapon against opponent_race
 bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 {
-    if (obj && IS_OBJ(obj) && (OBJ_TYPE(obj) == ITEM_WEAPON) && (OBJ_VALUE(obj, 3) != RACE_DO_NOT_USE))
+    if (obj && obj->isObj() && (OBJ_TYPE(obj) == ITEM_WEAPON) && (OBJ_VALUE(obj, 3) != RACE_DO_NOT_USE))
     {
         if (OBJ_VALUE(obj, 3) == opponent_race)
         {
@@ -1418,7 +1418,7 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
         return;
     }
 
-    assert(IS_OBJ(obj));
+    assert(obj->isObj());
 
     if (obj->getCurrentHitpoints() < 0)
     { /* Endless */

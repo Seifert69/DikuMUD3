@@ -102,7 +102,7 @@ unit_data::~unit_data()
     /* Call functions of the unit which have any data                     */
     /* that they might want to work on.                                   */
 
-    if (IS_OBJ(this))
+    if (isObj())
     {
         delete UOBJ(this);
     }
@@ -301,68 +301,71 @@ unit_data *unit_data::copy()
             uroom->getRoomDirectionDataForExit(x)->setSkillDifficulty(thisroom->getRoomDirectionDataForExit(x)->getSkillDifficulty());
         }
     }
-    else if (IS_OBJ(this))
+    else
     {
-        obj_data *thisobj = UOBJ(this);
-        obj_data *uobj = UOBJ(u);
-
-        for (size_t x = 0; x < uobj->getValueArraySize(); x++)
+        if (isObj())
         {
-            uobj->setValueAtIndexTo(x, thisobj->getValueAtIndex(x));
+            obj_data *thisobj = UOBJ(this);
+            obj_data *uobj = UOBJ(u);
+
+            for (size_t x = 0; x < uobj->getValueArraySize(); x++)
+            {
+                uobj->setValueAtIndexTo(x, thisobj->getValueAtIndex(x));
+            }
+
+            uobj->setPriceInGP(thisobj->getPriceInGP());
+            uobj->setPricePerDay(thisobj->getPricePerDay());
+            uobj->setAllObjectFlags(thisobj->getObjectFlags());
+            uobj->setObjectItemType(thisobj->getObjectItemType());
+            uobj->setEquipmentPosition(thisobj->getEquipmentPosition());
+            uobj->setMagicResistance(thisobj->getMagicResistance());
         }
-
-        uobj->setPriceInGP(thisobj->getPriceInGP());
-        uobj->setPricePerDay(thisobj->getPricePerDay());
-        uobj->setAllObjectFlags(thisobj->getObjectFlags());
-        uobj->setObjectItemType(thisobj->getObjectItemType());
-        uobj->setEquipmentPosition(thisobj->getEquipmentPosition());
-        uobj->setMagicResistance(thisobj->getMagicResistance());
-    }
-    else if (IS_CHAR(this))
-    {
-        /// @todo These should all move down to char_data
-        auto *u_downcast = dynamic_cast<char_data *>(u);
-        auto *this_downcast = dynamic_cast<char_data *>(this);
-
-        u_downcast->setAllCharacterFlags(this_downcast->getCharacterFlags());
-        u_downcast->setPlayerExperience(this_downcast->getPlayerExperience());
-        u_downcast->setMana(this_downcast->getMana());
-        u_downcast->setEndurance(this_downcast->getEndurance());
-        u_downcast->setRace(this_downcast->getRace());
-        u_downcast->setOffensiveBonus(this_downcast->getOffensiveBonus());
-        u_downcast->setDefensiveBonus(this_downcast->getDefensiveBonus());
-        u_downcast->setSpeed(this_downcast->getSpeed());
-        u_downcast->setNaturalArmor(this_downcast->getNaturalArmor());
-        u_downcast->setAttackType(this_downcast->getAttackType());
-        u_downcast->setSex(this_downcast->getSex());
-        u_downcast->setLevel(this_downcast->getLevel());
-        u_downcast->setPosition(this_downcast->getPosition());
-        for (x = 0; x < ABIL_TREE_MAX; x++)
+        else if (IS_CHAR(this))
         {
-            u_downcast->setAbilityAtIndexTo(x, this_downcast->getAbilityAtIndex(x));
-        }
-        if (IS_PC(this))
-        {
-            ;
-            // Put in PC Copy stuff here
+            /// @todo These should all move down to char_data
+            auto *u_downcast = dynamic_cast<char_data *>(u);
+            auto *this_downcast = dynamic_cast<char_data *>(this);
+
+            u_downcast->setAllCharacterFlags(this_downcast->getCharacterFlags());
+            u_downcast->setPlayerExperience(this_downcast->getPlayerExperience());
+            u_downcast->setMana(this_downcast->getMana());
+            u_downcast->setEndurance(this_downcast->getEndurance());
+            u_downcast->setRace(this_downcast->getRace());
+            u_downcast->setOffensiveBonus(this_downcast->getOffensiveBonus());
+            u_downcast->setDefensiveBonus(this_downcast->getDefensiveBonus());
+            u_downcast->setSpeed(this_downcast->getSpeed());
+            u_downcast->setNaturalArmor(this_downcast->getNaturalArmor());
+            u_downcast->setAttackType(this_downcast->getAttackType());
+            u_downcast->setSex(this_downcast->getSex());
+            u_downcast->setLevel(this_downcast->getLevel());
+            u_downcast->setPosition(this_downcast->getPosition());
+            for (x = 0; x < ABIL_TREE_MAX; x++)
+            {
+                u_downcast->setAbilityAtIndexTo(x, this_downcast->getAbilityAtIndex(x));
+            }
+            if (IS_PC(this))
+            {
+                ;
+                // Put in PC Copy stuff here
+            }
+            else
+            {
+                for (x = 0; x < WPN_GROUP_MAX; x++)
+                {
+                    UNPC(u)->setWeaponSkillAtIndexTo(x, UNPC(this)->getWeaponSkillAtIndex(x));
+                }
+                for (x = 0; x < SPL_GROUP_MAX; x++)
+                {
+                    UNPC(u)->setSpellSkillAtIndexTo(x, UNPC(this)->getSpellSkillAtIndex(x));
+                }
+                UNPC(u)->setDefaultPosition(UNPC(this)->getDefaultPosition());
+                UNPC(u)->setAllNPCFlags(UNPC(this)->getAllNPCFlags());
+            }
         }
         else
         {
-            for (x = 0; x < WPN_GROUP_MAX; x++)
-            {
-                UNPC(u)->setWeaponSkillAtIndexTo(x, UNPC(this)->getWeaponSkillAtIndex(x));
-            }
-            for (x = 0; x < SPL_GROUP_MAX; x++)
-            {
-                UNPC(u)->setSpellSkillAtIndexTo(x, UNPC(this)->getSpellSkillAtIndex(x));
-            }
-            UNPC(u)->setDefaultPosition(UNPC(this)->getDefaultPosition());
-            UNPC(u)->setAllNPCFlags(UNPC(this)->getAllNPCFlags());
+            assert(FALSE);
         }
-    }
-    else
-    {
-        assert(FALSE);
     }
     insert_in_unit_list(u); /* Put unit into the g_unit_list      */
     apply_affect(u);        /* Set all affects that modify      */

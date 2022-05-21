@@ -297,7 +297,7 @@ int weight_size(int lbs)
 
 int weapon_fumble(unit_data *weapon, int roll)
 {
-    assert(IS_OBJ(weapon) && (OBJ_TYPE(weapon) == ITEM_WEAPON));
+    assert(weapon->isObj() && (OBJ_TYPE(weapon) == ITEM_WEAPON));
 
     return roll <= g_weapon_chart[OBJ_VALUE(weapon, 0)].fumble;
 }
@@ -521,7 +521,7 @@ int effective_dex(unit_data *ch)
 
     for (u = ch->getContainedUnits(); u; u = u->getNext())
     {
-        if (IS_OBJ(u) && (OBJ_EQP_POS(u) != 0) && (OBJ_TYPE(u) == ITEM_ARMOR))
+        if (u->isObj() && (OBJ_EQP_POS(u) != 0) && (OBJ_TYPE(u) == ITEM_ARMOR))
         {
             if (OBJ_EQP_POS(u) > WEAR_MAX)
             {

@@ -75,7 +75,7 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     unit_affected_type *taf = nullptr;
 
-    assert(IS_OBJ(unit));
+    assert(unit->isObj());
 
     if (set)
     {

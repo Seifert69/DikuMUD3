@@ -277,7 +277,7 @@ static unit_data *make_money(file_index_type *fi, amount_t amt)
 {
     unit_data *money = read_unit(fi);
 
-    assert(IS_OBJ(money));
+    assert(money->isObj());
 
     money->setWeight(0); // Init money-weight
 
@@ -508,7 +508,7 @@ amount_t unit_holds_total(unit_data *u, currency_t currency)
     amount_t amt = 0;
     amount_t rec = 0;
 
-    if (u->isRoom() || IS_CHAR(u) || (IS_OBJ(u) && OBJ_TYPE(u) == ITEM_CONTAINER))
+    if (u->isRoom() || IS_CHAR(u) || (u->isObj() && OBJ_TYPE(u) == ITEM_CONTAINER))
     {
         for (tmp = u->getContainedUnits(); tmp; tmp = tmp->getNext())
         {
@@ -521,7 +521,7 @@ amount_t unit_holds_total(unit_data *u, currency_t currency)
             }
             else
             {
-                if (tmp->isRoom() || IS_CHAR(tmp) || (IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER))
+                if (tmp->isRoom() || IS_CHAR(tmp) || (tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER))
                 {
                     rec = unit_holds_total(tmp, currency);
                     if (amt < amt + rec)

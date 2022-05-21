@@ -83,7 +83,7 @@ static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, v
 
     sum += subtract_recurse(ch, item->getNext(), seconds, fptr);
 
-    if (IS_OBJ(item) && !item->getLevelOfWizardInvisibility())
+    if (item->isObj() && !item->getLevelOfWizardInvisibility())
     {
         ubit32 price = 0;
 
@@ -250,7 +250,7 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
     hn.type = unit->getUnitType();
     hn.level = level;
 
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         hn.equip = OBJ_EQP_POS(unit);
     }
@@ -293,7 +293,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
 
     if ((tmp_u = unit->getContainedUnits()))
     {
-        if (IS_OBJ(tmp_u) && (tmp_i = OBJ_EQP_POS(tmp_u)))
+        if (tmp_u->isObj() && (tmp_i = OBJ_EQP_POS(tmp_u)))
         {
             unequip_object(tmp_u);
             UOBJ(tmp_u)->setEquipmentPosition(tmp_i);
@@ -303,14 +303,14 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
 
         add_units(pBuf, parent, unit, level, fast);
 
-        if (IS_OBJ(tmp_u) || IS_NPC(tmp_u))
+        if (tmp_u->isObj() || IS_NPC(tmp_u))
         {
             add_units(pBuf, parent, tmp_u, level + 1, fast);
         }
 
         unit_to_unit(tmp_u, unit);
 
-        if (IS_OBJ(tmp_u) && tmp_i)
+        if (tmp_u->isObj() && tmp_i)
         {
             UOBJ(tmp_u)->setEquipmentPosition(0);
             equip_char(unit, tmp_u, tmp_i);
@@ -319,7 +319,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
     else
     {
         /* UNIT CONTAINS NOTHING */
-        if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
+        if ((level != 0) && (unit->isObj() || IS_NPC(unit)) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
         {
             enlist(pBuf, unit, level, fast);
         }
@@ -336,7 +336,7 @@ void send_saves(unit_data *parent, unit_data *unit)
     send_saves(parent, unit->getContainedUnits());
     send_saves(parent, unit->getNext());
 
-    if ((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
+    if ((unit->isObj() || IS_NPC(unit)) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
     {
         send_save_to(parent, unit);
     }

@@ -242,7 +242,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
             dil_loadtime_activate(loaded);
         }
 
-        if (IS_OBJ(loaded))
+        if (loaded->isObj())
         {
 #ifdef SUSPEKT
             if ((cmd->num[1] == WEAR_WIELD) && (OBJ_TYPE(loaded) == ITEM_WEAPON))
