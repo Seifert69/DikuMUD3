@@ -1401,7 +1401,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             break;
     }
 
-    bwrite_affect(pBuf, UNIT_AFFECTED(u), nVersion);
+    bwrite_affect(pBuf, u->getUnitAffectedType(), nVersion);
 
     bwrite_func(pBuf, u->getFunctionPointer());
 

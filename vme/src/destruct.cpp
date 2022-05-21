@@ -216,9 +216,9 @@ void destruct_unit(unit_data *unit)
             destroy_fptr(unit, unit->getFunctionPointer()); /* Unlinks, no free */
         }
 
-        while (UNIT_AFFECTED(unit))
+        while (unit->getUnitAffectedType())
         {
-            unlink_affect(UNIT_AFFECTED(unit));
+            unlink_affect(unit->getUnitAffectedType());
         }
     }
 

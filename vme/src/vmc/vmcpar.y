@@ -875,10 +875,10 @@ unit_field  : NAMES stringlist
     }
     optfuncargs | AFFECT
     {
-        if (!UNIT_AFFECTED(cur))
+        if (!cur->getUnitAffectedType())
         {
             cur->setUnitAffectedType(mcreate_affect());
-            cur_aff = UNIT_AFFECTED(cur);
+            cur_aff = cur->getUnitAffectedType();
         }
         else
         {

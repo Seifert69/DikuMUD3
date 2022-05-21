@@ -388,7 +388,7 @@ bool affect_vector_string(unit_data *obj, std::string &s)
 
     memset(bonusvector, 0, sizeof(bonusvector));
 
-    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->getNext())
+    for (unit_affected_type *af = obj->getUnitAffectedType(); af; af = af->getNext())
     {
         switch (af->getID())
         {
@@ -452,7 +452,7 @@ bool affect_vector_list(unit_data *obj, std::string &s)
 {
     s.clear();
 
-    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->getNext())
+    for (unit_affected_type *af = obj->getUnitAffectedType(); af; af = af->getNext())
     {
         switch (af->getID())
         {
@@ -627,7 +627,7 @@ void process_affects(unit_data *pUnit)
     int lastf = 0;
     int applyf = 0;
 
-    for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->getNext())
+    for (pAf = pUnit->getUnitAffectedType(); pAf; pAf = pAf->getNext())
     {
         firstf = (pAf->getFirstFI() == TIF_NONE);
         tickf = (pAf->getTickFI() == TIF_NONE);

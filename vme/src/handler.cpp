@@ -591,7 +591,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     UOBJ(obj)->setEquipmentPosition(pos);
     modify_bright(ch, obj->getLightOutput()); /* Update light sources */
 
-    for (af = UNIT_AFFECTED(obj); af; af = af->getNext())
+    for (af = obj->getUnitAffectedType(); af; af = af->getNext())
     {
         if (af->getID() < 0) /* It is a transfer affect! */
         {
@@ -617,11 +617,11 @@ unit_data *unequip_object(unit_data *obj)
     UOBJ(obj)->setEquipmentPosition(0);
     modify_bright(ch, -obj->getLightOutput()); /* Update light sources */
 
-    for (af = UNIT_AFFECTED(obj); af; af = af->getNext())
+    for (af = obj->getUnitAffectedType(); af; af = af->getNext())
     {
         if (af->getID() < 0) /* It is a transfer affect! */
         {
-            for (caf = UNIT_AFFECTED(ch); caf; caf = caf->getNext())
+            for (caf = ch->getUnitAffectedType(); caf; caf = caf->getNext())
             {
                 if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->getDataAtIndex(0) == af->getDataAtIndex(0)) &&
                     (caf->getDataAtIndex(1) == af->getDataAtIndex(1)) &&

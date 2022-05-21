@@ -132,7 +132,7 @@ int has_found_door(unit_data *pc, int dir)
 
     if (ROOM_EXIT(pc->getMyContainer(), dir)->isDoorFlagSet(EX_CLOSED))
     {
-        for (af = UNIT_AFFECTED(pc->getMyContainer()); af; af = af->getNext())
+        for (af = pc->getMyContainer()->getUnitAffectedType(); af; af = af->getNext())
         {
             if (af->getID() == ID_SPOTTED_SECRET && PC_ID(pc) == af->getDataAtIndex(0))
             {

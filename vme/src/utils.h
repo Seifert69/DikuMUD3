@@ -93,8 +93,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline unit_affected_type *UNIT_AFFECTED(unit_data *unit) { return unit->getUnitAffectedType(); }
-
 inline const char *UNIT_NAME(const unit_data *unit) { return unit->getNames().Name(); }
 
 inline const char *UNIT_KEY(unit_data *unit) { return unit->getKey(); }

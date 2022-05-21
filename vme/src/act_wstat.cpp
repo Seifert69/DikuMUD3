@@ -632,7 +632,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
 {
     unit_affected_type *af = nullptr;
 
-    if (!UNIT_AFFECTED(u))
+    if (!u->getUnitAffectedType())
     {
         send_to_char("It is not affected by anything.<br/>", ch);
         return;
@@ -640,7 +640,7 @@ static void stat_affect(const unit_data *ch, unit_data *u)
 
     send_to_char("Unit affects:<br/>", ch);
 
-    for (af = UNIT_AFFECTED(u); af; af = af->getNext())
+    for (af = u->getUnitAffectedType(); af; af = af->getNext())
     {
         auto msg = diku::format_to_str("----------------------------------------------------<br/>"
                                        "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
