@@ -746,7 +746,7 @@ void dilfi_chas(dilprg *p)
     if (dil_type_check("change_speed", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
         auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-        if (character && IS_CHAR(character) && CHAR_COMBAT(character))
+        if (character && character->isChar() && CHAR_COMBAT(character))
         {
             CHAR_COMBAT(character)->changeSpeed(v2->val.num, character->getSpeedPercentage());
         }
@@ -839,9 +839,9 @@ void dilfi_stopf(dilprg *p)
 
     if (dil_type_check("stop_fighting", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 2, DILV_UP, DILV_NULL))
     {
-        if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
         {
-            if (v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+            if (v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
             {
                 stop_fighting((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
             }
@@ -863,7 +863,7 @@ void dilfi_setf(dilprg *p)
 
     if (dil_type_check("set_fighting", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar() && v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
         {
             if (CHAR_FIGHTING((unit_data *)v1->val.ptr))
             {
@@ -1743,7 +1743,7 @@ void dilfi_sete(dilprg *p)
 
     if (dil_type_check("sendtext", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
         {
             if (*((char *)v1->val.ptr) == MULTI_UNIQUE_CHAR && *((char *)v1->val.ptr + 1) == MULTI_PROMPT_CHAR)
             {
@@ -1781,7 +1781,7 @@ void dilfi_folo(dilprg *p)
         }
         else
         {
-            if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && IS_CHAR((unit_data *)v2->val.ptr))
+            if (v1->val.ptr && v2->val.ptr && ((unit_data *)v1->val.ptr)->isChar() && ((unit_data *)v2->val.ptr)->isChar())
             {
                 if (CHAR_MASTER((unit_data *)v1->val.ptr))
                 {
@@ -1807,7 +1807,7 @@ void dilfi_lcri(dilprg *p)
 
     if (dil_type_check("logcrime", p, 3, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_UP, v3, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && v2->val.ptr && ((unit_data *)v1->val.ptr)->isChar() && ((unit_data *)v2->val.ptr)->isChar())
         {
             log_crime((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr, v3->val.num);
         }
@@ -2327,7 +2327,7 @@ void dilfi_exec(dilprg *p)
 
     if (dil_type_check("exec", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
         {
             char cmd[MAX_INPUT_LENGTH + 1];
 
@@ -2658,7 +2658,7 @@ void dilfi_ada(dilprg *p)
     {
         if (v1->val.ptr)
         {
-            if (IS_CHAR((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isChar())
             {
                 if (is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
@@ -3043,7 +3043,7 @@ void dilfi_eqp(dilprg *p)
     if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
-        if (unit && unit->getMyContainer() && IS_CHAR(unit->getMyContainer()) && unit->isObj() &&
+        if (unit && unit->getMyContainer() && unit->getMyContainer()->isChar() && unit->isObj() &&
             !equipment(unit->getMyContainer(), v2->val.num))
         {
             /* Then equip char */
@@ -3090,7 +3090,7 @@ void dilfi_pup(dilprg *p)
 
     if (dil_type_check("updatepos", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
         {
             update_pos((unit_data *)v1->val.ptr);
             if (CHAR_POS((unit_data *)v1->val.ptr) == POSITION_DEAD)
@@ -3139,7 +3139,7 @@ void dilfi_cast(dilprg *p)
         medium = (unit_data *)v3->val.ptr;
         target = (unit_data *)v4->val.ptr;
 
-        if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) && caster && IS_CHAR(caster) && medium &&
+        if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) && caster && caster->isChar() && medium &&
             (g_spell_info[v1->val.num].spell_pointer || g_spell_info[v1->val.num].tmpl))
         {
             /* cast the spell */

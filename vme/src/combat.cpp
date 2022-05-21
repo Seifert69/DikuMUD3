@@ -630,7 +630,7 @@ void stat_combat(unit_data *god, unit_data *u, const char *pStr)
 {
     unit_data *u2 = nullptr;
 
-    if (!IS_CHAR(u))
+    if (!u->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
         return;
@@ -653,7 +653,7 @@ void stat_combat(unit_data *god, unit_data *u, const char *pStr)
         u2 = CHAR_FIGHTING(u);
     }
 
-    if (!IS_CHAR(u2))
+    if (!u2->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u2, cActParameter(), TO_CHAR);
         return;
@@ -681,7 +681,7 @@ void stat_spell(unit_data *god, unit_data *u, const char *pStr)
 {
     unit_data *u2 = nullptr;
 
-    if (!IS_CHAR(u))
+    if (!u->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
         return;
@@ -704,7 +704,7 @@ void stat_spell(unit_data *god, unit_data *u, const char *pStr)
         u2 = CHAR_FIGHTING(u);
     }
 
-    if (!IS_CHAR(u2))
+    if (!u2->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u2, cActParameter(), TO_CHAR);
         return;

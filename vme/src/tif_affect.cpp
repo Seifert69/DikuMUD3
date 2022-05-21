@@ -93,7 +93,7 @@ void tif_fear_check(unit_affected_type *af, unit_data *unit)
         /* Find someone else */
         for (ch = unit->getMyContainer()->getContainedUnits(); ch; ch = ch->getNext())
         {
-            if (ch != unit && IS_CHAR(ch))
+            if (ch != unit && ch->isChar())
             {
                 break;
             }
@@ -288,12 +288,12 @@ void tif_rage_tick(unit_affected_type *af, unit_data *unit)
 /* curse */
 void tif_curse_on(unit_affected_type *af, unit_data *unit)
 {
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         send_to_char("You feel that the gods are against you.<br/>", unit);
     }
     act("A shadow falls upon $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-    if (unit->getMyContainer() && IS_CHAR(unit->getMyContainer()))
+    if (unit->getMyContainer() && unit->getMyContainer()->isChar())
     {
         act("A shadow falls upon $3n.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
     }
@@ -301,13 +301,13 @@ void tif_curse_on(unit_affected_type *af, unit_data *unit)
 
 void tif_curse_off(unit_affected_type *af, unit_data *unit)
 {
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         send_to_char("You no longer feel that the gods are against you.<br/>", unit);
     }
 
     act("A shadow lifts from $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-    if (unit->getMyContainer() && IS_CHAR(unit->getMyContainer()))
+    if (unit->getMyContainer() && unit->getMyContainer()->isChar())
     {
         act("A shadow lifts from $3n.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
     }
@@ -353,7 +353,7 @@ void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 
     if (af->getDuration() <= 4)
     {
-        if (IS_CHAR(unit->getMyContainer()))
+        if (unit->getMyContainer()->isChar())
         {
             if (af->getDuration() <= 1) // Last tick.
             {
@@ -375,7 +375,7 @@ void tif_light_add(unit_affected_type *af, unit_data *unit)
     }
 
     /* If the thing is carried by a character */
-    if (IS_CHAR(unit->getMyContainer()))
+    if (unit->getMyContainer()->isChar())
     {
         act("Your $3N starts to glow.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
         act("$1n's $3n starts to glow.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_ROOM);
@@ -397,7 +397,7 @@ void tif_light_sub(unit_affected_type *af, unit_data *unit)
     }
 
     /* If the thing is carried by a character */
-    if (IS_CHAR(unit->getMyContainer()))
+    if (unit->getMyContainer()->isChar())
     {
         act("Your $3N gets dimmer.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_CHAR);
         act("$1n's $3N gets dimmer.", A_HIDEINV, unit->getMyContainer(), cActParameter(), unit, TO_ROOM);

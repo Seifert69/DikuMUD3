@@ -112,22 +112,25 @@ unit_data::~unit_data()
         {
             delete UROOM(this);
         }
-        else if (IS_CHAR(this))
+        else
         {
-            if (isNPC())
+            if (isChar())
             {
-                delete UNPC(this);
+                if (isNPC())
+                {
+                    delete UNPC(this);
+                }
+                else
+                {
+                    delete UPC(this);
+                }
+
+                delete UCHAR(this);
             }
             else
             {
-                delete UPC(this);
+                assert(FALSE);
             }
-
-            delete UCHAR(this);
-        }
-        else
-        {
-            assert(FALSE);
         }
     }
 }
@@ -320,51 +323,54 @@ unit_data *unit_data::copy()
             uobj->setEquipmentPosition(thisobj->getEquipmentPosition());
             uobj->setMagicResistance(thisobj->getMagicResistance());
         }
-        else if (IS_CHAR(this))
+        else
         {
-            /// @todo These should all move down to char_data
-            auto *u_downcast = dynamic_cast<char_data *>(u);
-            auto *this_downcast = dynamic_cast<char_data *>(this);
+            if (isChar())
+            {
+                /// @todo These should all move down to char_data
+                auto *u_downcast = dynamic_cast<char_data *>(u);
+                auto *this_downcast = dynamic_cast<char_data *>(this);
 
-            u_downcast->setAllCharacterFlags(this_downcast->getCharacterFlags());
-            u_downcast->setPlayerExperience(this_downcast->getPlayerExperience());
-            u_downcast->setMana(this_downcast->getMana());
-            u_downcast->setEndurance(this_downcast->getEndurance());
-            u_downcast->setRace(this_downcast->getRace());
-            u_downcast->setOffensiveBonus(this_downcast->getOffensiveBonus());
-            u_downcast->setDefensiveBonus(this_downcast->getDefensiveBonus());
-            u_downcast->setSpeed(this_downcast->getSpeed());
-            u_downcast->setNaturalArmor(this_downcast->getNaturalArmor());
-            u_downcast->setAttackType(this_downcast->getAttackType());
-            u_downcast->setSex(this_downcast->getSex());
-            u_downcast->setLevel(this_downcast->getLevel());
-            u_downcast->setPosition(this_downcast->getPosition());
-            for (x = 0; x < ABIL_TREE_MAX; x++)
-            {
-                u_downcast->setAbilityAtIndexTo(x, this_downcast->getAbilityAtIndex(x));
-            }
-            if (isPC())
-            {
-                ;
-                // Put in PC Copy stuff here
+                u_downcast->setAllCharacterFlags(this_downcast->getCharacterFlags());
+                u_downcast->setPlayerExperience(this_downcast->getPlayerExperience());
+                u_downcast->setMana(this_downcast->getMana());
+                u_downcast->setEndurance(this_downcast->getEndurance());
+                u_downcast->setRace(this_downcast->getRace());
+                u_downcast->setOffensiveBonus(this_downcast->getOffensiveBonus());
+                u_downcast->setDefensiveBonus(this_downcast->getDefensiveBonus());
+                u_downcast->setSpeed(this_downcast->getSpeed());
+                u_downcast->setNaturalArmor(this_downcast->getNaturalArmor());
+                u_downcast->setAttackType(this_downcast->getAttackType());
+                u_downcast->setSex(this_downcast->getSex());
+                u_downcast->setLevel(this_downcast->getLevel());
+                u_downcast->setPosition(this_downcast->getPosition());
+                for (x = 0; x < ABIL_TREE_MAX; x++)
+                {
+                    u_downcast->setAbilityAtIndexTo(x, this_downcast->getAbilityAtIndex(x));
+                }
+                if (isPC())
+                {
+                    ;
+                    // Put in PC Copy stuff here
+                }
+                else
+                {
+                    for (x = 0; x < WPN_GROUP_MAX; x++)
+                    {
+                        UNPC(u)->setWeaponSkillAtIndexTo(x, UNPC(this)->getWeaponSkillAtIndex(x));
+                    }
+                    for (x = 0; x < SPL_GROUP_MAX; x++)
+                    {
+                        UNPC(u)->setSpellSkillAtIndexTo(x, UNPC(this)->getSpellSkillAtIndex(x));
+                    }
+                    UNPC(u)->setDefaultPosition(UNPC(this)->getDefaultPosition());
+                    UNPC(u)->setAllNPCFlags(UNPC(this)->getAllNPCFlags());
+                }
             }
             else
             {
-                for (x = 0; x < WPN_GROUP_MAX; x++)
-                {
-                    UNPC(u)->setWeaponSkillAtIndexTo(x, UNPC(this)->getWeaponSkillAtIndex(x));
-                }
-                for (x = 0; x < SPL_GROUP_MAX; x++)
-                {
-                    UNPC(u)->setSpellSkillAtIndexTo(x, UNPC(this)->getSpellSkillAtIndex(x));
-                }
-                UNPC(u)->setDefaultPosition(UNPC(this)->getDefaultPosition());
-                UNPC(u)->setAllNPCFlags(UNPC(this)->getAllNPCFlags());
+                assert(FALSE);
             }
-        }
-        else
-        {
-            assert(FALSE);
         }
     }
     insert_in_unit_list(u); /* Put unit into the g_unit_list      */

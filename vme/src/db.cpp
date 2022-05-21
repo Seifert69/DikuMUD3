@@ -1329,7 +1329,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     if (g_nCorrupt == 0)
     {
-        if (IS_CHAR(u) && CHAR_MONEY(u) && stspec)
+        if (u->isChar() && CHAR_MONEY(u) && stspec)
         {
             long int val1 = 0;
             long int val2 = 0;

@@ -508,7 +508,7 @@ amount_t unit_holds_total(unit_data *u, currency_t currency)
     amount_t amt = 0;
     amount_t rec = 0;
 
-    if (u->isRoom() || IS_CHAR(u) || (u->isObj() && OBJ_TYPE(u) == ITEM_CONTAINER))
+    if (u->isRoom() || u->isChar() || (u->isObj() && OBJ_TYPE(u) == ITEM_CONTAINER))
     {
         for (tmp = u->getContainedUnits(); tmp; tmp = tmp->getNext())
         {
@@ -521,7 +521,7 @@ amount_t unit_holds_total(unit_data *u, currency_t currency)
             }
             else
             {
-                if (tmp->isRoom() || IS_CHAR(tmp) || (tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER))
+                if (tmp->isRoom() || tmp->isChar() || (tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER))
                 {
                     rec = unit_holds_total(tmp, currency);
                     if (amt < amt + rec)
@@ -543,7 +543,7 @@ amount_t char_holds_amount(unit_data *ch, currency_t currency)
     unit_data *tmp = nullptr;
     amount_t amt = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     for (tmp = ch->getContainedUnits(); tmp; tmp = tmp->getNext())
     {
@@ -566,7 +566,7 @@ ubit1 char_can_afford(unit_data *ch, amount_t amt, currency_t currency)
 {
     unit_data *tmp = nullptr;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     amt = adjust_money(amt, currency);
 

@@ -82,7 +82,7 @@ struct pc_train_values
 static int gold_cost(unit_data *ch, skill_teach_type *s, int level)
 {
     // It is free to practice < level 25.
-    if (IS_CHAR(ch) && CHAR_LEVEL(ch) < PRACTICE_COST_LEVEL)
+    if (ch->isChar() && CHAR_LEVEL(ch) < PRACTICE_COST_LEVEL)
         return 0;
 
     if (level < 1)

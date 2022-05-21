@@ -143,7 +143,7 @@ int hit_gain(unit_data *ch)
 {
     int gain = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     /* 10 turns to regenerate */
     if (CHAR_POS(ch) != POSITION_FIGHTING)
@@ -218,7 +218,7 @@ int move_gain(unit_data *ch)
 {
     int gain = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     if (CHAR_POS(ch) != POSITION_FIGHTING)
     {
@@ -268,7 +268,7 @@ int move_gain(unit_data *ch)
 
 int mana_limit(unit_data *ch)
 {
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     int ml = MIN(200, 100 + (CHAR_BRA(ch) + CHAR_CHA(ch)) / 2);
 
@@ -295,7 +295,7 @@ int mana_gain(unit_data *ch)
 {
     int gain = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     /* 10 turns to regenerate is default when CHA == LEVEL */
     if (CHAR_POS(ch) != POSITION_FIGHTING)

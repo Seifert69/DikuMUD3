@@ -155,7 +155,7 @@ void destruct_unit(unit_data *unit)
     }
 
     /* Remove all snooping, snoopers and return from any body */
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         if (CHAR_DESCRIPTOR(unit))
         {

@@ -53,7 +53,7 @@ void do_backstab(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    if (!IS_CHAR(vict))
+    if (!vict->isChar())
     {
         send_to_char("But it's dead already.<br/>", ch);
         return;

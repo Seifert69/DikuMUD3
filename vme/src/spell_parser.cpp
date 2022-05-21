@@ -72,7 +72,8 @@ ubit1 spell_legal_target(int spl, unit_data *caster, unit_data *target)
     }
 
     if ((IS_SET(g_spell_info[spl].targets, TAR_ROOM) && target->isRoom()) ||
-        (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && IS_CHAR(target)) || (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && target->isObj()))
+        (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && target->isChar()) ||
+        (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && target->isObj()))
     {
         return TRUE;
     }
@@ -171,7 +172,7 @@ int spell_perform(int spell_no,
         return -1;
     }
 
-    if (g_spell_info[spell_no].offensive && target && IS_CHAR(target))
+    if (g_spell_info[spell_no].offensive && target && target->isChar())
     {
         offend_legal_state(caster, target);
     }

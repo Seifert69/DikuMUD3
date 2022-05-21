@@ -1533,7 +1533,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
     unit_data *def_armour = nullptr;
     unit_data *def_shield = nullptr;
 
-    assert(IS_CHAR(att) && IS_CHAR(def));
+    assert(att->isChar() && def->isChar());
 
     if (CHAR_POS(att) < POSITION_SLEEPING)
     {
@@ -1761,7 +1761,7 @@ int hunting(spec_arg *sarg)
 
         if (scan4_ref(sarg->owner, h->victim))
         {
-            if (!IS_CHAR(h->victim))
+            if (!h->victim->isChar())
             {
                 destroy_fptr(sarg->owner, sarg->fptr); /* Will free automatic. */
                 return SFR_BLOCK;

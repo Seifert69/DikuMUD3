@@ -23,7 +23,7 @@ int follower_count(unit_data *u)
     char_follow_type *f = nullptr;
     int x = 0;
 
-    if (IS_CHAR(u))
+    if (u->isChar())
     {
         for (f = CHAR_FOLLOWERS(u); f; f = f->getNext())
         {
@@ -38,7 +38,7 @@ unit_data *get_follower(unit_data *u, int num)
     char_follow_type *f = nullptr;
     int x = 0;
 
-    if (IS_CHAR(u))
+    if (u->isChar())
     {
         for (f = CHAR_FOLLOWERS(u); f; f = f->getNext())
         {
@@ -472,7 +472,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                     {
                         for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                         {
-                            if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = uu->getNames().IsNameRawAbbrev(c)) &&
+                            if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRawAbbrev(c)) &&
                                 CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                             {
                                 if (ct - c > best_len)
@@ -518,7 +518,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                         {
                             for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                             {
-                                if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = uu->getNames().IsNameRawAbbrev(c)) &&
+                                if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRawAbbrev(c)) &&
                                     CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                 {
                                     if (ct - c > best_len)
@@ -655,7 +655,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         number = original_number = 1;
     }
 
-    if (IS_CHAR(ch)) /* Only check bitvector if ch IS a char! */
+    if (ch->isChar()) /* Only check bitvector if ch IS a char! */
     {
         /* Equipment can only be objects. */
         if (IS_SET(bitvectorm, FIND_UNIT_EQUIP))
@@ -759,7 +759,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                         {
                             for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                             {
-                                if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = uu->getNames().IsNameRaw(c)) &&
+                                if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRaw(c)) &&
                                     CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                 {
                                     if (ct - c > best_len)
@@ -805,7 +805,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                             {
                                 for (uu = u->getContainedUnits(); uu; uu = uu->getNext())
                                 {
-                                    if (IS_SET(type, uu->getUnitType()) && IS_CHAR(uu) && (ct = uu->getNames().IsNameRaw(c)) &&
+                                    if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRaw(c)) &&
                                         CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                     {
                                         if (ct - c > best_len)

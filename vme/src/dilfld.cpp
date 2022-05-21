@@ -223,7 +223,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if ((v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr)))
+                {
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -233,7 +234,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 case DILV_CP:
                     if (v1->val.ptr)
                     {
@@ -262,7 +264,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if ((v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr)))
+                {
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -279,7 +282,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 default:
@@ -298,7 +302,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if ((v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr)))
+                {
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -308,7 +313,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1789,7 +1795,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -1799,7 +1806,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -1816,7 +1824,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -1826,7 +1835,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2892,7 +2902,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -2923,7 +2933,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -2954,7 +2964,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -2985,7 +2995,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
@@ -3042,7 +3052,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                if (character && IS_CHAR(character) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                if (character && character->isChar() && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
                     if (character->isPC())
                     {
@@ -3586,7 +3596,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
@@ -3623,7 +3633,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -3633,7 +3644,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
 
                 default:
                     v->type = DILV_ERR; /* wrong type */
@@ -3653,7 +3665,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         if (character->isPC() && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
                         {
@@ -3814,7 +3826,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -3857,7 +3869,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3888,7 +3900,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -3919,7 +3931,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -3950,7 +3962,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3981,7 +3993,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -4010,7 +4022,8 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                {
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UP;
@@ -4020,7 +4033,8 @@ void dilfe_fld(dilprg *p)
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4759,7 +4773,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
@@ -4790,7 +4804,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         if (CHAR_FOLLOWERS(character))
                         {

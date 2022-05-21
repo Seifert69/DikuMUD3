@@ -218,7 +218,7 @@ void send_to_char(const char *messg, const unit_data *ch)
     // If a unit test is being run, send results there too
     unit_tests::OutputCapture::send_to_char(messg, ch);
 
-    if (IS_CHAR(ch))
+    if (ch->isChar())
     {
         send_to_descriptor(messg, const_cast<descriptor_data *>(CHAR_DESCRIPTOR(ch)));
     }
@@ -316,7 +316,7 @@ void act_generate(char *buf,
 
     *buf = 0;
 
-    if (!IS_CHAR(to) || arg1.m_u == nullptr)
+    if (!to->isChar() || arg1.m_u == nullptr)
     {
         return;
     }
@@ -442,7 +442,7 @@ void act_generate(char *buf,
                     case 'p':
                         if (sub->m_u != nullptr)
                         {
-                            if (IS_CHAR(sub->m_u))
+                            if (sub->m_u->isChar())
                             {
                                 i = g_char_pos[CHAR_POS(sub->m_u)];
                             }
@@ -574,7 +574,7 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
     if (type == TO_VICT)
     {
         to = arg3.m_u;
-        if (IS_CHAR(to))
+        if (to->isChar())
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0); // No newline
         }
@@ -583,7 +583,7 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
     else if (type == TO_CHAR)
     {
         to = arg1.m_u;
-        if (IS_CHAR(to))
+        if (to->isChar())
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0);
         }
@@ -629,7 +629,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     /* same unit or to person */
     for (; to; to = to->getNext())
     {
-        if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+        if (to->isChar() && CHAR_DESCRIPTOR(to))
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
             send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
@@ -643,7 +643,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
         {
             for (u = to->getContainedUnits(); u; u = u->getNext())
             {
-                if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                if (u->isChar() && CHAR_DESCRIPTOR(u))
                 {
                     act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                     send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
@@ -658,7 +658,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     {
         for (to = to->getContainedUnits(); to; to = to->getNext())
         {
-            if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+            if (to->isChar() && CHAR_DESCRIPTOR(to))
             {
                 act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
@@ -668,7 +668,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
             {
                 for (u = to->getContainedUnits(); u; u = u->getNext())
                 {
-                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                    if (u->isChar() && CHAR_DESCRIPTOR(u))
                     {
                         act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                         send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
@@ -719,7 +719,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     /* same unit or to person */
     for (; to; to = to->getNext())
     {
-        if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+        if (to->isChar() && CHAR_DESCRIPTOR(to))
         {
             *buf = 0;
             b = buf;
@@ -746,7 +746,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
         {
             for (u = to->getContainedUnits(); u; u = u->getNext())
             {
-                if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                if (u->isChar() && CHAR_DESCRIPTOR(u))
                 {
                     *buf = 0;
                     b = buf;
@@ -767,7 +767,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     {
         for (to = to->getContainedUnits(); to; to = to->getNext())
         {
-            if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+            if (to->isChar() && CHAR_DESCRIPTOR(to))
             {
                 *buf = 0;
                 b = buf;
@@ -783,7 +783,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
             {
                 for (u = to->getContainedUnits(); u; u = u->getNext())
                 {
-                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                    if (u->isChar() && CHAR_DESCRIPTOR(u))
                     {
                         *buf = 0;
                         b = buf;

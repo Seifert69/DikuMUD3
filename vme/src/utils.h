@@ -24,7 +24,6 @@
 inline ubit8 CHAR_SEX(const unit_data *ch);
 inline ubit8 CHAR_LEVEL(const unit_data *ch);
 inline bool CHAR_AWAKE(const unit_data *ch);
-inline bool IS_CHAR(const unit_data *unit);
 
 #define PK_RELAXED 0
 #define PK_STRICT 1
@@ -52,7 +51,7 @@ inline bool IS_ULTIMATE(const unit_data *ch) { return CHAR_LEVEL(ch) == ULTIMATE
 inline char_data *UCHAR(const unit_data *u)
 {
 #ifdef UNIT_TYPE_DEBUG
-    assert(u && IS_CHAR(u));
+    assert(u && u->isChar());
 #endif
     return const_cast<char_data *>(dynamic_cast<const char_data *>(u));
 }
@@ -89,8 +88,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-inline bool IS_CHAR(const unit_data *unit) { return unit->isChar(); }
-
 /* ............................FILE INDEX STUFF..................... */
 
 inline const char *FI_ZONENAME(const file_index_type *fi) { return fi->getZone()->getName(); }
@@ -118,7 +115,7 @@ inline sbit8 UNIT_OUTSIDE_LIGHT(const unit_data *unit) { return !IS_SET(unit->ge
 
 inline sbit16 UNIT_IS_LIGHT(const unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (unit->getMyContainer() ? unit->getMyContainer()->getNumberOfActiveLightSources() : 0) >= 0; }
 
-inline ubit8 UNIT_SEX(const unit_data *unit) { return IS_CHAR(unit) ? CHAR_SEX(unit) : SEX_NEUTRAL; }
+inline ubit8 UNIT_SEX(const unit_data *unit) { return unit->isChar() ? CHAR_SEX(unit) : SEX_NEUTRAL; }
 
 inline bool UNIT_IS_GOOD(unit_data *ch) { return ch->getAlignment() >= 350; }
 inline bool UNIT_IS_EVIL(unit_data *ch) { return ch->getAlignment() <= -350; }
@@ -263,7 +260,7 @@ inline bool CHAR_VISION(const unit_data *ch) { return !CHAR_HAS_FLAG(ch, CHAR_BL
 inline bool CHAR_CAN_SEE(const unit_data *ch, const unit_data *unit)
 {
     // Made the decision that you can always see what you are inside, so you can e.g. knock a coffin you've been buried in
-    return !IS_CHAR(ch) ||
+    return !ch->isChar() ||
            (CHAR_VISION(ch) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED) || ch->getMyContainer() == unit) && CHAR_LEVEL(ch) >= unit->getLevelOfWizardInvisibility() &&
             (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||
              (UNIT_IS_LIGHT(ch->getMyContainer()) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));

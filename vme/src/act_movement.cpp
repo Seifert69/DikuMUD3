@@ -269,14 +269,14 @@ int room_move(unit_data *ch,
 
     if (ch != mover)
     {
-        if (IS_CHAR(mover))
+        if (mover->isChar())
         {
             command_interpreter(mover, "look :brief:");
         }
 
         for (u = mover->getContainedUnits(); u; u = u->getNext())
         {
-            if ((u != ch) && IS_CHAR(u))
+            if ((u != ch) && u->isChar())
             {
                 act(pPassengersO, A_SOMEONE, u, ch, mover, TO_CHAR);
                 command_interpreter(u, "look :brief:");
@@ -394,7 +394,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     {
         for (unit_data *u = mover->getContainedUnits(); u; u = u->getNext())
         {
-            if (IS_CHAR(u) && CHAR_FIGHTING(u))
+            if (u->isChar() && CHAR_FIGHTING(u))
             {
                 act("You can't get away like that in the middle of combat.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 act("You can't get away like that in the middle of combat.", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_CHAR);
@@ -402,7 +402,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             }
         }
 
-        if (IS_CHAR(mover)) // Mounted on a steed
+        if (mover->isChar()) // Mounted on a steed
         {
             snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You ride your $3N %s.", g_dirs[direction]);
             snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n rides $2s $3N %s.", g_dirs[direction]);
@@ -525,7 +525,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
     if (((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL)) && !bOceanEscape)
     {
-        if (IS_CHAR(mover))
+        if (mover->isChar())
         {
             act("You need to get yourself a boat.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
@@ -541,7 +541,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SWIM) || bOceanEscape)
     {
-        if (IS_CHAR(mover))
+        if (mover->isChar())
         {
             if (!mover->getExtraList().find_raw(S_SWIM_ON) &&
                 (!mover->getExtraList().find_raw(S_IS_FISH) || !mover->getExtraList().find_raw(S_IS_AMPHIB)))
@@ -628,7 +628,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }
     }
 
-    if (IS_CHAR(mover))
+    if (mover->isChar())
     {
         int need_movement = (g_movement_loss[ROOM_LANDSCAPE(room_from)] + g_movement_loss[ROOM_LANDSCAPE(room_to)]) / 2;
 
@@ -693,12 +693,12 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
     {
         unit_data *u = nullptr;
 
-        if (IS_CHAR(ch) && CHAR_FOLLOWERS(ch))
+        if (ch->isChar() && CHAR_FOLLOWERS(ch))
         {
             u = ch;
         }
 
-        if (IS_CHAR(mover) && CHAR_FOLLOWERS(mover))
+        if (mover->isChar() && CHAR_FOLLOWERS(mover))
         {
             u = mover;
         }
@@ -767,7 +767,8 @@ void move_dir(unit_data *ch, int dir)
     }
     else
     {
-        if (IS_CHAR(ch->getMyContainer()))
+        const unit_data *unit = ch->getMyContainer();
+        if (unit->isChar())
         {
             self_walk(ch, ch->getMyContainer(), dir, 0);
         }

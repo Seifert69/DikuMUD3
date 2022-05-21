@@ -1121,7 +1121,8 @@ void dilfe_atsp(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_UP:
-                    if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                {
+                    if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                     {
                         v->type = DILV_FAIL;
                     }
@@ -1221,7 +1222,8 @@ void dilfe_atsp(dilprg *p)
                                 break;
                         }
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR;
                     break;
@@ -1262,7 +1264,8 @@ void dilfe_cast2(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_UP:
-                    if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                {
+                    if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                     {
                         v->type = DILV_FAIL;
                     }
@@ -1333,7 +1336,8 @@ void dilfe_cast2(dilprg *p)
                                 break;
                         }
                     }
-                    break;
+                }
+                break;
                 case DILV_FAIL:
                 case DILV_NULL:
                     v->type = DILV_FAIL;
@@ -1484,7 +1488,8 @@ void dilfe_eqpm(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -1508,8 +1513,9 @@ void dilfe_eqpm(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
@@ -1535,7 +1541,8 @@ void dilfe_mel(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -1544,7 +1551,7 @@ void dilfe_mel(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -1587,8 +1594,9 @@ void dilfe_mel(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
@@ -1616,7 +1624,8 @@ void dilfe_meldam(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -1625,7 +1634,7 @@ void dilfe_meldam(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -1675,8 +1684,9 @@ void dilfe_meldam(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
@@ -2149,7 +2159,8 @@ void dilfe_visi(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2176,8 +2187,9 @@ void dilfe_visi(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
@@ -2202,7 +2214,8 @@ void dilfe_oppo(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2211,7 +2224,7 @@ void dilfe_oppo(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -2231,8 +2244,9 @@ void dilfe_oppo(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
@@ -2256,7 +2270,8 @@ void dilfe_gopp(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2296,8 +2311,9 @@ void dilfe_gopp(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_FAIL:
         case DILV_NULL:
         default:
@@ -2319,7 +2335,8 @@ void dilfe_gfol(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2355,7 +2372,8 @@ void dilfe_gfol(dilprg *p)
                         break;
                 }
             }
-            break;
+        }
+        break;
         case DILV_FAIL:
         case DILV_NULL:
         default:
@@ -2728,7 +2746,8 @@ void dilfe_cary(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2785,8 +2804,9 @@ void dilfe_cary(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
@@ -2822,7 +2842,8 @@ void dilfe_trmo(dilprg *p)
             break;
         case DILV_NULL:
         case DILV_UP:
-            if (v1->val.ptr && !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (v1->val.ptr && !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2835,7 +2856,7 @@ void dilfe_trmo(dilprg *p)
                         break;
                     case DILV_NULL:
                     case DILV_UP:
-                        if (v2->val.ptr && !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (v2->val.ptr && !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -2861,7 +2882,8 @@ void dilfe_trmo(dilprg *p)
                         break;
                 }
             }
-            break;
+        }
+        break;
         default:
             v->type = DILV_ERR;
             break;
@@ -2920,7 +2942,8 @@ void dilfe_fits(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2960,8 +2983,9 @@ void dilfe_fits(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         case DILV_NULL:
         case DILV_FAIL:
             v->type = DILV_FAIL;
@@ -3586,32 +3610,40 @@ void dilfe_gint(dilprg *p)
         switch (idx)
         {
             case DIL_GINT_MANAREG:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+            {
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = mana_gain(p_u);
                 }
-                break;
+            }
+            break;
 
             case DIL_GINT_HITREG:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+            {
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = hit_gain(p_u);
                 }
-                break;
+            }
+            break;
 
             case DIL_GINT_MOVEREG:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+            {
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = move_gain(p_u);
                 }
-                break;
+            }
+            break;
 
             case DIL_GINT_EFFDEX:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+            {
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = effective_dex(p_u);
                 }
-                break;
+            }
+            break;
 
             case DIL_GINT_REQXP:
                 v->val.num = required_xp(p_i);
@@ -7045,7 +7077,8 @@ void dilfe_pck(dilprg *p)
             v->type = DILV_FAIL;
             break;
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+        {
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -7072,8 +7105,9 @@ void dilfe_pck(dilprg *p)
                         break;
                 }
             }
+        }
 
-            break;
+        break;
         default:
             v->type = DILV_ERR;
             break;

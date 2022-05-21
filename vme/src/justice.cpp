@@ -170,7 +170,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
         return;
     }
 
-    if (!IS_CHAR(criminal) || !IS_CHAR(victim))
+    if (!criminal->isChar() || !victim->isChar())
     {
         slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
         return;

@@ -364,7 +364,7 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
     fast = 1; /* MAJOR BUG IN DIFF CAUSING BAD PLAYERS! WITH TOO MUCH */
     /* INVENTORY, THE PLAYER INDEX WILL GET FUCKED UP!      */
 
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
         UCHAR(unit)->setDescriptor(nullptr);
@@ -382,7 +382,7 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         UCHAR(unit)->setDescriptor(tmp_descr);
     }
@@ -479,7 +479,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
     frame = 0;
     pstack[frame] = (unit_data *)unit;
 
-    if (unit && IS_CHAR(unit))
+    if (unit && unit->isChar())
     {
         tmp_descr = CHAR_DESCRIPTOR(const_cast<unit_data *>(unit));
         UCHAR(unit)->setDescriptor(nullptr);
@@ -523,7 +523,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         if (hn.compressed)
         {
             slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
-            if (unit && IS_CHAR(unit))
+            if (unit && unit->isChar())
             {
                 UCHAR(unit)->setDescriptor(tmp_descr);
                 send_to_char("Your inventory was corrupt, please contact the Admin.<br/>", unit);
@@ -611,7 +611,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             }
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
-            if (hn.equip && equip_ok && IS_CHAR(pnew->getMyContainer()))
+            if (hn.equip && equip_ok && pnew->getMyContainer()->isChar())
             {
                 equip_char(pnew->getMyContainer(), pnew, hn.equip);
             }
@@ -620,7 +620,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         }
     }
 
-    if (unit && IS_CHAR(unit))
+    if (unit && unit->isChar())
     {
         UCHAR(unit)->setDescriptor(tmp_descr);
     }

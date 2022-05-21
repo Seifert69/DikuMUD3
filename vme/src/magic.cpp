@@ -106,7 +106,7 @@ int dil_effect(char *pStr, spell_args *sa)
 /* wands and staffs uses one charge, no matter what 'mana' is. --HHS */
 ubit1 use_mana(unit_data *medium, int mana)
 {
-    if (IS_CHAR(medium))
+    if (medium->isChar())
     {
         if (CHAR_MANA(medium) >= mana)
         {
@@ -384,7 +384,7 @@ int spell_attack_skill(unit_data *unit, int spell)
 /* For CHAR's determine if Divine or Magic power is used */
 int spell_attack_ability(unit_data *medium, int spell)
 {
-    if (IS_CHAR(medium))
+    if (medium->isChar())
     {
         /* Figure out if char will use Divine or Magic powers */
         assert(g_spell_info[spell].realm == ABIL_MAG || g_spell_info[spell].realm == ABIL_DIV);
@@ -397,7 +397,7 @@ int spell_attack_ability(unit_data *medium, int spell)
 
 int spell_ability(unit_data *u, int ability, int spell)
 {
-    if (IS_CHAR(u))
+    if (u->isChar())
     {
         return CHAR_ABILITY(u, ability);
     }
@@ -421,7 +421,7 @@ int spell_resistance(unit_data *att, unit_data *def, int spell)
         return -1;
     }
 
-    if (IS_CHAR(att) && IS_CHAR(def))
+    if (att->isChar() && def->isChar())
     {
         return resistance_skill_check(spell_attack_ability(att, spell),
                                       spell_ability(def, ABIL_BRA, spell),

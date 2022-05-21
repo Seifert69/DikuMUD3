@@ -441,7 +441,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     /* see if field is valid for unit */
     if ((unit_field_data[type].utype == UT_ROOM && !unt->isRoom()) || (unit_field_data[type].utype == UT_OBJ && !unt->isObj()) ||
         (unit_field_data[type].utype == UT_NPC && !unt->isNPC()) || (unit_field_data[type].utype == UT_PC && !unt->isPC()) ||
-        (unit_field_data[type].utype == UT_CHAR && !IS_CHAR(unt)))
+        (unit_field_data[type].utype == UT_CHAR && !unt->isChar()))
     {
         send_to_char("Field invalid for type of unit.<br/>", ch);
         return;
@@ -1378,7 +1378,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if (!IS_CHAR(unt))
+    if (!unt->isChar())
     {
         send_to_char("Unit-type must be char<br/>", ch);
         return;

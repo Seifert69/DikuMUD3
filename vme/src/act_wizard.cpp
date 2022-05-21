@@ -257,7 +257,7 @@ void do_snoop(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if (!IS_CHAR(victim))
+    if (!victim->isChar())
     {
         send_to_char("That's not a player / monster!<br/>", ch);
         return;

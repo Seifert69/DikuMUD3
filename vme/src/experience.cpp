@@ -536,7 +536,7 @@ int spell_bonus(unit_data *att,
 //
 void getWeapon(unit_data *ch, unit_data **pWeapon, int *pWeaponType, int *pWeaponSpeed, bool primary)
 {
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
     assert(pWeaponType != nullptr);
     assert(pWeapon != nullptr);
     assert(pWeaponSpeed != nullptr);
@@ -917,7 +917,7 @@ void do_consider(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    if (!IS_CHAR(vict))
+    if (!vict->isChar())
     {
         send_to_char("It must be dead already?<br/>", ch);
         return;

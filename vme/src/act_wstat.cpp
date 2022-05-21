@@ -533,7 +533,7 @@ static void stat_spell(const unit_data *ch, unit_data *u)
     int i = 0;
     int max = 0;
 
-    if (!IS_CHAR(u))
+    if (!u->isChar())
     {
         send_to_char("Unit is not a char<br/>", ch);
         return;
@@ -580,7 +580,7 @@ static void stat_spell(const unit_data *ch, unit_data *u)
 
 static void stat_skill(const unit_data *ch, unit_data *u)
 {
-    if (!IS_CHAR(u))
+    if (!u->isChar())
     {
         send_to_char("Unit is not a char<br/>", ch);
     }
@@ -610,7 +610,7 @@ static void stat_skill(const unit_data *ch, unit_data *u)
 
 static void stat_wskill(const unit_data *ch, unit_data *u)
 {
-    if (!IS_CHAR(u))
+    if (!u->isChar())
     {
         send_to_char("Unit is not a char<br/>", ch);
         return;
@@ -1033,7 +1033,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
     std::string bits2;
     int i = 0;
 
-    if (IS_CHAR(u))
+    if (u->isChar())
     {
         auto msg = diku::format_to_str("Char data:<br/>"
                                        "Descriptor: %s  Fighting: '%s'<br/>"

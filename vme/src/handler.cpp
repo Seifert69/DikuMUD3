@@ -118,7 +118,7 @@ void insert_in_unit_list(unit_data *u)
             if (g_obj_head->getUnitType() != UNIT_ST_OBJ)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->getGlobalNext())
+                for (; tmp_u && tmp_u->isChar(); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -148,7 +148,7 @@ void insert_in_unit_list(unit_data *u)
             if (g_room_head->getUnitType() != UNIT_ST_ROOM)
             {
                 tmp_u = g_unit_list;
-                for (; tmp_u && (IS_CHAR(tmp_u) || tmp_u->isObj()); tmp_u = tmp_u->getGlobalNext())
+                for (; tmp_u && (tmp_u->isChar() || tmp_u->isObj()); tmp_u = tmp_u->getGlobalNext())
                 {
                     ;
                 }
@@ -548,7 +548,7 @@ unit_data *equipment(unit_data *ch, ubit8 pos)
 {
     unit_data *u = nullptr;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     for (u = ch->getContainedUnits(); u; u = u->getNext())
     {
@@ -584,7 +584,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     unit_affected_type *af = nullptr;
     unit_affected_type newaf;
 
-    assert(pos > 0 && obj->isObj() && IS_CHAR(ch));
+    assert(pos > 0 && obj->isObj() && ch->isChar());
     assert(!equipment(ch, pos));
     assert(obj->getMyContainer() == ch); /* Must carry object in inventory */
 
@@ -612,7 +612,7 @@ unit_data *unequip_object(unit_data *obj)
     ch = obj->getMyContainer();
 
     assert(obj->isObj() && OBJ_EQP_POS(obj));
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     UOBJ(obj)->setEquipmentPosition(0);
     modify_bright(ch, -obj->getLightOutput()); /* Update light sources */
@@ -766,7 +766,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
         }
     }
 
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         unit->getMyContainer()->decrementNumberOfCharactersInsideUnit();
     }
@@ -793,7 +793,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     {
         unit->setNext(unit->getMyContainer()->getContainedUnits());
         unit->getMyContainer()->setContainedUnit(unit);
-        if (IS_CHAR(unit))
+        if (unit->isChar())
         {
             unit->getMyContainer()->incrementNumberOfCharactersInsideUnit();
         }
@@ -858,7 +858,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
 
     if (unit->getMyContainer())
     {
-        if (IS_CHAR(unit))
+        if (unit->isChar())
         {
             unit->getMyContainer()->decrementNumberOfCharactersInsideUnit();
         }
@@ -880,7 +880,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     unit->setNext(to->getContainedUnits());
     to->setContainedUnit(unit);
 
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         unit->getMyContainer()->incrementNumberOfCharactersInsideUnit();
     }
@@ -1024,7 +1024,7 @@ void unswitchbody(unit_data *npc)
 
 void stop_fightfollow(unit_data *unit)
 {
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
         {
@@ -1047,7 +1047,7 @@ void stop_snoopwrite(unit_data *unit)
         set_descriptor_fptr(d, descriptor_interpreter, FALSE);
     }
 
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         if (CHAR_IS_SWITCHED(unit))
         {

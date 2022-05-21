@@ -41,7 +41,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     unit_affected_type *taf = nullptr;
 
-    assert(IS_CHAR(unit));
+    assert(unit->isChar());
 
     if (set)
     {
@@ -141,7 +141,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     int modify = 0;
 
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         slog(LOG_ALL, 0, "ERROR: Affect weapon groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
@@ -190,7 +190,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 /* NPC's are ignored, they don't have skills. */
 ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         slog(LOG_ALL, 0, "ERROR: Affect skill groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
@@ -226,7 +226,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     int modify = 0;
 
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         slog(LOG_ALL, 0, "ERROR: Affect spell groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
@@ -278,7 +278,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 /* Unit must be a CHAR!                                   */
 ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    assert(IS_CHAR(unit));
+    assert(unit->isChar());
 
     if (set)
     {
@@ -333,7 +333,7 @@ ubit1 apf_light(unit_affected_type *af, unit_data *unit, ubit1 set)
 /* Data[1] = The original armour-type */
 ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         return TRUE;
     }
@@ -371,7 +371,7 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
 // Data[0] = The amount to modify speed by (-8 .. +8)
 ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         return TRUE;
     }
