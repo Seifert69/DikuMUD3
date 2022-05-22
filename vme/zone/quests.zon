@@ -28,8 +28,6 @@ notes
 // quest string is in the string s.
 //
 dilbegin integer hasQuest(u : unitptr, i : integer, s : string);
-var
-   exd : extraptr;
 code
 {
    if (s in u.quests)
@@ -39,6 +37,22 @@ code
 }
 dilend
 
+// NotInGuid() returns (1) if the character in NOT in the specified guild, otherwith (0)
+// quest string is in the string s. E.g. "notinguild@quests 0 "+GUILD_UDG_FIGHTER
+//
+dilbegin integer NotInGuild(u : unitptr, i : integer, s : string);
+external 
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+var
+   exd : extraptr;
+code
+{
+   if (not IsInGuild@guilds(u, s))
+      return (1);
+   else
+      return (0);
+}
+dilend
 
 // ============ GENERIC qstItemsWait() Helper function
 

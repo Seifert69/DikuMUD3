@@ -301,12 +301,12 @@
         {
             "source_file": {
                 "filename": "fightersguild.zon",
-                "sha512": "21546d4e1a1d32b742ab428f0e370848541c62302ea8aed1708c5e5923ca9a7a7ec8acb8724bec539794c990d2e50f34dce88278a511164ea3d76903c0bbe6be"
+                "sha512": "bc6bea21fbf2ebb745cad57020d4f19666f993b3643851d0a99a61fe31740e6637384be234b524a892f5714068dbd90a5b309b83cddba1a191e265e912002406"
             },
             "output": [
                 {
                     "filename": "fightersguild.data",
-                    "sha512": "99b0a4edbda7f5e5c431c54b2c944b36e77cb9df4b51dc85e8cb021427012bd7f40d3074a5266044222844f61c14f7eb12a0354d7260471f802a6d5122d3ea8a"
+                    "sha512": "a651c7ea2b49973dde832efa6736eaf6f3eb7ec3f7a69ba4666d39d108bbe2664b79aedc2caaf629e104116f762e8d93a5c04631dfc6a0be1bb9deb516633294"
                 },
                 {
                     "filename": "fightersguild.reset",
@@ -701,12 +701,12 @@
         {
             "source_file": {
                 "filename": "quests.zon",
-                "sha512": "6532a18a982058fb028708d51485e2b861f7a434ab40ad24a0d6a2df23f5ad63cc56fbbb6a083f9d9b8ade3615f03de15852633824b5e433ed31998035cfcb42"
+                "sha512": "23e0b1270da3b45572642b2d27608ba02b654ea48057c3eee3f42b1581d07a534a2068b45009d96f68e19b862a1cfb6ba3f61f47636b4666e20675e37ded2537"
             },
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "c19d8118833bd5b4eb6817486f7881c969669528ba9f9e111a0be0a5a9a559d8120a941980db828a6f618040c5991db5220d95218f6c2b98eb6864e8d820505f"
+                    "sha512": "22d208661a5142b36e0e70fec585fc346a42cb5777229044c462915cca5545f58ce05241a3cab31df17bd18e579546190fa04207a25b724e833d654983388fd1"
                 },
                 {
                     "filename": "quests.reset",

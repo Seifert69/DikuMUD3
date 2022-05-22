@@ -861,7 +861,7 @@ dilcopy qstSimpleQuest@quests(QUEST_FIGHTER_ENTRY,
          "Maia in the Fighter's Guild has asked you to bring her the head of the Male Griffon from Wartnz.",
          {"emote looks at the head of the Griffon.",
           "say Impressive! Well done, $1N. Welcome to the Fighter's guild."},
-          800, 1 * COPPER_MULT, {""}, "");
+          800, 1 * COPPER_MULT, {""}, "NotInGuild@quests 0 "+GUILD_UDG_FIGHTER);
 
 dilcopy qstItemsWanted@quests(QUEST_FIGHTER_ENTRY, {"head@death"}, {"decapCheck@quests 0 griffon_male@warntz"},
          {"say Excellent, thank you $1N."},
