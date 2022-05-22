@@ -623,7 +623,6 @@ dilcopy shopkeeper@function(
 {},"",100,10,2*PLATINUM_MULT,"",""
 );
 
-
 dilcopy qstSimpleQuest@quests(QUEST_THIEVES_ENTRY,
          {"say Hey $1N, want to prove yourself worth to our guild?",
           "say All you need to do is to bring me the head of Shaun the guard from Midgaard."},
@@ -631,7 +630,7 @@ dilcopy qstSimpleQuest@quests(QUEST_THIEVES_ENTRY,
          "Maria in the Thieve's Guild has asked you to bring her the head of Shaun the guard from Midgaard.",
          {"emote looks at the head of Shaun.",
           "say Impressive! Well done, $1N. Welcome to the Thieve's guild."},
-          800, 1 * COPPER_MULT, {""}, "");
+          800, 1 * COPPER_MULT, {""}, "NotInGuild@quests 0 "+GUILD_UDG_THIEF);
 
 dilcopy qstItemsWanted@quests(QUEST_THIEVES_ENTRY, {"head@death"}, {"decapCheck@quests 0 gate_w2@midwalls"},
          {"say Excellent, thank you $1N."},
