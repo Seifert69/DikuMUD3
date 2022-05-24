@@ -22,7 +22,7 @@
 
 void do_save(unit_data *ch, char *arg, const command_info *cmd)
 {
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         return;
     }
@@ -60,7 +60,7 @@ void race_adjust(unit_data *ch)
     base_race_info_type *sex_race = nullptr;
     race_info_type *my_race = nullptr;
 
-    assert(IS_PC(ch));
+    assert(ch->isPC());
     assert(is_in(CHAR_RACE(ch), 0, PC_RACE_MAX - 1));
 
     my_race = &g_race_info[CHAR_RACE(ch)];
@@ -161,8 +161,8 @@ void points_reset(unit_data *ch)
 void start_player(unit_data *ch)
 {
     assert(CHAR_LEVEL(ch) == 0);
-    assert(UNIT_CONTAINS(ch) == nullptr);
-    assert(IS_PC(ch));
+    assert(ch->getUnitContains() == nullptr);
+    assert(ch->isPC());
     assert(CHAR_DESCRIPTOR(ch)); // Needed to copy pwd
 
     race_adjust(ch);

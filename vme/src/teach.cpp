@@ -82,7 +82,7 @@ struct pc_train_values
 static int gold_cost(unit_data *ch, skill_teach_type *s, int level)
 {
     // It is free to practice < level 25.
-    if (IS_CHAR(ch) && CHAR_LEVEL(ch) < PRACTICE_COST_LEVEL)
+    if (ch->isChar() && CHAR_LEVEL(ch) < PRACTICE_COST_LEVEL)
         return 0;
 
     if (level < 1)
@@ -231,7 +231,7 @@ void clear_training_level(unit_data *ch)
 {
     int i = 0;
 
-    assert(IS_PC(ch));
+    assert(ch->isPC());
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
@@ -274,7 +274,7 @@ const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int m
     static char buf[MAX_STRING_LENGTH];
     char *c = nullptr;
 
-    assert(IS_PC(pupil));
+    assert(pupil->isPC());
 
     strcpy(buf, "[REQ: ");
     c = buf;
@@ -649,7 +649,7 @@ int pupil_magic(unit_data *pupil)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(pupil); af; af = af->getNext())
+    for (af = pupil->getUnitAffected(); af; af = af->getNext())
     {
         switch (af->getID())
         {
@@ -1054,7 +1054,7 @@ teach_packet *get_teacher(const char *pName)
         return nullptr;
     }
 
-    for (f = UNIT_FUNC(u); f; f = f->getNext())
+    for (f = u->getFunctionPointer(); f; f = f->getNext())
     {
         if (f->getFunctionPointerIndex() == SFUN_TEACHING)
         {
@@ -1123,7 +1123,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
         return SFR_SHARE;
     }
 
-    if (!IS_PC(sarg->activator))
+    if (!sarg->activator->isPC())
     {
         send_to_char("That wouldn't be wise.<br/>", sarg->activator);
         return SFR_BLOCK;
@@ -1415,7 +1415,7 @@ int teach_init(spec_arg *sarg)
 
     if (!(c = (char *)sarg->fptr->getData()))
     {
-        szonelog(UNIT_FI_ZONE(sarg->owner),
+        szonelog(sarg->owner->getFileIndex()->getZone(),
                  "%s@%s: No text data for teacher-init!",
                  UNIT_FI_NAME(sarg->owner),
                  UNIT_FI_ZONENAME(sarg->owner));
@@ -1427,7 +1427,7 @@ int teach_init(spec_arg *sarg)
 
     if ((i = search_block(buf, teach_types, TRUE)) == -1)
     {
-        szonelog(UNIT_FI_ZONE(sarg->owner),
+        szonelog(sarg->owner->getFileIndex()->getZone(),
                  "%s@%s: Illegal teach type %s in "
                  "teacher init!",
                  UNIT_FI_NAME(sarg->owner),
@@ -1458,7 +1458,7 @@ int teach_init(spec_arg *sarg)
     {
         if ((nProfession = search_block(buf, g_professions, TRUE)) == -1)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Unknown profession %s in teacher-init.",
                      UNIT_FI_NAME(sarg->owner),
                      UNIT_FI_ZONENAME(sarg->owner),
@@ -1609,7 +1609,7 @@ int teach_init(spec_arg *sarg)
             break;
 
         default:
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal type in teacher-init",
                      UNIT_FI_NAME(sarg->owner),
                      UNIT_FI_ZONENAME(sarg->owner));
@@ -1627,7 +1627,7 @@ int teach_init(spec_arg *sarg)
         a_skill.min_glevel = atoi(buf);
         if (!is_in(a_skill.min_glevel, 0, 250))
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Minimum level expected "
                      "between 1 - 250 (is %s)",
                      UNIT_FI_NAME(sarg->owner),
@@ -1647,7 +1647,7 @@ int teach_init(spec_arg *sarg)
 
         if (!is_in(a_skill.max_skill, 1, 150))
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Maximum skill expected "
                      "between 1 - 100 (is %s)",
                      UNIT_FI_NAME(sarg->owner),
@@ -1667,7 +1667,7 @@ int teach_init(spec_arg *sarg)
 
         if ((i = search_block(buf, packet->text, TRUE)) == -1)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal teacher-init "
                      "skill: %s",
                      UNIT_FI_NAME(sarg->owner),
@@ -1702,7 +1702,7 @@ int teach_init(spec_arg *sarg)
         c = get_next_str(c, buf);
         if (!*buf)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Premature ending of "
                      "teacher-init! (expected cost)",
                      UNIT_FI_NAME(sarg->owner),
@@ -1714,7 +1714,7 @@ int teach_init(spec_arg *sarg)
         i = atoi(buf);
         if (i == 0)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal min cost amount "
                      "in teacher init (be > 0): %s",
                      UNIT_FI_NAME(sarg->owner),
@@ -1728,7 +1728,7 @@ int teach_init(spec_arg *sarg)
         c = get_next_str(c, buf);
         if (!*buf)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Premature ending of "
                      "teacher-init! (expected cost)",
                      UNIT_FI_NAME(sarg->owner),
@@ -1739,7 +1739,7 @@ int teach_init(spec_arg *sarg)
         i = atoi(buf);
         if (i == 0)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal max cost amount "
                      "in teacher init (be > 0): %s",
                      UNIT_FI_NAME(sarg->owner),
@@ -1752,7 +1752,7 @@ int teach_init(spec_arg *sarg)
 
         if (a_skill.max_cost_per_point <= a_skill.min_cost_per_point)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Max amount is <= "
                      "min amount... must be error!: %s",
                      UNIT_FI_NAME(sarg->owner),
@@ -1771,7 +1771,7 @@ int teach_init(spec_arg *sarg)
             c = get_next_str(c, buf);
             if (!*buf)
             {
-                szonelog(UNIT_FI_ZONE(sarg->owner),
+                szonelog(sarg->owner->getFileIndex()->getZone(),
                          "%s@%s: Premature ending of "
                          "teacher-init! (expected point)",
                          UNIT_FI_NAME(sarg->owner),
@@ -1791,7 +1791,7 @@ int teach_init(spec_arg *sarg)
 
         if (n < 1)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Premature ending of "
                      "teacher-init! (expected points cost)",
                      UNIT_FI_NAME(sarg->owner),

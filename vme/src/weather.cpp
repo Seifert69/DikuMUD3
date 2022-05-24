@@ -105,7 +105,7 @@ time_info_data age(unit_data *ch)
 {
     static time_info_data player_age;
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         player_age = mud_time_passed(time(nullptr), PC_TIME(ch).getPlayerBirthday());
     }

@@ -29,9 +29,9 @@ int char_carry_n(unit_data *unit)
 {
     int i = 0;
 
-    for (unit = UNIT_CONTAINS(unit), i = 0; unit; unit = unit->getNext())
+    for (unit = unit->getUnitContains(), i = 0; unit; unit = unit->getNext())
     {
-        if (!IS_OBJ(unit) || ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
+        if (!unit->isObj() || ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
         {
             i++;
         }
@@ -52,7 +52,7 @@ int char_can_carry_n(unit_data *ch, int n)
 
 int char_carry_w_limit(unit_data *ch)
 {
-    return 50 + MAX(50, UNIT_BASE_WEIGHT(ch) / 2) + CHAR_STR(ch) * 2;
+    return 50 + MAX(50, ch->getBaseWeight() / 2) + CHAR_STR(ch) * 2;
 }
 
 int char_can_carry_w(unit_data *ch, int weight)
@@ -62,7 +62,7 @@ int char_can_carry_w(unit_data *ch, int weight)
 
 int char_can_carry_unit(unit_data *ch, unit_data *unit)
 {
-    return (char_can_carry_w(ch, UNIT_WEIGHT(unit)) && char_can_carry_n(ch, 1));
+    return (char_can_carry_w(ch, unit->getWeight()) && char_can_carry_n(ch, 1));
 }
 
 /* For lifespan 100 (Human), result is                     */
@@ -118,7 +118,7 @@ int age_graph(int age, int lifespan, int p0, int p1, int p2, int p3, int p4, int
 /* This function is copied into basis.zon - remember to update accordingly!! */
 static int hit_limit_number(unit_data *ch, int point)
 {
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         if (!PC_IMMORTAL(ch) && age(ch).getYear() > PC_LIFESPAN(ch))
         {
@@ -143,7 +143,7 @@ int hit_gain(unit_data *ch)
 {
     int gain = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     /* 10 turns to regenerate */
     if (CHAR_POS(ch) != POSITION_FIGHTING)
@@ -171,15 +171,15 @@ int hit_gain(unit_data *ch)
 
     while (u)
     {
-        if (IS_SET(UNIT_FLAGS(u), UNIT_FL_SACRED))
+        if (IS_SET(u->getUnitFlags(), UNIT_FL_SACRED))
         {
             gain *= 2;
             break;
         }
-        u = UNIT_IN(u);
+        u = u->getUnitIn();
     }
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         /* gain = graf(age(ch).year, 2,5,10,18,6,4,2); */
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
@@ -195,7 +195,7 @@ int move_limit(unit_data *ch)
 {
     int ml = CHAR_CON(ch) * 2 + 150;
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         int pct = 0;
 
@@ -218,7 +218,7 @@ int move_gain(unit_data *ch)
 {
     int gain = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     if (CHAR_POS(ch) != POSITION_FIGHTING)
     {
@@ -246,15 +246,15 @@ int move_gain(unit_data *ch)
 
     while (u)
     {
-        if (IS_SET(UNIT_FLAGS(u), UNIT_FL_SACRED))
+        if (IS_SET(u->getUnitFlags(), UNIT_FL_SACRED))
         {
             gain *= 2;
             break;
         }
-        u = UNIT_IN(u);
+        u = u->getUnitIn();
     }
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         /* gain = graf(age(ch).year, ... Age calcs? */
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
@@ -268,11 +268,11 @@ int move_gain(unit_data *ch)
 
 int mana_limit(unit_data *ch)
 {
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     int ml = MIN(200, 100 + (CHAR_BRA(ch) + CHAR_CHA(ch)) / 2);
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         int pct = 0;
 
@@ -295,7 +295,7 @@ int mana_gain(unit_data *ch)
 {
     int gain = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     /* 10 turns to regenerate is default when CHA == LEVEL */
     if (CHAR_POS(ch) != POSITION_FIGHTING)
@@ -324,15 +324,15 @@ int mana_gain(unit_data *ch)
 
     while (u)
     {
-        if (IS_SET(UNIT_FLAGS(u), UNIT_FL_SACRED))
+        if (IS_SET(u->getUnitFlags(), UNIT_FL_SACRED))
         {
             gain *= 2;
             break;
         }
-        u = UNIT_IN(u);
+        u = u->getUnitIn();
     }
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
         {
@@ -346,7 +346,7 @@ int mana_gain(unit_data *ch)
 /* Gain maximum in various points */
 void advance_level(unit_data *ch)
 {
-    assert(IS_PC(ch));
+    assert(ch->isPC());
 
     if (IS_IMMORTAL(ch))
     {
@@ -404,7 +404,7 @@ void gain_condition(unit_data *ch, int condition, int value)
 {
     bool intoxicated = 0;
 
-    if (!IS_PC(ch) || (PC_COND(ch, condition) >= 48))
+    if (!ch->isPC() || (PC_COND(ch, condition) >= 48))
     {
         return;
     }
@@ -478,7 +478,7 @@ void gain_condition(unit_data *ch, int condition, int value)
 
 void set_title(unit_data *ch)
 {
-    assert(IS_PC(ch));
+    assert(ch->isPC());
 
     if (CHAR_LEVEL(ch) == 0)
     {
@@ -499,7 +499,7 @@ void gain_exp_regardless(unit_data *ch, int gain)
 {
     int j = 0;
 
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         return;
     }
@@ -542,7 +542,7 @@ void do_level(unit_data *ch, char *arg, const command_info *cmd)
 {
     int now = 0;
 
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         send_to_char("You ain't nothin' but a hound-dog.<br/>", ch);
         return;

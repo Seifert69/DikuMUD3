@@ -66,7 +66,7 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
     for (d = g_descriptor_list; d; d = d->getNext())
     {
         assert(d->cgetCharacter());
-        if (CHAR_LEVEL(ch) >= UNIT_MINV(CHAR_ORIGINAL(d->getCharacter())))
+        if (CHAR_LEVEL(ch) >= CHAR_ORIGINAL(d->getCharacter())->getLevelOfWizardInvisibility())
         {
             users++;
             if (IS_IMMORTAL(d->cgetCharacter()))
@@ -74,8 +74,8 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                 /* an immortal character */
                 msg += diku::format_to_str("&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                                            CHAR_LEVEL(CHAR_ORIGINAL(d->getCharacter())),
-                                           UNIT_MINV(CHAR_ORIGINAL(d->getCharacter())),
-                                           UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
+                                           CHAR_ORIGINAL(d->getCharacter())->getLevelOfWizardInvisibility(),
+                                           CHAR_ORIGINAL(d->getCharacter())->getNames().Name(),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),
@@ -87,8 +87,8 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
                 /* a mortal character */
                 msg += diku::format_to_str("&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                                            PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->getCharacter())),
-                                           UNIT_MINV(CHAR_ORIGINAL(d->getCharacter())) ? '*' : ' ',
-                                           UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
+                                           CHAR_ORIGINAL(d->getCharacter())->getLevelOfWizardInvisibility() ? '*' : ' ',
+                                           CHAR_ORIGINAL(d->getCharacter())->getNames().Name(),
                                            descriptor_is_playing(d) ? "Playing" : "Menu",
                                            g_cServerConfig.FromLAN(d->getHostname()) ? 'L' : 'W',
                                            d->getMplexPortNum(),
@@ -132,7 +132,7 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
     unit_data *original_loc = nullptr;
     file_index_type *fi = nullptr;
 
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         return;
     }
@@ -152,9 +152,9 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
     {
         if ((target = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD)))
         {
-            if (UNIT_IN(target))
+            if (target->getUnitIn())
             {
-                target = UNIT_IN(target);
+                target = target->getUnitIn();
             }
         }
     }
@@ -165,13 +165,13 @@ void do_at(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if (!IS_ROOM(target))
+    if (!target->isRoom())
     {
         send_to_char("Sorry, you may only 'at' at a room!<br/>", ch);
         return;
     }
 
-    original_loc = UNIT_IN(ch);
+    original_loc = ch->getUnitIn();
     unit_from_unit(ch);
     unit_to_unit(ch, target);
     command_interpreter(ch, argument);
@@ -217,7 +217,7 @@ void do_execute(unit_data *ch, char *argument, const command_info *cmd)
 
 void do_shutdown(unit_data *ch, char *argument, const command_info *cmd)
 {
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         return;
     }
@@ -228,7 +228,7 @@ void do_shutdown(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    auto msg = diku::format_to_str("Shutdown by %s.<br/>", UNIT_NAME(ch));
+    auto msg = diku::format_to_str("Shutdown by %s.<br/>", ch->getNames().Name());
     send_to_all(msg);
     g_mud_shutdown = 1;
 }
@@ -257,7 +257,7 @@ void do_snoop(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if (!IS_CHAR(victim))
+    if (!victim->isChar())
     {
         send_to_char("That's not a player / monster!<br/>", ch);
         return;
@@ -330,7 +330,7 @@ void do_switch(unit_data *ch, char *argument, const command_info *cmd)
 
     victim = find_unit(ch, &argument, nullptr, FIND_UNIT_WORLD | FIND_UNIT_SURRO);
 
-    if (!victim || !IS_NPC(victim))
+    if (!victim || !victim->isNPC())
     {
         send_to_char("No such monster around.<br/>", ch);
         return;
@@ -378,7 +378,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
     {
         for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
         {
-            if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), buf))
+            if (tmp->isPC() && !str_ccmp(tmp->getNames().Name(), buf))
             {
                 send_to_char("A player by that name is linkdead in the game.<br/>", ch);
                 return;
@@ -396,17 +396,21 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
             enter_game(u, TRUE);
 
             unit_from_unit(u);
-            unit_to_unit(u, UNIT_IN(ch));
+            unit_to_unit(u, ch->getUnitIn());
             send_to_char("You have loaded the player.<br/>", ch);
 
-            if (UNIT_CONTAINS(u))
+            if (u->getUnitContains())
             {
                 send_to_char("Inventory loaded.<br/>", ch);
             }
 
             if (CHAR_LEVEL(u) > CHAR_LEVEL(ch))
             {
-                slog(LOG_EXTENSIVE, UNIT_MINV(ch), "LEVEL: %s loaded %s when lower level.", UNIT_NAME(ch), UNIT_NAME(u));
+                slog(LOG_EXTENSIVE,
+                     ch->getLevelOfWizardInvisibility(),
+                     "LEVEL: %s loaded %s when lower level.",
+                     ch->getNames().Name(),
+                     u->getNames().Name());
             }
             return;
         }
@@ -423,7 +427,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
 
     if (CHAR_LEVEL(ch) < fi->getZone()->getLevelRequiredToLoadItems())
     {
-        if (!fi->getZone()->getCreators().IsName(UNIT_NAME(ch)))
+        if (!fi->getZone()->getCreators().IsName(ch->getNames().Name()))
         {
             int i = fi->getZone()->getLevelRequiredToLoadItems();
 
@@ -446,14 +450,14 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
         set_money(u, MONEY_AMOUNT(u));
     }
 
-    if (IS_OBJ(u) && IS_SET(UNIT_MANIPULATE(u), MANIPULATE_TAKE))
+    if (u->isObj() && IS_SET(u->getManipulate(), MANIPULATE_TAKE))
     {
         unit_to_unit(u, ch);
         act("You secretly load $2n.", A_SOMEONE, ch, u, cActParameter(), TO_CHAR);
     }
     else
     {
-        unit_to_unit(u, UNIT_IN(ch));
+        unit_to_unit(u, ch->getUnitIn());
         act("$1n opens an interdimensional gate and fetches $3n.", A_SOMEONE, ch, cActParameter(), u, TO_ROOM);
         act("$1n says, 'Hello World!'", A_SOMEONE, u, cActParameter(), cActParameter(), TO_ROOM);
     }

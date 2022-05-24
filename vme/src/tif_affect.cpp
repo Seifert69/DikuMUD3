@@ -49,7 +49,7 @@ void tif_confusion_off(unit_affected_type *af, unit_data *unit)
 
 void tif_invisibility_on(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE))
+    if (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE))
     {
         send_to_char("Your body appears ghostly.<br/>", unit);
         act("$1n vanish into thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
@@ -58,7 +58,7 @@ void tif_invisibility_on(unit_affected_type *af, unit_data *unit)
 
 void tif_invisibility_off(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE))
+    if (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE))
     {
         send_to_char("Your body is once again visible.<br/>", unit);
         act("$1n appears from thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
@@ -91,9 +91,9 @@ void tif_fear_check(unit_affected_type *af, unit_data *unit)
     else
     {
         /* Find someone else */
-        for (ch = UNIT_CONTAINS(UNIT_IN(unit)); ch; ch = ch->getNext())
+        for (ch = unit->getUnitIn()->getUnitIn(); ch; ch = ch->getNext())
         {
-            if (ch != unit && IS_CHAR(ch))
+            if (ch != unit && ch->isChar())
             {
                 break;
             }
@@ -288,28 +288,28 @@ void tif_rage_tick(unit_affected_type *af, unit_data *unit)
 /* curse */
 void tif_curse_on(unit_affected_type *af, unit_data *unit)
 {
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         send_to_char("You feel that the gods are against you.<br/>", unit);
     }
     act("A shadow falls upon $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-    if (UNIT_IN(unit) && IS_CHAR(UNIT_IN(unit)))
+    if (unit->getUnitIn() && unit->getUnitIn()->isChar())
     {
-        act("A shadow falls upon $3n.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
+        act("A shadow falls upon $3n.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
     }
 }
 
 void tif_curse_off(unit_affected_type *af, unit_data *unit)
 {
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         send_to_char("You no longer feel that the gods are against you.<br/>", unit);
     }
 
     act("A shadow lifts from $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
-    if (UNIT_IN(unit) && IS_CHAR(UNIT_IN(unit)))
+    if (unit->getUnitIn() && unit->getUnitIn()->isChar())
     {
-        act("A shadow lifts from $3n.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
+        act("A shadow lifts from $3n.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
     }
 }
 
@@ -353,15 +353,15 @@ void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 
     if (af->getDuration() <= 4)
     {
-        if (IS_CHAR(UNIT_IN(unit)))
+        if (unit->getUnitIn()->isChar())
         {
             if (af->getDuration() <= 1) // Last tick.
             {
-                act("Your $2N goes out.", A_HIDEINV, UNIT_IN(unit), unit, cActParameter(), TO_CHAR);
+                act("Your $2N goes out.", A_HIDEINV, unit->getUnitIn(), unit, cActParameter(), TO_CHAR);
             }
             else
             {
-                act("Your $2N is getting dim.", A_HIDEINV, UNIT_IN(unit), unit, cActParameter(), TO_CHAR);
+                act("Your $2N is getting dim.", A_HIDEINV, unit->getUnitIn(), unit, cActParameter(), TO_CHAR);
             }
         }
     }
@@ -369,39 +369,39 @@ void tif_torch_tick(unit_affected_type *af, unit_data *unit)
 
 void tif_light_add(unit_affected_type *af, unit_data *unit)
 {
-    if (!UNIT_IN(unit))
+    if (!unit->getUnitIn())
     {
         return;
     }
 
     /* If the thing is carried by a character */
-    if (IS_CHAR(UNIT_IN(unit)))
+    if (unit->getUnitIn()->isChar())
     {
-        act("Your $3N starts to glow.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
-        act("$1n's $3n starts to glow.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_ROOM);
+        act("Your $3N starts to glow.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
+        act("$1n's $3n starts to glow.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_ROOM);
     }
-    else if (UNIT_CONTAINS(UNIT_IN(unit)))
+    else if (unit->getUnitIn()->getUnitIn())
     {
-        act("The $3N starts to glow.", A_HIDEINV, UNIT_CONTAINS(UNIT_IN(unit)), cActParameter(), unit, TO_ALL);
+        act("The $3N starts to glow.", A_HIDEINV, unit->getUnitIn()->getUnitIn(), cActParameter(), unit, TO_ALL);
     }
 }
 
 void tif_light_sub(unit_affected_type *af, unit_data *unit)
 {
-    if (!UNIT_IN(unit))
+    if (!unit->getUnitIn())
     {
         return;
     }
 
     /* If the thing is carried by a character */
-    if (IS_CHAR(UNIT_IN(unit)))
+    if (unit->getUnitIn()->isChar())
     {
-        act("Your $3N gets dimmer.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
-        act("$1n's $3N gets dimmer.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_ROOM);
+        act("Your $3N gets dimmer.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
+        act("$1n's $3N gets dimmer.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_ROOM);
     }
-    else if (UNIT_CONTAINS(UNIT_IN(unit)))
+    else if (unit->getUnitIn()->getUnitIn())
     {
-        act("The $3N gets dimmer.", A_HIDEINV, UNIT_CONTAINS(UNIT_IN(unit)), cActParameter(), unit, TO_ALL);
+        act("The $3N gets dimmer.", A_HIDEINV, unit->getUnitIn()->getUnitIn(), cActParameter(), unit, TO_ALL);
     }
 }
 
@@ -924,7 +924,7 @@ void tif_sustain_on(unit_affected_type *af, unit_data *unit)
 
 void tif_sustain_tick(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_PC(unit))
+    if (!unit->isPC())
     {
         return;
     }
@@ -941,7 +941,7 @@ void tif_sustain_off(unit_affected_type *af, unit_data *unit)
 void tif_decay_corpse(unit_affected_type *af, unit_data *unit)
 {
     /* Make routine to change the description of a corpse instead */
-    if (ODD(af->getDuration()) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
+    if (ODD(af->getDuration()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED))
     {
         act("The rotten stench of $1n is here.", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
@@ -949,7 +949,7 @@ void tif_decay_corpse(unit_affected_type *af, unit_data *unit)
 
 void tif_destroy_corpse(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
+    if (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED))
     {
         act("A quivering horde of maggots consume $1n.", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
@@ -958,15 +958,15 @@ void tif_destroy_corpse(unit_affected_type *af, unit_data *unit)
 
 void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
 {
-    if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED))
+    if (IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED))
     {
         /* Empty the container and set buried status of contents */
 
-        while (UNIT_CONTAINS(unit))
+        while (unit->getUnitContains())
         {
             unit_affected_type naf;
 
-            UNIT_CONTAINS(unit)->setUnitFlag(UNIT_FL_BURIED);
+            unit->getUnitContains()->setUnitFlag(UNIT_FL_BURIED);
 
             naf.setID(ID_BURIED);
             naf.setDuration(0);
@@ -976,14 +976,14 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
             naf.setLastFI(TIF_BURIED_DESTRUCT);
             naf.setApplyFI(APF_NONE);
 
-            create_affect(UNIT_CONTAINS(unit), &naf);
+            create_affect(unit->getUnitContains(), &naf);
 
-            if (UNIT_IS_EQUIPPED(UNIT_CONTAINS(unit)))
+            if (UNIT_IS_EQUIPPED(unit->getUnitContains()))
             {
-                unequip_object(UNIT_CONTAINS(unit));
+                unequip_object(unit->getUnitContains());
             }
 
-            unit_up(UNIT_CONTAINS(unit));
+            unit_up(unit->getUnitContains());
         }
 
         extract_unit(unit);
@@ -992,7 +992,7 @@ void tif_buried_destruct(unit_affected_type *af, unit_data *unit)
 
 void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
 {
-    if (!IS_PC(unit))
+    if (!unit->isPC())
     {
         return;
     }
@@ -1016,7 +1016,7 @@ void tif_valhalla_ret(unit_affected_type *af, unit_data *unit)
 
     UCHAR(unit)->setMana(mana_limit(unit));
     UCHAR(unit)->setEndurance(move_limit(unit));
-    unit->setCurrentHitpoints(UNIT_MAX_HIT(unit));
+    unit->setCurrentHitpoints(unit->getMaximumHitpoints());
 
     if (!unit->is_destructed())
     {

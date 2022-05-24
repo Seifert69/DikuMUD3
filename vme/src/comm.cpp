@@ -148,12 +148,12 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
         {
             const unit_data *u = d->cgetCharacter();
 
-            if (!u || !IS_PC(u))
+            if (!u || !u->isPC())
             { // switched or snooped?
                 u = d->cgetOriginalCharacter();
             }
 
-            assert(IS_PC(u));
+            assert(u->isPC());
             std::string dest;
             dest.reserve(strlen(messg) * 1.1);
             // char buf[strlen(messg) + 10000];
@@ -218,7 +218,7 @@ void send_to_char(const char *messg, const unit_data *ch)
     // If a unit test is being run, send results there too
     unit_tests::OutputCapture::send_to_char(messg, ch);
 
-    if (IS_CHAR(ch))
+    if (ch->isChar())
     {
         send_to_descriptor(messg, const_cast<descriptor_data *>(CHAR_DESCRIPTOR(ch)));
     }
@@ -259,8 +259,8 @@ void send_to_zone_outdoor(const zone_type *z, const char *messg)
         for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && unit_zone(i->cgetCharacter()) == z &&
-                CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&
-                !IS_SET(UNIT_FLAGS(unit_room(i->getCharacter())), UNIT_FL_NO_WEATHER))
+                CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(i->cgetCharacter()->getUnitIn()->getUnitFlags(), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(unit_room(i->getCharacter())->getUnitFlags(), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }
@@ -277,8 +277,8 @@ void send_to_outdoor(const char *messg)
         for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && CHAR_AWAKE(i->cgetCharacter()) &&
-                !IS_SET(UNIT_FLAGS(UNIT_IN(i->cgetCharacter())), UNIT_FL_NO_WEATHER) &&
-                !IS_SET(UNIT_FLAGS(unit_room(i->getCharacter())), UNIT_FL_NO_WEATHER))
+                !IS_SET(i->cgetCharacter()->getUnitIn()->getUnitFlags(), UNIT_FL_NO_WEATHER) &&
+                !IS_SET(unit_room(i->getCharacter())->getUnitFlags(), UNIT_FL_NO_WEATHER))
             {
                 send_to_descriptor(messg, i);
             }
@@ -313,7 +313,7 @@ void act_generate(char *buf,
 
     *buf = 0;
 
-    if (!IS_CHAR(to) || arg1.m_u == nullptr)
+    if (!to->isChar() || arg1.m_u == nullptr)
     {
         return;
     }
@@ -331,7 +331,7 @@ void act_generate(char *buf,
         return;
     }
 
-    if (UNIT_IN(to) == arg1.m_u && type == TO_REST)
+    if (to->getUnitIn() == arg1.m_u && type == TO_REST)
     {
         return;
     }
@@ -375,15 +375,15 @@ void act_generate(char *buf,
                         {
                             if (CHAR_CAN_SEE(to, sub->m_u))
                             {
-                                if (IS_PC(sub->m_u))
+                                if (sub->m_u->isPC())
                                 {
                                     /* Upper-case it */
                                     // MS 2020 uppercase = TRUE;
-                                    i = UNIT_NAME((unit_data *)sub->m_u);
+                                    i = ((unit_data *)sub->m_u)->getNames().Name();
                                 }
                                 else
                                 {
-                                    i = UNIT_TITLE(sub->m_u).c_str();
+                                    i = sub->m_u->getTitle().c_str();
                                 }
                             }
                             else
@@ -439,7 +439,7 @@ void act_generate(char *buf,
                     case 'p':
                         if (sub->m_u != nullptr)
                         {
-                            if (IS_CHAR(sub->m_u))
+                            if (sub->m_u->isChar())
                             {
                                 i = g_char_pos[CHAR_POS(sub->m_u)];
                             }
@@ -571,7 +571,7 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
     if (type == TO_VICT)
     {
         to = arg3.m_u;
-        if (IS_CHAR(to))
+        if (to->isChar())
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0); // No newline
         }
@@ -580,7 +580,7 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
     else if (type == TO_CHAR)
     {
         to = arg1.m_u;
-        if (IS_CHAR(to))
+        if (to->isChar())
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0);
         }
@@ -610,19 +610,19 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     {
         to = arg1.m_u;
     }
-    else if (arg1.m_u == nullptr || UNIT_IN(arg1.m_u) == nullptr)
+    else if (arg1.m_u == nullptr || arg1.m_u->getUnitIn() == nullptr)
     {
         return;
     }
     else
     {
-        to = UNIT_CONTAINS(UNIT_IN(arg1.m_u));
+        to = arg1.m_u->getUnitIn()->getUnitIn();
     }
 
     /* same unit or to person */
     for (; to; to = to->getNext())
     {
-        if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+        if (to->isChar() && CHAR_DESCRIPTOR(to))
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
             send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
@@ -632,11 +632,11 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
         {
             return;
         }
-        if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
+        if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to))
         {
-            for (u = UNIT_CONTAINS(to); u; u = u->getNext())
+            for (u = to->getUnitContains(); u; u = u->getNext())
             {
-                if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                if (u->isChar() && CHAR_DESCRIPTOR(u))
                 {
                     act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                     send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
@@ -646,21 +646,21 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     }
 
     /* other units outside transparent unit */
-    if (UNIT_IN(arg1.m_u) && (to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
+    if (arg1.m_u->getUnitIn() && (to = arg1.m_u->getUnitIn()->getUnitIn()) && UNIT_IS_TRANSPARENT(arg1.m_u->getUnitIn()))
     {
-        for (to = UNIT_CONTAINS(to); to; to = to->getNext())
+        for (to = to->getUnitContains(); to; to = to->getNext())
         {
-            if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+            if (to->isChar() && CHAR_DESCRIPTOR(to))
             {
                 act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
             }
 
-            if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
+            if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to) && to != arg1.m_u->getUnitIn())
             {
-                for (u = UNIT_CONTAINS(to); u; u = u->getNext())
+                for (u = to->getUnitContains(); u; u = u->getNext())
                 {
-                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                    if (u->isChar() && CHAR_DESCRIPTOR(u))
                     {
                         act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                         send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
@@ -695,19 +695,19 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     {
         to = arg1.m_u;
     }
-    else if (arg1.m_u == nullptr || UNIT_IN(arg1.m_u) == nullptr)
+    else if (arg1.m_u == nullptr || arg1.m_u->getUnitIn() == nullptr)
     {
         return;
     }
     else
     {
-        to = UNIT_CONTAINS(UNIT_IN(arg1.m_u));
+        to = arg1.m_u->getUnitIn()->getUnitIn();
     }
 
     /* same unit or to person */
     for (; to; to = to->getNext())
     {
-        if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+        if (to->isChar() && CHAR_DESCRIPTOR(to))
         {
             *buf = 0;
             b = buf;
@@ -730,11 +730,11 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
             return;
         }
 
-        if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
+        if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to))
         {
-            for (u = UNIT_CONTAINS(to); u; u = u->getNext())
+            for (u = to->getUnitContains(); u; u = u->getNext())
             {
-                if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                if (u->isChar() && CHAR_DESCRIPTOR(u))
                 {
                     *buf = 0;
                     b = buf;
@@ -751,11 +751,11 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     }
 
     /* other units outside transparent unit */
-    if ((to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
+    if ((to = arg1.m_u->getUnitIn()->getUnitIn()) && UNIT_IS_TRANSPARENT(arg1.m_u->getUnitIn()))
     {
-        for (to = UNIT_CONTAINS(to); to; to = to->getNext())
+        for (to = to->getUnitContains(); to; to = to->getNext())
         {
-            if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
+            if (to->isChar() && CHAR_DESCRIPTOR(to))
             {
                 *buf = 0;
                 b = buf;
@@ -767,11 +767,11 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
             }
 
-            if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
+            if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to) && to != arg1.m_u->getUnitIn())
             {
-                for (u = UNIT_CONTAINS(to); u; u = u->getNext())
+                for (u = to->getUnitContains(); u; u = u->getNext())
                 {
-                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
+                    if (u->isChar() && CHAR_DESCRIPTOR(u))
                     {
                         *buf = 0;
                         b = buf;

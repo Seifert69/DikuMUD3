@@ -41,7 +41,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     unit_affected_type *taf = nullptr;
 
-    assert(IS_CHAR(unit));
+    assert(unit->isChar());
 
     if (set)
     {
@@ -57,7 +57,7 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* implies that a character can not permanently have     */
         /* these bits set, since a call of this function will    */
         /* remove them                                           */
-        for (taf = UNIT_AFFECTED(af->getOwner()); taf; taf = taf->getNext())
+        for (taf = af->getOwner()->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_CHAR_FLAGS))
             {
@@ -75,7 +75,7 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     unit_affected_type *taf = nullptr;
 
-    assert(IS_OBJ(unit));
+    assert(unit->isObj());
 
     if (set)
     {
@@ -93,7 +93,7 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* implies that a object can not permanently have these  */
         /* bits set, since a call of this function will remove   */
         /* them                                                  */
-        for (taf = UNIT_AFFECTED(af->getOwner()); taf; taf = taf->getNext())
+        for (taf = af->getOwner()->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_OBJ_FLAGS))
             {
@@ -126,7 +126,7 @@ ubit1 apf_mod_unit_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
         /* implies that a character can not permanently have     */
         /* these bits set, since a call of this function will    */
         /* remove them                                           */
-        for (taf = UNIT_AFFECTED(af->getOwner()); taf; taf = taf->getNext())
+        for (taf = af->getOwner()->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf != af) && (taf->getApplyFI() == APF_MOD_UNIT_FLAGS))
             {
@@ -141,14 +141,14 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     int modify = 0;
 
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         slog(LOG_ALL, 0, "ERROR: Affect weapon groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
     }
 
     modify = af->getDataAtIndex(0);
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         while (modify > WPN_GROUP_MAX)
         {
@@ -159,7 +159,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     /// @todo Remove 'if' and make this pure virtual in char_data and implement in pc_data/npc_data
     if (set)
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             if (skill_overflow(PC_WPN_SKILL(unit, modify), af->getDataAtIndex(1), set))
             {
@@ -174,7 +174,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             UPC(unit)->decreaseWeaponSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
@@ -190,7 +190,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 /* NPC's are ignored, they don't have skills. */
 ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         slog(LOG_ALL, 0, "ERROR: Affect skill groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
@@ -198,7 +198,7 @@ ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (set)
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             if (skill_overflow(PC_SKI_SKILL(unit, af->getDataAtIndex(0)), af->getDataAtIndex(1), set))
             {
@@ -209,7 +209,7 @@ ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             UPC(unit)->decreaseSkillAtIndexBy(af->getDataAtIndex(0), af->getDataAtIndex(1));
         }
@@ -226,14 +226,14 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     int modify = 0;
 
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         slog(LOG_ALL, 0, "ERROR: Affect spell groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
     }
 
     modify = af->getDataAtIndex(0);
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         while (modify > SPL_GROUP_MAX)
         {
@@ -244,7 +244,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     if (set)
     {
         /// @todo Remove the 'if' and make these pure virtual in char_data and implement in pc_data/npc_data
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             if (skill_overflow(PC_SPL_SKILL(unit, modify), af->getDataAtIndex(1), set))
             {
@@ -259,7 +259,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     }
     else
     {
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             UPC(unit)->decreaseSpellSkillAtIndexBy(modify, af->getDataAtIndex(1));
         }
@@ -278,7 +278,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 /* Unit must be a CHAR!                                   */
 ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    assert(IS_CHAR(unit));
+    assert(unit->isChar());
 
     if (set)
     {
@@ -314,7 +314,7 @@ ubit1 apf_light(unit_affected_type *af, unit_data *unit, ubit1 set)
         af->setDataAtIndex(0, -af->getDataAtIndex(0));
     }
 
-    if (IS_ROOM(unit))
+    if (unit->isRoom())
     {
         unit->changeNumberOfActiveLightSourcesBy(af->getDataAtIndex(0));
     }
@@ -333,7 +333,7 @@ ubit1 apf_light(unit_affected_type *af, unit_data *unit, ubit1 set)
 /* Data[1] = The original armour-type */
 ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         return TRUE;
     }
@@ -348,7 +348,7 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
     {
         unit_affected_type *taf = nullptr;
 
-        for (taf = UNIT_AFFECTED(unit); taf; taf = taf->getNext())
+        for (taf = unit->getUnitAffected(); taf; taf = taf->getNext())
         {
             if ((taf->getID() == ID_NATURAL_ARMOUR) && (taf != af))
             {
@@ -371,7 +371,7 @@ ubit1 apf_natural_armour(unit_affected_type *af, unit_data *unit, ubit1 set)
 // Data[0] = The amount to modify speed by (-8 .. +8)
 ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    if (!IS_CHAR(unit))
+    if (!unit->isChar())
     {
         return TRUE;
     }

@@ -97,7 +97,7 @@ int bonus_map_b(int bonus)
  */
 int ability_point_gain(unit_data *ch)
 {
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
     }
@@ -132,7 +132,7 @@ int ability_point_gain(unit_data *ch)
  */
 int ability_point_total(unit_data *ch)
 {
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * CHAR_LEVEL(ch);
     }
@@ -290,7 +290,7 @@ int level_xp(int level)
  */
 void set_hits(unit_data *obj, int craftsmanship)
 {
-    if (UNIT_HIT(obj) == 100) // 100 is the *default* and is overridden
+    if (obj->getCurrentHitpoints() == 100) // 100 is the *default* and is overridden
     {
         /* Hits are in [100..6000] based on craft, default == 1000 */
 
@@ -303,7 +303,7 @@ void set_hits(unit_data *obj, int craftsmanship)
             obj->setMaximumHitpoints(1000 - (175 * -craftsmanship) / 5);
         }
 
-        obj->setCurrentHitpoints(UNIT_MAX_HIT(obj));
+        obj->setCurrentHitpoints(obj->getMaximumHitpoints());
     }
 }
 

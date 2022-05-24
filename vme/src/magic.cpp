@@ -106,7 +106,7 @@ int dil_effect(char *pStr, spell_args *sa)
 /* wands and staffs uses one charge, no matter what 'mana' is. --HHS */
 ubit1 use_mana(unit_data *medium, int mana)
 {
-    if (IS_CHAR(medium))
+    if (medium->isChar())
     {
         if (CHAR_MANA(medium) >= mana)
         {
@@ -118,7 +118,7 @@ ubit1 use_mana(unit_data *medium, int mana)
             return FALSE;
         }
     }
-    else if (IS_OBJ(medium))
+    else if (medium->isObj())
     {
         switch (OBJ_TYPE(medium))
         {
@@ -149,13 +149,13 @@ ubit1 cast_magic_now(unit_data *ch, int mana)
 
     if (CHAR_MANA(ch) > mana)
     {
-        if (UNIT_MAX_HIT(ch) <= 0)
+        if (ch->getMaximumHitpoints() <= 0)
         {
             hleft = 0;
         }
         else
         {
-            hleft = (100 * UNIT_HIT(ch)) / UNIT_MAX_HIT(ch);
+            hleft = (100 * ch->getCurrentHitpoints()) / ch->getMaximumHitpoints();
         }
 
         sleft = mana ? CHAR_MANA(ch) / mana : 20;
@@ -202,14 +202,14 @@ int variation(int num, int d, int u)
 /* i.e. if a player is allowed to transfer out of jail, etc.           */
 ubit1 may_teleport_away(unit_data *unit)
 {
-    if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+    if (IS_SET(unit->getUnitFlags(), UNIT_FL_NO_TELEPORT))
     {
         return FALSE;
     }
 
-    while ((unit = UNIT_IN(unit)))
+    while ((unit = unit->getUnitIn()))
     {
-        if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+        if (IS_SET(unit->getUnitFlags(), UNIT_FL_NO_TELEPORT))
         {
             return FALSE;
         }
@@ -221,19 +221,19 @@ ubit1 may_teleport_away(unit_data *unit)
 /* See if unit is allowed to be transferred to 'dest' */
 ubit1 may_teleport_to(unit_data *unit, unit_data *dest)
 {
-    if (unit == dest || IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
-        UNIT_WEIGHT(unit) + UNIT_WEIGHT(dest) > UNIT_CAPACITY(dest))
+    if (unit == dest || IS_SET(dest->getUnitFlags(), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
+        unit->getWeight() + dest->getWeight() > dest->getCapacity())
     {
         return FALSE;
     }
 
     do
     {
-        if (IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT))
+        if (IS_SET(dest->getUnitFlags(), UNIT_FL_NO_TELEPORT))
         {
             return FALSE;
         }
-    } while ((dest = UNIT_IN(dest)));
+    } while ((dest = dest->getUnitIn()));
 
     return TRUE;
 }
@@ -248,7 +248,7 @@ ubit1 may_teleport(unit_data *unit, unit_data *dest)
 
 int object_power(unit_data *unit)
 {
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         if (OBJ_TYPE(unit) == ITEM_POTION || OBJ_TYPE(unit) == ITEM_SCROLL || OBJ_TYPE(unit) == ITEM_WAND || OBJ_TYPE(unit) == ITEM_STAFF)
         {
@@ -267,7 +267,7 @@ int object_power(unit_data *unit)
 
 int room_power(unit_data *unit)
 {
-    if (IS_ROOM(unit))
+    if (unit->isRoom())
     {
         return ROOM_RESISTANCE(unit);
     }
@@ -284,7 +284,7 @@ int spell_defense_skill(unit_data *unit, int spell)
 {
     int max = 0;
 
-    if (IS_PC(unit))
+    if (unit->isPC())
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
         {
@@ -308,12 +308,12 @@ int spell_defense_skill(unit_data *unit, int spell)
         return max;
     }
 
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         return object_power(unit); //  Philosophical... / 2 ?
     }
 
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
         {
@@ -352,17 +352,17 @@ int spell_defense_skill(unit_data *unit, int spell)
 /*                                                                 */
 int spell_attack_skill(unit_data *unit, int spell)
 {
-    if (IS_PC(unit))
+    if (unit->isPC())
     {
         return PC_SPL_SKILL(unit, spell);
     }
 
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         return object_power(unit);
     }
 
-    if (IS_NPC(unit))
+    if (unit->isNPC())
     {
         if (TREE_ISLEAF(g_SplColl.tree, spell))
         {
@@ -381,7 +381,7 @@ int spell_attack_skill(unit_data *unit, int spell)
 /* For CHAR's determine if Divine or Magic power is used */
 int spell_attack_ability(unit_data *medium, int spell)
 {
-    if (IS_CHAR(medium))
+    if (medium->isChar())
     {
         /* Figure out if char will use Divine or Magic powers */
         assert(g_spell_info[spell].realm == ABIL_MAG || g_spell_info[spell].realm == ABIL_DIV);
@@ -394,7 +394,7 @@ int spell_attack_ability(unit_data *medium, int spell)
 
 int spell_ability(unit_data *u, int ability, int spell)
 {
-    if (IS_CHAR(u))
+    if (u->isChar())
     {
         return CHAR_ABILITY(u, ability);
     }
@@ -418,7 +418,7 @@ int spell_resistance(unit_data *att, unit_data *def, int spell)
         return -1;
     }
 
-    if (IS_CHAR(att) && IS_CHAR(def))
+    if (att->isChar() && def->isChar())
     {
         return resistance_skill_check(spell_attack_ability(att, spell),
                                       spell_ability(def, ABIL_BRA, spell),
@@ -506,7 +506,7 @@ void spell_clear_skies(spell_args *sa)
 {
     unit_data *room = unit_room(sa->caster);
 
-    if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
+    if ((sa->hm / 20 <= 0) || (IS_SET(room->getUnitFlags(), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
         act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;
@@ -522,7 +522,7 @@ void spell_storm_call(spell_args *sa)
 {
     unit_data *room = unit_room(sa->caster);
 
-    if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
+    if ((sa->hm / 20 <= 0) || (IS_SET(room->getUnitFlags(), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
         act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;

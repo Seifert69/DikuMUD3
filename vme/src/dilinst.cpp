@@ -63,7 +63,7 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
     for (u = unt; u; u = u->getNext())
     {
         DeactivateDil(u, aprg);
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+        for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
         {
             if (aprg && (aprg == fptr->getData()))
             {
@@ -75,9 +75,9 @@ void dil_stop_special(unit_data *unt, dilprg *aprg)
             }
         }
 
-        if (UNIT_CONTAINS(u))
+        if (u->getUnitContains())
         {
-            dil_stop_special(UNIT_CONTAINS(u), aprg);
+            dil_stop_special(u->getUnitContains(), aprg);
         }
     }
 }
@@ -89,7 +89,7 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
     for (u = unt; u; u = u->getNext())
     {
         ActivateDil(u);
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+        for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
         {
             if (aprg && (aprg == fptr->getData()))
             {
@@ -101,9 +101,9 @@ void dil_start_special(unit_data *unt, dilprg *aprg)
             }
         }
 
-        if (UNIT_CONTAINS(u))
+        if (u->getUnitContains())
         {
-            dil_start_special(UNIT_CONTAINS(u), aprg);
+            dil_start_special(u->getUnitContains(), aprg);
         }
     }
 }
@@ -113,7 +113,7 @@ void dil_insterr(dilprg *p, char *where)
     /* instruction called as an expression! */
     /* This is serous! mess-up in the core.. stop the program */
 
-    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+    szonelog(p->sarg->owner->getFileIndex()->getZone(),
              "DIL %s@%s, Instruction error in %s\n",
              UNIT_FI_NAME(p->sarg->owner),
              UNIT_FI_ZONENAME(p->sarg->owner),
@@ -130,7 +130,7 @@ void dilfi_edit(dilprg *p)
 
     if (dil_type_check("beginedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "not a pc unit");
         }
@@ -158,7 +158,7 @@ void dilfi_kedit(dilprg *p)
 
     if (dil_type_check("killedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "not a pc unit");
         }
@@ -189,7 +189,7 @@ void dilfi_gamestate(dilprg *p)
 
     if (dil_type_check("gamestate", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "gamestate: Not a pc unit");
         }
@@ -301,7 +301,7 @@ void dilfi_pgstr(dilprg *p)
 
     if (dil_type_check("pagestring", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!IS_PC((unit_data *)v2->val.ptr) && !IS_NPC((unit_data *)v2->val.ptr))
+        if (!((unit_data *)v2->val.ptr)->isPC() && !((unit_data *)v2->val.ptr)->isNPC())
         {
             dil_typeerr(p, "not a pc/npc unit");
         }
@@ -321,7 +321,7 @@ void dilfi_setpwd(dilprg *p)
 
     if (dil_type_check("setpassword", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_SP))
     {
-        if (!IS_PC((unit_data *)v1->val.ptr))
+        if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "Not a pc unit");
         }
@@ -366,7 +366,7 @@ void dilfi_delpc(dilprg *p)
                 {
                     for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
                     {
-                        if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), ((char *)v1->val.ptr)))
+                        if (tmp->isPC() && !str_ccmp(tmp->getNames().Name(), ((char *)v1->val.ptr)))
                         {
                             extract_unit(tmp);
                         }
@@ -415,7 +415,7 @@ void dilfi_foe(dilprg *p)
                 }
             }
 
-            if (UNIT_IN(p->sarg->owner))
+            if (p->sarg->owner->getUnitIn())
             {
                 scan4_unit(p->sarg->owner, v1->val.num);
             }
@@ -434,7 +434,7 @@ void dilfi_foe(dilprg *p)
             // when it asked only for PCs
             // dil_add_secure(p, p->sarg->owner, NULL);
 
-            if (IS_SET(UNIT_TYPE(p->sarg->owner), v1->val.num))
+            if (IS_SET(p->sarg->owner->getUnitType(), v1->val.num))
             {
                 dil_add_secure(p, p->sarg->owner, nullptr);
             }
@@ -557,7 +557,7 @@ void dilfi_stora(dilprg *p)
 
                     if (v3->val.num >= 1)
                     {
-                        if (IS_ROOM((unit_data *)v1->val.ptr) || IS_PC((unit_data *)v1->val.ptr))
+                        if (((unit_data *)v1->val.ptr)->isRoom() || ((unit_data *)v1->val.ptr)->isPC())
                         {
                             szonelog(p->frame->tmpl->zone,
                                      "DIL '%s' attempt to save a container that is either a room or pc",
@@ -592,7 +592,7 @@ void dilfi_sbt(dilprg *p)
     {
         if (v1->val.ptr)
         {
-            dif = v2->val.num - UNIT_BRIGHT((unit_data *)v1->val.ptr);
+            dif = v2->val.num - ((unit_data *)v1->val.ptr)->getLightOutput();
 
             modify_bright((unit_data *)v1->val.ptr, dif);
         }
@@ -610,7 +610,7 @@ void dilfi_amod(dilprg *p)
 
     if (dil_type_check("acc_modify", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
-        if (g_cServerConfig.isAccounting() && v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+        if (g_cServerConfig.isAccounting() && v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC())
         {
             if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
             {
@@ -666,7 +666,7 @@ void dilfi_set_weight_base(dilprg *p)
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
         if (unit)
         {
-            int dif = v2->val.num - UNIT_BASE_WEIGHT(unit);
+            int dif = v2->val.num - unit->getBaseWeight();
 
             /* set new baseweight */
             unit->setBaseWeight(v2->val.num);
@@ -690,22 +690,23 @@ void dilfi_set_weight(dilprg *p)
 
     if (dil_type_check("set_weight", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr)
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit)
         {
-            if (v2->val.num < UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr))
+            if (v2->val.num < unit->getBaseWeight())
             {
                 szonelog(p->frame->tmpl->zone,
                          "DIL '%s' setting unit %s weight to %d less than base weight of %d.",
                          p->frame->tmpl->prgname,
-                         UNIT_FI_NAME((unit_data *)v1->val.ptr),
+                         UNIT_FI_NAME(unit),
                          v2->val.num,
-                         UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr));
+                         unit->getBaseWeight());
             }
 
-            int dif = v2->val.num - UNIT_WEIGHT((unit_data *)v1->val.ptr);
+            int dif = v2->val.num - unit->getWeight();
 
             /* update weight */
-            weight_change_unit((unit_data *)v1->val.ptr, dif);
+            weight_change_unit(unit, dif);
         }
     }
     delete v1;
@@ -723,7 +724,7 @@ void dilfi_swt(dilprg *p)
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
         if (unit)
         {
-            int dif = v2->val.num - UNIT_BASE_WEIGHT(unit);
+            int dif = v2->val.num - unit->getBaseWeight();
 
             /* set new baseweight */
             unit->setBaseWeight(v2->val.num);
@@ -745,7 +746,7 @@ void dilfi_chas(dilprg *p)
     if (dil_type_check("change_speed", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
     {
         auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-        if (character && IS_CHAR(character) && CHAR_COMBAT(character))
+        if (character && character->isChar() && CHAR_COMBAT(character))
         {
             CHAR_COMBAT(character)->changeSpeed(v2->val.num, character->getSpeedPercentage());
         }
@@ -769,7 +770,7 @@ void dilfi_rslv(dilprg *p)
         else
         {
             auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-            if (IS_PC(character))
+            if (character->isPC())
             {
                 if (!IS_IMMORTAL(character))
                 {
@@ -796,7 +797,7 @@ void dilfi_rsvlv(dilprg *p)
         else
         {
             auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-            if (IS_PC(pc))
+            if (pc->isPC())
             {
                 if (!IS_IMMORTAL(pc))
                 {
@@ -821,7 +822,7 @@ void dilfi_rsrce(dilprg *p)
         }
         else
         {
-            if (IS_PC((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isPC())
             {
                 race_adjust((unit_data *)v1->val.ptr);
             }
@@ -838,9 +839,9 @@ void dilfi_stopf(dilprg *p)
 
     if (dil_type_check("stop_fighting", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 2, DILV_UP, DILV_NULL))
     {
-        if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
         {
-            if (v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+            if (v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
             {
                 stop_fighting((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
             }
@@ -862,7 +863,7 @@ void dilfi_setf(dilprg *p)
 
     if (dil_type_check("set_fighting", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar() && v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
         {
             if (CHAR_FIGHTING((unit_data *)v1->val.ptr))
             {
@@ -1101,7 +1102,7 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
         {
             if (tmp != DILV_NULL)
             {
-                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                          "DIL %s@%s Error in %s in remote call to %s where parameter %d has incorrect type. Stopping program.",
                          UNIT_FI_NAME(p->sarg->owner),
                          UNIT_FI_ZONENAME(p->sarg->owner),
@@ -1188,7 +1189,7 @@ void dilfi_rfunc(dilprg *p)
          * stop the DIL program executing,
          * write error, but do not slime it.
          */
-        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                  "DIL %s@%s, dil %s@%s Error in remote call function #%d not valid\n",
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -1305,7 +1306,7 @@ void dilfi_rsfunc(dilprg *p)
 
     if (fail)
     {
-        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                  "DIL %s@%s, dil %s Error in symbolic remote call string=%s\n",
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -1697,12 +1698,12 @@ void dilfi_lnk(dilprg *p)
     {
         if (v1->val.ptr && v2->val.ptr)
         {
-            if (IS_OBJ((unit_data *)v1->val.ptr) && OBJ_EQP_POS((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isObj() && OBJ_EQP_POS((unit_data *)v1->val.ptr))
             {
                 unequip_object((unit_data *)v1->val.ptr);
             }
             if (!unit_recursive((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr) &&
-                (!IS_ROOM((unit_data *)v1->val.ptr) || IS_ROOM((unit_data *)v2->val.ptr)))
+                (!((unit_data *)v1->val.ptr)->isRoom() || ((unit_data *)v2->val.ptr)->isRoom()))
             {
                 unit_from_unit((unit_data *)v1->val.ptr);
                 unit_to_unit((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
@@ -1742,7 +1743,7 @@ void dilfi_sete(dilprg *p)
 
     if (dil_type_check("sendtext", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
         {
             if (*((char *)v1->val.ptr) == MULTI_UNIQUE_CHAR && *((char *)v1->val.ptr + 1) == MULTI_PROMPT_CHAR)
             {
@@ -1780,7 +1781,7 @@ void dilfi_folo(dilprg *p)
         }
         else
         {
-            if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && IS_CHAR((unit_data *)v2->val.ptr))
+            if (v1->val.ptr && v2->val.ptr && ((unit_data *)v1->val.ptr)->isChar() && ((unit_data *)v2->val.ptr)->isChar())
             {
                 if (CHAR_MASTER((unit_data *)v1->val.ptr))
                 {
@@ -1806,7 +1807,7 @@ void dilfi_lcri(dilprg *p)
 
     if (dil_type_check("logcrime", p, 3, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_UP, v3, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v1->val.ptr) && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && v2->val.ptr && ((unit_data *)v1->val.ptr)->isChar() && ((unit_data *)v2->val.ptr)->isChar())
         {
             log_crime((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr, v3->val.num);
         }
@@ -1832,12 +1833,12 @@ void dilfi_exp(dilprg *p)
             value = v1->val.num;
         }
 
-        if (v2->val.ptr && IS_PC((unit_data *)v2->val.ptr))
+        if (v2->val.ptr && ((unit_data *)v2->val.ptr)->isPC())
         {
             slog(LOG_ALL,
                  0,
                  "%s gained %d experience from unit %s@%s.",
-                 UNIT_NAME((unit_data *)v2->val.ptr),
+                 ((unit_data *)v2->val.ptr)->getNames().Name(),
                  value,
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner));
@@ -2292,7 +2293,7 @@ void dilfi_dst(dilprg *p)
 
     if (dil_type_check("purge", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && !IS_ROOM((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && !((unit_data *)v1->val.ptr)->isRoom())
         {
             if (v1->val.ptr == p->sarg->owner)
             {
@@ -2304,7 +2305,7 @@ void dilfi_dst(dilprg *p)
                 extract_unit((unit_data *)v1->val.ptr);
                 dil_test_secure(p);
             }
-            if (IS_PC((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isPC())
             {
                 if (CHAR_DESCRIPTOR((unit_data *)v1->val.ptr))
                 {
@@ -2326,7 +2327,7 @@ void dilfi_exec(dilprg *p)
 
     if (dil_type_check("exec", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && v2->val.ptr && IS_CHAR((unit_data *)v2->val.ptr))
+        if (v1->val.ptr && v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
         {
             char cmd[MAX_INPUT_LENGTH + 1];
 
@@ -2359,8 +2360,8 @@ void dilfi_exec(dilprg *p)
                              "DIL %s on %s tried "
                              "to make %s do: %s",
                              p->fp->tmpl->prgname,
-                             STR(UNIT_NAME(p->sarg->owner)),
-                             UNIT_NAME((unit_data *)v2->val.ptr),
+                             STR(p->sarg->owner->getNames().Name()),
+                             ((unit_data *)v2->val.ptr)->getNames().Name(),
                              cmd);
                     }
                     else
@@ -2657,7 +2658,7 @@ void dilfi_ada(dilprg *p)
     {
         if (v1->val.ptr)
         {
-            if (IS_CHAR((unit_data *)v1->val.ptr))
+            if (((unit_data *)v1->val.ptr)->isChar())
             {
                 if (is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
@@ -2700,7 +2701,7 @@ void dilfi_ada(dilprg *p)
                              v11->val.num);
                 }
             }
-            else if (IS_OBJ((unit_data *)v1->val.ptr))
+            else if (((unit_data *)v1->val.ptr)->isObj())
             {
                 if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
@@ -2926,7 +2927,7 @@ void dilfi_sntadil(dilprg *p)
                         /* If it is destructed, then it cant be found because data
                            will be null */
 
-                        for (fptr = UNIT_FUNC(tp->owner); fptr; fptr = fptr->getNext())
+                        for (fptr = tp->owner->getFunctionPointer(); fptr; fptr = fptr->getNext())
                         {
                             if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData() &&
                                 ((dilprg *)fptr->getData())->fp && ((dilprg *)fptr->getData())->fp->tmpl == tmpl)
@@ -2978,7 +2979,7 @@ void dilfi_log(dilprg *p)
     {
         if (v1->val.ptr)
         {
-            szonelog(UNIT_FI_ZONE(p->owner), "%s", (char *)v1->val.ptr);
+            szonelog(p->owner->getFileIndex()->getZone(), "%s", (char *)v1->val.ptr);
         }
     }
     delete v1;
@@ -3038,11 +3039,11 @@ void dilfi_eqp(dilprg *p)
 
     if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        if (v1->val.ptr && UNIT_IN((unit_data *)v1->val.ptr) && IS_CHAR(UNIT_IN((unit_data *)v1->val.ptr)) &&
-            IS_OBJ((unit_data *)v1->val.ptr) && !equipment(UNIT_IN((unit_data *)v1->val.ptr), v2->val.num))
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit && unit->getUnitIn() && unit->getUnitIn()->isChar() && unit->isObj() && !equipment(unit->getUnitIn(), v2->val.num))
         {
             /* Then equip char */
-            equip_char(UNIT_IN((unit_data *)v1->val.ptr), (unit_data *)v1->val.ptr, v2->val.num);
+            equip_char(unit->getUnitIn(), unit, v2->val.num);
         }
     }
     delete v1;
@@ -3058,7 +3059,7 @@ void dilfi_ueq(dilprg *p)
 
     if (dil_type_check("unequip", p, 1, v1, FAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr) && OBJ_EQP_POS((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isObj() && OBJ_EQP_POS((unit_data *)v1->val.ptr))
         {
             unequip_object((unit_data *)v1->val.ptr);
         }
@@ -3085,7 +3086,7 @@ void dilfi_pup(dilprg *p)
 
     if (dil_type_check("updatepos", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
         {
             update_pos((unit_data *)v1->val.ptr);
             if (CHAR_POS((unit_data *)v1->val.ptr) == POSITION_DEAD)
@@ -3134,7 +3135,7 @@ void dilfi_cast(dilprg *p)
         medium = (unit_data *)v3->val.ptr;
         target = (unit_data *)v4->val.ptr;
 
-        if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) && caster && IS_CHAR(caster) && medium &&
+        if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) && caster && caster->isChar() && medium &&
             (g_spell_info[v1->val.num].spell_pointer || g_spell_info[v1->val.num].tmpl))
         {
             /* cast the spell */

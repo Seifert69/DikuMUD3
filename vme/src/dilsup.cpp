@@ -15,7 +15,7 @@
 
 int pay_point_charlie(unit_data *ch, unit_data *to)
 {
-    if (IS_PC(ch) && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
+    if (ch->isPC() && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
     {
         if (CHAR_DESCRIPTOR(ch))
         {
@@ -25,19 +25,20 @@ int pay_point_charlie(unit_data *ch, unit_data *to)
             }
         }
 
-        if (UNIT_FI_ZONE(to) && UNIT_FI_ZONE(to)->getPayOnly())
+        if (to->getFileIndex()->getZone() && to->getFileIndex()->getZone()->getPayOnly())
         {
-            if ((UNIT_FI_ZONE(to)->getPayOnly() == 1) && (PC_ACCOUNT(ch).getTotalCredit() <= 0))
+            if ((to->getFileIndex()->getZone()->getPayOnly() == 1) && (PC_ACCOUNT(ch).getTotalCredit() <= 0))
             {
                 account_paypoint(ch);
                 return FALSE;
             }
-            else if ((UNIT_FI_ZONE(to)->getPayOnly() == 2) && (PC_ACCOUNT(ch).getFlatRateExpirationDate() < (ubit32)time(nullptr)))
+            else if ((to->getFileIndex()->getZone()->getPayOnly() == 2) &&
+                     (PC_ACCOUNT(ch).getFlatRateExpirationDate() < (ubit32)time(nullptr)))
             {
                 account_paypoint(ch);
                 return FALSE;
             }
-            else if ((UNIT_FI_ZONE(to)->getPayOnly() == 3) &&
+            else if ((to->getFileIndex()->getZone()->getPayOnly() == 3) &&
                      ((PC_ACCOUNT(ch).getTotalCredit() > 0) || (PC_ACCOUNT(ch).getFlatRateExpirationDate() > (ubit32)time(nullptr))))
             {
                 account_paypoint(ch);
@@ -128,20 +129,20 @@ static int getkeyword(unit_data *obj)
 /* Return NULL if unit fits, pointer to string otherwise */
 static const char *wear_size(unit_data *ch, unit_data *obj, int var)
 {
-    if (UNIT_SIZE(ch) == 0)
+    if (ch->getSize() == 0)
     {
         return "error";
     }
 
     int percent = 0;
 
-    if (UNIT_SIZE(ch) > 0)
+    if (ch->getSize() > 0)
     {
-        percent = (100 * UNIT_SIZE(obj)) / UNIT_SIZE(ch);
+        percent = (100 * obj->getSize()) / ch->getSize();
     }
     else
     {
-        percent = (100 * UNIT_SIZE(obj));
+        percent = (100 * obj->getSize());
     }
 
     if (percent < 100 - var - (100 - var) / 2)

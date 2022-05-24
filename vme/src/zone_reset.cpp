@@ -58,9 +58,9 @@ void zone_update_no_in_zone()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (UNIT_FILE_INDEX(u) && (unit_zone(u) == g_boot_zone))
+        if (u->getFileIndex() && (unit_zone(u) == g_boot_zone))
         {
-            UNIT_FILE_INDEX(u)->IncrementNumInZone();
+            u->getFileIndex()->IncrementNumInZone();
         }
     }
 }
@@ -70,7 +70,7 @@ void zone_loaded_a_unit(unit_data *u)
 {
     if (unit_zone(u) == g_boot_zone)
     {
-        UNIT_FILE_INDEX(u)->IncrementNumInZone();
+        u->getFileIndex()->IncrementNumInZone();
     }
 }
 
@@ -115,9 +115,9 @@ bool zone_limit(unit_data *u, file_index_type *fi, zone_reset_cmd *cmd)
     /* Check for local maxima */
     if ((i = cmd->getNum(2)))
     {
-        for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->getNext())
+        for (tmp = u->getUnitContains(); tmp; tmp = tmp->getNext())
         {
-            if (UNIT_FILE_INDEX(tmp) == fi)
+            if (tmp->getFileIndex() == fi)
             {
                 --i;
             }
@@ -170,16 +170,16 @@ unit_data *zone_load(unit_data *u, zone_reset_cmd *cmd)
             {
                 set_money(loaded, MONEY_AMOUNT(loaded));
             }
-            if (!UNIT_IN(loaded))
+            if (!loaded->getUnitIn())
             {
                 unit_to_unit(loaded, u);
             }
             zone_loaded_a_unit(loaded);
             dil_loadtime_activate(loaded);
-            if (IS_CHAR(loaded))
+            if (loaded->isChar())
             {
                 act("$1n has arrived.", A_HIDEINV, loaded, cActParameter(), cActParameter(), TO_ROOM);
-                loaded->increaseSizeBy((UNIT_SIZE(loaded) * (55 - dice(10, 10))) / 300);
+                loaded->increaseSizeBy((loaded->getSize() * (55 - dice(10, 10))) / 300);
             }
         }
         else
@@ -206,7 +206,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
                  cmd->getFileIndexType(0)->getName(),
                  cmd->getFileIndexType(0)->getZone()->getName());
     }
-    else if (!IS_CHAR(u))
+    else if (!u->isChar())
     {
         szonelog(g_boot_zone,
                  "Reset Error: %s@%s is not a char in equip.",
@@ -242,7 +242,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
             dil_loadtime_activate(loaded);
         }
 
-        if (IS_OBJ(loaded))
+        if (loaded->isObj())
         {
 #ifdef SUSPEKT
             if ((cmd->num[1] == WEAR_WIELD) && (OBJ_TYPE(loaded) == ITEM_WEAPON))
@@ -261,7 +261,7 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
             }
 #endif
             equip_char(u, loaded, cmd->getNum(1));
-            loaded->setSize(UNIT_SIZE(u)); // Autofit
+            loaded->setSize(u->getSize()); // Autofit
         }
     }
 
@@ -303,10 +303,10 @@ unit_data *zone_purge(unit_data *u, zone_reset_cmd *cmd)
     }
     else
     {
-        for (u = UNIT_CONTAINS(cmd->getFileIndexType(0)->Front()); u; u = next)
+        for (u = cmd->getFileIndexType(0)->Front()->getUnitContains(); u; u = next)
         {
             next = u->getNext();
-            if (!IS_PC(u) && !IS_ROOM(u))
+            if (!u->isPC() && !u->isRoom())
             {
                 extract_unit(u);
             }
@@ -328,10 +328,10 @@ unit_data *zone_remove(unit_data *u, zone_reset_cmd *cmd)
     }
     else
     {
-        for (u = UNIT_CONTAINS(cmd->getFileIndexType(1)->Front()); u; u = next)
+        for (u = cmd->getFileIndexType(1)->Front()->getUnitContains(); u; u = next)
         {
             next = u->getNext();
-            if (UNIT_FILE_INDEX(u) == cmd->getFileIndexType(0) && !IS_ROOM(u))
+            if (u->getFileIndex() == cmd->getFileIndexType(0) && !u->isRoom())
             {
                 extract_unit(u);
             }
@@ -355,7 +355,7 @@ unit_data *zone_follow(unit_data *u, zone_reset_cmd *cmd)
     {
         szonelog(g_boot_zone, "Reset Error: Non Existant destination-unit in follow");
     }
-    else if (!IS_CHAR(u))
+    else if (!u->isChar())
     {
         szonelog(g_boot_zone, "Reset Error: Master to follow is not a mobile.");
     }
@@ -367,7 +367,7 @@ unit_data *zone_follow(unit_data *u, zone_reset_cmd *cmd)
     {
         loaded = read_unit(cmd->getFileIndexType(0));
 
-        unit_to_unit(loaded, UNIT_IN(u));
+        unit_to_unit(loaded, u->getUnitIn());
         start_following(loaded, u);
         zone_loaded_a_unit(loaded);
 

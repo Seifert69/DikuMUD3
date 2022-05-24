@@ -394,7 +394,7 @@ void dump_zone(char *prefix)
 
     for (u = g_zone.z_rooms; u; u = u->getNext())
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             no_rooms++;
         }
@@ -721,7 +721,7 @@ void graph_sc(char *prefix)
     int x = 0;
     for (x = 0, u = g_zone.z_rooms; u; u = u->getNext(), x++)
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             UROOM(u)->setRoomNumber(x);
         }
@@ -732,7 +732,7 @@ void graph_sc(char *prefix)
     ZoneGraph G(x);
     for (u = g_zone.z_rooms; u; u = u->getNext())
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             add_edge(ROOM_NUM(u), 0, G);
         }
@@ -758,7 +758,7 @@ void write_dot(char *prefix)
 
     for (u = g_zone.z_rooms; u; u = u->getNext())
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" "
                   << "[label=\"" << UNIT_IDENT(u) << "\"];" << std::endl;
@@ -768,7 +768,7 @@ void write_dot(char *prefix)
     dotfl << std::endl << "/* Room Interconnects */" << std::endl;
     for (u = g_zone.z_rooms; u; u = u->getNext())
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             for (int i = 0; i < MAX_EXIT; i++)
             {

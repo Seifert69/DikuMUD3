@@ -223,18 +223,18 @@ void game_loop()
     {
         if (d->cgetOriginalCharacter() != nullptr)
         {
-            if (IS_PC(d->cgetOriginalCharacter()) && UNIT_IN(d->cgetOriginalCharacter()))
+            if (d->cgetOriginalCharacter()->isPC() && d->cgetOriginalCharacter()->getUnitIn())
             {
-                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetOriginalCharacter()));
+                slog(LOG_ALL, 0, "Saving %s.", d->cgetOriginalCharacter()->getNames().Name());
                 save_player(d->getOriginalCharacter());
                 save_player_contents(d->getOriginalCharacter(), TRUE);
             }
         }
         else
         {
-            if (IS_PC(d->cgetCharacter()) && UNIT_IN(d->cgetCharacter()))
+            if (d->cgetCharacter()->isPC() && d->cgetCharacter()->getUnitIn())
             {
-                slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->cgetCharacter()));
+                slog(LOG_ALL, 0, "Saving %s.", d->cgetCharacter()->getNames().Name());
                 save_player(d->getCharacter());
                 save_player_contents(d->getCharacter(), TRUE);
             }
@@ -365,11 +365,11 @@ void check_overpopulation_event(void *p1, void *p2)
         t = u;
         while (t)
         {
-            if (UNIT_TYPE(t) == UNIT_ST_PC)
+            if (t->isPC())
             {
                 break;
             }
-            t = UNIT_IN(t);
+            t = t->getUnitIn();
         }
         if (t)
         {
@@ -377,7 +377,7 @@ void check_overpopulation_event(void *p1, void *p2)
         }
 
         i = 0;
-        for (t = UNIT_CONTAINS(u); t; t = t->getNext())
+        for (t = u->getUnitContains(); t; t = t->getNext())
         { // count top layer
             i++;
         }

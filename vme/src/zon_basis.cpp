@@ -68,14 +68,14 @@ void basis_boot()
 
 int error_rod(spec_arg *sarg)
 {
-    if ((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
+    if ((!is_command(sarg->cmd, "use")) || (!sarg->activator->isPC()) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
     {
         return SFR_SHARE;
     }
 
     zone_type *zone = unit_zone(sarg->activator);
 
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(UNIT_NAME(sarg->activator)))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(sarg->activator->getNames().Name()))
     {
         send_to_char("You are only allowed to erase errors "
                      "in your own zone.<br/>",
@@ -96,20 +96,20 @@ int error_rod(spec_arg *sarg)
 
     act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Error file was erased.<br/>", sarg->activator);
-    slog(LOG_ALL, UNIT_MINV(sarg->activator), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
+    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", sarg->activator->getNames().Name(), filename);
     return SFR_BLOCK;
 }
 
 int info_rod(spec_arg *sarg)
 {
-    if (!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
+    if (!is_command(sarg->cmd, "wave") || !sarg->activator->isPC() || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
     {
         return SFR_SHARE;
     }
 
     zone_type *zone = unit_zone(sarg->activator);
 
-    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(UNIT_NAME(sarg->activator)))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->getCreators().IsName(sarg->activator->getNames().Name()))
     {
         send_to_char("You are only allowed to erase user-information"
                      " in your own zone.",
@@ -130,7 +130,7 @@ int info_rod(spec_arg *sarg)
 
     act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Zone user information file was erased.<br/>", sarg->activator);
-    slog(LOG_ALL, UNIT_MINV(sarg->activator), "%s cleared %s", UNIT_NAME(sarg->activator), filename);
+    slog(LOG_ALL, sarg->activator->getLevelOfWizardInvisibility(), "%s cleared %s", sarg->activator->getNames().Name(), filename);
     return SFR_BLOCK;
 }
 
@@ -141,7 +141,7 @@ int log_object(spec_arg *sarg)
     ubit8 *ip = nullptr;
     log_level lev = LOG_OFF;
     char c = 0;
-    unit_data *ch = UNIT_IN(sarg->owner);
+    unit_data *ch = sarg->owner->getUnitIn();
 
     if (sarg->fptr->getData() == nullptr)
     {
@@ -185,7 +185,7 @@ int log_object(spec_arg *sarg)
                     break;
             }
 
-            if (LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
+            if (LOG_OFF < lev && ch->isPC() && PC_IMMORTAL(ch))
             {
                 while (!g_log_buf[*ip].getString().empty())
                 {
@@ -200,7 +200,7 @@ int log_object(spec_arg *sarg)
             return SFR_SHARE;
 
         default:
-            if (sarg->cmd->cmd_str && sarg->activator == UNIT_IN(sarg->owner) && !strcmp("log", sarg->cmd->cmd_str))
+            if (sarg->cmd->cmd_str && sarg->activator == sarg->owner->getUnitIn() && !strcmp("log", sarg->cmd->cmd_str))
             {
                 sarg->arg = skip_spaces(sarg->arg);
                 if (is_abbrev(sarg->arg, "all"))
@@ -274,7 +274,7 @@ int system_check(unit_data *pc, const char *buf)
     if (strchr(buf, '`') || strchr(buf, ';'))
     {
         send_to_char("You can not use the ' and ; characters<br/>", pc);
-        slog(LOG_ALL, 0, "%s may have tried to break security with %s", UNIT_NAME(pc), buf);
+        slog(LOG_ALL, 0, "%s may have tried to break security with %s", pc->getNames().Name(), buf);
         return FALSE;
     }
 
@@ -295,7 +295,7 @@ void execute_append(unit_data *pc, const char *str)
 
     fprintf(f, "%s\n", str);
 
-    slog(LOG_ALL, UNIT_MINV(pc), "EXECUTE(%s): %s", UNIT_NAME(pc), str);
+    slog(LOG_ALL, pc->getLevelOfWizardInvisibility(), "EXECUTE(%s): %s", pc->getNames().Name(), str);
 
     fclose(f);
 }
@@ -311,7 +311,7 @@ int admin_obj(spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    if (!IS_PC(sarg->activator))
+    if (!sarg->activator->isPC())
     {
         return SFR_SHARE;
     }
@@ -358,7 +358,7 @@ int admin_obj(spec_arg *sarg)
     }
     else
     {
-        if ((!zone->getCreators().IsName(UNIT_NAME(sarg->activator))) && (!IS_OVERSEER(sarg->activator)))
+        if ((!zone->getCreators().IsName(sarg->activator->getNames().Name())) && (!IS_OVERSEER(sarg->activator)))
         {
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;

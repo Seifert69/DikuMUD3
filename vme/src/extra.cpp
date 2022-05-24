@@ -389,7 +389,7 @@ extra_descr_data *unit_find_extra(const char *word, unit_data *unit)
 
         word = skip_spaces(word);
 
-        for (i = UNIT_EXTRA(unit).m_pList; i; i = i->next)
+        for (i = unit->getExtraList().m_pList; i; i = i->next)
         {
             if (i->names.Name())
             {
@@ -403,7 +403,7 @@ extra_descr_data *unit_find_extra(const char *word, unit_data *unit)
                     return i;
                 }
             }
-            else if (UNIT_NAMES(unit).IsName(word))
+            else if (unit->getNames().IsName(word))
             {
                 return i;
             }
@@ -422,7 +422,7 @@ extra_descr_data *char_unit_find_extra(unit_data *ch, unit_data **target, char *
         return nullptr;
     }
 
-    if (IS_ROOM(list))
+    if (list->isRoom())
     {
         if (CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
         {
@@ -434,7 +434,7 @@ extra_descr_data *char_unit_find_extra(unit_data *ch, unit_data **target, char *
         }
         else
         {
-            list = list->getContainedUnits();
+            list = list->getUnitContains();
         }
     }
 

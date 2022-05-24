@@ -1119,19 +1119,19 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
     pBuf->Append8(nVersion); /* Version Number! */
 
-    UNIT_NAMES(u).AppendBuffer(pBuf);
+    u->getNames().AppendBuffer(pBuf);
 
-    pBuf->AppendString(UNIT_TITLE_STRING(u));
-    pBuf->AppendString(UNIT_OUT_DESCR_STRING(u));
-    pBuf->AppendString(UNIT_IN_DESCR_STRING(u));
+    pBuf->AppendString(u->getTitle().c_str());
+    pBuf->AppendString(u->getDescriptionOfOutside().c_str());
+    pBuf->AppendString(u->getDescriptionOfInside().c_str());
 
-    if (UNIT_EXTRA(u).isempty())
+    if (u->getExtraList().isempty())
     { // MS2020, nasty bug, exd could be NULL and class was called.
         pBuf->Append32(0);
     }
     else
     {
-        UNIT_EXTRA(u).AppendBuffer(pBuf);
+        u->getExtraList().AppendBuffer(pBuf);
     }
 
     /*      if (IS_PC (u))
@@ -1143,11 +1143,11 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
        }*/
 
 #ifdef VMC_SRC
-    pBuf->AppendDoubleString((char *)UNIT_KEY(u));
+    pBuf->AppendDoubleString((char *)u->getKey());
 #else
-    if (UNIT_KEY(u))
+    if (u->getKey())
     {
-        split_fi_ref(UNIT_KEY(u), zone, name);
+        split_fi_ref(u->getKey(), zone, name);
         pBuf->AppendString(zone);
         pBuf->AppendString(name);
     }
@@ -1158,41 +1158,41 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
     }
 #endif
 
-    pBuf->Append32(UNIT_MANIPULATE(u));
-    pBuf->Append16(UNIT_FLAGS(u));
-    pBuf->Append16(UNIT_BASE_WEIGHT(u));
-    pBuf->Append16(UNIT_WEIGHT(u));
-    pBuf->Append16(UNIT_CAPACITY(u));
+    pBuf->Append32(u->getManipulate());
+    pBuf->Append16(u->getUnitFlags());
+    pBuf->Append16(u->getBaseWeight());
+    pBuf->Append16(u->getWeight());
+    pBuf->Append16(u->getCapacity());
 
-    pBuf->Append32((ubit32)UNIT_MAX_HIT(u));
-    pBuf->Append32((ubit32)UNIT_HIT(u));
+    pBuf->Append32((ubit32)u->getMaximumHitpoints());
+    pBuf->Append32((ubit32)u->getCurrentHitpoints());
 
-    pBuf->Append16((ubit16)UNIT_ALIGNMENT(u));
+    pBuf->Append16((ubit16)u->getAlignment());
 
-    pBuf->Append8(UNIT_OPEN_FLAGS(u));
-    pBuf->Append8(UNIT_OPEN_DIFF(u));
-    pBuf->Append8(UNIT_LIGHTS(u));
-    pBuf->Append8(UNIT_BRIGHT(u));
-    pBuf->Append8(UNIT_ILLUM(u));
-    pBuf->Append8(UNIT_CHARS(u));
-    pBuf->Append8(UNIT_MINV(u));
+    pBuf->Append8(u->getOpenFlags());
+    pBuf->Append8(u->getOpenDifficulty());
+    pBuf->Append8(u->getNumberOfActiveLightSources());
+    pBuf->Append8(u->getLightOutput());
+    pBuf->Append8(u->getTransparentLightOutput());
+    pBuf->Append8(u->getNumberOfCharactersInsideUnit());
+    pBuf->Append8(u->getLevelOfWizardInvisibility());
 
-    pBuf->Append16(UNIT_SIZE(u));
+    pBuf->Append16(u->getSize());
 
-    if (UNIT_TYPE(u) == UNIT_ST_ROOM)
+    if (u->getUnitType() == UNIT_ST_ROOM)
     {
         /* See if room is to be placed inside another room! */
-        pBuf->AppendDoubleString((char *)UNIT_IN(u));
+        pBuf->AppendDoubleString((char *)u->getUnitIn());
     }
     else
     {
         unit_data *inu = nullptr;
 
-        if (IS_PC(u))
+        if (u->isPC())
         {
             inu = CHAR_LAST_ROOM(u);
         }
-        else if (UNIT_IN(u))
+        else if (u->getUnitIn())
         {
 #ifdef DMSERVER
             inu = unit_room(u);
@@ -1201,7 +1201,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 #endif
         }
 
-        if (inu && UNIT_FILE_INDEX(inu))
+        if (inu && inu->getFileIndex())
         {
             pBuf->AppendString(UNIT_FI_ZONENAME(inu));
             pBuf->AppendString(UNIT_FI_NAME(inu));
@@ -1213,7 +1213,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
         }
     }
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_NPC:
             pBuf->AppendString(CHAR_MONEY(u) ? CHAR_MONEY(u) : "");
@@ -1244,13 +1244,13 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             for (i = 0; i < ABIL_TREE_MAX; i++)
             {
                 pBuf->Append16(CHAR_ABILITY(u, i));
-                if (IS_PC(u))
+                if (u->isPC())
                 {
                     pBuf->Append8(PC_ABI_LVL(u, i));
                 }
             }
 
-            if (IS_PC(u))
+            if (u->isPC())
             {
                 pBuf->Append8(PC_PROFESSION(u));
                 PC_ACCOUNT(u).writeTo(*pBuf);
@@ -1398,9 +1398,9 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             break;
     }
 
-    bwrite_affect(pBuf, UNIT_AFFECTED(u), nVersion);
+    bwrite_affect(pBuf, u->getUnitAffected(), nVersion);
 
-    bwrite_func(pBuf, UNIT_FUNC(u));
+    bwrite_func(pBuf, u->getFunctionPointer());
 
     return pBuf->GetLength() - nPos;
 }
@@ -1421,8 +1421,8 @@ void write_unit(FILE *f, unit_data *u, char *fname)
     pBuf = &g_FileBuffer;
     pBuf->Clear();
 
-    pBuf->AppendString(fname);   /* Write unique name  */
-    pBuf->Append8(UNIT_TYPE(u)); /* Write unit type    */
+    pBuf->AppendString(fname);       /* Write unique name  */
+    pBuf->Append8(u->getUnitType()); /* Write unit type    */
 
     nSizeStart = pBuf->GetLength();
     pBuf->Append32(0); /* Write dummy length */

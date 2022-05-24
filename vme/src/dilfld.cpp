@@ -139,7 +139,7 @@ void dilfe_fld(dilprg *p)
                     }
                     else
                     {
-                        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s %s@%s, index of stringlist out of bounds: %d\n",
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -162,7 +162,7 @@ void dilfe_fld(dilprg *p)
                     }
                     else
                     {
-                        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s %s@%s, index of stringlist out of bounds: %d\n",
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner),
@@ -193,7 +193,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
-                        if (IS_PC((unit_data *)v1->val.ptr))
+                        if (((unit_data *)v1->val.ptr)->isPC())
                         {
                             v->val.num = (int)PC_ID((unit_data *)v1->val.ptr);
                         }
@@ -223,7 +223,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if ((v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr)))
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -262,7 +262,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if ((v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr)))
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -298,7 +298,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if ((v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr)))
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -354,7 +354,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -391,7 +391,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
@@ -515,7 +515,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_TYPE((unit_data *)v1->val.ptr);
+                        v->val.num = ((unit_data *)v1->val.ptr)->getUnitType();
                     }
                     else
                     {
@@ -650,17 +650,20 @@ void dilfe_fld(dilprg *p)
                     }
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SLPR;
-                        v->ref = &UNIT_NAMES((unit_data *)v1->val.ptr);
+                        v->ref = &unit->getNames();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -729,7 +732,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SP;
-                        v->val.ptr = (void *)IF_STR(UNIT_NAME((unit_data *)v1->val.ptr));
+                        v->val.ptr = (void *)IF_STR(((unit_data *)v1->val.ptr)->getNames().Name());
                     }
                     else
                     {
@@ -955,7 +958,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
@@ -985,7 +988,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_PC(character))
+                    if (character && character->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
@@ -1019,7 +1022,7 @@ void dilfe_fld(dilprg *p)
                         v->type = DILV_EDPR;
                         if (v1->val.ptr)
                         { // MS2020 BUG
-                            v->ref = &(UNIT_EXTRA((unit_data *)v1->val.ptr).m_pList);
+                            v->ref = &(((unit_data *)v1->val.ptr)->getExtraList().m_pList);
                         }
                         else
                         {
@@ -1051,7 +1054,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = UNIT_IN((unit_data *)v1->val.ptr);
+                        v->val.ptr = ((unit_data *)v1->val.ptr)->getUnitIn();
                     }
                     else
                     {
@@ -1078,7 +1081,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        v->val.ptr = UNIT_CONTAINS((unit_data *)v1->val.ptr);
+                        v->val.ptr = ((unit_data *)v1->val.ptr)->getUnitContains();
                     }
                     else
                     {
@@ -1269,7 +1272,7 @@ void dilfe_fld(dilprg *p)
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
                         v->val.num =
-                            UNIT_FILE_INDEX((unit_data *)v1->val.ptr) ? UNIT_FILE_INDEX((unit_data *)v1->val.ptr)->getNumInMem() : 1;
+                            ((unit_data *)v1->val.ptr)->getFileIndex() ? ((unit_data *)v1->val.ptr)->getFileIndex()->getNumInMem() : 1;
                     }
                     else
                     {
@@ -1412,7 +1415,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_LIGHTS((unit_data *)v1->val.ptr);
+                        v->val.num = ((unit_data *)v1->val.ptr)->getNumberOfActiveLightSources();
                     }
                     else
                     {
@@ -1440,7 +1443,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_BRIGHT((unit_data *)v1->val.ptr);
+                        v->val.num = ((unit_data *)v1->val.ptr)->getLightOutput();
                     }
                     else
                     {
@@ -1467,7 +1470,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_ILLUM((unit_data *)v1->val.ptr);
+                        v->val.num = ((unit_data *)v1->val.ptr)->getTransparentLightOutput();
                     }
                     else
                     {
@@ -1723,7 +1726,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
 
@@ -1786,7 +1789,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -1813,7 +1816,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -1846,7 +1849,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
 
-                        if (IS_PC(unit))
+                        if (unit->isPC())
                         {
                             if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                             {
@@ -1923,7 +1926,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_BASE_WEIGHT((unit_data *)v1->val.ptr);
+                        v->val.num = ((unit_data *)v1->val.ptr)->getBaseWeight();
 
                         // v->atyp = DILA_NONE;
                         // v->type = DILV_SINT2R;
@@ -1956,7 +1959,7 @@ void dilfe_fld(dilprg *p)
                         int editing = FALSE;
                         unit_data *vict = nullptr;
                         vict = ((unit_data *)v1->val.ptr);
-                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
+                        if (vict->isPC() && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->getNext())
@@ -1973,7 +1976,7 @@ void dilfe_fld(dilprg *p)
                         }
                         else
                         {
-                            if (IS_PC(vict) && CHAR_DESCRIPTOR(vict))
+                            if (vict->isPC() && CHAR_DESCRIPTOR(vict))
                             {
                                 if (CHAR_DESCRIPTOR(vict)->cgetEditing())
                                 {
@@ -2012,7 +2015,7 @@ void dilfe_fld(dilprg *p)
                         unit_data *switched = nullptr;
                         unit_data *vict = nullptr;
                         vict = ((unit_data *)v1->val.ptr);
-                        if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == nullptr)
+                        if (vict->isPC() && CHAR_DESCRIPTOR(vict) == nullptr)
                         {
                             descriptor_data *d = nullptr;
                             for (d = g_descriptor_list; d; d = d->getNext())
@@ -2026,7 +2029,7 @@ void dilfe_fld(dilprg *p)
                         }
                         else
                         {
-                            if (IS_NPC(vict) && CHAR_DESCRIPTOR(vict))
+                            if (vict->isNPC() && CHAR_DESCRIPTOR(vict))
                             {
                                 if (CHAR_DESCRIPTOR(vict)->cgetOriginalCharacter())
                                 {
@@ -2063,8 +2066,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = UNIT_WEIGHT((unit_data *)v1->val.ptr);
-                        ;
+                        v->val.num = ((unit_data *)v1->val.ptr)->getWeight();
 
                         // v->atyp = DILA_NONE;
                         // v->type = DILV_SINT2R;
@@ -2180,7 +2182,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr)
                 {
-                    switch (UNIT_TYPE((unit_data *)v1->val.ptr))
+                    switch (((unit_data *)v1->val.ptr)->getUnitType())
                     {
                         case UNIT_ST_ROOM:
                         {
@@ -2264,7 +2266,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
-                        v->val.num = (UNIT_FUNC((unit_data *)v1->val.ptr) != nullptr);
+                        v->val.num = (((unit_data *)v1->val.ptr)->getFunctionPointer() != nullptr);
                     }
                     else
                     {
@@ -2316,7 +2318,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->type = DILV_UINT1R;
                         v->atyp = DILA_NONE;
@@ -2371,7 +2373,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_UINT4R)
             {
                 auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                if (object && IS_OBJ(object) && (v2->val.num >= 0 && v2->val.num < static_cast<sbit32>(object->getValueArraySize())))
+                if (object && object->isObj() && (v2->val.num >= 0 && v2->val.num < static_cast<sbit32>(object->getValueArraySize())))
                 {
                     v->atyp = DILA_NONE;
                     v->ref = object->getValueAtIndexPtr(v2->val.num);
@@ -2395,7 +2397,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -2425,7 +2427,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -2455,7 +2457,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
-                    if (object && IS_OBJ(object))
+                    if (object && object->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -2483,7 +2485,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_OBJ((unit_data *)v1->val.ptr))
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isObj())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -2536,7 +2538,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_SPR)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
@@ -2586,7 +2588,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_SLPR)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NORM;
@@ -2635,7 +2637,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_UINT1R)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NONE;
@@ -2683,7 +2685,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_UINT1R)
             {
-                if (v1->val.ptr && IS_ROOM((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, MAX_EXIT) &&
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
                     ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
                 {
                     v->atyp = DILA_NONE;
@@ -2732,7 +2734,7 @@ void dilfe_fld(dilprg *p)
             {
                 auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
 
-                if (room && IS_ROOM(room) && is_in(v2->val.num, 0, MAX_EXIT))
+                if (room && room->isRoom() && is_in(v2->val.num, 0, MAX_EXIT))
                 {
                     if (ROOM_EXIT(room, v2->val.num))
                     {
@@ -2764,7 +2766,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -2797,7 +2799,7 @@ void dilfe_fld(dilprg *p)
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->val.num = room->getMapXCoordinate();
                     }
@@ -2828,7 +2830,7 @@ void dilfe_fld(dilprg *p)
                     v->atyp = DILA_NORM;
                     v->type = DILV_INT;
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->val.num = room->getMapYCoordinate();
                     }
@@ -2857,7 +2859,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
-                    if (room && IS_ROOM(room))
+                    if (room && room->isRoom())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -2888,7 +2890,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -2919,7 +2921,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -2950,7 +2952,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -2981,7 +2983,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
@@ -3038,9 +3040,9 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                if (character && IS_CHAR(character) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                if (character && character->isChar() && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
-                    if (IS_PC(character))
+                    if (character->isPC())
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
@@ -3107,7 +3109,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3166,7 +3168,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, ABIL_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3234,7 +3236,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3294,7 +3296,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, SPL_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3360,7 +3362,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3419,7 +3421,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3484,7 +3486,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -3543,7 +3545,7 @@ void dilfe_fld(dilprg *p)
 
             if (v->type == DILV_INT)
             {
-                if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr) && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC() && is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
                 {
                     v->atyp = DILA_NONE;
                     v->type = DILV_INT;
@@ -3582,7 +3584,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                         {
@@ -3619,7 +3621,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -3649,9 +3651,9 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
-                        if (IS_PC(character) && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
+                        if (character->isPC() && (p->frame[0].tmpl->zone->getAccessLevel() != 0))
                         {
                             v->type = DILV_INT;
                             v->val.num = CHAR_LEVEL(character);
@@ -3700,7 +3702,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
                         {
@@ -3739,7 +3741,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
@@ -3810,7 +3812,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -3853,7 +3855,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3884,7 +3886,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -3915,7 +3917,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
@@ -3946,7 +3948,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -3977,7 +3979,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -4006,7 +4008,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_CHAR((unit_data *)v1->val.ptr))
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UP;
@@ -4061,7 +4063,7 @@ void dilfe_fld(dilprg *p)
             {
                 if (v1->val.ptr)
                 {
-                    switch (UNIT_TYPE((unit_data *)v1->val.ptr))
+                    switch (((unit_data *)v1->val.ptr)->getUnitType())
                     {
                         case UNIT_ST_NPC:
                         {
@@ -4125,7 +4127,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
-                    if (npc && IS_NPC(npc))
+                    if (npc && npc->isNPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -4156,7 +4158,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
-                    if (npc && IS_NPC(npc))
+                    if (npc && npc->isNPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
@@ -4187,7 +4189,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
@@ -4218,7 +4220,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT4R;
@@ -4249,7 +4251,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (player && IS_PC(player))
+                    if (player && player->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -4280,7 +4282,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -4311,7 +4313,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -4342,7 +4344,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT1R;
@@ -4372,7 +4374,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
@@ -4403,7 +4405,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT4R;
@@ -4434,7 +4436,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
@@ -4465,7 +4467,7 @@ void dilfe_fld(dilprg *p)
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
 
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SPR;
@@ -4606,7 +4608,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                    if (pc && IS_PC(pc))
+                    if (pc && pc->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT2R;
@@ -4635,17 +4637,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit && unit->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_EDPR;
-                        v->ref = &(PC_QUEST((unit_data *)v1->val.ptr).m_pList);
+                        v->ref = &(PC_QUEST(unit).m_pList);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4662,17 +4667,20 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && IS_PC((unit_data *)v1->val.ptr))
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit && unit->isPC())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_EDPR;
-                        v->ref = &(PC_INFO((unit_data *)v1->val.ptr).m_pList);
+                        v->ref = &(PC_INFO(unit).m_pList);
                     }
                     else
                     {
                         v->type = DILV_FAIL;
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -4715,7 +4723,7 @@ void dilfe_fld(dilprg *p)
             if (v->type == DILV_INT)
             {
                 auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-                if (pc && IS_PC(pc) && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
                 {
                     if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
                     {
@@ -4749,7 +4757,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
@@ -4780,7 +4788,7 @@ void dilfe_fld(dilprg *p)
                 case DILV_UP:
                 {
                     auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
-                    if (character && IS_CHAR(character))
+                    if (character && character->isChar())
                     {
                         if (CHAR_FOLLOWERS(character))
                         {
@@ -4840,7 +4848,7 @@ void dilfe_fld(dilprg *p)
             break;
 
         default:
-            szonelog(UNIT_FI_ZONE(p->sarg->owner),
+            szonelog(p->sarg->owner->getFileIndex()->getZone(),
                      "DIL %s@%s, unknown field type: %d\n",
                      UNIT_FI_NAME(p->sarg->owner),
                      UNIT_FI_ZONENAME(p->sarg->owner),

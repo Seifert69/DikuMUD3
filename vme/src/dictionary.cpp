@@ -75,11 +75,11 @@ static char *get_next_word(const char *argument, char *first_arg)
 /** Setup owner-ship of dictionary. */
 static void set_owner(unit_data *obj, alias_head *ah, unit_data *ch)
 {
-    strcpy(ah->owner, UNIT_NAME(ch));
+    strcpy(ah->owner, ch->getNames().Name());
 
-    obj->setDescriptionOfOutside(diku::format_to_str("On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj)));
+    obj->setDescriptionOfOutside(diku::format_to_str("On the ground lies %s's %s.", ah->owner, obj->getNames().Name()));
 
-    obj->setTitle(diku::format_to_str("%s's %s", ah->owner, UNIT_NAME(obj)));
+    obj->setTitle(diku::format_to_str("%s's %s", ah->owner, obj->getNames().Name()));
 }
 
 /**
@@ -91,7 +91,7 @@ static extra_descr_data *make_alias_extra(unit_data *u)
     extra_descr_data *exd = nullptr;
     static const char *aliaslist[] = {"$alias", nullptr};
 
-    exd = UNIT_EXTRA(u).find_raw("$alias");
+    exd = u->getExtraList().find_raw("$alias");
 
     if (exd)
     {
@@ -99,7 +99,7 @@ static extra_descr_data *make_alias_extra(unit_data *u)
     }
 
     exd = new extra_descr_data(aliaslist, nullptr);
-    UNIT_EXTRA(u).add(exd);
+    u->getExtraList().add(exd);
 
     return exd;
 }
@@ -643,7 +643,7 @@ static void cmd_claim(unit_data *ch, char *arg, unit_data *obj, alias_head *alia
 
     one_argument(arg, buf);
 
-    if (str_is_empty(buf) || !UNIT_NAMES(obj).IsName(buf))
+    if (str_is_empty(buf) || !obj->getNames().IsName(buf))
     {
         act("You can only claim $2n.", A_ALWAYS, ch, obj, cActParameter(), TO_CHAR);
     }
@@ -668,7 +668,7 @@ static int local_dictionary(spec_arg *sarg)
     /* specproc initialization */
     if ((alias_h = (alias_head *)sarg->fptr->getData()) == nullptr)
     {
-        exd = UNIT_EXTRA(sarg->owner).find_raw("$alias");
+        exd = sarg->owner->getExtraList().find_raw("$alias");
         sarg->fptr->setData(str_to_alias(exd ? exd->descr.c_str() : nullptr));
         alias_h = (alias_head *)sarg->fptr->getData();
     }
@@ -700,7 +700,7 @@ static int local_dictionary(spec_arg *sarg)
     }
 
     /* Not an applicaple command */
-    if (!sarg->activator || !IS_CHAR(sarg->activator) || !CHAR_DESCRIPTOR(sarg->activator) || sarg->activator != UNIT_IN(sarg->owner))
+    if (!sarg->activator || !sarg->activator->isChar() || !CHAR_DESCRIPTOR(sarg->activator) || sarg->activator != sarg->owner->getUnitIn())
     {
         return SFR_SHARE;
     }
@@ -713,7 +713,7 @@ static int local_dictionary(spec_arg *sarg)
         /* This check is needed too, so people can't wreak havoc with another
          * person's dictionary...
          */
-        if (str_ccmp(UNIT_NAME(sarg->activator), alias_h->owner))
+        if (str_ccmp(sarg->activator->getNames().Name(), alias_h->owner))
         {
             act("You can't use the alias command before you type `claim $3N'.",
                 A_ALWAYS,
@@ -755,7 +755,7 @@ static int local_dictionary(spec_arg *sarg)
     /* We now have an alias to parse... */
 
     /* Check if this dictionary belongs to user */
-    if (str_ccmp(UNIT_NAME(sarg->activator), alias_h->owner))
+    if (str_ccmp(sarg->activator->getNames().Name(), alias_h->owner))
     {
         act("You can't use the alias `$2t' before you type `claim $3N'.",
             A_ALWAYS,

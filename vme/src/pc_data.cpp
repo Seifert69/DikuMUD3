@@ -74,7 +74,7 @@ pc_data::~pc_data()
 //
 void pc_data::gstate_tomenu(dilprg *pdontstop)
 {
-    if (this->is_destructed())
+    if (is_destructed())
     {
         return;
     }
@@ -100,9 +100,9 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
     UCHAR(this)->setDescriptor(nullptr);
 
-    while (UNIT_CONTAINS(this))
+    while (getUnitContains())
     {
-        extract_unit(UNIT_CONTAINS(this));
+        extract_unit(getUnitContains());
     }
 
     UCHAR(this)->setDescriptor(tmp_descr);
@@ -122,7 +122,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     descriptor_data *i = nullptr;
     const time_t last_connect = m_time.getPlayerLastConnectTime();
 
-    if (this->is_destructed())
+    if (is_destructed())
     {
         return;
     }
@@ -145,7 +145,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
         dil_destroy("link_dead@basis", this);
 
-        this->connect_game();
+        connect_game();
     }
 
     unit_data *load_room = nullptr;
@@ -166,12 +166,12 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 
     if (CHAR_DESCRIPTOR(this) && !DILWAY) /* Only do these things if player is connected */
     {
-        auto msg = diku::format_to_str("%s has entered the world.<br/>", UNIT_NAME(this));
+        auto msg = diku::format_to_str("%s has entered the world.<br/>", getNames().Name());
 
         for (i = g_descriptor_list; i; i = i->getNext())
         {
             if (descriptor_is_playing(i) && i->cgetCharacter() != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->getCharacter()), this) &&
-                IS_PC(CHAR_ORIGINAL(i->getCharacter())) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->getCharacter())), PC_INFORM) &&
+                CHAR_ORIGINAL(i->getCharacter())->isPC() && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->getCharacter())), PC_INFORM) &&
                 !same_surroundings(this, i->cgetCharacter()))
             {
                 send_to_descriptor(msg, i);
@@ -208,7 +208,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
 
     /*		if (!dilway)*/
-    if (strcmp(g_cServerConfig.getImmortalName().c_str(), UNIT_NAME(this)) == 0)
+    if (strcmp(g_cServerConfig.getImmortalName().c_str(), getNames().Name()) == 0)
     {
         setLevel(ULTIMATE_LEVEL);
     }
@@ -268,7 +268,7 @@ void pc_data::reconnect_game(descriptor_data *d)
     // char *color;
     // char tbuf[MAX_STRING_LENGTH * 2];
 
-    if (this->is_destructed() || !d)
+    if (is_destructed() || !d)
     {
         return;
     }
@@ -282,12 +282,12 @@ void pc_data::reconnect_game(descriptor_data *d)
 
     ActivateDil(this); // ch could potentially get zapped here.
 
-    if (this->is_destructed() || !d)
+    if (is_destructed() || !d)
     {
         return;
     }
 
-    this->connect_game();
+    connect_game();
     /* MS2020
      color = UPC (ch)->color.save_string ();
      s printf (tbuf, "%s%s%s", CONTROL_COLOR_CREATE, color, CONTROL_COLOR_END);
@@ -296,7 +296,7 @@ void pc_data::reconnect_game(descriptor_data *d)
  */
     send_to_char("Reconnecting.<br/>", this);
 
-    if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != UNIT_IN(this)))
+    if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != getUnitIn()))
     {
         act("$1n has reconnected, and is moved to another location.",
             A_HIDEINV,
@@ -309,7 +309,7 @@ void pc_data::reconnect_game(descriptor_data *d)
         setLastLocation(nullptr);
     }
     act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
-    slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
+    slog(LOG_BRIEF, getLevelOfWizardInvisibility(), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
     CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
     m_time.setPlayerLastConnectTime(time(nullptr));
     //      stop_affect(ch);

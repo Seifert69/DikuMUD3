@@ -108,13 +108,13 @@ void add_crime(unit_data *criminal, unit_data *victim, int type)
     dilprg *prg = nullptr;
     int crime_no = 0;
 
-    if (str_is_empty(UNIT_NAME(criminal)))
+    if (str_is_empty(criminal->getNames().Name()))
     {
         slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
         return;
     }
 
-    if (str_is_empty(UNIT_NAME(victim)))
+    if (str_is_empty(victim->getNames().Name()))
     {
         slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
         return;
@@ -170,7 +170,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
         return;
     }
 
-    if (!IS_CHAR(criminal) || !IS_CHAR(victim))
+    if (!criminal->isChar() || !victim->isChar())
     {
         slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
         return;
@@ -183,7 +183,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
     }
 
     // It's OK to kill NPCs that are not "protected"
-    if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+    if (victim->isNPC() && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
     {
         return;
     }
@@ -205,7 +205,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
             prg->fp->vars[2].val.integer = crime_serial_no;
             prg->fp->vars[3].val.integer = crime_type;
             prg->fp->vars[4].val.integer = active;
-            prg->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+            prg->fp->vars[5].val.string = str_dup(victim->getNames().Name());
             dil_add_secure(prg, criminal, prg->fp->tmpl->core);
             dil_add_secure(prg, victim, prg->fp->tmpl->core);
             dil_activate(prg);
@@ -233,7 +233,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
                     prg2->fp->vars[2].val.integer = crime_serial_no;
                     prg2->fp->vars[3].val.integer = crime_type;
                     prg2->fp->vars[4].val.integer = active;
-                    prg2->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+                    prg2->fp->vars[5].val.string = str_dup(victim->getNames().Name());
                     dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
                     dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
                     dil_activate(prg2);
@@ -264,7 +264,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
                         prg3->fp->vars[2].val.integer = crime_serial_no;
                         prg3->fp->vars[3].val.integer = crime_type;
                         prg3->fp->vars[4].val.integer = active;
-                        prg3->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+                        prg3->fp->vars[5].val.string = str_dup(victim->getNames().Name());
                         dil_add_secure(prg3, criminal, prg3->fp->tmpl->core);
                         dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
                         dil_activate(prg3);
@@ -1082,18 +1082,18 @@ int reward_give(spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    u = UNIT_CONTAINS(sarg->owner);
+    u = sarg->owner->getUnitContains();
 
     buf = "give ";
     buf = buf + (char *)sarg->arg;
     command_interpreter(sarg->activator, (const char *)buf.c_str());
 
-    if (UNIT_CONTAINS(sarg->owner) == u)
+    if (sarg->owner->getUnitContains() == u)
     { /* Was it given nothing? */
         return SFR_BLOCK;
     }
 
-    if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == nullptr)
+    if ((paf = affected_by_spell(sarg->owner->getUnitContains(), ID_REWARD)) == nullptr)
     {
         act("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;
@@ -1103,14 +1103,14 @@ int reward_give(spec_arg *sarg)
 
     cur = local_currency(sarg->owner);
 
-    if (IS_PC(sarg->activator))
+    if (sarg->activator->isPC())
     {
         gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->getDataAtIndex(0)));
     }
 
     money_to_unit(sarg->activator, paf->getDataAtIndex(1), cur);
 
-    extract_unit(UNIT_CONTAINS(sarg->owner));
+    extract_unit(sarg->owner->getUnitContains());
 
     return SFR_BLOCK;
 }

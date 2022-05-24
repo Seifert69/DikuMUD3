@@ -27,7 +27,7 @@ void do_color(unit_data *ch, char *aaa, const command_info *cmd)
     int add = FALSE;
 
     char *arg = (char *)aaa;
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         send_to_char("Warning: A non pc trying to change colors", ch);
         return;

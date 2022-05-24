@@ -148,22 +148,22 @@ void destruct_unit(unit_data *unit)
         return;
     }
 
-    if (!IS_PC(unit))
+    if (!unit->isPC())
     {
         stop_all_special(unit); // MS2020 reactivated, this is imperative to avoid crash from obsoleted event q events
         stop_affect(unit);      // Reactivated
     }
 
     /* Remove all snooping, snoopers and return from any body */
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         if (CHAR_DESCRIPTOR(unit))
         {
-            assert(IS_PC(unit));
+            assert(unit->isPC());
 
             in_menu = TRUE;
 
-            if (UNIT_IN(unit) && !g_dilmenu)
+            if (unit->getUnitIn() && !g_dilmenu)
             {
                 set_descriptor_fptr(CHAR_DESCRIPTOR(unit), nanny_menu, TRUE);
                 unit->undo_destruct();
@@ -180,7 +180,7 @@ void destruct_unit(unit_data *unit)
         assert(!CHAR_IS_SNOOPED(unit));
 
         /* If the PC which is switched is extracted, then unswitch */
-        if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+        if (unit->isPC() && !CHAR_DESCRIPTOR(unit))
         {
             for (d = g_descriptor_list; d; d = d->getNext())
             {
@@ -192,44 +192,44 @@ void destruct_unit(unit_data *unit)
         assert(!CHAR_MASTER(unit));
         assert(!CHAR_COMBAT(unit));
     }
-    else if (!IS_OBJ(unit))
+    else if (!unit->isObj())
     {
         slog(LOG_OFF, 0, "Extract on something not a char or an obj.");
         assert(FALSE);
     }
 
-    while (UNIT_CONTAINS(unit))
+    while (unit->getUnitContains())
     {
-        if (IS_OBJ(UNIT_CONTAINS(unit)) && OBJ_EQP_POS(UNIT_CONTAINS(unit)))
+        if (unit->getUnitContains()->isObj() && OBJ_EQP_POS(unit->getUnitContains()))
         {
-            unequip_object(UNIT_CONTAINS(unit));
+            unequip_object(unit->getUnitContains());
         }
-        destruct_unit(UNIT_CONTAINS(unit));
+        destruct_unit(unit->getUnitContains());
     }
 
     if (!in_menu)
     {
         /* Call functions of the unit which have any data                     */
         /* that they might want to work on.                                   */
-        while (UNIT_FUNC(unit))
+        while (unit->getFunctionPointer())
         {
-            destroy_fptr(unit, UNIT_FUNC(unit)); /* Unlinks, no free */
+            destroy_fptr(unit, unit->getFunctionPointer()); /* Unlinks, no free */
         }
 
-        while (UNIT_AFFECTED(unit))
+        while (unit->getUnitAffected())
         {
-            unlink_affect(UNIT_AFFECTED(unit));
+            unlink_affect(unit->getUnitAffected());
         }
     }
 
-    if (UNIT_IN(unit))
+    if (unit->getUnitIn())
     {
         unit_from_unit(unit);
     }
 
-    if (UNIT_FILE_INDEX(unit))
+    if (unit->getFileIndex())
     {
-        UNIT_FILE_INDEX(unit)->DecrementNumInMemory();
+        unit->getFileIndex()->DecrementNumInMemory();
     }
 
     if ((g_unit_list == unit) || unit->getGlobalNext() || unit->getGlobalPrevious())

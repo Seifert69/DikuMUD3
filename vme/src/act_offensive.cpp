@@ -31,7 +31,7 @@ void do_hit(unit_data *ch, char *argument, const command_info *cmd)
 
     victim = find_unit(ch, &argument, nullptr, FIND_UNIT_SURRO);
 
-    if (!victim || !IS_CHAR(victim))
+    if (!victim || !victim->isChar())
     {
         act("There is nobody here called $2t which you can hit.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
         return;
@@ -70,7 +70,7 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if ((CHAR_LEVEL(ch) < ULTIMATE_LEVEL) || IS_NPC(ch))
+    if ((CHAR_LEVEL(ch) < ULTIMATE_LEVEL) || ch->isNPC())
     {
         do_hit(ch, argument, &g_cmd_auto_unknown);
         return;
@@ -78,7 +78,7 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
 
     victim = find_unit(ch, &argument, nullptr, FIND_UNIT_SURRO);
 
-    if (!victim || !IS_CHAR(victim))
+    if (!victim || !victim->isChar())
     {
         act("There is nobody here called $2t which you can kill.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
         return;

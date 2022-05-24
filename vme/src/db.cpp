@@ -657,7 +657,7 @@ zone_type *unit_error_zone = nullptr;
 void post_read_unit(unit_data *u)
 {
     // Add regenerate to NPCs
-    if (UNIT_TYPE(u) == UNIT_ST_NPC)
+    if (u->isNPC())
     {
         static diltemplate *regen = nullptr;
 
@@ -729,15 +729,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         exit(0);
     }
 
-    g_nCorrupt += UNIT_NAMES(u).ReadBuffer(pBuf, unit_version);
+    g_nCorrupt += u->getNames().ReadBuffer(pBuf, unit_version);
 
     if (unit_version < 47 && type == UNIT_ST_PC)
     {
         char buf[256];
 
-        strcpy(buf, UNIT_NAME(u));
+        strcpy(buf, u->getNames().Name());
         CAP(buf);
-        UNIT_NAMES(u).Substitute(0, buf);
+        u->getNames().Substitute(0, buf);
     }
     char *c = nullptr;
     if (pBuf->SkipString(&c))
@@ -747,7 +747,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setTitle(c);
     if (unit_version < 70)
     {
-        u->setTitle(fix_old_codes_to_html(UNIT_TITLE(u)));
+        u->setTitle(fix_old_codes_to_html(u->getTitle()));
     }
 
     if (pBuf->SkipString(&c))
@@ -757,7 +757,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setDescriptionOfOutside(c);
     if (unit_version < 70)
     {
-        u->setDescriptionOfOutside(fix_old_codes_to_html(UNIT_OUT_DESCR(u)));
+        u->setDescriptionOfOutside(fix_old_codes_to_html(u->getDescriptionOfOutside()));
     }
 
     if (pBuf->SkipString(&c))
@@ -767,10 +767,10 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setDescriptionOfInside(c);
     if (unit_version < 70)
     {
-        u->setDescriptionOfInside(fix_old_codes_to_html(UNIT_IN_DESCR(u)));
+        u->setDescriptionOfInside(fix_old_codes_to_html(u->getDescriptionOfInside()));
     }
 
-    g_nCorrupt += bread_extra(pBuf, UNIT_EXTRA(u), unit_version);
+    g_nCorrupt += bread_extra(pBuf, u->getExtraList(), unit_version);
 
     /* Read Key Zone, Name */
     g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
@@ -805,7 +805,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     if (unit_version <= 54)
     {
-        if (UNIT_MAX_HIT(u) <= 0)
+        if (u->getMaximumHitpoints() <= 0)
         {
             u->setCurrentHitpoints(1000);
             u->setMaximumHitpoints(1000);
@@ -845,25 +845,25 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
         if (tmpfi)
         {
-            if (UNIT_TYPE(u) == UNIT_ST_ROOM)
+            if (u->getUnitType() == UNIT_ST_ROOM)
             {
-                u->setMyContainerTo(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
+                u->setUnitIn(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
             }
             else
             {
-                if (IS_PC(u))
+                if (u->isPC())
                 {
                     UCHAR(u)->setLastLocation(tmpfi->Front());
                 }
                 else
                 {
-                    u->setMyContainerTo(tmpfi->Front());
+                    u->setUnitIn(tmpfi->Front());
                 }
             }
         }
     }
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_NPC:
             g_nCorrupt += pBuf->ReadStringAlloc(UCHAR(u)->getMoneyPtr());
@@ -873,7 +873,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         {
             UCHAR(u)->readFrom(*pBuf, unit_version, u, g_nCorrupt);
 
-            if (IS_PC(u))
+            if (u->isPC())
             {
                 if (unit_version >= 72)
                 {
@@ -978,7 +978,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 else
                 {
                     char temp[pc_data::PC_MAX_NAME];
-                    memcpy(temp, UNIT_NAME(u), pc_data::PC_MAX_NAME);
+                    memcpy(temp, u->getNames().Name(), pc_data::PC_MAX_NAME);
                     temp[pc_data::PC_MAX_NAME - 1] = 0;
                     str_lower(temp);
                     UPC(u)->setFilename(temp);
@@ -1034,7 +1034,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     int xpfloor = xpl + (required_xp(PC_VIRTUAL_LEVEL(u) + 1) - xpl) / 2;
                     if (CHAR_EXP(u) < xpfloor)
                     {
-                        slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", UNIT_NAME(u), CHAR_EXP(u), xpfloor);
+                        slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", u->getNames().Name(), CHAR_EXP(u), xpfloor);
                         UCHAR(u)->setPlayerExperience(xpfloor);
                         // xxx
                     }
@@ -1238,11 +1238,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
                 if ((fi = find_file_index(zone, name)))
                 {
-                    u->setMyContainerTo(reinterpret_cast<unit_data *>(fi)); // A file index
+                    u->setUnitIn(reinterpret_cast<unit_data *>(fi)); // A file index
                 }
                 else
                 {
-                    u->setMyContainerTo(nullptr);
+                    u->setUnitIn(nullptr);
                 }
             }
 
@@ -1329,7 +1329,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     if (g_nCorrupt == 0)
     {
-        if (IS_CHAR(u) && CHAR_MONEY(u) && stspec)
+        if (u->isChar() && CHAR_MONEY(u) && stspec)
         {
             long int val1 = 0;
             long int val2 = 0;
@@ -1401,7 +1401,7 @@ void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
 
 void bonus_setup(unit_data *u)
 {
-    if (IS_OBJ(u))
+    if (u->isObj())
     {
         if ((OBJ_TYPE(u) == ITEM_WEAPON) || (OBJ_TYPE(u) == ITEM_SHIELD) || (OBJ_TYPE(u) == ITEM_ARMOR))
         {
@@ -1409,7 +1409,7 @@ void bonus_setup(unit_data *u)
             UOBJ(u)->setValueAtIndexTo(2, bonus_map_a(OBJ_VALUE(u, 2)));
         }
 
-        for (unit_affected_type *af = UNIT_AFFECTED(u); af; af = af->getNext())
+        for (unit_affected_type *af = u->getUnitAffected(); af; af = af->getNext())
         {
             if ((af->getID() == ID_TRANSFER_STR) || (af->getID() == ID_TRANSFER_DEX) || (af->getID() == ID_TRANSFER_CON) ||
                 (af->getID() == ID_TRANSFER_CHA) || (af->getID() == ID_TRANSFER_BRA) || (af->getID() == ID_TRANSFER_MAG) ||
@@ -1456,9 +1456,9 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
 
     bonus_setup(u);
 
-    if (!IS_ROOM(u))
+    if (!u->isRoom())
     {
-        assert(UNIT_IN(u) == nullptr);
+        assert(u->getUnitIn() == nullptr);
     }
 
     unit_error_zone = nullptr;
@@ -1473,7 +1473,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
     }
     else
     {
-        if (UNIT_TYPE(u) != UNIT_ST_ROOM)
+        if (!u->isRoom())
         {
             slog(LOG_ALL, 0, "Bizarro. This probably shouldn't happen");
         }
@@ -1514,16 +1514,16 @@ void normalize_world()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             /* Place room inside another room? */
-            if (UNIT_IN(u))
+            if (u->getUnitIn())
             {
-                fi = (file_index_type *)UNIT_IN(u);
+                fi = (file_index_type *)u->getUnitIn();
 
                 assert(!fi->Empty());
 
-                u->setMyContainerTo(fi->Front());
+                u->setUnitIn(fi->Front());
             }
 
             /* Change directions into unit_data points from file_index_type */
@@ -1546,10 +1546,10 @@ void normalize_world()
 
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_ROOM(u) && UNIT_IN(u))
+        if (u->isRoom() && u->getUnitIn())
         {
-            tmpu = UNIT_IN(u);
-            u->setMyContainerTo(nullptr);
+            tmpu = u->getUnitIn();
+            u->setUnitIn(nullptr);
 
             if (unit_recursive(u, tmpu))
             {
@@ -1877,7 +1877,7 @@ void db_shutdown()
 
     slog(LOG_OFF, 0, "Destroying unit list.");
 
-    while (!IS_ROOM(g_unit_list))
+    while (!g_unit_list->isRoom())
     {
         tmpu = g_unit_list;
         extract_unit(tmpu);

@@ -90,7 +90,7 @@ inline void money_from_unit(unit_data *unit, amount_t amt, currency_t currency)
 
 inline bool IS_MONEY(const unit_data *unit)
 {
-    return IS_OBJ(unit) && OBJ_TYPE(unit) == ITEM_MONEY;
+    return unit->isObj() && OBJ_TYPE(unit) == ITEM_MONEY;
 }
 
 inline amount_t MONEY_AMOUNT(const unit_data *unit)

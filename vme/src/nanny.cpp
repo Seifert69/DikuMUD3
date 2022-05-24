@@ -148,7 +148,7 @@ void check_idle()
                 slog(LOG_ALL, 0, "Kicking out idle player and making link-dead.");
                 descriptor_close(d);
             }
-            else if (IS_PC(d->cgetCharacter()) && now - d->getLastLogonTime() >= SECS_PER_REAL_HOUR / 3)
+            else if (d->cgetCharacter()->isPC() && now - d->getLastLogonTime() >= SECS_PER_REAL_HOUR / 3)
             {
                 send_to_char("Autosave.<br/>", d->cgetCharacter());
                 save_player(d->getCharacter());
@@ -315,7 +315,7 @@ void nanny_throw(descriptor_data *d, char *arg)
         // they should all be descriptorless now (except for d trying to login)
         for (u = g_unit_list; u; u = u->getGlobalNext())
         {
-            if (!IS_PC(u))
+            if (!u->isPC())
             {
                 break; // PCs are always first in the list
             }
@@ -325,7 +325,7 @@ void nanny_throw(descriptor_data *d, char *arg)
                 //	      assert (!CHAR_DESCRIPTOR (u));
                 //	      assert (UNIT_IN (u));
 
-                if (!UNIT_IN(u))
+                if (!u->getUnitIn())
                 {
                     slog(LOG_ALL, 0, "nanny_throw() player found but not in any units. Debug info - inspect me.");
                 }
@@ -339,7 +339,7 @@ void nanny_throw(descriptor_data *d, char *arg)
                    break; // Break so that the guest gets purged
                 } */
 
-                UCHAR(u)->setLastLocation(UNIT_IN(u));
+                UCHAR(u)->setLastLocation(u->getUnitIn());
                 UPC(u)->reconnect_game(d);
                 return;
             }
@@ -372,7 +372,7 @@ void nanny_dil(descriptor_data *d, char *arg)
 {
     extra_descr_data *exd = nullptr;
 
-    exd = UNIT_EXTRA(d->getCharacter()).find_raw("$nanny");
+    exd = d->getCharacter()->getExtraList().find_raw("$nanny");
 
     if (exd && !str_is_empty(exd->names.Name(1)))
     {
@@ -396,7 +396,7 @@ void nanny_dil(descriptor_data *d, char *arg)
         }
     }
 
-    if (d->cgetCharacter() && UNIT_EXTRA(d->getCharacter()).find_raw("$nanny") == nullptr)
+    if (d->cgetCharacter() && d->getCharacter()->getExtraList().find_raw("$nanny") == nullptr)
     {
         g_dilmenu = TRUE;
         enter_game(d->getCharacter(), TRUE);
@@ -439,7 +439,7 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
     /* Password has now been redefined                       */
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->getCharacter())) == 0))
+        if (u->isPC() && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->getCharacter())) == 0))
         {
             UPC(u)->reconnect_game(d);
             return;
@@ -507,7 +507,7 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
 {
     if (d->postincrementState() == 0)
     {
-        auto msg = diku::format_to_str("Give me a new password for %s: ", UNIT_NAME(d->cgetCharacter()));
+        auto msg = diku::format_to_str("Give me a new password for %s: ", d->cgetCharacter()->getNames().Name());
         send_to_descriptor(msg, d);
         send_to_descriptor(scriptwrap("PasswordOn()"), d);
         return;
@@ -602,7 +602,7 @@ void nanny_fix_descriptions(unit_data *u)
     extra_descr_data *exd = nullptr;
     char buf[1024];
 
-    for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
+    for (exd = u->getExtraList().m_pList; exd; exd = exd->next)
     {
         if (exd->names.Name())
         {
@@ -617,7 +617,7 @@ void nanny_fix_descriptions(unit_data *u)
         {
             if (str_is_empty(exd->descr.c_str()))
             {
-                UNIT_EXTRA(u).erase(exd);
+                u->getExtraList().erase(exd);
                 nanny_fix_descriptions(u); // MS2020 terrible kludge :)
                 return;
             }
@@ -664,13 +664,13 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     if (d->getState() == 2)
     {
-        auto msg = diku::format_to_str("Welcome back %s, please enter your password: ", UNIT_NAME(d->cgetCharacter()));
+        auto msg = diku::format_to_str("Welcome back %s, please enter your password: ", d->cgetCharacter()->getNames().Name());
         send_to_descriptor(msg, d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
         return;
     }
 
-    auto str = diku::format_to_str("PasswordOff('%s', '%s')", UNIT_NAME(d->cgetCharacter()), g_cServerConfig.getMudName().c_str());
+    auto str = diku::format_to_str("PasswordOff('%s', '%s')", d->cgetCharacter()->getNames().Name(), g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(str), d);
 
     if (str_is_empty(arg))
@@ -722,7 +722,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
 
     const auto last_connect = PC_TIME(d->getCharacter()).getPlayerLastConnectTime();
     auto msg2 = diku::format_to_str("<br/>Welcome back %s, you last visited %s on %s<br/>",
-                                    UNIT_NAME(d->cgetCharacter()),
+                                    d->cgetCharacter()->getNames().Name(),
                                     g_cServerConfig.getMudName().c_str(),
                                     ctime(&last_connect));
     send_to_descriptor(msg2, d);
@@ -737,7 +737,7 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
     /* Enters game (reconnects) if true                                  */
     for (u = g_unit_list; u; u = u->getGlobalNext())
     {
-        if (!IS_PC(u))
+        if (!u->isPC())
         {
             break;
         }
@@ -764,7 +764,7 @@ void nanny_name_confirm(descriptor_data *d, char *arg)
     if (d->postincrementState() == 0)
     {
         // MS: removed help option since it was not implemented.
-        auto msg = diku::format_to_str("Did I get that right, %s (Y/N)? ", UNIT_NAME(d->cgetCharacter()));
+        auto msg = diku::format_to_str("Did I get that right, %s (Y/N)? ", d->cgetCharacter()->getNames().Name());
         send_to_descriptor(msg, d);
         return;
     }
@@ -793,7 +793,7 @@ void nanny_name_confirm(descriptor_data *d, char *arg)
         {
             UPC(d->cgetCharacter())->setFilename("");
         }
-        UNIT_NAMES(d->getCharacter()).Free();
+        d->getCharacter()->getNames().Free();
         send_to_descriptor("Ok, what IS it, then? ", d);
         set_descriptor_fptr(d, nanny_get_name, FALSE);
     }
@@ -888,7 +888,7 @@ void nanny_get_name(descriptor_data *d, char *arg)
         UPC(d->getCharacter())->setFilename(tmp_name);
 
         CAPC(tmp_name);
-        UNIT_NAMES(d->getCharacter()).AppendName(tmp_name);
+        d->getCharacter()->getNames().AppendName(tmp_name);
         UPC(d->cgetCharacter())->setPassword("");
 
         /* If someone is connected, we borrow his pwd */

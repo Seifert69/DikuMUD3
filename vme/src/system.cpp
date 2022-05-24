@@ -146,7 +146,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
     /* (affects, etc) and he shall not be saved!                    */
     if (!char_is_playing(d->getCharacter())) /* In menu - extract completely */
     {
-        assert(!UNIT_IN(d->cgetCharacter()));
+        assert(!d->cgetCharacter()->getUnitIn());
         assert(!d->cgetCharacter()->getGlobalNext());
         assert(!d->cgetCharacter()->getGlobalPrevious());
 
@@ -181,11 +181,14 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         assert(!d->cgetOriginalCharacter());
 
         act("$1n has lost $1s link.", A_HIDEINV, d->cgetCharacter(), cActParameter(), cActParameter(), TO_ROOM);
-        slog(LOG_BRIEF, UNIT_MINV(d->cgetCharacter()), "Closing link and making link dead: %s.", UNIT_NAME(d->cgetCharacter()));
+        slog(LOG_BRIEF,
+             d->cgetCharacter()->getLevelOfWizardInvisibility(),
+             "Closing link and making link dead: %s.",
+             d->cgetCharacter()->getNames().Name());
 
         if (!d->getCharacter()->is_destructed())
         {
-            if (IS_PC(d->cgetCharacter()))
+            if (d->cgetCharacter()->isPC())
             {
                 UPC(d->cgetCharacter())->disconnect_game();
             }
