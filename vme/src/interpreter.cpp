@@ -766,7 +766,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
     if (ch->getUnitIn())
     {
         /* special in room present? */
-        for (u = ch->getUnitIn()->getUnitIn(); u; u = next)
+        for (u = ch->getUnitIn()->getUnitContains(); u; u = next)
         {
             next = u->getNext(); /* Next dude trick */
 
@@ -817,7 +817,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
             if (ch->getUnitIn()->getUnitIn())
             {
-                for (u = ch->getUnitIn()->getUnitIn()->getUnitIn(); u; u = next)
+                for (u = ch->getUnitIn()->getUnitIn()->getUnitContains(); u; u = next)
                 {
                     next = u->getNext(); /* Next dude trick */
 

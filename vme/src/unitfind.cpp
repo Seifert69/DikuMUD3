@@ -446,7 +446,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
             }
 
             /* Run through units in local environment */
-            for (u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn()); u; u = u->getNext())
+            for (u = const_cast<unit_data *>(ch->getUnitIn()->getUnitContains()); u; u = u->getNext())
             {
                 if (IS_SET(type, u->getUnitType()) && (u->isRoom() || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                 {
@@ -732,7 +732,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 }
 
                 /* Run through units in local environment */
-                for (u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn()); u; u = u->getNext())
+                for (u = const_cast<unit_data *>(ch->getUnitIn()->getUnitContains()); u; u = u->getNext())
                 {
                     if (IS_SET(type, u->getUnitType()) && (u->isRoom() || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                     {
@@ -1082,7 +1082,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
         init_unit_vector();
     }
 
-    for (u = ch->getUnitIn()->getUnitIn(); u; u = u->getNext())
+    for (u = ch->getUnitIn()->getUnitContains(); u; u = u->getNext())
     {
         if (u != ch && IS_SET(u->getUnitType(), type))
         {
@@ -1113,7 +1113,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
     /* up through transparent unit */
     if (UNIT_IS_TRANSPARENT(ch->getUnitIn()) && ch->getUnitIn()->getUnitIn())
     {
-        for (u = ch->getUnitIn()->getUnitIn()->getUnitIn(); u; u = u->getNext())
+        for (u = ch->getUnitIn()->getUnitIn()->getUnitContains(); u; u = u->getNext())
         {
             if (IS_SET(u->getUnitType(), type))
             {

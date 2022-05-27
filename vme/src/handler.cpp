@@ -773,13 +773,13 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     /*fuck*/
     unit->getUnitIn()->reduceWeightBy(unit->getWeight());
 
-    if (unit == unit->getUnitIn()->getUnitIn())
+    if (unit == unit->getUnitIn()->getUnitContains())
     {
         unit->getUnitIn()->setUnitContains(unit->getNext());
     }
     else
     {
-        for (u = unit->getUnitIn()->getUnitIn(); u->getNext() != unit; u = u->getNext())
+        for (u = unit->getUnitIn()->getUnitContains(); u->getNext() != unit; u = u->getNext())
         {
             ;
         }
@@ -791,7 +791,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     unit->setUnitIn(unit->getUnitIn()->getUnitIn());
     if (unit->getUnitIn())
     {
-        unit->setNext(unit->getUnitIn()->getUnitIn());
+        unit->setNext(unit->getUnitIn()->getUnitContains());
         unit->getUnitIn()->setUnitContains(unit);
         if (unit->isChar())
         {
@@ -862,13 +862,13 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         {
             unit->getUnitIn()->decrementNumberOfCharactersInsideUnit();
         }
-        if (unit == unit->getUnitIn()->getUnitIn())
+        if (unit == unit->getUnitIn()->getUnitContains())
         {
             unit->getUnitIn()->setUnitContains(unit->getNext());
         }
         else
         {
-            for (u = unit->getUnitIn()->getUnitIn(); u->getNext() != unit; u = u->getNext())
+            for (u = unit->getUnitIn()->getUnitContains(); u->getNext() != unit; u = u->getNext())
             {
                 ;
             }

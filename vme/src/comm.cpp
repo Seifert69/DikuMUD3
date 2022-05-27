@@ -616,7 +616,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     }
     else
     {
-        to = arg1.m_u->getUnitIn()->getUnitIn();
+        to = arg1.m_u->getUnitIn()->getUnitContains();
     }
 
     /* same unit or to person */
@@ -701,7 +701,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     }
     else
     {
-        to = arg1.m_u->getUnitIn()->getUnitIn();
+        to = arg1.m_u->getUnitIn()->getUnitContains();
     }
 
     /* same unit or to person */

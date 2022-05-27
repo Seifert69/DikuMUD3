@@ -44,7 +44,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
 
         /* Run through units in local environment */
-        for (u = ref->getUnitIn()->getUnitIn(); u; u = u->getNext())
+        for (u = ref->getUnitIn()->getUnitContains(); u; u = u->getNext())
         {
             if (u->getFileIndex() == this)
             {

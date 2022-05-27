@@ -91,7 +91,7 @@ void tif_fear_check(unit_affected_type *af, unit_data *unit)
     else
     {
         /* Find someone else */
-        for (ch = unit->getUnitIn()->getUnitIn(); ch; ch = ch->getNext())
+        for (ch = unit->getUnitIn()->getUnitContains(); ch; ch = ch->getNext())
         {
             if (ch != unit && ch->isChar())
             {
@@ -380,9 +380,9 @@ void tif_light_add(unit_affected_type *af, unit_data *unit)
         act("Your $3N starts to glow.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
         act("$1n's $3n starts to glow.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_ROOM);
     }
-    else if (unit->getUnitIn()->getUnitIn())
+    else if (unit->getUnitIn()->getUnitContains())
     {
-        act("The $3N starts to glow.", A_HIDEINV, unit->getUnitIn()->getUnitIn(), cActParameter(), unit, TO_ALL);
+        act("The $3N starts to glow.", A_HIDEINV, unit->getUnitIn()->getUnitContains(), cActParameter(), unit, TO_ALL);
     }
 }
 
@@ -399,9 +399,9 @@ void tif_light_sub(unit_affected_type *af, unit_data *unit)
         act("Your $3N gets dimmer.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_CHAR);
         act("$1n's $3N gets dimmer.", A_HIDEINV, unit->getUnitIn(), cActParameter(), unit, TO_ROOM);
     }
-    else if (unit->getUnitIn()->getUnitIn())
+    else if (unit->getUnitIn()->getUnitContains())
     {
-        act("The $3N gets dimmer.", A_HIDEINV, unit->getUnitIn()->getUnitIn(), cActParameter(), unit, TO_ALL);
+        act("The $3N gets dimmer.", A_HIDEINV, unit->getUnitIn()->getUnitContains(), cActParameter(), unit, TO_ALL);
     }
 }
 
