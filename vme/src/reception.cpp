@@ -76,14 +76,14 @@ static ubit32 subtract_recurse(unit_data *ch, unit_data *item, ubit32 seconds, v
         return 0;
     }
 
-    if (!UNIT_MINV(item))
+    if (!item->getLevelOfWizardInvisibility())
     {
-        sum += subtract_recurse(ch, UNIT_CONTAINS(item), seconds, fptr);
+        sum += subtract_recurse(ch, item->getUnitContains(), seconds, fptr);
     }
 
     sum += subtract_recurse(ch, item->getNext(), seconds, fptr);
 
-    if (IS_OBJ(item) && !UNIT_MINV(item))
+    if (item->isObj() && !item->getLevelOfWizardInvisibility())
     {
         ubit32 price = 0;
 
@@ -111,7 +111,7 @@ ubit32 rent_calc(unit_data *ch, time_t savetime)
 {
     ubit32 sum = 0;
 
-    assert(IS_PC(ch));
+    assert(ch->isPC());
 
     if (CHAR_DESCRIPTOR(ch) == nullptr)
     { /* If loading or similar, dont subtract! */
@@ -128,7 +128,7 @@ ubit32 rent_calc(unit_data *ch, time_t savetime)
 
             if (t > SECS_PER_REAL_MIN * 10)
             {
-                sum = subtract_recurse(ch, UNIT_CONTAINS(ch), t, subtract_rent);
+                sum = subtract_recurse(ch, ch->getUnitContains(), t, subtract_rent);
             }
         }
     }
@@ -142,7 +142,7 @@ void do_rent(unit_data *ch, char *arg, const command_info *cmd)
 
     rent_info = FALSE;
 
-    sum = subtract_recurse(ch, UNIT_CONTAINS(ch), SECS_PER_REAL_DAY, show_items);
+    sum = subtract_recurse(ch, ch->getUnitContains(), SECS_PER_REAL_DAY, show_items);
 
     if (!rent_info)
     {
@@ -222,7 +222,7 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
     memset(&ho, 0, sizeof(ho));
     memset(&hn, 0, sizeof(hn));
 
-    if (!IS_SET(UNIT_TYPE(unit), UNIT_ST_NPC | UNIT_ST_OBJ))
+    if (!IS_SET(unit->getUnitType(), UNIT_ST_NPC | UNIT_ST_OBJ))
     {
         slog(LOG_ALL, 0, "MAJOR ERROR - enlist a non-NPC or non-OBJ is being saved. Aborted");
         return;
@@ -235,7 +235,7 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
 
     len = write_unit_string(&TmpBuf, unit);
 
-    if (fast || !UNIT_FILE_INDEX(unit))
+    if (fast || !unit->getFileIndex())
     {
         hn.compressed = 0;
     }
@@ -247,10 +247,10 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
     strcpy(hn.zone, UNIT_FI_ZONENAME(unit));
     strcpy(hn.unit, UNIT_FI_NAME(unit));
 
-    hn.type = UNIT_TYPE(unit);
+    hn.type = unit->getUnitType();
     hn.level = level;
 
-    if (IS_OBJ(unit))
+    if (unit->isObj())
     {
         hn.equip = OBJ_EQP_POS(unit);
     }
@@ -285,15 +285,15 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
     int tmp_i = 0;
     unit_data *tmp_u = nullptr;
 
-    if (IS_ROOM(unit))
+    if (unit->isRoom())
     {
         slog(LOG_ALL, 0, "BAD ERROR: Room attempted saved as inventory!");
         return;
     }
 
-    if ((tmp_u = UNIT_CONTAINS(unit)))
+    if ((tmp_u = unit->getUnitContains()))
     {
-        if (IS_OBJ(tmp_u) && (tmp_i = OBJ_EQP_POS(tmp_u)))
+        if (tmp_u->isObj() && (tmp_i = OBJ_EQP_POS(tmp_u)))
         {
             unequip_object(tmp_u);
             UOBJ(tmp_u)->setEquipmentPosition(tmp_i);
@@ -303,14 +303,14 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
 
         add_units(pBuf, parent, unit, level, fast);
 
-        if (IS_OBJ(tmp_u) || IS_NPC(tmp_u))
+        if (tmp_u->isObj() || tmp_u->isNPC())
         {
             add_units(pBuf, parent, tmp_u, level + 1, fast);
         }
 
         unit_to_unit(tmp_u, unit);
 
-        if (IS_OBJ(tmp_u) && tmp_i)
+        if (tmp_u->isObj() && tmp_i)
         {
             UOBJ(tmp_u)->setEquipmentPosition(0);
             equip_char(unit, tmp_u, tmp_i);
@@ -319,7 +319,7 @@ void add_units(CByteBuffer *pBuf, unit_data *parent, unit_data *unit, int level,
     else
     {
         /* UNIT CONTAINS NOTHING */
-        if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+        if ((level != 0) && (unit->isObj() || unit->isNPC()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
         {
             enlist(pBuf, unit, level, fast);
         }
@@ -333,10 +333,10 @@ void send_saves(unit_data *parent, unit_data *unit)
         return;
     }
 
-    send_saves(parent, UNIT_CONTAINS(unit));
+    send_saves(parent, unit->getUnitContains());
     send_saves(parent, unit->getNext());
 
-    if ((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+    if ((unit->isObj() || unit->isNPC()) && !IS_SET(unit->getUnitFlags(), UNIT_FL_NOSAVE))
     {
         send_save_to(parent, unit);
     }
@@ -364,7 +364,7 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
     fast = 1; /* MAJOR BUG IN DIFF CAUSING BAD PLAYERS! WITH TOO MUCH */
     /* INVENTORY, THE PLAYER INDEX WILL GET FUCKED UP!      */
 
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
         UCHAR(unit)->setDescriptor(nullptr);
@@ -378,11 +378,11 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
         send_save_to(unit, unit);
     }
 
-    send_saves(unit, UNIT_CONTAINS(unit));
+    send_saves(unit, unit->getUnitContains());
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 
-    if (IS_CHAR(unit))
+    if (unit->isChar())
     {
         UCHAR(unit)->setDescriptor(tmp_descr);
     }
@@ -416,7 +416,7 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 
     strcpy(name, ContentsFileName(pFileName));
 
-    if (!UNIT_CONTAINS(unit))
+    if (!unit->getUnitContains())
     {
         remove(name);
         return 0;
@@ -424,7 +424,7 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 
     basic_save_contents(name, unit, fast, bContainer);
 
-    return subtract_recurse(unit, UNIT_CONTAINS(unit), SECS_PER_REAL_DAY, nullptr);
+    return subtract_recurse(unit, unit->getUnitContains(), SECS_PER_REAL_DAY, nullptr);
 }
 
 /* From the block_file 'bf' at index 'blk_idx' load the objects    */
@@ -479,7 +479,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
     frame = 0;
     pstack[frame] = (unit_data *)unit;
 
-    if (unit && IS_CHAR(unit))
+    if (unit && unit->isChar())
     {
         tmp_descr = CHAR_DESCRIPTOR(const_cast<unit_data *>(unit));
         UCHAR(unit)->setDescriptor(nullptr);
@@ -523,7 +523,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         if (hn.compressed)
         {
             slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
-            if (unit && IS_CHAR(unit))
+            if (unit && unit->isChar())
             {
                 UCHAR(unit)->setDescriptor(tmp_descr);
                 send_to_char("Your inventory was corrupt, please contact the Admin.<br/>", unit);
@@ -568,7 +568,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 auto str = diku::format_to_str("The slimy remains of %s", TITLENAME(pnew_tmp));
                 pnew->setDescriptionOfOutside(str);
                 pnew->setTitle(str);
-                UNIT_NAMES(pnew).PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));
+                pnew->getNames().PrependName(str_cc("slime of ", pnew_tmp->getNames().Name()));
                 delete pnew_tmp;
             }
         }
@@ -580,9 +580,9 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         }
         if (pstack[frame] == nullptr)
         {
-            if (UNIT_IN(pnew))
+            if (pnew->getUnitIn())
             {
-                pstack[frame] = UNIT_IN(pnew);
+                pstack[frame] = pnew->getUnitIn();
             }
             else
             {
@@ -590,7 +590,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             }
         }
 
-        pnew->setMyContainerTo(nullptr);
+        pnew->setUnitIn(nullptr);
         if (pnew == pstack[frame])
         {
             slog(LOG_ALL, 0, "ERROR. Loading inventory, recursive linking. Please report.");
@@ -607,20 +607,20 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             else
             {
                 frame = hn.level;
-                unit_to_unit(pnew, UNIT_IN(pstack[frame]));
+                unit_to_unit(pnew, pstack[frame]->getUnitIn());
             }
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
-            if (hn.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
+            if (hn.equip && equip_ok && pnew->getUnitIn()->isChar())
             {
-                equip_char(UNIT_IN(pnew), pnew, hn.equip);
+                equip_char(pnew->getUnitIn(), pnew, hn.equip);
             }
 
             pstack[frame] = pnew;
         }
     }
 
-    if (unit && IS_CHAR(unit))
+    if (unit && unit->isChar())
     {
         UCHAR(unit)->setDescriptor(tmp_descr);
     }

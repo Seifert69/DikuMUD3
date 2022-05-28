@@ -100,8 +100,8 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
             /* Let's make a shield check - CAN_SEE does affect this too */
             hm = resistance_skill_check(def_dex + shield_bonus,
                                         att_dex,
-                                        IS_PC(def) ? PC_SKI_SKILL(def, SKI_SHIELD) : def_dex,
-                                        IS_PC(att) ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
+                                        def->isPC() ? PC_SKI_SKILL(def, SKI_SHIELD) : def_dex,
+                                        att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
 
             if (hm >= 0)
             { /* Successful Shield use */
@@ -266,7 +266,7 @@ int dikuii_melee_bonus(unit_data *att,
     {
         int dual_skill = 0;
 
-        if (IS_PC(att))
+        if (att->isPC())
         {
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
         }
@@ -391,8 +391,10 @@ int spell_bonus(unit_data *att,
 
     if (pStat)
     {
-        *pStat =
-            diku::format_to_str("<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
+        *pStat = diku::format_to_str("<u>%s spelling %s with %s:</u><br/><pre>",
+                                     att->getNames().Name(),
+                                     def->getNames().Name(),
+                                     g_SplColl.text[spell_number]);
         pStat->append("                        ATT     DEF<br/>");
     }
 
@@ -519,7 +521,7 @@ int spell_bonus(unit_data *att,
 
         pStat->append(diku::format_to_str("Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95));
 
-        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3)));
+        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", def->getMaximumHitpoints() / MAX(1, (dam5 + dam50 + dam95) / 3)));
         pStat->append("Defensive Shield bonus not part of stat<br/>");
 
         pStat->append("</pre>");
@@ -534,7 +536,7 @@ int spell_bonus(unit_data *att,
 //
 void getWeapon(unit_data *ch, unit_data **pWeapon, int *pWeaponType, int *pWeaponSpeed, bool primary)
 {
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
     assert(pWeaponType != nullptr);
     assert(pWeapon != nullptr);
     assert(pWeaponSpeed != nullptr);
@@ -593,7 +595,7 @@ int melee_bonus(unit_data *att,
 
     if (pStat)
     {
-        *pStat = diku::format_to_str("<u>%s attacking %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def));
+        *pStat = diku::format_to_str("<u>%s attacking %s:</u><br/><pre>", att->getNames().Name(), def->getNames().Name());
         pStat->append("                        ATT     DEF<br/>");
     }
 
@@ -627,7 +629,7 @@ int melee_bonus(unit_data *att,
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
             if (pStat)
             {
-                pStat->append(diku::format_to_str("Att Weapon          :  %s       <br/>", UNIT_NAME(att_wpn)));
+                pStat->append(diku::format_to_str("Att Weapon          :  %s       <br/>", att_wpn->getNames().Name()));
             }
             if (is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
             {
@@ -655,7 +657,7 @@ int melee_bonus(unit_data *att,
     {
         int dual_skill = 0;
 
-        if (IS_PC(att))
+        if (att->isPC())
         {
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
         }
@@ -823,7 +825,7 @@ int melee_bonus(unit_data *att,
 
         pStat->append(diku::format_to_str("Weapon dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95));
 
-        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3)));
+        pStat->append(diku::format_to_str("Rounds to kill def = %d<br/>", def->getMaximumHitpoints() / MAX(1, (dam5 + dam50 + dam95) / 3)));
 
         pStat->append("</pre>");
     }
@@ -886,7 +888,7 @@ int base_consider(unit_data *att, unit_data *def, std::string *pStr)
     }
     else
     {
-        return UNIT_MAX_HIT(def) / dam; /* Rounds to die.... */
+        return def->getMaximumHitpoints() / dam; /* Rounds to die.... */
     }
 }
 
@@ -897,7 +899,7 @@ void do_consider(unit_data *ch, char *arg, const command_info *cmd)
     char *oarg = arg;
     std::string str;
 
-    if (IS_PC(ch) && PC_SKI_SKILL(ch, SKI_CONSIDER) == 0)
+    if (ch->isPC() && PC_SKI_SKILL(ch, SKI_CONSIDER) == 0)
     {
         send_to_char("You must practice first.<br/>", ch);
         return;
@@ -915,7 +917,7 @@ void do_consider(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    if (!IS_CHAR(vict))
+    if (!vict->isChar())
     {
         send_to_char("It must be dead already?<br/>", ch);
         return;

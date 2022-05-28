@@ -41,8 +41,8 @@ void link_affect(unit_data *unit, unit_affected_type *af)
 
     affected_list = af;
 
-    af->setNext(UNIT_AFFECTED(unit));
-    unit->setUnitAffectedType(af);
+    af->setNext(unit->getUnitAffected());
+    unit->setUnitAffected(af);
     af->setOwner(unit);
 }
 
@@ -146,12 +146,12 @@ void unlink_affect(unit_affected_type *af)
 
     /* Unlink affect structure from local list */
 
-    i = UNIT_AFFECTED(af->getOwner());
+    i = af->getOwner()->getUnitAffected();
     if (i)
     {
         if (i == af)
         {
-            af->getOwner()->setUnitAffectedType(i->getNext());
+            af->getOwner()->setUnitAffected(i->getNext());
         }
         else
         {
@@ -212,16 +212,16 @@ void affect_clear_unit(unit_data *unit)
 
     /* Some affects may not be destroyed at first attempt if it would */
     /* cause an overflow, therefore do several attemps to destroy     */
-    for (i = 0; UNIT_AFFECTED(unit) && (i < 5); i++)
+    for (i = 0; unit->getUnitAffected() && (i < 5); i++)
     {
-        for (taf1 = UNIT_AFFECTED(unit); taf1; taf1 = taf2)
+        for (taf1 = unit->getUnitAffected(); taf1; taf1 = taf2)
         {
             taf2 = taf1->getNext();
             destroy_affect(taf1);
         }
     }
 
-    if (UNIT_AFFECTED(unit))
+    if (unit->getUnitAffected())
     {
         slog(LOG_ALL, 0, "ERROR: Could not clear unit of affects!");
     }
@@ -233,7 +233,7 @@ void get_affects(const unit_data *unit, cNamelist *sl)
     char buf[256];
 
     /// @todo fix unit_data so const member funcs are returns const pointers to members
-    for (af = const_cast<unit_data *>(unit)->getUnitAffectedType(); af; af = af->getNext())
+    for (af = const_cast<unit_data *>(unit)->getUnitAffected(); af; af = af->getNext())
     {
         sl->AppendName(g_apf[af->getApplyFI()].descr);
         sprintf(buf, "%d,%d,%d,%d", af->getDataAtIndex(0), af->getDataAtIndex(1), af->getDataAtIndex(2), af->getDuration());
@@ -246,7 +246,7 @@ unit_affected_type *affected_by_spell(const unit_data *unit, sbit16 id)
     unit_affected_type *af = nullptr;
 
     /// @todo fix unit_data so const member funcs are returns const pointers to members
-    for (af = const_cast<unit_data *>(unit)->getUnitAffectedType(); af; af = af->getNext())
+    for (af = const_cast<unit_data *>(unit)->getUnitAffected(); af; af = af->getNext())
     {
         if (af->getID() == id)
         {
@@ -276,7 +276,7 @@ void affect_beat(void *p1, void *p2)
 
     destroyed = FALSE;
 
-    if (!IS_PC(af->cgetOwner()) || CHAR_DESCRIPTOR(af->cgetOwner()))
+    if (!af->cgetOwner()->isPC() || CHAR_DESCRIPTOR(af->cgetOwner()))
     {
         if (af->getDuration() == 0)
         {
@@ -319,7 +319,7 @@ void apply_affect(unit_data *unit)
     unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
+    for (af = unit->getUnitAffected(); af; af = af->getNext())
     {
         if ((af->getID() >= 0) && (af->getApplyFI() >= 0))
         {
@@ -336,7 +336,7 @@ void start_affect(unit_data *unit)
     unit_affected_type *af = nullptr;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
+    for (af = unit->getUnitAffected(); af; af = af->getNext())
     {
         if ((af->getID() >= 0) && (af->getBeat() > 0))
         {
@@ -357,7 +357,7 @@ void stop_affect(unit_data *unit)
 {
     unit_affected_type *af = nullptr;
 
-    for (af = UNIT_AFFECTED(unit); af; af = af->getNext())
+    for (af = unit->getUnitAffected(); af; af = af->getNext())
     {
         if (af->cgetEventQueueElement() != nullptr)
         {

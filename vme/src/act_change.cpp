@@ -342,7 +342,7 @@ void do_change(unit_data *ch, char *arg, const command_info *cmd)
 
     char buf[MAX_INPUT_LENGTH];
 
-    if (!IS_PC(ch))
+    if (!ch->isPC())
     {
         send_to_char("You don't want to do that.  Trust me.<br/>", ch);
         return;

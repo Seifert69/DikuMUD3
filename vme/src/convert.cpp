@@ -48,12 +48,12 @@ int sel_name(const dirent *dptr)
 
 void convert_free_unit(unit_data *u)
 {
-    while (UNIT_CONTAINS(u))
+    while (u->getUnitContains())
     {
-        convert_free_unit(UNIT_CONTAINS(u));
+        convert_free_unit(u->getUnitContains());
     }
 
-    u->setUnitAffectedType(nullptr);
+    u->setUnitAffected(nullptr);
     u->setFunctionPointer(nullptr);
 
     unit_from_unit(u);
@@ -83,9 +83,9 @@ unit_data *convert_item(unit_data *u, unit_data *pc, int bList)
 {
     if (bList)
     {
-        if (strcmp(UNIT_FI_ZONE(u)->getName(), "treasure") == 0)
+        if (strcmp(u->getFileIndex()->getZone()->getName(), "treasure") == 0)
         {
-            extra_descr_data *ed = UNIT_EXTRA(u).m_pList;
+            extra_descr_data *ed = u->getExtraList().m_pList;
             std::cout << std::endl << UNIT_FI_NAME(u) << "@treasure" << std::endl;
             if (ed)
             {
@@ -110,9 +110,9 @@ unit_data *convert_item(unit_data *u, unit_data *pc, int bList)
         return u;
     }
 
-    if (IS_OBJ(u))
+    if (u->isObj())
     {
-        u->setSize(UNIT_SIZE(pc));
+        u->setSize(pc->getSize());
     }
 
     return u;
@@ -127,7 +127,7 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
         return;
     }
 
-    convert_inventory(UNIT_CONTAINS(u), pc, bList);
+    convert_inventory(u->getUnitContains(), pc, bList);
 
     convert_inventory(u->getNext(), pc, bList);
 
@@ -139,13 +139,13 @@ void convert_inventory(unit_data *u, unit_data *pc, int bList = FALSE)
     {
         unit_data *tmpu = nullptr;
 
-        assert(UNIT_IN(u));
+        assert(u->getUnitIn());
 
-        unit_to_unit(bla, UNIT_IN(u));
+        unit_to_unit(bla, u->getUnitIn());
 
-        while (UNIT_CONTAINS(u))
+        while (u->getUnitContains())
         {
-            tmpu = UNIT_CONTAINS(u);
+            tmpu = u->getUnitContains();
             unit_from_unit(tmpu);
             unit_to_unit(tmpu, bla);
         }
@@ -187,13 +187,13 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if ((UNIT_HIT(u) > 10000) || (UNIT_MAX_HIT(u) > 10000))
+    if ((u->getCurrentHitpoints() > 10000) || (u->getMaximumHitpoints() > 10000))
     {
         printf("Corrupted UNIT HITPOINTS");
         return FALSE;
     }
 
-    if (!IS_PC(u))
+    if (!u->isPC())
     {
         printf("Not a player!");
         return FALSE;
@@ -217,10 +217,10 @@ int sanity_check(unit_data *u)
         return FALSE;
     }
 
-    if (!UNIT_CONTAINS(u) && (UNIT_WEIGHT(u) != UNIT_BASE_WEIGHT(u)))
+    if (!u->getUnitContains() && (u->getWeight() != u->getBaseWeight()))
     {
         printf("Fixed illegal weight.");
-        u->setWeight(UNIT_BASE_WEIGHT(u));
+        u->setWeight(u->getBaseWeight());
     }
 
     return TRUE;
@@ -428,10 +428,10 @@ void clist()
                             ids[PC_ID(pc)] = 1;
                         }
 
-                        shall_exclude(UNIT_NAME(pc));
+                        shall_exclude(pc->getNames().Name());
                         // shall_delete(pc);
 
-                        void_char->setContainedUnit(nullptr);
+                        void_char->setUnitContains(nullptr);
                         /* load_contents(temp, void_char);
 
                         if (UNIT_CONTAINS(void_char))
@@ -583,7 +583,8 @@ void convert_file()
                             ids[PC_ID(pc)] = 1;
                         }
 
-                        std::cout << UNIT_NAME(pc) << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN") << std::endl;
+                        std::cout << pc->getNames().Name() << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN")
+                                  << std::endl;
 
                         std::cout.flush();
                         load_contents(temp, pc);
@@ -683,7 +684,7 @@ void cleanup()
                             continue;
                         }
 
-                        if (str_ccmp(temp, UNIT_NAME(pc)))
+                        if (str_ccmp(temp, pc->getNames().Name()))
                         {
                             std::cout << "Name in file doesn't match filename." << std::endl;
                             convert_free_unit(pc);
@@ -693,7 +694,7 @@ void cleanup()
                             continue;
                         }
 
-                        std::cout << UNIT_NAME(pc) << "]  Lvl " << CHAR_LEVEL(pc) << "]  " << (IS_MORTAL(pc) ? "   " : "ADMIN");
+                        std::cout << pc->getNames().Name() << "]  Lvl " << CHAR_LEVEL(pc) << "]  " << (IS_MORTAL(pc) ? "   " : "ADMIN");
 
                         if (shall_delete(pc))
                         {
@@ -706,13 +707,13 @@ void cleanup()
 
                         std::cout.flush();
 
-                        void_char->setContainedUnit(nullptr);
+                        void_char->setUnitContains(nullptr);
                         load_contents(temp, void_char);
-                        if (UNIT_CONTAINS(void_char))
+                        if (void_char->getUnitContains())
                         {
                             std::cout << "  INV";
-                            convert_inventory(UNIT_CONTAINS(void_char), pc, TRUE);
-                            free_inventory(UNIT_CONTAINS(void_char));
+                            convert_inventory(void_char->getUnitContains(), pc, TRUE);
+                            free_inventory(void_char->getUnitContains());
                         }
 
                         convert_free_unit(pc);

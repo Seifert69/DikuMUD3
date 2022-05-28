@@ -238,7 +238,7 @@ void save_player_file(unit_data *pc)
 
     pBuf->Clear();
 
-    assert(IS_PC(pc));
+    assert(pc->isPC());
     assert(strlen(PC_FILENAME(pc)) < pc_data::PC_MAX_NAME);
     assert(!pc->is_destructed());
 
@@ -261,10 +261,10 @@ void save_player_file(unit_data *pc)
     }
 
     /* PRIMITIVE SANITY CHECK */
-    slog(LOG_ALL, 0, "Saving PC %s id =%d", UNIT_NAME(pc), PC_ID(pc));
+    slog(LOG_ALL, 0, "Saving PC %s id =%d", pc->getNames().Name(), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
-    if (UNIT_IN(pc) && !IS_SET(UNIT_FLAGS(unit_room(pc)), UNIT_FL_NOSAVE))
+    if (pc->getUnitIn() && !IS_SET(unit_room(pc)->getUnitFlags(), UNIT_FL_NOSAVE))
     {
         UCHAR(pc)->setLastLocation(unit_room(pc));
     }
@@ -273,9 +273,9 @@ void save_player_file(unit_data *pc)
     UCHAR(pc)->setDescriptor(nullptr); // Do this to turn off all messages!
 
     /* Remove all inventory and equipment in order to make a CLEAN save */
-    while ((tmp_u = UNIT_CONTAINS(pc)))
+    while ((tmp_u = pc->getUnitContains()))
     {
-        if (IS_OBJ(tmp_u))
+        if (tmp_u->isObj())
         {
             if ((tmp_i = OBJ_EQP_POS(tmp_u)))
             {
@@ -303,7 +303,7 @@ void save_player_file(unit_data *pc)
 
         unit_to_unit(tmp_u, pc);
 
-        if (IS_OBJ(tmp_u))
+        if (tmp_u->isObj())
         {
             tmp_i = OBJ_EQP_POS(tmp_u);
             UOBJ(tmp_u)->setEquipmentPosition(0);
@@ -328,7 +328,7 @@ void save_player_contents(unit_data *pc, int fast)
     amount_t daily_cost = 0;
     currency_t cur = local_currency(pc);
 
-    assert(IS_PC(pc));
+    assert(pc->isPC());
 
     if (locked)
     {

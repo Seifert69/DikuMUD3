@@ -73,7 +73,7 @@ combat_msg_list fight_messages[COM_MAX_MSGS];
 
 int pk_test(unit_data *att, unit_data *def, int message)
 {
-    if (IS_PC(att) && IS_PC(def) && att != def)
+    if (att->isPC() && def->isPC() && att != def)
     {
         if (CHAR_LEVEL(att) <= 3)
         {
@@ -98,7 +98,7 @@ int pk_test(unit_data *att, unit_data *def, int message)
         return FALSE;
     }
 
-    if ((att != def) && IS_PC(att) && IS_PC(def) && (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED) || !IS_SET(PC_FLAGS(def), PC_PK_RELAXED)))
+    if ((att != def) && att->isPC() && def->isPC() && (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED) || !IS_SET(PC_FLAGS(def), PC_PK_RELAXED)))
     {
         /* Ok, he's allowed to attack only if the other guy is rewarded! */
         /* if (affected_by_spell(def, ID_REWARD))
@@ -141,14 +141,14 @@ int char_dual_wield(unit_data *ch)
 // returns true if obj is a slaying weapon against opponent_race
 bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 {
-    if (obj && IS_OBJ(obj) && (OBJ_TYPE(obj) == ITEM_WEAPON) && (OBJ_VALUE(obj, 3) != RACE_DO_NOT_USE))
+    if (obj && obj->isObj() && (OBJ_TYPE(obj) == ITEM_WEAPON) && (OBJ_VALUE(obj, 3) != RACE_DO_NOT_USE))
     {
         if (OBJ_VALUE(obj, 3) == opponent_race)
         {
             return true;
         }
 
-        extra_descr_data *exd = UNIT_EXTRA(obj).find_raw("$slayer");
+        extra_descr_data *exd = obj->getExtraList().find_raw("$slayer");
 
         if (exd == nullptr)
         {
@@ -170,7 +170,7 @@ bool is_obj_slaying(unit_data *obj, ubit16 opponent_race)
 /* Given an amount of experience, what is the 'virtual' level of the char? */
 int virtual_level(unit_data *ch)
 {
-    if (IS_NPC(ch))
+    if (ch->isNPC())
     {
         return CHAR_LEVEL(ch);
     }
@@ -610,17 +610,17 @@ static void combat_send(combat_single_msg *msg,
 {
     if (msg->to_char)
     {
-        cact(sub_damage(msg->to_char, dam, UNIT_MAX_HIT(arg3)), A_SOMEONE, arg1, arg2, arg3, TO_CHAR, color1);
+        cact(sub_damage(msg->to_char, dam, arg3->getMaximumHitpoints()), A_SOMEONE, arg1, arg2, arg3, TO_CHAR, color1);
     }
 
     if (msg->to_vict)
     {
-        cact(sub_damage(msg->to_vict, dam, UNIT_MAX_HIT(arg3)), A_ALWAYS, arg1, arg2, arg3, TO_VICT, color2);
+        cact(sub_damage(msg->to_vict, dam, arg3->getMaximumHitpoints()), A_ALWAYS, arg1, arg2, arg3, TO_VICT, color2);
     }
 
     if (msg->to_notvict)
     {
-        cact(sub_damage(msg->to_notvict, dam, UNIT_MAX_HIT(arg3)), A_SOMEONE, arg1, arg2, arg3, TO_NOTVICT, color3);
+        cact(sub_damage(msg->to_notvict, dam, arg3->getMaximumHitpoints()), A_SOMEONE, arg1, arg2, arg3, TO_NOTVICT, color3);
     }
 }
 
@@ -718,23 +718,23 @@ void combat_message(unit_data *att, unit_data *def, unit_data *medium, int damag
 
 void update_pos(unit_data *victim)
 {
-    if ((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
+    if ((victim->getCurrentHitpoints() > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
     {
         return;
     }
-    else if (UNIT_HIT(victim) > 0)
+    else if (victim->getCurrentHitpoints() > 0)
     {
         UCHAR(victim)->setPosition(POSITION_STANDING);
     }
-    else if (UNIT_HIT(victim) <= -11)
+    else if (victim->getCurrentHitpoints() <= -11)
     {
         UCHAR(victim)->setPosition(POSITION_DEAD);
     }
-    else if (UNIT_HIT(victim) <= -6)
+    else if (victim->getCurrentHitpoints() <= -6)
     {
         UCHAR(victim)->setPosition(POSITION_MORTALLYW);
     }
-    else if (UNIT_HIT(victim) <= -3)
+    else if (victim->getCurrentHitpoints() <= -3)
     {
         UCHAR(victim)->setPosition(POSITION_INCAP);
     }
@@ -752,7 +752,7 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
     int adjust = 0;
     int diff = 0;
 
-    diff = UNIT_ALIGNMENT(slayer) - UNIT_ALIGNMENT(victim);
+    diff = slayer->getAlignment() - victim->getAlignment();
 
     if (UNIT_IS_GOOD(slayer))
     {
@@ -762,18 +762,18 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
         }
         else if (UNIT_IS_NEUTRAL(victim))
         {
-            if (UNIT_ALIGNMENT(victim) <= -100)
+            if (victim->getAlignment() <= -100)
             {
                 adjust = 1;
             }
-            else if (UNIT_ALIGNMENT(victim) >= 100)
+            else if (victim->getAlignment() >= 100)
             {
                 adjust = -3;
             }
         }
         else
         { /* Victim is good */
-            adjust = -(UNIT_ALIGNMENT(slayer) + UNIT_ALIGNMENT(victim) - 700) / 5 - 3;
+            adjust = -(slayer->getAlignment() + victim->getAlignment() - 700) / 5 - 3;
         }
     }
     else if (UNIT_IS_EVIL(slayer))
@@ -832,7 +832,7 @@ static void person_gain(unit_data *ch, unit_data *dead, int share, int grouped, 
         }
     }
 
-    if (IS_PC(ch))
+    if (ch->isPC())
     {
         if (share > 0)
         {
@@ -881,7 +881,7 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
 
     maxlevel = CHAR_LEVEL(ch);
 
-    if (IS_PC(victim) && IS_SET(PC_FLAGS(victim), PC_SPIRIT))
+    if (victim->isPC() && IS_SET(PC_FLAGS(victim), PC_SPIRIT))
     {
         act("Oh dear, what a mess!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
         slog(LOG_EXTENSIVE, 0, "Oh dear, a spirit was killed!");
@@ -896,7 +896,7 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
         head = CHAR_MASTER(ch);
     }
 
-    if (IS_PC(victim))
+    if (victim->isPC())
     {
         share = 0;
     }
@@ -1055,7 +1055,7 @@ void modify_hit(unit_data *ch, int hit)
     {
         ch->changeCurrentHitpointsBy(hit);
         /// @todo move limits into the setter
-        ch->setCurrentHitpoints(MIN(hit_limit(ch), UNIT_HIT(ch)));
+        ch->setCurrentHitpoints(MIN(hit_limit(ch), ch->getCurrentHitpoints()));
 
         update_pos(ch);
 
@@ -1111,7 +1111,7 @@ void damage(unit_data *ch,
         {
             UCHAR(victim)->setLastAttacker(str_dup(ch->getNames().Name()));
         }
-        UCHAR(victim)->setLastAttackerType(UNIT_TYPE(ch));
+        UCHAR(victim)->setLastAttackerType(ch->getUnitType());
         if (IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))
         {
             if ((paf = affected_by_spell(victim, ID_HIDE)))
@@ -1121,7 +1121,7 @@ void damage(unit_data *ch,
             UCHAR(victim)->removeCharacterFlag(CHAR_HIDE);
         }
 
-        if (IS_SET(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE))
+        if (IS_SET(victim->getUnitFlags(), UNIT_FL_INVISIBLE))
         {
             while ((paf = affected_by_spell(victim, ID_INVISIBILITY)))
             {
@@ -1144,7 +1144,7 @@ void damage(unit_data *ch,
 
         if (!CHAR_FIGHTING(victim))
         {
-            if (IS_PC(victim) && IS_IMMORTAL(victim) && IS_PC(ch))
+            if (victim->isPC() && IS_IMMORTAL(victim) && ch->isPC())
             {
                 cact("$1n ignores your feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_VICT, "miss_me");
                 cact("$1n ignores $3n's feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_NOTVICT, "miss_other");
@@ -1254,7 +1254,7 @@ void damage(unit_data *ch,
                 cact("$1n screams with agony!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM, "hit_other");
             }
 
-            if (UNIT_HIT(victim) < (max_hit / 5))
+            if (victim->getCurrentHitpoints() < (max_hit / 5))
             {
                 cact("You wish that your wounds would stop BLEEDING that much!",
                      A_SOMEONE,
@@ -1265,7 +1265,7 @@ void damage(unit_data *ch,
                      "hit_me");
             }
 
-            if ((dam > UNIT_HIT(victim) / 4) || (UNIT_HIT(victim) < (max_hit / 4)))
+            if ((dam > victim->getCurrentHitpoints() / 4) || (victim->getCurrentHitpoints() < (max_hit / 4)))
             {
                 if (IS_SET(CHAR_FLAGS(victim), CHAR_WIMPY))
                 {
@@ -1289,13 +1289,13 @@ void damage(unit_data *ch,
         {
             if (CHAR_LAST_ATTACKER(victim))
             {
-                for (sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->getNext())
+                for (sch = victim->getUnitIn()->getUnitContains(); sch; sch = sch->getNext())
                 {
                     if (CHAR_LAST_ATTACKER(victim) && sch->getNames().Name())
                     {
                         if (strcmp(CHAR_LAST_ATTACKER(victim), sch->getNames().Name()) == 0)
                         {
-                            if (CHAR_LAST_ATTACKER_TYPE(victim) == UNIT_TYPE(sch))
+                            if (CHAR_LAST_ATTACKER_TYPE(victim) == sch->getUnitType())
                             {
                                 break;
                             }
@@ -1316,7 +1316,7 @@ void damage(unit_data *ch,
             /* Except in self defence & legal target makes a crime */
             if (!IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
             {
-                if (IS_PC(victim))
+                if (victim->isPC())
                 {
                     if (!IS_SET(CHAR_FLAGS(victim), CHAR_OUTLAW) || IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
                     {
@@ -1333,14 +1333,14 @@ void damage(unit_data *ch,
             }
         }
 
-        if (!IS_NPC(victim))
+        if (!victim->isNPC())
         {
             slog(LOG_EXTENSIVE,
-                 MAX(UNIT_MINV(ch), UNIT_MINV(victim)),
+                 MAX(ch->getLevelOfWizardInvisibility(), victim->getLevelOfWizardInvisibility()),
                  "%s killed by %s at %s",
-                 STR(UNIT_NAME(victim)),
+                 STR(victim->getNames().Name()),
                  TITLENAME(ch),
-                 STR(TITLENAME(UNIT_IN(ch))));
+                 STR(TITLENAME(ch->getUnitIn())));
         }
 
         if (victim == ch)
@@ -1372,7 +1372,7 @@ void damage(unit_data *ch,
         }
     }
 
-    if (IS_PC(victim) && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
+    if (victim->isPC() && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
     {
         command_interpreter(victim, "flee");
         if (victim->is_destructed() || CHAR_POS(victim) == POSITION_DEAD)
@@ -1412,9 +1412,9 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
         return;
     }
 
-    assert(IS_OBJ(obj));
+    assert(obj->isObj());
 
-    if (UNIT_HIT(obj) < 0)
+    if (obj->getCurrentHitpoints() < 0)
     { /* Endless */
         return;
     }
@@ -1445,7 +1445,7 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
     {
         obj->changeCurrentHitpointsBy(-1 * dam);
 
-        if (UNIT_HIT(obj) < 0)
+        if (obj->getCurrentHitpoints() < 0)
         {
             if (ch)
             {
@@ -1527,7 +1527,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
     unit_data *def_armour = nullptr;
     unit_data *def_shield = nullptr;
 
-    assert(IS_CHAR(att) && IS_CHAR(def));
+    assert(att->isChar() && def->isChar());
 
     if (CHAR_POS(att) < POSITION_SLEEPING)
     {
@@ -1637,7 +1637,7 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
         }
         else
         {
-            dam = natural_damage(hm, att_weapon_type, def_armour_type, UNIT_BASE_WEIGHT(att));
+            dam = natural_damage(hm, att_weapon_type, def_armour_type, att->getBaseWeight());
         }
 
         if (dam > 0)
@@ -1755,7 +1755,7 @@ int hunting(spec_arg *sarg)
 
         if (scan4_ref(sarg->owner, h->victim))
         {
-            if (!IS_CHAR(h->victim))
+            if (!h->victim->isChar())
             {
                 destroy_fptr(sarg->owner, sarg->fptr); /* Will free automatic. */
                 return SFR_BLOCK;

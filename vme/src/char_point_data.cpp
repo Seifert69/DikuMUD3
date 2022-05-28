@@ -417,7 +417,7 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
         {
             ubit8 spd = buf.ReadU8(&error); // Ensure correct conversion
             speed = spd;
-            if (IS_PC(unit))
+            if (unit->isPC())
             {
                 if (speed < SPEED_MIN)
                 {
@@ -464,7 +464,7 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
             abilities[i] = buf.ReadS16(&error);
         }
 
-        if (IS_PC(unit))
+        if (unit->isPC())
         {
             UPC(unit)->setAbilityLevelAtIndexTo(i, buf.ReadU8(&error));
             if (unit_version < 72)

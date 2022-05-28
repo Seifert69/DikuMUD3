@@ -62,7 +62,7 @@
 //
 const char *single_unit_messg(unit_data *unit, const char *type, int direction, char *mesg)
 {
-    extra_descr_data *exd = UNIT_EXTRA(unit).m_pList;
+    extra_descr_data *exd = unit->getExtraList().m_pList;
 
     if (exd)
     {
@@ -98,22 +98,22 @@ int has_found_door(unit_data *pc, int dir)
     unit_affected_type *af = nullptr;
     char buf[MAX_INPUT_LENGTH];
 
-    if (!IS_ROOM(UNIT_IN(pc)))
+    if (!pc->getUnitIn()->isRoom())
     {
         return FALSE;
     }
 
-    if (!ROOM_EXIT(UNIT_IN(pc), dir))
+    if (!ROOM_EXIT(pc->getUnitIn(), dir))
     {
         return FALSE;
     }
 
-    if (!IS_PC(pc))
+    if (!pc->isPC())
     {
         return TRUE;
     }
 
-    if (!ROOM_EXIT(UNIT_IN(pc), dir)->isDoorFlagSet(EX_HIDDEN))
+    if (!ROOM_EXIT(pc->getUnitIn(), dir)->isDoorFlagSet(EX_HIDDEN))
     {
         return TRUE;
     }
@@ -121,18 +121,18 @@ int has_found_door(unit_data *pc, int dir)
     strcpy(buf, SECRET_DOOR);
     strcat(buf, itoa(dir));
 
-    exd = UNIT_EXTRA(UNIT_IN(pc)).find_raw(buf);
+    exd = pc->getUnitIn()->getExtraList().find_raw(buf);
 
     if (exd == nullptr)
     {
         return FALSE;
     }
 
-    return exd->names.IsName(UNIT_NAMES(pc).Name(0)) != nullptr;
+    return exd->names.IsName(pc->getNames().Name(0)) != nullptr;
 
-    if (ROOM_EXIT(UNIT_IN(pc), dir)->isDoorFlagSet(EX_CLOSED))
+    if (ROOM_EXIT(pc->getUnitIn(), dir)->isDoorFlagSet(EX_CLOSED))
     {
-        for (af = UNIT_AFFECTED(UNIT_IN(pc)); af; af = af->getNext())
+        for (af = pc->getUnitIn()->getUnitAffected(); af; af = af->getNext())
         {
             if (af->getID() == ID_SPOTTED_SECRET && PC_ID(pc) == af->getDataAtIndex(0))
             {
@@ -149,9 +149,9 @@ int has_found_door(unit_data *pc, int dir)
 
 unit_data *in_room(unit_data *u)
 {
-    while (u && !IS_ROOM(u))
+    while (u && !u->isRoom())
     {
-        u = UNIT_IN(u);
+        u = u->getUnitIn();
     }
 
     assert(u);
@@ -196,8 +196,8 @@ int room_move(unit_data *ch,
 
     room_from = in_room(ch);
 
-    assert(IS_ROOM(room_from));
-    assert(IS_ROOM(room_to));
+    assert(room_from->isRoom());
+    assert(room_to->isRoom());
 
     /* If we are not following, then we already issued the special
        in command interpreter! */
@@ -226,7 +226,7 @@ int room_move(unit_data *ch,
         return 0;
     }
 
-    for (u = UNIT_CONTAINS(ch); u; u = u->getNext())
+    for (u = ch->getUnitContains(); u; u = u->getNext())
     {
         if (!pay_point_charlie(u, room_to))
         {
@@ -239,7 +239,7 @@ int room_move(unit_data *ch,
         act(pLeaveSelf, A_ALWAYS, ch, room_from, mover, TO_CHAR);
     }
 
-    if (UNIT_CONTAINS(room_from) && !str_is_empty(pLeaveOther))
+    if (room_from->getUnitContains() && !str_is_empty(pLeaveOther))
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
@@ -252,7 +252,7 @@ int room_move(unit_data *ch,
     UCHAR(ch)->removeCharacterFlag(CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
     unit_to_unit(mover, room_to);
 
-    if (UNIT_CONTAINS(room_to) && !str_is_empty(pArrOther))
+    if (room_to->getUnitContains() && !str_is_empty(pArrOther))
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
@@ -269,14 +269,14 @@ int room_move(unit_data *ch,
 
     if (ch != mover)
     {
-        if (IS_CHAR(mover))
+        if (mover->isChar())
         {
             command_interpreter(mover, "look :brief:");
         }
 
-        for (u = UNIT_CONTAINS(mover); u; u = u->getNext())
+        for (u = mover->getUnitContains(); u; u = u->getNext())
         {
-            if ((u != ch) && IS_CHAR(u))
+            if ((u != ch) && u->isChar())
             {
                 act(pPassengersO, A_SOMEONE, u, ch, mover, TO_CHAR);
                 command_interpreter(u, "look :brief:");
@@ -341,9 +341,9 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
     room_from = in_room(ch);
 
-    assert((ch == mover) || (UNIT_IN(ch) == mover));
+    assert((ch == mover) || (ch->getUnitIn() == mover));
 
-    if (!IS_ROOM(UNIT_IN(mover)))
+    if (!mover->getUnitIn()->isRoom())
     {
         send_to_char(ALAS_NOWAY, ch);
         return 0;
@@ -392,9 +392,9 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else // Steed or boat code (shares scan for passenger combat)
     {
-        for (unit_data *u = UNIT_CONTAINS(mover); u; u = u->getNext())
+        for (unit_data *u = mover->getUnitContains(); u; u = u->getNext())
         {
-            if (IS_CHAR(u) && CHAR_FIGHTING(u))
+            if (u->isChar() && CHAR_FIGHTING(u))
             {
                 act("You can't get away like that in the middle of combat.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 act("You can't get away like that in the middle of combat.", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_CHAR);
@@ -402,7 +402,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             }
         }
 
-        if (IS_CHAR(mover)) // Mounted on a steed
+        if (mover->isChar()) // Mounted on a steed
         {
             snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You ride your $3N %s.", g_dirs[direction]);
             snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n rides $2s $3N %s.", g_dirs[direction]);
@@ -430,7 +430,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
                 return 0;
             }
-            if (!IS_NPC(mover))
+            if (!mover->isNPC())
             {
                 send_to_char("You must be on a mount if you wish to ride.<br/>", ch);
                 return 0;
@@ -466,13 +466,13 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                 return 0;
             }
 
-            if (IS_SET(UNIT_FLAGS(mover), UNIT_FL_BURIED))
+            if (IS_SET(mover->getUnitFlags(), UNIT_FL_BURIED))
             {
                 act("Your $2N is buried! It cannot move.", A_ALWAYS, ch, mover, cActParameter(), TO_CHAR);
                 return 0;
             }
 
-            if (!IS_SET(UNIT_FLAGS(mover), UNIT_FL_TRANS))
+            if (!IS_SET(mover->getUnitFlags(), UNIT_FL_TRANS))
             {
                 act("Alas, you cannot go that way...", A_SOMEONE, mover, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
@@ -525,14 +525,14 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
     if (((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL)) && !bOceanEscape)
     {
-        if (IS_CHAR(mover))
+        if (mover->isChar())
         {
             act("You need to get yourself a boat.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
         }
         else // Sailing in an object
         {
-            if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
+            if (!mover->isObj() || OBJ_TYPE(mover) != ITEM_BOAT)
             {
                 act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
@@ -541,10 +541,10 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SWIM) || bOceanEscape)
     {
-        if (IS_CHAR(mover))
+        if (mover->isChar())
         {
-            if (!UNIT_EXTRA(mover).find_raw(S_SWIM_ON) &&
-                (!UNIT_EXTRA(mover).find_raw(S_IS_FISH) || !UNIT_EXTRA(mover).find_raw(S_IS_AMPHIB)))
+            if (!mover->getExtraList().find_raw(S_SWIM_ON) &&
+                (!mover->getExtraList().find_raw(S_IS_FISH) || !mover->getExtraList().find_raw(S_IS_AMPHIB)))
             {
                 act("You might want to swim.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
@@ -556,11 +556,11 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             {
                 skillbonus = 50; // Additional bonus for races born to swim :)
             }
-            if (UNIT_EXTRA(mover).find_raw(S_IS_AMPHIB))
+            if (mover->getExtraList().find_raw(S_IS_AMPHIB))
             {
                 skillbonus = 80;
             }
-            if (UNIT_EXTRA(mover).find_raw(S_IS_FISH))
+            if (mover->getExtraList().find_raw(S_IS_FISH))
             {
                 skillbonus = 100;
             }
@@ -606,7 +606,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }    // IS_CHAR
         else // Inside an object
         {
-            if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
+            if (!mover->isObj() || OBJ_TYPE(mover) != ITEM_BOAT)
             {
                 act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 return 0;
@@ -615,20 +615,20 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     }
     else // we're not swimming
     {
-        if (UNIT_EXTRA(mover).find_raw(S_IS_FISH))
+        if (mover->getExtraList().find_raw(S_IS_FISH))
         {
             act("No little fishies on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0; // Fish can't walk on land. 2020 I would think checking for race was equally important as extra?
         }
 
-        if (IS_OBJ(mover) && (OBJ_TYPE(mover) == ITEM_BOAT))
+        if (mover->isObj() && (OBJ_TYPE(mover) == ITEM_BOAT))
         {
             act("You can't sail your boat on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
         }
     }
 
-    if (IS_CHAR(mover))
+    if (mover->isChar())
     {
         int need_movement = (g_movement_loss[ROOM_LANDSCAPE(room_from)] + g_movement_loss[ROOM_LANDSCAPE(room_to)]) / 2;
 
@@ -693,12 +693,12 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
     {
         unit_data *u = nullptr;
 
-        if (IS_CHAR(ch) && CHAR_FOLLOWERS(ch))
+        if (ch->isChar() && CHAR_FOLLOWERS(ch))
         {
             u = ch;
         }
 
-        if (IS_CHAR(mover) && CHAR_FOLLOWERS(mover))
+        if (mover->isChar() && CHAR_FOLLOWERS(mover))
         {
             u = mover;
         }
@@ -724,13 +724,13 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
                 if (room_from == in_room(k->getFollower()) && CHAR_POS(k->getFollower()) >= POSITION_STANDING)
                 {
                     act("You follow $3n.<br/>", A_SOMEONE, k->getFollower(), cActParameter(), ch, TO_CHAR);
-                    if (IS_ROOM(UNIT_IN(k->getFollower())))
+                    if (k->getFollower()->getUnitIn()->isRoom())
                     {
                         self_walk(k->getFollower(), k->getFollower(), direction, TRUE);
                     }
                     else
                     {
-                        self_walk(k->getFollower(), UNIT_IN(k->getFollower()), direction, TRUE);
+                        self_walk(k->getFollower(), k->getFollower()->getUnitIn(), direction, TRUE);
                     }
                 }
             }
@@ -761,25 +761,25 @@ void move_dir(unit_data *ch, int dir)
         return;
     }
 
-    if (IS_OBJ(UNIT_IN(ch)))
+    if (ch->getUnitIn()->isObj())
     {
-        self_walk(ch, UNIT_IN(ch), dir, 0);
+        self_walk(ch, ch->getUnitIn(), dir, 0);
     }
-    else if (IS_CHAR(UNIT_IN(ch)))
+    else if (ch->getUnitIn()->isChar())
     {
-        self_walk(ch, UNIT_IN(ch), dir, 0);
+        self_walk(ch, ch->getUnitIn(), dir, 0);
     }
-    else if (IS_ROOM(UNIT_IN(ch)))
+    else if (ch->getUnitIn()->isRoom())
     {
         self_walk(ch, ch, dir, 0);
     }
     else
     {
-        slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", UNIT_NAME(ch), UNIT_NAME(UNIT_IN(ch)));
+        slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", ch->getNames().Name(), ch->getUnitIn()->getNames().Name());
         act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
-        if (UNIT_IN(UNIT_IN(ch)))
+        if (ch->getUnitIn()->getUnitIn())
         {
-            ch->setMyContainerTo(UNIT_IN(UNIT_IN(ch)));
+            ch->setUnitIn(ch->getUnitIn()->getUnitIn());
         }
         command_interpreter(ch, "look");
         act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
@@ -822,7 +822,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
         return -1;
     }
 
-    if (!IS_ROOM(UNIT_IN(ch)))
+    if (!ch->getUnitIn()->isRoom())
     {
         if (err_msg)
         {
@@ -836,7 +836,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
         /* A direction and name was specified */
         if (str_is_empty(dirdoorstr))
         {
-            if (ROOM_EXIT(UNIT_IN(ch), door) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(ch->getUnitIn(), door) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }
@@ -849,9 +849,9 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
             return -1;
         }
 
-        if (ROOM_EXIT(UNIT_IN(ch), door))
+        if (ROOM_EXIT(ch->getUnitIn(), door))
         {
-            if (ROOM_EXIT(UNIT_IN(ch), door)->getOpenName().IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(ch->getUnitIn(), door)->getOpenName().IsName(dirdoorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }
@@ -875,9 +875,9 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 
     for (door = 0; door <= MAX_EXIT; door++)
     {
-        if (ROOM_EXIT(UNIT_IN(ch), door))
+        if (ROOM_EXIT(ch->getUnitIn(), door))
         {
-            if (ROOM_EXIT(UNIT_IN(ch), door)->getOpenName().IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
+            if (ROOM_EXIT(ch->getUnitIn(), door)->getOpenName().IsName(doorstr) && (!check_hidden || has_found_door(ch, door)))
             {
                 return door;
             }

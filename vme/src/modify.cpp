@@ -162,7 +162,7 @@ void edit_extra(descriptor_data *d)
 {
     extra_descr_data *exd = nullptr;
 
-    for (exd = UNIT_EXTRA(d->cgetEditing()).m_pList; exd; exd = exd->next)
+    for (exd = d->cgetEditing()->getExtraList().m_pList; exd; exd = exd->next)
     {
         if (exd == d->getEditingReference())
         {
@@ -394,7 +394,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     if (str_ccmp(arg, "room") == 0)
     {
         argument = str_next_word(argument, arg);
-        unt = UNIT_IN(ch);
+        unt = ch->getUnitIn();
     }
     else
     {
@@ -424,14 +424,14 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     }
 
     /* check if level of users is ok */
-    if (CHAR_LEVEL(ch) < unit_field_data[type].minplayer && unt != ch && IS_PC(unt))
+    if (CHAR_LEVEL(ch) < unit_field_data[type].minplayer && unt != ch && unt->isPC())
     {
         send_to_char("Authority to set field for OTHER PLAYERS denied!<br/>", ch);
         return;
     }
 
     /* check if level of users is ok */
-    if ((CHAR_LEVEL(ch) < unit_field_data[type].minother && unt != ch && IS_PC(unt)) ||
+    if ((CHAR_LEVEL(ch) < unit_field_data[type].minother && unt != ch && unt->isPC()) ||
         (CHAR_LEVEL(ch) < unit_field_data[type].minself && unt == ch))
     {
         send_to_char("Authority to set field denied!<br/>", ch);
@@ -439,9 +439,9 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     }
 
     /* see if field is valid for unit */
-    if ((unit_field_data[type].utype == UT_ROOM && !IS_ROOM(unt)) || (unit_field_data[type].utype == UT_OBJ && !IS_OBJ(unt)) ||
-        (unit_field_data[type].utype == UT_NPC && !IS_NPC(unt)) || (unit_field_data[type].utype == UT_PC && !IS_PC(unt)) ||
-        (unit_field_data[type].utype == UT_CHAR && !IS_CHAR(unt)))
+    if ((unit_field_data[type].utype == UT_ROOM && !unt->isRoom()) || (unit_field_data[type].utype == UT_OBJ && !unt->isObj()) ||
+        (unit_field_data[type].utype == UT_NPC && !unt->isNPC()) || (unit_field_data[type].utype == UT_PC && !unt->isPC()) ||
+        (unit_field_data[type].utype == UT_CHAR && !unt->isChar()))
     {
         send_to_char("Field invalid for type of unit.<br/>", ch);
         return;
@@ -674,7 +674,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
     switch (type)
     {
         case 0: /* "add-name" */
-            if (IS_PC(unt) && CHAR_LEVEL(ch) < 255)
+            if (unt->isPC() && CHAR_LEVEL(ch) < 255)
             {
                 send_to_char("Not allowed to modify PC's.<br/>", ch);
                 return;
@@ -683,18 +683,18 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             strip_trailing_blanks(argument);
             str_remspc(argument);
 
-            UNIT_NAMES(unt).AppendName(argument);
+            unt->getNames().AppendName(argument);
             send_to_char("The extra name was added.<br/>", ch);
             return;
 
         case 1: /* "del-name" */
-            if (!UNIT_NAMES(unt).Name(0) || !UNIT_NAMES(unt).Name(1))
+            if (!unt->getNames().Name(0) || !unt->getNames().Name(1))
             {
                 send_to_char("Must have minimum of two names<br/>", ch);
                 return;
             }
             argument = skip_spaces(argument);
-            UNIT_NAMES(unt).RemoveName(argument);
+            unt->getNames().RemoveName(argument);
             send_to_char("Name may have been deleted.<br/>", ch);
             return;
 
@@ -723,7 +723,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                     ed->names.AppendName(strarg);
                     argument = str_next_word(argument, strarg);
                 }
-                UNIT_EXTRA(unt).add(ed);
+                unt->getExtraList().add(ed);
 
                 send_to_char("New field.<br/>", ch);
             }
@@ -757,7 +757,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 return;
             }
 
-            UNIT_EXTRA(unt).remove(argument);
+            unt->getExtraList().remove(argument);
             send_to_char("Trying to delete field.<br/>", ch);
             return;
 
@@ -766,11 +766,11 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 7: /* "unit-flags" */
-            if (IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
+            if (IS_SET(unt->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
             {
                 trans_unset(unt);
             }
-            else if (!IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && IS_SET(bitarg, UNIT_FL_TRANS))
+            else if (!IS_SET(unt->getUnitFlags(), UNIT_FL_TRANS) && IS_SET(bitarg, UNIT_FL_TRANS))
             {
                 trans_set(unt);
             }
@@ -780,12 +780,12 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 8: /* "weight" */
         {
-            if (UNIT_CONTAINS(unt))
+            if (unt->getUnitContains())
             {
                 send_to_char("The unit isn't empty. Setting weight is supposed to happen on empty units only. Setting anyway<br/>", ch);
             }
 
-            int dif = valarg - UNIT_BASE_WEIGHT(unt);
+            int dif = valarg - unt->getBaseWeight();
 
             /* set new baseweight */
             unt->setBaseWeight(valarg);
@@ -794,7 +794,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             weight_change_unit(unt, dif);
 
             // Now make weight and base weight equal
-            dif = UNIT_BASE_WEIGHT(unt) - UNIT_WEIGHT(unt);
+            dif = unt->getBaseWeight() - unt->getWeight();
             weight_change_unit(unt, dif);
             // UNIT_BASE_WEIGHT(unt) = UNIT_WEIGHT(unt) = valarg;
             return;
@@ -850,7 +850,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Expected -6..+6<br/>", ch);
                 return;
             }
-            modify_bright(unt, valarg - UNIT_BRIGHT(unt));
+            modify_bright(unt, valarg - unt->getLightOutput());
             return;
 
         case 18: /* "room_flags" */
@@ -1038,12 +1038,12 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             argument = str_next_word(argument, strarg);
             if (CHAR_LEVEL(ch) < CHAR_LEVEL(unt))
             {
-                slog(LOG_ALL, 0, "WARNING: %s attempted to set %s password", UNIT_NAME(ch), UNIT_NAME(unt));
+                slog(LOG_ALL, 0, "WARNING: %s attempted to set %s password", ch->getNames().Name(), unt->getNames().Name());
                 send_to_char("You can not change a password of a higher level immortal", ch);
             }
             else
             {
-                slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", UNIT_NAME(ch), UNIT_NAME(unt));
+                slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", ch->getNames().Name(), unt->getNames().Name());
                 UPC(unt)->setPassword(crypt(strarg, PC_FILENAME(unt)));
                 send_to_char("The password has been set.<br/>", ch);
             }
@@ -1279,8 +1279,8 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
                      "SET %s set %s's age from %.2f to %d",
-                     UNIT_NAME(ch),
-                     UNIT_NAME(unt),
+                     ch->getNames().Name(),
+                     unt->getNames().Name(),
                      PC_TIME(unt).getPlayerBirthday() / (1.0 * SECS_PER_MUD_YEAR),
                      valarg);
 
@@ -1301,8 +1301,8 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
                      "SET %s set %s's lifespan from %d to %d",
-                     UNIT_NAME(ch),
-                     UNIT_NAME(unt),
+                     ch->getNames().Name(),
+                     unt->getNames().Name(),
                      PC_LIFESPAN(unt),
                      valarg);
                 UPC(unt)->setLifespan(valarg);
@@ -1319,8 +1319,8 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
                      "SET %s set %s's profession from %d to %d",
-                     UNIT_NAME(ch),
-                     UNIT_NAME(unt),
+                     ch->getNames().Name(),
+                     unt->getNames().Name(),
                      PC_PROFESSION(unt),
                      valarg);
                 UPC(unt)->setProfession(valarg);
@@ -1376,7 +1376,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    if (!IS_CHAR(unt))
+    if (!unt->isChar())
     {
         send_to_char("Unit-type must be char<br/>", ch);
         return;
@@ -1398,7 +1398,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
     switch (type)
     {
         case SET_SKILL:
-            if (!IS_PC(unt))
+            if (!unt->isPC())
             {
                 send_to_char("Skills are only for PC's<br/>", ch);
                 return;
@@ -1421,7 +1421,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
                 show_structure(g_SplColl.text, ch);
                 return;
             }
-            if (skillarg > SPL_EXTERNAL && IS_NPC(unt))
+            if (skillarg > SPL_EXTERNAL && unt->isNPC())
             {
                 send_to_char("Only spell-groups for NPC<br/>", ch);
                 return;
@@ -1429,7 +1429,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
 
-            if (IS_PC(unt))
+            if (unt->isPC())
             {
                 UPC(unt)->setSpellSKillAtIndexTo(skillarg, valarg);
             }
@@ -1446,7 +1446,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
                 show_structure(g_WpnColl.text, ch);
                 return;
             }
-            if (skillarg > WPN_SPECIAL && IS_NPC(unt))
+            if (skillarg > WPN_SPECIAL && unt->isNPC())
             {
                 send_to_char("Only weapon-groups for NPC<br/>", ch);
                 return;
@@ -1454,7 +1454,7 @@ void do_setskill(unit_data *ch, char *argument, const command_info *cmd)
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
 
-            if (IS_PC(unt))
+            if (unt->isPC())
             {
                 UPC(unt)->setWeaponSkillAtIndexTo(skillarg, valarg);
             }

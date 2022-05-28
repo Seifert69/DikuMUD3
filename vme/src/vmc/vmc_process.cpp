@@ -388,7 +388,7 @@ bool affect_vector_string(unit_data *obj, std::string &s)
 
     memset(bonusvector, 0, sizeof(bonusvector));
 
-    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->getNext())
+    for (unit_affected_type *af = obj->getUnitAffected(); af; af = af->getNext())
     {
         switch (af->getID())
         {
@@ -452,7 +452,7 @@ bool affect_vector_list(unit_data *obj, std::string &s)
 {
     s.clear();
 
-    for (unit_affected_type *af = UNIT_AFFECTED(obj); af; af = af->getNext())
+    for (unit_affected_type *af = obj->getUnitAffected(); af; af = af->getNext())
     {
         switch (af->getID())
         {
@@ -587,7 +587,7 @@ void show_obj_info(unit_data *obj)
     if (doprint || bHasAffect1 || bHasAffect2)
     {
         s += "//," + sAffectVector + ",//,";
-        std::string title = UNIT_TITLE(obj);
+        std::string title = obj->getTitle();
         std::replace(title.begin(), title.end(), ',', ' ');
         s += title;
         s += ",";
@@ -612,7 +612,7 @@ void show_npc_info(unit_data *npc)
             CHAR_STR(npc),
             CHAR_DEX(npc),
             CHAR_CON(npc),
-            UNIT_MAX_HIT(npc),
+            npc->getMaximumHitpoints(),
             CHAR_BRA(npc),
             CHAR_CHA(npc),
             CHAR_MAG(npc),
@@ -627,7 +627,7 @@ void process_affects(unit_data *pUnit)
     int lastf = 0;
     int applyf = 0;
 
-    for (pAf = UNIT_AFFECTED(pUnit); pAf; pAf = pAf->getNext())
+    for (pAf = pUnit->getUnitAffected(); pAf; pAf = pAf->getNext())
     {
         firstf = (pAf->getFirstFI() == TIF_NONE);
         tickf = (pAf->getTickFI() == TIF_NONE);
@@ -862,7 +862,7 @@ void process_funcs(unit_data *u)
 {
     unit_fptr *fptr = nullptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+    for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (!is_in(fptr->getFunctionPointerIndex(), 0, SFUN_TOP_IDX))
         {
@@ -970,14 +970,14 @@ void process_unit(unit_data *u)
     process_affects(u);
     process_funcs(u);
 
-    check_namelist(u, &UNIT_NAMES(u));
+    check_namelist(u, &u->getNames());
 
-    for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
+    for (exd = u->getExtraList().m_pList; exd; exd = exd->next)
     {
         check_namelist(u, &exd->names);
     }
 
-    if (IS_ROOM(u))
+    if (u->isRoom())
     {
         for (i = 0; i <= MAX_EXIT; i++)
         {
@@ -988,35 +988,35 @@ void process_unit(unit_data *u)
         }
     }
 
-    if (!IS_ROOM(u) && !UNIT_TITLE(u).empty())
+    if (!u->isRoom() && !u->getTitle().empty())
     {
-        if (isupper(*UNIT_TITLE(u).c_str()))
+        if (isupper(*u->getTitle().c_str()))
         {
             char buf[MAX_STRING_LENGTH];
-            str_next_word_copy(UNIT_TITLE(u).c_str(), buf);
+            str_next_word_copy(u->getTitle().c_str(), buf);
             if (fill_word(buf))
             {
-                dmc_error(FALSE, "%s: Title CASE seems to be wrong for '%s'", UNIT_IDENT(u), UNIT_TITLE(u).c_str());
+                dmc_error(FALSE, "%s: Title CASE seems to be wrong for '%s'", UNIT_IDENT(u), u->getTitle().c_str());
             }
         }
 
-        i = strlen(UNIT_TITLE(u).c_str());
+        i = strlen(u->getTitle().c_str());
 
         // Title should end with character or HTML end code >
-        if ((i > 0) && !isalpha(UNIT_TITLE(u).c_str()[i - 1]) && (UNIT_TITLE(u).c_str()[i - 1] != '>'))
+        if ((i > 0) && !isalpha(u->getTitle().c_str()[i - 1]) && (u->getTitle().c_str()[i - 1] != '>'))
         {
-            dmc_error(FALSE, "%s: Title ends with non-alphabet character '%s'", UNIT_IDENT(u), UNIT_TITLE(u).c_str());
+            dmc_error(FALSE, "%s: Title ends with non-alphabet character '%s'", UNIT_IDENT(u), u->getTitle().c_str());
         }
     }
 
-    if (!is_in(UNIT_WEIGHT(u), 0, 2000))
+    if (!is_in(u->getWeight(), 0, 2000))
     {
-        dmc_error(TRUE, "%s: Illegal weight %d (expected 0..2000).", UNIT_IDENT(u), UNIT_WEIGHT(u));
+        dmc_error(TRUE, "%s: Illegal weight %d (expected 0..2000).", UNIT_IDENT(u), u->getWeight());
         u->setWeight(0);
     }
-    u->setWeight(UNIT_BASE_WEIGHT(u));
+    u->setWeight(u->getBaseWeight());
 
-    if (!is_in(UNIT_ALIGNMENT(u), unit_data::MinAlignment, unit_data::MaxAlignment))
+    if (!is_in(u->getAlignment(), unit_data::MinAlignment, unit_data::MaxAlignment))
     {
         dmc_error(TRUE,
                   "%s: Illegal alignment %d (expected %+d..%+d).",
@@ -1027,19 +1027,19 @@ void process_unit(unit_data *u)
         u->setAlignment(0);
     }
 
-    if (!is_in(UNIT_LIGHTS(u), -6, 6))
+    if (!is_in(u->getNumberOfActiveLightSources(), -6, 6))
     {
-        dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), UNIT_LIGHTS(u));
+        dmc_error(TRUE, "%s: Illegal light %d (expected -6..+6).", UNIT_IDENT(u), u->getNumberOfActiveLightSources());
         u->setNumberOfActiveLightSources(0);
     }
 
-    if (!is_in(UNIT_BRIGHT(u), -6, 6))
+    if (!is_in(u->getLightOutput(), -6, 6))
     {
-        dmc_error(TRUE, "%s: Illegal bright %d (expected -6..+6).", UNIT_IDENT(u), UNIT_BRIGHT(u));
+        dmc_error(TRUE, "%s: Illegal bright %d (expected -6..+6).", UNIT_IDENT(u), u->getLightOutput());
         u->setLightOutput(0);
     }
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_ROOM:
             set_room_data(u);
@@ -1052,13 +1052,13 @@ void process_unit(unit_data *u)
                     UOBJ(u)->setPriceInGP(OBJ_VALUE(u, 0));
                     UOBJ(u)->setValueAtIndexTo(0, 0);
 
-                    if (!UNIT_TITLE(u).empty())
+                    if (!u->getTitle().empty())
                     {
                         int i = 0;
 
                         for (i = 0; i <= MAX_MONEY; i++)
                         {
-                            if (!strcmp(UNIT_TITLE(u).c_str(), g_money_types[i].abbrev))
+                            if (!strcmp(u->getTitle().c_str(), g_money_types[i].abbrev))
                             {
                                 break;
                             }
@@ -1066,7 +1066,7 @@ void process_unit(unit_data *u)
 
                         if (i > MAX_MONEY)
                         {
-                            dmc_error(TRUE, "Not a legal money denominator (%s) on %s", UNIT_TITLE(u).c_str(), UNIT_IDENT(u));
+                            dmc_error(TRUE, "Not a legal money denominator (%s) on %s", u->getTitle().c_str(), UNIT_IDENT(u));
                         }
                         else
                         {
@@ -1187,10 +1187,10 @@ void init_unit(unit_data *u)
     u->setNumberOfActiveLightSources(0);
     u->setLightOutput(0);
     u->setNumberOfCharactersInsideUnit(0);
-    u->setUnitAffectedType(nullptr);
+    u->setUnitAffected(nullptr);
     u->setSize(180); // 180cm default
 
-    switch (UNIT_TYPE(u))
+    switch (u->getUnitType())
     {
         case UNIT_ST_NPC:
         {
@@ -1250,7 +1250,7 @@ void init_unit(unit_data *u)
             u->setCapacity(30000);
             u->setBaseWeight(10);
             u->setWeight(10);
-            u->setMyContainerTo(nullptr);
+            u->setUnitIn(nullptr);
             for (i = 0; i <= MAX_EXIT; i++)
             {
                 UROOM(u)->setRoomDirectionDataForExitTo(i, nullptr);

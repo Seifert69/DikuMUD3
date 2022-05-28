@@ -686,7 +686,7 @@ void dil_typeerr(dilprg *p, const char *where)
     /* returned value not of expected type */
     /* This is serous! mess-up in the core.. stop the program */
 
-    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+    szonelog(p->sarg->owner->getFileIndex()->getZone(),
              "DIL SERIOUS: on %s@%s %s@%s, Type error in %s\n",
              UNIT_FI_NAME(p->sarg->owner),
              UNIT_FI_ZONENAME(p->sarg->owner),
@@ -768,98 +768,101 @@ int dil_type_check(const char *f, dilprg *p, int tot, ...)
 /* ************************************************************************ */
 /* Evaluating DIL-expressions/instructions				    */
 /* ************************************************************************ */
+// clang-format off
+dil_func_type g_dilfe_func[DILI_MAX + 1] = {
+    {dilfe_illegal}, /* 0 */
+    {dilfe_plus},     {dilfe_min},       {dilfe_mul},
+    {dilfe_div},      {dilfe_mod},       {dilfe_and},
+    {dilfe_or},       {dilfe_not},       {dilfe_gt},
+    {dilfe_lt}, /* 10 */
+    {dilfe_ge},       {dilfe_le},        {dilfe_eq},
+    {dilfe_pe},       {dilfe_ne},        {dilfe_in},
+    {dilfe_umin},     {dilfe_se},        {dilfe_null},
 
-dil_func_type g_dilfe_func[DILI_MAX + 1] = {{dilfe_illegal}, /* 0 */
-                                            {dilfe_plus},      {dilfe_min},       {dilfe_mul},
-                                            {dilfe_div},       {dilfe_mod},       {dilfe_and},
-                                            {dilfe_or},        {dilfe_not},       {dilfe_gt},
-                                            {dilfe_lt}, /* 10 */
-                                            {dilfe_ge},        {dilfe_le},        {dilfe_eq},
-                                            {dilfe_pe},        {dilfe_ne},        {dilfe_in},
-                                            {dilfe_umin},      {dilfe_se},        {dilfe_null},
+    {dilfe_fld}, /* 20 */
+    {dilfe_atoi},     {dilfe_itoa},      {dilfe_rnd},
+    {dilfe_fndu}, // findunit
+    {dilfe_fndr}, // 25 findroom
+    {dilfe_load},     {dilfe_iss},       {dilfe_getw},
+    {dilfe_isa},      {dilfe_cmds}, /* 30 */
+    {dilfe_fnds},                   // findsymbolic
 
-                                            {dilfe_fld}, /* 20 */
-                                            {dilfe_atoi},      {dilfe_itoa},      {dilfe_rnd},
-                                            {dilfe_fndu}, // findunit
-                                            {dilfe_fndr}, // 25 findroom
-                                            {dilfe_load},      {dilfe_iss},       {dilfe_getw},
-                                            {dilfe_isa},       {dilfe_cmds}, /* 30 */
-                                            {dilfe_fnds},                    // findsymbolic
+    {dilfe_acti},     {dilfe_argm},      {dilfe_tho},
+    {dilfe_tda},      {dilfe_tmd},       {dilfe_tye},
+    {dilfe_hrt},      {dilfe_self},
 
-                                            {dilfe_acti},      {dilfe_argm},      {dilfe_tho},
-                                            {dilfe_tda},       {dilfe_tmd},       {dilfe_tye},
-                                            {dilfe_hrt},       {dilfe_self},
+    {dilfe_var}, /* 40 */
+    {dilfe_fs},       {dilfe_fsl},       {dilfe_int},
+    {dilfe_len},
 
-                                            {dilfe_var}, /* 40 */
-                                            {dilfe_fs},        {dilfe_fsl},       {dilfe_int},
-                                            {dilfe_len},
+    {dilfi_ass},      {dilfi_lnk},       {dilfi_exp},
+    {dilfi_cast},     {dilfi_if},        {dilfi_set}, /* 50 */
+    {dilfi_uset},     {dilfi_adl},       {dilfi_sul},
+    {dilfi_ade},      {dilfi_sue},       {dilfi_dst},
+    {dilfi_popstk},   {dilfi_exec},      {dilfi_wit},
+    {dilfi_act}, /* 60 */
+    {dilfi_goto},     {dilfi_sua},       {dilfi_ada},
+    {dilfi_pri},      {dilfi_npr},       {dilfi_snd},
+    {dilfi_snt},      {dilfi_sec},       {dilfi_use},
+    {dilfi_foe}, /* 70 */
+    {dilfi_fon},      {dilfi_eqp},       {dilfi_ueq},
+    {dilfe_weat},     {dilfe_oppo},      {dilfi_quit},
 
-                                            {dilfi_ass},       {dilfi_lnk},       {dilfi_exp},
-                                            {dilfi_cast},      {dilfi_if},        {dilfi_set}, /* 50 */
-                                            {dilfi_uset},      {dilfi_adl},       {dilfi_sul},
-                                            {dilfi_ade},       {dilfi_sue},       {dilfi_dst},
-                                            {dilfi_popstk},    {dilfi_exec},      {dilfi_wit},
-                                            {dilfi_act}, /* 60 */
-                                            {dilfi_goto},      {dilfi_sua},       {dilfi_ada},
-                                            {dilfi_pri},       {dilfi_npr},       {dilfi_snd},
-                                            {dilfi_snt},       {dilfi_sec},       {dilfi_use},
-                                            {dilfi_foe}, /* 70 */
-                                            {dilfi_fon},       {dilfi_eqp},       {dilfi_ueq},
-                                            {dilfe_weat},      {dilfe_oppo},      {dilfi_quit},
+    {dilfi_blk},      {dilfi_pup},
 
-                                            {dilfi_blk},       {dilfi_pup},
-
-                                            {dilfe_getws},     {dilfi_snta}, /* 80 */
-                                            {dilfi_log},       {dilfe_pne},       {dilfe_sne},
-                                            {dilfi_rfunc},     {dilfi_rfunc},     {dilfi_rtf},
-                                            {dilfi_rtf},       {dilfe_dld},       {dilfe_dlf},
-                                            {dilfi_dlc}, /* 90 */
-                                            {dilfe_lor},       {dilfe_land},      {dilfi_on},
-                                            {dilfi_rsfunc},    {dilfi_rsfunc},    {dilfe_intr},
-                                            {dilfi_cli},       {dilfi_sbt},       {dilfi_set_weight_base},
-                                            {dilfe_fndru}, /* 100 */
-                                            {dilfe_visi},      {dilfe_atsp},      {dilfe_purs},
-                                            {dilfi_chas},      {dilfi_setf}, /* 105 */
-                                            {dilfe_medi},      {dilfe_targ},      {dilfe_powe},
-                                            {dilfe_trmo},      {dilfi_sntadil}, /* 110 */
-                                            {dilfe_cast2},     {dilfe_mel},       {dilfe_eqpm},
-                                            {dilfe_cmst},      {dilfe_opro}, /* 115 */
-                                            {dilfe_delstr},    {dilfe_delunit},   {dilfi_amod},
-                                            {dilfi_sete},      {dilfi_folo}, /* 120 */
-                                            {dilfi_lcri},      {dilfe_fits},      {dilfe_cary},
-                                            {dilfe_fnds2}, // findsymbolic(#,#)
-                                            {dilfe_path},  /* 125  */
-                                            {dilfe_mons},      {dilfe_splx},      {dilfe_spli},
-                                            {dilfe_rti},       {dilfe_txf}, /* 130  */
-                                            {dilfe_ast},       {dilfe_pck},       {dilfe_act},
-                                            {dilfe_islt},      {dilfe_clr}, /* 135  */
-                                            {dilfe_clradd},    {dilfe_split},     {dilfe_ghead},
-                                            {dilfe_replace},   {dilfe_meldam}, /*140 */
-                                            {dilfi_rslv},      {dilfi_rsvlv},     {dilfi_rsrce},
-                                            {dilfi_pgstr},     {dilfe_clrdel}, /*145 */
-                                            {dilfe_clrchg},    {dilfe_svstr},     {dilfe_ldstr},
-                                            {dilfe_flog},      {dilfe_resta}, /*150 */
-                                            {dilfi_stora},     {dilfi_stopf},     {dilfi_edit},
-                                            {dilfe_zhead},     {dilfe_udir}, // 155
-                                            {dilfe_sdir},      {dilfi_send_done}, {dilfi_gamestate},
-                                            {dilfi_setpwd},    {dilfi_delpc},     {dilfe_ckpwd},
-                                            {dilfe_left},      {dilfe_right},     {dilfe_mid},
-                                            {dilfe_sgt}, // 165
-                                            {dilfe_slt},       {dilfe_sge},       {dilfe_sle},
-                                            {dilfe_isplayer},  {dilfe_tolower},   {dilfe_toupper},
-                                            {dilfe_skitxt},    {dilfe_wpntxt},    {dilfe_clone},
-                                            {dilfe_chead},     {dilfe_sendpre},   {dilfe_excmst},
-                                            {dilfe_fil},       {dilfi_inslst},    {dilfi_remlst},
-                                            {dilfi_ade2},      {dilfe_getcmd},    {dilfi_reboot},
-                                            {dilfi_kedit},     {dilfe_gopp},      {dilfe_excmstc},
-                                            {dilfe_strcmp},    {dilfe_strncmp},   {dilfe_wepinfo},
-                                            {dilfe_nhead},     {dilfe_rhead},     {dilfe_ohead},
-                                            {dilfe_phead},     {dilfe_fndu2},     {dilfe_gfol},
-                                            {dilfe_sact}, // 196
-                                            {dilfe_gint},      {dilfe_shell},     {dilfi_set_weight},
-                                            {dilfi_dispatch},                                   // 200
-                                            {dilfe_fndz},      {dilfe_fndsidx},   {dilfe_call}, // 203
-                                            {dilfe_getaffects}};
+    {dilfe_getws},    {dilfi_snta}, /* 80 */
+    {dilfi_log},      {dilfe_pne},       {dilfe_sne},
+    {dilfi_rfunc},    {dilfi_rfunc},     {dilfi_rtf},
+    {dilfi_rtf},      {dilfe_dld},       {dilfe_dlf},
+    {dilfi_dlc}, /* 90 */
+    {dilfe_lor},      {dilfe_land},      {dilfi_on},
+    {dilfi_rsfunc},   {dilfi_rsfunc},    {dilfe_intr},
+    {dilfi_cli},      {dilfi_sbt},       {dilfi_set_weight_base},
+    {dilfe_fndru}, /* 100 */
+    {dilfe_visi},     {dilfe_atsp},      {dilfe_purs},
+    {dilfi_chas},     {dilfi_setf}, /* 105 */
+    {dilfe_medi},     {dilfe_targ},      {dilfe_powe},
+    {dilfe_trmo},     {dilfi_sntadil}, /* 110 */
+    {dilfe_cast2},    {dilfe_mel},       {dilfe_eqpm},
+    {dilfe_cmst},     {dilfe_opro}, /* 115 */
+    {dilfe_delstr},   {dilfe_delunit},   {dilfi_amod},
+    {dilfi_sete},     {dilfi_folo}, /* 120 */
+    {dilfi_lcri},     {dilfe_fits},      {dilfe_cary},
+    {dilfe_fnds2}, // findsymbolic(#,#)
+    {dilfe_path},  /* 125  */
+    {dilfe_mons},     {dilfe_splx},      {dilfe_spli},
+    {dilfe_rti},      {dilfe_txf}, /* 130  */
+    {dilfe_ast},      {dilfe_pck},       {dilfe_act},
+    {dilfe_islt},     {dilfe_clr}, /* 135  */
+    {dilfe_clradd},   {dilfe_split},     {dilfe_ghead},
+    {dilfe_replace},  {dilfe_meldam}, /*140 */
+    {dilfi_rslv},     {dilfi_rsvlv},     {dilfi_rsrce},
+    {dilfi_pgstr},    {dilfe_clrdel}, /*145 */
+    {dilfe_clrchg},   {dilfe_svstr},     {dilfe_ldstr},
+    {dilfe_flog},     {dilfe_resta}, /*150 */
+    {dilfi_stora},    {dilfi_stopf},     {dilfi_edit},
+    {dilfe_zhead},    {dilfe_udir}, // 155
+    {dilfe_sdir},     {dilfi_send_done}, {dilfi_gamestate},
+    {dilfi_setpwd},   {dilfi_delpc},     {dilfe_ckpwd},
+    {dilfe_left},     {dilfe_right},     {dilfe_mid},
+    {dilfe_sgt}, // 165
+    {dilfe_slt},      {dilfe_sge},       {dilfe_sle},
+    {dilfe_isplayer}, {dilfe_tolower},   {dilfe_toupper},
+    {dilfe_skitxt},   {dilfe_wpntxt},    {dilfe_clone},
+    {dilfe_chead},    {dilfe_sendpre},   {dilfe_excmst},
+    {dilfe_fil},      {dilfi_inslst},    {dilfi_remlst},
+    {dilfi_ade2},     {dilfe_getcmd},    {dilfi_reboot},
+    {dilfi_kedit},    {dilfe_gopp},      {dilfe_excmstc},
+    {dilfe_strcmp},   {dilfe_strncmp},   {dilfe_wepinfo},
+    {dilfe_nhead},    {dilfe_rhead},     {dilfe_ohead},
+    {dilfe_phead},    {dilfe_fndu2},     {dilfe_gfol},
+    {dilfe_sact}, // 196
+    {dilfe_gint},     {dilfe_shell},     {dilfi_set_weight},
+    {dilfi_dispatch},                                 // 200
+    {dilfe_fndz},     {dilfe_fndsidx},   {dilfe_call}, // 203
+    {dilfe_getaffects}
+};
+// clang-format on
 
 static int check_interrupt(dilprg *prg)
 {
@@ -942,7 +945,7 @@ void ActivateDil(unit_data *pc)
     unit_fptr *fptr = nullptr;
     dilprg *prg = nullptr;
 
-    for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->getNext())
+    for (fptr = pc->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->is_destructed())
         {
@@ -965,7 +968,7 @@ void DeactivateDil(unit_data *pc, dilprg *aprg)
     unit_fptr *fptr = nullptr;
     dilprg *prg = nullptr;
 
-    for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->getNext())
+    for (fptr = pc->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData())
         {
@@ -1212,7 +1215,7 @@ int run_dil(spec_arg *sarg)
     }
     else if (prg->waitcmd > WAITCMD_FINISH)
     {
-        szonelog(UNIT_FI_ZONE(sarg->owner),
+        szonelog(sarg->owner->getFileIndex()->getZone(),
                  "DIL %s in unit %s@%s had endless loop.",
                  prg->fp->tmpl->prgname,
                  UNIT_FI_NAME(sarg->owner),
@@ -1289,7 +1292,7 @@ int dil_init(spec_arg *sarg)
         }
         else
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "Template '(null)' not found: %s@%s",
                      UNIT_FI_NAME(sarg->owner),
                      UNIT_FI_ZONENAME(sarg->owner));
@@ -1345,7 +1348,7 @@ int dil_direct_init(spec_arg *sarg)
 
         if (tmpl == nullptr)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "Template '%s' not found: %s@%s",
                      dilargs->name,
                      UNIT_FI_NAME(sarg->owner),
@@ -1353,7 +1356,7 @@ int dil_direct_init(spec_arg *sarg)
         }
         else if (tmpl->argc != dilargs->no)
         {
-            szonelog(UNIT_FI_ZONE(sarg->owner),
+            szonelog(sarg->owner->getFileIndex()->getZone(),
                      "Template '%s' had mismatching argument count %d: %s@%s",
                      dilargs->name,
                      dilargs->no,
@@ -1373,7 +1376,7 @@ int dil_direct_init(spec_arg *sarg)
 
             if (i < dilargs->no)
             {
-                szonelog(UNIT_FI_ZONE(sarg->owner),
+                szonelog(sarg->owner->getFileIndex()->getZone(),
                          "Template '%s' had argument "
                          "mismatch for argument %d: %s@%s",
                          dilargs->name,
@@ -1506,7 +1509,7 @@ dilprg *dil_copy_template(diltemplate *tmpl, unit_data *u, unit_fptr **pfptr)
     if (IS_SET(tmpl->flags, DILFL_UNIQUE))
     {
         unit_fptr *f = nullptr;
-        for (f = UNIT_FUNC(u); f; f = f->getNext())
+        for (f = u->getFunctionPointer(); f; f = f->getNext())
         {
             if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
             {
@@ -1578,7 +1581,7 @@ void dil_activate(dilprg *prg)
 
     assert(prg);
 
-    for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->getNext())
+    for (fptr = prg->owner->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->getData() == prg)
         {
@@ -1613,7 +1616,7 @@ void dil_activate_cmd(dilprg *prg, command_info *cmd_ptr)
 
     assert(prg);
 
-    for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->getNext())
+    for (fptr = prg->owner->getFunctionPointer(); fptr; fptr = fptr->getNext())
     {
         if (fptr->getData() == prg)
         {
@@ -1645,7 +1648,7 @@ void dil_loadtime_activate(unit_data *u)
 {
     unit_fptr *f = nullptr;
     unit_fptr *fnext = nullptr;
-    for (f = UNIT_FUNC(u); f; f = fnext)
+    for (f = u->getFunctionPointer(); f; f = fnext)
     {
         fnext = f->getNext();
         if (f->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
@@ -1715,7 +1718,7 @@ dilprg *dil_copy(char *name, unit_data *u)
 
     if (!tmpl)
     {
-        szonelog(UNIT_FI_ZONE(u), "Template '%s' not found: %s@%s", tmplname, UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+        szonelog(u->getFileIndex()->getZone(), "Template '%s' not found: %s@%s", tmplname, UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
         if (targ)
         {
             FREE(targ);
@@ -1726,7 +1729,7 @@ dilprg *dil_copy(char *name, unit_data *u)
     /* check argument count and types */
     if (tmpl->argc != narg)
     {
-        szonelog(UNIT_FI_ZONE(u),
+        szonelog(u->getFileIndex()->getZone(),
                  "Template '%s' had mismatching argument count %d: %s@%s",
                  tmplname,
                  narg,
@@ -1756,7 +1759,7 @@ dilprg *dil_copy(char *name, unit_data *u)
             }
         }
 
-        szonelog(UNIT_FI_ZONE(u),
+        szonelog(u->getFileIndex()->getZone(),
                  "Template '%s' had mismatching argument mismatch for %d: %s@%s",
                  tmplname,
                  i,
@@ -1801,7 +1804,7 @@ unit_fptr *dil_find(const char *name, unit_data *u)
 
     if ((tmpl = find_dil_template(name)))
     {
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->getNext())
+        for (fptr = u->getFunctionPointer(); fptr; fptr = fptr->getNext())
         {
             if ((!fptr->is_destructed()) && (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {

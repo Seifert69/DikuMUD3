@@ -37,7 +37,7 @@ static bool init_bank(const unit_data *pc, unit_data *clerk, bool init)
             cActParameter(),
             TO_ROOM);
     }
-    else if (!IS_PC(pc))
+    else if (!pc->isPC())
     {
         send_to_char("Only trustworthy people are served...<br/>", pc);
     }
@@ -422,19 +422,19 @@ static bool move_money_up(unit_data *ch, unit_data *u)
     unit_data *next = nullptr;
     bool found = FALSE;
 
-    for (tmp = UNIT_CONTAINS(u); tmp; tmp = next)
+    for (tmp = u->getUnitContains(); tmp; tmp = next)
     {
         next = tmp->getNext();
 
         if (IS_MONEY(tmp))
         {
-            while (UNIT_IN(tmp) != ch)
+            while (tmp->getUnitIn() != ch)
             {
                 found = TRUE;
                 unit_up(tmp);
             }
         }
-        else if ((IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER) || IS_ROOM(tmp) || IS_CHAR(tmp))
+        else if ((tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER) || tmp->isRoom() || tmp->isChar())
         {
             found = found || move_money_up(ch, tmp);
         }
@@ -544,7 +544,7 @@ void stat_bank(const unit_data *ch, unit_data *u)
     bool none = TRUE;
     int i = 0;
 
-    if (!IS_PC(u))
+    if (!u->isPC())
     {
         send_to_char("You can only get bank info for PC's<br/>", ch);
         return;

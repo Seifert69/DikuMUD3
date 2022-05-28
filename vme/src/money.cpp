@@ -194,7 +194,7 @@ unit_data *set_money(unit_data *money, amount_t amt)
         amt = 1;
     }
 
-    UNIT_NAMES(money).Free();
+    money->getNames().Free();
 
     /* Set relevant strings as names */
     for (i = 0; g_money_types[MONEY_TYPE(money)].strings[i]; ++i)
@@ -205,7 +205,7 @@ unit_data *set_money(unit_data *money, amount_t amt)
         }
         else
         {
-            UNIT_NAMES(money).AppendName(g_money_types[MONEY_TYPE(money)].strings[i]);
+            money->getNames().AppendName(g_money_types[MONEY_TYPE(money)].strings[i]);
         }
     }
 
@@ -214,14 +214,14 @@ unit_data *set_money(unit_data *money, amount_t amt)
      * Suffice to say that the current string system forces me to sort the
      * strings, or chaos arises...
      */
-    for (i = 0; i < UNIT_NAMES(money).Length(); ++i)
+    for (i = 0; i < money->getNames().Length(); ++i)
     {
         ubit32 j = 0;
         ubit32 m = i;
 
-        for (j = i; j < UNIT_NAMES(money).Length(); ++j)
+        for (j = i; j < money->getNames().Length(); ++j)
         {
-            if (strlen(UNIT_NAMES(money).Name(m)) < strlen(UNIT_NAMES(money).Name(j)))
+            if (strlen(money->getNames().Name(m)) < strlen(money->getNames().Name(j)))
             {
                 m = j;
             }
@@ -229,11 +229,11 @@ unit_data *set_money(unit_data *money, amount_t amt)
 
         if (m != i)
         {
-            char *max = str_dup(UNIT_NAMES(money).Name(m));
-            char *t = str_dup(UNIT_NAMES(money).Name(i));
+            char *max = str_dup(money->getNames().Name(m));
+            char *t = str_dup(money->getNames().Name(i));
 
-            UNIT_NAMES(money).Substitute(i, max);
-            UNIT_NAMES(money).Substitute(m, t);
+            money->getNames().Substitute(i, max);
+            money->getNames().Substitute(m, t);
 
             FREE(max);
             FREE(t);
@@ -244,12 +244,12 @@ unit_data *set_money(unit_data *money, amount_t amt)
 
     /* set new baseweight */
     int mwgt = amt / MONEY_WEIGHT(money);
-    int dif = mwgt - UNIT_BASE_WEIGHT(money);
+    int dif = mwgt - money->getBaseWeight();
 
     money->setBaseWeight(mwgt);
     weight_change_unit(money, dif);
 
-    dif = mwgt - UNIT_WEIGHT(money);
+    dif = mwgt - money->getWeight();
     weight_change_unit(money, dif);
 
     money->setTitle(obj_money_string(money, amt));
@@ -277,13 +277,13 @@ static unit_data *make_money(file_index_type *fi, amount_t amt)
 {
     unit_data *money = read_unit(fi);
 
-    assert(IS_OBJ(money));
+    assert(money->isObj());
 
     money->setWeight(0); // Init money-weight
 
     auto str = diku::format_to_str(cur_strings[MONEY_CURRENCY(money)], g_money_types[MONEY_TYPE(money)].tails);
 
-    UNIT_EXTRA(money).add("", str.c_str());
+    money->getExtraList().add("", str.c_str());
 
     return set_money(money, amt);
 }
@@ -331,7 +331,7 @@ void money_transfer(unit_data *from, unit_data *to, amount_t amt, currency_t cur
         }
 
         /* Note down money-objects in from, and their values */
-        for (tmp = UNIT_CONTAINS(from); tmp; tmp = tmp->getNext())
+        for (tmp = from->getUnitContains(); tmp; tmp = tmp->getNext())
         {
             if (IS_MONEY(tmp) && MONEY_CURRENCY(tmp) == currency)
             {
@@ -423,7 +423,7 @@ void money_transfer(unit_data *from, unit_data *to, amount_t amt, currency_t cur
                 assert(0 < i && i <= last);
 
                 /* Get that coin from `to' */
-                for (tmp = UNIT_CONTAINS(to); tmp; tmp = tmp->getNext())
+                for (tmp = to->getUnitContains(); tmp; tmp = tmp->getNext())
                 {
                     if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == i)
                     {
@@ -508,9 +508,9 @@ amount_t unit_holds_total(unit_data *u, currency_t currency)
     amount_t amt = 0;
     amount_t rec = 0;
 
-    if (IS_ROOM(u) || IS_CHAR(u) || (IS_OBJ(u) && OBJ_TYPE(u) == ITEM_CONTAINER))
+    if (u->isRoom() || u->isChar() || (u->isObj() && OBJ_TYPE(u) == ITEM_CONTAINER))
     {
-        for (tmp = UNIT_CONTAINS(u); tmp; tmp = tmp->getNext())
+        for (tmp = u->getUnitContains(); tmp; tmp = tmp->getNext())
         {
             if (IS_MONEY(tmp) && (currency == ANY_CURRENCY || MONEY_CURRENCY(tmp) == currency))
             {
@@ -521,7 +521,7 @@ amount_t unit_holds_total(unit_data *u, currency_t currency)
             }
             else
             {
-                if (IS_ROOM(tmp) || IS_CHAR(tmp) || (IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER))
+                if (tmp->isRoom() || tmp->isChar() || (tmp->isObj() && OBJ_TYPE(tmp) == ITEM_CONTAINER))
                 {
                     rec = unit_holds_total(tmp, currency);
                     if (amt < amt + rec)
@@ -543,9 +543,9 @@ amount_t char_holds_amount(unit_data *ch, currency_t currency)
     unit_data *tmp = nullptr;
     amount_t amt = 0;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
-    for (tmp = UNIT_CONTAINS(ch); tmp; tmp = tmp->getNext())
+    for (tmp = ch->getUnitContains(); tmp; tmp = tmp->getNext())
     {
         if (IS_MONEY(tmp) && (currency == ANY_CURRENCY || MONEY_CURRENCY(tmp) == currency))
         {
@@ -566,11 +566,11 @@ ubit1 char_can_afford(unit_data *ch, amount_t amt, currency_t currency)
 {
     unit_data *tmp = nullptr;
 
-    assert(IS_CHAR(ch));
+    assert(ch->isChar());
 
     amt = adjust_money(amt, currency);
 
-    for (tmp = UNIT_CONTAINS(ch); tmp; tmp = tmp->getNext())
+    for (tmp = ch->getUnitContains(); tmp; tmp = tmp->getNext())
     {
         if (IS_MONEY(tmp) && MONEY_CURRENCY(tmp) == currency)
         {
@@ -593,7 +593,7 @@ unit_data *unit_has_money_type(unit_data *unit, ubit8 type)
 {
     unit_data *tmp = nullptr;
 
-    for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->getNext())
+    for (tmp = unit->getUnitContains(); tmp; tmp = tmp->getNext())
     {
         if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == type)
         {
@@ -625,9 +625,9 @@ unit_data *split_money(unit_data *money, amount_t amt)
         unit_data *pnew = make_money(g_money_types[MONEY_TYPE(money)].fi, amt);
         set_money(money, calc_money(MONEY_AMOUNT(money), '-', amt));
 
-        if (UNIT_IN(money))
+        if (money->getUnitIn())
         {
-            intern_unit_to_unit(pnew, UNIT_IN(money), FALSE);
+            intern_unit_to_unit(pnew, money->getUnitIn(), FALSE);
         }
 
         return pnew;
@@ -643,11 +643,11 @@ unit_data *split_money(unit_data *money, amount_t amt)
 void pile_money(unit_data *money)
 {
     unit_data *tmp = nullptr;
-    unit_data *unit = UNIT_IN(money);
+    unit_data *unit = money->getUnitIn();
 
     assert(IS_MONEY(money) && unit);
 
-    for (tmp = UNIT_CONTAINS(unit); tmp; tmp = tmp->getNext())
+    for (tmp = unit->getUnitContains(); tmp; tmp = tmp->getNext())
     {
         if (tmp != money && IS_MONEY(tmp) && MONEY_TYPE(tmp) == MONEY_TYPE(money))
         {
@@ -740,7 +740,7 @@ amount_t char_can_carry_amount(unit_data *ch, unit_data *money)
 
 amount_t unit_can_hold_amount(unit_data *unit, unit_data *money)
 {
-    int d_wgt = UNIT_CAPACITY(unit) - UNIT_CONTAINING_W(unit);
+    int d_wgt = unit->getCapacity() - UNIT_CONTAINING_W(unit);
 
     return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
@@ -750,7 +750,7 @@ void do_makemoney(unit_data *ch, char *arg, const command_info *cmd)
     currency_t cur = 0;
     amount_t amt = 0;
 
-    if (!IS_PC(ch) || str_is_empty(arg) || (amt = atol(arg)) < 0)
+    if (!ch->isPC() || str_is_empty(arg) || (amt = atol(arg)) < 0)
     {
         send_to_char("Rather silly, isn't it?<br/>", ch);
         return;

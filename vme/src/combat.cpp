@@ -529,15 +529,15 @@ void cCombat::status(const unit_data *god)
                                    "Combat Speed [%d]  Turn [%d]<br/>"
                                    "Melee Opponent '%s'<br/>"
                                    "Total of %d Opponents:<br/><br/>",
-                                   STR(UNIT_NAME(pOwner)),
+                                   STR(pOwner->getNames().Name()),
                                    CHAR_SPEED(pOwner),
                                    nWhen,
-                                   CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
+                                   CHAR_FIGHTING(pOwner) ? STR(CHAR_FIGHTING(pOwner)->getNames().Name()) : "NONE",
                                    nNoOpponents);
 
     for (int i = 0; i < nNoOpponents; i++)
     {
-        msg += diku::format_to_str("   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
+        msg += diku::format_to_str("   %s<br/>", STR(pOpponents[i]->getNames().Name()));
     }
 
     send_to_char(msg, god);
@@ -630,7 +630,7 @@ void stat_combat(unit_data *god, unit_data *u, const char *pStr)
 {
     unit_data *u2 = nullptr;
 
-    if (!IS_CHAR(u))
+    if (!u->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
         return;
@@ -653,7 +653,7 @@ void stat_combat(unit_data *god, unit_data *u, const char *pStr)
         u2 = CHAR_FIGHTING(u);
     }
 
-    if (!IS_CHAR(u2))
+    if (!u2->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u2, cActParameter(), TO_CHAR);
         return;
@@ -681,7 +681,7 @@ void stat_spell(unit_data *god, unit_data *u, const char *pStr)
 {
     unit_data *u2 = nullptr;
 
-    if (!IS_CHAR(u))
+    if (!u->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
         return;
@@ -704,7 +704,7 @@ void stat_spell(unit_data *god, unit_data *u, const char *pStr)
         u2 = CHAR_FIGHTING(u);
     }
 
-    if (!IS_CHAR(u2))
+    if (!u2->isChar())
     {
         act("$2n is not a pc / npc.", A_ALWAYS, god, u2, cActParameter(), TO_CHAR);
         return;

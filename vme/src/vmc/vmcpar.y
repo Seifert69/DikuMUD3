@@ -278,7 +278,7 @@ oroom_field : MOVEMENT PNUM
     }
     | VIN reference
     {
-        cur->setMyContainerTo(reinterpret_cast<unit_data*>($2));
+        cur->setUnitIn(reinterpret_cast<unit_data*>($2));
     }
     | SPELL number
     {
@@ -349,8 +349,8 @@ exit_field  : TO reference
         }
         else
         {
-            UNIT_EXTRA(cur).add(ed);
-            cur_extra = UNIT_EXTRA(cur).m_pList;
+            cur->getExtraList().add(ed);
+            cur_extra = cur->getExtraList().m_pList;
         }
 
         /*
@@ -571,7 +571,7 @@ omobile_field   : MANA number
  */
 unit_field  : NAMES stringlist
     {
-        UNIT_NAMES(cur).CopyList((const char **)$2);
+        cur->getNames().CopyList((const char **)$2);
         /*if (UNIT_NAMES(cur) && UNIT_NAME(cur))
           CAP(UNIT_NAME(cur)); */
     }
@@ -619,10 +619,10 @@ unit_field  : NAMES stringlist
             idargcopy->no = 0;
             idargcopy->name = prgname;
 
-            if (!UNIT_FUNC(cur))
+            if (!cur->getFunctionPointer())
             {
                 cur->setFunctionPointer(mcreate_func());
-                cur_func = UNIT_FUNC(cur);
+                cur_func = cur->getFunctionPointer();
             }
             else
             {
@@ -644,10 +644,10 @@ unit_field  : NAMES stringlist
         *argcopy = *($4);
         argcopy->name = $2;
 
-        if (!UNIT_FUNC(cur))
+        if (!cur->getFunctionPointer())
         {
             cur->setFunctionPointer(mcreate_func());
-            cur_func = UNIT_FUNC(cur);
+            cur_func = cur->getFunctionPointer();
         }
         else
         {
@@ -669,7 +669,7 @@ unit_field  : NAMES stringlist
     }
     | IN_DESCR STRING
     {
-        if (IS_ROOM(cur) && !str_is_empty($2))
+        if (cur->isRoom() && !str_is_empty($2))
         {
             memmove($2 + 3, $2, strlen($2) + 1);
 
@@ -682,7 +682,7 @@ unit_field  : NAMES stringlist
     }
     | DESCR STRING
     {
-        if (IS_ROOM(cur) && !str_is_empty($2))
+        if (cur->isRoom() && !str_is_empty($2))
         {
             memmove($2 + 3, $2, strlen($2) + 1);
 
@@ -720,8 +720,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            UNIT_EXTRA(cur).add(ed);
-            cur_extra = UNIT_EXTRA(cur).m_pList;
+            cur->getExtraList().add(ed);
+            cur_extra = cur->getExtraList().m_pList;
         }
 
         /*
@@ -764,8 +764,8 @@ unit_field  : NAMES stringlist
         }
         else
         {
-            UNIT_EXTRA(cur).add(ed);
-            cur_extra = UNIT_EXTRA(cur).m_pList;
+            cur->getExtraList().add(ed);
+            cur_extra = cur->getExtraList().m_pList;
         }
 
         /*
@@ -844,10 +844,10 @@ unit_field  : NAMES stringlist
     }
     | SPECIAL
     {
-        if (!UNIT_FUNC(cur))
+        if (!cur->getFunctionPointer())
         {
             cur->setFunctionPointer(mcreate_func());
-            cur_func = UNIT_FUNC(cur);
+            cur_func = cur->getFunctionPointer();
         }
         else
         {
@@ -875,10 +875,10 @@ unit_field  : NAMES stringlist
     }
     optfuncargs | AFFECT
     {
-        if (!UNIT_AFFECTED(cur))
+        if (!cur->getUnitAffected())
         {
-            cur->setUnitAffectedType(mcreate_affect());
-            cur_aff = UNIT_AFFECTED(cur);
+            cur->setUnitAffected(mcreate_affect());
+            cur_aff = cur->getUnitAffected();
         }
         else
         {

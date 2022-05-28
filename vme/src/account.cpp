@@ -45,7 +45,7 @@ void account_cclog(unit_data *ch, int amount)
 
     f = fopen(g_cServerConfig.getFileInLogDir(CREDITFILE_LOG).c_str(), "a+b");
 
-    fprintf(f, "%-16s %6.2f %s\n", UNIT_NAME(ch), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+    fprintf(f, "%-16s %6.2f %s\n", ch->getNames().Name(), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
     fclose(f);
 }
@@ -83,9 +83,9 @@ static void account_log(char action, unit_data *god, unit_data *pc, int amount)
     }
 
     c = buf;
-    sprintf(c, "%c %-15s %-15s %8d ", action, UNIT_NAME(god), UNIT_NAME(pc), amount);
+    sprintf(c, "%c %-15s %-15s %8d ", action, god->getNames().Name(), pc->getNames().Name(), amount);
 
-    if (IS_PC(god))
+    if (god->isPC())
     {
         gid = PC_ID(god) ^ (vxor);
     }
@@ -135,7 +135,7 @@ void account_local_stat(const unit_data *ch, unit_data *u)
         return;
     }
 
-    if (!IS_PC(u))
+    if (!u->isPC())
     {
         send_to_char("Only players have accounts.\n\r", ch);
         return;
@@ -415,7 +415,7 @@ void account_subtract(unit_data *pc, time_t from, time_t to)
     tm bt;
     tm et;
 
-    assert(IS_PC(pc));
+    assert(pc->isPC());
 
     if (!g_cServerConfig.isAccounting())
     {
@@ -569,7 +569,7 @@ void account_insert(unit_data *god, unit_data *whom, ubit32 amount)
     PC_ACCOUNT(whom).increaseAccountBalanceBy(static_cast<float>(amount));
     PC_ACCOUNT(whom).increaseTotalCreditBy(amount);
 
-    slog(LOG_ALL, 255, "%s inserted %d on account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
+    slog(LOG_ALL, 255, "%s inserted %d on account %s.", god->getNames().Name(), amount, whom->getNames().Name());
     account_log('I', god, whom, amount);
 }
 
@@ -585,7 +585,7 @@ void account_withdraw(unit_data *god, unit_data *whom, ubit32 amount)
         PC_ACCOUNT(whom).reduceTotalCreditBy(amount);
     }
 
-    slog(LOG_ALL, 255, "%s withdrew %d from account %s.", UNIT_NAME(god), amount, UNIT_NAME(whom));
+    slog(LOG_ALL, 255, "%s withdrew %d from account %s.", god->getNames().Name(), amount, whom->getNames().Name());
 
     account_log('W', god, whom, amount);
 }
@@ -625,7 +625,7 @@ void account_flatrate_change(unit_data *god, unit_data *whom, sbit32 days)
         }
     }
 
-    slog(LOG_ALL, 255, "%s change flatrate with %d on account %s.", UNIT_NAME(god), days, UNIT_NAME(whom));
+    slog(LOG_ALL, 255, "%s change flatrate with %d on account %s.", god->getNames().Name(), days, whom->getNames().Name());
     account_log('F', god, whom, days);
 
     send_to_char(msg, god);
@@ -642,7 +642,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
     int i = 0;
     int amount = 0;
 
-    if (!g_cServerConfig.isAccounting() || !IS_PC(ch))
+    if (!g_cServerConfig.isAccounting() || !ch->isPC())
     {
         send_to_char("That command is not available.<br/>", ch);
         return;
@@ -694,7 +694,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
     u = find_unit(ch, &c, nullptr, FIND_UNIT_SURRO | FIND_UNIT_WORLD);
 
-    if ((u == nullptr) || !IS_PC(u))
+    if ((u == nullptr) || !u->isPC())
     {
         send_to_char("No such player found.\n\r", ch);
         return;
@@ -737,11 +737,11 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
             account_local_stat(ch, u);
 
             msg = diku::format_to_str("%s inserted %.2f %s on your account.\n\r",
-                                      UNIT_NAME(ch),
+                                      ch->getNames().Name(),
                                       (float)amount / 100.0,
                                       g_cAccountConfig.m_pCoinName);
             note = read_unit(g_letter_fi);
-            UNIT_EXTRA(note).add("", msg.c_str());
+            note->getExtraList().add("", msg.c_str());
             unit_to_unit(note, u);
         }
         break;
@@ -771,7 +771,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
             account_local_stat(ch, u);
 
-            slog(LOG_ALL, 255, "%s changed limit of %s to %d.", UNIT_NAME(ch), UNIT_NAME(u), amount);
+            slog(LOG_ALL, 255, "%s changed limit of %s to %d.", ch->getNames().Name(), u->getNames().Name(), amount);
             account_log('L', ch, u, amount);
         }
         break;
@@ -794,7 +794,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
 
             account_local_stat(ch, u);
 
-            slog(LOG_ALL, 255, "%s changed discount of %s to %d.", UNIT_NAME(ch), UNIT_NAME(u), amount);
+            slog(LOG_ALL, 255, "%s changed discount of %s to %d.", ch->getNames().Name(), u->getNames().Name(), amount);
             account_log('D', ch, u, amount);
         }
         break;

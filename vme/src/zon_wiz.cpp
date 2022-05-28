@@ -58,7 +58,7 @@ int ball(spec_arg *sarg)
 
         for (u = g_unit_list; u; u = u->getGlobalNext())
         {
-            if (IS_OBJ(u) && (OBJ_TYPE(u) == v1))
+            if (u->isObj() && (OBJ_TYPE(u) == v1))
             {
                 for (i = 0; i < TOP_MAX; i++)
                 {
@@ -79,9 +79,9 @@ int ball(spec_arg *sarg)
                                                 (signed long)OBJ_VALUE(top[i], v2),
                                                 UNIT_FI_NAME(top[i]),
                                                 UNIT_FI_ZONENAME(top[i]),
-                                                UNIT_NAME(UNIT_IN(top[i])),
-                                                UNIT_FI_NAME(UNIT_IN(top[i])),
-                                                UNIT_FI_ZONENAME(UNIT_IN(top[i])));
+                                                top[i]->getUnitIn()->getNames().Name(),
+                                                UNIT_FI_NAME(top[i]->getUnitIn()),
+                                                UNIT_FI_ZONENAME(top[i]->getUnitIn()));
                 send_to_char(msg2, sarg->activator);
             }
         }

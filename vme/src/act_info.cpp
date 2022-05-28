@@ -23,9 +23,9 @@ const char *in_string(const unit_data *ch, const unit_data *u)
 {
     static std::string in_str;
     in_str.clear();
-    while ((u = UNIT_IN(u)))
+    while ((u = u->getUnitIn()))
     {
-        if (IS_ROOM(u))
+        if (u->isRoom())
         {
             in_str = diku::format_to_str("<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
             return in_str.c_str();
@@ -48,11 +48,13 @@ void player_where(unit_data *ch, char *arg)
 
     for (d = g_descriptor_list; d; d = d->getNext())
     {
-        if (d->cgetCharacter() && (d->cgetCharacter() != ch) && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
-            (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->cgetCharacter()))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
-            d->cgetOriginalCharacter() == nullptr && CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
+        if (d->cgetCharacter() && (d->cgetCharacter() != ch) && d->cgetCharacter()->getUnitIn() && descriptor_is_playing(d) &&
+            (str_is_empty(arg) || !str_ccmp(arg, d->cgetCharacter()->getNames().Name())) &&
+            CHAR_LEVEL(ch) >= d->cgetCharacter()->getLevelOfWizardInvisibility() && d->cgetOriginalCharacter() == nullptr &&
+            CHAR_CAN_SEE(ch, d->cgetCharacter()) && unit_zone(ch) == unit_zone(d->cgetCharacter()))
         {
-            auto msg = diku::format_to_str("%-30s at %s<br/>", UNIT_NAME(d->cgetCharacter()), TITLENAME(unit_room(d->getCharacter())));
+            auto msg =
+                diku::format_to_str("%-30s at %s<br/>", d->cgetCharacter()->getNames().Name(), TITLENAME(unit_room(d->getCharacter())));
             send_to_char(msg, ch);
             any = TRUE;
         }
@@ -91,20 +93,20 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (d = g_descriptor_list; d; d = d->getNext())
         {
-            if (d->cgetCharacter() && UNIT_IN(d->cgetCharacter()) && descriptor_is_playing(d) &&
-                CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetCharacter()) &&
-                (d->cgetOriginalCharacter() == nullptr || CHAR_LEVEL(ch) >= UNIT_MINV(d->cgetOriginalCharacter())))
+            if (d->cgetCharacter() && d->cgetCharacter()->getUnitIn() && descriptor_is_playing(d) &&
+                CHAR_LEVEL(ch) >= d->cgetCharacter()->getLevelOfWizardInvisibility() &&
+                (d->cgetOriginalCharacter() == nullptr || CHAR_LEVEL(ch) >= d->cgetOriginalCharacter()->getLevelOfWizardInvisibility()))
             {
                 nCount++;
                 std::string whose_body;
                 if (d->cgetOriginalCharacter())
                 { /* If switched */
-                    whose_body = diku::format_to_str(" In body of %s", UNIT_NAME(d->cgetCharacter()));
+                    whose_body = diku::format_to_str(" In body of %s", d->cgetCharacter()->getNames().Name());
                 }
 
                 mystr += diku::format_to_str("%-20s - %s [%s]%s<br/>",
-                                             UNIT_NAME(CHAR_ORIGINAL(d->getCharacter())),
-                                             UNIT_SEE_TITLE(ch, UNIT_IN(d->cgetCharacter())),
+                                             CHAR_ORIGINAL(d->getCharacter())->getNames().Name(),
+                                             UNIT_SEE_TITLE(ch, d->getCharacter()->getUnitIn()),
                                              in_string(ch, d->cgetCharacter()),
                                              whose_body);
             }
@@ -116,7 +118,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
         for (i = g_unit_list; i; i = i->getGlobalNext())
         {
-            if (UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
+            if (i->getUnitIn() && i->getNames().IsName(arg) && CHAR_LEVEL(ch) >= i->getLevelOfWizardInvisibility())
             {
                 nCount++;
                 if (nCount++ > 100)
@@ -126,7 +128,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 
                 mystr += diku::format_to_str("%-30s - %s [%s]<br/>",
                                              TITLENAME(i),
-                                             UNIT_SEE_TITLE(ch, UNIT_IN(i)),
+                                             UNIT_SEE_TITLE(ch, i->getUnitIn()),
                                              (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
             }
         }

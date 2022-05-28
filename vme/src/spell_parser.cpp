@@ -71,8 +71,9 @@ ubit1 spell_legal_target(int spl, unit_data *caster, unit_data *target)
         return FALSE;
     }
 
-    if ((IS_SET(g_spell_info[spl].targets, TAR_ROOM) && IS_ROOM(target)) ||
-        (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && IS_CHAR(target)) || (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && IS_OBJ(target)))
+    if ((IS_SET(g_spell_info[spl].targets, TAR_ROOM) && target->isRoom()) ||
+        (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && target->isChar()) ||
+        (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && target->isObj()))
     {
         return TRUE;
     }
@@ -156,7 +157,7 @@ int spell_perform(int spell_no,
                      "be there! Please report.<br/>",
                      caster);
 
-        szonelog(UNIT_FI_ZONE(medium),
+        szonelog(medium->getFileIndex()->getZone(),
                  "Illegal spell type (%d/%d): used on (%s@%s)!",
                  spell_no,
                  spell_type,
@@ -171,7 +172,7 @@ int spell_perform(int spell_no,
         return -1;
     }
 
-    if (g_spell_info[spell_no].offensive && target && IS_CHAR(target))
+    if (g_spell_info[spell_no].offensive && target && target->isChar())
     {
         offend_legal_state(caster, target);
     }
@@ -312,7 +313,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
 
         /* Do this to prevent fighters from taking a chance that av will */
         /* make a natural success                                        */
-        if (IS_PC(ch) && PC_SPL_SKILL(ch, spl) <= 1)
+        if (ch->isPC() && PC_SPL_SKILL(ch, spl) <= 1)
         {
             send_to_char("Thou dost not knoweth of this magick.<br/>", ch);
             return;
@@ -378,9 +379,9 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
                 target_ok = TRUE;
             }
 
-            if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_ROOM) && IS_ROOM(UNIT_IN(ch)))
+            if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_ROOM) && ch->getUnitIn()->isRoom())
             {
-                unit = UNIT_IN(ch);
+                unit = ch->getUnitIn();
                 target_ok = TRUE;
             }
         }

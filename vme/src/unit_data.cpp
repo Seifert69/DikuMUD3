@@ -102,17 +102,17 @@ unit_data::~unit_data()
     /* Call functions of the unit which have any data                     */
     /* that they might want to work on.                                   */
 
-    if (IS_OBJ(this))
+    if (isObj())
     {
         delete UOBJ(this);
     }
-    else if (IS_ROOM(this))
+    else if (isRoom())
     {
         delete UROOM(this);
     }
-    else if (IS_CHAR(this))
+    else if (isChar())
     {
-        if (IS_NPC(this))
+        if (isNPC())
         {
             delete UNPC(this);
         }
@@ -282,7 +282,7 @@ unit_data *unit_data::copy()
     u->m_in_descr = m_in_descr;
     u->getExtraList().copyfrom(m_extra);
 
-    if (IS_ROOM(this))
+    if (isRoom())
     {
         room_data *thisroom = UROOM(this);
         room_data *uroom = UROOM(u);
@@ -298,7 +298,7 @@ unit_data *unit_data::copy()
             uroom->getRoomDirectionDataForExit(x)->setSkillDifficulty(thisroom->getRoomDirectionDataForExit(x)->getSkillDifficulty());
         }
     }
-    else if (IS_OBJ(this))
+    else if (isObj())
     {
         obj_data *thisobj = UOBJ(this);
         obj_data *uobj = UOBJ(u);
@@ -315,7 +315,7 @@ unit_data *unit_data::copy()
         uobj->setEquipmentPosition(thisobj->getEquipmentPosition());
         uobj->setMagicResistance(thisobj->getMagicResistance());
     }
-    else if (IS_CHAR(this))
+    else if (isChar())
     {
         /// @todo These should all move down to char_data
         auto *u_downcast = dynamic_cast<char_data *>(u);
@@ -338,7 +338,7 @@ unit_data *unit_data::copy()
         {
             u_downcast->setAbilityAtIndexTo(x, this_downcast->getAbilityAtIndex(x));
         }
-        if (IS_PC(this))
+        if (isPC())
         {
             ;
             // Put in PC Copy stuff here
@@ -394,12 +394,12 @@ void unit_data::setFunctionPointer(unit_fptr *value)
     m_func = value;
 }
 
-unit_affected_type *unit_data::getUnitAffectedType()
+unit_affected_type *unit_data::getUnitAffected()
 {
     return m_affected;
 }
 
-void unit_data::setUnitAffectedType(unit_affected_type *value)
+void unit_data::setUnitAffected(unit_affected_type *value)
 {
     m_affected = value;
 }
@@ -434,32 +434,32 @@ void unit_data::setKey(char *value)
     m_key = value;
 }
 
-unit_data *unit_data::getMyContainer()
+unit_data *unit_data::getUnitIn()
 {
     return m_outside;
 }
 
-const unit_data *unit_data::getMyContainer() const
+const unit_data *unit_data::getUnitIn() const
 {
     return m_outside;
 }
 
-void unit_data::setMyContainerTo(unit_data *value)
+void unit_data::setUnitIn(unit_data *value)
 {
     m_outside = value;
 }
 
-const unit_data *unit_data::getContainedUnits() const
+const unit_data *unit_data::getUnitContains() const
 {
     return m_inside;
 }
 
-unit_data *unit_data::getContainedUnits()
+unit_data *unit_data::getUnitContains()
 {
     return m_inside;
 }
 
-void unit_data::setContainedUnit(unit_data *value)
+void unit_data::setUnitContains(unit_data *value)
 {
     m_inside = value;
 }

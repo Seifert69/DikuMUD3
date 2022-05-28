@@ -69,7 +69,7 @@ $Revision: 2.18 $
 
 void dilfe_illegal(dilprg *p)
 {
-    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+    szonelog(p->sarg->owner->getFileIndex()->getZone(),
              "DIL %s@%s, Illegal Expression/Instruction Node.\n",
              UNIT_FI_NAME(p->sarg->owner),
              UNIT_FI_ZONENAME(p->sarg->owner));
@@ -446,7 +446,7 @@ void dilfe_mid(dilprg *p)
 
                             if (r < l)
                             {
-                                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s@%s, Illegal: mid(1,2,3) 3 > 2 \n",
                                          UNIT_FI_NAME(p->sarg->owner),
                                          UNIT_FI_ZONENAME(p->sarg->owner));
@@ -535,7 +535,7 @@ void dilfe_ghead(dilprg *p)
 void dilfe_phead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_PC(g_unit_list))
+    if (g_unit_list->isPC())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
@@ -551,7 +551,7 @@ void dilfe_phead(dilprg *p)
 void dilfe_ohead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_OBJ(g_obj_head))
+    if (g_obj_head->isObj())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
@@ -567,7 +567,7 @@ void dilfe_ohead(dilprg *p)
 void dilfe_nhead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_NPC(g_npc_head))
+    if (g_npc_head->isNPC())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
@@ -583,7 +583,7 @@ void dilfe_nhead(dilprg *p)
 void dilfe_rhead(dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_ROOM(g_room_head))
+    if (g_room_head->isRoom())
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
@@ -679,7 +679,7 @@ void dilfe_sendpre(dilprg *p)
                                                             cmd = ((command_info *)search_trie((char *)v1->val.ptr, g_intr_trie));
                                                             if (!cmd)
                                                             {
-                                                                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                                                          "DIL %s@%s, : Can not send_preprocess. No such command %s\n",
                                                                          UNIT_FI_NAME(p->sarg->owner),
                                                                          UNIT_FI_ZONENAME(p->sarg->owner),
@@ -785,9 +785,9 @@ void dilfe_clradd(dilprg *p)
                             break;
                         case DILV_SP:
 
-                            if (!IS_PC((unit_data *)v1->val.ptr))
+                            if (!((unit_data *)v1->val.ptr)->isPC())
                             {
-                                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s@%s, Illegal: Tried to add a color to a non pc.\n",
                                          UNIT_FI_NAME(p->sarg->owner),
                                          UNIT_FI_ZONENAME(p->sarg->owner));
@@ -796,7 +796,7 @@ void dilfe_clradd(dilprg *p)
 
                             if (strlen((char *)v2->val.ptr) > 20)
                             {
-                                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s@%s, Illegal: Color key is greater than 20 characters.\n",
                                          UNIT_FI_NAME(p->sarg->owner),
                                          UNIT_FI_ZONENAME(p->sarg->owner));
@@ -808,7 +808,7 @@ void dilfe_clradd(dilprg *p)
                             {
                                 if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
                                 {
-                                    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                    szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                              "DIL %s@%s, Illegal: Color key contains invalid characters.\n",
                                              UNIT_FI_NAME(p->sarg->owner),
                                              UNIT_FI_ZONENAME(p->sarg->owner));
@@ -889,9 +889,9 @@ void dilfe_clrchg(dilprg *p)
                             break;
                         case DILV_SP:
 
-                            if (!IS_PC((unit_data *)v1->val.ptr))
+                            if (!((unit_data *)v1->val.ptr)->isPC())
                             {
-                                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s@%s, Illegal: Tried to change a color to a non pc.\n",
                                          UNIT_FI_NAME(p->sarg->owner),
                                          UNIT_FI_ZONENAME(p->sarg->owner));
@@ -900,7 +900,7 @@ void dilfe_clrchg(dilprg *p)
 
                             if (strlen((char *)v2->val.ptr) > 20)
                             {
-                                szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s@%s, Illegal: Color key is greater than 20 characters.\n",
                                          UNIT_FI_NAME(p->sarg->owner),
                                          UNIT_FI_ZONENAME(p->sarg->owner));
@@ -912,7 +912,7 @@ void dilfe_clrchg(dilprg *p)
                             {
                                 if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
                                 {
-                                    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                    szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                              "DIL %s@%s, Illegal: Color key contains invalid characters.\n",
                                              UNIT_FI_NAME(p->sarg->owner),
                                              UNIT_FI_ZONENAME(p->sarg->owner));
@@ -985,9 +985,9 @@ void dilfe_clrdel(dilprg *p)
                     v->type = DILV_FAIL;
                     break;
                 case DILV_SP:
-                    if (!IS_PC((unit_data *)v1->val.ptr))
+                    if (!((unit_data *)v1->val.ptr)->isPC())
                     {
-                        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s, Illegal: Tried to delete a color to a non pc.\n",
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner));
@@ -996,7 +996,7 @@ void dilfe_clrdel(dilprg *p)
 
                     if (strlen((char *)v2->val.ptr) > 20)
                     {
-                        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s, Illegal: Color key is greater than 20 characters.\n",
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner));
@@ -1008,7 +1008,7 @@ void dilfe_clrdel(dilprg *p)
                     {
                         if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
                         {
-                            szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                            szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                      "DIL %s@%s, Illegal: Color key contains invalid characters.\n",
                                      UNIT_FI_NAME(p->sarg->owner),
                                      UNIT_FI_ZONENAME(p->sarg->owner));
@@ -1059,9 +1059,9 @@ void dilfe_ckpwd(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_SP:
-                    if (!IS_PC((unit_data *)v1->val.ptr))
+                    if (!((unit_data *)v1->val.ptr)->isPC())
                     {
-                        szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s@%s, Illegal: Unit must be a pc to check password.\n",
                                  UNIT_FI_NAME(p->sarg->owner),
                                  UNIT_FI_ZONENAME(p->sarg->owner));
@@ -1121,7 +1121,7 @@ void dilfe_atsp(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_UP:
-                    if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                    if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                     {
                         v->type = DILV_FAIL;
                     }
@@ -1262,7 +1262,7 @@ void dilfe_cast2(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_UP:
-                    if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                    if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                     {
                         v->type = DILV_FAIL;
                     }
@@ -1484,7 +1484,7 @@ void dilfe_eqpm(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -1535,7 +1535,7 @@ void dilfe_mel(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -1544,7 +1544,7 @@ void dilfe_mel(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -1616,7 +1616,7 @@ void dilfe_meldam(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -1625,7 +1625,7 @@ void dilfe_meldam(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -2149,7 +2149,7 @@ void dilfe_visi(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2202,7 +2202,7 @@ void dilfe_oppo(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2211,7 +2211,7 @@ void dilfe_oppo(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -2256,7 +2256,7 @@ void dilfe_gopp(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2319,7 +2319,7 @@ void dilfe_gfol(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2585,7 +2585,7 @@ void dilfe_purs(dilprg *p)
                             if (i <= MAX_MONEY)
                             {
                                 /* Note down money-objects in from, and their values */
-                                for (unit_data *tmp = UNIT_CONTAINS((unit_data *)v1->val.ptr); tmp; tmp = tmp->getNext())
+                                for (unit_data *tmp = ((unit_data *)v1->val.ptr)->getUnitContains(); tmp; tmp = tmp->getNext())
                                 {
                                     if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == i)
                                     {
@@ -2728,7 +2728,7 @@ void dilfe_cary(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2757,7 +2757,7 @@ void dilfe_cary(dilprg *p)
                                             v->val.num = 1;
                                         }
                                         else if (!char_can_carry_w((unit_data *)v1->val.ptr,
-                                                                   v3->val.num * UNIT_WEIGHT((unit_data *)v2->val.ptr)))
+                                                                   v3->val.num * ((unit_data *)v2->val.ptr)->getWeight()))
                                         {
                                             v->val.num = 2;
                                         }
@@ -2819,7 +2819,7 @@ void dilfe_trmo(dilprg *p)
             break;
         case DILV_NULL:
         case DILV_UP:
-            if (v1->val.ptr && !IS_CHAR((unit_data *)v1->val.ptr))
+            if (v1->val.ptr && !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2832,7 +2832,7 @@ void dilfe_trmo(dilprg *p)
                         break;
                     case DILV_NULL:
                     case DILV_UP:
-                        if (v2->val.ptr && !IS_CHAR((unit_data *)v2->val.ptr))
+                        if (v2->val.ptr && !((unit_data *)v2->val.ptr)->isChar())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -2879,7 +2879,7 @@ void dilfe_trmo(dilprg *p)
             slog(LOG_ALL,
                  0,
                  "%s was given %s by DIL %s@%s.",
-                 UNIT_NAME((unit_data *)v2->val.ptr),
+                 ((unit_data *)v2->val.ptr)->getNames().Name(),
                  buf,
                  UNIT_FI_NAME(p->sarg->owner),
                  UNIT_FI_ZONENAME(p->sarg->owner));
@@ -2922,7 +2922,7 @@ void dilfe_fits(dilprg *p)
     switch (dil_getval(v1))
     {
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
@@ -2931,7 +2931,7 @@ void dilfe_fits(dilprg *p)
                 switch (dil_getval(v2))
                 {
                     case DILV_UP:
-                        if (!v2->val.ptr || !IS_OBJ((unit_data *)v2->val.ptr))
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isObj())
                         {
                             v->type = DILV_FAIL;
                         }
@@ -3586,28 +3586,28 @@ void dilfe_gint(dilprg *p)
         switch (idx)
         {
             case DIL_GINT_MANAREG:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = mana_gain(p_u);
                 }
                 break;
 
             case DIL_GINT_HITREG:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = hit_gain(p_u);
                 }
                 break;
 
             case DIL_GINT_MOVEREG:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = move_gain(p_u);
                 }
                 break;
 
             case DIL_GINT_EFFDEX:
-                if ((p_u != nullptr) && IS_CHAR(p_u))
+                if ((p_u != nullptr) && p_u->isChar())
                 {
                     v->val.num = effective_dex(p_u);
                 }
@@ -3622,7 +3622,7 @@ void dilfe_gint(dilprg *p)
                 break;
 
             case DIL_GINT_DESCRIPTOR:
-                if ((p_u != nullptr) && IS_PC(p_u))
+                if ((p_u != nullptr) && p_u->isPC())
                 {
                     v->val.num = (CHAR_DESCRIPTOR(p_u) != nullptr);
                 }
@@ -4516,7 +4516,7 @@ void dilfe_call(dilprg *p)
                                         }
                                         else
                                         {
-                                            szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                            szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                                      "DIL %s@%s, Unable to find template %s",
                                                      UNIT_FI_NAME(p->sarg->owner),
                                                      UNIT_FI_ZONENAME(p->sarg->owner),
@@ -7045,7 +7045,7 @@ void dilfe_pck(dilprg *p)
             v->type = DILV_FAIL;
             break;
         case DILV_UP:
-            if (!v1->val.ptr || !IS_CHAR((unit_data *)v1->val.ptr))
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
                 v->type = DILV_FAIL;
             }
