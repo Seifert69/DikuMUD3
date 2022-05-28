@@ -20,7 +20,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
 void bread_block(FILE *datafile, long file_pos, int length, void *buffer);
 
-void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version);
+void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af);
 void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr);
 void bwrite_block(FILE *f, int length, void *buffer);
 void bwrite_dil(CByteBuffer *pBuf, dilprg *prg);

@@ -272,10 +272,10 @@ unit_data *unit_data::copy()
     u->m_key = str_dup(m_key);
     u->set_fi(m_fi);
 
-    bwrite_affect(&abuf, m_affected, 61); // WTF 61?
-    bread_affect(&abuf, u, 61);
+    bwrite_affect(&abuf, m_affected);
+    bread_affect(&abuf, u, UNIT_VERSION);
     bwrite_func(&fbuf, m_func);
-    u->setFunctionPointer(bread_func(&fbuf, 61, u, TRUE)); // WTF 61?
+    u->setFunctionPointer(bread_func(&fbuf, UNIT_VERSION, u, TRUE));
 
     u->m_title = m_title;
     u->m_out_descr = m_out_descr;

@@ -768,20 +768,13 @@ void bread_block(FILE *datafile, long file_pos, int length, void *buffer)
     }
 }
 
-void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version)
+void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af)
 {
     int i = 0;
     ubit32 nPos = 0;
     ubit32 nOrgPos = pBuf->GetLength();
 
-    if (version <= 56)
-    {
-        pBuf->Append8(0); /* Assume no affects by default */
-    }
-    else
-    {
-        pBuf->Append16(0); /* Assume no affects by default */
-    }
+    pBuf->Append16(0); /* Assume no affects by default */
 
     for (; af; af = af->getNext())
     {
@@ -807,14 +800,7 @@ void bwrite_affect(CByteBuffer *pBuf, unit_affected_type *af, ubit8 version)
         nPos = pBuf->GetLength();
         pBuf->SetLength(nOrgPos);
 
-        if (version <= 56)
-        {
-            pBuf->Append8(i);
-        }
-        else
-        {
-            pBuf->Append16(i);
-        }
+        pBuf->Append16(i);
 
         pBuf->SetLength(nPos);
     }
@@ -1107,17 +1093,15 @@ void bwrite_block(FILE *datafile, int length, void *buffer)
 int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 {
     int i = 0;
-    ubit8 nVersion = 0;
+
 #ifdef DMSERVER
     char zone[FI_MAX_ZONENAME + 1];
     char name[FI_MAX_UNITNAME + 1];
 #endif
 
-    nVersion = UNIT_VERSION;
-
     ubit32 nPos = pBuf->GetLength();
 
-    pBuf->Append8(nVersion); /* Version Number! */
+    pBuf->Append8(UNIT_VERSION); /* Version Number! */
 
     u->getNames().AppendBuffer(pBuf);
 
@@ -1398,7 +1382,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             break;
     }
 
-    bwrite_affect(pBuf, u->getUnitAffected(), nVersion);
+    bwrite_affect(pBuf, u->getUnitAffected());
 
     bwrite_func(pBuf, u->getFunctionPointer());
 
