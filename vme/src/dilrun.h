@@ -11,13 +11,6 @@
 #include "essential.h"
 #include "unit_fptr.h"
 
-#include <cstddef>
-
-struct dil_func_type
-{
-    void (*func)(dilprg *);
-};
-
 /* Maximum number of consecutive instructions allowed in one tick */
 #define WAITCMD_FINISH -100    /* Stop program execution until next event */
 #define WAITCMD_STOP -150      /* Suspend execution                       */
@@ -77,5 +70,3 @@ void dil_intr_remove(dilprg *p, int idx);
 int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags);
 int run_dil(spec_arg *sarg);
 void dil_free_template(diltemplate *tmpl, int copy);
-
-extern dil_func_type g_dilfe_func[];
