@@ -5973,6 +5973,24 @@ code
       s := sact("You gain no additional insight into this item.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
    }
 
+   if (tgt.bright != 0)
+   {
+      if (tgt.bright > 0)
+      {
+         if (lvl >= 2)
+            s := s + sact("$3n emits light with an illumination of "+itoa(tgt.bright)+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+         else
+            s := s + sact("$3n emits light.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+      }
+      else
+      {
+         if (lvl >= 2)
+            s := s + sact("$3n enshrouds darkness with a dampening of "+itoa(-tgt.bright)+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+         else
+            s := s + sact("$3n enshrouds darkness.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+      }
+   }
+
    exd := "$identify" in tgt.extra;
    if (exd)
       s := exd.descr + s;
@@ -7198,6 +7216,7 @@ code
 dilend
 
 
+// See also Displace Magic (DIV version)
 dilbegin dispel_magic(medi : unitptr, tgt : unitptr,
                         arg : string,
                         hm : integer, effect : string);

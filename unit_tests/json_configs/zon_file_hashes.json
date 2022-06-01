@@ -861,12 +861,12 @@
         {
             "source_file": {
                 "filename": "spells.zon",
-                "sha512": "cc5b0765b659a4935c4b49c99ffcf98c4e9ce49370dc104ee8cebf5eda9ce8c6776d502f733e8fbc23e8913d6b2b51451995c7967e9e5ed8229bd02b66d80ddc"
+                "sha512": "96cffd4b1cd33b6142ab04232545dc296e7f584c9f4f1012659ec721249b46243a41cee4a2a559e770f87f00e6a0b88ed45951fa46c359c2ae4a7a7765f8c82a"
             },
             "output": [
                 {
                     "filename": "spells.data",
-                    "sha512": "749e167ba23529931ca089183fa67880fe3ddb3f2aad15998f975729cee40d5d4152e5ec1bd983d8b120b5bce2279bbce15e1717e5cd7ce4b7b1286ef9533e06"
+                    "sha512": "dc0e752bbc5af62f65006395e0bd5668cf796c8eee94d6a448aed4a83230a64c92e3f0d86a0557756cd654b82b0f5a7885afdd37e27dcfdf8a7a8bd02b019cf4"
                 },
                 {
                     "filename": "spells.reset",
