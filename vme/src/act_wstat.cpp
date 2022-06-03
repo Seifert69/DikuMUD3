@@ -353,6 +353,8 @@ static void stat_dil(unit_data *ch, zone_type *zone)
     send_to_char(msg, ch);
 
     msg += "<div class='twocol'>";
+    ubit64 instructionSum = 0;
+
     for (auto tmpl = zone->cgetDILTemplate().begin(); tmpl != zone->cgetDILTemplate().end(); tmpl++)
     {
         msg += diku::format_to_str("%.2fs %s [%d t / %d i]<br/>",
@@ -360,9 +362,11 @@ static void stat_dil(unit_data *ch, zone_type *zone)
                                    tmpl->second->prgname,
                                    tmpl->second->nTriggers,
                                    tmpl->second->nInstructions);
+        instructionSum += tmpl->second->nInstructions;
     }
 
     msg += "</div><br/>"; // MS2020
+    msg += diku::format_to_str("Total number of DIL instructions: %ld<br/>", instructionSum);
     send_to_char(msg, ch);
 }
 
