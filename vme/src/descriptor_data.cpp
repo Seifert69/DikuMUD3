@@ -301,6 +301,7 @@ const char *descriptor_data::getLastCommand() const
 void descriptor_data::setLastCommand(const char *value)
 {
     strncpy(last_cmd, value, sizeof(last_cmd) - 1);
+    last_cmd[sizeof(last_cmd) - 1] = '\0';
 }
 
 char *descriptor_data::getCommandHistory()
@@ -311,6 +312,7 @@ char *descriptor_data::getCommandHistory()
 void descriptor_data::setCommandHistory(const char *value)
 {
     strncpy(history, value, sizeof(history) - 1);
+    history[sizeof(history) - 1] = '\0';
 }
 
 cQueue &descriptor_data::getInputQueue()
