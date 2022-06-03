@@ -309,9 +309,9 @@ exit_field  : TO reference
     | KEY reference
     {
         strncpy(tzone, $2, 30);
-        tzone[30] = 0;
+        tzone[29] = 0;
         strncpy(tname, $2 + strlen((char *)$2) + 1, 30);
-        tname[30] = 0;
+        tname[29] = 0;
         char *key=(char *)malloc(strlen(tzone) + strlen(tname) + 2);
         strcpy(key, (char *)tzone);
         strcpy(key + strlen(tzone) + 1, (char *)tname);
@@ -789,9 +789,9 @@ unit_field  : NAMES stringlist
     | KEY reference
     {
         strncpy(tzone, $2, 30);
-        tzone[30] = 0;
+        tzone[29] = 0;
         strncpy(tname, $2 + strlen((char *)$2) + 1, 30);
-        tname[30] = 0;
+        tname[29] = 0;
         auto *key_reference = (char *)malloc(strlen(tzone) + strlen(tname) + 2);
         strcpy(key_reference, (char *)tzone);
         strcpy(key_reference + strlen(tzone) + 1, (char *)tname);

@@ -288,7 +288,6 @@ cNamelist *cNamelist::Duplicate()
     return pNl;
 }
 
-
 // See IsNameRaw.
 // Will match non-full words, so
 //   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
@@ -334,7 +333,7 @@ const char *cNamelist::IsNameRawAbbrev(const char *name) const
 // Find a match for 'name' in this namelist.
 // Will match full name only.
 // Case insensitive.
-// Then it will return a pointer to "Boar" because there was 
+// Then it will return a pointer to "Boar" because there was
 // a match on the full word fallow.
 //
 // If name is nullptr function returns nullptr.
@@ -359,7 +358,7 @@ const char *cNamelist::IsNameRaw(const char *name) const
 
     if (name == nullptr)
         return nullptr;
-        
+
     for (i = 0; i < length; i++)
     {
         for (j = 0; namelist[i]->c_str()[j]; j++)
@@ -383,7 +382,6 @@ const char *cNamelist::IsNameRaw(const char *name) const
     return nullptr;
 }
 
-
 /* Returns -1 if no name matches, or 0.. for the index in the namelist */
 const int cNamelist::IsNameRawIdx(const char *name)
 {
@@ -392,7 +390,7 @@ const int cNamelist::IsNameRawIdx(const char *name)
 
     if (name == nullptr)
         return -1;
-        
+
     for (i = 0; i < length; i++)
     {
         for (j = 0; namelist[i]->c_str()[j]; j++)
@@ -417,7 +415,7 @@ const int cNamelist::IsNameRawIdx(const char *name)
 
 const char *cNamelist::IsName(const char *name)
 {
-    char buf[MAX_STRING_LENGTH];
+    static char buf[MAX_STRING_LENGTH];
 
     if (name == nullptr)
         return nullptr;
