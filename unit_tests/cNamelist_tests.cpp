@@ -1134,8 +1134,48 @@ BOOST_AUTO_TEST_CASE(IsName4_test)
     auto ret = list.IsName("    Loki        ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
-    BOOST_TEST(std::string(ret) == " ");
+    BOOST_TEST(std::string(ret) == "        ");
 }
+
+BOOST_AUTO_TEST_CASE(IsName5_test)
+{
+    cNamelist list;
+    list.AppendName("Loki");
+    list.AppendName("Thor");
+
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsName("    Loki to Thor ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_REQUIRE_NE(ret, nullptr);
+    BOOST_TEST(std::string(ret) == " to Thor ");
+}
+
+BOOST_AUTO_TEST_CASE(IsName6_test)
+{
+    cNamelist list;
+    list.AppendName("Loki");
+    list.AppendName("Thor Odinsson");
+
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsName("    Thor Odinsson to Loki ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_REQUIRE_NE(ret, nullptr);
+    BOOST_TEST(std::string(ret) == " to Loki ");
+}
+
+BOOST_AUTO_TEST_CASE(IsName7_test)
+{
+    cNamelist list;
+    list.AppendName("Loki");
+    list.AppendName("Thor Odinsson");
+
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsName("    Thor      Odinsson to  Loki ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_REQUIRE_NE(ret, nullptr);
+    BOOST_TEST(std::string(ret) == " to  Loki ");
+}
+
 
 BOOST_AUTO_TEST_CASE(Length_test)
 {
