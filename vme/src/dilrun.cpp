@@ -1870,7 +1870,7 @@ dilprg *dil_copy(char *name, unit_data *u)
         }
         else if (tmpl->argt[i] == DILV_INT)
         {
-            args[i] = skip_spaces(args[i]);
+            args[i] = (char *) skip_spaces(args[i]);
             strip_trailing_spaces(args[i]);
 
             if (str_is_number(args[i]))

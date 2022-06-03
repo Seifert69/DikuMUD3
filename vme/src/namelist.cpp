@@ -346,8 +346,6 @@ const char *cNamelist::IsNameRaw(const char *name)
 // Find a match for 'name' in this namelist.
 // Will match full name only.
 // Case insensitive.
-// Then it will return a pointer to "Boar" because there was
-// a match on the full word fallow.
 //
 // If name is nullptr function returns nullptr.
 // If name is empty function returns nullptr (I believe).
@@ -422,15 +420,9 @@ const char *cNamelist::IsName(const char *name)
 
     name = skip_spaces(name);
 
-    if (!name)
-    {
-        strcpy(buf, "");
-    }
-    else
-    {
-        strcpy(buf, name);
-        str_remspc(buf);
-    }
+    strcpy(buf, name);
+    str_remspc(buf);
+
     return IsNameRaw(buf);
 }
 

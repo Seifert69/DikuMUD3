@@ -315,7 +315,7 @@ const char *str_cstr(const char *cs, const char *ct)
 }
 
 /* return string without leading spaces */
-char *skip_blanks(const char *string)
+const char *skip_blanks(const char *string)
 {
     if (string == nullptr)
     {
@@ -327,11 +327,11 @@ char *skip_blanks(const char *string)
         ;
     }
 
-    return (char *)string;
+    return string;
 }
 
 /* return string without leading spaces */
-char *skip_spaces(const char *string)
+const char *skip_spaces(const char *string)
 {
     if (string == nullptr)
     {
@@ -343,7 +343,7 @@ char *skip_spaces(const char *string)
         ;
     }
 
-    return (char *)string;
+    return string;
 }
 
 void strip_trailing_blanks(char *str)
@@ -543,7 +543,7 @@ char *str_next_word_copy(const char *argument, char *first_arg)
 
     *first_arg = '\0';
 
-    return skip_spaces(argument);
+    return (char *) skip_spaces(argument);
 }
 
 /* Copy next word from argument into first_arg and make lowercase*/
@@ -560,7 +560,7 @@ char *str_next_word(const char *argument, char *first_arg)
 
     *first_arg = '\0';
 
-    return skip_spaces(argument);
+    return (char *) skip_spaces(argument);
 }
 
 /*  Find the first sub-argument of a string,
@@ -646,8 +646,8 @@ int search_block_abbrevs(const char *oarg, const char **list, const char **end)
             d = str_next_word(d, buf2);
             if (is_multi_abbrev(buf1, buf2))
             {
-                s = skip_spaces(s);
-                d = skip_spaces(d);
+                s = (char *) skip_spaces(s);
+                d = (char *) skip_spaces(d);
                 match++;
             }
             else

@@ -303,7 +303,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
     char *arg = cmdCPY;
 
     /* Find first non blank */
-    arg = skip_spaces(arg);
+    arg = (char *) skip_spaces(arg);
 
     if (CHAR_DESCRIPTOR(ch))
     {

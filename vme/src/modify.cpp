@@ -447,7 +447,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    argument = skip_spaces(argument);
+    argument = (char *) skip_spaces(argument);
 
     /* read in field parameters */
     switch (unit_field_data[type].atype)
@@ -611,7 +611,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Missing string argument.<br/>", ch);
                 return;
             }
-            argument = skip_spaces(argument);
+            argument = (char *) skip_spaces(argument);
         }
         break;
 
@@ -667,7 +667,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
     }
 
-    argument = skip_spaces(argument);
+    argument = (char *) skip_spaces(argument);
     strip_trailing_spaces(argument);
 
     /* insert data read in argument */
@@ -679,7 +679,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Not allowed to modify PC's.<br/>", ch);
                 return;
             }
-            argument = skip_spaces(argument);
+            argument = (char *) skip_spaces(argument);
             strip_trailing_blanks(argument);
             str_remspc(argument);
 
@@ -693,7 +693,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Must have minimum of two names<br/>", ch);
                 return;
             }
-            argument = skip_spaces(argument);
+            argument = (char *) skip_spaces(argument);
             unt->getNames().RemoveName(argument);
             send_to_char("Name may have been deleted.<br/>", ch);
             return;

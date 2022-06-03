@@ -547,7 +547,7 @@ static alias_head *str_to_alias(const char *str)
             tmp = get_next_word(str, cmd); /* Get alias-name */
 
             /* Add alias, but don't sort the trie yet */
-            add_alias(ah, cmd, skip_spaces(tmp), FALSE);
+            add_alias(ah, cmd, (char *) skip_spaces(tmp), FALSE);
             *tilde = '~';
             str = tilde + 1;
         }
@@ -602,7 +602,7 @@ static void cmd_alias(unit_data *ch, char *arg, alias_head *alias_h)
     }
 
     /* There's a new alias to re/define */
-    arg = skip_spaces(arg);
+    arg = (char *) skip_spaces(arg);
 
     if (alias_is_ok(alias_h, comm, arg, ch))
     {

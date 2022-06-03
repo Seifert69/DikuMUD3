@@ -617,7 +617,7 @@ static void profession_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = skip_blanks(pCh + 1);
+            pCh = (char *) skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
             str_lower(pTmp);
         }
@@ -696,7 +696,7 @@ static void race_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = skip_blanks(pCh + 1);
+            pCh = (char *) skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
             str_lower(pTmp);
         }
@@ -910,7 +910,7 @@ static void ability_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = skip_blanks(pCh + 1);
+            pCh = (char *) skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
         }
 
@@ -1213,7 +1213,7 @@ static void weapon_read()
         }
 
         *pCh = 0;
-        pCh = skip_blanks(pCh + 1);
+        pCh = (char *) skip_blanks(pCh + 1);
         strip_trailing_blanks(pCh);
 
         str_lower(pTmp);

@@ -791,7 +791,7 @@ static void set_money_strings(FILE *fl, int idx)
 
     do
     {
-        s = skip_spaces(s);
+        s = (char *) skip_spaces(s);
 
         if ((c = strchr(s, ',')))
         {

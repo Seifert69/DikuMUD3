@@ -268,7 +268,7 @@ void command_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = skip_blanks(pCh + 1);
+            pCh = (char *) skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
         }
 

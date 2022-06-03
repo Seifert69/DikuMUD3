@@ -654,7 +654,7 @@ void do_account(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    c = skip_spaces(c);
+    c = (char *) skip_spaces(c);
 
 #ifdef ACCOUNT_DEBUG
 
