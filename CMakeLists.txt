@@ -69,6 +69,22 @@ if (WERROR)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 endif ()
 
+# Turn gprof profiling on
+if (PROFILING)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
+endif ()
+
+# O2 optimizations
+if (O2)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+endif ()
+# O3 optimizations - will override O2 if set
+if (O3)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+endif ()
+
 message(STATUS "Compiler: ${CMAKE_C_COMPILER} version: ${CMAKE_C_COMPILER_VERSION}")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER} version: ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")

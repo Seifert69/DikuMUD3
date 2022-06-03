@@ -17,3 +17,4 @@ CTestTestfile.cmake
 Testing/
 unit_tests/CTestTestfile.cmake
 core.*
+gmon.out
