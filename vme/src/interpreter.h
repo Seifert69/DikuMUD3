@@ -120,6 +120,7 @@ void interpreter_dil_check();
 int char_is_playing(unit_data *u);
 int descriptor_is_playing(descriptor_data *d);
 void descriptor_interpreter(descriptor_data *d, char *arg);
+void add_func_history(unit_data *u, ubit16 idx, ubit16 flags);
 
 extern command_info *g_cmd_follow;
 extern command_info *g_cmd_dirs[MAX_EXIT + 1];

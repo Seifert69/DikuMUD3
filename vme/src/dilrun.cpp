@@ -26,7 +26,6 @@
 #include <sys/time.h>
 
 #include <cstdarg> /* For type_check */
-#include <functional>
 #include <map>
 
 /* *********************************************************************** *
@@ -763,231 +762,272 @@ int dil_type_check(const char *f, dilprg *p, int tot, ...)
     return FALSE;
 }
 
-/* ************************************************************************ */
-/* Evaluating DIL-expressions/instructions				    */
-/* ************************************************************************ */
-static const std::map<size_t, std::function<void(dilprg *)>> g_dilfe_func{
-    /* DIL expressions */
-    {DIL_ILL, dilfe_illegal}, /* Illegal (for debugging purpose) */
-    {DILE_PLUS, dilfe_plus},  /* # + # */
-    {DILE_MIN, dilfe_min},    /* # - # */
-    {DILE_MUL, dilfe_mul},    /* # * # */
-    {DILE_DIV, dilfe_div},    /* # / # */
-    {DILE_MOD, dilfe_mod},    /* # % # */
-    {DILE_AND, dilfe_and},    /* # and # */
-    {DILE_OR, dilfe_or},      /* # or # */
-    {DILE_NOT, dilfe_not},    /* not # */
-    {DILE_GT, dilfe_gt},      /* # > # */
-    {DILE_LT, dilfe_lt},      /* # < # */
-    {DILE_GE, dilfe_ge},      /* # >= # */
-    {DILE_LE, dilfe_le},      /* # <= # */
-    {DILE_EQ, dilfe_eq},      /* # == # */
-    {DILE_PE, dilfe_pe},      /* # #= # */
-    {DILE_NE, dilfe_ne},      /* # != # */
-    {DILE_IN, dilfe_in},      /* # in # */
-    {DILE_UMIN, dilfe_umin},  /* - # */
-    {DILE_SE, dilfe_se},      /* # ?= # */
-    {DILE_NULL, dilfe_null},  /* null */
+/**
+ * Evaluating DIL-expressions/instructions
+ *
+ * Papi had this great idea for optimization. The map gets flattened into an array at runtime to reduce lookup
+ * times for the functions.
+ *
+ * The map gets copied into an array at runtime.
+ **/
+using dil_func_ptr = void (*)(dilprg *);
+static std::unique_ptr<dil_func_ptr[]> g_dil_runtime_function_table;
+void dil_function_table_setup()
+{
+    // We use gcc branch hinting here, because this will only ever be null on the first call
+    if (__builtin_expect(g_dil_runtime_function_table != nullptr, 1))
+    {
+        return;
+    }
+    static std::map<size_t, dil_func_ptr> function_table{
+        /* DIL expressions */
+        {DIL_ILL, dilfe_illegal}, /* Illegal (for debugging purpose) */
+        {DILE_PLUS, dilfe_plus},  /* # + # */
+        {DILE_MIN, dilfe_min},    /* # - # */
+        {DILE_MUL, dilfe_mul},    /* # * # */
+        {DILE_DIV, dilfe_div},    /* # / # */
+        {DILE_MOD, dilfe_mod},    /* # % # */
+        {DILE_AND, dilfe_and},    /* # and # */
+        {DILE_OR, dilfe_or},      /* # or # */
+        {DILE_NOT, dilfe_not},    /* not # */
+        {DILE_GT, dilfe_gt},      /* # > # */
+        {DILE_LT, dilfe_lt},      /* # < # */
+        {DILE_GE, dilfe_ge},      /* # >= # */
+        {DILE_LE, dilfe_le},      /* # <= # */
+        {DILE_EQ, dilfe_eq},      /* # == # */
+        {DILE_PE, dilfe_pe},      /* # #= # */
+        {DILE_NE, dilfe_ne},      /* # != # */
+        {DILE_IN, dilfe_in},      /* # in # */
+        {DILE_UMIN, dilfe_umin},  /* - # */
+        {DILE_SE, dilfe_se},      /* # ?= # */
+        {DILE_NULL, dilfe_null},  /* null */
 
-    /* DIL functions */
-    {DILE_FLD, dilfe_fld},   /* get field + ubit8 DILF_? */
-    {DILE_ATOI, dilfe_atoi}, /* atoi(#) */
-    {DILE_ITOA, dilfe_itoa}, /* itoa(#) */
-    {DILE_RND, dilfe_rnd},   /* rnd(#,#) */
-    {DILE_FNDU, dilfe_fndu}, /* findunit(#,#,#) */
-    {DILE_FNDR, dilfe_fndr}, /* findroom(#,#) */
-    {DILE_LOAD, dilfe_load}, /* load(#) */
-    {DILE_ISS, dilfe_iss},   /* isset(#,#) */
-    {DILE_GETW, dilfe_getw}, /* getword(#) */
-    {DILE_ISA, dilfe_isa},   /* isaff(#,#) */
-    {DILE_CMDS, dilfe_cmds}, /* command(#) */
-    {DILE_FNDS, dilfe_fnds}, /* findsymbolic(#) */
+        /* DIL functions */
+        {DILE_FLD, dilfe_fld},   /* get field + ubit8 DILF_? */
+        {DILE_ATOI, dilfe_atoi}, /* atoi(#) */
+        {DILE_ITOA, dilfe_itoa}, /* itoa(#) */
+        {DILE_RND, dilfe_rnd},   /* rnd(#,#) */
+        {DILE_FNDU, dilfe_fndu}, /* findunit(#,#,#) */
+        {DILE_FNDR, dilfe_fndr}, /* findroom(#,#) */
+        {DILE_LOAD, dilfe_load}, /* load(#) */
+        {DILE_ISS, dilfe_iss},   /* isset(#,#) */
+        {DILE_GETW, dilfe_getw}, /* getword(#) */
+        {DILE_ISA, dilfe_isa},   /* isaff(#,#) */
+        {DILE_CMDS, dilfe_cmds}, /* command(#) */
+        {DILE_FNDS, dilfe_fnds}, /* findsymbolic(#) */
 
-    /* DIL internal variables */
-    {DILE_ACTI, dilfe_acti}, /* activator */
-    {DILE_ARGM, dilfe_argm}, /* argument */
-    {DILE_THO, dilfe_tho},   /* mudhour */
-    {DILE_TDA, dilfe_tda},   /* mudday */
-    {DILE_TMD, dilfe_tmd},   /* mudmonth */
-    {DILE_TYE, dilfe_tye},   /* mudyear */
-    {DILE_HRT, dilfe_hrt},   /* heartbeat */
-    {DILE_SELF, dilfe_self}, /* self */
+        /* DIL internal variables */
+        {DILE_ACTI, dilfe_acti}, /* activator */
+        {DILE_ARGM, dilfe_argm}, /* argument */
+        {DILE_THO, dilfe_tho},   /* mudhour */
+        {DILE_TDA, dilfe_tda},   /* mudday */
+        {DILE_TMD, dilfe_tmd},   /* mudmonth */
+        {DILE_TYE, dilfe_tye},   /* mudyear */
+        {DILE_HRT, dilfe_hrt},   /* heartbeat */
+        {DILE_SELF, dilfe_self}, /* self */
 
-    /* DIL static references */
-    {DILE_VAR, dilfe_var}, /* variable (ubit16) */
-    {DILE_FS, dilfe_fs},   /* fixed string (char[]) */
-    {DILE_FSL, dilfe_fsl}, /* fixed stringlist (char[][]) */
-    {DILE_INT, dilfe_int}, /* fixed integer (sbit32) */
-    {DILE_LEN, dilfe_len}, /* length(#) */
+        /* DIL static references */
+        {DILE_VAR, dilfe_var}, /* variable (ubit16) */
+        {DILE_FS, dilfe_fs},   /* fixed string (char[]) */
+        {DILE_FSL, dilfe_fsl}, /* fixed stringlist (char[][]) */
+        {DILE_INT, dilfe_int}, /* fixed integer (sbit32) */
+        {DILE_LEN, dilfe_len}, /* length(#) */
 
-    /* DIL instructions */
-    {DILI_ASS, dilfi_ass},       /* # = # */
-    {DILI_LNK, dilfi_lnk},       /* link(#,#) */
-    {DILI_EXP, dilfi_exp},       /* experience(#) */
-    {DILI_CAST, dilfi_cast},     /* cast_spell */
-    {DILI_IF, dilfi_if},         /* if */
-    {DILI_SET, dilfi_set},       /* set (#,#) */
-    {DILI_USET, dilfi_uset},     /* unset (#,#) */
-    {DILI_ADL, dilfi_adl},       /* addlist (#,#) */
-    {DILI_SUL, dilfi_sul},       /* sublist (#,#) */
-    {DILI_ADE, dilfi_ade},       /* addextra (#,#,#) */
-    {DILI_SUE, dilfi_sue},       /* subextra (#,#) */
-    {DILI_DST, dilfi_dst},       /* destroy (#) */
-    {DILI_POPSTK, dilfi_popstk}, /* pop the stack and thow it away*/
-    {DILI_EXEC, dilfi_exec},     /* exec (#,#) */
-    {DILI_WIT, dilfi_wit},       /* wait (#,#) */
-    {DILI_ACT, dilfi_act},       /* act (#,#,#,#,#,#) */
-    {DILI_GOTO, dilfi_goto},     /* goto label */
-    {DILI_SUA, dilfi_sua},       /* subaff (#,#) */
-    {DILI_ADA, dilfi_ada},       /* addaff (#,#,#) */
-    {DILI_PRI, dilfi_pri},       /* priority */
-    {DILI_NPR, dilfi_npr},       /* nopriority */
-    {DILI_SND, dilfi_snd},       /* send (#) */
-    {DILI_SNT, dilfi_snt},       /* sendto (#,#) */
-    {DILI_SEC, dilfi_sec},       /* secure (#,@) */
-    {DILI_USE, dilfi_use},       /* unsecure (#) */
-    {DILI_FOE, dilfi_foe},       /* foreach - clear / build list */
-    {DILI_FON, dilfi_fon},       /* foreach - get next in environment */
-    {DILI_EQP, dilfi_eqp},       /* addequip (#,#) */
-    {DILI_UEQ, dilfi_ueq},       /* unequip (#) */
-    {DILE_WEAT, dilfe_weat},     /* weather */
-    {DILE_OPPO, dilfe_oppo},     /* opponent(#,#) */
-    {DILI_QUIT, dilfi_quit},     /* quit */
+        /* DIL instructions */
+        {DILI_ASS, dilfi_ass},       /* # = # */
+        {DILI_LNK, dilfi_lnk},       /* link(#,#) */
+        {DILI_EXP, dilfi_exp},       /* experience(#) */
+        {DILI_CAST, dilfi_cast},     /* cast_spell */
+        {DILI_IF, dilfi_if},         /* if */
+        {DILI_SET, dilfi_set},       /* set (#,#) */
+        {DILI_USET, dilfi_uset},     /* unset (#,#) */
+        {DILI_ADL, dilfi_adl},       /* addlist (#,#) */
+        {DILI_SUL, dilfi_sul},       /* sublist (#,#) */
+        {DILI_ADE, dilfi_ade},       /* addextra (#,#,#) */
+        {DILI_SUE, dilfi_sue},       /* subextra (#,#) */
+        {DILI_DST, dilfi_dst},       /* destroy (#) */
+        {DILI_POPSTK, dilfi_popstk}, /* pop the stack and thow it away*/
+        {DILI_EXEC, dilfi_exec},     /* exec (#,#) */
+        {DILI_WIT, dilfi_wit},       /* wait (#,#) */
+        {DILI_ACT, dilfi_act},       /* act (#,#,#,#,#,#) */
+        {DILI_GOTO, dilfi_goto},     /* goto label */
+        {DILI_SUA, dilfi_sua},       /* subaff (#,#) */
+        {DILI_ADA, dilfi_ada},       /* addaff (#,#,#) */
+        {DILI_PRI, dilfi_pri},       /* priority */
+        {DILI_NPR, dilfi_npr},       /* nopriority */
+        {DILI_SND, dilfi_snd},       /* send (#) */
+        {DILI_SNT, dilfi_snt},       /* sendto (#,#) */
+        {DILI_SEC, dilfi_sec},       /* secure (#,@) */
+        {DILI_USE, dilfi_use},       /* unsecure (#) */
+        {DILI_FOE, dilfi_foe},       /* foreach - clear / build list */
+        {DILI_FON, dilfi_fon},       /* foreach - get next in environment */
+        {DILI_EQP, dilfi_eqp},       /* addequip (#,#) */
+        {DILI_UEQ, dilfi_ueq},       /* unequip (#) */
+        {DILE_WEAT, dilfe_weat},     /* weather */
+        {DILE_OPPO, dilfe_oppo},     /* opponent(#,#) */
+        {DILI_QUIT, dilfi_quit},     /* quit */
 
-    {DILI_BLK, dilfi_blk}, /* block */
-    {DILI_PUP, dilfi_pup}, /* position_update */
+        {DILI_BLK, dilfi_blk}, /* block */
+        {DILI_PUP, dilfi_pup}, /* position_update */
 
-    /* Extensions */
-    {DILE_GETWS, dilfe_getws},                /* getwords(#) */
-    {DILI_SNTA, dilfi_snta},                  /* sendtoall */
-    {DILI_LOG, dilfi_log},                    /* log */
-    {DILE_PNEQ, dilfe_pne},                   /* not # #= # */
-    {DILE_SNEQ, dilfe_sne},                   /* not # $= # */
-    {DILI_RPC, dilfi_rfunc},                  /* remote procedure call */
-    {DILI_RFC, dilfi_rfunc},                  /* remote function call */
-    {DILI_RTS, dilfi_rtf},                    /* return from subroutine */
-    {DILI_RTF, dilfi_rtf},                    /* return from function */
-    {DILE_DLD, dilfe_dld},                    /* dil destroy (#,#) */
-    {DILE_DLF, dilfe_dlf},                    /* dil find (#,#) */
-    {DILI_DLC, dilfi_dlc},                    /* dil copy (#,#) */
-    {DILE_LOR, dilfe_lor},                    /* logical or */
-    {DILE_LAND, dilfe_land},                  /* logical and */
-    {DILI_ON, dilfi_on},                      /* on # @ @ @ @ */
-    {DILI_SPC, dilfi_rsfunc},                 /* symbolic procedure call */
-    {DILI_SFC, dilfi_rsfunc},                 /* symbolic function call */
-    {DILE_INTR, dilfe_intr},                  /* interrupt */
-    {DILI_CLI, dilfi_cli},                    /* clear interrupt */
-    {DILI_SBT, dilfi_sbt},                    /* setbright (#,#) */
-    {DILI_SET_W_BASE, dilfi_set_weight_base}, /* set_weight_base (#,#) */
-    {DILE_FNDRU, dilfe_fndru},                /* findunit(#,#,#) */
-    {DILE_VISI, dilfe_visi},                  /* visible(#,#)   */
-    {DILE_ATSP, dilfe_atsp},                  /* attack_spell(#,#,#,#,#) */
-    {DILE_PURS, dilfe_purs},                  /* purse(#,#) */
-    {DILI_CHAS, dilfi_chas},                  /* change_speed(#,#) */
-    {DILI_SETF, dilfi_setf},                  /* set_fighting(#,#) */
-    {DILE_MEDI, dilfe_medi},                  /* medium */
-    {DILE_TARG, dilfe_targ},                  /* target */
-    {DILE_POWE, dilfe_powe},                  /* power */
-    {DILE_TRMO, dilfe_trmo},                  /* transfermoney(#,#,#) */
-    {DILI_SNTADIL, dilfi_sntadil},            /* sendtoalldil(#,#,#) */
-    {DILE_CAST2, dilfe_cast2},                /* int cast_spell(#,#,#,#,#) */
-    {DILE_MEL, dilfe_mel},                    /* int meleeattack(#,#,#) */
-    {DILE_EQPM, dilfe_eqpm},                  /* unitptr equipment(#,#) */
-    {DILE_CMST, dilfe_cmst},                  /* cmdstr */
-    {DILE_OPRO, dilfe_opro},                  /* openroll(#,#) */
+        /* Extensions */
+        {DILE_GETWS, dilfe_getws},                /* getwords(#) */
+        {DILI_SNTA, dilfi_snta},                  /* sendtoall */
+        {DILI_LOG, dilfi_log},                    /* log */
+        {DILE_PNEQ, dilfe_pne},                   /* not # #= # */
+        {DILE_SNEQ, dilfe_sne},                   /* not # $= # */
+        {DILI_RPC, dilfi_rfunc},                  /* remote procedure call */
+        {DILI_RFC, dilfi_rfunc},                  /* remote function call */
+        {DILI_RTS, dilfi_rtf},                    /* return from subroutine */
+        {DILI_RTF, dilfi_rtf},                    /* return from function */
+        {DILE_DLD, dilfe_dld},                    /* dil destroy (#,#) */
+        {DILE_DLF, dilfe_dlf},                    /* dil find (#,#) */
+        {DILI_DLC, dilfi_dlc},                    /* dil copy (#,#) */
+        {DILE_LOR, dilfe_lor},                    /* logical or */
+        {DILE_LAND, dilfe_land},                  /* logical and */
+        {DILI_ON, dilfi_on},                      /* on # @ @ @ @ */
+        {DILI_SPC, dilfi_rsfunc},                 /* symbolic procedure call */
+        {DILI_SFC, dilfi_rsfunc},                 /* symbolic function call */
+        {DILE_INTR, dilfe_intr},                  /* interrupt */
+        {DILI_CLI, dilfi_cli},                    /* clear interrupt */
+        {DILI_SBT, dilfi_sbt},                    /* setbright (#,#) */
+        {DILI_SET_W_BASE, dilfi_set_weight_base}, /* set_weight_base (#,#) */
+        {DILE_FNDRU, dilfe_fndru},                /* findunit(#,#,#) */
+        {DILE_VISI, dilfe_visi},                  /* visible(#,#)   */
+        {DILE_ATSP, dilfe_atsp},                  /* attack_spell(#,#,#,#,#) */
+        {DILE_PURS, dilfe_purs},                  /* purse(#,#) */
+        {DILI_CHAS, dilfi_chas},                  /* change_speed(#,#) */
+        {DILI_SETF, dilfi_setf},                  /* set_fighting(#,#) */
+        {DILE_MEDI, dilfe_medi},                  /* medium */
+        {DILE_TARG, dilfe_targ},                  /* target */
+        {DILE_POWE, dilfe_powe},                  /* power */
+        {DILE_TRMO, dilfe_trmo},                  /* transfermoney(#,#,#) */
+        {DILI_SNTADIL, dilfi_sntadil},            /* sendtoalldil(#,#,#) */
+        {DILE_CAST2, dilfe_cast2},                /* int cast_spell(#,#,#,#,#) */
+        {DILE_MEL, dilfe_mel},                    /* int meleeattack(#,#,#) */
+        {DILE_EQPM, dilfe_eqpm},                  /* unitptr equipment(#,#) */
+        {DILE_CMST, dilfe_cmst},                  /* cmdstr */
+        {DILE_OPRO, dilfe_opro},                  /* openroll(#,#) */
 
-    {DILE_DELSTR, dilfe_delstr},   /* delstr(filename) */
-    {DILE_DELUNIT, dilfe_delunit}, /* delunit(filename)     */
-    {DILI_AMOD, dilfi_amod},       /* acc_modify(#,#)  */
-    {DILI_SETE, dilfi_sete},       /* sendtext(#,#)  */
+        {DILE_DELSTR, dilfe_delstr},   /* delstr(filename) */
+        {DILE_DELUNIT, dilfe_delunit}, /* delunit(filename)     */
+        {DILI_AMOD, dilfi_amod},       /* acc_modify(#,#)  */
+        {DILI_SETE, dilfi_sete},       /* sendtext(#,#)  */
 
-    {DILI_FOLO, dilfi_folo},   /* follow(#,#)       */
-    {DILI_LCRI, dilfi_lcri},   /* logcrime(#,#,#)   */
-    {DILE_FIT, dilfe_fits},    /* fits(#,#,#)       */
-    {DILE_CARY, dilfe_cary},   /* can_carry(#,#)    */
-    {DILE_FNDS2, dilfe_fnds2}, /* findsymbolic(#,#) */
-    {DILE_PATH, dilfe_path},   /* pathto(#,#)       */
-    {DILE_MONS, dilfe_mons},   /* moneystring(#,#)  */
-    {DILE_SPLX, dilfe_splx},   /* spellindex(#)     */
-    {DILE_SPLI, dilfe_spli},   /* spellinfo(#,#)    */
+        {DILI_FOLO, dilfi_folo},   /* follow(#,#)       */
+        {DILI_LCRI, dilfi_lcri},   /* logcrime(#,#,#)   */
+        {DILE_FIT, dilfe_fits},    /* fits(#,#,#)       */
+        {DILE_CARY, dilfe_cary},   /* can_carry(#,#)    */
+        {DILE_FNDS2, dilfe_fnds2}, /* findsymbolic(#,#) */
+        {DILE_PATH, dilfe_path},   /* pathto(#,#)       */
+        {DILE_MONS, dilfe_mons},   /* moneystring(#,#)  */
+        {DILE_SPLX, dilfe_splx},   /* spellindex(#)     */
+        {DILE_SPLI, dilfe_spli},   /* spellinfo(#,#)    */
 
-    {DILE_RTI, dilfe_rti},         /* realtime()        */
-    {DILE_TXF, dilfe_txf},         /* textformat(#)     */
-    {DILE_AST, dilfe_ast},         /* asctime(#)        */
-    {DILE_PCK, dilfe_pck},         /* paycheck(#,#)   */
-    {DILE_ACT, dilfe_act},         /* act(...) expression */
-    {DILE_ISLT, dilfe_islt},       /* islight(#) */
-    {DILE_GETCLR, dilfe_clr},      /* getcolor(#,#) */
-    {DILE_ADDCLR, dilfe_clradd},   /* addcolor(#,#,#) */
-    {DILE_SPLIT, dilfe_split},     /* split(#,#) */
-    {DILE_GHEAD, dilfe_ghead},     /* ghead() */
-    {DILE_REPLACE, dilfe_replace}, /* replace(#,#,#) */
-    {DILE_MELDAM, dilfe_meldam},   /* int meleedamage(#,#,#) */
-    {DILI_RSLV, dilfi_rslv},       /* reset_level(#) */
-    {DILI_RSVLV, dilfi_rsvlv},     /* reset_vlevel(#) */
-    {DILI_RSRCE, dilfi_rsrce},     /* reset_race(#) */
-    {DILI_PGSTR, dilfi_pgstr},     /* reset_race(#) */
-    {DILE_DELCLR, dilfe_clrdel},   /* delcolor(#,#) */
-    {DILE_CHGCLR, dilfe_clrchg},   /* changecolor(#,#, #) */
-    {DILE_SVSTR, dilfe_svstr},     /* int = savestr(filename, string) */
-    {DILE_LDSTR, dilfe_ldstr},     /* int = loadstr(filename, string) */
-    {DILE_FLOG, dilfe_flog},       /* int = flog(filename, string) */
-    {DILE_RESTA, dilfe_resta},     /* restoreall(#,#) */
-    {DILI_STORA, dilfi_stora},     /* storeall(#)     */
-    {DILI_STOPF, dilfi_stopf},     /* stopfighting(#)     */
-    {DILI_EDIT, dilfi_edit},       /* beginedit     */
-    {DILE_ZHEAD, dilfe_zhead},
-    {DILE_UDIR, dilfe_udir}, // 155
-    {DILE_SDIR, dilfe_sdir},
-    {DILI_SNDDONE, dilfi_send_done},
-    {DILI_GMSTATE, dilfi_gamestate},
-    {DILI_SETPWD, dilfi_setpwd},
-    {DILI_DELPC, dilfi_delpc},
-    {DILE_CKPWD, dilfe_ckpwd},
-    {DILE_LEFT, dilfe_left},
-    {DILE_RIGHT, dilfe_right},
-    {DILE_MID, dilfe_mid},
-    {DILE_SGT, dilfe_sgt}, /* # > # */
-    {DILE_SLT, dilfe_slt}, /* # < # */
-    {DILE_SGE, dilfe_sge}, /* # >= # */
-    {DILE_SLE, dilfe_sle}, /* # <= # */
-    {DILE_ISPLAYER, dilfe_isplayer},
-    {DILE_TOLOWER, dilfe_tolower},
-    {DILE_TOUPPER, dilfe_toupper},
-    {DILE_SKITXT, dilfe_skitxt},
-    {DILE_WPNTXT, dilfe_wpntxt},
-    {DILE_CLONE, dilfe_clone},
-    {DILE_CHEAD, dilfe_chead},
-    {DILE_SENDPRE, dilfe_sendpre},
-    {DILE_EXCMST, dilfe_excmst},
-    {DILE_FIL, dilfe_fil},
-    {DILI_INSLST, dilfi_inslst},
-    {DILI_REMLST, dilfi_remlst},
-    {DILI_ADE2, dilfi_ade2},     /* addextra (#,#,#,#) */
-    {DILE_GETCMD, dilfe_getcmd}, /* getcmd (#) */
-    {DILI_REBOOT, dilfi_reboot}, /* Reboot the server */
-    {DILI_KEDIT, dilfi_kedit},   /* Reboot the server */
-    {DILE_GOPP, dilfe_gopp},
-    {DILE_EXCMSTC, dilfe_excmstc},
-    {DILE_STRCMP, dilfe_strcmp},
-    {DILE_STRNCMP, dilfe_strncmp},
-    {DILE_WEPINFO, dilfe_wepinfo},
-    {DILE_NHEAD, dilfe_nhead},
-    {DILE_RHEAD, dilfe_rhead},
-    {DILE_OHEAD, dilfe_ohead},
-    {DILE_PHEAD, dilfe_phead},
-    {DILE_FNDU2, dilfe_fndu2},
-    {DILE_GFOL, dilfe_gfol},
-    {DILE_SACT, dilfe_sact},            /* sact (#,#,#,#,#,#) */
-    {DILE_GINT, dilfe_gint},            /* getinteger(unit, idx) */
-    {DILE_PLAYERID, dilfe_shell},       /* */
-    {DILI_SET_W, dilfi_set_weight},     /* set_weight(#,#) */
-    {DILI_DISPATCH, dilfi_dispatch},    /* dispatch(message) */
-    {DILE_FNDZ, dilfe_fndz},            /* findroom(#,#) */
-    {DILE_FNDSIDX, dilfe_fndsidx},      /* */
-    {DILE_CALL, dilfe_call},            /* dilcall(#)(#,#,#) */
-    {DILE_GETAFFECTS, dilfe_getaffects} /* getaffects(#) */
-};
+        {DILE_RTI, dilfe_rti},              /* realtime()        */
+        {DILE_TXF, dilfe_txf},              /* textformat(#)     */
+        {DILE_AST, dilfe_ast},              /* asctime(#)        */
+        {DILE_PCK, dilfe_pck},              /* paycheck(#,#)   */
+        {DILE_ACT, dilfe_act},              /* act(...) expression */
+        {DILE_ISLT, dilfe_islt},            /* islight(#) */
+        {DILE_GETCLR, dilfe_clr},           /* getcolor(#,#) */
+        {DILE_ADDCLR, dilfe_clradd},        /* addcolor(#,#,#) */
+        {DILE_SPLIT, dilfe_split},          /* split(#,#) */
+        {DILE_GHEAD, dilfe_ghead},          /* ghead() */
+        {DILE_REPLACE, dilfe_replace},      /* replace(#,#,#) */
+        {DILE_MELDAM, dilfe_meldam},        /* int meleedamage(#,#,#) */
+        {DILI_RSLV, dilfi_rslv},            /* reset_level(#) */
+        {DILI_RSVLV, dilfi_rsvlv},          /* reset_vlevel(#) */
+        {DILI_RSRCE, dilfi_rsrce},          /* reset_race(#) */
+        {DILI_PGSTR, dilfi_pgstr},          /* reset_race(#) */
+        {DILE_DELCLR, dilfe_clrdel},        /* delcolor(#,#) */
+        {DILE_CHGCLR, dilfe_clrchg},        /* changecolor(#,#, #) */
+        {DILE_SVSTR, dilfe_svstr},          /* int = savestr(filename, string) */
+        {DILE_LDSTR, dilfe_ldstr},          /* int = loadstr(filename, string) */
+        {DILE_FLOG, dilfe_flog},            /* int = flog(filename, string) */
+        {DILE_RESTA, dilfe_resta},          /* restoreall(#,#) */
+        {DILI_STORA, dilfi_stora},          /* storeall(#)     */
+        {DILI_STOPF, dilfi_stopf},          /* stopfighting(#)     */
+        {DILI_EDIT, dilfi_edit},            /* beginedit     */
+        {DILE_ZHEAD, dilfe_zhead},          /* */
+        {DILE_UDIR, dilfe_udir},            /* */
+        {DILE_SDIR, dilfe_sdir},            /* */
+        {DILI_SNDDONE, dilfi_send_done},    /* */
+        {DILI_GMSTATE, dilfi_gamestate},    /* */
+        {DILI_SETPWD, dilfi_setpwd},        /* */
+        {DILI_DELPC, dilfi_delpc},          /* */
+        {DILE_CKPWD, dilfe_ckpwd},          /* */
+        {DILE_LEFT, dilfe_left},            /* */
+        {DILE_RIGHT, dilfe_right},          /* */
+        {DILE_MID, dilfe_mid},              /* */
+        {DILE_SGT, dilfe_sgt},              /* # > # */
+        {DILE_SLT, dilfe_slt},              /* # < # */
+        {DILE_SGE, dilfe_sge},              /* # >= # */
+        {DILE_SLE, dilfe_sle},              /* # <= # */
+        {DILE_ISPLAYER, dilfe_isplayer},    /* */
+        {DILE_TOLOWER, dilfe_tolower},      /* */
+        {DILE_TOUPPER, dilfe_toupper},      /* */
+        {DILE_SKITXT, dilfe_skitxt},        /* */
+        {DILE_WPNTXT, dilfe_wpntxt},        /* */
+        {DILE_CLONE, dilfe_clone},          /* */
+        {DILE_CHEAD, dilfe_chead},          /* */
+        {DILE_SENDPRE, dilfe_sendpre},      /* */
+        {DILE_EXCMST, dilfe_excmst},        /* */
+        {DILE_FIL, dilfe_fil},              /* */
+        {DILI_INSLST, dilfi_inslst},        /* */
+        {DILI_REMLST, dilfi_remlst},        /* */
+        {DILI_ADE2, dilfi_ade2},            /* addextra (#,#,#,#) */
+        {DILE_GETCMD, dilfe_getcmd},        /* getcmd (#) */
+        {DILI_REBOOT, dilfi_reboot},        /* Reboot the server */
+        {DILI_KEDIT, dilfi_kedit},          /* Reboot the server */
+        {DILE_GOPP, dilfe_gopp},            /* */
+        {DILE_EXCMSTC, dilfe_excmstc},      /* */
+        {DILE_STRCMP, dilfe_strcmp},        /* */
+        {DILE_STRNCMP, dilfe_strncmp},      /* */
+        {DILE_WEPINFO, dilfe_wepinfo},      /* */
+        {DILE_NHEAD, dilfe_nhead},          /* */
+        {DILE_RHEAD, dilfe_rhead},          /* */
+        {DILE_OHEAD, dilfe_ohead},          /* */
+        {DILE_PHEAD, dilfe_phead},          /* */
+        {DILE_FNDU2, dilfe_fndu2},          /* */
+        {DILE_GFOL, dilfe_gfol},            /* */
+        {DILE_SACT, dilfe_sact},            /* sact (#,#,#,#,#,#) */
+        {DILE_GINT, dilfe_gint},            /* getinteger(unit, idx) */
+        {DILE_PLAYERID, dilfe_shell},       /* */
+        {DILI_SET_W, dilfi_set_weight},     /* set_weight(#,#) */
+        {DILI_DISPATCH, dilfi_dispatch},    /* dispatch(message) */
+        {DILE_FNDZ, dilfe_fndz},            /* findroom(#,#) */
+        {DILE_FNDSIDX, dilfe_fndsidx},      /* */
+        {DILE_CALL, dilfe_call},            /* dilcall(#)(#,#,#) */
+        {DILE_GETAFFECTS, dilfe_getaffects} /* getaffects(#) */
+    };
+
+    // Find the largest function key for array total size
+    const auto function_with_largest_key = std::max_element(function_table.begin(), function_table.end(), function_table.value_comp());
+    const auto table_size = function_with_largest_key->first;
+
+    g_dil_runtime_function_table = std::make_unique<dil_func_ptr[]>(table_size);
+    bool missing_functions = false;
+    for (auto i = 0ul; i < table_size; ++i)
+    {
+        if (auto it = function_table.find(i); it != function_table.end())
+        {
+            g_dil_runtime_function_table[i] = it->second;
+        }
+        else
+        {
+            missing_functions = true;
+            slog(LOG_ALL, 0, "Missing function id in DIL function map [%d]", i);
+        }
+    }
+#ifdef MUD_DEBUG
+    if (missing_functions)
+    {
+        std::terminate();
+    }
+#endif
+    slog(LOG_ALL, 0, "Initialized dil function table with %d functions", table_size);
+}
 
 static int check_interrupt(dilprg *prg)
 {
@@ -1015,16 +1055,7 @@ static int check_interrupt(dilprg *prg)
                 (prg)->fp->pc++;
                 (prg)->fp->tmpl->nInstructions++;
                 assert(prg->fp->pc <= &(prg->fp->tmpl->core[prg->fp->tmpl->coresz]));
-                try
-                {
-                    auto dil_function = g_dilfe_func.at(*(prg->fp->pc - 1));
-                    dil_function(prg);
-                }
-                catch (...)
-                {
-                    // There is no function with that ID in the function map with that number
-                    assert(false);
-                }
+                g_dil_runtime_function_table[*(prg->fp->pc - 1)](prg);
             }
 
             gettimeofday(&tend, nullptr);
@@ -1257,16 +1288,7 @@ int run_dil(spec_arg *sarg)
 
         assert(prg->fp->pc <= &(prg->fp->tmpl->core[prg->fp->tmpl->coresz]));
 
-        try
-        {
-            auto dil_function = g_dilfe_func.at(*(prg->fp->pc - 1));
-            dil_function(prg);
-        }
-        catch (...)
-        {
-            // There is no function with that ID in the function map with that number
-            assert(false);
-        }
+        g_dil_runtime_function_table[*(prg->fp->pc - 1)](prg);
     }
     membug_verify(prg);
     gettimeofday(&tend, nullptr);
@@ -1893,7 +1915,7 @@ dilprg *dil_copy(char *name, unit_data *u)
         }
         else if (tmpl->argt[i] == DILV_INT)
         {
-            args[i] = (char *) skip_spaces(args[i]);
+            args[i] = (char *)skip_spaces(args[i]);
             strip_trailing_spaces(args[i]);
 
             if (str_is_number(args[i]))

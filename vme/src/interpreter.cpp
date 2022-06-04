@@ -175,23 +175,27 @@ public:
     }
 
     char str[MAX_INPUT_LENGTH + 50];
-    char pcname[PC_MAX_NAME + 1];
-    class file_index_type *fi;
+    char pcname[pc_data::PC_MAX_NAME + 1];
+    file_index_type *fi;
 }
 
 command_history_data[MAX_DEBUG_HISTORY];
 
 static int command_history_pos = 0;
 
-static void add_command_history(class unit_data *u, char *str)
+static void add_command_history(unit_data *u, char *str)
 {
-    if (IS_PC(u))
-        strcpy(command_history_data[command_history_pos].pcname, UNIT_NAME(u));
+    if (u->isPC())
+    {
+        strcpy(command_history_data[command_history_pos].pcname, u->getNames().Name());
+    }
     else
+    {
         command_history_data[command_history_pos].pcname[0] = 0;
+    }
 
     strcpy(command_history_data[command_history_pos].str, str);
-    command_history_data[command_history_pos].fi = UNIT_FILE_INDEX(u);
+    command_history_data[command_history_pos].fi = u->getFileIndex();
 
     command_history_pos = (command_history_pos + 1) % MAX_DEBUG_HISTORY;
 }
@@ -222,18 +226,18 @@ public:
     }
     ubit16 idx;
     ubit16 flags;
-    class file_index_type *fi;
+    file_index_type *fi;
 }
 
 func_history_data[MAX_DEBUG_HISTORY];
 
 static int func_history_pos = 0;
 
-void add_func_history(class unit_data *u, ubit16 idx, ubit16 flags)
+void add_func_history(unit_data *u, ubit16 idx, ubit16 flags)
 {
     func_history_data[func_history_pos].idx = idx;
     func_history_data[func_history_pos].flags = flags;
-    func_history_data[func_history_pos].fi = UNIT_FILE_INDEX(u);
+    func_history_data[func_history_pos].fi = u->getFileIndex();
 
     func_history_pos = (func_history_pos + 1) % MAX_DEBUG_HISTORY;
 }
@@ -303,7 +307,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
     char *arg = cmdCPY;
 
     /* Find first non blank */
-    arg = (char *) skip_spaces(arg);
+    arg = (char *)skip_spaces(arg);
 
     if (CHAR_DESCRIPTOR(ch))
     {
@@ -549,7 +553,7 @@ int function_activate(unit_data *u, spec_arg *sarg)
         if (sarg->fptr->isActivateOnEventFlagSet(sarg->mflags & (~SFB_AWARE | SFB_PROMPT))) // MS2020 added ()
         {
 #ifdef DEBUG_HISTORY
-            add_func_history(u, sarg->fptr->index, sarg->mflags);
+            add_func_history(u, sarg->fptr->getFunctionPointerIndex(), sarg->mflags);
 #endif
             assert(!sarg->fptr->is_destructed());
             if (g_unit_function_array[sarg->fptr->getFunctionPointerIndex()].func)

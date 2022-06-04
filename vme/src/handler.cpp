@@ -321,7 +321,7 @@ void destroy_fptr(unit_data *u, unit_fptr *f)
     f->register_destruct();
 
 #ifdef DEBUG_HISTORY
-    add_func_history(u, f->index, 0);
+    add_func_history(u, f->getFunctionPointerIndex(), 0);
 #endif
 
     sarg.owner = u;
