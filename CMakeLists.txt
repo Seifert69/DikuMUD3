@@ -52,6 +52,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Common cmake flags for all builds
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    add_compile_definitions(MUD_DEBUG)
+
     # Stronger warnings for debug build
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas -Wredundant-move -Wvirtual-move-assign -Wpessimizing-move")
 

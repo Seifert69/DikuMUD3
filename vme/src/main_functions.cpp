@@ -130,6 +130,9 @@ void run_the_game(char *srvcfg)
     slog(LOG_OFF, 0, "Named pipe setup.");
     namedpipe_setup();
 
+    slog(LOG_OFF, 0, "Dil function table setup.");
+    dil_function_table_setup();
+
     boot_db();
     g_mudboot = 0;
     g_events.process();

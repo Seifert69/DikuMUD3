@@ -142,7 +142,7 @@ void special_event(void *p1, void *p2)
             if (fptr->isActivateOnEventFlagSet(SFB_TICK))
             {
 #ifdef DEBUG_HISTORY
-                add_func_history(u, fptr->index, SFB_TICK);
+                add_func_history(u, fptr->getFunctionPointerIndex(), SFB_TICK);
 #endif
                 sarg.owner = u;
                 sarg.activator = nullptr;
