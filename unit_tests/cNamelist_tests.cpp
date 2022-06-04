@@ -1060,6 +1060,43 @@ BOOST_AUTO_TEST_CASE(IsNameRawIdx4_test)
     BOOST_TEST(ret == 1);
 }
 
+BOOST_AUTO_TEST_CASE(IsNameRawIdx5_test)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    list.AppendName("Black Dragon");
+    list.AppendName("Heimdall");
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawIdx("Black Dragon");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(ret == 1);
+}
+
+BOOST_AUTO_TEST_CASE(IsNameRawIdx6_test)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    list.AppendName("Black Dragon");
+    list.AppendName("Heimdall");
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawIdx("Black   Dragon ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(ret == 1);
+}
+
+
+BOOST_AUTO_TEST_CASE(IsNameRawIdx7_test)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    list.AppendName("Black Dragon");
+    list.AppendName("Heimdall");
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawIdx("Black   Dragon to Viggo");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(ret == 1);
+}
+
 BOOST_AUTO_TEST_CASE(IsNameRaw1_test)
 {
     cNamelist list;
@@ -1090,6 +1127,67 @@ BOOST_AUTO_TEST_CASE(IsNameRaw3_test)
     list.AppendName("Heimdall");
     ////////////////////////// Test Subject //////////////////////////////
     auto ret = list.IsNameRaw("loki     ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_REQUIRE_NE(ret, nullptr);
+    BOOST_TEST(std::string(ret) == "");
+}
+
+BOOST_AUTO_TEST_CASE(IsNameRawAbbrev1_test)
+{
+    cNamelist list;
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawAbbrev("Loki");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(ret == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(IsNameRawAbbrev2_test)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    list.AppendName("Loki");
+    list.AppendName("Heimdall");
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawAbbrev("Loki        ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_REQUIRE_NE(ret, nullptr);
+    BOOST_TEST(std::string(ret) == "");
+}
+
+BOOST_AUTO_TEST_CASE(IsNameRawAbbrev3_test)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    list.AppendName("Loki");
+    list.AppendName("Heimdall");
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawAbbrev("Lo        ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_REQUIRE_NE(ret, nullptr);
+    BOOST_TEST(std::string(ret) == "");
+}
+
+BOOST_AUTO_TEST_CASE(IsNameRawAbbrev4_test)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    list.AppendName("Loki");
+    list.AppendName("Heimdall");
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawAbbrev("Lo to Guard");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_REQUIRE_NE(ret, nullptr);
+    BOOST_TEST(std::string(ret) == "to Guard");
+}
+
+BOOST_AUTO_TEST_CASE(IsNameRawAbbrev5_test)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    list.AppendName("LOKI");
+    list.AppendName("Heimdall");
+    ////////////////////////// Test Subject //////////////////////////////
+    auto ret = list.IsNameRawAbbrev("loki     ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
     BOOST_TEST(std::string(ret) == "");

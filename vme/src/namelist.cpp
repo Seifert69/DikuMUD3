@@ -313,17 +313,30 @@ const char *cNamelist::IsNameRawAbbrev(const char *name) const
 
     for (i = 0; i < length; i++)
     {
-        for (j = 0; name[j]; j++)
+        int s = 0;
+
+        for (j = 0; name[j+s]; j++)
         {
-            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            if (tolower(name[j+s]) != tolower(namelist[i]->c_str()[j]))
             {
                 break;
             }
+
+            while (name[j+s] == ' ' && name[j+s+1] == ' ')
+            {
+                s++;
+            }
         }
 
-        if ((j > 0) && ((name[j] == 0) || isspace(name[j])))
+        if ((j > 0) && ((name[j+s] == 0) || isspace(name[j+s])))
         {
-            return name + j;
+            // Skip trailing spaces
+            while (name[j+s] == ' ')
+            {
+                j++;
+            }
+
+            return name + j + s;
         }
     }
 
@@ -394,6 +407,7 @@ const char *cNamelist::IsNameRaw(const char *name) const
     return nullptr;
 }
 
+
 /* Returns -1 if no name matches, or 0.. for the index in the namelist */
 const int cNamelist::IsNameRawIdx(const char *name)
 {
@@ -405,17 +419,24 @@ const int cNamelist::IsNameRawIdx(const char *name)
 
     for (i = 0; i < length; i++)
     {
+        int s = 0;
+
         for (j = 0; namelist[i]->c_str()[j]; j++)
         {
-            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            if (tolower(name[j+s]) != tolower(namelist[i]->c_str()[j]))
             {
                 break;
+            }
+
+            while (name[j+s] == ' ' && name[j+s+1] == ' ')
+            {
+                s++;
             }
         }
 
         if (namelist[i]->c_str()[j] == 0)
         {
-            if (!name[j] || isaspace(name[j]))
+            if (!name[j+s] || isaspace(name[j+s]))
             {
                 return i;
             }
@@ -425,15 +446,15 @@ const int cNamelist::IsNameRawIdx(const char *name)
     return -1;
 }
 
+
 const char *cNamelist::IsName(const char *name)
 {
     if (name == nullptr)
         return nullptr;
 
-    name = skip_spaces(name);
-
-    return IsNameRaw(name);
+    return IsNameRaw(skip_spaces(name));
 }
+
 
 // see if name is in the name list names some where and return name if it is
 const char *cNamelist::StrStrRaw(const char *name)
