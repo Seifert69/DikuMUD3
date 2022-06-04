@@ -360,15 +360,12 @@ const char *cNamelist::IsNameRaw(const char *name) const
     if (name == nullptr)
         return nullptr;
 
-    int s;
-
     for (i = 0; i < length; i++)
     {
-        s = 0;
+        int s = 0;
 
         for (j = 0; namelist[i]->c_str()[j]; j++)
         {
-            /*fuck look at thes isnameraw functions */
             if (tolower(name[j+s]) != tolower(namelist[i]->c_str()[j]))
             {
                 break;
@@ -384,6 +381,11 @@ const char *cNamelist::IsNameRaw(const char *name) const
         {
             if (!name[j+s] || isaspace(name[j+s]))
             {
+                // Skip trailing spaces
+                while (name[j+s] == ' ')
+                {
+                    j++;
+                }
                 return name + j +s;
             }
         }

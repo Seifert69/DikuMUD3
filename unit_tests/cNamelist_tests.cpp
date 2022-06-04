@@ -1079,7 +1079,7 @@ BOOST_AUTO_TEST_CASE(IsNameRaw2_test)
     auto ret = list.IsNameRaw("Loki        ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
-    BOOST_TEST(std::string(ret) == "        ");
+    BOOST_TEST(std::string(ret) == "");
 }
 
 BOOST_AUTO_TEST_CASE(IsNameRaw3_test)
@@ -1092,7 +1092,7 @@ BOOST_AUTO_TEST_CASE(IsNameRaw3_test)
     auto ret = list.IsNameRaw("loki     ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
-    BOOST_TEST(std::string(ret) == "     ");
+    BOOST_TEST(std::string(ret) == "");
 }
 
 BOOST_AUTO_TEST_CASE(IsName1_test)
@@ -1134,7 +1134,7 @@ BOOST_AUTO_TEST_CASE(IsName4_test)
     auto ret = list.IsName("    Loki        ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
-    BOOST_TEST(std::string(ret) == "        ");
+    BOOST_TEST(std::string(ret) == "");
 }
 
 BOOST_AUTO_TEST_CASE(IsName5_test)
@@ -1147,7 +1147,7 @@ BOOST_AUTO_TEST_CASE(IsName5_test)
     auto ret = list.IsName("    Loki to Thor ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
-    BOOST_TEST(std::string(ret) == " to Thor ");
+    BOOST_TEST(std::string(ret) == "to Thor ");
 }
 
 BOOST_AUTO_TEST_CASE(IsName6_test)
@@ -1160,7 +1160,7 @@ BOOST_AUTO_TEST_CASE(IsName6_test)
     auto ret = list.IsName("    Thor Odinsson to Loki ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
-    BOOST_TEST(std::string(ret) == " to Loki ");
+    BOOST_TEST(std::string(ret) == "to Loki ");
 }
 
 BOOST_AUTO_TEST_CASE(IsName7_test)
@@ -1173,7 +1173,7 @@ BOOST_AUTO_TEST_CASE(IsName7_test)
     auto ret = list.IsName("    Thor      Odinsson to  Loki ");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_REQUIRE_NE(ret, nullptr);
-    BOOST_TEST(std::string(ret) == " to  Loki ");
+    BOOST_TEST(std::string(ret) == "to  Loki ");
 }
 
 
