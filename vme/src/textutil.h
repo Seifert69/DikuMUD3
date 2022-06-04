@@ -69,8 +69,8 @@ char *str_ccmp_next_word(const char *buf, const char *next_word);
 char *str_next_word_copy(const char *argument, char *first_arg);
 char *str_next_word(const char *argument, char *first_arg);
 void split_fi_ref(const char *str, char *zone, char *name);
-char *skip_spaces(const char *);
-char *skip_blanks(const char *string);
+const char *skip_spaces(const char *);
+const char *skip_blanks(const char *string);
 void strip_trailing_spaces(char *str);
 void strip_trailing_blanks(char *str);
 

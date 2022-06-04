@@ -3715,7 +3715,7 @@ void dilfe_getw(dilprg *p)
                 v->atyp = DILA_EXP;
                 v->type = DILV_SP;
                 c = str_next_word_copy((char *)v1->val.ptr, buf1);
-                c = skip_spaces(c);
+                c = (char *) skip_spaces(c);
                 v->val.ptr = str_dup(buf1);
 
                 if (v1->atyp == DILA_NORM && v1->type == DILV_SPR)

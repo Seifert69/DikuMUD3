@@ -346,11 +346,12 @@ const char *cNamelist::IsNameRaw(const char *name)
 // Find a match for 'name' in this namelist.
 // Will match full name only.
 // Case insensitive.
-// Then it will return a pointer to "Boar" because there was
-// a match on the full word fallow.
+// if name has double spaces, they will be skipped and treated as a single space.
 //
 // If name is nullptr function returns nullptr.
 // If name is empty function returns nullptr (I believe).
+// Normally returns a pointer to the end of name for the match.
+//
 const char *cNamelist::IsNameRaw(const char *name) const
 {
     ubit32 i = 0;
@@ -361,20 +362,31 @@ const char *cNamelist::IsNameRaw(const char *name) const
 
     for (i = 0; i < length; i++)
     {
+        int s = 0;
+
         for (j = 0; namelist[i]->c_str()[j]; j++)
         {
-            /*fuck look at thes isnameraw functions */
-            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            if (tolower(name[j+s]) != tolower(namelist[i]->c_str()[j]))
             {
                 break;
             }
-        }
+
+            while (name[j+s] == ' ' && name[j+s+1] == ' ')
+            {
+                s++;
+            }
+       }
 
         if (namelist[i]->c_str()[j] == 0)
         {
-            if (!name[j] || isaspace(name[j]))
+            if (!name[j+s] || isaspace(name[j+s]))
             {
-                return name + j;
+                // Skip trailing spaces
+                while (name[j+s] == ' ')
+                {
+                    j++;
+                }
+                return name + j +s;
             }
         }
     }
@@ -415,23 +427,12 @@ const int cNamelist::IsNameRawIdx(const char *name)
 
 const char *cNamelist::IsName(const char *name)
 {
-    static char buf[MAX_STRING_LENGTH];
-
     if (name == nullptr)
         return nullptr;
 
     name = skip_spaces(name);
 
-    if (!name)
-    {
-        strcpy(buf, "");
-    }
-    else
-    {
-        strcpy(buf, name);
-        str_remspc(buf);
-    }
-    return IsNameRaw(buf);
+    return IsNameRaw(name);
 }
 
 // see if name is in the name list names some where and return name if it is

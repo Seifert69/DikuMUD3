@@ -204,7 +204,7 @@ void do_crash(unit_data *ch, char *argument, const command_info *cmd)
 
 void do_execute(unit_data *ch, char *argument, const command_info *cmd)
 {
-    argument = skip_spaces(argument);
+    argument = (char *) skip_spaces(argument);
 
     if (!system_check(ch, argument))
     {

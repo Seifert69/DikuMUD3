@@ -24,13 +24,13 @@ char *parse_match(const char *pData, const char *pMatch)
         return nullptr;
     }
 
-    pTmp2 = skip_blanks(pTmp1 + strlen(pMatch));
+    pTmp2 = (char *) skip_blanks(pTmp1 + strlen(pMatch));
     if (*pTmp2 != '=')
     {
         return nullptr;
     }
 
-    pTmp2 = skip_blanks(pTmp2 + 1);
+    pTmp2 = (char *) skip_blanks(pTmp2 + 1);
 
     if (*pTmp2)
     {
@@ -50,7 +50,7 @@ char *parse_name(char **pData)
 
     Buf[0] = 0;
 
-    pTmp1 = skip_blanks(*pData);
+    pTmp1 = (char *) skip_blanks(*pData);
     if (*pTmp1 != '~')
     {
         return nullptr;
@@ -85,7 +85,7 @@ int parse_num(char **pData, int *pNum)
 
     *pNum = 0;
 
-    pTmp1 = skip_blanks(*pData);
+    pTmp1 = (char *) skip_blanks(*pData);
     if (!isdigit(*pTmp1) && *pTmp1 != '+' && *pTmp1 != '-')
     {
         return FALSE;

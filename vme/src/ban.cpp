@@ -79,12 +79,12 @@ time_t ban_timer(char *arg)
     {
         int mult = 0;
 
-        arg = skip_spaces(arg);
+        arg = (char *) skip_spaces(arg);
         while (isdigit(*arg))
         {
             mult = 10 * mult + (*arg++ - '0');
         }
-        arg = skip_spaces(arg);
+        arg = (char *) skip_spaces(arg);
         switch (*arg++)
         {
             case 'd':
@@ -99,7 +99,7 @@ time_t ban_timer(char *arg)
             default:
                 return 0;
         }
-        arg = skip_spaces(arg);
+        arg = (char *) skip_spaces(arg);
         now += mult;
     }
 
