@@ -1079,9 +1079,13 @@ BOOST_AUTO_TEST_CASE(IsNameRawIdx6_test)
     list.AppendName("Black Dragon");
     list.AppendName("Heimdall");
     ////////////////////////// Test Subject //////////////////////////////
-    auto ret = list.IsNameRawIdx("Black   Dragon ");
+    auto ret = list.IsNameRawIdx("Black dragon");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_TEST(ret == 1);
+
+    ret = list.IsNameRawIdx("Black  dragon");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(ret == -1);
 }
 
 
@@ -1092,9 +1096,13 @@ BOOST_AUTO_TEST_CASE(IsNameRawIdx7_test)
     list.AppendName("Black Dragon");
     list.AppendName("Heimdall");
     ////////////////////////// Test Subject //////////////////////////////
-    auto ret = list.IsNameRawIdx("Black   Dragon to Viggo");
+    auto ret = list.IsNameRawIdx("Black dragon to Viggo");
     ////////////////////////// Test Subject //////////////////////////////
     BOOST_TEST(ret == 1);
+
+    ret = list.IsNameRawIdx("Black   Dragon to Viggo");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(ret == -1);
 }
 
 BOOST_AUTO_TEST_CASE(IsNameRaw1_test)

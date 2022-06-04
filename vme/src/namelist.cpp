@@ -288,61 +288,6 @@ cNamelist *cNamelist::Duplicate()
     return pNl;
 }
 
-// See IsNameRaw.
-// Will match non-full words, so
-//   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
-// will return " guard" because "de" matches the beginning of "deer"
-//
-const char *cNamelist::IsNameRawAbbrev(const char *name)
-{
-    return std::as_const(*this).IsNameRawAbbrev(name);
-}
-
-// See IsNameRaw.
-// Will match non-full words, so
-//   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
-// will return " guard" because "de" matches the beginning of "deer"
-//
-const char *cNamelist::IsNameRawAbbrev(const char *name) const
-{
-    ubit32 i = 0;
-    ubit32 j = 0;
-
-    if (name == nullptr)
-        return nullptr;
-
-    for (i = 0; i < length; i++)
-    {
-        int s = 0;
-
-        for (j = 0; name[j+s]; j++)
-        {
-            if (tolower(name[j+s]) != tolower(namelist[i]->c_str()[j]))
-            {
-                break;
-            }
-
-            while (name[j+s] == ' ' && name[j+s+1] == ' ')
-            {
-                s++;
-            }
-        }
-
-        if ((j > 0) && ((name[j+s] == 0) || isspace(name[j+s])))
-        {
-            // Skip trailing spaces
-            while (name[j+s] == ' ')
-            {
-                j++;
-            }
-
-            return name + j + s;
-        }
-    }
-
-    return nullptr;
-}
-
 // Find a match for 'name' in this namelist.
 // Will match full name only.
 // Case insensitive.
@@ -356,26 +301,147 @@ const char *cNamelist::IsNameRaw(const char *name)
     return std::as_const(*this).IsNameRaw(name);
 }
 
-// Find a match for 'name' in this namelist.
-// Will match full name only.
+// Find a precise match for 'name' in this namelist.
+// Will match exact name only.
 // Case insensitive.
-// if name has double spaces, they will be skipped and treated as a single space.
 //
 // If name is nullptr function returns nullptr.
-// If name is empty function returns nullptr (I believe).
-// Normally returns a pointer to the end of name for the match.
+// If name is empty "" function returns nullptr (I believe).
+// If a match returns a pointer to the end of name for the match.
 //
 const char *cNamelist::IsNameRaw(const char *name) const
 {
-    ubit32 i = 0;
-    ubit32 j = 0;
-
     if (name == nullptr)
         return nullptr;
 
-    for (i = 0; i < length; i++)
+    for (ubit32 i = 0; i < length; i++)
+    {
+        ubit32 j;
+
+        for (j = 0; namelist[i]->c_str()[j]; j++)
+        {
+            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            {
+                break;
+            }
+        }
+
+        if (namelist[i]->c_str()[j] == 0)
+        {
+            if (!name[j] || isaspace(name[j]))
+            {
+                // Skip trailing spaces
+                while (name[j] == ' ')
+                {
+                    j++;
+                }
+                return name + j;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+
+// See IsNameRaw.
+// Will match non-full words, so
+//   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
+// will return " guard" because "de" matches the beginning of "deer"
+//
+const char *cNamelist::IsNameRawAbbrev(const char *name)
+{
+    return std::as_const(*this).IsNameRawAbbrev(name);
+}
+
+// See IsNameRaw.
+// Will match non-full words, so
+//   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
+// will return "guard" because "de" matches the beginning of "deer"
+// Note it is raw so string must be pre-formatted.
+//
+const char *cNamelist::IsNameRawAbbrev(const char *name) const
+{
+    if (name == nullptr)
+        return nullptr;
+
+    for (ubit32 i = 0; i < length; i++)
+    {
+        ubit32 j;
+
+        for (j = 0; name[j]; j++)
+        {
+            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            {
+                break;
+            }
+        }
+
+        if ((j > 0) && ((name[j] == 0) || isspace(name[j])))
+        {
+            // Skip trailing spaces
+            while (name[j] == ' ')
+            {
+                j++;
+            }
+
+            return name + j;
+        }
+    }
+
+    return nullptr;
+}
+
+/* Returns -1 if no name matches, or 0.. for the index in the namelist */
+const int cNamelist::IsNameRawIdx(const char *name)
+{
+    if (name == nullptr)
+        return -1;
+
+    for (ubit32 i = 0; i < length; i++)
+    {
+        ubit32 j;
+
+        for (j = 0; namelist[i]->c_str()[j]; j++)
+        {
+            if (tolower(name[j]) != tolower(namelist[i]->c_str()[j]))
+            {
+                break;
+            }
+        }
+
+        if (namelist[i]->c_str()[j] == 0)
+        {
+            if (!name[j] || isaspace(name[j]))
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
+// Finds "name" in this namelist.
+// Will skip any prepending spaces, and will skip double spaces in name.
+// If you want a precise string match only, use IsNameRaw()
+// Retuns nullptr if no match.
+// If a namelist entry has double spaces or initial spacing, a match will be impossible.
+// Otherwise returns a pointer to name, in the location where the match ends.
+// Will skip any spaces at the end of the returned pointer.
+//
+const char *cNamelist::IsName(const char *name)
+{
+    if (name == nullptr)
+        return nullptr;
+
+    while (*name == ' ')
+        name++;
+
+    for (ubit32 i = 0; i < length; i++)
     {
         int s = 0;
+        ubit32 j;
 
         for (j = 0; namelist[i]->c_str()[j]; j++)
         {
@@ -407,18 +473,18 @@ const char *cNamelist::IsNameRaw(const char *name) const
     return nullptr;
 }
 
-
-/* Returns -1 if no name matches, or 0.. for the index in the namelist */
-const int cNamelist::IsNameRawIdx(const char *name)
+/* As IsName but for IsNameRawIdx */
+const int cNamelist::IsNameIdx(const char *name)
 {
-    ubit32 i = 0;
-    ubit32 j = 0;
-
     if (name == nullptr)
         return -1;
 
-    for (i = 0; i < length; i++)
+    while (*name == ' ')
+        name++;
+
+    for (ubit32 i = 0; i < length; i++)
     {
+        ubit32 j;
         int s = 0;
 
         for (j = 0; namelist[i]->c_str()[j]; j++)
@@ -432,7 +498,7 @@ const int cNamelist::IsNameRawIdx(const char *name)
             {
                 s++;
             }
-        }
+       }
 
         if (namelist[i]->c_str()[j] == 0)
         {
@@ -444,15 +510,6 @@ const int cNamelist::IsNameRawIdx(const char *name)
     }
 
     return -1;
-}
-
-
-const char *cNamelist::IsName(const char *name)
-{
-    if (name == nullptr)
-        return nullptr;
-
-    return IsNameRaw(skip_spaces(name));
 }
 
 
@@ -505,19 +562,6 @@ const char *cNamelist::StrStr(const char *name)
     else
     {
         return nullptr;
-    }
-}
-
-/* As IsNameRawIdx */
-const int cNamelist::IsNameIdx(const char *name)
-{
-    if (name)
-    {
-        return IsNameRawIdx(name);
-    }
-    else
-    {
-        return IsNameRawIdx("");
     }
 }
 
