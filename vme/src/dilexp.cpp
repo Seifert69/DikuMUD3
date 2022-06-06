@@ -4877,8 +4877,8 @@ void dilfe_fndr(dilprg *p)
     dilval *v = new dilval;
     /* Find a room */
     dilval *v1 = p->stack.pop();
-    char buf1[MAX_STRING_LENGTH];
-    char buf2[MAX_STRING_LENGTH];
+    char zone[MAX_STRING_LENGTH];
+    char name[MAX_STRING_LENGTH];
 
     switch (dil_getval(v1))
     {
@@ -4888,12 +4888,12 @@ void dilfe_fndr(dilprg *p)
         case DILV_SP:
             v->atyp = DILA_NORM;
             v->type = DILV_UP;
-            *buf1 = '\0';
-            *buf2 = '\0';
+            *zone = '\0';
+            *name = '\0';
             if (v1->val.ptr)
             {
-                split_fi_ref((char *)v1->val.ptr, buf1, buf2);
-                v->val.ptr = world_room(buf1, buf2);
+                split_fi_ref((char *)v1->val.ptr, zone, name);
+                v->val.ptr = world_room(zone, name);
                 if (v->val.ptr == nullptr)
                 {
                     v->type = DILV_NULL; /* not found */
@@ -4964,8 +4964,8 @@ void dilfe_fnds2(dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
-    char buf1[MAX_STRING_LENGTH];
-    char buf2[MAX_STRING_LENGTH];
+    char zone[MAX_STRING_LENGTH];
+    char name[MAX_STRING_LENGTH];
 
     v->type = DILV_UP;
     switch (dil_getval(v1))
@@ -4991,10 +4991,10 @@ void dilfe_fnds2(dilprg *p)
                                 case DILV_INT:
                                 {
                                     v->atyp = DILA_NORM;
-                                    *buf1 = '\0';
-                                    *buf2 = '\0';
-                                    split_fi_ref((char *)v2->val.ptr, buf1, buf2);
-                                    file_index_type *fi = find_file_index(buf1, buf2);
+                                    *zone = '\0';
+                                    *name = '\0';
+                                    split_fi_ref((char *)v2->val.ptr, zone, name);
+                                    file_index_type *fi = find_file_index(zone, name);
                                     if (fi)
                                     {
                                         v->val.ptr = fi->find_symbolic_instance_ref((unit_data *)v1->val.ptr, v3->val.num);
@@ -5056,8 +5056,8 @@ void dilfe_fndsidx(dilprg *p)
     /* Find a symbolic unit */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char buf1[MAX_STRING_LENGTH];
-    char buf2[MAX_STRING_LENGTH];
+    char zone[MAX_STRING_LENGTH];
+    char name[MAX_STRING_LENGTH];
 
     v->type = DILV_UP;
     switch (dil_getval(v1))
@@ -5073,11 +5073,11 @@ void dilfe_fndsidx(dilprg *p)
                 {
                     case DILV_INT:
                         v->atyp = DILA_NORM;
-                        *buf1 = '\0';
-                        *buf2 = '\0';
-                        split_fi_ref((const char *)v1->val.ptr, buf1, buf2);
+                        *zone = '\0';
+                        *name = '\0';
+                        split_fi_ref((const char *)v1->val.ptr, zone, name);
 
-                        v->val.ptr = find_symbolic_idx(buf1, buf2, v2->val.num);
+                        v->val.ptr = find_symbolic_idx(zone, name, v2->val.num);
 
                         if (v->val.ptr == nullptr)
                         {
@@ -5119,8 +5119,8 @@ void dilfe_fnds(dilprg *p)
     dilval *v = new dilval;
     /* Find a symbolic unit */
     dilval *v1 = p->stack.pop();
-    char buf1[MAX_STRING_LENGTH];
-    char buf2[MAX_STRING_LENGTH];
+    char zone[MAX_STRING_LENGTH];
+    char name[MAX_STRING_LENGTH];
 
     switch (dil_getval(v1))
     {
@@ -5133,10 +5133,10 @@ void dilfe_fnds(dilprg *p)
         case DILV_SP:
             v->atyp = DILA_NORM;
             v->type = DILV_UP;
-            *buf1 = '\0';
-            *buf2 = '\0';
-            split_fi_ref((char *)v1->val.ptr, buf1, buf2);
-            v->val.ptr = find_symbolic(buf1, buf2);
+            *zone = '\0';
+            *name = '\0';
+            split_fi_ref((char *)v1->val.ptr, zone, name);
+            v->val.ptr = find_symbolic(zone, name);
             if (v->val.ptr == nullptr)
             {
                 v->type = DILV_NULL; /* not found */
