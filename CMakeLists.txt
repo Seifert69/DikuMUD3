@@ -64,6 +64,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 else ()
     # Hide some warnings for a release build
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+    set(O2 TRUE)
 endif ()
 
 if (WERROR)
