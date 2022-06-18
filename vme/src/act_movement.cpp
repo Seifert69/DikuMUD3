@@ -572,8 +572,8 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                 slog(LOG_ALL,
                      0,
                      "Ocean escape from %s@%s direction %d adding 150 to difficulty.",
-                     UNIT_FI_NAME(room_from),
-                     UNIT_FI_ZONENAME(room_from),
+                     room_from->getFileIndexName(),
+                     room_from->getFileIndexZoneName(),
                      direction);
                 diff += 150;
                 act("You really should have been in a boat here, swimming is incredible difficult.",
@@ -632,7 +632,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     {
         int need_movement = (g_movement_loss[ROOM_LANDSCAPE(room_from)] + g_movement_loss[ROOM_LANDSCAPE(room_to)]) / 2;
 
-        int overweight = UNIT_CONTAINING_W(ch) - char_carry_w_limit(mover);
+        int overweight = ch->getContainingWeight() - char_carry_w_limit(mover);
 
         if (overweight > 0)
         {

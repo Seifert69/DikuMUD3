@@ -208,8 +208,8 @@ static void dump_command_history(void)
         slog(LOG_ALL,
              0,
              "CMD %s@%s [%s]",
-             command_history_data[i].pcname ? command_history_data[i].pcname : FI_NAME(command_history_data[i].fi),
-             command_history_data[i].pcname ? "" : FI_ZONENAME(command_history_data[i].fi),
+             command_history_data[i].pcname ? command_history_data[i].pcname : command_history_data[i].fi->getName(),
+             command_history_data[i].pcname ? "" : command_history_data[i].fi->getZone()->getName(),
              command_history_data[i].str);
         i = (i + 1) % MAX_DEBUG_HISTORY;
     }
@@ -252,8 +252,8 @@ static void dump_func_history(void)
         slog(LOG_ALL,
              0,
              "FUNC %s@%s: '%s (%d) %s (%d)'",
-             FI_NAME(func_history_data[i].fi),
-             FI_ZONENAME(func_history_data[i].fi),
+             func_history_data[i].fi->getName(),
+             func_history_data[i].fi->getZone()->getName(),
              g_unit_function_array[func_history_data[i].idx].name,
              func_history_data[i].idx,
              sprintbit(bits, func_history_data[i].flags, g_sfb_flags),
@@ -793,7 +793,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
             if (u != ch)
             {
-                if (UNIT_IS_TRANSPARENT(u))
+                if (u->isTransparent())
                 {
                     for (uu = u->getUnitContains(); uu; uu = nextt)
                     {
@@ -820,7 +820,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         }
 
         /* specials outside room */
-        if (ch->getUnitIn() && UNIT_IS_TRANSPARENT(ch->getUnitIn()) && ch->getUnitIn()->getUnitIn())
+        if (ch->getUnitIn() && ch->getUnitIn()->isTransparent() && ch->getUnitIn()->getUnitIn())
         {
             /* special in outside room? */
             if (ch->getUnitIn()->getUnitIn()->getFunctionPointer())
@@ -850,7 +850,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
                     if (u != ch->getUnitIn())
                     {
-                        if (UNIT_IS_TRANSPARENT(u))
+                        if (u->isTransparent())
                         {
                             for (uu = u->getUnitContains(); uu; uu = nextt)
                             {

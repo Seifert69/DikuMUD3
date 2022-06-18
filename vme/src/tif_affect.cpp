@@ -1172,7 +1172,12 @@ void tif_speed_off(unit_affected_type *af, unit_data *unit)
 
 void tif_naught(unit_affected_type *af, unit_data *unit)
 {
-    slog(LOG_ALL, 0, "Obsoleted affect called with ID %d on %s@%s.", af->getApplyFI(), UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+    slog(LOG_ALL,
+         0,
+         "Obsoleted affect called with ID %d on %s@%s.",
+         af->getApplyFI(),
+         unit->getFileIndexName(),
+         unit->getFileIndexZoneName());
 }
 
 tick_function_type g_tif[] = {{"Decay Corpse", tif_decay_corpse}, // 0

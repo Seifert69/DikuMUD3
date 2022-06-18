@@ -500,7 +500,7 @@ void modify_bright(unit_data *unit, int bright)
         /* of transparancy.  */
         modify_bright(in, bright);
     }
-    else if (in && UNIT_IS_TRANSPARENT(in))
+    else if (in && in->isTransparent())
     {
         /* the unit is inside a transperant unit, so it lights up too */
         /* this works with actions in unit-up/down                    */
@@ -669,14 +669,18 @@ zone_type *unit_zone(const unit_data *unit)
             //      assert(IS_ROOM(unit));
             if (!unit->isRoom())
             {
-                slog(LOG_ALL, 0, "ZONE: FATAL(1): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
+                slog(LOG_ALL,
+                     0,
+                     "ZONE: FATAL(1): %s@%s IN NO ROOMS WHILE NOT A ROOM!!",
+                     org->getFileIndexName(),
+                     org->getFileIndexZoneName());
                 return nullptr;
             }
             return unit->getFileIndex()->getZone();
         }
     }
 
-    slog(LOG_ALL, 0, "ZONE: FATAL(2): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
+    slog(LOG_ALL, 0, "ZONE: FATAL(2): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", org->getFileIndexName(), org->getFileIndexZoneName());
     return nullptr;
 }
 
@@ -690,16 +694,16 @@ std::string unit_trace_up(unit_data *unit)
     std::string t;
 
     s = "";
-    s.append(UNIT_FI_NAME(unit));
+    s.append(unit->getFileIndexName());
     s.append("@");
-    s.append(UNIT_FI_ZONENAME(unit));
+    s.append(unit->getFileIndexZoneName());
 
     for (u = unit->getUnitIn(); u; u = u->getUnitIn())
     {
         t = " in ";
-        t.append(UNIT_FI_NAME(u));
+        t.append(u->getFileIndexName());
         t.append("@");
-        t.append(UNIT_FI_ZONENAME(u));
+        t.append(u->getFileIndexZoneName());
         s.append(t);
     }
 
@@ -723,7 +727,7 @@ unit_data *unit_room(unit_data *unit)
         }
     }
 
-    slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
+    slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", org->getFileIndexName(), org->getFileIndexZoneName());
     return nullptr;
 }
 
@@ -746,7 +750,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
     selfb = bright - unit->getTransparentLightOutput(); /* brightness excl. trans   */
 
     in->changeNumberOfActiveLightSourcesBy(-1 * bright); // Subtract Light
-    if (UNIT_IS_TRANSPARENT(in))
+    if (in->isTransparent())
     {
         in->changeTransparentLightOutputBy(-1 * selfb);
         in->changeLightOutputBy(-1 * selfb);
@@ -756,7 +760,7 @@ void intern_unit_up(unit_data *unit, ubit1 pile)
         toin->changeNumberOfActiveLightSourcesBy(bright);
     }
 
-    if (toin && UNIT_IS_TRANSPARENT(toin))
+    if (toin && toin->isTransparent())
     {
         toin->changeLightOutputBy(selfb);
         toin->changeTransparentLightOutputBy(selfb);
@@ -836,7 +840,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
     selfb = bright - unit->getTransparentLightOutput();
 
     to->changeNumberOfActiveLightSourcesBy(bright);
-    if (UNIT_IS_TRANSPARENT(to))
+    if (to->isTransparent())
     {
         to->changeLightOutputBy(selfb);
         to->changeTransparentLightOutputBy(selfb);
@@ -846,7 +850,7 @@ void intern_unit_down(unit_data *unit, unit_data *to, ubit1 pile)
         in->changeNumberOfActiveLightSourcesBy(-1 * bright);
     }
 
-    if (in && UNIT_IS_TRANSPARENT(in))
+    if (in && in->isTransparent())
     {
         in->changeLightOutputBy(-1 * selfb);
         in->changeTransparentLightOutputBy(-1 * selfb);

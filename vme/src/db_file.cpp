@@ -442,10 +442,20 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         /* Prevent all execution */
         SET_BIT(prg->flags, DILFL_EXECUTING);
         tmpl->flags |= DILFL_FREEME;
-        if (owner->getFileIndex())  
-            slog(LOG_ALL, 0, "bread_dil(): Unit %s@%s DIL template [%s] no longer exists. bNameRead = %d.", owner->getFileIndex()->getName(), owner->getFileIndex()->getZone(), name, bNameRead);
+        if (owner->getFileIndex())
+        {
+            slog(LOG_ALL,
+                 0,
+                 "bread_dil(): Unit %s@%s DIL template [%s] no longer exists. bNameRead = %d.",
+                 owner->getFileIndex()->getName(),
+                 owner->getFileIndex()->getZone(),
+                 name,
+                 bNameRead);
+        }
         else
+        {
             slog(LOG_ALL, 0, "bread_dil(): Unit has no file index DIL template [%s] no longer exists. bNameRead = %d.", name, bNameRead);
+        }
     }
 
     prg->waitcmd = WAITCMD_MAXINST - 1; /* Command countdown          */
@@ -737,8 +747,8 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
                      0,
                      "WARNING: HEARTBEAT LOW (%d) SAVE on %s@%s \n",
                      fptr->getHeartBeat(),
-                     UNIT_FI_NAME(owner),
-                     UNIT_FI_ZONENAME(owner));
+                     owner->getFileIndexName(),
+                     owner->getFileIndexZoneName());
             }
             else
             {
@@ -1190,8 +1200,8 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 
         if (inu && inu->getFileIndex())
         {
-            pBuf->AppendString(UNIT_FI_ZONENAME(inu));
-            pBuf->AppendString(UNIT_FI_NAME(inu));
+            pBuf->AppendString(inu->getFileIndexZoneName());
+            pBuf->AppendString(inu->getFileIndexName());
         }
         else
         {
@@ -1223,7 +1233,7 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
             pBuf->Append16(CHAR_OFFENSIVE(u));
             pBuf->Append16(CHAR_DEFENSIVE(u));
 
-            pBuf->Append8(CHAR_SEX(u));
+            pBuf->Append8(u->getSex());
             pBuf->Append8(CHAR_LEVEL(u));
             pBuf->Append8(CHAR_POS(u));
 

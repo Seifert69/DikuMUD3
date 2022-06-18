@@ -258,7 +258,7 @@ void send_to_zone_outdoor(const zone_type *z, const char *messg)
     {
         for (i = g_descriptor_list; i; i = i->getNext())
         {
-            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && unit_zone(i->cgetCharacter()) == z &&
+            if (descriptor_is_playing(i) && i->cgetCharacter()->isOutside() && unit_zone(i->cgetCharacter()) == z &&
                 CHAR_AWAKE(i->cgetCharacter()) && !IS_SET(i->cgetCharacter()->getUnitIn()->getUnitFlags(), UNIT_FL_NO_WEATHER) &&
                 !IS_SET(unit_room(i->getCharacter())->getUnitFlags(), UNIT_FL_NO_WEATHER))
             {
@@ -276,7 +276,7 @@ void send_to_outdoor(const char *messg)
     {
         for (i = g_descriptor_list; i; i = i->getNext())
         {
-            if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->cgetCharacter()) && CHAR_AWAKE(i->cgetCharacter()) &&
+            if (descriptor_is_playing(i) && i->cgetCharacter()->isOutside() && CHAR_AWAKE(i->cgetCharacter()) &&
                 !IS_SET(i->cgetCharacter()->getUnitIn()->getUnitFlags(), UNIT_FL_NO_WEATHER) &&
                 !IS_SET(unit_room(i->getCharacter())->getUnitFlags(), UNIT_FL_NO_WEATHER))
             {
@@ -632,7 +632,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
         {
             return;
         }
-        if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to))
+        if (to->getNumberOfCharactersInsideUnit() && to->isTransparent())
         {
             for (u = to->getUnitContains(); u; u = u->getNext())
             {
@@ -646,7 +646,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     }
 
     /* other units outside transparent unit */
-    if (arg1.m_u->getUnitIn() && (to = arg1.m_u->getUnitIn()->getUnitIn()) && UNIT_IS_TRANSPARENT(arg1.m_u->getUnitIn()))
+    if (arg1.m_u->getUnitIn() && (to = arg1.m_u->getUnitIn()->getUnitIn()) && arg1.m_u->getUnitIn()->isTransparent())
     {
         for (to = to->getUnitContains(); to; to = to->getNext())
         {
@@ -656,7 +656,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
             }
 
-            if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to) && to != arg1.m_u->getUnitIn())
+            if (to->getNumberOfCharactersInsideUnit() && to->isTransparent() && to != arg1.m_u->getUnitIn())
             {
                 for (u = to->getUnitContains(); u; u = u->getNext())
                 {
@@ -730,7 +730,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
             return;
         }
 
-        if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to))
+        if (to->getNumberOfCharactersInsideUnit() && to->isTransparent())
         {
             for (u = to->getUnitContains(); u; u = u->getNext())
             {
@@ -751,7 +751,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     }
 
     /* other units outside transparent unit */
-    if ((to = arg1.m_u->getUnitIn()->getUnitIn()) && UNIT_IS_TRANSPARENT(arg1.m_u->getUnitIn()))
+    if ((to = arg1.m_u->getUnitIn()->getUnitIn()) && arg1.m_u->getUnitIn()->isTransparent())
     {
         for (to = to->getUnitContains(); to; to = to->getNext())
         {
@@ -767,7 +767,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
             }
 
-            if (to->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(to) && to != arg1.m_u->getUnitIn())
+            if (to->getNumberOfCharactersInsideUnit() && to->isTransparent() && to != arg1.m_u->getUnitIn())
             {
                 for (u = to->getUnitContains(); u; u = u->getNext())
                 {

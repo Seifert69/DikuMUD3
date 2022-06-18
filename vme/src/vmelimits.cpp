@@ -57,7 +57,7 @@ int char_carry_w_limit(unit_data *ch)
 
 int char_can_carry_w(unit_data *ch, int weight)
 {
-    return (char_carry_w_limit(ch) >= (UNIT_CONTAINING_W(ch) + weight));
+    return (char_carry_w_limit(ch) >= (ch->getContainingWeight() + weight));
 }
 
 int char_can_carry_unit(unit_data *ch, unit_data *unit)

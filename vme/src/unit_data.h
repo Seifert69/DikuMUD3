@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constants.h"
 #include "essential.h"
 #include "extra.h"
 #include "file_index_type.h"
@@ -7,6 +8,8 @@
 #include "unit_affected_type.h"
 #include "unit_dil_affected_type.h"
 #include "unit_fptr.h"
+#include "weather.h"
+#include "zone_type.h"
 
 /**
  * Creates a new unit of the specified type
@@ -55,6 +58,30 @@ public:
     ///@}
 
     /**
+     * Is functions
+     * @{
+     */
+    bool isTransparent() const { return !isBuried() && isUnitFlagSet(UNIT_FL_TRANS) && !isClosed(); }
+    bool isClosed() const { return isOpenFlagSet(EX_CLOSED); }
+    bool isBuried() const { return isUnitFlagSet(UNIT_FL_BURIED); }
+    bool isGood() const { return m_alignment >= 350; }
+    bool isEvil() const { return m_alignment <= -350; }
+    bool isNeutral() const { return !isGood() && !isEvil(); }
+    bool isOutside() const { return !m_outside->isUnitFlagSet(UNIT_FL_INDOORS); }
+    bool isWornOn(ubit32 part) const { return IS_SET(m_manipulate, part); }
+    bool isDark() const { return getTotalLightValue() < 0; }
+    bool isLight() const { return getTotalLightValue() >= 0; }
+    ///@}
+
+    sbit8 getOutsideLight() const { return !isUnitFlagSet(UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
+    int getTotalLightValue() const { return m_light + getOutsideLight() + (m_outside ? m_outside->m_light : 0); }
+
+    /**
+     * @return Characters sex or neutral if not a character
+     */
+    virtual ubit8 getSex() const { return SEX_NEUTRAL; }
+
+    /**
      * @name Name related code
      * @{
      */
@@ -85,6 +112,22 @@ public:
     file_index_type *getFileIndex();
     const file_index_type *getFileIndex() const;
     void setFileIndex(file_index_type *value);
+    [[nodiscard]] const char *getFileIndexZoneName() const
+    {
+        if (m_fi)
+        {
+            return m_fi->getZone()->getName();
+        }
+        return "NO-ZONE";
+    }
+    [[nodiscard]] const char *getFileIndexName() const
+    {
+        if (m_fi)
+        {
+            return m_fi->getName();
+        }
+        return "NO-NAME";
+    }
     /// @}
 
     /**
@@ -140,6 +183,7 @@ public:
     void setAllUnitFlags(ubit16 value);
     void setUnitFlag(ubit16 value);
     void removeUnitFlag(ubit16 value);
+    bool isUnitFlagSet(int flag) const { return IS_SET(m_flags, flag); }
     /// @}
 
     /**
@@ -153,6 +197,8 @@ public:
     void reduceWeightBy(sbit32 value);
     void increaseWeightBy(sbit32 value);
     void setWeight(sbit32 value);
+
+    sbit32 getContainingWeight() const { return m_weight - m_base_weight; }
     /// @}
 
     /**
@@ -182,6 +228,7 @@ public:
     ubit8 *getOpenFlagsPtr();
     void setAllOpenFlags(ubit8 value);
     void setOpenFlag(ubit8 value);
+    bool isOpenFlagSet(ubit8 flag) const { return IS_SET(m_open_flags, flag); }
 
     ubit8 getOpenDifficulty() const;
     ubit8 *getOpenDifficultyPtr();

@@ -54,71 +54,71 @@ static int getkeyword(unit_data *obj)
 {
     int keyword = -2;
 
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_SHIELD))
+    if (obj->isWornOn(MANIPULATE_WEAR_SHIELD))
     {
         keyword = WEAR_SHIELD;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_FINGER))
+    if (obj->isWornOn(MANIPULATE_WEAR_FINGER))
     {
         keyword = WEAR_FINGER_L;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_NECK))
+    if (obj->isWornOn(MANIPULATE_WEAR_NECK))
     {
         keyword = WEAR_NECK_1;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_WRIST))
+    if (obj->isWornOn(MANIPULATE_WEAR_WRIST))
     {
         keyword = WEAR_WRIST_L;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_WAIST))
+    if (obj->isWornOn(MANIPULATE_WEAR_WAIST))
     {
         keyword = WEAR_WAIST;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_ARMS))
+    if (obj->isWornOn(MANIPULATE_WEAR_ARMS))
     {
         keyword = WEAR_ARMS;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_HANDS))
+    if (obj->isWornOn(MANIPULATE_WEAR_HANDS))
     {
         keyword = WEAR_HANDS;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_FEET))
+    if (obj->isWornOn(MANIPULATE_WEAR_FEET))
     {
         keyword = WEAR_FEET;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_LEGS))
+    if (obj->isWornOn(MANIPULATE_WEAR_LEGS))
     {
         keyword = WEAR_LEGS;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_ABOUT))
+    if (obj->isWornOn(MANIPULATE_WEAR_ABOUT))
     {
         keyword = WEAR_ABOUT;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_HEAD))
+    if (obj->isWornOn(MANIPULATE_WEAR_HEAD))
     {
         keyword = WEAR_HEAD;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_BODY))
+    if (obj->isWornOn(MANIPULATE_WEAR_BODY))
     {
         keyword = WEAR_BODY;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WIELD))
+    if (obj->isWornOn(MANIPULATE_WIELD))
     {
         keyword = WEAR_WIELD;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_CHEST))
+    if (obj->isWornOn(MANIPULATE_WEAR_CHEST))
     {
         keyword = WEAR_CHEST;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_BACK))
+    if (obj->isWornOn(MANIPULATE_WEAR_BACK))
     {
         keyword = WEAR_BACK;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_EAR))
+    if (obj->isWornOn(MANIPULATE_WEAR_EAR))
     {
         keyword = WEAR_EAR_L;
     }
-    if (UNIT_WEAR(obj, MANIPULATE_WEAR_ANKLE))
+    if (obj->isWornOn(MANIPULATE_WEAR_ANKLE))
     {
         keyword = WEAR_ANKLE_L;
     }

@@ -7,9 +7,10 @@
 #pragma once
 
 #include "time_info_data.h"
-#include "unit_data.h"
 
 #include <ctime>
+
+class unit_data;
 
 time_info_data real_time_passed(time_t t2, time_t t1);
 time_info_data mud_date();

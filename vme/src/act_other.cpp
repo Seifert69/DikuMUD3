@@ -65,7 +65,7 @@ void race_adjust(unit_data *ch)
 
     my_race = &g_race_info[CHAR_RACE(ch)];
 
-    if (CHAR_SEX(ch) == SEX_MALE)
+    if (ch->getSex() == SEX_MALE)
     {
         sex_race = &my_race->male;
     }
@@ -185,7 +185,7 @@ void start_player(unit_data *ch)
     UPC(ch)->setPCFlag(PC_ECHO);
     UPC(ch)->setPCFlag(PC_PROMPT);
 
-    if (!UNIT_IS_EVIL(ch))
+    if (!ch->isEvil())
     {
         UCHAR(ch)->setCharacterFlag(CHAR_PEACEFUL);
     }

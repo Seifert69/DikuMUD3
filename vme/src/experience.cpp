@@ -144,7 +144,7 @@ int dikuii_spell_bonus(unit_data *att,
         att_bonus -= 12;
     }
 
-    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((att->isGood() && affected_by_spell(def, ID_PROT_GOOD)) || (att->isEvil() && affected_by_spell(def, ID_PROT_EVIL)))
     {
         def_bonus += 10;
     }
@@ -311,7 +311,7 @@ int dikuii_melee_bonus(unit_data *att,
         att_bonus += 25;
     }
 
-    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((att->isGood() && affected_by_spell(def, ID_PROT_GOOD)) || (att->isEvil() && affected_by_spell(def, ID_PROT_EVIL)))
     {
         def_bonus += 20;
     }
@@ -433,7 +433,7 @@ int spell_bonus(unit_data *att,
         }
     }
 
-    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((att->isGood() && affected_by_spell(def, ID_PROT_GOOD)) || (att->isEvil() && affected_by_spell(def, ID_PROT_EVIL)))
     {
         if (pStat)
         {
@@ -730,7 +730,7 @@ int melee_bonus(unit_data *att,
         }
     }
 
-    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((att->isGood() && affected_by_spell(def, ID_PROT_GOOD)) || (att->isEvil() && affected_by_spell(def, ID_PROT_EVIL)))
     {
         def_bonus += 20;
 

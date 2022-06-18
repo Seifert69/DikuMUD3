@@ -147,9 +147,9 @@ std::string unit_data::json()
     std::string s;
     std::string t;
 
-    t = UNIT_FI_NAME(this);
+    t = getFileIndexName();
     t.append("@");
-    t.append(UNIT_FI_ZONENAME(this));
+    t.append(getFileIndexZoneName());
 
     s = "{";
     s.append(str_json("idx", t));
@@ -216,9 +216,9 @@ std::string unit_data::json()
                 s.append(": {\n");
                 if (UROOM(this)->getRoomDirectionDataForExit(i)->getToRoom())
                 {
-                    t = UNIT_FI_NAME(ROOM_EXIT(this, i)->getToRoom());
+                    t = ROOM_EXIT(this, i)->getToRoom()->getFileIndexName();
                     t.append("@");
-                    t.append(UNIT_FI_ZONENAME(UROOM(this)->getRoomDirectionDataForExit(i)->getToRoom()));
+                    t.append(UROOM(this)->getRoomDirectionDataForExit(i)->getToRoom()->getFileIndexZoneName());
                     s.append(str_json("toroom", t));
                     s.append(",\n");
                 }

@@ -161,8 +161,8 @@ int spell_perform(int spell_no,
                  "Illegal spell type (%d/%d): used on (%s@%s)!",
                  spell_no,
                  spell_type,
-                 UNIT_FI_NAME(medium),
-                 UNIT_FI_ZONENAME(medium));
+                 medium->getFileIndexName(),
+                 medium->getFileIndexZoneName());
         return -1;
     }
 
@@ -269,7 +269,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
 
     c = argument;
     spl = search_block_abbrevs(c, g_SplColl.text, (const char **)&argument);
-    argument = (char *) skip_spaces(argument);
+    argument = (char *)skip_spaces(argument);
 
     if (spl == -1)
     {
@@ -555,7 +555,7 @@ static void spell_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = (char *) skip_blanks(pCh + 1);
+            pCh = (char *)skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
         }
 

@@ -249,17 +249,15 @@ void eventqueue::process()
             tfunc = tmp_event->func;
             int bDestructed = 0;
 
-            if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->getData() &&
-                (((unit_fptr *)tmp_event->arg2)->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
+            auto *fptr = reinterpret_cast<unit_fptr *>(tmp_event->arg2);
+            if (tfunc == special_event && fptr->getData() && fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
             {
                 strcpy(dilname, "NO NAME");
                 strcpy(dilzname, "NO ZONE");
                 strcpy(diloname, "NO NAME");
                 strcpy(dilozname, "NO ZONE");
 
-                unit_data *u = (unit_data *)tmp_event->arg1;
-                unit_fptr *fptr = (unit_fptr *)tmp_event->arg2;
-
+                auto *u = reinterpret_cast<unit_data *>(tmp_event->arg1);
                 membug_verify(u);
                 membug_verify(fptr);
 
@@ -287,8 +285,8 @@ void eventqueue::process()
                     {
                         strcpy(dilzname, prg->fp->tmpl->zone->getName());
                     }
-                    strcpy(diloname, tmp_event->arg1 ? UNIT_FI_NAME((unit_data *)(tmp_event->arg1)) : "NO NAME");
-                    strcpy(dilozname, tmp_event->arg1 ? UNIT_FI_ZONENAME((unit_data *)(tmp_event->arg1)) : "NO ZONE");
+                    strcpy(diloname, u ? u->getFileIndexName() : "NO NAME");
+                    strcpy(dilozname, u ? u->getFileIndexZoneName() : "NO ZONE");
                 }
             }
 

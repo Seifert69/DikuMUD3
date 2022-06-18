@@ -65,7 +65,7 @@ static ubit1 same_surroundings_room(const unit_data *room, const unit_data *u2)
         return TRUE;
     }
 
-    if (UNIT_IS_TRANSPARENT(u2->getUnitIn()) && u2->getUnitIn()->getUnitIn() == room)
+    if (u2->getUnitIn()->isTransparent() && u2->getUnitIn()->getUnitIn() == room)
     {
         return TRUE;
     }
@@ -89,17 +89,17 @@ ubit1 same_surroundings(const unit_data *u1, const unit_data *u2)
         return TRUE;
     }
 
-    if (UNIT_IS_TRANSPARENT(u1->getUnitIn()) && u1->getUnitIn()->getUnitIn() == u2->getUnitIn())
+    if (u1->getUnitIn()->isTransparent() && u1->getUnitIn()->getUnitIn() == u2->getUnitIn())
     {
         return TRUE;
     }
 
-    if (UNIT_IS_TRANSPARENT(u2->getUnitIn()) && u2->getUnitIn()->getUnitIn() == u1->getUnitIn())
+    if (u2->getUnitIn()->isTransparent() && u2->getUnitIn()->getUnitIn() == u1->getUnitIn())
     {
         return TRUE;
     }
 
-    if (UNIT_IS_TRANSPARENT(u1->getUnitIn()) && UNIT_IS_TRANSPARENT(u2->getUnitIn()) &&
+    if (u1->getUnitIn()->isTransparent() && u2->getUnitIn()->isTransparent() &&
         u1->getUnitIn()->getUnitIn() == u2->getUnitIn()->getUnitIn())
     {
         return TRUE;
@@ -423,7 +423,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
 
         if (ch->getUnitIn() == nullptr)
         {
-            slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(ch), UNIT_FI_ZONENAME(ch));
+            slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", ch->getFileIndexName(), ch->getFileIndexZoneName());
         }
         else
         {
@@ -465,7 +465,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                     }
 
                     /* check tranparancy */
-                    if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
+                    if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
                     {
                         for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                         {
@@ -490,7 +490,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
             } /* End for */
 
             /* Run through units in local environment if upwards transparent */
-            if ((u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn())) && UNIT_IS_TRANSPARENT(ch->getUnitIn()))
+            if ((u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn())) && ch->getUnitIn()->isTransparent())
             {
                 for (u = u->getUnitContains(); u; u = u->getNext())
                 {
@@ -511,7 +511,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                         }
 
                         /* check down into transparent unit */
-                        if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
+                        if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
                         {
                             for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                             {
@@ -710,7 +710,11 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
             if (ch->getUnitIn() == nullptr)
             {
-                slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(ch), UNIT_FI_ZONENAME(ch));
+                slog(LOG_ALL,
+                     0,
+                     "%s@%s is not in a room while in find_unit_general<br/>",
+                     ch->getFileIndexName(),
+                     ch->getFileIndexZoneName());
             }
             else
             {
@@ -751,7 +755,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                         }
 
                         /* check tranparancy */
-                        if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
+                        if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
                         {
                             for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                             {
@@ -776,7 +780,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                 } /* End for */
 
                 /* Run through units in local environment if upwards transparent */
-                if ((u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn())) && UNIT_IS_TRANSPARENT(ch->getUnitIn()))
+                if ((u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn())) && ch->getUnitIn()->isTransparent())
                 {
                     for (u = u->getUnitContains(); u; u = u->getNext())
                     {
@@ -797,7 +801,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                             }
 
                             /* check down into transparent unit */
-                            if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
+                            if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
                             {
                                 for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                                 {
@@ -1041,7 +1045,7 @@ void scan4_unit_room(unit_data *room, ubit8 type)
         }
 
         /* down into transparent unit */
-        if (UNIT_IS_TRANSPARENT(u))
+        if (u->isTransparent())
         {
             for (uu = u->getUnitContains(); uu; uu = uu->getNext())
             {
@@ -1094,7 +1098,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
         }
 
         /* down into transparent unit */
-        if (UNIT_IS_TRANSPARENT(u))
+        if (u->isTransparent())
         {
             for (uu = u->getUnitContains(); uu; uu = uu->getNext())
             {
@@ -1111,7 +1115,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
     }
 
     /* up through transparent unit */
-    if (UNIT_IS_TRANSPARENT(ch->getUnitIn()) && ch->getUnitIn()->getUnitIn())
+    if (ch->getUnitIn()->isTransparent() && ch->getUnitIn()->getUnitIn())
     {
         for (u = ch->getUnitIn()->getUnitIn()->getUnitContains(); u; u = u->getNext())
         {
@@ -1125,7 +1129,7 @@ void scan4_unit(unit_data *ch, ubit8 type)
             }
 
             /* down into transparent unit */
-            if (UNIT_IS_TRANSPARENT(u) && u != ch->getUnitIn())
+            if (u->isTransparent() && u != ch->getUnitIn())
             {
                 for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                 {
@@ -1162,7 +1166,7 @@ static unit_data *scan4_ref_room(unit_data *room, unit_data *fu)
 
     for (u = room->getUnitContains(); u; u = u->getNext())
     {
-        if (((u->isRoom() || u->isObj()) && (!UNIT_IS_TRANSPARENT(u))))
+        if (((u->isRoom() || u->isObj()) && (!u->isTransparent())))
         {
             continue;
         }
@@ -1187,7 +1191,7 @@ unit_data *scan4_ref(unit_data *ch, unit_data *fu)
     {
         return (scan4_ref_room(ch, fu));
     }
-    else if (((ch->getUnitIn()->isRoom() || ch->getUnitIn()->isObj()) && (!UNIT_IS_TRANSPARENT(ch->getUnitIn()))))
+    else if (((ch->getUnitIn()->isRoom() || ch->getUnitIn()->isObj()) && (!ch->getUnitIn()->isTransparent())))
     {
         return (scan4_ref_room(ch->getUnitIn(), fu));
     }

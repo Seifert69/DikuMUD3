@@ -244,8 +244,8 @@ void enlist(CByteBuffer *pBuf, unit_data *unit, int level, int fast)
         assert(FALSE);
     }
 
-    strcpy(hn.zone, UNIT_FI_ZONENAME(unit));
-    strcpy(hn.unit, UNIT_FI_NAME(unit));
+    strcpy(hn.zone, unit->getFileIndexZoneName());
+    strcpy(hn.unit, unit->getFileIndexName());
 
     hn.type = unit->getUnitType();
     hn.level = level;
@@ -542,7 +542,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         {
             if ((fi == nullptr) || is_slimed(fi))
             {
-                slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+                slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, unit->getFileIndexName(), unit->getFileIndexZoneName());
                 pnew = read_unit(g_slime_fi); // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
 

@@ -52,7 +52,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             }
 
             /* check tranparancy */
-            if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
+            if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
             {
                 for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                 {
@@ -65,7 +65,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
 
         /* Run through units in local environment if upwards transparent */
-        if ((u = ref->getUnitIn()->getUnitIn()) && UNIT_IS_TRANSPARENT(ref->getUnitIn()))
+        if ((u = ref->getUnitIn()->getUnitIn()) && ref->getUnitIn()->isTransparent())
         {
             for (u = u->getUnitContains(); u; u = u->getNext())
             {
@@ -77,7 +77,7 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
                     }
 
                     /* check down into transparent unit */
-                    if (u->getNumberOfCharactersInsideUnit() && UNIT_IS_TRANSPARENT(u))
+                    if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
                     {
                         for (uu = u->getUnitContains(); uu; uu = uu->getNext())
                         {
@@ -94,9 +94,9 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_ZONE))
     {
-        if (!fi_unit_list.empty())
+        if (!m_fi_unit_list.empty())
         {
-            for (auto it = fi_unit_list.begin(); it != fi_unit_list.end(); it++)
+            for (auto it = m_fi_unit_list.begin(); it != m_fi_unit_list.end(); it++)
             {
                 if ((*it)->getFileIndex() == this)
                 {
@@ -108,9 +108,9 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
     if (IS_SET(bitvector, FIND_UNIT_WORLD))
     {
-        if (!fi_unit_list.empty())
+        if (!m_fi_unit_list.empty())
         {
-            return fi_unit_list.front();
+            return m_fi_unit_list.front();
         }
     }
 
@@ -119,9 +119,9 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
 
 unit_data *file_index_type::find_symbolic_instance()
 {
-    if (!fi_unit_list.empty())
+    if (!m_fi_unit_list.empty())
     {
-        return fi_unit_list.front();
+        return m_fi_unit_list.front();
     }
 
     return nullptr;
@@ -129,148 +129,148 @@ unit_data *file_index_type::find_symbolic_instance()
 
 const char *file_index_type::getName() const
 {
-    return name.c_str();
+    return m_name.c_str();
 }
 
 long file_index_type::getFilepos() const
 {
-    return filepos;
+    return m_filepos;
 }
 
 ubit32 file_index_type::getCRC() const
 {
-    return crc;
+    return m_crc;
 }
 
 sbit16 file_index_type::getNumInZone() const
 {
-    return no_in_zone;
+    return m_no_in_zone;
 }
 
 ubit16 file_index_type::getRoomNum() const
 {
-    return room_no;
+    return m_room_no;
 }
 
 ubit8 file_index_type::getType() const
 {
-    return type;
+    return m_type;
 }
 
 ubit16 file_index_type::getNumInMem() const
 {
-    return no_in_mem;
+    return m_no_in_mem;
 }
 
 ubit32 file_index_type::getLength() const
 {
-    return length;
+    return m_length;
 }
 
 void file_index_type::IncrementNumInMemory()
 {
-    ++no_in_mem;
+    ++m_no_in_mem;
 }
 
 zone_type *file_index_type::getZone() const
 {
-    return zone;
+    return m_zone;
 }
 
 void file_index_type::setType(ubit8 value)
 {
-    type = value;
+    m_type = value;
 }
 
 void file_index_type::setZone(zone_type *value)
 {
-    zone = value;
+    m_zone = value;
 }
 
 void file_index_type::setName(const char *value, bool to_lower)
 {
     if (value)
     {
-        name = std::string(value);
+        m_name = std::string(value);
         if (to_lower)
         {
-            str_lower(name);
+            str_lower(m_name);
         }
     }
 }
 
 void file_index_type::DecrementNumInMemory()
 {
-    /// @todo find out why code is trying to decrement no_in_mem below 0
+    /// @todo find out why code is trying to decrement m_no_in_mem below 0
     ///   I tried this but somewhere it goes below zero
-    ///     assert(no_in_mem > 0);
-    if (no_in_mem > 0)
+    ///     assert(m_no_in_mem > 0);
+    if (m_no_in_mem > 0)
     {
-        --no_in_mem;
+        --m_no_in_mem;
     }
 }
 
 void file_index_type::IncrementNumInZone()
 {
-    ++no_in_zone;
+    ++m_no_in_zone;
 }
 
 void file_index_type::setNumInZone(sbit16 value)
 {
-    no_in_zone = value;
+    m_no_in_zone = value;
 }
 
 void file_index_type::setLength(ubit32 value)
 {
-    length = value;
+    m_length = value;
 }
 
 void file_index_type::setFilepos(long value)
 {
-    filepos = value;
+    m_filepos = value;
 }
 
 void file_index_type::setRoomNum(ubit16 value)
 {
-    room_no = value;
+    m_room_no = value;
 }
 
 void file_index_type::setNumInMemory(sbit16 value)
 {
-    no_in_mem = value;
+    m_no_in_mem = value;
 }
 
 void file_index_type::setCRC(ubit32 value)
 {
-    crc = value;
+    m_crc = value;
 }
 
 bool file_index_type::Empty() const
 {
-    return fi_unit_list.empty();
+    return m_fi_unit_list.empty();
 }
 
 unit_data *file_index_type::Front() const
 {
-    return fi_unit_list.front();
+    return m_fi_unit_list.front();
 }
 
 std::forward_list<unit_data *>::iterator file_index_type::Begin()
 {
-    return fi_unit_list.begin();
+    return m_fi_unit_list.begin();
 }
 
 std::forward_list<unit_data *>::iterator file_index_type::End()
 {
-    return fi_unit_list.end();
+    return m_fi_unit_list.end();
 }
 
 void file_index_type::PushFront(unit_data *value)
 {
-    fi_unit_list.push_front(value);
+    m_fi_unit_list.push_front(value);
 }
 
 void file_index_type::Remove(unit_data *value)
 {
-    fi_unit_list.remove(value);
+    m_fi_unit_list.remove(value);
 }
