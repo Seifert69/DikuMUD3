@@ -14,7 +14,7 @@ void slog_raw(log_level level, ubit8 wizinv_level, const std::string &msg)
     static uint32_t log_size = 0;
     log_size += msg.length() + 5 + 24;
 
-    if (log_size > 40'000'000) /* 40 meg is indeed a very big logfile! */
+    if (log_size > 80'000'000) /* 40 meg is indeed a very big logfile! */
     {
         fprintf(g_log_file_fd, "Log-file insanely big!  Going down.\n");
         std::terminate(); // Dont use error, it calls syslog!!! *grin*

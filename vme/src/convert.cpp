@@ -32,7 +32,7 @@ namespace fs = boost::filesystem;
 
 char player_directory[1024] = "\0";
 int max_id = -1;
-int top_id = -1;
+int top_id = 200000;
 ubit8 *ids = nullptr; /** For checking duplicate players... */
 
 #define OUTPUT_DIR "lib/"
@@ -432,9 +432,9 @@ void clist()
                         // shall_delete(pc);
 
                         void_char->setUnitContains(nullptr);
-                        /* load_contents(temp, void_char);
+                        load_contents(temp, void_char);
 
-                        if (UNIT_CONTAINS(void_char))
+                        /*if (UNIT_CONTAINS(void_char))
                         {
                             std::cout << "  INV";
                             convert_inventory(UNIT_CONTAINS(void_char), pc, TRUE);

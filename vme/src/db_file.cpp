@@ -442,7 +442,10 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         /* Prevent all execution */
         SET_BIT(prg->flags, DILFL_EXECUTING);
         tmpl->flags |= DILFL_FREEME;
-        slog(LOG_ALL, 0, "bread_dil(): Unit %s@%s DIL template [%s] no longer exists. bNameRead = %d.", owner->getFileIndex()->getName(), owner->getFileIndex()->getZone(), name, bNameRead);
+        if (owner->getFileIndex())  
+            slog(LOG_ALL, 0, "bread_dil(): Unit %s@%s DIL template [%s] no longer exists. bNameRead = %d.", owner->getFileIndex()->getName(), owner->getFileIndex()->getZone(), name, bNameRead);
+        else
+            slog(LOG_ALL, 0, "bread_dil(): Unit has no file index DIL template [%s] no longer exists. bNameRead = %d.", name, bNameRead);
     }
 
     prg->waitcmd = WAITCMD_MAXINST - 1; /* Command countdown          */
