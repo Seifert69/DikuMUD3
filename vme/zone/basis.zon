@@ -3883,6 +3883,7 @@ var
    u : unitptr;
 code
 {
+   quit;
    :loop:
    wait(SFB_CMD, activator != self);
    u := activator;
@@ -3910,6 +3911,7 @@ external
 
 code
 { 
+   quit;
    log(self.name + " advanced to level " + itoa(self.vlevel));
    AdvGuildLevel@guilds(self);
    return;

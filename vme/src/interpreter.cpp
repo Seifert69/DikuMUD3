@@ -468,6 +468,16 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
         slog(LOG_ALL, MAX(CHAR_LEVEL(ch), cmd_ptr->log_level), "CMDLOG %s: %s %s", ch->getNames().Name(), cmd_ptr->cmd_str, argstr);
     }
 
+    static int nesting = 0; // Avoid a special instance of DIL endless loops
+
+    nesting++;
+    if (nesting > 100)
+    {
+        nesting--;
+        slog(LOG_ALL, 0, "command_interpreter() endless recursive call [%s]?", cmdArg);
+        return;
+    }
+
     if (cmd_ptr->tmpl)
     {
         dilprg *prg = nullptr;
@@ -499,6 +509,8 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
         FREE(cmd_ptr->excmd);
     if (cmd_ptr->excmdc)
         FREE(cmd_ptr->excmdc);
+
+    nesting--;
 }
 
 int descriptor_is_playing(descriptor_data *d)

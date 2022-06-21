@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "a497fc5307fb7fb7ae9b605eff0a7178726b9e3d1f4d3ce0c2eac0ab3c910a43fdaca5820f2008ef95d2c7cca9bc763e79f768d1b523669a5bad050443d62e73"
+                "sha512": "5608a617882f4cb4e87957ac3efde63862c20cacdcf8491be137cff862f6d3f181a59856d624df217c868e4d41413be3ec2e30525489a9a609cb803ba3bd5410"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "67d19a71b1a02e63317b7985bc65b5f3367967de328ba3867651a37105eb46af40b5415fbd539818295b3e63dbfba9f16d91ebf7fda07df8e0888e8efc18337d"
+                    "sha512": "31b7fbacd98208b02350e35d3c50714858e03596fde0893d276083ef214a9c1bcf6abc9a6b3b36966204dc56dedb772a99fec8f3cc0ba1b311e50dd1b4ad4577"
                 },
                 {
                     "filename": "basis.reset",
@@ -221,12 +221,12 @@
         {
             "source_file": {
                 "filename": "commands.zon",
-                "sha512": "997f1f90697791d2c7a558ec4ecc0267f7c25cae868001504eccc4461ecfcf285e156e392cbe94fb120158c07315e154f4f72f3cc833ffbeb4f5f30bda0c7d7a"
+                "sha512": "26134e489e847ed1fe7ab8bed1f1478184469fbff2a25ab44a5f4e918a060f7191c9daf72869c3e2e863038c4fdf6f2815bc72271bc7c97ec314eaa389515864"
             },
             "output": [
                 {
                     "filename": "commands.data",
-                    "sha512": "cc0ba1b2c1955c1470d0b85ffbf87da3153f745f281525a0a5e87ae6b09eb8ce96e1d07d4e564720647816b87501529f0560c1e51b518075ac6d23c419bef313"
+                    "sha512": "bede0cc20866392b9f209a788549ce4f566f1554b57b48fbdb0afca75ec183b0c5c84e240551c6193fb0debcc91afec99731f4b7e551a4453d30f7b0b9355454"
                 },
                 {
                     "filename": "commands.reset",

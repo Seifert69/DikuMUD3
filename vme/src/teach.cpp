@@ -1183,7 +1183,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
         return SFR_BLOCK;
     }
 
-    if (str_ccmp(arg, "auto") == 0)
+    if (strncmp(arg, "auto", 4) == 0)
     {
         if (TrainValues.values == nullptr)
         {

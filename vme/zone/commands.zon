@@ -3001,6 +3001,14 @@ code
    s := getword(arg);
    if (s == "auto")
    {
+      s := getword(arg);
+      if (s == "exec")
+      {
+         sendtext("There's a flash of bright white light in your head.<br/>", self);
+         return;
+      }
+
+
       exd := "$autotrain" in self.info;
 
       u := findsymbolic(exd.names.[1]);
@@ -3010,9 +3018,15 @@ code
       }
       else
       {
+         if (self.outside == u.outside)
+         {
+            sendtext("Is something amiss with your teacher?<br/>", self);
+            quit;
+         }
+
          room := self.outside;
          link(self, u.outside);
-         exec("practice auto", self);
+         exec("practice auto exec", self);
          link(self, room);
       }
    }
