@@ -392,13 +392,20 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
         strcpy(TmpName, ContentsFileName("aaa-inv.tmp"));
         pFile = fopen(TmpName, "wb");
         assert(pFile);
-        pBuf->FileWrite(pFile);
+        ubit32 n = pBuf->FileWrite(pFile);
         fclose(pFile);
 
-        if (rename(TmpName, pFileName) != 0)
+        if (n != pBuf->GetLength())
         {
-            perror("rename:");
-            exit(2);
+            slog(LOG_ALL, 0, "ERROR: Only able to write %d of %d bytes for %s inventory (disk full?).", n, pBuf->GetLength(), pFileName);
+        }
+        else
+        {
+            if (rename(TmpName, pFileName) != 0)
+            {
+                perror("rename:");
+                exit(2);
+            }
         }
     }
 }
