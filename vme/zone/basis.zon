@@ -3911,7 +3911,6 @@ external
 
 code
 { 
-   quit;
    log(self.name + " advanced to level " + itoa(self.vlevel));
    AdvGuildLevel@guilds(self);
    return;

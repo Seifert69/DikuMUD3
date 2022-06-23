@@ -671,6 +671,7 @@ dilbegin AdvGuildLevel(pc : unitptr);
 var
    exd : extraptr;
    s : string;
+   n : integer;
 code
 {
    exd := (GUILD_KEY_PREPEND + pc.guild) in pc.info;
@@ -681,7 +682,9 @@ code
       return;
    }
 
-   s := itoa(1+atoi(exd.names.[1]));
+   n := atoi(exd.names.[1]);
+   s := itoa(n+1);
+   log("AdvGuildLevel(): "+pc.symname+" guild ["+pc.guild+"] in level exd.[1]="+exd.names.[1]+", n="+itoa(n)+", s="+s);
    exd.names.[1] := s;
    sendtext("You are now level " + s + " in the " + pc.guild + " guild.<br/>", pc);
    return;
