@@ -56,56 +56,22 @@ Bright White.<br/>
 #define SKILL_POINT_FACTOR      (8) 
 #define ABILITY_POINT_FACTOR    (4)
 
-dilbegin integer buglostint(pc : unitptr, ip : integer, s : string);
+
+
+// 2022 : Called from vmelimits, hard requirement
+//
+dilbegin advance_level();
+external 
+   AdvGuildLevel@guilds(ch : unitptr);
+
 code
-{
-   secure(pc, lostpc);
-
-   :loop:
-   wait(SFB_CMD, 1==1);
-   goto loop;
-
-   :lostpc:
-   log("Lost PC in called function integer.");
-   return(0);
+{ 
+   log(self.name + " advanced to level " + itoa(self.vlevel));
+   AdvGuildLevel@guilds(self);
+   return;
 }
 dilend
 
-
-dilbegin unitptr buglostpc(pc : unitptr);
-external
-   integer buglostint(pc : unitptr, ip : integer, s : string);
-var
-   i : integer;
-code
-{
-   secure(pc, lostpc);
-
-   :loop:
-   i := buglostint(pc, 42, "42");
-   if (pc == null)
-      log("PC is null");
-   else
-      log(pc.name);
-   wait(SFB_CMD, 1==1);
-   goto loop;
-
-   :lostpc:
-   exec("emote loses its grip.", self);
-   log("Lost PC in called function.");
-   pc := null;
-   return(pc);
-}
-dilend
-
-
-
-dilbegin string testsymname();
-code
-{
-   return(self.symname);
-}
-dilend
 
 dilbegin worms();
 var
@@ -2878,6 +2844,63 @@ code
 }
 dilend
 
+
+// ===================================================================
+//                     DEBUG
+// ===================================================================
+
+dilbegin integer buglostint(pc : unitptr, ip : integer, s : string);
+code
+{
+   secure(pc, lostpc);
+
+   :loop:
+   wait(SFB_CMD, 1==1);
+   goto loop;
+
+   :lostpc:
+   log("Lost PC in called function integer.");
+   return(0);
+}
+dilend
+
+
+dilbegin unitptr buglostpc(pc : unitptr);
+external
+   integer buglostint(pc : unitptr, ip : integer, s : string);
+var
+   i : integer;
+code
+{
+   secure(pc, lostpc);
+
+   :loop:
+   i := buglostint(pc, 42, "42");
+   if (pc == null)
+      log("PC is null");
+   else
+      log(pc.name);
+   wait(SFB_CMD, 1==1);
+   goto loop;
+
+   :lostpc:
+   exec("emote loses its grip.", self);
+   log("Lost PC in called function.");
+   pc := null;
+   return(pc);
+}
+dilend
+
+
+
+dilbegin string testsymname();
+code
+{
+   return(self.symname);
+}
+dilend
+
+
 %rooms
 
                                    ocean_void
@@ -3900,22 +3923,6 @@ code
 }
 dilend
 
-
-
-// 2022 : Called from vmelimits, hard requirement
-//
-//
-dilbegin advance_level();
-external 
-   AdvGuildLevel@guilds(ch : unitptr);
-
-code
-{ 
-   log(self.name + " advanced to level " + itoa(self.vlevel));
-   AdvGuildLevel@guilds(self);
-   return;
-}
-dilend
 end
 
 
