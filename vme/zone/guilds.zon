@@ -29,7 +29,7 @@ a Paladin if you're in the Necromancer, Thief or Dark Knight guilds.<br/>
 
 A player can thereafter join as many guilds as they want. Joining a 
 guild should require something from the player, e.g. at least completing
-a quest.<br/>
+a quest. I'm hoping this will get built out over time.<br/>
 
 Training cost is determined by the player's profession, so joining a new
 guild will not make it cheaper to practice e.g. your strength, but new
@@ -38,10 +38,9 @@ or even have higher maximums than your current guild. For example, at mage
 teacher can typically train your brain to a higher maximum than a fighter
 teacher.<br/>
 
-Along with this we will also introduce the ability to switch profession.
-For example from a fighter to a mage. This will
-allow you to make a combination character as you build up to level 100 and beyond.
-E.g. Fighter / Mage.
+Along with this we have also introduced the ability to switch profession.
+For example from a fighter to a mage. This will allow you to make a combination
+character as you build up to level 100 and beyond. E.g. Fighter / Mage.
 
 The data structure is as follows:
 
@@ -55,41 +54,32 @@ pc.info
 
    .[0] is the guild name prepended with '$guild/'
    .[1] is the current guild level
-   .[2] was the player's vlvl when the joined the guild. 
+   .[2] was the player's vlvl when they joined the guild. 
    .[3] is the guild string (I considered prepending $g_ but will just try this)
         (in case we need to iterate throught them all)
 
-Notes on switching profession. Idea:
+Joining a new guild sets your guild level to 1 because then a new player of level 1
+will be in guild level 1 too.
 
-Perhaps when you start a new character you can only choose 
+Notes on switching profession.
+
+When you start a new character you can now only choose between four archetypes: 
    Fighter, Mage, Cleric, Thief
 
 Those are the four classical archetypes. As per the guild description
 you can of course join new guilds (if you can complete the quests).
 For example as a fighter you may join the Barbarian guild and explore it.
 
-Then when you reach some medium level, e.g. level 25 you can change profession
+Then when you reach some medium level, currently level 25, you can change profession
 the first time. But you can only change profession to a related profession:
 
-Fighter -> Barbarian, Ranger
-Thief   -> Assassin, 
-Cleric  -> Druid, Necromancer
+Fighter -> Barbarian
+Thief   -> Assassin 
+Cleric  -> Druid
 Mage    -> Sorcerer
 
-Later, when you reach a higher level, e.g. 50 or 75, you can change profession
-again. But this time I suggest you can either freely choose your final profession
-or you can choose more broadly than above. If we were to restrict it and not make
-it completely free, then how about something like this:
-
-Fighter, Barbarian, Ranger ->
-   Paladin,  Dark Knight, Assassin, Cleric, Druid
-
-Mage / Sorcerer -> 
-   Thief, Assassin, Fighter 
-
-Cleric, Necromancer, Druid ->
-   Fighter, Paladin, Dark Knight, Necromancer
-"
+Later, when you reach a higher level, currently guild level 50, you can change profession
+again. But this you can fairly freely choose your final profession. See help professions."
 
 
 %dil
@@ -104,7 +94,6 @@ Cleric, Necromancer, Druid ->
 //    quest blocking DIL(s)
 //         - e.g. quest_block@guilds(); you can only join if you completed X
 //    join DIL
-//         - We're missing a generic join DIL I think.
 //         - e.g. master_join@paladin_guild
 //
 //     MurderBanish()  (replaces SFUN_GUILD_BASIS)
@@ -128,25 +117,6 @@ Cleric, Necromancer, Druid ->
 
 //
 // =================================================================
-//
-
-// Plan:
-//   in block.zon ?
-//
-// quest_block@guilds(cmd : string, quest : string, sExec : stringlist);
-//    used to blocks the join command unless player has list of quests
-//
-// alignment@block - 
-//    blocks the join command unless player has alignment GOOD, EVIL or NEUTRAL
-//
-// guild@block({commands}, guild, {actions}) - 
-//    used to block player {commands} unless the player is in the guild
-// 
-// move@block({directions}, guild, {actions}) - 
-//    used to block player moving in direction unless the player is in the guild
-// 
-// guild_wield()
-//    if not in guild, unequip and drop
 //
 
 //
@@ -376,7 +346,7 @@ code
    }
 
    addstring(sl, GUILD_KEY_PREPEND + sGuild);
-   addstring(sl, "0");
+   addstring(sl, "1"); // Starting guild level
    addstring(sl, itoa(pc.vlevel));
    addstring(sl, GUILD_KEY);
    
