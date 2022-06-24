@@ -41,6 +41,7 @@ python2 getwikihelppage.py Balance &
 python2 getwikihelppage.py Ballchain
 python2 getwikihelppage.py Banish &
 python2 getwikihelppage.py Bank &
+python2 getwikihelppage.py Barbarian &
 python2 getwikihelppage.py Bardiche &
 python2 getwikihelppage.py Barkskin &
 python2 getwikihelppage.py Bash
