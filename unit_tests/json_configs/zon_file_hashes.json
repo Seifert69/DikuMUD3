@@ -941,12 +941,12 @@
         {
             "source_file": {
                 "filename": "wiz.zon",
-                "sha512": "ac2d54cb2266d4e2a93b99cb0b6c3a715f9ab649b7ea87ab472f841584f58f6bb79d528ff97650d653b79469fe99df43676e43c1f79283ec94af292735d68ee7"
+                "sha512": "fa6745076f64e8308ec5f9540269d509a5a1b1e102ea2259e04db05b3c64809f173adb92e9a8832b3039eab799b6e0dc6c51f05ca9a407f7d88c1d063639fae6"
             },
             "output": [
                 {
                     "filename": "wiz.data",
-                    "sha512": "4983bcc9f2fd5e478d4180d9ef326dc0472e66c9b827a6190ad42f5ece6ca4425037e8fb07332e0f4e6d2821a4302eb717df74970f32f0354d7b850698f53441"
+                    "sha512": "406a3bb562e2d3b88abfbddea447f4624645f8d030eddc553d1d741127f69e41ee02437cd0eba9f0786be2cd6c769da5d16de8a095757841769dff0784193141"
                 },
                 {
                     "filename": "wiz.reset",

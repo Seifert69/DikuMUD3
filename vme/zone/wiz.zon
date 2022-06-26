@@ -1117,6 +1117,7 @@ code
       log("Not level 255");
       goto start;
    }
+   block;
 
    pc := findunit(activator, argument, FIND_UNIT_SURRO, null);
 
