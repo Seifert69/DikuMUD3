@@ -66,17 +66,23 @@ end
 
 				cave_entrance
 
-names {"hole", "bush", "bushes", "whitethorn"}
+names {"hole", "bush", "bushes", "whitethorn", "opening"}
 title "Amidst Whitethorn Bushes"
 descr
 "   You are amidst many vigorous whitethorn bushes, some stand nearly seven
 feet tall. The bushes prevent any further movement up the hill, but a small
 cave entrance is visible to the south."
-
+outside_descr 
+""
+// By having no outside_descr it's invisible :-)
 extra {"cave entrance", "entrance", "cave"}
 "The entrance is fairly small being some five feet tall with many small roots
 hanging around the edge of the entrance."
-// By having no outside_descr it's invisible :-)
+
+extra {}
+"The whitethorn bushes makes it impossible to ascend the hill, but you
+spot a small hole in one of the bushes. Perhaps you would be able to
+squeeze your way into these bushes (enter bushes)."
 
 movement SECT_FOREST
 gmap(244,560)
@@ -96,11 +102,7 @@ section of the whitethorn bushes seems to be thinner then the rest,
 indicating that there just MIGHT be something of note in them. A small
 nearly invisible path runs north through the trees."
 
-extra {"bush", "bushes", "whitethorn"}
-"The whitethorn bushes makes it impossible to ascend the hill, but you
-spot a small hole in one of the bushes. Perhaps you would be able to
-squeeze your way into these bushes."
-extra {"hole", "opening"}
+extra {"opening"}
 "Perhaps you would fit?"
 
 movement SECT_FOREST
