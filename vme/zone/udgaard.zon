@@ -1116,6 +1116,8 @@ code
    }
    else if (command(CMD_AUTO_TICK))
    {
+      if (self.outside.type != UNIT_ST_PC)
+         goto loop;
       state := state + 1;
 
       if (state <= 2)
@@ -9462,6 +9464,27 @@ extra {"$identify"}
 extra {"$improved identify"}
 "This is a Rabbit slaying dagger."
 end
+
+    newbie_handaxe
+
+names {"hand axe", "boar's bane", "axe"}
+title "the hand axe Boar's Bane"
+descr "A shining, sharp hand axe lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+romflags {OBJ_NO_DUAL}
+weight 5
+extra {}
+"This fine hand axe is standard issue for fighters, and seems especially useful
+against boars."
+
+WEAPON_SLAYER(RACE_BOAR)
+extra {"$identify"}
+"The words Boar's Bane are etched on the axe's head."
+extra {"$improved identify"}
+"This is a Boar slaying hand axe."
+end
+
 
     newbie_sword
 
