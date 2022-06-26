@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "5608a617882f4cb4e87957ac3efde63862c20cacdcf8491be137cff862f6d3f181a59856d624df217c868e4d41413be3ec2e30525489a9a609cb803ba3bd5410"
+                "sha512": "3fbdeed9ded246c72b2fb33748ed62d115236882cd6204c0e36a7dcb709f1a0fd05baaf69cafc697d657aa3cf8745b00f0cc6cf7ddbb743c508f17fc2475e206"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "31b7fbacd98208b02350e35d3c50714858e03596fde0893d276083ef214a9c1bcf6abc9a6b3b36966204dc56dedb772a99fec8f3cc0ba1b311e50dd1b4ad4577"
+                    "sha512": "e565712c2149f09750526c2776820668463f29562725b29aff29b1f22c8083a2a0876a3388a7e8d9aadc7f14f3f5ebdd78fa01ae1ed0816a5bc03b06c4a1ac16"
                 },
                 {
                     "filename": "basis.reset",
@@ -397,12 +397,12 @@
         {
             "source_file": {
                 "filename": "guilds.zon",
-                "sha512": "13bdd8d652faceba9e233b7aba5d8b71c3f5fc435662f976e39bc2896c1db5f68f3c37c6ba948ba9eb87b8c5ec7c275135110f44d7d7c3407debbd61ea6f7735"
+                "sha512": "f610424eb5db82f480072541d8cd0f5925d1dfc2bcbf12aa6318eb3f46e29ab33bf08d38d80de5a6f545fac01da99937779d5727f660e0f4fdd0027b5b541ba1"
             },
             "output": [
                 {
                     "filename": "guilds.data",
-                    "sha512": "484512d5e22013010432549eddc90844daed0bfb0b145dfc844340553996c27d735e2c76d766c0eda663506d9e272e7651d378ff0525ccc30b50130c2d1eac3b"
+                    "sha512": "4da90ad1bdb1356ba5b118d3b8f50439eb153749304ab69fcd8eb3f720626a7cc695d6bf7e748ef9d2e86b070a69551adb445c0484413c52d89ea306b30fdaa8"
                 },
                 {
                     "filename": "guilds.reset",
