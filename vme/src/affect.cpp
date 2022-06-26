@@ -235,8 +235,7 @@ void get_affects(const unit_data *unit, cNamelist *sl)
     /// @todo fix unit_data so const member funcs are returns const pointers to members
     for (af = const_cast<unit_data *>(unit)->getUnitAffected(); af; af = af->getNext())
     {
-        sl->AppendName(g_apf[af->getApplyFI()].descr);
-        sprintf(buf, "%d,%d,%d,%d", af->getDataAtIndex(0), af->getDataAtIndex(1), af->getDataAtIndex(2), af->getDuration());
+        sprintf(buf, "%d,%d,%d,%d,%d,%d", af->getID(), af->getApplyFI(), af->getDataAtIndex(0), af->getDataAtIndex(1), af->getDataAtIndex(2), af->getDuration());
         sl->AppendName(buf);
     }
 }

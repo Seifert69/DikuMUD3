@@ -1004,7 +1004,7 @@ void dil_function_table_setup()
 
     // Find the largest function key for array total size
     const auto function_with_largest_key = std::max_element(function_table.begin(), function_table.end(), function_table.value_comp());
-    const auto table_size = function_with_largest_key->first;
+    const auto table_size = function_with_largest_key->first + 1;
 
     g_dil_runtime_function_table = std::make_unique<dil_func_ptr[]>(table_size);
     bool missing_functions = false;
@@ -1020,12 +1020,12 @@ void dil_function_table_setup()
             slog(LOG_ALL, 0, "Missing function id in DIL function map [%d]", i);
         }
     }
-#ifdef MUD_DEBUG
+
     if (missing_functions)
     {
         std::terminate();
     }
-#endif
+
     slog(LOG_ALL, 0, "Initialized dil function table with %d functions", table_size);
 }
 
