@@ -316,9 +316,6 @@ descr
 to the west. Through the thicket you notice a very small hole which appears
 to be the entrance to a badgers burrow.."
 
-extra {"hole", "badgers burrow", "burrow"}
-"The hole is very small and it seems like it hasn't been used for
-a long time."
 /* A "hole" (room) is inside this room */
 
 movement SECT_FOREST
@@ -338,6 +335,9 @@ descr
 movement SECT_INSIDE
 gmap(456, 452)
 
+extra {}
+"The hole is very small and it seems like it hasn't been used for
+a long time."
 
 in ct_9
 end

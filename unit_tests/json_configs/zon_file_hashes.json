@@ -253,12 +253,12 @@
         {
             "source_file": {
                 "filename": "cypress.zon",
-                "sha512": "4a01f307dea94789e529f309d61bb7cb13aa4b52a19981a5493221e33242ccc6e41053d3a2d3ea5478aa214b4ac6aac2825b7f52ba44a3a50ef24d1122af360f"
+                "sha512": "6c5145bbb2449f7cfa9e047a41c28dfe3bb96ae8d93f65f1ce95c55046223ad811b9a85e1ae41fc716a9782c4f19570d70fa56e1da3da3d303b1732403ec2131"
             },
             "output": [
                 {
                     "filename": "cypress.data",
-                    "sha512": "94954f9c613f6c5eb763d2611af48757aa83ce7ac728a9d9c31eab6e61297b74d44bb5a0443ead31d1b9083f8b7de750a5c30d3c23a57fa9bf58b100c9f368f8"
+                    "sha512": "f1f31135884435fe62e424643b495152c6a48e28f5b1d82af78a18a0c57343355d6bae8dc00cdc2cb71e656e2880df9e4332b628922226ebbf1bd7f7de9d383f"
                 },
                 {
                     "filename": "cypress.reset",
