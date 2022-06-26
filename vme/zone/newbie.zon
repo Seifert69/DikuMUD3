@@ -1709,8 +1709,9 @@ code
    addextra(pc.quests, {NEWBIE_COMPLETE}, "");
    subextra(pc.quests, NEWBIE_ONGOING);
    pause;
-   act ("$1n says I will give you 2000 experience which should be enough to "+
-   "give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   act ("$1n says, 'I will give you 2000 experience which should be enough to give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says, 'If you're lazy you can also simply write 'practice auto' and the system will automatically spend your training points for you.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    if (not("$got exp from newbie guide" in pc.extra))
    {
@@ -1727,7 +1728,7 @@ code
    exec("bow "+pc.name, self);
    act("A portal opens, the Newbie Guide steps through and disappears.'",
        A_ALWAYS, self, null, null, TO_ALL);
-                        destroy (self);
+    destroy (self);
    return (TRUE);
 
    :stop:

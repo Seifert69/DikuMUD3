@@ -637,12 +637,12 @@
         {
             "source_file": {
                 "filename": "newbie.zon",
-                "sha512": "d3a8b2e1a2cfc705cbf60a5c377db58ee37a370ab3255a20a592d1ed6c9242c2374118c6fd9effbc33548bfefc138bed5f09ebf41cb7d7cd3d07555657827b99"
+                "sha512": "d5b451595ca38f493acc401badecc13c805fae0dcdead57ccc56a482cf3fa9b958442d9799db108b5c313eebaaa127a54bc76891eb60cc9b91efed49b98c437b"
             },
             "output": [
                 {
                     "filename": "newbie.data",
-                    "sha512": "c85ba526a903a3f7d95b07b55dccf977649e82d025aceaffb3827f6b9709fd3b2aa96bd94fba27756bdb2a92729ef4f26da53b00e98103bdfe5141a00293eee3"
+                    "sha512": "f71e01862ab325a2cf379bb9f4be589964a3ebd200645260d7c65f993e27e7f66bd43b3bad0513aaa31fbce9a3d1299a757f9581ecaf89ac5d73d2d3cf766bb5"
                 },
                 {
                     "filename": "newbie.reset",
