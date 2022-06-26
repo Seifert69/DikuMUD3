@@ -82,7 +82,7 @@ eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1,
             assert(!f->is_destructed());
         }
 
-        if (f->getFunctionPointerIndex() == 82)
+        if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
             dilprg *prg = (dilprg *)f->getData();
             membug_verify(prg);

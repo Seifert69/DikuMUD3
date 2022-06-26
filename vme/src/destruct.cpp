@@ -262,7 +262,7 @@ void clear_destructed()
     {
         f = (unit_fptr *)destructed[DR_FUNC][i];
 
-        if (f->getFunctionPointerIndex() == 82)
+        if (f->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
         {
             assert(f->getData() == nullptr);
         }
