@@ -397,12 +397,12 @@
         {
             "source_file": {
                 "filename": "guilds.zon",
-                "sha512": "0480080f37769893bd7849e0e77b763c9df5164c7161bb87793041477dba1ef6920bc2c879255d320823d0d7b71f13d895827948bc2b2d46a5d925a8da9f4dc2"
+                "sha512": "8cd97d6b7921ee3a342f3f025dabd057869c707a2fd95064030b226bcc77394023032a30d12f6a5521b18990dc9ac0485ac4326baca8233ba05ec39da4feb334"
             },
             "output": [
                 {
                     "filename": "guilds.data",
-                    "sha512": "adf7116118fb3a016116c89cb5c606da8492ea6da6f1c7a647a3bb5610f84befd717b6d9db10b0cc5f341a8fbd43084905be443d9905eda0d39678bec9ea2f48"
+                    "sha512": "859c4394b6392823adb7acaaab191d9510d8366238ee9c5e697ac43073b0a204c9735939fdfbf6566acb2f24a4161a004a684d9f5356dd89dd3e5691b3616758"
                 },
                 {
                     "filename": "guilds.reset",
@@ -941,12 +941,12 @@
         {
             "source_file": {
                 "filename": "wiz.zon",
-                "sha512": "9ea657d67db237e4379b68db06d7683c06c59f3d78a31b362c6d0eb189d5d9b9d8c9f8896c4c3b73506c974d1cc44e7caf163a983ff4b39610cbbe4170b93d5b"
+                "sha512": "ac2d54cb2266d4e2a93b99cb0b6c3a715f9ab649b7ea87ab472f841584f58f6bb79d528ff97650d653b79469fe99df43676e43c1f79283ec94af292735d68ee7"
             },
             "output": [
                 {
                     "filename": "wiz.data",
-                    "sha512": "9c6a68292b6502c5ef39e5191fee21859406fb2a5c75a35815aba6a2faadf4642be086dc5cb4e9c4f7fc4ec42e17e1086d238a6572fa909467656f56f2aba341"
+                    "sha512": "4983bcc9f2fd5e478d4180d9ef326dc0472e66c9b827a6190ad42f5ece6ca4425037e8fb07332e0f4e6d2821a4302eb717df74970f32f0354d7b850698f53441"
                 },
                 {
                     "filename": "wiz.reset",
