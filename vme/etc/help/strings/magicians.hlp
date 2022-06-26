@@ -1,17 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-The elite of magic with the cunning to match.<br/>
-This class gives your character good possibilities for learning<br/>
-magic spells. Some of these spells can defend you from the hostile<br/>
-world surrounding you.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
- Spells<br/><br/>
-&lt;Magic<br/><br/>
- Conjurer Skills<br/><br/>
- Conjurer Spells<br/><br/>
- Conjurer Weapons<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Conjurer profession</h1>
+<p>Primary stats: BRA, MAG
+</p><p>Specialization option: Sorcerer profession 
+</p><p>The elite of magic with the cunning to match. This class gives your character 
+good possibilities for learning magic spells. Some of these spells can defend 
+you from the hostile world surrounding you.
+</p><p>Attributes:
+</p>
+<pre> Bra	+3
+ Mag	+2
+ Cha	+1
+ Dex	 0
+ Con	-1
+ HP	-2
+ Str	-3
+ Div	-7
+</pre>
+<p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Sorcerer</a>
+ &gt; <a cmd='#'>Help Spells</a>
+ &gt; <a cmd='#'>Help Conjurer Skills</a>
+ &gt; <a cmd='#'>Help Conjurer Spells</a>
+ &gt; <a cmd='#'>Help Conjurer Weapons</a>
+</pre>
+
+
+
+
+</div>

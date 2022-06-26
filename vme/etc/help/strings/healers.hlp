@@ -1,25 +1,38 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Main attributes: DIV, BRA, and CHA<br/><br/>
-<br/><br/>
-A healer character can be good or neutral, some turn to evil, but<br/>
-no matter the alignment or the god they worship all believe strongly<br/>
-in the divine and use their strength of faith to heal and aid others.<br/>
-This gives the healer almost a direct tap of the divine forces of the<br/>
-universe. They will use their healing and creation spells to fight<br/>
-off all who oppose their god. While the healer is very much in demand,<br/>
-they tend to be weak and must rely on others to protect them as they pray.<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Brain<br/><br/>
- Charisma<br/><br/>
- Divine<br/><br/>
- Healer Roleplay<br/><br/>
- Healer Skills<br/><br/>
- Healer Spells<br/><br/>
- Healer Weapons<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Healer Profession</h1>
+<p>Main attributes: DIV and CHA
+</p><p>Specialization option: Druid profession
+</p><p>Attributes:
+</p>
+<pre> Div	+3
+ Cha	+2
+ Bra	+1
+ Str	 0
+ HP	-1
+ Dex	-2
+ Con	-3
+ Mag	-7
+</pre>
+<p>A healer character can be good or neutral, some turn to evil, but
+no matter the alignment or the god they worship all believe strongly
+in the divine and use their strength of faith to heal and aid others.
+This gives the healer almost a direct tap of the divine forces of the
+universe. They will use their healing and creation spells to fight
+off all who oppose their god. While the healer is very much in demand,
+they tend to be weak and must rely on others to protect them as they pray.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Druid</a>
+ &gt; <a cmd='#'>Help Brain</a>
+ &gt; <a cmd='#'>Help Charisma</a>
+ &gt; <a cmd='#'>Help Divine</a>
+ &gt; <a cmd='#'>Help Healer Roleplay</a>
+ &gt; <a cmd='#'>Help Healer Skills</a>
+ &gt; <a cmd='#'>Help Healer Spells</a>
+ &gt; <a cmd='#'>Help Healer Weapons</a>
+</pre>
+
+
+
+
+</div>

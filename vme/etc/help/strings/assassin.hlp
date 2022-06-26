@@ -1,13 +1,24 @@
 <div class="mw-parser-output"><h1>Assassin Profession</h1>
-<p>Assassins are the hired killers of the land. Their profession requires that they know many weapons, but they actually master few. They share some skills
+<p>Primary stats: STR, HP
+</p><p>Assassins are the hired killers of the land. Their profession requires that they know many weapons, but they actually master few. They share some skills
 with both fighters and thieves but unlike either, they dabble slightly in the magics to enhance their stealth. Their main attributes are dexterity and hitpoints with strength and constitution as secondary.
-</p><p><br />
-See Also:
+</p><p>Attributes:
 </p>
-<pre>&gt; Assassin Weapons
-&gt; Assassin Spells
-&gt; Assassin Skills
-&gt; Assassin Role Play
+<pre> Dex	+2
+ Bra	+1
+ Str	 0
+ Con	 0
+ Mag	 0
+ HP	-1
+ Cha	-2
+ Div	-7
+</pre>
+<p>See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Assassin Weapons</a>
+ &gt; <a cmd='#'>Help Assassin Spells</a>
+ &gt; <a cmd='#'>Help Assassin Skills</a>
+ &gt; <a cmd='#'>Help Assassin Role Play</a>
 </pre>
 
 

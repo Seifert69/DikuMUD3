@@ -1,14 +1,33 @@
-<br/>
-Dark Knights split from the Holy Paladins, some where between the<br/>
-time of the Orc War and the Great War that destroyed Midgaard.<br/>
-They dabble in the divine arts as do the Paladins, but draw there<br/>
-powers from the dark forces of the underworld.  They have a good<br/>
-knowledge base of weapons and must remain of evil alignment or<br/>
-face the possibility of banishment from the Order of Dark Knights.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Good<br/>
-Divine Sphere<br/><br/>
- Dark Knight Weapons<br/><br/>
- Dark Knight Skills<br/><br/>
- Dark Knight Spells <br/><br/>
+<div class="mw-parser-output"><h1>Dark Knight profession</h1>
+<p>Primary stats: STR, HP
+</p><p>Dark Knights split from the Holy Paladins, some where between the
+time of the Orc War and the Great War that destroyed Midgaard.
+They dabble in the divine arts as do the Paladins, but draw there
+powers from the dark forces of the underworld. They have a good
+knowledge base of weapons and must remain of evil alignment or
+face the possibility of banishment from the Order of Dark Knights.
+</p><p>Attributes:
+</p>
+<pre> Str	+2
+ HP	+1
+ Con	 0
+ Bra	 0
+ Div	 0
+ Dex	-1
+ Cha	-2
+ Mag	-7
+</pre>
+<p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Good</a>
+ &gt; <a cmd='#'>Help Divine Sphere</a>
+ &gt; <a cmd='#'>Help Dark Knight Weapons</a>
+ &gt; <a cmd='#'>Help Dark Knight Skills</a>
+ &gt; <a cmd='#'>Help Dark Knight Spells</a>
+</pre>
+
+
+
+
+</div>

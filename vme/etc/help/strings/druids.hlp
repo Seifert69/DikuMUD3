@@ -1,20 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-  The Druid are a collective of peoples who use their divine abilities<br/>
-to nurture and harness the powers of nature.  With these powerful forces<br/>
-at one's disposal, a Druid can command, manipulate and channel one's<br/>
-surroundings, making the Druid a most formidable friend... Or foe.<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Magic<br/><br/>
- Divine Sphere<br/><br/>
- Druid Spells<br/><br/>
- Druid Weapons<br/><br/>
- Druid Skills<br/><br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Druid profession</h1>
+<p>Primary stats: BRA, DIV
+</p><p>The Druid are a collective of peoples who use their divine abilities
+to nurture and harness the powers of nature. With these powerful forces
+at one's disposal, a Druid can command, manipulate and channel one's
+surroundings, making the Druid a most formidable friend... Or foe.
+</p><p>Attributes:
+</p>
+<pre> Bra	+3
+ Div	+2
+ Cha	+1
+ Dex	 0
+ HP	-1
+ Str	-2
+ Con	-3
+ Mag	-7
+</pre>
+<p>See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Magic</a>
+ &gt; <a cmd='#'>Help Divine Sphere</a>
+ &gt; <a cmd='#'>Help Druid Spells</a>
+ &gt; <a cmd='#'>Help Druid Weapons</a>
+ &gt; <a cmd='#'>Help Druid Skills</a>
+</pre>
+
+
+
+
+</div>

@@ -1,7 +1,7 @@
 <div class="mw-parser-output"><h1>Professions</h1>
-<p>Your profession determines how expensive it is to learn a new skill. For example, the fighter profession generally has a low cost for weapons and strength. The conjurer profession generally has a low cost for learning magic, but a high cost for learning weapons. Using the 'guilds' command you can see your guilds and current profession.
-</p><p>When you first start a new character, you can choose one of four guilds / professions. After that you can join as many guilds as you want, but your cost of training remains the same no matter which guild you go to.
-</p><p>Upon reaching a certain level (25 at time of writing), you get the opportunity to specialize your character:
+<p>When you first start a new character, you can choose one of four archetypical professions: The fighter, the thief, the conjurer and the healer. Your profession determines how expensive it is to learn a new skill. For example, the fighter profession generally has a low cost for weapons and strength. The conjurer profession generally has a low cost for learning magic, but a high cost for learning weapons. Using the 'guilds' command you can see your guilds and current profession.
+</p><p>Regardless of your profession you can generally join as many guilds as you want, but your cost of training remains the same no matter which guild you go to. A guild is a club of people. A profession is your raw natural talent and what you choose to focus on.
+</p><p>Upon reaching a certain level (25 at time of writing), you get the opportunity to specialize your profession:
 </p>
 <pre> * Fighter can become a Barbarian
  * Thief can become an Assassin
@@ -10,8 +10,7 @@
 </pre>
 <p>These for specializations are of course closely related to your initial profession (hence, a specialization). You don't have to specialize. And you definitely shouldn't change your profession until you're very ready. When switching profession, something that was previously accessible might become inaccessible.
 </p><p>At a later stage (e.g. level 75) in the game you'll have the opportunity to one last profession change. This will allow you to make a complete career change:
-</p><p><br />
-fighter / barbarian:
+</p><p>fighter / barbarian:
 </p>
 <pre>  thief, cleric, mage, knight, paladin, ranger.
 </pre>
@@ -31,7 +30,23 @@ fighter / barbarian:
 Note, that necromancy is only possible if your starting class is a cleric.
 Also, you can only achieve a specialization in your own class. A fighter can specialize as
 a barbarian. But a thief cannot later become a Barbarian.
-</p><p>See Also:
+</p><p>The following professions are available:
+</p>
+<pre> <a cmd='#'>Help Fighter</a>
+ <a cmd='#'>Help Thief</a>
+ <a cmd='#'>Help Conjurer</a>
+ <a cmd='#'>Help Healer</a>
+ <a cmd='#'>Help Dark Knight</a>
+ <a cmd='#'>Help Paladin</a>
+ <a cmd='#'>Help Ranger</a>
+ <a cmd='#'>Help Assassin</a>
+ <a cmd='#'>Help Druid</a>
+ <a cmd='#'>Help Necromancer</a>
+ <a cmd='#'>Help Sorcerer</a>
+ <a cmd='#'>Help Barbarian</a>
+</pre>
+<p><br />
+See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Guilds</a>
  &gt; <a cmd='#'>Help Status</a>

@@ -1,11 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sorcerers excell at combat type magics.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Sorcerer Spells<br/><br/>
- Sorcerer Weapons<br/><br/>
- Sorcerer Skills<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Sorcerer profession</h1>
+<p>Primary stats: MAG, BRA
+</p><p>Only Conjurers can specialize to become Sorcerers.
+</p><p>Sorcerers excel at combat type magics.
+</p><p>Attributes:
+</p>
+<pre> Mag	+3
+ Bra	+2
+ Cha	+1
+ Dex	 0
+ HP	-1
+ Con	-2
+ Str	-3
+ Div	-7
+</pre>
+<p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Sorcerer Spells</a>
+ &gt; <a cmd='#'>Help Sorcerer Weapons</a>
+ &gt; <a cmd='#'>Help Sorcerer Skills</a>
+</pre>
+
+
+
+
+</div>
