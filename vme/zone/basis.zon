@@ -342,7 +342,7 @@ code
    if (exd == null)
    {
       // Setup default comm channels
-      addextra(self.info, {"$channels", "newbie", "mud", "builder"}, "");
+      addextra(self.info, {"$channels", "newbie", "mud", "builder", "chat", "diku3", "bugs"}, "");
    }
 
    // Also set channel for immortals

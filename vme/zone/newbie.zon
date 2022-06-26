@@ -931,25 +931,20 @@ act ("$1n says 'I would like to remind you that this is a family game and there 
 act ("$1n says 'One last form of communication we have on Valhalla is channels.'",
   A_ALWAYS, self,null,pc,TO_VICT);
   pause;
+act ("$1n says 'These are particularly important because some of them  are live integrated with Discord. So you can get help even if no other players are online.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
 act ("$1n says 'You can create as many or as few channels as you like. Type "+
         "'comm help' to get information on how to do this.'",
   A_ALWAYS, self,null,pc,TO_VICT);
  pause;
-act ("$1n says 'For now however it would be a good idea to add the newbie "+
-       "comm channel in case you need ever need help.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-act ("$1n says 'To do this type 'comm add newbie' do this now please.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
 act ("$1n says 'To talk to other players on the newbie channel or to get help "+
-        "type newbie and what you want to say.",	
-  A_ALWAYS, self,null,pc,TO_VICT);
+        "type newbie and what you want to say.",	A_ALWAYS, self,null,pc,TO_VICT);
 pause;
 act ("$1n says ' For example try this now - type 'newbie hello everyone!'",
   A_ALWAYS, self,null,pc,TO_VICT);
 pause;  
-act ("$1n says 'Newbie comm is also a great place to ask for help. "+
+act ("$1n says 'Newbie comm is also a great place to ask for help. And it goes to Discord. "+
         "If you lose your corpse ask on newbie for help retrieving it!'",
   A_ALWAYS, self,null,pc,TO_VICT);
 pause;
@@ -958,6 +953,9 @@ act ("$1n says 'There will be questions you have that I do not cover in the "+
         "our help files.'",
   A_ALWAYS, self,null,pc,TO_VICT);
    pause;
+act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
 act ("$1n says 'To get a listing of help topics you simply type 'help help'. "+
         "Do this now please.'",
   A_ALWAYS, self,null,pc,TO_VICT);
@@ -1059,15 +1057,10 @@ return (TRUE);
       A_ALWAYS, self,null,pc,TO_VICT);
    
    pause;
-   act ("$1n says 'It would be a good idea to add the newbie "+
-         "comm channel in case you ever need help.'",
+   act ("$1n says 'To see a list of your comm channels type 'comm #'. The newbie, builder, mud and chat channels are live integrated with Discord in case you need help.'",
          A_ALWAYS, self,null,pc,TO_VICT);
    
    pause;
-   act ("$1n says 'To do this type 'comm add newbie'.'", A_ALWAYS, self,null,pc,TO_VICT);
-   // XXX addextra (pc.quests,{NEWBIE_ONGOING},"");
-   // XXX qst:=NEWBIE_ONGOING in pc.quests;
-   // XXX qst.descr:="part 1 done";
    return (TRUE);
 
    :stop:
