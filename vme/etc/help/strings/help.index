@@ -30,7 +30,8 @@ armor=armour.hlp
 armour=armour.hlp
 arrests=arrests.hlp
 ask=ask.hlp
-assassin=khorsabadassassin.hlp
+assassins=assassin.hlp
+assassins guild=khorsabadassassin.hlp
 assassin role play=assrp.hlp
 assassin roleplay=assrp.hlp
 assassin rp=assrp.hlp
@@ -574,14 +575,14 @@ open=open.hlp
 order=order.hlp
 :end:o
 :start:p
-paladin=midgaardpaladins.hlp
+paladins=paladins.hlp
+paladin guild=midgaardpaladins.hlp
 paladin role play=palrp.hlp
 paladin role=palrp.hlp
 paladin rp=palrp.hlp
 paladin skills=paladinskills.hlp
 paladin spells=paladinspells.hlp
 paladin weapons=paladinweapons.hlp
-paladins=paladins.hlp
 palm orb=palmorb.hlp
 partisan=partisan.hlp
 password=password.hlp
