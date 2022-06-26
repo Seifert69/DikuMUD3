@@ -8,11 +8,17 @@ When you try to pickpocket your pick pocket skill and dexterity and roll is
 compared to the targets pick pocket and brain.  If your pick pocket is 
 successful you still risk that any bystanders see your crime even if the 
 target didn't.
-</p><p>If you're good at picking pockets, this is a fast way to get cash and also a
+</p><p>Example:
+</p>
+<pre> &gt; pickpo city guard
+</pre>
+<p>If you're good at picking pockets, this is a fast way to get cash and also a
 way to spend some quality time in jail. Not to mention, a horde of blood thirsty
 enemies. 
 </p><p>Picking pockets is considered a crime, and few MUD'ers will help a thief in
 trouble. Some will not help a thief at all. 
+</p><p>Do notice that the command is in one word. Also note, that if you just type
+'pick' then it is the pick lock command.
 </p><p><br />
 See Also:
 </p>
