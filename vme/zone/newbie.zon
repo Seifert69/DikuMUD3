@@ -953,7 +953,7 @@ act ("$1n says 'There will be questions you have that I do not cover in the "+
         "our help files.'",
   A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2",
+act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2 '",
   A_ALWAYS, self,null,pc,TO_VICT);
 pause;
 act ("$1n says 'To get a listing of help topics you simply type 'help help'. "+
@@ -1053,7 +1053,7 @@ return (TRUE);
    
    pause;
    act ("$1n says 'Being the expert you are you know that you can get info on each "+
-      "command by typing 'help <command>'.'",
+      "command by typing 'help &lt;command&gt;'.'",
       A_ALWAYS, self,null,pc,TO_VICT);
    
    pause;
@@ -1733,70 +1733,64 @@ dilend
 /*healer*/
 dilbegin integer newbie_part5c(pc : unitptr);
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
 
 var
-tf:integer;
-     nroom     :    unitptr;
-        i       :       integer;
-        item:unitptr;
+   tf:integer;
+   nroom     :    unitptr;
+   i       :       integer;
+   item:unitptr;
 code
 {
-   :init:
+:init:
    heartbeat := PULSE_SEC*6;
    on_activation(self.position <= POSITION_SLEEPING, skip);
 
-   :start:
+:start:
    if (pc == null)
       goto stop;
    secure(pc, stop);
 
-pause;
-   act ("$1n says 'I notice you have an affinity for nature.'",
-A_ALWAYS,self,null,pc,TO_VICT);
    pause;
-   act ("$1n says 'Well that is grand! I would love to show you "+
-     "around your guild, you'll find it helpful I think.'",
-A_ALWAYS,self,null,pc,TO_VICT);
+   act ("$1n says 'I notice you have an affinity for nature.'", A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Well that is grand! I would love to show you around your guild, you'll find it helpful I think.'",
+      A_ALWAYS,self,null,pc,TO_VICT);
    pause;
    act ("$1n says 'Now it will be important that you stay close by " +
-     "so you don't get lost.'",
-A_ALWAYS,self,null,pc,TO_VICT);
+     "so you don't get lost.'", A_ALWAYS,self,null,pc,TO_VICT);
    pause;
    if (not(pc.position == POSITION_STANDING))
    {
-      act ("$1n says 'Please stand up now so we may begin.'",
-A_ALWAYS,self,null,pc,TO_VICT);
+      act("$1n says 'Please stand up now so we may begin.'", A_ALWAYS,self,null,pc,TO_VICT);
       :try_again:
-      wait(SFB_CMD, activator #= pc);
+      wait(SFB_CMD, activator == pc);
       if (not command("stand"))
       {
-      pause;
-      act ("$1n says 'Please STAND up.'", A_ALWAYS, self,null,pc,TO_VICT);
-      goto try_again;
+         pause;
+         act ("$1n says 'Please STAND up.'", A_ALWAYS, self,null,pc,TO_VICT);
+         goto try_again;
       }
    }
    if (not(pc.master.name $= self.name))
-  {
-  act ("$1n says 'Please type 'fol newbie guide' now.'",
-A_ALWAYS, self, null,pc,TO_VICT);
-  :try_again2:
-  wait (SFB_DONE, activator==pc);
-  if (not(command  ("follow")) or
-    (target!=self))
-    {
-    act ("$1n says 'Please follow me now by typing 'fol newbie" +
-      " guide' now.'", A_ALWAYS, self, null,pc,TO_VICT);
-    goto try_again2;
-    }
-  }
+   {
+      act("$1n says 'Please type 'fol newbie guide' now.'", A_ALWAYS, self, null,pc,TO_VICT);
+:try_again2:
+      wait (SFB_DONE, activator==pc);
+      if (not(command("follow")) or (target!=self))
+      {
+         act ("$1n says 'Please follow me now by typing 'fol newbie" +
+         " guide' now.'", A_ALWAYS, self, null,pc,TO_VICT);
+         goto try_again2;
+      }
+   }
    pause;
    act ("$1n says 'Let us visit your guild master now.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'Remember how to get to your guild because you will need to" +
      "in the future quite frequently.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("entrance@clericguild",4);
+   tf := walk_room@function("entrance@clericguild",4);
    pause;
    act ("$1n says 'This is the entrance, and to the west is your guild.'",
      A_ALWAYS, self, null,pc,TO_VICT);
@@ -1830,10 +1824,9 @@ tf:=   walk_room@function("entrance@clericguild",4);
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'Chances are that you will not always be a healer."+
-         " Many players leave their respective " +
-        "guilds and search out further knowledge in other guilds."+
-         "once they become proficient in their chosen
-path.'",A_ALWAYS, self, null,pc,TO_VICT);
+         " Many players choose to change profession " +
+        "and search out further knowledge in other guilds "+
+         "once they become proficient in their chosen path.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
 
    act ("$1n says 'This is where you join and leave the guild. To get more "+
@@ -1841,7 +1834,7 @@ path.'",A_ALWAYS, self, null,pc,TO_VICT);
           "'help join' and 'help insult' '", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'I will give you a little hint. You will only get ability "+
-       "practice points until level 50. It might be a good idea to '",A_ALWAYS, self, null,pc,TO_VICT);
+       "practice points until level 100. It might be a good idea to '",A_ALWAYS, self, null,pc,TO_VICT);
 pause;
   act ("$1n says 'save some of these for the next guild you join. Ask a high "+
       "level player for some pointers on this.'",A_ALWAYS, self, null,pc,TO_VICT);
@@ -1874,7 +1867,7 @@ tf:=   walk_room@function("garden7@clericguild",4);
    pause;
    pause;
    act ("$1n says 'And finally to actually practice a spell once you have " +
-     "decided on one to train just use 'practice <spell>'.'",
+     "decided on one to train just use 'practice &lt;spell&gt;'.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'The info command will show you useful information " +
@@ -1890,10 +1883,10 @@ tf:=   walk_room@function("garden7@clericguild",4);
    act ("$1n says 'Now let me give you some things for your patience in completing "+
    "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-     item := load("udgaard/newbie_mace");
+   item := load("udgaard/newbie_mace");
    item.height := pc.height;
    link(item, pc);
-   act("The newbie guide gives you a better weapon.'",
+   act("The newbie guide gives you a better weapon.",
        A_ALWAYS, pc, null, null, TO_CHAR);
    pause;
    addextra(pc.quests, {NEWBIE_COMPLETE}, "");
@@ -1910,6 +1903,12 @@ tf:=   walk_room@function("garden7@clericguild",4);
     experience (2000,pc);
    pause;
    act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To practice very easily you can use the 'practice auto' command until you feel ready to manage it yourself.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Examine your medallion and use it to get easily back to Udgaard.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
    pause;
           }
 
@@ -2023,8 +2022,8 @@ tf:=   walk_room@function("entrance@fightersguild",4);
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'Chances are that you will not always be a fighter."+
-         " Many players leave their respective " +
-        "guilds and search out further knowledge in other guilds."+
+         " Many players learn new professions and join more " +
+        "guilds and search out further knowledge "+
          "once they become proficient in their chosen path.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
 
@@ -2035,9 +2034,9 @@ tf:=   walk_room@function("entrance@fightersguild",4);
    pause;
 
    act ("$1n says 'I will give you a little hint. You will only get ability "+
-       "practice points until level 50. It might be a good idea to '",A_ALWAYS, self, null,pc,TO_VICT);
+       "practice points until level 100. It might be a good idea to '",A_ALWAYS, self, null,pc,TO_VICT);
 pause;
-  act ("$1n says 'save some of these for the next guild you join. Ask a high "+
+  act ("$1n says 'save some of these for when you change profession. Ask a high "+
       "level player for some pointers on this.'",A_ALWAYS, self,
 null,pc,TO_VICT);
 
@@ -2064,7 +2063,7 @@ tf:=   walk_room@function("smithy@fightersguild",4);
    pause;
    pause;
    act ("$1n says 'And to actually train an ability once you have" +
-     "decided on one to train just use 'practice <abil>'.'",
+     "decided on one to train just use 'practice &lt;abil&gt;'.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'The info command will show you useful information " +
@@ -2078,11 +2077,11 @@ tf:=   walk_room@function("smithy@fightersguild",4);
    pause;
    act ("$1n says 'Now let me give you some things for your patience in completing "+
    "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
-     item := load("udgaard/newbie_sword");
+   item := load("udgaard/newbie_handaxe");
    item.height := pc.height;
    link(item, pc);
    pause;
-   act("The newbie guide gives you a better weapon.'",
+   act("The newbie guide gives you a better weapon.",
              A_ALWAYS, pc, null, null, TO_CHAR);
    addextra(pc.quests, {NEWBIE_COMPLETE}, "");
    subextra(pc.quests, NEWBIE_ONGOING);
@@ -2096,6 +2095,12 @@ tf:=   walk_room@function("smithy@fightersguild",4);
     experience (2000,pc);
    pause;
    act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To practice very easily you can use the 'practice auto' command until you feel ready to manage it yourself.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Examine your medallion and use it to get easily back to Udgaard.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
    pause;
           }
    exec("bow "+pc.name, self);
@@ -2212,10 +2217,9 @@ null,pc,TO_VICT);
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'Chances are that you will not always be a conjurer."+
-         " Many players leave their respective " +
-        "guilds and search out further knowledge in other guilds."+
-         "once they become proficient in their chosen
-path.'",A_ALWAYS, self, null,pc,TO_VICT);
+         " Many players change profession " +
+        "and join more guilds and search out further knowledge "+
+         "once they become proficient in their chosen path.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
 
    act ("$1n says 'This is where you join and leave the guild. To get more "+
@@ -2226,8 +2230,7 @@ null,pc,TO_VICT);
    pause;
 
    act ("$1n says 'I will give you a little hint. You will only get ability "+
-       "practice points until level 50. It might be a good idea
-to '",A_ALWAYS, self, null,pc,TO_VICT);
+       "practice points until level 100. It might be a good idea to '",A_ALWAYS, self, null,pc,TO_VICT);
 pause;
 
   act ("$1n says 'save some of these for the next guild you join. Ask a high "+
@@ -2261,7 +2264,7 @@ tf:=   walk_room@function("arcane_ground@mageguild",4);
    pause;
    pause;
    act ("$1n says 'And finally to actually practice a spell once you have " +
-     "decided on one to train just use 'practice <spell>'.'",
+     "decided on one to train just use 'practice &lt;spell&gt;'.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'The info command will show you useful information " +
@@ -2281,7 +2284,7 @@ tf:=   walk_room@function("arcane_ground@mageguild",4);
    link(item, pc);
 
    pause;
-   act("The newbie guide gives you a better weapon.'",
+   act("The newbie guide gives you a better weapon.",
               A_ALWAYS, pc, null, null, TO_CHAR);
    addextra(pc.quests, {NEWBIE_COMPLETE}, "");
    subextra(pc.quests, NEWBIE_ONGOING);
@@ -2295,6 +2298,12 @@ tf:=   walk_room@function("arcane_ground@mageguild",4);
     experience (2000,pc);
    pause;
    act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To practice very easily you can use the 'practice auto' command until you feel ready to manage it yourself.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Examine your medallion and use it to get easily back to Udgaard.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
    pause;
           }
    exec("bow "+pc.name, self);
@@ -2411,15 +2420,14 @@ null,pc,TO_VICT);
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'Chances are that you will not always be a thief."+
-         " Many players leave their respective " +
-        "guilds and search out further knowledge in other guilds. "+
+         " Many players change profession and join new " +
+        "guilds and search out further knowledge "+
          "once they become proficient in their chosen path.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
 
    act ("$1n says 'This is where you join and leave the guild. To get more "+
          "information on this when we are not so busy you can type "+
           "'help join' and 'help insult' '", A_ALWAYS, self,null,pc,TO_VICT);
-
    pause;
 
    act ("$1n says 'I will introduce you to one of your teachers now, " +
@@ -2450,7 +2458,7 @@ null,pc,TO_VICT);
    pause;
    pause;
    act ("$1n says 'And to actually train an ability once you have" +
-     "decided on one to train just use 'practice <abil>'."+
+     "decided on one to train just use 'practice &lt;abil&gt;'."+
          "to train your dex you would type: 'train dex'.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
@@ -2472,7 +2480,7 @@ null,pc,TO_VICT);
    link(item, pc);
 
    pause;
-   act("The newbie guide gives you a better weapon.'",
+   act("The newbie guide gives you a better weapon.",
               A_ALWAYS, pc, null, null, TO_CHAR);
    addextra(pc.quests, {NEWBIE_COMPLETE}, "");
    subextra(pc.quests, NEWBIE_ONGOING);
@@ -2486,6 +2494,12 @@ null,pc,TO_VICT);
     experience (2000,pc);
    pause;
    act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To practice very easily you can use the 'practice auto' command until you feel ready to manage it yourself.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Examine your medallion and use it to get easily back to Udgaard.'", 
+         A_ALWAYS, self, null,pc,TO_VICT);
    pause;
           }
    exec("bow "+pc.name, self);
@@ -2851,7 +2865,7 @@ A_ALWAYS,self,null,pc,TO_VICT);
 n:=quest_parse@newbie (pc);
 if (n==-1 ) goto stop;
 
-on n goto part1,part2,part3,part4,temp_g,complete ;
+on n goto part1,part2,part3,part4,part5,complete ;
 goto stop;  /*incase on goto fails*/
 
 :part1:
@@ -3031,10 +3045,6 @@ n:=stop_test (pc,4);
    if (n == FALSE)
      goto stop;
 
-:temp_g:
-  n := newbie_temp@newbie(pc);
-  goto stop;
-
 :part5:
 if (IsInGuild@guilds(pc, GUILD_UDG_CLERIC))
   goto part5c;
@@ -3045,7 +3055,12 @@ else if (IsInGuild@guilds(pc, GUILD_UDG_MAGE))
 else if (IsInGuild@guilds(pc, GUILD_UDG_THIEF))
   goto part5t;
 else
-  goto part5u;
+{
+  // This shouldn't be possible
+  n := newbie_temp@newbie(pc);
+  goto stop;
+  // goto part5u;
+}
 
 :part5c:
   n := newbie_part5c@newbie(pc);
@@ -3063,9 +3078,9 @@ else
   n := newbie_part5t@newbie(pc);
   goto stop;
 
-:part5u:
+/*:part5u:
   n := newbie_part5u@newbie(pc);
-  goto stop;
+  goto stop;*/
 
 :complete:
 n:=newbie_help@newbie (pc);
