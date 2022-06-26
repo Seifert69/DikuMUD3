@@ -1087,6 +1087,53 @@ dilend
 end
 
 
+                  guild_advancer
+
+names {"gnarly wand", "wand"}
+title "a gnarly wand"
+descr "A gnarly wand is here."
+manipulate {MANIPULATE_TAKE}
+type ITEM_OTHER
+weight 1
+extra {}
+"<pre>Usage: guildup &lt;playername&gt;
+
+Will advance player's current guild level.
+</pre>"
+
+dilbegin gnarlywand();
+external
+  AdvGuildLevel@guilds(ch : unitptr);
+var
+  pc : unitptr;
+code
+{
+:start:
+   wait(SFB_CMD, command("guildup"));
+   if (activator != self.outside)
+      goto start;
+   if (activator.level < 255)
+   {
+      log("Not level 255");
+      goto start;
+   }
+
+   pc := findunit(activator, argument, FIND_UNIT_SURRO, null);
+
+   if (pc == null)
+   {
+      log("No player");
+      goto start;
+   }
+
+   AdvGuildLevel@guilds(pc);
+
+   goto start;
+}
+dilend
+end
+
+
                            sticker
 
 names {"sticker"}
