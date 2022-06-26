@@ -1060,6 +1060,10 @@ return (TRUE);
    act ("$1n says 'To see a list of your comm channels type 'comm #'. The newbie, builder, mud and chat channels are live integrated with Discord in case you need help.'",
          A_ALWAYS, self,null,pc,TO_VICT);
    
+  act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2",
+    A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
+
    pause;
    return (TRUE);
 
