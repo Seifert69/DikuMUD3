@@ -5789,14 +5789,18 @@ external
 	string quality_str(i : integer);
 	string magic_str(i : integer);
    string race_name@skills(i : integer);
+   string abistr@function(ability:integer);
 var
    exd : extraptr;
    craft_str : string;
    mag_str : string;
    s : string;
    s2 : string;
-   sl : stringlist;
    i : integer;
+   n : integer;
+   i2 : integer;
+   sl : stringlist;
+   sl2 : stringlist;
 
 code
 {
@@ -5990,6 +5994,148 @@ code
             s := s + sact("$3n enshrouds darkness.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
       }
    }
+
+   // Now let's parse any (transfer) affects 
+   sl := getaffects(tgt);
+   n := length(sl);
+
+   if (n > 0)
+   {
+      s := s + "----<br/>";
+   }
+
+   i := 0;
+   while (i < n)
+   {
+      sl2 := split(sl.[i], ",");
+
+      if (sl2.[1] == "0") // Ability adjustment
+      {
+         s := s + "Ability bonus: ";
+         i2 := atoi(sl2.[2]);
+         s := s + abistr@function(i2) + " "; // e.g. "strength"
+
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "1") // Spell adjustment
+      {
+         s := s + "Spell bonus: ";
+         i2 := atoi(sl2.[2]);
+         s2 := spellinfo(i2, i2, i2, i2, i2 ,i2 ,i2 ,i2);
+         s := s + s2 + " "; // e.g. "fireball"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "2") // Modify bright/light
+      {
+         s := s + "Light bonus: "+sl.[i];
+         i2 := atoi(sl2.[2]);
+         s := s + skill_name(i2) + " "; // e.g. "fleeing"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "3") // Modify char flags
+      {
+         s := s + "Special ability C: "+sl.[i];
+         i2 := atoi(sl2.[2]);
+         s := s + skill_name(i2) + " "; // e.g. "fleeing"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "4") // Modify UNIT_FLAGS()
+      {
+         s := s + "Special ability U: "+sl.[i];
+         i2 := atoi(sl2.[2]);
+         s := s + skill_name(i2) + " "; // e.g. "fleeing"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "5") // Modify OBJ_FLAGS()
+      {
+         s := s + "Special ability O: "+sl.[i];
+         i2 := atoi(sl2.[2]);
+         s := s + skill_name(i2) + " "; // e.g. "fleeing"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "6") // Modify skill adjustment
+      {
+         s := s + "Skill bonus: ";
+         i2 := atoi(sl2.[2]);
+         s := s + skill_name(i2) + " "; // e.g. "fleeing"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "7") // Modify weapon adjustment
+      {
+         s := s + "Weapon bonus: ";
+         i2 := atoi(sl2.[2]);
+         s := s + weapon_name(i2) + " "; // e.g. "fleeing"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "8") // Modify Natural armor
+      {
+         s := s + "Natural armor modification: "+sl.[i];
+         i2 := atoi(sl2.[2]);
+         s := s + skill_name(i2) + " "; // e.g. "fleeing"
+         i2 := atoi(sl2.[3]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + sl2.[3] + "<br/>";
+      }
+      else if (sl2.[1] == "9") // Modify speed
+      {
+         s := s + "Speed bonus: "; //+sl.[i];
+         i2 := atoi(sl2.[2]);
+         if (i2 >= 0)
+            s := s + "+";
+         s := s + itoa(i2) + "<br/>";
+      }
+      else if (sl2.[1] == "-1")
+      {
+         i2 := atoi(sl2.[0]);
+         if (i2 < 0)
+            i2 := -i2;
+         if (i2 == ID_PROT_GOOD)
+         {
+            s := s + "Protection from Good<br/>";
+         }
+         else if (i2 == ID_PROT_EVIL)
+         {
+            s := s + "Protection from Evil<br/>";
+         }
+         else
+         {
+            s := s + "-1 please report to an admin. Unknown secondary kind. " + sl.[i];
+         }
+      }
+      else if (sl2.[1] != "-1")
+      {
+         s := s + "Oh no, please report to an admin. Unknown kind. " + sl.[i];
+      }
+
+      i := i + 1;
+   }
+
+   // Finally copy in the description from $identify / $improved identify
 
    exd := "$identify" in tgt.extra;
    if (exd)

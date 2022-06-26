@@ -1062,8 +1062,6 @@ return (TRUE);
    
   act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2",
     A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-
    pause;
    return (TRUE);
 
@@ -1087,40 +1085,30 @@ code
    if (pc #= null)
       goto stop;
    secure(pc, stop);
-pause;
-act ("$1n says 'Now lets talk about some more important matters.'",
-A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act ("$1n says 'Now lets talk about some more important matters.'",
+  A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act ("$1n says 'Firstly, please be kind to other players.'", A_ALWAYS,self,null,pc,TO_VICT);
+
    :next1:
-   pause;
    pause;
    act ("$1n says 'When something is wrong and the game does something that "+
         "it should not, it's called a 'bug'.'",
 A_ALWAYS,self,null,pc,TO_VICT);
    pause;
-    act ("$1n says 'Sometimes bugs hinder play, other times  they benefit play.'",
-A_ALWAYS,self,null,pc,TO_VICT);
+    act ("$1n says 'Sometimes bugs hinder play, other times they benefit play.'", A_ALWAYS,self,null,pc,TO_VICT);
    pause;
-   act ("$1n says 'For this reason we insist that every player "+
+   act ("$1n says 'For this reason please "+
      "use the bug command (syntax: bug <describe bug found>)" +
-     " to report all bugs.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-   pause;
-   act ("$1n says 'We will take appropriate action if a player is found " +
-     "to have been taking advantage of bugs.'",
-A_ALWAYS,self,null,pc,TO_VICT);
+     " to report all bugs.'", A_ALWAYS,self,null,pc,TO_VICT);
    pause;
    act ("$1n says 'Now we must discuss our rules of multi-playing.'",
 A_ALWAYS,self,null,pc,TO_VICT);
    pause;
-   act ("$1n says 'Valhalla allows a max of 2 characters owned by the same "+
-        "player on line at the same time. If you are caught with more "+
-        "on you will be asked to log the extras off.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-   pause;
-   act ("$1n says 'Also I would like to mention that you must be in full control "+
+   act ("$1n says 'I would like to mention that you must be in full control "+
         "of your characters at all time. We do not allow scripts to run "+
-        "players.'",
-A_ALWAYS,self,null,pc,TO_VICT);
+        "players.'", A_ALWAYS,self,null,pc,TO_VICT);
    exec("emote glances at the rule book to refresh his memory.",self);
    pause;
    act ("$1n says 'Player killing is another area that may concern you.'",
