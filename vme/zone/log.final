@@ -1,0 +1,1151 @@
+Thu Jun 23 16:37:26 2022 :: Running 64-bit mode
+Thu Jun 23 16:37:26 2022 :: Booting server.
+Thu Jun 23 16:37:26 2022 :: The Mud Name is Valhalla.
+Thu Jun 23 16:37:26 2022 :: The lib directory is /home/val/vme/lib/.
+Thu Jun 23 16:37:26 2022 :: The etc directory is /home/val/vme/etc/.
+Thu Jun 23 16:37:26 2022 :: The log directory is /home/val/vme/log/.
+Thu Jun 23 16:37:26 2022 :: The zone directory is /home/val/vme/zone/.
+Thu Jun 23 16:37:26 2022 :: The player directory is /home/val/vme/lib/ply/.
+Thu Jun 23 16:37:26 2022 :: The dil directory is ../lib/dilfiles/.
+Thu Jun 23 16:37:26 2022 :: Reading info and configuration files.
+Thu Jun 23 16:37:26 2022 :: Reading in etc / colors.
+Thu Jun 23 16:37:26 2022 :: Reading in etc / logo.
+Thu Jun 23 16:37:26 2022 :: VME SERVER COMPILED AT Jun  5 2022 20:59:28
+Thu Jun 23 16:37:26 2022 :: VME Compiled with [-DDMSERVER -DPOSIX -DLINUX -DMUD_DEBUG]
+Thu Jun 23 16:37:26 2022 :: Read server configuration.
+Thu Jun 23 16:37:26 2022 :: Opening mother connection on port 4999.
+Thu Jun 23 16:37:26 2022 :: Signal trapping.
+Thu Jun 23 16:37:26 2022 :: Named pipe setup.
+Thu Jun 23 16:37:26 2022 :: Dil function table setup.
+Thu Jun 23 16:37:26 2022 :: Initialized dil function table with 204 functions
+Thu Jun 23 16:37:26 2022 :: Boot DB -- BEGIN.
+Thu Jun 23 16:37:26 2022 :: Copyright (C) 1994 - 2021 by DikuMUD & Valhalla.
+Thu Jun 23 16:37:26 2022 :: Generating indexes from list of zone-filenames.
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/basis.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/death.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/spells.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/skills.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/commands.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/baseget.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/basemove.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/wiz.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/baselook.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/update.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/help.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/boards.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/comm.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/socials.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/set.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mail.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/newbie.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/function.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/restrict.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/quests.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/guilds.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/professions.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/justice.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/arena.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/competition.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holiday20.data AC[  0] LL[220] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holiday21.data AC[  0] LL[220] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/guild_quest.data AC[255] LL[254] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/bounty.data AC[250] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/udgaard.data AC[  0] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/midgaard.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hallows10.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holidays.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holiday10.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holiday09.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holiday08.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holiday05.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mageguild.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clericguild.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/thievesguild.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/fightersguild.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/paladin_guild.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/sorcerer.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/necro_guild.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/assassin.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/knight.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/cypress.data AC[  3] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/youth.data AC[  3] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/haon-dor.data AC[  3] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/midsewer.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/midwalls.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hamlet.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/galgachus.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/holes.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/cenedal.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/nymgaard.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/talen.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/toy.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/farm.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/farm1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/farm2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/farm3.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/gobtown1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/gobtown.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/vine.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ranger.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/monk.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/foothill.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/trees.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/darkravine.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/darkhollow.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/druid.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/sand.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/sands2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/neptune.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hobgob.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/deadl1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/offices.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/fjord.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/halfzon.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ogre.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ogre1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/udsewer.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/torsbay.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/urland.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/casino.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/valley1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/valley2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/valley3.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/valley4.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/kingc.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/elfdom.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/goblin_cave.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hill.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/moor.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ratswarf.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/gnome.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/timezon.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/tiamat.data AC[  0] LL[250] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/treasure.data AC[  0] LL[254] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/cthulu.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/desert.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/etznab.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/skaven.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/citadel.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/arma.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades1.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades2.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades3.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades4.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades5.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades6.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades7.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hades8.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/abyss1.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/cemetery.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/atlantis.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/atl_misc.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/atl_beach.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/atl_sea.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/serpents.data AC[255] LL[246] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/seren.data AC[255] LL[246] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/seren1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/darkelf.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/arabian.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/asgaard.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/dwarves.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/oxiyang.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/tobas_manse.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/lost.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ww1.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ww2.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/volcano.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/keep.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/center.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/deathlink.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/isledead.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/pit.data AC[255] LL[254] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/pit2.data AC[255] LL[254] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/garden.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/tower.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/arctic.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/gazha.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/xiyang.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/xiyang2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/akaren.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/reslab.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/cloud.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/chess1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/chess2.data AC[255] LL[254] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/chess4.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/chess3.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/rotten.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/warntz.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/demon.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/daemon.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/academy.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/haunted.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/night.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/night1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/elenia.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/zemoch.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/korandin.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_hf.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_bus.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_kin.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_wom.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_dra.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_aoh.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_uch.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/clan_koh.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/vendetta.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/kaio.data AC[255] LL[254] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/rebirth.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/guild_paths.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/vasklor.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/nether.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/vasklor1.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/troi.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/albula.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/tolanna.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/troi1.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/tolanna1.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/split.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mount.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/aocean1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/aocean2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/aocean3.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/aocean4.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/skavship.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/dracship.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/serpship.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/arctship.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/drasil.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/fthieves.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/bazaar.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/wallace.data AC[  1] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/fortress.data AC[  0] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/hoy_mts.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mt_chen.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/yamato.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/korinshi.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/swamps.data AC[  0] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/egypt.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/cocytus.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/yamruins.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/faerie.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/faeries2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego1.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego3.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego4.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego5.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego6.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego7.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego8.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego9.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/ego10.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/pelagiris.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/kuan_hador.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mordenkin.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/udplhome.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/moccihome.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/anthill2.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mjorngar.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/valte.data AC[  0] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/murhabi.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/titanzon.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/soullake.data AC[  0] LL[250] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/demsiege.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mforest.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/mushcaps.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/glowcave.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/arcisle.data AC[255] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/duinveld.data AC[255] LL[200] PO[2]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/barbarian.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/gremlin.data AC[  2] LL[200] PO[0]
+Thu Jun 23 16:37:26 2022 :: Indexing /home/val/vme/zone/randomt.data AC[  0] LL[250] PO[0]
+Thu Jun 23 16:37:26 2022 :: Generating player index.
+Thu Jun 23 16:37:26 2022 :: Booting the money-system.
+Thu Jun 23 16:37:26 2022 :: Resetting the game time:
+Thu Jun 23 16:37:26 2022 ::    Current Gametime: 18H 11D 4M 1108Y.
+Thu Jun 23 16:37:26 2022 :: Profession, Race, Spell, skill, weapon and ability boot.
+Thu Jun 23 16:37:26 2022 :: Booting Commands from: commands.dat
+Thu Jun 23 16:37:26 2022 :: Booting the sectors.:
+Thu Jun 23 16:37:26 2022 :: Reading all rooms into memory.
+Thu Jun 23 16:37:26 2022 :: Normalizing file index ref. and replacing rooms.
+Thu Jun 23 16:37:26 2022 :: Initilizing shortest path matrixes for world.
+Thu Jun 23 16:37:26 2022 :: Creating Strong Connected Components
+Thu Jun 23 16:37:26 2022 :: Total Number of SC - 468
+Thu Jun 23 16:37:26 2022 :: Completed Strong Connected Components
+Thu Jun 23 16:37:29 2022 :: Create Shortest Path VME thread
+Thu Jun 23 16:37:29 2022 :: Finished shortest path matrix initilization.
+Thu Jun 23 16:37:29 2022 :: Reading Zone Reset information.
+Thu Jun 23 16:37:30 2022 :: Building interpreter trie.
+Thu Jun 23 16:37:30 2022 :: Loading fight messages.
+Thu Jun 23 16:37:30 2022 :: Calling boot-sequences of all zones.
+Thu Jun 23 16:37:30 2022 :: Booting ban-file.
+Thu Jun 23 16:37:30 2022 :: Booting slime system.
+Thu Jun 23 16:37:30 2022 :: Performing boot time reset.
+Thu Jun 23 16:37:30 2022 :: HEAP expand to 10000
+Thu Jun 23 16:37:30 2022 :: HEAP expand to 20000
+Thu Jun 23 16:37:30 2022 :: HEAP expand to 40000
+Thu Jun 23 16:37:30 2022 :: HEAP expand to 80000
+Thu Jun 23 16:37:31 2022 :: Priming eventqueue.
+Thu Jun 23 16:37:31 2022 :: Entering game loop.
+Thu Jun 23 16:37:31 2022 :: Sending Mudname Valhalla, Len 9
+Thu Jun 23 16:37:31 2022 :: Sending Default Colors to multihost.
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/boards/strings/wiz.idx
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/boards/strings/wiz.idx
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/boards/strings/wiz.idx
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/boards/strings/quest.idx
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/boards/strings/time.idx
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/clan/strings/clan_hf_names.data
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/clan/strings/clan_kin_names.data
+Thu Jun 23 16:37:32 2022 :: load_string(): File does not exist: ../lib/clan/strings/clan_wom_names.data
+Thu Jun 23 16:37:32 2022 :: bounty/DIL 'tome_dil' attempt to violate system access security (loadstr).
+Thu Jun 23 16:37:38 2022 :: dwili entered a wrong password [98.37.20.131].
+Thu Jun 23 16:37:43 2022 :: justice/JUSTICE: Successfully loaded the global justice database
+Thu Jun 23 16:37:55 2022 :: Booting Eliza
+Thu Jun 23 16:37:55 2022 :: Booting Eliza Done.
+Thu Jun 23 16:37:59 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=4, n=4, s=5
+Thu Jun 23 16:38:30 2022 :: udgaard/Courtney got stuck in a room with no exits jail@udgaard exiting wander zone.
+Thu Jun 23 16:39:26 2022 :: midgaard/d7
+Thu Jun 23 16:39:26 2022 :: midgaard/d9
+Thu Jun 23 16:39:26 2022 :: midgaard/d10
+Thu Jun 23 16:40:26 2022 :: justice/JUSTICE: database saved.
+Thu Jun 23 17:22:24 2022 :: midgaard/d7
+Thu Jun 23 17:22:24 2022 :: midgaard/d9
+Thu Jun 23 17:22:24 2022 :: midgaard/d10
+Thu Jun 23 17:23:24 2022 :: justice/JUSTICE: database saved.
+Thu Jun 23 17:32:31 2022 :: _players/nanny_newbie()
+Thu Jun 23 17:32:31 2022 :: dwili[98.37.20.131] (GUEST) has entered the game.
+Thu Jun 23 17:32:31 2022 :: new player id = 98898
+Thu Jun 23 17:32:42 2022 :: PASSWORD: Papi changed Dwili's password.
+Thu Jun 23 17:35:58 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=0, n=0, s=1
+Thu Jun 23 17:37:06 2022 :: Sending Mudname Valhalla, Len 9
+Thu Jun 23 17:37:06 2022 :: Sending Default Colors to multihost.
+Thu Jun 23 17:37:42 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=1, n=1, s=2
+Thu Jun 23 17:49:55 2022 :: faeries2/familiar was randomly loaded by elemental shrine and placed in field_7@farm2.
+Thu Jun 23 17:53:10 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=2, n=2, s=3
+Thu Jun 23 17:54:40 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=3, n=3, s=4
+Thu Jun 23 17:55:58 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=4, n=4, s=5
+Thu Jun 23 17:57:22 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=5, n=5, s=6
+Thu Jun 23 17:58:27 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=4, n=4, s=5
+Thu Jun 23 17:58:51 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=6, n=6, s=7
+Thu Jun 23 18:01:15 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=7, n=7, s=8
+Thu Jun 23 18:02:53 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=8, n=8, s=9
+Thu Jun 23 18:04:08 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=9, n=9, s=10
+Thu Jun 23 18:05:14 2022 :: _players/AdvGuildLevel(): dwili@_players guild [Udgaard Fighter] in level exd.[1]=10, n=10, s=11
+Thu Jun 23 18:10:21 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=4, n=4, s=5
+Thu Jun 23 19:12:01 2022 :: midgaard/d7
+Thu Jun 23 19:12:01 2022 :: midgaard/d9
+Thu Jun 23 19:12:01 2022 :: midgaard/d10
+Thu Jun 23 19:13:01 2022 :: justice/JUSTICE: database saved.
+Thu Jun 23 20:15:50 2022 :: midgaard/d7
+Thu Jun 23 20:15:50 2022 :: midgaard/d9
+Thu Jun 23 20:15:50 2022 :: midgaard/d10
+Thu Jun 23 20:16:50 2022 :: justice/JUSTICE: database saved.
+Thu Jun 23 20:37:31 2022 :: Game up for 4 tick hours, checking for overpopulation
+Thu Jun 23 20:37:31 2022 :: Server has 57698 units.
+Thu Jun 23 22:01:49 2022 :: midgaard/d7
+Thu Jun 23 22:01:49 2022 :: midgaard/d9
+Thu Jun 23 22:01:49 2022 :: midgaard/d10
+Thu Jun 23 22:02:49 2022 :: justice/JUSTICE: database saved.
+Thu Jun 23 22:27:19 2022 :: midgaard/d7
+Thu Jun 23 22:27:19 2022 :: midgaard/d9
+Thu Jun 23 22:27:19 2022 :: midgaard/d10
+Thu Jun 23 22:28:19 2022 :: justice/JUSTICE: database saved.
+Thu Jun 23 22:43:56 2022 :: midgaard/d7
+Thu Jun 23 22:43:56 2022 :: midgaard/d9
+Thu Jun 23 22:43:56 2022 :: midgaard/d10
+Thu Jun 23 22:44:56 2022 :: justice/JUSTICE: database saved.
+Thu Jun 23 23:49:17 2022 :: midgaard/d7
+Thu Jun 23 23:49:17 2022 :: midgaard/d9
+Thu Jun 23 23:49:17 2022 :: midgaard/d10
+Thu Jun 23 23:50:17 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 00:12:55 2022 :: _players/container bag_holding1@hades3 weight 8 !=  baseweight of 5. Resetting.
+Fri Jun 24 00:20:52 2022 :: _players/Spree Tracker: Xynox has lead a successful spree of type 3 with 84/72 kills and 450/0000 XP in 5:58. Duration was 6:00.
+Fri Jun 24 00:37:31 2022 :: Game up for 8 tick hours, checking for overpopulation
+Fri Jun 24 00:37:31 2022 :: Server has 58824 units.
+Fri Jun 24 00:41:48 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 00:41:48 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 00:43:57 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 00:43:57 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 02:03:06 2022 :: midgaard/d7
+Fri Jun 24 02:03:06 2022 :: midgaard/d11
+Fri Jun 24 02:03:06 2022 :: midgaard/debug: NPC svygil@citadel -40821264 is gone.
+Fri Jun 24 02:03:06 2022 :: midgaard/d12
+Fri Jun 24 02:33:57 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=5, n=5, s=6
+Fri Jun 24 02:38:41 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=6, n=6, s=7
+Fri Jun 24 02:44:23 2022 :: midgaard/d7
+Fri Jun 24 02:44:23 2022 :: midgaard/d11
+Fri Jun 24 02:44:23 2022 :: midgaard/debug: NPC svygil@citadel -40783856 is gone.
+Fri Jun 24 02:44:23 2022 :: midgaard/d12
+Fri Jun 24 02:47:10 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=5, n=5, s=6
+Fri Jun 24 02:49:40 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=6, n=6, s=7
+Fri Jun 24 03:47:13 2022 :: midgaard/d7
+Fri Jun 24 03:47:13 2022 :: midgaard/d9
+Fri Jun 24 03:47:13 2022 :: midgaard/d10
+Fri Jun 24 03:48:13 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 04:34:32 2022 :: midgaard/d7
+Fri Jun 24 04:34:32 2022 :: midgaard/d11
+Fri Jun 24 04:34:32 2022 :: midgaard/debug: NPC svygil@citadel -39230576 is gone.
+Fri Jun 24 04:34:32 2022 :: midgaard/d12
+Fri Jun 24 04:37:31 2022 :: Game up for 12 tick hours, checking for overpopulation
+Fri Jun 24 04:37:31 2022 :: Server has 59941 units.
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:37:34 2022 :: basis/Overpopulation destroyed aggressive NPC tsetse_fly@tolanna from the game
+Fri Jun 24 04:53:01 2022 :: midgaard/d7
+Fri Jun 24 04:53:01 2022 :: midgaard/d11
+Fri Jun 24 04:53:01 2022 :: midgaard/debug: NPC dark_warrior@gnome -81074896 is gone.
+Fri Jun 24 04:53:01 2022 :: midgaard/d12
+Fri Jun 24 05:38:39 2022 :: midgaard/d7
+Fri Jun 24 05:38:39 2022 :: midgaard/d11
+Fri Jun 24 05:38:39 2022 :: midgaard/debug: NPC svygil@citadel -39917008 is gone.
+Fri Jun 24 05:38:39 2022 :: midgaard/d12
+Fri Jun 24 07:03:42 2022 :: midgaard/d7
+Fri Jun 24 07:03:42 2022 :: midgaard/d9
+Fri Jun 24 07:03:42 2022 :: midgaard/d10
+Fri Jun 24 07:04:42 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 07:26:50 2022 :: midgaard/d7
+Fri Jun 24 07:26:50 2022 :: midgaard/d9
+Fri Jun 24 07:26:50 2022 :: midgaard/d10
+Fri Jun 24 07:27:50 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 08:06:18 2022 :: Mplex not from trusted host, terminating.
+Fri Jun 24 08:34:40 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=7, n=7, s=8
+Fri Jun 24 08:37:31 2022 :: Game up for 16 tick hours, checking for overpopulation
+Fri Jun 24 08:37:31 2022 :: Server has 61556 units.
+Fri Jun 24 08:38:26 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=8, n=8, s=9
+Fri Jun 24 08:44:06 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=7, n=7, s=8
+Fri Jun 24 08:46:18 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=8, n=8, s=9
+Fri Jun 24 09:11:12 2022 :: Mplex not from trusted host, terminating.
+Fri Jun 24 09:35:36 2022 :: midgaard/d7
+Fri Jun 24 09:35:36 2022 :: midgaard/d9
+Fri Jun 24 09:35:36 2022 :: midgaard/d10
+Fri Jun 24 09:36:36 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 10:18:37 2022 :: Mplex not from trusted host, terminating.
+Fri Jun 24 10:43:05 2022 :: midgaard/d7
+Fri Jun 24 10:43:05 2022 :: midgaard/d9
+Fri Jun 24 10:43:05 2022 :: midgaard/d10
+Fri Jun 24 10:43:52 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:43:52 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:44:05 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 10:46:04 2022 :: _players/guild login_clean()
+Fri Jun 24 10:46:04 2022 :: _players/prof login_clean()
+Fri Jun 24 10:46:04 2022 :: _players/Mokla had profession -1. Bizarre. Setting to 0 (fighter).
+Fri Jun 24 10:46:04 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:46:04 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:48:04 2022 :: _players/guild login_clean()
+Fri Jun 24 10:48:04 2022 :: _players/prof login_clean()
+Fri Jun 24 10:48:04 2022 :: _players/Otoc had profession -1. Bizarre. Setting to 0 (fighter).
+Fri Jun 24 10:48:04 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:48:04 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:53:27 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:53:27 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:58:19 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 10:58:19 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 11:01:37 2022 :: midgaard/d7
+Fri Jun 24 11:01:37 2022 :: midgaard/d9
+Fri Jun 24 11:01:37 2022 :: midgaard/d10
+Fri Jun 24 11:02:37 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 12:06:18 2022 :: midgaard/d7
+Fri Jun 24 12:06:18 2022 :: midgaard/d9
+Fri Jun 24 12:06:18 2022 :: midgaard/d10
+Fri Jun 24 12:07:18 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 12:13:25 2022 :: _players/container bag_holding1@hades3 weight 8 !=  baseweight of 5. Resetting.
+Fri Jun 24 12:37:31 2022 :: Game up for 20 tick hours, checking for overpopulation
+Fri Jun 24 12:37:31 2022 :: Server has 63318 units.
+Fri Jun 24 12:59:41 2022 :: Mplex not from trusted host, terminating.
+Fri Jun 24 13:11:13 2022 :: midgaard/d7
+Fri Jun 24 13:11:13 2022 :: midgaard/d9
+Fri Jun 24 13:11:13 2022 :: midgaard/d10
+Fri Jun 24 13:12:13 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 13:36:48 2022 :: midgaard/d7
+Fri Jun 24 13:36:48 2022 :: midgaard/d11
+Fri Jun 24 13:36:48 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:36:48 2022 :: midgaard/d12
+Fri Jun 24 13:36:55 2022 :: midgaard/d7
+Fri Jun 24 13:36:55 2022 :: midgaard/d11
+Fri Jun 24 13:36:55 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:36:55 2022 :: midgaard/d12
+Fri Jun 24 13:36:58 2022 :: midgaard/d7
+Fri Jun 24 13:36:58 2022 :: midgaard/d11
+Fri Jun 24 13:36:58 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:36:58 2022 :: midgaard/d12
+Fri Jun 24 13:37:08 2022 :: midgaard/d7
+Fri Jun 24 13:37:08 2022 :: midgaard/d11
+Fri Jun 24 13:37:08 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:37:08 2022 :: midgaard/d12
+Fri Jun 24 13:37:16 2022 :: midgaard/d7
+Fri Jun 24 13:37:16 2022 :: midgaard/d11
+Fri Jun 24 13:37:16 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:37:16 2022 :: midgaard/d12
+Fri Jun 24 13:37:38 2022 :: midgaard/d7
+Fri Jun 24 13:37:38 2022 :: midgaard/d11
+Fri Jun 24 13:37:38 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:37:38 2022 :: midgaard/d12
+Fri Jun 24 13:37:45 2022 :: midgaard/d7
+Fri Jun 24 13:37:45 2022 :: midgaard/d11
+Fri Jun 24 13:37:45 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:37:45 2022 :: midgaard/d12
+Fri Jun 24 13:38:02 2022 :: midgaard/d7
+Fri Jun 24 13:38:02 2022 :: midgaard/d11
+Fri Jun 24 13:38:02 2022 :: midgaard/debug: NPC svygil@citadel -40273504 is gone.
+Fri Jun 24 13:38:02 2022 :: midgaard/d12
+Fri Jun 24 14:14:42 2022 :: midgaard/d7
+Fri Jun 24 14:14:42 2022 :: midgaard/d11
+Fri Jun 24 14:14:42 2022 :: midgaard/debug: NPC svygil@citadel -30642512 is gone.
+Fri Jun 24 14:14:42 2022 :: midgaard/d12
+Fri Jun 24 14:14:43 2022 :: midgaard/d7
+Fri Jun 24 14:14:43 2022 :: midgaard/d11
+Fri Jun 24 14:14:43 2022 :: midgaard/debug: NPC svygil@citadel -30642512 is gone.
+Fri Jun 24 14:14:43 2022 :: midgaard/d12
+Fri Jun 24 14:15:18 2022 :: midgaard/d7
+Fri Jun 24 14:15:18 2022 :: midgaard/d11
+Fri Jun 24 14:15:18 2022 :: midgaard/debug: NPC svygil@citadel -30642512 is gone.
+Fri Jun 24 14:15:18 2022 :: midgaard/d12
+Fri Jun 24 14:35:26 2022 :: midgaard/d7
+Fri Jun 24 14:35:26 2022 :: midgaard/d9
+Fri Jun 24 14:35:26 2022 :: midgaard/d10
+Fri Jun 24 14:35:32 2022 :: midgaard/d7
+Fri Jun 24 14:35:32 2022 :: midgaard/d9
+Fri Jun 24 14:35:32 2022 :: midgaard/d10
+Fri Jun 24 14:36:15 2022 :: midgaard/d7
+Fri Jun 24 14:36:15 2022 :: midgaard/d9
+Fri Jun 24 14:36:15 2022 :: midgaard/d10
+Fri Jun 24 14:36:26 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 14:59:43 2022 :: midgaard/d7
+Fri Jun 24 14:59:43 2022 :: midgaard/d11
+Fri Jun 24 14:59:43 2022 :: midgaard/debug: NPC svygil@citadel -32670256 is gone.
+Fri Jun 24 14:59:43 2022 :: midgaard/d12
+Fri Jun 24 14:59:58 2022 :: midgaard/d7
+Fri Jun 24 14:59:58 2022 :: midgaard/d11
+Fri Jun 24 14:59:58 2022 :: midgaard/debug: NPC svygil@citadel -32670256 is gone.
+Fri Jun 24 14:59:58 2022 :: midgaard/d12
+Fri Jun 24 15:00:28 2022 :: midgaard/d7
+Fri Jun 24 15:00:28 2022 :: midgaard/d11
+Fri Jun 24 15:00:28 2022 :: midgaard/debug: NPC svygil@citadel -32670256 is gone.
+Fri Jun 24 15:00:28 2022 :: midgaard/d12
+Fri Jun 24 15:25:19 2022 :: midgaard/d7
+Fri Jun 24 15:25:19 2022 :: midgaard/d11
+Fri Jun 24 15:25:19 2022 :: midgaard/debug: NPC dark_warrior@gnome -32312704 is gone.
+Fri Jun 24 15:25:19 2022 :: midgaard/d12
+Fri Jun 24 15:40:52 2022 :: midgaard/d7
+Fri Jun 24 15:40:52 2022 :: midgaard/d11
+Fri Jun 24 15:40:52 2022 :: midgaard/debug: NPC svygil@citadel -34240480 is gone.
+Fri Jun 24 15:40:52 2022 :: midgaard/d12
+Fri Jun 24 15:41:00 2022 :: midgaard/d7
+Fri Jun 24 15:41:00 2022 :: midgaard/d11
+Fri Jun 24 15:41:00 2022 :: midgaard/debug: NPC svygil@citadel -34240480 is gone.
+Fri Jun 24 15:41:00 2022 :: midgaard/d12
+Fri Jun 24 15:41:00 2022 :: midgaard/d7
+Fri Jun 24 15:41:00 2022 :: midgaard/d11
+Fri Jun 24 15:41:00 2022 :: midgaard/debug: NPC svygil@citadel -34240480 is gone.
+Fri Jun 24 15:41:00 2022 :: midgaard/d12
+Fri Jun 24 15:41:00 2022 :: midgaard/d7
+Fri Jun 24 15:41:00 2022 :: midgaard/d11
+Fri Jun 24 15:41:00 2022 :: midgaard/debug: NPC svygil@citadel -34240480 is gone.
+Fri Jun 24 15:41:00 2022 :: midgaard/d12
+Fri Jun 24 16:32:34 2022 :: _players/nanny_newbie()
+Fri Jun 24 16:32:34 2022 :: Melquiades[130.253.191.163] (GUEST) has entered the game.
+Fri Jun 24 16:32:34 2022 :: new player id = 98899
+Fri Jun 24 16:37:31 2022 :: Game up for 24 tick hours, checking for overpopulation
+Fri Jun 24 16:37:31 2022 :: Server has 64246 units.
+Fri Jun 24 16:48:39 2022 :: midgaard/d7
+Fri Jun 24 16:48:39 2022 :: midgaard/d11
+Fri Jun 24 16:48:39 2022 :: midgaard/debug: NPC svygil@citadel -33206528 is gone.
+Fri Jun 24 16:48:39 2022 :: midgaard/d12
+Fri Jun 24 16:48:47 2022 :: midgaard/d7
+Fri Jun 24 16:48:47 2022 :: midgaard/d11
+Fri Jun 24 16:48:47 2022 :: midgaard/debug: NPC svygil@citadel -33206528 is gone.
+Fri Jun 24 16:48:47 2022 :: midgaard/d12
+Fri Jun 24 16:49:03 2022 :: midgaard/d7
+Fri Jun 24 16:49:03 2022 :: midgaard/d11
+Fri Jun 24 16:49:03 2022 :: midgaard/debug: NPC svygil@citadel -33206528 is gone.
+Fri Jun 24 16:49:03 2022 :: midgaard/d12
+Fri Jun 24 16:56:06 2022 :: _players/AdvGuildLevel(): Melquiades@_players guild [Udgaard Conjurer] in level exd.[1]=0, n=0, s=1
+Fri Jun 24 17:47:45 2022 :: midgaard/d7
+Fri Jun 24 17:47:45 2022 :: midgaard/d11
+Fri Jun 24 17:47:45 2022 :: midgaard/debug: NPC svygil@citadel -41223072 is gone.
+Fri Jun 24 17:47:45 2022 :: midgaard/d12
+Fri Jun 24 17:47:53 2022 :: midgaard/d7
+Fri Jun 24 17:47:53 2022 :: midgaard/d11
+Fri Jun 24 17:47:53 2022 :: midgaard/debug: NPC svygil@citadel -41223072 is gone.
+Fri Jun 24 17:47:53 2022 :: midgaard/d12
+Fri Jun 24 17:48:11 2022 :: midgaard/d7
+Fri Jun 24 17:48:11 2022 :: midgaard/d11
+Fri Jun 24 17:48:11 2022 :: midgaard/debug: NPC svygil@citadel -41223072 is gone.
+Fri Jun 24 17:48:11 2022 :: midgaard/d12
+Fri Jun 24 17:52:58 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 17:52:58 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Fri Jun 24 18:10:46 2022 :: midgaard/d7
+Fri Jun 24 18:10:46 2022 :: midgaard/d11
+Fri Jun 24 18:10:46 2022 :: midgaard/debug: NPC dark_warrior@gnome -34441904 is gone.
+Fri Jun 24 18:10:46 2022 :: midgaard/d12
+Fri Jun 24 18:30:45 2022 :: midgaard/d7
+Fri Jun 24 18:30:45 2022 :: midgaard/d9
+Fri Jun 24 18:30:45 2022 :: midgaard/d10
+Fri Jun 24 18:30:47 2022 :: midgaard/d7
+Fri Jun 24 18:30:47 2022 :: midgaard/d9
+Fri Jun 24 18:30:47 2022 :: midgaard/d10
+Fri Jun 24 18:30:55 2022 :: midgaard/d7
+Fri Jun 24 18:30:55 2022 :: midgaard/d9
+Fri Jun 24 18:30:55 2022 :: midgaard/d10
+Fri Jun 24 18:31:45 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 18:50:39 2022 :: midgaard/d7
+Fri Jun 24 18:50:39 2022 :: midgaard/d11
+Fri Jun 24 18:50:39 2022 :: midgaard/debug: NPC svygil@citadel -28863200 is gone.
+Fri Jun 24 18:50:39 2022 :: midgaard/d12
+Fri Jun 24 18:51:02 2022 :: midgaard/d7
+Fri Jun 24 18:51:02 2022 :: midgaard/d11
+Fri Jun 24 18:51:02 2022 :: midgaard/debug: NPC svygil@citadel -28863200 is gone.
+Fri Jun 24 18:51:02 2022 :: midgaard/d12
+Fri Jun 24 18:51:27 2022 :: midgaard/d7
+Fri Jun 24 18:51:27 2022 :: midgaard/d11
+Fri Jun 24 18:51:27 2022 :: midgaard/debug: NPC svygil@citadel -28863200 is gone.
+Fri Jun 24 18:51:27 2022 :: midgaard/d12
+Fri Jun 24 19:40:39 2022 :: midgaard/d7
+Fri Jun 24 19:40:39 2022 :: midgaard/d11
+Fri Jun 24 19:40:39 2022 :: midgaard/debug: NPC svygil@citadel -27068640 is gone.
+Fri Jun 24 19:40:39 2022 :: midgaard/d12
+Fri Jun 24 19:40:42 2022 :: midgaard/d7
+Fri Jun 24 19:40:42 2022 :: midgaard/d11
+Fri Jun 24 19:40:42 2022 :: midgaard/debug: NPC svygil@citadel -27068640 is gone.
+Fri Jun 24 19:40:42 2022 :: midgaard/d12
+Fri Jun 24 19:40:47 2022 :: midgaard/d7
+Fri Jun 24 19:40:47 2022 :: midgaard/d11
+Fri Jun 24 19:40:47 2022 :: midgaard/debug: NPC svygil@citadel -27068640 is gone.
+Fri Jun 24 19:40:47 2022 :: midgaard/d12
+Fri Jun 24 19:41:07 2022 :: midgaard/d7
+Fri Jun 24 19:41:07 2022 :: midgaard/d11
+Fri Jun 24 19:41:07 2022 :: midgaard/debug: NPC svygil@citadel -27068640 is gone.
+Fri Jun 24 19:41:07 2022 :: midgaard/d12
+Fri Jun 24 20:18:57 2022 :: midgaard/d7
+Fri Jun 24 20:18:57 2022 :: midgaard/d11
+Fri Jun 24 20:18:57 2022 :: midgaard/debug: NPC svygil@citadel -26371280 is gone.
+Fri Jun 24 20:18:57 2022 :: midgaard/d12
+Fri Jun 24 20:19:22 2022 :: midgaard/d7
+Fri Jun 24 20:19:22 2022 :: midgaard/d11
+Fri Jun 24 20:19:22 2022 :: midgaard/debug: NPC svygil@citadel -26371280 is gone.
+Fri Jun 24 20:19:22 2022 :: midgaard/d12
+Fri Jun 24 20:19:27 2022 :: midgaard/d7
+Fri Jun 24 20:19:27 2022 :: midgaard/d11
+Fri Jun 24 20:19:27 2022 :: midgaard/debug: NPC svygil@citadel -26371280 is gone.
+Fri Jun 24 20:19:27 2022 :: midgaard/d12
+Fri Jun 24 20:37:31 2022 :: Game up for 28 tick hours, checking for overpopulation
+Fri Jun 24 20:37:31 2022 :: Server has 65874 units.
+Fri Jun 24 21:00:38 2022 :: midgaard/d7
+Fri Jun 24 21:00:38 2022 :: midgaard/d11
+Fri Jun 24 21:00:38 2022 :: midgaard/debug: NPC svygil@citadel -26265184 is gone.
+Fri Jun 24 21:00:38 2022 :: midgaard/d12
+Fri Jun 24 21:00:51 2022 :: midgaard/d7
+Fri Jun 24 21:00:51 2022 :: midgaard/d11
+Fri Jun 24 21:00:51 2022 :: midgaard/debug: NPC svygil@citadel -26265184 is gone.
+Fri Jun 24 21:00:51 2022 :: midgaard/d12
+Fri Jun 24 21:01:07 2022 :: midgaard/d7
+Fri Jun 24 21:01:07 2022 :: midgaard/d11
+Fri Jun 24 21:01:07 2022 :: midgaard/debug: NPC svygil@citadel -26265184 is gone.
+Fri Jun 24 21:01:07 2022 :: midgaard/d12
+Fri Jun 24 22:04:45 2022 :: midgaard/d7
+Fri Jun 24 22:04:45 2022 :: midgaard/d11
+Fri Jun 24 22:04:45 2022 :: midgaard/debug: NPC svygil@citadel -28700896 is gone.
+Fri Jun 24 22:04:45 2022 :: midgaard/d12
+Fri Jun 24 22:05:12 2022 :: midgaard/d7
+Fri Jun 24 22:05:12 2022 :: midgaard/d11
+Fri Jun 24 22:05:12 2022 :: midgaard/debug: NPC svygil@citadel -28700896 is gone.
+Fri Jun 24 22:05:12 2022 :: midgaard/d12
+Fri Jun 24 22:05:33 2022 :: midgaard/d7
+Fri Jun 24 22:05:33 2022 :: midgaard/d11
+Fri Jun 24 22:05:33 2022 :: midgaard/debug: NPC svygil@citadel -28700896 is gone.
+Fri Jun 24 22:05:33 2022 :: midgaard/d12
+Fri Jun 24 22:26:09 2022 :: midgaard/d7
+Fri Jun 24 22:26:09 2022 :: midgaard/d9
+Fri Jun 24 22:26:09 2022 :: midgaard/d10
+Fri Jun 24 22:26:33 2022 :: midgaard/d7
+Fri Jun 24 22:26:33 2022 :: midgaard/d11
+Fri Jun 24 22:26:33 2022 :: midgaard/debug: NPC svygil@citadel -23782176 is gone.
+Fri Jun 24 22:26:33 2022 :: midgaard/d12
+Fri Jun 24 22:26:41 2022 :: midgaard/d7
+Fri Jun 24 22:26:41 2022 :: midgaard/d11
+Fri Jun 24 22:26:41 2022 :: midgaard/debug: NPC svygil@citadel -23782176 is gone.
+Fri Jun 24 22:26:41 2022 :: midgaard/d12
+Fri Jun 24 22:27:09 2022 :: justice/JUSTICE: database saved.
+Fri Jun 24 22:31:27 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=9, n=9, s=10
+Fri Jun 24 22:32:51 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=10, n=10, s=11
+Fri Jun 24 22:40:16 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=9, n=9, s=10
+Fri Jun 24 22:43:07 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=10, n=10, s=11
+Fri Jun 24 22:46:20 2022 :: _players/container bag_holding1@hades3 weight 8 !=  baseweight of 5. Resetting.
+Fri Jun 24 23:03:56 2022 :: Mplex not from trusted host, terminating.
+Fri Jun 24 23:51:15 2022 :: midgaard/d7
+Fri Jun 24 23:51:15 2022 :: midgaard/d11
+Fri Jun 24 23:51:15 2022 :: midgaard/debug: NPC svygil@citadel -27690000 is gone.
+Fri Jun 24 23:51:15 2022 :: midgaard/d12
+Fri Jun 24 23:51:42 2022 :: midgaard/d7
+Fri Jun 24 23:51:42 2022 :: midgaard/d11
+Fri Jun 24 23:51:42 2022 :: midgaard/debug: NPC svygil@citadel -27690000 is gone.
+Fri Jun 24 23:51:42 2022 :: midgaard/d12
+Fri Jun 24 23:52:03 2022 :: midgaard/d7
+Fri Jun 24 23:52:03 2022 :: midgaard/d11
+Fri Jun 24 23:52:03 2022 :: midgaard/debug: NPC svygil@citadel -27690000 is gone.
+Fri Jun 24 23:52:03 2022 :: midgaard/d12
+Sat Jun 25 00:16:21 2022 :: midgaard/d7
+Sat Jun 25 00:16:21 2022 :: midgaard/d11
+Sat Jun 25 00:16:21 2022 :: midgaard/debug: NPC svygil@citadel -22514752 is gone.
+Sat Jun 25 00:16:21 2022 :: midgaard/d12
+Sat Jun 25 00:16:21 2022 :: midgaard/d7
+Sat Jun 25 00:16:21 2022 :: midgaard/d11
+Sat Jun 25 00:16:21 2022 :: midgaard/debug: NPC svygil@citadel -22514752 is gone.
+Sat Jun 25 00:16:21 2022 :: midgaard/d12
+Sat Jun 25 00:16:53 2022 :: midgaard/d7
+Sat Jun 25 00:16:53 2022 :: midgaard/d11
+Sat Jun 25 00:16:53 2022 :: midgaard/debug: NPC svygil@citadel -22514752 is gone.
+Sat Jun 25 00:16:53 2022 :: midgaard/d12
+Sat Jun 25 00:16:58 2022 :: midgaard/d7
+Sat Jun 25 00:16:58 2022 :: midgaard/d11
+Sat Jun 25 00:16:58 2022 :: midgaard/debug: NPC svygil@citadel -22514752 is gone.
+Sat Jun 25 00:16:58 2022 :: midgaard/d12
+Sat Jun 25 00:30:55 2022 :: _players/nanny_newbie()
+Sat Jun 25 00:30:55 2022 :: beyazsakal[173.174.102.112] (GUEST) has entered the game.
+Sat Jun 25 00:30:55 2022 :: new player id = 98900
+Sat Jun 25 00:37:10 2022 :: midgaard/d7
+Sat Jun 25 00:37:10 2022 :: midgaard/d9
+Sat Jun 25 00:37:10 2022 :: midgaard/d10
+Sat Jun 25 00:37:23 2022 :: midgaard/d7
+Sat Jun 25 00:37:23 2022 :: midgaard/d9
+Sat Jun 25 00:37:23 2022 :: midgaard/d10
+Sat Jun 25 00:37:27 2022 :: midgaard/d7
+Sat Jun 25 00:37:27 2022 :: midgaard/d9
+Sat Jun 25 00:37:27 2022 :: midgaard/d10
+Sat Jun 25 00:37:31 2022 :: Game up for 32 tick hours, checking for overpopulation
+Sat Jun 25 00:37:31 2022 :: Server has 66892 units.
+Sat Jun 25 00:38:10 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 00:38:20 2022 :: _players/container bag_holding1@hades3 weight 8 !=  baseweight of 5. Resetting.
+Sat Jun 25 00:45:13 2022 :: _players/container bag_holding1@hades3 weight 8 !=  baseweight of 5. Resetting.
+Sat Jun 25 00:48:16 2022 :: Vysck killed by the Giant Drone Ant at A Path
+Sat Jun 25 00:48:16 2022 :: korandin/jill@korandin is in path_8@outxiyang instead of home shop arms@korandin
+Sat Jun 25 01:00:21 2022 :: _players/DIL do_get in unit jace@_players had endless loop.
+Sat Jun 25 01:05:26 2022 :: _players/Spree Tracker: Xynox failed to lead a spree of type 1 with 136/182 kills and 30781/78000 XP. Duration was 26:00.
+Sat Jun 25 01:07:43 2022 :: _players/AdvGuildLevel(): Vysck@_players guild [Udgaard Healer] in level exd.[1]=337, n=337, s=338
+Sat Jun 25 01:08:36 2022 :: _players/AdvGuildLevel(): Vysck@_players guild [Udgaard Healer] in level exd.[1]=338, n=338, s=339
+Sat Jun 25 01:08:47 2022 :: _players/AdvGuildLevel(): Vysck@_players guild [Udgaard Healer] in level exd.[1]=339, n=339, s=340
+Sat Jun 25 01:09:38 2022 :: _players/AdvGuildLevel(): jace@_players guild [Udgaard Fighter] in level exd.[1]=60, n=60, s=61
+Sat Jun 25 01:09:39 2022 :: _players/AdvGuildLevel(): jace@_players guild [Udgaard Fighter] in level exd.[1]=61, n=61, s=62
+Sat Jun 25 01:09:40 2022 :: _players/AdvGuildLevel(): jace@_players guild [Udgaard Fighter] in level exd.[1]=62, n=62, s=63
+Sat Jun 25 01:09:40 2022 :: _players/AdvGuildLevel(): jace@_players guild [Udgaard Fighter] in level exd.[1]=63, n=63, s=64
+Sat Jun 25 01:10:53 2022 :: _players/AdvGuildLevel(): jaygo@_players guild [Udgaard Healer] in level exd.[1]=50, n=50, s=51
+Sat Jun 25 01:11:02 2022 :: _players/AdvGuildLevel(): jaygo@_players guild [Udgaard Healer] in level exd.[1]=51, n=51, s=52
+Sat Jun 25 01:11:11 2022 :: _players/AdvGuildLevel(): jaygo@_players guild [Udgaard Healer] in level exd.[1]=52, n=52, s=53
+Sat Jun 25 01:11:17 2022 :: _players/AdvGuildLevel(): jaygo@_players guild [Udgaard Healer] in level exd.[1]=53, n=53, s=54
+Sat Jun 25 01:40:54 2022 :: midgaard/d7
+Sat Jun 25 01:40:54 2022 :: midgaard/d11
+Sat Jun 25 01:40:54 2022 :: midgaard/debug: NPC svygil@citadel -81390864 is gone.
+Sat Jun 25 01:40:54 2022 :: midgaard/d12
+Sat Jun 25 01:41:18 2022 :: midgaard/d7
+Sat Jun 25 01:41:18 2022 :: midgaard/d11
+Sat Jun 25 01:41:18 2022 :: midgaard/debug: NPC svygil@citadel -81390864 is gone.
+Sat Jun 25 01:41:18 2022 :: midgaard/d12
+Sat Jun 25 01:41:24 2022 :: midgaard/d7
+Sat Jun 25 01:41:24 2022 :: midgaard/d11
+Sat Jun 25 01:41:24 2022 :: midgaard/debug: NPC svygil@citadel -81390864 is gone.
+Sat Jun 25 01:41:24 2022 :: midgaard/d12
+Sat Jun 25 01:41:34 2022 :: midgaard/d7
+Sat Jun 25 01:41:34 2022 :: midgaard/d11
+Sat Jun 25 01:41:34 2022 :: midgaard/debug: NPC svygil@citadel -81390864 is gone.
+Sat Jun 25 01:41:34 2022 :: midgaard/d12
+Sat Jun 25 02:00:50 2022 :: midgaard/d7
+Sat Jun 25 02:00:50 2022 :: midgaard/d11
+Sat Jun 25 02:00:50 2022 :: midgaard/debug: NPC svygil@citadel -21637664 is gone.
+Sat Jun 25 02:00:50 2022 :: midgaard/d12
+Sat Jun 25 02:00:53 2022 :: midgaard/d7
+Sat Jun 25 02:00:53 2022 :: midgaard/d11
+Sat Jun 25 02:00:53 2022 :: midgaard/debug: NPC svygil@citadel -21637664 is gone.
+Sat Jun 25 02:00:53 2022 :: midgaard/d12
+Sat Jun 25 02:01:22 2022 :: midgaard/d7
+Sat Jun 25 02:01:22 2022 :: midgaard/d11
+Sat Jun 25 02:01:22 2022 :: midgaard/debug: NPC svygil@citadel -21637664 is gone.
+Sat Jun 25 02:01:22 2022 :: midgaard/d12
+Sat Jun 25 02:50:29 2022 :: midgaard/d7
+Sat Jun 25 02:50:29 2022 :: midgaard/d11
+Sat Jun 25 02:50:29 2022 :: midgaard/debug: NPC dark_warrior@gnome -23577280 is gone.
+Sat Jun 25 02:50:29 2022 :: midgaard/d12
+Sat Jun 25 02:52:04 2022 :: Doctyr killed by a adventurer at The Harbor Master's tower
+Sat Jun 25 03:07:39 2022 :: midgaard/d7
+Sat Jun 25 03:07:39 2022 :: midgaard/d11
+Sat Jun 25 03:07:39 2022 :: midgaard/debug: NPC svygil@citadel -29711424 is gone.
+Sat Jun 25 03:07:39 2022 :: midgaard/d12
+Sat Jun 25 03:08:04 2022 :: midgaard/d7
+Sat Jun 25 03:08:04 2022 :: midgaard/d11
+Sat Jun 25 03:08:04 2022 :: midgaard/debug: NPC svygil@citadel -29711424 is gone.
+Sat Jun 25 03:08:04 2022 :: midgaard/d12
+Sat Jun 25 03:32:02 2022 :: midgaard/d7
+Sat Jun 25 03:32:02 2022 :: midgaard/d11
+Sat Jun 25 03:32:02 2022 :: midgaard/debug: NPC dark_warrior@gnome -42017088 is gone.
+Sat Jun 25 03:32:02 2022 :: midgaard/d12
+Sat Jun 25 03:52:33 2022 :: midgaard/d7
+Sat Jun 25 03:52:33 2022 :: midgaard/d11
+Sat Jun 25 03:52:33 2022 :: midgaard/debug: NPC svygil@citadel -22173856 is gone.
+Sat Jun 25 03:52:33 2022 :: midgaard/d12
+Sat Jun 25 03:52:46 2022 :: midgaard/d7
+Sat Jun 25 03:52:46 2022 :: midgaard/d11
+Sat Jun 25 03:52:46 2022 :: midgaard/debug: NPC svygil@citadel -22173856 is gone.
+Sat Jun 25 03:52:46 2022 :: midgaard/d12
+Sat Jun 25 03:52:48 2022 :: midgaard/d7
+Sat Jun 25 03:52:48 2022 :: midgaard/d11
+Sat Jun 25 03:52:48 2022 :: midgaard/debug: NPC svygil@citadel -22173856 is gone.
+Sat Jun 25 03:52:48 2022 :: midgaard/d12
+Sat Jun 25 03:55:47 2022 :: midgaard/d7
+Sat Jun 25 03:55:47 2022 :: midgaard/d11
+Sat Jun 25 03:55:47 2022 :: midgaard/debug: NPC svygil@citadel -22173856 is gone.
+Sat Jun 25 03:55:47 2022 :: midgaard/d12
+Sat Jun 25 04:03:57 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:03:57 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:10:59 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:11:46 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:11:46 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:11:46 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:12:07 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:12:39 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:18:31 2022 :: midgaard/d7
+Sat Jun 25 04:18:31 2022 :: midgaard/d11
+Sat Jun 25 04:18:31 2022 :: midgaard/debug: NPC svygil@citadel -21533200 is gone.
+Sat Jun 25 04:18:31 2022 :: midgaard/d12
+Sat Jun 25 04:18:35 2022 :: midgaard/d7
+Sat Jun 25 04:18:35 2022 :: midgaard/d11
+Sat Jun 25 04:18:35 2022 :: midgaard/debug: NPC svygil@citadel -21533200 is gone.
+Sat Jun 25 04:18:35 2022 :: midgaard/d12
+Sat Jun 25 04:21:31 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:21:31 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:21:52 2022 :: _players/Giliyan was summoned by Mercury to camp6@skaven.
+Sat Jun 25 04:23:31 2022 :: NULL n code to act(): You unleash a deadly whirling attack on $3n!
+Sat Jun 25 04:34:31 2022 :: Kicking out idle player and making link-dead.
+Sat Jun 25 04:35:31 2022 :: Kicking out idle player and making link-dead.
+Sat Jun 25 04:36:17 2022 :: _players/Tsunami was summoned by Mercury to path_und@neptune.
+Sat Jun 25 04:37:31 2022 :: Game up for 36 tick hours, checking for overpopulation
+Sat Jun 25 04:37:31 2022 :: Server has 65870 units.
+Sat Jun 25 04:38:54 2022 :: NULL n code to act(): You unleash a deadly whirling attack on $3n!
+Sat Jun 25 04:38:59 2022 :: darkelf/DIL SERIOUS: on traveler@darkelf traveler@darkelf, Type error in exec
+
+Sat Jun 25 04:41:32 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 04:41:32 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:00:25 2022 :: _players/Tsunami was summoned by Mercury to path_und@neptune.
+Sat Jun 25 05:02:02 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:03:55 2022 :: _players/Yellixei was summoned by Mercury to path_und@neptune.
+Sat Jun 25 05:04:28 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:04:28 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:05:39 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:05:50 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:05:50 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:05:50 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:06:51 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:14:44 2022 :: midgaard/d7
+Sat Jun 25 05:14:44 2022 :: midgaard/d11
+Sat Jun 25 05:14:44 2022 :: midgaard/debug: NPC svygil@citadel -81314080 is gone.
+Sat Jun 25 05:14:44 2022 :: midgaard/d12
+Sat Jun 25 05:15:18 2022 :: midgaard/d7
+Sat Jun 25 05:15:18 2022 :: midgaard/d11
+Sat Jun 25 05:15:18 2022 :: midgaard/debug: NPC svygil@citadel -81314080 is gone.
+Sat Jun 25 05:15:18 2022 :: midgaard/d12
+Sat Jun 25 05:21:05 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:21:05 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:21:05 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:21:21 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:21:21 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:34:25 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:34:25 2022 :: vahldragh[69.201.67.228] has reconnected.
+Sat Jun 25 05:34:44 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:35:29 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:35:29 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:35:29 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:37:10 2022 :: Vahldragh killed by Satan the Master of Hell at The Evil City of Dis : Where Evil Resides
+Sat Jun 25 05:40:31 2022 :: Kicking out idle player and making link-dead.
+Sat Jun 25 05:41:31 2022 :: Kicking out idle player and making link-dead.
+Sat Jun 25 05:41:35 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:41:35 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 05:47:17 2022 :: midgaard/d7
+Sat Jun 25 05:47:17 2022 :: midgaard/d9
+Sat Jun 25 05:47:17 2022 :: midgaard/d10
+Sat Jun 25 05:47:21 2022 :: midgaard/d7
+Sat Jun 25 05:47:21 2022 :: midgaard/d9
+Sat Jun 25 05:47:21 2022 :: midgaard/d10
+Sat Jun 25 05:48:17 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 05:59:53 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=11, n=11, s=12
+Sat Jun 25 06:01:55 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=12, n=12, s=13
+Sat Jun 25 06:04:31 2022 :: Kicking out idle player and making link-dead.
+Sat Jun 25 06:04:32 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=11, n=11, s=12
+Sat Jun 25 06:07:01 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=12, n=12, s=13
+Sat Jun 25 06:13:05 2022 :: midgaard/d7
+Sat Jun 25 06:13:05 2022 :: midgaard/d11
+Sat Jun 25 06:13:05 2022 :: midgaard/debug: NPC svygil@citadel -79497584 is gone.
+Sat Jun 25 06:13:05 2022 :: midgaard/d12
+Sat Jun 25 06:13:56 2022 :: midgaard/d7
+Sat Jun 25 06:13:56 2022 :: midgaard/d11
+Sat Jun 25 06:13:56 2022 :: midgaard/debug: NPC svygil@citadel -79497584 is gone.
+Sat Jun 25 06:13:56 2022 :: midgaard/d12
+Sat Jun 25 06:47:40 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=5, n=5, s=6
+Sat Jun 25 06:51:33 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=6, n=6, s=7
+Sat Jun 25 06:53:27 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=7, n=7, s=8
+Sat Jun 25 06:54:38 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=8, n=8, s=9
+Sat Jun 25 06:55:50 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=9, n=9, s=10
+Sat Jun 25 06:57:15 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=10, n=10, s=11
+Sat Jun 25 06:58:26 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=11, n=11, s=12
+Sat Jun 25 07:00:09 2022 :: _players/AdvGuildLevel(): tsunami@_players guild [Barbarian] in level exd.[1]=12, n=12, s=13
+Sat Jun 25 07:04:31 2022 :: Kicking out idle player and making link-dead.
+Sat Jun 25 07:04:51 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 07:05:07 2022 :: _players/Tsunami was summoned by Mercury to ud_storage@udgaard.
+Sat Jun 25 07:08:26 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 07:08:26 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 07:10:00 2022 :: midgaard/d7
+Sat Jun 25 07:10:00 2022 :: midgaard/d11
+Sat Jun 25 07:10:00 2022 :: midgaard/debug: NPC svygil@citadel -17971680 is gone.
+Sat Jun 25 07:10:00 2022 :: midgaard/d12
+Sat Jun 25 07:10:20 2022 :: midgaard/d7
+Sat Jun 25 07:10:20 2022 :: midgaard/d11
+Sat Jun 25 07:10:20 2022 :: midgaard/debug: NPC svygil@citadel -17971680 is gone.
+Sat Jun 25 07:10:20 2022 :: midgaard/d12
+Sat Jun 25 07:20:13 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 07:20:13 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 07:20:13 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 07:20:33 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 07:21:03 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 08:03:43 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=13, n=13, s=14
+Sat Jun 25 08:06:53 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=13, n=13, s=14
+Sat Jun 25 08:17:15 2022 :: midgaard/d7
+Sat Jun 25 08:17:15 2022 :: midgaard/d11
+Sat Jun 25 08:17:15 2022 :: midgaard/debug: NPC svygil@citadel -18286688 is gone.
+Sat Jun 25 08:17:15 2022 :: midgaard/d12
+Sat Jun 25 08:17:44 2022 :: midgaard/d7
+Sat Jun 25 08:17:44 2022 :: midgaard/d11
+Sat Jun 25 08:17:44 2022 :: midgaard/debug: NPC svygil@citadel -18286688 is gone.
+Sat Jun 25 08:17:44 2022 :: midgaard/d12
+Sat Jun 25 08:18:00 2022 :: midgaard/d7
+Sat Jun 25 08:18:00 2022 :: midgaard/d11
+Sat Jun 25 08:18:00 2022 :: midgaard/debug: NPC svygil@citadel -18286688 is gone.
+Sat Jun 25 08:18:00 2022 :: midgaard/d12
+Sat Jun 25 08:37:31 2022 :: Game up for 40 tick hours, checking for overpopulation
+Sat Jun 25 08:37:31 2022 :: Server has 66487 units.
+Sat Jun 25 08:37:44 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 08:37:44 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 08:43:02 2022 :: g_q/get_out() magic_cricket@g_q is unable to exit pack@farm1
+Sat Jun 25 08:43:02 2022 :: g_q/readywalk() giving up
+Sat Jun 25 09:05:36 2022 :: midgaard/d7
+Sat Jun 25 09:05:36 2022 :: midgaard/d9
+Sat Jun 25 09:05:36 2022 :: midgaard/d10
+Sat Jun 25 09:06:18 2022 :: midgaard/d7
+Sat Jun 25 09:06:18 2022 :: midgaard/d9
+Sat Jun 25 09:06:18 2022 :: midgaard/d10
+Sat Jun 25 09:06:36 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 09:15:10 2022 :: midgaard/d7
+Sat Jun 25 09:15:10 2022 :: midgaard/d11
+Sat Jun 25 09:15:10 2022 :: midgaard/debug: NPC svygil@citadel -19239712 is gone.
+Sat Jun 25 09:15:10 2022 :: midgaard/d12
+Sat Jun 25 09:15:13 2022 :: midgaard/d7
+Sat Jun 25 09:15:13 2022 :: midgaard/d11
+Sat Jun 25 09:15:13 2022 :: midgaard/debug: NPC svygil@citadel -19239712 is gone.
+Sat Jun 25 09:15:13 2022 :: midgaard/d12
+Sat Jun 25 09:24:09 2022 :: _players/nanny_newbie()
+Sat Jun 25 09:24:09 2022 :: Outlaw[172.226.6.10] (GUEST) has entered the game.
+Sat Jun 25 09:24:09 2022 :: new player id = 98901
+Sat Jun 25 09:35:14 2022 :: midgaard/d7
+Sat Jun 25 09:35:14 2022 :: midgaard/d11
+Sat Jun 25 09:35:14 2022 :: midgaard/debug: NPC svygil@citadel -17592448 is gone.
+Sat Jun 25 09:35:14 2022 :: midgaard/d12
+Sat Jun 25 09:35:20 2022 :: midgaard/d7
+Sat Jun 25 09:35:20 2022 :: midgaard/d11
+Sat Jun 25 09:35:20 2022 :: midgaard/debug: NPC svygil@citadel -17592448 is gone.
+Sat Jun 25 09:35:20 2022 :: midgaard/d12
+Sat Jun 25 10:05:21 2022 :: midgaard/d7
+Sat Jun 25 10:05:21 2022 :: midgaard/d11
+Sat Jun 25 10:05:21 2022 :: midgaard/debug: NPC svygil@citadel -18918912 is gone.
+Sat Jun 25 10:05:21 2022 :: midgaard/d12
+Sat Jun 25 10:06:04 2022 :: midgaard/d7
+Sat Jun 25 10:06:04 2022 :: midgaard/d11
+Sat Jun 25 10:06:04 2022 :: midgaard/debug: NPC svygil@citadel -18918912 is gone.
+Sat Jun 25 10:06:04 2022 :: midgaard/d12
+Sat Jun 25 10:32:44 2022 :: midgaard/d7
+Sat Jun 25 10:32:44 2022 :: midgaard/d11
+Sat Jun 25 10:32:44 2022 :: midgaard/debug: NPC svygil@citadel -19165696 is gone.
+Sat Jun 25 10:32:44 2022 :: midgaard/d12
+Sat Jun 25 10:33:02 2022 :: midgaard/d7
+Sat Jun 25 10:33:02 2022 :: midgaard/d11
+Sat Jun 25 10:33:02 2022 :: midgaard/debug: NPC svygil@citadel -19165696 is gone.
+Sat Jun 25 10:33:02 2022 :: midgaard/d12
+Sat Jun 25 11:00:14 2022 :: midgaard/d7
+Sat Jun 25 11:00:14 2022 :: midgaard/d11
+Sat Jun 25 11:00:14 2022 :: midgaard/debug: NPC svygil@citadel -45962432 is gone.
+Sat Jun 25 11:00:14 2022 :: midgaard/d12
+Sat Jun 25 11:00:19 2022 :: midgaard/d7
+Sat Jun 25 11:00:19 2022 :: midgaard/d11
+Sat Jun 25 11:00:19 2022 :: midgaard/debug: NPC svygil@citadel -45962432 is gone.
+Sat Jun 25 11:00:19 2022 :: midgaard/d12
+Sat Jun 25 11:57:30 2022 :: midgaard/d7
+Sat Jun 25 11:57:30 2022 :: midgaard/d11
+Sat Jun 25 11:57:30 2022 :: midgaard/debug: NPC svygil@citadel -16359728 is gone.
+Sat Jun 25 11:57:30 2022 :: midgaard/d12
+Sat Jun 25 11:57:49 2022 :: midgaard/d7
+Sat Jun 25 11:57:49 2022 :: midgaard/d11
+Sat Jun 25 11:57:49 2022 :: midgaard/debug: NPC svygil@citadel -16359728 is gone.
+Sat Jun 25 11:57:49 2022 :: midgaard/d12
+Sat Jun 25 11:58:00 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 11:58:00 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 12:25:47 2022 :: midgaard/d7
+Sat Jun 25 12:25:47 2022 :: midgaard/d11
+Sat Jun 25 12:25:47 2022 :: midgaard/debug: NPC svygil@citadel -21801984 is gone.
+Sat Jun 25 12:25:47 2022 :: midgaard/d12
+Sat Jun 25 12:25:54 2022 :: midgaard/d7
+Sat Jun 25 12:25:54 2022 :: midgaard/d11
+Sat Jun 25 12:25:54 2022 :: midgaard/debug: NPC svygil@citadel -21801984 is gone.
+Sat Jun 25 12:25:54 2022 :: midgaard/d12
+Sat Jun 25 12:37:31 2022 :: Game up for 44 tick hours, checking for overpopulation
+Sat Jun 25 12:37:31 2022 :: Server has 68126 units.
+Sat Jun 25 12:53:15 2022 :: midgaard/d7
+Sat Jun 25 12:53:15 2022 :: midgaard/d9
+Sat Jun 25 12:53:15 2022 :: midgaard/d10
+Sat Jun 25 12:53:41 2022 :: midgaard/d7
+Sat Jun 25 12:53:41 2022 :: midgaard/d9
+Sat Jun 25 12:53:41 2022 :: midgaard/d10
+Sat Jun 25 12:54:15 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 13:27:43 2022 :: midgaard/d7
+Sat Jun 25 13:27:43 2022 :: midgaard/d11
+Sat Jun 25 13:27:43 2022 :: midgaard/debug: NPC svygil@citadel -14394416 is gone.
+Sat Jun 25 13:27:43 2022 :: midgaard/d12
+Sat Jun 25 13:27:44 2022 :: midgaard/d7
+Sat Jun 25 13:27:44 2022 :: midgaard/d11
+Sat Jun 25 13:27:44 2022 :: midgaard/debug: NPC svygil@citadel -14394416 is gone.
+Sat Jun 25 13:27:44 2022 :: midgaard/d12
+Sat Jun 25 13:34:26 2022 :: Mplex not from trusted host, terminating.
+Sat Jun 25 13:49:10 2022 :: midgaard/d7
+Sat Jun 25 13:49:10 2022 :: midgaard/d11
+Sat Jun 25 13:49:10 2022 :: midgaard/debug: NPC dark_warrior@gnome -15443232 is gone.
+Sat Jun 25 13:49:10 2022 :: midgaard/d12
+Sat Jun 25 14:32:38 2022 :: midgaard/d7
+Sat Jun 25 14:32:38 2022 :: midgaard/d9
+Sat Jun 25 14:32:38 2022 :: midgaard/d10
+Sat Jun 25 14:32:54 2022 :: midgaard/d7
+Sat Jun 25 14:32:54 2022 :: midgaard/d9
+Sat Jun 25 14:32:54 2022 :: midgaard/d10
+Sat Jun 25 14:33:38 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 14:54:09 2022 :: midgaard/d7
+Sat Jun 25 14:54:09 2022 :: midgaard/d11
+Sat Jun 25 14:54:09 2022 :: midgaard/debug: NPC svygil@citadel -22883056 is gone.
+Sat Jun 25 14:54:09 2022 :: midgaard/d12
+Sat Jun 25 14:54:27 2022 :: midgaard/d7
+Sat Jun 25 14:54:27 2022 :: midgaard/d11
+Sat Jun 25 14:54:27 2022 :: midgaard/debug: NPC svygil@citadel -22883056 is gone.
+Sat Jun 25 14:54:27 2022 :: midgaard/d12
+Sat Jun 25 15:01:04 2022 :: _players/container bag_holding1@hades3 weight 8 !=  baseweight of 5. Resetting.
+Sat Jun 25 15:01:18 2022 :: _players/Xynox was summoned by Vysck to royal_av1@midgaard.
+Sat Jun 25 15:11:15 2022 :: _players/Jace was summoned by Zow to smithy@bounty.
+Sat Jun 25 15:27:58 2022 :: _players/AdvGuildLevel(): Xynox@_players guild [Midgaard Paladin] in level exd.[1]=72, n=72, s=73
+Sat Jun 25 15:28:14 2022 :: _players/AdvGuildLevel(): Xynox@_players guild [Midgaard Paladin] in level exd.[1]=73, n=73, s=74
+Sat Jun 25 15:28:18 2022 :: _players/AdvGuildLevel(): Xynox@_players guild [Midgaard Paladin] in level exd.[1]=74, n=74, s=75
+Sat Jun 25 15:28:21 2022 :: _players/AdvGuildLevel(): Xynox@_players guild [Midgaard Paladin] in level exd.[1]=75, n=75, s=76
+Sat Jun 25 15:28:26 2022 :: _players/AdvGuildLevel(): Xynox@_players guild [Midgaard Paladin] in level exd.[1]=76, n=76, s=77
+Sat Jun 25 15:42:22 2022 :: Zow killed by a Church Knight at A Run-Down Shack of a Goblin
+Sat Jun 25 15:44:58 2022 :: midgaard/d7
+Sat Jun 25 15:44:58 2022 :: midgaard/d11
+Sat Jun 25 15:44:58 2022 :: midgaard/debug: NPC svygil@citadel -14448208 is gone.
+Sat Jun 25 15:44:58 2022 :: midgaard/d12
+Sat Jun 25 15:45:23 2022 :: midgaard/d7
+Sat Jun 25 15:45:23 2022 :: midgaard/d11
+Sat Jun 25 15:45:23 2022 :: midgaard/debug: NPC svygil@citadel -14448208 is gone.
+Sat Jun 25 15:45:23 2022 :: midgaard/d12
+Sat Jun 25 15:55:22 2022 :: Jaygo killed by a Citadellian shock trooper at Kirby's Baked Goods
+Sat Jun 25 16:21:31 2022 :: midgaard/d7
+Sat Jun 25 16:21:31 2022 :: midgaard/d9
+Sat Jun 25 16:21:31 2022 :: midgaard/d10
+Sat Jun 25 16:22:31 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 16:34:30 2022 :: _players/nanny_newbie()
+Sat Jun 25 16:34:30 2022 :: Wilton[136.56.162.39] (GUEST) has entered the game.
+Sat Jun 25 16:34:30 2022 :: new player id = 98902
+Sat Jun 25 16:37:31 2022 :: Game up for 48 tick hours, checking for overpopulation
+Sat Jun 25 16:37:31 2022 :: Server has 65217 units.
+Sat Jun 25 17:47:58 2022 :: ADJUST: Player Lyrch XP increased from 9608342 to 11580050
+Sat Jun 25 17:47:58 2022 :: _players/guild login_clean()
+Sat Jun 25 17:47:58 2022 :: _players/prof login_clean()
+Sat Jun 25 17:47:58 2022 :: _players/Lyrch had profession -1. Bizarre. Setting to 0 (fighter).
+Sat Jun 25 17:47:58 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 17:47:58 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 17:47:58 2022 :: Sliming rig_fury@seren1 for Lyrch@_players
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [remember]. Zone [seren1]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [action_bard]. Zone [seren1]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [game_over]. Zone [seren1]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [quest_restrict]. Zone [function]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [abi_restrict]. Zone [function]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [weap_restrict]. Zone [function]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [abi_restrict]. Zone [function]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: Not found in dil_list [level_restrict]. Zone [function]. Owner NO-NAME
+Sat Jun 25 17:47:58 2022 :: _players/Clan: Lyrch extra updated from $clan-_symbolic to $clan_symbolic. Descr is: clan_bus
+Sat Jun 25 17:50:48 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 17:50:48 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 18:09:11 2022 :: midgaard/d7
+Sat Jun 25 18:09:11 2022 :: midgaard/d9
+Sat Jun 25 18:09:11 2022 :: midgaard/d10
+Sat Jun 25 18:10:11 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 18:31:23 2022 :: midgaard/d7
+Sat Jun 25 18:31:23 2022 :: midgaard/d9
+Sat Jun 25 18:31:23 2022 :: midgaard/d10
+Sat Jun 25 18:32:23 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 19:14:58 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 19:14:58 2022 :: bread_dil(): Unit has no file index DIL template [q2_only@cloud] no longer exists. bNameRead = 1.
+Sat Jun 25 19:37:04 2022 :: midgaard/d7
+Sat Jun 25 19:37:04 2022 :: midgaard/d9
+Sat Jun 25 19:37:04 2022 :: midgaard/d10
+Sat Jun 25 19:37:16 2022 :: midgaard/d7
+Sat Jun 25 19:37:16 2022 :: midgaard/d9
+Sat Jun 25 19:37:16 2022 :: midgaard/d10
+Sat Jun 25 19:37:40 2022 :: midgaard/d7
+Sat Jun 25 19:37:40 2022 :: midgaard/d9
+Sat Jun 25 19:37:40 2022 :: midgaard/d10
+Sat Jun 25 19:37:51 2022 :: midgaard/d7
+Sat Jun 25 19:37:51 2022 :: midgaard/d11
+Sat Jun 25 19:37:51 2022 :: midgaard/debug: NPC svygil@citadel -14833120 is gone.
+Sat Jun 25 19:37:51 2022 :: midgaard/d12
+Sat Jun 25 19:38:04 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 19:39:11 2022 :: midgaard/d7
+Sat Jun 25 19:39:11 2022 :: midgaard/d11
+Sat Jun 25 19:39:11 2022 :: midgaard/debug: NPC svygil@citadel -14833120 is gone.
+Sat Jun 25 19:39:11 2022 :: midgaard/d12
+Sat Jun 25 19:40:50 2022 :: midgaard/d7
+Sat Jun 25 19:40:50 2022 :: midgaard/d11
+Sat Jun 25 19:40:50 2022 :: midgaard/debug: NPC svygil@citadel -14833120 is gone.
+Sat Jun 25 19:40:50 2022 :: midgaard/d12
+Sat Jun 25 20:16:51 2022 :: midgaard/d7
+Sat Jun 25 20:16:51 2022 :: midgaard/d9
+Sat Jun 25 20:16:51 2022 :: midgaard/d10
+Sat Jun 25 20:17:51 2022 :: justice/JUSTICE: database saved.
+Sat Jun 25 20:37:31 2022 :: Game up for 52 tick hours, checking for overpopulation
+Sat Jun 25 20:37:31 2022 :: Server has 66490 units.
+Sat Jun 25 21:25:14 2022 :: Doctyr killed by a farm worker at Between a Cabbage Patch and a Pumpkin Patch
+Sat Jun 25 21:25:19 2022 :: Baboo killed by a farm worker at Between a Cabbage Patch and a Pumpkin Patch
+Sat Jun 25 23:11:08 2022 :: midgaard/d7
+Sat Jun 25 23:11:08 2022 :: midgaard/d11
+Sat Jun 25 23:11:08 2022 :: midgaard/debug: NPC svygil@citadel -11914992 is gone.
+Sat Jun 25 23:11:08 2022 :: midgaard/d12
+Sat Jun 25 23:12:56 2022 :: midgaard/d7
+Sat Jun 25 23:12:56 2022 :: midgaard/d11
+Sat Jun 25 23:12:56 2022 :: midgaard/debug: NPC svygil@citadel -11914992 is gone.
+Sat Jun 25 23:12:56 2022 :: midgaard/d12
+Sun Jun 26 00:15:51 2022 :: midgaard/d7
+Sun Jun 26 00:15:51 2022 :: midgaard/d9
+Sun Jun 26 00:15:51 2022 :: midgaard/d10
+Sun Jun 26 00:16:51 2022 :: justice/JUSTICE: database saved.
+Sun Jun 26 00:30:42 2022 :: _players/container bag_holding1@hades3 weight 8 !=  baseweight of 5. Resetting.
+Sun Jun 26 00:37:31 2022 :: Game up for 56 tick hours, checking for overpopulation
+Sun Jun 26 00:37:31 2022 :: Server has 67914 units.
+Sun Jun 26 00:42:39 2022 :: _players/Spree Tracker: Xynox has lead a successful spree of type 3 with 65/48 kills and 0/0000 XP in 3:60. Duration was 4:00.
+Sun Jun 26 00:42:55 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=14, n=14, s=15
+Sun Jun 26 00:49:35 2022 :: _players/AdvGuildLevel(): doctyr@_players guild [Udgaard Healer] in level exd.[1]=15, n=15, s=16
+Sun Jun 26 00:53:35 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=14, n=14, s=15
+Sun Jun 26 00:55:30 2022 :: midgaard/d7
+Sun Jun 26 00:55:30 2022 :: midgaard/d9
+Sun Jun 26 00:55:30 2022 :: midgaard/d10
+Sun Jun 26 00:56:30 2022 :: justice/JUSTICE: database saved.
+Sun Jun 26 00:56:33 2022 :: _players/AdvGuildLevel(): baboo@_players guild [Udgaard Fighter] in level exd.[1]=15, n=15, s=16
+Sun Jun 26 02:24:33 2022 :: _players/nanny_newbie()
+Sun Jun 26 02:24:33 2022 :: thufir[173.174.102.112] (GUEST) has entered the game.
+Sun Jun 26 02:24:33 2022 :: new player id = 98903

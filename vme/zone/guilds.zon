@@ -654,7 +654,7 @@ code
 
    n := atoi(exd.names.[1]);
    s := itoa(n+1);
-   log("AdvGuildLevel(): "+pc.symname+" guild ["+pc.guild+"] in level exd.[1]="+exd.names.[1]+", n="+itoa(n)+", s="+s);
+   // log("AdvGuildLevel(): "+pc.symname+" guild ["+pc.guild+"] in level exd.[1]="+exd.names.[1]+", n="+itoa(n)+", s="+s);
    exd.names.[1] := s;
    sendtext("You are now level " + s + " in the " + pc.guild + " guild.<br/>", pc);
    return;

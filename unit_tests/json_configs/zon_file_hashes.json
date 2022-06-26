@@ -397,12 +397,12 @@
         {
             "source_file": {
                 "filename": "guilds.zon",
-                "sha512": "f610424eb5db82f480072541d8cd0f5925d1dfc2bcbf12aa6318eb3f46e29ab33bf08d38d80de5a6f545fac01da99937779d5727f660e0f4fdd0027b5b541ba1"
+                "sha512": "0480080f37769893bd7849e0e77b763c9df5164c7161bb87793041477dba1ef6920bc2c879255d320823d0d7b71f13d895827948bc2b2d46a5d925a8da9f4dc2"
             },
             "output": [
                 {
                     "filename": "guilds.data",
-                    "sha512": "4da90ad1bdb1356ba5b118d3b8f50439eb153749304ab69fcd8eb3f720626a7cc695d6bf7e748ef9d2e86b070a69551adb445c0484413c52d89ea306b30fdaa8"
+                    "sha512": "adf7116118fb3a016116c89cb5c606da8492ea6da6f1c7a647a3bb5610f84befd717b6d9db10b0cc5f341a8fbd43084905be443d9905eda0d39678bec9ea2f48"
                 },
                 {
                     "filename": "guilds.reset",
