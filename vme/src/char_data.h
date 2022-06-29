@@ -113,7 +113,7 @@ public:
     void setAttackType(ubit8 value);
     ubit8 *getAttackTypePtr();
 
-    ubit8 getSex() const;
+    virtual ubit8 getSex() const;
     void setSex(ubit8 value);
     ubit8 *getSexPtr();
 

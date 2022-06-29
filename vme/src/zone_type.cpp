@@ -7,43 +7,53 @@
 
 zone_type::zone_type()
 {
-    name = nullptr;
-    notes = nullptr;
-    help = nullptr;
-    filename = nullptr;
-    rooms = nullptr;
-    objects = nullptr;
-    npcs = nullptr;
+    m_name = nullptr;
+    m_notes = nullptr;
+    m_help = nullptr;
+    m_filename = nullptr;
+    m_rooms = nullptr;
+    m_objects = nullptr;
+    m_npcs = nullptr;
 
-    zri = nullptr;
+    m_zri = nullptr;
 
-    spmatrix = nullptr;
-    no_rooms = 0;
-    no_objs = 0;
-    no_npcs = 0;
-    access = 255;
+    m_spmatrix = nullptr;
+    m_no_rooms = 0;
+    m_no_objs = 0;
+    m_no_npcs = 0;
+    m_access = 255;
 }
 
 zone_type::~zone_type()
 {
-    if (name)
-        FREE(name);
+    if (m_name)
+    {
+        FREE(m_name);
+    }
 
-    if (title)
-        FREE(title);
+    if (m_title)
+    {
+        FREE(m_title);
+    }
 
-    if (notes)
-        FREE(notes);
+    if (m_notes)
+    {
+        FREE(m_notes);
+    }
 
-    if (help)
-        FREE(help);
+    if (m_help)
+    {
+        FREE(m_help);
+    }
 
-    if (filename)
-        FREE(filename);
+    if (m_filename)
+    {
+        FREE(m_filename);
+    }
     unit_data *ut = nullptr;
     unit_data *nextut = nullptr;
 
-    for (ut = objects; ut; ut = nextut)
+    for (ut = m_objects; ut; ut = nextut)
     {
         nextut = ut->getNext();
         ut->setNext(nullptr);
@@ -52,7 +62,7 @@ zone_type::~zone_type()
         delete ut;
     }
 
-    for (ut = npcs; ut; ut = nextut)
+    for (ut = m_npcs; ut; ut = nextut)
     {
         nextut = ut->getNext();
         ut->setNext(nullptr);
@@ -61,8 +71,8 @@ zone_type::~zone_type()
         delete ut;
     }
 
-    auto nextfi = mmp_fi.begin();
-    for (auto p = mmp_fi.begin(); p != mmp_fi.end(); p = nextfi)
+    auto nextfi = m_mmp_fi.begin();
+    for (auto p = m_mmp_fi.begin(); p != m_mmp_fi.end(); p = nextfi)
     {
         nextfi = p;
         nextfi++;
@@ -73,27 +83,35 @@ zone_type::~zone_type()
     zone_reset_cmd *pzri = nullptr;
     zone_reset_cmd *nextzri = nullptr;
 
-    for (pzri = zri; pzri; pzri = nextzri)
+    for (pzri = m_zri; pzri; pzri = nextzri)
     {
         nextzri = pzri->getNext();
         DELETE(zone_reset_cmd, pzri);
     }
 
-    auto nextpt = mmp_tmpl.begin();
+    auto nextpt = m_mmp_tmpl.begin();
 
-    for (auto pt = mmp_tmpl.begin(); pt != mmp_tmpl.end(); pt = nextpt)
+    for (auto pt = m_mmp_tmpl.begin(); pt != m_mmp_tmpl.end(); pt = nextpt)
     {
         nextpt = pt;
         nextpt++;
 
         if (pt->second->prgname)
+        {
             FREE(pt->second->prgname);
+        }
         if (pt->second->argt)
+        {
             FREE(pt->second->argt);
+        }
         if (pt->second->core)
+        {
             FREE(pt->second->core);
+        }
         if (pt->second->vart)
+        {
             FREE(pt->second->vart);
+        }
 
         FREE(pt->second);
     }
@@ -101,277 +119,279 @@ zone_type::~zone_type()
     // struct bin_search_type *ba;    /* Pointer to binarray of type      */
     // struct diltemplate *tmpl;      /* DIL templates in zone            */
     // struct bin_search_type *tmplba;/* Pointer to binarray of type      */
-    if (spmatrix)
-        FREE(spmatrix);
+    if (m_spmatrix)
+    {
+        FREE(m_spmatrix);
+    }
 }
 
 cNamelist &zone_type::getCreators()
 {
-    return creators;
+    return m_creators;
 }
 
 const char *zone_type::getName() const
 {
-    return name;
+    return m_name;
 }
 
 char *zone_type::getNamePtr()
 {
-    return name;
+    return m_name;
 }
 
 void zone_type::setName(char *value)
 {
-    FREE(name);
-    name = value;
+    FREE(m_name);
+    m_name = value;
 }
 
 const char *zone_type::getTitle() const
 {
-    return title;
+    return m_title;
 }
 
 char **zone_type::getTitlePtrPtr()
 {
-    return &title;
+    return &m_title;
 }
 
 void zone_type::setTitle(char *value)
 {
-    FREE(title);
-    title = value;
+    FREE(m_title);
+    m_title = value;
 }
 
 const char *zone_type::getNotes() const
 {
-    return notes;
+    return m_notes;
 }
 
 char **zone_type::getNotesPtrPtr()
 {
-    return &notes;
+    return &m_notes;
 }
 
 void zone_type::setNotes(char *value)
 {
-    FREE(notes);
-    notes = value;
+    FREE(m_notes);
+    m_notes = value;
 }
 
 char **zone_type::getHelpPtrPtr()
 {
-    return &help;
+    return &m_help;
 }
 
 void zone_type::setHelp(char *value)
 {
-    FREE(help);
-    help = value;
+    FREE(m_help);
+    m_help = value;
 }
 
 const char *zone_type::getFilename() const
 {
-    return filename;
+    return m_filename;
 }
 
 char **zone_type::getFilenamePtrPtr()
 {
-    return &filename;
+    return &m_filename;
 }
 
 void zone_type::setFilename(char *value)
 {
-    FREE(filename);
-    filename = value;
+    FREE(m_filename);
+    m_filename = value;
 }
 
 const std::map<const char *, file_index_type *, cmp_str> &zone_type::cgetFileIndexMap() const
 {
-    return mmp_fi;
+    return m_mmp_fi;
 }
 
 std::map<const char *, file_index_type *, cmp_str> &zone_type::getFileIndexMap()
 {
-    return mmp_fi;
+    return m_mmp_fi;
 }
 
 const zone_reset_cmd *zone_type::cgetZoneResetCommands() const
 {
-    return zri;
+    return m_zri;
 }
 
 zone_reset_cmd *zone_type::getZoneResetCommands()
 {
-    return zri;
+    return m_zri;
 }
 
 void zone_type::setZoneResetCommands(zone_reset_cmd *value)
 {
-    DELETE(zone_reset_cmd, zri);
-    zri = value;
+    DELETE(zone_reset_cmd, m_zri);
+    m_zri = value;
 }
 
 const std::map<const char *, diltemplate *, cmp_str> &zone_type::cgetDILTemplate() const
 {
-    return mmp_tmpl;
+    return m_mmp_tmpl;
 }
 
 std::map<const char *, diltemplate *, cmp_str> &zone_type::getDILTemplate()
 {
-    return mmp_tmpl;
+    return m_mmp_tmpl;
 }
 
 void zone_type::setZoneNumber(ubit16 value)
 {
-    zone_no = value;
+    m_zone_no = value;
 }
 
 ubit16 zone_type::getNumOfFileIndexes() const
 {
-    return no_of_fi;
+    return m_no_of_fi;
 }
 
 void zone_type::incrementNumOfFileIndexes()
 {
-    ++no_of_fi;
+    ++m_no_of_fi;
 }
 
 void zone_type::setNumOfFileIndexes(ubit16 value)
 {
-    no_of_fi = value;
+    m_no_of_fi = value;
 }
 
 ubit16 zone_type::getZoneResetTime() const
 {
-    return zone_time;
+    return m_zone_time;
 }
 
 void zone_type::setZoneResetTime(ubit16 value)
 {
-    zone_time = value;
+    m_zone_time = value;
 }
 
 ubit16 *zone_type::getZoneResetTimePtr()
 {
-    return &zone_time;
+    return &m_zone_time;
 }
 
 ubit16 zone_type::getNumOfRooms() const
 {
-    return no_rooms;
+    return m_no_rooms;
 }
 
 void zone_type::incrementNumOfRooms()
 {
-    ++no_rooms;
+    ++m_no_rooms;
 }
 
 void zone_type::setNumOfRooms(ubit16 value)
 {
-    no_rooms = value;
+    m_no_rooms = value;
 }
 
 ubit16 zone_type::getNumOfObjects() const
 {
-    return no_objs;
+    return m_no_objs;
 }
 
 void zone_type::incrementNumOfObjects()
 {
-    ++no_objs;
+    ++m_no_objs;
 }
 
 void zone_type::incrementNumOfNPCs()
 {
-    ++no_npcs;
+    ++m_no_npcs;
 }
 ubit16 zone_type::getNumOfNPCs() const
 {
-    return no_npcs;
+    return m_no_npcs;
 }
 
 ubit8 zone_type::getResetMode() const
 {
-    return reset_mode;
+    return m_reset_mode;
 }
 
 ubit8 *zone_type::getResetModePtr()
 {
-    return &reset_mode;
+    return &m_reset_mode;
 }
 
 void zone_type::setResetMode(ubit8 value)
 {
-    reset_mode = value;
+    m_reset_mode = value;
 }
 
 void zone_type::incrementNumOfDILTemplates()
 {
-    ++no_tmpl;
+    ++m_no_tmpl;
 }
 
 void zone_type::setNumOfDILTemplates(ubit16 value)
 {
-    no_tmpl = value;
+    m_no_tmpl = value;
 }
 
 ubit8 zone_type::getAccessLevel() const
 {
-    return access;
+    return m_access;
 }
 
 void zone_type::setAccessLevel(ubit8 value)
 {
-    access = value;
+    m_access = value;
 }
 
 ubit8 zone_type::getLevelRequiredToLoadItems() const
 {
-    return loadlevel;
+    return m_loadlevel;
 }
 
 ubit8 *zone_type::getLevelRequiredToLoadItemsPtr()
 {
-    return &loadlevel;
+    return &m_loadlevel;
 }
 
 void zone_type::setLevelRequiredToLoadItems(ubit8 value)
 {
-    loadlevel = value;
+    m_loadlevel = value;
 }
 
 ubit8 zone_type::getPayOnly() const
 {
-    return payonly;
+    return m_payonly;
 }
 
 ubit8 *zone_type::getPayOnlyPtr()
 {
-    return &payonly;
+    return &m_payonly;
 }
 
 void zone_type::setPayOnly(ubit8 value)
 {
-    payonly = value;
+    m_payonly = value;
 }
 
 const char *zone_type::getDILFilePath() const
 {
-    return dilfilepath;
+    return m_dilfilepath;
 }
 
 void zone_type::setDILFilePath(char *value)
 {
-    FREE(dilfilepath);
-    dilfilepath = value;
+    FREE(m_dilfilepath);
+    m_dilfilepath = value;
 }
 
 const zone_type::Weather &zone_type::cgetWeather() const
 {
-    return weather;
+    return m_weather;
 }
 
 zone_type::Weather &zone_type::getWeather()
 {
-    return weather;
+    return m_weather;
 }

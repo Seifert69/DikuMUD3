@@ -387,7 +387,13 @@ void check_overpopulation_event(void *p1, void *p2)
 
         if (i >= 50)
         {
-            slog(LOG_ALL, 0, "Too many items in %s@%s(%s) : %d units", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), unit_trace_up(u), i);
+            slog(LOG_ALL,
+                 0,
+                 "Too many items in %s@%s(%s) : %d units",
+                 u->getFileIndexName(),
+                 u->getFileIndexZoneName(),
+                 unit_trace_up(u),
+                 i);
 
             diltemplate *worms = nullptr;
             worms = find_dil_template("worms@basis");

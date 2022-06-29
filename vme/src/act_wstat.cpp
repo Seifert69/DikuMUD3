@@ -66,7 +66,11 @@ static void stat_world_count(const unit_data *ch, char *arg)
 
         if (i >= nMinCount)
         {
-            msg += diku::format_to_str("%s@%s(%s) : %d units <br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), u->getNames().Name(), i);
+            msg += diku::format_to_str("%s@%s(%s) : %d units <br/>",
+                                       u->getFileIndexName(),
+                                       u->getFileIndexZoneName(),
+                                       u->getNames().Name(),
+                                       i);
             n++;
 
             if (n >= 40)
@@ -128,7 +132,7 @@ static void stat_memory(unit_data *ch)
         {
             if (u->getUnitIn() == nullptr)
             {
-                msg = diku::format_to_str("%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+                msg = diku::format_to_str("%s@%s is not in a room<br/>", u->getFileIndexName(), u->getFileIndexZoneName());
                 send_to_char(msg, ch);
             }
         }
@@ -728,8 +732,8 @@ static void stat_normal(unit_data *ch, unit_data *u)
                                    "Title: \"%s\"<br/>Outside_descr:<br/>\"%s\"<br/>"
                                    "Inside_descr:<br/>\"%s\"<br/>",
                                    sprintbit(bits2, u->getUnitType(), g_unit_status),
-                                   UNIT_FI_NAME(u),
-                                   UNIT_FI_ZONENAME(u),
+                                   u->getFileIndexName(),
+                                   u->getFileIndexZoneName(),
                                    u->getFileIndex() ? u->getFileIndex()->getNumInMem() : -1,
                                    u->getFileIndex() ? (unsigned long)u->getFileIndex()->getCRC() : 0,
                                    cname,
@@ -1055,7 +1059,7 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        CHAR_FOLLOWERS(u) ? STR(CHAR_FOLLOWERS(u)->getFollower()->getNames().Name()) : "Nobody",
                                        CHAR_LAST_ROOM(u) ? STR(CHAR_LAST_ROOM(u)->getTitle().c_str()) : "Nowhere",
                                        CHAR_LEVEL(u),
-                                       sprinttype(nullptr, CHAR_SEX(u), g_char_sex),
+                                       sprinttype(nullptr, u->getSex(), g_char_sex),
                                        sprinttype(nullptr, CHAR_POS(u), g_char_pos),
                                        u->isPC() ? sprinttype(nullptr, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
                                        char_carry_w_limit(u),
@@ -1179,8 +1183,8 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                        "%s [%s@%s]  Sector type: %s<br/>"
                                        "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
                                        u->getTitle().c_str(),
-                                       UNIT_FI_NAME(u),
-                                       UNIT_FI_ZONENAME(u),
+                                       u->getFileIndexName(),
+                                       u->getFileIndexZoneName(),
                                        sprinttype(nullptr, ROOM_LANDSCAPE(u), g_room_landscape),
                                        UROOM(u)->getMapXCoordinate(),
                                        UROOM(u)->getMapYCoordinate(),
@@ -1202,8 +1206,8 @@ static void stat_data(const unit_data *ch, unit_data *u)
                                               "   Exit Bits: [%s] Difficulty: [%d]<br/>"
                                               "   Key: [%s]<br/>",
                                               g_dirs[i],
-                                              UNIT_FI_NAME(ROOM_EXIT(u, i)->getToRoom()),
-                                              UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->getToRoom()),
+                                              ROOM_EXIT(u, i)->getToRoom()->getFileIndexName(),
+                                              ROOM_EXIT(u, i)->getToRoom()->getFileIndexZoneName(),
                                               ROOM_EXIT(u, i)->getToRoom()->getTitle().c_str(),
                                               cname,
                                               &bits2[0],
@@ -1241,8 +1245,8 @@ static void stat_contents(const unit_data *ch, unit_data *u)
             if (CHAR_LEVEL(ch) >= u->getLevelOfWizardInvisibility())
             {
                 auto msg = diku::format_to_str("[%s@%s] Name '%s', Title '%s'  %s (L%d B%d)<br/>",
-                                               UNIT_FI_NAME(u),
-                                               UNIT_FI_ZONENAME(u),
+                                               u->getFileIndexName(),
+                                               u->getFileIndexZoneName(),
                                                u->getNames().Name(),
                                                u->getTitle().c_str(),
                                                u->isObj() && OBJ_EQP_POS(u) ? "Equipped" : "",

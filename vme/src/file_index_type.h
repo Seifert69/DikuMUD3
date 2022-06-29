@@ -59,14 +59,14 @@ public:
     void setRoomNum(ubit16 value);
 
 private:
-    std::forward_list<unit_data *> fi_unit_list; ///< This list of units that match this file_index
-    std::string name{};                          ///< Unique within this list
-    zone_type *zone{nullptr};                    ///< Pointer to owner of structure
-    long filepos{};                              ///< Byte offset into file
-    ubit32 length{};                             ///< No of bytes to read
-    ubit32 crc{};                                ///< CRC check for compressed items
-    sbit16 no_in_zone{};                         ///< Updated in zone reset for reset
-    ubit16 no_in_mem{};                          ///< Number of these in the game
-    ubit16 room_no{};                            ///< The number of the room
-    ubit8 type{};                                ///< Room/Obj/Char or other?
+    std::forward_list<unit_data *> m_fi_unit_list; ///< This list of units that match this file_index
+    std::string m_name{};                          ///< Unique within this list
+    zone_type *m_zone{nullptr};                    ///< Pointer to owner of structure
+    long m_filepos{};                              ///< Byte offset into file
+    ubit32 m_length{};                             ///< No of bytes to read
+    ubit32 m_crc{};                                ///< CRC check for compressed items
+    sbit16 m_no_in_zone{};                         ///< Updated in zone reset for reset
+    ubit16 m_no_in_mem{};                          ///< Number of these in the game
+    ubit16 m_room_no{};                            ///< The number of the room
+    ubit8 m_type{};                                ///< Room/Obj/Char or other?
 };

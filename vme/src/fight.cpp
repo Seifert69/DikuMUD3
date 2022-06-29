@@ -754,13 +754,13 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
 
     diff = slayer->getAlignment() - victim->getAlignment();
 
-    if (UNIT_IS_GOOD(slayer))
+    if (slayer->isGood())
     {
-        if (UNIT_IS_EVIL(victim))
+        if (victim->isEvil())
         { /* Diff >= 700 */
             adjust = (diff - 700) / 70 + 1;
         }
-        else if (UNIT_IS_NEUTRAL(victim))
+        else if (victim->isNeutral())
         {
             if (victim->getAlignment() <= -100)
             {
@@ -776,9 +776,9 @@ static void change_alignment(unit_data *slayer, unit_data *victim)
             adjust = -(slayer->getAlignment() + victim->getAlignment() - 700) / 5 - 3;
         }
     }
-    else if (UNIT_IS_EVIL(slayer))
+    else if (slayer->isEvil())
     {
-        if (UNIT_IS_GOOD(victim))
+        if (victim->isGood())
         { /* Diff <= -700 */
             adjust = (diff + 700) / 35 - 2;
         }
@@ -821,12 +821,12 @@ static void person_gain(unit_data *ch, unit_data *dead, int share, int grouped, 
 {
     if (share > 0)
     {
-        if (UNIT_IS_GOOD(ch) && UNIT_IS_EVIL(dead))
+        if (ch->isGood() && dead->isEvil())
         {
             share += share / 5;
         }
 
-        if (UNIT_IS_EVIL(ch) && UNIT_IS_GOOD(dead))
+        if (ch->isEvil() && dead->isGood())
         {
             share += share / 10;
         }

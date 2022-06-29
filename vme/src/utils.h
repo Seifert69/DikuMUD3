@@ -21,7 +21,6 @@
 // clang-format off
 /* ..................................................................... */
 // Forward declarations
-inline ubit8 CHAR_SEX(const unit_data *ch);
 inline ubit8 CHAR_LEVEL(const unit_data *ch);
 inline bool CHAR_AWAKE(const unit_data *ch);
 
@@ -88,41 +87,6 @@ inline room_data *UROOM(const unit_data *u)
     return const_cast<room_data *>(dynamic_cast<const room_data *>(u));
 }
 
-/* ............................FILE INDEX STUFF..................... */
-
-inline const char *FI_ZONENAME(const file_index_type *fi) { return fi->getZone()->getName(); }
-
-inline const char *FI_NAME(const file_index_type *fi) { return fi->getName(); }
-
-/* ............................UNIT SUPERSTRUCTURES..................... */
-
-inline bool UNIT_IS_TRANSPARENT(const unit_data *u)
-{
-    return !IS_SET(u->getUnitFlags(), UNIT_FL_BURIED) && IS_SET(u->getUnitFlags(), UNIT_FL_TRANS) && !IS_SET(u->getOpenFlags(), EX_CLOSED);
-}
-
-inline const char *UNIT_FI_ZONENAME(const unit_data *unit) { return unit->getFileIndex() ? FI_ZONENAME(unit->getFileIndex()) : "NO-ZONE"; }
-
-inline const char *UNIT_FI_NAME(const unit_data *unit) { return unit->getFileIndex() ? FI_NAME(unit->getFileIndex()) : "NO-NAME"; }
-
-inline bool UNIT_WEAR(unit_data *unit, ubit32 part) { return IS_SET(unit->getManipulate(), part); }
-
-inline bool UNIT_IS_OUTSIDE(const unit_data *unit) { return !IS_SET(unit->getUnitIn()->getUnitFlags(), UNIT_FL_INDOORS); }
-
-inline sbit8 UNIT_OUTSIDE_LIGHT(const unit_data *unit) { return !IS_SET(unit->getUnitFlags(), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
-
-[[maybe_unused]] inline sbit16 UNIT_IS_DARK(unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (unit->getUnitIn() ? unit->getUnitIn()->getNumberOfActiveLightSources() : 0) < 0; }
-
-inline sbit16 UNIT_IS_LIGHT(const unit_data *unit) { return unit->getNumberOfActiveLightSources() + UNIT_OUTSIDE_LIGHT(unit) + (unit->getUnitIn() ? unit->getUnitIn()->getNumberOfActiveLightSources() : 0) >= 0; }
-
-inline ubit8 UNIT_SEX(const unit_data *unit) { return unit->isChar() ? CHAR_SEX(unit) : SEX_NEUTRAL; }
-
-inline bool UNIT_IS_GOOD(unit_data *ch) { return ch->getAlignment() >= 350; }
-inline bool UNIT_IS_EVIL(unit_data *ch) { return ch->getAlignment() <= -350; }
-inline bool UNIT_IS_NEUTRAL(unit_data *ch) { return !UNIT_IS_GOOD(ch) && !UNIT_IS_EVIL(ch); }
-
-inline sbit32 UNIT_CONTAINING_W(unit_data *u) { return u->getWeight() - u->getBaseWeight(); }
-
 /* ..................................................................... */
 
 inline ubit8 ROOM_RESISTANCE(unit_data *room) { return UROOM(room)->getRoomMagicalResistance(); }
@@ -173,8 +137,6 @@ inline sbit16 CHAR_OFFENSIVE(const unit_data *unit) { return UCHAR(unit)->getOff
 inline sbit16 CHAR_DEFENSIVE(const unit_data *unit) { return UCHAR(unit)->getDefensiveBonus(); }
 
 inline ubit32 CHAR_FLAGS(const unit_data *unit) { return UCHAR(unit)->getCharacterFlags(); }
-
-inline ubit8 CHAR_SEX(const unit_data *ch) { return UCHAR(ch)->getSex(); }
 
 inline unit_data *CHAR_LAST_ROOM(unit_data *unit) { return UCHAR(unit)->getLastLocation(); }
 
@@ -263,7 +225,7 @@ inline bool CHAR_CAN_SEE(const unit_data *ch, const unit_data *unit)
     return !ch->isChar() ||
            (CHAR_VISION(ch) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_BURIED) || ch->getUnitIn() == unit) && CHAR_LEVEL(ch) >= unit->getLevelOfWizardInvisibility() &&
             (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||
-             (UNIT_IS_LIGHT(ch->getUnitIn()) && (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
+             (ch->getUnitIn()->isLight() && (!IS_SET(unit->getUnitFlags(), UNIT_FL_INVISIBLE) || CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))));
 }
 
 inline bool CHAR_CAN_SEE(unit_data *ch, unit_data *unit)
@@ -380,7 +342,7 @@ inline ubit8 NPC_FLAGS(unit_data *unit)
 
 inline const char *TITLENAME(unit_data *unit) { return unit->isPC() ? unit->getNames().Name() : unit->getTitle().c_str(); }
 
-inline const char *SOMETON(const unit_data *unit) { return UNIT_SEX(unit) == SEX_NEUTRAL ? "something" : "someone"; }
+inline const char *SOMETON(const unit_data *unit) { return unit->getSex() == SEX_NEUTRAL ? "something" : "someone"; }
 
 /* Title, Name or Someone/Something */
 inline const char *UNIT_SEE_TITLE(unit_data *ch, unit_data *unit) { return CHAR_CAN_SEE(ch, unit) ? TITLENAME(unit) : SOMETON(unit); }
@@ -390,15 +352,15 @@ inline const char *UNIT_SEE_NAME(const unit_data *ch, const unit_data *unit) { r
 
 /* Invis people aren't supposed to have sex... /gnort */
 
-inline const char *B_HSHR(const unit_data *ch) { return UNIT_SEX(ch) == SEX_NEUTRAL ? "its" : (CHAR_SEX(ch) == SEX_MALE) ? "his" : "her"; }
+inline const char *B_HSHR(const unit_data *ch) { return ch->getSex() == SEX_NEUTRAL ? "its" : (ch->getSex() == SEX_MALE) ? "his" : "her"; }
 
 inline const char *HSHR(const unit_data *to, const unit_data *ch) { return CHAR_CAN_SEE((to), (ch)) ? B_HSHR(ch) : "their"; }
 
-inline const char *B_HESH(const unit_data *ch) { return UNIT_SEX(ch) == SEX_NEUTRAL ? "it" : (CHAR_SEX(ch) == SEX_MALE) ? "he" : "she"; }
+inline const char *B_HESH(const unit_data *ch) { return ch->getSex() == SEX_NEUTRAL ? "it" : (ch->getSex() == SEX_MALE) ? "he" : "she"; }
 
 inline const char *HESH(const unit_data *to, const unit_data *ch) { return CHAR_CAN_SEE(to, ch) ? B_HESH(ch) : "they"; }
 
-inline const char *B_HMHR(const unit_data *ch) { return UNIT_SEX(ch) == SEX_NEUTRAL ? "it" : CHAR_SEX(ch) == SEX_MALE ? "him" : "her"; }
+inline const char *B_HMHR(const unit_data *ch) { return ch->getSex() == SEX_NEUTRAL ? "it" : ch->getSex() == SEX_MALE ? "him" : "her"; }
 
 inline const char *HMHR(const unit_data *to, const unit_data *ch) { return CHAR_CAN_SEE(to, ch) ? B_HMHR(ch) : "them"; }
 

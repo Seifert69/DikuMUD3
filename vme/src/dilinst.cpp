@@ -115,8 +115,8 @@ void dil_insterr(dilprg *p, char *where)
 
     szonelog(p->sarg->owner->getFileIndex()->getZone(),
              "DIL %s@%s, Instruction error in %s\n",
-             UNIT_FI_NAME(p->sarg->owner),
-             UNIT_FI_ZONENAME(p->sarg->owner),
+             p->sarg->owner->getFileIndexName(),
+             p->sarg->owner->getFileIndexZoneName(),
              where);
     p->waitcmd = WAITCMD_QUIT;
 }
@@ -698,7 +698,7 @@ void dilfi_set_weight(dilprg *p)
                 szonelog(p->frame->tmpl->zone,
                          "DIL '%s' setting unit %s weight to %d less than base weight of %d.",
                          p->frame->tmpl->prgname,
-                         UNIT_FI_NAME(unit),
+                         unit->getFileIndexName(),
                          v2->val.num,
                          unit->getBaseWeight());
             }
@@ -915,8 +915,8 @@ void dilfi_rtf(dilprg *p)
                  "DIL %s@%s on %s@%s: Unexpected stack length after procedure call.",
                  p->fp->tmpl->prgname,
                  p->fp->tmpl->zone->getName(),
-                 UNIT_FI_NAME(p->sarg->owner),
-                 UNIT_FI_ZONENAME(p->sarg->owner));
+                 p->sarg->owner->getFileIndexName(),
+                 p->sarg->owner->getFileIndexZoneName());
             p->waitcmd = WAITCMD_QUIT;
             return;
         }
@@ -931,8 +931,8 @@ void dilfi_rtf(dilprg *p)
                  "DIL %s@%s on %s@%s: Unexpected stack length after function call.",
                  p->fp->tmpl->prgname,
                  p->fp->tmpl->zone->getName(),
-                 UNIT_FI_NAME(p->sarg->owner),
-                 UNIT_FI_ZONENAME(p->sarg->owner));
+                 p->sarg->owner->getFileIndexName(),
+                 p->sarg->owner->getFileIndexZoneName());
             p->waitcmd = WAITCMD_QUIT;
             return;
         }
@@ -1104,8 +1104,8 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
             {
                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
                          "DIL %s@%s Error in %s in remote call to %s where parameter %d has incorrect type. Stopping program.",
-                         UNIT_FI_NAME(p->sarg->owner),
-                         UNIT_FI_ZONENAME(p->sarg->owner),
+                         p->sarg->owner->getFileIndexName(),
+                         p->sarg->owner->getFileIndexZoneName(),
                          p->frame[0].tmpl->prgname,
                          p->fp->tmpl->prgname,
                          i + 1);
@@ -1191,8 +1191,8 @@ void dilfi_rfunc(dilprg *p)
          */
         szonelog(p->sarg->owner->getFileIndex()->getZone(),
                  "DIL %s@%s, dil %s@%s Error in remote call function #%d not valid\n",
-                 UNIT_FI_NAME(p->sarg->owner),
-                 UNIT_FI_ZONENAME(p->sarg->owner),
+                 p->sarg->owner->getFileIndexName(),
+                 p->sarg->owner->getFileIndexZoneName(),
                  p->fp->tmpl->prgname,
                  p->fp->tmpl->zone->getName(),
                  xrefi);
@@ -1308,8 +1308,8 @@ void dilfi_rsfunc(dilprg *p)
     {
         szonelog(p->sarg->owner->getFileIndex()->getZone(),
                  "DIL %s@%s, dil %s Error in symbolic remote call string=%s\n",
-                 UNIT_FI_NAME(p->sarg->owner),
-                 UNIT_FI_ZONENAME(p->sarg->owner),
+                 p->sarg->owner->getFileIndexName(),
+                 p->sarg->owner->getFileIndexZoneName(),
                  p->fp->tmpl->prgname,
                  (char *)v1->val.ptr);
         p->waitcmd = WAITCMD_STOP;
@@ -1840,8 +1840,8 @@ void dilfi_exp(dilprg *p)
                  "%s gained %d experience from unit %s@%s.",
                  ((unit_data *)v2->val.ptr)->getNames().Name(),
                  value,
-                 UNIT_FI_NAME(p->sarg->owner),
-                 UNIT_FI_ZONENAME(p->sarg->owner));
+                 p->sarg->owner->getFileIndexName(),
+                 p->sarg->owner->getFileIndexZoneName());
             gain_exp((unit_data *)v2->val.ptr, value);
         }
     }
@@ -2339,8 +2339,8 @@ void dilfi_exec(dilprg *p)
                 slog(LOG_ALL,
                      0,
                      "DIL %s@%s issued command which was too long: %s",
-                     UNIT_FI_NAME(p->sarg->owner),
-                     UNIT_FI_ZONENAME(p->sarg->owner),
+                     p->sarg->owner->getFileIndexName(),
+                     p->sarg->owner->getFileIndexZoneName(),
                      cmd);
             }
 

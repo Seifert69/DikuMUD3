@@ -733,14 +733,14 @@ char *obj_money_string(unit_data *obj, amount_t amt)
 
 amount_t char_can_carry_amount(unit_data *ch, unit_data *money)
 {
-    int d_wgt = char_carry_w_limit(ch) - UNIT_CONTAINING_W(ch);
+    int d_wgt = char_carry_w_limit(ch) - ch->getContainingWeight();
 
     return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
 amount_t unit_can_hold_amount(unit_data *unit, unit_data *money)
 {
-    int d_wgt = unit->getCapacity() - UNIT_CONTAINING_W(unit);
+    int d_wgt = unit->getCapacity() - unit->getContainingWeight();
 
     return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
@@ -791,7 +791,7 @@ static void set_money_strings(FILE *fl, int idx)
 
     do
     {
-        s = (char *) skip_spaces(s);
+        s = (char *)skip_spaces(s);
 
         if ((c = strchr(s, ',')))
         {

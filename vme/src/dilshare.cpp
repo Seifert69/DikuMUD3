@@ -140,7 +140,7 @@ void dilprg::unlink()
                  "Not found in dil_list [%s]. Zone [%s]. Owner %s",
                  tmpl->prgname,
                  tmpl->zone ? tmpl->zone->getName() : "NOZONE",
-                 UNIT_FI_NAME(this->owner));
+                 this->owner->getFileIndexName());
         }
     }
 

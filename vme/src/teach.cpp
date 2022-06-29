@@ -1417,8 +1417,8 @@ int teach_init(spec_arg *sarg)
     {
         szonelog(sarg->owner->getFileIndex()->getZone(),
                  "%s@%s: No text data for teacher-init!",
-                 UNIT_FI_NAME(sarg->owner),
-                 UNIT_FI_ZONENAME(sarg->owner));
+                 sarg->owner->getFileIndexName(),
+                 sarg->owner->getFileIndexZoneName());
         destroy_fptr(sarg->owner, sarg->fptr);
         return SFR_BLOCK;
     }
@@ -1430,8 +1430,8 @@ int teach_init(spec_arg *sarg)
         szonelog(sarg->owner->getFileIndex()->getZone(),
                  "%s@%s: Illegal teach type %s in "
                  "teacher init!",
-                 UNIT_FI_NAME(sarg->owner),
-                 UNIT_FI_ZONENAME(sarg->owner),
+                 sarg->owner->getFileIndexName(),
+                 sarg->owner->getFileIndexZoneName(),
                  buf);
         destroy_fptr(sarg->owner, sarg->fptr);
         return SFR_BLOCK;
@@ -1460,8 +1460,8 @@ int teach_init(spec_arg *sarg)
         {
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Unknown profession %s in teacher-init.",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner),
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName(),
                      buf);
         }
     }
@@ -1611,8 +1611,8 @@ int teach_init(spec_arg *sarg)
         default:
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal type in teacher-init",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner));
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName());
             break;
     }
 
@@ -1630,8 +1630,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Minimum level expected "
                      "between 1 - 250 (is %s)",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner),
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName(),
                      buf);
             c = str_line(c, buf);
             continue;
@@ -1650,8 +1650,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Maximum skill expected "
                      "between 1 - 100 (is %s)",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner),
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName(),
                      buf);
             c = str_line(c, buf);
             continue;
@@ -1670,8 +1670,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal teacher-init "
                      "skill: %s",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner),
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName(),
                      buf);
             c = str_line(c, buf);
             continue;
@@ -1705,8 +1705,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Premature ending of "
                      "teacher-init! (expected cost)",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner));
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName());
             c = str_line(c, buf);
             continue;
         }
@@ -1717,8 +1717,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal min cost amount "
                      "in teacher init (be > 0): %s",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner),
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName(),
                      buf);
             c = str_line(c, buf);
             continue;
@@ -1731,8 +1731,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Premature ending of "
                      "teacher-init! (expected cost)",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner));
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName());
             break;
         }
 
@@ -1742,8 +1742,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Illegal max cost amount "
                      "in teacher init (be > 0): %s",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner),
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName(),
                      buf);
             c = str_line(c, buf);
             continue;
@@ -1755,8 +1755,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Max amount is <= "
                      "min amount... must be error!: %s",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner),
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName(),
                      buf);
             c = str_line(c, buf);
             continue;
@@ -1774,8 +1774,8 @@ int teach_init(spec_arg *sarg)
                 szonelog(sarg->owner->getFileIndex()->getZone(),
                          "%s@%s: Premature ending of "
                          "teacher-init! (expected point)",
-                         UNIT_FI_NAME(sarg->owner),
-                         UNIT_FI_ZONENAME(sarg->owner));
+                         sarg->owner->getFileIndexName(),
+                         sarg->owner->getFileIndexZoneName());
                 c = str_line(c, buf);
                 continue;
             }
@@ -1794,8 +1794,8 @@ int teach_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "%s@%s: Premature ending of "
                      "teacher-init! (expected points cost)",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner));
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName());
             c = str_line(c, buf);
             continue;
         }

@@ -344,8 +344,8 @@ char dil_getbool(dilval *v, dilprg *prg)
                  0,
                  "DIL getbool error in dil %s on unit %s@%s.",
                  prg->frame->tmpl->prgname,
-                 UNIT_FI_NAME(prg->sarg->owner),
-                 UNIT_FI_ZONENAME(prg->sarg->owner));
+                 prg->sarg->owner->getFileIndexName(),
+                 prg->sarg->owner->getFileIndexZoneName());
             return FALSE;
     }
 }
@@ -685,8 +685,8 @@ void dil_typeerr(dilprg *p, const char *where)
 
     szonelog(p->sarg->owner->getFileIndex()->getZone(),
              "DIL SERIOUS: on %s@%s %s@%s, Type error in %s\n",
-             UNIT_FI_NAME(p->sarg->owner),
-             UNIT_FI_ZONENAME(p->sarg->owner),
+             p->sarg->owner->getFileIndexName(),
+             p->sarg->owner->getFileIndexZoneName(),
              p->fp->tmpl->prgname,
              p->fp->tmpl->zone->getName(),
              where);
@@ -1353,8 +1353,8 @@ int run_dil(spec_arg *sarg)
              0,
              "DIL program [%s] stopped on unit %s@%s.",
              prg->fp->tmpl->prgname,
-             UNIT_FI_NAME(sarg->owner),
-             UNIT_FI_ZONENAME(sarg->owner));
+             sarg->owner->getFileIndexName(),
+             sarg->owner->getFileIndexZoneName());
         prg->nest--;
 
         //
@@ -1383,8 +1383,8 @@ int run_dil(spec_arg *sarg)
         szonelog(sarg->owner->getFileIndex()->getZone(),
                  "DIL %s in unit %s@%s had endless loop.",
                  prg->fp->tmpl->prgname,
-                 UNIT_FI_NAME(sarg->owner),
-                 UNIT_FI_ZONENAME(sarg->owner));
+                 sarg->owner->getFileIndexName(),
+                 sarg->owner->getFileIndexZoneName());
 
         prg->nest--;
         if (prg->canfree())
@@ -1459,8 +1459,8 @@ int dil_init(spec_arg *sarg)
         {
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "Template '(null)' not found: %s@%s",
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner));
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName());
         }
         destroy_fptr(sarg->owner, sarg->fptr);
     }
@@ -1516,8 +1516,8 @@ int dil_direct_init(spec_arg *sarg)
             szonelog(sarg->owner->getFileIndex()->getZone(),
                      "Template '%s' not found: %s@%s",
                      dilargs->name,
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner));
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName());
         }
         else if (tmpl->argc != dilargs->no)
         {
@@ -1525,8 +1525,8 @@ int dil_direct_init(spec_arg *sarg)
                      "Template '%s' had mismatching argument count %d: %s@%s",
                      dilargs->name,
                      dilargs->no,
-                     UNIT_FI_NAME(sarg->owner),
-                     UNIT_FI_ZONENAME(sarg->owner));
+                     sarg->owner->getFileIndexName(),
+                     sarg->owner->getFileIndexZoneName());
         }
         else
         {
@@ -1546,8 +1546,8 @@ int dil_direct_init(spec_arg *sarg)
                          "mismatch for argument %d: %s@%s",
                          dilargs->name,
                          i,
-                         UNIT_FI_NAME(sarg->owner),
-                         UNIT_FI_ZONENAME(sarg->owner));
+                         sarg->owner->getFileIndexName(),
+                         sarg->owner->getFileIndexZoneName());
             }
             else
             {
@@ -1883,7 +1883,11 @@ dilprg *dil_copy(char *name, unit_data *u)
 
     if (!tmpl)
     {
-        szonelog(u->getFileIndex()->getZone(), "Template '%s' not found: %s@%s", tmplname, UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+        szonelog(u->getFileIndex()->getZone(),
+                 "Template '%s' not found: %s@%s",
+                 tmplname,
+                 u->getFileIndexName(),
+                 u->getFileIndexZoneName());
         if (targ)
         {
             FREE(targ);
@@ -1898,8 +1902,8 @@ dilprg *dil_copy(char *name, unit_data *u)
                  "Template '%s' had mismatching argument count %d: %s@%s",
                  tmplname,
                  narg,
-                 UNIT_FI_NAME(u),
-                 UNIT_FI_ZONENAME(u));
+                 u->getFileIndexName(),
+                 u->getFileIndexZoneName());
         if (targ)
         {
             FREE(targ);
@@ -1928,8 +1932,8 @@ dilprg *dil_copy(char *name, unit_data *u)
                  "Template '%s' had mismatching argument mismatch for %d: %s@%s",
                  tmplname,
                  i,
-                 UNIT_FI_NAME(u),
-                 UNIT_FI_ZONENAME(u));
+                 u->getFileIndexName(),
+                 u->getFileIndexZoneName());
         if (targ)
         {
             FREE(targ);
