@@ -1286,6 +1286,8 @@ void dilfi_rsfunc(dilprg *p)
                                 fail = TRUE; /* type error, expect stringlist */
                             }
                             break;
+                        default:
+                            break;
                     }
                 }
             }

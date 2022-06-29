@@ -612,7 +612,7 @@ void dil_free_var(dilvar *v)
 {
     switch (v->type)
     {
-        case DILV_SP:
+        case DilVarType_e::DILV_SP:
             if (v->val.string)
             {
                 FREE(v->val.string);
@@ -620,7 +620,7 @@ void dil_free_var(dilvar *v)
             }
             break;
 
-        case DILV_SLP:
+        case DilVarType_e::DILV_SLP:
             if (v->val.namelist)
             {
                 delete v->val.namelist;
@@ -628,13 +628,16 @@ void dil_free_var(dilvar *v)
             }
             break;
 
-        case DILV_ILP:
+        case DilVarType_e::DILV_ILP:
             /* Only free if temporary allocated expression */
             if (v->val.intlist)
             {
                 delete v->val.intlist;
                 v->val.intlist = nullptr;
             }
+            break;
+
+        default:
             break;
     }
 }
