@@ -209,25 +209,22 @@ unit_data *zone_equip(unit_data *u, zone_reset_cmd *cmd)
     else if (!u->isChar())
     {
         szonelog(g_boot_zone,
-                 "Reset Error: %s@%s is not a char in equip.",
-                 u->getFileIndexName(),
-                 u->getFileIndexZoneName()); // cmd->fi[0]->name, cmd->fi[0]->zone->name);
+                 "Reset Error: %s is not a char in equip.",
+                 u->getFileIndexSymName()); // cmd->fi[0]->name, cmd->fi[0]->zone->name);
     }
     else if (cmd->getFileIndexType(0)->getType() != UNIT_ST_OBJ)
     {
         szonelog(g_boot_zone,
-                 "Reset Error: %s@%s equipping %s@%s is not an object.",
-                 u->getFileIndexName(),
-                 u->getFileIndexZoneName(),
+                 "Reset Error: %s equipping %s@%s is not an object.",
+                 u->getFileIndexSymName(),
                  cmd->getFileIndexType(0)->getName(),
                  cmd->getFileIndexType(0)->getZone()->getName());
     }
     else if (cmd->getNum(1) <= 0)
     {
         szonelog(g_boot_zone,
-                 "Reset Error: %s@%s equipping %s@%s doesn't have a legal equip position.",
-                 u->getFileIndexName(),
-                 u->getFileIndexZoneName(),
+                 "Reset Error: %s equipping %s@%s doesn't have a legal equip position.",
+                 u->getFileIndexSymName(),
                  cmd->getFileIndexType(0)->getName(),
                  cmd->getFileIndexType(0)->getZone()->getName());
     }

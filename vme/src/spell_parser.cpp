@@ -158,11 +158,10 @@ int spell_perform(int spell_no,
                      caster);
 
         szonelog(medium->getFileIndex()->getZone(),
-                 "Illegal spell type (%d/%d): used on (%s@%s)!",
+                 "Illegal spell type (%d/%d): used on (%s)!",
                  spell_no,
                  spell_type,
-                 medium->getFileIndexName(),
-                 medium->getFileIndexZoneName());
+                 medium->getFileIndexSymName());
         return -1;
     }
 

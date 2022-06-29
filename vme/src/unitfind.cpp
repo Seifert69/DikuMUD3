@@ -423,7 +423,7 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
 
         if (ch->getUnitIn() == nullptr)
         {
-            slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", ch->getFileIndexName(), ch->getFileIndexZoneName());
+            slog(LOG_ALL, 0, "%s is not in a room while in find_unit_general<br/>", ch->getFileIndexSymName());
         }
         else
         {
@@ -710,11 +710,7 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
 
             if (ch->getUnitIn() == nullptr)
             {
-                slog(LOG_ALL,
-                     0,
-                     "%s@%s is not in a room while in find_unit_general<br/>",
-                     ch->getFileIndexName(),
-                     ch->getFileIndexZoneName());
+                slog(LOG_ALL, 0, "%s is not in a room while in find_unit_general<br/>", ch->getFileIndexSymName());
             }
             else
             {

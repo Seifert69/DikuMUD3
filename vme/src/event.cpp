@@ -285,8 +285,8 @@ void eventqueue::process()
                     {
                         strcpy(dilzname, prg->fp->tmpl->zone->getName());
                     }
-                    strcpy(diloname, u ? u->getFileIndexName() : "NO NAME");
-                    strcpy(dilozname, u ? u->getFileIndexZoneName() : "NO ZONE");
+                    strcpy(diloname, u ? u->getFileIndexName() : unit_data::NO_NAME);
+                    strcpy(dilozname, u ? u->getFileIndexZoneName() : unit_data::NO_ZONE);
                 }
             }
 

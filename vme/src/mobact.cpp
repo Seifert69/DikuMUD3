@@ -31,7 +31,7 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
     {
         if (ticks < PULSE_SEC)
         {
-            szonelog(g_boot_zone, "Error: %s@%s had heartbeat of %d.", u->getFileIndexName(), u->getFileIndexZoneName(), ticks);
+            szonelog(g_boot_zone, "Error: %s had heartbeat of %d.", u->getFileIndexSymName(), ticks);
             if ((fptr->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL) || (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL))
             {
                 dilprg *p = nullptr;
@@ -181,7 +181,7 @@ void special_event(void *p1, void *p2)
 
     if (fptr->getHeartBeat() < PULSE_SEC)
     {
-        slog(LOG_ALL, 0, "Error: %s@%s had heartbeat of %d.", u->getFileIndexName(), u->getFileIndexZoneName(), fptr->getHeartBeat());
+        slog(LOG_ALL, 0, "Error: %s had heartbeat of %d.", u->getFileIndexSymName(), fptr->getHeartBeat());
     }
 
     if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)

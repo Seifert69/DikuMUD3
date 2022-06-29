@@ -571,9 +571,8 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             {
                 slog(LOG_ALL,
                      0,
-                     "Ocean escape from %s@%s direction %d adding 150 to difficulty.",
-                     room_from->getFileIndexName(),
-                     room_from->getFileIndexZoneName(),
+                     "Ocean escape from %s direction %d adding 150 to difficulty.",
+                     room_from->getFileIndexSymName(),
                      direction);
                 diff += 150;
                 act("You really should have been in a boat here, swimming is incredible difficult.",
