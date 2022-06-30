@@ -17,6 +17,8 @@
 
 enum DilVarType_e : uint8_t
 {
+    DILV_INVALID = 0,
+
     /* Legal variable values */
     DILV_UP=1,  /* unit pointer Rexpr Var */
     DILV_SP=2,  /* string pointer Rexpr Var */
@@ -61,9 +63,9 @@ enum DilVarType_e : uint8_t
     DILV_ILP=34,    /* intlist pointer Rexpr */
     DILV_ILPR=35,   /* intlist pointer Lexpr */
     DILV_ESLIP=36,  /* For compiler shared e sl il */
-    DILV_ALL=37    /* sym functions can return anything at runtim */
+    DILV_ALL=37,    /* sym functions can return anything at runtim */
+    DILV_MAX=37     // Max DILV_ number, used in array allocation
 };
-#define DILV_MAX 37    // Max DILV_ number, used in array allocation
 
 /* The following "dilarg" structs are used only for VMC purposes to allow
    the user to enter the : dilcopy prg@zon(arg, arg, arg); instead of the

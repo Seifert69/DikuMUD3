@@ -16,6 +16,19 @@
 int g_nDilPrg = 0;
 int g_nDilVal = 0;
 
+DilVarType_e DilVarTypeIntToEnum(int n)
+{
+    if ((n >= 1) && (n <= DilVarType_e::DILV_MAX))
+    {
+        return (DilVarType_e) n;
+    }
+    else
+    {
+        slog(LOG_ALL, 0, "DilVarType_e conversion OOB integer %d", n);
+        return DilVarType_e::DILV_INVALID;
+    }
+}
+
 dilval::dilval()
 {
     g_nDilVal++;

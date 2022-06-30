@@ -10,6 +10,7 @@
 #include "db.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "dilshare.h"
 #include "error.h"
 #include "formatter.h"
 #include "handler.h"
@@ -158,7 +159,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->argc; i++)
         {
-            tmpl->argt[i] = (DilVarType_e) pBuf->ReadU8(); /* argument types */
+            tmpl->argt[i] = DilVarTypeIntToEnum(pBuf->ReadU8()); /* argument types */
         }
     }
     else
@@ -176,7 +177,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->varc; i++)
         {
-            tmpl->vart[i] = (DilVarType_e) pBuf->ReadU8();
+            tmpl->vart[i] = DilVarTypeIntToEnum(pBuf->ReadU8());
         }
     }
     else
@@ -194,7 +195,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         for (i = 0; i < tmpl->xrefcount; i++)
         {
             pBuf->ReadStringAlloc(&tmpl->xrefs[i].name);
-            tmpl->xrefs[i].rtnt = (DilVarType_e) pBuf->ReadU8();
+            tmpl->xrefs[i].rtnt = DilVarTypeIntToEnum(pBuf->ReadU8());
             tmpl->xrefs[i].argc = pBuf->ReadU8();
 
             if (tmpl->xrefs[i].argc)
@@ -202,7 +203,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
                 CREATE(tmpl->xrefs[i].argt, DilVarType_e, tmpl->xrefs[i].argc);
                 for (j = 0; j < tmpl->xrefs[i].argc; j++)
                 {
-                    tmpl->xrefs[i].argt[j] = (DilVarType_e) pBuf->ReadU8();
+                    tmpl->xrefs[i].argt[j] = DilVarTypeIntToEnum(pBuf->ReadU8());
                 }
             }
             else
@@ -489,7 +490,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
     for (i = 0; i < novar; i++)
     {
-        prg->fp->vars[i].type = (DilVarType_e) pBuf->ReadU8();
+        prg->fp->vars[i].type = DilVarTypeIntToEnum(pBuf->ReadU8());
 
         switch (prg->fp->vars[i].type)
         {
@@ -703,7 +704,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
             for (int j = 0; j < dilargs->no; j++)
             {
-                dilargs->dilarg[j].type = (DilVarType_e) pBuf->ReadU8();
+                dilargs->dilarg[j].type = DilVarTypeIntToEnum(pBuf->ReadU8());
 
                 switch (dilargs->dilarg[j].type)
                 {

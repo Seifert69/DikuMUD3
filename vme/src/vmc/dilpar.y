@@ -22,6 +22,7 @@
 #include "db_file.h"
 #include "dil.h"
 #include "dilpar.h"
+#include "dilshare.h"
 #include "intlist.h"
 #include "namelist.h"
 #include "textutil.h"
@@ -521,7 +522,7 @@ decl    : syminit symlist ':' type
         {
             $$->names->AppendName(symlist[i]);
         }
-        $$->type = (DilVarType_e) $4;  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
+        $$->type = DilVarTypeIntToEnum($4);  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
     }
     | // empty
     {
@@ -601,7 +602,7 @@ ref     : SYMBOL '(' arginit refarglist ')' ';'
 
         ref.name = str_dup(nbuf);
         ref.zname = str_dup(zbuf);
-        ref.rtnt = (DilVarType_e) $1; // Not sure why type returns an int rather than DilVarType_e
+        ref.rtnt = DilVarTypeIntToEnum($1); // Not sure why type returns an int rather than DilVarType_e
         add_ref(&ref);
     }
     ;
@@ -624,7 +625,7 @@ somerefargs : refarg ',' somerefargs
 refarg   : SYMBOL ':' type
     {
         /* collect argument */
-        ref.argt[ref.argc] = (DilVarType_e) $3; ;  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
+        ref.argt[ref.argc] = DilVarTypeIntToEnum($3); ;  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
         ref.argv[ref.argc] = str_dup($1);
         if (++ref.argc > ARGMAX)
         {
@@ -6890,7 +6891,7 @@ funcall:  FUNCTION '(' arginit darglist ')'
         }
 
         $$.dsl = DSL_DYN;
-        $$.typ = (DilVarType_e) $1;  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
+        $$.typ = DilVarTypeIntToEnum($1);  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
         for (i = 0; i < ref.argc; i++)
         {
             make_code(&explist[i]);
