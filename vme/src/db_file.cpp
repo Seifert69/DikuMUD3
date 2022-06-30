@@ -154,11 +154,11 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     if (tmpl->argc)
     {
-        CREATE(tmpl->argt, ubit8, tmpl->argc);
+        CREATE(tmpl->argt, DilVarType_e, tmpl->argc);
 
         for (i = 0; i < tmpl->argc; i++)
         {
-            tmpl->argt[i] = pBuf->ReadU8(); /* argument types */
+            tmpl->argt[i] = (DilVarType_e) pBuf->ReadU8(); /* argument types */
         }
     }
     else
@@ -172,11 +172,11 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     if (tmpl->varc)
     {
-        CREATE(tmpl->vart, ubit8, tmpl->varc);
+        CREATE(tmpl->vart, DilVarType_e, tmpl->varc);
 
         for (i = 0; i < tmpl->varc; i++)
         {
-            tmpl->vart[i] = pBuf->ReadU8();
+            tmpl->vart[i] = (DilVarType_e) pBuf->ReadU8();
         }
     }
     else
@@ -194,15 +194,15 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         for (i = 0; i < tmpl->xrefcount; i++)
         {
             pBuf->ReadStringAlloc(&tmpl->xrefs[i].name);
-            tmpl->xrefs[i].rtnt = pBuf->ReadU8();
+            tmpl->xrefs[i].rtnt = (DilVarType_e) pBuf->ReadU8();
             tmpl->xrefs[i].argc = pBuf->ReadU8();
 
             if (tmpl->xrefs[i].argc)
             {
-                CREATE(tmpl->xrefs[i].argt, ubit8, tmpl->xrefs[i].argc);
+                CREATE(tmpl->xrefs[i].argt, DilVarType_e, tmpl->xrefs[i].argc);
                 for (j = 0; j < tmpl->xrefs[i].argc; j++)
                 {
-                    tmpl->xrefs[i].argt[j] = pBuf->ReadU8();
+                    tmpl->xrefs[i].argt[j] = (DilVarType_e) pBuf->ReadU8();
                 }
             }
             else
@@ -489,22 +489,22 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
     for (i = 0; i < novar; i++)
     {
-        prg->fp->vars[i].type = pBuf->ReadU8();
+        prg->fp->vars[i].type = (DilVarType_e) pBuf->ReadU8();
 
         switch (prg->fp->vars[i].type)
         {
-            case DILV_SLP:
+            case DilVarType_e::DILV_SLP:
                 prg->fp->vars[i].val.namelist = new cNamelist;
                 prg->fp->vars[i].val.namelist->ReadBuffer(pBuf, version);
                 break;
-            case DILV_ILP:
+            case DilVarType_e::DILV_ILP:
                 prg->fp->vars[i].val.intlist = new cintlist;
                 prg->fp->vars[i].val.intlist->ReadBuffer(pBuf);
                 break;
-            case DILV_SP:
+            case DilVarType_e::DILV_SP:
                 pBuf->ReadStringAlloc(&prg->fp->vars[i].val.string);
                 break;
-            case DILV_INT:
+            case DilVarType_e::DILV_INT:
                 prg->fp->vars[i].val.integer = pBuf->ReadS32();
                 break;
             default:
@@ -555,11 +555,11 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         for (i = 0; i < tmpl->varc; i++)
         {
             prg->fp->vars[i].type = tmpl->vart[i];
-            if (tmpl->vart[i] == DILV_SLP)
+            if (tmpl->vart[i] == DilVarType_e::DILV_SLP)
             {
                 prg->fp->vars[i].val.namelist = new cNamelist;
             }
-            else if (tmpl->vart[i] == DILV_ILP)
+            else if (tmpl->vart[i] == DilVarType_e::DILV_ILP)
             {
                 prg->fp->vars[i].val.intlist = new cintlist;
             }
@@ -703,23 +703,23 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
             for (int j = 0; j < dilargs->no; j++)
             {
-                dilargs->dilarg[j].type = pBuf->ReadU8();
+                dilargs->dilarg[j].type = (DilVarType_e) pBuf->ReadU8();
 
                 switch (dilargs->dilarg[j].type)
                 {
-                    case DILV_SLP:
+                    case DilVarType_e::DILV_SLP:
                         pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
                         break;
 
-                    case DILV_SP:
+                    case DilVarType_e::DILV_SP:
                         pBuf->ReadStringAlloc(&dilargs->dilarg[j].data.string);
                         break;
 
-                    case DILV_INT:
+                    case DilVarType_e::DILV_INT:
                         dilargs->dilarg[j].data.num = pBuf->ReadS32();
                         break;
 
-                    case DILV_ILP:
+                    case DilVarType_e::DILV_ILP:
                         pBuf->ReadIntList(&dilargs->dilarg[j].data.intlist);
                         break;
 
@@ -931,7 +931,7 @@ void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
 
         switch (prg->frame[0].vars[i].type)
         {
-            case DILV_SLP:
+            case DilVarType_e::DILV_SLP:
                 if (prg->frame[0].vars[i].val.namelist)
                 {
                     prg->frame[0].vars[i].val.namelist->AppendBuffer(pBuf);
@@ -942,7 +942,7 @@ void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
                 }
                 break;
 
-            case DILV_ILP:
+            case DilVarType_e::DILV_ILP:
                 if (prg->frame[0].vars[i].val.intlist)
                 {
                     prg->frame[0].vars[i].val.intlist->AppendBuffer(pBuf);
@@ -953,12 +953,15 @@ void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
                 }
                 break;
 
-            case DILV_SP:
+            case DilVarType_e::DILV_SP:
                 pBuf->AppendString(prg->frame[0].vars[i].val.string);
                 break;
 
-            case DILV_INT:
+            case DilVarType_e::DILV_INT:
                 pBuf->Append32(prg->frame[0].vars[i].val.integer);
+                break;
+
+            default:
                 break;
         }
     }
@@ -1039,10 +1042,10 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
 
                 switch (dilargs->dilarg[j].type)
                 {
-                    case DILV_SLP:
+                    case DilVarType_e::DILV_SLP:
                         pBuf->AppendNames((const char **)dilargs->dilarg[j].data.stringlist, 0);
                         break;
-                    case DILV_ILP:
+                    case DilVarType_e::DILV_ILP:
                     {
                         int myi = 0;
                         for (myi = 0; myi <= ((int *)dilargs->dilarg[j].data.intlist)[0]; myi++)
@@ -1051,10 +1054,10 @@ void bwrite_func(CByteBuffer *pBuf, unit_fptr *fptr)
                         }
                     }
                     break;
-                    case DILV_SP:
+                    case DilVarType_e::DILV_SP:
                         pBuf->AppendString(dilargs->dilarg[j].data.string);
                         break;
-                    case DILV_INT:
+                    case DilVarType_e::DILV_INT:
                         pBuf->Append32(dilargs->dilarg[j].data.num);
                         break;
                     default:

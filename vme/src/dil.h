@@ -15,13 +15,63 @@
 
 #define SKIP 0xffffffff /* skip label/index defined */
 
+enum DilVarType_e : uint8_t
+{
+    /* Legal variable values */
+    DILV_UP=1,  /* unit pointer Rexpr Var */
+    DILV_SP=2,  /* string pointer Rexpr Var */
+    DILV_SLP=3, /* string list pointer Var */
+    DILV_EDP=4, /* extra description pointer Rexpr Var */
+    DILV_INT=5, /* integer Rexpr Var */
+
+    /* Other return values */
+    DILV_UPR=6,  /* unit pointer ref Lexpr */
+    DILV_SPR=7,  /* string pointer Rexpr */
+    DILV_SLPR=8, /* string list pointer */
+    DILV_EDPR=9, /* extra descr pointer ref Lexpr */
+
+    /* Different pointers for different size fields */
+    DILV_SINT1R=10, /* integer ref, 8 bit, sgn Lexpr */
+    DILV_SINT2R=11, /* integer ref, 16 bit, sgn Lexpr */
+    DILV_SINT4R=12, /* integer ref, 32 bit, sgn Lexpr */
+    DILV_UINT1R=13, /* integer ref, 8 bit, usgn Lexpr */
+    DILV_UINT2R=14, /* integer ref, 16 bit, usgn Lexpr */
+    DILV_UINT4R=15, /* integer ref, 32 bit, usgn Lexpr */
+
+    DILV_ERR=16,  /* fatal error value */
+    DILV_NULL=17, /* value is null */
+    DILV_FAIL=18, /* value is failed */
+
+    DILV_UEDP=19,    /* FOR COMPILER ONLY! (shared fields) */
+    DILV_FUNC=20,    /* FOR COMPILER ONLY! functions */
+    DILV_PROC=21,    /* FOR COMPILER ONLY! procedures */
+    DILV_HASHSTR=22, /* Hashed String */
+
+    DILV_ZP=23,     /* Zone Pointer Rexpr */
+    DILV_ZPR=24,    /* zone pointer Lexpr */
+    DILV_UZP=25,    /* FOR COMPILER ONLY! unit/zone shared */
+    DILV_EZP=26,    /* FOR COMPILER ONLY! extra/zone shared */
+    DILV_UEZP=27,   /* FOR COMPILER ONLY! all shared */
+    DILV_SP_SLP=28, /* FOR COMPILER ONLY! all shared */
+    DILV_CP=29,     /* Command Pointer Rexpr */
+    DILV_CPR=30,    /* Command pointer Lexpr */
+    DILV_UEZCP=31,  /* FOR COMPILER ONLY! all shared */
+    DILV_UCP=32,    /* FOR COMPILER ONLY! all shared */
+    DILV_ESLP=33,   /* FOR COMPILER ONLY! all shared */
+    DILV_ILP=34,    /* intlist pointer Rexpr */
+    DILV_ILPR=35,   /* intlist pointer Lexpr */
+    DILV_ESLIP=36,  /* For compiler shared e sl il */
+    DILV_ALL=37    /* sym functions can return anything at runtim */
+};
+#define DILV_MAX 37    // Max DILV_ number, used in array allocation
+
 /* The following "dilarg" structs are used only for VMC purposes to allow
    the user to enter the : dilcopy prg@zon(arg, arg, arg); instead of the
    stupid string format */
 
 struct dilargtype
 {
-    ubit8 type;
+    DilVarType_e type;
     union
     {
         char *string;
@@ -411,64 +461,22 @@ struct dilargstype
 
 #define DILF_MAX 127 /* The maximum field number */
 
-/* Legal variable values */
-#define DILV_UP 1  /* unit pointer Rexpr Var */
-#define DILV_SP 2  /* string pointer Rexpr Var */
-#define DILV_SLP 3 /* string list pointer Var */
-#define DILV_EDP 4 /* extra description pointer Rexpr Var */
-#define DILV_INT 5 /* integer Rexpr Var */
-
-/* Other return values */
-#define DILV_UPR 6  /* unit pointer ref Lexpr */
-#define DILV_SPR 7  /* string pointer Rexpr */
-#define DILV_SLPR 8 /* string list pointer */
-#define DILV_EDPR 9 /* extra descr pointer ref Lexpr */
-
-/* Different pointers for different size fields */
-#define DILV_SINT1R 10 /* integer ref, 8 bit, sgn Lexpr */
-#define DILV_SINT2R 11 /* integer ref, 16 bit, sgn Lexpr */
-#define DILV_SINT4R 12 /* integer ref, 32 bit, sgn Lexpr */
-#define DILV_UINT1R 13 /* integer ref, 8 bit, usgn Lexpr */
-#define DILV_UINT2R 14 /* integer ref, 16 bit, usgn Lexpr */
-#define DILV_UINT4R 15 /* integer ref, 32 bit, usgn Lexpr */
-
-#define DILV_ERR 16  /* fatal error value */
-#define DILV_NULL 17 /* value is null */
-#define DILV_FAIL 18 /* value is failed */
-
-#define DILV_UEDP 19    /* FOR COMPILER ONLY! (shared fields) */
-#define DILV_FUNC 20    /* FOR COMPILER ONLY! functions */
-#define DILV_PROC 21    /* FOR COMPILER ONLY! procedures */
-#define DILV_HASHSTR 22 /* Hashed String */
-
-#define DILV_ZP 23     /* Zone Pointer Rexpr */
-#define DILV_ZPR 24    /* zone pointer Lexpr */
-#define DILV_UZP 25    /* FOR COMPILER ONLY! unit/zone shared */
-#define DILV_EZP 26    /* FOR COMPILER ONLY! extra/zone shared */
-#define DILV_UEZP 27   /* FOR COMPILER ONLY! all shared */
-#define DILV_SP_SLP 28 /* FOR COMPILER ONLY! all shared */
-#define DILV_CP 29     /* Command Pointer Rexpr */
-#define DILV_CPR 30    /* Command pointer Lexpr */
-#define DILV_UEZCP 31  /* FOR COMPILER ONLY! all shared */
-#define DILV_UCP 32    /* FOR COMPILER ONLY! all shared */
-#define DILV_ESLP 33   /* FOR COMPILER ONLY! all shared */
-#define DILV_ILP 34    /* intlist pointer Rexpr */
-#define DILV_ILPR 35   /* intlist pointer Lexpr */
-#define DILV_ESLIP 36  /* For compiler shared e sl il */
-#define DILV_ALL 37    /* sym functions can return anything at runtim */
-#define DILV_MAX 37    /* Max number */
-
-#define DILT_REG 1
-#define DILT_CONST 2
-#define DILT_ARG 3
 
 class zone_type;
 class command_info;
+
+enum class DilIType_e : ubit8
+{
+   Reg  = 1,  // DILT_REG 
+   Const = 2, // DILT_CONST
+   Arg   = 3  // DILT_ARG
+};
+
 /* DIL variable structure */
 struct dilvar
 {
-    ubit8 type;  /* variable type - string, integer, ...*/
-    ubit8 itype; /* Regular, constant, argument */
+    DilVarType_e type;  /* variable type - string, integer, ...*/
+    DilIType_e itype; /* UNUSED - Regular, constant, argument */
     char *name;  /* variable name */
     union
     {
@@ -482,6 +490,8 @@ struct dilvar
         cintlist *intlist;
     } val;
 };
+
+// std::map<std::string, std::unique<dilvar>> g_global_dilvars;
 
 /* allocation strategy */
 #define DILA_NONE 0 /* not malloc (int) */
@@ -520,9 +530,9 @@ struct dilsecure
 struct dilxref
 {
     char *name;  /* func/proc name [@ zone] */
-    ubit8 rtnt;  /* return type */
+    DilVarType_e rtnt;  /* return type */
     ubit8 argc;  /* number of arguments (min 1) */
-    ubit8 *argt; /* argument types */
+    DilVarType_e *argt; /* argument types */
 };
 
 class dilprg;
@@ -543,13 +553,13 @@ struct diltemplate
     ubit16 corecrc;   /* core crc from compiler */
     ubit8 rtnt;       /* return type */
     ubit8 argc;       /* number of arguments */
-    ubit8 *argt;      /* argument types */
+    DilVarType_e *argt;      /* argument types */
 
     ubit32 coresz; /* size of coreblock */
     ubit8 *core;   /* instructions, expressions and statics */
 
     ubit16 varc; /* number of variables */
-    ubit8 *vart; /* variable types */
+    DilVarType_e *vart; /* variable types */
 
     ubit16 xrefcount;     /* number of external references   */
     diltemplate **extprg; /* external programs (SERVER only) */

@@ -164,7 +164,7 @@ void dil_free_var(dilvar *v)
 {
     switch (v->type)
     {
-        case DILV_SP:
+        case DilVarType_e::DILV_SP:
             if (v->val.string)
             {
                 FREE(v->val.string);
@@ -172,7 +172,7 @@ void dil_free_var(dilvar *v)
             }
             break;
 
-        case DILV_SLP:
+        case DilVarType_e::DILV_SLP:
             if (v->val.namelist)
             {
                 delete v->val.namelist;
@@ -180,13 +180,16 @@ void dil_free_var(dilvar *v)
             }
             break;
 
-        case DILV_ILP:
+        case DilVarType_e::DILV_ILP:
             /* Only free if temporary allocated expression */
             if (v->val.intlist)
             {
                 delete v->val.intlist;
                 v->val.intlist = nullptr;
             }
+            break;
+
+        default:
             break;
     }
 }
@@ -284,59 +287,59 @@ char dil_getbool(dilval *v, dilprg *prg)
      */
     switch (v->type)
     {
-        case DILV_UP:
-        case DILV_ZP:
-        case DILV_CP:
-        case DILV_SP:
-        case DILV_EDP:
+        case DilVarType_e::DILV_UP:
+        case DilVarType_e::DILV_ZP:
+        case DilVarType_e::DILV_CP:
+        case DilVarType_e::DILV_SP:
+        case DilVarType_e::DILV_EDP:
             return (v->val.ptr != nullptr); /* return Rvalue */
 
-        case DILV_UPR:
-        case DILV_ZPR:
-        case DILV_CPR:
-        case DILV_SPR:
-        case DILV_EDPR:
+        case DilVarType_e::DILV_UPR:
+        case DilVarType_e::DILV_ZPR:
+        case DilVarType_e::DILV_CPR:
+        case DilVarType_e::DILV_SPR:
+        case DilVarType_e::DILV_EDPR:
             return (*((void **)v->ref) != nullptr); /* return Lvalue */
 
-        case DILV_SLP:
+        case DilVarType_e::DILV_SLP:
             return ((cNamelist *)v->val.ptr)->Length() != 0;
 
-        case DILV_SLPR:
+        case DilVarType_e::DILV_SLPR:
             return ((cNamelist *)v->ref)->Length() != 0;
 
-        case DILV_ILP:
+        case DilVarType_e::DILV_ILP:
             return ((cintlist *)v->val.ptr)->Length() != 0;
 
-        case DILV_ILPR:
+        case DilVarType_e::DILV_ILPR:
             return ((cintlist *)v->ref)->Length() != 0;
 
-        case DILV_HASHSTR:
+        case DilVarType_e::DILV_HASHSTR:
             /* return Lvalue */
             return ((std::string *)(v->ref))->empty();
 
-        case DILV_INT:
+        case DilVarType_e::DILV_INT:
             return (v->val.num != 0); /* return Rvalue */
 
-        case DILV_SINT1R:
+        case DilVarType_e::DILV_SINT1R:
             return (*((sbit8 *)v->ref) != 0); /* return Lvalue */
 
-        case DILV_SINT2R:
+        case DilVarType_e::DILV_SINT2R:
             return (*((sbit16 *)v->ref) != 0); /* return Lvalue */
 
-        case DILV_SINT4R:
+        case DilVarType_e::DILV_SINT4R:
             return (*((sbit32 *)v->ref) != 0); /* return Lvalue */
 
-        case DILV_UINT1R:
+        case DilVarType_e::DILV_UINT1R:
             return (*((ubit8 *)v->ref) != 0); /* return Lvalue */
 
-        case DILV_UINT2R:
+        case DilVarType_e::DILV_UINT2R:
             return (*((ubit16 *)v->ref) != 0); /* return Lvalue */
 
-        case DILV_UINT4R:
+        case DilVarType_e::DILV_UINT4R:
             return (*((ubit32 *)v->ref) != 0); /* return Lvalue */
 
-        case DILV_FAIL:
-        case DILV_NULL:
+        case DilVarType_e::DILV_FAIL:
+        case DilVarType_e::DILV_NULL:
             return FALSE;
 
         default:
@@ -350,71 +353,71 @@ int dil_getval(dilval *v)
 {
     /* original type */
     static int orig_type[DILV_MAX + 1] = {
-        DILV_ERR, DILV_UP,  DILV_SP,  DILV_SLP, DILV_EDP,  DILV_INT,  DILV_UP,  DILV_SP,  DILV_SLP, DILV_EDP, DILV_INT, DILV_INT, DILV_INT,
-        DILV_INT, DILV_INT, DILV_INT, DILV_ERR, DILV_NULL, DILV_FAIL, DILV_ERR, DILV_ERR, DILV_ERR, DILV_SP,  DILV_ZP,  DILV_ZP,  DILV_ERR,
-        DILV_ERR, DILV_ERR, DILV_ERR, DILV_CP,  DILV_CP,   DILV_ERR,  DILV_ERR, DILV_ERR, DILV_ILP, DILV_ILP, DILV_ERR};
+        DilVarType_e::DILV_ERR, DilVarType_e::DILV_UP,  DilVarType_e::DILV_SP,  DilVarType_e::DILV_SLP, DilVarType_e::DILV_EDP,  DilVarType_e::DILV_INT,  DilVarType_e::DILV_UP,  DilVarType_e::DILV_SP,  DilVarType_e::DILV_SLP, DilVarType_e::DILV_EDP, DilVarType_e::DILV_INT, DilVarType_e::DILV_INT, DilVarType_e::DILV_INT,
+        DilVarType_e::DILV_INT, DilVarType_e::DILV_INT, DilVarType_e::DILV_INT, DilVarType_e::DILV_ERR, DilVarType_e::DILV_NULL, DilVarType_e::DILV_FAIL, DilVarType_e::DILV_ERR, DilVarType_e::DILV_ERR, DilVarType_e::DILV_ERR, DilVarType_e::DILV_SP,  DilVarType_e::DILV_ZP,  DilVarType_e::DILV_ZP,  DilVarType_e::DILV_ERR,
+        DilVarType_e::DILV_ERR, DilVarType_e::DILV_ERR, DilVarType_e::DILV_ERR, DilVarType_e::DILV_CP,  DilVarType_e::DILV_CP,   DilVarType_e::DILV_ERR,  DilVarType_e::DILV_ERR, DilVarType_e::DILV_ERR, DilVarType_e::DILV_ILP, DilVarType_e::DILV_ILP, DilVarType_e::DILV_ERR};
 
     switch (v->type)
     {
-        case DILV_UP:
-        case DILV_SP:
-        case DILV_SLP:
-        case DILV_ILP:
-        case DILV_EDP:
-        case DILV_INT:
-        case DILV_ZP:
-        case DILV_CP:
+        case DilVarType_e::DILV_UP:
+        case DilVarType_e::DILV_SP:
+        case DilVarType_e::DILV_SLP:
+        case DilVarType_e::DILV_ILP:
+        case DilVarType_e::DILV_EDP:
+        case DilVarType_e::DILV_INT:
+        case DilVarType_e::DILV_ZP:
+        case DilVarType_e::DILV_CP:
             v->ref = nullptr; /* this is NOT a reference */
             break;
-        case DILV_SPR:
+        case DilVarType_e::DILV_SPR:
             v->val.ptr = *((char **)v->ref); /* get value of ref */
             break;
-        case DILV_HASHSTR:
+        case DilVarType_e::DILV_HASHSTR:
             /* Important! Remember that the HASHSTR may NEVER EVER BE CHANGED! */
             v->val.ptr = (char *)((std::string *)v->ref)->c_str();
             break;
 
-        case DILV_SLPR:
+        case DilVarType_e::DILV_SLPR:
             v->val.ptr = v->ref;
             break;
 
-        case DILV_ILPR:
+        case DilVarType_e::DILV_ILPR:
             v->val.ptr = v->ref;
             break;
 
-        case DILV_ZPR:
-        case DILV_CPR:
-        case DILV_UPR:
-        case DILV_EDPR:
+        case DilVarType_e::DILV_ZPR:
+        case DilVarType_e::DILV_CPR:
+        case DilVarType_e::DILV_UPR:
+        case DilVarType_e::DILV_EDPR:
             v->val.ptr = *((void **)v->ref); /* get value of ref */
             break;
 
-        case DILV_SINT1R:
+        case DilVarType_e::DILV_SINT1R:
             v->val.num = *((sbit8 *)v->ref);
             break;
-        case DILV_SINT2R:
+        case DilVarType_e::DILV_SINT2R:
             v->val.num = *((sbit16 *)v->ref);
             break;
-        case DILV_SINT4R:
+        case DilVarType_e::DILV_SINT4R:
             v->val.num = *((sbit32 *)v->ref);
             break;
-        case DILV_UINT1R:
+        case DilVarType_e::DILV_UINT1R:
             v->val.num = *((ubit8 *)v->ref);
             break;
-        case DILV_UINT2R:
+        case DilVarType_e::DILV_UINT2R:
             v->val.num = *((ubit16 *)v->ref);
             break;
-        case DILV_UINT4R:
+        case DilVarType_e::DILV_UINT4R:
             v->val.num = *((ubit32 *)v->ref);
             break;
-        case DILV_NULL:
-        case DILV_FAIL:
+        case DilVarType_e::DILV_NULL:
+        case DilVarType_e::DILV_FAIL:
             v->val.ptr = nullptr;
             v->ref = nullptr;
             break;
 
         default:
-            v->type = DILV_ERR; /* illegal type! */
+            v->type = DilVarType_e::DILV_ERR; /* illegal type! */
             v->val.num = 0;
             v->ref = nullptr;
             break;
@@ -504,7 +507,7 @@ void dil_clear_extras(dilprg *prg, extra_descr_data *exd)
     {
         for (i = 0; i < frm->tmpl->varc; i++)
         {
-            if (frm->vars[i].type == DILV_EDP)
+            if (frm->vars[i].type == DilVarType_e::DILV_EDP)
             {
                 if (frm->vars[i].val.extraptr == exd)
                 {
@@ -517,14 +520,14 @@ void dil_clear_extras(dilprg *prg, extra_descr_data *exd)
     // Guess this might be needed when calling remote routines. Not tested... :-/
     for (i = 0; i < prg->stack.length(); i++)
     {
-        if (prg->stack[i]->atyp == DILV_EDPR)
+        if (prg->stack[i]->atyp == DilVarType_e::DILV_EDPR)
         {
             if (*((extra_descr_data **)prg->stack[i]->ref) == exd)
             {
                 prg->stack[i]->ref = nullptr;
             }
         }
-        else if (prg->stack[i]->atyp == DILV_EDP)
+        else if (prg->stack[i]->atyp == DilVarType_e::DILV_EDP)
         {
             if (prg->stack[i]->val.ptr == exd)
             {
@@ -552,11 +555,11 @@ void dil_clear_non_secured(dilprg *prg)
     {
         for (i = 0; i < frm->tmpl->varc; i++)
         {
-            if (frm->vars[i].type == DILV_EDP)
+            if (frm->vars[i].type == DilVarType_e::DILV_EDP)
             {
                 frm->vars[i].val.extraptr = nullptr;
             }
-            else if (frm->vars[i].type == DILV_UP)
+            else if (frm->vars[i].type == DilVarType_e::DILV_UP)
             {
                 for (j = 0; j < frm->securecount; j++)
                 {
@@ -692,7 +695,7 @@ void dil_typeerr(dilprg *p, const char *where)
  *  where tot is the amount of variables to be checked,
  *  v is a dilval *, flag is one of the macros above,
  *  n is the number of accepted types and type is an int of the form
- *  DILV_xxx.  Returns 0 for success, -1 for failure.
+ *  DilVarType_e::DILV_xxx.  Returns 0 for success, -1 for failure.
  */
 int dil_type_check(const char *f, dilprg *p, int tot, ...)
 {
@@ -728,9 +731,9 @@ int dil_type_check(const char *f, dilprg *p, int tot, ...)
         if (!any)
         {
             /* Don't write type error if dil_getval failed or
-             * returned DILV_NULL (provided we fail on nulls)
+             * returned DilVarType_e::DILV_NULL (provided we fail on nulls)
              */
-            if ((val != DILV_FAIL) && ((val != DILV_NULL) || (flag != FAIL_NULL)))
+            if ((val != DilVarType_e::DILV_FAIL) && ((val != DilVarType_e::DILV_NULL) || (flag != FAIL_NULL)))
             {
                 dil_typeerr(p, f);
                 ok_sofar = FALSE;
@@ -1462,20 +1465,22 @@ static void dil_free_dilargs(dilargstype *dilargs)
     {
         switch (dilargs->dilarg[i].type)
         {
-            case DILV_SP:
+            case DilVarType_e::DILV_SP:
                 if (dilargs->dilarg[i].data.string)
                     FREE(dilargs->dilarg[i].data.string);
                 break;
 
-            case DILV_SLP:
+            case DilVarType_e::DILV_SLP:
                 if (dilargs->dilarg[i].data.stringlist)
                 {
                     free_namelist(dilargs->dilarg[i].data.stringlist);
                 }
                 break;
-            case DILV_ILP:
+            case DilVarType_e::DILV_ILP:
                 if (dilargs->dilarg[i].data.intlist)
                     FREE(dilargs->dilarg[i].data.intlist);
+                break;
+            default:
                 break;
         }
     }
@@ -1539,12 +1544,12 @@ int dil_direct_init(spec_arg *sarg)
                 {
                     for (i = 0; i < dilargs->no; i++)
                     {
-                        if (tmpl->argt[i] == DILV_SP)
+                        if (tmpl->argt[i] == DilVarType_e::DILV_SP)
                         {
                             prg->fp->vars[i].val.string = dilargs->dilarg[i].data.string;
                             dilargs->dilarg[i].data.string = nullptr;
                         }
-                        else if (tmpl->argt[i] == DILV_SLP)
+                        else if (tmpl->argt[i] == DilVarType_e::DILV_SLP)
                         {
                             if (prg->fp->vars[i].val.namelist)
                             {
@@ -1552,7 +1557,7 @@ int dil_direct_init(spec_arg *sarg)
                             }
                             prg->fp->vars[i].val.namelist = new cNamelist((const char **)dilargs->dilarg[i].data.stringlist);
                         }
-                        else if (tmpl->argt[i] == DILV_ILP)
+                        else if (tmpl->argt[i] == DilVarType_e::DILV_ILP)
                         {
                             if (prg->fp->vars[i].val.intlist)
                             {
@@ -1565,7 +1570,7 @@ int dil_direct_init(spec_arg *sarg)
                                 prg->fp->vars[i].val.intlist->Append((int)dilargs->dilarg[i].data.intlist[m]);
                             }
                         }
-                        else if (tmpl->argt[i] == DILV_INT)
+                        else if (tmpl->argt[i] == DilVarType_e::DILV_INT)
                         {
                             prg->fp->vars[i].val.integer = dilargs->dilarg[i].data.num;
                         }
@@ -1630,15 +1635,15 @@ void dil_init_vars(int varc, dilframe *frm)
     {
         switch (frm->vars[i].type)
         {
-            case DILV_SLP:
+            case DilVarType_e::DILV_SLP:
                 frm->vars[i].val.namelist = new cNamelist;
                 break;
 
-            case DILV_ILP:
+            case DilVarType_e::DILV_ILP:
                 frm->vars[i].val.intlist = new cintlist;
                 break;
 
-            case DILV_SP:
+            case DilVarType_e::DILV_SP:
                 frm->vars[i].val.string = nullptr;
                 break;
 
@@ -1890,11 +1895,11 @@ dilprg *dil_copy(char *name, unit_data *u)
 
     for (i = 0; i < narg; i++)
     {
-        if (tmpl->argt[i] == DILV_SP)
+        if (tmpl->argt[i] == DilVarType_e::DILV_SP)
         {
             continue;
         }
-        else if (tmpl->argt[i] == DILV_INT)
+        else if (tmpl->argt[i] == DilVarType_e::DILV_INT)
         {
             args[i] = (char *)skip_spaces(args[i]);
             strip_trailing_spaces(args[i]);
@@ -1923,11 +1928,11 @@ dilprg *dil_copy(char *name, unit_data *u)
     {
         for (i = 0; i < narg; i++)
         {
-            if (tmpl->argt[i] == DILV_SP)
+            if (tmpl->argt[i] == DilVarType_e::DILV_SP)
             {
                 prg->fp->vars[i].val.string = str_dup(args[i]);
             }
-            else if (tmpl->argt[i] == DILV_INT)
+            else if (tmpl->argt[i] == DilVarType_e::DILV_INT)
             {
                 prg->fp->vars[i].val.integer = atoi(args[i]);
             }

@@ -56,11 +56,11 @@ cActParameter::cActParameter(const dilval *v)
     m_i = nullptr;
     m_p = nullptr;
 
-    if ((v->type == DILV_UP) || (v->type == DILV_UPR))
+    if ((v->type == DilVarType_e::DILV_UP) || (v->type == DilVarType_e::DILV_UPR))
     {
         m_u = (unit_data *)v->val.ptr;
     }
-    else if ((v->type == DILV_SP) || (v->type == DILV_SPR) || (v->type == DILV_HASHSTR))
+    else if ((v->type == DilVarType_e::DILV_SP) || (v->type == DilVarType_e::DILV_SPR) || (v->type == DilVarType_e::DILV_HASHSTR))
     {
         m_p = (char *)v->val.ptr;
     }
