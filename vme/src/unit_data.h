@@ -23,6 +23,8 @@ class unit_data : public basedestruct
 public:
     static constexpr sbit16 MinAlignment = -1000; ///< Minimum possible value for alignment
     static constexpr sbit16 MaxAlignment = 1000;  ///< Maximum possible value for alignment
+    static constexpr const char *NO_NAME = "NO-NAME";
+    static constexpr const char *NO_ZONE = "NO-ZONE";
 
 public:
     /**
@@ -112,21 +114,31 @@ public:
     file_index_type *getFileIndex();
     const file_index_type *getFileIndex() const;
     void setFileIndex(file_index_type *value);
+
     [[nodiscard]] const char *getFileIndexZoneName() const
     {
         if (m_fi)
         {
             return m_fi->getZone()->getName();
         }
-        return "NO-ZONE";
+        return NO_ZONE;
     }
+
     [[nodiscard]] const char *getFileIndexName() const
     {
         if (m_fi)
         {
             return m_fi->getName();
         }
-        return "NO-NAME";
+        return NO_NAME;
+    }
+
+    [[nodiscard]] std::string getFileIndexSymName() const
+    {
+        std::string retval{getFileIndexName()};
+        retval += '@';
+        retval += getFileIndexZoneName();
+        return retval;
     }
     /// @}
 

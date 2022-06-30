@@ -70,9 +70,8 @@ $Revision: 2.18 $
 void dilfe_illegal(dilprg *p)
 {
     szonelog(p->sarg->owner->getFileIndex()->getZone(),
-             "DIL %s@%s, Illegal Expression/Instruction Node.\n",
-             p->sarg->owner->getFileIndexName(),
-             p->sarg->owner->getFileIndexZoneName());
+             "DIL %s, Illegal Expression/Instruction Node.\n",
+             p->sarg->owner->getFileIndexSymName());
     p->waitcmd = WAITCMD_QUIT;
 }
 
@@ -447,9 +446,8 @@ void dilfe_mid(dilprg *p)
                             if (r < l)
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                         "DIL %s@%s, Illegal: mid(1,2,3) 3 > 2 \n",
-                                         p->sarg->owner->getFileIndexName(),
-                                         p->sarg->owner->getFileIndexZoneName());
+                                         "DIL %s, Illegal: mid(1,2,3) 3 > 2 \n",
+                                         p->sarg->owner->getFileIndexSymName());
                                 v->type = DILV_FAIL;
                                 break;
                             }
@@ -680,9 +678,8 @@ void dilfe_sendpre(dilprg *p)
                                                             if (!cmd)
                                                             {
                                                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                                                         "DIL %s@%s, : Can not send_preprocess. No such command %s\n",
-                                                                         p->sarg->owner->getFileIndexName(),
-                                                                         p->sarg->owner->getFileIndexZoneName(),
+                                                                         "DIL %s, : Can not send_preprocess. No such command %s\n",
+                                                                         p->sarg->owner->getFileIndexSymName(),
                                                                          (char *)v1->val.ptr);
                                                                 v->type = DILV_FAIL;
                                                             }
@@ -788,18 +785,16 @@ void dilfe_clradd(dilprg *p)
                             if (!((unit_data *)v1->val.ptr)->isPC())
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                         "DIL %s@%s, Illegal: Tried to add a color to a non pc.\n",
-                                         p->sarg->owner->getFileIndexName(),
-                                         p->sarg->owner->getFileIndexZoneName());
+                                         "DIL %s, Illegal: Tried to add a color to a non pc.\n",
+                                         p->sarg->owner->getFileIndexSymName());
                                 v->type = DILV_FAIL;
                             }
 
                             if (strlen((char *)v2->val.ptr) > 20)
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                         "DIL %s@%s, Illegal: Color key is greater than 20 characters.\n",
-                                         p->sarg->owner->getFileIndexName(),
-                                         p->sarg->owner->getFileIndexZoneName());
+                                         "DIL %s, Illegal: Color key is greater than 20 characters.\n",
+                                         p->sarg->owner->getFileIndexSymName());
                                 v->type = DILV_FAIL;
                             }
 
@@ -809,9 +804,8 @@ void dilfe_clradd(dilprg *p)
                                 if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
                                 {
                                     szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                             "DIL %s@%s, Illegal: Color key contains invalid characters.\n",
-                                             p->sarg->owner->getFileIndexName(),
-                                             p->sarg->owner->getFileIndexZoneName());
+                                             "DIL %s, Illegal: Color key contains invalid characters.\n",
+                                             p->sarg->owner->getFileIndexSymName());
                                     v->type = DILV_FAIL;
                                     break;
                                 }
@@ -892,18 +886,16 @@ void dilfe_clrchg(dilprg *p)
                             if (!((unit_data *)v1->val.ptr)->isPC())
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                         "DIL %s@%s, Illegal: Tried to change a color to a non pc.\n",
-                                         p->sarg->owner->getFileIndexName(),
-                                         p->sarg->owner->getFileIndexZoneName());
+                                         "DIL %s, Illegal: Tried to change a color to a non pc.\n",
+                                         p->sarg->owner->getFileIndexSymName());
                                 v->type = DILV_FAIL;
                             }
 
                             if (strlen((char *)v2->val.ptr) > 20)
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                         "DIL %s@%s, Illegal: Color key is greater than 20 characters.\n",
-                                         p->sarg->owner->getFileIndexName(),
-                                         p->sarg->owner->getFileIndexZoneName());
+                                         "DIL %s, Illegal: Color key is greater than 20 characters.\n",
+                                         p->sarg->owner->getFileIndexSymName());
                                 v->type = DILV_FAIL;
                             }
 
@@ -913,9 +905,8 @@ void dilfe_clrchg(dilprg *p)
                                 if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
                                 {
                                     szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                             "DIL %s@%s, Illegal: Color key contains invalid characters.\n",
-                                             p->sarg->owner->getFileIndexName(),
-                                             p->sarg->owner->getFileIndexZoneName());
+                                             "DIL %s, Illegal: Color key contains invalid characters.\n",
+                                             p->sarg->owner->getFileIndexSymName());
                                     v->type = DILV_FAIL;
                                     break;
                                 }
@@ -988,18 +979,16 @@ void dilfe_clrdel(dilprg *p)
                     if (!((unit_data *)v1->val.ptr)->isPC())
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                 "DIL %s@%s, Illegal: Tried to delete a color to a non pc.\n",
-                                 p->sarg->owner->getFileIndexName(),
-                                 p->sarg->owner->getFileIndexZoneName());
+                                 "DIL %s, Illegal: Tried to delete a color to a non pc.\n",
+                                 p->sarg->owner->getFileIndexSymName());
                         v->type = DILV_FAIL;
                     }
 
                     if (strlen((char *)v2->val.ptr) > 20)
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                 "DIL %s@%s, Illegal: Color key is greater than 20 characters.\n",
-                                 p->sarg->owner->getFileIndexName(),
-                                 p->sarg->owner->getFileIndexZoneName());
+                                 "DIL %s, Illegal: Color key is greater than 20 characters.\n",
+                                 p->sarg->owner->getFileIndexSymName());
                         v->type = DILV_FAIL;
                     }
 
@@ -1009,9 +998,8 @@ void dilfe_clrdel(dilprg *p)
                         if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
                         {
                             szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                     "DIL %s@%s, Illegal: Color key contains invalid characters.\n",
-                                     p->sarg->owner->getFileIndexName(),
-                                     p->sarg->owner->getFileIndexZoneName());
+                                     "DIL %s, Illegal: Color key contains invalid characters.\n",
+                                     p->sarg->owner->getFileIndexSymName());
                             v->type = DILV_FAIL;
                             break;
                         }
@@ -1062,9 +1050,8 @@ void dilfe_ckpwd(dilprg *p)
                     if (!((unit_data *)v1->val.ptr)->isPC())
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                 "DIL %s@%s, Illegal: Unit must be a pc to check password.\n",
-                                 p->sarg->owner->getFileIndexName(),
-                                 p->sarg->owner->getFileIndexZoneName());
+                                 "DIL %s, Illegal: Unit must be a pc to check password.\n",
+                                 p->sarg->owner->getFileIndexSymName());
                         v->type = DILV_FAIL;
                         break;
                     }
@@ -2878,11 +2865,10 @@ void dilfe_trmo(dilprg *p)
 
             slog(LOG_ALL,
                  0,
-                 "%s was given %s by DIL %s@%s.",
+                 "%s was given %s by DIL %s.",
                  ((unit_data *)v2->val.ptr)->getNames().Name(),
                  buf,
-                 p->sarg->owner->getFileIndexName(),
-                 p->sarg->owner->getFileIndexZoneName());
+                 p->sarg->owner->getFileIndexSymName());
             money_transfer(nullptr, (unit_data *)v2->val.ptr, v3->val.num, local_currency((unit_data *)v2->val.ptr));
             v->val.num = 1;
         }
@@ -3646,12 +3632,7 @@ void dilfe_gint(dilprg *p)
 
             default:
                 v->type = DILV_FAIL; /* failed */
-                slog(LOG_ALL,
-                     0,
-                     "getinteger() was given incorrect index %d by DIL %s@%s.",
-                     idx,
-                     p->sarg->owner->getFileIndexName(),
-                     p->sarg->owner->getFileIndexZoneName());
+                slog(LOG_ALL, 0, "getinteger() was given incorrect index %d by DIL %s.", idx, p->sarg->owner->getFileIndexSymName());
                 break;
         }
     }
@@ -4517,9 +4498,8 @@ void dilfe_call(dilprg *p)
                                         else
                                         {
                                             szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                                     "DIL %s@%s, Unable to find template %s",
-                                                     p->sarg->owner->getFileIndexName(),
-                                                     p->sarg->owner->getFileIndexZoneName(),
+                                                     "DIL %s, Unable to find template %s",
+                                                     p->sarg->owner->getFileIndexSymName(),
                                                      (char *)v1->val.ptr);
                                         }
                                     }

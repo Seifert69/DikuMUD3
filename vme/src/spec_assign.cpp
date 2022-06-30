@@ -46,7 +46,7 @@ int spec_unused(spec_arg *sarg)
 #else
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
-        slog(LOG_ALL, 0, "Unit %s@%s had undefined special routine.", sarg->owner->getFileIndexName(), sarg->owner->getFileIndexZoneName());
+        slog(LOG_ALL, 0, "Unit %s had undefined special routine.", sarg->owner->getFileIndexSymName());
         destroy_fptr(sarg->owner, sarg->fptr);
     }
 

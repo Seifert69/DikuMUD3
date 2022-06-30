@@ -669,18 +669,14 @@ zone_type *unit_zone(const unit_data *unit)
             //      assert(IS_ROOM(unit));
             if (!unit->isRoom())
             {
-                slog(LOG_ALL,
-                     0,
-                     "ZONE: FATAL(1): %s@%s IN NO ROOMS WHILE NOT A ROOM!!",
-                     org->getFileIndexName(),
-                     org->getFileIndexZoneName());
+                slog(LOG_ALL, 0, "ZONE: FATAL(1): %s IN NO ROOMS WHILE NOT A ROOM!!", org->getFileIndexSymName());
                 return nullptr;
             }
             return unit->getFileIndex()->getZone();
         }
     }
 
-    slog(LOG_ALL, 0, "ZONE: FATAL(2): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", org->getFileIndexName(), org->getFileIndexZoneName());
+    slog(LOG_ALL, 0, "ZONE: FATAL(2): %s IN NO ROOMS WHILE NOT A ROOM!!", org->getFileIndexSymName());
     return nullptr;
 }
 
@@ -690,20 +686,13 @@ zone_type *unit_zone(const unit_data *unit)
 std::string unit_trace_up(unit_data *unit)
 {
     unit_data *u = nullptr;
-    std::string s;
+    std::string s = unit->getFileIndexSymName();
     std::string t;
-
-    s = "";
-    s.append(unit->getFileIndexName());
-    s.append("@");
-    s.append(unit->getFileIndexZoneName());
 
     for (u = unit->getUnitIn(); u; u = u->getUnitIn())
     {
         t = " in ";
-        t.append(u->getFileIndexName());
-        t.append("@");
-        t.append(u->getFileIndexZoneName());
+        t.append(u->getFileIndexSymName());
         s.append(t);
     }
 
@@ -727,7 +716,7 @@ unit_data *unit_room(unit_data *unit)
         }
     }
 
-    slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", org->getFileIndexName(), org->getFileIndexZoneName());
+    slog(LOG_ALL, 0, "ROOM: FATAL(3): %s IN NO ROOMS WHILE NOT A ROOM!!", org->getFileIndexSymName());
     return nullptr;
 }
 

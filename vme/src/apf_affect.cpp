@@ -143,7 +143,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (!unit->isChar())
     {
-        slog(LOG_ALL, 0, "ERROR: Affect weapon groups on room/obj %s@%s", unit->getFileIndexName(), unit->getFileIndexZoneName());
+        slog(LOG_ALL, 0, "ERROR: Affect weapon groups on room/obj %s", unit->getFileIndexSymName());
         return TRUE;
     }
 
@@ -192,7 +192,7 @@ ubit1 apf_skill_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     if (!unit->isChar())
     {
-        slog(LOG_ALL, 0, "ERROR: Affect skill groups on room/obj %s@%s", unit->getFileIndexName(), unit->getFileIndexZoneName());
+        slog(LOG_ALL, 0, "ERROR: Affect skill groups on room/obj %s", unit->getFileIndexSymName());
         return TRUE;
     }
 
@@ -228,7 +228,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if (!unit->isChar())
     {
-        slog(LOG_ALL, 0, "ERROR: Affect spell groups on room/obj %s@%s", unit->getFileIndexName(), unit->getFileIndexZoneName());
+        slog(LOG_ALL, 0, "ERROR: Affect spell groups on room/obj %s", unit->getFileIndexSymName());
         return TRUE;
     }
 
@@ -378,12 +378,7 @@ ubit1 apf_speed(unit_affected_type *af, unit_data *unit, ubit1 set)
 
     if ((af->getDataAtIndex(0) < -8) || (af->getDataAtIndex(0) > 8))
     {
-        slog(LOG_ALL,
-             0,
-             "ERROR: Affect speed on room/obj %s@%s invalid range %d",
-             unit->getFileIndexName(),
-             unit->getFileIndexZoneName(),
-             af->getDataAtIndex(0));
+        slog(LOG_ALL, 0, "ERROR: Affect speed on room/obj %s invalid range %d", unit->getFileIndexSymName(), af->getDataAtIndex(0));
         return TRUE;
     }
 

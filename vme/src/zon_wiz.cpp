@@ -75,13 +75,11 @@ int ball(spec_arg *sarg)
         {
             if (top[i])
             {
-                auto msg2 = diku::format_to_str("%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
+                auto msg2 = diku::format_to_str("%4ld %-31s  IN  %s [%s]<br/>",
                                                 (signed long)OBJ_VALUE(top[i], v2),
-                                                top[i]->getFileIndexName(),
-                                                top[i]->getFileIndexZoneName(),
+                                                top[i]->getFileIndexSymName(),
                                                 top[i]->getUnitIn()->getNames().Name(),
-                                                top[i]->getUnitIn()->getFileIndexName(),
-                                                top[i]->getUnitIn()->getFileIndexZoneName());
+                                                top[i]->getUnitIn()->getFileIndexSymName());
                 send_to_char(msg2, sarg->activator);
             }
         }

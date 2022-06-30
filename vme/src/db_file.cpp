@@ -743,12 +743,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
         {
             if (fptr->getFunctionPointerIndex() != SFUN_DIL_INTERNAL)
             {
-                slog(LOG_ALL,
-                     0,
-                     "WARNING: HEARTBEAT LOW (%d) SAVE on %s@%s \n",
-                     fptr->getHeartBeat(),
-                     owner->getFileIndexName(),
-                     owner->getFileIndexZoneName());
+                slog(LOG_ALL, 0, "WARNING: HEARTBEAT LOW (%d) SAVE on %s\n", fptr->getHeartBeat(), owner->getFileIndexSymName());
             }
             else
             {

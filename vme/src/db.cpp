@@ -1553,13 +1553,7 @@ void normalize_world()
 
             if (unit_recursive(u, tmpu))
             {
-                slog(LOG_ALL,
-                     0,
-                     "Error: %s@%s was recursively in %s@%s!",
-                     u->getFileIndexName(),
-                     u->getFileIndexZoneName(),
-                     tmpu->getFileIndexName(),
-                     tmpu->getFileIndexZoneName());
+                slog(LOG_ALL, 0, "Error: %s was recursively in %s!", u->getFileIndexSymName(), tmpu->getFileIndexSymName());
             }
             else
             {

@@ -145,11 +145,7 @@ void unit_data::set_fi(file_index_type *f)
 std::string unit_data::json()
 {
     std::string s;
-    std::string t;
-
-    t = getFileIndexName();
-    t.append("@");
-    t.append(getFileIndexZoneName());
+    std::string t{getFileIndexSymName()};
 
     s = "{";
     s.append(str_json("idx", t));

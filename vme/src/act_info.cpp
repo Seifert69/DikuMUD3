@@ -27,7 +27,7 @@ const char *in_string(const unit_data *ch, const unit_data *u)
     {
         if (u->isRoom())
         {
-            in_str = diku::format_to_str("<a href='#' cmd='goto #'>%s@%s</a>", u->getFileIndexName(), u->getFileIndexZoneName());
+            in_str = diku::format_to_str("<a href='#' cmd='goto #'>%s</a>", u->getFileIndexSymName());
             return in_str.c_str();
         }
         else

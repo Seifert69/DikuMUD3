@@ -140,9 +140,8 @@ void dilfe_fld(dilprg *p)
                     else
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                 "DIL %s@%s %s@%s, index of stringlist out of bounds: %d\n",
-                                 p->sarg->owner->getFileIndexName(),
-                                 p->sarg->owner->getFileIndexZoneName(),
+                                 "DIL %s %s@%s, index of stringlist out of bounds: %d\n",
+                                 p->sarg->owner->getFileIndexSymName(),
                                  p->fp->tmpl->prgname,
                                  p->fp->tmpl->zone->getName(),
                                  v2->val.num);
@@ -163,9 +162,8 @@ void dilfe_fld(dilprg *p)
                     else
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                 "DIL %s@%s %s@%s, index of stringlist out of bounds: %d\n",
-                                 p->sarg->owner->getFileIndexName(),
-                                 p->sarg->owner->getFileIndexZoneName(),
+                                 "DIL %s %s@%s, index of stringlist out of bounds: %d\n",
+                                 p->sarg->owner->getFileIndexSymName(),
                                  p->fp->tmpl->prgname,
                                  p->fp->tmpl->zone->getName(),
                                  v2->val.num);
@@ -485,9 +483,7 @@ void dilfe_fld(dilprg *p)
                         v->atyp = DILA_EXP;
                         v->type = DILV_SP;
 
-                        auto buf = diku::format_to_str("%s@%s",
-                                                       ((unit_data *)v1->val.ptr)->getFileIndexName(),
-                                                       ((unit_data *)v1->val.ptr)->getFileIndexZoneName());
+                        auto buf = diku::format_to_str("%s", ((unit_data *)v1->val.ptr)->getFileIndexSymName());
                         v->val.ptr = strdup(buf.c_str());
                     }
                     else
@@ -4849,9 +4845,8 @@ void dilfe_fld(dilprg *p)
 
         default:
             szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                     "DIL %s@%s, unknown field type: %d\n",
-                     p->sarg->owner->getFileIndexName(),
-                     p->sarg->owner->getFileIndexZoneName(),
+                     "DIL %s, unknown field type: %d\n",
+                     p->sarg->owner->getFileIndexSymName(),
                      fldno);
             p->waitcmd = WAITCMD_QUIT;
             v->type = DILV_ERR;
