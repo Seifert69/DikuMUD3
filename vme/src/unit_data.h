@@ -78,6 +78,7 @@ public:
     sbit8 getOutsideLight() const { return !isUnitFlagSet(UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0; }
     int getTotalLightValue() const { return m_light + getOutsideLight() + (m_outside ? m_outside->m_light : 0); }
 
+    unit_data *inRoom();
     /**
      * @return Characters sex or neutral if not a character
      */
