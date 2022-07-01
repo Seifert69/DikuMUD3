@@ -380,6 +380,19 @@ const cNamelist &unit_data::getNames() const
     return m_names;
 }
 
+unit_data *unit_data::inRoom()
+{
+    unit_data *u = this;
+    while (u && u->m_status != UNIT_ST_ROOM)
+    {
+        u = u->m_outside;
+    }
+
+    assert(u);
+
+    return u;
+}
+
 unit_fptr *unit_data::getFunctionPointer()
 {
     return m_func;
