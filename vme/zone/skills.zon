@@ -7057,23 +7057,21 @@ self.manipulate:=MANIPULATE_TAKE;
 }
 dilend /* trap_laid */
 
-dilbegin aware trap_spell(pc_name : string, trap_name : string);
+
+
 /* Prevent casting of magic */
-
-var
-
+dilbegin aware trap_spell(pc_name : string, trap_name : string);
 code
 {
-   interrupt(SFB_MSG, ((getword(argument) == "lostem") and
-                       (argument == self.name)), done);
+   interrupt(SFB_MSG, (getword(argument) == "lostem") and (argument == self.name), done);
+
 :start:
    wait(SFB_PRE, command("cast"));
    if (activator==self)
    {
       power := -1;
       block;
-      act("You are unable to concentrate enough because the trap " +
-          "hurts so much!",
+      act("You are unable to concentrate enough because the trap hurts so much!",
           A_ALWAYS, self, null, null, TO_CHAR);
    }
    goto start;
@@ -7083,18 +7081,27 @@ code
 }
 dilend /* trap_spell */
 
-dilbegin aware trap_tick(pc_name : string, trap_name : string);
-/* Prevent casting of magic */
 
+/* Prevent casting of magic */
+// MS2022: The checkout didn't work. I've made it zap 
+// in case checkout doesn't zap.
+dilbegin aware trap_tick(pc_name : string, trap_name : string);
+var
+   i : integer;
 code
 {
    heartbeat := PULSE_SEC*1;
-   interrupt(SFB_MSG, ((getword(argument) == "lostem") and
-                       (argument == self.name)), done);
+   interrupt(SFB_MSG, (getword(argument) == "lostem") and (argument == self.name), done);
+
 :start:
    wait(SFB_TICK, TRUE);
    if (findunit(self, trap_name, FIND_UNIT_SURRO, null) == null)
-      sendtoalldil("checkout" + " " + pc_name, "trap_laid@skills");
+   {
+      sendtoalldil("checkout " + pc_name, "trap_laid@skills");
+      wait(SFB_TICK, TRUE); // Give checkout a chance to work
+      i := dildestroy("trap_spell@skills", self);
+      goto done;
+   }
    goto start;
 
 :done:

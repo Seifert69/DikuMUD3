@@ -1042,7 +1042,7 @@ void send_done(unit_data *activator,
     sarg.target = target;
     sarg.pInt = &i;
     sarg.cmd = (command_info *)cmd;
-    sarg.arg = (char *)arg;
+    sarg.arg = arg;
 
     if (to)
     {
