@@ -414,6 +414,13 @@ void start_following(unit_data *ch, unit_data *leader)
     k->setNext(CHAR_FOLLOWERS(leader));
     UCHAR(leader)->setFollowers(k);
 
+    dilprg *prg = dil_copy_template(g_dil_follow, ch, nullptr);
+    if (prg)
+    {
+        prg->waitcmd = WAITCMD_MAXINST - 1;
+        dil_activate(prg);
+    }
+
     send_done(ch, nullptr, leader, 0, g_cmd_follow, "");
 }
 

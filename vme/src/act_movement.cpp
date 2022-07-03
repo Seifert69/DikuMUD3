@@ -227,6 +227,14 @@ int room_move(unit_data *ch,
         act(pLeaveSelf, A_ALWAYS, ch, room_from, mover, TO_CHAR);
     }
 
+    send_done(mover, room_from, room_to, direction, g_cmd_dirs[direction], "");
+
+    if (mover->is_destructed() || (mover->inRoom() != room_from))
+    {
+        // send_done changed something, abort.
+        return 0;
+    }
+
     if (room_from->getUnitContains() && !str_is_empty(pLeaveOther))
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
@@ -273,7 +281,6 @@ int room_move(unit_data *ch,
     }
 
     send_done(mover, ch, room_from, direction, &g_cmd_auto_enter, "");
-
     return 1;
 }
 
@@ -678,6 +685,7 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
 
     if (res == 1 && (ch->inRoom() != room_from))
     {
+#ifdef SUSPEKT
         unit_data *u = nullptr;
 
         if (ch->isChar() && CHAR_FOLLOWERS(ch))
@@ -722,6 +730,7 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
                 }
             }
         }
+#endif
     }
 
     return res;
