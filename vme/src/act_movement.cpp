@@ -154,10 +154,10 @@ int has_found_door(unit_data *pc, int dir)
  * Endurance is calculated and subtracted here
  * @param ch is the CHAR doing the move command.
  * @param mover is the vehicle, steed or boat or the char itself
- * @param room_from
- * @param room_to
+ * @param room_from room moving from
+ * @param room_to room moving to
  * @param bIsFollower
- * @param direction
+ * @param direction the direction the move is in, e.g. DIR_EAST
  * @param pLeaveSelf
  * @param pLeaveOther
  * @param pArrSelf
@@ -227,9 +227,9 @@ int room_move(unit_data *ch,
         act(pLeaveSelf, A_ALWAYS, ch, room_from, mover, TO_CHAR);
     }
 
-    send_done(mover, room_from, room_to, direction, g_cmd_dirs[direction], "");
+    send_done(ch, room_from, room_to, direction, g_cmd_dirs[direction], "");
 
-    if (mover->is_destructed() || (mover->inRoom() != room_from))
+    if (ch->is_destructed() || mover->is_destructed() || (mover->inRoom() != room_from))
     {
         // send_done changed something, abort.
         return 0;
@@ -280,7 +280,7 @@ int room_move(unit_data *ch,
         }
     }
 
-    send_done(mover, ch, room_from, direction, &g_cmd_auto_enter, "");
+    send_done(ch, mover, room_from, direction, &g_cmd_auto_enter, "");
     return 1;
 }
 

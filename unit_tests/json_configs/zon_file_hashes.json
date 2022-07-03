@@ -93,12 +93,12 @@
         {
             "source_file": {
                 "filename": "basemove.zon",
-                "sha512": "ac5e0de291d156a3c7b9ebe9b9c205775253247e445e3c41ed409305994de4d4d204dec65fad591aa762c8d61153e1d3238ec39205cc84fb95ec955f72ed20b4"
+                "sha512": "f3cc23b5e6113789bf5bf57e4495720235f85b337dfffda1879df302c233a337af601f71fe6231038099de6391e7ec42ffb0117e174002b2dd676e9ae023e5f1"
             },
             "output": [
                 {
                     "filename": "basemove.data",
-                    "sha512": "177482343129b2a9fe465c929d608f5785b0409340ef999b804d9d3eb440d29ea5639d30299acfd9438fee697088edf31764c6128a91a22f164151c7c7e2566e"
+                    "sha512": "19f4b0987ba27f3b592070b834ac705432081714a0e9b596ec1a9654bab56194fcf7b03bf697d65b98fe40055e8ad5ce3bd9b1a3db04483d064521e0fb767000"
                 },
                 {
                     "filename": "basemove.reset",

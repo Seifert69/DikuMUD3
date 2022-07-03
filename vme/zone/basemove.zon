@@ -78,13 +78,15 @@ help
 %dil
 
 dilbegin unique dilfollow();
+var
+   s : string;
 code
 {
    heartbeat := 1;
 :start:
    wait(SFB_DONE, TRUE);
 
-   if (self.master)
+   if (not self.master)
       quit;
 
    if (self.master != activator)
@@ -114,17 +116,26 @@ code
    else if (command("leave"))
    {
       act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
-      exec("leave "+argument, self);
+      s := argument;
+      if (s == null)
+         s := "";
+      exec("leave "+s, self);
    }
    else if (command("exit"))
    {
       act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
-      exec("exit "+argument, self);
+      s := argument;
+      if (s == null)
+         s := "";
+      exec("exit "+s, self);
    }
    else if (command("enter"))
    {
       act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
-      exec("enter "+argument, self);
+      s := argument;
+      if (s == null)
+         s := "";
+      exec("enter "+s, self);
    }
    // Swim?
    // Ride?
