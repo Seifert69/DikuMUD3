@@ -843,34 +843,6 @@ static void race_init()
 
     g_pc_races[PC_RACE_MAX] = nullptr;
     g_pc_race_adverbs[PC_RACE_MAX] = nullptr;
-
-    g_playerinit_tmpl = find_dil_template("playerinit@basis");
-    if (g_playerinit_tmpl == nullptr)
-    {
-        slog(LOG_ALL, 0, "No 'playerinit@basis' DIL template.");
-    }
-    else
-    {
-        if (g_playerinit_tmpl->argc != 0)
-        {
-            slog(LOG_ALL, 0, "playerinit@basis(); not defined correctly.");
-            g_playerinit_tmpl = nullptr;
-        }
-    }
-
-    g_nanny_dil_tmpl = find_dil_template("nanny@basis");
-    if (g_nanny_dil_tmpl == nullptr)
-    {
-        slog(LOG_ALL, 0, "No 'nanny@basis' DIL template.");
-    }
-    else
-    {
-        if ((g_nanny_dil_tmpl->argc != 1) || (g_nanny_dil_tmpl->argt[0] != DILV_SP))
-        {
-            slog(LOG_ALL, 0, "nanny@basis(string); not defined correctly.");
-            g_nanny_dil_tmpl = nullptr;
-        }
-    }
 }
 
 void boot_race()

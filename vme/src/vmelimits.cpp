@@ -376,11 +376,7 @@ void advance_level(unit_data *ch)
     UPC(ch)->increaseSkillPointsBy(skill_point_gain());
     UPC(ch)->increaseAbilityPointsBy(ability_point_gain(ch));
 
-    diltemplate *dt = nullptr;
-    dt = find_dil_template("advance_level@basis");
-    assert(dt);
-
-    dilprg *prg = dil_copy_template(dt, ch, nullptr);
+    dilprg *prg = dil_copy_template(g_dil_advance_level, ch, nullptr);
     assert(prg);
 
     prg->waitcmd = WAITCMD_MAXINST - 1;

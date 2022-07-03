@@ -1025,24 +1025,17 @@ int lose_exp(class unit_data *ch)
 
 void die(unit_data *ch)
 {
-    diltemplate *death = nullptr;
-
     if (ch->is_destructed())
     {
         return;
     }
 
-    death = find_dil_template("death@death");
-    if (death)
+    send_death(ch);
+    dilprg *prg = dil_copy_template(g_dil_death, ch, nullptr);
+    if (prg)
     {
-        send_death(ch);
-        dilprg *prg = dil_copy_template(death, ch, nullptr);
-        if (prg)
-        {
-            prg->waitcmd = WAITCMD_MAXINST - 1;
-            dil_activate(prg);
-        }
-        return;
+        prg->waitcmd = WAITCMD_MAXINST - 1;
+        dil_activate(prg);
     }
 }
 

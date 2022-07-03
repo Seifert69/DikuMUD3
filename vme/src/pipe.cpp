@@ -219,8 +219,6 @@ void pipeMUD_write(const char *c)
 //
 void pipeMUD_dispatch(std::string str)
 {
-    diltemplate *tmpl = nullptr;
-    dilprg *prg = nullptr;
     static unit_data *u = nullptr;
 
     if (!u)
@@ -233,9 +231,7 @@ void pipeMUD_dispatch(std::string str)
         }
     }
 
-    tmpl = find_dil_template("dispatcher@comm");
-    prg = dil_copy_template(tmpl, u, nullptr);
-
+    dilprg *prg = dil_copy_template(g_dil_dispatcher, u, nullptr);
     if (prg)
     {
         str_correct_utf8(str);

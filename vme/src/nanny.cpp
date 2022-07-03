@@ -258,14 +258,13 @@ void nanny_close(descriptor_data *d, char *arg)
 
 void nanny_motd(descriptor_data *d, char *arg)
 {
-    diltemplate *on_connect = nullptr;
     g_dilmenu = FALSE;
-    on_connect = find_dil_template("on_connect@basis");
-    if (on_connect)
+
+    if (g_dil_on_connect)
     {
         g_dilmenu = TRUE;
         // Nono... only enter the game when entering from the menu (DIL) enter_game(d->character, TRUE);
-        dilprg *prg = dil_copy_template(on_connect, d->getCharacter(), nullptr);
+        dilprg *prg = dil_copy_template(g_dil_on_connect, d->getCharacter(), nullptr);
         if (prg)
         {
             set_descriptor_fptr(d, descriptor_interpreter, TRUE);
@@ -381,19 +380,14 @@ void nanny_dil(descriptor_data *d, char *arg)
         strcpy(buf, exd->names.Name(1));
     }
 
-    if (g_nanny_dil_tmpl)
+    dilprg *prg = dil_copy_template(g_dil_nanny_dil, d->getCharacter(), nullptr);
+    if (prg)
     {
-        dilprg *prg = nullptr;
+        prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 
-        prg = dil_copy_template(g_nanny_dil_tmpl, d->getCharacter(), nullptr);
-        if (prg)
-        {
-            prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
+        prg->fp->vars[0].val.string = str_dup(arg);
 
-            prg->fp->vars[0].val.string = str_dup(arg);
-
-            dil_activate(prg);
-        }
+        dil_activate(prg);
     }
 
     if (d->cgetCharacter() && d->getCharacter()->getExtraList().find_raw("$nanny") == nullptr)

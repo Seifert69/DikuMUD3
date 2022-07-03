@@ -659,25 +659,11 @@ void post_read_unit(unit_data *u)
     // Add regenerate to NPCs
     if (u->isNPC())
     {
-        static diltemplate *regen = nullptr;
-
-        if (regen == nullptr)
+        dilprg *prg = dil_copy_template(g_dil_regen, u, nullptr);
+        if (prg)
         {
-            regen = find_dil_template("regenerate@update");
-        }
-
-        if (regen)
-        {
-            dilprg *prg = dil_copy_template(regen, u, nullptr);
-            if (prg)
-            {
-                prg->waitcmd = WAITCMD_MAXINST - 1;
-                dil_activate(prg);
-            }
-        }
-        else
-        {
-            slog(LOG_ALL, 0, "SERIOUS: Couldn't find NPC regenerate@update DIL.");
+            prg->waitcmd = WAITCMD_MAXINST - 1;
+            dil_activate(prg);
         }
     }
 }
@@ -1857,8 +1843,11 @@ void boot_db()
         exit(0);
     }
 
+    boot_global_dil();
+
     slog(LOG_OFF, 0, "Performing boot time reset.");
     reset_all_zones();
+
 
     touch_file(g_cServerConfig.getFileInLogDir(STATISTICS_FILE));
 }

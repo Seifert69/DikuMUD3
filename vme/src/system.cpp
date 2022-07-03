@@ -138,7 +138,6 @@ descriptor_data *descriptor_new(cMultiHook *pe)
 void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 {
     descriptor_data *tmp = nullptr;
-    diltemplate *link_dead = nullptr;
     assert(d->cgetCharacter());
 
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */
@@ -199,16 +198,13 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
                     /* We need to save player to update his time status! */
                     save_player(d->getCharacter()); /* Save non-guests */
                     save_player_contents(d->getCharacter(), TRUE);
-                    link_dead = find_dil_template("link_dead@basis");
-                    if (link_dead)
+
+                    UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
+                    dilprg *prg = dil_copy_template(g_dil_link_dead, d->getCharacter(), nullptr);
+                    if (prg)
                     {
-                        UCHAR(d->cgetCharacter())->setDescriptor(nullptr);
-                        dilprg *prg = dil_copy_template(link_dead, d->getCharacter(), nullptr);
-                        if (prg)
-                        {
-                            prg->waitcmd = WAITCMD_MAXINST - 1;
-                            dil_activate(prg);
-                        }
+                        prg->waitcmd = WAITCMD_MAXINST - 1;
+                        dil_activate(prg);
                     }
                 }
                 else

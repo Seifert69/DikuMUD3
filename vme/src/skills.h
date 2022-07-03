@@ -187,8 +187,6 @@ int get_racial_weapon(int nRace, int nWeapon);
 int get_racial_skill(int nRace, int nSkill);
 int get_racial_spells(int nRace, int nSpell);
 
-extern diltemplate *g_nanny_dil_tmpl;
-extern diltemplate *g_playerinit_tmpl;
 extern wpn_info_type g_wpn_info[];
 extern const char *g_professions[PROFESSION_MAX + 1];
 extern int g_hit_location_table[];

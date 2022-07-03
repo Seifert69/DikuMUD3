@@ -463,11 +463,7 @@ void do_change(unit_data *ch, char *arg, const command_info *cmd)
 
         */
         default:
-            diltemplate *tmpl = nullptr;
-            dilprg *prg = nullptr;
-
-            tmpl = find_dil_template("do_change@commands");
-            prg = dil_copy_template(tmpl, ch, nullptr);
+            dilprg *prg = dil_copy_template(g_dil_change, ch, nullptr);
 
             if (prg)
             {

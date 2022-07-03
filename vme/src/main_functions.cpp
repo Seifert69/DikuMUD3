@@ -389,16 +389,11 @@ void check_overpopulation_event(void *p1, void *p2)
         {
             slog(LOG_ALL, 0, "Too many items in %s(%s) : %d units", u->getFileIndexSymName(), unit_trace_up(u), i);
 
-            diltemplate *worms = nullptr;
-            worms = find_dil_template("worms@basis");
-            if (worms)
+            dilprg *prg = dil_copy_template(g_dil_worms, u, nullptr);
+            if (prg)
             {
-                dilprg *prg = dil_copy_template(worms, u, nullptr);
-                if (prg)
-                {
-                    prg->waitcmd = WAITCMD_MAXINST - 1;
-                    dil_activate(prg);
-                }
+                prg->waitcmd = WAITCMD_MAXINST - 1;
+                dil_activate(prg);
             }
         }
     }
