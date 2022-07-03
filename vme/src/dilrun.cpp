@@ -110,8 +110,119 @@
  *
  * *********************************************************************** */
 
-// class dilprg *dil_list = NULL;
-// class dilprg *dil_list_nextdude = NULL;
+diltemplate *g_dil_change        = nullptr;
+diltemplate *g_dil_death         = nullptr;
+diltemplate *g_dil_regen         = nullptr;
+diltemplate *g_dil_follow        = nullptr;
+diltemplate *g_dil_set_witness   = nullptr;
+diltemplate *g_dil_worms         = nullptr;
+diltemplate *g_dil_on_connect    = nullptr;
+diltemplate *g_dil_dispatcher    = nullptr;
+diltemplate *g_dil_playerinit    = nullptr;
+diltemplate *g_dil_nanny_dil     = nullptr;
+diltemplate *g_dil_link_dead     = nullptr;
+diltemplate *g_dil_advance_level = nullptr;
+
+// These are the global DIL programs that are required to run the server
+//
+void boot_global_dil(void)
+{
+   slog(LOG_OFF, 0, "Booting required global DIL programs.");
+
+   g_dil_change = find_dil_template("do_change@commands");
+   if (g_dil_change == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing do_change@commands.");
+      exit(1);
+   }
+
+   g_dil_death = find_dil_template("death@death");
+   if (g_dil_death == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing death@death.");
+      exit(1);
+   }
+
+   g_dil_regen = find_dil_template("regenerate@update");
+   if (g_dil_regen == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing regenerate@update.");
+      exit(1);
+   }
+
+   g_dil_follow = find_dil_template("dilfollow@basemove");
+   if (g_dil_follow == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing dilfollow@basemove.");
+      exit(1);
+   }
+
+   g_dil_set_witness = find_dil_template("set_witness@justice");
+   if (g_dil_set_witness == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing set_witness@justice.");
+      exit(1);
+   }
+
+   g_dil_worms     = find_dil_template("worms@basis");
+   if (g_dil_worms == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing worms@basis.");
+      exit(1);
+   }
+
+   g_dil_on_connect = find_dil_template("on_connect@basis");
+   if (g_dil_on_connect == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing on_connect@basis.");
+      exit(1);
+   }
+
+   g_dil_dispatcher = find_dil_template("dispatcher@comm");
+   if (g_dil_dispatcher == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing dispatcher@comm.");
+      exit(1);
+   }
+
+   g_dil_playerinit = find_dil_template("playerinit@basis");
+   if (g_dil_playerinit == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing playerinit@basis.");
+      exit(1);
+   }
+   if (g_dil_playerinit->argc != 0)
+   {
+      slog(LOG_ALL, 0, "playerinit@basis(); not defined correctly.");
+      exit(1);
+   }
+
+   g_dil_nanny_dil = find_dil_template("nanny@basis");
+   if (g_dil_nanny_dil == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing nanny@basis.");
+      exit(1);
+   }
+   if ((g_dil_nanny_dil->argc != 1) || (g_dil_nanny_dil->argt[0] != DILV_SP))
+   {
+      slog(LOG_ALL, 0, "nanny@basis(string); not defined correctly.");
+      exit(1);
+   }
+
+   g_dil_link_dead = find_dil_template("link_dead@basis");
+   if (g_dil_link_dead == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing link_dead@basis.");
+      exit(1);
+   }
+
+   g_dil_advance_level = find_dil_template("advance_level@basis");
+   if (g_dil_advance_level == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing advance_level@basis.");
+      exit(1);
+   }
+}
 
 void dil_edit_done(descriptor_data *d)
 {
