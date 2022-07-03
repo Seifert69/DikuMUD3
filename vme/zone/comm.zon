@@ -387,7 +387,7 @@ if(left(arg,5) == "group")
     subextra(vict.extra,"$reply");
     addextra(vict.extra,{"$reply"},self.name);
     }
-    send_done("tell",self,null,vict,0,arg,null);
+    send_done("tell",self,null,vict,0,arg,null, CMD_AUTO_NONE);
    }
 
   vict := vict.gnext;
@@ -509,7 +509,7 @@ else
   subextra (vict.quests,"$reply");
   addextra (vict.quests,{"$reply"},self.name);
  }
- send_done("tell",self,null,vict,0,arg,null);
+ send_done("tell",self,null,vict,0,arg,null, CMD_AUTO_NONE);
 
 }
 
@@ -859,7 +859,7 @@ sendtext("Ok.<br/>", self);
 else
 act("<div class='ask_self'>You ask '$2t'</div>",
 A_ALWAYS, self, arg, null, TO_CHAR);
-send_done("ask",self,null,null,0,arg,null);
+send_done("ask",self,null,null,0,arg,null, CMD_AUTO_NONE);
 quit;
    }
 
@@ -890,7 +890,7 @@ else arg := tst; /* To avoid blank space in first arg */
   A_SOMEONE, self, dr, tgt, TO_NOTVICT);
   }
   }
-  send_done("ask", self, null, tgt, 0, arg, null);
+  send_done("ask", self, null, tgt, 0, arg, null, CMD_AUTO_NONE);
  quit;
 }
 dilend
@@ -961,7 +961,7 @@ code
       sendtext("Ok.<br/>", self);
    }
    
-   send_done("emote", self, null, null, 0, arg, null);
+   send_done("emote", self, null, null, 0, arg, null, CMD_AUTO_NONE);
    quit;
 }
 dilend
@@ -1041,7 +1041,7 @@ code
     else
       act("<div class='say_self'>You $2t '$3t'</div>", A_ALWAYS, self, mode, arg, TO_CHAR);
   }
-  send_done("say", self, null, null, 0, arg, null);
+  send_done("say", self, null, null, 0, arg, null, CMD_AUTO_NONE);
   quit;
 }
 dilend
@@ -1187,7 +1187,7 @@ sendtext("<div class='shout_other'>"+inv_name+" "+mode_other+" '"+arg+"'</div><b
 tgt:= tgt.gnext;
 }
 
-send_done("shout", self, null, null, 0, arg, null);
+send_done("shout", self, null, null, 0, arg, null, CMD_AUTO_NONE);
 
 quit;
 }
@@ -1358,7 +1358,7 @@ code
          sendtext("<div class='whisper'>"+my_name+" whispers to you, '"+arg+"'</div><br/>", tgt);
          act("<div class='whisper'>$1n whispers something to $3n.</div>", A_ALWAYS, self, null, tgt, TO_NOTVICT);
 
-         send_done("whisper", self, null, tgt, 0, arg, null);
+         send_done("whisper", self, null, tgt, 0, arg, null, CMD_AUTO_NONE);
       }
    }
    quit;

@@ -150,7 +150,7 @@ code
       liq_content(item);
    }
 
-   send_done("examine", self, item, null, 0, "", null);
+   send_done("examine", self, item, null, 0, "", null, CMD_AUTO_NONE);
    quit;
 }
 dilend
@@ -536,7 +536,7 @@ code
 
    /* Show the room! */
    sendtext(buff, looker);
-   send_done ("look", looker, null, null, 0, "", null);
+   send_done ("look", looker, null, null, 0, "", null, CMD_AUTO_NONE);
 
    return;
 }
@@ -661,7 +661,7 @@ code
    else
       act("It is empty.", A_ALWAYS, self, null, null, TO_CHAR);
 
-   send_done ("look", looker, null, u, 0, "", null);
+   send_done ("look", looker, null, u, 0, "", null, CMD_AUTO_NONE);
 
    quit;
 }
@@ -732,13 +732,13 @@ code
             sendtext(pc.extra.[arg1].descr+"<br/>", looker);
             act("$1n looks at $3n's $2t.", A_ALWAYS, looker, arg1, pc,TO_NOTVICT);
             act("$1n looks at your $2t.", A_SOMEONE, looker, arg1, pc,TO_VICT);
-            send_done("look", looker, item, pc, 1, arg, null);
+            send_done("look", looker, item, pc, 1, arg, null, CMD_AUTO_NONE);
             quit;
          }
          else
          {
 		      act("$3n does not seem to have a $2t.", A_ALWAYS, looker, arg1,pc, TO_CHAR);   /* doesnt have anything name arg1 */
-            send_done("look", looker, item, pc, 1, arg, null);
+            send_done("look", looker, item, pc, 1, arg, null, CMD_AUTO_NONE);
             quit;
          }
       }
@@ -774,7 +774,7 @@ code
          act("$1n looks at $3n's $2N.", A_ALWAYS, looker, item, pc,TO_NOTVICT);
          if (pc != looker)
             act("$1n looks at your $2N.", A_SOMEONE, looker, item, pc,TO_VICT);
-         send_done ("look", looker, item, pc, 1, arg, null);
+         send_done ("look", looker, item, pc, 1, arg, null, CMD_AUTO_NONE);
          quit;
       }
    } // if right "'s"
@@ -899,7 +899,7 @@ code
 
       if (item != looker)
          act("$1n looks at you.", A_HIDEINV, looker, arg1, item, TO_VICT);
-      send_done ("look", looker, null, item, 2, arg, null);
+      send_done ("look", looker, null, item, 2, arg, null, CMD_AUTO_NONE);
       quit;
     }
 
@@ -914,7 +914,7 @@ code
       {
          act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
          sendtext(item.extra.[arg1].descr+"<br/>", looker);
-         send_done ("look", looker, null, item, 1, arg, null);
+         send_done ("look", looker, null, item, 1, arg, null, CMD_AUTO_NONE);
          quit;
       }
 
@@ -926,7 +926,7 @@ code
    {
       act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
       sendtext(item.extra.[arg1].descr+"<br/>", looker);
-      send_done ("look", looker, null, item, 1, arg, null);
+      send_done ("look", looker, null, item, 1, arg, null, CMD_AUTO_NONE);
       quit;
    }
 
@@ -947,7 +947,7 @@ code
    {
       act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
       sendtext(looker.extra.[arg1].descr + "<br/>", looker);
-      send_done ("look", looker, null, null, 2, arg, null);
+      send_done ("look", looker, null, null, 2, arg, null, CMD_AUTO_NONE);
       quit;
    }
 
@@ -1089,7 +1089,7 @@ code
       {
          act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
          sendtext(item.extra.[arg1].descr + "<br/>", looker);
-         send_done("look", looker, null, item, 1, truearg, null);
+         send_done("look", looker, null, item, 1, truearg, null, CMD_AUTO_NONE);
          quit;
       }
       item := item.next;
@@ -1154,7 +1154,7 @@ code
    else
       return (FALSE);
 
-   send_done("look", looker, null, null, 0, arg, null);
+   send_done("look", looker, null, null, 0, arg, null, CMD_AUTO_NONE);
 
    return(TRUE);
 }

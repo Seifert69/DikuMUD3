@@ -1318,5 +1318,6 @@ SFUN_ARREST_CHECK
 #define CMD_AUTO_DEATH    -3	/* Used when someone is killed (combat)        */
 #define CMD_AUTO_COMBAT   -2	/* Used when combat round                      */
 #define CMD_AUTO_TICK     -1	/* MUST BE -1 ,Used when units are "ticking"   */
+#define CMD_AUTO_NONE      0	// means not an AUTO CMD (used in DIL)
 
 #endif /* _MUD_VME_H */

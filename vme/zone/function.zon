@@ -4721,7 +4721,7 @@ code
            A_SOMEONE, self, tmps, pc, TO_ALL );
 
       link( u, self );
-	     	  send_done ("sell",pc,u,self,0,"",null);
+	     	  send_done ("sell",pc,u,self,0,"",null, CMD_AUTO_NONE);
 
       if( ( u.symname ) in itmsl )
       {
@@ -4964,7 +4964,7 @@ pc, TO_ALL );
 	 act( acts.[0], A_SOMEONE, self, null, pc, TO_ALL );
      }
    }
-   	  send_done ("buy",pc,null,self,0,"",null);
+   	  send_done ("buy",pc,null,self,0,"",null, CMD_AUTO_NONE);
    unsecure( pc );
 
 
@@ -5559,7 +5559,7 @@ pc, TO_VICT);
            A_SOMEONE, self, tmps, pc, TO_ALL );
 
       link( u, self );
-	     	  send_done ("sell",pc,u,self,0,"",null);
+	     	  send_done ("sell",pc,u,self,0,"",null, CMD_AUTO_NONE);
 
       if( ( u.nameidx + "@" + u.zoneidx ) in itmsl )
       {
@@ -5802,7 +5802,7 @@ pc, TO_ALL );
 	 act( acts.[0], A_SOMEONE, self, null, pc, TO_ALL );
      }
    }
-   	  send_done ("buy",pc,null,self,0,"",null);
+   	  send_done ("buy",pc,null,self,0,"",null, CMD_AUTO_NONE);
    unsecure( pc );
 
 

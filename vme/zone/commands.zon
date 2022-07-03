@@ -313,7 +313,7 @@ code
    act("$1n knocks on $3n.", A_SOMEONE, self, null, item,TO_NOTVICT);
    act("$1n knocks on you.", A_SOMEONE, self, null, item, TO_VICT);
 
-   send_done ("knock", self, null, item, 0, "", null);
+   send_done ("knock", self, null, item, 0, "", null, CMD_AUTO_NONE);
    return;
 
 
@@ -359,7 +359,7 @@ code
       }
    }
 
-   send_done ("knock", self, null, null, 0, "", null);
+   send_done ("knock", self, null, null, 0, "", null, CMD_AUTO_NONE);
    return;
 }
 dilend
@@ -976,7 +976,7 @@ act("$1n mounts $2n.", A_SOMEONE, self, horse, null, TO_REST);
 link(self, horse);
 exec("look", self);
 
-send_done("mount", self, horse, null, 0, "", null);
+send_done("mount", self, horse, null, 0, "", null, CMD_AUTO_NONE);
 
 quit;
 
@@ -1002,7 +1002,7 @@ code{
        act("$1n dismounts $1s $2N.", A_SOMEONE, self, horse, null, TO_REST);
        link(self, horse.outside);
        exec("look", self);
-       send_done("dismount", self, horse, null, 0, "", null);
+       send_done("dismount", self, horse, null, 0, "", null, CMD_AUTO_NONE);
        quit;
      }
 
@@ -1292,7 +1292,7 @@ code
     ch := ch.gnext;
    }
 
-   send_done("wiz", self, null, null, 0, arg, null);
+   send_done("wiz", self, null, null, 0, arg, null, CMD_AUTO_NONE);
  quit;
 }
 dilend
@@ -1933,7 +1933,7 @@ if (buff == "")
 
 sendtext (buff, self);
 
-send_done("purse", self, null, null, 0, arg, null);
+send_done("purse", self, null, null, 0, arg, null, CMD_AUTO_NONE);
 
 quit;
 
@@ -3843,7 +3843,7 @@ else
 
 if(errstr == "")
 {
- send_done(cmd_str,ch,obj,null,0,arg,null);
+ send_done(cmd_str,ch,obj,null,0,arg,null, CMD_AUTO_NONE);
  return(TRUE);
 }
 
@@ -4085,7 +4085,7 @@ code
 
  unit_msg(ch, obj, "$rem", "You stop using $2n.", "$1n stops using $2n.");
 
- send_done(cmd_str,ch,obj,null,0,arg,null);
+ send_done(cmd_str,ch,obj,null,0,arg,null, CMD_AUTO_NONE);
 
  return(TRUE);
 }
@@ -4571,7 +4571,7 @@ if (tgt!=null)
 
  exec("look", self);
 
- send_done("goto",self,null,tgt,0,arg,null);
+ send_done("goto",self,null,tgt,0,arg,null, CMD_AUTO_NONE);
 quit;
 }
 dilend
@@ -4627,7 +4627,7 @@ code
       str := textformat(str);
       pagestring(str,self);
    }
-   send_done("quests",self,null,null,0,arg,null);
+   send_done("quests",self,null,null,0,arg,null, CMD_AUTO_NONE);
    quit;
 }
 dilend
@@ -4648,7 +4648,7 @@ if(err > 0)
         pagestring(news,self);
 }
 
-send_done("news",self,null,null,0,arg,null);
+send_done("news",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 quit;
 }
@@ -4669,7 +4669,7 @@ if(err > 0)
         pagestring(contrib,self);
 }
 
-send_done("contrib",self,null,null,0,arg,null);
+send_done("contrib",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 quit;
 }
@@ -4690,7 +4690,7 @@ if(err > 0)
         pagestring(credits,self);
 }
 
-send_done("credits",self,null,null,0,arg,null);
+send_done("credits",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 quit;
 }
@@ -4711,7 +4711,7 @@ if(err > 0)
         pagestring(wizlist,self);
 }
 
-send_done("wizlist",self,null,null,0,arg,null);
+send_done("wizlist",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 quit;
 }
@@ -4781,7 +4781,7 @@ else
 	self.attack_type := wpn.[i];
 	sendtext("Attack type set to "+lst.[i]+".<br/>",self);
 
-	send_done("attackswitch",self,null,null,0,arg,null);
+	send_done("attackswitch",self,null,null,0,arg,null, CMD_AUTO_NONE);
 }
 
 quit;
@@ -5077,7 +5077,7 @@ code
       sendtext("Not sure what that means... Try equipment or equipment all<br/>",self);
    }
 
-   send_done("equipment",self,null,null,0,arg,null);
+   send_done("equipment",self,null,null,0,arg,null, CMD_AUTO_NONE);
    quit;
 }
 dilend
@@ -5465,7 +5465,7 @@ if(err > 0)
         pagestring(motd,self);
 }
 
-send_done("motd",self,null,null,0,arg,null);
+send_done("motd",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 quit;
 }
@@ -5514,7 +5514,7 @@ if (f!=TRUE)
 act("There seems to be nothing to dig up.",A_ALWAYS,self,null,null,TO_CHAR);
 act("$1n digs around but doesn't find anything.",A_ALWAYS,self,null,null,TO_REST);
 }
-send_done("dig",self,u,null,0,arg,null);
+send_done("dig",self,u,null,0,arg,null, CMD_AUTO_NONE);
 
 quit;
 }
@@ -5641,7 +5641,7 @@ if ((item.type!=UNIT_ST_OBJ) or
   set (item.flags,UNIT_FL_BURIED);
   dilcopy("buried_timer@commands(60)", item);
   link (item,self.outside);
-  send_done("bury",self,item,null,0,arg,null);
+  send_done("bury",self,item,null,0,arg,null, CMD_AUTO_NONE);
   }
   	if ((count==-1) or (arg=="all"))
 	{
@@ -5691,7 +5691,7 @@ if ((item.type!=UNIT_ST_OBJ) or
   dilcopy("buried_timer@commands(60)", item);
   temp:=item.next;
   link (item,self.outside);
-  send_done("bury",self,item,null,0,arg,null);
+  send_done("bury",self,item,null,0,arg,null, CMD_AUTO_NONE);
   }
   	if (count==-1)
 	{
@@ -5872,7 +5872,7 @@ code
    act("$1n clambers on $1s feet.", A_HIDEINV, self, null, null, TO_REST);
    self.position := POSITION_STANDING;
 
-    send_done("stand",self,null,null,0,arg,null);
+    send_done("stand",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 
    return;
@@ -5885,7 +5885,7 @@ code
 null, null, TO_REST);
    self.position := POSITION_STANDING;
 
-    send_done("stand",self,null,null,0,arg,null);
+    send_done("stand",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 
    return;
@@ -5897,7 +5897,7 @@ null, null, TO_REST);
    A_HIDEINV, self, null, null, TO_REST);
    self.position := POSITION_STANDING;
 
-    send_done("stand",self,null,null,0,arg,null);
+    send_done("stand",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 
    return;
@@ -5919,7 +5919,7 @@ code
       A_HIDEINV, self, null, null, TO_REST);
    self.position := POSITION_SITTING;
 
-    send_done("sit",self,null,null,0,arg,null);
+    send_done("sit",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 
    }
@@ -5934,7 +5934,7 @@ code
      A_HIDEINV, self, null, null, TO_REST);
    self.position := POSITION_SITTING;
 
-    send_done("sit",self,null,null,0,arg,null);
+    send_done("sit",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 
   }
@@ -5949,7 +5949,7 @@ code
 null, TO_REST);
    self.position := POSITION_SITTING;
 
-    send_done("sit",self,null,null,0,arg,null);
+    send_done("sit",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 
   }
@@ -5969,7 +5969,7 @@ code
     act("$1n sits down and rests.", A_HIDEINV, self, null, null, TO_REST);
     self.position := POSITION_RESTING;
 
-    send_done("rest",self,null,null,0,arg,null);
+    send_done("rest",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 
    }
@@ -5979,7 +5979,7 @@ code
     act("$1n rests.", A_HIDEINV, self, null, null, TO_REST);
     self.position := POSITION_RESTING;
 
-    send_done("rest",self,null,null,0,arg,null);
+    send_done("rest",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
   }
   else if(self.position == POSITION_RESTING)
@@ -5997,7 +5997,7 @@ code
      A_HIDEINV, self, null, null, TO_REST);
    self.position := POSITION_RESTING;
 
-    send_done("rest",self,null,null,0,arg,null);
+    send_done("rest",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
   }
 
@@ -6018,7 +6018,7 @@ code
       A_HIDEINV, self, null, null, TO_REST);
    self.position := POSITION_SLEEPING;
 
-    send_done("sleep",self,null,null,0,arg,null);
+    send_done("sleep",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
   }
   else if(self.position == POSITION_SLEEPING)
@@ -6036,7 +6036,7 @@ code
 null, null, TO_REST);
    self.position := POSITION_SLEEPING;
 
-    send_done("sleep",self,null,null,0,arg,null);
+    send_done("sleep",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
   }
 
@@ -6061,7 +6061,7 @@ code
          sendtext("You awaken, and start resting.<br/>",self);
          act("$1n awakens.", A_HIDEINV, self, null, null, TO_REST);
          self.position := POSITION_RESTING;
-         send_done("wake",self,null,null,0,arg,null);
+         send_done("wake",self,null,null,0,arg,null, CMD_AUTO_NONE);
      }
       return;
    }
@@ -6109,7 +6109,7 @@ code
                   A_SOMEONE, self, null, vict, TO_NOTVICT);
             act("You are awakened by $1n.", A_SOMEONE, self, null, vict, TO_VICT);
 
-            send_done("wake",vict,null,self,0,arg,null);
+            send_done("wake",vict,null,self,0,arg,null, CMD_AUTO_NONE);
          }
          return;
       }
@@ -8089,7 +8089,7 @@ code
    if (self.full<15)
       act("You still feel hungry.", A_ALWAYS, self, null, null, TO_CHAR);
    
-   send_done("drink",self,d_obj,null,pois,"",null);
+   send_done("drink",self,d_obj,null,pois,"",null, CMD_AUTO_NONE);
    quit;
 }
 dilend
@@ -8172,7 +8172,7 @@ code
 		self.thirst := 115;
 	}
 	
-	send_done ("eat",self,food,null,pois,"",null);
+	send_done ("eat",self,food,null,pois,"",null, CMD_AUTO_NONE);
 	eat_str:="logging on";
 	destroy (food);
 	quit;
@@ -8536,7 +8536,7 @@ TO_CHAR);
  act("You empty $2n.",A_SOMEONE, self, f_obj, null, TO_CHAR);
 
  sub_drink_info(f_obj);
-send_done ("pour",self,f_obj,self.outside,0,"",null);
+send_done ("pour",self,f_obj,self.outside,0,"",null, CMD_AUTO_NONE);
  quit;
  }
 
@@ -8676,7 +8676,7 @@ if (f_obj.value[0]==0)
  sub_drink_info(f_obj);
  }
 
-send_done ("pour",self,f_obj,t_obj,0,"",null);
+send_done ("pour",self,f_obj,t_obj,0,"",null, CMD_AUTO_NONE);
 quit;
 }
 dilend
@@ -10323,7 +10323,7 @@ TO_CHAR);
  n := cast_spell(potion.value[1],self,potion,self,"");
  n := cast_spell(potion.value[2],self,potion,self,"");
  n := cast_spell(potion.value[3],self,potion,self,"");
- send_done("quaff",self,potion,potion,0,"",null);
+ send_done("quaff",self,potion,potion,0,"",null, CMD_AUTO_NONE);
  destroy(potion);
  quit;
 
