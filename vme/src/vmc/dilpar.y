@@ -5483,7 +5483,7 @@ dilproc : corefuncall
             bwrite_ubit8(&wtmp, DILI_STORA);
         }
     }
-    | DILSI_SNDDONE '(' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ')' ihold
+    | DILSI_SNDDONE '(' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ')' ihold
     {
         if ($3.typ != DilVarType_e::DILV_SP)
         {
@@ -5513,11 +5513,15 @@ dilproc : corefuncall
         {
             dilfatal("Arg 7 of 'send_done' not an unit pointer");
         }
+        else if ($17.typ != DilVarType_e::DILV_INT)
+        {
+            dilfatal("Arg 8 of 'send_done' not an integer (CMD_AUTO_ or 0)");
+        }
         else
         {
             $$.fst = $3.fst;
-            $$.lst = $17 + 1;
-            wtmp = &tmpl.core[$17];
+            $$.lst = $19 + 1;
+            wtmp = &tmpl.core[$19];
             bwrite_ubit8(&wtmp, DILI_SNDDONE);
         }
     }

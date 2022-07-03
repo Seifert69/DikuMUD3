@@ -218,6 +218,7 @@ void dilfi_gamestate(dilprg *p)
 void dilfi_send_done(dilprg *p)
 {
     command_info *cmd_ptr = nullptr;
+    dilval *v8 = p->stack.pop();
     dilval *v7 = p->stack.pop();
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
@@ -228,7 +229,7 @@ void dilfi_send_done(dilprg *p)
 
     if (dil_type_check("send_done",
                        p,
-                       7,
+                       8,
                        v1,
                        TYPEFAIL_NULL,
                        1,
@@ -260,9 +261,35 @@ void dilfi_send_done(dilprg *p)
                        TYPEFAIL_NULL,
                        2,
                        DILV_UP,
-                       DILV_NULL))
+                       DILV_NULL,
+                       v8,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT))
     {
-        if ((cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
+        if (v8->val.num != CMD_AUTO_NONE)
+        {
+            switch (v8->val.num)
+            {
+               case CMD_AUTO_ENTER:
+                  send_done((unit_data *)v2->val.ptr,
+                           (unit_data *)v3->val.ptr,
+                           (unit_data *)v4->val.ptr,
+                           v5->val.num,
+                           &g_cmd_auto_enter,
+                           (const char *)v6->val.ptr,
+                           (unit_data *)v7->val.ptr);
+                  break;
+
+               default:
+                  slog(LOG_ALL, 0, "DIL %s@%s on %s: Unknown CMD_AUTO_ value %d.",
+                     p->fp->tmpl->prgname,
+                     p->fp->tmpl->zone->getName(),
+                     p->sarg->owner->getFileIndexSymName(), v8->val.num);
+                  break;
+            }
+        }
+        else if ((cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
         {
             send_done((unit_data *)v2->val.ptr,
                       (unit_data *)v3->val.ptr,
