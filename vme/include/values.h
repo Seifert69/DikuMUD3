@@ -74,7 +74,7 @@ END HEADER*/
 #define GUILD_KNIGHT_EXCL {GUILD_PALADIN, GUILD_UDG_MAGE, GUILD_SORCERER}
 
 #define GUILD_PALADIN     "Midgaard Paladin"
-#define GUILD_PALADIN_ATL  "joan@paladin_guild", "edmund@paladin_guild", "alex@paladin_guild", "corbin@paladin_guild" //  Abi, Wpn, Spl, Ski
+#define GUILD_PALADIN_ATL  "edmund@paladin_guild", "joan@paladin_guild", "alex@paladin_guild", "corbin@paladin_guild" //  Wpn, Abi, Spl, Ski
 #define GUILD_PALADIN_EXCL {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_KNIGHT, GUILD_ASSASSIN, GUILD_UDG_THIEF, GUILD_NECROMANCER}
 
 #define GUILD_NYM_RANGER  "Nymgaard Ranger"
