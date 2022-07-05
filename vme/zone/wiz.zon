@@ -932,7 +932,7 @@ dilcopy listener@wiz(SFB_DONE, "SFB_DONE");
 dilcopy listener@wiz(SFB_EDIT, "SFB_EDIT");
 dilcopy listener@wiz(SFB_DILDESTROY, "SFB_DILDESTROY");
 dilcopy listener@wiz(SFB_PROMPT, "SFB_PROMPT");
-dilcopy listener@wiz(SFB_UNIQUE, "SFB_UNIQUE");
+dilcopy listener@wiz(SFB_NOOP, "SFB_NOOP");
 dilcopy listener@wiz(SFB_PRIORITY, "SFB_PRIORITY"); // Shouldn't be activated
 dilcopy listener@wiz(SFB_RANTIME, "SFB_RANTIME"); // Shouldn't be activated
 

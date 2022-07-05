@@ -80,6 +80,7 @@ help
 dilbegin unique dilfollow();
 var
    s : string;
+   c : string;
 code
 {
    heartbeat := 1;
@@ -106,12 +107,16 @@ code
    if (command("north") or command("east") or command("south") or command("west") or command("up") or command("down"))
    {
       act("You follow $3n $2t.", A_HIDEINV, self, cmdstr, self.master, TO_CHAR);
-      exec(cmdstr, self);
+      c := cmdstr;
+      waitnoop;
+      exec(c, self);
    }
    else if (command("southeast") or command("northeast") or command("southwest") or command("northwest"))
    {
       act("You follow $3n $2t.", A_HIDEINV, self, cmdstr, self.master, TO_CHAR);
-      exec(cmdstr, self);
+      c := cmdstr;
+      waitnoop;
+      exec(c, self);
    }
    else if (command("leave"))
    {
@@ -119,6 +124,7 @@ code
       s := argument;
       if (s == null)
          s := "";
+      waitnoop;
       exec("leave "+s, self);
    }
    else if (command("exit"))
@@ -127,6 +133,7 @@ code
       s := argument;
       if (s == null)
          s := "";
+      waitnoop;
       exec("exit "+s, self);
    }
    else if (command("enter"))
@@ -135,6 +142,7 @@ code
       s := argument;
       if (s == null)
          s := "";
+      waitnoop;
       exec("enter "+s, self);
    }
    // Swim?
