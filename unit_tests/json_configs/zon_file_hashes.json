@@ -813,12 +813,12 @@
         {
             "source_file": {
                 "filename": "skills.zon",
-                "sha512": "0aa47c71ae72367f84066f362c4bc9bd61736cb952865513a1ca97d58fbcc93b3cb2c8a12dd2ad3124f6c685f8c6af72fbdc48d8ce62988b9009b750d50ae086"
+                "sha512": "82f254c8729b217bcef901fa4f2cd854efd4dd429d547039ff02210fd4f38640443ce1f8fbc37b6a3b3a69a0e68e87c7eaec319751462e2fffcc09bf9bce5269"
             },
             "output": [
                 {
                     "filename": "skills.data",
-                    "sha512": "654f0773420f6e5b5b1f3da70db7eb3e3171d923190a4d63dd20ca043013a6d460e98845aba2e81fa07229b14d9917b4cf22c5a460db256e2e765c8e181804eb"
+                    "sha512": "88bdae4186dc247c3b3b9de8cda0cc03e13734aae8cd9e9467e08d9fc8c6a2b7b7e308918fcb9bd17534c9f6470768f59c255586f1e39d231fbf62d674ebda88"
                 },
                 {
                     "filename": "skills.reset",

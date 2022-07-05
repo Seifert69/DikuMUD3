@@ -513,7 +513,6 @@ void spell_clear_skies(spell_args *sa)
     }
 
     unit_zone(sa->caster)->getWeather().incrementChangeBy(sa->hm / 20);
-    unit_zone(sa->caster)->getWeather().setChange(MIN(unit_zone(sa->caster)->getWeather().getChange(), 12));
 
     act("You feel a warm breeze.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
 }
@@ -529,7 +528,6 @@ void spell_storm_call(spell_args *sa)
     }
 
     unit_zone(sa->caster)->getWeather().decrementChangeBy(sa->hm / 20);
-    unit_zone(sa->caster)->getWeather().setChange(MAX(unit_zone(sa->caster)->getWeather().getChange(), -12));
 
     act("A cold wind chills you to the bone.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
 }
