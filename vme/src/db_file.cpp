@@ -447,15 +447,14 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         {
             slog(LOG_ALL,
                  0,
-                 "bread_dil(): Unit %s@%s DIL template [%s] no longer exists. bNameRead = %d.",
-                 owner->getFileIndex()->getName(),
-                 owner->getFileIndex()->getZone(),
+                 "bread_dil() unit %s: DIL template [%s] no longer exists. bNameRead = %d.",
+                 owner->getFileIndexSymName(),
                  name,
                  bNameRead);
         }
         else
         {
-            slog(LOG_ALL, 0, "bread_dil(): Unit has no file index DIL template [%s] no longer exists. bNameRead = %d.", name, bNameRead);
+            slog(LOG_ALL, 0, "bread_dil() unit with no file index: DIL template [%s] no longer exists. bNameRead = %d.", name, bNameRead);
         }
     }
 
