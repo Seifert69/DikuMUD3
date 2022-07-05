@@ -1003,8 +1003,9 @@ The function may share with others/continue command sequence
 #define SFB_DONE     (0x0800)	/* Used to tell when something has been done */
 #define SFB_EDIT     (0x1000)	/* Edit */
 #define SFB_DILDESTROY     (0x2000)	/* Edit */
-#define SFB_PROMPT     (0x4000)	/* PROMPT */
-#define SFB_UNIQUE     (0x10000)	/* PROMPT */
+#define SFB_PROMPT     (0x4000)	  /* PROMPT */
+#define SFB_NOOP       (0x8000)   // NOOP, special condition (16th bit)
+
 #define SFB_ALL   (SFB_CMD|SFB_TICK|SFB_DEAD|SFB_COM|SFB_MSG|SFB_SAVE|SFB_PRE)
 
 /* ------------------------- Special Functions ------------------------------
