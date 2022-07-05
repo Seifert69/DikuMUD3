@@ -25,6 +25,7 @@ extern diltemplate *g_dil_link_dead;
 extern diltemplate *g_dil_advance_level;
 
 /* Maximum number of consecutive instructions allowed in one tick */
+#define WAITCMD_NOOP -50       /* Take a quick break and allow other DILs to process */
 #define WAITCMD_FINISH -100    /* Stop program execution until next event */
 #define WAITCMD_STOP -150      /* Suspend execution                       */
 #define WAITCMD_QUIT -200      /* Quit the DIL program entirely           */

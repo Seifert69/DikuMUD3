@@ -2410,6 +2410,30 @@ void dilfi_exec(dilprg *p)
     delete v2;
 }
 
+
+
+/* Execute command */
+void dilfi_waitnoop(dilprg *p)
+{
+    ubit32 coreptr = 0;
+    ubit8 *oldpc = nullptr;
+    coreptr = bread_ubit32(&(p->fp->pc));
+    oldpc = &(p->fp->tmpl->core[coreptr]);
+
+    if (p->waitcmd != WAITCMD_MAXINST)
+    {
+        p->sarg->fptr->setAllActivateOnEventFlags(SFB_NOOP);
+        p->waitcmd = WAITCMD_NOOP;
+        p->fp->pc = oldpc; /* rewind pc to just before wait command */
+    }
+    else
+    {
+        // Program was waiting
+        p->waitcmd--;
+    }
+}
+
+
 /* Wait */
 void dilfi_wit(dilprg *p)
 {

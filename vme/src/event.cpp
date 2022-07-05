@@ -58,10 +58,12 @@ eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1,
     int parent_index = 0;
     int current_index = 0;
 
+    /* The NOOP operation has 0 time, so ditch this warning.
+    
     if (when <= 0)
     {
         slog(LOG_ALL, 0, "Error: %d EVENT", when);
-    }
+    }*/
 
     // One could add a sanity check to make sure that events for known
     if (func == special_event)

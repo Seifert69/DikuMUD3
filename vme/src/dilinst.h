@@ -33,6 +33,7 @@ void dilfi_sue(dilprg *);
 void dilfi_dst(dilprg *);
 void dilfi_popstk(dilprg *);
 void dilfi_exec(dilprg *);
+void dilfi_waitnoop(dilprg *);
 void dilfi_wit(dilprg *);
 void dilfi_act(dilprg *);
 void dilfi_goto(dilprg *);

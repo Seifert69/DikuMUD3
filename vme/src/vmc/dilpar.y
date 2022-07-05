@@ -242,7 +242,7 @@ void make_code(struct exptype *dest);
 %token DILSI_SNDDONE DILSI_GMSTATE DILSI_INSLST DILSI_REMLST
 
 /* DIL instructions */
-%token DILSI_WHI DILSI_IF  DILSI_EXE DILSI_WIT DILSI_ACT
+%token DILSI_WHI DILSI_IF  DILSI_EXE DILSI_WAITNOOP DILSI_WIT DILSI_ACT
 %token DILSI_ELS DILSI_GOT DILSI_PRI DILSI_NPR DILSI_BLK DILSI_CNT
 %token DILSI_PUP DILSI_FOE DILSI_BRK DILSI_RTS
 %token DILSI_ON  DILSI_AMOD DILSI_SETPWD DILSI_DELPC DILSI_REBOOT
@@ -6316,6 +6316,34 @@ dilproc : corefuncall
             bwrite_ubit8(&wtmp, DILI_EXEC);
         }
     }
+    // This is not working, not yet sure why.  
+    | DILSI_WAITNOOP ihold ahold
+    {
+        $$.fst = $2;
+        $$.lst = $3 + 4;
+        wtmp = &tmpl.core[$2];
+        bwrite_ubit8(&wtmp, DILI_WAITNOOP);
+
+        wtmp = &tmpl.core[$3];
+        bwrite_ubit32(&wtmp, $2);
+    }
+    /* This works too
+    | DILSI_WAITNOOP '(' coreexp ')' ihold ahold
+    {
+        if ($3.typ != DilVarType_e::DILV_SP)
+        {
+            dilfatal("Arg 1 of 'waitnoop' not a string");
+        }
+        else
+        {
+            $$.fst = $3.fst;
+            $$.lst = $6 + 4;
+            wtmp = &tmpl.core[$5];
+            bwrite_ubit8(&wtmp, DILI_WAITNOOP);
+            wtmp = &tmpl.core[$6];
+            bwrite_ubit32(&wtmp, $3.fst);
+        }
+    } */
     | DILSI_WIT '(' coreexp ',' coreexp ')' ihold ahold
     {
         checkbool("argument 1 of wait", $3.boolean);

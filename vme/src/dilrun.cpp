@@ -956,6 +956,7 @@ void dil_function_table_setup()
         {DILI_DST, dilfi_dst},       /* destroy (#) */
         {DILI_POPSTK, dilfi_popstk}, /* pop the stack and thow it away*/
         {DILI_EXEC, dilfi_exec},     /* exec (#,#) */
+        {DILI_WAITNOOP, dilfi_waitnoop},     /* waitnoop () */
         {DILI_WIT, dilfi_wit},       /* wait (#,#) */
         {DILI_ACT, dilfi_act},       /* act (#,#,#,#,#,#) */
         {DILI_GOTO, dilfi_goto},     /* goto label */
@@ -1481,7 +1482,47 @@ int run_dil(spec_arg *sarg)
             return SFR_SHARE;
         }
     }
-    else if (prg->waitcmd > WAITCMD_FINISH)
+    else if (prg->waitcmd <= WAITCMD_FINISH)
+    {
+        for (i = 0; i < prg->fp->intrcount; i++)
+        {
+            prg->sarg->fptr->setActivateOnEventFlag(prg->fp->intr[i].flags);
+        }
+
+        /* Okay this is the problem:
+        Imagine this:
+
+        heartbeat := 30 * PULSE_SEC;
+        wait(SFB_CMD | SFB_TICK, TRUE);
+        heartbeat := PULSE_SEC;
+        pause;
+        goto loop;
+
+        It will only work, if the "SFB_TICK" is what triggers the execution.
+        Therefore, I am unfortunately forced to do the follow dequeue and
+        enqueue.
+        */
+
+        prg->nest--;
+
+        if (prg->nest <= 0)
+        {
+            sarg->fptr->setHeartBeat(MAX(PULSE_SEC * 1, sarg->fptr->getHeartBeat()));
+
+            if (prg->sarg->fptr->isActivateOnEventFlagSet(SFB_TICK))
+            {
+                /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
+                if ((OrgHeartBeat != sarg->fptr->getHeartBeat()) && (sarg->cmd->no != CMD_AUTO_TICK))
+                {
+                    ResetFptrTimer(sarg->owner, sarg->fptr);
+                }
+            }
+            prg->waitcmd = WAITCMD_MAXINST;
+
+            REMOVE_BIT(prg->flags, DILFL_EXECUTING);
+        }
+    }
+    else if (prg->waitcmd > WAITCMD_NOOP) // Endless loop
     {
         szonelog(sarg->owner->getFileIndex()->getZone(),
                  "DIL %s in unit %s had endless loop.",
@@ -1498,43 +1539,20 @@ int run_dil(spec_arg *sarg)
         }
         return SFR_SHARE;
     }
-
-    for (i = 0; i < prg->fp->intrcount; i++)
+    else
     {
-        prg->sarg->fptr->setActivateOnEventFlag(prg->fp->intr[i].flags);
-    }
+        // NOOP
+        prg->nest--;
 
-    /* Okay this is the problem:
-       Imagine this:
-
-       heartbeat := 30 * PULSE_SEC;
-       wait(SFB_CMD | SFB_TICK, TRUE);
-       heartbeat := PULSE_SEC;
-       pause;
-       goto loop;
-
-       It will only work, if the "SFB_TICK" is what triggers the execution.
-       Therefore, I am unfortunately forced to do the follow dequeue and
-       enqueue.
-     */
-
-    prg->nest--;
-
-    if (prg->nest <= 0)
-    {
-        sarg->fptr->setHeartBeat(MAX(PULSE_SEC * 1, sarg->fptr->getHeartBeat()));
-
-        if (prg->sarg->fptr->isActivateOnEventFlagSet(SFB_TICK))
+        if (prg->nest <= 0)
         {
-            /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
-            if ((OrgHeartBeat != sarg->fptr->getHeartBeat()) && (sarg->cmd->no != CMD_AUTO_TICK))
-            {
-                ResetFptrTimer(sarg->owner, sarg->fptr);
-            }
-        }
-        prg->waitcmd = WAITCMD_MAXINST;
+            void ResetFptrTimerNoop(unit_data *u, unit_fptr *fptr);
 
-        REMOVE_BIT(prg->flags, DILFL_EXECUTING);
+            ResetFptrTimerNoop(sarg->owner, sarg->fptr);
+            REMOVE_BIT(prg->flags, DILFL_EXECUTING);
+            prg->waitcmd = WAITCMD_MAXINST;
+        }
+
     }
 
     membug_verify(prg);
