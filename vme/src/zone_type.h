@@ -2,6 +2,7 @@
 
 #include "essential.h"
 #include "namelist.h"
+#include "weather.h"
 
 #include <cstring>
 #include <map>
@@ -104,31 +105,8 @@ public:
     const char *getDILFilePath() const;
     void setDILFilePath(char *value);
 
-    class Weather
-    {
-        /// @todo this should be extracted to global namespace and the functions from weather.cpp moved here too
-    public:
-        int getPressure() const { return pressure; }
-        int getChange() const { return change; }
-        int getSky() const { return sky; }
-        int getBase() const { return base; }
-
-        void setBase(int value) { base = value; }
-        void setChange(int value) { change = value; }
-        void incrementChangeBy(int value) { change += value; }
-        void decrementChangeBy(int value) { change -= value; }
-        void setPressure(int value) { pressure = value; }
-        void incrementPressureBy(int value) { pressure += value; }
-        void setSky(int value) { sky = value; }
-
-    private:
-        int pressure{0}; ///< How is the pressure ( Mb )
-        int change{0};   ///< How fast and what way does it change.
-        int sky{0};      ///< How is the sky.
-        int base{0};     ///< What is the basis pressure like?
-    };
-    const Weather &cgetWeather() const;
-    Weather &getWeather();
+    [[nodiscard]] const Weather &cgetWeather() const;
+    [[nodiscard]] Weather &getWeather();
 
 private:
     cNamelist m_creators;                                        ///< List of creators of zone

@@ -386,12 +386,12 @@ void zone_type::setDILFilePath(char *value)
     m_dilfilepath = value;
 }
 
-const zone_type::Weather &zone_type::cgetWeather() const
+const Weather &zone_type::cgetWeather() const
 {
     return m_weather;
 }
 
-zone_type::Weather &zone_type::getWeather()
+Weather &zone_type::getWeather()
 {
     return m_weather;
 }
