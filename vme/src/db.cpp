@@ -43,6 +43,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
+#include <memory>
 
 const char *g_player_zone = "_players";
 
@@ -167,52 +169,11 @@ void generate_bin_arrays()
  */
 void resolve_templates()
 {
-    int i = 0;
-    int j = 0;
-    int valid = 0;
-
     /* all zones */
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
         /* all templates in zone */
-        for (auto tmpl = z->second->cgetDILTemplate().begin(); tmpl != z->second->cgetDILTemplate().end(); tmpl++)
-        {
-            /* all external references */
-            for (i = 0; i < tmpl->second->xrefcount; i++)
-            {
-                tmpl->second->extprg[i] = find_dil_template(tmpl->second->xrefs[i].name);
-                valid = 1;
-
-                if (tmpl->second->extprg[i])
-                {
-                    /* check argument count and types */
-                    if ((tmpl->second->xrefs[i].rtnt != tmpl->second->extprg[i]->rtnt) ||
-                        (tmpl->second->xrefs[i].argc != tmpl->second->extprg[i]->argc))
-                    {
-                        valid = 0;
-                    }
-                    for (j = 0; j < tmpl->second->xrefs[i].argc; j++)
-                    {
-                        if (tmpl->second->xrefs[i].argt[j] != tmpl->second->extprg[i]->argt[j])
-                        {
-                            valid = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    /* ERROR MESSAGE HERE */
-                    szonelog(z->second, "Cannot resolve external reference '%s'", tmpl->second->xrefs[i].name);
-                }
-                /* Typecheck error ! */
-                if (!valid)
-                {
-                    tmpl->second->extprg[i] = nullptr;
-                    /* ERROR MESSAGE HERE */
-                    szonelog(z->second, "Error typechecking reference to '%s'", tmpl->second->xrefs[i].name);
-                }
-            }
-        }
+        z->second->resolveZoneTemplates();
     }
 }
 
@@ -222,7 +183,6 @@ void resolve_templates()
 diltemplate *generate_templates(FILE *f, zone_type *zone)
 {
     diltemplate *tmpllist = nullptr;
-    diltemplate *tmpl = nullptr;
     CByteBuffer Buf;
     ubit32 tmplsize = 0;
     char nBuf[256];
@@ -244,7 +204,7 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
     {
         Buf.FileRead(f, tmplsize);
 
-        tmpl = bread_diltemplate(&Buf, UNIT_VERSION);
+        auto tmpl = std::unique_ptr<diltemplate>(bread_diltemplate(&Buf, UNIT_VERSION));
 
         if (tmpl)
         {
@@ -256,11 +216,7 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 
             tmpl->prgname = str_dup(nBuf);
             str_lower(tmpl->prgname);
-            zone->getDILTemplate().insert(std::make_pair(tmpl->prgname, tmpl));
-
-            /* Link into list of indexes */
-
-            zone->incrementNumOfDILTemplates();
+            zone->insertDILTemplate(std::move(tmpl));
         }
         /* next size */
         if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
@@ -278,7 +234,6 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 void generate_file_indexes(FILE *f, zone_type *zone)
 {
     file_index_type *fi = nullptr;
-    file_index_type *temp_index = nullptr;
     static int object_num = 0;
     static int npc_num = 0;
 
@@ -297,7 +252,7 @@ void generate_file_indexes(FILE *f, zone_type *zone)
             break;
         }
 
-        temp_index = new file_index_type();
+        auto temp_index = std::make_unique<file_index_type>();
         temp_index->setName(reinterpret_cast<const char *>(cBuf.GetData()), true);
 
         temp_index->setZone(zone);
@@ -325,9 +280,8 @@ void generate_file_indexes(FILE *f, zone_type *zone)
         }
         temp_index->setCRC(temp_32);
 
-        zone->getFileIndexMap().insert(std::make_pair(temp_index->getName(), temp_index));
-        fi = temp_index;
-        zone->incrementNumOfFileIndexes();
+        fi = temp_index.get();
+        zone->insertFileIndex(std::move(temp_index));
         fi->setFilepos(ftell(f));
         if (fi->getType() == UNIT_ST_OBJ)
         {
@@ -370,7 +324,6 @@ void generate_file_indexes(FILE *f, zone_type *zone)
  */
 void generate_zone_indexes()
 {
-    zone_type *z = nullptr;
     char zone[82];
     char tmpbuf[82];
     char filename[82 + 41];
@@ -393,16 +346,10 @@ void generate_zone_indexes()
     }
 
     // Insert a virtual zone _players
-    z = new (zone_type);
-    g_zone_info.no_of_zones++;
-    z->setZoneNumber(g_zone_info.no_of_zones - 1);
-    z->setName(str_dup("_players"));
-    z->setFilename(str_dup("ply"));
-    z->setTitle(str_dup("Reserved zone for player file_indexes"));
-    z->setHelp(str_dup(""));
-    z->setNotes(str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
-                        "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
-                        "of player files on disk\n"));
+    auto z = new zone_type{"_players", "ply"};
+    z->setTitle("Reserved zone for player file_indexes");
+    z->setNotes("This zone is only here to allow us to use playername@_plaeyrs as with all other indexes such as mayor@midgaard. It's not "
+                "actually a zone, and it's not a representation of player files on disk\n");
     g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
     z = nullptr;
 
@@ -486,27 +433,16 @@ void generate_zone_indexes()
 
         slog(LOG_ALL, 0, "Indexing %s AC[%3d] LL[%d] PO[%d]", filename, access, loadlevel, payonly);
 
-        z = new (zone_type);
+        fstrcpy(&cBuf, f);
+        z = new zone_type{(char *)cBuf.GetData(), zone};
         g_zone_info.no_of_zones++;
-
-        z->setZoneNumber(g_zone_info.no_of_zones - 1);
-        z->setFilename(str_dup(zone));
 
         if (*dilfilepath)
         {
             z->setDILFilePath(str_dup(dilfilepath));
         }
-        else
-        {
-            z->setDILFilePath(nullptr);
-        }
 
-        fstrcpy(&cBuf, f);
-        auto name = str_dup((char *)cBuf.GetData());
-        str_lower(name);
-        z->setName(name);
-
-        if (find_zone(z->getName()))
+        if (find_zone(z->getName().c_str()))
         {
             slog(LOG_ALL, 0, "ZONE BOOT: Duplicate zone name [%s] not allowed", z->getName());
             exit(42);
@@ -559,10 +495,8 @@ void generate_zone_indexes()
         }
 
         /* read templates */
-        z->setNumOfDILTemplates(0);
         generate_templates(f, z);
 
-        z->setNumOfFileIndexes(0);
         z->setZoneResetCommands(nullptr);
         generate_file_indexes(f, z);
         z->setNumOfRooms(g_room_number); /* Number of rooms in the zone */
@@ -1368,21 +1302,16 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
  */
 void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
 {
-    FILE *f = nullptr;
-    char buf[256];
-
-    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->getZone()->getFilename());
-
-    if ((f = fopen_cache(buf, "rb")) == nullptr)
+    std::filesystem::path buf{g_cServerConfig.getZoneDir()};
+    buf += org_fi->getZone()->getFilename();
+    buf += ".data";
+    FILE *f = fopen_cache(buf.c_str(), "rb");
+    if (f == nullptr)
     {
         error(HERE, "Couldn't open %s for reading.", buf);
     }
 
     pBuf->FileRead(f, org_fi->getFilepos(), org_fi->getLength());
-
-    // bread_block(f, org_fi->filepos, org_fi->length, buffer);
-
-    /* was fclose(f) */
 }
 
 void bonus_setup(unit_data *u)
@@ -1436,7 +1365,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
     u = read_unit_string(&g_FileBuffer,
                          org_fi->getType(),
                          org_fi->getLength(),
-                         str_cc(org_fi->getName(), org_fi->getZone()->getName()),
+                         str_cc(org_fi->getName(), org_fi->getZone()->getName().c_str()),
                          ins_list);
     u->set_fi(org_fi);
 
@@ -1474,15 +1403,8 @@ void read_all_rooms()
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
-        g_boot_zone = z->second;
-
-        for (auto fi = z->second->cgetFileIndexMap().begin(); fi != z->second->cgetFileIndexMap().end(); fi++)
-        {
-            if (fi->second->getType() == UNIT_ST_ROOM)
-            {
-                read_unit(fi->second);
-            }
-        }
+        g_boot_zone = z->second; // TODO This looks terrible, setting a global before each function call, check if it can be removed
+        z->second->readAllUnitRooms();
     }
 
     g_boot_zone = nullptr;
@@ -1708,21 +1630,20 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
 
 void read_all_zones()
 {
-    char filename[FI_MAX_ZONENAME + 41];
-    FILE *f = nullptr;
-
     for (auto zone = g_zone_info.mmp.begin(); zone != g_zone_info.mmp.end(); zone++)
     {
         read_zone_error = zone->second;
 
-        if (strcmp(zone->second->getName(), "_players") == 0)
+        if (zone->second->getName() == "_players")
         {
             continue;
         }
 
-        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->getFilename());
-
-        if ((f = fopen(filename, "rb")) == nullptr)
+        std::filesystem::path filename{g_cServerConfig.getZoneDir()};
+        filename += zone->second->getFilename();
+        filename += ".reset";
+        FILE *f = fopen(filename.c_str(), "rb");
+        if (f == nullptr)
         {
             slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->getFilename());
             exit(10);
@@ -1847,7 +1768,6 @@ void boot_db()
 
     slog(LOG_OFF, 0, "Performing boot time reset.");
     reset_all_zones();
-
 
     touch_file(g_cServerConfig.getFileInLogDir(STATISTICS_FILE));
 }

@@ -54,6 +54,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 
 /* report error in instruction */
 void dil_stop_special(unit_data *unt, dilprg *aprg)
@@ -271,22 +272,25 @@ void dilfi_send_done(dilprg *p)
         {
             switch (v8->val.num)
             {
-               case CMD_AUTO_ENTER:
-                  send_done((unit_data *)v2->val.ptr,
-                           (unit_data *)v3->val.ptr,
-                           (unit_data *)v4->val.ptr,
-                           v5->val.num,
-                           &g_cmd_auto_enter,
-                           (const char *)v6->val.ptr,
-                           (unit_data *)v7->val.ptr);
-                  break;
+                case CMD_AUTO_ENTER:
+                    send_done((unit_data *)v2->val.ptr,
+                              (unit_data *)v3->val.ptr,
+                              (unit_data *)v4->val.ptr,
+                              v5->val.num,
+                              &g_cmd_auto_enter,
+                              (const char *)v6->val.ptr,
+                              (unit_data *)v7->val.ptr);
+                    break;
 
-               default:
-                  slog(LOG_ALL, 0, "DIL %s@%s on %s: Unknown CMD_AUTO_ value %d.",
-                     p->fp->tmpl->prgname,
-                     p->fp->tmpl->zone->getName(),
-                     p->sarg->owner->getFileIndexSymName(), v8->val.num);
-                  break;
+                default:
+                    slog(LOG_ALL,
+                         0,
+                         "DIL %s@%s on %s: Unknown CMD_AUTO_ value %d.",
+                         p->fp->tmpl->prgname,
+                         p->fp->tmpl->zone->getName(),
+                         p->sarg->owner->getFileIndexSymName(),
+                         v8->val.num);
+                    break;
             }
         }
         else if ((cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
@@ -524,7 +528,6 @@ void dilfi_stora(dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char filename[512];
 
     if (dil_type_check("storeall", p, 3, v1, FAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_SP, v3, FAIL_NULL, 1, DILV_INT))
     {
@@ -543,41 +546,13 @@ void dilfi_stora(dilprg *p)
                 }
                 else
                 {
-                    if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
+                    std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                    filename += "/units/";
+                    if (!std::filesystem::exists(filename))
                     {
-                        if (!file_exists(g_cServerConfig.getDILFileDir()))
-                        {
-#ifdef _WINDOWS
-                            _mkdir(g_cServerConfig.m_dilfiledir);
-#else
-                            mkdir(g_cServerConfig.getDILFileDir().c_str(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                        }
-                        strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
+                        std::filesystem::create_directories(filename);
                     }
-                    else
-                    {
-                        if (!file_exists(p->frame[0].tmpl->zone->getDILFilePath()))
-                        {
-#ifdef _WINDOWS
-                            _mkdir(p->frame[0].tmpl->zone->getDILFilePath());
-#else
-                            mkdir(p->frame[0].tmpl->zone->getDILFilePath(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                        }
-
-                        strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
-                    }
-                    strcat(filename, "/units/");
-                    if (!file_exists(filename))
-                    {
-#ifdef _WINDOWS
-                        _mkdir(filename);
-#else
-                        mkdir(filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                    }
-                    strcat(filename, (char *)v2->val.ptr);
+                    filename += (char *)v2->val.ptr;
 
                     if (v3->val.num >= 1)
                     {
@@ -589,12 +564,12 @@ void dilfi_stora(dilprg *p)
                         }
                         else
                         {
-                            store_all_unit((unit_data *)v1->val.ptr, filename, TRUE);
+                            store_all_unit((unit_data *)v1->val.ptr, filename.c_str(), TRUE);
                         }
                     }
                     else
                     {
-                        store_all_unit((unit_data *)v1->val.ptr, filename, FALSE);
+                        store_all_unit((unit_data *)v1->val.ptr, filename.c_str(), FALSE);
                     }
                 }
             }
@@ -2422,8 +2397,6 @@ void dilfi_exec(dilprg *p)
     delete v2;
 }
 
-
-
 /* Execute command */
 void dilfi_waitnoop(dilprg *p)
 {
@@ -2444,7 +2417,6 @@ void dilfi_waitnoop(dilprg *p)
         p->waitcmd--;
     }
 }
-
 
 /* Wait */
 void dilfi_wit(dilprg *p)

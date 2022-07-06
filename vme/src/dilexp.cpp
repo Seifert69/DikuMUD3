@@ -57,6 +57,7 @@ $Revision: 2.18 $
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <filesystem>
 #include <string>
 
 #include <boost/filesystem/operations.hpp>
@@ -1351,7 +1352,6 @@ void dilfe_resta(dilprg *p)
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    char filename[512];
 
     v->type = DILV_UP;
 
@@ -1362,6 +1362,7 @@ void dilfe_resta(dilprg *p)
             {
                 case DILV_UP:
                 case DILV_NULL:
+                {
                     if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
                     {
                         szonelog(p->frame->tmpl->zone,
@@ -1378,29 +1379,23 @@ void dilfe_resta(dilprg *p)
                         break;
                     }
 
-                    if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
-                    {
-                        strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
-                    }
-                    else
-                    {
-                        strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
-                    }
-                    strcat(filename, "/units/");
-                    strcat(filename, (char *)v1->val.ptr);
+                    std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                    filename += "/units/";
+                    filename += (char *)v1->val.ptr;
                     if (v2->val.ptr)
                     {
-                        v->val.ptr = restore_all_unit(filename, (unit_data *)v2->val.ptr);
+                        v->val.ptr = restore_all_unit(filename.c_str(), (unit_data *)v2->val.ptr);
                     }
                     else
                     {
-                        v->val.ptr = restore_all_unit(filename, p->owner);
+                        v->val.ptr = restore_all_unit(filename.c_str(), p->owner);
                     }
                     if (v->val.ptr == nullptr)
                     {
                         v->type = DILV_NULL;
                     }
-                    break;
+                }
+                break;
                 case DILV_FAIL:
                     v->type = DILV_FAIL;
                 default:
@@ -1752,7 +1747,6 @@ void dilfe_ldstr(dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     char *sstr = nullptr;
-    char filename[512];
 
     v->type = DILV_INT;
 
@@ -1773,26 +1767,20 @@ void dilfe_ldstr(dilprg *p)
                     {
                         szonelog(p->frame->tmpl->zone, "DIL '%s' attempted to loadstr n illegal file name.", p->frame->tmpl->prgname);
                         v->val.num = FALSE;
-                        ;
                     }
                     else
                     {
                         sstr = nullptr;
-                        if (p->frame[0].tmpl->zone->getDILFilePath())
-                        {
-                            strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
-                        }
-                        else
-                        {
-                            strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
-                        }
-                        strcat(filename, "/strings/");
-                        strcat(filename, (char *)v1->val.ptr);
-                        v->val.num = load_string(filename, &sstr);
+                        std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                        filename += "/strings/";
+                        filename += (char *)v1->val.ptr;
+                        v->val.num = load_string(filename.c_str(), &sstr);
                         if (!str_is_empty(sstr))
                         {
                             if (*((char **)v2->ref))
+                            {
                                 FREE(*((char **)v2->ref));
+                            }
                             *((char **)v2->ref) = str_dup(sstr);
                             FREE(sstr);
                         }
@@ -1801,7 +1789,6 @@ void dilfe_ldstr(dilprg *p)
                             v2->val.ptr = nullptr;
                         }
                     }
-
                     break;
                 case DILV_FAIL:
                 case DILV_NULL:
@@ -1830,8 +1817,6 @@ void dilfe_delstr(dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    int ret = 0;
-    char filename[512];
 
     v->type = DILV_INT;
 
@@ -1851,25 +1836,10 @@ void dilfe_delstr(dilprg *p)
             }
             else
             {
-                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
-                {
-                    strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
-                }
-                else
-                {
-                    strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
-                }
-                strcat(filename, "/strings/");
-                strcat(filename, (char *)v1->val.ptr);
-                ret = remove(filename);
-                if (ret)
-                {
-                    v->val.num = TRUE;
-                }
-                else
-                {
-                    v->val.num = FALSE;
-                }
+                std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                filename += "/strings/";
+                filename += (char *)v1->val.ptr;
+                v->val.num = remove(filename.c_str()) ? TRUE : FALSE;
             }
             break;
         case DILV_FAIL:
@@ -1889,8 +1859,6 @@ void dilfe_delunit(dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    int ret = 0;
-    char filename[512];
 
     v->type = DILV_INT;
 
@@ -1909,25 +1877,10 @@ void dilfe_delunit(dilprg *p)
             }
             else
             {
-                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
-                {
-                    strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
-                }
-                else
-                {
-                    strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
-                }
-                strcat(filename, "/units/");
-                strcat(filename, (char *)v1->val.ptr);
-                ret = remove(filename);
-                if (ret)
-                {
-                    v->val.num = TRUE;
-                }
-                else
-                {
-                    v->val.num = FALSE;
-                }
+                std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                filename += "/units/";
+                filename += (char *)v1->val.ptr;
+                v->val.num = remove(filename.c_str()) ? TRUE : FALSE;
             }
 
             break;
@@ -1952,7 +1905,6 @@ void dilfe_svstr(dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     char *sstr = nullptr;
-    char filename[511];
 
     v->type = DILV_INT;
 
@@ -1979,44 +1931,16 @@ void dilfe_svstr(dilprg *p)
                             }
                             else
                             {
-                                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
+                                std::filesystem::path filename{
+                                    p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                                filename += "/strings/";
+                                if (!std::filesystem::exists(filename))
                                 {
-                                    if (!file_exists(g_cServerConfig.getDILFileDir()))
-                                    {
-#ifdef _WINDOWS
-                                        _mkdir(g_cServerConfig.m_dilfiledir);
-#else
-                                        mkdir(g_cServerConfig.getDILFileDir().c_str(),
-                                              S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                                    }
-                                    strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
+                                    std::filesystem::create_directories(filename);
                                 }
-                                else
-                                {
-                                    if (!file_exists(p->frame[0].tmpl->zone->getDILFilePath()))
-                                    {
-#ifdef _WINDOWS
-                                        _mkdir(p->frame[0].tmpl->zone->getDILFilePath());
-#else
-                                        mkdir(p->frame[0].tmpl->zone->getDILFilePath(),
-                                              S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                                    }
-                                    strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
-                                }
-                                strcat(filename, "/strings/");
-                                if (!file_exists(filename))
-                                {
-#ifdef _WINDOWS
-                                    _mkdir(filename);
-#else
-                                    mkdir(filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                                }
-                                strcat(filename, (char *)v1->val.ptr);
+                                filename += (char *)v1->val.ptr;
                                 sstr = str_dup((char *)v2->val.ptr);
-                                v->val.num = save_string(filename, &sstr, (char *)v3->val.ptr);
+                                v->val.num = save_string(filename.c_str(), &sstr, (char *)v3->val.ptr);
                                 FREE(sstr);
                             }
 
@@ -2059,50 +1983,22 @@ void dilfe_filesz(dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
-    char filename[511];
-    FILE *fp = nullptr;
 
     v->type = DILV_INT;
 
     switch (dil_getval(v1))
     {
         case DILV_SP:
-            if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
+        {
+            std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+            filename += "/strings/";
+            if (!std::filesystem::exists(filename))
             {
-                if (!file_exists(g_cServerConfig.getDILFileDir()))
-                {
-#ifdef _WINDOWS
-                    _mkdir(g_cServerConfig.m_dilfiledir);
-#else
-                    mkdir(g_cServerConfig.getDILFileDir().c_str(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                }
-                strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
+                std::filesystem::create_directories(filename);
             }
-            else
-            {
-                if (!file_exists(p->frame[0].tmpl->zone->getDILFilePath()))
-                {
-#ifdef _WINDOWS
-                    _mkdir(p->frame[0].tmpl->zone->getDILFilePath());
-#else
-                    mkdir(p->frame[0].tmpl->zone->getDILFilePath(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-                }
-
-                strcpy(filename, p->frame[0].tmpl->zone->getDILFilePath());
-            }
-            strcat(filename, "/strings/");
-            if (!file_exists(filename))
-            {
-#ifdef _WINDOWS
-                _mkdir(filename);
-#else
-                mkdir(filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
-#endif
-            }
-            strcat(filename, (char *)v1->val.ptr);
-            if ((fp = fopen(filename, "r")) == nullptr)
+            filename += (char *)v1->val.ptr;
+            FILE *fp = fopen(filename.c_str(), "r");
+            if (fp == nullptr)
             {
                 v->val.num = -1;
             }
@@ -2111,7 +2007,8 @@ void dilfe_filesz(dilprg *p)
                 v->val.num = fsize(fp);
                 fclose(fp);
             }
-            break;
+        }
+        break;
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
@@ -3899,7 +3796,6 @@ void dilfe_udir(dilprg *p)
     dilval *v1 = p->stack.pop();
 
     cNamelist *words = new cNamelist;
-    std::string uPath;
     std::string sPath;
 
     v->type = DILV_SLP;
@@ -3912,16 +3808,9 @@ void dilfe_udir(dilprg *p)
             {
                 v->atyp = DILA_EXP;
                 v->type = DILV_SLP;
-                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
-                {
-                    uPath = g_cServerConfig.getDILFileDir();
-                    uPath = uPath + "/units";
-                }
-                else
-                {
-                    uPath = p->frame[0].tmpl->zone->getDILFilePath();
-                    uPath = uPath + "/units";
-                }
+
+                std::filesystem::path uPath{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                uPath += "/units";
 
                 sPath = (char *)v1->val.ptr;
                 if (sPath.empty())
@@ -3995,8 +3884,7 @@ void dilfe_sdir(dilprg *p)
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
     cNamelist *words = new cNamelist;
-    std::string uPath;
-    std::string sPath;
+
     v->type = DILV_SLP;
 
     switch (dil_getval(v1))
@@ -4006,18 +3894,11 @@ void dilfe_sdir(dilprg *p)
             {
                 v->atyp = DILA_EXP;
                 v->type = DILV_SLP;
-                if (str_is_empty(p->frame[0].tmpl->zone->getDILFilePath()))
-                {
-                    uPath = g_cServerConfig.getDILFileDir();
-                    uPath = uPath + "/strings";
-                }
-                else
-                {
-                    uPath = p->frame[0].tmpl->zone->getDILFilePath();
-                    uPath = uPath + "/strings";
-                }
 
-                sPath = (char *)v1->val.ptr;
+                std::filesystem::path uPath{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                uPath += "/strings";
+
+                std::string sPath{(char *)v1->val.ptr};
                 if (sPath.empty())
                 {
                     sPath = ".*";

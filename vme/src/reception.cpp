@@ -560,7 +560,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             else
             {
                 pnew_tmp = nullptr;
-                pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->getName(), fi->getZone()->getName()));
+                pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->getName(), fi->getZone()->getName().c_str()));
                 if (g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
@@ -757,7 +757,7 @@ int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen
 
 /* ========================= DIL STORE / RESTORE ======================= */
 
-void store_all_unit(unit_data *u, char *fname, int svcont)
+void store_all_unit(unit_data *u, const char *fname, int svcont)
 {
     /*fuck  if (!UNIT_FILE_INDEX (u))
         return;*/
@@ -765,9 +765,7 @@ void store_all_unit(unit_data *u, char *fname, int svcont)
     basic_save_contents(fname, u, FALSE, svcont);
 }
 
-unit_data *restore_all_unit(char *filename, unit_data *udest)
+unit_data *restore_all_unit(const char *filename, unit_data *udest)
 {
-    unit_data *u = nullptr;
-    u = base_load_contents(filename, udest);
-    return u;
+    return base_load_contents(filename, udest);
 }
