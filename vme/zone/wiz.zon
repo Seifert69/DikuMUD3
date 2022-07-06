@@ -28,6 +28,87 @@ creators {"quinn","god","gnort","carter","cabal"}
 
 %dil
 
+
+// For example call with SFB_CMD, "SFB_CMD"
+dilbegin aware listener(waitflag : integer, waitstring: string);
+var
+  as : string;
+  ms : string;
+  ts : string;
+  tt : string;
+  cs : string;
+  ecs : string;
+  args : string;
+code
+{
+   heartbeat := PULSE_SEC *30;
+
+:start:
+   wait(waitflag, TRUE);
+
+   if (command(CMD_AUTO_TICK))
+      tt := "CMD_AUTO_TICK";
+   else if (command(CMD_AUTO_COMBAT))
+      tt := "CMD_AUTO_COMBAT";
+   else if (command(CMD_AUTO_DEATH))
+      tt := "CMD_AUTO_DEATH";
+   else if (command(CMD_AUTO_UNKNOWN))
+      tt := "CMD_AUTO_UNKNOWN";
+   else if (command(CMD_AUTO_EXTRACT))
+      tt := "CMD_AUTO_EXTRACT";
+   else if (command(CMD_AUTO_MSG))
+      tt := "CMD_AUTO_MSG";
+   else if (command(CMD_AUTO_SAVE))
+      tt := "CMD_AUTO_SAVE";
+   else if (command(CMD_AUTO_ENTER))
+      tt := "CMD_AUTO_ENTER";
+   else if (command(CMD_AUTO_DAMAGE))
+      tt := "CMD_AUTO_DAMAGE";
+   else if (command(CMD_AUTO_PLAY))
+      tt := "CMD_AUTO_PLAY";
+   else if (command(CMD_AUTO_LEAVE))
+      tt := "CMD_AUTO_LEAVE";
+   else if (command(CMD_AUTO_EDIT))
+      tt := "CMD_AUTO_EDIT";
+   else
+      tt := "CMD_AUTO UNKNOWN";
+
+   if (activator)
+      as := activator.symname;
+   else
+      as := "no-activator";
+
+   if (medium)
+      ms := medium.symname;
+   else
+      ms := "no-medium";
+
+   if (target)
+      ts := target.symname;
+   else
+      ts := "no-target";
+
+   if (cmdstr)
+      cs := cmdstr;
+   else
+      cs := "NULL";
+
+   if (excmdstr)
+      ecs := excmdstr;
+   else
+      ecs := "NULL";
+
+   if (argument)
+      args := argument;
+   else
+      args := "NULL";
+
+   log(waitstring + ",  "+tt+",  activator="+as+ ",  excmdstr="+ecs+",  cmdstr="+cs+",  argument="+args+",  medium="+ms+",  target="+ts);
+   goto start;
+}
+dilend
+
+
 dilbegin do_plog(arg:string);
 var
  u:unitptr;
@@ -825,6 +906,39 @@ end
 
 
 %mobiles
+
+
+                           messenger
+
+names {"small messenger", "messenger"}
+title "a small messenger"
+descr "A small messenger is standing here."
+weight 10
+extra {}
+"He's tiny. As you look at him he mouths the words to you 'Don't kill the messenger'."
+
+BASE_NORSE_GOD(1, SEX_MALE, ARM_CLOTHES)
+
+dilcopy listener@wiz(SFB_CMD, "SFB_CMD");
+dilcopy listener@wiz(SFB_TICK, "SFB_TICK");
+dilcopy listener@wiz(SFB_DEAD, "SFB_DEAD");
+dilcopy listener@wiz(SFB_COM, "SFB_COM");
+dilcopy listener@wiz(SFB_MSG, "SFB_MSG");
+dilcopy listener@wiz(SFB_SAVE, "SFB_SAVE");
+dilcopy listener@wiz(SFB_AWARE, "SFB_AWARE");
+dilcopy listener@wiz(SFB_ACTIVATE, "SFB_ACTIVATE");
+dilcopy listener@wiz(SFB_PRE, "SFB_PRE");
+dilcopy listener@wiz(SFB_DONE, "SFB_DONE");
+dilcopy listener@wiz(SFB_EDIT, "SFB_EDIT");
+dilcopy listener@wiz(SFB_DILDESTROY, "SFB_DILDESTROY");
+dilcopy listener@wiz(SFB_PROMPT, "SFB_PROMPT");
+dilcopy listener@wiz(SFB_NOOP, "SFB_NOOP");
+dilcopy listener@wiz(SFB_PRIORITY, "SFB_PRIORITY"); // Shouldn't be activated
+dilcopy listener@wiz(SFB_RANTIME, "SFB_RANTIME"); // Shouldn't be activated
+
+end
+
+
 
      odin
 

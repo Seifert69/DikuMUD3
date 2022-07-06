@@ -11,7 +11,21 @@
 #include "essential.h"
 #include "unit_fptr.h"
 
+extern diltemplate *g_dil_change;
+extern diltemplate *g_dil_death;
+extern diltemplate *g_dil_regen;
+extern diltemplate *g_dil_follow;
+extern diltemplate *g_dil_set_witness;
+extern diltemplate *g_dil_worms;
+extern diltemplate *g_dil_on_connect;
+extern diltemplate *g_dil_dispatcher;
+extern diltemplate *g_dil_playerinit;
+extern diltemplate *g_dil_nanny_dil;
+extern diltemplate *g_dil_link_dead;
+extern diltemplate *g_dil_advance_level;
+
 /* Maximum number of consecutive instructions allowed in one tick */
+#define WAITCMD_NOOP -50       /* Take a quick break and allow other DILs to process */
 #define WAITCMD_FINISH -100    /* Stop program execution until next event */
 #define WAITCMD_STOP -150      /* Suspend execution                       */
 #define WAITCMD_QUIT -200      /* Quit the DIL program entirely           */
@@ -71,3 +85,4 @@ int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags);
 int run_dil(spec_arg *sarg);
 void dil_free_template(diltemplate *tmpl, int copy);
 void dil_function_table_setup();
+void boot_global_dil(void);

@@ -96,20 +96,15 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
         set_fighting(ch, victim, TRUE); /* Point to the killer! */
         UCHAR(ch)->setCharacterFlag(CHAR_KILL_SELF);
 
-        diltemplate *death = nullptr;
-        death = find_dil_template("death@death");
-        if (death)
-        {
-            send_death(ch);
-            dilprg *prg = dil_copy_template(death, victim, nullptr);
+        send_death(ch);
+        dilprg *prg = dil_copy_template(g_dil_death, victim, nullptr);
 
-            if (prg)
-            {
-                prg->waitcmd = WAITCMD_MAXINST - 1;
-                dil_activate(prg);
-            }
-            return;
+        if (prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1;
+            dil_activate(prg);
         }
-        die(victim);
+
+        // The old non-DIL way: die(victim);
     }
 }

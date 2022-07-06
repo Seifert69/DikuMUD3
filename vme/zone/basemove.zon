@@ -77,6 +77,82 @@ help
 
 %dil
 
+dilbegin unique dilfollow();
+var
+   s : string;
+   c : string;
+code
+{
+   heartbeat := 1;
+:start:
+   wait(SFB_DONE, TRUE);
+
+   if (not self.master)
+      quit;
+
+   if (self.master != activator)
+      goto start;
+
+   if (not visible(self, self.master))
+      goto start;
+
+   if (self.position < POSITION_STANDING)
+   {
+      if (self.position <= POSITION_SLEEPING)
+         goto start;
+      act("You're not in a position to follow $2n.", A_HIDEINV, self, self.master, null, TO_CHAR);
+      goto start;
+   }
+
+   if (command("north") or command("east") or command("south") or command("west") or command("up") or command("down"))
+   {
+      act("You follow $3n $2t.", A_HIDEINV, self, cmdstr, self.master, TO_CHAR);
+      c := cmdstr;
+      waitnoop;
+      exec(c, self);
+   }
+   else if (command("southeast") or command("northeast") or command("southwest") or command("northwest"))
+   {
+      act("You follow $3n $2t.", A_HIDEINV, self, cmdstr, self.master, TO_CHAR);
+      c := cmdstr;
+      waitnoop;
+      exec(c, self);
+   }
+   else if (command("leave"))
+   {
+      act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
+      s := argument;
+      if (s == null)
+         s := "";
+      waitnoop;
+      exec("leave "+s, self);
+   }
+   else if (command("exit"))
+   {
+      act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
+      s := argument;
+      if (s == null)
+         s := "";
+      waitnoop;
+      exec("exit "+s, self);
+   }
+   else if (command("enter"))
+   {
+      act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
+      s := argument;
+      if (s == null)
+         s := "";
+      waitnoop;
+      exec("enter "+s, self);
+   }
+   // Swim?
+   // Ride?
+   // Drive?
+
+   goto start;
+}
+dilend
+
 /* fall_dil. Copy onto a character and they will fall through rooms marked
  * with EX_FALL_THIS_WAY. When a room is entered with no such flag, they 
  * hit the ground and take damaage. 
@@ -340,8 +416,8 @@ code
 
    look_blank@baselook(self, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
 
-   send_done("climb", self, null, null, 0, "", null);
-   send_done(dirstring@function(dir), self, null, null, 0, "", null);
+   send_done("climb", self, null, null, 0, "", null, CMD_AUTO_NONE);
+   send_done(dirstring@function(dir), self, null, null, 0, "", null, CMD_AUTO_NONE);
    quit;
 }
 dilend
@@ -1841,7 +1917,7 @@ if (room_going == room_in)             /* This is here to keep infinite loops fr
    return;                             /* link back on themselves */
 
 
-send_done (dirlist.[direc], mover, null, null, 0, "", null);
+send_done (dirlist.[direc], mover, null, null, 0, "", null, CMD_AUTO_NONE);
 
 /* Using the new getfollower and followercount, we have replaced the cumbersome
    code with a sleek coding that should be much faster.
@@ -2164,7 +2240,7 @@ look_blank@baselook(mover, ":brief:");   /* get the rooms contents.  The :brief:
                                   /* to check the player for PC_BRIEF flag */
 
 
-send_done (dirlist.[direc], mover, null, null, 0, "", null);
+send_done (dirlist.[direc], mover, null, null, 0, "", null, CMD_AUTO_NONE);
 
 if (room_going == room_in)             /* This is here to keep infinite loops from happening when rooms */
    return;                             /* link back on themselves */
@@ -2561,7 +2637,7 @@ while(pc_fol != null)
 look_blank@baselook(mover, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
                                   /* to check the player for PC_BRIEF flag */
 
-send_done (dirlist.[direc], mover, null, null, 0, "", null);
+send_done (dirlist.[direc], mover, null, null, 0, "", null, CMD_AUTO_NONE);
 
 /* start dargs lava fix mess */
 if ((room_going.movement == SECT_WATER_SAIL) and (room_going.extra.["$lava_river"]==null) and (mover.outside.names.[0]=="lava boat"))
@@ -2602,7 +2678,7 @@ return;
 /* enter_dil :  This dil will replace the current enter command.  This is necessary to complete the
    use of movement into dil. do_enter() */
 
-dilbegin enter_dil (arg : string);
+dilbegin enter_dil(arg : string);
 external
    unitptr unit_room@function(unit1 : unitptr);
    integer is_hidden(unit2 : unitptr, int1 : integer, unit23 : unitptr);
@@ -2614,6 +2690,7 @@ external
 var
    item        :  unitptr;
    pc          :  unitptr;
+   u           :  unitptr;
    arg1        :  string;
    arg2        :  string;
    oppdir      :  intlist;
@@ -2735,7 +2812,13 @@ code
          act("$1n spurs $1s $3N into $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
          act("You spur your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
 
+         u := self.outside.outside;
+         send_done("enter", self, self.outside, item, 0, arg1, null, CMD_AUTO_NONE);
+         if (self.outside.outside != u) // send_done changed something, abort.
+            return;
+
          link(self.outside, item);
+         send_done("enter", self, self.outside, u, 0, arg1, null, CMD_AUTO_ENTER);
          look_blank@baselook(self, ":brief:");
 
          pc := self.outside.inside;
@@ -2755,7 +2838,13 @@ code
          act("$1n steers $1s $3N into $2n.", A_HIDEINV, self, item, self.outside, TO_REST);
          act("You steer your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
 
+         u := self.outside.outside;
+         send_done("enter", self, self.outside, item, 0, arg1, null, CMD_AUTO_NONE);
+         if (self.outside.outside != u) // send_done changed something, abort.
+            return;
+
          link(self.outside, item);
+         send_done("enter", self, self.outside, u, 0, arg1, null, CMD_AUTO_ENTER);
          look_blank@baselook(self, ":brief:");
 
          pc := self.outside.inside;
@@ -2783,7 +2872,12 @@ code
       else
          act("$1n enters $2n.", A_HIDEINV, self, item, null, TO_REST);
 
+      u := self.outside;
+      send_done("enter", self, self.outside, item, 0, arg1, null, CMD_AUTO_NONE);
+      if (self.outside != u)
+         return;
       link(self, item);
+      send_done("enter", self, item, u, 0, arg1, null, CMD_AUTO_ENTER);
 
       look_blank@baselook(self, ":brief:");
 
@@ -2791,7 +2885,6 @@ code
          act("$1n has entered the $2N.", A_HIDEINV, self, item, null, TO_REST);
    }
 
-   send_done ("enter", self, null, item, 0, "", null);
    return;
 
 
@@ -2810,7 +2903,6 @@ code
      transparent, we take that objects outside as our item */
    if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
       item := item.outside;
-
 
    /* If not a room, no doors */
    if (item.type != UNIT_ST_ROOM)
@@ -2832,276 +2924,300 @@ dilend
 
 /* exit_dil :  This dil will replace  the basecode exit and leave command.  This will make
    movement complete. */
-
+// See do_leave for exiting something with your mount
+// do_exit
 dilbegin exit_dil(arg : string);
-
 external
-
-     look_blank@baselook(l1 : unitptr, str12 : string);
-
+   look_blank@baselook(l1 : unitptr, str12 : string);
 var
+   item        :  unitptr;
+code
+{
+   /*  Check positions of player to make sure he can exit */
 
-     item        :  unitptr;
-     arg1        :  string;
-
-code{
-
-
-
-/*  Check positions of player to make sure he can exit */
-
-if (self.position == POSITION_FIGHTING)
-   {act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_FIGHTING)
+   {
+      act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_RESTING)
-   {act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_RESTING)
+   {
+      act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_SITTING)
-   {act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_SITTING)
+   {
+      act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_SLEEPING)
-   {act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_SLEEPING)
+   {
+      act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position != POSITION_STANDING)
-   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position != POSITION_STANDING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-item := self.outside;
+   item := self.outside;
 
-
-if (item.outside == null)
-   {act("But there is nowhere to exit to.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (item.outside == null)
+   {
+      act("But there is nowhere to exit to.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
-   {act("You should try dismounting instead.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
+   {
+      act("You should try dismounting instead (or use the leave command).", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    /* if it is closed, cant exit */
-if (isset(item.openflags, EX_CLOSED))
-   {act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
+   if (isset(item.openflags, EX_CLOSED))
+   {
+      act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
    }
 
    /* If the thing outside isnt enterable, cant exit */
-if (not isset(item.outside.manipulate, MANIPULATE_ENTER))
-   {act("Something is preventing you from exiting.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (not isset(item.outside.manipulate, MANIPULATE_ENTER))
+   {
+      act("Something is preventing you from exiting.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    /* IF cant fit, cant exit */
-if (can_carry(item, self, 1))
-   {act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (can_carry(item, self, 1))
+   {
+      act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
 
    /* If the thing the player is in is buried, then they cant get out! */
-if (isset(item.flags, UNIT_FL_BURIED))
-   {act("You are buried alive!", A_ALWAYS, self, arg1, null, TO_CHAR);
-    return;
-   }
-
-
-
-if ((item.outside.type == UNIT_ST_ROOM) and (item.outside.movement == SECT_WATER_SAIL))
-   {act("You jump out of the $2N and into the water! *SPLASH*", A_ALWAYS, self, item, null, TO_CHAR);
-    act("$1n jumps out of the $2N and into the water! *SPLASH*", A_ALWAYS, self, item, null, TO_REST);
-   }
-else
+   if (isset(item.flags, UNIT_FL_BURIED))
    {
-     if (item.extra.["$exit_s"])
-        act(item.extra.["$exit_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
-     else
-        act("You exit $2n.", A_ALWAYS, self, item, null, TO_CHAR);
-
-     if (item.extra.["$exit_o"])
-        act(item.extra.["$exit_o"].descr, A_ALWAYS, self, item, null, TO_REST);
-     else
-        act("$1n exits $2n.", A_HIDEINV, self, item, null, TO_REST);
-
+      act("You are buried alive!", A_ALWAYS, self, arg, null, TO_CHAR);
+      return;
    }
 
-link(self, item.outside);
+   if ((item.outside.type == UNIT_ST_ROOM) and (item.outside.movement == SECT_WATER_SAIL))
+   {
+      act("You jump out of the $2N and into the water! *SPLASH*", A_ALWAYS, self, item, null, TO_CHAR);
+      act("$1n jumps out of the $2N and into the water! *SPLASH*", A_ALWAYS, self, item, null, TO_REST);
+   }
+   else
+   {
+      if (item.extra.["$exit_s"])
+         act(item.extra.["$exit_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
+      else
+         act("You exit $2n.", A_ALWAYS, self, item, null, TO_CHAR);
 
-look_blank@baselook(self, ":brief:");
+      if (item.extra.["$exit_o"])
+         act(item.extra.["$exit_o"].descr, A_ALWAYS, self, item, null, TO_REST);
+      else
+         act("$1n exits $2n.", A_HIDEINV, self, item, null, TO_REST);
+   }
 
-if (not isset(item.flags, UNIT_FL_TRANS))
-    act("$1n has exited the $2N.", A_HIDEINV, self, item, null, TO_REST);
+   send_done("exit", self, item, item.outside, 0, arg, null, CMD_AUTO_NONE);
+   if (self.outside != item)
+      return; // send_done changed something, abort.
 
-send_done ("exit", self, null, item, 0, "", null);
-
-return;
-
-}dilend
+   link(self, item.outside);
+   if (not isset(item.flags, UNIT_FL_TRANS))
+      act("$1n has exited the $2N.", A_HIDEINV, self, item, null, TO_REST);
+   send_done("exit", self, item, item.outside, 0, "", null, CMD_AUTO_ENTER);
+   look_blank@baselook(self, ":brief:");
+   return;
+}
+dilend
 
 
 
 /* leaving_dil : This allows us two choices :  exit command to get out of a boat or vehicle, or what ever,
    but leaving the boat behind.  leave to take the boat, vehicle, horse with us.  */
-
+// do_leave
 dilbegin leave_dil(arg : string);
-
 external
-
-     look_blank@baselook(l1 : unitptr, str12 : string);
+   look_blank@baselook(l1 : unitptr, str12 : string);
 
 var
+   item        :  unitptr;
+   arg1        :  string;
+   horse       :  unitptr;
+   pc          :  unitptr;
+   u           :  unitptr;
 
-     item        :  unitptr;
-     arg1        :  string;
-     horse       :  unitptr;
-     pc          :  unitptr;
+code
+{
+   /*  Check positions of player to make sure he can exit */
 
-code{
-
-
-
-/*  Check positions of player to make sure he can exit */
-
-if (self.position == POSITION_FIGHTING)
-   {act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_FIGHTING)
+   {
+      act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_RESTING)
-   {act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_RESTING)
+   {
+      act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_SITTING)
-   {act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_SITTING)
+   {
+      act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_SLEEPING)
-   {act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_SLEEPING)
+   {
+      act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position != POSITION_STANDING)
-   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position != POSITION_STANDING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-item := self.outside;
+   item := self.outside;
 
-if ((((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC)) and (isset(item.flags, UNIT_FL_TRANS))) or
-    ((item.type == UNIT_ST_OBJ) and ((item.objecttype == ITEM_BOAT) or (item.objecttype == ITEM_VEHICLE))))
-   {horse := item;
-    item := item.outside;
+   if ((((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC)) and (isset(item.flags, UNIT_FL_TRANS))) or
+      ((item.type == UNIT_ST_OBJ) and ((item.objecttype == ITEM_BOAT) or (item.objecttype == ITEM_VEHICLE))))
+   {
+      horse := item;
+      item := item.outside;
    }
 
-if (item.outside == null)
-   {act("But there is nowhere to leave to.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (item.outside == null)
+   {
+      act("But there is nowhere to leave to.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
-   {act("You should try dismounting instead.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
+   {
+      act("You should try dismounting instead.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    /* if it is closed, cant exit */
-if (isset(item.openflags, EX_CLOSED))
-   {act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
+   if (isset(item.openflags, EX_CLOSED))
+   {
+      act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
    }
 
    /* If the thing outside isnt enterable, cant exit */
-if (not isset(self.outside.manipulate, MANIPULATE_ENTER))
-   {act("Something is preventing you from leaving.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (not isset(self.outside.manipulate, MANIPULATE_ENTER))
+   {
+      act("Something is preventing you from leaving.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    /* IF cant fit, cant exit */
-if (can_carry(item, self, 1))
-   {act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (can_carry(item, self, 1))
+   {
+      act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
-
 
    /* If the thing the player is in is buried, then they cant get out! */
-if (isset(item.flags, UNIT_FL_BURIED))
-   {act("You are buried alive!", A_ALWAYS, self, arg1, null, TO_CHAR);
-    return;
-   }
-
-if (horse)
-   {if (self.outside.type == UNIT_ST_NPC)
-       {act("$1n spurs $1s $3N out of $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
-        act("You spur your $3N out of $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
-
-        link(self.outside, item.outside);
-        look_blank@baselook(self, ":brief:");
-
-        pc := self.outside.inside;
-        while (pc != null)
-           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
-               look_blank@baselook(pc, ":brief:");
-
-            pc := pc.next;
-           }
-
-        if (not isset(item.flags, UNIT_FL_TRANS))
-            act("$1n has left the $2N on $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
-       }
-    else
-       {act("$1n steers $1s $3N out of $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
-        act("You steer your $3N out of $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
-
-        link(self.outside, item.outside);
-        look_blank@baselook(self, ":brief:");
-
-
-        pc := self.outside.inside;
-        while (pc != null)
-           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
-               look_blank@baselook(pc, ":brief:");
-
-            pc := pc.next;
-           }
-
-        if (not isset(item.flags, UNIT_FL_TRANS))
-            act("$1n has left the $2N in $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
-       }
-   }
-else    /* Not on a horse or vehicle, so just enter pc */
+   if (isset(item.flags, UNIT_FL_BURIED))
    {
-     if (item.extra.["$exit_s"])
-        act(item.extra.["$exit_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
-     else
-        act("You leave $2n.", A_ALWAYS, self, item, null, TO_CHAR);
-
-     if (item.extra.["$exit_o"])
-        act(item.extra.["$exit_o"].descr, A_ALWAYS, self, item, null, TO_REST);
-     else
-        act("$1n leaves $2n.", A_HIDEINV, self, item, null, TO_REST);
-
-    link(self, item.outside);
-
-    look_blank@baselook(self, ":brief:");
-
-    if (not isset(item.flags, UNIT_FL_TRANS))
-        act("$1n has left the $2N.", A_HIDEINV, self, item, null, TO_REST);
+      act("You are buried alive!", A_ALWAYS, self, arg1, null, TO_CHAR);
+      return;
    }
 
-send_done ("leave", self, null, item, 0, "", null);
+   if (horse)
+   {
+      if (self.outside.type == UNIT_ST_NPC)
+      {
+         act("$1n spurs $1s $3N out of $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
+         act("You spur your $3N out of $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
 
-return;
+         u := self.outside;
+         send_done("leave", self, self.outside, item.outside, 0, arg1, null, CMD_AUTO_NONE);
+         if (self.outside != u)
+            return;
+         link(self.outside, item.outside);
+         send_done("leave", self, item, u, 0, arg1, null, CMD_AUTO_ENTER);
+         look_blank@baselook(self, ":brief:");
 
-}dilend
+         pc := self.outside.inside;
+         while (pc != null)
+         {
+            if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+               look_blank@baselook(pc, ":brief:");
+            pc := pc.next;
+         }
+
+         if (not isset(item.flags, UNIT_FL_TRANS))
+            act("$1n has left the $2N on $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+      }
+      else
+      {
+         act("$1n steers $1s $3N out of $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
+         act("You steer your $3N out of $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
+
+         u := self.outside;
+         send_done("leave", self, self.outside, item.outside, 0, arg1, null, CMD_AUTO_NONE);
+         if (self.outside != u)
+            return;
+         link(self.outside, item.outside);
+         send_done("leave", self, item, u, 0, arg1, null, CMD_AUTO_ENTER);
+         look_blank@baselook(self, ":brief:");
+
+         pc := self.outside.inside;
+         while (pc != null)
+         {
+            if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+               look_blank@baselook(pc, ":brief:");
+
+            pc := pc.next;
+         }
+
+         if (not isset(item.flags, UNIT_FL_TRANS))
+            act("$1n has left the $2N in $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+      }
+   }
+   else    /* Not on a horse or vehicle, so just enter pc */
+   {
+      if (item.extra.["$exit_s"])
+         act(item.extra.["$exit_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
+      else
+         act("You leave $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+
+      if (item.extra.["$exit_o"])
+         act(item.extra.["$exit_o"].descr, A_ALWAYS, self, item, null, TO_REST);
+      else
+         act("$1n leaves $2n.", A_HIDEINV, self, item, null, TO_REST);
+
+      u := self.outside;
+      send_done("leave", self, self.outside, item.outside, 0, arg1, null, CMD_AUTO_NONE);
+      if (self.outside != u)
+         return;
+
+      link(self, item.outside);
+      send_done("leave", self, item, u, 0, arg1, null, CMD_AUTO_ENTER);
+      look_blank@baselook(self, ":brief:");
+
+      if (not isset(item.flags, UNIT_FL_TRANS))
+         act("$1n has left the $2N.", A_HIDEINV, self, item, null, TO_REST);
+   }
+
+   return;
+}
+dilend
 
 
 
@@ -3209,7 +3325,7 @@ code
    act("You open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
    act("$1n opens $2n.", A_ALWAYS, self, item, null, TO_REST);
    unset(item.openflags, EX_CLOSED);
-   send_done ("open", self, null, item, 0, "", null);
+   send_done ("open", self, null, item, 0, "", null, CMD_AUTO_NONE);
    return;
 
    :check_doors:
@@ -3305,7 +3421,7 @@ code
    if ((ct==TRUE) and (i <= MAX_EXIT))
       unset(item.exit_to[dir].exit_info[i], EX_CLOSED);
 
-   send_done ("open", self, null, null, 0, "", null);
+   send_done ("open", self, null, null, 0, "", null, CMD_AUTO_NONE);
    return;
 }
 dilend
@@ -3401,7 +3517,7 @@ code
    act("$1n closed $2n.", A_ALWAYS, self, item, null, TO_REST);
 
    set(item.openflags, EX_CLOSED);
-   send_done ("close", self, null,item, 0, "", null);
+   send_done ("close", self, null,item, 0, "", null, CMD_AUTO_NONE);
    return;
 
    :check_doors:
@@ -3478,7 +3594,7 @@ code
    if ((ct==TRUE) and (i <= MAX_EXIT))
       set(item.exit_to[dir].exit_info[i], EX_CLOSED);
 
-   send_done ("close", self, null, null, 0, "", null);
+   send_done ("close", self, null, null, 0, "", null, CMD_AUTO_NONE);
 
    return;
 }
@@ -3580,7 +3696,7 @@ code
 
    set(item.openflags, EX_LOCKED);
 
-   send_done ("lock", self, null,item, 0, "", item);
+   send_done ("lock", self, null,item, 0, "", item, CMD_AUTO_NONE);
 
    return;
 
@@ -3679,7 +3795,7 @@ code
    if (ct==TRUE)
       set(item.exit_to[dir].exit_info[i], EX_LOCKED);
 
-   send_done ("lock", self, mykey, null, 0, "", mykey);
+   send_done ("lock", self, mykey, null, 0, "", mykey, CMD_AUTO_NONE);
    return;
 }dilend
 
@@ -3780,7 +3896,7 @@ code
    act("$1n unlocks $2n - *click*", A_ALWAYS, self, item, null, TO_REST);
 
    unset(item.openflags, EX_LOCKED);
-   send_done ("unlock", self, pc, item, 0, "", pc);
+   send_done ("unlock", self, pc, item, 0, "", pc, CMD_AUTO_NONE);
    return;
 
    :check_doors:
@@ -3877,7 +3993,7 @@ code
    if (ct==TRUE)
       unset(item.exit_to[dir].exit_info[i], EX_LOCKED);
       
-   send_done ("unlock", self, mykey, null, 0, "", mykey);
+   send_done ("unlock", self, mykey, null, 0, "", mykey, CMD_AUTO_NONE);
    return;
 }
 dilend
@@ -4103,7 +4219,7 @@ code
 
    position_update(self);
 
-   send_done ("drag", self, null, item, 0, "", null);
+   send_done ("drag", self, null, item, 0, "", null, CMD_AUTO_NONE);
    return;
 }
 dilend

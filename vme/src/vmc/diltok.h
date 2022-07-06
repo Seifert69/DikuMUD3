@@ -174,6 +174,7 @@ struct symbols
     {"destroy", DILSI_DST},
     {"send_done", DILSI_SNDDONE},
     {"exec", DILSI_EXE},
+    {"waitnoop", DILSI_WAITNOOP},
     {"send", DILSI_SND},
     {"sendto", DILSI_SNT},
     {"secure", DILSI_SEC},

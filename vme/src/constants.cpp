@@ -256,7 +256,7 @@ const char *g_sfb_flags[] = {"Priority",
                              "Edit",
                              "DILDestroy",
                              "Prompt",
-                             "Unique",
+                             "NOOP",
                              nullptr};
 
 /* UNIT_MANIPULATE */

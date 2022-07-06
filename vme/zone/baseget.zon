@@ -529,7 +529,7 @@ if ((fromitem.type==UNIT_ST_OBJ) and
 
  link(item, self);
 
- send_done("get", self, fromitem, item, 0, "", null);
+ send_done("get", self, fromitem, item, 0, "", null, CMD_AUTO_NONE);
 
  return(0);
 
@@ -1136,7 +1136,7 @@ code{
       link(item, self.outside);
     }
 
- send_done("drop", self, null, item, 0, "", null);
+ send_done("drop", self, null, item, 0, "", null, CMD_AUTO_NONE);
 
  return(TRUE);
 
@@ -1418,7 +1418,7 @@ code{
 
       link(nmoney, toitem);
 
-      send_done("put", self, nmoney, toitem, 0, "", null);
+      send_done("put", self, nmoney, toitem, 0, "", null, CMD_AUTO_NONE);
 
       if (amnt2)
            nmoney := make_money(mtype, amnt2);
@@ -1444,7 +1444,7 @@ code{
 
       link(item, toitem);
 
-      send_done("put", self, item, toitem, 0, "", null);
+      send_done("put", self, item, toitem, 0, "", null, CMD_AUTO_NONE);
 
       return(1);
     }
@@ -1678,7 +1678,7 @@ code
          nmoney := make_money(mtype, amnt2);
       }
 
-      send_done("give", self, omoney, toitem, amnt, itoa(mtype), null);
+      send_done("give", self, omoney, toitem, amnt, itoa(mtype), null, CMD_AUTO_NONE);
 
       return(1);
    }
@@ -1704,7 +1704,7 @@ code
 
       link(item, toitem);
 
-      send_done("give", self, item, toitem, 0, "", null);
+      send_done("give", self, item, toitem, 0, "", null, CMD_AUTO_NONE);
 
       return(1);
    }

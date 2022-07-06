@@ -102,9 +102,9 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
 // Activate the add_crime@justice DIL
 //
 //
+#ifdef SUSPEKT
 void add_crime(unit_data *criminal, unit_data *victim, int type)
 {
-    diltemplate *tmpl = nullptr;
     dilprg *prg = nullptr;
     int crime_no = 0;
 
@@ -122,27 +122,23 @@ void add_crime(unit_data *criminal, unit_data *victim, int type)
 
     crime_no = new_crime_serial_no();
 
-    tmpl = find_dil_template("add_crime@justice");
+    prg = dil_copy_template(g_dil_add_crime, criminal, nullptr);
 
-    if (tmpl)
+    if (prg)
     {
-        prg = dil_copy_template(tmpl, criminal, nullptr);
+        prg->waitcmd = WAITCMD_MAXINST - 1;
 
-        if (prg)
-        {
-            prg->waitcmd = WAITCMD_MAXINST - 1;
-
-            prg->fp->vars[0].val.unitptr = criminal;
-            prg->fp->vars[1].val.unitptr = victim;
-            prg->fp->vars[2].val.integer = type;
-            prg->fp->vars[3].val.integer = crime_no;
-            prg->fp->vars[4].val.integer = CRIME_LIFE + 2;
-            dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-            dil_add_secure(prg, victim, prg->fp->tmpl->core);
-            dil_activate(prg);
-        }
+        prg->fp->vars[0].val.unitptr = criminal;
+        prg->fp->vars[1].val.unitptr = victim;
+        prg->fp->vars[2].val.integer = type;
+        prg->fp->vars[3].val.integer = crime_no;
+        prg->fp->vars[4].val.integer = CRIME_LIFE + 2;
+        dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+        dil_add_secure(prg, victim, prg->fp->tmpl->core);
+        dil_activate(prg);
     }
 }
+#endif
 
 // criminal points to the perpetrating char. Mandatory.
 // victim is the char subjected to a crime. Mandatory.
@@ -153,7 +149,6 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
 {
     int i = 0;
     int j = 0;
-    diltemplate *tmpl = nullptr;
     dilprg *prg = nullptr;
     dilprg *prg2 = nullptr;
     dilprg *prg3 = nullptr;
@@ -192,24 +187,20 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
     // add_crime(criminal, victim, crime_type);
 
     // prepare the set_witness function
-    tmpl = find_dil_template("set_witness@justice");
-    if (tmpl)
-    {
-        prg = dil_copy_template(tmpl, victim, nullptr);
+    prg = dil_copy_template(g_dil_set_witness, victim, nullptr);
 
-        if (prg)
-        {
-            prg->waitcmd = WAITCMD_MAXINST - 1;
-            prg->fp->vars[0].val.unitptr = criminal;
-            prg->fp->vars[1].val.unitptr = victim;
-            prg->fp->vars[2].val.integer = crime_serial_no;
-            prg->fp->vars[3].val.integer = crime_type;
-            prg->fp->vars[4].val.integer = active;
-            prg->fp->vars[5].val.string = str_dup(victim->getNames().Name());
-            dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-            dil_add_secure(prg, victim, prg->fp->tmpl->core);
-            dil_activate(prg);
-        }
+    if (prg)
+    {
+        prg->waitcmd = WAITCMD_MAXINST - 1;
+        prg->fp->vars[0].val.unitptr = criminal;
+        prg->fp->vars[1].val.unitptr = victim;
+        prg->fp->vars[2].val.integer = crime_serial_no;
+        prg->fp->vars[3].val.integer = crime_type;
+        prg->fp->vars[4].val.integer = active;
+        prg->fp->vars[5].val.string = str_dup(victim->getNames().Name());
+        dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+        dil_add_secure(prg, victim, prg->fp->tmpl->core);
+        dil_activate(prg);
     }
 
     // Find any bystanders and register them as witnesses
@@ -220,24 +211,20 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
         if (CHAR_CAN_SEE(UVI(i), criminal))
         {
             /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
-            tmpl = find_dil_template("set_witness@justice");
-            if (tmpl)
-            {
-                prg2 = dil_copy_template(tmpl, UVI(i), nullptr);
+            prg2 = dil_copy_template(g_dil_set_witness, UVI(i), nullptr);
 
-                if (prg2)
-                {
-                    prg2->waitcmd = WAITCMD_MAXINST - 1;
-                    prg2->fp->vars[0].val.unitptr = criminal;
-                    prg2->fp->vars[1].val.unitptr = UVI(i);
-                    prg2->fp->vars[2].val.integer = crime_serial_no;
-                    prg2->fp->vars[3].val.integer = crime_type;
-                    prg2->fp->vars[4].val.integer = active;
-                    prg2->fp->vars[5].val.string = str_dup(victim->getNames().Name());
-                    dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
-                    dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
-                    dil_activate(prg2);
-                }
+            if (prg2)
+            {
+                prg2->waitcmd = WAITCMD_MAXINST - 1;
+                prg2->fp->vars[0].val.unitptr = criminal;
+                prg2->fp->vars[1].val.unitptr = UVI(i);
+                prg2->fp->vars[2].val.integer = crime_serial_no;
+                prg2->fp->vars[3].val.integer = crime_type;
+                prg2->fp->vars[4].val.integer = active;
+                prg2->fp->vars[5].val.string = str_dup(victim->getNames().Name());
+                dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
+                dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
+                dil_activate(prg2);
             }
         }
     }
@@ -253,8 +240,7 @@ void log_crime(unit_data *criminal, unit_data *victim, ubit8 crime_type, int act
             {
                 if (CHAR_CAN_SEE(UVI(i), UVI(j)))
                 {
-                    tmpl = find_dil_template("set_witness@justice");
-                    prg3 = dil_copy_template(tmpl, UVI(i), nullptr);
+                    prg3 = dil_copy_template(g_dil_set_witness, UVI(i), nullptr);
 
                     if (prg3)
                     {

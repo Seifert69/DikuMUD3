@@ -61,6 +61,34 @@ void SetFptrTimer(unit_data *u, unit_fptr *fptr)
     }
 }
 
+
+void ResetFptrTimerNoop(unit_data *u, unit_fptr *fptr)
+{
+    membug_verify_class(u);
+    membug_verify_class(fptr);
+    membug_verify(fptr->data);
+
+    assert(!u->is_destructed());
+    assert(!fptr->is_destructed());
+
+    // The NOOP command might mess up an existing heartbeat timer. 
+    // At least I think it migt. Maybe not. But for now it's only
+    // used in DIL follow which doesn't need a wait(SFB_TICK).
+    //
+    // I believe the design is to have max 1 event per DIL in the
+    // queue, so we need to remove any current SFB_TICK event pending.
+    //
+    g_events.remove(special_event, u, fptr);
+
+    // Make sure this gets processed during the current 
+    // eventqueue::process cycle
+    fptr->setEventQueue(g_events.add(0, special_event, u, fptr));
+
+    membug_verify_class(fptr);
+    membug_verify(fptr->data);
+}
+
+
 void ResetFptrTimer(unit_data *u, unit_fptr *fptr)
 {
     membug_verify_class(u);
@@ -139,7 +167,7 @@ void special_event(void *p1, void *p2)
     {
         if (g_unit_function_array[fptr->getFunctionPointerIndex()].func)
         {
-            if (fptr->isActivateOnEventFlagSet(SFB_TICK))
+            if (fptr->isActivateOnEventFlagSet(SFB_TICK|SFB_NOOP))
             {
 #ifdef DEBUG_HISTORY
                 add_func_history(u, fptr->getFunctionPointerIndex(), SFB_TICK);

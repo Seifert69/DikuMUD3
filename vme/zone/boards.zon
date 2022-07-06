@@ -314,7 +314,7 @@ while (i<ln)
    act("$1n finishes posting to the board.", A_ALWAYS,self,null,null,TO_REST);
 
    :quitboard:
-   send_done("reply",self,null,u,0,arg,null);
+   send_done("reply",self,null,u,0,arg,null, CMD_AUTO_NONE);
    killedit(self);
    quit;
 }
@@ -760,7 +760,7 @@ else
 sendtext("<pre>"+buff+"</pre>",self);
 
 :read_quit:
- send_done("read",self,null,u,0,arg,null);
+ send_done("read",self,null,u,0,arg,null, CMD_AUTO_NONE);
 quit;
 }
 dilend
@@ -1063,7 +1063,7 @@ goto quitboard;
 	A_ALWAYS,self,null,null,TO_REST);
 
 :quitboard:
- send_done("write",self,null,u,0,arg,null);
+ send_done("write",self,null,u,0,arg,null, CMD_AUTO_NONE);
 killedit(self);
 		 quit;
 }

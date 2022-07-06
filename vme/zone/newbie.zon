@@ -749,6 +749,14 @@ goto start;
 }
 dilend
 
+
+#define WAITFORCMD(msg) \
+   i := 1; \
+   while (TRUE) { wait(SFB_CMD | SFB_TICK, TRUE); \
+   if (i % 3 == 0) \
+      act(msg, A_ALWAYS, self,null,pc,TO_VICT); \
+      i := i + 1; }
+
 /* newbie guide tour part one basic commands*/
 dilbegin integer newbie_part1(pc : unitptr);
 var
@@ -757,6 +765,10 @@ var
    h:integer;
    s:string;
    qst:extraptr;
+
+   i1 : integer;
+   i2 : integer;
+   i3 : integer;
 code
 {
    :init:
@@ -769,201 +781,153 @@ code
    secure(pc, stop);
 
    :quest_accepted:
-   act("$1n says 'Ok now, here we are, this is our Newbie Guide Chat room," +
-     " just perfect for this little talk.'",
-      A_ALWAYS, self,null,pc,TO_VICT);
+   act("$1n says 'Ok now, here we are, this is our Newbie Guide Chat room, just perfect for this little talk.'", A_ALWAYS, self,null,pc,TO_VICT);
    goto stage1;
 
    :no_quest:
    pause;
-   exec("tell "+pc.name+" I wish thee well then, make use of the help "+
-     "files frequently as they will be your only source of " +
-     "information.",self);
+   exec("tell "+pc.name+" I wish thee well then, make use of the help files frequently as they will be your only source of information.",self);
    pause;
-   exec("tell "+pc.name+" If you wish to get my help later, just say 'help me"+
-   "newbie guide'. You must do this before reaching "+
-     "level six!", self);
+   exec("tell "+pc.name+" If you wish to get my help later, just say 'help me newbie guide'. You must do this before reaching level six!", self);
    pause;
    goto stop;
 
-   :stage1:
+   i1 := interrupt(SFB_DONE, command ("say") and (pc==activator) and (argument =="go on"), hurry);
+
+:stage1:
+   i2 := interrupt(SFB_DONE, command("say") and (pc==activator) and (getword(argument) =="skip"), stage2);
    pause;
-act ("$1n says 'If we get separated during the course " +
-     "of your training one of two things may occur.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'If you want to skip a little forward, jus say 'skip' anytime and I'll skip forward a bit.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'If another newbie logs in before we can find each " +
-     "other again I will most likely be helping them.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'If we get separated during the course of your training one of two things may occur.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'If I am not you can just say help me newbie guide
-and I will "+
-   "find you and bring you back to Udgaard to finish your training.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act("$1n says 'If another newbie logs in before we can find each other again I will most likely be helping them.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'If I am busy, one of the other many newbie guides will come "+
-     "and help you.",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act("$1n says 'If I am not you can just say help me newbie guide and I will find you and bring you back to Udgaard to finish your training.'",  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act("$1n says 'If I am busy, one of the other many newbie guides will come and help you.", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
 
-/* Players forget to turn it back on.
+   // Players forget to turn it back on.
+   // act ("$1n says 'Now, it would probably be best if you turned off your shout and tell.'",  A_ALWAYS, self,null,pc,TO_VICT);
+   // act ("$1n says 'Otherwise it may be hard to follow what I say during the course of training.'", A_ALWAYS, self,null,pc,TO_VICT);
+   // pause;
+   // act("$1n says 'To do this, type 'change shout' and 'change tell'. Please do this now.'",  A_ALWAYS, self,null,pc,TO_VICT);
+   // pause;
+   // act ("$1n says you can toggle many different things with the change command. When we are finished our tour you can type change to see them all'", A_ALWAYS, self,null,pc,TO_VICT);
+   // pause;
+   // act ("$1n says 'Remember to turn them back on again after training by typing each command again.'",  A_ALWAYS, self,null,pc,TO_VICT);
+   // pause; */
 
- act ("$1n says 'Now, it would probably be best if you turned off " +
-     "your shout and tell.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-act ("$1n says 'Otherwise it may be hard to follow what I say " +
-     "during the course of training.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-act ("$1n says 'To do this, type 'change shout' and 'change tell'. Please " +
-     "do this now.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-act ("$1n says you can toggle many different things with the
-change command."+
-        "When we are finished our tour you can type change to see them all'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'Remember to turn them back on again after training " +
-     "by typing each command again.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-     pause; */
+:stage2:
+   clear(i2);
+   i2 := interrupt(SFB_DONE, command("say") and (pc==activator) and (getword(argument) =="skip"), stage3);
 
-   act ("$1n says 'The first thing I will talk about are basic mud commands.'",
-   A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'If you have played other muds, you can skip this part by saying 'go on' and I will move on to more Valhalla specific topics.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-   act ("$1n says 'If you have played other muds, you can skip this part by saying "+
-   "'go on' and I will move on to more Valhalla specific topics.'",
-   A_ALWAYS, self,null,pc,TO_VICT);
-   h:=interrupt (SFB_DONE, command ("say") and
-   (pc==activator) and
-   (argument =="go on"), hurry);
+   act ("$1n says 'The first thing I will talk about are basic mud commands.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Before we start I would like to mention that most commands can be abbreviated. For example 'l' will work for 'look' and 'inv' will work for 'inventory''", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You must first learn the 'look' command - try to type: 'look' (do not type the ' around look).'", A_ALWAYS, self,null,pc,TO_VICT);
+   i3 := interrupt(SFB_DONE, command("look") and (pc==activator), looked);
 
+   WAITFORCMD("$1n says 'You must type 'look' before we can go on.'");
+
+:looked:
+   clear(i3);
+   act("$1n says 'Very good! What you see is the description of the location in which we are standing as well as any objects and/or people that are here.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-   act ("$1n says 'Before we start I would like to mention that most commands "+
-         " can be abbreviated. For example 'l' will work for 'look' and "+
-         "'inv' will work for 'inventory''",
-     A_ALWAYS, self,null,pc,TO_VICT);
+   i3 := interrupt(SFB_CMD, command("who") and (pc==activator), whoed);
+   act("$1n says 'If you would like to see a list of the people that are currently playing Valhalla you may do so with the 'who' command.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-   act ("$1n says 'You must first learn the 'look' command - try to type: "+
-     "'look' (do not type the ' around look).'",
-      A_ALWAYS, self,null,pc,TO_VICT);
-   i := TRUE;
-   while (i)
-   {
-      wait(SFB_DONE | SFB_TICK, activator == pc);
-      if (not command("look"))
-      {
-act ("$1n says 'You must type 'look' before we can go on.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-      }
-      else
-     i := FALSE;
-   }
-act ("$1n says 'Very good! What you see is the description of the location "+
-     "in which we are standing as well as any objects and/or "+
-     "people that are here.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'The 'who' command will show you all the players visible to you that are currently playing.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'If you would like to see a list of the people that are currently "+
-     "playing Valhalla you may do so with the 'who' command.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'Please type 'who' now.'", A_ALWAYS, self,null,pc,TO_VICT);
+   WAITFORCMD("$1n says 'You must type 'who' before we can go on.'");
+
+:whoed:
+   clear(i3);
    pause;
-act ("$1n says 'The 'who' command will show you all the players visible to "+
-         "you that are currently playing.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'Great.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'Please type 'who' now.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   wait(SFB_CMD | SFB_TICK, command("who") and (activator == pc));
+   act ("$1n says 'You may notice that some people on the who list have (Admin) after their names. These are the people that help run the game.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'Great.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'If you have a 'game' related question you can talk to any Admin on line and ask for help. Remember however that immortals are not allowed to interfere with game play.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'You may notice that some people on the who list have "+
-        "(Admin) after their names. These are the people that help "+
-         "run the game.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'You can also get a list of Admin and their email addresses by typing 'wizlist''",  A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'If you have a 'game' related question you can talk to "+
-        "any Admin on line and ask for help. Remember however that "+
-        "immortals are not allowed to interfere with game play.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-act ("$1n says 'You can also get a list of Admin and their email addresses by typing "+
-        "'wizlist''",
-  A_ALWAYS, self,null,pc,TO_VICT);
+
+:stage3:
+   clear(i2);
+   i2 := interrupt(SFB_DONE, command("say") and (pc==activator) and (getword(argument) =="skip"), stage4);
+
+   act ("$1n says 'Next I would like to talk to you about communicating. The say command will allow you to speak to others in the same room as you. Try this now. type: 'say hello''", A_ALWAYS, self,null,pc,TO_VICT);
+   i3 := interrupt(SFB_DONE, command("say") and (pc==activator) and (getword(argument) != "skip"), said);
+   WAITFORCMD("$1n says 'You must type 'say hello' before we can go on.'");
+
+:said:
+   clear(i3);
    pause;
-act ("$1n says 'Next I would like to talk to you about communicating. "+
-     "The say command will allow you to speak to others in the same "+
-     "room as you. Try this now. type: 'say hello''",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   wait(SFB_DONE | SFB_TICK, command("say") and (activator == pc));
-  pause;
-act ("$1n says 'Very good.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-act ("$1n says 'There may be times when you want to communicate with someone "+
+   act("$1n says 'Very good.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'There may be times when you want to communicate with someone "+
         "that is not in the same room as you. Or you wish to communicate "+
-        "privately with someone. This can be done with the 'tell' command.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+        "privately with someone. This can be done with the 'tell' command.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'You use tell command like this 'tell <name> <message>'. Try "+
-        "this now, type: 'tell "+self.name+" hello''",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   wait(SFB_DONE | SFB_TICK, command("tell")
-     and (activator == pc) and (target== self));
-   pause;
-act ("$1n says 'Perfect.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-act ("$1n says 'You are bound to come across a time you would like to speak "+
-     "to everyone in the game. This can be done with the 'shout' "+
-        "command. It works the same as the say command but everyone will "+
-         "hear you.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-act ("$1n says 'I would like to remind you that this is a family game and there "+
-     "are often young children playing so you are expected to keep your "+
-     "language on the shout channel clean.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-act ("$1n says 'One last form of communication we have on Valhalla is channels.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-act ("$1n says 'These are particularly important because some of them  are live integrated with Discord. So you can get help even if no other players are online.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-act ("$1n says 'You can create as many or as few channels as you like. Type "+
-        "'comm help' to get information on how to do this.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
- pause;
-act ("$1n says 'To talk to other players on the newbie channel or to get help "+
-        "type newbie and what you want to say.",	A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says ' For example try this now - type 'newbie hello everyone!'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;  
-act ("$1n says 'Newbie comm is also a great place to ask for help. And it goes to Discord. "+
-        "If you lose your corpse ask on newbie for help retrieving it!'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'There will be questions you have that I do not cover in the "+
-        "course of our chat. You can usually find helps for such times in "+
-        "our help files.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2 '",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'To get a listing of help topics you simply type 'help help'. "+
-        "Do this now please.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'You use tell command like this 'tell <name> <message>'. Try "+
+        "this now, type: 'tell "+self.name+" hello''", A_ALWAYS, self,null,pc,TO_VICT);
 
-   wait(SFB_CMD | SFB_TICK, command("help") and ("help" in argument));
+   i3 := interrupt(SFB_DONE, command("tell") and (pc==activator) and (target == self), told);
+   WAITFORCMD("$1n says 'You must type 'tell $1N hello' before we can go on.'");
+
+:told:
+   clear(i3);
    pause;
-   act("$1n says 'Very good. Now we will now discuss manipulation of objects.'",
-      A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'Perfect.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You are bound to come across a time you would like to speak "+
+     "to everyone in the game. This can be done with the 'shout' "+
+        "command. It works the same as the say command but everyone will hear you.'",  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'I would like to remind you that this is a family game and there "+
+     "are often young children playing so you are expected to keep your "+
+     "language on the shout channel clean.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+
+:stage4:
+   clear(i2);
+   i2 := interrupt(SFB_DONE, command("say") and (pc==activator) and (getword(argument) =="skip"), stage5);
+
+   act ("$1n says 'One last form of communication we have on Valhalla is channels.'",  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'These are particularly important because some of them  are live integrated with Discord. So you can get help even if no other players are online.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You can create as many or as few channels as you like. Type 'comm help' to get information on how to do this.'",  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To talk to other players on the newbie channel or to get help type newbie and what you want to say.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'For example try this now - type 'newbie hello everyone in the game and on Discord!'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;  
+   act ("$1n says 'Newbie comm is also a great place to ask for help. And it goes to Discord. "+
+        "If you lose your corpse ask on newbie for help retrieving it!'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'There will be questions you have that I do not cover in the "+
+        "course of our chat. You can usually find helps for such times in "+
+        "our help files.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2 '", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To get a listing of help topics you simply type 'help help'. "+
+         "Do this now please.'", A_ALWAYS, self,null,pc,TO_VICT);
+
+   i3 := interrupt(SFB_CMD, command("help") and (pc==activator) and (getword(argument) == "help"), helped);
+   WAITFORCMD("$1n says 'You must type 'help help' before we can go on.'");
+
+:helped:
+   clear(i3);
+   pause;
+   act("$1n says 'Very good. Now we will now discuss manipulation of objects.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
    u := load("silring@newbie");
    u.height := pc.height;
@@ -973,70 +937,67 @@ act ("$1n says 'To get a listing of help topics you simply type 'help help'. "+
          " your 'inventory'. You can do this by typing the word  'inventory', "+
          "please try this now.'", A_ALWAYS, self,null,pc,TO_VICT);
 
-   wait(SFB_CMD | SFB_TICK, command("inventory") and (activator == pc));
-   pause;
-act ("$1n says 'Good! Notice that the ring I just gave you is listed "+
-     "in your inventory.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-   pause;
-act ("$1n says 'Now, please wear the ring on your finger by typing 'wear ring'.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   i3 := interrupt(SFB_CMD, command("inventory") and (pc==activator), inved);
+   WAITFORCMD("$1n says 'You must type 'inventory' before we can go on.'");
 
-   wait(SFB_DONE | SFB_TICK, command("wear") and (activator == pc) and
-   ((medium.nameidx+"@"+medium.zoneidx)=="silring@newbie"));
+:inved:
+   clear(i3);
    pause;
+   act ("$1n says 'Good! Notice that the ring I just gave you is listed in your inventory.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'The ring you just wore is no longer in your 'inventory', "+
+   act ("$1n says 'Now, please wear the ring on your finger by typing 'wear ring'.'", A_ALWAYS, self,null,pc,TO_VICT);
+
+   i3 := interrupt(SFB_DONE, command("wear") and (pc==activator) and (medium.symname=="silring@newbie"), worn);
+   WAITFORCMD("$1n says 'You must type 'wear ring' before we can go on.'");
+
+:worn:
+   clear(i3);
+   pause;
+   act ("$1n says 'The ring you just wore is no longer in your 'inventory', "+
      "because you are wearing it. To see the things you are wearing, use "+
-     "the 'equipment' command, try this now.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+     "the 'equipment' command, try this now.'",  A_ALWAYS, self,null,pc,TO_VICT);
 
-   wait(SFB_CMD | SFB_TICK, command("equipment") and (activator == pc));
-   pause;
-act ("$1n says 'To remove the things you are wearing, you can use the "+
-     "'remove' command, for example 'remove ring'.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-act ("$1n says 'That ring will provide you light until you're level 20.'",
-     A_ALWAYS, self,null,pc,TO_VICT);
+   i3 := interrupt(SFB_DONE, command("equipment") and (pc==activator), equipped);
+   WAITFORCMD("$1n says 'You must type 'equipment' before we can go on.'");
 
-act ("$1n says 'Now onto movement.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+:equipped:
+   clear(i3);
    pause;
-act ("$1n says 'In order to move around the game you must first know "+
-        "which direction you can go.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-act ("$1n says 'You can type 'exits' or you can type 'direction'. Give this  "+
-        "a try now. type 'exits''",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   wait(SFB_CMD | SFB_TICK, command("exits") and (activator == pc));
-
+   act ("$1n says 'To remove the things you are wearing, you can use the 'remove' command, for example 'remove ring'.'",  A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'What you see is the obvious directions you can leave in. "+
-     "There are six directions, 'north', 'east', 'south', 'west', 'up' "+
-     "and 'down''",
-  A_ALWAYS, self,null,pc,TO_VICT);
-  pause;
-act ("$1n says 'To move in a specific direction you simple type the direction. "+
-      "You can also use just the first letter of the direction. Most find "+
-      "this to be easier.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-act ("$1n says 'If you can also type 'change exits' if you want to "+
-      "always have the obvious exits in a room displayed.",
-  A_ALWAYS, self,null,pc,TO_VICT);  
-  pause;
-act ("$1n says 'One last command I would like to tell you about before we move "+
-       "on  is 'commands'. This will give you a list of every command in "+
-        "the game.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-//XXX qst:=NEWBIE_ONGOING in pc.quests;
-//XXX qst.descr:="part 1 done";
-return (TRUE);
+   act ("$1n says 'That ring will provide you light until you're level 20.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
 
-   :hurry:
+:stage5:
+   clear(i2);
+   i2 := interrupt(SFB_DONE, command("say") and (pc==activator) and (getword(argument) =="skip"), stage6);
+   act ("$1n says 'Now onto movement.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'In order to move around the game you must first know which direction you can go.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You can type 'exits' or you can type 'direction'. Give this  a try now. type 'exits''", A_ALWAYS, self,null,pc,TO_VICT);
+   i3 := interrupt(SFB_CMD, command("exits") and (pc==activator), exitsed);
+   WAITFORCMD("$1n says 'You must type 'exits' before we can go on.'");
+
+:exitsed:
+   clear(i3);
+   pause;
+   act ("$1n says 'What you see is the obvious directions you can leave in. "+
+     "There are six directions, 'north', 'east', 'south', 'west', 'up' and 'down''", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To move in a specific direction you simple type the direction. "+
+      "You can also use just the first letter of the direction. Most find this to be easier.'", A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'If you can also type 'change exits' if you want to always have the obvious exits in a room displayed.", A_ALWAYS, self,null,pc,TO_VICT);  
+   pause;
+:stage6:
+   clear(i2);
+   act ("$1n says 'One last command I would like to tell you about before we move "+
+       "on  is 'commands'. This will give you a list of every command in the game.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   return (TRUE);
+
+:hurry:
+   clear(i1);
    pause;
    act ("$1n says 'Ah!  So you're some what familiar with muds.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;   
@@ -1044,28 +1005,19 @@ return (TRUE);
    u.height := pc.height;
    exec("give "+u.name+" to "+pc.name, self);
    pause;
-   act("$1n says 'I just gave you a magical silver ring that emits light.'", A_ALWAYS, self,null,pc,TO_VICT);
-   
+   act("$1n says 'I just gave you a magical silver ring that emits light.'", A_ALWAYS, self,null,pc,TO_VICT);   
    pause;
-   act("$1n says 'Then all I will tell you in this phase of training is to get a "+
-      "list of commands on this mud just type 'commands''",
-      A_ALWAYS, self,null,pc,TO_VICT);
-   
+   act("$1n says 'Then all I will tell you in this phase of training is to get a list of commands on this mud just type 'commands''",  A_ALWAYS, self,null,pc,TO_VICT);   
    pause;
-   act ("$1n says 'Being the expert you are you know that you can get info on each "+
-      "command by typing 'help &lt;command&gt;'.'",
-      A_ALWAYS, self,null,pc,TO_VICT);
-   
+   act ("$1n says 'Being the expert you are you know that you can get info on each command by typing 'help &lt;command&gt;'.'", A_ALWAYS, self,null,pc,TO_VICT);   
    pause;
-   act ("$1n says 'To see a list of your comm channels type 'comm #'. The newbie, builder, mud and chat channels are live integrated with Discord in case you need help.'",
-         A_ALWAYS, self,null,pc,TO_VICT);
-   
-  act ("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2",
-    A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'To see a list of your comm channels type 'comm #'. The newbie, builder, mud and chat channels are live integrated with Discord in case you need help.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act("$1n says 'I do suggest you also join our Discord channel on https://discord.gg/vmha2rGRA2", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
    return (TRUE);
 
-   :stop:
+:stop:
    return (FALSE);
 }
 dilend

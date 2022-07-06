@@ -190,16 +190,12 @@ void start_player(unit_data *ch)
         UCHAR(ch)->setCharacterFlag(CHAR_PEACEFUL);
     }
 
-    if (g_playerinit_tmpl)
+    /* Call DIL to see if we should init the player in any other way. */
+    dilprg *prg = dil_copy_template(g_dil_playerinit, ch, nullptr);
+    if (prg)
     {
-        /* Call DIL to see if we should init the player in any other way. */
-        dilprg *prg = dil_copy_template(g_playerinit_tmpl, ch, nullptr);
-
-        if (prg)
-        {
-            prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
-            dil_activate(prg);
-        }
+        prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
+        dil_activate(prg);
     }
 
     ch->setMaximumHitpoints(hit_limit(ch));
