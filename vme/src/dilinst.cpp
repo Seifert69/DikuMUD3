@@ -314,6 +314,7 @@ void dilfi_send_done(dilprg *p)
     delete v5;
     delete v6;
     delete v7;
+    delete v8;
 }
 
 /* pagestring */
