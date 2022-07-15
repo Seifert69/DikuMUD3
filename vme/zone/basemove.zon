@@ -83,6 +83,9 @@ var
    c : string;
 code
 {
+   if (not self.master)
+      quit;
+
    act("You now follow $3n.", A_ALWAYS, self, null, self.master, TO_CHAR);
    heartbeat := 1;
 :start:
