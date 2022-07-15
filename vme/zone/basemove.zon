@@ -77,12 +77,13 @@ help
 
 %dil
 
-dilbegin unique dilfollow();
+dilbegin unique fnpri(FN_PRI_MISSION) dilfollow();
 var
    s : string;
    c : string;
 code
 {
+   act("You now follow $3n.", A_ALWAYS, self, null, self.master, TO_CHAR);
    heartbeat := 1;
 :start:
    wait(SFB_DONE, TRUE);

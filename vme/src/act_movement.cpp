@@ -1047,7 +1047,7 @@ void do_follow(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     start_following(ch, leader);
 
-    act("You now follow $3n.", A_SOMEONE, ch, 0, leader, TO_CHAR);
+    // dilfollow() sends this statement to help debugging. act("You now follow $3n.", A_SOMEONE, ch, 0, leader, TO_CHAR);
     act("$1n starts following you.", A_HIDEINV, ch, 0, leader, TO_VICT);
 }
 
