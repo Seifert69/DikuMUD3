@@ -2081,97 +2081,89 @@ code{
 /* do_follow:  this will put the follow command into dil. */
 
 dilbegin do_follow(arg : string);
-
-
 var
-
    mast   :  unitptr;
    temp   :  string;
-   cnt    :  integer;
+   n      :  integer;
 
-code{
-
- if (arg == "")
-    {
+code
+{
+   if (arg == "")
+   {
       mast := self.master;
 
       if (mast == null)
-           sendtext("You are not following anyone.<br/>", self);
+         sendtext("You are not following anyone.<br/>", self);
       else
-           sendtext("You are following " + mast.name + ".<br/>", self);
+         sendtext("You are following " + mast.name + ".<br/>", self);
 
       quit;
-    }
+   }
 
 
-/* This is a little messy, but only way I can think to do it to avoid
-   people from following invisible players or worse, wizi gods.
-   Let me know if there is a better way.
-*/
+   /* This is a little messy, but only way I can think to do it to avoid
+      people from following invisible players or worse, wizi gods.
+      Let me know if there is a better way.
+   */
 
- temp := arg;
- cnt := 1;
+   mast := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-:loop:
- mast := findunit(self, temp, FIND_UNIT_SURRO, null);
-
- if (mast == null)
-    {
+   if (mast == null)
+   {
       sendtext("There is no one named " + arg + " here to follow.<br/>", self);
       quit;
-    }
+   }
 
- if (mast == self)
-    {
+   if ((mast.type != UNIT_ST_NPC) and (mast.type != UNIT_ST_PC))
+   {
+      sendtext("You can't follow that.<br/>", self);
+      quit;
+   }
+
+   if (mast == self)
+   {
       if (self.master == null)
-         {
-           sendtext("Who do you wish to follow?<br/>", self);
-           quit;
-         }
+      {
+         sendtext("Who do you wish to follow?<br/>", self);
+         quit;
+      }
       else
-         {
-           mast := null;
-           act("You stop following $2n.", A_SOMEONE, self, self.master, null, TO_CHAR);
-           act("$1n stops following you.", A_SOMEONE, self, null, self.master, TO_VICT);
+      {
+         mast := null;
+         act("You stop following $2n.", A_SOMEONE, self, self.master, null, TO_CHAR);
+         act("$1n stops following you.", A_SOMEONE, self, null, self.master, TO_VICT);
 
-           follow(self, mast);
+         follow(self, null);
+         n := dildestroy("dilfollow@basemove", self);
 
-           if (not isset(self.charflags, CHAR_GROUP))
-                set(self.charflags, CHAR_GROUP);
-           quit;
-         }
-    }
+         if (not isset(self.charflags, CHAR_GROUP))
+            set(self.charflags, CHAR_GROUP);
+         quit;
+      }
+   }
 
- if ((not visible(self, mast)) or (mast.type == UNIT_ST_OBJ))
-    {
-      cnt := cnt + 1;
-      temp := itoa(cnt) + "." + arg;
-      goto loop;
-    }
-
-
- if (mast == self.master)
-    {
+   if (mast == self.master)
+   {
       act("You already are following $2n.", A_SOMEONE, self, mast, null, TO_CHAR);
       quit;
-    }
+   }
 
- if (isset(self.charflags, CHAR_GROUP))
+   if (isset(self.charflags, CHAR_GROUP))
       unset(self.charflags, CHAR_GROUP);
 
- if (self.master != null)
+    if (self.master != null)
       act("You stop following $2n.", A_SOMEONE, self, self.master, null, TO_CHAR);
 
- follow(self, mast);
+   n := dildestroy("dilfollow@basemove", self);
+   follow(self, mast);
+   // This is sent in the DIL dilfollow()@basemove now: sendtext("You now follow " + mast.name + ".<br/>", self);
 
- sendtext("You now follow " + mast.name + ".<br/>", self);
-
- if (visible(mast,self))
+   if (visible(mast,self))
       sendtext(self.name + " starts following you.<br/>", mast);
 
- quit;
-
-}dilend
+   quit;
+}
+dilend
 
 
 /* ditch : this is a repair to the ditch dil that was released with 2.0.2

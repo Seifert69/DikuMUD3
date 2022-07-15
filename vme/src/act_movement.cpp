@@ -1009,47 +1009,6 @@ int do_simple_move(class unit_data *ch, int direction, int following)
     return (1);
 }
 
-void do_follow(class unit_data *ch, char *arg, const struct command_info *cmd)
-{
-    class unit_data *leader = nullptr;
-
-    void stop_follower(class unit_data * ch);
-    void add_follower(class unit_data * ch, class unit_data * leader);
-
-    if (str_is_empty(arg) || ((leader = find_unit(ch, &arg, 0, FIND_UNIT_SURRO)) == ch))
-    {
-        if (CHAR_MASTER(ch))
-        {
-            act("You stop following $3n.", A_SOMEONE, ch, 0, CHAR_MASTER(ch), TO_CHAR);
-            if (same_surroundings(ch, CHAR_MASTER(ch)))
-                act("$1n stops following you.", A_HIDEINV, ch, 0, CHAR_MASTER(ch), TO_VICT);
-            stop_following(ch);
-        }
-        else
-            send_to_char("Who do you wish to follow?<br/>", ch);
-
-        return;
-    }
-
-    if ((leader == nullptr) || !IS_CHAR(leader))
-    {
-        send_to_char("You see no person by that name here!<br/>", ch);
-        return;
-    }
-
-    if (CHAR_MASTER(ch))
-    {
-        act("You stop following $3n.", A_SOMEONE, ch, 0, CHAR_MASTER(ch), TO_CHAR);
-        if (same_surroundings(ch, CHAR_MASTER(ch)))
-            act("$1n stops following you.", A_HIDEINV, ch, 0, CHAR_MASTER(ch), TO_VICT);
-        stop_following(ch);
-    }
-
-    start_following(ch, leader);
-
-    // dilfollow() sends this statement to help debugging. act("You now follow $3n.", A_SOMEONE, ch, 0, leader, TO_CHAR);
-    act("$1n starts following you.", A_HIDEINV, ch, 0, leader, TO_VICT);
-}
 
 void steed_walk(class unit_data *ch, int direction)
 {
