@@ -391,6 +391,7 @@ void stop_following(unit_data *ch)
     }
 
     UCHAR(ch)->setMaster(nullptr);
+    dil_destroy("dilfollow@basemove", ch);
 
     send_done(ch, nullptr, nullptr, 0, g_cmd_follow, "");
 }

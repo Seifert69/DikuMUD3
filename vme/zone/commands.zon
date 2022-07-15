@@ -2134,7 +2134,6 @@ code
          act("$1n stops following you.", A_SOMEONE, self, null, self.master, TO_VICT);
 
          follow(self, null);
-         n := dildestroy("dilfollow@basemove", self);
 
          if (not isset(self.charflags, CHAR_GROUP))
             set(self.charflags, CHAR_GROUP);
@@ -2154,7 +2153,6 @@ code
     if (self.master != null)
       act("You stop following $2n.", A_SOMEONE, self, self.master, null, TO_CHAR);
 
-   n := dildestroy("dilfollow@basemove", self);
    follow(self, mast);
    // This is sent in the DIL dilfollow()@basemove now: sendtext("You now follow " + mast.name + ".<br/>", self);
 

@@ -221,12 +221,12 @@
         {
             "source_file": {
                 "filename": "commands.zon",
-                "sha512": "35d55d206ec8a402ad257a25997d7f7f574d49c89fb75b7a5905fa669f522988451220357d56cf763b1e2affb6a71cac89e6f7ea0554b37f27ca133aa5598da7"
+                "sha512": "81c8de0d2dd75078fa00aba984a2c8d7d2166725e47c3f3024925779fd35b968aefa992318aa92aeb31caf4aa334fcea5561e2dfcb7e0dc7057ab81367538eef"
             },
             "output": [
                 {
                     "filename": "commands.data",
-                    "sha512": "9bf17dff2d46a08b3404b1e57a29c01d86d3559c633fbeeac553d7e60251eb5ef7dca1297ea61a8f14b186de1b5d15ffc8da71781fcdd5a83de3de401aae39c8"
+                    "sha512": "e3c3a0085139e21c20c4d80738dde7de2af4bc11127ea5c9a20333f47e0f762eb69696d467ce47cace46de1ada977ea527db21645230784760938e19815cafba"
                 },
                 {
                     "filename": "commands.reset",

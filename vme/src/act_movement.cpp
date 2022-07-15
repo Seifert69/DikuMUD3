@@ -35,6 +35,7 @@
 /* 23/08/93 jubal  : Fixed messages in do_sail                             */
 /* 23/08/93 jubal  : Added messages to leader when start/stop follow       */
 /* 23/08/93 jubal  : Fixed (nearly - still acttrouble) msgs around open etc*/
+// 15-Jul-2022  sei: Removed do_follow C source since it's a DIL command
 
 #include "char_follow_type.h"
 #include "comm.h"
