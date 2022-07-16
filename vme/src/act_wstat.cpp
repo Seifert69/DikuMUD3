@@ -97,7 +97,7 @@ static void stat_world_extra(const unit_data *ch)
 
 static void stat_memory(unit_data *ch)
 {
-    auto msg = diku::format_to_str("Event queue entries: %d (tick 1: %d, tick 1-4: %d)<br/>", g_events.Count(), g_events.CountNextTicks(1), g_events.CountNextTicks(4));
+    auto msg = diku::format_to_str("Event queue entries: %d (tick 1: %d, tick 1-4: %d, tick 1-10: %d)<br/>", g_events.Count(), g_events.CountNextTicks(1), g_events.CountNextTicks(4), g_events.CountNextTicks(10));
     send_to_char(msg, ch);
 
     msg = diku::format_to_str("Current Tic=%d , Event Queue Tic=%d<br/>", g_tics, g_events.NextEventTic());
