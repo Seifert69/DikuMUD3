@@ -47,6 +47,8 @@ public:
     inline float Total_PTime() { return total_time; }
     inline float Avg_PTime() { return (float)total_time / (float)total_loops; }
     inline float Avg_PCount() { return (float)total_process / (float)total_loops; }
+
+    int CountNextTicks(int noOfTicks);
     eventq_elem *add(int when, void (*func)(void *, void *), void *arg1, void *arg2);
     void remove(void (*func)(void *, void *), void *arg1, void *arg2);
     void remove_relaxed(void (*func)(void *, void *), void *arg1, void *arg2);

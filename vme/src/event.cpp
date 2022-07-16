@@ -52,6 +52,28 @@ eventqueue::~eventqueue()
     }
 }
 
+//
+// 1=count only the current tick, 2=current and current+1 tick, etc.
+// Count matters because
+// if there are many items at the same When (tick)
+// then the priorityQueue is probably not the most
+// efficient data structure for this problem.
+//
+int eventqueue::CountNextTicks(int noOfTicks)
+{
+    int i;
+    int n = 0;
+
+    for (i=1; i < count; i++)
+    {
+        if (heap[i]->when < heap[1]->when+noOfTicks)
+            n++;
+    }
+
+    return n;
+}
+
+
 eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1, void *arg2)
 {
     eventq_elem *end = nullptr;
