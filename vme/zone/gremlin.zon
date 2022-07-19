@@ -2222,7 +2222,7 @@ title "a small sturdy chest"
 descr "A small but sturdy chest is here."
 extra {}
 "This is a fairly small chest, just large enough to hold a few personal items."
-type ITEM_CONTAINER
+CONTAINER_DEF(50)
 weight 30
 open {EX_OPEN_CLOSE,EX_CLOSED}
 cost 1 COPPER_PIECE
@@ -2234,7 +2234,7 @@ title "a sturdy chest"
 descr "A well-made and sturdy chest is here."
 extra {}
 "This is a well-made chest, sturdy and heavy."
-type ITEM_CONTAINER
+CONTAINER_DEF(100)
 weight 50
 open {EX_OPEN_CLOSE,EX_CLOSED}
 cost 5 COPPER_PIECE
