@@ -23,6 +23,7 @@ struct symbols
     {"aware", DILSC_AWA},
     {"unique", DILSC_UNIQUE},
     {"fnpri", DILSC_PRIORITY},
+    {"global", DILSC_GLOBAL},
 
     /* DIL Symbol Expr (functions) */
 

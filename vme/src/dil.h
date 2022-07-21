@@ -470,9 +470,8 @@ class command_info;
 
 enum class DilIType_e : ubit8
 {
-   Reg  = 1,  // DILT_REG 
-   Const = 2, // DILT_CONST
-   Arg   = 3  // DILT_ARG
+   Regular  = 1,  // A regular DIL variable
+   Global = 2     // A global DIL variable (do not free)
 };
 
 /* DIL variable structure */
@@ -496,9 +495,16 @@ struct dilvar
 
 // std::map<std::string, std::unique<dilvar>> g_global_dilvars;
 
+enum class DilValAlloc_e : ubit8
+{
+   NotAllocated  = 0,  // DILA_NONE, no malloc, e.g. INT
+   GlobalPointer = 1,  // DILA_NORM, Pointer to e.g. a zone, should not be freed
+   Allocated     = 2   // DILA_EXP, allocated, e.g. a string malloc. Needs to be freed
+};
+
 /* allocation strategy */
 #define DILA_NONE 0 /* not malloc (int) */
-#define DILA_NORM 1 /* normal malloc */
+#define DILA_NORM 1 /* Assignment of a pointer that should not be freed, e.g. a zone pointer */
 #define DILA_EXP 2  /* temp. expression malloc */
 
 /* DIL evaluation result. */
@@ -508,7 +514,7 @@ public:
     dilval();
     ~dilval();
 
-    ubit8 type; /* result type     */
+    DilVarType_e type; /* result type     */
     ubit8 atyp; /* allocation type */
     union
     {
@@ -563,10 +569,10 @@ struct diltemplate
 
     ubit16 varc; /* number of variables */
     DilVarType_e *vart; /* variable types */
+    char **varg;  // the name of a global variable or null
 
     ubit16 xrefcount;     /* number of external references   */
     diltemplate **extprg; /* external programs (SERVER only) */
-    dilxref *xrefs;       /* external references (VMC only)  */
 
     ubit32 nInstructions; /* Number of instructions          */
     ubit32 nTriggers;     /* Number of triggers of the DIL   */
@@ -575,6 +581,7 @@ struct diltemplate
     dilprg *nextdude;     // For use in DIL sendtoall() with destroyed units
     dilprg *prg_list;     // Replacing the global dil_list with a template local one
     diltemplate *vmcnext; // Only for VMC
+    dilxref *xrefs;       // external references (VMC only)
 };
 
 struct dilintr
@@ -614,6 +621,7 @@ struct dilframe
 #define DIL_FRAMEINC 8 /* # of stackframes to inc stack with */
 
 class spec_arg;
+
 class dilprg
 {
 public:

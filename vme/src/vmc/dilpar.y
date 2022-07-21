@@ -107,7 +107,7 @@ int dilstr_top; /* Number of strings */
 char tmpfname[L_tmpnam] = "";
 
 void add_ref(struct dilref *ref);
-void add_var(char *name, DilVarType_e type);
+void add_var(char *name, DilVarType_e type, const char *globalVarName);
 int add_label(char *str, ubit32 adr);
 ubit32 get_label(char *name, ubit32 adr);
 void moredilcore(ubit32 size);
@@ -200,7 +200,7 @@ void make_code(struct exptype *dest);
 
 /* DIL code */
 %token DILSC_VAR DILSC_BEG DILSC_COD DILSC_END DILSC_EXT DILSC_REC DILSC_AWA
-%token DILSC_UNIQUE DILSC_PRIORITY
+%token DILSC_UNIQUE DILSC_PRIORITY DILSC_GLOBAL
 
 /* DIL functions */
 %token DILSE_ATOI DILSE_RND  DILSE_FNDU DILSE_FNDRU DILSE_FNDR DILSE_FNDZ DILSE_LOAD
@@ -412,6 +412,7 @@ dilinit : /* nothing */
         CREATE(tmpl.argt, DilVarType_e, ARGMAX);
         CREATE(tmpl.core, ubit8, CODESIZE);
         CREATE(tmpl.vart, DilVarType_e, VARMAX);
+        CREATE(tmpl.varg, char *, VARMAX);
         tmpl.prgname = strdup("NONAME");
         tmpl.priority = FN_PRI_CHORES;
         tmpl.varc = 0;
@@ -474,6 +475,7 @@ dilinit : /* nothing */
     }
     ;
 
+
 dildecls : /* naught */
     | DILSC_VAR decls
     {
@@ -482,13 +484,14 @@ dildecls : /* naught */
     }
     ;
 
+
 decls   :  decl ';' decls
     {
         if ($1)
         {
             for (int i = 0; i < (int)$1->names->Length(); i++)
             {
-                add_var((char *)$1->names->Name(i), $1->type);
+                add_var((char *)$1->names->Name(i), $1->type, nullptr);
             }
             delete ($1->names);
             delete $1;
@@ -500,8 +503,68 @@ decls   :  decl ';' decls
         {
             for (int i = 0; i < (int)$1->names->Length(); i++)
             {
-                add_var((char *)$1->names->Name(i), $1->type);
+                add_var((char *)$1->names->Name(i), $1->type, nullptr);
             }
+            delete ($1->names);
+            delete $1;
+        }
+    }
+    | decl DILSC_GLOBAL SYMBOL ';' decls
+    {
+        if ($1)
+        {
+            char zbuf[256];
+            char nbuf[256];
+
+            if  (!$3[0])
+            {
+                dilfatal("var global missing name@zone", $1);
+            }
+
+            split_fi_ref($3, zbuf, nbuf);
+
+            if (!zbuf[0] || !nbuf[0])
+            {
+                dilfatal("var global missing name@zone", $1);
+            }
+
+            if ((int)$1->names->Length() != 1)
+            {
+                dilfatal("var global cannot define multiple names", $1);
+            }
+
+            add_var((char *) $1->names->Name(0), $1->type, $3);
+
+            delete ($1->names);
+            delete $1;
+        }
+    }
+    | decl DILSC_GLOBAL SYMBOL
+    {
+        if ($1)
+        {
+            if ((int)$1->names->Length() != 1)
+            {
+                dilfatal("var global cannot define multiple names", $1);
+            }
+
+            char zbuf[256];
+            char nbuf[256];
+
+            if  (!$3[0])
+            {
+                dilfatal("var global missing name@zone", $1);
+            }
+
+            split_fi_ref($3, zbuf, nbuf);
+
+            if (!zbuf[0] || !nbuf[0])
+            {
+                dilfatal("var global missing name@zone", $1);
+            }
+
+            add_var((char *) $1->names->Name(0), $1->type, $3);
+
             delete ($1->names);
             delete $1;
         }
@@ -684,7 +747,7 @@ fundef   : ref
         for (i = 0; i < ref.argc; i++)
         {
             /* add arguments as variables */
-            add_var(ref.argv[i], ref.argt[i]);
+            add_var(ref.argv[i], ref.argt[i], nullptr);
 
             /* generate template reference line */
             strcat(cur_tmplref, ref.argv[i]);
@@ -7193,7 +7256,7 @@ dilinst  : dilproc
     ;
 %%
 
-void add_var(char *name, DilVarType_e type)
+void add_var(char *name, DilVarType_e type, const char *globalVarName)
 {
     str_lower(name);
     //   fprintf(stderr, "Adding Variable #%d %s type %d\n",tmpl.varc, name, type);
@@ -7204,9 +7267,18 @@ void add_var(char *name, DilVarType_e type)
     }
     var_names = add_name(name, var_names);
 
+    //if (globalVarName)
+    //{
+    //    fprintf(stderr, "\nAdding global variable: %s\n", globalVarName);
+    //}
+
     tmpl.vart[tmpl.varc] = type;
-    frm.vars[tmpl.varc].val.integer = 0;
+    tmpl.varg[tmpl.varc] = str_dup(globalVarName);
+
+    frm.vars[tmpl.varc].val.string = nullptr;
+    frm.vars[tmpl.varc].name = str_dup(globalVarName);
     frm.vars[tmpl.varc].type = type;
+    frm.vars[tmpl.varc].itype = DilIType_e::Regular;
 
     if (++tmpl.varc > VARMAX)
     {
