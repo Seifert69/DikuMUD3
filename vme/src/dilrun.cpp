@@ -229,7 +229,7 @@ void boot_global_dil(void)
 
 dilvar *getDilGlobalDilVar(const char *name, DilVarType_e type)
 {
-    if (g_global_dilvars[name] == nullptr)
+    if (g_global_dilvars.find(name) == g_global_dilvars.end())
     {
         // Create a placeholder variable for the global var
 
@@ -315,16 +315,16 @@ int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 
 void dil_free_var(dilvar *v)
 {
-    if (v->name)
-    {
-        FREE(v->name);
-        v->name = nullptr;
-    }
-
     if (v->itype == DilIType_e::Global)
     {
         // It's a global variable, don't free it.
         return;
+    }
+
+    if (v->name)
+    {
+        FREE(v->name);
+        v->name = nullptr;
     }
 
     switch (v->type)
