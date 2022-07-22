@@ -1096,6 +1096,8 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
                 continue;
             }
 
+            frm->vars[i].itype = DilIType_e::Regular;
+
 
             if (i >= rtmpl->argc)
             {
