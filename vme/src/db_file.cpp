@@ -26,12 +26,9 @@
 #include <cstdlib>
 #include <cstring>
 
-int g_nCorrupt = 0; /* > 0 when a unit is corrupt       */
+int g_nCorrupt = 0; /* > 0 when database is corrupted */
 
 CByteBuffer g_FileBuffer(16384);
-
-// int filbuffer_length = 0;             /* The length of filbuffer         */
-// ubit8 *filbuffer = 0;                 /* Buffer for read/write unit      */
 
 /// @returns 1 on error, 0 if OK
 int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
@@ -174,10 +171,15 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     if (tmpl->varc)
     {
         CREATE(tmpl->vart, DilVarType_e, tmpl->varc);
+        CREATE(tmpl->varg, char *, tmpl->varc);
 
         for (i = 0; i < tmpl->varc; i++)
         {
             tmpl->vart[i] = DilVarTypeIntToEnum(pBuf->ReadU8());
+            if (version >= 76)
+            {
+                g_nCorrupt += pBuf->ReadStringAlloc(&tmpl->varg[i]);
+            }
         }
     }
     else
@@ -489,17 +491,60 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
     for (i = 0; i < novar; i++)
     {
-        prg->fp->vars[i].type = DilVarTypeIntToEnum(pBuf->ReadU8());
+        prg->fp->vars[i].type  = DilVarTypeIntToEnum(pBuf->ReadU8());
+        prg->fp->vars[i].itype = DilIType_e::Regular;
+
+        bool globalVar = false;
+        prg->fp->vars[i].name = nullptr;
+
+        if (version >= 76)
+        {
+            // Read the global variable name
+            g_nCorrupt += pBuf->ReadStringAlloc(&prg->fp->vars[i].name);
+            globalVar = (prg->fp->vars[i].name != nullptr);
+        }
 
         switch (prg->fp->vars[i].type)
         {
             case DilVarType_e::DILV_SLP:
-                prg->fp->vars[i].val.namelist = new cNamelist;
-                prg->fp->vars[i].val.namelist->ReadBuffer(pBuf, version);
+                if (!globalVar)
+                {
+                    prg->fp->vars[i].val.namelist = new cNamelist;
+                    prg->fp->vars[i].val.namelist->ReadBuffer(pBuf, version);
+                }
+                else
+                {
+                    cNamelist nl;
+                    nl.ReadBuffer(pBuf, version); // We're missing a SkipBuffer
+
+                    // Create global var in the global index or find and reuse it
+                    dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
+
+                    // Set the type so that we don't free it.
+                    // Global means it's a reference to a global var
+                    prg->fp->vars[i].itype = DilIType_e::Global;
+                    prg->fp->vars[i].val = v->val;
+                }
                 break;
             case DilVarType_e::DILV_ILP:
-                prg->fp->vars[i].val.intlist = new cintlist;
-                prg->fp->vars[i].val.intlist->ReadBuffer(pBuf);
+                if (!globalVar)
+                {
+                    prg->fp->vars[i].val.intlist = new cintlist;
+                    prg->fp->vars[i].val.intlist->ReadBuffer(pBuf);
+                }
+                else
+                {
+                    cintlist il;
+                    il.ReadBuffer(pBuf); // We're missing a SkipBuffer
+
+                    // Create global var in the global index or find and reuse it
+                    dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
+
+                    // Set the type so that we don't free it.
+                    // Global means it's a reference to a global var
+                    prg->fp->vars[i].itype = DilIType_e::Global;
+                    prg->fp->vars[i].val = v->val;
+                }
                 break;
             case DilVarType_e::DILV_SP:
                 pBuf->ReadStringAlloc(&prg->fp->vars[i].val.string);
@@ -507,8 +552,9 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
             case DilVarType_e::DILV_INT:
                 prg->fp->vars[i].val.integer = pBuf->ReadS32();
                 break;
+
             default:
-                prg->fp->vars[i].val.integer = 0;
+                prg->fp->vars[i].val.string = nullptr;
         }
     }
 
@@ -860,6 +906,10 @@ void bwrite_diltemplate(CByteBuffer *pBuf, diltemplate *tmpl)
     for (i = 0; i < tmpl->varc; i++)
     {
         pBuf->Append8(tmpl->vart[i]); /* variable types */
+        if (tmpl->varg[i] == nullptr)
+            pBuf->AppendString(nullptr);  // Version 76+
+        else
+            pBuf->AppendString(tmpl->varg[i]);  // Version 76+
     }
 
     pBuf->Append16(tmpl->xrefcount); /* number of external references */
@@ -929,10 +979,13 @@ void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
     {
         pBuf->Append8(prg->frame[0].vars[i].type);
 
+        pBuf->AppendString(prg->frame[0].vars[i].name); // XXXX Null except for global variables, this is the global shared variable name e.g. materials@treasure
+        bool globalVar = (prg->frame[0].vars[i].name != nullptr);
+        
         switch (prg->frame[0].vars[i].type)
         {
             case DilVarType_e::DILV_SLP:
-                if (prg->frame[0].vars[i].val.namelist)
+                if (prg->frame[0].vars[i].val.namelist && !globalVar)
                 {
                     prg->frame[0].vars[i].val.namelist->AppendBuffer(pBuf);
                 }
@@ -943,7 +996,7 @@ void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
                 break;
 
             case DilVarType_e::DILV_ILP:
-                if (prg->frame[0].vars[i].val.intlist)
+                if (prg->frame[0].vars[i].val.intlist && !globalVar)
                 {
                     prg->frame[0].vars[i].val.intlist->AppendBuffer(pBuf);
                 }

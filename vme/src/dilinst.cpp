@@ -1088,6 +1088,17 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
         for (i = 0; i < rtmpl->varc; i++)
         {
             frm->vars[i].type = rtmpl->vart[i];
+            if (rtmpl->varg[i])
+            {
+                frm->vars[i].itype = DilIType_e::Global;
+                dilvar *v = getDilGlobalDilVar(rtmpl->varg[i], frm->vars[i].type);
+                frm->vars[i].val = v->val;
+                continue;
+            }
+
+            frm->vars[i].itype = DilIType_e::Regular;
+
+
             if (i >= rtmpl->argc)
             {
                 if (frm->vars[i].type == DILV_SLP)

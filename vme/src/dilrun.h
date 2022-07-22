@@ -45,6 +45,7 @@ extern diltemplate *g_dil_advance_level;
 #define FAIL_NULL 1
 #define TYPEFAIL_NULL 2
 
+dilvar *getDilGlobalDilVar(const char *name, DilVarType_e type);
 void dil_edit_done(descriptor_data *d);
 void DeactivateDil(unit_data *pc, dilprg *prg = nullptr);
 void ActivateDil(unit_data *pc);

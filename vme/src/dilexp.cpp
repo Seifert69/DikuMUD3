@@ -4343,6 +4343,8 @@ void dilfe_plus(dilprg *p)
             v->atyp = DILA_NONE;
             v->val.num = v1->val.num + v2->val.num;
             break;
+        default:
+            break;
     }
     p->stack.push(v);
     delete v1;
@@ -5663,6 +5665,8 @@ void dilfe_se(dilprg *p)
             v->type = DILV_INT;
             v->val.num = FALSE;
             break;
+        default:
+            break;
     }
 
     p->stack.push(v);
@@ -5723,6 +5727,8 @@ void dilfe_sne(dilprg *p)
             {
                 v->val.num = (str_ccmp((char *)v1->val.ptr, (char *)v2->val.ptr) != 0);
             }
+            break;
+        default:
             break;
     }
 
@@ -6086,6 +6092,8 @@ void dilfe_in(dilprg *p)
             {
                 break;
             }
+        default:
+            break;
     }
     p->stack.push(v);
     delete v1;
@@ -6146,6 +6154,8 @@ void dilfe_strcmp(dilprg *p)
             v->atyp = DILA_NONE;
             v->type = DILV_INT;
             v->val.num = FALSE;
+            break;
+        default:
             break;
     }
 
@@ -6222,6 +6232,8 @@ void dilfe_strncmp(dilprg *p)
             v->atyp = DILA_NONE;
             v->type = DILV_INT;
             v->val.num = FALSE;
+            break;
+        default:
             break;
     }
 

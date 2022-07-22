@@ -123,6 +123,8 @@ diltemplate *g_dil_nanny_dil     = nullptr;
 diltemplate *g_dil_link_dead     = nullptr;
 diltemplate *g_dil_advance_level = nullptr;
 
+std::map<std::string, dilvar *> g_global_dilvars;
+
 // These are the global DIL programs that are required to run the server
 //
 void boot_global_dil(void)
@@ -224,6 +226,44 @@ void boot_global_dil(void)
    }
 }
 
+
+dilvar *getDilGlobalDilVar(const char *name, DilVarType_e type)
+{
+    if (g_global_dilvars.find(name) == g_global_dilvars.end())
+    {
+        // Create a placeholder variable for the global var
+
+        dilvar *v = new dilvar;
+
+        v->type = type;
+        v->itype = DilIType_e::Global;
+        v->name = nullptr;
+
+        switch (v->type)
+        {
+            case DilVarType_e::DILV_SLP:
+                v->val.namelist = new cNamelist;
+                break;
+
+            case DilVarType_e::DILV_ILP:
+                v->val.intlist = new cintlist;
+                break;
+
+            case DilVarType_e::DILV_SP:
+                v->val.string = nullptr;
+                break;
+
+            default:
+                assert(false);
+        }
+
+        g_global_dilvars[name] = v;
+    }
+
+    return g_global_dilvars[name];
+}
+
+
 void dil_edit_done(descriptor_data *d)
 {
     send_edit(d->getEditing(), d->getLocalString());
@@ -271,8 +311,22 @@ int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 
     return intnum;
 }
+
+
 void dil_free_var(dilvar *v)
 {
+    if (v->itype == DilIType_e::Global)
+    {
+        // It's a global variable, don't free it.
+        return;
+    }
+
+    if (v->name)
+    {
+        FREE(v->name);
+        v->name = nullptr;
+    }
+
     switch (v->type)
     {
         case DilVarType_e::DILV_SP:
@@ -360,6 +414,16 @@ void dil_free_template(diltemplate *tmpl, int copy)
         if (tmpl->vart)
             FREE(tmpl->vart);
 
+        if (tmpl->varg)
+        {
+            for (int i=0; i < tmpl->varc; i++)
+            {
+                if (tmpl->varg[i] != nullptr)
+                    FREE(tmpl->varg[i]);
+            }
+            FREE(tmpl->varg);
+        }
+
         if (tmpl->core)
             FREE(tmpl->core);
 
@@ -385,6 +449,7 @@ void dil_free_template(diltemplate *tmpl, int copy)
         FREE(tmpl);
     }
 }
+
 
 /* returns boolean value of DIL value */
 char dil_getbool(dilval *v, dilprg *prg)
@@ -1762,6 +1827,16 @@ void dil_init_vars(int varc, dilframe *frm)
 {
     for (int i = 0; i < varc; i++)
     {
+        if (frm->vars[i].name)
+        {
+            frm->vars[i].itype = DilIType_e::Global;
+            dilvar *v = getDilGlobalDilVar(frm->vars[i].name, frm->vars[i].type);
+            frm->vars[i].val = v->val;
+            continue;
+        }
+
+        frm->vars[i].itype = DilIType_e::Regular;
+
         switch (frm->vars[i].type)
         {
             case DilVarType_e::DILV_SLP:
@@ -1823,6 +1898,11 @@ dilprg *dil_copy_template(diltemplate *tmpl, unit_data *u, unit_fptr **pfptr)
     for (int i = 0; i < tmpl->varc; i++)
     {
         prg->frame->vars[i].type = tmpl->vart[i];
+        prg->frame->vars[i].name = str_dup(tmpl->varg[i]);
+        if (prg->frame->vars[i].name)
+            prg->frame->vars[i].itype = DilIType_e::Global;
+        else
+            prg->frame->vars[i].itype = DilIType_e::Regular;
     }
 
     dil_init_vars(tmpl->varc, prg->frame);
