@@ -803,7 +803,13 @@ void dil_clear_lost_reference(dilframe *frm, void *ptr)
 
 */
 
-void dil_test_secure(dilprg *prg, int bForeach)
+
+// MS2022: Adding a bExec to try to solve an impossible issue with DIL follow() that clears 
+//         secures when a unit moves and followers come after (newbie guide). By laxing the
+//         check in dilfi_exec() to only test for destructed units seems to do the trick...
+//         But are there unintended side-effects...?
+//
+void dil_test_secure(dilprg *prg, bool bForeach, bool bExec)
 {
     int i = 0;
     int count = 0;
@@ -824,6 +830,9 @@ void dil_test_secure(dilprg *prg, int bForeach)
             }
             if (scan4_ref(prg->sarg->owner, frm->secure[i].sup) == nullptr)
             {
+                if (bExec && !frm->secure[i].sup->is_destructed())
+                    continue;
+
                 if (frm->secure[i].lab)
                 {
                     /* This is REALLY important! Imagine a broken secure in a
@@ -838,6 +847,8 @@ void dil_test_secure(dilprg *prg, int bForeach)
                         frm->pc = frm->secure[i].lab;
                     }
                 }
+
+                slog(LOG_ALL, 0, "DIL secure triggered for DIL program: %s@%s", frm->tmpl->prgname, frm->tmpl->zone->getName());
 
                 dil_clear_lost_reference(frm, frm->secure[i].sup);
                 count = dil_sub_secure(frm, frm->secure[i].sup, bForeach);

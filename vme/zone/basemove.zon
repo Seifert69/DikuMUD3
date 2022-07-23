@@ -112,7 +112,7 @@ code
    {
       act("You follow $3n $2t.", A_HIDEINV, self, cmdstr, self.master, TO_CHAR);
       c := cmdstr;
-      waitnoop;
+      waitnoop; // The waitnoops causes loss of secure() on followers... 
       exec(c, self);
    }
    else if (command("southeast") or command("northeast") or command("southwest") or command("northwest"))

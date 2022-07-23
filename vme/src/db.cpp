@@ -177,6 +177,8 @@ void resolve_templates()
         /* all templates in zone */
         for (auto tmpl = z->second->cgetDILTemplate().begin(); tmpl != z->second->cgetDILTemplate().end(); tmpl++)
         {
+            // XXXX We could instantiate all DIL global vars here, and type check them.
+
             /* all external references */
             for (i = 0; i < tmpl->second->xrefcount; i++)
             {
