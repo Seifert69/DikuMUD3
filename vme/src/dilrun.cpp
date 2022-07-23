@@ -848,7 +848,9 @@ void dil_test_secure(dilprg *prg, bool bForeach, bool bExec)
                     }
                 }
 
-                slog(LOG_ALL, 0, "DIL secure triggered for DIL program: %s@%s", frm->tmpl->prgname, frm->tmpl->zone->getName());
+                // Foreach() doesn't clear all its secures. It's not bad. But wondering if it's
+                // a bug or a feature :-)
+                // slog(LOG_ALL, 0, "DIL secure triggered for DIL program: %s@%s", frm->tmpl->prgname, frm->tmpl->zone->getName());
 
                 dil_clear_lost_reference(frm, frm->secure[i].sup);
                 count = dil_sub_secure(frm, frm->secure[i].sup, bForeach);

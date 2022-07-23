@@ -24,7 +24,26 @@ END HEADER*/
 
 %dil
 
+#define LOGT_ERROR   0
+#define LOGT_SUCCESS 1
+#define LOGT_INFO    2
+
+
+dilbegin logtest(no : integer, ltype : integer, msg : string);
+var
+   sl : stringlist;
+code
+{
+   sl := {"ERROR", "SUCCESS", "INFO"};
+   log("T"+itoa(no)+"//"+sl.[ltype]+" "+msg);
+   return;
+}
+dilend
+
 dilbegin followdil();
+external
+   logtest(no : integer, ltype : integer, msg : string);
+
 var
    u : unitptr;
 code
@@ -32,25 +51,26 @@ code
    exec("follow experiment", self);
    exec("stand", self);
    if (self.master == null)
-      log("Error: unable to follow");
+      logtest(1, LOGT_ERROR, "Unable to follow");
    else
-      log("Following: " + self.master.name);
+      logtest(1, LOGT_INFO, "Following: " + self.master.name);
 
    u := self.master;
    secure(u, lostit);
    heartbeat := PULSE_SEC * 4;
+
 :loop:
    pause;
    if (u == null)
    {
-      log("T001//ANNOYING but ok Follower master pointer turned null");
+      logtest(1, LOGT_ERROR, "u turned to null.");
       quit;
    }
-   log("T001//INFO Follower still has master secured()");
+   logtest(1, LOGT_INFO, "Follower has master secured()");
    goto loop;
 
 :lostit:
-   log("T001//ANNOYING but OK Follower lost master");
+   logtest(1, LOGT_ERROR, "Follower lost master.");
    quit;
 }
 dilend
@@ -160,6 +180,7 @@ code
 dilend
 
 
+// Setup test 001
 dilbegin T001();
 var
    u1, u2 : unitptr;
@@ -174,6 +195,10 @@ code
 
    dilcopy("followdil@test()", u2);
    dilcopy("walkeast@test()", u1);
+
+   // Here we need to wait for it to either finish
+   // or a timer will trigger and fail the test.
+
    quit;
 }
 dilend
