@@ -25,20 +25,39 @@ END HEADER*/
 %dil
 
 dilbegin followdil();
+var
+   u : unitptr;
 code
 {
    exec("follow experiment", self);
    exec("stand", self);
    if (self.master == null)
       log("Error: unable to follow");
+   else
+      log("Following: " + self.master.name);
+
+   u := self.master;
+   secure(u, lostit);
+   heartbeat := PULSE_SEC * 4;
+:loop:
+   pause;
+   if (u == null)
+   {
+      log("T001//ANNOYING but ok Follower master pointer turned null");
+      quit;
+   }
+   log("T001//INFO Follower still has master secured()");
+   goto loop;
+
+:lostit:
+   log("T001//ANNOYING but OK Follower lost master");
    quit;
 }
 dilend
 
 dilbegin walkeast();
 external
-   integer walk_room(place:string, spd:integer);
-
+   integer walk_room@function(place:string, spd:integer);
 var
    u : unitptr;
    i : integer;
@@ -54,62 +73,94 @@ code
    }
    secure(u, lostpc);
 
+   log("T001//Info TEST STARTING");
+
+   log("T001//Info in room: "+self.outside.symname);
    exec("east", self);
+   log("T001//Info in room: "+self.outside.symname);
+   pause;
    if (u == null)
    {
-      log("Error: secure(u) null after exec() one");
+      log("T001//ERROR: secure(u) null after exec() one");
+      quit;
+   }
+   if (u.outside != self.outside)
+   {
+      log("T001//ERROR: follower not in the same room as master");
       quit;
    }
 
    exec("east", self);
+   log("T001//Info in room: "+self.outside.symname);
+   pause;
    if (u == null)
    {
-      log("Error: secure(u) null after exec() two");
+      log("T001//ERROR: secure(u) null after exec() two");
+      quit;
+   }
+   if (u.outside != self.outside)
+   {
+      log("T001//ERROR: follower not in the same room as master");
       quit;
    }
 
    pause;
    exec("east", self);
+   log("T001//Info in room: "+self.outside.symname);
+   pause;
    if (u == null)
    {
-      log("Error: secure(u) null after exec() three");
+      log("T001//ERROR: secure(u) null after exec() three");
       quit;
    }
-   pause;
-   i := walk_room("testlabc@test", PULSE_SEC);
-   if (u == null)
+   if (u.outside != self.outside)
    {
-      log("Error: secure(u) null after exec() three");
+      log("T001//ERROR: follower not in the same room as master");
       quit;
    }
+
    pause;
-   i := walk_room("testlabc@test", PULSE_SEC);
+   log("T001//Info FIRST WALK_ROOM to labc");
+   i := walk_room@function("testlabc@test", PULSE_SEC);
+   log("T001//Info in room: "+self.outside.symname);
+   pause;
    if (u == null)
    {
-      log("Error: secure(u) null after exec() four");
+      log("T001//ERROR: secure(u) null after exec() three");
+      quit;
+   }
+   if (u.outside != self.outside)
+   {
+      log("T001//ERROR: follower not in the same room as master");
+      quit;
+   }
+
+   log("T001//Info SECOND WALK_ROOM to labe");
+   i := walk_room@function("testlabe@test", PULSE_SEC);
+   log("T001//Info in room: "+self.outside.symname);
+   if (u == null)
+   {
+      log("T001//ERROR secure(u) null after exec() five");
+      quit;
+   }
+   if (u.outside != self.outside)
+   {
+      log("T001//ERROR: follower not in the same room as master");
       quit;
    }
    pause;
 
-   i := walk_room("testlabe@test", PULSE_SEC);
-   if (u == null)
-   {
-      log("Error: secure(u) null after exec() five");
-      quit;
-   }
-   pause;
-
-   log("Test1: SUCCESS");
+   log("T001//SUCCESS");
    quit;
 
 :lostpc:
-   log("Error: Triggered secure() not supposed to happen");
+   log("T001//ERROR Triggered secure() not supposed to happen");
    quit;
 }
 dilend
 
 
-dilbegin test1();
+dilbegin T001();
 var
    u1, u2 : unitptr;
 
@@ -186,7 +237,7 @@ flags {UNIT_FL_NO_WEATHER}
 light 5
 east to testlabe;
 
-dilcopy test1@test();
+dilcopy T001@test();
 end
 
                                    testlabe
