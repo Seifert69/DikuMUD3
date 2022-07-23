@@ -629,7 +629,7 @@ code
    on_activation(self.position <= POSITION_SLEEPING, skip);
 
    :start:
-   if (pc #= null)
+   if (pc == null)
       goto stop;
    secure(pc, lost_pc);
 
@@ -765,7 +765,6 @@ var
    h:integer;
    s:string;
    qst:extraptr;
-
    i1 : integer;
    i2 : integer;
    i3 : integer;
@@ -776,7 +775,7 @@ code
    on_activation(self.position <= POSITION_SLEEPING, skip);
 
    :start:
-   if (pc #= null)
+   if (pc == null)
       goto stop;
    secure(pc, stop);
 
@@ -1111,7 +1110,7 @@ code
 
 :start:
    if (pc == null)
-   goto stop;
+      goto stop;
    secure(pc, stop);
    pc.endurance:=pc.max_endurance;
    self.endurance:=self.max_endurance;
@@ -1138,10 +1137,10 @@ code
    pause;
    act("$1n says 'So you must follow me...'", A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
-   if (not(pc.master.name $= self.name))
+   if (not(pc.master.name == self.name))
    {
       act("$1n says 'Please type 'fol "+self.name+"' now.'", A_ALWAYS , self, null , pc ,TO_VICT);
-:try_again2:
+   :try_again2:
       wait (SFB_DONE, activator==pc);
       if (not(command  ("follow")) or (target!=self))
       {
@@ -1165,10 +1164,13 @@ code
    if (npc.outside!=findroom("food_store@udgaard"))
       link(npc,findroom("food_store@udgaard"));
    npc.position:=POSITION_STANDING;
+   if (pc == null)
+      log("PC was null right BEFORE first walk_room");
    tf := walk_room@function("food_store@udgaard",4);
-   secure(pc, stop);
+   if (pc == null)
+      log("PC was null right AFTER first walk_room");
 
-   act("$1n says 'Rosanne makes some delicious bread and pastries!. Type help list if you want to see what food you can buy here.'", A_ALWAYS , self, null , pc ,TO_VICT);
+   act("$1n says 'Rosanne makes some delicious bread and pastries! Type help list if you want to see what food you can buy here.'", A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
    exec("emote buys a loaf of bread.",self);
    link(load("bread@midgaard"), self);
@@ -1181,7 +1183,6 @@ code
    act("$1n says 'Let's  visit the Chicken's Rest next, there is a bulletin board there with the latest news and such.'", A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
    tf := walk_room@function("inn@udgaard",4);
-   secure(pc, stop);
    pause;
    act("$1n says 'Here we are. It's a good idea to check the board here on a "+
      "regular basis. It will contain game updates and bugs as well "+
@@ -1207,7 +1208,6 @@ code
       link(npc,findroom("postoffice@udgaard"));
    npc.position:=POSITION_STANDING;
    tf := walk_room@function("postoffice@udgaard",4);
-   secure(pc, stop);
 
    act("$1n says 'Here we are at our neighborhood mail man Hansen.'", A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
@@ -1250,7 +1250,6 @@ code
       link(npc,findroom("ironmonger@udgaard"));
    npc.position:=POSITION_STANDING;
    tf := walk_room@function("ironmonger@udgaard",4);
-   secure(pc, stop);
    pause;
    exec("emote buys a lantern", self);
    link(load("lantern@midgaard"),self);
@@ -1281,7 +1280,6 @@ code
 
    npc.position:=POSITION_STANDING;
    tf := walk_room@function("heal_room@udgaard",4);
-   secure(pc, stop);
    pause;
    act("$1n says 'If you find you need some helping spells come and sit here for "+
          "a bit and the healer will be more then willing to help you.'", A_ALWAYS , self, null , pc ,TO_VICT);
@@ -1293,7 +1291,6 @@ code
          "explain one more nice thing.'", A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
    tf:=walk_room@function("temple@udgaard",4);
-   secure(pc, stop);
    act("$1n says 'If you ever find yourself without equipment you can worship "+
          "this statue of Odin and it will grant you some very basic "+
          "equipment.'", A_ALWAYS , self, null , pc ,TO_VICT);
@@ -1369,7 +1366,6 @@ code
    pause;
 
    tf := walk_room@function("hill@cypress",4);
-   secure(pc, stop);
    act("$1n says 'This is the Cypress forest.'", A_ALWAYS,self,null,pc,TO_VICT);
    pause;
    act("$1n says 'Skunks, Badgers and Boar live here and in a level or so you will be able to hunt them all.'", A_ALWAYS,self,null,pc,TO_VICT);
@@ -1383,7 +1379,6 @@ code
    act("$1n says 'Let's visit it now so you know how to get there.'", A_ALWAYS,self,null,pc,TO_VICT);
    pause;
    tf := walk_room@function("forest_edge@haon_dor",4);
-   secure(pc, stop);
 
    act("$1n says 'Here we stand at the entrance to the legendary " +
      "forest of Haon-Dor.'", A_ALWAYS,self,null,pc,TO_VICT);
@@ -1512,7 +1507,7 @@ code
          goto try_again;
       }
    }
-   if (not(pc.master.name $= self.name))
+   if (not(pc.master.name == self.name))
    {
       act("$1n says 'Please type 'fol newbie guide' now.'",
          A_ALWAYS,self,null,pc,TO_VICT);
@@ -1531,7 +1526,6 @@ code
    act("$1n says 'Let me show you how to train your skills and abilities.'", A_ALWAYS,self,null,pc,TO_VICT);
    pause;
    tf:= walk_room@function("inn_2@udgaard", 4);
-   secure(pc, stop);
 
    act("$1n says 'So in this back room of the Chicken's Rest you'll find four newbie teachers.'",
      A_ALWAYS, self, null,pc,TO_VICT);
@@ -1721,10 +1715,9 @@ pause;
      "a spells teacher'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'Let's visit your magic teacher, he's " +
-     "very close by, as are all of the teachers here.'",
-A_ALWAYS, self, null,pc,TO_VICT);
+     "very close by, as are all of the teachers here.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("garden7@clericguild",4);
+   tf:=   walk_room@function("garden7@clericguild",4);
    act("$1n says 'Tick here will teach you all about " +
      "Healer spells.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
@@ -1800,13 +1793,14 @@ dilend
 /*fighter*/
 dilbegin integer newbie_part5f(pc : unitptr);
 external
- integer walk_room@function(s:string,i:integer);
+   integer walk_room@function(s:string,i:integer);
 
 var
-tf:integer;
-        nroom   :       unitptr;
-        item:unitptr;
-        i       :       integer;
+   tf:integer;
+   nroom   :       unitptr;
+   item:unitptr;
+   i       :       integer;
+
 code
 {
    :init:
@@ -1859,7 +1853,7 @@ pause;
    act("$1n says 'Remember how to get to your guild because you will need to "+
      "in the future quite frequently.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("entrance@fightersguild",4);
+   tf := walk_room@function("entrance@fightersguild",4);
    pause;
    act("$1n says 'This is the entrance, and to the east is your guild.'",
      A_ALWAYS, self, null,pc,TO_VICT);
@@ -1923,10 +1917,10 @@ act("$1n says 'I will introduce you to one of your teachers now," +
 A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'Let's visit your abilities teacher, he's " +
-     "very close by, as are all of the teachers here.'",
-A_ALWAYS, self, null,pc,TO_VICT);
+     "very close by, as are all of the teachers here.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("smithy@fightersguild",4);
+   tf := walk_room@function("smithy@fightersguild",4);
+
    act("$1n says 'Jones here will train your abilities to a suitable" +
      "level.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
@@ -2053,14 +2047,13 @@ A_ALWAYS, self, null,pc,TO_VICT);
    act("$1n says 'Remember how to get to your guild because you will need to "+
      "in the future quite frequently.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("entrance@mageguild",4);
-      pause;
+   tf:= walk_room@function("entrance@mageguild",4);
+   pause;
    act("$1n says 'This is the entrance, and to the east is your guild.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'These guards are meant to keep any non-Conjurers " +
-     "out and so I will have to teleport in.'", A_ALWAYS, self,
-null,pc,TO_VICT);
+     "out and so I will have to teleport in.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    exec("emote is not quite a Conjurer.", self);
    pause;
@@ -2120,10 +2113,10 @@ pause;
    act("$1n says 'Let's visit your spells teacher, he's " +
      "very close by, as are all of the teachers here.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("arcane_ground@mageguild",4);
+   tf := walk_room@function("arcane_ground@mageguild",4);
 
-  act("$1n says 'Zofax here will teach you all about " +
-     "Conjurer spells.'", A_ALWAYS, self, null,pc,TO_VICT);
+   act("$1n says 'Zofax here will teach you all about " +
+         "Conjurer spells.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'When you enter 'info' with no arguments " +
      "your teacher will display all of the categories in which "+
@@ -2251,21 +2244,18 @@ A_ALWAYS, self, null,pc,TO_VICT);
     }
   }
    pause;
-   act("$1n says 'Let us visit your guild master now.'",
-A_ALWAYS, self, null,pc,TO_VICT);
+   act("$1n says 'Let us visit your guild master now.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'Remember how to get here because you will need to " +
      "in the future quite frequently.'", A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("entrance@thievesguild",4);
-
+   tf := walk_room@function("entrance@thievesguild",4);
    pause;
    act("$1n says 'This is the entrance, and to the west is your guild.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'These guards are meant to keep any non-thieves" +
-     "out and so I will have to teleport in.'", A_ALWAYS, self,
-null,pc,TO_VICT);
+     "out and so I will have to teleport in.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    exec("emote is not a thief (yet).", self);
    pause;
@@ -2308,26 +2298,21 @@ null,pc,TO_VICT);
      "tour.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'For the Udgaard Thieves, there is an abilities" +
-     "teacher, a skills teacher, and a weapons teacher.'",
-A_ALWAYS, self, null,pc,TO_VICT);
+     "teacher, a skills teacher, and a weapons teacher.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'Let's visit your abilities teacher, he's " +
-     "very close by, as are all of the teachers here.'",
-A_ALWAYS, self, null,pc,TO_VICT);
+     "very close by, as are all of the teachers here.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-tf:=   walk_room@function("storage_room@thievesguild",4);
+   tf := walk_room@function("storage_room@thievesguild",4);
       act("$1n says 'Bisse here will train your abilities to a suitable " +
-     "degree so that you may be a decent thief.'", A_ALWAYS,
-self, null,pc,TO_VICT);
+     "degree so that you may be a decent thief.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'You have already looked at help info, so you should " +
-     "have an idea what the 'info' command does.'", A_ALWAYS,
-self, null,pc,TO_VICT);
+     "have an idea what the 'info' command does.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act("$1n says 'When you enter 'info' with no arguments " +
      "your teacher will display all of the categories in which "+
-     "you may train such as dex, str, con.'", A_ALWAYS, self,
-null,pc,TO_VICT);
+     "you may train such as dex, str, con.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    pause;
    act("$1n says 'And to actually train an ability once you have" +
@@ -2650,6 +2635,7 @@ else
 	(self.zone =="moor"))
     {
     tf:=walk_room@function("temple@udgaard",3);
+    secure(pc, stop);
     pause;
     exec("wave "+pc.name,self);
     return(0);

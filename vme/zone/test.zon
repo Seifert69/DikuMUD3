@@ -9,22 +9,125 @@ END HEADER*/
 
 #include <macros.h>
 
+
 %zone                                  test
-reset RESET_NOT
 
-weather 1040
+   reset RESET_NOT
+   weather 1040
+   creators {"papi"}
 
-creators {"papi"}
+   notes
+   "This is a test zone. Can we do DIL 'unit testing' ?"
 
-notes
-"This is a test zone. Can we do DIL 'unit testing' ?"
-
-help
-"This zone is not intended for players."
-
-/* used for a quest fix */
+   help
+   "This zone is not intended for players."
 
 %dil
+
+dilbegin followdil();
+code
+{
+   exec("follow experiment", self);
+   exec("stand", self);
+   if (self.master == null)
+      log("Error: unable to follow");
+   quit;
+}
+dilend
+
+dilbegin walkeast();
+external
+   integer walk_room(place:string, spd:integer);
+
+var
+   u : unitptr;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC;
+   pause;
+   u := findunit(self, "follower", FIND_UNIT_SURRO, null);
+   if (u == null)
+   {
+      log("Error: unable to find follower");
+      quit;
+   }
+   secure(u, lostpc);
+
+   exec("east", self);
+   if (u == null)
+   {
+      log("Error: secure(u) null after exec() one");
+      quit;
+   }
+
+   exec("east", self);
+   if (u == null)
+   {
+      log("Error: secure(u) null after exec() two");
+      quit;
+   }
+
+   pause;
+   exec("east", self);
+   if (u == null)
+   {
+      log("Error: secure(u) null after exec() three");
+      quit;
+   }
+   pause;
+   i := walk_room("testlabc@test", PULSE_SEC);
+   if (u == null)
+   {
+      log("Error: secure(u) null after exec() three");
+      quit;
+   }
+   pause;
+   i := walk_room("testlabc@test", PULSE_SEC);
+   if (u == null)
+   {
+      log("Error: secure(u) null after exec() four");
+      quit;
+   }
+   pause;
+
+   i := walk_room("testlabe@test", PULSE_SEC);
+   if (u == null)
+   {
+      log("Error: secure(u) null after exec() five");
+      quit;
+   }
+   pause;
+
+   log("Test1: SUCCESS");
+   quit;
+
+:lostpc:
+   log("Error: Triggered secure() not supposed to happen");
+   quit;
+}
+dilend
+
+
+dilbegin test1();
+var
+   u1, u2 : unitptr;
+
+code
+{
+   u1 := load("experiment@test");
+   link(u1, findroom("testlabc@test"));
+
+   u2 := load("follower@test");
+   link(u2, findroom("testlabc@test"));
+
+   dilcopy("followdil@test()", u2);
+   dilcopy("walkeast@test()", u1);
+   quit;
+}
+dilend
+
+
 
 dilbegin integer buglostint(pc : unitptr, ip : integer, s : string);
 code
@@ -82,6 +185,8 @@ descr
 flags {UNIT_FL_NO_WEATHER}
 light 5
 east to testlabe;
+
+dilcopy test1@test();
 end
 
                                    testlabe
@@ -92,12 +197,13 @@ descr
 flags {UNIT_FL_NO_WEATHER}
 light 5
 west to testlabc;
+east to testlabc;
 end
 
 %objects
 
-		deadbug
 
+		deadbug
 names {"dead bug","bug"}
 title "a dead bug"
 descr "A dead bug lies here."
@@ -154,6 +260,25 @@ end
 
 
 %mobiles
+
+
+   experiment
+
+names {"experiment"}
+title "an experiment"
+descr "an experiment is standing here."
+weight 1
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+end
+
+   follower
+
+names {"follower"}
+title "a follower"
+descr "a follower is standing here."
+weight 1
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+end
 
    ladybug
 
