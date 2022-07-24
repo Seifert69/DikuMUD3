@@ -10,7 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 
-%zone                                  test
+%zone test
 
    reset RESET_NOT
    weather 1040
@@ -28,7 +28,6 @@ END HEADER*/
 #define LOGT_SUCCESS 1
 #define LOGT_INFO    2
 
-
 dilbegin logtest(no : integer, ltype : integer, msg : string);
 var
    sl : stringlist;
@@ -39,6 +38,7 @@ code
    return;
 }
 dilend
+
 
 dilbegin followdil();
 external
@@ -64,19 +64,23 @@ code
    if (u == null)
    {
       logtest(1, LOGT_ERROR, "u turned to null.");
-      quit;
+      goto terminate;
    }
    logtest(1, LOGT_INFO, "Follower has master secured()");
    goto loop;
 
 :lostit:
    logtest(1, LOGT_ERROR, "Follower lost master.");
+
+:terminate:
+   sendtoalldil("fail", "T001@test");
    quit;
 }
 dilend
 
 dilbegin walkeast();
 external
+   logtest(no : integer, ltype : integer, msg : string);
    integer walk_room@function(place:string, spd:integer);
 var
    u : unitptr;
@@ -88,105 +92,114 @@ code
    u := findunit(self, "follower", FIND_UNIT_SURRO, null);
    if (u == null)
    {
-      log("Error: unable to find follower");
-      quit;
+      logtest(1, LOGT_ERROR, "Unable to find follower");
+      goto terminate;
    }
    secure(u, lostpc);
 
-   log("T001//Info TEST STARTING");
+   logtest(1, LOGT_INFO, "Test Starting");
 
-   log("T001//Info in room: "+self.outside.symname);
+   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
    exec("east", self);
-   log("T001//Info in room: "+self.outside.symname);
+   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      log("T001//ERROR: secure(u) null after exec() one");
-      quit;
+      logtest(1, LOGT_ERROR, "secure(u) null after exec() one");
+      goto terminate;
    }
    if (u.outside != self.outside)
    {
-      log("T001//ERROR: follower not in the same room as master");
-      quit;
+      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      goto terminate;
    }
 
    exec("east", self);
-   log("T001//Info in room: "+self.outside.symname);
+   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      log("T001//ERROR: secure(u) null after exec() two");
-      quit;
+      logtest(1, LOGT_ERROR, "secure(u) null after exec() two");
+      goto terminate;
    }
    if (u.outside != self.outside)
    {
-      log("T001//ERROR: follower not in the same room as master");
-      quit;
+      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      goto terminate;
    }
 
    pause;
    exec("east", self);
-   log("T001//Info in room: "+self.outside.symname);
+   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      log("T001//ERROR: secure(u) null after exec() three");
-      quit;
+      logtest(1, LOGT_ERROR, "secure(u) null after exec() three");
+      goto terminate;
    }
    if (u.outside != self.outside)
    {
-      log("T001//ERROR: follower not in the same room as master");
-      quit;
+      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      goto terminate;
    }
 
    pause;
-   log("T001//Info FIRST WALK_ROOM to labc");
+   logtest(1, LOGT_INFO, "FIRST WALK_ROOM to labc");
    i := walk_room@function("testlabc@test", PULSE_SEC);
-   log("T001//Info in room: "+self.outside.symname);
+   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      log("T001//ERROR: secure(u) null after exec() three");
-      quit;
+      logtest(1, LOGT_ERROR, "secure(u) null after exec() three");
+      goto terminate;
    }
    if (u.outside != self.outside)
    {
-      log("T001//ERROR: follower not in the same room as master");
-      quit;
+      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      goto terminate;
    }
 
-   log("T001//Info SECOND WALK_ROOM to labe");
+   logtest(1, LOGT_INFO, "SECOND WALK_ROOM to labe");
    i := walk_room@function("testlabe@test", PULSE_SEC);
-   log("T001//Info in room: "+self.outside.symname);
+   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
    if (u == null)
    {
-      log("T001//ERROR secure(u) null after exec() five");
-      quit;
+      logtest(1, LOGT_ERROR, "secure(u) null after exec() five");
+      goto terminate;
    }
    if (u.outside != self.outside)
    {
-      log("T001//ERROR: follower not in the same room as master");
-      quit;
+      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      goto terminate;
    }
    pause;
 
-   log("T001//SUCCESS");
-   quit;
+   logtest(1, LOGT_SUCCESS, "Finished");
+   goto terminate;
 
 :lostpc:
-   log("T001//ERROR Triggered secure() not supposed to happen");
-   quit;
+   logtest(1, LOGT_ERROR, "Triggered secure() not supposed to happen");
+
+:terminate:
+   sendtoalldil("terminate", "T001@test");
+   quit;   
 }
 dilend
 
 
 // Setup test 001
+// Tests that a follower and master do not lose each other while moving
+//
 dilbegin T001();
+external
+   logtest(no : integer, ltype : integer, msg : string);
 var
    u1, u2 : unitptr;
-
+   i : integer;
 code
 {
+   interrupt(SFB_MSG, argument == "terminate", cleanup);
+
    u1 := load("experiment@test");
    link(u1, findroom("testlabc@test"));
 
@@ -198,8 +211,25 @@ code
 
    // Here we need to wait for it to either finish
    // or a timer will trigger and fail the test.
+   heartbeat := PULSE_SEC * 30;
+   i := 0;
+   while (i < 4)
+   {
+      wait(SFB_TICK, TRUE);
+      pause;
+      i := i + 1;
+   }
+   logtest(1, LOGT_ERROR, "Timeout");
 
-   quit;
+:cleanup:
+   logtest(1, LOGT_INFO, "Cleaning up");
+   u1 := findsymbolic("experiment@test");
+   destroy(u1);
+   u1 := findsymbolic("follower@test");
+   destroy(u1);
+   logtest(1, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
@@ -261,8 +291,6 @@ descr
 flags {UNIT_FL_NO_WEATHER}
 light 5
 east to testlabe;
-
-dilcopy T001@test();
 end
 
                                    testlabe
@@ -275,6 +303,18 @@ light 5
 west to testlabc;
 east to testlabc;
 end
+
+
+                                   labcontrol
+
+title "Test Laboratory Control"
+descr
+"   You are in the laboratory control center."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+up to testlabc;
+end
+
 
 %objects
 
@@ -356,6 +396,54 @@ weight 1
 M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
 end
 
+
+   director
+
+names {"lab director"}
+title "a lab director"
+descr "a lab director is standing here."
+weight 1
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+
+dilbegin labdirector();
+external
+   T001();
+   logtest(no : integer, ltype : integer, msg : string);
+   rebooting@commands(s : string);
+
+var 
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 30;
+   interrupt(SFB_MSG, argument == "done", test2);
+   logtest(0, LOGT_INFO, "Lab director starting.");
+   dilcopy("T001@test()", self.outside);
+   i := 0;
+   while (i < 4)
+   {
+      pause;
+      i := i + 1;
+   } 
+   goto timeout;
+
+:test2:
+   // load ladybug into testlabc max 1
+
+   logtest(0, LOGT_SUCCESS, "Lab director finished.");
+   goto shutdown;
+
+:timeout:
+   logtest(0, LOGT_ERROR, "Lab director stuck.");
+   goto shutdown;
+
+:shutdown:
+   rebooting@commands("0");
+   quit;
+}
+dilend
+end
+
    ladybug
 
 names {"lady bug","bug"}
@@ -368,7 +456,6 @@ weight 0
 M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
 
 dilbegin test001();
-
 var
    u : unitptr;
 code
@@ -595,6 +682,6 @@ end*/
 
 %reset
 
-load ladybug into testlabc max 1
+load director into labcontrol max 1
 
 %end
