@@ -488,7 +488,7 @@ void dilfi_fon(dilprg *p)
     }
     else
     {
-        dil_test_secure(p, TRUE);
+        dil_test_secure(p, true);
         /* look for NULL references, remove first */
         u = nullptr;
         for (i = 0; i < p->fp->securecount; i++)
@@ -2326,6 +2326,8 @@ void dilfi_dst(dilprg *p)
 /* Execute command */
 void dilfi_exec(dilprg *p)
 {
+    static int nested = 0; // Used to count nests of exec() from DIL, need for secure hack
+
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2345,6 +2347,8 @@ void dilfi_exec(dilprg *p)
                 slog(LOG_ALL, 0, "DIL %s issued command which was too long: %s", p->sarg->owner->getFileIndexSymName(), cmd);
             }
 
+            bool bOkToExecute = true;
+
             if (IS_IMMORTAL((unit_data *)v2->val.ptr))
             {
                 char buf[MAX_INPUT_LENGTH];
@@ -2356,6 +2360,7 @@ void dilfi_exec(dilprg *p)
                 {
                     if (cmd_ptr->minimum_level >= IMMORTAL_LEVEL)
                     {
+                        bOkToExecute = false;
                         slog(LOG_EXTENSIVE,
                              0,
                              "DIL %s on %s tried "
@@ -2365,31 +2370,20 @@ void dilfi_exec(dilprg *p)
                              ((unit_data *)v2->val.ptr)->getNames().Name(),
                              cmd);
                     }
-                    else
-                    {
-                        command_interpreter((unit_data *)v2->val.ptr, cmd);
-                        if (p && p->frame)
-                        {
-                            dil_test_secure(p);
-                        }
-                    }
-                }
-                else
-                {
-                    command_interpreter((unit_data *)v2->val.ptr, cmd);
-                    if (p && p->frame)
-                    {
-                        dil_test_secure(p);
-                    }
                 }
             }
-            else
+
+            if (bOkToExecute)
             {
+                nested++;
+
                 command_interpreter((unit_data *)v2->val.ptr, cmd);
                 if (p && p->frame)
                 {
-                    dil_test_secure(p);
+                    dil_test_secure(p, false, true);
                 }
+
+                nested--;
             }
         }
     }

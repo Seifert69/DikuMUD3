@@ -173,7 +173,7 @@ void resolve_templates()
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
         /* all templates in zone */
-        z->second->resolveZoneTemplates();
+        z->second->resolveZoneTemplates(); // <- we could instantiate all DIL global vars here
     }
 }
 

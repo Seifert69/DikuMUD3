@@ -68,7 +68,7 @@ int dil_sub_secure(dilframe *frm, unit_data *sup, int bForeach = FALSE);
 void dil_clear_extras(dilprg *prg, extra_descr_data *exd);
 void dil_clear_non_secured(dilprg *prg);
 void dil_clear_lost_reference(dilframe *frm, void *ptr);
-void dil_test_secure(dilprg *prg, int bForeach = FALSE);
+void dil_test_secure(dilprg *prg, bool bForeach = false, bool bExec = false);
 int dil_destroy(const char *name, unit_data *u);
 
 /* NULL fptr creates one...  */
