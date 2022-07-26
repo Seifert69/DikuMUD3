@@ -82,7 +82,7 @@ struct zone_info_type
     int no_of_zones;               ///< Total number of zones
     // class zone_type *zone_list;	Replaced by ::map below
     void **spmatrix; ///< Inter zone shortest paths
-    std::map<const char *, zone_type *, cmp_str> mmp;
+    std::map<std::string, zone_type *> mmp;
 };
 
 unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec = TRUE);

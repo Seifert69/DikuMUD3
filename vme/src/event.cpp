@@ -211,7 +211,6 @@ void eventqueue::process()
     int j = 0;
     int k = 0;
     char dilname[256];
-    char dilzname[256];
     char diloname[256];
     char dilozname[256];
     timeval now;
@@ -273,11 +272,11 @@ void eventqueue::process()
             tfunc = tmp_event->func;
             int bDestructed = 0;
 
+            std::string dilzname{"NO ZONE"};
             auto *fptr = reinterpret_cast<unit_fptr *>(tmp_event->arg2);
             if (tfunc == special_event && fptr->getData() && fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
             {
                 strcpy(dilname, "NO NAME");
-                strcpy(dilzname, "NO ZONE");
                 strcpy(diloname, "NO NAME");
                 strcpy(dilozname, "NO ZONE");
 
@@ -307,7 +306,7 @@ void eventqueue::process()
                     }
                     if (prg->fp->tmpl->zone)
                     {
-                        strcpy(dilzname, prg->fp->tmpl->zone->getName());
+                        dilzname = prg->fp->tmpl->zone->getName();
                     }
                     strcpy(diloname, u ? u->getFileIndexName() : unit_data::NO_NAME);
                     strcpy(dilozname, u ? u->getFileIndexZoneName() : unit_data::NO_ZONE);
