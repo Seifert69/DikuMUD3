@@ -38,6 +38,77 @@ code
    return;
 }
 dilend
+// ==================== T003 =====================
+
+// Tests DIL store / restore
+//
+dilbegin T003(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   r, u1, u2 : unitptr;
+code
+{
+   // interrupt(SFB_MSG, argument == "failure", failure);
+
+   r := findroom("testlabc@test");
+   if (r.inside != null)
+   {
+      logtest(tstno, LOGT_ERROR, "Room not empty in beginning");
+      goto failure;
+   }
+
+   u1 := load("pbox@test");
+   link(u1, r);
+   u2 := load("pbox@test");
+   link(u2, u1);
+
+   store(u1, "shazam.test", TRUE);
+   destroy(u1);
+   if (r.inside != null)
+   {
+      logtest(tstno, LOGT_ERROR, "Room not empty after destroy");
+      goto failure;
+   }
+
+   u1 := restore("shazam.test", r);
+   if (u1 == null)
+   {
+      logtest(tstno, LOGT_ERROR, "Room empty after restore");
+      goto failure;
+   }
+
+   if (u1.symname != "pbox@test")
+   {
+      logtest(tstno, LOGT_ERROR, "Room didn't contain Pandora's box");
+      goto failure;
+   }
+
+   if (u1.inside.symname != "pbox@test")
+   {
+      logtest(tstno, LOGT_ERROR, "Pandora's box didn't contain Pandora's box");
+      goto failure;
+   }
+   logtest(tstno, LOGT_INFO, "All good");
+   goto cleanup;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+
+:cleanup:
+   u1 := findsymbolic("pbox@test");
+   destroy(u1);
+   u1 := findsymbolic("pbox@test");
+   destroy(u1);
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
+
+
 
 // ==================== T002 =====================
 
@@ -433,6 +504,19 @@ end
 
 %objects
 
+		pbox
+names {"pandora's box", "pandoras box","box"}
+title "pandora's box"
+descr "Someone has carelessly left a Pandora's box here."
+extra {}
+"Looks like there could be a box in a box"
+cost 1 SILVER_PIECE
+rent 1 IRON_PIECE
+CONTAINER_DEF(100)
+manipulate {MANIPULATE_TAKE}
+weight 1
+end
+
 
 		deadbug
 names {"dead bug","bug"}
@@ -545,7 +629,7 @@ code
 {
    logtest(0, LOGT_INFO, "Lab director starting.");
 
-   tstno := 2; // If you add a new T003, then set this to 3, and so forth
+   tstno := 3; // If you add a new T003, then set this to 3, and so forth
 
 
    heartbeat := PULSE_SEC * 30;
