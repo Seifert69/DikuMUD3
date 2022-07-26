@@ -34,13 +34,127 @@ var
 code
 {
    sl := {"ERROR", "SUCCESS", "INFO"};
-   log("T"+itoa(no)+"//"+sl.[ltype]+" "+msg);
+   log("T"+right("00"+itoa(no),3)+"//"+sl.[ltype]+" "+msg);
+   return;
+}
+dilend
+
+// ==================== T002 =====================
+
+dilbegin globalvar(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+
+var
+   u : unitptr;
+   sl : stringlist global testsl@test;
+   il : intlist global testil@test;
+code
+{
+   if (length(sl) != 3)
+      goto failure;
+
+   if (length(il) != 3)
+      goto failure;
+
+   if ((sl.[0] != "abc") or (sl.[1] != "def") or (sl.[2] != "ghi"))
+      goto failure;
+
+   if ((il.[0] != 42) or (il.[1] != 43) or (il.[2] != 44))
+      goto failure;
+
+   insert(sl, 3, "jkl");
+   insert(il, 3, 45);
+   goto success;
+
+:success:
+   logtest(tstno, LOGT_INFO, "sub test OK");
+   sendtoalldil("success", "T"+right("00"+itoa(tstno), 3)+"@test");
+   quit;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test Failed.");
+   sendtoalldil("failure", "T"+right("00"+itoa(tstno), 3)+"@test");
+   quit;
+}
+dilend
+
+
+
+// Tests global DIL variables
+//
+dilbegin T002(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u1 : unitptr;
+   sl : stringlist global testsl@test;
+   il : intlist global testil@test;
+code
+{
+   interrupt(SFB_MSG, argument == "failure", failure);
+
+   sl := {"abc", "def", "ghi"};
+   il := {42, 43, 44};
+
+   if (length(sl) != 3)
+      goto failure;
+
+   if (length(il) != 3)
+      goto failure;
+
+   if ((sl.[0] != "abc") or (sl.[1] != "def") or (sl.[2] != "ghi"))
+      goto failure;
+
+   if ((il.[0] != 42) or (il.[1] != 43) or (il.[2] != 44))
+      goto failure;
+      
+   u1 := load("experiment@test");
+   link(u1, findroom("testlabc@test"));
+   dilcopy("globalvar@test("+itoa(tstno)+")", u1);
+
+   // Wait for the globalvar to change the variable
+
+   heartbeat :=PULSE_SEC * 3;
+   wait(SFB_TICK, TRUE);
+
+   if (length(sl) != 4)
+      goto failure;
+
+   if (length(il) != 4)
+      goto failure;
+
+   if ((sl.[0] != "abc") or (sl.[1] != "def") or (sl.[2] != "ghi") or (sl.[3] != "jkl"))
+      goto failure;
+
+   if ((il.[0] != 42) or (il.[1] != 43) or (il.[2] != 44) or (il.[3] != 45))
+      goto failure;
+
+   logtest(tstno, LOGT_INFO, "Data OK");
+   goto cleanup;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Data not as expected");
+
+:cleanup:
+   logtest(tstno, LOGT_INFO, "Cleaning up");
+   u1 := findsymbolic("experiment@test");
+   destroy(u1);
+   u1 := findsymbolic("follower@test");
+   destroy(u1);
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
    return;
 }
 dilend
 
 
-dilbegin followdil();
+
+// ==================== T001 =====================
+
+dilbegin followdil(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
 
@@ -51,9 +165,9 @@ code
    exec("follow experiment", self);
    exec("stand", self);
    if (self.master == null)
-      logtest(1, LOGT_ERROR, "Unable to follow");
+      logtest(tstno, LOGT_ERROR, "Unable to follow");
    else
-      logtest(1, LOGT_INFO, "Following: " + self.master.name);
+      logtest(tstno, LOGT_INFO, "Following: " + self.master.name);
 
    u := self.master;
    secure(u, lostit);
@@ -63,14 +177,14 @@ code
    pause;
    if (u == null)
    {
-      logtest(1, LOGT_ERROR, "u turned to null.");
+      logtest(tstno, LOGT_ERROR, "u turned to null.");
       goto terminate;
    }
-   logtest(1, LOGT_INFO, "Follower has master secured()");
+   logtest(tstno, LOGT_INFO, "Follower has master secured()");
    goto loop;
 
 :lostit:
-   logtest(1, LOGT_ERROR, "Follower lost master.");
+   logtest(tstno, LOGT_ERROR, "Follower lost master.");
 
 :terminate:
    sendtoalldil("fail", "T001@test");
@@ -78,7 +192,7 @@ code
 }
 dilend
 
-dilbegin walkeast();
+dilbegin walkeast(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
    integer walk_room@function(place:string, spd:integer);
@@ -92,93 +206,93 @@ code
    u := findunit(self, "follower", FIND_UNIT_SURRO, null);
    if (u == null)
    {
-      logtest(1, LOGT_ERROR, "Unable to find follower");
+      logtest(tstno, LOGT_ERROR, "Unable to find follower");
       goto terminate;
    }
    secure(u, lostpc);
 
-   logtest(1, LOGT_INFO, "Test Starting");
+   logtest(tstno, LOGT_INFO, "Test Starting");
 
-   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
+   logtest(tstno, LOGT_INFO, "in room: "+self.outside.symname);
    exec("east", self);
-   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
+   logtest(tstno, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      logtest(1, LOGT_ERROR, "secure(u) null after exec() one");
+      logtest(tstno, LOGT_ERROR, "secure(u) null after exec() one");
       goto terminate;
    }
    if (u.outside != self.outside)
    {
-      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      logtest(tstno, LOGT_ERROR, "follower not in the same room as master");
       goto terminate;
    }
 
    exec("east", self);
-   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
+   logtest(tstno, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      logtest(1, LOGT_ERROR, "secure(u) null after exec() two");
+      logtest(tstno, LOGT_ERROR, "secure(u) null after exec() two");
       goto terminate;
    }
    if (u.outside != self.outside)
    {
-      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      logtest(tstno, LOGT_ERROR, "follower not in the same room as master");
       goto terminate;
    }
 
    pause;
    exec("east", self);
-   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
+   logtest(tstno, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      logtest(1, LOGT_ERROR, "secure(u) null after exec() three");
+      logtest(tstno, LOGT_ERROR, "secure(u) null after exec() three");
       goto terminate;
    }
    if (u.outside != self.outside)
    {
-      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      logtest(tstno, LOGT_ERROR, "follower not in the same room as master");
       goto terminate;
    }
 
    pause;
-   logtest(1, LOGT_INFO, "FIRST WALK_ROOM to labc");
+   logtest(tstno, LOGT_INFO, "FIRST WALK_ROOM to labc");
    i := walk_room@function("testlabc@test", PULSE_SEC);
-   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
+   logtest(tstno, LOGT_INFO, "in room: "+self.outside.symname);
    pause;
    if (u == null)
    {
-      logtest(1, LOGT_ERROR, "secure(u) null after exec() three");
+      logtest(tstno, LOGT_ERROR, "secure(u) null after exec() three");
       goto terminate;
    }
    if (u.outside != self.outside)
    {
-      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      logtest(tstno, LOGT_ERROR, "follower not in the same room as master");
       goto terminate;
    }
 
-   logtest(1, LOGT_INFO, "SECOND WALK_ROOM to labe");
+   logtest(tstno, LOGT_INFO, "SECOND WALK_ROOM to labe");
    i := walk_room@function("testlabe@test", PULSE_SEC);
-   logtest(1, LOGT_INFO, "in room: "+self.outside.symname);
+   logtest(tstno, LOGT_INFO, "in room: "+self.outside.symname);
    if (u == null)
    {
-      logtest(1, LOGT_ERROR, "secure(u) null after exec() five");
+      logtest(tstno, LOGT_ERROR, "secure(u) null after exec() five");
       goto terminate;
    }
    if (u.outside != self.outside)
    {
-      logtest(1, LOGT_ERROR, "follower not in the same room as master");
+      logtest(tstno, LOGT_ERROR, "follower not in the same room as master");
       goto terminate;
    }
    pause;
 
-   logtest(1, LOGT_SUCCESS, "Finished");
+   logtest(tstno, LOGT_SUCCESS, "Finished");
    goto terminate;
 
 :lostpc:
-   logtest(1, LOGT_ERROR, "Triggered secure() not supposed to happen");
+   logtest(tstno, LOGT_ERROR, "Triggered secure() not supposed to happen");
 
 :terminate:
    sendtoalldil("terminate", "T001@test");
@@ -186,11 +300,10 @@ code
 }
 dilend
 
-
 // Setup test 001
 // Tests that a follower and master do not lose each other while moving
 //
-dilbegin T001();
+dilbegin T001(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
 var
@@ -206,8 +319,8 @@ code
    u2 := load("follower@test");
    link(u2, findroom("testlabc@test"));
 
-   dilcopy("followdil@test()", u2);
-   dilcopy("walkeast@test()", u1);
+   dilcopy("followdil@test("+itoa(tstno)+")", u2);
+   dilcopy("walkeast@test("+itoa(tstno)+")", u1);
 
    // Here we need to wait for it to either finish
    // or a timer will trigger and fail the test.
@@ -219,20 +332,22 @@ code
       pause;
       i := i + 1;
    }
-   logtest(1, LOGT_ERROR, "Timeout");
+   logtest(tstno, LOGT_ERROR, "Timeout");
 
 :cleanup:
-   logtest(1, LOGT_INFO, "Cleaning up");
+   logtest(tstno, LOGT_INFO, "Cleaning up");
    u1 := findsymbolic("experiment@test");
    destroy(u1);
    u1 := findsymbolic("follower@test");
    destroy(u1);
-   logtest(1, LOGT_INFO, "Done");
+   logtest(tstno, LOGT_INFO, "Done");
    sendtoalldil("done", "labdirector@test");
    return;
 }
 dilend
 
+
+// ==================== T00X =====================
 
 
 dilbegin integer buglostint(pc : unitptr, ip : integer, s : string);
@@ -405,20 +520,40 @@ descr "a lab director is standing here."
 weight 1
 M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
 
-dilbegin labdirector();
+dilbegin fnpri(FN_PRI_MISSION) failsafe();
 external
-   T001();
    logtest(no : integer, ltype : integer, msg : string);
    rebooting@commands(s : string);
-
-var 
-   i : integer;
 code
 {
-   heartbeat := PULSE_SEC * 30;
-   interrupt(SFB_MSG, argument == "done", test2);
+   heartbeat := PULSE_SEC*60*5; // After 5 minutes, abort
+   wait(SFB_TICK, TRUE);
+   log("Test/T000//ERROR Fail safe triggered");
+   rebooting@commands("0");
+   quit;
+}
+dilend
+
+dilbegin labdirector();
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   rebooting@commands(s : string);
+var 
+   i : integer;
+   tstno : integer
+code
+{
    logtest(0, LOGT_INFO, "Lab director starting.");
-   dilcopy("T001@test()", self.outside);
+
+   tstno := 2; // If you add a new T003, then set this to 3, and so forth
+
+
+   heartbeat := PULSE_SEC * 30;
+   interrupt(SFB_MSG, argument == "done", nexttest);
+
+:loop:
+   logtest(0, LOGT_INFO, "Lab director launching test " + itoa(tstno));
+   dilcopy("T"+right("00"+itoa(tstno), 3)+"@test("+itoa(tstno)+")", self.outside);
    i := 0;
    while (i < 4)
    {
@@ -427,10 +562,12 @@ code
    } 
    goto timeout;
 
-:test2:
-   // load ladybug into testlabc max 1
+:nexttest:
+   tstno := tstno - 1;
+   if (tstno > 0)
+      goto loop;
 
-   logtest(0, LOGT_SUCCESS, "Lab director finished.");
+   logtest(0, LOGT_SUCCESS, "Lab director finished running all tests.");
    goto shutdown;
 
 :timeout:
@@ -443,6 +580,7 @@ code
 }
 dilend
 end
+
 
    ladybug
 
