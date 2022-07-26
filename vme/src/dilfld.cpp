@@ -740,7 +740,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SP;
-                        v->val.ptr = (void *)IF_STR(((zone_type *)v1->val.ptr)->getName());
+                        v->val.ptr = (void *)((zone_type *)v1->val.ptr)->getName().c_str();
                     }
                     else
                     {
@@ -1104,23 +1104,12 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        zone_type *z = (zone_type *)v1->val.ptr;
+                        auto *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->cgetFileIndexMap().begin(); fi != z->cgetFileIndexMap().end(); fi++)
+                        v->val.ptr = z->findFirstRoom();
+                        if (v->val.ptr == nullptr)
                         {
-                            if (fi->second->getType() == UNIT_ST_ROOM)
-                            {
-                                if (fi->second->Empty())
-                                {
-                                    v->type = DILV_FAIL;
-                                    v->val.ptr = nullptr;
-                                }
-                                else
-                                {
-                                    v->val.ptr = fi->second->Front();
-                                }
-                                break;
-                            }
+                            v->type = DILV_FAIL;
                         }
                     }
                     else
@@ -1148,23 +1137,12 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        zone_type *z = (zone_type *)v1->val.ptr;
+                        auto *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->cgetFileIndexMap().begin(); fi != z->cgetFileIndexMap().end(); fi++)
+                        v->val.ptr = z->findFirstNPC();
+                        if (v->val.ptr == nullptr)
                         {
-                            if (fi->second->getType() == UNIT_ST_NPC)
-                            {
-                                if (fi->second->Empty())
-                                {
-                                    v->type = DILV_FAIL;
-                                    v->val.ptr = nullptr;
-                                }
-                                else
-                                {
-                                    v->val.ptr = fi->second->Front();
-                                }
-                                break;
-                            }
+                            v->type = DILV_FAIL;
                         }
                     }
                     else
@@ -1192,23 +1170,12 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UP;
-                        zone_type *z = (zone_type *)v1->val.ptr;
+                        auto *z = (zone_type *)v1->val.ptr;
 
-                        for (auto fi = z->cgetFileIndexMap().begin(); fi != z->cgetFileIndexMap().end(); fi++)
+                        v->val.ptr = z->findFirstObj();
+                        if (v->val.ptr == nullptr)
                         {
-                            if (fi->second->getType() == UNIT_ST_OBJ)
-                            {
-                                if (fi->second->Empty())
-                                {
-                                    v->type = DILV_FAIL;
-                                    v->val.ptr = nullptr;
-                                }
-                                else
-                                {
-                                    v->val.ptr = fi->second->Front();
-                                }
-                                break;
-                            }
+                            v->type = DILV_FAIL;
                         }
                     }
                     else

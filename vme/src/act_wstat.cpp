@@ -276,7 +276,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    zone->getName(),
                                    zone->getFilename(),
                                    zone->getAccessLevel(),
-                                   zone->getTitle() ? zone->getTitle() : "",
+                                   zone->getTitle(),
                                    zone->getLevelRequiredToLoadItems(),
                                    zone->getPayOnly(),
                                    zone->getNumOfFileIndexes(),
@@ -353,16 +353,7 @@ static void stat_dil(unit_data *ch, zone_type *zone)
     send_to_char(msg, ch);
 
     msg += "<div class='twocol'>";
-
-    for (auto tmpl = zone->cgetDILTemplate().begin(); tmpl != zone->cgetDILTemplate().end(); tmpl++)
-    {
-        msg += diku::format_to_str("%.2fs %s [%d t / %d i]<br/>",
-                                   tmpl->second->fCPU / 1000.0,
-                                   tmpl->second->prgname,
-                                   tmpl->second->nTriggers,
-                                   tmpl->second->nInstructions);
-    }
-
+    msg += zone->getStatDIL();
     msg += "</div><br/>"; // MS2020
     send_to_char(msg, ch);
 }
@@ -378,19 +369,7 @@ static void stat_global_dil(unit_data *ch, ubit32 nCount)
 
     for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
-        for (auto tmpl = z->second->cgetDILTemplate().begin(); tmpl != z->second->cgetDILTemplate().end(); tmpl++)
-        {
-            instructionSum += tmpl->second->nInstructions;
-            if (tmpl->second->fCPU >= nCount)
-            {
-                msg += diku::format_to_str("%.2fs %s@%s [%d t / %d i]<br/>",
-                                           tmpl->second->fCPU / 1000.0,
-                                           tmpl->second->prgname,
-                                           tmpl->second->zone->getName(),
-                                           tmpl->second->nTriggers,
-                                           tmpl->second->nInstructions);
-            }
-        }
+        msg += z->second->getStatGlobalDIL(nCount, instructionSum);
     }
 
     msg += "</div><br/>"; // MS2020
@@ -488,23 +467,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
     }
 
     /* Search for mobs/objs/rooms and line in columns */
-    std::string msg{"<div class='threecol'>"};
-    for (auto fi = zone->cgetFileIndexMap().begin(); fi != zone->cgetFileIndexMap().end(); fi++)
-    {
-        if (fi->second->getType() == search_type)
-        {
-            if ((fi->second->getType() == UNIT_ST_OBJ) || (fi->second->getType() == UNIT_ST_NPC))
-            {
-                msg += diku::format_to_str("<a cmd='load #'>%s</a><br/>", fi->second->getName());
-            }
-            else
-            {
-                msg += diku::format_to_str("%s<br/>", fi->second->getName());
-            }
-        }
-    }
-
-    msg += "</div></br>";
+    std::string msg{"<div class='threecol'>" + zone->getExtraStatZoneMessage(search_type) + "</div></br>"};
     send_to_char(msg, ch);
 }
 
@@ -1293,7 +1256,7 @@ void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
 
             if (*name && !*zone)
             {
-                strcpy(zone, unit_zone(ch)->getName());
+                strcpy(zone, unit_zone(ch)->getName().c_str());
             }
 
             u = find_symbolic(zone, name);

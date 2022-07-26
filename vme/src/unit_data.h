@@ -120,7 +120,7 @@ public:
     {
         if (m_fi)
         {
-            return m_fi->getZone()->getName();
+            return m_fi->getZone()->getName().c_str();
         }
         return NO_ZONE;
     }

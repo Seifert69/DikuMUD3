@@ -87,21 +87,7 @@ file_index_type *find_file_index(const char *zonename, const char *name)
     strcpy(bufname, name);
     str_lower(bufname);
 
-    auto it = zone->cgetFileIndexMap().find(bufname);
-
-    if (it != zone->cgetFileIndexMap().end())
-    {
-        return it->second;
-    }
-    else
-    {
-        return nullptr;
-    }
-
-    /*if ((ba = binary_search(zone->ba, name, zone->no_of_fi)) == NULL)
-        return NULL;
-
-    return (class file_index_type *)ba->block;*/
+    return zone->findFileIndex(bufname);
 }
 
 /**
@@ -122,21 +108,7 @@ diltemplate *find_dil_index(const char *zonename, const char *name)
         return nullptr;
     }
 
-    auto it = zone->cgetDILTemplate().find(name);
-
-    if (it != zone->cgetDILTemplate().end())
-    {
-        return it->second;
-    }
-    else
-    {
-        return nullptr;
-    }
-
-    /*    if ((ba = binary_search(zone->tmplba, name, zone->no_tmpl)) == NULL)
-            return NULL;
-
-        return (struct diltemplate *)ba->block;*/
+    return zone->findDILTemplate(name);
 }
 
 /**
@@ -204,7 +176,7 @@ file_index_type *pc_str_to_file_index(unit_data *ch, const char *str)
 
     if (*name && !*zone)
     {
-        strcpy(zone, unit_zone(ch)->getName());
+        strcpy(zone, unit_zone(ch)->getName().c_str());
     }
 
     return find_file_index(zone, name);

@@ -29,5 +29,5 @@ FILE *fopen_cache(const std::string &name, const char *mode);
 void fclose_cache();
 ubit1 file_exists(const char *name);
 ubit1 file_exists(const std::string &name);
-int load_string(char *filename, char **file_str);
-int save_string(char *filename, char **file_str, char *opp);
+int load_string(const char *filename, char **file_str);
+int save_string(const char *filename, char **file_str, char *opp);

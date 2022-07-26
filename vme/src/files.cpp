@@ -478,7 +478,7 @@ void fclose_cache()
 int max_size_load = 1000000;
 int max_size_save = 1000000;
 
-int load_string(char *filename, char **file_str)
+int load_string(const char *filename, char **file_str)
 {
     int input = 0;
     unsigned int nread = 0;
@@ -535,7 +535,7 @@ int load_string(char *filename, char **file_str)
     return (FILE_LOADED);
 }
 
-int save_string(char *filename, char **file_str, char *opp)
+int save_string(const char *filename, char **file_str, char *opp)
 {
     int output = 0;
     unsigned int nwrite = 0;

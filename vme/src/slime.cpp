@@ -34,7 +34,7 @@ static void slime_save()
 
     for (i = 0; i < slime_count; i++)
     {
-        fputs(slime_list[i]->getZone()->getName(), f);
+        fputs(slime_list[i]->getZone()->getName().c_str(), f);
         fputc(0, f);
         fputs(slime_list[i]->getName(), f);
         fputc(0, f);
