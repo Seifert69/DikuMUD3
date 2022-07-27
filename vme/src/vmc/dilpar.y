@@ -5666,12 +5666,24 @@ dilproc : corefuncall
             bwrite_ubit8(&wtmp, DILI_DELPC);
         }
     }
-    | DILSI_REBOOT ihold
+    | DILSI_REBOOT '(' coreexp ')' ihold
     {
-        $$.fst = $2;
+        if ($3.typ != DilVarType_e::DILV_INT)
+        {
+            dilfatal("Arg 1 of 'reboot' not an integer");
+        }
+        else
+        {
+            $$.fst = $3.fst;
+            $$.lst = $5 + 1;
+            wtmp = &tmpl.core[$5];
+            bwrite_ubit8(&wtmp, DILI_REBOOT);
+        }
+
+        /*$$.fst = $2;
         $$.lst = $2 + 1;
         wtmp = &tmpl.core[$2];
-        bwrite_ubit8(&wtmp, DILI_REBOOT);
+        bwrite_ubit8(&wtmp, DILI_REBOOT);*/
     }
     | DILSI_FOLO '(' coreexp ',' coreexp ')' ihold
     {

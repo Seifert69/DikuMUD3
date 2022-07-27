@@ -22,6 +22,9 @@ END HEADER*/
    help
    "This zone is not intended for players."
 
+// T003 is a good example of a fairly simple stand-alone test.
+//      All testing is happening inside of the T003 code.
+
 %dil
 
 #define LOGT_ERROR   0
@@ -31,13 +34,50 @@ END HEADER*/
 dilbegin logtest(no : integer, ltype : integer, msg : string);
 var
    sl : stringlist;
+   il : intlist global errors@test;
 code
 {
    sl := {"ERROR", "SUCCESS", "INFO"};
    log("T"+right("00"+itoa(no),3)+"//"+sl.[ltype]+" "+msg);
+   if (ltype == LOGT_ERROR)
+      insert(il, length(il), no);
    return;
 }
 dilend
+
+
+// ==================== T004 =====================
+
+// Tests DIL store / restore
+//
+dilbegin T004(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   r, u1, u2 : unitptr;
+code
+{
+   logtest(tstno, LOGT_ERROR, "Failing on purpose");
+   goto failure;
+
+   logtest(tstno, LOGT_INFO, "All good");
+   goto cleanup;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+
+:cleanup:
+   // Naught
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
+
+
+
 // ==================== T003 =====================
 
 // Tests DIL store / restore
@@ -621,16 +661,16 @@ dilend
 dilbegin labdirector();
 external
    logtest(no : integer, ltype : integer, msg : string);
-   rebooting@commands(s : string);
 var 
    i : integer;
-   tstno : integer
+   tstno : integer;
+   il : intlist global errors@test;
+   s : string;
 code
 {
    logtest(0, LOGT_INFO, "Lab director starting.");
 
    tstno := 3; // If you add a new T003, then set this to 3, and so forth
-
 
    heartbeat := PULSE_SEC * 30;
    interrupt(SFB_MSG, argument == "done", nexttest);
@@ -659,7 +699,21 @@ code
    goto shutdown;
 
 :shutdown:
-   rebooting@commands("0");
+   if (length(il) > 0)
+   {
+      s := "";
+      i := length(il)-1;
+      while (i >= 0)
+      {
+         s := s + itoa(il.[i]) + " ";
+         i := i - 1;
+      }
+      log("The following tests failed : " + s);
+      log("Exiting with code " + itoa(il.[0]));
+      reboot(il.[0]);
+   }
+   else
+      reboot(0);
    quit;
 }
 dilend

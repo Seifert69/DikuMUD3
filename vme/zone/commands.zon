@@ -4854,7 +4854,7 @@ while (u.type==UNIT_ST_PC)
 {
 u:=u.gnext;
 }
-reboot;
+reboot(0);
 quit;
 }
 dilend

@@ -56,6 +56,7 @@ int g_player_convert = 0;
 int g_slow_death = 0;      /* Shut her down, Martha, she's sucking mud */
 int g_mud_shutdown = 0;    /* clean shutdown */
 int g_mud_reboot = 0;      /* reboot the game after a shutdown */
+int g_mud_exitcode = 0;    // The exit code when rebooting / shutting down
 int g_wizlock = 0;         /* no mortals on now */
 int g_tics = 60;           /* number of tics since boot-time */
 bool g_dumptables = false; // If true, dump all profession tables to stdout and exit(0)
@@ -173,12 +174,14 @@ void run_the_game(char *srvcfg)
     if (g_mud_reboot)
     {
         slog(LOG_OFF, 0, "Rebooting.");
-        exit(42);
+        exit(g_mud_exitcode);
+        //exit(42);
     }
     else
     {
         slog(LOG_OFF, 0, "Normal termination of game.");
-        exit(0);
+        exit(g_mud_exitcode);
+        //exit(0);
     }
 }
 

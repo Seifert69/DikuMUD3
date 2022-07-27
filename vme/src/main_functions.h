@@ -32,6 +32,7 @@ extern int g_player_convert;
 extern int g_slow_death;
 extern int g_mud_shutdown;
 extern int g_mud_reboot;
+extern int g_mud_exitcode;
 extern int g_wizlock;
 extern int g_tics;
 extern int g_mudboot;

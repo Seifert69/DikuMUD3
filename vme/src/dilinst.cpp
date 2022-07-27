@@ -410,14 +410,25 @@ void dilfi_delpc(dilprg *p)
 
 void dilfi_reboot(dilprg *p)
 {
-    if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("reboot", p, 1, v1, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (reboot).", p->frame->tmpl->prgname);
-        p->waitcmd = WAITCMD_QUIT;
-        return;
+        dil_getval(v1);
+
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (reboot).", p->frame->tmpl->prgname);
+            p->waitcmd = WAITCMD_QUIT;
+        }
+        else
+        {
+            g_mud_shutdown = g_mud_reboot = 1;
+            g_mud_exitcode = v1->val.num; // The exit() code
+        }
     }
 
-    g_mud_shutdown = g_mud_reboot = 1;
+    delete v1;
 }
 
 /* foreach - clear / build */
