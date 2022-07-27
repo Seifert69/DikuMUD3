@@ -1,7 +1,8 @@
 #!/bin/bash
+set -x
 TIMEOUT=300s
 cp ../etc/zonelist.test ../etc/zonelist
-timeout --signal=KILL ${TIMEOUT} vme
+timeout --signal=KILL ${TIMEOUT} ./vme
 result=$?
 #echo "RESULT:${result}"
 if [ ${result} -ne 0 ]; then
