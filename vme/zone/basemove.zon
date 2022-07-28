@@ -88,6 +88,7 @@ code
 
    act("You now follow $3n.", A_ALWAYS, self, null, self.master, TO_CHAR);
    heartbeat := 1;
+
 :start:
    wait(SFB_DONE, TRUE);
 
@@ -106,6 +107,13 @@ code
          goto start;
       act("You're not in a position to follow $2n.", A_HIDEINV, self, self.master, null, TO_CHAR);
       goto start;
+   }
+
+   if (self.outside == self.master.outside)
+   {
+      // If you and the master are in the same object, then don't follow (sail & ride)
+      if (self.outside.type != UNIT_ST_ROOM)
+         goto start;
    }
 
    if (command("north") or command("east") or command("south") or command("west") or command("up") or command("down"))
