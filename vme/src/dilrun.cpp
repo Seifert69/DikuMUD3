@@ -229,11 +229,13 @@ void boot_global_dil(void)
 
 dilvar *getDilGlobalDilVar(const char *name, DilVarType_e type)
 {
-    if (g_global_dilvars.find(name) == g_global_dilvars.end())
+    dilvar *v;
+    auto it = g_global_dilvars.find(name);
+
+    if (it == g_global_dilvars.end())
     {
         // Create a placeholder variable for the global var
-
-        dilvar *v = new dilvar;
+        v = new dilvar;
 
         v->type = type;
         v->itype = DilIType_e::Global;
@@ -259,8 +261,18 @@ dilvar *getDilGlobalDilVar(const char *name, DilVarType_e type)
 
         g_global_dilvars[name] = v;
     }
+    else
+    {
+        v = it->second;
 
-    return g_global_dilvars[name];
+        if (v->type != type)
+        {
+            slog(LOG_ALL, 0, "DIL ERROR: getDilGlobalDilVar() type error for global DIL var %s (one is stringlist and the other is intlist).", name);
+            v = nullptr;
+        }
+    }
+
+    return v;
 }
 
 
@@ -1842,10 +1854,17 @@ void dil_init_vars(int varc, dilframe *frm)
     {
         if (frm->vars[i].name)
         {
-            frm->vars[i].itype = DilIType_e::Global;
             dilvar *v = getDilGlobalDilVar(frm->vars[i].name, frm->vars[i].type);
-            frm->vars[i].val = v->val;
-            continue;
+
+            if (v)
+            {
+                frm->vars[i].itype = DilIType_e::Global;
+                frm->vars[i].val = v->val;
+                continue;
+            }
+            
+            // Error, set it as invalid and fall through
+            frm->vars[i].type = DilVarType_e::DILV_INVALID;
         }
 
         frm->vars[i].itype = DilIType_e::Regular;
@@ -1860,12 +1879,8 @@ void dil_init_vars(int varc, dilframe *frm)
                 frm->vars[i].val.intlist = new cintlist;
                 break;
 
-            case DilVarType_e::DILV_SP:
-                frm->vars[i].val.string = nullptr;
-                break;
-
             default:
-                frm->vars[i].val.integer = 0;
+                frm->vars[i].val.string = nullptr;
         }
     }
 }

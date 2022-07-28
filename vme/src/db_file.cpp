@@ -520,10 +520,19 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
                     // Create global var in the global index or find and reuse it
                     dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
 
-                    // Set the type so that we don't free it.
-                    // Global means it's a reference to a global var
-                    prg->fp->vars[i].itype = DilIType_e::Global;
-                    prg->fp->vars[i].val = v->val;
+                    if (v)
+                    {
+                        // Set the type so that we don't free it.
+                        // Global means it's a reference to a global var
+                        prg->fp->vars[i].itype = DilIType_e::Global;
+                        prg->fp->vars[i].val = v->val;
+                    }
+                    else
+                    {
+                        prg->fp->vars[i].itype = DilIType_e::Regular;
+                        prg->fp->vars[i].type = DilVarType_e::DILV_INVALID;
+                        prg->fp->vars[i].val.string = nullptr;
+                    }
                 }
                 break;
             case DilVarType_e::DILV_ILP:
@@ -540,10 +549,19 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
                     // Create global var in the global index or find and reuse it
                     dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
 
-                    // Set the type so that we don't free it.
-                    // Global means it's a reference to a global var
-                    prg->fp->vars[i].itype = DilIType_e::Global;
-                    prg->fp->vars[i].val = v->val;
+                    if (v)
+                    {
+                        // Set the type so that we don't free it.
+                        // Global means it's a reference to a global var
+                        prg->fp->vars[i].itype = DilIType_e::Global;
+                        prg->fp->vars[i].val = v->val;
+                    }
+                    else
+                    {
+                        prg->fp->vars[i].itype = DilIType_e::Regular;
+                        prg->fp->vars[i].type = DilVarType_e::DILV_INVALID;
+                        prg->fp->vars[i].val.string = nullptr;
+                    }
                 }
                 break;
             case DilVarType_e::DILV_SP:
