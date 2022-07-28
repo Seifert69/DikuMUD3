@@ -295,7 +295,7 @@ code
    goto loop;
 
 :lostit:
-   logtest(tstno, LOGT_ERROR, "Follower lost master.");
+   logtest(tstno, LOGT_ERROR, "followdil() secure() trigger follower lost master.");
 
 :terminate:
    sendtoalldil("fail", "T001@test");

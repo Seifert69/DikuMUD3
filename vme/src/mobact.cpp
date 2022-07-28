@@ -82,7 +82,10 @@ void ResetFptrTimerNoop(unit_data *u, unit_fptr *fptr)
 
     // Make sure this gets processed during the current 
     // eventqueue::process cycle
-    fptr->setEventQueue(g_events.add(0, special_event, u, fptr));
+
+    // Use -1 to be sure no other timers events can trigger before
+    // this waitnoop;
+    fptr->setEventQueue(g_events.add(-1, special_event, u, fptr));
 
     membug_verify_class(fptr);
     membug_verify(fptr->data);
