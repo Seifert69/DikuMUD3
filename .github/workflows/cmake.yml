@@ -51,3 +51,7 @@ jobs:
     - name: PP Unit Test
       working-directory: ${{github.workspace}}/vme/bin
       run: ${{github.workspace}}/vme/bin/pp_unit_tests --color_output=false --log_level=message
+
+    - name: VME Integration Test
+      working-directory: ${{github.workspace}}/vme/bin
+      run: ${{github.workspace}}/vme/bin/intergration_test.sh
