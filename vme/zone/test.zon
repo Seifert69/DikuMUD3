@@ -271,6 +271,7 @@ external
 
 var
    u : unitptr;
+   i : integer;
 code
 {
    exec("follow experiment", self);
@@ -282,16 +283,19 @@ code
 
    u := self.master;
    secure(u, lostit);
-   heartbeat := PULSE_SEC * 4;
+   heartbeat := 1;
 
+   i := 0;
 :loop:
-   pause;
+   wait(SFB_TICK, TRUE);
    if (u == null)
    {
       logtest(tstno, LOGT_ERROR, "u turned to null.");
       goto terminate;
    }
-   logtest(tstno, LOGT_INFO, "Follower has master secured()");
+   if (i % 5 == 0)
+      logtest(tstno, LOGT_INFO, "Follower has master secured()");
+   i := i + 1;
    goto loop;
 
 :lostit:
