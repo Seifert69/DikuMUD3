@@ -113,7 +113,7 @@ code
    {
       // If you and the master are in the same object, then don't follow (sail & ride)
       if (self.outside.type != UNIT_ST_ROOM)
-         if (not (command("exit") or command("leave")))
+         if (not (command("exit") or command("leave"))) // Ignore unless leaving / exiting the object
             goto start;
    }
 

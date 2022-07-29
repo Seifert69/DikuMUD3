@@ -40,6 +40,104 @@ creators {"Aja"}
 %dil
 
 
+dilbegin integer login_age(pc : unitptr);
+external
+   integer isAgeDead(pc : unitptr);
+   integer Rejuvenate(pc : unitptr, years : integer);
+var
+   i : integer;
+code
+{
+   if (isAgeDead(pc))
+   {
+      i := (Rejuvenate(pc, 2));
+
+      if (i)
+      {
+         sendtext("<br/><br/>You had died from old age but Odin has revived you. Seek the pool of youth which is close to The Top of the Hill in the Cypress forest.<br/><br/>", pc);
+      }
+
+      return (i);
+   }
+
+   return (FALSE);
+}
+dilend
+
+// Returns 1 if the player is out of life, 0 otherwise
+//
+dilbegin integer isAgeDead(pc : unitptr);
+code
+{
+   if (self.type != UNIT_ST_PC)
+      return (FALSE);
+
+   if (self.level >= IMMORTAL_LEVEL)
+      return (FALSE);
+
+   return ((realtime - self.birth) > (self.lifespan * SECS_PER_MUD_YEAR));
+}
+dilend
+
+
+
+// Makes the player 'years' younger. 
+// Returns 1 if Rejuvenated, and 0 otherwise.
+// If the person is age dead, on the first call they'll become 2 years younger than their lifespan.
+// 
+dilbegin integer Rejuvenate(pc : unitptr, years : integer);
+var
+   currentage : integer;
+   newage : integer;
+code
+{
+   log("a");
+
+   if (pc.type != UNIT_ST_PC)
+      return (FALSE);
+
+   if (pc.level >= IMMORTAL_LEVEL)
+      return (FALSE);
+
+   currentage := (realtime - pc.birth) / SECS_PER_MUD_YEAR;
+    
+   if (currentage >= pc.lifespan)
+   {
+      // log("age dead");
+      newage := pc.lifespan - 2; // Make 2 years before death
+   }
+   else
+   {
+      // log("fixer upper");
+      newage := currentage - years;
+   }
+
+
+   // Don't make a person younger than 20% of their lifespan
+   if (newage <= ((pc.lifespan * 20) / 100))
+   {
+      // log("too young, setting to 20%");
+      newage := (pc.lifespan * 20) / 100;
+   }
+
+   // Let's only make an effect if you age by at least half a MUD year
+   if (newage >= currentage)
+   {
+      // log("not enough difference to drink");
+      return (FALSE);
+   }
+
+   log("Rejuvenate(): " + pc.name + " changed age from " +  itoa(currentage) + " to " + itoa(newage) + " mud years.");
+
+   pc.birth := realtime - (newage * SECS_PER_MUD_YEAR);
+   pc.hp := pc.max_hp;
+   pc.mana := pc.max_mana;
+   pc.endurance := pc.max_endurance;
+
+   return (TRUE);
+}
+dilend
+
 
 /*In case you want to brute force the age change - dilcopy change_age(i)@youth*/
 
@@ -57,6 +155,7 @@ code
       log("They're immortal....");
       quit;
    }
+
    if ((realtime - self.birth) > (self.lifespan * SECS_PER_MUD_YEAR))
    {
       i := self.birth + (years * SECS_PER_MUD_YEAR);
@@ -107,6 +206,9 @@ spring
     weight 40000
 
    dilbegin restore_youth();
+   external
+      integer Rejuvenate(pc : unitptr, years : integer);
+
    var
       payer : unitptr;
       drinker : unitptr;
@@ -117,6 +219,7 @@ spring
       k : integer;
       price : integer;
       years : integer;
+      prevage : integer;
       
   code
   {
@@ -169,12 +272,14 @@ spring
       {
           addstring(self.extra.["$interactions_1"].names, activator.name);
           addstring(self.extra.["$interactions_2"].names, activator.name);        
-          sendtext("<div class='cpr'>Drinking from the spring will cost you " +  itoa(price) + " powerpoints. It will make you younger by " +  itoa(years) + " mud years. If you are sure you want to continue, drink again.</div><br/>", activator);
+          sendtext("<div class='cpr'>Drinking from the spring will make you younger by " +  itoa(years) + " mud years. If you are sure you want to continue, drink again.</div><br/>", activator);
           goto start;
       }
 
-      i := activator.birth + SECS_PER_REAL_YEAR;
-      if ((realtime - i) < (activator.lifespan * SECS_PER_MUD_YEAR / 6))
+      prevage := activator.birth;
+      i := Rejuvenate(activator, years);
+
+      if (i == 0)
       {    
           act("You try to drink from the spring but find that it simply dissapears before it hits your lips.", A_SOMEONE, activator,  self, null, TO_CHAR);
           goto start;
@@ -185,29 +290,22 @@ spring
       substring(self.extra.["$interactions_2"].names, drinker.name);
       act("You scoop a handful of water to your lips and sip, feeling renewed!", A_ALWAYS, drinker, self, null, TO_CHAR);
       act("$1n scoops a handful of water to $1s lips and instantly looks " + itoa(years) + "younger.", A_SOMEONE, drinker, self, null, TO_REST);
-      i := drinker.birth + (years * SECS_PER_MUD_YEAR);
-      if ((realtime - drinker.birth) > (drinker.lifespan * SECS_PER_MUD_YEAR))
-      i := realtime - ((drinker.lifespan * SECS_PER_MUD_YEAR) - (years * SECS_PER_MUD_YEAR));
-      log (self.name + ": " + drinker.name + " changed age from " +  itoa((realtime - drinker.birth) / (SECS_PER_MUD_YEAR)) + " to " +  itoa((realtime-i) / (SECS_PER_MUD_YEAR)) + " mud years.");
+
+      log (self.name + ": " + drinker.name + " changed age to " +  itoa((realtime - drinker.birth) / (SECS_PER_MUD_YEAR)));
       
       s := asctime(realtime);
       s := s + 
       " Drinker:" + 
       drinker.name + 
       " age from " + 
-      itoa((realtime - drinker.birth) / (SECS_PER_MUD_YEAR)) + 
+      itoa((realtime - prevage) / (SECS_PER_MUD_YEAR)) + 
       " to " + 
-      itoa((realtime-i) / (SECS_PER_MUD_YEAR)) + 
+      itoa((realtime-drinker.birth) / (SECS_PER_MUD_YEAR)) + 
       " price: " + 
       itoa(price) + 
       " lifespan: " + 
       itoa(drinker.lifespan) + "<br/>";
       k := savestr("youth.log", s, "a");
-      
-      drinker.birth := i;
-      drinker.hp := drinker.max_hp;
-      drinker.mana := drinker.max_mana;
-      drinker.endurance := drinker.max_endurance;
       acc_modify(payer, -((price) * 100));
       goto start;    
   }

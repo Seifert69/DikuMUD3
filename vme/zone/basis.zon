@@ -326,6 +326,7 @@ dilend
 dilbegin login_modify(tgt : unitptr);
 external
    login_scrub@basis(tgt : unitptr);
+   integer login_age@youth(pc : unitptr);
 
 var
    i : integer;
@@ -388,6 +389,7 @@ code
    }
 
    login_scrub(self);
+   login_age@youth(self);  // Revive the player
    dilcopy("got_mail@mail()", self);
 
    return;
