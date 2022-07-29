@@ -91,8 +91,6 @@ var
    newage : integer;
 code
 {
-   log("a");
-
    if (pc.type != UNIT_ST_PC)
       return (FALSE);
 
@@ -289,7 +287,7 @@ spring
       substring(self.extra.["$interactions_1"].names, drinker.name);
       substring(self.extra.["$interactions_2"].names, drinker.name);
       act("You scoop a handful of water to your lips and sip, feeling renewed!", A_ALWAYS, drinker, self, null, TO_CHAR);
-      act("$1n scoops a handful of water to $1s lips and instantly looks " + itoa(years) + "younger.", A_SOMEONE, drinker, self, null, TO_REST);
+      act("$1n scoops a handful of water to $1s lips and instantly looks " + itoa(years) + " younger.", A_SOMEONE, drinker, self, null, TO_REST);
 
       log (self.name + ": " + drinker.name + " changed age to " +  itoa((realtime - drinker.birth) / (SECS_PER_MUD_YEAR)));
       

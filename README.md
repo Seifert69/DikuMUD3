@@ -1,11 +1,11 @@
 # DikuMUD3
-DikuMUD III using HTML and websockets. 
+DikuMUD III using HTML, websockets and live Discord integrated.
 
 D-Day June 21, 2020
 
-Get in touch if you'd like to contribute. Check out the issues on Git. There are a few broader issues at the bottom of this file. Everything from non-programming to HTML to C(++). Drop a mail to seifert at dikumud.com. Look at the end of this file for a few items.
+Look at the end of this file if you want to contribute.
 
-Join us on Discord:
+Join us on Discord (live integrated):
 
 https://discord.gg/vmha2rGRA2
 
@@ -61,31 +61,16 @@ And you'll see the welcome screen in Firefox
 
 ---
 
-I would appreciate help with:
+Get in touch if you'd like to contribute. Drop a mail to seifert at dikumud.com. 
+Contribution can be anything from world building, to creating tables in excel,
+to coding.
 
-   * I would appreciate any world builder wanting to create quests to be completed
-     in order to join the various guilds. Right now there are four base teachers 
-     and they'll help you out for the first 10-20 levels. So some low level quest
-     that e.g. gives access to the thieves guild, the paladin's guild, etc.
-     It is OK if one player can complete several quests and join several guilds
-     (the profession still dictates what is easy / hard to learn).
-     Write me to discuss.
+   * World builders are most welcome.
+   * Some issues on Git to look at.
+   * Need help creating random treasures. Got something working but need to polish it. 
+     Also missing e.g. random descriptions and a way to generate random descriptions.
 
-   * DOT files & Mapping:
-   
-     In the zone directory after compiling the zones, there's a valid DOT file for each zone. 
-     The DOT file is the graph description language that describes how the rooms are connected
-     in the zone. And also how the zone connects to other zones. 
-     There is an example online tool here https://dreampuf.github.io/GraphvizOnline which
-     can visualize a zone (just paste each .dot file into the digraph {}.
-     Would be fantastic if this could be used to maintain maps of the world, and even more so
-     if these maps could be associated with coordinates so they can be visualized in the client.
-     It's rather cumbersome to do them by hand - I've done three so far. 
-     https://en.wikipedia.org/wiki/DOT_(graph_description_language)
-
-     If anyone is interested in helping out mapping coordinates or generating maps let me know.
-     I've been using cMUD to do some test mapping. I think I have two young helpers that can assist 
-     me with the actual mapping and turning a boring map into a hand-drawn piece of art :)
+---
      
 ## Docker build/run/test
 
