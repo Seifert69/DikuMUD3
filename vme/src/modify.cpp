@@ -30,6 +30,8 @@
 
 #include <unistd.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -361,6 +363,66 @@ int get_type(char *typdef, const char *structure[])
     return search_block_set(typdef, structure, FALSE);
 }
 
+
+
+void insert_comma_names(class cNamelist *nl,  char *argument)
+{
+    if (str_is_empty(argument))
+        return;
+
+    argument = (char *) skip_spaces(argument);
+    strip_trailing_blanks(argument);
+    str_remspc(argument);
+
+    std::string text = argument;
+    std::vector<std::string> results;
+
+    boost::split(results, text, [](char c){return c == ',';});
+
+    for (int i=0; i < (int) results.size(); i++)
+    {
+        if (!nl->IsName(results[i].c_str()) && !str_is_empty(results[i].c_str()))
+        {
+            nl->AppendNameTrim(results[i].c_str());
+        }
+    }
+}
+
+
+void insert_comma_ints(class cintlist *il, char *argument)
+{
+    if (str_is_empty(argument))
+        return;
+
+    argument = (char *) skip_spaces(argument);
+    strip_trailing_blanks(argument);
+    str_remspc(argument);
+
+    std::string text = argument;
+    std::vector<std::string> results;
+
+    boost::split(results, text, [](char c){return c == ',';});
+
+    for (int i=0; i < (int) results.size(); i++)
+    {
+        if (!str_is_empty(results[i].c_str()))
+           il->Append(atoi(results[i].c_str()));
+    }
+}
+
+void insert_comma_semicolon(class extra_descr_data *ed, char *argument)
+{
+   std::string text = argument;
+   std::vector<std::string> results;
+
+   boost::split(results, text, [](char c){return c == ';';});
+
+   insert_comma_names(&ed->names, (char *) results[0].c_str());
+   if (results.size() >= 2)
+      insert_comma_ints(&ed->vals, (char *)  results[1].c_str());
+}
+
+
 /* modification of anything in units */
 void do_set(unit_data *ch, char *argument, const command_info *cmd)
 {
@@ -679,11 +741,8 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Not allowed to modify PC's.<br/>", ch);
                 return;
             }
-            argument = (char *) skip_spaces(argument);
-            strip_trailing_blanks(argument);
-            str_remspc(argument);
 
-            unt->getNames().AppendName(argument);
+            insert_comma_names(&unt->getNames(), argument);
             send_to_char("The extra name was added.<br/>", ch);
             return;
 
@@ -711,39 +770,22 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 4: /* "add-extra" */
-            argument = str_next_word(argument, strarg);
+            str_next_word_delim(argument, strarg,',');
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
             if ((ed = unit_find_extra(strarg, unt)) == nullptr)
             {
                 /* the field was not found. create a new one. */
                 ed = new (extra_descr_data);
-                while (*strarg) /* insert names */
-                {
-                    ed->names.AppendName(strarg);
-                    argument = str_next_word(argument, strarg);
-                }
                 unt->getExtraList().add(ed);
-
                 send_to_char("New field.<br/>", ch);
             }
             else
             {
-                /* add the rest of the names if they do not exist */
-                argument = str_next_word(argument, strarg);
-                while (*strarg)
-                {
-                    if (ed->names.IsName(strarg))
-                    {
-                        ed->names.AppendName(strarg);
-                    }
-
-                    argument = str_next_word(argument, strarg);
-                }
-
                 send_to_char("Modifying existing description.<br/>", ch);
             }
 
+            insert_comma_semicolon(ed, argument);
             CHAR_DESCRIPTOR(ch)->setEditReference(ed);
             CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_extra);
             CHAR_DESCRIPTOR(ch)->setEditing(unt);
@@ -890,8 +932,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 return;
             }
 
-            argument = str_next_word(argument, strarg);
-            ROOM_EXIT(unt, typarg)->getOpenName().AppendName(strarg);
+            insert_comma_names(&ROOM_EXIT(unt, typarg)->getOpenName(), argument);
             return;
 
         case 22: /* "del-dir-name" */
@@ -902,7 +943,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             argument = str_next_word(argument, strarg);
-            ROOM_EXIT(unt, typarg)->getOpenName().AppendName(strarg);
+            ROOM_EXIT(unt, typarg)->getOpenName().RemoveName(strarg);
             return;
 
         case 23: /* "dir-flags" */
@@ -1178,8 +1219,26 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 60: /* "add-quest" */
-            quest_add(unt, argument, "");
-            send_to_char("New quest.<br/>", ch);
+            str_next_word_delim(argument, strarg,',');
+            act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
+
+            if ((ed = PC_QUEST(unt).find_raw(strarg)) == nullptr)
+            {
+                /* the field was not found. create a new one. */
+                ed = new (extra_descr_data);
+                PC_QUEST(unt).add(ed);
+                send_to_char("New field.<br/>", ch);
+            }
+            else
+            {
+                send_to_char("Modifying existing quest.<br/>", ch);
+            }
+
+            insert_comma_semicolon(ed, argument);
+            CHAR_DESCRIPTOR(ch)->setEditReference(ed);
+            CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_info);
+            CHAR_DESCRIPTOR(ch)->setEditing(unt);
+            set_descriptor_fptr(CHAR_DESCRIPTOR(ch), interpreter_string_add, TRUE);
             return;
 
         case 61: /* "del-quest" */
@@ -1206,39 +1265,22 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 63: /* "add-info" */
-            argument = str_next_word(argument, strarg);
+            str_next_word_delim(argument, strarg,',');
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
             if ((ed = PC_INFO(unt).find_raw(strarg)) == nullptr)
             {
                 /* the field was not found. create a new one. */
                 ed = new (extra_descr_data);
-                while (*strarg) /* insert names */
-                {
-                    ed->names.AppendName(strarg);
-                    argument = str_next_word(argument, strarg);
-                }
                 PC_INFO(unt).add(ed);
-
                 send_to_char("New field.<br/>", ch);
             }
             else
             {
-                /* add the rest of the names if they do not exist */
-                argument = str_next_word(argument, strarg);
-                while (*strarg)
-                {
-                    if (ed->names.IsName(strarg))
-                    {
-                        ed->names.AppendName(strarg);
-                    }
-
-                    argument = str_next_word(argument, strarg);
-                }
-
                 send_to_char("Modifying existing description.<br/>", ch);
             }
 
+            insert_comma_semicolon(ed, argument);
             CHAR_DESCRIPTOR(ch)->setEditReference(ed);
             CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_info);
             CHAR_DESCRIPTOR(ch)->setEditing(unt);

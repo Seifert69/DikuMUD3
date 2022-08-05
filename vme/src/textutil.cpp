@@ -547,6 +547,26 @@ char *str_next_word_copy(const char *argument, char *first_arg)
 }
 
 /* Copy next word from argument into first_arg and make lowercase*/
+char *str_next_word_delim(const char *argument, char *first_arg, char delim)
+{
+    /* Find first non blank */
+    argument = skip_spaces(argument);
+
+    /* Copy next word and make it lower case */
+    for (; *argument && *argument != delim; argument++)
+    {
+        *first_arg++ = tolower(*argument);
+    }
+
+    *first_arg = '\0';
+
+    if (*argument == delim)
+        argument++;
+
+    return (char *) skip_spaces(argument);
+}
+
+/* Copy next word from argument into first_arg and make lowercase*/
 char *str_next_word(const char *argument, char *first_arg)
 {
     /* Find first non blank */

@@ -456,7 +456,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         }
         else
         {
-            slog(LOG_ALL, 0, "bread_dil() unit with no file index: DIL template [%s] no longer exists. bNameRead = %d.", name, bNameRead);
+            slog(LOG_ALL, 0, "bread_dil() unit (name %s) with no file index: DIL template [%s] no longer exists. bNameRead = %d.", owner->getNames().Name(), name, bNameRead);
         }
     }
 
