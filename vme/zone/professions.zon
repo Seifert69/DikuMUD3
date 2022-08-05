@@ -209,6 +209,7 @@ code
       {
          if (not (exd.names.[n] in sl))
          {
+            log("profesion = " + exd.names.[n] + " not in allowed list.");
             return (0);
          }
          n := n - 1;
