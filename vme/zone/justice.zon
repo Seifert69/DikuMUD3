@@ -385,8 +385,8 @@ code
          // be cashed in? I dont think we should go through the trouble and 
          // update the reard info on a head.
          //
-         return(0);
       }
+      return(0);
    }
 
    log("add_reward debug i1");
