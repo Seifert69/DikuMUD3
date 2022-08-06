@@ -1,27 +1,47 @@
-<br/>
-Usage:<br/>
-   &gt;set &lt;unit&gt; &lt;field&gt; &lt;arguments&gt;<br/>
-<br/>
-This is the command you use, if you want to fiddle with individual fields in a<br/>
-unit. As there are a LOT of fields to set, i will not list them here. The<br/>
-command will list them, if you just give a unit name. However it is essential,<br/>
-that you understand the argument types.<br/>
-<br/>
-&lt;value&gt;  : a value. beware not to enter a number out of range.<br/>
-&lt;type&gt;   : a type. to list possible types give it an 'X' as type<br/>
-&lt;string&gt; : a single string.<br/>
-(enter description): this gives you the multi-line editor.<br/>
-                     End with a '@' on a single line.<br/>
-&lt;unitpath&gt;: a 'path' to the unit, specifying its zonename and itemname.<br/>
-&lt;keyword&gt; : a single keyword.<br/>
-&lt;direction&gt; : direction can be any of the six: n s e w u d<br/>
-&lt;bitlist&gt; : a list of bitnames. nothing indicates no set bits.<br/>
-            separate bitnames with a single '|'.<br/>
-<br/>
-Combinations of the above occur.<br/>
-<br/>
-See also:<br/>
-   &gt;wizhelp setskill<br/>
-   &gt;wizhelp wstat<br/>
-   &gt;wizhelp wstat<br/>
-<br/>
+<div class="mw-parser-output"><h1>Set</h1>
+<p>Usage:
+</p>
+<pre> &gt; set &lt;unit&gt; &lt;field&gt; &lt;arguments&gt;
+</pre>
+<p>This is the command you use, if you want to fiddle with individual fields in a
+unit. As there are a LOT of fields to set, i will not list them here. The
+command will list them, if you just give a unit name. However it is essential,
+that you understand the argument types.
+</p>
+<pre> &lt;value&gt;&#160;: a value. beware not to enter a number out of range.
+ &lt;type&gt;&#160;: a type. to list possible types give it an 'X' as type
+ &lt;string&gt;&#160;: a single string.
+    (enter description): this gives you the multi-line editor.
+    End with a '@' on a single line.
+ &lt;unitpath&gt;: a 'path' to the unit, specifying its zonename and itemname.
+ &lt;keyword&gt;&#160;: a single keyword.
+ &lt;direction&gt;&#160;: direction can be any of the six: n s e w u d
+ &lt;bitlist&gt;&#160;: a list of bitnames. nothing indicates no set bits.
+             separate bitnames with a single '|'.
+</pre>
+<p>For add-name and xxxdirection info:
+</p>
+<pre>  &lt;names&gt; is a comma separated list of values e.g. city guard, guard
+</pre>
+<p>For extra data (add-extra, add-info, add-quest):
+</p>
+<pre>  &lt;names&gt;;&lt;ints&gt; first a comma separated list of names, optionally a semicolon 
+                 followed by a comma separated list of integers.
+</pre>
+<p>Examples:
+</p>
+<pre> &gt; set rabbit add-name killer rabbit, carrot muncher
+ &gt; set papi add-info $professions,barbarian,dark knight,necromancer;1,2,3
+</pre>
+<p>Combinations of the above occur.
+</p><p>See also:
+</p>
+<pre> &gt; wizhelp setskill
+ &gt; wizhelp wstat
+ &gt; wizhelp wstat
+</pre>
+
+
+
+
+</div>

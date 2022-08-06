@@ -1,20 +1,21 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-list<br/><br/>
-<br/><br/>
-<br/>
-The list command is used inside shops to get a listing of the currently<br/>
-available products. The listing shows the objects along with prices<br/>
-and other information.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Shops<br/><br/>
-Sell<br/><br/>
-Value<br/><br/>
-Bury<br/><br/>
-Request<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>List</h1>
+<p>The list command is used inside shops to get a listing of the currently
+available products. The listing shows the objects along with prices
+and other information.
+</p><p>Usage:
+</p>
+<pre> &gt; list
+</pre>
+<p>See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Shops</a>
+ &gt; <a cmd='#'>Help Sell</a>
+ &gt; <a cmd='#'>Help Value</a>
+ &gt; <a cmd='#'>Help Bury</a>
+ &gt; <a cmd='#'>Help Request</a>
+</pre>
+
+
+
+
+</div>
