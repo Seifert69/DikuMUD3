@@ -396,12 +396,10 @@ code
       return(0);
    }
 
-   log("add_reward debug i1");
    // Criminal != null
-
    s := "$reward "+juris;
    exd_char_reward := s in criminal.extra;
-   log("add_reward debug i2");
+
    if (exd_char_reward == null)
    {
       // Create blank $reward
@@ -414,11 +412,8 @@ code
       exd_char_reward := s in criminal.extra;
    }
 
-   log("add_reward debug i3");
    s := "$reward "+criminal.symname+" "+itoa(criminal.idx);
-   log("add_reward debug i4");
    sj:= s + " "+juris; 
-   log("add_reward debug i5");
    exd_db_reward := sj in database.extra;
 
    if (exd_db_reward == null)
@@ -481,9 +476,7 @@ code
    if (exd_char_reward)
       exd_char_reward.names.[2] := itoa(gold);
 
-   log("add_reward debug i6");
    s := moneystring(gold, 1);
-   log("add_reward debug i7");
 
    // [8..31]  You'll lose the benefit of being protected by the law and order system (see below).
    // [32..63] You're wanted alive by the guards. They'll try to arrest you.
@@ -494,13 +487,11 @@ code
       // Changed this to fit this into the Arrest and jail time jailstay@midgaard DIL.
       // --Dave
       s := criminal.name + " is wanted for imprisonment."; 
-      log("add_reward debug i8");
       set_char_flags@justice(criminal, "arrest");
    }
    else if (cnt >= 64)
    {
       s := "A reward of " + s + " has been offered for the head of "+criminal.name;
-      log("add_reward debug i9");
       set_char_flags@justice(criminal, "wanted");
    }
    else
@@ -514,7 +505,6 @@ code
        set_char_flags@justice(criminal, "onnotice");
    }
 
-   log("add_reward debug i10");
    exd_db_reward.descr := s;
    if (exd_char_reward)
       exd_char_reward.descr := s;
@@ -1252,7 +1242,6 @@ code
             log("$witness inconsistency 2");
             goto skipit2;
          }
-         log("d7");
          if (w_ptr.names.[1] == criminal)
          {
             c_data := getwords(w_ptr.names.[0]);
@@ -1264,7 +1253,6 @@ code
             else
                goto goneaccuse;
          }
-         log("d8");
       }
       :skipit2:
       w_ptr := w_ptr.next;
@@ -1272,7 +1260,6 @@ code
 goto end;
 
 :doaccuse:
-   log("d9");
    found := 1;
    act("$1n says, 'Thank you very much $3N, I will stop $2t.'", A_SOMEONE, self, criminal, activator, TO_ROOM);
    if (activator.alignment > -1000)
@@ -1280,11 +1267,9 @@ goto end;
    subextra(activator.extra,w_ptr.names.[0]);
    add_reward@justice(accused.symname, accused.idx, crime_type);    
    block; 
-   log("d10");
    goto start;  
 
 :goneaccuse: // Offline player or Dead monster
-   log("d11");
    found := 1;
    if ("@_players" in c_data.[2])
    {
@@ -1300,7 +1285,6 @@ goto end;
    subextra(activator.extra, w_ptr.names.[0]);
    add_reward@justice(c_data.[2], atoi(c_data.[3]), crime_type);
    block; 
-   log("d12");
    goto start;  
 
 :notmyproblem:
