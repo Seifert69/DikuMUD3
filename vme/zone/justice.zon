@@ -266,6 +266,13 @@ reset RESET_NOT
 
 %dil
 
+// Just to get rid of this on old players.
+dilbegin witness_timer();
+code
+{
+   quit;
+}
+dilend
 
 // =================================================
 // MS Sample code BEGIN
