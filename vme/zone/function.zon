@@ -4076,7 +4076,7 @@ code
 {
    place := self.outside.idx;
 
-   :start:
+:start:
    wait(SFB_CMD, command(direction));
 
    if (self.outside.idx != place)
@@ -4085,7 +4085,7 @@ code
    if (activator.type == UNIT_ST_PC)
    {
       if (activator.name in excludepc)
-	goto start; 
+      	goto start; 
 
       goto stopit;
    }
@@ -4093,15 +4093,13 @@ code
    if (activator.name in excludenpc)
      goto start;
 
-   :stopit:
+:stopit:
    block;
 
    if (stopdil == "")
    {
-      act ("$3n stops you from going "+direction+"!'",
-	   A_ALWAYS,activator,null,self,TO_CHAR);
-      act ("$3n stops $1n from going "+direction+"!",
-	   A_SOMEONE,activator,null,self,TO_REST);
+      act ("$3n stops you from going "+direction+"!'", A_ALWAYS,activator,null,self,TO_CHAR);
+      act ("$3n stops $1n from going "+direction+"!", A_SOMEONE,activator,null,self,TO_REST);
    }
    else
    {
