@@ -230,69 +230,69 @@ var
 	pc:unitptr;
 	pet:unitptr;
 	petname:string;
-pet_string:string;
+   pet_string:string;
+   i1 : integer;
 code
 {
 :init:
-heartbeat := PULSE_SEC*3;
+   heartbeat := PULSE_SEC*3;
+
 :start:
+   wait(SFB_CMD, command("open"));
 
-wait(SFB_CMD, command("open"));
+   if (findunit(activator, argument, FIND_UNIT_INVEN|FIND_UNIT_SURRO,null) !=self)
+      goto start;
 
-     if (findunit(activator, argument, FIND_UNIT_INVEN|FIND_UNIT_SURRO,null) !=self)
-	goto start;
+   priority;
 
-priority;
+   pc:=activator;
+   secure(pc, lostowner);
 
-pc:=activator;
-secure (pc,lostowner);
+   pet:=load(pet_passed);
+   secure(pet, lostpet);
+   pet_string:=pet.symname;
+   link(pet, self.inside);
 
-pet:=load (pet_passed);
-pet_string:=pet.nameidx+"@"+pet.zoneidx;
-link (pet,self.inside);
-
-pause;
-interrupt (SFB_DONE,( (command ("say")) and
-(activator.type==UNIT_ST_PC) and
-(activator==pc)),named);
+   pause;
+   i1 := interrupt(SFB_DONE,( (command ("say")) and (activator.type==UNIT_ST_PC) and (activator==pc)), named);
 
 :loop:
-act ("As you gaze at your new pet you get the feeling you should give him "+
-"a special name.  This special name would allow you to get your pet while "+
-"in a crowded room of other pets like it.  Just 'say' his name and it's "+
-"yours.",A_SOMEONE, pc, null, null, TO_CHAR);
+   act ("As you gaze at your new pet you get the feeling you should give him "+
+   "a special name.  This special name would allow you to get your pet while "+
+   "in a crowded room of other pets like it.  Just 'say' his name and it's "+
+   "yours.",A_SOMEONE, pc, null, null, TO_CHAR);
 
-wait (SFB_DONE, (not(command ("say"))) and
-(activator ==pc));
-goto loop;
-  :named:
-pet:=self.inside;
-if (pet_string!=(pet.nameidx+"@"+pet.zoneidx))
-{
-sendtext ("You need to leave the pet in the box till you're done." +
-          " Now you have to buy another one this one is lost to you.<br/>",pc);
-	 nopriority;
-quit;
-}
+   wait(SFB_DONE, (not(command ("say"))) and (activator ==pc));
+   goto loop;
 
-block;
-petname:=argument;
-addstring (pet.names,petname);
-dilcopy ("pet_base@hobgob("+pc.name+")",pet);
-act ("$3n climbs out of the cage",A_ALWAYS,pc,null,pet,TO_CHAR);
-link(pet,self.outside);
-act ("Your pet's special name is '"+petname+"'.  Please be very careful "+
-"with your pet even though it has a special name others can still get it "+
-"by using its default name.", A_SOMEONE, pc, null, null, TO_CHAR);
-							 pause;
-	 nopriority;
-quit;
+:named:
+   clear(i1);
+   i1 := interrupt(SFB_DONE,( (command ("say")) and (activator.type==UNIT_ST_PC) and (activator==pc)), named);
+   if (pet_string != pet.symname)
+   {
+      sendtext("You need to leave the pet in the box till you're done. Now you have to buy another one this one is lost to you.<br/>", pc);
+      nopriority;
+      quit;
+   }
+   block;
+   petname := argument;
+   addstring(pet.names, petname);
+   act ("$3n climbs out of the cage", A_ALWAYS, pc, null, pet, TO_CHAR);
+   link(pet,self.outside);
+   act ("Your pet's special name is '"+petname+"'.  Please be very careful "+
+   "with your pet even though it has a special name others can still get it "+
+   "by using its default name.", A_SOMEONE, pc, null, null, TO_CHAR);
+   dilcopy("pet_base@hobgob("+pc.name+")",pet);
+   clear(i1);
+   pause;
+   nopriority;
+   quit;
 :lostowner:
-		 quit;
-	 :lostpet:
-					quit;
-	 }
-	 dilend
+   quit;
+:lostpet:
+   quit;
+}
+dilend
 
 dilbegin recall pet_base (pname:string);
 var
