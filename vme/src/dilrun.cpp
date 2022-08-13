@@ -818,7 +818,7 @@ void dil_clear_lost_reference(dilframe *frm, void *ptr)
 
 // MS2022:
 //   If the unit 'u' has been destroyed then it triggers the secure().
-//   Called after "destroy()" and on owner after "exec()"
+//   Called after "destroy()" on the unit destroyed and on owner after "exec()"
 //
 void dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
 {
@@ -833,6 +833,7 @@ void dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
     }
 
     dilframe *frm = prg->fp;
+    prg->fp->wasSecureTested = true;
 
     for (i = 0; i < frm->securecount; i++)
     {
