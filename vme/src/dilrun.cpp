@@ -816,12 +816,59 @@ void dil_clear_lost_reference(dilframe *frm, void *ptr)
 */
 
 
-// MS2022: Adding a bExec to try to solve an impossible issue with DIL follow() that clears 
-//         secures when a unit moves and followers come after (newbie guide). By laxing the
-//         check in dilfi_exec() to only test for destructed units seems to do the trick...
-//         But are there unintended side-effects...?
+// MS2022:
+//   If the unit 'u' has been destroyed then it triggers the secure().
+//   Called after "destroy()" and on owner after "exec()"
 //
-void dil_test_secure(dilprg *prg, bool bForeach, bool bExec)
+void dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
+{
+    int i = 0;
+    int count = 0;
+
+    assert(u);
+
+    if (prg->waitcmd <= WAITCMD_STOP)
+    {
+        return;
+    }
+
+    dilframe *frm = prg->fp;
+
+    for (i = 0; i < frm->securecount; i++)
+    {
+        if ((frm->secure[i].sup == u) && u->is_destructed())
+        {
+            if (frm->secure[i].lab)
+            {
+                /* This is REALLY important! Imagine a broken secure in a
+                    pause; the execution then continues at the label point,
+                    however, to get the expected "wait" and execution behaviour,
+                    waitcmd must be less than MAXINST (see dilfi_wit) */
+                prg->waitcmd--;
+                frm->pc = frm->secure[i].lab;
+            }
+
+            dil_clear_lost_reference(frm, frm->secure[i].sup);
+            count = dil_sub_secure(frm, frm->secure[i].sup, false);
+            if (count > 0)
+            {
+                i--;
+            }
+            /* Do not return until all have been tested! */
+        }
+    }
+}
+
+
+// MS2022:
+//   Testing the current frame only for secure violations.
+//   Execution will continue at 'label' if unit disappeared from local environment
+//   Will set the frame's wasSecuredTested to true. Which will trickle down to any
+//   frames below.
+//
+//   Add a comment about bForeach - I'm not sure yet what it does
+//
+void dil_test_secure(dilprg *prg, bool bForeach)
 {
     int i = 0;
     int count = 0;
@@ -832,46 +879,43 @@ void dil_test_secure(dilprg *prg, bool bForeach, bool bExec)
         return;
     }
 
-    for (frm = prg->frame; frm <= prg->fp; frm++)
+    prg->fp->wasSecureTested = true;
+
+    frm = prg->fp;
+    for (i = 0; i < frm->securecount; i++)
     {
-        for (i = 0; i < frm->securecount; i++)
+        if (bForeach && frm->secure[i].lab)
         {
-            if (bForeach && frm->secure[i].lab)
+            continue;
+        }
+        if (scan4_ref(prg->sarg->owner, frm->secure[i].sup) == nullptr)
+        {
+            if (frm->secure[i].lab)
             {
-                continue;
+                /* This is REALLY important! Imagine a broken secure in a
+                    pause; the execution then continues at the label point,
+                    however, to get the expected "wait" and execution behaviour,
+                    waitcmd must be less than MAXINST (see dilfi_wit) */
+
+                prg->waitcmd--;
+
+                if (frm == prg->fp)
+                { // See long comment above. Only the active frame changes execution point
+                    frm->pc = frm->secure[i].lab;
+                }
             }
-            if (scan4_ref(prg->sarg->owner, frm->secure[i].sup) == nullptr)
+
+            // Foreach() doesn't clear all its secures. It's not bad. But wondering if it's
+            // a bug or a feature :-)
+            // slog(LOG_ALL, 0, "DIL secure triggered for DIL program: %s@%s", frm->tmpl->prgname, frm->tmpl->zone->getName());
+
+            dil_clear_lost_reference(frm, frm->secure[i].sup);
+            count = dil_sub_secure(frm, frm->secure[i].sup, bForeach);
+            if (count > 0)
             {
-                if (bExec && !frm->secure[i].sup->is_destructed())
-                    continue;
-
-                if (frm->secure[i].lab)
-                {
-                    /* This is REALLY important! Imagine a broken secure in a
-                       pause; the execution then continues at the label point,
-                       however, to get the expected "wait" and execution behaviour,
-                       waitcmd must be less than MAXINST (see dilfi_wit) */
-
-                    prg->waitcmd--;
-
-                    if (frm == prg->fp)
-                    { // See long comment above. Only the active frame changes execution point
-                        frm->pc = frm->secure[i].lab;
-                    }
-                }
-
-                // Foreach() doesn't clear all its secures. It's not bad. But wondering if it's
-                // a bug or a feature :-)
-                // slog(LOG_ALL, 0, "DIL secure triggered for DIL program: %s@%s", frm->tmpl->prgname, frm->tmpl->zone->getName());
-
-                dil_clear_lost_reference(frm, frm->secure[i].sup);
-                count = dil_sub_secure(frm, frm->secure[i].sup, bForeach);
-                if (count > 0)
-                {
-                    i--;
-                }
-                /* Do not return until all have been tested! */
+                i--;
             }
+            /* Do not return until all have been tested! */
         }
     }
 }

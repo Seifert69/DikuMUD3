@@ -907,6 +907,8 @@ void dilfi_rtf(dilprg *p)
     dilframe *cfrm = nullptr;
     ubit8 typ = 0;
     int i = 0;
+    bool doSecureTest = false;
+
     p->waitcmd--;
 
     if (p->fp == p->frame)
@@ -1015,6 +1017,8 @@ void dilfi_rtf(dilprg *p)
         p->stack.push(v);
     }
 
+    doSecureTest = p->fp->wasSecureTested;
+
     i = p->fp - p->frame - 1;
     cfrm = p->fp;
 
@@ -1022,6 +1026,11 @@ void dilfi_rtf(dilprg *p)
     p->fp = &p->frame[i];
 
     dil_free_frame(cfrm);
+
+    if (doSecureTest)
+    {
+        dil_test_secure(p);
+    }
 }
 
 void dil_pop_frame(dilprg *p)
@@ -1047,7 +1056,6 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
         p->framesz += DIL_FRAMEINC;
         RECREATE(p->frame, dilframe, p->framesz);
     }
-
     frm = &p->frame[i + 1];
     p->fp = frm;
 
@@ -1055,6 +1063,7 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
     frm->pc = rtmpl->core;
     frm->securecount = 0;
     frm->secure = nullptr;
+    frm->wasSecureTested = false;
 
     frm->intrcount = rtmpl->intrcount;
 
@@ -2329,7 +2338,7 @@ void dilfi_dst(dilprg *p)
             else
             {
                 extract_unit((unit_data *)v1->val.ptr);
-                dil_test_secure(p);
+                dil_test_secure_unit_destroyed(p, (unit_data *)v1->val.ptr);
             }
             if (((unit_data *)v1->val.ptr)->isPC())
             {
@@ -2400,7 +2409,7 @@ void dilfi_exec(dilprg *p)
                 command_interpreter((unit_data *)v2->val.ptr, cmd);
                 if (p && p->frame)
                 {
-                    dil_test_secure(p, false, true);
+                    dil_test_secure_unit_destroyed(p, (unit_data *)v2->val.ptr);
                 }
 
                 nested--;
@@ -3127,8 +3136,8 @@ void dilfi_pup(dilprg *p)
             update_pos((unit_data *)v1->val.ptr);
             if (CHAR_POS((unit_data *)v1->val.ptr) == POSITION_DEAD)
             {
-                die((unit_data *)v1->val.ptr);
-                dil_test_secure(p);
+                die((unit_data *) v1->val.ptr);
+                dil_test_secure(p); // Should this be only a dil_test_secure_unit_destroyed?
             }
         }
     }

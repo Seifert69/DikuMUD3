@@ -607,6 +607,7 @@ struct dilframe
 
     ubit16 securecount; /* number of secures (not saved) */
     dilsecure *secure;  /* secured vars (not saved) */
+    bool wasSecureTested; // Set to true if dil_test_secure() was called on this frame
 
     ubit16 intrcount; /* number of interrupts */
     dilintr *intr;    /* interrupts */
