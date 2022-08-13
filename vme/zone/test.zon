@@ -27,9 +27,12 @@ END HEADER*/
 
 %dil
 
+#define TEST_MAXIMUM 9  // T009, T008, ...
+
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
 #define LOGT_INFO    2
+
 
 dilbegin logtest(no : integer, ltype : integer, msg : string);
 var
@@ -46,17 +49,19 @@ code
 dilend
 
 
-// ==================== T004 =====================
+// ==================== T099 =====================
 
-// Tests DIL store / restore
+// Tests DIL template. Tempalte running on unit labcontrol@test
 //
-dilbegin T004(tstno : integer);
+dilbegin T099(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
 var
-   r, u1, u2 : unitptr;
+   u : unitptr;
 code
 {
+   heartbeat := PULSE_SEC * 1;
+   wait(SFB_TICK, TRUE);
    logtest(tstno, LOGT_ERROR, "Failing on purpose");
    goto failure;
 
@@ -76,7 +81,291 @@ code
 }
 dilend
 
+// ==================== T009 =====================
 
+dilbegin frame3(tstno : integer, u : unitptr);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+code
+{
+    heartbeat := 1;
+    secure(u, success);
+    wait(SFB_TICK, TRUE);  // This will trigger the secure test and the frame trickle
+    logtest(tstno, LOGT_ERROR, "Frame3");
+    return;
+
+:success:
+   logtest(tstno, LOGT_INFO, "Frame3 OK");
+   return;
+}
+dilend
+
+
+dilbegin frame2(tstno : integer, u : unitptr);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+    frame3(tstno : integer, u : unitptr);
+code
+{
+    secure(u, success);
+    frame3(tstno, u);
+    logtest(tstno, LOGT_ERROR, "Frame2");
+    return;
+
+:success:
+   logtest(tstno, LOGT_INFO, "Frame2 OK");
+   return;
+}
+dilend
+
+// Tests DIL secure()
+// Test that secure will trickle down through DIL frames
+//
+dilbegin T009(tstno : integer);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+    frame2(tstno : integer, u : unitptr);
+
+var
+   r, u : unitptr;
+code
+{
+    u := load("experiment@test");
+    secure(u, cleanup);
+    r := findsymbolic("void@basis");
+    link(u, r);  // move to a far away location, doesn't trigger secure
+    frame2(tstno, u); // Frame3 will pause which will trigger cascade of secure checks as frames pop.
+    // If we return and it doesn't trigger the secure, then we have an issue
+    goto failure;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+   goto cleanup;
+   
+:cleanup:
+   unsecure(u);
+   destroy(u);
+   // Naught
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
+
+
+
+
+// ==================== T008 =====================
+
+// Tests DIL secure()
+// Test that moving the unit away and then calling a pausing DIL will trigger secure
+// This is the functionality I need to restore
+//
+dilbegin T008(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   Explainer@quests(pc : unitptr, sl : stringlist);
+
+var
+   r, u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   u := load("experiment@test");
+   secure(u, cleanup);
+   r := findsymbolic("void@basis");
+   log("a");
+   link(u, r);  // move to a far away location, doesn't trigger secure
+   log("b");
+
+   // call a mini DIL that has no dil secure triggers
+   // it shouldn't provoke a trigger
+   Explainer@quests(u, {"bounce", "jump"}); 
+   log("c");
+
+   // If we return and it doesn't trigger the secure, then we have an issue
+   goto failure;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+   goto cleanup;
+
+:cleanup:
+   unsecure(u);
+   destroy(u);
+   // Naught
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
+
+
+// ==================== T007 =====================
+
+// Tests DIL secure()
+// Test that moving the unit away and then calling an immediate DIL will not trigger secure
+//
+dilbegin T007(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   integer rev_dir@function(i : integer);
+var
+   r, u : unitptr;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   u := load("experiment@test");
+   secure(u, failure);
+   r := findsymbolic("void@basis");
+   link(u, r);  // move to a far away location, doesn't trigger secure
+
+   // call a mini DIL that has no dil secure triggers
+   // it shouldn't provoke a trigger
+   i := rev_dir@function(DIR_NORTH); 
+   goto cleanup;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+   return;
+
+:cleanup:
+   unsecure(u);
+   destroy(u);
+   // Naught
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
+
+
+// ==================== T006 =====================
+
+// Tests DIL secure()
+// Test that moving the unit away and then waiting triggers the secure after the wait()
+//
+dilbegin T006(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   r, u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   u := load("experiment@test");
+   secure(u, finished);
+   r := findsymbolic("void@basis");
+   link(u, r);  // move to a far away location, doesn't trigger secure
+   wait(SFB_TICK, TRUE);
+   goto failure;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+   return;
+
+:cleanup:
+   unsecure(u);
+   destroy(u);
+   // Naught
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
+
+
+// ==================== T005 =====================
+
+// Tests DIL secure()
+// Test that moving the unit away with no wait() doesn't trigger the secure
+//
+dilbegin T005(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   r, u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC* 1;
+   u := load("experiment@test");
+   if (u == null)
+   {
+      log("Unable to load object");
+      goto failure;
+   }
+   secure(u, failure);
+   wait(SFB_TICK, TRUE);
+   if (u == null)
+   {
+      log("u null after wait");
+      goto failure;
+   }
+   r := findsymbolic("void@basis");
+   link(u, r);  // move to a far away location, doesn't trigger secure
+   // We should get to here without a secure trigger because 
+   // there is no "wait"
+   logtest(tstno, LOGT_INFO, "All good");
+   goto cleanup;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+   return;
+
+:cleanup:
+   unsecure(u);
+   destroy(u);
+   // Naught
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
+
+// ==================== T004 =====================
+
+// Tests DIL secure().
+// Test that destroying a unit triggers its secure
+//
+dilbegin T004(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   r, u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   u := load("experiment@test");
+   if (u == null)
+      goto failure;
+   secure(u, cleanup);
+   destroy(u);  // Destroy will trigger a secure test
+   goto failure;
+
+:failure:
+   logtest(tstno, LOGT_ERROR, "Test not as expected");
+   return;
+
+:cleanup:
+   // Naught
+
+:finished:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+}
+dilend
 
 // ==================== T003 =====================
 
@@ -674,7 +963,7 @@ code
 {
    logtest(0, LOGT_INFO, "Lab director starting.");
 
-   tstno := 3; // If you add a new T003, then set this to 3, and so forth
+   tstno := TEST_MAXIMUM; // If you add a new T003, then set this to 3, and so forth
 
    heartbeat := PULSE_SEC * 30;
    interrupt(SFB_MSG, argument == "done", nexttest);
