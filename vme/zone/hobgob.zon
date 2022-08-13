@@ -5707,6 +5707,7 @@ descr "A Macaw cage is sitting here."
 extra	{}
 "The birdcage is made from bamboo and is big enough to hold a
 macaw comfortably."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 CONTAINER_DEF(100)
@@ -5726,6 +5727,7 @@ descr "A bird cage is sitting here."
 extra	{}
 "The birdcage is made from bamboo and is big enough to hold a
 Budgie comfortably."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 CONTAINER_DEF(100)
@@ -5741,6 +5743,7 @@ pbull_cage
 names {"pit bull cage","cage"}
 title "a wooden Pit Bull cage"
 descr "A wooden Pit Bull cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5758,6 +5761,7 @@ monkey_cage
 names {"monkey cage","cage"}
 title "a wooden chimpanzee  cage"
 descr "A wooden chimpanzee cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra   {}
@@ -5777,6 +5781,7 @@ rot_cage
 names {"rottweiler cage","cage"}
 title "a wooden Rottweiler cage"
 descr "A wooden Rottweiler cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5786,14 +5791,15 @@ extra {"$identify"}
 "A wooden cage"
 CONTAINER_DEF(300)
 cost 7 GOLD_PIECE
-
 weight 2
 dilcopy pet_container@hobgob("rottweiler@hobgob");
 end
+
 puppy_cage
 names {"puppy cage","cage"}
 title "a wooden Puppy cage"
 descr "A wooden Puppy cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5811,6 +5817,7 @@ pig_crate
 names {"pig crate","crate"}
 title "a wooden pig crate"
 descr "A wooden pig crate is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5823,10 +5830,12 @@ extra {"$identify"}
 weight 2
 dilcopy pet_container@hobgob("pig@hobgob");
 end
+
 cat_home
 names {"cat cage","cage"}
 title "a cat cage"
 descr "A cat cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra {}
@@ -5845,6 +5854,7 @@ skunk_cage
 names {"skunk cage","cage"}
 title "a wooden skunk cage"
 descr "A wooden skunk cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5866,6 +5876,7 @@ hamster_cage
 names {"hamster cage","cage"}
 title "a small hamster cage"
 descr "A small hamster cage is sitting here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 CONTAINER_DEF(10)
@@ -5880,6 +5891,7 @@ lizard_cage
 names {"lizard cage","cage"}
 title "a lizard cage"
 descr "A lizard cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra {}
@@ -5897,6 +5909,7 @@ spider_cage
 names {"spider cage","cage"}
 title "a spider cage"
 descr "A spider cage is lying here."
+flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra	{}
@@ -5909,6 +5922,7 @@ cost 3 GOLD_PIECE
 weight 2
 dilcopy pet_container@hobgob("spider@hobgob");
 end
+
 pole
 title "a fishing pole"
 names"pole"
