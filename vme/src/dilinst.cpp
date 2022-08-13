@@ -445,6 +445,7 @@ void dilfi_foe(dilprg *p)
 
         if (v1->val.num)
         {
+            // Clear any pre-existing for-each secured items
             for (i = 0; i < p->fp->securecount; i++)
             {
                 if (p->fp->secure[i].lab == nullptr)
@@ -463,16 +464,13 @@ void dilfi_foe(dilprg *p)
                 scan4_unit_room(p->sarg->owner, v1->val.num);
             }
 
+            // Add all the items found to the for-each
             for (i = 0; i < g_unit_vector.top; i++)
             {
                 dil_add_secure(p, UVI(i), nullptr);
             }
 
-            // This statement is incorrect in Yamato when a room uses foreach() this
-            // will cause the room to get added as one of the items to be looped
-            // when it asked only for PCs
-            // dil_add_secure(p, p->sarg->owner, NULL);
-
+            // Add the owner unit if it is the right type
             if (IS_SET(p->sarg->owner->getUnitType(), v1->val.num))
             {
                 dil_add_secure(p, p->sarg->owner, nullptr);
@@ -499,8 +497,10 @@ void dilfi_fon(dilprg *p)
     }
     else
     {
+        // Remove any items no longer in the local environment
         dil_test_secure(p, true);
-        /* look for NULL references, remove first */
+
+        /* look for NULL label references, aka fornext items and remove the first one */
         u = nullptr;
         for (i = 0; i < p->fp->securecount; i++)
         {
@@ -525,7 +525,7 @@ void dilfi_fon(dilprg *p)
         }
         else
         {
-            /* assign variable the new value */
+            /* assign variable the new value and remove it from the secured list */
             dil_sub_secure(p->fp, u, TRUE);
             *((unit_data **)v1->ref) = u;
         }

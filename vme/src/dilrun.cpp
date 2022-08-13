@@ -613,7 +613,9 @@ int dil_getval(dilval *v)
     return orig_type[v->type];
 }
 
-/* adds exp node to exp, returns node number */
+// secures 'ups' for the current frame of DIL program 'prg'
+// If label 'lab' is null, then it is a "for each" secure.
+//
 void dil_add_secure(dilprg *prg, unit_data *sup, ubit8 *lab)
 {
     if (sup == nullptr)
@@ -635,7 +637,15 @@ void dil_add_secure(dilprg *prg, unit_data *sup, ubit8 *lab)
     prg->fp->securecount++;
 }
 
-/* adds exp node to exp, returns node number */
+
+// 'frm' is the DIL frame to remove a secure from.
+// 'sup' is the unitptr to remove
+// 'bForeach'
+//     False: will remove all occurences of 'sup', except if label is null
+//     True:  process all secures where label is null
+//
+// Return: how many secures were removed.
+//
 int dil_sub_secure(dilframe *frm, unit_data *sup, int bForeach)
 {
     int i = 0;
@@ -646,14 +656,19 @@ int dil_sub_secure(dilframe *frm, unit_data *sup, int bForeach)
     {
         if (frm->secure[i].sup == sup)
         {
-            if (bForeach && frm->secure[i].lab)
+            if (bForeach)
             {
-                continue;
+                if (frm->secure[i].lab)
+                {
+                    continue;
+                }
             }
-
-            if (!bForeach && !frm->secure[i].lab)
+            else
             {
-                continue;
+                if (frm->secure[i].lab == null)
+                {
+                    continue;
+                }
             }
 
             frm->secure[i] = frm->secure[--(frm->securecount)];
