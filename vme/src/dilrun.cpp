@@ -665,7 +665,7 @@ int dil_sub_secure(dilframe *frm, unit_data *sup, int bForeach)
             }
             else
             {
-                if (frm->secure[i].lab == null)
+                if (frm->secure[i].lab == nullptr)
                 {
                     continue;
                 }
