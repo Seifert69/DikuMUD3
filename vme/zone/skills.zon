@@ -1514,7 +1514,6 @@ dilbegin picklock(arg : string);
 external
    integer is_hidden@basemove(u1 : unitptr, int1 : integer, u2 :unitptr);
    string  dirstring@function(i2 : integer);
-   integer skillresist(i3 : integer, i4 : integer, i5 : integer, i6 : integer);
    integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
    checkstand@basemove();
    integer checkdoor@basemove(arg : string);
@@ -1853,7 +1852,6 @@ dilend
 // do_bash
 dilbegin ski_bash(arg : string);
 external
-   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
    provoked_attack(victim : unitptr, ch : unitptr);
    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
@@ -5678,8 +5676,6 @@ dilend /* race_name */
 dilbegin butcher(arg : string);
 
 external
-   integer skillresist@skills(aa : integer, ad : integer,
-                             sa : integer, sd : integer);
    integer race_legs (race_def : integer);
    integer race_arms (race_def : integer);
    string race_name (race_def : integer);
@@ -12367,7 +12363,8 @@ dilend // defending
 // do_berserk
 dilbegin ski_berserk(arg : string);
 external
-   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
+    integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
+
 var
 	heal : integer;
 	hm : integer;
@@ -12407,7 +12404,8 @@ code
 		tgt.endurance := tgt.endurance - 50;
 		quit;
 	}
-	hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],30);
+	// Wrong, because NPC doesn't have SKI_BERSERK. hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],30);
+    hm := skillchecksa(SKI_BERSERK, ABIL_CON, 30);
 	if (hm > 10)
         hm := 10;	
 	if (hm <= 0)
@@ -12566,7 +12564,7 @@ dilend /* ski_charge */
 
 dilbegin ski_leap(arg : string);
 external
-   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
+    integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
 var
    u : unitptr;
    tgt : unitptr;
@@ -12589,7 +12587,8 @@ code
 		quit;
 	}
 	
-	hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
+	// Wrong. hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
+    hm := skillchecksa(SKI_LEAP, ABIL_CON, 30);
 
 	if (hm <= 0)
 	{

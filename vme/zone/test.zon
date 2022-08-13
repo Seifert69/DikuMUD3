@@ -350,7 +350,7 @@ code
    if (u == null)
       goto failure;
    secure(u, cleanup);
-   destroy(u);  // Destroy will trigger a secure test
+   destroy(u);  // Destroy will trigger a secure test for the unit destroyed immediately
    goto failure;
 
 :failure:
