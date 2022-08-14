@@ -77,12 +77,12 @@
         {
             "source_file": {
                 "filename": "baselook.zon",
-                "sha512": "4fc782cf16976b072d3bdfd9cf0e71decfcba5ac063f0171fbde20437ad69c1c8196d13dac4e17c911a5c6e5a8c2b69d04fe8e035194d9431c587c2aaa98a5cd"
+                "sha512": "e5940a2fd222b6125233893dce5ffd38a9763102f766beaf8d45576ac566aacea1c67912e821ee018c6f3a3a2b8b475c95e800d67518b2c2333c386c941da8e4"
             },
             "output": [
                 {
                     "filename": "baselook.data",
-                    "sha512": "0884e74aa402280e0eb8faffac3e62750c331e8a382f60940d52178eb50a96d6feba95916022c015a6160235a0d4112d371d922a90fdc914d49a232e629bbdcf"
+                    "sha512": "bf1723e73e8d9321947fa632d9ca2a1de70abb4ff57ac8f4e7e6cd152f5cc5501412559f3cca98ab9d7736e027f2d740d8116b79d708596b8ad920b95faf6b01"
                 },
                 {
                     "filename": "baselook.reset",
@@ -461,12 +461,12 @@
         {
             "source_file": {
                 "filename": "hobgob.zon",
-                "sha512": "66dafe91663029f4abc59f585dd1bcd08e14d5751eb97885009338cfdf9a20a8362612e4fba80297ec8dc0579e9e93f9175e10884bed3cc31804ff4269629a47"
+                "sha512": "8f521ca9dad35b1f8855f6fd9a6d0dfe5bf1711d937a70ab2fee03ca85766a9fca92d53fa8c123252082febea1d78e8b1c064d7e031e06805871c824eb7de8a4"
             },
             "output": [
                 {
                     "filename": "hobgob.data",
-                    "sha512": "6a1ab529f089a7dfcf2f7b2b51bcd953dc13a975174733b77cb851fee3ca7f5c4d91b74d397745798c59efd52141a3d2d65c554be7bea1d17bc6bf81b405103b"
+                    "sha512": "36965efeb4ab2065ea5dfe164a8146afca02d4ba74933deec033c6a3f982a55c9d7c89eaf22058f5ec8ed98532efe5a6651146cc8886245e40f6c8fb36ea215e"
                 },
                 {
                     "filename": "hobgob.reset",

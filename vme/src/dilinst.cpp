@@ -497,16 +497,16 @@ void dilfi_fon(dilprg *p)
     }
     else
     {
-        // Remove any items no longer in the local environment
+        // Remove any for-next items no longer in the local environment
         dil_test_secure(p, true);
 
-        /* look for NULL label references, aka fornext items and remove the first one */
+        // look for NULL label references, aka fornext items and remove the first one
         u = nullptr;
         for (i = 0; i < p->fp->securecount; i++)
         {
-            if (!p->fp->secure[i].lab)
+            if (p->fp->secure[i].lab == nullptr)
             {
-                u = p->fp->secure[i].sup;
+                u = p->fp->secure[i].sup; // We know it exists because we just ran a dil_test_secure() above
                 if (u->is_destructed())
                 {
                     dil_sub_secure(p->fp, u, TRUE);
@@ -518,7 +518,7 @@ void dilfi_fon(dilprg *p)
             }
         }
 
-        if (!u)
+        if (u == nullptr)
         {
             /* no new in environment found, exit loop */
             p->fp->pc = &(p->fp->tmpl->core[adr]);
