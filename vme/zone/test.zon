@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 9  // T009, T008, ...
+#define TEST_MAXIMUM 10  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -80,6 +80,67 @@ code
    return;
 }
 dilend
+
+
+// T011 test secure pet in transparent cage outside looker, in inventory.
+
+// ==================== T010 =====================
+
+// Tests DIL secure()
+// Test secures in a for each next context
+//
+dilbegin T010(tstno : integer);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+
+var
+   u1, u2, u3 : unitptr;
+   u : unitptr;
+   i : integer;
+code
+{
+    heartbeat := 1;
+
+    u1 := load("experiment@test");
+    u2 := load("experiment@test");
+    u3 := load("experiment@test");
+    secure(u1, failure);
+    secure(u2, failure);
+    secure(u3, failure);
+
+    wait(SFB_TICK, TRUE);
+
+    i := 0;
+    foreach(UNIT_ST_NPC, u)
+    {
+        if (u.symname == "experiment@test")
+        {
+            unsecure(u);
+            destroy(u);
+            wait(SFB_TICK, TRUE);
+            i := i + 1;
+        }
+    }
+
+    if (i == 3)
+        goto cleanup;
+    else
+        goto failure;
+
+:failure:
+    logtest(tstno, LOGT_ERROR, "Test not as expected");
+    goto cleanup;
+   
+:cleanup:
+    // Naught
+
+:finished:
+    logtest(tstno, LOGT_INFO, "Done");
+    sendtoalldil("done", "labdirector@test");
+    return;
+}
+dilend
+
 
 // ==================== T009 =====================
 
@@ -176,14 +237,11 @@ code
    u := load("experiment@test");
    secure(u, cleanup);
    r := findsymbolic("void@basis");
-   log("a");
    link(u, r);  // move to a far away location, doesn't trigger secure
-   log("b");
 
    // call a mini DIL that has no dil secure triggers
    // it shouldn't provoke a trigger
    Explainer@quests(u, {"bounce", "jump"}); 
-   log("c");
 
    // If we return and it doesn't trigger the secure, then we have an issue
    goto failure;

@@ -1943,21 +1943,18 @@ quit;
 /* do_inventory : This dil will show the players inventory to him */
 
 dilbegin do_inventory(arg : string);
-
-
 var
-
-ln:integer;
-z:integer;
-   buffer   :  string;
-   item     :  unitptr;
-   temp     :  string;
-   temp1    :  string;
-   slist    :  stringlist;
-   ilist    :  stringlist;
-   clist    :  stringlist;
-   cnt      :  integer;
-   i        :  integer;
+    ln:integer;
+    z:integer;
+    buffer   :  string;
+    item     :  unitptr;
+    temp     :  string;
+    temp1    :  string;
+    slist    :  stringlist;
+    ilist    :  stringlist;
+    clist    :  stringlist;
+    cnt      :  integer;
+    i        :  integer;
 
 code
 {

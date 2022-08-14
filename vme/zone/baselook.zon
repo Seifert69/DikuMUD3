@@ -156,135 +156,122 @@ code
 dilend
 
 
-/* get_aura : This will return a string listing all the different auras an
-item has */
+/* get_aura : This will return a string listing all the different auras an item has */
 
 dilbegin string get_aura(item : unitptr);
-
 var
-
     temp    :  string;
 
 code
 {
-   temp := "";
+    temp := "";
 
-   if (isset(self.charflags, CHAR_DETECT_ALIGN))
-   {
-      if (item.alignment > 350)
-         temp := temp + " (blue)";
-      else if (item.alignment < -350)
-         temp := temp + " (red)";
-      else
-         temp := temp + " (green)";
-   }
+    if (isset(self.charflags, CHAR_DETECT_ALIGN))
+    {
+        if (item.alignment > 350)
+            temp := temp + " (blue)";
+        else if (item.alignment < -350)
+            temp := temp + " (red)";
+        else
+            temp := temp + " (green)";
+    }
 
-   if (isset(self.charflags, CHAR_DETECT_INVISIBLE) and
-         (isset(item.flags,UNIT_FL_INVISIBLE)))
-      temp := temp + " (clear)";
-
-
-   if (isset(self.charflags, CHAR_DETECT_MAGIC)
-         and (isset(item.flags,UNIT_FL_MAGIC)))
-      temp := temp + " (yellow)";
+    if (isset(self.charflags, CHAR_DETECT_INVISIBLE) and
+            (isset(item.flags,UNIT_FL_INVISIBLE)))
+        temp := temp + " (clear)";
 
 
-   if ((item.type == UNIT_ST_OBJ) and ((item.objecttype == ITEM_FOOD) or
+    if (isset(self.charflags, CHAR_DETECT_MAGIC)
+            and (isset(item.flags,UNIT_FL_MAGIC)))
+        temp := temp + " (yellow)";
+
+
+    if ((item.type == UNIT_ST_OBJ) and ((item.objecttype == ITEM_FOOD) or
             (item.objecttype == ITEM_DRINKCON)))
-   {
-      if (isset(self.charflags, CHAR_DETECT_POISON) and (item.value[3] > 0))
-         temp := temp + " (black)";
-   }
-   else if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
-   {
-      if (isset(self.charflags, CHAR_DETECT_POISON) and
-         (dilfind("weapon_curare@skills", item)))
-         temp := temp + " (black)";
-   }
-   else if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
-   {
-      if (isset(self.charflags, CHAR_DETECT_POISON) and
+    {
+        if (isset(self.charflags, CHAR_DETECT_POISON) and (item.value[3] > 0))
+            temp := temp + " (black)";
+    }
+    else if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
+    {
+        if (isset(self.charflags, CHAR_DETECT_POISON) and
+            (dilfind("weapon_curare@skills", item)))
+            temp := temp + " (black)";
+    }
+    else if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
+    {
+        if (isset(self.charflags, CHAR_DETECT_POISON) and
             (dilfind("spl_poison@spells", item)))
-         temp := temp +  " (black)";
+            temp := temp +  " (black)";
 
-      if (isset(self.charflags, CHAR_DETECT_UNDEAD) and
-         ((item.race > RACE_SPIRIT_MIN) and (item.race < RACE_SPIRIT_MAX)))
-         temp := temp + " (violet)";
-   }
+        if (isset(self.charflags, CHAR_DETECT_UNDEAD) and
+            ((item.race > RACE_SPIRIT_MIN) and (item.race < RACE_SPIRIT_MAX)))
+            temp := temp + " (violet)";
+    }
 
-   if (temp != "")
-      temp :=  "The " + item.name + " reveals an aura of" + temp + "<br/>";
+    if (temp != "")
+        temp :=  "The " + item.name + " reveals an aura of" + temp + "<br/>";
 
-   return(temp);
+    return(temp);
 }
 dilend
 
 
 
-/* liq_content : This returns the contents of a liquid container to the
-player */
-
+/* liq_content : This returns the contents of a liquid container to the player */
 dilbegin liq_content (u : unitptr);
-
 var
-     buff      :  string;
+    buff      :  string;
 
-code{
+code
+{
+    if (u.extra.["$drink_color"])
+        buff := u.extra.["$drink_color"].descr;
+    else
+        buff := "";
 
-if (u.extra.["$drink_color"])
-   buff := u.extra.["$drink_color"].descr;
-else
-   buff := "";
+    if (u.value[0] >= u.capacity)
+        act("It is full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
+    else if (u.value[0] > (u.capacity / 2))
+        act("It is more than half full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
+    else if (u.value[0] > 0)
+        act("It is less than half full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
+    else
+        act("It is empty.", A_ALWAYS, self, null, null, TO_CHAR);
 
-if (u.value[0] >= u.capacity)
-   act("It is full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
-else if (u.value[0] > (u.capacity / 2))
-   act("It is more than half full of a $2t liquid.", A_ALWAYS, self, buff,
-null, TO_CHAR);
-else if (u.value[0] > 0)
-   act("It is less than half full of a $2t liquid.", A_ALWAYS, self, buff,
-null, TO_CHAR);
-else
-   act("It is empty.", A_ALWAYS, self, null, null, TO_CHAR);
-
-
-return;
-
-}dilend
+    return;
+}
+dilend
 
 
-/* exam_in : This shows the contents of a container to a player when they
-use examine */
+/* exam_in : This shows the contents of a container to a player when they use examine */
 
 dilbegin exam_in (u : unitptr);
-
 external
 	string obj_content (l : unitptr, u:unitptr);
-
 var
-     buff      :  string;
+    buff      :  string;
 
-code{
+code
+{
+    if (isset (u.openflags, EX_CLOSED))
+    {
+        act ("It is closed.", A_ALWAYS, self, null, null, TO_CHAR);
+        return;
+    }
 
-if (isset (u.openflags, EX_CLOSED))
-     {
-       act ("It is closed.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-     }
 
+    buff := obj_content (self, u);
+    /* MS2020 buff := buff + "<br/>"; */
 
-buff := obj_content (self, u);
+    if (self.type == UNIT_ST_PC)
+        sendtext(buff, self);
+    else
+        sendtext(buff, self);
 
-/* MS2020 buff := buff + "<br/>"; */
-
-if (self.type == UNIT_ST_PC)
-      sendtext(buff, self);
-else
-      sendtext(buff, self);
-
-return;
-
-}dilend
+    return;
+}
+dilend
 
 /* End do_area dils */
 
