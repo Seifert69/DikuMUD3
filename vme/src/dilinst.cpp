@@ -1017,7 +1017,7 @@ void dilfi_rtf(dilprg *p)
         }
         delete v1;
 
-        // Push the copied return value so that it can be assigned
+        // Yes, we should Push the copied return value so that it can be assigned
         doPush = true;
     }
 

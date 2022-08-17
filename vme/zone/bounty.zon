@@ -6997,7 +6997,7 @@ end
 //////////////////////////////////////////////////////////////////
 
 mag_potion
-names {"potion of full magic","magic","potion"}
+names {"potion of full magic","full magic potion", "magic potion"}
 title "a potion of full magic"
 descr "A potion of full magic is here."
 extra {}
@@ -7012,7 +7012,7 @@ dilcopy mag_pot@bounty();
 end
 
 div_potion
-names {"potion of full divinity","divinity","potion"}
+names {"potion of full divinity","full divinity potion", "divinity potion"}
 title "a potion of full divinity"
 descr "A potion of full divinity is here."
 extra {}
@@ -7026,7 +7026,7 @@ type ITEM_POTION
 end
 
 str_potion
-names {"potion of battle","battle","potion"}
+names {"potion of battle","battle potion"}
 title "a potion of battle"
 descr "A potion of battle is here."
 extra {}
@@ -7040,7 +7040,7 @@ type ITEM_POTION
 end
 
 pot_bl
-names {"potion of blessing","bless","potion"}
+names {"potion of blessing","blessing potion"}
 title "a potion of blessing"
 descr "A potion of blessing is here."
 extra {}
@@ -7054,7 +7054,7 @@ type ITEM_POTION
 end
 
 pot_fo
-names {"potion of focus","focus","potion"}
+names {"potion of focus","focus potion"}
 title "a potion of focus"
 descr "A potion of focus is here."
 extra {}
@@ -7068,7 +7068,7 @@ type ITEM_POTION
 end
 
 pot_st
-names {"potion of strength","strength","str","potion"}
+names {"potion of strength","strength potion"}
 title "a potion of strength"
 descr "A potion of strength is here."
 extra {}
@@ -7082,7 +7082,7 @@ type ITEM_POTION
 end
 
 pot_br
-names {"potion of brain","brain","bra","potion"}
+names {"potion of brain","brain potion"}
 title "a potion of brain"
 descr "A potion of brain is here."
 extra {}
@@ -7096,7 +7096,7 @@ type ITEM_POTION
 end
 
 pot_de
-names {"potion of dexterity","dexterity","dex","potion"}
+names {"potion of dexterity","dexterity potion"}
 title "a potion of dexterity"
 descr "A potion of dexterity is here."
 extra {}
@@ -7110,7 +7110,7 @@ type ITEM_POTION
 end
 
 pot_co
-names {"potion of constitution","constitution","con","potion"}
+names {"potion of constitution","constitution potion"}
 title "a potion of constitution"
 descr "A potion of constitution is here."
 extra {}
@@ -7124,7 +7124,7 @@ type ITEM_POTION
 end
 
 pot_ch
-names {"potion of charisma","charisma","cha","potion"}
+names {"potion of charisma","charisma potion"}
 title "a potion of charisma"
 descr "A potion of charisma is here."
 extra {}
@@ -7138,7 +7138,7 @@ type ITEM_POTION
 end
 
 pot_di
-names {"potion of divine","divine","div","potion"}
+names {"potion of divine","divine potion"}
 title "a potion of divine"
 descr "A potion of divine is here."
 extra {}
@@ -7152,7 +7152,7 @@ type ITEM_POTION
 end
 
 pot_ma
-names {"potion of magic","magic","mag","potion"}
+names {"potion of magic","magic potion"}
 title "a potion of magic"
 descr "A potion of magic is here."
 extra {}
@@ -7166,7 +7166,7 @@ type ITEM_POTION
 end
 
 pot_hi
-names {"potion of health","health","hit","potion"}
+names {"potion of health","health potion"}
 title "a potion of health"
 descr "A potion of health is here."
 extra {}
@@ -7180,7 +7180,7 @@ type ITEM_POTION
 end
 
 full_restore
-names {"potion of full restoration","full restoration","potion"}
+names {"potion of full restoration","full restoration potion", "restoration potion"}
 title "a potion of full restoration"
 descr "A potion of full restoration is here."
 extra {}
@@ -7196,7 +7196,7 @@ dilcopy restore_pot@bounty("restore","full");
 end
 
 strong_restore
-names {"potent potion of restoration","potent restoration","potion"}
+names {"potent potion of restoration","potent restoration potion", "restoration potion"}
 title "a potent potion of restoration"
 descr "A potent potion of restoration is here."
 extra {}
@@ -7212,7 +7212,7 @@ dilcopy restore_pot@bounty("restore","strong");
 end
 
 half_restore
-names {"potion of restoration","restoration","potion"}
+names {"potion of restoration","restoration potion"}
 title "a potion of restoration"
 descr "A potion of restoration is here."
 extra {}
@@ -7228,7 +7228,7 @@ dilcopy restore_pot@bounty("restore","half");
 end
 
 full_heal
-names {"potion of full healing","full healing","potion"}
+names {"potion of full healing","full healing potion", "healing potion"}
 title "a potion of full healing"
 descr "A potion of full healing is here."
 extra {}
@@ -7244,7 +7244,7 @@ dilcopy restore_pot@bounty("hp","full");
 end
 
 strong_heal
-names {"potent potion of healing","potent healing","potion"}
+names {"potent potion of healing","potent healing potion", "healing potion"}
 title "a potent potion of healing"
 descr "A potent potion of healing is here."
 extra {}
@@ -7260,7 +7260,7 @@ dilcopy restore_pot@bounty("hp","strong");
 end
 
 half_heal
-names {"potion of healing","healing","potion"}
+names {"potion of healing","healing potion"}
 title "a potion of healing"
 descr "A potion of healing is here."
 extra {}
@@ -7276,7 +7276,7 @@ dilcopy restore_pot@bounty("hp","half");
 end
 
 full_end
-names {"potion of full endurance","full endurance","potion"}
+names {"potion of full endurance","full endurance potion", "endurance potion"}
 title "a potion of full endurance"
 descr "A potion of full endurance is here."
 extra {}
@@ -7292,7 +7292,7 @@ dilcopy restore_pot@bounty("endurance","full");
 end
 
 strong_end
-names {"potent potion of endurance","potent endurance","potion"}
+names {"potent potion of endurance","potent endurance potion", "endurance potion"}
 title "a potent potion of endurance"
 descr "A potent potion of endurance is here."
 extra {}
@@ -7308,7 +7308,7 @@ dilcopy restore_pot@bounty("endurance","strong");
 end
 
 half_end
-names {"potion of endurance","endurance","potion"}
+names {"potion of endurance","endurance potion"}
 title "a potion of endurance"
 descr "A potion of endurance is here."
 extra {}
@@ -7324,7 +7324,7 @@ dilcopy restore_pot@bounty("endurance","half");
 end
 
 full_mana
-names {"potion of full mana","full mana","potion"}
+names {"potion of full mana","full mana potion", "mana potion"}
 title "a potion of full mana"
 descr "A potion of full mana is here."
 extra {}
@@ -7340,7 +7340,7 @@ dilcopy restore_pot@bounty("mana","full");
 end
 
 strong_mana
-names {"potent potion of mana","potent mana","potion"}
+names {"potent potion of mana","potent mana potion", "mana potion"}
 title "a potent potion of mana"
 descr "A potent potion of mana is here."
 extra {}
@@ -7356,7 +7356,7 @@ dilcopy restore_pot@bounty("mana","strong");
 end
 
 half_mana
-names {"potion of mana","mana","potion"}
+names {"potion of mana","mana potion"}
 title "a potion of mana"
 descr "A potion of mana is here."
 extra {}
