@@ -835,16 +835,17 @@ void dil_clear_lost_reference(dilframe *frm, void *ptr)
 //   If the unit 'u' has been destroyed then it triggers the secure().
 //   Called after "destroy()" on the unit destroyed and on owner after "exec()"
 //
-void dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
+bool dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
 {
     int i = 0;
     int count = 0;
+    bool bGoto = false;
 
     assert(u);
 
     if (prg->waitcmd <= WAITCMD_STOP)
     {
-        return;
+        return false;
     }
 
     dilframe *frm = prg->fp;
@@ -862,6 +863,7 @@ void dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
                     waitcmd must be less than MAXINST (see dilfi_wit) */
                 prg->waitcmd--;
                 frm->pc = frm->secure[i].lab;
+                bGoto = true;
             }
 
             dil_clear_lost_reference(frm, frm->secure[i].sup);
@@ -873,6 +875,8 @@ void dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
             /* Do not return until all have been tested! */
         }
     }
+
+    return bGoto;
 }
 
 
@@ -882,17 +886,19 @@ void dil_test_secure_unit_destroyed(dilprg *prg, unit_data *u)
 //   Will set the frame's wasSecuredTested to true. Which will trickle down to any
 //   frames below.
 //
-//   Add a comment about bForeach - I'm not sure yet what it does
+//   Returns true if execution point was changed. Needed to secures() triggering
+//   after function return.
 //
-void dil_test_secure(dilprg *prg, bool bForeach)
+bool dil_test_secure(dilprg *prg, bool bForeach)
 {
     int i = 0;
     int count = 0;
     dilframe *frm = nullptr;
+    bool bGoto = false;
 
     if (prg->waitcmd <= WAITCMD_STOP)
     {
-        return;
+        return false;
     }
 
     prg->fp->wasSecureTested = true;
@@ -918,6 +924,7 @@ void dil_test_secure(dilprg *prg, bool bForeach)
                 if (frm == prg->fp)
                 { // See long comment above. Only the active frame changes execution point
                     frm->pc = frm->secure[i].lab;
+                    bGoto = true;
                 }
             }
 
@@ -934,6 +941,8 @@ void dil_test_secure(dilprg *prg, bool bForeach)
             /* Do not return until all have been tested! */
         }
     }
+
+    return bGoto;
 }
 
 /* report error in passed type to function */

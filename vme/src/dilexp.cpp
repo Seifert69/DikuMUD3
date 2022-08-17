@@ -3960,6 +3960,7 @@ void dilfe_sdir(dilprg *p)
     delete v1;
 }
 
+// weapon_info
 void dilfe_wepinfo(dilprg *p)
 {
     dilval *v = new dilval;

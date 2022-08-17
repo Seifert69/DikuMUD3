@@ -908,12 +908,14 @@ void dilfi_rtf(dilprg *p)
     ubit8 typ = 0;
     int i = 0;
     bool doSecureTest = false;
+    bool doPush = false;
+    dilval *v = new dilval;
 
     p->waitcmd--;
 
     if (p->fp == p->frame)
     {
-        /* just stop execution, never discard last frameframe! */
+        /* just stop execution, never discard last frame! */
         p->waitcmd = WAITCMD_QUIT;
         return;
     }
@@ -924,7 +926,7 @@ void dilfi_rtf(dilprg *p)
         {
             slog(LOG_ALL,
                  0,
-                 "DIL %s@%s on %s: Unexpected stack length after procedure call.",
+                 "DIL %s@%s on %s: DILV_ERR Unexpected stack length after procedure call.",
                  p->fp->tmpl->prgname,
                  p->fp->tmpl->zone->getName(),
                  p->sarg->owner->getFileIndexSymName());
@@ -947,7 +949,7 @@ void dilfi_rtf(dilprg *p)
             return;
         }
         dilval *v1 = p->stack.pop();
-        dilval *v = new dilval;
+        v = new dilval;
 
         typ = dil_getval(v1);
         if (typ != p->fp->tmpl->rtnt)
@@ -1014,7 +1016,9 @@ void dilfi_rtf(dilprg *p)
                 break;
         }
         delete v1;
-        p->stack.push(v);
+
+        // Push the copied return value so that it can be assigned
+        doPush = true;
     }
 
     doSecureTest = p->fp->wasSecureTested;
@@ -1029,7 +1033,16 @@ void dilfi_rtf(dilprg *p)
 
     if (doSecureTest)
     {
-        dil_test_secure(p);
+        // If we change execution point, then we shouldn't push the cophy of the return variable
+        // for the assignment
+        if (dil_test_secure(p) == true)
+            doPush = false;
+    }
+
+    if (doPush)
+    {
+        assert(v);
+        p->stack.push(v);
     }
 }
 
