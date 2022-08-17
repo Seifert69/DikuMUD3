@@ -1194,21 +1194,20 @@ dilend
 
 dilbegin fnpri(FN_PRI_RESCUE-1) guard_arrest(office : string, prisoner : unitptr);
 external
-   unitptr unit_room@function(u : unitptr);
-   integer walk_room@function (s:string,i:integer);
+    unitptr unit_room@function(u : unitptr);
+    integer walk_room@function(s:string, i:integer);
 var
-   tf:integer;
-   u : unitptr;
-   i : integer;
-   wasin : string;
-   prevtit : string
+    tf:integer;
+    u : unitptr;
+    i : integer;
+    wasin : string;
+    prevtit : string
 code
 {
-   on_activation((self.position < POSITION_SLEEPING) or
-                 (self.position == POSITION_FIGHTING), skip);
+   on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    u := unit_room@function(self);
-   wasin := u.nameidx + "@" + u.zoneidx;
+   wasin := u.symname;
 
    heartbeat := PULSE_SEC * 10;
 
@@ -1225,12 +1224,9 @@ code
    self.outside_descr := sact("$1n has handcuffed $3n and is dragging $3m along.", A_ALWAYS, self, null, prisoner, TO_CHAR);
    priority;
 
-   :loop:
-
+:loop:
    tf := walk_room@function(office,4);
-
-   if (prisoner == null)
-      goto losthim;
+   // This is no longer needed, secure() handles it correctly now:     if (prisoner == null) goto losthim;
 
    if (i == 0)
    {
@@ -1243,7 +1239,7 @@ code
    i := i + 1;
    goto loop;
 
-   :losthim:
+:losthim:
    self.outside_descr := prevtit;
    tf := walk_room@function(wasin,4);
    nopriority;

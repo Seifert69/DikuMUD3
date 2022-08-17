@@ -141,12 +141,12 @@
         {
             "source_file": {
                 "filename": "bounty.zon",
-                "sha512": "06a3a4baf658fafa61e933c98195099ca79000954f37a4ef7d93c41694de8af45e3a319a164d0c30a1e1164fff26892b7698ad8a208f15511a6deeef7556b3af"
+                "sha512": "ce4d7f61bc0de6c04aec414f3b6dabc9cfd1cb14797118f18b12ce773e4cffdb85be2bf85a7c32da9b2aeeecdcf974f0308302a19a04605646cf4089662132bd"
             },
             "output": [
                 {
                     "filename": "bounty.data",
-                    "sha512": "80f373d60e2e82efc675d222350dfd46c90d4a2ae696ef1b00303350a4504639c21adf40837cf9f2ed1604e65bc3b2c4659a18be260fcabf6fc982a47288783f"
+                    "sha512": "9f9b1c478dcc32453dd787ce73901269accabe69673683cb90d4ca377dcddeb18508174a7f476148fd223cffb57689a2530d75551df919abfca0019ef5684dd6"
                 },
                 {
                     "filename": "bounty.reset",
@@ -589,12 +589,12 @@
         {
             "source_file": {
                 "filename": "midgaard.zon",
-                "sha512": "8846c750b1d0dd64dcee77109b294a894abde217b270e892ac07af460537817b4d65fc81d93691c1a87e738265afca23e0c2eae08a681eb99463c128df5dbdcf"
+                "sha512": "a8211a276c428ad531b3837382917394f35706653dccbfc58eb504b5fc051de1b087bc4e1362f7ee511b6e74a3c3fcd7979767278bc279c82d067f3288636839"
             },
             "output": [
                 {
                     "filename": "midgaard.data",
-                    "sha512": "2ccf19e06d12ff796682e05e5f3a0166d003c5452d45a4e554d00cf79f3e2aea6e924aa0d10df5e337d158b1f44f517acab3341aeea25c43b899f1f444e63aa5"
+                    "sha512": "b9b133f164812aa8680fb87264d3e3309a2404f2d59a629ec9c387255dab601eaf1ad331ac468e2116532078b492cbfefa8e1da9854818f2827865aa9e700499"
                 },
                 {
                     "filename": "midgaard.reset",
@@ -658,7 +658,7 @@
             "output": [
                 {
                     "filename": "newtreasure.data",
-                    "sha512": "95508b6165ac01ab4547db0312bc996f542f395f77b0e65a4aebf3056e7bf4d214a47d9b36809682fb288262e8d4e317e0c8c42a040dfdcaee557e5a3bb4f4f1"
+                    "sha512": "8f7d416cf7e7ccca2d65dcf5c6db52de83c4c25bc00e309fd419ee2ad9cb16d5bb6992b2e0e0b3342b3961b64562ca7bcc8c9dedc95e0d924bacc7c33dae933b"
                 },
                 {
                     "filename": "newtreasure.reset",

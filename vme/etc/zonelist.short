@@ -36,10 +36,11 @@ bounty release           1 250 0 0
 quests release           1   2   0 0
 guilds 1120tw0008        1   0 250 0
 professions release      1   0 250 0
+justice 1120tw0008       1   0 250 0 ../lib/justice
+youth 1120tw0008         1   3   0 0
 
 #
 newbie 1120tw0008        1   0 250 0 ../lib/newbie
-justice 1120tw0008       1   0 250 0 ../lib/justice
 arena release            1   0 250 0
 clan 1120tw0008          1   0 250 0 ../lib/clan
 competition 1120tw0008   1   0 250 0 ../lib/competition
