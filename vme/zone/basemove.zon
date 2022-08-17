@@ -3441,8 +3441,8 @@ dilend
 
 
 
-/* close_dil : This is to supplement the new movement and secret doors.
-   do_close() */
+// close_dil : This is to supplement the new movement and secret doors. 
+//   do_close()
 dilbegin close_dil(arg : string);
 external
    integer checkdoor(arg : string);

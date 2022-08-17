@@ -1,0 +1,303 @@
+Sun Aug 14 19:48:49 2022 :: MPlex compiled with [-DPOSIX -DLINUX -DMUD_DEBUG -DMPLEX_COMPILE]
+Sun Aug 14 19:48:49 2022 :: Opening mother connection on port 4242.
+Sun Aug 14 19:48:50 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:48:50 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:48:50 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 19:50:12 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 19:50:12 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:50:12 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:50:12 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:50:13 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:50:13 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:50:13 2022 :: Read from socket 5 error 104
+Sun Aug 14 19:50:13 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:50:13 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:50:13 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:50:14 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:50:14 2022 :: No connect allowed to server.
+Sun Aug 14 19:50:15 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 19:50:21 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:50:21 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:50:21 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 19:50:48 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 19:50:48 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:50:48 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:50:48 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:50:49 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:50:49 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:50:49 2022 :: Read from socket 5 error 104
+Sun Aug 14 19:50:49 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:50:49 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:50:49 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:50:50 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:50:50 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:50:50 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 19:51:30 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 19:51:30 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:51:30 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:51:30 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:51:31 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:51:31 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:51:31 2022 :: Read from socket 5 error 104
+Sun Aug 14 19:51:31 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:51:31 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:51:31 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:51:32 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:51:32 2022 :: No connect allowed to server.
+Sun Aug 14 19:51:33 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 19:51:37 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:51:37 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:51:38 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 19:52:32 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 19:52:32 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:52:32 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:52:32 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:52:33 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:52:33 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:52:33 2022 :: Read from socket 5 error 104
+Sun Aug 14 19:52:33 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:52:33 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:52:33 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:52:34 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:52:34 2022 :: No connect allowed to server.
+Sun Aug 14 19:52:35 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 19:52:40 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:52:40 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:52:40 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 19:57:06 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 19:57:06 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:57:06 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:57:06 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:57:07 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:57:07 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:57:07 2022 :: Read from socket 5 error 104
+Sun Aug 14 19:57:07 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:57:07 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:57:07 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:57:08 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:57:08 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:57:08 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 19:58:42 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 19:58:42 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:58:42 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:58:42 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:58:43 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:58:43 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:58:43 2022 :: Read from socket 5 error 104
+Sun Aug 14 19:58:43 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:58:43 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:58:43 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:58:44 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:58:44 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:58:45 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 19:59:41 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 19:59:41 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:59:41 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:59:41 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:59:42 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:59:42 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:59:42 2022 :: Read from socket 5 error 104
+Sun Aug 14 19:59:42 2022 :: Unhooking MUD Hook
+Sun Aug 14 19:59:42 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 19:59:42 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 19:59:43 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 19:59:43 2022 :: Stream to server was re-opened!
+Sun Aug 14 19:59:44 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 20:02:43 2022 :: Unhooking player connection
+Sun Aug 14 20:09:04 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 20:09:04 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:09:04 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:09:04 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:09:05 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:09:05 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:09:05 2022 :: Read from socket 5 error 104
+Sun Aug 14 20:09:05 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:09:05 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:09:05 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:09:06 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:09:06 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:10:05 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 20:10:05 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:10:05 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:10:05 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:10:06 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:10:06 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:10:06 2022 :: Read from socket 5 error 104
+Sun Aug 14 20:10:06 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:10:06 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:10:06 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:10:07 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:10:07 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:10:48 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 20:10:48 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:10:48 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:10:48 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:10:49 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:10:49 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:10:49 2022 :: Read from socket 5 error 104
+Sun Aug 14 20:10:49 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:10:49 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:10:49 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:10:50 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:10:50 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:11:55 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 20:11:55 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:11:55 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:11:55 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:11:56 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:11:56 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:11:56 2022 :: Read from socket 5 error 104
+Sun Aug 14 20:11:56 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:11:56 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:11:56 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:11:57 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:11:57 2022 :: No connect allowed to server.
+Sun Aug 14 20:11:58 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 20:49:34 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:49:34 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:49:34 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 20:50:40 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 20:50:40 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:50:40 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:50:40 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:50:41 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:50:41 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:50:41 2022 :: Read from socket 6 error 104
+Sun Aug 14 20:50:41 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:50:41 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:50:41 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:50:42 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:50:42 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:50:42 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 20:55:08 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 20:55:08 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:55:08 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:55:08 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:55:09 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:55:09 2022 :: Stream to server was re-opened!
+Sun Aug 14 20:55:09 2022 :: Read from socket 6 error 104
+Sun Aug 14 20:55:09 2022 :: Unhooking MUD Hook
+Sun Aug 14 20:55:09 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 20:55:09 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 20:55:10 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 20:55:10 2022 :: No connect allowed to server.
+Sun Aug 14 20:55:11 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 21:08:06 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:08:06 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:08:06 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 21:13:12 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 21:13:12 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:13:12 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:13:12 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:13:13 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:13:13 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:13:13 2022 :: Read from socket 6 error 104
+Sun Aug 14 21:13:13 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:13:13 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:13:13 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:13:14 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:13:14 2022 :: No connect allowed to server.
+Sun Aug 14 21:13:15 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 21:13:18 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:13:18 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:13:18 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 21:13:20 2022 :: Unhooking player connection
+Sun Aug 14 21:13:21 2022 :: MULTI_CON_CHAR: Connected zero id to 2
+Sun Aug 14 21:23:42 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 21:23:42 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:23:42 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:23:42 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:23:43 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:23:43 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:23:43 2022 :: Read from socket 6 error 104
+Sun Aug 14 21:23:43 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:23:43 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:23:43 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:23:44 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:23:44 2022 :: No connect allowed to server.
+Sun Aug 14 21:23:45 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 21:26:03 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:26:03 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:26:03 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 21:26:53 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 21:26:53 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:26:53 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:26:53 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:26:54 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:26:54 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:26:54 2022 :: Read from socket 6 error 104
+Sun Aug 14 21:26:54 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:26:54 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:26:54 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:26:55 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:26:55 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:26:55 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 21:28:49 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 21:28:49 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:28:49 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:28:49 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:28:50 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:28:50 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:28:50 2022 :: Read from socket 6 error 104
+Sun Aug 14 21:28:50 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:28:50 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:28:50 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:28:51 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:28:51 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:28:51 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 21:34:45 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 21:34:45 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:34:45 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:34:45 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:34:46 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:34:46 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:34:46 2022 :: Read from socket 6 error 104
+Sun Aug 14 21:34:46 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:34:46 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:34:46 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:34:47 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:34:47 2022 :: No connect allowed to server.
+Sun Aug 14 21:34:48 2022 :: Unable to connect to MUD server 127.0.0.1:4999
+Sun Aug 14 21:34:57 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:34:57 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:34:57 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 21:58:15 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 21:58:15 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:58:15 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:58:15 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:58:16 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:58:16 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:58:16 2022 :: Read from socket 6 error 104
+Sun Aug 14 21:58:16 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:58:16 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:58:16 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:58:17 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:58:17 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:58:17 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 21:58:36 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 21:58:36 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:58:36 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:58:36 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:58:37 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:58:37 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:58:37 2022 :: Read from socket 6 error 104
+Sun Aug 14 21:58:37 2022 :: Unhooking MUD Hook
+Sun Aug 14 21:58:37 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 21:58:37 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 21:58:38 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 21:58:38 2022 :: Stream to server was re-opened!
+Sun Aug 14 21:58:38 2022 :: MULTI_CON_CHAR: Connected zero id to 1
+Sun Aug 14 22:01:38 2022 :: Unhooking player connection
+Sun Aug 14 22:02:34 2022 :: Read to queue: EOF on socket read.
+Sun Aug 14 22:02:34 2022 :: Unhooking MUD Hook
+Sun Aug 14 22:02:34 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 22:02:34 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 22:02:35 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 22:02:35 2022 :: Stream to server was re-opened!
+Sun Aug 14 22:02:35 2022 :: Read from socket 5 error 104
+Sun Aug 14 22:02:35 2022 :: Unhooking MUD Hook
+Sun Aug 14 22:02:35 2022 :: Protocol: parse_incoming error.
+Sun Aug 14 22:02:35 2022 :: ERROR READING FROM MUD.
+Sun Aug 14 22:02:36 2022 :: Open connection to server on 127.0.0.1 4999.
+Sun Aug 14 22:02:36 2022 :: No connect allowed to server.
+Sun Aug 14 22:02:37 2022 :: Unable to connect to MUD server 127.0.0.1:4999

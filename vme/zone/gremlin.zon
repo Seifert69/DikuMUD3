@@ -256,118 +256,117 @@ var
 code
 {
 	interrupt(SFB_MSG, TRUE, check_msg);
-	heartbeat:= PULSE_SEC*3;
+	heartbeat := PULSE_SEC*3;
 
 :start:
-   unsecure(pc);
+    unsecure(pc);
 	wait(SFB_CMD, TRUE);
 	pc := activator;
 
 :msgskipin:
-	if (pc.type != UNIT_ST_PC)
-      goto start;
-	if (BOLDIN_COMPLETE in pc.quests)
-	   goto start;
-   if (not (BOLDIN_ONGOING in pc.quests))
-      goto boldingo;
+    if (pc.type != UNIT_ST_PC)
+        goto start;
+    if (BOLDIN_COMPLETE in pc.quests)
+        goto start;
+    if (not (BOLDIN_ONGOING in pc.quests))
+        goto boldingo;
 
 	secure(pc, lostpc);
 
-   if (not (BOLDIN_BREAD_COMPLETE in pc.quests))
-   {
-      if (not (BOLDIN_BREAD_ONGOING in pc.quests))
-         goto bread;
-   }
-   else if (not (BOLDIN_WATER_COMPLETE in pc.quests))
-   {
-      if (not (BOLDIN_WATER_ONGOING in pc.quests))
-         goto water;
-   }
-   else if (not (BOLDIN_HANDOFF_COMPLETE in pc.quests))
-   {
-      if (not (BOLDIN_HANDOFF_ONGOING in pc.quests))
-         goto handoff;
-   }
-   else if (not (BOLDIN_ROGUE_COMPLETE in pc.quests))
-   {
-      if (not (BOLDIN_ROGUE_ONGOING in pc.quests))
-         goto rogue;
-      else
-         goto roguedone;
-   }
+    if (not (BOLDIN_BREAD_COMPLETE in pc.quests))
+    {
+        if (not (BOLDIN_BREAD_ONGOING in pc.quests))
+            goto bread;
+    }
+    else if (not (BOLDIN_WATER_COMPLETE in pc.quests))
+    {
+        if (not (BOLDIN_WATER_ONGOING in pc.quests))
+            goto water;
+    }
+    else if (not (BOLDIN_HANDOFF_COMPLETE in pc.quests))
+    {
+        if (not (BOLDIN_HANDOFF_ONGOING in pc.quests))
+            goto handoff;
+    }
+    else if (not (BOLDIN_ROGUE_COMPLETE in pc.quests))
+    {
+        if (not (BOLDIN_ROGUE_ONGOING in pc.quests))
+            goto rogue;
+        else
+            goto roguedone;
+    }
 
-   goto start;
+    goto start;
 
 :boldingo: 
-	pc := qstWaitHero@quests(BOLDIN_QUEST, pc,
-      {"say Ahoy there traveller!",
-      "say you look to be somewhat new around here.",
-      "whisper $1N I could use some help. And I'm guessing you could as well!",
-      "whisper $1N You see, the older I get, the harder it seems it is to get around.",
-      "whisper $1N Would you be so kind as to help me out?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
-      }, "", ""
-   );
+    pc := qstWaitHero@quests(BOLDIN_QUEST, pc,
+        {"say Ahoy there traveller!",
+        "say you look to be somewhat new around here.",
+        "whisper $1N I could use some help. And I'm guessing you could as well!",
+        "whisper $1N You see, the older I get, the harder it seems it is to get around.",
+        "whisper $1N Would you be so kind as to help me out?",
+        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
+        }, "", ""
+    );
 
-   if (pc == null)
-      goto start;
+    if (pc == null)
+        goto start;
 
-   secure(pc, lostpc);
+    secure(pc, lostpc);
 
-   // Boldin Quest accepted
+    // Boldin Quest accepted
 
-   exdp := qstAssign@quests(BOLDIN_QUEST, pc, 
-      {"say Excellent!",
-       "clap"},
-      "Help Boldin in Udgaard with various quests."
-   );
+    exdp := qstAssign@quests(BOLDIN_QUEST, pc, 
+        {"say Excellent!",
+        "clap"},
+        "Help Boldin in Udgaard with various quests."
+    );
 
 :bread:
    // Bread Quest accepted
 
+    exdp := qstAssign@quests(BOLDIN_BREAD, pc, 
+        {"say A man gets hungry in his age.",
+        "whisper $1N If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",
+        "whisper $1N Take this money, and you can keep anything thats left after your purchase.",
+        "whisper $1N Use the <a cmd='#'>purse</a> command to check how much money you are carrying.'",
+        "whisper $1N A food store can be found west and north of here.",
+        "emote gives 2 copper pieces to $1N"},
+        "Buy a bread and give it to Boldin."
+    );
 
-   exdp := qstAssign@quests(BOLDIN_BREAD, pc, 
-      {"say A man gets hungry in his age.",
-      "whisper $1N If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",
-      "whisper $1N Take this money, and you can keep anything thats left after your purchase.",
-      "whisper $1N Use the <a cmd='#'>purse</a> command to check how much money you are carrying.'",
-      "whisper $1N A food store can be found west and north of here.",
-      "emote gives 2 copper pieces to $1N"},
-      "Buy a bread and give it to Boldin."
-   );
-
-   // Give money to the player
-   i := transfermoney(null, pc, 2 * COPPER_MULT);
+    // Give money to the player
+    i := transfermoney(null, pc, 2 * COPPER_MULT);
 
 	unsecure(pc);
 	goto start;
 
 
 :water:	
-   pc  := qstWaitHero@quests(BOLDIN_WATER, pc,
-      {"emote quietly chews a chunk of bread.",
-      "say Thank you again for that bread, traveller!",
-      "say Now, could I ask one more favor?",
-      "whisper $1N You see, I'm feeling rather parched.",
-      "whisper $1N A dash of water would do me well!",
-      "whisper $1N Would you be so kind as to help me out?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
+    pc  := qstWaitHero@quests(BOLDIN_WATER, pc,
+        {"emote quietly chews a chunk of bread.",
+        "say Thank you again for that bread, traveller!",
+        "say Now, could I ask one more favor?",
+        "whisper $1N You see, I'm feeling rather parched.",
+        "whisper $1N A dash of water would do me well!",
+        "whisper $1N Would you be so kind as to help me out?",
+        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
 
-	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+    act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 
-   if (pc == null)
-      goto start;
+    if (pc == null)
+        goto start;
 
-   // Find a hero to take the water quest
-   exdp := qstAssign@quests(BOLDIN_WATER, pc, 
-      {"say Excellent!",
-      "say I've got the thirst of a man twice my size and with three times my vigor.",
-      "whisper $1N Take this barrel, and map.",
-      "whisper $1N Simply <a cmd='look map'>look at this map</a> and it will guide you to the nearby city of Midgaard.",
-      "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.'",
-      "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."},
-      "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
-   );
+    // Find a hero to take the water quest
+    exdp := qstAssign@quests(BOLDIN_WATER, pc, 
+        {"say Excellent!",
+        "say I've got the thirst of a man twice my size and with three times my vigor.",
+        "whisper $1N Take this barrel, and map.",
+        "whisper $1N Simply <a cmd='look map'>look at this map</a> and it will guide you to the nearby city of Midgaard.",
+        "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.'",
+        "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."},
+        "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
+    );
 
 	item := load("water_barrel@gremlin");
 	link(item, pc);
@@ -380,59 +379,58 @@ code
 
 
 :handoff:
-   pc  := qstWaitHero@quests(BOLDIN_HANDOFF, pc,
-      {"say Now that was refreshing, $1N!",
-      "say A dark rumour has been spreading, and I think you're up to helping with it.",
-      "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
-      "whisper $1N What do you think, do you have it in you to help?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
+    pc  := qstWaitHero@quests(BOLDIN_HANDOFF, pc,
+        {"say Now that was refreshing, $1N!",
+        "say A dark rumour has been spreading, and I think you're up to helping with it.",
+        "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
+        "whisper $1N What do you think, do you have it in you to help?",
+        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
 
-   if (pc == null)
-      goto start;
+    if (pc == null)
+        goto start;
 
-   // Find a hero to take the water quest
-   exdp := qstAssign@quests(BOLDIN_HANDOFF, pc, 
-      {"say Your help will be well appreciated $1N!",
-      "whisper $1N Between Cypress Forest and the City of Midgaard lies a dusty trail.",
-      "whisper $1N A small farmstead can be found by heading north on this trail.",
-      "whisper $1N Barnham is the master of this farm, and also a distant cousin of mine.",
-      "whisper $1N Please go find Barnham, he will warmly welcome you."},
-      "Go see Barnham in the farmstead north of a dusty trail between the Cypress forest and Midgaard."
-   );
+    // Find a hero to take the water quest
+    exdp := qstAssign@quests(BOLDIN_HANDOFF, pc, 
+        {"say Your help will be well appreciated $1N!",
+        "whisper $1N Between Cypress Forest and the City of Midgaard lies a dusty trail.",
+        "whisper $1N A small farmstead can be found by heading north on this trail.",
+        "whisper $1N Barnham is the master of this farm, and also a distant cousin of mine.",
+        "whisper $1N Please go find Barnham, he will warmly welcome you."},
+        "Go see Barnham in the farmstead north of a dusty trail between the Cypress forest and Midgaard."
+    );
 
-	unsecure(pc);
-	goto start;
+    unsecure(pc);
+    goto start;
 
 	
 :rogue:
-   pc  := qstWaitHero@quests(BOLDIN_ROGUE, pc,
-      {
-      "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
-      "whisper $1N Can I count on you for one more request?"
-      },"", "");
+    pc  := qstWaitHero@quests(BOLDIN_ROGUE, pc,
+        {
+        "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
+        "whisper $1N Can I count on you for one more request?"
+        },"", "");
 
-   if (pc == null)
-      goto start;
+    if (pc == null)
+        goto start;
 
-   // Find a hero to take the water quest
-   exdp := qstAssign@quests(BOLDIN_ROGUE, pc, 
-      {"say And so another adventure begins $1N.",
-   	  "whisper $1N Away beyond the East gate of Midgaard lies a crossroads.",
-        "whisper $1N South from this crossroads, lies the seaside town of Torsbay.",
-        "whisper $1N There in Torsbay, a rogue has landed on the shore.",
-        "whisper $1N Find this rogue, and mention my name. He will know what to do."
-      }, "Find the rogue in Torsbay.");
-	unsecure(pc);
-	goto start;
+    // Find a hero to take the water quest
+    exdp := qstAssign@quests(BOLDIN_ROGUE, pc, 
+        {"say And so another adventure begins $1N.",
+        "whisper $1N Away beyond the East gate of Midgaard lies a crossroads.",
+            "whisper $1N South from this crossroads, lies the seaside town of Torsbay.",
+            "whisper $1N There in Torsbay, a rogue has landed on the shore.",
+            "whisper $1N Find this rogue, and mention my name. He will know what to do."
+        }, "Find the rogue in Torsbay.");
+        unsecure(pc);
+        goto start;
 
 :roguedone:
-   // Check if BOLDIN_ROGUE is done (qstWaitDone). For now I don't think you've compelted this part?
-   goto start;
+    // Check if BOLDIN_ROGUE is done (qstWaitDone). For now I don't think you've compelted this part?
+    goto start;
 
 
 :no_quest:
-
-	exec("say So be it!", self);
+    exec("say So be it!", self);
 	unsecure(pc);
 	goto start;
 
@@ -443,8 +441,11 @@ code
 
 :check_msg:
 	words := getwords(argument);
-	s := words.[0];
 
+    if (length(words) < 2)
+        goto start;
+
+	s := words.[0];
 	if (s != "quest$done")
 		goto start;
 

@@ -1528,10 +1528,10 @@ returns:
 dilbegin unitptr unit_room(u : unitptr);
 code
 {
-   while (u.type != UNIT_ST_ROOM)
-     u := u.outside;
+    while (u.type != UNIT_ST_ROOM)
+        u := u.outside;
 
-   return(u);
+    return(u);
 }
 dilend
 
@@ -3056,65 +3056,66 @@ dilend
 
 
 /*Virtual Level restriction add by Ratlin 11/2000 */
-dilbegin vlevel_restrict (lvl:integer,damage:integer,percent:integer,action:string);
+// Action is a DIL function that takes an integer as parameter where amont is the # of missing levels, e.g. missing +10 levels
+dilbegin vlevel_restrict(lvl:integer, damage:integer, percent:integer, action:string);
 var
-  amount:integer;
-
+    amount:integer;
 code
 {
-if (damage < 0) damage := -damage;
-if (percent < 0) percent := -percent;
+    if (damage < 0) damage := -damage;
+    if (percent < 0) percent := -percent;
 
-interrupt (SFB_MSG,argument=="unstore",start);
-if ((self.equip) and (self.outside.zoneidx=="g_q"))
-goto nextstart;
-:start:
-heartbeat:=4;
-damage := 0;
-percent := 25;
-amount := 0;
+    interrupt (SFB_MSG,argument=="unstore",start);
 
-wait (SFB_DONE, (((command ("hold")) or (command ("wear")) or (command ("grab"))
-or (command ("wield"))) and (self==medium)));
+    if ((self.equip) and (self.outside.zoneidx=="g_q"))
+        goto nextstart;
+
+    :start:
+    heartbeat:=4;
+    damage := 0;
+    percent := 25;
+    amount := 0;
+
+    wait (SFB_DONE, (((command ("hold")) or (command ("wear")) or (command ("grab")) or (command ("wield"))) and (self==medium)));
+
 :nextstart:
+    if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
+    and (activator.master.type != UNIT_ST_PC) ) goto start;
 
-if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
-   and (activator.master.type != UNIT_ST_PC) ) goto start;
+    if (activator.vlevel>=lvl) goto start;
 
-if (activator.vlevel>=lvl) goto start;
+    if (self.outside.level>=IMMORTAL_LEVEL) goto start;
+    amount:=lvl-activator.vlevel;
 
-if (self.outside.level>=IMMORTAL_LEVEL) goto start;
-  amount:=lvl-activator.vlevel;
+    if (action=="")
+    {
+        act ("Your $2n burns you and you drop it to the ground.",
+        A_ALWAYS,self.outside,self,null,TO_CHAR);
+        act ("$1n's $2n burns $1m and $1e drops it to the ground.",
+        A_SOMEONE,self.outside,self,null,TO_REST);
+        act ("You are not high enough level to use $3n. $2t levels needed to use it.",
+        A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
+    }
+    else
+        action (amount);
 
-if (action=="")
-  {
-act ("Your $2n burns you and you drop it to the ground.",
-A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("$1n's $2n burns $1m and $1e drops it to the ground.",
-A_SOMEONE,self.outside,self,null,TO_REST);
-  act ("You are not high enough level to use $3n. $2t levels needed to use it.",
-  A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
-  }
-else action (amount);
+    if (percent!=0)
+        amount:=(self.outside.hp*percent)/100;
+    if (damage==-1)
+        damage:=openroll (100,5);
 
-if (percent!=0)
-  amount:=(self.outside.hp*percent)/100;
-if (damage==-1)
-  damage:=openroll (100,5);
+    if (percent!=0)
+        if (damage>amount)
+            damage:=amount;
+        else if (damage==0)
+            damage:=amount;
 
-if (percent!=0)
-  if (damage>amount)
-    damage:=amount;
-  else if (damage==0)
-  damage:=amount;
+    self.outside.hp:=self.outside.hp-damage;
+    position_update (self.outside);
 
-
-self.outside.hp:=self.outside.hp-damage;
-position_update (self.outside);
-
-unequip (self);
-link (self,self.outside.outside);
-goto start;
+    unequip (self);
+    link (self,self.outside.outside);
+    goto start;
 }
 dilend
 

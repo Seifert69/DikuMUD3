@@ -93,7 +93,7 @@
         {
             "source_file": {
                 "filename": "basemove.zon",
-                "sha512": "1b6b0d33fab362955728e5126a3c0808192d2344d28b13d13a225ebc384027f18e2713c60258e6a1014b611a81f5cb84267f76f457a4ec62f649dd568ad8fdcf"
+                "sha512": "08898b5189b58577cc56f648ce93b782f412682202ae97dc5c99efebeabf883fb852fcb3b7cdb22842fd7e2dd107ab9be9440f415cc8b8e595e2b9d474cf0529"
             },
             "output": [
                 {
@@ -317,7 +317,7 @@
         {
             "source_file": {
                 "filename": "function.zon",
-                "sha512": "4f4cec03217bed5de5e6cbffe7e0199de76724c4870fa075187bb289cc183cf92e643346e05290cacbd13451143506c50db31a7a4ee64f1c7ec51520657e175c"
+                "sha512": "f667bbea62a993f28cd849aecfec652ecd368a355b9c28b37b1df565abc7e7f7bb016de0cd54ea427f94c8f3ea61d0d102f71a93e8e9237aec20ddb41bf9a80b"
             },
             "output": [
                 {
@@ -349,12 +349,12 @@
         {
             "source_file": {
                 "filename": "gremlin.zon",
-                "sha512": "9dd8519103a29dcaaa695bacfbcfdf775a3ae1804d8b331d9526baee2d6ab42e6a0daad915840b770b6bbeecb416098cf92273927d6db03487f75b8346b5a025"
+                "sha512": "67d3b0bcf9ddc79864151415b06486cb33c978762d8068056d9d2bf925e48e235cde9a467580645fce1214985f72a9131bc818295bc24734650a3c30b6f8b7c9"
             },
             "output": [
                 {
                     "filename": "gremlin.data",
-                    "sha512": "100a8ac638b9a73a778c3988102ad71ba8e174074f4d55f4e632537ed284e88a98e2a7c54d0b2d45881797a003514506a05564c9e60350fa06d4e71f6a854e1e"
+                    "sha512": "a646f319eac49176f23310716f3438a61ab31b8773a2f605c0f25b56302982cc262221686c3ae1341aceef17d27a5b603aa8e4ebe10df980bc91ffc2334a6968"
                 },
                 {
                     "filename": "gremlin.reset",
@@ -652,6 +652,22 @@
         },
         {
             "source_file": {
+                "filename": "newtreasure.zon",
+                "sha512": "ee558e8a9e0265df24d291727b339b6c020d35514f863b07f081e2583934715ea93f887e7dd16b3f244840bb4968cde49cc95da1c3db7c098b5c188d0c59f590"
+            },
+            "output": [
+                {
+                    "filename": "newtreasure.data",
+                    "sha512": "95508b6165ac01ab4547db0312bc996f542f395f77b0e65a4aebf3056e7bf4d214a47d9b36809682fb288262e8d4e317e0c8c42a040dfdcaee557e5a3bb4f4f1"
+                },
+                {
+                    "filename": "newtreasure.reset",
+                    "sha512": "6c826bffa20689f84f376ec13d921393a064f34a215a675633c7eac7ba215bd6b2faa383f18c39ea40160dce42514ad7d6b9a1b5882eee2ac584d4b38eed391a"
+                }
+            ]
+        },
+        {
+            "source_file": {
                 "filename": "offices.zon",
                 "sha512": "6377c46871034b1e2d5c2b6bdd60f21428aea96e73f3000dd0071d755320e9bf0c2c46d098c434a7d50abdfe58d4c1e58d744e14771953a1303ca07d3275dd82"
             },
@@ -877,12 +893,12 @@
         {
             "source_file": {
                 "filename": "test.zon",
-                "sha512": "00022bb72ce4c3e084d2c5a8dd9b974886dda764bc9d45e9a54c49057db02caef196ad3a4cdc21cd58b4aa91fc66f52bd7d75e513b14209851e721a3e9e0018d"
+                "sha512": "8f76b922aff49b97acce007fb1cbcf2daf94e6e4ebc1ef4df255147dfeb1644a178f454028dbde8cac67345930a8fafc9790e6b41843a1565985230e1cde89db"
             },
             "output": [
                 {
                     "filename": "test.data",
-                    "sha512": "1bd7f6d2a76209172ee638bb74d44292ac02378134306b469ca1c10e608f13848846dc534831f9744bd01ae8e577fec2f46b5bae21118c02c8c71771aa6b501f"
+                    "sha512": "e341b85a2676e18095129819553f147c1bfae643db58746db009443aca7e078a88c52466e038dbb15c8e7738157eb74afaf4b9d898a94660f841b8af4041c0ce"
                 },
                 {
                     "filename": "test.reset",
