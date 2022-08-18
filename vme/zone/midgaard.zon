@@ -783,7 +783,7 @@ dilend /* wand_charge */
 
 dilbegin engrave();
 var
- 	pc     : unitptr;
+    pc     : unitptr;
  	ting   : unitptr;
  	pris   : integer;
  	i      : integer;
@@ -792,128 +792,126 @@ var
 	cash   : string;
 code
 {
-heartbeat := PULSE_SEC*4;
-   	:start:
-wait(SFB_DONE,command("give")and(self == target));
-if(not visible(self,medium))goto start;
-if(not visible(self,activator))
-{
-exec("sigh",self);
-exec("say How can I deal with someone I can't see?", self );
-exec("drop"+medium.name,self);
-goto start;
-}
-pc := activator;
-ting := medium;
-secure(pc,nopc);
-secure(ting,ingenting);
-dilcopy("busy@function(Please wait; I am working right now.)",self);
+    heartbeat := PULSE_SEC*4;
 
-if((ting.type != UNIT_ST_OBJ)or(ting.objecttype == ITEM_LIGHT)
-or(ting.objecttype == ITEM_SCROLL)or(ting.objecttype == ITEM_FOOD)
-or(ting.objecttype == ITEM_BOOK)or(ting.objecttype == ITEM_SPELL)
-or(MAT_CLOTH in ting.extra)or(MAT_FIRE in ting.extra)or
-((ting.objecttype == ITEM_ARMOR)and(ting.value[0]==0)))
-{
-exec("say Sorry, it is beyond my ability to engrave this.",self);
-    	:giveback:
-unsecure(ting);
-link(ting, pc);
-act("$3n gives $2n to $1n.",A_SOMEONE,pc,ting,self,TO_REST);
-act("$3n gives $2n to you.",A_SOMEONE,pc,ting,self,TO_CHAR);
-i:=dildestroy("busy@function",self);
-unsecure (pc);
-goto start;
-}
+:start:
+    wait(SFB_DONE,command("give")and(self == target));
+    if(not visible(self,medium))goto start;
+    if(not visible(self,activator))
+    {
+        exec("sigh",self);
+        exec("say How can I deal with someone I can't see?", self );
+        exec("drop"+medium.name,self);
+        goto start;
+    }
+    pc := activator;
+    ting := medium;
+    secure(pc,nopc);
+    secure(ting,ingenting);
+    dilcopy("busy@function(Please wait; I am working right now.)",self);
 
-if("engraving" in ting.extra)
-{
-exec("say Hmm... this item appears to be engraved already, "+pc.name+
-".",self);
-goto giveback;
-}
+    if((ting.type != UNIT_ST_OBJ)or(ting.objecttype == ITEM_LIGHT)
+        or(ting.objecttype == ITEM_SCROLL)or(ting.objecttype == ITEM_FOOD)
+        or(ting.objecttype == ITEM_BOOK)or(ting.objecttype == ITEM_SPELL)
+        or(MAT_CLOTH_STR in ting.extra)or(MAT_FIRE_STR in ting.extra)or
+        ((ting.objecttype == ITEM_ARMOR)and(ting.value[0]==0)))
+    {
+        exec("say Sorry, it is beyond my ability to engrave this.",self);
+:giveback:
+        unsecure(ting);
+        link(ting, pc);
+        act("$3n gives $2n to $1n.",A_SOMEONE,pc,ting,self,TO_REST);
+        act("$3n gives $2n to you.",A_SOMEONE,pc,ting,self,TO_CHAR);
+        i:=dildestroy("busy@function",self);
+        unsecure (pc);
+        goto start;
+    }
 
-if("$no_engrave" in ting.extra)
-{
-exec("emote examines "+ting.title+"carefully...",self);
-exec("say This item cannot be engraved. I am sorry, "+pc.name+
-".",self);
-goto giveback;
-}
+    if("engraving" in ting.extra)
+    {
+        exec("say Hmm... this item appears to be engraved already, "+pc.name+
+        ".",self);
+        goto giveback;
+    }
 
-           :brief:
-exec("say What do you want engraved on this "+ting.name+", "+pc.name+
-"?",self);
-exec("say Just say the line, and remember, maximum 10 letters!",self);
-           :brieftext:
-wait(SFB_DONE, command("say")and(activator == pc));
-text := argument;
-if(length(text) > 10)
-{
-exec("say I am sorry, but this is too long!",self);
-exec("say Try another one, 10 letters maximum.",self);
-goto brieftext;
-}
+    if("$no_engrave" in ting.extra)
+    {
+        exec("emote examines "+ting.title+"carefully...",self);
+        exec("say This item cannot be engraved. I am sorry, "+pc.name+
+        ".",self);
+        goto giveback;
+    }
 
-exec("say An engraving saying: '"+text+"', yes?",self);
+:brief:
+    exec("say What do you want engraved on this "+ting.name+", "+pc.name+"?",self);
+    exec("say Just say the line, and remember, maximum 10 letters!",self);
 
-wait(SFB_DONE,(command("say") or command("nod")or
-command("shake"))and(activator == pc));
+:brieftext:
+    wait(SFB_DONE, command("say")and(activator == pc));
+    text := argument;
+    if(length(text) > 10)
+    {
+        exec("say I am sorry, but this is too long!",self);
+        exec("say Try another one, 10 letters maximum.",self);
+        goto brieftext;
+    }
 
-if((command("say")and((" " + argument)in "no"))
-or command("shake"))
-{
-exec("say Oh, what is it then?",self);
-goto brieftext;
-}
+    exec("say An engraving saying: '"+text+"', yes?",self);
 
-pause;
-pris := (5*GOLD_MULT)+((ting.rent)*3);
-cash := moneystring(pris,TRUE);
-exec("say This engraving will cost you "+cash+".",self);
-if(not transfermoney(pc,self,pris))
-{
-exec("say ...which you don't have apparently.",self);
-exec("say Come back when you are richer, "+pc.name+".",self);
-goto giveback;
-}
+    wait(SFB_DONE,(command("say") or command("nod") or command("shake"))and(activator == pc));
 
-ting.title := ting.title+" (engraved: '" + text + "')";
-blah := "" in ting.extra;
-if(blah)
-{
-blah.descr := blah.descr + "<br/>'" + text + "' is engraved on it.";
-addextra( ting.extra, {"engraving"}, "It says '" + text + "'" );
-}
-else
-{
-addextra(ting.extra,{"dummy"},"You see nothing special.<br/>'"+text+
-"' is engraved on it.");
-blah := "dummy" in ting.extra;
-substring( blah.names, "dummy" );
-/* There was no general description... make a new one :) */
+    if((command("say")and((" " + argument)in "no")) or command("shake"))
+    {
+        exec("say Oh, what is it then?",self);
+        goto brieftext;
+    }
 
-}
-pause;
-exec("say There, hope you like it, " + pc.name + "!", self);
-destroy(self.inside);
-goto giveback;
+    pause;
+    pris := (5*GOLD_MULT)+((ting.rent)*3);
+    cash := moneystring(pris,TRUE);
+    exec("say This engraving will cost you "+cash+".",self);
+    if(not transfermoney(pc,self,pris))
+    {
+        exec("say ...which you don't have apparently.",self);
+        exec("say Come back when you are richer, "+pc.name+".",self);
+        goto giveback;
+    }
+
+    ting.title := ting.title+" (engraved: '" + text + "')";
+    blah := "" in ting.extra;
+    if(blah)
+    {
+        blah.descr := blah.descr + "<br/>'" + text + "' is engraved on it.";
+        addextra( ting.extra, {"engraving"}, "It says '" + text + "'" );
+    }
+    else
+    {
+        addextra(ting.extra,{"dummy"},"You see nothing special.<br/>'"+text+
+        "' is engraved on it.");
+        blah := "dummy" in ting.extra;
+        substring( blah.names, "dummy" );
+        /* There was no general description... make a new one :) */
+    }
+    pause;
+    exec("say There, hope you like it, " + pc.name + "!", self);
+    destroy(self.inside);
+    goto giveback;
 
 
-           :nopc:
-exec("shrug ",self);
-exec("drop "+ting.name,self);
-i:=dildestroy("busy@function",self);
-unsecure(pc);
-unsecure(ting);
-goto start;
+:nopc:
+    exec("shrug ",self);
+    exec("drop "+ting.name,self);
+    i:=dildestroy("busy@function",self);
+    unsecure(pc);
+    unsecure(ting);
+    goto start;
 
-           :ingenting:
-exec("say Huh? Where did that ting go?",self);
-I:=dildestroy("busy@function",self);
-unsecure(ting);
-unsecure(pc);
-goto start;
+:ingenting:
+    exec("say Huh? Where did that ting go?",self);
+    I:=dildestroy("busy@function",self);
+    unsecure(ting);
+    unsecure(pc);
+    goto start;
 
 }
 dilend
