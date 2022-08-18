@@ -249,6 +249,31 @@ height hgt
    value[1] craftsmanship       \
    value[2] magic_bonus
 
+
+/*  These are for use in dill to check if a item is a certain type of
+ * material.
+ *
+ * ie.
+ *
+ * if (MAT_WOOD in item.extra) {
+ *	 ...
+ *	 ...
+ * }
+ *
+ * if the item has a wooden material it will evualate to true. */
+
+#define MATERIAL "$material"
+#define MAT_WOOD_STR "$mat_wood"
+#define MAT_METAL_STR "$mat_metal"
+#define MAT_STONE_STR "$mat_stone"
+#define MAT_CLOTH_STR "$mat_cloth"
+#define MAT_LEATHER_STR "$mat_leather"
+#define MAT_ORGANIC_STR "$mat_organic"
+#define MAT_GLASS_STR "$mat_glass"
+#define MAT_FIRE_STR "$mat_fire"
+#define MAT_WATER_STR "$mat_water"
+#define MAT_MAGIC_STR "$mat_magic"
+
 /* Material Types
  *  All objects must have a material type!!  Please select one that
  *  best fits your items material.  If your item is composed of
@@ -268,42 +293,19 @@ height hgt
  * than someone that is wearing leather.  Organics might be susceptable to
  * rot, and decay spells, while metal might rust.
 */
-#define MATERIAL_WOOD(DESCR)    extra {"$material", "$mat_wood"} DESCR
-#define MATERIAL_METAL(DESCR)   extra {"$material", "$mat_metal"} DESCR
-#define MATERIAL_STONE(DESCR)   extra {"$material", "$mat_stone"} DESCR
-#define MATERIAL_CLOTH(DESCR)   extra {"$material", "$mat_cloth"} DESCR
-#define MATERIAL_LEATHER(DESCR) extra {"$material", "$mat_leather"} DESCR
-#define MATERIAL_SKIN(DESCR) extra {"$material", "$mat_skin"} DESCR
-#define MATERIAL_ORGANIC(DESCR) extra {"$material", "$mat_organic"} DESCR
-#define MATERIAL_GLASS(DESCR)   extra {"$material", "$mat_glass"} DESCR
-#define MATERIAL_FIRE(DESCR)    extra {"$material", "$mat_fire"} DESCR
-#define MATERIAL_WATER(DESCR)   extra {"$material", "$mat_water"} DESCR
+#define MATERIAL_WOOD(DESCR)    extra {"$material", MAT_WOOD_STR} DESCR
+#define MATERIAL_METAL(DESCR)   extra {"$material", MAT_METAL_STR} DESCR
+#define MATERIAL_STONE(DESCR)   extra {"$material", MAT_STONE_STR} DESCR
+#define MATERIAL_CLOTH(DESCR)   extra {"$material", MAT_CLOTH_STR} DESCR
+#define MATERIAL_LEATHER(DESCR) extra {"$material", MAT_LEATHER_STR} DESCR
+#define MATERIAL_SKIN(DESCR)    extra {"$material", "$mat_skin"} DESCR
+#define MATERIAL_ORGANIC(DESCR) extra {"$material", MAT_ORGANIC_STR} DESCR
+#define MATERIAL_GLASS(DESCR)   extra {"$material", MAT_GLASS_STR} DESCR
+#define MATERIAL_FIRE(DESCR)    extra {"$material", MAT_FIRE_STR} DESCR
+#define MATERIAL_WATER(DESCR)   extra {"$material", MAT_WATER_STR} DESCR
 #define MATERIAL_EARTH(DESCR)   extra {"$material", "$mat_earth"} DESCR
-#define MATERIAL_MAGIC(DESCR)   extra {"$material", "$mat_magic"} DESCR
+#define MATERIAL_MAGIC(DESCR)   extra {"$material", MAT_MAGIC_STR} DESCR
 
-/*  These are for use in dill to check if a item is a certain type of
- * material.
- *
- * ie.
- *
- * if (MAT_WOOD in item.extra) {
- *	 ...
- *	 ...
- * }
- *
- * if the item has a wooden material it will evualate to true. */
-
-#define MATERIAL "$material"
-#define MAT_WOOD "$mat_wood"
-#define MAT_METAL "$mat_wood"
-#define MAT_STONE "$mat_stone"
-#define MAT_CLOTH "$mat_cloth"
-#define MAT_LEATHER "$mat_leather"
-#define MAT_ORGANIC "$mat_organic"
-#define MAT_GLASS "$mat_glass"
-#define MAT_FIRE "$mat_fire"
-#define MAT_WATER "$mat_water"
-#define MAT_MAGIC "$mat_magic"
 /*
 	*Liq defines values.
 	*color - color of liquid when you look at it.
