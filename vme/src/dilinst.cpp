@@ -3137,6 +3137,8 @@ void dilfi_blk(dilprg *p)
     SET_BIT(p->flags, DILFL_CMDBLOCK);
 }
 
+
+// position_update()
 void dilfi_pup(dilprg *p)
 {
     dilval *v1 = p->stack.pop();
@@ -3156,6 +3158,7 @@ void dilfi_pup(dilprg *p)
     }
     delete v1;
 }
+
 
 void dilfi_cast(dilprg *p)
 {
