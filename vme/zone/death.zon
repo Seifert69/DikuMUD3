@@ -24,6 +24,21 @@ creators {"whistler"}
 
 %dil
 
+// Returns true if the race in question has a head
+//
+dilbegin integer hasRaceHead(crace : integer);
+code
+{
+    if ( ((crace > RACE_CNIDARIA_MIN) and (crace <= RACE_CNIDARIA_MAX)) or ((crace > RACE_PLANT_MIN) and (crace <= RACE_PLANT_MAX)) )
+    {
+        return (FALSE);
+    }
+
+    return (TRUE);
+}
+dilend
+
+
 
 dilbegin death_bell(s:string);
 code
@@ -46,25 +61,26 @@ dilend
 dilbegin rot_head();
 code
 {
-   heartbeat := PULSE_SEC *15;
+    heartbeat := PULSE_SEC *15;
 
-   :loop:
-   pause;
+:loop:
+    pause;
 
-if (self.extra.["$head_time"]==null)
- {
-      if (not isset(self.flags, UNIT_FL_BURIED))
+    if (self.extra.["$head_time"]==null)
+    {
+        if (not isset(self.flags, UNIT_FL_BURIED))
         act("$1n is consumed by some smelly maggots.", A_SOMEONE, self, null, null, TO_ROOM);
-      destroy(self);
-  quit;
-  }
-if ((realtime-atoi(self.extra.["$head_time"].descr))>1800  )
- {
-      if (not isset(self.flags, UNIT_FL_BURIED))
+        destroy(self);
+        quit;
+    }
+    
+    if ((realtime - atoi(self.extra.["$head_time"].descr)) > 1800)
+    {
+        if (not isset(self.flags, UNIT_FL_BURIED))
         act("$1n is consumed by some smelly maggots.", A_SOMEONE, self, null, null, TO_ROOM);
-      destroy(self);
-  quit;
-  }
+        destroy(self);
+        quit;
+    }
 
    goto loop;
 }
@@ -72,59 +88,58 @@ dilend
 
 
 dilbegin piunwizinv();
-
 var
- u:unitptr;
- i:integer;
+    u:unitptr;
+    i:integer;
 code
 {
-heartbeat:=3;
-i:=dildestroy("noaction@death",self);
-u:=self.inside;
-while (u!=null)
-{
-   if (u.zoneidx=="treasure")
-   {
-      u.minv := 0;
+    heartbeat:=3;
+    i:=dildestroy("noaction@death",self);
+    u:=self.inside;
+    while (u!=null)
+    {
+        if (u.zoneidx=="treasure")
+        {
+            u.minv := 0;
 
-      act("Suddenly $3n appears before you.",
-          A_SOMEONE, self, null, u, TO_CHAR);
+            act("Suddenly $3n appears before you.",
+                A_SOMEONE, self, null, u, TO_CHAR);
 
-      act("Suddenly $3n appears before $1n.",
-          A_HIDEINV, self, null, u, TO_ROOM);
+            act("Suddenly $3n appears before $1n.",
+                A_HIDEINV, self, null, u, TO_ROOM);
 
-   }
+        }
 
-u:=u.next;
-}
-quit;
+        u:=u.next;
+    }
+    quit;
 }
 dilend
 
 
 dilbegin statue(arg:string);
 var
-   rltime:integer;
+    rltime:integer;
 code
 {
-   // heartbeat:=3;
-   rltime:=realtime;
-   addextra (self.extra, {CORPSE_FILE},"statue_"+arg+"."+itoa(rltime));
-   addextra (self.extra, {CORPSE_TIME},itoa(rltime));
-   store(self,"statue_"+arg+"."+itoa(rltime),TRUE);
-   quit;
+    // heartbeat:=3;
+    rltime:=realtime;
+    addextra(self.extra, {CORPSE_FILE},"statue_"+arg+"."+itoa(rltime));
+    addextra(self.extra, {CORPSE_TIME},itoa(rltime));
+    store(self,"statue_"+arg+"."+itoa(rltime),TRUE);
+    quit;
 }
 dilend
 
 
 dilbegin death_clear();
 var
-   i:integer;
+    i:integer;
 code
 {
-   // heartbeat:=3;
-   i:=delunit(self.extra.["$CORPSE_FILE"].descr);
-   destroy(self);
+    // heartbeat:=3;
+    i := delunit(self.extra.["$CORPSE_FILE"].descr);
+    destroy(self);
 }
 dilend
 
@@ -133,159 +148,225 @@ dilend
 dilbegin integer min(a:integer,b:integer);
 code
 {
-heartbeat:=3;
-if (a<b)
-	return (a);
-else
-	return (b);
-	}
-	dilend
+    heartbeat:=3;
+    if (a<b)
+        return (a);
+    else
+        return (b);
+}
+dilend
+
 
 dilbegin integer max(a:integer,b:integer);
 code
 {
-heartbeat:=3;
-if (a>b)
-	return (a);
-else
-	return (b);
-	}
-	dilend
+    heartbeat:=3;
+    if (a>b)
+        return (a);
+    else
+        return (b);
+}
+dilend
 
 
 
-/*
-The following two dils are commands that had to be modified to work for death.
-*/
-// 2021 - heads now carry an extra "$living_sym" that contains the symname of it's
-// host in life. This is useful for quests, and stuff.
-// do_decapitate
-dilbegin decap(arg : string); /* Decapitating corpses */
+// Decapitate the corpse (OBJ).
+// Returns unitptr to the newly created head
+//
+dilbegin unitptr decapCorpse(corpse : unitptr);
+external
+    integer hasRaceHead(crace : integer);
 var
-   item      : unitptr;
-   corpse    : unitptr;
-   reward_exp : extraptr;
-   nextdude   : extraptr;
-   temp_lst  : stringlist;
-   temp_str2:string;
-   temp_str  : string;
-   test_expt : extraptr;
-   headless:string;
-   chk : integer;
-   living_sym : string;
+    item      : unitptr;
+    reward_exp : extraptr;
+    nextdude   : extraptr;
+    temp_lst  : stringlist;
+    temp_str2:string;
+    temp_str  : string;
+    test_expt : extraptr;
+    headless:string;
+    living_sym : string;
+    chk : integer;
 
 code
 {
-   heartbeat:=3;
-   if (arg == "")
-   {
-      act("What corpse do you wish to decapitate?", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    item := null;
 
-   corpse := findunit(self, arg, FIND_UNIT_HERE, null);
+    if (corpse.type != UNIT_ST_OBJ)
+    {
+        log("Corpse to decap not an object");
+        return (item);
+    }
 
-   if ((not(corpse)) or (corpse.type != UNIT_ST_OBJ))
-   {
-      act("No such corpse around.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((corpse.symname != "corpse@death"))
+    {
+        log("Corpse to decap not a corpse");
+        return (item);
+    }
 
-   if ("headless" in corpse.outside_descr)
-   {
-      act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ("headless" in corpse.outside_descr)
+    {
+        log("Corpse already headless");
+        return (item);
+    }
 
-   if ((corpse.nameidx != "corpse") or (corpse.zoneidx != "death"))
-   {
-      act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if (not hasRaceHead(corpse.value[4]))
+    {
+        log("Corpse race has no head");
+        return (item);
+    }
 
-   chk := (corpse.value[4]);
-   if ( ((chk > RACE_CNIDARIA_MIN) and (chk <= RACE_CNIDARIA_MAX)) or
-        ((chk > RACE_PLANT_MIN) and (chk <= RACE_PLANT_MAX)) )
-   {
-      act("There is no head on that corpse silly!" ,
-         A_SOMEONE, self, null,null, TO_CHAR);
-      quit;
-   }
+    living_sym := corpse.extra.["$living_sym"].descr;
+    item := load("head@death");
+    addextra(item.extra,{"$head_time"}, itoa(realtime));
+    addextra(item.extra,{"$living_sym"}, living_sym);
+    dilcopy("rot_head@death", item);
 
-	living_sym := corpse.extra.["$living_sym"].descr;
-	
-   act("You brutally decapitate a corpse.", A_ALWAYS, self, null, null, TO_CHAR);
-   act("$1n brutally decapitates a corpse.", A_SOMEONE, self, null, null, TO_REST);
-   item := load("head@death");
-   addextra (item.extra,{"$head_time"},itoa(realtime));
-   addextra (item.extra,{"$living_sym"},living_sym);
-   dilcopy ("rot_head@death",item);
-   // If corpse has a reward on it copy it to the head.
- 
-   reward_exp := "$reward" in corpse.extra;
-   while (reward_exp)
-   {
-      nextdude := "$reward" in reward_exp.next;
-      addextra(item.extra, reward_exp.names,reward_exp.descr);
-      subextra(corpse.extra, "$reward");
-      reward_exp := nextdude;
-   }
- 
-   item.minv := 200;
-   link(item, self.outside);
+    // If corpse has a reward on it copy it to the head.
+    //
+    reward_exp := "$reward" in corpse.extra;
+    while (reward_exp)
+    {
+        nextdude := "$reward" in reward_exp.next;
+        addextra(item.extra, reward_exp.names,reward_exp.descr);
+        subextra(corpse.extra, "$reward");
+        reward_exp := nextdude;
+    }
 
-   chk := (corpse.value[4]);
-   if ((chk > RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) 
-   {
-      set_weight_base(item, corpse.baseweight/70);
-   }
-   else
-      set_weight_base(item, corpse.baseweight/30);
+    item.minv := 200;
+    link(item, corpse.outside);
 
-   if (item.baseweight > 100)
-   {
-      set_weight_base(item, 100);
-   }
+    chk := (corpse.value[4]);
+    if ((chk > RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) 
+    {
+        set_weight_base(item, corpse.baseweight/70);
+    }
+    else
+        set_weight_base(item, corpse.baseweight/30);
 
-   if (item.baseweight < 1)
-   {
-      set_weight_base(item, 1);
-   }
+    if (item.baseweight > 100)
+    {
+        set_weight_base(item, 100);
+    }
 
-   set_weight_base(item, item.baseweight);
-   item.minv := 0;
-   temp_str2 :=corpse.outside_descr;
-   temp_str := getword(temp_str2);
-   temp_str := getword(temp_str2);
-   temp_str := getword(temp_str2);
-   temp_str:=temp_str2;
-   item.outside_descr := "The decapitated head of " + temp_str ;
-   addextra(item.extra, {""}, "The head has been severed from the body");
-   headless:=left(corpse.title,length(corpse.title)-6);
-   corpse.title:=headless+"headless corpse";
+    if (item.baseweight < 1)
+    {
+        set_weight_base(item, 1);
+    }
 
-   corpse.outside_descr:="The headless corpse of "+temp_str;
-   addextra(corpse.extra, {""}, "The head has been severed from the body");
-   item.value[2] := corpse.value[2];
-   item.value[3] := corpse.value[3];
-   quit;
+    set_weight_base(item, item.baseweight);
+    item.minv := 0;
+    temp_str2 :=corpse.outside_descr;
+    temp_str := getword(temp_str2);
+    temp_str := getword(temp_str2);
+    temp_str := getword(temp_str2);
+    temp_str:=temp_str2;
+    item.outside_descr := "The decapitated head of " + temp_str ;
+    addextra(item.extra, {""}, "The head has been severed from the body");
+    headless:=left(corpse.title,length(corpse.title)-6);
+    corpse.title:=headless+"headless corpse";
+    corpse.outside_descr:="The headless corpse of "+temp_str;
+    addextra(corpse.extra, {""}, "The head has been severed from the body");
+    item.value[2] := corpse.value[2];
+    item.value[3] := corpse.value[3];
+
+    return (item);
+}
+dilend /* decapCorpse */
+
+
+/*
+The following two DILs are commands that had to be modified to work for death.
+*/
+// 2021 - heads now carry an extra "$living_sym" that contains the symname of it's
+// host in life. This is useful for quests, and stuff.
+//
+
+// do_decapitate - the decapitate command
+//
+dilbegin decap(arg : string); /* Decapitating corpses */
+external
+    integer hasRaceHead(crace : integer);
+    unitptr decapCorpse(corpse : unitptr);
+
+var
+    item      : unitptr;
+    corpse    : unitptr;
+    reward_exp : extraptr;
+    nextdude   : extraptr;
+    temp_lst  : stringlist;
+    temp_str2:string;
+    temp_str  : string;
+    test_expt : extraptr;
+    headless:string;
+    chk : integer;
+    living_sym : string;
+
+code
+{
+    if (arg == "")
+    {
+        act("What corpse do you wish to decapitate?", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    corpse := findunit(self, arg, FIND_UNIT_HERE, null);
+
+    if ((not(corpse)) or (corpse.type != UNIT_ST_OBJ))
+    {
+        act("No such corpse around.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if ("headless" in corpse.outside_descr)
+    {
+        act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if ((corpse.symname != "corpse@death"))
+    {
+        act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if (not  hasRaceHead(corpse.value[4]))
+    {
+        act("There is no head on that corpse silly!" , A_SOMEONE, self, null,null, TO_CHAR);
+        quit;
+    }
+
+    item := decapCorpse(corpse);
+
+    if (item)
+    {
+        act("You brutally decapitate a corpse.", A_ALWAYS, self, null, null, TO_CHAR);
+        act("$1n brutally decapitates a corpse.", A_SOMEONE, self, null, null, TO_REST);
+    }
+    else
+    {
+        log("decap command didn't work");
+        act("You can't decapitate the corpse.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+
+    quit;
 }
 dilend /* decapitate */
 
 
-dilbegin gcrps (arg:string);
+dilbegin gcrps(arg:string);
 code
 {
-   heartbeat:=3;
-   if (self.level < 200)
-   {
-      act("Arglebargle, glop-glyf!?!", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    heartbeat:=3;
+    if (self.level < 200)
+    {
+        act("Arglebargle, glop-glyf!?!", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   act("The following corpses were found:", A_ALWAYS,self,null,null,TO_CHAR);
-   sendtoalldil("reportgod","report_corpse@death");
-   quit;
+    act("The following corpses were found:", A_ALWAYS,self,null,null,TO_CHAR);
+    sendtoalldil("reportgod","report_corpse@death");
+    quit;
 }
 dilend
 
