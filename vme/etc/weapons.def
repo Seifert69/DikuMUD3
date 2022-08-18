@@ -1604,12 +1604,12 @@ profession necromancer = 0
 profession mage = 0
 profession sorcerer = 0
 profession barbarian = 1
-// Circle 3, 1H Normal weapons (swords, maces, etc)
-attack clothes  = {50,  7,  6}
-attack sleather = {50,  6,  7}
-attack hleather = {50,  5,  8}
-attack chain    = {50,  4,  9}
-attack plate    = {50,  3, 10}
+// Circle 1, 2H swords, maces, etc
+attack clothes  = {60, 10,  4}
+attack sleather = {50,  9,  5}
+attack hleather = {40,  8,  6}
+attack chain    = {35,  7,  7}
+attack plate    = {30,  6,  8}
 //_CUTEND quarterstaff
 
 
