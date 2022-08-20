@@ -948,8 +948,8 @@ void dilfi_rtf(dilprg *p)
             p->waitcmd = WAITCMD_QUIT;
             return;
         }
+
         dilval *v1 = p->stack.pop();
-        v = new dilval;
 
         typ = dil_getval(v1);
         if (typ != p->fp->tmpl->rtnt)
@@ -957,9 +957,11 @@ void dilfi_rtf(dilprg *p)
             slog(LOG_ALL, 0, "DIL: Error return types do not match.");
             p->waitcmd = WAITCMD_QUIT;
             delete v1;
-            delete v;
             return;
         }
+
+        v = new dilval;
+
         switch (typ)
         {
             case DILV_UP:
