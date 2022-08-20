@@ -145,29 +145,6 @@ dilend
 
 
 
-dilbegin integer min(a:integer,b:integer);
-code
-{
-    heartbeat:=3;
-    if (a<b)
-        return (a);
-    else
-        return (b);
-}
-dilend
-
-
-dilbegin integer max(a:integer,b:integer);
-code
-{
-    heartbeat:=3;
-    if (a>b)
-        return (a);
-    else
-        return (b);
-}
-dilend
-
 
 
 // Decapitate the corpse (OBJ).
@@ -1121,8 +1098,8 @@ dilend
 
 dilbegin integer lose_exp(u:unitptr);
 external
-	integer max(a:integer,b:integer);
-	integer min(a:integer,b:integer);
+	integer max@function(a:integer,b:integer);
+	integer min@function(a:integer,b:integer);
 
 var
 	loss:integer;
@@ -1145,17 +1122,17 @@ code
    // log("l1 = " + itoa(l1) + "   l0 = " + itoa(l0) + "   l1-l0 = " + itoa(l1-l0));
 
    // Lose half the XP earned above your current level (you should level up)
-   loss := max(0, (u.exp-l0)/2);
+   loss := max@function(0, (u.exp-l0)/2);
    // log("loss 1 = " + itoa(loss));
 
    /* This line makes sure, that you lose at most half a level...       */
-   loss := min(loss, (l1-l0)/2);
+   loss := min@function(loss, (l1-l0)/2);
    // log("loss 2 = " + itoa(loss));
 
    /* This line takes care of the case where you have less or almost    */
    /* equal XP to your required. You thus lose at least 1/5th your      */
    /* level.                                                            */
-   loss := max(loss, (l1-l0)/5);
+   loss := max@function(loss, (l1-l0)/5);
    // log("loss 3 = " + itoa(loss));
 
    if (loss < 0)

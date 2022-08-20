@@ -269,12 +269,12 @@
         {
             "source_file": {
                 "filename": "death.zon",
-                "sha512": "53dd48292495757e9972cc73630de4b66f163ff332c11d78511977d2ea705c909cafdec5e281a1f7f4793b0ada3e1f7ae7c7985ba9ece4b6a44623588b3d722c"
+                "sha512": "5ca4b194fe738409fe9fa0c5c133fad9846c152d940e6a9e2ed912aba462a0852dc3a811635faf2e8482a8cb89fdb61f99abb2535284bd8796b23cac573d1d07"
             },
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "cfc88869576f552fc0e765e1b61f372d30792ce0e1f8975ffe6316ca942a3ad47ae4b767cdc416edf7645cc690161b2801634e857557da82645e6699d4841b0b"
+                    "sha512": "8c33b9b62b5dfe84cdcbf2e333a2de3367e5fb3fbc76cc18a0248ffa066890702e9b9f3876728391be53fc16603b63c3a77e417f4f36cf13f5670172c0f8d6f8"
                 },
                 {
                     "filename": "death.reset",
@@ -317,12 +317,12 @@
         {
             "source_file": {
                 "filename": "function.zon",
-                "sha512": "f667bbea62a993f28cd849aecfec652ecd368a355b9c28b37b1df565abc7e7f7bb016de0cd54ea427f94c8f3ea61d0d102f71a93e8e9237aec20ddb41bf9a80b"
+                "sha512": "167aacc89649e23f29409b1254a2995e87d8b68a8ba27325d027e25ba0391a4d8ebdc46e16f207e68a3b06ed0542dac3772bc0ffc12ded9863908f04aed9fdbc"
             },
             "output": [
                 {
                     "filename": "function.data",
-                    "sha512": "3d2c64d63fa3aaf6f23cd00504e40288177b7a11d3afe576109897e7d0b17e5c43ed6c89b4384ee5e51f11c249dd145cc4bc1c163e87372dfc6d135a9d6c1a1f"
+                    "sha512": "de2a16cfc3d52844e79d7770674cb165fe62cfea58c13b0ce3247f71af3eb7d0fafeb1f79b71c146fc55c5a91e35fa77b82d6b2e26ead927920ebb3d93b77f6e"
                 },
                 {
                     "filename": "function.reset",
@@ -589,7 +589,7 @@
         {
             "source_file": {
                 "filename": "midgaard.zon",
-                "sha512": "a8211a276c428ad531b3837382917394f35706653dccbfc58eb504b5fc051de1b087bc4e1362f7ee511b6e74a3c3fcd7979767278bc279c82d067f3288636839"
+                "sha512": "c5794701ba58b3d636506d92c879e326db337a67099087f7fc8225496b5ac990929555ffa5916607fd7311fae0a6b668309474936dcb22a1c1fa7adebb9c8397"
             },
             "output": [
                 {
@@ -647,22 +647,6 @@
                 {
                     "filename": "newbie.reset",
                     "sha512": "f7afb0a6816705e03bd3b8a0b0e42b05835dbca0715594bbedc479e12664d3e0229d29f4007beeb595da62090a5202ce4441ac1b19ddfc48456b6afff256a499"
-                }
-            ]
-        },
-        {
-            "source_file": {
-                "filename": "newtreasure.zon",
-                "sha512": "ee558e8a9e0265df24d291727b339b6c020d35514f863b07f081e2583934715ea93f887e7dd16b3f244840bb4968cde49cc95da1c3db7c098b5c188d0c59f590"
-            },
-            "output": [
-                {
-                    "filename": "newtreasure.data",
-                    "sha512": "8f7d416cf7e7ccca2d65dcf5c6db52de83c4c25bc00e309fd419ee2ad9cb16d5bb6992b2e0e0b3342b3961b64562ca7bcc8c9dedc95e0d924bacc7c33dae933b"
-                },
-                {
-                    "filename": "newtreasure.reset",
-                    "sha512": "6c826bffa20689f84f376ec13d921393a064f34a215a675633c7eac7ba215bd6b2faa383f18c39ea40160dce42514ad7d6b9a1b5882eee2ac584d4b38eed391a"
                 }
             ]
         },
@@ -733,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "eb2fe2a5f4f697e8bb0161df9583e0cbee14dfe3496304a5fc306aac4e70815f67b93a5a757e1e2a7f44cde9bd29ab1ace5af013339c0402b6b5bb0e6a69a25d"
+                "sha512": "fd934934037380408cc2b8a47f30643f165943ea48515d2f183fbb105a2abbda6dce35bd083fc52d1139221c8df46a1d3dfd2e3bcd3c6553b4e5005fba86969f"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "5e41583c3a14adb053fb3ee8378e9bf200c9ae5f07e8d3677e5f9f274b15947a10403b4c4ff082d42e4903a935935fdb782211149bb5fb0e2ca715d90a6eb02d"
+                    "sha512": "d621436b8bd77dc3a71f4a14965e751e72a594a68079274a203327061fda3d52543b64b033c9de2dda364919262c4346aa3cf478648cb474030b941b70e35fb2"
                 },
                 {
                     "filename": "randomt.reset",

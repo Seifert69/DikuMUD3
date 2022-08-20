@@ -909,7 +909,7 @@ void dilfi_rtf(dilprg *p)
     int i = 0;
     bool doSecureTest = false;
     bool doPush = false;
-    dilval *v = new dilval;
+    dilval *v = nullptr;
 
     p->waitcmd--;
 
@@ -1043,6 +1043,11 @@ void dilfi_rtf(dilprg *p)
     {
         assert(v);
         p->stack.push(v);
+    }
+    else
+    {
+        if (v)
+            delete v;
     }
 }
 

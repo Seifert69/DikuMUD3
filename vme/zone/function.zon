@@ -95,6 +95,50 @@ poi_resist - removes any poison spells cast on mobs.
 
 %dil
 
+dilbegin integer min(a:integer, b:integer);
+code
+{
+    if (a < b)
+        return (a);
+    else
+        return (b);
+}
+dilend
+
+
+dilbegin integer max(a:integer, b:integer);
+code
+{
+    if (a > b)
+        return (a);
+    else
+        return (b);
+}
+dilend
+
+
+dilbegin integer max3(a:integer, b:integer, c:integer);
+code
+{
+    if (a > b)
+    {
+        if (a > c)
+            return (a);
+        else
+            return (c);
+    }
+    else
+    {
+        if (b > c)
+            return (b);
+        else
+            return (c);
+    }
+}
+dilend
+
+
+
 dilbegin string do_color(arg : string);
 var
 	colors  : stringlist;
