@@ -2828,13 +2828,6 @@ code
         WPN_WAR_HAMMER // Thor's hammer
     };
 
-    // Most common to least common weapon available for randomness
-    ilWpns := {
-        WPN_CLUB, // XXX
-        WPN_BATTLE_CLUB, // XXX
-        WPN_LANCE // XXX
-    };
-
     i := twodiceidx(length(ilWpns));
     createWpn(bonuslvl, ilWpns.[i]);
     return;
