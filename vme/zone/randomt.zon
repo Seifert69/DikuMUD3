@@ -2933,7 +2933,7 @@ code
 {
     heartbeat := PULSE_SEC;
 
-    if (rnd(0,1) != 2)
+    if (rnd(0,1) != 0)
         createWeapon(lvl);
     else
         createJewelry(lvl);
