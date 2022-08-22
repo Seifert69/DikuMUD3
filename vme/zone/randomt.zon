@@ -1265,8 +1265,23 @@ external
 code
 {
 	addaff(u, -ID_BLESS, -1, 0,
-	       0, 0, 0,
-           TIF_BLESS_ON, TIF_NONE, TIF_BLESS_OFF, APF_NONE);
+        ABIL_DIV, bonuslvl*10, 0,
+        TIF_BLESS_ON, TIF_NONE, TIF_BLESS_OFF, APF_ABILITY);
+
+    addaff(u, -ID_BLESS, -1, 0,
+        ABIL_DEX, bonuslvl*10, 0, 
+        TIF_NONE, TIF_NONE, TIF_NONE,
+        APF_ABILITY);
+
+    addaff(u, -ID_BLESS, -1, 0,
+        ABIL_STR, bonuslvl*10, 0, 
+        TIF_NONE, TIF_NONE, TIF_NONE,
+        APF_ABILITY);
+
+    addaff(u, -ID_BLESS, -1, 0,
+        ABIL_BRA, bonuslvl*10, 0, 
+        TIF_NONE, TIF_NONE, TIF_NONE,
+        APF_ABILITY);
 
     identify(u, "It has a blue tint.", "Will protect you with a bless spell.");
 

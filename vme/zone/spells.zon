@@ -14465,17 +14465,17 @@ external
     integer skill_duration(hm : integer);
 code
 {
+    if ((isaff(tgt,ID_SANCTUARY)) or (hm < 0))
+        quit;
 
-   if((isaff(tgt,ID_SANCTUARY)) or (hm < 0)) quit;
+    hm := skill_duration(hm);
 
-   hm := skill_duration(hm);
+    addaff(tgt, ID_SANCTUARY, hm, WAIT_SEC * 30, 0, 0, 0,
+                TIF_SANCTUARY_ON, TIF_SANCTUARY_TICK,
+                TIF_SANCTUARY_OFF, APF_NONE);
 
-   addaff(tgt, ID_SANCTUARY, hm, WAIT_SEC * 30, 0, 0, 0,
-               TIF_SANCTUARY_ON, TIF_SANCTUARY_TICK,
-               TIF_SANCTUARY_OFF, APF_NONE);
-
- if(effect != "")
-  effect(tgt,medi,hm);
+    if (effect != "")
+        effect(tgt,medi,hm);
 
    quit;
 }
