@@ -126,7 +126,7 @@ var
 code
 {
     if (length(r8il) > 0)
-        quit;
+        return;
 
     log("Setting global constants for the randomt zone.");
 
@@ -2921,9 +2921,11 @@ dilbegin RndTreasure(lvl : integer);
 external
     createJewelry(bonuslvl : integer);
     createWeapon(bonuslvl : integer);
+    constants();
 
 code
 {
+    constants();
     heartbeat := PULSE_SEC;
 
     if (rnd(0,1) != 0)
