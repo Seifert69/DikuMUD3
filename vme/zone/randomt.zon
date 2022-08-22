@@ -1265,21 +1265,21 @@ external
 code
 {
 	addaff(u, -ID_BLESS, -1, 0,
-        ABIL_DIV, bonuslvl*10, 0,
+        ABIL_DIV, bonuslvl, 0,
         TIF_BLESS_ON, TIF_NONE, TIF_BLESS_OFF, APF_ABILITY);
 
     addaff(u, -ID_BLESS, -1, 0,
-        ABIL_DEX, bonuslvl*10, 0, 
+        ABIL_DEX, bonuslvl, 0, 
         TIF_NONE, TIF_NONE, TIF_NONE,
         APF_ABILITY);
 
     addaff(u, -ID_BLESS, -1, 0,
-        ABIL_STR, bonuslvl*10, 0, 
+        ABIL_STR, bonuslvl, 0, 
         TIF_NONE, TIF_NONE, TIF_NONE,
         APF_ABILITY);
 
     addaff(u, -ID_BLESS, -1, 0,
-        ABIL_BRA, bonuslvl*10, 0, 
+        ABIL_BRA, bonuslvl, 0, 
         TIF_NONE, TIF_NONE, TIF_NONE,
         APF_ABILITY);
 

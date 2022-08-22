@@ -8444,7 +8444,8 @@ code
    }
 
    hm := 1 + hm / 10;
-   if (hm > 10) hm := 10;
+   if (hm > 10)
+      hm := 10;
 
    addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
 	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
