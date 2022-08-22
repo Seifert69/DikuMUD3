@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 11  // T010, T009, ...
+#define TEST_MAXIMUM 12  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -80,6 +80,46 @@ code
    return;
 }
 dilend
+
+// ==================== T012 =====================
+
+// Tests DIL secure()
+// Test double secure() of the same pointer doesn't really result in two secures.
+//
+dilbegin T012(tstno : integer);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+
+var
+   u1 : unitptr;
+   i : integer;
+code
+{
+    heartbeat := 1;
+
+    u1 := load("experiment@test");
+    link(u1, self.outside);
+    secure(u1, failure);
+    secure(u1, failure);
+    wait(SFB_TICK, TRUE); // test secure() triggers
+    unsecure(u1);
+    destroy(u1);
+    goto cleanup;
+
+:failure:
+    logtest(tstno, LOGT_ERROR, "Test not as expected");
+    goto cleanup;
+   
+:cleanup:
+    // Naught
+
+:finished:
+    logtest(tstno, LOGT_INFO, "Done");
+    sendtoalldil("done", "labdirector@test");
+    return;
+}
+dilend
+
 
 
 // ==================== T011 =====================

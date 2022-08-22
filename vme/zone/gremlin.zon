@@ -268,10 +268,11 @@ code
         goto start;
     if (BOLDIN_COMPLETE in pc.quests)
         goto start;
-    if (not (BOLDIN_ONGOING in pc.quests))
-        goto boldingo;
 
 	secure(pc, lostpc);
+
+    if (not (BOLDIN_ONGOING in pc.quests))
+        goto boldingo;
 
     if (not (BOLDIN_BREAD_COMPLETE in pc.quests))
     {
@@ -296,6 +297,7 @@ code
             goto roguedone;
     }
 
+    unsecure(pc);
     goto start;
 
 :boldingo: 
@@ -312,8 +314,6 @@ code
     if (pc == null)
         goto start;
 
-    secure(pc, lostpc);
-
     // Boldin Quest accepted
 
     exdp := qstAssign@quests(BOLDIN_QUEST, pc, 
@@ -324,7 +324,6 @@ code
 
 :bread:
    // Bread Quest accepted
-
     exdp := qstAssign@quests(BOLDIN_BREAD, pc, 
         {"say A man gets hungry in his age.",
         "whisper $1N If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",
@@ -480,21 +479,20 @@ code
 
   :start:
 
-    wait(SFB_DONE, (activator.type == UNIT_ST_PC) and (not (SOUL_ANCHOR_COMPLETE in activator.quests)));
+    wait(SFB_DONE, activator.type == UNIT_ST_PC);
     pc := activator;
 
     if (SOUL_ANCHOR_COMPLETE in pc.quests)
     {
-      goto start;
+        goto start;
     }
 
     if (SOUL_ANCHOR_ONGOING in pc.quests)
     {
-      goto soul_anchor_ongoing;
+        goto soul_anchor_ongoing;
     }
 
     wait(SFB_DONE,(activator.type == UNIT_ST_PC) and command("smile"));
-
     pc := activator;
     secure(pc, lostpc);
 

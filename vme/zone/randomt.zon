@@ -5,10 +5,9 @@ changedby   Papi
 EmailAdd    Papi  <seifert@dikumud.com>
 request     compile
 version     1
-END HEADER*/
+END HEADER */
 
 #include <macros.h>
-
 
 %zone		        randomt
 
@@ -21,83 +20,440 @@ notes
 "This zone is an attempt to make random treasure by Papi."
 
 
-help
-"Player should never be in here."
+help  "Player should never be in here."
 
+#define MAT_NONE -1
+// Auto-generated from EXCEL (Git)
+// Value must match index in stringlists and intlists
+// Ok to update the values
+#define MAT_TIN 0
+#define MAT_LEAD 1
+#define MAT_COPPER 2
+#define MAT_BRONZE 3
+#define MAT_BRASS 4
+#define MAT_ZINC 5
+#define MAT_IRON 6
+#define MAT_DARK_IRON 7
+#define MAT_STEEL 8
+#define MAT_SILVER 9
+#define MAT_HIGH_STEEL 10
+#define MAT_GOLD 11
+#define MAT_BLACK_STEEL 12
+#define MAT_ADAMANTIUM 13
+#define MAT_PLATINUM 14
+#define MAT_TITANIUM 15
+#define MAT_EOG 16
+#define MAT_ITHILNAUR 17
+#define MAT_MITHRIL 18
+#define MAT_BAMBOO 19
+#define MAT_PINE 20
+#define MAT_ASH 21
+#define MAT_BIRCH 22
+#define MAT_WALNUT 23
+#define MAT_MAPLE 24
+#define MAT_OAK 25
+#define MAT_WILLOW 26
+#define MAT_HICKORY 27
+#define MAT_MAHOGANY 28
+#define MAT_TEAK 29
+#define MAT_IPE 30
+#define MAT_BLACK_OAK 31
+#define MAT_DARK_WOOD 32
+#define MAT_MALLORN 33
+#define MAT_ENTE_WOOD 34
+#define MAT_SANDSTONE 35
+#define MAT_FLINT 36
+#define MAT_GRANITE 37
+#define MAT_MALACHITE 38
+#define MAT_AMETHYST 39
+#define MAT_AMBER 40
+#define MAT_MARBLE 41
+#define MAT_OBSIDIAN 42
+#define MAT_MOONSTONE 43
+#define MAT_PEARL 44
+#define MAT_ONYX 45
+#define MAT_EMERALD 46
+#define MAT_SAPPHIRE 47
+#define MAT_RUBY 48
+#define MAT_DIAMOND 49
+#define MAT_SLIME 50
+#define MAT_CLOTH 52
+#define MAT_LEATHER 53
+#define MAT_HARD_LEATHER 54
+#define MAT_SHARK_HIDE 64
+#define MAT_ELEPHANT_HIDE 55
+#define MAT_CHIMERA_HIDE 56
+#define MAT_GRIFFON_HIDE 57
+#define MAT_BASILISK_HIDE 58
+#define MAT_DRAKE_HIDE 59
+#define MAT_WYVERN_HIDE 60
+#define MAT_DRAGON_HIDE 61
+#define MAT_RUBBER 63
+#define MAT_BONE 51
+#define MAT_IVORY 62
+#define MAT_DRAGON_BONE 65
+#define MAT_DRAGON_SCALE 66
+
+#define ilMatIndex(matIndex,offset) (matIndex*4+offset)
 
 %dil
 
-// dilvar mimi : integer
-
-// pct : How many percent you want to shrink the weight (0..100)
-//   0 means don't reduce the weight
-// 100 means reduce weight by 100%
-// Capac is how many lbs the bag can hold max (it will weigh less).
-// Baseweight is how much the bag weighs when empty
-dilbegin aware bagofholding(pct : integer, bweight : integer, capac : integer);
+//
+// ======================== CONSTANTS =========================
+//
+dilbegin constants();
 var
-   totalwgt : integer;
-   prevwgt : integer;
-   i : integer;
-   u : unitptr;
-   r : unitptr;
+    r8il        : intlist global roll8@randomt;
+    ilBladeMat  : intlist global ilBladeMat@randomt;
+    ilHiltMat   : intlist global ilHiltMat@randomt;
+
+    ilJewelryMat : intlist global ilJewelryMat@randomt;
+    ilGems        : intlist    global ilGems@randomt;
+
+    slMatNames  : stringlist global slMatNames@randomt;
+    ilMatValues : intlist    global ilMatValues@randomt;
+
+    ilHeadMat    : intlist global ilHeadMat@randomt;
+    ilHandleMat  : intlist global ilHandleMat@randomt;
+
+    ilStaffMat   : intlist global ilStaffMat@randomt;
+    ilWhipMat    : intlist global ilWhipMat@randomt;
+
+    slWeapons    : stringlist global slWeapons@randomt;
+
+    i : integer;
+
 code
-{   
-   self.capacity := capac;
+{
+    if (length(r8il) > 0)
+        quit;
 
-:init:
-   if (self.inside == null)
-   {
-      // Bag is empty
-      set_weight_base(self, bweight);
-      prevwgt := self.weight;
-      totalwgt := 0;
-   }
-   else
-   {
-      totalwgt := 0;
-      u := self.inside;
-      while (u)
-      {
-         totalwgt := totalwgt + u.weight;
-         u := u.next;
-      }
-      set_weight(self, bweight + (totalwgt * (100-pct))/100);
-      prevwgt := self.weight;
-   }
+    log("Setting global constants for the randomt zone.");
+
+    // Tables for 2d8 used for bonus adjustment
+    // The two leftmost values can't be used (1d8+1d8=[2..16])
+    r8il := {0,0,-3,-2,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1};
+
+    // Weapon materials for forging "blades": swords, mattock heads, mace heads, bardiches, 
+
+    // Blade1: main material for sword blade & guard
+    ilBladeMat   := {MAT_TIN, MAT_TIN, MAT_TIN, MAT_TIN, MAT_COPPER, MAT_COPPER, MAT_BRONZE, 
+                     MAT_IRON,
+                     MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    // Blade2: main material for the hilt
+    ilHiltMat    := {MAT_TIN, MAT_TIN, MAT_TIN, MAT_TIN, MAT_COPPER, MAT_COPPER, MAT_BRONZE, 
+                     MAT_IRON,
+                     MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    ilJewelryMat  := {MAT_TIN, MAT_TIN, MAT_TIN, MAT_TIN, MAT_COPPER, MAT_BRONZE, MAT_BRASS,
+                       MAT_IRON,
+                       MAT_DARK_IRON, MAT_SILVER, MAT_GOLD, MAT_PLATINUM, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    ilGems         := {MAT_GRANITE, MAT_GRANITE, MAT_GRANITE, MAT_GRANITE, MAT_GRANITE, MAT_MARBLE, MAT_OBSIDIAN, 
+                       MAT_ONYX, 
+                       MAT_MOONSTONE, MAT_PEARL, MAT_AMBER, MAT_EMERALD, MAT_SAPPHIRE, MAT_RUBY, MAT_DIAMOND};
 
 
-:start:
-   wait(SFB_DONE, command("put") or command("get"));
+    // Weapon materials for forging "heads": axes, hammers, spears, javelins, arrows
+    ilHeadMat  := {MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_BRONZE, 
+                   MAT_IRON,
+                   MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
 
-   if (prevwgt != self.weight)
-   {
-      totalwgt := totalwgt + (self.weight - prevwgt);
-      // log("totalwgt is now " + itoa(totalwgt));
-      i := self.baseweight + (totalwgt * (100-pct))/100;
-      set_weight(self, i);
-      prevwgt := self.weight;
+    // Weapon materials for forging "heads": axes, hammers, spears, javelins, arrows
+    ilHandleMat  := {MAT_PINE, MAT_PINE, MAT_PINE, MAT_BIRCH, MAT_ASH, MAT_COPPER, MAT_BRONZE, 
+                     MAT_IRON,
+                     MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
 
-      if (totalwgt > capac)
-         goto burp;
-   }
-   goto start;
+    // Weapon materials for staves 
+    ilStaffMat := {MAT_PINE, MAT_BIRCH, MAT_WALNUT, MAT_MAPLE, MAT_OAK, MAT_WILLOW, MAT_HICKORY, 
+                   MAT_TEAK,
+                   MAT_MAHOGANY, MAT_IPE, MAT_BLACK_OAK, MAT_BLACK_STEEL, MAT_DARK_WOOD, MAT_MALLORN, MAT_ENTE_WOOD};
 
-:burp:
-   act("There is a large belching sound as items pour out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
-   
-   r := self.outside;
-   while (r.type != UNIT_ST_ROOM)
-      r := r.outside;
+    // Weapon materials for staves 
+    ilWhipMat := {MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, 
+                   MAT_LEATHER,
+                   MAT_SHARK_HIDE, MAT_ELEPHANT_HIDE, MAT_CHIMERA_HIDE, MAT_GRIFFON_HIDE, MAT_BASILISK_HIDE, MAT_DRAKE_HIDE, MAT_DRAGON_HIDE};
 
-   while (self.inside)
-   {
-      link(self.inside, r);
-   }
+/*
+    // Weapon materials for forging "clubs": clubs (nails/reinforcement), quarterstaff (tip)
+    // Difference to blades is that it can be all wood
+    ilClubMat  := {MAT_NONE, MAT_NONE,
+                        MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_BRONZE, 
+                        MAT_IRON,
+                        MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
 
-   set_weight_base(self, bweight);
-   set_weight(self, bweight);
-   goto init;
+    // Weapon materials for forging "clubs": clubs (nails/reinforcement), quarterstaff (tip)
+    // Difference to blades is that it can be all wood
+    ilClubMat  := {MAT_NONE, MAT_NONE,
+                        MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_BRONZE, 
+                        MAT_IRON,
+                        MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};*/
+
+
+
+    // weapon id, cost ip, weight, main function, main kind, sec function, sec kind, names
+    // Note that the main kind, e.g. "blade" is also used to dilcall the DIL func: "mat"+kind+"Idx" which resolves the main materials
+    // e.g. matBladeIndex is used to get the main material of swords.
+    // Most common first, most rare last
+    slWeapons := {
+        "0", "","","","","","","",
+        "1", "","","","","","","",
+        "2", "","","","","","","",
+        "3", "","","","","","","",
+        "4", "","","","","","","",
+        "5", "","","","","","","",
+        "6", "","","","","","","",
+        QUOTE(WPN_BATTLE_AXE),    "160", "16",  "setWpnSharp@randomt", "head",  "setWpnHilt@randomt",  "handle", "battle axe//axe", // 7
+        QUOTE(WPN_HAND_AXE),       "60",  "6",  "setWpnSharp@randomt", "head",  "setWpnHilt@randomt",  "handle", "hand axe//axe", 
+        QUOTE(WPN_WAR_MATTOCK),    "90", "10",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "war mattock//mattock",
+        QUOTE(WPN_WAR_HAMMER),     "55", "25",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "war hammer//hammer",  // Thor's hammer
+        QUOTE(WPN_GREAT_SWORD),   "200", "16",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "great sword//sword", 
+        QUOTE(WPN_SCIMITAR),      "100",  "7",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "scimitar", 
+        "13", "","","","","","","",
+        QUOTE(WPN_FALCHION),       "90",  "9",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "falchion", 
+        "15", "","","","","","","",
+        QUOTE(WPN_BROAD_SWORD),   "100",  "8",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "broad sword//sword", 
+        QUOTE(WPN_LONG_SWORD),    "100",  "8",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "long sword//sword", 
+        QUOTE(WPN_RAPIER),         "60",  "4",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "rapier", 
+        QUOTE(WPN_SHORT_SWORD),    "70",  "6",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "short sword//sword",
+        QUOTE(WPN_DAGGER),         "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "dagger",
+        QUOTE(WPN_BATTLE_MACE),    "80", "12",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "battle mace//mace", 
+        QUOTE(WPN_MACE),           "60",  "6",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "mace", 
+        QUOTE(WPN_BATTLE_CLUB),    "30", "12",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "grip", "battle club//club", // XXXX TODO
+        QUOTE(WPN_CLUB),           "10",  "6",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "handle", "club", // XXXX TODO
+        QUOTE(WPN_MORNING_STAR),   "10", "10",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "handle", "morning star",  
+        QUOTE(WPN_FLAIL),          "20", "14",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "handle", "flail",    
+        QUOTE(WPN_QUARTERSTAFF),    "4",  "4",  "setWpnStaff@randomt", "staff", "setWpnTips@randomt",  "tips",   "quarterstaff//staff",
+        QUOTE(WPN_SPEAR),          "10",  "4",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "spear",
+        QUOTE(WPN_HALBERD),        "20", "10",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "halberd",
+        QUOTE(WPN_BARDICHE),       "20", "10",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "bardiche",
+        QUOTE(WPN_SICKLE),          "2",  "5",  "setWpnSharp@randomt", "blade", "setWpnShaft@randomt", "handle", "sickle",
+        QUOTE(WPN_SCYTHE),         "20", "10",  "setWpnSharp@randomt", "blade", "setWpnShaft@randomt", "shaft",  "scythe",
+        QUOTE(WPN_TRIDENT),        "10", " 8",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "trident",
+        "34", "","","","","","","",
+        "35", "","","","","","","",
+        "36", "","","","","","","",
+        "37", "","","","","","","",
+        "38", "","","","","","","",
+        "39", "","","","","","","",
+        QUOTE(WPN_WHIP),          "120",  "9",  "setWpnWhip@randomt",  "whip",  "setWpnShaft@randomt", "handle", "whip",
+        "41", "","","","","","","",
+        "42", "","","","","","","",
+        "43", "","","","","","","",
+        "44", "","","","","","","",
+        "45", "","","","","","","",
+        "46", "","","","","","","",
+        "47", "","","","","","","",
+        "48", "","","","","","","",
+        QUOTE(WPN_LANCE),      "240",  "40",  "setWpnLance@randomt", "pole", "setWpnHilt@randomt",  "hilt",   "lance",  // 49 XXX TODO
+        "50", "","","","","","","",
+        "51", "","","","","","","",
+        "52", "","","","","","","",
+        QUOTE(WPN_CLAYMORE),      "120",  "9",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "claymore",  // 53
+        QUOTE(WPN_WAR_MAUL),       "60",  "9",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "war maul//maul",  // 54
+        "55", "","","","","","","",
+        "56", "","","","","","","",
+        "57", "","","","","","","",
+        "58", "","","","","","","",
+        "59", "","","","","","","",
+        "60", "","","","","","","",
+        "61", "","","","","","","",
+        "62", "","","","","","","",
+        "63", "","","","","","","",
+        "64", "","","","","","","",
+        "65", "","","","","","","",
+        "66", "","","","","","","",
+        "67", "","","","","","","",
+        "68", "","","","","","","",
+        "69", "","","","","","","",
+        "70", "","","","","","","",
+        "71", "","","","","","","",
+        "72", "","","","","","","",
+        QUOTE(WPN_MAIN_GAUCHE),    "50",  "2",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "main gauche", // 73
+        "74", "","","","","","","",
+        "75", "","","","","","","",
+        QUOTE(WPN_ADZE),           "70",  "7",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "adze",  // 76
+        "77", "","","","","","","",
+        "78", "","","","","","","",
+        "79", "","","","","","","",
+        "80", "","","","","","","",
+        "81", "","","","","","","",
+        "82", "","","","","","","",
+        "83", "","","","","","","",
+        "84", "","","","","","","",
+        QUOTE(WPN_JAVELIN),        "10",  "6",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "javelin", // 85
+        "86", "","","","","","","",
+        "87", "","","","","","","",
+        "88", "","","","","","","",
+        "89", "","","","","","","",
+        "90", "","","","","","","",
+        "91", "","","","","","","",
+        "92", "","","","","","","",
+        "93", "","","","","","","",
+        "94", "","","","","","","",
+        "95", "","","","","","","",
+        "96", "","","","","","","",
+        QUOTE(WPN_STILETTO),       "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "stiletto", // 97
+        "98", "","","","","","",""
+    };
+
+    i := length(slWeapons)/8-1;
+
+    while (i >= 0)
+    {
+        if (atoi(slWeapons.[i*8]) != i)
+        {
+            log("RANDOM WEAPONS TABLE ERROR at index " + itoa(i) + " mismatch : "+ slWeapons.[i*8]);
+        }
+        i := i - 1;
+    }
+
+    // Auto-generated from EXCEL (Git)
+    slMatNames :=
+    {
+        "tin",
+        "lead",
+        "copper",
+        "bronze",
+        "brass",
+        "zinc",
+        "iron",
+        "dark iron",
+        "steel",
+        "silver",
+        "high steel",
+        "gold",
+        "black steel",
+        "adamantium",
+        "platinum",
+        "titanium",
+        "eog",
+        "ithilnaur",
+        "mithril",
+        "bamboo",
+        "pine, yellow",
+        "ash",
+        "birch",
+        "walnut",
+        "maple",
+        "oak",
+        "willow",
+        "hickory",
+        "mahogany",
+        "teak",
+        "ipe",
+        "black oak",
+        "dark wood",
+        "mallorn",
+        "ente wood",
+        "sandstone",
+        "flint",
+        "granite",
+        "malachite",
+        "amethyst",
+        "amber",
+        "marble",
+        "obsidian",
+        "moonstone",
+        "pearl",
+        "onyx",
+        "emerald",
+        "sapphire",
+        "ruby",
+        "diamond",
+        "slime",
+        "cloth",
+        "leather",
+        "hard leather",
+        "shark hide",
+        "elephant hide",
+        "chimera hide",
+        "griffon hide",
+        "basilisk hide",
+        "drake hide",
+        "wyvern hide",
+        "dragon hide",
+        "rubber",
+        "bone",
+        "ivory",
+        "dragon bone",
+        "dragon scale"
+    };
+
+    // Auto-generated from EXCEL (Git)
+    ilMatValues := {
+        MAT_TIN,1,93,10000,
+        MAT_LEAD,1,145,10000,
+        MAT_COPPER,1,114,60000,
+        MAT_BRONZE,1,112,70000,
+        MAT_BRASS,1,108,70000,
+        MAT_ZINC,1,91,10000,
+        MAT_IRON,1,100,100000,
+        MAT_DARK_IRON,1,101,120000,
+        MAT_STEEL,1,102,150000,
+        MAT_SILVER,1,132,60000,
+        MAT_HIGH_STEEL,1,96,170000,
+        MAT_GOLD,1,246,20000,
+        MAT_BLACK_STEEL,1,89,190000,
+        MAT_ADAMANTIUM,1,77,220000,
+        MAT_PLATINUM,1,273,60000,
+        MAT_TITANIUM,1,57,200000,
+        MAT_EOG,1,70,200000,
+        MAT_ITHILNAUR,1,61,290000,
+        MAT_MITHRIL,1,49,400000,
+        MAT_BAMBOO,2,5,4000,
+        MAT_PINE,2,5,5000,
+        MAT_ASH,2,8,7000,
+        MAT_BIRCH,2,8,7000,
+        MAT_WALNUT,2,7,10000,
+        MAT_MAPLE,2,9,10000,
+        MAT_OAK,2,10,10000,
+        MAT_WILLOW,2,6,10000,
+        MAT_HICKORY,2,10,10000,
+        MAT_MAHOGANY,2,10,10000,
+        MAT_TEAK,2,12,10000,
+        MAT_IPE,2,15,20000,
+        MAT_BLACK_OAK,2,11,60000,
+        MAT_DARK_WOOD,2,16,80000,
+        MAT_MALLORN,2,9,100000,
+        MAT_ENTE_WOOD,2,6,140000,
+        MAT_SANDSTONE,3,29,50000,
+        MAT_FLINT,3,33,70000,
+        MAT_GRANITE,3,35,100000,
+        MAT_MALACHITE,3,51,80000,
+        MAT_AMETHYST,3,23,80000,
+        MAT_AMBER,3,14,80000,
+        MAT_MARBLE,3,35,80000,
+        MAT_OBSIDIAN,3,30,80000,
+        MAT_MOONSTONE,3,23,80000,
+        MAT_PEARL,3,14,20000,
+        MAT_ONYX,3,23,80000,
+        MAT_EMERALD,3,36,80000,
+        MAT_SAPPHIRE,3,36,80000,
+        MAT_RUBY,3,36,80000,
+        MAT_DIAMOND,3,45,80000,
+        MAT_SLIME,4,13,80000,
+        MAT_CLOTH,4,6,20000,
+        MAT_LEATHER,4,11,40000,
+        MAT_HARD_LEATHER,4,12,60000,
+        MAT_SHARK_HIDE,4,11,80000,
+        MAT_ELEPHANT_HIDE,4,12,70000,
+        MAT_CHIMERA_HIDE,4,11,77500,
+        MAT_GRIFFON_HIDE,4,11,85000,
+        MAT_BASILISK_HIDE,4,10,90000,
+        MAT_DRAKE_HIDE,4,10,110000,
+        MAT_WYVERN_HIDE,4,10,120000,
+        MAT_DRAGON_HIDE,4,9,150000,
+        MAT_RUBBER,4,15,80000,
+        MAT_BONE,4,26,40000,
+        MAT_IVORY,4,25,70000,
+        MAT_DRAGON_BONE,4,15,280000,
+        MAT_DRAGON_SCALE,4,18,300000
+    };
+
+
+    quit;
 }
 dilend
 
@@ -105,36 +461,60 @@ dilend
 // ======================== UTILITY =========================
 //
 
-dilbegin identify(u :unitptr, norm : string, improved: string);
+// Will return a two dice roll in range [0..len-1]
+// len is size of array sorted from most common to least common
+//
+// L6->2d3->[0..6]->[-6..+6]->rn : -6 -> 5; +6 -> 6
+// L7->2d3->[0..6]->[-6..+6]->rn : -6 -> 5; +6 -> 6
+// L8->2d4->[0..8]->[-8..+8]->rn : -8 -> 7; +8 -> 8
+//
+dilbegin integer twodiceidx(len : integer);
 var
-    exd : extraptr;
+    d, i : integer;
 code
 {
-    if (norm != "")
-    {
-        exd := "$identify" in u.extra;
-        if (exd == null)
-        {
-            addextra(u.extra, {"$identify"}, "");
-            exd := "$identify" in u.extra;
-        }
+    d := len/2;
+    i := 2*(rnd(0,d)+rnd(0,d)-d);
+    if (i < 0)
+        i := (-i)-1;
 
-        exd.descr := exd.descr + norm + "<br/>";
-    }
+     if (i >= len)
+        return (0); // Return most common for overflow (even arrays)
+    else
+        return (i);
+}
+dilend
 
-    if (improved != "")
-    {
-        exd := "$improved identify" in u.extra;
-        if (exd == null)
-        {
-            addextra(u.extra, {"$improved identify"}, "");
-            exd := "$improved identify" in u.extra;
-        }
+dilbegin identify(u :unitptr, norm : string, improved: string);
+var
+   exd : extraptr;
+code
+{
+   if (norm != "")
+   {
+      exd := "$identify" in u.extra;
+      if (exd == null)
+      {
+         addextra(u.extra, {"$identify"}, "");
+         exd := "$identify" in u.extra;
+      }
 
-        exd.descr := exd.descr + improved + "<br/>";
-    }
+      exd.descr := exd.descr + norm + "<br/>";
+   }
 
-    return;
+   if (improved != "")
+   {
+      exd := "$improved identify" in u.extra;
+      if (exd == null)
+      {
+         addextra(u.extra, {"$improved identify"}, "");
+         exd := "$improved identify" in u.extra;
+      }
+
+      exd.descr := exd.descr + improved + "<br/>";
+   }
+
+   return;
 }
 dilend
 
@@ -145,57 +525,57 @@ var
    ana : string;
 code
 {
-    vowels := "aeiou";
+   vowels := "aeiou";
 
-    if (a1 != "")
-    {
-        s := replace("$1n", a1, s);
+   if (a1 != "")
+   {
+      s := replace("$1n", a1, s);
 
-        if (a1.[0] in vowels)
-            ana := "an";
-        else
-            ana := "a";
+      if (a1.[0] in vowels)
+         ana := "an";
+      else
+         ana := "a";
 
-        s := replace("$1a", ana, s);
-    }
+      s := replace("$1a", ana, s);
+   }
 
-    if (a2 != "")
-    {
-        s := replace("$2n", a2, s);
+   if (a2 != "")
+   {
+      s := replace("$2n", a2, s);
 
-        if (a2.[0] in vowels)
-            ana := "an";
-        else
-            ana := "a";
+      if (a2.[0] in vowels)
+         ana := "an";
+      else
+         ana := "a";
 
-        s := replace("$2a", ana, s);
-    }
+      s := replace("$2a", ana, s);
+   }
 
-    if (a3 != "")
-    {
-        s := replace("$3n", a3, s);
+   if (a3 != "")
+   {
+      s := replace("$3n", a3, s);
 
-        if (a3.[0] in vowels)
-            ana := "an";
-        else
-            ana := "a";
+      if (a3.[0] in vowels)
+         ana := "an";
+      else
+         ana := "a";
 
-        s := replace("$3a", ana, s);
-    }
+      s := replace("$3a", ana, s);
+   }
 
-    if (a4 != "")
-    {
-        s := replace("$4n", a4, s);
+   if (a4 != "")
+   {
+      s := replace("$4n", a4, s);
 
-        if (a4.[0] in vowels)
-            ana := "an";
-        else
-            ana := "a";
+      if (a4.[0] in vowels)
+         ana := "an";
+      else
+         ana := "a";
 
-        s := replace("$4a", ana, s);
-    }
+      s := replace("$4a", ana, s);
+   }
 
-    return (s);
+   return (s);
 }
 dilend
 
@@ -203,20 +583,31 @@ dilend
 dilbegin integer minmax7(i : integer);
 code
 {
-    if (i > 7)
-        return (7);
+   if (i > 7)
+      return (7);
 
-    if (i < -7)
-        return (-7);
+   if (i < -7)
+      return (-7);
 
-    return (i);
+   return (i);
 }
 dilend
-
 
 //
 // ======================== ROLLS =========================
 //
+
+
+// Roll 2d8 and get a bonus
+// The result of this can be outside [-7..+7]
+dilbegin integer bonusAdjRoll(bonus : integer);
+var
+    r8il : intlist global roll8@randomt;
+code
+{
+    return (bonus + r8il.[rnd(1,8)+rnd(1,8)] + (openroll(100, 5)/100));
+}
+dilend
 
 
 // il : intlist  [array of integers from 5..94]
@@ -332,6 +723,206 @@ code
         return (max-1);
 
     return (i);
+}
+dilend
+
+
+//
+// ======================== UNIQUE ENCHANTMENTS =========================
+//
+
+// Chance in 1 / 1000th. E.g. if chance is 10 it equals 1%
+//
+dilbegin vorpalweapon(chance : integer);
+external
+    unitptr decapCorpse@death(c : unitptr);
+var
+    wpntype : integer;
+    i : integer;
+    il : intlist;
+    s : string;
+    r, hd : unitptr;
+    u : unitptr;
+    exd : extraptr;
+code
+{
+    exd := "$vorpal" in self.extra;
+    if (exd == null)
+    {
+        addextra(self.extra, {"$vorpal"}, itoa(chance));
+    }
+    else
+    {
+        chance := atoi(exd.descr);
+        log(self.symname + " LOADED VORPAL CHANCE " + itoa(chance));
+    }
+
+
+    il := weapon_info(self.value[0]);
+    wpntype := il.[2];
+    heartbeat := PULSE_SEC;
+
+:loop:
+    wait(SFB_PRE, command(CMD_AUTO_DAMAGE) and (medium == self) and (self.equip == WEAR_WIELD));
+
+    // log("VORPAL YAY medium is " + medium.symname);
+
+    if (activator != self.outside)
+        goto loop;
+
+    // Let's check if it's time to chop heads
+    if (rnd(1,1000) > chance)
+        goto loop;
+
+    if (activator.fighting == null)
+    {
+        goto loop;
+    }
+
+    act("Your $2n makes a high pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_CHAR);
+    act("$1n's $2n makes a high pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_ROOM);
+
+    u := activator;
+    i := u.fighting.idx;
+
+    secure(u, loop);
+
+    wait(SFB_TICK, TRUE);
+
+    unsecure(u);
+
+    if (u.fighting == null)
+    {
+        goto loop;
+    }
+
+    if (u.fighting.level >= IMMORTAL_LEVEL)
+    {        
+        goto loop;
+    }
+
+    if (u.fighting.idx != i)
+    {
+        goto loop;
+    }
+
+    // decapitate the enemy
+
+    // Maybe make other descriptions depending on slashing, piercing, crushing. 
+    //
+    act("You decapitate $3n's head with your $2n, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_CHAR);
+    act("$1n decapitates you with $1s $2n, killing you instantly.", A_SOMEONE, u, self, u.fighting, TO_VICT);
+    act("$1n decapitates $3n with $1s $2n, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_REST);
+
+    r := u.outside;
+    while (r.type != UNIT_ST_ROOM)
+        r := r.outside;
+
+    secure(r, loop);
+
+    // Would it be better to apply damage()? Hm...
+    s := u.fighting.symname;
+    u.fighting.hp := -100;
+
+    log(u.symname + " decapitated " + s);
+    position_update(u.fighting);
+
+    // r.inside should be the corpse that was just created
+    exd := "$living_sym" in r.inside.extra;
+
+    if (exd == null)
+    {
+        log("no corpse for vorpal.");
+        goto petTheHorse;
+    }
+
+    if (s != exd.descr)
+    {
+        log("wrong corpse for vorpal.");
+        goto petTheHorse;
+    }
+
+    hd := decapCorpse@death(r.inside);
+    goto petTheHorse;
+
+:petTheHorse:
+    // Pause for 10 minutes
+    heartbeat := PULSE_SEC * 60 * 10;
+    wait(SFB_TICK, TRUE);
+    goto loop;
+}
+dilend
+
+// Bag of Holding
+// pct : How many percent you want to shrink the weight (0..100)
+//   0 means don't reduce the weight
+// 100 means reduce weight by 100%
+// Capac is how many lbs the bag can hold max (it will weigh less).
+// Baseweight is how much the bag weighs when empty
+dilbegin aware bagofholding(pct : integer, bweight : integer, capac : integer);
+var
+   totalwgt : integer;
+   prevwgt : integer;
+   i : integer;
+   u : unitptr;
+   r : unitptr;
+code
+{   
+   self.capacity := capac;
+
+:init:
+   if (self.inside == null)
+   {
+      // Bag is empty
+      set_weight_base(self, bweight);
+      prevwgt := self.weight;
+      totalwgt := 0;
+   }
+   else
+   {
+      totalwgt := 0;
+      u := self.inside;
+      while (u)
+      {
+         totalwgt := totalwgt + u.weight;
+         u := u.next;
+      }
+      set_weight(self, bweight + (totalwgt * (100-pct))/100);
+      prevwgt := self.weight;
+   }
+
+
+:start:
+   wait(SFB_DONE, command("put") or command("get"));
+
+   if (prevwgt != self.weight)
+   {
+      totalwgt := totalwgt + (self.weight - prevwgt);
+      // log("totalwgt is now " + itoa(totalwgt));
+      i := self.baseweight + (totalwgt * (100-pct))/100;
+      set_weight(self, i);
+      prevwgt := self.weight;
+
+      if (totalwgt > capac)
+         goto burp;
+   }
+   goto start;
+
+:burp:
+   act("There is a large belching sound as items pour out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
+   
+   r := self.outside;
+   while (r.type != UNIT_ST_ROOM)
+      r := r.outside;
+
+   while (self.inside)
+   {
+      link(self.inside, r);
+   }
+
+   set_weight_base(self, bweight);
+   set_weight(self, bweight);
+   goto init;
 }
 dilend
 
@@ -528,6 +1119,23 @@ code
 dilend
 
 
+// Enchant the weapon either dark or light
+dilbegin integer enc_vorpal(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+var
+    i : integer;
+code
+{
+    i := bonuslvl;
+    dilcopy("vorpalweapon@randomt("+itoa(2*i)+")", u);
+    identify(u, "Will occasionally decapitate enemies.", "Decapitates enemies " + itoa(i) + " out of 1000.");
+    return (2);
+}
+dilend
+
+
+
 // Make up to 4 ticks faster
 dilbegin integer enc_haste(u : unitptr, bonuslvl : integer, data : string);
 external
@@ -647,6 +1255,38 @@ code
         return (enc_goodprot(u, bonuslvl, data));
     else
         return (enc_evilprot(u, bonuslvl, data));
+}
+dilend
+
+
+dilbegin integer enc_bless(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+code
+{
+	addaff(u, -ID_BLESS, -1, 0,
+	       0, 0, 0,
+           TIF_BLESS_ON, TIF_NONE, TIF_BLESS_OFF, APF_NONE);
+
+    identify(u, "It has a blue tint.", "Will protect you with a bless spell.");
+
+    return (1);
+}
+dilend
+
+
+dilbegin integer enc_sanc(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+code
+{
+	addaff(u, -ID_SANCTUARY, -1, 0,
+	       0, 0, 0,
+           TIF_SANCTUARY_ON, TIF_NONE, TIF_SANCTUARY_OFF, APF_NONE);
+
+    identify(u, "It has a green tint.", "Will sustain you with a Sanctuary spell.");
+
+    return (1);
 }
 dilend
 
@@ -841,19 +1481,19 @@ dilend
 dilbegin integer enc_wpnslaying(u : unitptr, bonuslvl : integer, data : string);
 external
     identify(u :unitptr, norm : string, improved: string);
+    integer twodiceidx(len : integer);
+    integer max@function(a:integer, b:integer);
+    integer max3@function(a:integer, b:integer, c:integer);
 
 var
     sl : stringlist;
-    i : integer;
+    l, i1,i2,i3 : integer;
     exd : extraptr;
 code
 {
-    // debug log("Enchant slaying");
-
+    // Race from, Race to, "$n slayer" name
     sl := {
-        // Race from, Race to, "$n slayer" name
-
-        QUOTE(RACE_MOSQUITO), "", "mosquito",
+        QUOTE(RACE_MOSQUITO), "", "mosquitoe",
         QUOTE(RACE_ARTHROPODA_MIN), QUOTE(RACE_ARTHROPODA_MAX), "arthropoda", // ants beetles, ...
         QUOTE(RACE_ANNELIDA_MIN), QUOTE(RACE_ANNELIDA_MAX), "annelida", // WOrms, leeches
         QUOTE(RACE_CNIDARIA_MIN), QUOTE(RACE_CNIDARIA_MAX), "cnidaria", // Jellyfish
@@ -868,44 +1508,60 @@ code
         QUOTE(RACE_DROW), "", "drow",
         QUOTE(RACE_ORC), "", "orc",
         QUOTE(RACE_HOBGOBLIN), "", "hobgoblin", 
-        QUOTE(RACE_JAWLESS_FISH_MIN), QUOTE(RACE_BONEY_FISH_MAX), "fish", 
+        QUOTE(RACE_JAWLESS_FISH_MIN), QUOTE(RACE_BONEY_FISH_MAX), "fishe", 
         QUOTE(RACE_BIRD_MIN), QUOTE(RACE_BIRD_MAX), "bird", 
         QUOTE(RACE_PLANT_MIN), QUOTE(RACE_PLANT_MAX), "plant", 
         QUOTE(RACE_AMPHIBIAN_MIN), QUOTE(RACE_AMPHIBIAN_MAX), "amphibian", 
         QUOTE(RACE_TROLL), "", "troll", 
         QUOTE(RACE_GIANT), "", "giant", 
-        QUOTE(RACE_REPTILES_MIN), QUOTE(RACE_REPTILES_MAX), "reptile", 
-        QUOTE(RACE_MAMMAL_MIN), QUOTE(RACE_MAMMAL_MAX), "mammal", 
-        QUOTE(MIN_HUMANOID_PC), QUOTE(MAX_HUMANOID_NPC), "humanoid", 
-        QUOTE(RACE_WEREWOLF), "", "werewolf",
+        QUOTE(RACE_WEREWOLF), "", "werewolve",
         QUOTE(RACE_GHOST), "", "ghost",
         QUOTE(RACE_VAMPIRE), "", "vampire",
-        QUOTE(RACE_ELEMENTAL_MIN), QUOTE(RACE_ELEMENTAL_MAX), "elemental", 
-        QUOTE(RACE_LICH_MIN), QUOTE(RACE_LICH_MAX), "lich",
-        QUOTE(RACE_UNDEAD_MIN), QUOTE(RACE_UNDEAD_MAX), "undead", 
-        QUOTE(RACE_DEMON_MIN), QUOTE(RACE_DEMON_MAX), "demon", 
         QUOTE(RACE_DRAGON_BLACK), "", "black dragon", 
         QUOTE(RACE_DRAGON_BLUE), "", "blue dragon", 
         QUOTE(RACE_DRAGON_GREEN), "", "green dragon", 
         QUOTE(RACE_DRAGON_RED), "", "red dragon", 
         QUOTE(RACE_DRAGON_WHITE), "", "white dragon", 
         QUOTE(RACE_DRAGON_SILVER), "", "silver dragon", 
+        QUOTE(RACE_REPTILES_MIN), QUOTE(RACE_REPTILES_MAX), "reptile", 
+        QUOTE(RACE_MAMMAL_MIN), QUOTE(RACE_MAMMAL_MAX), "mammal", 
+        QUOTE(MIN_HUMANOID_PC), QUOTE(MAX_HUMANOID_NPC), "humanoid", 
+        QUOTE(RACE_LICH_MIN), QUOTE(RACE_LICH_MAX), "liche",
+        QUOTE(RACE_ELEMENTAL_MIN), QUOTE(RACE_ELEMENTAL_MAX), "elemental", 
+        QUOTE(RACE_UNDEAD_MIN), QUOTE(RACE_UNDEAD_MAX), "undead", 
+        QUOTE(RACE_DEMON_MIN), QUOTE(RACE_DEMON_MAX), "demon", 
         QUOTE(RACE_DRAGON_MIN), QUOTE(RACE_DRAGON_MAX), "dragon"
     };
 
-    // 38
-
-    i := rnd(0, (length(sl)/3)-1)*3;
-
-    u.value[3] := atoi(sl.[i]);
-    identify(u, "You sense a low hum.", "Slaying against "+sl.[i+2]+"s.");
-
-    if (sl.[i+1] != "") // Check if a range
+    l := length(sl)/3;
+    if (bonuslvl >= BONUS_ARTIFACT)
     {
-        addextra(u.extra, {"$slayer"}, sl.[i+2]);
+        i1 := twodiceidx(l);
+        i2 := twodiceidx(l);
+        i3 := twodiceidx(l);
+        i1 := max3@function(i1, i2, i3);
+    }
+    else if (bonuslvl >= BONUS_EXCELLENT)
+    {
+        i1 := twodiceidx(l);
+        i2 := twodiceidx(l);
+        i1 := max@function(i1, i2);
+    }
+    else
+        i1 := twodiceidx(l);
+    
+    i1 := 3 * i1;
+
+    u.value[3] := atoi(sl.[i1]);
+    identify(u, "You sense a low hum.", "Slaying against "+sl.[i1+2]+"s.");
+
+    if (sl.[i1+1] != "") // Check if a range
+    {
+        addextra(u.extra, {"$slayer"}, sl.[i1+2]+"s");
         exd := "$slayer" in u.extra;
-        insert(exd.vals, 0, atoi(sl.[i]));
-        insert(exd.vals, 1, atoi(sl.[i+1]));
+        insert(exd.vals, 0, atoi(sl.[i1]));
+        insert(exd.vals, 1, atoi(sl.[i1+1]));
+        return (2); // Group slaying uses 2 enchantments
     }
 
     return (1);
@@ -961,23 +1617,21 @@ dilend
 //
 // ======================== ENCHANT SUPER FUNCTIONS =========================
 //
+dilbegin encWpn(u : unitptr, kind : string);
+external
+    integer twodiceidx(len : integer);
 
-dilbegin integer encWpn(u : unitptr, bonuslvl : integer, blade : string);
 var
     enchantments : integer;
     lvl : integer;
-    i : integer;
+    i,j : integer;
     r : integer;
     n : integer;
-    s : string;
     encs : stringlist;
-    encn : intlist;
 
-    rollenc : integer;
-    enc1 : integer;
-    enc2 : integer;
-    enc3 : integer;
     exd : extraptr;
+    rollenc : integer;
+    enc1, enc2, enc3 : integer;
 
 code
 {
@@ -989,60 +1643,55 @@ code
 
     lvl := (rollenc + enc1 + enc2 + enc3) / 4; // Take the average
 
-    // debug log("encWpn() lvl = " + itoa(lvl));
-
-    if (lvl == 0)
-        return (0);
+    if (lvl <= 0)
+        return;
 
     u.flags := u.flags | UNIT_FL_MAGIC;
 
     // debug log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
 
+    // Possible weapon enchantments from most rare to most common
     encs := {
-        "enc_haste_slow@randomt", "",   // 0
-        "enc_wpnslaying@randomt", "",   // 1
-        "enc_wpnskill@randomt", "",     // 2
-        "enc_good_evil@randomt", "",    // 3
-        "enc_abilities@randomt", "",    // 4
-        "enc_resistances@randomt", "",  // 5
-        "enc_defences@randomt", "",     // 6 
-        "enc_lightdark@randomt", "",    // 7 
-        "enc_wpnenchant@randomt", ""    // 8 
+        "enc_wpnenchant@randomt",
+        "enc_light@randomt",
+        "enc_defences@randomt",
+        "enc_wpnskill@randomt",
+        "enc_resistances@randomt",   
+        "enc_abilities@randomt",
+        "enc_bless@randomt",
+        "enc_sanc@randomt",
+        "enc_good_evil@randomt",
+        "enc_wpnslaying@randomt",
+        "enc_haste@randomt",
+        "enc_vorpal@randomt"
         };
 
-
-    encn := { 0, 2, 4, 6, 8, 7, 5, 3, 1 };
-    i := length(encn)-1;
-
-    if (i+1 != length(encs)/2)
-    {
-        log("ERROR: The two arrays must be in sync");
-        quit;
-    }
-
+    i := length(encs);
+    j := 0;
     enchantments := lvl;
     while (enchantments > 0)
     {
-        // debug log("enchantment "+itoa(enchantments));
-        r := (rnd(0,i)+rnd(0,i))/2;
-        n := dilcall(encs.[encn.[r]*2])(u, lvl, encs.[encn.[r]*2+1]);
-
-        encn.[r] := encn.[i]; // Well not perfect but it probably works
-        i := i - 1;
+        r := j+twodiceidx(i);  // Get two dice random number from [0..length-1]
+        // log("enchantment "+encs.[r]);
+        n := dilcall(encs.[r])(u, lvl, "");
+        encs.[r] := encs.[j];
         enchantments := enchantments - n;
+        i := i - 1;
+        j := j + 1;
     }
-
-    return (0);
+    return;
 }
 dilend
-
 
 
 dilbegin integer encJewelry(u : unitptr, bonuslvl : integer, blade : string);
+external
+    integer twodiceidx(len : integer);
+
 var
     enchantments : integer;
     lvl : integer;
-    i : integer;
+    i,j : integer;
     r : integer;
     n : integer;
     s : string;
@@ -1075,134 +1724,184 @@ code
     // debug log("Enchant the weapon: lvl=" + itoa(lvl) + " u.value2="+itoa(u.value[2]));
 
     encs := {
-        "enc_haste_slow@randomt", "",   // 0
-        "enc_good_evil@randomt", "",    // 1
-        "enc_abilities@randomt", "",    // 2
-        "enc_resistances@randomt", "",  // 3
-        "enc_defences@randomt", "",     // 4 
-        "enc_lightdark@randomt", ""     // 5 
-        };
+        "enc_light@randomt",
+        "enc_bless@randomt",
+        "enc_sanc@randomt",
+        "enc_resistances@randomt",
+        "enc_abilities@randomt",
+        "enc_defences@randomt",
+        "enc_good_evil@randomt",
+        "enc_haste@randomt"
+    };
 
-
-    encn := { 0, 2, 4, 5, 3, 1 };
-    i := length(encn)-1;
-
-    if (i+1 != length(encs)/2)
-    {
-        log("ERROR: The two arrays must be in sync");
-        quit;
-    }
-
+    i := length(encs);
+    j := 0;
     enchantments := lvl;
     while (enchantments > 0)
     {
-        // debug log("enchantment "+itoa(enchantments));
-        r := (rnd(0,i)+rnd(0,i))/2;
-        n := dilcall(encs.[encn.[r]*2])(u, lvl, encs.[encn.[r]*2+1]);
-
-        encn.[r] := encn.[i]; // Well not perfect but it probably works
-        i := i - 1;
+        r := j+twodiceidx(i);  // Get two dice random number from [0..length-1]
+        // log("enchantment "+encs.[r]);
+        n := dilcall(encs.[r])(u, lvl, "");
+        encs.[r] := encs.[j];
         enchantments := enchantments - n;
+        i := i - 1;
+        j := j + 1;
     }
 
     return (0);
 }
 dilend
 
-
 // ========================= MATERIALS ==========================
 
-// Main metals for metal weapons, e.g. a long sword or mace made of iron
-// (handle / hilt is another matter). Matroll [-7..+7]
-//
-dilbegin string matMetal(matlvl : integer);
+dilbegin integer matBladeIdx(u : unitptr, matRoll : integer, s : string);
 var 
-    materials : stringlist;
+    ilBladeMat  : intlist global ilBladeMat@randomt;
 code
 {
-    materials := {
-        "coroded copper", "coroded copper", "worn copper", "worn copper", "worn copper", "copper", "bronze",
-        "iron",
-        "silver", "steel", "high steel", "black steel", "true steel", "adamantium", "mithril"};
+    return (ilBladeMat.[matRoll+7]);
+}
+dilend
 
-    return (materials.[matlvl+7]);
+dilbegin integer matHeadIdx(u : unitptr, matRoll : integer, s : string);
+var 
+    ilBladeMat  : intlist global ilHeadMat@randomt;
+code
+{
+    return (ilBladeMat.[matRoll+7]);
+}
+dilend
+
+dilbegin integer matBaseIdx(u : unitptr, matRoll : integer, s : string);
+var 
+    ilStaffMat : intlist    global ilStaffMat@randomt;
+code
+{
+    return (ilStaffMat.[matRoll+7]);
+}
+dilend
+
+dilbegin integer matPoleIdx(u : unitptr, matRoll : integer, s : string);
+var 
+    ilBladeMat  : intlist global ilHeadMat@randomt;
+code
+{
+    return (ilBladeMat.[matRoll+7]);
+}
+dilend
+
+dilbegin integer matStaffIdx(u : unitptr, matRoll : integer, s : string);
+var 
+    ilStaffMat : intlist    global ilStaffMat@randomt;
+code
+{
+    return (ilStaffMat.[matRoll+7]);
+}
+dilend
+
+dilbegin integer matWhipIdx(u : unitptr, matRoll : integer, s : string);
+var 
+    ilWhipMat : intlist    global ilWhipMat@randomt; 
+code
+{
+    return (ilWhipMat.[matRoll+7]);
 }
 dilend
 
 
-// Metals for enchantment, e.g. inlaid runes, enclvl[-7..+7]
-//
-dilbegin string matMetalEnc(enclvl : integer);
+dilbegin string matRunes(matRoll : integer);
 var 
-    materials : stringlist;
+    slMatNames  : stringlist global slMatNames@randomt;
+    ilJewelryMat : intlist global ilJewelryMat@randomt;
 code
 {
-    materials := {
-        "", "", "", "", "", "", "",
-        "",
-        "silver", "silver", "silver", "silver", "red gold", "gold", "platinum"};
-
-    return (materials.[enclvl+7]);
+    return (slMatNames.[ilJewelryMat.[matRoll+7]]);
 }
 dilend
 
 
 // Metals for the hilt, hiltlvl[-7..+7]
 //
-dilbegin string matHilt(hiltlvl : integer);
+dilbegin string matHilt(matRoll : integer);
 var 
-    i : integer;
-    materials : stringlist;
+    slMatNames  : stringlist global slMatNames@randomt;
+    ilHiltMat   : intlist    global ilHiltMat@randomt;
 code
 {
-    materials := {
-        "wood", "wood", "wood", "wood", "bone", "bone", "bone",
-        "iron",
-        "silver", "steel", "high steel", "black steel", "true steel", "adamantium", "mithril"};
-
-    return (materials.[hiltlvl+7]);
+    return (slMatNames.[ilHiltMat.[matRoll+7]]);
 }
 dilend
 
 
 // Gem for e.g. a hilt [-7..+7]
 //
-dilbegin string matGem(gemlvl : integer);
+dilbegin string matGem(matRoll : integer);
 var 
-    materials : stringlist;
+    slMatNames  : stringlist global slMatNames@randomt;
+    ilGems        : intlist    global ilGems@randomt;
 code
 {
-    materials := {
-        "", "", "", "", "", "", "",
-        "",
-        "pearl", "black pearl", "moonstone", "emerald", "sapphire", "ruby", "diamond"};
-
-    return (materials.[gemlvl+7]);
+    return (slMatNames.[ilGems.[matRoll+7]]);
 }
 dilend
 
 
+
 // ========================= LYRICS ==========================
 
-// For e.g. a long sword, made of mithril, set the title and name
-// and outside description to ...mihtril long sword...
+// Calculates 
 //
-dilbegin setMatDescr(u : unitptr, mat : string);
+// And sets the item description. For e.g. a long sword, made of mithril,
+// set the title and name and outside description to ...mihtril long sword...
+// or e.g. a "gold ring".
+//
+// 'craftsmanship' is the -7..+7 roll and determines how well it was made
+// 'mat1Roll' is the -7..+7 main material roll that the item is made from 
+// 'mat1Index' is the MAT_ value (via e.g. the mat1Roll) and is used to lookup the proper material
+//
+dilbegin setMatProps(u : unitptr, craftsmanship : integer, mat1Roll: integer, mat1Index : integer);
+external
+    identify(u :unitptr, norm : string, improved: string);
 var
     ana : string;
+    mat : string;
+    slMatNames  : stringlist global slMatNames@randomt;
+    ilMatValues : intlist    global ilMatValues@randomt;
 code
 {
-    if (mat.[0] in "aeiou")
-        ana := "an ";
-    else
-        ana := "a ";
+   // Adjust for material hitpoints - applies to ALL weapons
+   //
+   // TODO --> here
+   // u.max_hp := (u.max_hp * ilMatValues.[ilMatIndex(mat1Index, 4)]) / 1000;
+   // u.hp := u.max_hp;
 
-    // Set name, title, description, extra
-    addstring(u.names, mat + " " + u.name);
-    u.title := ana + mat + " " + u.name;
-    u.outside_descr := ana + mat + " " + u.name + " is lying here.";
+   // If a weapon, let's set the weapon Craftsmanship + material bonus - apples to ALL weapons
+   //
+   if (u.objecttype == ITEM_WEAPON)
+   {
+      u.value[1] := getinteger(DIL_GINT_BONUS_A, null, (craftsmanship + mat1Roll) / 2);
+      if (u.value[1] >= 0)
+         identify(u, "Weapon has a quality bonus.", "Weapon has a quality bonus of +" + itoa(u.value[1]) + ".");
+      else if (u.value[1] < 0)
+         identify(u, "Weapon has a quality penalty.", "Weapon has a quality penalty of " + itoa(u.value[1]) + ".");
+   }
 
-    return;
+   // Set the name title & outside_descr
+   //
+   mat := slMatNames.[mat1Index];
+   // log("setMatProps mat1Index= " + itoa(mat1Index));
+   // log("setMatProps name = " + mat);
+
+   if (mat.[0] in "aeiou")
+      ana := "an ";
+   else
+      ana := "a ";
+
+   // Set name, title, description, extra
+   addstring(u.names, mat + " " + u.name);
+   u.title := ana + mat + " " + u.name;
+   u.outside_descr := ana + mat + " " + u.name + " is lying here.";
+   return;
 }
 dilend
 
@@ -1211,12 +1910,14 @@ dilend
 // For the weapon u, set an appropriate overall smithing description 
 // based on the success of the smithing roll [-7..+7]
 //
-dilbegin setJewelrySmith(u : unitptr, mat : string, smithlvl : integer);
+dilbegin setJewelrySmith(u : unitptr, matIndex : integer, smithlvl : integer);
 external
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var
     sl : stringlist;
     exd : extraptr;
+    slMatNames  : stringlist global slMatNames@randomt;
+
 code
 {
     // Get a smithing description based on weapons quality
@@ -1226,7 +1927,7 @@ code
         "This $2n $1n is terribly bad.",
         "This $2n $1n is terrible.", // -4
         "A really badly made $2n $1n.",
-        "Whoever made this $2n $1n was probably the apprentice's apprentice.",
+        "Whoever made this $2n $1n was most likely the apprentice's apprentice.",
         "Not the best $2n $1n you've seen but it can come in handy.", 
         "It's $2a $2n $1n.", // 0
         "A pretty $2n $1n.",  // +1
@@ -1234,13 +1935,13 @@ code
         "A beautiful $2n $1n.",
         "A beautiful well made $2n $1n.",
         "A stunning $2n $1n.",
-        "A stunning well made $2n $1n.",
-        "Probably the most beautiful $2n $1n you've ever seen." };
+        "A stunningly well made $2n $1n.",
+        "A godly $2n $1n." };
 
     // debug log("Jewelry extra : " + sl.[smithlvl+7]);
 
     exd := "" in u.extra;
-    exd.descr :=  sreplace(sl.[smithlvl+7], u.name, mat, "", "");
+    exd.descr :=  sreplace(sl.[smithlvl+7], u.name, slMatNames.[matIndex], "", "");
 
     // debug log("exd name = [" + exd.name + "] descr = " + exd.descr);
 
@@ -1260,9 +1961,11 @@ var
     t : string;
     r : string;
     exd : extraptr;
+
 code
 {
     gem := matGem(mat2);
+
     if (gem == "")
         return;
 
@@ -1301,22 +2004,25 @@ dilend
 // For the weapon u, set an appropriate overall smithing description 
 // based on the success of the smithing roll [-7..+7]
 //
-dilbegin setWpnSmithing(u : unitptr, mat : string, smithlvl : integer);
+dilbegin setWpnSmithing(u : unitptr, matIndex : integer, smithlvl : integer);
 external
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 var
+    slMatNames  : stringlist global slMatNames@randomt;
     sl : stringlist;
     exd : extraptr;
 code
 {
     // Get a smithing description based on weapons quality
+    // $1n is the item name, long sword
+    // $2n is the material string, e.g. mithril
     sl := {
         "You look at the lump of $2n and wonder if it is even $1a $1n.", // -7
         "This lump of $2n was clearly an unsuccessful attempt at making $1a $1n.",
         "This $2n $1n is terribly bad.",
         "This $2n $1n is terrible.", // -4
         "A really badly made $2n $1n.",
-        "Whoever made this $2n $1n was probably the apprentice's apprentice.",
+        "Whoever made this $2n $1n was most likely the apprentice's apprentice.",
         "Not the best $2n $1n you've seen but it can come in handy.", 
         "It's $2a $2n $1n.", // 0
         "A decent $2n $1n.",  // +1
@@ -1325,12 +2031,12 @@ code
         "An excellent $2n $1n.",
         "An excellent and well balanced $2n $1n.",
         "A superior $2n $1n.",
-        "Probably the best $2n $1n you've ever seen." };
+        "A god like $2n $1n." };
 
     // debug log("weapon extra : " + sl.[smithlvl+7]);
 
     exd := "" in u.extra;
-    exd.descr :=  sreplace(sl.[smithlvl+7], u.name, mat, "", "");
+    exd.descr :=  sreplace(sl.[smithlvl+7], u.name, slMatNames.[matIndex], "", "");
 
     // debug log("exd name = [" + exd.name + "] descr = " + exd.descr);
 
@@ -1339,12 +2045,13 @@ code
 dilend
 
 
-// lvl1 - skill of making the blade
-// lvl2 - material for inlaid runes / engravings
+// making of a "sharp blade", e.g. sword blade, or the blade of an axe head
+// smithRoll - skill of the smith.
+// mat2Index - material for inlaid runes / engravings
 //
-dilbegin setWpnBlade(u : unitptr, lvl1 : integer, lvl2 : integer, kind : string);
+dilbegin setWpnSharp(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
 external
-    string matMetalEnc(enclvl : integer);
+    string matRunes(enclvl : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 
 var
@@ -1354,31 +2061,183 @@ var
     exd : extraptr;
 code
 {
+    // $1 - the unit name (e.g. mithril long sword or adamantium axe); $2 = e.g. (sword) "blade" or (axe) "head", $3 = material for inlaid runes
+    //
     sl := {
-        "You wonder if that's really $1a $1n $2n, it is crooked and uneven.", // -7
-        "The $2n is crooked and could be a lot better.",
-        "This $2n $1n is terribly bad.",
-        "This $2n $1n is terrible.", // -4
-        "A really badly made $2n $1n.",
-        "Whoever made this $2n $1n was probably the apprentice's apprentice.",
-        "Not the best $2n $1n you've seen but it can come in handy.", 
+        "It takes you a while to realize that you're looking at $1a $1n $2n. It's actually part of a weapon.", // -7
+        "The $1n $2n is crooked and could be a lot better.",
+        "This $1n $2n is terribly bad.",
+        "This $1n $2n is terrible.", // -4
+        "A really badly made $1n $2n.",
+        "Whoever made this $1n $2n was most likely the apprentice's apprentice.",
+        "Not the best $1n $2n you've seen.", 
         "The $2n looks plain.", // 0
-        "The $2n is very smooth and well made.",
-        "The well made $2n is both very sharp and smooth.",
-        "It's strong $2n has $3n runes inlaid.",
-        "It's strong well made $2n has $3n runes inlaid.",
-        "It's beautiful and strong $2n has $3n runes inlaid.",
-        "It's fantastic $1n $2n which is highly decorated and with inlaid $3n runes.",
-        "It's probably the most stunning $1n $2n you have ever seen, it is highly decorated and with inlaid $3n runes."  //+7
+        "The $2n is well made.",
+        "The $2n is sharp and well made.",
+        "It's a well made and sharp strong $2n with $3n runes inlaid.",
+        "It's a well made and very sharp strong $2n with $3n runes inlaid.",
+        "It's a beautiful and very sharp, strong $2n with $3n runes inlaid.",
+        "It's a fantastical and a very sharp $2n which is highly decorated and with inlaid $3n runes.",
+        "The $2n looks to be created by divine forces, it is razor sharp, and is highly decorated and with inlaid $3n runes."  //+7
     };
 
-    s := sl.[lvl1 + 7];
+    s := sl.[smithRoll + 7];
     // debug log("Blade : " + s);
 
-    t := matMetalEnc(lvl2);
+    t := matRunes(mat2Index);
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
-    // debug log("setWpnBlade extra : " + exd.descr);
+    // debug log("setWpnSharp extra : " + exd.descr);
+
+    return;
+}
+dilend
+
+
+// making of a whip, unique
+// smithRoll - skill of the smith.
+// mat2Index - material for inlaid runes / engravings
+//
+dilbegin setWpnWhip(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
+external
+    string matRunes(enclvl : integer);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+
+var
+    sl : stringlist;
+    s : string;
+    t : string;
+    exd : extraptr;
+code
+{
+    // Note uinit name and kind if the same
+    // $1 - the unit name (e.g. mithril long sword or adamantium axe); $2 = e.g. (sword) "blade" or (axe) "head", $3 = material for inlaid runes
+    //
+    sl := {
+        "It takes you a while to realize that you're looking at $1a $1n. It's actually part of a weapon.", // -7
+        "The $2n is crooked and could be a lot better.",
+        "This $2n is terribly bad.",
+        "This $2n is terrible.", // -4
+        "A really badly made $2n.",
+        "Whoever made this $2n was most likely the apprentice's apprentice.",
+        "Not the best $2n you've seen.", 
+        "The $2n looks plain.", // 0
+        "The $2n is well made.",
+        "The $2n is very well made.",
+        "It's a well made and strong $2n with sewn in $3n threads.",
+        "It's a well made and very strong $2n with sewn in $3n threads.",
+        "It's a beautiful and very strong $2n with swen in $3n threads.",
+        "It's a fantastical and a very strong $2n which is highly decorated and with sewn in $3n threads.",
+        "The $2n looks to be created by divine forces, and it is highly decorated and with swen in $3n threads."  //+7
+    };
+
+    s := sl.[smithRoll + 7];
+    // debug log("Blade : " + s);
+
+    t := matRunes(mat2Index);
+    exd := "" in u.extra;
+    exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
+    // debug log("setWpnSharp extra : " + exd.descr);
+
+    return;
+}
+dilend
+
+
+// making of clubs, unique
+// smithRoll - skill of the smith.
+// mat2Index - material for inlaid runes / engravings
+//
+dilbegin setWpnClub(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
+external
+    string matRunes(enclvl : integer);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+
+var
+    sl : stringlist;
+    s : string;
+    t : string;
+    exd : extraptr;
+code
+{
+    // Note uinit name and kind if the same
+    // $1 - the unit name (e.g. mithril long sword or adamantium axe); $2 = "base"", $3 = material for inlaid runes
+    //
+    sl := {
+        "It takes you a while to realize that the lump you're looking at is the base of a club. Hey, it's actually part of a weapon.", // -7
+        "The club is crooked and could be a lot better.",
+        "This club is terribly bad.",
+        "This $2n is terrible.", // -4
+        "A really badly made base of a club.",
+        "Whoever made this club base was most likely the apprentice's apprentice.",
+        "Not the best club base you've seen.", 
+        "The club base looks ordinary.", // 0
+        "The club base is well made.",
+        "The club base is very well made and balanced.",
+        "It's a strong and well balanced club base with $2n with rune engravings.",
+        "It's a well made and very strong club base with $3n inlaid rune engravings.",
+        "It's a beautiful and very strong club base with $3n inlaid rune engravings.",
+        "It's a fantastical and a very strong club base which is highly decorated and $3n inlaid rune engravings.",
+        "The club base looks to be created by divine forces, and it is highly decorated and with $3n inlaid rune engravings."  //+7
+    };
+
+    s := sl.[smithRoll + 7];
+    // debug log("Blade : " + s);
+
+    t := matRunes(mat2Index);
+    exd := "" in u.extra;
+    exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
+    // debug log("setWpnSharp extra : " + exd.descr);
+
+    return;
+}
+dilend
+
+
+// making of lances
+// smithRoll - skill of the smith.
+// mat2Index - material for inlaid runes / engravings
+//
+dilbegin setWpnLance(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
+external
+    string matRunes(enclvl : integer);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+
+var
+    sl : stringlist;
+    s : string;
+    t : string;
+    exd : extraptr;
+code
+{
+    // Note uinit name and kind if the same
+    // $1 - the unit name (e.g. mithril long sword or adamantium axe); $2 = "pole", $3 = material for inlaid runes
+    //
+    sl := {
+        "It takes you a while to realize that the long thingy you're looking at is an attempt to make a lance.", // -7
+        "The lance is crooked and could be a lot better.",
+        "This lance is terribly bad.",
+        "This lance is just terrible.", // -4
+        "A really badly made lance pole.",
+        "Whoever made this lance pole was most likely the apprentice's apprentice.",
+        "Not the best lance pole you've seen.", 
+        "The lance pole looks ordinary.", // 0
+        "The lance pole is well made.",
+        "The lance pole is very well made and balanced.",
+        "It's a strong and well balanced lance pole with $2n with rune engravings.",
+        "It's a well made and very strong lance pole with $3n inlaid rune engravings.",
+        "It's a beautiful and very strong lance pole with $3n inlaid rune engravings.",
+        "It's a fantastical and a very strong lance pole which is highly decorated and $3n inlaid rune engravings.",
+        "The lance pole looks to be created by divine forces, and it is highly decorated and with $3n inlaid rune engravings."  //+7
+    };
+
+    s := sl.[smithRoll + 7];
+    // debug log("Blade : " + s);
+
+    t := matRunes(mat2Index);
+    exd := "" in u.extra;
+    exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
+    // debug log("setWpnSharp extra : " + exd.descr);
 
     return;
 }
@@ -1387,8 +2246,8 @@ dilend
 
 dilbegin setWpnHilt(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
 external
-    string matHilt(hiltlvl : integer);
-    string matGem(gemlvl : integer);
+    string matHilt(matIndex : integer);
+    string matGem(matIndex : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 
 var
@@ -1414,8 +2273,8 @@ code
         "The $2n is made of $3n and looks really good.",
         "The $2n is made of $3n and looks excellent.",
         "The $2n is made of $3n and looks really excellent.",
-        "The $2n is made of $3n and $4n is set in at the end.",
-        "The $2n is made of $3n and $4n is set in at the end." // +7
+        "The $2n is made of $3n and $4a $4n is set in at the end.",
+        "The $2n is made of $3n and $4a $4n is set in at the end." // +7
     };
 
     s := matHilt(mat2);
@@ -1433,145 +2292,53 @@ code
 dilend
 
 
-// ========================= GENERAL TREASURE ==========================
 
-// Find treasure's materials, adjust cost, adjust weight
-// When finished u.extra.vals holds the rolls [-10..10] like this
-//   {Craftsmanship, mat1, mat2, mat3, Enchantment, enc1, enc2, enc3}
+// smithRoll - skill of making the weapon (smithyroll)
+// mat2index   - material for inlaid runes / engravings
+// kind   - "head"
 //
-dilbegin treasureroll(u : unitptr, bonuslvl : integer);
+dilbegin setWpnHead(u : unitptr, smithRoll : integer, mat2index : integer, kind : string);
 external
-    integer successroll_oe(il : intlist, rollskew : integer);
-    integer minmax7(i : integer);
+    string matRunes(matIndex : integer);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 
 var
-    rollmat : integer;
-    mat1 : integer;
-    mat2 : integer;
-    mat3 : integer;
-    
-    rollenc : integer;
-    enc1 : integer;
-    enc2 : integer;
-    enc3 : integer;
-
-    il : intlist;
+    sl : stringlist;
+    s : string;
+    r : string;
+    exd : extraptr;
 code
 {
-   // debug log("treasureroll");
-   if (u.extra == null)
-      addextra(u.extra, {""}, "");
+    // $1 - the unit name (e.g. blackwood quaterstaff); $2 = e.g. "head", $3 = material for inlaid runes
+    sl := {
+        "You wonder if that's really $1a $1n $2n, it is crooked and uneven.", // -7
+        "The $2n is crooked and could be a lot better.",
+        "This $1n $2n is terribly bad.",
+        "This $1n $2n is terrible.", // -4
+        "A really poorly made $1n $2n.",
+        "Whoever made this $1n $2n was most likely the apprentice's apprentice.",
+        "Not the best $1n $2n you've seen.", 
+        "The $2n looks plain.", // 0
+        "The $2n is well made.",
+        "The $2n is very well made.",
+        "Its strong $2n has $3n runes inlaid.",
+        "Its strong well made $2n has $3n runes inlaid.",
+        "Its beautiful and strong $2n has $3n runes inlaid.",
+        "Its fantastic $1n $2n is highly decorated and with inlaid $3n runes.",
+        "Its one of the most stunning $1n $2ns you have ever seen, it is highly decorated and with inlaid $3n runes."  //+7
+    };
 
-   rollmat := (7*(successroll_oe({45,70,90}, 0) + bonuslvl))/10;
-   rollmat := minmax7(rollmat);
-   mat1 := minmax7(rollmat + rnd(-1,1));
-   mat2 := minmax7(rollmat + rnd(-1,1));
-   mat3 := minmax7(rollmat + rnd(-1,1));
+    // log("smithRoll = " + itoa(smithRoll));
+    // log(sl.[smithRoll+7]);
 
-   rollenc := (7*(successroll_oe({45,70,90}, 0) + bonuslvl))/10;
-   rollenc := minmax7(rollenc);
-   enc1 := minmax7(rollenc + rnd(-1,1));
-   enc2 := minmax7(rollenc + rnd(-1,1));
-   enc3 := minmax7(rollenc + rnd(-1,1));
+    s := matRunes(mat2index);
+    r := sreplace(sl.[smithRoll+7], u.name, kind, s, "");
 
-   // Adjust weight, cost, hits
+    // debug log("Hilt decor: " + r);
 
-   set_weight_base(u, u.weight - (u.weight * rollmat*5) / 100);  // +7 means 35% less weight, -7 +35% weight
-
-   u.max_hp := 1000;
-
-   if (rollmat > 0)
-   {
-      u.max_hp := u.max_hp + (rollmat * 1000);
-      u.cost   := u.cost * rollmat * 50;  // +7 means x350 cost.
-   }
-
-   if (rollmat < 0)
-   {
-      u.max_hp := u.max_hp + (rollmat * 125);  // Down to 125 hits for -7
-      u.cost := u.cost + (u.cost * rollmat * 10) / 100;  // -7 means 70% reduced cost.
-   }
-
-   u.hp := u.max_hp;
-
-   if (u.outside.type == UNIT_ST_NPC)
-   {
-      u.height := u.outside.height;
-   }
-   else
-   {
-      // Human, elf, dwarf, halfling, gnome, half-orc, half-ogre, half-elf, brownie, groll, dark elf
-      il := {175, 147, 120, 90, 98, 172, 205, 150, 75, 227, 148};
-      u.height := il.[rnd(0, length(il))];
-   }
-
-   il := {};
-   insert(il, 0, rollmat);
-   insert(il, 1, mat1);
-   insert(il, 2, mat2);
-   insert(il, 3, mat3);
-   insert(il, 4, rollenc);
-   insert(il, 5, enc1);
-   insert(il, 6, enc2);
-   insert(il, 7, enc3);
-
-   u.extra.vals := il;
-
-   return;
-}
-dilend
-
-
-
-dilbegin treasureize(bonuslvl : integer,
-                     matDil : string, matArg : string, 
-                     encDil : string, encArg : string);
-external
-   treasureroll(u : unitptr, bonuslvl : integer);
-var
-   i : integer;
-   exd : extraptr;
-code
-{
-   treasureroll(self, bonuslvl);
-
-   if (matDil != "")
-      i := dilcall(matDil)(self, bonuslvl, matArg); 
-
-   if (encDil != "")
-      i := dilcall(encDil)(self, bonuslvl, encArg);
-
-   exd := "" in self.extra;
-   exd.vals := {};  // remove temporary storage of rolls
-
-   return;
-}
-dilend
-
-
-// 'self' must be the item to create and must be from this zone
-//
-//
-dilbegin createItem(itemname : string,
-                    item_type : integer, price : integer, size : integer, lbs : integer);
-code
-{
-   if ((self.zoneidx != "randomt") or (self.type != UNIT_ST_OBJ))
-   {
-      log("error in createItem(). Can only be used on item shells from @randomt");
-      quit;
-   }
-
-   self.objecttype := item_type;
-   self.names.[0] := itemname;
-
-   self.cost := price;
-   set_weight_base(self, lbs);
-
-   if (self.outside.type == UNIT_ST_NPC)
-      self.height := self.outside.height;
-   else
-      self.height := size;
+    exd := "" in u.extra;
+    exd.descr := exd.descr + " " + r;
+    // debug log("setWpnHilt name = [" + exd.name + "]  descr="+exd.descr);
 
     return;
 }
@@ -1579,27 +2346,178 @@ dilend
 
 
 
-// ========================= ?CATEGORY? ==========================
+// smithRoll - skill of making the weapon (smithyroll)
+// mat2index   - material for inlaid runes / engravings
+// kind   - "staff"
+//
+dilbegin setWpnStaff(u : unitptr, smithRoll : integer, mat2index : integer, kind : string);
+external
+    string matRunes(matIndex : integer);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
 
+var
+    sl : stringlist;
+    s : string;
+    r : string;
+    exd : extraptr;
+code
+{
+    // $1 - the unit name (e.g. blackwood quaterstaff); $2 = e.g. "rod", $3 = material for inlaid runes
+    sl := {
+        "You wonder if that's really $1a $1n, it is so warped and bent.", // -7
+        "The $1n is very crooked and could be a lot better.",
+        "This $1n is terribly bad.",
+        "This $1n is terrible.", // -4
+        "A really badly made $1n.",
+        "Whoever made this $1n was most likely the apprentice's apprentice.",
+        "Not the best $1n you've seen but it can come in handy.", 
+        "The $2n looks quite plain.", // 0
+        "The $2n is very well made.",
+        "The well made $2n seems quite strong.",
+        "Its a strong $2n that has $3n runes inlaid.",
+        "Its a strong well made $2n that has $3n runes inlaid.",
+        "Its a beautiful and strong $2n which has $3n runes inlaid.",
+        "This is truly a fantastical $2n with wood engravings and inlaid $3n runes.",
+        "Its one of the most divinely stunning $2ns you have ever seen, it is highly decorated and with inlaid $3n runes."  //+7
+    };
+
+    // log("smithRoll = " + itoa(smithRoll));
+    // log(sl.[smithRoll+7]);
+
+    s := matRunes(mat2index);
+    r := sreplace(sl.[smithRoll+7], u.name, kind, s, "");
+
+    // debug log("Hilt decor: " + r);
+
+    exd := "" in u.extra;
+    exd.descr := exd.descr + " " + r;
+    // debug log("setWpnHilt name = [" + exd.name + "]  descr="+exd.descr);
+
+    return;
+}
+dilend
+
+
+// smithRoll - skill of making the weapon (smithyroll)
+// mat2index   - material for inlaid runes / engravings
+// kind   - "tips"
+//
+dilbegin setWpnTips(u : unitptr, smithRoll : integer, mat2index : integer, kind : string);
+external
+    string matBladeName(matIndex : integer);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+
+var
+    sl : stringlist;
+    s : string;
+    r : string;
+    exd : extraptr;
+code
+{
+    // $1 - the unit name (e.g. blackwood quaterstaff); $2 = e.g. "tips", $3 = material for inlaid runes
+    sl := {
+        "", // -7
+        "",
+        "",
+        "", // -4
+        "",
+        "",
+        "", 
+        "At each end of the rod there is a pair of $3n $2n.", // 0
+        "At each end of the rod there is a pair of well made $3n $2n.",
+        "At each end of the rod there is a pair of strong $3n $2n.",
+        "At each end of the rod there is a pair of strong $3n $2n.",
+        "At each end of the rod there is a pair of strong spiked $3n $2n.",
+        "At each end of the rod there is a great pair of strong spiked $3n $2n.",
+        "A pair of fantastical $3n $2n has been set at each end of the rod.",
+        "A pair of deadly looking $3n $2n can be seen at each end of the rod."  //+7
+    };
+
+    s := matBladeName(mat2index);
+    r := sreplace(sl.[smithRoll+7], u.name, kind, s, "");
+
+    // debug log("Hilt decor: " + r);
+
+    exd := "" in u.extra;
+    exd.descr := exd.descr + " " + r;
+    // debug log("setWpnHilt name = [" + exd.name + "]  descr="+exd.descr);
+
+    return;
+}
+dilend
+
+
+// smithRoll - skill of making the weapon (smithyroll)
+// mat2index   - material for inlaid runes / engravings
+// kind   - "shaft", "handle"
+//
+dilbegin setWpnShaft(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
+external
+    integer matStaffIdx(u : unitptr, matRoll : integer, s : string);
+    string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+
+var
+    sl : stringlist;
+    s : string;
+    r : string;
+    exd : extraptr;
+    i : integer;
+    slMatNames  : stringlist global slMatNames@randomt;
+code
+{
+    // log("Shafty");
+    // $1 - the unit name (e.g. blackwood quaterstaff); $2 = e.g. "rod", $3 = material of handle
+    sl := {
+        "You wonder if that's really $3n $1a $1n $2n, it is so warped and bent.", // -7
+        "The $3n $1n $2n is very crooked and could be a lot better.",
+        "This $3n $1n $2n is terribly bad.",
+        "This $3n $1n $2n is terrible.", // -4
+        "A really poorly made $3n $1n $2n.",
+        "Whoever made this $3n $1n $2n was most likely the apprentice's apprentice.",
+        "Not the best $3n $1n $2n you've seen but it works.", 
+        "The $3n $1n $2n is quite ordinary.", // 0
+        "The $3n $1n $2n is pretty okay.",
+        "The $3n $1n $2n is good.",
+        "The $3n $1n $2n is beyond good.",
+        "The $3n $1n $2n is excellent.",
+        "The $3n $1n $2n is beyond excellent.",
+        "The $3n $1n $2n is clearly superior.",
+        "The $3n $1n $2n is divinely crafted."  //+7
+    };
+
+    // log("smithRoll = " + itoa(smithRoll));
+    // log(sl.[smithRoll+7]);
+
+    i := matStaffIdx(self, mat2roll, "");
+    s := slMatNames.[i];
+    r := sreplace(sl.[smithRoll+7], u.name, kind, s, "");
+
+    // debug log("Hilt decor: " + r);
+
+    exd := "" in u.extra;
+    exd.descr := exd.descr + " " + r;
+    // debug log("setWpnHilt name = [" + exd.name + "]  descr="+exd.descr);
+
+    return;
+}
+dilend
+
+
+// ========================= ?CATEGORY? ==========================
 
 dilbegin integer matJewelry(u : unitptr, bonuslvl : integer, data : string);
 external
-   string matMetal(roll : integer);
-   setMatDescr(u : unitptr, mat : string);
-   setJewelrySmith(u : unitptr, mat : string, smithlvl : integer);
-   setJewelryGem(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
+    setMatProps(u : unitptr, craftsmanship : integer, mat1Roll: integer, mat1Index : integer);
+    setJewelrySmith(u : unitptr, matIndex : integer, smithlvl : integer);
+    setJewelryGem(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
 
 var
    rollsmith : integer;
-   mat1 : integer;
-   mat2 : integer;
-   mat3 : integer;
+   mat1, mat2, mat3 : integer;
    rollenc : integer;
-   enc1 : integer;
-   s : string;
-   t : string;
-   i : integer;
-   sl : stringlist;
+   enc1, enc2, enc3 : integer;
+
+   ilJewelryMat : intlist global ilJewelryMat@randomt; // Change to jewelry
 
 code
 {
@@ -1613,11 +2531,9 @@ code
    enc1 := u.extra.vals.[5];  // 
 
    // Get the main jewelry material
-   s := matMetal(mat1);
+   setMatProps(u, rollsmith, mat1, ilJewelryMat.[mat1+7]);
 
-   setMatDescr(u, s);
-
-   setJewelrySmith(u, s, i);
+   setJewelrySmith(u, ilJewelryMat.[mat1+7], rollsmith);
    setJewelryGem(u, mat2, mat3, "");
 
    return (0);
@@ -1625,58 +2541,163 @@ code
 dilend
 
 
-dilbegin integer matWpnBlade(u : unitptr, bonuslvl : integer, data : string);
+// ========================= GENERAL TREASURE ==========================
+
+// Find treasure's materials, adjust cost, adjust weight
+// When finished u.extra.vals holds the rolls [-10..10] like this
+//   {Craftsmanship, mat1, mat2, mat3, Enchantment, enc1, enc2, enc3}
+//
+dilbegin extraptr treasureroll(u : unitptr, bonuslvl : integer);
 external
-   string matMetal(roll : integer);
-   identify(u :unitptr, norm : string, improved: string);
-   setMatDescr(u : unitptr, mat : string);
-   setWpnSmithing(u : unitptr, mat : string, smithlvl : integer);
-   setWpnHilt(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
-   setWpnBlade(u : unitptr, lvl1 : integer, lvl2 : integer, kind : string);
+    integer bonusAdjRoll(bonus : integer);
+    integer minmax7(i : integer);
+    vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
 
 var
-   rollsmith : integer;
-   mat1 : integer;
-   mat2 : integer;
-   mat3 : integer;
-   rollenc : integer;
-   enc1 : integer;
-   s : string;
-   t : string;
-   i : integer;
-   sl : stringlist;
+    rollmat : integer;
+    mat1 : integer;
+    mat2 : integer;
+    mat3 : integer;
+    rollenc : integer;
+    enc1 : integer;
+    enc2 : integer;
+    enc3 : integer;
+    w : integer;
+    il : intlist;
 
 code
 {
-   // debug log("matWpnBlade");
+    if (u.extra == null)
+        addextra(u.extra, {""}, "");
 
-   rollsmith := u.extra.vals.[0];  // Smithing roll
-   mat1 := u.extra.vals.[1];  // Primary blade material
-   mat2 := u.extra.vals.[2];  // Primary hilt material
-   mat3 := u.extra.vals.[3];  // [Primary hilt gemstone]
-   rollenc := u.extra.vals.[4];  // 
-   enc1 := u.extra.vals.[5];  // 
+    // Add a vlevel restrict
+    dilcopy("vlevel_restrict@function("+itoa(bonuslvl*2*10)+",0,0, )", u);
 
-   // Get the main bladed weapon material
-   s := matMetal(mat1);
+    rollmat := bonusAdjRoll(bonuslvl);  // Overall treasure roll & craftsmanship
+    mat1 := bonusAdjRoll(rollmat);      // material
+    mat1 := minmax7(mat1);
+    mat2 := bonusAdjRoll(rollmat);      // Craftsmanship
+    mat2 := minmax7(mat2);              // Craftsmanship
+    mat3 := bonusAdjRoll(rollmat);      // extras (e.g. hilt)
+    mat3 := minmax7(mat3);              // extras (e.g. hilt)
+    // log(itoa(rollmat-bonuslvl) + " " + itoa(mat1-bonuslvl) + " " + itoa(mat2-bonuslvl) + " " + itoa(mat3-bonuslvl));
+    rollmat := minmax7(rollmat);
 
-   setMatDescr(u, s);
-   
-   i := (rollsmith + mat1) / 2; // Set average weapon material bonus [-7..+7]
-   u.value[1] := getinteger(DIL_GINT_BONUS_A, null, i);
-   if (u.value[1] > 0)
-      identify(u, "Weapon has a quality bonus.", "Weapon has a quality bonus of +" + itoa(u.value[1]) + ".");
-   else if (u.value[1] < 0)
-      identify(u, "Weapon has a quality penalty.", "Weapon has a quality penalty of " + itoa(u.value[1]) + ".");
+    rollenc := bonusAdjRoll(rollmat);     // Enchant overall
+    enc1 := bonusAdjRoll(rollenc);        // enchantment capacity
+    enc1 := minmax7(enc1);
+    enc2 := bonusAdjRoll(rollenc);        // enchantment skill
+    enc2 := minmax7(enc2);                // enchantment skill
+    enc3 := bonusAdjRoll(rollenc);        // extras
+    enc3 := minmax7(enc3);                // extras
+    rollenc := minmax7(rollenc);
 
-   setWpnSmithing(u, s, i);
 
-   sl := split(data, "//");
+    // Set the height to the initially wielding NPC or pick a random race
+    //
+    if (u.outside.type == UNIT_ST_NPC)
+    {
+        u.height := u.outside.height;
+    }
+    else
+    {
+        // Human, elf, dwarf, halfling, gnome, half-orc, half-ogre, half-elf, brownie, groll, dark elf
+        il := {175, 147, 120, 90, 98, 172, 205, 150, 75, 227, 148};
+        u.height := il.[rnd(0, length(il)-1)];
+        // Maybe do a dual dice distribution. 
+        // Maybe use the race for somehting l8r....
+    }
 
-   setWpnBlade(u, rollsmith, mat1, sl.[0]);
-   setWpnHilt(u, mat2, mat3, sl.[1]);
+    // Adjust weight based on difference from default 170cm to actual height
+    //
+    w := (u.weight * 170) / u.height;
 
-   return (0);
+    // For craftsmanship, rollmat +7 means 21% less weight, -7 +21% weight
+    //
+    w := w - ((w * rollmat*3) / 100);
+
+    set_weight_base(u, w);
+
+    // Adjust HP (default 1000) for craftsmanship, based on rollmat
+    //
+    // TODO: Consider if we should do this and / or for primary material
+    //
+    u.max_hp := 1000;
+    if (rollmat > 0)
+    {
+        u.max_hp := u.max_hp + (rollmat * 1000);
+        u.cost   := u.cost * rollmat * 50;  // +7 means x350 cost.
+    }
+    if (rollmat < 0)
+    {
+        u.max_hp := u.max_hp + (rollmat * 125);  // Down to 125 hits for -7
+        u.cost := u.cost + (u.cost * rollmat * 10) / 100;  // -7 means 70% reduced cost.
+    }
+    u.hp := u.max_hp;
+
+    // Save the treasure rolls
+    //
+    il := {};
+    insert(il, 0, rollmat);
+    insert(il, 1, mat1);
+    insert(il, 2, mat2);
+    insert(il, 3, mat3);
+    insert(il, 4, rollenc);
+    insert(il, 5, enc1);
+    insert(il, 6, enc2);
+    insert(il, 7, enc3);
+
+    u.extra.vals := il;
+
+    return (u.extra);
+}
+dilend
+
+
+// Last function to call when generating random treasure
+dilbegin cleanup();
+var
+    exd : extraptr;
+code
+{
+    exd := "" in self.extra;
+    // log(exd.descr);
+    // I'm keeping the temp storage for now, good for debugging
+    return;
+    exd.vals := {};  // remove temporary storage of rolls
+    return;
+}
+dilend
+
+
+// 'self' must be the item to create and must be from this zone
+//    itemname  : name of the item
+//    item_type : ITEM_ for example ITEM_WEAPON
+//    price     : The default value of the item in iron pieces
+//    size      : The default size of the item (170cm fit is the default)
+//    lbs       : The default weight of the item. E.g. standard for long sword is iron and 8 lbs
+//
+dilbegin createItem(itemnames : stringlist, item_type : integer, price : integer, lbs : integer);
+code
+{
+    if ((self.zoneidx != "randomt") or (self.type != UNIT_ST_OBJ))
+    {
+        log("error in createItem(). Can only be used on item shells from @randomt");
+        quit;
+    }
+
+    self.names := itemnames;
+    self.objecttype := item_type;
+    self.cost := price;
+    set_weight_base(self, lbs);
+
+    // Should be able to delete this code because it's in treasureize
+    if (self.outside.type == UNIT_ST_NPC)
+        self.height := self.outside.height;
+    else
+        self.height := 170;
+
+    return;
 }
 dilend
 
@@ -1684,62 +2705,138 @@ dilend
 
 // ========================= CREATE ITEM TYPE ==========================
 
-dilbegin createWeapon(bonuslvl : integer);
+// Creates swords, daggers, anything with a blade and a hilt.
+// idxWpn is e.g. WPN_DAGGER constant
+//
+dilbegin createWpn(bonuslvl : integer, idxWpn : integer);
 external
-    treasureize(bonuslvl : integer,
-                  matDil : string, matArg : string, 
-                  encDil : string, encArg : string);
-    createItem(itemname : string,
-                item_type : integer, price : integer, size : integer, lbs : integer);
+    createItem(itemnames : stringlist, item_type : integer, price : integer, lbs : integer);
+    setMatProps(u : unitptr, craftsmanship : integer, mat1Roll: integer, mat1Index : integer);
+    setWpnSmithing(u : unitptr, matIndex : integer, smithlvl : integer);
+    extraptr treasureroll(u : unitptr, bonuslvl : integer);
+    encWpn(u : unitptr, kind : string);
+    cleanup();
 var
-    wpns : stringlist;
-    idxWpn : integer;
     s : string;
+    func : string;
+    rollsmith, mat1, mat2, mat3, matIndex : integer;
+    slWeapons    : stringlist global slWeapons@randomt;
+    slMatNames  : stringlist global slMatNames@randomt;
+    exd : extraptr;
 code
 {
-    // weapon id, cost cp, weight
-    wpns := {
-            QUOTE(WPN_GREAT_SWORD),   "200", "16", "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_LONG_SWORD),    "100", "8",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_BROAD_SWORD),   "100", "8",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_CLAYMORE),      "120", "9",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_SCIMITAR),      "100", "7",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_FALCHION),       "90", "9",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_SHORT_SWORD),    "70", "6",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_RAPIER),         "60", "4",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_MAIN_GAUCHE),    "50", "2",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_STILETTO),       "40", "1",  "blade//hilt",  "matWpnBlade@randomt", 
-            QUOTE(WPN_DAGGER),         "40", "1",  "blade//hilt",  "matWpnBlade@randomt",
-            QUOTE(WPN_BATTLE_AXE),    "160", "16", "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_HAND_AXE),       "60", "6",  "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_WAR_MATTOCK),    "90", "10", "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_ADZE),           "70", "7",  "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_WAR_MAUL),       "60", "9",  "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_WAR_HAMMER),     "55", "7",  "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_BATTLE_CLUB),    "50", "6",  "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_CLUB),           "20", "4",  "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_BATTLE_MACE),    "80", "12", "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_MACE),           "60", "6",  "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_FLAIL),         "140", "16", "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_MORNING_STAR),   "80", "16", "head//handle", "matWpnBlade@randomt",
-            QUOTE(WPN_HALBERD),        "80", "10", "head//shaft",  "matWpnBlade@randomt",
-            QUOTE(WPN_BARDICHE),       "80", "10", "head//shaft",  "matWpnBlade@randomt",
-            // QUOTE(WPN_QUARTERSTAFF),   "50", "10", "tip//shaft",   "matWpnBlade@randomt",
-            QUOTE(WPN_SPEAR),          "40", "6",  "head//shaft",  "matWpnBlade@randomt",
-            QUOTE(WPN_JAVELIN),        "60", "7",  "head//shaft",  "matWpnBlade@randomt",
-            QUOTE(WPN_TRIDENT),        "70", "12", "fork//shaft",  "matWpnBlade@randomt"
-            };
+    // slWeapons: QUOTE(WPN_DAGGER),         "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt", "hilt", "dagger",
 
+    idxWpn := 8 * idxWpn;
+    if (slWeapons.[idxWpn+1] == "")
+    {
+        log("createWpn ERROR idxWpn is not a valid weapon : " + itoa(idxWpn / 8));
+        idxWpn := WPN_DAGGER * 8;
+    }
 
-    // debug log("Random weapon");
-    idxWpn := rnd(0,length(wpns)/5-1) * 5;
-
-    createItem(weapon_name(atoi(wpns.[idxWpn])), ITEM_WEAPON, atoi(wpns.[idxWpn+1]), 180, atoi(wpns.[idxWpn+2]));
+    createItem(split(slWeapons.[idxWpn+7], "//"), ITEM_WEAPON, atoi(slWeapons.[idxWpn+1]), atoi(slWeapons.[idxWpn+2]));
     self.manipulate := self.manipulate | MANIPULATE_WIELD;
-    self.value[0] := atoi(wpns.[idxWpn]); // Set the weapon type
+    self.value[0] := atoi(slWeapons.[idxWpn]); // Set the weapon type
+    self.value[3] := RACE_DO_NOT_USE;
 
-    treasureize(bonuslvl, wpns.[idxWpn+4], wpns.[idxWpn+3], "encWpn@randomt", wpns.[idxWpn+3]);
+    exd := treasureroll(self, bonuslvl);
 
+    rollsmith := exd.vals.[0];  // Smithing roll
+    mat1 := exd.vals.[1];       // Primary blade material
+    mat2 := exd.vals.[2];       // Primary hilt material
+    mat3 := exd.vals.[3];       // Primary guard material
+
+
+    // Add the main material to the item name & title & outside_descr (e.g. a mithirl long sword)
+    //    and adjust object values for craftsmanship and e.g. material properties.
+    func := "mat"+slWeapons.[idxWpn+4]+"Idx@randomt";
+    matIndex := dilcall(func)(self, mat1, "");
+
+    // log("mat1 = "+itoa(mat1));
+    // log("matIndex = "+itoa(matIndex));
+    // log("matName = "+slMatNames.[matIndex]);
+
+    setMatProps(self, rollsmith, mat1, matIndex);  // mat1 [-7..+7] + 7 => [0..14]
+
+    // Add a general description of the craftsmanship. Well balanced weapon?
+    //
+    setWpnSmithing(self, matIndex, rollsmith);
+
+    func := slWeapons.[idxWpn+3];                            // E.g. matWpnSharp
+    s := slWeapons.[idxWpn+4];
+    if (func != "")
+        func(self, rollsmith, mat1, s);   // E.g. "blade"
+
+    func := slWeapons.[idxWpn+5];                            // E.g. matWpnHilt
+    s := slWeapons.[idxWpn+6];
+    if (func != "")
+        func(self, mat2, mat3, s);        // E.g. "hilt"
+
+    encWpn(self, slWeapons.[idxWpn+4]);                      // E.g. "blade" with runes
+
+    cleanup();
+    return;
+}
+dilend
+
+
+// Creates a random weapon. Also consider using createWpn(BONUS_, WPN_) to create a specific weapon
+//
+dilbegin createWeapon(bonuslvl : integer);
+external
+    createWpn(bonuslvl : integer, wpnIdx : integer);
+    integer twodiceidx(len : integer);
+var
+    ilWpns : intlist;
+    i      : integer;
+code
+{
+    // Most common to least common weapon available for randomness
+    ilWpns := {
+        WPN_DAGGER,
+        WPN_CLUB, // XXX
+        WPN_SHORT_SWORD,
+        WPN_HAND_AXE,
+        WPN_ADZE,
+        WPN_BATTLE_CLUB, // XXX
+        WPN_MACE,
+        WPN_LONG_SWORD,
+        WPN_BROAD_SWORD,
+        WPN_QUARTERSTAFF,
+        WPN_SICKLE,
+        WPN_SPEAR,
+        WPN_JAVELIN,
+        WPN_TRIDENT,
+        WPN_SCIMITAR,
+        WPN_RAPIER,
+        WPN_STILETTO,
+        WPN_MAIN_GAUCHE,
+        WPN_FALCHION,
+        WPN_MORNING_STAR,
+        WPN_HALBERD,
+        WPN_BARDICHE,
+        WPN_WAR_MAUL,
+        WPN_BATTLE_MACE,
+        WPN_SCYTHE,
+        WPN_GREAT_SWORD,
+        WPN_BATTLE_AXE,
+        WPN_WAR_MATTOCK,
+        WPN_FLAIL,
+        WPN_LANCE, // XXX
+        WPN_CLAYMORE,
+        WPN_WHIP,
+        WPN_WAR_HAMMER // Thor's hammer
+    };
+
+    // Most common to least common weapon available for randomness
+    ilWpns := {
+        WPN_CLUB, // XXX
+        WPN_BATTLE_CLUB, // XXX
+        WPN_LANCE // XXX
+    };
+
+    i := twodiceidx(length(ilWpns));
+    createWpn(bonuslvl, ilWpns.[i]);
     return;
 }
 dilend
@@ -1747,71 +2844,57 @@ dilend
 
 dilbegin createJewelry(bonuslvl : integer);
 external
-    treasureize(bonuslvl : integer,
-                matDil : string, matArg : string, 
-                encDil : string, encArg : string);
-    createItem(itemname : string,
-                item_type : integer, price : integer, size : integer, lbs : integer);
+    integer twodiceidx(len : integer);
+    createItem(itemnames : stringlist, item_type : integer, price : integer, lbs : integer);
+    extraptr treasureroll(u : unitptr, bonuslvl : integer);
+    cleanup();
+    integer matJewelry(u : unitptr, bonuslvl : integer, data : string);
+    integer encJewelry(u : unitptr, bonuslvl : integer, blade : string);
 var
     i : integer;
     s : string;
+    items : stringlist;
     sl : stringlist;
     wear : integer;
     price : integer;
+    mat1 : integer;
+    exd : extraptr;
+
 code
 {
-    i := rnd(0,5);
+    // names, cost ip, lbs, MANIPULATE_WEAR_...
+    // Most common first, most rare last
+    items := {
+        "ring",      "3", "0", QUOTE(MANIPULATE_WEAR_FINGER),
+        "bracelet",  "5", "0", QUOTE(MANIPULATE_WEAR_WRIST),
+        "earring",   "3", "0", QUOTE(MANIPULATE_WEAR_EAR),
+        "necklace", "10", "0", QUOTE(MANIPULATE_WEAR_NECK),
+        "anklet",   "10", "0", QUOTE(MANIPULATE_WEAR_ANKLE),
+        "crown",    "20", "3", QUOTE(MANIPULATE_WEAR_HEAD),
+        "tiara",    "30", "1", QUOTE(MANIPULATE_WEAR_HEAD)
+    };
 
-    if (i == 0) // Ring
-    {
-        s := "ring";
-        price := 3 * IRON_MULT;
-        wear := MANIPULATE_WEAR_FINGER;
-    }
-    else if (i == 1) // necklace
-    {
-        price := 4 * IRON_MULT;
-        s := "necklace";
-        wear := MANIPULATE_WEAR_NECK;
-    }
-    else if (i == 2)
-    {
-        price := 20 * IRON_MULT;
-        sl := {"crown", "tiara"};
-        i := rnd(0,1);
-        s := sl.[i];
-        wear := MANIPULATE_WEAR_HEAD;
-    }
-    else if (i == 3)
-    {
-        price := 4 * IRON_MULT;
-        s := "bracelet";
-        wear := MANIPULATE_WEAR_WRIST;
-    }
-    else if (i == 4)
-    {
-        price := 4 * IRON_MULT;
-        s := "anklet";
-        wear := MANIPULATE_WEAR_ANKLE;
-    }
-    else if (i == 5)
-    {
-        price := 4 * IRON_MULT;
-        s := "earring";
-        wear := MANIPULATE_WEAR_EAR;
-    }
+    i := 4 * twodiceidx(length(items)/4);
 
-    // debug log("Random Jewelry");
-    createItem(s, ITEM_TREASURE, price, 180, 0);
+    s := items.[i];
+    price := atoi(items.[i+1]) * IRON_MULT;
+    wear  := atoi(items.[i+3]);
+    // log("wear bit = " + itoa(w));
+
+    sl := null;
+    insert(sl, 0, s);
+    createItem(sl, ITEM_TREASURE, price, atoi(items.[i+2]));
     self.manipulate := self.manipulate | wear;
     
-    treasureize(bonuslvl, "matJewelry@randomt", "", "encJewelry@randomt", "");
+    exd := treasureroll(self, bonuslvl);
 
+    i := matJewelry@randomt(self, bonuslvl, ""); 
+    i := encJewelry@randomt(self, bonuslvl, ""); 
+
+    cleanup();
     return;
 }
 dilend
-
-
 
 
 
@@ -1830,13 +2913,13 @@ dilend
 
 //
 // createWeapon() -> to create a frame unit for treasureize
-//   treasureize()
-//     calls treasureroll() -> to get all material bonuses, set cost, weight. Data in new extra "" created
-//     calls param matDil
-//         e.g. matWpnBlade() -> customized to set the weapon's blade materials and value[1] bonus
+//   calls treasureroll() -> to get all material bonuses, set cost, weight. Data in new extra "" created
+//   calls param matDil
+//       e.g. matWpnBlade() -> customized to set the weapon's blade materials and value[1] bonus
 //                               also sets the hilt and hilt gem
-//     calls param encDil
-//         e.g. encWpn() -> customized to enchant a weapon and set value[2]
+//   calls param encDil
+//       e.g. encWpn() -> customized to enchant a weapon and set value[2]
+//   calls cleanup
 //
 // ========================= CREATE ITEM TYPE ==========================
 //
@@ -1848,13 +2931,12 @@ external
 
 code
 {
-   heartbeat := PULSE_SEC;
-   pause;
+    heartbeat := PULSE_SEC;
 
-   if (rnd(0,1) == 1)
-      createWeapon(lvl);
-   else
-      createJewelry(lvl);
+    if (rnd(0,1) != 2)
+        createWeapon(lvl);
+    else
+        createJewelry(lvl);
 
    // Wear it if applicable?   
    quit;
@@ -1874,56 +2956,6 @@ mortals."
 
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB}
 ALWAYS_LIGHT
-
-// Thoughts in progess, these are not used.
-extra {"$iron",
-         "copper",
-         "bronze",
-         "iron",
-         "silver",
-         "steel",
-         "high steel",
-         "black steel",
-         "true steel",
-         "adamantium",
-         "mithril"} ""
-
-extra {"$pmetal",
-         "copper",
-         "bronze",
-         "iron",
-         "silver",
-         "steel",
-         "high steel",
-         "black steel",
-         "true steel",
-         "red gold",
-         "gold",
-         "adamantium",
-         "platinum",
-         "mithril"} ""
-
-extra {"$wood",
-         "pine",
-         "oak",
-         "black oak",
-         "ente wood"} 
-         "Woods"
-
-
-extra {"$hilt",
-        "wood",
-        "bone",
-        "iron",
-        "silver",
-        "steel",
-        "high steel",
-        "black steel",
-        "true steel",
-        "adamantium",
-        "mithril"} 
-        "Materials that can adorn a hilt"
-
 end
 
 
@@ -2010,11 +3042,12 @@ title "the treasure chest"
 descr "treasure0 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
+dilcopy constants@randomt();
 end
 
 treasure4
 names {"treasure4"}
-title "the tresure4 chest"
+title "the treasure4 chest"
 descr "treasure4 is here, open it"
 CONTAINER_DEF(10)
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
@@ -2022,7 +3055,7 @@ end
 
 treasure7
 names {"treasure7"}
-title "the tresure7 chest"
+title "the treasure7 chest"
 descr "treasure7 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
 CONTAINER_DEF(10)
@@ -2068,18 +3101,18 @@ load treasure7 into treasury max 1
 //
 // --
 // Treasure types:
-// More weapons: quaterstaff, bows, etc.
+// More weapons: quarterstaff, bows, etc.
 // Armors
 // Other body wear, such as cloak, quivers, backpacks, belts, hold, etc.
 // 
 // Maybe even predesigned treasure, e.g. "The holy avenger of San Luis Obispo"
 
 //  Possible enchantment expansions
-//    NEW: All, maybe go through affect list and pick more such as bless, etc?
 //    NEW: All, has embedded spells that can be used X times / day
 //    NEW: All, add magic bonus to a skill
 //    NEW: All, add magic bonus to a spell
 //    NEW: non-weapon, add magic bonus to a weapon skill (silly to wield an axe and get + to long sword)
+//
 //    NEW: Weapon Fireblade, Coldblade, Electricity, (how?)
 //    NEW: Weapon Soul saver? When you die your soul is saved.
 //    NEW: Weapon Intelligent. Weapon fights for you while you're down.

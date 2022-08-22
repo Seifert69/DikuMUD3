@@ -349,12 +349,12 @@
         {
             "source_file": {
                 "filename": "gremlin.zon",
-                "sha512": "67d3b0bcf9ddc79864151415b06486cb33c978762d8068056d9d2bf925e48e235cde9a467580645fce1214985f72a9131bc818295bc24734650a3c30b6f8b7c9"
+                "sha512": "79af8072ca36cd34c15d7fcb1f5b38df600914b4d04b3963ae3834766312ad980c86d0d2ef8572f276e9576a969460bcb6733dacc1dbbd9d18e5bdee5f8f8376"
             },
             "output": [
                 {
                     "filename": "gremlin.data",
-                    "sha512": "a646f319eac49176f23310716f3438a61ab31b8773a2f605c0f25b56302982cc262221686c3ae1341aceef17d27a5b603aa8e4ebe10df980bc91ffc2334a6968"
+                    "sha512": "1735a545bceb56dd8a1f1420d14252c89cb1e90ad63da3aaf850553004daa165a702117a0351386e2aaf5424142e51e0495cdfbab2961e615f7631f9435cbff7"
                 },
                 {
                     "filename": "gremlin.reset",
@@ -717,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "eb2fe2a5f4f697e8bb0161df9583e0cbee14dfe3496304a5fc306aac4e70815f67b93a5a757e1e2a7f44cde9bd29ab1ace5af013339c0402b6b5bb0e6a69a25d"
+                "sha512": "c27517db256c2fc8b97169b853f4d9d9f97e93a9262c9a50c610d2917a8a02ac7e50eff73b72bcf90f0edad8f36b6df54d954a5faa29f85e9c80afb39f7c2502"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "5e41583c3a14adb053fb3ee8378e9bf200c9ae5f07e8d3677e5f9f274b15947a10403b4c4ff082d42e4903a935935fdb782211149bb5fb0e2ca715d90a6eb02d"
+                    "sha512": "dbca7476ec886864d7b71df0e6699ea39d3f733aa04e9809442daef040457e6f36ebc5f3cd592eb243c63097bbe8ba84d47e2a099840a4fc89da7c859dbfea38"
                 },
                 {
                     "filename": "randomt.reset",
@@ -877,12 +877,12 @@
         {
             "source_file": {
                 "filename": "test.zon",
-                "sha512": "8f76b922aff49b97acce007fb1cbcf2daf94e6e4ebc1ef4df255147dfeb1644a178f454028dbde8cac67345930a8fafc9790e6b41843a1565985230e1cde89db"
+                "sha512": "64b4cf93c68e1e88b71ed255649769392ce8e9f696147035c70c223d93107a0741f0fc7fb8925dc577cc75e2e9d50e50434499059a5e92ea039e90a56ad13274"
             },
             "output": [
                 {
                     "filename": "test.data",
-                    "sha512": "e341b85a2676e18095129819553f147c1bfae643db58746db009443aca7e078a88c52466e038dbb15c8e7738157eb74afaf4b9d898a94660f841b8af4041c0ce"
+                    "sha512": "73fc7a2da5e4909f53f1387203e1ecd0d50a8a7be134702b0149c3c5aace72075b8430f932b84308a1dd44e733c0fbe5588c873dde2ae18fb5d8df82c88d461b"
                 },
                 {
                     "filename": "test.reset",
