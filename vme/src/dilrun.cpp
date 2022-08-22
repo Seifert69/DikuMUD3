@@ -122,6 +122,7 @@ diltemplate *g_dil_playerinit    = nullptr;
 diltemplate *g_dil_nanny_dil     = nullptr;
 diltemplate *g_dil_link_dead     = nullptr;
 diltemplate *g_dil_advance_level = nullptr;
+diltemplate *g_dil_initial_prg   = nullptr;  // The first DIL program that runs just before first zone reset
 
 std::map<std::string, dilvar *> g_global_dilvars;
 
@@ -166,6 +167,13 @@ void boot_global_dil(void)
       exit(1);
    }
 
+   g_dil_dispatcher = find_dil_template("dispatcher@comm");
+   if (g_dil_dispatcher == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing dispatcher@comm.");
+      exit(1);
+   }
+
    g_dil_worms     = find_dil_template("worms@basis");
    if (g_dil_worms == nullptr)
    {
@@ -177,13 +185,6 @@ void boot_global_dil(void)
    if (g_dil_on_connect == nullptr)
    {
       slog(LOG_ALL, 0, "DIL boot - missing on_connect@basis.");
-      exit(1);
-   }
-
-   g_dil_dispatcher = find_dil_template("dispatcher@comm");
-   if (g_dil_dispatcher == nullptr)
-   {
-      slog(LOG_ALL, 0, "DIL boot - missing dispatcher@comm.");
       exit(1);
    }
 
@@ -224,6 +225,33 @@ void boot_global_dil(void)
       slog(LOG_ALL, 0, "DIL boot - missing advance_level@basis.");
       exit(1);
    }
+
+   g_dil_initial_prg = find_dil_template("initial_prg@basis");
+   if (g_dil_initial_prg == nullptr)
+   {
+      slog(LOG_ALL, 0, "DIL boot - missing initial_prg@basis.");
+      exit(1);
+   }
+   if (g_dil_initial_prg->argc != 0)
+   {
+      slog(LOG_ALL, 0, "initial_prg@basis(); zero arguments expected.");
+      exit(1);
+   }
+
+    // Boot the initial_prg DIL
+    //
+    unit_data *u = find_symbolic("basis", "void");
+    if (u == nullptr)
+    {
+      slog(LOG_ALL, 0, "Unable to find void@basis.");
+      exit(1);
+    }
+
+    dilprg *prg = dil_copy_template(g_dil_initial_prg, u, nullptr);
+    assert(prg);
+    prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
+    dil_activate(prg);
+
 }
 
 

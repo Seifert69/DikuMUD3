@@ -126,7 +126,10 @@ var
 code
 {
     if (length(r8il) > 0)
+    {
+        log("HEYA : Setting global constants called twice.");
         return;
+    }
 
     log("Setting global constants for the randomt zone.");
 
@@ -1853,6 +1856,17 @@ code
 dilend
 
 
+dilbegin string matBlade(matRoll : integer);
+var 
+    slMatNames  : stringlist global slMatNames@randomt;
+    ilBladeMat  : intlist global ilBladeMat@randomt;
+code
+{
+    return (slMatNames.[ilBladeMat.[matRoll+7]]);
+}
+dilend
+
+
 // Gem for e.g. a hilt [-7..+7]
 //
 dilbegin string matGem(matRoll : integer);
@@ -2067,9 +2081,9 @@ dilend
 
 // making of a "sharp blade", e.g. sword blade, or the blade of an axe head
 // smithRoll - skill of the smith.
-// mat2Index - material for inlaid runes / engravings
+// mat2roll - material for inlaid runes / engravings
 //
-dilbegin setWpnSharp(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
+dilbegin setWpnSharp(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
 external
     string matRunes(enclvl : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
@@ -2104,7 +2118,7 @@ code
     s := sl.[smithRoll + 7];
     // debug log("Blade : " + s);
 
-    t := matRunes(mat2Index);
+    t := matRunes(mat2roll);
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
     // debug log("setWpnSharp extra : " + exd.descr);
@@ -2116,9 +2130,9 @@ dilend
 
 // making of a whip, unique
 // smithRoll - skill of the smith.
-// mat2Index - material for inlaid runes / engravings
+// mat2roll - material for inlaid runes / engravings
 //
-dilbegin setWpnWhip(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
+dilbegin setWpnWhip(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
 external
     string matRunes(enclvl : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
@@ -2154,7 +2168,7 @@ code
     s := sl.[smithRoll + 7];
     // debug log("Blade : " + s);
 
-    t := matRunes(mat2Index);
+    t := matRunes(mat2roll);
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
     // debug log("setWpnSharp extra : " + exd.descr);
@@ -2166,9 +2180,9 @@ dilend
 
 // making of clubs, unique
 // smithRoll - skill of the smith.
-// mat2Index - material for inlaid runes / engravings
+// mat2roll - material for inlaid runes / engravings
 //
-dilbegin setWpnClub(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
+dilbegin setWpnClub(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
 external
     string matRunes(enclvl : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
@@ -2204,7 +2218,7 @@ code
     s := sl.[smithRoll + 7];
     // debug log("Blade : " + s);
 
-    t := matRunes(mat2Index);
+    t := matRunes(mat2roll);
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
     // debug log("setWpnSharp extra : " + exd.descr);
@@ -2216,9 +2230,9 @@ dilend
 
 // making of lances
 // smithRoll - skill of the smith.
-// mat2Index - material for inlaid runes / engravings
+// mat2roll - material for inlaid runes / engravings
 //
-dilbegin setWpnLance(u : unitptr, smithRoll : integer, mat2Index : integer, kind : string);
+dilbegin setWpnLance(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
 external
     string matRunes(enclvl : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
@@ -2254,7 +2268,7 @@ code
     s := sl.[smithRoll + 7];
     // debug log("Blade : " + s);
 
-    t := matRunes(mat2Index);
+    t := matRunes(mat2roll);
     exd := "" in u.extra;
     exd.descr := exd.descr + " " + sreplace(s, u.name, kind, t, "");
     // debug log("setWpnSharp extra : " + exd.descr);
@@ -2314,10 +2328,10 @@ dilend
 
 
 // smithRoll - skill of making the weapon (smithyroll)
-// mat2index   - material for inlaid runes / engravings
+// mat2roll   - material for inlaid runes / engravings
 // kind   - "head"
 //
-dilbegin setWpnHead(u : unitptr, smithRoll : integer, mat2index : integer, kind : string);
+dilbegin setWpnHead(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
 external
     string matRunes(matIndex : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
@@ -2351,7 +2365,7 @@ code
     // log("smithRoll = " + itoa(smithRoll));
     // log(sl.[smithRoll+7]);
 
-    s := matRunes(mat2index);
+    s := matRunes(mat2roll);
     r := sreplace(sl.[smithRoll+7], u.name, kind, s, "");
 
     // debug log("Hilt decor: " + r);
@@ -2367,10 +2381,10 @@ dilend
 
 
 // smithRoll - skill of making the weapon (smithyroll)
-// mat2index   - material for inlaid runes / engravings
+// mat2roll   - material for inlaid runes / engravings
 // kind   - "staff"
 //
-dilbegin setWpnStaff(u : unitptr, smithRoll : integer, mat2index : integer, kind : string);
+dilbegin setWpnStaff(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
 external
     string matRunes(matIndex : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
@@ -2404,7 +2418,7 @@ code
     // log("smithRoll = " + itoa(smithRoll));
     // log(sl.[smithRoll+7]);
 
-    s := matRunes(mat2index);
+    s := matRunes(mat2roll);
     r := sreplace(sl.[smithRoll+7], u.name, kind, s, "");
 
     // debug log("Hilt decor: " + r);
@@ -2419,19 +2433,20 @@ dilend
 
 
 // smithRoll - skill of making the weapon (smithyroll)
-// mat2index   - material for inlaid runes / engravings
+// mat2roll   - material for inlaid runes / engravings
 // kind   - "tips"
 //
-dilbegin setWpnTips(u : unitptr, smithRoll : integer, mat2index : integer, kind : string);
+dilbegin setWpnTips(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
 external
-    string matBladeName(matIndex : integer);
     string sreplace(s : string, a1: string, a2 : string, a3 : string, a4 : string);
+    string matBlade(matRoll : integer);
 
 var
     sl : stringlist;
     s : string;
     r : string;
     exd : extraptr;
+    i : integer;
 code
 {
     // $1 - the unit name (e.g. blackwood quaterstaff); $2 = e.g. "tips", $3 = material for inlaid runes
@@ -2453,7 +2468,7 @@ code
         "A pair of deadly looking $3n $2n can be seen at each end of the rod."  //+7
     };
 
-    s := matBladeName(mat2index);
+    s := matBlade(mat2roll);
     r := sreplace(sl.[smithRoll+7], u.name, kind, s, "");
 
     // debug log("Hilt decor: " + r);
@@ -2468,7 +2483,7 @@ dilend
 
 
 // smithRoll - skill of making the weapon (smithyroll)
-// mat2index   - material for inlaid runes / engravings
+// mat2roll   - material for inlaid runes / engravings
 // kind   - "shaft", "handle"
 //
 dilbegin setWpnShaft(u : unitptr, smithRoll : integer, mat2roll : integer, kind : string);
@@ -2941,11 +2956,9 @@ dilbegin RndTreasure(lvl : integer);
 external
     createJewelry(bonuslvl : integer);
     createWeapon(bonuslvl : integer);
-    constants();
 
 code
 {
-    constants();
     heartbeat := PULSE_SEC;
 
     if (rnd(0,1) != 0)
@@ -3056,9 +3069,7 @@ names {"treasure0"}
 title "the treasure chest"
 descr "treasure0 is here, open it"
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN}
-CONTAINER_DEF(10)
-dilcopy constants@randomt();
-end
+CONTAINER_DEF(10)end
 
 treasure4
 names {"treasure4"}

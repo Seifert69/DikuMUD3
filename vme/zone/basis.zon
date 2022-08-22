@@ -57,6 +57,18 @@ Bright White.<br/>
 #define ABILITY_POINT_FACTOR    (4)
 
 
+// This DIL program is called during the boot process just before all the zones are reset.
+// An excellet place to initialize global variables :-)
+//
+dilbegin initial_prg();
+external 
+    constants@randomt();
+code
+{
+    constants@randomt();
+    quit;
+}
+dilend
 
 // 2022 : Called from vmelimits, hard requirement
 //

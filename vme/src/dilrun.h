@@ -23,6 +23,7 @@ extern diltemplate *g_dil_playerinit;
 extern diltemplate *g_dil_nanny_dil;
 extern diltemplate *g_dil_link_dead;
 extern diltemplate *g_dil_advance_level;
+extern diltemplate *g_dil_initial_prg;
 
 /* Maximum number of consecutive instructions allowed in one tick */
 #define WAITCMD_NOOP -50       /* Take a quick break and allow other DILs to process */
