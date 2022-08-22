@@ -1731,7 +1731,7 @@ code
 
     // debug log("encWpn() lvl = " + itoa(lvl));
 
-    if (lvl == 0)
+    if (lvl <= 0)
         return (0);
 
     u.flags := u.flags | UNIT_FL_MAGIC;
@@ -1740,7 +1740,7 @@ code
 
     encs := {
         "enc_light@randomt",
-        "enc_bless@randomt",
+        // "enc_bless@randomt", Don't do this until I can fix the stacking issue
         "enc_sanc@randomt",
         "enc_resistances@randomt",
         "enc_abilities@randomt",
@@ -1749,9 +1749,14 @@ code
         "enc_haste@randomt"
     };
 
+    // Add bonus to weapon skill(s)
+    // Add bonus to skill(s)
+    // Add bonus to spell(s)
+
     i := length(encs);
     j := 0;
-    enchantments := lvl;
+    enchantments := ((lvl+1)/2); // 1-2 = 1; 3-4 = 2; 5-6 = 3; 7 = 4
+ 
     while (enchantments > 0)
     {
         r := j+twodiceidx(i);  // Get two dice random number from [0..length-1]
