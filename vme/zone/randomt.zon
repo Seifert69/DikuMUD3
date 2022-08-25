@@ -1144,9 +1144,8 @@ code
     else
     {
         chance := atoi(exd.descr);
-        log(self.symname + " LOADED VORPAL CHANCE " + itoa(chance));
+        log(self.symname + " LOADED VORPAL CHANCE " + itoa(chance) + " inside of unit " + self.outside.symname);
     }
-
 
     il := weapon_info(self.value[0]);
     wpntype := il.[2];
@@ -3584,5 +3583,7 @@ load treasure7 into treasury max 1
 //    NEW: Weapon Fireblade, Coldblade, Electricity, (how?)
 //    NEW: Weapon Soul saver? When you die your soul is saved.
 //    NEW: Weapon Intelligent. Weapon fights for you while you're down.
+//    NEW: Weapon. Mana, hit, endurance drain. 
+//    NEW: Weapon. Vampiric Mana, hit, endurance drain.
 //
 
