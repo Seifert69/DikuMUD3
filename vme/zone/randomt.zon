@@ -2162,7 +2162,7 @@ code
 
     i := length(encs);
     j := 0;
-    enchantments := lvl;
+    enchantments := rollenc;
     while (enchantments > 0)
     {
         r := j + twodiceidxbonus(i, rollenc);  // Get two dice random number from [0..length-1]
