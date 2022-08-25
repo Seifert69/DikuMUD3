@@ -120,6 +120,9 @@ var
     ilWhipMat    : intlist global ilWhipMat@randomt;
 
     slWeapons    : stringlist global slWeapons@randomt;
+    ilWeapons    : intlist global ilWeapons@randomt;
+    ilSkills     : intlist global ilSkills@randomt;
+    ilSpells     : intlist global ilSpells@randomt;
 
     i : integer;
 
@@ -135,7 +138,7 @@ code
 
     // Tables for 2d8 used for bonus adjustment
     // The two leftmost values can't be used (1d8+1d8=[2..16])
-    r8il := {0,0,-3,-2,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1};
+    r8il := {-7,-7,-3,-2,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,1};
 
     // Weapon materials for forging "blades": swords, mattock heads, mace heads, bardiches, 
 
@@ -312,6 +315,355 @@ code
         i := i - 1;
     }
 
+    // Most common to least common weapon available for randomness, groups not included
+    ilWeapons := {
+        WPN_DAGGER,
+        WPN_CLUB,
+        WPN_SHORT_SWORD,
+        WPN_HAND_AXE,
+        WPN_ADZE,
+        WPN_BATTLE_CLUB,
+        WPN_MACE,
+        WPN_LONG_SWORD,
+        WPN_BROAD_SWORD,
+        WPN_QUARTERSTAFF,
+        WPN_SICKLE,
+        WPN_SPEAR,
+        WPN_JAVELIN,
+        WPN_TRIDENT,
+        WPN_SCIMITAR,
+        WPN_RAPIER,
+        WPN_STILETTO,
+        WPN_MAIN_GAUCHE,
+        WPN_FALCHION,
+        WPN_MORNING_STAR,
+        WPN_HALBERD,
+        WPN_BARDICHE,
+        WPN_WAR_MAUL,
+        WPN_BATTLE_MACE,
+        WPN_SCYTHE,
+        WPN_GREAT_SWORD,
+        WPN_BATTLE_AXE,
+        WPN_WAR_MATTOCK,
+        WPN_FLAIL,
+        WPN_LANCE,
+        WPN_CLAYMORE,
+        WPN_WHIP,
+        WPN_WAR_HAMMER // Thor's hammer
+    };
+
+    ilSkills := {        
+        SKI_APPRAISAL,
+        SKI_DIAGNOSTICS,
+        SKI_FLEE,
+        SKI_SWIMMING,
+        SKI_ARM_LEATHER,
+        SKI_CONSIDER,
+        SKI_TRACK,
+        SKI_COOK,
+        SKI_HUNT,
+        SKI_PLANT,
+        SKI_HERBS,
+        SKI_FORAGE,
+        SKI_BUTCHER,
+        SKI_SKIN,
+        SKI_ARM_HLEATHER,
+        SKI_CLIMB,
+        SKI_SHELTER,
+        SKI_RESIZE_CLOTHES,
+        SKI_CUFF,
+        SKI_WEATHER_WATCH,
+        SKI_KICK,
+        SKI_SEARCH,
+        SKI_VENTRILOQUATE,
+        SKI_RESIZE_LEATHER,
+        SKI_EVALUATE,
+        SKI_LAY_TRAP,
+        SKI_ARM_CHAIN,
+        SKI_TRIP,
+        SKI_PEEK,
+        SKI_LEADERSHIP,
+        SKI_SHIELD,
+        SKI_BASH,
+        SKI_FIRST_AID,
+        SKI_SNEAK,
+        SKI_RESCUE,
+        SKI_ARM_PLATE,
+        SKI_RESIZE_METAL,
+        SKI_HIDE,
+        SKI_DUAL_WIELD,
+        SKI_SCROLL_USE,
+        SKI_DISARM,
+        SKI_SOOTHE,
+        SKI_AMBUSH,
+        SKI_FASHION,
+        SKI_SHOOT,
+        SKI_DOWSE,
+        SKI_THROW,
+        SKI_SCAN,
+        SKI_SLIP,
+        SKI_PALM,
+        SKI_STALK,
+        SKI_KNEE,
+        SKI_ELBOW,
+        SKI_HIT,
+        SKI_PUNCH,
+        SKI_GLANCE,
+        SKI_FRENZY,			
+        SKI_BERSERK,		
+        SKI_RAGE,
+        SKI_TAUNT,
+        SKI_CHARGE,
+        SKI_LEAP,
+        SKI_DEFEND,
+        SKI_WHIRL,
+        SKI_CLEAVE,
+        SKI_REND,
+        SKI_SLAM,
+        SKI_WAND_USE,
+        SKI_TURN_UNDEAD,
+        SKI_PICK_LOCK,
+        SKI_BACKSTAB,
+        SKI_STEAL,
+        SKI_FILCH,
+        SKI_PICK_POCKETS,
+        SKI_CURARE
+    };
+
+
+    ilSpells := {
+        SPL_LIGHT_1,
+        SPL_IDENTIFY_1,
+        SPL_DARKNESS_1,
+        SPL_CURE_WOUNDS_1,
+        SPL_LOCATE_OBJECT,
+        SPL_CURE_BLIND,
+        SPL_REMOVE_CURSE,
+        SPL_REPEL_UNDEAD_1,
+        SPL_LAVA_1,
+        SPL_CAUSE_WOUNDS_1,
+        SPL_COLOURSPRAY_1,/*MIND*/
+        SPL_FIREBALL_1,/*HEAT*/
+        SPL_FROSTBALL_1,/*COLD*/
+        SPL_LIGHTNING_1,/*CELL*/
+        SPL_STINKING_CLOUD_1,/*INTERNAL*/
+        SPL_DISEASE_1,
+        SPL_ACIDBALL_1,/*EXTERNAL*/
+        SPL_DISPEL_EVIL,
+
+        SPL_BLESS,/*DIVINE*/
+        SPL_CURSE,
+        SPL_CURE_WOUNDS_2,
+        SPL_CAUSE_WOUNDS_2,
+        SPL_UNHOLY_WORD_2,
+        SPL_LAVA_2,
+        SPL_HOLY_WORD_2,
+        SPL_REPEL_UNDEAD_2,
+        SPL_FIREBALL_2,
+        SPL_FROSTBALL_2,
+        SPL_LIGHTNING_2,
+        SPL_STINKING_CLOUD_2,
+        SPL_DISEASE_2,
+        SPL_ACIDBALL_2,
+        SPL_IDENTIFY_2,
+        SPL_LIGHT_2,
+        SPL_DARKNESS_2,
+        SPL_COLOURSPRAY_2,
+
+        SPL_BLIND,
+        SPL_LOCATE_CHAR,
+        SPL_RAISE_MAG,/*PROTECTION*/
+        SPL_RAISE_DIV,
+        SPL_RAISE_STR,
+        SPL_RAISE_DEX,
+        SPL_RAISE_CON,
+        SPL_RAISE_CHA,
+        SPL_RAISE_BRA,
+        SPL_SUN_RAY,
+        SPL_DIVINE_RESIST,
+        SPL_RAISE_SUMMONING,
+        SPL_AWAKEN,
+        SPL_MIND_SHIELD,
+        SPL_HEAT_RESI,
+        SPL_COLD_RESI,
+        SPL_ELECTRICITY_RESI,
+        SPL_POISON_RESI,
+        SPL_ACID_RESI,
+        SPL_PRO_EVIL,
+        SPL_SANCTUARY,
+        SPL_DISPEL_MAGIC,
+        SPL_SUSTAIN,
+        SPL_LOCK,
+        SPL_UNLOCK,
+        SPL_DROWSE,
+        SPL_SLOW,
+        SPL_DUST_DEVIL,
+        SPL_DET_ALIGN,
+        SPL_DET_INVISIBLE,
+        SPL_DET_MAGIC,
+        SPL_DET_POISON,
+        SPL_DET_UNDEAD,
+        SPL_DET_CURSE,
+        SPL_SENSE_LIFE,
+        SPL_RANDOM_TELEPORT,
+        SPL_CLEAR_SKIES,
+        SPL_STORM_CALL,
+        SPL_WORD_OF_RECALL,
+        SPL_CONTROL_TELEPORT,
+        SPL_MINOR_GATE,
+        SPL_GATE,
+        SPL_CREATE_FOOD,
+        SPL_CREATE_WATER,
+        SPL_STUN,
+        SPL_HOLD,
+        SPL_ANIMATE_DEAD,
+        SPL_LEATHER_SKIN,
+        SPL_BARK_SKIN,
+        SPL_CONTROL_UNDEAD,
+        SPL_BONE_SKIN,
+        SPL_STONE_SKIN,
+        SPL_AID,
+        SPL_INVISIBILITY,
+        SPL_WIZARD_EYE,
+        SPL_FEAR,
+        SPL_CONFUSION,
+        SPL_SLEEP,
+        SPL_XRAY_VISION,
+        SPL_CALM,
+        SPL_SUMMER_RAIN,
+        SPL_COMMAND,
+        SPL_LEAVING,
+        SPL_POISON,
+        SPL_REMOVE_POISON,
+        SPL_ENERGY_DRAIN,
+        SPL_REM_DISEASE,
+        SPL_LEAF_SHIELD,
+        SPL_FIND_PATH,/*Divine*/
+        SPL_DISPEL_GOOD,
+        SPL_PRO_GOOD,
+        SPL_TRANSPORT,
+        SPL_FIRE_BREATH,
+        SPL_FROST_BREATH,
+        SPL_LIGHTNING_BREATH,
+        SPL_ACID_BREATH,
+        SPL_GAS_BREATH,
+        SPL_LIGHT_BREATH,
+        SPL_HOLD_MONSTER,
+        SPL_HOLD_UNDEAD,
+        SPL_TOTAL_RECALL,
+        SPL_UNDEAD_DOOR,
+        SPL_LIFE_PROTECTION,
+        SPL_ENERGY_BOLT,
+        SPL_CLENCHED_FIST,
+        SPL_METEOR_SHOWER,
+        SPL_SUN_BEAM,
+        SPL_SOLAR_FLARE,
+        SPL_SUMMON_DEVIL,
+        SPL_SUMMON_DEMON,
+        SPL_SUMMON_FIRE,
+        SPL_SUMMON_WATER,
+        SPL_SUMMON_AIR,
+        SPL_SUMMON_EARTH,
+        SPL_CHARGE_WAND,
+        SPL_CHARGE_STAFF,
+        SPL_MENDING,
+        SPL_REPAIR,
+        SPL_RECONSTRUCT,
+        SPL_SENDING,
+        SPL_REFIT,
+        SPL_FIND_WANTED,
+        SPL_LOCATE_WANTED,
+        SPL_STORM_GATE,
+        SPL_SUN_GLOBE,
+        SPL_MAGIC_CANDLE,
+        SPL_SONIC_BREATH,
+        SPL_SHARD_BREATH,
+        SPL_CONE_SHARD,
+        SPL_SACRED,
+        SPL_CAUSE_INSTABILITY,
+        SPL_CAUSE_FLIGHT,
+        SPL_SLOW_ROT,
+        SPL_HAMMER_HAND,
+        SPL_CAUSE_PANIC,
+        SPL_BANISH,
+        SPL_HOLD_FLIGHT,
+        SPL_BLINDING_FLASH,
+        SPL_BLIZZARD,
+        SPL_SUMMON_ANIMAL,
+        SPL_HEAL_ANIMAL,
+        SPL_HOLD_ANIMAL,
+        SPL_CHARM_ANIMAL,
+        SPL_LOCATE_ANIMAL,
+        SPL_ENTANGLE,
+        SPL_REFRESH,
+        SPL_TIGER_CLAW,
+        SPL_EAGLE_CRY,
+        SPL_GROUP_TELEPORT,
+        SPL_RAISE_HPP,
+        SPL_SOUL_SHIFT,
+        SPL_AID_UNDEAD,
+        SPL_HOLY_WORD,
+        SPL_UNHOLY_WORD,
+        SPL_FINAL_REST,
+        SPL_RAISE_SKELETON,
+        SPL_RAISE_CHAMPION,
+        SPL_RAISE_HORDE,
+        SPL_PORTAL,
+        SPL_TRAVEL,
+        SPL_GLOW_FUNGUS,
+        SPL_SEN_INVISIBLE,
+        SPL_MANA_BOOST,
+        SPL_TSUNAMI,
+        SPL_QUICKSAND,
+        SPL_HEDGE_WALL,
+        SPL_POISON_IVY,
+        SPL_THORN_STRIKE,
+        SPL_WIND_SLASH,
+        SPL_PETRIFY,
+        SPL_MUD_PUDDLE,
+        SPL_EARTH_QUAKE,
+        SPL_BRAMBLES,
+        SPL_POLARITY,
+        SPL_MIRE,
+        SPL_NIGHT_GLOBE,
+        SPL_UBLESS,		
+        SPL_SUMMON_LIGHT,
+        SPL_ICE_THORN,
+        SPL_WIZARD_MARK,
+        SPL_FOCUS,
+        SPL_CONDEMN,
+        SPL_DISPLACE_MAGIC,
+        SPL_QUICKEN,
+
+        SPL_ACIDBALL_3,
+        SPL_STINKING_CLOUD_3,
+        SPL_HOLY_WORD_3,
+        SPL_UNHOLY_WORD_3,
+        SPL_CURE_WOUNDS_3,
+        SPL_CAUSE_WOUNDS_3,
+        SPL_COLOURSPRAY_3,
+        SPL_FIREBALL_3,
+        SPL_FROSTBALL_3,
+        SPL_LIGHTNING_3,
+        SPL_LAVA_3,
+
+        SPL_RAISE_DEAD,
+        SPL_RESURRECTION,
+        SPL_CALL_LIGHTNING,/*CellGroup*/
+        SPL_HASTE,
+
+        SPL_HOLY_WORD_4,
+        SPL_UNHOLY_WORD_4,
+        SPL_LAVA_4,
+        SPL_FIREBALL_4,/*HEAT*/
+        SPL_FROSTBALL_4,/*COLD*/
+        SPL_LIGHTNING_4,/*CELL*/
+        SPL_ACIDBALL_4,/*EXTERNAL*/
+        SPL_COLOURSPRAY_4,/*MIND*/
+        SPL_STINKING_CLOUD_4,/*INTERNAL*/
+        SPL_CAUSE_WOUNDS_4 /*DIVINE*/
+    };
+
     // Auto-generated from EXCEL (Git)
     slMatNames :=
     {
@@ -487,6 +839,41 @@ code
         return (i);
 }
 dilend
+
+
+// Depending on bonuslvl calls twodiceidx once, twice or up to thrice for artifacts
+//
+dilbegin integer twodiceidxbonus(len : integer, bonuslvl : integer);
+external
+    integer twodiceidx(len : integer);
+    integer max@function(a:integer, b:integer);
+    integer max3@function(a:integer, b:integer, c:integer);
+var
+    i1, i2, i3 : integer;
+code
+{
+    /*
+    if (bonuslvl >= BONUS_ARTIFACT)
+    {
+        i1 := twodiceidx(len);
+        i2 := twodiceidx(len);
+        i3 := twodiceidx(len);
+        i1 := max3@function(i1, i2, i3);
+    }
+    else*/ 
+    if (bonuslvl >= BONUS_EXCELLENT_PLUS)
+    {
+        i1 := twodiceidx(len);
+        i2 := twodiceidx(len);
+        i1 := max@function(i1, i2);
+    }
+    else
+        i1 := twodiceidx(len);
+
+    return (i1);
+}
+dilend
+
 
 dilbegin identify(u :unitptr, norm : string, improved: string);
 var
@@ -1499,9 +1886,7 @@ dilend
 dilbegin integer enc_wpnslaying(u : unitptr, bonuslvl : integer, data : string);
 external
     identify(u :unitptr, norm : string, improved: string);
-    integer twodiceidx(len : integer);
-    integer max@function(a:integer, b:integer);
-    integer max3@function(a:integer, b:integer, c:integer);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
 
 var
     sl : stringlist;
@@ -1552,23 +1937,7 @@ code
     };
 
     l := length(sl)/3;
-    if (bonuslvl >= BONUS_ARTIFACT)
-    {
-        i1 := twodiceidx(l);
-        i2 := twodiceidx(l);
-        i3 := twodiceidx(l);
-        i1 := max3@function(i1, i2, i3);
-    }
-    else if (bonuslvl >= BONUS_EXCELLENT)
-    {
-        i1 := twodiceidx(l);
-        i2 := twodiceidx(l);
-        i1 := max@function(i1, i2);
-    }
-    else
-        i1 := twodiceidx(l);
-    
-    i1 := 3 * i1;
+    i1 := 3 * twodiceidxbonus(l, bonuslvl);
 
     u.value[3] := atoi(sl.[i1]);
     identify(u, "You sense a low hum.", "Slaying against "+sl.[i1+2]+"s.");
@@ -1632,12 +2001,117 @@ code
 dilend
 
 
+// u : treasure item (weapons not suggested)
+// Pick a random weapon and give a bonus for that weapon
+//
+dilbegin integer enc_somewpn(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
+var
+    i : integer;
+    wi : integer;
+    ilWeapons    : intlist global ilWeapons@randomt;
+    s : string;
+code
+{
+    i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+
+    if (i == 0)
+        return(1);
+
+    wi := twodiceidxbonus(length(ilWeapons), bonuslvl);
+
+    s := weapon_name(ilWeapons.[wi]);
+
+	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
+	       ilWeapons.[wi], i, 0,
+           TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
+
+    identify(u, "Increases your weapon skill with "+s, "Increases your weapon skill with "+s+" by +" + itoa(i)+".");
+
+    return (1);
+}
+dilend
+
+
+
+// u : treasure item
+// Pick a random weapon and give a bonus for that weapon
+//
+dilbegin integer enc_someskill(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
+var
+    i : integer;
+    wi : integer;
+    ilSkills     : intlist global ilSkills@randomt;
+    s : string;
+code
+{
+    i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+
+    if (i == 0)
+        return(1);
+
+    wi := twodiceidxbonus(length(ilSkills), bonuslvl);
+
+    s := skill_name(ilSkills.[wi]);
+
+	addaff(u, -ID_SKILL, -1, 0,
+	       ilSkills.[wi], i, 0,
+           TIF_SKI_INC, TIF_NONE, TIF_SKI_DEC, APF_SKILL_ADJ);
+
+    identify(u, "Increases your skill with "+s, "Increases your skill with "+s+" by +" + itoa(i)+".");
+
+    return (1);
+}
+dilend
+
+
+// u : treasure item
+// Pick a random weapon and give a bonus for that weapon
+//
+dilbegin integer enc_somespell(u : unitptr, bonuslvl : integer, data : string);
+external
+    identify(u :unitptr, norm : string, improved: string);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
+var
+    tmp, i : integer;
+    wi : integer;
+    ilSpells     : intlist global ilSpells@randomt;
+    s : string;
+code
+{
+    i := getinteger(DIL_GINT_BONUS_A, null, bonuslvl);
+
+    if (i == 0)
+        return(1);
+
+    wi := twodiceidxbonus(length(ilSpells), bonuslvl);
+
+    s := spellinfo(ilSpells.[wi], tmp, tmp, tmp, tmp, tmp, tmp, tmp);
+
+	addaff(u, -ID_SPELL, -1, 0,
+	       ilSpells.[wi], i, 0,
+           TIF_SPL_INC, TIF_NONE, TIF_SPL_DEC, APF_SPELL_ADJ);
+
+    identify(u, "Increases your spell casting with "+s, "Increases your spell casting with "+s+" by +" + itoa(i)+".");
+
+    return (1);
+}
+dilend
+
+
+
+
 //
 // ======================== ENCHANT SUPER FUNCTIONS =========================
 //
 dilbegin encWpn(u : unitptr, kind : string);
 external
-    integer twodiceidx(len : integer);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
 
 var
     enchantments : integer;
@@ -1674,9 +2148,11 @@ code
         "enc_light@randomt",
         "enc_defences@randomt",
         "enc_wpnskill@randomt",
+        "enc_someskill@randomt",   // somewpn not included by purpose - doesn't make sense for weapons
+        "enc_somespell@randomt",
         "enc_resistances@randomt",   
         "enc_abilities@randomt",
-        "enc_bless@randomt",
+        // "enc_bless@randomt",
         "enc_sanc@randomt",
         "enc_good_evil@randomt",
         "enc_wpnslaying@randomt",
@@ -1689,7 +2165,7 @@ code
     enchantments := lvl;
     while (enchantments > 0)
     {
-        r := j+twodiceidx(i);  // Get two dice random number from [0..length-1]
+        r := j + twodiceidxbonus(i, rollenc);  // Get two dice random number from [0..length-1]
         // log("enchantment "+encs.[r]);
         n := dilcall(encs.[r])(u, lvl, "");
         encs.[r] := encs.[j];
@@ -1704,7 +2180,7 @@ dilend
 
 dilbegin integer encJewelry(u : unitptr, bonuslvl : integer, blade : string);
 external
-    integer twodiceidx(len : integer);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
 
 var
     enchantments : integer;
@@ -1745,6 +2221,9 @@ code
         "enc_light@randomt",
         // "enc_bless@randomt", Don't do this until I can fix the stacking issue
         "enc_sanc@randomt",
+        "enc_somewpn@randomt",
+        "enc_someskill@randomt",
+        "enc_somespell@randomt",
         "enc_resistances@randomt",
         "enc_abilities@randomt",
         "enc_defences@randomt",
@@ -1762,7 +2241,7 @@ code
  
     while (enchantments > 0)
     {
-        r := j+twodiceidx(i);  // Get two dice random number from [0..length-1]
+        r := j+twodiceidxbonus(i, bonuslvl);  // Get two dice random number from [0..length-1]
         // log("enchantment "+encs.[r]);
         n := dilcall(encs.[r])(u, lvl, "");
         encs.[r] := encs.[j];
@@ -2820,51 +3299,14 @@ dilend
 dilbegin createWeapon(bonuslvl : integer);
 external
     createWpn(bonuslvl : integer, wpnIdx : integer);
-    integer twodiceidx(len : integer);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
 var
-    ilWpns : intlist;
     i      : integer;
+    ilWeapons    : intlist global ilWeapons@randomt;
 code
 {
-    // Most common to least common weapon available for randomness
-    ilWpns := {
-        WPN_DAGGER,
-        WPN_CLUB, // XXX
-        WPN_SHORT_SWORD,
-        WPN_HAND_AXE,
-        WPN_ADZE,
-        WPN_BATTLE_CLUB, // XXX
-        WPN_MACE,
-        WPN_LONG_SWORD,
-        WPN_BROAD_SWORD,
-        WPN_QUARTERSTAFF,
-        WPN_SICKLE,
-        WPN_SPEAR,
-        WPN_JAVELIN,
-        WPN_TRIDENT,
-        WPN_SCIMITAR,
-        WPN_RAPIER,
-        WPN_STILETTO,
-        WPN_MAIN_GAUCHE,
-        WPN_FALCHION,
-        WPN_MORNING_STAR,
-        WPN_HALBERD,
-        WPN_BARDICHE,
-        WPN_WAR_MAUL,
-        WPN_BATTLE_MACE,
-        WPN_SCYTHE,
-        WPN_GREAT_SWORD,
-        WPN_BATTLE_AXE,
-        WPN_WAR_MATTOCK,
-        WPN_FLAIL,
-        WPN_LANCE, // XXX
-        WPN_CLAYMORE,
-        WPN_WHIP,
-        WPN_WAR_HAMMER // Thor's hammer
-    };
-
-    i := twodiceidx(length(ilWpns));
-    createWpn(bonuslvl, ilWpns.[i]);
+    i := twodiceidxbonus(length(ilWeapons), bonuslvl);
+    createWpn(bonuslvl, ilWeapons.[i]);
     return;
 }
 dilend
@@ -2872,7 +3314,7 @@ dilend
 
 dilbegin createJewelry(bonuslvl : integer);
 external
-    integer twodiceidx(len : integer);
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
     createItem(itemnames : stringlist, item_type : integer, price : integer, lbs : integer);
     extraptr treasureroll(u : unitptr, bonuslvl : integer);
     cleanup();
@@ -2902,7 +3344,7 @@ code
         "tiara",    "30", "1", QUOTE(MANIPULATE_WEAR_HEAD)
     };
 
-    i := 4 * twodiceidx(length(items)/4);
+    i := 4 * twodiceidxbonus(length(items)/4, bonuslvl);
 
     s := items.[i];
     price := atoi(items.[i+1]) * IRON_MULT;
