@@ -1202,46 +1202,57 @@ var
     prevtit : string
 code
 {
-   on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+    on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
-   u := unit_room@function(self);
-   wasin := u.symname;
+    u := unit_room@function(self);
+    wasin := u.symname;
 
-   heartbeat := PULSE_SEC * 10;
+    heartbeat := PULSE_SEC * 10;
 
-   if (prisoner == null)
-   {
-      log("prisoner is NULL ?!");
-   }
+    if (prisoner == null)
+    {
+        log("prisoner is NULL ?!");
+    }
 
-   secure(prisoner, losthim);
+    secure(prisoner, losthim);
 
-   i := 0;
+    i := 0;
 
-   prevtit := self.outside_descr;
-   self.outside_descr := sact("$1n has handcuffed $3n and is dragging $3m along.", A_ALWAYS, self, null, prisoner, TO_CHAR);
-   priority;
+    prevtit := self.outside_descr;
+    self.outside_descr := sact("$1n has handcuffed $3n and is dragging $3m along.", A_ALWAYS, self, null, prisoner, TO_CHAR);
+    priority;
+    log(self.symname + " walking prisoner to office.");
 
 :loop:
-   tf := walk_room@function(office,4);
-   // This is no longer needed, secure() handles it correctly now:     if (prisoner == null) goto losthim;
+    tf := walk_room@function(office, 4);
 
-   if (i == 0)
-   {
-      exec("say Got another prisoner, Captain, Sir!", self);
-      self.outside_descr := sact("$1n is waiting for the Captain to jail $3n.", A_ALWAYS, self, null, prisoner, TO_CHAR);
-   }
-   else if (i == 4)
-      exec("cough", self);
+    // This is no longer needed, secure() handles it correctly now:
+    if (prisoner == null) 
+    {
+        log(self.symname + " impossible - prisoner is now null *exploding brain*");  // Sanity only
+        goto losthim;
+    }
 
-   i := i + 1;
-   goto loop;
+    log(self.symname + " waiting for the prisoner to become secure triggered when lost.");
+
+    if (i == 0)
+    {
+        exec("say Got another prisoner, Captain, Sir!", self);
+        self.outside_descr := sact("$1n is waiting for the Captain to jail $3n.", A_ALWAYS, self, null, prisoner, TO_CHAR);
+    }
+    else if (i == 4)
+        exec("cough", self);
+
+    i := i + 1;
+    goto loop;
 
 :losthim:
-   self.outside_descr := prevtit;
-   tf := walk_room@function(wasin,4);
-   nopriority;
-   return;
+    log(self.symname + " lost prisoner, starting walking back.");
+    self.outside_descr := prevtit;
+    tf := walk_room@function(wasin,4);
+    log(self.symname + " lost prisoner, finished walking back, now returning.");
+    nopriority;
+    return;
 }
 dilend
 
@@ -1252,51 +1263,50 @@ dilend
 
 dilbegin fnpri(FN_PRI_RESCUE-1) arrest_check(office : string);
 external
-   guard_arrest(office : string, prisoner : unitptr);
-   cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
-   integer check_outlaw@justice(char : unitptr, juris : string);
-   string get_juris@justice();
+    guard_arrest(office : string, prisoner : unitptr);
+    cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+    integer check_outlaw@justice(char : unitptr, juris : string);
+    string get_juris@justice();
 var
-  u : unitptr;
-  outlaw_status : integer;
-  juris : string;
+    u : unitptr;
+    outlaw_status : integer;
+    juris : string;
 code
 {
-   on_activation((self.position <= POSITION_SLEEPING) or
-                 (self.position == POSITION_FIGHTING), skip);
+    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
 :loop:
-   wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
-   juris := get_juris@justice();
-   if (activator == self)
-      goto loop;
-   outlaw_status := check_outlaw@justice(activator, juris);
-   if (outlaw_status == 0)
-      goto loop; 
+    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+    if (activator == self)
+        goto loop;
+    juris := get_juris@justice();
+    outlaw_status := check_outlaw@justice(activator, juris);
+    if (outlaw_status == 0)
+        goto loop; 
 
-   u := equipment(activator,  WEAR_WRIST_R);
+    u := equipment(activator,  WEAR_WRIST_R);
 
-   if (u)
-     if ((u.nameidx == "cuffs") and (u.zoneidx == "midgaard"))
-       goto loop;
+    if (u)
+        if ((u.nameidx == "cuffs") and (u.zoneidx == "midgaard"))
+            goto loop;
 
-   if (outlaw_status == 1)  //if (activator.charflags & CHAR_PROTECTED)
-   {
-      u := load("cuffs@midgaard");
+    if (outlaw_status == 1)  //if (activator.charflags & CHAR_PROTECTED)
+    {
+        u := load("cuffs@midgaard");
 
-      cuff_target(self, activator, u);
+        cuff_target(self, activator, u);
 
-      guard_arrest@midgaard(office, activator);
-   }
-   else
-   {
-      unset(activator.charflags, CHAR_SELF_DEFENCE);
-      // If we have several chars with the same name, this causes havoc
-      //     exec("kill "+activator.name, self);
-      set_fighting(self, activator);
-   }
+        guard_arrest@midgaard(office, activator);
+    }
+    else
+    {
+        unset(activator.charflags, CHAR_SELF_DEFENCE);
+        // If we have several chars with the same name, this causes havoc
+        //     exec("kill "+activator.name, self);
+        set_fighting(self, activator);
+    }
 
-   goto loop;
+    goto loop;
 }
 dilend
 

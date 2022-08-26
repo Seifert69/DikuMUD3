@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 12  // T010, T009, ...
+#define TEST_MAXIMUM 13  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -80,6 +80,88 @@ code
    return;
 }
 dilend
+
+
+// ==================== T013 =====================
+
+dilbegin integer funcframe1(tstno : integer, u : unitptr);
+var
+    r : unitptr;
+code
+{
+    heartbeat := PULSE_SEC;
+    if (u == null)
+    {
+        wait(SFB_TICK, TRUE);
+        return (0);
+    }
+
+    secure(u, success);
+    r := findsymbolic("void@basis");
+    link(u, r);  // move to a far away location, doesn't trigger secure
+    wait(SFB_TICK, TRUE);
+    goto success;
+
+:success:
+    return (42);
+}
+dilend
+
+
+dilbegin procframe1(tstno : integer, u : unitptr);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+    integer funcframe1(tstno : integer, u : unitptr);
+code
+{
+    secure(u, success);
+    funcframe1(tstno, u);
+    wait(SFB_TICK, TRUE); // This should trigger the secure
+    logtest(tstno, LOGT_ERROR, "procframe1 FAIL");
+    return;
+
+:success:
+   logtest(tstno, LOGT_INFO, "procframe1 OK1");
+   wait(SFB_TICK, TRUE);
+    funcframe1(tstno, null);
+   return;
+}
+dilend
+
+// Tests DIL secure()
+// Test call to one frame with no return value and no secure in parent frame.
+// (tracking down ERR in production log)
+//
+dilbegin T013(tstno : integer);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+    procframe1(tstno : integer, u : unitptr);
+var
+    r, u : unitptr;
+    i : integer;
+code
+{
+    u := load("experiment@test");
+    procframe1(tstno, u); // Frame3 will pause which will trigger cascade of secure checks as frames pop.
+    log("we should be OK here");
+    goto cleanup;
+
+:failure:
+    logtest(tstno, LOGT_ERROR, "Test not as expected");
+    goto cleanup;
+   
+:cleanup:
+    destroy(u);
+    // Naught
+
+:finished:
+    logtest(tstno, LOGT_INFO, "Done");
+    sendtoalldil("done", "labdirector@test");
+    return;
+}
+dilend
+
+
 
 // ==================== T012 =====================
 
