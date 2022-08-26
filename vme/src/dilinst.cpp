@@ -904,9 +904,6 @@ void dilfi_cli(dilprg *p)
 /* Return from proc */
 void dilfi_rtf(dilprg *p)
 {
-    dilframe *cfrm = nullptr;
-    ubit8 typ = 0;
-    int i = 0;
     bool doSecureTest = false;
     bool doPush = false;
     dilval *v = nullptr;
@@ -920,7 +917,8 @@ void dilfi_rtf(dilprg *p)
         return;
     }
 
-    if (p->fp->tmpl->rtnt == DILV_ERR)
+    // It seems that if the rtnt is DILV_ERR then it's returning from a procedure, rather than a function
+    if (p->fp->tmpl->rtnt == DILV_ERR)  
     {
         if (p->stack.length() != p->fp->stacklen)
         {
@@ -951,7 +949,7 @@ void dilfi_rtf(dilprg *p)
 
         dilval *v1 = p->stack.pop();
 
-        typ = dil_getval(v1);
+        ubit8 typ = dil_getval(v1);
         if (typ != p->fp->tmpl->rtnt)
         {
             slog(LOG_ALL, 0, "DIL: Error return types do not match.");
@@ -1025,8 +1023,8 @@ void dilfi_rtf(dilprg *p)
 
     doSecureTest = p->fp->wasSecureTested;
 
-    i = p->fp - p->frame - 1;
-    cfrm = p->fp;
+    int i = p->fp - p->frame - 1;
+    dilframe *cfrm = p->fp;
 
     /* pop stack frame */
     p->fp = &p->frame[i];
@@ -1035,10 +1033,27 @@ void dilfi_rtf(dilprg *p)
 
     if (doSecureTest)
     {
-        // If we change execution point, then we shouldn't push the cophy of the return variable
+        using dil_func_ptr = void (*)(dilprg *);
+        extern std::unique_ptr<dil_func_ptr[]> g_dil_runtime_function_table;
+
+        // If the secure is going to change execution right where we assign a return variable, then pop
+        // the right side (if you look at dilfi_ass then you'll see it pops two variables from the stack)
+        // Fortunately, we cannot pass dil functions as function parameters. Otherwise we'd be in trouble.
+        // I wonder though if there is a better way to do this. Perhaps we could do stack math and figure it out.
+        //
+        bool bAssign = g_dil_runtime_function_table[*(p->fp->pc + 1 - 1)] == dilfi_ass;
+
+        // If we change execution point, then we shouldn't push the copy of the return variable
         // for the assignment
         if (dil_test_secure(p) == true)
+        {
             doPush = false;
+            if (bAssign)
+            {
+                dilval *v1 = p->stack.pop();
+                delete(v1);
+            }
+        }
     }
 
     if (doPush)
@@ -1051,11 +1066,6 @@ void dilfi_rtf(dilprg *p)
         if (v)
             delete v;
     }
-}
-
-void dil_pop_frame(dilprg *p)
-{
-    dilfi_rtf(p); /* XXX Is this a potential memory leak rts / rtf? */
 }
 
 /*
@@ -1386,8 +1396,8 @@ void dilfi_rsfunc(dilprg *p)
 /* Assignment of value to reference */
 void dilfi_ass(dilprg *p)
 {
-    dilval *v2 = p->stack.pop();
-    dilval *v1 = p->stack.pop();
+    dilval *v2 = p->stack.pop();  // Pop the result
+    dilval *v1 = p->stack.pop();  // Pop the variable to assign it to
 
     p->waitcmd--;
 

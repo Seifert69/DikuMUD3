@@ -55,7 +55,6 @@ void dilfi_pup(dilprg *);
 void dilfi_cast(dilprg *);
 void dilfi_rproc(dilprg *);
 void dilfi_rfunc(dilprg *);
-void dilfi_rts(dilprg *);
 void dilfi_rtf(dilprg *);
 void dilfi_dlc(dilprg *);
 void dilfi_on(dilprg *);

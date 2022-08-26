@@ -1066,7 +1066,8 @@ int dil_type_check(const char *f, dilprg *p, int tot, ...)
  * The map gets copied into an array at runtime.
  **/
 using dil_func_ptr = void (*)(dilprg *);
-static std::unique_ptr<dil_func_ptr[]> g_dil_runtime_function_table;
+std::unique_ptr<dil_func_ptr[]> g_dil_runtime_function_table;
+
 void dil_function_table_setup()
 {
     // We use gcc branch hinting here, because this will only ever be null on the first call
