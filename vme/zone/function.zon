@@ -3294,16 +3294,16 @@ goto start;
 }
 dilend
 
-dilbegin string abistr (ability:integer);
+dilbegin string abistr(ability:integer);
 var
- ablst:stringlist;
+    ablst:stringlist;
 code
 {
-ablst:={"magic" , "divinity" , "strength" , "dexterity","constitution" ,
-    "charisma" ,"brains" , "hit points"};
-return (ablst.[ability]);
-    }
-    dilend
+    ablst := {"magic" , "divinity" , "strength" , "dexterity", "constitution" , "charisma" ,"brains" , "hit points"};
+    return (ablst.[ability]);
+}
+dilend
+
 
 dilbegin abi_restrict (ab:integer,min_abi:integer,
           damage:integer,percent:integer,

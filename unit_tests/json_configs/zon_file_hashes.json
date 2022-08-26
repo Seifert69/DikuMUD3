@@ -317,7 +317,7 @@
         {
             "source_file": {
                 "filename": "function.zon",
-                "sha512": "167aacc89649e23f29409b1254a2995e87d8b68a8ba27325d027e25ba0391a4d8ebdc46e16f207e68a3b06ed0542dac3772bc0ffc12ded9863908f04aed9fdbc"
+                "sha512": "9bdd34d492adb415eb2521c8180e8ccc616c64424cabcbf46b49963b8482d39f79aaced62e2225f76505d9a9e0dcafa1477268648daaf44322189a862528a240"
             },
             "output": [
                 {
@@ -589,12 +589,12 @@
         {
             "source_file": {
                 "filename": "midgaard.zon",
-                "sha512": "c5794701ba58b3d636506d92c879e326db337a67099087f7fc8225496b5ac990929555ffa5916607fd7311fae0a6b668309474936dcb22a1c1fa7adebb9c8397"
+                "sha512": "44422f71988fd6d514bf524adf200983c0477fb073b2c8cf2800fed547fd4026474f3de60076023fc198d2c3d22a37144f188531ad3e004ea0ebbb17c85f90f2"
             },
             "output": [
                 {
                     "filename": "midgaard.data",
-                    "sha512": "b9b133f164812aa8680fb87264d3e3309a2404f2d59a629ec9c387255dab601eaf1ad331ac468e2116532078b492cbfefa8e1da9854818f2827865aa9e700499"
+                    "sha512": "1999de2554774055ff0df5d0d38da16a1b7530f05979e0634be7930e5005037893bb2caeded4357a08ee6d1c56c24bfff966934f6b25c5a817c4829b102ea31d"
                 },
                 {
                     "filename": "midgaard.reset",
@@ -717,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "2818c4323d117129b66e779075725adacb61b27046fb0dfd321eb72da446e9fda804080be3bea22817aef5723f8b2446321ed38c190c832d876202b429c3e6ca"
+                "sha512": "b1b020b1247ce0fc3c1f330527e4ccb8dade86e91d8abd7b80350c782bffb03ca79ccdde05b03eb500e43268dada62d003e2d1a1914359d3126af2f1714f3605"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "94fee308f7f58a808427069bd0e48339eb814508d117550c254a226d8e9bf7b3acc7401675dcd4686f1d9d63c2aa2b224615c3edfcbd4667317b920e442e73be"
+                    "sha512": "1312c6ea32da5ca0dc1c80b36f7d45d64a813a0e5d9b2d3818865ac144763dab0d66c9d8c168bacd492001f1ed05be783f2d3ee771e93689ce8b9f6ad3e43347"
                 },
                 {
                     "filename": "randomt.reset",
@@ -861,12 +861,12 @@
         {
             "source_file": {
                 "filename": "spells.zon",
-                "sha512": "cf51ea8aec22ab249e7b36fc13895e2ee869a8e91ad2861412e4d8b40242575ea1e37d063808e68ca583461fa9304ed5ca42eef63698e14fc473298ec8c457e4"
+                "sha512": "7362b143856aafb7c9f72ba6f1e92e37747956a10b84d750661d6251a54ef276dea508396268f16cbbcfb9f02591b4de4718e32576cebff34fadcf009b737639"
             },
             "output": [
                 {
                     "filename": "spells.data",
-                    "sha512": "7c5513cf66c5636e219c03fb6421c1f95ce87a5fc17b3e5af192f1909a44923d85fe1949f9b48916fc46bdb4c2a70993ced28398383c3caea72f4a012f8a78a2"
+                    "sha512": "16637c35fab4488e2721e8b626265ddb715477b4853f434f86aececb7c9ade5d14d50fc905588841fa669cc4dcd168c992eef77424706a66a27b1e9355893d16"
                 },
                 {
                     "filename": "spells.reset",

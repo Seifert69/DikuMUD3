@@ -5786,369 +5786,376 @@ dilend
 //
 dilbegin string identify_str(tgt : unitptr, lvl : integer);
 external
-	string quality_str(i : integer);
-	string magic_str(i : integer);
-   string race_name@skills(i : integer);
-   string abistr@function(ability:integer);
+    string quality_str(i : integer);
+    string magic_str(i : integer);
+    string race_name@skills(i : integer);
+    string abistr@function(ability:integer);
 var
-   exd : extraptr;
-   craft_str : string;
-   mag_str : string;
-   s : string;
-   s2 : string;
-   i : integer;
-   n : integer;
-   i2 : integer;
-   sl : stringlist;
-   sl2 : stringlist;
+    exd : extraptr;
+    craft_str : string;
+    mag_str : string;
+    s : string;
+    s2 : string;
+    i : integer;
+    n : integer;
+    i2 : integer;
+    sl : stringlist;
+    sl2 : stringlist;
 
 code
 {
-   if (tgt.objecttype == ITEM_LIGHT)
-   {
-      s := sact("$3n is light source with "+itoa(tgt.value[0])+" hours left, and an illumination of "+itoa(tgt.value[1])+".<br/>",
-	            A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_SCROLL)
-   {
-      s := sact("$3n is a scroll with a magical power of "+itoa(tgt.value[0])+"<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-      if (lvl >= 2)
-      {
-         s2 := spellinfo(tgt.value[1], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
+    if (tgt.objecttype == ITEM_LIGHT)
+    {
+        s := sact("$3n is light source with "+itoa(tgt.value[0])+" hours left, and an illumination of "+itoa(tgt.value[1])+".<br/>",
+                    A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_SCROLL)
+    {
+        s := sact("$3n is a scroll with a magical power of "+itoa(tgt.value[0])+"<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (lvl >= 2)
+        {
+            s2 := spellinfo(tgt.value[1], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
 
-         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
+            s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
 
-         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
-      }
-   }
-   else if (tgt.objecttype == ITEM_WAND)
-   {
-      s := sact("$3n is a wand with a magical power of "+itoa(tgt.value[0])+" and "+itoa(tgt.value[1])+
+            s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
+        }
+    }
+    else if (tgt.objecttype == ITEM_WAND)
+    {
+        s := sact("$3n is a wand with a magical power of "+itoa(tgt.value[0])+" and "+itoa(tgt.value[1])+
+                    " charges of " + itoa(tgt.value[4]) + " left.<br/>",
+                    A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (lvl >= 2)
+        {
+            s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
+
+            s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
+        }
+    }
+    else if (tgt.objecttype == ITEM_STAFF)
+    {
+        s := sact("$3n is a staff with power "+itoa(tgt.value[0])+" and " + itoa(tgt.value[1])+
                 " charges of " + itoa(tgt.value[4]) + " left.<br/>",
-            	  A_SOMEONE, self, null, tgt, TO_CHAR);
-      if (lvl >= 2)
-      {
-         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
+                A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (lvl >= 2)
+        {
+            s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
 
-         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
-      }
-   }
-   else if (tgt.objecttype == ITEM_STAFF)
-   {
-      s := sact("$3n is a staff with power "+itoa(tgt.value[0])+" and " + itoa(tgt.value[1])+
-               " charges of " + itoa(tgt.value[4]) + " left.<br/>",
-      	      A_SOMEONE, self, null, tgt, TO_CHAR);
-      if (lvl >= 2)
-      {
-         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
+            s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
+        }
+    }
+    else if (tgt.objecttype == ITEM_WEAPON)
+    {
+        craft_str := quality_str(tgt.value[1]);
+        mag_str := magic_str(tgt.value[2]);
 
-         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
-      }
-   }
-   else if (tgt.objecttype == ITEM_WEAPON)
-   {
-      craft_str := quality_str(tgt.value[1]);
-      mag_str := magic_str(tgt.value[2]);
+        s := sact("$3n is a weapon that requires a " + weapon_name(tgt.value[0]) + " fighting style, is of " + craft_str + 
+                    " craftsmanship " + " and has a " + mag_str + " magical modifier.<br/>",
+                    A_SOMEONE, self, null, tgt, TO_CHAR);
 
-      s := sact("$3n is a weapon that requires a " + weapon_name(tgt.value[0]) + " fighting style, is of " + craft_str + 
-                " craftsmanship " + " and has a " + mag_str + " magical modifier.<br/>",
-	               A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (lvl >= 2)
+        {
+            s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
+            s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
+            if (tgt.value[3] != RACE_DO_NOT_USE)
+                s := s + "Slaying: " + race_name@skills(tgt.value[3]) + "<br/>";  // Find race string
+        }
+    }
+    else if (tgt.objecttype == ITEM_ARMOR)
+    {
+        sl := {"clothing", "soft leather", "hard leather", "chain mail", "plate mail"};
 
-      if (lvl >= 2)
-      {
-         s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
-         s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
-         if (tgt.value[3] != RACE_DO_NOT_USE)
-            s := s + "Slaying: " + race_name@skills(tgt.value[3]) + "<br/>";  // Find race string
-      }
-   }
-   else if (tgt.objecttype == ITEM_ARMOR)
-   {
-      sl := {"clothing", "soft leather", "hard leather", "chain mail", "plate mail"};
+        craft_str := quality_str(tgt.value[1]);
+        mag_str := magic_str(tgt.value[2]);
+        s := sact("$3n is a "+sl.[tgt.value[0]]+ " equivalent armor with "+craft_str+" craftsmanship and has a "+mag_str+" magical modifier.<br/>",
+            A_SOMEONE, self, null, tgt, TO_CHAR);
 
-      craft_str := quality_str(tgt.value[1]);
-      mag_str := magic_str(tgt.value[2]);
-      s := sact("$3n is a "+sl.[tgt.value[0]]+ " equivalent armor with "+craft_str+" craftsmanship and has a "+mag_str+" magical modifier.<br/>",
-      	  A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (lvl >= 2)
+        {
+            s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
+            s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
+        }
+    }
+    else if (tgt.objecttype == ITEM_TREASURE)
+    {
+        s := sact("$3n appears to be nothing less than a treasure!<br/>",
+                    A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_POTION)
+    {
+        s := sact("$3n is a potion with power "+itoa(tgt.value[0])+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (lvl >= 2)
+        {
+            s2 := spellinfo(tgt.value[1], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
 
-      if (lvl >= 2)
-      {
-         s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
-         s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
-      }
-   }
-   else if (tgt.objecttype == ITEM_TREASURE)
-   {
-      s := sact("$3n appears to be nothing less than a treasure!<br/>",
-	               A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_POTION)
-   {
-      s := sact("$3n is a potion with power "+itoa(tgt.value[0])+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-      if (lvl >= 2)
-      {
-         s2 := spellinfo(tgt.value[1], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
+            s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
 
-         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
+            s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+            if (s2 != null)
+                s := s + "Spell: " + s2 + "<br/>";
+        }
+    }
+    else if (tgt.objecttype == ITEM_SHIELD)
+    {
+        craft_str := quality_str(tgt.value[1]);
+        mag_str := magic_str(tgt.value[2]);
 
-         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
-         if (s2 != null)
-             s := s + "Spell: " + s2 + "<br/>";
-      }
-   }
-   else if (tgt.objecttype == ITEM_SHIELD)
-   {
-      craft_str := quality_str(tgt.value[1]);
-      mag_str := magic_str(tgt.value[2]);
+        s := sact("$3n is a shield with "+craft_str+" craftsmanship and has a "+mag_str+" magical modifier.<br/>",
+            A_SOMEONE, self, null, tgt, TO_CHAR);
 
-      s := sact("$3n is a shield with "+craft_str+" craftsmanship and has a "+mag_str+" magical modifier.<br/>",
-      	  A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (lvl >= 2)
+        {
+            s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
+            s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
+        }
+    }
+    else if (tgt.objecttype == ITEM_WORN)
+    {
+        s := sact("$3n appears to be an item designed to be worn.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_NOTE)
+    {
+        s := sact("$3n seems to be of literary value.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_FOOD)
+    {
+        s := sact("$3n is consumable.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (tgt.value[3] > 0)
+            s := s + sact("It is poisoned.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_DRINKCON)
+    {
+        s := sact("$3n is a drink container.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
 
-      if (lvl >= 2)
-      {
-         s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
-         s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
-      }
-   }
-   else if (tgt.objecttype == ITEM_WORN)
-   {
-      s := sact("$3n appears to be an item designed to be worn.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_NOTE)
-   {
-      s := sact("$3n seems to be of literary value.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_FOOD)
-   {
-      s := sact("$3n is consumable.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-      if (tgt.value[3] > 0)
-      	s := s + sact("It is poisoned.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_DRINKCON)
-   {
-      s := sact("$3n is a drink container.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        if (tgt.value[3] > 0)
+            s := s + sact("It is poisoned.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_KEY)
+    {
+        s := sact("$3n is a key.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_MONEY)
+    {
+        s := sact("$3n is money.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_PEN)
+    {
+        s := sact("$3n is a pen.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_BOAT)
+    {
+        s := sact("$3n is a boat which can carry "+itoa(tgt.capacity)+" pounds.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else if (tgt.objecttype == ITEM_CONTAINER)
+    {
+        if (dilfind("rot_corpse@death",tgt) or dilfind("rotting@spells",tgt))
+            s := sact("It is a dead body.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        else
+            s := sact("It is a container.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
+    else
+    {
+        s := sact("You gain no additional insight into this item.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
 
-      if (tgt.value[3] > 0)
-      	s := s + sact("It is poisoned.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_KEY)
-   {
-      s := sact("$3n is a key.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_MONEY)
-   {
-      s := sact("$3n is money.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_PEN)
-   {
-      s := sact("$3n is a pen.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_BOAT)
-   {
-      s := sact("$3n is a boat which can carry "+itoa(tgt.capacity)+" pounds.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_CONTAINER)
-   {
-      if (dilfind("rot_corpse@death",tgt) or dilfind("rotting@spells",tgt))
-	      s := sact("It is a dead body.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-      else
-	      s := sact("It is a container.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
-   else
-   {
-      s := sact("You gain no additional insight into this item.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
+    if (tgt.bright != 0)
+    {
+        if (tgt.bright > 0)
+        {
+            if (lvl >= 2)
+                s := s + sact("$3n emits light with an illumination of "+itoa(tgt.bright)+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+            else
+                s := s + sact("$3n emits light.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        }
+        else
+        {
+            if (lvl >= 2)
+                s := s + sact("$3n enshrouds darkness with a dampening of "+itoa(-tgt.bright)+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+            else
+                s := s + sact("$3n enshrouds darkness.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        }
+    }
 
-   if (tgt.bright != 0)
-   {
-      if (tgt.bright > 0)
-      {
-         if (lvl >= 2)
-            s := s + sact("$3n emits light with an illumination of "+itoa(tgt.bright)+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-         else
-            s := s + sact("$3n emits light.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-      }
-      else
-      {
-         if (lvl >= 2)
-            s := s + sact("$3n enshrouds darkness with a dampening of "+itoa(-tgt.bright)+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-         else
-            s := s + sact("$3n enshrouds darkness.<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
-      }
-   }
+    // Now let's parse any (transfer) affects 
+    sl := getaffects(tgt);
+    n := length(sl);
 
-   // Now let's parse any (transfer) affects 
-   sl := getaffects(tgt);
-   n := length(sl);
+    if (n > 0)
+    {
+        s := s + "----<br/>";
+    }
 
-   if (n > 0)
-   {
-      s := s + "----<br/>";
-   }
-
-   i := 0;
-   while (i < n)
-   {
-      sl2 := split(sl.[i], ",");
-
-      if (sl2.[1] == "0") // Ability adjustment
-      {
-         s := s + "Ability bonus: ";
-         i2 := atoi(sl2.[2]);
-         s := s + abistr@function(i2) + " "; // e.g. "strength"
-
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "1") // Spell adjustment
-      {
-         s := s + "Spell bonus: ";
-         i2 := atoi(sl2.[2]);
-         s2 := spellinfo(i2, i2, i2, i2, i2 ,i2 ,i2 ,i2);
-         s := s + s2 + " "; // e.g. "fireball"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "2") // Modify bright/light
-      {
-         s := s + "Light bonus: "+sl.[i];
-         i2 := atoi(sl2.[2]);
-         s := s + skill_name(i2) + " "; // e.g. "fleeing"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "3") // Modify char flags
-      {
-         s := s + "Special ability C: "+sl.[i];
-         i2 := atoi(sl2.[2]);
-         s := s + skill_name(i2) + " "; // e.g. "fleeing"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "4") // Modify UNIT_FLAGS()
-      {
-         s := s + "Special ability U: "+sl.[i];
-         i2 := atoi(sl2.[2]);
-         s := s + skill_name(i2) + " "; // e.g. "fleeing"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "5") // Modify OBJ_FLAGS()
-      {
-         s := s + "Special ability O: "+sl.[i];
-         i2 := atoi(sl2.[2]);
-         s := s + skill_name(i2) + " "; // e.g. "fleeing"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "6") // Modify skill adjustment
-      {
-         s := s + "Skill bonus: ";
-         i2 := atoi(sl2.[2]);
-         s := s + skill_name(i2) + " "; // e.g. "fleeing"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "7") // Modify weapon adjustment
-      {
-         s := s + "Weapon bonus: ";
-         i2 := atoi(sl2.[2]);
-         s := s + weapon_name(i2) + " "; // e.g. "fleeing"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "8") // Modify Natural armor
-      {
-         s := s + "Natural armor modification: "+sl.[i];
-         i2 := atoi(sl2.[2]);
-         s := s + skill_name(i2) + " "; // e.g. "fleeing"
-         i2 := atoi(sl2.[3]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + sl2.[3] + "<br/>";
-      }
-      else if (sl2.[1] == "9") // Modify speed
-      {
-         s := s + "Speed bonus: "; //+sl.[i];
-         i2 := atoi(sl2.[2]);
-         if (i2 >= 0)
-            s := s + "+";
-         s := s + itoa(i2) + "<br/>";
-      }
-      else if (sl2.[1] == "-1")
-      {
-         i2 := atoi(sl2.[0]);
-         if (i2 < 0)
+    i := 0;
+    while (i < n)
+    {
+        sl2 := split(sl.[i], ",");
+        i2 := atoi(sl2.[0]);
+        if (i2 < 0)
             i2 := -i2;
-         if (i2 == ID_PROT_GOOD)
-         {
-            s := s + "Protection from Good<br/>";
-         }
-         else if (i2 == ID_PROT_EVIL)
-         {
-            s := s + "Protection from Evil<br/>";
-         }
-         else
-         {
-            s := s + "-1 please report to an admin. Unknown secondary kind. " + sl.[i];
-         }
-      }
-      else if (sl2.[1] != "-1")
-      {
-         s := s + "Oh no, please report to an admin. Unknown kind. " + sl.[i];
-      }
 
-      i := i + 1;
-   }
+        if (i2 == ID_SANCTUARY) // Sanctuary transfer
+        {
+            s := s + "Sanctuary spell.<br/>";
+        }
+        else if (sl2.[1] == "0") // Ability adjustment
+        {
+            s := s + "Ability bonus: ";
+            i2 := atoi(sl2.[2]);
+            s := s + abistr@function(i2) + " "; // e.g. "strength"
 
-   // Finally copy in the description from $identify / $improved identify
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "1") // Spell adjustment
+        {
+            s := s + "Spell bonus: ";
+            i2 := atoi(sl2.[2]);
+            s2 := spellinfo(i2, i2, i2, i2, i2 ,i2 ,i2 ,i2);
+            s := s + s2 + " "; // e.g. "fireball"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "2") // Modify bright/light
+        {
+            s := s + "Light bonus: "+sl.[i];
+            i2 := atoi(sl2.[2]);
+            s := s + skill_name(i2) + " "; // e.g. "fleeing"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "3") // Modify char flags
+        {
+            s := s + "Special ability C: "+sl.[i];
+            i2 := atoi(sl2.[2]);
+            s := s + skill_name(i2) + " "; // e.g. "fleeing"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "4") // Modify UNIT_FLAGS()
+        {
+            s := s + "Special ability U: "+sl.[i];
+            i2 := atoi(sl2.[2]);
+            s := s + skill_name(i2) + " "; // e.g. "fleeing"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "5") // Modify OBJ_FLAGS()
+        {
+            s := s + "Special ability O: "+sl.[i];
+            i2 := atoi(sl2.[2]);
+            s := s + skill_name(i2) + " "; // e.g. "fleeing"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "6") // Modify skill adjustment
+        {
+            s := s + "Skill bonus: ";
+            i2 := atoi(sl2.[2]);
+            s := s + skill_name(i2) + " "; // e.g. "fleeing"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "7") // Modify weapon adjustment
+        {
+            s := s + "Weapon bonus: ";
+            i2 := atoi(sl2.[2]);
+            s := s + weapon_name(i2) + " "; // e.g. "fleeing"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "8") // Modify Natural armor
+        {
+            s := s + "Natural armor modification: "+sl.[i];
+            i2 := atoi(sl2.[2]);
+            s := s + skill_name(i2) + " "; // e.g. "fleeing"
+            i2 := atoi(sl2.[3]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + sl2.[3] + "<br/>";
+        }
+        else if (sl2.[1] == "9") // Modify speed
+        {
+            s := s + "Speed bonus: "; //+sl.[i];
+            i2 := atoi(sl2.[2]);
+            if (i2 >= 0)
+                s := s + "+";
+            s := s + itoa(i2) + "<br/>";
+        }
+        else if (sl2.[1] == "-1")
+        {
+            i2 := atoi(sl2.[0]);
+            if (i2 < 0)
+                i2 := -i2;
+            if (i2 == ID_PROT_GOOD)
+            {
+                s := s + "Protection from Good<br/>";
+            }
+            else if (i2 == ID_PROT_EVIL)
+            {
+                s := s + "Protection from Evil<br/>";
+            }
+            else
+            {
+                s := s + "-1 please report to an admin. Unknown secondary kind. " + sl.[i];
+            }
+        }
+        else if (sl2.[1] != "-1")
+        {
+            s := s + "Oh no, please report to an admin. Unknown kind. " + sl.[i];
+        }
 
-   exd := "$identify" in tgt.extra;
-   if (exd)
-      s := exd.descr + s;
+        i := i + 1;
+    }
 
-   if (lvl >= 2)
-   {
-      exd := "$improved identify" in tgt.extra;
-      if (exd)
-         s := exd.descr + s;
-   }
+    // Finally copy in the description from $identify / $improved identify
 
-   return(s);
+    exd := "$identify" in tgt.extra;
+    if (exd)
+        s := exd.descr + s;
+
+    if (lvl >= 2)
+    {
+        exd := "$improved identify" in tgt.extra;
+        if (exd)
+            s := exd.descr + s;
+    }
+
+    return(s);
 }
 dilend
 

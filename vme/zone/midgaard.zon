@@ -8736,6 +8736,7 @@ extra {}
 little metal bar."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 2
 cost 5   COPPER_PIECE
 end
@@ -8747,6 +8748,7 @@ title "a wooden stick"
 descr "A simple-looking wooden stick is here."
 /* Wood + Craftman ship = (30% + 5%) */
 WEAPON_DEF(WPN_CLUB, BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -10,0
+dilcopy randomizeItem@randomt(BONUS_BAD);
 weight 3
 cost 1   COPPER_PIECE
 end
@@ -8758,6 +8760,7 @@ title "a great wooden club"
 descr "A very large, simple-looking wooden club is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_BATTLE_CLUB, BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -10,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 7
 cost 2   COPPER_PIECE
 end
@@ -8770,6 +8773,7 @@ descr "A small dagger with a long thin blade is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman-ship = -5% */
 WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 6
 cost  4   SILVER_PIECE
 end
@@ -8782,6 +8786,7 @@ descr "A short sword lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -8794,6 +8799,7 @@ descr "A long sword has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 romflags {OBJ_NO_DUAL}
 weight 10
 cost 12   SILVER_PIECE
@@ -8807,6 +8813,7 @@ descr "A two handed sword has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
 WEAPON_DEF(WPN_GREAT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 10
 cost 16   SILVER_PIECE
 end
@@ -8821,6 +8828,7 @@ extra {}
 "The katana is a light weight finely crafted weapon."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 7
 cost 25   SILVER_PIECE
 end
@@ -8834,6 +8842,7 @@ descr "A medium-sized warhammer is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship -5% */
 WEAPON_DEF(WPN_WAR_HAMMER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -8866,6 +8875,7 @@ descr "A mace has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship -5% */
 WEAPON_DEF(WPN_MACE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 10
 cost 8   SILVER_PIECE
 end
@@ -8880,6 +8890,7 @@ extra {} "The spear has a wooden shaft, and is reinforced at the head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship -5% */
 WEAPON_DEF(WPN_SPEAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 7
 cost 2   SILVER_PIECE
 end
@@ -8896,6 +8907,7 @@ metal chain."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron / Craftman ship = -5% */
 WEAPON_DEF(WPN_FLAIL, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 5
 cost 15   SILVER_PIECE
 end
@@ -8910,6 +8922,7 @@ extra {} "The axe is made of metal with a wooden grip."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron + Craftman ship = (90% + -5%) */
 WEAPON_DEF(WPN_BATTLE_AXE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 10
 cost 10   SILVER_PIECE
 end
@@ -9612,6 +9625,7 @@ names {"pendant","silver"}
 title "a silver pendant"
 descr "A silver pendant has been left here."
 type ITEM_TREASURE
+dilcopy randomizeItem@randomt(BONUS_AVERAGE_PLUS);
 romflags {OBJ_NOCOVER}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK, MANIPULATE_HOLD}
 weight 5
@@ -9627,8 +9641,9 @@ title "a silver ring"
 descr "A silver ring has been left here."
 type ITEM_TREASURE
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER, MANIPULATE_HOLD}
-weight 1
 cost 1   SILVER_PIECE
+dilcopy randomizeItem@randomt(BONUS_AVERAGE_PLUS);
+weight 1
 extra {}
 "It appears to be made of solid silver, and is beautifully polished.  It
 almost
@@ -9644,6 +9659,7 @@ names {"gold ring", "ring"}
 title "a gold ring"
 descr "A gold ring has been left here."
 type ITEM_TREASURE
+dilcopy randomizeItem@randomt(BONUS_AVERAGE_PLUS);
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER, MANIPULATE_HOLD}
 weight 1
 cost 12   SILVER_PIECE
@@ -9661,6 +9677,7 @@ flags {UNIT_FL_MAGIC}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Silver / Good Craftmanship / A little magic~= -5% */
 WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: -5,+1
+dilcopy randomizeItem@randomt(BONUS_AVERAGE_PLUS);
 weight 1
 rent 20 COPPER_PIECE
 cost 50   SILVER_PIECE
@@ -9973,6 +9990,7 @@ descr "A meat cleaver has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron + Craftman ship = -5% */
 WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
+dilcopy randomizeItem@randomt(BONUS_AVERAGE);
 weight 4
 cost 2   SILVER_PIECE
 end

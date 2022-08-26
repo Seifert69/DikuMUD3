@@ -138,7 +138,7 @@ code
 
     // Tables for 2d8 used for bonus adjustment
     // The two leftmost values can't be used (1d8+1d8=[2..16])
-    r8il := {-7,-7,-3,-2,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,1};
+    r8il := {-7,-7,-3,-2,-2,-1,-1,-1,-1,-1,-1,0,0,0,0,1,1};
 
     // Weapon materials for forging "blades": swords, mattock heads, mace heads, bardiches, 
 
@@ -2108,7 +2108,7 @@ dilend
 //
 // ======================== ENCHANT SUPER FUNCTIONS =========================
 //
-dilbegin encWpn(u : unitptr, kind : string);
+dilbegin encWpn(u : unitptr);
 external
     integer twodiceidxbonus(len : integer, bonuslvl : integer);
 
@@ -2177,7 +2177,7 @@ code
 dilend
 
 
-dilbegin integer encJewelry(u : unitptr, bonuslvl : integer, blade : string);
+dilbegin encJewelry(u : unitptr);
 external
     integer twodiceidxbonus(len : integer, bonuslvl : integer);
 
@@ -2210,7 +2210,7 @@ code
     // debug log("encWpn() lvl = " + itoa(lvl));
 
     if (lvl <= 0)
-        return (0);
+        return;
 
     u.flags := u.flags | UNIT_FL_MAGIC;
 
@@ -2240,7 +2240,7 @@ code
  
     while (enchantments > 0)
     {
-        r := j+twodiceidxbonus(i, bonuslvl);  // Get two dice random number from [0..length-1]
+        r := j+twodiceidxbonus(i, rollenc);  // Get two dice random number from [0..length-1]
         // log("enchantment "+encs.[r]);
         n := dilcall(encs.[r])(u, lvl, "");
         encs.[r] := encs.[j];
@@ -2249,7 +2249,7 @@ code
         j := j + 1;
     }
 
-    return (0);
+    return;
 }
 dilend
 
@@ -2386,17 +2386,6 @@ code
    // TODO --> here
    // u.max_hp := (u.max_hp * ilMatValues.[ilMatIndex(mat1Index, 4)]) / 1000;
    // u.hp := u.max_hp;
-
-   // If a weapon, let's set the weapon Craftsmanship + material bonus - apples to ALL weapons
-   //
-   if (u.objecttype == ITEM_WEAPON)
-   {
-      u.value[1] := getinteger(DIL_GINT_BONUS_A, null, (craftsmanship + mat1Roll) / 2);
-      if (u.value[1] >= 0)
-         identify(u, "Weapon has a quality bonus.", "Weapon has a quality bonus of +" + itoa(u.value[1]) + ".");
-      else if (u.value[1] < 0)
-         identify(u, "Weapon has a quality penalty.", "Weapon has a quality penalty of " + itoa(u.value[1]) + ".");
-   }
 
    // Set the name title & outside_descr
    //
@@ -3064,7 +3053,6 @@ dilbegin extraptr treasureroll(u : unitptr, bonuslvl : integer);
 external
     integer bonusAdjRoll(bonus : integer);
     integer minmax7(i : integer);
-    vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
 
 var
     rollmat : integer;
@@ -3082,9 +3070,6 @@ code
 {
     if (u.extra == null)
         addextra(u.extra, {""}, "");
-
-    // Add a vlevel restrict
-    dilcopy("vlevel_restrict@function("+itoa(bonuslvl*2*10)+",0,0, )", u);
 
     rollmat := bonusAdjRoll(bonuslvl);  // Overall treasure roll & craftsmanship
     mat1 := bonusAdjRoll(rollmat);      // material
@@ -3119,6 +3104,7 @@ code
         u.height := il.[rnd(0, length(il)-1)];
         // Maybe do a dual dice distribution. 
         // Maybe use the race for somehting l8r....
+        // Maybe add decription, sword for a dwarf
     }
 
     // Adjust weight based on difference from default 170cm to actual height
@@ -3173,10 +3159,11 @@ var
     exd : extraptr;
 code
 {
+    return;  // Shouldn't zap this because of the new randomizeItem
+
     exd := "" in self.extra;
     // log(exd.descr);
     // I'm keeping the temp storage for now, good for debugging
-    return;
     exd.vals := {};  // remove temporary storage of rolls
     return;
 }
@@ -3218,6 +3205,55 @@ dilend
 
 // ========================= CREATE ITEM TYPE ==========================
 
+// Use this function to enchant a pre-existing item. You can dilcopy() it onto the item.
+// It'll do a treasureRoll, set weapon quality and magic bonus, as well as apply random enchantments.
+//
+dilbegin extraptr randomizeItem(bonuslvl : integer);
+external
+    identify(u :unitptr, norm : string, improved: string);
+    extraptr treasureroll(u : unitptr, bonuslvl : integer);
+    encWpn(u : unitptr);
+    encJewelry(u : unitptr);
+    cleanup();
+var
+    s : string;
+    func : string;
+    rollsmith, mat1, mat2, mat3, matIndex : integer;
+    slWeapons    : stringlist global slWeapons@randomt;
+    slMatNames  : stringlist global slMatNames@randomt;
+    exd : extraptr;
+
+code
+{
+    exd := treasureroll(self, bonuslvl);
+
+    rollsmith := exd.vals.[0];  // Smithing roll
+    mat1 := exd.vals.[1];       // Primary blade material
+    mat2 := exd.vals.[2];       // Primary hilt material
+    mat3 := exd.vals.[3];       // Primary guard material
+
+    if (rollsmith > bonuslvl)
+        log("Nicey noice, above bonus with: " + itoa(rollsmith-bonuslvl));
+
+    if (self.objecttype == ITEM_WEAPON)
+    {
+        self.value[1] := getinteger(DIL_GINT_BONUS_A, null, (rollsmith + mat1) / 2);
+        if (self.value[1] >= 0)
+            identify(self, "Weapon has a quality bonus.", "Weapon has a quality bonus of +" + itoa(self.value[1]) + ".");
+        else if (self.value[1] < 0)
+            identify(self, "Weapon has a quality penalty.", "Weapon has a quality penalty of " + itoa(self.value[1]) + ".");
+        encWpn(self);
+    }
+    else
+    {
+        encJewelry(self);
+    }
+
+    return (exd);
+}
+dilend
+
+
 // Creates swords, daggers, anything with a blade and a hilt.
 // idxWpn is e.g. WPN_DAGGER constant
 //
@@ -3226,9 +3262,9 @@ external
     createItem(itemnames : stringlist, item_type : integer, price : integer, lbs : integer);
     setMatProps(u : unitptr, craftsmanship : integer, mat1Roll: integer, mat1Index : integer);
     setWpnSmithing(u : unitptr, matIndex : integer, smithlvl : integer);
-    extraptr treasureroll(u : unitptr, bonuslvl : integer);
-    encWpn(u : unitptr, kind : string);
+    extraptr randomizeItem(bonuslvl : integer);
     cleanup();
+    vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
 var
     s : string;
     func : string;
@@ -3248,17 +3284,18 @@ code
     }
 
     createItem(split(slWeapons.[idxWpn+7], "//"), ITEM_WEAPON, atoi(slWeapons.[idxWpn+1]), atoi(slWeapons.[idxWpn+2]));
+
     self.manipulate := self.manipulate | MANIPULATE_WIELD;
     self.value[0] := atoi(slWeapons.[idxWpn]); // Set the weapon type
     self.value[3] := RACE_DO_NOT_USE;
 
-    exd := treasureroll(self, bonuslvl);
+    exd := randomizeItem(bonuslvl);
+    dilcopy("vlevel_restrict@function("+itoa(bonuslvl*2*10)+",0,0, )", self);    // Add a vlevel restrict
 
     rollsmith := exd.vals.[0];  // Smithing roll
     mat1 := exd.vals.[1];       // Primary blade material
     mat2 := exd.vals.[2];       // Primary hilt material
     mat3 := exd.vals.[3];       // Primary guard material
-
 
     // Add the main material to the item name & title & outside_descr (e.g. a mithirl long sword)
     //    and adjust object values for craftsmanship and e.g. material properties.
@@ -3284,8 +3321,6 @@ code
     s := slWeapons.[idxWpn+6];
     if (func != "")
         func(self, mat2, mat3, s);        // E.g. "hilt"
-
-    encWpn(self, slWeapons.[idxWpn+4]);                      // E.g. "blade" with runes
 
     cleanup();
     return;
@@ -3315,10 +3350,10 @@ dilbegin createJewelry(bonuslvl : integer);
 external
     integer twodiceidxbonus(len : integer, bonuslvl : integer);
     createItem(itemnames : stringlist, item_type : integer, price : integer, lbs : integer);
-    extraptr treasureroll(u : unitptr, bonuslvl : integer);
+    extraptr randomizeItem(bonuslvl : integer);
     cleanup();
     integer matJewelry(u : unitptr, bonuslvl : integer, data : string);
-    integer encJewelry(u : unitptr, bonuslvl : integer, blade : string);
+    vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
 var
     i : integer;
     s : string;
@@ -3355,10 +3390,10 @@ code
     createItem(sl, ITEM_TREASURE, price, atoi(items.[i+2]));
     self.manipulate := self.manipulate | wear;
     
-    exd := treasureroll(self, bonuslvl);
+    exd := randomizeItem(bonuslvl);
+    dilcopy("vlevel_restrict@function("+itoa(bonuslvl*2*10)+",0,0, )", self);    // Add a vlevel restrict
 
     i := matJewelry@randomt(self, bonuslvl, ""); 
-    i := encJewelry@randomt(self, bonuslvl, ""); 
 
     cleanup();
     return;
@@ -3576,13 +3611,11 @@ load treasure7 into treasury max 1
 
 //  Possible enchantment expansions
 //    NEW: All, has embedded spells that can be used X times / day
-//    NEW: All, add magic bonus to a skill
-//    NEW: All, add magic bonus to a spell
-//    NEW: non-weapon, add magic bonus to a weapon skill (silly to wield an axe and get + to long sword)
 //
 //    NEW: Weapon Fireblade, Coldblade, Electricity, (how?)
 //    NEW: Weapon Soul saver? When you die your soul is saved.
-//    NEW: Weapon Intelligent. Weapon fights for you while you're down.
+//    NEW: Weapon Intelligent. 
+//    NEW: Weapon fights for you while you're down.
 //    NEW: Weapon. Mana, hit, endurance drain. 
 //    NEW: Weapon. Vampiric Mana, hit, endurance drain.
 //
