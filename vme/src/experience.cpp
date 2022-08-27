@@ -30,7 +30,7 @@
 //                  will yield bonus from 150..150+5/level
 //
 
-int kludge_bonus(int level, int points)
+/* int kludge_bonus(int level, int points)
 {
     if (level <= 20)
     {
@@ -51,7 +51,7 @@ int kludge_bonus(int level, int points)
     b += (5 * (level - 50) * MIN(expected, points)) / expected;
 
     return b;
-}
+}*/
 
 /* Let 'def' attempt to use his shield against 'att'. If the shield */
 /* is magic, then it is easier to use. Material & magic does also   */
@@ -118,7 +118,7 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
     return def_shield_bonus;
 }
 
-int dikuii_spell_bonus(unit_data *att,
+/* int dikuii_spell_bonus(unit_data *att,
                        unit_data *medium,
                        unit_data *def,
                        int hit_loc,
@@ -137,8 +137,8 @@ int dikuii_spell_bonus(unit_data *att,
     att_bonus = CHAR_OFFENSIVE(att);
     def_bonus = CHAR_DEFENSIVE(def);
 
-    /* If attacker can't see the defender, then the defender has a   */
-    /* much better effective dexterity (since attacker can't see him */
+    // If attacker can't see the defender, then the defender has a
+    // much better effective dexterity (since attacker can't see him
     if (!CHAR_CAN_SEE(att, def))
     {
         att_bonus -= 12;
@@ -193,15 +193,15 @@ int dikuii_spell_bonus(unit_data *att,
     }
 
     return MAX(-50, hm);
-}
+}*/
 
-/* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
-/* modification? This value should then be added to an open roll  */
-/* and looked up upon the damage_charts. If armour type points    */
-/* to anything, then it will be set to the defenders armour_type  */
-/* which should be used upon lookup                               */
+// If 'att' hits 'def' on 'hit_loc' then what is his basic attack
+// modification? This value should then be added to an open roll
+// and looked up upon the damage_charts. If armour type points  
+// to anything, then it will be set to the defenders armour_type  
+// which should be used upon lookup
 
-int dikuii_melee_bonus(unit_data *att,
+/*int dikuii_melee_bonus(unit_data *att,
                        unit_data *def,
                        int hit_loc,
                        int *pAtt_weapon_type,
@@ -248,7 +248,7 @@ int dikuii_melee_bonus(unit_data *att,
 
         if (att_wpn)
         {
-            att_wpn_type = OBJ_VALUE(att_wpn, 0); /* [0] is category */
+            att_wpn_type = OBJ_VALUE(att_wpn, 0); // [0] is category
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
             if (is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
             {
@@ -293,8 +293,8 @@ int dikuii_melee_bonus(unit_data *att,
         def_bonus -= 25;
     }
 
-    /* If attacker can't see the defender, then the defender has a   */
-    /* much better effective dexterity (since attacker can't see him */
+    // If attacker can't see the defender, then the defender has a 
+    // much better effective dexterity (since attacker can't see him
     if (!CHAR_CAN_SEE(att, def))
     {
         def_bonus += 25;
@@ -305,7 +305,7 @@ int dikuii_melee_bonus(unit_data *att,
         att_bonus += 25;
     }
 
-    /* Slaying Weapons */
+    // Slaying Weapons
     if (is_obj_slaying(att_wpn, CHAR_RACE(def)))
     {
         att_bonus += 25;
@@ -370,7 +370,9 @@ int dikuii_melee_bonus(unit_data *att,
     // This results in a 5% hm increase per "level"
 
     return MAX(-50, hm);
-}
+}*/
+
+
 
 int spell_bonus(unit_data *att,
                 unit_data *medium,
