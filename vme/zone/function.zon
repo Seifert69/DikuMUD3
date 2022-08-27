@@ -3109,36 +3109,36 @@ code
     if (damage < 0) damage := -damage;
     if (percent < 0) percent := -percent;
 
-    interrupt (SFB_MSG,argument=="unstore",start);
+    interrupt(SFB_MSG, argument=="unstore",start);
 
     if ((self.equip) and (self.outside.zoneidx=="g_q"))
         goto nextstart;
 
-    :start:
+:start:
     heartbeat:=4;
     damage := 0;
     percent := 25;
     amount := 0;
 
-    wait (SFB_DONE, (((command ("hold")) or (command ("wear")) or (command ("grab")) or (command ("wield"))) and (self==medium)));
+    wait(SFB_DONE, (((command ("hold")) or (command ("wear")) or (command ("grab")) or (command ("wield"))) and (self==medium)));
 
 :nextstart:
-    if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
-    and (activator.master.type != UNIT_ST_PC) ) goto start;
+    if (activator.type == UNIT_ST_NPC)
+        goto start;
 
-    if (activator.vlevel>=lvl) goto start;
+    if (activator.vlevel >= lvl)   // vlevel doesn't work for NPCs
+        goto start;
 
-    if (self.outside.level>=IMMORTAL_LEVEL) goto start;
-    amount:=lvl-activator.vlevel;
+    if (self.outside.level>=IMMORTAL_LEVEL) 
+        goto start;
+
+    amount := lvl-activator.vlevel;
 
     if (action=="")
     {
-        act("Your $2n burns you and you drop it to the ground.",
-        A_ALWAYS,self.outside,self,null,TO_CHAR);
-        act("$1n's $2n burns $1m and $1e drops it to the ground.",
-        A_SOMEONE,self.outside,self,null,TO_REST);
-        act("You are not high enough level to use $3n. $2t levels needed to use it.",
-        A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
+        act("Your $2n burns you and you drop it to the ground.", A_ALWAYS,self.outside,self,null,TO_CHAR);
+        act("$1n's $2n burns $1m and $1e drops it to the ground.", A_SOMEONE,self.outside,self,null,TO_REST);
+        act("You are not high enough level to use $3n. $2t levels needed to use it.", A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
     }
     else
         action (amount);

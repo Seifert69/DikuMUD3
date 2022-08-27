@@ -4472,7 +4472,7 @@ code
    //MS2020 removed second check, too difficult to know the name of the hidden exit
    if (room.exit_to[count] == null) /*  or (not (arg1 in room.exit_names[count]))) */
    {
-      act("You search but find nothing.x", A_ALWAYS, self, null, null, TO_CHAR);
+      act("You search but find nothing.", A_ALWAYS, self, null, null, TO_CHAR);
       if (self.level < IMMORTAL_LEVEL)
          self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
       return;
