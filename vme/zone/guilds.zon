@@ -1125,6 +1125,7 @@ code
    if (IsInGuilds@guilds(pc, sGuildExclude))
    {
       Explainer@quests(pc, slExpExclude);
+      goto start;
    }
 
    if (not ((sJoinQuest+" Complete") in pc.quests))
