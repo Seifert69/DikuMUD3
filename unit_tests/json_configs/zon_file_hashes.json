@@ -845,12 +845,12 @@
         {
             "source_file": {
                 "filename": "sorcerer.zon",
-                "sha512": "4d723bfdec1ceae1eb9fc9d4183b0d24c07ce68f6736a1cbbcbcd905f6f623b7b8524f45d1784b625c5cebd266ff67f23746c782917a181ed2000de255daeb3d"
+                "sha512": "8270ffcce0deb71e029bb1877d06f4fb9b5b857a1121d3a3b360ee3e7c1bc0593fd544aa4b83bb1733afb442234cb8aebbfadcf2e1c7e788ab5cec7c7a0a80ec"
             },
             "output": [
                 {
                     "filename": "sorcerer.data",
-                    "sha512": "37b32890dade8fe5f69897cdbc7bdf9831cfc867ce3480ef98b74901702568004c766415995885e3c539825b11f402d5a6da97e5a3fba9deef5d1ea778bae053"
+                    "sha512": "7da71b252d1a2551278036fdc4aef86b7fbb74effdf23b7b14171b470adb9c273fd6a09467873bd825a5917257bad1ddea8c0f4415bef75f36828eb62a7f0868"
                 },
                 {
                     "filename": "sorcerer.reset",
@@ -877,12 +877,12 @@
         {
             "source_file": {
                 "filename": "test.zon",
-                "sha512": "609e98ca03f715244a7b540716166f5d58237fe9dcde0eb0711ae537c3c5dc7e092f3481e77bace0ce2a74fc9a9710c2ccb682922ed6256652e3b58ba73ceb21"
+                "sha512": "c11b974161e4cf7a2460dc1d9c348257cf68f3dce5ea0c4acaed1b8cc1af0f6bf6d44e04649baf78467f3b8be990539a0518c8c48c7fa478bada39bacd0c0ff3"
             },
             "output": [
                 {
                     "filename": "test.data",
-                    "sha512": "48c92f9fedb7e88832b859b9ac6d2eadcda51c7695e198e53f6b8fe1057d51bbdd9f05c7e87db3fd3f983616e7c03f9aac6aed8ec00a3d9d8f9df6efcaa5e435"
+                    "sha512": "c7153580a1df77336bb20086859d6274314d0894493fb4543af4d1c406b1b9188613067cfea6bba3982aed32808258110f334424c9dbed97dd9ff80eb8eae551"
                 },
                 {
                     "filename": "test.reset",

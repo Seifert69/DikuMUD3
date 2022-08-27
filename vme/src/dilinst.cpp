@@ -901,13 +901,9 @@ void dilfi_cli(dilprg *p)
     delete v1;
 }
 
-/* Return from proc */
+/* Return from function / procedure */
 void dilfi_rtf(dilprg *p)
 {
-    bool doSecureTest = false;
-    bool doPush = false;
-    dilval *v = nullptr;
-
     p->waitcmd--;
 
     if (p->fp == p->frame)
@@ -917,8 +913,8 @@ void dilfi_rtf(dilprg *p)
         return;
     }
 
-    // It seems that if the rtnt is DILV_ERR then it's returning from a procedure, rather than a function
-    if (p->fp->tmpl->rtnt == DILV_ERR)  
+    // When rtnt == DILV_ERR then it's returning from a procedure, otherwise a function
+    if (p->fp->tmpl->rtnt == DILV_ERR)
     {
         if (p->stack.length() != p->fp->stacklen)
         {
@@ -934,8 +930,9 @@ void dilfi_rtf(dilprg *p)
     }
     else
     {
-        // There is a return variable lets get it and make it a copy on the stack
-        if (p->stack.length() != p->fp->stacklen + 1)
+        // The 'return' statement has placed a variable on the stack, so
+        // let's get it and make it a copy on the stack
+        if (p->stack.length() != p->fp->stacklen + 1)  // +1 for the return statement variable
         {
             slog(LOG_ALL,
                  0,
@@ -958,7 +955,7 @@ void dilfi_rtf(dilprg *p)
             return;
         }
 
-        v = new dilval;
+        dilval *v = new dilval;
 
         switch (typ)
         {
@@ -1017,54 +1014,43 @@ void dilfi_rtf(dilprg *p)
         }
         delete v1;
 
-        // Yes, we should Push the copied return value so that it can be assigned
-        doPush = true;
-    }
-
-    doSecureTest = p->fp->wasSecureTested;
-
-    int i = p->fp - p->frame - 1;
-    dilframe *cfrm = p->fp;
-
-    /* pop stack frame */
-    p->fp = &p->frame[i];
-
-    dil_free_frame(cfrm);
-
-    if (doSecureTest)
-    {
-        using dil_func_ptr = void (*)(dilprg *);
-        extern std::unique_ptr<dil_func_ptr[]> g_dil_runtime_function_table;
-
-        // If the secure is going to change execution right where we assign a return variable, then pop
-        // the right side (if you look at dilfi_ass then you'll see it pops two variables from the stack)
-        // Fortunately, we cannot pass dil functions as function parameters. Otherwise we'd be in trouble.
-        // I wonder though if there is a better way to do this. Perhaps we could do stack math and figure it out.
-        //
-        bool bAssign = g_dil_runtime_function_table[*(p->fp->pc + 1 - 1)] == dilfi_ass;
-
-        // If we change execution point, then we shouldn't push the copy of the return variable
-        // for the assignment
-        if (dil_test_secure(p) == true)
-        {
-            doPush = false;
-            if (bAssign)
-            {
-                dilval *v1 = p->stack.pop();
-                delete(v1);
-            }
-        }
-    }
-
-    if (doPush)
-    {
-        assert(v);
+        // Push the copied return value so that it can be assigned
         p->stack.push(v);
     }
-    else
+
+    bool doSecureTest = p->fp->wasSecureTested;
+
+    // Pop and free the current frame, change fp to the new frame
+    int i = p->fp - p->frame - 1;
+    dilframe *cfrm = p->fp;
+    p->fp = &p->frame[i];
+    dil_free_frame(cfrm);
+
+    // Now we've arrived at the new frame (the old frame returning from was removed)
+    // Let's see if we need to do a trickle secure() test and possibly change execution point
+    //
+    if (doSecureTest)
     {
-        if (v)
-            delete v;
+        if (dil_test_secure(p) == true)
+        {
+            // We changed the point of execution. This could be in the middle of an assignment.
+            // If it was in an assignment for example, then the stack will be wrong with two
+            // stack entries. If for example a function call without assignment, stack will be
+            // wrong with 1 stack entry. This will fix the stack according to the secure 
+            // changing point of execution
+            //
+            while (p->stack.length() != p->fp->stacklen)
+            {
+                if (p->stack.length() <= 0)
+                {
+                    slog(LOG_ALL, 0, "TERRIBLE STACK ERROR DIL %s", p->fp->tmpl->prgname);
+                    p->waitcmd = WAITCMD_QUIT;
+                    return;
+                }
+
+                delete(p->stack.pop());
+            }
+        }
     }
 }
 

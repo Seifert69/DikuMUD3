@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 13  // T010, T009, ...
+#define TEST_MAXIMUM 14  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -55,31 +55,151 @@ dilend
 //
 dilbegin T099(tstno : integer);
 external
-   logtest(no : integer, ltype : integer, msg : string);
+    logtest(no : integer, ltype : integer, msg : string);
 var
-   u : unitptr;
+    u : unitptr;
 code
 {
-   heartbeat := PULSE_SEC * 1;
-   wait(SFB_TICK, TRUE);
-   logtest(tstno, LOGT_ERROR, "Failing on purpose");
-   goto failure;
+    heartbeat := PULSE_SEC * 1;
+    wait(SFB_TICK, TRUE);
+    logtest(tstno, LOGT_ERROR, "Failing on purpose");
+    goto failure;
 
-   logtest(tstno, LOGT_INFO, "All good");
-   goto cleanup;
+    logtest(tstno, LOGT_INFO, "All good");
+    goto cleanup;
 
 :failure:
-   logtest(tstno, LOGT_ERROR, "Test not as expected");
+    logtest(tstno, LOGT_ERROR, "Test not as expected");
 
 :cleanup:
-   // Naught
+    // Naught
 
 :finished:
-   logtest(tstno, LOGT_INFO, "Done");
-   sendtoalldil("done", "labdirector@test");
-   return;
+    logtest(tstno, LOGT_INFO, "Done");
+    sendtoalldil("done", "labdirector@test");
+    return;
 }
 dilend
+
+// ==================== T014 =====================
+
+
+dilbegin integer f4(u : unitptr);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+code
+{
+    secure(u, success);
+    link(u, findroom("void@basis"));
+    heartbeat := PULSE_SEC;
+    pause;
+    goto failure;
+
+:failure:
+    logtest(14, LOGT_ERROR, "Secure not triggered");
+    return (0);
+
+:success:
+    logtest(14, LOGT_INFO, "Returning f4");
+    return (42);
+}
+dilend
+
+dilbegin integer f3(u : unitptr);
+external
+    integer f4(u : unitptr);
+    logtest(no : integer, ltype : integer, msg : string);
+var
+    i : integer;
+code
+{
+    secure(u, success);
+    i := f4(u);
+
+:failure:
+    logtest(14, LOGT_ERROR, "Secure not triggered");
+    return (0);
+
+:success:
+    logtest(14, LOGT_INFO, "Returning f3");
+    return (i);
+}
+dilend
+
+dilbegin integer f2(u : unitptr);
+external
+    integer f3(u : unitptr);
+    logtest(no : integer, ltype : integer, msg : string);
+
+var
+    i : integer;
+code
+{
+    secure(u, success);
+    i := f3(u);
+
+:failure:
+    logtest(14, LOGT_ERROR, "Secure not triggered");
+    return (0);
+
+:success:
+    logtest(14, LOGT_INFO, "Returning f2");
+    return (i);
+}
+dilend
+
+dilbegin integer f1(u : unitptr);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+    integer f2(u : unitptr);
+var
+    i : integer;
+code
+{
+    secure(u, success);
+    i := 7;
+    i := f2(u);
+
+:failure:
+    logtest(14, LOGT_ERROR, "Secure not triggered");
+    return (0);
+
+:success:
+    logtest(14, LOGT_INFO, "Returning f1");
+    return (i);
+}
+dilend
+
+
+// Tests DIL secure()
+// Test that building a deep stack of function calls returning values 
+// to an assigment point in a broken secure() doesn't mess up the stack.
+//
+dilbegin T014(tstno : integer);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+    integer f1(u : unitptr);
+var
+    u : unitptr;
+    i : integer;
+code
+{
+    u := load("follower@test");
+    link(u, self.outside);
+    secure(u, success);
+    i := f1(u);
+
+:failure:
+    logtest(tstno, LOGT_ERROR, "Secure not triggered T014");
+    return;
+
+:success:
+    logtest(tstno, LOGT_SUCCESS, "All done.");
+    sendtoalldil("done", "labdirector@test");
+    return;
+}
+dilend
+
 
 
 // ==================== T013 =====================
@@ -173,7 +293,8 @@ dilend
 // ==================== T012 =====================
 
 // Tests DIL secure()
-// Test double secure() of the same pointer doesn't really result in two secures.
+// Test double secure() of the same pointer doesn't really result in two secures
+// and can be cleaned up with one unsecure() statement
 //
 dilbegin T012(tstno : integer);
 external
@@ -410,7 +531,7 @@ dilend
 
 // Tests DIL secure()
 // Test that moving the unit away and then calling a pausing DIL will trigger secure
-// This is the functionality I need to restore
+// This is the functionality I needed to restore
 //
 dilbegin T008(tstno : integer);
 external

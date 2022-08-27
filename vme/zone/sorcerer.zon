@@ -1415,7 +1415,8 @@ dilcopy TrainMemberChk@guilds(SORCERER_GUILD, "");
 
 dilcopy qstSimpleQuest@quests(QUEST_SORCERER_ENTRY,
          {"say Hey $1N, want to prove yourself worth to our guild?",
-          "say All you need to do is to bring me the head of the Gnome Sorceress."},
+          "say All you need to do is to bring me the head of the Gnome Sorceress.", 
+          "say Just nod if you accept."},
          {"say Excellent! Best of luck, $1N."},
          "Forbin in the Sorcerer's Guild has asked you to bring him the head of the Gnome Sorceress.",
          {"emote looks at the head of the Gnome Sorceress.",
