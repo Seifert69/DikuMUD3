@@ -542,12 +542,12 @@ code
         SPL_DISPEL_GOOD,
         SPL_PRO_GOOD,
         SPL_TRANSPORT,
-        SPL_FIRE_BREATH,
-        SPL_FROST_BREATH,
-        SPL_LIGHTNING_BREATH,
-        SPL_ACID_BREATH,
-        SPL_GAS_BREATH,
-        SPL_LIGHT_BREATH,
+        // MONSTER SPELL SPL_FIRE_BREATH,
+        // MONSTER SPELL SPL_FROST_BREATH,
+        // MONSTER SPELL SPL_LIGHTNING_BREATH,
+        // MONSTER SPELL SPL_ACID_BREATH,
+        // MONSTER SPELL SPL_GAS_BREATH,
+        // MONSTER SPELL SPL_LIGHT_BREATH,
         SPL_HOLD_MONSTER,
         SPL_HOLD_UNDEAD,
         SPL_TOTAL_RECALL,
@@ -600,7 +600,7 @@ code
         SPL_EAGLE_CRY,
         SPL_GROUP_TELEPORT,
         SPL_RAISE_HPP,
-        SPL_SOUL_SHIFT,
+        // MONSTER SPELL SPL_SOUL_SHIFT,
         SPL_AID_UNDEAD,
         SPL_HOLY_WORD,
         SPL_UNHOLY_WORD,
@@ -2381,28 +2381,28 @@ var
     ilMatValues : intlist    global ilMatValues@randomt;
 code
 {
-   // Adjust for material hitpoints - applies to ALL weapons
-   //
-   // TODO --> here
-   // u.max_hp := (u.max_hp * ilMatValues.[ilMatIndex(mat1Index, 4)]) / 1000;
-   // u.hp := u.max_hp;
+    // Adjust for material hitpoints - applies to ALL weapons
+    //
+    // TODO --> here
+    // u.max_hp := (u.max_hp * ilMatValues.[ilMatIndex(mat1Index, 4)]) / 1000;
+    // u.hp := u.max_hp;
 
-   // Set the name title & outside_descr
-   //
-   mat := slMatNames.[mat1Index];
-   // log("setMatProps mat1Index= " + itoa(mat1Index));
-   // log("setMatProps name = " + mat);
+    // Set the name title & outside_descr
+    //
+    mat := slMatNames.[mat1Index];
+    log("setMatProps mat1Index= " + itoa(mat1Index));
+    log("setMatProps name = " + mat);
 
-   if (mat.[0] in "aeiou")
-      ana := "an ";
-   else
-      ana := "a ";
+    if (mat.[0] in "aeiou")
+        ana := "an ";
+    else
+        ana := "a ";
 
-   // Set name, title, description, extra
-   addstring(u.names, mat + " " + u.name);
-   u.title := ana + mat + " " + u.name;
-   u.outside_descr := ana + mat + " " + u.name + " is lying here.";
-   return;
+    // Set name, title, description, extra
+    addstring(u.names, mat + " " + u.name);
+    u.title := ana + mat + " " + u.name;
+    u.outside_descr := ana + mat + " " + u.name + " is lying here.";
+    return;
 }
 dilend
 
@@ -3014,23 +3014,28 @@ external
     setJewelryGem(u : unitptr, mat2 : integer, mat3 : integer, kind : string);
 
 var
-   rollsmith : integer;
-   mat1, mat2, mat3 : integer;
-   rollenc : integer;
-   enc1, enc2, enc3 : integer;
-
-   ilJewelryMat : intlist global ilJewelryMat@randomt; // Change to jewelry
+    rollsmith : integer;
+    mat1, mat2, mat3 : integer;
+    rollenc : integer;
+    enc1, enc2, enc3 : integer;
+    exd : extraptr;
+    ilJewelryMat : intlist global ilJewelryMat@randomt; // Change to jewelry
 
 code
 {
-   // debug log("matJewelry");
+    log("matJewelry");
 
-   rollsmith := u.extra.vals.[0];  // Smithing roll
-   mat1 := u.extra.vals.[1];  // Primary jewelry material
-   mat2 := u.extra.vals.[2];  // Secondary jewelry material
-   mat3 := u.extra.vals.[3];  // Tertiary jewelry material
-   rollenc := u.extra.vals.[4];  // 
-   enc1 := u.extra.vals.[5];  // 
+    exd := "" in u.extra;
+
+    rollsmith := exd.vals.[0];  // Smithing roll
+    mat1 := exd.vals.[1];  // Primary jewelry material
+    mat2 := exd.vals.[2];  // Secondary jewelry material
+    mat3 := exd.vals.[3];  // Tertiary jewelry material
+    rollenc := exd.vals.[4];  // 
+    enc1 := exd.vals.[5];  // 
+
+   log("rollsmith = " + itoa(rollsmith));
+   log("mat1 = " + itoa(mat1));
 
    // Get the main jewelry material
    setMatProps(u, rollsmith, mat1, ilJewelryMat.[mat1+7]);
@@ -3274,6 +3279,7 @@ var
     exd : extraptr;
 code
 {
+    log("create weapon");
     // slWeapons: QUOTE(WPN_DAGGER),         "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt", "hilt", "dagger",
 
     idxWpn := 8 * idxWpn;
@@ -3366,6 +3372,8 @@ var
 
 code
 {
+    log("create jewelry");
+
     // names, cost ip, lbs, MANIPULATE_WEAR_...
     // Most common first, most rare last
     items := {
