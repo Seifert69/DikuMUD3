@@ -124,7 +124,7 @@ diltemplate *g_dil_link_dead     = nullptr;
 diltemplate *g_dil_advance_level = nullptr;
 diltemplate *g_dil_initial_prg   = nullptr;  // The first DIL program that runs just before first zone reset
 
-std::map<std::string, dilvar *> g_global_dilvars;
+static std::map<std::string, dilvar *> g_global_dilvars;
 
 // These are the global DIL programs that are required to run the server
 //
