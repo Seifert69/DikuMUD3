@@ -724,11 +724,13 @@ int melee_bonus(unit_data *att,
     /* Slaying Weapons */
     if (is_obj_slaying(att_wpn, CHAR_RACE(def)))
     {
-        att_bonus += 50;
+        // The more powerful the opponent, the more slaying comes to play
+        int slayBonus = 50 + MAX(CHAR_LEVEL(def)-50, 0);
+        att_bonus += slayBonus;
 
         if (pStat)
         {
-            pStat->append(diku::format_to_str("Slaying              :  %4d  <br/>", 50));
+            pStat->append(diku::format_to_str("Slaying              :  %4d  <br/>", slayBonus));
         }
     }
 
