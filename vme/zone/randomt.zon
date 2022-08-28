@@ -999,7 +999,7 @@ code
                  0,
                  0, 10, 20, 40, 60, 80, 100};
 
-    l := ilLevels.[bonuslvl];
+    l := ilLevels.[bonuslvl + 7];
 
     if (l > 0)
         dilcopy("vlevel_restrict@function("+itoa(l)+", 0, 0, )", self);    
