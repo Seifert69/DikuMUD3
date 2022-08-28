@@ -10548,64 +10548,60 @@ dilend
 
 dilbegin jump(arg:string);
 external
-  socialact(act_s:string,act_i:integer,act_1:unitptr,act_2:unitptr,act_3:unitptr,act_to:integer);
+    socialact(act_s:string,act_i:integer,act_1:unitptr,act_2:unitptr,act_3:unitptr,act_to:integer);
 
 var
 	vict:unitptr;
 code
 {
-
-if (self.position<POSITION_STANDING)
-  {
+    if (self.position < POSITION_STANDING)
+    {
         sendtext ("<div class='social_self'>You can't seem to do that from this position.</div><br/>",self);
-	quit;
-	}
-if (arg!="")
+        quit;
+    }
+    
+    if (arg != "")
 	{
-	vict:=findunit(self,arg,SOCIAL_FIND,null);
+	    vict:= findunit(self, arg, SOCIAL_FIND, null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Can you jump that far?</div><br/>",self);
-		quit;
+            sendtext("<div class='social_self'>Can you jump that far?</div><br/>",self);
+		    quit;
 		}
-	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
-		{
-                sendtext ("<div class='social_self'>Can you jump that far?</div><br/>",self);
-		quit;
-		}
-if (vict.position<POSITION_STANDING)
-{
-socialact("<div class='social_self'>$3n is not positioned to react to that.</div>",
-A_ALWAYS,self,null,vict,TO_CHAR);
-quit;
-}
-if (self==vict)
-	{
-        socialact("<div class='social_self'>You jump onto your own foot, and nearly stumble.</div>",
-        A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n clumsily stumble upon $1s own feet.</div>",
-        A_HIDEINV,self,null,null,TO_REST);
-  send_done ("jump",self,null,vict,0,"",null, CMD_AUTO_NONE);
-	quit;
-	}
-	socialact("<div class='social_self'>You jump on $3n's big feet!</div>",
-        A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n jumps on $3n's feet.</div>",
-        A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n jumps on you foot.</div>",
-        A_HIDEINV,self,null,vict,TO_VICT);
-  send_done ("jump",self,null,vict,0,"",null, CMD_AUTO_NONE);
-	quit;
-	 }
 
-	socialact("<div class='social_self'>You jump about the place!</div>",
-A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n jumps and skips.</div>",
-A_HIDEINV,self,null,null,TO_REST);
-  send_done ("jump",self,null,null,0,"",null, CMD_AUTO_NONE);
-quit;
+    	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
+		{
+            sendtext ("<div class='social_self'>Can you jump that far?</div><br/>",self);
+    		quit;
+		}
+
+        if (vict.position<POSITION_STANDING)
+        {
+            socialact("<div class='social_self'>$3n is not positioned to react to that.</div>", A_ALWAYS,self,null,vict,TO_CHAR);
+            quit;
+        }
+
+        if (self==vict)
+        {
+            socialact("<div class='social_self'>You jump onto your own foot, and nearly stumble.</div>", A_HIDEINV,self,null,null,TO_CHAR);
+            socialact("<div class='social_other'>$1n clumsily stumble upon $1s own feet.</div>", A_HIDEINV,self,null,null,TO_REST);
+            send_done("jump",self,null,vict,0,"",null, CMD_AUTO_NONE);
+            quit;
+        }
+    	socialact("<div class='social_self'>You jump on $3n's big feet!</div>", A_HIDEINV,self,null,vict,TO_CHAR);
+        socialact("<div class='social_other'>$1n jumps on $3n's feet.</div>", A_HIDEINV,self,null,vict,TO_NOTVICT);
+        socialact("<div class='social_other'>$1n jumps on you foot.</div>", A_HIDEINV,self,null,vict,TO_VICT);
+        send_done("jump",self,null,vict,0,"",null, CMD_AUTO_NONE);
+	    quit;
+    }
+
+	socialact("<div class='social_self'>You jump about the place!</div>", A_HIDEINV,self,null,null,TO_CHAR);
+    socialact("<div class='social_other'>$1n jumps and skips.</div>", A_HIDEINV,self,null,null,TO_REST);
+    send_done("jump",self,null,null,0,"",null, CMD_AUTO_NONE);
+    quit;
 }
 dilend
+
 
 dilbegin stretch(arg:string);
 external
