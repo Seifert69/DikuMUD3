@@ -397,12 +397,12 @@
         {
             "source_file": {
                 "filename": "guilds.zon",
-                "sha512": "befa184f30293647619fa802e00fad44f0b0216347b3a84bee918afe34bb03898467ee08234c87cb037d4ef875ebe20d8fb5e1936b89a3ff65b50d4abd508596"
+                "sha512": "ce96373083b89e780d7e7e2bfe93655a0bdd0f4578084cf7473e4f30537fdb9b38db5e6835b5b0bb4d385ea510440bf302be30174b2b8be5179903083128c1f9"
             },
             "output": [
                 {
                     "filename": "guilds.data",
-                    "sha512": "981f8715edd394cc2fdbd9826ce2a120ba755d0d5b9e218b37a70a42f4b1738933ed994df4ee881ab734bd76e975f776925033fe9d27b55257e9e2704589ff80"
+                    "sha512": "b4143b617f7369095f261eea2228fc7f0bb6d3952e5a75f11c995fdbccbfa90a75469be166c8fae9fe558659d15ca1f080c025b7a71537302b409dacf789486c"
                 },
                 {
                     "filename": "guilds.reset",
@@ -717,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "00cb34f11a4d53afdf87c4b08ebdd5dda0c7da984124d4ad44abfe59c0590acf759251852b00523040be7bcc4f01ca4820448bd82a03127836c79c47a60d0d9f"
+                "sha512": "cd75ff41704a297321010c882d5e86dd1e10b27cd64c82c750742ffb80410fd9dc0d12211c83506ba8ed5d831eec10be132531018ea44a60712dbccd556f6bb6"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "3c277c187b4d4018134ef1680de14cf28beea8c22a20911ba1a67d7b9172d32bb78bb8018b6789b8fe30ebfb7d535d8e0a28af55ee22320982f8d865cc1d6e4b"
+                    "sha512": "63cb911c95d607bc8f00d055a73c37bcf3686e4e152238280ccc6938ecd8b3bea9606f0fe9bd0dba4e9dbe817a21d776dde4e935de25b49ed4990559bbfed33f"
                 },
                 {
                     "filename": "randomt.reset",

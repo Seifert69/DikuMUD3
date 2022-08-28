@@ -1144,7 +1144,7 @@ code
     else
     {
         chance := atoi(exd.descr);
-        log(self.symname + " LOADED VORPAL CHANCE " + itoa(chance) + " inside of unit " + self.outside.symname);
+        // log(self.symname + " LOADED VORPAL CHANCE " + itoa(chance) + " inside of unit " + self.outside.symname);
     }
 
     il := weapon_info(self.value[0]);
@@ -2390,8 +2390,8 @@ code
     // Set the name title & outside_descr
     //
     mat := slMatNames.[mat1Index];
-    log("setMatProps mat1Index= " + itoa(mat1Index));
-    log("setMatProps name = " + mat);
+    // log("setMatProps mat1Index= " + itoa(mat1Index));
+    // log("setMatProps name = " + mat);
 
     if (mat.[0] in "aeiou")
         ana := "an ";
@@ -3023,7 +3023,7 @@ var
 
 code
 {
-    log("matJewelry");
+    // log("matJewelry");
 
     exd := "" in u.extra;
 
@@ -3034,8 +3034,8 @@ code
     rollenc := exd.vals.[4];  // 
     enc1 := exd.vals.[5];  // 
 
-   log("rollsmith = " + itoa(rollsmith));
-   log("mat1 = " + itoa(mat1));
+   // log("rollsmith = " + itoa(rollsmith));
+   // log("mat1 = " + itoa(mat1));
 
    // Get the main jewelry material
    setMatProps(u, rollsmith, mat1, ilJewelryMat.[mat1+7]);
@@ -3279,7 +3279,7 @@ var
     exd : extraptr;
 code
 {
-    log("create weapon");
+    // log("create weapon");
     // slWeapons: QUOTE(WPN_DAGGER),         "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt", "hilt", "dagger",
 
     idxWpn := 8 * idxWpn;
@@ -3372,7 +3372,7 @@ var
 
 code
 {
-    log("create jewelry");
+    // log("create jewelry");
 
     // names, cost ip, lbs, MANIPULATE_WEAR_...
     // Most common first, most rare last
