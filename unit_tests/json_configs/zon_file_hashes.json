@@ -461,12 +461,12 @@
         {
             "source_file": {
                 "filename": "hobgob.zon",
-                "sha512": "8f521ca9dad35b1f8855f6fd9a6d0dfe5bf1711d937a70ab2fee03ca85766a9fca92d53fa8c123252082febea1d78e8b1c064d7e031e06805871c824eb7de8a4"
+                "sha512": "53b5cd70a77271f12fe161010fff65fc3910084ba31e87cc8872463020981cb40ff3b722612da45388b4abad71c6fad45917bc991282fe6a5a6cd2321dd2d8a9"
             },
             "output": [
                 {
                     "filename": "hobgob.data",
-                    "sha512": "36965efeb4ab2065ea5dfe164a8146afca02d4ba74933deec033c6a3f982a55c9d7c89eaf22058f5ec8ed98532efe5a6651146cc8886245e40f6c8fb36ea215e"
+                    "sha512": "d751b84626258e70ff36ac268a4861fda909740536bc86dd987f3299bc5bf54358dd9e468538981d0cd2bbaf0ddf422e3bde5c8a96ab415b170fb31e262ef6c6"
                 },
                 {
                     "filename": "hobgob.reset",
