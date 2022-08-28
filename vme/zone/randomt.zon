@@ -226,8 +226,8 @@ code
         QUOTE(WPN_DAGGER),         "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "dagger",
         QUOTE(WPN_BATTLE_MACE),    "80", "12",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "battle mace//mace", 
         QUOTE(WPN_MACE),           "60",  "6",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "mace", 
-        QUOTE(WPN_BATTLE_CLUB),    "30", "12",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "grip", "battle club//club", // XXXX TODO
-        QUOTE(WPN_CLUB),           "10",  "6",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "handle", "club", // XXXX TODO
+        QUOTE(WPN_BATTLE_CLUB),    "30", "12",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "grip", "battle club//club",
+        QUOTE(WPN_CLUB),           "10",  "6",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "handle", "club",
         QUOTE(WPN_MORNING_STAR),   "10", "10",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "handle", "morning star",  
         QUOTE(WPN_FLAIL),          "20", "14",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "handle", "flail",    
         QUOTE(WPN_QUARTERSTAFF),    "4",  "4",  "setWpnStaff@randomt", "staff", "setWpnTips@randomt",  "tips",   "quarterstaff//staff",
@@ -982,6 +982,32 @@ code
    return (i);
 }
 dilend
+
+
+// Add a vlevel restrict if needed based on ite, bonuslvl
+// Bonuslvl -7 .. +7
+dilbegin vrestrict(bonuslvl : integer);
+external
+    vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
+
+var
+    ilLevels : intlist;
+    l : integer;
+code
+{
+    ilLevels := {0,  0,  0,  0,  0,  0,   0,
+                 0,
+                 0, 10, 20, 40, 60, 80, 100};
+
+    l := ilLevels.[bonuslvl];
+
+    if (l > 0)
+        dilcopy("vlevel_restrict@function("+itoa(l)+", 0, 0, )", self);    
+
+    return;
+}
+dilend
+
 
 //
 // ======================== ROLLS =========================
@@ -3269,7 +3295,7 @@ external
     setWpnSmithing(u : unitptr, matIndex : integer, smithlvl : integer);
     extraptr randomizeItem(bonuslvl : integer);
     cleanup();
-    vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
+    vrestrict(bonuslvl : integer);
 var
     s : string;
     func : string;
@@ -3296,7 +3322,7 @@ code
     self.value[3] := RACE_DO_NOT_USE;
 
     exd := randomizeItem(bonuslvl);
-    dilcopy("vlevel_restrict@function("+itoa(bonuslvl*2*10)+",0,0, )", self);    // Add a vlevel restrict
+    vrestrict(bonuslvl);
 
     rollsmith := exd.vals.[0];  // Smithing roll
     mat1 := exd.vals.[1];       // Primary blade material
@@ -3359,7 +3385,7 @@ external
     extraptr randomizeItem(bonuslvl : integer);
     cleanup();
     integer matJewelry(u : unitptr, bonuslvl : integer, data : string);
-    vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
+    vrestrict(bonuslvl : integer);
 var
     i : integer;
     s : string;
@@ -3399,7 +3425,7 @@ code
     self.manipulate := self.manipulate | wear;
     
     exd := randomizeItem(bonuslvl);
-    dilcopy("vlevel_restrict@function("+itoa(bonuslvl*2*10)+",0,0, )", self);    // Add a vlevel restrict
+    vrestrict(bonuslvl);
 
     i := matJewelry@randomt(self, bonuslvl, ""); 
 
