@@ -6012,7 +6012,7 @@ end
 
 water_lake
 names {"lake","water"}
-title " the lake"
+title "the lake"
 descr "From the west you can hear some sort of activity in one of the caves."
 extra {}
 "The lake is fairly shallow although it gets deep in some  places. The
