@@ -121,6 +121,7 @@ var
 
     slWeapons    : stringlist global slWeapons@randomt;
     ilWeapons    : intlist global ilWeapons@randomt;
+    ilMartial    : intlist global ilMartial@randomt;
     ilSkills     : intlist global ilSkills@randomt;
     ilSpells     : intlist global ilSpells@randomt;
 
@@ -302,6 +303,7 @@ code
         "96", "","","","","","","",
         QUOTE(WPN_STILETTO),       "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "stiletto", // 97
         "98", "","","","","","",""
+        // ADD WPN_KNUCKLES <-- but it's kind of odd though, it's a separate skill
     };
 
     i := length(slWeapons)/8-1;
@@ -351,6 +353,18 @@ code
         WPN_WHIP,
         WPN_WAR_HAMMER // Thor's hammer
     };
+
+
+    // Most common to least common martial arts weapon available for randomness, groups not included
+    ilMartial := {
+        WPN_FIST,
+        WPN_ELBOW,
+        WPN_KNEE,
+        WPN_KICK,
+        WPN_CLAW
+    };
+
+    // ADD A NEW SKILL BOOST TO UNARMED COMBAT (ilWeapons doesn't have e.g. WPN_FIST)
 
     ilSkills := {        
         SKI_APPRAISAL,
@@ -986,6 +1000,7 @@ dilend
 
 // Add a vlevel restrict if needed based on ite, bonuslvl
 // Bonuslvl -7 .. +7
+//
 dilbegin vrestrict(bonuslvl : integer);
 external
     vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
@@ -2035,8 +2050,10 @@ external
     integer twodiceidxbonus(len : integer, bonuslvl : integer);
 var
     i : integer;
+    l1, l2 : integer;
     wi : integer;
     ilWeapons    : intlist global ilWeapons@randomt;
+    ilMartial    : intlist global ilMartial@randomt;
     s : string;
 code
 {
@@ -2045,12 +2062,25 @@ code
     if (i == 0)
         return(1);
 
-    wi := twodiceidxbonus(length(ilWeapons), bonuslvl);
+    l1 := length(ilWeapons);
+    l2 := length(ilMartial);
 
-    s := weapon_name(ilWeapons.[wi]);
+    if (rnd(1, l1+l2) > l1)
+    {
+        wi := twodiceidxbonus(l2, bonuslvl);
+        wi := ilMartial.[wi];
+    }
+    else
+    {
+        // Regular weapon
+        wi := twodiceidxbonus(l1, bonuslvl);
+        wi := ilWeapons.[wi];
+    }
+
+    s := weapon_name(wi);
 
 	addaff(u, -ID_WEAPON_DEFENSE, -1, 0,
-	       ilWeapons.[wi], i, 0,
+	       wi, i, 0,
            TIF_WPN_INC, TIF_NONE, TIF_WPN_DEC, APF_WEAPON_ADJ);
 
     identify(u, "Increases your weapon skill with "+s, "Increases your weapon skill with "+s+" by +" + itoa(i)+".");
