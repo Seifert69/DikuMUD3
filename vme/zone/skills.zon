@@ -12702,47 +12702,55 @@ code
 		act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
+
 	if (not(self.fighting))
 	{
 		act("You must be in combat to do that.",A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
+
 	weap := equipment(self,WEAR_WIELD);
 	held := equipment(self,WEAR_HOLD);
+
 	if ((weap == null) or (held == null) or (held.objecttype != 5))
 	{
 		
 		act("You must be dual-wielding to whirl.", A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
+
 	if (self.endurance <= 75)
 	{
 		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
+
 	act("You begin whirling your $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_CHAR);
 	act("$1n begins whirling their $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_ROOM);
 	self.endurance := self.endurance - 75;
 	heartbeat := PULSE_ROUND*4;
-	change_speed(self,PULSE_ROUND*4);
-	pause;
+	change_speed(self, PULSE_ROUND*4);
+
+	wait(SFB_TICK, TRUE);  // Yikes - self.fighting might be gone after this
+
+	if (not(self.fighting))
+	{
+		act("You lost the opponent for your whirl attack.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
 	hm := skillchecksaopp(SKI_WHIRL, ABIL_STR, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
 	if (hm <= -15)
 	{
-		act("Your get tripped up and stumble in your whirl!",
-			A_SOMEONE, self, null, null, TO_CHAR);
-		act("$1n gets tripped up and stumbles in their whirl!",
-			A_SOMEONE, self, null, null, TO_REST);
+		act("Your get tripped up and stumble in your whirl!", A_SOMEONE, self, null, null, TO_CHAR);
+		act("$1n gets tripped up and stumbles in their whirl!", A_SOMEONE, self, null, null, TO_REST);
 		change_speed(self,PULSE_ROUND*2);
 	}
 	else 
 	{
-		act("You unleash a deadly whirling attack on $3n!",
-			A_SOMEONE, self, null, self.fighting, TO_CHAR);
-		act("$1n unleashes a deadly whirling attack on $3n!",
-			A_SOMEONE, self, null, self.fighting, TO_NOTVICT);
-		act("$1n unleashes a deadly whirling attack on you!",
-			A_SOMEONE, self, null, self.fighting, TO_VICT);
+		act("You unleash a deadly whirling attack on $3n!", A_SOMEONE, self, null, self.fighting, TO_CHAR);
+		act("$1n unleashes a deadly whirling attack on $3n!", A_SOMEONE, self, null, self.fighting, TO_NOTVICT);
+		act("$1n unleashes a deadly whirling attack on you!", A_SOMEONE, self, null, self.fighting, TO_VICT);
 		if(hm < 16)
 			hm := 16;
 		if(hm > 60)

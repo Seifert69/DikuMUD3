@@ -11,7 +11,7 @@
 #include "namelist.h"
 #include "t_array.h"
 
-#define WAITCMD_MAXINST 32000
+#define WAITCMD_MAXINST 52000
 
 #define SKIP 0xffffffff /* skip label/index defined */
 
@@ -645,7 +645,7 @@ public:
     spec_arg *sarg;
     unit_data *owner;
 
-    sbit16 waitcmd; /* Command countdown */
+    sbit32 waitcmd; /* Command countdown */
 
     dilprg *next; /* For global dilprg list (sendtoalldil) */
 

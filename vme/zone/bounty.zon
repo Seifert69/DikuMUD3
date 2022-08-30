@@ -2195,9 +2195,9 @@ code
 			link(item,u);
 			item := load("str_boots@bounty");
 			link(item,u);
-			item := load("str_sleeves@bounty");
+			item := load("str_arms@bounty");
 			link(item,u);
-			item := load("str_leggings@bounty");
+			item := load("str_legs@bounty");
 			link(item,u);
 			item := load("str_hammer2@bounty");
 			link(item,u);
@@ -2211,9 +2211,9 @@ code
 			link(item,u);
 			item := load("str_boots@bounty");
 			link(item,u);
-			item := load("str_sleeves@bounty");
+			item := load("str_arms@bounty");
 			link(item,u);
-			item := load("str_leggings@bounty");
+			item := load("str_legs@bounty");
 			link(item,u);
 			item := load("str_hammer@bounty");
 			link(item,u);
@@ -2252,7 +2252,7 @@ code
 			link(item,u);
 			item := load("lth_jerkin@midgaard");
 			link(item,u);
-			item := load("lth_sleeves@midgaard");
+			item := load("str_arms@midgaard");
 			link(item,u);
 			exec("wear all",u);
 		}

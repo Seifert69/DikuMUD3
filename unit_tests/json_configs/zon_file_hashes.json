@@ -141,12 +141,12 @@
         {
             "source_file": {
                 "filename": "bounty.zon",
-                "sha512": "ce4d7f61bc0de6c04aec414f3b6dabc9cfd1cb14797118f18b12ce773e4cffdb85be2bf85a7c32da9b2aeeecdcf974f0308302a19a04605646cf4089662132bd"
+                "sha512": "75763553c84e4593efc42c0eb359bfcc1b96acd4dcdaf4cd33fd82a69575cc06d96a5415caefa9833e649f9227a8c152eb0b69369c0db174ce97a51e4dbe8661"
             },
             "output": [
                 {
                     "filename": "bounty.data",
-                    "sha512": "9f9b1c478dcc32453dd787ce73901269accabe69673683cb90d4ca377dcddeb18508174a7f476148fd223cffb57689a2530d75551df919abfca0019ef5684dd6"
+                    "sha512": "475951fa354367c4c0f5f81d1ebdd86787697936f5dd50e987ba81a379af69ecdfccdc4a325a255ab1edbb426f7427b6fa358cf4ef5eebc690d31732209779b2"
                 },
                 {
                     "filename": "bounty.reset",
@@ -813,12 +813,12 @@
         {
             "source_file": {
                 "filename": "skills.zon",
-                "sha512": "1565dab9f4738fedf2a35f8182821684bcf8944e030fabf041e74290d4b0daa30aeb02638e953b69d36d8af3833bb23a0980c465c0f734b1a654187d732892a1"
+                "sha512": "926ec06e60b54f3ad137f75b7833acbe5e58b577629c39be72144278c071881349d0ed7717058f838ffd64ae9d62fef9875f6b3889c43675adf9b806b01e19e9"
             },
             "output": [
                 {
                     "filename": "skills.data",
-                    "sha512": "ef8ce167850d28011ceaad7a563d6c490e05626f5860179f5cddca2b90aced6f1152f22b1cb6aecc31ebd191d1056b4fa6cc9346e53a9d28252c4132c1e91b27"
+                    "sha512": "251bfa967cb636c7ad8220553309957d1ff7b0207c7f8c6060fd898837820926ba91f258159d4fb3801b41a477716be58d2db4974339796180f143c13f3929dd"
                 },
                 {
                     "filename": "skills.reset",
