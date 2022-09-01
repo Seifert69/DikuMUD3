@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "7e0ebd44ad153a14a8de8802ed7d3fe3ab50e21183b2ee7a4a6a8e9b841fc5ae8787e00cc2a45874f1515b0346b0b2cddb08923c24630c995cffe1b1246b5462"
+                "sha512": "fb2dd61306ddb56c467ccedba4d222195614f3e49cb0fed7dd686fc61ca9f80cab675c4b7b511009d97c06e89f8f0a0c8a202215ed0463946b51ccba75300eef"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "6562f876caa640be26b539901f1dcc47782da7f52a7f6b6ab32facb11a7b493af349de7d80329832dee0ed05c534b6e8093e54ab1943cd73f9b2fd93a48ed98d"
+                    "sha512": "b62b0e9c6763bdb04b65e5657aaf6fb3b546404e10ef26592f2ce2c7977deb83588d869bbc6b906ea897d7a361f244aad584aeb3054f8755c9b9555ef78c42a3"
                 },
                 {
                     "filename": "basis.reset",
@@ -317,7 +317,7 @@
         {
             "source_file": {
                 "filename": "function.zon",
-                "sha512": "dbe99cfd86c09be415670a9c2fee7d3f7b770d4dd1869de2451b04454e4d2490aba60c66ce4883b324bdc9e565ebb25316d3f102edf57e6e301e2ece671115fb"
+                "sha512": "53859353aaa301566c9657954e969662605f2463bacef36fa45696f37cade4ec248b499db4e0f34a2ec8b18d5d30ef52fb8a0769517d7892db1affee4bad7cb6"
             },
             "output": [
                 {
@@ -509,12 +509,12 @@
         {
             "source_file": {
                 "filename": "justice.zon",
-                "sha512": "bcbb9fb1921fc0a5d85bb95a20deef835a15d777c26c5c61a782d720e0501390689d965d40043e99868def6792e765fa900851354bc9214293162992e6596ed7"
+                "sha512": "ee27d0ba0667708b8426d26ae0d7f4f5fa960fe25477a95a72cd11ef0c9bfb3c283f06ba39afe09ed5f6974733b2c92daf7b344adc53cd2f86cf392f871bb3d4"
             },
             "output": [
                 {
                     "filename": "justice.data",
-                    "sha512": "c0d098e4bfc659a218733b46465434d157100cfa96c76778b409c7938583ed1af86fbfdadb75fd800e4f8e27f04d4ab12f7068ba2a1c363296bc1d4ae1b9dd8e"
+                    "sha512": "30ad430ac90ef78212657710f9f838ecc6a094b12400bccd1d74e6d210071bf3df490e372561743239cbe0ba7c1eaaf198746d68f2e80142f44f5b08b9ad6b04"
                 },
                 {
                     "filename": "justice.reset",
@@ -589,7 +589,7 @@
         {
             "source_file": {
                 "filename": "midgaard.zon",
-                "sha512": "53af5a63d5b1a7c0bfc921922ea8bb9ce773a2eedae675c4712fdb6f4e4451b3a909677d305fc99844916d86e910ba13d2cd02ba887d674c30b0ed5b232ed5f8"
+                "sha512": "867ab6f4e0af7a623e0ac6d718b2b6c014ee24f6d79d09e90966ce9b3b4b61d6069ea66f7109a6a8c14f3132b0bbf0652f6caceec97c59d5bdee085889474b10"
             },
             "output": [
                 {

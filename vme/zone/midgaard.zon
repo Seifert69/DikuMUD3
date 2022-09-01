@@ -1913,8 +1913,7 @@ gmap(165,849)
 north to wall_rd1;
 east to glad_rd1;
 south to wall_rd3;
-down to midsewers/sewerexit2 keyword {"manhole"} open
-{EX_OPEN_CLOSE, EX_CLOSED};
+down to midsewers/sewerexit2 keyword {"manhole"} open {EX_OPEN_CLOSE, EX_CLOSED};
 ALWAYS_LIGHT
 end
 

@@ -384,7 +384,7 @@ code
       {
          log("debug: PC "+criminal_symname+ " " + itoa(criminal_idx) + " is offline.");         
       }
-      else
+/*      else
       {
          log("debug: NPC "+criminal_symname+ " " + itoa(criminal_idx) + " is gone.");
          // The NPC is dead. So no more reward accumulation. 
@@ -392,7 +392,7 @@ code
          // be cashed in? I dont think we should go through the trouble and 
          // update the reard info on a head.
          //
-      }
+      }*/
       return(0);
    }
 

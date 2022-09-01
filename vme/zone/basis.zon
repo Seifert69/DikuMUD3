@@ -828,55 +828,59 @@ dilend
 
 dilbegin integer fixweight(u:unitptr);
 var
-   wgt:integer;
-   item:unitptr;
+    wgt : integer;
+    item : unitptr;
+    s : string;
 
 code
 {
-   heartbeat := PULSE_SEC;
-   wgt:=0;
+    heartbeat := PULSE_SEC;
+    wgt:=0;
 
-   if ((u.names.[0]=="storage container") and (u.minv>=200))
-   {
-      //log(u.symname + " base = " + itoa(u.baseweight) + " weight= " + itoa(u.weight)+ " pre-set");
-      set_weight_base(u, 0);
-      set_weight(u, 0);
-      dilcopy("fixstorage@basis()",u);
-      return(0);
-	}
+    if ((u.names.[0]=="storage container") and (u.minv>=200))
+    {
+        //log(u.symname + " base = " + itoa(u.baseweight) + " weight= " + itoa(u.weight)+ " pre-set");
+        set_weight_base(u, 0);
+        set_weight(u, 0);
+        dilcopy("fixstorage@basis()",u);
+        return(0);
+    }
 
-   // Presume wizi items are storage containers
-   if (u.minv > 0)
-   {
-      return(u.weight);
-   }
+    // Presume wizi items are storage containers
+    if (u.minv > 0)
+    {
+        return(u.weight);
+    }
 
-   if (u.inside == null)
-   {
-      if (u.weight != u.baseweight)
-      {
-         log(u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
-         set_weight(u, u.baseweight);
-      }
-      return(u.weight);
-   }
+    if (u.inside == null)
+    {
+        if (u.weight != u.baseweight)
+        {
+            if (u.outside)
+                s := "IN UNIT " + u.outside.symname + " ";
 
-   item := u.inside;
+            log(s + u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
+            set_weight(u, u.baseweight);
+        }
+        return(u.weight);
+    }
 
-   while (item != null)
-   {
-      wgt:=wgt+fixweight(item);
-      item:=item.next;
-   }
+    item := u.inside;
 
-   //log("Setting " + u.symname + " to base + weight= " + itoa(wgt));
-   if (u.weight != u.baseweight + wgt)
-   {
-      log("container " + u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
-      set_weight(u, u.baseweight+wgt);
-   }
+    while (item != null)
+    {
+        wgt:=wgt+fixweight(item);
+        item:=item.next;
+    }
 
-   return (u.weight);
+    //log("Setting " + u.symname + " to base + weight= " + itoa(wgt));
+    if (u.weight != u.baseweight + wgt)
+    {
+        log("container " + u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
+        set_weight(u, u.baseweight+wgt);
+    }
+
+    return (u.weight);
 }
 dilend
 
