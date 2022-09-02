@@ -644,15 +644,11 @@ void dilfi_amod(dilprg *p)
     delete v2;
 }
 
-// set_weight_base
-// Set unitptr param 1 base weight to param 2 int value
-// Sets a unit's base weight and adjustes the weight of the unit and everything it is in.
-//
 void dilfi_dispatch(dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
-    if (dil_type_check("set_weight_base", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
+    if (dil_type_check("dispatch", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
     {
         if (v1->val.ptr)
         {

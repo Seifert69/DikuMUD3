@@ -1291,68 +1291,70 @@ dilend
 // Baseweight is how much the bag weighs when empty
 dilbegin aware bagofholding(pct : integer, bweight : integer, capac : integer);
 var
-   totalwgt : integer;
-   prevwgt : integer;
-   i : integer;
-   u : unitptr;
-   r : unitptr;
+    totalwgt : integer;
+    prevwgt : integer;
+    i : integer;
+    u : unitptr;
+    r : unitptr;
 code
 {   
-   self.capacity := capac;
+    self.capacity := capac;
 
 :init:
-   if (self.inside == null)
-   {
-      // Bag is empty
-      set_weight_base(self, bweight);
-      prevwgt := self.weight;
-      totalwgt := 0;
-   }
-   else
-   {
-      totalwgt := 0;
-      u := self.inside;
-      while (u)
-      {
-         totalwgt := totalwgt + u.weight;
-         u := u.next;
-      }
-      set_weight(self, bweight + (totalwgt * (100-pct))/100);
-      prevwgt := self.weight;
-   }
+    if (self.inside == null)
+    {
+        // Bag is empty
+        set_weight_base(self, bweight);
+        set_weight(self, bweight);
+        prevwgt := self.weight;
+        totalwgt := 0;
+    }
+    else
+    {
+        totalwgt := 0;
+        u := self.inside;
+        while (u)
+        {
+            totalwgt := totalwgt + u.weight;
+            u := u.next;
+        }
+        set_weight(self, bweight + (totalwgt * (100-pct))/100);
+        prevwgt := self.weight;
+    }
 
 
 :start:
-   wait(SFB_DONE, command("put") or command("get"));
+    wait(SFB_DONE, command("put") or command("get"));
 
-   if (prevwgt != self.weight)
-   {
-      totalwgt := totalwgt + (self.weight - prevwgt);
-      // log("totalwgt is now " + itoa(totalwgt));
-      i := self.baseweight + (totalwgt * (100-pct))/100;
-      set_weight(self, i);
-      prevwgt := self.weight;
+    if (prevwgt != self.weight)
+    {
+        //log("changing " + itoa(self.weight - prevwgt) + " lbs in the bag.");
+        totalwgt := totalwgt + (self.weight - prevwgt);
+        //log("bag totalwgt is now " + itoa(totalwgt));
+        i := self.baseweight + (totalwgt * (100-pct))/100;
+        set_weight(self, i);
+        prevwgt := self.weight;
 
-      if (totalwgt > capac)
-         goto burp;
-   }
-   goto start;
+        if (totalwgt > capac)
+            goto burp;
+    }
+    goto start;
 
 :burp:
-   act("There is a large belching sound as items pour out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
-   
-   r := self.outside;
-   while (r.type != UNIT_ST_ROOM)
-      r := r.outside;
+    act("There is a large belching sound as items pour out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
 
-   while (self.inside)
-   {
-      link(self.inside, r);
-   }
+    r := self.outside;
+    while (r.type != UNIT_ST_ROOM)
+        r := r.outside;
 
-   set_weight_base(self, bweight);
-   set_weight(self, bweight);
-   goto init;
+    while (self.inside)
+    {
+        link(self.inside, r);
+    }
+
+    set_weight_base(self, bweight);
+    set_weight(self, bweight);
+    goto init;
 }
 dilend
 

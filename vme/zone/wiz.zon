@@ -1032,6 +1032,19 @@ end
 
 %objects
 
+                                  bag
+
+names {"bag", "wizard bag", "wizard's bag"}
+title "a wizard's bag"
+descr "A wizard's bag has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
+CONTAINER_DEF(75)
+weight 2
+cost 5   IRON_PIECE
+dilcopy bagofholding@randomt(75, 2, 400);
+end
+
+
                            universe
 
 names {"parallel universe", "universe"}

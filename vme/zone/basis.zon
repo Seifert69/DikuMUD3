@@ -388,7 +388,6 @@ code
       i := dildestroy("stomach@update", self);
       dilcopy("stomach@update",self);
 
-      dilcopy("fixwt@basis()", self);
       dilcopy("break_eq@basis()", self);
 
 
@@ -399,6 +398,7 @@ code
          dilcopy("pk_erase@basis()", self);
 
    }
+    dilcopy("fixwt@basis()", self);
 
    login_scrub(self);
    login_age@youth(self);  // Revive the player
@@ -850,6 +850,12 @@ code
     if (u.minv > 0)
     {
         return(u.weight);
+    }
+
+    if (dilfind("bagofholding@randomt", u)) // Skip bags of holding
+    {
+        log("Skipping bag of holding");
+        return (u.weight);
     }
 
     if (u.inside == null)

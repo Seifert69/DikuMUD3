@@ -167,190 +167,187 @@ code{
 
 dilbegin do_get(arg : string);
 external
-   unitptr find_item(u1: unitptr, s1 : string, i1 : integer, u2 : unitptr);
-   integer get_item(u1 : unitptr, u2 : unitptr, i1 : integer);
-   integer get_extra(u1 : unitptr, s1 : string);
+    unitptr find_item(u1: unitptr, s1 : string, i1 : integer, u2 : unitptr);
+    integer get_item(u1 : unitptr, u2 : unitptr, i1 : integer);
+    integer get_extra(u1 : unitptr, s1 : string);
 
 var
-   temp      :  string;
-   wrdlst    :  stringlist;
-   fromitem  :  unitptr;
-   item      :  unitptr;
-   item2     :  unitptr;
-   cnt       :  integer;
-   pick      :  integer;
-   amnt      :  string;
+    temp      :  string;
+    wrdlst    :  stringlist;
+    fromitem  :  unitptr;
+    item      :  unitptr;
+    item2     :  unitptr;
+    cnt       :  integer;
+    pick      :  integer;
+    amnt      :  string;
 
 code
 {
-
-   if (arg == "")
-   {
-      sendtext("What do you wish to get?<br/>", self);
-      quit;
-   }
-
+    if (arg == "")
+    {
+        sendtext("What do you wish to get?<br/>", self);
+        quit;
+    }
 
     if (" from " in arg)
     {
-      temp := arg;
+        temp := arg;
 
-      wrdlst := split(temp, " from ");
+        wrdlst := split(temp, " from ");
 
-      if (wrdlst.[1] != "")
-      {
-         fromitem := find_item(self, wrdlst.[1], FIND_UNIT_HERE, null);
+        if (wrdlst.[1] != "")
+        {
+            fromitem := find_item(self, wrdlst.[1], FIND_UNIT_HERE, null);
 
-         if (fromitem == null)
-         {
-            sendtext("No such item to get things from.<br/>", self);
-            quit;
-         }
-         else if ((fromitem.type == UNIT_ST_PC) or (fromitem.type == UNIT_ST_NPC))
-         {
-            act("$3e would probably object to you doing that.", A_ALWAYS, self, null, fromitem, TO_CHAR);
-            quit;
-         }
-         else if ((IS_CORPSE(fromitem)) or ((fromitem.nameidx=="stat_corpse") and (fromitem.zoneidx=="spells")))
-         {
-            if ((("corpse of "+self.name) != fromitem.names.[0]) and
-               (("statue of "+self.name) != fromitem.names.[0]) and (fromitem.value[2]==1))
+            if (fromitem == null)
             {
-               sendtext ("You can only get stuff from your own players remains.<br/>",self);
-               quit;
+                sendtext("No such item to get things from.<br/>", self);
+                quit;
             }
-         }
+            else if ((fromitem.type == UNIT_ST_PC) or (fromitem.type == UNIT_ST_NPC))
+            {
+                act("$3e would probably object to you doing that.", A_ALWAYS, self, null, fromitem, TO_CHAR);
+                quit;
+            }
+            else if ((IS_CORPSE(fromitem)) or ((fromitem.nameidx=="stat_corpse") and (fromitem.zoneidx=="spells")))
+            {
+                if ((("corpse of "+self.name) != fromitem.names.[0]) and
+                    (("statue of "+self.name) != fromitem.names.[0]) and (fromitem.value[2]==1))
+                {
+                    sendtext ("You can only get stuff from your own players remains.<br/>",self);
+                    quit;
+                }
+            }
 
-         arg := wrdlst.[0];
-      }
-   }
+            arg := wrdlst.[0];
+        }
+    }
 
-   if (arg == "all")
-   {
-      if (fromitem)
-         item := fromitem.inside;
-      else
-         item := self.outside.inside;
+    if (arg == "all")
+    {
+        if (fromitem)
+            item := fromitem.inside;
+        else
+            item := self.outside.inside;
 
-      while(item)
-      {
-         item2 := item.next;
+        while(item)
+        {
+            item2 := item.next;
 
-         if (not visible(self, item))
-         {
+            if (not visible(self, item))
+            {
+                item := item2;
+                continue;
+            }
+
+            if (isset(item.manipulate, MANIPULATE_TAKE))
+            {
+                cnt := get_item(item, fromitem, 0);
+
+                if (cnt == 2)
+                    break;
+
+                pick := pick + 1;
+            }
+
             item := item2;
-            continue;
-         }
+        }
 
-         if (isset(item.manipulate, MANIPULATE_TAKE))
-         {
-            cnt := get_item(item, fromitem, 0);
+        if (pick == 0)
+        {
+            sendtext("Nothing to get.<br/>", self);
+            quit;
+        }
+    }
+    else if (arg == "money")
+    {
+        if (fromitem)
+            item := fromitem.inside;
+        else
+            item := self.outside.inside;
 
-            if (cnt == 2)
-               break;
+        while(item)
+        {
+            item2 := item.next;
 
-            pick := pick + 1;
-         }
+            if (not visible(self, item))
+            {
+                item := item2;
+                continue;
+            }
 
+            if (item.objecttype == ITEM_MONEY)
+            {
+                cnt := get_item(item, fromitem, 0);
 
-         item := item2;
-      }
+                if (cnt == 2)
+                    break;
 
-      if (pick == 0)
-      {
-         sendtext("Nothing to get.<br/>", self);
-         quit;
-      }
-   }
-   else if (arg == "money")
-   {
-      if (fromitem)
-           item := fromitem.inside;
-      else
-           item := self.outside.inside;
+                pick := pick + 1;
+            }
 
-      while(item)
-      {
-         item2 := item.next;
-
-         if (not visible(self, item))
-         {
             item := item2;
-            continue;
-         }
+        }
 
-         if (item.objecttype == ITEM_MONEY)
-         {
+        if (not pick)
+        {
+            sendtext("No money to get.<br/>", self);
+            quit;
+        }
+    }
+    else
+    {
+        temp := arg;
+        amnt := getword(temp);
+
+        pick := atoi(amnt);
+
+        if ((amnt == "0") or (pick))
+        {
+            if (pick < 1)
+            {
+                sendtext("How can you get " + itoa(pick) + " of something?<br/>", self);
+                quit;
+            }
+
+            if ("." in amnt)
+                pick := 0;
+            else
+                arg := temp;
+        }
+
+        if (fromitem)
+            item := find_item(self, arg, 0, fromitem.inside);
+        else
+            item := find_item(self, arg, FIND_UNIT_SURRO, null);
+
+
+        if (item)
+        {
+            if (item.objecttype == ITEM_MONEY)
+            {
+                cnt := get_item(item, fromitem, pick);
+                quit;
+            }
+            else if (pick > 0)
+            {
+                sendtext("Sorry, you cannot do that.<br/>", self);
+                quit;
+            }
+
             cnt := get_item(item, fromitem, 0);
-
-            if (cnt == 2)
-               break;
-
-            pick := pick + 1;
-         }
-
-         item := item2;
-      }
-
-      if (not pick)
-      {
-         sendtext("No money to get.<br/>", self);
-         quit;
-      }
-   }
-   else
-   {
-      temp := arg;
-      amnt := getword(temp);
-
-      pick := atoi(amnt);
-
-      if ((amnt == "0") or (pick))
-      {
-         if (pick < 1)
-         {
-            sendtext("How can you get " + itoa(pick) + " of something?<br/>", self);
             quit;
-         }
+        }
+        else
+            cnt := get_extra(self, arg);
 
-         if ("." in amnt)
-            pick := 0;
-         else
-            arg := temp;
-      }
+        if (not cnt)
+            sendtext("No such thing here.<br/>", self);
 
-      if (fromitem)
-         item := find_item(self, arg, 0, fromitem.inside);
-      else
-         item := find_item(self, arg, FIND_UNIT_SURRO, null);
+        quit;
+    }
 
-
-      if (item)
-      {
-         if (item.objecttype == ITEM_MONEY)
-         {
-            cnt := get_item(item, fromitem, pick);
-            quit;
-         }
-         else if (pick > 0)
-         {
-            sendtext("Sorry, you cannot do that.<br/>", self);
-            quit;
-         }
-
-         cnt := get_item(item, fromitem, 0);
-         quit;
-      }
-      else
-         cnt := get_extra(self, arg);
-
-      if (not cnt)
-           sendtext("No such thing here.<br/>", self);
-
-      quit;
-   }
-
-   quit;
+    quit;
 }
 dilend
 
@@ -415,125 +412,118 @@ code{
 
 
 
-/* get_item  : This actually transfers the item to the character */
-
+// get_item  : This actually transfers the item to the character
+//
 dilbegin integer get_item(item : unitptr, fromitem : unitptr, amount : integer);
-
 external
-
-  get_money(u1 : unitptr, u2 : unitptr, i1 : integer);
-  integer cancarry(u1 : unitptr, u2 : unitptr, i1 : integer);
+    get_money(u1 : unitptr, u2 : unitptr, i1 : integer);
+    integer cancarry(u1 : unitptr, u2 : unitptr, i1 : integer);
 
 var
+    cnt      :  integer;
+    buff     :  string;
 
-  cnt      :  integer;
-  buff     :  string;
+code
+{
+    /*log ("the amount in get_item is "+itoa(amount)); */
 
-
-code{
-/*log ("the amount in get_item is "+itoa(amount)); */
- if (item == self.outside)
+    if (item == self.outside)
     {
-      act("Pulling $3n out from under you seems quite impossible.", A_ALWAYS, self, null, item, TO_CHAR);
-      return(1);
+        act("Pulling $3n out from under you seems quite impossible.", A_ALWAYS, self, null, item, TO_CHAR);
+        return(1);
     }
 
- if ((item.type == UNIT_ST_OBJ) and (item.equip))
+    if ((item.type == UNIT_ST_OBJ) and (item.equip))
     {
-      act ("The $3N is equipped, you can't take $3m.", A_ALWAYS, self, null, item, TO_CHAR);
-      return(1);
-    }
-
-
- if (fromitem)
-    {
-if ((fromitem.type==UNIT_ST_OBJ) and
-((not isset(fromitem.manipulate, MANIPULATE_ENTER)) and
-(fromitem.objecttype!=ITEM_CONTAINER)))
-         {
-           act("$3n is not a container.", A_SOMEONE, self, null, fromitem, TO_CHAR);
-           return(2);
-         }
-
-      if ((fromitem.type == UNIT_ST_PC) or (fromitem.type == UNIT_ST_NPC))
-         {
-           act("$3e would probably object to that.", A_SOMEONE, self, null, fromitem, TO_CHAR);
-           return(2);
-         }
-
-      if (isset(fromitem.openflags, EX_CLOSED))
-         {
-           act("The $3N is closed.", A_SOMEONE, self, null, fromitem, TO_CHAR);
-           return(2);
-         }
-    }
-
- if ((item == self) or (not visible(self, item)))
-     return(1);
-
- if ((item.type == UNIT_ST_ROOM) or (not isset(item.manipulate, MANIPULATE_TAKE)))
-    {
-      act("$2n</div>: You cannot take that.", A_SOMEONE, self, item, null, TO_CHAR);
-      return(1);
+        act("The $3N is equipped, you can't take $3m.", A_ALWAYS, self, null, item, TO_CHAR);
+        return(1);
     }
 
 
-
- if (item.objecttype == ITEM_MONEY)
+    if (fromitem)
     {
-      get_money(item, fromitem, amount);
-      return(1);
+        if ((fromitem.type==UNIT_ST_OBJ) and ((not isset(fromitem.manipulate, MANIPULATE_ENTER)) and (fromitem.objecttype!=ITEM_CONTAINER)))
+        {
+            act("$3n is not a container.", A_SOMEONE, self, null, fromitem, TO_CHAR);
+            return(2);
+        }
+
+        if ((fromitem.type == UNIT_ST_PC) or (fromitem.type == UNIT_ST_NPC))
+        {
+            act("$3e would probably object to that.", A_SOMEONE, self, null, fromitem, TO_CHAR);
+            return(2);
+        }
+
+        if (isset(fromitem.openflags, EX_CLOSED))
+        {
+            act("The $3N is closed.", A_SOMEONE, self, null, fromitem, TO_CHAR);
+            return(2);
+        }
     }
 
- cnt := cancarry(self, item, 1);
+    if ((item == self) or (not visible(self, item)))
+        return(1);
 
- if (cnt == 2)
+    if ((item.type == UNIT_ST_ROOM) or (not isset(item.manipulate, MANIPULATE_TAKE)))
     {
-      act("$2n</div>: You cannot carry that much weight.", A_SOMEONE, self, item, null, TO_CHAR);
-      return(1);
+        act("$2n</div>: You cannot take that.", A_SOMEONE, self, item, null, TO_CHAR);
+        return(1);
     }
 
- if ((item.objecttype != ITEM_MONEY) and (cnt == 1))
+    if (item.objecttype == ITEM_MONEY)
     {
-      act("$2n</div>: You cannot carry that many items.", A_SOMEONE, self, item, null, TO_CHAR);
-      return(2);
+        get_money(item, fromitem, amount);
+        return(1);
+    }
+
+    cnt := cancarry(self, item, 1);
+
+    if (cnt == 2)
+    {
+        act("$2n</div>: You cannot carry that much weight.", A_SOMEONE, self, item, null, TO_CHAR);
+        return(1);
+    }
+
+    if ((item.objecttype != ITEM_MONEY) and (cnt == 1))
+    {
+        act("$2n</div>: You cannot carry that many items.", A_SOMEONE, self, item, null, TO_CHAR);
+        return(2);
     }
 
 
- if (fromitem)
+    if (fromitem)
     {
-      act("You get $2n from $3n.", A_SOMEONE, self, item, fromitem, TO_CHAR);
-      if (fromitem.outside == self)
-           act("$1n gets $2n from $1s $3N.", A_HIDEINV, self, item, fromitem, TO_ROOM);
-      else
-           act("$1n gets $2n from the $3N.", A_HIDEINV, self, item, fromitem, TO_ROOM);
+        act("You get $2n from $3n.", A_SOMEONE, self, item, fromitem, TO_CHAR);
+        if (fromitem.outside == self)
+            act("$1n gets $2n from $1s $3N.", A_HIDEINV, self, item, fromitem, TO_ROOM);
+        else
+            act("$1n gets $2n from the $3N.", A_HIDEINV, self, item, fromitem, TO_ROOM);
     }
- else
+    else
     {
-      if (item.extra.["$get_s"])
-           {
-             buff := item.extra.["$get_s"].descr;
-             act(buff, A_ALWAYS, self, item, null, TO_CHAR);
-           }
-      else
-           act("You get $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+        if (item.extra.["$get_s"])
+        {
+            buff := item.extra.["$get_s"].descr;
+            act(buff, A_ALWAYS, self, item, null, TO_CHAR);
+        }
+        else
+            act("You get $2n.", A_ALWAYS, self, item, null, TO_CHAR);
 
-      if (item.extra.["$get_o"])
-         {
-           buff := item.extra.["$get_o"].descr;
-           act(buff, A_SOMEONE, self, item, null, TO_REST);
-         }
-      else
-           act("$1n gets $2n.", A_SOMEONE, self, item, null, TO_REST);
+        if (item.extra.["$get_o"])
+        {
+            buff := item.extra.["$get_o"].descr;
+            act(buff, A_SOMEONE, self, item, null, TO_REST);
+        }
+        else
+            act("$1n gets $2n.", A_SOMEONE, self, item, null, TO_REST);
     }
 
- link(item, self);
+    link(item, self);
 
- send_done("get", self, fromitem, item, 0, "", null, CMD_AUTO_NONE);
-
- return(0);
-
-}dilend
+    send_done("get", self, fromitem, item, 0, "", null, CMD_AUTO_NONE);
+    return (0);
+}
+dilend
 
 
 /* get_extra : This checks the room for $get extras for when picking up 'stuff'
@@ -791,136 +781,132 @@ code{
    the persons 'purse' (money objects already in inventory */
 
 dilbegin get_money(item : unitptr, fromitem : unitptr, amnt : integer);
-
 external
-
-  integer avail_weight(u1 : unitptr);
-  integer money_weight(i1 : integer, i2 : integer);
-  unitptr find_money(u1 : unitptr, i1 : integer);
-  unitptr make_money(i1 : integer, i2 : integer);
-  integer money_amount(i1 : integer, i2 : integer);
+    integer avail_weight(u1 : unitptr);
+    integer money_weight(i1 : integer, i2 : integer);
+    unitptr find_money(u1 : unitptr, i1 : integer);
+    unitptr make_money(i1 : integer, i2 : integer);
+    integer money_amount(i1 : integer, i2 : integer);
 
 var
+    pcmoney :  unitptr;
+    gmoney  :  unitptr;
+    gout    :  unitptr;
+    mwt     :  integer;
+    mtype   :  integer;
+    mstring :  stringlist;
+    buff    :  string;
+    capac   :  integer;
+    nmoney  :  unitptr;
+    omoney  :  unitptr;
+    amnt2   :  integer;
 
-  pcmoney :  unitptr;
-  gmoney  :  unitptr;
-  gout    :  unitptr;
-  mwt     :  integer;
-  mtype   :  integer;
-  mstring :  stringlist;
-  buff    :  string;
-  capac   :  integer;
-  nmoney  :  unitptr;
-  omoney  :  unitptr;
-  amnt2   :  integer;
+code
+{
+    /* log ("the amount in get_money is "+itoa(amnt)); */
+    mstring := MONEY_STRING;
 
-code{
-/* log ("the amount in get_money is "+itoa(amnt)); */
- mstring := MONEY_STRING;
+    mtype := item.value[0];
 
- mtype := item.value[0];
+    if (amnt == 0)
+        amnt := item.cost;
 
- if (amnt == 0)
-      amnt := item.cost;
-
- if ((fromitem) and (fromitem.outside == self))
- {
-      capac := money_weight(mtype, amnt);
-	  goto fromself;
-	  }
- else
-      capac := avail_weight(self);
-
- if (capac == 0)
+    if ((fromitem) and (fromitem.outside == self))
     {
-      act("$2n: You cannot carry that much weight.", A_ALWAYS, self, item, null, TO_CHAR);
-      return;
+        capac := money_weight(mtype, amnt);
+        goto fromself;
+    }
+    else
+        capac := avail_weight(self);
+
+    if (capac == 0)
+    {
+        act("$2n: You cannot carry that much weight.", A_ALWAYS, self, item, null, TO_CHAR);
+        return;
     }
 
- mwt := money_weight(mtype, amnt);
+    mwt := money_weight(mtype, amnt);
 
- if (amnt > 0)
+    if (amnt > 0)
     {
-      /* Check item to make sure there is that much there */
-      if (amnt > item.cost)
-         {
-           act("There aren't that many $2ts here!", A_ALWAYS, self, mstring.[mtype], null, TO_CHAR);
-           return;
-         }
+        /* Check item to make sure there is that much there */
+        if (amnt > item.cost)
+        {
+            act("There aren't that many $2ts here!", A_ALWAYS, self, mstring.[mtype], null, TO_CHAR);
+            return;
+        }
     }
 
- if (amnt == 0)
+    if (amnt == 0)
     {
-      act("You get the $2N, but discover that they are fake!", A_ALWAYS, self, item, null, TO_CHAR);
-      destroy(item);
-      return;
+        act("You get the $2N, but discover that they are fake!", A_ALWAYS, self, item, null, TO_CHAR);
+        destroy(item);
+        return;
     }
 
- if (mwt > capac)
+    if (mwt > capac)
     {
-      amnt := money_amount(mtype, capac);
+        amnt := money_amount(mtype, capac);
 
-      if (amnt == 1)
-           buff := mstring.[mtype];
-      else
-           buff := mstring.[mtype] + "s";
+        if (amnt == 1)
+            buff := mstring.[mtype];
+        else
+            buff := mstring.[mtype] + "s";
 
-      if (fromitem)
-           buff := buff + " from " + fromitem.title;
+        if (fromitem)
+            buff := buff + " from " + fromitem.title;
 
-      act("You manage to take $2t $3t.<br/>Anything more would break your back!", A_ALWAYS, self, itoa(amnt), buff, TO_CHAR);
+        act("You manage to take $2t $3t.<br/>Anything more would break your back!", A_ALWAYS, self, itoa(amnt), buff, TO_CHAR);
 
     }
- else
+    else
     {
-	                                        :fromself:
-      if (amnt == 1)
-           buff := mstring.[mtype];
-      else
-           buff := mstring.[mtype] + "s";
+:fromself:
+        if (amnt == 1)
+            buff := mstring.[mtype];
+        else
+            buff := mstring.[mtype] + "s";
 
-      if (fromitem)
-           buff := buff + " from " + fromitem.title;
+        if (fromitem)
+            buff := buff + " from " + fromitem.title;
 
-      act("You get $2t $3t.", A_ALWAYS, self, itoa(amnt), buff, TO_CHAR);
+        act("You get $2t $3t.", A_ALWAYS, self, itoa(amnt), buff, TO_CHAR);
     }
 
- buff := mstring.[mtype] + "s";
+    buff := mstring.[mtype] + "s";
 
- if (fromitem)
-      buff := buff + " from " + fromitem.title;
+    if (fromitem)
+        buff := buff + " from " + fromitem.title;
 
- act("$1n gets some $2t.", A_SOMEONE, self, buff, null, TO_REST);
+    act("$1n gets some $2t.", A_SOMEONE, self, buff, null, TO_REST);
 
+    if (amnt < item.cost)
+        amnt2 := item.cost - amnt;
 
- if (amnt < item.cost)
-      amnt2 := item.cost - amnt;
+    fromitem := item.outside;
 
- fromitem := item.outside;
+    destroy(item);
 
- destroy(item);
+    omoney := find_money(self, mtype);
 
- omoney := find_money(self, mtype);
-
- if (omoney)
+    if (omoney)
     {
-      amnt := amnt + omoney.cost;
-      destroy(omoney);
+        amnt := amnt + omoney.cost;
+        destroy(omoney);
     }
 
- if (amnt2)
+    if (amnt2)
     {
-      nmoney := make_money(mtype, amnt2);
-      link(nmoney, fromitem);
+        nmoney := make_money(mtype, amnt2);
+        link(nmoney, fromitem);
     }
 
+    nmoney := make_money(mtype, amnt);
 
-
- nmoney := make_money(mtype, amnt);
-
- return;
-
-}dilend
+    send_done("get", self, fromitem, nmoney, 0, "", null, CMD_AUTO_NONE);
+    return;
+}
+dilend
 
 
 /* do_drop  : This is the dil that allows players to drop items that are in
@@ -1146,312 +1132,301 @@ code{
 /* do_put  : This allows the players to put stuff into containers */
 
 dilbegin do_put(arg : string);
-
 external
-
-  unitptr  find_item(u1 : unitptr, s1 : string, i1 : integer, u2 : unitptr);
-  integer  put_item(u1 : unitptr, u2 : unitptr, i1 : integer);
+    unitptr  find_item(u1 : unitptr, s1 : string, i1 : integer, u2 : unitptr);
+    integer  put_item(u1 : unitptr, u2 : unitptr, i1 : integer);
 
 var
+    item     :  unitptr;
+    nitem    :  unitptr;
+    wrdlst   :  stringlist;
+    toitem   :  unitptr;
+    temp     :  string;
+    buff     :  string;
+    amnt     :  integer;
+    i        :  integer;
+    cnt      :  integer;
 
-  item     :  unitptr;
-  nitem    :  unitptr;
-  wrdlst   :  stringlist;
-  toitem   :  unitptr;
-  temp     :  string;
-  buff     :  string;
-  amnt     :  integer;
-  i        :  integer;
-  cnt      :  integer;
-
-code{
-
- if (arg == "")
+code
+{
+    if (arg == "")
     {
-      sendtext("Put what in what?<br/>", self);
-      quit;
+        sendtext("Put what in what?<br/>", self);
+        quit;
     }
 
- temp := arg;
+    temp := arg;
 
- buff := getword(temp);
+    buff := getword(temp);
 
- amnt := atoi(buff);
+    amnt := atoi(buff);
 
- if ((buff == "0") or (amnt < 0))
+    if ((buff == "0") or (amnt < 0))
     {
-      act("How can you put $2t of something into something?", A_ALWAYS, self, temp, toitem, TO_CHAR);
-      quit;
+        act("How can you put $2t of something into something?", A_ALWAYS, self, temp, toitem, TO_CHAR);
+        quit;
     }
- else if ((amnt > 0) and (not("." in buff)))
+    else if ((amnt > 0) and (not("." in buff)))
         temp := getword(arg);
- else
-      amnt := 0;
+    else
+        amnt := 0;
 
- wrdlst := split(arg, " in ");
-if (length(wrdlst)<2)
+    wrdlst := split(arg, " in ");
+    if (length(wrdlst)<2)
     {
-      sendtext("Put 'in' what?<br/>", self);
-      quit;
+        sendtext("Put 'in' what?<br/>", self);
+        quit;
     }
 
- if ((wrdlst.[0] == "") or (wrdlst.[1] == ""))
+    if ((wrdlst.[0] == "") or (wrdlst.[1] == ""))
     {
-      sendtext("Put 'in' what?<br/>", self);
-      quit;
+        sendtext("Put 'in' what?<br/>", self);
+        quit;
     }
 
- toitem := find_item(self, wrdlst.[1], FIND_UNIT_HERE, null);
+    toitem := find_item(self, wrdlst.[1], FIND_UNIT_HERE, null);
 
- if (not toitem)
+    if (not toitem)
     {
-      sendtext("No such thing to put stuff in here.<br/>", self);
-      quit;
+        sendtext("No such thing to put stuff in here.<br/>", self);
+        quit;
     }
- else if ((toitem.type == UNIT_ST_PC) or (toitem.type == UNIT_ST_NPC))
+    else if ((toitem.type == UNIT_ST_PC) or (toitem.type == UNIT_ST_NPC))
     {
-      act("$2e would probably object to that!", A_SOMEONE, self, toitem, null, TO_CHAR);
-      quit;
-    }
-
- if (not isset(toitem.manipulate, MANIPULATE_ENTER))
-    {
-      act("You cannot put anything in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
-      quit;
+        act("$2e would probably object to that!", A_SOMEONE, self, toitem, null, TO_CHAR);
+        quit;
     }
 
- if (isset(toitem.openflags, EX_CLOSED))
+    if (not isset(toitem.manipulate, MANIPULATE_ENTER))
     {
-      act("$2n is closed.", A_ALWAYS, self, toitem, null, TO_CHAR);
-      quit;
+        act("You cannot put anything in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
+        quit;
     }
 
-
-
- if (wrdlst.[0] == "all")
+    if (isset(toitem.openflags, EX_CLOSED))
     {
-      item := self.inside;
-
-      cnt := 0;
-
-      while(item)
-         {
-           nitem := item.next;
-
-           if ((item.minv == 0) and (visible(self, item)) and (not item.equip) and (item.objecttype != ITEM_MONEY) and (item != toitem))
-                 i := put_item(item, toitem, 0);
-
-           if (i == 2)
-                break;
-if ((item.nameidx == "familiar2") and(item.zoneidx == "g_q"))
-    {
-      sendtext(item.title+" kicks and screams as you try to cram it into "+toitem.title+".<br/>", self);
-            cnt := cnt + i;
-
-           item := nitem;
+        act("$2n is closed.", A_ALWAYS, self, toitem, null, TO_CHAR);
+        quit;
     }
 
-           cnt := cnt + i;
-
-           item := nitem;
-         }
-
-      if (not cnt)
-           act("You have nothing to put in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
-
-      quit;
-    }
- else if (wrdlst.[0] == "money")
+    if (wrdlst.[0] == "all")
     {
-      item := self.inside;
+        item := self.inside;
 
-      cnt := 0;
+        cnt := 0;
 
-      while(item)
-         {
-           nitem := item.next;
+        while(item)
+        {
+            nitem := item.next;
 
-           if (item.objecttype == ITEM_MONEY)
+            if ((item.minv == 0) and (visible(self, item)) and (not item.equip) and (item.objecttype != ITEM_MONEY) and (item != toitem))
                 i := put_item(item, toitem, 0);
 
-           cnt := cnt + i;
+            if (i == 2)
+                break;
+            if ((item.nameidx == "familiar2") and(item.zoneidx == "g_q"))
+            {
+                sendtext(item.title+" kicks and screams as you try to cram it into "+toitem.title+".<br/>", self);
+                cnt := cnt + i;
 
-           if (i == 2)
+                item := nitem;
+            }
+
+            cnt := cnt + i;
+
+            item := nitem;
+        }
+
+        if (not cnt)
+            act("You have nothing to put in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
+
+        quit;
+    }
+    else if (wrdlst.[0] == "money")
+    {
+        item := self.inside;
+
+        cnt := 0;
+
+        while(item)
+        {
+            nitem := item.next;
+
+            if (item.objecttype == ITEM_MONEY)
+                i := put_item(item, toitem, 0);
+
+            cnt := cnt + i;
+
+            if (i == 2)
                 break;
 
 
-           item := nitem;
-         }
+            item := nitem;
+        }
 
-      if (not cnt)
-           act("You have no money to put in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
+        if (not cnt)
+            act("You have no money to put in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
 
-      quit;
+        quit;
     }
- else
+    else
     {
-      item := find_item(self, wrdlst.[0], FIND_UNIT_INVEN, null);
+        item := find_item(self, wrdlst.[0], FIND_UNIT_INVEN, null);
 
-      if (item == toitem)
-         {
-           act("You attempt to fold $2n into $2mself, but fail.", A_ALWAYS, self, item, null, TO_CHAR);
-           quit;
-         }
+        if (item == toitem)
+        {
+            act("You attempt to fold $2n into $2mself, but fail.", A_ALWAYS, self, item, null, TO_CHAR);
+            quit;
+        }
 
-  if ((item.nameidx == "familiar2") and(item.zoneidx == "g_q"))
-    {
-      sendtext(item.title+" kicks and screams as you try to cram it into "+toitem.title+".<br/>", self);
-      quit;
+        if ((item.nameidx == "familiar2") and(item.zoneidx == "g_q"))
+        {
+            sendtext(item.title+" kicks and screams as you try to cram it into "+toitem.title+".<br/>", self);
+            quit;
+        }
+
+
+        if ((item) and (item.objecttype != ITEM_MONEY) and (amnt))
+        {
+            sendtext("You cannot do that.<br/>", self);
+            quit;
+        }
+        else if (item)
+            i := put_item(item, toitem, amnt);
+        else
+            act("No such thing here to put in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
+
+        quit;
     }
 
-
-      if ((item) and (item.objecttype != ITEM_MONEY) and (amnt))
-         {
-           sendtext("You cannot do that.<br/>", self);
-           quit;
-         }
-      else if (item)
-         i := put_item(item, toitem, amnt);
-      else
-         act("No such thing here to put in $2n.", A_ALWAYS, self, toitem, null, TO_CHAR);
-
-      quit;
-    }
-
-quit;
-
-}dilend
+    quit;
+}
+dilend
 
 
 /* put_item : This does the actual transfer of the items */
 
 dilbegin integer put_item(item : unitptr, toitem : unitptr, amnt : integer);
-
 external
-
-  integer money_weight(i1 : integer, i2 : integer);
-  unitptr find_money(u1 : unitptr, i1 : integer);
-  unitptr make_money(i1 : integer, i2 : integer);
-  integer money_amount(i1 : integer, i2 : integer);
+    integer money_weight(i1 : integer, i2 : integer);
+    unitptr find_money(u1 : unitptr, i1 : integer);
+    unitptr make_money(i1 : integer, i2 : integer);
+    integer money_amount(i1 : integer, i2 : integer);
 
 
 var
+    omoney  :  unitptr;
+    nmoney  :  unitptr;
+    amnt2   :  integer;
+    cnt     :  integer;
+    mtype   :  integer;
+    buff    :  string;
 
-  omoney  :  unitptr;
-  nmoney  :  unitptr;
-  amnt2   :  integer;
-  cnt     :  integer;
-  mtype   :  integer;
-  buff    :  string;
-
-code{
-
-           if ((item.objecttype == ITEM_BOAT) and
-(toitem.objecttype == ITEM_BOAT))
+code
 {
-           act("The $2N cannot contain $3n.", A_ALWAYS, self, toitem, item, TO_CHAR);
-           return(2);
+    if ((item.objecttype == ITEM_BOAT) and (toitem.objecttype == ITEM_BOAT))
+    {
+        act("The $2N cannot contain $3n.", A_ALWAYS, self, toitem, item, TO_CHAR);
+        return(2);
+    }
+
+    if (item.objecttype == ITEM_MONEY)
+    {
+        if (amnt == 0)
+            amnt := item.cost;
+
+        if (amnt > item.cost)
+        {
+            act("You haven't got that many $2N!", A_ALWAYS, self, item, null, TO_CHAR);
+            return(2);
+        }
+
+
+        if (toitem.weight + toitem.baseweight >= toitem.capacity)
+        {
+            act("The $2N cannot contain anymore.", A_ALWAYS, self, toitem, null, TO_CHAR);
+            return(2);
+        }
+
+        mtype := item.value[0];
+
+        cnt := money_weight(mtype, amnt);
+
+        if (cnt + toitem.weight - toitem.baseweight >= toitem.capacity)
+        {
+            cnt := toitem.capacity - (toitem.weight - toitem.baseweight);
+            amnt := money_amount(mtype, cnt);
+            act("You manage to squeeze " + itoa(amnt) + " $2N into the $3N.", A_ALWAYS, self, item, toitem, TO_CHAR);
+        }
+        else
+            act("You put " + itoa(amnt) + " $2N into $3n.", A_ALWAYS, self, item, toitem, TO_CHAR);
+
+        if (amnt < item.cost)
+            amnt2 := item.cost - amnt;
+
+        omoney := find_money(toitem, mtype);
+
+        if (omoney)
+        {
+            cnt := amnt + omoney.cost;
+            destroy(omoney);
+        }
+        else
+            cnt := amnt;
+
+        destroy(item);
+
+        nmoney := make_money(mtype, cnt);
+
+
+        if (nmoney.cost == 1)
+            buff := nmoney.name + "s";
+        else
+            buff := nmoney.name;
+
+        if (toitem.outside == self)
+            buff := "$1n puts some " + buff + " into $1s $3N.";
+        else
+            buff := "$1n puts some " + buff + " into the $3N.";
+
+        act(buff, A_HIDEINV, self, nmoney, toitem, TO_REST);
+
+        link(nmoney, toitem);
+
+        send_done("put", self, nmoney, toitem, 0, "", null, CMD_AUTO_NONE);
+
+        if (amnt2)
+            nmoney := make_money(mtype, amnt2);
+
+        return(1);
+    }
+    else
+    {
+        if ((item.weight + toitem.weight - toitem.baseweight) > toitem.capacity)
+        {
+            act("The $2N cannot contain anymore.", A_ALWAYS, self, toitem, null, TO_CHAR);
+            return(2);
+        }
+
+        act("You put $2n into the $3N.", A_ALWAYS, self, item, toitem, TO_CHAR);
+
+        if (toitem.outside == self)
+            buff := "$1n puts $2n into $1s $3N.";
+        else
+            buff := "$1n puts $2n into the $3N.";
+
+        act(buff, A_HIDEINV, self, item, toitem, TO_REST);
+
+        link(item, toitem);
+
+        send_done("put", self, item, toitem, 0, "", null, CMD_AUTO_NONE);
+
+        return(1);
+    }
+
+    return(0);
 }
-
- if (item.objecttype == ITEM_MONEY)
-    {
-      if (amnt == 0)
-           amnt := item.cost;
-
-      if (amnt > item.cost)
-         {
-           act("You haven't got that many $2N!", A_ALWAYS, self, item, null, TO_CHAR);
-           return(2);
-         }
-
-
-      if (toitem.weight + toitem.baseweight >= toitem.capacity)
-         {
-
-           act("The $2N cannot contain anymore.", A_ALWAYS, self, toitem, null, TO_CHAR);
-           return(2);
-         }
-
-      mtype := item.value[0];
-
-
-      cnt := money_weight(mtype, amnt);
-
-      if (cnt + toitem.weight - toitem.baseweight >= toitem.capacity)
-         {
-           cnt := toitem.capacity - (toitem.weight - toitem.baseweight);
-           amnt := money_amount(mtype, cnt);
-           act("You manage to squeeze " + itoa(amnt) + " $2N into the $3N.", A_ALWAYS, self, item, toitem, TO_CHAR);
-         }
-      else
-           act("You put " + itoa(amnt) + " $2N into $3n.", A_ALWAYS, self, item, toitem, TO_CHAR);
-
-      if (amnt < item.cost)
-           amnt2 := item.cost - amnt;
-
-      omoney := find_money(toitem, mtype);
-
-      if (omoney)
-         {
-           cnt := amnt + omoney.cost;
-           destroy(omoney);
-         }
-      else
-           cnt := amnt;
-
-      destroy(item);
-
-      nmoney := make_money(mtype, cnt);
-
-
-      if (nmoney.cost == 1)
-           buff := nmoney.name + "s";
-      else
-           buff := nmoney.name;
-
-      if (toitem.outside == self)
-           buff := "$1n puts some " + buff + " into $1s $3N.";
-      else
-           buff := "$1n puts some " + buff + " into the $3N.";
-
-      act(buff, A_HIDEINV, self, nmoney, toitem, TO_REST);
-
-      link(nmoney, toitem);
-
-      send_done("put", self, nmoney, toitem, 0, "", null, CMD_AUTO_NONE);
-
-      if (amnt2)
-           nmoney := make_money(mtype, amnt2);
-
-      return(1);
-    }
- else
-    {
-      if ((item.weight + toitem.weight - toitem.baseweight) > toitem.capacity)
-         {
-           act("The $2N cannot contain anymore.", A_ALWAYS, self, toitem, null, TO_CHAR);
-           return(2);
-         }
-
-      act("You put $2n into the $3N.", A_ALWAYS, self, item, toitem, TO_CHAR);
-
-      if (toitem.outside == self)
-          buff := "$1n puts $2n into $1s $3N.";
-      else
-          buff := "$1n puts $2n into the $3N.";
-
-      act(buff, A_HIDEINV, self, item, toitem, TO_REST);
-
-      link(item, toitem);
-
-      send_done("put", self, item, toitem, 0, "", null, CMD_AUTO_NONE);
-
-      return(1);
-    }
-
- return(0);
-
-}dilend
+dilend
 
 
 /* do_give : this dil allows players to give items to other pcs/npcs */

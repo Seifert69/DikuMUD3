@@ -273,12 +273,15 @@ unit_data *set_money(unit_data *money, amount_t amt)
     return money;
 }
 
+
+// Create a money object (not in any unit)
 static unit_data *make_money(file_index_type *fi, amount_t amt)
 {
     unit_data *money = read_unit(fi);
 
     assert(money->isObj());
 
+    money->setBaseWeight(0); // Init money-weight
     money->setWeight(0); // Init money-weight
 
     auto str = diku::format_to_str(cur_strings[MONEY_CURRENCY(money)], g_money_types[MONEY_TYPE(money)].tails);
@@ -287,6 +290,7 @@ static unit_data *make_money(file_index_type *fi, amount_t amt)
 
     return set_money(money, amt);
 }
+
 
 /*  This is the most non-trivial part of this module, and has certainly caused
  *  me a bit of head-scratching from its conception in '92 'til its completion
@@ -729,20 +733,6 @@ char *obj_money_string(unit_data *obj, amount_t amt)
     }
 
     return buf;
-}
-
-amount_t char_can_carry_amount(unit_data *ch, unit_data *money)
-{
-    int d_wgt = char_carry_w_limit(ch) - ch->getContainingWeight();
-
-    return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
-}
-
-amount_t unit_can_hold_amount(unit_data *unit, unit_data *money)
-{
-    int d_wgt = unit->getCapacity() - unit->getContainingWeight();
-
-    return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
 void do_makemoney(unit_data *ch, char *arg, const command_info *cmd)
