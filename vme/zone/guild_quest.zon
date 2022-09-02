@@ -751,183 +751,179 @@ dilend
 
 dilbegin fam_brain();
 external
-   integer walk_room@function (s:string,i:integer);
-   integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+    integer walk_room@function (s:string,i:integer);
+    integer IsInGuilds@guilds(pc : unitptr, sGuilds : stringlist);
+    unitptr unit_room@function(u : unitptr);
 
 var
-   tf:integer;
-   junk:    integer;
-   i:integer;
-   pcowner: unitptr;
-   exd    : extraptr;
-   u :  unitptr;
-   pcname : string;
-   stat1:   string;
-   stat2:   string;
-   stat3:   string;
+    tf:integer;
+    junk:    integer;
+    i:integer;
+    pcowner: unitptr;
+    exd    : extraptr;
+    u :  unitptr;
+    pcname : string;
+    stat1:   string;
+    stat2:   string;
+    stat3:   string;
 
 code
 {
-   exd    := "$owner" in self.extra;
-   pcname := exd.descr;
+    exd    := "$owner" in self.extra;
+    pcname := exd.descr;
 
-   on_activation(self.position <= POSITION_SLEEPING, skip);
+    on_activation(self.position <= POSITION_SLEEPING, skip);
 
-   heartbeat := PULSE_SEC*5;
+    heartbeat := PULSE_SEC*5;
 
-   :bond:
-   if ((self.outside.type == UNIT_ST_PC) and (pcname == self.outside.name))
-   {
-      pcowner := self.outside;
-      secure(pcowner, lostowner);
-      exec("follow "+pcowner.name,self);
-      exec("emote basks in the loving glow of it's master "+
-	   pcowner.name+".", self);
-      goto brains;
-   }
-   pause;
-   goto bond;
-
-   :brains:
-
-   /* Current implementation only supports the status command,
-      which should now work wonderfully... a few new routines
-      have been added as separate DILs for combat and death.
-      The main reason not to have the brains wait statement
-      responded to generic or multiple SFB_CMD is that a few
-      familiars would really eat up the system resources. */
-
-   wait (SFB_CMD, (command("status") or command("tell")) and
-	 (activator == pcowner) and (findunit(activator, argument, FIND_UNIT_SURRO|FIND_UNIT_INVEN, null) == self));
+:bond:
+    if ((self.outside.type == UNIT_ST_PC) and (pcname == self.outside.name))
+    {
+        pcowner := self.outside;
+        secure(pcowner, lostowner);
+        exec("follow "+pcowner.name,self);
+        exec("emote basks in the loving glow of it's master "+
+        pcowner.name+".", self);
+        goto brains;
+    }
+    pause;
+    goto bond;
 
 
-   if (not IsInGuilds@guilds(pcowner, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
-     goto lostbond;
+:brains:
+    /* Current implementation only supports the status command,
+        which should now work wonderfully... a few new routines
+        have been added as separate DILs for combat and death.
+        The main reason not to have the brains wait statement
+        responded to generic or multiple SFB_CMD is that a few
+        familiars would really eat up the system resources. */
 
-   /* MANA FEEDING ROUTINE: it really should drain a small amount of mana
-      each time it is commanded, but right now, it just gets you for the
-      status command for 5 mana points... how to beef this up? are familiars
-      too powerful a possession? */
+    wait(SFB_CMD, (command("status") or command("tell")) and (activator == pcowner) and (findunit(activator, argument, FIND_UNIT_SURRO|FIND_UNIT_INVEN, null) == self));
 
-   /* Notice that now every command issued via TELL will cost the owner
-      some mana. Need to make them a BIT more expensive... */
+    if (not IsInGuilds@guilds(pcowner, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
+        goto lostbond;
 
-   pcowner.mana := pcowner.mana - 5;
-   position_update (pcowner);
-   if (command("tell"))
-   {
-      stat1 := getword(argument);
-      goto brains; /* Pass on the tell command to the obey function! */
-   }
+    /* MANA FEEDING ROUTINE: it really should drain a small amount of mana
+        each time it is commanded, but right now, it just gets you for the
+        status command for 5 mana points... how to beef this up? are familiars
+        too powerful a possession? */
 
-   /* IMPLIED: a status command was issued */
-   block;
+    /* Notice that now every command issued via TELL will cost the owner
+        some mana. Need to make them a BIT more expensive... */
 
-   act ("**The mental image of your familiar appears to you**", A_SOMEONE,
-	self, null, pcowner, TO_VICT);
+    pcowner.mana := pcowner.mana - 5;
+    position_update (pcowner);
+    if (command("tell"))
+    {
+        stat1 := getword(argument);
+        goto brains; /* Pass on the tell command to the obey function! */
+    }
 
-   /* STATUS ROUTINE CONSTRUCTION */
+    /* IMPLIED: a status command was issued */
+    block;
 
-   /* Pick a phrase to describe hit point state */
-   if (self.hp > ((self.max_hp / 4) * 3))
-     stat1 := "healthy";
-   if ((self.hp < ((self.max_hp / 4) *3)) and (self.hp > (self.max_hp/2)))
-     stat1 := "battered";
-   if ((self.hp < (self.max_hp/2)) and (self.hp > (self.max_hp/4)))
-     stat1 := "injured";
-   if (self.hp < (self.max_hp/4))
-     stat1 := "devastated";
+    act ("**The mental image of your familiar appears to you**", A_SOMEONE,
+    self, null, pcowner, TO_VICT);
 
-   /* Pick a phrase to describe mana state */
-   if (self.mana > 75)
-     stat2 := "powerful";
-   if ((self.mana < 75) and (self.mana > 50))
-     stat2 := "stressed";
-   if ((self.mana < 50) and (self.mana > 25))
-     stat2 := "drained";
-   if (self.mana < 25)
-     stat2 := "helpless";
+    /* STATUS ROUTINE CONSTRUCTION */
 
-   /* Pick a phrase to describe endurance */
-   if (self.endurance > 140)
-     stat3 := "rested";
-   if ((self.endurance < 140) and (self.endurance > 80))
-     stat3 := "winded";
-   if ((self.endurance < 80) and (self.endurance > 40))
-     stat3 := "fatigued";
-   if (self.endurance < 40)
-     stat3 := "exhausted";
+    /* Pick a phrase to describe hit point state */
+    if (self.hp > ((self.max_hp / 4) * 3))
+        stat1 := "healthy";
+    if ((self.hp < ((self.max_hp / 4) *3)) and (self.hp > (self.max_hp/2)))
+        stat1 := "battered";
+    if ((self.hp < (self.max_hp/2)) and (self.hp > (self.max_hp/4)))
+        stat1 := "injured";
+    if (self.hp < (self.max_hp/4))
+        stat1 := "devastated";
 
-   /* And put it all together as a status line */
+    /* Pick a phrase to describe mana state */
+    if (self.mana > 75)
+        stat2 := "powerful";
+    if ((self.mana < 75) and (self.mana > 50))
+        stat2 := "stressed";
+    if ((self.mana < 50) and (self.mana > 25))
+        stat2 := "drained";
+    if (self.mana < 25)
+        stat2 := "helpless";
 
-   act ("You sense that your familiar is "+stat1+", "+stat2+
-	", "+stat3+".", A_SOMEONE, self, null, pcowner, TO_VICT);
-   goto brains;
+    /* Pick a phrase to describe endurance */
+    if (self.endurance > 140)
+        stat3 := "rested";
+    if ((self.endurance < 140) and (self.endurance > 80))
+        stat3 := "winded";
+    if ((self.endurance < 80) and (self.endurance > 40))
+        stat3 := "fatigued";
+    if (self.endurance < 40)
+        stat3 := "exhausted";
 
+    /* And put it all together as a status line */
 
-   :lostbond:    /* This routine is invoked if the familiar's master has
-		    stopped being a Spellcaster and tried to command it.
-		    In this version, lostbond sends the familiar into a very
-		    destructive rampage against their FORMER master. */
-
-   exec ("follow "+self.name, self);
-
-   exec ("say "+pcowner.name+", you no longer control me... by straying from "+
-	 "the paths of magic, you have lost your control over me! "+
-	 "Now, it's pay back time for all those nasty situations you made me "+
-	 "go into!", self);
-   pause;
-
-   subextra (self.extra, "$owner");
-   subextra (self.extra, "$pc obey");
-
-   /* NASTY NEW ROUTINE: familiar removes all owners mana and 75% of points
-      before attacking... they were warned what classes the had to be.... */
-   junk := pcowner.max_hp;
-   pcowner.hp := (pcowner.hp - (3*(junk/4)));
-   pcowner.mana := 0;
-   position_update (pcowner);
-   link(self,self.outside.outside);
-   exec ("kill "+pcowner.name, self);
-   quit;
+    act ("You sense that your familiar is "+stat1+", "+stat2+", "+stat3+".", A_SOMEONE, self, null, pcowner, TO_VICT);
+    goto brains;
 
 
-   :lostowner:
-   heartbeat := PULSE_SEC * 5;
-   while (self.outside.type != UNIT_ST_ROOM)
-      link(self, self.outside);
+:lostbond:    /* This routine is invoked if the familiar's master has
+            stopped being a Spellcaster and tried to command it.
+            In this version, lostbond sends the familiar into a very
+            destructive rampage against their FORMER master. */
 
-   exec("say Eeek!", self);
-   exec("follow", self);
-   pause;
+    exec ("follow "+self.name, self);
+    exec ("say "+pcowner.name+", you no longer control me... by straying from "+
+        "the paths of magic, you have lost your control over me! "+
+        "Now, it's pay back time for all those nasty situations you made me "+
+        "go into!", self);
+    pause;
 
-   :lostloop:
-   while (self.outside.type != UNIT_ST_ROOM)
-      link(self, self.outside);
+    subextra (self.extra, "$owner");
+    subextra (self.extra, "$pc obey");
 
-   exec("cast controlled teleport "+pcname, self);
-   pause;
-   stat1 := pcname;
-   // tf := walk_room@function(pcname,4);   Makes no sense to walk to "player name" 2020
+    /* NASTY NEW ROUTINE: familiar removes all owners mana and 75% of points
+        before attacking... they were warned what classes the had to be.... */
+    junk := pcowner.max_hp;
+    pcowner.hp := (pcowner.hp - (3*(junk/4)));
+    pcowner.mana := 0;
+    position_update (pcowner);
+    link(self,self.outside.outside);
+    exec("kill "+pcowner.name, self);
+    quit;
 
-   u := findunit(self, stat1, FIND_UNIT_WORLD, null); // Try to find my master
 
-   if (u)
-   {
-      while (u.type != UNIT_ST_ROOM)
-         u := u.outside;
-      tf := walk_room@function(u.symname, 4);
-      exec("follow "+pcname, self);
-      if (self.master.name == pcname)
-      {
-         pcowner := self.master;
-         secure(pcowner, lostowner);
-         goto brains;
-      }
-   }
-   pause;
-   /* Retry */
-   goto lostloop;
+:lostowner:
+    heartbeat := PULSE_SEC * 5;
+    u := unit_room@function(self.outside);
+    link(self, u);
+
+    exec("say Eeek!", self);
+    exec("follow", self);
+    pause;
+
+:lostloop:
+    u := unit_room@function(self.outside);
+    link(self, u);
+
+    exec("cast controlled teleport "+pcname, self);
+    pause;
+    stat1 := pcname;
+    // tf := walk_room@function(pcname,4);   Makes no sense to walk to "player name" 2020
+
+    u := findunit(self, stat1, FIND_UNIT_WORLD, null); // Try to find my master
+
+    if (u)
+    {
+        u := unit_room@function(u);
+        tf := walk_room@function(u.symname, 4);
+        exec("follow "+pcname, self);
+        if (self.master.name == pcname)
+        {
+            pcowner := self.master;
+            secure(pcowner, lostowner);
+            goto brains;
+        }
+    }
+    pause;
+    /* Retry */
+    goto lostloop;
 }
 dilend
 

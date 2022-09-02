@@ -81,7 +81,7 @@ dilbegin admin_gp(arg : string);
 /* This dil takes input made by the admin for setting up a player on a guild path */
 code
 {
-   log("OBSOLETE admin_gp called");
+   log("OBSOLETE admin_gp called " + self.symname);
    quit;
 }
 dilend /* admin_gp */

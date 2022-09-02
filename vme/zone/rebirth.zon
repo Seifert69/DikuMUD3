@@ -4352,10 +4352,8 @@ if (self.extra.[DK_REBIRTHS]!=null)
                              }
 
    act("<div class=cpy>A bolt of lightning strikes you! You feel the gods restoring " +
-       "some of your morphing power!</div>",
-       A_ALWAYS, self, null, null, TO_CHAR);
-   act("<div class=cpyA bolt of lightning strikes $1n!</div>",
-       A_SOMEONE, self, null, null, TO_NOTVICT);
+       "some of your morphing power!</div>", A_ALWAYS, self, null, null, TO_CHAR);
+   act("<div class=cpy>A bolt of lightning strikes $1n!</div>", A_SOMEONE, self, null, null, TO_NOTVICT);
 
    i := 0;
 

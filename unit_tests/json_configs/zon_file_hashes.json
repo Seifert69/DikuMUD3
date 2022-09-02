@@ -365,12 +365,12 @@
         {
             "source_file": {
                 "filename": "guild_paths.zon",
-                "sha512": "afe98fbcc59e6e249bbd8af9efb816002484d9b0975990e4b67cc4b9e4d2696d86c53131b8b175fe91caeb09851af3778d5887b67e353f71fb455ee95d493527"
+                "sha512": "2426239d9a6467086160bf4c55bdc458362df7e7736993e5effc2573b070fafd99c4c617d8a0208a782444f38916eb96385fd2161b076672948fafa901bdfbef"
             },
             "output": [
                 {
                     "filename": "guild_paths.data",
-                    "sha512": "39f2d6ea744af7b51a5c3348362ca5c92a02fe99297ee908630a63b2eb5526769dc054e7999f843e6f1ac84175430da631093c2cac25b899b85f09fd99d77734"
+                    "sha512": "d9e5bfba79f09343333bb455d70edbcecd48512bb0127ae3f9b3387c72ac3c239c6207900da6402a951aae28a0acc59c07bbb912eacc9cf9808d46c94f526844"
                 },
                 {
                     "filename": "guild_paths.reset",
@@ -381,12 +381,12 @@
         {
             "source_file": {
                 "filename": "guild_quest.zon",
-                "sha512": "0a6e4741df00e5b3176da2612dd4b7a1b74281815de9bc8097f72ba634c3bf57afc2e7edf55fe35324a00f2d3edfd7d8eba5158b47d83f1a2ef23807e9dc892f"
+                "sha512": "2eba14183c4c1af07c425e474ca28aef350f56d5013bc95fb08413f8f91db7cfeb45d407270c5b43064efbf9c9e65eaad6e89d73b166bd693490b05970b499ff"
             },
             "output": [
                 {
                     "filename": "guild_quest.data",
-                    "sha512": "ce78460066f3a48e74de0081c446db507556fafdb89e8033a0805ebbde33623f44a662c978f9ebe5bef78090fbe416f9cbde9cf5a3026cd2e32c0480005b93bc"
+                    "sha512": "ba3eb86c7254f715b1defb248a3ddf186878a0dcf73b877c35058af6d441e892c64298f94b72ac4c4be34b53c9938742d381f0b29943a1dfaa92bdf9d70c7aa1"
                 },
                 {
                     "filename": "guild_quest.reset",
@@ -765,12 +765,12 @@
         {
             "source_file": {
                 "filename": "rebirth.zon",
-                "sha512": "05289c2b6039ad0fbcc87e9c9e505eca7cb4d30956e85c1d61b474e2241911d53b92d61c57db6eeaa28d71458e0b4c12b8a31036d9227b47c2a25b375f683660"
+                "sha512": "5afcddaf59ce07e11ecc0034068c73c8e5d5f58bee51c7af0d822ac0f12680fc572a4d08404b673ebf6b1f88693b8d7c904c06c49c1afaa52b467524030673bd"
             },
             "output": [
                 {
                     "filename": "rebirth.data",
-                    "sha512": "5ce46ac2b022829a96578cca45fc4d2e6d6738ccbaecd309345f49dc7b1be3ac176e4d6850d275b60f5cdf27a19d3d89ba2307678a9007bf9f8f2a226d54a1e2"
+                    "sha512": "4cd0dded693b8715b6045ef36dd7416c41fcecc69516db1871e24be0fec5d46cf200bced20a8d99132097990eb753fd2fd69711016e2d4fd5a8f0b50d5c69c92"
                 },
                 {
                     "filename": "rebirth.reset",
