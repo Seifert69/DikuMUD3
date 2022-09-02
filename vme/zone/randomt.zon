@@ -1322,6 +1322,7 @@ code
         if (self.weight != i)
         {
             log("bag of holding "+self.symname+" weight messed up on " + self.outside.symname + " weight is actually " + itoa(i) + " but was set to " + itoa(self.weight));
+            set_weight_base(self, bweight);
             set_weight(self, i);
         }
         prevwgt := self.weight;
