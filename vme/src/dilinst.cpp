@@ -2715,7 +2715,7 @@ void dilfi_ada(dilprg *p)
     {
         if (v1->val.ptr)
         {
-            if (((unit_data *)v1->val.ptr)->isChar())
+            if (((unit_data *)v1->val.ptr)->isChar() || ((unit_data *)v1->val.ptr)->isRoom())
             {
                 if (is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
                     is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
