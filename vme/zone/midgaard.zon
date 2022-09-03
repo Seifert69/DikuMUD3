@@ -1221,7 +1221,7 @@ code
     prevtit := self.outside_descr;
     self.outside_descr := sact("$1n has handcuffed $3n and is dragging $3m along.", A_ALWAYS, self, null, prisoner, TO_CHAR);
     priority;
-    log(self.symname + " walking prisoner to office.");
+    log(self.symname + " walking prisoner "+prisoner.symname+" to office.");
 
 :loop:
     tf := walk_room@function(office, 4);
@@ -1233,7 +1233,7 @@ code
         goto losthim;
     }
 
-    log(self.symname + " waiting for the prisoner to become secure triggered when lost.");
+    log(self.symname + " at the captain with "+prisoner.symname+" waiting for the prisoner to get kicked in jail.");
 
     if (i == 0)
     {
