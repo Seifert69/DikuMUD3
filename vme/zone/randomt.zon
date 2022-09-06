@@ -3301,7 +3301,7 @@ code
     mat2 := exd.vals.[2];       // Primary hilt material
     mat3 := exd.vals.[3];       // Primary guard material
 
-    if (rollsmith > bonuslvl)
+    if ((rollsmith - bonuslvl) > 1)
         log("Nicey noice, above bonus with: " + itoa(rollsmith-bonuslvl));
 
     if (self.objecttype == ITEM_WEAPON)
