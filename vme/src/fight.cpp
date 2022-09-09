@@ -1313,7 +1313,7 @@ void damage(unit_data *ch,
                 {
                     if (!IS_SET(CHAR_FLAGS(victim), CHAR_OUTLAW) || IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
                     {
-                        log_crime(ch, victim, CRIME_PK);
+                        log_crime(ch, victim, CRIME_MURDER);   // Used to be CRIME_PK but we dont really have code for it
                     }
                 }
                 else

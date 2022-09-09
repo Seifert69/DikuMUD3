@@ -3598,93 +3598,92 @@ dilend
 
 
 dilbegin knee(arg : string); /* do_knee. Just like kick */
-
 external
-   provoked_attack (victim : unitptr, ch : unitptr);
+    provoked_attack (victim : unitptr, ch : unitptr);
 
 var
-   bonus : integer;
-   targ  : unitptr;
+    bonus : integer;
+    targ  : unitptr;
 
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_KNEE] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_KNEE] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (arg == "")
-   {
-      if (self.fighting)
-      {
-	 targ := self.fighting;
-	 goto knee;
-      }
+    if (arg == "")
+    {
+        if (self.fighting)
+        {
+            targ := self.fighting;
+            goto knee;
+        }
 
-      act("Knee who?", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+        act("Knee who?", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
-   {
-      act("You can't knee that, silly!", A_SOMEONE, self, null, null,
-	  TO_CHAR);
-      quit;
-   }
+    if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+    {
+        act("You can't knee that, silly!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (targ == self)
-   {
-      act("You knee yourself.", A_HIDEINV, self, null, null,
-	  TO_CHAR);
-      act("$1n knees $1mself.", A_HIDEINV, self, null, null,
-	  TO_ROOM);
-      quit;
-   }
+    if (targ == self)
+    {
+        act("You knee yourself.", A_HIDEINV, self, null, null,
+        TO_CHAR);
+        act("$1n knees $1mself.", A_HIDEINV, self, null, null,
+        TO_ROOM);
+        quit;
+    }
 
-   if ((targ.type==UNIT_ST_PC) and
-   (self.type==UNIT_ST_PC))
-  {
-if (not(isset (self.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless you sign the book of blood.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
+    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+    {
+        if (not(isset (self.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
+            quit;
+        }
 
-if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless $2e signs the book of blood.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  quit;
-  }
-  }
+        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless $2e signs the book of blood.", A_ALWAYS,self,targ,null,TO_CHAR);
+            quit;
+        }
+    }
 
 
-   :knee:
-   if (equipment(self, WEAR_WIELD))
-     bonus := 0;
-   else
-   {
-     bonus := rnd(1,(self.weapons[WPN_KNEE] - 70));
-     /* Possibly a +30 bonus if you are 100% in knee */
-     if(bonus <= 0) bonus := 1;
-   }
-   if (self.endurance < 2)
-     act("You are too exhausted to attempt that.", A_ALWAYS, self, null,
-         null, TO_CHAR);
-   else self.endurance := self.endurance - 2;
-   provoked_attack (targ, self);
-   bonus := meleeattack(self, targ, (bonus+self.level), WPN_KNEE);
-   quit;
+:knee:
+    if (self.endurance < 2)
+    {
+        act("You are too exhausted to attempt that.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if (equipment(self, WEAR_WIELD))
+        bonus := 0;
+    else
+    {
+        bonus := rnd(1,(self.weapons[WPN_KNEE] - 70));
+        /* Possibly a +30 bonus if you are 100% in knee */
+        if(bonus <= 0) bonus := 1;
+    }
+
+    self.endurance := self.endurance - 2;
+    provoked_attack (targ, self);
+    bonus := meleeattack(self, targ, (bonus+self.level), WPN_KNEE);
+    quit;
 }
 dilend
 
@@ -3692,332 +3691,307 @@ dilend
 // do_hit
 dilbegin punch(arg : string); /* works as cmds hit and punch */
 external
-   provoked_attack (victim : unitptr, ch : unitptr);
+    provoked_attack (victim : unitptr, ch : unitptr);
 
 var
-   bonus : integer;
-   targ  : unitptr;
+    bonus : integer;
+    targ  : unitptr;
 
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_FIST] <= 0))
-   {
-      act("You must practice fist fighting first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_FIST] <= 0))
+    {
+        act("You must practice fist fighting first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (arg == "")
-   {
-      if (self.fighting)
-      {
-         targ := self.fighting;
-         goto hit;
-      }
+    if (equipment(self, WEAR_WIELD))
+    {
+        act ("You cannot hit someone with your fists if you're also wielding a weapon.", A_ALWAYS, self, targ, null, TO_CHAR);
+        quit;
+    }
 
-      act("Who do you wish to strike?", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if (arg == "")
+    {
+        if (self.fighting)
+        {
+            targ := self.fighting;
+            goto hit;
+        }
 
-   targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+        act("Who do you wish to strike?", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-   if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
-   {
-      act("You can't hit that, silly!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (targ == self)
-   {
-      act("You hit yourself.", A_HIDEINV, self, null, null, TO_CHAR);
-      act("$1n hits $1mself.", A_HIDEINV, self, null, null, TO_ROOM);
-      quit;
-   }
+    if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+    {
+        act("You can't hit that, silly!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
-   {
-      if (not(isset (self.pcflags, PC_PK_RELAXED)))
-      {
-         act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
-         quit;
-      }
+    if (targ == self)
+    {
+        act("You hit yourself.", A_HIDEINV, self, null, null, TO_CHAR);
+        act("$1n hits $1mself.", A_HIDEINV, self, null, null, TO_ROOM);
+        quit;
+    }
 
-      if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-      {
-         act ("You are not allowed to do this unless $2e signs the book of blood.", A_ALWAYS,self,targ,null,TO_CHAR);
-         quit;
-      }
-   }
+    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+    {
+        if (not(isset (self.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
+            quit;
+        }
 
-   :hit:
-   if (equipment(self, WEAR_WIELD))
-     bonus := 0;
-   else
-   {
-      bonus := rnd(1,(self.weapons[WPN_FIST] - 70));
-      /* Possibly a +30 bonus if you are 100% in knee */
-      if(bonus <= 0)
-         bonus := 1;
-   }
+        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless $2e signs the book of blood.", A_ALWAYS,self,targ,null,TO_CHAR);
+            quit;
+        }
+    }
 
-   if (self.endurance < 2)
-      act("You are too exhausted to attempt that.", A_ALWAYS, self, null, null, TO_CHAR);
-   else 
-      self.endurance := self.endurance - 2;
-   provoked_attack(targ, self);
-   bonus := meleeattack(self, targ, (bonus+self.level), WPN_FIST);
-   quit;
+
+:hit:
+    if (self.endurance < 2)
+    {
+        act("You are too exhausted to attempt that.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    bonus := self.weapons[WPN_FIST];
+    if (targ.position != POSITION_FIGHTING)
+        bonus := bonus + 50;
+    self.endurance := self.endurance - 2;
+    provoked_attack(targ, self);
+    bonus := meleeattack(self, targ, bonus, WPN_FIST);
+    quit;
 }
 dilend
 
 
-dilbegin tripwt ();
+dilbegin tripwt();
 code
 {
-heartbeat:=PULSE_VIOLENCE*6;
-wait (SFB_TICK,TRUE);
-quit;
+    heartbeat:=PULSE_VIOLENCE*6;
+    wait (SFB_TICK,TRUE);
+    quit;
 }
 dilend
 
-dilbegin tripped ();
+
+dilbegin tripped();
 code
 {
-heartbeat:=PULSE_VIOLENCE*3;
-wait (SFB_TICK,TRUE);
-quit;
+    heartbeat:=PULSE_VIOLENCE*3;
+    wait (SFB_TICK,TRUE);
+    quit;
 }
 dilend
+
+
 
 dilbegin trip(arg : string);
-
 external
-   integer skillresist (aa : integer, ad : integer,
-                             sa : integer, sd : integer);
-   provoked_attack (victim : unitptr, ch : unitptr);
+    integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
+    provoked_attack (victim : unitptr, ch : unitptr);
 
 var
-   skilla : integer;
-   skillb : integer;
-   skillc : integer;
-   skilld : integer;
-   hm     : integer;
-   targ   : unitptr;
-   f      : integer;
+    skilla : integer;
+    skillb : integer;
+    skillc : integer;
+    skilld : integer;
+    hm     : integer;
+    targ   : unitptr;
+    f      : integer;
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_TRIP] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-if ( self.position== POSITION_STUNNED)
-{
-      act("There doesn't seem to be a way to effectively trip $3n while you're lying face down in the muck!",
-          A_SOMEONE, self, null, targ, TO_CHAR);
-quit;
-}
-
-   if (arg == "")
-   {
-      if (self.fighting)
-      {
-	 targ := self.fighting;
-	 goto trip;
-      }
-      else
-      {
-	 act("Who do you wish to trip?", A_SOMEONE, self, null, null,
-	     TO_CHAR);
-	 quit;
-      }
-   }
-
-   targ := findunit(self, arg, FIND_UNIT_SURRO, null);
-
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
-   {
-      act("You can't trip that, silly!", A_SOMEONE, self, null, null,
-	  TO_CHAR);
-      quit;
-   }
-
-   if (targ == self)
-   {
-      act("You trip over your own feet.", A_HIDEINV, self, null, null,TO_CHAR);
-      act("$1n trips over $1s own feet.", A_SOMEONE, self, null, null,TO_ROOM);
-      self.position:=POSITION_SITTING;
-      quit;
-   }
-
-
-   if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
-  {
-if (not(isset (self.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless you sign the book of blood.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
-
-if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless $2e signs the book of blood.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  quit;
-  }
-  }
-
-   if (not (RACE_IS_MAMMAL(targ.race)))
-   {
-      act("There doesn't seem to be a way to effectively trip $3n.",
-          A_SOMEONE, self, null, targ, TO_CHAR);
-      quit;
-   }
-/*darg added to make mobs a bit more intelligent acting */
-
-   if (RACE_IS_MAMMAL(targ.race) and (targ.type == UNIT_ST_NPC))
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_TRIP] <= 0))
     {
-     f := dilfind("trip_pc@update", targ);
-     if(f == FALSE)
-      {
-       dilcopy("trip_pc@update()", targ);
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
     }
+
+    if ( self.position== POSITION_STUNNED)
+    {
+        act("There doesn't seem to be a way to effectively trip $3n while you're lying face down in the muck!",
+            A_SOMEONE, self, null, targ, TO_CHAR);
+        quit;
     }
-/* end darg add */
+
+    if (arg == "")
+    {
+        if (self.fighting)
+        {
+            targ := self.fighting;
+            goto trip;
+        }
+        else
+        {
+            act("Who do you wish to trip?", A_SOMEONE, self, null, null, TO_CHAR);
+            quit;
+        }
+    }
+
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+    {
+        act("You can't trip that, silly!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if (targ == self)
+    {
+        act("You trip over your own feet.", A_HIDEINV, self, null, null,TO_CHAR);
+        act("$1n trips over $1s own feet.", A_SOMEONE, self, null, null,TO_ROOM);
+        self.position := POSITION_SITTING;
+        quit;
+    }
 
 
-   if ( ((targ.weight - self.weight) > 350) )
-   {
-      act("You quickly find that $3e is much to heavy to trip...ouch.",
-          A_SOMEONE, self, null, targ, TO_CHAR);
-      quit;
-   }
+    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+    {
+        if (not(isset (self.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
+            quit;
+        }
 
-   if (targ.position <= POSITION_RESTING)
-   {
-      act("$3e is already down!", A_SOMEONE, self, null, targ, TO_CHAR);
-      quit;
-   }
+        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless $2e signs the book of blood.", A_ALWAYS,self,targ,null,TO_CHAR);
+            quit;
+        }
+    }
 
- :trip:
-   provoked_attack (targ, self);
-        
+    if (not (RACE_IS_MAMMAL(targ.race)))
+    {
+        act("There doesn't seem to be a way to effectively trip $3n.", A_SOMEONE, self, null, targ, TO_CHAR);
+        quit;
+    }
 
-if ((dilfind ("tripwt@skills",targ))or(dilfind ("tripped@skills",targ)))
-	{
-	act ("$3n anticipates $1n's trip and leaps harmlessly over.",
-		A_ALWAYS, self,null,targ,TO_NOTVICT);
-	act ("You try to trip $3n again but $3n anticipates your trip and leaps harmlessly over.",
-		A_ALWAYS, self,null,targ,TO_CHAR);
-		act ("You notice $3n trying to trip you again and you leap harmlessly over $3s leg.",
-			A_ALWAYS, targ,null,self,TO_CHAR);
-            self.endurance := self.endurance - 10;
-			position_update(self);
-			quit;
-			}
+    /*darg added to make mobs a bit more intelligent acting */
 
-   if (self.type == UNIT_ST_PC)
-     skillc := self.skills[SKI_TRIP];
-   else
-       skillc := rnd(40,144);
-     /*/
-     skillc := self.abilities[ABIL_DEX];
-     */
-   if (targ.type == UNIT_ST_PC)
-   /*  skilld := targ.skills[SKI_TRIP]; */
-  skilld := targ.abilities[ABIL_DEX]/4;
-   else
-      skilld := rnd(40,144);
+    if (RACE_IS_MAMMAL(targ.race) and (targ.type == UNIT_ST_NPC))
+    {
+        f := dilfind("trip_pc@update", targ);
+        if(f == FALSE)
+        {
+            dilcopy("trip_pc@update()", targ);
+        }
+    }
+    /* end darg add */
 
-   /*
-     skilld := targ.abilities[ABIL_DEX];
-    */
+
+    if ( ((targ.weight - self.weight) > 350) )
+    {
+        act("You quickly find that $3e is much to heavy to trip...ouch.", A_SOMEONE, self, null, targ, TO_CHAR);
+        quit;
+    }
+
+    if (targ.position <= POSITION_RESTING)
+    {
+        act("$3e is already down!", A_SOMEONE, self, null, targ, TO_CHAR);
+        quit;
+    }
+
+:trip:
+    provoked_attack (targ, self);
+            
+    if ((dilfind("tripwt@skills",targ)) or (dilfind("tripped@skills",targ)))
+    {
+        act ("$3n anticipates $1n's trip and leaps harmlessly over.", A_ALWAYS, self,null,targ,TO_NOTVICT);
+        act ("You try to trip $3n again but $3n anticipates your trip and leaps harmlessly over.", A_ALWAYS, self,null,targ,TO_CHAR);
+        act ("You notice $3n trying to trip you again and you leap harmlessly over $3s leg.", A_ALWAYS, targ,null,self,TO_CHAR);
+        self.endurance := self.endurance - 10;
+        position_update(self);
+        quit;
+    }
+
+    if (self.type == UNIT_ST_PC)
+        skillc := self.skills[SKI_TRIP];
+    else
+        skillc := rnd(40,144);
+        // skillc := self.abilities[ABIL_DEX];
+
+    if (targ.type == UNIT_ST_PC)
+        //  skilld := targ.skills[SKI_TRIP];
+        skilld := targ.abilities[ABIL_DEX]/4;
+    else
+        skilld := rnd(40,144);
+
+    // skilld := targ.abilities[ABIL_DEX];
     skilla := self.abilities[ABIL_DEX];
-	skillb := targ.abilities[ABIL_DEX] ;
-   hm := skillresist (skilla,skillb,skillc,skilld);
+    skillb := targ.abilities[ABIL_DEX] ;
+    hm := skillresist (skilla,skillb,skillc,skilld);
 
+    if (self.endurance < 10)
+    {
+        act("You are too exhausted to attempt that.", A_ALWAYS, self, null,null, TO_CHAR);
+        quit;
+    }
+    else
+    {
+        self.endurance:=self.endurance - 10;
+        position_update(self);
+    }
+        
+    if (hm < -25)
+    {
+        change_speed(self, PULSE_VIOLENCE);
+        provoked_attack (targ, self);
+        act("You fumble your trip attempt and stumble!.", A_ALWAYS, self,null, targ, TO_CHAR);
+        act("$1n ducks clumsily and attempts to sweep your feet!.", A_ALWAYS, self, null, targ, TO_VICT);
+        act("$1n attempts to trip $3n but fails miserably.", A_SOMEONE, self,  null, targ, TO_NOTVICT);
+        self.endurance := self.endurance - 10;
+        position_update(self);
+        quit;
+    }
 
+    if (hm < 0)
+    {
+        change_speed(self, PULSE_VIOLENCE / 2);
+        act("You fumble your trip attempt on $3n!.", A_ALWAYS, self, null, targ, TO_CHAR);
+        act("$1n ducks and attempts to sweeep your feet!.", A_ALWAYS, self, null, targ, TO_VICT);
+        act("$1n attempts to trip $3n but fails.", A_SOMEONE, self, null, targ, TO_NOTVICT);
+        self.endurance := self.endurance - 10;
+        position_update(self);
+        quit;
+    }
 
-   if (self.endurance < 10)
-     {
-	 act("You are too exhausted to attempt that.", A_ALWAYS, self, null,null, TO_CHAR);
-     quit;
-	 }
-   else
-   {
-  self.endurance:=self.endurance - 10;
+    dilcopy("tripwt@skills",targ);
+    dilcopy("tripped@skills",targ);
+    change_speed(targ, PULSE_VIOLENCE);
+    act("You make a quick move and trip $3n.", A_ALWAYS, self, null, targ, TO_CHAR);
+    act("$1n ducks quickly and sweeps your feet from under you.", A_ALWAYS, self, null, targ, TO_VICT);
+    act("$1n makes a quick manuever and trips $3n.", A_SOMEONE, self, null, targ, TO_NOTVICT);
+    act("$3n falls on $3s backside with a loud THUMP!", A_SOMEONE, self, null, targ, TO_CHAR);
+    act("$3n falls on $3s backside with a loud THUMP!", A_SOMEONE, self, null, targ, TO_NOTVICT);
+    act("You fall on your backside with a loud THUMP!", A_ALWAYS, self, null, targ, TO_VICT);
+    targ.position:=POSITION_SITTING;
+    self.endurance := self.endurance - 10;
     position_update(self);
-	}
-       
-   if (hm < -25)
-   {
-      change_speed(self, PULSE_VIOLENCE);
-      provoked_attack (targ, self);
-      act("You fumble your trip attempt and stumble!.",
-	   A_ALWAYS, self,null, targ, TO_CHAR);
-      act("$1n ducks clumsily and attempts to sweep your feet!.",
-	   A_ALWAYS, self, null, targ, TO_VICT);
-      act("$1n attempts to trip $3n but fails miserably.", A_SOMEONE, self,
-	  null, targ, TO_NOTVICT);
-      self.endurance := self.endurance - 10;
-	    position_update(self);
-      quit;
-   }
 
-   if (hm < 0)
-   {
-      change_speed(self, PULSE_VIOLENCE / 2);
-      act("You fumble your trip attempt on $3n!.", A_ALWAYS, self, null, targ,
-	  TO_CHAR);
-      act("$1n ducks and attempts to sweeep your feet!.", A_ALWAYS, self,
-	  null, targ, TO_VICT);
-      act("$1n attempts to trip $3n but fails.", A_SOMEONE, self, null, targ,
-	  TO_NOTVICT);
-      self.endurance := self.endurance - 10;
-	    position_update(self);
-      quit;
-   }
-
-dilcopy ("tripwt@skills",targ);
-dilcopy ("tripped@skills",targ);
-   change_speed(targ, PULSE_VIOLENCE);
-   act("You make a quick move and trip $3n.", A_ALWAYS, self, null, targ,
-       TO_CHAR);
-   act("$1n ducks quickly and sweeps your feet from under you.",
-       A_ALWAYS, self, null, targ, TO_VICT);
-   act("$1n makes a quick manuever and trips $3n.", A_SOMEONE, self, null,
-       targ, TO_NOTVICT);
-   act("$3n falls on $3s backside with a loud THUMP!", A_SOMEONE, self, null,
-       targ, TO_CHAR);
-   act("$3n falls on $3s backside with a loud THUMP!", A_SOMEONE, self, null,
-       targ, TO_NOTVICT);
-   act("You fall on your backside with a loud THUMP!",
-       A_ALWAYS, self, null, targ, TO_VICT);
-
-   targ.position:=POSITION_SITTING;
-   self.endurance := self.endurance - 10;
-	    position_update(self);
-
-      if (self.fighting == null)
-      {
-      set_fighting(self, targ);
-      }
-
-  quit;
-
+    if (self.fighting == null)
+    {
+        set_fighting(self, targ);
+    }
+    quit;
 }
 dilend
 

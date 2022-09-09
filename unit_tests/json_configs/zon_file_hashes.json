@@ -813,12 +813,12 @@
         {
             "source_file": {
                 "filename": "skills.zon",
-                "sha512": "926ec06e60b54f3ad137f75b7833acbe5e58b577629c39be72144278c071881349d0ed7717058f838ffd64ae9d62fef9875f6b3889c43675adf9b806b01e19e9"
+                "sha512": "162542b19b74b1bcffacd72e0ff7377055c2bccefab122ee9f1aa681b54ecdaa1eb9e8eabde773b93a17eb494e033b04fc1567c25060140a35c58f5df9099e83"
             },
             "output": [
                 {
                     "filename": "skills.data",
-                    "sha512": "251bfa967cb636c7ad8220553309957d1ff7b0207c7f8c6060fd898837820926ba91f258159d4fb3801b41a477716be58d2db4974339796180f143c13f3929dd"
+                    "sha512": "d617a535b8f786922a7c59e68c93164384e4411210fb1fc730603e6057c128f5721fb01ec9d17b98c8e22a82dcb24525f2ab1c141cb746c76bdf6d02bfd0787b"
                 },
                 {
                     "filename": "skills.reset",
@@ -861,12 +861,12 @@
         {
             "source_file": {
                 "filename": "spells.zon",
-                "sha512": "7362b143856aafb7c9f72ba6f1e92e37747956a10b84d750661d6251a54ef276dea508396268f16cbbcfb9f02591b4de4718e32576cebff34fadcf009b737639"
+                "sha512": "6b9548b0cc3068324695e9577e309c021502c7da3dfbcb5c80649d646c7928e025005fe0ea03dba93d8ccbe0b4e43e3ded86a227d000004e5844e473ea9bf12a"
             },
             "output": [
                 {
                     "filename": "spells.data",
-                    "sha512": "16637c35fab4488e2721e8b626265ddb715477b4853f434f86aececb7c9ade5d14d50fc905588841fa669cc4dcd168c992eef77424706a66a27b1e9355893d16"
+                    "sha512": "12191792964bcd93f55475b5edf2ad7e01e2106d77127d53a91c59b8cf8c5dfc0607f7db4171f7bc020f79fe1ba5d11eaf9f09482f45f36ab5b5d2770581841b"
                 },
                 {
                     "filename": "spells.reset",

@@ -10329,105 +10329,103 @@ dilend
 
 
 /* Called from both 'self leaving' and 'leaving' */
-/* Advanced for of flee. */
-dilbegin leaving(medi : unitptr, tgt : unitptr, arg : string,
-		 hm : integer, effect : string);
+/* Advanced form of flee.                        */
+dilbegin leaving(medi : unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 var
-   u : unitptr;
-   i : integer;
-   d : string;
+    u : unitptr;
+    i : integer;
+    d : string;
 
 code
 {
-   if (hm < 0)
-   {
-      act("Nothing happens.", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if (hm < 0)
+    {
+        act("Nothing happens.", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   /* Find the room that the tgt is inside */
+    /* Find the room that the tgt is inside */
 
-   u := self.outside;
-   while (u.type != UNIT_ST_ROOM)
-     u := u.outside;
+    u := self.outside;
+    while (u.type != UNIT_ST_ROOM)
+        u := u.outside;
 
-   arg := getword(arg);
+    arg := getword(arg);
 
-   if (arg in "north") {
-     i := DIR_NORTH;
-     d := "north"; }
-   else if ((arg in "east") and (arg != "s")) {
-     i := DIR_EAST;
-     d := "east"; }
-   else if ((arg in "south") and (arg != "u")) {
-     i := DIR_SOUTH;
-     d := "south"; }
-   else if (arg in "west") {
-     i := DIR_WEST;
-     d := "west"; }
-   else if (arg in "up") {
-     i := DIR_UP;
-     d := "up"; }
-   else if (arg in "down") {
-     i := DIR_DOWN;
-     d := "down"; }
-   else if ((arg in "northeast") or (arg == "ne")) {
-     i := DIR_NORTHEAST;
-     d := "northeast"; }
-   else if ((arg in "northwest") or (arg == "nw")) {
-     i := DIR_NORTHWEST;
-     d := "northwest"; }
-   else if ((arg in "southeast") or (arg == "se")) {
-     i := DIR_SOUTHEAST;
-     d := "southeast"; }
-   else if ((arg in "southwest") or (arg == "sw")) {
-     i := DIR_SOUTHWEST;
-     d := "southwest"; }
-   else
-   {
-      act("You must specify a direction to leave in.",
-	  A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if (arg in "north") {
+        i := DIR_NORTH;
+        d := "north"; }
+    else if ((arg in "east") and (arg != "s")) {
+        i := DIR_EAST;
+        d := "east"; }
+    else if ((arg in "south") and (arg != "u")) {
+        i := DIR_SOUTH;
+        d := "south"; }
+    else if (arg in "west") {
+        i := DIR_WEST;
+        d := "west"; }
+    else if (arg in "up") {
+        i := DIR_UP;
+        d := "up"; }
+    else if (arg in "down") {
+        i := DIR_DOWN;
+        d := "down"; }
+    else if ((arg in "northeast") or (arg == "ne")) {
+        i := DIR_NORTHEAST;
+        d := "northeast"; }
+    else if ((arg in "northwest") or (arg == "nw")) {
+        i := DIR_NORTHWEST;
+        d := "northwest"; }
+    else if ((arg in "southeast") or (arg == "se")) {
+        i := DIR_SOUTHEAST;
+        d := "southeast"; }
+    else if ((arg in "southwest") or (arg == "sw")) {
+        i := DIR_SOUTHWEST;
+        d := "southwest"; }
+    else
+    {
+        act("You must specify a direction to leave in.",
+        A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if ((not u.exit_to[i]) or (u.exit_info[i] & EX_CLOSED) or
-       (u.exit_to[i].movement == SECT_WATER_SAIL))
-   {
-      act("No such direction.",
-	  A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((not u.exit_to[i]) or (u.exit_info[i] & EX_CLOSED))
+    {
+        act("No such direction.", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-if (self.type==UNIT_ST_PC)
-if (not(paycheck(self,u.exit_to[i]))){
-      act("You don't have access to that location, type 'help donation'.",
-           A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-     }
+    if ((u.exit_to[i].movement == SECT_WATER_SAIL))
+    {
+        act("That is impossibly far.", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-if ("$no_leaving_clan" in self.outside.extra)
-	{
-	act ("Magical Clan powers stop you from succeeding in that spell.",
-	A_ALWAYS, self, null,null,TO_CHAR);
-	act ("Magical Clan powers stop $1n from casting the Leaving spell.",
-	A_ALWAYS, self, null,null,TO_REST);
-	quit;
-	}
+    if (self.type==UNIT_ST_PC)
+    {
+        if (not (paycheck(self,u.exit_to[i])))
+        {
+            act("You don't have access to that location, type 'help donation'.", A_ALWAYS, self, null, null, TO_CHAR);
+            quit;
+        }
+    }
 
-   act("$1n vanishes.",
-       A_HIDEINV, self, null, null, TO_ROOM);
-   act("You are teleported "+d+".",
-       A_SOMEONE, self, null, null, TO_CHAR);
+    if ("$no_leaving_clan" in self.outside.extra)
+    {
+        act ("Magical Clan powers stop you from succeeding in that spell.", A_ALWAYS, self, null,null,TO_CHAR);
+        act ("Magical Clan powers stop $1n from casting the Leaving spell.", A_ALWAYS, self, null,null,TO_REST);
+        quit;
+    }
 
-   link(self, u.exit_to[i]);
-   dilcopy("sendmsg@spells(teleport)", self);
+    act("$1n vanishes.", A_HIDEINV, self, null, null, TO_ROOM);
+    act("You are teleported "+d+".", A_SOMEONE, self, null, null, TO_CHAR);
 
-   act("$1n appears from thin air.",
-       A_HIDEINV, self, null, null, TO_ROOM);
+    link(self, u.exit_to[i]);
+    dilcopy("sendmsg@spells(teleport)", self);
 
-   exec("look", self);
-
-   quit;
+    act("$1n appears from thin air.", A_HIDEINV, self, null, null, TO_ROOM);
+    exec("look", self);
+    quit;
 }
 dilend
 
