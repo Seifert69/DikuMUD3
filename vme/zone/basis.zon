@@ -854,7 +854,7 @@ code
 
     if (dilfind("bagofholding@randomt", u)) // Skip bags of holding
     {
-        log("Skipping bag of holding");
+        //log("Skipping bag of holding");
         return (u.weight);
     }
 

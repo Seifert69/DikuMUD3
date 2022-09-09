@@ -109,12 +109,12 @@
         {
             "source_file": {
                 "filename": "basis.zon",
-                "sha512": "13de1ff5a1a1ec4f71a4bb802b3bf614048859807363469e3a5fe75046a539d3462601c9584206c76ee40180a3f87d9e1ae07879737691b9a60ace0943d8c5a9"
+                "sha512": "db7144ea6148febc8f540fd4ce214046ee8b70b544e6c0e84b5dca9b7eb77674cac5ea8c5616f2164bc62d55299b761405cc2dce59de411ea29becfedc70c20b"
             },
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "025f001d573bfe830259fa409185294c967bd1e54fbeca2c7e0ddf060daf4687dcf0b711b146ed38324ac08aeb5faf226b4969692502ccefddf6f4cc0ff162db"
+                    "sha512": "bb1c3440158e59decdd0ef9a77c250e9971aae857e53116453f0ff7d90c0f5b340f090d972d517d7bd63741d72e3ea91f0621c1fdd28eed37d37fd8697261af8"
                 },
                 {
                     "filename": "basis.reset",
@@ -141,12 +141,12 @@
         {
             "source_file": {
                 "filename": "bounty.zon",
-                "sha512": "75763553c84e4593efc42c0eb359bfcc1b96acd4dcdaf4cd33fd82a69575cc06d96a5415caefa9833e649f9227a8c152eb0b69369c0db174ce97a51e4dbe8661"
+                "sha512": "32f99c9b21221d007d22f0c81c1296d92351eda93d18ebe3855b08d9230966426857bc5b4b6fa362d88521b16907f9d7cb9954be95bb5e8dd497ab716b1de7b1"
             },
             "output": [
                 {
                     "filename": "bounty.data",
-                    "sha512": "475951fa354367c4c0f5f81d1ebdd86787697936f5dd50e987ba81a379af69ecdfccdc4a325a255ab1edbb426f7427b6fa358cf4ef5eebc690d31732209779b2"
+                    "sha512": "e38bb2d0f37682cd2be00aac219594a8818c85d0891542a369e81b1c6694a90f9be6ec7d25b1b0f0356a1cc2c50015757a318986b707387319d47877d059a762"
                 },
                 {
                     "filename": "bounty.reset",
@@ -717,12 +717,12 @@
         {
             "source_file": {
                 "filename": "randomt.zon",
-                "sha512": "3f0258c5d6e3e32301c5b2d451dfcd899d843cafaf5599b747eb429dfba268458bfbc0c6f86fc44715b3baeb3e490ea163da25748176641d38fb9616e2031d6d"
+                "sha512": "953bf6effb90a6d88a3c88821745648865f488d97f5027e2db9b7b9855542985a2704a4b9413ebf359090fccc34700a2ef1c57d18e349dbcf624b3b903d2b35b"
             },
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "3ec8307c9874daa89cc52e7645a55cd7de119b3edb8d7df700f8e08ed85a4403362c8ec02fd1a3e44fba0984c6a18c583217819a21f6b1a3662c2fdafebee84c"
+                    "sha512": "7083eeb0886423ce2a4f624ed3382c37069a9ef2f93f898859527a1c17eec3aceff769c1d4d1cf36a42ce61b91df921fa6030733b926da36d57f8032d475cff2"
                 },
                 {
                     "filename": "randomt.reset",
