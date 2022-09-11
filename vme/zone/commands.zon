@@ -514,7 +514,7 @@ nodonlist:={"$nodonlist"};
 conlist:={"$conlist"};
     zones := zhead();
     cnt:=0;
- while(zones)
+ while (zones)
  {
 
 		tlist := split(zones.title,"@");
@@ -553,7 +553,7 @@ while (inc < iMax)
  inc := inc *3+1;
 
 inc:=inc/3;
-while(inc > 0)
+while (inc > 0)
  {
 
  i:=inc;
@@ -561,9 +561,9 @@ while(inc > 0)
   {
   iVal := zonlist.[i];
   j:=i;
-  while(j > (inc-1))
+  while (j > (inc-1))
    {
-   if(iVal < zonlist.[j - inc])
+   if (iVal < zonlist.[j - inc])
     {
     zonlist.[j] := zonlist.[j - inc];
     }
@@ -586,7 +586,7 @@ while (inc < iMax)
  inc := inc *3+1;
 
 inc:=inc/3;
-while(inc > 0)
+while (inc > 0)
  {
 
  i:=inc;
@@ -594,9 +594,9 @@ while(inc > 0)
   {
   iVal := conlist.[i];
   j:=i;
-  while(j > (inc-1))
+  while (j > (inc-1))
    {
-   if(iVal < conlist.[j - inc])
+   if (iVal < conlist.[j - inc])
     {
     conlist.[j] := conlist.[j - inc];
     }
@@ -1158,7 +1158,7 @@ lft : string;
 code
 {
 
-   if(arg == "")
+   if (arg == "")
    {
     sendtext("Gods don't like being bothered like that!<br/>",self);
     quit;
@@ -1166,24 +1166,24 @@ code
 
    wizcmd := chead();
 
-   while((wizcmd) and (wizcmd.name != "wiz"))
+   while ((wizcmd) and (wizcmd.name != "wiz"))
     wizcmd := wizcmd.next;
 
-   if(isset(self.flags,UNIT_FL_BURIED))
+   if (isset(self.flags,UNIT_FL_BURIED))
    {
     sendtext("You can not talk while buried.<br/>", self);
     quit;
    }
 
-   if((left(arg,1) == "@") and (length(arg) > 1))
+   if ((left(arg,1) == "@") and (length(arg) > 1))
    {
    tmp := getword(arg);
    emote := TRUE;
    }
 
-   else if(arg == "-")
+   else if (arg == "-")
    {
-    if(isset(self.pcflags,PC_NOWIZ))
+    if (isset(self.pcflags,PC_NOWIZ))
      sendtext("But you're ALREADY offline!<br/>", self);
     else
     {
@@ -1193,9 +1193,9 @@ code
    quit;
    }
 
-   else if(arg == "+")
+   else if (arg == "+")
    {
-    if(not isset(self.pcflags,PC_NOWIZ))
+    if (not isset(self.pcflags,PC_NOWIZ))
      sendtext("But you're ALREADY online!<br/>", self);
     else
     {
@@ -1206,33 +1206,33 @@ code
    }
 
 
-   else if(arg == "?")
+   else if (arg == "?")
    {
     ch := ghead();
     cnt := 0;
 
-    while(ch.type == UNIT_ST_PC)
+    while (ch.type == UNIT_ST_PC)
     {
-     if((ch.level >= IMMORTAL_LEVEL) and (visible(self,ch)))
+     if ((ch.level >= IMMORTAL_LEVEL) and (visible(self,ch)))
      {
-      if(cnt == 0)
+      if (cnt == 0)
       {
-       if(ch.minv > 0)
+       if (ch.minv > 0)
         tmp := "*<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
        else
         tmp := "<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
 
-                  if(isset(ch.pcflags,PC_NOWIZ))
+                  if (isset(ch.pcflags,PC_NOWIZ))
                    tmp := tmp+"-<div class='wiz'>";
                  }
       else
       {
-       if(ch.minv > 0)
+       if (ch.minv > 0)
         tmp := tmp+", *<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
        else
         tmp := tmp+"<div class='wiz'>, "+ch.name+"("+itoa(ch.level)+")";
 
-                  if(isset(ch.pcflags, PC_NOWIZ))
+                  if (isset(ch.pcflags, PC_NOWIZ))
                    tmp := tmp+"-<div class='wiz'>";
                  }
       cnt := cnt + 1;
@@ -1245,18 +1245,18 @@ code
     quit;
    }
 
-   if(isset(self.pcflags,PC_NOWIZ))
+   if (isset(self.pcflags,PC_NOWIZ))
    {
     sendtext("You're offline!!!<br/>", self);
     quit;
    }
 
-   if((left(arg,1) == "#") and (length(arg) > 1))
+   if ((left(arg,1) == "#") and (length(arg) > 1))
    {
    tmp := getword(arg);
    wizlvl := atoi(right(tmp, length(tmp) - 1));
 
-   if(wizlvl > self.level)
+   if (wizlvl > self.level)
    {
     sendtext("You cannot limit the channel to a higher level than your own.<br/>", self);
     quit;
@@ -1270,7 +1270,7 @@ code
    {
 
    wizlvl := self.minv;
-   if(wizlvl > 200) lft := ":"+itoa(wizlvl)+":";
+   if (wizlvl > 200) lft := ":"+itoa(wizlvl)+":";
    else lft := "::";
 
 
@@ -1278,13 +1278,13 @@ code
 
    ch := ghead();
 
-   while(ch.type == UNIT_ST_PC)
+   while (ch.type == UNIT_ST_PC)
    {
 
-    if((ch.level >= wizcmd.level) and (ch.level >= wizlvl) and
+    if ((ch.level >= wizcmd.level) and (ch.level >= wizlvl) and
            (not isset(ch.pcflags,PC_NOWIZ)))
         {
-        if(emote)
+        if (emote)
            sendtext("<div class='wiz'>"+lft+" "+self.name+" "+arg+"<br/>", ch);
         else
            sendtext("<div class='wiz'>"+lft+" "+self.name+" :: "+arg+"<br/>", ch);
@@ -1402,7 +1402,7 @@ code{
 
        cnt := 1;
 
-       while(cnt < length(slist))
+       while (cnt < length(slist))
            {
              sname := sname + " " + slist.[cnt];
              cnt := cnt + 1;
@@ -1417,7 +1417,7 @@ code{
        buffer := "Invalid skill, please choose from the following:<br/>";
 
        sdef := 0;
-       while(sdef < SKI_TREE_MAX)
+       while (sdef < SKI_TREE_MAX)
           {
             sname := skill_name(sdef);
 
@@ -1458,7 +1458,7 @@ code{
 
        cnt := 1;
 
-       while(cnt < length(slist))
+       while (cnt < length(slist))
            {
              sname := sname + " " + slist.[cnt];
              cnt := cnt + 1;
@@ -1473,7 +1473,7 @@ code{
        buffer := "Invalid weapon, please choose from the following:<br/>";
 
        sdef := 0;
-       while(sdef < WPN_TREE_MAX)
+       while (sdef < WPN_TREE_MAX)
           {
             sname := weapon_name(sdef);
 
@@ -1519,7 +1519,7 @@ code{
 
        cnt := 1;
 
-       while(cnt < length(slist))
+       while (cnt < length(slist))
           {
             sname := sname + " " + slist.[cnt];
             cnt := cnt + 1;
@@ -1534,7 +1534,7 @@ code{
        buffer := "Invalid spell, please choose from the following:<br/>";
 
        sdef := 0;
-       while(sdef < SPL_TREE_MAX)
+       while (sdef < SPL_TREE_MAX)
           {
             sname := spellinfo(sdef, t1, t2, t3, t4, t5, t6, t7);
 
@@ -1591,7 +1591,7 @@ code{
   sdef := 0;
 
 
-  while(sdef < SKI_TREE_MAX)
+  while (sdef < SKI_TREE_MAX)
      {
        sname := skill_name(sdef);
 
@@ -1602,7 +1602,7 @@ code{
 
        cnt := 0;
 
-       while((cnt < length(slist)) and (cnt < length(scomp)))
+       while ((cnt < length(slist)) and (cnt < length(scomp)))
           {
             if (not (slist.[cnt] in scomp.[cnt]))
                  break;
@@ -1645,7 +1645,7 @@ code{
   sdef := 0;
 
 
-  while(sdef < WPN_TREE_MAX)
+  while (sdef < WPN_TREE_MAX)
      {
        sname := weapon_name(sdef);
 
@@ -1656,7 +1656,7 @@ code{
 
        cnt := 0;
 
-       while((cnt < length(slist)) and (cnt < length(scomp)))
+       while ((cnt < length(slist)) and (cnt < length(scomp)))
           {
             if (not (slist.[cnt] in scomp.[cnt]))
                  break;
@@ -1821,7 +1821,7 @@ code{
 
  wizcmd := chead();
 
- while(wizcmd.name != "wiz")
+ while (wizcmd.name != "wiz")
     wizcmd := wizcmd.next;
 
 
@@ -1831,7 +1831,7 @@ code{
 
       temp := "Wizards online:<br/>";
 
-      while(pc.type == UNIT_ST_PC)
+      while (pc.type == UNIT_ST_PC)
           {
             if ((pc.level >= IMMORTAL_LEVEL) and (visible(self, pc)))
                  temp := temp + pc.name + "(" + itoa(pc.level) + ")<br/>";
@@ -1875,7 +1875,7 @@ code{
 
  pc := ghead();
 
- while(pc.type == UNIT_ST_PC)
+ while (pc.type == UNIT_ST_PC)
     {
       if ((pc.level >= wizcmd.level) and (pc.level >= wizlvl))
            act("<div class='wiz'>:$3t: $2n " + temp + "</div>", A_ALWAYS, pc, self, wizstr, TO_CHAR);
@@ -1911,7 +1911,7 @@ s := {"null", "null", "null", "null", "null"};
 
 u := self.inside;
 
-while(u)
+while (u)
   {
      if ((u.type == UNIT_ST_OBJ) and (u.objecttype == ITEM_MONEY))
            s.[u.value[0]] := u.title + "<br/> ";
@@ -1961,7 +1961,7 @@ code
    buffer := "<u>You are carrying:</u><br/>";
    item := self.inside;
 
-   while(item)
+   while (item)
    {
       if (visible(self, item))
       {
@@ -2038,7 +2038,7 @@ code
       buffer := buffer + "<div class='obj_title'> Nothing.</div><br/>";
    else
    {
-      while(cnt < length(slist))
+      while (cnt < length(slist))
       {
          if (atoi(ilist.[cnt]) > 1)
             temp := clist.[cnt] + "[x" + ilist.[cnt] + "] ";
@@ -2460,7 +2460,7 @@ quit;
 
 pc := ghead();
 
-while((pc.type == UNIT_ST_PC))
+while ((pc.type == UNIT_ST_PC))
    {
 
     if (pc.level > IMMORTAL_LEVEL)
@@ -2491,7 +2491,7 @@ quit;
 
 i := 0;
 
-while(i < ABIL_TREE_MAX)
+while (i < ABIL_TREE_MAX)
    {self.abilities[i] := 200;
     i := i + 1;
    }
@@ -2580,7 +2580,7 @@ code
       }
    }
 
-   /*if(self.type!=UNIT_ST_PC) quit;*/
+   /*if (self.type!=UNIT_ST_PC) quit;*/
 
    if (self.position == POSITION_FIGHTING)
    {
@@ -2597,19 +2597,19 @@ code
       alig := "(Neutral)";
    /*whats my position */
 
-   if(self.position == POSITION_DEAD)
+   if (self.position == POSITION_DEAD)
       pos := "<div class='score'>Sorry old chap, it seems like you're Dead!</div>";
-   else if(self.position == POSITION_MORTALLYW)
+   else if (self.position == POSITION_MORTALLYW)
       pos := "<div class='score'>You are mortally wounded, you should seek help!</div>";
-   else if(self.position == POSITION_INCAP)
+   else if (self.position == POSITION_INCAP)
       pos := "<div class='score'>You are incapacitated, slowly fading away.</div>";
-   else if(self.position == POSITION_STUNNED)
+   else if (self.position == POSITION_STUNNED)
       pos := "<div class='score'>You are stunned and unable to move.</div>";
-   else if(self.position == POSITION_SLEEPING)
+   else if (self.position == POSITION_SLEEPING)
       pos := "<div class='score'>You are sleeping.</div>";
-   else if(self.position == POSITION_RESTING)
+   else if (self.position == POSITION_RESTING)
       pos := "<div class='score'>You are resting.</div>";
-   else if(self.position == POSITION_SITTING)
+   else if (self.position == POSITION_SITTING)
       pos := "<div class='score'>You are sitting.</div>";
    else
       pos := "<div class='score'>You are standing.</div>";
@@ -2676,7 +2676,7 @@ code
       slvl := "<b>You have unspent practice points, you should <a cmd='#'>practice auto</a> now or go visit a teacher.</b><br/>";
    }
 
-   if(arg=="")
+   if (arg=="")
    {
       act(titlestring()
          +"<div class='score'>" + agestring(self.race)
@@ -2707,7 +2707,7 @@ code
       " Endurance, "+itoa(self.mana)+"/"+itoa(self.max_mana)+" Mana"+
       " to the group.</div>",A_ALWAYS,self,null,null,TO_CHAR);
    i:=0;
-   while(i<self.followercount)
+   while (i<self.followercount)
    {
    u:=getfollower(self,i);
    if (isset(u.charflags,CHAR_GROUP))
@@ -2729,7 +2729,7 @@ code
       " Hitpoints, "+itoa(leader.endurance)+"/"+itoa(leader.max_endurance)+
       " Endurance, "+itoa(leader.mana)+"/"+itoa(leader.max_mana)+" Mana"+
       " to the group.</div>",A_ALWAYS,self,null,leader,TO_CHAR);
-   while(i<leader.followercount)
+   while (i<leader.followercount)
    {
    u:=getfollower(leader,i);
       if (isset(u.charflags,CHAR_GROUP))
@@ -3245,29 +3245,29 @@ rating : string;
 code
 {
 errstr := "";
-if((obj.type != UNIT_ST_OBJ) or
+if ((obj.type != UNIT_ST_OBJ) or
    (obj.equip))
 	return(FALSE);
 
-if(keyword == WEAR_UNUSED)
+if (keyword == WEAR_UNUSED)
 {
- if(equipment(ch,WEAR_UNUSED))
+ if (equipment(ch,WEAR_UNUSED))
   sendtext("DOUBLE ERROR! UNUSED ALREADY USED! REPORT!<br/>",ch);
  else
   sendtext("UNUSED EQUIPMENT ERROR! Please report!<br/>", ch);
 
  return(FALSE);
 }
-else if((keyword == WEAR_FINGER_L) or
+else if ((keyword == WEAR_FINGER_L) or
         (keyword == WEAR_FINGER_R))
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_FINGER))
+ if (not (obj.manipulate & MANIPULATE_WEAR_FINGER))
   errstr := "You can't wear that on your finger.";
- else if(not (equipment(ch,WEAR_FINGER_L)))
+ else if (not (equipment(ch,WEAR_FINGER_L)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
     act("$3n is $2t to fit on your finger.",
     	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3280,11 +3280,11 @@ else if((keyword == WEAR_FINGER_L) or
 
    addequip(obj,WEAR_FINGER_L);
  }
- else if(not (equipment(ch,WEAR_FINGER_R)))
+ else if (not (equipment(ch,WEAR_FINGER_R)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
     act("$3n is $2t to fit on your finger.",
     	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3300,16 +3300,16 @@ else if((keyword == WEAR_FINGER_L) or
  else
    errstr := "You're already using two rings.";
 }
-else if((keyword == WEAR_NECK_1) or
+else if ((keyword == WEAR_NECK_1) or
    (keyword == WEAR_NECK_2))
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_NECK))
+ if (not (obj.manipulate & MANIPULATE_WEAR_NECK))
    errstr := "You can't wear that around your neck.";
- else if(not (equipment(ch,WEAR_NECK_1)))
+ else if (not (equipment(ch,WEAR_NECK_1)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
     act("$3n is $2t to fit around your neck.",
     	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3322,11 +3322,11 @@ else if((keyword == WEAR_NECK_1) or
 
     addequip(obj,WEAR_NECK_1);
  }
- else if(not (equipment(ch,WEAR_NECK_2)))
+ else if (not (equipment(ch,WEAR_NECK_2)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
     act("$3n is $2t to fit around your neck.",
     	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3342,15 +3342,15 @@ else if((keyword == WEAR_NECK_1) or
  else
    errstr := "You can't wear any more around your neck.";
 }
-else if(keyword == WEAR_BODY)
+else if (keyword == WEAR_BODY)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_BODY))
+ if (not (obj.manipulate & MANIPULATE_WEAR_BODY))
    errstr := "You can't wear that on your body.";
- else if(not (equipment(ch,WEAR_BODY)))
+ else if (not (equipment(ch,WEAR_BODY)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
    act("$3n is $2t to fit your body.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3366,15 +3366,15 @@ else if(keyword == WEAR_BODY)
  else
    errstr := "You already wear something on your body.";
 }
-else if(keyword == WEAR_HEAD)
+else if (keyword == WEAR_HEAD)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_HEAD))
+ if (not (obj.manipulate & MANIPULATE_WEAR_HEAD))
    errstr := "You can't wear that on your head.";
- else if(not (equipment(ch,WEAR_HEAD)))
+ else if (not (equipment(ch,WEAR_HEAD)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
    act("$3n is $2t to fit your head.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3390,15 +3390,15 @@ else if(keyword == WEAR_HEAD)
  else
    errstr := "You already wear something on your head.";
 }
-else if(keyword == WEAR_LEGS)
+else if (keyword == WEAR_LEGS)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_LEGS))
+ if (not (obj.manipulate & MANIPULATE_WEAR_LEGS))
    errstr := "You can't wear that on your legs.";
- else if(not (equipment(ch,WEAR_LEGS)))
+ else if (not (equipment(ch,WEAR_LEGS)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
    act("$3n are $2t to fit your legs.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3414,15 +3414,15 @@ else if(keyword == WEAR_LEGS)
  else
    errstr := "You already wear something on your legs.";
 }
-else if(keyword == WEAR_FEET)
+else if (keyword == WEAR_FEET)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_FEET))
+ if (not (obj.manipulate & MANIPULATE_WEAR_FEET))
    errstr := "You can't wear that on your feet.";
- else if(not (equipment(ch,WEAR_FEET)))
+ else if (not (equipment(ch,WEAR_FEET)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-   if(c != "")
+   if (c != "")
    {
    act("$3n are $2t to fit your feet.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3438,15 +3438,15 @@ else if(keyword == WEAR_FEET)
  else
    errstr := "You already wear something on your feet.";
 }
-else if(keyword == WEAR_HANDS)
+else if (keyword == WEAR_HANDS)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_HANDS))
+ if (not (obj.manipulate & MANIPULATE_WEAR_HANDS))
    errstr := "You can't wear that on your hands.";
- else if(not (equipment(ch,WEAR_HANDS)))
+ else if (not (equipment(ch,WEAR_HANDS)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n are $2t to fit your hands.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3461,15 +3461,15 @@ else if(keyword == WEAR_HANDS)
  else
     errstr := "You already wear something on your hands.";
 }
-else if(keyword == WEAR_ARMS)
+else if (keyword == WEAR_ARMS)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_ARMS))
+ if (not (obj.manipulate & MANIPULATE_WEAR_ARMS))
    errstr := "You can't wear that on your arms.";
- else if(not (equipment(ch,WEAR_ARMS)))
+ else if (not (equipment(ch,WEAR_ARMS)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n are $2t to fit your arms.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3483,15 +3483,15 @@ else if(keyword == WEAR_ARMS)
  else
     errstr := "You already wear something on your arms.";
 }
-else if(keyword == WEAR_ABOUT)
+else if (keyword == WEAR_ABOUT)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_ABOUT))
+ if (not (obj.manipulate & MANIPULATE_WEAR_ABOUT))
    errstr := "You can't wear that about your body.";
- else if(not (equipment(ch,WEAR_ABOUT)))
+ else if (not (equipment(ch,WEAR_ABOUT)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit about your body.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3505,15 +3505,15 @@ else if(keyword == WEAR_ABOUT)
  else
     errstr := "You already wear something about your body.";
 }
-else if(keyword == WEAR_WAIST)
+else if (keyword == WEAR_WAIST)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_WAIST))
+ if (not (obj.manipulate & MANIPULATE_WEAR_WAIST))
     errstr := "You can't wear that about your waist.";
- else if(not (equipment(ch,WEAR_WAIST)))
+ else if (not (equipment(ch,WEAR_WAIST)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit around your waist.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3527,16 +3527,16 @@ else if(keyword == WEAR_WAIST)
  else
     errstr := "You already wear something about your waist.";
 }
-else if((keyword == WEAR_WRIST_L) or
+else if ((keyword == WEAR_WRIST_L) or
         (keyword == WEAR_WRIST_R))
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_WRIST))
+ if (not (obj.manipulate & MANIPULATE_WEAR_WRIST))
     errstr := "You can't wear that around your wrist.";
- else if(not (equipment(ch,WEAR_WRIST_L)))
+ else if (not (equipment(ch,WEAR_WRIST_L)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit around your wrist.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3547,11 +3547,11 @@ else if((keyword == WEAR_WRIST_L) or
 		    "$1n wears $2n around $1s left wrist.");
     addequip(obj,WEAR_WRIST_L);
  }
- else if(not (equipment(ch,WEAR_WRIST_R)))
+ else if (not (equipment(ch,WEAR_WRIST_R)))
  {
    c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit around your wrist.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3565,7 +3565,7 @@ else if((keyword == WEAR_WRIST_L) or
  else
     errstr := "You already wear something around both your wrists.";
 }
-else if(keyword == WEAR_WIELD)
+else if (keyword == WEAR_WIELD)
 {
  hands := hands_used(ch);
  if (obj)
@@ -3573,24 +3573,24 @@ else if(keyword == WEAR_WIELD)
  else
  two := FALSE;
 
- if(not (obj.manipulate & MANIPULATE_WIELD))
+ if (not (obj.manipulate & MANIPULATE_WIELD))
     errstr := "You can't wield that.";
- else if(hands >= 2)
+ else if (hands >= 2)
     errstr := "You have no free hands.";
- else if((two == TRUE) and (hands > 0))
+ else if ((two == TRUE) and (hands > 0))
     errstr := "You need two free hands to wield this weapon.";
- else if(not (equipment(ch,WEAR_WIELD)))
+ else if (not (equipment(ch,WEAR_WIELD)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to be wielded by you.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
     return(FALSE);
     }
 
-    if(two == TRUE)
+    if (two == TRUE)
      unit_msg(ch, obj, "$wear",
 		      "You wield $2n two-handedly.",
 		      "$1n wields $2n two-handedly.");
@@ -3601,7 +3601,7 @@ else if(keyword == WEAR_WIELD)
 
     addequip(obj,WEAR_WIELD);
 
-    if((ch.type == UNIT_ST_PC) and (obj.objecttype == ITEM_WEAPON))
+    if ((ch.type == UNIT_ST_PC) and (obj.objecttype == ITEM_WEAPON))
     {
     rating := wear_rating(ch.weapons[obj.value[0]]);
     act("$2t at fighting with $3n.",
@@ -3611,33 +3611,33 @@ else if(keyword == WEAR_WIELD)
  else
     errstr := "You are already wielding something.";
 }
-else if(keyword == WEAR_HOLD)
+else if (keyword == WEAR_HOLD)
 {
  hands := hands_used(ch);
 
 
- if(obj.objecttype == ITEM_WEAPON)
+ if (obj.objecttype == ITEM_WEAPON)
     two := two_handed(obj.value[0]);
  else
     two := FALSE;
 
- if(not (obj.manipulate & (MANIPULATE_HOLD|MANIPULATE_WIELD)))
+ if (not (obj.manipulate & (MANIPULATE_HOLD|MANIPULATE_WIELD)))
     errstr := "You can't hold this.";
- else if(hands >= 2)
+ else if (hands >= 2)
     errstr := "Your hands are full.";
- else if(not (equipment(ch,WEAR_HOLD)))
+ else if (not (equipment(ch,WEAR_HOLD)))
  {
 
-    if((two == TRUE) and (hands > 0))
+    if ((two == TRUE) and (hands > 0))
     {
      errstr := "It requires two free hands to use!";
      goto err;
     }
 
-    if(obj.objecttype == ITEM_WEAPON)
+    if (obj.objecttype == ITEM_WEAPON)
     {
 
-      if(isset(obj.objectflags,OBJ_NO_DUAL))
+      if (isset(obj.objectflags,OBJ_NO_DUAL))
       {
        errstr := "This weapon is too large to be used as a second "+
 		 "weapon.";
@@ -3646,7 +3646,7 @@ else if(keyword == WEAR_HOLD)
 
       c := obj_wear_size(ch,obj,keyword);
 
-      if(c != "")
+      if (c != "")
       {
       act("$3n is $2t to be wielded by you.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3663,21 +3663,21 @@ else if(keyword == WEAR_HOLD)
  else
    errstr := "You are already holding something.";
 }
-else if(keyword == WEAR_SHIELD)
+else if (keyword == WEAR_SHIELD)
 {
  hands := hands_used(ch);
 
- if(not (obj.manipulate & MANIPULATE_WEAR_SHIELD))
+ if (not (obj.manipulate & MANIPULATE_WEAR_SHIELD))
     errstr := "You can't use that as a shield.";
- else if(obj.objecttype != ITEM_SHIELD)
+ else if (obj.objecttype != ITEM_SHIELD)
     errstr := "That is not a shield.";
- else if(hands >= 2)
+ else if (hands >= 2)
     errstr := "Your hands are full.";
- else if(not (equipment(ch,WEAR_SHIELD)))
+ else if (not (equipment(ch,WEAR_SHIELD)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n are $2t to fit your arms.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3692,15 +3692,15 @@ else if(keyword == WEAR_SHIELD)
  else
     errstr := "You are already using a shield.";
 }
-else if(keyword == WEAR_CHEST)
+else if (keyword == WEAR_CHEST)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_CHEST))
+ if (not (obj.manipulate & MANIPULATE_WEAR_CHEST))
     errstr := "You can't wear that across your chest.";
- else if(not (equipment(ch,WEAR_CHEST)))
+ else if (not (equipment(ch,WEAR_CHEST)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit your chest.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3715,15 +3715,15 @@ else if(keyword == WEAR_CHEST)
  else
     errstr := "You already wear something across your chest.";
 }
-else if(keyword == WEAR_BACK)
+else if (keyword == WEAR_BACK)
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_BACK))
+ if (not (obj.manipulate & MANIPULATE_WEAR_BACK))
     errstr := "You can't wear that on your back.";
- else if(not (equipment(ch,WEAR_BACK)))
+ else if (not (equipment(ch,WEAR_BACK)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit on your back.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3738,16 +3738,16 @@ else if(keyword == WEAR_BACK)
  else
     errstr := "You already wear something on your back.";
 }
-else if((keyword == WEAR_EAR_L) or
+else if ((keyword == WEAR_EAR_L) or
         (keyword == WEAR_EAR_R))
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_EAR))
+ if (not (obj.manipulate & MANIPULATE_WEAR_EAR))
     errstr := "You can't wear that on your ear.";
- else if(not (equipment(ch,WEAR_EAR_L)))
+ else if (not (equipment(ch,WEAR_EAR_L)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit your ear.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3759,11 +3759,11 @@ else if((keyword == WEAR_EAR_L) or
 		    "$1n wears $2n on $1s left ear.");
     addequip(obj,WEAR_EAR_L);
  }
- else if(not (equipment(ch,WEAR_EAR_R)))
+ else if (not (equipment(ch,WEAR_EAR_R)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit your ear.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3778,16 +3778,16 @@ else if((keyword == WEAR_EAR_L) or
  else
     errstr := "You can't wear anything else on your ear.";
 }
-else if((keyword == WEAR_ANKLE_L) or
+else if ((keyword == WEAR_ANKLE_L) or
         (keyword == WEAR_ANKLE_R))
 {
- if(not (obj.manipulate & MANIPULATE_WEAR_ANKLE))
+ if (not (obj.manipulate & MANIPULATE_WEAR_ANKLE))
     errstr := "You can't wear that on your ankle.";
- else if(not (equipment(ch,WEAR_ANKLE_L)))
+ else if (not (equipment(ch,WEAR_ANKLE_L)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit your ankle.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3799,11 +3799,11 @@ else if((keyword == WEAR_ANKLE_L) or
 		    "$1n wears $2n around $1s left ankle.");
     addequip(obj,WEAR_ANKLE_L);
  }
- else if(not (equipment(ch,WEAR_ANKLE_R)))
+ else if (not (equipment(ch,WEAR_ANKLE_R)))
  {
     c := obj_wear_size(ch,obj,keyword);
 
-    if(c != "")
+    if (c != "")
     {
     act("$3n is $2t to fit your ankle.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
@@ -3818,9 +3818,9 @@ else if((keyword == WEAR_ANKLE_L) or
  else
     errstr := "You can't wear anything else on your ankles.";
 }
-else if(keyword == -1)
+else if (keyword == -1)
     errstr := "Wear $2n where?";
-else if(keyword == -2)
+else if (keyword == -2)
     errstr := "You can not wear $2n.";
 else
 {
@@ -3828,14 +3828,14 @@ else
     log("Unknown type ("+itoa(keyword)+") called in wear.");
 }
 
-if(errstr == "")
+if (errstr == "")
 {
  send_done(cmd_str,ch,obj,null,0,arg,null, CMD_AUTO_NONE);
  return(TRUE);
 }
 
 :err:
-if(err)
+if (err)
 {
  act(errstr, A_ALWAYS, ch, obj, null, TO_CHAR);
  return(FALSE);
@@ -3864,7 +3864,7 @@ equipped : integer;
 code
 {
 
- if(arg == "")
+ if (arg == "")
  {
   sendtext("Wear what (where)?<br/>", self);
   quit;
@@ -3882,27 +3882,27 @@ code
  WEAR_ANKLE_L};
 
 
- if(left(arg,3) == "all")
+ if (left(arg,3) == "all")
  {
 
  obj := self.inside;
 
- while(obj != null)
+ while (obj != null)
  {
  nxt := obj.next;
 
- if((obj.type == UNIT_ST_OBJ) and (not (obj.equip)))
+ if ((obj.type == UNIT_ST_OBJ) and (not (obj.equip)))
  {
   keyword := getkeyword(obj);
   worn := wear(self,obj,keyword,arg,FALSE,cmdstr);
-  if(worn) equipped := TRUE;
+  if (worn) equipped := TRUE;
  }
 
  obj := nxt;
  }
 
 
- if(not (equipped))
+ if (not (equipped))
   sendtext("You have nothing to wear.<br/>", self);
 
  }
@@ -3910,12 +3910,12 @@ code
 {
  obj := findunit(self,arg,FIND_UNIT_INVEN,null);
 
- if((obj == null) or (not visible(self,obj)))
+ if ((obj == null) or (not visible(self,obj)))
  {
   sendtext("You are carrying no such thing.<br/>", self);
   quit;
  }
- else if(obj.type != UNIT_ST_OBJ)
+ else if (obj.type != UNIT_ST_OBJ)
  {
   sendtext("You can't wear that.<br/>", self);
   quit;
@@ -3923,11 +3923,11 @@ code
 
  str := getword(arg); /* finger..legs..possibly? */
 
- if(str != "")
+ if (str != "")
  {
   keyword := search_list(str,keywords);
 
-  if(keyword == -1)
+  if (keyword == -1)
    act("$2t is an unknown body location.",A_ALWAYS, self, str, null, TO_CHAR);
   else
    worn := wear(self,obj,keytrans.[keyword],str,TRUE,cmdstr);
@@ -3954,7 +3954,7 @@ worn : integer;
 code
 {
 
- if(arg == "")
+ if (arg == "")
  {
   sendtext("Hold what?<br/>", self);
   quit;
@@ -3962,12 +3962,12 @@ code
 
  obj := findunit(self,arg,FIND_UNIT_INVEN,null);
 
- if((obj == null) or (not visible(self,obj)))
+ if ((obj == null) or (not visible(self,obj)))
  {
   sendtext("You are carrying no such thing.<br/>", self);
   quit;
  }
- else if(obj.type != UNIT_ST_OBJ)
+ else if (obj.type != UNIT_ST_OBJ)
  {
   sendtext("You can't hold that in your hand.<br/>", self);
   quit;
@@ -3990,7 +3990,7 @@ worn : integer;
 code
 {
 
- if(arg == "")
+ if (arg == "")
  {
   sendtext("Grab what?<br/>", self);
   quit;
@@ -3998,12 +3998,12 @@ code
 
  obj := findunit(self,arg,FIND_UNIT_INVEN,null);
 
- if((obj == null) or (not visible(self,obj)))
+ if ((obj == null) or (not visible(self,obj)))
  {
   sendtext("You are carrying no such thing.<br/>", self);
   quit;
  }
- else if(obj.type != UNIT_ST_OBJ)
+ else if (obj.type != UNIT_ST_OBJ)
  {
   sendtext("You can't hold that in your hand.<br/>", self);
   quit;
@@ -4026,7 +4026,7 @@ worn : integer;
 code
 {
 
-if(arg == "")
+if (arg == "")
 {
   sendtext("Wield which weapon?<br/>", self);
   quit;
@@ -4034,12 +4034,12 @@ if(arg == "")
 
 obj := findunit(self,arg,FIND_UNIT_INVEN,null);
 
-if((obj == null) or (not visible(self,obj)))
+if ((obj == null) or (not visible(self,obj)))
 {
   sendtext("You are carrying no such weapon.<br/>", self);
   quit;
 }
-else if((obj.type == UNIT_ST_OBJ) and (obj.objecttype == ITEM_WEAPON))
+else if ((obj.type == UNIT_ST_OBJ) and (obj.objecttype == ITEM_WEAPON))
   worn := wear(self,obj,WEAR_WIELD,arg,TRUE,"wield");
 else
   sendtext("That is not a proper weapon.<br/>", self);
@@ -4057,7 +4057,7 @@ external
 code
 {
 
- if((isset(obj.flags,OBJ_NO_UNEQUIP))or
+ if ((isset(obj.flags,OBJ_NO_UNEQUIP))or
  (isaff(obj, ID_CURSE)))
  {
   act("The $3n is cursed, you can't remove it!",
@@ -4089,34 +4089,34 @@ nxt : unitptr;
 code
 {
 
- if(arg == "")
+ if (arg == "")
  {
   sendtext("Remove what?<br/>", self);
   quit;
  }
- else if(left(arg,3) == "all")
+ else if (left(arg,3) == "all")
  {
 
   obj := self.inside;
 
-  while(obj != null)
+  while (obj != null)
   {
    nxt := obj.next;
 
-   if((obj.type == UNIT_ST_OBJ) and (obj.equip))
+   if ((obj.type == UNIT_ST_OBJ) and (obj.equip))
     removed := remove_equip(self,obj,cmdstr,arg);
 
    obj := nxt;
   }
 
-  if(not removed)
+  if (not removed)
    sendtext("There was nothing to remove.<br/>",self);
  }
 else
 {
  obj := findunit(self,arg,FIND_UNIT_EQUIP,null);
 
- if((obj == null) or (not visible(self,obj)))
+ if ((obj == null) or (not visible(self,obj)))
   sendtext("You are using no such thing.<br/>", self);
  else
   removed := remove_equip(self,obj,cmdstr,arg);
@@ -4162,10 +4162,10 @@ code
 i := 0;
 ln:=length(lst);
 
-while(i < ln)
+while (i < ln)
 {
 
- if(left(lst.[i],length(s)) == s)
+ if (left(lst.[i],length(s)) == s)
  	return(i);
  else
  	i := i + 1;
@@ -4185,12 +4185,12 @@ code
 str_self := ex_str+"_s";
 str_other := ex_str+"_o";
 
-if(obj.extra.[str_self].descr != "")
+if (obj.extra.[str_self].descr != "")
  act(obj.extra.[str_self].descr, A_ALWAYS, self, obj, null, TO_CHAR);
 else
  act(act_self, A_ALWAYS, self, obj, null, TO_CHAR);
 
-if(obj.extra.[str_other].descr != "")
+if (obj.extra.[str_other].descr != "")
  act(obj.extra.[str_other].descr, A_SOMEONE, self, obj, null ,TO_REST);
 else
  act(act_other, A_SOMEONE, self, obj, null, TO_REST);
@@ -4207,41 +4207,38 @@ dilbegin integer hands_used(ch : unitptr);
 external
 	integer two_handed(i : integer);
 var
-ins : unitptr;
-hands : integer;
-two : integer;
-nxt : unitptr;
+    ins : unitptr;
+    hands : integer;
+    two : integer;
+    nxt : unitptr;
 code
 {
 
- ins := ch.inside;
- hands := 0;
+    ins := ch.inside;
+    hands := 0;
 
-/* Supposidly faster than calling equipment() */
- while(ins != null)
- {
- nxt := ins.next;
+    /* Supposidly faster than calling equipment() */
+    while (ins != null)
+    {
+        nxt := ins.next;
 
-  if((ins.type == UNIT_ST_OBJ) and (ins.equip))
-  {
-   if((ins.equip == WEAR_WIELD) or
-      (ins.equip == WEAR_HOLD) or
-      (ins.equip == WEAR_SHIELD))
-	hands := hands + 1;
+        if ((ins.type == UNIT_ST_OBJ) and (ins.equip))
+        {
+            if ((ins.equip == WEAR_WIELD) or (ins.equip == WEAR_HOLD) or (ins.equip == WEAR_SHIELD))
+                hands := hands + 1;
 
-   if(ins.objecttype == ITEM_WEAPON)
-   {
-   two := two_handed(ins.value[0]);
-   if(two == TRUE)
-	hands := hands + 1;
-   }
+            if (ins.objecttype == ITEM_WEAPON)
+            {
+                two := two_handed(ins.value[0]);
+                if (two == TRUE)
+                    hands := hands + 1;
+            }
+        }
 
-   }
+        ins := nxt;
+    }
 
-  ins := nxt;
- }
-
- return(hands);
+    return(hands);
 }
 dilend
 
@@ -4254,23 +4251,23 @@ code
 mani := obj.manipulate;
 keyword := -2;
 
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_SHIELD)) keyword := WEAR_SHIELD;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_FINGER)) keyword := WEAR_FINGER_L;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_NECK)) keyword := WEAR_NECK_1;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_WRIST)) keyword := WEAR_WRIST_L;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_WAIST)) keyword := WEAR_WAIST;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_ARMS)) keyword := WEAR_ARMS;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_HANDS)) keyword := WEAR_HANDS;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_FEET)) keyword := WEAR_FEET;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_LEGS)) keyword := WEAR_LEGS;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_ABOUT)) keyword := WEAR_ABOUT;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_HEAD)) keyword := WEAR_HEAD;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_BODY)) keyword := WEAR_BODY;
-if(UNIT_WEAR(mani,MANIPULATE_WIELD)) keyword := WEAR_WIELD;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_CHEST)) keyword := WEAR_CHEST;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_BACK)) keyword := WEAR_BACK;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_EAR)) keyword := WEAR_EAR_L;
-if(UNIT_WEAR(mani,MANIPULATE_WEAR_ANKLE)) keyword := WEAR_ANKLE_L;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_SHIELD)) keyword := WEAR_SHIELD;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_FINGER)) keyword := WEAR_FINGER_L;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_NECK)) keyword := WEAR_NECK_1;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_WRIST)) keyword := WEAR_WRIST_L;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_WAIST)) keyword := WEAR_WAIST;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_ARMS)) keyword := WEAR_ARMS;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_HANDS)) keyword := WEAR_HANDS;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_FEET)) keyword := WEAR_FEET;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_LEGS)) keyword := WEAR_LEGS;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_ABOUT)) keyword := WEAR_ABOUT;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_HEAD)) keyword := WEAR_HEAD;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_BODY)) keyword := WEAR_BODY;
+if (UNIT_WEAR(mani,MANIPULATE_WIELD)) keyword := WEAR_WIELD;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_CHEST)) keyword := WEAR_CHEST;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_BACK)) keyword := WEAR_BACK;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_EAR)) keyword := WEAR_EAR_L;
+if (UNIT_WEAR(mani,MANIPULATE_WEAR_ANKLE)) keyword := WEAR_ANKLE_L;
 
 return(keyword);
 }
@@ -4282,15 +4279,15 @@ percent : integer;
 code
 {
 
-if(ch.height == 0)
+if (ch.height == 0)
 	return("error");
 
-if(ch.height > 0)
+if (ch.height > 0)
 	percent := (100*obj.height) / ch.height;
 else
 	percent := 100*obj.height;
 
-if(percent < 100-vari-(100-vari)/2)
+if (percent < 100-vari-(100-vari)/2)
 	return("way too small");
 else if (percent < (100-vari))
 	return("too small");
@@ -4313,68 +4310,68 @@ code
 {
 ret := "";
 
- if(keyword == -1)
+ if (keyword == -1)
  	keyword := getkeyword(obj);
 
- if((keyword == WEAR_FINGER_L) or
+ if ((keyword == WEAR_FINGER_L) or
     (keyword == WEAR_FINGER_R))
     	ret := wear_size(ch,obj,50);
 
- else if((keyword == WEAR_NECK_1) or
+ else if ((keyword == WEAR_NECK_1) or
          (keyword == WEAR_NECK_2))
 	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_BODY)
+ else if (keyword == WEAR_BODY)
  	ret := wear_size(ch,obj,40);
 
- else if(keyword == WEAR_HEAD)
+ else if (keyword == WEAR_HEAD)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_LEGS)
+ else if (keyword == WEAR_LEGS)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_FEET)
+ else if (keyword == WEAR_FEET)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_HANDS)
+ else if (keyword == WEAR_HANDS)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_ARMS)
+ else if (keyword == WEAR_ARMS)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_ABOUT)
+ else if (keyword == WEAR_ABOUT)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_WAIST)
+ else if (keyword == WEAR_WAIST)
  	ret := wear_size(ch,obj,50);
 
- else if((keyword == WEAR_WRIST_L) or
+ else if ((keyword == WEAR_WRIST_L) or
          (keyword == WEAR_WRIST_R))
 	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_WIELD)
+ else if (keyword == WEAR_WIELD)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_HOLD)
+ else if (keyword == WEAR_HOLD)
  {
-  if(obj.objecttype == ITEM_WEAPON)
+  if (obj.objecttype == ITEM_WEAPON)
   	ret := wear_size(ch,obj,50);
  }
 
- else if(keyword == WEAR_SHIELD)
+ else if (keyword == WEAR_SHIELD)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_CHEST)
+ else if (keyword == WEAR_CHEST)
  	ret := wear_size(ch,obj,50);
 
- else if(keyword == WEAR_BACK)
+ else if (keyword == WEAR_BACK)
  	ret := wear_size(ch,obj,50);
 
- else if((keyword == WEAR_EAR_L) or
+ else if ((keyword == WEAR_EAR_L) or
          (keyword == WEAR_EAR_R))
 	ret := wear_size(ch,obj,50);
 
- else if((keyword == WEAR_ANKLE_L) or
+ else if ((keyword == WEAR_ANKLE_L) or
          (keyword == WEAR_ANKLE_R))
 	ret := wear_size(ch,obj,50);
 
@@ -4408,10 +4405,10 @@ code
 
 zn := zhead();
 
-while(zn)
+while (zn)
 {
 
-	if(zn.name == s)
+	if (zn.name == s)
 		break;
 
 	zn := zn.next;
@@ -4436,29 +4433,29 @@ ins : unitptr;
 code
 {
 
- if(self.type != UNIT_ST_PC)
+ if (self.type != UNIT_ST_PC)
  	quit;
 
- if(arg == "")
+ if (arg == "")
  {
   sendtext("You must supply a unit name or zone reference.<br/>", self);
   quit;
  }
 
- if("@" in arg)
+ if ("@" in arg)
  {
   tgt := findsymbolic(arg);
-  while((tgt.type != UNIT_ST_ROOM) and
+  while ((tgt.type != UNIT_ST_ROOM) and
        (not isset(tgt.manipulate,MANIPULATE_ENTER)))
        tgt := tgt.outside;
 
   goto got_one;
  }
 
- if("corpse" in arg)
+ if ("corpse" in arg)
  {
   tgt := findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_OBJ);
-  while((tgt.type != UNIT_ST_ROOM) and
+  while ((tgt.type != UNIT_ST_ROOM) and
        (not isset(tgt.manipulate,MANIPULATE_ENTER)))
        tgt := tgt.outside;
 if (tgt!=null)
@@ -4467,7 +4464,7 @@ if (tgt!=null)
 
 
    z := get_zone(arg);
-  if(z)
+  if (z)
   	{
       tgt := z.rooms;
 	    goto got_one;
@@ -4489,7 +4486,7 @@ if (tgt!=null)
 			  if (tgt!=null)
     goto got_one;
 
- if(tgt ==null)
+ if (tgt ==null)
   {
    arg := arg+"@"+self.zone;
    tgt := findsymbolic(arg);
@@ -4497,32 +4494,32 @@ if (tgt!=null)
 
  :got_one:
 
- if(not tgt)
+ if (not tgt)
  {
   sendtext("No such place around.<br/>", self);
   quit;
  }
 
-   while((tgt.type != UNIT_ST_ROOM) and
+   while ((tgt.type != UNIT_ST_ROOM) and
        (not isset(tgt.manipulate,MANIPULATE_ENTER)))
        tgt := tgt.outside;
 
 
 
- if(isset(tgt.flags,UNIT_FL_PRIVATE))
+ if (isset(tgt.flags,UNIT_FL_PRIVATE))
  {
   ins := tgt.inside;
   i := 0;
 
-  while(ins)
+  while (ins)
   {
-   if(ins.type == UNIT_ST_PC)
+   if (ins.type == UNIT_ST_PC)
     i := i + 1;
 
    ins := ins.next;
   }
 
-  if(i > 1)
+  if (i > 1)
   {
    sendtext("There's a private conversation going on in that room.<br/>",self);
    quit;
@@ -4531,7 +4528,7 @@ if (tgt!=null)
 
  ins := unit_char@function(tgt);
 
- if(ins == self)
+ if (ins == self)
  {
   sendtext("Recursive goto. Would destroy the universe.<br/>",self);
   quit;
@@ -4539,10 +4536,10 @@ if (tgt!=null)
 
  i := may_tele_away@function(tgt);
 
- if(i == FALSE)
+ if (i == FALSE)
   sendtext("WARNING - this is a no teleport environment.<br/>", self);
 
- if(self.extra.["$bamfout"].descr != "")
+ if (self.extra.["$bamfout"].descr != "")
   act(self.extra.["$bamfout"].descr,A_HIDEINV, self, null, null, TO_ROOM);
  else
   act("$1n disappears into thin air.",
@@ -4550,7 +4547,7 @@ if (tgt!=null)
 
   link(self,tgt);
 
- if(self.extra.["$bamfin"].descr != "")
+ if (self.extra.["$bamfin"].descr != "")
   act(self.extra.["$bamfin"].descr,A_HIDEINV, self, null, null, TO_ROOM);
  else
   act("$1n appears from thin air.",
@@ -4573,11 +4570,11 @@ code
    ex := self.quests;
    str := "";
 
-   if(arg != "")
+   if (arg != "")
    {
       sendtext("Quests containing '"+arg+"'.<br/>", self);
 
-      while(ex != null)
+      while (ex != null)
       {
          if ((left(ex.names.[0],1) != "$") and (arg in ex.names.[0]))
          {
@@ -4597,7 +4594,7 @@ code
    }
    else
    {
-      while(ex != null)
+      while (ex != null)
       {
          if (left(ex.names.[0],1) != "$")
          {
@@ -4609,7 +4606,7 @@ code
          ex := ex.next;
       }
 
-      if(str == "") str := "You have not completed any quests.<br/>";
+      if (str == "") str := "You have not completed any quests.<br/>";
 
       str := textformat(str);
       pagestring(str,self);
@@ -4629,7 +4626,7 @@ code
 
 err := loadstr("news",news);
 
-if(err > 0)
+if (err > 0)
 {
         news := "<br/>" + textformat(news);
         pagestring(news,self);
@@ -4650,7 +4647,7 @@ code
 
 err := loadstr("contrib",contrib);
 
-if(err > 0)
+if (err > 0)
 {
         contrib := "<br/>" + textformat(contrib);
         pagestring(contrib,self);
@@ -4671,7 +4668,7 @@ code
 
 err := loadstr("credits",credits);
 
-if(err > 0)
+if (err > 0)
 {
         credits := "<br/>" + textformat(credits);
         pagestring(credits,self);
@@ -4692,7 +4689,7 @@ code
 
 err := loadstr("wizlist",wizlist);
 
-if(err > 0)
+if (err > 0)
 {
         wizlist := "<br/>" + textformat(wizlist);
         pagestring(wizlist,self);
@@ -4716,64 +4713,60 @@ dilend
 
 dilbegin attack_switch(arg : string);
 var
-lst : stringlist;
-wpn : intlist;
-i : integer;
-fnd : integer;
-str : string;
+    lst : stringlist;
+    wpn : intlist;
+    i : integer;
+    fnd : integer;
+    str : string;
 code
 {
+    if (arg == "")
+    {
+        sendtext("Your current attack type is "+
+        weapon_name(self.attack_type)+".<br/>", self);
+        quit;
+    }
 
-if(arg == "")
-{
-sendtext("Your current attack type is "+
-weapon_name(self.attack_type)+".<br/>", self);
-quit;
-}
+    lst := {"fist","kick","knee","elbow"};
 
-lst :=
-{"fist","kick","knee","elbow"};
+    wpn := {WPN_FIST,WPN_KICK,WPN_KNEE,WPN_ELBOW};
 
-wpn :=
-{WPN_FIST,WPN_KICK,WPN_KNEE,WPN_ELBOW};
+    i := 0;
+    fnd := FALSE;
+    while (i < length(lst))
+    {
+        if (left(lst.[i], length(arg)) == arg)
+        {
+            fnd := TRUE;
+            break;
+        }
 
-i := 0;
+        i := i + 1;
+    }
 
-while(i < length(lst))
-{
+    if (fnd != TRUE)
+    {
+        str := lst.[0];
+        i := 1;
+        while (i < length(lst))
+        {
+            str := str+", "+lst.[i];
+            i := i + 1;
+        }
 
- if(left(lst.[i], length(arg)) == arg)
- {
- fnd := TRUE;
- break;
- }
+        sendtext("That option is not available (choose "+str+"</div>).<br/>",self);
+    }
+    else
+    {
+        self.attack_type := wpn.[i];
+        sendtext("Attack type set to "+lst.[i]+".<br/>",self);
+        send_done("attackswitch", self, null, null, 0, arg, null, CMD_AUTO_NONE);
+    }
 
- i := i + 1;
-}
-
-if(fnd != TRUE)
-{
-	str := lst.[0];
-	i := 1;
-	while(i < length(lst))
-	{
-	str := str+", "+lst.[i];
-	i := i + 1;
-	}
-
-sendtext("That option is not available("+str+"</div>).<br/>",self);
-}
-else
-{
-	self.attack_type := wpn.[i];
-	sendtext("Attack type set to "+lst.[i]+".<br/>",self);
-
-	send_done("attackswitch",self,null,null,0,arg,null, CMD_AUTO_NONE);
-}
-
-quit;
+    quit;
 }
 dilend
+
 
 dilbegin send_to_world(s : string);
 var
@@ -4783,7 +4776,7 @@ code
 
 u := ghead();
 
-while(u.type == UNIT_ST_PC)
+while (u.type == UNIT_ST_PC)
 {
  sendtext(s,u);
  u := u.gnext;
@@ -4803,23 +4796,23 @@ i : integer;
 code
 {
 i := atoi(s);
-if(i == 0) goto go_now;
+if (i == 0) goto go_now;
 
-if(i > 1) str := "minutes";
+if (i > 1) str := "minutes";
 else str := "minute";
 
 
 /* Only tell the players it will reboot if it's under 20 */
- if(i < 20)
+ if (i < 20)
  send_to_world("The mud will reboot in "+itoa(i)+" "+str+".</br>");
 
 heartbeat := PULSE_SEC * SECS_PER_REAL_MIN;
 
-while(i > 1)
+while (i > 1)
 {
  wait(SFB_TICK, TRUE);
 
- if((i == 10) or (i == 5))
+ if ((i == 10) or (i == 5))
  send_to_world("The mud will reboot in "+itoa(i)+" minutes.<br/>");
 
  i := i - 1;
@@ -4830,15 +4823,15 @@ j := SECS_PER_REAL_MIN;
 
 heartbeat := PULSE_SEC;
 
-while(j > 0)
+while (j > 0)
 {
 
  wait(SFB_TICK, TRUE);
 
- if(j == 30)
+ if (j == 30)
  send_to_world("The mud will reboot in 30 seconds.<br/>");
 
- if(j == 10)
+ if (j == 10)
  send_to_world("The mud will reboot in 10 seconds.<br/>");
 
  j := j - 1;
@@ -4872,9 +4865,9 @@ code
 void := findroom("void@basis");
 
 
-if(arg == "")
+if (arg == "")
  {
- if(dilfind("rebooting@commands",void))
+ if (dilfind("rebooting@commands",void))
  {
  sendtext("There is a reboot in progress, use the cancel option.<br/>",self);
  quit;
@@ -4883,14 +4876,14 @@ if(arg == "")
  sendtext("Reboot set for 1 minute.<br/>", self);
  quit;
  }
-else if("now" in arg)
+else if ("now" in arg)
  {
  dilcopy("rebooting@commands("+itoa(0)+")", void);
  quit;
  }
-else if("cancel" in arg)
+else if ("cancel" in arg)
 {
- if(dilfind("rebooting@commands",void))
+ if (dilfind("rebooting@commands",void))
  {
  i := dildestroy("rebooting@commands",void);
  sendtext("Reboot cancelled.<br/>", self);
@@ -4905,9 +4898,9 @@ else if("cancel" in arg)
 else
 {
 str := getword(arg);
-if(atoi(str) > 0)
+if (atoi(str) > 0)
 {
- if(dilfind("rebooting@commands",void))
+ if (dilfind("rebooting@commands",void))
  {
  sendtext("There is a reboot in progress, use the cancel option.<br/>",self);
  quit;
@@ -4944,63 +4937,63 @@ var
 two : integer;
 code
 {
-   if(i == WEAR_FINGER_R)
+   if (i == WEAR_FINGER_R)
       return("worn on right finger");
-   else if(i == WEAR_FINGER_L)
+   else if (i == WEAR_FINGER_L)
       return("worn on left finger");
-   else if((i == WEAR_NECK_1) or (i == WEAR_NECK_2))
+   else if ((i == WEAR_NECK_1) or (i == WEAR_NECK_2))
       return("worn around neck");
-   else if(i == WEAR_BODY)
+   else if (i == WEAR_BODY)
       return("worn on body");
-   else if(i == WEAR_HEAD)
+   else if (i == WEAR_HEAD)
       return("worn on head");
-   else if(i == WEAR_LEGS)
+   else if (i == WEAR_LEGS)
       return("worn on legs");
-   else if(i == WEAR_FEET)
+   else if (i == WEAR_FEET)
       return("worn on feet");
-   else if(i == WEAR_HANDS)
+   else if (i == WEAR_HANDS)
       return("worn on hands");
-   else if(i == WEAR_ARMS)
+   else if (i == WEAR_ARMS)
       return("worn on arms");
-   else if(i == WEAR_SHIELD)
+   else if (i == WEAR_SHIELD)
       return("worn as shield");
-   else if(i == WEAR_ABOUT)
+   else if (i == WEAR_ABOUT)
       return("worn about body");
-   else if(i == WEAR_WAIST)
+   else if (i == WEAR_WAIST)
       return("worn about waist");
-   else if((i == WEAR_WRIST_R) or (i == WEAR_WRIST_L))
+   else if ((i == WEAR_WRIST_R) or (i == WEAR_WRIST_L))
       return("worn around wrist");
-   else if(i == WEAR_WIELD)
+   else if (i == WEAR_WIELD)
    {
       if (ting)
          two := two_handed(ting.value[0]);
       else
          two:=FALSE;
-      if(two == TRUE)
+      if (two == TRUE)
          return("two hand wielded");
       else
          return("wielded");
    }
-   else if(i == WEAR_HOLD)
+   else if (i == WEAR_HOLD)
    {
       if (ting)
          two := two_handed(ting.value[0]);
       else
          two:=FALSE;
-      if(two == TRUE)
+      if (two == TRUE)
          return("two hand held");
       else
          return("held");
    }
-   else if(i == WEAR_CHEST)
+   else if (i == WEAR_CHEST)
       return("worn across chest");
-   else if(i == WEAR_BACK)
+   else if (i == WEAR_BACK)
       return("worn on back");
-   else if(i == WEAR_EAR_L)
+   else if (i == WEAR_EAR_L)
       return("worn on left ear");
-   else if(i == WEAR_EAR_R)
+   else if (i == WEAR_EAR_R)
       return("worn on right ear");
-   else if((i == WEAR_ANKLE_L) or (i == WEAR_ANKLE_R))
+   else if ((i == WEAR_ANKLE_L) or (i == WEAR_ANKLE_R))
       return("worn on ankle");
    else
       return("report to an admin");
@@ -5022,15 +5015,15 @@ pge : string;
 lit : string;
 code
 {
-   if(arg == "")
+   if (arg == "")
    {
       pge := "<u>You are using:</u><br/>";
 
       obj := self.inside;
       pge := pge + "<table class='colh2'>";
-      while(obj != null)
+      while (obj != null)
       {
-         if(obj.equip)
+         if (obj.equip)
          {
             if (obj.bright > 0)
                lit := " (light)";
@@ -5049,12 +5042,12 @@ code
 
       pge := pge + "</table>";
 
-      if(cnt < 1)
+      if (cnt < 1)
          pge := pge+"Nothing!<br/>";
 
       sendtext(pge, self);
    } // arg == ""
-   else if(arg == "all")
+   else if (arg == "all")
    {
       str := get_eq_in_order(); // xxx
       sendtext(str,self);
@@ -5110,14 +5103,14 @@ code
          if (obj!=null)
          {
             two := two_handed(obj.value[0]);
-            if(two == TRUE)
+            if (two == TRUE)
             {
                i := i + 1;
                continue;
             }
          }
       }
-      else if((il.[i] == WEAR_SHIELD) and (equipment(self,WEAR_SHIELD) == null))
+      else if ((il.[i] == WEAR_SHIELD) and (equipment(self,WEAR_SHIELD) == null))
       {
             i := i + 1;
             continue;
@@ -5126,7 +5119,7 @@ code
       obj := equipment(self,il.[i]);
       str := eq_string(il.[i],obj);
 
-      if(obj != null)
+      if (obj != null)
       {
          if (obj.bright > 0)
             lit := " (light)";
@@ -5188,17 +5181,17 @@ code
    }
 
 
-   if(self.type != UNIT_ST_PC) 
+   if (self.type != UNIT_ST_PC) 
       quit;
 
-   if(self.position == POSITION_FIGHTING)
+   if (self.position == POSITION_FIGHTING)
    {
       sendtext("Not while fighting!<br/>", self);
       quit;
    }
 
    tt:=atoi(self.extra.["$PK_TIMER"].descr);
-   if(realtime-tt>600)
+   if (realtime-tt>600)
       goto cont_quit;
 
    seconds:=0;
@@ -5233,7 +5226,7 @@ code
    :cont_quit:
    foreach(UNIT_ST_PC,u)
    {
-      if(u != self)
+      if (u != self)
       {
          if (visible(u,self))
             sendtext(self.name+" has left the game.<br/>",u);
@@ -5245,7 +5238,7 @@ code
    {
       err := loadstr("goodbye",goodbye);
 
-      if(err > 0)
+      if (err > 0)
       {
          goodbye := textformat(goodbye);
          sendtext("<br/><br/>"+goodbye, self);
@@ -5363,7 +5356,7 @@ quit;
 }
 */
 
-if(self.type != UNIT_ST_PC) quit;
+if (self.type != UNIT_ST_PC) quit;
 
 if (self.level>200)
 	goto admin_delete;
@@ -5418,7 +5411,7 @@ sendtext ("To delete self you need to type 'delete self forever'<br/>",self);
 quit;
 }
 pc:=pc_head();
-while(pc.type==UNIT_ST_PC)
+while (pc.type==UNIT_ST_PC)
 {
 if (pc.name==arg)
 goto deletem;
@@ -5446,7 +5439,7 @@ code
 
 err := loadstr("motd",motd);
 
-if(err > 0)
+if (err > 0)
 {
         motd := "<br/>" + textformat(motd);
         pagestring(motd,self);
@@ -5481,7 +5474,7 @@ f:=FALSE;
 
 	foreach(UNIT_ST_OBJ | UNIT_ST_NPC | UNIT_ST_PC,u)
 	{
-	if(isset(u.flags,UNIT_FL_BURIED))
+	if (isset(u.flags,UNIT_FL_BURIED))
 	{
 
 	unset(u.flags, UNIT_FL_BURIED);
@@ -5514,22 +5507,22 @@ time : integer;
 code
 {
 
-if(self.type != UNIT_ST_OBJ) quit; /* shrug..I don't know */
-if(not (isset(self.flags, UNIT_FL_BURIED))) quit;
-if((self.nameidx+"@"+self.zoneidx) == "corpse@death") quit;
+if (self.type != UNIT_ST_OBJ) quit; /* shrug..I don't know */
+if (not (isset(self.flags, UNIT_FL_BURIED))) quit;
+if ((self.nameidx+"@"+self.zoneidx) == "corpse@death") quit;
 
 
 heartbeat := PULSE_SEC * SECS_PER_REAL_MIN;
 time := amount;
 
-while(time > 0)
+while (time > 0)
 {
 	wait(SFB_TICK, TRUE);
 
 	time := time - 1;
 }
 
-if(isset(self.flags, UNIT_FL_BURIED)) destroy(self);
+if (isset(self.flags, UNIT_FL_BURIED)) destroy(self);
 quit;
 }
 dilend
@@ -5826,7 +5819,7 @@ code
 {
 
   /* horse ?*/
-  if(self.outside.type & (UNIT_ST_NPC | UNIT_ST_PC))
+  if (self.outside.type & (UNIT_ST_NPC | UNIT_ST_PC))
   {
    DO_ACT("Not here you don't.")
    return;
@@ -5836,12 +5829,12 @@ code
     Skills.def will prevent this action unless you position is > resting
 */
 
-  if(self.position == POSITION_FIGHTING)
+  if (self.position == POSITION_FIGHTING)
   {
    DO_ACT("Do you not consider fighting as standing?")
    return;
   }
-  else if(self.position == POSITION_STANDING)
+  else if (self.position == POSITION_STANDING)
    {
     DO_ACT("You are already standing.")
     return;
@@ -5853,7 +5846,7 @@ code
     return;
 	}
 
-  else if(self.position == POSITION_SITTING)
+  else if (self.position == POSITION_SITTING)
   {
    DO_ACT("You stand up.")
    act("$1n clambers on $1s feet.", A_HIDEINV, self, null, null, TO_REST);
@@ -5865,7 +5858,7 @@ code
    return;
   }
 
-  else if(self.position == POSITION_RESTING)
+  else if (self.position == POSITION_RESTING)
   {
    DO_ACT("You stop resting, and stand up.")
    act("$1n stops resting, and clambers on $1s feet.", A_HIDEINV, self,
@@ -5899,7 +5892,7 @@ dilbegin do_sit(arg : string);
 code
 {
 
- if(self.position == POSITION_STANDING)
+ if (self.position == POSITION_STANDING)
   {
    DO_ACT("You sit down.")
    act("$1n sits down.",
@@ -5910,11 +5903,11 @@ code
 
 
    }
- else if(self.position == POSITION_SITTING)
+ else if (self.position == POSITION_SITTING)
   {
    DO_ACT("You are sitting already.")
   }
- else if(self.position == POSITION_RESTING)
+ else if (self.position == POSITION_RESTING)
   {
    DO_ACT("You stop resting, and sit up.")
    act("$1n stops resting.",
@@ -5925,7 +5918,7 @@ code
 
 
   }
- else if(self.position == POSITION_FIGHTING)
+ else if (self.position == POSITION_FIGHTING)
   {
    DO_ACT("Sit down while fighting? are you MAD?")
   }
@@ -5950,7 +5943,7 @@ dilbegin do_rest(arg : string);
 code
 {
 
-  if(self.position == POSITION_STANDING)
+  if (self.position == POSITION_STANDING)
    {
     DO_ACT("You sit down and rest your tired bones.")
     act("$1n sits down and rests.", A_HIDEINV, self, null, null, TO_REST);
@@ -5960,7 +5953,7 @@ code
 
 
    }
-  else if(self.position == POSITION_SITTING)
+  else if (self.position == POSITION_SITTING)
   {
     DO_ACT("You rest your tired bones.")
     act("$1n rests.", A_HIDEINV, self, null, null, TO_REST);
@@ -5969,11 +5962,11 @@ code
     send_done("rest",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
   }
-  else if(self.position == POSITION_RESTING)
+  else if (self.position == POSITION_RESTING)
   {
    DO_ACT("You are already resting.")
   }
-  else if(self.position == POSITION_FIGHTING)
+  else if (self.position == POSITION_FIGHTING)
   {
    DO_ACT("Rest while fighting? are you MAD?")
   }
@@ -5996,7 +5989,7 @@ dilbegin do_sleep(arg : string);
 code
 {
 
-  if((self.position == POSITION_STANDING) or
+  if ((self.position == POSITION_STANDING) or
      (self.position == POSITION_RESTING) or
      (self.position == POSITION_SITTING))
   {
@@ -6008,11 +6001,11 @@ code
     send_done("sleep",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
   }
-  else if(self.position == POSITION_SLEEPING)
+  else if (self.position == POSITION_SLEEPING)
   {
    sendtext("You are already sound asleep.<br/>", self);
   }
-  else if(self.position == POSITION_FIGHTING)
+  else if (self.position == POSITION_FIGHTING)
   {
    DO_ACT("Sleep while fighting? are you MAD?")
   }
@@ -6039,9 +6032,9 @@ vict: unitptr;
 code
 {
 
-   if(arg == "")
+   if (arg == "")
    {
-      if(self.position > POSITION_SLEEPING)
+      if (self.position > POSITION_SLEEPING)
          DO_ACT("You are already awake.")
       else
       {
@@ -6054,40 +6047,40 @@ code
    }
    else
    {
-      if(self.position == POSITION_SLEEPING)
+      if (self.position == POSITION_SLEEPING)
          DO_ACT("You can't wake people up if you are asleep yourself!<br>")
       else
       {
          vict := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-         if((vict == null) or (not(vict.type & (UNIT_ST_NPC | UNIT_ST_PC)))
+         if ((vict == null) or (not(vict.type & (UNIT_ST_NPC | UNIT_ST_PC)))
             or not(visible(self,vict)))
          {
             DO_ACT("You do not see that person here.")
             return;
          }
 
-         if(vict == self)
+         if (vict == self)
          {
             DO_ACT("If you want to wake yourself up, just type 'wake'")
             return;
          }
 
-         if(vict.position < POSITION_SLEEPING)
+         if (vict.position < POSITION_SLEEPING)
          {
             act("You can't wake $3m up!",
                A_SOMEONE, self, null, vict, TO_CHAR);
             return;
          }
 
-         if(vict.position > POSITION_SLEEPING)
+         if (vict.position > POSITION_SLEEPING)
          {
             act("$3n is already awake.",
                A_SOMEONE, self, null, vict, TO_CHAR);
             return;
          }
 
-         if(vict.position == POSITION_SLEEPING)
+         if (vict.position == POSITION_SLEEPING)
          {
             vict.position := POSITION_RESTING;
             act("You wake $3m up.",
@@ -6525,16 +6518,16 @@ code
       inc := inc *3+1;
 
 inc:=inc/3;
-while(inc > 0)
+while (inc > 0)
  {
  i:=inc;
  while (i < iMax)
   {
   iVal := s.[i];
   j:=i;
-  while(j > (inc-1))
+  while (j > (inc-1))
    {
-   if(iVal < s.[j - inc])
+   if (iVal < s.[j - inc])
     {
     s.[j] := s.[j - inc];
     }
@@ -7073,7 +7066,7 @@ code
    :start:
    if ((self.type == UNIT_ST_PC) and (self.level < IMMORTAL_LEVEL))
    {
-      if(self.endurance < endcost)
+      if (self.endurance < endcost)
       {
          act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
          quit;
@@ -9916,7 +9909,7 @@ if (isset(self.outside.flags, UNIT_FL_SACRED))
 
 ln:=length (spl_aff);
 
-if(self.position == POSITION_FIGHTING)
+if (self.position == POSITION_FIGHTING)
 {
  sendtext("You decide it best to focus your energies on the battle at hand!<br/>", self);
  quit;
@@ -9958,10 +9951,10 @@ var
 u: unitptr;
 code
 {
-if(self.type!=UNIT_ST_PC)
+if (self.type!=UNIT_ST_PC)
 quit;
 
-if(arg==""){
+if (arg==""){
   act(self.name+" reports: "+itoa(self.hp)+"/"+itoa(self.max_hp)+
     " Hitpoints, "+itoa(self.endurance)+"/"+itoa(self.max_endurance)+
     " Endurance, "+itoa(self.mana)+"/"+itoa(self.max_mana)+" Mana",
@@ -9971,30 +9964,30 @@ if(arg==""){
     " Endurance, "+itoa(self.mana)+"/"+itoa(self.max_mana)+" Mana",
     A_ALWAYS, self, null, null, TO_CHAR);
 }
-else if(arg=="group") {
+else if (arg=="group") {
 foreach (UNIT_ST_PC, u)
 {
- if(u==self)
+ if (u==self)
  {
   act("You report: "+itoa(self.hp)+"/"+itoa(self.max_hp)+
     " Hitpoints, "+itoa(self.endurance)+"/"+itoa(self.max_endurance)+
     " Endurance, "+itoa(self.mana)+"/"+itoa(self.max_mana)+" Mana"+
     " to the group.", A_ALWAYS, self, null, null, TO_CHAR);
  }
- else if(u.master==self)
+ else if (u.master==self)
  {
   act("$1n reports: "+itoa(self.hp)+"/"+itoa(self.max_hp)+
     " Hitpoints, "+itoa(self.endurance)+"/"+itoa(self.max_endurance)+
     " Endurance, "+itoa(self.mana)+"/"+itoa(self.max_mana)+" Mana"+
     " to the group.", A_SOMEONE, self, null, u, TO_VICT);
  }
- else if(u==self.master) {
+ else if (u==self.master) {
   act("$1n reports: "+itoa(self.hp)+"/"+itoa(self.max_hp)+
     " Hitpoints, "+itoa(self.endurance)+"/"+itoa(self.max_endurance)+
     " Endurance, "+itoa(self.mana)+"/"+itoa(self.max_mana)+" Mana"+
     " to the group.", A_SOMEONE, self, null, u, TO_VICT);
  }
- else if(u.master==self.master)
+ else if (u.master==self.master)
  {
   act("$1n reports: "+itoa(self.hp)+"/"+itoa(self.max_hp)+
     " Hitpoints, "+itoa(self.endurance)+"/"+itoa(self.max_endurance)+
@@ -10006,7 +9999,7 @@ foreach (UNIT_ST_PC, u)
 else
 {
  u:=findunit(self, arg, FIND_UNIT_SURRO, null);
- if(u==null)
+ if (u==null)
  {
    act("That person is not here.", A_ALWAYS, self, null, null, TO_CHAR);
  }
@@ -10036,7 +10029,7 @@ str: string;
 code
 {
 
- if(arg == "")
+ if (arg == "")
   {
    act("<br/>Usage : transfer &lt;person&gt;<br/>
         transfer &lt;person&gt; &lt;place&gt;<br/>
@@ -10046,36 +10039,36 @@ code
    quit;
   }
 
-  if((arg == "all") or (arg == "all now"))
+  if ((arg == "all") or (arg == "all now"))
   goto transall;
 
  tgt := findunit(self,arg,FIND_UNIT_GLOBAL,null);
 
- if((tgt == null) or (not(visible(self,tgt))))
+ if ((tgt == null) or (not(visible(self,tgt))))
   {
    act("No such person found.",A_ALWAYS, self, null, null, TO_CHAR);
    quit;
   }
 
- if(tgt == self)
+ if (tgt == self)
   {
    act("DOH", A_ALWAYS, self, null, null, TO_CHAR);
    quit;
   }
 
- if(not(tgt.type & (UNIT_ST_PC|UNIT_ST_NPC)))
+ if (not(tgt.type & (UNIT_ST_PC|UNIT_ST_NPC)))
  {
   act("Transfer is for players and mobiles only!",A_ALWAYS, self, null,
 null, TO_CHAR);
   quit;
  }
 
- if(arg == "") /* lone transfer..ex. transfer domino */
+ if (arg == "") /* lone transfer..ex. transfer domino */
  {
   dest_s := self.outside;
   dest_t := tgt.outside;
 
-  if((("$NO_TRANS" in dest_s.extra) or ("NO_TRANS" in dest_t.extra)) and
+  if ((("$NO_TRANS" in dest_s.extra) or ("NO_TRANS" in dest_t.extra)) and
       (self.level < 250))
   {
    act("Sorry, you are unable to transfer that person.", A_ALWAYS, self,
@@ -10083,7 +10076,7 @@ null, null, TO_CHAR);
    quit;
   }
 
-  if((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
+  if ((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
   {
    act("You are unable to transfer dead persons.",A_ALWAYS, self, null,
 null, TO_CHAR);
@@ -10099,17 +10092,17 @@ TO_REST);
  act("$1n appears in a puff of smoke.",A_HIDEINV, tgt, null, null, TO_REST);
  quit;
  }
- else if("@" in arg) /* transfer domino temple@udgaard */
+ else if ("@" in arg) /* transfer domino temple@udgaard */
  {
   dest_s := findroom(arg);
-  if(dest_s == null)
+  if (dest_s == null)
   {
    act("No such room!", A_ALWAYS, self, null, null, TO_CHAR);
    quit;
   }
   dest_t := tgt.outside;
 
-  if(("NO_TRANS" in dest_t.extra) and
+  if (("NO_TRANS" in dest_t.extra) and
       (self.level < 250))
   {
    act("Sorry, you are unable to transfer that person.",A_ALWAYS, self,
@@ -10117,7 +10110,7 @@ null, null, TO_CHAR);
    quit;
   }
 
-  if((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
+  if ((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
   {
    act("You are unable to transfer dead persons",A_ALWAYS, self, null, null,
 TO_CHAR);
@@ -10138,22 +10131,22 @@ TO_REST);
   {
    dest_s := findunit(self,arg, FIND_UNIT_WORLD, null);
 
-   if(dest_s == null)
+   if (dest_s == null)
    {
     act("No such place to transfer $3n to!",A_ALWAYS, self, null, tgt,
 TO_CHAR);
     quit;
    }
 
- if(dest_s.type != UNIT_ST_ROOM)
+ if (dest_s.type != UNIT_ST_ROOM)
   {
-   while(dest_s.type != UNIT_ST_ROOM)
+   while (dest_s.type != UNIT_ST_ROOM)
      dest_s := dest_s.outside;
   }
 
   dest_t := tgt.outside;
 
-  if(("NO_TRANS" in dest_t.extra) and
+  if (("NO_TRANS" in dest_t.extra) and
       (self.level < 250))
   {
    act("Sorry, you are unable to transfer that person.", A_ALWAYS, self,
@@ -10161,7 +10154,7 @@ null, null, TO_CHAR);
    quit;
   }
 
-  if((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
+  if ((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
   {
    act("You are unable to transfer dead persons",A_ALWAYS, self, null, null,
 TO_CHAR);
@@ -10181,7 +10174,7 @@ TO_REST);
 
  :transall:
 
-  if(arg != "all now")
+  if (arg != "all now")
   {
    act("You must type transfer all now</div>.",A_ALWAYS, self, null,
 null, TO_CHAR);
@@ -10192,10 +10185,10 @@ null, TO_CHAR);
 
  tgt := ghead();
 
- while(tgt.type == UNIT_ST_PC)
+ while (tgt.type == UNIT_ST_PC)
  {
 
-  if((visible(self,tgt)) and (tgt != self))
+  if ((visible(self,tgt)) and (tgt != self))
   {
 
    act("$1n disappears in a mushroom cloud.",
@@ -10223,32 +10216,32 @@ var
    s : string;
 code
 {
-if(arg=="") {
+if (arg=="") {
   act("Assist who??",A_SOMEONE,self,null,null,TO_CHAR);
   quit; }
 u:=findunit(self,arg,FIND_UNIT_SURRO,null);
 secure(u,losthim);
-if(u==null) {
+if (u==null) {
   act("No such person by that name!.",A_SOMEONE,self,null,null,TO_CHAR);
   quit; }
-if(u==self) {
+if (u==self) {
   act("Assist yourself?  Your in pretty bad shape if your the only one who
 can help you.",A_SOMEONE,self,null,null,TO_CHAR);
   quit; }
-if(self.fighting) {
+if (self.fighting) {
   act("No way! You are too busy fighting for your
 life!",A_ALWAYS,self,null,null,TO_CHAR);
   quit; }
-if(u.fighting==null) {
+if (u.fighting==null) {
   act("Assist $3n? $3e isn't fighting anything.",
       A_SOMEONE,self,null,u,TO_CHAR);
   quit; }
-if((self.type==UNIT_ST_PC) and (u.fighting.type==UNIT_ST_PC)) {
-  if(not(isset(u.fighting.pcflags,PC_PK_RELAXED))) {
+if ((self.type==UNIT_ST_PC) and (u.fighting.type==UNIT_ST_PC)) {
+  if (not(isset(u.fighting.pcflags,PC_PK_RELAXED))) {
     act("You cannot do this until $3n has signed the book of blood.",
         A_SOMEONE,self,null,u.fighting,TO_CHAR);
     quit; }
-  if(not(isset(self.pcflags,PC_PK_RELAXED))) {
+  if (not(isset(self.pcflags,PC_PK_RELAXED))) {
     act("You are not allowed to do this until you sign the book of blood.",
         A_ALWAYS,self,null,u.fighting,TO_CHAR);
     quit; } }
@@ -10279,7 +10272,7 @@ n: integer;
 code
 {
 
- if(arg == "")
+ if (arg == "")
  {
  act("What do you want to quaff?",A_ALWAYS, self, null, null, TO_CHAR);
  quit;
@@ -10287,13 +10280,13 @@ code
 
  potion := findunit(self,arg,FIND_UNIT_IN_ME,null);
 
- if(potion == null)
+ if (potion == null)
  {
  act("You do not have that item.",A_ALWAYS, self, null, null, TO_CHAR);
  quit;
  }
 
- if(potion.objecttype != ITEM_POTION)
+ if (potion.objecttype != ITEM_POTION)
  {
  act("You can only quaff potions.",A_ALWAYS, self, null, null, TO_CHAR);
  quit;
@@ -10301,7 +10294,7 @@ code
 
  potion.spells[SPL_ALL] := potion.value[0];
 
- if(self.position == POSITION_FIGHTING) change_speed(self,PULSE_VIOLENCE*2);
+ if (self.position == POSITION_FIGHTING) change_speed(self,PULSE_VIOLENCE*2);
 
  act("You quaff $2t which dissolves.", A_ALWAYS, self, potion.title, null,
 TO_CHAR);

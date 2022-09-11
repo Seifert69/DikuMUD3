@@ -3410,188 +3410,212 @@ Can I set that?
 
 return;
 }
+dilend
 
+
+// Will figure out the natural penalty for self
+dilbegin integer naturalPentalty();
+external 
+	integer two_handed@commands(i : integer);
+
+var
+    bonus : integer;
+    u : unitptr;
+    two : integer;
+code
+{
+    bonus := 0;
+
+    if (equipment(self, WEAR_SHIELD))
+        bonus := bonus - 25;
+
+    if (equipment(self, WEAR_HOLD))
+        bonus := bonus - 25;
+
+    u := equipment(self, WEAR_WIELD) ;
+    if (u)
+    {
+        bonus := bonus - 25;
+        if (u.objecttype == ITEM_WEAPON)
+        {
+            if (two_handed@commands(u.value[0]))
+                bonus := bonus - 75;
+        }
+    }
+
+    return (bonus);
+}
 dilend
 
 
 dilbegin kick(arg : string);
-
 external
-   provoked_attack (victim : unitptr, ch : unitptr);
+    provoked_attack(victim : unitptr, ch : unitptr);
+    integer naturalPentalty@skills();
 
 var
-   bonus : integer;
-   targ  : unitptr;
+    bonus : integer;
+    targ  : unitptr;
 
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_KICK] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_KICK] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (arg == "")
-   {
-      if (self.fighting)
-      {
-	 targ := self.fighting;
-	 goto kick;
-      }
+    if (arg == "")
+    {
+        if (self.fighting)
+        {
+            targ := self.fighting;
+            goto kick;
+        }
 
-      act("Kick who?", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+        act("Kick who?", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
-   {
-      act("You can't kick that, silly!", A_SOMEONE, self, null, null,
-	  TO_CHAR);
-      quit;
-   }
+    if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+    {
+        act("You can't kick that, silly!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (targ == self)
-   {
-      act("You kick yourself.", A_HIDEINV, self, null, null,
-	  TO_CHAR);
-      act("$1n kicks $1mself.", A_HIDEINV, self, null, null,
-	  TO_ROOM);
-      quit;
-   }
+    if (targ == self)
+    {
+        act("You kick yourself.", A_HIDEINV, self, null, null, TO_CHAR);
+        act("$1n kicks $1mself.", A_HIDEINV, self, null, null, TO_ROOM);
+        quit;
+    }
 
-   if ((targ.type==UNIT_ST_PC) and
-   (self.type==UNIT_ST_PC))
-  {
-if (not(isset (self.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless you sign the book of blood.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
+    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+    {
+        if (not(isset (self.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
+            quit;
+        }
 
-if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless $2e signs the book of blood.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  quit;
-  }
-  }
+        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless $2e signs the book of blood.", A_ALWAYS,self,targ,null,TO_CHAR);
+            quit;
+        }
+    }
 
 
-   :kick:
-   if (equipment(self, WEAR_WIELD))
-     bonus := 0;
-   else
-     {
-     bonus := rnd(1,(self.weapons[WPN_KICK] - 70));
-     if(bonus <= 0) bonus := 1;
-     }
-   if (self.endurance < 2)
-     act("You are too exhausted to attempt that.", A_ALWAYS, self, null,
-         null, TO_CHAR);
-   else self.endurance := self.endurance - 2;
-   provoked_attack (targ, self);
-   bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK);
-   quit;
+:kick:
+    if (self.endurance < 2)
+    {
+        act("You are too exhausted to attempt that.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    bonus := naturalPentalty();
+    bonus := bonus + self.weapons[WPN_KICK];
+    if (targ.position != POSITION_FIGHTING)
+        bonus := bonus + 50;
+    self.endurance := self.endurance - 2;
+    provoked_attack(targ, self);
+    bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK);
+    quit;
 }
 dilend
 
-dilbegin elbow(arg : string); /* Just like kick */
 
+
+dilbegin elbow(arg : string); /* Just like kick */
 external
-   provoked_attack (victim : unitptr, ch : unitptr);
+    provoked_attack (victim : unitptr, ch : unitptr);
+    integer naturalPentalty@skills();
 
 var
-   bonus : integer;
-   targ  : unitptr;
+    bonus : integer;
+    targ  : unitptr;
 
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_ELBOW] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if (arg == "")
-   {
-      if (self.fighting)
-      {
-	 targ := self.fighting;
-	 goto elbow;
-      }
-
-      act("Elbow who?", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   targ := findunit(self, arg, FIND_UNIT_SURRO, null);
-
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
-   {
-      act("You can't elbow that, silly!", A_SOMEONE, self, null, null,
-	  TO_CHAR);
-      quit;
-   }
-
-   if (targ == self)
-   {
-      act("You elbow yourself.", A_HIDEINV, self, null, null,
-	  TO_CHAR);
-      act("$1n elbows $1mself.", A_HIDEINV, self, null, null,
-	  TO_ROOM);
-      quit;
-   }
-
-   if ((targ.type==UNIT_ST_PC) and
-   (self.type==UNIT_ST_PC))
-  {
-if (not(isset (self.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless you sign the book of blood.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
-
-if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless $2e signs the book of blood.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  quit;
-  }
-  }
-
-
-   :elbow:
-   if (equipment(self, WEAR_WIELD))
-     bonus := 0;
-   else
-   {
-     bonus := rnd(1,(self.weapons[WPN_ELBOW] - 70));
-     /* Possibly a +30 bonus if you are 100% in elbow */
-     if(bonus <= 0) bonus := 1;
+    if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_ELBOW] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
     }
-   if (self.endurance < 2)
-     act("You are too exhausted to attempt that.", A_ALWAYS, self, null,
-         null, TO_CHAR);
-   else self.endurance := self.endurance - 2;
-   provoked_attack (targ, self);
-   bonus := meleeattack(self, targ, (bonus+self.level), WPN_ELBOW);
-   quit;
+
+    if (arg == "")
+    {
+        if (self.fighting)
+        {
+            targ := self.fighting;
+            goto elbow;
+        }
+
+        act("Elbow who?", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+    {
+        act("You can't elbow that, silly!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    if (targ == self)
+    {
+        act("You elbow yourself.", A_HIDEINV, self, null, null, TO_CHAR);
+        act("$1n elbows $1mself.", A_HIDEINV, self, null, null, TO_ROOM);
+        quit;
+    }
+
+    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+    {
+        if (not(isset (self.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
+            quit;
+        }
+
+        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless $2e signs the book of blood.", A_ALWAYS,self,targ,null,TO_CHAR);
+            quit;
+        }
+    }
+
+
+:elbow:
+    if (self.endurance < 2)
+    {
+        act("You are too exhausted to attempt that.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    bonus := naturalPentalty();
+    bonus := bonus + self.weapons[WPN_ELBOW];
+    if (targ.position != POSITION_FIGHTING)
+        bonus := bonus + 50;
+    self.endurance := self.endurance - 2;
+
+    provoked_attack (targ, self);
+    bonus := meleeattack(self, targ, (bonus+self.level), WPN_ELBOW);
+    quit;
 }
 dilend
 
@@ -3600,6 +3624,7 @@ dilend
 dilbegin knee(arg : string); /* do_knee. Just like kick */
 external
     provoked_attack (victim : unitptr, ch : unitptr);
+    integer naturalPentalty@skills();
 
 var
     bonus : integer;
@@ -3641,10 +3666,8 @@ code
 
     if (targ == self)
     {
-        act("You knee yourself.", A_HIDEINV, self, null, null,
-        TO_CHAR);
-        act("$1n knees $1mself.", A_HIDEINV, self, null, null,
-        TO_ROOM);
+        act("You knee yourself.", A_HIDEINV, self, null, null, TO_CHAR);
+        act("$1n knees $1mself.", A_HIDEINV, self, null, null, TO_ROOM);
         quit;
     }
 
@@ -3671,16 +3694,12 @@ code
         quit;
     }
 
-    if (equipment(self, WEAR_WIELD))
-        bonus := 0;
-    else
-    {
-        bonus := rnd(1,(self.weapons[WPN_KNEE] - 70));
-        /* Possibly a +30 bonus if you are 100% in knee */
-        if(bonus <= 0) bonus := 1;
-    }
-
+    bonus := naturalPentalty();
+    bonus := bonus + self.weapons[WPN_KNEE];
+    if (targ.position != POSITION_FIGHTING)
+        bonus := bonus + 50;
     self.endurance := self.endurance - 2;
+
     provoked_attack (targ, self);
     bonus := meleeattack(self, targ, (bonus+self.level), WPN_KNEE);
     quit;
@@ -3692,6 +3711,7 @@ dilend
 dilbegin punch(arg : string); /* works as cmds hit and punch */
 external
     provoked_attack (victim : unitptr, ch : unitptr);
+    integer naturalPentalty@skills();
 
 var
     bonus : integer;
@@ -3767,7 +3787,8 @@ code
         quit;
     }
 
-    bonus := self.weapons[WPN_FIST];
+    bonus := naturalPentalty();
+    bonus := bonus + self.weapons[WPN_FIST];
     if (targ.position != POSITION_FIGHTING)
         bonus := bonus + 50;
     self.endurance := self.endurance - 2;
