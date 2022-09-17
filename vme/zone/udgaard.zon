@@ -2090,7 +2090,7 @@ names {"crypt"}
 title "Village Crypt"
 descr
 "You're in the cold crypt beneath the temple of Udgaard. A pair of torches
-illuminate this othewise dark and cold place. Many stone shelves are built
+illuminate this otherwise dark and cold place. Many stone shelves are built
 into the walls. Stairs lead back up."
 gmap(424,420)
 movement SECT_INSIDE
