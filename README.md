@@ -69,6 +69,9 @@ to coding.
    * Some issues on Git to look at.
    * Need help creating random treasures. Got something working but need to polish it. 
      Also missing e.g. random descriptions and a way to generate random descriptions.
+   * Would like to monitor compiled zone files (INotify?) for changes and reindex them if they change. 
+     This will allow live, in-game, updates of zones. 
+   * Would like to be able to push in-game changes back into the zone files for in-game editing.
 
 ---
      
