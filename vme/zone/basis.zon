@@ -3961,104 +3961,104 @@ M_ZOMBIE_SMALL(20,SEX_NEUTRAL)
 
 dilbegin aware energyworms();
 var
-   u : unitptr;
-   sl : stringlist;
-   s : string;
-   nCount : integer;
-   exdp : extraptr;
+    u : unitptr;
+    sl : stringlist;
+    s : string;
+    nCount : integer;
+    exdp : extraptr;
 code
 {
-   heartbeat := PULSE_SEC*4;
-   log("Energy worms checking location " + self.outside.symname);
+    heartbeat := PULSE_SEC*4;
+    log("Energy worms checking location " + self.outside.symname);
 
-   if (self.outside.type != UNIT_ST_ROOM)
-   {
-      u := self.outside;
+    // First make sure we're not in (in (in (in))) a player or player corpse
+    //
+    u := self.outside;
 
-      while (u)
-      {
-         if (u.type == UNIT_ST_PC)
-         {
+    while (u)
+    {
+        if (u.type == UNIT_ST_PC)
+        {
             log("Energy worms loaded into a player. Quitting. " + self.outside.symname);
             destroy(self);
-         }
+        }
 
-         if (u.type == UNIT_ST_OBJ)
-         {
+        if (u.type == UNIT_ST_OBJ)
+        {
             if (u.value[2] == 1) // corpse is a player corpse
             {
-               exdp := "$living_sym" in u.extra;
+                exdp := "$living_sym" in u.extra;
 
-               if (exdp)
-               {
-                  if ("@_players" in exdp.descr)
-                  {
-                     log("Energy worms loaded into a player corpse. Quitting. " + self.outside.symname);
-                     destroy(self);
-                  }
-               }
+                if (exdp)
+                {
+                    if ("@_players" in exdp.descr)
+                    {
+                        log("Energy worms loaded into a player corpse. Quitting. " + self.outside.symname);
+                        destroy(self);
+                    }
+                }
             }
-         }
+        }
 
-         u := u.outside;
-      }
-      quit;
-   }
+        u := u.outside;
+    }
 
-   :init:
-   wait(SFB_ALL, TRUE);
+    // Now we know we're OK to destroy all the units in this location
 
-   if (self.fighting != null)
-   {
-      if (self.fighting.type != UNIT_ST_PC)
-      {
-         self.hp := self.max_hp;
-         u := self.fighting;
-         act("As $2n attacks $1n $2e is dissolved in a bright light.", A_SOMEONE, self, u, null, TO_ROOM);
-         stop_fighting(self.fighting, self);
-         stop_fighting(self, self.fighting);
-         log("Overpopulation destroyed aggressive NPC " + u.symname + " from the game");
-         destroy(u);
-         goto init;
-      }
-   }
+:init:
+    wait(SFB_ALL, TRUE);
 
-   if (not command(CMD_AUTO_TICK))
-      goto init;
+    if (self.fighting != null)
+    {
+        if (self.fighting.type != UNIT_ST_PC)
+        {
+            self.hp := self.max_hp;
+            u := self.fighting;
+            act("As $2n attacks $1n $2e is dissolved in a bright light.", A_SOMEONE, self, u, null, TO_ROOM);
+            stop_fighting(self.fighting, self);
+            stop_fighting(self, self.fighting);
+            log("Overpopulation destroyed aggressive NPC " + u.symname + " from the game");
+            destroy(u);
+            goto init;
+        }
+    }
 
-   sl := null;
-   nCount := 0;
+    if (not command(CMD_AUTO_TICK))
+        goto init;
 
-   :loop:
-   u := self.outside.inside;
-   while (u)
-   {
-      nCount := nCount + 1;
-      s := u.symname;
+    sl := null;
+    nCount := 0;
 
-      // Don't consume players or player's corpses :o)
-      if ((u.type == UNIT_ST_PC) or (s $= "corpse@death"))
-      {
-         u := u.next;
-         continue;
-      }
+:loop:
+    u := self.outside.inside;
+    while (u)
+    {
+        nCount := nCount + 1;
+        s := u.symname;
 
-      if (s in sl) // more than 1
-      {
-         // if there's anything we cannot eat, skip
-         log("Overpopulation removed " + s + " from the game");
-         act("$1n consumes $2n.", A_SOMEONE, self, u, null, TO_ROOM);
-         destroy(u);
-         goto init;
-      }
-      addstring(sl, s);
-      u := u.next;
-   }
+        // Don't consume players or player's corpses :o)
+        if ((u.type == UNIT_ST_PC) or (s == "corpse@death"))
+        {
+            u := u.next;
+            continue;
+        }
 
-   log("Overpopulation quitting with " + itoa(nCount) + " left in location.");
-   act("$1n dissolve in bright light.", A_SOMEONE, self, null, null, TO_ROOM);
-   destroy(self);
-   quit;
+        if (s in sl) // more than 1
+        {
+            // if there's anything we cannot eat, skip
+            log("Overpopulation removed " + s + " from the game");
+            act("$1n consumes $2n.", A_SOMEONE, self, u, null, TO_ROOM);
+            destroy(u);
+            goto init;
+        }
+        addstring(sl, s);
+        u := u.next;
+    }
+
+    log("Overpopulation quitting with " + itoa(nCount) + " left in location.");
+    act("$1n dissolve in bright light.", A_SOMEONE, self, null, null, TO_ROOM);
+    destroy(self);
+    quit;
 }
 dilend
 end
