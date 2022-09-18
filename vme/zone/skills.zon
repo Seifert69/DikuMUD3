@@ -3521,10 +3521,16 @@ code
         quit;
     }
 
-    bonus := naturalPentalty();
-    bonus := bonus + self.weapons[WPN_KICK];
+    if (self.type == UNIT_ST_PC)
+        bonus := self.weapons[WPN_KICK];
+    else
+        bonus := self.weapons[WPN_UNARMED];
+
+    bonus := bonus + naturalPentalty();
+
     if (targ.position != POSITION_FIGHTING)
         bonus := bonus + 50;
+
     self.endurance := self.endurance - 2;
     provoked_attack(targ, self);
     bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK);
@@ -3607,8 +3613,13 @@ code
         quit;
     }
 
-    bonus := naturalPentalty();
-    bonus := bonus + self.weapons[WPN_ELBOW];
+    if (self.type == UNIT_ST_PC)
+        bonus := self.weapons[WPN_ELBOW];
+    else
+        bonus := self.weapons[WPN_UNARMED];
+
+    bonus := bonus + naturalPentalty();
+
     if (targ.position != POSITION_FIGHTING)
         bonus := bonus + 50;
     self.endurance := self.endurance - 2;
@@ -3694,8 +3705,13 @@ code
         quit;
     }
 
-    bonus := naturalPentalty();
-    bonus := bonus + self.weapons[WPN_KNEE];
+    if (self.type == UNIT_ST_PC)
+        bonus := self.weapons[WPN_KNEE];
+    else
+        bonus := self.weapons[WPN_UNARMED];
+
+    bonus := bonus + naturalPentalty();
+
     if (targ.position != POSITION_FIGHTING)
         bonus := bonus + 50;
     self.endurance := self.endurance - 2;
@@ -3787,8 +3803,13 @@ code
         quit;
     }
 
-    bonus := naturalPentalty();
-    bonus := bonus + self.weapons[WPN_FIST];
+    if (self.type == UNIT_ST_PC)
+        bonus := self.weapons[WPN_FIST];
+    else
+        bonus := self.weapons[WPN_UNARMED];
+
+    bonus := bonus + naturalPentalty();
+
     if (targ.position != POSITION_FIGHTING)
         bonus := bonus + 50;
     self.endurance := self.endurance - 2;

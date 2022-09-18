@@ -4805,12 +4805,19 @@ code
 	sldt := split(edaily.descr,"|");
 	slmt := split(emonth.descr,"|");
 	slbt := split(ebonus.descr,"|");
-    log("claim_bounty A");
 	sdtarg := sldt.[1];
-    log("claim_bounty B");
 	smtarg := slmt.[1];
     log("claim_bounty C");
+    if (length(slbt) < 2)
+    {
+        log("Invalid ebonus : ");
+        if (ebonus == null)
+            log("ebonus = null");
+        else
+            log("ebonus = " + ebonus.descr);
+    }
 	sbtarg := slbt.[1];
+    log("claim_bounty D");
 
 	// if you have turned in a valid bounty
 	
