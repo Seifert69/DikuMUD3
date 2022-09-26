@@ -3162,7 +3162,7 @@ code
 
     // Set the height to the initially wielding NPC or pick a random race
     //
-    if (u.outside.type == UNIT_ST_NPC)
+    if ((u.outside.type == UNIT_ST_NPC) and (u.equip != 0))
     {
         u.height := u.outside.height;
     }
@@ -3473,6 +3473,71 @@ code
 dilend
 
 
+dilbegin createArmor(bonuslvl : integer);
+external
+    integer twodiceidxbonus(len : integer, bonuslvl : integer);
+    createItem(itemnames : stringlist, item_type : integer, price : integer, lbs : integer);
+    extraptr randomizeItem(bonuslvl : integer);
+    cleanup();
+    integer matJewelry(u : unitptr, bonuslvl : integer, data : string);
+    vrestrict(bonuslvl : integer);
+var
+    i : integer;
+    s : string;
+    items : stringlist;
+    sl : stringlist;
+    wear : integer;
+    price : integer;
+    mat1 : integer;
+    exd : extraptr;
+
+code
+{
+    // log("create jewelry");
+
+    // names, cost ip, lbs, MANIPULATE_WEAR_...
+    // Most common first, most rare last
+    items := {
+        "helmet",        "3", "0", QUOTE(MANIPULATE_WEAR_FINGER),
+        "boots",         "5", "0", QUOTE(MANIPULATE_WEAR_WRIST),
+        "leggings",      "3", "0", QUOTE(MANIPULATE_WEAR_EAR),
+        "greaves",      "10", "0", QUOTE(MANIPULATE_WEAR_NECK),
+        "breast plate", "10", "0", QUOTE(MANIPULATE_WEAR_ANKLE),
+        "gauntlet",     "20", "3", QUOTE(MANIPULATE_WEAR_HEAD),
+        "shield",       "30", "1", QUOTE(MANIPULATE_WEAR_HEAD)
+    };
+
+#define MANIPULATE_WEAR_BODY            8 // 0x00008
+#define MANIPULATE_WEAR_HEAD           16 // 0x00010
+#define MANIPULATE_WEAR_LEGS           32 // 0x00020
+#define MANIPULATE_WEAR_FEET           64 // 0x00040
+#define MANIPULATE_WEAR_HANDS         128 // 0x00080
+#define MANIPULATE_WEAR_ARMS          256 // 0x00100
+#define MANIPULATE_WEAR_SHIELD        512 // 0x00200
+
+    i := 4 * twodiceidxbonus(length(items)/4, bonuslvl);
+
+    s := items.[i];
+    price := atoi(items.[i+1]) * IRON_MULT;
+    wear  := atoi(items.[i+3]);
+    // log("wear bit = " + itoa(w));
+
+    sl := null;
+    insert(sl, 0, s);
+    createItem(sl, ITEM_TREASURE, price, atoi(items.[i+2]));
+    self.manipulate := self.manipulate | wear;
+    
+    exd := randomizeItem(bonuslvl);
+    vrestrict(bonuslvl);
+
+    i := matJewelry@randomt(self, bonuslvl, ""); 
+
+    cleanup();
+    return;
+}
+dilend
+
+
 
 // Current approach, roughly:
 //   We receive the BONUS_LVL (0-7)
@@ -3504,15 +3569,21 @@ dilbegin RndTreasure(lvl : integer);
 external
     createJewelry(bonuslvl : integer);
     createWeapon(bonuslvl : integer);
-
+    createArmor(bonuslvl : integer);
+var
+    i : integer;
 code
 {
     heartbeat := PULSE_SEC;
 
-    if (rnd(0,1) != 0)
+    i := rnd(2,0);
+
+    if (i == 0)
         createWeapon(lvl);
-    else
+    else if (i == 1)
         createJewelry(lvl);
+    else
+        createArmor(lvl);
 
    // Wear it if applicable?   
    quit;
