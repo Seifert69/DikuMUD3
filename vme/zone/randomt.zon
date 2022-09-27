@@ -3576,14 +3576,14 @@ code
 {
     heartbeat := PULSE_SEC;
 
-    i := rnd(2,0);
+    i := rnd(0,1);  // ARMOR NOT FINISHED
 
     if (i == 0)
         createWeapon(lvl);
     else if (i == 1)
         createJewelry(lvl);
     else
-        createArmor(lvl);
+        createArmor(lvl); // NOT FINISHED
 
    // Wear it if applicable?   
    quit;
