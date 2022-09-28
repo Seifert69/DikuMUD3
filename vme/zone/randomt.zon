@@ -421,7 +421,7 @@ code
         SKI_KNEE,
         SKI_ELBOW,
         SKI_HIT,
-        SKI_PUNCH,
+        // SKI_PUNCH, - not a skill
         SKI_GLANCE,
         SKI_FRENZY,			
         SKI_BERSERK,		

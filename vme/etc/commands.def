@@ -1728,8 +1728,8 @@ profession obsolete = -7
 profession necromancer = -7
 profession mage = -7
 profession sorcerer = -7
-profession barbarian = 2
-race groll = 1
+profession barbarian = -7
+race groll = -7
 //_CUTEND hit
 
 
