@@ -8,7 +8,7 @@ basemove 1120tw0008      1 1 0 0
 wiz 1120tw0008           1 0 250 0
 baselook 1120tw0008      1 1 0 0
 update 1120tw0008        1 0 250 0
-help 1120tw0008          1 0 250 0 ../etc/help
+helpzon 1120tw0008          1 0 250 0 ../etc/help
 boards 1120tw0008        1 0 250 0 ../lib/boards
 comm 1120tw0008          1 0 250 0
 socials 1120tw0008       1 0 250 0
@@ -23,11 +23,11 @@ professions release      1 0 250 0
 #
 justice 1120tw0008       1 0 250 0
 arena 1120tw0008         1 0 250 0
-clan 1120tw0008          1 0 250 0 ../lib/clan
+clans 1120tw0008          1 0 250 0 ../lib/clan
 competition 1120tw0008   1 0 250 0 ../lib/competition
 holiday20 release        1 0 220 0 
 holiday21 release        1 0 220 0 
-guild_quest release      1 255 254 0 
+g_q release      1 255 254 0 
 #
 bounty release           1 250 0 0
 udgaard 1120tw0008       1 0 250 0
@@ -49,7 +49,7 @@ assassin 1120tw0008      1 2 0 0
 knight   1120tw0008      1 2 0 0
 cypress 1120tw0008       1 3 0 0
 youth 1120tw0008       1 3 0 0
-haon-dor 1120tw0008      1 3 0 0
+haon_dor 1120tw0008      1 3 0 0
 midsewer 1120tw0008      1 1 0 0
 midwalls 1120tw0008      1 1 0 0
 hamlet 1120tw0008        1 1 0 0

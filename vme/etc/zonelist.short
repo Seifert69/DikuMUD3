@@ -24,7 +24,7 @@ basemove 1120tw0008      1   1   0 0
 wiz 1120tw0008           1   0 250 0
 baselook 1120tw0008      1   1   0 0
 update 1120tw0008        1   0 250 0
-help 1120tw0008          1   0 250 0 ../etc/help
+helpzon 1120tw0008          1   0 250 0 ../etc/help
 boards 1120tw0008        1   0 250 0 ../lib/boards
 comm 1120tw0008          1   0 250 0
 socials 1120tw0008       1   0 250 0
@@ -42,10 +42,10 @@ youth 1120tw0008         1   3   0 0
 #
 newbie 1120tw0008        1   0 250 0 ../lib/newbie
 arena release            1   0 250 0
-clan 1120tw0008          1   0 250 0 ../lib/clan
+clans 1120tw0008          1   0 250 0 ../lib/clan
 competition 1120tw0008   1   0 250 0 ../lib/competition
 holiday20 release		 1   0 250 0 
-guild_quest release		 1	 0 250 0 
+g_q release		 1	 0 250 0 
 #
 guild_paths  release 1 2 0 0
 assassin release 1 2 0 0
@@ -55,7 +55,7 @@ cypress release 1 3 0 0
 fightersguild release 1 2 0 0
 goblin_cave release 1 255 0 0
 halfzon release 1 255 0 0
-haon-dor release 1 3 0 0
+haon_dor release 1 3 0 0
 hobgob release 1 255 0 0
 kingc release 1 255 0 0
 mageguild release 1 2 0 0
