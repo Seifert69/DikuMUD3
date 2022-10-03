@@ -594,10 +594,26 @@
             "output": [
                 {
                     "filename": "midgaard.data",
-                    "sha512": "38c434898449391c18dd6c8b09c58907f7115ffb41a5453191f5f8cf2309d410cd12f0df0e27c0934cdbb4793e08d02d58e6590fe9a0a1e6e9c7501a18145328"
+                    "sha512": "f526172aa864786218d2dc476a4321272e3b003146cb08eaa4e812911b86f16dc434565edefb09082859f9eeae760b91a58d14a941be4aa54c2aa1623382bdd2"
                 },
                 {
                     "filename": "midgaard.reset",
+                    "sha512": "df702708b6e0a55bdde4ebde5aa2f1e84ae48ab5a94535ac77efb795b6efc18118ed49fff9d31fd3719023cba4245fddf99b4d0024afecb0ec46582cc785dffd"
+                }
+            ]
+        },
+        {
+            "source_file": {
+                "filename": "midgaard1.zon",
+                "sha512": "a0a7780a7907a77e046a51e2647293bc8643f18728f915b006f5e8c0f77865ffa6f7efba69218467529e242917845f2eb47a2d5510939cdb5599a725981497f0"
+            },
+            "output": [
+                {
+                    "filename": "midgaard1.data",
+                    "sha512": "f526172aa864786218d2dc476a4321272e3b003146cb08eaa4e812911b86f16dc434565edefb09082859f9eeae760b91a58d14a941be4aa54c2aa1623382bdd2"
+                },
+                {
+                    "filename": "midgaard1.reset",
                     "sha512": "df702708b6e0a55bdde4ebde5aa2f1e84ae48ab5a94535ac77efb795b6efc18118ed49fff9d31fd3719023cba4245fddf99b4d0024afecb0ec46582cc785dffd"
                 }
             ]

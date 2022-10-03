@@ -83,6 +83,7 @@ void CByteBuffer::IncreaseSize(ubit32 nAdd)
     SetSize(m_nAllocated);
 }
 
+// Returns number of bytes read
 int CByteBuffer::FileRead(FILE *f, ubit32 nLength)
 {
     Clear();
@@ -114,6 +115,7 @@ int CByteBuffer::FileWrite(FILE *f)
     }
 }
 
+// Returns number of bytes read or -1 on unable to position
 int CByteBuffer::FileRead(FILE *f, long nOffset, ubit32 nLength)
 {
     Clear();

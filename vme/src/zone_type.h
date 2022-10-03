@@ -66,6 +66,9 @@ public:
     char **getHelpPtrPtr();
     void setHelp(std::string value);
 
+    ubit32 getCrc() const;
+    void setCrc(ubit32 crc);
+
     [[nodiscard]] const std::string &getFilename() const;
     char **getFilenamePtrPtr();
 
@@ -217,6 +220,7 @@ private:
     ubit8 m_access{255};                      ///< Access Level 0 = highest (root)
     ubit8 m_loadlevel{0};                     ///< Level required to load items
     ubit8 m_payonly{0};                       ///< TRUE when only 4 paying players
+    ubit32 m_crc{0};                          ///< The CRC for the zone (a timestamp, used to detect file changes mid game)
     std::optional<std::string> m_dilfilepath; ///<
     Weather m_weather;                        ///<
 };

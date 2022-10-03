@@ -173,6 +173,29 @@ void zone_type::setZoneResetTime(ubit16 value)
     m_zone_time = value;
 }
 
+
+ubit32 zone_type::getCrc() const
+{
+    return m_crc;
+}
+
+void zone_type::setCrc(ubit32 crc)
+{
+    if (m_crc == 0)
+    {
+        m_crc = crc;
+    }
+    else
+    {
+        if (m_crc != crc)
+        {
+            slog(LOG_ALL, 0, "Zone CRC attempted overwritten with second value.");
+            exit(42);
+        }
+    }
+}
+
+
 ubit16 *zone_type::getZoneResetTimePtr()
 {
     return &m_zone_time;

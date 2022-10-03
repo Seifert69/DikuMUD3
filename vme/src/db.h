@@ -86,7 +86,7 @@ struct zone_info_type
 };
 
 unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec = TRUE);
-void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf);
+void read_unit_datafile(file_index_type *org_fi, CByteBuffer *pBuf);
 unit_data *read_unit(file_index_type *fi, int ins_list = TRUE);
 char *read_info_file(const char *name, char *oldstr);
 char *read_info_file(const std::string &name, char *oldstr);

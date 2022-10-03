@@ -356,6 +356,15 @@ void check_unique_ident(unit_data *u)
     ident_names = add_name(UNIT_IDENT(u), ident_names);
 }
 
+
+ubit32 timecrc()
+{
+    struct timespec spec;
+    clock_gettime(CLOCK_REALTIME, &spec);
+    return (ubit32) ((spec.tv_sec * 1000) + (spec.tv_nsec / 1000000));
+}
+
+
 /*
    #define write_unit(x,y,z) fprintf(stderr, "Writing: %s\n", z)
    #define write_diltemplate(x,y) fprintf(stderr, "Writing tmpl: %s\n", y->prgname)
@@ -371,7 +380,7 @@ void dump_zone(char *prefix)
     int no_rooms = 0;
     diltemplate *tmpl = nullptr;
     diltemplate *ut = nullptr;
-    ubit32 dummy = 0;
+    ubit32 dummy32 = 0;
 
     /* Quinn, I do this to get all the sematic errors and info */
     /* appear when nooutput = TRUE - it didn't before!         */
@@ -440,11 +449,13 @@ void dump_zone(char *prefix)
         exit(1);
     }
 
-#ifndef DEMO_VERSION
-    #ifdef WRITE_TEST
-    write_unit(fl, zone.z_rooms, UNIT_IDENT(zone.z_rooms));
-    exit(10);
-    #endif
+    //
+    // Begin writing the data
+    //
+    //#ifdef WRITE_TEST
+    //write_unit(fl, zone.z_rooms, UNIT_IDENT(zone.z_rooms));
+    //exit(10);
+    //#endif
     fwrite(g_zone.z_zone.name, sizeof(char), strlen(g_zone.z_zone.name) + 1, fl);
     fwrite(&g_zone.z_zone.weather, sizeof(int), 1, fl);
     /* More data inserted here */
@@ -484,23 +495,27 @@ void dump_zone(char *prefix)
         fwrite("", sizeof(char), 1, fl);
     }
 
+    const ubit32 filecrc = (ubit32) timecrc();
+    fprintf(stderr, "filecrc %u\n", filecrc);
+
     /* write DIL templates */
     for (tmpl = g_zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
     {
-        write_diltemplate(fl, tmpl);
+        write_diltemplate(fl, tmpl, filecrc);
     }
 
     /* end of DIL templates marker */
-    dummy = 0;
-    if (fwrite(&dummy, sizeof(dummy), 1, fl) != 1)
+    dummy32 = 0;
+    if (fwrite(&dummy32, sizeof(dummy32), 1, fl) != 1)
     {
         error(HERE, "Failed to fwrite() end of DIL templates");
     }
 
+
     write_dot(prefix);
     for (u = g_zone.z_rooms; u; u = u->getNext())
     {
-        write_unit(fl, u, UNIT_IDENT(u));
+        write_unit_datafile(fl, u, UNIT_IDENT(u), filecrc);
     }
 
     u = g_zone.z_rooms;
@@ -513,7 +528,7 @@ void dump_zone(char *prefix)
 
     for (u = g_zone.z_objects; u; u = u->getNext())
     {
-        write_unit(fl, u, UNIT_IDENT(u));
+        write_unit_datafile(fl, u, UNIT_IDENT(u), filecrc);
     }
 
     u = g_zone.z_objects;
@@ -526,7 +541,7 @@ void dump_zone(char *prefix)
 
     for (u = g_zone.z_mobiles; u; u = u->getNext())
     {
-        write_unit(fl, u, UNIT_IDENT(u));
+        write_unit_datafile(fl, u, UNIT_IDENT(u), filecrc);
     }
 
     u = g_zone.z_mobiles;
@@ -564,7 +579,6 @@ void dump_zone(char *prefix)
 
     fwrite("VMC", sizeof(char), 3, fl);
     fclose(fl);
-#endif
 }
 
 long stat_mtime(char *name)

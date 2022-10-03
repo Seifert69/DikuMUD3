@@ -180,11 +180,11 @@ void resolve_templates()
 /**
  * Generate and read DIL templates
  */
-diltemplate *generate_templates(FILE *f, zone_type *zone)
+diltemplate *generate_datafile_diltemplates(FILE *f, zone_type *zone)
 {
     diltemplate *tmpllist = nullptr;
     CByteBuffer Buf;
-    ubit32 tmplsize = 0;
+    sbit32 tmplsize = 0;
     char nBuf[256];
     char zBuf[256];
 
@@ -192,16 +192,34 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 
     /*
      * The global templates are preceded with their length
-     * written by write_template() in db_file.c
+     * written by write_template() in db_file.c and now also
+     * the filecrc
      */
 
-    if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
+    ubit32 filecrc = 0;
+    while (!feof(f))
     {
-        error(HERE, "Failed to fread() tmplsize");
-    }
+        if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
+        {
+            error(HERE, "Failed to fread() tmplsize");
+        }
 
-    while (tmplsize && !feof(f))
-    {
+        if (tmplsize == 0) // End of templates marker
+        {
+            break;
+        }
+
+        if (tmplsize < 0)
+        {
+            error(HERE, "Unexpected templatesize");
+        }
+
+        if (fread(&(filecrc), sizeof(filecrc), 1, f) != 1)
+        {
+            error(HERE, "Failed to fread() filecrc");
+        }
+        zone->setCrc(filecrc);
+
         Buf.FileRead(f, tmplsize);
 
         auto tmpl = std::unique_ptr<diltemplate>(bread_diltemplate(&Buf, UNIT_VERSION));
@@ -218,10 +236,9 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
             str_lower(tmpl->prgname);
             zone->insertDILTemplate(std::move(tmpl));
         }
-        /* next size */
-        if (fread(&(tmplsize), sizeof(ubit32), 1, f) != 1)
+        else
         {
-            error(HERE, "Failed to fread() tmplsize");
+            error(HERE, "Couldn't read DIL template.");
         }
     }
 
@@ -229,9 +246,10 @@ diltemplate *generate_templates(FILE *f, zone_type *zone)
 }
 
 /**
- * Generate index's for each unit in the file 'f', zone 'zone'
+ * Generate index's for each unit in the '.data' file 'f', zone 'zone'
+ * Format is: string(name), ubit32(filecrc), ubit8(unit type), ubit32(unit string data length), ubit32(datacrc)
  */
-void generate_file_indexes(FILE *f, zone_type *zone)
+void generate_datafile_file_indexes(FILE *f, zone_type *zone)
 {
     file_index_type *fi = nullptr;
     static int object_num = 0;
@@ -245,34 +263,37 @@ void generate_file_indexes(FILE *f, zone_type *zone)
 
     for (;;)
     {
-        fstrcpy(&cBuf, f);
+        auto temp_index = std::make_unique<file_index_type>();
+        temp_index->setZone(zone);
+        temp_index->setCRC(0);
+        // temp_index->unit = NULL;
+ 
+        fstrcpy(&cBuf, f); //get fname
 
         if (feof(f))
         {
             break;
         }
 
-        auto temp_index = std::make_unique<file_index_type>();
         temp_index->setName(reinterpret_cast<const char *>(cBuf.GetData()), true);
 
-        temp_index->setZone(zone);
-        // temp_index->unit = NULL;
-        temp_index->setCRC(0);
-
-        ubit8 temp_8{};
+        ubit8 temp_8{};  // get Type
         if (fread(&temp_8, sizeof(ubit8), 1, f) != 1)
         {
             error(HERE, "Failed to fread() temp_index->type");
         }
         temp_index->setType(temp_8);
 
-        ubit32 temp_32{};
+        // get Length
+        sbit32 temp_32{};
         if (fread(&temp_32, sizeof(ubit32), 1, f) != 1)
         {
             error(HERE, "Failed to fread() temp_index->length");
         }
+        assert(temp_32 > 0);
         temp_index->setLength(temp_32);
 
+        // get CRC
         temp_32 = 0;
         if (fread(&temp_32, sizeof(ubit32), 1, f) != 1)
         {
@@ -280,9 +301,20 @@ void generate_file_indexes(FILE *f, zone_type *zone)
         }
         temp_index->setCRC(temp_32);
 
+        // This is the file location we'll want to jump to when reading from the .data
+        // From here we'll read the CRC, check it, and then parse the unit.
+        auto startReadPos = ftell(f);
+
+        // get fileCRC (zone based)
+        if (fread(&temp_32, sizeof(ubit32), 1, f) != 1)
+        {
+            error(HERE, "Failed to fread() filecrc for the zone");
+        }
+        zone->setCrc(temp_32); // Will fail if CRC changes
+
         fi = temp_index.get();
         zone->insertFileIndex(std::move(temp_index));
-        fi->setFilepos(ftell(f));
+        fi->setFilepos(startReadPos);
         if (fi->getType() == UNIT_ST_OBJ)
         {
             zone->incrementNumOfObjects();
@@ -310,12 +342,11 @@ void generate_file_indexes(FILE *f, zone_type *zone)
             fi->setRoomNum(0);
         }
 
-        /* We are now positioned at first data byte */
-        fi->setFilepos(ftell(f));
         fi->setNumInMemory(0);
 
-        /* Seek forward to next index, so we are ready */
-        fseek(f, fi->getFilepos() + fi->getLength(), SEEK_SET);
+        // Skip over the 'data' portion since we didnn't read it from the file
+        // i.e. skip forward "length" from the current file position
+        fseek(f, ftell(f) + fi->getLength(), SEEK_SET);
     }
 }
 
@@ -494,11 +525,12 @@ void generate_zone_indexes()
             z->setTitle(str_dup(""));
         }
 
-        /* read templates */
-        generate_templates(f, z);
-
         z->setZoneResetCommands(nullptr);
-        generate_file_indexes(f, z);
+
+        // XXXX
+        generate_datafile_diltemplates(f, z);  // Read DIL templates
+        generate_datafile_file_indexes(f, z);
+
         z->setNumOfRooms(g_room_number); /* Number of rooms in the zone */
 
         fflush(f); /* Don't fclose(f); since we are using _cache */
@@ -1299,8 +1331,9 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 /**
  * Room directions points to file_indexes instead of units
  * after a room has been read, due to initialization considerations
+ * Fetches the data ready to pass to read_unit_string from a '.data' file.
  */
-void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
+void read_unit_datafile(file_index_type *org_fi, CByteBuffer *pBuf)
 {
     std::filesystem::path buf{g_cServerConfig.getZoneDir()};
     buf += org_fi->getZone()->getFilename();
@@ -1311,7 +1344,18 @@ void read_unit_file(file_index_type *org_fi, CByteBuffer *pBuf)
         error(HERE, "Couldn't open %s for reading.", buf);
     }
 
-    pBuf->FileRead(f, org_fi->getFilepos(), org_fi->getLength());
+    int len = pBuf->FileRead(f, org_fi->getFilepos(), org_fi->getLength() + sizeof(ubit32)); // data length + the filecrc
+
+    if (len != (int) (org_fi->getLength() + sizeof(ubit32)))
+    {
+        error(HERE, "Unable to read specified number of bytes in .data file %s", buf);
+    }
+
+    ubit32 filecrc = pBuf->ReadU32(&g_nCorrupt);
+    if (filecrc != org_fi->getZone()->getCrc())
+    {
+        error(HERE, "FileCRC changed, we need to reindex");
+    }
 }
 
 void bonus_setup(unit_data *u)
@@ -1358,7 +1402,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
         org_fi = g_slime_fi;
     }
 
-    read_unit_file(org_fi, &g_FileBuffer);
+    read_unit_datafile(org_fi, &g_FileBuffer);
 
     unit_error_zone = org_fi->getZone();
 
@@ -1478,7 +1522,7 @@ void normalize_world()
 /** For local error purposes */
 static zone_type *read_zone_error = nullptr;
 
-zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
+zone_reset_cmd *read_zone_reset(FILE *f, zone_reset_cmd *cmd_list)
 {
     zone_reset_cmd *cmd = nullptr;
     zone_reset_cmd *tmp_cmd = nullptr;
@@ -1612,7 +1656,7 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
                 break;
 
             case ZON_DIR_NEST:
-                cmd->setNestedPtr(read_zone(f, nullptr));
+                cmd->setNestedPtr(read_zone_reset(f, nullptr));
                 break;
 
             case ZON_DIR_UNNEST:
@@ -1628,7 +1672,10 @@ zone_reset_cmd *read_zone(FILE *f, zone_reset_cmd *cmd_list)
     return cmd_list;
 }
 
-void read_all_zones()
+
+// Reads .reset file from a zone
+//
+void read_all_zones_reset()
 {
     for (auto zone = g_zone_info.mmp.begin(); zone != g_zone_info.mmp.end(); zone++)
     {
@@ -1663,7 +1710,7 @@ void read_all_zones()
         }
         zone->second->setResetMode(temp2);
 
-        zone->second->setZoneResetCommands(read_zone(f, nullptr));
+        zone->second->setZoneResetCommands(read_zone_reset(f, nullptr));
 
         fclose(f);
     }
@@ -1737,7 +1784,7 @@ void boot_db()
     }
 
     slog(LOG_OFF, 0, "Reading Zone Reset information.");
-    read_all_zones();
+    read_all_zones_reset();
 
     g_cAccountConfig.Boot();
 

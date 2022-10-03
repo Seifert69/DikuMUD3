@@ -26,8 +26,8 @@ void bwrite_block(FILE *f, int length, void *buffer);
 void bwrite_dil(CByteBuffer *pBuf, dilprg *prg);
 void bwrite_diltemplate(CByteBuffer *pBuf, diltemplate *tmpl);
 
-void write_unit(FILE *f, unit_data *u, char *fname);
-void write_diltemplate(FILE *f, diltemplate *tmpl);
+void write_unit_datafile(FILE *f, unit_data *u, char *fname, const ubit32 filecrc);
+void write_diltemplate(FILE *f, diltemplate *tmpl, const ubit32 filecrc);
 int write_unit_string(CByteBuffer *pBuf, unit_data *u);
 
 extern CByteBuffer g_FileBuffer; /* Defined in db_file.c */
