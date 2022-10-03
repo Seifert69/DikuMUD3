@@ -908,52 +908,55 @@ money 10 IRON_PIECE
 dilcopy teamwork@function("boo / officer / cook");
 dilcopy rescue@function("boo");
 dilbegin baaprg();
+var
+    s : string;
 code
 {
-  heartbeat:=PULSE_SEC*6;
-  :start:
-  exec("say Dad my fater did. Dad's true.", self);
-  pause;
-  exec("say Bud dad's true!!", self);
-  pause;
-  exec("say And den he also killed da dragon wid a come.", self);
-  pause;
-  exec("say And da lich he also killed, bud wid da head of da dragoon!", self);
-  pause;
-  exec("say My motter vas a very evil and stronng wizdard.", self);
-  pause;
-  exec("she She coud kill all im den world, wit a pen.", self);
-  pause;
-  exec("say She was ruler of da hole MIDGAARD.", self);
-  pause;
-  exec("say Bud da gods had he removed from da world.", self);
-  pause;
-  exec("Bud nod withoud a big figt!", self);
-  pause;
-  exec("say Modder is da one dad I hav da genes from.", self);
-  pause;
-  exec("say Dad's wy I'm dad clevver!", self);
-  pause;
-  exec("agree Baa", self);
-  pause;
-  exec("smile", self);
-  pause;
-  exec("say My fadder killed da god Beren.", self);
-  wait(SFB_CMD|SFB_TICK, TRUE);
-  if(activator.type==UNIT_ST_PC)
-  {
-    act("$1n notices you.", A_SOMEONE, self, null, activator, TO_VICT);
-    act("$1n notices $3n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
+    heartbeat:=PULSE_SEC*6;
+    :start:
+    exec("say Dad my fater did. Dad's true.", self);
     pause;
-    exec("say Who, YU?", self);
+    exec("say Bud dad's true!!", self);
     pause;
-    exec("kill "+activator.name, self);
-    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
-    exec("get all from corpse", self);
+    exec("say And den he also killed da dragon wid a come.", self);
     pause;
-    goto start;
-  }
-  else goto start;
+    exec("say And da lich he also killed, bud wid da head of da dragoon!", self);
+    pause;
+    exec("say My motter vas a very evil and stronng wizdard.", self);
+    pause;
+    exec("she She coud kill all im den world, wit a pen.", self);
+    pause;
+    exec("say She was ruler of da hole MIDGAARD.", self);
+    pause;
+    exec("say Bud da gods had he removed from da world.", self);
+    pause;
+    exec("Bud nod withoud a big figt!", self);
+    pause;
+    exec("say Modder is da one dad I hav da genes from.", self);
+    pause;
+    exec("say Dad's wy I'm dad clevver!", self);
+    pause;
+    exec("agree Baa", self);
+    pause;
+    exec("smile", self);
+    pause;
+    exec("say My fadder killed da god Beren.", self);
+    wait(SFB_CMD|SFB_TICK, TRUE);
+    if(activator.type==UNIT_ST_PC)
+    {
+        s := activator.name;
+        act("$1n notices you.", A_SOMEONE, self, null, activator, TO_VICT);
+        act("$1n notices $3n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
+        pause;
+        exec("say Who, YU?", self);
+        pause;
+        exec("kill "+s, self);
+        wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+        exec("get all from corpse", self);
+        pause;
+        goto start;
+    }
+    else goto start;
 }
 dilend
 
@@ -974,47 +977,51 @@ money 15 IRON_PIECE
 dilcopy teamwork@function("baa / officer / cook");
 dilcopy rescue@function("baa");
 dilbegin booprg();
+var 
+    s : string;
 code
 {
-  heartbeat:=PULSE_SEC*6;
-  :start:
-  exec("say Sure!", self);
-  pause;
-  exec("say Okey, den it's true.", self);
-  pause;
-  exec("say Yes, dads very possiblele.", self);
-  pause;
-  exec("say Yeah, vid lots of brain.", self);
-  pause;
-  exec("say BAH!", self);
-  pause;
-  exec("say Dads in anodder time anodder place.", self);
-  pause;
-  exec("say Nah, dey probably had to remove da smell.", self);
-  pause;
-  exec("say Yeah, no brain, no pain.", self);
-  pause;
-  exec("say Yeah, da are VERY brain(dead).", self);
-  pause;
-  exec("laugh baa", self);
-  pause;
-  exec("emote points a finger to his ear, indicating that Bass isn't to smart.", self);
-  pause;
-  exec("say Yes da gods are wimps.", self);
-  pause;
-  wait(SFB_CMD|SFB_TICK, TRUE);
-  if(activator.type==UNIT_ST_PC)
-  {
-    exec("look "+activator.name, self);
+    heartbeat:=PULSE_SEC*6;
+
+:start:
+    exec("say Sure!", self);
     pause;
-    exec("say Dads from Udgaard!", self);
+    exec("say Okey, den it's true.", self);
     pause;
-    exec("kill "+activator.name, self);
+    exec("say Yes, dads very possiblele.", self);
     pause;
-    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+    exec("say Yeah, vid lots of brain.", self);
+    pause;
+    exec("say BAH!", self);
+    pause;
+    exec("say Dads in anodder time anodder place.", self);
+    pause;
+    exec("say Nah, dey probably had to remove da smell.", self);
+    pause;
+    exec("say Yeah, no brain, no pain.", self);
+    pause;
+    exec("say Yeah, da are VERY brain(dead).", self);
+    pause;
+    exec("laugh baa", self);
+    pause;
+    exec("emote points a finger to his ear, indicating that Bass isn't to smart.", self);
+    pause;
+    exec("say Yes da gods are wimps.", self);
+    pause;
+    wait(SFB_CMD|SFB_TICK, TRUE);
+    if(activator.type==UNIT_ST_PC)
+    {
+        s := activator.name;
+        exec("look "+s, self);
+        pause;
+        exec("say Dads from Udgaard!", self);
+        pause;
+        exec("kill "+s, self);
+        pause;
+        wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+        goto start;
+    }
     goto start;
-  }
-  goto start;
 }
 dilend
 
@@ -1037,50 +1044,50 @@ dilcopy teamwork@function("bee / officer / cook");
 dilcopy rescue@function("bee");
 dilbegin biiprg();
 var
-pc : unitptr;
+    pc : unitptr;
 
 code
 {
-  heartbeat:=PULSE_SEC*6;
-  :start:
-  exec("say Da world has da shape of da banana.", self);
-  pause;
-  exec("say Den all da people gathers in da middle.", self);
-  pause;
-  exec("say And dey all kill all.", self);
-  pause;
-  exec("grin", self);
-  pause;
-  exec("say Did you know dad yu can eat da world?", self);
-  pause;
-  exec("say Dad's true!", self);
-  pause;
-  exec("say Bud yu hav to hav biiiiiggg teeths!", self);
-  pause;
-  exec("say Dad we live on.", self);
-  pause;
-  exec("say Shall I tell you again?", self);
-  pause;
-  wait(SFB_CMD|SFB_TICK, TRUE);
-  if(activator.type==UNIT_ST_PC)
-  {
-    pc:=activator;
-	secure(pc,lostpc);
-    act("$1n notices you.", A_SOMEONE, self, null, activator, TO_VICT);
-    act("$1n notices $2n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
+    heartbeat:=PULSE_SEC*6;
+:start:
+    exec("say Da world has da shape of da banana.", self);
     pause;
-    exec("say Yu are nod from dis place, Yu DIE...?", self);
+    exec("say Den all da people gathers in da middle.", self);
     pause;
-    exec("kill "+activator.name, self);
-    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+    exec("say And dey all kill all.", self);
     pause;
-    exec("get all from corpse", self);
+    exec("grin", self);
     pause;
-	unsecure(pc);
-    goto start;
-  }
+    exec("say Did you know dad yu can eat da world?", self);
+    pause;
+    exec("say Dad's true!", self);
+    pause;
+    exec("say Bud yu hav to hav biiiiiggg teeths!", self);
+    pause;
+    exec("say Dad we live on.", self);
+    pause;
+    exec("say Shall I tell you again?", self);
+    pause;
+    wait(SFB_CMD|SFB_TICK, TRUE);
+    if(activator.type==UNIT_ST_PC)
+    {
+        pc:=activator;
+        secure(pc,lostpc);
+        act("$1n notices you.", A_SOMEONE, self, null, activator, TO_VICT);
+        act("$1n notices $2n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
+        pause;
+        exec("say Yu are nod from dis place, Yu DIE...?", self);
+        pause;
+        exec("kill "+pc.name, self);
+        wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+        pause;
+        exec("get all from corpse", self);
+        pause;
+        unsecure(pc);
+        goto start;
+    }
 :lostpc:
-  goto start;
+    goto start;
 }
 dilend
 
@@ -1102,43 +1109,48 @@ money 20 IRON_PIECE
 dilcopy teamwork@function("bii / officer / cook");
 dilcopy rescue@function("bii");
 dilbegin beeprg();
+var 
+    s : string;
 code
 {
-  heartbeat:=PULSE_SEC*6;
-  :start:
-  exec("say Oh I thought that it was round.", self);
-  pause;
-  exec("say Oh, I though that the graverty held them around the world.", self);
-  pause;
-  exec("say The do? Dwarves, elves, gnomes and humans?", self);
-  pause;
-  exec("say Wow! I thought that the lived in peace in towns!", self);
-  pause;
-  exec("say Eat Earth? Thats a lie!", self);
-  pause;
-  exec("say How?", self);
-  pause;
-  exec("say Oh, thats why.", self);
-  pause;
-  exec("say Okay!", self);
-  pause;
-  exec("say YES PLEASE!", self);
-  pause;
-  wait(SFB_CMD|SFB_TICK, TRUE);
-  if(activator.type==UNIT_ST_PC)
-  {
-    exec("look "+activator.name, self);
+    heartbeat:=PULSE_SEC*6;
+
+:start:
+    exec("say Oh I thought that it was round.", self);
     pause;
-    exec("say Thats a person from Midgaard or Udgaard!", self);
+    exec("say Oh, I though that the graverty held them around the world.", self);
     pause;
-    exec("kill "+activator.name, self);
+    exec("say The do? Dwarves, elves, gnomes and humans?", self);
     pause;
-    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
-    exec("get all from corpse", self);
+    exec("say Wow! I thought that the lived in peace in towns!", self);
     pause;
+    exec("say Eat Earth? Thats a lie!", self);
+    pause;
+    exec("say How?", self);
+    pause;
+    exec("say Oh, thats why.", self);
+    pause;
+    exec("say Okay!", self);
+    pause;
+    exec("say YES PLEASE!", self);
+    pause;
+
+    wait(SFB_CMD|SFB_TICK, TRUE);
+    if (activator.type==UNIT_ST_PC)
+    {
+        s := activator.name;
+        exec("look "+s, self);
+        pause;
+        exec("say Thats a person from Midgaard or Udgaard!", self);
+        pause;
+        exec("kill "+s, self);
+        pause;
+        wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+        exec("get all from corpse", self);
+        pause;
+        goto start;
+    }
     goto start;
-  }
-  goto start;
 }
 dilend
 

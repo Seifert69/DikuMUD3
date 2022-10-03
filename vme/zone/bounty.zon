@@ -1735,6 +1735,7 @@ code
 			else
 			{
 				log("Error in tablet@bounty - unresolved findsymbolic for bounty: "+bty.descr);
+				log("slt.[1] == " + slt.[1]);
 				col := "cpy";
 				buf := buf + 
 				"<div class='"+col+"'>-------------------------------------------------------</div>" +
