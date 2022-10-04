@@ -496,7 +496,6 @@ void dump_zone(char *prefix)
     }
 
     const ubit32 filecrc = (ubit32) timecrc();
-    fprintf(stderr, "filecrc %u\n", filecrc);
 
     /* write DIL templates */
     for (tmpl = g_zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
