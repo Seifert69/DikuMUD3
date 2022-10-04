@@ -877,12 +877,12 @@
         {
             "source_file": {
                 "filename": "test.zon",
-                "sha512": "c11b974161e4cf7a2460dc1d9c348257cf68f3dce5ea0c4acaed1b8cc1af0f6bf6d44e04649baf78467f3b8be990539a0518c8c48c7fa478bada39bacd0c0ff3"
+                "sha512": "665e96e1a52708ee173fe1744a1a1bd2d19736044fdfaf90cdcded19fb36e4572a27c68f5d1384ad615cf2e75cf956b4e4aa0e3aeeecc909d254c0a7e7aca39b"
             },
             "output": [
                 {
                     "filename": "test.data",
-                    "sha512": "b14b06f2647a601e1fad65ad2dc5572280971aa5c63703849141039da0eef3c52cb0771abdf6145d5bdef8728d310c05322e2f879dbb187c15dd0ba542e86e23"
+                    "sha512": "09c4f639ee077cf35a388f4978eefc2664102b0e7d5282845e7b11585a6a92224ac73692511ca021c5ea78b784e0233cf380c12e8c0fc1f0b02177aed8587057"
                 },
                 {
                     "filename": "test.reset",

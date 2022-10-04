@@ -4491,8 +4491,8 @@ void dilfe_fld(dilprg *p)
                     if (v1->val.ptr)
                     {
                         v->atyp = DILA_NORM;
-                        v->type = DILV_SPR;
-                        v->ref = ((zone_type *)v1->val.ptr)->getNamePtr();
+                        v->type = DILV_SP;
+                        v->val.ptr = ((zone_type *)v1->val.ptr)->getNamePtr();
                     }
                     else
                     {

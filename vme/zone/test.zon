@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 14  // T010, T009, ...
+#define TEST_MAXIMUM 15  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -80,6 +80,42 @@ code
     return;
 }
 dilend
+
+
+// ==================== T015 =====================
+
+// Testing the .filename property on a zone
+//
+dilbegin T015(tstno : integer);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+
+var
+   z : zoneptr;
+code
+{
+    z := zhead();
+
+    if (length(z.fname) < 1)
+        goto failure;
+    
+    goto cleanup;
+
+:failure:
+    logtest(tstno, LOGT_ERROR, ".filename not present");
+    goto cleanup;
+   
+:cleanup:
+    // Naught
+
+:finished:
+    logtest(tstno, LOGT_INFO, "Done");
+    sendtoalldil("done", "labdirector@test");
+    return;
+}
+dilend
+
+
 
 // ==================== T014 =====================
 
