@@ -83,7 +83,7 @@ int error_rod(spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    std::string filename = g_cServerConfig.getZoneDir() + zone->getFilename() + ".err";
+    std::string filename = g_cServerConfig.getZoneDir() + zone->getName() + ".err";
 
     FILE *fl = fopen(filename.c_str(), "w");
     if (!fl)
@@ -117,7 +117,7 @@ int info_rod(spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    std::string filename = g_cServerConfig.getZoneDir() + zone->getFilename() + ".inf";
+    std::string filename = g_cServerConfig.getZoneDir() + zone->getName() + ".inf";
 
     FILE *fl = fopen(filename.c_str(), "w");
     if (fl)
@@ -363,7 +363,7 @@ int admin_obj(spec_arg *sarg)
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;
         }
-        msg = diku::format_to_str("mail zone %s %s", zone->getFilename(), exdp->descr.c_str());
+        msg = diku::format_to_str("mail zone %s %s", zone->getName(), exdp->descr.c_str());
     }
 
     if (!system_check(sarg->activator, msg.c_str()))

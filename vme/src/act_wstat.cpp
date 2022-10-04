@@ -260,12 +260,12 @@ static void stat_zone(unit_data *ch, zone_type *zone)
         reset_mode = 3;
     }
 
-    bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->getFilename() + ".err");
-    bool info = file_exists(g_cServerConfig.getZoneDir() + zone->getFilename() + ".inf");
+    bool errors = file_exists(g_cServerConfig.getZoneDir() + zone->getName() + ".err");
+    bool info = file_exists(g_cServerConfig.getZoneDir() + zone->getName() + ".inf");
 
     char *cname = zone->getCreators().catnames();
 
-    auto msg = diku::format_to_str("Zone [%s]  File [%s]  Access [%d]<br/>"
+    auto msg = diku::format_to_str("Zone [%s]  Access [%d]<br/>"
                                    "Title: \"%s\"<br/>"
                                    "Load level [%d] Pay only [%d]<br/>"
                                    "Number of Units [%d]    Number of Rooms [%d]<br/>"
@@ -274,7 +274,6 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
                                    "%s<br/>%s<br/>",
                                    zone->getName(),
-                                   zone->getFilename(),
                                    zone->getAccessLevel(),
                                    zone->getTitle(),
                                    zone->getLevelRequiredToLoadItems(),
@@ -334,7 +333,7 @@ static void stat_creators(unit_data *ch, char *arg)
     {
         if (it->second->getCreators().IsName(tmp))
         {
-            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->getName(), it->second->getFilename());
+            msg += diku::format_to_str("%-15s   File: %s.zon<br/>", it->second->getName(), it->second->getName());
             found = TRUE;
         }
     }
@@ -443,7 +442,7 @@ static void extra_stat_zone(unit_data *ch, char *arg, zone_type *zone)
         case 5:
         {
             /* Errors/Info (Small hack, this :-) ) */
-            auto filename = diku::format_to_str("%s%s.%.3s", g_cServerConfig.getZoneDir(), zone->getFilename(), zone_args[argno]);
+            auto filename = diku::format_to_str("%s%s.%.3s", g_cServerConfig.getZoneDir(), zone->getName(), zone_args[argno]);
             if (!file_exists(filename))
             {
                 return;

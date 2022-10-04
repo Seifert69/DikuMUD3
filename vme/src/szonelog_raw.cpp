@@ -16,7 +16,7 @@ void szonelog_raw(const zone_type *zone, const std::string &msg)
 
     slog(LOG_ALL, 0, "%s/%s", zone->getName(), msg);
 
-    auto filename = diku::format_to_str("%s%s.err", g_cServerConfig.getZoneDir(), zone->getFilename());
+    auto filename = diku::format_to_str("%s%s.err", g_cServerConfig.getZoneDir(), zone->getName());
 
     FILE *f = fopen_cache(filename, "a");
     if (f == nullptr)

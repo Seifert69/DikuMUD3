@@ -9,9 +9,8 @@
 #include "unit_data.h"
 #include "zone_reset_cmd.h"
 
-zone_type::zone_type(std::string name, std::string filename)
+zone_type::zone_type(std::string name)
     : m_name(std::move(name))
-    , m_filename(std::move(filename))
 {
     str_lower(m_name);
 }
@@ -130,16 +129,6 @@ char **zone_type::getHelpPtrPtr()
 void zone_type::setHelp(std::string value)
 {
     m_help = std::move(value);
-}
-
-const std::string &zone_type::getFilename() const
-{
-    return m_filename.getValue();
-}
-
-char **zone_type::getFilenamePtrPtr()
-{
-    return m_filename.getValuePtr();
 }
 
 const zone_reset_cmd *zone_type::cgetZoneResetCommands() const

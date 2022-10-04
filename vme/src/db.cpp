@@ -350,6 +350,87 @@ void generate_datafile_file_indexes(FILE *f, zone_type *zone)
     }
 }
 
+
+// Parses zone.data binary file on disk. 
+// Returns true if successful, false otherwise
+//
+bool parse_datafile(zone_type *z)
+{
+    FILE *f = nullptr;
+    CByteBuffer cBuf(MAX_STRING_LENGTH);
+    char filename[82 + 41];
+
+    snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), z->getName().c_str());
+
+    if ((f = fopen_cache(filename, "rb")) == nullptr)
+    {
+        slog(LOG_OFF, 0, "Could not open data file: %s", filename);
+        return false; /* Next file, please */
+    }
+
+    if (fsize(f) <= 3)
+    {
+        slog(LOG_OFF, 0, "Data file empty: %s", filename);
+        return false; /* Next file, please */
+    }
+
+    fstrcpy(&cBuf, f);
+
+    if (str_ccmp((char *)cBuf.GetData(), z->getName().c_str()) != 0)
+    {
+        error(HERE, "ERROR: Zone name %s must match the filename on disk: %s ", (char *)cBuf.GetData(), z->getName());
+    }
+
+    int temp1{0};
+    int mstmp = fread(&temp1, sizeof(int), 1, f);
+    if (mstmp < 1)
+    {
+        slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in db.cpp", mstmp);
+        assert(FALSE);
+    }
+    z->getWeather().setBase(temp1);
+
+    /* More data read here */
+    fstrcpy(&cBuf, f);
+    z->setNotes(str_dup((char *)cBuf.GetData()));
+
+    fstrcpy(&cBuf, f);
+    z->setHelp(str_dup((char *)cBuf.GetData()));
+
+    for (;;)
+    {
+        fstrcpy(&cBuf, f);
+
+        if (cBuf.GetData()[0] == 0)
+        {
+            break;
+        }
+
+        z->getCreators().AppendName((char *)cBuf.GetData());
+    }
+
+    fstrcpy(&cBuf, f);
+
+    if (cBuf.GetData()[0] != 0)
+    {
+        z->setTitle(str_dup((char *)cBuf.GetData()));
+    }
+    else
+    {
+        z->setTitle(str_dup(""));
+    }
+
+    generate_datafile_diltemplates(f, z);  // Read DIL templates
+    generate_datafile_file_indexes(f, z);
+
+    z->setNumOfRooms(g_room_number); /* Number of rooms in the zone */
+
+    fflush(f); /* Don't fclose(f); since we are using fopen_cache */
+
+    return true;
+}
+
+
 /**
  * Call this routine at boot time, to index all zones
  */
@@ -357,11 +438,9 @@ void generate_zone_indexes()
 {
     char zone[82];
     char tmpbuf[82];
-    char filename[82 + 41];
     char buf[MAX_STRING_LENGTH];
     char dilfilepath[255];
     CByteBuffer cBuf(MAX_STRING_LENGTH);
-    FILE *f = nullptr;
     FILE *zone_file = nullptr;
     char *c = nullptr;
     ubit8 access = 0;
@@ -377,7 +456,7 @@ void generate_zone_indexes()
     }
 
     // Insert a virtual zone _players
-    auto z = new zone_type{"_players", "ply"};
+    auto z = new zone_type{"_players"};
     z->setTitle("Reserved zone for player file_indexes");
     z->setNotes("This zone is only here to allow us to use playername@_plaeyrs as with all other indexes such as mayor@midgaard. It's not "
                 "actually a zone, and it's not a representation of player files on disk\n");
@@ -403,8 +482,6 @@ void generate_zone_indexes()
         {
             break;
         }
-
-        snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), zone);
 
         /* Skip password */
         c = str_next_word_copy(c, tmpbuf);
@@ -450,90 +527,33 @@ void generate_zone_indexes()
 
         c = str_next_word_copy(c, dilfilepath);
 
-        if ((f = fopen_cache(filename, "rb")) == nullptr)
-        {
-            slog(LOG_OFF, 0, "Could not open data file: %s", filename);
-            continue; /* Next file, please */
-        }
-
-        if (fsize(f) <= 3)
-        {
-            slog(LOG_OFF, 0, "Data file empty: %s", filename);
-            continue; /* Next file, please */
-        }
-
-        slog(LOG_ALL, 0, "Indexing %s AC[%3d] LL[%d] PO[%d]", filename, access, loadlevel, payonly);
-
-        fstrcpy(&cBuf, f);
-        z = new zone_type{(char *)cBuf.GetData(), zone};
-        g_zone_info.no_of_zones++;
-
-        if (*dilfilepath)
-        {
-            z->setDILFilePath(str_dup(dilfilepath));
-        }
-
-        if (find_zone(z->getName().c_str()))
+        if (find_zone(zone))
         {
             slog(LOG_ALL, 0, "ZONE BOOT: Duplicate zone name [%s] not allowed", z->getName());
             exit(42);
         }
 
-        // Insert zone into sorted list
-        g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
+        slog(LOG_ALL, 0, "Indexing %s AC[%3d] LL[%d] PO[%d]", zone, access, loadlevel, payonly);
 
-        int temp1{0};
-        int mstmp = fread(&temp1, sizeof(int), 1, f);
-        if (mstmp < 1)
-        {
-            slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in db.cpp", mstmp);
-            assert(FALSE);
-        }
-        z->getWeather().setBase(temp1);
+        // Ok, now we're ready to create the skeleton zone_type class
+        z = new zone_type{zone};
+        g_zone_info.no_of_zones++;
 
         z->setAccessLevel(access);
         z->setLevelRequiredToLoadItems(loadlevel);
         z->setPayOnly(payonly);
 
-        /* More data read here */
-        fstrcpy(&cBuf, f);
-        z->setNotes(str_dup((char *)cBuf.GetData()));
-
-        fstrcpy(&cBuf, f);
-        z->setHelp(str_dup((char *)cBuf.GetData()));
-
-        for (;;)
+        if (*dilfilepath)
         {
-            fstrcpy(&cBuf, f);
-
-            if (cBuf.GetData()[0] == 0)
-            {
-                break;
-            }
-
-            z->getCreators().AppendName((char *)cBuf.GetData());
+            z->setDILFilePath(str_dup(dilfilepath));
         }
-
-        fstrcpy(&cBuf, f);
-
-        if (cBuf.GetData()[0] != 0)
-        {
-            z->setTitle(str_dup((char *)cBuf.GetData()));
-        }
-        else
-        {
-            z->setTitle(str_dup(""));
-        }
-
         z->setZoneResetCommands(nullptr);
 
-        // XXXX
-        generate_datafile_diltemplates(f, z);  // Read DIL templates
-        generate_datafile_file_indexes(f, z);
-
-        z->setNumOfRooms(g_room_number); /* Number of rooms in the zone */
-
-        fflush(f); /* Don't fclose(f); since we are using _cache */
+        if (parse_datafile(z))
+        {
+            // Insert zone into sorted list
+            g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
+        }
     }
     fclose(zone_file);
 
@@ -1336,7 +1356,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 void read_unit_datafile(file_index_type *org_fi, CByteBuffer *pBuf)
 {
     std::filesystem::path buf{g_cServerConfig.getZoneDir()};
-    buf += org_fi->getZone()->getFilename();
+    buf += org_fi->getZone()->getName();
     buf += ".data";
     FILE *f = fopen_cache(buf.c_str(), "rb");
     if (f == nullptr)
@@ -1687,12 +1707,12 @@ void read_all_zones_reset()
         }
 
         std::filesystem::path filename{g_cServerConfig.getZoneDir()};
-        filename += zone->second->getFilename();
+        filename += zone->second->getName();
         filename += ".reset";
         FILE *f = fopen(filename.c_str(), "rb");
         if (f == nullptr)
         {
-            slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->getFilename());
+            slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->getName());
             exit(10);
         }
 

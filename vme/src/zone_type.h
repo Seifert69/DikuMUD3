@@ -47,7 +47,7 @@ class zone_type
     };
 
 public:
-    zone_type(std::string name, std::string filename);
+    zone_type(std::string name);
     ~zone_type();
 
     cNamelist &getCreators();
@@ -68,9 +68,6 @@ public:
 
     ubit32 getCrc() const;
     void setCrc(ubit32 crc);
-
-    [[nodiscard]] const std::string &getFilename() const;
-    char **getFilenamePtrPtr();
 
     /**
      * Extracted from extra_stat_zone()
@@ -204,7 +201,6 @@ private:
     PtrPtrType m_title;                       ///< A nice looking zone title
     PtrPtrType m_notes;                       ///< Creator notes to zone
     PtrPtrType m_help;                        ///< User-Help to zone
-    PtrPtrType m_filename;                    ///< The filename of this file
     unit_data *m_rooms{nullptr};              ///< unit pointer to the base rooms, used in vmc really
     unit_data *m_objects{nullptr};            ///< unit pointer to the base objects, used in vmc really
     unit_data *m_npcs{nullptr};               ///< unit pointer to the base npcs, used in vmc really
