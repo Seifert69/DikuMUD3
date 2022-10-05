@@ -364,18 +364,14 @@ unit_data *zone_type::findFirstUnitOfType(int type)
     return nullptr;
 }
 
-file_index_type *zone_type::findOrCreateFileIndex(const char *name)
+file_index_type *zone_type::findOrCreatePlayerFileIndex(const char *name)
 {
     if (auto it = m_mmp_fi.find(name); it != m_mmp_fi.end())
     {
         return it->second.get();
     }
 
-    auto fi = std::make_unique<file_index_type>();
-    fi->setName(str_dup(name));
-    fi->setZone(this);
-    fi->setType(UNIT_ST_PC);
-
+    auto fi = std::make_unique<file_index_type>(this, name, UNIT_ST_PC);
     auto result = m_mmp_fi.insert(std::make_pair(name, std::move(fi)));
 
     return result.first->second.get();

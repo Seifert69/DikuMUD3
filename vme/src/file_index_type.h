@@ -12,7 +12,7 @@ class zone_type;
 class file_index_type
 {
 public:
-    file_index_type() = default;                                  ///< Default ctor
+    file_index_type(zone_type *zone, const char *name, ubit8 type);
     ~file_index_type() = default;                                 ///< Default dtor
     file_index_type(const file_index_type &) = delete;            ///< Delete copy ctor
     file_index_type &operator=(const file_index_type &) = delete; ///< Delete assignment
@@ -48,10 +48,7 @@ public:
      * @param value Name to set
      * @param to_lower If true convert to lower case
      */
-    void setName(const char *value, bool to_lower = false);
-    void setZone(zone_type *value);
     void setCRC(ubit32 value);
-    void setType(ubit8 value);
     void setNumInZone(sbit16 value);
     void setNumInMemory(sbit16 value);
     void setLength(ubit32 value);
@@ -62,11 +59,11 @@ private:
     std::forward_list<unit_data *> m_fi_unit_list; ///< This list of units that match this file_index
     std::string m_name{};                          ///< Unique within this list
     zone_type *m_zone{nullptr};                    ///< Pointer to owner of structure
-    long m_filepos{};                              ///< Byte offset into file
-    ubit32 m_length{};                             ///< No of bytes to read
-    ubit32 m_crc{};                                ///< CRC check for compressed items
-    sbit16 m_no_in_zone{};                         ///< Updated in zone reset for reset
-    ubit16 m_no_in_mem{};                          ///< Number of these in the game
-    ubit16 m_room_no{};                            ///< The number of the room
-    ubit8 m_type{};                                ///< Room/Obj/Char or other?
+    long m_filepos{0};                             ///< Byte offset into file
+    ubit32 m_length{0};                            ///< No of bytes to read
+    ubit32 m_crc{0};                               ///< CRC check for compressed items
+    sbit16 m_no_in_zone{0};                        ///< Updated in zone reset for reset
+    ubit16 m_no_in_mem{0};                         ///< Number of these in the game
+    ubit16 m_room_no{0};                           ///< The number of the room
+    ubit8 m_type{0};                               ///< Room/Obj/Char or other?
 };

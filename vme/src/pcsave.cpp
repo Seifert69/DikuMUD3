@@ -33,7 +33,7 @@ sbit32 g_player_id = 1; // Looks to me like it needs to begin with 1 (crash on s
 void assign_player_file_index(unit_data *pc)
 {
     zone_type *z = find_zone(g_player_zone);
-    pc->setFileIndex(z->findOrCreateFileIndex(PC_FILENAME(pc)));
+    pc->setFileIndex(z->findOrCreatePlayerFileIndex(PC_FILENAME(pc)));
 }
 
 std::string PlayerFileName(const char *pName)

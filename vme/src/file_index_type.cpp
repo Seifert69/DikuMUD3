@@ -4,6 +4,28 @@
 #include "utils.h"
 #include "vme.h"
 
+
+file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
+{
+    assert(zone);
+    assert(name);
+
+    m_name = std::string(name);
+    str_lower(m_name);
+    m_zone = zone;
+    m_type = type;
+
+    switch (m_type)
+    {
+        case UNIT_ST_ROOM:
+            break;
+
+    assert((type == UNIT_ST_ROOM) || (type == UNIT_ST_OBJ) || (type == UNIT_ST_PC) || (type == UNIT_ST_NPC));
+
+    }
+}
+
+
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
@@ -177,28 +199,6 @@ zone_type *file_index_type::getZone() const
     return m_zone;
 }
 
-void file_index_type::setType(ubit8 value)
-{
-    m_type = value;
-}
-
-void file_index_type::setZone(zone_type *value)
-{
-    m_zone = value;
-}
-
-void file_index_type::setName(const char *value, bool to_lower)
-{
-    if (value)
-    {
-        m_name = std::string(value);
-        if (to_lower)
-        {
-            str_lower(m_name);
-        }
-    }
-}
-
 void file_index_type::DecrementNumInMemory()
 {
     /// @todo find out why code is trying to decrement m_no_in_mem below 0
@@ -212,11 +212,13 @@ void file_index_type::DecrementNumInMemory()
 
 void file_index_type::IncrementNumInZone()
 {
+    // This looks like nonsense.
     ++m_no_in_zone;
 }
 
 void file_index_type::setNumInZone(sbit16 value)
 {
+    // This looks like nonsense.
     m_no_in_zone = value;
 }
 

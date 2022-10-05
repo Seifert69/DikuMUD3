@@ -153,7 +153,7 @@ public:
      * @param name Filename of the player file
      * @return A file_index_type
      */
-    file_index_type *findOrCreateFileIndex(const char *name);
+    file_index_type *findOrCreatePlayerFileIndex(const char *name);
 
     /**
      * Extracted from zone_update_no_in_zone()

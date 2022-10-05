@@ -48,7 +48,6 @@
 
 const char *g_player_zone = "_players";
 
-int g_room_number;                ///< For counting numbers in rooms
 unit_data *g_unit_list = nullptr; ///< The global unit_list
 unit_data *g_npc_head = nullptr;
 unit_data *g_obj_head = nullptr;
@@ -248,26 +247,16 @@ diltemplate *generate_datafile_diltemplates(FILE *f, zone_type *zone)
 /**
  * Generate index's for each unit in the '.data' file 'f', zone 'zone'
  * Format is: string(name), ubit32(filecrc), ubit8(unit type), ubit32(unit string data length), ubit32(datacrc)
+ * Returns number of rooms read.
  */
-void generate_datafile_file_indexes(FILE *f, zone_type *zone)
+int generate_datafile_file_indexes(FILE *f, zone_type *zone)
 {
-    file_index_type *fi = nullptr;
-    static int object_num = 0;
-    static int npc_num = 0;
-
-    static int room_num = 0;
-
     CByteBuffer cBuf(100);
 
-    g_room_number = 0;
+    int room_number = 0;
 
     for (;;)
     {
-        auto temp_index = std::make_unique<file_index_type>();
-        temp_index->setZone(zone);
-        temp_index->setCRC(0);
-        // temp_index->unit = NULL;
- 
         fstrcpy(&cBuf, f); //get fname
 
         if (feof(f))
@@ -275,14 +264,14 @@ void generate_datafile_file_indexes(FILE *f, zone_type *zone)
             break;
         }
 
-        temp_index->setName(reinterpret_cast<const char *>(cBuf.GetData()), true);
-
         ubit8 temp_8{};  // get Type
         if (fread(&temp_8, sizeof(ubit8), 1, f) != 1)
         {
-            error(HERE, "Failed to fread() temp_index->type");
+            error(HERE, "Failed to fread() unit type");
         }
-        temp_index->setType(temp_8);
+
+        // Maybe the file_index constructor should require a name and a zone.
+        auto temp_index = std::make_unique<file_index_type>(zone, (const char *) cBuf.GetData(), temp_8);
 
         // get Length
         sbit32 temp_32{};
@@ -293,7 +282,7 @@ void generate_datafile_file_indexes(FILE *f, zone_type *zone)
         assert(temp_32 > 0);
         temp_index->setLength(temp_32);
 
-        // get CRC
+        // get data CRC
         temp_32 = 0;
         if (fread(&temp_32, sizeof(ubit32), 1, f) != 1)
         {
@@ -312,42 +301,21 @@ void generate_datafile_file_indexes(FILE *f, zone_type *zone)
         }
         zone->setCrc(temp_32); // Will fail if CRC changes
 
-        fi = temp_index.get();
-        zone->insertFileIndex(std::move(temp_index));
-        fi->setFilepos(startReadPos);
-        if (fi->getType() == UNIT_ST_OBJ)
-        {
-            zone->incrementNumOfObjects();
-            object_num++;
-        }
+        temp_index->setFilepos(startReadPos);
 
-        if (fi->getType() == UNIT_ST_NPC)
+        if (temp_index->getType() == UNIT_ST_ROOM)
         {
-            zone->incrementNumOfNPCs();
-            npc_num++;
+            temp_index->setRoomNum(room_number++);
         }
-
-        if (fi->getType() == UNIT_ST_ROOM)
-        {
-            zone->incrementNumOfRooms();
-        }
-
-        if (fi->getType() == UNIT_ST_ROOM)
-        {
-            fi->setRoomNum(g_room_number++);
-            room_num++;
-        }
-        else
-        {
-            fi->setRoomNum(0);
-        }
-
-        fi->setNumInMemory(0);
 
         // Skip over the 'data' portion since we didnn't read it from the file
         // i.e. skip forward "length" from the current file position
-        fseek(f, ftell(f) + fi->getLength(), SEEK_SET);
+        fseek(f, ftell(f) + temp_index->getLength(), SEEK_SET);
+
+        zone->insertFileIndex(std::move(temp_index));
     }
+
+    return room_number;
 }
 
 
@@ -421,9 +389,9 @@ bool parse_datafile(zone_type *z)
     }
 
     generate_datafile_diltemplates(f, z);  // Read DIL templates
-    generate_datafile_file_indexes(f, z);
+    int room_count = generate_datafile_file_indexes(f, z);
 
-    z->setNumOfRooms(g_room_number); /* Number of rooms in the zone */
+    z->setNumOfRooms(room_count); /* Number of rooms in the zone */
 
     fflush(f); /* Don't fclose(f); since we are using fopen_cache */
 
