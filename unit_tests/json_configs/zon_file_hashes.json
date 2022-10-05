@@ -18,7 +18,7 @@
             "output": [
                 {
                     "filename": "arena.data",
-                    "sha512": "c25a835ea2c6624190e96856258b94520a282d872438195ecaab5334b30a0175a98a30745de6986b5642fbe04f218ef26394b487ce0250e4da31cef4e25bb604"
+                    "sha512": "01339427cd7e8c2d1991738ec1d334a2152987755320f701cf2ac52248310590078258e05ed34393e627567bebb7d9a3a8f551df64f9715e6493899ce0111e9f"
                 },
                 {
                     "filename": "arena.reset",
@@ -34,7 +34,7 @@
             "output": [
                 {
                     "filename": "assassin.data",
-                    "sha512": "d724a2dd4d438943695c957bcf73e5c4c5e0de781ed0c5eadf1ab4a4abcf55a2986db9903138ee6198c7c03f9d9f4c1774588a33d74ec09c1b4b4b9fb3c106c1"
+                    "sha512": "ad7602c258016192f0c9a7268b5b41a1dcc66bccac9ed6abe77d366481e33ad412a65ae3744b4c1c8a39f68c7751d4686f3b82230ae3160d90b65402ea6545e1"
                 },
                 {
                     "filename": "assassin.reset",
@@ -50,7 +50,7 @@
             "output": [
                 {
                     "filename": "barbarian.data",
-                    "sha512": "4b0ed35afbd320ccd16d3a526d4100bc2c5b36d60a2336547caa93cac1575e3e54f9002f0393ccc20798d326d23bc0cd2e9118833a09bf4aacf4261f434eb3e3"
+                    "sha512": "dff93a13fd12b40a62ff0db4839f750b46e6ed31febf12fcd4d88c063bcd5b03b8b3a64b73eda19c67a29a14b08844cf7bc040e112627d8b799493dc8c7bc839"
                 },
                 {
                     "filename": "barbarian.reset",
@@ -66,7 +66,7 @@
             "output": [
                 {
                     "filename": "baseget.data",
-                    "sha512": "eb7245787edbb0daa1162d209ce5c54b7e7f2b3df8865e96621e6ef521699a00f6e3310a453492fb716ff2a2bf7a09e2933d59442f1638cad68bbf8a8edb06ee"
+                    "sha512": "fd5b452ec7a22498f43e20e2f38ef54e7dc45b074247f40b275dc89262c121cd4984167e9da28ac78359029ebcf7a544ac77b664348083808ba26ecfe49c2c3b"
                 },
                 {
                     "filename": "baseget.reset",
@@ -82,7 +82,7 @@
             "output": [
                 {
                     "filename": "baselook.data",
-                    "sha512": "d7936c3d9bce6a48a53672106c32678e71165f44e876001de0b5dbba47c0c097d5bc0c8d434517441c181cd99fb0bf34c952b890162c055382e654cd562ab9f5"
+                    "sha512": "2dc74d0e87455b6681feb4a0519e26b269bf40929246cf24df3d0020275f70492809c8ad7211d6b5f100bd453bd5e9fd11dc72637bf820dce70718f3a84277fc"
                 },
                 {
                     "filename": "baselook.reset",
@@ -98,7 +98,7 @@
             "output": [
                 {
                     "filename": "basemove.data",
-                    "sha512": "fe3ed10eb5b20d388a9898694d9597fcbdb91c17564b7d5b22b66be58949c31de7882d26e0d48e71f41320634dac5f8d362d9f7f3a24646fb131502bf8efcb0e"
+                    "sha512": "c107330ae84d6b3fc0a4f1f4b3de49a8166ae3aca23fc93a7601234ddf560adf1e17060a26fc89614772a86caa1f99fe58688b1e8beca7b2cbedad641e1368e7"
                 },
                 {
                     "filename": "basemove.reset",
@@ -114,7 +114,7 @@
             "output": [
                 {
                     "filename": "basis.data",
-                    "sha512": "22bc2cca59ba933322504f3fbbe9d463ba971e9fe70fff85cb56f81014bdb604af8775606910317efc5591e43e09621af76adcbeed82e50b7d844f78333e7926"
+                    "sha512": "a2d196727a1fb77912331bfea166a611fe85837ff9097fae72f8e917500e5b2f7e17a7c743d75f823e809261726bbff0b1e82838da26c30fe163c18bf7a7a5c8"
                 },
                 {
                     "filename": "basis.reset",
@@ -130,7 +130,7 @@
             "output": [
                 {
                     "filename": "boards.data",
-                    "sha512": "1531f350d6c3119e9611effd02d46c7a5ea7bb3c673f210103419b6b1252a8ee6550a428c564dff19706ab1d27e018ac684adebc118aae61bb6173c56461d47d"
+                    "sha512": "aecdc589de0673383a1c678223e3b94aab543af67ec36cbe91e99f8cfe95f90e2e6cd9b4b0adb87714a3ea1ecd5e370a02e5f4e6b48a12d66a6a8d4b806edca6"
                 },
                 {
                     "filename": "boards.reset",
@@ -146,7 +146,7 @@
             "output": [
                 {
                     "filename": "bounty.data",
-                    "sha512": "8888cd156d7a3fdfc76ff7621489cb9259f261ce7301dd8630d795e3d7cb12e9745ea99826514db6de572db8a3ef0a778d0433a5c3ab613423de8020191622fe"
+                    "sha512": "bcbc4f17d2dc2356555501207684168bd329a6177e4f3b2ba1cc4b678b5870992aab4af682066d75ff6b7d2ff4e9de5f020e3463877f18fd06927d4ee2f88cbf"
                 },
                 {
                     "filename": "bounty.reset",
@@ -162,7 +162,7 @@
             "output": [
                 {
                     "filename": "clan_koh.data",
-                    "sha512": "d0f3c4e924f998af5d16de6f4f9718b51bf97b5aeb4aa0dd5ebb087a232ede6e78315a046628dbc04625635af2c6d88c44378f62730ddc8a0778a8b2d241de9a"
+                    "sha512": "66410ecdea857e606f5888f6900ee2f0483832a0cf9d3267bb776e899aa3f352d628dbc611a2b7d4a5ba9643cf2b9a46d34afdbfe14b17918240e15ffda0701d"
                 },
                 {
                     "filename": "clan_koh.reset",
@@ -178,7 +178,7 @@
             "output": [
                 {
                     "filename": "clans.data",
-                    "sha512": "201610169be8e1fe05eea36213086e09551ab56f92758cfdc7d500f9739a149fa46ffd9f6a19e49f3172fb638437e2d6bec368f36423d24efd342dd82dd27d78"
+                    "sha512": "613b9435c587ad3b690ca32fbe58b46428d7a6c2931af269bd4b617a47a7ff5d8428966658e937cd7f92ec453743104d3d145288894c41c71055d159244e3e9a"
                 },
                 {
                     "filename": "clans.reset",
@@ -194,7 +194,7 @@
             "output": [
                 {
                     "filename": "clericguild.data",
-                    "sha512": "5757312834a3283d77c652d23812d16b7f60434f4bab9bbe19856c9d8426cd4ff3cf8b736cc631256485e47282649d4f71f9837287b9268731ba2cb840121dff"
+                    "sha512": "32d03c96a03913c58b8ac5cfe58e5f7acaf72fa3065fa3e7b5d1e36024ae6483629301b9fdd4009d5adb3ab471e7150f0eb09c8bb97d68e3d08d524ea7ff80c7"
                 },
                 {
                     "filename": "clericguild.reset",
@@ -210,7 +210,7 @@
             "output": [
                 {
                     "filename": "comm.data",
-                    "sha512": "ca84d92e13215a070c15b0542697f6de0a00d30217e4d5193f67e356793482e30e320c683d6309816484917bebc298839028a1dc2d4f310350c71fea662c4a0b"
+                    "sha512": "8145db50da3ec06d97a01039f54b0c3637da3c8b95f6325578970044d369ee0a464d93b222c9d7cd72946674e7378ab30d8eed1154ed8b4e8d68217b6ed7e7ed"
                 },
                 {
                     "filename": "comm.reset",
@@ -226,7 +226,7 @@
             "output": [
                 {
                     "filename": "commands.data",
-                    "sha512": "55545fb6af9fa83bf4610b2fadbbafb1fc8f0d8238ad5e57332b9e80e7f87d8b939fb7a5d5661b6e7f861389c0a75004fb8917c49d549bbe64b71846a5ba5eb2"
+                    "sha512": "fe9a0628c9a47362d1a97f43ed331d7f686cf0b4a77cb134bcfe6861c568cac58a01f982e82458f95971f25d89f09b3ccb018b4d214277d3d87ecf3b754aed3c"
                 },
                 {
                     "filename": "commands.reset",
@@ -242,7 +242,7 @@
             "output": [
                 {
                     "filename": "competition.data",
-                    "sha512": "62ef5f3969f88d5c76cb8995d1bd7b9d1e7d1b52164a9edff7d8b9d8ba4b0c9b5de1be9317e5a8897f013ca56010f1eab80594a45005ebb653bb4f35ed9d5242"
+                    "sha512": "26dc8727097c9f5a59408a8c5bab51f850e8a13a89ec2fbb1169b0ddb25df3ba20465a3bd914efbb9de540d4e8289631e547049223ddbc305528afb006bd5528"
                 },
                 {
                     "filename": "competition.reset",
@@ -258,7 +258,7 @@
             "output": [
                 {
                     "filename": "cypress.data",
-                    "sha512": "2f07445d165862874cc9a5303d255d9d850774eeb7ab76e953ee16b6291eb8f46000933fa933d47fd019a297c0958b777d9d4a779d226d0b571d1ccd0839be48"
+                    "sha512": "466a07853a6db517464c3f284abcf7a8e1f31f8e42a1327a91621864ad777a5a055452be016958388334d0e417b1ac22aaec37d757c6c1cfb1b16ba121861378"
                 },
                 {
                     "filename": "cypress.reset",
@@ -274,7 +274,7 @@
             "output": [
                 {
                     "filename": "death.data",
-                    "sha512": "796e9425538bdbec6390955e9b09783a4ee11d4fa5cf2bdd18e279d4be61a6a0cb2cd12042db03a4a361511f1da6fcb216f7d219e3ed57f73251f88cfc5b2339"
+                    "sha512": "a245657ccb9e0794e2273ad8a9a0da206a1a51b0e9cca906e835e2c79e8647939ec023a728a9c91e6f343b44f2b03d14bec08c06643bd750e1dceb0762a73635"
                 },
                 {
                     "filename": "death.reset",
@@ -290,7 +290,7 @@
             "output": [
                 {
                     "filename": "druid.data",
-                    "sha512": "c6418f5588ec7a44fa39d4661843b0b239ec56b55dfa6188b43c5fd663ebe9e5cb4f97d1b0fae9e0e4f76b376c2a12929875dd5867e4cf8b25ec267b4b0efda4"
+                    "sha512": "ac53a2f68756329bedecaa14742c872e0d70a4d7ab18c1cf42776ed5508b202b8c8d6f3bd28edb6174f72d175f450ee3c2f31135059bce82924cfb5587db1680"
                 },
                 {
                     "filename": "druid.reset",
@@ -306,7 +306,7 @@
             "output": [
                 {
                     "filename": "fightersguild.data",
-                    "sha512": "dca860dcb4748021f7e0907ae59845ee1017c590e42448314da861aee80d8cdb281119d2af7c89198ca9a506df06e313c2bfbfe53b507212a03cb897adea98ef"
+                    "sha512": "a33a837ca52f7f22542229066d7abaaeb50bbdae15cc4b7b1c712914304c5eb0d7d8582bfcc181e12364006f31714135fcbc7d8ec79b9e7a746e1ee974d382a7"
                 },
                 {
                     "filename": "fightersguild.reset",
@@ -322,7 +322,7 @@
             "output": [
                 {
                     "filename": "function.data",
-                    "sha512": "c784830cd9eefae481a1d73e93823a87fbc1ba0cd199658fc1c9ceb9ea53e6a8faa1717b5a4750f4a72dfdb55e35584771d7c2bf6e2d86e35a7147bfb610440f"
+                    "sha512": "61bf6869f07dc00554cb3a387ceed5c9fa4e32a67b059ddb0d9a68028919505dd030dae47e0bffae3c48fbb6e1f40d60e6f09ba96713c9db9ca4935c768ff517"
                 },
                 {
                     "filename": "function.reset",
@@ -338,7 +338,7 @@
             "output": [
                 {
                     "filename": "g_q.data",
-                    "sha512": "06284d142bd1cadbb29013afd0200d988f195e0ee105ef55c9e072112b755649655306424b07519110dc4d9c20c3c72f9022a9d86a8838b83b29ce5422f883fa"
+                    "sha512": "f2610b39f3038a8a4693e43b201fd2e07948601ab55def6059a1a98aaae268f1ce757d62b6d5956a74149d3de347fd7a7153d18efb3bf9109c2a17b3a8eac0ee"
                 },
                 {
                     "filename": "g_q.reset",
@@ -354,7 +354,7 @@
             "output": [
                 {
                     "filename": "goblin_cave.data",
-                    "sha512": "bd63e746e2f0066ce0644dcfc3ef05ce6d0e430de8ccb410e7886e3280e40b8679707d8f498034188bce8586734449c28704af366f543961425cf8269b7da0de"
+                    "sha512": "bfc356691331edc6ca887e4fa19596b7565ff030a6fc3176c02169e12b71ca635de3e8f24c2d14dcb44030a30087b4a60188502b617789ffc3f651dc82157754"
                 },
                 {
                     "filename": "goblin_cave.reset",
@@ -370,7 +370,7 @@
             "output": [
                 {
                     "filename": "gremlin.data",
-                    "sha512": "7ba281d0f073e5e111caa2ff078e4418689495ca789037ef9ab804017a33b5ccfa3ec8a0df01fc55792cc831dbb72da08455e8a6b9e8be0cb28532de40115057"
+                    "sha512": "d24f71243aec96fd8c2b31694a08a54f05cb4f347f4fd710d7f5c7aa876e61579aed50c605d7f623c4db68b2afb9c7c0f823c4dad2082c9c1fd7d101b40cc422"
                 },
                 {
                     "filename": "gremlin.reset",
@@ -386,7 +386,7 @@
             "output": [
                 {
                     "filename": "guild_paths.data",
-                    "sha512": "52ce101ff4a28d08d6c65e482f7cc2b00d6ce77fb507f407c7f5676f190788fb0f64b5461cf5da72b0cc58026d49f7ee6a4985a21895822a7cc74c05303a32a5"
+                    "sha512": "97312c7bf69d3d4db259408357648637c7c4f45e0a0d2cd4c78f31d84ca83c96c91e3417c4a050cd7f91e4858fd755258456003b8092baf6902538c65866c7c1"
                 },
                 {
                     "filename": "guild_paths.reset",
@@ -402,7 +402,7 @@
             "output": [
                 {
                     "filename": "guilds.data",
-                    "sha512": "89f7c3d70942b26ce5ffdeee804f2ce0b29428380edff30a4f2d1bc7e33685044d60b94b93997e03abf217c3b8be946c522aebf3d52c9b4c87bab93bd67a5b79"
+                    "sha512": "b69fc5a32876b2bd692c5b345d342521fa2467e00e90ed5b29431409ec7589c8950ff2f1eb90f756c78e3e8ed19c2c33512f9dda770895def4f9c0a5dbf81f62"
                 },
                 {
                     "filename": "guilds.reset",
@@ -418,7 +418,7 @@
             "output": [
                 {
                     "filename": "halfzon.data",
-                    "sha512": "8f7f2c0346a549578e188be69acbdbac538d8c1e2d4008ca6e89625f3edb24af03a388461e4aeb90ab93cac9ccbfe2bfdb4e778fe54165ab9596927f5279d73b"
+                    "sha512": "70a9275044c21681b1ec0dec22882ebb0a07e8316b2afcb7102388ebcd583f8da61b987b5d1d1ca8efd7f991b0567723433dd9952307fe49c4e9aa39daeaf6f3"
                 },
                 {
                     "filename": "halfzon.reset",
@@ -434,7 +434,7 @@
             "output": [
                 {
                     "filename": "haon_dor.data",
-                    "sha512": "18488b85e86cba250b5449c9a15226fea67fb04df14ed22f70e1b1852a4b9d7952cecc33af3ac970816c4340367441eb0a05d02128f7fecca2847c52c401969d"
+                    "sha512": "485419cf60eb22788f0d59ff550637848bc7c2443159514d89cef605d620df9b6ae4a7f2a1f1bc4e091371115d19109282044b91aa2ab0834ffe5d034739f4e2"
                 },
                 {
                     "filename": "haon_dor.reset",
@@ -450,7 +450,7 @@
             "output": [
                 {
                     "filename": "helpzon.data",
-                    "sha512": "ea461c859a621e37176ea6019c27508a1ecf12816e22955118e5ee10dd39f1aff24bbd7647d185a9e01d58a256f5f0dbd27c517a253d08c0052a17e078688f1f"
+                    "sha512": "8e69440bfe41c87783a27e8cd15e3d03343950506bcada29c2df57e8a35c7bdd126e9c0491b312916a6b44c105f3ec9fcba193236fbf8c2356cb868c4ed4c96a"
                 },
                 {
                     "filename": "helpzon.reset",
@@ -466,7 +466,7 @@
             "output": [
                 {
                     "filename": "hobgob.data",
-                    "sha512": "5374ea3addb8445b03b14064c189cd48e79c0bc603c463347f5277919aee77e7a11d5345ab897bd34ce5d4f6ee2d15889f353641365a756448eba56b3343ae54"
+                    "sha512": "6f1df050159a97f6eb498bbd65c348440e3c3efdc7e9993997205543c7b7f39476e588aaf9466d1ddb38cbfe43b113bc250ed6f0157c1be9a5a7f20ca59aec5f"
                 },
                 {
                     "filename": "hobgob.reset",
@@ -482,7 +482,7 @@
             "output": [
                 {
                     "filename": "holiday20.data",
-                    "sha512": "9d3e6aaa356aeaa8c6a349c5a5456b5e2cd89ba1f5cfb83d587c2089d6f8875eeac0da230d54fa4b4b4914d34cc2bdd5767d9125a2a267f73ff3fcfd6987ebd0"
+                    "sha512": "833502dbc6cb208218b8885d904643e988b786b2baff1d583a82045e51e5c0c41a06ea8d24721a2c6a6184636e62041d01fc91958feebddabde65c8949f65056"
                 },
                 {
                     "filename": "holiday20.reset",
@@ -498,7 +498,7 @@
             "output": [
                 {
                     "filename": "holiday21.data",
-                    "sha512": "78608b2aa46433be82c762be8f6065c219f0cf22808a9c7577189a63f99cc370eb4d06fb84bcafa75d0bba7a18e763ebfea51947ca0c76e74931ecc7eb6df04a"
+                    "sha512": "9b3fec33b8654ceab30c799eab8341c53d64d4256db49a3c531670fa26cf9f4c77f8c18848e8d0393ab8a90da74eb19ab2ac98984a5302d6e9a187bc95c893ac"
                 },
                 {
                     "filename": "holiday21.reset",
@@ -514,7 +514,7 @@
             "output": [
                 {
                     "filename": "justice.data",
-                    "sha512": "272e7d718522b01552ae1aed976b44ca001724e07f03ea81704419fa58697275145cf01d54227bffa36a1a8c80aeabad645b49bee127d925889df552e1997cad"
+                    "sha512": "b098d0332d2f375b0d397526daa438509bc397e960c7c414d44e9950a883e8bbd6879e227937f44688209892cbba22b62593a12ded48b9625d124165826c6c44"
                 },
                 {
                     "filename": "justice.reset",
@@ -530,7 +530,7 @@
             "output": [
                 {
                     "filename": "kingc.data",
-                    "sha512": "6df1ef6704a29b53a47a809ef06187259508b1dad630ac0f04edbf41c5332fcb6906334672c92390bda709626b00221295e7e7eb68c4ed5b9796932ff59d0b71"
+                    "sha512": "c4d200acde192a5cef9b263cac90b91256cf4ba271053d77b61ed14aeec6c0d33bc0df7a13f5a47be6fb5f550339db90da15984a4a4f71778b39857ce4b79586"
                 },
                 {
                     "filename": "kingc.reset",
@@ -546,7 +546,7 @@
             "output": [
                 {
                     "filename": "knight.data",
-                    "sha512": "ee5d52574cc645db30468485fb944f9458c7921b4d203430dc69697b747bc27817e297db428957b3fc73cb4c1d8172c0f9d0e7129e5a826e2cfe0fbcccfc96bf"
+                    "sha512": "fdcca653fb3869524a29853593283a4451e1c092c6bb775be5b6708bf0d68f3774daddce3dbe4c10c7f984ded269f3bb0f16933a3c4b65b6298a4bfc7d3e3c77"
                 },
                 {
                     "filename": "knight.reset",
@@ -562,7 +562,7 @@
             "output": [
                 {
                     "filename": "mageguild.data",
-                    "sha512": "e8736d07ec5c2858cad9299c900666362d6f14159c8dd473e3e337ac11c4561ae200d68e183f5da0c79f7bf0e65a0bda0d3daf460c7afe925d01826ee1bd1a1c"
+                    "sha512": "45196facd69299f62c3aedc76bdc5bcc64c82126009afd8c120ea2eb0f97844fdb695a489892332abba3f027adba1f08ea6f1dde2209e17d9cce82e83ec2d74a"
                 },
                 {
                     "filename": "mageguild.reset",
@@ -578,7 +578,7 @@
             "output": [
                 {
                     "filename": "mail.data",
-                    "sha512": "313d94482c0e292bd43e923f24a1452202477a4499c441aa698b4aa728d1faea192c03de1fabcc17393dcd12240b23eb66a51c81557b8e2c291a088c920cadf2"
+                    "sha512": "ac236f73524d6e05ec4e392a69c6781aac80779f24dee89bd5dc67fbf63616d600c2e812b3bdea33475bf3d48e84f06b8e8e4b74b49fbbdac6b324054ff230aa"
                 },
                 {
                     "filename": "mail.reset",
@@ -594,7 +594,7 @@
             "output": [
                 {
                     "filename": "midgaard.data",
-                    "sha512": "971bcf38e4c8fbc8895a986ab54e6daef37e60f01be3426a99798a1f0b8bbd00ddca5137547badd41b8bf50fa7301501abc5c2e56d169fc67c8bff662d7cd2f3"
+                    "sha512": "be015857c457d4a6f78bfa23164d57408c782a1c0807b2f6e3657f2a40b92bf0bff6d60e9a7c5e32df0294229f443139b519aaa031b3faddb9cd7c7128fbdccc"
                 },
                 {
                     "filename": "midgaard.reset",
@@ -610,7 +610,7 @@
             "output": [
                 {
                     "filename": "midwalls.data",
-                    "sha512": "686f2e859078d9294cf3410bd66583801454619933d7e36b4493778a4dfaadca6968d8fd96784fee869db3df206ab0fa972b5f36bfe3cc3df434d504c0a93dec"
+                    "sha512": "6040b0df16ea291a70586c883fe1950a8c0bc2b78f64110efdb25775647d47ea66c555bc6b1042e4666f97915cc83324a888972d51bb87fff01156f29c61765d"
                 },
                 {
                     "filename": "midwalls.reset",
@@ -626,7 +626,7 @@
             "output": [
                 {
                     "filename": "necro_guild.data",
-                    "sha512": "3cd602b475b6e6474cfd1b6f2f3ae4ad230b8ae7de6e70f9da3ef8663073163ebdc99c08b6f371fed584aa9c242f8697e72a6f4acad8267254738543a2fdaabb"
+                    "sha512": "83497978c56daea73fe435709fb715790caabe16b26e3f9c7b53e19ef43afddbf2570c6649d7769bcb500858a7aa11792cc4d85cc376ae60e0450cd62c3215c1"
                 },
                 {
                     "filename": "necro_guild.reset",
@@ -642,7 +642,7 @@
             "output": [
                 {
                     "filename": "newbie.data",
-                    "sha512": "188983cc6790b1ba1f67e69da65ccc9227d81fa09a28ff361f83a1687eef4ec6319ca1938c254b0d447f9bd95dc6fd04d3194fe0d4cb63f7e9ffecff46a1fde5"
+                    "sha512": "1a9d70c53320a1050e393c4886d300b28e3ae30df494ea534bdabbe25adc3bb18eac7492817051ba1a97c2f7196147714e2b581aa636a9780c68eb209edd418a"
                 },
                 {
                     "filename": "newbie.reset",
@@ -658,7 +658,7 @@
             "output": [
                 {
                     "filename": "offices.data",
-                    "sha512": "790be91fa23ac9c98f82493e6eacacd07b64f423faf664d7f0af7c83a7d9ad37a46e15b98d4af5e2d325c2dc0756eb4b805296046f76155e81cd34e679605da2"
+                    "sha512": "7ce25ebe0fcd6b5e7b70b885a11e5d94ea254d0aa884b54f988b6d759c686d9b5fbd42ebdc8275d303f48c8929d9e6c3fe30dea52a4ec4ae8b08b60225677c6e"
                 },
                 {
                     "filename": "offices.reset",
@@ -674,7 +674,7 @@
             "output": [
                 {
                     "filename": "paladin_guild.data",
-                    "sha512": "499001ef3d92dc2c7dfc3c75db29bb74c410c48b6045650cb4db8837e9f0bb5bab586c5d30bf43a21de2ceed501016131c3e38b1e790e891dd8ec2401ee8a2a6"
+                    "sha512": "5d3010919fdec3ca2f5857b1a14c03889d4689fc2ca3b461ab7ef16039d652cfae827c3f8328abc996be3692af227b497a4666786f98e97e6f9c9280488b8973"
                 },
                 {
                     "filename": "paladin_guild.reset",
@@ -690,7 +690,7 @@
             "output": [
                 {
                     "filename": "professions.data",
-                    "sha512": "f79846f7d2d008b05bbe2450daff12d30305deba05a967d4a7a51043cff9b5df861fd1ccffa337e71240cc6d3ab79da3f6880950fe7860f926b67a49a5467d9c"
+                    "sha512": "58cdfca42ae20a4fa9bc7ae5ac7518d7727b55ae697677439cdc67d6f718ebd3938f8f10b5eccdd90387f176eaa5d6df9451178d9c163ec84e1cbcf51a2ca2ab"
                 },
                 {
                     "filename": "professions.reset",
@@ -706,7 +706,7 @@
             "output": [
                 {
                     "filename": "quests.data",
-                    "sha512": "041f43a3c7f2f41e7df5c195e1f5adf40c5f2ac3ae4e1834fbfbbfcdad6a5444091eb1f135d756a806fdca36a085b58338ad4ae583c5fba069ec9bc07079329a"
+                    "sha512": "cd84661c762ed23522c1779669f095e4dcbc6b513872f7b1f70531318199aa4ac65b06f1d30bab19f033f5b3e77fb5433a876310dc44f84554758d4b8e5fc7c5"
                 },
                 {
                     "filename": "quests.reset",
@@ -722,7 +722,7 @@
             "output": [
                 {
                     "filename": "randomt.data",
-                    "sha512": "b4ffcd209b4258710a0218875fc18196b4fbfba75f56f0ca5f7969b442e470bec157ccb4e0e39c6a596eecd73603704aa952e530b1c2113673a4bf7da1c1ff4e"
+                    "sha512": "84aeec87698d8e33cbb81e8fc45a6615b842f467a300335b6d148aed560f510d837f58f9974389a35680e548e013173548e63c01ea882e6b6b23325656c627a8"
                 },
                 {
                     "filename": "randomt.reset",
@@ -738,7 +738,7 @@
             "output": [
                 {
                     "filename": "ranger.data",
-                    "sha512": "58278fe28bacdfcba1144be20bbed90eb79e583cf27cbd68869c873a1ed5bcc0e9f9f83cc8ef112c32599d17ba696a528681c82419ab0df09e6a4d4e39e8e35e"
+                    "sha512": "3f47bafdde091f1606494edcfce6487fccc92376e947e3431d47c194e591d094e1dc3d4c9dd785e0bd9474ceeca4f4e52055fac2a252a471b399f740481f2342"
                 },
                 {
                     "filename": "ranger.reset",
@@ -754,7 +754,7 @@
             "output": [
                 {
                     "filename": "ratswarf.data",
-                    "sha512": "cac7ac005003e78a37193563f9a93b47444a71c727c813e218bf94b08211e1b683bf8ff3167102614990af3842a333d7db5443ef9753a76b9f9eb28554435f7b"
+                    "sha512": "aa6cb7186928dadd603ff57aaf6ac11197963094db1c9fdd0240c8237e32cc573b628f32c92e4bcb4bf367ee54924d5b528a9148040818b022a0756cb54b2e23"
                 },
                 {
                     "filename": "ratswarf.reset",
@@ -770,7 +770,7 @@
             "output": [
                 {
                     "filename": "rebirth.data",
-                    "sha512": "86e48fd5fe3b536ef5187e413494dfe1a0598529acd75731f8a74d67fe6a2b98c86cab5642798ffb564b7d3a81f070c30382fba395454384fec696924fb0e1d5"
+                    "sha512": "3598c0eb577074867be1117e37417cbd0465b420ff4b2a5ed054f320a14b32e2ea19ecf22578771362f90e93d4fa354d9b45f626d23ab220b643c416d210de8a"
                 },
                 {
                     "filename": "rebirth.reset",
@@ -786,7 +786,7 @@
             "output": [
                 {
                     "filename": "restrict.data",
-                    "sha512": "475d6d46e872bd5848af57f45977d7cd02c250bec456ecb6851f13380fe61dfe0a59b9841b1c6d465d78631dfa53e138d0c5ada9061c144d588617863e2e49ce"
+                    "sha512": "8acc9e57dce549ddc73b2aea90d025b09602befa348dd057fcfc0514d9a5d7bf872d508fafee4ad25f21d88ac643f37be77fe0ec80bfc5f89e82d2ff41292866"
                 },
                 {
                     "filename": "restrict.reset",
@@ -802,7 +802,7 @@
             "output": [
                 {
                     "filename": "set.data",
-                    "sha512": "a7e639b04770432b802cc17d2f62d60af820ab110f734c7da783a564290fc2d9f8fd93b724e6ef3c081548bffa9a4c3144f707fba6314c4b6a51adc2b819426d"
+                    "sha512": "a01910bbec1bd1c0b0470bc5b9520eba480b37d2ce79c6c7c69ec82155b6b3517ddeba99b19553245262cc85db643e6f928385610eb4f33f88799d90164d5ea1"
                 },
                 {
                     "filename": "set.reset",
@@ -818,7 +818,7 @@
             "output": [
                 {
                     "filename": "skills.data",
-                    "sha512": "8fdb2c5bcf81cb648fcda35fa9dde8c2baf3e3575b8f1fe639bc3a4f8ce9b268ecef2e49fe5dfc936f8bd23fe67d551fd269ef9fff07a8903b86d6a1fac5db65"
+                    "sha512": "aac4471a02eb96f72a9736094398b5fd6c52d3e35f71bb69ddebd45bd3ca254234a80f9f3437a4602cdb1daed8f2c373f15112ddadb42cc2d3212b01d413dbe5"
                 },
                 {
                     "filename": "skills.reset",
@@ -834,7 +834,7 @@
             "output": [
                 {
                     "filename": "socials.data",
-                    "sha512": "b2aad6933b7ce465979a429eff54fcc2595d7307ec19ed018cde6998551b496e5243176c9a6692af69f6f4b3411382cbf7789455a8cc3a2de5afd0fa227d24c2"
+                    "sha512": "9ddad1a9ab160deb8ad50881f2279011cd020c6436ba4dbb3a35ea29f50c35bfa55ffad966a04533b89866b3a487bee277faea02b5cd178cd8cf220f9632f36e"
                 },
                 {
                     "filename": "socials.reset",
@@ -850,7 +850,7 @@
             "output": [
                 {
                     "filename": "sorcerer.data",
-                    "sha512": "083282e08df9c0e141f9828461c280b413f007f2c3cc32a34ee098d076e4fc2607ba5a0d8a1ecf0874d8318b16d3c38ad22e841849644eb29593650f5b3e9a59"
+                    "sha512": "5788bb305b3b13a7b13ac8515d377132373c0243a083605f8e695d415a7883940aedcc0fecd1f69197355592e38ed6dfc6685cd7a91403387c8bd06ef3613f2c"
                 },
                 {
                     "filename": "sorcerer.reset",
@@ -866,7 +866,7 @@
             "output": [
                 {
                     "filename": "spells.data",
-                    "sha512": "f16af0038bcbff658596e9ecb9e8b4d4fa5f78acfea89364e3161666eae5ad750bdb406ccf631b15bace4324efe91d176da2e892ebf58a11de9d7e08b21eeccc"
+                    "sha512": "c0ede3f56bc012759a9a3255279135a1bd3b8fabe397981d09de62bb347252e145d55bca1bfba6741cfe681b2a48fdfe649d8936bfaeea1a36713439b23f577e"
                 },
                 {
                     "filename": "spells.reset",
@@ -882,7 +882,7 @@
             "output": [
                 {
                     "filename": "test.data",
-                    "sha512": "2ee8fa0d8e7c81b766cc277cb54c52701b2789b6c519c2c713e3775903a1ecbdaa60cbf8d4a81a766dfc1b7e7041e3c90ac8e1007c6e7bf8a4453751a3ceff95"
+                    "sha512": "30b1cd4593fd02f243db2ac3cde1c93beba0fba6928843482f737be4620cc7083f0cd844faadc342934765928e88c040b096e00da80c2a66e7aeb081fde5dd94"
                 },
                 {
                     "filename": "test.reset",
@@ -898,7 +898,7 @@
             "output": [
                 {
                     "filename": "thievesguild.data",
-                    "sha512": "a217de2def99f0f77d29ddf2a10ebee13252187636eb2ba036ac641562d746348dfa4b91d29bc98c11ff20e9d1f4bc0ba09267ae9ca7e5b6dc2b645980875c9c"
+                    "sha512": "876a34e557fe2dabef68a2b5ff98df325128ffae2676411f6e9fac69381d96e772e455200646afc179ac11229255972443fb9cd209349ed8634f5d30ff1c7cc8"
                 },
                 {
                     "filename": "thievesguild.reset",
@@ -914,7 +914,7 @@
             "output": [
                 {
                     "filename": "udgaard.data",
-                    "sha512": "afe4df3a5fdb939b7a7062d691fa1b9091e5070c7a52e308ba7dfd8e5091393f65ff024a00778e2ac01ce251dd5e4e6269b0207ed4a0d1c9492a4ce6185fedb1"
+                    "sha512": "ef870f568a6241b09cda6d0de5280f6534b7ed41f5cf3dbf1944971ea33f9fb527227166609542c92a6008f2fc13fc3c249098666052cd76b98386757c5f1e6c"
                 },
                 {
                     "filename": "udgaard.reset",
@@ -930,7 +930,7 @@
             "output": [
                 {
                     "filename": "update.data",
-                    "sha512": "58edef427dfaca34925fb1ecbee63350916b35b9625f1313f9e9ec0ef2e4795a153f4ec2abd09094ad3f7bf38c9413066958d4a5933fa8d2ba67926e556f3dd4"
+                    "sha512": "acf6231e03b9f4a215c00d19f46085fe7f770936cba5691e1f5f0060a8118bd7ec3dabd75a1b565a74feb17be0f6ca9dabafd2f68f0e73aae6087b80c6ba70b8"
                 },
                 {
                     "filename": "update.reset",
@@ -946,7 +946,7 @@
             "output": [
                 {
                     "filename": "wiz.data",
-                    "sha512": "b81ac32de9e0b1f23d73d5833d8e58583e574063d6162a0534f854905ec840d50c272bc435de8640ab7f091b7ab056bac83c193310fe222ce075cc7d2f143544"
+                    "sha512": "c1d85a984e207b0cd6b4770f6e41beefd2c15b025cff715d9e8cdcafeb8b76711b55b7731b14fbbeb5ad3b8f13747d6b0b1f40e3d18d2319c3468231093a158f"
                 },
                 {
                     "filename": "wiz.reset",
@@ -962,7 +962,7 @@
             "output": [
                 {
                     "filename": "youth.data",
-                    "sha512": "45bdd84c28d927e9b8bf2b60b4475615f672776d9c074e2f515beee6aeff6497d56825e345af66a04e3202a795859ce0ff2d575db4073d5176681cc5d032e5f0"
+                    "sha512": "4214aaebd909afde772b4c2dcaf57ec41deddef11fbb6d4d6cb6403ab0042874ed225528de0c75af330d23f0b71d4908a7629b601dd41ccbd4c096a283f761bb"
                 },
                 {
                     "filename": "youth.reset",

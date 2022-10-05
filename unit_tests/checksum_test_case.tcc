@@ -1,3 +1,4 @@
+#ifdef SKIP_WHILE_TIMESTAMP_CRC_IN_VMC_FILES
 /**
  * if source file doesn't exist on disk
  *      - Pass test: Remove source file from dataset
@@ -105,3 +106,4 @@ BOOST_DATA_TEST_CASE(TestFileChecksums, config_files, filename)
         }
     }
 }
+#endif
