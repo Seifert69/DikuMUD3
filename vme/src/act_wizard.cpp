@@ -438,6 +438,13 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
 
     u = read_unit(fi);
 
+    if (u == nullptr)
+    {
+        send_to_char("No such thing to load.<br/>", ch);
+        return;
+    }
+
+
     if (IS_MONEY(u))
     {
         if (!IS_ADMINISTRATOR(ch))

@@ -179,7 +179,7 @@ void resolve_templates()
 /**
  * Generate and read DIL templates
  */
-diltemplate *generate_datafile_diltemplates(FILE *f, zone_type *zone)
+diltemplate *generate_datafile_diltemplates(FILE *f, zone_type *zone, bool do_reindex)
 {
     diltemplate *tmpllist = nullptr;
     CByteBuffer Buf;
@@ -249,7 +249,7 @@ diltemplate *generate_datafile_diltemplates(FILE *f, zone_type *zone)
  * Format is: string(name), ubit32(filecrc), ubit8(unit type), ubit32(unit string data length), ubit32(datacrc)
  * Returns number of rooms read.
  */
-int generate_datafile_file_indexes(FILE *f, zone_type *zone)
+int generate_datafile_file_indexes(FILE *f, zone_type *zone, bool do_reindex)
 {
     CByteBuffer cBuf(100);
 
@@ -322,7 +322,7 @@ int generate_datafile_file_indexes(FILE *f, zone_type *zone)
 // Parses zone.data binary file on disk. 
 // Returns true if successful, false otherwise
 //
-bool parse_datafile(zone_type *z)
+bool parse_datafile(zone_type *z, bool do_reindex)
 {
     FILE *f = nullptr;
     CByteBuffer cBuf(MAX_STRING_LENGTH);
@@ -388,8 +388,8 @@ bool parse_datafile(zone_type *z)
         z->setTitle(str_dup(""));
     }
 
-    generate_datafile_diltemplates(f, z);  // Read DIL templates
-    int room_count = generate_datafile_file_indexes(f, z);
+    generate_datafile_diltemplates(f, z, do_reindex);  // Read DIL templates
+    int room_count = generate_datafile_file_indexes(f, z, do_reindex);
 
     z->setNumOfRooms(room_count); /* Number of rooms in the zone */
 
@@ -517,7 +517,7 @@ void generate_zone_indexes()
         }
         z->setZoneResetCommands(nullptr);
 
-        if (parse_datafile(z))
+        if (parse_datafile(z, false))
         {
             // Insert zone into sorted list
             g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
@@ -1317,12 +1317,12 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 }
 
 /**
- * Room directions points to file_indexes instead of units
- * after a room has been read, due to initialization considerations
  * Fetches the data ready to pass to read_unit_string from a '.data' file.
  */
 void read_unit_datafile(file_index_type *org_fi, CByteBuffer *pBuf)
 {
+    assert(org_fi->getFilepos() > 0);
+
     std::filesystem::path buf{g_cServerConfig.getZoneDir()};
     buf += org_fi->getZone()->getName();
     buf += ".data";
@@ -1372,6 +1372,7 @@ void bonus_setup(unit_data *u)
     }
 }
 
+
 /**
  * Room directions points to file_indexes instead of units
  * after a room has been read, due to initialization considerations
@@ -1381,6 +1382,11 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
     unit_data *u = nullptr;
 
     if (org_fi == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (org_fi->getFilepos() < 1)  // This would happen for players in papi@_players
     {
         return nullptr;
     }

@@ -9,20 +9,12 @@ file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
 {
     assert(zone);
     assert(name);
+    assert((type == UNIT_ST_ROOM) || (type == UNIT_ST_OBJ) || (type == UNIT_ST_PC) || (type == UNIT_ST_NPC));
 
     m_name = std::string(name);
     str_lower(m_name);
     m_zone = zone;
     m_type = type;
-
-    switch (m_type)
-    {
-        case UNIT_ST_ROOM:
-            break;
-
-    assert((type == UNIT_ST_ROOM) || (type == UNIT_ST_OBJ) || (type == UNIT_ST_PC) || (type == UNIT_ST_NPC));
-
-    }
 }
 
 
@@ -212,13 +204,11 @@ void file_index_type::DecrementNumInMemory()
 
 void file_index_type::IncrementNumInZone()
 {
-    // This looks like nonsense.
     ++m_no_in_zone;
 }
 
 void file_index_type::setNumInZone(sbit16 value)
 {
-    // This looks like nonsense.
     m_no_in_zone = value;
 }
 
