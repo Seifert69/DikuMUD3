@@ -2,8 +2,8 @@
 
 size_t obj_data::g_world_noobjects; // number of objects in the world
 
-obj_data::obj_data()
-    : unit_data(UNIT_ST_OBJ)
+obj_data::obj_data(file_index_type *fi)
+    : unit_data(UNIT_ST_OBJ, fi)
     , m_value{0}
     , m_cost{0}
     , m_cost_per_day{0}

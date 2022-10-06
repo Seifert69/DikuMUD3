@@ -227,11 +227,6 @@ void file_index_type::setRoomNum(ubit16 value)
     m_room_no = value;
 }
 
-void file_index_type::setNumInMemory(sbit16 value)
-{
-    m_no_in_mem = value;
-}
-
 void file_index_type::setCRC(ubit32 value)
 {
     m_crc = value;

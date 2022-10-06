@@ -2,8 +2,8 @@
 
 size_t npc_data::g_world_nonpc = 0; // number of chars in the world
 
-npc_data::npc_data()
-    : char_data(UNIT_ST_NPC)
+npc_data::npc_data(file_index_type *fi)
+    : char_data(UNIT_ST_NPC, fi)
     , m_weapons{0}
     , m_spells{0}
     , m_default_pos{POSITION_STANDING}

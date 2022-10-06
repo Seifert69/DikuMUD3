@@ -359,7 +359,7 @@ void clist()
     time_info_data tid2;
 
     unit_data *pc = nullptr;
-    unit_data *void_char = new EMPLACE(npc_data) npc_data;
+    unit_data *void_char = new_unit_data(UNIT_ST_NPC, nullptr); // Would be preferable to have a file_index_type passed here
 
     if (!fs::exists(full_path))
     {
@@ -628,7 +628,7 @@ void cleanup()
     unsigned long err_count = 0;
 
     unit_data *pc = nullptr;
-    unit_data *void_char = new EMPLACE(npc_data) npc_data;
+    unit_data *void_char = new_unit_data(UNIT_ST_NPC, nullptr); // Would be preferable to have a file_index_type passed here
 
     if (!fs::exists(full_path))
     {
@@ -747,8 +747,9 @@ void cleanup_playerfile(int c)
 
     memset(ids, 0, top_id);
 
-    g_entry_room = new EMPLACE(room_data) room_data;
-    g_destroy_room = new EMPLACE(room_data) room_data;
+    g_entry_room = new_unit_data(UNIT_ST_ROOM, nullptr); // Would be preferable to have a file_index_type passed here 
+    g_destroy_room = new_unit_data(UNIT_ST_ROOM, nullptr); // Would be preferable to have a file_index_type passed here 
+
     if (c == 1)
     {
         convert_file();

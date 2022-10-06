@@ -366,6 +366,8 @@ unit_data *zone_type::findFirstUnitOfType(int type)
 
 file_index_type *zone_type::findOrCreatePlayerFileIndex(const char *name)
 {
+    assert(this == find_zone(g_player_zone));  // This should only be done in the special player zone
+
     if (auto it = m_mmp_fi.find(name); it != m_mmp_fi.end())
     {
         return it->second.get();

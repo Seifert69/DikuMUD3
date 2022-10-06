@@ -270,7 +270,7 @@ unit_data *mcreate_unit(int type)
     unit_data *rslt = nullptr;
 
     // rslt = new (class unit_data) (type);
-    rslt = new_unit_data(type);
+    rslt = new_unit_data(type, nullptr);
 
     init_unit(rslt);
     return rslt;

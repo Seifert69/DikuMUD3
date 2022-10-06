@@ -650,7 +650,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
 
     // u = new EMPLACE(unit_data) unit_data(type);
-    u = new_unit_data(type);
+    u = new_unit_data(type, nullptr); // Would be preferable to have a file_index_type passed here 
 
     nStart = pBuf->GetReadPosition();
     unit_version = pBuf->ReadU8(&g_nCorrupt);
@@ -1405,7 +1405,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
                          org_fi->getLength(),
                          str_cc(org_fi->getName(), org_fi->getZone()->getName().c_str()),
                          ins_list);
-    u->set_fi(org_fi);
+    u->setFileIndex(org_fi);
 
     bonus_setup(u);
 

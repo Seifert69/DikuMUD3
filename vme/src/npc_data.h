@@ -9,7 +9,7 @@ class npc_data : public char_data
 public:
     static size_t g_world_nonpc; // number of chars in the world
 public:
-    npc_data();
+    npc_data(file_index_type *fi);
     ~npc_data() override;
 
     /**

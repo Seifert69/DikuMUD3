@@ -20,8 +20,8 @@
 
 size_t pc_data::g_world_nopc = 0; // number of chars in the world
 
-pc_data::pc_data()
-    : char_data(UNIT_ST_PC)
+pc_data::pc_data(file_index_type *fi)
+    : char_data(UNIT_ST_PC, fi)
     , m_setup{0, 0, 0, 0, 0, 0, 0, 0}
     , m_guild{nullptr}
     , m_bank{nullptr}

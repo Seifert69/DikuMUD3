@@ -15,7 +15,7 @@ public:
     static size_t g_world_nopc;                 ///< number of chars in the world
 
 public:
-    pc_data();
+    pc_data(file_index_type *fi);
     ~pc_data() override;
 
     void gstate_tomenu(dilprg *pdontstop);

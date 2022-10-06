@@ -2,8 +2,8 @@
 
 size_t char_data::g_world_nochars = 0;
 
-char_data::char_data(ubit8 unit_type)
-    : unit_data(unit_type)
+char_data::char_data(ubit8 unit_type, file_index_type *fi)
+    : unit_data(unit_type, fi)
     , m_descriptor{nullptr}
     , m_combat{nullptr}
     , m_master{nullptr}

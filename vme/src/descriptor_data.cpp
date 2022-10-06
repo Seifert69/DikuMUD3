@@ -46,7 +46,7 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     replyid = (ubit32)-1;
 
     /* Make a new PC struct */
-    character = new EMPLACE(pc_data) pc_data;
+    character = new_unit_data(UNIT_ST_PC, nullptr);  // Would be preferable to have a file_index_type passed here
     init_char(character);
     UCHAR(character)->setDescriptor(this);
 

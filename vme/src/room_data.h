@@ -17,7 +17,7 @@ public:
      * @name Constructors/Destructor
      * @{
      */
-    room_data();
+    room_data(file_index_type *fi);
     room_data(const room_data &) = delete;
     room_data(room_data &&) = delete;
     room_data &operator=(const room_data &) = delete;

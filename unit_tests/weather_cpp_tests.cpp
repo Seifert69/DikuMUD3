@@ -195,7 +195,7 @@ BOOST_DATA_TEST_CASE(real_time_passed_test,
  */
 BOOST_AUTO_TEST_CASE(age_npc_test)
 {
-    auto unit = std::unique_ptr<npc_data>(dynamic_cast<npc_data *>(new_unit_data(UNIT_ST_NPC)));
+    auto unit = std::unique_ptr<npc_data>(dynamic_cast<npc_data *>(new_unit_data(UNIT_ST_NPC, nullptr)));
 
     ////////////////////////// Test Subject //////////////////////////////
     auto result = age(unit.get());
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(age_npc_test)
 BOOST_AUTO_TEST_CASE(age_pc_test)
 {
     auto age_time = time(nullptr) - 7654321;
-    auto unit = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC)));
+    auto unit = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC, nullptr)));
     unit->getPCTimeInformation().setPlayerBirthday(age_time);
 
     ////////////////////////// Test Subject //////////////////////////////

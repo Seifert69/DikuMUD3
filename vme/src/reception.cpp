@@ -554,7 +554,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
 
                 if (pnew->getFileIndex() == nullptr)
                 {
-                    pnew->set_fi(g_slime_fi);
+                    pnew->setFileIndex(g_slime_fi);
                 }
             }
             else
@@ -566,7 +566,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
                 }
-                pnew->set_fi(fi);
+                pnew->setFileIndex(fi);
                 insert_in_unit_list(pnew);
             }
 

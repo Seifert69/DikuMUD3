@@ -2,8 +2,8 @@
 
 size_t room_data::g_world_norooms = 0; // number of rooms in the world
 
-room_data::room_data()
-    : unit_data(UNIT_ST_ROOM)
+room_data::room_data(file_index_type *fi)
+    : unit_data(UNIT_ST_ROOM, fi)
     , m_mapx{-1}
     , m_mapy{-1}
     , m_waiting_dijkstra{false}

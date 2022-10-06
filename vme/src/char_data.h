@@ -12,7 +12,7 @@ public:
     static size_t g_world_nochars; // number of chars in the world
 
 public:
-    explicit char_data(ubit8 unit_type);
+    explicit char_data(ubit8 unit_type, file_index_type *fi);
     virtual ~char_data();
 
     /**

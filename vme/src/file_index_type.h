@@ -50,7 +50,6 @@ public:
      */
     void setCRC(ubit32 value);
     void setNumInZone(sbit16 value);
-    void setNumInMemory(sbit16 value);
     void setLength(ubit32 value);
     void setFilepos(long value);
     void setRoomNum(ubit16 value);

@@ -17,23 +17,23 @@
     #include "vmc/vmc_process.h"
 #endif
 
-unit_data *new_unit_data(ubit8 type)
+unit_data *new_unit_data(ubit8 type, file_index_type *fi)
 {
     if (type == UNIT_ST_ROOM)
     {
-        return new EMPLACE(room_data) room_data;
+        return new EMPLACE(room_data) room_data(fi);
     }
     else if (type == UNIT_ST_OBJ)
     {
-        return new EMPLACE(obj_data) obj_data;
+        return new EMPLACE(obj_data) obj_data(fi);
     }
     else if (type == UNIT_ST_PC)
     {
-        return new EMPLACE(pc_data) pc_data;
+        return new EMPLACE(pc_data) pc_data(fi);
     }
     else if (type == UNIT_ST_NPC)
     {
-        return new EMPLACE(npc_data) npc_data;
+        return new EMPLACE(npc_data) npc_data(fi);
     }
     else
     {
@@ -42,7 +42,7 @@ unit_data *new_unit_data(ubit8 type)
     return nullptr; // Need to avoid warning on Git actions.
 }
 
-unit_data::unit_data(ubit8 unit_type)
+unit_data::unit_data(ubit8 type, file_index_type *fi)
     : m_func{nullptr}
     , m_affected{nullptr}
     , m_fi{nullptr}
@@ -58,7 +58,7 @@ unit_data::unit_data(ubit8 unit_type)
     , m_weight{0}
     , m_capacity{0}
     , m_size{0}
-    , m_status{unit_type}
+    , m_status{type}
     , m_open_flags{0}
     , m_open_diff{0}
     , m_light{0}
@@ -70,6 +70,10 @@ unit_data::unit_data(ubit8 unit_type)
     , m_hp{0}
     , m_alignment{0}
 {
+    assert((type == UNIT_ST_ROOM) || (type == UNIT_ST_OBJ) || (type == UNIT_ST_PC) || (type == UNIT_ST_NPC));
+    // assert(fi);  -- Ideally some day it will be impossible to create a unit without a file_index
+    m_status = type;
+    this->setFileIndex(fi);
 }
 
 unit_data::~unit_data()
@@ -82,6 +86,12 @@ unit_data::~unit_data()
     assert(m_next == nullptr);
     assert(g_unit_list != this);
 #endif
+
+    if (m_fi)
+    {
+        m_fi->DecrementNumInMemory();
+        m_fi = nullptr;
+    }
 
     if (m_key)
     {
@@ -129,18 +139,6 @@ unit_data::~unit_data()
     }
 }
 
-void unit_data::set_fi(file_index_type *f)
-{
-    assert(f);
-
-    if (m_fi)
-    {
-        slog(LOG_ALL, 0, "ERROR: FI was already set. This shouldn't happen");
-    }
-
-    m_fi = f;
-    m_fi->IncrementNumInMemory();
-}
 
 std::string unit_data::json()
 {
@@ -244,7 +242,7 @@ unit_data *unit_data::copy()
     unit_data *u = nullptr;
     int x = 0;
 
-    u = new_unit_data(m_status);
+    u = new_unit_data(m_status, m_fi);
 
     CByteBuffer abuf;
     CByteBuffer fbuf;
@@ -266,7 +264,7 @@ unit_data *unit_data::copy()
     u->m_hp = m_hp;
     u->m_alignment = m_alignment;
     u->m_key = str_dup(m_key);
-    u->set_fi(m_fi);
+    u->setFileIndex(m_fi);
 
     bwrite_affect(&abuf, m_affected);
     bread_affect(&abuf, u, UNIT_VERSION);
@@ -423,9 +421,23 @@ const file_index_type *unit_data::getFileIndex() const
     return m_fi;
 }
 
-void unit_data::setFileIndex(file_index_type *value)
+void unit_data::setFileIndex(file_index_type *fi)
 {
-    m_fi = value;
+    if (fi == nullptr)
+        return;   // Ideally some day nullptr will not be allowed
+
+    if (m_fi)
+    {
+        slog(LOG_ALL, 0, "ERROR: FI was already set. This shouldn't happen. Overwriting");
+    }
+
+    if (fi->getType() != this->m_status)
+    {
+        slog(LOG_ALL, 0, "ERROR: FI set but the FI %s@%s type isn't the same as the unit type.",  fi->getName(), fi->getZone()->getName());
+    }
+
+    m_fi = fi;
+    m_fi->IncrementNumInMemory();
 }
 
 const char *unit_data::getKey() const

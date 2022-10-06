@@ -31,13 +31,13 @@ struct AccountCPPFixture : public unit_tests::FixtureBase
         g_cServerConfig.enableAccounting();
         g_cAccountConfig.Boot();
 
-        god = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC)));
+        god = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC, nullptr)));
         god->getNames().AppendName("Thor");
 
-        whom = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC)));
+        whom = std::unique_ptr<pc_data>(dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC, nullptr)));
         whom->getNames().AppendName("Bilbo");
 
-        npc = std::unique_ptr<npc_data>(dynamic_cast<npc_data *>(new_unit_data(UNIT_ST_NPC)));
+        npc = std::unique_ptr<npc_data>(dynamic_cast<npc_data *>(new_unit_data(UNIT_ST_NPC, nullptr)));
         npc->getNames().AppendName("Red Shirt 1");
 
         // Booting the server config and account config create log messsage so start with clean slate
