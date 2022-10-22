@@ -4806,22 +4806,15 @@ code
 	sldt := split(edaily.descr,"|");
 	slmt := split(emonth.descr,"|");
 	slbt := split(ebonus.descr,"|");
-	sdtarg := sldt.[1];
-	smtarg := slmt.[1];
-    log("claim_bounty C");
-    if (length(slbt) < 2)
-    {
-        log("Invalid ebonus : ");
-        if (ebonus == null)
-            log("ebonus = null");
-        else
-            log("ebonus = " + ebonus.descr);
-    }
-	sbtarg := slbt.[1];
-    log("claim_bounty D");
 
-	// if you have turned in a valid bounty
-	
+    if (length(sldt) >= 2) // Not guaranteed to have a daily target
+    	sdtarg := sldt.[1];
+    if (length(slmt) >= 2) // Not guaranteed to have a monthly target
+    	smtarg := slmt.[1];
+    if (length(slbt) >= 2) // Not guaranteed to have a bonus target
+    	sbtarg := slbt.[1];
+
+	// if you have turned in a valid bounty	
 	if(sdtarg == self.inside.extra.["$living_sym"].descr)
 	{
 		etarg := edaily;
