@@ -5527,171 +5527,161 @@ quit;
 }
 dilend
 
+
+
 /* Updated bury dil */
-
-/* Made by whistler, modified/tested by Mesmer, modified by Azzurathe to
-check for cant bury flags */
-dilbegin bury (arg:string);
+/* Made by whistler, modified/tested by Mesmer, modified by Azzurathe to check for cant bury flags */
+// do_bury
+dilbegin bury(arg:string);
 var
-count:integer;
-args:stringlist;
-  item:unitptr;
-  temp:unitptr;
+    count:integer;
+    args:stringlist;
+    item:unitptr;
+    temp:unitptr;
+    ln:integer;
+    buried:integer;
 
-
-
-  ln:integer;
-  buried:integer;
-
-
-  code
-  {
-  count:=0;
-  buried:=0;
-  count:=0;
-  if (arg=="") {
-  act ("Bury what?", A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
-
-if (self.fighting!=null) {
-  act ("No Way! Your fighting for your life!",A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
-
-if (self.outside.type!=UNIT_ST_ROOM) {
-  act ("You can't bury stuff here.",A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
-
-  args:=split(arg,".");
-  ln:=length (args);
-  if (ln>1)
-  {
-  	arg:=args.[1];
-	if (args.[0]=="all")
-	count:=-1;
-	else
-	count:=atoi(args.[0]);
-	}
-else
-count:=1;
-
-
-item:=self.outside.inside;
-while (item!=null){
-if (arg=="all")
+code
 {
-if ((not(visible(self,item))) or
-(item.type!=UNIT_ST_OBJ) or
-   ( not(isset (item.manipulate,MANIPULATE_TAKE))) or
-(isset(item.flags,UNIT_FL_BURIED))){
-item:=item.next;
-continue;
-}
-}
-else if ((arg!="all") and (arg in item.names)){
-if ((not(visible(self,item))) or
-(isset(item.flags,UNIT_FL_BURIED))){
-item:=item.next;
-continue;
-}
-else if (count>1){
-count:=count-1;
-item:=item.next;
-continue;
-}
-}
-else
-{
-item:=item.next;
-continue;
-}
+    count:=0;
+    buried:=0;
+    count:=0;
+    if (arg=="") {
+        act ("Bury what?", A_ALWAYS,self,null,null,TO_CHAR);
+        quit;
+    }
 
-if ((item.type!=UNIT_ST_OBJ) or
-   ( not(isset (item.manipulate,MANIPULATE_TAKE))))
-  {
-    act ("You can't bury $2n",A_ALWAYS,self,item,null,TO_CHAR);
-	}
-	else
-	{
-	buried:=buried+1;
-	  act ("$1n buries $3n.",A_SOMEONE,self,null,item,TO_REST);
-  act ("You bury $3n that was lying on the ground.",A_SOMEONE,self,null,item,TO_CHAR);
-  set (item.flags,UNIT_FL_BURIED);
-  dilcopy("buried_timer@commands(60)", item);
-  link (item,self.outside);
-  send_done("bury",self,item,null,0,arg,null, CMD_AUTO_NONE);
-  }
-  	if ((count==-1) or (arg=="all"))
-	{
-	item:=item.next;
-	continue;
-	}
-	quit;
-	}
-if ((arg=="all") and (buried==0))
-{
-sendtext ("Couldn't find anything to bury.<br/>",self);
-quit;
-}
+    if (self.fighting!=null) {
+        act ("No Way! Your fighting for your life!",A_ALWAYS,self,null,null,TO_CHAR);
+        quit;
+    }
 
-if (arg=="all")
- quit;
+    if (self.outside.type!=UNIT_ST_ROOM) {
+        act ("You can't bury stuff here.",A_ALWAYS,self,null,null,TO_CHAR);
+        quit;
+    }
 
+    args:=split(arg,".");
+    ln:=length (args);
+    if (ln>1)
+    {
+        arg:=args.[1];
+        if (args.[0]=="all")
+            count:=-1;
+        else
+            count:=atoi(args.[0]);
+    }
+    else
+        count:=1;
 
-	if ((buried>0) and (count!=-1))
-		quit;
+    item := self.outside.inside;
 
-	item:=self.inside;
-	while (item!=null){
-	if ((item.equip!=0) or
-(not(visible(self,item))) or
-(isset(item.flags,UNIT_FL_BURIED)) or
-(not(arg in item.names)) or
-(count>1))
-{
-if (count>1)
-count:=count-1;
-item:=item.next;
-continue;
-}
+    while (item != null)
+    {
+        if (arg=="all")
+        {
+            if ((not(visible(self,item))) or (item.type!=UNIT_ST_OBJ) or ( not(isset (item.manipulate,MANIPULATE_TAKE))) or (isset(item.flags,UNIT_FL_BURIED))) {
+                item:=item.next;
+                continue;
+            }
+        }
+        else if ((arg!="all") and (arg in item.names)) {
+            if ((not(visible(self,item))) or (isset(item.flags,UNIT_FL_BURIED))) {
+                item:=item.next;
+                continue;
+            }
+            else if (count>1){
+                count:=count-1;
+                item:=item.next;
+                continue;
+            }
+        }
+        else
+        {
+            item:=item.next;
+            continue;
+        }
 
-if ((item.type!=UNIT_ST_OBJ) or
-   (not(isset (item.manipulate,MANIPULATE_TAKE))))
-  {
-    act ("You can't bury $2n",A_ALWAYS,self,item,null,TO_CHAR);
-	}
-	else
-	{
-	buried:=buried+1;
-	  act ("$1n buries $3n.",A_SOMEONE,self,null,item,TO_REST);
-  act ("You bury $3n from your inventory.",A_SOMEONE,self,null,item,TO_CHAR);
-  set (item.flags,UNIT_FL_BURIED);
-  dilcopy("buried_timer@commands(60)", item);
-  temp:=item.next;
-  link (item,self.outside);
-  send_done("bury",self,item,null,0,arg,null, CMD_AUTO_NONE);
-  }
-  	if (count==-1)
-	{
-	item:=temp;
-	continue;
-	}
-	quit;
-	}
+        if ((item.type!=UNIT_ST_OBJ) or ( not(isset (item.manipulate,MANIPULATE_TAKE))))
+        {
+            act ("You can't bury $2n",A_ALWAYS,self,item,null,TO_CHAR);
+        }
+        else
+        {
+            buried:=buried+1;
+            act ("$1n buries $3n.",A_SOMEONE,self,null,item,TO_REST);
+            act ("You bury $3n that was lying on the ground.",A_SOMEONE,self,null,item,TO_CHAR);
+            set (item.flags,UNIT_FL_BURIED);
+            dilcopy("buried_timer@commands(60)", item);
+            link (item,self.outside);
+            send_done("bury",self,item,null,0,arg,null, CMD_AUTO_NONE);
+        }
 
-if (buried==0)
-{
-	act("No "+arg+" to bury here!",
-	A_ALWAYS, self, null, null, TO_CHAR);
-	quit;
-	}
+        if ((count==-1) or (arg=="all"))
+        {
+            item:=item.next;
+            continue;
+        }
+        quit;
+    } // While
 
+    if ((arg=="all") and (buried==0))
+    {
+        sendtext ("Couldn't find anything to bury.<br/>",self);
+        quit;
+    }
 
-	quit;
+    if (arg=="all")
+        quit;
+
+    if ((buried>0) and (count!=-1))
+        quit;
+
+    item:=self.inside;
+    while (item!=null)
+    {
+        if ((item.equip!=0) or (not(visible(self,item))) or (isset(item.flags,UNIT_FL_BURIED)) or (not(arg in item.names)) or (count>1))
+        {
+            if (count>1)
+                count:=count-1;
+            item:=item.next;
+            continue;
+        }
+
+        if ((item.type!=UNIT_ST_OBJ) or (not(isset (item.manipulate,MANIPULATE_TAKE))))
+        {
+            act ("You can't bury $2n",A_ALWAYS,self,item,null,TO_CHAR);
+        }
+        else
+        {
+            buried:=buried+1;
+            act ("$1n buries $3n.",A_SOMEONE,self,null,item,TO_REST);
+            act ("You bury $3n from your inventory.",A_SOMEONE,self,null,item,TO_CHAR);
+            set (item.flags,UNIT_FL_BURIED);
+            dilcopy("buried_timer@commands(60)", item);
+            temp:=item.next;
+            link (item,self.outside);
+            send_done("bury",self,item,null,0,arg,null, CMD_AUTO_NONE);
+        }
+
+        if (count==-1)
+        {
+            item:=temp;
+            continue;
+        }
+        quit;
+    } // While2
+
+    if (buried==0)
+    {
+        sendtext("No "+arg+" to bury here!<br/>", self);
+        quit;
+    }
+
+    quit;
 }
 dilend
+
 
 dilbegin cmd_copy(arg : string);
 var
@@ -5713,12 +5703,11 @@ code
       {
       u := findsymbolic(s);
 
-      if (u.type != UNIT_ST_ROOM)
-         {
-         sendtext("Copying on symbolic units other than rooms "+
-            "is denied.<br/>", self);
-         quit;
-         }
+        if (u.type != UNIT_ST_ROOM)
+        {
+            sendtext("Copying on symbolic units other than rooms "+"is denied.<br/>", self);
+            quit;
+        }
       }
 
    else
