@@ -494,7 +494,7 @@ code
          exd := "$newbies" in tgt.extra;
          if (exd == null)
          {
-            addextra(tgt.extra, {"$newbie"}, "");
+            addextra(tgt.extra, {"$newbies"}, "");
             exd := "$newbies" in tgt.extra;
          }
 
