@@ -9,16 +9,17 @@ spells and weapons (these are not listed as the list is very long):<br/>
 -2 Hard             +2 Easy<br/>
 -1 Somewhat hard    +1 Somewhat easy<br/>
 <br/>
-           Magic  Div   Str   Dex   Con   Cha   Brain  HP<br/>
-Human        0     0     0     0     0     0     0      0<br/>
-Dwarf       -2     0    +2    -1    +2    -1     0     +2<br/>
-Halfling    +1    -1    -1    +2    -1    +1    -1     -1<br/>
-Gnome       +2    -1    -1    +1    -1    -1    +2     -1<br/>
-Elf         -1    +2     0    +2    -1    +2    +1     -1<br/>
-Half-elf     0     0     0    +1    -1    +1     0     -1<br/>
-Darkelf     +3    -1     0    +1    -1    -1    +1     -1<br/>
-Brownie     +3    -1    -2    +2    -2    +1    +1     -2<br/>
-Groll       -2    -2    +1    +1    +3    -3    -2     +3<br/>
-Half-orc    -3     0    +2     0    +1    -1    -1     +1<br/>
-Half-ogre   -3    -1    +3    -1    +2    -2    -1     +2<br/>
+
+            Mag Div Str Dex Con Cha Bra HP
+ Human       0   0   0   0   0   0   0   0
+ Elf        +2  -2   0   0  -1  -1   0   0
+ Dwarf      -3   0  +3  -1  +1  -2   0  +2
+ Halfling    0  -1   0  +3   0   0  -1  -1
+ Gnome      +3  -3  -1   0   0   1   2  -2
+ Half-orc   -1  +1   0  -2  +2   0   0   0
+ Half-ogres -3  -2  +3  -1  +1   0   0  +2
+ Half-elf   -2  +3   0  +1  -3  +2   0  -1
+ Brownies   +4  -2  -1  +2  -1   0  +1  -3
+ Grolls     -3  -2  +4   0  +1  -1  -1  +2
+ Darkelf    -1  +2   0  +1   0  -2   0   0
 </pre>
