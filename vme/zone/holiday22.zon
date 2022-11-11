@@ -3373,7 +3373,6 @@ end
 // comment out this entire load section after the holiday season.
 // this will maitain the items for players, but take away some christmas cheer.
 
-/*
 %reset 
 load xmas_tree2 into hall@newbie         local 1
 load xmas_tree into square@udgaard       local 1
@@ -3397,5 +3396,5 @@ load elf into workshop max 1
 load northpole into square@udgaard max 1
 
 load graf_jan into village_rd6@udgaard max 1
-*/
+
 %end
