@@ -1495,7 +1495,8 @@ dilend
 
 
 // Make sure the handcuffs blocks execution of other DILs.
-// So it's one worse priority than "cuffed2"
+// So it's one worse priority (-1) than "cuffed2" (-2).
+//  meaning cuffed2 will run, and cuffed will block.
 //
 dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed(depname : string);
 var
@@ -1522,7 +1523,7 @@ code
    if (cuffs.equip != WEAR_WRIST_R)
      goto broken;
    priority;
-   wait(SFB_TICK, activator == self);
+   wait(SFB_TICK|SFB_CMD, activator == self);
    goto loop;
 
    :broken:
@@ -1542,7 +1543,6 @@ code
    interrupt(SFB_COM, activator == self, broken);
 
    :loop:
-   priority;
    wait(SFB_CMD, TRUE);
 
    :postloop:
