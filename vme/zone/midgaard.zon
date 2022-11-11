@@ -1497,7 +1497,7 @@ dilend
 // Make sure the handcuffs blocks execution of other DILs.
 // So it's one worse priority than "cuffed2"
 //
-dilbegin fnpri(FN_PRI_RESCUE) aware unique cuffed(depname : string);
+dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed(depname : string);
 var
    cuffs  : unitptr;
    deputy : unitptr;
@@ -1533,7 +1533,7 @@ dilend
 
 
 
-dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed2(depname : string);
+dilbegin fnpri(FN_PRI_RESCUE-2) aware unique cuffed2(depname : string);
 var
    i      : integer;
    u      : unitptr;
@@ -1542,6 +1542,7 @@ code
    interrupt(SFB_COM, activator == self, broken);
 
    :loop:
+   priority;
    wait(SFB_CMD, TRUE);
 
    :postloop:
