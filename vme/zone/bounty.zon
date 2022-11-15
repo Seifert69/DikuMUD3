@@ -4429,7 +4429,7 @@ code
 {	
 	slZone := {"basis","death","spells","skills","commands","baseget","basemove","wiz","baselook",
 				"update","help","boards","comm","socials","set","mail","function","restrict","newbie",
-				"justice","arena","competition","clan","holiday20","guild_quest","guild_paths",
+				"justice","arena","competition","clan","holiday22","guild_quest","guild_paths",
 				"assassin","clericguild","fightersguild","mageguild","necro_guild","offices","paladin_guild",
 				"sorcerer","thievesguild","druid","knight","ranger","rebirth","barbarian","bounty"};
 	if (n == 0) // package deliver

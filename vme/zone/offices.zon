@@ -222,7 +222,7 @@ code
    :start:
    wait(SFB_DONE, (activator.type == UNIT_ST_PC) and command("put"));
 
-if (medium.symname == "card@holiday20")
+if (medium.symname == "card@holiday22")
    {
 		log("its a card");
 		if (("$"+activator.name) == medium.extra.["card"].names.[1])

@@ -230,8 +230,11 @@ code
 	return;
 }
 dilend
+
+
+
 /* Maintains the counts of gift types loaded so that mud 
-does not become flooded with presents in low population hours. */
+   does not become flooded with presents in low population hours. */
 dilbegin string gift_name(i:integer);
 var
 	gifts	:	stringlist;
@@ -1031,8 +1034,7 @@ code
 dilend
 end
 
-/*loads coins, food/potions or heal items 1 in 12 chance of exp 
-card */
+// loads coins, food/potions or heal items 1 in 12 chance of exp card
 boom_box2
 names {"Christmas Gift","gift","box"}
 title "a <div class='cpr'>Christmas </div><div class='cpg'>Gift</div>"
@@ -1040,7 +1042,6 @@ descr "A brightly wrapped <div class='cpr'>Christmas </div><div class='cpg'>gift
 extra {}
 "This <div class='cpr'>Christmas </div><div class='cpg'>Gift</div> will add a little cheer to the season.
  It looks like this box could hold quite a bit and keep your gear safe inside."
-
 CONTAINER_DEF(200)
 manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
 flags {UNIT_FL_MAGIC}
@@ -1065,8 +1066,7 @@ code
 
 	:start:
 
-	wait(SFB_CMD, (command("open")) and (("box" in argument)or
-	("gift" in argument)or("basket" in argument)) );
+	wait(SFB_CMD, (command("open")) and (("box" in argument)or("gift" in argument)or("basket" in argument)) );
 	pc := activator;
 	secure(pc, lost);
 	{
