@@ -6912,46 +6912,57 @@ void dilfe_pck(dilprg *p)
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_INT;
-    switch (dil_getval(v1))
-    {
-        case DILV_FAIL:
-        case DILV_NULL:
-            v->type = DILV_FAIL;
-            break;
-        case DILV_UP:
-            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
-            {
-                v->type = DILV_FAIL;
-            }
-            else
-            {
-                switch (dil_getval(v2))
-                {
-                    case DILV_FAIL:
-                    case DILV_NULL:
-                        v->type = DILV_FAIL;
-                        break;
-                    case DILV_UP:
-                        if (!v2->val.ptr)
-                        {
-                            v->type = DILV_FAIL;
-                        }
-                        else
-                        {
-                            v->val.num = pay_point_charlie((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
-                        }
-                        break;
-                    default:
-                        v->type = DILV_ERR;
-                        break;
-                }
-            }
 
-            break;
-        default:
-            v->type = DILV_ERR;
-            break;
+    // Don't evaluate in case accounting is off. Evaluating might fail
+    // and lead to undesired results.
+    if (g_cServerConfig.isAccounting() == false)
+    {
+        v->val.num = 1;
     }
+    else
+    {
+        switch (dil_getval(v1))
+        {
+            case DILV_FAIL:
+            case DILV_NULL:
+                v->type = DILV_FAIL;
+                break;
+            case DILV_UP:
+                if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
+                {
+                    v->type = DILV_FAIL;
+                }
+                else
+                {
+                    switch (dil_getval(v2))
+                    {
+                        case DILV_FAIL:
+                        case DILV_NULL:
+                            v->type = DILV_FAIL;
+                            break;
+                        case DILV_UP:
+                            if (!v2->val.ptr)
+                            {
+                                v->type = DILV_FAIL;
+                            }
+                            else
+                            {
+                                v->val.num = pay_point_charlie((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
+                            }
+                            break;
+                        default:
+                            v->type = DILV_ERR;
+                            break;
+                    }
+                }
+
+                break;
+            default:
+                v->type = DILV_ERR;
+                break;
+        }
+    }
+
     p->stack.push(v);
     delete v1;
     delete v2;

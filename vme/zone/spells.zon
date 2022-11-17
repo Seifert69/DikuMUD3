@@ -3282,115 +3282,116 @@ if (not(paycheck(self,targ)))
 }
 dilend /* indiv_tele */
 
-dilbegin group_tele(med : unitptr, targ : unitptr, arg : string,
-                    hm : integer, effect : string);
+// group teleport spell
+//
+dilbegin group_tele(med : unitptr, targ : unitptr, arg : string, hm : integer, effect : string);
 external
-	integer may_tele_away(u : unitptr);
-	rift_failure(targ : unitptr);
-
+    integer may_tele_away(u : unitptr);
+    rift_failure(targ : unitptr);
 var
-   u      : unitptr;
-   mast   : unitptr;
-   u_mast : unitptr;
-   dest   : unitptr;
-   in_gr  : integer;
-   kids   : integer;
-   mta    : integer;
+    u      : unitptr;
+    mast   : unitptr;
+    u_mast : unitptr;
+    dest   : unitptr;
+    in_gr  : integer;
+    kids   : integer;
+    mta    : integer;
 
 code
 {
-  if (self.spells[SPL_GROUP_TELEPORT] <= 0)
-  {
-     act("I don't think so.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-     quit;
-  }
+    if (self.spells[SPL_GROUP_TELEPORT] <= 0)
+    {
+        act("I don't think so.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-  if(hm < 0)
-  {
-	act("Nothing happens.",
-	A_ALWAYS, self, null, null, TO_CHAR);
-	goto end;
-  }
+    if (hm < 0)
+    {
+        if (rnd(1, RIFT_RISK) <= 3)
+        {
+            rift_failure(targ);
+            quit;
+        }
 
-  if(rnd(1, RIFT_RISK) <= 5)
-  {
-	rift_failure(targ);
-	quit;
-  }
-
-if (self.zoneidx=="g_q")
-	{
-	act ("$1n is struck by lightning.",
-		A_ALWAYS, self,null,null,TO_ROOM);
-	self.mana:=0;
-	position_update(self);
-	quit;
-	}
-
-  if (targ.outside == self.outside)
-  {
-    act("$3n is right here!",
-        A_ALWAYS, self, null, targ, TO_CHAR);
-    goto end;
-  }
-
-  mta := may_tele_away(self);
-  if (not mta)
-      {
-        act("Something prevents you from teleporting from here.",
-            A_ALWAYS, self, null, null, TO_CHAR);
+        act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
         goto end;
-      }
+    }
 
-  mta := TRUE;
+    if (rnd(1, RIFT_RISK) <= 5)
+    {
+        rift_failure(targ);
+        quit;
+    }
 
-/* This spell currently allows people to tele to the room/etc of
-   a target mob or object even if that mob or object is notele. To
-   disable this, uncomment the following lines. - Eirinn */
+    if (self.zoneidx=="g_q")
+    {
+        act ("$1n is struck by lightning.", A_ALWAYS, self,null,null,TO_ROOM);
+        self.mana:=0;
+        position_update(self);
+        quit;
+    }
 
-   if (targ.flags & UNIT_FL_NO_TELEPORT)
-  {
-    mta := FALSE;
-    goto check_it;
-  }
+    if (targ.outside == self.outside)
+    {
+        act("$3n is right here!", A_ALWAYS, self, null, targ, TO_CHAR);
+        goto end;
+    }
+
+    mta := may_tele_away(self);
+    if (not mta)
+    {
+        act("Something prevents you from teleporting from here.", A_ALWAYS, self, null, null, TO_CHAR);
+        goto end;
+    }
+
+    mta := TRUE;
+
+    /* This spell currently allows people to tele to the room/etc of
+    a target mob or object even if that mob or object is notele. To
+    disable this, uncomment the following lines. - Eirinn */
+
+    if (targ.flags & UNIT_FL_NO_TELEPORT)
+    {
+        mta := FALSE;
+        goto check_it;
+    }
 
 
-  dest := targ;
-  while (dest.type != UNIT_ST_ROOM)
-     dest := dest.outside;
+    dest := targ;
+    while (dest.type != UNIT_ST_ROOM)
+    dest := dest.outside;
 
-  if (dest.flags & UNIT_FL_NO_TELEPORT)
+    if (dest.flags & UNIT_FL_NO_TELEPORT)
         mta := FALSE;
 
-:check_it:
-  if (not mta)
-      {
-  /* Man, look at that act. I wonder what dipshit wrote it. If you ever
-     happen to read this, you should be using A_ALWAYS. */
+    :check_it:
+    if (not mta)
+    {
+        /* Man, look at that act. I wonder what dipshit wrote it. If you ever
+        happen to read this, you should be using A_ALWAYS. */
 
-        act("Something prevents you from teleporting to there.",
-            A_ALWAYS, self, null, null, TO_CHAR);
+        act("Something prevents you from teleporting to there.", A_ALWAYS, self, null, null, TO_CHAR);
         goto end;
-      }
+    }
 
-if (self.type==UNIT_ST_PC)
-if (not(paycheck(self,dest))){
-        act("You don't have access to that location, type 'help donation'.",
-            A_SOMEONE, self, null, null, TO_CHAR);
-        goto end;
-      }
+    if (self.type==UNIT_ST_PC)
+    {
+        if (not(paycheck(self,dest)))
+        {
+            act("You don't have access to that location, type 'help donation'.", A_SOMEONE, self, null, null, TO_CHAR);
+            goto end;
+        }
+    }
 
-  if ((dest.movement == SECT_WATER_SWIM) or
-      (dest.movement == SECT_WATER_SAIL))
-  {
+    if ((dest.movement == SECT_WATER_SWIM) or (dest.movement == SECT_WATER_SAIL))
+    {
     act("You sense a watery grave for yourself should you appear " +
         "there.",
         A_ALWAYS, self, null, null, TO_CHAR);
     goto end;
-  }
+    }
 
-if (self.master)        /* Bob is not a leader */
+    if (self.master)        /* Bob is not a leader */
     {
     if (self.master.master) /* Bob's leader cannot be group leader */
         {
@@ -3422,7 +3423,7 @@ if (self.master)        /* Bob is not a leader */
         }
     }
 
-else        /* Bob is a leader */
+    else        /* Bob is a leader */
     {
     mast := self;
 
@@ -3445,20 +3446,20 @@ else        /* Bob is a leader */
     }
 
 
-if (self.mana < (kids * 10)) /* 10 mana per grouped char */
+    if (self.mana < (kids * 10)) /* 10 mana per grouped char */
     {
     act("You have insufficient mana to teleport everyone in your group.",
         A_ALWAYS, self, null, null, TO_CHAR);
     goto tele_self;
     }
 
-self.mana:= self.mana - (kids * 10);
+    self.mana:= self.mana - (kids * 10);
 
-if (in_gr == FALSE)
+    if (in_gr == FALSE)
     goto tele_self;
 
-foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
-	{
+    foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+    {
 
     if (u == self)
         continue;
@@ -3489,17 +3490,17 @@ foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
     act("$3n vanishes in a flash of blue light!",
         A_ALWAYS, self, null, u, TO_CHAR);
     dilcopy("indiv_tele@spells("+dest.nameidx + "@" + dest.zoneidx +
-                               "," + self.name +")", u);
+                                "," + self.name +")", u);
     }
 
-/*  act("You clap your hands and find yourself at " + targ.name + ".",
-      A_ALWAYS, self, null, null, TO_CHAR);*/
-:tele_self:
-dilcopy("indiv_tele@spells("+dest.nameidx + "@" + dest.zoneidx +
+    /*  act("You clap your hands and find yourself at " + targ.name + ".",
+    A_ALWAYS, self, null, null, TO_CHAR);*/
+    :tele_self:
+    dilcopy("indiv_tele@spells("+dest.nameidx + "@" + dest.zoneidx +
     "," + self.name +")", self);
 
-:end:
-quit;
+    :end:
+    quit;
 
 }
 dilend /* group_tele */

@@ -13,9 +13,14 @@
 
 #include <cstring>
 
+// Returns TRUE if you can go into "to"
+//
 int pay_point_charlie(unit_data *ch, unit_data *to)
 {
-    if (ch->isPC() && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
+    if (g_cServerConfig.isAccounting() == false)
+        return TRUE;
+
+    if (ch->isPC() && IS_MORTAL(ch))
     {
         if (CHAR_DESCRIPTOR(ch))
         {
