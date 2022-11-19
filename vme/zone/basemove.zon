@@ -3309,7 +3309,7 @@ code
     /* If it cant be opened, let the player know */
     if (not isset(item.openflags, EX_OPEN_CLOSE))
     {
-        act("You cannot do that.", A_ALWAYS, self, null, null, TO_CHAR);
+        act("You cannot open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
         return;
     }
 
@@ -3370,7 +3370,7 @@ code
     /* If not a room, no doors */
     if (item.type != UNIT_ST_ROOM)
     {
-        act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+        act("You cannot open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
         return;
     }
 
@@ -3384,13 +3384,13 @@ code
 
     if (not isset(item.exit_info[dir], EX_CLOSED))
     {
-        act("But it is already opened!", A_ALWAYS, self, null, null, TO_CHAR);
+        act("But $2n is already opened!", A_ALWAYS, self, item, null, TO_CHAR);
         return;
     }
 
     if (isset(item.exit_info[dir], EX_LOCKED))
     {
-        act("It seems to be locked.", A_ALWAYS, self, null, null, TO_CHAR);
+        act("$2n seems to be locked.", A_ALWAYS, self, item, null, TO_CHAR);
         return;
     }
 
