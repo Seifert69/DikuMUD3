@@ -5094,6 +5094,7 @@ to the booth."
 northwest to market;
 movement SECT_CITY
 gmap(466,720)
+ALWAYS_LIGHT
 
 extra {"old barrels","barrels","barrel","vegetables"}
 "One of the barrels is smashed, rotting heads of cabbage lying in the

@@ -235,19 +235,25 @@ dilend
 
 /* Maintains the counts of gift types loaded so that mud 
    does not become flooded with presents in low population hours. */
+// i must be [0..11]
+//
 dilbegin string gift_name(i:integer);
 var
 	gifts	:	stringlist;
 code
 {
-	gifts:={"boom_box2","boom_box3","boom_box4","boom_box2",
+	gifts:={"boom_box2","boom_box2","boom_box4","boom_box2",
 		"boom_box4","boom_box3","boom_box2","boom_box3",
 		"boom_box4","boom_box3","boom_box2","boom_box4"};
 	return (gifts.[i]);
 }
 dilend
 
-dilbegin gift_func(count:integer,i:integer);
+
+// count must be in [0..11] and will load a random gift based on the number
+// i is 0 for placed in random npc, 1 random room
+//
+dilbegin gift_func(count:integer, i:integer);
 external
 	string gift_name (i:integer);
 var
@@ -257,15 +263,15 @@ var
 	gift	:	unitptr;
 code
 {
-  namer:=gift_name(count);
-  gift:=load (namer+"@holiday22");
+    namer:=gift_name(count);
+    gift:=load(namer+"@holiday22");
 
-	if ((gift.nameidx == "boom_box2") and (gift.loadcount > 250))
+    if (gift.loadcount > 250)
 	{
 		destroy(gift);
 		return;
 	}
-	else if ((gift.nameidx == "boom_box3") and (gift.loadcount > 175))
+	else if ((gift.nameidx == "boom_box3") and (gift.loadcount > 100))
 	{
 		destroy(gift);
 		return;
@@ -275,13 +281,13 @@ code
 		destroy(gift);
 		return;
 	}
+
 	
 :loop:
-
 	if (i==0)
-		place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_NPC);
+		place:=findrndunit(self,FIND_UNIT_WORLD,UNIT_ST_NPC);
 	else
-		place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
+		place:=findrndunit(self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
 
 	if ((place==null) or (place==self))
 		goto loop;
@@ -294,59 +300,63 @@ code
 			goto loop;
 		item:=item.outside;
 	}
-	link (gift,place);
-	return ;
+	link(gift,place);
+
+	return;
 }
 dilend   
 
-/*routine to load the gifts */
+
+// Once every 20 minutes, try to load a lot of gifts randomly in the world
+//
 dilbegin load_gift();
 external
-	gift_func (count:integer,i:integer);
+	gift_func(count:integer,i:integer);
 var
 	count:integer;
 	exclude:integer;
 code
 {     
-	:start:
-	exclude:=rnd(0,11);
-	count:=-1;
-	heartbeat:=PULSE_SEC*3;
-	while (count <12)
+:start:
+	heartbeat := PULSE_SEC*3;
+	exclude := rnd(0,11);
+	count := 0;
+	while (count < 12)
 	{
-		count:=count+1;
-		if (count==12)
-			continue;
-		if (exclude==count)
+		if (exclude==count) // Place in room
 		{
-			gift_func(exclude,1);
+			gift_func(count, 1);
 			pause;
-			gift_func(exclude,1);
+			gift_func(count, 1);
 			pause;
-			gift_func(exclude,1);
+			gift_func(count, 1);
 			pause;
-			gift_func(exclude,1);
+			gift_func(count, 1);
 			pause;
 		}
 		else
 		{
-			gift_func(count,0);
+			gift_func(count, 0);
 			pause;
-			gift_func(count,0);
+			gift_func(count, 0);
 			pause;
-			gift_func(count,0);
+			gift_func(count, 0);
 			pause;
-			gift_func(count,0);
+			gift_func(count, 0);
 			pause;
 		}
+
+		count := count + 1;
 	}
-	heartbeat:=PULSE_SEC*1200; heartbeat:=PULSE_SEC*1200;
-	wait (SFB_TICK,TRUE);
+
+	heartbeat:=PULSE_SEC*1200; 
+	wait(SFB_TICK,TRUE);
 	goto start;
 }
 dilend  
 
- /*Heal routine for newbie candy can presents (under level 50) */
+
+/* Heal routine for newbie candy can presents (under level 50) */
 dilbegin candy_heal(medi : unitptr, targ : unitptr, hm : integer);
 code
 {
