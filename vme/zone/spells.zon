@@ -8035,49 +8035,54 @@ code
    quit;
 }
 dilend
-dilbegin sacred(medi:unitptr, tgt : unitptr, arg : string,
-		    hm : integer, effect : string);
-   var
+
+//
+//
+dilbegin sacred(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
+var
     rm:unitptr;
 code
 {
-rm:=self.outside;
-secure (rm,dend);
-if (rm.type!=UNIT_ST_ROOM)
-  {
-  act ("You must have a big area to cast this spell.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  unsecure (rm);
-  quit;
-  }
-   if (isset(rm.flags, UNIT_FL_SACRED))
-     quit;
+    rm:=self.outside;
+    secure (rm,dend);
+    if (rm.type!=UNIT_ST_ROOM)
+    {
+        act ("You must have a big area to cast this spell.", A_ALWAYS,self,null,null,TO_CHAR);
+        unsecure (rm);
+        quit;
+    }
 
-   if (hm < 0)
-     quit;
+    if (isset(rm.flags, UNIT_FL_SACRED))
+        quit;
 
-      hm :=(4*self.spells[SPL_SACRED])+100;
-dilcopy("spl_sacred@spells("+itoa(hm)+")",rm);
-unsecure (rm);
-   quit;
-   :dend:
-   quit;
+    if (hm < 0)
+        quit;
+
+    hm :=(4*self.spells[SPL_SACRED])+100;
+    dilcopy("spl_sacred@spells("+itoa(hm)+")",rm);
+    unsecure (rm);
+    quit;
+
+:dend:
+    quit;
 }
 dilend
 
-dilbegin spl_sacred (time:integer);
+
+
+dilbegin spl_sacred(time : integer);
 code
 {
-  set (self.flags,UNIT_FL_SACRED);
-  act ("A peaceful feeling settles over this area.",
-  A_ALWAYS,self.inside,null,null,TO_ALL);
-  heartbeat:=PULSE_SEC*time;
-  wait (SFB_TICK, TRUE);
-  unset (self.flags,UNIT_FL_SACRED);
-  act ("You feel the veil of protection over this area lift.", A_ALWAYS,self.inside,null,null,TO_ALL);
-  quit;
-  }
-  dilend
+    set(self.flags, UNIT_FL_SACRED);
+    act("A peaceful feeling settles over this area.", A_ALWAYS,self.inside,null,null,TO_ALL);
+    heartbeat := PULSE_SEC*time;
+    wait(SFB_TICK, TRUE);
+    unset(self.flags, UNIT_FL_SACRED);
+    act("You feel the veil of protection over this area lift.", A_ALWAYS,self.inside,null,null,TO_ALL);
+
+    quit;
+}
+dilend
 
 
 dilbegin cont_light(medi:unitptr, tgt : unitptr, arg : string,
