@@ -18,8 +18,9 @@
 #define SKILL_MAX 500 /* Maximum of any skill / ability */
 #define AVERAGE_SKILL_COST 10
 #define HITPOINTS_BASE 125
-#define ABILITY_POINT_FACTOR (4) /* Abilitypoints multiplied by this */
-#define SKILL_POINT_FACTOR (8)   /* Skillpoints   multiplied by this */
+#define ABILITY_POINT_FACTOR (4) // Abilitypoints multiplied by this, for a total of 4,000 ability points at level 100
+                                 // A more forgiving approach might be giving 5,000 ability points at level 100, see excel.
+#define SKILL_POINT_FACTOR (8)   // Skillpoints   multiplied by this
 
 /* ..................................................................... */
 /*                           A R M O U R S                               */

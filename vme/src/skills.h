@@ -35,8 +35,11 @@ public:
     sbit8 *racial[PC_RACE_MAX];
 };
 
-struct profession_cost
+class profession_cost
 {
+public:
+    int getProfessionBonus(class unit_data *pc);
+
     ubit16 sanity; ///< Used for sanity check
     ubit8 min_level;
     ubit8 min_abil[ABIL_TREE_MAX];

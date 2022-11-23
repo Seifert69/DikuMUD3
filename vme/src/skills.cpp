@@ -86,6 +86,26 @@ wpn_info_type g_wpn_info[WPN_TREE_MAX];
 // class skill_collection g_SkiColl(SKI_TREE_MAX + 1);
 // class skill_collection g_SplColl(SPL_TREE_MAX + 1);
 
+
+int profession_cost::getProfessionBonus(class unit_data *pc)
+{
+    if (!pc->isPC())
+    {
+        slog(LOG_ALL, 0, "Error: getProfessionCost called with non-PC");
+        return 0;
+    }
+
+    int professionNo = PC_PROFESSION(pc);
+
+    if (!is_in(professionNo, 0, PROFESSION_MAX))
+    {
+        slog(LOG_ALL, 0, "Error: getProfessionCost non valid profession");
+        return 0;
+    }
+
+    return profession_cost[professionNo];
+}
+
 /* ===================================================================== */
 
 skill_collection::skill_collection(int nSize)
