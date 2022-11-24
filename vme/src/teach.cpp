@@ -868,13 +868,18 @@ int practice(unit_data *teacher,
     int ms = max_skill_limit(pColl->prof_table[pckt->teaches[teach_index].node].getProfessionBonus(pupil), pColl->racial[CHAR_RACE(pupil)][pckt->teaches[teach_index].node]);
     if (pTrainValues->values[pckt->teaches[teach_index].node] >= ms)
     {
-        act("$1n tells you, 'You've reached your personal potential for $2t.'",
-            A_ALWAYS,
-            teacher,
-            pColl->text[pckt->teaches[teach_index].node],
-            pupil,
-            TO_VICT);
-        return TRUE;
+        // This is a temporary bypass. Characters that has this $value will not be affected by the personal max
+        // for the time being.
+        if (PC_INFO(pupil).find_raw("$gooffix") == nullptr)
+        {
+            act("$1n tells you, 'You've reached your profession's full potential for $2t.'",
+                A_ALWAYS,
+                teacher,
+                pColl->text[pckt->teaches[teach_index].node],
+                pupil,
+                TO_VICT);
+            return TRUE;
+        }
     }
 
     cost = actual_cost(pColl->prof_table[pckt->teaches[teach_index].node].getProfessionBonus(pupil),
