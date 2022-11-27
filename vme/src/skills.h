@@ -38,7 +38,7 @@ public:
 class profession_cost
 {
 public:
-    int getProfessionBonus(class unit_data *pc);
+    int getProfessionBonus(unit_data *pc);
 
     ubit16 sanity; ///< Used for sanity check
     ubit8 min_level;

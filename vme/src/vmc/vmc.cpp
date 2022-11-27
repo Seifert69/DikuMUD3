@@ -356,14 +356,12 @@ void check_unique_ident(unit_data *u)
     ident_names = add_name(UNIT_IDENT(u), ident_names);
 }
 
-
 ubit32 timecrc()
 {
-    struct timespec spec;
+    timespec spec;
     clock_gettime(CLOCK_REALTIME, &spec);
-    return (ubit32) ((spec.tv_sec * 1000) + (spec.tv_nsec / 1000000));
+    return (ubit32)((spec.tv_sec * 1000) + (spec.tv_nsec / 1000000));
 }
-
 
 /*
    #define write_unit(x,y,z) fprintf(stderr, "Writing: %s\n", z)
@@ -453,8 +451,8 @@ void dump_zone(char *prefix)
     // Begin writing the data
     //
     //#ifdef WRITE_TEST
-    //write_unit(fl, zone.z_rooms, UNIT_IDENT(zone.z_rooms));
-    //exit(10);
+    // write_unit(fl, zone.z_rooms, UNIT_IDENT(zone.z_rooms));
+    // exit(10);
     //#endif
     fwrite(g_zone.z_zone.name, sizeof(char), strlen(g_zone.z_zone.name) + 1, fl);
     fwrite(&g_zone.z_zone.weather, sizeof(int), 1, fl);
@@ -495,7 +493,7 @@ void dump_zone(char *prefix)
         fwrite("", sizeof(char), 1, fl);
     }
 
-    const ubit32 filecrc = (ubit32) timecrc();
+    const ubit32 filecrc = (ubit32)timecrc();
 
     /* write DIL templates */
     for (tmpl = g_zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
@@ -509,7 +507,6 @@ void dump_zone(char *prefix)
     {
         error(HERE, "Failed to fwrite() end of DIL templates");
     }
-
 
     write_dot(prefix);
     for (u = g_zone.z_rooms; u; u = u->getNext())

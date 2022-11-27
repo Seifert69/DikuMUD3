@@ -30,11 +30,11 @@
 
 #include <unistd.h>
 
-#include <boost/algorithm/string.hpp>
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+
+#include <boost/algorithm/string.hpp>
 
 #define UT_ROOM (1 << 0)
 #define UT_OBJ (1 << 1)
@@ -363,23 +363,21 @@ int get_type(char *typdef, const char *structure[])
     return search_block_set(typdef, structure, FALSE);
 }
 
-
-
-void insert_comma_names(class cNamelist *nl,  char *argument)
+void insert_comma_names(cNamelist *nl, char *argument)
 {
     if (str_is_empty(argument))
         return;
 
-    argument = (char *) skip_spaces(argument);
+    argument = (char *)skip_spaces(argument);
     strip_trailing_blanks(argument);
     str_remspc(argument);
 
     std::string text = argument;
     std::vector<std::string> results;
 
-    boost::split(results, text, [](char c){return c == ',';});
+    boost::split(results, text, [](char c) { return c == ','; });
 
-    for (int i=0; i < (int) results.size(); i++)
+    for (int i = 0; i < (int)results.size(); i++)
     {
         if (!nl->IsName(results[i].c_str()) && !str_is_empty(results[i].c_str()))
         {
@@ -388,40 +386,38 @@ void insert_comma_names(class cNamelist *nl,  char *argument)
     }
 }
 
-
-void insert_comma_ints(class cintlist *il, char *argument)
+void insert_comma_ints(cintlist *il, char *argument)
 {
     if (str_is_empty(argument))
         return;
 
-    argument = (char *) skip_spaces(argument);
+    argument = (char *)skip_spaces(argument);
     strip_trailing_blanks(argument);
     str_remspc(argument);
 
     std::string text = argument;
     std::vector<std::string> results;
 
-    boost::split(results, text, [](char c){return c == ',';});
+    boost::split(results, text, [](char c) { return c == ','; });
 
-    for (int i=0; i < (int) results.size(); i++)
+    for (int i = 0; i < (int)results.size(); i++)
     {
         if (!str_is_empty(results[i].c_str()))
-           il->Append(atoi(results[i].c_str()));
+            il->Append(atoi(results[i].c_str()));
     }
 }
 
-void insert_comma_semicolon(class extra_descr_data *ed, char *argument)
+void insert_comma_semicolon(extra_descr_data *ed, char *argument)
 {
-   std::string text = argument;
-   std::vector<std::string> results;
+    std::string text = argument;
+    std::vector<std::string> results;
 
-   boost::split(results, text, [](char c){return c == ';';});
+    boost::split(results, text, [](char c) { return c == ';'; });
 
-   insert_comma_names(&ed->names, (char *) results[0].c_str());
-   if (results.size() >= 2)
-      insert_comma_ints(&ed->vals, (char *)  results[1].c_str());
+    insert_comma_names(&ed->names, (char *)results[0].c_str());
+    if (results.size() >= 2)
+        insert_comma_ints(&ed->vals, (char *)results[1].c_str());
 }
-
 
 /* modification of anything in units */
 void do_set(unit_data *ch, char *argument, const command_info *cmd)
@@ -509,7 +505,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    argument = (char *) skip_spaces(argument);
+    argument = (char *)skip_spaces(argument);
 
     /* read in field parameters */
     switch (unit_field_data[type].atype)
@@ -673,7 +669,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Missing string argument.<br/>", ch);
                 return;
             }
-            argument = (char *) skip_spaces(argument);
+            argument = (char *)skip_spaces(argument);
         }
         break;
 
@@ -729,7 +725,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
     }
 
-    argument = (char *) skip_spaces(argument);
+    argument = (char *)skip_spaces(argument);
     strip_trailing_spaces(argument);
 
     /* insert data read in argument */
@@ -752,7 +748,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Must have minimum of two names<br/>", ch);
                 return;
             }
-            argument = (char *) skip_spaces(argument);
+            argument = (char *)skip_spaces(argument);
             unt->getNames().RemoveName(argument);
             send_to_char("Name may have been deleted.<br/>", ch);
             return;
@@ -770,7 +766,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 4: /* "add-extra" */
-            str_next_word_delim(argument, strarg,',');
+            str_next_word_delim(argument, strarg, ',');
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
             if ((ed = unit_find_extra(strarg, unt)) == nullptr)
@@ -1219,7 +1215,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 60: /* "add-quest" */
-            str_next_word_delim(argument, strarg,',');
+            str_next_word_delim(argument, strarg, ',');
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
             if ((ed = PC_QUEST(unt).find_raw(strarg)) == nullptr)
@@ -1265,7 +1261,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             return;
 
         case 63: /* "add-info" */
-            str_next_word_delim(argument, strarg,',');
+            str_next_word_delim(argument, strarg, ',');
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
             if ((ed = PC_INFO(unt).find_raw(strarg)) == nullptr)
