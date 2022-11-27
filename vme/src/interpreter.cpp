@@ -208,8 +208,8 @@ static void dump_command_history(void)
         slog(LOG_ALL,
              0,
              "CMD %s@%s [%s]",
-             command_history_data[i].pcname ? command_history_data[i].pcname : command_history_data[i].fi->getName(),
-             command_history_data[i].pcname ? "" : command_history_data[i].fi->getZone()->getName(),
+             command_history_data[i].pcname[0] ? command_history_data[i].pcname : command_history_data[i].fi->getName(),
+             command_history_data[i].pcname[0] ? "" : command_history_data[i].fi->getZone()->getName(),
              command_history_data[i].str);
         i = (i + 1) % MAX_DEBUG_HISTORY;
     }

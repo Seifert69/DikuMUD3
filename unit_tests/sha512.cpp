@@ -6,7 +6,10 @@
 
 sha512::sha512()
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     if (SHA512_Init(&context) == 0)
+#pragma GCC diagnostic pop
     {
         throw std::logic_error("SHA512_Init() failed");
     }
@@ -27,7 +30,10 @@ void sha512::generate(const std::string &filename)
     while (filesize >= blocksize)
     {
         in.read(reinterpret_cast<char *>(data_block.data()), blocksize);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         if (SHA512_Update(&context, data_block.data(), blocksize) == 0)
+#pragma GCC diagnostic pop
         {
             throw std::logic_error("SHA512_Update() failed");
         }
@@ -37,13 +43,19 @@ void sha512::generate(const std::string &filename)
     if (filesize > 0)
     {
         in.read(reinterpret_cast<char *>(data_block.data()), filesize);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         if (SHA512_Update(&context, data_block.data(), filesize) == 0)
+#pragma GCC diagnostic pop
         {
             throw std::logic_error("SHA512_Update() failed");
         }
     }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     if (SHA512_Final(checksum.data(), &context) == 0)
+#pragma GCC diagnostic pop
     {
         throw std::logic_error("SHA512_Final() failed");
     }
