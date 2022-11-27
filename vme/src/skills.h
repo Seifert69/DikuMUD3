@@ -29,7 +29,7 @@ public:
     const char **gettext();
     skill_collection(int nSize);
 
-    profession_cost *prof_table;
+    std::unique_ptr<profession_cost[]> prof_table;
     const char **text;
     tree_type *tree;
     sbit8 *racial[PC_RACE_MAX];
@@ -38,12 +38,16 @@ public:
 class profession_cost
 {
 public:
+    void setProfessionBonus(int professionIndex, sbit8 value);
+    int getProfessionBonus(int professionIndex);
     int getProfessionBonus(unit_data *pc);
 
     ubit16 sanity; ///< Used for sanity check
     ubit8 min_level;
     ubit8 min_abil[ABIL_TREE_MAX];
-    sbit8 profession_cost[PROFESSION_MAX]; ///< 0 is middle, +1 easier to learn, -1 more dificult, etc.
+
+private:    
+    sbit8 profession_bonus[PROFESSION_MAX]{}; ///< 0 is middle, +1 easier to learn, -1 more dificult, etc.
 };
 
 /* ---------------- COMBAT MESSAGE SYSTEM -------------------- */

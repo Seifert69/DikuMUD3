@@ -92,8 +92,8 @@ void skill_dump_alternate()
             str += diku::format_to_str(".profession %s%s = %s%d\n",
                                        g_professions[j],
                                        spc(12 - strlen(g_professions[j])),
-                                       (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                                       g_SkiColl.prof_table[i].profession_cost[j]);
+                                       (g_SkiColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "",
+                                       g_SkiColl.prof_table[i].getProfessionBonus(j));
             /*if (g_SkiColl.prof_table[i].min_level > 0)
             {
                 s printf(buf, "restrict level          = %d\n", g_SkiColl.prof_table[i].min_level);
@@ -108,7 +108,7 @@ void skill_dump_alternate()
                     str.append(buf);
                 }*/
 
-            vect.push_back(std::make_pair(g_SkiColl.prof_table[i].profession_cost[j], str));
+            vect.push_back(std::make_pair(g_SkiColl.prof_table[i].getProfessionBonus(j), str));
         }
 
         std::sort(vect.begin(), vect.end(), pairISCompare);
@@ -152,7 +152,7 @@ void skill_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_SkiColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_SkiColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "", g_SkiColl.prof_table[i].getProfessionBonus(j));
         }
 
         printf("%s,", (g_SkiColl.prof_table[i].min_level == 0) ? "" : itoa(g_SkiColl.prof_table[i].min_level));
@@ -432,7 +432,7 @@ void command_read()
             }
             else
             {
-                g_SkiColl.prof_table[idx].profession_cost[ridx] = dummy;
+                g_SkiColl.prof_table[idx].setProfessionBonus(ridx, dummy);
             }
             continue;
         }

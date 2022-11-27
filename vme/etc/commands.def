@@ -1636,7 +1636,7 @@ command        = kick
 minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = kick@skills
-type           = TYPE_SKILL
+type           = 0 // TYPE_SKILL
 //_CUTBEGIN kick
 profession fighter = 0
 profession knight = -1
@@ -1662,7 +1662,7 @@ command        = elbow
 minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = elbow@skills
-type = TYPE_SKILL
+type           = 0 // TYPE_SKILL
 //_CUTBEGIN elbow
 profession fighter = 0
 profession knight = -1
@@ -1688,7 +1688,7 @@ command        = knee
 minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = knee@skills
-type = TYPE_SKILL
+type           = 0 // TYPE_SKILL
 //_CUTBEGIN knee
 profession fighter = 0
 profession knight = -1
@@ -1714,7 +1714,7 @@ command        = hit
 minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = punch@skills
-type = TYPE_SKILL
+type           = 0 // TYPE_SKILL
 //_CUTBEGIN hit
 profession fighter = -7
 profession knight = -7
@@ -1741,7 +1741,7 @@ command        = punch
 minpos         = POSITION_FIGHTING
 turns          = PULSE_VIOLENCE/2
 func           = punch@skills
-type = TYPE_SKILL
+type           = 0 // TYPE_SKILL
 //_CUTBEGIN punch
 profession fighter = -7
 profession knight = -7

@@ -759,7 +759,7 @@ static void spell_read()
             }
             else
             {
-                g_SplColl.prof_table[idx].profession_cost[ridx] = dummy;
+                g_SplColl.prof_table[idx].setProfessionBonus(ridx, dummy);
             }
         }
         else if (strncmp(pTmp, "restrict ", 9) == 0)
@@ -921,7 +921,7 @@ static void spell_init()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            g_SplColl.prof_table[i].profession_cost[j] = -7;
+            g_SplColl.prof_table[i].setProfessionBonus(j, -7);
         }
 
         if ((i <= LAST_SPELL) && (g_SplColl.prof_table[i].sanity != i))
@@ -969,7 +969,7 @@ void spell_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_SplColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_SplColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "", g_SplColl.prof_table[i].getProfessionBonus(j));
         }
 
         printf("%s,", (g_SplColl.prof_table[i].min_level == 0) ? "" : itoa(g_SplColl.prof_table[i].min_level));
@@ -1020,8 +1020,8 @@ void spell_dump_alternate()
             str += diku::format_to_str(".profession %s%s = %s%d\n",
                                        g_professions[j],
                                        spc(12 - strlen(g_professions[j])),
-                                       (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                                       g_SplColl.prof_table[i].profession_cost[j]);
+                                       (g_SplColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "",
+                                       g_SplColl.prof_table[i].getProfessionBonus(j));
 
             /*if (g_SplColl.prof_table[i].min_level > 0)
             {
@@ -1036,7 +1036,7 @@ void spell_dump_alternate()
                         (g_SplColl.prof_table[i].min_abil[k] >= 0) ? "+" : "", g_SplColl.prof_table[i].min_abil[k]);
                     str.append(buf);
                 }*/
-            vect.push_back(std::make_pair(g_SplColl.prof_table[i].profession_cost[j], str));
+            vect.push_back(std::make_pair(g_SplColl.prof_table[i].getProfessionBonus(j), str));
         }
         std::sort(vect.begin(), vect.end(), pairISCompare);
         for (auto it = vect.begin(); it != vect.end(); ++it)

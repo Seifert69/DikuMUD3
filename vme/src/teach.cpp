@@ -1530,13 +1530,13 @@ int teach_init(spec_arg *sarg)
                 // Copy in all abilities for profession
                 for (n = 0; packet->text[n] != nullptr; n++)
                 {
-                    if ((g_AbiColl.prof_table[n].profession_cost[nProfession] >= -3) && !g_AbiColl.tree[n].bAutoTeacherNoAdd)
+                    if ((g_AbiColl.prof_table[n].getProfessionBonus(nProfession) >= -3) && !g_AbiColl.tree[n].bAutoTeacherNoAdd)
                     {
                         a_skill.min_glevel = 0;
-                        a_skill.max_skill = max_skill_limit(g_AbiColl.prof_table[n].profession_cost[nProfession], 0);
+                        a_skill.max_skill = max_skill_limit(g_AbiColl.prof_table[n].getProfessionBonus(nProfession), 0);
                         a_skill.node = n;
                         a_skill.min_cost_per_point = 10;
-                        a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_AbiColl.prof_table[n].profession_cost[nProfession], 0);
+                        a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_AbiColl.prof_table[n].getProfessionBonus(nProfession), 0);
                         packet->teaches[count - 1] = a_skill;
 
                         count++;
@@ -1558,13 +1558,13 @@ int teach_init(spec_arg *sarg)
                 // Copy in all abilities for profession
                 for (n = 0; packet->text[n] != nullptr; n++)
                 {
-                    if (g_SkiColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_SkiColl.tree[n].bAutoTeacherNoAdd)
+                    if (g_SkiColl.prof_table[n].getProfessionBonus(nProfession) >= -3 && !g_SkiColl.tree[n].bAutoTeacherNoAdd)
                     {
                         a_skill.min_glevel = 0;
-                        a_skill.max_skill = max_skill_limit(g_SkiColl.prof_table[n].profession_cost[nProfession], 0);
+                        a_skill.max_skill = max_skill_limit(g_SkiColl.prof_table[n].getProfessionBonus(nProfession), 0);
                         a_skill.node = n;
                         a_skill.min_cost_per_point = 10;
-                        a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_SkiColl.prof_table[n].profession_cost[nProfession], 0);
+                        a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_SkiColl.prof_table[n].getProfessionBonus(nProfession), 0);
                         packet->teaches[count - 1] = a_skill;
 
                         count++;
@@ -1586,13 +1586,13 @@ int teach_init(spec_arg *sarg)
                 // Copy in all abilities for profession
                 for (n = 0; packet->text[n] != nullptr; n++)
                 {
-                    if (g_SplColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_SplColl.tree[n].bAutoTeacherNoAdd)
+                    if (g_SplColl.prof_table[n].getProfessionBonus(nProfession) >= -3 && !g_SplColl.tree[n].bAutoTeacherNoAdd)
                     {
                         a_skill.min_glevel = 0;
-                        a_skill.max_skill = max_skill_limit(g_SplColl.prof_table[n].profession_cost[nProfession], 0);
+                        a_skill.max_skill = max_skill_limit(g_SplColl.prof_table[n].getProfessionBonus(nProfession), 0);
                         a_skill.node = n;
                         a_skill.min_cost_per_point = 10;
-                        a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_SplColl.prof_table[n].profession_cost[nProfession], 0);
+                        a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_SplColl.prof_table[n].getProfessionBonus(nProfession), 0);
                         packet->teaches[count - 1] = a_skill;
 
                         count++;
@@ -1614,14 +1614,14 @@ int teach_init(spec_arg *sarg)
                 // Copy in all abilities for profession
                 for (n = 0; packet->text[n] != nullptr; n++)
                 {
-                    if (g_WpnColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_WpnColl.tree[n].bAutoTeacherNoAdd)
+                    if (g_WpnColl.prof_table[n].getProfessionBonus(nProfession) >= -3 && !g_WpnColl.tree[n].bAutoTeacherNoAdd)
                     {
                         a_skill.min_glevel = 0;
-                        a_skill.max_skill = max_skill_limit(g_WpnColl.prof_table[n].profession_cost[nProfession], 0);
+                        a_skill.max_skill = max_skill_limit(g_WpnColl.prof_table[n].getProfessionBonus(nProfession), 0);
                         a_skill.node = n;
                         a_skill.min_cost_per_point = 1;
                         a_skill.max_cost_per_point =
-                            MAX(1, 1000 + -100 * max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession], 0));
+                            MAX(1, 1000 + -100 * max_skill_mod(g_WpnColl.prof_table[n].getProfessionBonus(nProfession), 0));
                         packet->teaches[count - 1] = a_skill;
 
                         count++;

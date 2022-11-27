@@ -86,6 +86,18 @@ wpn_info_type g_wpn_info[WPN_TREE_MAX];
 // class skill_collection g_SkiColl(SKI_TREE_MAX + 1);
 // class skill_collection g_SplColl(SPL_TREE_MAX + 1);
 
+
+int profession_cost::getProfessionBonus(int professionIndex)
+{
+    if (!is_in(professionIndex, 0, PROFESSION_MAX-1))
+    {
+        slog(LOG_ALL, 0, "Error: getProfessionBonus non valid profession");
+        return 0;
+    }
+
+    return profession_bonus[professionIndex];
+}
+
 int profession_cost::getProfessionBonus(unit_data *pc)
 {
     if (!pc->isPC())
@@ -94,22 +106,25 @@ int profession_cost::getProfessionBonus(unit_data *pc)
         return 0;
     }
 
-    int professionNo = PC_PROFESSION(pc);
+    return getProfessionBonus(PC_PROFESSION(pc));
+}
 
-    if (!is_in(professionNo, 0, PROFESSION_MAX))
+void profession_cost::setProfessionBonus(int professionIndex, sbit8 value)
+{
+    if (!is_in(professionIndex, 0, PROFESSION_MAX-1))
     {
-        slog(LOG_ALL, 0, "Error: getProfessionCost non valid profession");
-        return 0;
+        slog(LOG_ALL, 0, "Error: getProfessionBonus non valid profession");
+        return;
     }
 
-    return profession_cost[professionNo];
+    profession_bonus[professionIndex] = value;
 }
 
 /* ===================================================================== */
 
 skill_collection::skill_collection(int nSize)
 {
-    CREATE(prof_table, profession_cost, nSize);
+    prof_table = std::make_unique<profession_cost[]>(nSize);
     CREATE(text, const char *, nSize);
     assert(this->text);
     CREATE(tree, tree_type, nSize);
@@ -636,7 +651,7 @@ static void profession_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = (char *)skip_blanks(pCh + 1);
+            pCh = (char *) skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
             str_lower(pTmp);
         }
@@ -715,7 +730,7 @@ static void race_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = (char *)skip_blanks(pCh + 1);
+            pCh = (char *) skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
             str_lower(pTmp);
         }
@@ -901,7 +916,7 @@ static void ability_read()
         if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
-            pCh = (char *)skip_blanks(pCh + 1);
+            pCh = (char *) skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
         }
 
@@ -991,7 +1006,7 @@ static void ability_read()
             }
             else
             {
-                g_AbiColl.prof_table[idx].profession_cost[ridx] = dummy;
+                g_AbiColl.prof_table[idx].setProfessionBonus(ridx, dummy);
             }
         }
         else
@@ -1031,7 +1046,7 @@ static void ability_init()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            g_AbiColl.prof_table[i].profession_cost[j] = -7;
+            g_AbiColl.prof_table[i].setProfessionBonus(j, -7);
         }
     }
 
@@ -1058,10 +1073,10 @@ void ability_dump_alternate()
             str += diku::format_to_str(".profession %s%s = %s%d\n",
                                        g_professions[j],
                                        spc(12 - strlen(g_professions[j])),
-                                       (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                                       g_AbiColl.prof_table[i].profession_cost[j]);
+                                       (g_AbiColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "",
+                                       g_AbiColl.prof_table[i].getProfessionBonus(j));
 
-            vect.push_back(std::make_pair(g_AbiColl.prof_table[i].profession_cost[j], str));
+            vect.push_back(std::make_pair(g_AbiColl.prof_table[i].getProfessionBonus(j), str));
 
             /// @todo This looks broken str is never used again in the old code
             if (g_AbiColl.prof_table[i].min_level > 0)
@@ -1105,7 +1120,7 @@ void ability_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_AbiColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_AbiColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "", g_AbiColl.prof_table[i].getProfessionBonus(j));
 
             // For abilities this shouldn't happen, if it does, output will break
             if (g_AbiColl.prof_table[i].min_level > 0)
@@ -1204,7 +1219,7 @@ static void weapon_read()
         }
 
         *pCh = 0;
-        pCh = (char *)skip_blanks(pCh + 1);
+        pCh = (char *) skip_blanks(pCh + 1);
         strip_trailing_blanks(pCh);
 
         str_lower(pTmp);
@@ -1348,7 +1363,7 @@ static void weapon_read()
             }
             else
             {
-                g_WpnColl.prof_table[idx].profession_cost[ridx] = dummy;
+                g_WpnColl.prof_table[idx].setProfessionBonus(ridx, dummy);
             }
         }
         else if (strncmp(pTmp, "restrict ", 9) == 0)
@@ -1531,7 +1546,7 @@ static void weapon_init()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            g_WpnColl.prof_table[i].profession_cost[j] = -7;
+            g_WpnColl.prof_table[i].setProfessionBonus(j, -7);
         }
 
         if ((i <= LAST_WEAPON) && (g_WpnColl.prof_table[i].sanity != i))
@@ -1579,7 +1594,7 @@ void weapon_dump()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            printf("%s%d,", (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_WpnColl.prof_table[i].profession_cost[j]);
+            printf("%s%d,", (g_WpnColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "", g_WpnColl.prof_table[i].getProfessionBonus(j));
         }
 
         printf("%s,", (g_WpnColl.prof_table[i].min_level == 0) ? "" : itoa(g_WpnColl.prof_table[i].min_level));
@@ -1630,10 +1645,10 @@ void weapon_dump_alternate()
             str += diku::format_to_str(".profession %s%s = %s%d\n",
                                        g_professions[j],
                                        spc(12 - strlen(g_professions[j])),
-                                       (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                                       g_WpnColl.prof_table[i].profession_cost[j]);
+                                       (g_WpnColl.prof_table[i].getProfessionBonus(j) >= 0) ? "+" : "",
+                                       g_WpnColl.prof_table[i].getProfessionBonus(j));
 
-            vect.push_back(std::make_pair(g_WpnColl.prof_table[i].profession_cost[j], str));
+            vect.push_back(std::make_pair(g_WpnColl.prof_table[i].getProfessionBonus(j), str));
 
             /*if (g_WpnColl.prof_table[i].min_level > 0)
                 printf("restrict level          = %d\n", g_WpnColl.prof_table[i].min_level);
@@ -1694,7 +1709,7 @@ static void skill_init()
 
         for (int j = 0; j < PROFESSION_MAX; j++)
         {
-            g_SkiColl.prof_table[i].profession_cost[j] = -7;
+            g_SkiColl.prof_table[i].setProfessionBonus(j, -7);
         }
 
         if ((i < LAST_SKILL) && (g_SkiColl.prof_table[i].sanity != i))
