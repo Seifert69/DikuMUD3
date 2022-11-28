@@ -138,6 +138,14 @@ const char **skill_collection::gettext()
     return this->text;
 }
 
+
+int skill_collection::max_skill_limit(unit_data *pupil, int node)
+{
+    int max_skill_limit(int professionBonus, int raceBonus);
+
+    return max_skill_limit(this->prof_table[node].getProfessionBonus(pupil), this->racial[CHAR_RACE(pupil)][node]);
+}
+
 /* ===================================================================== */
 
 int get_racial_ability(int nRace, int nAbility)

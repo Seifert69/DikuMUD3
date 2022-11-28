@@ -391,23 +391,30 @@ const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int m
 
 void info_show_one(unit_data *teacher,
                    unit_data *pupil,
-                   ubit8 current_points,
-                   ubit8 max_level,
-                   int next_point,
-                   int gold,
-                   int lvl,
-                   const char *text,
+                   skill_teach_type *teaches_skills,
+                   int teachesSkillsIndex,
+                   pc_train_values *pTrainValues,
+                   skill_collection *pColl,
                    int indent,
-                   ubit8 isleaf,
-                   int min_level,
-                   profession_cost *cost_entry,
                    std::vector<std::pair<int, std::string>> &vect,
                    const char *pGuildName)
 {
+    int current_points = pTrainValues->values[teaches_skills[teachesSkillsIndex].node];
+    int lvl = pTrainValues->lvl[teaches_skills[teachesSkillsIndex].node];
+    const char *text = pColl->text[teaches_skills[teachesSkillsIndex].node];
+    profession_cost *cost_entry = &pColl->prof_table[teaches_skills[teachesSkillsIndex].node];
+    ubit8 isleaf = TREE_ISLEAF(pColl->tree, teaches_skills[teachesSkillsIndex].node);
+    int gold = gold_cost(pupil, &teaches_skills[teachesSkillsIndex], pTrainValues->values[teaches_skills[teachesSkillsIndex].node]);
+    int next_point = actual_cost(pColl->prof_table[teaches_skills[teachesSkillsIndex].node].getProfessionBonus(pupil),
+                                 pColl->racial[CHAR_RACE(pupil)][teaches_skills[teachesSkillsIndex].node],
+                                 pTrainValues->lvl[teaches_skills[teachesSkillsIndex].node],
+                                 PC_VIRTUAL_LEVEL(pupil));
+    int maxPersonalPotential = pColl->max_skill_limit(pupil, teaches_skills[teachesSkillsIndex].node);
+
     if (isleaf)
     {
         const char *req = nullptr;
-        req = trainrestricted(pupil, cost_entry, min_level, pGuildName);
+        req = trainrestricted(pupil, cost_entry, teaches_skills[teachesSkillsIndex].min_glevel, pGuildName);
 
         if (*req)
         {
@@ -416,7 +423,7 @@ void info_show_one(unit_data *teacher,
             return;
         }
 
-        if (current_points >= max_level)
+        if (current_points >= teaches_skills[teachesSkillsIndex].max_skill)
         {
             auto str =
                 diku::format_to_str("<div class='ca'>%s%3d%% %-20s [Teacher at max]</div><br/>", spc(4 * indent), current_points, text);
@@ -444,7 +451,7 @@ void info_show_one(unit_data *teacher,
                                                current_points,
                                                text,
                                                current_points,
-                                               max_level,
+                                               maxPersonalPotential, // teaches_skills[teachesSkillsIndex].max_skill,
                                                next_point,
                                                money_string(money_round(TRUE, gold, currency, 1), currency, FALSE),
                                                std::string(lvl, '*').c_str(),
@@ -485,7 +492,6 @@ void info_show_roots(unit_data *teacher,
                      const char *pGuildName)
 {
     int i = 0;
-    int cost = 0;
     std::vector<std::pair<int, std::string>> vect;
 
     for (i = 0; teaches_skills[i].node != -1; i++)
@@ -493,23 +499,13 @@ void info_show_roots(unit_data *teacher,
         if ((!TREE_ISROOT(pColl->tree, teaches_skills[i].node) && !TREE_ISLEAF(pColl->tree, teaches_skills[i].node)) ||
             ((TREE_ISROOT(pColl->tree, teaches_skills[i].node) && TREE_ISLEAF(pColl->tree, teaches_skills[i].node))))
         {
-            cost = actual_cost(pColl->prof_table[teaches_skills[i].node].getProfessionBonus(pupil),
-                               pColl->racial[CHAR_RACE(pupil)][teaches_skills[i].node],
-                               pTrainValues->lvl[teaches_skills[i].node],
-                               PC_VIRTUAL_LEVEL(pupil));
-
             info_show_one(teacher,
                           pupil,
-                          pTrainValues->values[teaches_skills[i].node],
-                          teaches_skills[i].max_skill,
-                          cost,
-                          gold_cost(pupil, &teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
-                          pTrainValues->lvl[teaches_skills[i].node],
-                          pColl->text[teaches_skills[i].node],
+                          teaches_skills,
+                          i,
+                          pTrainValues,
+                          pColl,
                           0,
-                          TREE_ISLEAF(pColl->tree, teaches_skills[i].node),
-                          teaches_skills[i].min_glevel,
-                          &pColl->prof_table[teaches_skills[i].node],
                           vect,
                           pGuildName);
         }
@@ -541,30 +537,19 @@ void info_show_leaves(unit_data *teacher,
                       const char *pGuildName)
 {
     int i = 0;
-    int cost = 0;
     std::vector<std::pair<int, std::string>> vect;
 
     for (i = 0; teaches_skills[i].node != -1; i++)
     {
         if (TREE_ISLEAF(pColl->tree, teaches_skills[i].node))
         {
-            cost = actual_cost(pColl->prof_table[teaches_skills[i].node].getProfessionBonus(pupil),
-                               pColl->racial[CHAR_RACE(pupil)][teaches_skills[i].node],
-                               pTrainValues->lvl[teaches_skills[i].node],
-                               PC_VIRTUAL_LEVEL(pupil));
-
             info_show_one(teacher,
                           pupil,
-                          pTrainValues->values[teaches_skills[i].node],
-                          teaches_skills[i].max_skill,
-                          cost,
-                          gold_cost(pupil, &teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
-                          pTrainValues->lvl[teaches_skills[i].node],
-                          pColl->text[teaches_skills[i].node],
+                          teaches_skills,
+                          i,
+                          pTrainValues,
+                          pColl,
                           0,
-                          TREE_ISLEAF(pColl->tree, teaches_skills[i].node),
-                          teaches_skills[i].min_glevel,
-                          &pColl->prof_table[teaches_skills[i].node],
                           vect,
                           pGuildName);
         }
@@ -602,7 +587,6 @@ void info_one_skill(unit_data *teacher,
     int indent = 0;
     int i = 0;
     int j = 0;
-    int cost = 0;
     indent = 0;
     std::vector<std::pair<int, std::string>> vect;
 
@@ -627,23 +611,13 @@ void info_one_skill(unit_data *teacher,
     if (!TREE_ISLEAF(pColl->tree, teaches_skills[teach_index].node))
     {
         i = teaches_skills[teach_index].node;
-        cost = actual_cost(pColl->prof_table[i].getProfessionBonus(pupil),
-                           pColl->racial[CHAR_RACE(pupil)][i],
-                           pTrainValues->lvl[i],
-                           PC_VIRTUAL_LEVEL(pupil));
-
         info_show_one(teacher,
                       pupil,
-                      pTrainValues->values[i],
-                      teaches_skills[teach_index].max_skill,
-                      cost,
-                      gold_cost(pupil, &teaches_skills[teach_index], pTrainValues->values[i]),
-                      pTrainValues->lvl[i],
-                      pColl->text[i],
+                      teaches_skills,
+                      teach_index,
+                      pTrainValues,
+                      pColl,
                       indent++,
-                      TREE_ISLEAF(pColl->tree, teaches_skills[teach_index].node),
-                      teaches_skills[teach_index].min_glevel,
-                      &pColl->prof_table[i],
                       vect,
                       pGuildName);
 
@@ -655,22 +629,13 @@ void info_one_skill(unit_data *teacher,
             {
                 /* It is a child */
                 i = teaches_skills[j].node;
-                cost = actual_cost(pColl->prof_table[i].getProfessionBonus(pupil),
-                                   pColl->racial[CHAR_RACE(pupil)][i],
-                                   pTrainValues->lvl[i],
-                                   PC_VIRTUAL_LEVEL(pupil));
                 info_show_one(teacher,
                               pupil,
-                              pTrainValues->values[i],
-                              teaches_skills[j].max_skill,
-                              cost,
-                              gold_cost(pupil, &teaches_skills[j], pTrainValues->values[i]),
-                              pTrainValues->lvl[i],
-                              pColl->text[i],
+                              teaches_skills,
+                              j,
+                              pTrainValues,
+                              pColl,
                               indent,
-                              TREE_ISLEAF(pColl->tree, teaches_skills[j].node),
-                              teaches_skills[j].min_glevel,
-                              &pColl->prof_table[i],
                               vect,
                               pGuildName);
             }
@@ -685,23 +650,13 @@ void info_one_skill(unit_data *teacher,
             {
                 /* It is a child */
                 i = teaches_skills[j].node;
-                cost = actual_cost(pColl->prof_table[i].getProfessionBonus(pupil),
-                                   pColl->racial[CHAR_RACE(pupil)][i],
-                                   pTrainValues->lvl[i],
-                                   PC_VIRTUAL_LEVEL(pupil));
-
                 info_show_one(teacher,
                               pupil,
-                              pTrainValues->values[i],
-                              teaches_skills[j].max_skill,
-                              cost,
-                              gold_cost(pupil, &teaches_skills[j], pTrainValues->values[i]),
-                              pTrainValues->lvl[i],
-                              pColl->text[i],
+                              teaches_skills,
+                              j,
+                              pTrainValues,
+                              pColl,
                               indent,
-                              TREE_ISLEAF(pColl->tree, teaches_skills[j].node),
-                              teaches_skills[j].min_glevel,
-                              &pColl->prof_table[i],
                               vect,
                               pGuildName);
             }
@@ -865,14 +820,14 @@ int practice(unit_data *teacher,
     // 
     // Calculate the character's personal potential as a function of race & profession
     //
-    int ms = max_skill_limit(pColl->prof_table[pckt->teaches[teach_index].node].getProfessionBonus(pupil), pColl->racial[CHAR_RACE(pupil)][pckt->teaches[teach_index].node]);
+    int ms = pColl->max_skill_limit(pupil, pckt->teaches[teach_index].node);
     if (pTrainValues->values[pckt->teaches[teach_index].node] >= ms)
     {
         // This is a temporary bypass. Characters that has this $value will not be affected by the personal max
         // for the time being.
         if (PC_INFO(pupil).find_raw("$gooffix") == nullptr)
         {
-            act("$1n tells you, 'You've reached your profession's full potential for $2t.'",
+            act("$1n tells you, 'You've reached your character's full potential for $2t.'",
                 A_ALWAYS,
                 teacher,
                 pColl->text[pckt->teaches[teach_index].node],

@@ -28,6 +28,7 @@ class skill_collection
 public:
     const char **gettext();
     skill_collection(int nSize);
+    int max_skill_limit(unit_data *pupil, int node);
 
     std::unique_ptr<profession_cost[]> prof_table;
     const char **text;
