@@ -568,7 +568,7 @@ void do_level(unit_data *ch, char *arg, const command_info *cmd)
 
     if (!now && PC_SKILL_POINTS(ch) >= skill_point_gain())
     {
-        send_to_char("You havn't used your skill points at all, if you "
+        send_to_char("You haven't used your skill points at all, if you "
                      "really want to level now, type 'level now'<br/>",
                      ch);
         return;
@@ -578,7 +578,7 @@ void do_level(unit_data *ch, char *arg, const command_info *cmd)
     {
         if (PC_VIRTUAL_LEVEL(ch) < 100)
         {
-            send_to_char("You havn't used your ability points at all, if you "
+            send_to_char("You haven't used your ability points at all, if you "
                          "really want to level now, type 'level now'<br/>",
                          ch);
             return;
