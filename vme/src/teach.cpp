@@ -426,7 +426,11 @@ void info_show_one(unit_data *teacher,
         if (current_points >= teaches_skills[teachesSkillsIndex].max_skill)
         {
             auto str =
-                diku::format_to_str("<div class='ca'>%s%3d%% %-20s [Teacher at max]</div><br/>", spc(4 * indent), current_points, text);
+                diku::format_to_str("<div class='ca'>%s%3d%% %-20s [Teacher at max (%d%%). You are at %d%% of your potential %d%%]</div><br/>",
+                                    spc(4 * indent), current_points, text, 
+                                    teaches_skills[teachesSkillsIndex].max_skill,
+                                    current_points,
+                                    maxPersonalPotential);
             vect.push_back(std::make_pair(1002, str));
             return;
         }
