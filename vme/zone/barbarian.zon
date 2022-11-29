@@ -737,7 +737,7 @@ dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian",
 dilcopy MasterJoin@guilds(GUILD_BARBARIAN, GUILD_BARBARIAN_EXCL, QUEST_ENTRY, 
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
- {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"glare $1N", "say Barbarians don't accept people of faith."},
  {"say To join $1N, you must prove yourself worthy by completing the Barbarian quest.","say Go speak with Raz."},
  {"handshake $1N", "say Welcome to the Barbarian's Guild, $1N."});
 

@@ -1237,7 +1237,7 @@ dilcopy Specialize@guilds(GUILD_SORCERER, "alespec@sorcerer",
 dilcopy MasterJoin@guilds(GUILD_SORCERER, GUILD_SORCERER_EXCL, QUEST_SORCERER_ENTRY, 
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
- {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"glare $1N", "say say Followers of the faith cannot master the science of magic."},
  {"say To join $1N, you must prove yourself worthy by completing the Sorcerer's Guild quest.","say Go speak with Master Forbin."},
  {"handshake $1N", "say Welcome to the Sorcerer's Guild, $1N."});
 

@@ -1081,7 +1081,7 @@ dilend
 // slExpQuest   : Quest not completed
 // slExpWelcome : Welcome message
 //
-dilbegin MasterJoin(sGuild : string, sGuildExclude : stringlist, sJoinQuest : string,
+dilbegin MasterJoin(sGuild : string, slGuildExclude : stringlist, sJoinQuest : string,
                      slExpBan : stringlist,
                      slExpAlready : stringlist,
                      slExpExclude : stringlist,
@@ -1122,7 +1122,7 @@ code
       goto start; 
    }
 
-   if (IsInGuilds@guilds(pc, sGuildExclude))
+   if (IsInGuilds@guilds(pc, slGuildExclude))
    {
       Explainer@quests(pc, slExpExclude);
       goto start;

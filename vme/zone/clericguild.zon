@@ -583,7 +583,7 @@ dilcopy healer_give@clericguild();
 dilcopy MasterJoin@guilds(GUILD_UDG_CLERIC, GUILD_CLERIC_EXCL, QUEST_CLERIC_ENTRY, 
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
- {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"glare $1N", "say Magic scholars and necromancers can't learn the healing arts."},
  {"say To join $1N, you must prove yourself worthy by completing the Healer's Guild quest.","say Go speak with Morenae."},
  {"handshake $1N", "say Welcome to the Cleric's Guild, $1N."});
 

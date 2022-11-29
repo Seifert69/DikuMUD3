@@ -377,7 +377,7 @@ dilcopy SetTitles@guilds(GUILD_UDG_THIEF, {"Pilferer", "Pilferers",
 dilcopy MasterJoin@guilds(GUILD_UDG_THIEF, GUILD_THIEF_EXCL, QUEST_THIEVES_ENTRY, 
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
- {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"glare $1N", "say Paladins just never make good thieves, this is not for you."},
  {"say To join $1N, you must prove yourself worthy by completing the Thieve's Guild quest.","say Go speak with Marie."},
  {"handshake $1N", "say Welcome to the Thieve's Guild, $1N."});
 

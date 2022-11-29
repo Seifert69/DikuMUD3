@@ -497,7 +497,7 @@ dilend
 dilcopy MasterJoin@guilds(GUILD_NYM_DRUID, GUILD_DRUID_EXCL, QUEST_DRUID_ENTRY, 
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
- {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"glare $1N", "say Magical scholars and necromancers cannot learn the way of nature."},
  {"say To join $1N, you must prove yourself worthy by completing the Druid's Guild quest.","say Go speak with the Willow tree."},
  {"handshake $1N", "say Welcome to the Druid's Guild, $1N."});
 

@@ -748,7 +748,7 @@ dilend
 dilcopy MasterJoin@guilds(GUILD_PALADIN, GUILD_PALADIN_EXCL, QUEST_PALADIN_ENTRY, 
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
- {"glare $1N", "say You have made some unfortunate choices in life $1N, that prevent you from joining our guild."},
+ {"glare $1N", "say Here at the Paladin's Guild we only accept the devoted and pure of heart. We cannot have members from magical schools or the dark underworld."},
  {"say To join $1N, you must prove yourself worthy by completing the Paladin's Guild quest.","say Go speak with Joan."},
  {"handshake $1N", "say Welcome to the Paladin's Guild, $1N."});
 
