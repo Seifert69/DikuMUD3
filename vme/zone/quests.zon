@@ -666,6 +666,7 @@ code
 
    if (not ("$done" in exdp.names))
    {
+      exdp.descr := exdp.descr + "<br/>Quest objectives completed.";
       addstring(exdp.names, "$done");
       return (1);
    }
