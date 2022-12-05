@@ -103,7 +103,7 @@ int ability_point_gain(unit_data *ch)
     }
     else
     {
-        if (PC_VIRTUAL_LEVEL(ch) <= 100)
+        if (PC_VIRTUAL_LEVEL(ch) <= 114)  // 114 means player receives the points for 113 level-ups, aka 40*113 = 4,520 total (+10)
         {
             return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
         }
@@ -138,7 +138,7 @@ int ability_point_total(unit_data *ch)
     }
     else
     {
-        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * MIN(PC_VIRTUAL_LEVEL(ch), 100);
+        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * MIN(PC_VIRTUAL_LEVEL(ch), 113);
     }
 }
 

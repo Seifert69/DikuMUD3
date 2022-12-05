@@ -322,13 +322,13 @@ int generate_datafile_file_indexes(FILE *f, zone_type *zone, bool do_reindex)
 // Parses zone.data binary file on disk. 
 // Returns true if successful, false otherwise
 //
-bool parse_datafile(zone_type *z, bool do_reindex)
+bool parse_datafile(zone_type *zone, bool do_reindex)
 {
     FILE *f = nullptr;
     CByteBuffer cBuf(MAX_STRING_LENGTH);
     char filename[82 + 41];
 
-    snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), z->getName().c_str());
+    snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), zone->getName().c_str());
 
     if ((f = fopen_cache(filename, "rb")) == nullptr)
     {
@@ -344,9 +344,9 @@ bool parse_datafile(zone_type *z, bool do_reindex)
 
     fstrcpy(&cBuf, f);
 
-    if (str_ccmp((char *)cBuf.GetData(), z->getName().c_str()) != 0)
+    if (str_ccmp((char *)cBuf.GetData(), zone->getName().c_str()) != 0)
     {
-        error(HERE, "ERROR: Zone name %s must match the filename on disk: %s ", (char *)cBuf.GetData(), z->getName());
+        error(HERE, "ERROR: Zone name %s must match the filename on disk: %s ", (char *)cBuf.GetData(), zone->getName());
     }
 
     int temp1{0};
@@ -356,14 +356,14 @@ bool parse_datafile(zone_type *z, bool do_reindex)
         slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in db.cpp", mstmp);
         assert(FALSE);
     }
-    z->getWeather().setBase(temp1);
+    zone->getWeather().setBase(temp1);
 
     /* More data read here */
     fstrcpy(&cBuf, f);
-    z->setNotes(str_dup((char *)cBuf.GetData()));
+    zone->setNotes(str_dup((char *)cBuf.GetData()));
 
     fstrcpy(&cBuf, f);
-    z->setHelp(str_dup((char *)cBuf.GetData()));
+    zone->setHelp(str_dup((char *)cBuf.GetData()));
 
     for (;;)
     {
@@ -374,24 +374,24 @@ bool parse_datafile(zone_type *z, bool do_reindex)
             break;
         }
 
-        z->getCreators().AppendName((char *)cBuf.GetData());
+        zone->getCreators().AppendName((char *)cBuf.GetData());
     }
 
     fstrcpy(&cBuf, f);
 
     if (cBuf.GetData()[0] != 0)
     {
-        z->setTitle(str_dup((char *)cBuf.GetData()));
+        zone->setTitle(str_dup((char *)cBuf.GetData()));
     }
     else
     {
-        z->setTitle(str_dup(""));
+        zone->setTitle(str_dup(""));
     }
 
-    generate_datafile_diltemplates(f, z, do_reindex);  // Read DIL templates
-    int room_count = generate_datafile_file_indexes(f, z, do_reindex);
+    generate_datafile_diltemplates(f, zone, do_reindex);  // Read DIL templates
+    int room_count = generate_datafile_file_indexes(f, zone, do_reindex);
 
-    z->setNumOfRooms(room_count); /* Number of rooms in the zone */
+    zone->setNumOfRooms(room_count); /* Number of rooms in the zone */
 
     fflush(f); /* Don't fclose(f); since we are using fopen_cache */
 
@@ -976,7 +976,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     {
                         slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d", u->getNames().Name(), CHAR_EXP(u), xpfloor);
                         UCHAR(u)->setPlayerExperience(xpfloor);
-                        // xxx
                     }
                 }
 
@@ -1143,8 +1142,19 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 UNPC(u)->setDefaultPosition(pBuf->ReadU8(&g_nCorrupt));
                 UNPC(u)->setAllNPCFlags(pBuf->ReadU8(&g_nCorrupt));
             }
+            if (u->isPC() && (unit_version < 77))
+            {
+                // Upgrade in ability points from 4,000 to 4,500
+                if (PC_VIRTUAL_LEVEL(u) > 100)
+                {
+                    // So players above level 100, gain up to 500 
+                    int additional = MIN(13, PC_VIRTUAL_LEVEL(u) - 100) * 40;
+                    UPC(u)->increaseAbilityPointsBy(additional);
+                    slog(LOG_ALL, 0, "ADJUST: Player %s ability points increased with %d", u->getNames().Name(), additional);
+                }
+            }
         }
-        break;
+        break; // UNIT_ST_PC
 
         case UNIT_ST_OBJ:
             UOBJ(u)->setValueAtIndexTo(0, pBuf->ReadS32(&g_nCorrupt));

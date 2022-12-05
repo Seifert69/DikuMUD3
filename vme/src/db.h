@@ -14,7 +14,7 @@
 #include <map>
 #include <string>
 
-#define UNIT_VERSION 76
+#define UNIT_VERSION 77
 #define MUD_NAME "Valhalla" /* For ease of localization */
 
 #define UNIT_DIR "units/"      // Directory for DIL store / restore units
