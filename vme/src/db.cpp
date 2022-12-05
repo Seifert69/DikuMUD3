@@ -1150,7 +1150,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     // So players above level 100, gain up to 500 
                     int additional = MIN(13, PC_VIRTUAL_LEVEL(u) - 100) * 40;
                     UPC(u)->increaseAbilityPointsBy(additional);
-                    slog(LOG_ALL, 0, "ADJUST: Player %s ability points increased with %d", u->getNames().Name(), additional);
+                    slog(LOG_ALL, 0, "ADJUST: Player %s (VL %d) ability points increased with %d", u->getNames().Name(), PC_VIRTUAL_LEVEL(u), additional);
                 }
             }
         }
