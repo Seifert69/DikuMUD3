@@ -7589,42 +7589,44 @@ self, null, pc, TO_NOTVICT);
 dilend /* petrify */
 
 
-dilbegin gtitle (arg:string);
+// do_title - wizcommand
+//
+dilbegin gtitle(arg:string);
 var
- pname:string;
- pc:unitptr;
+    pname:string;
+    pc:unitptr;
 code
 {
-if (self.level<200)
- {
- sendtext ("You don't have access tot he 'title' command.<br/>",self);
- quit;
- }
+    if (self.level < 200)
+    {
+        sendtext ("You don't have access tot he 'title' command.<br/>",self);
+        quit;
+    }
 
-pname:=getword(arg);
+    pname:=getword(arg);
 
-pc:=findunit(self,pname,FIND_UNIT_WORLD,null);
-if (pc==null)
- {
- sendtext("No such person found.<br/>", self);
- quit;
- }
+    pc:=findunit(self,pname,FIND_UNIT_WORLD,null);
+    if (pc==null)
+    {
+        sendtext("No such person found.<br/>", self);
+        quit;
+    }
 
-if ((pc.type!=UNIT_ST_PC) or
-(not(visible(self,pc))))
- {
- sendtext("No such person found.<br/>", self);
- quit;
- }
+    if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+    {
+        sendtext("No such person found.<br/>", self);
+        quit;
+    }
 
-log (self.name+" set "+pc.name+"'s  title to "+arg);
-arg:=arg+"</div>";
-arg:=textformat(arg);
-pc.title:=arg;
-sendtext("You set "+pc.name+"'s title to '"+arg+"'<br/>",self);
-quit;
+    log (self.name+" set "+pc.name+"'s  title to "+arg);
+    arg:=textformat(arg);
+    pc.title:=arg;
+    sendtext("You set "+pc.name+"'s title to '"+arg+"'<br/>", self);
+    sendtext("Your title changed.<br/>", pc);
+    quit;
 }
 dilend
+
 
 dilbegin aware describe (arg:string);
 var
