@@ -403,7 +403,7 @@ code
     addstring(exdleft.names, sGuild);
 
     log("Player " + pc.symname + " left guild " + sGuild);
-    sendtext("You've been kicked out of the " + sGuild + " guild.", pc);
+    sendtext("You've been kicked out of the " + sGuild + " guild.<br/>", pc);
     return;
 }
 dilend
