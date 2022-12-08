@@ -337,24 +337,24 @@ var
    sl : stringlist;
 code
 {
-   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+    exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
 
-   if (exd)
-   {
-      log("Error in JoinGuild. Guild was already in player guild list");
-      return;
-   }
+    if (exd)
+    {
+        log("Error in JoinGuild. Guild was already in player guild list");
+        return;
+    }
 
-   addstring(sl, GUILD_KEY_PREPEND + sGuild);
-   addstring(sl, "1"); // Starting guild level
-   addstring(sl, itoa(pc.vlevel));
-   addstring(sl, GUILD_KEY);
-   
-   addextra(pc.info, sl, "");
+    addstring(sl, GUILD_KEY_PREPEND + sGuild);
+    addstring(sl, "1"); // Starting guild level
+    addstring(sl, itoa(pc.vlevel));
+    addstring(sl, GUILD_KEY);
 
-   SetDefaultGuild(pc, sGuild);
+    addextra(pc.info, sl, "");
 
-   return;
+    SetDefaultGuild(pc, sGuild);
+
+    return;
 }
 dilend
 
@@ -367,34 +367,44 @@ var
    exdleft : extraptr;
 code
 {
-   exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+    exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+    if (exd == null)
+    {
+        log("Error in LeaveGuild. $guild to leave not found for " + pc.symname);
+        return;
+    }
 
-   if (exd == null)
-   {
-      log("Error in LeaveGuild. $guild to leave not found for " + pc.name);
-      return;
-   }
+    // log("Trying to leave: " + GUILD_KEY_PREPEND + sGuild);
 
-   subextra(pc.info, GUILD_KEY_PREPEND + sGuild);
+    subextra(pc.info, GUILD_KEY_PREPEND + sGuild);
 
-   // Now add to GUILD_KEY_LEFT
+    exd := (GUILD_KEY_PREPEND + sGuild) in pc.info;
+    if (exd != null)
+    {
+        log("Error in LeaveGuild. $guild still present for " + pc.symname);
+        return;
+    }
 
-   exdleft := GUILD_KEY_LEFT in pc.info;
+    // Now add to GUILD_KEY_LEFT
 
-   if (exdleft == null)
-   {
-      addextra(pc.info, {GUILD_KEY_LEFT}, "");
-      exdleft := GUILD_KEY_LEFT in pc.info;
-   }
+    exdleft := GUILD_KEY_LEFT in pc.info;
+    if (exdleft == null)
+    {
+        addextra(pc.info, {GUILD_KEY_LEFT}, "");
+        exdleft := GUILD_KEY_LEFT in pc.info;
+    }
 
-   if (sGuild in exdleft.names)
-   {
-      log("Error in LeaveGuild. The guild was already left for : " + pc.name);
-      return;
-   }
+    if (sGuild in exdleft.names)
+    {
+        log("Error in LeaveGuild. The guild was already left for : " + pc.name);
+        return;
+    }
 
-   addstring(exdleft.names, sGuild);
-   return;
+    addstring(exdleft.names, sGuild);
+
+    log("Player " + pc.symname + " left guild " + sGuild);
+    sendtext("You've been kicked out of the " + sGuild + " guild.", pc);
+    return;
 }
 dilend
 
@@ -1097,14 +1107,49 @@ external
    Explainer@quests(pc : unitptr, sl : stringlist);
 var
 	pc : unitptr;
+	u : unitptr;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    heartbeat := PULSE_SEC*5;
 
-   :start:
-   wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+:start:
+    if (pc)
+        unsecure(pc);
+
+    wait (SFB_CMD, activator.type == UNIT_ST_PC);
+
+    if (command("join"))
+        goto joincmd;
+    else if (command("insult"))
+        goto insultcmd;
+    else
+        goto start;
+
+:insultcmd:
+    self.position := POSITION_STANDING;
+    pc := activator;
+
+    u := findunit(activator, argument, FIND_UNIT_SURRO, null);
+
+    if (u != self) // Insult the master?
+        goto start;
+
+    secure(pc, start);
+    block;
+
+    if (not IsInGuild@guilds(pc, sGuild))
+    {
+        exec("eye", self);
+        goto start; 
+    }
+
+    LeaveGuild@guilds(pc, sGuild);
+
+    goto start;
+
+:joincmd:
    self.position := POSITION_STANDING;
    pc := activator;
    secure(pc, start);
