@@ -252,3 +252,19 @@ std::string color_type::save_string() const
     }
     return strm.str();
 }
+
+void color_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartArray();
+    for (auto &[key, value] : m_map)
+    {
+        writer.StartObject();
+        writer.String("keyword");
+        writer.String(key.c_str());
+
+        writer.String("color");
+        writer.String(value.c_str());
+        writer.EndObject();
+    }
+    writer.EndArray();
+}

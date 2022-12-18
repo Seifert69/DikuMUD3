@@ -67,23 +67,28 @@ int main(int argc, char **argv)
             {
                 case 'I':
                     Ipath[Ipcnt++] = argv[pos] + 2;
-                    ;
                     break;
+
                 case 'm':
                     g_make = 1;
                     break;
+
                 case 's':
                     g_nooutput = 1;
                     break;
+
                 case 'v':
                     g_verbose = 1;
                     break;
+
                 case 'p':
                     pponly = 1;
                     break;
+
                 case 'l':
                     g_fatal_warnings = 1;
                     break;
+
                 case 'd':
                     if (*(argv[pos] + 2))
                     {
@@ -99,13 +104,19 @@ int main(int argc, char **argv)
                         exit(1);
                     }
                     break;
+
                 case 'q':
                     g_quiet_compile = true;
+                    break;
+
+                case 'j':
+                    g_dump_json = true;
                     break;
 
                 case '?':
                     ShowUsage(argv[0]);
                     exit(0);
+
                 case 'h':
                     ShowUsage(argv[0]);
                     exit(0);

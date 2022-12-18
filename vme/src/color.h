@@ -5,9 +5,10 @@
  $Revision: 2.4 $
  */
 #pragma once
-
 #include "essential.h"
 #include "values.h"
+
+#include <rapidjson/prettywriter.h>
 
 #include <map>
 #include <optional>
@@ -32,6 +33,8 @@ public:
     [[nodiscard]] std::string get(const char *key, char *full_key) const;
     int remove(char *key);
     void create(const char *input_str);
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 public:
     color_type() = default;

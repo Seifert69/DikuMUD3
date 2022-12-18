@@ -1,6 +1,8 @@
 #pragma once
 #include "essential.h"
 
+#include <rapidjson/prettywriter.h>
+
 #include <cstring>
 #include <forward_list>
 #include <string>
@@ -24,6 +26,7 @@ public:
 
     [[nodiscard]] const char *getName() const;
     [[nodiscard]] zone_type *getZone() const;
+    [[nodiscard]] std::string getID() const;
     [[nodiscard]] long getFilepos() const;
     [[nodiscard]] ubit32 getLength() const;
     [[nodiscard]] ubit32 getCRC() const;
@@ -53,6 +56,8 @@ public:
     void setLength(ubit32 value);
     void setFilepos(long value);
     void setRoomNum(ubit16 value);
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     std::forward_list<unit_data *> m_fi_unit_list; ///< This list of units that match this file_index

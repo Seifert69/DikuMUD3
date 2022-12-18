@@ -186,6 +186,9 @@ public:
     ubit8 getLastAttackerType() const;
     void setLastAttackerType(ubit8 value);
     ///@}
+
+    virtual void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     descriptor_data *m_descriptor{nullptr}; ///<
     cCombat *m_combat{nullptr};             ///<

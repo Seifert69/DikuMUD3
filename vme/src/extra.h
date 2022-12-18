@@ -42,6 +42,8 @@ public:
     // and I can't get to the container only one pointer in DIL.
     extra_descr_data *m_pList;
 
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     void freelist(extra_descr_data *);
 };

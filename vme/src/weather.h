@@ -8,6 +8,8 @@
 
 #include "time_info_data.h"
 
+#include <rapidjson/prettywriter.h>
+
 #include <ctime>
 #include <optional>
 #include <string>
@@ -53,10 +55,11 @@ public:
     void decrementChangeBy(int value);
     void modifyPressureBy(int value);
 
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     void setChange(int value);
     void setPressure(int value);
-    ;
 
     int m_pressure{0}; ///< How is the pressure ( Mb )
     int m_change{0};   ///< How fast and what way does it change.

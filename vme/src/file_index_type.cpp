@@ -1,9 +1,9 @@
 #include "file_index_type.h"
 
+#include "json_helper.h"
 #include "textutil.h"
 #include "utils.h"
 #include "vme.h"
-
 
 file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
 {
@@ -16,7 +16,6 @@ file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
     m_zone = zone;
     m_type = type;
 }
-
 
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
@@ -191,6 +190,11 @@ zone_type *file_index_type::getZone() const
     return m_zone;
 }
 
+std::string file_index_type::getID() const
+{
+    return {m_name + '@' + m_zone->getName()};
+}
+
 void file_index_type::DecrementNumInMemory()
 {
     /// @todo find out why code is trying to decrement m_no_in_mem below 0
@@ -260,4 +264,59 @@ void file_index_type::PushFront(unit_data *value)
 void file_index_type::Remove(unit_data *value)
 {
     m_fi_unit_list.remove(value);
+}
+
+void file_index_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    ////////////////////////////////////////////////////////
+    writer.String("id");
+    writer.String(getID().c_str());
+
+    ////////////////////////////////////////////////////////
+    writer.String("fi_unit_list");
+    writer.StartArray();
+    for (auto &item : m_fi_unit_list)
+    {
+        writer.String(item->getID().c_str());
+    }
+    writer.EndArray();
+
+    ////////////////////////////////////////////////////////
+    writer.String("name");
+    writer.String(m_name.c_str());
+
+    ////////////////////////////////////////////////////////
+    json::write_zone_id("zone", m_zone, writer);
+
+    ////////////////////////////////////////////////////////
+    writer.String("filepos");
+    writer.Int64(m_filepos);
+
+    ////////////////////////////////////////////////////////
+    writer.String("length");
+    writer.Uint(m_length);
+
+    ////////////////////////////////////////////////////////
+    writer.String("crc");
+    writer.Uint(m_crc);
+
+    ////////////////////////////////////////////////////////
+    writer.String("no_in_zone");
+    writer.Int(m_no_in_zone);
+
+    ////////////////////////////////////////////////////////
+    writer.String("no_in_mem");
+    writer.Uint(m_no_in_mem);
+
+    ////////////////////////////////////////////////////////
+    writer.String("room_no");
+    writer.Uint(m_room_no);
+
+    ////////////////////////////////////////////////////////
+    writer.String("type");
+    writer.Uint(m_type);
+    ////////////////////////////////////////////////////////
+
+    writer.EndObject();
 }

@@ -8,6 +8,10 @@
 
 #include "bytestring.h"
 
+#include <rapidjson/document.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/stringbuffer.h>
+
 #include <string>
 
 class cNamelist
@@ -56,6 +60,8 @@ public:
     const char *StrStr(const char *name);
 
     inline ubit32 Length() { return length; }
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     std::string **namelist;

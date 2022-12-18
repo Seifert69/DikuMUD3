@@ -6,6 +6,8 @@
 #include "event.h"
 #include "vme.h"
 
+#include <rapidjson/prettywriter.h>
+
 class unit_fptr : public basedestruct
 {
 public:
@@ -44,6 +46,8 @@ public:
     void setEventQueue(eventq_elem *value);
 
     int destruct_classindex();
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     ubit16 index{0};                  ///< Index to function pointer array

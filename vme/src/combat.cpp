@@ -4,12 +4,12 @@
  $Date: 2001/04/29 03:46:05 $
  $Revision: 2.1 $
  */
-
 #include "comm.h"
 #include "experience.h"
 #include "fight.h"
 #include "formatter.h"
 #include "interpreter.h"
+#include "json_helper.h"
 #include "modify.h"
 #include "skills.h"
 #include "slog.h"
@@ -541,6 +541,37 @@ void cCombat::status(const unit_data *god)
     }
 
     send_to_char(msg, god);
+}
+
+void cCombat::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        writer.String("AttackNo");
+        writer.Int(nAttackNo);
+
+        writer.String("When");
+        writer.Int(nWhen);
+
+        json::write_unit_id_kvp("Owner", pOwner, writer);
+
+        json::write_unit_id_kvp("Melee", pMelee, writer);
+
+        writer.String("NoOpponents");
+        writer.Int(nNoOpponents);
+
+        writer.String("Opponents");
+        writer.StartArray();
+        for (int i = 0; i < nNoOpponents; ++i)
+        {
+            json::write_unit_id(pOpponents[i], writer);
+        }
+        writer.EndArray();
+
+        writer.String("cmd");
+        writer.String(cmd);
+    }
+    writer.EndObject();
 }
 
 /* ======================================================================= */

@@ -1,5 +1,6 @@
 #include "char_point_data.h"
 
+#include "json_helper.h"
 #include "slog.h"
 #include "utility.h"
 #include "utils.h"
@@ -473,4 +474,38 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
             }
         }
     }
+}
+
+void char_point_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        std::string bits;
+        json::write_kvp("flags", sprintbit(bits, flags, g_char_flags), writer);
+        json::write_kvp("exp", exp, writer);
+        //        auto race_text=sprinttype(nullptr, race, g_pc_races) : itoa(CHAR_RACE(u))
+        json::write_kvp("race", race, writer);
+
+        json::write_kvp("mana", mana, writer);
+        json::write_kvp("endurance", endurance, writer);
+        json::write_kvp("offensive", offensive, writer);
+        json::write_kvp("defensive", defensive, writer);
+        json::write_kvp("speed", speed, writer);
+        json::write_kvp("natural_armour", natural_armour, writer);
+        json::write_kvp("attack_type", attack_type, writer);
+        json::write_kvp("dex_reduction", dex_reduction, writer);
+        json::write_kvp("sex", sprinttype(nullptr, sex, g_char_sex), writer);
+        json::write_kvp("level", level, writer);
+        json::write_kvp("position", sprinttype(nullptr, position, g_char_pos), writer);
+
+        json::write_kvp("MAG", abilities[ABIL_MAG], writer);
+        json::write_kvp("DIV", abilities[ABIL_DIV], writer);
+        json::write_kvp("STR", abilities[ABIL_STR], writer);
+        json::write_kvp("DEX", abilities[ABIL_DEX], writer);
+        json::write_kvp("CON", abilities[ABIL_CON], writer);
+        json::write_kvp("CHA", abilities[ABIL_CHA], writer);
+        json::write_kvp("BRA", abilities[ABIL_BRA], writer);
+        json::write_kvp("HP", abilities[ABIL_HP], writer);
+    }
+    writer.EndObject();
 }

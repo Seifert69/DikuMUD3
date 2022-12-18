@@ -3,6 +3,7 @@ set(VME_SRCS
         act_change.cpp act_change.h
         act_color.cpp act_color.h
         act_info.cpp act_info.h
+        act_jstat.cpp act_jstat.h
         act_movement.cpp act_movement.h
         act_offensive.cpp act_offensive.h
         act_other.cpp act_other.h
@@ -58,6 +59,7 @@ set(VME_SRCS
         hookmud.cpp hookmud.h
         interpreter.cpp interpreter.h
         intlist.cpp intlist.h
+        json_helper.h json_helper.cpp
         justice.cpp justice.h
         magic.cpp magic.h
         main.h

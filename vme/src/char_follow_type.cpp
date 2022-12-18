@@ -1,5 +1,6 @@
 #include "char_follow_type.h"
 
+#include "json_helper.h"
 unit_data *char_follow_type::getFollower()
 {
     return follower;
@@ -23,4 +24,9 @@ char_follow_type *char_follow_type::getNext()
 void char_follow_type::setNext(char_follow_type *value)
 {
     next = value;
+}
+
+void char_follow_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer)
+{
+    json::write_unit_id_kvp("follower", follower, writer);
 }

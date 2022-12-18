@@ -1,5 +1,7 @@
 #include "char_data.h"
 
+#include "json_helper.h"
+#include "vmelimits.h"
 size_t char_data::g_world_nochars = 0;
 
 char_data::char_data(ubit8 unit_type, file_index_type *fi)
@@ -542,4 +544,45 @@ ubit8 char_data::getLastAttackerType() const
 void char_data::setLastAttackerType(ubit8 value)
 {
     m_last_attacker_type = value;
+}
+
+void char_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_unit_id_kvp("id", this, writer);
+
+        writer.String("char_data");
+        writer.StartObject();
+        {
+            json::write_object_pointer_kvp("descriptor", m_descriptor, writer);
+            json::write_object_pointer_kvp("combat", m_combat, writer);
+            json::write_unit_id_kvp("master", m_master, writer);
+            json::write_unit_id_kvp("last_room", m_last_room, writer);
+
+            writer.String("points");
+            m_points.toJSON(writer);
+
+            writer.String("Followers");
+            auto follow = m_followers;
+            writer.StartArray();
+            while (follow)
+            {
+                follow->toJSON(writer);
+                follow = follow->getNext();
+            }
+            writer.EndArray();
+
+            json::write_char_pointer_kvp("last_attacker", m_last_attacker, writer);
+            json::write_char_pointer_kvp("money", m_money, writer);
+            json::write_kvp("last_attacker_type", m_last_attacker_type, writer);
+            json::write_kvp("hit_limit", hit_limit(const_cast<char_data *>(this)), writer);
+            json::write_kvp("hit_gain", hit_gain(const_cast<char_data *>(this)), writer);
+        }
+        writer.EndObject();
+
+        writer.String("unit_data");
+        unit_data::toJSON(writer);
+    }
+    writer.EndObject();
 }

@@ -1,5 +1,9 @@
 #include "npc_data.h"
 
+#include "utility.h"
+
+#include <json_helper.h>
+
 size_t npc_data::g_world_nonpc = 0; // number of chars in the world
 
 npc_data::npc_data(file_index_type *fi)
@@ -115,4 +119,41 @@ ubit8 *npc_data::getAllNPCFlagsPtr()
 void npc_data::setAllNPCFlags(ubit8 value)
 {
     m_flags = value;
+}
+
+void npc_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_unit_id_kvp("id", this, writer);
+
+        writer.String("npc_data");
+        writer.StartObject();
+        {
+            writer.String("weapons");
+            writer.StartArray();
+            for (auto &weapon : m_weapons)
+            {
+                writer.Int(weapon);
+            }
+            writer.EndArray();
+
+            writer.String("spells");
+            writer.StartArray();
+            for (auto &spell : m_spells)
+            {
+                writer.Int(spell);
+            }
+            writer.EndArray();
+
+            json::write_kvp("default_pos", m_default_pos, writer);
+            std::string bits;
+            json::write_kvp("flags", sprintbit(bits, m_flags, g_npc_flags), writer);
+        }
+        writer.EndObject();
+
+        writer.String("char_data");
+        char_data::toJSON(writer);
+    }
+    writer.EndObject();
 }

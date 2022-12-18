@@ -2,6 +2,8 @@
 
 #include "char_data.h"
 
+#include <rapidjson/prettywriter.h>
+
 #include <array>
 
 class npc_data : public char_data
@@ -57,6 +59,9 @@ public:
     ubit8 *getAllNPCFlagsPtr();
     void setAllNPCFlags(ubit8 value);
     /// @}
+
+    virtual void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     std::array<sbit16, WPN_GROUP_MAX> m_weapons{0}; ///<
     std::array<sbit16, SPL_GROUP_MAX> m_spells{0};  ///<

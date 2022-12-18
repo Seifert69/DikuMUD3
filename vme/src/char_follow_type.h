@@ -15,6 +15,8 @@ public:
     char_follow_type *getNext();
     void setNext(char_follow_type *value);
 
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer);
+
 private:
     unit_data *follower{nullptr}; ///< Must be a char
     char_follow_type *next{nullptr};

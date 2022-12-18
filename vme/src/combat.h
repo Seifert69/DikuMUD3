@@ -55,6 +55,8 @@ public:
     void subOpponent(unit_data *victim);
     void status(const unit_data *ch);
 
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     void add(unit_data *victim);
     void sub(int idx);

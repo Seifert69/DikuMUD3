@@ -9,6 +9,8 @@
 #include "bytestring.h"
 #include "essential.h"
 
+#include <rapidjson/prettywriter.h>
+
 #include <string>
 
 class cintlist
@@ -33,6 +35,8 @@ public:
     void Insert(int val, int loc);
     void bread(ubit8 **b);
     inline sbit32 Length() { return length; }
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     int *intlist;

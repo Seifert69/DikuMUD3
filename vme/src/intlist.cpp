@@ -264,3 +264,21 @@ cintlist *cintlist::Duplicate()
 
     return pNl;
 }
+
+void cintlist::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        writer.String("length");
+        writer.Int(length);
+
+        writer.String("intlist");
+        writer.StartArray();
+        for (int i = 0; i < length; ++i)
+        {
+            writer.Int(intlist[i]);
+        }
+        writer.EndArray();
+    }
+    writer.EndObject();
+}

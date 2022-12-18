@@ -116,6 +116,9 @@ public:
     int getRoomNumber() const;
     void setRoomNumber(int value);
     /// @}
+
+    virtual void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
     ubit8 m_flags{0};                                                      ///< Room flags

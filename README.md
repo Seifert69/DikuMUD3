@@ -89,8 +89,54 @@ DOCKER_BUILDKIT=1 docker build . -t dikumud3
 
 ### Run the mud in a new container, binding the port to localhost
 ```console
-docker run -d -p 4280:4280 dikumud3
+docker run -d -p 4280:4280 -p 80:80 dikumud3
 ```
+
+Then you can point a webbrowser at http://localhost - and connect to the MUD. If you have a be server running already, try `-p 8080:80` instead and connect to http://localhost:8080
+
+#### Persist data between builds/instances
+Create a volume to store mud data
+```console
+docker volume create muddata
+```
+
+Mount the volume when you start a container instance
+```console
+docker run -d -p 4280:4280 -p 80:80 -v muddata:/dikumud3/vme/lib -v dikumud3
+```
+
+Create a bash shell into the container then so you can rebuild/restart vme mplex etc
+```console
+docker exec -it $(docker ps -q -f ancestor=dikumud3) bash
+```
+#### Stop container
+```console
+docker stop $(docker ps -q -f ancestor=dikumud3)
+```
+
+### Docker Example Workflow
+
+1. Create volume to persist mud data: `docker volume create muddata`
+2. Build the container: `DOCKER_BUILDKIT=1 docker build . -t dikumud3`
+3. Run the container: `docker run -d -p 4280:4280 -p 80:80 -v muddata:/dikumud3/vme/lib -v dikumud3`
+4. Visit http://localhost
+5. Create "Papi" user or other
+6. Enter MUD and save user
+7. Exit MUD
+8. Make code changes
+9. Build locally (can be skipped)
+9. Stop container: `docker stop $(docker ps -q -f ancestor=dikumud3)`
+10. Rebuild container: `DOCKER_BUILDKIT=1 docker build . -t dikumud3`
+11. Run the container: `docker run -d -p 4280:4280 -p 80:80 -v muddata:/dikumud3/vme/lib -v dikumud3`
+12. Visit http://localhost
+13. Oh no - it coredumped with my change (ﾉ｀Д´)ﾉ
+14. Start shell in container: `docker exec -it $(docker ps -q -f ancestor=dikumud3) bash`
+15. (in container) run vme in debug `cd /dikumud3/vme/bin; gdb vme`
+16. etc
+
+
+### Errors
+
 If the above gives an error like below, it may be because your distro sets `DOCKER_CONTENT_TRUST`. This stops docker from executing images that have not been digitally signed by the creator. You can disable the check by setting the env to zero.
 ```
 [user@localhost]$ docker run -d -p 4280:4280 dikumud3

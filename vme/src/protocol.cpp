@@ -14,6 +14,7 @@
 #include "protocol.h"
 #include "slog.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cstring>
 
@@ -175,11 +176,7 @@ void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, 
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                 */
 void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ubit8 type)
 {
-#define MAX_TEXT_LEN (32768)
-    ubit16 len = 0;
-    ubit16 txlen = 0;
-    ubit8 buf[6 + MAX_TEXT_LEN];
-    char c = 0;
+    auto constexpr MAX_TEXT_LEN = 32768ul;
 
     assert(id != 0);
 
@@ -188,10 +185,8 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
         return;
     }
 
-    len = strlen(text) + 1;
-
-    txlen = MIN(MAX_TEXT_LEN, len);
-
+    auto len = strlen(text) + 1;
+    ubit16 txlen = std::min(MAX_TEXT_LEN, len);
     if (txlen < len)
     {
         /* Fragmented text, break it up at a newline for
@@ -200,7 +195,7 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
 
         for (; txlen != 0; txlen--)
         {
-            c = text[txlen - 1];
+            char c = text[txlen - 1];
             if ((c == '>') || ISNEWL(c))
             {
                 break;
@@ -209,12 +204,13 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
 
         if (txlen == 0)
         {
-            txlen = MIN(MAX_TEXT_LEN, len);
+            txlen = std::min(MAX_TEXT_LEN, len);
         }
     }
 
     assert(txlen > 0);
 
+    ubit8 buf[6 + MAX_TEXT_LEN];
     buf[0] = MULTI_UNIQUE_CHAR;
     buf[1] = type;
     memcpy(&(buf[2]), &id, sizeof(id));
@@ -229,7 +225,6 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
     {
         protocol_send_text(Hook, id, &text[txlen], type);
     }
-#undef MAX_TEXT_LEN
 }
 
 /* Create the standard header and send setup information from the server   */
@@ -487,4 +482,35 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, 
     *str = data;
 
     return buf[1];
+}
+
+void terminal_setup_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        writer.String("redraw");
+        writer.Uint(redraw);
+
+        writer.String("echo");
+        writer.Uint(echo);
+
+        writer.String("width");
+        writer.Uint(width);
+
+        writer.String("height");
+        writer.Uint(height);
+
+        writer.String("emulation");
+        writer.Uint(emulation);
+
+        writer.String("telnet");
+        writer.Uint(telnet);
+
+        writer.String("colour_convert");
+        writer.Uint(colour_convert);
+
+        writer.String("websockets");
+        writer.Uint(websockets);
+    }
+    writer.EndObject();
 }

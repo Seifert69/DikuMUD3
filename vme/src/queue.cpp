@@ -223,3 +223,16 @@ void cQueue::Flush()
         delete pTmp;
     }
 }
+
+void cQueue::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        writer.String("Entries");
+        writer.Uint(nEntries);
+
+        writer.String("Bytes");
+        writer.Uint(nBytes);
+    }
+    writer.EndObject();
+}

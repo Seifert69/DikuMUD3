@@ -65,3 +65,22 @@ void pc_time_data::incTotalTimePlayedInSecondsBy(ubit32 seconds)
 {
     played += seconds;
 }
+
+void pc_time_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        writer.String("creation");
+        writer.Int64(creation);
+
+        writer.String("connect");
+        writer.Int64(connect);
+
+        writer.String("birth");
+        writer.Int64(birth);
+
+        writer.String("played");
+        writer.Uint(played);
+    }
+    writer.EndObject();
+}

@@ -10,6 +10,7 @@
 #include "comm.h"
 #include "db.h"
 #include "interpreter.h"
+#include "json_helper.h"
 #include "main_functions.h"
 #include "slog.h"
 #include "utils.h"
@@ -479,4 +480,16 @@ void Weather::setPressure(int value)
     }
 
     m_pressure = value;
+}
+
+void Weather::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_kvp("pressure", m_pressure, writer);
+        json::write_kvp("change", m_change, writer);
+        json::write_kvp("sky", m_sky, writer);
+        json::write_kvp("base", m_base, writer);
+    }
+    writer.EndObject();
 }

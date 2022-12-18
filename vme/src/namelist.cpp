@@ -343,7 +343,6 @@ const char *cNamelist::IsNameRaw(const char *name) const
     return nullptr;
 }
 
-
 // See IsNameRaw.
 // Will match non-full words, so
 //   {"fallow deer", "deer"}.IsNameRawAbbrev("de guard")
@@ -445,27 +444,27 @@ const char *cNamelist::IsName(const char *name)
 
         for (j = 0; namelist[i]->c_str()[j]; j++)
         {
-            if (tolower(name[j+s]) != tolower(namelist[i]->c_str()[j]))
+            if (tolower(name[j + s]) != tolower(namelist[i]->c_str()[j]))
             {
                 break;
             }
 
-            while (name[j+s] == ' ' && name[j+s+1] == ' ')
+            while (name[j + s] == ' ' && name[j + s + 1] == ' ')
             {
                 s++;
             }
-       }
+        }
 
         if (namelist[i]->c_str()[j] == 0)
         {
-            if (!name[j+s] || isaspace(name[j+s]))
+            if (!name[j + s] || isaspace(name[j + s]))
             {
                 // Skip trailing spaces
-                while (name[j+s] == ' ')
+                while (name[j + s] == ' ')
                 {
                     j++;
                 }
-                return name + j +s;
+                return name + j + s;
             }
         }
     }
@@ -489,20 +488,20 @@ const int cNamelist::IsNameIdx(const char *name)
 
         for (j = 0; namelist[i]->c_str()[j]; j++)
         {
-            if (tolower(name[j+s]) != tolower(namelist[i]->c_str()[j]))
+            if (tolower(name[j + s]) != tolower(namelist[i]->c_str()[j]))
             {
                 break;
             }
 
-            while (name[j+s] == ' ' && name[j+s+1] == ' ')
+            while (name[j + s] == ' ' && name[j + s + 1] == ' ')
             {
                 s++;
             }
-       }
+        }
 
         if (namelist[i]->c_str()[j] == 0)
         {
-            if (!name[j+s] || isaspace(name[j+s]))
+            if (!name[j + s] || isaspace(name[j + s]))
             {
                 return i;
             }
@@ -511,7 +510,6 @@ const int cNamelist::IsNameIdx(const char *name)
 
     return -1;
 }
-
 
 // see if name is in the name list names some where and return name if it is
 const char *cNamelist::StrStrRaw(const char *name)
@@ -723,4 +721,29 @@ void cNamelist::InsertName(const char *name, ubit32 loc)
             namelist[x] = new std::string("");
         }
     }
+}
+
+void cNamelist::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        writer.String("length");
+        writer.Int(length);
+
+        writer.String("namelist");
+        writer.StartArray();
+        for (auto i = 0u; i < length; ++i)
+        {
+            if (namelist[i])
+            {
+                writer.String(namelist[i]->c_str());
+            }
+            else
+            {
+                writer.Null();
+            }
+        }
+        writer.EndArray();
+    }
+    writer.EndObject();
 }

@@ -8,6 +8,8 @@
 
 #include "essential.h"
 
+#include <rapidjson/prettywriter.h>
+
 // To use, inherit this type into your data structure.
 class cQueueElem
 {
@@ -61,6 +63,8 @@ public:
     const cQueueElem *PeekTail();
 
     void Flush();
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     cQueueElem *pHead;
