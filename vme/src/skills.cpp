@@ -154,17 +154,17 @@ int profession_cost::getProfessionBonus(unit_data *pc, ubit8 teachtype)
     n = getPlayerProfessionByIndex(pc, 2);
     if (n >= 0)
     {
-        /*
         if (teachtype == TEACH_ABILITIES)
         {
-            professionBonusZero = -7;
-            professionBonusOne = -7;
+            professionBonusZero -= 4; // Total of 5
+            professionBonusOne -= 2;
         }
-        else*/
-
-        // Changing from e.g. barbarian to mage is more dramatic, subtract 2
-        professionBonusZero -= 2;
-        professionBonusOne -= 2;
+        else
+        {
+            // Changing from e.g. barbarian to mage is more dramatic, subtract 2
+            professionBonusZero -= 2; // Total of 3
+            professionBonusOne -= 2;
+        }
 
         professionBonusTwo = getProfessionBonus(n);
     }
