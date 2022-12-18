@@ -210,6 +210,7 @@ CMD_CBALANCE cbalance
 CMD_CWITHDRAW cwithdraw
 CMD_CSTORE cstore
 CMD_CEQUIPMENT cequipment
+CMD_CUPDATE cupdate
 CMD_CUNSTORE cunstore
 CMD_CRANK crank
 CMD_CSRANK csrank

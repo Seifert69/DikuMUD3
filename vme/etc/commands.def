@@ -4797,6 +4797,10 @@ command       = cequipment
 func          = cequipment@clans
 minpos        = POSITION_RESTING
 
+command       = cupdate
+func          = cupdate@clans
+minpos        = POSITION_RESTING
+
 command  = cdelete
 func     = cdelete@clans
 minpos   = POSITION_DEAD

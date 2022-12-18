@@ -38,13 +38,14 @@ Knights of Honor
 A large shield stamped with HONOR
 <div class='cpn'>[</div><div class='cw'>K</div><div class='cpw'>nights</div> <div class='cw'>o</div><div class='cpw'>f</div> <div class='cw'>H</div><div class='cpw'>onor</div><div class='cpn'>]</div>
 
-//clist.data should be a csv formatted text file, where each row represents a clan.
+You must create a zone for each clan named the same as the clan id.
+This zone must have a room with an id of 'htown' as that is where members will respawn after death.
+A clan chest and clan board should be placed somewhere in the zone to enable clan storage and messaging.
+A clan door should be used as the entrance and clan guards should wander the zone to prevent non-members from entering.
+You may also place portals, shopkeepers, etc. in the zone as perks for clan members.
+See clan_koh.zon for an example.
 
-//The format is: clan_ID,clan_master,clan_name,tattoo,title
-
-//An example is: clan_koh,Snaga,Knights of Honor,A large shield stamped with HONOR,<div class='cpn'>[</div><div class='cw'>K</div><div class='cpw'>nights</div> <div class='cw'>o</div><div class='cpw'>f</div> <div class='cw'>H</div><div class='cpw'>onor</div><div class='cpn'>]</div>
-
-//To start a clan after adding them in clanlist.data, have the person namer as clan_master
+To start a clan after adding them in clanlist.data and createing their zone, have the person named as clan_master run the 'cstart' command.
 "
 
 #define CTITLE_COST (10*PLATINUM_MULT)
@@ -600,6 +601,11 @@ code
 	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 	if (err<1)
 		err:=loadstr ("default.rank",buf);
+		if (err<1)
+		{
+			buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+			blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+		}
 	rlist:=split(buf,"\n");
 	if (arg=="")
 		goto cinfo_who;
@@ -637,14 +643,14 @@ code
 			ps:=ps+"[Quartermaster] ";
 		if (line.[0] in list)
 		{
-			if (line.[1]=="0")
+			if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
 				buf:=buf+"* "+line.[0]+" "+ps+"<br/>";
 			else
 				buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps+"<br/>";
 		}
 		else
 		{
-			if (line.[1]=="0")
+			if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
 				buf:=buf+"  "+line.[0]+" "+ps+"<br/>";
 			else
 				buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps +"<br/>";
@@ -660,7 +666,7 @@ code
 		sendtext (textformat("You are the master daaa!<br/>"),self);
 		quit;
 	}
-	sendtext (textformat("<div class='clan'>The </div>"+self.extra.[CLAN_NAME].descr+" clan master is "),self);
+	buf:="<div class='clan'>The "+self.extra.[CLAN_NAME].descr+" clan master is (* denotes on line):</div>";
 	i:=0;
 	ln:=length(mlist);
 	while (i<ln)
@@ -674,12 +680,24 @@ code
 		pos:=split (line.[2],"/");
 		if (pos.[0]=="$master")
 		{
-			sendtext (textformat(line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>"),self);
-			quit;
+			if (line.[0] in list)
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+			else
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
 		}
 		i:=i+1;
 	}
-	quit;
+	goto cinfo_list;
 
 :cinfo_lord:
 	
@@ -700,9 +718,19 @@ code
 		{
 			count:=count+1;
 			if (line.[0] in list)
-				buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
 			else
-				buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
 			i:=i+1;
 		}
 		i:=i+1;
@@ -731,9 +759,19 @@ code
 		{
 			count:=count+1;
 			if (line.[0] in list)
-				buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
 			else
-				buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
 		}
 		i:=i+1;
 	}
@@ -761,9 +799,19 @@ code
 		{
 			count:=count+1;
 			if (line.[0] in list)
-				buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
 			else
-				buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
 		}
 		i:=i+1;
 	}
@@ -997,7 +1045,66 @@ code
 }
 dilend // chest_load
 
-/* Lists a clans ranks. Also displays the rank of an individual within their clan */
+dilbegin cupdate (arg:string);
+var
+	buf:string;
+	err:integer;
+	dlist:stringlist;
+	i:integer;
+	ln:integer;
+	cname:string;
+	found:integer;
+		
+code
+{
+	buf:="";
+	err:=loadstr ("clan.delete",buf);
+	if (err<1)
+	{
+		log ("01: Error in clan.delete");
+		quit;
+	}
+	
+	dlist:=split(buf,"\n");
+	i:=0;
+	ln:=length(dlist);
+	ln:=ln-1;
+	buf:="";
+	found:=-1;
+	
+	while (i<ln)
+	{
+		if (dlist.[i]!=self.name)
+		{
+			if (dlist.[i]!="")
+				buf:=buf+dlist.[i]+"\n";
+		}
+		else if (dlist.[i]==self.name)
+		{
+			found:=1;
+		}
+		i:=i+1;
+	}
+	
+	if (found==1)
+	{
+		i:=delstr("clan.delete");
+		err:=savestr("clan.delete",buf,"w");
+	
+		cname:=self.extra.[CLAN_NAME].descr;	
+		subextra (self.extra,CLAN_NAME);
+		subextra (self.extra,CLAN_RANK);
+		subextra (self.extra,CLAN_SYMBOLIC);
+		self.hometown:= "temple@udgaard";
+		self.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+cname+" clan<div class='default'></div>";	
+		act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+	}
+	quit;
+}
+dilend //cupdate
+
+/* Lists a clan's ranks. Also displays the rank of an individual within their clan */
 
 dilbegin crank (arg:string);
 var
@@ -1046,24 +1153,31 @@ code
 			act("<div class='clan'>You don't hold a rank in your clan.</div><div class='default'></div>",
 			A_ALWAYS,self,null,pc,TO_CHAR);
 		else
-			act("<div class='clan'>$3n Doesn't hold a rank in a clan.</div><div class='default'></div>",
+			act("<div class='clan'>$3n doesn't hold a rank in $3s clan.</div><div class='default'></div>",
 			A_ALWAYS,self,null,pc,TO_CHAR);
 		quit;
 	}
 
 	err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 	if (err<1)
+	{
 		err:=loadstr ("default.rank",buf);
+		if (err<1)
+		{
+			buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+			blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+		}
+	}
 
 	rlist:=split(buf,"\n");
 
 	if (rlist.[atoi(pc.extra.[CLAN_RANK].descr)]=="blank")
 	{
 		if (self==pc)
-			act("<div class='clan'>You don't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
+			act("<div class='clan'>You don't hold a Labeled rank in your clan.</div><div class='default'></div>",
 			A_ALWAYS,self,null,pc,TO_CHAR);
 		else
-			act("<div class='clan'>$3n Doesn't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
+			act("<div class='clan'>$3n doesn't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
 			A_ALWAYS,self,null,pc,TO_CHAR);
 		quit;
 	 }
@@ -1087,11 +1201,18 @@ code
 	}
 	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 	if (err<1)
+	{
 		err:=loadstr ("default.rank",buf);
+		if (err<1)
+		{
+			buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+			blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+		}
+	}
 
 	rlist:=split(buf,"\n");
 
-	act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
+	act ("<div class='clan'>Your clan's ranks are set as follows:</div><div class='default'></div>",
 	 A_ALWAYS,self,null,null,TO_CHAR);
 
 	i:=1;
@@ -1163,7 +1284,7 @@ code
 
 	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
 	{
-		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		act ("<div class='clan'>No such person found.</div><div class='default'></div>", A_ALWAYS,self,null,null,TO_CHAR);
 		quit;
 	}
 	if (pc.extra.[CLAN_NAME]==null)
@@ -1181,32 +1302,46 @@ code
 	}
 
 	rank:=getword (arg);
-	if ((atoi(rank)>=1) or (atoi(rank)<=25))
+	if ((atoi(rank)>=0) and (atoi(rank)<=25) and (rank != ""))
 	{
 		err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 		if (err<1)
 			err:=loadstr ("default.rank",buf);
+			if (err<1)
+			{
+				buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+				blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+			}
 
 		rlist:=split(buf,"\n");
 		if (rlist.[atoi(rank)]=="blank")
 		{
-			sendtext ("<div class='clan'>That rank has no label yet you can't set it till it has a label</div><div class='default'><br/></div>",self);
+			sendtext ("<div class='clan'>That rank has no label yet, you can't set it till it has a label.</div><div class='default'><br/></div>",self);
 			quit;
 		}
 		pc.extra.[CLAN_RANK].descr:=rank;
-		act ("<div class='clan'>Setting $3ns Clan rank to </div>"+rank+
-		":  "+rlist.[atoi(rank)]+
-		".<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
-		act ("<div class='clan'>Your clan rank is now </div>"+
-		rlist.[atoi(rank)]+
-		"<div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+		if (atoi(rank)!=0)
+		{
+			act ("<div class='clan'>Setting $3n's clan rank to </div>"+rank+
+			":  "+rlist.[atoi(rank)]+
+			".<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+			act ("<div class='clan'>Your clan rank is now </div>"+
+			rlist.[atoi(rank)]+
+			"<div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+		}
+		else
+		{
+			act ("<div class='clan'>Striping $3n of their clan rank.</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+			act ("<div class='clan'>You have been striped of your clan rank.</div><div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+		}
 	}
 	else
 	{
-		sendtext ("<div class='clan'>You can only set ranks 1 - 25<br/></div>",self);
+		sendtext ("<div class='clan'>You can only set ranks 1 - 25 or 0 to clear.<br/></div>",self);
+		quit;
 	}
 
-	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[1]);
 	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
 	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
 
@@ -1220,6 +1355,11 @@ code
 	err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 	if (err<1)
 		err:=loadstr ("default.rank",buf);
+		if (err<1)
+		{
+			buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+			blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+		}
 
 	rlist:=split(buf,"\n");
 	act ("<div class='clan'></div>"+rank+":  "+rlist.[atoi(rank)],A_ALWAYS,self,null,null,TO_CHAR);
@@ -1230,6 +1370,11 @@ code
 	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 	if (err<1)
 		err:=loadstr ("default.rank",buf);
+		if (err<1)
+		{
+			buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+			blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+		}
 
 	rlist:=split(buf,"\n");
 	rlist.[atoi(rank)]:=textformat(arg);
@@ -1257,10 +1402,15 @@ code
 	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 	if (err<1)
 		err:=loadstr ("default.rank",buf);
+		if (err<1)
+		{
+			buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+			blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+		}
 
 	rlist:=split(buf,"\n");
 
-	act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
+	act ("<div class='clan'>Your clan's ranks are set as follows:</div><div class='default'></div>",
 	 A_ALWAYS,self,null,null,TO_CHAR);
 
 	i:=1;
@@ -2435,6 +2585,7 @@ code
 
 	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
 	pc.extra.[CLAN_RANK].descr,tlist);
+	quit;
 }
 dilend // cdemote
 

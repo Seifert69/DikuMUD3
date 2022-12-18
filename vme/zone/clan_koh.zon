@@ -101,7 +101,7 @@ is filled with treasure. To reach the chest you must walk through the Veil of
 Truth. You begin to walk towards it but oddly you begin to feel warm..."
 
 
-flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
 movement SECT_INSIDE
 
 up to clan_enter;
@@ -116,7 +116,7 @@ say: Issa, Doggy, Alvaneu, Sentrosi, Joff, Wash, Snaga. These people must be
 very important to the clan! You feel a deep sense of honor for these people."
 
 
-flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
 movement SECT_INSIDE
 
 east to clan_fount

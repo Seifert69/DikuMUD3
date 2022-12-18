@@ -614,6 +614,7 @@ code
       informer();
       login_modify(self);
       exec("look", self);
+      exec("cupdate", self);
       login_event@bounty();
       quit;
    }
