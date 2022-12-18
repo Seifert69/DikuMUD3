@@ -81,10 +81,10 @@ static const char *unit_field_names[MAX_SET_FIELDS + 1] = {
     "del-info",  "access",       "promptstr",      "age",           "lifespan",  "profession",   nullptr};
 
 // These are oddly placed here because they need to initialize before used below
-skill_collection g_AbiColl(ABIL_TREE_MAX + 1);
-skill_collection g_WpnColl(WPN_TREE_MAX + 1);
-skill_collection g_SkiColl(SKI_TREE_MAX + 1);
-skill_collection g_SplColl(SPL_TREE_MAX + 1);
+skill_collection g_AbiColl(ABIL_TREE_MAX + 1, TEACH_ABILITIES);
+skill_collection g_WpnColl(WPN_TREE_MAX + 1, TEACH_WEAPONS);
+skill_collection g_SkiColl(SKI_TREE_MAX + 1, TEACH_SKILLS);
+skill_collection g_SplColl(SPL_TREE_MAX + 1, TEACH_SPELLS);
 
 field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_UNIT, AT_STR, nullptr, 200, 200, 253},                /* add-name        */

@@ -405,7 +405,7 @@ void info_show_one(unit_data *teacher,
     profession_cost *cost_entry = &pColl->prof_table[teaches_skills[teachesSkillsIndex].node];
     ubit8 isleaf = TREE_ISLEAF(pColl->tree, teaches_skills[teachesSkillsIndex].node);
     int gold = gold_cost(pupil, &teaches_skills[teachesSkillsIndex], pTrainValues->values[teaches_skills[teachesSkillsIndex].node]);
-    int next_point = actual_cost(pColl->prof_table[teaches_skills[teachesSkillsIndex].node].getProfessionBonus(pupil),
+    int next_point = actual_cost(pColl->prof_table[teaches_skills[teachesSkillsIndex].node].getProfessionBonus(pupil, pColl->teachtype),
                                  pColl->racial[CHAR_RACE(pupil)][teaches_skills[teachesSkillsIndex].node],
                                  pTrainValues->lvl[teaches_skills[teachesSkillsIndex].node],
                                  PC_VIRTUAL_LEVEL(pupil));
@@ -841,7 +841,7 @@ int practice(unit_data *teacher,
         }
     }
 
-    cost = actual_cost(pColl->prof_table[pckt->teaches[teach_index].node].getProfessionBonus(pupil),
+    cost = actual_cost(pColl->prof_table[pckt->teaches[teach_index].node].getProfessionBonus(pupil, pColl->teachtype),
                        pColl->racial[CHAR_RACE(pupil)][pckt->teaches[teach_index].node],
                        pTrainValues->lvl[pckt->teaches[teach_index].node],
                        PC_VIRTUAL_LEVEL(pupil));
@@ -974,7 +974,7 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
                 continue;
             }
 
-            cost = actual_cost(pColl->prof_table[nodeidx].getProfessionBonus(pupil),
+            cost = actual_cost(pColl->prof_table[nodeidx].getProfessionBonus(pupil, pColl->teachtype),
                                pColl->racial[CHAR_RACE(pupil)][nodeidx],
                                pTrainValues->lvl[nodeidx],
                                PC_VIRTUAL_LEVEL(pupil));
