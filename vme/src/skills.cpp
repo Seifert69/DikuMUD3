@@ -98,7 +98,28 @@ int profession_cost::getProfessionBonus(int professionIndex)
     return profession_bonus[professionIndex];
 }
 
-int profession_cost::getProfessionBonus(unit_data *pc)
+// Hack. Get the player's profession by index in the PC_INFO structure.
+//
+// 0 = first profession
+// 1 = second profession
+// 2 = third profession
+//
+// Returns -1 if not found, otherwise returns the player's profession for the index
+//
+int getPlayerProfessionByIndex(unit_data *pc, int index)
+{
+    auto exdp = PC_INFO(pc).find_raw("$profession");
+
+    if (exdp == nullptr)
+        return -1;
+
+    if (exdp->vals.Length() <= index+1)
+        return -1;
+
+    return exdp->vals.Value(index+1);
+}
+
+int profession_cost::getProfessionBonus(unit_data *pc, ubit8 teachtype)
 {
     if (!pc->isPC())
     {
@@ -106,8 +127,53 @@ int profession_cost::getProfessionBonus(unit_data *pc)
         return 0;
     }
 
-    return getProfessionBonus(PC_PROFESSION(pc));
+    //
+    // A player's profession bonus is the best of the player's up to three
+    // professions, but with a decay of -2 for each previous profession.
+    //
+    int professionBonusZero = -7;
+    int professionBonusOne = -7;
+    int professionBonusTwo = -7;
+
+    int n;
+
+    n = getPlayerProfessionByIndex(pc, 0);
+    if (n >= 0)
+        professionBonusZero = getProfessionBonus(n);
+    else
+        professionBonusZero = getProfessionBonus(PC_PROFESSION(pc));
+
+    n = getPlayerProfessionByIndex(pc, 1);
+    if (n >= 0)
+    {
+        // Perhaps this -1 should be 0 ?
+        professionBonusZero -= 1;
+        professionBonusOne = getProfessionBonus(n);
+    }
+
+    n = getPlayerProfessionByIndex(pc, 2);
+    if (n >= 0)
+    {
+        /*
+        if (teachtype == TEACH_ABILITIES)
+        {
+            professionBonusZero = -7;
+            professionBonusOne = -7;
+        }
+        else*/
+
+        // Changing from e.g. barbarian to mage is more dramatic, subtract 2
+        professionBonusZero -= 2;
+        professionBonusOne -= 2;
+
+        professionBonusTwo = getProfessionBonus(n);
+    }
+
+    return MAX(MAX(professionBonusZero, professionBonusOne), professionBonusTwo);
+
+    // return getProfessionBonus(PC_PROFESSION(pc));
 }
+
 
 void profession_cost::setProfessionBonus(int professionIndex, sbit8 value)
 {
@@ -122,8 +188,9 @@ void profession_cost::setProfessionBonus(int professionIndex, sbit8 value)
 
 /* ===================================================================== */
 
-skill_collection::skill_collection(int nSize)
+skill_collection::skill_collection(int nSize, ubit8 tt)
 {
+    teachtype = tt;
     prof_table = std::make_unique<profession_cost[]>(nSize);
     CREATE(text, const char *, nSize);
     assert(this->text);
@@ -143,7 +210,7 @@ int skill_collection::max_skill_limit(unit_data *pupil, int node)
 {
     int max_skill_limit(int professionBonus, int raceBonus);
 
-    return max_skill_limit(this->prof_table[node].getProfessionBonus(pupil), this->racial[CHAR_RACE(pupil)][node]);
+    return max_skill_limit(this->prof_table[node].getProfessionBonus(pupil, this->teachtype), this->racial[CHAR_RACE(pupil)][node]);
 }
 
 /* ===================================================================== */
