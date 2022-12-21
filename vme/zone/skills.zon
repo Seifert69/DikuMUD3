@@ -179,7 +179,7 @@ dilend
 // sd : skill of defender (numeric, not index)
 // Result: > 0 is a success, <= 0 is a failure.
 //
-dilbegin integer skillresist(aa : integer, ad : integer, sa : integer, sd : integer);
+dilbegin integer skillroll(aa : integer, ad : integer, sa : integer, sd : integer);
 code
 {
     return (openroll(100, 5) + aa + sa - ad - sd - 50);
@@ -436,7 +436,6 @@ dilend
 dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 external
     integer skillbattle1(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
-    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 var
    observer : unitptr;
@@ -1047,7 +1046,7 @@ dilend
 
 dilbegin do_use(arg : string);
 external
-   integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+   integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
    integer skillchar(u : unitptr, skiidx : integer, abiidx : integer);
 
 var
@@ -1119,7 +1118,7 @@ code
    skilld := stick.value[0];
 
    // Check if the character has enough skill with wands to actually use it.
-   hm := skillresist(skilla, self.abilities[ABIL_BRA], skilld, skilld);
+   hm := skillroll(skilla, self.abilities[ABIL_BRA], skilld, skilld);
 
    /* all considerations before here, now we are ready */
 
@@ -1976,7 +1975,7 @@ dilbegin disarm(arg : string);
 /* by Drevar */
 /*updated by Darg 2/2006*/
 external
-   integer skillresist (aa : integer, ad : integer,
+   integer skillroll (aa : integer, ad : integer,
                              sa : integer, sd : integer);
    provoked_attack (victim : unitptr, ch : unitptr);
 
@@ -2139,7 +2138,7 @@ provoked_attack (targ, self);
 
 
 
-        hm:=skillresist(skilla,skillb,skillc,skilld);
+        hm:=skillroll(skilla,skillb,skillc,skilld);
 
 
    if (self.endurance < 30)
@@ -2329,7 +2328,7 @@ dilbegin diagnose(arg : string);
 external
    string sizestring (cm : integer);
    string weightstring (cm : integer);
-   integer skillresist (aa : integer, ad : integer,
+   integer skillroll (aa : integer, ad : integer,
 			     sa : integer, sd : integer);
 
 var
@@ -2387,7 +2386,7 @@ code
    else
      skilla := self.abilities[ABIL_BRA];
 
-   hm := skillresist (self.abilities[ABIL_BRA], 20,
+   hm := skillroll (self.abilities[ABIL_BRA], 20,
 				skilla, 50);
 
    if (hm > 0)
@@ -2664,7 +2663,7 @@ dilend
 
 dilbegin res_clothes(tgt:unitptr, tgt_pc:unitptr);
 external
-   integer skillresist(aa : integer, ad : integer, sa : integer, sd : integer);
+   integer skillroll(aa : integer, ad : integer, sa : integer, sd : integer);
    unitptr unit_room(u:unitptr);
 
 var
@@ -2718,7 +2717,7 @@ code
    //
    skilld := 2*tgt.value[1] + 6*tgt.value[2];
 
-   hm := skillresist (self.abilities[ABIL_DEX],
+   hm := skillroll (self.abilities[ABIL_DEX],
 		     tgt.spells[SPL_CREATION],
 		     skilla, skilld);
 
@@ -2807,7 +2806,7 @@ dilend
 
 dilbegin res_lth(tgt:unitptr,tgt_pc:unitptr);
 external
-   integer skillresist (aa : integer, ad : integer,
+   integer skillroll (aa : integer, ad : integer,
 			     sa : integer, sd : integer);
    unitptr unit_room (u:unitptr);
 var
@@ -2866,7 +2865,7 @@ code
 
    skilld := 2*tgt.value[1] + 6*tgt.value[2];
 
-   hm := skillresist (self.abilities[ABIL_DEX],
+   hm := skillroll (self.abilities[ABIL_DEX],
 		     tgt.spells[SPL_CREATION],
 		     skilla, skilld);
 
@@ -2946,7 +2945,7 @@ dilend
 
 dilbegin res_metal(tgt:unitptr,tgt_pc:unitptr);
 external
-   integer skillresist (aa : integer, ad : integer,
+   integer skillroll (aa : integer, ad : integer,
 			     sa : integer, sd : integer);
    unitptr unit_room (u:unitptr);
 
@@ -3001,7 +3000,7 @@ code
 
    skilld := 2*tgt.value[1] + 6*tgt.value[2];
 
-   hm := skillresist (self.abilities[ABIL_STR],
+   hm := skillroll (self.abilities[ABIL_STR],
 		     tgt.spells[SPL_CREATION],
 		     skilla, skilld);
 
@@ -3113,7 +3112,7 @@ dilend
 dilbegin climb(destination:string, difficulty:integer,
                damage:integer, direction:integer);
 external
-    integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+    integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
    dest : unitptr;
@@ -3149,7 +3148,7 @@ code
    else
      skilla := self.abilities[ABIL_DEX];
 
-   hm := skillresist (skilla, 0,
+   hm := skillroll (skilla, 0,
 		     activator.abilities[ABIL_DEX], 0);
 
    if (hm >= difficulty)
@@ -3230,7 +3229,7 @@ dilend
 
 dilbegin base_rescue(targ: unitptr); /* May be copied on mobs easily */
 external
-    integer skillresist (aa : integer, ad : integer,
+    integer skillroll (aa : integer, ad : integer,
                          sa : integer, sd : integer);
 var tmp: unitptr;
     hm : integer;
@@ -3292,7 +3291,7 @@ code
     ska := self.abilities[ABIL_DEX];
 	skb := tmp.abilities[ABIL_DEX];
 
-    hm := skillresist(ska, skb, skc, skd);
+    hm := skillroll(ska, skb, skc, skd);
 
     /*       log(self.name+" tried to rescue "+tmp.name+" openroll "
         +itoa((openroll(100, 5)))+" skilla is: "+itoa(ska)
@@ -3769,7 +3768,7 @@ dilend
 
 dilbegin trip(arg : string);
 external
-    integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
+    integer skillroll (aa : integer, ad : integer, sa : integer, sd : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
 
 var
@@ -3906,7 +3905,7 @@ code
     // skilld := targ.abilities[ABIL_DEX];
     skilla := self.abilities[ABIL_DEX];
     skillb := targ.abilities[ABIL_DEX] ;
-    hm := skillresist (skilla,skillb,skillc,skilld);
+    hm := skillroll (skilla,skillb,skillc,skilld);
 
     if (self.endurance < 10)
     {
@@ -6173,7 +6172,7 @@ dilend /* Butcher */
 dilbegin throw (arg : string); /* The throw skill */
 
 external
-   integer skillresist@skills(aa : integer, ad : integer, sa : integer,
+   integer skillroll@skills(aa : integer, ad : integer, sa : integer,
                              sd : integer);
 
 var
@@ -6188,7 +6187,7 @@ wielded:unitptr;
    sharpness    : integer;  /* Approximate sharpness of non-weapons. */
    miss         : integer;
    mdam         : integer;  /* Damage the missile takes from the fight */
-   hm           : integer;  /* For skillresist */
+   hm           : integer;  /* For skillroll */
    dead_jim     : integer;  /* did we kill it? huh huh? */
 
    tstr         : string;   /* Temporary string for processing argument. */
@@ -6386,20 +6385,20 @@ else
                skilld := rnd(40,124);
 	  /*  skilld := targ.abilities[ABIL_DEX];*/
 
-hm := skillresist(skilla,skillb,skillc,skilld);
+hm := skillroll(skilla,skillb,skillc,skilld);
 
 
 
 /*
    if (targ.type == UNIT_ST_PC)
-      hm := skillresist@skills((self.abilities[ABIL_DEX] +
+      hm := skillroll@skills((self.abilities[ABIL_DEX] +
                                self.abilities[ABIL_STR]) /2,
                                (targ.abilities[ABIL_DEX]*2)/3,
                                self.skills[SKI_THROW],
                                targ.skills[SKI_THROW] - 25);
 
    else
-      hm := skillresist@skills((self.abilities[ABIL_DEX] +
+      hm := skillroll@skills((self.abilities[ABIL_DEX] +
                                self.abilities[ABIL_STR]) /2,
                                (targ.abilities[ABIL_DEX]*2)/3,
                                self.skills[SKI_THROW],
@@ -7707,7 +7706,7 @@ dilbegin hunting(arg : string);
 
 external
    string dirstring@function(dr : integer);
-   integer skillresist@skills(aa : integer, ad : integer,
+   integer skillroll@skills(aa : integer, ad : integer,
                              sa : integer, sd : integer);
 
 var
@@ -7899,7 +7898,7 @@ code
       */
        skilla:=self.abilities[ABIL_BRA] + self.level;
        skillb:=targ.abilities[ABIL_DEX] + targ.level;
-        hm:=skillresist(skilla,skillb,skillc,skilld);
+        hm:=skillroll(skilla,skillb,skillc,skilld);
 
 
 
@@ -7907,12 +7906,12 @@ code
 /*
 
    if (targ.type == UNIT_ST_PC)
-      hm:=skillresist@skills(self.abilities[ABIL_BRA]+self.level,
+      hm:=skillroll@skills(self.abilities[ABIL_BRA]+self.level,
                             targ.abilities[ABIL_BRA]+targ.level,
                             (self.skills[SKI_TRACK]+self.skills[SKI_HUNT])/2,
                             targ.skills[SKI_TRACK]);
    else
-      hm:=skillresist@skills(self.abilities[ABIL_BRA]+self.level,
+      hm:=skillroll@skills(self.abilities[ABIL_BRA]+self.level,
                             targ.abilities[ABIL_BRA]+(targ.level/4),
                             (self.skills[SKI_TRACK]+self.skills[SKI_HUNT])/2,
                             targ.abilities[ABIL_BRA]);
@@ -8040,7 +8039,7 @@ dilend /* hunting */
 dilbegin track(arg : string);
 external
    string dirstring@function(dr : integer);
-   integer skillresist@skills(aa : integer, ad : integer, sa : integer,
+   integer skillroll@skills(aa : integer, ad : integer, sa : integer,
                              sd : integer);
 var
    dir_string : string;
@@ -8234,18 +8233,18 @@ code
         */
        skilla:=self.abilities[ABIL_BRA] + self.level;
        skillb:=targ.abilities[ABIL_DEX] + targ.level /3;
-        hm:=skillresist(skilla,skillb,skillc,skilld);
+        hm:=skillroll(skilla,skillb,skillc,skilld);
 
 
 
 /*
    if (targ.type == UNIT_ST_PC)
-         hm := skillresist@skills(self.abilities[ABIL_BRA]+self.level,
+         hm := skillroll@skills(self.abilities[ABIL_BRA]+self.level,
                                  targ.abilities[ABIL_BRA]+targ.level,
                                  self.skills[SKI_TRACK],
                                  targ.skills[SKI_TRACK]);
    else
-         hm := skillresist@skills(self.abilities[ABIL_BRA]+self.level,
+         hm := skillroll@skills(self.abilities[ABIL_BRA]+self.level,
                                  targ.abilities[ABIL_BRA]+(targ.level/4),
                                  self.skills[SKI_TRACK],
                                  targ.abilities[ABIL_BRA]);
@@ -8339,7 +8338,7 @@ dilend
 dilbegin curare(arg : string);
 external
 	integer is_blade(wpn_type : integer);
-      integer skillresist@skills(aa : integer, ad : integer,
+      integer skillroll@skills(aa : integer, ad : integer,
                                 sa : integer, sd : integer);
 
 var
@@ -8482,7 +8481,7 @@ we thus need a -21 modifier
        skilla:= self.abilities[ABIL_BRA] /2;
        skillb:= 41;
 
-       hm:=skillresist(skilla,skillb,skillc,skilld);
+       hm:=skillroll(skilla,skillb,skillc,skilld);
 
 
    if (hm > 50) hm := 50;
@@ -8575,7 +8574,7 @@ dilend
 
 dilbegin recall weapon_curare(pwr : integer);
 external
-      integer skillresist@skills(aa : integer, ad : integer,
+      integer skillroll@skills(aa : integer, ad : integer,
                                 sa : integer, sd : integer);
 var
    origpwr : integer;
@@ -8656,11 +8655,11 @@ wait (SFB_PRE, (command(CMD_AUTO_DAMAGE) and
         */
        skilla:=self.abilities[ABIL_DEX];
        skillb:=self.outside.fighting.abilities[ABIL_DEX];
-        hm:=skillresist(skilla,skillb,skillc,skilld);
+        hm:=skillroll(skilla,skillb,skillc,skilld);
 
 /*
 
-   hm := skillresist@skills(self.outside.abilities[ABIL_DEX],
+   hm := skillroll@skills(self.outside.abilities[ABIL_DEX],
                          self.outside.fighting.abilities[ABIL_DEX],
                          self.outside.abilities[ABIL_BRA],
                          self.outside.fighting.abilities[ABIL_CON]);
@@ -8709,7 +8708,7 @@ dilend /* weapon_curare */
 // do_shoot
 dilbegin shoot(arg : string);
 external
-   integer skillresist@skills(aa : integer, ad : integer, sa : integer,
+   integer skillroll@skills(aa : integer, ad : integer, sa : integer,
                              sd : integer);
 
 var
@@ -8912,7 +8911,7 @@ code
 
    slay_bon := 0;
 
-   hm := skillresist@skills(self.abilities[ABIL_DEX],
+   hm := skillroll@skills(self.abilities[ABIL_DEX],
                            (targ.abilities[ABIL_DEX]-20),
                            self.weapons[wep_type],
                            (targ.abilities[ABIL_BRA]-10));
@@ -9017,7 +9016,7 @@ code
       quit;
    }
 
-   hm := skillresist@skills(self.abilities[ABIL_DEX],
+   hm := skillroll@skills(self.abilities[ABIL_DEX],
                            (targ.abilities[ABIL_DEX]-20),
                            self.weapons[wep_type],
                            (targ.abilities[ABIL_BRA]-10));
@@ -9412,7 +9411,7 @@ dilend /* fashion_weapon */
 dilbegin soothe(arg : string);
 
 external
-   integer skillresist@skills(aa : integer, ad : integer,
+   integer skillroll@skills(aa : integer, ad : integer,
                              sa : integer, sd : integer);
 
 var
@@ -9504,7 +9503,7 @@ code
        skilla:=self.abilities[ABIL_CHA];
        skillb:=targ.abilities[ABIL_CHA];
 
-       hm:=skillresist(skilla,skillb,skillc,skilld);
+       hm:=skillroll(skilla,skillb,skillc,skilld);
 
 /*
    if (self.type == UNIT_ST_PC)
@@ -9514,7 +9513,7 @@ code
 
    skilld := targ.abilities[ABIL_BRA];
 
-   hm := skillresist@skills(self.abilities[ABIL_CHA],
+   hm := skillroll@skills(self.abilities[ABIL_CHA],
                            targ.abilities[ABIL_BRA],
                            skilla, skilld);
 */
@@ -9882,7 +9881,7 @@ dilend /* ambush */
 /* forage skill by Saor, October, 1997 */
 dilbegin forage(arg : string);
 external
-      integer skillresist@skills(aa : integer, ad : integer,
+      integer skillroll@skills(aa : integer, ad : integer,
                                 sa : integer, sd : integer);
 var
    food : unitptr;
@@ -9941,37 +9940,37 @@ code
 
     :c3: /* field */
     t := rnd(0, 4);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 100);
     goto test;
 
     :c4: /* forest */
     t := rnd(0, 8);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 100);
     goto test;
 
     :c5: /* hills */
     t := rnd(0, 4);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 50);
     goto test;
 
     :c6: /* mountain */
     t := rnd(2, 4);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 0);
     goto test;
 
     :c7: /* desert */
     t := 9;
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 200);
     goto test;
 
     :c8: /* swamp */
     t := rnd(10, 16);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 0);
     goto test;
 
@@ -9979,14 +9978,14 @@ code
     :c10: /* water sail */
     :c11: /* under water */
     t := rnd(10, 14);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 50);
     goto test;
 
     :c12: /* snow */
     :c13: /* slush */
     t := rnd(0, 1);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_FORAGE], 200);
     goto test;
 
@@ -10214,7 +10213,7 @@ dilend
 /* dowse by Saor, September 1997 */
 dilbegin dowse(arg : string);
 external
-      integer skillresist@skills(aa : integer, ad : integer,
+      integer skillroll@skills(aa : integer, ad : integer,
                                 sa : integer, sd : integer);
 var
     u    : unitptr;
@@ -10268,35 +10267,35 @@ code
     :c4: /* forest */
     act("The chances of finding water here are good.", A_SOMEONE, self,
         null, null, TO_CHAR);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_DOWSE], 100);
     goto test;
 
     :c5: /* hills */
     act("The chances of finding water here are very good.", A_SOMEONE,
         self, null, null, TO_CHAR);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_DOWSE], 50);
     goto test;
 
     :c6: /* mountain */
     act("The chances of finding water here are excellent.", A_SOMEONE,
         self, null, null, TO_CHAR);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_DOWSE], 0);
     goto test;
 
     :c7: /* desert */
     act("The chances of finding water here are poor.", A_SOMEONE,
         self, null, null, TO_CHAR);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_DOWSE], 200);
     goto test;
 
     :c8: /* swamp */
     act("The chances of finding water here are excellent, but it may "+
         "be tainted.", A_SOMEONE, self, null, null, TO_CHAR);
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_DOWSE], 0);
     pois := 1;
     goto test;
@@ -10412,7 +10411,7 @@ dilend
 /* herbs skill by Saor, September, 1997 */
 dilbegin herbs(arg : string);
 external
-      integer skillresist@skills(aa : integer, ad : integer,
+      integer skillroll@skills(aa : integer, ad : integer,
                                 sa : integer, sd : integer);
 var
    u : unitptr;
@@ -10496,34 +10495,34 @@ code
 
     :c3: /* field */
     :c4: /* forest */
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_HERBS], 0);
     goto test;
 
     :c5: /* hills */
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_HERBS], 50);
     goto test;
 
     :c6: /* mountain */
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_HERBS], 100);
     goto test;
 
     :c7: /* desert */
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_HERBS], 200);
     goto test;
 
     :c8: /* swamp */
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_HERBS], 50);
     goto test;
 
     :c9: /* water swim */
     :c10: /* water sail */
     :c11: /* under water */
-    i := skillresist@skills(self.abilities[ABIL_BRA], 0,
+    i := skillroll@skills(self.abilities[ABIL_BRA], 0,
                            self.skills[SKI_HERBS], 50);
     goto test;
 
@@ -10592,7 +10591,7 @@ dilend
 
 dilbegin cook(arg : string);
 external
-      integer skillresist@skills(aa : integer, ad : integer,
+      integer skillroll@skills(aa : integer, ad : integer,
                                 sa : integer, sd : integer);
 var
    u    : unitptr;
@@ -10691,7 +10690,7 @@ code
     act("You begin to build a fire.", A_ALWAYS, self, null, null,
         TO_CHAR);
 
-    i := skillresist@skills(self.abilities[ABIL_DEX], 0,
+    i := skillroll@skills(self.abilities[ABIL_DEX], 0,
                            self.skills[SKI_COOK], u.movement*27);
 
     if (i <= 0)
@@ -10735,7 +10734,7 @@ dilend
 /* Mesmer- Rewrite of base coded scroll use */
 dilbegin ski_scroll_use(arg : string);
 external
-    integer skillresist@skills(aa : integer,ad : integer,sa : integer,sd : integer);
+    integer skillroll@skills(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
 scroll : unitptr;
@@ -10820,7 +10819,7 @@ code
        skilla:=scroll.value[0];
        skillb:=scroll.value[0];
 
-       hm:=skillresist(skilla,skillb,skillc,skilld);
+       hm:=skillroll(skilla,skillb,skillc,skilld);
 
 /*
   if(self.type == UNIT_ST_PC)
@@ -10830,7 +10829,7 @@ code
 
   skib := self.abilities[ABIL_BRA];
 
- hm := skillresist@skills(skia,scroll.value[0],skib,scroll.value[0]);
+ hm := skillroll@skills(skia,scroll.value[0],skib,scroll.value[0]);
 */
  if(hm < -50)
  {
@@ -10874,7 +10873,7 @@ dilend
 
 dilbegin ski_turn(arg : string);
 external
-    integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+    integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
 var
 tgt    : unitptr;
@@ -10929,7 +10928,7 @@ code
  skilla := self.abilities[ABIL_DIV];
  skillb := tgt.abilities[ABIL_DIV];
 
- hm := skillresist(skilla,skillb,skillc,skilld);
+ hm := skillroll(skilla,skillb,skillc,skilld);
  if((hm >= 0) and (RACE_IS_UNDEAD(tgt.race)))
  {
 if (self.endurance<20) self.endurance:=0;
@@ -10972,7 +10971,7 @@ dilend
 
 dilbegin ski_appraise(arg : string);
 external
-  integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+  integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
 hm   : integer;
@@ -11020,7 +11019,7 @@ code
     else
      skia := self.abilities[ABIL_BRA];
 
- hm := skillresist(self.abilities[ABIL_BRA],50,skia,0);
+ hm := skillroll(self.abilities[ABIL_BRA],50,skia,0);
 
  val := item.cost;
 
@@ -11050,7 +11049,7 @@ dilend
 
 dilbegin ski_ventril(arg : string);
 external
-  integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+  integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
 hm   : integer;
@@ -11138,7 +11137,7 @@ code
  else
   arg := str;
 
-  hm := skillresist(abia,abib,skia,skib);
+  hm := skillroll(abia,abib,skia,skib);
 
 
   if(hm >= 0)
@@ -11163,7 +11162,7 @@ dilend
 
 dilbegin ski_weather(arg : string);
 external
-   integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+   integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
 skia : integer;
@@ -11223,7 +11222,7 @@ dilend
 
 dilbegin ski_sneak(arg : string);
 external
-  integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+  integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
 hm   : integer;
@@ -11268,7 +11267,7 @@ else
  skillc := (self.abilities[ABIL_DEX] + self.abilities[ABIL_BRA]) / 2;
 */
 
-hm := skillresist(skilla,skillb,skillc,skilld);
+hm := skillroll(skilla,skillb,skillc,skilld);
  /*
  if(self.type == UNIT_ST_PC)
   skia := self.skills[SKI_SNEAK]
@@ -11276,7 +11275,7 @@ hm := skillresist(skilla,skillb,skillc,skilld);
    skia := (self.abilities[ABIL_DEX] +
             self.abilities[ABIL_BRA]) / 2;
 
- hm := skillresist((self.abilities[ABIL_DEX] +
+ hm := skillroll((self.abilities[ABIL_DEX] +
                     self.abilities[ABIL_BRA]) / 2, 60, skia, 50);
 */
  if(hm < 0)
@@ -11302,7 +11301,7 @@ dilend
 
 dilbegin ski_hide(arg : string);
 external
-  integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+  integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
 hm   : integer;
@@ -11341,7 +11340,7 @@ code
     skia := (self.abilities[ABIL_DEX] +
              self.abilities[ABIL_BRA]) / 2;
 
- hm := skillresist((self.abilities[ABIL_DEX] +
+ hm := skillroll((self.abilities[ABIL_DEX] +
                     self.abilities[ABIL_BRA]) / 2, 20, skia, 50);
 
  if(hm < 0)
@@ -11364,7 +11363,7 @@ dilend
 
 dilbegin ski_first_aid(arg : string);
 external
-  integer skillresist(aa : integer,ad : integer,sa : integer,sd : integer);
+  integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
 vict : unitptr;
@@ -11417,7 +11416,7 @@ code
     skia := (self.abilities[ABIL_BRA] +
              self.abilities[ABIL_DIV]) / 2;
 
- hm := skillresist((self.abilities[ABIL_BRA] +
+ hm := skillroll((self.abilities[ABIL_BRA] +
                     self.abilities[ABIL_DIV]) / 2, 10, skia, 40);
 
  if(hm >= 0)
@@ -11456,7 +11455,7 @@ dilend
 
 dilbegin slip(arg : string);
 external
-	integer skillresist (aa : integer, ad : integer,
+	integer skillroll (aa : integer, ad : integer,
 			     sa : integer, sd : integer);
 var
 tgt : unitptr;
@@ -11508,7 +11507,7 @@ code
         quit;
         }
 
-	res := skillresist(self.abilities[ABIL_DEX],50,
+	res := skillroll(self.abilities[ABIL_DEX],50,
 			   self.skills[SKI_SLIP],0);
 
 	if(res <= 0)
@@ -11568,7 +11567,7 @@ code
 	continue;
 	}
 
-	res := skillresist(self.abilities[ABIL_DEX],
+	res := skillroll(self.abilities[ABIL_DEX],
 			   u.abilities[ABIL_DEX],
 			   self.skills[SKI_SLIP],
 			   u.skills[SKI_SLIP]);
@@ -11586,7 +11585,7 @@ dilend
 
 dilbegin plant(arg : string);
 external
-	integer skillresist (aa : integer, ad : integer,
+	integer skillroll (aa : integer, ad : integer,
                              sa : integer, sd : integer);
 
 var
@@ -11661,11 +11660,11 @@ code
        skilla:=self.abilities[ABIL_DEX];
        skillb:=tgt.abilities[ABIL_DEX];
 
-	   res:=skillresist(skilla,skillb,skillc,skilld);
+	   res:=skillroll(skilla,skillb,skillc,skilld);
 
 /*
 
-	res := skillresist(self.abilities[ABIL_DEX],50,
+	res := skillroll(self.abilities[ABIL_DEX],50,
 			   self.skills[SKI_PLANT],0);
 */
 
@@ -11704,9 +11703,9 @@ code
         }
 
 
-    res := skillresist(skilla,skillb,skillc,skilld);
+    res := skillroll(skilla,skillb,skillc,skilld);
 	/*
-	res := skillresist(self.abilities[ABIL_DEX],
+	res := skillroll(self.abilities[ABIL_DEX],
 			   tgt.abilities[ABIL_DEX],
 			   self.abilities[SKI_PLANT],
 			   tgt.abilities[SKI_PLANT]);
@@ -11780,7 +11779,7 @@ dilend
 dilbegin palm(arg : string);
 external
  unitptr find_outside (s:string);
-	integer skillresist (aa : integer, ad : integer,
+	integer skillroll (aa : integer, ad : integer,
 			     sa : integer, sd : integer);
 
 var
@@ -11830,7 +11829,7 @@ code
 	quit;
 	}
 
-	res := skillresist(self.abilities[ABIL_DEX],50,
+	res := skillroll(self.abilities[ABIL_DEX],50,
 			   self.skills[SKI_PALM],0);
 
 	if(res <= 0)
@@ -11865,7 +11864,7 @@ code
 	foreach(UNIT_ST_PC,u)
 	{
 
-	res := skillresist(self.abilities[ABIL_DEX],
+	res := skillroll(self.abilities[ABIL_DEX],
 			   u.abilities[ABIL_DEX],
 			   self.skills[SKI_PALM],
 			   u.skills[SKI_PALM]);
@@ -11895,7 +11894,7 @@ dilend
 
 dilbegin ski_stalk(arg : string);
 external
-        integer skillresist(aa : integer, ad : integer,
+        integer skillroll(aa : integer, ad : integer,
                             sa : integer, sd : integer);
 var
 tgt : unitptr;
@@ -11966,7 +11965,7 @@ else
         skilld := rnd(40,124);
   /*      skilld := tgt.abilities[ABIL_DEX];
 */
-res := skillresist(skilla,skillb,skillc,skilld);
+res := skillroll(skilla,skillb,skillc,skilld);
 
 
 if(res <= -30) /* Major fail */
@@ -12003,7 +12002,7 @@ dilend // ski_stalk
 
 dilbegin ski_taunt(arg : string);
 external
-   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
+   integer skillroll (aa : integer, ad : integer, sa : integer, sd : integer);
    provoked_attack(victim : unitptr, ch : unitptr);
    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
@@ -12346,7 +12345,7 @@ code
 		tgt.endurance := tgt.endurance - 50;
 		quit;
 	}
-	// Wrong, because NPC doesn't have SKI_BERSERK. hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],30);
+	// Wrong, because NPC doesn't have SKI_BERSERK. hm := skillroll(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],30);
     hm := skillchecksa(SKI_BERSERK, ABIL_CON, 30);
 	if (hm > 10)
         hm := 10;	
@@ -12529,7 +12528,7 @@ code
 		quit;
 	}
 	
-	// Wrong. hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
+	// Wrong. hm := skillroll(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
     hm := skillchecksa(SKI_LEAP, ABIL_CON, 30);
 
 	if (hm <= 0)
