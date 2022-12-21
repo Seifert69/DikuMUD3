@@ -185,23 +185,27 @@ code
 dilend
 
 
-
 dilbegin integer skillchar(u : unitptr, skiidx : integer, abiidx : integer);
 code
 {
-   if (u.type == UNIT_ST_PC)
-      return(u.skills[skiidx]);
-   else
-      return(u.abilities[abiidx]);
+    if (u.type == UNIT_ST_PC)
+        return(u.skills[skiidx]);
+    else
+        return(u.abilities[abiidx]);
 }
 dilend
 
-
+//
+// aa : ability of attacker (numeric, not index)
+// ad : ability of defender (numeric, not index)
+// sa : skill of attacker (numeric, not index)
+// sd : skill of defender (numeric, not index)
+// Result: > 0 is a success, <= 0 is a failure.
+//
 dilbegin integer skillresist(aa : integer, ad : integer, sa : integer, sd : integer);
 code
 {
-                                         /* 100 was 50*/
-   return (openroll(100, 5) + aa + sa - ad - sd - 50);
+    return (openroll(100, 5) + aa + sa - ad - sd - 50);
 }
 dilend
 
@@ -513,7 +517,6 @@ dilbegin steal(arg : string);
 external
    onefreehand();
    bobcheck(victim : unitptr);
-   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
    provoked_attack (victim : unitptr, ch : unitptr);
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
@@ -1704,8 +1707,8 @@ dilend
 // do_glance
 dilbegin ski_glance(arg : string);
 external
-	integer skillresist (aa : integer, ad : integer,
-                             sa : integer, sd : integer);
+    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+                        def : unitptr, defskiidx : integer, defabiidx : integer);
 	string eq_string@commands(i : integer,ting : unitptr);
 var
    tgt : unitptr;
@@ -1716,10 +1719,6 @@ var
    str : string;
    len : integer;
    tot : integer;
-   skilla : integer;
-   skillb : integer;
-   skillc : integer;
-   skilld : integer;
 
 code
 {
@@ -1755,60 +1754,64 @@ code
       quit;
    }
 
-   if(tgt == self)
-   {
-      sendtext("You glance at yourself, amazing ehh?<br/>", self);
-      act("$1n glances at $1mself.",
-         A_SOMEONE, self, null, null, TO_REST);
-      quit;
-   }
+    if(tgt == self)
+    {
+        sendtext("You glance at yourself, amazing ehh?<br/>", self);
+        act("$1n glances at $1mself.",
+            A_SOMEONE, self, null, null, TO_REST);
+        quit;
+    }
 
-   if(self.type==UNIT_ST_PC)
-      skillc:=self.skills[SKI_GLANCE];
-   else
-      skillc := rnd(40,124);
+
+    /* if(self.type==UNIT_ST_PC)
+        skillc:=self.skills[SKI_GLANCE];
+    else
+        skillc := rnd(40,124);*/
 
    /*        skillc:=self.abilities[ABIL_BRA];     */
-   if(tgt.type==UNIT_ST_PC)
+   /* if(tgt.type==UNIT_ST_PC)
       skilld:=tgt.skills[SKI_GLANCE];
    else
-      skilld := rnd(40,124);
+      skilld := rnd(40,124);*/
 
    /*   skilld:=tgt.abilities[ABIL_BRA]; */
-   skilla:=self.abilities[ABIL_DEX];
+   /* skilla:=self.abilities[ABIL_DEX];
    skillb:=tgt.abilities[ABIL_DEX];
 
-   res:=skillresist(skilla,skillb,skillc,skilld);
+   res:=skillresist(skilla,skillb,skillc,skilld);*/
 
    /* res := skillresist(self.abilities[ABIL_DEX],
                      tgt.abilities[ABIL_DEX],
                      self.skills[SKI_GLANCE],
                      tgt.skills[SKI_GLANCE]);*/
-   if(res <= 0)
-   {
-      act("You try and sneak a peak at $3n, but $3e slaps you in the face.",
-         A_ALWAYS, self, null, tgt, TO_CHAR);
-      act("$1n tries to sneak a peak at $3n, but $3e slaps $1m in the face.",
-         A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("$1n tries to sneak a peak at you, but you slap $1m in the face.",
-         A_SOMEONE, self, null, tgt, TO_VICT);
 
-      self.hp := self.hp - rnd(5,30);
-      position_update(self);
-      quit;
-   }
-   else if(res <= 50)
-   {
-      act("You glance at $3n briefly, but have to away before $1e catches you.",
-         A_SOMEONE, self, null, tgt, TO_CHAR);
-      num := rnd(2,18);
-   }
-   else
-   {
-      act("You stealthily sneak a peak at $3n out of the corner of your eye.",
-         A_SOMEONE, self, null, tgt, TO_CHAR);
-      num := 25; /* more than enough to see all positions */
-   }
+    res := skillbattle(self, ABIL_DEX, SKI_GLANCE, tgt, ABIL_BRA, SKI_GLANCE);
+
+    if(res <= 0)
+    {
+        act("You try and sneak a peak at $3n, but $3e slaps you in the face.",
+            A_ALWAYS, self, null, tgt, TO_CHAR);
+        act("$1n tries to sneak a peak at $3n, but $3e slaps $1m in the face.",
+            A_SOMEONE, self, null, tgt, TO_NOTVICT);
+        act("$1n tries to sneak a peak at you, but you slap $1m in the face.",
+            A_SOMEONE, self, null, tgt, TO_VICT);
+
+        self.hp := self.hp - rnd(5,30);
+        position_update(self);
+        quit;
+    }
+    else if(res <= 50)
+    {
+        act("You glance at $3n briefly, but have to away before $1e catches you.",
+            A_SOMEONE, self, null, tgt, TO_CHAR);
+        num := rnd(2,18);
+    }
+    else
+    {
+        act("You stealthily sneak a peak at $3n out of the corner of your eye.",
+            A_SOMEONE, self, null, tgt, TO_CHAR);
+        num := 25; /* more than enough to see all positions */
+    }
 
    obj := tgt.inside;
    if (tgt.extra.[""].descr != "")
@@ -3290,10 +3293,9 @@ dilend
 
 
 dilbegin base_rescue(targ: unitptr); /* May be copied on mobs easily */
-
-external integer skillresist (aa : integer, ad : integer,
-                              sa : integer, sd : integer);
-
+external
+    integer skillresist (aa : integer, ad : integer,
+                         sa : integer, sd : integer);
 var tmp: unitptr;
     hm : integer;
     ska: integer;
@@ -3302,113 +3304,101 @@ var tmp: unitptr;
     skd: integer;
 code
 {
-
-if (not visible(self, targ))
+    if (not visible(self, targ))
     {
-    sendtext("Who do you want to rescue?<br/>", self);
-    return;
+        sendtext("Who do you want to rescue?<br/>", self);
+        return;
     }
 
-if (targ == self)
+    if (targ == self)
     {
-    sendtext("What about fleeing instead?<br/>", self);
-    return;
+        sendtext("What about fleeing instead?<br/>", self);
+        return;
     }
 
-if (targ == self.fighting)
+    if (targ == self.fighting)
     {
-    sendtext("How can you rescue someone you are trying to kill?<br/>", self);
-    return;
+        sendtext("How can you rescue someone you are trying to kill?<br/>", self);
+        return;
     }
 
-foreach (UNIT_ST_PC|UNIT_ST_NPC, tmp)
+    foreach (UNIT_ST_PC|UNIT_ST_NPC, tmp)
     {
-    if (tmp.fighting == targ)
-        break;
+        if (tmp.fighting == targ)
+            break;
     }
 
-if ((tmp == null) or (tmp.fighting != targ))
+    if ((tmp == null) or (tmp.fighting != targ))
     {
-    act("Nobody is fighting $3m?", A_SOMEONE, self, null, targ, TO_CHAR);
-    return;
+        act("Nobody is fighting $3m?", A_SOMEONE, self, null, targ, TO_CHAR);
+        return;
     }
 
-if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESCUE] <= 0))
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESCUE] <= 0))
     {
-    sendtext("You'd better practice first.<br/>", self);
-    return;
+        sendtext("You'd better practice first.<br/>", self);
+        return;
     }
 
-if (self.type == UNIT_ST_PC)
-    skc := self.skills[SKI_RESCUE];
-else
-          skc := (rnd(80,124)) + 50;
-/*
-    skc := (self.abilities[ABIL_DEX] + self.abilities[ABIL_BRA]) / 2;
-  */
-if (tmp.type == UNIT_ST_PC)
-    skd := tmp.skills[SKI_RESCUE];
-else
-          skd := (rnd(60,100)) ;
-/*
-    skd := (tmp.abilities[ABIL_DEX] + tmp.abilities[ABIL_BRA]) / 2;
-  */
+    if (self.type == UNIT_ST_PC)
+        skc := self.skills[SKI_RESCUE];
+    else
+        skc := (rnd(80,124)) + 50;
+
+    // skc := (self.abilities[ABIL_DEX] + self.abilities[ABIL_BRA]) / 2;
+
+    if (tmp.type == UNIT_ST_PC)
+        skd := tmp.skills[SKI_RESCUE];
+    else
+        skd := (rnd(60,100)) ;
+    // skd := (tmp.abilities[ABIL_DEX] + tmp.abilities[ABIL_BRA]) / 2;
+
     ska := self.abilities[ABIL_DEX];
 	skb := tmp.abilities[ABIL_DEX];
 
-hm := skillresist(ska, skb, skc, skd);
-/*       log(self.name+" tried to rescue "+tmp.name+" openroll "
-	   +itoa((openroll(100, 5)))+" skilla is: "+itoa(ska)
-	   +" skillb is: "+itoa(skb)
-	   +" skillc is: "+itoa(skc)+" skilld is: "+itoa(skd)+
-	   "- 50 = hm total: "+itoa(hm));
-*/
+    hm := skillresist(ska, skb, skc, skd);
 
-if ((tmp.type == UNIT_ST_PC) and (self.skills[SKI_LEADERSHIP])
-   and (targ.master == self))
-   hm := hm + self.skills[SKI_LEADERSHIP] / 4;
+    /*       log(self.name+" tried to rescue "+tmp.name+" openroll "
+        +itoa((openroll(100, 5)))+" skilla is: "+itoa(ska)
+        +" skillb is: "+itoa(skb)
+        +" skillc is: "+itoa(skc)+" skilld is: "+itoa(skd)+
+        "- 50 = hm total: "+itoa(hm)); */
 
-if (hm < 0)
+    if ((tmp.type == UNIT_ST_PC) and (self.skills[SKI_LEADERSHIP]) and (targ.master == self))
+        hm := hm + self.skills[SKI_LEADERSHIP] / 4;
+
+    if (hm < 0)
     {
-    sendtext("You bulge in from the left...<br/>"+
-        "...and continue out to the right.<br/>", self);
-
-    act("$1n bulges in from the left...<br/>"+
-        "...and continues out to the right.",
-        A_SOMEONE, self, null, targ, TO_VICT);
-
-    act("$1n makes a feeble attempt to rescue $3n.",
-        A_SOMEONE, self, null, targ, TO_NOTVICT);
-    return;
+        sendtext("You bulge in from the left...<br/>"+"...and continue out to the right.<br/>", self);
+        act("$1n bulges in from the left...<br/>"+"...and continues out to the right.", A_SOMEONE, self, null, targ, TO_VICT);
+        act("$1n makes a feeble attempt to rescue $3n.", A_SOMEONE, self, null, targ, TO_NOTVICT);
+        return;
     }
 
-sendtext("Banzai! To the rescue...<br/>", self);
+    sendtext("Banzai! To the rescue...<br/>", self);
+    act("You are rescued by $1n, you are confused!", A_SOMEONE, self, null, targ, TO_VICT);
+    act("$1n heroically rescues $3n.", A_SOMEONE, self, null, targ, TO_NOTVICT);
 
-act("You are rescued by $1n, you are confused!",
-    A_SOMEONE, self, null, targ, TO_VICT);
+    if (targ.fighting == tmp)
+        stop_fighting (targ, tmp);
 
-act("$1n heroically rescues $3n.", A_SOMEONE, self, null, targ, TO_NOTVICT);
+    if (self.fighting)
+        stop_fighting (self, self.fighting);
 
-if (targ.fighting == tmp)
-    stop_fighting (targ, tmp);
+    if (isset(tmp.charflags, CHAR_SELF_DEFENCE))
+        set(self.charflags, CHAR_SELF_DEFENCE);
 
-if (self.fighting)
-    stop_fighting (self, self.fighting);
+    set_fighting(self, tmp);
+    set_fighting(tmp, self);
 
-if (isset(tmp.charflags, CHAR_SELF_DEFENCE))
-    set(self.charflags, CHAR_SELF_DEFENCE);
+    /*
+    Can I set that?
 
-set_fighting(self, tmp);
-set_fighting(tmp, self);
+    if (CHAR_COMBAT(tmp_ch))
+        CHAR_COMBAT(tmp_ch)->setMelee(ch);
+    */
 
-/*
-Can I set that?
-
-   if (CHAR_COMBAT(tmp_ch))
-     CHAR_COMBAT(tmp_ch)->setMelee(ch);
-*/
-
-return;
+    return;
 }
 dilend
 
