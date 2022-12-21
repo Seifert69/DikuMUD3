@@ -34,7 +34,7 @@ this zone."
 */
 
 
-/* MS2020 skillchecksau() checks 'u' versus the difficulty        */
+/* MS2020 skillchecksau() checks 'u' versus a difficulty          */
 /*    SkillIdx is the skill in question.                          */ 
 /*    AbiIdx is the primary ability related                       */
 /*    Difficulty is how hard. 50 means 50 hard. -50 means easier! */
@@ -43,85 +43,55 @@ this zone."
 
 dilbegin integer skillchecksau(u : unitptr, skillidx : integer, abiidx : integer, difficulty : integer);
 var
-  roll : integer;
-  skl : integer;
+    roll : integer;
+    skl : integer;
 code
 {
-   roll := openroll(100, 5);
+    roll := openroll(100, 5);
 
-   if (u.type == UNIT_ST_PC)
-      skl := (u.skills[skillidx] * 2 + u.abilities[abiidx]) / 3; /* 2/3rd skill, 1/3rd ability */
-   else
-      skl := u.abilities[abiidx];
+    if (u.type == UNIT_ST_PC)
+        skl := (u.skills[skillidx] * 2 + u.abilities[abiidx]) / 3; /* 2/3rd skill, 1/3rd ability */
+    else
+        skl := u.abilities[abiidx];
 
-   if (difficulty < 0)
-      log("skillchecksau < 0 (easier)");
-   //log("skillchecksau() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
+    if (difficulty < 0)
+        log("skillchecksau < 0 (easier)");
+    //log("skillchecksau() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
 
-   return (roll + skl - difficulty - 50);
+    return (roll + skl - difficulty - 50);
 }
 dilend
 
 
 
-/* MS2020 skillchecksa() checks 'self' versus the difficulty
+/* skillchecksa() checks 'self' versus a difficulty
+ *
  * This is identical to skillchecksau except self == u
  */
 dilbegin integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
 var
-  roll : integer;
-  skl : integer;
+    roll : integer;
+    skl : integer;
 code
 {
-   roll := openroll(100, 5);
+    roll := openroll(100, 5);
 
-   if (self.type == UNIT_ST_PC)
-      skl := (self.skills[skillidx] * 2 + self.abilities[abiidx]) / 3; /* 2/3rd skill, 1/3rd ability */
-   else
-      skl := self.abilities[abiidx];
+    if (self.type == UNIT_ST_PC)
+        skl := (self.skills[skillidx] * 2 + self.abilities[abiidx]) / 3; /* 2/3rd skill, 1/3rd ability */
+    else
+        skl := self.abilities[abiidx];
 
-   if (difficulty < 0)
-      log("skillchecksa < 0 (easier)");
+    if (difficulty < 0)
+        log("skillchecksa < 0 (easier)");
 
-   //log("skillchecksa() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
+    //log("skillchecksa() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
 
-   return (roll + skl - difficulty - 50);
+    return (roll + skl - difficulty - 50);
 }
 dilend
 
 
-/* MS2020 SkillCheck() the skill versus the difficulty           */
-/* When skill equals difficulty there's a 50% chance of success. */ 
-/* Result > 0 is success                                         */
-dilbegin integer skillcheck(skilllevel : integer, difficulty : integer);
-var
-  i : integer;
-code
-{
-   i := openroll(100, 5);
-
-   if (difficulty < 0)
-      log("skillchecks < 0 (easier)");
-
-   //log("1d100OE = " + itoa(i) +" plus skill " + itoa(skilllevel) + " less " + itoa(difficulty) + " less 50 > 0");
-   return (i + skilllevel - difficulty - 50);
-}
-dilend
-
-
-/* MS2020 E.g. resist. If person resisting is higher level, then deltalevel should be positive */
-/* E.g. flee.   If person fleeing is higher level, then deltalevel should be positive */
-/* deltalevel is the level difference of the two involved chars and wil be multiplied by 5 */
-/* Result > 0 is success */
-dilbegin integer skillchecklevel(skilllevel : integer, deltalevel : integer);
-code
-{
-   return (openroll(100, 5) + skilllevel + deltalevel*5 - 50);
-}
-dilend
-
-
-/* skillchecksaopp() MS2020 checks 'self' versus the opponent
+/* skillbattle2() MS2020 checks 'self' versus the opponent
  *
  *    self     - the attacker
  *    skillidx - the skill in question, e.g. SKI_GLANCE 
@@ -133,11 +103,11 @@ dilend
  *
  * Example:
  *
- *     res := skillchecksaopp(SKI_GLANCE, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
+ *     res := skillbattle2(SKI_GLANCE, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
  *
  * Returns > 0 if successful
  */
-dilbegin integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+dilbegin integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                                  opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
     skl : integer;
@@ -153,14 +123,14 @@ code
    if (opp.type == UNIT_ST_PC)
       oppskl := (opp.skills[skillidx] * 2 + oppskl) / 3; // 2/3rd skill, 1/3rd ability
 
-   //log("skillchecksaopp() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
+   //log("skillbattle2() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
 
    return (openroll(100, 5) + skl - oppskl - 50);
 }
 dilend
 
 
-/* skillbattle1
+/* skillbattle1 - check self versus the opponent
  *   att : self, the char attacking
  *   attskiidx : e.g. SKI_STEAL
  *   attabiidx : e.g. ABIL_DEX
@@ -466,7 +436,7 @@ dilend
 dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 external
     integer skillbattle1(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 var
    observer : unitptr;
@@ -526,7 +496,7 @@ external
     bobcheck(victim : unitptr);
     provoked_attack (victim : unitptr, ch : unitptr);
     awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
    skilla  :  integer;
@@ -624,7 +594,7 @@ code
       quit;
    }
 
-    hm := skillchecksaopp(SKI_STEAL, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
+    hm := skillbattle2(SKI_STEAL, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
     if (isaff(self, ID_INVISIBILITY))
         hm := hm + 50;
 
@@ -684,7 +654,7 @@ dilbegin pickpocket(arg : string);
 external
     onefreehand();
     bobcheck(victim : unitptr);
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
     awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
@@ -722,7 +692,7 @@ code
 
     bobcheck(vict);
 
-    hm := skillchecksaopp(SKI_PICK_POCKETS, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
+    hm := skillbattle2(SKI_PICK_POCKETS, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
 
     if (hm <= -25)
     {
@@ -818,7 +788,7 @@ dilbegin filch(arg : string);
 external
     bobcheck(victim : unitptr);
     onefreehand();
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
     awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
@@ -914,7 +884,7 @@ code
         quit;
     }
 
-    hm := skillchecksaopp(SKI_FILCH, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
+    hm := skillbattle2(SKI_FILCH, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
 
     if (hm <= -5)
     {
@@ -969,7 +939,7 @@ dilend
 
 dilbegin peek(arg : string);
 external
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
     skilla : integer;
@@ -1021,7 +991,7 @@ code
         goto success;
     }
 
-    hm := skillchecksaopp(SKI_PEEK, ABIL_DEX, ABIL_BRA, targ, ABIL_BRA, ABIL_DEX);
+    hm := skillbattle2(SKI_PEEK, ABIL_DEX, ABIL_BRA, targ, ABIL_BRA, ABIL_DEX);
 
     if (hm < -25)
     {
@@ -1297,7 +1267,7 @@ external
     stringlist get_exits@skills(u1 : unitptr);
     unitptr  unit_room@function(u2 : unitptr);
     integer issetclimb@function(d:integer);
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
     i       :  integer;
@@ -1356,7 +1326,7 @@ code
     if (pc == null)
         goto flee;
 
-    hm := skillchecksaopp(SKI_FLEE, ABIL_DEX, ABIL_BRA, pc, ABIL_DEX, ABIL_BRA);
+    hm := skillbattle2(SKI_FLEE, ABIL_DEX, ABIL_BRA, pc, ABIL_DEX, ABIL_BRA);
 
    if (hm <= -50)
    {
@@ -1708,7 +1678,7 @@ dilend
 // do_glance
 dilbegin ski_glance(arg : string);
 external
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 	string eq_string@commands(i : integer,ting : unitptr);
 var
    tgt : unitptr;
@@ -1761,7 +1731,7 @@ code
         quit;
     }
 
-    res := skillchecksaopp(SKI_GLANCE, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
+    res := skillbattle2(SKI_GLANCE, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
 
     if (res <= 0)
     {
@@ -1827,7 +1797,7 @@ dilend
 dilbegin ski_bash(arg : string);
 external
     provoked_attack(victim : unitptr, ch : unitptr);
-    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                             opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
    skia : integer;
@@ -1931,7 +1901,7 @@ code
    else
       self.endurance := self.endurance - 10;
 
-   hm := skillchecksaopp(SKI_BASH, ABIL_STR, ABIL_STR, tgt, ABIL_DEX, ABIL_DEX);
+   hm := skillbattle2(SKI_BASH, ABIL_STR, ABIL_STR, tgt, ABIL_DEX, ABIL_DEX);
 
    if (hm < -25)
    {
@@ -12035,7 +12005,7 @@ dilbegin ski_taunt(arg : string);
 external
    integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
    provoked_attack(victim : unitptr, ch : unitptr);
-   integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+   integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
@@ -12135,7 +12105,7 @@ code
 		quit;
 	}
 	
-	hm := skillchecksaopp(SKI_TAUNT, ABIL_CON, ABIL_DEX, tgt, ABIL_BRA, ABIL_DEX);
+	hm := skillbattle2(SKI_TAUNT, ABIL_CON, ABIL_DEX, tgt, ABIL_BRA, ABIL_DEX);
 
 	if (hm < -25)
 	{
@@ -12415,7 +12385,7 @@ dilend // ski_berserk
 dilbegin ski_frenzy(arg : string);
 external
 	provoked_attack(victim : unitptr, ch : unitptr);
-	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+	integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
 	tgt : unitptr;
@@ -12452,7 +12422,7 @@ dilend
 dilbegin ski_charge(arg : string);
 external
 	provoked_attack(victim : unitptr, ch : unitptr);
-	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+	integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
    targ     : unitptr;
@@ -12526,7 +12496,7 @@ code
 	act("$1n recklessly charges at you !", A_ALWAYS, self, null, targ, TO_VICT);
 	act("$1n recklessly charges at $3n!", A_SOMEONE, self, null, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
-	hm := skillchecksaopp(SKI_CHARGE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_STR);
+	hm := skillbattle2(SKI_CHARGE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_STR);
 	self.hp := self.hp - pain;
 	hm := meleeattack(self, targ, (bonus + self.level + hm), 0);
 	
@@ -12659,7 +12629,7 @@ dilend // ski_leap
 
 dilbegin ski_whirl(arg : string);
 external
-	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+	integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
 	weap : unitptr;
@@ -12711,7 +12681,7 @@ code
 		quit;
 	}
 
-	hm := skillchecksaopp(SKI_WHIRL, ABIL_STR, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
+	hm := skillbattle2(SKI_WHIRL, ABIL_STR, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
 	if (hm <= -15)
 	{
 		act("Your get tripped up and stumble in your whirl!", A_SOMEONE, self, null, null, TO_CHAR);
@@ -12741,7 +12711,7 @@ dilend
 dilbegin ski_cleave(arg : string);
 external
 	provoked_attack(victim : unitptr, ch : unitptr);
-	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+	integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 	integer is_cleaver(wpn_type : integer);
 var
@@ -12817,7 +12787,7 @@ code
 	act("$1n pulls back their $2n and cleaves $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
 	self.endurance := self.endurance - 50;
-	hm := skillchecksaopp(SKI_CLEAVE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
+	hm := skillbattle2(SKI_CLEAVE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
 	hm := meleeattack(self, targ, (bonus + hm), 0);
 	
 	send_done("cleave",self,null,null,0,arg,null, CMD_AUTO_NONE);
@@ -12828,7 +12798,7 @@ dilend
 dilbegin ski_rend(arg : string);
 external
 	provoked_attack(victim : unitptr, ch : unitptr);
-	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+	integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 	integer is_cleaver(wpn_type : integer);
 var
@@ -12902,7 +12872,7 @@ code
 	act("$1n swings their $2n and violently rends $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
 	self.endurance := self.endurance - 75;
-	hm := skillchecksaopp(SKI_REND, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
+	hm := skillbattle2(SKI_REND, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
 	if (hm >= 0)
 		if (not(dilfind("rend_bleed@skills", targ)))
 			dilcopy("rend_bleed@skills("+itoa(hm)+")", targ);
@@ -12986,7 +12956,7 @@ dilend
 dilbegin ski_slam(arg : string);
 external
 	provoked_attack(victim : unitptr, ch : unitptr);
-	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+	integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 	integer is_blunt(wpn_type : integer);
 var
@@ -13040,7 +13010,7 @@ code
 
 		if ((u.master != mast) and (u != mast) and (u != self))
 		{	
-			hm := skillchecksaopp(SKI_SLAM, ABIL_STR, ABIL_CON, u, ABIL_DEX, ABIL_CON);
+			hm := skillbattle2(SKI_SLAM, ABIL_STR, ABIL_CON, u, ABIL_DEX, ABIL_CON);
 			if (hm <= -10)
 			{
 				act("<div class='hit_opponent'>Your slam hits $3n to no effect!</div>",
