@@ -29,11 +29,6 @@
 
 #define PRACTICE_COST_LEVEL (25)  // At what player level does it cost gold to train
 
-#define TEACH_ABILITIES 0
-#define TEACH_SPELLS 1
-#define TEACH_SKILLS 2
-#define TEACH_WEAPONS 3
-
 /* You can practice a low cost skill 3 times per level. I.e. gain 3 ability in a prime stat.
  * meaning you could have 90 in an ability in 30 levels. Or you can have 90 skill in 15 levels.
  */
