@@ -469,9 +469,9 @@ dilend
 //
 dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 external
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                       def : unitptr, defskiidx : integer, defabiidx : integer);
-   set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
+    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 var
    observer : unitptr;
    hm       : integer;
@@ -686,12 +686,12 @@ dilend
 /* do_pickocket (org by Drevar) */
 dilbegin pickpocket(arg : string);
 external
-   onefreehand();
-   bobcheck(victim : unitptr);
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                       def : unitptr, defskiidx : integer, defabiidx : integer);
-   provoked_attack (victim : unitptr, ch : unitptr);
-   awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
+    onefreehand();
+    bobcheck(victim : unitptr);
+    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    provoked_attack (victim : unitptr, ch : unitptr);
+    awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
 var
    skilla   :  integer;
@@ -709,111 +709,111 @@ var
 
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_PICK_POCKETS] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_PICK_POCKETS] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   onefreehand();
+    onefreehand();
 
-   vict := findunit(self, arg, FIND_UNIT_SURRO, null);
+    vict := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-   if ((vict == null) or not visible(self, vict))
-   {
-      act("No such person to pickpocket.",  A_SOMEONE, self, null, null,TO_CHAR);
-      quit;
-   }
+    if ((vict == null) or not visible(self, vict))
+    {
+        act("No such person to pickpocket.",  A_SOMEONE, self, null, null,TO_CHAR);
+        quit;
+    }
 
-   bobcheck(vict);
+    bobcheck(vict);
 
-   hm := skillbattle(self, SKI_PICK_POCKETS, ABIL_DEX, vict, SKI_PICK_POCKETS, ABIL_BRA);
+    hm := skillchecksaopp(SKI_PICK_POCKETS, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
 
-   if (hm <= -25)
-   {
-      act("You are caught!", A_SOMEONE, self, null, vict, TO_CHAR);
+    if (hm <= -25)
+    {
+        act("You are caught!", A_SOMEONE, self, null, vict, TO_CHAR);
 
-      if (isaff(self, ID_INVISIBILITY))
-         subaff(self, ID_INVISIBILITY);
+        if (isaff(self, ID_INVISIBILITY))
+            subaff(self, ID_INVISIBILITY);
 
-      act("You catch $1n with $1s hand in your purse!", A_SOMEONE, self, null,vict, TO_VICT);
-      act("You see $1n trying to pilfer money from $3n...$3e doesn't seem amused!", A_SOMEONE, self, null, vict, TO_NOTVICT);
-      provoked_attack (vict, self);
-      logcrime(self, vict, CRIME_STEALING);
-      quit;
-   }
+        act("You catch $1n with $1s hand in your purse!", A_SOMEONE, self, null,vict, TO_VICT);
+        act("You see $1n trying to pilfer money from $3n...$3e doesn't seem amused!", A_SOMEONE, self, null, vict, TO_NOTVICT);
+        provoked_attack (vict, self);
+        logcrime(self, vict, CRIME_STEALING);
+        quit;
+    }
 
-   if (hm <= 0)
-   {
-      act("You fail to get any money from $3n, but at least no one was watching!",A_SOMEONE, self, null, vict, TO_CHAR);
-      quit;
-   }
+    if (hm <= 0)
+    {
+        act("You fail to get any money from $3n, but at least no one was watching!",A_SOMEONE, self, null, vict, TO_CHAR);
+        quit;
+    }
 
-   if (hm <= 25)
-   {
-      act("You have your fingers on a handful of $3n's coins just as $3e turns toward you...",A_SOMEONE, self, null, vict, TO_CHAR);
-      act("You have been caught!",A_SOMEONE, self, null, vict, TO_CHAR);
-   
-      if (isaff(self, ID_INVISIBILITY))
+    if (hm <= 25)
+    {
+        act("You have your fingers on a handful of $3n's coins just as $3e turns toward you...",A_SOMEONE, self, null, vict, TO_CHAR);
+        act("You have been caught!",A_SOMEONE, self, null, vict, TO_CHAR);
+
+        if (isaff(self, ID_INVISIBILITY))
         subaff(self, ID_INVISIBILITY);
 
-      act("Arrgh!  $1n just tried to steal some of your hard earned money!",
+        act("Arrgh!  $1n just tried to steal some of your hard earned money!",
             A_SOMEONE, self, null, vict, TO_VICT);
-      act("You see $1n swipe a handful of coins from $3n...$3e doesn't seem amused!",
+        act("You see $1n swipe a handful of coins from $3n...$3e doesn't seem amused!",
             A_SOMEONE, self, null, vict, TO_NOTVICT);
-      willtake := (self.skills[SKI_PICK_POCKETS] / 2);
-      willtake := (rnd((willtake / 4), willtake));
-      plat := (((purse(vict, PLATINUM_PIECE)*willtake) / 100) * 40960);
-      gold := (((purse(vict, GOLD_PIECE)*willtake) / 100) * 5120);
-      silv := (((purse(vict, SILVER_PIECE)*willtake) / 100) * 640);
-      copp := (((purse(vict, COPPER_PIECE)*willtake) / 100) * 80);
-      iron := (((purse(vict, IRON_PIECE)*willtake) / 100) * 10);
+        willtake := (self.skills[SKI_PICK_POCKETS] / 2);
+        willtake := (rnd((willtake / 4), willtake));
+        plat := (((purse(vict, PLATINUM_PIECE)*willtake) / 100) * 40960);
+        gold := (((purse(vict, GOLD_PIECE)*willtake) / 100) * 5120);
+        silv := (((purse(vict, SILVER_PIECE)*willtake) / 100) * 640);
+        copp := (((purse(vict, COPPER_PIECE)*willtake) / 100) * 80);
+        iron := (((purse(vict, IRON_PIECE)*willtake) / 100) * 10);
 
-      if (iron)
+        if (iron)
         iron := (transfermoney(vict, self, iron));
-      if (copp)
+        if (copp)
         copp := (transfermoney(vict, self, copp));
-      if (silv)
+        if (silv)
         silv := (transfermoney(vict, self, silv));
-      if (gold)
+        if (gold)
         gold := (transfermoney(vict, self, gold));
-      if (plat)
+        if (plat)
         plat := (transfermoney(vict, self, plat));
-      provoked_attack (vict, self);
-      logcrime(self, vict, CRIME_STEALING);
-      position_update(self);
-      position_update(vict);
-      send_done("pickpocket",self,null,vict,hm,arg,null, CMD_AUTO_NONE);
-      quit;
-   }
+        provoked_attack (vict, self);
+        logcrime(self, vict, CRIME_STEALING);
+        position_update(self);
+        position_update(vict);
+        send_done("pickpocket",self,null,vict,hm,arg,null, CMD_AUTO_NONE);
+        quit;
+    }
 
-   willtake := (self.skills[SKI_PICK_POCKETS] / 2);
-   willtake := (rnd((willtake / 4), willtake));
+    willtake := (self.skills[SKI_PICK_POCKETS] / 2);
+    willtake := (rnd((willtake / 4), willtake));
 
-   plat := (((purse(vict, PLATINUM_PIECE)*willtake) / 100) * 40960);
-   gold := (((purse(vict, GOLD_PIECE)*willtake) / 100) * 5120);
-   silv := (((purse(vict, SILVER_PIECE)*willtake) / 100) * 640);
-   copp := (((purse(vict, COPPER_PIECE)*willtake) / 100) * 80);
-   iron := (((purse(vict, IRON_PIECE)*willtake) / 100) * 10);
+    plat := (((purse(vict, PLATINUM_PIECE)*willtake) / 100) * 40960);
+    gold := (((purse(vict, GOLD_PIECE)*willtake) / 100) * 5120);
+    silv := (((purse(vict, SILVER_PIECE)*willtake) / 100) * 640);
+    copp := (((purse(vict, COPPER_PIECE)*willtake) / 100) * 80);
+    iron := (((purse(vict, IRON_PIECE)*willtake) / 100) * 10);
 
-   if (iron)
-      iron := (transfermoney(vict, self, iron));
-   if (copp)
-      copp := (transfermoney(vict, self, copp));
-   if (silv)
-      silv := (transfermoney(vict, self, silv));
-   if (gold)
-      gold := (transfermoney(vict, self, gold));
-   if (plat)
-      plat := (transfermoney(vict, self, plat));
+    if (iron)
+        iron := (transfermoney(vict, self, iron));
+    if (copp)
+        copp := (transfermoney(vict, self, copp));
+    if (silv)
+        silv := (transfermoney(vict, self, silv));
+    if (gold)
+        gold := (transfermoney(vict, self, gold));
+    if (plat)
+        plat := (transfermoney(vict, self, plat));
 
-   position_update(self);
-   position_update(vict);
-   act("You stealthily pilfer a handful of coins from $3n's purse and " +
-      "quickly deposit them in your own.",A_SOMEONE, self, null, vict, TO_CHAR);
-   awareness_check(self, vict, SKI_PICK_POCKETS, "You notice $2n stealing gold from $3n");
-   send_done("pickpocket",self,null,vict,hm,arg,null, CMD_AUTO_NONE);
-   quit;
+    position_update(self);
+    position_update(vict);
+    act("You stealthily pilfer a handful of coins from $3n's purse and " +
+        "quickly deposit them in your own.",A_SOMEONE, self, null, vict, TO_CHAR);
+    awareness_check(self, vict, SKI_PICK_POCKETS, "You notice $2n stealing gold from $3n");
+    send_done("pickpocket",self,null,vict,hm,arg,null, CMD_AUTO_NONE);
+    quit;
 }
 dilend
 
@@ -821,12 +821,12 @@ dilend
 
 dilbegin filch(arg : string);
 external
-   bobcheck(victim : unitptr);
-   onefreehand();
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                       def : unitptr, defskiidx : integer, defabiidx : integer);
-   provoked_attack (victim : unitptr, ch : unitptr);
-   awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
+    bobcheck(victim : unitptr);
+    onefreehand();
+    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    provoked_attack (victim : unitptr, ch : unitptr);
+    awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
 var
    skilla  :  integer;
@@ -975,8 +975,8 @@ dilend
 
 dilbegin peek(arg : string);
 external
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                       def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
    skilla : integer;
@@ -1302,12 +1302,12 @@ dilend
 /* do_flee in dil */
 dilbegin aware flee(arg : string);
 external
-   string   dirstring@function(a3 : integer);
-   stringlist get_exits@skills(u1 : unitptr);
-   unitptr  unit_room@function(u2 : unitptr);
-   integer issetclimb@function(d:integer);
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                        def : unitptr, defskiidx : integer, defabiidx : integer);
+    string   dirstring@function(a3 : integer);
+    stringlist get_exits@skills(u1 : unitptr);
+    unitptr  unit_room@function(u2 : unitptr);
+    integer issetclimb@function(d:integer);
+    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
    i       :  integer;
