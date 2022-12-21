@@ -3076,129 +3076,127 @@ dilend
      (most usually it is up, which is macro UP == 5).
 */
 
-dilbegin climb(destination:string, difficulty:integer,
-               damage:integer, direction:integer);
+dilbegin climb(destination:string, difficulty:integer, damage:integer, direction:integer);
 external
     integer skillroll(aa : integer,ad : integer,sa : integer,sd : integer);
 
 var
-   dest : unitptr;
-   skilla : integer;
-   hm : integer;
-   doorname : string;
+    dest : unitptr;
+    skilla : integer;
+    hm : integer;
+    doorname : string;
 code
 {
-   if (not self.exit_to[direction])
-   {
-      log("No such exit in climb dil.");
-      quit;
-   }
+    if (not self.exit_to[direction])
+    {
+        log("No such exit in climb dil.");
+        quit;
+    }
 
-   if (not findroom(destination))
-   {
-      log("No such room in climb dil.");
-      quit;
-   }
+    if (not findroom(destination))
+    {
+        log("No such room in climb dil.");
+        quit;
+    }
 
-   doorname := self.exit_names[direction].[0];
-   /* One could check for an empty name here... */
+    doorname := self.exit_names[direction].[0];
+    /* One could check for an empty name here... */
 
-   :loop:
-   wait(SFB_CMD, command("climb") or command(direction));
+:loop:
+    wait(SFB_CMD, command("climb") or command(direction));
 
-   if (self.type == UNIT_ST_PC)
-   {
-      skilla := self.skills[SKI_CLIMB];
-      if (skilla < 1)
-	skilla := -25;
-   }
-   else
-     skilla := self.abilities[ABIL_DEX];
+    if (self.type == UNIT_ST_PC)
+    {
+        skilla := self.skills[SKI_CLIMB];
+        if (skilla < 1)
+    skilla := -25;
+    }
+    else
+        skilla := self.abilities[ABIL_DEX];
 
-   hm := skillroll (skilla, 0,
-		     activator.abilities[ABIL_DEX], 0);
+    hm := skillroll (skilla, 0,
+                activator.abilities[ABIL_DEX], 0);
 
-   if (hm >= difficulty)
-   {
-      act("You easily climb the $2t.",
-	  A_ALWAYS, activator, doorname, null, TO_CHAR);
-      act("$1n easily climbs the $2t.",
-	  A_HIDEINV, activator, doorname, null, TO_ROOM);
-      goto loop;
-   }
+    if (hm >= difficulty)
+    {
+        act("You easily climb the $2t.",
+        A_ALWAYS, activator, doorname, null, TO_CHAR);
+        act("$1n easily climbs the $2t.",
+        A_HIDEINV, activator, doorname, null, TO_ROOM);
+        goto loop;
+    }
 
-   dest := findroom(destination);
+    dest := findroom(destination);
 
-   if (dest != activator.outside)
-   {
-      act("You fall and hit yourself!",
-	  A_ALWAYS, activator, doorname, null, TO_CHAR);
+    if (dest != activator.outside)
+    {
+        act("You fall and hit yourself!",
+        A_ALWAYS, activator, doorname, null, TO_CHAR);
 
-      act("$1n failed to climb the $2t and takes a nasty fall...",
-	  A_SOMEONE, activator, doorname, null, TO_ROOM);
+        act("$1n failed to climb the $2t and takes a nasty fall...",
+        A_SOMEONE, activator, doorname, null, TO_ROOM);
 
-      link(activator, dest);
+        link(activator, dest);
 
-      act("$1n failed to climb the $2t and lands at your feet...",
-	  A_SOMEONE, activator, doorname, null, TO_ROOM);
-   }
-   else
-   {
-      act("You fail to climb the $2t!",
-	  A_ALWAYS, activator, doorname, null, TO_CHAR);
+        act("$1n failed to climb the $2t and lands at your feet...",
+        A_SOMEONE, activator, doorname, null, TO_ROOM);
+    }
+    else
+    {
+        act("You fail to climb the $2t!",
+        A_ALWAYS, activator, doorname, null, TO_CHAR);
 
-      act("$1n failed to climb the $2t!",
-	  A_SOMEONE, activator, doorname, null, TO_ROOM);
-   }
+        act("$1n failed to climb the $2t!",
+        A_SOMEONE, activator, doorname, null, TO_ROOM);
+    }
 
-   if (activator.level < IMMORTAL_LEVEL)
-   {
-      activator.hp := activator.hp - damage;
-      position_update(activator);
-   }
-   block;
-   goto loop;
+    if (activator.level < IMMORTAL_LEVEL)
+    {
+        activator.hp := activator.hp - damage;
+        position_update(activator);
+    }
+    block;
+    goto loop;
 }
 dilend
 
 
 
 dilbegin do_rescue(arg: string);
+external 
+    base_rescue(targ: unitptr); /* Needed for SFUN_RESCUE */
 
-external base_rescue(targ: unitptr); /* Needed for SFUN_RESCUE */
-
-var targ: unitptr;
+var 
+    targ: unitptr;
 
 code
 {
-
-if (arg == "")
+    if (arg == "")
     {
-    sendtext("Rescue who?<br/>", self);
-    quit;
+        sendtext("Rescue who?<br/>", self);
+        quit;
     }
 
-targ :=findunit(self, arg, FIND_UNIT_SURRO, null);
+    targ :=findunit(self, arg, FIND_UNIT_SURRO, null);
 
-if ((not targ) or not(targ.type & UNIT_ST_PC|UNIT_ST_NPC))
+    if ((not targ) or not(targ.type & UNIT_ST_PC|UNIT_ST_NPC))
     {
-    sendtext("Who do you want to rescue?<br/>", self);
-    quit;
+        sendtext("Who do you want to rescue?<br/>", self);
+        quit;
     }
 
-base_rescue(targ);
+    base_rescue(targ);
 
-quit;
+    quit;
 }
-
 dilend
 
 
 dilbegin base_rescue(targ: unitptr); /* May be copied on mobs easily */
 external
-    integer skillroll (aa : integer, ad : integer,
-                         sa : integer, sd : integer);
-var tmp: unitptr;
+    integer skillbattle1(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+var 
+    tmp: unitptr;
     hm : integer;
     ska: integer;
     skb: integer;
@@ -3206,6 +3204,12 @@ var tmp: unitptr;
     skd: integer;
 code
 {
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESCUE] <= 0))
+    {
+        sendtext("You'd better practice first.<br/>", self);
+        return;
+    }
+
     if (not visible(self, targ))
     {
         sendtext("Who do you want to rescue?<br/>", self);
@@ -3236,37 +3240,14 @@ code
         return;
     }
 
-    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESCUE] <= 0))
-    {
-        sendtext("You'd better practice first.<br/>", self);
-        return;
-    }
+    // targ is the person you're trying to rescue
+    // tmp is the person you're trying to rescue them from
+    //
+    hm := skillbattle1(self, SKI_RESCUE, ABIL_DEX, tmp, SKI_RESCUE, ABIL_DEX);
 
-    if (self.type == UNIT_ST_PC)
-        skc := self.skills[SKI_RESCUE];
-    else
-        skc := (rnd(80,124)) + 50;
-
-    // skc := (self.abilities[ABIL_DEX] + self.abilities[ABIL_BRA]) / 2;
-
-    if (tmp.type == UNIT_ST_PC)
-        skd := tmp.skills[SKI_RESCUE];
-    else
-        skd := (rnd(60,100)) ;
-    // skd := (tmp.abilities[ABIL_DEX] + tmp.abilities[ABIL_BRA]) / 2;
-
-    ska := self.abilities[ABIL_DEX];
-	skb := tmp.abilities[ABIL_DEX];
-
-    hm := skillroll(ska, skb, skc, skd);
-
-    /*       log(self.name+" tried to rescue "+tmp.name+" openroll "
-        +itoa((openroll(100, 5)))+" skilla is: "+itoa(ska)
-        +" skillb is: "+itoa(skb)
-        +" skillc is: "+itoa(skc)+" skilld is: "+itoa(skd)+
-        "- 50 = hm total: "+itoa(hm)); */
-
-    if ((tmp.type == UNIT_ST_PC) and (self.skills[SKI_LEADERSHIP]) and (targ.master == self))
+    // If you're the group leader, and targ is following you, your leadership will help
+    //
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_LEADERSHIP]) and (targ.master == self))
         hm := hm + self.skills[SKI_LEADERSHIP] / 4;
 
     if (hm < 0)
