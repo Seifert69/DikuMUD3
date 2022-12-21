@@ -107,8 +107,7 @@ dilend
  *
  * Returns > 0 if successful
  */
-dilbegin integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
-                                 opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+dilbegin integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
     skl : integer;
     oppskl : integer;
@@ -435,7 +434,7 @@ dilend
 //
 dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 external
-    integer skillbattle1(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillbattle1(skiidx : integer, attabiidx : integer, def : unitptr, defabiidx : integer);
     set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 var
    observer : unitptr;
@@ -456,7 +455,7 @@ code
    {
       if ((observer != thief) and (observer != victim))
       {
-         hm := skillbattle1(thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
+         hm := skillbattle1(skill, ABIL_DEX, observer, ABIL_BRA);
 
          if (not visible(observer, thief))
             hm := hm - 100;
@@ -3194,7 +3193,7 @@ dilend
 
 dilbegin base_rescue(targ: unitptr); /* May be copied on mobs easily */
 external
-    integer skillbattle1(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillbattle1(skiidx : integer, attabiidx : integer, def : unitptr, defabiidx : integer);
 var 
     tmp: unitptr;
     hm : integer;
@@ -3243,7 +3242,7 @@ code
     // targ is the person you're trying to rescue
     // tmp is the person you're trying to rescue them from
     //
-    hm := skillbattle1(self, SKI_RESCUE, ABIL_DEX, tmp, SKI_RESCUE, ABIL_DEX);
+    hm := skillbattle1(SKI_RESCUE, ABIL_DEX, tmp, ABIL_DEX);
 
     // If you're the group leader, and targ is following you, your leadership will help
     //
