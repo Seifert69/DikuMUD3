@@ -1975,234 +1975,202 @@ dilbegin disarm(arg : string);
 /* by Drevar */
 /*updated by Darg 2/2006*/
 external
-   integer skillroll (aa : integer, ad : integer,
-                             sa : integer, sd : integer);
-   provoked_attack (victim : unitptr, ch : unitptr);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    provoked_attack (victim : unitptr, ch : unitptr);
 
 var
-   tweapon  : unitptr;
-   mweapon  : unitptr;
-   skilla : integer;
-   skilld : integer;
-   hm     : integer;
-   targ   : unitptr;
-   skillb : integer;
-   skillc : integer;
-   f  : integer;
+    tweapon  : unitptr;
+    mweapon  : unitptr;
+    hm     : integer;
+    targ   : unitptr;
+    f  : integer;
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_DISARM] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_DISARM] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (arg == "")
-   {
-      if (self.fighting)
-      {
-         targ := self.fighting;
-         goto disarm;
-      }
-      else
-      {
-         act("Who do you wish to disarm?", A_SOMEONE, self, null, null,
+    if (arg == "")
+    {
+        if (self.fighting)
+        {
+            targ := self.fighting;
+            goto disarm;
+        }
+        else
+        {
+            act("Who do you wish to disarm?", A_SOMEONE, self, null, null,
             TO_CHAR);
-         quit;
-      }
-   }
-   targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+            quit;
+        }
+    }
 
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("They are not here!", A_SOMEONE, self, null, targ, TO_CHAR);
-      quit;
-   }
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-   if (targ==self)
-   {
-      act("Why not use the remove command.", A_SOMEONE, self,
-          null, null, TO_CHAR);
-      quit;
-   }
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("They are not here!", A_SOMEONE, self, null, targ, TO_CHAR);
+        quit;
+    }
 
-
-  if ( (targ.type != UNIT_ST_PC) and (targ.type != UNIT_ST_NPC) )
-   {
-      act("No need to disarm that, it can't attack you.", A_SOMEONE, self,
+    if (targ==self)
+    {
+        act("Why not use the remove command.", A_SOMEONE, self,
             null, null, TO_CHAR);
-      quit;
-   }
-
-   if (targ.position <= POSITION_INCAP)
-   {
-      act("Why bother?  $3e can't hurt you now!", A_SOMEONE, self, null,
-         targ, TO_CHAR);
-      quit;
-   }
-
-   if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
-   {
-      if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-      {
-         act ("You are not allowed to do this unless $2e signs the book of blood.",
-         A_ALWAYS,self,targ,null,TO_CHAR);
-         quit;
-      }
-   }
-
-   /*darg added to make mobs a bit more intelligent acting */
-
-   if (RACE_IS_MAMMAL(targ.race) and (targ.type == UNIT_ST_NPC))
-   {
-      f := dilfind("disarm_pc@update", targ);
-      if(f == FALSE)
-      {
-         dilcopy("disarm_pc@update()", targ);
-      }
-   }
-   /* end darg add */
+        quit;
+    }
 
 
-   :disarm:
-      provoked_attack (targ, self);
-if ((dilfind ("disarmed@skills",targ))or(dilfind ("disarmed@skills",targ)))
-	{
-	act ("$3n anticipates $1n's disarm attempt and avoids it completely.",
-		A_ALWAYS, self,null,targ,TO_NOTVICT);
-	act ("You try to disarm $3n again but $3n anticipates it and avoids it completely.",
-		A_ALWAYS, self,null,targ,TO_CHAR);
-		act ("You notice $3n trying to disarm you again and avoid it completely.",
-			A_ALWAYS, targ,null,self,TO_CHAR);
-            self.endurance := self.endurance - 20;
-			position_update(self);
-			quit;
-			}
+    if ( (targ.type != UNIT_ST_PC) and (targ.type != UNIT_ST_NPC) )
+    {
+        act("No need to disarm that, it can't attack you.", A_SOMEONE, self,
+            null, null, TO_CHAR);
+        quit;
+    }
 
-if ((dilfind ("disarmed@skills",self))or(dilfind ("disarmed@skills",self)))
-	{
-	act ("You are too shook up to try to disarm $3n at the moment.",
-		A_ALWAYS, self,null,targ,TO_CHAR);
-            self.endurance := self.endurance - 20;
-			position_update(self);
-			quit;
-			}
+    if (targ.position <= POSITION_INCAP)
+    {
+        act("Why bother?  $3e can't hurt you now!", A_SOMEONE, self, null,
+            targ, TO_CHAR);
+        quit;
+    }
+
+    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+    {
+        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+        {
+            act ("You are not allowed to do this unless $2e signs the book of blood.",
+            A_ALWAYS,self,targ,null,TO_CHAR);
+            quit;
+        }
+    }
+
+    /*darg added to make mobs a bit more intelligent acting */
+
+    if (RACE_IS_MAMMAL(targ.race) and (targ.type == UNIT_ST_NPC))
+    {
+        f := dilfind("disarm_pc@update", targ);
+        if(f == FALSE)
+        {
+            dilcopy("disarm_pc@update()", targ);
+        }
+    }
+    /* end darg add */
 
 
-   mweapon := self.inside;
-   while (mweapon)
-     {
-       if ( (mweapon.objecttype == ITEM_WEAPON) and
-            (mweapon.equip == WEAR_WIELD) )
-         {
-           break;
-         }
-       mweapon := mweapon.next;
-     }
+:disarm:
+    provoked_attack (targ, self);
+    if ((dilfind ("disarmed@skills",targ))or(dilfind ("disarmed@skills",targ)))
+    {
+        act ("$3n anticipates $1n's disarm attempt and avoids it completely.",
+            A_ALWAYS, self,null,targ,TO_NOTVICT);
+        act ("You try to disarm $3n again but $3n anticipates it and avoids it completely.",
+            A_ALWAYS, self,null,targ,TO_CHAR);
+        act ("You notice $3n trying to disarm you again and avoid it completely.",
+            A_ALWAYS, targ,null,self,TO_CHAR);
+        self.endurance := self.endurance - 20;
+        position_update(self);
+        quit;
+    }
 
-   if (mweapon == null)
-     {
-       act("Better get yourself a weapon first!", A_SOMEONE, self, null, null,
-           TO_CHAR);
-       quit;
-     }
+    if ((dilfind ("disarmed@skills",self))or(dilfind ("disarmed@skills",self)))
+    {
+        act ("You are too shook up to try to disarm $3n at the moment.", A_ALWAYS, self,null,targ,TO_CHAR);
+        self.endurance := self.endurance - 20;
+        position_update(self);
+        quit;
+    }
 
-   tweapon := targ.inside;
-   while (tweapon)
-     {
-       if ( (tweapon.objecttype == ITEM_WEAPON) and
+    mweapon := self.inside;
+    while (mweapon)
+    {
+        if ( (mweapon.objecttype == ITEM_WEAPON) and (mweapon.equip == WEAR_WIELD) )
+        {
+            break;
+        }
+        mweapon := mweapon.next;
+    }
+
+    if (mweapon == null)
+    {
+        act("Better get yourself a weapon first!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    tweapon := targ.inside;
+    while (tweapon)
+    {
+        if ( (tweapon.objecttype == ITEM_WEAPON) and
             (tweapon.equip == WEAR_WIELD) )
-         {
-           break;
-         }
-       tweapon := tweapon.next;
-     }
+            {
+            break;
+            }
+        tweapon := tweapon.next;
+    }
 
-   if (tweapon == null)
-     {
-       act("$3n has no weapon!", A_SOMEONE, self, null, targ, TO_CHAR);
-       quit;
-     }
+    if (tweapon == null)
+    {
+        act("$3n has no weapon!", A_SOMEONE, self, null, targ, TO_CHAR);
+        quit;
+    }
 
+    provoked_attack (targ, self);
+    hm := skillbattle2(SKI_DISARM, ABIL_DEX, ABIL_STR, targ, ABIL_DEX, ABIL_STR);
 
-provoked_attack (targ, self);
-       if(self.type==UNIT_ST_PC)  skillc:=self.skills[SKI_DISARM];
-       else
-	   skillc := rnd(40,150);
-
-       if(targ.type==UNIT_ST_PC) skilld:=targ.skills[SKI_DISARM];
-       else
-       skilld := rnd(40,150);
-       skilla:=(self.abilities[ABIL_DEX] + self.abilities[ABIL_STR])/2;
-       skillb:=(targ.abilities[ABIL_DEX] + targ.abilities[ABIL_STR])/2;
-
+    if (self.endurance < 30)
+    {
+        act("You are too exhausted to attempt that.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    else
+        self.endurance := self.endurance - 20;
 
 
-        hm:=skillroll(skilla,skillb,skillc,skilld);
+    if (hm <= -25)
+    {
+        act("As you attempt to disarm $3n, your $2N slips through your hands!", A_SOMEONE, self, mweapon, targ, TO_CHAR);
+        act("$1n tries a fancy move, but you counter and cause $1m to drop $1s $2N!.", A_SOMEONE, self, mweapon, targ, TO_VICT);
+        act("$3n counters $1n's disarm attempt, $1n lost $1s own weapon instead!",A_SOMEONE, self, mweapon, targ, TO_NOTVICT);
 
-
-   if (self.endurance < 30)
-     {
-      act("You are too exhausted to attempt that.", A_ALWAYS, self, null,
-         null, TO_CHAR);
-       quit;
-      }
-   else self.endurance := self.endurance - 20;
-
-
-   if (hm <= -25)
-     {
-        act("As you attempt to disarm $3n, your $2N slips through your " +
-            "hands!", A_SOMEONE, self, mweapon, targ, TO_CHAR);
-        act("$1n tries a fancy move, but you counter and cause $1m to drop
-"  +
-            "$1s $2N!.", A_SOMEONE, self, mweapon, targ, TO_VICT);
-        act("$3n counters $1n's disarm attempt, $1n lost $1s own weapon " +
-            "instead!",A_SOMEONE, self, mweapon, targ, TO_NOTVICT);
         link(mweapon, self.outside);
         if (self.type == UNIT_ST_NPC)
-          dilcopy("rearm@skills("+mweapon.name+")", self);
+            dilcopy("rearm@skills("+mweapon.name+")", self);
         quit;
-     }
-   if (hm <= 0)
-     {
-       act("You attempt to disarm $3n, but fail.",
-	    A_SOMEONE, self, null,targ,TO_CHAR);
-       act("$1n makes a feeble attempt to relieve you of your $2N.",
-           A_SOMEONE, self, tweapon, targ, TO_VICT);
-       act("$1n fails $1s attempt at disarming $3n.", A_SOMEONE, self, null,
-           targ, TO_NOTVICT);
-       quit;
-     }
-   if (targ.position <= POSITION_SLEEPING)
-     {
-       act("You quietly disarm $3n without waking them.",
-	    A_SOMEONE, self, null, targ, TO_CHAR);
-     }
-provoked_attack(targ, self);
+    }
+    if (hm <= 0)
+    {
+        act("You attempt to disarm $3n, but fail.", A_SOMEONE, self, null,targ,TO_CHAR);
+        act("$1n makes a feeble attempt to relieve you of your $2N.", A_SOMEONE, self, tweapon, targ, TO_VICT);
+        act("$1n fails $1s attempt at disarming $3n.", A_SOMEONE, self, null, targ, TO_NOTVICT);
+        quit;
+    }
 
+    if (targ.position <= POSITION_SLEEPING)
+    {
+        act("You quietly disarm $3n without waking them.", A_SOMEONE, self, null, targ, TO_CHAR);
+    }
+    provoked_attack(targ, self);
 
-
-   act("Your quick move pulls $3n's $2N from $3s hands!", A_SOMEONE, self,
-       tweapon, targ, TO_CHAR);
-   act("$1n strips your $2N from your hands!", A_SOMEONE, self, tweapon,
-       targ, TO_VICT);
-   act("$1n deftly strips $3n's $2N from $3s hands!", A_SOMEONE, self,
-       tweapon, targ, TO_NOTVICT);
-   link(tweapon, targ.outside);
-   dilcopy ("disarmed@skills",targ);
-   if (targ.type == UNIT_ST_NPC)
+    act("Your quick move pulls $3n's $2N from $3s hands!", A_SOMEONE, self, tweapon, targ, TO_CHAR);
+    act("$1n strips your $2N from your hands!", A_SOMEONE, self, tweapon, targ, TO_VICT);
+    act("$1n deftly strips $3n's $2N from $3s hands!", A_SOMEONE, self, tweapon, targ, TO_NOTVICT);
+    link(tweapon, targ.outside);
+    dilcopy ("disarmed@skills",targ);
+    if (targ.type == UNIT_ST_NPC)
     dilcopy("rearm@skills("+tweapon.name+")", targ);
-  provoked_attack (targ, self);
-   quit;
-
+    provoked_attack (targ, self);
+    quit;
 }
 dilend
 
+
+
 dilbegin rearm(t : string);
 var
-i : integer;
-tweap : unitptr;
+    i : integer;
+    tweap : unitptr;
 code
 {
   interrupt(SFB_DEAD, activator == self, stop);
@@ -2386,8 +2354,7 @@ code
    else
      skilla := self.abilities[ABIL_BRA];
 
-   hm := skillroll (self.abilities[ABIL_BRA], 20,
-				skilla, 50);
+   hm := skillroll(self.abilities[ABIL_BRA], 20, skilla, 50);
 
    if (hm > 0)
      hm := 0;
@@ -2435,103 +2402,103 @@ dilend
 // do_resize
 dilbegin resize(arg:string);
 external
-   res_clothes@skills (tgt:unitptr,tgt_pc:unitptr);
-   res_lth@skills (tgt:unitptr,tgt_pc:unitptr);
-   res_metal@skills (tgt:unitptr,tgt_pc:unitptr);
-   res_obj(tgt:unitptr, tgt_pc:unitptr, skillidx : integer, abilidx : integer);
+    res_clothes@skills (tgt:unitptr,tgt_pc:unitptr);
+    res_lth@skills (tgt:unitptr,tgt_pc:unitptr);
+    res_metal@skills (tgt:unitptr,tgt_pc:unitptr);
+    res_obj(tgt:unitptr, tgt_pc:unitptr, skillidx : integer, abilidx : integer);
 var
-   item : unitptr;
-   tgt_pc : unitptr;
+    item : unitptr;
+    tgt_pc : unitptr;
 code
 {
-   if (arg == "")
-   {
-      act("What do you wish to resize?", A_SOMEONE, self, null, null,TO_CHAR);
-      quit;
-   }
+    if (arg == "")
+    {
+        act("What do you wish to resize?", A_SOMEONE, self, null, null,TO_CHAR);
+        quit;
+    }
 
-   item := findunit(self, arg, FIND_UNIT_INVEN, null);
+    item := findunit(self, arg, FIND_UNIT_INVEN, null);
 
-   if ((item == null) or not visible(self, item))
-   {
-      act("No such thing by that name!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((item == null) or not visible(self, item))
+    {
+        act("No such thing by that name!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   tgt_pc := findunit(self,arg,FIND_UNIT_SURRO,null);
+    tgt_pc := findunit(self,arg,FIND_UNIT_SURRO,null);
 
-   if ((tgt_pc==null) or not visible(self, tgt_pc))
-     tgt_pc := self;
+    if ((tgt_pc==null) or not visible(self, tgt_pc))
+        tgt_pc := self;
 
-   if (not (item.type&UNIT_ST_OBJ))
-   {
-      act("You can't resize that!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if (not (item.type&UNIT_ST_OBJ))
+    {
+        act("You can't resize that!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (item.objecttype == ITEM_ARMOR)
-   {
-      if ((item.value[0]<ARM_CLOTHES)or
-          (item.value[0]>ARM_PLATE))
-      {
-         act ("The armor seems to be broken.", A_ALWAYS,self,null, null,TO_CHAR);
-         quit;
-      }
-      on item.value[0] goto clothes,leather,leather,metal,metal;
-   }
-   else if (item.objecttype == ITEM_SHIELD)
-     goto metal;
-   else if (item.objecttype == ITEM_WEAPON)
-     goto metal;
-   else if (item.objecttype == ITEM_WORN)
-     goto clothes;
-   else
-   {
-      if ((item.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
-			     MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
-			     MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
-			     MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
-			     MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
-			     MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
-			     MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
-			     MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
-			     MANIPULATE_WEAR_ANKLE)) == 0)
-      {
-         act ("There is no way the $3N can be resized.",
-	      A_SOMEONE, self, null, item, TO_CHAR);
-         quit;
-      }
-      goto metal; /* What else can one do? */
-   }
-   quit;
+    if (item.objecttype == ITEM_ARMOR)
+    {
+        if ((item.value[0]<ARM_CLOTHES)or
+            (item.value[0]>ARM_PLATE))
+        {
+            act ("The armor seems to be broken.", A_ALWAYS,self,null, null,TO_CHAR);
+            quit;
+        }
+        on item.value[0] goto clothes,leather,leather,metal,metal;
+    }
+    else if (item.objecttype == ITEM_SHIELD)
+        goto metal;
+    else if (item.objecttype == ITEM_WEAPON)
+        goto metal;
+    else if (item.objecttype == ITEM_WORN)
+        goto clothes;
+    else
+    {
+        if ((item.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
+                    MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
+                    MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
+                    MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
+                    MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
+                    MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
+                    MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
+                    MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
+                    MANIPULATE_WEAR_ANKLE)) == 0)
+        {
+            act ("There is no way the $3N can be resized.",
+            A_SOMEONE, self, null, item, TO_CHAR);
+            quit;
+        }
+        goto metal; /* What else can one do? */
+    }
+    quit;
 
-   :clothes:
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_CLOTHES] <= 0))
-   {
-      act("You have no knowledge in tailoring, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    :clothes:
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_CLOTHES] <= 0))
+    {
+        act("You have no knowledge in tailoring, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   res_obj(item, tgt_pc, SKI_RESIZE_CLOTHES, ABIL_DEX);
-   quit;
+    res_obj(item, tgt_pc, SKI_RESIZE_CLOTHES, ABIL_DEX);
+    quit;
 
-   :leather:
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_LEATHER] <= 0))
-   {
-      act("You have no knowledge in leather, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-   res_obj(item, tgt_pc, SKI_RESIZE_LEATHER, ABIL_STR);
-   quit;
-   
-   :metal:
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_METAL] <= 0))
-   {
-      act("You have no knowledge in smithing, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-   res_obj(item, tgt_pc, SKI_RESIZE_METAL, ABIL_STR);
-   quit;
+:leather:
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_LEATHER] <= 0))
+    {
+        act("You have no knowledge in leather, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    res_obj(item, tgt_pc, SKI_RESIZE_LEATHER, ABIL_STR);
+    quit;
+
+:metal:
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_METAL] <= 0))
+    {
+        act("You have no knowledge in smithing, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    res_obj(item, tgt_pc, SKI_RESIZE_METAL, ABIL_STR);
+    quit;
 }
 dilend
 
@@ -2554,47 +2521,47 @@ var
 
 code
 {
-   :workshop:
-   if ("$resized" in tgt.extra)
-   {
-      act("You see that the $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
-      quit;
-   }
+:workshop:
+    if ("$resized" in tgt.extra)
+    {
+        act("You see that the $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
+        quit;
+    }
 
-   // Find percentage to scale 
-   //  Not a real percentage when scaling down, cut in half so 100->50 = 50%, not 100%
-   //
-   if (tgt_pc.height > tgt.height)
-   {
-      size:="enlarges";
-      scale := (100*tgt_pc.height) / tgt.height - 100;  // Enlarge %
-   }
-   else
-   {
-      size:="shrinks";
-      scale := (((100*tgt.height) / tgt_pc.height)-100) / 2; // Shrink %, ½ = easier to shrink
-   }
+    // Find percentage to scale 
+    //  Not a real percentage when scaling down, cut in half so 100->50 = 50%, not 100%
+    //
+    if (tgt_pc.height > tgt.height)
+    {
+        size:="enlarges";
+        scale := (100*tgt_pc.height) / tgt.height - 100;  // Enlarge %
+    }
+    else
+    {
+        size:="shrinks";
+        scale := (((100*tgt.height) / tgt_pc.height)-100) / 2; // Shrink %, ½ = easier to shrink
+    }
 
-   if (scale > 50)
-      scale := 50; // 125% resize is the most difficult for anyone
+    if (scale > 50)
+        scale := 50; // 125% resize is the most difficult for anyone
 
-   endu := 20;
-   endu := endu + (endu * scale) / 100;
+    endu := 20;
+    endu := endu + (endu * scale) / 100;
 
-   if (self.endurance < endu)
-      goto fail_endurance;
+    if (self.endurance < endu)
+        goto fail_endurance;
 
-   // value[1] is craftsmanship
-   // value[2] is magical bonus
-   //
-   skilld := 2*tgt.value[1] + 3*tgt.value[2];
+    // value[1] is craftsmanship
+    // value[2] is magical bonus
+    //
+    skilld := 2*tgt.value[1] + 3*tgt.value[2];
 
-   hm := skillchecksa@skills(skillidx, abilidx, (skilld + scale));
+    hm := skillchecksa@skills(skillidx, abilidx, (skilld + scale));
 
-   if (hm <= -100)
-     goto major_fail;
-   if (hm < -50)
-     goto fail;
+    if (hm <= -100)
+        goto major_fail;
+    if (hm < -50)
+        goto fail;
 
    if (hm < 0)
    {
@@ -2627,7 +2594,7 @@ code
    }
    quit;
 
-   :fail:
+:fail:
    tgt.hp := tgt.hp + hm;
    if (tgt.hp < 1)
       goto major_fail;
