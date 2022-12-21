@@ -140,14 +140,11 @@ dilend
 dilbegin integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                                  opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
-   roll : integer;
-   skl : integer;
-   oppskl : integer;
+    skl : integer;
+    oppskl : integer;
 
 code
 {
-   roll := openroll(100, 5);
-
    skl := (2*self.abilities[abiidx1]+self.abilities[abiidx2]) / 3;
    if (self.type == UNIT_ST_PC)
       skl := (self.skills[skillidx] * 2 + skl) / 3;   // 2/3rd skill, 1/3rd ability
@@ -158,36 +155,35 @@ code
 
    //log("skillchecksaopp() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
 
-   return (roll + skl - oppskl - 50);
+   return (openroll(100, 5) + skl - oppskl - 50);
 }
 dilend
 
 
-/* skillbattle
- *   att : the char attacking
+/* skillbattle1
+ *   att : self, the char attacking
  *   attskiidx : e.g. SKI_STEAL
  *   attabiidx : e.g. ABIL_DEX
  *   def : the char defending
  *   defskiidx : e.g. 
  * Result > 0 is success
  */
-dilbegin integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                             def : unitptr, defskiidx : integer, defabiidx : integer);
+dilbegin integer skillbattle1(skiidx : integer, attabiidx : integer, def : unitptr, defabiidx : integer);
 var
-  aski, aabi : integer;
-  dski, dabi : integer;
+    aski, aabi : integer;
+    dski, dabi : integer;
 
 code
 {
-   aabi := att.abilities[attabiidx];
-   if (att.type == UNIT_ST_PC)
-      aski := att.skills[attskiidx];
+   aabi := self.abilities[attabiidx];
+   if (self.type == UNIT_ST_PC)
+      aski := self.skills[skiidx];
    else
       aski := aabi;
 
    dabi := def.abilities[defabiidx];
    if (def.type == UNIT_ST_PC)
-      dski := def.skills[defskiidx];
+      dski := def.skills[skiidx];
    else
       dski := dabi;
 
@@ -469,7 +465,7 @@ dilend
 //
 dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 external
-    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillbattle1(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
     integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 var
@@ -491,7 +487,7 @@ code
    {
       if ((observer != thief) and (observer != victim))
       {
-         hm := skillbattle(thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
+         hm := skillbattle1(thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
 
          if (not visible(observer, thief))
             hm := hm - 100;
@@ -1015,19 +1011,17 @@ code
 
     if (targ == self)
     {
-    act("Why don't you just use the inventory command?", A_SOMEONE, self,
-            null, null, TO_CHAR);
-    quit;
+        act("Why don't you just use the inventory command?", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
     }
 
-    if (targ.position <=  POSITION_SLEEPING)
+    if (targ.position <= POSITION_SLEEPING)
     {
-        act("They won't mind if you take a little peek at the moment.",
-            A_SOMEONE, self, null, null, TO_CHAR);
+        act("They won't mind if you take a little peek at the moment.", A_SOMEONE, self, null, null, TO_CHAR);
         goto success;
     }
 
-    hm := skillchecksaopp(SKI_PEEK, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
+    hm := skillchecksaopp(SKI_PEEK, ABIL_DEX, ABIL_BRA, targ, ABIL_BRA, ABIL_DEX);
 
     if (hm < -25)
     {
@@ -1303,67 +1297,66 @@ external
     stringlist get_exits@skills(u1 : unitptr);
     unitptr  unit_room@function(u2 : unitptr);
     integer issetclimb@function(d:integer);
-    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
     integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
-   i       :  integer;
-   skill_flee :  integer;  
-   me      :  unitptr;
-   pc      :  unitptr;
-   hm      :  integer;
-   roomlst :  stringlist;
-   climb_rm:unitptr;
-   rm      :  integer;
-   direc   :  string;
-   dir_name:string;
-   rmm     :  unitptr;
-   roomin  :  unitptr;
-   dirlist :  stringlist;
-   rmchk   :  extraptr;
-   mestring :  string;
-   res:integer;
+    i       :  integer;
+    skill_flee :  integer;  
+    me      :  unitptr;
+    pc      :  unitptr;
+    hm      :  integer;
+    roomlst :  stringlist;
+    climb_rm:unitptr;
+    rm      :  integer;
+    direc   :  string;
+    dir_name:string;
+    rmm     :  unitptr;
+    roomin  :  unitptr;
+    dirlist :  stringlist;
+    rmchk   :  extraptr;
+    mestring :  string;
+    res:integer;
 
 code
 {
-   interrupt (SFB_DEAD,self==activator,stopdie);
+    interrupt (SFB_DEAD,self==activator,stopdie);
 
-   /* MS2020 ought to be placed on vines DIL, not here. */
-   if(dilfind("entangled_2@spells",self))
-   {
-      act("You struggle to flee but are prevented by the vines!.",
-      A_SOMEONE, self, null, null, TO_CHAR);
-      act("$1n struggles to flee but is prevented by the entangling vines.",
-      A_SOMEONE, self, null, null, TO_REST);
-      quit;
-   }
+    /* MS2020 ought to be placed on vines DIL, not here. */
+    if(dilfind("entangled_2@spells",self))
+    {
+        act("You struggle to flee but are prevented by the vines!.",
+        A_SOMEONE, self, null, null, TO_CHAR);
+        act("$1n struggles to flee but is prevented by the entangling vines.",
+        A_SOMEONE, self, null, null, TO_REST);
+        quit;
+    }
 
-   if (self.outside.type == UNIT_ST_NPC)
-   {
-      me := self.outside;
-      mestring := "Your " + self.outside.name + " is";
-   }
-   else
-   {
-      me := self;
-      mestring := "You are";
-   }
+    if (self.outside.type == UNIT_ST_NPC)
+    {
+        me := self.outside;
+        mestring := "Your " + self.outside.name + " is";
+    }
+    else
+    {
+        me := self;
+        mestring := "You are";
+    }
 
-   if (me.endurance < 20)
-   {
-      act("$2t too exhausted to flee.", A_SOMEONE, self, mestring, null, TO_CHAR);
-      quit;
-   }
+    if (me.endurance < 20)
+    {
+        act("$2t too exhausted to flee.", A_SOMEONE, self, mestring, null, TO_CHAR);
+        quit;
+    }
 
-   res := send_pre("flee", self, null, null, 0, arg, null);
-   if (res != SFR_SHARE)
-      quit;
+    res := send_pre("flee", self, null, null, 0, arg, null);
+    if (res != SFR_SHARE)
+        quit;
 
-   pc:=self.fighting;
-   if (pc == null)
-      goto flee;
+    pc:=self.fighting;
+    if (pc == null)
+        goto flee;
 
-   hm := skillbattle(self, SKI_FLEE, ABIL_DEX, pc, SKI_FLEE, ABIL_DEX);
+    hm := skillchecksaopp(SKI_FLEE, ABIL_DEX, ABIL_BRA, pc, ABIL_DEX, ABIL_BRA);
 
    if (hm <= -50)
    {
@@ -1486,35 +1479,35 @@ code
    quit;
 
 
-   :flee_nonroom:
-   roomin := me.outside;
+:flee_nonroom:
+    roomin := me.outside;
 
-   if (self.outside.type != UNIT_ST_NPC)
-   {
-      act("You flee head over heels!", A_SOMEONE, self, null, null, TO_CHAR);
-      act("$1n flees head over heels out of $2n!", A_SOMEONE, self, self.outside, null, TO_ROOM);
-   }
-   else
-   {
-      act("You charge away on your $2N!", A_SOMEONE, self, me, null, TO_CHAR);
-      act("$1n charges out of $3n on $1s $2N!", A_SOMEONE, self, me, me.outside, TO_ROOM);
-   }
+    if (self.outside.type != UNIT_ST_NPC)
+    {
+        act("You flee head over heels!", A_SOMEONE, self, null, null, TO_CHAR);
+        act("$1n flees head over heels out of $2n!", A_SOMEONE, self, self.outside, null, TO_ROOM);
+    }
+    else
+    {
+        act("You charge away on your $2N!", A_SOMEONE, self, me, null, TO_CHAR);
+        act("$1n charges out of $3n on $1s $2N!", A_SOMEONE, self, me, me.outside, TO_ROOM);
+    }
 
-   exec("exit", self);
+    exec("exit", self);
 
-   if (not isset(roomin.flags, UNIT_FL_TRANS))
-   {
-      if (self.outside.type != UNIT_ST_NPC)
-         act("$1n flees out of $2n!", A_SOMEONE, self, roomin, null, TO_ROOM);
-      else
-         act("$1n charges out of $2n on $1s $2N!", A_SOMEONE, self, me, roomin, TO_ROOM);
-   }
+    if (not isset(roomin.flags, UNIT_FL_TRANS))
+    {
+        if (self.outside.type != UNIT_ST_NPC)
+            act("$1n flees out of $2n!", A_SOMEONE, self, roomin, null, TO_ROOM);
+        else
+            act("$1n charges out of $2n on $1s $2N!", A_SOMEONE, self, me, roomin, TO_ROOM);
+    }
 
-   self.position := POSITION_STANDING;
-   position_update(pc);
+    self.position := POSITION_STANDING;
+    position_update(pc);
 
-   :stopdie:
-   quit;
+:stopdie:
+    quit;
 }
 dilend
 
