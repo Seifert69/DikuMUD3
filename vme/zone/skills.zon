@@ -688,7 +688,6 @@ dilbegin pickpocket(arg : string);
 external
     onefreehand();
     bobcheck(victim : unitptr);
-    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
     integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
     awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
@@ -823,151 +822,150 @@ dilbegin filch(arg : string);
 external
     bobcheck(victim : unitptr);
     onefreehand();
-    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
     integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
     awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
 var
-   skilla  :  integer;
-   skillb  :  integer;
-   skillc  :  integer;
-   skilld  :  integer;
-   hm      : integer;
-   targ    : unitptr;
-   vict    : unitptr;
-   from    : string;
-   t       : string;
-   temp    : string;
-	ti:integer;
+    skilla  :  integer;
+    skillb  :  integer;
+    skillc  :  integer;
+    skilld  :  integer;
+    hm      : integer;
+    targ    : unitptr;
+    vict    : unitptr;
+    from    : string;
+    t       : string;
+    temp    : string;
+    ti:integer;
 
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_FILCH] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_FILCH] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   onefreehand();
+    onefreehand();
 
-   if (not (" from " in arg))
-   {
-      act("Filch what from who?", A_SOMEONE, self, null, null,  TO_CHAR);
-      quit;
-   }
+    if (not (" from " in arg))
+    {
+        act("Filch what from who?", A_SOMEONE, self, null, null,  TO_CHAR);
+        quit;
+    }
 
-   /* needed for multi word names */
-   t := getword(arg);
-   temp := getword(arg);
-   while (temp != "from")
-   {
-      t := (t + " " + temp);
-      temp := getword(arg);
-   }
+    /* needed for multi word names */
+    t := getword(arg);
+    temp := getword(arg);
+    while (temp != "from")
+    {
+        t := (t + " " + temp);
+        temp := getword(arg);
+    }
 
-   vict := findunit(self, arg, FIND_UNIT_SURRO, null);
+    vict := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-   if ((vict == null) or not visible(self, vict))
-   {
-      act("No such person to filch from.",
-         A_SOMEONE, self, null,  null, TO_CHAR);
-      quit;
-   }
+    if ((vict == null) or not visible(self, vict))
+    {
+        act("No such person to filch from.",
+            A_SOMEONE, self, null,  null, TO_CHAR);
+        quit;
+    }
 
-   if (not (vict.type & (UNIT_ST_PC | UNIT_ST_NPC)))
-   {
-      act("Why bother? Just get the darn thing!", 
+    if (not (vict.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+    {
+        act("Why bother? Just get the darn thing!", 
             A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+        quit;
+    }
 
-   bobcheck(vict);
+    bobcheck(vict);
 
-   targ := findunit(vict, t, FIND_UNIT_EQUIP, null);
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("You can't find that on $3n.", A_SOMEONE, self, targ, vict, TO_CHAR);
-      quit;
-   }
+    targ := findunit(vict, t, FIND_UNIT_EQUIP, null);
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("You can't find that on $3n.", A_SOMEONE, self, targ, vict, TO_CHAR);
+        quit;
+    }
 
-   if ( (targ.equip != WEAR_FINGER_R) and (targ.equip != WEAR_FINGER_L) and
-         (targ.equip != WEAR_NECK_1) and (targ.equip != WEAR_NECK_2) and
-         (targ.equip != WEAR_WAIST) and (targ.equip != WEAR_WRIST_R) and
-         (targ.equip != WEAR_BACK) and (targ.equip != WEAR_EAR_L) and
-         (targ.equip != WEAR_EAR_R) and (targ.equip != WEAR_ANKLE_L) and
-         (targ.equip != WEAR_ANKLE_R) and (targ.equip != WEAR_WRIST_L) )
-   {
-      act("That would be much to difficult to filch away from $3n!",
+    if ( (targ.equip != WEAR_FINGER_R) and (targ.equip != WEAR_FINGER_L) and
+            (targ.equip != WEAR_NECK_1) and (targ.equip != WEAR_NECK_2) and
+            (targ.equip != WEAR_WAIST) and (targ.equip != WEAR_WRIST_R) and
+            (targ.equip != WEAR_BACK) and (targ.equip != WEAR_EAR_L) and
+            (targ.equip != WEAR_EAR_R) and (targ.equip != WEAR_ANKLE_L) and
+            (targ.equip != WEAR_ANKLE_R) and (targ.equip != WEAR_WRIST_L) )
+    {
+        act("That would be much to difficult to filch away from $3n!",
             A_SOMEONE, self, null, vict, TO_CHAR);
-      quit;
-   }
+        quit;
+    }
 
-   if (targ.zoneidx == "treasure")
-   {
-      act("A chill runs down your spine...someone or something is watching.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      act("You change your mind about filching that.", A_ALWAYS, self,
-         null, null, TO_CHAR);
-      quit;
-   }
+    if (targ.zoneidx == "treasure")
+    {
+        act("A chill runs down your spine...someone or something is watching.",
+            A_ALWAYS, self, null, null, TO_CHAR);
+        act("You change your mind about filching that.", A_ALWAYS, self,
+            null, null, TO_CHAR);
+        quit;
+    }
 
-   ti:=can_carry (self,targ,1);
-   if (ti==1)
-	{
-      act ("You can't carry another thing.",
-         A_ALWAYS,self,null,null,TO_CHAR);
-		quit;
-   }
+    ti:=can_carry (self,targ,1);
+    if (ti==1)
+    {
+        act ("You can't carry another thing.",
+            A_ALWAYS,self,null,null,TO_CHAR);
+        quit;
+    }
 
-   hm := skillbattle(self, SKI_FILCH, ABIL_DEX, vict, SKI_FILCH, ABIL_BRA);
+    hm := skillchecksaopp(SKI_FILCH, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
 
-   if (hm <= -5)
-   {
-      act("You are caught!", A_SOMEONE, self, targ, vict, TO_CHAR);
-      if (isaff(self, ID_INVISIBILITY))
-          subaff(self, ID_INVISIBILITY);
-      act("You catch $1n trying to filch your $2n!", A_SOMEONE, self, targ,
-          vict, TO_VICT);
-      act("You see $1n trying to filch something from $3n...$3e doesn't " +
-          "seem amused!", A_SOMEONE, self, targ, vict, TO_NOTVICT);
-      provoked_attack (vict, self);
-      logcrime(self, vict, CRIME_STEALING);
-      quit;
-   }
+    if (hm <= -5)
+    {
+        act("You are caught!", A_SOMEONE, self, targ, vict, TO_CHAR);
+        if (isaff(self, ID_INVISIBILITY))
+            subaff(self, ID_INVISIBILITY);
+        act("You catch $1n trying to filch your $2n!", A_SOMEONE, self, targ,
+            vict, TO_VICT);
+        act("You see $1n trying to filch something from $3n...$3e doesn't " +
+            "seem amused!", A_SOMEONE, self, targ, vict, TO_NOTVICT);
+        provoked_attack (vict, self);
+        logcrime(self, vict, CRIME_STEALING);
+        quit;
+    }
 
 
-   if (hm <= 0)
-   {
-      act("You fail to filch $3n's $2n, but at least no one was watching!",
+    if (hm <= 0)
+    {
+        act("You fail to filch $3n's $2n, but at least no one was watching!",
         A_SOMEONE, self, targ, vict, TO_CHAR);
-      quit;
-   }
+        quit;
+    }
 
-   if (hm <= 5)
-   {
-      act("You filch $2n from $3n just as $3e turns toward you..You have been caught!",
-         A_SOMEONE, self, targ, vict, TO_CHAR);
-      if (isaff(self, ID_INVISIBILITY))
-         subaff(self, ID_INVISIBILITY);
+    if (hm <= 5)
+    {
+        act("You filch $2n from $3n just as $3e turns toward you..You have been caught!",
+            A_SOMEONE, self, targ, vict, TO_CHAR);
+        if (isaff(self, ID_INVISIBILITY))
+            subaff(self, ID_INVISIBILITY);
 
-      act("Arrgh!  $1n just stole your $2n!", A_SOMEONE, self, targ, vict, TO_VICT);
-      act("You see $1n filch something from $3n...$3e doesn't seem amused!",
-          A_SOMEONE, self, targ, vict, TO_NOTVICT);
-      link(targ, self);
-      provoked_attack (vict, self);
-      logcrime(self, vict, CRIME_STEALING);
-      send_done("filch",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
-      quit;
-   }
+        act("Arrgh!  $1n just stole your $2n!", A_SOMEONE, self, targ, vict, TO_VICT);
+        act("You see $1n filch something from $3n...$3e doesn't seem amused!",
+            A_SOMEONE, self, targ, vict, TO_NOTVICT);
+        link(targ, self);
+        provoked_attack (vict, self);
+        logcrime(self, vict, CRIME_STEALING);
+        send_done("filch",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
+        quit;
+    }
 
-   act("You stealthily filch $3n's $2n and quickly tuck it out of " +
-         "sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
-   link(targ, self);
-   awareness_check(self, vict, SKI_FILCH, "You notice $2n stealing jewelry from $3n.");
+    act("You stealthily filch $3n's $2n and quickly tuck it out of " +
+            "sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
+    link(targ, self);
+    awareness_check(self, vict, SKI_FILCH, "You notice $2n stealing jewelry from $3n.");
 
-   send_done("filch",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
-   quit;
+    send_done("filch",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
+    quit;
 }
 dilend
 
@@ -975,109 +973,108 @@ dilend
 
 dilbegin peek(arg : string);
 external
-    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer, def : unitptr, defskiidx : integer, defabiidx : integer);
     integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
-   skilla : integer;
-   skillb : integer;
-   skillc : integer;
-   skilld : integer;
-   hm     : integer;
-   targ   : unitptr;
-   object  : unitptr;
+    skilla : integer;
+    skillb : integer;
+    skillc : integer;
+    skilld : integer;
+    hm     : integer;
+    targ   : unitptr;
+    object  : unitptr;
 code
 {
-   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_PEEK] <= 0))
-   {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_PEEK] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (arg == "")
-   {
-      act("Who's inventory do you wish to peek at?", A_SOMEONE, self, null,
-         null, TO_CHAR);
-      quit;
-   }
+    if (arg == "")
+    {
+        act("Who's inventory do you wish to peek at?", A_SOMEONE, self, null,
+            null, TO_CHAR);
+        quit;
+    }
 
-   targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
 
-   if ((targ == null) or not visible(self, targ))
-   {
-      act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
-      quit;
-   }
+    if ((targ == null) or not visible(self, targ))
+    {
+        act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
-   if (targ.type & (UNIT_ST_ROOM | UNIT_ST_OBJ))
-   {
-      act("You don't have to peek, just look in it!", A_SOMEONE, self, null,
-      null, TO_CHAR);
-      quit;
-   }
+    if (targ.type & (UNIT_ST_ROOM | UNIT_ST_OBJ))
+    {
+        act("You don't have to peek, just look in it!", A_SOMEONE, self, null,
+        null, TO_CHAR);
+        quit;
+    }
 
-  if (targ == self)
-  {
+    if (targ == self)
+    {
     act("Why don't you just use the inventory command?", A_SOMEONE, self,
-         null, null, TO_CHAR);
+            null, null, TO_CHAR);
     quit;
-  }
+    }
 
-   if (targ.position <=  POSITION_SLEEPING)
-   {
-      act("They won't mind if you take a little peek at the moment.",
-         A_SOMEONE, self, null, null, TO_CHAR);
-      goto success;
-   }
+    if (targ.position <=  POSITION_SLEEPING)
+    {
+        act("They won't mind if you take a little peek at the moment.",
+            A_SOMEONE, self, null, null, TO_CHAR);
+        goto success;
+    }
 
-   hm := skillbattle(self, SKI_PEEK, ABIL_DEX, targ, SKI_PEEK, ABIL_BRA);
+    hm := skillchecksaopp(SKI_PEEK, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
 
-   if (hm < -25)
-   {
-      act("You clumsily attempt to see what goodies $3n has, $3e " +
-         "doesn't seem to be amused.", A_SOMEONE, self, null, targ, TO_CHAR);
-      if (isaff(self, ID_INVISIBILITY))
-         subaff(self, ID_INVISIBILITY);
-      act("You catch $1n blatently peeking at your possessions!",
-         A_SOMEONE, self, null, targ, TO_VICT);
-      quit;
-   }
+    if (hm < -25)
+    {
+        act("You clumsily attempt to see what goodies $3n has, $3e " +
+            "doesn't seem to be amused.", A_SOMEONE, self, null, targ, TO_CHAR);
+        if (isaff(self, ID_INVISIBILITY))
+            subaff(self, ID_INVISIBILITY);
+        act("You catch $1n blatently peeking at your possessions!",
+            A_SOMEONE, self, null, targ, TO_VICT);
+        quit;
+    }
 
-   if (hm <= 0)
-   {
-      act("You can't quite make out what $3e has, but at least you were " +
-      "discrete.", A_SOMEONE, self, null, targ, TO_CHAR);
-      quit;
-   }
+    if (hm <= 0)
+    {
+        act("You can't quite make out what $3e has, but at least you were " +
+        "discrete.", A_SOMEONE, self, null, targ, TO_CHAR);
+        quit;
+    }
 
-   act("You manage to peek at $3s belongings.", A_SOMEONE, self, null, targ,
-         TO_CHAR);
+    act("You manage to peek at $3s belongings.", A_SOMEONE, self, null, targ,
+            TO_CHAR);
 
 :success:
-   act("You see $3e has: ", A_SOMEONE, self, null, targ, TO_CHAR);
+    act("You see $3e has: ", A_SOMEONE, self, null, targ, TO_CHAR);
 
-   hm := FALSE;
+    hm := FALSE;
 
-   object := targ.inside;
+    object := targ.inside;
 
-   while (object)
-   {
-      if (visible(self, object))
-      {
-         if (object.equip == 0)
-         {
+    while (object)
+    {
+        if (visible(self, object))
+        {
+            if (object.equip == 0)
+            {
             /* Perhaps do check for each item */
             act(object.title, A_SOMEONE, self, null, targ, TO_CHAR);
             hm := TRUE;
-         }
-      }
-      object := object.next;
-   }
+            }
+        }
+        object := object.next;
+    }
 
-   if (hm == FALSE)
-      act("Absolutely nothing!", A_SOMEONE, self, null, targ, TO_CHAR);
+    if (hm == FALSE)
+        act("Absolutely nothing!", A_SOMEONE, self, null, targ, TO_CHAR);
 
-   quit;
+    quit;
 }
 dilend
 
