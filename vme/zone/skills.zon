@@ -90,37 +90,6 @@ code
 dilend
 
 
-/* MS2020 skillchecksaopp() checks 'self' versus the opponent
- *    skillidx 
- *    abiidx
- *    opp
- */
-dilbegin integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
-                                 opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
-var
-   roll : integer;
-   skl : integer;
-   oppskl : integer;
-
-code
-{
-   roll := openroll(100, 5);
-
-   skl := (2*self.abilities[abiidx1]+self.abilities[abiidx2]) / 3;
-   if (self.type == UNIT_ST_PC)
-      skl := (self.skills[skillidx] * 2 + skl) / 3;   // 2/3rd skill, 1/3rd ability
-
-   oppskl := (2*opp.abilities[oabiidx1]+opp.abilities[oabiidx2]) / 3;
-   if (opp.type == UNIT_ST_PC)
-      oppskl := (opp.skills[skillidx] * 2 + oppskl) / 3; // 2/3rd skill, 1/3rd ability
-
-   //log("skillchecksaopp() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
-
-   return (roll + skl - oppskl - 50);
-}
-dilend
-
-
 /* MS2020 SkillCheck() the skill versus the difficulty           */
 /* When skill equals difficulty there's a 50% chance of success. */ 
 /* Result > 0 is success                                         */
@@ -148,6 +117,48 @@ dilbegin integer skillchecklevel(skilllevel : integer, deltalevel : integer);
 code
 {
    return (openroll(100, 5) + skilllevel + deltalevel*5 - 50);
+}
+dilend
+
+
+/* skillchecksaopp() MS2020 checks 'self' versus the opponent
+ *
+ *    self     - the attacker
+ *    skillidx - the skill in question, e.g. SKI_GLANCE 
+ *    abiidx1  - the primary attacker ability in question, e.g. ABIL_BRA
+ *    abiidx2  - the secondary attacker ability in question, e.g. ABIL_DEX
+ *    opp      - the opponent
+ *    oabiidx1 - the primary opponent ability in question, e.g. ABIL_BRA
+ *    oabiidx2 - the secondary opponent ability in question, e.g. ABIL_DEX
+ *
+ * Example:
+ *
+ *     res := skillchecksaopp(SKI_GLANCE, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
+ *
+ * Returns > 0 if successful
+ */
+dilbegin integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+                                 opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+var
+   roll : integer;
+   skl : integer;
+   oppskl : integer;
+
+code
+{
+   roll := openroll(100, 5);
+
+   skl := (2*self.abilities[abiidx1]+self.abilities[abiidx2]) / 3;
+   if (self.type == UNIT_ST_PC)
+      skl := (self.skills[skillidx] * 2 + skl) / 3;   // 2/3rd skill, 1/3rd ability
+
+   oppskl := (2*opp.abilities[oabiidx1]+opp.abilities[oabiidx2]) / 3;
+   if (opp.type == UNIT_ST_PC)
+      oppskl := (opp.skills[skillidx] * 2 + oppskl) / 3; // 2/3rd skill, 1/3rd ability
+
+   //log("skillchecksaopp() 1d100OE = " + itoa(roll) +" plus skill " + itoa(skl) + " less " + itoa(difficulty) + " less 50 > 0");
+
+   return (roll + skl - oppskl - 50);
 }
 dilend
 
@@ -515,12 +526,11 @@ dilend
 /* do_steal */
 dilbegin steal(arg : string);
 external
-   onefreehand();
-   bobcheck(victim : unitptr);
-   provoked_attack (victim : unitptr, ch : unitptr);
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                       def : unitptr, defskiidx : integer, defabiidx : integer);
-   awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
+    onefreehand();
+    bobcheck(victim : unitptr);
+    provoked_attack (victim : unitptr, ch : unitptr);
+    awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
    skilla  :  integer;
@@ -618,8 +628,9 @@ code
       quit;
    }
 
-   // I guess one could consider that e.g. an invisible char might get a bonus to the attempt. 
-   hm := skillbattle(self, SKI_STEAL, ABIL_DEX, vict, SKI_STEAL, ABIL_BRA);
+    hm := skillchecksaopp(SKI_STEAL, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
+    if (isaff(self, ID_INVISIBILITY))
+        hm := hm + 50;
 
    if (hm <= -25)
    {
@@ -1707,8 +1718,7 @@ dilend
 // do_glance
 dilbegin ski_glance(arg : string);
 external
-    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                        def : unitptr, defskiidx : integer, defabiidx : integer);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 	string eq_string@commands(i : integer,ting : unitptr);
 var
    tgt : unitptr;
@@ -1722,143 +1732,113 @@ var
 
 code
 {
-   if(self.skills[SKI_GLANCE] <= 0)
-   {
-      sendtext("You must practice first.<br/>", self);
-      quit;
-   }
-
-   if(arg == "")
-   {
-      sendtext("Glance at who?<br/>", self);
-      quit;
-   }
-
-   if(not isaff(self,ID_SNEAK))
-   {
-      sendtext("Maybe you should try a 'sneakier' approach.<br/>", self);
-      quit;
-   }
-
-   if(not isaff(self, ID_HIDE))
-   {
-      sendtext("Without hiding? What are you crazy?<br/>", self);
-      quit;
-   }
-
-   tgt := findunit(self,arg,FIND_UNIT_SURRO,null);
-
-   if((tgt == null) or (not visible(self,tgt)))
-   {
-      sendtext("No such person here.<br/>", self);
-      quit;
-   }
-
-    if(tgt == self)
+    if (self.skills[SKI_GLANCE] <= 0)
     {
-        sendtext("You glance at yourself, amazing ehh?<br/>", self);
-        act("$1n glances at $1mself.",
-            A_SOMEONE, self, null, null, TO_REST);
+        sendtext("You must practice first.<br/>", self);
         quit;
     }
 
-
-    /* if(self.type==UNIT_ST_PC)
-        skillc:=self.skills[SKI_GLANCE];
-    else
-        skillc := rnd(40,124);*/
-
-   /*        skillc:=self.abilities[ABIL_BRA];     */
-   /* if(tgt.type==UNIT_ST_PC)
-      skilld:=tgt.skills[SKI_GLANCE];
-   else
-      skilld := rnd(40,124);*/
-
-   /*   skilld:=tgt.abilities[ABIL_BRA]; */
-   /* skilla:=self.abilities[ABIL_DEX];
-   skillb:=tgt.abilities[ABIL_DEX];
-
-   res:=skillresist(skilla,skillb,skillc,skilld);*/
-
-   /* res := skillresist(self.abilities[ABIL_DEX],
-                     tgt.abilities[ABIL_DEX],
-                     self.skills[SKI_GLANCE],
-                     tgt.skills[SKI_GLANCE]);*/
-
-    res := skillbattle(self, ABIL_DEX, SKI_GLANCE, tgt, ABIL_BRA, SKI_GLANCE);
-
-    if(res <= 0)
+    if (arg == "")
     {
-        act("You try and sneak a peak at $3n, but $3e slaps you in the face.",
-            A_ALWAYS, self, null, tgt, TO_CHAR);
-        act("$1n tries to sneak a peak at $3n, but $3e slaps $1m in the face.",
-            A_SOMEONE, self, null, tgt, TO_NOTVICT);
-        act("$1n tries to sneak a peak at you, but you slap $1m in the face.",
-            A_SOMEONE, self, null, tgt, TO_VICT);
+        sendtext("Glance at who?<br/>", self);
+        quit;
+    }
 
+    if (not isaff(self,ID_SNEAK))
+    {
+        sendtext("Maybe you should try a 'sneakier' approach.<br/>", self);
+        quit;
+    }
+
+    if (not isaff(self, ID_HIDE))
+    {
+        sendtext("Without hiding? What are you crazy?<br/>", self);
+        quit;
+    }
+
+    tgt := findunit(self,arg,FIND_UNIT_SURRO,null);
+
+    if ((tgt == null) or (not visible(self,tgt)))
+    {
+        sendtext("No such person here.<br/>", self);
+        quit;
+    }
+
+    if (tgt == self)
+    {
+        sendtext("You glance at yourself, amazing ehh?<br/>", self);
+        act("$1n glances at $1mself.", A_SOMEONE, self, null, null, TO_REST);
+        quit;
+    }
+
+    res := skillchecksaopp(SKI_GLANCE, ABIL_DEX, ABIL_BRA, tgt, ABIL_BRA, ABIL_DEX);
+
+    if (res <= 0)
+    {
+        act("You try and sneak a peak at $3n, but $3e slaps you in the face.", A_ALWAYS, self, null, tgt, TO_CHAR);
+        act("$1n tries to sneak a peak at $3n, but $3e slaps $1m in the face.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+        act("$1n tries to sneak a peak at you, but you slap $1m in the face.", A_SOMEONE, self, null, tgt, TO_VICT);
         self.hp := self.hp - rnd(5,30);
         position_update(self);
         quit;
     }
     else if(res <= 50)
     {
-        act("You glance at $3n briefly, but have to away before $1e catches you.",
-            A_SOMEONE, self, null, tgt, TO_CHAR);
+        act("You glance at $3n briefly, but have to away before $1e catches you.", A_SOMEONE, self, null, tgt, TO_CHAR);
         num := rnd(2,18);
     }
     else
     {
-        act("You stealthily sneak a peak at $3n out of the corner of your eye.",
-            A_SOMEONE, self, null, tgt, TO_CHAR);
+        act("You stealthily sneak a peak at $3n out of the corner of your eye.", A_SOMEONE, self, null, tgt, TO_CHAR);
         num := 25; /* more than enough to see all positions */
     }
 
-   obj := tgt.inside;
-   if (tgt.extra.[""].descr != "")
-      sendtext(tgt.extra.[""].descr,self);
+    obj := tgt.inside;
+    if (tgt.extra.[""].descr != "")
+        sendtext(tgt.extra.[""].descr,self);
 
-   if (isset(tgt.pcflags,PC_PK_RELAXED))
-   {
-      act("<br/>You notice a scar on $3s wrist from the Book of Blood.",
-         A_SOMEONE, self, null, tgt, TO_CHAR);
-   }
+    if (isset(tgt.pcflags,PC_PK_RELAXED))
+    {
+        act("<br/>You notice a scar on $3s wrist from the Book of Blood.",
+            A_SOMEONE, self, null, tgt, TO_CHAR);
+    }
 
-   tot := 0;
-   buf := "";
-   buf:=buf+"<table class='colh2'>";
+    tot := 0;
+    buf := "";
+    buf:=buf+"<table class='colh2'>";
 
-   while((obj != null) and (num > 0))
-   {
-      if (obj.equip)
-      {
-         str := eq_string@commands(obj.equip,obj);
-         buf := buf+"<tr><td>&lt;"+str+"&gt;</td><td><div class='worn'>"+obj.title+"</div></td></tr>";
-         tot := tot + 1;
-         num := num - 1;
-      }
+    while((obj != null) and (num > 0))
+    {
+        if (obj.equip)
+        {
+            str := eq_string@commands(obj.equip,obj);
+            buf := buf+"<tr><td>&lt;"+str+"&gt;</td><td><div class='worn'>"+obj.title+"</div></td></tr>";
+            tot := tot + 1;
+            num := num - 1;
+        }
 
-      obj := obj.next;
-   }
-   buf:=buf+"</table>";
+        obj := obj.next;
+    }
+    buf:=buf+"</table>";
 
-   if(tot < 1)
- 	   buf := "Nothing<br/>";
+    if(tot < 1)
+        buf := "Nothing<br/>";
 
-   sendtext(buf,self);
-   send_done("glance",self,null,tgt,res,arg,null, CMD_AUTO_NONE);
+    sendtext(buf,self);
+    send_done("glance",self,null,tgt,res,arg,null, CMD_AUTO_NONE);
 
-   quit;
+    quit;
 }
 dilend
+
 
 
 // do_bash
 dilbegin ski_bash(arg : string);
 external
-   provoked_attack(victim : unitptr, ch : unitptr);
-   integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
-                           opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
-
+    provoked_attack(victim : unitptr, ch : unitptr);
+    integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
    skia : integer;
    skib : integer;
@@ -1867,10 +1847,6 @@ var
    hm   : integer;
    tgt  : unitptr;
    shield : unitptr;
-   skilla   : integer;
-   skillb   : integer;
-   skillc   : integer;
-   skilld   : integer;
 
 code
 {
