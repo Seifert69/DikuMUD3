@@ -5737,65 +5737,60 @@ dilend
 
 dilbegin cmd_zap(arg : string);
 var
-u: unitptr;
-s: string;
-i: integer;
+    u: unitptr;
+    s: string;
+    i: integer;
 
 code
 {
+    s := getword(arg);
 
-   s := getword(arg);
+    if (s == "room")
+    {
+        u := self.outside;
+    }
 
-   if (s == "room")
-      {
-      u := self.outside;
-      }
+    else if (s == "self")
+    {
+        u := self;
+    }
 
-   else if (s == "self")
-      {
-      u := self;
-      }
+    else if ("@" in s)
+    {
+        u := findsymbolic(s);
 
-   else if ("@" in s)
-      {
-      u := findsymbolic(s);
+        if (u.type != UNIT_ST_ROOM)
+        {
+            sendtext("Copying on symbolic units other than rooms is denied.<br/>", self);
+            quit;
+        }
+    }
+    else
+    {
+        arg := s + " " + arg;
+        u := findunit(self, arg, FIND_UNIT_HERE, null);
+    }
 
-      if (u.type != UNIT_ST_ROOM)
-         {
-         sendtext("Copying on symbolic units other than rooms "+
-            "is denied.<br/>", self);
-         quit;
-         }
-      }
+    if (u)
+    {
+        if (u.zoneidx=="treasure")
+        {
+            act ("You can not zap from that.", A_ALWAYS, self,null,null,TO_CHAR);
+            quit;
+        }
 
-   else
-      {
-      arg := s + " " + arg;
-      u := findunit(self, arg, FIND_UNIT_HERE, null);
-      }
+        s := getword(arg);
+        i := dildestroy(s, u);
 
-   if (u)
-   {
-  if (u.zoneidx=="treasure")
-  {
-   act ("You can not zap from that.", A_ALWAYS, self,null,null,TO_CHAR);
-  quit;
-  }
+        if (i)
+            act("DIL successfully removed.", A_ALWAYS, self, null, null, TO_CHAR);
+        else
+            act("Unable to remove the DIL in question.",A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    else
+        act("No such unit found to zap.", A_ALWAYS, self, null, null, TO_CHAR);
 
-      s := getword(arg);
-      i := dildestroy(s, u);
-
-      if (i)
-         act("DIL successfully removed.", A_ALWAYS, self, null, null,
-TO_CHAR);
-      else
-         act("Unable to remove the DIL in question.",A_ALWAYS, self, null,
-null, TO_CHAR);
-   }
-   else
-     act("No such unit found to zap.", A_ALWAYS, self, null, null, TO_CHAR);
-
-quit;
+    quit;
 }
 dilend
 

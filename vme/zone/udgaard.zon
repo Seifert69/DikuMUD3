@@ -1221,28 +1221,29 @@ dilend
 
 dilbegin statue_load(pc : unitptr, s : string, i : integer);
 var
-  u : unitptr;
+    u : unitptr;
 
 code
 {
-   if (findsymbolic(pc, s, FIND_UNIT_INVEN | FIND_UNIT_EQUIP) == null)
-   {
-      u := load(s);
-      u.cost := 0;
-      u.height := pc.height;
-      link(u, pc);
-      if (i)
-        dilcopy("blowaway@udgaard($1n explodes in a flash of "+
-         "bright yellow light!)", u);
-   }
-   return;
+    if (findsymbolic(pc, s, FIND_UNIT_INVEN | FIND_UNIT_EQUIP) == null)
+    {
+        u := load(s);
+        i := dildestroy("randomizeItem@randomt", u);
+        u.cost := 0;
+        u.height := pc.height;
+        link(u, pc);
+        if (i)
+            dilcopy("blowaway@udgaard($1n explodes in a flash of bright yellow light!)", u);
+        
+    }
+    return;
 }
 dilend
+
 
 dilbegin clone_attr(original : unitptr, tgt : unitptr);
 var
    i : integer;
-
 code
 {
 
@@ -7629,29 +7630,28 @@ weight 8000
 
 dilbegin worship_st();
 var
-pc:unitptr;
+    pc : unitptr;
 code
 {
-   heartbeat:=PULSE_SEC*5;
+    heartbeat:=PULSE_SEC*5;
 
-   :start:
-   wait (SFB_DONE, command("worship") and
-                   (activator.type==UNIT_ST_PC) and (self==target));
-   pc := activator;
-   secure(pc, start);
+:start:
+    wait (SFB_DONE, command("worship") and (activator.type==UNIT_ST_PC) and (self==target));
+    pc := activator;
+    secure(pc, start);
 
-   if (not(dilfind ("channel@function",pc)))
-     dilcopy ("channel@function",pc);
+    if (not(dilfind ("channel@function",pc)))
+        dilcopy ("channel@function",pc);
 
-   if ((dilfind ("still_newbie@udgaard",pc)) or (pc.level >5))
-   {
-      unsecure(pc);
-      goto start;
-   }
-   else
-     dilcopy ("still_newbie@udgaard",pc);
+    if ((dilfind ("still_newbie@udgaard",pc)) or (pc.level >5))
+    {
+        unsecure(pc);
+        goto start;
+    }
+    else
+        dilcopy ("still_newbie@udgaard",pc);
 
-   goto start;
+    goto start;
 }
 dilend
 
@@ -7659,185 +7659,176 @@ dilend
 dilbegin odinstatue();
 external
    statue_load(pc : unitptr, s : string, i : integer);
-
 var
-   pc         : unitptr;
-   expd       : extraptr;
-
+    pc         : unitptr;
+    expd       : extraptr;
 code
 {
-   :start:
-   wait(SFB_CMD, command("pray"));
+:start:
+    wait(SFB_CMD, command("pray"));
 
-   if (activator.type != UNIT_ST_PC)
-     goto start;
+    if (activator.type != UNIT_ST_PC)
+        goto start;
 
-   if (findunit(activator, argument, FIND_UNIT_SURRO, null) != self)
-     goto start;
+    if (findunit(activator, argument, FIND_UNIT_SURRO, null) != self)
+        goto start;
 
-   block;
+    block;
 
-   act("$1n kneels before $3n and prays to Odin.",
-       A_HIDEINV, activator, null, self, TO_ROOM);
+    act("$1n kneels before $3n and prays to Odin.", A_HIDEINV, activator, null, self, TO_ROOM);
+    act("You kneel before $3n and pray to Odin.", A_ALWAYS, activator, null, self, TO_CHAR);
 
-   act("You kneel before $3n and pray to Odin.",
-       A_ALWAYS, activator, null, self, TO_CHAR);
+    if (activator.level > 20)
+    {
+        act("You feel at ease with yourself after having prayed to Odin.", A_ALWAYS, activator, null, null, TO_CHAR);
+        goto start;
+    }
 
-   if (activator.level > 20)
-   {
-      act("You feel at ease with yourself after having prayed to Odin.",
-          A_ALWAYS, activator, null, null, TO_CHAR);
-      goto start;
-   }
+    pc := activator;
+    secure(pc, start);
 
-   pc := activator;
-   secure(pc, start);
+    act("The eyes of $3n glows in a bright yellow light.", A_ALWAYS, pc, null, self, TO_ALL);
+    act("A voice echoes inside your head 'The Gods like you, receive this gift'",A_ALWAYS, pc, null, self, TO_CHAR);
 
-   act("The eyes of $3n glows in a bright yellow light.",
-       A_ALWAYS, pc, null, self, TO_ALL);
+    statue_load(pc, "tuborg@udgaard",        1);
+    statue_load(pc, "midgaard/torch",        1);
+    statue_load(pc, "midgaard/bread",        1);
+    statue_load(pc, "swood_shield@midgaard", 1);
+    statue_load(pc, "guild_medallion@guild_paths", 1);
+    //statue_load(pc, "basis/dictionary",      0);
 
-   act("A voice echoes inside your head 'The Gods like you, receive"+
-       " this gift'",A_ALWAYS, pc, null, self, TO_CHAR);
+    expd := "Newbie Quest Complete" in pc.quests;
+    if (expd)
+    {
+        statue_load(pc, "newbie/silring",  1);
+    }
 
-   statue_load(pc, "tuborg@udgaard",        1);
-   statue_load(pc, "midgaard/torch",        1);
-   statue_load(pc, "midgaard/bread",        1);
-   statue_load(pc, "swood_shield@midgaard", 1);
-   statue_load(pc, "guild_medallion@guild_paths", 1);
-   //statue_load(pc, "basis/dictionary",      0);
-
-   expd := "Newbie Quest Complete" in pc.quests;
-   if (expd)
-   {
-      statue_load(pc, "newbie/silring",  1);
-   }
-
-   if (pc.profession == PROFESSION_CONJURER)
-   {
-      statue_load(pc, "udgaard/conjurer_book",  1);
-      statue_load(pc, "udgaard/newbie_robes",   1);
-      statue_load(pc, "udgaard/newbie_bracers", 1);
-      statue_load(pc, "udgaard/newbie_boots",   1);
-      statue_load(pc, "udgaard/conjure_item",   1);
-      statue_load(pc, "midgaard/dag0",          1);
-   }
-   else if (pc.profession == PROFESSION_PRIEST)
-   {
-      statue_load(pc, "udgaard/newbie_book",  1);
-      statue_load(pc, "udgaard/newbie_chain", 1);
-      statue_load(pc, "udgaard/newbie_boots", 1);
-      statue_load(pc, "udgaard/newbie_pants", 1);
-      statue_load(pc, "udgaard/healer_item",  1);
-      statue_load(pc, "midgaard/mace",        1);
-   }
-   else if (pc.profession == PROFESSION_FIGHTER)
-   {
-      statue_load(pc, "udgaard/fighter_book",    1);
-      statue_load(pc, "udgaard/newbie_plate",    1);
-      statue_load(pc, "udgaard/newbie_psleeves", 1);
-      statue_load(pc, "udgaard/newbie_boots",    1);
-      statue_load(pc, "udgaard/newbie_legg",     1);
-      statue_load(pc, "udgaard/fighter_item",    1);
-      statue_load(pc, "udgaard/axe0",            1);
-   }
-   else if (pc.profession == PROFESSION_THIEF)
-   {
-      statue_load(pc, "udgaard/thief_book",    1);
-      statue_load(pc, "udgaard/newbie_jacket", 1);
-      statue_load(pc, "udgaard/newbie_lpants", 1);
-      statue_load(pc, "udgaard/newbie_boots",  1);
-      statue_load(pc, "udgaard/newbie_cloak",  1);
-      statue_load(pc, "udgaard/thief_item",    1);
-      statue_load(pc, "midgaard/sword0",       1);
-   }
-   else if (pc.profession == PROFESSION_ASSASSIN)
-   {
-      statue_load(pc, "udgaard/assassin_book", 1);
-      statue_load(pc, "udgaard/newbie_jacket", 1);
-      statue_load(pc, "udgaard/newbie_lpants", 1);
-      statue_load(pc, "udgaard/newbie_boots",  1);
-      statue_load(pc, "udgaard/newbie_cloak",  1);
-      statue_load(pc, "udgaard/assassin_item", 1);
-      statue_load(pc, "udgaard/thief_dagger",  1);
-   }
-   else if (pc.profession == PROFESSION_RANGER)
-   {
-      statue_load(pc, "udgaard/ranger_book",   1);
-      statue_load(pc, "udgaard/newbie_plate",  1);
-      statue_load(pc, "udgaard/newbie_lpants", 1);
-      statue_load(pc, "udgaard/newbie_boots",  1);
-      statue_load(pc, "udgaard/newbie_cloak",  1);
-      statue_load(pc, "udgaard/ranger_item",   1);
-      statue_load(pc, "ranger/ranger_bow",     1);
-      statue_load(pc, "udgaard/rapier",        1);
-   }
-   else if (pc.profession == PROFESSION_SORCERER)
-   {
-      statue_load(pc, "udgaard/sorcerer_book",  1);
-      statue_load(pc, "udgaard/newbie_robes",   1);
-      statue_load(pc, "udgaard/newbie_bracers", 1);
-      statue_load(pc, "udgaard/newbie_boots",   1);
-      statue_load(pc, "udgaard/sorcerer_item",  1);
-      statue_load(pc, "sorc_pendant@sorcerer",  1);
-      statue_load(pc, "midgaard/dag0",          1);
-   }
-   else if (pc.profession == PROFESSION_PALADIN)
-   {
-      statue_load(pc, "udgaard/paladin_book",     1);
-      statue_load(pc, "udgaard/newbie_plate",     1);
-      statue_load(pc, "udgaard/newbie_bracer",  1);
-      statue_load(pc, "udgaard/newbie_boots",     1);
-      statue_load(pc, "udgaard/cloth",            1);
-      statue_load(pc, "udgaard/paladin_item",     1);
-      statue_load(pc, "paladin_guild/fl1_tongue", 1);
-      statue_load(pc, "midgaard/sword0",          1);
-   }
-   else if (pc.profession == PROFESSION_NECROMANCER)
-   {
-      statue_load(pc, "udgaard/necro_book",     1);
-      statue_load(pc, "udgaard/newbie_robes",   1);
-      statue_load(pc, "udgaard/newbie_boots",   1);
-      statue_load(pc, "udgaard/newbie_pants",   1);
-      statue_load(pc, "udgaard/necro_item",     1);
-      statue_load(pc, "midgaard/silver_dagger", 1);
-      statue_load(pc, "necro_guild/necro_hand", 1);
-   }
-   else if (pc.profession == PROFESSION_DRUID)
-   {
-      statue_load(pc, "udgaard/druid_book",     1);
-      statue_load(pc, "udgaard/druid_robes",    1);
-      statue_load(pc, "udgaard/newbie_boots",   1);
-      statue_load(pc, "udgaard/druid_cloak",    1);
-      statue_load(pc, "udgaard/druid_item",     1);
-      statue_load(pc, "udgaard/short_staff",    1);
-   }
-   else if (pc.profession == PROFESSION_KNIGHT)
-   {
-      statue_load(pc, "udgaard/knight_book",      1);
-      statue_load(pc, "udgaard/knight_pants",     1);
-      statue_load(pc, "udgaard/knight_boots",     1);
-      statue_load(pc, "udgaard/trench_coat",      1);
-      statue_load(pc, "udgaard/knight_sleeves",   1);
-      statue_load(pc, "udgaard/rapier",           1);
-      statue_load(pc, "udgaard/knight_jerkin",    1);
-      statue_load(pc, "knight/berret",            1);
-   }
-   else if (pc.profession == PROFESSION_BARBARIAN)
-   {
-      statue_load(pc, "udgaard/newbie_book",      1);
-      statue_load(pc, "udgaard/newbie_jerkin",    1);
-      statue_load(pc, "udgaard/newbie_bracer",    1);
-      statue_load(pc, "udgaard/newbie_boots",     1);
-      statue_load(pc, "udgaard/newbie_cloth",     1);
-      statue_load(pc, "udgaard/barbarian_item",   1);
-      statue_load(pc, "udgaard/axe0",             1);
-   }
-   else 
-   {
-      sendtext("It's so odd, please report to admin your profession is "+itoa(pc.profession)+"&amp;n", pc);
-   }
-   unsecure(pc);
-   goto start;
+    if (pc.profession == PROFESSION_CONJURER)
+    {
+        statue_load(pc, "udgaard/conjurer_book",  1);
+        statue_load(pc, "udgaard/newbie_robes",   1);
+        statue_load(pc, "udgaard/newbie_bracers", 1);
+        statue_load(pc, "udgaard/newbie_boots",   1);
+        statue_load(pc, "udgaard/conjure_item",   1);
+        statue_load(pc, "midgaard/dag0",          1);
+    }
+    else if (pc.profession == PROFESSION_PRIEST)
+    {
+        statue_load(pc, "udgaard/newbie_book",  1);
+        statue_load(pc, "udgaard/newbie_chain", 1);
+        statue_load(pc, "udgaard/newbie_boots", 1);
+        statue_load(pc, "udgaard/newbie_pants", 1);
+        statue_load(pc, "udgaard/healer_item",  1);
+        statue_load(pc, "midgaard/mace",        1);
+    }
+    else if (pc.profession == PROFESSION_FIGHTER)
+    {
+        statue_load(pc, "udgaard/fighter_book",    1);
+        statue_load(pc, "udgaard/newbie_plate",    1);
+        statue_load(pc, "udgaard/newbie_psleeves", 1);
+        statue_load(pc, "udgaard/newbie_boots",    1);
+        statue_load(pc, "udgaard/newbie_legg",     1);
+        statue_load(pc, "udgaard/fighter_item",    1);
+        statue_load(pc, "udgaard/axe0",            1);
+    }
+    else if (pc.profession == PROFESSION_THIEF)
+    {
+        statue_load(pc, "udgaard/thief_book",    1);
+        statue_load(pc, "udgaard/newbie_jacket", 1);
+        statue_load(pc, "udgaard/newbie_lpants", 1);
+        statue_load(pc, "udgaard/newbie_boots",  1);
+        statue_load(pc, "udgaard/newbie_cloak",  1);
+        statue_load(pc, "udgaard/thief_item",    1);
+        statue_load(pc, "midgaard/sword0",       1);
+    }
+    else if (pc.profession == PROFESSION_ASSASSIN)
+    {
+        statue_load(pc, "udgaard/assassin_book", 1);
+        statue_load(pc, "udgaard/newbie_jacket", 1);
+        statue_load(pc, "udgaard/newbie_lpants", 1);
+        statue_load(pc, "udgaard/newbie_boots",  1);
+        statue_load(pc, "udgaard/newbie_cloak",  1);
+        statue_load(pc, "udgaard/assassin_item", 1);
+        statue_load(pc, "udgaard/thief_dagger",  1);
+    }
+    else if (pc.profession == PROFESSION_RANGER)
+    {
+        statue_load(pc, "udgaard/ranger_book",   1);
+        statue_load(pc, "udgaard/newbie_plate",  1);
+        statue_load(pc, "udgaard/newbie_lpants", 1);
+        statue_load(pc, "udgaard/newbie_boots",  1);
+        statue_load(pc, "udgaard/newbie_cloak",  1);
+        statue_load(pc, "udgaard/ranger_item",   1);
+        statue_load(pc, "ranger/ranger_bow",     1);
+        statue_load(pc, "udgaard/rapier",        1);
+    }
+    else if (pc.profession == PROFESSION_SORCERER)
+    {
+        statue_load(pc, "udgaard/sorcerer_book",  1);
+        statue_load(pc, "udgaard/newbie_robes",   1);
+        statue_load(pc, "udgaard/newbie_bracers", 1);
+        statue_load(pc, "udgaard/newbie_boots",   1);
+        statue_load(pc, "udgaard/sorcerer_item",  1);
+        statue_load(pc, "sorc_pendant@sorcerer",  1);
+        statue_load(pc, "midgaard/dag0",          1);
+    }
+    else if (pc.profession == PROFESSION_PALADIN)
+    {
+        statue_load(pc, "udgaard/paladin_book",     1);
+        statue_load(pc, "udgaard/newbie_plate",     1);
+        statue_load(pc, "udgaard/newbie_bracer",  1);
+        statue_load(pc, "udgaard/newbie_boots",     1);
+        statue_load(pc, "udgaard/cloth",            1);
+        statue_load(pc, "udgaard/paladin_item",     1);
+        statue_load(pc, "paladin_guild/fl1_tongue", 1);
+        statue_load(pc, "midgaard/sword0",          1);
+    }
+    else if (pc.profession == PROFESSION_NECROMANCER)
+    {
+        statue_load(pc, "udgaard/necro_book",     1);
+        statue_load(pc, "udgaard/newbie_robes",   1);
+        statue_load(pc, "udgaard/newbie_boots",   1);
+        statue_load(pc, "udgaard/newbie_pants",   1);
+        statue_load(pc, "udgaard/necro_item",     1);
+        statue_load(pc, "midgaard/silver_dagger", 1);
+        statue_load(pc, "necro_guild/necro_hand", 1);
+    }
+    else if (pc.profession == PROFESSION_DRUID)
+    {
+        statue_load(pc, "udgaard/druid_book",     1);
+        statue_load(pc, "udgaard/druid_robes",    1);
+        statue_load(pc, "udgaard/newbie_boots",   1);
+        statue_load(pc, "udgaard/druid_cloak",    1);
+        statue_load(pc, "udgaard/druid_item",     1);
+        statue_load(pc, "udgaard/short_staff",    1);
+    }
+    else if (pc.profession == PROFESSION_KNIGHT)
+    {
+        statue_load(pc, "udgaard/knight_book",      1);
+        statue_load(pc, "udgaard/knight_pants",     1);
+        statue_load(pc, "udgaard/knight_boots",     1);
+        statue_load(pc, "udgaard/trench_coat",      1);
+        statue_load(pc, "udgaard/knight_sleeves",   1);
+        statue_load(pc, "udgaard/rapier",           1);
+        statue_load(pc, "udgaard/knight_jerkin",    1);
+        statue_load(pc, "knight/berret",            1);
+    }
+    else if (pc.profession == PROFESSION_BARBARIAN)
+    {
+        statue_load(pc, "udgaard/newbie_book",      1);
+        statue_load(pc, "udgaard/newbie_jerkin",    1);
+        statue_load(pc, "udgaard/newbie_bracer",    1);
+        statue_load(pc, "udgaard/newbie_boots",     1);
+        statue_load(pc, "udgaard/newbie_cloth",     1);
+        statue_load(pc, "udgaard/barbarian_item",   1);
+        statue_load(pc, "udgaard/axe0",             1);
+    }
+    else 
+    {
+        sendtext("It's so odd, please report to admin your profession is "+itoa(pc.profession)+"&amp;n", pc);
+    }
+    unsecure(pc);
+    goto start;
 }
 dilend
 end
