@@ -16,6 +16,8 @@ BOOST_AUTO_TEST_SUITE(VMC_tests)
 BOOST_AUTO_TEST_CASE(Heading)
 {
     BOOST_TEST_MESSAGE("VMC Unit Tests");
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 std::vector<std::string> config_files{"def_file_hashes.json", "zon_file_hashes.json"};

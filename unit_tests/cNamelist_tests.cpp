@@ -1,7 +1,9 @@
 #define BOOST_TEST_MODULE "cNamelists Unit Tests"
-#include <boost/test/unit_test.hpp>
 #include "namelist.h"
+
 #include <vector>
+
+#include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(cNamelist_tests)
 
@@ -54,6 +56,9 @@ BOOST_AUTO_TEST_CASE(operator_eq1_test)
     // list = ptr;
     ////////////////////////// Test Subject //////////////////////////////
     // BOOST_TEST(true, "Cool - didn't crash");
+
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 BOOST_AUTO_TEST_CASE(operator_eq2_test)
@@ -133,6 +138,9 @@ BOOST_AUTO_TEST_CASE(CopyList2_test)
     // list.CopyList(ptr);
     ////////////////////////// Test Subject //////////////////////////////
     // BOOST_TEST(true, "Cool - didn't crash");
+
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 BOOST_AUTO_TEST_CASE(CopyList3_test)
@@ -302,6 +310,9 @@ BOOST_AUTO_TEST_CASE(bread1_test)
     // list.bread(b);
     ////////////////////////// Test Subject //////////////////////////////
     // BOOST_TEST(true, "Cool - didn't crash");
+
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 BOOST_AUTO_TEST_CASE(bread2_test)
@@ -342,6 +353,9 @@ BOOST_AUTO_TEST_CASE(bwrite1_test)
     // list.bwrite(b);
     ////////////////////////// Test Subject //////////////////////////////
     // BOOST_TEST(true, "Cool - didn't crash");
+
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 BOOST_AUTO_TEST_CASE(bwrite2_test)
@@ -464,6 +478,9 @@ BOOST_AUTO_TEST_CASE(RemoveName1_test)
     ////////////////////////// Test Subject //////////////////////////////
     list.RemoveName("Thor");
     ////////////////////////// Test Subject //////////////////////////////
+
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 BOOST_AUTO_TEST_CASE(RemoveName2_test)
@@ -472,6 +489,9 @@ BOOST_AUTO_TEST_CASE(RemoveName2_test)
     ////////////////////////// Test Subject //////////////////////////////
     list.RemoveName(nullptr);
     ////////////////////////// Test Subject //////////////////////////////
+
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 BOOST_AUTO_TEST_CASE(RemoveName3_test)
@@ -1088,7 +1108,6 @@ BOOST_AUTO_TEST_CASE(IsNameRawIdx6_test)
     BOOST_TEST(ret == -1);
 }
 
-
 BOOST_AUTO_TEST_CASE(IsNameRawIdx7_test)
 {
     cNamelist list;
@@ -1281,7 +1300,6 @@ BOOST_AUTO_TEST_CASE(IsName7_test)
     BOOST_REQUIRE_NE(ret, nullptr);
     BOOST_TEST(std::string(ret) == "to  Loki ");
 }
-
 
 BOOST_AUTO_TEST_CASE(Length_test)
 {

@@ -16,6 +16,8 @@ BOOST_AUTO_TEST_SUITE(Defcomp_tests)
 BOOST_AUTO_TEST_CASE(Heading)
 {
     BOOST_TEST_MESSAGE("DEFCOMP Unit Tests");
+    // suppress test warnings
+    BOOST_TEST(1 < 2);
 }
 
 std::vector<std::string> config_files{"color_file_hashes.json"};
