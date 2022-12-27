@@ -570,6 +570,7 @@ external
    login_event@bounty();
    login_clean@justice();
    login_clean@guilds();
+   cupdate@clans();
 
 
 var
@@ -614,8 +615,8 @@ code
       informer();
       login_modify(self);
       exec("look", self);
-      exec("cupdate", self);
       login_event@bounty();
+      dilcopy("cupdate@clans()", self);
       quit;
    }
    

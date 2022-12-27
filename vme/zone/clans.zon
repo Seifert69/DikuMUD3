@@ -1045,7 +1045,7 @@ code
 }
 dilend // chest_load
 
-dilbegin cupdate (arg:string);
+dilbegin cupdate ();
 var
 	buf:string;
 	err:integer;
@@ -1061,7 +1061,6 @@ code
 	err:=loadstr ("clan.delete",buf);
 	if (err<1)
 	{
-		log ("01: Error in clan.delete");
 		quit;
 	}
 	
@@ -1091,7 +1090,12 @@ code
 		i:=delstr("clan.delete");
 		err:=savestr("clan.delete",buf,"w");
 	
-		cname:=self.extra.[CLAN_NAME].descr;	
+		cname:=self.extra.[CLAN_NAME].descr;
+		if (cname==null)
+		{
+			log ("01:  "+self.name+" was listed in clan.delete but had no clan extra data to remove.");
+			quit;
+		}	
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
@@ -2151,7 +2155,7 @@ code
 
 	if (pc==self)
 	{
-		act ("<div class='clan'>You can not use cremove to remove yourself use cdefect.</div>",
+		act ("<div class='clan'>You can not use cremove to remove yourself, use cdefect instead.</div>",
 		A_ALWAYS,self, null,null,TO_CHAR);
 		quit;
 	}
@@ -2264,7 +2268,7 @@ code
 	}
 	if (self.extra.[CLAN_RANK].names.[1]=="$master")
 	{
-		act ("<div class='clan'>You must first step down as clan master see help clan master.</div>",
+		act ("<div class='clan'>You must first appoint someone else to take your place as clan master. Type 'cappoint &lt;new master&gt; master' to do so.</div>",
 		A_ALWAYS, self,null,null,TO_CHAR);
 		quit;
 	}
