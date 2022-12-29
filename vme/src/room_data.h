@@ -129,7 +129,6 @@ private:
     int m_sc{0};                                                           ///< strong component, used for shortest path
     int m_num{0};                                                          ///< room number, used for shortest path
 
-#ifndef MPLEX_COMPILE
 public:
     enum edge_dir_t
     {
@@ -171,5 +170,4 @@ private:
     std::vector<vertex_descriptor> m_path;     ///<
     std::vector<vertex_descriptor> m_distance; ///<
     bool m_waiting_dijkstra{false};            ///<
-#endif
 };

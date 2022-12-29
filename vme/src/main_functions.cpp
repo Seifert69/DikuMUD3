@@ -15,6 +15,7 @@
 #include "handler.h"
 #include "hookmud.h"
 #include "interpreter.h"
+#include "json_helper.h"
 #include "nanny.h"
 #include "nice.h"
 #include "path.h"
@@ -475,13 +476,8 @@ void DumpJSONZones()
     for (auto &[name, zone] : g_zone_info.mmp)
     {
         writer.StartObject();
-
-        writer.String("name");
-        writer.String(name.c_str());
-
-        writer.String("zone");
-        zone->toJSON(writer);
-
+        json::write_kvp("name", name, writer);
+        json::write_object_pointer_kvp("zone", zone, writer);
         writer.EndObject();
     }
     writer.EndArray();

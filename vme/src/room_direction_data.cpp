@@ -92,31 +92,13 @@ ubit8 *room_direction_data::getDoorFlagsPtr()
 void room_direction_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
 {
     writer.StartObject();
-    //    writer.String("room_direction_data");
-
-    writer.String("open_name");
-    open_name.toJSON(writer);
-
-    writer.String("key");
-    if (key)
     {
-        writer.String(key);
+        json::write_object_value_kvp("open_name", open_name, writer);
+        json::write_kvp("key", key, writer);
+        json::write_unit_id_kvp("to_room", to_room, writer);
+        json::write_kvp("difficulty", difficulty, writer);
+        json::write_kvp("weight", weight, writer);
+        json::write_kvp("exit_info", exit_info, writer);
     }
-    else
-    {
-        writer.Null();
-    }
-
-    json::write_unit_id_kvp("to_room", to_room, writer);
-
-    writer.String("difficulty");
-    writer.Uint(difficulty);
-
-    writer.String("weight");
-    writer.Int(weight);
-
-    writer.String("exit_info");
-    writer.Uint(exit_info);
-
     writer.EndObject();
 }

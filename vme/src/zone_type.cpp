@@ -538,9 +538,9 @@ void zone_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer)
         json::write_object_value_kvp("title", m_title, writer);
         json::write_object_value_kvp("notes", m_notes, writer);
         json::write_object_value_kvp("help", m_help, writer);
-        json::write_pointer_kvp("rooms", m_rooms, writer);
-        json::write_pointer_kvp("objects", m_objects, writer);
-        json::write_pointer_kvp("npcs", m_npcs, writer);
+        json::write_unit_id_kvp("rooms", m_rooms, writer);
+        json::write_unit_id_kvp("objects", m_objects, writer);
+        json::write_unit_id_kvp("npcs", m_npcs, writer);
 
         writer.String("mmp_fi");
         writer.StartArray();

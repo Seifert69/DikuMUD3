@@ -269,54 +269,25 @@ void file_index_type::Remove(unit_data *value)
 void file_index_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
 {
     writer.StartObject();
-    ////////////////////////////////////////////////////////
-    writer.String("id");
-    writer.String(getID().c_str());
-
-    ////////////////////////////////////////////////////////
-    writer.String("fi_unit_list");
-    writer.StartArray();
-    for (auto &item : m_fi_unit_list)
     {
-        writer.String(item->getID().c_str());
+        json::write_kvp("id", getID(), writer);
+        writer.String("fi_unit_list");
+        writer.StartArray();
+        for (auto &item : m_fi_unit_list)
+        {
+            writer.String(item->getID().c_str());
+        }
+        writer.EndArray();
+        json::write_kvp("name", m_name, writer);
+        json::write_zone_id("zone", m_zone, writer);
+        json::write_kvp("filepos", m_filepos, writer);
+        json::write_kvp("length", m_length, writer);
+        json::write_kvp("crc", m_crc, writer);
+        json::write_kvp("no_in_zone", m_no_in_zone, writer);
+        json::write_kvp("no_in_mem", m_no_in_mem, writer);
+        json::write_kvp("room_no", m_room_no, writer);
+        json::write_kvp("type", m_type, writer);
+        ////////////////////////////////////////////////////////
     }
-    writer.EndArray();
-
-    ////////////////////////////////////////////////////////
-    writer.String("name");
-    writer.String(m_name.c_str());
-
-    ////////////////////////////////////////////////////////
-    json::write_zone_id("zone", m_zone, writer);
-
-    ////////////////////////////////////////////////////////
-    writer.String("filepos");
-    writer.Int64(m_filepos);
-
-    ////////////////////////////////////////////////////////
-    writer.String("length");
-    writer.Uint(m_length);
-
-    ////////////////////////////////////////////////////////
-    writer.String("crc");
-    writer.Uint(m_crc);
-
-    ////////////////////////////////////////////////////////
-    writer.String("no_in_zone");
-    writer.Int(m_no_in_zone);
-
-    ////////////////////////////////////////////////////////
-    writer.String("no_in_mem");
-    writer.Uint(m_no_in_mem);
-
-    ////////////////////////////////////////////////////////
-    writer.String("room_no");
-    writer.Uint(m_room_no);
-
-    ////////////////////////////////////////////////////////
-    writer.String("type");
-    writer.Uint(m_type);
-    ////////////////////////////////////////////////////////
-
     writer.EndObject();
 }

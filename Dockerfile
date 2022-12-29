@@ -12,5 +12,6 @@ COPY vme/www/img /dikumud3/vme/www/docker/img
 COPY vme/www/client/*.css /dikumud3/vme/www/docker
 COPY vme/www/client/*.js /dikumud3/vme/www/docker
 RUN mkdir dkr_build && cd dkr_build && cmake -G Ninja .. && ninja
-VOLUME /dikumud3/vme/lib
+EXPOSE 4280
+VOLUME ["/dikumud3/vme/lib"]
 ENTRYPOINT [ "/dikumud3/entrypoint.sh" ]

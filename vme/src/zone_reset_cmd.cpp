@@ -66,41 +66,27 @@ zone_reset_cmd *zone_reset_cmd::getNext() const
 void zone_reset_cmd::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
 {
     writer.StartObject();
-    ////////////////////////////////////////////////////////
-    json::write_pointer_kvp("zone_reset_cmd_this", this, writer);
-
-    ////////////////////////////////////////////////////////
-    writer.String("cmd_no");
-    writer.Uint(cmd_no);
-
-    ////////////////////////////////////////////////////////
-    writer.String("cmpl");
-    writer.Uint(cmpl);
-
-    ////////////////////////////////////////////////////////
-    writer.String("fi");
-    writer.StartArray();
-    for (auto &item : fi)
     {
-        json::write_pointer(item, writer);
+        json::write_pointer_kvp("zone_reset_cmd_this", this, writer);
+        json::write_kvp("cmd_no", cmd_no, writer);
+        json::write_kvp("cmpl", cmpl, writer);
+        writer.String("fi");
+        writer.StartArray();
+        for (auto &item : fi)
+        {
+            json::write_pointer(item, writer);
+        }
+        writer.EndArray();
+
+        writer.String("num");
+        writer.StartArray();
+        for (auto &item : num)
+        {
+            writer.Int(item);
+        }
+        writer.EndArray();
+        json::write_pointer_kvp("next", next, writer);
+        json::write_pointer_kvp("nested", nested, writer);
     }
-    writer.EndArray();
-
-    ////////////////////////////////////////////////////////
-    writer.String("num");
-    writer.StartArray();
-    for (auto &item : num)
-    {
-        writer.Int(item);
-    }
-    writer.EndArray();
-
-    ////////////////////////////////////////////////////////
-    json::write_pointer_kvp("next", next, writer);
-
-    ////////////////////////////////////////////////////////
-    json::write_pointer_kvp("nested", nested, writer);
-
-    ////////////////////////////////////////////////////////
     writer.EndObject();
 }

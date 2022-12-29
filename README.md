@@ -116,6 +116,8 @@ docker stop $(docker ps -q -f ancestor=dikumud3)
 
 ### Docker Example Workflow
 
+Note running docker in the foreground (without the `-d` switch)
+
 1. Create volume to persist mud data: `docker volume create muddata`
 2. Build the container: `DOCKER_BUILDKIT=1 docker build . -t dikumud3`
 3. Run the container: `docker run -d -p 4280:4280 -p 80:80 -v muddata:/dikumud3/vme/lib -v dikumud3`
@@ -125,7 +127,7 @@ docker stop $(docker ps -q -f ancestor=dikumud3)
 7. Exit MUD
 8. Make code changes
 9. Build locally (can be skipped)
-9. Stop container: `docker stop $(docker ps -q -f ancestor=dikumud3)`
+9. Stop container: CTRL-C or `docker stop $(docker ps -q -f ancestor=dikumud3)`
 10. Rebuild container: `DOCKER_BUILDKIT=1 docker build . -t dikumud3`
 11. Run the container: `docker run -d -p 4280:4280 -p 80:80 -v muddata:/dikumud3/vme/lib -v dikumud3`
 12. Visit http://localhost

@@ -9,6 +9,7 @@
 
 #include "db_file.h"
 #include "essential.h"
+#include "json_helper.h"
 #include "slog.h"
 #include "textutil.h"
 
@@ -727,8 +728,7 @@ void cNamelist::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer)
 {
     writer.StartObject();
     {
-        writer.String("length");
-        writer.Int(length);
+        json::write_kvp("length", length, writer);
 
         writer.String("namelist");
         writer.StartArray();

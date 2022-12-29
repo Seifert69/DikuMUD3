@@ -547,18 +547,11 @@ void cCombat::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) c
 {
     writer.StartObject();
     {
-        writer.String("AttackNo");
-        writer.Int(nAttackNo);
-
-        writer.String("When");
-        writer.Int(nWhen);
-
+        json::write_kvp("AttackNo", nAttackNo, writer);
+        json::write_kvp("When", nWhen, writer);
         json::write_unit_id_kvp("Owner", pOwner, writer);
-
         json::write_unit_id_kvp("Melee", pMelee, writer);
-
-        writer.String("NoOpponents");
-        writer.Int(nNoOpponents);
+        json::write_kvp("NoOpponents", nNoOpponents, writer);
 
         writer.String("Opponents");
         writer.StartArray();
@@ -568,8 +561,7 @@ void cCombat::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) c
         }
         writer.EndArray();
 
-        writer.String("cmd");
-        writer.String(cmd);
+        json::write_kvp("cmd", cmd, writer);
     }
     writer.EndObject();
 }

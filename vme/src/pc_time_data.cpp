@@ -1,5 +1,7 @@
 #include "pc_time_data.h"
 
+#include "json_helper.h"
+
 void pc_time_data::readFrom(CByteBuffer &buf, int &errors)
 {
     creation = buf.ReadU32(&errors);
@@ -70,17 +72,10 @@ void pc_time_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writ
 {
     writer.StartObject();
     {
-        writer.String("creation");
-        writer.Int64(creation);
-
-        writer.String("connect");
-        writer.Int64(connect);
-
-        writer.String("birth");
-        writer.Int64(birth);
-
-        writer.String("played");
-        writer.Uint(played);
+        json::write_kvp("creation", creation, writer);
+        json::write_kvp("connect", connect, writer);
+        json::write_kvp("birth", birth, writer);
+        json::write_kvp("played", played, writer);
     }
     writer.EndObject();
 }

@@ -375,63 +375,29 @@ void descriptor_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &w
 {
     writer.StartObject();
     {
-        writer.String("logon");
-        writer.Uint64(logon);
-
+        json::write_kvp("logon", logon, writer);
         // TODO - should this be dumped?
         // json::write_object_pointer_kvp("multi", multi, writer);
-
-        writer.String("id");
-        writer.Uint(id);
-
+        json::write_kvp("id", id, writer);
         json::write_pointer_kvp("fptr", (const void *)fptr, writer);
-
-        writer.String("state");
-        writer.Int(state);
-
-        writer.String("host");
-        writer.String(host);
-
-        writer.String("Port");
-        writer.Uint(nPort);
-
-        writer.String("Line");
-        writer.Uint(nLine);
-
-        writer.String("wait");
-        writer.Int(wait);
-
-        writer.String("timer");
-        writer.Uint(timer);
-
-        writer.String("replyid");
-        writer.Uint(replyid);
-
+        json::write_kvp("state", state, writer);
+        json::write_kvp("host", host, writer);
+        json::write_kvp("Port", nPort, writer);
+        json::write_kvp("Line", nLine, writer);
+        json::write_kvp("wait", wait, writer);
+        json::write_kvp("timer", timer, writer);
+        json::write_kvp("replyid", replyid, writer);
         json::write_char_pointer_kvp("localstr", localstr, writer);
-
         json::write_pointer_kvp("postedit", (const void *)postedit, writer);
-
         json::write_pointer_kvp("editing", editing, writer);
-
         json::write_pointer_kvp("editref", editref, writer);
-
-        writer.String("prompt_mode");
-        writer.Int(prompt_mode);
-
+        json::write_kvp("prompt_mode", prompt_mode, writer);
         json::write_char_pointer_kvp("last_cmd", last_cmd, writer);
-
         json::write_char_pointer_kvp("history", history, writer);
-
-        writer.String("qInput");
-        qInput.toJSON(writer);
-
-        json::write_pointer_kvp("character", character, writer);
-
-        json::write_pointer_kvp("original", original, writer);
-
-        writer.String("snoop");
-        snoop.toJSON(writer);
-
+        json::write_object_value_kvp("qInput", qInput, writer);
+        json::write_unit_id_kvp("character", character, writer);
+        json::write_unit_id_kvp("original", original, writer);
+        json::write_object_value_kvp("snoop", snoop, writer);
         json::write_pointer_kvp("next", next, writer);
     }
     writer.EndObject();

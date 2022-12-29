@@ -12,6 +12,7 @@
 
 #include "queue.h"
 
+#include "json_helper.h"
 #include "utility.h"
 
 #include <cassert>
@@ -228,11 +229,8 @@ void cQueue::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) co
 {
     writer.StartObject();
     {
-        writer.String("Entries");
-        writer.Uint(nEntries);
-
-        writer.String("Bytes");
-        writer.Uint(nBytes);
+        json::write_kvp("Entries", nEntries, writer);
+        json::write_kvp("Bytes", nBytes, writer);
     }
     writer.EndObject();
 }

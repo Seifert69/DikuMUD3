@@ -218,7 +218,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
 #ifdef DMSERVER
     int valid = 0;
-   /* Resolve the external references runtime */
+    /* Resolve the external references runtime */
 
     if (tmpl->xrefcount)
     {
@@ -454,7 +454,12 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         }
         else
         {
-            slog(LOG_ALL, 0, "bread_dil() unit (name %s) with no file index: DIL template [%s] no longer exists. bNameRead = %d.", owner->getNames().Name(), name, bNameRead);
+            slog(LOG_ALL,
+                 0,
+                 "bread_dil() unit (name %s) with no file index: DIL template [%s] no longer exists. bNameRead = %d.",
+                 owner->getNames().Name(),
+                 name,
+                 bNameRead);
         }
     }
 
@@ -489,7 +494,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
     for (i = 0; i < novar; i++)
     {
-        prg->fp->vars[i].type  = DilVarTypeIntToEnum(pBuf->ReadU8());
+        prg->fp->vars[i].type = DilVarTypeIntToEnum(pBuf->ReadU8());
         prg->fp->vars[i].itype = DilIType_e::Regular;
 
         bool globalVar = false;
@@ -923,9 +928,9 @@ void bwrite_diltemplate(CByteBuffer *pBuf, diltemplate *tmpl)
     {
         pBuf->Append8(tmpl->vart[i]); /* variable types */
         if (tmpl->varg[i] == nullptr)
-            pBuf->AppendString(nullptr);  // Version 76+
+            pBuf->AppendString(nullptr); // Version 76+
         else
-            pBuf->AppendString(tmpl->varg[i]);  // Version 76+
+            pBuf->AppendString(tmpl->varg[i]); // Version 76+
     }
 
     pBuf->Append16(tmpl->xrefcount); /* number of external references */
@@ -995,9 +1000,11 @@ void bwrite_dil(CByteBuffer *pBuf, dilprg *prg)
     {
         pBuf->Append8(prg->frame[0].vars[i].type);
 
-        pBuf->AppendString(prg->frame[0].vars[i].name); // Null except for global variables, this is the global shared variable name e.g. materials@treasure
+        pBuf->AppendString(prg->frame[0]
+                               .vars[i]
+                               .name); // Null except for global variables, this is the global shared variable name e.g. materials@treasure
         bool globalVar = (prg->frame[0].vars[i].name != nullptr);
-        
+
         switch (prg->frame[0].vars[i].type)
         {
             case DilVarType_e::DILV_SLP:
@@ -1173,11 +1180,8 @@ void bwrite_block(FILE *datafile, int length, void *buffer)
 int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 {
     int i = 0;
-
-#ifdef DMSERVER
     char zone[FI_MAX_ZONENAME + 1];
     char name[FI_MAX_UNITNAME + 1];
-#endif
 
     ubit32 nPos = pBuf->GetLength();
 
@@ -1481,12 +1485,12 @@ void write_unit_datafile(FILE *f, unit_data *u, char *fname, const ubit32 filecr
     pBuf = &g_FileBuffer;
     pBuf->Clear();
 
-    pBuf->AppendString(fname);       // Write the units unique 'name' ('name'@zone) 
+    pBuf->AppendString(fname);       // Write the units unique 'name' ('name'@zone)
     pBuf->Append8(u->getUnitType()); // Write unit type, UNIT_ST_...
     ubit32 nSizeStart = pBuf->GetLength();
-    pBuf->Append32(0); /* Write dummy length */
-    pBuf->Append32(0); /* Write dummy CRC    */
-    pBuf->Append32(filecrc);         // Write file CRC (constant for all units in the file)
+    pBuf->Append32(0);       /* Write dummy length */
+    pBuf->Append32(0);       /* Write dummy CRC    */
+    pBuf->Append32(filecrc); // Write file CRC (constant for all units in the file)
 
     ubit32 nStart = pBuf->GetLength();
     ubit32 length = write_unit_string(pBuf, u);
@@ -1501,9 +1505,9 @@ void write_unit_datafile(FILE *f, unit_data *u, char *fname, const ubit32 filecr
     // Let's go back and overwrite length and CRC with the real values
     ubit32 nPos = pBuf->GetLength();
     pBuf->SetLength(nSizeStart);
-    pBuf->Append32(length);    // Overwrite with the calculated length of the unit itself
-    pBuf->Append32(crc);       // Overwrite with the CRC calculated length of the unit itself
-    pBuf->SetLength(nPos);     // Restore position back to where it was before overwrite
+    pBuf->Append32(length); // Overwrite with the calculated length of the unit itself
+    pBuf->Append32(crc);    // Overwrite with the CRC calculated length of the unit itself
+    pBuf->SetLength(nPos);  // Restore position back to where it was before overwrite
 
     /* Lets write the entire block, including name, type and length info */
     pBuf->FileWrite(f);
@@ -1523,7 +1527,7 @@ void write_diltemplate(FILE *f, diltemplate *tmpl, const ubit32 filecrc)
     pBuf = &g_FileBuffer;
     pBuf->Clear();
 
-    pBuf->Append32(0); /* Write dummy length */
+    pBuf->Append32(0);       /* Write dummy length */
     pBuf->Append32(filecrc); // A unique crc (timestamp) for this file used to detect changes
     nStart = pBuf->GetLength();
     bwrite_diltemplate(pBuf, tmpl);

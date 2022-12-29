@@ -9,7 +9,9 @@ room_data::room_data(file_index_type *fi)
     : unit_data(UNIT_ST_ROOM, fi)
     , m_mapx{-1}
     , m_mapy{-1}
+#ifndef MPLEX_COMPILE
     , m_waiting_dijkstra{false}
+#endif
 {
     g_world_norooms++;
 }
@@ -122,7 +124,6 @@ void room_data::setRoomNumber(int value)
     m_num = value;
 }
 
-#ifndef MPLEX_COMPILE
 std::vector<room_data::vertex_descriptor> &room_data::getPath()
 {
     return m_path;
@@ -152,7 +153,6 @@ void room_data::setWaitingDijkstra(bool value)
 {
     m_waiting_dijkstra = value;
 }
-#endif
 
 void room_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
 {

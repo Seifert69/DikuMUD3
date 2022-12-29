@@ -7,6 +7,7 @@
 #include "color.h"
 
 #include "formatter.h"
+#include "json_helper.h"
 #include "textutil.h"
 
 #include <optional>
@@ -259,11 +260,10 @@ void color_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer
     for (auto &[key, value] : m_map)
     {
         writer.StartObject();
-        writer.String("keyword");
-        writer.String(key.c_str());
-
-        writer.String("color");
-        writer.String(value.c_str());
+        {
+            json::write_kvp("keyword", key, writer);
+            json::write_kvp("color", value, writer);
+        }
         writer.EndObject();
     }
     writer.EndArray();

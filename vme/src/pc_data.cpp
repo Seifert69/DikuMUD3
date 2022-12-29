@@ -888,26 +888,14 @@ void pc_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) c
         writer.String("npc_data");
         writer.StartObject();
         {
-            writer.String("setup");
-            m_setup.toJSON(writer);
-
-            writer.String("time");
-            m_time.toJSON(writer);
-
+            json::write_object_value_kvp("setup", m_setup, writer);
+            json::write_object_value_kvp("time", m_time, writer);
             json::write_char_pointer_kvp("guild", m_guild, writer);
-
             json::write_char_pointer_kvp("bank", m_bank, writer);
-
             json::write_char_pointer_kvp("hometown", m_hometown, writer);
-
             json::write_char_pointer_kvp("promptstr", m_promptstr, writer);
-
-            writer.String("info");
-            m_info.toJSON(writer);
-
-            writer.String("quest");
-            m_quest.toJSON(writer);
-
+            json::write_object_value_kvp("info", m_info, writer);
+            json::write_object_value_kvp("quest", m_quest, writer);
             json::write_kvp("profession", m_profession, writer);
             json::write_kvp("vlvl", m_vlvl, writer);
             json::write_kvp("id", m_id, writer);
