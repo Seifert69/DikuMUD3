@@ -26,7 +26,7 @@ public:
 
     [[nodiscard]] const char *getName() const;
     [[nodiscard]] zone_type *getZone() const;
-    [[nodiscard]] std::string getID() const;
+    [[nodiscard]] std::string getSymName() const;
     [[nodiscard]] long getFilepos() const;
     [[nodiscard]] ubit32 getLength() const;
     [[nodiscard]] ubit32 getCRC() const;

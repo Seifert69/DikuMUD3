@@ -190,7 +190,7 @@ zone_type *file_index_type::getZone() const
     return m_zone;
 }
 
-std::string file_index_type::getID() const
+std::string file_index_type::getSymName() const
 {
     return {m_name + '@' + m_zone->getName()};
 }
@@ -270,7 +270,7 @@ void file_index_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &w
 {
     writer.StartObject();
     {
-        json::write_kvp("id", getID(), writer);
+        json::write_kvp("id", getSymName(), writer);
         writer.String("fi_unit_list");
         writer.StartArray();
         for (auto &item : m_fi_unit_list)
