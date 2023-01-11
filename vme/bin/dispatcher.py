@@ -66,13 +66,14 @@ class MyDispatcher():
         message = message.replace("&lt;", '<')
         message = message.replace("&gt;", '>')
         print('Relaying message to Discord: ' + message)
-        os.write(self.pipeDiscord, message.encode())
-        print('Message Sent')
+        encmsg = message.encode()
+        numBytes = os.write(self.pipeDiscord, encmsg)
+        print('Message of ', len(encmsg), ' bytes sent, wrote ', numBytes, ' bytes')
 
 
     #
     def ProcessMUDMessage(self, txt):
-        print('MUD said:' + txt)
+        print('MUD said: [' + txt +']')
         sDispatch = txt.partition(' ')[0]
         
         if (sDispatch == "discord"):
@@ -101,6 +102,7 @@ class MyDispatcher():
             with open(FIFO) as fifopipe:
                 for line in fifopipe:
                     self.ProcessMUDMessage(line)
+                    print('Ready for next line in fifopipe')
 
 dispatcher = MyDispatcher()
 MyDispatcher.MUDlistener(dispatcher)

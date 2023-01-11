@@ -4,7 +4,8 @@ import errno
 import time
 import asyncio
 import sys
-
+import traceback
+import time
 
 
 # See dispatcher.py for overall architecture
@@ -12,6 +13,9 @@ import sys
 # https://discordpy.readthedocs.io/en/latest/intro.html
 # 
 # python3 -m pip install -U discord.py
+
+whodata = ""
+whotime = 0
 
 class MyClient(discord.Client):
     pipeMUD = None
@@ -114,13 +118,21 @@ class MyClient(discord.Client):
         mymsg = mymsg.replace("\r", "")
         mymsg = mymsg.replace("\n", "&&")  # Newline
 
-        print("Message from Discord to the MUD-> ", mymsg)
+        print("Message from Discord to the MUD-> [", mymsg, "]")
 
         # write the message received from Discord to pipeMUD so that
         # the MUD server receives it.
         #
         str = "discord " + message.channel.name + " @ @" + message.author.name + " says, '" + mymsg + "'"
-        os.write(self.pipeMUD, str.encode())
+
+        encmsg = str.encode()
+
+        try:
+            nBytes = os.write(self.pipeMUD, encmsg)
+        except Exception:
+            print("Exception: ", traceback.format_exc())
+
+        print('Message of ', len(encmsg), ' bytes sent, wrote ', nBytes, ' bytes')
         #if message.content.startswith('$hello'):
         #    await message.channel.send('da robot replies Hello!')
 
@@ -141,6 +153,30 @@ class MyClient(discord.Client):
 
         return channel
 
+
+    async def editWho(self, w, l):
+        global whodata
+        global whotime
+
+        # If less than 15 seconds since last who update, defer
+        #
+        tnow = int( time.time() )
+        if tnow-whotime < 15:
+            whodata = l
+            print("editWho: Defer")
+            return
+
+        try:
+            print("editWho: Sending")
+            tmp = await w.edit(content=l)
+            whotime = tnow
+            whodata = ""
+            print("editWho: Done")
+        except Exception:
+            print("editWho Exception: ", traceback.format_exc())
+        return
+
+
     #
     # Listens to the named pipeDiscord for chat channel from MUD dispatcher
     #
@@ -148,6 +184,8 @@ class MyClient(discord.Client):
         await self.wait_until_ready()
 
         print('pipeListener running')
+
+        global whodata
 
         if self.resolveChannel('mud') == None:
             print('Cant find the default channel (MUD).')
@@ -180,7 +218,7 @@ class MyClient(discord.Client):
 
             while (True):
                 try:
-                    line = os.read(self.pipeDiscord, 1000)
+                    line = os.read(self.pipeDiscord, 5000)
                     if not line:
                         break
                     else:
@@ -222,16 +260,27 @@ class MyClient(discord.Client):
                             line = line[14:]  # remove "<discord> who " 
                             line = line.replace('&&', '\n')
                             print('WHO update:\n', "["+line+"]")
-                            await whomsg.edit(content=line)
+                            try:
+                                await self.editWho(whomsg, line)
+                            except Exception:
+                                print("Exception: ", traceback.format_exc())
+                            print('Who update done.')
+
                         elif words[1] == "msg":
                             print('Msg Line = ', "["+line+"]")
                             print('Partition = ', line.split(' ', 3)[-1])
-                            await channel.send(line.split(' ', 3)[-1])
+                            try:
+                                message = await channel.send(line.split(' ', 3)[-1])
+                            except Exception:
+                                print("Exception: ", traceback.format_exc())
+                            print('Send as message id = ', message.id)
                         else:
                             print("Unknown type ", words[1])
                             continue
 
             await asyncio.sleep(1) # task runs every 1 seconds
+            if (whodata != ""):
+                await self.editWho(whomsg, whodata)
 
         print('Pipe listener end')
 
