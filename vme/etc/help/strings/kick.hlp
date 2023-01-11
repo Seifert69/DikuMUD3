@@ -1,10 +1,19 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage kick (character)<br/><br/>
-<br/>
-Use that special karate kick to smash you foe to bits. That is, if you're<br/>
-good at it.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Kick</h1>
+<p>Usage:
+</p>
+<pre> kick (character)
+</pre>
+<p>Use that special martial arts kick to smash you foe to bits. That is, if you're
+good at it. It is more powerful when your hands are free.
+</p><p><br />
+See also:
+</p>
+<pre> &gt; <a cmd='#'>Help Punch</a>
+ &gt; <a cmd='#'>Help Knee</a>
+ &gt; <a cmd='#'>Help Elbow</a>
+</pre>
+
+
+
+
+</div>

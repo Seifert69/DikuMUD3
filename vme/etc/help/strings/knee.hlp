@@ -1,11 +1,21 @@
-<br/>
-<br/>
-Usage: knee &lt;target&gt;<br/>
- <br/>
-This command will allow you to knee your opponent. It is more powerful if you<br/>
-are not wielding a weapon.<br/>
-<br/>
-<br/>
-See Also:<br/> <br/>
-Attackswitch<br/>
-Knee<br/>
+<div class="mw-parser-output"><h1>Knee</h1>
+<p>Usage: 
+</p>
+<pre> knee &lt;target&gt;
+</pre>
+<p>This command will allow you to knee your opponent. It is more powerful when your
+hands are free.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Attackswitch</a>
+ &gt; <a cmd='#'>Help Punch</a>
+ &gt; <a cmd='#'>Help Kick</a>
+ &gt; <a cmd='#'>Help Hit</a>
+ &gt; <a cmd='#'>Help Elbow</a>
+</pre>
+
+
+
+
+</div>

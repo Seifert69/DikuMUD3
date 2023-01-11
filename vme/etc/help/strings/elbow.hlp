@@ -1,10 +1,20 @@
-<br/>
- <br/>
-Usage: elbow &lt;target&gt;<br/>
- <br/>
-This command will allow you to elbow your opponent. Elbows are more powerful<br/>
-when you are not wielding a weapon.<br/>
-<br/>
-See Also:<br/> <br/>
-Attackswitch <br/>
-Knee<br/>
+<div class="mw-parser-output"><h1>Elbow</h1>
+<p>Usage:
+</p>
+<pre> elbow &lt;target&gt;
+</pre>
+<p>This command will allow you to elbow your opponent. It is more powerful when your
+hands are free.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Attackswitch</a>
+ &gt; <a cmd='#'>Help Punch</a>
+ &gt; <a cmd='#'>Help Knee</a>
+ &gt; <a cmd='#'>Help Kick</a>
+</pre>
+
+
+
+
+</div>

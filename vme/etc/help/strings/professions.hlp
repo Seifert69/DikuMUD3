@@ -8,9 +8,9 @@
  * Healer can become a Druid
  * Conjurer can become a Sorcerer
 </pre>
-<p>These for specializations are of course closely related to your initial profession (hence, a specialization). You don't have to specialize. And you definitely shouldn't change your profession until you're very ready. When switching profession, something that was previously accessible might become inaccessible.
-</p><p>To specialize seek out the guildmaster in the guild you can specialize in and look at the sign. E.g. a fighter would have to find the Barbarian's Guild, go to the guildmaster Hilka the Bold, look at the sign, and follow the instructions.
-</p><p>At a later stage (e.g. level 75) in the game you'll have the opportunity to one last profession change. This will allow you to make a complete career change:
+<p>These for specializations are of course closely related to your initial profession (hence, a specialization). You don't have to specialize. And you definitely shouldn't change your profession until you're very ready. When switching profession, all the skills in your previous profession become slightly harder (-1) to learn and will cost more skill points and have a slightly lower maximum potential.
+</p><p>To specialize your character you must seek out the guild master in the guild you can specialize in and look at the sign. A fighter would for example have to find the Barbarian's Guild, go to the guild master Hilka the Bold, look at the sign, and follow the instructions.
+</p><p>At a later stage (level 50) in the game you'll have the opportunity to one last profession change. This will allow you to make a complete career change as follows:
 </p><p>fighter / barbarian:
 </p>
 <pre>  thief, cleric, mage, knight, paladin, ranger.
@@ -27,10 +27,9 @@
 </p>
 <pre>  fighter, thief, cleric
 </pre>
-<p>Thus, you could end up with a character that is for example a fighter / barbarian / mage.
-Note, that necromancy is only possible if your starting class is a cleric.
-Also, you can only achieve a specialization in your own class. A fighter can specialize as
-a barbarian. But a thief cannot later become a Barbarian.
+<p>Thus, you could end up with a true dual class character that is for example a fighter / barbarian / mage. When you do the last profession change, the skills that were available in your previous class become harder to learn (-2 for your previous profession, and -3 for your first profession). 
+</p><p>Note, that necromancy is only possible if your starting class is a cleric.
+</p><p>Also, you can only achieve a specialization in your own class. A fighter can specialize as a barbarian. But a thief cannot later become a Barbarian.
 </p><p>To change profession you should seek out Father Tuck in the Temple of Udgaard. He will know
 when you're ready to make a profession change.
 </p><p>The following professions are available:

@@ -1,47 +1,35 @@
-<br/>
-<br/>
-<br/>
-Type VME Command<br/><br/>
-Usage<br/><br/>
-bug (bug string)<br/><br/>
-<br/>
-<br/>
-This command is used to report bugs to the creators. If the bug is<br/>
-a crash bug, PLEASE also send an email report to admin@valahall.com. <br/>
-To use type the word bug and press enter. This will open the <br/>
-editor as if you were writing a letter at the post office. Turn off all <br/>
-triggers that may echo in the editor. Type in the details of the bug.<br/>
-Close the editor with @ on a single line at the end.<br/><br/>
-<br/><br/>
-If at all possible issue the command from the room in which the <br/>
-bug is found.  If aggro mobiles or death room type situation render <br/>
-it not possible to do so, please report from nearest safe room you can. <br/>
-Avoid reporting from inside a container like a tent or a canoe unless the <br/>
-bug is on the object.<br/><br/>
-<br/><br/>
-If the bug is on an object in a place like the donations room, please copy <br/>
-the object title as best you can so that we may find the exact<br/>
-item. If the bug is due to a typographical error report as a typo also.<br/>
-<br/><br/>
-NOTE <br/>
-<br/><br/>
-If you have a severe bug,  you should contact the Admin via email<br/>
-ASAP. Do not share the bug with other players or builder directly. If<br/>
-you are found to have knowledge of a bug you MUST tell an Admin what<br/>
-the bug is. If you refuse your character may be frozen, the password changed or <br/>
-deleted. If you are found to be abusing a bug you may find your character <br/>
-deleted or lowered in levels, experience and any objects, advancements<br/>
-or other that are as a result of abusing the bug removed. Punishment is <br/>
-determined by the Admin you are dealing with.<br/>
-<br/><br/>
-If you are uncertain if something is a bug, but are fairly<br/>
-certain it should NOT work that way or makes the game too easy <br/>
-for a select few. REFRAIN from doing it and report via this<br/>
-command. <br/>
-<br/>See Also:<br/><br/>
-<br/><br/>
-Admin<br/><br/>
-Immortal<br/><br/>
-Typo<br/><br/>
-Idea<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Bug</h1>
+<p>Usage:
+</p>
+<pre> &gt; bug
+</pre>
+<p>This command is used to report bugs in the game and a copy is posted to Discord. If the bug is a crash bug, PLEASE also send an email report to admin@valahall.com.
+</p><p>To use type the word bug and press enter. This will open the editor as if you were writing a letter at the post office. Turn off all triggers that may echo in the editor. Type in the details of the bug. Close the editor with @ on a single line at the end.
+</p><p>Example:
+</p>
+<pre> 42h&gt; bug
+ ] When I wander into the dark forest of Haon Dor 
+ ] there is no light even though I am holding a 
+ ] torch.
+ ] @
+ 42h&gt;
+</pre>
+<p>If at all possible issue the command from the room in which the bug is found. If aggro mobiles or death room type situation render it not possible to do so, please report from nearest safe room you can. Avoid reporting from inside a container like a tent or a canoe unless the bug is on the object.
+</p><p>If the bug is on an object in a place like the donations room, please copy the object title as best you can so that we may find the exact  item. If the bug is due to a typographical error report as a typo also.
+</p>
+<h2><span class="mw-headline" id="NOTE">NOTE</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a cmd='#'>edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>If you have a severe bug, you should contact the Admin via email ASAP. Do not share the bug with other players or builder directly. If you are found to have knowledge of a bug please tell an Admin what the bug is. If you are found to be abusing a bug you may find your character deleted or lowered in levels, experience and any objects, advancements
+or other that are as a result of abusing the bug removed. Punishment is determined by the Admin you are dealing with.
+</p><p>If you are uncertain if something is a bug, but are fairly certain it should NOT work that way or makes the game too easy for a select few. REFRAIN from doing it and report via this command.
+</p>
+<h3><span class="mw-headline" id="See_Also:">See Also:</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a cmd='#'>edit</a><span class="mw-editsection-bracket">]</span></span></h3>
+<pre> &gt; <a cmd='#'>Help Admin</a>
+ &gt; <a cmd='#'>Help Immortal</a>
+ &gt; <a cmd='#'>Help Typo</a>
+ &gt; <a cmd='#'>Help Idea</a>
+</pre>
+
+
+
+
+</div>
