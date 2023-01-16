@@ -767,7 +767,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 4: /* "add-extra" */
             str_next_word_delim(argument, strarg, ',');
-            act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
+            act("Searching for $2t.", eA_ALWAYS, ch, strarg, cActParameter(), eTO_CHAR);
 
             if ((ed = unit_find_extra(strarg, unt)) == nullptr)
             {
@@ -1216,7 +1216,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 60: /* "add-quest" */
             str_next_word_delim(argument, strarg, ',');
-            act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
+            act("Searching for $2t.", eA_ALWAYS, ch, strarg, cActParameter(), eTO_CHAR);
 
             if ((ed = PC_QUEST(unt).find_raw(strarg)) == nullptr)
             {
@@ -1262,7 +1262,7 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 63: /* "add-info" */
             str_next_word_delim(argument, strarg, ',');
-            act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
+            act("Searching for $2t.", eA_ALWAYS, ch, strarg, cActParameter(), eTO_CHAR);
 
             if ((ed = PC_INFO(unt).find_raw(strarg)) == nullptr)
             {

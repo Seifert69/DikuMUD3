@@ -503,7 +503,7 @@ static void account_status(const unit_data *ch)
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
-            act("At the current rate that is $2d hours and $3d minutes.", A_ALWAYS, ch, &i, &j, TO_CHAR);
+            act("At the current rate that is $2d hours and $3d minutes.", eA_ALWAYS, ch, &i, &j, eTO_CHAR);
 
             i = static_cast<int>(PC_ACCOUNT(ch).getCreditLimit() / static_cast<float>(lcharge));
 

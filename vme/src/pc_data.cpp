@@ -179,7 +179,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
             }
         }
 
-        act("$1n has arrived.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
+        act("$1n has arrived.", eA_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), eTO_ROOM);
     }
 
     /* New player stats. Level can be zero after reroll while ID is not. */
@@ -300,16 +300,16 @@ void pc_data::reconnect_game(descriptor_data *d)
     if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != getUnitIn()))
     {
         act("$1n has reconnected, and is moved to another location.",
-            A_HIDEINV,
+            eA_HIDEINV,
             cActParameter(this),
             cActParameter(),
             cActParameter(),
-            TO_ROOM);
+            eTO_ROOM);
         unit_from_unit(this);
         unit_to_unit(this, CHAR_LAST_ROOM(this));
         setLastLocation(nullptr);
     }
-    act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
+    act("$1n has reconnected.", eA_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), eTO_ROOM);
     slog(LOG_BRIEF, getLevelOfWizardInvisibility(), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
     CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
     m_time.setPlayerLastConnectTime(time(nullptr));

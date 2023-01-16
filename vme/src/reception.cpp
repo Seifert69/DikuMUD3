@@ -37,7 +37,7 @@ static void show_items(unit_data *ch, unit_data *item, ubit32 price)
     {
         price = money_round_up(price, local_currency(ch), 2);
 
-        act("$2t for $3n", A_ALWAYS, ch, money_string(price, local_currency(ch), FALSE), item, TO_CHAR);
+        act("$2t for $3n", eA_ALWAYS, ch, money_string(price, local_currency(ch), FALSE), item, eTO_CHAR);
         rent_info = TRUE;
     }
 }
@@ -50,7 +50,7 @@ static void subtract_rent(unit_data *ch, unit_data *item, ubit32 price)
     {
         if (!char_can_afford(ch, price, DEF_CURRENCY))
         {
-            act("You couldn't afford to keep $2n.", A_ALWAYS, ch, item, cActParameter(), TO_CHAR);
+            act("You couldn't afford to keep $2n.", eA_ALWAYS, ch, item, cActParameter(), eTO_CHAR);
             extract_unit(item);
         }
         else
@@ -151,11 +151,11 @@ void do_rent(unit_data *ch, char *arg, const command_info *cmd)
     else
     {
         act("Your inventory costs $2t per day to rent.",
-            A_ALWAYS,
+            eA_ALWAYS,
             ch,
             money_string(sum, local_currency(ch), FALSE),
             cActParameter(),
-            TO_CHAR);
+            eTO_CHAR);
     }
 }
 

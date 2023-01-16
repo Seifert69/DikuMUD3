@@ -590,7 +590,7 @@ update_criminal(const class unit_data *deputy,
         if (IS_PC(criminal) && PC_ID(criminal) == pidx)
         {
             act("$1n tells you, 'You are in trouble, you good-for-nothing ...'",
-                A_SOMEONE, deputy, cActParameter(), criminal, TO_VICT);
+                eA_SOMEONE, deputy, cActParameter(), criminal, TO_VICT);
             break;
         }
 
@@ -647,8 +647,8 @@ int accuse(struct spec_arg *sarg)
     if (CHAR_POS(sarg->owner) < POSITION_SLEEPING ||
         CHAR_POS(sarg->owner) == POSITION_FIGHTING)
     {
-        act("$1n seems busy right now.", A_SOMEONE, sarg->owner,
-            sarg->activator, cActParameter(), TO_ROOM);
+        act("$1n seems busy right now.", eA_SOMEONE, sarg->owner,
+            sarg->activator, cActParameter(), eTO_ROOM);
         return SFR_BLOCK;
     }
 
@@ -657,8 +657,8 @@ int accuse(struct spec_arg *sarg)
 
 /*    if (str_is_empty(arg1))
     {
-        act("$1n says, 'Yes... who?'", A_SOMEONE, sarg->owner, sarg->activator,
-            cActParameter(), TO_ROOM);
+        act("$1n says, 'Yes... who?'", eA_SOMEONE, sarg->owner, sarg->activator,
+            cActParameter(), eTO_ROOM);
         return SFR_BLOCK;
     }
     else
@@ -666,7 +666,7 @@ int accuse(struct spec_arg *sarg)
         if (str_is_empty(arg2))
         {
             act("$1n says, 'What do you wish to accuse $3t of?'",
-                A_SOMEONE, sarg->owner, sarg->activator, arg1, TO_ROOM);
+                eA_SOMEONE, sarg->owner, sarg->activator, arg1, eTO_ROOM);
             return SFR_BLOCK;
         }
     }
@@ -676,32 +676,32 @@ int accuse(struct spec_arg *sarg)
     {
         crime_type = CRIME_MURDER;
         act("$1n says, 'Murder... lets see', and looks through his files.",
-            A_SOMEONE, sarg->owner, sarg->activator, cActParameter(), TO_ROOM);
+            eA_SOMEONE, sarg->owner, sarg->activator, cActParameter(), eTO_ROOM);
     }
     else if (!(strcmp(arg2, "stealing")))
     {
         crime_type = CRIME_STEALING;
         act("$1n says, 'Stealing... lets see', and looks through his files.",
-            A_SOMEONE, sarg->owner, sarg->activator, cActParameter(), TO_ROOM);
+            eA_SOMEONE, sarg->owner, sarg->activator, cActParameter(), eTO_ROOM);
     }
     else
     {
         act("$1n says, 'Are you accusing of murder or stealing?'",
-            A_SOMEONE, sarg->owner, sarg->activator, cActParameter(), TO_ROOM);
+            eA_SOMEONE, sarg->owner, sarg->activator, cActParameter(), eTO_ROOM);
         return SFR_BLOCK;
     }
 
     if ((pid = find_player_id(arg1)) == -1)
     {
         act("$1n says, 'I have never heard of this so called $2t.'",
-            A_SOMEONE, sarg->owner, arg1, sarg->activator, TO_ROOM);
+            eA_SOMEONE, sarg->owner, arg1, sarg->activator, eTO_ROOM);
         return SFR_BLOCK;
     }
 
-    act("$1n accuses $3t of $2t.", A_SOMEONE, sarg->activator, arg2, arg1,
-        TO_ROOM);
-    act("$1n says, 'Ah yes... $2t'", A_SOMEONE, sarg->owner, arg2,
-        sarg->activator, TO_ROOM);
+    act("$1n accuses $3t of $2t.", eA_SOMEONE, sarg->activator, arg2, arg1,
+        eTO_ROOM);
+    act("$1n says, 'Ah yes... $2t'", eA_SOMEONE, sarg->owner, arg2,
+        sarg->activator, eTO_ROOM);
 
     for (crime = crime_list; crime; crime = crime->next)
     {
@@ -722,7 +722,7 @@ int accuse(struct spec_arg *sarg)
                                                (int)crime->crime_nr))
                 {
                     act("$1n says, 'Thank you very much $3N, I will stop $2t.'",
-                        A_SOMEONE, sarg->owner, arg1, sarg->activator, TO_ROOM);
+                        eA_SOMEONE, sarg->owner, arg1, sarg->activator, eTO_ROOM);
 
                     if (!(crime->reported))
                         update_criminal(sarg->owner, arg1, pid, crime, TRUE);
@@ -744,7 +744,7 @@ int accuse(struct spec_arg *sarg)
     }
 
     act("$1n says, 'Sorry $3n, but I don't find your evidence convincing.'",
-        A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+        eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_ROOM);
 
     return SFR_BLOCK;
 }
@@ -875,7 +875,7 @@ i*/
     }
     else
         act("$1n complains about the lack of law and order in this place.",
-            A_HIDEINV, npc, cActParameter(), cActParameter(), TO_ROOM);
+            A_HIDEINV, npc, cActParameter(), cActParameter(), eTO_ROOM);
 }
 */
 /* ---------------------------------------------------------------------- */
@@ -983,7 +983,7 @@ void call_guards(class unit_data *guard)
             {
                 SET_BIT(CHAR_FLAGS(UVI(i)), CHAR_LEGAL_TARGET);
                 act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
-                    A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+                    eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_ROOM);
                 call_guards(sarg->owner);
                 // MS2020 why dont sleeping guards in the room wake up? */
 /*               simple_one_hit(sarg->owner, UVI(i));
@@ -1043,7 +1043,7 @@ void call_guards(class unit_data *guard)
         if (crime_in_progress(sarg->activator, CHAR_FIGHTING(sarg->activator)))
         {
             act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
-                A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+                eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_ROOM);
             call_guards(sarg->owner);
             simple_one_hit(sarg->owner, sarg->activator);
             REMOVE_BIT(CHAR_FLAGS(sarg->activator), CHAR_SELF_DEFENCE);
@@ -1081,11 +1081,11 @@ int reward_give(spec_arg *sarg)
 
     if ((paf = affected_by_spell(sarg->owner->getUnitContains(), ID_REWARD)) == nullptr)
     {
-        act("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+        act("$1n says, 'Thank you $3n, that is very nice of you.'", eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_ROOM);
         return SFR_BLOCK;
     }
 
-    act("$1n says, '$3n, receieve this as a token of our gratitude.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+    act("$1n says, '$3n, receieve this as a token of our gratitude.'", eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_ROOM);
 
     cur = local_currency(sarg->owner);
 
@@ -1116,7 +1116,7 @@ int reward_give(spec_arg *sarg)
         return SFR_SHARE;
 
     act("$1n looks at the board of rewards.",
-        A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_ROOM);
+        A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), eTO_ROOM);
 
     for (u = g_unit_list; u; u = u->gnext)
         if (IS_CHAR(u))
@@ -1168,13 +1168,13 @@ void tif_reward_on(class unit_affected_type *af, class unit_data *unit)
         {
             send_to_char("You feel wanted...<br/>", unit);
             act("$1n suddenly seems a little paranoid.",
-                A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
+                A_HIDEINV, unit, cActParameter(), cActParameter(), eTO_ROOM);
         }
     }
     else
     {
         act("You realize that the $1N is perhaps worth something.",
-            A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
+            A_HIDEINV, unit, cActParameter(), cActParameter(), eTO_ROOM);
     }
 }
 

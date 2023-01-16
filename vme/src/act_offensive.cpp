@@ -25,7 +25,7 @@ void do_hit(unit_data *ch, char *argument, const command_info *cmd)
 
     if (str_is_empty(argument))
     {
-        act("Who do you want to hit?", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("Who do you want to hit?", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
         return;
     }
 
@@ -33,14 +33,14 @@ void do_hit(unit_data *ch, char *argument, const command_info *cmd)
 
     if (!victim || !victim->isChar())
     {
-        act("There is nobody here called $2t which you can hit.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
+        act("There is nobody here called $2t which you can hit.", eA_ALWAYS, ch, argument, cActParameter(), eTO_CHAR);
         return;
     }
 
     if (victim == ch)
     {
         send_to_char("You hit yourself... OUCH!.<br/>", ch);
-        act("$1n hits $1mself, and says OUCH!", A_SOMEONE, ch, cActParameter(), victim, TO_ROOM);
+        act("$1n hits $1mself, and says OUCH!", eA_SOMEONE, ch, cActParameter(), victim, eTO_ROOM);
     }
     else
     {
@@ -66,7 +66,7 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
 
     if (str_is_empty(argument))
     {
-        act("Who do you want to kill?", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("Who do you want to kill?", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
         return;
     }
 
@@ -80,7 +80,7 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
 
     if (!victim || !victim->isChar())
     {
-        act("There is nobody here called $2t which you can kill.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
+        act("There is nobody here called $2t which you can kill.", eA_ALWAYS, ch, argument, cActParameter(), eTO_CHAR);
         return;
     }
 
@@ -90,9 +90,9 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
     }
     else
     {
-        act("You chop $3m to pieces! Ah! The blood!", A_SOMEONE, ch, cActParameter(), victim, TO_CHAR);
-        act("$3n chops you to pieces!", A_SOMEONE, victim, cActParameter(), ch, TO_CHAR);
-        act("$1n brutally slays $3n.", A_SOMEONE, ch, cActParameter(), victim, TO_NOTVICT);
+        act("You chop $3m to pieces! Ah! The blood!", eA_SOMEONE, ch, cActParameter(), victim, eTO_CHAR);
+        act("$3n chops you to pieces!", eA_SOMEONE, victim, cActParameter(), ch, eTO_CHAR);
+        act("$1n brutally slays $3n.", eA_SOMEONE, ch, cActParameter(), victim, eTO_NOTVICT);
         set_fighting(ch, victim, TRUE); /* Point to the killer! */
         UCHAR(ch)->setCharacterFlag(CHAR_KILL_SELF);
 

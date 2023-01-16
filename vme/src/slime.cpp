@@ -133,13 +133,13 @@ int slime_obj(spec_arg *sarg)
 
     if (fi == nullptr)
     {
-        act("No such file index '$2t'.", A_ALWAYS, sarg->activator, fi_name, cActParameter(), TO_CHAR);
+        act("No such file index '$2t'.", eA_ALWAYS, sarg->activator, fi_name, cActParameter(), eTO_CHAR);
         return SFR_BLOCK;
     }
 
     if (fi->getZone() == find_zone(BASIS_ZONE))
     {
-        act("Basis zone is not allowed slimed.", A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
+        act("Basis zone is not allowed slimed.", eA_ALWAYS, sarg->activator, cActParameter(), cActParameter(), eTO_CHAR);
         return SFR_BLOCK;
     }
 
@@ -171,7 +171,7 @@ int slime_obj(spec_arg *sarg)
     }
     else
     {
-        act("Please specify 'add' or 'remove'.", A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
+        act("Please specify 'add' or 'remove'.", eA_ALWAYS, sarg->activator, cActParameter(), cActParameter(), eTO_CHAR);
     }
 
     return SFR_BLOCK;

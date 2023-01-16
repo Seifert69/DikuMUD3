@@ -382,7 +382,7 @@ void command_interpreter(unit_data *ch, const char *cmdArg)
 
         if (send_preprocess(ch, &the_cmd, argstr) == SFR_SHARE)
         {
-            act("$2t is not a known command.", A_ALWAYS, ch, cmd, cActParameter(), TO_CHAR);
+            act("$2t is not a known command.", eA_ALWAYS, ch, cmd, cActParameter(), eTO_CHAR);
         }
 
         if (the_cmd.cmd_str)

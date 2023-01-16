@@ -164,7 +164,7 @@ static void chg_columns(unit_data *ch, const char *arg)
         return;
     }
 
-    act("Your screen width is now $2d columns.", A_ALWAYS, ch, &width, cActParameter(), TO_CHAR);
+    act("Your screen width is now $2d columns.", eA_ALWAYS, ch, &width, cActParameter(), eTO_CHAR);
 
     UPC(ch)->getTerminalSetupType().width = (ubit8)width;
 
@@ -189,7 +189,7 @@ static void chg_rows(unit_data *ch, const char *arg)
 
     UPC(ch)->getTerminalSetupType().height = (ubit8)height;
 
-    act("Your screen height is $2d rows.", A_ALWAYS, ch, &height, cActParameter(), TO_CHAR);
+    act("Your screen height is $2d rows.", eA_ALWAYS, ch, &height, cActParameter(), eTO_CHAR);
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
 }
@@ -248,11 +248,11 @@ static void chg_telnet(unit_data *ch)
 
     if (PC_SETUP_TELNET(ch))
     {
-        act("You are now assumed to be using telnet.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("You are now assumed to be using telnet.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
     else
     {
-        act("You are now assumed not to be using telnet.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("You are now assumed not to be using telnet.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
@@ -270,11 +270,11 @@ static void chg_character_echo(unit_data *ch)
 
     if (PC_SETUP_ECHO(ch))
     {
-        act("You will now get all typed characters echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("You will now get all typed characters echoed.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
     else
     {
-        act("You will now receive no echo characters.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("You will now receive no echo characters.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
@@ -292,11 +292,11 @@ static void chg_redraw_prompt(unit_data *ch)
 
     if (PC_SETUP_REDRAW(ch))
     {
-        act("You will now get your prompt redrawn.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("You will now get your prompt redrawn.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
     else
     {
-        act("Your prompt will no longer get redrawn.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("Your prompt will no longer get redrawn.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
 
     MplexSendSetup(CHAR_DESCRIPTOR(ch));
@@ -308,11 +308,11 @@ static void chg_echo_say(unit_data *ch)
 
     if (IS_SET(PC_FLAGS(ch), PC_ECHO))
     {
-        act("You will now get your communications echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("You will now get your communications echoed.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
     else
     {
-        act("You will no longer get your communications echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("You will no longer get your communications echoed.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
 }
 

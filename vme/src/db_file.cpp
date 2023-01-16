@@ -1180,8 +1180,6 @@ void bwrite_block(FILE *datafile, int length, void *buffer)
 int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 {
     int i = 0;
-    char zone[FI_MAX_ZONENAME + 1];
-    char name[FI_MAX_UNITNAME + 1];
 
     ubit32 nPos = pBuf->GetLength();
 
@@ -1213,6 +1211,8 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 #ifdef VMC_SRC
     pBuf->AppendDoubleString((char *)u->getKey());
 #else
+    char zone[FI_MAX_ZONENAME + 1];
+    char name[FI_MAX_UNITNAME + 1];
     if (u->getKey())
     {
         split_fi_ref(u->getKey(), zone, name);

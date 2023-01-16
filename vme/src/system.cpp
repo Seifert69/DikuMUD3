@@ -179,7 +179,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
         assert(!d->cgetSnoopData().getSnooping() && !d->cgetSnoopData().getSnoopBy());
         assert(!d->cgetOriginalCharacter());
 
-        act("$1n has lost $1s link.", A_HIDEINV, d->cgetCharacter(), cActParameter(), cActParameter(), TO_ROOM);
+        act("$1n has lost $1s link.", eA_HIDEINV, d->cgetCharacter(), cActParameter(), cActParameter(), eTO_ROOM);
         slog(LOG_BRIEF,
              d->cgetCharacter()->getLevelOfWizardInvisibility(),
              "Closing link and making link dead: %s.",

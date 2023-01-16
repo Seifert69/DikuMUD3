@@ -212,7 +212,7 @@ void do_execute(unit_data *ch, char *argument, const command_info *cmd)
     }
 
     execute_append(ch, argument);
-    act("Executing $2t.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
+    act("Executing $2t.", eA_ALWAYS, ch, argument, cActParameter(), eTO_CHAR);
 }
 
 void do_shutdown(unit_data *ch, char *argument, const command_info *cmd)
@@ -265,7 +265,7 @@ void do_snoop(unit_data *ch, char *argument, const command_info *cmd)
 
     if (!CHAR_DESCRIPTOR(victim))
     {
-        act("$3n has no descriptor-link.", A_SOMEONE, ch, cActParameter(), victim, TO_CHAR);
+        act("$3n has no descriptor-link.", eA_SOMEONE, ch, cActParameter(), victim, eTO_CHAR);
         return;
     }
 
@@ -344,7 +344,7 @@ void do_switch(unit_data *ch, char *argument, const command_info *cmd)
 
     if (CHAR_DESCRIPTOR(victim))
     {
-        act("$3n's body is already in use!", A_ALWAYS, ch, cActParameter(), victim, TO_CHAR);
+        act("$3n's body is already in use!", eA_ALWAYS, ch, cActParameter(), victim, eTO_CHAR);
     }
     else
     {
@@ -431,7 +431,7 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
         {
             int i = fi->getZone()->getLevelRequiredToLoadItems();
 
-            act("Level $2d is required to load items from this zone.", A_ALWAYS, ch, &i, cActParameter(), TO_CHAR);
+            act("Level $2d is required to load items from this zone.", eA_ALWAYS, ch, &i, cActParameter(), eTO_CHAR);
             return;
         }
     }
@@ -460,13 +460,13 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
     if (u->isObj() && IS_SET(u->getManipulate(), MANIPULATE_TAKE))
     {
         unit_to_unit(u, ch);
-        act("You secretly load $2n.", A_SOMEONE, ch, u, cActParameter(), TO_CHAR);
+        act("You secretly load $2n.", eA_SOMEONE, ch, u, cActParameter(), eTO_CHAR);
     }
     else
     {
         unit_to_unit(u, ch->getUnitIn());
-        act("$1n opens an interdimensional gate and fetches $3n.", A_SOMEONE, ch, cActParameter(), u, TO_ROOM);
-        act("$1n says, 'Hello World!'", A_SOMEONE, u, cActParameter(), cActParameter(), TO_ROOM);
+        act("$1n opens an interdimensional gate and fetches $3n.", eA_SOMEONE, ch, cActParameter(), u, eTO_ROOM);
+        act("$1n says, 'Hello World!'", eA_SOMEONE, u, cActParameter(), cActParameter(), eTO_ROOM);
     }
     dil_loadtime_activate(u);
 }

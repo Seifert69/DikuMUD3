@@ -233,7 +233,7 @@ static int push_alias(char *s, char *arg, trie_type *t, unit_data *ch, bool firs
 static void alias_to_char(alias_t *al, unit_data *ch)
 {
     auto buf = diku::format_to_str(" %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
-    act("$2t", A_ALWAYS, ch, buf.c_str(), cActParameter(), TO_CHAR);
+    act("$2t", eA_ALWAYS, ch, buf.c_str(), cActParameter(), eTO_CHAR);
 }
 
 /**
@@ -394,7 +394,7 @@ static bool alias_is_ok(alias_head *ah, char *key, char *val, unit_data *ch)
     {
         count = MAX_ALIAS_LENGTH;
 
-        act("Aliasname too long. Max $2d chars.", A_ALWAYS, ch, &count, cActParameter(), TO_CHAR);
+        act("Aliasname too long. Max $2d chars.", eA_ALWAYS, ch, &count, cActParameter(), eTO_CHAR);
         return FALSE;
     }
 
@@ -591,7 +591,7 @@ static void cmd_alias(unit_data *ch, char *arg, alias_head *alias_h)
         /* No further arguments lists this alias, if defined */
         if (alias_h->trie == nullptr || (al = (alias_t *)search_trie(comm, alias_h->trie)) == nullptr)
         {
-            act("No alias defined for `$2t'.", A_ALWAYS, ch, comm, cActParameter(), TO_CHAR);
+            act("No alias defined for `$2t'.", eA_ALWAYS, ch, comm, cActParameter(), eTO_CHAR);
         }
         else
         {
@@ -608,7 +608,7 @@ static void cmd_alias(unit_data *ch, char *arg, alias_head *alias_h)
     {
         int status = add_alias(alias_h, comm, arg, TRUE);
 
-        act("Alias for `$2t' $3t.", A_ALWAYS, ch, comm, status ? "added" : "changed", TO_CHAR);
+        act("Alias for `$2t' $3t.", eA_ALWAYS, ch, comm, status ? "added" : "changed", eTO_CHAR);
     }
 }
 
@@ -616,7 +616,7 @@ static void cmd_unalias(unit_data *ch, char *arg, alias_head *alias_h)
 {
     if (str_is_empty(arg))
     {
-        act("Unalias what?", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("Unalias what?", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
     }
     else
     {
@@ -628,11 +628,11 @@ static void cmd_unalias(unit_data *ch, char *arg, alias_head *alias_h)
             arg = get_next_word(arg, comm);
 
             act(del_alias(alias_h, comm) ? "Alias `$2t' deleted." : "No alias defined for `$2t'.",
-                A_ALWAYS,
+                eA_ALWAYS,
                 ch,
                 comm,
                 cActParameter(),
-                TO_CHAR);
+                eTO_CHAR);
         } while (!str_is_empty(arg));
     }
 }
@@ -645,11 +645,11 @@ static void cmd_claim(unit_data *ch, char *arg, unit_data *obj, alias_head *alia
 
     if (str_is_empty(buf) || !obj->getNames().IsName(buf))
     {
-        act("You can only claim $2n.", A_ALWAYS, ch, obj, cActParameter(), TO_CHAR);
+        act("You can only claim $2n.", eA_ALWAYS, ch, obj, cActParameter(), eTO_CHAR);
     }
     else
     {
-        act("You claim $2n as your property.", A_ALWAYS, ch, obj, cActParameter(), TO_CHAR);
+        act("You claim $2n as your property.", eA_ALWAYS, ch, obj, cActParameter(), eTO_CHAR);
         set_owner(obj, alias_h, ch);
     }
 }
@@ -716,11 +716,11 @@ static int local_dictionary(spec_arg *sarg)
         if (str_ccmp(sarg->activator->getNames().Name(), alias_h->owner))
         {
             act("You can't use the alias command before you type `claim $3N'.",
-                A_ALWAYS,
+                eA_ALWAYS,
                 sarg->activator,
                 cActParameter(),
                 sarg->owner,
-                TO_CHAR);
+                eTO_CHAR);
         }
         else
         {
@@ -758,11 +758,11 @@ static int local_dictionary(spec_arg *sarg)
     if (str_ccmp(sarg->activator->getNames().Name(), alias_h->owner))
     {
         act("You can't use the alias `$2t' before you type `claim $3N'.",
-            A_ALWAYS,
+            eA_ALWAYS,
             sarg->activator,
             sarg->cmd->cmd_str,
             sarg->owner,
-            TO_CHAR);
+            eTO_CHAR);
         return SFR_BLOCK;
     }
 

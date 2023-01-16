@@ -207,11 +207,11 @@ void del_ban(unit_data *ch, char *site)
     if (entry)
     {
         kill_entry(entry);
-        act("$2t taken succesfully off ban list.", A_ALWAYS, ch, site, cActParameter(), TO_CHAR);
+        act("$2t taken succesfully off ban list.", eA_ALWAYS, ch, site, cActParameter(), eTO_CHAR);
     }
     else
     {
-        act("No entry $2t in ban list.", A_ALWAYS, ch, site, cActParameter(), TO_CHAR);
+        act("No entry $2t in ban list.", eA_ALWAYS, ch, site, cActParameter(), eTO_CHAR);
     }
 }
 

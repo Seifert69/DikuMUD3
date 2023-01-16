@@ -8,6 +8,7 @@
 
 #include "descriptor_data.h"
 #include "dil.h"
+#include "vme.h"
 
 class cActParameter
 {
@@ -23,6 +24,29 @@ public:
     const int *m_i;
     const char *m_p;
 };
+
+enum actType_e : uint8_t
+{
+    eTO_ROOM = TO_ROOM,
+    eTO_VICT = TO_VICT,
+    eTO_NOTVICT = TO_NOTVICT,
+    eTO_CHAR = TO_CHAR,
+    eTO_ALL = TO_ALL,
+    eTO_REST = TO_REST
+};
+
+actType_e ActType(int n);
+
+
+enum actShow_e : uint8_t
+{
+    eA_HIDEINV = A_HIDEINV,
+    eA_SOMEONE = A_SOMEONE,
+    eA_ALWAYS = A_ALWAYS
+};
+
+actShow_e ActShow(int n);
+
 
 void page_string(descriptor_data *d, const char *);
 void page_string(descriptor_data *d, const std::string &);
@@ -40,16 +64,16 @@ void send_to_char(const std::string &messg, const unit_data *ch);
 /*  Please note that act() does NOT accept TRUE or FALSE as second argument
  *  anymore...
  */
-void act(const char *str, int hide_invisible, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type);
-void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type);
-void cact(const char *str, int hide_invisible, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type, const char *colortype);
+void act(const char *str, actShow_e hide_invisible, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type);
+void sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type);
+void cact(const char *str, actShow_e hide_invisible, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type, const char *colortype);
 void act_generate(char *buf,
                   const char *str,
-                  int show_type,
+                  actShow_e show_type,
                   cActParameter arg1,
                   cActParameter arg2,
                   cActParameter arg3,
-                  int type,
+                  actType_e type,
                   const unit_data *to,
                   int bNewline = 1);
 

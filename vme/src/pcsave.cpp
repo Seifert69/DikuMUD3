@@ -359,16 +359,16 @@ void save_player_contents(unit_data *pc, int fast)
             }
 
             tdiff = (keep_period - t0) / SECS_PER_REAL_HOUR;
-            act("Inventory expires in $2d hours ($3t daily).", A_ALWAYS, pc, (int *)&tdiff, money_string(daily_cost, cur, FALSE), TO_CHAR);
+            act("Inventory expires in $2d hours ($3t daily).", eA_ALWAYS, pc, (int *)&tdiff, money_string(daily_cost, cur, FALSE), eTO_CHAR);
         }
         else
         {
             act("You can't afford to keep your inventory (cost is $3t).",
-                A_ALWAYS,
+                eA_ALWAYS,
                 pc,
                 cActParameter(),
                 money_string(daily_cost, cur, FALSE),
-                TO_CHAR);
+                eTO_CHAR);
         }
     }
 

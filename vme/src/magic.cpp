@@ -508,13 +508,13 @@ void spell_clear_skies(spell_args *sa)
 
     if ((sa->hm / 20 <= 0) || (IS_SET(room->getUnitFlags(), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
-        act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
+        act("Nothing happens.", eA_ALWAYS, sa->caster, cActParameter(), cActParameter(), eTO_CHAR);
         return;
     }
 
     unit_zone(sa->caster)->getWeather().incrementChangeBy(sa->hm / 20);
 
-    act("You feel a warm breeze.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
+    act("You feel a warm breeze.", eA_ALWAYS, sa->caster, cActParameter(), cActParameter(), eTO_ALL);
 }
 
 void spell_storm_call(spell_args *sa)
@@ -523,11 +523,11 @@ void spell_storm_call(spell_args *sa)
 
     if ((sa->hm / 20 <= 0) || (IS_SET(room->getUnitFlags(), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
-        act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
+        act("Nothing happens.", eA_ALWAYS, sa->caster, cActParameter(), cActParameter(), eTO_CHAR);
         return;
     }
 
     unit_zone(sa->caster)->getWeather().decrementChangeBy(sa->hm / 20);
 
-    act("A cold wind chills you to the bone.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
+    act("A cold wind chills you to the bone.", eA_ALWAYS, sa->caster, cActParameter(), cActParameter(), eTO_ALL);
 }

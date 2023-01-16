@@ -85,14 +85,14 @@ void say_spell(unit_data *ch, unit_data *target, int si)
 {
     if (ch != target)
     {
-        cact(g_spell_info[si].tochar, A_ALWAYS, ch, cActParameter(), target, TO_CHAR, "spells");
-        cact(g_spell_info[si].tovict, g_spell_info[si].acttype, ch, cActParameter(), target, TO_VICT, "spells");
-        cact(g_spell_info[si].torest, g_spell_info[si].acttype, ch, cActParameter(), target, TO_NOTVICT, "spells");
+        cact(g_spell_info[si].tochar, eA_ALWAYS, ch, cActParameter(), target, eTO_CHAR, "spells");
+        cact(g_spell_info[si].tovict, g_spell_info[si].acttype, ch, cActParameter(), target, eTO_VICT, "spells");
+        cact(g_spell_info[si].torest, g_spell_info[si].acttype, ch, cActParameter(), target, eTO_NOTVICT, "spells");
     }
     else
     {
-        cact(g_spell_info[si].toself, A_ALWAYS, ch, cActParameter(), target, TO_CHAR, "spells");
-        cact(g_spell_info[si].toselfroom, g_spell_info[si].acttype, ch, cActParameter(), target, TO_ROOM, "spells");
+        cact(g_spell_info[si].toself, eA_ALWAYS, ch, cActParameter(), target, eTO_CHAR, "spells");
+        cact(g_spell_info[si].toselfroom, g_spell_info[si].acttype, ch, cActParameter(), target, eTO_ROOM, "spells");
     }
 }
 
@@ -167,7 +167,7 @@ int spell_perform(int spell_no,
 
     if (!spell_legal_target(spell_no, caster, target))
     {
-        cact("The magic disappears when cast on $3n.", A_SOMEONE, caster, cActParameter(), target, TO_CHAR, "spells");
+        cact("The magic disappears when cast on $3n.", eA_SOMEONE, caster, cActParameter(), target, eTO_CHAR, "spells");
         return -1;
     }
 
@@ -272,13 +272,13 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
 
     if (spl == -1)
     {
-        act("The $2t spell is not known to this realm.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
+        act("The $2t spell is not known to this realm.", eA_ALWAYS, ch, argument, cActParameter(), eTO_CHAR);
         return;
     }
 
     if (spl < SPL_GROUP_MAX)
     {
-        act("$2t is not a spell.", A_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), TO_CHAR);
+        act("$2t is not a spell.", eA_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), eTO_CHAR);
         return;
     }
 
@@ -391,15 +391,15 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
             {
                 if (IS_SET(g_spell_info[spl].targets, TAR_CHAR))
                 {
-                    act("Nobody by the name '$2t' here.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                    act("Nobody by the name '$2t' here.", eA_ALWAYS, ch, orgarg, cActParameter(), eTO_CHAR);
                 }
                 else if (IS_SET(g_spell_info[spl].targets, TAR_OBJ))
                 {
-                    act("Nothing by the name '' here.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                    act("Nothing by the name '' here.", eA_ALWAYS, ch, orgarg, cActParameter(), eTO_CHAR);
                 }
                 else if (IS_SET(g_spell_info[spl].targets, TAR_ROOM))
                 {
-                    act("No location by the name '$2t'.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                    act("No location by the name '$2t'.", eA_ALWAYS, ch, orgarg, cActParameter(), eTO_CHAR);
                 }
                 else
                 {
@@ -408,7 +408,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             { /* Nothing was given as argument */
-                act("What should the $2t spell be cast upon?", A_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), TO_CHAR);
+                act("What should the $2t spell be cast upon?", eA_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), eTO_CHAR);
             }
 
             return;
@@ -624,9 +624,9 @@ static void spell_read()
         else if (strncmp(pTmp, "acttype", 7) == 0)
         {
             dummy = atoi(pCh);
-            if (dummy == A_ALWAYS || dummy == A_HIDEINV || dummy == A_SOMEONE)
+            if (dummy == actShow_e::eA_ALWAYS || dummy == actShow_e::eA_HIDEINV || dummy == actShow_e::eA_SOMEONE)
             {
-                g_spell_info[idx].acttype = dummy;
+                g_spell_info[idx].acttype = ActShow(dummy);
             }
         }
         else if (strncmp(pTmp, "sphere", 6) == 0)
@@ -875,7 +875,7 @@ static void spell_init()
         g_spell_info[i].torest = nullptr;
         g_spell_info[i].toself = nullptr;
         g_spell_info[i].toselfroom = nullptr;
-        g_spell_info[i].acttype = A_SOMEONE;
+        g_spell_info[i].acttype = eA_SOMEONE;
 
         g_SplColl.tree[i].parent = SPL_ALL;
         g_SplColl.tree[i].bAutoTrain = TRUE;

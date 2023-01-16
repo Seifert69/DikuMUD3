@@ -2554,7 +2554,7 @@ void dilfi_act(dilprg *p)
                 /* these require 1st argument */
                 if (v3->val.ptr)
                 {
-                    act((char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num);
+                    act((char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
                 }
                 break;
 
@@ -2562,7 +2562,7 @@ void dilfi_act(dilprg *p)
             case TO_NOTVICT:
                 if (v5->val.ptr)
                 {
-                    act((char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num);
+                    act((char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
                 }
         }
     }

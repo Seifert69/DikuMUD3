@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include "comm.h"
 #include "dil.h"
 #include "spelldef.h"
 
@@ -31,7 +32,7 @@ struct spell_args
 
 struct spell_info_type
 {
-    ubit8 acttype;
+    actShow_e acttype;
     char *tochar;
     char *tovict;
     char *torest;

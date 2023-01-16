@@ -950,7 +950,7 @@ void unsnoop(unit_data *ch, int mode)
 
     if (CHAR_IS_SNOOPING(ch))
     {
-        act("You no longer snoop $3n.", A_SOMEONE, ch, cActParameter(), CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnooping(), TO_CHAR);
+        act("You no longer snoop $3n.", eA_SOMEONE, ch, cActParameter(), CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnooping(), eTO_CHAR);
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->getSnoopData().getSnooping())->getSnoopData().setSnoopBy(nullptr);
         CHAR_DESCRIPTOR(ch)->getSnoopData().setSnooping(nullptr);
     }
@@ -958,11 +958,11 @@ void unsnoop(unit_data *ch, int mode)
     if (CHAR_IS_SNOOPED(ch) && mode)
     {
         act("You no longer snoop $3n, $3e was extracted.",
-            A_SOMEONE,
+            eA_SOMEONE,
             CHAR_DESCRIPTOR(ch)->cgetSnoopData().getSnoopBy(),
             cActParameter(),
             ch,
-            TO_CHAR);
+            eTO_CHAR);
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->getSnoopData().getSnoopBy())->getSnoopData().setSnooping(nullptr);
         CHAR_DESCRIPTOR(ch)->getSnoopData().setSnoopBy(nullptr);
     }

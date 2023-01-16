@@ -225,7 +225,7 @@ int room_move(unit_data *ch,
 
     if (!str_is_empty(pLeaveSelf))
     {
-        act(pLeaveSelf, A_ALWAYS, ch, room_from, mover, TO_CHAR);
+        act(pLeaveSelf, eA_ALWAYS, ch, room_from, mover, eTO_CHAR);
     }
 
     send_done(ch, room_from, room_to, direction, g_cmd_dirs[direction], "");
@@ -240,7 +240,7 @@ int room_move(unit_data *ch,
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
-            act(pLeaveOther, A_HIDEINV, ch, ch, mover, TO_REST);
+            act(pLeaveOther, eA_HIDEINV, ch, ch, mover, eTO_REST);
         }
     }
 
@@ -253,13 +253,13 @@ int room_move(unit_data *ch,
     {
         if ((mover != ch) || !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
         {
-            act(pArrOther, A_HIDEINV, ch, ch, mover, TO_REST);
+            act(pArrOther, eA_HIDEINV, ch, ch, mover, eTO_REST);
         }
     }
 
     if (!str_is_empty(pArrSelf))
     {
-        act(pArrSelf, A_ALWAYS, ch, room_to, mover, TO_CHAR);
+        act(pArrSelf, eA_ALWAYS, ch, room_to, mover, eTO_CHAR);
     }
 
     command_interpreter(ch, "look :brief:");
@@ -275,7 +275,7 @@ int room_move(unit_data *ch,
         {
             if ((u != ch) && u->isChar())
             {
-                act(pPassengersO, A_SOMEONE, u, ch, mover, TO_CHAR);
+                act(pPassengersO, eA_SOMEONE, u, ch, mover, eTO_CHAR);
                 command_interpreter(u, "look :brief:");
             }
         }
@@ -392,8 +392,8 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         {
             if (u->isChar() && CHAR_FIGHTING(u))
             {
-                act("You can't get away like that in the middle of combat.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
-                act("You can't get away like that in the middle of combat.", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_CHAR);
+                act("You can't get away like that in the middle of combat.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
+                act("You can't get away like that in the middle of combat.", eA_ALWAYS, mover, cActParameter(), cActParameter(), eTO_CHAR);
                 return 0;
             }
         }
@@ -412,7 +412,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                     send_to_char("You are fighting for your life!<br/>", mover);
                     if (ch != mover)
                     {
-                        act("Your $3n is busy fighting!", A_ALWAYS, ch, cActParameter(), mover, TO_CHAR);
+                        act("Your $3n is busy fighting!", eA_ALWAYS, ch, cActParameter(), mover, eTO_CHAR);
                     }
                 }
                 else if (CHAR_POS(mover) >= POSITION_RESTING)
@@ -420,7 +420,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                     send_to_char("Perhaps you should get on your feet first?<br/>", mover);
                     if (ch != mover)
                     {
-                        act("Your $3n needs to get up first.", A_ALWAYS, ch, cActParameter(), mover, TO_CHAR);
+                        act("Your $3n needs to get up first.", eA_ALWAYS, ch, cActParameter(), mover, eTO_CHAR);
                     }
                 }
 
@@ -464,19 +464,19 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
             if (IS_SET(mover->getUnitFlags(), UNIT_FL_BURIED))
             {
-                act("Your $2N is buried! It cannot move.", A_ALWAYS, ch, mover, cActParameter(), TO_CHAR);
+                act("Your $2N is buried! It cannot move.", eA_ALWAYS, ch, mover, cActParameter(), eTO_CHAR);
                 return 0;
             }
 
             if (!IS_SET(mover->getUnitFlags(), UNIT_FL_TRANS))
             {
-                act("Alas, you cannot go that way...", A_SOMEONE, mover, cActParameter(), cActParameter(), TO_CHAR);
+                act("Alas, you cannot go that way...", eA_SOMEONE, mover, cActParameter(), cActParameter(), eTO_CHAR);
                 return 0;
             }
 
             if ((OBJ_TYPE(mover) != ITEM_VEHICLE) && (OBJ_TYPE(mover) != ITEM_BOAT))
             {
-                act("This isn't a vehicle!", A_SOMEONE, mover, cActParameter(), cActParameter(), TO_CHAR);
+                act("This isn't a vehicle!", eA_SOMEONE, mover, cActParameter(), cActParameter(), eTO_CHAR);
                 return 0;
             }
             /* Now we need to check if the vehicle has the fuel to move (if not a boat)
@@ -490,7 +490,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
                if (mover.outside.value[1] - end_need < 0)
                {
-                  act("Your $2N doesnt have the energy to move.", A_SOMEONE, mover, mover.outside, null, TO_CHAR);
+                  act("Your $2N doesnt have the energy to move.", eA_SOMEONE, mover, mover.outside, null, eTO_CHAR);
                   return;
                }
             }*/
@@ -505,14 +505,14 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         }
         else
         {
-            act("The $3t seems to be closed.", A_SOMEONE, ch, cActParameter(), ROOM_DOOR_NAME(room_from, direction), TO_CHAR);
+            act("The $3t seems to be closed.", eA_SOMEONE, ch, cActParameter(), ROOM_DOOR_NAME(room_from, direction), eTO_CHAR);
         }
         return 0;
     }
 
     if (ROOM_EXIT(room_from, direction)->isDoorFlagSet(EX_CLIMB))
     {
-        act("Alas, you must climb to go that way.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("Alas, you must climb to go that way.", eA_SOMEONE, ch, cActParameter(), cActParameter(), eTO_CHAR);
         return 0;
     }
 
@@ -523,14 +523,14 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     {
         if (mover->isChar())
         {
-            act("You need to get yourself a boat.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+            act("You need to get yourself a boat.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
             return 0;
         }
         else // Sailing in an object
         {
             if (!mover->isObj() || OBJ_TYPE(mover) != ITEM_BOAT)
             {
-                act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+                act("You must be inside a boat if you want to sail.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
                 return 0;
             }
         }
@@ -542,7 +542,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
             if (!mover->getExtraList().find_raw(S_SWIM_ON) &&
                 (!mover->getExtraList().find_raw(S_IS_FISH) || !mover->getExtraList().find_raw(S_IS_AMPHIB)))
             {
-                act("You might want to swim.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+                act("You might want to swim.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
                 return 0;
             }
 
@@ -572,11 +572,11 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                      direction);
                 diff += 150;
                 act("You really should have been in a boat here, swimming is incredible difficult.",
-                    A_ALWAYS,
+                    eA_ALWAYS,
                     mover,
                     cActParameter(),
                     cActParameter(),
-                    TO_CHAR);
+                    eTO_CHAR);
             }
 
             diff -= skillbonus; // Make it less difficult if it's kind of fishy
@@ -585,8 +585,8 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
             if (skilltest < 0)
             {
-                act("As you try to swim, you flounder and take in water!", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_CHAR);
-                act("$1n tries to swim, but flounders and takes in water!", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_REST);
+                act("As you try to swim, you flounder and take in water!", eA_ALWAYS, mover, cActParameter(), cActParameter(), eTO_CHAR);
+                act("$1n tries to swim, but flounders and takes in water!", eA_ALWAYS, mover, cActParameter(), cActParameter(), eTO_REST);
                 modify_hit(mover, (skilltest / 10));
 
                 if (mover->is_destructed() || (CHAR_POS(mover) == POSITION_DEAD))
@@ -603,7 +603,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         {
             if (!mover->isObj() || OBJ_TYPE(mover) != ITEM_BOAT)
             {
-                act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+                act("You must be inside a boat if you want to sail.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
                 return 0;
             }
         }
@@ -612,13 +612,13 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
     {
         if (mover->getExtraList().find_raw(S_IS_FISH))
         {
-            act("No little fishies on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+            act("No little fishies on land.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
             return 0; // Fish can't walk on land. 2020 I would think checking for race was equally important as extra?
         }
 
         if (mover->isObj() && (OBJ_TYPE(mover) == ITEM_BOAT))
         {
-            act("You can't sail your boat on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+            act("You can't sail your boat on land.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
             return 0;
         }
     }
@@ -648,7 +648,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
             if (ch != mover)
             {
-                act("Your $2n is too exhausted to move.", A_ALWAYS, ch, mover, cActParameter(), TO_CHAR);
+                act("Your $2n is too exhausted to move.", eA_ALWAYS, ch, mover, cActParameter(), eTO_CHAR);
             }
             return 0;
         }
@@ -719,7 +719,7 @@ int self_walk(unit_data *ch, unit_data *mover, int direction, int following)
 
                 if (room_from == k->getFollower()->inRoom() && CHAR_POS(k->getFollower()) >= POSITION_STANDING)
                 {
-                    act("You follow $3n.<br/>", A_SOMEONE, k->getFollower(), cActParameter(), ch, TO_CHAR);
+                    act("You follow $3n.<br/>", eA_SOMEONE, k->getFollower(), cActParameter(), ch, eTO_CHAR);
                     if (k->getFollower()->getUnitIn()->isRoom())
                     {
                         self_walk(k->getFollower(), k->getFollower(), direction, TRUE);
@@ -773,13 +773,13 @@ void move_dir(unit_data *ch, int dir)
     else
     {
         slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", ch->getNames().Name(), ch->getUnitIn()->getNames().Name());
-        act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
+        act("Hmm. You shouldnt be in here. You're pushed out.", eA_SOMEONE, ch, cActParameter(), cActParameter(), eTO_CHAR);
         if (ch->getUnitIn()->getUnitIn())
         {
             ch->setUnitIn(ch->getUnitIn()->getUnitIn());
         }
         command_interpreter(ch, "look");
-        act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
+        act("$1n appears out of thin air.", eA_HIDEINV, ch, cActParameter(), cActParameter(), eTO_REST);
     }
 }
 
@@ -814,7 +814,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
     {
         if (err_msg)
         {
-            act("What?", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+            act("What?", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
         }
         return -1;
     }
@@ -823,7 +823,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
     {
         if (err_msg)
         {
-            act("You see no such exit.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+            act("You see no such exit.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
         }
         return -1;
     }
@@ -840,7 +840,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 
             if (err_msg)
             {
-                act("You see no exit in that direction.", A_ALWAYS, ch, dirdoorstr, cActParameter(), TO_CHAR);
+                act("You see no exit in that direction.", eA_ALWAYS, ch, dirdoorstr, cActParameter(), eTO_CHAR);
             }
 
             return -1;
@@ -855,14 +855,14 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 
             if (err_msg)
             {
-                act("You see no $2t in that direction.", A_ALWAYS, ch, dirdoorstr, cActParameter(), TO_CHAR);
+                act("You see no $2t in that direction.", eA_ALWAYS, ch, dirdoorstr, cActParameter(), eTO_CHAR);
             }
             return -1;
         }
 
         if (err_msg)
         {
-            act("You see no exit in that direction.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
+            act("You see no exit in that direction.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
         }
         return -1;
     }
@@ -883,7 +883,7 @@ int low_find_door(unit_data *ch, char *doorstr, int err_msg, int check_hidden)
 
     if (err_msg)
     {
-        act("You see no $2t here.", A_ALWAYS, ch, doorstr, cActParameter(), TO_CHAR);
+        act("You see no $2t here.", eA_ALWAYS, ch, doorstr, cActParameter(), eTO_CHAR);
     }
 
     return -1;
@@ -939,7 +939,7 @@ int do_simple_move(class unit_data *ch, int direction, int following)
         if (!has_found_door(ch, direction))
             send_to_char(ALAS_NOWAY, ch);
         else
-            act("The $3t seems to be closed.", A_SOMEONE, ch, 0, ROOM_DOOR_NAME(room, direction), TO_CHAR);
+            act("The $3t seems to be closed.", eA_SOMEONE, ch, 0, ROOM_DOOR_NAME(room, direction), eTO_CHAR);
         return 0;
     }
 
@@ -978,12 +978,12 @@ int do_simple_move(class unit_data *ch, int direction, int following)
     c = single_unit_messg(room, "$leave_o", dirbuf, "$1n leaves $3t.");
 
     if (!CHAR_HAS_FLAG(ch, CHAR_SNEAK) && !str_is_empty(c))
-        act(c, A_HIDEINV, ch, room, g_dirs[direction], TO_ROOM);
+        act(c, eA_HIDEINV, ch, room, g_dirs[direction], TO_ROOM);
 
     c = single_unit_messg(room, "$leave_s", dirbuf, "");
 
     if (!str_is_empty(c))
-        act(c, A_ALWAYS, ch, room, g_dirs[direction], TO_CHAR);
+        act(c, eA_ALWAYS, ch, room, g_dirs[direction], eTO_CHAR);
 
     unit_from_unit(ch);
 
@@ -996,12 +996,12 @@ int do_simple_move(class unit_data *ch, int direction, int following)
     c = single_unit_messg(room, "$arrive_o", dirbuf, "$1n has arrived from $3t.");
 
     if (!CHAR_HAS_FLAG(ch, CHAR_SNEAK) && !str_is_empty(c))
-        act(c, A_HIDEINV, ch, to, g_enter_dirs[g_rev_dir[direction]], TO_ROOM);
+        act(c, eA_HIDEINV, ch, to, g_enter_dirs[g_rev_dir[direction]], TO_ROOM);
 
     c = single_unit_messg(to, "$arrive_s", dirbuf, "");
 
     if (!str_is_empty(c))
-        act(c, A_ALWAYS, ch, to, g_enter_dirs[g_rev_dir[direction]], TO_CHAR);
+        act(c, eA_ALWAYS, ch, to, g_enter_dirs[g_rev_dir[direction]], eTO_CHAR);
 
     command_interpreter(ch, "look");
 
@@ -1024,20 +1024,20 @@ void steed_walk(class unit_data *ch, int direction)
 
     if (!IS_NPC(beast))
     {
-        act("You must be on a mount if you want to ride.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+        act("You must be on a mount if you want to ride.", eA_ALWAYS, ch, 0, 0, eTO_CHAR);
         return;
     }
 
     if (CHAR_FIGHTING(beast))
     {
-        act("You must be in control to do that.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+        act("You must be in control to do that.", eA_ALWAYS, ch, 0, 0, eTO_CHAR);
         return;
     }
 
     for (class unit_data *u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
         if (IS_CHAR(u) && CHAR_FIGHTING(u))
         {
-            act("You can't just ride away in the middle of a combat.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+            act("You can't just ride away in the middle of a combat.", eA_ALWAYS, ch, 0, 0, eTO_CHAR);
             return;
         }
 
@@ -1055,7 +1055,7 @@ void steed_walk(class unit_data *ch, int direction)
         if (!has_found_door(ch, direction))
             send_to_char(ALAS_NOWAY, ch);
         else
-            act("The $3t seems to be closed.", A_SOMEONE, ch, 0, ROOM_DOOR_NAME(room, direction), TO_CHAR);
+            act("The $3t seems to be closed.", eA_SOMEONE, ch, 0, ROOM_DOOR_NAME(room, direction), eTO_CHAR);
         return;
     }
 
@@ -1079,7 +1079,7 @@ void vehicle_walk(class unit_data *ch, int dir)
 
     if (!IS_OBJ(boat) || OBJ_TYPE(boat) != ITEM_BOAT)
     {
-        act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+        act("You must be inside a boat if you want to sail.", eA_ALWAYS, ch, 0, 0, eTO_CHAR);
         return;
     }
 
@@ -1094,7 +1094,7 @@ void vehicle_walk(class unit_data *ch, int dir)
     for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
         if (IS_CHAR(u) && CHAR_FIGHTING(u))
         {
-            act("You can't just sail away in the middle of a combat.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+            act("You can't just sail away in the middle of a combat.", eA_ALWAYS, ch, 0, 0, eTO_CHAR);
             return;
         }
 
@@ -1103,7 +1103,7 @@ void vehicle_walk(class unit_data *ch, int dir)
     {
         /* XXX MS2020 backdoor(ch, arg, cmd); */
 
-        act("The $3t seems to be closed.", A_SOMEONE, ch, 0, ROOM_DOOR_NAME(room, dir), TO_CHAR);
+        act("The $3t seems to be closed.", eA_SOMEONE, ch, 0, ROOM_DOOR_NAME(room, dir), eTO_CHAR);
         return;
     }
 
@@ -1171,17 +1171,17 @@ int do_simple_sail(class unit_data *boat, class unit_data *captain, int directio
     unit_from_unit(boat);
 
     if (UNIT_CONTAINS(was_in))
-        act("$2n sails $3t.", A_HIDEINV, UNIT_CONTAINS(was_in), boat, g_dirs[direction], TO_ALL);
+        act("$2n sails $3t.", eA_HIDEINV, UNIT_CONTAINS(was_in), boat, g_dirs[direction], TO_ALL);
 
     if (UNIT_CONTAINS(to))
-        act("$2n has arrived from $3t.", A_HIDEINV, UNIT_CONTAINS(to), boat, g_enter_dirs[g_rev_dir[direction]], TO_ALL);
+        act("$2n has arrived from $3t.", eA_HIDEINV, UNIT_CONTAINS(to), boat, g_enter_dirs[g_rev_dir[direction]], TO_ALL);
 
     unit_to_unit(boat, to);
 
     for (u = UNIT_CONTAINS(boat); u; u = u->next)
         if (IS_CHAR(u))
         {
-            act("$1n sails $2t with you.", A_SOMEONE, boat, g_dirs[direction], u, TO_VICT);
+            act("$1n sails $2t with you.", eA_SOMEONE, boat, g_dirs[direction], u, TO_VICT);
             command_interpreter(u, "look");
         }
 
@@ -1232,7 +1232,7 @@ int do_simple_ride(class unit_data *beast, class unit_data *master, int directio
 
     if ((ROOM_LANDSCAPE(UNIT_IN(beast)) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(to) == SECT_WATER_SAIL))
     {
-        act("$1n refuses to go there.", A_SOMEONE, beast, 0, 0, TO_ROOM);
+        act("$1n refuses to go there.", eA_SOMEONE, beast, 0, 0, TO_ROOM);
         return 0;
     }
 
@@ -1249,10 +1249,10 @@ int do_simple_ride(class unit_data *beast, class unit_data *master, int directio
     unit_from_unit(beast);
 
     if (UNIT_CONTAINS(was_in))
-        act("$2n rides $3t.", A_HIDEINV, UNIT_CONTAINS(was_in), beast, g_dirs[direction], TO_ALL);
+        act("$2n rides $3t.", eA_HIDEINV, UNIT_CONTAINS(was_in), beast, g_dirs[direction], TO_ALL);
 
     if (UNIT_CONTAINS(to))
-        act("$2n has arrived from $3t.", A_HIDEINV, UNIT_CONTAINS(to), beast, g_enter_dirs[g_rev_dir[direction]], TO_ALL);
+        act("$2n has arrived from $3t.", eA_HIDEINV, UNIT_CONTAINS(to), beast, g_enter_dirs[g_rev_dir[direction]], TO_ALL);
 
     unit_to_unit(beast, to);
 
@@ -1260,7 +1260,7 @@ int do_simple_ride(class unit_data *beast, class unit_data *master, int directio
     {
         if (IS_CHAR(u))
         {
-            act("$1n rides $2t with you.", A_SOMEONE, beast, g_dirs[direction], u, TO_VICT);
+            act("$1n rides $2t with you.", eA_SOMEONE, beast, g_dirs[direction], u, TO_VICT);
             command_interpreter(u, "look");
         }
     }

@@ -128,7 +128,7 @@ void act_to_guild(const char *msg, char *guild, unit_data *member, unit_data *no
         if (descriptor_is_playing(d) && (d->cgetCharacter() != nonmember) && d->cgetCharacter()->isPC() && PC_GUILD(d->getCharacter()) &&
             strcmp(PC_GUILD(d->getCharacter()), guild) == 0)
         {
-            act(msg, A_ALWAYS, member, nonmember, d->cgetCharacter(), TO_VICT);
+            act(msg, eA_ALWAYS, member, nonmember, d->cgetCharacter(), eTO_VICT);
         }
     }
 }
@@ -202,8 +202,8 @@ int guard_guild_way(spec_arg *sarg)
             return SFR_SHARE;
         }
         *msg2 = '\0';
-        act(msg1 + 1, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
-        act(msg2 + 1, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_NOTVICT);
+        act(msg1 + 1, eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_VICT);
+        act(msg2 + 1, eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_NOTVICT);
         *msg1 = '#';
         *msg2 = '#';
         return SFR_BLOCK;

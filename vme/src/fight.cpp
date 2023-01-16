@@ -79,7 +79,7 @@ int pk_test(unit_data *att, unit_data *def, int message)
         {
             if (message)
             {
-                act("You are not old enough to do that!", A_ALWAYS, att, cActParameter(), def, TO_CHAR);
+                act("You are not old enough to do that!", eA_ALWAYS, att, cActParameter(), def, eTO_CHAR);
             }
             return TRUE;
         }
@@ -87,7 +87,7 @@ int pk_test(unit_data *att, unit_data *def, int message)
         {
             if (message)
             {
-                act("$3e is too young to die now!", A_ALWAYS, att, cActParameter(), def, TO_CHAR);
+                act("$3e is too young to die now!", eA_ALWAYS, att, cActParameter(), def, eTO_CHAR);
             }
             return TRUE;
         }
@@ -110,21 +110,21 @@ int pk_test(unit_data *att, unit_data *def, int message)
             {
                 act("You are not allowed to do this unless you sign the "
                     "book of blood.",
-                    A_ALWAYS,
+                    eA_ALWAYS,
                     att,
                     cActParameter(),
                     def,
-                    TO_CHAR);
+                    eTO_CHAR);
             }
             else
             {
                 act("You are not allowed to do this until $3n signs the "
                     "book of blood.",
-                    A_ALWAYS,
+                    eA_ALWAYS,
                     att,
                     cActParameter(),
                     def,
-                    TO_CHAR);
+                    eTO_CHAR);
             }
         }
         return TRUE;
@@ -610,17 +610,17 @@ static void combat_send(combat_single_msg *msg,
 {
     if (msg->to_char)
     {
-        cact(sub_damage(msg->to_char, dam, arg3->getMaximumHitpoints()), A_SOMEONE, arg1, arg2, arg3, TO_CHAR, color1);
+        cact(sub_damage(msg->to_char, dam, arg3->getMaximumHitpoints()), eA_SOMEONE, arg1, arg2, arg3, eTO_CHAR, color1);
     }
 
     if (msg->to_vict)
     {
-        cact(sub_damage(msg->to_vict, dam, arg3->getMaximumHitpoints()), A_ALWAYS, arg1, arg2, arg3, TO_VICT, color2);
+        cact(sub_damage(msg->to_vict, dam, arg3->getMaximumHitpoints()), eA_ALWAYS, arg1, arg2, arg3, eTO_VICT, color2);
     }
 
     if (msg->to_notvict)
     {
-        cact(sub_damage(msg->to_notvict, dam, arg3->getMaximumHitpoints()), A_SOMEONE, arg1, arg2, arg3, TO_NOTVICT, color3);
+        cact(sub_damage(msg->to_notvict, dam, arg3->getMaximumHitpoints()), eA_SOMEONE, arg1, arg2, arg3, eTO_NOTVICT, color3);
     }
 }
 
@@ -703,13 +703,13 @@ void combat_message(unit_data *att, unit_data *def, unit_data *medium, int damag
                 break;
 
             default:
-                act("Undefined hitlocation!", A_SOMEONE, att, cActParameter(), cActParameter(), TO_ALL);
+                act("Undefined hitlocation!", eA_SOMEONE, att, cActParameter(), cActParameter(), eTO_ALL);
                 break;
         }
     }
     else
     {
-        act("Undefined message numbers!", A_SOMEONE, att, cActParameter(), cActParameter(), TO_ALL);
+        act("Undefined message numbers!", eA_SOMEONE, att, cActParameter(), cActParameter(), eTO_ALL);
         slog(LOG_ALL, 0, "combat_message: Unknown message group %d, number %d", msg_group, msg_number);
     }
 }
@@ -850,15 +850,15 @@ static void person_gain(unit_data *ch, unit_data *dead, int share, int grouped, 
 
         if (share > 0)
         {
-            cact("You receive $2d experience points.", A_ALWAYS, ch, &share, cActParameter(), TO_CHAR, "xpgain");
+            cact("You receive $2d experience points.", eA_ALWAYS, ch, &share, cActParameter(), eTO_CHAR, "xpgain");
         }
         else if (share == 0)
         {
-            cact("You receive no experience points.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR, "xpgain");
+            cact("You receive no experience points.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR, "xpgain");
         }
         else /* less than zero */
         {
-            cact("You are penalized by $2d experience.", A_ALWAYS, ch, &share, cActParameter(), TO_CHAR, "xpgain");
+            cact("You are penalized by $2d experience.", eA_ALWAYS, ch, &share, cActParameter(), eTO_CHAR, "xpgain");
         }
     }
 
@@ -883,7 +883,7 @@ static void exp_align_gain(unit_data *ch, unit_data *victim)
 
     if (victim->isPC() && IS_SET(PC_FLAGS(victim), PC_SPIRIT))
     {
-        act("Oh dear, what a mess!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
+        act("Oh dear, what a mess!", eA_SOMEONE, victim, cActParameter(), cActParameter(), eTO_ROOM);
         slog(LOG_EXTENSIVE, 0, "Oh dear, a spirit was killed!");
         return;
     }
@@ -1139,8 +1139,8 @@ void damage(unit_data *ch,
         {
             if (victim->isPC() && IS_IMMORTAL(victim) && ch->isPC())
             {
-                cact("$1n ignores your feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_VICT, "miss_me");
-                cact("$1n ignores $3n's feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_NOTVICT, "miss_other");
+                cact("$1n ignores your feeble threats.", eA_ALWAYS, victim, cActParameter(), ch, eTO_VICT, "miss_me");
+                cact("$1n ignores $3n's feeble threats.", eA_ALWAYS, victim, cActParameter(), ch, eTO_NOTVICT, "miss_other");
             }
             else
             {
@@ -1209,31 +1209,31 @@ void damage(unit_data *ch,
     {
         case POSITION_MORTALLYW:
             send_to_char("You are mortally wounded!<br/>", victim);
-            act("$1n is mortally wounded!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
+            act("$1n is mortally wounded!", eA_SOMEONE, victim, cActParameter(), cActParameter(), eTO_ROOM);
             break;
 
         case POSITION_INCAP:
             send_to_char("You are incapacitated!<br/>", victim);
-            act("$1n is incapacitated!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
+            act("$1n is incapacitated!", eA_SOMEONE, victim, cActParameter(), cActParameter(), eTO_ROOM);
             break;
 
         case POSITION_STUNNED:
             act("$1n is stunned, but will probably regain consciousness again.",
-                A_HIDEINV,
+                eA_HIDEINV,
                 victim,
                 cActParameter(),
                 cActParameter(),
-                TO_ROOM);
+                eTO_ROOM);
             act("You're stunned, but will probably regain consciousness again.",
-                A_SOMEONE,
+                eA_SOMEONE,
                 victim,
                 cActParameter(),
                 cActParameter(),
-                TO_CHAR);
+                eTO_CHAR);
             break;
 
         case POSITION_DEAD:
-            act("$1n is dead!", A_HIDEINV, victim, cActParameter(), cActParameter(), TO_ROOM);
+            act("$1n is dead!", eA_HIDEINV, victim, cActParameter(), cActParameter(), eTO_ROOM);
             break;
 
         default: /* >= POSITION SLEEPING */
@@ -1243,18 +1243,18 @@ void damage(unit_data *ch,
 
             if (dam > (max_hit / 5))
             {
-                cact("That Really did HURT!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_CHAR, "hit_me");
-                cact("$1n screams with agony!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM, "hit_other");
+                cact("That Really did HURT!", eA_SOMEONE, victim, cActParameter(), cActParameter(), eTO_CHAR, "hit_me");
+                cact("$1n screams with agony!", eA_SOMEONE, victim, cActParameter(), cActParameter(), eTO_ROOM, "hit_other");
             }
 
             if (victim->getCurrentHitpoints() < (max_hit / 5))
             {
                 cact("You wish that your wounds would stop BLEEDING that much!",
-                     A_SOMEONE,
+                     eA_SOMEONE,
                      victim,
                      cActParameter(),
                      cActParameter(),
-                     TO_CHAR,
+                     eTO_CHAR,
                      "hit_me");
             }
 
@@ -1442,8 +1442,8 @@ void damage_object(unit_data *ch, unit_data *obj, int dam)
         {
             if (ch)
             {
-                act("Your $3N is broken by the impact!!!", A_ALWAYS, ch, cActParameter(), cActParameter(obj), TO_CHAR);
-                act("$1n's $3N is broken by the impact!!!", A_ALWAYS, ch, cActParameter(), cActParameter(obj), TO_ROOM);
+                act("Your $3N is broken by the impact!!!", eA_ALWAYS, ch, cActParameter(), cActParameter(obj), eTO_CHAR);
+                act("$1n's $3N is broken by the impact!!!", eA_ALWAYS, ch, cActParameter(), cActParameter(obj), eTO_ROOM);
             }
 
             break_object(obj);
@@ -1576,8 +1576,8 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
 
     if (att_weapon && weapon_fumble(att_weapon, roll))
     {
-        cact("You fumble with your $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_CHAR, "miss_me");
-        cact("$1n fumbles with $1s $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_ROOM, "miss_other");
+        cact("You fumble with your $2N!", eA_ALWAYS, att, att_weapon, cActParameter(), eTO_CHAR, "miss_me");
+        cact("$1n fumbles with $1s $2N!", eA_ALWAYS, att, att_weapon, cActParameter(), eTO_ROOM, "miss_other");
         hm = MIN(-10, roll - open100());
         damage_object(att, att_weapon, hm);
         if (CHAR_COMBAT(att))
@@ -1623,8 +1623,8 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
             if (is_obj_slaying(att_weapon, CHAR_RACE(def)))
             {
                 hm += hm / 5; /* Add 20% bonus extra again to damage */
-                act("Your $2N glows!", A_ALWAYS, att, att_weapon, cActParameter(), TO_CHAR);
-                act("$1n's $2N glows!", A_HIDEINV, att, att_weapon, cActParameter(), TO_ROOM);
+                act("Your $2N glows!", eA_ALWAYS, att, att_weapon, cActParameter(), eTO_CHAR);
+                act("$1n's $2N glows!", eA_HIDEINV, att, att_weapon, cActParameter(), eTO_ROOM);
             }
             dam = weapon_damage(hm, att_weapon_type, def_armour_type);
         }
@@ -1696,8 +1696,8 @@ void melee_violence(unit_data *ch, int primary)
     }
     else
     {
-        act("You get back in a fighting position, ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
-        act("$1n gets back in a fighting position ready to fight!", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_ROOM);
+        act("You get back in a fighting position, ready to fight!", eA_SOMEONE, ch, cActParameter(), cActParameter(), eTO_CHAR);
+        act("$1n gets back in a fighting position ready to fight!", eA_SOMEONE, ch, cActParameter(), cActParameter(), eTO_ROOM);
         UCHAR(ch)->setPosition(POSITION_FIGHTING);
     }
 }
@@ -1759,8 +1759,8 @@ int hunting(spec_arg *sarg)
                 return SFR_SHARE;
             }
 
-            act("$1n growls viciously at $3n.", A_SOMEONE, sarg->owner, cActParameter(), h->victim, TO_NOTVICT);
-            act("$1n growls at you.", A_SOMEONE, sarg->owner, cActParameter(), h->victim, TO_VICT);
+            act("$1n growls viciously at $3n.", eA_SOMEONE, sarg->owner, cActParameter(), h->victim, eTO_NOTVICT);
+            act("$1n growls at you.", eA_SOMEONE, sarg->owner, cActParameter(), h->victim, eTO_VICT);
 
             /* If the victim was a legal target, then it must be such */
             /* again                                                  */

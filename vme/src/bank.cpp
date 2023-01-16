@@ -26,16 +26,16 @@ static bool init_bank(const unit_data *pc, unit_data *clerk, bool init)
 {
     if (clerk && !CHAR_IS_READY(clerk))
     {
-        act("It seems that $3e isn't paying attention!", A_SOMEONE, pc, cActParameter(), clerk, TO_CHAR);
+        act("It seems that $3e isn't paying attention!", eA_SOMEONE, pc, cActParameter(), clerk, eTO_CHAR);
     }
     else if (clerk && !CHAR_CAN_SEE(clerk, pc))
     {
         act("$1n says 'Sorry, but I only do business with people I can see...'",
-            A_SOMEONE,
+            eA_SOMEONE,
             clerk,
             cActParameter(),
             cActParameter(),
-            TO_ROOM);
+            eTO_ROOM);
     }
     else if (!pc->isPC())
     {
@@ -102,8 +102,8 @@ static void cmd_balance(const unit_data *pc, unit_data *clerk, char *s)
         }
     }
 
-    act("$1n says '$2t'", A_SOMEONE, clerk, buf, pc, TO_VICT);
-    act("$1n talks to $3n.", A_SOMEONE, pc, cActParameter(), clerk, TO_ROOM);
+    act("$1n says '$2t'", eA_SOMEONE, clerk, buf, pc, eTO_VICT);
+    act("$1n talks to $3n.", eA_SOMEONE, pc, cActParameter(), clerk, eTO_ROOM);
 }
 
 static void cmd_deposit(const unit_data *pc, unit_data *clerk, char *s)
@@ -118,7 +118,7 @@ static void cmd_deposit(const unit_data *pc, unit_data *clerk, char *s)
 
     if (str_is_empty(s))
     {
-        act("$1n says 'Deposit what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n says 'Deposit what, $3n?'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
         return;
     }
 
@@ -129,18 +129,18 @@ static void cmd_deposit(const unit_data *pc, unit_data *clerk, char *s)
         s = str_next_word(s, buf);
         if ((amount = atoi(buf)) < 1)
         {
-            act("$1n coughs and says 'That's a silly thing to do, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+            act("$1n coughs and says 'That's a silly thing to do, $3n...'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
             return;
         }
     }
 
     if ((thing = find_unit(pc, &s, nullptr, FIND_UNIT_INVEN)) == nullptr)
     {
-        act("$1n sighs and says 'I can't deposit what you haven't got, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n sighs and says 'I can't deposit what you haven't got, $3n...'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
     }
     else if (!IS_MONEY(thing))
     {
-        act("$1n says 'I won't store anything but money for you, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n says 'I won't store anything but money for you, $3n...'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
     }
     else
     {
@@ -153,7 +153,7 @@ static void cmd_deposit(const unit_data *pc, unit_data *clerk, char *s)
         }
         else if (MONEY_AMOUNT(thing) < amount)
         {
-            act("$1n says 'Credit on deposits, $3n?  What a preposterous thought!'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+            act("$1n says 'Credit on deposits, $3n?  What a preposterous thought!'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
             return;
         }
 
@@ -165,14 +165,14 @@ static void cmd_deposit(const unit_data *pc, unit_data *clerk, char *s)
         if (balance[cur] < old_balance) /* overflow! */
         {
             balance[cur] = old_balance;
-            act("$3n shrugs and says 'Uhm, your account is full?'", A_SOMEONE, pc, cActParameter(), clerk, TO_CHAR);
+            act("$3n shrugs and says 'Uhm, your account is full?'", eA_SOMEONE, pc, cActParameter(), clerk, eTO_CHAR);
             pile_money(thing);
         }
         else
         {
-            act("$1n hands over some $2t to $3n.", A_HIDEINV, pc, money_pluralis(thing), clerk, TO_NOTVICT);
-            act("You hand $3n your $2t.", A_SOMEONE, pc, money_pluralis(thing), clerk, TO_CHAR);
-            act("$3n whispers to you 'I'll take $2d% interest.'", A_SOMEONE, pc, &INT_INTEREST, clerk, TO_CHAR);
+            act("$1n hands over some $2t to $3n.", eA_HIDEINV, pc, money_pluralis(thing), clerk, eTO_NOTVICT);
+            act("You hand $3n your $2t.", eA_SOMEONE, pc, money_pluralis(thing), clerk, eTO_CHAR);
+            act("$3n whispers to you 'I'll take $2d% interest.'", eA_SOMEONE, pc, &INT_INTEREST, clerk, eTO_CHAR);
 
             changed_balance = TRUE;
             unit_from_unit(thing);
@@ -194,7 +194,7 @@ static void cmd_exchange(const unit_data *pc, unit_data *clerk, char *s)
 
     if (str_is_empty(s))
     {
-        act("$1n says 'Exchange what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n says 'Exchange what, $3n?'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
         return;
     }
 
@@ -205,19 +205,19 @@ static void cmd_exchange(const unit_data *pc, unit_data *clerk, char *s)
         s = str_next_word(s, buf);
         if ((amount = atoi(buf)) < 1)
         {
-            act("$1n coughs and says 'That's a silly thing to do, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+            act("$1n coughs and says 'That's a silly thing to do, $3n...'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
             return;
         }
     }
 
     if ((thing = find_unit(pc, &s, nullptr, FIND_UNIT_INVEN)) == nullptr)
     {
-        act("$1n sighs and says 'I can't exchange what you haven't got, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n sighs and says 'I can't exchange what you haven't got, $3n...'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
         return;
     }
     else if (!IS_MONEY(thing))
     {
-        act("$1n says 'I only deal in money, $3n!'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n says 'I only deal in money, $3n!'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
         return;
     }
 
@@ -227,7 +227,7 @@ static void cmd_exchange(const unit_data *pc, unit_data *clerk, char *s)
     }
     else if (MONEY_AMOUNT(thing) < amount)
     {
-        act("$1n says 'No credit, $3n!  What cheek!'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n says 'No credit, $3n!  What cheek!'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
         return;
     }
 
@@ -240,10 +240,10 @@ static void cmd_exchange(const unit_data *pc, unit_data *clerk, char *s)
 
     if (str_is_empty(s))
     {
-        act("$1n exchanges some $2t with $3n.", A_HIDEINV, pc, money_pluralis(thing), clerk, TO_NOTVICT);
-        act("You exchange your $2t with $3n.", A_SOMEONE, pc, money_pluralis(thing), clerk, TO_CHAR);
-        act("$3n whispers to you 'I'll take $2d% interest.'", A_SOMEONE, pc, &INT_INTEREST, clerk, TO_CHAR);
-        act("You get $2t back.", A_SOMEONE, pc, money_string(amount, cur, TRUE), cActParameter(), TO_CHAR);
+        act("$1n exchanges some $2t with $3n.", eA_HIDEINV, pc, money_pluralis(thing), clerk, eTO_NOTVICT);
+        act("You exchange your $2t with $3n.", eA_SOMEONE, pc, money_pluralis(thing), clerk, eTO_CHAR);
+        act("$3n whispers to you 'I'll take $2d%% interest.'", eA_SOMEONE, pc, &INT_INTEREST, clerk, eTO_CHAR);
+        act("You get $2t back.", eA_SOMEONE, pc, money_string(amount, cur, TRUE), cActParameter(), eTO_CHAR);
 
         extract_unit(thing);
         money_to_unit((unit_data *)pc, amount, cur);
@@ -265,7 +265,7 @@ static void cmd_exchange(const unit_data *pc, unit_data *clerk, char *s)
 
         if (i > MAX_MONEY)
         {
-            act("$1n shrugs and says 'Never heard of that one before, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+            act("$1n shrugs and says 'Never heard of that one before, $3n.'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
             unit_to_unit(thing, (unit_data *)pc);
             return;
         }
@@ -273,31 +273,31 @@ static void cmd_exchange(const unit_data *pc, unit_data *clerk, char *s)
         tmp = amount / g_money_types[i].relative_value;
         remainder = amount - tmp * g_money_types[i].relative_value;
 
-        act("$1n exchanges some $2t with $3n.", A_HIDEINV, pc, money_pluralis(thing), clerk, TO_NOTVICT);
-        act("You exchange your $2t with $3n.", A_SOMEONE, pc, money_pluralis(thing), clerk, TO_CHAR);
-        act("$3n whispers to you 'I'll take $2d% interest.'", A_SOMEONE, pc, &INT_INTEREST, clerk, TO_CHAR);
+        act("$1n exchanges some $2t with $3n.", eA_HIDEINV, pc, money_pluralis(thing), clerk, eTO_NOTVICT);
+        act("You exchange your $2t with $3n.", eA_SOMEONE, pc, money_pluralis(thing), clerk, eTO_CHAR);
+        act("$3n whispers to you 'I'll take $2d% interest.'", eA_SOMEONE, pc, &INT_INTEREST, clerk, eTO_CHAR);
 
         extract_unit(thing);
 
         if (tmp > 0)
         {
             coins_to_unit((unit_data *)pc, tmp, i);
-            act("You get $2d $3t back.", A_SOMEONE, pc, &tmp, tmp == 1 ? money_singularis_type(i) : money_pluralis_type(i), TO_CHAR);
+            act("You get $2d $3t back.", eA_SOMEONE, pc, &tmp, tmp == 1 ? money_singularis_type(i) : money_pluralis_type(i), eTO_CHAR);
         }
         if (remainder > 0)
         {
             money_to_unit((unit_data *)pc, remainder, cur);
             act(tmp > 0 ? "...and $2t in change." : "You get $2t back.",
-                A_SOMEONE,
+                eA_SOMEONE,
                 pc,
                 money_string(remainder, cur, TRUE),
                 cActParameter(),
-                TO_CHAR);
+                eTO_CHAR);
         }
     }
     else
     {
-        act("$1n says 'Exchange to what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n says 'Exchange to what, $3n?'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
         unit_to_unit(thing, (unit_data *)pc);
         return;
     }
@@ -316,7 +316,7 @@ static void cmd_withdraw(const unit_data *pc, unit_data *clerk, char *s)
 
     if (str_is_empty(s))
     {
-        act("$1n says 'Withdraw what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n says 'Withdraw what, $3n?'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
         return;
     }
 
@@ -327,13 +327,13 @@ static void cmd_withdraw(const unit_data *pc, unit_data *clerk, char *s)
         s = str_next_word(s, buf);
         if ((amount = atoi(buf)) < 1)
         {
-            act("$1n coughs and says 'That's a silly thing to do, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+            act("$1n coughs and says 'That's a silly thing to do, $3n...'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
             return;
         }
     }
     else
     {
-        act("$1n says 'You have to specify how much to withdraw, $3n.'", A_SOMEONE, clerk, s, pc, TO_VICT);
+        act("$1n says 'You have to specify how much to withdraw, $3n.'", eA_SOMEONE, clerk, s, pc, eTO_VICT);
         return;
     }
 
@@ -348,11 +348,11 @@ static void cmd_withdraw(const unit_data *pc, unit_data *clerk, char *s)
 
     if (i > MAX_MONEY)
     {
-        act("$1n shrugs and says 'I'm storing nothing of the sort for you, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n shrugs and says 'I'm storing nothing of the sort for you, $3n.'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
     }
     else if ((balance[cur] < amount * g_money_types[i].relative_value) || (amount * g_money_types[i].relative_value < 0))
     {
-        act("$1n shakes $1s head and says 'No loans, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
+        act("$1n shakes $1s head and says 'No loans, $3n.'", eA_SOMEONE, clerk, cActParameter(), pc, eTO_VICT);
     }
     else
     {
@@ -361,8 +361,8 @@ static void cmd_withdraw(const unit_data *pc, unit_data *clerk, char *s)
 
         coins_to_unit((unit_data *)pc, amount, i);
 
-        act("$3n hands $1n some $2t.", A_SOMEONE, pc, money_pluralis_type(i), clerk, TO_ROOM);
-        act("$3n hands you your $2t.", A_SOMEONE, pc, money_pluralis_type(i), clerk, TO_CHAR);
+        act("$3n hands $1n some $2t.", eA_SOMEONE, pc, money_pluralis_type(i), clerk, eTO_ROOM);
+        act("$3n hands you your $2t.", eA_SOMEONE, pc, money_pluralis_type(i), clerk, eTO_CHAR);
     }
 }
 
@@ -520,21 +520,21 @@ void tax_player(unit_data *ch)
                 " subjected to a taxing, as reported below.  You will have to "
                 "believe that, what is good for the game, is indeed good for you."
                 "<br/>$2t",
-                A_ALWAYS,
+                eA_ALWAYS,
                 ch,
                 buf,
                 cActParameter(),
-                TO_CHAR);
+                eTO_CHAR);
         }
         else
         {
             act("Your money has has moved around a bit, but you weren't taxed."
                 "  Congratulations!<br/>$2t",
-                A_ALWAYS,
+                eA_ALWAYS,
                 ch,
                 buf,
                 cActParameter(),
-                TO_CHAR);
+                eTO_CHAR);
         }
     }
 }
@@ -552,7 +552,7 @@ void stat_bank(const unit_data *ch, unit_data *u)
 
     init_bank(u, nullptr, TRUE);
 
-    act("$2n has a bank-deposit of:", A_ALWAYS, ch, u, cActParameter(), TO_CHAR);
+    act("$2n has a bank-deposit of:", eA_ALWAYS, ch, u, cActParameter(), eTO_CHAR);
 
     for (i = 0; i <= MAX_CURRENCY; ++i)
     {
@@ -560,7 +560,7 @@ void stat_bank(const unit_data *ch, unit_data *u)
         {
             none = FALSE;
 
-            act("  $2t", A_ALWAYS, ch, money_string(balance[i], i, FALSE), cActParameter(), TO_CHAR);
+            act("  $2t", eA_ALWAYS, ch, money_string(balance[i], i, FALSE), cActParameter(), eTO_CHAR);
         }
     }
 

@@ -1096,7 +1096,6 @@ static void stat_data(const unit_data *ch, unit_data *u)
          {0, 0, 0, 0, 0}} /*SHIELD    */
     };
 
-    char tmp[512];
     std::string bits1;
     std::string bits2;
     int i = 0;

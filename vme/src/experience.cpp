@@ -941,19 +941,19 @@ void do_consider(unit_data *ch, char *arg, const command_info *cmd)
 
     if (CHAR_LEVEL(vict) - 10 >= CHAR_LEVEL(ch))
     {
-        act("$3e is probably out of your league.", A_SOMEONE, ch, cActParameter(), vict, TO_CHAR);
+        act("$3e is probably out of your league.", eA_SOMEONE, ch, cActParameter(), vict, eTO_CHAR);
     }
 
     rtd = base_consider(vict, ch, &str);
 
     if (IS_IMMORTAL(ch))
     {
-        act("Rounds to be killed by $3n = $2d.", A_SOMEONE, ch, &rtd, vict, TO_CHAR);
+        act("Rounds to be killed by $3n = $2d.", eA_SOMEONE, ch, &rtd, vict, eTO_CHAR);
         send_to_char(str.c_str(), ch);
 
         str = "";
         rtd = base_consider(ch, vict, &str);
-        act("Rounds to kill $3n = $2d.", A_SOMEONE, ch, &rtd, vict, TO_CHAR);
+        act("Rounds to kill $3n = $2d.", eA_SOMEONE, ch, &rtd, vict, eTO_CHAR);
         send_to_char(str.c_str(), ch);
         return;
     }

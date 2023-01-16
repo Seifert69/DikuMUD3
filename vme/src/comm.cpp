@@ -22,6 +22,36 @@
 #include <cctype>
 #include <cstring>
 
+actType_e ActType(int n)
+{
+    if ((n >= actType_e::eTO_ROOM) && (n <= actType_e::eTO_REST))
+    {
+        return (actType_e) n;
+    }
+    else
+    {
+        slog(LOG_ALL, 0, "actType_e conversion OOB integer %d", n);
+        return actType_e::eTO_ALL;
+    }
+}
+
+
+actShow_e ActShow(int n)
+{
+    if ((n >= actShow_e::eA_HIDEINV) && (n <= actShow_e::eA_ALWAYS))
+    {
+        return (actShow_e) n;
+    }
+    else
+    {
+        slog(LOG_ALL, 0, "actShow_e conversion OOB integer %d", n);
+        return actShow_e::eA_ALWAYS;
+    }
+}
+
+
+
+
 cActParameter::cActParameter()
 {
     m_u = nullptr;
@@ -290,11 +320,11 @@ void send_to_outdoor(const char *messg)
 // append a <br/> and sact() should never add a <br/>. buf = dest
 void act_generate(char *buf,
                   const char *str,
-                  int show_type,
+                  actShow_e show_type,
                   cActParameter arg1,
                   cActParameter arg2,
                   cActParameter arg3,
-                  int type,
+                  actType_e type,
                   const unit_data *to,
                   int bNewline)
 {
@@ -336,7 +366,7 @@ void act_generate(char *buf,
         return;
     }
 
-    if ((show_type == A_HIDEINV && !CHAR_CAN_SEE(to, arg1.m_u)) || (show_type != A_ALWAYS && !CHAR_AWAKE(to)))
+    if ((show_type == actShow_e::eA_HIDEINV && !CHAR_CAN_SEE(to, arg1.m_u)) || (show_type != actShow_e::eA_ALWAYS && !CHAR_AWAKE(to)))
     {
         return;
     }
@@ -554,12 +584,12 @@ void act_generate(char *buf,
 /// because of variance with each target's ability to e.g. see.
 /// Is there a need for sactother which takes a "to" argument? If we add
 /// to argument here it will be confusing for TO_VICT and TO_CHAR scenarios.
-void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type)
+void sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type)
 {
     const unit_data *to = nullptr;
 
     /* This to catch old-style FALSE/TRUE calls...  */
-    assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);
+    assert(show_type == actShow_e::eA_SOMEONE || show_type == actShow_e::eA_HIDEINV || show_type == actShow_e::eA_ALWAYS);
 
     if (!str || !*str)
     {
@@ -588,14 +618,14 @@ void sact(char *buf, const char *str, int show_type, cActParameter arg1, cActPar
 }
 
 /// @note Always adds <br/> at the end
-void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type)
+void act(const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type)
 {
     const unit_data *to = nullptr;
     const unit_data *u = nullptr;
     char buf[MAX_STRING_LENGTH];
 
     /* This to catch old-style FALSE/TRUE calls...  */
-    assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);
+    assert(show_type == actShow_e::eA_SOMEONE || show_type == actShow_e::eA_HIDEINV || show_type == actShow_e::eA_ALWAYS);
 
     if (!str || !*str)
     {
@@ -671,7 +701,7 @@ void act(const char *str, int show_type, cActParameter arg1, cActParameter arg2,
     }
 }
 
-void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, int type, const char *colortype)
+void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type, const char *colortype)
 {
     const unit_data *to = nullptr;
     const unit_data *u = nullptr;
@@ -680,7 +710,7 @@ void cact(const char *str, int show_type, cActParameter arg1, cActParameter arg2
     char *t = nullptr;
     char *b = buf;
     /* This to catch old-style FALSE/TRUE calls...  */
-    assert(show_type == A_SOMEONE || show_type == A_HIDEINV || show_type == A_ALWAYS);
+    assert(show_type == actShow_e::eA_SOMEONE || show_type == actShow_e::eA_HIDEINV || show_type == actShow_e::eA_ALWAYS);
 
     if (!str || !*str)
     {

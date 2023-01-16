@@ -798,7 +798,7 @@ int practice(unit_data *teacher,
 
     if (pckt->teaches[teach_index].max_skill <= pTrainValues->values[pckt->teaches[teach_index].node])
     {
-        act(pckt->msgs.teacher_not_good_enough, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+        act(pckt->msgs.teacher_not_good_enough, eA_SOMEONE, teacher, cActParameter(), pupil, eTO_VICT);
         return TRUE;
     }
 
@@ -827,11 +827,11 @@ int practice(unit_data *teacher,
         if (PC_INFO(pupil).find_raw("$gooffix") == nullptr)
         {
             act("$1n tells you, 'You've reached your character's full potential for $2t.'",
-                A_ALWAYS,
+                eA_ALWAYS,
                 teacher,
                 pColl->text[pckt->teaches[teach_index].node],
                 pupil,
-                TO_VICT);
+                eTO_VICT);
             return TRUE;
         }
     }
@@ -844,11 +844,11 @@ int practice(unit_data *teacher,
     if (cost == 0)
     {
         act("$1n tells you, 'You've learned all you can about $2t at this level.'",
-            A_ALWAYS,
+            eA_ALWAYS,
             teacher,
             pColl->text[pckt->teaches[teach_index].node],
             pupil,
-            TO_VICT);
+            eTO_VICT);
         return TRUE;
     }
 
@@ -857,7 +857,7 @@ int practice(unit_data *teacher,
     if (*pTrainValues->practice_points < cost)
     {
         auto str = diku::format_to_str(pckt->msgs.not_enough_points, cost);
-        act(str.c_str(), A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+        act(str.c_str(), eA_SOMEONE, teacher, cActParameter(), pupil, eTO_VICT);
         if (CHAR_LEVEL(pupil) == START_LEVEL)
         {
             send_to_char("Beginners note: Go on adventure and gain a level.<br/>"
@@ -869,7 +869,7 @@ int practice(unit_data *teacher,
 
     if (pupil_magic(pupil))
     {
-        act(pckt->msgs.not_pure, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+        act(pckt->msgs.not_pure, eA_SOMEONE, teacher, cActParameter(), pupil, eTO_VICT);
         return TRUE;
     }
 
@@ -885,7 +885,7 @@ int practice(unit_data *teacher,
         if (!char_can_afford(pupil, amt, currency))
         {
             auto str = diku::format_to_str(pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
-            act(str.c_str(), A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+            act(str.c_str(), eA_SOMEONE, teacher, cActParameter(), pupil, eTO_VICT);
             return TRUE;
         }
 
@@ -894,7 +894,7 @@ int practice(unit_data *teacher,
 
     practice_base(pckt->type, pckt, pTrainValues, teach_index, cost);
 
-    act("You finish training $2t with $1n.", A_ALWAYS, teacher, pColl->text[pckt->teaches[teach_index].node], pupil, TO_VICT);
+    act("You finish training $2t with $1n.", eA_ALWAYS, teacher, pColl->text[pckt->teaches[teach_index].node], pupil, eTO_VICT);
 
     return FALSE;
 }
@@ -1056,7 +1056,7 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
                 if (!char_can_afford(pupil, amt, currency))
                 {
                     auto str = diku::format_to_str(pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
-                    act(str.c_str(), A_ALWAYS, pckt->teacher, cActParameter(), pupil, TO_VICT);
+                    act(str.c_str(), eA_ALWAYS, pckt->teacher, cActParameter(), pupil, eTO_VICT);
                     continue;
                 }
 
@@ -1067,7 +1067,7 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
 
             practice_base(type, pckt, pTrainValues, teach_index, cost);
 
-            act("You train $2t.", A_ALWAYS, pupil, pColl->text[nodeidx], cActParameter(), TO_CHAR);
+            act("You train $2t.", eA_ALWAYS, pupil, pColl->text[nodeidx], cActParameter(), eTO_CHAR);
         }
     }
 
@@ -1185,7 +1185,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
 
     if (!CHAR_IS_READY(sarg->owner))
     {
-        act("$1n is not capable of teaching now.", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
+        act("$1n is not capable of teaching now.", eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_VICT);
         return SFR_BLOCK;
     }
 
@@ -1211,7 +1211,7 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
         }
         else
         {
-            act("$1n asks, 'What do you wish to practice, $3n?'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
+            act("$1n asks, 'What do you wish to practice, $3n?'", eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_VICT);
             if (CHAR_LEVEL(sarg->activator) == START_LEVEL)
             {
                 send_to_char("Beginners note: Try the 'info' command NOW.<br/>", sarg->activator);
@@ -1286,14 +1286,14 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
 
     if (index == -1)
     {
-        act(pckt->msgs.unknown_skill, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
+        act(pckt->msgs.unknown_skill, eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_VICT);
         return SFR_BLOCK;
     }
 
     index = teaches_index(pckt->teaches, index);
     if (index == -1)
     {
-        act(pckt->msgs.no_teaching, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
+        act(pckt->msgs.no_teaching, eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_VICT);
         return SFR_BLOCK;
     }
 
