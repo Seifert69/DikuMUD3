@@ -1,5 +1,12 @@
 #include "unit_affected_type.h"
 
+#include "apf_affect.h"
+#include "json_helper.h"
+#include "tif_affect.h"
+#include "unit_data.h"
+
+#include <rapidjson/prettywriter.h>
+
 int unit_affected_type::destruct_classindex()
 {
     return DR_AFFECT;
@@ -180,4 +187,37 @@ unit_affected_type *unit_affected_type::getG_Previous()
 void unit_affected_type::setG_Previous(unit_affected_type *value)
 {
     gprevious = value;
+}
+
+void unit_affected_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    json::write_pointer_kvp("unit_affected_type_this", this, writer);
+
+    json::write_kvp("id", id, writer);
+    json::write_kvp("beat", beat, writer);
+    json::write_kvp("duration", duration, writer);
+    writer.String("data");
+    writer.StartArray();
+    for (int i : data)
+    {
+        writer.Int(i);
+    }
+    writer.EndArray();
+    json::write_kvp("firstf_i", firstf_i >= 0 ? STR(g_tif[firstf_i].descr) : "Not used (-1)", writer);
+    json::write_kvp("tickf_i", tickf_i >= 0 ? STR(g_tif[tickf_i].descr) : "Not used (-1)", writer);
+    json::write_kvp("lastf_i", lastf_i >= 0 ? STR(g_tif[lastf_i].descr) : "Not used (-1)", writer);
+    json::write_kvp("applyf_i", applyf_i >= 0 ? STR(g_apf[applyf_i].descr) : "Not used (-1)", writer);
+    writer.String("event");
+    if (event)
+    {
+        writer.String("to be done");
+    }
+    else
+    {
+        writer.Null();
+    }
+    json::write_unit_id_kvp("owner", owner, writer);
+    json::write_object_pointer_kvp("next", next, writer);
+    writer.EndObject();
 }

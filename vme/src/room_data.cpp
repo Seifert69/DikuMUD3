@@ -1,12 +1,17 @@
 #include "room_data.h"
 
+#include "json_helper.h"
+#include "utility.h"
+
 size_t room_data::g_world_norooms = 0; // number of rooms in the world
 
 room_data::room_data(file_index_type *fi)
     : unit_data(UNIT_ST_ROOM, fi)
     , m_mapx{-1}
     , m_mapy{-1}
+#ifndef MPLEX_COMPILE
     , m_waiting_dijkstra{false}
+#endif
 {
     g_world_norooms++;
 }
@@ -119,7 +124,6 @@ void room_data::setRoomNumber(int value)
     m_num = value;
 }
 
-#ifndef MPLEX_COMPILE
 std::vector<room_data::vertex_descriptor> &room_data::getPath()
 {
     return m_path;
@@ -149,4 +153,43 @@ void room_data::setWaitingDijkstra(bool value)
 {
     m_waiting_dijkstra = value;
 }
-#endif
+
+void room_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_unit_id_kvp("id", this, writer);
+
+        writer.String("room_data");
+        writer.StartObject();
+        {
+            writer.String("dir_option");
+            writer.StartArray();
+            for (auto &direction : m_dir_option)
+            {
+                if (direction)
+                {
+                    direction->toJSON(writer);
+                }
+                else
+                {
+                    writer.Null();
+                }
+            }
+            writer.EndArray();
+
+            std::string bits;
+            json::write_kvp("flags", sprintbit(bits, m_flags, g_room_flags), writer);
+            json::write_kvp("movement_type", m_movement_type, writer);
+            json::write_kvp("resistance", m_resistance, writer);
+            json::write_kvp("mapx", m_mapx, writer);
+            json::write_kvp("mapy", m_mapy, writer);
+            json::write_kvp("sc", m_sc, writer);
+            json::write_kvp("num", m_num, writer);
+        }
+        writer.EndObject();
+        writer.String("unit_data");
+        unit_data::toJSON(writer);
+    }
+    writer.EndObject();
+}

@@ -101,10 +101,8 @@ inline int ROOM_NUM(const unit_data *unit) { return UROOM(unit)->getRoomNumber()
 
 inline int ROOM_SC(const unit_data *unit) { return UROOM(unit)->getStrongComponent(); }
 
-#ifndef MPLEX_COMPILE
-    inline std::vector<room_data::vertex_descriptor> &ROOM_PATH(unit_data *unit) { return UROOM(unit)->getPath(); }
-    inline std::vector<room_data::vertex_descriptor> &ROOM_DISTANCE(unit_data *unit) { return UROOM(unit)->getDistance();}
-#endif
+inline std::vector<room_data::vertex_descriptor> &ROOM_PATH(unit_data *unit) { return UROOM(unit)->getPath(); }
+inline std::vector<room_data::vertex_descriptor> &ROOM_DISTANCE(unit_data *unit) { return UROOM(unit)->getDistance();}
 
 /* ..................................................................... */
 

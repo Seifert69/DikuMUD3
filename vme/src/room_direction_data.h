@@ -30,6 +30,8 @@ public:
     void setDoorFlags(ubit8 value);
     ubit8 *getDoorFlagsPtr();
 
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     cNamelist open_name;         ///< For Open & Enter
     char *key{nullptr};          ///<

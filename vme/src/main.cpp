@@ -101,6 +101,10 @@ int main(int argc, char **argv)
                     g_dumptables = true;
                     break;
 
+                case 'j':
+                    g_dump_json = true;
+                    break;
+
                 case 'l':
                     if (*(argv[pos] + 2))
                     {
@@ -176,9 +180,9 @@ int main(int argc, char **argv)
         */
         /* Other used routines are declared obsolete by SVID3 */
         //  srand (time (0));
-        //#else
+        // #else
         srandom(time(nullptr));
-        //#endif
+        // #endif
         run_the_game(srvcfg);
     }
     catch (const diku_exception &e)

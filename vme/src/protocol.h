@@ -24,6 +24,8 @@ struct terminal_setup_type
     ubit8 telnet;         ///< Is telnet used?
     ubit8 colour_convert; ///< Colour conversion (mapping) used
     ubit8 websockets;     ///< Using websockets (HTML)?
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 };
 
 // These definitions are used by the mplex protocol

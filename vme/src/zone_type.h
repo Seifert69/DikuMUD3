@@ -41,13 +41,15 @@ class zone_type
             return &m_value_ptr;
         }
 
+        void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const { writer.String(m_value.c_str()); }
+
     private:
         std::string m_value;
         char *m_value_ptr{nullptr};
     };
 
 public:
-    zone_type(std::string name);
+    explicit zone_type(std::string name);
     ~zone_type();
 
     cNamelist &getCreators();
@@ -75,6 +77,7 @@ public:
      * @return Formatted message
      */
     [[nodiscard]] std::string getExtraStatZoneMessage(int search_type) const;
+    void getExtraStatZoneMessageJSON(int search_type, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
     void insertFileIndex(std::unique_ptr<file_index_type> &&value);
     /**
      * Extracted from find_file_index()
@@ -166,6 +169,8 @@ public:
      */
     [[nodiscard]] std::string getStatDIL() const;
 
+    void getStatDILJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
     /**
      * Extracted from stat_global_dil()
      * @param nCount
@@ -173,6 +178,14 @@ public:
      * @return std::string Formatted message
      */
     [[nodiscard]] std::string getStatGlobalDIL(ubit32 nCount, ubit64 &instructionSum) const;
+
+    /**
+     * Formats stats into JSON object
+     * @param nCount
+     * @param instructionSum Running total of all instructions
+     * @param writer JSON pretty printer
+     */
+    void getStatGlobalDILJSON(ubit32 nCount, ubit64 &instructionSum, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
     /**
      * Extracted from resolve_templates()
@@ -193,8 +206,11 @@ public:
      */
     diltemplate *findDILTemplate(const std::string &name);
 
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     unit_data *findFirstUnitOfType(int type);
+    void diltemplateToJSON(diltemplate *dil_template, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
     cNamelist m_creators;                     ///< List of creators of zone
     std::string m_name;                       ///< Unique in list

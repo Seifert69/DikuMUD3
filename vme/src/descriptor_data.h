@@ -3,6 +3,8 @@
 #include "hookmud.h"
 #include "snoop_data.h"
 
+#include <rapidjson/prettywriter.h>
+
 #include <ctime>
 
 class unit_data;
@@ -89,6 +91,8 @@ public:
 
     descriptor_data *getNext();
     void setNext(descriptor_data *value);
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     time_t logon{0};                        ///< Time of last connect

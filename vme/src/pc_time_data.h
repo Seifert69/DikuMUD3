@@ -2,6 +2,8 @@
 
 #include "bytestring.h"
 
+#include <rapidjson/prettywriter.h>
+
 class pc_time_data
 {
 public:
@@ -29,6 +31,8 @@ public:
     ubit32 getTotalTimePlayedInSeconds() const;
     void setTotalTimePlayedInSeconds(ubit32 value);
     void incTotalTimePlayedInSecondsBy(ubit32 seconds);
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     time_t creation{0}; ///< This represents time when the pc was created.

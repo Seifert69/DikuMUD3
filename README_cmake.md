@@ -12,7 +12,7 @@ Pre-requisites:
     Fedora/Centos 8/9: sudo dnf install cmake
 
 ### ninja
-    Ubuntu: sudo apt-get insta@ll ninja-build
+    Ubuntu: sudo apt-get install ninja-build
     Centos 7: not available in official repos - requires manual install
     Fedora/Centos 8/9: dnf install ninja-build
 

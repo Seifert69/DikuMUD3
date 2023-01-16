@@ -372,6 +372,27 @@ void extra_list::copyfrom(extra_list &listToBeCopied)
     }
 }
 
+void extra_list::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    extra_descr_data *current = m_pList;
+    writer.StartArray();
+    while (current)
+    {
+        writer.String("vals");
+        current->vals.toJSON(writer);
+
+        writer.String("names");
+        current->names.toJSON(writer);
+
+        writer.String("descr");
+        writer.String(current->descr.c_str());
+
+        current = current->next;
+    }
+
+    writer.EndArray();
+}
+
 /* ===================================================================== */
 /*   The following should really be in the unit_data class, but we dont  */
 /*   have it yet...                                                      */

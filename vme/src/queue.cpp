@@ -12,6 +12,7 @@
 
 #include "queue.h"
 
+#include "json_helper.h"
 #include "utility.h"
 
 #include <cassert>
@@ -222,4 +223,14 @@ void cQueue::Flush()
     {
         delete pTmp;
     }
+}
+
+void cQueue::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_kvp("Entries", nEntries, writer);
+        json::write_kvp("Bytes", nBytes, writer);
+    }
+    writer.EndObject();
 }

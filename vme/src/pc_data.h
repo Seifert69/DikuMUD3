@@ -323,6 +323,9 @@ public:
     const color_type &getColor() const;
     color_type &getColor();
     /// @}
+
+    virtual void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     terminal_setup_type m_setup{0, 0, 0, 0, 0, 0, 0, 0}; ///<
     pc_time_data m_time{};                               ///< PCs time info

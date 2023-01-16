@@ -34,12 +34,12 @@ var g_aIgnoreCommands = ['north', 'east', 'south', 'west', 'up', 'down', 'northe
 var g_aTriggerRegExp = []; // [new RegExp("^(.+) leaves (.+?)\.\<br\/\>$", "gim"), new RegExp("^(.+) has arrived from (.+)\.\<br\/\>$", "gim")];
 var g_aTriggerCmd = [];    // ["emote waves goodbye to $1", "hug $1;look $2;emote likes $1"];
 var g_nTriggerCircular = 0; // Count potential circular references
-var g_nTriggerCounter  = 0; // Count tiggers per time unit to detect cyclic triggers
+var g_nTriggerCounter = 0; // Count tiggers per time unit to detect cyclic triggers
 var g_nTriggerLastTime = 0; // Timer needed for trigger counter
 
 var g_aAliasName = [];
 var g_aAliasData = [];
-var g_nAliasCircular = 0; // Count potential circular references 
+var g_nAliasCircular = 0; // Count potential circular references
 
 var g_aVariableName = [];
 var g_aVariableData = [];
@@ -61,12 +61,12 @@ function getStrFirstWord(str) {
 
 function getStrRemainder(str) {
     let spaceIndex = str.indexOf(' ');
-    return spaceIndex === -1 ? "" : str.slice(spaceIndex+1);
+    return spaceIndex === -1 ? "" : str.slice(spaceIndex + 1);
 }
 
 /* The string str contains $1, $2 ...
  * and the regexp match array a replaces $1 with a[1], etc.
- * returns the substituted string. 
+ * returns the substituted string.
  */
 function dlrReplace(str, a) {
     var i;
@@ -85,10 +85,8 @@ function dlrReplace(str, a) {
 
 /* ========== ALIAS ============= */
 
-function aliasCheck(str) 
-{
-    if (g_nAliasCircular > 5)
-    {
+function aliasCheck(str) {
+    if (g_nAliasCircular > 5) {
         outputText("Alias nesting more than five levels, aborting alias.<br/>", false);
         return 1;
     }
@@ -97,10 +95,8 @@ function aliasCheck(str)
     var a = str.split(" ");
     a[0] = getStrRemainder(str);
 
-    for (var i=0; i < g_aAliasData.length; i++)
-    {
-        if (g_aAliasName[i].toLowerCase() == cmd.toLowerCase())
-        {
+    for (var i = 0; i < g_aAliasData.length; i++) {
+        if (g_aAliasName[i].toLowerCase() == cmd.toLowerCase()) {
             g_nAliasCircular++;
             var t = g_aAliasData[i];
             t = dlrReplace(t, a);
@@ -132,36 +128,31 @@ function setAlias(item) {
 }
 
 
-
 /* Splits str by ; and sends each as its own command
  */
 function manycmds(str) {
     var cmds = str.split(';');
 
-    for (var i = 0; i < cmds.length; i++)
-    {
-        if ((g_nAliasCircular > 5) || (g_nTriggerCircular > 5))
-        {
+    for (var i = 0; i < cmds.length; i++) {
+        if ((g_nAliasCircular > 5) || (g_nTriggerCircular > 5)) {
             outputText("Alias nesting more than five levels, aborting alias.<br/>", false);
             return;
         }
-    
+
         sendCommand(cmds[i], false, false, true);
     }
 }
 
 
-function testTrigger(s, regexp, mycmd)
-{
+function testTrigger(s, regexp, mycmd) {
     var s;
 
-    if (g_nTriggerCircular > 5)
-    {
+    if (g_nTriggerCircular > 5) {
         outputText("Triggers nesting more than five levels, aborting.<br/>", false);
         return 1;
     }
 
-    var i,j;
+    var i, j;
     i = Math.round(Date.now() / 1000);
     j = i - g_nTriggerLastTime; // seconds since last checkpoint
     g_nTriggerLastTime = i;
@@ -170,8 +161,7 @@ function testTrigger(s, regexp, mycmd)
     if (g_nTriggerCounter < 0)
         g_nTriggerCounter = 0;
 
-    if (g_nTriggerCounter > 5)
-    {
+    if (g_nTriggerCounter > 5) {
         outputText("Triggers firing too fast, aborting.<br/>", false);
         return 1;
     }
@@ -193,17 +183,15 @@ function testTrigger(s, regexp, mycmd)
 }
 
 
-function variableReplace(str)
-{
+function variableReplace(str) {
     console.log("variableReplace()");
-    console.log("REPLACE string: [" + str +"]");
-    for (var i = 0; i < g_aVariableName.length; i++)
-    {
+    console.log("REPLACE string: [" + str + "]");
+    for (var i = 0; i < g_aVariableName.length; i++) {
         str = str.replaceAll("@" + g_aVariableName[i], g_aVariableData[i]);
-        console.log("REPLACE @" + g_aVariableName[i] + "="+ g_aVariableData[i]);
+        console.log("REPLACE @" + g_aVariableName[i] + "=" + g_aVariableData[i]);
     }
 
-    console.log("REPLACE newstr: [" + str +"]");
+    console.log("REPLACE newstr: [" + str + "]");
     return str;
 }
 
@@ -227,8 +215,7 @@ function setVariable(item) {
 }
 
 
-function setTrigger(item)
-{
+function setTrigger(item) {
     var s, t, u;
     var j;
 
@@ -242,23 +229,20 @@ function setTrigger(item)
         s = item[i].innerText;
         //console.log(s);
 
-        if ((s.indexOf("/") === -1) || (s.indexOf("/") === s.lastIndexOf("/")))
-        {
-            outputText("Trigger "+s+": missing slash around the trigger expression /trigger/. Remove trigger and try again.<br/>", false);
+        if ((s.indexOf("/") === -1) || (s.indexOf("/") === s.lastIndexOf("/"))) {
+            outputText("Trigger " + s + ": missing slash around the trigger expression /trigger/. Remove trigger and try again.<br/>", false);
             continue;
         }
 
         t = s.substring(s.indexOf("/") + 1, s.lastIndexOf("/")).trim();
-        if (t.length === 0)
-        {
-            outputText("Trigger "+s+": empty expression between slash: /empty/ commands<br/>", false);
+        if (t.length === 0) {
+            outputText("Trigger " + s + ": empty expression between slash: /empty/ commands<br/>", false);
             continue;
         }
 
-        u = s.slice(s.lastIndexOf("/")+1).trim();
-        if (u.length === 0)
-        {
-            outputText("Trigger "+s+": commands is empty: /tigger/ empty<br/>", false);
+        u = s.slice(s.lastIndexOf("/") + 1).trim();
+        if (u.length === 0) {
+            outputText("Trigger " + s + ": commands is empty: /tigger/ empty<br/>", false);
             continue;
         }
 
@@ -272,8 +256,7 @@ function setTrigger(item)
 }
 
 
-function setJson(item)
-{
+function setJson(item) {
     console.log("setJson()");
     console.log(item.innerHTML);
 }
@@ -291,12 +274,12 @@ function HistoryAdd(s) {
 
     for (i = 0; i < g_aIgnoreCommands.length; i++)
         if (g_aIgnoreCommands[i].indexOf(s) == 0)
-        return;
+            return;
 
-    i = (g_nCmdPos-1) % g_aCmdHistory.length;
+    i = (g_nCmdPos - 1) % g_aCmdHistory.length;
     if (g_aCmdHistory[i] == s)
         return;
-        
+
     g_nCmdPos = g_nCmdPos % g_aCmdHistory.length;
     g_aCmdHistory[g_nCmdPos] = s;
     g_nCmdPos += 1;
@@ -321,10 +304,9 @@ function HistoryGet(nPos) {
 }
 
 
-
 /**
-    * Event handler for clicking on button "Disconnect"
-    */
+ * Event handler for clicking on button "Disconnect"
+ */
 function onDisconnectClick() {
     webSocket.close();
 }
@@ -345,10 +327,8 @@ function TraverseTreeAndFix(myelem) {
         if (!nodes[i])
             continue;
 
-        if (nodes[i].nodeName == 'A')
-        {
-            if (nodes[i].attributes.getNamedItem('cmd'))
-            {
+        if (nodes[i].nodeName == 'A') {
+            if (nodes[i].attributes.getNamedItem('cmd')) {
                 nodes[i].href = '#';
 
                 var s = String(nodes[i].attributes.getNamedItem('cmd').value);
@@ -359,10 +339,10 @@ function TraverseTreeAndFix(myelem) {
                     s = s.slice(0, n) + nodes[i].innerText + s.slice(n + 1);
 
                 nodes[i].data = s;
-                nodes[i].onclick = function (e) { cmd(this.data); };
-            }
-            else
-            {
+                nodes[i].onclick = function (e) {
+                    cmd(this.data);
+                };
+            } else {
                 nodes[i].target = '_blank';
             }
         }
@@ -421,7 +401,8 @@ function pagedSet(item) {
     item2.setAttribute("style", "display: inline");
     item2.innerHTML = item.innerHTML;
 
-    TraverseTreeAndFix(item2);;
+    TraverseTreeAndFix(item2);
+    ;
 
     //console.log("PAGED CONTENT" + item.innerHTML);
     //document.getElementById("acp_text").innerHTML = item.innerHTML;
@@ -429,7 +410,7 @@ function pagedSet(item) {
     //modalShow();
 }
 
-// str is of the exit format "N E U NW "... 
+// str is of the exit format "N E U NW "...
 function setExits(str) {
     var fields, buff;
 
@@ -458,7 +439,7 @@ function updateBars() {
 }
 
 
-// str is of the exit format "N E U NW "... 
+// str is of the exit format "N E U NW "...
 function setBars(str) {
     var fields, buff;
 
@@ -516,14 +497,14 @@ function setMap(szone, smap) {
         mye.style = "background-image: url('" + g_sImage + "'); background-size: contain; width: 100%; height: 100%; background-position: center; background-repeat: no-repeat;";
 
         mye = document.getElementById("crosshairs");
-        mye.hidden = true;    
+        mye.hidden = true;
         return;
     }
 
     //console.log("map: " + x + "," + y + "   :: window size " + xw + "," + yh);
 
     // Do the math to put the coordinate in the center of the window
-    // x = 0 => right side sticks; -200 creates dark edge on the left, +400 moves 
+    // x = 0 => right side sticks; -200 creates dark edge on the left, +400 moves
     // y = 0 => top, y = - 400 moves picture down
 
     // Center coordinate
@@ -537,8 +518,8 @@ function setMap(szone, smap) {
     var mye = document.getElementById("mymap");
     mye.style = "background-image: url('" + g_sImage + "'); width: " + xw + "px; height: " + yh + "px; background-repeat: no-repeat; background-position: left " + x + "px top " + y + "px;";
 
-    x = xw/2-18;
-    y = yh/2-18;
+    x = xw / 2 - 18;
+    y = yh / 2 - 18;
 
     mye = document.getElementById("crosshairs");
     mye.style = "position: relative; left: " + x + "px; top: " + y + "px;";
@@ -565,13 +546,13 @@ function outputReader(item) {
 function outputNormal(item) {
     var msgo = document.getElementById("converse");
 
-    if (nRowCount > g_nRowCountMax)  // Max g_nRowCountMax child items 
+    if (nRowCount > g_nRowCountMax)  // Max g_nRowCountMax child items
     {
         msgo.removeChild(msgo.childNodes[0]);
         nRowCount -= 1;
 
         // When it eventually overruns
-        if (msgo.childNodes.length > g_nRowCountMax+50)
+        if (msgo.childNodes.length > g_nRowCountMax + 50)
             while (msgo.childNodes.length > g_nRowCountMax)
                 msgo.removeChild(msgo.childNodes[0]);
     }
@@ -583,7 +564,7 @@ function outputItem(item) {
     nRowCount += 1;
 
     // Apparently, adding items to lists, makes readers behave erratically
-    // if (bScreenReader) // Test if more accessible in lists. 
+    // if (bScreenReader) // Test if more accessible in lists.
 
     if (false)
         outputReader(item);
@@ -604,8 +585,7 @@ function outputText(str, bParse) {
     if (g_bDebugOutput)
         console.log("WS[" + str + "]");
 
-    if (bParse)
-    {
+    if (bParse) {
         // I was wondering if using something like <span class='paged'>
         // might be a better marker. But it would leave a non-unique ending
         // of </span> which could appear elsewhere. So I thought for now
@@ -629,8 +609,7 @@ function outputText(str, bParse) {
                 TraverseTreeAndFix(item);
 
                 pagedSet(item);
-            }
-            else {
+            } else {
                 sPaged += str;
             }
             return;
@@ -642,40 +621,30 @@ function outputText(str, bParse) {
     item.innerHTML = str;
     TraverseTreeAndFix(item);
 
-    if (bParse)
-    {
+    if (bParse) {
         if (str.slice(0, 25) == "<div class='prompt' bars=") {
             var mye = item.firstChild.getAttribute("bars");
 
             if (mye != "")
                 setBars(mye);
-        }
-        else if (str.slice(0, 28) == "<h1 class='room_title' zone=") {
+        } else if (str.slice(0, 28) == "<h1 class='room_title' zone=") {
             setExits(item.firstChild.getAttribute("exits"));
             setMap(item.firstChild.getAttribute("zone"), item.firstChild.getAttribute("map"));
-        }
-        else if (str.slice(0, 16) == "<div class='say_") {
+        } else if (str.slice(0, 16) == "<div class='say_") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
-        }
-        else if (str.slice(0, 16) == "<div class='ask_") {
+        } else if (str.slice(0, 16) == "<div class='ask_") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
-        }
-        else if (str.slice(0, 16) == "<div class='ask_") {
+        } else if (str.slice(0, 16) == "<div class='ask_") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
-        }
-        else if (str.slice(0, 18) == "<div class='shout_") {
+        } else if (str.slice(0, 18) == "<div class='shout_") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
-        }
-        else if (str.slice(0, 19) == "<div class='whisper") {
+        } else if (str.slice(0, 19) == "<div class='whisper") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
-        }
-        else if (str.slice(0, 16) == "<div class='tell") {
+        } else if (str.slice(0, 16) == "<div class='tell") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
-        }
-        else if (str.slice(0, 17) == "<div class='comm_") {
+        } else if (str.slice(0, 17) == "<div class='comm_") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
-        }
-        else if (str.slice(0, 8) == "<script>") {
+        } else if (str.slice(0, 8) == "<script>") {
             // For now I can't figure out a better method
             // Preferably I would have loved for the script to
             // simply execute when added to the lists.
@@ -686,8 +655,7 @@ function outputText(str, bParse) {
                 InputFocus(null);
             }
             return;
-        }
-        else if (str.slice(0, 6) == "<data ") {
+        } else if (str.slice(0, 6) == "<data ") {
             if (str.slice(-7) != "</data>") {
                 console.log("Got incomplete <data> package.");
                 return;
@@ -695,8 +663,7 @@ function outputText(str, bParse) {
 
             var mytype = item.firstChild.getAttribute("type");
 
-            if (mytype == "$json")
-            {
+            if (mytype == "$json") {
                 setJson(item.firstChild);
                 return;
             }
@@ -709,8 +676,7 @@ function outputText(str, bParse) {
                 setTrigger(myitem);
             else if (mytype == "$var")
                 setVariable(myitem);
-            else
-            {
+            else {
                 console.log("Unknown data type " + mytype);
             }
 
@@ -723,9 +689,8 @@ function outputText(str, bParse) {
     // It gets super complicated to write triggers if the HTML is included
     var txt = item.innerText;
 
-    if (bParse)
-    {
-        for (var i=0; i < g_aTriggerRegExp.length; i++)
+    if (bParse) {
+        for (var i = 0; i < g_aTriggerRegExp.length; i++)
             if (testTrigger(txt, g_aTriggerRegExp[i], g_aTriggerCmd[i]))
                 return;
     }
@@ -733,8 +698,8 @@ function outputText(str, bParse) {
 
 
 /**
-    * Open a new WebSocket connection using the given parameters
-    */
+ * Open a new WebSocket connection using the given parameters
+ */
 function openWSConnection(protocol, hostname, port, endpoint) {
 
     var webSocketURL = protocol + "://" + hostname + ":" + port + endpoint;
@@ -765,13 +730,47 @@ function openWSConnection(protocol, hostname, port, endpoint) {
         webSocket.onmessage = function (messageEvent) {
             var wsMsg = messageEvent.data;
             // console.log("WebSocket MESSAGE: " + wsMsg);
-            outputText(wsMsg, true);
+
+            if ( typeof arguments.callee.largeMessage == 'undefined' ) {
+                arguments.callee.largeMessage = '';
+                // console.log("creating largeMessage static");
+            }
+
+            var hasOpenDataTag = wsMsg.slice(0, 6) === "<data ";
+            var hasCloseDataTag = wsMsg.slice(-7) === "</data>";
+
+            // console.log("hasOpenDataTag:" + hasOpenDataTag);
+            // console.log("hasCloseDataTag:" + hasCloseDataTag);
+            // console.log("largeMessage.length:" + arguments.callee.largeMessage.length);
+
+            if (arguments.callee.largeMessage.length === 0) {
+                if (!hasOpenDataTag || (hasOpenDataTag && hasCloseDataTag)) {
+                    outputText(wsMsg, true);
+                    // console.log("Send complete message to outputText");
+                }
+
+                if (hasOpenDataTag && !hasCloseDataTag) {
+                    arguments.callee.largeMessage += wsMsg;
+                    // console.log("starting Large Message");
+                }
+            } else {
+                arguments.callee.largeMessage += wsMsg;
+                // console.log("continuing Large Message");
+                if (hasCloseDataTag) {
+                    // console.log("finished Large Message");
+                    outputText(arguments.callee.largeMessage, true);
+                    arguments.callee.largeMessage = '';
+                    // console.log("large message cleared")
+                }
+            }
             /* Cant trigger on any error string .... if (wsMsg.indexOf("error") > 0) {
                 outputText("error: " + wsMsg.error + "<br/>");
             } else {
             }*/
-        };
-    } catch (exception) {
+        }
+
+    } catch
+        (exception) {
         outputText("Exception: " + exception + "<br/>", false);
         console.error(exception);
     }
@@ -783,7 +782,7 @@ function openWSConnection(protocol, hostname, port, endpoint) {
  */
 function InputFocus(str) {
     var myfld;
-    
+
     if (isPasswordActive())
         myfld = document.getElementById("pwd");
     else
@@ -792,19 +791,17 @@ function InputFocus(str) {
     if (str != null)
         myfld.value = str;
 
-    // I suspect changing the focus might cause readers to repeat text read. 
+    // I suspect changing the focus might cause readers to repeat text read.
     // So therefore test if the element has focus before setting it
     //
-    if (document.activeElement != myfld)
-    {
+    if (document.activeElement != myfld) {
         myfld.focus();
         myfld.select();
     }
 }
 
 
-function sendCommand(str, bFocus, bHistory, bEcho)
-{
+function sendCommand(str, bFocus, bHistory, bEcho) {
     if (webSocket.readyState != WebSocket.OPEN) {
         outputText("webSocket is not open: " + webSocket.readyState, false);
         return false;
@@ -836,11 +833,11 @@ function isPasswordActive() {
 }
 
 /**
-    * Send a message to the WebSocket server
-    */
+ * Send a message to the WebSocket server
+ */
 function onSendClick() {
     g_nHistoryPos = 0;
-    
+
     var myfld;
     var bPwdActive = isPasswordActive();
 
@@ -871,30 +868,28 @@ function shHistory() {
 }
 
 function toggleSettings() {
-  var d = document.getElementById("banner");
-  if (d.style.display == "none") {
-    d.style.display = "block";
-  } else {
-    d.style.display = "none";
-  }
+    var d = document.getElementById("banner");
+    if (d.style.display == "none") {
+        d.style.display = "block";
+    } else {
+        d.style.display = "none";
+    }
 }
 
-function switchTheme()
-        {
-          var th = document.getElementById("theme");
-          var newstylesheet = th.options[th.selectedIndex].value;
-          var stylesheet = document.getElementById("stylesheet");
-             stylesheet.setAttribute('href', newstylesheet);
-            }
+function switchTheme() {
+    var th = document.getElementById("theme");
+    var newstylesheet = th.options[th.selectedIndex].value;
+    var stylesheet = document.getElementById("stylesheet");
+    stylesheet.setAttribute('href', newstylesheet);
+}
 
-function onMapClick()
-{
+function onMapClick() {
     var item = document.createElement("img");
     item.id = "id";
     item.src = g_sImage;
     item.setAttribute("style", "display: inline");
     item.style.maxHeight = "500px";
-    item.style.maxWidth  = "auto";
+    item.style.maxWidth = "auto";
 
     document.getElementById("modtext").firstChild.replaceWith(item);
 
@@ -902,8 +897,7 @@ function onMapClick()
 }
 
 
-function onMainClick()
-{
+function onMainClick() {
     var item, pgd;
 
     pgd = document.getElementById("al_text");
@@ -917,18 +911,15 @@ function onMainClick()
     item.innerHTML = pgd.innerHTML;
     TraverseTreeAndFix(item); // Transform links
 
-    document.getElementById("modtext").firstChild.replaceWith(item);    
+    document.getElementById("modtext").firstChild.replaceWith(item);
 
     document.getElementById("myModal").style.display = "block";
 }
 
 
-function keepAlive()
-{
-    if (g_bCommsChanged)
-    {
-        if (g_sPlyName != "")
-        {
+function keepAlive() {
+    if (g_bCommsChanged) {
+        if (g_sPlyName != "") {
             window.localStorage.setItem(g_sPlyName, g_sComms);
             console.log("Saved local storage for " + g_sPlyName);
         }
@@ -937,7 +928,7 @@ function keepAlive()
 
     var sec = Math.round(Date.now() / 1000);
 
-    if (sec-g_nLastSend < 250)
+    if (sec - g_nLastSend < 250)
         return;
 
     console.log("Keep alive");

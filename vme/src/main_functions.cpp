@@ -15,6 +15,7 @@
 #include "handler.h"
 #include "hookmud.h"
 #include "interpreter.h"
+#include "json_helper.h"
 #include "nanny.h"
 #include "nice.h"
 #include "path.h"
@@ -33,6 +34,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 
 #define OPT_USEC 250000L     /* time delay corresponding to 4 passes/sec */
 long g_nTickUsec = OPT_USEC; // Dont mess with this, it's the game heartbeat. Look at 'timewarp'
@@ -60,6 +62,7 @@ int g_mud_exitcode = 0;    // The exit code when rebooting / shutting down
 int g_wizlock = 0;         /* no mortals on now */
 int g_tics = 60;           /* number of tics since boot-time */
 bool g_dumptables = false; // If true, dump all profession tables to stdout and exit(0)
+bool g_dump_json = false;
 
 std::string g_world_boottime; /* boottime of world */
 
@@ -70,6 +73,7 @@ std::string g_world_boottime; /* boottime of world */
 const char *g_compile_date = __DATE__;
 const char *g_compile_time = __TIME__;
 
+void DumpJSON();
 //
 // Need this to be sure the typedefs are right for 64 bit architecture (MS2020)
 void type_validate_64()
@@ -135,6 +139,11 @@ void run_the_game(char *srvcfg)
     dil_function_table_setup();
 
     boot_db();
+    if (g_dump_json)
+    {
+        DumpJSON();
+        exit(1);
+    }
     g_mudboot = 0;
     g_events.process();
     /*
@@ -175,13 +184,13 @@ void run_the_game(char *srvcfg)
     {
         slog(LOG_OFF, 0, "Rebooting.");
         exit(g_mud_exitcode);
-        //exit(42);
+        // exit(42);
     }
     else
     {
         slog(LOG_OFF, 0, "Normal termination of game.");
         exit(g_mud_exitcode);
-        //exit(0);
+        // exit(0);
     }
 }
 
@@ -456,4 +465,105 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -p: Persistant containers list\n");
     fprintf(stderr, "  -d: dump all profession tables.\n");
     fprintf(stderr, "Copyright (C) 1994 - 1996 by Valhalla.\n");
+}
+
+void DumpJSONZones()
+{
+    rapidjson::StringBuffer buffer;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+    writer.StartArray();
+    for (auto &[name, zone] : g_zone_info.mmp)
+    {
+        writer.StartObject();
+        json::write_kvp("name", name, writer);
+        json::write_object_pointer_kvp("zone", zone, writer);
+        writer.EndObject();
+    }
+    writer.EndArray();
+
+    std::ofstream out("dump_zones.json");
+    out << buffer.GetString();
+    out.close();
+}
+
+void DumpJSONRooms()
+{
+    rapidjson::StringBuffer buffer;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+    writer.StartArray();
+    unit_data *room = g_room_head;
+    while (room)
+    {
+        room->toJSON(writer);
+        room = room->getGlobalNext();
+    }
+    writer.EndArray();
+
+    std::ofstream out("dump_rooms.json");
+    out << buffer.GetString();
+    out.close();
+}
+
+void DumpJSONObjects()
+{
+    rapidjson::StringBuffer buffer;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+    writer.StartArray();
+    unit_data *object = g_obj_head;
+    while (object)
+    {
+        object->toJSON(writer);
+        object = object->getGlobalNext();
+    }
+    writer.EndArray();
+
+    std::ofstream out("dump_objects.json");
+    out << buffer.GetString();
+    out.close();
+}
+
+void DumpJSONNPCs()
+{
+    rapidjson::StringBuffer buffer;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+    writer.StartArray();
+    unit_data *npc = g_npc_head;
+    while (npc)
+    {
+        npc->toJSON(writer);
+        npc = npc->getGlobalNext();
+    }
+    writer.EndArray();
+
+    std::ofstream out("dump_npcs.json");
+    out << buffer.GetString();
+    out.close();
+}
+
+void DumpJSONPCs()
+{
+    rapidjson::StringBuffer buffer;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+    writer.StartArray();
+    /// TODO how to get the PC's
+    writer.EndArray();
+
+    std::ofstream out("dump_pcs.json");
+    out << buffer.GetString();
+    out.close();
+}
+
+void DumpJSON()
+{
+    DumpJSONZones();
+    DumpJSONRooms();
+    DumpJSONObjects();
+    DumpJSONObjects();
+    DumpJSONNPCs();
+    DumpJSONPCs();
 }

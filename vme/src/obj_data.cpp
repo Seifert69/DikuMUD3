@@ -1,5 +1,8 @@
 #include "obj_data.h"
 
+#include "json_helper.h"
+#include "utility.h"
+
 size_t obj_data::g_world_noobjects; // number of objects in the world
 
 obj_data::obj_data(file_index_type *fi)
@@ -133,4 +136,38 @@ ubit8 *obj_data::getMagicResistancePtr()
 void obj_data::setMagicResistance(ubit8 value)
 {
     m_resistance = value;
+}
+
+void obj_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_unit_id_kvp("id", this, writer);
+
+        writer.String("obj_data");
+        writer.StartObject();
+        {
+            writer.String("value");
+            writer.StartArray();
+            for (auto &v : m_value)
+            {
+                writer.Int(v);
+            }
+            writer.EndArray();
+
+            json::write_kvp("cost", m_cost, writer);
+            json::write_kvp("cost_per_day", m_cost_per_day, writer);
+            std::string bits;
+            json::write_kvp("flags", sprintbit(bits, m_flags, g_obj_flags), writer);
+            json::write_kvp("type", m_type, writer);
+            json::write_kvp("equip_pos", m_equip_pos, writer);
+            json::write_kvp("resistance", m_resistance, writer);
+        }
+
+        writer.EndObject();
+
+        writer.String("unit_data");
+        unit_data::toJSON(writer);
+    }
+    writer.EndObject();
 }

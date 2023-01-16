@@ -2,6 +2,8 @@
 
 #include "essential.h"
 
+#include <rapidjson/prettywriter.h>
+
 #include <array>
 
 class file_index_type;
@@ -31,6 +33,8 @@ public:
     void setCompleteFlag(ubit8 value);
     void setNextPtr(zone_reset_cmd *value);
     void setNestedPtr(zone_reset_cmd *value);
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     ubit8 cmd_no{};                        ///< Index to array of func() ptrs

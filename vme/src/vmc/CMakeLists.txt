@@ -3,6 +3,7 @@ project(vmc)
 set(VMC_SRCS
         dilpar.h
         diltok.h
+        json.cpp
         vmc.cpp vmc.h
         vmc_process.cpp vmc_process.h
         vmctok.h

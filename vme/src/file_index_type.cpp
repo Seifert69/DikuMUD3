@@ -1,9 +1,9 @@
 #include "file_index_type.h"
 
+#include "json_helper.h"
 #include "textutil.h"
 #include "utils.h"
 #include "vme.h"
-
 
 file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
 {
@@ -16,7 +16,6 @@ file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
     m_zone = zone;
     m_type = type;
 }
-
 
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
@@ -191,6 +190,11 @@ zone_type *file_index_type::getZone() const
     return m_zone;
 }
 
+std::string file_index_type::getSymName() const
+{
+    return {m_name + '@' + m_zone->getName()};
+}
+
 void file_index_type::DecrementNumInMemory()
 {
     /// @todo find out why code is trying to decrement m_no_in_mem below 0
@@ -260,4 +264,30 @@ void file_index_type::PushFront(unit_data *value)
 void file_index_type::Remove(unit_data *value)
 {
     m_fi_unit_list.remove(value);
+}
+
+void file_index_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_kvp("id", getSymName(), writer);
+        writer.String("fi_unit_list");
+        writer.StartArray();
+        for (auto &item : m_fi_unit_list)
+        {
+            writer.String(item->getID().c_str());
+        }
+        writer.EndArray();
+        json::write_kvp("name", m_name, writer);
+        json::write_zone_id("zone", m_zone, writer);
+        json::write_kvp("filepos", m_filepos, writer);
+        json::write_kvp("length", m_length, writer);
+        json::write_kvp("crc", m_crc, writer);
+        json::write_kvp("no_in_zone", m_no_in_zone, writer);
+        json::write_kvp("no_in_mem", m_no_in_mem, writer);
+        json::write_kvp("room_no", m_room_no, writer);
+        json::write_kvp("type", m_type, writer);
+        ////////////////////////////////////////////////////////
+    }
+    writer.EndObject();
 }

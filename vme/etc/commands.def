@@ -3151,6 +3151,13 @@ minlevel = 215
 loglevel = 215
 type     = 0
 
+command  = jstat
+internal = jstat
+minpos   = POSITION_DEAD
+minlevel = 215
+loglevel = 215
+type     = 0
+
 command  = wedit
 internal = wedit
 minpos   = POSITION_DEAD

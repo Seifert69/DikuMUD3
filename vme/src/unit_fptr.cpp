@@ -1,5 +1,9 @@
 #include "unit_fptr.h"
 
+#include "constants.h"
+#include "json_helper.h"
+#include "utility.h"
+
 #include <cstdlib>
 
 unit_fptr::unit_fptr()
@@ -141,4 +145,30 @@ eventq_elem *unit_fptr::getEventQueue()
 void unit_fptr::setEventQueue(eventq_elem *value)
 {
     event = value;
+}
+
+void unit_fptr::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_pointer_kvp("unit_fptr_this", this, writer);
+        json::write_kvp("index", index, writer);
+        json::write_kvp("priority", priority, writer);
+        json::write_kvp("heart_beat", heart_beat, writer);
+        std::string bits;
+        json::write_kvp("flags", sprintbit(bits, flags, g_sfb_flags), writer);
+        json::write_pointer_kvp("data", data, writer);
+        json::write_pointer_kvp("next", next, writer);
+        writer.String("event");
+        if (event)
+        {
+            //            event->toJSON(writer);
+            writer.String("to be done");
+        }
+        else
+        {
+            writer.Null();
+        }
+    }
+    writer.EndObject();
 }

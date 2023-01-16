@@ -4,6 +4,7 @@
 #include "dil.h"
 #include "file_index_type.h"
 #include "formatter.h"
+#include "json_helper.h"
 #include "szonelog.h"
 #include "textutil.h"
 #include "unit_data.h"
@@ -162,7 +163,6 @@ void zone_type::setZoneResetTime(ubit16 value)
     m_zone_time = value;
 }
 
-
 ubit32 zone_type::getCrc() const
 {
     return m_crc;
@@ -183,7 +183,6 @@ void zone_type::setCrc(ubit32 crc)
         }
     }
 }
-
 
 ubit16 *zone_type::getZoneResetTimePtr()
 {
@@ -319,6 +318,19 @@ std::string zone_type::getExtraStatZoneMessage(int search_type) const
     return msg;
 }
 
+void zone_type::getExtraStatZoneMessageJSON(int search_type, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartArray();
+    for (const auto &[name, fi] : m_mmp_fi)
+    {
+        if (fi->getType() == search_type)
+        {
+            writer.String(name.c_str());
+        }
+    }
+    writer.EndArray();
+}
+
 void zone_type::readAllUnitRooms()
 {
     for (auto &[name, fi] : m_mmp_fi)
@@ -366,7 +378,7 @@ unit_data *zone_type::findFirstUnitOfType(int type)
 
 file_index_type *zone_type::findOrCreatePlayerFileIndex(const char *name)
 {
-    assert(this == find_zone(g_player_zone));  // This should only be done in the special player zone
+    assert(this == find_zone(g_player_zone)); // This should only be done in the special player zone
 
     if (auto it = m_mmp_fi.find(name); it != m_mmp_fi.end())
     {
@@ -415,6 +427,16 @@ std::string zone_type::getStatDIL() const
     return msg;
 }
 
+void zone_type::getStatDILJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartArray();
+    for (auto &[name, dil_template] : m_mmp_tmpl)
+    {
+        diltemplateToJSON(dil_template.get(), writer);
+    }
+    writer.EndArray();
+}
+
 std::string zone_type::getStatGlobalDIL(ubit32 nCount, ubit64 &instructionSum) const
 {
     std::string msg;
@@ -432,6 +454,21 @@ std::string zone_type::getStatGlobalDIL(ubit32 nCount, ubit64 &instructionSum) c
         }
     }
     return msg;
+}
+
+void zone_type::getStatGlobalDILJSON(ubit32 nCount, ubit64 &instructionSum, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    std::string msg;
+    writer.StartArray();
+    for (auto &[name, dil_template] : m_mmp_tmpl)
+    {
+        instructionSum += dil_template->nInstructions;
+        if (dil_template->fCPU >= nCount)
+        {
+            diltemplateToJSON(dil_template.get(), writer);
+        }
+    }
+    writer.EndArray();
 }
 
 void zone_type::resolveZoneTemplates()
@@ -488,4 +525,102 @@ diltemplate *zone_type::findDILTemplate(const std::string &name)
     }
 
     return nullptr;
+}
+
+void zone_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_pointer_kvp("zone_type_this", this, writer);
+
+        json::write_object_value_kvp("creators", m_creators, writer);
+        json::write_kvp("name", m_name, writer);
+        json::write_object_value_kvp("title", m_title, writer);
+        json::write_object_value_kvp("notes", m_notes, writer);
+        json::write_object_value_kvp("help", m_help, writer);
+        json::write_unit_id_kvp("rooms", m_rooms, writer);
+        json::write_unit_id_kvp("objects", m_objects, writer);
+        json::write_unit_id_kvp("npcs", m_npcs, writer);
+
+        writer.String("mmp_fi");
+        writer.StartArray();
+        for (const auto &[key, value] : m_mmp_fi)
+        {
+            writer.StartObject();
+
+            json::write_kvp("key", key, writer);
+
+            json::write_object_pointer_kvp("file_index_type", value.get(), writer);
+            writer.EndObject();
+        }
+        writer.EndArray();
+
+        ////////////////////////////////////////////////////////
+        json::write_object_pointer_kvp("zri", m_zri, writer);
+
+        ////////////////////////////////////////////////////////
+        writer.String("mmp_tmpl");
+        writer.StartArray();
+        for (const auto &[key, value] : m_mmp_tmpl)
+        {
+            writer.StartObject();
+            json::write_kvp("key", key, writer);
+
+            writer.String("diltemplate");
+            writer.String("dil templates to be done later");
+            // value->toJSON(writer);
+            writer.EndObject();
+        }
+        writer.EndArray();
+
+        ////////////////////////////////////////////////////////
+        writer.String("spmatrix");
+        if (m_spmatrix)
+        {
+            writer.String("to be done - I think its not used");
+        }
+        else
+        {
+            writer.Null();
+        }
+
+        json::write_kvp("zone_time", m_zone_time, writer);
+        json::write_kvp("no_rooms", m_no_rooms, writer);
+        json::write_kvp("no_objs", m_no_objs, writer);
+        json::write_kvp("no_npcs", m_no_npcs, writer);
+        static const char *reset_modes[] = {"Never Reset", "Reset When Empty", "Reset Always", "UNKNOWN"};
+        json::write_kvp("reset_mode", reset_modes[m_reset_mode], writer);
+        json::write_kvp("access", m_access, writer);
+        json::write_kvp("loadlevel", m_loadlevel, writer);
+        json::write_kvp("payonly", m_payonly, writer);
+        json::write_kvp("crc", m_crc, writer);
+
+        ////////////////////////////////////////////////////////
+        writer.String("dilfilepath");
+        if (m_dilfilepath.has_value())
+        {
+            writer.String(m_dilfilepath.value().c_str());
+        }
+        else
+        {
+            writer.Null();
+        }
+
+        ////////////////////////////////////////////////////////
+        json::write_object_value_kvp("weather", m_weather, writer);
+    }
+    writer.EndObject();
+}
+
+void zone_type::diltemplateToJSON(diltemplate *dil_template, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_kvp("CPU_secs", dil_template->fCPU / 1000.0, writer);
+        json::write_kvp("program_name", dil_template->prgname, writer);
+        json::write_kvp("zone_name", dil_template->zone->getName(), writer);
+        json::write_kvp("activations", dil_template->nTriggers, writer);
+        json::write_kvp("instructions", dil_template->nInstructions, writer);
+    }
+    writer.EndObject();
 }

@@ -1,5 +1,7 @@
 #include "room_direction_data.h"
 
+#include "json_helper.h"
+
 room_direction_data::room_direction_data()
 {
     key = nullptr;
@@ -85,4 +87,18 @@ void room_direction_data::setDoorFlags(ubit8 value)
 ubit8 *room_direction_data::getDoorFlagsPtr()
 {
     return &exit_info;
+}
+
+void room_direction_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_object_value_kvp("open_name", open_name, writer);
+        json::write_kvp("key", key, writer);
+        json::write_unit_id_kvp("to_room", to_room, writer);
+        json::write_kvp("difficulty", difficulty, writer);
+        json::write_kvp("weight", weight, writer);
+        json::write_kvp("exit_info", exit_info, writer);
+    }
+    writer.EndObject();
 }

@@ -3,6 +3,8 @@
 #include "bytestring.h"
 #include "vme.h"
 
+#include <rapidjson/prettywriter.h>
+
 #include <array>
 
 class unit_data;
@@ -109,6 +111,8 @@ public:
     void increaseAbilityAtIndexBy(size_t index, sbit16 value);
     void decreaseAbilityAtIndexBy(size_t index, sbit16 value);
     std::array<sbit16, ABIL_TREE_MAX> &getAbilitiesArray();
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     ubit32 flags{0};                                ///< Char flags

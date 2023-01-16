@@ -1,5 +1,8 @@
 #include "zone_reset_cmd.h"
 
+#include "file_index_type.h"
+#include "json_helper.h"
+
 void zone_reset_cmd::setCommandNum(ubit8 value)
 {
     cmd_no = value;
@@ -58,4 +61,32 @@ zone_reset_cmd *zone_reset_cmd::getNested() const
 zone_reset_cmd *zone_reset_cmd::getNext() const
 {
     return next;
+}
+
+void zone_reset_cmd::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_pointer_kvp("zone_reset_cmd_this", this, writer);
+        json::write_kvp("cmd_no", cmd_no, writer);
+        json::write_kvp("cmpl", cmpl, writer);
+        writer.String("fi");
+        writer.StartArray();
+        for (auto &item : fi)
+        {
+            json::write_pointer(item, writer);
+        }
+        writer.EndArray();
+
+        writer.String("num");
+        writer.StartArray();
+        for (auto &item : num)
+        {
+            writer.Int(item);
+        }
+        writer.EndArray();
+        json::write_pointer_kvp("next", next, writer);
+        json::write_pointer_kvp("nested", nested, writer);
+    }
+    writer.EndObject();
 }

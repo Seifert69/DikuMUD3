@@ -7,6 +7,7 @@
 #include "color.h"
 
 #include "formatter.h"
+#include "json_helper.h"
 #include "textutil.h"
 
 #include <optional>
@@ -251,4 +252,19 @@ std::string color_type::save_string() const
         strm << keyword << ":" << color << ":";
     }
     return strm.str();
+}
+
+void color_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartArray();
+    for (auto &[key, value] : m_map)
+    {
+        writer.StartObject();
+        {
+            json::write_kvp("keyword", key, writer);
+            json::write_kvp("color", value, writer);
+        }
+        writer.EndObject();
+    }
+    writer.EndArray();
 }

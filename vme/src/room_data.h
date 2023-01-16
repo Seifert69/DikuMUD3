@@ -116,6 +116,9 @@ public:
     int getRoomNumber() const;
     void setRoomNumber(int value);
     /// @}
+
+    virtual void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
 private:
     std::array<room_direction_data *, MAX_EXIT + 1> m_dir_option{nullptr}; ///<
     ubit8 m_flags{0};                                                      ///< Room flags
@@ -126,7 +129,6 @@ private:
     int m_sc{0};                                                           ///< strong component, used for shortest path
     int m_num{0};                                                          ///< room number, used for shortest path
 
-#ifndef MPLEX_COMPILE
 public:
     enum edge_dir_t
     {
@@ -168,5 +170,4 @@ private:
     std::vector<vertex_descriptor> m_path;     ///<
     std::vector<vertex_descriptor> m_distance; ///<
     bool m_waiting_dijkstra{false};            ///<
-#endif
 };

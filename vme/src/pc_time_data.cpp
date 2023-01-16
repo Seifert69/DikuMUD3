@@ -1,5 +1,7 @@
 #include "pc_time_data.h"
 
+#include "json_helper.h"
+
 void pc_time_data::readFrom(CByteBuffer &buf, int &errors)
 {
     creation = buf.ReadU32(&errors);
@@ -64,4 +66,16 @@ void pc_time_data::setTotalTimePlayedInSeconds(ubit32 value)
 void pc_time_data::incTotalTimePlayedInSecondsBy(ubit32 seconds)
 {
     played += seconds;
+}
+
+void pc_time_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
+{
+    writer.StartObject();
+    {
+        json::write_kvp("creation", creation, writer);
+        json::write_kvp("connect", connect, writer);
+        json::write_kvp("birth", birth, writer);
+        json::write_kvp("played", played, writer);
+    }
+    writer.EndObject();
 }

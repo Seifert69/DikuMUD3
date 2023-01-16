@@ -88,9 +88,7 @@ void argument_interpreter(const char *argument, char *first_arg, char *second_ar
 
 int unit_function_scan(unit_data *u, spec_arg *sarg);
 int function_activate(unit_data *u, spec_arg *sarg);
-#ifdef DMSERVER
 int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_target = nullptr, const char *to = nullptr);
-#endif
 int send_preprocess(unit_data *ch, const command_info *cmd, char *arg);
 void send_done(unit_data *activator,
                unit_data *medium,

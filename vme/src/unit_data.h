@@ -11,6 +11,8 @@
 #include "weather.h"
 #include "zone_type.h"
 
+#include <rapidjson/document.h>
+
 /**
  * Creates a new unit of the specified type
  * @param type One of UNIT_ST_ROOM, UNIT_ST_OBJ, UNIT_ST_PC, UNIT_ST_NPC
@@ -366,6 +368,10 @@ public:
 
     int destruct_classindex();
     std::string json();
+
+    virtual void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
+    [[nodiscard]] std::string getID() const { return m_fi->getSymName(); }
 
 private:
     cNamelist m_names;                       ///< Name Keyword list for get, enter, etc.

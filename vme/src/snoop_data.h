@@ -1,5 +1,7 @@
 #pragma once
 
+#include <rapidjson/prettywriter.h>
+
 class unit_data;
 
 class snoop_data
@@ -12,6 +14,8 @@ public:
 
     void setSnooping(const unit_data *value);
     void setSnoopBy(const unit_data *value);
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     unit_data *snooping{nullptr}; ///< Who is this char snooping

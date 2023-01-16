@@ -5,6 +5,8 @@
 #include "essential.h"
 #include "event.h"
 
+#include <rapidjson/prettywriter.h>
+
 class unit_data;
 
 class unit_affected_type : public basedestruct
@@ -57,6 +59,8 @@ public:
     void setG_Previous(unit_affected_type *value);
 
     int destruct_classindex();
+
+    void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
 private:
     sbit16 id{0};                           ///<
