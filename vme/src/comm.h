@@ -42,7 +42,8 @@ enum actShow_e : uint8_t
 {
     eA_HIDEINV = A_HIDEINV,
     eA_SOMEONE = A_SOMEONE,
-    eA_ALWAYS = A_ALWAYS
+    eA_ALWAYS = A_ALWAYS,
+    eA_RAW = A_RAW
 };
 
 actShow_e ActShow(int n);

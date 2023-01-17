@@ -36,10 +36,13 @@
 #define FALSE 0
 #define TRUE  1
 
+// These are used as enums
 #define A_HIDEINV  10
 #define A_SOMEONE  11
 #define A_ALWAYS   12
+#define A_RAW      14
 
+// These are used as enums
 #define TO_ROOM    0
 #define TO_VICT    1
 #define TO_NOTVICT 2

@@ -366,9 +366,12 @@ void act_generate(char *buf,
         return;
     }
 
-    if ((show_type == actShow_e::eA_HIDEINV && !CHAR_CAN_SEE(to, arg1.m_u)) || (show_type != actShow_e::eA_ALWAYS && !CHAR_AWAKE(to)))
+    if (show_type != eA_RAW)
     {
-        return;
+        if ((show_type == actShow_e::eA_HIDEINV && !CHAR_CAN_SEE(to, arg1.m_u)) || (show_type != actShow_e::eA_ALWAYS && !CHAR_AWAKE(to)))
+        {
+            return;
+        }
     }
 
     for (strp = str, point = buf;;)
@@ -403,7 +406,7 @@ void act_generate(char *buf,
                     case 'n':
                         if (sub->m_u != nullptr)
                         {
-                            if (CHAR_CAN_SEE(to, sub->m_u))
+                            if (CHAR_CAN_SEE(to, sub->m_u) || show_type == eA_RAW)
                             {
                                 if (sub->m_u->isPC())
                                 {
@@ -429,7 +432,10 @@ void act_generate(char *buf,
                     case 'N':
                         if (sub->m_u != nullptr)
                         {
-                            i = UNIT_SEE_NAME(to, (unit_data *)sub->m_u);
+                            if (show_type == eA_RAW)
+                                i = ((unit_data *)sub->m_u)->getNames().Name();
+                            else
+                                i = UNIT_SEE_NAME(to, (unit_data *)sub->m_u);
                         }
                         else
                         {
