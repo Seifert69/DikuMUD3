@@ -624,10 +624,7 @@ static void spell_read()
         else if (strncmp(pTmp, "acttype", 7) == 0)
         {
             dummy = atoi(pCh);
-            if (dummy == actShow_e::eA_ALWAYS || dummy == actShow_e::eA_HIDEINV || dummy == actShow_e::eA_SOMEONE)
-            {
-                g_spell_info[idx].acttype = ActShow(dummy);
-            }
+            g_spell_info[idx].acttype = ActShow(dummy);
         }
         else if (strncmp(pTmp, "sphere", 6) == 0)
         {

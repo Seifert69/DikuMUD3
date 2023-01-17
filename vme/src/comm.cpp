@@ -594,9 +594,6 @@ void sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, c
 {
     const unit_data *to = nullptr;
 
-    /* This to catch old-style FALSE/TRUE calls...  */
-    assert(show_type == actShow_e::eA_SOMEONE || show_type == actShow_e::eA_HIDEINV || show_type == actShow_e::eA_ALWAYS);
-
     if (!str || !*str)
     {
         return;
@@ -629,9 +626,6 @@ void act(const char *str, actShow_e show_type, cActParameter arg1, cActParameter
     const unit_data *to = nullptr;
     const unit_data *u = nullptr;
     char buf[MAX_STRING_LENGTH];
-
-    /* This to catch old-style FALSE/TRUE calls...  */
-    assert(show_type == actShow_e::eA_SOMEONE || show_type == actShow_e::eA_HIDEINV || show_type == actShow_e::eA_ALWAYS);
 
     if (!str || !*str)
     {
@@ -715,8 +709,6 @@ void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParamete
     char temp[MAX_STRING_LENGTH];
     char *t = nullptr;
     char *b = buf;
-    /* This to catch old-style FALSE/TRUE calls...  */
-    assert(show_type == actShow_e::eA_SOMEONE || show_type == actShow_e::eA_HIDEINV || show_type == actShow_e::eA_ALWAYS);
 
     if (!str || !*str)
     {
