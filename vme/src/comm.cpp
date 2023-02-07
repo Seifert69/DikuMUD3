@@ -38,7 +38,7 @@ actType_e ActType(int n)
 
 actShow_e ActShow(int n)
 {
-    if ((n >= actShow_e::eA_HIDEINV) && (n <= actShow_e::eA_ALWAYS))
+    if ((n >= actShow_e::eA_HIDEINV) && (n <= actShow_e::eA_RAW))
     {
         return (actShow_e) n;
     }
