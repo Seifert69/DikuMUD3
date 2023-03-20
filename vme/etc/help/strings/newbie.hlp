@@ -12,9 +12,9 @@ The first commands that you will want to know are these:<br/>
 *  say followed by the sentence you wish to say<br/>
 *  exits will reveal all obvious exits  from the room you are in<br/>
 *  north will move you to the north if you can go there<br/>
-*  south will move you to th south if you can go there<br/>
-*  east will move you to th east if you can go there<br/>
-*  west will move you to th west if you can go there<br/>
+*  south will move you to the south if you can go there<br/>
+*  east will move you to the east if you can go there<br/>
+*  west will move you to the west if you can go there<br/>
 *  up will move you up if you can go there<br/>
 *  down will move you down if you can go there<br/>
 *  inventory lists the items you carry<br/>
@@ -32,7 +32,7 @@ trigger which commands. For instance, 's' is an abbreviation for 'south' not<br/
 If you haven't saved your character yet, you<br/>
 are here as a guest and your character is<br/>
 forgotten as soon as you quit. If you decide<br/>
-to begin playingseriously, use the save command to keep your character.<br/>
+to begin playing seriously, use the save command to keep your character.<br/>
 <br/>
 If you need further help, try to use the help command differently, by putting<br/>
 a word behind it, such as 'help commands' which will show you a sample of<br/>
