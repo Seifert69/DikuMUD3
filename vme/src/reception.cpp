@@ -620,7 +620,10 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             /* IS_CHAR() needed, since a potential char may have been slimed! */
             if (hn.equip && equip_ok && pnew->getUnitIn()->isChar())
             {
-                equip_char(pnew->getUnitIn(), pnew, hn.equip);
+                if (!equipment(pnew->getUnitIn(), hn.equip)) // Saw a crash bug 2023-04-10. Suspect old prg33@hades DIL equipping
+                {
+                    equip_char(pnew->getUnitIn(), pnew, hn.equip);
+                }
             }
 
             pstack[frame] = pnew;
