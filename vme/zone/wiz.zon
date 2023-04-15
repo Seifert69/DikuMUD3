@@ -642,14 +642,26 @@ end
 
 			       papis_cottage
 
+names {"Papi's Cottage"}
 title "Papi's Cosy Cottage"
 descr
-" You are inside Papi's small wooden cottage. A fireplace is placed against
-the north wall and a large rocking chair is placed in front of the fire.
-A flight of stone stairs lead down below."
+"     You find yourself in a cozy, single-roomed cottage belonging to the god Papi. The warm, inviting atmosphere is created by the flickering glow of a stone fireplace in the center of the room. A comfortable-looking rocking chair sits near the fire, inviting you to take a moment of respite from your adventures. Intricate tapestries and Papi's personal mementos adorn the walls, providing a glimpse into the deity's life and interests.
+
+The room has no windows or doors, giving it an air of seclusion and privacy. The only visible exit is a set of enigmatic stairs leading down into darkness. At the bottom of the stairs, a shimmering portal beckons, with the faint inscription 'ᚡᚨᛚᚺᚯᛚᛚ' etched onto its surface. Once you descend, there's no turning back."
 flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
-down to temple@udgaard;
+
+down to temple@udgaard descr
+"As you peer down the stairs, the mysterious portal emits a soft, otherworldly glow, inviting you to step through and leave the comfort of Papi's cottage behind.";
+
+extra {"fireplace", "stone fireplace"}
+"The beautifully crafted stone fireplace radiates warmth and comfort, casting flickering shadows across the room. It seems to be a testament to Papi's appreciation for the simple pleasures in life."
+
+extra {"rocking chair", "chair"}
+"The sturdy wooden rocking chair, well-worn from years of use, promises relaxation and serenity as it gently sways near the crackling fireplace."
+
+extra {"tapestries", "mementos"}
+"Exquisite tapestries and personal mementos cover the walls, telling the stories of Papi's divine journeys and the many souls touched along the way."
 
 // When the server comes up, send a message to the builder channel.
 // I'd like to know when the server (re)boots.
