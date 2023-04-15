@@ -791,11 +791,14 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         case 5: /* "del-extra" */
             if (str_is_empty(argument))
             {
-                send_to_char("You must supply a field name.<br/>", ch);
+                send_to_char("You must supply a field name (use comma if empty).<br/>", ch);
                 return;
             }
 
-            unt->getExtraList().remove(argument);
+            str_next_word_delim(argument, strarg, ',');
+            act("Searching for [$2t].", eA_ALWAYS, ch, strarg, cActParameter(), eTO_CHAR);
+
+            unt->getExtraList().remove(strarg);
             send_to_char("Trying to delete field.<br/>", ch);
             return;
 
