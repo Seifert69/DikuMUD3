@@ -83,19 +83,33 @@ The Udgaard Town Hall is situated at G13.      To Hamlet  B12
 That's is where the Mayor is to be found.      W - Watchtowers
 
 
-Udgaard is the starting Village for new players. It contains all the basic
-elements needed: A temple, armory, weapon smith, banker, sheriff, food
-store,
-ironmonger, post office and an Inn. All of the four starting guilds are
-reachable through the guild streets, also containing several
-guild-dedicated shops.
+Nestled in a picturesque valley and surrounded by lush forests and the river
+of Haon-Dor, the Village of Udgaard serves as the starting point for many 
+adventurers in the world of Valhalla. Udgaard is a well-equipped, small 
+village complete with basic shops, law enforcement, banking, and a post 
+office. To the east lies the Cypress Forest, and beyond it, the bustling 
+capital of Midgaard. Meanwhile, the dense forest of Haon-Dor stretches out
+to the west, offering both beauty and danger to those who dare to venture
+deeper.
 
-Udgaard is connected to the Haon-Dor forest, Cypress forest and Hamlet - all
-are ideal zones for beginners as long as you are a little cautious.
+At the southernmost part of Udgaard, the Haon-Dor river flows from west to
+east, connecting the two forests. A small boat bridge, located next to the
+village waste heap, provides a route for travelers to reach Midgaard by water.
+Along the river's banks, adventurers can discover a variety of locations.
 
-The only native monster in here is the ever-famous 'beastly fido'. A map of
-Udgaard is available at the Ironmonger store and also has directions for
-reaching the city of Midgaard.
+Beneath the village's Market Square, ancient sewers hold secrets of their
+own. Built as part of the original city, these long-abandoned passageways 
+reveal the superior craftsmanship and simple design that have allowed them 
+to endure, a testament to the skills of the builders who came before.
+
+Among the many secrets hidden within the forests surrounding Udgaard, one 
+can find Mary's Cabin, home to a beginner's quest that offers a taste of the
+adventures that await beyond the village. With the promise of even greater
+challenges to come, the Village of Udgaard stands as a beacon to those who
+seek to write themselves into the annals of Valhalla.
+
+A map of Udgaard is available at the Ironmonger store and also has directions
+for reaching the city of Midgaard.
 
 Beginners: Try 'help me' to get beginners help.</pre>"
 
@@ -2086,19 +2100,6 @@ dilend
 
 %rooms
 
-crypt
-names {"crypt"}
-title "Village Crypt"
-descr
-"You're in the cold crypt beneath the temple of Udgaard. A pair of torches
-illuminate this otherwise dark and cold place. Many stone shelves are built
-into the walls. Stairs lead back up."
-gmap(424,420)
-movement SECT_INSIDE
-ALWAYS_LIGHT
-up to temple descr "Stairs lead up to the Temple of Udgaard";
-end
-
 
 post_path
 names {"path"}
@@ -2263,6 +2264,1434 @@ east to village_rd8 descr "Village Road.";
 ALWAYS_LIGHT
 end
 
+
+
+village_rd10
+
+title "End of the Village Road"
+descr
+"The village road leads back to the east from here. To the north is a
+wooden watchtower, and to the south is the back side of the Udgaard
+temple."
+extra {"wooden watchtower", "watchtower", "tower"}
+"This watchtower helps to protect the town of Udgaard."
+extra {"village road", "road"}
+"The road is constructed of hard-packed dirt."
+extra {"udgaard temple", "back side", "temple"}
+"The Udgaard temple is the center of your existance. It is there that you
+can find donated items, rest your soul, or resurrect from death."
+movement SECT_CITY
+gmap(370,310)
+north to watch_tower3 descr "Wooden Watchtower.";
+east to village_rd9 descr "Village Road.";
+ALWAYS_LIGHT
+end
+
+watch_tower
+
+title "Underneath the Wooden Watchtower"
+descr
+"The floor of a wooden watchtower spreads above your head. The Cypress
+Forest grows to the east, or you can enter Udgaard to the west. Trees block
+all passage to the north and south.  A ladder leads upwards into the
+watchtower."
+extra {"ladder"}
+"It is a simple wooden ladder."
+extra {"wooden watchtower", "watchtower", "tower"}
+"This watchtower helps to protect the town of Udgaard."
+extra {"village road", "road"}
+"The road is constructed of hard-packed dirt."
+extra {"udgaard"}
+"Udgaard is far safer than the lands which surround it."
+extra {"cypress forest", "cypress", "forest"}
+"The Cypress Forest stands between Midgaard and Udgaard."
+extra {"large trees", "trees", "tree"}
+"These trees seem to be very old."
+movement SECT_CITY
+gmap(698,584)
+west to village_rd5 descr "Bend in the Village Road.";
+east to cypress/hill descr "Go into the Cypress Forest.";
+up to up_tower1 descr "Up in the Watchtower.";
+ALWAYS_LIGHT
+end
+
+up_tower1
+
+title "Up in the Wooden Watchtower"
+descr
+"It is obvious why this watchtower was built. From the top of it, there is
+a good view of all of Udgaard, and it is possible to scan the surrounding
+lands for infidels. The tower can be exited by way of a ladder leading
+down."
+extra {"wooden watchtower", "watchtower", "tower"}
+"This watchtower helps to protect the town of Udgaard."
+extra {"village road", "road"}
+"The road is constructed of hard-packed dirt."
+extra {"udgaard"}
+"Udgaard is far safer than the lands which surround it."
+extra {"cypress forest", "cypress", "forest"}
+"The Cypress Forest stands between Midgaard and Udgaard."
+extra {"large trees", "trees", "tree"}
+"These trees seem to be very old."
+movement SECT_CITY
+gmap(676,564)
+down to watch_tower descr "Wooden Watchtower.";
+ALWAYS_LIGHT
+end
+
+watch_tower2
+
+title "Underneath the Wooden Watchtower"
+descr
+"The floor of a wooden watchtower looms over your head. The forest of
+Haon-dor is to the west, and the Village Road of Udgaard leads east. Trees
+block all passage to the north and south. A ladder leads upwards into the
+watchtower."
+extra {"ladder"}
+"It is a simple wooden ladder."
+extra {"wooden watchtower", "watchtower", "tower"}
+"This watchtower helps to protect the town of Udgaard."
+extra {"village road", "road"}
+"The road is constructed of hard-packed dirt."
+extra {"udgaard"}
+"Udgaard is far safer than the lands which surround it."
+extra {"cypress forest", "cypress", "forest"}
+"The Cypress Forest stands between Midgaard and Udgaard."
+extra {"large trees", "trees", "tree"}
+"These trees seem to be very old."
+movement SECT_CITY
+gmap(152,584)
+west to haon_dor/forest_edge descr "Go into the Forest of Haon-dor.";
+east to village_rd1 descr "Village Road at Haon-dor.";
+up to up_tower2 descr "Up in the Watch Tower.";
+ALWAYS_LIGHT
+end
+
+up_tower2
+
+title "Up in the Wooden Watchtower"
+descr
+"This watchtower has a sturdy wooden floor. From the top of it, there is
+a good view of all of Udgaard, and it is possible to look over the
+surrounding lands. The tower can be exited by way of a ladder leading down."
+extra {"wooden watchtower", "watchtower", "tower"}
+"This watchtower helps to protect the town of Udgaard."
+extra {"sturdy wooden floor", "wooden floor", "floor"}
+"The floor could support a great weight."
+extra {"village road", "road"}
+"The road is constructed of hard-packed dirt."
+extra {"udgaard"}
+"Udgaard is far safer than the lands which surround it."
+extra {"cypress forest", "cypress", "forest"}
+"The Cypress Forest stands between Midgaard and Udgaard."
+extra {"large trees", "trees", "tree"}
+"These trees seem to be very old."
+movement SECT_CITY
+gmap(130,564)
+down to watch_tower2 descr "Wooden Watchtower.";
+ALWAYS_LIGHT
+end
+
+watch_tower3
+
+title "Underneath the Wooden Watchtower"
+descr
+"The floor of a wooden watchtower looms over your head. Some farm fields
+are to the north, and the Village Road of Udgaard is south. To the east
+and west are the fences of farm fields. A ladder leads upwards into the
+watchtower."
+extra {"farming fields", "fences", "field"}
+"These fields help to supply Udgaard with food."
+extra {"ladder"}
+"It is a simple wooden ladder."
+extra {"wooden watchtower", "watchtower", "tower"}
+"This watchtower helps to protect the town of Udgaard."
+extra {"village road", "road"}
+"The road is constructed of hard-packed dirt."
+extra {"udgaard"}
+"Udgaard is far safer than the lands which surround it."
+extra {"cypress forest", "cypress", "forest"}
+"The Cypress Forest stands between Midgaard and Udgaard."
+extra {"large trees", "trees", "tree"}
+"These trees seem to be very old."
+movement SECT_CITY
+gmap(370,256)
+north to hamlet/sm_path descr "A small path to a hamlet.";
+south to village_rd10 descr "End of the Village Road.";
+up to up_tower3 descr "Up in the Watch Tower.";
+ALWAYS_LIGHT
+end
+
+up_tower3
+
+title "Up in the Wooden Watchtower"
+descr
+"This watchtower has a sturdy wooden floor. From the top of it, there is
+a good view of all of Udgaard, and a small farming hamlet is visible over
+the fields to the north. The tower can be exited by way of a ladder
+leading down."
+extra {"farming hamlet", "hamlet"}
+"This is a small town which farmers live in."
+extra {"fields", "field"}
+"Food is grown here."
+extra {"wooden watchtower", "watchtower", "tower"}
+"This watchtower helps to protect the town of Udgaard."
+extra {"sturdy wooden floor", "wooden floor", "floor"}
+"The floor could support a great weight."
+extra {"village road", "road"}
+"The road is constructed of hard-packed dirt."
+extra {"udgaard"}
+"Udgaard is far safer than the lands which surround it."
+extra {"cypress forest", "cypress", "forest"}
+"The Cypress Forest stands between Midgaard and Udgaard."
+extra {"large trees", "trees", "tree"}
+"These trees seem to be very old."
+movement SECT_CITY
+gmap(352,238)
+down to watch_tower3 descr "Wooden Watchtower.";
+ALWAYS_LIGHT
+end
+
+    ud_storage
+
+title "Storage Office"
+descr
+"You have entered a room which is filled with all kinds of junk.  Piles
+of weapons and armor, bottles, flasks, and scrolls litter the floor.
+Small cupboards with doors line the walls, and boxes and crates are stacked
+on large shelves.  You are amazed at the size of this room, it seems
+to extend fifty feet to the north.  There is a small <a cmd='read #'>sign</a> on the wall."
+
+
+extra {"junk"}
+"There is anything that you can imagine piled about this store."
+extra {"piles", "weapons", "armor", "bottles", "flasks", "scrolls"}
+"These items have been reclaimed by the storage agency."
+extra {"small cupboards", "cupboards", "boxes", "crates", "large shelves",
+"shelves"}
+"These are all used to hold the goods of the storage agencies clients."
+extra {"room"}
+"This room is absolutely monstrous."
+extra {"sign"}
+"<pre>
+The Sign Says:
+
+-rent [container]
+-store &lt;ITEM&gt;
+-unstore &lt;ITEM&gt;
+-storage [list]
+</pre>"
+
+flags {UNIT_FL_NO_WEATHER}
+
+movement SECT_INSIDE
+gmap(532,498)
+south to bank@udgaard;
+ALWAYS_LIGHT
+end
+
+#ifdef EXTENDEDMUD
+                                ud_auction
+
+title "Auction Office"
+descr
+"This room is surmounted by a large wooden box.  Various items
+line shelves and the floor, bearing colored tags.  The room is
+relatively bare otherwise, being a place where trading, buying,
+and selling is done.  The building spans overhead, and heavy
+wooden rafters appear to do a good job of supporting the ceiling.
+The dark alley is west of here."
+extra {"building", "room"}
+"This is the auction office of Udgaard."
+extra {"wooden box", "box"}
+"The auctioneer stands on this box to call bids."
+extra {"shelves", "floor", "items"}
+"The whole room is filled with items that are being or have been sold."
+extra {"colored tags"}
+"The colored tags have names and prices written on them.  One reads:
+'Papi: Valhalla Mud, 10000000 Platinum, 2 Iron'."
+extra {"heavy wooden rafters", "wooden rafters", "rafters", "ceiling"}
+"They look to be very sturdy, keeping the large ceiling in place."
+flags {UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+west to dark_all3;
+ALWAYS_LIGHT
+end
+#endif
+
+
+
+                              command_chat
+title "Commands's Chat Room"
+descr
+"You have entered the 'newbie zone'. If you have been brought to this
+place then you must be seeking help. Sit still and your guide will
+explain all you need to know about life in the world of Valhalla."
+movement SECT_INSIDE
+up to temple;
+ALWAYS_LIGHT
+end
+
+                                newbie_chat
+names {"newbie chat room"}
+title "The Newbie Guide Chat Room"
+descr
+"You have entered the 'newbie zone'. If you have been brought to this
+place then you must be seeking help. Sit still and your guide will
+explain all you need to know about life in the world of Valhalla."
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
+       UNIT_FL_NO_MOB, UNIT_FL_SACRED}
+up to square;
+ALWAYS_LIGHT
+end
+
+
+
+
+      square
+names {"udgaard square","udgaard","square"}
+title "Village Square"
+descr
+"You are at the small village square of Udgaard. The temple is located
+just north of here. The Village road continues both east and west. 
+South of here is the small village marketplace."
+gmap(70,70)
+movement SECT_CITY
+gmap(424,584)
+east to village_rd3;
+west to village_rd2;
+south to market;
+north to temple;
+ALWAYS_LIGHT
+end
+
+      village_rd1
+
+title "Village Road at Haon-Dor"
+descr
+"Just west of here is a watchtower which protects Udgaard from the
+dangers of the forest.  Farther west from that is the forest of
+Haon-Dor where many adventurers travel.  Very conveniently the Chicken's
+Rest is next to you just north while the post office is south in case you
+would like to send a last farewell letter."
+movement SECT_CITY
+gmap(274,584)
+north to inn;
+south to postoffice;
+west to watch_tower2;
+east to village_rd2;
+ALWAYS_LIGHT
+end
+
+      village_rd2
+
+title "Village Road"
+descr
+"The village square is east of here and the Village road continues
+west. The food store is to the north and Harold's is to the south."
+movement SECT_CITY
+gmap(328,584)
+north to food_store;
+south to ironmonger;
+east to square;
+west to village_rd1;
+ALWAYS_LIGHT
+end
+
+      village_rd3
+
+title "Village Road"
+descr
+"The village square is just west of here. The finest building in Udgaard,
+the bank, is north. Safeguarding the bank is the guard headquarters to the
+south. The village road continues east."
+gmap(534,583)
+movement SECT_CITY
+north to bank;
+south to accuse_room;
+west to square;
+east to village_rd4;
+ALWAYS_LIGHT
+end
+
+      market
+
+title "The Udgaard Market"
+descr
+"You are at the Udgaard market just south of the village square. This
+used to be a larger and busier market. Now only a few small merchants
+are scattered around the market. The boat bridge is south of here."
+movement SECT_CITY
+gmap(424,679)
+north to square;
+south to bridge;
+east to tobacco_shop;
+northeast to field_shop;
+northwest to heal_shop;
+southeast to side_alley;
+southwest to mageshop;
+down open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 0 to sew_ent@udsewer;
+extra {"$climb_down"} {1} "" // Only 1 damage
+
+ALWAYS_LIGHT
+end
+
+#ifdef OLD_UDGAARD
+
+      guild_rd1
+
+title "Guild Road"
+descr
+"The road is constructed from white flagstones, each fashioned and laid
+by hand. From there you can see the village square to the north while the
+road continues to the south. The tranquility path is west of here and the
+Swordsman way is to the east."
+gmap(1024,0)
+movement SECT_CITY
+north to square;
+south to guild_rd2;
+west to healers_way1;
+east to fighters_way1;
+ALWAYS_LIGHT
+end
+                           guild_rd2
+
+title "Guild Road"
+descr
+" The road is constructed from handmade and laid flagstones. Although the
+flagstones are old they are still in very good repair. A dark alley leads
+off to the east of here and elemental alley is to the west. You notice an
+open man-hole leading down. The road continues to the north and a dump is
+to the south."
+movement SECT_CITY
+north to guild_rd1;
+west to magic_way1;
+east to dark_all1;
+south to dump;
+down to sew_ent@udsewer;
+ALWAYS_LIGHT
+end
+#endif
+
+
+                           dump
+names {"Village Waste Heap", "dump"}
+title "Village Waste Heap"
+descr
+"Located just outside the village walls and close to the boat bridge, the village
+waste heap is quite a dirty mess. The pile of discarded items and refuse is a
+reminder of the everyday life in Udgaard. You are convinced that if you drop
+any items here, you won't be able to find them again. To the south, the large
+river calmly flows east towards the Cypress Forest, but you need to head
+over to the boat bridge if you want to jump in."
+movement SECT_CITY
+gmap(478,843)
+west to bridge;
+ALWAYS_LIGHT
+extra {"pile", "discarded items", "refuse"}
+"The heap consists of various discarded items, ranging from broken tools to
+rotting food. It's not a pleasant sight, but it serves its purpose."
+end
+
+
+                         bridge
+title "On the Boat Bridge"
+descr
+"The river gently flows east towards the Cypress Forest. The village of
+Udgaard is just north of here, and to the east is the village waste heap.
+The boat bridge spans the river, connecting the village with the surrounding
+areas."
+movement SECT_CITY
+gmap(424,843)
+north to market;
+east to dump;
+south to river;
+ALWAYS_LIGHT
+extra {"boat bridge", "bridge"}
+"The wooden boat bridge is well-maintained, providing a sturdy deck over
+the water. Its planks creak slightly underfoot as you move."
+end
+
+                                 river
+title "On the River"
+descr
+"You are on the river flowing past the village of Udgaard, with a
+picturesque view of the village beyond the boat bridge. The village waste heap
+is visible to the north, but the beauty of the surrounding landscape
+overshadows its presence."
+movement SECT_WATER_SWIM
+gmap(424,897)
+north to bridge;
+#ifdef EXTENDEDMUD
+west to river6@toy descr "The river enters the forest to the west.";
+"If you need to connect, I wouldn't suggest breaking the river link to Haon-Dor"
+#endif
+
+west to lightriver@haon_dor difficulty 10 descr "The river flows from the forest to the west.";
+east to cypress/river difficulty 0;
+
+dilcopy watercurrent@basemove(DIR_EAST,
+   {"The river current gently takes you east.", "$1n gently flows away to the east.",
+    "You gently flow further eastwards.", "$1n flows in from the west."}, 7);
+extra {"landscape", "surroundings"}
+"The landscape surrounding the river is a mix of lush forests, the village of
+Udgaard, and the boat bridge. The beauty of nature contrasts with the signs of
+human habitation, creating a captivating scene."
+end
+
+
+                                crypt
+names {"crypt"}
+title "Village Crypt"
+descr
+"You find yourself in the cold crypt beneath the Temple of Udgaard. A pair
+of torches cast flickering shadows across the room, revealing stone shelves
+built into the walls. The air is heavy with a sense of foreboding, and the
+only way out is a set of stairs leading up."
+movement SECT_INSIDE
+gmap(424,420)
+ALWAYS_LIGHT
+up to temple descr "Stairs lead up to the Temple of Udgaard";
+extra {"torches", "shadows", "light"}
+"The torches on the walls offer just enough light to navigate the crypt, casting
+eerie shadows that seem to dance and flicker with every movement."
+extra {"stone shelves", "shelves"}
+"Stone shelves line the walls, creating an organized, if somewhat macabre, storage
+area for the crypt's contents."
+end
+
+
+
+                         temple
+
+title "Temple of Udgaard"
+descr
+"You are inside the small and humble village temple in Udgaard. A
+simple stone altar, with strange stone carvings, is placed against the
+north wall. A small donation room is to the east, while the temple exit
+is to the south, leading to the Village Square. Stairs along the west wall
+lead down into the crypt."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
+       UNIT_FL_NO_MOB, UNIT_FL_SACRED}
+movement SECT_INSIDE
+gmap(424,420)
+south to square;
+east to udonate;
+north to heal_room;
+down to crypt descr "Stairs along the west wall lead down into darkness.";
+ALWAYS_LIGHT
+extra {"stone altar", "altar"}
+"The stone altar is very simple, with numerous strange symbols engraved into
+its surface. Perhaps the symbols are worth examining."
+
+extra {"symbols", "stone carvings", "carvings"}
+"Some of the symbols clearly represent various gods, while others appear
+to be normal text. You notice some of the largest symbols have been
+laid in gold and they read ᚡᚨᛚᚺᚯᛚᛚ. The symbols you do understand look
+like this:<pre>
+
+      Pray to Odin if you are new and helpless.</pre>"
+
+end
+
+                                heal_room
+
+title "Healing Center of the Temple"
+
+descr
+"You are in the healing center of the small and humble village temple. The
+walls are made of bare stone with intricate etchings depicting many great
+battles. The atmosphere here is calm and serene, a haven for weary adventurers
+seeking respite and healing."
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
+UNIT_FL_NO_MOB, UNIT_FL_SACRED}
+movement SECT_INSIDE
+gmap(424,364)
+south to temple;
+ALWAYS_LIGHT
+extra {"etchings", "battles"}
+"Intricate etchings on the stone walls tell stories of great battles, offering
+inspiration and a reminder of the challenges that await outside the temple."
+
+#ifdef EXTENDEDMUD
+north to hall@newbie descr "The new player council room is to the north.";
+#endif
+end
+
+
+                    udonate
+names {"udgaard donations room", "udgaard donation room", "donations room"}
+title "The Udgaard Donations Room"
+descr
+"You find yourself in a modest room within the Temple of Udgaard, dedicated
+to donations. This space serves as a communal area where adventurers can leave
+items they no longer need or take something that may aid them on their journey.
+The spirit of generosity and camaraderie fills the room, creating a sense of unity
+among the village's inhabitants."
+flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+gmap(465,420)
+west to temple;
+/* Dil to restrict getting all */
+dilcopy all_block@udgaard ();
+end
+
+                          inn_2
+title "Back Room"
+descr
+"The room smells of stale beer and old tobacco, with a number of round tables,
+this is where the village residents gather to play cards and have a
+cold one during the long nights."
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+gmap(234,501)
+extra {"round tables","tables","table"}
+"Round card tables, stained with beer and cigar butts."
+east to inn;
+north to inn_3;
+west to inn_5;
+south to inn_4;
+ALWAYS_LIGHT
+end
+
+                                inn_3
+title "Back Room"
+descr
+"You're in the northen part of the back room. The room still smells of stale
+beer and smoke."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,
+UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+gmap(234,460)
+south to inn_2;
+ALWAYS_LIGHT
+end
+
+                                inn_4
+title "Back Room"
+descr
+"You're in the southern part of the back room. The room still smells of stale
+beer and smoke."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,
+UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+gmap(234,541)
+north to inn_2;
+ALWAYS_LIGHT
+end
+
+
+                                inn_5
+title "Back Room"
+descr
+"You're in the northen part of the back room. The room still smells of stale
+beer and smoke."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,
+UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+gmap(193,501)
+east to inn_2;
+ALWAYS_LIGHT
+end
+
+
+                                   inn
+
+title "The Chicken's Rest"
+descr
+"The Chicken's Rest is a cozy bar often used by adventurers returning
+from the dangerous forest of Haon-Dor just west of here. A small <a cmd='read #'>sign</a> has
+been hung on the wall. A rickety staircase leads upstairs and a small
+door leads west into a back room."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB, UNIT_FL_SACRED}
+movement SECT_INSIDE
+gmap(276,501)
+south to village_rd1;
+west to inn_2;
+up to offices/hallway;
+ALWAYS_LIGHT
+extra {"rickety staircase", "staircase"}
+"Well, it's rickety!"
+extra {"sign", "small sign", "wall"}
+"From whence cometh the name 'The Chicken's Rest' is forgotten in the
+mists of time. But it has been said, that a blessing rests in this inn
+which make wounds heal faster.<pre>
+
+    Use `<a cmd='#'>list</a>'           to see available drinks.
+        `request &lt;item&gt;' to ask the price of a drink.
+        `buy &lt;drink&gt;'    to buy a drink.
+        `value &lt;item&gt;'   to get a price for a drink you are selling.
+        `sell &lt;drink&gt;'   to sell a drink.
+
+                         - Sam the Keeper</pre>"
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+                                 postoffice
+title "The Post Office"
+descr
+"You are inside the small tidy post office of Udgaard. If you wish to send
+a letter before departing on your next adventure this would be a good time
+to do so. There is a <a cmd='read #'>sign</a> with instructions mounted on the wall. The
+Records office is just west of here."
+extra {"sign", "instructions", "wall"}
+"Use:<pre>
+      `write letter' to begin writing a letter.
+      `mail &lt;letter&gt; &lt;person&gt;' to send a letter to somebody.
+      `request' to get your mail.
+      `put &lt;letter&gt; in shredder' to erase the letter permanently.</pre>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+gmap(274,637)
+north to village_rd1;
+west to records;
+ALWAYS_LIGHT
+
+end
+
+                                 records
+title "The Records Office"
+descr
+"This neatly kept office is where the Town Records are kept. All of the
+citizens of Valhalla have a file here, and they can change the information
+which the files contain. There are two strange cabinets, one on each side
+of the room. On one is written the word 'Mailing Addresses', and the other
+has the words 'Maiden Name' carefully engraved upon it. There is an
+important SIGN on the far wall which you really should look at. The Post
+Office is east of here."
+
+extra {"files"}
+"The files are secret to all but the person whose name appears on the file.
+Look at the sign if you need information on how to access your file."
+
+extra {"cabinets", "cabinet"}
+"Each Cabinet is almost six feet in height and a good two feet wide. One
+contains the files which record Mailing Addresses, and the other has the
+Maiden Name lists."
+
+extra {"desk"}
+"The desk is quite bare, but looks proper and makes the owner feel very
+important."
+
+extra {"sign", "instructions", "wall"}
+"<pre><div class='cpc'>Personal File Information</div><div class='cw'>
+-------------------------
+      `</div><div class='cpw'>see file</div><div class='cw'>' to see your current file information.
+
+      `</div><div class='cpw'>maiden &lt;newname&gt;</div><div class='cw'>' to change your Mother's Maiden name to
+       something new. This is used to verify your identity should
+       you lose your password. You can use any word or name as
+       long as you remember it. (e.g. maiden gates)
+
+      `</div><div class='cpw'>mail &lt;email address&gt;</div><div class='cw'>' to change your email address to
+something
+       new (e.g. mail joe@valhalla.com).
+
+</div><div class='cpc'>Player Email List (</div><div class='cr'>Not the mud mailing list - Just a list of
+emails</div><div class='cw'>)
+-----------------
+      `</div><div class='cpw'>update</div><div class='cw'>' will update your entry on the email list (or create
+       an entry if you don't already have an entry on the list).
+
+      `</div><div class='cpw'>public</div><div class='cw'>' to allow others to see your email address. This is
+       by default set off so only you see your address. Typing public
+       again will deny people from seeing your email address. Your current
+       email address on this list may not be the same as that of your
+       character unless you have used the </div><div class='cpw'>update</div><div class='cw'> command mentioned
+       above.
+
+      `</div><div class='cpw'>show &lt;charactername&gt;</div><div class='cw'>' will show you the email address of
+       player &lt;charactername&gt;, if they have entered one and it is publicly
+       visible.
+
+Only you, the player, and higher level administrators (254+) can see your
+maiden name setting, and unless you set your email to public, the same
+restriction will reply to your email address.</div></pre>"
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+gmap(219,637)
+east to postoffice;
+ALWAYS_LIGHT
+
+end /* records */
+
+                                food_store
+
+title "Rosanne's Food Store"
+descr
+"A scent of various foods fills the store. There is a <a cmd='read #'>sign</a> placed
+on the wall. The village road is south of here."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+gmap(328,528)
+south to village_rd2;
+ALWAYS_LIGHT
+extra {"sign", "wall"}
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
+        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
+end
+
+                                 ironmonger
+
+title "Harold's Assorted Goods"
+descr
+"Various items cover the shelves behind the counter. It is clear that
+this shop has all the nifty little things you need on your adventures.
+A <a cmd='read #'>sign</a> has been hung on the wall."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+gmap(328,636)
+north to village_rd2;
+ALWAYS_LIGHT
+extra {"sign", "wall"}
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
+        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
+end
+
+                                  bank
+
+title "Mammon's Nest"
+descr
+"Without doubt this is the finest building in Udgaard, although not large,
+it has been made from large granite rocks. A white marble <a cmd='read #'>sign</a> hangs on the
+wall.  A small passage north leads into a back room and the street is to
+the south."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+gmap(534,541)
+north to ud_storage;
+south to village_rd3;
+ALWAYS_LIGHT
+extra {"white marble sign", "marble sign", "sign", "wall"}
+"It says :-<pre>
+                         The Bank of Udgaard
+
+                  We stash your cash and hold your
+                    gold for a mere 5% interest.
+
+    Use `deposit &lt;amount&gt;' to deposit,
+        `withdraw &lt;amount&gt;' to withdraw, and
+        `exchange' &lt;amount&gt; to change into coins of more wealth.
+        `balance' to get a statement of your account.</pre>"
+end
+
+                                  accuse_room
+
+title "Guard's Office"
+descr
+"You are inside the guards office. Through the window in the northern
+wall you see the Bank beyond the village road. There is a <a cmd='read #'>sign</a> hanging
+on the wall."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+gmap(534,639)
+north to village_rd3;
+south to jail open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
+      key jail_key
+      descr "You see the heavy steel door." keyword {"steel door", "door"}
+      difficulty 35;
+ALWAYS_LIGHT
+extra {"sign", "wall"}
+"The sign says:<pre>
+
+    In order to accuse another player of a crime, you must accuse him
+    to the captain. Use the command:
+
+       accuse &lt;player&gt; murder   - for a murder accusation.
+       accuse &lt;player&gt; stealing - for a stealing accusation.</pre>"
+end
+
+
+                            jail
+names {"jail"}
+title "The Jail"
+descr
+"You are in a dark and humid jail.  The dark stone walls are hard and cold
+to the touch.  A heavy steel door, supposed to keep prisoners inside the
+jail, is in the north stone wall."
+
+extra {"wall","walls"}
+"The walls are marked with lots of scratches.  Some of them spell sentences
+like `INGRES STRIKES AGAIN'."
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+gmap(534,691)
+
+north to accuse_room descr "You see the heavy steel door."
+   key jail_key keyword {"steel door", "door"}
+   open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF} 
+   difficulty 35;
+
+ALWAYS_LIGHT
+end
+
+                                   armourer
+
+title "Better Clothing"
+descr
+"This shop is actually a combined armory and smith. The smell of hot
+iron fills the room. A <a cmd='read #'>sign</a> is hanging on the wall."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+gmap(588,529)
+south to village_rd4;
+ALWAYS_LIGHT
+extra {"sign", "wall"}
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
+        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
+end
+
+
+                                   weaponsmith
+
+title "Sharper Swords"
+descr
+"This is a neat and tidy small weapon shop. You wonder why there is no
+smithy in here but soon realize that Arny must be working with Slade from
+across the street. A <a cmd='read #'>sign</a> is hanging on the wall."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+gmap(588,637)
+north to village_rd4;
+ALWAYS_LIGHT
+extra {"sign", "wall"}
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
+        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
+end
+
+#ifdef EXTENDEDMUD
+fighters_way1
+title "Swordsman Way"
+names {"swordsman way"}
+descr
+"The street here is paved with a reddish colored flagstone, each of them
+laid with loving pride by some long-ago mason. A couple of smaller sized
+trees stand proud, despite the knick's and cuts countless swords have made
+in their trunks over the years. The road continues to the east and west."
+movement SECT_CITY
+ALWAYS_LIGHT
+extra {"street","mason","flagstone","stone"}
+"The flagstones are a reddish brown color, hand made and laid with loving
+care."
+west to guild_rd1;
+east to fighters_way2;
+end
+
+  fighters_way2
+title "Swordsman Way"
+names {"swordsman way"}
+descr
+"The street here is paved with a reddish colored flagstone, each of them
+laid with loving pride by some long-ago mason. The sounds of swords
+clanging can be heard through out the area. The road continues to the
+east and west from here. A small shop sells outdoors equipment north of
+here."
+extra {"shop"}
+"The small shop offers a variety of equipment handy for anyone travelling
+out in the wilderness."
+extra {"street","mason","flagstone","stone"}
+"The flagstones are a reddish brown color, handmade and laid with loving
+care."
+movement SECT_CITY
+ALWAYS_LIGHT
+east to fighters_way3;
+west to fighters_way1;
+north to field_shop;
+end
+
+fighters_way3
+title "Swordsman Way"
+names {"swordsman way"}
+descr
+"The street here is paved with a reddish colored flagstone, each of them
+laid with loving pride by some long-ago mason."
+
+west to fighters_way2;
+
+extra {"street","mason","flagstone","stone"}
+"The flagstones are a reddish brown color, hand made and laid with loving
+care."
+movement SECT_CITY
+ALWAYS_LIGHT
+
+
+
+/*EXTENDEDMUD To the south is an impressive edifice which appears to be the town hall.*/
+
+
+south to town_hall;
+end
+
+
+                                town_hall
+
+names {"town hall", "hall"}
+title "Udgaard Town Hall"
+descr
+"The Udgaard Town Hall is a majestic yet subtle building. The craftsmanship
+of the woodwork here was undertaken by skilled craftsman, and large
+glass windows line the walls.  The building is filled with rows of
+wooden benches, and a small stage has been raised at one end of the hall.
+A set of stairs lead upwards to the Mayor's home."
+extra {"udgaard town hall", "town hall", "hall"}
+"The Town Hall of Udgaard is a place for meetings and the dissemination
+of important information."
+extra {"woodwork"}
+"The woodwork is quite exquisite, having been carved by skilled artisans."
+extra {"glass windows", "windows"}
+"No expense was spared on this building, by the necessity of having a
+well lit building that was sheltered from the elements."
+extra {"wooden benches", "benches", "rows"}
+"It is here that the commoners from the hamlet and the townspeople of
+udgaard gather to discuss matters."
+extra {"small stage", "stage"}
+"The stage bears a large podium, and a number of seats bearing name
+plates.  The nameplates read: Whistler, Palio, Saor, Eirinn, Drevar,
+Jager...
+and so on down the wizard list.  The podium has some letters scratched into
+it, you think you might be able to read them."
+extra {"scratches","letters","podium"}
+"The letters read: 'Papi, Gnort, God, Quinn and Mead were here'."
+extra {"stairs"}
+"The stairs lead upwards to the Mayor's home."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT,UNIT_FL_NO_BURY, UNIT_FL_SACRED}
+movement SECT_INSIDE
+north to fighters_way3;
+up to mayor_house;
+ALWAYS_LIGHT
+end
+                      mayor_house
+
+title "The Mayor's Home"
+descr
+"The Mayor's home is a small but quaint room above the Town Hall.
+There is a fireplace against one wall, and in addition to the Mayor's
+bed are four beds for his guards.  A large desk sits against one wall,
+with what looks like an overstuffed chair standing before it. There is a
+bookshelf against one wall, and a nice rug covers the floor. A staircase
+leads down."
+extra {"mayor's home", "home", "room"}
+"The Mayor's home looks like a nice place, whether for conducting business
+or
+just stopping in for a chat."
+extra {"fireplace"}
+"The fireplace glows with a warm flame."
+extra {"mayor's bed", "beds", "bed"}
+"The beds look to be quite comfortable."
+extra {"large desk", "desk"}
+"The desk is constructed of mahogany, or some similar fine wood.  Its top
+is covered with papers."
+extra {"overstuffed chair", "chair"}
+"The chair looks to be wonderfully comfortable.  A truly great
+place to sit."
+extra {"bookshelf"}
+"You can make out some of the titles in the bookshelf:  Screetons Book of
+Knowledge, Guide to Familiars, A small book about horses, The Maleus
+Malefacarum, The history of Sanctuary, Aristol's Book, The book of Creation,
+The Book of Remembrance, the Book of Demonic Knowledge, Thorbardins
+Events, Practical Demonology, Bases and Acids in Modern Alchemy, and
+the list goes on."
+extra {"nice rug", "rug"}
+"The rug is just a nice throw rug."
+extra {"staircase"}
+"The stairs lead down to the Town Hall."
+flags {UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+down to town_hall;
+ALWAYS_LIGHTeast to entrance@fightersguild;
+
+end
+
+
+
+healers_way1
+title "Tranquility Path"
+names {"tranquility Path"}
+descr
+"You are traveling down a quiet dirt path, birds can be heard singing
+here during any season and large shade trees provide some natural cover
+from the elements. All the noises of the nearby village have been
+filtered out and a sense of peace washes over you. The road
+continues to the east and west from here."
+extra {"path","dirt path","dirt"}
+"The path is made from well packed dirt."
+extra {"trees","tree"}
+"The trees add a welcome tranquillity to the area."
+west to healers_way2;
+east to guild_rd1;
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+  healers_way2
+title "Tranquility Path"
+names {"tranquility Path"}
+descr
+"You are traveling down a quiet dirt path, birds can be heard singing
+here during any season and large shadowy trees provide some natural cover
+from the elements. All the noises of the nearby village have been
+filtered out and a sense of peace washes over you. The path is lined with
+a soft green grass that looks inviting to sit and rest on in any
+season. The path continues to the east and west from here, while to the
+north a small shop offers charms and talismans for adventurers."
+extra {"shop"}
+"The small shop sells all sorts of charms, herbs and holy items, mostly
+for people of the faith, but everyone is welcome."
+extra {"path","dirt path","dirt"}
+"The path is made from well packed dirt."
+extra {"trees","tree"}
+"The trees add a welcome tranquility to the area."
+north to heal_shop
+open {EX_OPEN_CLOSE} keyword {"door"};
+
+west to healers_way3;
+east to healers_way1;
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+
+  healers_way3
+title "Tranquility Path"
+names {"tranquility Path"}
+descr
+"You are traveling down a quiet dirt path, birds can be heard singing
+here during any season and large shade trees provide some natural cover
+from the elements. All the noises of the nearby village have been
+filtered out and a sense of peace washes over you."
+
+extra {"path","dirt path","dirt"}
+"The path is made from well packed dirt."
+extra {"trees","tree"}
+"The trees add a welcome tranquillity to the areas."
+east to healers_way2; movement SECT_CITY
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+dark_all1
+title "A Dark Alley"
+names {"alley"}
+descr
+"You are walking down a dark dreary alley. It is difficult to see much of
+anything down here. Even in the middle of the day a gloom seems to hang
+over the place as if mother nature knew that those that frequent this
+place should be hidden from the sight of the honest people of the
+surrounding
+village. You hear the faint whisper of movement in the darkness but are
+unable to locate it origin. "
+extra {"gloom","shadows"}
+"It is dark and difficult to see. It seems as if one of the shadows
+moved...just a little."
+west to guild_rd2;
+east to dark_all2;
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+
+  dark_all2
+title "A dark alley"
+names {"alley"}
+descr
+"You are walking down a dark dreary alley. It is difficult to see much of
+anything down here. Even in the middle of the day a gloom seems to hang
+over the place as if mother nature knows that those that frequent this
+place should be hidden from the sight of the honest people of the
+surrounding
+village. Looking around there seems to be some slight movement off in the
+shadows, you get the feeling you had better hang on to your purse. A
+dark side alley leads off to the south."
+extra {"side alley","sidealley"}
+"A dark and narrow side-alley, you think you can spot someone standing in
+there..."
+extra {"gloom","shadows"}
+"It is dark and difficult to see. It seems as if one of the shadows
+moved...just a little."
+west to dark_all1;
+east to dark_all3;
+south to side_alley;
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+
+dark_all3
+title "A Dark Alley"
+names {"alley"}
+descr
+
+"You are walking down a dark dreary alley. It is difficult to see much of
+anything down here. Even in the middle of the day a gloom seems to hang
+over the place as if mother nature knows that those that frequent this
+place should be hidden from the sight of the honest people of the
+surrounding  village."
+/*while to the east appears to be an auction house*/
+extra {"gloom","shadows"}
+"It is dark and difficult to see. It seems as if one of the shadows
+moved... just a little."
+extra {"trees"}
+"The trees of the forest add to the gloom of the area."
+west to dark_all2;
+/* EXTENDED MUD east to ud_auction;*/
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+magic_way1
+title "Elemental Path"
+names {"elemental path"}
+descr
+"You are walking down a quiet cobblestone path. Small flowers grow along the
+edges giving the area a peaceful look. Small shade trees provide
+the scholars that frequent this area a place to rest and read, as well as
+providing the perfect place for the young conjurers to practice their
+fledgling spells, as is evident by the scorch marks on many of the trunks.
+You can follow the path to the east or west."
+extra {"cobblestone","path","stone"}
+"The path is made from plain white handcrafted cobblestones."
+extra {"trees"}
+"The trees are covered in burn marks, some conjurer has been practising
+here."
+east to guild_rd2;
+west to magic_way2;
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+
+ magic_way2
+title "Elemental Path"
+names {"elemental path"}
+descr
+"You are walking down a quiet cobblestone path. Small flowers grow along the
+edges giving the area a peaceful look. Small shade trees provide
+the scholars that frequent this area a place to rest and read. At spots
+along the path you notice burn marks on the cobblestones and can only
+assume some young conjurer was practicing their fireball spells at sometime
+in the past. Upon closer inspection you notice that many of the trees are
+damaged by young conjurers as they worked to hone the skills of their
+chosen field.<br/>
+A <a cmd='read #'>sign</a> saying 'Mr Winky's Tailoring &amp; Crafting' hangs over a door to a
+shop to the south."
+extra {"sign","door","shop"}
+"The sign over the door says 'Mr Winky's Tailoring &amp; Crafting' and
+a quick look inside tells you that it does not lie."
+extra {"cobblestone","path","stone"}
+"The path is made from plain white handcrafted cobblestones."
+extra {"trees"}
+"The trees are covered in burn marks, some conjurer has been practising
+here."
+east to magic_way1;
+west to magic_way3;
+south to mageshop;
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+
+  magic_way3
+title "Elemental Path"
+names {"elemental path"}
+descr
+"You are walking down a quiet cobblestone path. Small flowers grow along the
+edges giving the area a peaceful look. Small shade trees provide
+the scholars that frequent this area a place to rest and read.  The path
+leads off to the east back toward the village, while to the north a small
+door leads into a tobacco shop."
+east to magic_way2;
+north to tobacco_shop open {EX_OPEN_CLOSE} keyword {"door"};
+extra {"tobacco shop","shop","door"}
+"The small tobacco shop is frequently visited by the local wizards who
+enjoy a good smoke after a hard day of spell-tossing."
+extra {"cobblestone","path","stone"}
+"The path is made from plain white handcrafted cobblestones."
+extra {"trees"}
+"The trees are covered in burn marks, some conjurer has been practising
+here."
+movement SECT_CITY
+ALWAYS_LIGHT
+end
+#endif // EXTENDEDMUD
+
+/* --------------------- GUILD SHOPS ----------------------- */
+
+/* ----------------- MAGESHOP ------------------------------ */
+  mageshop
+names {"tailor booth","booth"}
+title "At a small tailor booth"
+descr
+"This small market stand seems filled with random merchandise. Clothes seem the main
+feature here, but a few weapons and other random trinkets complete the collection of
+the absolute must for the well-equipped beginner student of magic. A <a cmd='read #'>sign</a>
+hanging over the booth tries to explain a few things."
+extra {"sign over the booth", "booth sign", "sign"}
+"<pre>The sign says:
+
+ '<a cmd='#'>list</a>'  - lists the merchandise.
+ 'buy &lt;item&gt;' - lets you acquire an item.
+ 'sell &lt;item&gt;' - lets you sell an item.
+
+  Warning: As this shop specializes in mage items, some of the items
+  may be worthless to non-students.
+
+</pre>"
+movement SECT_CITY
+gmap(382,720)
+northeast to market;
+ALWAYS_LIGHT
+end
+
+/* ----------------- THIEVES BACKALLEY --------------------- */
+  side_alley
+names {"scruffy booth","booth"}
+title "A scruffy booth at the Udgaard Market"
+descr
+"You're at the southeast corner of the Udgaard Market and it is clearly
+the scruffy looking part of the marketplace. An old booth with what looks
+like mostly junk items is here and you're wondering how anyone could possibly
+make a living from this. Some smashed old barrels with vegetables stand next
+to the booth."
+
+northwest to market;
+movement SECT_CITY
+gmap(466,720)
+ALWAYS_LIGHT
+
+extra {"old barrels","barrels","barrel","vegetables"}
+"One of the barrels is smashed, rotting heads of cabbage lying in the
+smelly mud. The other one is half-filled with stinky rain-water."
+end
+
+/* ----------------------------- HEAL SHOP ------------------ */
+
+  heal_shop
+names {"The Herbalist and Talismongers", "supplies"}
+title "The Herbalist &amp; Talismonger stand"
+descr
+"The air in northwest corner of the Udgaard Market smells faintly of herbs,
+incense and other various healer ingredients.  You hear a  weak tinkle of
+small bells hanging from the small market stand in front of you. The stand is
+filled with trinkets of all sorts and a <a cmd='read #'>sign</a> catches your attention."
+movement SECT_CITY
+gmap(382,637)
+southeast to market;
+ALWAYS_LIGHT
+
+/*extra {"bells over the door","bells","bell"}
+"Tiny brass bells hang over the door, tinkling musically."
+extra {"coloured windows","glass","windows","light"}
+"The many-coloured glass makes you think of cathedral windows. Perhaps
+owner of this shop got his glass cheap from the church. Or perhaps he was
+out with a rock himself, collecting whatever fell down."*/
+
+extra {"trinkets","herbs","incense","ingredients"}
+"A lot of talismans, herbs, vials, holy charms and whatever the
+well-supplied superstitious needs to get him through the day."
+extra {"sign"}
+"<pre>
+ ________________________________________________________
+[                                                        ]
+[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
+[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the talismonger ]
+[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
+[                                                        ]
+[   </div><div class='cpc'>'ask talismonger &lt;item&gt;'</div><div class='cw'> will give you a description ]
+[   of the item in question; only items sold in this     ]
+[   store can be examined in this way.                   ]
+[________________________________________________________]
+
+<br/></div></pre>"
+end
+
+/* --------------------- OUTDOORS SHOP ----------------- */
+
+                field_shop
+names {"field equipment booth","booth"}
+title "Field Equipment Booth"
+descr
+"This small market booth is filled with all sorts of equipment, useful
+in the outdoors. Perhaps you can browse the many items here and find
+something you might like. A small <a cmd='read #'>sign</a> hangs over the booth."
+
+movement SECT_CITY
+gmap(465,639)
+ALWAYS_LIGHT
+southwest to market;
+
+extra {"small sign","sign"}
+"<pre>
+ ________________________________________________________
+[                                                        ]
+[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
+[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the shopkeeper  ]
+[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
+[                                                        ]
+[   </div><div class='cpc'>'ask shopkeeper &lt;item&gt;'</div><div class='cw'> will give you a description  ]
+[   of the item in question; only items sold in this     ]
+[   store can be examined in this way.                   ]
+[________________________________________________________]
+
+<br/></div></pre>"
+end
+
+/* -------------------- TOBACCO SHOP ------------------- */
+
+  tobacco_shop
+names {"tobacco shop","shop"}
+title "At 'Ye Olde Tobacco Shoppe'"
+descr
+"This booth is very small. Even so, the aroma of tobacco permeates the air.
+The table is filled with jars and boxes of tobacco, cigars, pipes and
+other articles for the well-supplied smoker. A small <a cmd='read #'>sign</a> stands 
+amongst the wares."
+
+movement SECT_CITY
+gmap(466,679)
+west to market;
+ALWAYS_LIGHT
+
+extra {"shelves","jars","boxes","tobacco","cigars","pipes","articles"}
+"Those shelves keep all your heart would desire if you are a smoker or
+plan to get off to a good start."
+extra {"small sign","sign"}
+"<pre>
+ ________________________________________________________
+[                                                        ]
+[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
+[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the seller      ]
+[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
+[                                                        ]
+[   </div><div class='cpc'>'ask seller &lt;item&gt;'</div><div class='cw'> will give you a description      ]
+[   of the item in question; only items sold in this     ]
+[   store can be examined in this way.                   ]
+[________________________________________________________]
+</div></pre>"
+end
 
 /* SHould probably not be in Udgaard.... It's the simple starting village... */
 /* MOOTHALL mod 2.201*/
@@ -3826,1387 +5255,6 @@ northeast to moot_uha9 descr "A Circular Hallway"
 end
 
 
-village_rd10
-
-title "End of the Village Road"
-descr
-"The village road leads back to the east from here. To the north is a
-wooden watchtower, and to the south is the back side of the Udgaard
-temple."
-extra {"wooden watchtower", "watchtower", "tower"}
-"This watchtower helps to protect the town of Udgaard."
-extra {"village road", "road"}
-"The road is constructed of hard-packed dirt."
-extra {"udgaard temple", "back side", "temple"}
-"The Udgaard temple is the center of your existance. It is there that you
-can find donated items, rest your soul, or resurrect from death."
-movement SECT_CITY
-gmap(370,310)
-north to watch_tower3 descr "Wooden Watchtower.";
-east to village_rd9 descr "Village Road.";
-ALWAYS_LIGHT
-end
-
-watch_tower
-
-title "Underneath the Wooden Watchtower"
-descr
-"The floor of a wooden watchtower spreads above your head. The Cypress
-Forest grows to the east, or you can enter Udgaard to the west. Trees block
-all passage to the north and south.  A ladder leads upwards into the
-watchtower."
-extra {"ladder"}
-"It is a simple wooden ladder."
-extra {"wooden watchtower", "watchtower", "tower"}
-"This watchtower helps to protect the town of Udgaard."
-extra {"village road", "road"}
-"The road is constructed of hard-packed dirt."
-extra {"udgaard"}
-"Udgaard is far safer than the lands which surround it."
-extra {"cypress forest", "cypress", "forest"}
-"The Cypress Forest stands between Midgaard and Udgaard."
-extra {"large trees", "trees", "tree"}
-"These trees seem to be very old."
-movement SECT_CITY
-gmap(698,584)
-west to village_rd5 descr "Bend in the Village Road.";
-east to cypress/hill descr "Go into the Cypress Forest.";
-up to up_tower1 descr "Up in the Watchtower.";
-ALWAYS_LIGHT
-end
-
-up_tower1
-
-title "Up in the Wooden Watchtower"
-descr
-"It is obvious why this watchtower was built. From the top of it, there is
-a good view of all of Udgaard, and it is possible to scan the surrounding
-lands for infidels. The tower can be exited by way of a ladder leading
-down."
-extra {"wooden watchtower", "watchtower", "tower"}
-"This watchtower helps to protect the town of Udgaard."
-extra {"village road", "road"}
-"The road is constructed of hard-packed dirt."
-extra {"udgaard"}
-"Udgaard is far safer than the lands which surround it."
-extra {"cypress forest", "cypress", "forest"}
-"The Cypress Forest stands between Midgaard and Udgaard."
-extra {"large trees", "trees", "tree"}
-"These trees seem to be very old."
-movement SECT_CITY
-gmap(676,564)
-down to watch_tower descr "Wooden Watchtower.";
-ALWAYS_LIGHT
-end
-
-watch_tower2
-
-title "Underneath the Wooden Watchtower"
-descr
-"The floor of a wooden watchtower looms over your head. The forest of
-Haon-dor is to the west, and the Village Road of Udgaard leads east. Trees
-block all passage to the north and south. A ladder leads upwards into the
-watchtower."
-extra {"ladder"}
-"It is a simple wooden ladder."
-extra {"wooden watchtower", "watchtower", "tower"}
-"This watchtower helps to protect the town of Udgaard."
-extra {"village road", "road"}
-"The road is constructed of hard-packed dirt."
-extra {"udgaard"}
-"Udgaard is far safer than the lands which surround it."
-extra {"cypress forest", "cypress", "forest"}
-"The Cypress Forest stands between Midgaard and Udgaard."
-extra {"large trees", "trees", "tree"}
-"These trees seem to be very old."
-movement SECT_CITY
-gmap(152,584)
-west to haon_dor/forest_edge descr "Go into the Forest of Haon-dor.";
-east to village_rd1 descr "Village Road at Haon-dor.";
-up to up_tower2 descr "Up in the Watch Tower.";
-ALWAYS_LIGHT
-end
-
-up_tower2
-
-title "Up in the Wooden Watchtower"
-descr
-"This watchtower has a sturdy wooden floor. From the top of it, there is
-a good view of all of Udgaard, and it is possible to look over the
-surrounding lands. The tower can be exited by way of a ladder leading down."
-extra {"wooden watchtower", "watchtower", "tower"}
-"This watchtower helps to protect the town of Udgaard."
-extra {"sturdy wooden floor", "wooden floor", "floor"}
-"The floor could support a great weight."
-extra {"village road", "road"}
-"The road is constructed of hard-packed dirt."
-extra {"udgaard"}
-"Udgaard is far safer than the lands which surround it."
-extra {"cypress forest", "cypress", "forest"}
-"The Cypress Forest stands between Midgaard and Udgaard."
-extra {"large trees", "trees", "tree"}
-"These trees seem to be very old."
-movement SECT_CITY
-gmap(130,564)
-down to watch_tower2 descr "Wooden Watchtower.";
-ALWAYS_LIGHT
-end
-
-watch_tower3
-
-title "Underneath the Wooden Watchtower"
-descr
-"The floor of a wooden watchtower looms over your head. Some farm fields
-are to the north, and the Village Road of Udgaard is south. To the east
-and west are the fences of farm fields. A ladder leads upwards into the
-watchtower."
-extra {"farming fields", "fences", "field"}
-"These fields help to supply Udgaard with food."
-extra {"ladder"}
-"It is a simple wooden ladder."
-extra {"wooden watchtower", "watchtower", "tower"}
-"This watchtower helps to protect the town of Udgaard."
-extra {"village road", "road"}
-"The road is constructed of hard-packed dirt."
-extra {"udgaard"}
-"Udgaard is far safer than the lands which surround it."
-extra {"cypress forest", "cypress", "forest"}
-"The Cypress Forest stands between Midgaard and Udgaard."
-extra {"large trees", "trees", "tree"}
-"These trees seem to be very old."
-movement SECT_CITY
-gmap(370,256)
-north to hamlet/sm_path descr "A small path to a hamlet.";
-south to village_rd10 descr "End of the Village Road.";
-up to up_tower3 descr "Up in the Watch Tower.";
-ALWAYS_LIGHT
-end
-
-up_tower3
-
-title "Up in the Wooden Watchtower"
-descr
-"This watchtower has a sturdy wooden floor. From the top of it, there is
-a good view of all of Udgaard, and a small farming hamlet is visible over
-the fields to the north. The tower can be exited by way of a ladder
-leading down."
-extra {"farming hamlet", "hamlet"}
-"This is a small town which farmers live in."
-extra {"fields", "field"}
-"Food is grown here."
-extra {"wooden watchtower", "watchtower", "tower"}
-"This watchtower helps to protect the town of Udgaard."
-extra {"sturdy wooden floor", "wooden floor", "floor"}
-"The floor could support a great weight."
-extra {"village road", "road"}
-"The road is constructed of hard-packed dirt."
-extra {"udgaard"}
-"Udgaard is far safer than the lands which surround it."
-extra {"cypress forest", "cypress", "forest"}
-"The Cypress Forest stands between Midgaard and Udgaard."
-extra {"large trees", "trees", "tree"}
-"These trees seem to be very old."
-movement SECT_CITY
-gmap(352,238)
-down to watch_tower3 descr "Wooden Watchtower.";
-ALWAYS_LIGHT
-end
-
-    ud_storage
-
-title "Storage Office"
-descr
-"You have entered a room which is filled with all kinds of junk.  Piles
-of weapons and armor, bottles, flasks, and scrolls litter the floor.
-Small cupboards with doors line the walls, and boxes and crates are stacked
-on large shelves.  You are amazed at the size of this room, it seems
-to extend fifty feet to the north.  There is a small <a cmd='read #'>sign</a> on the wall."
-
-
-extra {"junk"}
-"There is anything that you can imagine piled about this store."
-extra {"piles", "weapons", "armor", "bottles", "flasks", "scrolls"}
-"These items have been reclaimed by the storage agency."
-extra {"small cupboards", "cupboards", "boxes", "crates", "large shelves",
-"shelves"}
-"These are all used to hold the goods of the storage agencies clients."
-extra {"room"}
-"This room is absolutely monstrous."
-extra {"sign"}
-"<pre>
-The Sign Says:
-
--rent [container]
--store &lt;ITEM&gt;
--unstore &lt;ITEM&gt;
--storage [list]
-</pre>"
-
-flags {UNIT_FL_NO_WEATHER}
-
-movement SECT_INSIDE
-gmap(532,498)
-south to bank@udgaard;
-ALWAYS_LIGHT
-end
-
-#ifdef EXTENDEDMUD
-                                ud_auction
-
-title "Auction Office"
-descr
-"This room is surmounted by a large wooden box.  Various items
-line shelves and the floor, bearing colored tags.  The room is
-relatively bare otherwise, being a place where trading, buying,
-and selling is done.  The building spans overhead, and heavy
-wooden rafters appear to do a good job of supporting the ceiling.
-The dark alley is west of here."
-extra {"building", "room"}
-"This is the auction office of Udgaard."
-extra {"wooden box", "box"}
-"The auctioneer stands on this box to call bids."
-extra {"shelves", "floor", "items"}
-"The whole room is filled with items that are being or have been sold."
-extra {"colored tags"}
-"The colored tags have names and prices written on them.  One reads:
-'Papi: Valhalla Mud, 10000000 Platinum, 2 Iron'."
-extra {"heavy wooden rafters", "wooden rafters", "rafters", "ceiling"}
-"They look to be very sturdy, keeping the large ceiling in place."
-flags {UNIT_FL_NO_WEATHER}
-movement SECT_INSIDE
-west to dark_all3;
-ALWAYS_LIGHT
-end
-#endif
-
-
-
-                              command_chat
-title "Commands's Chat Room"
-descr
-"You have entered the 'newbie zone'. If you have been brought to this
-place then you must be seeking help. Sit still and your guide will
-explain all you need to know about life in the world of Valhalla."
-movement SECT_INSIDE
-up to temple;
-ALWAYS_LIGHT
-end
-
-                                newbie_chat
-names {"newbie chat room"}
-title "The Newbie Guide Chat Room"
-descr
-"You have entered the 'newbie zone'. If you have been brought to this
-place then you must be seeking help. Sit still and your guide will
-explain all you need to know about life in the world of Valhalla."
-movement SECT_INSIDE
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
-       UNIT_FL_NO_MOB, UNIT_FL_SACRED}
-up to square;
-ALWAYS_LIGHT
-end
-
-
-
-
-      square
-names {"udgaard square","udgaard","square"}
-title "Village Square"
-descr
-"You are at the small village square of Udgaard. The temple is located
-just north of here. The Village road continues both east and west. 
-South of here is the small village marketplace."
-gmap(70,70)
-movement SECT_CITY
-gmap(424,584)
-east to village_rd3;
-west to village_rd2;
-south to market;
-north to temple;
-ALWAYS_LIGHT
-end
-
-      village_rd1
-
-title "Village Road at Haon-Dor"
-descr
-"Just west of here is a watchtower which protects Udgaard from the
-dangers of the forest.  Farther west from that is the forest of
-Haon-Dor where many adventurers travel.  Very conveniently the Chicken's
-Rest is next to you just north while the post office is south in case you
-would like to send a last farewell letter."
-movement SECT_CITY
-gmap(274,584)
-north to inn;
-south to postoffice;
-west to watch_tower2;
-east to village_rd2;
-ALWAYS_LIGHT
-end
-
-      village_rd2
-
-title "Village Road"
-descr
-"The village square is east of here and the Village road continues
-west. The food store is to the north and Harold's is to the south."
-movement SECT_CITY
-gmap(328,584)
-north to food_store;
-south to ironmonger;
-east to square;
-west to village_rd1;
-ALWAYS_LIGHT
-end
-
-      village_rd3
-
-title "Village Road"
-descr
-"The village square is just west of here. The finest building in Udgaard,
-the bank, is north. Safeguarding the bank is the guard headquarters to the
-south. The village road continues east."
-gmap(534,583)
-movement SECT_CITY
-north to bank;
-south to accuse_room;
-west to square;
-east to village_rd4;
-ALWAYS_LIGHT
-end
-
-      market
-
-title "The Udgaard Market"
-descr
-"You are at the Udgaard market just south of the village square. This
-used to be a larger and busier market. Now only a few small merchants
-are scattered around the market. The boat bridge is south of here."
-movement SECT_CITY
-gmap(424,679)
-north to square;
-south to bridge;
-east to tobacco_shop;
-northeast to field_shop;
-northwest to heal_shop;
-southeast to side_alley;
-southwest to mageshop;
-down open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 0 to sew_ent@udsewer;
-extra {"$climb_down"} {1} "" // Only 1 damage
-
-ALWAYS_LIGHT
-end
-
-#ifdef OLD_UDGAARD
-
-      guild_rd1
-
-title "Guild Road"
-descr
-"The road is constructed from white flagstones, each fashioned and laid
-by hand. From there you can see the village square to the north while the
-road continues to the south. The tranquility path is west of here and the
-Swordsman way is to the east."
-gmap(1024,0)
-movement SECT_CITY
-north to square;
-south to guild_rd2;
-west to healers_way1;
-east to fighters_way1;
-ALWAYS_LIGHT
-end
-                           guild_rd2
-
-title "Guild Road"
-descr
-" The road is constructed from handmade and laid flagstones. Although the
-flagstones are old they are still in very good repair. A dark alley leads
-off to the east of here and elemental alley is to the west. You notice an
-open man-hole leading down. The road continues to the north and a dump is
-to the south."
-movement SECT_CITY
-north to guild_rd1;
-west to magic_way1;
-east to dark_all1;
-south to dump;
-down to sew_ent@udsewer;
-ALWAYS_LIGHT
-end
-#endif
-
-                                 dump
-
-names {"dump"}
-title "Village Dump"
-descr
-"Located just outside the walls and close to the boat bridge the village
-dump is quite a dirty mess. Actually you are convinced, that if you drop
-any items here, you won't be able to find them again. To the south a large
-river calmly flows east towards the cypress forest but you need to head
-over to the boat bridge if you want to jump in."
-movement SECT_CITY
-gmap(478,843)
-west to bridge;
-ALWAYS_LIGHT
-
-
-end
-
-                                 bridge
-title "On the Boat Bridge"
-descr
-"The river gently flows east towards the cypress forest. The village of 
-Udgaard is just north of here and to the east is the village dump."
-movement SECT_CITY
-gmap(424,843)
-north to market;
-east to dump;
-south to river;
-ALWAYS_LIGHT
-end
-
-                                 river
-title "On the River"
-descr
-"You are on the river flowing past the village of Udgaard with a
-pretty view of the village dump just north of here beyond the boat bridge."
-movement SECT_WATER_SWIM
-gmap(424,897)
-north to bridge;
-#ifdef EXTENDEDMUD
-west to river6@toy descr "The river enters the forest to the west.";
-"If you need to connect, I wouldn't suggest breaking the river link to Haon-Dor"
-#endif
-
-west to lightriver@haon_dor difficulty 10 descr "The river flows from the forest to the west." ;
-east to cypress/river difficulty 0;
-
-dilcopy watercurrent@basemove(DIR_EAST, 
-   {"The river current gently takes you east.", "$1n gently flows away to the east.",
-    "You gently flow further eastwards.", "$1n flows in from the west."}, 7);
-end
-
-
-
-                                 temple
-
-title "Temple of Udgaard"
-descr
-"You are inside the small and humble village temple in Udgaard. A
-simple stone altar, with strange stone carvings, is placed against the
-north  wall. A small humble donation room is to the east.  The temple exit
-is south to the Village Square."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
-       UNIT_FL_NO_MOB, UNIT_FL_SACRED}
-movement SECT_INSIDE
-gmap(424,420)
-south to square;
-east to udonate;
-north to heal_room;
-down to crypt descr "Stairs along the west wall lead down into darkness.";
-ALWAYS_LIGHT
-extra {"stone altar", "altar"}
-"The stone altar is very simple and engraved in it are a lots of strange
-symbols. Perhaps the symbols are worth examining."
-
-extra {"symbols", "stone carvings", "carvings"}
-"Some of the symbols clearly represents various Gods while other appear
-to be normal text. You notice some of the largest symbols have been
-laid in gold and they read ᚡᚨᛚᚺᚯᛚᛚ. The symbols you do understand looks
-like this:<pre>
-
-      Pray to odin if you are new and helpless.</pre>"
-end
-
-                                heal_room
-
-title "Temple of Udgaard"
-descr
-"You are in the healing center of a small and humble village temple. The
-walls are bare stone with intricate etching in them depicting many great
-battles."
-
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
-UNIT_FL_NO_MOB, UNIT_FL_SACRED}
-movement SECT_INSIDE
-gmap(424,364)
-south to temple;
-ALWAYS_LIGHT
-#ifdef EXTENDEDMUD
-north to hall@newbie descr "The new player council room is to the north.";
-#endif
-end
-
-
-                    udonate
-names {"udgaard donations room", "udgaard donation room", "donations room"}
-title "The Udgaard Donations Room"
-descr
-"   You are standing in a room beside the temple of Udgaard.
-If you are lucky you might have the good graces to have
-something nice drop into your lap, it has been known to happen."
-flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-gmap(465,420)
-west to temple;
-/* Dil to restrict getting all */
-dilcopy all_block@udgaard ();
-end
-
-                          inn_2
-title "Back Room"
-descr
-"The room smells of stale beer and old tobacco, with a number of round tables,
-this is where the village residents gather to play cards and have a
-cold one during the long nights."
-
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-gmap(234,501)
-extra {"round tables","tables","table"}
-"Round card tables, stained with beer and cigar butts."
-east to inn;
-north to inn_3;
-west to inn_5;
-south to inn_4;
-ALWAYS_LIGHT
-end
-
-                                inn_3
-title "Back Room"
-descr
-"You're in the northen part of the back room. The room still smells of stale
-beer and smoke."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,
-UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-gmap(234,460)
-south to inn_2;
-ALWAYS_LIGHT
-end
-
-                                inn_4
-title "Back Room"
-descr
-"You're in the southern part of the back room. The room still smells of stale
-beer and smoke."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,
-UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-gmap(234,541)
-north to inn_2;
-ALWAYS_LIGHT
-end
-
-
-                                inn_5
-title "Back Room"
-descr
-"You're in the northen part of the back room. The room still smells of stale
-beer and smoke."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_SACRED,
-UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-gmap(193,501)
-east to inn_2;
-ALWAYS_LIGHT
-end
-
-
-                                   inn
-
-title "The Chicken's Rest"
-descr
-"The Chicken's Rest is a cozy bar often used by adventurers returning
-from the dangerous forest of Haon-Dor just west of here. A small <a cmd='read #'>sign</a> has
-been hung on the wall. A rickety staircase leads upstairs and a small
-door leads west into a back room."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB, UNIT_FL_SACRED}
-movement SECT_INSIDE
-gmap(276,501)
-south to village_rd1;
-west to inn_2;
-up to offices/hallway;
-ALWAYS_LIGHT
-extra {"rickety staircase", "staircase"}
-"Well, it's rickety!"
-extra {"sign", "small sign", "wall"}
-"From whence cometh the name 'The Chicken's Rest' is forgotten in the
-mists of time. But it has been said, that a blessing rests in this inn
-which make wounds heal faster.<pre>
-
-    Use `<a cmd='#'>list</a>'           to see available drinks.
-        `request &lt;item&gt;' to ask the price of a drink.
-        `buy &lt;drink&gt;'    to buy a drink.
-        `value &lt;item&gt;'   to get a price for a drink you are selling.
-        `sell &lt;drink&gt;'   to sell a drink.
-
-                         - Sam the Keeper</pre>"
-flags {UNIT_FL_NO_TELEPORT}
-end
-
-                                 postoffice
-title "The Post Office"
-descr
-"You are inside the small tidy post office of Udgaard. If you wish to send
-a letter before departing on your next adventure this would be a good time
-to do so. There is a <a cmd='read #'>sign</a> with instructions mounted on the wall. The
-Records office is just west of here."
-extra {"sign", "instructions", "wall"}
-"Use:<pre>
-      `write letter' to begin writing a letter.
-      `mail &lt;letter&gt; &lt;person&gt;' to send a letter to somebody.
-      `request' to get your mail.
-      `put &lt;letter&gt; in shredder' to erase the letter permanently.</pre>"
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
-movement SECT_INSIDE
-gmap(274,637)
-north to village_rd1;
-west to records;
-ALWAYS_LIGHT
-
-end
-
-                                 records
-title "The Records Office"
-descr
-"This neatly kept office is where the Town Records are kept. All of the
-citizens of Valhalla have a file here, and they can change the information
-which the files contain. There are two strange cabinets, one on each side
-of the room. On one is written the word 'Mailing Addresses', and the other
-has the words 'Maiden Name' carefully engraved upon it. There is an
-important SIGN on the far wall which you really should look at. The Post
-Office is east of here."
-
-extra {"files"}
-"The files are secret to all but the person whose name appears on the file.
-Look at the sign if you need information on how to access your file."
-
-extra {"cabinets", "cabinet"}
-"Each Cabinet is almost six feet in height and a good two feet wide. One
-contains the files which record Mailing Addresses, and the other has the
-Maiden Name lists."
-
-extra {"desk"}
-"The desk is quite bare, but looks proper and makes the owner feel very
-important."
-
-extra {"sign", "instructions", "wall"}
-"<pre><div class='cpc'>Personal File Information</div><div class='cw'>
--------------------------
-      `</div><div class='cpw'>see file</div><div class='cw'>' to see your current file information.
-
-      `</div><div class='cpw'>maiden &lt;newname&gt;</div><div class='cw'>' to change your Mother's Maiden name to
-       something new. This is used to verify your identity should
-       you lose your password. You can use any word or name as
-       long as you remember it. (e.g. maiden gates)
-
-      `</div><div class='cpw'>mail &lt;email address&gt;</div><div class='cw'>' to change your email address to
-something
-       new (e.g. mail joe@valhalla.com).
-
-</div><div class='cpc'>Player Email List (</div><div class='cr'>Not the mud mailing list - Just a list of
-emails</div><div class='cw'>)
------------------
-      `</div><div class='cpw'>update</div><div class='cw'>' will update your entry on the email list (or create
-       an entry if you don't already have an entry on the list).
-
-      `</div><div class='cpw'>public</div><div class='cw'>' to allow others to see your email address. This is
-       by default set off so only you see your address. Typing public
-       again will deny people from seeing your email address. Your current
-       email address on this list may not be the same as that of your
-       character unless you have used the </div><div class='cpw'>update</div><div class='cw'> command mentioned
-       above.
-
-      `</div><div class='cpw'>show &lt;charactername&gt;</div><div class='cw'>' will show you the email address of
-       player &lt;charactername&gt;, if they have entered one and it is publicly
-       visible.
-
-Only you, the player, and higher level administrators (254+) can see your
-maiden name setting, and unless you set your email to public, the same
-restriction will reply to your email address.</div></pre>"
-
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
-movement SECT_INSIDE
-gmap(219,637)
-east to postoffice;
-ALWAYS_LIGHT
-
-end /* records */
-
-                                food_store
-
-title "Rosanne's Food Store"
-descr
-"A scent of various foods fills the store. There is a <a cmd='read #'>sign</a> placed
-on the wall. The village road is south of here."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
-movement SECT_INSIDE
-gmap(328,528)
-south to village_rd2;
-ALWAYS_LIGHT
-extra {"sign", "wall"}
-"The sign says:<pre>
-
-    Use `<a cmd='#'>list</a>' to see what is in store.
-        `buy &lt;item&gt;' to buy an item.
-        `sell &lt;item&gt;' to sell an item.
-        `request &lt;item&gt;' to ask the price of an item.
-        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
-end
-
-                                 ironmonger
-
-title "Harold's Assorted Goods"
-descr
-"Various items cover the shelves behind the counter. It is clear that
-this shop has all the nifty little things you need on your adventures.
-A <a cmd='read #'>sign</a> has been hung on the wall."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
-movement SECT_INSIDE
-gmap(328,636)
-north to village_rd2;
-ALWAYS_LIGHT
-extra {"sign", "wall"}
-"The sign says:<pre>
-
-    Use `<a cmd='#'>list</a>' to see what is in store.
-        `buy &lt;item&gt;' to buy an item.
-        `sell &lt;item&gt;' to sell an item.
-        `request &lt;item&gt;' to ask the price of an item.
-        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
-end
-
-                                  bank
-
-title "Mammon's Nest"
-descr
-"Without doubt this is the finest building in Udgaard, although not large,
-it has been made from large granite rocks. A white marble <a cmd='read #'>sign</a> hangs on the
-wall.  A small passage north leads into a back room and the street is to
-the south."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
-movement SECT_INSIDE
-gmap(534,541)
-north to ud_storage;
-south to village_rd3;
-ALWAYS_LIGHT
-extra {"white marble sign", "marble sign", "sign", "wall"}
-"It says :-<pre>
-                         The Bank of Udgaard
-
-                  We stash your cash and hold your
-                    gold for a mere 5% interest.
-
-    Use `deposit &lt;amount&gt;' to deposit,
-        `withdraw &lt;amount&gt;' to withdraw, and
-        `exchange' &lt;amount&gt; to change into coins of more wealth.
-        `balance' to get a statement of your account.</pre>"
-end
-
-                                  accuse_room
-
-title "Guard's Office"
-descr
-"You are inside the guards office. Through the window in the northern
-wall you see the Bank beyond the village road. There is a <a cmd='read #'>sign</a> hanging
-on the wall."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB,UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-gmap(534,639)
-north to village_rd3;
-south to jail open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
-      key jail_key
-      descr "You see the heavy steel door." keyword {"steel door", "door"}
-      difficulty 35;
-ALWAYS_LIGHT
-extra {"sign", "wall"}
-"The sign says:<pre>
-
-    In order to accuse another player of a crime, you must accuse him
-    to the captain. Use the command:
-
-       accuse &lt;player&gt; murder   - for a murder accusation.
-       accuse &lt;player&gt; stealing - for a stealing accusation.</pre>"
-end
-
-
-                            jail
-names {"jail"}
-title "The Jail"
-descr
-"You are in a dark and humid jail.  The dark stone walls are hard and cold
-to the touch.  A heavy steel door, supposed to keep prisoners inside the
-jail, is in the north stone wall."
-
-extra {"wall","walls"}
-"The walls are marked with lots of scratches.  Some of them spell sentences
-like `INGRES STRIKES AGAIN'."
-
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-gmap(534,691)
-
-north to accuse_room descr "You see the heavy steel door."
-   key jail_key keyword {"steel door", "door"}
-   open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF} 
-   difficulty 35;
-
-ALWAYS_LIGHT
-end
-
-                                   armourer
-
-title "Better Clothing"
-descr
-"This shop is actually a combined armory and smith. The smell of hot
-iron fills the room. A <a cmd='read #'>sign</a> is hanging on the wall."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
-movement SECT_INSIDE
-gmap(588,529)
-south to village_rd4;
-ALWAYS_LIGHT
-extra {"sign", "wall"}
-"The sign says:<pre>
-
-    Use `<a cmd='#'>list</a>' to see what is in store.
-        `buy &lt;item&gt;' to buy an item.
-        `sell &lt;item&gt;' to sell an item.
-        `request &lt;item&gt;' to ask the price of an item.
-        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
-end
-
-
-                                   weaponsmith
-
-title "Sharper Swords"
-descr
-"This is a neat and tidy small weapon shop. You wonder why there is no
-smithy in here but soon realize that Arny must be working with Slade from
-across the street. A <a cmd='read #'>sign</a> is hanging on the wall."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
-movement SECT_INSIDE
-gmap(588,637)
-north to village_rd4;
-ALWAYS_LIGHT
-extra {"sign", "wall"}
-"The sign says:<pre>
-
-    Use `<a cmd='#'>list</a>' to see what is in store.
-        `buy &lt;item&gt;' to buy an item.
-        `sell &lt;item&gt;' to sell an item.
-        `request &lt;item&gt;' to ask the price of an item.
-        `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
-end
-
-#ifdef EXTENDEDMUD
-fighters_way1
-title "Swordsman Way"
-names {"swordsman way"}
-descr
-"The street here is paved with a reddish colored flagstone, each of them
-laid with loving pride by some long-ago mason. A couple of smaller sized
-trees stand proud, despite the knick's and cuts countless swords have made
-in their trunks over the years. The road continues to the east and west."
-movement SECT_CITY
-ALWAYS_LIGHT
-extra {"street","mason","flagstone","stone"}
-"The flagstones are a reddish brown color, hand made and laid with loving
-care."
-west to guild_rd1;
-east to fighters_way2;
-end
-
-  fighters_way2
-title "Swordsman Way"
-names {"swordsman way"}
-descr
-"The street here is paved with a reddish colored flagstone, each of them
-laid with loving pride by some long-ago mason. The sounds of swords
-clanging can be heard through out the area. The road continues to the
-east and west from here. A small shop sells outdoors equipment north of
-here."
-extra {"shop"}
-"The small shop offers a variety of equipment handy for anyone travelling
-out in the wilderness."
-extra {"street","mason","flagstone","stone"}
-"The flagstones are a reddish brown color, handmade and laid with loving
-care."
-movement SECT_CITY
-ALWAYS_LIGHT
-east to fighters_way3;
-west to fighters_way1;
-north to field_shop;
-end
-
-fighters_way3
-title "Swordsman Way"
-names {"swordsman way"}
-descr
-"The street here is paved with a reddish colored flagstone, each of them
-laid with loving pride by some long-ago mason."
-
-west to fighters_way2;
-
-extra {"street","mason","flagstone","stone"}
-"The flagstones are a reddish brown color, hand made and laid with loving
-care."
-movement SECT_CITY
-ALWAYS_LIGHT
-
-
-
-/*EXTENDEDMUD To the south is an impressive edifice which appears to be the town hall.*/
-
-
-south to town_hall;
-end
-
-
-                                town_hall
-
-names {"town hall", "hall"}
-title "Udgaard Town Hall"
-descr
-"The Udgaard Town Hall is a majestic yet subtle building. The craftsmanship
-of the woodwork here was undertaken by skilled craftsman, and large
-glass windows line the walls.  The building is filled with rows of
-wooden benches, and a small stage has been raised at one end of the hall.
-A set of stairs lead upwards to the Mayor's home."
-extra {"udgaard town hall", "town hall", "hall"}
-"The Town Hall of Udgaard is a place for meetings and the dissemination
-of important information."
-extra {"woodwork"}
-"The woodwork is quite exquisite, having been carved by skilled artisans."
-extra {"glass windows", "windows"}
-"No expense was spared on this building, by the necessity of having a
-well lit building that was sheltered from the elements."
-extra {"wooden benches", "benches", "rows"}
-"It is here that the commoners from the hamlet and the townspeople of
-udgaard gather to discuss matters."
-extra {"small stage", "stage"}
-"The stage bears a large podium, and a number of seats bearing name
-plates.  The nameplates read: Whistler, Palio, Saor, Eirinn, Drevar,
-Jager...
-and so on down the wizard list.  The podium has some letters scratched into
-it, you think you might be able to read them."
-extra {"scratches","letters","podium"}
-"The letters read: 'Papi, Gnort, God, Quinn and Mead were here'."
-extra {"stairs"}
-"The stairs lead upwards to the Mayor's home."
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT,UNIT_FL_NO_BURY, UNIT_FL_SACRED}
-movement SECT_INSIDE
-north to fighters_way3;
-up to mayor_house;
-ALWAYS_LIGHT
-end
-                      mayor_house
-
-title "The Mayor's Home"
-descr
-"The Mayor's home is a small but quaint room above the Town Hall.
-There is a fireplace against one wall, and in addition to the Mayor's
-bed are four beds for his guards.  A large desk sits against one wall,
-with what looks like an overstuffed chair standing before it. There is a
-bookshelf against one wall, and a nice rug covers the floor. A staircase
-leads down."
-extra {"mayor's home", "home", "room"}
-"The Mayor's home looks like a nice place, whether for conducting business
-or
-just stopping in for a chat."
-extra {"fireplace"}
-"The fireplace glows with a warm flame."
-extra {"mayor's bed", "beds", "bed"}
-"The beds look to be quite comfortable."
-extra {"large desk", "desk"}
-"The desk is constructed of mahogany, or some similar fine wood.  Its top
-is covered with papers."
-extra {"overstuffed chair", "chair"}
-"The chair looks to be wonderfully comfortable.  A truly great
-place to sit."
-extra {"bookshelf"}
-"You can make out some of the titles in the bookshelf:  Screetons Book of
-Knowledge, Guide to Familiars, A small book about horses, The Maleus
-Malefacarum, The history of Sanctuary, Aristol's Book, The book of Creation,
-The Book of Remembrance, the Book of Demonic Knowledge, Thorbardins
-Events, Practical Demonology, Bases and Acids in Modern Alchemy, and
-the list goes on."
-extra {"nice rug", "rug"}
-"The rug is just a nice throw rug."
-extra {"staircase"}
-"The stairs lead down to the Town Hall."
-flags {UNIT_FL_NO_WEATHER}
-movement SECT_INSIDE
-down to town_hall;
-ALWAYS_LIGHTeast to entrance@fightersguild;
-
-end
-
-
-
-healers_way1
-title "Tranquility Path"
-names {"tranquility Path"}
-descr
-"You are traveling down a quiet dirt path, birds can be heard singing
-here during any season and large shade trees provide some natural cover
-from the elements. All the noises of the nearby village have been
-filtered out and a sense of peace washes over you. The road
-continues to the east and west from here."
-extra {"path","dirt path","dirt"}
-"The path is made from well packed dirt."
-extra {"trees","tree"}
-"The trees add a welcome tranquillity to the area."
-west to healers_way2;
-east to guild_rd1;
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-  healers_way2
-title "Tranquility Path"
-names {"tranquility Path"}
-descr
-"You are traveling down a quiet dirt path, birds can be heard singing
-here during any season and large shadowy trees provide some natural cover
-from the elements. All the noises of the nearby village have been
-filtered out and a sense of peace washes over you. The path is lined with
-a soft green grass that looks inviting to sit and rest on in any
-season. The path continues to the east and west from here, while to the
-north a small shop offers charms and talismans for adventurers."
-extra {"shop"}
-"The small shop sells all sorts of charms, herbs and holy items, mostly
-for people of the faith, but everyone is welcome."
-extra {"path","dirt path","dirt"}
-"The path is made from well packed dirt."
-extra {"trees","tree"}
-"The trees add a welcome tranquility to the area."
-north to heal_shop
-open {EX_OPEN_CLOSE} keyword {"door"};
-
-west to healers_way3;
-east to healers_way1;
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-
-  healers_way3
-title "Tranquility Path"
-names {"tranquility Path"}
-descr
-"You are traveling down a quiet dirt path, birds can be heard singing
-here during any season and large shade trees provide some natural cover
-from the elements. All the noises of the nearby village have been
-filtered out and a sense of peace washes over you."
-
-extra {"path","dirt path","dirt"}
-"The path is made from well packed dirt."
-extra {"trees","tree"}
-"The trees add a welcome tranquillity to the areas."
-east to healers_way2; movement SECT_CITY
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-dark_all1
-title "A Dark Alley"
-names {"alley"}
-descr
-"You are walking down a dark dreary alley. It is difficult to see much of
-anything down here. Even in the middle of the day a gloom seems to hang
-over the place as if mother nature knew that those that frequent this
-place should be hidden from the sight of the honest people of the
-surrounding
-village. You hear the faint whisper of movement in the darkness but are
-unable to locate it origin. "
-extra {"gloom","shadows"}
-"It is dark and difficult to see. It seems as if one of the shadows
-moved...just a little."
-west to guild_rd2;
-east to dark_all2;
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-
-  dark_all2
-title "A dark alley"
-names {"alley"}
-descr
-"You are walking down a dark dreary alley. It is difficult to see much of
-anything down here. Even in the middle of the day a gloom seems to hang
-over the place as if mother nature knows that those that frequent this
-place should be hidden from the sight of the honest people of the
-surrounding
-village. Looking around there seems to be some slight movement off in the
-shadows, you get the feeling you had better hang on to your purse. A
-dark side alley leads off to the south."
-extra {"side alley","sidealley"}
-"A dark and narrow side-alley, you think you can spot someone standing in
-there..."
-extra {"gloom","shadows"}
-"It is dark and difficult to see. It seems as if one of the shadows
-moved...just a little."
-west to dark_all1;
-east to dark_all3;
-south to side_alley;
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-
-dark_all3
-title "A Dark Alley"
-names {"alley"}
-descr
-
-"You are walking down a dark dreary alley. It is difficult to see much of
-anything down here. Even in the middle of the day a gloom seems to hang
-over the place as if mother nature knows that those that frequent this
-place should be hidden from the sight of the honest people of the
-surrounding  village."
-/*while to the east appears to be an auction house*/
-extra {"gloom","shadows"}
-"It is dark and difficult to see. It seems as if one of the shadows
-moved... just a little."
-extra {"trees"}
-"The trees of the forest add to the gloom of the area."
-west to dark_all2;
-/* EXTENDED MUD east to ud_auction;*/
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-magic_way1
-title "Elemental Path"
-names {"elemental path"}
-descr
-"You are walking down a quiet cobblestone path. Small flowers grow along the
-edges giving the area a peaceful look. Small shade trees provide
-the scholars that frequent this area a place to rest and read, as well as
-providing the perfect place for the young conjurers to practice their
-fledgling spells, as is evident by the scorch marks on many of the trunks.
-You can follow the path to the east or west."
-extra {"cobblestone","path","stone"}
-"The path is made from plain white handcrafted cobblestones."
-extra {"trees"}
-"The trees are covered in burn marks, some conjurer has been practising
-here."
-east to guild_rd2;
-west to magic_way2;
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-
- magic_way2
-title "Elemental Path"
-names {"elemental path"}
-descr
-"You are walking down a quiet cobblestone path. Small flowers grow along the
-edges giving the area a peaceful look. Small shade trees provide
-the scholars that frequent this area a place to rest and read. At spots
-along the path you notice burn marks on the cobblestones and can only
-assume some young conjurer was practicing their fireball spells at sometime
-in the past. Upon closer inspection you notice that many of the trees are
-damaged by young conjurers as they worked to hone the skills of their
-chosen field.<br/>
-A <a cmd='read #'>sign</a> saying 'Mr Winky's Tailoring &amp; Crafting' hangs over a door to a
-shop to the south."
-extra {"sign","door","shop"}
-"The sign over the door says 'Mr Winky's Tailoring &amp; Crafting' and
-a quick look inside tells you that it does not lie."
-extra {"cobblestone","path","stone"}
-"The path is made from plain white handcrafted cobblestones."
-extra {"trees"}
-"The trees are covered in burn marks, some conjurer has been practising
-here."
-east to magic_way1;
-west to magic_way3;
-south to mageshop;
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-
-  magic_way3
-title "Elemental Path"
-names {"elemental path"}
-descr
-"You are walking down a quiet cobblestone path. Small flowers grow along the
-edges giving the area a peaceful look. Small shade trees provide
-the scholars that frequent this area a place to rest and read.  The path
-leads off to the east back toward the village, while to the north a small
-door leads into a tobacco shop."
-east to magic_way2;
-north to tobacco_shop open {EX_OPEN_CLOSE} keyword {"door"};
-extra {"tobacco shop","shop","door"}
-"The small tobacco shop is frequently visited by the local wizards who
-enjoy a good smoke after a hard day of spell-tossing."
-extra {"cobblestone","path","stone"}
-"The path is made from plain white handcrafted cobblestones."
-extra {"trees"}
-"The trees are covered in burn marks, some conjurer has been practising
-here."
-movement SECT_CITY
-ALWAYS_LIGHT
-end
-#endif // EXTENDEDMUD
-
-/* --------------------- GUILD SHOPS ----------------------- */
-
-/* ----------------- MAGESHOP ------------------------------ */
-  mageshop
-names {"tailor booth","booth"}
-title "At a small tailor booth"
-descr
-"This small market stand seems filled with random merchandise. Clothes seem the main
-feature here, but a few weapons and other random trinkets complete the collection of
-the absolute must for the well-equipped beginner student of magic. A <a cmd='read #'>sign</a>
-hanging over the booth tries to explain a few things."
-extra {"sign over the booth", "booth sign", "sign"}
-"<pre>The sign says:
-
- '<a cmd='#'>list</a>'  - lists the merchandise.
- 'buy &lt;item&gt;' - lets you acquire an item.
- 'sell &lt;item&gt;' - lets you sell an item.
-
-  Warning: As this shop specializes in mage items, some of the items
-  may be worthless to non-students.
-
-</pre>"
-movement SECT_CITY
-gmap(382,720)
-northeast to market;
-ALWAYS_LIGHT
-end
-
-/* ----------------- THIEVES BACKALLEY --------------------- */
-  side_alley
-names {"scruffy booth","booth"}
-title "A scruffy booth at the Udgaard Market"
-descr
-"You're at the southeast corner of the Udgaard Market and it is clearly
-the scruffy looking part of the marketplace. An old booth with what looks
-like mostly junk items is here and you're wondering how anyone could possibly
-make a living from this. Some smashed old barrels with vegetables stand next
-to the booth."
-
-northwest to market;
-movement SECT_CITY
-gmap(466,720)
-ALWAYS_LIGHT
-
-extra {"old barrels","barrels","barrel","vegetables"}
-"One of the barrels is smashed, rotting heads of cabbage lying in the
-smelly mud. The other one is half-filled with stinky rain-water."
-end
-
-/* ----------------------------- HEAL SHOP ------------------ */
-
-  heal_shop
-names {"The Herbalist and Talismongers", "supplies"}
-title "The Herbalist &amp; Talismonger stand"
-descr
-"The air in northwest corner of the Udgaard Market smells faintly of herbs,
-incense and other various healer ingredients.  You hear a  weak tinkle of
-small bells hanging from the small market stand in front of you. The stand is
-filled with trinkets of all sorts and a <a cmd='read #'>sign</a> catches your attention."
-movement SECT_CITY
-gmap(382,637)
-southeast to market;
-ALWAYS_LIGHT
-
-/*extra {"bells over the door","bells","bell"}
-"Tiny brass bells hang over the door, tinkling musically."
-extra {"coloured windows","glass","windows","light"}
-"The many-coloured glass makes you think of cathedral windows. Perhaps
-owner of this shop got his glass cheap from the church. Or perhaps he was
-out with a rock himself, collecting whatever fell down."*/
-
-extra {"trinkets","herbs","incense","ingredients"}
-"A lot of talismans, herbs, vials, holy charms and whatever the
-well-supplied superstitious needs to get him through the day."
-extra {"sign"}
-"<pre>
- ________________________________________________________
-[                                                        ]
-[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
-[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the talismonger ]
-[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
-[                                                        ]
-[   </div><div class='cpc'>'ask talismonger &lt;item&gt;'</div><div class='cw'> will give you a description ]
-[   of the item in question; only items sold in this     ]
-[   store can be examined in this way.                   ]
-[________________________________________________________]
-
-<br/></div></pre>"
-end
-
-/* --------------------- OUTDOORS SHOP ----------------- */
-
-                field_shop
-names {"field equipment booth","booth"}
-title "Field Equipment Booth"
-descr
-"This small market booth is filled with all sorts of equipment, useful
-in the outdoors. Perhaps you can browse the many items here and find
-something you might like. A small <a cmd='read #'>sign</a> hangs over the booth."
-
-movement SECT_CITY
-gmap(465,639)
-ALWAYS_LIGHT
-southwest to market;
-
-extra {"small sign","sign"}
-"<pre>
- ________________________________________________________
-[                                                        ]
-[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
-[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the shopkeeper  ]
-[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
-[                                                        ]
-[   </div><div class='cpc'>'ask shopkeeper &lt;item&gt;'</div><div class='cw'> will give you a description  ]
-[   of the item in question; only items sold in this     ]
-[   store can be examined in this way.                   ]
-[________________________________________________________]
-
-<br/></div></pre>"
-end
-
-/* -------------------- TOBACCO SHOP ------------------- */
-
-  tobacco_shop
-names {"tobacco shop","shop"}
-title "At 'Ye Olde Tobacco Shoppe'"
-descr
-"This booth is very small. Even so, the aroma of tobacco permeates the air.
-The table is filled with jars and boxes of tobacco, cigars, pipes and
-other articles for the well-supplied smoker. A small <a cmd='read #'>sign</a> stands 
-amongst the wares."
-
-movement SECT_CITY
-gmap(466,679)
-west to market;
-ALWAYS_LIGHT
-
-extra {"shelves","jars","boxes","tobacco","cigars","pipes","articles"}
-"Those shelves keep all your heart would desire if you are a smoker or
-plan to get off to a good start."
-extra {"small sign","sign"}
-"<pre>
- ________________________________________________________
-[                                                        ]
-[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
-[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the seller      ]
-[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
-[                                                        ]
-[   </div><div class='cpc'>'ask seller &lt;item&gt;'</div><div class='cw'> will give you a description      ]
-[   of the item in question; only items sold in this     ]
-[   store can be examined in this way.                   ]
-[________________________________________________________]
-</div></pre>"
-end
 
 %objects
 
