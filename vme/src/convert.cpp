@@ -7,6 +7,7 @@
 #include "affect.h"
 #include "db.h"
 #include "db_file.h"
+#include "extra.h"
 #include "formatter.h"
 #include "handler.h"
 #include "nanny.h"
@@ -339,8 +340,25 @@ const char *isodate(tm *t)
     return isodate.c_str();
 }
 
+std::string GetInfo(unit_data *pc)
+{
+    std::string s = "";
+    extra_descr_data *e1 = PC_INFO(pc).find_raw("$email");
+
+    if (e1)
+        s = "email: " + e1->descr + ";";
+
+    e1 = PC_INFO(pc).find_raw("$maiden");
+    if (e1)
+        s += "maiden: " + e1->descr + ";";
+
+    return s;
+}
+
 void clist()
 {
+    void boot_global_dil(void);
+    
     std::string ipath;
     /*
         std::cout << "\nEnter the full path to the root player directory for example '/home/mud/vme2.0/lib/ply' or \n<enter> for the one
@@ -374,6 +392,8 @@ void clist()
         std::string path_end = "";
 
         std::cout << "name;id;Level;Admin;days since login;created;birth;" << std::endl;
+
+        boot_global_dil();
 
         for (char c = 'a'; c <= 'z'; c++)
         {
@@ -416,6 +436,8 @@ void clist()
 
                         std::cout << PC_ID(pc) << ";" << (int)CHAR_LEVEL(pc) << ";" << (IS_MORTAL(pc) ? " PLY  " : "ADMIN") << ";"
                                   << days_old(PC_TIME(pc).getPlayerLastConnectTime()) << ";";
+
+                        std::cout << GetInfo(pc);
 
                         if (ids[PC_ID(pc)])
                         {
