@@ -57,7 +57,10 @@ to the server, some supporting telnet some support web sockets.
        firefox index.html
 
 Set the host to your fqdn or localhost and set the port to match mplex (4280 if you used that)
-And you'll see the welcome screen in Firefox
+And you'll see the welcome screen in Firefox.
+
+6) Connect with a player named 'Papi' to create your first god character. 
+   This value is configurable in vme/etc/server.cfg 
 
 ---
 
