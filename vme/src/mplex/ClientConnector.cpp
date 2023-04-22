@@ -1096,12 +1096,14 @@ void cConHook::StripHTML(char *dest, const char *src)
 // This should only be called for telnet
 char *cConHook::ParseOutput(const char *text)
 {
+    extern arg_type g_mplex_arg;
+
     static char Outbuf[65536];  // I know this sucks. Got to rewrite thath StripHTML and 
     static char Outbuf2[65536]; // rewrite indentText too to either stop at the end or realloc...
 
     assert(strlen(text) < sizeof(Outbuf));
 
-    if (this->m_pWebsServer)
+    if (this->m_pWebsServer && !g_mplex_arg.bForceAscii)
     {
         size_t n = strlen(text);
         if (n < sizeof(Outbuf))

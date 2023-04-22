@@ -30,6 +30,7 @@ struct arg_type
     int g_bModeRawHTML;
     int bWebSockets;
     int bMudProtocol;
+    int bForceAscii;
     bool g_bUseTLS;
 };
 

@@ -72,6 +72,7 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -s  Internet port of server (4999 default).\n");
     fprintf(stderr, "  -l  Name of the logfile (default: ./mplex.log).\n");
     fprintf(stderr, "  -x  Output raw HTML on telnet (nice for debugging).\n");
+    fprintf(stderr, "  -y  Strip away the HTML on websockets.\n");
     fprintf(stderr, "  -w  Use Websockets.\n");
     fprintf(stderr, "  -t  Use TLS (can only be used with Websockets).\n");
     fprintf(stderr, "  -m  Use mud protocol (experimental).\n");
@@ -101,6 +102,7 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
     arg->g_bModeRawHTML = FALSE;
     arg->bWebSockets = FALSE;
     arg->bMudProtocol = false;
+    arg->bForceAscii = false;
 
     log_name = str_dup("./mplex.log");
 
@@ -146,6 +148,10 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
 
             case 'm':
                 arg->bMudProtocol = true;
+                break;
+
+            case 'y':
+                arg->bForceAscii = true;
                 break;
 
             case 'l':
