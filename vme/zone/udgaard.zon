@@ -22,7 +22,7 @@ from moving to fjord and grotto thus depriving newbies access. */
 
 // 2020 MS. Added #ifndef EXTENDEDMUD to zap away complicated stuff in Udgaard
 // Ken and I thought Udgaard had become too large for a starting zone. I'll add
-// the same for Haon-Dor (a builder house). I'll also revamp login so you only choose
+// the same for Haon Dor (a builder house). I'll also revamp login so you only choose
 // one guild. And make it possible to choose additional guilds in the game.
 //
 // All the extended mud stuff could be moved to its own zone away from Udgaard.
@@ -63,7 +63,7 @@ D    R---P   S   |   O   S                     Weaponsmith     D11
                  |                             Inn             B03
 E             H  |  F                          Post Office     D03
                \ | /                           Guard's Office  D09
-F                # -- T                        Haon-Dor        C00
+F                # -- T                        Haon Dor        C00
                / | \                           Bank            B09
 G             M  |  Y                          Herbalist       E05
                  |                             Field Equipment E09
@@ -90,7 +90,7 @@ ironmonger, post office and an Inn. All of the four starting guilds are
 reachable through the guild streets, also containing several
 guild-dedicated shops.
 
-Udgaard is connected to the Haon-Dor forest, Cypress forest and Hamlet - all
+Udgaard is connected to the Haon Dor forest, Cypress forest and Hamlet - all
 are ideal zones for beginners as long as you are a little cautious.
 
 The only native monster in here is the ever-famous 'beastly fido'. A map of
@@ -2280,7 +2280,7 @@ person to defend the entrance with an axe or a large sword in
 case of invasion. Nicks and scratches on the wall indicate
 that perhaps it has been necessary in the past. A <a cmd='read #'>sign</a> hangs on
 the eastern wall and the head of a broken pike on the western.
-The main room of the hall is visable to the north and the village road
+The main room of the hall is visible to the north and the village road
 goes south."
 
 extra {"head", "pike"}
@@ -3838,7 +3838,7 @@ extra {"wooden watchtower", "watchtower", "tower"}
 extra {"village road", "road"}
 "The road is constructed of hard-packed dirt."
 extra {"udgaard temple", "back side", "temple"}
-"The Udgaard temple is the center of your existance. It is there that you
+"The Udgaard temple is the center of your existence. It is there that you
 can find donated items, rest your soul, or resurrect from death."
 movement SECT_CITY
 gmap(370,310)
@@ -3904,7 +3904,7 @@ watch_tower2
 title "Underneath the Wooden Watchtower"
 descr
 "The floor of a wooden watchtower looms over your head. The forest of
-Haon-dor is to the west, and the Village Road of Udgaard leads east. Trees
+Haon Dor is to the west, and the Village Road of Udgaard leads east. Trees
 block all passage to the north and south. A ladder leads upwards into the
 watchtower."
 extra {"ladder"}
@@ -4082,7 +4082,7 @@ end
 
 
                               command_chat
-title "Commands's Chat Room"
+title "Commands Chat Room"
 descr
 "You have entered the 'newbie zone'. If you have been brought to this
 place then you must be seeking help. Sit still and your guide will
@@ -4132,7 +4132,7 @@ title "Village Road at Haon-Dor"
 descr
 "Just west of here is a watchtower which protects Udgaard from the
 dangers of the forest.  Farther west from that is the forest of
-Haon-Dor where many adventurers travel.  Very conveniently the Chicken's
+Haon Dor where many adventurers travel.  Very conveniently the Chicken's
 Rest is next to you just north while the post office is south in case you
 would like to send a last farewell letter."
 movement SECT_CITY
@@ -4418,7 +4418,7 @@ end
 title "The Chicken's Rest"
 descr
 "The Chicken's Rest is a cozy bar often used by adventurers returning
-from the dangerous forest of Haon-Dor just west of here. A small <a cmd='read #'>sign</a> has
+from the dangerous forest of Haon Dor just west of here. A small <a cmd='read #'>sign</a> has
 been hung on the wall. A rickety staircase leads upstairs and a small
 door leads west into a back room."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB, UNIT_FL_SACRED}
@@ -4706,7 +4706,7 @@ names {"swordsman way"}
 descr
 "The street here is paved with a reddish colored flagstone, each of them
 laid with loving pride by some long-ago mason. A couple of smaller sized
-trees stand proud, despite the knick's and cuts countless swords have made
+trees stand proud, despite the nicks and cuts countless swords have made
 in their trunks over the years. The road continues to the east and west."
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -4783,7 +4783,7 @@ extra {"glass windows", "windows"}
 well lit building that was sheltered from the elements."
 extra {"wooden benches", "benches", "rows"}
 "It is here that the commoners from the hamlet and the townspeople of
-udgaard gather to discuss matters."
+Udgaard gather to discuss matters."
 extra {"small stage", "stage"}
 "The stage bears a large podium, and a number of seats bearing name
 plates.  The nameplates read: Whistler, Palio, Saor, Eirinn, Drevar,
@@ -4825,7 +4825,7 @@ extra {"overstuffed chair", "chair"}
 "The chair looks to be wonderfully comfortable.  A truly great
 place to sit."
 extra {"bookshelf"}
-"You can make out some of the titles in the bookshelf:  Screetons Book of
+"You can make out some of the titles in the bookshelf:  Screeton's Book of
 Knowledge, Guide to Familiars, A small book about horses, The Maleus
 Malefacarum, The history of Sanctuary, Aristol's Book, The book of Creation,
 The Book of Remembrance, the Book of Demonic Knowledge, Thorbardins
@@ -4856,7 +4856,7 @@ continues to the east and west from here."
 extra {"path","dirt path","dirt"}
 "The path is made from well packed dirt."
 extra {"trees","tree"}
-"The trees add a welcome tranquillity to the area."
+"The trees add a welcome tranquility to the area."
 west to healers_way2;
 east to guild_rd1;
 movement SECT_CITY
@@ -4903,7 +4903,7 @@ filtered out and a sense of peace washes over you."
 extra {"path","dirt path","dirt"}
 "The path is made from well packed dirt."
 extra {"trees","tree"}
-"The trees add a welcome tranquillity to the areas."
+"The trees add a welcome tranquility to the areas."
 east to healers_way2; movement SECT_CITY
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -4991,7 +4991,7 @@ You can follow the path to the east or west."
 extra {"cobblestone","path","stone"}
 "The path is made from plain white handcrafted cobblestones."
 extra {"trees"}
-"The trees are covered in burn marks, some conjurer has been practising
+"The trees are covered in burn marks, some conjurer has been practicing
 here."
 east to guild_rd2;
 west to magic_way2;
@@ -5020,7 +5020,7 @@ a quick look inside tells you that it does not lie."
 extra {"cobblestone","path","stone"}
 "The path is made from plain white handcrafted cobblestones."
 extra {"trees"}
-"The trees are covered in burn marks, some conjurer has been practising
+"The trees are covered in burn marks, some conjurer has been practicing
 here."
 east to magic_way1;
 west to magic_way3;
@@ -5046,7 +5046,7 @@ enjoy a good smoke after a hard day of spell-tossing."
 extra {"cobblestone","path","stone"}
 "The path is made from plain white handcrafted cobblestones."
 extra {"trees"}
-"The trees are covered in burn marks, some conjurer has been practising
+"The trees are covered in burn marks, some conjurer has been practicing
 here."
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5304,8 +5304,8 @@ end /* mail_list_obj */
 
 honeybun
 names {"honey bun", "bun", "pastry"}
-title "a honey bunn"
-descr "A huge honey bunn pastry has been placed here."
+title "a honey bun"
+descr "A huge honey bun pastry has been placed here."
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(5, 0)
 weight 1
@@ -5317,7 +5317,7 @@ names {"hand axe","axe"}
 title "an axe"
 descr "A short axe with a large head is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-/* Not pure Iron / Craftman-ship = -5% */
+/* Not pure Iron / Craftmanship = -5% */
 WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 6
 cost  4   SILVER_PIECE
@@ -5531,7 +5531,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -5681,7 +5681,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -5830,7 +5830,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -5982,7 +5982,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -6132,7 +6132,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -6283,7 +6283,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -6432,7 +6432,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -6581,7 +6581,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -6731,7 +6731,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -6881,7 +6881,7 @@ While in Udgaard, you can get a map at any time by typing:
 
    &gt; help
 
-The map shows you how to get to the Haon-Dor Forest as well as the
+The map shows you how to get to the Haon Dor Forest as well as the
 Cypress Forest. From the village square simply go east three times to
 get to the Cypress forest, or west three times to get to the Haon Dor
 forest. Both locations are ideal for beginners such as yourself.
@@ -7571,7 +7571,7 @@ names {"long sword", "sword"}
 title "a long sword"
 descr "A long sword has carelessly been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-/* Iron - Non Pure, Craftman ship -5 */
+/* Iron - Non Pure, Craftmanship -5 */
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 romflags {OBJ_NO_DUAL}
 weight 20
@@ -7908,7 +7908,7 @@ names {"hand mace","mace"}
 title "a hand mace"
 descr "A small hand mace lies here."
 extra {}
-"Perfect weapon for all your self-defence needs."
+"Perfect weapon for all your self-defense needs."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_MACE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
@@ -9721,7 +9721,7 @@ descr "A small glowing ring lies here."
 manipulate{MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 weight 1
 extra {}
-"This ring will transport you to udgaard upon using the command 'home' and
+"This ring will transport you to Udgaard upon using the command 'home' and
 while worn."
 dilcopy home@udgaard();
 dilcopy guild_restrict@function ({GUILD_UDG_MAGE},0,0,"");
@@ -9736,7 +9736,7 @@ descr "A small glowing amulet lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 weight 1
 extra {}
-"This amulet will transport you to udgaard upon the command 'home' and while
+"This amulet will transport you to Udgaard upon the command 'home' and while
 worn."
 dilcopy home@udgaard();
 dilcopy guild_restrict@function ({GUILD_UDG_CLERIC},0,0,"");
@@ -9751,7 +9751,7 @@ descr "A small broach lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 weight 1
 extra {}
-"This amulet will transport you to udgaard upon the command 'home' and while
+"This amulet will transport you to Udgaard upon the command 'home' and while
 worn."
 dilcopy home@udgaard();
 dilcopy guild_restrict@function ({GUILD_UDG_THIEF},0,0,"");
@@ -9766,7 +9766,7 @@ descr "A sturdy iron arm band lies here."
 weight 1
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_WRIST}
 extra {}
-"This arm band will transport you to udgaard upon the command 'home' and while worn."
+"This arm band will transport you to Udgaard upon the command 'home' and while worn."
 
 dilcopy home@udgaard();
 dilcopy prof_restrict@function(PROFESSION_BARBARIAN,0,0,"");
@@ -9780,7 +9780,7 @@ descr "A small earring shaped like a sword is here."
 weight 1
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_EAR}
 extra {}
-"This earring will transport you to udgaard upon the command 'home' and
+"This earring will transport you to Udgaard upon the command 'home' and
 while
 worn."
 dilcopy home@udgaard();
@@ -10007,7 +10007,7 @@ C    1---#---#---#---#---#---2                 Ironmonger      D05
 D        P   S   |   O   S                     Inn             B03
                  |                             Post Office     D03
 E  G-#---#---#---#---#---#---#-G               Guard's Office  D09
-                 |                             Haon-Dor        C01
+                 |                             Haon Dor        C01
 F  G-#---#---#---#---#---#---#-G               Bank            B09
                                                Cleric's Guild  E00
                                                Warrior's Guild E14
@@ -11406,7 +11406,7 @@ names {"Jens Grib", "Jens", "Grib"}
 title "Jens Grib"
 descr "Jens Grib is standing here."
 extra {}
-"Jens is a middle aged man, nearly bald, with a really short haircut.
+"Jens is a middle-aged man, nearly bald, with a really short haircut.
 Somehow you wonder if he is really as nice as he tries to seem."
 
 M_HUMAN_THIEF_SWORD(3, SEX_MALE)
@@ -11742,7 +11742,7 @@ names {"cook","ogre"}
 title "a greasy cook"
 descr "A greasy cook hums as he works at the grill."
 extra {}
-"A middle aged man, a little overweight. He wears greasy white
+"A middle-aged man, a little overweight. He wears greasy white
 clothes and a barely readable name tag. He hums something about hounds
 as he flips dragon burgers. "
 
@@ -13306,7 +13306,7 @@ end
                 bwarrior1
 names {"young warrior","warrior","boy"}
 title "a young warrior"
-descr "A young warrior practises his axe skills on nearby trees."
+descr "A young warrior practices his axe skills on nearby trees."
 extra {}
 "A young, warrior has huge arms, obviously from heaving that huge axe
 about."
@@ -13448,7 +13448,7 @@ title "Mr Winky"
 descr "Mr Winky walks around here, taking care of the merchandise."
 extra {}
 "A small, round man, Mr Winky is the tailor of the Conjurers. It is said
-that his clothes don't lose facon even after the heaviest spell fumbles."
+that his clothes don't lose function even after the heaviest spell fumbles."
 M_SHOP_KEEPER(33,SEX_MALE,RACE_HUMAN)
 flags {UNIT_FL_NO_TELEPORT}
 money 10 COPPER_PIECE
