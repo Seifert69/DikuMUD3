@@ -1798,6 +1798,7 @@ external
     integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                             opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
+   bonus: integer;
    skia : integer;
    skib : integer;
    skic : integer;
@@ -1869,7 +1870,7 @@ code
       }
    }
 
-   if ((tgt.weight - self.weight) > 125)
+   if ((not("$bashmaster" in self.extra)) and (tgt.weight > (self.abilities[ABIL_STR]+self.skills[SKI_BASH]+self.weight+100)))
    {
       act("$3n is too large to be bashed!", A_SOMEONE, self, null, tgt, TO_CHAR);
       quit;
@@ -1940,7 +1941,16 @@ code
    act("<div class='hit_opponent'>You slam your $2t into $3n.</div>", A_SOMEONE, self, shield.name, tgt, TO_CHAR);
    act("<div class='hit_other'>$1n slams $1s $2t into $3n.</div>", A_SOMEONE, self, shield.name, tgt, TO_NOTVICT);
    act("<div class='hit_me'>$1n slams $1s $2t into you!</div>", A_SOMEONE, self, shield.name, tgt, TO_VICT);
+   if ("$spiked" in shield.extra){
+       if (self.type == UNIT_ST_PC)
+           bonus := self.skills[SKI_BASH];
+       else
+           bonus := self.weapons[WPN_UNARMED];
 
+       if (tgt.position != POSITION_FIGHTING)
+           bonus := bonus + 50;
+       bonus := meleeattack(self, tgt, (bonus+self.level),    WPN_CRUSH);
+   }
    provoked_attack(tgt, self);
    send_done("bash",self,shield,tgt,hm,arg,null, CMD_AUTO_NONE);
    quit;
