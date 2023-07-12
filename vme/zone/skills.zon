@@ -1790,7 +1790,16 @@ code
 dilend
 
 
-
+// rewritten in 07/2023 by Barron
+// Increases range of possible bash target from 125+initiator weight vs target weight to
+// 100+bash skill+strength+initiator weight vs target weight. This can work out to be
+// a much larger range (assuming strengh is 100 and skill is 100, this would give you
+// 300+weight instead of 125+ weight.
+// Also contains a new $extra that could be added via quest to allow bashing of
+// creatures of any size ($bashmaster)
+// Also contains an option for shields to be spiked ($spiked in shield extras) to allow
+// a a spiked shield to do damage on a bash. Calculation for damage based off of kick,
+// using the bash skill to determine damage. Currently uses wpn_crush as the damage type.
 // do_bash
 dilbegin ski_bash(arg : string);
 external
@@ -1798,6 +1807,7 @@ external
     integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
                             opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 var
+   bonus: integer; // added to be used for damage calculation if shield is spiked
    skia : integer;
    skib : integer;
    skic : integer;
@@ -1869,7 +1879,7 @@ code
       }
    }
 
-   if ((tgt.weight - self.weight) > 125)
+   if ((not("$bashmaster" in self.extra)) and (tgt.weight > (self.abilities[ABIL_STR]+self.skills[SKI_BASH]+self.weight+100))) // calculation changed during rewrite
    {
       act("$3n is too large to be bashed!", A_SOMEONE, self, null, tgt, TO_CHAR);
       quit;
@@ -1940,7 +1950,16 @@ code
    act("<div class='hit_opponent'>You slam your $2t into $3n.</div>", A_SOMEONE, self, shield.name, tgt, TO_CHAR);
    act("<div class='hit_other'>$1n slams $1s $2t into $3n.</div>", A_SOMEONE, self, shield.name, tgt, TO_NOTVICT);
    act("<div class='hit_me'>$1n slams $1s $2t into you!</div>", A_SOMEONE, self, shield.name, tgt, TO_VICT);
+   if ("$spiked" in shield.extra){ // added to allow spiked shields to do damage
+       if (self.type == UNIT_ST_PC)
+           bonus := self.skills[SKI_BASH];
+       else
+           bonus := self.weapons[WPN_UNARMED];
 
+       if (tgt.position != POSITION_FIGHTING)
+           bonus := bonus + 50;
+       bonus := meleeattack(self, tgt, (bonus+self.level),    WPN_CRUSH);
+   }
    provoked_attack(tgt, self);
    send_done("bash",self,shield,tgt,hm,arg,null, CMD_AUTO_NONE);
    quit;
