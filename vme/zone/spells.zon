@@ -6143,8 +6143,9 @@ code
         i := i + 1;
     }
 
-    // Finally copy in the description from $identify / $improved identify
-
+    /* Finally copy in the description from $identify / $improved identify
+       added <br/> to allow new line for improved identify for old items instead
+       of running indentification strings together */
     exd := "$identify" in tgt.extra;
     if (exd)
         s := exd.descr + s;
@@ -6153,7 +6154,7 @@ code
     {
         exd := "$improved identify" in tgt.extra;
         if (exd)
-            s := exd.descr + s;
+            s := exd.descr + "<br/>" + s;
     }
 
     return(s);
