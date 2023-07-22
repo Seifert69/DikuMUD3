@@ -238,7 +238,7 @@ var
    sl : stringlist;
 code
 {
-   if (ProfCount@professions(pc) == 1)
+   if (ProfCount@professions(pc) <= 2)
    {
       // You can only specialize if this is one of your starting professions.
       //
@@ -335,11 +335,11 @@ code
       return;
    }
 
-   if (length(exd.names) != 2)
+   /*if (length(exd.names) <= 3)
    {
       log("AddSpec() was expecting precisely one profession.");
       return;
-   }
+   }*/
 
    pc.profession := newProf;
    

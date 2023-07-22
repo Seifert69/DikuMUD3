@@ -163,6 +163,7 @@ external
    integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
    Explainer@quests(pc : unitptr, sl : stringlist);
    integer ReadySpecialize@professions(pc : unitptr);
+   integer ProfCount@professions(pc : unitptr);
 
 var
    pc : unitptr;
@@ -186,7 +187,12 @@ code
    	Explain@quests(pc, null, "say $1N, in order to specialize, you must first become a guild member.");
       goto start;
    }
-
+   if (ProfCount@professions(activator) > 2)
+   {
+      pause;
+   	Explain@quests(pc, null, "say I'm sorry $1N but you have already specialized.");
+      goto start;
+   }
    if (not ReadySpecialize@professions(activator))
    {
       pause;
