@@ -136,7 +136,7 @@ code
    // Wish I had int in intlist...
 
    exd := PROFESSION_KEY in pc.info;
-   n := ProfessionIdx(exd.names.[1]);
+   n := ProfessionIdx(exd.names.[length(exd.names)-1]);
 
    if ((n == PROFESSION_FIGHTER) or (n == PROFESSION_BARBARIAN))
    {
@@ -157,6 +157,19 @@ code
    {
       il := {PROFESSION_FIGHTER, PROFESSION_THIEF, PROFESSION_PRIEST};
    }
+   else if (n == PROFESSION_RANGER)
+   {
+      il := {PROFESSION_FIGHTER, PROFESSION_PALADIN, PROFESSION_PRIEST};
+   }
+      else if (n == PROFESSION_PALADIN)
+   {
+      il := {PROFESSION_FIGHTER, PROFESSION_PRIEST, PROFESSION_RANGER};
+   }
+   else if (n == PROFESSION_KNIGHT)
+   {
+      il := {PROFESSION_FIGHTER, PROFESSION_THIEF, PROFESSION_PRIEST};
+   }
+
    else
    {
       il := null;
@@ -172,6 +185,7 @@ dilend
 // and optionally a specialization. Used to know when we can
 // switch career
 //
+/*
 dilbegin integer ReadyCareer(pc : unitptr);
 external
    integer ProfCount@professions(pc : unitptr);
@@ -196,7 +210,10 @@ code
           "Priest",
           "Druid",
           "Thief",
-          "Assassin"};
+          "Assassin",
+          "Ranger",
+          "Paladin",
+          "Knight"};
 
    n := ProfCount@professions(pc); 
    log("count = " + itoa(n));
@@ -220,7 +237,7 @@ code
    return (0);
 }
 dilend
-
+*/
 
 
 
@@ -335,18 +352,12 @@ code
       return;
    }
 
-   /*if (length(exd.names) <= 3)
-   {
-      log("AddSpec() was expecting precisely one profession.");
-      return;
-   }*/
-
    pc.profession := newProf;
    
    sl := {PROFESSION_STRINGS};
    addstring(exd.names, sl.[newProf]);
    exd.descr := exd.descr + desc + "<br/>";
-   insert(exd.vals, 2, newProf);
+   insert(exd.vals, length(exd.names), newProf);
    return;
 }
 dilend
@@ -355,7 +366,7 @@ dilend
 // ONLY CALL FROM INSIDE PROFESSIONS ZONE. PRIVATE FUNCTION.
 // To be called on a player to add a profession.
 //
-dilbegin AddFinal(pc : unitptr, newProf : integer, desc : string);
+dilbegin AddNonSpecProf(pc : unitptr, newProf : integer, desc : string);
 var
    sl : stringlist;
    i : integer;
@@ -368,13 +379,13 @@ code
    // If there is a $professions, then this doesn't apply.
    if (exd == null)
    {
-      log("AddFinal() called but $profession did not exist for player " + pc.name);
+      log("AddNonSpecProf() called but $profession did not exist for player " + pc.name);
       return;
    }
 
    if ((i < 0) or (i >= PROFESSION_COUNT))
    {
-      log("AddFinal() called but prof OOB.");
+      log("AddNonSpecProf() called but prof OOB.");
       return;
    }
 
@@ -383,19 +394,20 @@ code
    insert(exd.vals, length(exd.names), newProf);
    addstring(exd.names, sl.[newProf]);
    exd.descr := exd.descr + desc + "<br/>";
-   log(pc.name + " changed to dual class " + sl.[newProf]);
+   log(pc.name + " changed to multi class " + sl.[newProf]);
    return;
 }
 dilend
 
 
-// Call to allow player to do the final profession change.
+// Call to allow player to do the non specialization profession change.
 //
 dilbegin ChangeProf(pc : unitptr, newProf : integer);
 external
-   AddFinal(pc : unitptr, newProf : integer, desc : string);
-   integer ReadyCareer(pc : unitptr);
+   AddNonSpecProf(pc : unitptr, newProf : integer, desc : string);
+//   integer ReadyCareer(pc : unitptr);
    intlist CareerChoices(pc : unitptr);
+   integer ProfCount@professions(pc : unitptr);
 var
    sl : stringlist;
    il : intlist;
@@ -404,10 +416,10 @@ var
 
 code
 {
-   // Do a final sanity check just to be double sure
+   // Do a sanity check just to be double sure
    //
 
-   if (ReadyCareer(pc) == 0)
+   if (ProfCount@professions(pc) > 2)
    {
       log("something unexpected happened... dc");
       return;
@@ -433,7 +445,7 @@ code
    return;
 
 :profok:
-   AddFinal(pc, newProf, "Final profession change."); // xxxx
+   AddNonSpecProf(pc, newProf, "Non Specilization profession change."); // xxxx
    return;
 }
 dilend
@@ -444,6 +456,7 @@ dilend
 dilbegin SpecializeProf(pc : unitptr, newProf : integer);
 external
    AddSpec(pc : unitptr, newProf : integer, desc : string);
+   integer ProfessionIdx@professions(sName : string);
 
 var
    sl : stringlist;
@@ -452,13 +465,32 @@ var
 
 code
 {
-   // Make sure it is an allowed specialization
-   if (((pc.profession == PROFESSION_FIGHTER) and (newProf == PROFESSION_BARBARIAN)) or
-       ((pc.profession == PROFESSION_THIEF) and (newProf == PROFESSION_ASSASSIN)) or
-       ((pc.profession == PROFESSION_PRIEST) and (newProf == PROFESSION_DRUID)) or
-       ((pc.profession == PROFESSION_CONJURER) and (newProf == PROFESSION_SORCERER)))
+   exd := PROFESSION_KEY in pc.info;
+
+   if (((newProf == PROFESSION_BARBARIAN) and 
+                (ProfessionIdx(exd.names.[1]) == PROFESSION_FIGHTER)) or
+           ((newProf == PROFESSION_ASSASSIN) and 
+   		(ProfessionIdx(exd.names.[1]) == PROFESSION_THIEF)) or
+           ((newProf == PROFESSION_DRUID) and 
+   		(ProfessionIdx(exd.names.[1]) == PROFESSION_PRIEST)) or
+           ((newProf == PROFESSION_SORCERER) and 
+   		(ProfessionIdx(exd.names.[1]) == PROFESSION_CONJURER)))
    {
-      AddSpec@professions(pc, newProf, "Specializing from " + itoa(pc.profession) + " to " + itoa(newProf));
+      AddSpec@professions(pc, newProf, "Specializing from " + exd.names.[1] + " to " + itoa(newProf));
+   } 
+   else if (length(exd.names) == 3)
+   {
+   	if (((newProf == PROFESSION_BARBARIAN) and 
+                (ProfessionIdx(exd.names.[2]) == PROFESSION_FIGHTER)) or
+            ((newProf == PROFESSION_ASSASSIN) and 
+   	        (ProfessionIdx(exd.names.[2]) == PROFESSION_THIEF)) or
+            ((newProf == PROFESSION_DRUID) and 
+                (ProfessionIdx(exd.names.[2]) == PROFESSION_PRIEST)) or
+            ((newProf == PROFESSION_SORCERER) and 
+                (ProfessionIdx(exd.names.[2]) == PROFESSION_CONJURER)))
+        {
+        AddSpec@professions(pc, newProf, "Specializing from second profession to " + exd.names.[2] + " to " + itoa(newProf));
+        }
    }
    else
    {

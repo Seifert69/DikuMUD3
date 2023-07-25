@@ -475,7 +475,7 @@ dilcopy Specialize@guilds(GUILD_NYM_DRUID, "alespec@druid",
     { "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
       "say Once you commit this process will alter your body permanently.",
       "say I'll give you a mug of green liquid. Once you cosume it the change will occur.",
-      "say Remember, this will only work for healers.",
+      "say Remember, this will only work for those who have been a healer and never specialized.",
       "::$3n hands you a mug of green liquid.::$3n hands a mug of green liquid to $1n."});
 
 dilbegin  fnpri(FN_PRI_BLOCK-1) block_evil_join();
