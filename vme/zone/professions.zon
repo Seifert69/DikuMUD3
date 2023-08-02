@@ -35,6 +35,10 @@ mage: sorcerer<br/>
 
 You can now choose to specialize in your first or second profession as
 long as it is a basic profession. You can still only specialize once.
+Each base profession currently has only one specialization available as
+shown above and you must have the base profession in your professions list
+in order to take the corresponding specialization.
+
 Here are some examples
 Prof 1   | Prof2     | Prof3
 Fighter -> Thief    -> Barbarian
@@ -400,10 +404,10 @@ dilend
 //
 dilbegin ChangeProf(pc : unitptr, newProf : integer);
 external
-   AddNonSpecProf(pc : unitptr, newProf : integer, desc : string);
-//   integer ReadyCareer(pc : unitptr);
+   AddNonSpecProf(pc : unitptr, newProf : integer, desc : string);  
+   integer ReadyCareer(pc : unitptr);
    intlist CareerChoices(pc : unitptr);
-   integer ProfCount@professions(pc : unitptr);
+   
 var
    sl : stringlist;
    il : intlist;
@@ -415,7 +419,7 @@ code
    // Do a sanity check just to be double sure
    //
 
-   if (ProfCount@professions(pc) > 2)
+   if (ReadyCareer(pc) == 0)
    {
       log("something unexpected happened... dc");
       return;

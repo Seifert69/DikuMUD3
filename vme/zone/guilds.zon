@@ -781,7 +781,7 @@ code
    // =========================================
    // Show the character's profession
    //
-   sendtext("<br/>You have Been initiated into the following professions:<br/>", self);
+   sendtext("<br/>You are initiated into the following professions:<br/>", self);
    exd := "$profession" in self.info;
    i := 1;
    j := ProfCount@professions(self);
