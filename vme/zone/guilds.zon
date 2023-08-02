@@ -187,16 +187,10 @@ code
    	Explain@quests(pc, null, "say $1N, in order to specialize, you must first become a guild member.");
       goto start;
    }
-   if (ProfCount@professions(activator) > 2)
-   {
-      pause;
-   	Explain@quests(pc, null, "say I'm sorry $1N but you have already specialized.");
-      goto start;
-   }
    if (not ReadySpecialize@professions(activator))
    {
       pause;
-   	Explain@quests(pc, null, "say $1N, to specialize, you must at least be level 25 in your main guild.");
+   	Explain@quests(pc, null, "say $1N, to specialize, you must have embarked upon two or fewer professions at be at least level 25 in your main guild.");
       goto start;
    }
 
@@ -709,6 +703,7 @@ dilend /* join_dil */
 dilbegin do_guilds(arg : string);
 external
    string ProfessionName@professions(prof_xxx : integer);
+   integer ProfCount@professions(pc : unitptr);
    integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
    integer ReadySpecialize@professions(pc : unitptr);
 
@@ -716,6 +711,7 @@ var
    exd : extraptr;
    sl : stringlist;
    i : integer;
+   j : integer;
    s : string;
 
 code
@@ -785,7 +781,17 @@ code
    // =========================================
    // Show the character's profession
    //
-   sendtext("Your profession is: " + ProfessionName@professions(self.profession) + ".<br/>", self);
+   sendtext("<br/>You have Been initiated into the following professions:<br/>", self);
+   exd := "$profession" in self.info;
+   i := 1;
+   j := ProfCount@professions(self);
+   while (i <= j)
+   { 
+      
+      sendtext(exd.names.[i] + "<br/>", self);
+      i := i + 1;
+   }
+   sendtext("<br/>Your active profession is: " + ProfessionName@professions(self.profession) + ".<br/>", self);
 
    //
    // When the character has 25 guild levels in his main profession, he can 

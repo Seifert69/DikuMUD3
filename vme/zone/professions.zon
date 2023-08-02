@@ -31,6 +31,45 @@ thief: assassin<br/>
 cleric: druid<br/>
 mage: sorcerer<br/>
 
+***** Changes to allow more profession variation ******
+
+You can now choose to specialize in your first or second profession as
+long as it is a basic profession. You can still only specialize once.
+Here are some examples
+Prof 1   | Prof2     | Prof3
+Fighter -> Thief    -> Barbarian
+Fighter -> Thief    -> Assassin
+
+You can also choose not to specialize and only use profession changes.
+Here are some examples
+Prof 1   | Prof2     | Prof3
+Healer  -> Paladin  -> Ranger
+Conjurer-> Priest   -> Paladin
+Thief   -> Knight   -> Priest
+
+Here's the logic tree:
+FIGHTER or BARBARIAN ->
+	THIEF, PRIEST, CONJURER, KNIGHT, PALADIN, RANGER
+	
+THIEF or ASSASSIN ->
+	FIGHTER, PRIEST, CONJURER, KNIGHT, RANGER
+	
+PRIEST or DRUID ->
+	FIGHTER, THIEF, CONJURER, PALADIN, NECROMANCER, RANGER
+	
+CONJURER SORCERER ->
+	FIGHTER, THIEF, PRIEST
+	
+RANGER ->
+	FIGHTER, PALADIN, PRIEST
+	
+PALADIN ->
+	FIGHTER, PRIEST, RANGER
+	
+KNIGHT ->
+	FIGHTER, THIEF, PRIEST
+
+***** Everything below has been deprecated but kept for reference *****
 I made it so that these specializations are not obtainable on a
 career change. Once you hit level 50 in a guild, you can choose your
 second career :<br/>
@@ -47,9 +86,12 @@ cleric:<br/>
 mage:<br/>
    fighter, thief, cleric,
    necromancer<br/>
-
+***********************************************************************
 "
 
+#define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
+                           "Priest", "Druid", "Obsolete","Necromancer", "Conjurer", "Sorcerer", \
+						   "Barbarian"
 
 %dil
 
@@ -119,9 +161,8 @@ code
 dilend
 
 
-// Returns 1 if the player is has had a starting profession 
-// and optionally a specialization. Used to know when we can
-// switch career
+// Returns the list of professions a character can move into
+// when switching careers
 //
 dilbegin intlist CareerChoices(pc : unitptr);
 external
@@ -181,63 +222,31 @@ dilend
 
 
 
-// Returns 1 if the player is has had a starting profession 
-// and optionally a specialization. Used to know when we can
-// switch career
-//
-/*
+// Returns 1 if the player is has two professions or less. Otherwise returns 0
+// All of the other logic previously in this method is no logner relevant
+
 dilbegin integer ReadyCareer(pc : unitptr);
 external
    integer ProfCount@professions(pc : unitptr);
-   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
-   integer ProfessionIdx(sGuild : string);
-   string ProfessionName@professions(prof_xxx : integer);
 
 var
    exd : extraptr;
-   sl : stringlist;
    n : integer;
 code
 {
-#define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Obsolete","Necromancer", "Conjurer", "Sorcerer", \
-						   "Barbarian"
-
-   sl := {"Fighter",
-          "Barbarian",
-          "Conjurer",
-          "Sorcerer",
-          "Priest",
-          "Druid",
-          "Thief",
-          "Assassin",
-          "Ranger",
-          "Paladin",
-          "Knight"};
 
    n := ProfCount@professions(pc); 
    log("count = " + itoa(n));
 
    if (n <= 2)
    {
-      exd := PROFESSION_KEY in pc.info;
-
-      while (n > 0)
-      {
-         if (not (exd.names.[n] in sl))
-         {
-            log("profesion = " + exd.names.[n] + " not in allowed list.");
-            return (0);
-         }
-         n := n - 1;
-      }
       return (1);
    }
 
    return (0);
 }
 dilend
-*/
+
 
 
 
@@ -255,29 +264,16 @@ var
    sl : stringlist;
 code
 {
-   if (ProfCount@professions(pc) <= 2)
+   if (ProfCount@professions(pc) <= 2) 
    {
-      // You can only specialize if this is one of your starting professions.
-      //
-      if ((pc.profession == PROFESSION_FIGHTER) or
-          (pc.profession == PROFESSION_PRIEST) or
-          (pc.profession == PROFESSION_CONJURER) or
-          (pc.profession == PROFESSION_THIEF))
-      {
-         // We only have one profession
-         // Now find the guild matching pc.profession
-         // and if that guild level is >= 25 we can specialize
-
-         // It got a little too complicated to have the guild level requirement here.
-         // SO simply checking the level of the player.
-         // if (GetGuildLevel@guilds(pc, pc.guild) >= 25)
+   /* players first profession will always be a basic one and there is only a
+   single specialization per basic guild. As you can now specialize based on your first
+   profession while in your second profession, the check was no longer needed and removed */
          if (pc. level >= 25)
          {
             return (1);
          }         
-      }
    }
-
    return (0);
 }
 dilend

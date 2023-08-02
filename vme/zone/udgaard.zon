@@ -11218,7 +11218,7 @@ dilcopy qstItemsWanted@quests(NICHOLAS_QUEST, {"shrubbery@udgaard"},
 
 dilbegin newProfession();
 external
-   integer ProfCount@professions(pc : unitptr);
+   integer ReadyCareer@professions(pc : unitptr);
    intlist CareerChoices@professions(pc : unitptr);
    string ProfessionName@professions(prof_xxx : integer);
    string listselector@basis(sl : stringlist);
@@ -11242,7 +11242,7 @@ code
    if (not ((NICHOLAS_QUEST+" Complete") in activator.quests))
       goto start;
 
-   if (ProfCount@professions(activator) <= 2)
+   if (ReadyCareer@professions(activator))
    {
       if (argument == "")
       {
