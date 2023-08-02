@@ -240,7 +240,6 @@ code
 {
 
    n := ProfCount@professions(pc); 
-   log("count = " + itoa(n));
 
    if (n <= 2)
    {
@@ -261,19 +260,32 @@ dilend
 dilbegin integer ReadySpecialize(pc : unitptr);
 external
    integer ProfCount@professions(pc : unitptr);
-   integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
+   integer ReadyCareer@professions(pc : unitptr);
 
 var
    exd : extraptr;
-   sl : stringlist;
+   i : integer;
+   j : integer;
+   profname : string;
 code
 {
-   if (ProfCount@professions(pc) <= 2) 
+   if (ReadyCareer@professions(pc)) 
    {
+   	exd := "$profession" in pc.info;
+	i := 1;
+	j := ProfCount@professions(pc);
+	while (i <= j)
+	{ 
+		profName := exd.names.[i];
+		if((profName == "Barbarian") or (profName == "Druid") or (profName == "Sorcerer") or (profName == "Assassin")){
+				return (0);
+			}
+      i := i + 1;
+   }
    /* players first profession will always be a basic one and there is only a
    single specialization per basic guild. As you can now specialize based on your first
    profession while in your second profession, the check was no longer needed and removed */
-         if (pc. level >= 25)
+         if (pc.level >= 25)
          {
             return (1);
          }         
