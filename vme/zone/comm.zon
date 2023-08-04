@@ -537,11 +537,11 @@ badwords:=
  "fucker!","shit","s*it","sh*t","shi*","s**t","s***t", \
  "s******t","s*****t","cunt","c*nt","slut","fucker", \
  "a$$!","@$$!","asshole","ass","a**","d@mn", \
- "damn","whore","hoar","bitch","b*tch","bastard", \
- "b@stard","faggot","homo","dick","d*ck","dickhead", \
+ "whore","bitch","b*tch", \
+ "faggot","homo","dick","d*ck","dickhead", \
  "f*cker","fucking","f*cking","a$$","a$$","a@@", \
  "shit!","bullshit","bullsh!t","bullsh*t","que", \
- "qui","hoar","arse","caesure"};
+ "qui","arse","caesure"};
 
 while(i < length(lst))
 {
@@ -549,7 +549,7 @@ while(i < length(lst))
 if(lst.[i] in badwords)
 {
 loc:= lst.[i] in badwords;
-tm:= 100 * PULSE_SEC * SECS_PER_REAL_HOUR;
+tm:= 1 * PULSE_SEC * SECS_PER_REAL_HOUR;
 dilcopy("no_shouted@commands(" + itoa(tm) + ")", self);
 addextra(self.quests, {"$noshout"},"Shouted swear word "+
 asctime(realtime));
@@ -1106,7 +1106,7 @@ swear:= swear_check(arg);
 if(swear == TRUE)
 {
 sendtext("You suddenly get a sore throat!<br/>", self);
-sendtext("You have been noshouted for 100 hours for "+
+sendtext("You have been noshouted for 1 hour for "+
 "using a swear word in a public shout.<br/>", self);
 log(self.name+" was noshouted for shouting a swear word..."+
 "Argument was "+arg);

@@ -879,6 +879,11 @@ code
    
    if (self.symname == "familiar2@g_q")
    {
+     /* The while statement is to prevent people from destroying eq with a familiar*/
+
+	while(self.inside != null)
+		link(self.inside, self.outside);
+	
 		act("The familiar's magic unwinds and it fades from this plane of existance.",
 			A_ALWAYS,self,null,null,TO_ALL);
       crp := null;
