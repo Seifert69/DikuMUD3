@@ -214,6 +214,11 @@ code
    {
       il := {PROFESSION_FIGHTER, PROFESSION_THIEF, PROFESSION_PRIEST};
    }
+   else if (n == PROFESSION_NECROMANCER)
+   {
+      il := {PROFESSION_FIGHTER, PROFESSION_THIEF, PROFESSION_KNIGHT};
+   }
+
 
    else
    {
