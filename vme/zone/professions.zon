@@ -372,9 +372,10 @@ code
    pc.profession := newProf;
    
    sl := {PROFESSION_STRINGS};
+   insert(exd.vals, length(exd.names), newProf);
    addstring(exd.names, sl.[newProf]);
    exd.descr := exd.descr + desc + "<br/>";
-   insert(exd.vals, length(exd.names), newProf);
+
    return;
 }
 dilend
@@ -462,7 +463,7 @@ code
    return;
 
 :profok:
-   AddNonSpecProf(pc, newProf, "Non Specilization profession change."); // xxxx
+   AddNonSpecProf(pc, newProf, "Non-specialization profession change."); // xxxx
    return;
 }
 dilend
