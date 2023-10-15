@@ -4238,7 +4238,7 @@ code
    else if (hm <= 150)
       return (hm/10);
    else
-      return (15+((hm-150)/50));
+      return (15+((hm-150)/20));
 
 }
 dilend
@@ -14908,7 +14908,7 @@ code
 {
       hm := hm/10+1;  // old starting calculation
       if (hm>10)
-	hm := 10+((hm-10)/5); // allows for numbers greater than 10 at intervals of 50 per increase
+	hm := 10+((hm-10)/3); // allows for numbers greater than 10 at intervals of 50 per increase
       
      return(hm);
 }
