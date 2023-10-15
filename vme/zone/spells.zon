@@ -4232,10 +4232,14 @@ dilend
 dilbegin integer skill_duration(hm : integer);
 code
 {
+
    if (hm < 20)
-     return (2); // removed cap at 150 of 15.
+      return (2);
+   else if (hm <= 150)
+      return (hm/10);
    else
-     return (hm / 10);
+      return (15+((hm-150)/50));
+
 }
 dilend
 dilbegin unitptr unit_room(u : unitptr);
