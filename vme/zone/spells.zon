@@ -14900,7 +14900,7 @@ relevant attribute + an open100 roll -50.
 Example: Character with 50 magic and 50 skill and rolls a 50 would have a total of 100.
 1-10 are roughly 1 point per 10 points on your roll
 In this case, this function would return 10, the old standard roll.
-However, if the same character were to roll a 160 (due to how open roll works. If you roll a 100 it rolls again and adds the result so here I'm assuming they rolled a 100, then a 10) then the after the first 10 points, the second part of the calculation would kick in and the result would be an 11.
+However, if the same character were to roll a 160 (due to how open roll works. If you roll a 100 it rolls again and adds the result so here I'm assuming they rolled a 100, then a 10) then the after the first 10 points, the second part of the calculation would kick in and the result would be an 12.
 */
 dilbegin integer bonusCalc(hm : integer);
 
@@ -14908,7 +14908,7 @@ code
 {
       hm := hm/10+1;  // old starting calculation
       if (hm>10)
-	hm := 10+((hm-10)/3); // allows for numbers greater than 10 at intervals of 50 per increase
+	hm := 10+((hm-10)/3); // allows for numbers greater than 10 at intervals of 30 per increase
       
      return(hm);
 }
