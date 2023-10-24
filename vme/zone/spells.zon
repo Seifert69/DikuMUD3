@@ -8449,7 +8449,7 @@ dilbegin bless(medi:unitptr, tgt : unitptr, arg : string,
 	       hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
    /*
@@ -8500,7 +8500,7 @@ dilend
 dilbegin ubless(medi:unitptr,tgt:unitptr,arg:string,hm:integer,effect:string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
    /*
@@ -8617,7 +8617,7 @@ dilbegin raise_div(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8652,7 +8652,7 @@ dilbegin raise_mag(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8687,7 +8687,7 @@ dilbegin raise_str(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 
 code
 {
@@ -8724,7 +8724,7 @@ dilbegin raise_dex(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8759,7 +8759,7 @@ dilbegin raise_con(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8793,7 +8793,7 @@ dilbegin raise_cha(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8828,7 +8828,7 @@ dilbegin raise_bra(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8864,7 +8864,7 @@ dilbegin raise_divine(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8899,7 +8899,7 @@ dilbegin raise_heat(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8934,7 +8934,7 @@ dilbegin raise_summoning(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8969,7 +8969,7 @@ dilbegin raise_cold(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9004,7 +9004,7 @@ dilbegin raise_elect(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9039,7 +9039,7 @@ dilbegin raise_poison(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9074,7 +9074,7 @@ dilbegin raise_acid(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9109,7 +9109,7 @@ dilbegin mind_shield(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
 external
      integer bonusCalc(hm : integer);
-     iinteger max@function(a:integer, b:integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
