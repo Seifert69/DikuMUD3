@@ -742,10 +742,16 @@ block;
 
 act("Magic Newbie guardians knock you unconscious.",
 A_ALWAYS,self,null,activator,TO_VICT);
-activator.position:=POSITION_STUNNED;
-self.position:=POSITION_STANDING;
-activator.hp:=0;
-goto start;
+if (activator.type ==UNIT_ST_NPC){
+            act("As $2n attacks $1n $2e is dissolved in a bright light.", A_SOMEONE, self, activator, null, TO_ROOM);
+	destroy(activator);
+	goto start;
+} else {
+	activator.position:=POSITION_STUNNED;
+	self.position:=POSITION_STANDING;
+	activator.hp:=0;
+	goto start;
+}
 }
 dilend
 
