@@ -555,8 +555,7 @@ else if (tlist.[i]==left("maxmana",length(tlist.[i])))
   addstring (plist,"%tankdiag%");
        tlist.[i]:="%tankdiag%";
     }
-  else   if ((tlist.[i]==left("zone",length(tlist.[i]))) and
-(self.level >= IMMORTAL_LEVEL))
+  else   if (tlist.[i]==left("zone",length(tlist.[i])))
   {
     if (not("%zone%" in  plist))
   addstring (plist,"%zone%");

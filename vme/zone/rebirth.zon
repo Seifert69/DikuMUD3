@@ -745,7 +745,7 @@ code
 }
 dilend /* demon_special */
 
-/*dilbegin aware recall dragon_special();
+dilbegin aware recall dragon_special();
 
 var
    targ : unitptr;
@@ -889,7 +889,7 @@ code
 
    goto start;
 }
-dilend  dragon_special */
+dilend  /*dragon_special*/
 
 dilbegin aware recall lion_special();
 
@@ -3191,7 +3191,7 @@ code
    i := dildestroy ("vampire_special@rebirth", self);
    i := dildestroy ("vampire_combat@rebirth", self);
    i := dildestroy ("no_wear@rebirth", self);
-   i := dildestroy ("morph_commands@rebirth", self);
+   i := dildestroy ("d_commands@rebirth", self);
 
    position_update(self);
 
@@ -3598,15 +3598,6 @@ var
 
 code
 {
-/* rem out below to put back in */
-
-  act("Morph has been temporarily disabled due to problems " +
-       "with some morphs being unbalanced against others. " +
-	   "As well as other issues. This will be fixed asap.",
-       A_ALWAYS, self, null, null, TO_CHAR);
-   subextra(self.extra, "$morphed");
-   quit;
-//to here
    if ((isset(self.pcflags, PC_PK_RELAXED)) and ("$Rebirth_Bob" in
         self.quests)) 
 

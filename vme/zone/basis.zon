@@ -4038,8 +4038,9 @@ code
         nCount := nCount + 1;
         s := u.symname;
 
-        // Don't consume players or player's corpses :o)
-        if ((u.type == UNIT_ST_PC) or (s == "corpse@death"))
+        // Don't consume players, player's corpses, or containers :o)
+        if ((u.type == UNIT_ST_PC) or (s == "corpse@death") or ((u.type == UNIT_ST_OBJ) and (u.objecttype==ITEM_CONTAINER)))
+
         {
             u := u.next;
             continue;
