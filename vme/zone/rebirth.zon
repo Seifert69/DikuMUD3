@@ -255,10 +255,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -267,11 +267,11 @@ code
        "a fearsome basilisk!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Basilisk");
+   //addstring(self.names, pc_name + " the Basilisk");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "Basilisk");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "Basilisk");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null, "Covered with greenish brown scales and "+
@@ -312,11 +312,11 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
 
-   substring(self.names, pc_name + " the Basilisk");
-   substring(self.names, "Basilisk");
+   //substring(self.names, pc_name + " the Basilisk");
+  // substring(self.names, "Basilisk");
 
    subextra(self.extra, "");
 
@@ -332,7 +332,7 @@ code
    expd := "$My_Spell" in self.extra;
    self.spells[SPL_PETRIFY] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -1950,10 +1950,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -1962,11 +1962,11 @@ code
        "very eyes!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Giant");
+   //addstring(self.names, pc_name + " the Giant");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "Giant");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "Giant");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null, "Over ten metres tall, this giant could quite
@@ -2029,11 +2029,11 @@ code
    pause;
 
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
 
-   substring(self.names, pc_name + " the Giant");
-   substring(self.names, "Giant");
+   //substring(self.names, pc_name + " the Giant");
+   //substring(self.names, "Giant");
 
    subextra(self.extra, "");
 
@@ -2049,7 +2049,7 @@ code
    expd := "$My_Spell" in self.extra;
    self.spells[SPL_CLENCHED_FIST] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -2107,10 +2107,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+  // pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -2119,11 +2119,11 @@ code
        "$1s skin, and morphs into the Phoenix!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Phoenix");
+  // addstring(self.names, pc_name + " the Phoenix");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "phoenix");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "phoenix");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null, "A great bird of fire, the phoenix has " +
@@ -2169,10 +2169,10 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name + " the Phoenix");
-   substring(self.names, "phoenix");
+   //expd := "$My_Name" in self.extra;
+  // pc_name := expd.descr;
+  // substring(self.names, pc_name + " the Phoenix");
+   //substring(self.names, "phoenix");
 
    subextra(self.extra, "");
 
@@ -2191,7 +2191,7 @@ code
    expd := "$My_Spell_2" in self.extra;
    self.spells[SPL_CAUSE_WOUNDS_3] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -2258,10 +2258,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -2269,12 +2269,12 @@ code
    act("$1n changes shape, $1s body elongating into that of a Viper!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Viper");
+   //addstring(self.names, pc_name + " the Viper");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "viper");
-   addstring(self.names, "snake");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "viper");
+   //addstring(self.names, "snake");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null, "Slithering over the ground at great speed, " +
@@ -2313,11 +2313,11 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name + " the Viper");
-   substring(self.names, "viper");
-   substring(self.names, "snake");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, pc_name + " the Viper");
+   //substring(self.names, "viper");
+   //substring(self.names, "snake");
 
    subextra(self.extra, "");
 
@@ -2333,7 +2333,7 @@ code
    expd := "$My_Spell" in self.extra;
    self.spells[SPL_POISON] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -2398,10 +2398,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -2409,12 +2409,12 @@ code
    act("$1n changes shape, morphing into a great shadow demon!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Shadow Demon");
+   //addstring(self.names, pc_name + " the Shadow Demon");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "shadow demon");
-   addstring(self.names, "demon");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "shadow demon");
+   //addstring(self.names, "demon");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null,
@@ -2457,11 +2457,11 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name +  " the Shadow Demon");
-   substring(self.names, "shadow demon");
-   substring(self.names, "demon");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, pc_name +  " the Shadow Demon");
+   //substring(self.names, "shadow demon");
+   //substring(self.names, "demon");
 
    subextra(self.extra, "");
 
@@ -2480,7 +2480,7 @@ code
    expd := "$My_Spell2" in self.extra;
    self.spells[SPL_SLEEP] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -2547,10 +2547,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -2558,12 +2558,12 @@ code
    act("$1n changes shape, growing into a great red dragon!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Red Dragon");
+   //addstring(self.names, pc_name + " the Red Dragon");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "red dragon");
-   addstring(self.names, "dragon");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "red dragon");
+   //addstring(self.names, "dragon");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null,
@@ -2610,11 +2610,11 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name + " the Red Dragon");
-   substring(self.names, "red dragon");
-   substring(self.names, "dragon");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, pc_name + " the Red Dragon");
+   //substring(self.names, "red dragon");
+   //substring(self.names, "dragon");
 
    subextra(self.extra, "");
 
@@ -2633,7 +2633,7 @@ code
    expd := "$My_Spell2" in self.extra;
    self.spells[SPL_FIRE_BREATH] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -2697,10 +2697,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -2708,11 +2708,11 @@ code
    act("$1n changes shape, morphing into a lion!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Lion");
+   //addstring(self.names, pc_name + " the Lion");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "lion");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "lion");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null,
@@ -2751,10 +2751,10 @@ code
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name + " the Lion");
-   substring(self.names, "lion");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, pc_name + " the Lion");
+   //substring(self.names, "lion");
 
    subextra(self.extra, "");
 
@@ -2770,7 +2770,7 @@ code
    expd := "$My_Spell" in self.extra;
    self.spells[SPL_STUN] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -2833,10 +2833,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -2844,11 +2844,11 @@ code
    act("$1n changes shape, morphing into a panther!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Panther");
+   //addstring(self.names, pc_name + " the Panther");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "panther");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "panther");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null,"A pair of beady eyes stare back at you " +
@@ -2884,10 +2884,10 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name + " the Panther");
-   substring(self.names, "panther");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, pc_name + " the Panther");
+   //substring(self.names, "panther");
 
    subextra(self.extra, "");
 
@@ -2900,7 +2900,7 @@ code
    expd := "$My_Race" in self.extra;
    self.race := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -2962,10 +2962,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -2973,12 +2973,12 @@ code
    act("$1n changes shape, morphing into a Hell hound!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Hell Hound");
+   //addstring(self.names, pc_name + " the Hell Hound");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "hound");
-      addstring(self.names, "hell hound");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "hound");
+   //addstring(self.names, "hell hound");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null,
@@ -3023,11 +3023,11 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name + " the hell hound");
-   substring(self.names, "hound");
-      substring(self.names, "hell hound");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, pc_name + " the hell hound");
+   //substring(self.names, "hound");
+   //substring(self.names, "hell hound");
 
    subextra(self.extra, "");
 
@@ -3043,7 +3043,7 @@ code
    expd := "$My_Spell" in self.extra;
    self.spells[SPL_FIRE_BREATH] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -3106,10 +3106,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -3117,11 +3117,11 @@ code
    act("$1n changes shape, morphing into a vampire!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, "The Vampire " + pc_name);
+   //addstring(self.names, "The Vampire " + pc_name);
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "vampire");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "vampire");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null,
@@ -3158,10 +3158,10 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, "The Vampire " + pc_name);
-   substring(self.names, "vampire");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, "The Vampire " + pc_name);
+   //substring(self.names, "vampire");
 
    subextra(self.extra, "");
 
@@ -3174,7 +3174,7 @@ code
    expd := "$My_Race" in self.extra;
    self.race := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
@@ -3236,10 +3236,10 @@ code
 
    setbright(self, self.bright + 1);
 
-   pc_name := self.name;
+   //pc_name := self.name;
    expd := "" in self.extra;
 
-   addextra(self.extra, {"$My_Name"}, self.name);
+   //addextra(self.extra, {"$My_Name"}, self.name);
    addextra(self.extra, {"$My_Title"}, self.title);
    addextra(self.extra, {"$My_Descr"}, expd.descr);
    addextra(self.extra, {"$My_Race"}, itoa(self.race));
@@ -3247,12 +3247,12 @@ code
    act("$1n suddenly freezes into an ice elemental!",
        A_HIDEINV, self, null, null, TO_REST);
 
-   addstring(self.names, pc_name + " the Ice Elemental");
+   //addstring(self.names, pc_name + " the Ice Elemental");
     /* Sort out the names */
-   substring(self.names, pc_name);
-   addstring(self.names, "elemental");
-   addstring(self.names, "ice");
-   addstring(self.names, pc_name);
+   //substring(self.names, pc_name);
+   //addstring(self.names, "elemental");
+   //addstring(self.names, "ice");
+   //addstring(self.names, pc_name);
 
    subextra(self.extra, "");
    addextra(self.extra, null,
@@ -3294,11 +3294,11 @@ code
 
    pause;
 :end:
-   expd := "$My_Name" in self.extra;
-   pc_name := expd.descr;
-   substring(self.names, pc_name + " the Ice Elemental");
-   substring(self.names, "elemental");
-   substring(self.names, "ice");
+   //expd := "$My_Name" in self.extra;
+   //pc_name := expd.descr;
+   //substring(self.names, pc_name + " the Ice Elemental");
+   //substring(self.names, "elemental");
+   //substring(self.names, "ice");
 
    subextra(self.extra, "");
 
@@ -3317,7 +3317,7 @@ code
    expd := "$My_Spell2" in self.extra;
    self.spells[SPL_LIGHTNING_3] := atoi(expd.descr);
 
-   subextra(self.extra, "$My_Name");
+   //subextra(self.extra, "$My_Name");
    subextra(self.extra, "$My_Title");
    subextra(self.extra, "$My_Descr");
    subextra(self.extra, "$My_Race");
