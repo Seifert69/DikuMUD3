@@ -158,7 +158,8 @@ var
     reward_exp : extraptr;
     nextdude   : extraptr;
     temp_lst  : stringlist;
-    temp_str2:string;
+    mobdescr  : string;
+    mobname   : string;
     temp_str  : string;
     test_expt : extraptr;
     headless:string;
@@ -186,7 +187,13 @@ code
         log("Corpse already headless");
         return (item);
     }
-
+    
+    if ("$headless" in corpse.extra)
+    {
+        log("Corpse already headless");
+        return (item);
+    }
+    
     if (not hasRaceHead(corpse.value[4]))
     {
         log("Corpse race has no head");
@@ -194,6 +201,7 @@ code
     }
 
     living_sym := corpse.extra.["$living_sym"].descr;
+    addextra(corpse.extra,{"$headless"},"has been decaped");
     item := load("head@death");
     addextra(item.extra,{"$head_time"}, itoa(realtime));
     addextra(item.extra,{"$living_sym"}, living_sym);
@@ -233,16 +241,20 @@ code
 
     set_weight_base(item, item.baseweight);
     item.minv := 0;
-    temp_str2 :=corpse.outside_descr;
-    temp_str := getword(temp_str2);
-    temp_str := getword(temp_str2);
-    temp_str := getword(temp_str2);
-    temp_str:=temp_str2;
-    item.outside_descr := "The decapitated head of " + temp_str ;
+    mobdescr :=corpse.outside_descr;
+    temp_str := getword(mobdescr);
+    mobname  := mobdescr;
+    temp_str := getword(mobname);
+    temp_str := getword(mobname);
+    if (temp_str != "of")
+	temp_str := getword(mobname);
+
+    item.outside_descr := "The decapitated head of " + mobname ;
+    item.title := "The decapitated head of " + mobname ;
     addextra(item.extra, {""}, "The head has been severed from the body");
     headless:=left(corpse.title,length(corpse.title)-6);
     corpse.title:=headless+"headless corpse";
-    corpse.outside_descr:="The headless corpse of "+temp_str;
+    corpse.outside_descr:="The headless "+ mobdescr;
     addextra(corpse.extra, {""}, "The head has been severed from the body");
     item.value[2] := corpse.value[2];
     item.value[3] := corpse.value[3];
@@ -295,7 +307,7 @@ code
         quit;
     }
 
-    if ("headless" in corpse.outside_descr)
+    if ("headless" in corpse.outside_descr or "$headless" in corpse.extra)
     {
         act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
         quit;
@@ -487,7 +499,10 @@ code
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[1], A_HIDEINV, self, null, null, TO_ALL);
-      self.outside_descr := self.extra.["$rot"].names.[1];
+      if ("$headless" in self.extra)
+      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[1],4,length(self.extra.["$rot"].names.[1]));
+      else
+      	self.outside_descr := self.extra.["$rot"].names.[1];
    }
 
    //if (self.value[2] == 1)
@@ -503,7 +518,10 @@ code
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[2], A_HIDEINV,self,null,null,TO_ALL);
-      self.outside_descr := self.extra.["$rot"].names.[2];
+      if ("$headless" in self.extra)
+      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[2],4,length(self.extra.["$rot"].names.[2]));
+      else
+      	self.outside_descr := self.extra.["$rot"].names.[2];
    }
 
    //if (self.value[2] == 1)
@@ -519,7 +537,10 @@ code
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
    {
       act(self.extra.["$rotact"].names.[3], A_HIDEINV,self,null,null,TO_ALL);
-      self.outside_descr := self.extra.["$rot"].names.[3];
+      if ("$headless" in self.extra)
+      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[3],4,length(self.extra.["$rot"].names.[3]));
+      else
+      	self.outside_descr := self.extra.["$rot"].names.[3];
    }
 
    //if (self.value[2] == 1)
@@ -1330,7 +1351,7 @@ names {"statue of $1n", "statue"}
 title "$1n's statue"
 descr "The statue of $1n is standing here."
 type ITEM_OTHER
-// manipulate {MANIPULATE_TAKE}
+manipulate {MANIPULATE_TAKE}
 extra {}
    "It is a remarkably life-like statue as if someone and everything they carried was turned to stone."
 extra {"$rot", 
