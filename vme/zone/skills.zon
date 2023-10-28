@@ -12285,7 +12285,8 @@ dilend // defending
 dilbegin ski_berserk(arg : string);
 external
     integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
-
+    integer bonusCalc(hm : integer);
+    integer max@function(a:integer, b:integer);
 var
 	heal : integer;
 	hm : integer;
@@ -12298,7 +12299,7 @@ code
       As a result the character's Speed, HP, and CON are increased temporarily.
       */
 	tgt := self;
-	
+
 	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_BERSERK] <= 0))
 	{
       act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -12327,8 +12328,7 @@ code
 	}
 	// Wrong, because NPC doesn't have SKI_BERSERK. hm := skillroll(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],30);
     hm := skillchecksa(SKI_BERSERK, ABIL_CON, 30);
-	if (hm > 10)
-        hm := 10;	
+    		
 	if (hm <= 0)
 	{
 		act("<div class='spell'>You channel your energy, but fail to go berserk.</div>",
@@ -12339,6 +12339,8 @@ code
 		quit;
 	}
 	
+	hm := bonusCalc(hm);
+	
 	act("<div class='spell'>You channel your energy, and go berserk!</div>",
 		A_ALWAYS, self, null, tgt, TO_CHAR);
 	act("<div class='spell'>$1n channels their energy, and goes berserk!</div>",
@@ -12346,14 +12348,14 @@ code
 	if (isaff(tgt, ID_SPEED))
 		act("<div class='cpw'>Nothing happens.</div>",A_ALWAYS, self, null, tgt, TO_CHAR);
 	else
-	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, +6, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
-	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, ABIL_CON, hm, 0, TIF_CON_INC, TIF_NONE, TIF_CON_DEC, APF_ABILITY);
-	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, ABIL_HP, hm, 0, TIF_HIT_INC, TIF_NONE, TIF_HIT_DEC, APF_ABILITY);
+	addaff(tgt, ID_BERSERK, max@function(20,hm*2), WAIT_SEC*30, +6, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
+	addaff(tgt, ID_BERSERK, max@function(20,hm*2), WAIT_SEC*30, ABIL_CON, hm, 0, TIF_CON_INC, TIF_NONE, TIF_CON_DEC, APF_ABILITY);
+	addaff(tgt, ID_BERSERK, max@function(20,hm*2), WAIT_SEC*30, ABIL_HP, hm, 0, TIF_HIT_INC, TIF_NONE, TIF_HIT_DEC, APF_ABILITY);
 	hm := hm * rnd(4,2);
     if (hm > 20) hm := 20;
 	heal := tgt.hp + (hm * 3);
 	if (heal > tgt.max_hp) heal := tgt.max_hp;
-	tgt.endurance := tgt.endurance - 100;
+	tgt.endurance := tgt.endurance - (100 - (hm*2));
 	tgt.hp := heal;
 	
 	send_done("berserk",self,null,tgt,hm,arg,null, CMD_AUTO_NONE);
@@ -13035,6 +13037,28 @@ code
 dilend
 
 /* END Barbarian Skills */
+
+/*
+New function for handling bonus calculations for skills.
+Starts with the base (10) at 10 and adds anoth 1 for every 10 beyond that. This was derived
+from the berserk skill calculation.
+*/
+dilbegin integer bonusCalc(hm : integer);
+
+external
+     integer min@function(a:integer, b:integer);
+
+code
+{
+      
+      if (hm>30)
+	return(10+((hm-30)/30)); // allows for numbers greater than 10 at intervals of 30 per increase
+     else
+     	return(min@function(hm, 10));
+      
+}
+dilend
+
 %rooms
                                    skill_room
 title "The Skill Room"
