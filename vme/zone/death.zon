@@ -251,6 +251,7 @@ code
 
     item.outside_descr := "The decapitated head of " + mobname ;
     item.title := "The decapitated head of " + left(mobname, length(mobname)-15);
+    addstring(item.names, "head_of_" + left(mobname, length(mobname)-15));
     addextra(item.extra, {""}, "The head has been severed from the body");
     headless:=left(corpse.title,length(corpse.title)-6);
     corpse.title:=headless+"headless corpse";
