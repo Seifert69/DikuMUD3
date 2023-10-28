@@ -4232,12 +4232,14 @@ dilend
 dilbegin integer skill_duration(hm : integer);
 code
 {
+
    if (hm < 20)
-     return (2);
-   else if (hm > 150)
-     return (15);
+      return (2);
+   else if (hm <= 150)
+      return (hm/10);
    else
-     return (hm / 10);
+      return (15+((hm-150)/20));
+
 }
 dilend
 dilbegin unitptr unit_room(u : unitptr);
@@ -5046,8 +5048,15 @@ code
       i := i + 1;
 
       self.hp := self.hp - j;
+      
       self.mana := self.mana - 2*j;
+      if (self.mana < 0)
+      	self.mana := 0;	
+
       self.endurance := self.endurance - 2*j;
+      if (self.endurance < 0)
+        self.endurance := 0;
+      
       if (self.hp >= -10)
           position_update(self);
 
@@ -6143,9 +6152,8 @@ code
         i := i + 1;
     }
 
-    /* Finally copy in the description from $identify / $improved identify
-       added <br/> to allow new line for improved identify for old items instead
-       of running indentification strings together */
+    // Finally copy in the description from $identify / $improved identify
+
     exd := "$identify" in tgt.extra;
     if (exd)
         s := exd.descr + s;
@@ -6154,7 +6162,7 @@ code
     {
         exd := "$improved identify" in tgt.extra;
         if (exd)
-            s := exd.descr + "<br/>" + s;
+            s := exd.descr + s;
     }
 
     return(s);
@@ -8439,6 +8447,9 @@ dilend
 
 dilbegin bless(medi:unitptr, tgt : unitptr, arg : string,
 	       hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
    /*
@@ -8457,23 +8468,21 @@ code
       quit;
    }
 
-   hm := 1 + hm / 10;
-   if (hm > 10)
-      hm := 10;
+      hm := bonusCalc(hm);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DEX, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_STR, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
@@ -8489,6 +8498,9 @@ code
 dilend
 
 dilbegin ubless(medi:unitptr,tgt:unitptr,arg:string,hm:integer,effect:string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
    /*
@@ -8507,22 +8519,21 @@ code
       quit;
    }
 
-   hm := 1 + hm / 10;
-   if (hm > 10) hm := 10;
+      hm := bonusCalc(hm);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DEX, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_STR, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
    quit;
@@ -8604,6 +8615,9 @@ dilend
 
 dilbegin raise_div(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8621,11 +8635,9 @@ if ((isaff(tgt,ID_SPL_RAISE_DIV)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_DIV, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_DIV, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_DIV, hm, 0, TIF_DIV_INC, TIF_NONE, TIF_DIV_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8638,6 +8650,9 @@ dilend
 
 dilbegin raise_mag(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8655,11 +8670,9 @@ if ((isaff(tgt,ID_SPL_RAISE_MAG)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_MAG, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_MAG, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_MAG, hm, 0, TIF_MAG_INC, TIF_NONE, TIF_MAG_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8672,6 +8685,10 @@ dilend
 
 dilbegin raise_str(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
+
 code
 {
 
@@ -8688,12 +8705,11 @@ if ((isaff(tgt,ID_SPL_RAISE_STR)) or
          effect(tgt, medi, -1);
          quit;
          }
-
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
-
-	addaff(tgt, ID_SPL_RAISE_STR, 20, WAIT_SEC*30,
+         
+         
+      hm := bonusCalc(hm);
+	
+	addaff(tgt, ID_SPL_RAISE_STR, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_STR, hm, 0, TIF_STR_INC, TIF_NONE, TIF_STR_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8706,6 +8722,9 @@ dilend
 
 dilbegin raise_dex(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8723,11 +8742,9 @@ if ((isaff(tgt,ID_SPL_RAISE_DEX)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_DEX, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_DEX, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_DEX, hm, 0, TIF_DEX_INC, TIF_NONE, TIF_DEX_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8740,6 +8757,9 @@ dilend
 
 dilbegin raise_con(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8757,11 +8777,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CON)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_CON, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_CON, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_CON, hm, 0, TIF_CON_INC, TIF_NONE, TIF_CON_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8773,6 +8791,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CON)) or
 dilend
 dilbegin raise_cha(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8790,11 +8811,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CHA)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_CHA, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_CHA, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_CHA, hm, 0, TIF_CHA_INC, TIF_NONE, TIF_CHA_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8807,6 +8826,9 @@ dilend
 
 dilbegin raise_bra(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8824,11 +8846,9 @@ if ((isaff(tgt,ID_SPL_RAISE_BRA)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_BRA, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_BRA, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_BRA, hm, 0, TIF_BRA_INC, TIF_NONE, TIF_BRA_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8842,6 +8862,9 @@ dilend
 
 dilbegin raise_divine(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8859,11 +8882,9 @@ if ((isaff(tgt,ID_SPL_RAISE_DIVINE)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_DIVINE, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_DIVINE, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_DIVINE, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8876,6 +8897,9 @@ dilend
 
 dilbegin raise_heat(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8893,11 +8917,9 @@ if ((isaff(tgt,ID_SPL_RAISE_HEAT)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_HEAT, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_HEAT, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_HEAT, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8910,6 +8932,9 @@ dilend
 
 dilbegin raise_summoning(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8927,11 +8952,9 @@ if ((isaff(tgt,ID_SPL_RAISE_SUMMONING)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_SUMMONING, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_SUMMONING, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_SUMMONING, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8944,6 +8967,9 @@ dilend
 
 dilbegin raise_cold(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8961,11 +8987,9 @@ if ((isaff(tgt,ID_SPL_RAISE_COLD)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_COLD, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_COLD, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_COLD, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8978,6 +9002,9 @@ dilend
 
 dilbegin raise_elect(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8995,11 +9022,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CELL)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_CELL, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_CELL, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_CELL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -9012,6 +9037,9 @@ dilend
 
 dilbegin raise_poison(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9029,11 +9057,9 @@ if ((isaff(tgt,ID_SPL_RAISE_INTERNAL)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_INTERNAL, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_INTERNAL, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_INTERNAL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -9046,6 +9072,9 @@ dilend
 
 dilbegin raise_acid(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9063,11 +9092,9 @@ if ((isaff(tgt,ID_SPL_RAISE_EXTERNAL)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_EXTERNAL, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_EXTERNAL, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_EXTERNAL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -9080,6 +9107,9 @@ dilend
 
 dilbegin mind_shield(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9097,11 +9127,9 @@ if ((isaff(tgt,ID_SPL_RAISE_MIND)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_MIND, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_MIND, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_MIND, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -14880,6 +14908,29 @@ code
 }
 dilend
 
+/*
+New function for handling bonus calculations.
+Uses the old code as a starting point for bonuses of up to 10 points but removes the cap,
+allowing bonuses over 10 if the roll is high enough.
+Remember that rolls for attribute boosts are generally the sum of the characters skill and
+relevant attribute + an open100 roll -50.
+Example: Character with 50 magic and 50 skill and rolls a 50 would have a total of 100.
+1-10 are roughly 1 point per 10 points on your roll
+In this case, this function would return 10, the old standard roll.
+However, if the same character were to roll a 160 (due to how open roll works. If you roll a 100 it rolls again and adds the result so here I'm assuming they rolled a 100, then a 10) then the after the first 10 points, the second part of the calculation would kick in and the result would be an 12.
+*/
+dilbegin integer bonusCalc(hm : integer);
+
+code
+{
+      hm := hm/10+1;  // old starting calculation
+      if (hm>10)
+	hm := 10+((hm-10)/3); // allows for numbers greater than 10 at intervals of 30 per increase
+      
+     return(hm);
+}
+dilend
+
 %rooms
 
                                    spell_room
@@ -15390,3 +15441,4 @@ end
 
 
 %end
+
