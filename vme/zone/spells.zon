@@ -2694,8 +2694,7 @@ foreach(UNIT_ST_OBJ, can)
   if (can == self)
      continue;
 
-  if (not (IS_CORPSE(can)))
-
+  if (not (IS_CORPSE(can)) or (IS_CORPSE(can) and tgt.value[2] == 1))
      continue;
 
   chk := (can.value[4]);
@@ -2793,7 +2792,7 @@ code
       quit;
    }
 
-  if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -2875,7 +2874,7 @@ code
    }
 
 
-     if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -10539,6 +10538,7 @@ dilbegin resurrect(medi : unitptr, tgt : unitptr, arg : string,
 		   hm : integer, effect : string);
 var
    u : unitptr;
+   uh : unitptr;
    t:integer;
    c:integer;
    i:integer;
@@ -10558,7 +10558,7 @@ if (self.extra.["$RES_TIME"]==null)
 
 
 c:=realtime-atoi(self.extra.["$RES_TIME"].descr);
-if (c<120)
+if (c<150) // increased by 30s time because of power level now affecting time before recast
 {
 self.mana:=self.mana+80;
 act ("You are still too queasy to cast this spell try waiting a minute or so and try again.",
@@ -10567,23 +10567,28 @@ return;
 }
 
 
-
 :skiptimer:
 subextra (self.extra,"$RES_TIME");
-addextra (self.extra,{"$RES_TIME"},itoa(realtime));
+addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
    foreach (UNIT_ST_OBJ, u)
    {
       if ((IS_CORPSE(u)) and ((" "+tgt.name+" ") in u.outside_descr))
       {
-	  if ("headless" in u.outside_descr)
-	  	  {
+	  if ("headless" in u.outside_descr){
+	  log("head_of_" +tgt.name);
+	  	  uh := findunit( self, "head_of_" +tgt.name, FIND_UNIT_INVEN, null );
+	  	  if(uh != null){
+	  	  	destroy(uh);
+	  	  	goto startres;
+	  	  }
 	  act("The headless corpse of "+tgt.name+" stands up, realizes it "
 	  +"has no head, runs around the room like a chicken with its head chopped"
 	  +" off then flops to the ground.",A_ALWAYS, tgt, null, self, TO_VICT);
 	 act("$1n thinks they are Dr. Frankenstein and attempts to resurrect "
 	 +"the headless corpse of "+tgt.name+" to no avail.",A_ALWAYS, self, null, null, TO_ROOM);
         quit;
-	   }
+        }
+        :startres:
 	 act("A vortex appears above you dragging your soul out of "+
 	     "Valhalla and back into your mutilated body.",
 	     A_ALWAYS, tgt, null, null, TO_CHAR);
@@ -10760,7 +10765,7 @@ code
       quit;
    }
 
-	       if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
