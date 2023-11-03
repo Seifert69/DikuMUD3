@@ -5130,7 +5130,7 @@ code
          ret := ret+str+"<td><div class='worn'>"+obj.title+lit+"</div></td></tr>";
       }
       else
-         ret := ret+"<tr><td>&lt;"+str+"&gt;</td><td>nothing</td></tr>";
+         ret := ret+str+"<td>nothing</td></tr>";
       i := i + 1;
    }
 
