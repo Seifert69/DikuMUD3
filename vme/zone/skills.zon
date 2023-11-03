@@ -1762,7 +1762,7 @@ code
     }
 
     tot := 0;
-    buf := "";
+    buf := "<br/>";
     buf:=buf+"<table class='colh2'>";
 
     while((obj != null) and (num > 0))
@@ -1770,7 +1770,7 @@ code
         if (obj.equip)
         {
             str := eq_string@commands(obj.equip,obj);
-            buf := buf+"<tr><td>&lt;"+str+"&gt;</td><td><div class='worn'>"+obj.title+"</div></td></tr>";
+            buf := buf+str+"<td><div class='worn'>"+obj.title+"</div></td></tr>";
             tot := tot + 1;
             num := num - 1;
         }
