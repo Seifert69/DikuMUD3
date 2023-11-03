@@ -858,11 +858,8 @@ code
     }
     subextra(ting.extra, "engraving");
     olddescr := "" in ting.extra;
-    log(olddescr.descr);
     engrv := "<br/>" + engrvstr.[1] + " is engraved on it.";
-    log(engrv);
     newdescr := split(olddescr.descr, engrv);
-    log(newdescr.[0]);
     if (length(newdescr) == 2){
 	    olddescr.descr := newdescr.[0] + newdescr.[1];
     }
@@ -870,22 +867,6 @@ code
     	    olddescr.descr := newdescr.[0];
     }
 
-    /*blah := "" in ting.extra;
-    if(blah)
-    {
-        blah.descr := blah.descr + "<br/>'" + text + "' is engraved on it.";
-        addextra( ting.extra, {"engraving"}, "It says '" + text + "'" );
-    }
-    else
-    {
-        addextra(ting.extra,{"dummy"},"You see nothing special.<br/>'"+text+
-        "' is engraved on it.");
-        blah := "dummy" in ting.extra;
-        substring( blah.names, "dummy" );
-        
-    }
-    pause;
-    */
     exec("say There, hope you like it, " + pc.name + "!", self);
     destroy(self.inside);
     goto giveback;
@@ -918,6 +899,8 @@ var
  	text   : string;
  	blah   : extraptr;
 	cash   : string;
+	maxlength : integer;
+	templist : stringlist;
 code
 {
     heartbeat := PULSE_SEC*4;
@@ -977,10 +960,27 @@ code
 :brieftext:
     wait(SFB_DONE, command("say")and(activator == pc));
     text := argument;
-    if(length(text) > 10)
+    maxlength := 12;
+    if("&amp;" in text){ // These all exist to allow engraving to work for special characters without eating up the maximum length. Also increasing Max length of engravings to 12
+        templist := split(text,"&amp;");
+    	maxlength := maxlength + ((length(templist)-1)*4);
+    }
+    if("&quot;" in text){
+        templist := split(text,"&quot;");
+    	maxlength := maxlength + ((length(templist)-1)*5);
+    }
+    if("&lt;" in text){
+        templist := split(text,"&lt;");
+    	maxlength := maxlength + ((length(templist)-1)*3);
+    }
+    if("&gt;" in text){
+        templist := split(text,"&gt;");
+    	maxlength := maxlength + ((length(templist)-1)*3);
+    }
+    if(length(text) > maxlength)
     {
         exec("say I am sorry, but this is too long!",self);
-        exec("say Try another one, 10 letters maximum.",self);
+        exec("say Try another one, 12 letters maximum.",self);
         goto brieftext;
     }
 
@@ -5325,13 +5325,13 @@ end
                              thief_guild
 
 names {"thief", "guild"}
-title "The Thieves' Guild"
+title "The Abandoned Original Thieves' Guild"
 descr
 "   You are in a large low-ceiling and dimly-lit room.  Dark, heavy drapes
-cover most of the walls, giving the room an eerie atmosphere."
+cover most of the walls, giving the room an eerie atmosphere. A small ladder leads up through a hatch in the roof"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
-/*up to grub_barrel;*/
+up to engraver_back descr "A small hatch leads upwards into a small shop";
 /* XXX */
 /* Michael: Perhaps a secret entrance to the sewers? or to Haon Dor? */
 /* Mads   : Til sewers var en meget god ide.  N�r de bliver lavet. */
@@ -5502,8 +5502,8 @@ descr
 "A characteristic smell of warm leather, metal and sound of people
 working fills this small shop. A single window offers a view of the
 Tailor Street and the Post Office just opposite the workshop. A dwarf and a
-gnome, both hard at work, can be seen through a half-open door at the back
-of the store.<br/>
+gnome are both hard at work at the back of the shop. A large tapestry lines the
+far wall of the shop detailing the steps of the engraving process. <br/>
 A <a cmd='read #'>sign</a> hanging in the window offers some info on the workmanship prices.<br/>
 A small note is fastened underneath the sign."
 extra {"sign in the window","sign","window"}
@@ -5525,7 +5525,7 @@ extra {"sign in the window","sign","window"}
 
 A small note at the bottom of the sign demands your immediate attention.
 
-&f</div></pre>"
+</div></pre>"
 extra {"note fastened to the sign","note"}
 "<pre>The note reads:
 
@@ -5544,13 +5544,50 @@ extra {"note fastened to the sign","note"}
 </div></pre>"
 extra {"dwarf and the gnome in the workshop","dwarf","gnome","workshop"}
 "They both appear very busy and hard at work. Better not bother them or
-your job will take even longer.<br/>"
+your job will take even longer. They occasionally stare at the tapestry
+on the far wall intently<br/>"
+extra {"tapestry"}
+"The tapestry depicts the steps of the engraving process on various materials.
+It shifts as you examine it."
 movement SECT_INSIDE
 gmap(653,562)
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS}
 ALWAYS_LIGHT
 west to tailor_st3@midgaard open {EX_OPEN_CLOSE}
 descr "The Tailor Street is just outside the door.";
+east to engraver_back open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+        keyword {"door", "wall","tapestry"} difficulty 45;
+end
+
+	engraver_back
+names {"deengraver's emporium","emporium"}
+title "At Reejay's Engraving Removal Emporium"
+descr
+"A characteristic smell of warm leather, metal and the pungent smells of dye 
+removers, leather softeners, and the sound of tools scraping on metal fills 
+this hidden back room. The soundproofing and ventilation in here must be 
+excellent! A small hatch sits in the corner covered with scraps of leather 
+and other detritus.
+ <br/>
+A <a cmd='read #'>sign</a> hangs from the wall providing some info on price.<br/>"
+extra {"sign"}
+"<pre>The sign proclaims:
+
+		------------------------------------------
+			Reejay's Deengraving Services
+
+<div class='cpr'> 	Removal of engravings	:   min. 5 PP  </div><div class='cw'>
+
+   Give the item in question to Reejay to have the engraving on it removed.
+		------------------------------------------
+
+</div></pre>"
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+west to engraver_shop@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door"}
+descr "A door in the west wall leads into Veejay's Engraving Workshop.";
+down to thief_guild descr "There is a hatch here in the floor that is rusted open, leading down into the darkness";
 end
 
                            armour_shop
@@ -10378,7 +10415,9 @@ load mid_clerk into mid_storage@midgaard max 1
 
 
 /*engraver stuff*/
-load veejay into engraver_shop max 1
+load veejay into engraver_shop local 1
+load reejay into engraver_back local 1
+door engraver_shop EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
 load engraver_sign into tailor_st3@midgaard max 1
 
 
