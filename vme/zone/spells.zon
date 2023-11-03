@@ -2751,9 +2751,8 @@ foreach(UNIT_ST_OBJ, can)
   }
 
   secure (u,lostu);
-  dilcopy("undead_obey@spells("+itoa(hm)+")",u);
   dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-  dilcopy("undead_exec@spells",u);
+  dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -2832,9 +2831,8 @@ unsecure (tgt);
 
    u:= load("skel_champ@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -2914,9 +2912,8 @@ unsecure (tgt);
 
    u:= load("skeleton@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -3601,8 +3598,6 @@ var ext : extraptr;
 
 code
 {
-interrupt(SFB_MSG, TRUE, test);
-priority;
 
 :loop:
 wait(SFB_CMD, command("tell"));
@@ -3661,17 +3656,6 @@ addextra (self.extra,{"$pc obey"},activator.name);
 exec(argument, self);
 goto loop;
 
-:test:
-if (getword(argument) == "spl_dispel")
-  if (atoi(getword(argument)) >= i)
-    goto stop;
-goto loop;
-
-:stop:
-i:= dildestroy("undead_exec@spells", self);
-subextra (self.extra, "$undead control");
-exec("follow", self);
-quit;
 }
 dilend
 
@@ -4139,31 +4123,51 @@ else
 dilend
 
 
-dilbegin aware undead_exec();
-var
-   cancast : integer;
+dilbegin aware undead_exec(i : integer);
 code
 {
-   cancast := dilfind("combat_mag ", self);
-
+dilcopy ("undead_obey@spells("+itoa(i)+")",self);
+heartbeat:=PULSE_SEC*3;
    :loop:
    wait(SFB_CMD, activator == self);
 
-   /* This is what the undeads cant do... */
-   if (command("sneak") or command("hide") or
-       command("steal") or command("recite") or command("use") or
-       command ("shout") or command ("tell") or command ("pick") or
-       command ("filch") or command ("pickpocket") or
-       command("aid") or command("trip"))
-   {
-      block;
-      exec("moan", self);
-   }
-   else if ((command("cast")) and (cancast!=1))
-   {
-      block;
-      exec("moan", self);
-   }
+   /* This is what the undeads can do... */
+if ((command("cast")) and ("$undeadcaster" in self.extra))
+   	{
+	      	goto loop;
+  	 }
+else if (not(((command ("kill")) or
+	(command ("up")) or
+	(command ("down")) or
+	(command ("north")) or
+	(command ("south")) or
+	(command ("east")) or
+	(command ("west")) or
+	(command ("northeast")) or
+	(command ("northwest")) or
+	(command ("southwest")) or
+	(command ("southeast")) or
+	(command ("climb")) or
+	(command ("enter")) or
+	(command ("sleep")) or
+	(command ("wake")) or
+	(command ("stand")) or
+	(command ("rest")) or
+	(command ("sit")) or
+	(command ("kill")) or
+	(command ("get")) or
+	(command ("drop")) or
+	(command ("give")) or
+	(command ("follow")) or
+	(command ("flee")) or
+	(command ("look")) or
+	(command ("dig")) or
+	(command ("bury")) or
+	(command ("put"))))){
+			block;
+      		exec("moan", self);
+   	}
+
    goto loop;
 }
 dilend
@@ -6251,8 +6255,7 @@ code
       {
 		act("$3n is controlled by $1n.",
 		A_HIDEINV, self, null, tgt, TO_ROOM);
-		dilcopy("undead_obey@spells("+itoa(hm)+")", tgt);
-		dilcopy("undead_exec@spells", tgt);
+		dilcopy("undead_exec@spells("+itoa(hm)+")", tgt);
 		dilcopy("undead_timer@spells("+itoa(hm)+")", tgt);
 		addextra(tgt.extra,{"$undead control"},self.name);
 		if (isset(self.pcflags,PC_PK_RELAXED))
@@ -10804,9 +10807,8 @@ unsecure (tgt);
 
    u:= load("zombie@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
    if (isset(self.pcflags,PC_PK_RELAXED))
    dilcopy ("catchit@spells(1)",u);
    else
