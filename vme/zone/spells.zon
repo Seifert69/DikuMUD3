@@ -2694,8 +2694,7 @@ foreach(UNIT_ST_OBJ, can)
   if (can == self)
      continue;
 
-  if (not (IS_CORPSE(can)))
-
+  if (not (IS_CORPSE(can)) or (IS_CORPSE(can) and tgt.value[2] == 1))
      continue;
 
   chk := (can.value[4]);
@@ -2752,9 +2751,8 @@ foreach(UNIT_ST_OBJ, can)
   }
 
   secure (u,lostu);
-  dilcopy("undead_obey@spells("+itoa(hm)+")",u);
   dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-  dilcopy("undead_exec@spells",u);
+  dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -2793,7 +2791,7 @@ code
       quit;
    }
 
-  if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -2833,9 +2831,8 @@ unsecure (tgt);
 
    u:= load("skel_champ@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -2875,7 +2872,7 @@ code
    }
 
 
-     if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -2915,9 +2912,8 @@ unsecure (tgt);
 
    u:= load("skeleton@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -3602,8 +3598,6 @@ var ext : extraptr;
 
 code
 {
-interrupt(SFB_MSG, TRUE, test);
-priority;
 
 :loop:
 wait(SFB_CMD, command("tell"));
@@ -3662,17 +3656,6 @@ addextra (self.extra,{"$pc obey"},activator.name);
 exec(argument, self);
 goto loop;
 
-:test:
-if (getword(argument) == "spl_dispel")
-  if (atoi(getword(argument)) >= i)
-    goto stop;
-goto loop;
-
-:stop:
-i:= dildestroy("undead_exec@spells", self);
-subextra (self.extra, "$undead control");
-exec("follow", self);
-quit;
 }
 dilend
 
@@ -4140,31 +4123,51 @@ else
 dilend
 
 
-dilbegin aware undead_exec();
-var
-   cancast : integer;
+dilbegin aware undead_exec(i : integer);
 code
 {
-   cancast := dilfind("combat_mag ", self);
-
+dilcopy ("undead_obey@spells("+itoa(i)+")",self);
+heartbeat:=PULSE_SEC*3;
    :loop:
    wait(SFB_CMD, activator == self);
 
-   /* This is what the undeads cant do... */
-   if (command("sneak") or command("hide") or
-       command("steal") or command("recite") or command("use") or
-       command ("shout") or command ("tell") or command ("pick") or
-       command ("filch") or command ("pickpocket") or
-       command("aid") or command("trip"))
-   {
-      block;
-      exec("moan", self);
-   }
-   else if ((command("cast")) and (cancast!=1))
-   {
-      block;
-      exec("moan", self);
-   }
+   /* This is what the undeads can do... */
+if ((command("cast")) and ("$undeadcaster" in self.extra))
+   	{
+	      	goto loop;
+  	 }
+else if (not(((command ("kill")) or
+	(command ("up")) or
+	(command ("down")) or
+	(command ("north")) or
+	(command ("south")) or
+	(command ("east")) or
+	(command ("west")) or
+	(command ("northeast")) or
+	(command ("northwest")) or
+	(command ("southwest")) or
+	(command ("southeast")) or
+	(command ("climb")) or
+	(command ("enter")) or
+	(command ("sleep")) or
+	(command ("wake")) or
+	(command ("stand")) or
+	(command ("rest")) or
+	(command ("sit")) or
+	(command ("kill")) or
+	(command ("get")) or
+	(command ("drop")) or
+	(command ("give")) or
+	(command ("follow")) or
+	(command ("flee")) or
+	(command ("look")) or
+	(command ("dig")) or
+	(command ("bury")) or
+	(command ("put"))))){
+			block;
+      		exec("moan", self);
+   	}
+
    goto loop;
 }
 dilend
@@ -6252,8 +6255,7 @@ code
       {
 		act("$3n is controlled by $1n.",
 		A_HIDEINV, self, null, tgt, TO_ROOM);
-		dilcopy("undead_obey@spells("+itoa(hm)+")", tgt);
-		dilcopy("undead_exec@spells", tgt);
+		dilcopy("undead_exec@spells("+itoa(hm)+")", tgt);
 		dilcopy("undead_timer@spells("+itoa(hm)+")", tgt);
 		addextra(tgt.extra,{"$undead control"},self.name);
 		if (isset(self.pcflags,PC_PK_RELAXED))
@@ -10539,6 +10541,7 @@ dilbegin resurrect(medi : unitptr, tgt : unitptr, arg : string,
 		   hm : integer, effect : string);
 var
    u : unitptr;
+   uh : unitptr;
    t:integer;
    c:integer;
    i:integer;
@@ -10558,7 +10561,7 @@ if (self.extra.["$RES_TIME"]==null)
 
 
 c:=realtime-atoi(self.extra.["$RES_TIME"].descr);
-if (c<120)
+if (c<150) // increased by 30s time because of power level now affecting time before recast
 {
 self.mana:=self.mana+80;
 act ("You are still too queasy to cast this spell try waiting a minute or so and try again.",
@@ -10567,23 +10570,28 @@ return;
 }
 
 
-
 :skiptimer:
 subextra (self.extra,"$RES_TIME");
-addextra (self.extra,{"$RES_TIME"},itoa(realtime));
+addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
    foreach (UNIT_ST_OBJ, u)
    {
       if ((IS_CORPSE(u)) and ((" "+tgt.name+" ") in u.outside_descr))
       {
-	  if ("headless" in u.outside_descr)
-	  	  {
+	  if ("headless" in u.outside_descr){
+	  log("head_of_" +tgt.name);
+	  	  uh := findunit( self, "head_of_" +tgt.name, FIND_UNIT_INVEN, null );
+	  	  if(uh != null){
+	  	  	destroy(uh);
+	  	  	goto startres;
+	  	  }
 	  act("The headless corpse of "+tgt.name+" stands up, realizes it "
 	  +"has no head, runs around the room like a chicken with its head chopped"
 	  +" off then flops to the ground.",A_ALWAYS, tgt, null, self, TO_VICT);
 	 act("$1n thinks they are Dr. Frankenstein and attempts to resurrect "
 	 +"the headless corpse of "+tgt.name+" to no avail.",A_ALWAYS, self, null, null, TO_ROOM);
         quit;
-	   }
+        }
+        :startres:
 	 act("A vortex appears above you dragging your soul out of "+
 	     "Valhalla and back into your mutilated body.",
 	     A_ALWAYS, tgt, null, null, TO_CHAR);
@@ -10760,7 +10768,7 @@ code
       quit;
    }
 
-	       if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -10799,9 +10807,8 @@ unsecure (tgt);
 
    u:= load("zombie@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
    if (isset(self.pcflags,PC_PK_RELAXED))
    dilcopy ("catchit@spells(1)",u);
    else

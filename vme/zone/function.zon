@@ -893,49 +893,36 @@ heartbeat:=PULSE_SEC*3;
 dilcopy ("obey@function()",self);
 :start:
 wait (SFB_CMD, activator==self);
-if (((command ("insult")) or
-(command ("contract")) or
-(command ("extinguish")) or
-(command ("light")) or
-(command ("aid")) or
-(command ("ventriloquate")) or
-(command ("turn")) or
-(command ("recite")) or
-(command ("use")) or
-(command ("backstab")) or
-(command ("pick")) or
-(command ("steal")) or
-(command ("bash")) or
-(command ("rescue")) or
-(command ("search")) or
-(command ("hide")) or
-(command ("sneak")) or
-(command ("write")) or
-(command ("open")) or
-(command ("close")) or
-(command ("cast")) or
-(command ("whisper")) or
+if (not(((command ("kill")) or
+(command ("up")) or
+(command ("down")) or
+(command ("north")) or
+(command ("south")) or
+(command ("east")) or
+(command ("west")) or
+(command ("northeast")) or
+(command ("northwest")) or
+(command ("southwest")) or
+(command ("southeast")) or
+(command ("climb")) or
+(command ("enter")) or
+(command ("sleep")) or
+(command ("wake")) or
+(command ("stand")) or
+(command ("rest")) or
+(command ("sit")) or
+(command ("kill")) or
+(command ("get")) or
+(command ("drop")) or
 (command ("give")) or
-(command ("put")) or
-(command ("pour")) or
-(command ("value")) or
-(command ("buy")) or
-(command ("sell")) or
-(command ("emote")) or
-(command ("decapitate")) or
-(command ("wear")) or
-(command ("wield")) or
-(command ("kick")) or
-(command ("shout")) or
-(command ("say")) or
-(command ("ask")) or
-(command ("shelter")) or
-(command ("fashion")) or
-(command ("hold")) or
-(command ("throw")) or
-(command ("unlock")) or
-(command ("lock"))))
+(command ("follow")) or
+(command ("flee")) or
+(command ("look")) or
+(command ("dig")) or
+(command ("bury")) or
+(command ("put"))))){
 block;
+}
 
 goto start;
 }
