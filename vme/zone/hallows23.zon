@@ -1472,7 +1472,7 @@ extra{}
 "This heart was forcibly removed from its previous owner.  Neatly sliced
 off arteries limply dangle from the bloody pulp."
 extra {"$donotstore"}
-" This is to prevent excessive storage of items, mainly hard 
+"This is to prevent excessive storage of items, mainly hard 
 to get ones."
 type ITEM_TRASH
 manipulate {MANIPULATE_TAKE}
@@ -1486,7 +1486,7 @@ descr "a decapitated head is here."
 extra{}
 "When you get a closer look at it, you notice that it missing an eye!"
 extra {"$donotstore"}
-" This is to prevent excessive storage of items, mainly hard to get ones."
+"This is to prevent excessive storage of items, mainly hard to get ones."
 type ITEM_TRASH
 manipulate {MANIPULATE_TAKE}
 weight 2
@@ -1499,7 +1499,7 @@ descr "Brains lie on the floor."
 extra{}
 "Squishy gray brains. Ewww!"
 extra {"$donotstore"}
-" This is to prevent excessive storage of items, mainly hard to get ones."
+"This is to prevent excessive storage of items, mainly hard to get ones."
 type ITEM_TRASH
 manipulate {MANIPULATE_TAKE}
 weight 2
@@ -1525,7 +1525,7 @@ descr "Someone lost their right arm here."
 extra{}
 "A right arm cut off at the shoulder"
 extra {"$donotstore"}
-" This is to prevent excessive storage of items, mainly hard to get ones."
+"This is to prevent excessive storage of items, mainly hard to get ones."
 manipulate {MANIPULATE_TAKE}
 type ITEM_TRASH
 weight 2
@@ -1539,7 +1539,7 @@ extra{}
 "A right hand cut off at the wrist. It has long pale fingers that seem
 to have been grasping at something."
 extra {"$donotstore"}
-" This is to prevent excessive storage of items, mainly hard to get ones."
+"This is to prevent excessive storage of items, mainly hard to get ones."
 manipulate {MANIPULATE_TAKE}
 type ITEM_TRASH
 weight 2
@@ -1552,7 +1552,7 @@ descr "A foot stands here without a leg."
 extra{}
 "A left foot cut off at the ankle. It has long gross toenails."
 extra {"$donotstore"}
-" This is to prevent excessive storage of items, mainly hard to get ones."
+"This is to prevent excessive storage of items, mainly hard to get ones."
 manipulate {MANIPULATE_TAKE}
 type ITEM_TRASH
 weight 2
@@ -1565,7 +1565,7 @@ descr "A leg is lying on the floor."
 extra{}
 "A left leg cut off at the knee and missing a foot. "
 extra {"$donotstore"}
-" This is to prevent excessive storage of items, mainly hard to get ones."
+"This is to prevent excessive storage of items, mainly hard to get ones."
 manipulate {MANIPULATE_TAKE}
 type ITEM_TRASH
 weight 2
@@ -1703,7 +1703,7 @@ end
 blfount
 names {"fountain", "blood","punch"}
 title "a blood fountain"
-descr " A fountain of blood trickles here. "
+descr "A fountain of blood trickles here. "
 extra {}
 "It looks like blood shoots from the top and sprays 
 into a basin below. But it looks a bit thin. Closer examination
@@ -1714,7 +1714,7 @@ end
 qblfount
 names {"fountain", "blood","punch"}
 title "a blood fountain"
-descr " A fountain of blood trickles here. "
+descr "A fountain of blood trickles here. "
 extra {}
 "It looks like blood shoots from the top and sprays 
 into a basin below. There is a darker shape beneath the
@@ -2305,7 +2305,7 @@ if ((item == findsymbolic(self, "arm2@hallows23", FIND_UNIT_INVEN))
   {
     addstring(pin.names, "a2");
     exec("say Thank you, "+pc.name+". " +
-	      " Now he is armed and dangerous!", self);
+	      "Now he is armed and dangerous!", self);
     exec("giggle", self);
     exec("emote puts the arm in the large coffin. ", self);
     destroy(item);
@@ -2409,7 +2409,7 @@ if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
   {
     addstring(pin.names, "lg");
     exec("say Thank you, "+pc.name+". "+
-	      " He was on his last leg.", self);
+	      "He was on his last leg.", self);
     exec("emote puts the leg in the large coffin", self);
     destroy(item);
     goto hcheck;
@@ -2418,7 +2418,7 @@ if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
    		and ("lg" in pin.names))
   		{
    			exec("say You gave me a left leg already, "+pc.name+". " +
-			" Great now all I need is an arm then I can afford anything!", self);
+			"Great now all I need is an arm then I can afford anything!", self);
    			exec("emote drops the leg in his bag.", self);
    			destroy(item);
    			goto hcheck;
@@ -2438,7 +2438,7 @@ if ((item == findsymbolic(self, "gut@hallows23", FIND_UNIT_INVEN))
    		and ("g" in pin.names))
   		{
    			exec("say You gave me some guts already, "+pc.name+"." +
-			" You must be brave to have so many to share!.", self);
+			"You must be brave to have so many to share!.", self);
    			exec("emote winds the intestines up and puts them in his bag.", self);
    			destroy(item);
    			goto hcheck;
