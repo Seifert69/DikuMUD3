@@ -4983,7 +4983,7 @@ code
       if (two == TRUE)
          return("<tr><td>&lt;two hand held&gt;</td>        ");
       else
-         return("<tr><td>&lt;held                          ");
+         return("<tr><td>&lt;held&gt;</td>                 ");
    }
    else if (i == WEAR_CHEST)
       return("<tr><td>&lt;worn across chest&gt;</td>    ");
