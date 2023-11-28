@@ -955,7 +955,7 @@ code
 
 :brief:
     exec("say What do you want engraved on this "+ting.name+", "+pc.name+"?",self);
-    exec("say Just say the line, and remember, maximum 10 letters!",self);
+    exec("say Just say the line, and remember, maximum 12 letters!",self);
 
 :brieftext:
     wait(SFB_DONE, command("say")and(activator == pc));

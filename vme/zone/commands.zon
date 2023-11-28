@@ -4938,31 +4938,31 @@ two : integer;
 code
 {
    if (i == WEAR_FINGER_R)
-      return("worn on right finger");
+      return("<tr><td>&lt;worn on right finger&gt;</td> ");
    else if (i == WEAR_FINGER_L)
-      return("worn on left finger");
+      return("<tr><td>&lt;worn on left finger&gt;</td>  ");
    else if ((i == WEAR_NECK_1) or (i == WEAR_NECK_2))
-      return("worn around neck");
+      return("<tr><td>&lt;worn around neck&gt;</td>     ");
    else if (i == WEAR_BODY)
-      return("worn on body");
+      return("<tr><td>&lt;worn on body&gt;</td>         ");
    else if (i == WEAR_HEAD)
-      return("worn on head");
+      return("<tr><td>&lt;worn on head&gt;</td>         ");
    else if (i == WEAR_LEGS)
-      return("worn on legs");
+      return("<tr><td>&lt;worn on legs&gt;</td>         ");
    else if (i == WEAR_FEET)
-      return("worn on feet");
+      return("<tr><td>&lt;worn on feet&gt;</td>         ");
    else if (i == WEAR_HANDS)
-      return("worn on hands");
+      return("<tr><td>&lt;worn on hands&gt;</td>        ");
    else if (i == WEAR_ARMS)
-      return("worn on arms");
+      return("<tr><td>&lt;worn on arms&gt;</td>         ");
    else if (i == WEAR_SHIELD)
-      return("worn as shield");
+      return("<tr><td>&lt;worn as shield&gt;</td>       ");
    else if (i == WEAR_ABOUT)
-      return("worn about body");
+      return("<tr><td>&lt;worn about body&gt;</td>      ");
    else if (i == WEAR_WAIST)
-      return("worn about waist");
+      return("<tr><td>&lt;worn about waist&gt;</td>     ");
    else if ((i == WEAR_WRIST_R) or (i == WEAR_WRIST_L))
-      return("worn around wrist");
+      return("<tr><td>&lt;worn around wrist&gt;</td>    ");
    else if (i == WEAR_WIELD)
    {
       if (ting)
@@ -4970,9 +4970,9 @@ code
       else
          two:=FALSE;
       if (two == TRUE)
-         return("two hand wielded");
+         return("<tr><td>&lt;two hand wielded&gt;</td>     ");
       else
-         return("wielded");
+         return("<tr><td>&lt;wielded&gt;</td>              ");
    }
    else if (i == WEAR_HOLD)
    {
@@ -4981,22 +4981,22 @@ code
       else
          two:=FALSE;
       if (two == TRUE)
-         return("two hand held");
+         return("<tr><td>&lt;two hand held&gt;</td>        ");
       else
-         return("held");
+         return("<tr><td>&lt;held&gt;</td>                 ");
    }
    else if (i == WEAR_CHEST)
-      return("worn across chest");
+      return("<tr><td>&lt;worn across chest&gt;</td>    ");
    else if (i == WEAR_BACK)
-      return("worn on back");
+      return("<tr><td>&lt;worn on back&gt;</td>         ");
    else if (i == WEAR_EAR_L)
-      return("worn on left ear");
+      return("<tr><td>&lt;worn on left ear&gt;</td>     ");
    else if (i == WEAR_EAR_R)
-      return("worn on right ear");
+      return("<tr><td>&lt;worn on right ear&gt;</td>    ");
    else if ((i == WEAR_ANKLE_L) or (i == WEAR_ANKLE_R))
-      return("worn on ankle");
+      return("<tr><td>&lt;worn on ankle&gt;</td>        ");
    else
-      return("report to an admin");
+      return("<tr><td>&lt;report to an admin&gt;</td>   ");
 }
 dilend
 
@@ -5033,8 +5033,7 @@ code
                lit := "";
 
             str := eq_string(obj.equip,obj);
-            pge := pge+"<tr><td>&lt;"+str+"&gt;</td>"+
-                     "<td><div class='worn'>"+obj.title+lit+"</div></td></tr>";
+            pge := pge+str+"<td><div class='worn'>"+obj.title+lit+"</div></td></tr>";
             cnt := cnt + 1;
          }
          obj := obj.next;
@@ -5128,10 +5127,10 @@ code
          else
             lit := "";
 
-         ret := ret+"<tr><td>&lt;"+str+"&gt;</td><td><div class='worn'>"+obj.title+lit+"</div></td></tr>";
+         ret := ret+str+"<td><div class='worn'>"+obj.title+lit+"</div></td></tr>";
       }
       else
-         ret := ret+"<tr><td>&lt;"+str+"&gt;</td><td>nothing</td></tr>";
+         ret := ret+str+"<td>nothing</td></tr>";
       i := i + 1;
    }
 
@@ -11199,3 +11198,4 @@ dilcopy test1();
 end
 
 %end
+
