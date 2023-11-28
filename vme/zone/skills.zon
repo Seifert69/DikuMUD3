@@ -12666,8 +12666,7 @@ code
 	}
 
 	hm := skillbattle2(SKI_WHIRL, ABIL_DEX, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
-	if (hm <= -30) // was extremely easy to fail before making the skill unusable against many mobs. Lowering base difficulty a little bit.
-	L
+	if (hm <= -30) {// was extremely easy to fail before making the skill unusable against many mobs. Lowering base difficulty a little bit.
 		act("Your get tripped up and stumble in your whirl!", A_SOMEONE, self, null, null, TO_CHAR);
 		act("$1n gets tripped up and stumbles in their whirl!", A_SOMEONE, self, null, null, TO_REST);
 		change_speed(self,PULSE_ROUND*2);
