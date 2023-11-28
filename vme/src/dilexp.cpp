@@ -1503,10 +1503,11 @@ void dilfe_eqpm(dilprg *p)
     delete v2;
 }
 
-/* int meleeAttack(unit, unit, int, int) */
+/* int meleeAttack(unit, unit, int, int, int) */
 void dilfe_mel(dilprg *p)
 {
     dilval *v = new dilval;
+    dilval *v5 = p->stack.pop();
     dilval *v4 = p->stack.pop();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -1538,14 +1539,21 @@ void dilfe_mel(dilprg *p)
                                     switch (dil_getval(v4))
                                     {
                                         case DILV_INT:
-                                            v->val.num = one_hit((unit_data *)v1->val.ptr,
-                                                                 (unit_data *)v2->val.ptr,
-                                                                 v3->val.num,
-                                                                 v4->val.num,
-                                                                 TRUE,
-                                                                 TRUE);
-                                            dil_test_secure(p);
-
+						switch (dil_getval(v5)) // added new option to deal with primary vs secondary weapon
+						{
+							case DILV_INT:
+								v->val.num = one_hit((unit_data *)v1->val.ptr,
+                                                                (unit_data *)v2->val.ptr,
+                                                                v3->val.num,
+                                                                v4->val.num,
+                                                                v5->val.num,
+                                                                TRUE);
+								dil_test_secure(p);
+								break;
+							default:
+								v->type = DILV_ERR;
+								break;
+						}
                                             break;
                                         default:
                                             v->type = DILV_ERR;
@@ -1582,6 +1590,7 @@ void dilfe_mel(dilprg *p)
     delete v2;
     delete v3;
     delete v4;
+    delete v5;
 }
 
 /* int meleedamage(unit, unit, int, int) */

@@ -4858,7 +4858,7 @@ dilfun  :  funcall
         FREEEXP($3);
         FREEEXP($5);
     }
-    | DILSE_MEL '(' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
+    | DILSE_MEL '(' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
     {
         INITEXP($$);
         checkbool("argument 1 of MeleeAttack", $3.boolean);
@@ -4879,6 +4879,11 @@ dilfun  :  funcall
         {
             dilfatal("Arg 4 of 'MeleeAttack' not an integer");
         }
+        else if ($11.typ != DilVarType_e::DILV_INT)
+        {
+            dilfatal("Arg 5 of 'MeleeAttack' not an integer"); // added 'primary' variable to check if we should use offhand or not
+        }
+
         else
         {
             /* Type is ok */
@@ -4890,11 +4895,13 @@ dilfun  :  funcall
             make_code(&($5));
             make_code(&($7));
             make_code(&($9));
+            make_code(&($11));
 
             add_code(&($$), &($3));
             add_code(&($$), &($5));
             add_code(&($$), &($7));
             add_code(&($$), &($9));
+            add_code(&($$), &($11));
             add_ubit8(&($$), DILE_MEL);
         }
 
@@ -4902,6 +4909,7 @@ dilfun  :  funcall
         FREEEXP($5);
         FREEEXP($7);
         FREEEXP($9);
+        FREEEXP($11);
     }
     | DILSE_MELDAM '(' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
     {
@@ -7789,3 +7797,4 @@ void dumpdil(struct dilprg *prg)
 }
 
 #pragma GCC diagnostic pop
+

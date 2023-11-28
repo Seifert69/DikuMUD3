@@ -2159,7 +2159,7 @@
 
   If wtype is within a valid weapon range (WPN_XXX) any weapon will be
   bypassed, and the value will be used as the attacktype. Good for
-  things like "meleeattack(ch, vict, bonus, WPN_CIRCLE_KICK)" if you
+  things like "meleeattack(ch, vict, bonus, WPN_CIRCLE_KICK, 1)" if you
   want person to be able to perform an extra attack even though wielding
   a weapon or something. Note that this will require BOTH a weapon type
   WPN_CIRCLE_KICK and a skill "kick" in order for it to work.
@@ -2259,7 +2259,7 @@
            null, TO_CHAR);
      else self.endurance := self.endurance - 2;
      provoked_attack (targ, self);
-     bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK);
+     bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK, 1);
      quit;
   }
   dilend

@@ -2022,13 +2022,15 @@ Delete a Unit file.
 
 ««««««««««««««««««««««««««««««««««««««««»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
 integer meleeattack ( ch : unitptr, vict : unitptr,
-                     bonus : integer, wtype : integer )
-   ch    : The character which should make an additional attack.
-   vict  : The victim of the attack.
-   bonus : Any penalty or bonus added to the attack.
-   wtype : The weapon type of the attack, if a valid type then that is
-           used for the attack purpose, otherwise the default weapon/hand
-           attack is used.
+                     bonus : integer, wtype : integer, primary : integer )
+   ch     : The character which should make an additional attack.
+   vict   : The victim of the attack.
+   bonus  : Any penalty or bonus added to the attack.
+   wtype  : The weapon type of the attack, if a valid type then that is
+            used for the attack purpose, otherwise the default weapon/hand
+            attack is used.
+   primary: Used to determine if we should use the primary weapon (wielded)
+            of offhand (held/hand attack).
 
    result: 'ch' performs a melee attack (using whatever weapon is wielded
            or his bare hands) against 'vict'. Returns the amount of damage
@@ -2036,7 +2038,7 @@ integer meleeattack ( ch : unitptr, vict : unitptr,
 
    If wtype is within a valid weapon range (WPN_XXX) any weapon will
    be bypassed, and the value will be used as the attacktype. Good
-   for things like "meleeattack(ch, vict, bonus, WPN_CIRCLE_KICK)"
+   for things like "meleeattack(ch, vict, bonus, WPN_CIRCLE_KICK, 1)"
    if you want person to be able to perform an extra attack even
    though wielding a weapon or something. Note that this will require
    BOTH a weapon type WPN_CIRCLE_KICK and a skill "kick" in order for
@@ -2144,7 +2146,7 @@ if (not(isset (targ.pcflags, PC_PK_RELAXED)))
          null, TO_CHAR);
    else self.endurance := self.endurance - 2;
    provoked_attack (targ, self);
-   bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK);
+   bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK, 1);
    quit;
 }
 dilend
