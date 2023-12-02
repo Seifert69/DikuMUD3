@@ -1593,14 +1593,14 @@ int one_hit(unit_data *att, unit_data *def, int bonus, int att_weapon_type, int 
         hm += roll_boost(roll, CHAR_LEVEL(att));
     }
 
-    if (!check_combat(att))
+    if (!check_combat(att) && attack) // fix for thrown weapons and ranged weapons - the test above used to cover this case but now this causes the attacks to fail again without a bypass
     {
         return -1;
     }
 
     send_combat(att);
 
-    if (!check_combat(att))
+    if (!check_combat(att) && attack) // fix for thrown weapons and ranged weapons - the test above used to cover this case but now this causes the attacks to fail again without a bypass
     {
         return -1;
     }

@@ -3030,29 +3030,16 @@ down to hell_entry;
 west to entry1;
 end
 
-
+//did some reimaging of the newbie guide room while working on a spelling issue
                                    throne_room2
-/*title "The Newbie Guide Throne Room"
+title "The Newbie Guide Respite Room"
 descr
-"   You are inside the great throne room of the Newbie Guide Ginger.  A large
-purple throne</div> sits in the center of the room.  Something about
-the worn out seat of the throne draws your attention.  Here is where the newbie
-player helpers come to socialize and talk about that darn newbie
-that just got them killed. A simple statue of Ginger - the Leader of the Newbie
-Guides lays along one wall.  An exit leads east but does not look like you can
-come back." */
-title "A Special Corner of Newbie Hell"
-descr
-"   You are inside a dreary room.  The heat is stifling, it is so hot the walls seem
-to shimmer in and out of existence.  There is a chair facing a blank wall on the
-north side of the room.  There are leather straps and steel buckles attached to
-the chair.  Somehow you know, this is where you are forced to relive your last 
-moments before you died trying to save a helpless newbie.  Along the south wall
-is a line of statues celebrating some of the more venerated Newbie Guides to
-have walked the realms of Valhalla.  There is an exit to the east, but it looks
-like a one way trip. "
+"   You are inside the respite room of the Newbie Guides.  A large sofa sits
+in the center of the room. Along the south wall is a line of statues celebrating
+some of the more venerated Newbie Guides to have walked the realms of Valhalla.
+A one way exit leads east."
 
-extra {"statues","guides"}
+extra {"statue","statues","guides"}
 "Each statue has a name on it Kuros, Ginger, Grift, Iaso, Malice, Ratlin, 
 Heulflodyn, Colwyn, Kalrai, Bloody and Cira are a few you see but many more
 are honored here for the blood, sweat, tears and more blood they dedicated to 
@@ -3062,17 +3049,7 @@ flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
 dilcopy dead_only@basis("You should not have been here, you are sent home.");
 light 5
 east to entry1;
-/*extra {"statue"}
-"It looks as in her mortal words 'Very deaded' and two red horns protrude
-from its head"
-extra {"worn seat","seat"}
-"It looks as if someone has spent many hours sitting here, one cushion shows a
-strange indention."
-extra {"indention"}
-"You can make out the words 'w*w.@vclh   a.com'."
 
-extra {"throne"}
-"The throne is very large and awe inspiring, you dare not approach it." */
 end
 
 
@@ -3744,7 +3721,7 @@ the"+
    pause;
 if (self.outside.quests.["New Player Helper"] != null)
  {
-   act("After a short ride she sets your spirit down inside Ginger's thrown room. "+
+   act("After a short ride she sets your spirit down inside the Newbie Guide Respite room. "+ // fixed spelling issue and ended up renaming the room and reimaging it.
    "You slowly regain a more material form.",
        A_ALWAYS, self.outside, null, null, TO_CHAR);
    act("$1n enters the castle of Valhalla.",
@@ -4550,3 +4527,4 @@ load saerimner into throne_room2 max 2
 load heidruns into throne_room2  max 2
 
 %end
+

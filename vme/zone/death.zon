@@ -777,7 +777,7 @@ code
 
     if (self.quests.["New Player Helper"] != null)
     {
-        act("After a short ride she sets your spirit down inside Ginger's thrown room. "+
+        act("After a short ride she sets your spirit down inside thew Newbie Guide Respite room "+ // fixed room name from a mispelling and renamed the room - see basis.zon
         "You slowly regain a more material form.",
             A_ALWAYS, self, null, null, TO_CHAR);
         act("$1n enters the castle of Valhalla.",
