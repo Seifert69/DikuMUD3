@@ -2159,7 +2159,7 @@
 
   If wtype is within a valid weapon range (WPN_XXX) any weapon will be
   bypassed, and the value will be used as the attacktype. Good for
-  things like "meleeattack(ch, vict, bonus, WPN_CIRCLE_KICK, 1)" if you
+  things like "meleeattack(ch, vict, bonus, WPN_CIRCLE_KICK, TRUE)" if you
   want person to be able to perform an extra attack even though wielding
   a weapon or something. Note that this will require BOTH a weapon type
   WPN_CIRCLE_KICK and a skill "kick" in order for it to work.
