@@ -2146,7 +2146,7 @@ if (not(isset (targ.pcflags, PC_PK_RELAXED)))
          null, TO_CHAR);
    else self.endurance := self.endurance - 2;
    provoked_attack (targ, self);
-   bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK, 1);
+   bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK, TRUE);
    quit;
 }
 dilend

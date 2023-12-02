@@ -638,7 +638,7 @@ code
    sendto("constricting", self);
 
    i := 0;
-   i := meleeattack (self, targ, i, 0,1);
+   i := meleeattack (self, targ, i, 0,TRUE);
 
    self.attack_type := WPN_BITE;
 
@@ -1551,7 +1551,7 @@ code
    act("$1n MAULS $3n!",
        A_SOMEONE, self, null, self.fighting, TO_NOTVICT);
    i := (self.abilities[ABIL_DEX]/15) + rnd(5,10);
-   i := meleeattack (self, self.fighting, i, 0,1);
+   i := meleeattack (self, self.fighting, i, 0,TRUE);
 /*   self.fighting.hp := self.fighting.hp - (self.abilities[ABIL_DEX]
                                            + rnd(10,50));
 */
@@ -1595,7 +1595,7 @@ code
 */
 
    i := (self.abilities[ABIL_DEX]/15) + rnd(5,10);
-   i := meleeattack (self, self.fighting, i, 0,1);
+   i := meleeattack (self, self.fighting, i, 0,TRUE);
 
 /*   heartbeat := PULSE_VIOLENCE; */
 
@@ -1717,7 +1717,7 @@ code
 */
 
    i := (self.abilities[ABIL_DEX]/15) + rnd(5,10);
-   i := meleeattack (self, self.fighting, i, 0,1);
+   i := meleeattack (self, self.fighting, i, 0,TRUE);
 
 /*   heartbeat := PULSE_VIOLENCE; */
 

@@ -4761,11 +4761,11 @@ code{
      if(command(CMD_AUTO_COMBAT) and not(equipment(self,WEAR_WIELD)))
      {
       if(self.speed<=12)
-       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,1);
+       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,TRUE);
       if(self.speed<=8)
-       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,1);
+       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,TRUE);
       if(self.speed<=4)
-       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,1);
+       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,TRUE);
      }
      goto loop;
 }

@@ -1356,7 +1356,7 @@ code
          act("As $2n flees, you hit $2m!", A_SOMEONE, pc, self, null, TO_CHAR);
          act("As you flee, $2n hits you!", A_SOMEONE, self, pc, null, TO_CHAR);
 
-         hm := meleeattack(pc, self, (50-hm), -1,1); /* 50-hm is the bonus */
+         hm := meleeattack(pc, self, (50-hm), -1,TRUE); /* 50-hm is the bonus */
 
          if (self.fighting == pc)
             stop_fighting(self, pc);
@@ -1966,7 +1966,7 @@ if (not(shield == null)){
 
 	       if (tgt.position != POSITION_FIGHTING)
 		   bonus := bonus + 50;
-	       bonus := meleeattack(self, tgt, (bonus+self.level),    WPN_CRUSH,1);
+	       bonus := meleeattack(self, tgt, (bonus+self.level),    WPN_CRUSH,TRUE);
 	   }
    }else{
    		   act("<div class='hit_opponent'>You slam into $3n and send them reeling.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
@@ -3438,7 +3438,7 @@ code
 
     self.endurance := self.endurance - 2;
     provoked_attack(targ, self);
-    bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK,1);
+    bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK,TRUE);
     quit;
 }
 dilend
@@ -3530,7 +3530,7 @@ code
     self.endurance := self.endurance - 2;
 
     provoked_attack (targ, self);
-    bonus := meleeattack(self, targ, (bonus+self.level), WPN_ELBOW,1);
+    bonus := meleeattack(self, targ, (bonus+self.level), WPN_ELBOW,TRUE);
     quit;
 }
 dilend
@@ -3622,7 +3622,7 @@ code
     self.endurance := self.endurance - 2;
 
     provoked_attack (targ, self);
-    bonus := meleeattack(self, targ, (bonus+self.level), WPN_KNEE,1);
+    bonus := meleeattack(self, targ, (bonus+self.level), WPN_KNEE,TRUE);
     quit;
 }
 dilend
@@ -3719,7 +3719,7 @@ code
         bonus := bonus + 50;
     self.endurance := self.endurance - 2;
     provoked_attack(targ, self);
-    bonus := meleeattack(self, targ, bonus, WPN_FIST,1);
+    bonus := meleeattack(self, targ, bonus, WPN_FIST,TRUE);
     quit;
 }
 dilend
@@ -9853,7 +9853,7 @@ over usage of the command */
        A_ALWAYS, self, null, targ, TO_VICT);
    act("$1n appears from nowhere and ambushes $3n!",
        A_SOMEONE, self, null, targ, TO_NOTVICT);
-   bonus := meleeattack(self, targ, (bonus + self.level), 0,1);
+   bonus := meleeattack(self, targ, (bonus + self.level), 0,TRUE);
    quit;
 }
 dilend /* ambush */
@@ -12479,7 +12479,7 @@ code
 	provoked_attack(targ, self);
 	hm := skillbattle2(SKI_CHARGE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_STR);
 	self.hp := self.hp - pain;
-	hm := meleeattack(self, targ, (bonus + self.level + hm), 0,1);
+	hm := meleeattack(self, targ, (bonus + self.level + hm), 0,TRUE);
 	
 	quit;
 }
@@ -12666,7 +12666,7 @@ code
 	}
 
 	hm := skillbattle2(SKI_WHIRL, ABIL_DEX, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
-	if (hm <= -30) {// was extremely easy to fail before making the skill unusable against many mobs. Lowering base difficulty a little bit.
+	if (hm <= -30){ // was extremely easy to fail before making the skill unusable against many mobs. Lowering base difficulty a little bit.
 		act("Your get tripped up and stumble in your whirl!", A_SOMEONE, self, null, null, TO_CHAR);
 		act("$1n gets tripped up and stumbles in their whirl!", A_SOMEONE, self, null, null, TO_REST);
 		change_speed(self,PULSE_ROUND*2);
@@ -12682,8 +12682,8 @@ code
 		hmcost := (1500/speed_percent@commands(self)); // now takes into account haste/slow affects
 		while(hm > 0)
 		{
-			dam := meleeattack(self, self.fighting, (hm), 0,1);
-			dam := meleeattack(self, self.fighting, (hm), 0,0); // now uses offhand weapon as well.
+			dam := meleeattack(self, self.fighting, (hm), 0,TRUE);
+			dam := meleeattack(self, self.fighting, (hm), 0,FALSE); // now uses offhand weapon as well.
 			hm := hm - hmcost;
 		}
 	}
@@ -12772,7 +12772,7 @@ code
 	provoked_attack(targ, self);
 	self.endurance := self.endurance - 50;
 	hm := skillbattle2(SKI_CLEAVE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
-	hm := meleeattack(self, targ, (bonus + hm), 0,1);
+	hm := meleeattack(self, targ, (bonus + hm), 0,TRUE);
 	
 	send_done("cleave",self,null,null,0,arg,null, CMD_AUTO_NONE);
 	quit;
@@ -12860,7 +12860,7 @@ code
 	if (hm >= 0)
 		if (not(dilfind("rend_bleed@skills", targ)))
 			dilcopy("rend_bleed@skills("+itoa(hm)+")", targ);
-	hm := meleeattack(self, targ, hm, 0,1);
+	hm := meleeattack(self, targ, hm, 0,TRUE);
 	send_done("rend",self,null,null,0,arg,null, CMD_AUTO_NONE);
 	quit;
 }
@@ -13006,7 +13006,7 @@ code
 			}
 			else
 			{
-				dam := meleeattack(self, u, (hm), 0,1);
+				dam := meleeattack(self, u, (hm), 0,TRUE);
 				change_speed(self,-6);
 			}
 			provoked_attack(u,self);
