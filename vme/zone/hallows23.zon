@@ -2687,7 +2687,7 @@ end
 
 
 %reset 
-/********Halloween Loads ***************/
+/********Halloween Loads **************
 
 load jackolant into inn@udgaard          local 1
 load jackolant into side_alley@udgaard   local 1
@@ -2867,7 +2867,7 @@ load nightmare into pas2@urland              max 20
 load qnightmare into pas3@urland             max 1
 {
 load leg@hallows23  
-}   
+}   */
 
 /*quest item loads */
 
