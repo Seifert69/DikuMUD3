@@ -2685,9 +2685,9 @@ end
 
 /* END HALLOWEEN MOBS */
 
-
+/* *******Halloween Loads **************
 %reset 
-/********Halloween Loads **************
+  
 
 load jackolant into inn@udgaard          local 1
 load jackolant into side_alley@udgaard   local 1
@@ -2855,7 +2855,7 @@ load hand@hallows23
 load ghost into a10@arabian             max 20
 load ghost into glad_rd4@midgaard       max 20
 load ghost into market_3@torsbay        max 20
-load ghost into vil_path9@urland        max 20
+load ghost into vil_path9@rland        max 20
 				
 load nightmare into healers_way2@udgaard     max 20         
 load nightmare into papi_3@nymgaard          max 20
