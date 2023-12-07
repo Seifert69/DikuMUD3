@@ -193,6 +193,7 @@ struct symbols
     {"set_password", DILSI_SETPWD},
     {"check_password", DILSE_CKPWD},
     {"reboot", DILSI_REBOOT},
+    {"zonereset", DILSI_ZONERESET},
     {"continue", DILSI_CNT},
     {"acc_modify", DILSI_AMOD},
     {"reset_level", DILSI_RSLV},

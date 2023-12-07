@@ -462,10 +462,13 @@ bool zone_is_empty(zone_type *zone)
     return TRUE;
 }
 
-/* Check if any zones needs updating */
+/* Check if the zone pointed to by *p1 is due for a zone reset */
 void zone_event(void *p1, void *p2)
 {
     zone_type *zone = (zone_type *)p1;
+
+    if (zone->getResetMode() == RESET_NEVER)
+        return;
 
     if (zone->getResetMode() != RESET_IFEMPTY || zone_is_empty(zone))
     {

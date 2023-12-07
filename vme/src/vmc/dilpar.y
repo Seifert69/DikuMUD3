@@ -245,7 +245,7 @@ void make_code(struct exptype *dest);
 %token DILSI_WHI DILSI_IF  DILSI_EXE DILSI_WAITNOOP DILSI_WIT DILSI_ACT
 %token DILSI_ELS DILSI_GOT DILSI_PRI DILSI_NPR DILSI_BLK DILSI_CNT
 %token DILSI_PUP DILSI_FOE DILSI_BRK DILSI_RTS
-%token DILSI_ON  DILSI_AMOD DILSI_SETPWD DILSI_DELPC DILSI_REBOOT
+%token DILSI_ON  DILSI_AMOD DILSI_SETPWD DILSI_DELPC DILSI_REBOOT DILSI_ZONERESET
 //DILSI_WLK 
 /* DIL structure fields */
 %token DILSF_ZOI DILSF_NMI DILSF_TYP DILSF_NXT DILSF_NMS DILSF_NAM DILSF_IDX
@@ -5672,6 +5672,20 @@ dilproc : corefuncall
             $$.lst = $5 + 1;
             wtmp = &tmpl.core[$5];
             bwrite_ubit8(&wtmp, DILI_DELPC);
+        }
+    }
+    | DILSI_ZONERESET '(' coreexp ')' ihold
+    {
+        if ($3.typ != DilVarType_e::DILV_ZP)
+        {
+            dilfatal("Arg 1 of 'resetzone' not a zone pointer");
+        }
+        else
+        {
+            $$.fst = $3.fst;
+            $$.lst = $5 + 1;
+            wtmp = &tmpl.core[$5];
+            bwrite_ubit8(&wtmp, DILI_ZONERESET);
         }
     }
     | DILSI_REBOOT '(' coreexp ')' ihold

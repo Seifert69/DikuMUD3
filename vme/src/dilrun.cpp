@@ -1293,7 +1293,8 @@ void dil_function_table_setup()
         {DILE_PLAYERID, dilfe_shell},       /* */
         {DILI_SET_W, dilfi_set_weight},     /* set_weight(#,#) */
         {DILI_DISPATCH, dilfi_dispatch},    /* dispatch(message) */
-        {DILE_FNDZ, dilfe_fndz},            /* findroom(#,#) */
+        {DILE_FNDZ, dilfe_fndz},            /* findzone(#) */
+        {DILI_ZONERESET, dilfi_zonereset},  /* zonereset(#) */
         {DILE_FNDSIDX, dilfe_fndsidx},      /* */
         {DILE_CALL, dilfe_call},            /* dilcall(#)(#,#,#) */
         {DILE_GETAFFECTS, dilfe_getaffects} /* getaffects(#) */
