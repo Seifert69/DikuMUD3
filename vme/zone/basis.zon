@@ -3977,6 +3977,11 @@ code
                     }
                 }
             }
+            if ((u.objecttype==ITEM_CONTAINER) and (u.symname != "corpse@death"))
+            {
+                        log("Energy worms loaded into a non corpse container. Quitting. " + self.outside.symname);
+                        destroy(self);
+            }
         }
 
         u := u.outside;
