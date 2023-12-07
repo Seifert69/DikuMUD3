@@ -17,14 +17,16 @@ reset RESET_ANYHOW
 creators {"Ratlin"}
 
 notes
-"Largely taken from the holiday22 zone. See it for more details."
+"Largely taken from the holiday22 zone. See it for more details.
+2023... Trying to reuse the zone from 2022 by simply renaming
+the quests. Let's see how it goes..."
 
 help
 "Player should never be in here."
 
-#define XMAS_SANTA22 "Visiting Santa 2022"
-#define XMAS_DONE22 "Holiday Gift 2022 Received"
-#define XMAS_DAY22 "Holiday Gift 2022 Upgraded"
+#define XMAS_SANTA22 "Visiting Santa 2023"
+#define XMAS_DONE22 "Holiday Gift 2023 Received"
+#define XMAS_DAY22 "Holiday Gift 2023 Upgraded"
 #define X_CHARGES "$XMAS_Charges"
 
 %dil
@@ -3383,7 +3385,6 @@ end
 // comment out this entire load section after the holiday season.
 // this will maitain the items for players, but take away some christmas cheer.
 
-/*
 
 %reset 
 load xmas_tree2 into hall@newbie         local 1
@@ -3408,5 +3409,5 @@ load elf into workshop max 1
 load northpole into square@udgaard max 1
 
 load graf_jan into village_rd6@udgaard max 1
-*/
+
 %end

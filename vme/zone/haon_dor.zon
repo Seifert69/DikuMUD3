@@ -74,7 +74,7 @@ code
 
 	 i := cast_spell(SPL_POISON, self, self, u, "");
 	 i := cast_spell(SPL_POISON, self, self, u, "");
-	 i := meleeattack(self, u, +75, WPN_BITE);
+	 i := meleeattack(self, u, +75, WPN_BITE,TRUE);
 	 goto done;
       }
    }
