@@ -3,7 +3,6 @@
 #include "interpreter.h"
 
 void do_snoop(unit_data *, char *, const command_info *);
-void do_reset(unit_data *, char *, const command_info *);
 void do_shutdown(unit_data *, char *, const command_info *);
 void do_load(unit_data *, char *, const command_info *);
 void do_at(unit_data *, char *, const command_info *);
