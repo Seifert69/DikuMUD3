@@ -102,28 +102,6 @@ void do_users(unit_data *ch, char *argument, const command_info *cmd)
     page_string(CHAR_DESCRIPTOR(ch), msg);
 }
 
-/**
- * Reset the zone in which the char is in!
- */
-void do_reset(unit_data *ch, char *arg, const command_info *cmd)
-{
-    zone_type *zone = nullptr;
-
-    if (!str_is_empty(arg))
-    {
-        send_to_char("You can only reset the zone you are in.<br/>", ch);
-        return;
-    }
-
-    if (!(zone = unit_zone(ch)))
-    {
-        send_to_char("You are inside no zone to reset!<br/>", ch);
-        return;
-    }
-
-    send_to_char("Ok.<br/>", ch);
-    zone_reset(zone);
-}
 
 void do_at(unit_data *ch, char *argument, const command_info *cmd)
 {

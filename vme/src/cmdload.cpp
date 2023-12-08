@@ -77,7 +77,6 @@ cmdload_struct cmdload[] = {{"north", do_move, 0, 0},
                             {"timewarp", do_timewarp, 0, 0},
 
                             {"rent", do_rent, 0, 0},
-                            {"reset", do_reset, 0, 0},
                             {"save", do_save, 0, 0},
                             {"set", do_set, 0, 0},
                             {"setskill", do_setskill, 0, 0},
