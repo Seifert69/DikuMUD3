@@ -3475,6 +3475,8 @@ void dilfe_gint(dilprg *p)
 
     if (v->type == DILV_INT)
     {
+        time_t t;
+        struct tm *timeInfo;
         switch (idx)
         {
             case DIL_GINT_MANAREG:
@@ -3534,6 +3536,24 @@ void dilfe_gint(dilprg *p)
 
             case DIL_GINT_BONUS_B:
                 v->val.num = bonus_map_b(p_i);
+                break;
+
+            case DIL_GINT_REALYEAR:
+                t = time(0);
+                timeInfo = gmtime(&t);
+                v->val.num = 1900 + timeInfo->tm_year;
+                break;
+
+            case DIL_GINT_REALMONTH:
+                t = time(0);
+                timeInfo = gmtime(&t);
+                v->val.num = timeInfo->tm_mon + 1;
+                break;
+
+            case DIL_GINT_REALDAY:
+                t = time(0);
+                timeInfo = gmtime(&t);
+                v->val.num = timeInfo->tm_mday;
                 break;
 
             default:

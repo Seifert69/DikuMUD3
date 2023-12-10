@@ -1294,16 +1294,19 @@ extra {PLAYER_R, NAME}{DAMAGE,PERCENT} \
 ACTION
 
 
-#define DIL_GINT_EFFDEX     0  // return the CHAR's effective_dex()
-#define DIL_GINT_REQXP      1  // return the required_xp(i) for level i using the INT parameter i
-#define DIL_GINT_LEVELXP    2  // return the level_xp(i) (XP needed for level i->i+1)
-#define DIL_GINT_DESCRIPTOR 3  // returns 0 if PC has no descriptor. 1 for all else
-#define DIL_GINT_CRIMENO    4  // returns the next crime_no
-#define DIL_GINT_MANAREG    5  // returns the amount of mana PC/NPC should regenerate
-#define DIL_GINT_HITREG     6  // returns the amount of hp PC/NPC should regenerate
-#define DIL_GINT_MOVEREG    7  // returns the amount of endurance PC/NPC should regenerate
-#define DIL_GINT_BONUS_A    8  // Translate BONUS_XXX to skill levels (up to 20 bonus)
-#define DIL_GINT_BONUS_B    9  // Transalte BONUS_XXX to ability levels (up to 10 bonus)
+#define DIL_GINT_EFFDEX      0  // return the CHAR's effective_dex()
+#define DIL_GINT_REQXP       1  // return the required_xp(i) for level i using the INT parameter i
+#define DIL_GINT_LEVELXP     2  // return the level_xp(i) (XP needed for level i->i+1)
+#define DIL_GINT_DESCRIPTOR  3  // returns 0 if PC has no descriptor. 1 for all else
+#define DIL_GINT_CRIMENO     4  // returns the next crime_no
+#define DIL_GINT_MANAREG     5  // returns the amount of mana PC/NPC should regenerate
+#define DIL_GINT_HITREG      6  // returns the amount of hp PC/NPC should regenerate
+#define DIL_GINT_MOVEREG     7  // returns the amount of endurance PC/NPC should regenerate
+#define DIL_GINT_BONUS_A     8  // Translate BONUS_XXX to skill levels (up to 20 bonus)
+#define DIL_GINT_BONUS_B     9  // Transalte BONUS_XXX to ability levels (up to 10 bonus)
+#define DIL_GINT_REALYEAR   10  // The real year
+#define DIL_GINT_REALMONTH  11  // month
+#define DIL_GINT_REALDAY    12  // day
 
 #endif /* _MUD_VALUES_H */
 
