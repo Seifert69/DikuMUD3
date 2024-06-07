@@ -841,9 +841,9 @@ dilcopy shopkeeper@function(
 
 dilcopy qstSimpleQuest@quests(QUEST_NECROMANCER_ENTRY,
          {"say Hey $1N, want to prove yourself to our guild?",
-          "say All you need to do is to bring me the head of the Mage of Goodness from the Pits."},
+          "say All you need to do is to bring me the head of the Mage of Goodness from the Pits.","say I hear he hands out near Tor's Bay"},
          {"say Excellent! Best of luck, $1N."},
-         "Murim in the Necromancer's Guild has asked you to bring him the head of the Mage of Goodness from the Pits.",
+         "Murim in the Necromancer's Guild has asked you to bring him the head of the Mage of Goodness that hangs out near Tor's Bay.",
          {"emote looks at the head of the Mage of Goodness.",
           "say Impressive! Well done, $1N. Welcome to the Necromancer's guild."},
           800, 1 * COPPER_MULT, {""}, "");
@@ -1996,6 +1996,7 @@ type ITEM_WORN
 weight 5
 cost 15 GOLD_PIECE
 rent 25 IRON_PIECE
+CHAR_FLAG_TRANSFER(CHAR_DETECT_INVISIBLE)
 dilcopy ali_restrict@function (-350,-1000,0,25,"");
 dilcopy abi_restrict@function(ABIL_BRA,10,0,0,"");
 extra {"$identify"}

@@ -27,6 +27,7 @@ clans 1120tw0008          1 0 250 0 ../lib/clan
 competition 1120tw0008   1 0 250 0 ../lib/competition
 holiday20 release        1 0 220 0 
 holiday21 release        1 0 220 0 
+holiday22 release        1 0 220 0 
 g_q release      1 255 254 0 
 #
 bounty release           1 250 0 0
@@ -240,4 +241,5 @@ duinveld  sandman         1 255 0 2
 barbarian release 1 2 0 0 
 gremlin   release 1 2 0 0 
 randomt   release 1 0 250 0
+hallows23 d15turb3d      1 1 0 0
 

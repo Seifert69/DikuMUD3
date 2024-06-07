@@ -1231,7 +1231,7 @@ dilcopy Specialize@guilds(GUILD_SORCERER, "alespec@sorcerer",
     { "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
       "say Once you commit this process will alter your body permanently.",
       "say I'll give you a mug of red ale. Once you cosume it the change will occur.",
-      "say Remember, this will only work for Conjurers.",
+      "say Remember, this will only work for those who have been a Conjurer and never specialized.",
       "::$3n hands you a mug of red ale.::$3n hands a mug of red ale to $1n."});
 
 dilcopy MasterJoin@guilds(GUILD_SORCERER, GUILD_SORCERER_EXCL, QUEST_SORCERER_ENTRY, 
@@ -2177,7 +2177,7 @@ extra {"$improved identify"}
 "The command to become invisible is simply 'raise hood'. Remember, the
 invisibility will fade as soon as you enter combat. The power of the
 cloak is not limitless, however - it will turn you invisible 7 times
-before needing to recharge. Dex bonus granted is +2.<br/>
+before needing to recharge.<br/>
 This cloak is cloth of craftmanship and magic bonus 7.<br/>"
 extra {"$wear_s"}
 "You wrap $2n about your body and fasten the brooch."
@@ -2189,6 +2189,7 @@ MATERIAL_CLOTH("The cloak is made of silk.")
 weight 1
 cost 1 PLATINUM_PIECE
 rent 400 IRON_PIECE
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 dilcopy abi_restrict@function(ABIL_BRA,30,0,0,"bra_rest@skaven");
 dilcopy abi_restrict@function(ABIL_MAG,10,0,25,"mag_rest@skaven");
 dilcopy level_restrict@function(25,0,0,"lvl_rest@skaven");

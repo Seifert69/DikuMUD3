@@ -192,11 +192,13 @@
 
  RESET_ANYHOW
    A zone is reset regardless of wheter it contains players or not.
+ RESET_NEVER
+   Zone never resets, not even at boot (useful for programmatic triggering).
 */
-#define RESET_NOT 0
-#define RESET_IFEMPTY 1
-#define RESET_ANYHOW 2
-
+#define RESET_NOT     0     
+#define RESET_IFEMPTY 1     
+#define RESET_ANYHOW 2      
+#define RESET_NEVER 3       
 
 
 /* ------------------------- Directions ------------------------------

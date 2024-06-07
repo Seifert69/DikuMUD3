@@ -11,25 +11,75 @@ END HEADER*/
 
 %zone	holiday22
 
-lifespan 25
-reset RESET_ANYHOW
+lifespan 25       // Lifespan is controlled in Santa's room
+reset RESET_NEVER // Only reset in Santa's control room
 
 creators {"Ratlin"}
 
 notes
-"Largely taken from the holiday22 zone. See it for more details."
+"Largely taken from the holiday22 zone. See it for more details.
+2023... Trying to reuse the zone from 2022 by simply renaming
+the quests. Let's see how it goes..."
 
 help
 "Player should never be in here."
 
-#define XMAS_SANTA22 "Visiting Santa 2022"
-#define XMAS_DONE22 "Holiday Gift 2022 Received"
-#define XMAS_DAY22 "Holiday Gift 2022 Upgraded"
-#define X_CHARGES "$XMAS_Charges"
 
 %dil
 
-dilbegin rocket (holiday : string);
+#define XMAS_SANTA_IDX   0
+#define XMAS_DONE_IDX    1
+#define XMAS_DAY_IDX     2
+#define XMAS_CHARGES_IDX 3
+#define XMAS_NO_DEC_IDX  4
+#define XMAS_EXP_IDX     5
+
+
+//
+// Initialize these global DIL values for the xmas zone 
+// so that we can reuse it year after year.
+//
+dilbegin xmas_initialize();
+var
+    xmas_quests  : stringlist global xmas_done@holiday22;
+
+/*  xmas_santa   : string global xmas_santa@holiday22;
+    xmas_done    : string global xmas_done@holiday22;
+    xmas_day     : string global xmas_day@holiday22;
+    xmas_charges : string global xmas_charges@holiday22;
+    xmas_no_dec  : string global xmas_no_dec@holiday22;
+    xmas_exp     : string global xmas_exp@holiday22;*/
+
+    year : integer;
+code
+{
+    year := getinteger(DIL_GINT_REALYEAR, self, 0);
+    addstring(xmas_quests, "Visiting Santa " + itoa(year));
+    addstring(xmas_quests, "Holiday Gift " + itoa(year) + " Received");
+    addstring(xmas_quests, "Holiday Gift " + itoa(year) + " Upgraded");
+    addstring(xmas_quests, "$XMAS_Charges " + itoa(year));
+    addstring(xmas_quests, "$NO_DEC" + itoa(year));
+    addstring(xmas_quests, "$XMASEXP" + itoa(year));
+    log("xmas debug year = " + itoa(year));
+    return;
+}
+dilend
+
+// Copy a quest_restrict onto the calling object
+// using the xmas_done quest
+//
+dilbegin xmas_restrict();
+var
+    xmas_quests  : stringlist global xmas_done@holiday22;
+code
+{
+   dilcopy("quest_restrict@function("+xmas_quests.[XMAS_DONE_IDX]+", 0, 0,)", self);
+   return;
+}
+dilend
+
+
+dilbegin rocket(holiday : string);
 external
 	act_world (s:string);
 	ast_launch();
@@ -370,11 +420,13 @@ dilend
 otherwise, set the flag, and start the exp tracker */ 
 dilbegin touch_pole();
 var
+    xmas_quests  : stringlist global xmas_done@holiday22;
 	pc 			: unitptr;
 	newbie_gift	: unitptr;
 	item		: unitptr;
 	z 			: integer;
 	i 			: integer;
+    sl          : stringlist;
 
 code
 {
@@ -386,7 +438,7 @@ code
 	pc := activator;
 	secure(pc, lostpc);
 
-	if ("$NO_DEC22" in pc.extra)
+	if (xmas_quests.[XMAS_NO_DEC_IDX] in pc.extra)
 	{
 		act("We are sorry, but you have not played here long enough to get on our gift list.", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("But we still Wish you a Happy Holiday Season!", A_ALWAYS, activator, null, null, TO_CHAR);
@@ -394,7 +446,7 @@ code
 		unsecure(pc);
 		goto start;
 	}
-	if (XMAS_DONE22 in pc.quests)
+	if (xmas_quests.[XMAS_DONE_IDX] in pc.quests)
 	{
 		act("Greedy little snot aren't we!", A_ALWAYS, activator, null, null, TO_CHAR);
 		unsecure(pc);
@@ -406,7 +458,9 @@ code
 		act("We are sorry, but you have not played here long enough to get on our regular gift list.", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("But please take this small token and Have a Happy Holiday Season!", A_ALWAYS, activator, null, null, TO_CHAR);
 		newbie_gift:= load("newbgift@holiday22");
-		addextra(pc.quests, {XMAS_DONE22}, "");
+        sl := null;
+        addstring(sl, xmas_quests.[XMAS_DONE_IDX]);
+		addextra(pc.quests, sl, "");
 		dilcopy ("ply_restrict@function("+pc.name+",0,25,holiday_burn@holiday22)",newbie_gift);
 		newbie_gift.height:= pc.height;
 		log(pc.name+" received a "+newbie_gift.nameidx);
@@ -414,13 +468,15 @@ code
 		unsecure(pc);
 		goto start;
 	}
-	if (not("$XMASEXP22" in pc.extra))
+	if (not(xmas_quests.[XMAS_EXP_IDX] in pc.extra))
 	{
-		addextra (pc.extra,{"$XMASEXP22"},itoa(pc.exp)); 
+        sl := null;
+        addstring(sl, xmas_quests.[XMAS_EXP_IDX]);
+		addextra (pc.extra,sl,itoa(pc.exp)); 
 		act("Come back when you have gained some experience!", A_ALWAYS, activator, null, null, TO_CHAR);
 		goto start;
 	}
-	else if ((pc.exp - atoi(pc.extra.["$XMASEXP22"].descr)) >=200000)
+	else if ((pc.exp - atoi(pc.extra.[xmas_quests.[XMAS_EXP_IDX]].descr)) >=200000)
 	{   /* they got it */	
 		act("You touch the pole, and visions of sugar plums start dancing in your head!", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("You suddenly feel like you're floating.", A_ALWAYS, activator, null, null, TO_CHAR);
@@ -437,7 +493,7 @@ code
 	}
 	else 
 	{  /*they need */
-		act( "You need "+itoa(200000 - (pc.exp - atoi(pc.extra.["$XMASEXP22"].descr)))
+		act( "You need "+itoa(200000 - (pc.exp - atoi(pc.extra.[xmas_quests.[XMAS_EXP_IDX]].descr)))
 		+ " more experience to see Santa.", A_ALWAYS, activator, null, null, TO_CHAR);
 		goto start;
 	}
@@ -529,7 +585,9 @@ dilend
 /*santa's rountines for once they get exp */
 dilbegin look_santa();
 var
+    xmas_quests  : stringlist global xmas_done@holiday22;
 	pc : unitptr;
+    sl : stringlist;
 code
 {
 	heartbeat := PULSE_SEC*4;
@@ -542,12 +600,12 @@ code
 	pc := activator;
 	secure(pc, lostpc);
 
-	if (XMAS_DONE22 in pc.quests)
+	if (xmas_quests.[XMAS_DONE_IDX] in pc.quests)
 	{
 		exec("whisper "+pc.name+ "Don't be greedy or I shall take your gift away!", self);
 		goto start;
     }
-	else if (XMAS_SANTA22 in pc.quests)
+	else if (xmas_quests.[XMAS_SANTA_IDX] in pc.quests)
 	{
 		exec("say "+pc.name+ ", I'd love to talk more, but I have a lot to do. " +
 		"My assistant will take care of you. The workshop is over there.", self);
@@ -576,7 +634,9 @@ code
 	exec("say I along with the Admin here at Valhalla, wish you a very Happy Holiday!", self);
 	pause;
 	exec("wave "+pc.name,self);
-	addextra(pc.quests, {XMAS_SANTA22}, "");
+    sl := null;
+    addstring(sl, xmas_quests.[XMAS_SANTA_IDX]);
+	addextra(pc.quests, sl, "");
 
 :lostpc:
 
@@ -585,11 +645,12 @@ code
 }
 dilend   
 
-dilbegin xmas_day();
+dilbegin xmas_day_func();
 var
-
+    xmas_quests  : stringlist global xmas_done@holiday22;
 	pc		:  	unitptr;
 	item 	:   unitptr;
+    sl      :   stringlist;
 
 code
 {
@@ -603,7 +664,7 @@ code
 
 	pc := activator;
 	
-	if ((not(XMAS_DONE22 in pc.quests)) or (XMAS_DAY22 in pc.quests))
+	if ((not(xmas_quests.[XMAS_DONE_IDX] in pc.quests)) or (xmas_quests.[XMAS_DAY_IDX] in pc.quests))
 		goto start;
 
 	secure(pc, lost_pc);
@@ -624,9 +685,11 @@ code
 	wait(SFB_DONE, (command("give")) and (activator == pc) and (target == self));
 	
 	item := medium;
-	if ((item.zoneidx == "holiday22") and (not(XMAS_DAY22 in pc.quests)) and (item.type == 8))
+	if ((item.zoneidx == "holiday22") and (not(xmas_quests.[XMAS_DAY_IDX] in pc.quests)) and (item.type == 8))
 	{
-		addextra(pc.quests, {XMAS_DAY22}, "");
+        sl := null;
+        addstring(sl, xmas_quests.[XMAS_DAY_IDX]);
+		addextra(pc.quests, sl, "");
 		dilcopy ("xmas_magic@holiday22()",item);
 		dilcopy ("x_charge@holiday22()",item);
 		item.extra.descr := item.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
@@ -658,9 +721,11 @@ dilend  // xmas_day
 
 dilbegin xmas_magic();
 var
+    xmas_quests  : stringlist global xmas_done@holiday22;
 	pc		: unitptr;
 	charges : integer;
 	i 		: integer;
+    sl      : stringlist;
 code
 {
 	heartbeat := PULSE_SEC;
@@ -670,17 +735,21 @@ code
 	pc := activator;
 	secure(pc,lostpc);
 	
-	if(not(X_CHARGES in self.extra))
-		addextra(self.extra, {X_CHARGES}, "charged");
+	if(not(xmas_quests.[XMAS_CHARGES_IDX] in self.extra))
+    {
+        sl := null;
+        addstring(sl, xmas_quests.[XMAS_CHARGES_IDX]);
+		addextra(self.extra, sl, "charged");
+    }
 
-	if(self.extra.[X_CHARGES].descr == "empty") 
+	if(self.extra.[xmas_quests.[XMAS_CHARGES_IDX]].descr == "empty") 
 	{
 		wait(SFB_TICK, command(CMD_AUTO_TICK));
 		act("Your $2n seems to be drained of its holiday magic.",A_ALWAYS,self.outside,self,null,TO_CHAR);
 		goto start;
 	}
 	wait(SFB_TICK, command(CMD_AUTO_TICK));
-	self.extra.[X_CHARGES].descr := "empty";
+	self.extra.[xmas_quests.[XMAS_CHARGES_IDX]].descr := "empty";
 	self.extra.[0].descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.[0].descr);
 	
 	act("A burst of holiday magic erupts from your $2n!",A_ALWAYS,self.outside,self,null,TO_CHAR);
@@ -701,22 +770,28 @@ dilend
 
 dilbegin recall x_charge();
 var
-  charge 	: integer;
+    xmas_quests  : stringlist global xmas_done@holiday22;
+    charge 	: integer;
+    sl : stringlist;
 code
 {
 	:start:
 	heartbeat := PULSE_SEC*SECS_PER_MUD_DAY;
 	wait(SFB_TICK, (self.equip > 0));
 	
-	if(not(X_CHARGES in self.extra))
-		addextra(self.extra, {X_CHARGES}, "charged");
+	if(not(xmas_quests.[XMAS_CHARGES_IDX] in self.extra))
+    {
+        sl := null;
+        addstring(sl, xmas_quests.[XMAS_CHARGES_IDX]);
+		addextra(self.extra, sl, "charged");
+    }
 	
 	act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
-	if(self.extra.[X_CHARGES].descr == "empty")
+	if(self.extra.[xmas_quests.[XMAS_CHARGES_IDX]].descr == "empty")
 	{
 		self.extra.[0].descr := self.extra.[0].descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
-		self.extra.[X_CHARGES].descr := "charged";
+		self.extra.[xmas_quests.[XMAS_CHARGES_IDX]].descr := "charged";
 	}
 	goto start;
 	
@@ -726,7 +801,7 @@ dilend // END x_charge
 /*pc picks item */
 dilbegin christmas_2022();
 var
-
+    xmas_quests  : stringlist global xmas_done@holiday22;
 	pc		:  	unitptr;
 	gift	:	unitptr;
 	stat	:	string;
@@ -743,7 +818,7 @@ code
 	heartbeat:= PULSE_SEC*4;
 	wait(SFB_DONE, (command("look")) and (activator.type == UNIT_ST_PC) and (target == self));
 
-	if (XMAS_DONE22 in activator.quests)
+	if (xmas_quests.[XMAS_DONE_IDX] in activator.quests)
 		goto start;
 
 	pc := activator;
@@ -819,14 +894,16 @@ code
 
 	gift := load(spot+"_"+stat+"@holiday22");
 	dilcopy ("ply_restrict@function("+pc.name+",0,25,holiday_burn@holiday22)",gift);
-	dilcopy ("quest_restrict@function("+XMAS_DONE22+",0,25,hq_burn@holiday22)",gift);
+	dilcopy ("quest_restrict@function("+xmas_quests.[XMAS_DONE_IDX]+",0,25,hq_burn@holiday22)",gift);
 	gift.height := pc.height;
 	link(gift,pc);
 	log("SANTA DIL: ("+pc.name+") received a "+gift.symname);
 	exec("say Here is your gift.", self);
 	pause;
-	addextra(pc.quests, {XMAS_DONE22}, "");
-	subextra(pc.quests, XMAS_SANTA22);
+    sl := null;
+    addstring(sl, xmas_quests.[XMAS_DONE_IDX]);
+	addextra(pc.quests, sl, "");
+	subextra(pc.quests, xmas_quests.[XMAS_SANTA_IDX]);
 	pause;
 	exec("shout <div class='cpr'>Happy Holidays "+pc.name+"</div>",self);
 	link(pc, findroom("square@udgaard"));
@@ -926,6 +1003,80 @@ Apparently the treasures are beyond the reach of mere mortals."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 ALWAYS_LIGHT
 west to study;
+
+dilbegin init_xmas();
+external
+   	xmas_initialize();
+code
+{
+    xmas_initialize(); // JIC someone resets the zone
+    quit;
+}
+dilend
+
+dilbegin wait_for_xmas();
+external
+   	xmas_initialize();
+var
+    xmas_quests  : stringlist global xmas_done@holiday22;
+    m : integer;
+    mday : integer;
+code
+{
+    pause;
+    log("xmas hello world ");
+    xmas_initialize(); // JIC someone resets the zone
+    log("xmas debug: " + xmas_quests.[XMAS_SANTA_IDX] + "|" + xmas_quests.[XMAS_DONE_IDX] + "|" + xmas_quests.[XMAS_DAY_IDX] + "|" + xmas_quests.[XMAS_CHARGES_IDX] + "|" + xmas_quests.[XMAS_NO_DEC_IDX] + "|" + xmas_quests.[XMAS_EXP_IDX]);
+
+:loop:
+    
+    wait(SFB_TICK, TRUE);
+    m := getinteger(DIL_GINT_REALMONTH, self, 0);
+    log("xmas debug: month " + itoa(m));
+    if (m != 12) // Waiting for xmas
+    {
+        if (m < 11) // we're in October or earlier, so let's wait 14 days
+        {
+            heartbeat := PULSE_SEC * SECS_PER_REAL_DAY * 14;
+            goto loop;
+        }
+
+        // Month is november
+        mday := getinteger(DIL_GINT_REALDAY, self, 0);
+        if (mday < 30)
+        {
+            heartbeat := PULSE_SEC * SECS_PER_REAL_DAY;
+            goto loop;
+        }
+
+        // It's the 30th of november, let's check every 15 minutes
+        heartbeat := PULSE_SEC * SECS_PER_REAL_MIN * 15;
+        goto loop;
+    }
+
+    // It is December - activate the quest
+    //
+    xmas_initialize(); // Be sure we have the right values
+
+    log("xmas debug: " + xmas_quests.[XMAS_SANTA_IDX] + "|" + xmas_quests.[XMAS_DONE_IDX] + "|" + xmas_quests.[XMAS_DAY_IDX] + "|" + xmas_quests.[XMAS_CHARGES_IDX] + "|" + xmas_quests.[XMAS_NO_DEC_IDX] + "|" + xmas_quests.[XMAS_EXP_IDX]);
+
+    // Send everyone a message about the xmas spirit arriving
+    heartbeat := PULSE_SEC * SECS_PER_REAL_MIN * 25;  // Zone resets every 25 minutes
+
+:xmas:
+    m := getinteger(DIL_GINT_REALMONTH, self, 0);
+    if (m != 12)
+    {
+        // Xmas has ended
+        // Send everyone a message
+        goto loop;
+    }
+
+    zonereset(findzone(self.zone));
+    wait(SFB_TICK, TRUE);
+    goto xmas;
+}
+dilend
 end
 
 %objects
@@ -1426,7 +1577,9 @@ the Admin of Valhalla for New Players, weapons like these are hard to find.
 <div class='cpr'>             `---'  </div>
 </pre>"
 HIT_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
-dilcopy quest_restrict@function(XMAS_DONE22,0,0,"");
+
+
+dilcopy xmas_restrict();
 
 dilbegin candyheal();
 var
@@ -3321,7 +3474,7 @@ MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
 flags {UNIT_FL_NO_TELEPORT}
 romflags{CHAR_DETECT_INVISIBLE}
 dilcopy spirit_nokill();
-dilcopy xmas_day();
+dilcopy xmas_day_func();
 end      
 
 graf_jan	   
@@ -3383,7 +3536,6 @@ end
 // comment out this entire load section after the holiday season.
 // this will maitain the items for players, but take away some christmas cheer.
 
-/*
 
 %reset 
 load xmas_tree2 into hall@newbie         local 1
@@ -3408,5 +3560,5 @@ load elf into workshop max 1
 load northpole into square@udgaard max 1
 
 load graf_jan into village_rd6@udgaard max 1
-*/
+
 %end

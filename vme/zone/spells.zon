@@ -2694,8 +2694,7 @@ foreach(UNIT_ST_OBJ, can)
   if (can == self)
      continue;
 
-  if (not (IS_CORPSE(can)))
-
+  if (not (IS_CORPSE(can)) or (IS_CORPSE(can) and tgt.value[2] == 1))
      continue;
 
   chk := (can.value[4]);
@@ -2752,9 +2751,8 @@ foreach(UNIT_ST_OBJ, can)
   }
 
   secure (u,lostu);
-  dilcopy("undead_obey@spells("+itoa(hm)+")",u);
   dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-  dilcopy("undead_exec@spells",u);
+  dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -2793,7 +2791,7 @@ code
       quit;
    }
 
-  if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -2833,9 +2831,8 @@ unsecure (tgt);
 
    u:= load("skel_champ@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -2875,7 +2872,7 @@ code
    }
 
 
-     if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -2915,9 +2912,8 @@ unsecure (tgt);
 
    u:= load("skeleton@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
 		if (isset(self.pcflags,PC_PK_RELAXED))
 		dilcopy ("catchit@spells(1)",u);
 		else
@@ -3602,8 +3598,6 @@ var ext : extraptr;
 
 code
 {
-interrupt(SFB_MSG, TRUE, test);
-priority;
 
 :loop:
 wait(SFB_CMD, command("tell"));
@@ -3662,17 +3656,6 @@ addextra (self.extra,{"$pc obey"},activator.name);
 exec(argument, self);
 goto loop;
 
-:test:
-if (getword(argument) == "spl_dispel")
-  if (atoi(getword(argument)) >= i)
-    goto stop;
-goto loop;
-
-:stop:
-i:= dildestroy("undead_exec@spells", self);
-subextra (self.extra, "$undead control");
-exec("follow", self);
-quit;
 }
 dilend
 
@@ -4140,31 +4123,51 @@ else
 dilend
 
 
-dilbegin aware undead_exec();
-var
-   cancast : integer;
+dilbegin aware undead_exec(i : integer);
 code
 {
-   cancast := dilfind("combat_mag ", self);
-
+dilcopy ("undead_obey@spells("+itoa(i)+")",self);
+heartbeat:=PULSE_SEC*3;
    :loop:
    wait(SFB_CMD, activator == self);
 
-   /* This is what the undeads cant do... */
-   if (command("sneak") or command("hide") or
-       command("steal") or command("recite") or command("use") or
-       command ("shout") or command ("tell") or command ("pick") or
-       command ("filch") or command ("pickpocket") or
-       command("aid") or command("trip"))
-   {
-      block;
-      exec("moan", self);
-   }
-   else if ((command("cast")) and (cancast!=1))
-   {
-      block;
-      exec("moan", self);
-   }
+   /* This is what the undeads can do... */
+if ((command("cast")) and ("$undeadcaster" in self.extra))
+   	{
+	      	goto loop;
+  	 }
+else if (not(((command ("kill")) or
+	(command ("up")) or
+	(command ("down")) or
+	(command ("north")) or
+	(command ("south")) or
+	(command ("east")) or
+	(command ("west")) or
+	(command ("northeast")) or
+	(command ("northwest")) or
+	(command ("southwest")) or
+	(command ("southeast")) or
+	(command ("climb")) or
+	(command ("enter")) or
+	(command ("sleep")) or
+	(command ("wake")) or
+	(command ("stand")) or
+	(command ("rest")) or
+	(command ("sit")) or
+	(command ("kill")) or
+	(command ("get")) or
+	(command ("drop")) or
+	(command ("give")) or
+	(command ("follow")) or
+	(command ("flee")) or
+	(command ("look")) or
+	(command ("dig")) or
+	(command ("bury")) or
+	(command ("put"))))){
+			block;
+      		exec("moan", self);
+   	}
+
    goto loop;
 }
 dilend
@@ -4232,12 +4235,14 @@ dilend
 dilbegin integer skill_duration(hm : integer);
 code
 {
+
    if (hm < 20)
-     return (2);
-   else if (hm > 150)
-     return (15);
+      return (2);
+   else if (hm <= 150)
+      return (hm/10);
    else
-     return (hm / 10);
+      return (15+((hm-150)/20));
+
 }
 dilend
 dilbegin unitptr unit_room(u : unitptr);
@@ -4756,11 +4761,11 @@ code{
      if(command(CMD_AUTO_COMBAT) and not(equipment(self,WEAR_WIELD)))
      {
       if(self.speed<=12)
-       res:=meleeattack(self,self.fighting,3,WPN_UNARMED);
+       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,TRUE);
       if(self.speed<=8)
-       res:=meleeattack(self,self.fighting,3,WPN_UNARMED);
+       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,TRUE);
       if(self.speed<=4)
-       res:=meleeattack(self,self.fighting,3,WPN_UNARMED);
+       res:=meleeattack(self,self.fighting,3,WPN_UNARMED,TRUE);
      }
      goto loop;
 }
@@ -5046,8 +5051,15 @@ code
       i := i + 1;
 
       self.hp := self.hp - j;
+      
       self.mana := self.mana - 2*j;
+      if (self.mana < 0)
+      	self.mana := 0;	
+
       self.endurance := self.endurance - 2*j;
+      if (self.endurance < 0)
+        self.endurance := 0;
+      
       if (self.hp >= -10)
           position_update(self);
 
@@ -6243,8 +6255,7 @@ code
       {
 		act("$3n is controlled by $1n.",
 		A_HIDEINV, self, null, tgt, TO_ROOM);
-		dilcopy("undead_obey@spells("+itoa(hm)+")", tgt);
-		dilcopy("undead_exec@spells", tgt);
+		dilcopy("undead_exec@spells("+itoa(hm)+")", tgt);
 		dilcopy("undead_timer@spells("+itoa(hm)+")", tgt);
 		addextra(tgt.extra,{"$undead control"},self.name);
 		if (isset(self.pcflags,PC_PK_RELAXED))
@@ -8438,6 +8449,9 @@ dilend
 
 dilbegin bless(medi:unitptr, tgt : unitptr, arg : string,
 	       hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
    /*
@@ -8456,23 +8470,21 @@ code
       quit;
    }
 
-   hm := 1 + hm / 10;
-   if (hm > 10)
-      hm := 10;
+      hm := bonusCalc(hm);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DEX, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_STR, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+   addaff(tgt, ID_BLESS, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
@@ -8488,6 +8500,9 @@ code
 dilend
 
 dilbegin ubless(medi:unitptr,tgt:unitptr,arg:string,hm:integer,effect:string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
    /*
@@ -8506,22 +8521,21 @@ code
       quit;
    }
 
-   hm := 1 + hm / 10;
-   if (hm > 10) hm := 10;
+      hm := bonusCalc(hm);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_DEX, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_STR, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
-   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+   addaff(tgt, ID_UNHOLY_BLESSING, max@function(10,hm), WAIT_SEC*30,
 	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
    quit;
@@ -8603,6 +8617,9 @@ dilend
 
 dilbegin raise_div(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8620,11 +8637,9 @@ if ((isaff(tgt,ID_SPL_RAISE_DIV)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_DIV, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_DIV, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_DIV, hm, 0, TIF_DIV_INC, TIF_NONE, TIF_DIV_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8637,6 +8652,9 @@ dilend
 
 dilbegin raise_mag(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8654,11 +8672,9 @@ if ((isaff(tgt,ID_SPL_RAISE_MAG)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_MAG, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_MAG, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_MAG, hm, 0, TIF_MAG_INC, TIF_NONE, TIF_MAG_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8671,6 +8687,10 @@ dilend
 
 dilbegin raise_str(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
+
 code
 {
 
@@ -8687,12 +8707,11 @@ if ((isaff(tgt,ID_SPL_RAISE_STR)) or
          effect(tgt, medi, -1);
          quit;
          }
-
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
-
-	addaff(tgt, ID_SPL_RAISE_STR, 20, WAIT_SEC*30,
+         
+         
+      hm := bonusCalc(hm);
+	
+	addaff(tgt, ID_SPL_RAISE_STR, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_STR, hm, 0, TIF_STR_INC, TIF_NONE, TIF_STR_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8705,6 +8724,9 @@ dilend
 
 dilbegin raise_dex(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8722,11 +8744,9 @@ if ((isaff(tgt,ID_SPL_RAISE_DEX)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_DEX, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_DEX, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_DEX, hm, 0, TIF_DEX_INC, TIF_NONE, TIF_DEX_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8739,6 +8759,9 @@ dilend
 
 dilbegin raise_con(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8756,11 +8779,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CON)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_CON, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_CON, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_CON, hm, 0, TIF_CON_INC, TIF_NONE, TIF_CON_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8772,6 +8793,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CON)) or
 dilend
 dilbegin raise_cha(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8789,11 +8813,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CHA)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_CHA, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_CHA, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_CHA, hm, 0, TIF_CHA_INC, TIF_NONE, TIF_CHA_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8806,6 +8828,9 @@ dilend
 
 dilbegin raise_bra(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8823,11 +8848,9 @@ if ((isaff(tgt,ID_SPL_RAISE_BRA)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_BRA, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_BRA, max@function(20,hm*2), WAIT_SEC*30,
 	       ABIL_BRA, hm, 0, TIF_BRA_INC, TIF_NONE, TIF_BRA_DEC,
 	       APF_ABILITY);
    if (effect != "")
@@ -8841,6 +8864,9 @@ dilend
 
 dilbegin raise_divine(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8858,11 +8884,9 @@ if ((isaff(tgt,ID_SPL_RAISE_DIVINE)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_DIVINE, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_DIVINE, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_DIVINE, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8875,6 +8899,9 @@ dilend
 
 dilbegin raise_heat(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8892,11 +8919,9 @@ if ((isaff(tgt,ID_SPL_RAISE_HEAT)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_HEAT, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_HEAT, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_HEAT, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8909,6 +8934,9 @@ dilend
 
 dilbegin raise_summoning(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8926,11 +8954,9 @@ if ((isaff(tgt,ID_SPL_RAISE_SUMMONING)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_SUMMONING, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_SUMMONING, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_SUMMONING, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8943,6 +8969,9 @@ dilend
 
 dilbegin raise_cold(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8960,11 +8989,9 @@ if ((isaff(tgt,ID_SPL_RAISE_COLD)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_COLD, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_COLD, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_COLD, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -8977,6 +9004,9 @@ dilend
 
 dilbegin raise_elect(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -8994,11 +9024,9 @@ if ((isaff(tgt,ID_SPL_RAISE_CELL)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_CELL, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_CELL, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_CELL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -9011,6 +9039,9 @@ dilend
 
 dilbegin raise_poison(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9028,11 +9059,9 @@ if ((isaff(tgt,ID_SPL_RAISE_INTERNAL)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_INTERNAL, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_INTERNAL, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_INTERNAL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -9045,6 +9074,9 @@ dilend
 
 dilbegin raise_acid(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9062,11 +9094,9 @@ if ((isaff(tgt,ID_SPL_RAISE_EXTERNAL)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_EXTERNAL, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_EXTERNAL, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_EXTERNAL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -9079,6 +9109,9 @@ dilend
 
 dilbegin mind_shield(medi:unitptr, tgt : unitptr, arg : string,
 	           hm : integer, effect : string);
+external
+     integer bonusCalc(hm : integer);
+     integer max@function(a:integer, b:integer);
 code
 {
 
@@ -9096,11 +9129,9 @@ if ((isaff(tgt,ID_SPL_RAISE_MIND)) or
          quit;
          }
 
-      hm := hm/10+1;
-      if (hm>10)
-	hm := 10;
+      hm := bonusCalc(hm);
 
-	addaff(tgt, ID_SPL_RAISE_MIND, 20, WAIT_SEC*30,
+	addaff(tgt, ID_SPL_RAISE_MIND, max@function(20,hm*2), WAIT_SEC*30,
 	       SPL_MIND, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
@@ -10510,6 +10541,7 @@ dilbegin resurrect(medi : unitptr, tgt : unitptr, arg : string,
 		   hm : integer, effect : string);
 var
    u : unitptr;
+   uh : unitptr;
    t:integer;
    c:integer;
    i:integer;
@@ -10529,7 +10561,7 @@ if (self.extra.["$RES_TIME"]==null)
 
 
 c:=realtime-atoi(self.extra.["$RES_TIME"].descr);
-if (c<120)
+if (c<150) // increased by 30s time because of power level now affecting time before recast
 {
 self.mana:=self.mana+80;
 act ("You are still too queasy to cast this spell try waiting a minute or so and try again.",
@@ -10538,23 +10570,28 @@ return;
 }
 
 
-
 :skiptimer:
 subextra (self.extra,"$RES_TIME");
-addextra (self.extra,{"$RES_TIME"},itoa(realtime));
+addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
    foreach (UNIT_ST_OBJ, u)
    {
       if ((IS_CORPSE(u)) and ((" "+tgt.name+" ") in u.outside_descr))
       {
-	  if ("headless" in u.outside_descr)
-	  	  {
+	  if ("headless" in u.outside_descr){
+	  log("head_of_" +tgt.name);
+	  	  uh := findunit( self, "head_of_" +tgt.name, FIND_UNIT_INVEN, null );
+	  	  if(uh != null){
+	  	  	destroy(uh);
+	  	  	goto startres;
+	  	  }
 	  act("The headless corpse of "+tgt.name+" stands up, realizes it "
 	  +"has no head, runs around the room like a chicken with its head chopped"
 	  +" off then flops to the ground.",A_ALWAYS, tgt, null, self, TO_VICT);
 	 act("$1n thinks they are Dr. Frankenstein and attempts to resurrect "
 	 +"the headless corpse of "+tgt.name+" to no avail.",A_ALWAYS, self, null, null, TO_ROOM);
         quit;
-	   }
+        }
+        :startres:
 	 act("A vortex appears above you dragging your soul out of "+
 	     "Valhalla and back into your mutilated body.",
 	     A_ALWAYS, tgt, null, null, TO_CHAR);
@@ -10731,7 +10768,7 @@ code
       quit;
    }
 
-	       if (not (IS_CORPSE(tgt)))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -10770,9 +10807,8 @@ unsecure (tgt);
 
    u:= load("zombie@spells");
   secure (u,lostu);
-    dilcopy("undead_obey@spells("+itoa(hm)+")",u);
     dilcopy ("zombie_summoned@spells("+itoa(hm)+")",u);
-    dilcopy("undead_exec@spells",u);
+    dilcopy("undead_exec@spells("+itoa(hm)+")",u);
    if (isset(self.pcflags,PC_PK_RELAXED))
    dilcopy ("catchit@spells(1)",u);
    else
@@ -14879,6 +14915,29 @@ code
 }
 dilend
 
+/*
+New function for handling bonus calculations.
+Uses the old code as a starting point for bonuses of up to 10 points but removes the cap,
+allowing bonuses over 10 if the roll is high enough.
+Remember that rolls for attribute boosts are generally the sum of the characters skill and
+relevant attribute + an open100 roll -50.
+Example: Character with 50 magic and 50 skill and rolls a 50 would have a total of 100.
+1-10 are roughly 1 point per 10 points on your roll
+In this case, this function would return 10, the old standard roll.
+However, if the same character were to roll a 160 (due to how open roll works. If you roll a 100 it rolls again and adds the result so here I'm assuming they rolled a 100, then a 10) then the after the first 10 points, the second part of the calculation would kick in and the result would be an 12.
+*/
+dilbegin integer bonusCalc(hm : integer);
+
+code
+{
+      hm := hm/10+1;  // old starting calculation
+      if (hm>10)
+	hm := 10+((hm-10)/3); // allows for numbers greater than 10 at intervals of 30 per increase
+      
+     return(hm);
+}
+dilend
+
 %rooms
 
                                    spell_room
@@ -15389,3 +15448,4 @@ end
 
 
 %end
+

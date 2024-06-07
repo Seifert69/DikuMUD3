@@ -3033,7 +3033,7 @@ loglevel = 240
 type     = 0
 
 command  = reset
-internal = reset
+func     = cmd_reset@commands
 minpos   = POSITION_RESTING
 minlevel = 230
 loglevel = 230

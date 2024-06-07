@@ -555,13 +555,18 @@ else if (tlist.[i]==left("maxmana",length(tlist.[i])))
   addstring (plist,"%tankdiag%");
        tlist.[i]:="%tankdiag%";
     }
-  else   if ((tlist.[i]==left("zone",length(tlist.[i]))) and
-(self.level >= IMMORTAL_LEVEL))
+  else   if (tlist.[i]==left("zone",length(tlist.[i])))
   {
     if (not("%zone%" in  plist))
   addstring (plist,"%zone%");
        tlist.[i]:="%zone%";
     }
+  else   if (tlist.[i]==left("roomname",length(tlist.[i])))
+  {
+    if (not("%roomname%" in  plist))
+  addstring (plist,"%roomname%");
+       tlist.[i]:="%roomname%";
+  }
   else   if ((tlist.[i]==left("room",length(tlist.[i]))) and
 (self.level >= IMMORTAL_LEVEL))
   {
@@ -703,6 +708,8 @@ i:=i+1;
       }
       else if (plist.[i]=="%zone%")
          cp:=replace("%zone%",self.outside.zoneidx,cp);
+      else if (plist.[i]=="%roomname%")
+         cp:=replace("%roomname%",self.outside.title,cp);
       else if (plist.[i]=="%room%")
          cp:=replace("%room%",self.outside.nameidx,cp);
       else if (plist.[i]=="%wizinv%")

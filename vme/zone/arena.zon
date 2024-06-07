@@ -3035,7 +3035,7 @@ code
 
         if (i > 1) goto start;
            /* one in 3 times will it do a hit */
- i:=meleeattack (self.outside,self.outside.fighting,0,WPN_ROOT);
+ i:=meleeattack (self.outside,self.outside.fighting,0,WPN_ROOT,TRUE);
         pwr := "meekly poke";
         if (i > 1) pwr := "cut";
         if (i > 5) pwr := "stab";

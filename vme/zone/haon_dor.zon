@@ -74,7 +74,7 @@ code
 
 	 i := cast_spell(SPL_POISON, self, self, u, "");
 	 i := cast_spell(SPL_POISON, self, self, u, "");
-	 i := meleeattack(self, u, +75, WPN_BITE);
+	 i := meleeattack(self, u, +75, WPN_BITE,TRUE);
 	 goto done;
       }
    }
@@ -2791,7 +2791,7 @@ extra {}
 "She is a graceful creature, with sleek black fur."
 M_CAT_TINY(2,SEX_FEMALE)
 manipulate {MANIPULATE_TAKE}
-dilcopy obey_animal@function ();
+//dilcopy obey_animal@function (); Disabled while working on obey functions
 dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
 flags {UNIT_FL_NO_TELEPORT}
 

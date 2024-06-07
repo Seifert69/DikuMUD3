@@ -28,14 +28,17 @@ at the end of the prompt variables for this.
 <li>%xptolvl% - Your experience to next level</li>
 <li>%level% - Your current base level</li>
 <li>%vlevel% - Your current virtual level</li>
+<li>%zone% - The zone idx you are in</li>
+<li>%roomname% - The name of the room you are in</li>
 <li>%oppname% - Your opponent's name</li>
 <li>%tankname% - Your tank's name</li>
 <li>%oppdiag% - Your opponent's condition (diagnoses)</li>
 <li>%tankdiag% - Your tank's condition (diagnoses)</li></ul>
+
+
 <p><b>IMMORTAL ONLY IDENTIFIERS</b>
 </p>
-<ul><li>%zone% - The zone idx you are in</li>
-<li>%room% - The room idx you are in</li>
+<ul><li>%room% - The room idx you are in</li>
 <li>%wizinv% - Your wizinv level</li></ul>
 <p><b>More Examples</b>
 </p><p>Example:

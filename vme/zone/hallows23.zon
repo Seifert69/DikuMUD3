@@ -1,0 +1,2874 @@
+/*
+filename    hallows23
+password    n0twh4tu
+changedby   Etna
+EmailAdd
+request     compile
+version     2.0
+END HEADER*/
+
+#include <macros.h>
+
+%zone	hallows23
+
+lifespan 25
+reset RESET_ANYHOW
+
+creators {"Etna"}
+
+notes
+"This zone was installed by etna to contain some of the special items
+given at halloween. and OLQs run then
+
+Added OLQ stuff 10/23/09 ETNA
+Added bag drops and broke out into this file 10/23/10
+drops based on Dargs gift drop code.
+Implemented on production 10/28/2010
+Modified by Barron 2023
+"
+
+
+help
+"Player should never be in here. Thanks to darg for the gift_drop code"
+
+#define HALL23_ONGO "Halloween 2023 Ongoing"
+#define HALL23_COM  "Halloween 2023 Complete"
+
+%dil
+
+dilbegin string gift_name(i:integer);
+var
+  gifts:stringlist;
+code
+{
+  gifts:={"tot_bag2","tot_bag3","tot_bag2","tot_bag3",
+"tot_bag2","tot_bag3","tot_bag4","tot_bag2",
+"tot_bag3","tot_bag4","tot_bag2","tot_bag4"};
+
+ return (gifts.[i]);
+ }
+ dilend
+
+dilbegin gift_func(count:integer,i:integer);
+external
+  string gift_name (i:integer);
+var
+ item: unitptr;
+  namer:string;
+  place:unitptr;
+  gift:unitptr;
+code
+{
+  namer:=gift_name(count);
+  gift:=load (namer+"@"+"hallows23");
+
+if ((gift.nameidx == "tot_bag2") and (gift.loadcount > 250))
+{
+destroy(gift);
+return;
+}
+else if ((gift.nameidx == "tot_bag3") and (gift.loadcount > 175))
+{
+destroy(gift);
+return;
+}
+else if ((gift.nameidx == "tot_bag4") and (gift.loadcount > 150))
+{
+destroy(gift);
+return;
+}
+
+
+  log("loaded"+namer+"@"+"hallows23");
+
+
+  :loop:
+  if (i==0)
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_NPC);
+  else
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
+
+  if ((place==null) or
+  (place==self)) goto loop;
+
+item:=place;
+
+while (item.type!=UNIT_ST_ROOM)
+ {
+ if (item.type==UNIT_ST_PC)
+   goto loop;
+  item:=item.outside;
+  }
+
+  link (gift,place);
+  return ;
+  }
+  dilend     
+
+
+dilbegin load_gift();
+external
+  gift_func (count:integer,i:integer);
+var
+ count:integer;
+ exclude:integer;
+ code
+ {
+
+ :start:
+ exclude:=rnd(0,11);
+ count:=-1;
+heartbeat:=PULSE_SEC*3;
+ while (count <12)
+  {
+  count:=count+1;
+  if (count==12) continue;
+  if (exclude==count)
+    {
+gift_func(exclude,1);
+pause;
+gift_func(exclude,1);
+pause;
+gift_func(exclude,1);
+pause;
+gift_func(exclude,1);
+pause;
+    }
+  else
+    {
+  gift_func(count,0);
+  pause;
+  gift_func (count,0);
+  pause;
+  gift_func(count,0);
+  pause;
+  gift_func (count,0);
+  pause;
+  }
+ }
+
+  heartbeat:=PULSE_SEC*1200; heartbeat:=PULSE_SEC*1200;
+ wait (SFB_TICK,TRUE);
+
+goto start;
+}
+dilend   
+
+/*define the items */
+dilbegin string stuff_name (i:integer);
+var
+  stuff:stringlist;
+code
+{
+  stuff:={"juice","cider","capple","wax",
+"tongue","lskull","pcorn","c_heart",
+"mghost","ccorn","lbat","vcorn"};
+
+ return (stuff.[i]);
+ }
+ dilend  
+ 
+ /* load the items */
+dilbegin stuff_func (count:integer,i:integer);
+external
+  string stuff_name (i:integer);
+var
+ item: unitptr;
+  sname:string;
+  place:unitptr;
+  stuff:unitptr;
+code
+{
+  sname:=stuff_name(count);
+  stuff:=load (sname+"@"+"hallows23");
+  :loop:
+  if (i==0)
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_NPC);
+  else
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
+
+  if ((place==null) or
+  (place==self)) goto loop;
+
+item:=place;
+
+  link (stuff,place);
+  return ;
+  }
+  dilend  
+
+
+
+  
+dilbegin load_stuff();
+external
+  stuff_func (count:integer,i:integer);
+var
+ count:integer;
+ exclude:integer;
+ code
+ {
+
+ :start:
+ exclude:=rnd(0,11);
+ count:=-1;
+heartbeat:=PULSE_SEC*3;
+ while (count <12)
+  {
+  count:=count+1;
+  if (count==12) continue;
+  if (exclude==count)
+    {
+stuff_func(exclude,1);
+pause;
+stuff_func(exclude,1);
+pause;
+stuff_func(exclude,1);
+pause;
+stuff_func(exclude,1);
+pause;
+    }
+  else
+    {
+  stuff_func(count,0);
+  pause;
+  stuff_func (count,0);
+  pause;
+  stuff_func(count,0);
+  pause;
+  stuff_func (count,0);
+  pause;
+  }
+ }
+
+  heartbeat:=PULSE_SEC*1200; heartbeat:=PULSE_SEC*1200;
+ wait (SFB_TICK,TRUE);
+
+goto start;
+}
+dilend  
+
+dilbegin jack_fight();
+var
+        vict : unitptr;
+        fght : integer;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC * 7;
+   wait(SFB_COM,(self.position == POSITION_FIGHTING));
+   vict := self.fighting;
+   secure(vict,damnleft);
+
+   :start:
+fght := rnd(0,100);
+pause;
+
+if (fght < 10)
+{
+act("$1n chokes you with $1s strings!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n chokes $3n with $1s strings!",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(1,2);
+position_update(vict);
+goto start;
+}
+if (fght < 20)
+{
+act("A quick slap from $1n's movement bar knocks you silly!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("A quick slap from $1n's movement bar knocks $3n silly!",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,2);
+position_update(vict);
+goto start;
+}
+if (fght < 30)
+{
+act("$1n tries to charge you and trips over $1s's strings!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n tries to charge $3n but trips over $1s's own strings!",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,0);
+position_update(vict);
+goto start;
+}
+if (fght < 40)
+{
+act("$1n slices you with his razor!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n slices $3n with his razor",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(3,5);
+position_update(vict);
+goto start;
+}
+if (fght < 50)
+{
+act("$1n's jaw drops open and $1s takes a bite out of you!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n's jaw opens and he bites $3n !",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,1);
+position_update(vict);
+goto start;
+}
+if (fght < 60)
+{
+act("$1n gets all tangled up in $1s's own ropes!",
+A_ALWAYS,self,null,vict,TO_ALL);
+act("$1n gets totally tangled in $1s's own ropes!",
+A_ALWAYS,self,null,vict,TO_ALL);
+self.abilities[ABIL_DEX] := (self.abilities[ABIL_STR])-rnd(1,2);
+position_update(self);
+goto start;
+}
+if (fght < 70)
+{
+act("$1n kicks you with his wooden sabat!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n kicks $3n with his wooden sabat! ",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,5);
+position_update(vict);
+goto start;
+}
+else goto start;
+
+        :damnleft:
+exec("emote cackles maniacally.", self);
+unsecure(vict);
+goto init;
+}
+dilend
+
+
+%rooms
+
+study
+title ""
+descr
+"You are in haunted house room covered with cobwebs and big fat juicy
+spiders. If you are not an admin - you are dead. This room used for load
+dil."
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+/* dilcopy load_gift@hallows23();*/
+end
+
+%objects
+
+/*food and potions */
+tot_bag2
+names {"trick or treat bag","treat bag","bag"}
+title "a <div class='cy'>trick or treat bag </div><div class='default'></div>"
+descr "A bright orange burlap bag lays in the dust."
+extra {}
+"This bag looks like it could hold quite a bit of candy."
+CONTAINER_DEF(60)
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 10
+spell 200
+
+dilbegin prg3();
+var
+	pc : unitptr;
+   gift: unitptr;
+    i  : integer;
+    il : intlist;
+	buf : string;
+	sl  : stringlist;
+   gift1 : string;
+code
+{
+	heartbeat := 3;
+
+	:start:
+
+	wait(SFB_CMD, (command("open")) and (("bag" in argument)or
+	("box" in argument)or("treat" in argument)) );
+	pc := activator;
+	secure(pc, lost);
+	{
+	  block;
+	  if (self.outside != activator)
+{
+      act("You must pick me up before opening me.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+goto start;
+}		  
+  unset(self.openflags, EX_CLOSED);
+    	  goto trap;
+    }
+:lost:
+act("<div class='cpr'>A possible rare item disappears forever!</div><div class='default'></div>",
+A_SOMEONE, self, null, pc, TO_ALL);
+destroy(self);
+
+:trap:
+      act("The bag rustles.",
+          A_ALWAYS, pc, null, null, TO_ALL);
+       act("There is something inside - check your inventory!",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+on rnd(0,7) goto load_1, load_2, load_3, load_4, load_5, load_6,load_7,load_8;
+/*loads*/
+:load_1:
+gift := load("juice@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_2:
+     gift := load("pcookie@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_3:
+     gift := load("pcorn@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_4:
+     gift := load("mghost@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_5:
+     gift := load("capple@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	
+:load_6:
+     gift := load("cider@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	
+:load_7:
+     gift := load("lbat@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_8:
+     gift := load("dry_cran@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	  	    	  	  	    	    	     
+}
+dilend
+end   
+
+
+/*money */
+tot_bag3
+names {"trick or treat bag","treat bag","bag"}
+title "a <div class='cy'>trick or treat bag </div><div class='default'></div>"
+descr "A bright orange burlap bag lays in the dust."
+extra {}
+"This bag looks like it could hold quite a bit of candy."
+CONTAINER_DEF(60)
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 10
+spell 200
+
+dilbegin prg4();
+var
+	pc : unitptr;
+   gift: unitptr;
+    i  : integer;
+    il : intlist;
+	buf : string;
+	sl  : stringlist;
+   gift1 : string;
+code
+{
+	heartbeat := 3;
+
+	:start:
+
+	wait(SFB_CMD, (command("open")) and (("bag" in argument)or
+	("box" in argument)or("treat" in argument)) );
+	pc := activator;
+	secure(pc, lost);
+	{
+	  block;
+	  if (self.outside != activator)
+{
+      act("You must pick me up before opening me. DOH!",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+goto start;
+}		  
+  unset(self.openflags, EX_CLOSED);
+    	  goto trap;
+    }
+:lost:
+act("<div class='cpr'>A possible 500000 gold disappears forever!</div><div class='default'></div>",
+A_SOMEONE, self, null, pc, TO_ALL);
+destroy(self);
+
+:trap:
+      act("The bag rustles as you open it.",
+          A_ALWAYS, pc, null, null, TO_ALL);
+       act("There is money inside - check your purse!",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+on rnd(0,4) goto load_1, load_2, load_3, load_4, load_5;
+:load_1:
+gift := load("pcoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_2:
+     gift := load("icoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_3:
+     gift := load("gcoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_4:
+     gift := load("scoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_5:
+     gift := load("ccoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	  
+	  
+
+}
+dilend
+
+end 
+
+/*potions items*/
+tot_bag4
+names {"trick or treat bag","treat bag","bag"}
+title "a <div class='cy'>trick or treat bag </div><div class='default'></div>"
+descr "A bright orange burlap bag lays in the dust."
+extra {}
+"This bag looks like it could hold quite a bit of candy."
+CONTAINER_DEF(60)
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 10
+spell 200
+
+dilbegin prg5();
+var
+	pc : unitptr;
+   gift: unitptr;
+    i  : integer;
+    il : intlist;
+	buf : string;
+	sl  : stringlist;
+   gift1 : string;
+code
+{
+	heartbeat := 3;
+
+	:start:
+
+	wait(SFB_CMD, (command("open")) and (("bag" in argument)or
+	("box" in argument)or("treat" in argument)) );
+	pc := activator;
+	secure(pc, lost);
+	{
+	  block;
+	  if (self.outside != activator)
+{
+      act("You must pick me up before opening me.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+goto start;
+}		  
+  unset(self.openflags, EX_CLOSED);
+    	  goto trap;
+    }
+:lost:
+act("<div class='cpr'>A possible rare item disappears forever!</div><div class='default'></div>",
+A_SOMEONE, self, null, pc, TO_ALL);
+destroy(self);
+
+
+:trap:
+      act("The bag rustles as you open it.",
+          A_ALWAYS, pc, null, null, TO_ALL);
+       act("There is something inside - check your inventory!",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+on rnd(0,7) goto load_1, load_2, load_3, load_4, load_5, load_6,load_7,load_8;
+:load_1:
+gift := load("lskull@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_2:
+     gift := load("c_heart@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_3:
+     gift := load("ccorn@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_4:
+     gift := load("ceye@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_5:
+     gift := load("tongue@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	
+:load_6:
+     gift := load("juice@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	
+:load_7:
+     gift := load("wax@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_8:
+     gift := load("vcorn@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	  	    	  	  	    	    	     
+
+}
+dilend
+end 
+
+
+
+pcookie
+names {"cookie"}
+title "a pumpkin cookie"
+descr "A pumpkin shaped cookie has been left here."
+extra {}
+"This cookie has orange icing and looks to be the perfect
+snack."
+manipulate {MANIPULATE_TAKE}
+weight 1
+FOOD_DEF(6, 0)
+cost 3 IRON_PIECE
+end
+
+pcoins
+MONEY(PLATINUM_PIECE, 5)
+end
+
+scoins
+MONEY(SILVER_PIECE, 5)
+end
+
+icoins
+MONEY(IRON_PIECE, 50)
+end
+
+gcoins
+MONEY(GOLD_PIECE, 5)
+end
+
+ccoins
+MONEY(COPPER_PIECE, 20)
+end
+
+
+
+c_heart
+title "a <div class='cpr'>red candy heart</div><div class='default'></div>"
+names {"candy","box","hearts"}
+descr "A large <div class='cpr'>candy hearts</div><div class='default'> lies here.</div>"
+extra {}
+"A large heart made of cinnamon candy."
+ extra {"$identify"}
+"This heart will raise your strength when quaffed."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_STR,SPL_NONE,SPL_NONE)
+type ITEM_POTION
+weight 1
+cost 2 COPPER_PIECE
+rent 1 COPPER_PIECE
+end  
+
+
+
+
+
+/**********Halloween Quest Items*************/
+
+dq_chest
+names {"chest"}
+title "a sturdy chest"
+descr "A sturdy chest, covered with runes, sits here."
+open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
+flags {UNIT_FL_INVISIBLE}
+key dq_key
+manipulate{MANIPULATE_TAKE, MANIPULATE_ENTER}
+CONTAINER_DEF(300)
+weight 100
+cost 2 PLATINUM_PIECE
+extra {}
+"This is a very study and heavy looking chest, covered with magical
+protective runes."
+
+dilbegin poistrap();
+var
+ pc : unitptr;
+ dex_mod : integer;
+ num     : integer;
+code
+{
+
+ :start:
+ wait(SFB_CMD,(command("open")) and ("chest" in argument));
+
+ pc := activator;
+ secure(pc, start);
+
+ dex_mod := pc.abilities[ABIL_DEX];
+ num     := rnd(1, 100);
+
+ if((num+dex_mod)/2 > 80)
+{
+ act("A cloud of gas expels from the chest as you open it, but you "+
+ "manage to evade it.", A_ALWAYS, pc, self, null, TO_CHAR);
+ act("A cloud of gas expels from the chest, narrowly missing $1n!"
+ , A_ALWAYS, pc, self, null, TO_REST);
+
+ goto start;
+}
+ else
+{
+ act("A cloud of gas expels from the chest as you open it, striking "+
+ "you directly in the face!", A_ALWAYS, pc, null, null, TO_CHAR);
+ act("A cloud of gas expels from the chest, striking $1n "+
+ "in the face!", A_ALWAYS, pc, null, null, TO_REST);
+
+ pc.endurance := 0;
+ pc.hp        := -1;
+ position_update(pc);
+
+ goto start;
+}
+}
+dilend
+end
+
+paper_staff
+names {"newspaper staff","staff"}
+title "a staff made of paper"
+descr "An paper staff is here."
+extra {} "This staff looks quite odd. It is made of old newspapers. There are  
+some words in gold on it."
+extra {"words"}
+"Property of the Valhalla Times."
+extra {"$identify"}
+"This staff is crucial to the running of the paper. It duplicates the scribe's
+work and allows up to 50 copies of the paper to be produced at a time. Without
+it, it might take years for the paper to be distributed or cost over a 
+gold a copy."
+WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
+weight 7
+cost 10 COPPER_PIECE
+end
+
+
+vcorn
+title "a <div class='cw'>candy corn</div><div class='default'> bag</div>"
+names {"candy","bag","corn","candycorn"}
+descr "A small bag of <div class='cy'>candy corn</div><div class='default'> lies here.</div>"
+extra {}
+"A small bag of candy corn. This is the type with the white top. "
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(25,SPL_SANCTUARY  ,SPL_PRO_EVIL,SPL_NONE)
+type ITEM_POTION
+weight 1
+cost 2 COPPER_PIECE
+rent 2 COPPER_PIECE
+end
+
+ccorn
+title "a <div class='cy'>bag of candy corn</div><div class='default'></div>"
+names {"candy","bag","corn","candycorn"}
+descr "A small bag of <div class='cy'>candy corn</div><div class='default'> lies here.</div>"
+extra {}
+"A small bag of candy corn. This is the type with the chocolate top. "
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(25,SPL_SANCTUARY  ,SPL_PRO_GOOD,SPL_NONE)
+type ITEM_POTION
+cost 2 COPPER_PIECE
+rent 2 COPPER_PIECE
+weight  1
+end
+ 
+capple
+title "a <div class='cpr'>candied apple</div><div class='default'></div>"
+names {"candy apple","apple","candy"}
+descr "A bright red candy apple is stuck here."
+extra {}
+"An apple covered in a thick layer of hard red candy."
+manipulate {MANIPULATE_TAKE}
+type ITEM_FOOD
+FOOD_DEF(12, 0)
+weight 2
+ end
+ 
+pcorn
+title "a <div class='cw'>popcorn ball</div><div class='default'></div>"
+names {"popcorn ball","ball","popcorn","candy"}
+descr "A sphere of popped corn lies here."
+extra {}
+"Popped corn is somehow stuck together in a ball shape."
+manipulate {MANIPULATE_TAKE}
+type ITEM_FOOD
+FOOD_DEF(12, 0)
+weight 2
+ end
+
+
+rest_cert
+
+names {"certificate","paper"}
+title "an official looking certificate"
+descr "A gold rimmed certificate has been dicarded."
+extra {}
+"The certificate reads: The owner of this certificate hereby entitled to
+one free restring of one normal object (no power items). All the usual 
+codicils regarding appropriate naming and admin approval apply."
+MATERIAL_ORGANIC("The paper is made from trees")
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+type ITEM_NOTE
+weight 1
+cost 1 COPPER_PIECE
+end
+
+def_shirt
+names {"white tunic", "tunic"}
+title "shining tunic"
+descr "A <div class='cpw'>white silk tunic</div><div class='DEFAULT'> lies here in a rumpled heap.</div>"
+extra {}
+"The tunic is white and quite a beautiful thing to behold as silver moonlight
+dances along the threads. Strange runes spell out 'I Defended Midgaard' on the 
+front and on the back it says 'We lost the staff'."
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+cost 1 GOLD_PIECE
+end
+
+dq_shirt
+names {"dark tunic", "tunic"}
+title "dark tunic"
+descr "A <div class='cpn'>dark silk tunic</div><div class='DEFAULT'> lies here in a rumpled heap.</div>"
+extra {}
+"The robe is black and quite a beautiful thing to behold. The black circle
+inlaid with a purple one is embroidered in the front. Dark dragonfire
+dances along the threads. Strange runes spell out <div class='cp'>All Hail the Dark Queen</div><div class='DEFAULT'> 
+on the front and on the back it says </div><div class='cp'>Member of The Dark Queen's 
+Conquering Army</div><div class='DEFAULT'>.</div>"
+ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+cost 1 GOLD_PIECE
+end
+ 
+dry_cran
+title "a small bag of dried cranberries"
+names {"cranberries","raisins","bag"}
+descr "A small bag of wrinkled red things lies here." 
+extra {}
+ "They are dried cranberries, tart and sweet at the same time. Some
+ health nut must have given these. "
+manipulate {MANIPULATE_TAKE}
+type ITEM_FOOD
+FOOD_DEF(6, 0)
+weight 2
+end
+
+
+
+pump_bag
+names {"pumpkin","container","bag","treat bag"}
+title "a hollowed out <div class='cy'>pumpkin</div><div class='default'></div>"
+descr "A <div class='cy'>pumpkin</div><div class='default'> lies on its side here.</div>"
+extra {}
+"This pumpkin isn't a pumpkin at all! It is a wooden container
+that has been hollowed out, carved in a pumpkin shape and painted 
+to look like one. There is a handle made of rope. It looks like it might 
+hold quite a bit of candy."
+CONTAINER_DEF(100)
+MATERIAL_WOOD("cheap wood")
+manipulate {MANIPULATE_ENTER, MANIPULATE_HOLD, MANIPULATE_TAKE}
+weight 5
+cost 5 IRON_PIECE
+rent 2 IRON_PIECE
+end
+
+
+jackolant
+names {"pumpkin","jack o lantern","jackolantern","jacko lantern","lantern"}
+title "a carved <div class='cy'>Jack o'lantern</div><div class='default'></div>"
+descr "A carved<div class='cy'> pumpkin</div><div class='default'> glows here.</div>"
+extra {}
+"
+<pre><br/>
+                       <div class='cpg'>__<br/><br/>
+                      </div><div class='cpg'>/ /<br/><br/>
+             </div><div class='cy'>..,@@@@@</div><div class='cpg'>/ /</div><div class='cy'>@@@@@..<br/><br/>
+          </div><div class='cy'>.,@@@@|@@</div><div class='cpg'>\__/</div><div class='cy'>@@@|@@@,.<br/><br/>
+         </div><div class='cy'>@@|@@@@|@@@|@@@@@|@@@|@@<br/><br/>
+        </div><div class='cy'>@@@|@@</div><div class='cpy'>/\</div><div class='cy'>|@@@|@@@@</div><div class='cpy'>/\</div><div class='cy'>@@@|@@@<br/><br/>
+       </div><div class='cy'>@@@@|@</div><div class='cpy'>/__\</div><div class='cy'>@@@|@@@</div><div class='cpy'>/__\</div><div class='cy'>@@|@@@@<br/><br/>
+      </div><div class='cy'>@@@@@|@@@@|@@@|@@@@@|@@@|@@@@@<br/><br/>
+      </div><div class='cy'>@@@@@|@@@@|@</div><div class='cpy'>----</div><div class='cy'>@@@@|@@@|@@@@@<br/><br/>
+      </div><div class='cy'>.@@@@|@@@@|@</div><div class='cpy'>\  /</div><div class='cy'>@@@@|@@@|@@@@.<br/><br/>
+        </div><div class='cy'>@@@|@@@@|@@</div><div class='cpy'>\/</div><div class='cy'>@@@@@|@@@|@@@@<br/><br/>
+       </div><div class='cy'>'@@@</div><div class='cpy'>\-\/--------\/-/</div><div class='cy'>@@@|@@@''<br/><br/>
+        </div><div class='cy'>'@@@</div><div class='cpy'>\__/\____/\__/</div><div class='cy'>@@@@|@@'<br/><br/>
+          </div><div class='cy'>'@@@@@@@@@@@@@@@@@@@'<br/></div><div class='DEFAULT'><br/>
+<br/><br/>
+It's a Jack o Lantern. Maybe it will light your way?<br/><br/>
+</div></pre>"
+extra {"$identify"}
+"Hold pumpkin, light pumpkin and the light will guide you for a while."
+extra {"$improved identify"}
+"Ok so it's a little odd looking but it is a lantern."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+LIGHT_DEF(96, 4)
+weight 1
+cost 3  IRON_PIECE
+rent 2  IRON_PIECE
+MATERIAL_ORGANIC("A pumpkin with a candle")
+end
+
+jackolant2
+names {"turnip","jack o lantern","jackolantern","jacko lantern","lantern"}
+title "a carved <div class='cy'>Jack o'lantern</div><div class='default'></div>"
+descr "A carved<div class='cy'> turnip</div><div class='default'> glows here.</div>"
+extra {}
+"
+It's a Jack o Lantern. A turnip that is hollowed out and
+has a scary face carved into it to keep away evil spirits.
+At least that seems to be the theory. Maybe it will light your way?<br/>
+"
+extra {"$identify"}
+"Hold turnip, light turnip and the light will guide you for a while."
+extra {"$improved identify"}
+"Ok so it's a little odd looking but it is a lantern."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+LIGHT_DEF(96, 4)
+weight 1
+cost 3  IRON_PIECE
+rent 2  IRON_PIECE
+MATERIAL_ORGANIC("A turnip with a candle")
+end
+
+army_board
+names{"army","bulletin board","board"}
+title "a board with names on it"
+descr "A bulletin board is propped on an easel."
+type ITEM_OTHER
+dilcopy board@boards("army","","rem_res@boards","",100);
+end
+
+defend_board
+names{"army","bulletin board","board"}
+title "a board with names on it"
+descr "A bulletin board is propped on an easel."
+type ITEM_OTHER
+dilcopy board@boards("defend","","rem_res@boards","",100);
+end
+
+coffin
+names {"large coffin","coffin"}
+title "a large coffin"
+descr "A large, beautifully crafted coffin stands here."
+extra {}
+"This coffin is huge and beautifully crafted. It is black with inlay of 
+blonde wood in diamond shapes along the edges.  There is a brass plaque
+on the top. You can never find such quality coffins from Marty the
+Mortician."
+extra {"plaque"}
+"Engraved on the brass in beautiful script is the name <br/>
+Francis Kenneth Stein. "
+flags {UNIT_FL_NO_TELEPORT}
+cost 10 SILVER_PIECE
+weight 150
+end
+
+
+
+cball
+title "an eyeball"
+names {"candy","chocolate","eyeball"}
+descr "A lone eyeball stares at you."
+extra {}
+"A white chocolate sphere with a brown iris and black pupil painted
+on it with brown chocolate. It all covers a juicy cherry. "
+extra {"$identify"}
+"This potion will give you a blessing from the dark gods when you quaff it."
+manipulate {MANIPULATE_TAKE}
+type ITEM_POTION
+SCROLL_DEF(60,SPL_BLESS,SPL_NONE,SPL_NONE)
+weight 2
+end
+
+tongue
+title "a tongue"
+names {"tongue","lolly","lollipop","candy"}
+descr "A tongue hangs limply here."
+extra {}
+"It is a tongue. Too small to be from a cow, too large from a bird. It 
+looks to have been brutally hacked from someone's mouth. Except, it
+is on a stick?"
+extra {"$identify"}
+"This potion will aid in disease and poison removal when you quaff it."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(50,SPL_REMOVE_POISON, SPL_REM_DISEASE, SPL_NONE)
+type ITEM_POTION
+weight 2
+end
+
+ 
+mghost
+title "marshmallow ghost"
+names {"candy","ghost","marshmallow"}
+descr "A ghost sticks to the ground."
+extra {}
+"A white vaguely ghost-shaped confection."
+manipulate {MANIPULATE_TAKE}
+type ITEM_FOOD
+FOOD_DEF(12, 0)
+weight 2
+end 
+ 
+licbat
+title "a licorice bat"
+names {"candy","bat","licorice"}
+descr "A small bat lies here."
+extra {}
+"A thin black bat made of dark licorice."
+manipulate {MANIPULATE_TAKE}
+type ITEM_FOOD
+FOOD_DEF(12, 0)
+weight 2
+end  
+
+wax
+title "wax fangs"
+names {"wax","fangs","candy"}
+descr "A pair of wax fangs were lost here."
+extra {}
+"White wax fangs that fit over your teeth to make you look like
+Nikolai the Ancient. They are chewable and taste a bit like mint."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_DEX,SPL_NONE,SPL_NONE)
+type ITEM_POTION
+weight 1
+cost 2 COPPER_PIECE
+rent 1 COPPER_PIECE
+end  
+
+juice
+title "a bottle of pumpkin juice"
+names {"juice","pumpkin","bottle"}
+descr "A bottle of a dull orange liquid."
+extra {}
+"A bottle full of a thick juice that is a dull orange. Spices
+seems to swirl in it. If you like pumpkin pie, this drink is for you."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_CURE_WOUNDS_2,SPL_NONE,SPL_NONE)
+type ITEM_POTION
+weight 1
+cost 2 COPPER_PIECE
+rent 1 COPPER_PIECE
+end  
+
+cider
+names {"cup","cider"}
+title "a cup of hot cider"
+descr "A cup of cider has been left here."
+manipulate {MANIPULATE_TAKE}
+extra {"$identify"}
+"Feel good juice"
+LIQ_DEF("brown", 2,15,15,0,0,10,0)
+cost 7 COPPER_PIECE
+extra {}
+"A large cup of cider. Remember it is hazardous to your health to Drink
+and mud."
+dilcopy tuborg@function("NORMAL");
+end
+
+bmask
+title "black mask"
+names {"mask"}
+descr "A small black mask lies in the dust."
+extra {}
+"A small black mask to disguise yourself at a party or when 
+robbing a bank."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
+ARMOUR_CLOTHES(BONUS_JUNK, BONUS_AVERAGE)  // Xyzzy: -16,0
+cost 3 IRON_PIECE
+rent 2 IRON_PIECE
+MATERIAL_CLOTH("a cheap black cloth")
+weight 1
+end
+
+/*a light source */
+lskull
+names {"glowing skull", "crystal skull","skull"}
+title "a crystal skull"
+descr "A small black crystal <div class='cr'>skull</div><div class='DEFAULT'> has been left here.</div>"
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+extra {}
+"This small skull could have come from a brownie or a sprite.
+It is transluscent and glows from within. <div class='cr'>Red</div><div class='DEFAULT'>
+light comes from the openings letting you see your way. </div>"
+extra {"$identify"}
+"Holding this may let you see your way."
+cost 1 IRON_PIECE
+bright 5
+
+end
+/**************  clothes ************/
+
+/*rosanne - deviled egg costume*/
+horns
+names {"horns"}
+title "devil's horns"
+descr "A pair of red devil's horns lie in the dust."
+extra {}
+"Two horn tips have been painted red and tied together to wear
+on your head."
+MATERIAL_ORGANIC("cow horn")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+weight 4
+cost 3 IRON_PIECE
+rent 2 IRON_PIECE
+end
+
+egg_cos
+names {"egg","suit","costume"}
+title "an egg suit"
+descr "A suit shaped and colored like an egg leans here."
+extra {}
+"Someone took a lot of white cloth, stuffed it and made an egg
+shaped suite. there are holes for the arms and head and the 
+bottome is open for both legs to move freely."
+MATERIAL_CLOTH("white cloth")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+weight 4
+cost 3 IRON_PIECE
+rent 2 IRON_PIECE
+end
+
+pitchfork
+names {"pitchfork"}
+title "a small pitchfork"
+descr "A small pitchfork leans against the wall."
+MATERIAL_METAL("metal prongs on a wood shaft")
+WEAPON_DEF(WPN_TRIDENT, BONUS_JUNK, BONUS_JUNK)  // Xyzzy: -20,-20
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 1
+cost 6 IRON_PIECE
+rent 3 IRON_PIECE
+extra {}
+"It looks like your typical three pronged pitchfork carried
+by devils the world over."
+end
+
+
+
+/*city guards load bmask as well */
+burg_shirt
+names {"shirt","costume"}
+title "a black and white striped shirt"
+descr "A striped shirt lies here."
+extra {}
+"A long sleeved white and black striped shirt."
+MATERIAL_CLOTH("cheap cloth")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+weight 4
+cost 3 IRON_PIECE
+rent 2 IRON_PIECE
+end
+
+burg_pants
+names {"pants","costume"}
+title "a black pants"
+descr "A pair of black pants lie here."
+extra {}
+"A pair of black pants."
+MATERIAL_CLOTH("cheap cloth")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_LEGS}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+weight 4
+cost 3 IRON_PIECE
+rent 2 IRON_PIECE
+end
+
+swag_bag
+names {"bag","swag"}
+title "a swag bag"
+descr "A bag was dropped here."
+extra {}
+"A burlap bag with the word SWAG written on the side."
+CONTAINER_DEF(50)
+MATERIAL_CLOTH("cheap cloth")
+manipulate {MANIPULATE_ENTER, MANIPULATE_HOLD, MANIPULATE_TAKE}
+weight 5
+cost 5 IRON_PIECE
+rent 2 IRON_PIECE
+end
+
+heal_pot
+names {"potion of extra healing", "potion"}
+title "a potion of extra healing"
+descr "A potion lies here."
+extra {}
+"A small inscription on the potion says, 'to use, quaff me'."
+weight 1
+cost 3 GOLD_PIECE
+POTION_DEF(28, SPL_CURE_WOUNDS_1, SPL_NONE, SPL_NONE)
+end
+
+inv_pot
+names {"potion of invisibility", "potion"}
+title "a potion of invisibility"
+descr "A potion lies here."
+extra {}
+"A small inscription on the potion says, 'to use, quaff me'."
+weight 1
+cost 1 GOLD_PIECE
+POTION_DEF(28, SPL_INVISIBILITY, SPL_NONE, SPL_NONE)
+end
+
+poison_sta
+names {"staff of poison", "staff"}
+title "a staff of poison"
+descr "A gnarled staff lies here."
+extra {}
+"This gnarled staff is covered with green runes."
+extra {"$identify"}
+"This staff will cast poison upon a target. To use, type 'use staff target'."
+weight 5
+cost 7 GOLD_PIECE
+STAFF_DEF(90, 5, SPL_POISON, SPL_POISON)
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+dilcopy abi_restrict@function (ABIL_MAG,80,0,25,"");
+dilcopy abi_restrict@function (ABIL_BRA,70,0,25,"");
+end
+
+
+bag_holding
+names {"bag of holding", "bag", "travbag"}
+title "a bag of holding"
+descr "a bag lies here."
+extra {}
+"This bag has a seemingly limitless capacity, it is obviously magical."
+weight 10
+cost 25 GOLD_PIECE
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
+CONTAINER_DEF(600)
+end
+
+/*to load on bthieves */
+sheet
+names {"sheet","costume"}
+title "sheet"
+descr "A dirty sheet with two holes in it lies here."
+extra {}
+"The sheet is so thin you can almost see through it. Obviously this is a 
+poor costume, but still a costume."
+MATERIAL_CLOTH("linen")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+weight 4
+cost 3 IRON_PIECE
+rent 2 IRON_PIECE
+end
+
+/*Jack's weapons*/
+
+razor
+names {"straight razor","razor"}
+title "a straight razor"
+descr "A sharp looking straight razor lies on the ground here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 2,0
+WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_GOOD_PLUS)  // Xyzzy: +3
+cost 5 SILVER_PIECE
+rent 3 SILVER_PIECE
+MATERIAL_METAL("soft iron")
+extra {}
+"This is a very large straight razor that a giant might shave with."
+extra {"$identify"}
+"The razor is fairly well made and you think you could fight
+better than average with it."
+extra {"$improved identify"}
+"This is a unique weapon that is only available halloween 2023. It will add to
+your short sword skill"
+
+end
+
+/*Samedi's clothes */
+
+vcape
+names {"black cape","cape", "velvet"}
+title "a black velvet cape"
+descr "A black puddle of soft velvet lies here."
+extra {}
+"A beautiful and soft full-lenth cape of black velvet.
+It soaks in the light and seems elegantly mysterious/"
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+cost 3 IRON_PIECE
+rent 2 IRON_PIECE
+MATERIAL_CLOTH("black velvet")
+weight 1
+end
+
+sboots
+names {"boots"}
+title "comfortable soft black boots"
+descr "a pair of well made comfortable boots rest here."
+MATERIAL_LEATHER("A soft dark leather.")
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+cost  10 IRON_PIECE
+rent  5 IRON_PIECE
+weight 5
+extra {} 
+"A pair of black boots The soft leather reaches about halfway 
+up the calf of the leg. They look soft, pliable and comfortable.
+Their soft soles make little noise."
+end
+
+spants
+names {"pants", "leggings","trousers"}
+title "a pair of black cloth pants"
+descr "A pair of black pants have been left here"
+MATERIAL_CLOTH("wool")
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+cost  8 IRON_PIECE
+rent  4 IRON_PIECE
+weight 5
+extra {}
+"These are black wool pants. Very well-made pants, but nothing
+interesting,"
+end
+
+tophat
+names {"hat","top hat"}
+title "a black hat"
+descr "A black stovepipe top hat rests here."
+extra {}
+"The black hat is made of silk. It positively reeks of gentility."
+MATERIAL_CLOTH("silk")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+weight 4
+cost 14 IRON_PIECE
+rent 7 IRON_PIECE
+end
+
+svest
+names {"vest"}
+title "a black vest"
+descr "A black brocade vest lies in a crumpled heap."
+extra {}
+"The black vest is made of silk brocade. A design of black skulls
+can be barely discerned on the darker black background."
+MATERIAL_CLOTH("silk")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
+ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+weight 4
+cost 10 IRON_PIECE
+rent 5 IRON_PIECE
+end
+
+
+
+/*quest items */
+canbelt
+names {"candy belt","belt","candy"}
+title "a belt of <div class='cpy'>c</div><div class='cpm'>a</div><div class='cpc'>n</div><div class='cpw'>d</div><div class='cpg'>y </div><div class='cm'>w</div><div class='cpy'>r</div><div class='cpg'>a</div><div class='cpw'>p</div><div class='cpm'>p</div><div class='cpc'>e</div><div class='cpy'>r</div><div class='cpg'>s</div><div class='DEFAULT'></div>"
+descr "A belt of bright paper lies in the dust."
+extra {}
+"This thin belt, made of multi-colored gum and cand wrappers is a rare item
+that only those who are the best of the questers may wear."
+extra {"$identify"}
+"This is a one time reward not replacable for Halloween 2023."
+extra {"$improved identify"}
+"The belt grants +2 dex and helps you search and consider"
+weight 5
+ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
+DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
+SKILL_TRANSFER(SKI_SEARCH, BONUS_GOOD_PLUS)  // Xyzzy: +3
+SKILL_TRANSFER(SKI_CONSIDER, BONUS_GOOD_PLUS)  // Xyzzy: +3
+dilcopy quest_restrict@function("Halloween 2023 Complete",0,5,"");
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
+cost 6 COPPER_PIECE
+end
+
+qbag
+names {"trick or treat bag","treat bag","bag"}
+title "an orange <div class='cpy'>trick or treat bag</div><div class='default'></div>"
+descr "A bright orange burlap bag lays in the dust."
+extra {}
+"This bag looks like it could hold quite a bit of candy or anything 
+else. It says Halloween 2023 in black letters."
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+flags {UNIT_FL_MAGIC}
+weight 1
+cost 25 GOLD_PIECE
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
+CONTAINER_DEF(600)
+end
+
+heart
+names {"heart"}
+title "a <div class='cr'>heart</div><div class='default'></div>"
+descr "Someone lost their heart here."
+extra{}
+"This heart was forcibly removed from its previous owner.  Neatly sliced
+off arteries limply dangle from the bloody pulp."
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard 
+to get ones."
+type ITEM_TRASH
+manipulate {MANIPULATE_TAKE}
+weight 2
+end
+
+head
+names {"severed head","head"}
+title "a grisly severed head"
+descr "a decapitated head is here."
+extra{}
+"When you get a closer look at it, you notice that it missing an eye!"
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+type ITEM_TRASH
+manipulate {MANIPULATE_TAKE}
+weight 2
+end
+
+brain
+names {"brains","brain"}
+title "a pile of brains"
+descr "Brains lie on the floor."
+extra{}
+"Squishy gray brains. Ewww!"
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+type ITEM_TRASH
+manipulate {MANIPULATE_TAKE}
+weight 2
+end
+
+arm1
+names {"left arm","arm"}
+title "a severed left arm"
+descr "Someone left their arm here."
+extra{}
+"A left arm cut off at the shoulder"
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+type ITEM_TRASH
+manipulate {MANIPULATE_TAKE}
+weight 2
+end
+
+arm2
+names {"right arm","arm"}
+title "a severed right arm"
+descr "Someone lost their right arm here."
+extra{}
+"A right arm cut off at the shoulder"
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+
+hand
+names {"right hand","hand"}
+title "a right hand"
+descr "A right hand lays where it fell."
+extra{}
+"A right hand cut off at the wrist. It has long pale fingers that seem
+to have been grasping at something."
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+
+foot
+names {"left foot","foot"}
+title "a severed left foot"
+descr "A foot stands here without a leg."
+extra{}
+"A left foot cut off at the ankle. It has long gross toenails."
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+
+leg
+names {"left leg","leg"}
+title "a severed left leg"
+descr "A leg is lying on the floor."
+extra{}
+"A left leg cut off at the knee and missing a foot. "
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+
+eyeball
+title "an eyeball"
+names {"eyeball","eye"}
+descr "A lone eyeball stares at you."
+extra {}
+"A white sphere with a brown iris and black pupil stare at you.
+Red veins run through it. It seems to have been torn from its socket."
+manipulate {MANIPULATE_TAKE}
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+type ITEM_TRASH
+manipulate {MANIPULATE_TAKE}
+weight 2
+end
+
+spleen
+names {"spleen","organ"}
+title "a spleen"
+descr "A spleen lies in the dust."
+extra{}
+"A spleen full of bile!"
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+
+
+liver
+names {"liver"}
+title "a pile of liver"
+descr "A liver lies here looking unappetizing."
+extra{}
+"Liver, it's ugly!"
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+
+tong
+title "a tongue"
+names {"tongue"}
+descr "A tongue hangs limply here."
+extra {}
+"It is a tongue. Too small to be from a cow, too large from a bird. It 
+looks to have been brutally hacked from someone's mouth."
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+
+gut
+title "a string of intestines"
+names {"intestines","guts","gut"}
+descr "A long intestine dangles limply here."
+extra {}
+"It is a long rope of intestines, small from the look of it.  It 
+looks to have been sliced from someone's body."
+extra {"$donotstore"}
+"This is to prevent excessive storage of items, mainly hard to get ones."
+manipulate {MANIPULATE_TAKE}
+type ITEM_TRASH
+weight 2
+end
+/******Decorations **********/
+dtree
+title "a black gnarly tree"
+names {"tree","dead tree"}
+descr "An almost leafless gnarled black tree stands here."
+extra {}
+"A dark gnarled tree is silhouetted against the sky. The creaking 
+boughs sound like the death rattle of a dying man as the wind
+tosses them. A large dark shape twists and turns from a rope tied one of
+them."
+
+extra {"boughs","bough","branches","branch", "decoration"}
+"It looks like someone decorated the tree with some sort of 
+pink and red rope or string. It even runs down the noose that holds the 
+corpse. A closer look may be in order."
+
+extra {"string","rope"}
+"It is someone's intestines! What a grisly decoration!  
+Maybe you should GET GUTS FROM TREE."
+
+extra {"corpse","shape"}
+"It looks like the tree was used to hang a criminal. The corpse
+hangs but the victim suffocated rather than had a clean neck break.
+It is not a pretty sight."
+weight 2000
+end 
+
+branch 
+names {"twig"} 
+title "twig" 
+descr "twig for getting item." 
+extra {} 
+"PC should never get here." 
+weight 10000 
+minv 253 
+
+dilbegin guts(); 
+var 
+pc:  
+unitptr; 
+code 
+{ 
+:start: 
+wait(SFB_CMD, ((command("get")) and (argument == "guts from tree"))); 
+pc := activator; 
+block; 
+link(load("gut@hallows23"),pc); 
+act("You reach up and grasp the slimy guts.", 
+A_SOMEONE, pc, self, null, TO_CHAR); 
+act(pc.name+" stands on their toes and manages to grasp the grisly decoration.", 
+A_SOMEONE, pc, self, null, TO_REST); 
+act("You pull and pull and pull, finally it comes loose!", 
+A_SOMEONE, pc, self, null, TO_CHAR); 
+act(pc.name+" pulls the intestine to slowly off the tree.", 
+A_SOMEONE, pc, self, null, TO_REST); 
+quit; 
+} 
+dilend 
+end
+
+blfount
+names {"fountain", "blood","punch"}
+title "a blood fountain"
+descr "A fountain of blood trickles here. "
+extra {}
+"It looks like blood shoots from the top and sprays 
+into a basin below. But it looks a bit thin. Closer examination
+reveals it is fruit punch."
+LIQ_DEF("red", 1000, -1, 100, 8, 1, 0,0)
+end
+
+qblfount
+names {"fountain", "blood","punch"}
+title "a blood fountain"
+descr "A fountain of blood trickles here. "
+extra {}
+"It looks like blood shoots from the top and sprays 
+into a basin below. There is a darker shape beneath the
+liquid. Maybe you should SEARCH BLOOD."
+LIQ_DEF("red", 1000, -1, 100, 8, 1, 0,0)
+end
+
+blood 
+names {"blood"} 
+title "blood" 
+descr "blood for searching." 
+extra {} 
+"PC should never get here." 
+weight 10000 
+minv 253 
+
+dilbegin blood(); 
+var 
+pc:  
+unitptr; 
+code 
+{ 
+:start: 
+wait(SFB_CMD, ((command("search")) and (argument == "blood"))); 
+pc := activator; 
+block; 
+link(load("head@hallows23"),pc); 
+act("You plunge your hands into the bloody fountain.", 
+A_SOMEONE, pc, self, null, TO_CHAR); 
+act(pc.name+" plunges their hands into the blood.", 
+A_SOMEONE, pc, self, null, TO_REST); 
+act("You feel something hard and round. You grab and pull up head by the hair. 
+Blood streams from the face!", 
+A_SOMEONE, pc, self, null, TO_CHAR); 
+act(pc.name+" pulls a head up by the hair and lets the blood stream off it.", 
+A_SOMEONE, pc, self, null, TO_REST); 
+quit; 
+} 
+dilend 
+end
+
+
+qjackolant
+names {"pumpkin","jack o lantern","jackolantern","jacko lantern","lantern"}
+title "a carved <div class='cy'>Jack o'lantern</div><div class='default'></div>"
+descr "A carved<div class='cy'> pumpkin</div><div class='default'> is not glowing here.</div>"
+extra {}
+"
+<pre><br/>
+                       <div class='cpg'>__<br/><br/>
+                      </div><div class='cpg'>/ /<br/><br/>
+             </div><div class='cy'>..,@@@@@</div><div class='cpg'>/ /</div><div class='cy'>@@@@@..<br/><br/>
+          </div><div class='cy'>.,@@@@|@@</div><div class='cpg'>\__/</div><div class='cy'>@@@|@@@,.<br/><br/>
+         </div><div class='cy'>@@|@@@@|@@@|@@@@@|@@@|@@<br/><br/>
+        </div><div class='cy'>@@@|@@</div><div class='cpy'>/\</div><div class='cy'>|@@@|@@@@</div><div class='cpy'>/\</div><div class='cy'>@@@|@@@<br/><br/>
+       </div><div class='cy'>@@@@|@</div><div class='cpy'>/__\</div><div class='cy'>@@@|@@@</div><div class='cpy'>/__\</div><div class='cy'>@@|@@@@<br/><br/>
+      </div><div class='cy'>@@@@@|@@@@|@@@|@@@@@|@@@|@@@@@<br/><br/>
+      </div><div class='cy'>@@@@@|@@@@|@</div><div class='cpy'>----</div><div class='cy'>@@@@|@@@|@@@@@<br/><br/>
+      </div><div class='cy'>.@@@@|@@@@|@</div><div class='cpy'>\  /</div><div class='cy'>@@@@|@@@|@@@@.<br/><br/>
+        </div><div class='cy'>@@@|@@@@|@@</div><div class='cpy'>\/</div><div class='cy'>@@@@@|@@@|@@@@<br/><br/>
+       </div><div class='cy'>'@@@</div><div class='cpy'>\-\/--------\/-/</div><div class='cy'>@@@|@@@''<br/><br/>
+        </div><div class='cy'>'@@@</div><div class='cpy'>\__/\____/\__/</div><div class='cy'>@@@@|@@'<br/><br/>
+          </div><div class='cy'>'@@@@@@@@@@@@@@@@@@@'<br/></div><div class='DEFAULT'><br/>
+<br/><br/>
+It's a Jack o Lantern. but seems to be out. Maybe you should open it<br/>
+and see what is wrong?<br/><br/>
+</div></pre>"
+manipulate {MANIPULATE_ENTER,MANIPULATE_TAKE, MANIPULATE_HOLD}
+CONTAINER_DEF(10)
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 1
+cost 3  IRON_PIECE
+rent 2  IRON_PIECE
+MATERIAL_ORGANIC("A pumpkin with a candle")
+end
+
+skeleton
+
+names {"newbie skeleton", "skeleton"}
+title "a skeleton"
+descr "A skeleton has been left here."
+extra {}
+"It looks like a newbie's skeleton, must have been dead for a long time.
+Perhaps he insulted the healer. There are some markings on the bones."
+extra {"markings","bone","bones"}
+   "It looks like teeth marks. People have carved grafitti into the 
+   skull."
+extra {"skull","grafitti"}
+      "Sentrosi eats slugs. Kerin loves Nikolai. Alvaneu is a wimp.
+	   Magix wears combat boots and for a good time call Barron. Are among the 
+	   clan signs carved into the skull."
+weight 15
+type ITEM_TRASH
+end
+
+
+qlist
+names {"list","note","paper"}
+title "a list of parts"
+descr "A piece of parchment "
+extra {}
+"<pre><br/>
+Thanks for helping me with Ken's missing parts.<br/>
+Here is what I need<br/>
+<br/>
+heart <br/>
+head <br/>
+hand<br/>
+left arm<br/>
+right arm<br/>
+liver<br/>
+tongue<br/>
+spleen<br/>
+guts<br/>
+leg<br/>
+foot<br/>
+eye<br/>
+brains<br/>
+<br/>
+Jack is abroad and hiding out somewhere. Be careful, he most likely<br/>
+is looking for a place to stash more pieces. Jack has brought in<br/>
+many friends to help so he has scattered the pieces throughout the<br/>
+world, but most of the parts I have found through my crystal<br/>
+ball have been in something that is not usually in the world.<br/>
+I cannot see a small number of the parts but I can smell them.<br/>
+They must be near Udgaard look at all everything the presence of<br/>
+part of a being like Ken alters the person or thing containing it <br/>
+slightly.<br/>
+</pre>" 
+weight 1
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_NOTE
+cost 1 IRON_PIECE
+rent 1 IRON_PIECE
+end
+
+/* END HALLOWEEN OBJECTS      */
+
+%mobiles
+
+
+/***********************HALLOWEEN MOBS************************/
+/*quest mobs */
+
+
+qarmorg
+names {"ghost","empty armour","empty armor","armour", "armor"}
+title "a set of empty armor"
+descr "A set of empty armor stands here."
+extra {}
+"It stands holding with its helm under an arm. It seems to be looking 
+around for something."
+alignment 0
+M_AVG_HUMAN(15,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+qnightmare
+names {"nightmare","horse"}
+title "a nightmare"
+descr "A black horse with fiery red eyes paws the ground in anger."
+extra {}
+"This is the horse that haunts dreams. Those who ride
+it are either not of this world or die of fear in their sleep. It
+seems to have some of its previous rider in its teeth."
+alignment 0
+M_HORSE_SMALL(15,SEX_FEMALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+qcat
+names {"cat","black cat"}
+title "a black cat"
+descr "A small black cat licks itself then stares at you."
+extra {}
+"This cat just crossed the path. Its tail is stiff
+and full as if it has been in a fight. This is a mean 
+kitty."
+alignment 0
+M_CAT_SMALL(15,SEX_MALE)
+position POSITION_SITTING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+qwarg
+names {"warg","wolf"}
+title "a black warg"
+descr "A black warg growls at you."
+extra {}
+"It is a huge wolf with thick, black fur. Saliva is dripping quickly from its 
+long, white fangs.  It looks quite dangerous and very angry. It seems to be
+holding something in its mouth."
+M_WOLF_SMALL(15,SEX_MALE)
+alignment -350 
+end
+
+qbat
+names {"bat","black bat"}
+title "a large black bat"
+descr "A black bat flutters around."
+extra {}
+"This bat seems to have found food. It flies slowly
+laden with its heavy burden. Its small beady eyes 
+have a slightly malevolent expression."
+alignment 0
+M_BAT_SMALL(15,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+qghost
+names {"ghost"}
+title "a translucent ghost"
+descr "A translucent ghost hovers here."
+extra {}
+"This ghost seems to be hiding something. It is half materilaized and
+seems ready to fight."
+alignment 0
+M_SPRITE_SMALL(15,SEX_FEMALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+qhghost
+names {"ghost", "headless ghost"}
+title "an angry headless ghost"
+descr "An angry headless ghost stalks you."
+extra {}
+"It walks along with a head tucked under its arm. The eyes in the head 
+move and the bloody stump of a neck oozes. He seems to be looking for
+someone and is carrying an arm like it was a club."
+alignment 0
+M_AVG_HUMAN(15,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+qspider1
+names {"spider","black spider"}
+title "a hairy spider"
+descr "A huge black spider crawls around."
+extra {}
+"This spider has been very well fed! Its black body is covered
+in fur and is the size of a small dog. The eight legs look hairy
+and it has huge purple eyes. It is holding something in its mandibles!"
+alignment 0
+M_SPIDER_SMALL(15,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+qzombie
+names {"zombie","ferret"}
+title "a zombie ferret"
+descr "A zombie animal shambles around looking for revenge."
+extra {}
+"The ferret killed by thousands of newbies has
+risen from the grave. It seeks revenge. It is chewing on soemthing"
+alignment 0
+M_FERRET_MAD(16,SEX_FEMALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+jack
+names {"grinning jack", "jack", "marionette", "toy"}
+title "Grinning Jack"
+descr "Grinning Jack the marionette is here."
+extra {}
+"This living toy looks like nothing but pure evil.
+His grin is enough to make you want to hide."
+M_GOLEM_STRAW(20,SEX_MALE)
+flags {UNIT_FL_NO_TELEPORT}
+money 4 IRON_PIECE
+exp 120
+/* he is armed has special combat dil is aggressive and backstabs */
+/*all in all he is a bad puppet */
+alignment -800
+dilcopy jack_fight();
+dilbegin jack_chat();
+
+var
+
+pc : unitptr;
+
+code
+{
+heartbeat := PULSE_SEC * 4;
+interrupt(SFB_COM, self.position == POSITION_FIGHTING, combat);
+
+:start:
+wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
+pc := activator;
+secure(pc, lost);
+exec("emote slowly grins an evil grin.",self);
+pause;
+exec("say I know what you want and you can't have it.", self);
+pause;
+exec("emote opens his razor.",self);
+pause;
+exec("say He cheated so I won fair and square!!", self);
+pause;
+exec("peer "+pc.name, self);
+pause;
+exec("say Hey, didn't you steal my heart before?!", self);
+pause;
+exec("say You're not getting this one!", self);
+pause;
+exec("backstab "+pc.name, self);
+
+
+:twait:
+pause;
+goto twait;
+
+:lost:
+pause;
+unsecure(pc);
+goto start;
+
+:combat:
+heartbeat := PULSE_SEC*3;
+while (self.position == POSITION_FIGHTING) pause;
+heartbeat := PULSE_SEC*10;
+pause;
+pause;
+pause;
+goto start;
+
+}
+dilend
+
+end 
+
+samedi
+names {"man","stranger","baron","samedi"}
+title "a dark man"
+descr "A dark stranger stands wrapped in a cloak."
+extra {}
+"A tall stranger with a top hat stands here. His features are
+partially obscured by a white skull painted on his face approximating
+his own skull's dimensions. He looks dressed up for a costume party. What
+would happen if someone said 'trick or treat' to him?" 
+alignment 0
+flags {UNIT_FL_NO_TELEPORT} 
+M_HUMAN_MAGE_FIRE(46, SEX_MALE,"burn")
+money 3 COPPER_PIECE
+position POSITION_STANDING 
+
+dilbegin hall23();
+var
+pc	  :	unitptr;
+item1 : unitptr;
+item2 : unitptr;
+code
+{
+heartbeat := PULSE_SEC*7;
+    on_activation((self.position <= POSITION_SLEEPING) or  
+    (self.position == POSITION_FIGHTING), skip);  // make sure mob isn't busy
+   
+  :start:
+  wait(SFB_CMD,(command ("say"))and("trick or treat" in argument)); //get his attention
+  pc := activator;
+  if (not(pc.type == UNIT_ST_PC)) goto start;
+  secure(pc, start);
+  if (pc.level < IMMORTAL_LEVEL) 
+   {
+     if (HALL23_COM in pc.quests) //if already done quest
+     {
+       exec("say Trick time, "+pc.name+ "!", self);
+       pause;
+       exec("emote seems to grow taller as the shadows around him thicken. " +
+             "He removes his hat and fixes an icy stare on "+pc.name+ ". " +
+             "An orange mist rises from the hat as he makes mystical passes "+
+			 "with his hands, muttering in an unsettling tongue." ,self); 
+       pause;
+       exec("emote reaches into the hat and pulls out an orange rabbit", self);
+       exec("say That's the best trick I know!", self); 
+       goto start;
+     }
+   else if (HALL23_ONGO in pc.quests)  //pc is working on it
+    {
+     exec("say What have you brought me?", self);
+     pause;
+     exec("emote looks eerily at you and his eyes seem to glow slightly.", self);  
+     goto start;
+    }
+    else  
+  {
+    exec("say Here we are again, another All Hallows Eve!", self);
+	exec ("elaugh", self);
+	pause;
+    exec("say Hello "+pc.name+ ", I am Baron Samedi.", self);
+	exec("emote doffs his hat, bows elegantly then striaghtens up. " +
+	      "He studies you for a moment", self);
+	pause;	  
+    exec("say I have received sad news.", self);
+	exec("emote sighs.", self);
+	pause;
+	exec("say It seems a friend of mine has gone to pieces. " +
+	     "The people here were so helpful before that I " +
+         "thought I might see if I could find help again. " +
+		 "I am afraid this may be harder.", self);
+ 	pause;
+	exec("say Nod if you want to help me make my friend whole or " +
+	      "shake your head if you are too busy.", self);
+	goto hall23_acc;	  
+   } 
+ :hall23_acc:
+   wait(SFB_CMD, activator == pc);
+   if (command("nod"))
+   { 
+   exec("emote smiles happily, his fangs glisten in the moonlight", self);
+   pause;
+   exec("say Ken and Jack were playing mumblety peg. " +
+         "Jack lost and he thought Ken had cheated. So he chopped   " +
+		 "him up and left pieces of him throughout the world." , self);
+		 
+   exec("say Jack is very sorry but does not remember where he went on his rampage.", self);
+    exec("emote looks around furatively and whispers <div class='cpw'>'Between you me </div>"+
+	     "and the tree I think he knows but is still angry.", self);		 
+   pause;		 
+   exec("say I have found most of him but I am still missing some " +
+         "internal organs and body parts. There are 13 pieces missing in all. " +
+         "Bring them to me here as you find them. Knowing Jack they will be  " +
+		 "inside something else." , self);
+   addextra(pc.quests,{HALL23_ONGO},"");
+   item2 := load("qlist@hallows23"); //  load the list
+   item2.height := pc.height;
+   link(item2, pc);
+
+   item1 := load("qbag@hallows23"); //  load the bag
+   item1.height := pc.height;
+   dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item1);
+   link(item1, pc);
+    exec("emote hands you an orange trick or treat bag and a list.", self);
+	 exec("says Good Luck! Oh and look out for Jack, I think he is still mad.", self);		 		 
+   unsecure(pc);
+   goto start;
+   }
+    else if (command("shake"))
+   {
+    goto hall23_den;
+   }
+    else
+   {
+    pause;
+    exec("say Please nod if you want a treat " +
+          "or shake if you are stick in the mud.", self);  
+    goto hall23_acc;
+   }
+:hall23_den:
+  exec("say Fine then! Leave before I trick you. ", self);
+  pause;
+  exec("emote starts to chant in an unsettling tone.", self);
+   unsecure(pc); 
+  goto start;
+
+}
+}
+dilend   /*hall23*/
+
+/*DIL for quest items given */
+dilbegin hall23_give();
+var
+ 	pcname 	: string;
+	pc   	: unitptr;
+	item 	: unitptr;
+	pin  	: extraptr;
+
+code
+{
+heartbeat := PULSE_SEC*3;
+:start:
+wait(SFB_DONE, command("give") and (activator.type == UNIT_ST_PC));
+
+if (target == self)
+{
+   pc := activator;
+   item := medium;
+   secure(pc, start);
+   pin := HALL23_ONGO in pc.quests;
+
+/* Pc doesn't have quest active but tries to give items anyway - no go 
+   return to start and wait then give quest */
+
+ if (not(HALL23_ONGO in pc.quests))
+ {
+  exec("emote narrows his eyes", self);
+  exec("say "+pc.name+ ",are you trying to trick me? " +
+       "I don't take things from strangers." , self);
+  exec("drop "+item.name, self);	   
+  unsecure(pc);
+  goto start;
+ } 
+
+/*heart loaded on Jack in cenedal DONE*/
+
+  if ((item == findsymbolic(self, "heart@hallows23", FIND_UNIT_INVEN))
+  and (not ("h" in pin.names)))
+  {
+    addstring(pin.names, "h");
+    exec("say Thank you, "+pc.name+". ", self);
+    exec("emote sings 'You gotta have heart!", self);
+	pause;
+	exec("emote puts the heart in the coffin. A loud thump comes from it " +
+	      "as the Baron closes the lid.", self);
+    destroy(item);
+    goto hcheck;
+   }
+   if ((item == findsymbolic(self, "heart@hallows23", FIND_UNIT_INVEN))
+   		and ("h" in pin.names))
+  		{
+   			exec("say You gave me a heart already, "+pc.name+". "+
+			     "Who did this belong to? I know your heart"+
+				 " is in the right place, thanks for the snack.", self);
+   			exec("emote pops the heart in his mouth and chews.", self);
+   			destroy(item);
+   			goto hcheck;
+		}	
+/* head in fountain in moot_cen DONE*/
+  if ((item == findsymbolic(self, "head@hallows23", FIND_UNIT_INVEN))
+  and (not ("hd" in pin.names)))
+  {
+   addstring(pin.names, "hd");
+   exec("say Thank you, "+pc.name+". " +
+	      "Now he can get ahead!", self);
+    exec("emote puts the head in the large coffin.", self);
+   destroy(item);
+   goto hcheck;
+  }
+    if ((item == findsymbolic(self, "head@hallows23", FIND_UNIT_INVEN))
+   		and ("hd" in pin.names))
+  		{
+   			exec("say You gave me a head already, "+pc.name+". "+
+			     "But two heads are better than one!" , self);
+   			exec("emote puts the head in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+        }
+/*brain in zombie in mid sewers*/  
+  if ((item == findsymbolic(self, "brain@hallows23", FIND_UNIT_INVEN))
+  and (not ("b" in pin.names)))
+  {
+  addstring(pin.names, "b");
+  exec("say Thank you, "+pc.name+". " +
+	      " I feared he had lost his mind for good.", self);
+  exec("emote puts the brain in the large coffin. Slurping sounds come from it.", self);
+  exec("say Don't eat that you will need it later.", self);
+   destroy(item);
+   goto hcheck;  
+ }
+ if ((item == findsymbolic(self, "brain@hallows23", FIND_UNIT_INVEN))
+   		and ("b" in pin.names))
+  		{
+   			exec("say You gave me some brains already, "+pc.name+". "+
+			     "But my friend Sarah Bellum can use these!" , self);
+   			exec("emote slides the brains into his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+        }
+/* arm1 in armor ghost in armorer in galgachus DONE*/
+if ((item == findsymbolic(self, "arm1@hallows23", FIND_UNIT_INVEN))
+  and (not ("a1" in pin.names)))
+  {
+    addstring(pin.names, "a1");
+    exec("say Thank you, "+pc.name+". " +
+	      "He's mostly armless.", self);
+    exec("emote puts the arm in the large coffin. ", self);
+    destroy(item);
+    goto hcheck;
+   } 
+   if ((item == findsymbolic(self, "arm1@hallows23", FIND_UNIT_INVEN))
+   		and ("a1" in pin.names))
+  		{
+   			exec("say You gave me his left arm already, "+pc.name+". "+
+			     "I can sell this to an arms dealer!" , self);
+   			exec("emote puts the arm in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+        } 
+/*arm2 in headless ghost in hob gob*/
+if ((item == findsymbolic(self, "arm2@hallows23", FIND_UNIT_INVEN))
+  and (not ("a2" in pin.names)))
+  {
+    addstring(pin.names, "a2");
+    exec("say Thank you, "+pc.name+". " +
+	      "Now he is armed and dangerous!", self);
+    exec("giggle", self);
+    exec("emote puts the arm in the large coffin. ", self);
+    destroy(item);
+    goto hcheck;
+   }
+if ((item == findsymbolic(self, "arm2@hallows23", FIND_UNIT_INVEN))
+   		and ("a2" in pin.names))
+  		{
+   			exec("say You gave me his right arm already, "+pc.name+". "+
+			     "If I put this on him then he would be ALL RIGHT " , self);
+   			exec("emote puts the arm in his bag chuckling.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   
+/*hand in ghost in halfzon*/
+if ((item == findsymbolic(self, "hand@hallows23", FIND_UNIT_INVEN))
+  and (not ("hn" in pin.names)))
+  {
+    addstring(pin.names, "hn");
+    exec("say Thank you, "+pc.name+". " +
+	      "I have to hand it to you, you're working hard for this.", self);
+    exec("emote puts the hand in the large coffin. ", self);;
+    destroy(item);
+    goto hcheck;
+  }
+ if ((item == findsymbolic(self, "hand@hallows23", FIND_UNIT_INVEN))
+   		and ("hn" in pin.names))
+  		{
+   			exec("say You gave me a hand already, "+pc.name+". " +
+			" I'll give you one now!", self);
+			exec("applaud " +pc.name, self);
+   			exec("emote puts the hand in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   
+/*foot in spider in haon_dor DONE */	
+if ((item == findsymbolic(self, "foot@hallows23", FIND_UNIT_INVEN))
+  and (not ("f" in pin.names)))
+  {
+    addstring(pin.names, "f");
+    exec("say Thank you, "+pc.name+". " +
+	      "That was quite a feat!", self);
+    exec("emote puts the foot in the large coffin", self);
+	exec("say Now keep that out of your mouth!", self);
+    destroy(item);
+    goto hcheck;
+  }	
+ if ((item == findsymbolic(self, "foot@hallows23", FIND_UNIT_INVEN))
+   		and ("f" in pin.names))
+  		{
+   			exec("say You gave me a foot already, "+pc.name+"." +
+			" Now I can say I have two left feet.", self);
+   			exec("emote puts the foot in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+/*eye on bat in torsbay DONE*/
+if ((item == findsymbolic(self, "eyeball@hallows23", FIND_UNIT_INVEN))
+  and (not ("i" in pin.names)))
+  {
+    addstring(pin.names, "i");
+    exec("say Thank you, "+pc.name+". " +
+	      "I love the squishy filling.", self);
+    exec("emote starts to put it in his mouth, sighs and places it in the coffin.", self);
+    destroy(item);
+    goto hcheck;	       
+   }
+   if ((item == findsymbolic(self, "eyeball@hallows23", FIND_UNIT_INVEN))
+   		and ("i" in pin.names))
+  		{
+   			exec("say You gave me an eyeball already, "+pc.name+". ", self);
+   			exec("emote starts to put the eye in his bag, then stops.", self);
+            exec("say We need to keep an eye out for trouble.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+   
+/*liver on warg in arcisle DONE */
+if ((item == findsymbolic(self, "liver@hallows23", FIND_UNIT_INVEN))
+  and (not ("l" in pin.names)))
+  {
+    addstring(pin.names, "l");
+      exec("say Thank you, "+pc.name+". " +
+	      "Have any onions? Just kidding!", self);
+    exec("emote puts the liver in the large coffin", self);
+    destroy(item);
+    goto hcheck;
+  }	
+  if ((item == findsymbolic(self, "liver@hallows23", FIND_UNIT_INVEN))
+   		and ("l" in pin.names))
+  		{
+   			exec("say You gave me a liver already, "+pc.name+". " +
+			"I will hold on to this in case he starts drinking again", self);
+   			exec("emote drops the liver in his bag. You hear a PLOP!.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	     	
+/*leg  on nightmare in urland DONE */
+if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
+  and (not ("lg" in pin.names)))
+  {
+    addstring(pin.names, "lg");
+    exec("say Thank you, "+pc.name+". "+
+	      "He was on his last leg.", self);
+    exec("emote puts the leg in the large coffin", self);
+    destroy(item);
+    goto hcheck;
+  }
+	if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
+   		and ("lg" in pin.names))
+  		{
+   			exec("say You gave me a left leg already, "+pc.name+". " +
+			"Great now all I need is an arm then I can afford anything!", self);
+   			exec("emote drops the leg in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+	
+/*intestines in a tree DONE*/	
+if ((item == findsymbolic(self, "gut@hallows23", FIND_UNIT_INVEN))
+  and (not ("g" in pin.names)))
+  {
+    addstring(pin.names, "g");
+    exec("say Thank you, "+pc.name+", you sure have guts.", self);
+    exec("emote places the intestines in the coffin.", self);
+    destroy(item);
+    goto hcheck;	     		     	
+   }
+   if ((item == findsymbolic(self, "gut@hallows23", FIND_UNIT_INVEN))
+   		and ("g" in pin.names))
+  		{
+   			exec("say You gave me some guts already, "+pc.name+"." +
+			"You must be brave to have so many to share!.", self);
+   			exec("emote winds the intestines up and puts them in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+/*spleen (in jackolantern) DONE*/	
+if ((item == findsymbolic(self, "spleen@hallows23", FIND_UNIT_INVEN))
+  and (not ("s" in pin.names)))
+  {
+    addstring(pin.names, "s");
+    exec("say Thank you, "+pc.name+".", self);
+    exec("emote places the spleen in the coffin.", self);
+    destroy(item);
+    goto hcheck;
+  }	
+   if ((item == findsymbolic(self, "spleen@hallows23", FIND_UNIT_INVEN))
+   		and ("s" in pin.names))
+  		{
+   			exec("say You gave me a spleen already, "+pc.name+". "+
+			     "This seems to be a matter for internal investigation!", self);
+   			exec("emote puts the spleen in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}	
+/*tongue (on cat in vasklor) DONE*/	
+if ((item == findsymbolic(self, "tong@hallows23", FIND_UNIT_INVEN))
+  and (not ("t" in pin.names)))
+  {
+    addstring(pin.names, "t");
+    exec("say Thank you, "+pc.name+".", self);
+    exec("emote places the tongue in the coffin.", self);
+    exec("say You'll lick this yet!", self);
+    destroy(item);
+    goto hcheck;	    		     		     
+   }
+    if ((item == findsymbolic(self, "tong@hallows23", FIND_UNIT_INVEN))
+   		and ("t" in pin.names))
+  		{
+   			exec("say You gave me a tongue already, "+pc.name+". "+
+			     "I'll save this for the cat.", self);
+   			exec("emote drops the tongue in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}		
+/* pc gave him wrong item */
+
+exec("say I don't think that part will fit.", self);
+exec("emote looks at you suspiciously. ", self );
+exec("drop "+item.name, self);
+goto hcheck;
+
+/* ok he has it all, now for the reward one level and
+a belt of candy wrappers. +2 dex  
++ 2 consider   */
+
+:hcheck:
+
+pin := HALL23_ONGO in activator.quests;
+
+if (("h" in pin.names) and ("t" in pin.names) and 
+("s" in pin.names) and ("g" in pin.names) and 
+("lg" in pin.names) and ("l" in pin.names) and
+("i" in pin.names) and ("f" in pin.names) and
+("hn" in pin.names) and ("a1" in pin.names) and
+("a2" in pin.names) and ("hd" in pin.names) and
+("b" in pin.names))
+{
+subextra(pc.quests, HALL23_ONGO);
+addextra(pc.quests, {HALL23_COM}, "");
+item := load("canbelt@hallows23");
+dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+item.height := pc.height;
+link(item,pc);
+experience(16500, pc);
+exec("Shout It's ALLIVE! Thanks to "+pc.name+ "!",self);
+log("belt given to " +pc.name+" they found it all!");
+exec("say Thank you. That was an enjoyable experience.", self);
+exec("emote doffs his hat and bows elegantly to you.", self);
+pause;
+exec("say You can let this present go to waist!", self);
+exec("emote pulls out a brightly colored belt and hands it to" +pc.name+",", self);
+pause;
+exec("emote smiles as a wolf howls in the distance", self);
+exec("say You can keep the bag too. Happy Halloween, " + pc.name +"!", self);
+goto start;
+}
+goto start;
+}
+}
+dilend 
+
+end /*samedi*/
+
+spider1
+names {"spider","black spider"}
+title "a hairy spider"
+descr "A huge black spider crawls here."
+extra {}
+"This spider has been very well fed! Its black body is covered
+in fur and is the size of a small dog. The eight legs look hairy
+and it has huge purple eyes."
+alignment 0
+M_SPIDER_TINY(5,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_WIMPY}
+dilcopy global_wander@function (40, 1, 0);
+end
+
+spider2
+names {"spider","black spider"}
+title "a hairy spider"
+descr "A huge black spider crawls here."
+extra {}
+"This spider has been very well fed! Its black body is covered
+in fur and is the size of a small dog. The eight legs look hairy and 
+it has huge green eyes."
+alignment 0
+M_SPIDER_TINY(5,SEX_FEMALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_WIMPY}
+dilcopy global_wander@function (60, 1, 0);
+end
+
+bat
+names {"bat","black bat"}
+title "a black bat"
+descr "A small black bat flutters around."
+extra {}
+"This bat seems to be hunting for food. It flies with
+grace as it darts towards its prey. Its small beady eyes 
+have a slightly malevolent expression."
+alignment 0
+M_BAT_TINY(5,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_WIMPY}
+dilcopy global_wander@function (60, 1, 0);
+end
+
+zombie
+names {"zombie","ferret"}
+title "a zombie ferret"
+descr "A small zombie animal shambles around."
+extra {}
+"The ferret killed by thousands of newbies has
+risen from the grave. It seeks revenge."
+alignment 0
+M_FERRET_TINY(6,SEX_FEMALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_WIMPY}
+dilcopy global_wander@function (120, 1, 0);
+end
+
+warg
+names {"warg","wolf"}
+title "a black warg"
+descr "A black warg snarls at you."
+extra {}
+"It is a huge wolf with thick, black fur. Saliva is dripping quickly from its 
+long, white fangs.  "
+M_WOLF_TINY(10,SEX_MALE)
+dilcopy global_wander@function (120, 1, 0);
+alignment -350 
+end
+
+nightmare
+names {"nightmare","horse"}
+title "a nightmare"
+descr "A black horse with red eyes paws the ground."
+extra {}
+"This is the horse that haunts dreams. Those who ride
+it are either not of this world or die of fear in their sleep."
+alignment 0
+M_HORSE_TINY(6,SEX_FEMALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+dilcopy global_wander@function (120, 1, 0);
+end
+
+cat
+names {"cat","black cat"}
+title "a black cat"
+descr "A small black cat stares hostilely."
+extra {}
+"This cat just crossed the path. Its tail is stiff
+and full as if it has been in a fight.  This is a mean 
+kitty."
+alignment 0
+M_CAT_TINY(7,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_WIMPY}
+dilcopy global_wander@function (120, 1, 0);
+end
+
+
+ghost
+names {"ghost"}
+title "a translucent ghost"
+descr "A small translucent ghost floats here."
+extra {}
+"This ghost seems shy. It is half materilaized and
+seems ready to flee."
+alignment 0
+M_SPRITE_TINY(5,SEX_FEMALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_WIMPY}
+dilcopy global_wander@function (120, 1, 0);
+end
+
+hghost
+names {"ghost", "headless ghost"}
+title "a headless ghost"
+descr "A headless ghost walks here."
+extra {}
+"It walks along with a head tucked under its arm. The eyes in the head 
+move and the bloody stump of a neck oozes. He seems to be looking for
+someone."
+alignment 0
+M_AVG_HUMAN(5,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+dilcopy global_wander@function (120, 1, 0);
+end
+
+armorg
+names {"ghost","empty armour","empty armor","armour", "armor"}
+title "a set of empty armor"
+descr "A set of empty armor walks here."
+extra {}
+"It clanks along with is helm tucked under an arm. You are not
+certain how it knows where it is going but it does seem to have a
+destination in mind."
+alignment 0
+M_AVG_HUMAN(5,SEX_MALE)
+position POSITION_STANDING
+flags {UNIT_FL_NO_TELEPORT}
+dilcopy global_wander@function (120, 1, 0);
+end
+
+
+/* END HALLOWEEN MOBS */
+
+/* *******Halloween Loads **************
+%reset 
+  
+
+load jackolant into inn@udgaard          local 1
+load jackolant into side_alley@udgaard   local 1
+load jackolant into moot_cen@udgaard     local 1
+load jackolant into town_hall@udgaard    local 1
+load jackolant into mageshop@udgaard     local 1
+load jackolant into field_shop@udgaard   local 1
+load jackolant into postoffice@udgaard   local 1
+load qjackolant into armour_shop@nymgaard local 1
+{
+load spleen@hallows23                   
+}
+remove qjackolant in armour_shop@nymgaard 
+load qjackolant into armour_shop@nymgaard local 1
+{
+load spleen@hallows23                   
+}
+load jackolant into harborm1@torsbay     local 1
+
+load jackolant2 into tom_tom@korandin    local 1
+load jackolant2 into moot_lib1@udgaard   local 1 
+load jackolant2 into ironmonger@udgaard  local 1
+load jackolant2 into food_store@udgaard  local 1
+load jackolant2 into moot_ent@udgaard    local 1
+load jackolant2 into common@fortress     local 1
+load jackolant2 into tower2@darkelf      local 1
+
+load qblfount into moot_cen@udgaard       local 1
+load blood into moot_cen@udgaard 		  max 1 
+remove blood in moot_cen@udgaard 
+load blood into moot_cen@udgaard 		  
+ 
+load blfount into square@udgaard         local 1 
+load blfount into a4@arabian             local 1 
+load blfount into market_sq@midgaard     local 1 
+load blfount into cabal_1@nymgaard       local 1 
+load blfount into city_sq1@xiyang        local 1
+ 
+
+load dtree into dump@udgaard             max 1
+load branch into dump@udgaard 		     max 1 
+remove branch in dump@udgaard
+load branch into dump@udgaard 		  
+ 
+load coffin into dump@udgaard            max 1 
+load skeleton into heal_room@udgaard     local 1
+load qcat into cobbled_road@vasklor      max 1
+{
+ load tong@hallows23
+}
+load jack into dark_for25@cenedal        max 1
+{
+  load heart@hallows23
+  equip razor position WEAR_WIELD  
+}
+load samedi into dump@udgaard            max 1
+{
+equip svest position WEAR_BODY
+equip spants position WEAR_LEGS
+equip sboots position WEAR_FEET
+equip vcape	position  WEAR_ABOUT
+equip tophat position  WEAR_HEAD
+}         
+load armorg into cave7@galgachus       max 20
+load qarmorg into armourer@galgachus   max 1
+{
+load arm1@hallows23
+}
+load armorg into altar_rd1@manse       max 20
+load armorg into city_rd40@xiyang      max 20
+load armorg into cth_square7@midgaard  max 20
+load armorg into moot_nowe@udgaard     max 20
+load armorg into side_hall2@dwarves    max 20
+load armorg into dhfor38@darkravine    max 20
+
+load spider1 into cabal_1@nymgaard      max 20
+load spider1 into kings_way@fjord       max 20
+load spider1 into a26@arabian           max 20
+load spider1 into city_rd40@xiyang      max 20
+load spider1 into magic_way1@udgaard    max 20
+load spider1 into wall_rd6@midgaard     max 20
+load qspider1 into rn_6007@haon_dor     max 1
+{
+ load foot@hallows23
+} 
+load spider1 into castgn1@albula        max 20
+load spider1 into city4@darkelf         max 20
+load spider1 into bizzar3@fortress      max 20
+
+load spider2 into trading_post@udgaard  max 20
+load spider2 into city4@darkelf         max 20
+load spider2 into baker_st1@midgaard    max 20
+load spider2 into common@fortress       max 20
+load spider2 into a_trail@vasklor       max 20
+load spider2 into yon_1@halfzon         max 20
+load spider2 into city_rd27@xiyang      max 20
+load spider2 into rn_6006@haon_dor      max 20 
+
+
+load cat into village_rd10@udgaard      max 20       
+load cat into fish_shop@nymgaard        max 20
+load cat into city_rd47@xiyang          max 20
+load cat into royal_av4@midgaard        max 20
+load cat into fish2_shop@torsbay        max 20
+load cat into a35@arabian               max 20
+load cat into village1@darkelf          max 20
+
+load warg into cave7@galgachus       max 20
+load qwarg into mount4@arcisle       max 1
+{
+load liver@hallows23
+}
+load warg into mpath70@mforest       max 20
+load warg into city_rd40@xiyang      max 20
+load warg into stable1@cypress    	 max 20
+load warg into stable2@midgaard      max 20
+load warg into dhswg9@darkravine     max 20
+load warg into mount4@arcisle        max 20
+load warg into bizzar3@fortress      max 20
+
+
+load hghost into village_rd1@udgaard    max 20
+load hghost into elm_2@nymgaard         max 20
+load hghost into city_rd43@xiyang       max 20
+load hghost into west_bridge@midgaard   max 20
+load hghost into a1@arabian             max 20
+load hghost into qu_basin@split         max 20
+load hghost into bizzar4@fortress       max 20
+load qhghost into dining@fortress       max 1
+{
+ load arm2@hallows23
+} 
+
+load zombie into inn@udgaard            max 20 
+load zombie into rich1_street@vasklor   max 20
+load zombie into a21@arabian            max 20
+load zombie into main_st3@midgaard      max 20
+load zombie into court_yard@halfzon     max 20
+load zombie into beach_1@torsbay        max 20
+load zombie into below5@midsewers      max 20
+load qzombie into below3@midsewers       max 1
+{
+load brain@hallows23
+}
+
+				 
+load bat into village_rd4@udgaard       max 20
+load bat into healers_way1@udgaard      max 20
+load bat into a4@arabian                max 20
+load bat into gate@sands2               max 20
+load bat into pier_four@torsbay         max 20
+load qbat into harborm1@torsbay         max 1
+{
+load eyeball@hallows23
+}
+load bat into city_rd44@xiyang          max 20
+load bat into playground@nymgaard       max 20
+      
+load ghost into watch_tower3@udgaard    max 20
+load ghost into nw_pit@halfzon          max 20
+load qghost into tavern@halfzon         max 1
+{
+load hand@hallows23                     
+}
+load ghost into a10@arabian             max 20
+load ghost into glad_rd4@midgaard       max 20
+load ghost into market_3@torsbay        max 20
+load ghost into vil_path9@rland        max 20
+				
+load nightmare into healers_way2@udgaard     max 20         
+load nightmare into papi_3@nymgaard          max 20
+load nightmare into glad_rd3@midgaard        max 20
+load nightmare into pasture_ent@halfzon      max 20
+load nightmare into a20@arabian              max 20
+load nightmare into path3@darkelf            max 20
+load nightmare into pas2@urland              max 20
+load qnightmare into pas3@urland             max 1
+{
+load leg@hallows23  
+}   */
+
+/*quest item loads */
+
+%end
