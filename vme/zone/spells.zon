@@ -1858,6 +1858,7 @@ external
 
 var
   mboost : integer;
+  ex_ptr : extraptr;
 
 code
 {
@@ -1870,8 +1871,13 @@ if ((tgt==self) and (medi.type!=UNIT_ST_OBJ))
 	self.mana:=self.mana+100;
 	quit;
 	}
-   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
-     hm := -1;
+
+   ex_ptr:="$owner" in self.extra;
+   log(ex_ptr.descr);
+   if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
+   	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+ 	    hm := -1;
+   }
 
 				    if (hm < 0)
    {
@@ -3292,6 +3298,7 @@ var
     in_gr  : integer;
     kids   : integer;
     mta    : integer;
+    gtpcost   : integer;
 
 code
 {
@@ -3441,15 +3448,17 @@ code
         }
     }
 
+    gtpcost := 10 - (hm/120); // benefit for good casters for group teleport
+    log(itoa(gtpcost));
 
-    if (self.mana < (kids * 10)) /* 10 mana per grouped char */
+    if (self.mana < (kids * gtpcost)) /* 10 mana per grouped char */
     {
     act("You have insufficient mana to teleport everyone in your group.",
         A_ALWAYS, self, null, null, TO_CHAR);
     goto tele_self;
     }
 
-    self.mana:= self.mana - (kids * 10);
+    self.mana:= self.mana - (kids * gtpcost);
 
     if (in_gr == FALSE)
     goto tele_self;
@@ -8338,6 +8347,7 @@ external
 var
   heal : integer;
   i : integer;
+  ex_ptr:extraptr;
 code
 {
    /*
@@ -8346,8 +8356,12 @@ code
       of the target character.
       */
 
-   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
-     hm := -1;
+   ex_ptr:="$owner" in self.extra;
+   log(ex_ptr.descr);
+   if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
+   	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+ 	    hm := -1;
+   }
 
    if (hm < 0)
    {
@@ -8383,17 +8397,22 @@ external
 var
   heal : integer;
   i : integer;
+  ex_ptr:extraptr;
 code
 {
-   /*
-      Spell Cure Light Wounds
-      This spell cures minor wounds, or partly heals major wounds
+      /*
+      Spell Cure Serious Wounds
+      This spell cures moderate wounds, or partly heals major wounds
       of the target character.
       */
 
-   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
-     hm := -1;
 
+   ex_ptr:="$owner" in self.extra;
+   log(ex_ptr.descr);
+   if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
+   	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+ 	    hm := -1;
+   }
    if (hm < 0)
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -8422,11 +8441,16 @@ external
 var
   heal : integer;
   i : integer;
+  ex_ptr:extraptr;
 code
 {
 
-   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
-     hm := -1;
+   ex_ptr:="$owner" in self.extra;
+   log(ex_ptr.descr);
+   if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
+   	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+ 	    hm := -1;
+   }
 
    if (hm < 0)
    {
@@ -8452,8 +8476,11 @@ dilbegin bless(medi:unitptr, tgt : unitptr, arg : string,
 external
      integer bonusCalc(hm : integer);
      integer max@function(a:integer, b:integer);
+var
+     ex_ptr:extraptr;
 code
 {
+
    /*
       Spell Bless:
       This spell raises the gods good attention to a character.
@@ -8461,9 +8488,13 @@ code
       is raised temporarily.
       */
 
-   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
-     hm := -1;
 
+   ex_ptr:="$owner" in self.extra;
+   log(ex_ptr.descr);
+   if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't bless themselves and allows familiars to bless owners in rare corner cases
+   	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+ 	    hm := -1;
+   }
    if ((hm < 0) or isaff(tgt, ID_BLESS) or isaff(tgt, ID_UNHOLY_BLESSING))
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -8503,6 +8534,8 @@ dilbegin ubless(medi:unitptr,tgt:unitptr,arg:string,hm:integer,effect:string);
 external
      integer bonusCalc(hm : integer);
      integer max@function(a:integer, b:integer);
+var
+     ex_ptr:extraptr;
 code
 {
    /*
@@ -8512,9 +8545,12 @@ code
       is raised temporarily.
       */
 
-   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
-     hm := -1;
-
+   ex_ptr:="$owner" in self.extra;
+   log(ex_ptr.descr);
+   if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't cast unholy blessing on themselves and allows familiars to cast unholy blessing on owners in rare corner cases
+   	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+ 	    hm := -1;
+   }
    if ((hm < 0) or isaff(tgt, ID_BLESS) or isaff(tgt, ID_UNHOLY_BLESSING))
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -10716,7 +10752,7 @@ var
 code
 {
    interrupt(SFB_DEAD, activator == self, vanish);
-interrupt (SFB_MSG,TRUE,gotmsg);
+   interrupt (SFB_MSG,TRUE,gotmsg);
    heartbeat := PULSE_SEC * 100;
    d := pwr / 15 + 2;
 
@@ -10727,14 +10763,21 @@ if (d>0)
 	d := d - 1;
 	goto start;
 	}
-
 goto vanish;
 
 :gotmsg:
 parse:= getwords(argument);
-if (parse.[0] == "spl_dispel")
-	if (atoi(parse.[1]) <= pwr)
-		goto start;
+if (parse.[0] == "spl_dispel"){
+	if (atoi(parse.[1]) >= pwr){
+		goto vanish;
+   	} else {
+   		if (atoi(parse.[1]) >= (pwr/2)){
+   		d := d - 1;
+   		}
+   	}
+}
+goto start;
+
 
 :vanish:
 u:=load ("dust_bones@spells");
@@ -10973,10 +11016,16 @@ dilbegin refresh(med : unitptr, targ : unitptr, arg : string,
                  hm : integer, effect : string);
 var
    amount : integer;
+   ex_ptr : extraptr;
 code
 {
-   if ((not RACE_IS_HUMANOID(targ.race)) and (not RACE_IS_MAMMAL(targ.race)))
-     hm := -1;
+
+   ex_ptr:="$owner" in self.extra;
+   log(ex_ptr.descr);
+   if (not((targ == self) or (ex_ptr.descr == targ.name))){ // fixes mobs that can't refres themselves and allows familiars to refresh owners in rare corner cases
+   	if ((not RACE_IS_HUMANOID(targ.race)) and (not RACE_IS_MAMMAL(targ.race)))
+ 	    hm := -1;
+   }
 
    if (hm < 0)
    {
@@ -11513,7 +11562,7 @@ var
 
 code
 {
-   if ((tgt.type != UNIT_ST_NPC) or (not(race_lower_animal(tgt.race))))
+   if ((not(race_lower_animal(tgt.race)))) // there are cases where an PC can be a 'lower animal' - Removing NPC check
    {
       act("Your spell will only heal animals.",
           A_ALWAYS, self, null, null, TO_CHAR);
@@ -15448,4 +15497,5 @@ end
 
 
 %end
+
 

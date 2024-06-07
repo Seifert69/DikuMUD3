@@ -1857,7 +1857,7 @@ code
    	tgt := findunit(self,arg,FIND_UNIT_SURRO,null);
    }
 
-	if ((tgt == null) or (not visible(self,tgt)))
+	if ((tgt == null) or (not visible(self,tgt)) or (not((tgt.type==UNIT_ST_PC) or (tgt.type==UNIT_ST_NPC))))
 	{
       act("Bash who?", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
@@ -13739,3 +13739,4 @@ M_NORSE_GOD_LIGHT_GODLY(150,SEX_FEMALE)
 end
 
 %end
+
