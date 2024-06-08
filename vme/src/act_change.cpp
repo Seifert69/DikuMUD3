@@ -152,15 +152,15 @@ static void chg_columns(unit_data *ch, const char *arg)
 {
     if (str_is_empty(arg) || !str_is_number(arg))
     {
-        send_to_char("You must enter a column number between 40 and 160.<br/>", ch);
+        send_to_char("You must enter a column number between 40 and 240.<br/>", ch);
         return;
     }
 
     int width = atoi(arg);
 
-    if ((width < 40) || (width > 160))
+    if ((width < 40) || (width > 240))
     {
-        send_to_char("You must enter a column number between 40 and 160.<br/>", ch);
+        send_to_char("You must enter a column number between 40 and 240.<br/>", ch);
         return;
     }
 

@@ -349,7 +349,7 @@ int cMudHook::read_mud()
 
                     assert(is_in(con->m_sSetup.emulation, TERM_DUMB, TERM_INTERNAL));
 
-                    assert(con->m_sSetup.width >= 40 && con->m_sSetup.width <= 160);
+                    assert(con->m_sSetup.width >= 40 && con->m_sSetup.width <= 240);
 
                     assert(con->m_sSetup.height >= 15 && con->m_sSetup.height <= 60);
 
