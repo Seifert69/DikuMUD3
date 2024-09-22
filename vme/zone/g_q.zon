@@ -1840,7 +1840,7 @@ end
 
 banksy
 names {"banksy","artist","man"}
-title "an anyonmous man"
+title "an anonymous man"
 descr
 "An anonymous looking man in a dark cloak is here."
 extra {}
