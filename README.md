@@ -176,7 +176,7 @@ services:
       dockerfile: Dockerfile
     ports:
 -      - "4280:4280"
-+      - "34280:34280"
++      - "34280:4280"
       - "80:80"
     environment:
 -      - WS_HOST=localhost
