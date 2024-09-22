@@ -13,6 +13,18 @@ function signals()
 
 trap signals INT TERM EXIT HUP
 
+
+# Override the default values if the environment variables are set.
+WS_HOST=${WS_HOST:-localhost}
+WS_PORT=${WS_PORT:-4280}
+if [ "$WS_HOST" != "localhost" ] || [ "$WS_PORT" != "4280" ] ; then
+  echo "Starting websocket server on ws://${WS_HOST}:${WS_PORT}/echo"
+  DOCKER_CLIENT_FPATH="/dikumud3/vme/www/docker/index.html"
+  sed -i "s/encodeURI('localhost')/encodeURI('${WS_HOST}')/g" ${DOCKER_CLIENT_FPATH}
+  sed -i "s/encodeURI('4280')/encodeURI('${WS_PORT}')/g" ${DOCKER_CLIENT_FPATH}
+fi
+
+# Start services.
 service nginx restart
 cd /dikumud3/vme/bin
 rm -f vme.log mplex.log
