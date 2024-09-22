@@ -11,5 +11,6 @@ services:
     environment:
       - WS_HOST=localhost
       - WS_PORT=4280
+    # Remove the volume mount below, if you do not want to persist the mud data.
     volumes:
       - ./vme/lib:/dikumud3/vme/lib
