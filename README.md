@@ -151,3 +151,59 @@ See 'docker run --help'.
 32:DOCKER_CONTENT_TRUST=1
 [user@localhost]$ DOCKER_CONTENT_TRUST=0 docker run -d -p 4280:4280 dikumud3
 ```
+
+## Docker Compose
+
+Alternative to docker, you may use docker-compose.
+
+1. Build the image
+```console
+docker-compose build
+```
+
+2. Modify the docker-compose.yaml file to your needs, there are two variables you may set:
+   - WS_HOST: The host the websocket server will bind to.  By default, it is set to localhost.
+   - WS_PORT: The port the websocket server will bind to.  By default, it is set to 4280.
+
+For example in `docker-compose.yaml`:
+```diff
+version: '3.8'
+
+services:
+  dikumud3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+-      - "4280:4280"
++      - "34280:4280"
+      - "80:80"
+    environment:
+-      - WS_HOST=localhost
+-      - WS_PORT=4280
++      - WS_HOST=ws.example.com
++      - WS_PORT=34280
+    volumes:
+      - ./vme/lib:/dikumud3/vme/lib
+```
+
+3. Modify the volume mounts to your needs.  By default, it is set to the current directory for persisting the mud data.
+
+4. Run the container
+```console
+docker-compose up
+```
+- Optionally, run it in detached mode with: `docker-compose up -d`
+
+5. For development, you can rebuild the container when you make changes by running:
+```console
+docker-compose up -d --build
+```
+
+6. When finished, stop the container with:
+```console
+docker-compose down
+```
+
+
+

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  dikumud3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4280:4280"
+      - "80:80"
+    environment:
+      - WS_HOST=localhost
+      - WS_PORT=4280
+    # Remove the volume mount below, if you do not want to persist the mud data.
+    volumes:
+      - ./vme/lib:/dikumud3/vme/lib
