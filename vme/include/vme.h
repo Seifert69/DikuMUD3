@@ -923,6 +923,7 @@
 #define SHIELD_SMALL   0	/* Small Shield */
 #define SHIELD_MEDIUM  1	/* Medium Shield */
 #define SHIELD_LARGE   2	/* Large Shield */
+#define SHIELD_TOWER   3	/* Tower Shield */
 
 /* Shield methods set for each weapon type & spell type */
 
