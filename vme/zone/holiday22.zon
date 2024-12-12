@@ -1019,6 +1019,7 @@ external
    	xmas_initialize();
 var
     xmas_quests  : stringlist global xmas_done@holiday22;
+	npc : unitptr;
     m : integer;
     mday : integer;
 code
@@ -1073,6 +1074,16 @@ code
     }
 
     zonereset(findzone(self.zone));
+	//added to make Norma (Mrs Santa) auto spawn on Christmas
+    mday := getinteger(DIL_GINT_REALDAY, self, 0);
+    if (mday > 24){
+		if(not(findsymbolic("norma@holiday22")))
+		{
+			npc:=load("norma@holiday22");
+			log(npc.name+" was loaded by "+self.name+" and placed in market@udgaard.");
+			link(npc,findsymbolic("market@udgaard"));
+		}
+	}
     wait(SFB_TICK, TRUE);
     goto xmas;
 }
