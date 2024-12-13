@@ -30,8 +30,7 @@ shi_info_type g_shi_info[] = {
     /* %age Chance of blocking an attack if ready to block */
     {15}, /* SHIELD_SMALL  */
     {20}, /* SHIELD_MEDIUM */
-    {25}, /* SHIELD_LARGE  */
-	{35}  /* SHIELD_TOWER  */
+    {25}  /* SHIELD_LARGE  */
 };
 
 /// Translate BONUS_XXX for weapons, shields, armors, skills -> ]-20..+20[

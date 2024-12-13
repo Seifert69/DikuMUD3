@@ -121,7 +121,7 @@ const char *g_fullness[] = {"less than half ",
 
 const char *g_arm_text[ARM_PLATE + 1 + 1] = {"clothes base", "leather base", "hardened leather base", "chain base", "plate base", nullptr};
 
-const char *g_shi_text[SHIELD_TOWER + 2] = {"small shield", "medium shield", "large shield", "tower shield", nullptr};
+const char *g_shi_text[SHIELD_LARGE + 2] = {"small shield", "medium shield", "large shield", nullptr};
 
 const char *g_bodyparts[] = {"arms",       "left arm",  "right arm", "legs",      "left leg",   "right leg", "head", "feet",
                              "right foot", "left foot", "toes",      "hands",     "right hand", "left hand", "face", "hair",
