@@ -117,7 +117,7 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
         {
             shield_bonus = OBJ_VALUE(def_shield, 1) + OBJ_VALUE(def_shield, 2);*/
 /*This code gets shield bonus values and is equivalent to the numbers above but takes into account the shield type itself*/
-        shield_bonus = OBJ_VALUE(def_shield, 0) + OBJ_VALUE(def_shield, 1) + OBJ_VALUE(def_shield, 2); 
+        shield_bonus = g_shi_info[OBJ_VALUE(def_shield, 0)].melee + OBJ_VALUE(def_shield, 1) + OBJ_VALUE(def_shield, 2); 
         att_val += effective_dex(att); // This is equivalent to the above check to get att_dex
 /*This section switches between useing the minimum of Str, Con, and effective dex for a tower shield or effective dex for defending with the shield. Roughly equivalent to def_dex = effective_dex(def) commented out above*/
         if (OBJ_VALUE(def_shield, 0) == SHIELD_TOWER){
