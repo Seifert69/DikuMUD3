@@ -14,7 +14,9 @@ reset RESET_NOT
 creators {"whistler"}
 
 notes
-"This is competition code  what did you think?"
+"This is competition code  what did you think?
+Modified by Barron to have automatic xp tracking 2025
+Tracks XP of all online players"
 
 help
 "This zone is not intended for players."
@@ -128,6 +130,31 @@ code
 }
 dilend
 
+dilbegin auto_xp_death (); // Automatically gets xp and deaths data from characters every ten minutes for tracking
+external 
+	upd_xp_char(u:unitptr);
+	upd_dead_ch(u:unitptr);
+	string rlc_format (sl:stringlist,s:string);
+var
+	rm:unitptr;
+	u:unitptr;
+	i,ln:integer;
+code
+{
+	:start:
+	heartbeat:=PULSE_SEC*600;
+	pause;
+	u := ghead();
+	while (u.type==UNIT_ST_PC)
+	{
+		upd_xp_char(u);
+		upd_dead_ch(u);
+		u:=u.gnext;
+	}
+	goto start;
+}
+dilend
+
 
 dilbegin upd_xp_char(u:unitptr);
 var
@@ -163,6 +190,10 @@ code
 	if (ln==1)
 	{
 		insert (rm.extra.["xp_comp"].names,1,u.name);
+		if (length(rm.extra.["xp_comp"].vals) == 0){  // only necessary for empty lists
+			log("fixing xp comp extra of 0 size");
+			insert (rm.extra.["xp_comp"].vals,0,0);
+		}
 		insert (rm.extra.["xp_comp"].vals,1,p);
 	}
 	else
@@ -208,7 +239,7 @@ code
 	rm:=findsymbolic("dead_obj@competition");
 	if (rm==null)
 	{
-		log ("Error no room found for xp information<br>");
+		log ("Error no room found for death and xp information<br>");
 		return;
 	}
 	if (rm.extra.["dead_comp"]==null)
@@ -231,6 +262,10 @@ code
 	if (ln==1)
 	{
 		insert (rm.extra.["dead_comp"].names,1,u.name);
+		if (length(rm.extra.["dead_comp"].vals) == 0){   // only necessary for empty lists
+			log("fixing comp death extra of 0 size");
+			insert (rm.extra.["dead_comp"].vals,0,0);
+		}
 		insert (rm.extra.["dead_comp"].vals,1,p);
 	}
 	else
@@ -1412,6 +1447,7 @@ extra {"sign","corner"}
 "
 type ITEM_BOARD
 dilcopy board();
+dilcopy auto_xp_death();
 end
 
 %reset
