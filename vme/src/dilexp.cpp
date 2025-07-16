@@ -3476,7 +3476,7 @@ void dilfe_gint(dilprg *p)
     if (v->type == DILV_INT)
     {
         time_t t;
-        struct tm *timeInfo;
+        tm *timeInfo;
         switch (idx)
         {
             case DIL_GINT_MANAREG:
