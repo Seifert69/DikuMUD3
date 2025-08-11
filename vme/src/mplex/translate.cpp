@@ -125,11 +125,11 @@ void Control_ANSI_Fg(cConHook *con, char **dest, ubit8 code, int bBold)
         case 'r':
             if (bBold)
             {
-                Control_ANSI_Fg_Red(con, dest, 0);
+                Control_ANSI_Fgb_Red(con, dest, 0);
             }
             else
             {
-                Control_ANSI_Fgb_Red(con, dest, 0);
+                Control_ANSI_Fg_Red(con, dest, 0);
             }
             break;
 
