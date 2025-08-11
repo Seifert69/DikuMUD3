@@ -447,149 +447,149 @@ code
     ln:=length(tlist);
     while (i<ln)
     {
-        if (tlist.[i]==left("hp",length(tlist.[i])))
-        {
-            if (not("%hp%" in  plist))
-                addstring(plist,"%hp%");
-            tlist.[i]:="%hp%";
-        }
-        else if (tlist.[i]==left("maxhp",length(tlist.[i])))
-        {
-            if (not("%maxhp%" in  plist))
-                addstring(plist,"%maxhp%");
-            tlist.[i]:="%maxhp%";
-        }
-        else   if (tlist.[i]==left("mana",length(tlist.[i])))
-        {
-            if (not("%mana%" in  plist))
-                addstring(plist,"%mana%");
-            tlist.[i]:="%mana%";
-        }
-else if (tlist.[i]==left("maxmana",length(tlist.[i])))
-{
-  if (not("%maxmana%" in  plist))
-  addstring (plist,"%maxmana%");
-       tlist.[i]:="%maxmana%";
-    }
-  else   if (tlist.[i]==left("endurance",length(tlist.[i])))
-  {
-    if (not("%endurance%" in  plist))
-  addstring (plist,"%endurance%");
-         tlist.[i]:="%endurance%";
-    }
-  else   if (tlist.[i]==left("maxendurance",length(tlist.[i])))
-  {
-    if (not("%maxendurance%" in  plist))
-  addstring (plist,"%maxendurance%");
-       tlist.[i]:="%maxendurance%";
-    }
-  else   if (tlist.[i]==left("guild",length(tlist.[i])))
-  {
-    if (not("%guild%" in  plist))
-  addstring (plist,"%guild%");
-       tlist.[i]:="%guild%";
-    }
-  else   if (tlist.[i]==left("title",length(tlist.[i])))
-  {
-    if (not("%title%" in  plist))
-  addstring (plist,"%title%");
-       tlist.[i]:="%title%";
-    }
-      else   if (tlist.[i]==left("age",length(tlist.[i])))
-  {
-    if (not("%age%" in  plist))
-  addstring (plist,"%age%");
-       tlist.[i]:="%age%";
-    }
-  else   if (tlist.[i]==left("race",length(tlist.[i])))
-  {
-    if (not("%race%" in  plist))
-  addstring (plist,"%race%");
-       tlist.[i]:="%race%";
-    }
-  else   if (tlist.[i]==left("xp",length(tlist.[i])))
-  {
-    if (not("%xp%" in  plist))
-  addstring (plist,"%xp%");
-       tlist.[i]:="%xp%";
-    }
-      else   if (tlist.[i]==left("xptolvl",length(tlist.[i])))
-  {
-    if (not("%xptolvl%" in  plist))
-  addstring (plist,"%xptolvl%");
-       tlist.[i]:="%xptolvl%";
-    }
-  else   if (tlist.[i]==left("level",length(tlist.[i])))
-  {
-    if (not("%level%" in  plist))
-  addstring (plist,"%level%");
-       tlist.[i]:="%level%";
-    }
-      else   if (tlist.[i]==left("vlevel",length(tlist.[i])))
-  {
-    if (not("%vlevel%" in  plist))
-  addstring (plist,"%vlevel%");
-       tlist.[i]:="%vlevel%";
-    }
-  else   if (tlist.[i]==left("oppname",length(tlist.[i])))
-  {
-    if (not("%oppname%" in  plist))
-  addstring (plist,"%oppname%");
-       tlist.[i]:="%oppname%";
-    }
-  else   if (tlist.[i]==left("oppdiag",length(tlist.[i])))
-  {
-    if (not("%oppdiag%" in  plist))
-  addstring (plist,"%oppdiag%");
-       tlist.[i]:="%oppdiag%";
-    }
-  else   if (tlist.[i]==left("tankname",length(tlist.[i])))
-  {
-    if (not("%tankname%" in  plist))
-  addstring (plist,"%tankname%");
-       tlist.[i]:="%tankname%";
-    }
-  else   if (tlist.[i]==left("tankdiag",length(tlist.[i])))
-  {
-    if (not("%tankdiag%" in  plist))
-  addstring (plist,"%tankdiag%");
-       tlist.[i]:="%tankdiag%";
-    }
-  else   if (tlist.[i]==left("zone",length(tlist.[i])))
-  {
-    if (not("%zone%" in  plist))
-  addstring (plist,"%zone%");
-       tlist.[i]:="%zone%";
-    }
-  else   if (tlist.[i]==left("roomname",length(tlist.[i])))
-  {
-    if (not("%roomname%" in  plist))
-  addstring (plist,"%roomname%");
-       tlist.[i]:="%roomname%";
-  }
-  else   if ((tlist.[i]==left("room",length(tlist.[i]))) and
-(self.level >= IMMORTAL_LEVEL))
-  {
-    if (not("%room%" in  plist))
-  addstring (plist,"%room%");
-       tlist.[i]:="%room%";
-    }
-  else   if ((tlist.[i]==left("wizinv",length(tlist.[i]))) and
-(self.level >= IMMORTAL_LEVEL))
-  {
-    if (not("%wizinv%" in  plist))
-  addstring (plist,"%wizinv%");
-       tlist.[i]:="%wizinv%";
-    }
-    else
-    {
-      if (not("%er%" in  plist))
-    addstring(plist,"%er%");
-    tlist.[i]:="%er%";
-    }
 
-      i:=i+2;
-  }
+        if (tlist.[i] == "hp")
+        {
+            if (not("%hp%" in plist))
+                addstring(plist, "%hp%");
+            tlist.[i] := "%hp%";
+        }
+        else if (tlist.[i] == "maxhp")
+        {
+            if (not("%maxhp%" in plist))
+                addstring(plist, "%maxhp%");
+            tlist.[i] := "%maxhp%";
+        }
+        else if (tlist.[i] == "mana")
+        {
+            if (not("%mana%" in plist))
+                addstring(plist, "%mana%");
+            tlist.[i] := "%mana%";
+        }
+        else if (tlist.[i] == "maxmana")
+        {
+            if (not("%maxmana%" in plist))
+                addstring(plist, "%maxmana%");
+            tlist.[i] := "%maxmana%";
+        }
+        else if (tlist.[i] == "endurance")
+        {
+            if (not("%endurance%" in plist))
+                addstring(plist, "%endurance%");
+            tlist.[i] := "%endurance%";
+        }
+        else if (tlist.[i] == "maxendurance")
+        {
+            if (not("%maxendurance%" in plist))
+                addstring(plist, "%maxendurance%");
+            tlist.[i] := "%maxendurance%";
+        }
+        else if (tlist.[i] == "guild")
+        {
+            if (not("%guild%" in plist))
+                addstring(plist, "%guild%");
+            tlist.[i] := "%guild%";
+        }
+        else if (tlist.[i] == "title")
+        {
+            if (not("%title%" in plist))
+                addstring(plist, "%title%");
+            tlist.[i] := "%title%";
+        }
+        else if (tlist.[i] == "age")
+        {
+            if (not("%age%" in plist))
+                addstring(plist, "%age%");
+            tlist.[i] := "%age%";
+        }
+        else if (tlist.[i] == "race")
+        {
+            if (not("%race%" in plist))
+                addstring(plist, "%race%");
+            tlist.[i] := "%race%";
+        }
+        else if (tlist.[i] == "xp")
+        {
+            if (not("%xp%" in plist))
+                addstring(plist, "%xp%");
+            tlist.[i] := "%xp%";
+        }
+        else if (tlist.[i] == "xptolvl")
+        {
+            if (not("%xptolvl%" in plist))
+                addstring(plist, "%xptolvl%");
+            tlist.[i] := "%xptolvl%";
+        }
+        else if (tlist.[i] == "level")
+        {
+            if (not("%level%" in plist))
+                addstring(plist, "%level%");
+            tlist.[i] := "%level%";
+        }
+        else if (tlist.[i] == "vlevel")
+        {
+            if (not("%vlevel%" in plist))
+                addstring(plist, "%vlevel%");
+            tlist.[i] := "%vlevel%";
+        }
+        else if (tlist.[i] == "oppname")
+        {
+            if (not("%oppname%" in plist))
+                addstring(plist, "%oppname%");
+            tlist.[i] := "%oppname%";
+        }
+        else if (tlist.[i] == "oppdiag")
+        {
+            if (not("%oppdiag%" in plist))
+                addstring(plist, "%oppdiag%");
+            tlist.[i] := "%oppdiag%";
+        }
+        else if (tlist.[i] == "tankname")
+        {
+            if (not("%tankname%" in plist))
+                addstring(plist, "%tankname%");
+            tlist.[i] := "%tankname%";
+        }
+        else if (tlist.[i] == "tankdiag")
+        {
+            if (not("%tankdiag%" in plist))
+                addstring(plist, "%tankdiag%");
+            tlist.[i] := "%tankdiag%";
+        }
+        else if (tlist.[i] == "zone")
+        {
+            if (not("%zone%" in plist))
+                addstring(plist, "%zone%");
+            tlist.[i] := "%zone%";
+        }
+        else if (tlist.[i] == "roomname")
+        {
+            if (not("%roomname%" in plist))
+                addstring(plist, "%roomname%");
+            tlist.[i] := "%roomname%";
+        }
+        else if ((tlist.[i] == "room") and (self.level >= IMMORTAL_LEVEL))
+        {
+            if (not("%room%" in plist))
+                addstring(plist, "%room%");
+            tlist.[i] := "%room%";
+        }
+        else if ((tlist.[i] == "wizinv") and (self.level >= IMMORTAL_LEVEL))
+        {
+            if (not("%wizinv%" in plist))
+                addstring(plist, "%wizinv%");
+            tlist.[i] := "%wizinv%";
+        }
+        else
+        {
+            if (not("%er%" in plist))
+                addstring(plist, "%er%");
+            tlist.[i] := "%er%";
+        }
+
+
+        i := i + 2;
+    }
 
 /*
 i:=0;
