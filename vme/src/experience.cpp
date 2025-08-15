@@ -59,11 +59,6 @@
 /* successfully).                                                   */
 /* Returns 0 or less if unsuccessful, or 1..100 for the blocking    */
 /* chance                                                           */
-/* moved much of the code inside of the check to see if the defender*/
-/* has a shield so we don't make unnecessary calculations if there  */
-/* is no shield being used. Also commened out all of the checks for */
-/* items that exceed limits - this can be reenabled if we have        */
-/* problems inthe future - Barron                                    */
 
 int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
 {
@@ -91,11 +86,12 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
         return 0;
     }
 
-    // We found a valid shield, return it.
-    *pDef_shield = def_shield;
+    // We found a valid shield, return to caller
+    if (pDef_shield)
+        *pDef_shield = def_shield;
 
-    int att_val = 0;
-    int def_val = 0;
+    int att_visibility = 0;
+    int def_visibility = 0;
 
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him) */
@@ -103,12 +99,12 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
     /* a penalty in both directions */
     if (!CHAR_CAN_SEE(att, def))
     {
-        att_val -= 12;
+        att_visibility -= 12;
     }
 
     if (!CHAR_CAN_SEE(def, att))
     {
-        def_val -= 12;
+        def_visibility -= 12;
     }
 
     int shield_bonus = 0;
@@ -119,23 +115,27 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
     // We add magic and quality
     shield_bonus += OBJ_VALUE(def_shield, 1) + OBJ_VALUE(def_shield, 2);
 
-    // This is equivalent to the above check to get att_dex
-    att_val += effective_dex(att); 
+    int npc_att_ability = 0;
+    int npc_def_ability = 0;
+
+    // The NPCs "shield" attack skill is equal to it's dex.
+    npc_att_ability = effective_dex(att); 
     
-    // This section switches between useing the minimum of Str, Con, and effective dex for a tower shield
+    // For the NPCs (that don't have a shield skill)
+    // This section switches between using the minimum of Str, Con, and effective dex for a tower shield
     // or effective dex for defending with the shield. 
     // Roughly equivalent to def_dex = effective_dex(def) commented out above
     //
     if (OBJ_VALUE(def_shield, 0) == SHIELD_TOWER)
-        def_val += MIN(MIN(CHAR_STR(def), CHAR_CON(def)), effective_dex(def));
+        npc_def_ability = MIN(MIN(CHAR_STR(def), CHAR_CON(def)), effective_dex(def));
     else
-        def_val += effective_dex(def);
+        npc_def_ability = effective_dex(def);
 
-    // Let's make a shield check - CAN_SEE does affect this too
-    int hm = resistance_skill_check(def_val + shield_bonus,
-                                    att_val,
-                                    def->isPC() ? PC_SKI_SKILL(def, SKI_SHIELD) : def_val,
-                                    att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : att_val);
+    // Let's make the shield check
+    int hm = resistance_skill_check(def_visibility + shield_bonus,
+                                    att_visibility,
+                                    def->isPC() ? PC_SKI_SKILL(def, SKI_SHIELD) : npc_def_ability,
+                                    att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : npc_att_ability);
 
     if (hm >= 0)
     { 
