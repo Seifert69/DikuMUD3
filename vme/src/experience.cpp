@@ -68,84 +68,82 @@
 int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
 {
     unit_data *def_shield = nullptr;
-    int def_shield_bonus = 0;
 
-    //int att_dex = 0; now inside of check to see if we even have a shield
-    //int def_dex = 0; now inside of check to see if we even have a shield
-    //int hm = 0; now inside of check to see if we even have a shield
+    def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD);
 
-    //att_dex = effective_dex(att); renamed to att_val now inside of check to see if we even have a shield
-    //def_dex = effective_dex(def); renamed to def_val now inside of check to see if we even have a shield
+    if (def_shield == nullptr)
+        return 0;
 
-    /* If attacker can't see the defender, then the defender has a   */
-    /* much better effective dexterity (since attacker can't see him */
-    if ((def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD)))
+    // Put these back in, we do have illegal shields that need to be taken out.
+    // This is a very inexpensive operation. Especially since these values are
+    // used on the array lookups below
+    if (!is_in(OBJ_VALUE(def_shield, 0), SHIELD_SMALL, SHIELD_TOWER))
     {
-        int att_val = 0;
-        int def_val = 0;
-        int hm = 0;
-        /* If attacker can't see the defender, then the defender has a   */
-        /* much better effective dexterity (since attacker can't see him) */
-        /* converted to be bidirectional as being unable to see should apply */
-        /* a penalty in both directions */
-        if (!CHAR_CAN_SEE(att, def))
-        {
-            att_val -= 12;
-        }
-
-        if (!CHAR_CAN_SEE(def, att))
-        {
-            def_val -= 12;
-        }
-
-// now checked above    if ((def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD)))
-//    {
-        int shield_bonus = 0;
-
-/* removed these as they don't need to be run against every shield ever and on every block ever. If there's a problem it could be re-enabled
-        if (!is_in(OBJ_VALUE(def_shield, 0), SHIELD_SMALL, SHIELD_LARGE))
-        {
-            slog(LOG_ALL, 0, "Illegal shield type.");
-            UOBJ(def_shield)->setObjectItemType(ITEM_TRASH);
-        }
-        else if (!is_in(OBJ_VALUE(def_shield, 1), -25, 25) || !is_in(OBJ_VALUE(def_shield, 2), -25, 25))
-        {
-            slog(LOG_ALL, 0, "Illegal shield bonus");
-            UOBJ(def_shield)->setObjectItemType(ITEM_TRASH);
-        }
-        else
-        {
-            shield_bonus = OBJ_VALUE(def_shield, 1) + OBJ_VALUE(def_shield, 2);*/
-/*This code gets shield bonus values and is equivalent to the numbers above but takes into account the shield type itself*/
-        shield_bonus = g_shi_info[OBJ_VALUE(def_shield, 0)].melee + OBJ_VALUE(def_shield, 1) + OBJ_VALUE(def_shield, 2); 
-        att_val += effective_dex(att); // This is equivalent to the above check to get att_dex
-/*This section switches between useing the minimum of Str, Con, and effective dex for a tower shield or effective dex for defending with the shield. Roughly equivalent to def_dex = effective_dex(def) commented out above*/
-        if (OBJ_VALUE(def_shield, 0) == SHIELD_TOWER){
-            def_val += MIN(MIN(CHAR_STR(def),(CHAR_CON(def))),effective_dex(def));
-        }else{
-             def_val += effective_dex(def);
-        }
-
-            /* Let's make a shield check - CAN_SEE does affect this too */
-            hm = resistance_skill_check(def_val + shield_bonus,
-                                        att_val,
-                                        def->isPC() ? PC_SKI_SKILL(def, SKI_SHIELD) : def_val,
-                                        att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : def_val);
-        
-            if (hm >= 0)
-            { /* Successful Shield use
-                 Modified to make who well you succeeded matter for how well you blocked*/
-                def_shield_bonus = (hm/10)+g_shi_info[OBJ_VALUE(def_shield, 0)].melee + shield_bonus / 2;
-            }
-        //}
-    } /* End of Shield */
-
-    if (pDef_shield)
-    {
-        *pDef_shield = def_shield;
+        slog(LOG_ALL, 0, "Illegal shield type.");
+        UOBJ(def_shield)->setObjectItemType(ITEM_TRASH);
+        return 0;
     }
 
-    return def_shield_bonus;
+    if (!is_in(OBJ_VALUE(def_shield, 1), -25, 25) || !is_in(OBJ_VALUE(def_shield, 2), -25, 25))
+    {
+        slog(LOG_ALL, 0, "Illegal shield bonus");
+        UOBJ(def_shield)->setObjectItemType(ITEM_TRASH);
+        return 0;
+    }
+
+    // We found a valid shield, return it.
+    *pDef_shield = def_shield;
+
+    int att_val = 0;
+    int def_val = 0;
+
+    /* If attacker can't see the defender, then the defender has a   */
+    /* much better effective dexterity (since attacker can't see him) */
+    /* converted to be bidirectional as being unable to see should apply */
+    /* a penalty in both directions */
+    if (!CHAR_CAN_SEE(att, def))
+    {
+        att_val -= 12;
+    }
+
+    if (!CHAR_CAN_SEE(def, att))
+    {
+        def_val -= 12;
+    }
+
+    int shield_bonus = 0;
+
+    // This code gets base value for the shield type itself
+    shield_bonus = g_shi_info[OBJ_VALUE(def_shield, 0)].melee; 
+
+    // We add magic and quality
+    shield_bonus += OBJ_VALUE(def_shield, 1) + OBJ_VALUE(def_shield, 2);
+
+    // This is equivalent to the above check to get att_dex
+    att_val += effective_dex(att); 
+    
+    // This section switches between useing the minimum of Str, Con, and effective dex for a tower shield
+    // or effective dex for defending with the shield. 
+    // Roughly equivalent to def_dex = effective_dex(def) commented out above
+    //
+    if (OBJ_VALUE(def_shield, 0) == SHIELD_TOWER)
+        def_val += MIN(MIN(CHAR_STR(def), CHAR_CON(def)), effective_dex(def));
+    else
+        def_val += effective_dex(def);
+
+    // Let's make a shield check - CAN_SEE does affect this too
+    int hm = resistance_skill_check(def_val + shield_bonus,
+                                    att_val,
+                                    def->isPC() ? PC_SKI_SKILL(def, SKI_SHIELD) : def_val,
+                                    att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : def_val);
+
+    if (hm >= 0)
+    { 
+        // Successful Shield use
+        return (hm/10) + shield_bonus / 2;
+    }
+
+    return 0;
 }
 
 /* int dikuii_spell_bonus(unit_data *att,

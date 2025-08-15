@@ -643,7 +643,7 @@ int effective_dex(unit_data *ch)
             switch (at)
             {
                 case ARM_LEATHER:
-                    b = (CHAR_ABILITY(ch, ABIL_STR) + 4 * CHAR_ABILITY(ch, ABIL_DEX)) / 5;
+                    b = (CHAR_STR(ch) + 4 * CHAR_DEX(ch)) / 5;
                     if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_LEATHER)) / 2;
@@ -651,21 +651,21 @@ int effective_dex(unit_data *ch)
                     break;
 
                 case ARM_HLEATHER:
-                    b = (CHAR_ABILITY(ch, ABIL_STR) + 2 * CHAR_ABILITY(ch, ABIL_DEX)) / 3;
+                    b = (CHAR_STR(ch) + 2 * CHAR_DEX(ch)) / 3;
                     if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_HLEATHER)) / 2;
                     }
                     break;
                 case ARM_CHAIN:
-                    b = (2 * CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX)) / 3;
+                    b = (2 * CHAR_STR(ch) + CHAR_DEX(ch)) / 3;
                     if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_CHAIN)) / 2;
                     }
                     break;
                 case ARM_PLATE:
-                    b = CHAR_ABILITY(ch, ABIL_STR);
+                    b = CHAR_STR(ch);
                     if (ch->isPC())
                     {
                         b = (b + PC_SKI_SKILL(ch, SKI_ARM_PLATE)) / 2;
