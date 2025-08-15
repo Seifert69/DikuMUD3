@@ -135,7 +135,7 @@ int shield_bonus(unit_data *att, unit_data *def, unit_data **pDef_shield)
     int hm = resistance_skill_check(def_val + shield_bonus,
                                     att_val,
                                     def->isPC() ? PC_SKI_SKILL(def, SKI_SHIELD) : def_val,
-                                    att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : def_val);
+                                    att->isPC() ? PC_SKI_SKILL(att, SKI_SHIELD) : att_val);
 
     if (hm >= 0)
     { 
