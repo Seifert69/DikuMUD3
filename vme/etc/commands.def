@@ -2992,6 +2992,13 @@ minlevel = 200
 loglevel = 200
 type     = 0
 
+command  = nocomm
+func = do_nocomm@commands
+minpos   = POSITION_SLEEPING
+minlevel = 200
+loglevel = 200
+type     = 0
+
 command  = nset
 func     = do_set@set
 minpos   = POSITION_RESTING

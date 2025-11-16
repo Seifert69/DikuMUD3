@@ -396,6 +396,7 @@ gsub(/CMD_SWITCH/,"\"switch\"",$0);
 gsub(/CMD_USERS/,"\"users\"",$0);
 gsub(/CMD_WIZHELP/,"\"wizhelp\"",$0);
 gsub(/CMD_NOTELL/,"\"notell\"",$0);
+gsub(/CMD_NOCOMM/,"\"nocomm\"",$0);
 gsub(/CMD_FILE/,"\"file\"",$0);
 gsub(/CMD_CRASH/,"\"crash\"",$0);
 gsub(/CMD_ADVANCE/,"\"advance\"",$0);

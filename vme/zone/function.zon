@@ -7187,11 +7187,6 @@ code
    slActive := exd.names;
    substring(slActive, "$channels"); // Remove the extra prefix
 
-   if (self.level>=200)
-      interrupt (SFB_CMD, (command ("nocomm") and (self==activator)), nochannel);
-
-   interrupt (SFB_CMD, (command ("noshout") and  (self==activator)), noshout);
-   interrupt (SFB_CMD, (command ("notell") and   (self==activator)), notell);
    interrupt (SFB_DONE,((command ("tell")) and (self==target)), told);
    interrupt (SFB_CMD, (command("comm") and
                         (("add" in argument) or
@@ -7456,80 +7451,6 @@ code
       A_SOMEONE, self, null, null, TO_CHAR);
    jmode := 1;
    dmode := 0;
-   }
-   goto start;
-
-:noshout:
-   targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
-   if (targ==null) goto start;
-
-   if (not (NOSHOUT_QUEST in targ.quests))
-   {
-      time_string:=asctime(realtime);
-      time_string:=time_string+" "+self.name;
-   addextra (targ.quests,{NOSHOUT_QUEST},time_string);
-   }
-   else
-   subextra (targ.quests,NOSHOUT_QUEST);
-   goto start;
-
-:notell:
-   targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
-   if (targ==null) goto start;
-
-   if (not (NOTELL_QUEST in targ.quests))
-   {
-      time_string:=asctime(realtime);
-      time_string:=time_string+" "+self.name;
-   addextra (targ.quests,{NOTELL_QUEST},time_string);
-   }
-   else
-   subextra (targ.quests,NOTELL_QUEST);
-   goto start;
-
-:nochannel:
-   block;
-   targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
-   if (targ==null)
-   {
-      act("No such person found.", A_ALWAYS,self,null,null,TO_CHAR);
-      goto start;
-   }
-   if (targ.level >=self.level)
-   {
-      if ((self.name=="ginger") and (targ.level >50))
-      {
-         act("$2n would not like that very much.",
-         A_ALWAYS,self,targ,null,TO_CHAR);
-         goto start;
-      }
-
-      if (self.name!="ginger")
-      {
-         act("$2n would not like that very much.", A_ALWAYS,self,targ,null,TO_CHAR);
-         goto start;
-      }
-   }
-
-   if (not(NOCOMM_QUEST in targ.quests))
-   {
-      time_string:=asctime(realtime);
-      time_string:=time_string+" "+self.name;
-      addextra (targ.quests,{NOCOMM_QUEST},time_string);
-      act("You have lost the ability to use communication channels.",
-         A_ALWAYS,targ,null,null,TO_CHAR);
-      act("$2n has lost the ability to use communication channels.",
-         A_ALWAYS,self,targ,null,TO_CHAR);
-      goto start;
-   }
-   else
-   {
-      subextra (targ.quests,NOCOMM_QUEST);
-      act("You have regained the privilege to use the communication channels.",
-         A_ALWAYS,targ,null,null,TO_CHAR);
-      act("$2n can now use the communication channels again.",
-         A_ALWAYS,self,targ,null,TO_CHAR);
-      goto start;
    }
    goto start;
 

@@ -472,17 +472,69 @@ if (self.level<200)
 	{
 		sendtext ("You regain your telepathic ability.<br/>",vict);
 		sendtext("Notelling removed.<br/>",self);
+                subextra(vict.quests, "$noshout");
 		unset (vict.pcflags,PC_NOTELLING);
 	}
 	else
 	{
 		sendtext ("Your telepathic ability fades away!<br/>",vict);
-		sendtext ("NOTELLING set.<br/>",self);
+		sendtext ("Notelling set.<br/>",self);
+                addextra(vict.quests, {"$notell"}, self.name + " " + asctime(realtime));
 		set (vict.pcflags,PC_NOTELLING);
 	}
 return;
 }
 dilend /* do_notell */
+
+dilbegin do_nocomm (arg:string);
+var
+vict:unitptr;
+
+code
+{
+    if (self.type!=UNIT_ST_PC)
+        return;
+
+    if ("New Player Helper" in self.quests) goto proceed;
+
+    if (self.level<200)
+         return;
+
+    :proceed:
+            vict := findunit (self, arg, FIND_UNIT_WORLD,null,UNIT_ST_PC);
+            if ((vict == null) or (vict.minv > self.level))
+            {
+                    sendtext ("No such player around.<br/>",self);
+                    return;
+            }
+            if ((self.level < 200) and (vict.level > 20))
+            {
+                    sendtext ("That person is not a newbie. This only works for level 20 and below.<br/>",self);
+                    return;
+            }
+
+            if ((self.level >= 200) and (vict.level >= self.level))
+            {
+                    act ("$3e might object to that... better not.",
+                    A_SOMEONE, self, null, vict, TO_CHAR);
+                    return;
+            }
+
+            if ("$nocomm" in vict.quests)
+            {
+                    sendtext ("You have regained the ability to use communication channels.<br/>",vict);
+                    sendtext("Ability to use communication channels restored.<br/>",self);
+                    subextra(vict.quests, "$nocomm");
+            }
+            else
+            {
+                    sendtext ("You have lost the ability to use communication channels!<br/>",vict);
+                    sendtext ("Ability to use communication channels removed.<br/>",self);
+                    addextra(vict.quests, {"$nocomm"}, self.name + " " + asctime(realtime));
+            }
+return;
+}
+dilend /* do_nocomm */
 
 
 
