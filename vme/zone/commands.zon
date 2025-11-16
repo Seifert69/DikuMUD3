@@ -472,7 +472,7 @@ if (self.level<200)
 	{
 		sendtext ("You regain your telepathic ability.<br/>",vict);
 		sendtext("Notelling removed.<br/>",self);
-                subextra(vict.quests, "$noshout");
+                subextra(vict.quests, "$notell");
 		unset (vict.pcflags,PC_NOTELLING);
 	}
 	else
