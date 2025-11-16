@@ -471,14 +471,14 @@ if (self.level<200)
 	if (isset (vict.pcflags, PC_NOTELLING))
 	{
 		sendtext ("You regain your telepathic ability.<br/>",vict);
-		sendtext("Notelling removed.<br/>",self);
+		act("Notelling removed from $3n.",A_ALWAYS, self, null, vict, TO_CHAR);
                 subextra(vict.quests, "$notell");
 		unset (vict.pcflags,PC_NOTELLING);
 	}
 	else
 	{
 		sendtext ("Your telepathic ability fades away!<br/>",vict);
-		sendtext ("Notelling set.<br/>",self);
+		act("Notelling set on $3n.",A_ALWAYS, self, null, vict, TO_CHAR);
                 addextra(vict.quests, {"$notell"}, self.name + " " + asctime(realtime));
 		set (vict.pcflags,PC_NOTELLING);
 	}
@@ -523,13 +523,13 @@ code
             if ("$nocomm" in vict.quests)
             {
                     sendtext ("You have regained the ability to use communication channels.<br/>",vict);
-                    sendtext("Ability to use communication channels restored.<br/>",self);
+                    act("Nocomm removed from $3n.",A_ALWAYS, self, null, vict, TO_CHAR);
                     subextra(vict.quests, "$nocomm");
             }
             else
             {
                     sendtext ("You have lost the ability to use communication channels!<br/>",vict);
-                    sendtext ("Ability to use communication channels removed.<br/>",self);
+                    act("Nocomm set on $3n.",A_ALWAYS, self, null, vict, TO_CHAR);
                     addextra(vict.quests, {"$nocomm"}, self.name + " " + asctime(realtime));
             }
 return;
@@ -9081,7 +9081,7 @@ code
    if (isset(vict.pcflags, PC_NOSHOUTING))
    {
 		sendtext ("Your sore throat suddenly clears up.<br/>",vict);
-		sendtext("Noshouting removed.<br/>",self);
+		act("Noshouting removed from $3n.",A_ALWAYS, self, null, vict, TO_CHAR);
 		subextra(vict.quests, "$noshout");
 		unset(vict.pcflags, PC_NOSHOUTING);
 		i := dildestroy("no_shouted@commands", vict);
