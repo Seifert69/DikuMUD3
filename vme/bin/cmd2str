@@ -154,6 +154,7 @@ CMD_SWITCH switch
 CMD_USERS users
 CMD_WIZHELP wizhelp
 CMD_NOTELL notell
+CMD_NOCOMM nocomm
 CMD_FILE file
 CMD_CRASH crash
 CMD_ADVANCE advance
