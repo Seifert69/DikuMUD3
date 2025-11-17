@@ -5446,7 +5446,7 @@ quit;
 
 if (self.type != UNIT_ST_PC) quit;
 
-if (self.level>200)
+if (self.level>=254)
 	goto admin_delete;
 
 :char_delete:
