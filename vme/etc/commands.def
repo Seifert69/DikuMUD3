@@ -4771,8 +4771,12 @@ command       = cappoint
 func          = cappoint@clans
 minpos        = POSITION_RESTING
 
-command       = cdemote
-func          = cdemote@clans
+command       = cpromote
+func          = cpromote@clans
+minpos        = POSITION_RESTING
+
+command       = cdepose
+func          = cdepose@clans
 minpos        = POSITION_RESTING
 
 command       = cinfo
