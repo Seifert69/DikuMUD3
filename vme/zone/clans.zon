@@ -222,6 +222,8 @@ code
 		return ("You must be a clan member to post to this board.");
 	if (u.extra.[CLAN_SYMBOLIC].descr!=v.zoneidx)
 		return ("You must be a clan member to post to this board.");
+	if (u.extra.[CLAN_RANK].descr=="0")
+		return ("You must hold rank in the clan to post to this board.");
 	return ("");
 }
 dilend // clan_post
@@ -1272,87 +1274,16 @@ code
 		goto reset_rank;*/
 
 	rank:=getword(arg);
-	if ((atoi(rank)>0) and (atoi(rank)<26))
+	if ((atoi(rank)<1) or (atoi(rank)>25))
+	{
+		act ("<div class='clan'>Rank must be between 1 and 25.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
 	if (arg=="")
 		goto c_r_title;
 	else
 		goto s_r_title;
-
-	pc:=ghead();
-	while (pc.type==UNIT_ST_PC)
-	{
-		if (pc.name==rank)
-		break;
-		pc:=pc.gnext;
-	}
-
-	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
-	{
-		act ("<div class='clan'>No such person found.</div><div class='default'></div>", A_ALWAYS,self,null,null,TO_CHAR);
-		quit;
-	}
-	if (pc.extra.[CLAN_NAME]==null)
-	{
-		act("<div class='clan'>$3n is not a member of a clan.</div><div class='default'></div>",
-		A_ALWAYS,self,null,pc,TO_CHAR);
-		quit;
-	}
-
-	if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
-	{
-		act ("<div class='clan'>$3n is not a member of your clan.</div><div class='default'></div>",
-		A_ALWAYS,self,null,null,TO_CHAR);
-		quit;
-	}
-
-	rank:=getword (arg);
-	if ((atoi(rank)>=0) and (atoi(rank)<=25) and (rank != ""))
-	{
-		err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-		if (err<1)
-			err:=loadstr ("default.rank",buf);
-			if (err<1)
-			{
-				buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
-				blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
-			}
-
-		rlist:=split(buf,"\n");
-		if (rlist.[atoi(rank)]=="blank")
-		{
-			sendtext ("<div class='clan'>That rank has no label yet, you can't set it till it has a label.</div><div class='default'><br/></div>",self);
-			quit;
-		}
-		pc.extra.[CLAN_RANK].descr:=rank;
-		if (atoi(rank)!=0)
-		{
-			act ("<div class='clan'>Setting $3n's clan rank to </div>"+rank+
-			":  "+rlist.[atoi(rank)]+
-			".<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
-			act ("<div class='clan'>Your clan rank is now </div>"+
-			rlist.[atoi(rank)]+
-			"<div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
-		}
-		else
-		{
-			act ("<div class='clan'>Striping $3n of their clan rank.</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
-			act ("<div class='clan'>You have been striped of your clan rank.</div><div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
-		}
-	}
-	else
-	{
-		sendtext ("<div class='clan'>You can only set ranks 1 - 25 or 0 to clear.<br/></div>",self);
-		quit;
-	}
-
-	addstring(tlist, pc.extra.[CLAN_RANK].names.[1]);
-	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
-	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
-
-	modmember(self.extra.[CLAN_SYMBOLIC].descr,
-	pc.name,
-	pc.extra.[CLAN_RANK].descr,tlist);
-	quit;
 
 :c_r_title:
 
@@ -1366,7 +1297,24 @@ code
 		}
 
 	rlist:=split(buf,"\n");
-	act ("<div class='clan'></div>"+rank+":  "+rlist.[atoi(rank)],A_ALWAYS,self,null,null,TO_CHAR);
+	rlist.[atoi(rank)]:=textformat("blank");
+	act ("<div class='clan'></div>"+rank+" is now set to:  "+rlist.[atoi(rank)],
+	A_ALWAYS,self,null,null,TO_CHAR);
+	i:=0;
+	ln:=length(rlist);
+	ln:=ln-1;
+	buf:="";
+	while (i<ln)
+	{
+		if (i<0)
+			buf:=rlist.[i]+"\n";
+		else
+			buf:=buf+rlist.[i]+"\n";
+		i:=i+1;
+	}
+
+	err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".rank");
+	err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".rank",buf,"w");
 	quit;
 
 :s_r_title:
@@ -1751,14 +1699,14 @@ code
 	if (self.level >IMMORTAL_LEVEL) goto admin_title;
 	if (self.extra.[CLAN_RANK]==null)
 	{
-		act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
+		act ("<div class='clan'>You must be rank 21 or higher, or a clan Master or Load, to use ctitle.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
 
-	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord"))
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord") and (atoi(self.extra.[CLAN_RANK].descr)<21))
 	{
-		act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
+		act ("<div class='clan'>You must be rank 21 or higher, or a clan Master or Load, to use ctitle.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
@@ -1890,14 +1838,14 @@ code
 {
 	if (self.extra.[CLAN_RANK]==null)
 	{
-		act ("<div class='clan'>You must be a clan Master or Lord to use caccept.</div>",
+		act ("<div class='clan'>You must be rank 10 or higher, or a clan Master or Load, to use caccept.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
 
-	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord"))
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord") and (atoi(self.extra.[CLAN_RANK].descr)<10))
 	{
-		act ("<div class='clan'>You must be a clan Master or Lord to use caccept.</div>",
+		act ("<div class='clan'>You must be rank 10 or higher, or a clan Master or Load, to use caccept.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
@@ -1938,7 +1886,7 @@ code
 
 	addextra (pc.extra,{CLAN_NAME},self.extra.[CLAN_NAME].descr);
 	addextra(pc.extra,self.extra.[CLAN_SYMBOLIC].names,self.extra.[CLAN_SYMBOLIC].descr);
-	addextra (pc.extra,{CLAN_RANK,"$member","$none","$none"},"0");
+	addextra (pc.extra,{CLAN_RANK,"$member","$none","$none"},"1");
 	addextra (pc.extra,self.extra.["tattoo"].names,self.extra.["tattoo"].descr);
 
 	pc.hometown :="htown@"+self.extra.[CLAN_SYMBOLIC].descr;
@@ -2290,6 +2238,144 @@ code
 }
 dilend // cdefect
 
+/* command to promote clan member ranks */
+
+dilbegin cpromote (arg:string);
+external
+	modmember  (file:string,pname:string,rank:string,pos:stringlist);
+var
+	pc:unitptr;
+	tlist:stringlist;
+	rank:string;
+	err:integer;
+	buf:string;
+	rlist:stringlist;
+	pname:string;
+code
+{
+	if (self.extra.[CLAN_RANK]==null)
+	{
+		act ("<div class='clan'>You must be rank 16 or higher, or a clan Master or Load, to use cpromote.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
+	(self.extra.[CLAN_RANK].names.[1]!="$lord") and
+	(atoi(self.extra.[CLAN_RANK].descr)<16))
+	{
+		act ("<div class='clan'>You must be rank 16 or higher, or a clan Master or Load, to use cpromote.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	
+	
+	pname:=getword(arg);
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
+
+	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+	{
+		act ("<div class='clan'>No such person found.</div><div class='default'></div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	if (pc.extra.[CLAN_NAME]==null)
+	{
+		act("<div class='clan'>$3n is not a member of a clan.</div><div class='default'></div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
+
+	if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div><div class='default'></div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
+	(self.extra.[CLAN_RANK].names.[1]!="$lord") and
+	(atoi(self.extra.[CLAN_RANK].descr)<=atoi(pc.extra.[CLAN_RANK].descr)))
+	{
+		act ("<div class='clan'>$3n's rank is equal to or higher then yours.</div><div class='default'></div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+
+	rank:=getword (arg);
+	
+	if ((atoi(rank)>=0) and (atoi(rank)<=25) and (rank != ""))
+	{
+		if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
+		(self.extra.[CLAN_RANK].names.[1]!="$lord") and
+		(atoi(rank)>=atoi(self.extra.[CLAN_RANK].descr)))
+		{
+			sendtext ("<div class='clan'>You are limited to setting ranks less then yours.<br/></div>",self);
+			quit;
+		}
+		
+		if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
+		(atoi(rank)==25))
+		{
+			sendtext ("<div class='clan'>only clan Masters can set rank 25.<br/></div>",self);
+			quit;
+		}
+		
+		
+		err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+		if (err<1)
+			err:=loadstr ("default.rank",buf);
+			if (err<1)
+			{
+				buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+				blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+			}
+
+		rlist:=split(buf,"\n");
+		if (rlist.[atoi(rank)]=="blank")
+		{
+			sendtext ("<div class='clan'>That rank has no label yet, you can't set it till it has a label.</div><div class='default'><br/></div>",self);
+			quit;
+		}
+		pc.extra.[CLAN_RANK].descr:=rank;
+		if (atoi(rank)!=0)
+		{
+			act ("<div class='clan'>Setting $3n's clan rank to </div>"+rank+
+			":  "+rlist.[atoi(rank)]+
+			".<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+			act ("<div class='clan'>Your clan rank is now </div>"+
+			rlist.[atoi(rank)]+
+			"<div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+		}
+		else
+		{
+			act ("<div class='clan'>Striping $3n of their clan rank.</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+			act ("<div class='clan'>You have been striped of your clan rank.</div><div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+		}
+	}
+	else
+	{
+		sendtext ("<div class='clan'>You can only set ranks 1 - 25 or 0 to clear.<br/></div>",self);
+		quit;
+	}
+
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
+
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,
+	pc.name,
+	pc.extra.[CLAN_RANK].descr,tlist);
+	quit;
+	
+}
+dilend //cpromote
+
+
 /* command that allows a clan master to appoint lords */
 
 dilbegin cappoint (arg:string);
@@ -2307,14 +2393,14 @@ code
 {
 	if (self.extra.[CLAN_RANK]==null)
 	{
-		act ("<div class='clan'>You must be a clan Master to use cappoint.</div>",
+		act ("<div class='clan'>You must be a clan Master or rank 25 to use cappoint.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
 
-	if (self.extra.[CLAN_RANK].names.[1]!="$master")
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (atoi(self.extra.[CLAN_RANK].descr)<25))
 	{
-		act ("<div class='clan'>You must be a clan Master to use cappoint.</div>",
+		act ("<div class='clan'>You must be a clan Master or rank 25 to use cappoint.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
@@ -2367,9 +2453,9 @@ code
 		quit;
 	}
 
-	if (arg==left("master",length(arg)))
+	if ((arg==left("master",length(arg))) and (self.extra.[CLAN_RANK].names.[1]=="$master"))
 		goto app_master;
-	else if (arg==left("lord",length(arg)))
+	else if ((arg==left("lord",length(arg))) and (self.extra.[CLAN_RANK].names.[1]=="$master"))
 		goto app_lord;
 	else if (arg==left("treasurer",length(arg)))
 		goto app_treasurer;
@@ -2450,7 +2536,7 @@ dilend // cappoint
 
 /* command removes a member from lords positions */
 
-dilbegin cdemote (arg:string);
+dilbegin cdepose (arg:string);
 external
 	modmember  (file:string,pname:string,rank:string,pos:stringlist);
 
@@ -2464,13 +2550,13 @@ code
 {
 	if (self.extra.[CLAN_RANK]==null)
 	{
-		act ("<div class='clan'>You must be a clan Master to use cdemote.</div>",
+		act ("<div class='clan'>You must be a clan Master or rank 25 to use cdepose.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
-	if (self.extra.[CLAN_RANK].names.[1]!="$master")
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (atoi(self.extra.[CLAN_RANK].descr)<25))
 	{
-		act ("<div class='clan'>You must be a clan Master to use cdemote.</div>",
+		act ("<div class='clan'>You must be a clan Master or rank 25 to use cdepose.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
@@ -2510,12 +2596,12 @@ code
 
 	if (length(arg)<1)
 	{
-		act ("<div class='clan'>That is not a demotable position.</div>",
+		act ("<div class='clan'>That is not a deposeable position.</div>",
 		A_ALWAYS,self,null,null,TO_CHAR);
 		quit;
 	}
 
-	if (arg==left("lord",length(arg)))
+	if ((arg==left("lord",length(arg))) and (self.extra.[CLAN_RANK].names.[1]=="$master"))
 		goto dem_lord;
 	else if (arg==left("treasurer",length(arg)))
 		goto dem_treasurer;
@@ -2523,7 +2609,7 @@ code
 		goto dem_quartermaster;
 	else
 	{
-		act ("<div class='clan'>That is not a demotable position.</div>",
+		act ("<div class='clan'>That is not a deposeable position.</div>",
 		 A_ALWAYS,self,null,null,TO_CHAR);
 		quit;
 	}
@@ -2591,7 +2677,7 @@ code
 	pc.extra.[CLAN_RANK].descr,tlist);
 	quit;
 }
-dilend // cdemote
+dilend // cdepose
 
 /* command allows for money deposits into clan bank */
 
