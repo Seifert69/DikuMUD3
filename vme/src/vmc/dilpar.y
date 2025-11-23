@@ -215,7 +215,7 @@ void make_code(struct exptype *dest);
 %token DILSE_RHEAD DILSE_NHEAD DILSE_OHEAD DILSE_PHEAD
 %token DILSE_GFOL DILSE_SACT  DILSE_GINT DILSE_SHELL 
 
-/* DIL built-in variables */
+/* DIL comparisons */
 %token DILTO_EQ DILTO_NEQ DILTO_PEQ DILTO_SEQ DILTO_LEQ DILTO_GEQ
 %token DILTO_GT DILTO_LE DILTO_ASS
 
@@ -258,7 +258,7 @@ void make_code(struct exptype *dest);
 %token DILSF_MAPX DILSF_MAPY
 %token DILSF_SEX DILSF_RCE DILSF_ABL DILSF_ABL_L DILSF_ABL_C DILSF_EXP DILSF_LVL DILSF_PROF DILSF_HGT
 %token DILSF_POS DILSF_ATY DILSF_MNA DILSF_END DILSF_WPN DILSF_WPN_L DILSF_WPN_C DILSF_MAN
-%token DILSF_AFF DILSF_DRE DILSF_FGT DILSF_DEF DILSF_TIM DILSF_CRM
+%token DILSF_AFF DILSF_DRE DILSF_FGT DILSF_DEF DILSF_CRM
 %token DILSF_FLL DILSF_THR DILSF_DRK DILSF_SPT DILSF_APT DILSF_GLD
 %token DILSF_QST DILSF_SKL DILSF_SKL_L DILSF_SKL_C DILSF_BIR DILSF_PTI DILSF_PCF DILSF_HOME
 %token DILSF_ODES DILSF_IDES DILSF_DES DILSF_LCN DILSF_ABAL DILSF_ATOT
@@ -2115,14 +2115,6 @@ field   : idx
     /* PC fields :                      */
     /* ******************************** */
 
-    | DILSF_TIM /* .time */
-    {
-        INITEXP($$);
-        $$.rtyp = DilVarType_e::DILV_UP;
-        $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_LFT;
-        $$.num = DILF_TIM;
-    }
     | DILSF_CRM /* .crimes */
     {
         INITEXP($$);
