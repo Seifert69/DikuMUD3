@@ -30,7 +30,7 @@ def extract_keywords_from_diltok_h(diltok_h_path):
         "aware", "unique", "fnpri", "global", "and", "or", "not", "skip",
         "while", "else", "goto", "break", "continue", "for", "dex_red",
         "unitptr", "integer", "extraptr","string", "stringlist", "intlist",
-        "zoneptr", "cmdptr", 
+        "zoneptr", "cmdptr", "in"
 
     }
     matches = [(kw, op) for kw, op in matches if kw not in ignored_keywords]
@@ -53,7 +53,7 @@ def extract_yacc_rule(dilpar_y_path, opcode):
         content = f.read()
     # Match | OPCODE ... {
     # Match either 'nonterminal : OPCODE ... {' or '| OPCODE ... {', anchored to line starts
-    header_pattern = rf'^\s*(?:\w+\s*:\s*|\s*\|\s*){opcode}\s*[^{{]*{{'
+    header_pattern = rf'^\s*(?:\w+\s*:\s*|\s*\|\s*){opcode}(?![A-Z0-9_])\s*[^{{]*{{'
     matches = list(re.finditer(header_pattern, content, re.MULTILINE | re.DOTALL))
     if not matches:
         raise ValueError(f"No yacc rule found for opcode {opcode} in dilpar.y")
@@ -79,8 +79,6 @@ def extract_yacc_rule(dilpar_y_path, opcode):
         else:
             raise ValueError(f"Unmatched braces in yacc rule for {opcode}")
     return '\n\n------\n\n'.join(rule_codes)
-
-
 
 def extract_function_index(dilrun_cpp_path, opcode):
     """
