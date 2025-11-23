@@ -222,7 +222,7 @@ void make_code(struct exptype *dest);
 /* DIL built-in variables */
 %token DILSE_NULL DILSE_SELF DILSE_ACTI DILSE_ARGM DILSE_HRT DILSE_CMST
 %token DILSE_TDA  DILSE_THO  DILSE_TMD  DILSE_TYE DILSE_SKIP DILSE_WEAT
-%token DILSE_MEDI DILSE_TARG DILSE_POWE DILSE_CST DILSE_MEL DILSE_EQPM
+%token DILSE_MEDI DILSE_TARG DILSE_POWE DILSE_CAST DILSE_MEL DILSE_EQPM
 %token DILSE_OPRO DILSE_FIT  DILSE_CARY DILSE_PATH DILSE_MONS
 %token DILSE_SPLX DILSE_SPLI DILSE_MELDAM DILSE_RESTA DILSE_DELSTR
 %token DILSE_DELUNIT DILSE_EXCMST DILSE_EXCMSTC
@@ -246,7 +246,7 @@ void make_code(struct exptype *dest);
 %token DILSI_ELS DILSI_GOT DILSI_PRI DILSI_NPR DILSI_BLK DILSI_CNT
 %token DILSI_PUP DILSI_FOE DILSI_BRK DILSI_RTS
 %token DILSI_ON  DILSI_AMOD DILSI_SETPWD DILSI_DELPC DILSI_REBOOT DILSI_ZONERESET
-//DILSI_WLK 
+
 /* DIL structure fields */
 %token DILSF_ZOI DILSF_NMI DILSF_TYP DILSF_NXT DILSF_NMS DILSF_NAM DILSF_IDX
 %token DILSF_TIT DILSF_EXT DILSF_OUT DILSF_INS DILSF_GNX DILSF_SPD
@@ -1550,7 +1550,7 @@ field   : idx
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
         $$.dsl = DSL_LFT;
-        $$.num = DILF_ODI;
+        $$.num = DILF_OPENDIFF;
     }
 
     | DILSF_MHP /* .max_hp */
@@ -1755,7 +1755,7 @@ field   : idx
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
         $$.dsl = DSL_LFT;
-        $$.num = DILF_XDIFF;
+        $$.num = DILF_EXITDIFF;
         FREEEXP($2);
     }
     | DILSF_EXITKEY idx /* .exit_info */
@@ -3075,7 +3075,7 @@ dilfun  :  funcall
             $$.typ = DilVarType_e::DILV_INT;
             make_code(&($3));
             add_code(&($$), &($3));
-            add_ubit8(&($$), DILE_PLAYERID);
+            add_ubit8(&($$), DILE_SHELL);
         }
         FREEEXP($3);
     }
@@ -4627,7 +4627,7 @@ dilfun  :  funcall
         FREEEXP($11);
         FREEEXP($13);
     }
-    | DILSE_CST '(' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
+    | DILSE_CAST '(' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
     {
         INITEXP($$);
         checkbool("argument 1 of cast", $3.boolean);
@@ -5932,7 +5932,7 @@ dilproc : corefuncall
             $$.fst = $3.fst;
             $$.lst = $7 + 1;
             wtmp = &tmpl.core[$7];
-            bwrite_ubit8(&wtmp, DILI_USET);
+            bwrite_ubit8(&wtmp, DILI_UST);
         }
     }
     | DILSI_ADE '(' coreexp ',' coreexp ',' coreexp ')' ihold
@@ -6005,7 +6005,7 @@ dilproc : corefuncall
             bwrite_ubit8(&wtmp, DILI_LCRI);
         }
     }
-    | DILSE_CST '(' coreexp ',' coreexp ',' coreexp ',' coreexp ')' ihold
+    | DILSE_CAST '(' coreexp ',' coreexp ',' coreexp ',' coreexp ')' ihold
     {
         checkbool("argument 1 of cast", $3.boolean);
         if ($3.typ != DilVarType_e::DILV_INT)
@@ -6402,7 +6402,7 @@ dilproc : corefuncall
             $$.fst = $3.fst;
             $$.lst = $7 + 1;
             wtmp = &tmpl.core[$7];
-            bwrite_ubit8(&wtmp, DILI_EXEC);
+            bwrite_ubit8(&wtmp, DILI_EXE);
         }
     }
     // This is not working, not yet sure why.  

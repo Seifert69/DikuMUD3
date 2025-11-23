@@ -167,14 +167,14 @@ struct dilargstype
 #define DILI_CAST 48   /* cast_spell */
 #define DILI_IF 49     /* if */
 #define DILI_SET 50    /* set (#,#) */
-#define DILI_USET 51   /* unset (#,#) */
+#define DILI_UST 51    /* unset (#,#) */
 #define DILI_ADL 52    /* addlist (#,#) */
 #define DILI_SUL 53    /* sublist (#,#) */
 #define DILI_ADE 54    /* addextra (#,#,#) */
 #define DILI_SUE 55    /* subextra (#,#) */
 #define DILI_DST 56    /* destroy (#) */
 #define DILI_POPSTK 57 /* pop the stack and thow it away*/
-#define DILI_EXEC 58   /* exec (#,#) */
+#define DILI_EXE 58    /* exec (#,#) */
 #define DILI_WIT 59    /* wait (#,#) */
 #define DILI_ACT 60    /* act (#,#,#,#,#,#) */
 #define DILI_GOTO 61   /* goto label */
@@ -319,7 +319,7 @@ struct dilargstype
 #define DILE_GFOL 195
 #define DILE_SACT 196 /* sact (#,#,#,#,#,#) */
 #define DILE_GINT 197 /* getinteger(unit, idx) */
-#define DILE_PLAYERID 198
+#define DILE_SHELL 198
 #define DILI_SET_W 199    /* set_weight(#,#) */
 #define DILI_DISPATCH 200 /* dispatch(message) */
 #define DILE_FNDZ 201     /* findroom(#,#) */
@@ -458,8 +458,8 @@ struct dilargstype
 #define DILF_WPN_C 121   /* .weapon_costs */
 #define DILF_MAPX 122    /* room.mapx */
 #define DILF_MAPY 123    /* room.mapy */
-#define DILF_XDIFF 124   /*.exit_diff[UP] (room) */
-#define DILF_ODI 125     /*.opendiff (unit) */
+#define DILF_EXITDIFF 124   /*.exit_diff[UP] (room) */
+#define DILF_OPENDIFF 125 /*.opendiff (unit) */
 #define DILF_PROF 126    /* .profession */
 #define DILF_SYMNAME 127 // returns string "nameidx @ zoneidx"
 

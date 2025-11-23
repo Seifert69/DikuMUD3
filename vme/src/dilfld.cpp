@@ -1648,7 +1648,7 @@ void dilfe_fld(dilprg *p)
 
         /* *********************************** */
         /* .opendiff                      */
-        case DILF_ODI:
+        case DILF_OPENDIFF:
             switch (dil_getval(v1))
             {
                 case DILV_NULL: /* not applicable */
@@ -2615,7 +2615,7 @@ void dilfe_fld(dilprg *p)
 
         /* *********************************** */
         /* .exit_diff [ index ]                */
-        case DILF_XDIFF:
+        case DILF_EXITDIFF:
             v2 = p->stack.pop(); /* evaluate index */
             switch (dil_getval(v1))
             {

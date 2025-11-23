@@ -1136,14 +1136,14 @@ void dil_function_table_setup()
         {DILI_CAST, dilfi_cast},     /* cast_spell */
         {DILI_IF, dilfi_if},         /* if */
         {DILI_SET, dilfi_set},       /* set (#,#) */
-        {DILI_USET, dilfi_uset},     /* unset (#,#) */
+        {DILI_UST, dilfi_uset},      /* unset (#,#) */
         {DILI_ADL, dilfi_adl},       /* addlist (#,#) */
         {DILI_SUL, dilfi_sul},       /* sublist (#,#) */
         {DILI_ADE, dilfi_ade},       /* addextra (#,#,#) */
         {DILI_SUE, dilfi_sue},       /* subextra (#,#) */
         {DILI_DST, dilfi_dst},       /* destroy (#) */
         {DILI_POPSTK, dilfi_popstk}, /* pop the stack and thow it away*/
-        {DILI_EXEC, dilfi_exec},     /* exec (#,#) */
+        {DILI_EXE, dilfi_exec},      /* exec (#,#) */
         {DILI_WAITNOOP, dilfi_waitnoop},     /* waitnoop () */
         {DILI_WIT, dilfi_wit},       /* wait (#,#) */
         {DILI_ACT, dilfi_act},       /* act (#,#,#,#,#,#) */
@@ -1290,7 +1290,7 @@ void dil_function_table_setup()
         {DILE_GFOL, dilfe_gfol},            /* */
         {DILE_SACT, dilfe_sact},            /* sact (#,#,#,#,#,#) */
         {DILE_GINT, dilfe_gint},            /* getinteger(unit, idx) */
-        {DILE_PLAYERID, dilfe_shell},       /* */
+        {DILE_SHELL, dilfe_shell},          /* shell */
         {DILI_SET_W, dilfi_set_weight},     /* set_weight(#,#) */
         {DILI_DISPATCH, dilfi_dispatch},    /* dispatch(message) */
         {DILE_FNDZ, dilfe_fndz},            /* findzone(#) */

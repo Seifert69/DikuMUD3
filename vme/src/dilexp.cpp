@@ -3855,8 +3855,6 @@ void dilfe_udir(dilprg *p)
                 {
                     expression.assign(sPath);
                 }
-                /*      catch(std::exception& e)
-                {*/
                 catch (...)
                 {
                     v->type = DILV_FAIL;

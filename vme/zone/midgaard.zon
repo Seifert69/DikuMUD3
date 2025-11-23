@@ -359,8 +359,8 @@ code
       if (self.outside.flags & UNIT_FL_NO_BURY) continue;
       if (trash.flags & UNIT_FL_BURIED) continue;
       if (not isset (trash.manipulate, MANIPULATE_TAKE)) continue;
-      if (can_carry (self, trash, 1) == TRUE) continue; // Can't carry
       if (not visible(self,trash)) continue;
+      if (can_carry (self, trash, 1) > 0) continue; // Can't carry
       if ("treasure" == trash.zoneidx) continue;
       if ((trash.objecttype == ITEM_CONTAINER) or( trash.objecttype == ITEM_BOAT))
          continue;
