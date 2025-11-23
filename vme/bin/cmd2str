@@ -204,7 +204,8 @@ CMD_CACCEPT caccept
 CMD_CREMOVE cremove
 CMD_CDEFECT cdefect
 CMD_CAPPOINT cappoint
-CMD_CDEMOTE cdemote
+CMD_CPROMOTE cpromote
+CMD_CDEPOSE cdepose
 CMD_CINFO cinfo
 CMD_CDEPOSIT cdeposit
 CMD_CBALANCE cbalance

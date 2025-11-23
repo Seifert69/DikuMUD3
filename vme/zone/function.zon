@@ -7231,6 +7231,20 @@ code
       A_ALWAYS,self,null,null,TO_CHAR);
       goto start;
    }
+   
+   if ((self.extra.[CLAN_SYMBOLIC]== null) and (excmdstr=="clan"))
+   {
+      act("You are not in a clan.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto start;
+   }
+   
+   if ((self.extra.[CLAN_RANK].descr=="0") and (excmdstr=="clan"))
+   {
+      act("You must hold rank in your clan to use the clan channel.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto start;
+   }
 
    /*Channel has been recognized, take argument and send it to rest of dils*/
    if ( isset(self.pcflags, PC_NOTELLING)) {
