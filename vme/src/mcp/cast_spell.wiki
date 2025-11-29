@@ -1,0 +1,61 @@
+= cast_spell =
+
+== Description ==
+Casts a spell at a target unit. This is a low-level function for spell development and should only be used by developers who understand the spell system.
+
+== Syntax ==
+ cast_spell(spell_index, caster, medium, target, bonus, effect)
+
+== Parameters ==
+; spell_index : integer
+: The spell index to cast (SPL_XXX constants)
+; caster : unitptr
+: The unit casting the spell
+; medium : unitptr
+: The medium through which the spell is cast (may be same as caster)
+; target : unitptr
+: The target of the spell
+; bonus : integer
+: Bonus or penalty to apply to spell (positive for advantage, negative for penalty)
+; effect : string
+: Optional effect string for the spell (can be null or empty)
+
+== Return Value ==
+: integer
+: The amount of damage dealt by the spell
+
+== Examples ==
+ dilbegin fireball_example();
+ var
+  damage : integer;
+ code
+ {
+  :start:
+  damage := cast_spell(SPL_FIREBALL, self, self, 0, "");
+  sendtext("Your fireball deals " + itoa(damage) + " damage.<br/>", self);
+ } dilend
+
+dilbegin enhanced_spell();
+ var
+  spell_damage : integer;
+code
+ {
+  :start:
+  spell_damage := cast_spell(SPL_LIGHTNING, self, self, 5, "enhanced effect");
+  sendtext("Your enhanced lightning deals " + itoa(spell_damage) + " damage.<br/>", self);
+ } dilend
+
+== Notes ==
+* This is an advanced function for spell development
+* Should only be used by developers who understand the spell system internals
+* Requires proper spell index constants (SPL_XXX)
+* The bonus parameter can modify spell effectiveness
+* Effect parameter is optional and can be null or empty
+* Returns the actual damage dealt by the spell
+* Commonly used for creating custom spells or spell modifications
+* The function handles spell casting mechanics including damage calculation
+
+== See Also ==
+* spellinfo - For getting detailed information about spells
+* SPL_* constants - For spell index definitions
+* attack_spell - For offensive spell casting (higher-level function)

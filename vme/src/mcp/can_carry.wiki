@@ -1,0 +1,99 @@
+= can_carry =
+
+== Description ==
+Checks if a character can carry a specific number of items. This function tests weight and inventory capacity constraints.
+
+== Syntax ==
+ can_carry(unit, item, quantity)
+
+== Parameters ==
+; unit : unitptr
+: The character to check carrying capacity for
+; item : unitptr
+: The item to check if the character can carry
+; quantity : integer
+: The number of items to check (default is 1)
+
+== Return Value ==
+: integer
+: Returns the number of items the character can carry:
+:* 0 - Cannot carry any items
+:* 1 - Can carry 1 item
+:* 2 - Can carry 2 items
+:* n - Can carry n items
+
+== Examples ==
+ dilbegin check_carry();
+ var
+  sword : unitptr;
+  can_take : integer;
+ code
+ {
+  :start:
+  sword := findunit(self.outside, "sword", FIND_UNIT_SURRO, null);
+  can_take := can_carry(self, sword, 1);
+  if (can_take == 1)
+  {
+    sendtext("You can carry the sword.<br/>", self);
+  }
+  else
+  {
+    sendtext("You cannot carry the sword.<br/>", self);
+  }
+ } dilend
+
+ dilbegin weight_check();
+ var
+  item1 : unitptr;
+  item2 : unitptr;
+  item3 : unitptr;
+  can_take1 : integer;
+  can_take2 : integer;
+  can_take3 : integer;
+ code
+ {
+  :start:
+  item1 := findunit(self.outside, "sword", FIND_UNIT_SURRO, null);
+  item2 := findunit(self.outside, "shield", FIND_UNIT_SURRO, null);
+  item3 := findunit(self.outside, "armor", FIND_UNIT_SURRO, null);
+  
+  can_take1 := can_carry(self, item1, 1);
+  can_take2 := can_carry(self, item2, 1);
+  can_take3 := can_carry(self, item3, 1);
+  
+  if (can_take1 + can_take2 + can_take3 >= 3)
+  {
+    sendtext("You can carry all three items.<br/>", self);
+  }
+  else
+  {
+    sendtext("You cannot carry all three items.<br/>", self);
+  }
+ } dilend
+
+ dilbegin inventory_limit();
+ var
+  max_items : integer;
+  current_capacity : integer;
+ code
+ {
+  :start:
+  max_items := 10;
+  current_capacity := capacity(self);
+  sendtext("You can carry " + itoa(max_items) + " items.<br/>", self);
+  sendtext("Your current capacity allows " + itoa(current_capacity) + " items.<br/>", self);
+ } dilend
+
+== Notes ==
+* The function considers both weight and quantity constraints
+* Weight limits are based on the character's strength and dexterity
+* Quantity limits may be affected by character level or other factors
+* Returns 0 if the character cannot carry any of the specified items
+* Returns the actual number of items that can be carried (may be less than requested)
+* Commonly used for item pickup validation, inventory management, and encumbrance checks
+* The function does not actually give items to the character - it only checks capacity
+
+== See Also ==
+* capacity - For getting the maximum weight a unit can carry
+* weight - For getting the current weight of a unit
+* fits - For checking if an item fits in a specific slot

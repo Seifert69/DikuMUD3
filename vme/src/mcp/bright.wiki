@@ -1,0 +1,70 @@
+= bright =
+
+== Description ==
+Returns the light output value of a unit. This function gets the brightness level for light-producing units like torches or lanterns.
+
+== Syntax ==
+ bright(unit)
+
+== Parameters ==
+; unit : unitptr
+: The unit whose brightness value is being retrieved
+
+== Return Value ==
+: integer
+: The light output value of the unit
+
+== Examples ==
+ dilbegin check_torch();
+ var
+  torch_brightness : integer;
+ code
+ {
+  :start:
+  torch_brightness := bright(self);
+  sendtext("Torch brightness: " + itoa(torch_brightness) + "<br/>", self);
+ } dilend
+
+ dilbegin adjust_light();
+ var
+  light_obj : unitptr;
+ code
+ {
+  :start:
+  light_obj := findunit(self.outside, "torch", FIND_UNIT_SURRO, null);
+  if (light_obj.type == UNIT_ST_OBJ and light_obj.objecttype == ITEM_LIGHT)
+  {
+    setbright(light_obj, 5);
+    sendtext("You adjust the torch to brightness 5.<br/>", self);
+  }
+ } dilend
+
+ dilbegin magical_light();
+ var
+  current_bright : integer;
+ code
+ {
+  :start:
+  current_bright := bright(self);
+  if (current_bright > 0)
+  {
+    sendtext("The room is illuminated by your light.<br/>", activator);
+  }
+  else
+  {
+    sendtext("The light source is not providing illumination.<br/>", activator);
+  }
+ } dilend
+
+== Notes ==
+* This is a read-only property that returns light output value
+* Only applies to units that can produce light (lights, torches, etc.)
+* The brightness value affects how much light the unit provides to its surroundings
+* Higher brightness values provide more illumination
+* Commonly used with light-producing objects and room lighting calculations
+* The function is read-only - use setbright() to modify brightness
+
+== See Also ==
+* setbright - For setting the brightness of a unit
+* islight - For checking if a unit produces light
+* light - For getting the current light level of a room

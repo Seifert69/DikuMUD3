@@ -1,0 +1,81 @@
+= block =
+
+== Description ==
+Blocks commands issued by a player or mobile. This function prevents commands from being processed by the interpreter and is useful for creating special command handlers.
+
+== Syntax ==
+ block
+
+== Parameters ==
+None
+
+== Return Value ==
+None
+
+== Examples ==
+ dilbegin command_interceptor();
+ var
+ code
+ {
+  :start:
+  wait(SFB_CMD, command("test"));
+  block;
+  sendtext("The 'test' command has been blocked.<br/>", activator);
+ } dilend
+
+ dilbegin special_handler();
+ var
+  cmd : string;
+ code
+ {
+  :start:
+  wait(SFB_CMD, TRUE);
+  cmd := argument;
+  
+  if (cmd == "special")
+  {
+    block;
+    // Handle special command logic here
+    sendtext("Special command processed.<br/>", activator);
+  }
+  else
+  {
+    // Let normal command processing continue
+    sendtext("Normal command: " + cmd + "<br/>", activator);
+  }
+ } dilend
+
+ dilbegin block_example();
+ var
+  blocked_cmd : string;
+ code
+ {
+  :start:
+  wait(SFB_CMD, TRUE);
+  blocked_cmd := argument;
+  
+  if (blocked_cmd != "")
+  {
+    block;
+    exec("say I'm not allowed to use that command.", self);
+    exec("emote looks confused.", self);
+  }
+  else
+  {
+    sendtext("No command to block.<br/>", self);
+  }
+ } dilend
+
+== Notes ==
+* The block function prevents the current command from being processed
+* When blocked, the command is intercepted and not passed to the normal interpreter
+* Useful for creating custom command handlers or restricting certain commands
+* Can be used to intercept commands for special processing
+* Often used with SFB_CMD triggers to handle commands before normal processing
+* The blocking is temporary - subsequent commands will process normally unless blocked again
+* Commonly used for command validation, special effects, or command restrictions
+
+== See Also ==
+* SFB_CMD - For triggering on commands
+* command - For checking what command was issued
+* exec - For executing alternative commands

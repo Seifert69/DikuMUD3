@@ -1,0 +1,67 @@
+= birth =
+
+== Description ==
+Returns the birth time of a player character. This represents when the character was created in the game.
+
+== Syntax ==
+ birth(unit)
+
+== Parameters ==
+; unit : unitptr
+: The player character whose birth time is being retrieved
+
+== Return Value ==
+: integer
+: The Unix timestamp when the character was created
+
+== Examples ==
+ dilbegin check_age();
+ var
+  birth_time : integer;
+  age_days : integer;
+ code
+ {
+  :start:
+  birth_time := birth(self);
+  age_days := (realtime - birth_time) / (60 * 60 * 24);
+  sendtext("You are " + itoa(age_days) + " days old.<br/>", self);
+ } dilend
+
+ dilbegin character_info();
+ var
+  creation_time : integer;
+  creation_date : string;
+ code
+ {
+  :start:
+  creation_time := birth(activator);
+  creation_date := asctime(creation_time);
+  sendtext("Character created: " + creation_date + "<br/>", activator);
+ } dilend
+
+ dilbegin birthday_check();
+ var
+  char_birth : integer;
+  current_time : integer;
+  years_old : integer;
+ code
+ {
+  :start:
+  char_birth := birth(self);
+  current_time := realtime;
+  years_old := (current_time - char_birth) / (60 * 60 * 24 * 365);
+  sendtext("You are " + itoa(years_old) + " years old.<br/>", self);
+ } dilend
+
+== Notes ==
+* This is a read-only property that returns character creation time
+* The value is a Unix timestamp (seconds since epoch)
+* Commonly used with asctime() to convert to readable format
+* Used for age calculations, character history, and account management
+* Birth time is set when a character is first created and never changes
+* The timestamp can be used for various time-based calculations
+
+== See Also ==
+* asctime - For converting timestamp to readable date format
+* realtime - For getting current time
+* age calculations - For determining character age from birth time

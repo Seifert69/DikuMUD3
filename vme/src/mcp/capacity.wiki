@@ -1,0 +1,39 @@
+= capacity =
+
+== Description ==
+Returns the maximum weight capacity of a unit. This function determines how much weight a unit can hold (e.g. a chest) or carry (e.g. a character - based on its attributes).
+
+== Syntax ==
+ capacity(unit)
+
+== Parameters ==
+; unit : unitptr
+: The unit whose capacity is being retrieved
+
+== Return Value ==
+: integer
+: The maximum weight capacity of the unit
+
+== Examples ==
+ dilbegin check_capacity();
+ var
+  max_capacity : integer;
+ code
+ {
+  :start:
+  max_capacity := capacity(self);
+  sendtext("Your maximum capacity is " + itoa(max_capacity) + " units.<br/>", self);
+ } dilend
+
+== Notes ==
+* This is a read-write property that can be modified
+* For CHARS the capacity is based on the character's strength and other attributes
+* The value represents the maximum weight a unit can contain
+* Commonly used for chests, inventory management, encumbrance checks, and weight calculations
+* Higher capacity values allow units to contain more and heavier items
+* The function is read-only - use set() to modify capacity if needed
+
+== See Also ==
+* weight - For getting the current weight of a unit
+* can_carry - For checking if a character can carry specific items
+* strength - For accessing character strength and other attributes
