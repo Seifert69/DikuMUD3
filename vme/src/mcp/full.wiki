@@ -1,0 +1,85 @@
+= full =
+
+== Syntax ==
+ unitptr.full
+
+== Field Type ==
+ integer (Read-write)
+
+== Description ==
+The full field represents how hungry a player character (PC) is. This field tracks the character's hunger level and is used to determine when a character needs to eat.
+
+This field is only available for player characters (UNIT_ST_PC).
+
+== Range ==
+The typical range for hunger values depends on the game's configuration, but generally:
+* Higher values indicate more hunger
+* Lower values indicate less hunger (more full)
+* The exact scale and thresholds are game-specific
+
+== Example ==
+ dilbegin check_hunger();
+ var
+    hunger_level : integer;
+    
+ code
+ {
+    hunger_level := self.full;
+    
+    if (hunger_level > 20)
+    {
+        act("You are very hungry.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    else if (hunger_level > 10)
+    {
+        act("You are hungry.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    else if (hunger_level < 5)
+    {
+        act("You feel quite full.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    else
+    {
+        act("You are not particularly hungry.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    return;
+ } dilend
+
+ dilbegin eat_food(food : unitptr);
+ var
+    hunger_reduction : integer;
+    
+ code
+ {
+    if (food.objecttype != ITEM_FOOD)
+    {
+        act("That's not food!", A_ALWAYS, self, null, null, TO_CHAR);
+        return;
+    }
+    
+    hunger_reduction := food.value[0]; // Food value
+    self.full := self.full - hunger_reduction;
+    
+    if (self.full < 0)
+        self.full := 0;
+    
+    act("You eat $2n and feel less hungry.", A_ALWAYS, self, food, null, TO_CHAR);
+    act("$1n eats $2n.", A_ALWAYS, self, food, null, TO_REST);
+    
+    destroy(food);
+    return;
+ } dilend
+
+== Notes ==
+* This field is read-write and can be modified by DIL code
+* Only available for player characters (UNIT_ST_PC), not NPCs
+* Often used in conjunction with thirst and drunk fields for character condition tracking
+* The field is typically modified by eating food items or by natural hunger progression over time
+* Setting the value too low may cause the character to be unable to eat more
+* Setting the value too high may cause hunger-related messages or effects
+
+== See Also ==
+* [[thirst]]
+* [[drunk]]
+* [[unitptr]]
+* [[UNIT_ST_PC]]

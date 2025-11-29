@@ -1,0 +1,70 @@
+= getopponent =
+
+== Syntax ==
+ unitptr := getopponent( character : unitptr, index : integer );
+
+== Parameters ==
+ character : unitptr
+    The character whose opponent list should be searched. Must be a character unit (PC or NPC) that is currently in combat.
+ index : integer
+    The zero-based index of the opponent to retrieve. Must be >= 0.
+
+== Return Value ==
+ unitptr
+    Returns the opponent unit at the specified index if found.
+    Returns null if the index is out of range, the character is not in combat, or no opponent exists at that position.
+    Returns fail if the character parameter is null, not a character, or if parameters are invalid.
+
+== Description ==
+ The getopponent() function retrieves a specific opponent from a character's opponent list by index. In the DikuMUD combat system, a character can be fighting multiple opponents simultaneously, with one primary opponent (accessible via the .fighting field) and additional opponents in the opponent list.
+
+ This function is commonly used to:
+ * Iterate through all opponents of a character
+ * Check specific opponents in multi-opponent combat situations
+ * Display combat information involving multiple attackers
+
+ The index is zero-based, so index 0 retrieves the first opponent in the list.
+
+== Example ==
+ dilbegin list_opponents(target_name : string);
+ var
+    target : unitptr;
+    opponent : unitptr;
+    count : integer;
+    buffer : string;
+ code
+ {
+    target := findunit(self, target_name, FIND_UNIT_SURRO, null);
+    
+    if (target == null) {
+       sendtext("Target not found.&n", self);
+       quit;
+    }
+    
+    if (target.opponentcount == 0) {
+       sendtext(target.name + " is not fighting anyone.&n", self);
+       quit;
+    }
+    
+    buffer := target.name + " is fighting:&n";
+    count := 0;
+    
+    while (count < target.opponentcount) {
+       opponent := getopponent(target, count);
+       
+       if (opponent) {
+          buffer := buffer + "  " + itoa(count) + ": " + opponent.name + "&n";
+       }
+       
+       count := count + 1;
+    }
+    
+    sendtext(buffer, self);
+    quit;
+ } dilend
+
+== See Also ==
+ * [[opponent]] - Check if two units are opponents
+ * [[set_fighting]] - Set two characters fighting
+ * [[stop_fighting]] - Stop combat between characters
+ * [[unit_st_pc and unit_st_npc]] - Character fields including fighting and opponentcount

@@ -125,8 +125,7 @@ The ability_index parameter accepts any of the following constants defined in va
     pc := activator;
     thing := medium;
     secure(pc, lost_pc);
-    secure(thing, lost_pc);
-    
+    secure(thing, lost_pc);    
     if (not visible(self, pc)) {
        exec("say I only do business with people I can see.", self);
        exec("drop " + (thing.name), self);

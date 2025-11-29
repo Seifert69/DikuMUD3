@@ -1,0 +1,94 @@
+= foreach =
+
+== Syntax ==
+ foreach( unit_type_flags, variable )
+ {
+    // code block
+ }
+
+== Parameters ==
+; unit_type_flags : integer
+: Bitwise combination of unit type flags (e.g., UNIT_ST_PC, UNIT_ST_NPC, UNIT_ST_OBJ)
+; variable : unitptr
+: Variable name that will hold each unit in the iteration
+
+== Description ==
+The foreach statement provides an easy way to process all units in the local environment relative to the 'self' unit executing the foreach. The function automatically creates a list of local units and secures them during iteration.
+
+The local environment includes:
+* If 'self' is in a room: all units in that room
+* If 'self' is inside another unit: all units inside that container
+* The 'self' unit itself is always included in the iteration
+
+The foreach statement supports both break and continue statements for controlling the loop flow.
+
+== Return Value ==
+None
+
+== Example ==
+ dilbegin heal_all();
+ var
+    u : unitptr;
+    
+ code
+ {
+    foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+    {
+       if (u.hp < u.max_hp)
+       {
+          act("Warm raindrops fall upon you, cleaning your wounds.",
+              A_ALWAYS, u, null, null, TO_CHAR);
+          u.hp := u.hp + 6;
+          if (u.hp > u.max_hp)
+            u.hp := u.max_hp;
+       }
+       else
+          act("Warm raindrops fall upon you.",
+              A_ALWAYS, u, null, null, TO_CHAR);
+       pause;
+    }
+    return;
+ } dilend
+
+ dilbegin collect_items();
+ var
+    item : unitptr;
+    
+ code
+ {
+    foreach (UNIT_ST_OBJ, item)
+    {
+       if (item.objecttype == ITEM_FOOD)
+       {
+          act("$1n picks up $2n.", A_ALWAYS, self, item, null, TO_ALL);
+          exec("get " + item.name, self);
+          continue;
+       }
+       
+       if (item.objecttype == ITEM_WEAPON)
+       {
+          act("$1n examines $2n carefully.", A_ALWAYS, self, item, null, TO_ALL);
+          break;
+       }
+    }
+    return;
+ } dilend
+
+== Notes ==
+* Foreach cannot be nested - attempting to nest foreach statements will result in a fatal error
+* The units processed are relative to the 'self' unit executing the foreach
+* All units in the iteration are automatically secured to prevent modification conflicts
+* The 'self' unit is always included in the iteration if it matches the specified unit type flags
+* Common unit type flags include:
+** UNIT_ST_PC - Player characters
+** UNIT_ST_NPC - Non-player characters  
+** UNIT_ST_OBJ - Objects
+** UNIT_ST_ROOM - Rooms
+* Multiple flags can be combined using bitwise OR (|)
+
+== See Also ==
+* [[secure]]
+* [[unsecure]]
+* [[break]]
+* [[continue]]
+* [[unitptr]]

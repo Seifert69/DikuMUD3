@@ -1,0 +1,82 @@
+= hometown
+
+== Syntax
+
+  stringptr .hometown
+
+== Description
+
+The '''hometown''' field returns a string pointer to the hometown of a player character (PC). This field is read-only and can only be accessed on player character units.
+
+== Return Value
+
+Returns a string pointer containing the symbolic name of the player's hometown room. This can be used directly with functions like findroom() to locate the actual room unit.
+
+== Usage Notes
+
+* This field is only applicable to player characters (UNIT_ST_PC)
+* The field is read-only (RO) - it cannot be modified
+* The returned value is a string pointer that can be used with room-finding functions
+* Each player is assigned a hometown during character creation
+
+== Example
+
+ dilbegin recall home();
+ var
+    hour : integer;
+    i : integer;
+
+ code
+ {
+    hour := -24;
+
+    :start:
+    wait(SFB_CMD, (activator == self.outside) and command("home"));
+    block;
+    if (self.outside.position == POSITION_FIGHTING)
+    {
+       act("The $2N does not work in combat.",
+          A_ALWAYS, self.outside, self, null, TO_CHAR);
+       goto start;
+    }
+
+    if (self.equip == 0)
+    {
+       act("The $2N must be worn for it to work.",
+          A_ALWAYS, self.outside, self, null, TO_CHAR);
+       goto start;
+    }
+
+    if (activator.level > 3)
+    {
+       act("As you attempt to use $2n it suddenly dissolves.",
+          A_ALWAYS, self.outside, self, null, TO_CHAR);
+       act("$1n's $2n suddenly dissolves as $1e attempts to use it,",
+          A_ALWAYS, self.outside, self, null, TO_REST);
+       destroy(self);
+    }
+    i := hour - (mudhour + mudday * MUD_DAY);
+    if (i < 0)
+      i := -i;
+    if (i < 6)
+    {
+       act("The $2N has not charged enough power yet.",
+          A_ALWAYS, self.outside, self, null, TO_CHAR);
+       goto start;
+    }
+    hour := mudhour + mudday * MUD_DAY;
+    act("Your $2N glows and you feel transported to another place!",
+         A_ALWAYS, self.outside, self, null, TO_CHAR);
+    act("The $2N on $1n's finger glows brightly as $1e vanishes in a "+
+        "flash of light!", A_ALWAYS, self.outside, self, null, TO_REST);
+    link(self.outside, findroom(self.outside.hometown));
+    exec("look", self.outside);
+    act("$1n appears in a flash of light!",
+        A_ALWAYS, self.outside, self, null, TO_REST);
+    goto start;
+ } dilend
+
+== See Also
+
+* [[findroom]] - Find a room by symbolic name
+* [[unit_st_pc]] - Player character unit fields

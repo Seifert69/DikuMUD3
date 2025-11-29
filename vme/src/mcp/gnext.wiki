@@ -1,0 +1,55 @@
+= gnext =
+
+ unitptr gnext
+
+== Description ==
+Returns the next unit in the global list of units. This is a read-only field of a unitptr.
+
+== Return Value ==
+Returns a unitptr pointing to the next unit in the global list, or null if there is no next unit.
+
+== Usage ==
+This field is accessed using dot notation on a unitptr variable:
+ unitptr next_unit;
+ next_unit := current_unit.gnext;
+
+== Example ==
+ dilbegin look_signature();
+ var
+   pc:unitptr;
+ code
+ {
+   heartbeat:=PULSE_SEC*3;
+ :start:
+   wait (SFB_CMD,(
+   (command ("look")) and
+   (("signature"==argument ) or ("signatures" == argument))
+   ));
+   block;
+   pc:=ghead();
+   sendtext ("The following book signers are on line.<br/><br/>",activator);
+
+   while (pc.type==UNIT_ST_PC)
+   {
+     if (((isset (pc.pcflags,PC_PK_RELAXED)) or
+           (dilfind ("no_kill@function",pc))) and
+         (pc.level<200) and
+         (visible (activator,pc)))
+       sendtext(pc.name+" "+pc.title+"<br/>",activator);
+     pc:=pc.gnext;
+   }
+
+   goto start;
+ } dilend
+
+== Notes ==
+* The global list contains all units in the game
+* This field is read-only (RO)
+* Returns null when called on the last unit in the global list
+* Commonly used for iterating through all units in the game
+
+== See Also ==
+* [[ghead]] - Get the first unit in the global list
+* [[gprevious]] - Get the previous unit in the global list
+* [[next]] - Get the next unit in the local list
+* [[unitptr]] - Unit pointer documentation

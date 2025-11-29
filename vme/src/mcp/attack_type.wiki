@@ -35,8 +35,7 @@ Returns or sets the non-weapon attack type of a character unit. This property de
  {
   :start:
   attack_list := {"fist", "kick", "knee", "elbow"};
-  type_list := {WPN_FIST, WPN_KICK, WPN_KNEE, WPN_ELBOW};
-  
+  type_list := {WPN_FIST, WPN_KICK, WPN_KNEE, WPN_ELBOW};  
   i := 0;
   found := FALSE;
   while (i < length(attack_list))
@@ -48,7 +47,6 @@ Returns or sets the non-weapon attack type of a character unit. This property de
     }
     i := i + 1;
   }
-  
   if (found == TRUE)
   {
     self.attack_type := type_list.[i];

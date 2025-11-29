@@ -1,0 +1,111 @@
+= if
+
+== Syntax
+
+  if (condition)
+  {
+     // code to execute if condition is true
+  }
+  else
+  {
+     // code to execute if condition is false
+  }
+
+== Description
+
+The '''if''' statement is a conditional control structure similar to C. It evaluates a condition and executes different code blocks based on whether the condition is true or false.
+
+== Condition Evaluation
+
+* Integers: Considered TRUE if non-zero, FALSE if zero
+* Non-integer types: Considered TRUE if not null, FALSE if null
+* Any valid expression can be used as the condition
+
+== Usage Notes
+
+* The else clause is optional
+* Multiple if-else statements can be nested
+* Curly braces are required for code blocks
+* The condition can be any valid DIL expression
+
+== Examples
+
+=== Basic Health Check
+
+ dilbegin foo();
+ code
+ {
+   if (self.hp>10)
+   {
+     exec("say Hehe!",self);
+   }
+   else
+   {
+     exec("say ouch!", self);
+   }
+ } dilend
+
+=== Simple Condition Without Else
+
+ dilbegin foo();
+ code
+ {
+   if (self.loaded>10)
+   {
+     exec("say its getting crowded!",self);
+   }
+ } dilend
+
+=== Single Line Without Braces
+
+ dilbegin foo();
+ code
+ {
+   if (self.loaded<10)
+     exec("say plenty of room!",self);
+ } dilend
+
+=== Guard Routine with Multiple Conditions
+
+ dilbegin guardroutine(guardloc : string, dayguard : integer);
+ external
+    DailyRoutine@quests(sl : stringlist, arg2 : string);
+ var
+    i  : integer;
+    sch : intlist;
+ code
+ {
+    if (dayguard)
+       sch := {5, 18};  // Wake up at 5, go back at 6pm
+    else
+       sch := {17,6};   // Wake up at 17, go home at 6
+
+ :start:
+    heartbeat := WAIT_SEC*5;
+    pause;
+    if (mudhour == sch.[0])
+    {
+       DailyRoutine@quests({
+          "wake", 
+          "::descr::A $1N is here heading to work.",
+          "yawn",
+          "say Time to get going guys!", 
+          "::walkto::$2t",
+          "::descr::A $1N is here guarding the gate."
+       }, guardloc);
+    }
+
+    if(mudhour == sch.[1])
+    {
+       i := rnd(1,3);
+       if (i == 1) goto bar1;
+       if (i == 2) goto bar2;
+       if (i == 3) goto bar3;
+       else goto start;
+    }
+ } dilend
+
+== See Also
+
+* [[else]] - Optional else clause for if statements
+* [[goto]] - Unconditional jump statement

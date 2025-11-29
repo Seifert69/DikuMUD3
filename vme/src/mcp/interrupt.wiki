@@ -1,0 +1,73 @@
+= interrupt =
+
+; interrupt : integer ( flags : integer, dilexp, label )
+: Sets up an interrupt handler for specific message classes with conditional execution and label jumping.
+
+== Description ==
+
+The '''interrupt''' function creates an interrupt handler that monitors for messages matching specified flag classes. When a matching message occurs, the DIL expression is evaluated. If the expression evaluates to true, execution jumps to the specified label. If false, the next interrupt (if any) is checked.
+
+Interrupts are saved and restored when the '''recall''' keyword is used in the DIL program. The function returns an integer identifier that can be used with the '''clear()''' function to remove the interrupt.
+
+== Parameters ==
+
+; flags : integer
+: Bitwise combination of message class flags (SFB_*) to monitor. Common flags include:
+:* SFB_COM - Combat messages
+:* SFB_MSG - User messages 
+:* SFB_CMD - Command messages
+:* SFB_TICK - Timer messages
+:* SFB_DEAD - Death messages
+: Multiple flags can be combined using the bitwise OR operator (|).
+
+; dilexp : expression
+: DIL expression that evaluates when a matching message is received. If true, execution jumps to the label.
+
+; label : label
+: Target label where execution continues when dilexp evaluates to true.
+
+== Return Value ==
+
+; integer
+: Returns an interrupt identifier that can be used with '''clear()''' to remove the interrupt.
+
+== Examples ==
+
+=== Basic Combat Interrupt ===
+ interrupt(SFB_COM, activator == self, broken);
+ 
+This sets up an interrupt that triggers on combat messages where the activator is the same as the program owner, jumping to the :broken: label.
+
+=== Message Handling ===
+ interrupt(SFB_MSG, argument == "cured", the_end);
+ 
+This monitors for user messages with the argument "cured" and jumps to :the_end: when received.
+
+=== Clearable Interrupt ===
+ i1 := interrupt(SFB_MSG, argument == "relief", relief);
+ 
+ :relief:
+ /* Clear interrupt after one-time use */
+ clear(i1);
+ pause;
+ goto loop;
+
+This shows how to store the interrupt ID and clear it after use.
+
+== Usage Notes ==
+
+* Interrupts are checked in the order they are defined
+* Multiple interrupts can be active simultaneously
+* Use '''clear()''' with the returned ID to remove interrupts
+* Interrupts with '''recall''' keyword persist across save/load cycles
+* The '''aware''' keyword may be needed to receive messages from the program owner
+
+== See Also ==
+
+; clear : Removes an interrupt
+; wait : Waits for specific message classes
+; SFB_COM : Combat message flag
+; SFB_MSG : User message flag  
+; SFB_CMD : Command message flag
+; SFB_TICK : Timer message flag
+; SFB_DEAD : Death message flag

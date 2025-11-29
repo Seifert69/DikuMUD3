@@ -45,8 +45,6 @@ The ability_index parameter accepts any of the ABIL_* constants defined in value
 | ABIL_DIV || Divine training level requirement
 |-
 | ABIL_HP || Hit Points training level requirement
-|-
-| ABIL_STRUCT || Structure training level requirement
 |}
 
 == Examples ==

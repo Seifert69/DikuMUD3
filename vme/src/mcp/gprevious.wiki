@@ -1,0 +1,67 @@
+= gprevious =
+
+ unitptr gprevious
+
+== Description ==
+Returns the previous unit in the global list of units. This is a read-only field of a unitptr.
+
+== Return Value ==
+Returns a unitptr pointing to the previous unit in the global list, or null if there is no previous unit.
+
+== Usage ==
+This field is accessed using dot notation on a unitptr variable:
+ unitptr prev_unit;
+ prev_unit := current_unit.gprevious;
+
+== Example ==
+ dilbegin color_bc();
+ var
+   pc     :unitptr;
+   newarg :string;
+ code
+ {
+   heartbeat := PULSE_SEC;
+ 
+ :start:
+   wait(SFB_CMD,((command("cb")) and (activator.level>=242) and (activator==self.outside)));
+   block;
+   pc:=activator;
+   if (("\\" in argument) and (activator.level<253))
+   {
+     act("You may not use newline characters!",A_ALWAYS,pc,null,null,TO_CHAR);
+     log(pc.name + " attempted to use newline characters in a "
+         +"broadcast below level 253!");
+     goto start;
+   }
+   if ("\\" in argument)
+   {
+     act("You may not change the background color, sorry.",A_ALWAYS,pc,null,null,TO_CHAR);
+     goto start;
+   }
+   newarg := argument;
+   newarg := replace("&lt;","<",newarg);
+   newarg := replace("&gt;",">",newarg);
+
+   while (pc.gprevious.type==UNIT_ST_PC)
+     pc := pc.gprevious;
+
+   while (pc.type==UNIT_ST_PC)
+   {
+     sendtext(newarg,pc);
+     pc:=pc.gnext;
+   }
+   goto start;
+ } dilend
+
+== Notes ==
+* The global list contains all units in the game
+* This field is read-only (RO)
+* Returns null when called on the first unit in the global list
+* Commonly used for iterating backwards through all units in the game
+* Often used to find the first unit in a specific category before iterating forward
+
+== See Also ==
+* [[ghead]] - Get the first unit in the global list
+* [[gnext]] - Get the next unit in the global list
+* [[previous]] - Get the previous unit in the local list
+* [[unitptr]] - Unit pointer documentation

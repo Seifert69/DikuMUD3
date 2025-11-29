@@ -1,0 +1,28 @@
+= global_head =
+
+ unitptr global_head ( )
+
+== Description ==
+Returns the first unit in the global unit list, which will be the last character to have logged on.
+
+== Return Value ==
+Returns a unitptr pointing to the first unit in the global list.
+
+== Notes ==
+This function is currently marked as obsolete and not used anywhere in the existing DIL codebase. It was part of a set of head-related functions that were considered obsolete until needed and tested.
+
+== Example ==
+ dilbegin example();
+ code
+    // This function is not used in any current DIL programs
+    // head := global_head();  -- NOT USED ANYWHERE
+ quit;
+ dilend
+
+== See Also ==
+* [[ghead]] - Similar function for global head
+* [[obj_head]] - Object head function
+* [[npc_head]] - NPC head function
+* [[room_head]] - Room head function
+* [[zone_head]] - Zone head function
+* [[command_head]] - Command head function

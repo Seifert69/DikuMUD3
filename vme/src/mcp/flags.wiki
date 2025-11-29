@@ -1,0 +1,55 @@
+= flags =
+
+== Syntax ==
+ integer unitptr.flags
+
+== Access ==
+Read/Write (RW)
+
+== Description ==
+This field contains bits that specify different properties of a unit. The flags are defined as UNIT_FL_* constants in values.h and/or vme.h.
+
+The flags field is a bit vector where each bit represents a specific property or state of the unit. You can use the isset() and unset() functions to test and modify individual flags.
+
+== Common Flag Operations ===
+=== Testing Flags ===
+ if (isset(unit.flags, UNIT_FL_BURIED))
+ {
+    // Unit is buried
+ }
+
+=== Setting Flags ===
+ unit.flags := unit.flags | UNIT_FL_SOME_FLAG;
+
+=== Clearing Flags ===
+ unit.flags := unit.flags & ~UNIT_FL_SOME_FLAG;
+
+== Example ==
+=== Example 1: Check if Unit is Buried ===
+ if (not isset(self.flags, UNIT_FL_BURIED))
+ {
+    act("A "+self.name+" rots away.", A_SOMEONE, self, null, null, TO_ROOM);
+    destroy(self);
+ }
+
+=== Example 2: Toggle Visibility ===
+ // Make unit invisible
+ unit.flags := unit.flags | UNIT_FL_INVISIBLE;
+
+ // Make unit visible again  
+ unit.flags := unit.flags & ~UNIT_FL_INVISIBLE;
+
+== Flag Types ==
+The specific flag constants (UNIT_FL_*) are defined in the game's values.h and/or vme.h files. Common flags include:
+
+* UNIT_FL_BURIED - Unit is buried
+* UNIT_FL_INVISIBLE - Unit is invisible
+* UNIT_FL_NO_BURY - Cannot be buried in this location
+* And many others depending on the game implementation
+
+== See Also ==
+* [[Manual:DIL Manual/isset()|isset()]] - Test if a flag is set
+* [[Manual:DIL Manual/unset()|unset()]] - Clear a flag
+* [[Manual:DIL Manual/charflags|charflags]] - Character-specific flags
+* [[Manual:DIL Manual/roomflags|roomflags]] - Room-specific flags
+* [[Manual:DIL Manual/objectflags|objectflags]] - Object-specific flags

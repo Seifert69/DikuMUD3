@@ -1,0 +1,125 @@
+= getaffects =
+
+== Syntax ==
+ stringlist getaffects( unit : unitptr )
+
+== Parameters ==
+; unit : unitptr
+: The unit to scan for affects
+
+== Return Value ==
+Returns a stringlist containing information about all affects on the unit. For each affect, two strings are added to the stringlist:
+* First string: Description of what gets modified
+* Second string: Comma-separated data values (data0,data1,data2,duration)
+
+== Description ==
+The getaffects() function retrieves all magical and special affects currently applied to a unit. This is useful for identifying what spells, enchantments, or special properties are affecting a character or object.
+
+Each affect entry in the returned stringlist follows the format:
+{"Description", "data0,data1,data2,duration"}
+
+The data values and their meanings depend on the type of affect:
+* Ability adjustments: "ability_index,modifier,0,duration"
+* Spell adjustments: "spell_index,modifier,0,duration"  
+* Light modifications: "skill_index,modifier,0,duration"
+* Character flag modifications: "skill_index,modifier,0,duration"
+* Unit flag modifications: "skill_index,modifier,0,duration"
+* Object flag modifications: "skill_index,modifier,0,duration"
+* Skill adjustments: "skill_index,modifier,0,duration"
+* Weapon adjustments: "weapon_index,modifier,0,duration"
+* Natural armor modifications: "skill_index,modifier,0,duration"
+* Speed modifications: "0,speed_modifier,0,duration"
+
+== Example ==
+ dilbegin check_affects();
+ var
+    affects : stringlist;
+    affect_data : stringlist;
+    i : integer;
+    n : integer;
+    
+ code
+ {
+    affects := getaffects(self);
+    n := length(affects);
+    
+    if (n == 0)
+    {
+        act("You have no special affects.", A_ALWAYS, self, null, null, TO_CHAR);
+        return;
+    }
+    
+    act("You have the following affects:", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    i := 0;
+    while (i < n)
+    {
+        affect_data := split(affects.[i], ",");
+        
+        if (affect_data.[0] == "Ability Adjustment")
+        {
+            act("  " + affects.[i] + " (Ability bonus)", A_ALWAYS, self, null, null, TO_CHAR);
+        }
+        else if (affect_data.[0] == "Weapon adjustment")
+        {
+            act("  " + affects.[i] + " (Weapon bonus)", A_ALWAYS, self, null, null, TO_CHAR);
+        }
+        else
+        {
+            act("  " + affects.[i], A_ALWAYS, self, null, null, TO_CHAR);
+        }
+        
+        i := i + 1;
+    }
+    return;
+ } dilend
+
+ dilbegin identify_item(item : unitptr);
+ var
+    affects : stringlist;
+    affect_data : stringlist;
+    i : integer;
+    n : integer;
+    
+ code
+ {
+    affects := getaffects(item);
+    n := length(affects);
+    
+    if (n > 0)
+    {
+        act("This item has the following magical properties:", A_ALWAYS, self, null, null, TO_CHAR);
+        
+        i := 0;
+        while (i < n)
+        {
+            affect_data := split(affects.[i], ",");
+            
+            if (affect_data.[0] == "Ability Adjustment")
+            {
+                act("  Ability bonus: " + affect_data.[2] + " " + affect_data.[3], A_ALWAYS, self, null, null, TO_CHAR);
+            }
+            else if (affect_data.[0] == "Weapon adjustment")
+            {
+                act("  Weapon bonus: " + affect_data.[2] + " " + affect_data.[3], A_ALWAYS, self, null, null, TO_CHAR);
+            }
+            
+            i := i + 1;
+        }
+    }
+    return;
+ } dilend
+
+== Notes ==
+* Use the split() function to separate the numerical values in the data string
+* Duration of -1 typically indicates a permanent affect
+* The function returns an empty stringlist if the unit has no affects
+* This function is commonly used in identify spells and item inspection commands
+* The specific meaning of data values depends on the affect type
+
+== See Also ==
+* [[isaff]]
+* [[addaff]]
+* [[subaff]]
+* [[split]]
+* [[stringlist]]

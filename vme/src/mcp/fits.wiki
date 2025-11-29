@@ -1,0 +1,49 @@
+= fits =
+
+== Syntax ==
+ string fits( char : unitptr, obj : unitptr, pos : integer )
+
+== Parameters ==
+; char : unitptr
+: Character which we want to test if obj can be fitted upon
+; obj : unitptr
+: The object we want to see if fits char
+; pos : integer
+: -1 or WEAR_XXX position where object would be worn
+
+== Return Value ==
+Returns empty string if object fits, or a textual description of the size problem if it doesn't fit.
+
+== Description ==
+This function tests if "obj" can be worn by "char" in position "pos". If pos is -1, then fits automatically figures out the default worn position for "obj".
+
+The function is useful for checking whether an armor or clothing item will fit a character before attempting to equip it or sell it to them.
+
+== Examples ==
+=== Example 1: Basic Fit Check ===
+ s := fits(self, obj, -1);
+ if (s != "")
+   exec("say Don't buy it, its "+s, self);
+
+=== Example 2: Check Specific Position ===
+ // Check if helmet fits
+ result := fits(player, helmet, WEAR_HEAD);
+ if (result == "")
+ {
+    // Helmet fits, can proceed
+ }
+ else
+ {
+    // Helmet doesn't fit, explain why
+    exec("say This helmet won't fit you: " + result, self);
+ }
+
+== Return Values ==
+The function returns:
+* Empty string ("") if the object fits the character
+* Textual description of why it doesn't fit (e.g., "too small", "too large")
+
+== See Also ==
+* [[Manual:DIL Manual/equipment()|equipment()]] - Get equipment in specific position
+* [[Manual:DIL Manual/addequip()|addequip()]] - Add equipment to character
+* [[Manual:DIL Manual/unequip()|unequip()]] - Remove equipment from character

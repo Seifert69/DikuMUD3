@@ -1,0 +1,70 @@
+= ghead =
+
+== Syntax ==
+ unitptr := ghead();
+
+== Return Value ==
+ unitptr
+    Returns the first unit in the global unit list. According to the documentation, this will be the last character to have logged on.
+
+== Description ==
+ The ghead() function returns the first unit in the global unit list, providing access to all units currently active in the game. The global list contains all units (players, NPCs, objects, rooms) in the order they were created or logged in.
+
+ This function is commonly used to iterate through all units in the game, particularly for:
+ * Finding all online players
+ * Performing global operations on all units
+ * Checking who is currently logged in
+ * Global cleanup or maintenance tasks
+
+ The returned unit can be used with the .gnext field to traverse through the entire global list.
+
+== Example ==
+ dilbegin list_online_players();
+ var
+    unit : unitptr;
+    count : integer;
+ code
+ {
+    sendtext("Currently online players:&n", self);
+    
+    unit := ghead();
+    count := 0;
+    
+    while (unit != null) {
+       if (unit.type == UNIT_ST_PC) {
+          if (visible(self, unit)) {
+             sendtext("  " + unit.name + " (" + unit.title + ")&n", self);
+             count := count + 1;
+          }
+       }
+       unit := unit.gnext;
+    }
+    
+    sendtext("&nTotal visible players: " + itoa(count) + "&n", self);
+    quit;
+ } dilend
+
+ dilbegin global_cleanup();
+ var
+    unit : unitptr;
+ code
+ {
+    unit := ghead();
+    
+    while (unit != null) {
+       // Perform cleanup operations on all units
+       if (unit.type == UNIT_ST_OBJ) {
+          // Clean up objects if needed
+       }
+       
+       unit := unit.gnext;
+    }
+    
+    quit;
+ } dilend
+
+== See Also ==
+ * [[unitptr]] - Unit pointer type and fields
+ * [[gnext]] - Next unit in global list
+ * [[gprevious]] - Previous unit in global list
+ * [[visible]] - Check if unit is visible to another

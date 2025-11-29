@@ -1,0 +1,72 @@
+= islight =
+
+; islight : integer ( u : unitptr )
+: Tests whether a unit is a light source.
+
+== Description ==
+
+The '''islight''' function checks if the specified unit is a light source. This typically includes items like torches, lanterns, and other objects that can illuminate rooms. The function returns TRUE (1) if the unit is a light source, or FALSE (0) if not.
+
+== Parameters ==
+
+; u : unitptr
+: The unit to be checked. Can be any unit type, but typically used with objects.
+
+== Return Value ==
+
+; integer
+: Returns TRUE (1) if the unit is a light source, or FALSE (0) if it is not.
+
+== Examples ==
+
+=== Basic Light Check ===
+ if (islight(self))
+   sendtext("This item provides light.", self);
+ 
+This checks if the current unit is a light source and sends a message if so.
+
+=== Room Lighting Check ===
+ if (not islight(self.outside))
+ {
+    act("It is pitch black.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+ }
+ 
+This example from a directions DIL checks if the room (self.outside) has light, and if not, informs the player that it's pitch black.
+
+=== Light Source Inventory Check ===
+ foreach (UNIT_ST_OBJ, i)
+ {
+    if (islight(i))
+    {
+       act("$1n glows with light.", A_SOMEONE, i, null, null, TO_ROOM);
+    }
+ }
+ 
+This iterates through all objects and identifies which ones are light sources.
+
+== Usage Notes ==
+
+* Light sources are typically objects with ITEM_LIGHT object type
+* The function checks the unit's internal light-emitting properties
+* Use '''setbright()''' to modify how much light a unit emits
+* The '''bright''' field of a unit indicates how much light it produces
+* The '''light''' field shows how much light is currently inside a unit
+* Light sources are essential for visibility in dark rooms
+
+== Related Fields ==
+
+; bright : integer (RO)
+: How much the unit lights up. Can be set with '''setbright()'''
+
+; light : integer (RO)  
+: How much light is inside the unit
+
+; illum : integer (RO)
+: How much light units inside a transparent unit create
+
+== See Also ==
+
+; setbright : Sets the brightness of a unit
+; objecttype : The type of an object (ITEM_* constants)
+; bright : Field showing how much light a unit emits

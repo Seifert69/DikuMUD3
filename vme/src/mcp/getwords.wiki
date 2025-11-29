@@ -1,0 +1,66 @@
+= getwords =
+
+== Syntax ==
+ stringlist := getwords( input_string : string );
+
+== Parameters ==
+ input_string : string
+    A string containing zero or more words separated by spaces.
+
+== Return Value ==
+ stringlist
+    Returns a stringlist where each element is a word from the input string.
+    Returns fail if input string is null or invalid.
+
+== Description ==
+ The getwords() function splits a string into individual words using spaces as delimiters and returns them as a stringlist. Each word becomes a separate element in the resulting stringlist.
+
+ Unlike getword() which extracts one word and modifies the original string, getwords() returns all words at once without modifying the original string.
+
+ The function handles multiple consecutive spaces by treating them as single delimiters (empty strings are not added to the result).
+
+== Example ==
+ dilbegin parse_sentence(sentence : string);
+ var
+    words : stringlist;
+    i : integer;
+ code
+ {
+    words := getwords(sentence);
+    
+    sendtext("Sentence has " + itoa(length(words)) + " words:&n", self);
+    
+    i := 0;
+    while (i < length(words)) {
+       sendtext("  Word " + itoa(i) + ": " + words.[i] + "&n", self);
+       i := i + 1;
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin check_keywords(input : string);
+ var
+    words : stringlist;
+    keywords : stringlist;
+ code
+ {
+    words := getwords(input);
+    keywords := {"sword", "shield", "armor", "potion"};
+    
+    if (words.[0] in keywords) {
+       sendtext("First word is a keyword: " + words.[0] + "&n", self);
+    }
+    
+    if (words.[1] in keywords) {
+       sendtext("Second word is a keyword: " + words.[1] + "&n", self);
+    }
+    
+    quit;
+ } dilend
+
+== See Also ==
+ * [[getword]] - Get first word and remove from string
+ * [[stringlist]] - String list type and operations
+ * [[length]] - Get length of string or stringlist
+ * [[addstring]] - Add string to stringlist

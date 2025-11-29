@@ -1,0 +1,92 @@
+= getinteger =
+
+== Syntax ==
+ integer := getinteger( index : integer, unit : unitptr, value : integer );
+
+== Parameters ==
+ index : integer
+    The type of value to retrieve. See the table below for valid indices.
+ unit : unitptr
+    The unit to operate on (required for some indices, can be null for others).
+ value : integer
+    An integer value used by some index types (e.g., level for XP calculations).
+
+== Return Value ==
+ integer
+    Returns the requested integer value, or fail if parameters are invalid or index is unsupported.
+
+== Description ==
+ The getinteger() function is a versatile utility that retrieves various game system values based on the index parameter. It can calculate character statistics, experience requirements, check player status, and access real-world time information.
+
+=== Supported Indices ===
+
+{| class="wikitable"
+! Index Constant !! Description !! Unit Required !! Value Parameter
+|-
+| DIL_GINT_MANAREG || Mana regeneration rate || Yes (character) || Ignored
+|-
+| DIL_GINT_HITREG || Hit point regeneration rate || Yes (character) || Ignored
+|-
+| DIL_GINT_MOVEREG || Movement point regeneration rate || Yes (character) || Ignored
+|-
+| DIL_GINT_EFFDEX || Effective dexterity value || Yes (character) || Ignored
+|-
+| DIL_GINT_REQXP || Experience required for specified level || No || Level number
+|-
+| DIL_GINT_LEVELXP || Experience at specified level || No || Level number
+|-
+| DIL_GINT_DESCRIPTOR || Check if player has active descriptor || Yes (player) || Ignored
+|-
+| DIL_GINT_CRIMENO || Generate new crime serial number || No || Ignored
+|-
+| DIL_GINT_BONUS_A || Get bonus map A value || No || Index
+|-
+| DIL_GINT_BONUS_B || Get bonus map B value || No || Index
+|-
+| DIL_GINT_REALYEAR || Current real-world year || No || Ignored
+|-
+| DIL_GINT_REALMONTH || Current real-world month (1-12) || No || Ignored
+|-
+| DIL_GINT_REALDAY || Current real-world day of month || No || Ignored
+|}
+
+== Example ==
+ dilbegin check_character_stats(pc_name : string);
+ var
+    pc : unitptr;
+    mana_reg : integer;
+    hp_reg : integer;
+    move_reg : integer;
+    eff_dex : integer;
+ code
+ {
+    pc := findunit(self, pc_name, FIND_UNIT_SURRO, null);
+    
+    if (pc == null) {
+       sendtext("Player not found.&n", self);
+       quit;
+    }
+    
+    if (pc.type != UNIT_ST_PC) {
+       sendtext("Target is not a player.&n", self);
+       quit;
+    }
+    
+    mana_reg := getinteger(DIL_GINT_MANAREG, pc, 0);
+    hp_reg := getinteger(DIL_GINT_HITREG, pc, 0);
+    move_reg := getinteger(DIL_GINT_MOVEREG, pc, 0);
+    eff_dex := getinteger(DIL_GINT_EFFDEX, pc, 0);
+    
+    sendtext("Regeneration rates for " + pc.name + ":&n", self);
+    sendtext("  Mana: " + itoa(mana_reg) + "&n", self);
+    sendtext("  HP: " + itoa(hp_reg) + "&n", self);
+    sendtext("  Move: " + itoa(move_reg) + "&n", self);
+    sendtext("  Effective DEX: " + itoa(eff_dex) + "&n", self);
+    
+    quit;
+ } dilend
+
+== See Also ==
+ * [[experience]] - Modify player experience
+ * [[realtime]] - Get current Unix timestamp
+ * [[mud(day,month,..)]] - MUD time variables

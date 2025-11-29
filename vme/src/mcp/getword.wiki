@@ -1,0 +1,67 @@
+= getword =
+
+== Syntax ==
+ string := getword( var input_string : string );
+
+== Parameters ==
+ input_string : string
+    A string containing one or more words separated by spaces. This parameter is passed by reference and will be modified.
+
+== Return Value ==
+ string
+    Returns the first word from the input string.
+    Returns fail if the input string is null or invalid.
+
+== Description ==
+ The getword() function extracts the first word from a string and removes it from the original string. The function treats spaces as word separators and skips any leading spaces before finding the first word.
+
+ Important: The input_string parameter is modified by this function - the returned word is removed from the original string. This makes getword() useful for parsing command arguments sequentially.
+
+== Example ==
+ dilbegin parse_command(cmd_line : string);
+ var
+    first_word : string;
+    remaining : string;
+ code
+ {
+    first_word := getword(cmd_line);
+    remaining := cmd_line; // cmd_line now has the first word removed
+    
+    sendtext("First word: " + first_word + "&n", self);
+    sendtext("Remaining: " + remaining + "&n", self);
+    
+    // Example with "cast fireball monster"
+    // first_word becomes "cast"
+    // remaining becomes "fireball monster"
+    
+    quit;
+ } dilend
+
+ dilbegin process_spell_args();
+ var
+    spell_name : string;
+    target_name : string;
+ code
+ {
+    spell_name := getword(argument);
+    target_name := getword(argument);
+    
+    if (spell_name == "") {
+       sendtext("Cast what?&n", self);
+       quit;
+    }
+    
+    if (target_name == "") {
+       sendtext("Cast " + spell_name + " on whom?&n", self);
+       quit;
+    }
+    
+    sendtext("Casting " + spell_name + " on " + target_name + "&n", self);
+    quit;
+ } dilend
+
+== See Also ==
+ * [[getwords]] - Get all words as a stringlist
+ * [[argument]] - Command argument string
+ * [[left]] - Get left portion of string
+ * [[right]] - Get right portion of string

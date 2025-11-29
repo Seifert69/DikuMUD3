@@ -1,0 +1,68 @@
+= idx
+
+== Syntax
+
+  integer .idx
+
+== Description
+
+The '''idx''' field returns a constant integer ID for a unit. For players, this ID is persistent across reboots. For non-player characters (NPCs) and objects, this is the memory pointer converted to an integer.
+
+== Return Value
+
+Returns an integer representing the unique identifier for the unit.
+
+== Usage Notes
+
+* For players: Returns a persistent ID that remains the same across reboots
+* For NPCs and objects: Returns the memory pointer converted to integer (changes between reboots)
+* This field is read-only (RO)
+* Useful for distinguishing between multiple instances of the same unit type
+* Commonly used with findsymbolic() to locate specific units later
+* Do not rely on idx for persistence across reboots for non-player units
+
+== Examples
+
+=== Identifying Specific Units
+
+ dilbegin track_guard();
+ var
+    guard_symname : string;
+    guard_idx : integer;
+    target : unitptr;
+ code
+ {
+    // Get reference to a specific guard
+    target := findsymbolic("cityguard@midgaard");
+    if (target)
+    {
+       guard_symname := target.symname;
+       guard_idx := target.idx;
+       
+       // Later, find the exact same guard
+       target := findsymbolic(guard_symname, guard_idx);
+       if (target)
+       {
+          act("Found the same guard again!", A_ALWAYS, self, null, null, TO_CHAR);
+       }
+    }
+ } dilend
+
+=== Justice System Example
+
+ id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
+
+=== Bounty Hunter Pattern
+
+ // Presume target is pointing to a particular cityguard
+ s := target.symname; // Save the symbolic name
+ i := target.idx;
+ // Do stuff. Wake up 9 hours later. Find the target again like this:
+ target := findsymbolic(s, i);
+ // and if the guard is still alive you'll get your pointer back.
+
+== See Also
+
+* [[findsymbolic]] - Find units by symbolic name and optional idx
+* [[symname]] - Get the symbolic name of a unit
+* [[unitptr]] - General unit pointer fields

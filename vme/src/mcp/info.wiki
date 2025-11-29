@@ -1,0 +1,104 @@
+= info =
+
+; info : extraptr (RW)
+: The info structure of a PC. This field provides access to a player character's personal information storage, which can contain custom data fields such as email addresses, maiden names, and other player-specific information.
+
+== Description ==
+
+The '''info''' field is accessed on player character units and returns an extraptr to the player's information structure. This structure is used to store persistent player data that is not part of the core character statistics but is needed for game management and player identification.
+
+The info structure is implemented as a linked list of extra descriptions, where each entry can have:
+* An array of names (stringlist)
+* An array of values (integerlist) 
+* A description string
+
+== Usage ==
+
+The info field can only be accessed on player characters (PCs). Attempting to access it on NPCs or other unit types will result in a failure.
+
+=== Basic Access ===
+
+ dilbegin example();
+    var
+       pc : unitptr;
+       info_ptr : extraptr;
+    code
+    {
+       pc := activator;
+       if (pc.type != UNIT_ST_PC) goto lost_pc;
+       
+       info_ptr := pc.info;
+       if (info_ptr != null)
+       {
+          // Access player info
+       }
+    :lost_pc:
+    } dilend
+
+=== Common Data Fields ===
+
+From the example implementation, common fields stored in player info include:
+* '''$email''' - Player's email address
+* '''$maiden''' - Player's maiden name (for password recovery)
+
+=== Searching for Specific Fields ===
+
+The '''in''' operator is commonly used to search for specific fields in the info structure:
+
+ dilbegin get_email();
+    var
+       pc : unitptr;
+       email_expd : extraptr;
+       email_str : string;
+    code
+    {
+       pc := activator;
+       email_expd := "$email" in pc.info;
+       if (email_expd != null)
+       {
+          email_str := email_expd.descr;
+          act("Email: " + email_str, A_ALWAYS, pc, null, null, TO_CHAR);
+       }
+       else
+       {
+          act("No email address set.", A_ALWAYS, pc, null, null, TO_CHAR);
+       }
+    } dilend
+
+=== Adding/Modifying Info Fields ===
+
+ dilbegin set_email();
+    var
+       pc : unitptr;
+       new_email : string;
+    code
+    {
+       pc := activator;
+       new_email := argument;
+       
+       // Remove existing email entry
+       subextra(pc.info, "$email");
+       
+       // Add new email entry
+       addextra(pc.info, {"$email"}, new_email);
+       
+       act("Email address updated.", A_ALWAYS, pc, null, null, TO_CHAR);
+    } dilend
+
+== Return Value ==
+
+Returns an extraptr to the player's info structure. If the unit is not a player character, the operation fails.
+
+== See Also ==
+
+* [[extraptr]] - Information about the extraptr data structure
+* [[addextra]] - Function to add entries to extra descriptions
+* [[subextra]] - Function to remove entries from extra descriptions
+* [[unitptr]] - Information about unit pointers and their fields
+
+== Notes ==
+
+* The info field is read-write (RW)
+* Only player characters have an info structure
+* The structure is persistent and saved with the player data
+* Custom field names should be prefixed with a special character (like $) to avoid conflicts

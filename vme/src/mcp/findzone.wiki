@@ -1,0 +1,63 @@
+= findzone =
+
+== Syntax ==
+ zoneptr findzone( s : string )
+
+== Parameters ==
+; s : string
+: The name of the zone to find.
+
+== Return Value ==
+Returns a zoneptr to the zone, or null if the zone is not found.
+
+== Description ==
+This function finds and returns a zone pointer based on the zone name. The zone name should be the name of the zone without any file extension or path.
+
+If the zone is not found, the function returns null.
+
+== Example ==
+=== Example 1: Find Zone by Name ===
+ z := findzone("midgaard");
+
+=== Example 2: Find Current Zone ===
+ // Get the current room's zone
+ u := self.outside;
+ while (u.type != UNIT_ST_ROOM)
+     u := u.outside;
+ z := findzone(u.zone);
+
+=== Example 3: Complete Zone Reset Command ===
+ dilbegin cmd_reset(arg : string);
+ var
+    z : zoneptr;
+    u : unitptr;
+ code
+ {
+    if (arg == "")
+    {
+       u := self.outside;
+       while (u.type != UNIT_ST_ROOM)
+           u := u.outside;
+       z := findzone(u.zone);
+    }
+    else
+    {
+       z := findzone(arg);
+    }
+
+    if (z == null)
+    {
+        sendtext("Could not find a zone named "+ arg + "<br/>", self);
+        quit;
+    }
+
+    sendtext("Resetting zone "+ z.name + "<br/>", self);
+    zonereset(z);
+
+    quit;
+ } dilend
+
+== See Also ==
+* [[Manual:DIL Manual/zoneptr|zoneptr]] - Zone pointer type and fields
+* [[Manual:DIL Manual/zhead()|zhead()]] - Get the first zone in the global list
+* [[Manual:DIL Manual/zonereset()|zonereset()]] - Reset a zone

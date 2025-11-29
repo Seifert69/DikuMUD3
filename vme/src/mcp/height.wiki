@@ -1,0 +1,164 @@
+= height =
+
+ integer height
+
+== Description ==
+The height of a PC/NPC, the length of a rope, or the size of weapons, armours, and shields. This is a read-write field of a unitptr.
+
+== Return Value ==
+Returns an integer representing the height/size of the unit.
+
+== Usage ==
+This field is accessed using dot notation on a unitptr variable:
+ integer unit_height;
+ unit_height := unit.height;
+ unit.height := new_height; // For modification
+
+== Example ==
+ dilbegin resize_func(item1:integer, item2:integer, item3:integer,
+                      arm_type:integer, arm_type2:integer,
+                      cash:integer, a_name:string);
+ external
+   string accept_dil@function (pc:unitptr,s:string);
+ var
+   mn:string;
+   answer:string;
+   i:integer;
+   amount:integer;
+   pc:unitptr;
+   size:string;
+   tgt:unitptr;
+   diff:integer;
+ code
+ {
+    heartbeat := PULSE_SEC*5;
+    :start:
+    wait (SFB_DONE,command ("give") and
+     (self==target));
+
+    if (not (visible(self, activator)))
+    {
+       exec("say I can't resize it when I can't see you!.",self);
+       exec("drop "+medium.name, self);
+       goto start;
+    }
+
+    pc := activator;
+    secure (pc,lostpc);
+    tgt := medium;
+    secure (tgt,lostitem);
+    dilcopy ("busy@function(Please wait I am busy with other work right now.",
+             self);
+
+    if (not (tgt.type&UNIT_ST_OBJ))
+    {
+       exec ("say I can't resize that, "+pc.name+".",self);
+    :giveit:
+       link (tgt, pc);
+       act ("$2n gives $3n to $1n",
+   	   A_SOMEONE,pc,self,tgt,TO_REST);
+       act ("$2n gives $3n to you.",
+   	   A_SOMEONE,pc,self,tgt,TO_CHAR);
+       i := dildestroy ("busy@function",self);
+       unsecure (pc);
+       unsecure (tgt);
+       goto start;
+    }
+
+    if ("$resize" in tgt.extra)
+    {
+       exec ("say It cant be resize any more, "+pc.name+".",self);
+       goto giveit;
+    }
+
+    if ((tgt.objecttype != item1) and
+        (tgt.objecttype != item2) and
+        (tgt.objecttype != item3))
+    {
+       exec ("say I can not resize this, I am only a "+a_name+".",self);
+       goto giveit;
+    }
+
+    if (tgt.objecttype == ITEM_ARMOR)
+    {
+       if ((tgt.value[0]!=arm_type) and
+           (arm_type2!=tgt.value[0]))
+       {
+          exec ("say I can't resize that I am only a "+a_name+".",self);
+          goto giveit;
+       }
+    }
+
+    amount := (100*tgt.height) / pc.height;
+    if (amount > 100)
+      diff := amount - 100;
+    else
+      diff := 100 - amount;
+
+    if (diff==0) goto  no_need;
+    i := cash*diff;
+    mn := moneystring(i, TRUE);
+
+    exec ("say That will cost "+mn+" to have that resized.",self);
+
+    answer := accept_dil@function(pc, "Do you want this resized or not?");
+    pause;
+
+    if (answer=="no")
+       goto no;
+
+    if (transfermoney(pc, self, i))
+    {
+       exec ("resize "+tgt.name+" "+pc.name,self);
+
+       if (not ("$resized" in tgt.extra))
+       {
+          exec ("say I am sorry, I do not seem to be able to resize this, "+
+                "after all I am just a "+a_name+".",self);
+          diff := transfermoney(self,pc, i);
+          goto giveit;
+       }
+
+       exec ("say There you go, thats the best I can do.",self);
+       goto giveit;
+    }
+    else
+      goto no_money;
+
+    :no:
+    exec ("say Very well then come back when you want me to.",self);
+    goto giveit;
+
+    :no_need:
+    exec ("say It already fits you. I should charge you for "+
+          "waisting my time!",self);
+    goto giveit;
+
+    :no_money:
+    exec ("say You don't seem to have enough money. Come back when you "+
+          "have found enough to pay me.",self);
+    goto giveit;
+
+    :lostpc:
+    :lostitem:
+    i := dildestroy ("busy@function",self);
+
+    unsecure (pc);
+    unsecure (tgt);
+    goto start;
+ } dilend
+
+== Notes ==
+* This field is read-write (RW)
+* For PCs and NPCs: represents character height
+* For objects like ropes: represents length
+* For weapons, armor, and shields: represents size
+* Commonly used in resizing calculations and equipment fitting checks
+* Height values are typically in centimeters or similar units
+
+== See Also ==
+* [[unitptr]] - Unit pointer documentation
+* [[weight]] - Unit weight field
+* [[baseweight]] - Base weight field
+* [[objecttype]] - Object type field
+* [[value]] - Object values array

@@ -1,0 +1,41 @@
+= getcolor =
+
+== Syntax ==
+ string := getcolor( color_string : string );
+
+== Parameters ==
+ color_string : string
+    A string containing color codes to be converted/divided.
+
+== Return Value ==
+ string
+    Returns the processed color string. Returns fail if the input is null, fail, or an unsupported type.
+
+== Description ==
+ The getcolor() function processes color strings by calling the internal divcolor() function. This function appears to convert or divide color codes within the input string.
+
+ Note: This function is different from the player-specific color functions (addcolor, delcolor, changecolor) which work with individual player color settings. The getcolor() function works with color code processing and conversion.
+
+ The function is currently marked as unused in the codebase, suggesting it may be obsolete or awaiting testing and implementation.
+
+== Example ==
+ dilbegin process_colors(input : string);
+ var
+    processed : string;
+ code
+ {
+    processed := getcolor("&brThis is bold red text&n");
+    
+    if (processed) {
+       sendtext("Processed: " + processed + "&n", self);
+    } else {
+       sendtext("Failed to process colors.&n", self);
+    }
+    
+    quit;
+ } dilend
+
+== See Also ==
+ * [[addcolor]] - Add color to player's personal color list
+ * [[delcolor]] - Delete color from player's personal color list  
+ * [[changecolor]] - Change color in player's personal color list

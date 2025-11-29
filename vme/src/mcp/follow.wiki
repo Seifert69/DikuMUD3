@@ -1,0 +1,53 @@
+= follow =
+
+== Syntax ==
+ follow( follower : unitptr, leader : unitptr )
+
+== Parameters ==
+; follower : unitptr
+: The character that will follow the leader
+; leader : unitptr
+: The character to be followed. Can be null to stop following
+
+== Description ==
+The follow() function makes the follower character follow the leader character. This function works unconditionally, meaning it will make the follower follow even if they are mortally wounded, sleeping, fighting, or in any other state.
+
+If the leader parameter is null, the function will stop the follower from following anyone.
+
+When called, the function will first stop any existing following relationship for the follower, then establish the new following relationship if both the follower and leader are valid characters.
+
+== Return Value ==
+None
+
+== Example ==
+ dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+ var
+    depname: string;
+
+ code
+ {
+    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+    follow(targ, deputy);
+    depname := deputy.name;
+    link(cuffs, targ);
+    unequip(equipment(targ, WEAR_WRIST_R));
+    addequip(cuffs, WEAR_WRIST_R);
+    dilcopy("cuffed@midgaard("+depname+")", targ);
+    dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+    exec("sigh", targ); /* Do this to activate the DILs */
+    return;
+ } dilend
+
+== Notes ==
+* Both the follower and leader must be valid character units (unitptr)
+* The function will automatically stop any existing following relationship before establishing a new one
+* Use null as the leader parameter to stop a character from following anyone
+* This function is commonly used in situations like arrests, escorts, or prisoner scenarios
+
+== See Also ==
+* [[stop_fighting]]
+* [[unitptr]]

@@ -1,0 +1,77 @@
+= followercount =
+
+== Syntax ==
+ unitptr.followercount
+
+== Field Type ==
+ integer (Read-only)
+
+== Description ==
+The followercount field returns the number of followers that a PC or NPC character has. This field provides a count of all characters that are following the specified unit.
+
+If the character has no followers, this field returns 0.
+
+== Return Value ==
+Returns an integer representing the number of followers.
+
+== Example ==
+ dilbegin check_follower_count();
+ var
+    count : integer;
+    
+ code
+ {
+    count := self.followercount;
+    
+    if (count > 0)
+    {
+        act("You have " + itoa(count) + " follower(s).", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    else
+    {
+        act("You have no followers.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    return;
+ } dilend
+
+ dilbegin list_followers();
+ var
+    i : integer;
+    fol : unitptr;
+    
+ code
+ {
+    if (self.followercount == 0)
+    {
+        act("You have no followers.", A_ALWAYS, self, null, null, TO_CHAR);
+        return;
+    }
+    
+    act("Your followers:", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    i := 0;
+    while (i < self.followercount)
+    {
+        fol := getfollower(self, i);
+        if (fol)
+        {
+            act("  " + itoa(i+1) + ". " + fol.name, A_ALWAYS, self, null, null, TO_CHAR);
+        }
+        i := i + 1;
+    }
+    return;
+ } dilend
+
+== Notes ==
+* This field is read-only and cannot be modified directly
+* Returns 0 if the character has no followers
+* This field is only available for PC and NPC unit types (UNIT_ST_PC and UNIT_ST_NPC)
+* Often used in conjunction with the getfollower() function to iterate through all followers
+* Useful for group management and follower tracking systems
+
+== See Also ==
+* [[follower]]
+* [[follow]]
+* [[master]]
+* [[getfollower]]
+* [[unitptr]]

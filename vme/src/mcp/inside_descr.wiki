@@ -1,0 +1,118 @@
+= inside_descr =
+
+; inside_descr : string (RW)
+: The description of the unit from the 'inside'. This field contains the text that players see when they are inside a unit (such as a room, vehicle, or container) and look around.
+
+== Description ==
+
+The '''inside_descr''' field provides access to the description text that is displayed when a character is inside a unit and issues a look command. This is most commonly used for rooms, but can also apply to containers, vehicles, or any other unit that can contain other units.
+
+This field is read-write (RW), meaning it can be both read and modified by DIL programs to dynamically change the appearance of locations from within.
+
+== Usage ==
+
+=== Reading Inside Description ===
+
+ dilbegin check_room_description();
+    var
+       room : unitptr;
+       desc : string;
+    code
+    {
+       room := self.outside;  // Get the room containing this object
+       desc := room.inside_descr;
+       
+       act("Room description: " + desc, A_ALWAYS, activator, null, null, TO_CHAR);
+    } dilend
+
+=== Modifying Inside Description ===
+
+ dilbegin modify_room();
+    var
+       room : unitptr;
+       new_desc : string;
+    code
+    {
+       room := self.outside;
+       new_desc := "This is a newly modified room description.";
+       
+       room.inside_descr := new_desc;
+       act("The room has been modified.", A_ALWAYS, activator, null, null, TO_CHAR);
+    } dilend
+
+=== Practical Example - Graffiti System ===
+
+This example from the prompt shows how inside_descr is used in a graffiti system:
+
+ dilbegin do_graffiti();
+    var
+       room : unitptr;
+       original_desc : string;
+       new_desc : string;
+    code
+    {
+       room := self.outside.outside;  // Get the room
+       original_desc := room.inside_descr;
+       
+       // Add graffiti to the room description
+       new_desc := original_desc + " <div class='red'>Red graffiti is painted here!</div>";
+       room.inside_descr := new_desc;
+       
+       act("You add graffiti to the room.", A_ALWAYS, activator, null, null, TO_CHAR);
+    } dilend
+
+=== Checking for Description Changes ===
+
+ dilbegin monitor_room();
+    var
+       room : unitptr;
+       start_desc : string;
+    code
+    {
+       room := self.outside;
+       start_desc := room.inside_descr;
+       
+       // Wait for something to happen
+       wait(SFB_TICK, command("check"));
+       
+       if (start_desc != room.inside_descr)
+       {
+          act("The room description has changed!", A_ALWAYS, activator, null, null, TO_CHAR);
+       }
+    } dilend
+
+== Common Use Cases ==
+
+* '''Dynamic Room Descriptions''' - Changing room descriptions based on events, time, or player actions
+* '''Graffiti Systems''' - Allowing players to add temporary or permanent markings to rooms
+* '''Environmental Effects''' - Modifying descriptions to reflect weather, damage, or magical effects
+* '''Story Progression''' - Updating locations as stories advance
+* '''Player Customization''' - Allowing players to modify their personal spaces
+
+== Return Value ==
+
+Returns a string containing the current inside description of the unit.
+
+== Assignment ==
+
+The field can be assigned a new string value to change the inside description:
+ unit.inside_descr := "New description text";
+
+== Persistence ==
+
+When a unit is saved to disk (using the store function), the inside_descr field is preserved and will be restored when the unit is loaded again.
+
+== See Also ==
+
+* [[outside_descr]] - The description of the unit from the outside
+* [[unitptr]] - Information about unit pointers and their fields
+* [[extra]] - Extra descriptions system for more complex description handling
+* [[act]] - Function for sending messages to players
+
+== Notes ==
+
+* The field is read-write (RW)
+* Changes to inside_descr are immediately visible to players in the unit
+* The description is saved with the unit if the unit is persistent
+* HTML formatting can be included in the description text
+* This field is commonly used for rooms but applies to any container unit

@@ -1,0 +1,36 @@
+= fname =
+
+== Syntax ==
+ zoneptr.fname
+
+== Return Value ==
+Returns a string containing the filename of the zone.
+
+== Description ==
+The '''fname''' field is used to access the filename of a zone from a zone pointer (zoneptr). This field returns the actual filename used to store the zone data on disk.
+
+== Example ==
+ dilbegin show_zone_filename();
+ var
+    z : zoneptr;
+ code
+ {
+    z := zhead();
+    
+    if (length(z.fname) < 1)
+        goto failure;
+    
+    send("Zone filename: " + z.fname, self);
+    goto cleanup;
+
+:failure:
+    send("No filename available for this zone", self);
+    
+:cleanup:
+    return;
+ } dilend
+
+== See Also ==
+* [[zoneptr]]
+* [[zhead]]
+* [[name]]

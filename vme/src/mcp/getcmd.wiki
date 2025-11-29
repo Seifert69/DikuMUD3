@@ -1,0 +1,44 @@
+= getcmd =
+
+== Syntax ==
+ cmdptr := getcmd( command_name : string );
+
+== Parameters ==
+ command_name : string
+    The name of the command to search for in the command table.
+
+== Return Value ==
+ cmdptr
+    Returns a command pointer (cmdptr) to the command if found, or null if the command does not exist.
+    Returns fail if the input string is null.
+
+== Description ==
+ The getcmd() function searches the internal command trie for a command matching the specified name. This function provides direct access to the command information structure, allowing DIL programs to examine command properties such as required level, position, and command type.
+
+ The function is useful for:
+ * Checking if a command exists in the system
+ * Retrieving detailed information about a command
+ * Validating command availability for players
+
+== Example ==
+ dilbegin check_command(cmd_name : string);
+ var
+    cmd_ptr : cmdptr;
+ code
+ {
+    cmd_ptr := getcmd(cmd_name);
+    
+    if (cmd_ptr) {
+       act("Command '$2t' found. Level: $3d, Position: $4d", A_ALWAYS, self, 
+           cmd_name, itoa(cmd_ptr.level), itoa(cmd_ptr.position), null, TO_CHAR);
+    } else {
+       act("Command '$2t' not found.", A_ALWAYS, self, cmd_name, null, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+== See Also ==
+ * [[cmdptr]] - Command pointer type and fields
+ * [[command]] - Command matching function
+ * [[chead]] - Get first command in list

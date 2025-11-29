@@ -1,0 +1,76 @@
+= hp
+
+== Syntax
+
+  integer .hp
+
+== Description
+
+The '''hp''' field represents the current hitpoints of a unit. This field is read-write (RW) and can be accessed on any unit type including characters, mobiles, and objects.
+
+== Return Value
+
+Returns an integer representing the current hitpoints of the unit.
+
+== Usage Notes
+
+* For characters and mobiles, this represents their current health
+* For objects, this represents the object's durability/condition
+* Setting hp to low values can render objects 'broken'
+* If a unit has -1 hitpoints, it is considered unbreakable
+* The field is read-write (RW) and can be modified
+* Should typically be used in conjunction with max_hp to ensure values stay within valid ranges
+
+== Examples
+
+=== Basic Health Check
+
+ if (self.hp > 10)
+ {
+    act("You are in good health.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+=== Healing Example
+
+ dilbegin heal_target(target : unitptr);
+ var
+ code
+ {
+    if (target.hp < target.max_hp)
+    {
+       target.hp := target.hp + 6;
+       if (target.hp > target.max_hp)
+         target.hp := target.max_hp;
+       act("You feel better!", A_ALWAYS, target, null, null, TO_CHAR);
+    }
+ } dilend
+
+=== Cloning Attributes
+
+ dilbegin clone_attr(original : unitptr, tgt : unitptr);
+ var
+    i : integer;
+ code
+ {
+    /* Copy abilities */
+    while (i < ABIL_TREE_MAX)
+    {
+       tgt.abilities[i] := original.abilities[i];
+       i := i + 1;
+    }
+
+    /* Copy current hitpoints */
+    tgt.hp := original.hp;
+
+    quit;
+ } dilend
+
+=== Damage Example
+
+ pc.hp := pc.hp - 100;
+
+== See Also
+
+* [[max_hp]] - Maximum hitpoints field
+* [[position_update]] - Useful when modifying hp field
+* [[unitptr]] - General unit pointer fields

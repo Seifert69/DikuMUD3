@@ -1,0 +1,55 @@
+= flog =
+
+== Syntax ==
+ integer flog( filename : string, s : string, wa : string )
+
+== Parameters ==
+; filename : string
+: The Filename of the file to appear in the log directory.
+; s : string
+: The string to be logged.
+; wa : string
+: Write or Append mode - must be "w" or "a" (lowercase, surrounded by quotes)
+
+== Return Value ==
+Returns integer (typically 0 on success, non-zero on error).
+
+== Description ==
+The flog function allows you to split up your logs in the log directory so that you don't end up with everything in the main vme.log.
+
+The append/write argument must be in lower case and can only be a 'w' or a 'a' surrounded by quotes. If the argument is a 'w' it will overwrite any log file by that name. If the argument is an 'a' it will append to the file by that name.
+
+'''Note:''' This function requires zone access level > 1 to use.
+
+== Examples ==
+=== Example 1: Zone Logging ===
+ dilbegin zonelog (s:string);
+ code
+ {
+    flog (self.zonidx+".log", s, "a");
+    return;
+ }
+ dilend
+
+=== Example 2: Bug Report Logging ===
+ t := z.symname + " ["+self.name+"] " + asctime(realtime)+ argument;
+ t := textformat(t);
+ i := flog("bugs", t, "a");
+
+=== Example 3: Overwrite Log ===
+ // Create a fresh daily log
+ flog("daily.log", "Daily log started: " + asctime(realtime), "w");
+
+== File Modes ==
+; "w"
+: Write mode - creates new file or overwrites existing file
+; "a"
+: Append mode - adds to end of existing file or creates new file
+
+== Security ==
+The function checks for zone access level. If the calling DIL program doesn't have sufficient access (level > 1), it will log an error message and terminate.
+
+== See Also ==
+* [[Manual:DIL Manual/log()|log()]] - Write to main game log
+* [[Manual:DIL Manual/logcrime()|logcrime()]] - Log criminal activities
+* [[Manual:DIL Manual/asctime()|asctime()]] - Format timestamp for log entries
