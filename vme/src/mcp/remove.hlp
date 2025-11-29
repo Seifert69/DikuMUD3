@@ -1,0 +1,12 @@
+<span id="bpremove"></span>
+
+ '''Function:'''  <i><!--CODE-->remove( sl : stringlist, i : integer ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''sl'''
+ <!--DEFINITION-->         the stringlist you are removing from
+ <!--TERM-->  '''i'''
+ <!--DEFINITION-->         the index you want to remove
+
+ This function allows you to remove a string from a stringlist with out
+ leaving a blank spot in the stringlist.
+ '''Example:  '''<i><!--CODE-->remove (sl, i);</i><!--ENDCODE-->

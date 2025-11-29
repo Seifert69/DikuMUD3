@@ -1,0 +1,79 @@
+<span id="zptr"></span>
+
+ '''Type:  '''<i><!--CODE-->zoneptr</i><!--ENDCODE-->
+ '''Zone Pointer Fields'''
+
+
+ <!--TERM-->  '''next'''
+ <!--DEFINITION-->         unitptr - pointer to next zoneptr
+ <!--TERM-->  '''previous'''
+ <!--DEFINITION-->         unitptr - pointer to previous zone
+ <!--TERM-->  '''creators'''
+ <!--DEFINITION-->         stringlist - list of creators
+ <!--TERM-->  '''name'''
+ <!--DEFINITION-->         string - zone name (%zone)
+ <!--TERM-->  '''title'''
+ <!--DEFINITION-->         string - zone title (title "")
+ <!--TERM-->  '''rooms'''
+ <!--DEFINITION-->         unitptr - pointer to the base room
+ <!--TERM-->  '''objs'''
+ <!--DEFINITION-->         unitptr - pointer to the base objects of the zone
+ <!--TERM-->  '''npcs'''
+ <!--DEFINITION-->         unitptr - pointer to base NPCs of the zone
+ <!--TERM-->  '''resetmode'''
+ <!--DEFINITION-->         integer- reset mode of zone in 'values.h'
+ <!--TERM-->  '''resettime'''
+ <!--DEFINITION-->         integer - the reset time of the zone
+ <!--TERM-->  '''access'''
+ <!--DEFINITION-->         integer - the access level of the zone
+ <!--TERM-->  '''loadlevel'''
+ <!--DEFINITION-->         integer - the loadlevel of the zone
+ <!--TERM-->  '''payonly'''
+ <!--DEFINITION-->         integer - the paystatus of the zone
+ <!--TERM-->  '''roomcount'''
+ <!--DEFINITION-->         integer - the number of rooms in a zone
+ <!--TERM-->  '''objcount'''
+ <!--DEFINITION-->         integer - the numbner of objects in a zone
+ <!--TERM-->  '''npccount'''
+ <!--DEFINITION-->         integer - the number of npcs/mobiles in a zone
+ <!--TERM-->  '''fname'''
+ <!--DEFINITION-->         string - the filename of a zone
+ <!--TERM-->  '''notes'''
+ <!--DEFINITION-->         string - the Zone Notes
+ <!--TERM-->  '''help'''
+ <!--DEFINITION-->         string - the Zone Help
+
+
+   The 'zoneptr' works like a unitptr.  To get the first zoneptr in the global
+ list of zones you use 'zhead'.
+ '''Example: '''<i><!--CODE-->zoneptr := zhead();</i><!--ENDCODE-->
+ '''Zone list command'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin zonelist (arg:string);
+ var
+  z:zoneptr;
+  buf:string;
+ code
+ {
+           z:=zhead();
+           while (z)
+           {
+           buf:="Name:  "+z.name+"&amp;n";
+           buf:=buf+"Filename:  "+z.fname+"&amp;n";
+           buf:=buf+"Creator:  "+z.creators.[0]+"&amp;n";
+           buf:=buf+"Notes:  &amp;n"+z.notes+"&amp;n&amp;n";
+           z:=z.next;
+           }
+
+           pagestring (buf,self);
+           quit;
+ }
+ dilend
+
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->

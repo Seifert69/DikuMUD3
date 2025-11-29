@@ -1,0 +1,12 @@
+<span id="bfsplind"></span>
+ integer spellindex(s : string)
+    s  : The abbreviated or full spell name
+
+    Returns: -1 if no such spell, otherwise it returns the spell index
+             for that spell.
+
+    Example:
+       s := "cu li wo"; /* cure light wounds */
+       i := spellindex(s);
+
+ ---~---~---~---~---~---~---~---~---

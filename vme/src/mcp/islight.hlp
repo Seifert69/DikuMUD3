@@ -1,0 +1,10 @@
+<span id="bfislight"></span>
+
+ '''Function:  '''<i><!--CODE-->integer islight ( u : unitptr )</i><!--ENDCODE-->
+
+ <!--TERM-->  '''u'''
+ <!--DEFINITION-->         Unit that you are checking
+ <!--TERM-->  '''returns'''
+ <!--DEFINITION-->         ''TRUE' if item is a light, 'FALSE' if it is notway to small', 'to small', 'way to large', 'to large', or null if fits
+
+ Simply checks the item to see if it is a light.

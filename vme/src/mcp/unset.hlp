@@ -1,0 +1,5 @@
+<span id="bpunset"></span>
+ unset ( var i : integer , bit : integer )
+    i : Integer variable to alter.
+    bit : Bits to unset in integer variable.
+    result: unset bits in 'i'.

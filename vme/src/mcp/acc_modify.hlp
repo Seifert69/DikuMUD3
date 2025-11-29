@@ -1,0 +1,10 @@
+<span id="bpacc_mod"></span>
+ acc_modify( u : unitptr, i : integer )
+    u : A player
+    i : An amount in 1/100s, for example 100 would equal $1.00, and
+        -100 would equal -$1.00.
+
+       Access only allowed with 'root' access and all transactions are
+     registered in the specially encrypted account log file. Use with
+     great caution, and always test thoroughly before using.
+     Use without prior permission may cause deletion of god / zone.

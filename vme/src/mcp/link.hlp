@@ -1,0 +1,6 @@
+<span id="bplink"></span>
+ link ( u : unitptr, t : unitptr )
+    u : Unit to link.
+    t : Unit to link into.
+    result: Link a unit into another unit hierarchy. (Automatically
+            unequipps if equipped).

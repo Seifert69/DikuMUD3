@@ -1,0 +1,18 @@
+<span id="bfskill_name"></span>
+
+ '''Function:'''  <i><!--CODE-->string skill_name( i : integer ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''i'''
+ <!--DEFINITION-->         Skill to get the name of ass defined in 'values.h' and 'commands.def'
+ <!--TERM-->  '''returns'''
+ <!--DEFINITION-->         The name of the skill that corresponds with the integer value
+
+ '''example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ myski:=skill_name(5);
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->

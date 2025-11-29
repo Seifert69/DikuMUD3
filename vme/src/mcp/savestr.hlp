@@ -1,0 +1,54 @@
+<span id="bfsavestr"></span>
+
+ '''Function:'''  <i><!--CODE-->integer savestr( filename : string , buff : string , wa :string);</i><!--ENDCODE-->
+
+ <!--TERM-->  '''filename'''
+ <!--DEFINITION-->         The name of the String file to save the String to
+ <!--TERM-->  '''buff'''
+ <!--DEFINITION-->         The String you wish to save into the file
+ <!--TERM-->  '''wa'''
+ <!--DEFINITION-->         Write or append
+ <!--TERM-->  '''Return'''
+ <!--DEFINITION-->         <i><!--CODE-->FILE_SAVED, FILE_NOT_SAVED, FILE_NOT_CREATED, or FILE_ILEGAL_OPP</i><!--ENDCODE-->
+
+ Savestr is used to save strings to disk to be loaded later by the 'load' function.
+ The 'savestr' and 'Loadstr' is perfect for operations such as
+ on-line edited newspaper, a lottery where the tickets are sold to players,
+ creating smarter NPC's that can remember through reboots who they are hunting,
+ Dil based teachers, message boards, mail system, news command., zone or
+ room based help,  competition boards, and much much more.
+ '''Note:'''The append/write argument must be in lower case and can only be a
+ 'w' or a 'a' surrounded by '"'.  If the argument is a 'w' it will over write
+ any string file by that name.  If the argument is 'a' it will append to the
+ file by that name.
+ '''Disk access is always slow'''.
+ If you use loadstr on a continuous basis always
+ attempt to keep file sizes to a minimum for quick loading.  Otherwise you
+ might cause serious delays on the server.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin news_save (arg:string  /*for saving*/);
+ var
+         ret:integer;/*to hold the return value if saved or not*/
+ code
+ {
+ ret:= savestr("news.txt",arg,"w");
+ if (!ret)
+         {
+         log ("File not wrote");
+         quit;
+         }
+
+ sendtext("New news file wrote.[&amp;]n",self);
+ quit;/*dil save routine done destroy self.*/
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ '''See Also''' <i><!--CODE-->
+ [[#bfdelstr|Delete a String file]] and
+ [[#bfloadstr|Load a String file]]</i><!--ENDCODE-->

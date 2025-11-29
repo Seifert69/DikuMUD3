@@ -1,0 +1,16 @@
+<span id="bfright"></span>
+
+ '''Function:'''  <i><!--CODE-->string right ( o : string, r : integer );</i><!--ENDCODE-->
+
+ <!--TERM-->  '''o'''
+ <!--DEFINITION-->         the original string to be parsed
+ <!--TERM-->  '''r'''
+ <!--DEFINITION-->         The amount of characters to parse out
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         the right portion of the string with length r
+
+ This function parses the string passed to it and returns the number of characters
+ from the right defined in its second argument.
+ '''Example:'''  <i><!--CODE-->"Easy" := right ("This is Easy",4);</i><!--ENDCODE-->
+
+ ---~---~---~---~---~---~---~---~---

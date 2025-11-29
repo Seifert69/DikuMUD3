@@ -1,0 +1,22 @@
+<span id="dcbreak"></span>
+ '''break:'''
+     The break statement makes you break out of any
+     loop you're currently in.
+
+ '''Example:'''
+
+ <nowiki>
+
+ dilbegin foo();
+   code
+   {
+     while (self.inside) {
+       if (self.position &lt POSITION_SLEEPING)
+         break;
+       exec("say I own something", self);
+       pause;
+     }
+   }
+   dilend</nowiki>
+
+ ---~---~---~---~---~---~---~---~---

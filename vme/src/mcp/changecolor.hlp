@@ -1,0 +1,13 @@
+<span id="bpchangecolor"></span>
+
+ '''Function:  '''<i><!--CODE-->changecolor (ch : unitptr, ks : string, cstr : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''ch'''
+ <!--DEFINITION-->         character you are changing the color on
+ <!--TERM-->  '''ks'''
+ <!--DEFINITION-->         key string for the color
+ <!--TERM-->  '''cstr'''
+ <!--DEFINITION-->         color string
+
+ This will change a color in a players personal list.
+ '''Function:  '''<i><!--CODE-->changecolor(pc, "clan_who","&amp;c+w&amp;bn");</i><!--ENDCODE-->

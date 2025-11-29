@@ -1,0 +1,34 @@
+= SFB_COM =
+
+SFB_COM is a combat message that is sent during combat.
+
+When this flag is used in a wait() statement, it will trigger on combat messages.
+The unit containing the DIL program needs not be involved in the combat itself,
+it will react to any combat in it's local environment. The combat message is sent
+just prior to the hit.
+
+Only the following global value is set in a SFB_COM combat message:
+  'activator' : is a unitptr to the PC/NPC about to hit someone else.
+
+Note that:
+  command(CMD_AUTO_COMBAT) 
+
+will evaluate to TRUE.
+
+Example:
+  wait(SFB_COM, activator == self);
+
+Example:
+  wait(SFB_COM, activator == self.fighting);
+
+Example:
+  wait(SFB_ALL, TRUE);
+  if (command(CMD_AUTO_COMBAT))
+    exec("flee", self);
+
+You may want to take a look at the DIL vorpalweapon() in one of the distribution zones.
+
+See also:
+  > wait
+  > SFB_PRE
+  > CMD_AUTO_DAMAGE

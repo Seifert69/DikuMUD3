@@ -1,0 +1,5 @@
+<span id="bfatoi"></span>
+ integer atoi ( s : string )
+    s : A string with a number.
+    return: The number in the string.
+    Example: i := atoi("42");

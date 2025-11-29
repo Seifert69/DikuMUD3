@@ -1,0 +1,19 @@
+<span id="bfreplace"></span>
+
+ '''Function:'''  <i><!--CODE-->string replace( t :string, n : string, o : string);</i><!--ENDCODE-->
+
+ <!--TERM-->  '''t'''
+ <!--DEFINITION-->         the target string you want to replace
+ <!--TERM-->  '''n'''
+ <!--DEFINITION-->         what you want to replace the target with
+ <!--TERM-->  '''o'''
+ <!--DEFINITION-->         the original string
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         the string with the old string replaced by the new string
+
+ This function replaces all occurences of a string in another string with a
+ new string.
+ '''Example:'''
+ <i><!--CODE-->"Jafar %t% %l%" := replace(%n%,pc.name,"%n% %t% %l%");</i><!--ENDCODE-->
+ <i><!--CODE-->"Jafar the human %l%" := replace(%t%,pc.title,"Jafar %t% %l%");</i><!--ENDCODE-->
+ <i><!--CODE-->"Jafar the human 1" := replace(%l%,itoa(pc.vlevel),"Jafar the human %l%");</i><!--ENDCODE-->

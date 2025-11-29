@@ -1,0 +1,42 @@
+<span id="bpbeginedit"></span>
+
+ '''Function:'''  <i><!--CODE-->beginedit ( u : unitptr);</i><!--ENDCODE-->
+
+ <!--TERM-->  '''u'''
+ <!--DEFINITION-->         the PC unit doing the editing
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         When done  editing it returns SFB_EDIT and activator is set to PC
+
+ The 'BEGINEDIT' function sets a PC into editing mode.  while in edit mode
+ the PC field 'editing is set to true.  Once the PC is done editing a 'SFB_EDIT'
+ message is sent to the unit editing to continue on with the DIL.
+ If for some reason the PC needs to break
+ out of the editor before it is done editing then the Dil needs to call
+ the 'killedit' function
+ [[#sect-beginedit|interrupt editing before done]]
+
+ '''example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin edextra ();
+ var
+         temp:string;
+ code
+ {
+         beginedit (self);
+         wait(SFB_EDIT,self==activator) ;
+         temp:=textformat(argument);
+         addextra (self.extra,"general",temp);
+         quit;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ The previous DIL is an example of how you could make a command to set the
+ general extra which is the characters description when you do 'look player'
+
+
+ ---~---~---~---~---~---~---~---~---

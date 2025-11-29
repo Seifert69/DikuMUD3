@@ -1,0 +1,7 @@
+== string asctime(i : integer) ==
+i : the time to convert in seconds ({realtime} kind of integer)
+
+Returns: The seconds converted into an ascii format date of the following form  "Mon Nov 18 18:49:08 1996"
+
+Example:
+   log(asctime(realtime));

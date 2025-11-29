@@ -1,0 +1,10 @@
+<span id="bpexp"></span>
+ experience ( i : integer, u : unitptr )
+    i : A integer number of experience to gain or loose.
+    u : The player to receive the experience.
+    result: The integer amount of experience is added to the players
+            total amount of experience (thus causing more or less
+            experience). USE WITH CARE! SUGGEST THAT YOU ONLY USE
+            INTEGER CONSTANTS AS THE EXPRESSION TO AVOID ERRORS.
+
+ ---~---~---~---~---~---~---~---~---

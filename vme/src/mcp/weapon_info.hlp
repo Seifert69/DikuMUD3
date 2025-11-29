@@ -1,0 +1,54 @@
+<span id="bfweapon_info"></span>
+
+ '''Function:'''  <i><!--CODE-->intlist weapon_info( i : integer ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''i'''
+ <!--DEFINITION-->         Weapon to get the info of ass defined in 'values.h' and 'weapons.def'
+ <!--TERM-->  '''returns'''
+ <!--DEFINITION-->         Intlist containing 4 values:
+
+ <!--TERM-->  '''0'''
+ <!--DEFINITION-->         Number of hands
+ <!--TERM-->  '''1'''
+ <!--DEFINITION-->         weapon speed
+ <!--TERM-->  '''2'''
+ <!--DEFINITION-->         weapon type
+ <!--TERM-->  '''3'''
+ <!--DEFINITION-->         shield block value
+
+
+ This function gives you access to the values in the weapons.def file.
+ With this things like 'wear' equipment' and 'look' are much easier to
+ write in Dil.
+ '''Example'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilcopy id_weap (arg:string);
+ var
+   i:integer;
+   il:intlist;
+ code
+ {
+ il:=weapon_info(atoi(arg));
+
+ if (il!=null)
+ {
+ sendtext ("Number of hands:  "+itoa(il.[0])+"&amp;n";
+              sendtext ("Speed:  " +itoa(il.[1])+"&amp;n",self);
+                          sendtext ("Type:  "+itoa(il.[0])+"&amp;n",self);
+                          sendtext ("Shield value:  "+itoa(il.[0])+"&amp;n",self);
+                          }
+ else
+ {
+ sendtext ("No such weapon.&amp;n",self);
+ }
+
+ quit;
+ }
+ dilend
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->

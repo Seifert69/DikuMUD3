@@ -1,0 +1,7 @@
+<span id="bpset"></span>
+ set ( var i : integer , bit : integer )
+    i : Integer variable to alter.
+    bit : Bits to set in integer variable.
+    result: Sets bits in 'i'
+
+ ---~---~---~---~---~---~---~---~---

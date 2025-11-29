@@ -1,0 +1,6 @@
+<span id="fquit"></span>
+ quit:
+   This simple command quits the entire DIL program, even if
+   called while inside a procedure or function.
+
+ ---~---~---~---~---~---~---~---~---

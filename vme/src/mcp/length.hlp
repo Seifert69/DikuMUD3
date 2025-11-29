@@ -1,0 +1,7 @@
+<span id="bflen"></span>
+ integer length ( a : string or stringlist )
+        a : a string or stringlist to examine.
+    return: The length of the string in characters, or the number
+            of strings in a list.
+
+ ---~---~---~---~---~---~---~---~---

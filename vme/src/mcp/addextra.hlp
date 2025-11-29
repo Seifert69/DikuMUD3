@@ -1,0 +1,17 @@
+<span id="bpaddex"></span>
+ addextra ( var e : extraptr, l : stringlist , s : string )
+    e : Extra description list to add element to.
+    l : Stringlist for the .names field.
+    s : String for the .descr field.
+    result: Adds an extra description to a list of extra descriptions.
+
+ <strong>CAVEAT</strong> builder: You cannot use an extraptr variable as the e
+ argument, but you may continue to use the following form:
+
+    ...
+    ...
+    addextra (self.quests, "Bozo's Quest");
+    ...
+    ...
+See also:
+  subextra

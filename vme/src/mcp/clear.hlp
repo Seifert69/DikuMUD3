@@ -1,0 +1,7 @@
+<span id="bpclear"></span>
+ clear( i : integer )
+
+    Clears the interrupt number "i". If i is invalid, this will either
+    clear an wrong interrupt or do nothing.
+
+ ---~---~---~---~---~---~---~---~---

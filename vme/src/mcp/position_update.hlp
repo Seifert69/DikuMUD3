@@ -1,0 +1,9 @@
+<span id="bpp_u"></span>
+ position_update ( u : unitptr )
+    u : A pointer to a player or a monster. The character will be
+        updated and perhaps killed, incapacitated, mortally
+        wounded, revived, etc. depending on current hitpoints.
+        Useful when tampering with the 'hp' field. Example:
+
+        pc.hp := pc.hp - 100;
+        position_update(pc);

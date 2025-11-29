@@ -1,0 +1,10 @@
+= unsecure (u : unitptr) =
+
+A unit 'u' that has been secured in a DIL program can have the secure removed
+by calling unsecure on the unit'u'
+
+  u : Secured unit.
+  result: Drop secure on a given unit.
+
+See also:
+  > secure

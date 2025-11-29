@@ -1,0 +1,8 @@
+integer rnd ( i1 : integer , i2 : integer )
+    i1 : Start of range.
+    i2 : End of range.
+    return: A random integer in an interval from 'i1' to 'i2'.
+    Example: i := rnd(1,10);
+
+See also:
+  > openroll()

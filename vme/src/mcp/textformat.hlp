@@ -1,0 +1,14 @@
+<span id="bftextformat"></span>
+ string textformat(s : string)
+    s : The text string to format. The string is formatted according to
+        the escape format codes as defined in one of the other documents.
+
+    Returns: The formatted string which will automatically adapt to each
+             individual player's settings.
+
+    Example:
+       ts := note.extra.descr;
+       rs := textformat(ts);
+
+
+ ---~---~---~---~---~---~---~---~---

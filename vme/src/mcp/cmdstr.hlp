@@ -1,0 +1,10 @@
+<span id="cmdstr"></span>
+ 'cmdstr'
+    This variable is a string which contains the "command" which was entered
+    by a player. The result of adding:
+
+       cmdstr + " " + argument
+
+    is the entire string as entered by the player.
+    The 'cmdstr' is EXPANDED by the interpreter, so assume a player
+    types 's' then the string is expanded to 'south'.

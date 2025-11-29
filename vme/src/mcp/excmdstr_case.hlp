@@ -1,0 +1,13 @@
+<span id="excmdstr_case"></span>
+ 'excmdstr_case'
+    This variable is a string which contains the "first string" which was entered
+    by a player. The result of adding:
+
+       excmdstr_case + " " + argument
+
+    is the entire string as entered by the player.
+    The 'excmdstr' is not changed in anyway from how a player types it.
+    If a player types 'S' then the 'excmdstr_case' will have 'S' in it.
+
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,14 @@
+= integer shell(str : string); = 
+
+  str     : The system command to execute and its parameters.
+  result  : Will return 0 if a thread is successfully created. You won't know if the system command succeeded.
+
+'''Examples'''
+
+  rc := shell("gh --subject hello");
+
+This command would execute the vme/bin/allow/gh binary with the parameters shown above.
+If rc is zero then the thread was created successfully. But you wont know if the binary
+was executed (the server doesn't wait for it to finish).
+
+Using shell() you cannot directly execute any commands outside the allow/ directory.

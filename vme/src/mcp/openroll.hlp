@@ -1,0 +1,9 @@
+<span id="bforoll"></span>
+ integer openroll( dice : integer , end : integer )
+    dice : The size of the dice being rolled.
+    end  : The margin for the open-ended roll.
+    return: A random integer in approximately +/- 2^31 in worst case.
+    Example: i := openroll(100,5); The "100" roll continues on values
+             96 - 100 and on values 1 - 5.
+
+ ---~---~---~---~---~---~---~---~---

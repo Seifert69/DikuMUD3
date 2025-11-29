@@ -1,0 +1,10 @@
+= subaff ( u : unitptr, i : integer ) =
+  u : Unit remove affect from.
+  i : Affect id to remove, see ID_* in values.h and/or vme.h
+  result: Removes first affect at 'u' with matching id 'i'.
+
+See also:
+
+  > {isaff()}
+  > {addaff()}
+  > {getaffects()}

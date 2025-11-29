@@ -1,0 +1,9 @@
+<span id="bpsend"></span>
+ send ( s : string )
+    s : Message to send.
+    result: Send a message to all DIL programs in current local environment,
+            matching the message class SFB_MSG. The message is not received
+            by those DIL programs in the local environment that is not set up
+            to wait for that message class.
+
+ ---~---~---~---~---~---~---~---~---

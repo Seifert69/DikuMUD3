@@ -1,0 +1,138 @@
+<span id="bpgamestate"></span>
+
+ '''Function:  '''<i><!--CODE-->  gamestate( u : unitptr, gs : integer ); </i><!--ENDCODE-->
+ Change the gamestate of a unitptr, uses the GS_ defines from the
+ '''vme.h'''. This is used on the log on menu of the VME 2.0 release. Which is
+ shown here as an example but it can also be used in a command.  When used it
+ removes the char from playing so be aware that players could use this to hide
+ if you run a player killing style mud.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin informer();
+ var
+ tgt : unitptr;
+ code
+ {
+ heartbeat := PULSE_SEC;
+
+ tgt := ghead();
+
+ while(tgt.type == UNIT_ST_PC)
+ {
+
+  if((isset(tgt.pcflags,PC_INFORM)) and (tgt != self))
+  {
+      if(visible(tgt,self))
+         {
+         if(self.outside == tgt.outside)
+         sendtext(self.name+" has arrived.&amp;n", tgt);
+      else
+         sendtext(self.name+" has entered the world.&amp;n", tgt);
+         }
+  }
+
+ tgt := tgt.gnext;
+ }
+
+ return;
+ }
+ dilend
+
+ dilbegin aware on_connect();
+ external
+         informer();
+         login_modify(tgt : unitptr);
+
+ var
+   wizlvl : integer;
+         i:integer;
+      err : integer;
+     motd : string;
+  welcome : string;
+  goodbye : string;
+ code
+ {
+ heartbeat := PULSE_SEC;
+
+ if(dilfind("do_quit@commands",self))
+         i := dildestroy("do_quit@commands", self);
+
+ err := loadstr("motd",motd);
+
+ if(err > 0)
+ {
+         motd := textformat(motd);
+         sendtext(motd+"&amp;n&amp;n", self);
+
+ }
+
+ err := loadstr("welcome",welcome);
+ if(welcome)
+         welcome := textformat(welcome);
+
+ if (self.level &lt; 200)
+ {
+
+ login_modify(self);
+ dilcopy ("clan_delete@clans",self);
+ dilcopy ("clan_clear@clans",self);
+
+
+ if(err > 0)
+         sendtext("&amp;n"+welcome+"&amp;n&amp;n", self);
+   informer();
+   exec("look", self);
+   quit;
+ }
+ gamestate(self, GS_MENU);
+
+ :wiz_menu:
+ sendtext("Welcome to Valhalla&amp;n&amp;n", self);
+ sendtext("1) Enter Valhalla&amp;n", self);
+ sendtext("W) Change Wizinv level&amp;n [&amp;c+g"+itoa(self.minv)+"&amp;[default]]&amp;n",self);
+ sendtext("0) Exit Valhalla&amp;n&amp;n", self);
+ sendtext("Make your choice: ", self);
+ wait(SFB_CMD, TRUE);
+
+ if (command("1") )
+ {
+   gamestate(self, GS_PLAY);
+   if(err > 0)
+         sendtext("&amp;n"+welcome+"&amp;n&amp;n", self);
+   informer();
+   exec("look", self);
+   quit;
+ } else if (command("0") ) {
+   err := loadstr("goodbye",goodbye);
+   if(err > 0)
+   {
+   goodbye := textformat(goodbye);
+   sendtext(goodbye, self);
+   }
+   destroy(self);
+   quit;
+ } else if (command("w") ) {
+   sendtext("Enter new WizInv Level: ", self);
+   wait(SFB_CMD, TRUE);
+   wizlvl := atoi(cmdstr);
+   if (wizlvl > self.level)
+     wizlvl := self.level;
+   self.minv := wizlvl;
+ } else {
+   sendtext("Invalid Selection&amp;n&amp;n", self);
+   goto wiz_menu;
+ }
+
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ Look in '''vme.h''' for the possible values you can send to the menu
+ function.
+
+
+ ---~---~---~---~---~---~---~---~---

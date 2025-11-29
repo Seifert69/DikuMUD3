@@ -1,0 +1,36 @@
+<span id="bfstrcmp"></span>
+
+ '''Function:'''  <i><!--CODE-->integer strcmp( s1:string, s2:string) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''s1'''
+ <!--DEFINITION-->         first string
+ <!--TERM-->  '''s2'''
+ <!--DEFINITION-->         second string
+
+  '''returns'''
+ <!--TERM-->  '''-1'''
+ <!--DEFINITION-->         if s1 &lt; s2
+ <!--TERM-->  '''0'''
+ <!--DEFINITION-->         if s1 = s2
+ <!--TERM-->  '''1'''
+ <!--DEFINITION-->         if s1 &gt; s2
+
+
+ This allows you to compare strings with case sensitivity in place.  If
+ you don't care about the case of the string use the normal '==' '&gt;',
+ '&lt;', '&lt;=', '&gt;=', symbols.
+ '''example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ if (strcmp("I Care about Capitals",s2)==0))
+         {
+         sendtext ("You care I can see.&amp;n",self);
+         quit;
+         }
+
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->

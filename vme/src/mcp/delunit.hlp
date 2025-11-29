@@ -1,0 +1,40 @@
+<span id="bfdelunit"></span>
+
+ '''Function:'''  <i><!--CODE-->integer delunit( filename : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''filename'''
+ <!--DEFINITION-->         The name of the Unit file to be deleted.
+ <!--TERM-->  '''Return'''
+ <!--DEFINITION-->         Returns an integer TRUE if deleted FALSE if not delunit is used to delete files that are used with the 'Restore' and 'store' functions.
+
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin chest_del ("arg : string /*filename to be deleted*/);
+ var
+         ret:integer;/*to hold the return value if deleted or not*/
+ code
+ {
+ ret:= delstr("chest.file");
+ if (!ret)
+         {
+         log ("File not deleted.");
+         quit;
+         }
+
+ sendtext("Chest file deleted[&amp;]n",self);
+ quit;/*dil delete routine done
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ '''See Also'''
+ [[#bfrestore|Restore a Unit from a Unit file]] and
+ [[#bpstore|Store Units to a Unit file]].
+
+
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,6 @@
+<span id="bfgwords"></span>
+ stringlist getwords ( var s : string )
+        s : A string with zero or more words separated by space.
+    return: A stringlist where each string was a word in 's'.
+
+ ---~---~---~---~---~---~---~---~---

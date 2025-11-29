@@ -1,0 +1,15 @@
+= addaff( u : unitptr, id : integer, duration : integer, beat: integer, data0 : integer, data1: integer, data2: integer, tif_first : integer, tif_tick : integer, tif_last : integer, apf : integer) = 
+
+  u  : Unit to add affect to.
+  id : Affect id to add, see ID_* in values.h and/or vme.h
+  duration : Number of triggers
+  beat : How often the pulse runs (4 = 1 second)
+  data0-2 : Data values for the ID_
+  tif  : The message ID 
+  apf  : The modification function
+  result: Adds affect 'id' at 'u' with first, tick, and last TIF_XXX's, etc.
+
+See also:
+  > {subaff()}
+  > {isaff()}
+  > {getaffects()}

@@ -1,0 +1,52 @@
+<span id="int"></span>
+ '''Integer:'''
+
+   Non-fraction numbers can be used throughout your DIL programs.  They are given
+ normally, or in normal C style hexadecimal, preceded with '0x'. Integers are
+ signed 32-bit integers.  Variables of type string are saved with DIL programs,
+ if attached to a saved unit.
+
+ '''Example:'''
+
+   0x10
+
+ '''Example:'''
+
+   2
+
+   Integers are used within expressions as both number value and boolean(true/false)
+ values. You may use comparison between integers through the comparison operators:
+ '==' (equality),
+ '<' (less than),
+ '>' (greater than),
+ '<=' (less or equal),
+ '>=' (greater or equal)
+ '!=' (not equal).
+
+
+ '''Example:'''
+
+   if (42<12) ...
+
+   Returning the boolean value (true/false) depending on the comparison between
+ integers. The result may be stored in an integer variable, and tested later, or
+ used directly in an 'if' or 'while', etc.  You may also operate on boolean
+ expression themselves, using LOGICAL operators 'and','not','or', which allows
+ you to combine the expressions.
+
+ '''Example:'''
+
+   if ( not ( (self.hp<42) or (self.level>10) ) ) ..
+
+ Integer expressions may also use a number of other operators:
+ '+' (addition)
+ '-' (subtraction/negation),
+ '*' (multiplication),
+ '/' (division),
+ '|' (bitwise or, for flags),
+ '&' (bitwise and, for flags)
+
+ Precedence rules for using these operators are still somewhat messed up.  You'd
+ better use parenthesis where ever possible.
+
+ ---~---~---~---~---~---~---~---~---

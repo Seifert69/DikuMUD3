@@ -1,0 +1,14 @@
+<span id="bpresetvlevel"></span>
+
+ '''Function:'''  <i><!--CODE-->reset_vlevel( u : unitptr ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''u'''
+ <!--DEFINITION-->         player your resetting
+
+ This function simply resets a players virtual level.  Can be used in functions
+ like reroll where you set the players back to the way he first logged on.
+ '''Example:  '''<i><!--CODE-->reset_vlevel (u);</i><!--ENDCODE-->
+ '''See Also'''
+ <i><!--CODE-->
+ [[#bpresetlevel|reset a players level]] and
+ [[#bpresetrace|reset a players race information]]</i><!--ENDCODE-->

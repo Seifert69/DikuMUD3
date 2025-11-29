@@ -1,0 +1,8 @@
+<span id="bpaddeq"></span>
+ addequip ( u : unitptr , i : integer )
+    u : Unit to equip.
+    i : Where to equip unit.
+    result: Equips unit, presumed to be in inventory PC/NPC at
+            given position. See WEAR_* in values.h and/or vme.h
+
+ ---~---~---~---~---~---~---~---~---

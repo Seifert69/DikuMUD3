@@ -1,0 +1,9 @@
+<span id="bfpurse"></span>
+ integer purse(u : unitptr, coinage : integer)
+    u : The unit to check
+    coinage: The money type (e.g. gold, silver), one of IRON_PIECE, etc.
+    Returns: The number of such units found.
+    Example: if (purse(self, PLATINUM_PIECE) > 10)
+               exec("say I am loaded with platinum!", self);
+
+ ---~---~---~---~---~---~---~---~---

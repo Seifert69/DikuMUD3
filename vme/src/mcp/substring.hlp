@@ -1,0 +1,5 @@
+<span id="bpsubs"></span>
+ substring ( var l : stringlist, s : string )
+    l : Stringlist to remove string from.
+    s : String to remove
+    result: Removes string 's' from stringlist 'l'.

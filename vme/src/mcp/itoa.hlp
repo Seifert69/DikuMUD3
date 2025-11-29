@@ -1,0 +1,7 @@
+<span id="bfitoa"></span>
+ string itoa ( i : integer )
+    i : A number.
+    return: A string with the number.
+    Example: s := itoa(42);
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,18 @@
+= integer isaff ( u : unitptr , i : integer ) =
+
+  u : A unit to be examined.
+  i : An id of an affect, see ID_* in values.h and/or vme.h
+  result: TRUE, if unit 'u' is affected by affect id 'i'
+
+'''Examples:'''
+
+  if (isaff(self, ID_BLIND_CHAR))
+    sendtext("You're blinded", self);
+
+This command scans the unit 'u' for any affect matching the id 'i'
+and returns TRUE if one is found.
+
+See also:
+  > {subaff()}
+  > {addaff()}
+  > {getaffects()}

@@ -1,0 +1,21 @@
+<span id="dcwhile"></span>
+ '''while:'''
+     The while statement lets you execute a series of
+     statements while an expression evaluates to TRUE.
+
+ '''Example:'''
+
+ <nowiki>
+
+ dilbegin foo();
+   code
+   {
+     while (not self.inside) {
+       exec("say I own nothing", self);
+       pause;
+     }
+     exec("say ahh.. now i own something", self);
+   }
+   dilend</nowiki>
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,69 @@
+<span id="bfstrdir"></span>
+
+ '''Function:'''  <i><!--CODE-->stringlist strdir( match : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''match'''
+ <!--DEFINITION-->         The wild card file you want to match or '*' for all.
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         a Stringlist with all the filenames that match the 'match' argument.
+
+ The 'match' argument uses the same wild cards as the Linux 'ls' command
+ so the following will work.
+
+ <!--TERM-->  '''&ast;'''
+ <!--DEFINITION-->         Match any character or group of characters
+ <!--TERM-->  '''&quest;'''
+ <!--DEFINITION-->         Match one of any character
+ <!--TERM-->  '''[...]'''
+ <!--DEFINITION-->         Match one of a set of characters
+
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ "corpse*" matches:  corpse.10938 corpse.whistler corpseofwhistler ...
+ "corpse?" matches corpse1 corpses corpse5 ...
+ "[abc]*" matches ability about cost back ...
+ "[a-z]*" about zoo man father ...
+ "start[nm]end" matches startnend startmend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ '''Example DIL:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin wanted ();
+ var
+         wantedlist:stringlist;
+         templist:stringlist;
+         i:integer;
+         ln:integer;
+ code
+ {
+
+         wantedlist := strdir ("dead*");
+
+                 i := 0;
+                 ln := length (wantedlist);
+
+         while (i &lt; ln )
+                 {
+                 templist := split (wantedlist.[i],".");
+                 sendtext (templist.[1]+" wanted dead!&amp;n",self);
+                 i:=i+1;
+                 }
+
+ quit;
+ }
+ dilend
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ The previous DIL would be an example of a command to check the wanted dead
+ players on the VME if you saved the files with the first word being
+ 'dead' and separated it with a '.' and the players name. For example if
+ 'whistler' was wanted dead  the file name would be 'dead.whistler'

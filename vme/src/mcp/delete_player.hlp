@@ -1,0 +1,93 @@
+<span id="bpdp"></span>
+
+ '''Function:'''  <i><!--CODE-->delete_player( s : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''s'''
+ <!--DEFINITION-->         the player name you want to delete
+
+ This function deletes a player but it doesn't check to see if it
+ was deleted or if it even existed you will have to do that with 'isplayer'.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin aware do_delete (arg:string);
+ var
+         temp:string;
+         err:integer;
+ code
+ {
+
+ if(self.type != UNIT_ST_PC) quit;
+
+ if (self.level>200)
+         goto admin_delete;
+
+ :char_delete:
+         if (arg!="self forever")
+                 {
+                 sendtext ("To delete your char type:  'delete self forever'&amp;n",self);
+                 quit;
+                 }
+
+ err:=loadstr("delete.txt",temp);
+
+ if (err&lt;1)
+         goto no_insure;
+
+ sendtext (temp,self);
+
+ sendtext ("If your sure you still want to delete your character, 'say delete me'&amp;n",self);
+ sendtext ("Doing anything else will abort the deletion.&amp;n",self);
+
+ wait (SFB_CMD, self==activator);
+ if (command ("say"))
+
+         if (argument=="delete me")
+         if (self.extra.[CLAN_RANK]!=null)
+                 exec ("cdefect",self);
+                 delete_player(self.name);
+
+ sendtext("Deletion aborted&amp;n",self);
+
+ quit;
+
+         :no_insure:
+                 if (self.extra.[CLAN_RANK]!=null)
+                 exec ("cdefect",self);
+                         delete_player(self.name);
+
+ quit;
+         :admin_delete:
+         if (arg=="self forever")
+                 goto char_delete;
+ if (arg==""){
+ sendtext("You must supply a characters name to delete one.&amp;n",self);
+ quit;
+ }
+
+ if (arg==self.name){
+ sendtext ("To delete self you need to type 'delete self forever'&amp;n",self);
+ quit;
+ }
+
+ if (not isplayer(arg))
+         {
+         sendtext (arg+" is not a character.&amp;n",self);
+         quit;
+         }
+ dilcopy ("god_delete@clans("+arg+")",self);
+
+         sendtext (arg+" has been deleted.&amp;n",self);
+ quit;
+ }
+ dilend
+
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+ ---~---~---~---~---~---~---~---~---

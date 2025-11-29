@@ -1,0 +1,39 @@
+<span id="bpflog"></span>
+
+ '''Function:'''  <i><!--CODE-->flog (filename : string,  s : string, wa : string );</i><!--ENDCODE-->
+
+ <!--TERM-->  '''filename'''
+ <!--DEFINITION-->         The Filename of the file to appear in the log directory.
+ <!--TERM-->  '''s'''
+ <!--DEFINITION-->         The string to be logged.
+ <!--TERM-->  '''wa'''
+ <!--DEFINITION-->         Write or Append
+
+ The 'flog' function allows you to split up your logs in the log directory
+ so that you don't end up with everything in the main vme.log.
+ '''Note:'''The append/write argument must be in lower case and can only be a
+ 'w' or a 'a' surrounded by '"'.  If the argument is a 'w' it will over write
+ any log file by that name.  If the argument is 'a' it will append to the
+ file by that name.
+ '''Example:'''
+ <i><!--CODE-->
+
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin zonelog (s:string);
+ code
+ {
+ flog (self.zonidx+".log",s,"a");
+ return;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ The previous DIL function will work in any zone to log to a file with that
+ zones name each zone could use it to keep zone logs separate.
+
+
+
+ ---~---~---~---~---~---~---~---~---

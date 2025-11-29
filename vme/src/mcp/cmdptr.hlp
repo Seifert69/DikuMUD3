@@ -1,0 +1,63 @@
+<span id="cptr"></span>
+ '''Type:  '''<i><!--CODE-->cmdptr</i><!--ENDCODE-->
+ '''cmdptr fields'''
+
+
+ '''name'''
+             string - command name
+ '''type'''
+             integer - command type like social or skill or just command
+ '''level'''
+             integer - minimum level to use command
+ '''loglevel'''
+             integer - level of character that can see the log 0 for no logs
+ '''position'''
+             integer - minimum position to use command
+ '''next'''
+             cmdptr - pointer to the next cmdptr
+ '''previous'''
+             cmdptr - pointer to the previous cmdptr
+
+
+   The cmdptr can be used to search the command list or display all the commands.
+ I0t is also now possible to sort the commands by type by defining your own command
+ types and using the type field to sort on.
+
+   In order to get the first command in the list you use the following function:
+ '''Function:  '''<i><!--CODE-->chead();</i><!--ENDCODE-->
+ If you want to get a specific command then you use the following function:
+ '''Function:  '''<i><!--CODE-->cmdptr := getcommand (s : string );</i><!--ENDCODE-->
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin cmdtst(arg : string);
+ var
+   cmd : cmdptr;
+   st : string;
+
+ code
+ {
+    cmd := chead();
+
+ 	  while (cmd)
+         {
+         st := cmd.name + " " + itoa(cmd.level) + " " + itoa(cmd.type) + " " +
+         itoa(cmd.loglevel) + " " + itoa(cmd.position);
+         act("CMD: $2t", A_ALWAYS, self, st, null, TO_CHAR);
+         cmd := cmd.next;
+         }
+
+         cmd:=getcommand("kick");
+         sendtext ("You must be "+itoa(cmd.level+" to use kick&amp;n",self);
+
+            quit;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+ ---~---~---~---~---~---~---~---~---

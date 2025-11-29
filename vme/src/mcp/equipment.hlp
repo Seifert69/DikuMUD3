@@ -1,0 +1,6 @@
+<span id="bfeq"></span>
+ unitptr equipment ( u : unitptr , i : integer )
+    u : The character to search.
+    i : What equipment to find, any of the WEAR_XXX macros.
+    result: Returns the unit on 'u' which is equipped on position 'i'.
+            See WEAR_* in values.h and/or vme.h

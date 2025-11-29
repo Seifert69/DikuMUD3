@@ -1,0 +1,51 @@
+<span id="dcif"></span>
+ '''if:'''
+     The if statement is much like C. It takes any type as
+     argument. Non integers are considered 'TRUE' if they are
+     not null.
+
+ '''Example:'''
+
+ <nowiki>
+
+   dilbegin foo();
+   code
+   {
+     if (self.hp>10)
+     {
+       exec("say Hehe!",self);
+     }
+     else
+     {
+       exec("say ouch!", self);
+     }
+   }
+   dilend</nowiki>
+
+ '''Example:'''
+
+ <nowiki>
+
+   dilbegin foo();
+   code
+   {
+     if (self.loaded>10)
+     {
+       exec("say its getting crowded!",self);
+     }
+   }
+   dilend</nowiki>
+
+ '''Example:'''
+
+ <nowiki>
+
+   dilbegin foo();
+   code
+   {
+     if (self.loaded<10)
+       exec("say plenty of room!",self);
+   }
+   dilend</nowiki>
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,8 @@
+<span id="bfdf"></span>
+ integer dilfind( s : string, u : unitptr )
+    s : name of dil template to find.
+    u : unit to find program in.
+    return: Whether a program using a template with same name as in 's'
+            attached to unit 'u' was found.
+
+ ---~---~---~---~---~---~---~---~---

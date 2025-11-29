@@ -1,0 +1,7 @@
+= follow()= 
+
+ follow( f : unitptr, m : unitptr )
+    f : The character to follow
+    m : The character to be 
+
+Unconditionally makes 'f' follow 'm', even if 'f' is mortally wounded, sleeping, fighting or whatever. See also the unitptr field {unitptr#Char} for CHARs.

@@ -1,0 +1,16 @@
+<span id="bpsubex"></span>
+ subextra ( var e : extraptr, s : string )
+    e : Extra description list to remove element from.
+    s : String matching .names field in element
+    result: Removes first extra description from list with matching name.
+
+ <emp>CAVEAT</EMP> builder: You cannot use an extraptr variable as the e
+ argument, but you may continue to use the following form:
+
+    ...
+    ...
+    subextra (self.quests, "Bozo's Quest");
+    ...
+    ...
+
+ ---~---~---~---~---~---~---~---~---

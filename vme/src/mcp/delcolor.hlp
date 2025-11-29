@@ -1,0 +1,11 @@
+<span id="bpdelcolor"></span>
+
+ '''Function:  '''<i><!--CODE-->delcolor (ch : unitptr, ks : string) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''ch'''
+ <!--DEFINITION-->         character you are deleting the color from
+ <!--TERM-->  '''ks'''
+ <!--DEFINITION-->         key string for the color
+
+ This function is used to delete any colors from a players personal color list.
+ '''Function:  '''<i><!--CODE-->delcolor(pc, "clan_who");</i><!--ENDCODE-->

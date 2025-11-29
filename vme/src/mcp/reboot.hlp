@@ -1,0 +1,21 @@
+<span id="bpreboot"></span>
+
+ '''Function:  '''<i><!--CODE-->reboot ;</i><!--ENDCODE-->
+ This function works like a quit command.  Anything after the reboot function in a Dil will not be
+ executed the mud will reboot instantly.  The zone must have root privileges in
+ the zonelist in order to use this function.
+ '''Simple reboot command'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin cmd_reboot (arg:string);
+ code
+ {
+ sendtext ("Rebooting the mud.&amp;n",self);
+ reboot;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->

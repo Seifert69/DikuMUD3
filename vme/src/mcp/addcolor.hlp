@@ -1,0 +1,15 @@
+<span id="bpaddcolor"></span>
+
+ '''Function:  '''<i><!--CODE-->addcolor (ch : unitptr, ks : string, cstr : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''ch'''
+ <!--DEFINITION-->         character you are adding the color to
+ <!--TERM-->  '''ks'''
+ <!--DEFINITION-->         key string for the color
+ <!--TERM-->  '''cstr'''
+ <!--DEFINITION-->         color string
+
+ This function allows your Dils to create and add their own personal colors to a players
+ color list.  That way you can actually make an act in a color that the player chooses or
+ you yourself choose.
+ '''Function:  '''<i><!--CODE-->addcolor(pc, "clan_who","&amp;c+w&amp;bn");</i><!--ENDCODE-->

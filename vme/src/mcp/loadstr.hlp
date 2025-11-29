@@ -1,0 +1,52 @@
+<span id="bfloadstr"></span>
+
+ '''Function:'''
+ <i><!--CODE-->integer loadstr( filename : string , buff : string );</i><!--ENDCODE-->
+
+ <!--TERM-->  '''filename'''
+ <!--DEFINITION-->         The name of the string file to be loaded
+ <!--TERM-->  '''buff'''
+ <!--DEFINITION-->         The string that you wish to read the file contents into
+ <!--TERM-->  '''Return'''
+ <!--DEFINITION-->         <i><!--CODE-->FILE_LOADED, FILE_NOT_FOUND, FILE_OUT_OF_MEMORY,or FILE_TO_LARGE</i><!--ENDCODE-->
+
+ Loadstr is used to load strings from disk that were saved either by savestr
+ or any text editor.
+ The 'loadstr' is perfect for operations such as
+ on-line edited newspaper, a lottery where the tickets are sold to players,
+ creating smarter NPC's that can remember through reboots who they are hunting,
+ Dil based teachers, message boards, mail system, news command., zone or
+ room based help,  competition boards, and much much more.
+ '''Disk access is always slow'''.
+ attempt to keep file sizes to a minimum for quick loading.  Otherwise you
+ might cause serious delays on the server.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin news_load ();
+ var
+         ret:integer;/*to hold the return value if loaded or not*/
+         buff:string;/*to hold the loaded string*/
+ code
+ {
+ ret:= loadstr("news.txt",buff);
+ if (!ret)
+         {
+         log ("File not read.");
+         quit;
+         }
+
+ sendtext(buff+"[&amp;]n",self);
+ quit;/*dil load routine done destroy self.*/
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ '''See Also''' <i><!--CODE-->
+ [[#bfdelstr|Delete a String file]] and
+ [[#bfsavestr|Save String file]]</i><!--ENDCODE-->
+
+ ---~---~---~---~---~---~---~---~---

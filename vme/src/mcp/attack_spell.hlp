@@ -1,0 +1,13 @@
+<span id="bpatt_s"></span>
+ integer attack_spell( n : integer, caster : unitptr, medium : unitptr,
+                       target : unitptr, bonus : integer)
+    Returns : The amount of damage given.
+    n : The spell index of the offensive spell (SPL_XXX)
+    caster : The caster of the spell.
+    medium : The medium, with which the spell is cast, might be caster.
+    target : The target of the spell.
+    bonus  : Possible (+) advantage or (-) penalty.
+
+    This is low-level internal spell stuff used to develop new spells. Do not
+    use unless you know what you are doing and have been allowed to do so by
+    your Admin.

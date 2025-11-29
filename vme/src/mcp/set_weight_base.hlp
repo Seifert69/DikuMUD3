@@ -1,0 +1,14 @@
+= set_weight_base( u : unitptr, lbs : integer ) =
+
+''' Parameters '''
+  u : the unit on which you wish to alter the weight.
+  lbs : the new base weight in lbs (½ kg)
+
+''' Description '''
+Use this procedure to set a unit's base weight. This function will
+ensure the base-weight is set to the new value. To ensure weight 
+consistency this procedure also adjusts the weight of all units outside
+the altered unit.
+
+See also:
+  > {set_weight}

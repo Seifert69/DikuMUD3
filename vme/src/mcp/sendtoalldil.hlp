@@ -1,0 +1,16 @@
+<span id="bpsendalld"></span>
+ sendtoalldil( m : string, s : string )
+    m : Message to send.
+    s : Name idx to a DIL program to send message to.
+    result: Send a message to all DIL programs matching a given database name.
+
+ '''Example:'''
+
+    sendtoalldil ( "some message", "intercomm@cemetery");
+
+    The message "some message" is sent to all DIL program in the world
+    matching the data base name "intercomm@cemetery".
+    Like 'send()' and 'sendto()', the
+    message received matches the SFB_MSG message class.
+
+ ---~---~---~---~---~---~---~---~---

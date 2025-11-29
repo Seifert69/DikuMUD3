@@ -1,0 +1,10 @@
+<span id="bpsetbright"></span>
+ setbright( u : unitptr, i : integer )
+    u : the unit on which you want to change the brightness.
+    i : the new brightness
+
+    When you want to increase / decrease the amount of light shed by a
+    unit, use this function. Units with "bright" light up rooms so that
+    people can see.
+
+ ---~---~---~---~---~---~---~---~---

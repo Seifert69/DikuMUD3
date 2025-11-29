@@ -1,0 +1,8 @@
+<span id="bfmonstr"></span>
+ string moneystring(amt : integer, verbose : integer)
+    amt    : The amount of money
+    verbose: True if an expanded string (copper pieces) or false
+             if abbreviated money types (cp).
+    result : The moneystring for the given currency.
+
+ ---~---~---~---~---~---~---~---~---

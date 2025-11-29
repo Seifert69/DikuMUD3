@@ -1,0 +1,6 @@
+<span id="argu"></span>
+ 'argument'
+    This variable is a string, showing the argument of a command resulting
+    in the activation of the DIL program. See SFB_CMD for example.
+
+ ---~---~---~---~---~---~---~---~---

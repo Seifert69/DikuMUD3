@@ -1,0 +1,9 @@
+= dilcopy( s : string, u : unitptr ) =
+    s : Name template to attach to unit.
+    u : Unit to attach a dil program to.
+    result: Attaches a DIL program to a unit 'u', which uses a template named by 's'.
+
+Examples:
+   dilcopy("master_servant@spells()", u);
+   dilcopy("spl_sleep@spells(7)", tgt);
+   dilcopy("sendmsg@spells(teleport)", targ);

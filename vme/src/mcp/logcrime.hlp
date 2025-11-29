@@ -1,0 +1,13 @@
+<span id="bplogcrime"></span>
+ logcrime( c : unitptr, v : unitptr, t : integer )
+    c : The criminal (main suspect)
+    v : The victim
+    t : The crime type (CRIME_XXX)
+
+       Registers a crime committed against 'v' by 'c'. Use the
+     CRIME_XXX values from values.h and/or vme.h as the 't' argument.
+     The logcrime routine automatically registers group members
+     of the criminal, etc. In stuff like steal, remember to make
+     the criminal visible if he fails his attempts.
+
+ ---~---~---~---~---~---~---~---~---

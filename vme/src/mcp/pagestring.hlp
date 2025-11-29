@@ -1,0 +1,9 @@
+<span id="bppagestring"></span>
+ pathto(buff : string, u : unitptr )
+    buff   : The string that is to be paged to the player.
+ 	 u			: The unitptr the buff is to be paged for.
+    returns: nothing
+ 	 example:
+ 	 pagestring (buff,self);
+ 	 would format the buff string to the player so the buff text doesn't scroll
+ 	 off the screen until after the player presses enter.

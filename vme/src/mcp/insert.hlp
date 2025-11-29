@@ -1,0 +1,54 @@
+<span id="bpinsert"></span>
+
+ '''Function:  '''<i><!--CODE-->insert( sl : &lt;stringlist or intlist&gt;, i : integer, s : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''sl'''
+ <!--DEFINITION-->         the stringlist or intlist you are inserting to
+ <!--TERM-->  '''i'''
+ <!--DEFINITION-->         the index where you want to insert the string
+ <!--TERM-->  '''s'''
+ <!--DEFINITION-->         the string you want to insert
+
+ This function allows you to insert a string in a stringlist or intlist
+ with out re-writing the entire stringlist or intlist to do it.  The
+ following Dil will add a string in order to a stringlist.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin stringlist add_in_order (sl:stringlist,s:string);
+ var
+  i:integer;
+  ln:integer;
+ code
+ {
+ if (length(sl)==0)
+  {
+  addstring (sl,s);
+  return (sl);
+  }
+
+ ln:=length(s);
+ i:=0;
+ while (i&lt;ln)
+  {
+  if (length(sl.[i]) &lt;=ln)
+   {
+   insert (sl,i,s);
+  return(sl);
+  }
+  i:=i+1;
+  }
+
+ addstring (sl,s);
+ return (sl);
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+
+ ---~---~---~---~---~---~---~---~---

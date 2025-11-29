@@ -1,0 +1,8 @@
+<span id="bfdd"></span>
+ integer dildestroy( s : string, u : unitptr )
+    s : name of dil template to delete.
+    u : unit to remove program from.
+    return: Whether a program using a template with same name as in 's'
+            attached to unit 'u' was deleted.
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,62 @@
+<span id="bfsend_pre"></span>
+ '''Function:'''</i><!--ENDCODE-->send_pre( c : string, a :unitptr, m : unitptr, t :unitptr, p : integer, arg : string, o : unitptr);</i><!--ENDCODE-->
+
+ <!--TERM-->  '''c'''
+ <!--DEFINITION-->         the command string that is sending the message
+ <!--TERM-->  '''a'''
+ <!--DEFINITION-->         the unitptr (activator) that activated the message
+ <!--TERM-->  '''m'''
+ <!--DEFINITION-->         the unitptr (medium) that the Dil is acting through
+ <!--TERM-->  '''t'''
+ <!--DEFINITION-->         the unitptr (target) the Dil is acting on
+ <!--TERM-->  '''p'''
+ <!--DEFINITION-->         the power of the message
+ <!--TERM-->  '''arg'''
+ <!--DEFINITION-->         the argument sent with the message
+ <!--TERM-->  '''o'''
+ <!--DEFINITION-->         the unitptr (other) you also want the message to go to
+
+
+
+ New Function send_pre() takes same arguments as send_done but returns either
+  SFR_SHARE or SFR_BLOCK.
+ If the command is blocked by another special or dil, then SFB_BLOCK will be returned,
+  and you should quit your dil.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin cmdtst(arg : string);
+ var
+   i : integer;
+ code
+ {
+    i:=send_pre("cmdtest",self,null,null,0,argument,null);
+
+ if (i == SFR_BLOCK)
+   quit;
+
+           sendtext ("No one blocked me!&amp;n",self);
+           quit;
+           }
+           dilend
+
+
+ dilbegin pretest();
+ code
+ {
+    :loop:
+    wait(SFB_PRE, command("cmdtest"));
+    block;
+         act("hahahaha I blocked your cmdtest command",
+        A_SOMEONE, activator, medium, null, TO_ALL);
+         goto loop;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,6 @@
+<span id="weather"></span>
+ 'weather'
+    This is the state of the mud-weather. It will equal one of the
+    SKY_XXX values in values.h and/or vme.h.
+
+ ---~---~---~---~---~---~---~---~---

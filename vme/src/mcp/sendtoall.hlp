@@ -1,0 +1,15 @@
+<span id="bpsendall"></span>
+ sendtoall( m : string, s : string )
+    m : Message to send.
+    s : Name idx to send message to.
+    result: Send a message to all units matching a given database name.
+
+ '''Example:'''
+
+    sendtoall ( "some message", "rabbit@haon-dor");
+
+    The message "some message" is sent to all units in the world matching the
+    data base name "rabbit@haon-dor". Like 'send()' and 'sendto()', the
+    message received matches the SFB_MSG message class.
+
+ ---~---~---~---~---~---~---~---~---

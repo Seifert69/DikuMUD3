@@ -1,0 +1,97 @@
+= act() =
+
+The purpose of act is to send a message to a number of players '''present''' in a room.  The room is defined as the room containing the aforementioned character (provided he himself is in the room, i.e. not in a closed container.)
+
+== Syntax: ==
+
+  act(message, visibility, char, medium, victim, to_whom);
+
+== Parameters: ==
+'''message:''' is a string that will be shown to other mobiles when the act is executed. To refer to the following arguments use the [[#formatters|formatters]] listed below.
+
+'''visibility:''' is an integer that defines what happens if the mobile that is about to receive the message can't see the activator.
+* A_SOMEONE
+If the receiver cannot see char, replace any reference to char with <i>someone</i>.
+* A_HIDEINV
+If the receiver cannot see char, don't send the message at all. Use this when missing vision should eliminate the perception of the action the message represent. One instance where it is used is in smile. You would need a ridiculously sensitive ear to hear, let alone percept that someone's smiling if you can't see them. Do not use it if 'sound' is inherent in the message.
+* A_ALWAYS
+Works exactly like A_SOMEONE, except that the receiver will see the message even when sleeping.
+
+'''char:''' is a unitptr, and the most important argument in the act. If this is not valid the act will never show, leaving mobiles without the message.
+
+'''medium:''' is a unit pointer, an integer or a string. Use this at your leisure.
+
+'''victim''' is a unit pointer, an integer or a string. Certain flags in the next argument rely on the validity of victim.
+
+'''to_whom''' is an integer that defines who gets the message.
+
+* TO_ROOM
+Sends the message to the entire room, excluding 'char'.
+* TO_VICT
+ <!--DEFINITION-->                Sends to 'victim' only. 'victim' must be valid, naturally.
+ <!--TERM-->         <b><!--CODE-->TO_NOTVICT</b><!--ENDCODE-->
+ <!--DEFINITION-->                Sends the message to the entire room, excluding 'char' and 'victim'.  Perfect for bystanders in a melee.
+ <!--TERM-->         <b><!--CODE-->TO_CHAR</b><!--ENDCODE-->
+ <!--DEFINITION-->                Sends the message to 'char' and no one else.
+ <!--TERM-->         <b><!--CODE-->TO_ALL</b><!--ENDCODE-->
+ <!--DEFINITION-->                Sends the message to everybody in the room.
+ <!--TERM-->         <b><!--CODE-->TO_REST</b><!--ENDCODE-->
+ <!--DEFINITION-->                This is a bit different from the rest.  In sends the message to all other units in the local environment, excluding those inside 'char'.
+
+ ---~---~---~---~---~---~---~---~---
+
+ <span id="formatters"></span>
+ '''Act Formatters'''
+
+ Just as the description formatters, act has its own set of formatters that
+ enable you to create generic messages that will be interpreted at run-time,
+ lessening the load on you.
+
+ The format string is a normal message, containing some special characters:
+
+ <!--TERM--> '$$'
+ <!--DEFINITION-->         will be sent to the receiver as a single `$'
+
+ '$', followed by a number and an extra character.
+   '''The numbers:'''
+
+ <!--TERM--> '1'
+ <!--DEFINITION-->          means this formatter refers to the 'char' argument.
+ <!--TERM--> '2'
+ <!--DEFINITION-->         means this formatter refers to the 'medium' argument.
+ <!--TERM--> '3'
+ <!--DEFINITION-->          means this formatter refers to the 'victim' argument.
+
+    '''The characters'''
+
+ <!--TERM--> 'N'
+ <!--DEFINITION-->          the formatter will be replaced with the name of the unit, or (depending on the visibility) 'something' or 'someone'.
+ <!--TERM--> 'a'
+ <!--DEFINITION-->         'a' or 'an' depending on the name of the unit referred by the number.
+ <!--TERM--> 'e'
+ <!--DEFINITION-->         'it', 'he' or 'she' depending on the gender of the unit referred by the number.
+ <!--TERM--> 'm'
+ <!--DEFINITION-->         'it', 'him' or 'her' depending on the gender of the unit referred by the number.
+ <!--TERM--> 'n'
+ <!--DEFINITION-->          the formatter will be replaced with the title of the unit, or (depending on the visibility) 'something' or 'someone'.
+ <!--TERM--> 'p'
+ <!--DEFINITION-->         'fighting', 'standing', 'sleeping', etc., depending on the positionof the unit referred by the number.
+ <!--TERM--> 's'
+ <!--DEFINITION-->         'its', 'his' or 'her' depending on the gender of the unit referred by the number.
+ <!--TERM--> 't'
+ <!--DEFINITION-->         the string in the argument referred by the number.
+
+
+
+ '''Example:'''
+
+ <nowiki>
+
+   act("You step over $2n.", A_SOMEONE, self, litter, null, TO_CHAR);
+   act("$1n steps over $2n.", A_SOMEONE, self, litter, null, TO_REST);</nowiki>
+
+
+ '''See Also:'''
+   [[#act.html|DIL Act() for Dummies]]
+
+ ---~---~---~---~---~---~---~---~---

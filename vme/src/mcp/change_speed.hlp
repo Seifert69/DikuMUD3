@@ -1,0 +1,16 @@
+<span id="bpchngs"></span>
+ change_speed( u : unitptr, i : integer )
+   u : the unit on which you wish to alter the current combat speed.
+   i : the amount to add to the speed.
+
+   Beware, this is not the 'speed' as in the speed field, rather this is
+   the speed which is calculated during combat. It is used for spells like
+   'stun' which effectively puts the character out of combat for one
+   round. Such a spell would be implemented like:
+
+    change_speed(u, 12)
+
+   and would only cause any effect if 'u' was fighting already (if not,
+   use setfighting).
+
+ ---~---~---~---~---~---~---~---~---

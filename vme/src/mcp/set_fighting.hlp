@@ -1,0 +1,10 @@
+<span id="bpsetfight"></span>
+ set_fighting( u : unitptr, t : unitptr )
+    u : the unit on which attacks.
+    t : the unit being attacked.
+
+    This is used to set two characters fighting. If the attacker is
+    fighting already, the target will simply be inserted into the
+    opponent list and perhaps killed a little later.
+
+ ---~---~---~---~---~---~---~---~---

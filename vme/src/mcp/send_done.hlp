@@ -1,0 +1,139 @@
+= senddone() =
+'''Function:'''
+ send_done( c : string, a :unitptr, m : unitptr, t :unitptr, p : integer, arg : string, o : unitptr, i : integer);
+
+ <!--TERM-->  '''c'''
+ <!--DEFINITION-->         the command string that is sending the message
+ <!--TERM-->  '''a'''
+ <!--DEFINITION-->         the unitptr (activator) that activated the message
+ <!--TERM-->  '''m'''
+ <!--DEFINITION-->         the unitptr (medium) that the Dil is acting through
+ <!--TERM-->  '''t'''
+ <!--DEFINITION-->         the unitptr (target) the Dil is acting on
+ <!--TERM-->  '''p'''
+ <!--DEFINITION-->         the power of the message
+ <!--TERM-->  '''arg'''
+ <!--DEFINITION-->         the argument sent with the message
+ <!--TERM-->  '''o'''
+ <!--DEFINITION-->         the unitptr (other) you also want the message to go to
+ <!--TERM-->  '''i'''
+ <!--DEFINITION-->         CMD_AUTO_XXX to send a CMD_AUTO or 0
+
+
+This sends the 'SFB_DONE' message to any dils that are waiting for it in the
+surrounding area and to the other pointer if not null.  The following is just
+one example you can find many more in '''commands.zon'''
+
+'''Built-in variables''':
+  activator : unitptr
+  medium    : unitptr
+  target    : unitptr
+  argument  : string
+  power     : integer
+
+ '''Example:'''
+
+ dilbegin do_read (arg:string);
+ var
+ brdname:string;
+         i:integer;
+         u:unitptr;
+         x:extraptr;
+         ln:integer;
+         temp:string;
+         templist:stringlist;
+         buff:string;
+         f_name:string;
+         act_str:string;
+ code
+ {
+   i:=atoi (arg);
+  if (i&lt;0)
+         {
+         exec ("look "+arg,self);
+         goto read_quit;
+         }
+ 
+ if (itoa (i)!=arg)
+         {
+         exec ("look "+arg,self);
+         goto read_quit;
+         }
+ 
+ u:=self.outside.inside;
+ while (u!=null)
+         {
+         if ((u.type==UNIT_ST_OBJ) and (u.objecttype==ITEM_BOARD))
+                 break;
+         u:=u.next;
+         }
+ 
+ if (u==null)
+         {
+         act ("You do not see that here.",A_ALWAYS,self,null,null,TO_CHAR);
+         quit;
+         }
+ 
+                 if (u.extra.["$BOARD_L_RES"].descr!="")
+                 {
+                 act_str:=u.extra.["$BOARD_L_RES"].descr(self,u);
+                 if (act_str!="")
+                 {
+         act(act_str,
+                         A_ALWAYS,self,null,null,TO_CHAR);
+                 quit;
+                 }
+                 }
+
+ brdname:=u.names.[length (u.names)-1];
+ i:=loadstr (brdname+".idx",temp);
+ if (i&lt;=0)
+         {
+         act ("But the board is empty!",
+                 A_ALWAYS,self,null,null,TO_CHAR);
+         goto read_quit;
+         }
+
+ templist:=split(temp,"&amp;x");
+ ln:=length (templist);
+ x:="$BOARD_MAX" in self.extra;
+ if ((atoi(arg)>atoi(x.descr)) or
+ (atoi(arg)>ln))
+         {
+         act("That message exists only within the boundaries of your mind.",
+                 A_ALWAYS,self,null,null,TO_CHAR);
+         goto read_quit;
+         }
+
+ i:=atoi(arg);
+ temp:=templist.[i-1];
+ f_name:=getword(temp);
+ i:=loadstr (brdname+"."+f_name,buff);
+ if (i==0)
+         {
+         sendtext("You have to let the poster finish the post before reading it.",self);
+         quit;
+         }
+ if (i&lt;1)
+         {
+         log("05: Error when loading board info.");
+         act ("This board is not working report to an Administrator",
+                 A_ALWAYS,self,null,null,TO_CHAR);
+                 quit;
+                 }
+
+ templist:=split(f_name,".");
+ if (length(templist)&lt;2)
+         act ("Message "+arg+":  "+temp,
+                 A_ALWAYS,self,null,null,TO_CHAR);
+ else
+         act ("Message "+arg+":  Re:  "+temp,
+                 A_ALWAYS,self,null,null,TO_CHAR);
+
+ pagestring(buff,self);
+
+ :read_quit:
+  send_done("read",self,null,u,0,arg,null,0);
+ quit;
+ }
+ dilend

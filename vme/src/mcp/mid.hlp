@@ -1,0 +1,18 @@
+<span id="bfmid"></span>
+
+ '''Function:'''  <i><!--CODE-->string mid ( o : string, s : integer, e : integer );</i><!--ENDCODE-->
+
+ <!--TERM-->  '''o'''
+ <!--DEFINITION-->         the original string to be parsed
+ <!--TERM-->  '''s'''
+ <!--DEFINITION-->         The starting point of the string to be parsed out
+ <!--TERM-->  '''e'''
+ <!--DEFINITION-->         the ending point of the string to be parsed out
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         the portion of the string defined by the 's' and 'e' values
+
+ This function parses the string passed to it and returns the portion of the string
+  defined by the start value and the end value that is also passed to the function.
+ '''Example:'''  <i><!--CODE-->"rock" := mid ("sprocket",3,6);</i><!--ENDCODE-->
+
+ ---~---~---~---~---~---~---~---~---

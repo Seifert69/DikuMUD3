@@ -1,0 +1,167 @@
+<span id="bfleft"></span>
+
+ '''Function:'''  <i><!--CODE-->string left ( o : string, l : integer );</i><!--ENDCODE-->
+
+ <!--TERM-->  '''o'''
+ <!--DEFINITION-->         the original string to be parsed
+ <!--TERM-->  '''l'''
+ <!--DEFINITION-->         The amount of characters to parse out
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         the left portion of the string with length l
+
+ This function parses the string passed to it and returns the number
+ of characters defined in its second argument.
+
+ '''Example:'''  <i><!--CODE-->"short" := left ("shorten me",5);</i><!--ENDCODE-->
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin aware describe (arg:string);
+ var
+         side:string;
+         oneword:stringlist;
+         location:string;
+         ln:integer;
+         args:stringlist;
+         temp:string;
+         i:integer;
+         x:extraptr;
+ code
+ {
+         if (self.type!=UNIT_ST_PC)
+                 quit;
+         if (self.position &lt;POSITION_SLEEPING)
+         {
+         act ("Recover first and then you can describe your body parts.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+                 quit;
+         }
+
+         args:=getwords(arg);
+         ln:=length(args);
+         if ((ln&lt;1) or (ln>2))
+         {
+         sendtext ("No such location to describe.",self);
+         quit;
+         }
+         else if (ln>1)
+         goto two_word;
+
+         :one_word:
+
+         if ((arg==left("help",length(arg))) or
+                 (arg==""))
+                 goto hlp_dscr;
+
+         oneword := {"arms","butt","ears","eyes","face","feet",
+ 		            "general","hair","hands","head","legs",
+ 					"mouth","neck","nose","nostrils","teeth",
+ 					"toes","tongue"};
+
+         i := 0;
+         ln := length(args.[0]);
+         temp:="ERROR";
+         while (i&lt;18)
+         {
+                 if (args.[0]==left(oneword.[i],ln))
+                 {
+                         temp := oneword.[i];
+                         break;
+                 }
+                 i := i+1;
+         }
+
+         if (temp=="ERROR")
+         {
+                 sendtext ("No such location to describe.",self);
+                 quit;
+         }
+
+         goto describe;
+
+         :two_word:
+
+         oneword := {"arm","leg","foot","hand","eye","ear"};
+         temp := "ERROR";
+         ln := length(args.[0]);
+         if (args.[0] == left("left",ln))
+                 side:="left";
+         else if (args.[0] == left("right",ln))
+                 side:="right";
+         else
+         {
+                 sendtext ("No such location to describe.",self);
+                 quit;
+         }
+
+         i := 0;
+         while (i&lt;6)
+         {
+                 if (args.[1]==left(oneword.[i],ln))
+                 {
+                         temp := oneword.[i];
+                         break;
+                 }
+                 i := i+1;
+         }
+
+         if (temp=="ERROR")
+         {
+                 sendtext ("No such location to describe.",self);
+                 quit;
+         }
+
+         temp := side+" "+temp;
+
+         :describe:
+         if (temp=="General")
+                 location := "";
+         else
+                 location := temp;
+
+         x := location in self.extra;
+         if (x!=null)
+           if (location=="")
+ sendtext("your Current description for your body is:  &amp;n"+x.descr+"&amp;n",self);
+         else
+ sendtext("your Current description for your "+location+"is:  &amp;n"+x.descr+"&amp;n",self);
+         if (location=="")
+ sendtext ("Enter a text you would like others to see when they look at your body.&amp;n",self);
+         else
+ sendtext ("Enter a text you would like others to see when they look at your "+location+".&amp;n",self);
+
+         beginedit (self);
+         wait(SFB_EDIT,self==activator) ;
+         temp := textformat(argument);
+         oneword:={""};
+         subextra(self.extra,location);
+         addstring (oneword, location);
+         addextra (self.extra,oneword,temp);
+         sendtext ("Description added.&amp;n",self);
+         quit;
+
+         :hlp_dscr:
+
+         sendtext ("&amp;nCorrect usage of 'describe':&amp;n&amp;n",self);
+         sendtext ("describe &lt;position>&amp;n&amp;n",self);
+         sendtext("&lt;position> being one of the following:&amp;n&amp;n",self);
+         sendtext( "arms        butt        ears        eyes&amp;n"+
+                   "face        feet        General     hair&amp;n"+
+                   "hands       head        left arm    left leg&amp;n"+
+                   "left foot   left hand   left eye    left ear&amp;n"+
+                   "legs        mouth       neck        nose&amp;n"+
+                   "nostrils    right arm   right leg   right foot&amp;n"+
+                   "right hand  right eye   right ear   teeth&amp;n"+
+                   "toes        tongue&amp;n&amp;n",self);
+         sendtext ("Example:  &amp;n&amp;n",self);
+         sendtext ("describe left leg&amp;n",self);
+         quit;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+ ---~---~---~---~---~---~---~---~---

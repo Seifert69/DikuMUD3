@@ -1,0 +1,15 @@
+<span id="bftoupper"></span>
+
+ '''Function:'''  <i><!--CODE-->string toupper ( s : string );</i><!--ENDCODE-->
+
+ <!--TERM-->  '''s'''
+ <!--DEFINITION-->         String to lower case
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         the string passed in lower cased
+
+ This function returns a copy of the string passed in with all characters changed
+ to be capitalized.
+ '''Example:'''  <i><!--CODE-->"HELLO!" := toupper ("hello!");</i><!--ENDCODE-->
+
+
+ ---~---~---~---~---~---~---~---~---

@@ -1,0 +1,34 @@
+<span id="bpkilledit"></span>
+
+ '''Function:  '''<i><!--CODE-->killedit ;</i><!--ENDCODE-->
+ This function is used to kill the editor on a PC if it needs to
+ stop editing before the PC is done editing.  An example of when this is needed
+ is when a player is killed while editing or is transfered away from a place where he was editing.
+ You can let them finish but it may be wierd for a person to finish
+ posting in one room while in another.
+ '''Example'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin editextra (arg:string);
+ code
+ {
+ interrupt (SFB_DEAD,self==activator,int_quit);
+         beginedit (self);
+         wait(SFB_EDIT,self==activator) ;
+         temp := textformat(argument);
+ addextra (self.outside.extra ,{"graphitee"},temp);
+ quit;
+ :int_quit:
+ killedit;
+ quit;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+
+ ---~---~---~---~---~---~---~---~---

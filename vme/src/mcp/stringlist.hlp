@@ -1,0 +1,35 @@
+<span id="strl"></span>
+ '''Stringlist:'''
+
+   A stringlist is a list of separate strings. This is used for things such as
+ (multiple) names or keywords. You may request a specified word in a stringlist
+ by its number.
+ '''Example:'''
+
+   mystring := self.names.[2];
+
+   Returning null if out of bounds of the stringlist (see 'length()'). Static
+ stringlists are defined just as in the rest of the zonefile, as a comma separated
+ list of static strings within curly brackets.
+
+ '''Example:'''
+
+   mysrtringlist := {"Some string","another string","the last string"}
+
+   Stringlists are modified through the 'addstring()' and 'substring()' procedures.
+ Stringlists are searched easily by the 'in' operator. See documentation below.
+ They can also be set directly (see example above).  Variables of type string are
+ saved with DIL programs, if attached to a saved unit.
+
+   Elements of each separate string in a stringlist can be accessed by appending
+ a separate position at the end of the request for a string as follows:
+
+ '''Example'''
+ if (strlist.[5].[3]=="b"){
+ do something
+ }
+
+ '''Note'''
+   See the strings for more information on accessing a single element.
+
+ ---~---~---~---~---~---~---~---~---

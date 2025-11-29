@@ -1,0 +1,11 @@
+<span id="bftranmon"></span>
+ integer transfermoney( f : unitptr, t : unitptr, amount : integer)
+    f : The char the money is taken from
+    t : The char the money is given to
+    amount : How much money.
+    Returns: TRUE is money was transferred, FALSE if could not afford.
+
+    If 'f' is null and 't' isn't, then money is created and given to 't'.
+    If 'f' isn't null but 't' is, then money is removed from 'f'.
+
+ ---~---~---~---~---~---~---~---~---

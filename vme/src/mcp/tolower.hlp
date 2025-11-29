@@ -1,0 +1,11 @@
+<span id="bftolower"></span>
+
+
+ '''Function:''' <i><!--CODE-->string tolower ( s : string );</i><!--ENDCODE-->
+ <!--TERM-->   '''s'''
+ <!--DEFINITION-->         String to lower case
+ <!--TERM-->  '''return'''
+ <!--DEFINITION-->         the string passed in lower cased
+
+ This function returns a copy of the string passed in but with out capitals.
+  '''Example:''' <i><!--CODE-->"hello!" :=  tolower("HELLO!");</i><!--ENDCODE-->

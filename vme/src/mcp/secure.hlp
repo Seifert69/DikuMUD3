@@ -1,0 +1,31 @@
+= secure ( u : unitptr , label) =
+
+Secures the unitptr 'u' and jumps to 'label' when the secure is broken.
+
+  u : Unit to secure.
+  label : Label to jump to, on removal.
+
+Secures a unitptr, so that the program will go to 'label' if unit leaves local environment.
+The unit leaves the local environment when it is destroyed or e.g. moved to a different location
+such as an adjacent room. A transparent room in a room would not count as leaving the local environment.
+
+A DIL program is tested for secures in the follow circumstances:
+* When the DIL program is activated (e.g. after a pause / wait())
+* When the DIL program has performed a send(), sendto(), sendtoall(), sendtoalldil().
+* When the DIL program calls updateposition() (because it might kill the unit)
+* When the DIL program calls cast(), cast2() or attackspell(), meleeattack(), meleedamage().
+* Returning from a DIL sub-function that has triggered a secure() scan.
+* In every foreach-next step
+
+A DIL program will test a specific unit for secure in the follow circumstances:
+* DIL destroy(u) will test if 'u' was a secured() variable and if so will trigger it if destroyed.
+* DIL exec(str, u) will test if 'u' was a secured() variable and if so will trigger it if destroyed.
+A specific test will also cascade down through frames.
+
+If a secure() is triggered during execution in a sub-function/procedure, then once execution returns to
+the parent frame, then the parent frame will test for secure() violations before continuing execution. 
+
+Should several secured units leave local environment, the last such event will determine the point of execution upon return.
+
+See also:
+  > unsecure

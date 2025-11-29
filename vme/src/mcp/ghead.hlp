@@ -1,0 +1,7 @@
+<span id="bfghead"></span>
+ unitptr ghead ( )
+
+ return the first unit in the global list which will be the last
+ char to have logged on.
+
+ ---~---~---~---~---~---~---~---~---

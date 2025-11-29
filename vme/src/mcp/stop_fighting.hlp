@@ -1,0 +1,29 @@
+<span id="bpstopfighting"></span>
+
+ '''Function:'''  <i><!--CODE-->stop_fighting( ch: unitptr, vict : unitptr ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''ch'''
+ <!--DEFINITION-->         unitptr - person you are stoping the fighting for
+ <!--TERM-->  '''vict'''
+ <!--DEFINITION-->         unitptr - person you are removing from the fighting or null for everyone
+
+ This function can be used to cancel combat in a room or with two people.
+ The following example copied to a player will stop any fight the player is in.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin stop_combat();
+ code
+ {
+ stop_fighting(self,null);
+ quit;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+ ---~---~---~---~---~---~---~---~---

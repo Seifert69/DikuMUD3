@@ -1,0 +1,13 @@
+<span id="bfgcolor"></span>
+
+ '''Function:  '''<i><!--CODE--> string getcolor (ch : unitptr, ks : string) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''ch'''
+ <!--DEFINITION-->         character you are deleting the color from
+ <!--TERM-->  '''ks'''
+ <!--DEFINITION-->         key string for the color
+ <!--TERM-->  '''returns'''
+ <!--DEFINITION-->         returns the color in a string
+
+ This function returns what color a player has for a key in the players list.
+ '''Function:  '''<i><!--CODE-->string := getcolor(pc, "clan_who");</i><!--ENDCODE-->

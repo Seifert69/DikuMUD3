@@ -1,0 +1,23 @@
+<span id="sfbdead"></span>
+ SFB_DEAD           Death message
+
+   When this flag is set, the routine gets activated when a PC or NPC dies:
+
+      'activator'... will point to the PC/NPC that is about to die.
+      'argument'.... is empty.
+
+       command(CMD_AUTO_DEATH) will evaluate to TRUE
+
+   The SFB_DEAD message is sent, just as the character dies, while his items are
+   still equipped, just before the corpse is created.  The character's '.fighting'
+   field points to his primary opponent, although this person does not necessarily
+   have to be the one that killed him.
+
+   This can be exploited by making items wiz invisible (the .minv field) just as
+   the message is received, causing them to stay inside the player rather than
+   being transferred to the corpse. This does both give the ultimate crash
+   protection, as well as a means of letting items, such as bribe items, forever
+   be a part of the player (remember to make it un-wizinvis when the player
+   returns from heaven - players should not have access to items while in heaven).
+
+ ---~---~---~---~---~---~---~---~---

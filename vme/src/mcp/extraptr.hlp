@@ -1,0 +1,22 @@
+<span id="eptr"></span>
+ '''Extraptr:'''
+
+   Extra descriptions, quests structures, etc can be searched and manipulated
+ using variables of this type. There is no way to declare static structures of
+ this type in DIL programs. Lists of extra descriptions are easily searched with
+ the 'in' operator (See below).  Extraptr variables are 'volatile', and thus
+ cleared whenever there is a possibility that they are rendered unusable.
+
+Members:
+{| class="wikitable"
+|-
+! member !! type !! description
+|-
+| next || extraptr || Points to the next linked extra description. NULL if none
+|-
+| names || {stringlist} || Array of names on the extra description. NULL if none
+|-
+| vals || {integerlist} || Array of integers on the extra description. NULL if none
+|-
+| descr || {string} || string of text
+|}

@@ -1,0 +1,24 @@
+<span id="bfsplinf"></span>
+ string spellinfo(idx : integer, i1 : integer, i2 : integer, i3 : integer,
+                  i4 : integer, i5 : integer, i6 : integer, i7 : integer, )
+
+     idx : The spell index (SPL_XXX). You might want to use spellindex
+           to find this value.
+
+     Returns:
+       The full name of the spell, or the empty string if no such spell.
+
+     All the integer parameters are set to the following values:
+       i1  : Spell realm (MAG / DIC)
+       i2  : Spell sphere (SPL_XXX)
+       i3  : Mana usage
+       i4  : 0 if a non-offensive spell, non-zero otherwise
+       i5  : Resistance required (SPLCST_XXX)
+       i6  : Mediums (MEDIA_XXX)
+       i7  : Targets (FIND_UNIT_XXX & TAR_XXX)
+
+   Example:
+     s := "cu li wo"; /* cure light wounds */
+     i := spellindex(s);
+     s := spellinfo(i, i1, i2, i3, i4, i5, i6, i7);
+     /* s & i1 - i7 now set */

@@ -1,0 +1,31 @@
+<span id="bfisplayer"></span>
+
+ '''Function:'''  <i><!--CODE-->integer isplayer( pcname : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''pcname'''
+ <!--DEFINITION-->         the name of the player being checked
+ <!--TERM-->  '''Return'''
+ <!--DEFINITION-->         Returns an integer TRUE if pcname is a player FALSE if not
+
+ This function is used to find out if a string you pass to it is a player or not.
+ This can be used and is used to find out if a player is truly a player that an
+ Administrator is deleting with out having that player on line.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ if (not isplayer(arg))
+         {
+         sendtext (arg+" is not a character.&amp;n",self);
+         quit;
+         }
+
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+
+ ---~---~---~---~---~---~---~---~---

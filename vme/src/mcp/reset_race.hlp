@@ -1,0 +1,18 @@
+<span id="bpresetrace"></span>
+
+ '''Function:'''  <i><!--CODE-->reset_race( u : unitptr ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''u'''
+ <!--DEFINITION-->         player your resetting
+
+ Reset a characters race, weight, height, age, lifespan, and costs for training.
+ As if you first log on the character.  Great for reroll along with 'reset_level' and 'reset_vlevel'.
+ '''Example:  '''<i><!--CODE-->reset_race (u);</i><!--ENDCODE-->
+ '''See Also'''
+ <i><!--CODE-->
+ [[#bpresetlevel|reset a players level]] and
+ [[#bpresetvlevel|reset a players virtual level]]</i><!--ENDCODE-->
+
+
+
+ ---~---~---~---~---~---~---~---~---

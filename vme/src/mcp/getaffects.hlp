@@ -1,0 +1,27 @@
+= stringlist getaffects(u : unitptr) =
+
+  u : The unit to scan for affects
+  result : Returns stringlist of affects as described below.
+
+'''Example''':
+
+  sl := getaffects(self);
+
+For each affect on a unit, two strings are added to the stringlist.
+The first string is the description of what gets modified, e.g. an 
+ability. The second string contains the three data value data0,data1
+and data2, as well as the duration left.
+
+Could look like this:
+
+  {"Ability Adjustment", "6,6,0,-1",
+   "Weapon adjustment", "12,14,0,-1"}
+
+Use the {split()} command to separate the numerical values.
+
+
+See also:
+
+  > {isaff()}
+  > {addaff()}
+  > {getaffects()}

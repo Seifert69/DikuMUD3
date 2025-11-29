@@ -1,0 +1,11 @@
+<span id="bpwalkto"></span>
+ walkto ( u : unitptr )
+    u : Room to walk to.
+    result: Makes unit (self) walk to room, taking a 'step' at each 'tick'.
+
+ '''Example:'''
+
+ <nowiki>
+   walkto(findroom("inn@udgaard"));</nowiki>
+
+ ---~---~---~---~---~---~---~---~---

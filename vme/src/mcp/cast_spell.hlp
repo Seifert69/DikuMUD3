@@ -1,0 +1,65 @@
+<span id="bpcast_s"></span>
+ cast_spell( i : integer, caster : unitptr, medium : unitptr, target : unitptr )
+
+    WILL EVENTUALLY BE OBSOLETE AND REPLACED BY THE CAST_SPELL BELOW.
+
+    i : Spell index to cast. See SPL_* in values.h and/or vme.h.
+    caster : The caster of the spell.
+    medium : The medium, with which the spell is cast, might be caster.
+    target : The target of the spell.
+
+    Use this to cast spells without performing all the usual mana stuff, etc.
+    Very useful with for example rings / items possessing magical abilities.
+
+ integer cast_spell( i : integer, caster : unitptr, medium : unitptr, target : unitptr, effect : string )
+    i : Spell index to cast. See SPL_* in values.h and/or vme.h.
+    caster : The caster of the spell.
+    medium : The medium, with which the spell is cast, might be caster.
+    target : The target of the spell.
+    effect : A symbolic DIL program which takes no arguments. This will
+             cause all effects to be suppressed and leave this to the program
+             specified. A string of "" will cause the ordinary messages to
+             appear.
+    returns: The result of the spell.
+
+    Use this to cast spells without performing all the usual mana stuff, etc.
+    Very useful with for example rings / items possessing magical abilities.
+    Please note that in the two programs below the variable 'hm' represents
+    the number of hitpoints that will be deducted from the target.
+
+    '''Example:'''
+
+    %dil
+
+ <nowiki>
+
+    dilbegin myeffect(medi : unitptr, targ : unitptr, hm : integer);
+    code
+    {
+       act("The caster is $1N medium is $2N and target is $3N",
+           A_ALWAYS, self, medi, targ, TO_ALL);
+       act("The spell result is $2d", A_ALWAYS, self, hm, null, TO_ALL);
+       quit;
+    }
+    dilend</nowiki>
+
+    .....
+
+    %...
+
+ <nowiki>
+
+    dilbegin test();
+    var
+      n : integer;
+    code
+    {
+       wait(SFB_DONE, command("beg"));
+
+       n := cast_spell(SPL_FIREBALL_1, self, self, activator, "myeffect@wiz");
+
+       exec("say Result of spell was "+itoa(n), self);
+    }
+    dilend</nowiki>
+
+ ---~---~---~---~---~---~---~---~---

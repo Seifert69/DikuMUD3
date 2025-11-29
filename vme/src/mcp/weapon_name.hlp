@@ -1,0 +1,18 @@
+<span id="bfweapon_name"></span>
+
+ '''Function:'''  <i><!--CODE-->string weapon_name( i : integer ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''i'''
+ <!--DEFINITION-->         Weapon to get the name of ass defined in 'values.h' and 'weapons.def'
+ <!--TERM-->  '''returns'''
+ <!--DEFINITION-->         The name of the weapon that corresponds with the integer value
+
+ '''example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ myweap:=weapon_name(5);
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->

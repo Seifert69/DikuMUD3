@@ -1,0 +1,41 @@
+<span id="bfdelstr"></span>
+
+ '''Function:'''  <i><!--CODE-->integer delstr( filename : string ) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''filename'''
+ <!--DEFINITION-->         The name of the String file to be deleted
+ <!--TERM-->  '''Return'''
+ <!--DEFINITION-->         Returns an integer TRUE if deleted FALSE if not
+
+ The delstr is used to delete files that are used with the 'loadstr' and
+ 'savestr'       functions.  The delstr function will only delete files that
+ each individual Zone has access to which is set up in the Zonelist file in the
+ VME etc directory.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin news|del ("arg : string /*filename to be deleted);
+ var
+         ret:integer;/*to hold the return value if deleted or not*/
+ code
+ {
+ ret:= delstr("news.txt");
+ if (!ret)
+         {
+         log ("File not deleted.");
+         quit;
+         }
+
+ sendtext ("News file deleted[&amp;]n",self);
+ quit;/*dil delete routine done
+ }
+ dilend
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ '''See Also''' <i><!--CODE-->
+ [[#bfloadstr|Load String file]] and
+ [[#bfsavestr|Save String file]]</i><!--ENDCODE-->

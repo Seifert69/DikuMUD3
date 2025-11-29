@@ -1,0 +1,117 @@
+<span id="bfmeleedamage"></span>
+
+ '''Function:  '''
+ <i><!--CODE-->meleedamage ( c : unitptr, v : unitptr, b : integer, wt : integer );</i><!--ENDCODE-->
+
+ <!--TERM-->  '''c'''
+ <!--DEFINITION-->         the character that should make an additional attack
+ <!--TERM-->  '''v'''
+ <!--DEFINITION-->         the character being attacked
+ <!--TERM-->  '''b'''
+ <!--DEFINITION-->         any penalty or bonus added to the attack.
+ <!--TERM-->  '''wt'''
+ <!--DEFINITION-->         the weapon type of the attack, if a valid type then that is used for the attack purpose, otherwise the default weapon/hand attack is used.
+ <!--TERM-->  '''returns'''
+ <!--DEFINITION-->         The amount of damage done or -1 for failed
+
+ ch' performs an attack (using whatever weapon is wielded or his bare hands) against 'vict'.
+ If wtype is within a valid weapon range (WPN_XXX) any weapon will be bypassed,
+ and the value will be used as the attacktype.  Good for things like "meleeattack
+ (ch, vict, bonus, WPN_CIRCLE_KICK)"  If you want person to be able to perform an
+ extra attack even though wielding a weapon or something.  Note that this will
+ require BOTH a weapon type WPN_CIRCLE_KICK and a skill "kick" in order for it to
+ work.
+ '''Example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ dilbegin kick(arg : string);
+ external
+    provoked_attack (victim : unitptr, ch : unitptr);
+
+ var
+    bonus : integer;
+    targ  : unitptr;
+
+ code
+ {
+    if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_KICK] &lt;= 0))
+    {
+       act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    if (arg == "")
+    {
+       if (self.fighting)
+       {
+          targ := self.fighting;
+          goto kick;
+       }
+
+       act("Kick who?", A_SOMEONE, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+    if ((targ == null) or not visible(self, targ))
+    {
+       act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    if (not (targ.type &amp; (UNIT_ST_PC | UNIT_ST_NPC)))
+    {
+       act("You can't kick that, silly!", A_SOMEONE, self, null, null,
+           TO_CHAR);
+       quit;
+    }
+
+    if (targ == self)
+    {
+       act("You kick yourself.", A_HIDEINV, self, null, null,
+           TO_CHAR);
+       act("$1n kicks $1mself.", A_HIDEINV, self, null, null,
+           TO_ROOM);
+       quit;
+    }
+
+    if ((targ.type==UNIT_ST_PC) and
+    (self.type==UNIT_ST_PC))
+   {
+ if (not(isset (self.pcflags, PC_PK_RELAXED)))
+   {
+   act ("You are not allowed to do this unless you sign the book of blood.",
+   A_ALWAYS,self,null,null,TO_CHAR);
+   quit;
+   }
+
+ if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+   {
+   act ("You are not allowed to do this unless $2e signs the book of blood.",
+   A_ALWAYS,self,targ,null,TO_CHAR);
+   quit;
+   }
+   }
+
+
+    :kick:
+    /* Penalty for wielding a weapon while kicking! */
+    if (equipment(self, WEAR_WIELD))
+      bonus := -25;
+    else
+      bonus := +25;
+    if (self.endurance &lt; 2)
+      act("You are too exhausted to attempt that.", A_ALWAYS, self, null,
+          null, TO_CHAR);
+    else self.endurance := self.endurance - 2;
+    provoked_attack (targ, self);
+    bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK, TRUE);
+    quit;
+ }
+ dilend
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->

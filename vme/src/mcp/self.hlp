@@ -1,0 +1,6 @@
+<span id="self"></span>
+ 'self'
+    This variable is a unitptr to the unit owning the DIL program.
+    For C++ people, this is like the 'this' pointer.
+    For example, if Mary has a program, then self.title equals
+    "Mary the Lumberjack wife"

@@ -1,0 +1,8 @@
+<span id="bfpathto"></span>
+ integer pathto( from : unitptr, to : unitptr )
+    from   : The unit which the path is taken from
+    to     : The unit which the path is taken to
+    returns: DIR_XXX from values.h and/or vme.h.
+    Example: i := pathto(self, findroom("inn@midgaard"));
+
+ ---~---~---~---~---~---~---~---~---

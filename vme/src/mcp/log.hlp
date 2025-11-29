@@ -1,0 +1,6 @@
+<span id="bplog"></span>
+ log( s : string )
+    s : Text to put in the log.
+    result: Puts text in the log for debugging purposes.
+
+ ---~---~---~---~---~---~---~---~---

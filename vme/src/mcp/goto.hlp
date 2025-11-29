@@ -1,0 +1,21 @@
+<span id="dcgoto"></span>
+ '''goto:'''
+     The goto statement lets you jump about in the code.
+     Labels in your DIL programs, for 'goto' or interrupts
+     are defined within ':'. For an example, see the program below.
+
+ '''Example:'''
+
+ <nowiki>
+
+ dilbegin foo();
+   code
+   {
+     :mylabel:
+     exec("say Hello world",self);
+     pause;
+     goto mylabel;
+   }
+   dilend</nowiki>
+
+ ---~---~---~---~---~---~---~---~---

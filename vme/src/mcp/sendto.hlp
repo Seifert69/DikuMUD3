@@ -1,0 +1,10 @@
+<span id="bpsendto"></span>
+ sendto ( s : string , u : unitptr )
+    s : Message to send.
+    u : Unit to send it to.
+    result: The message is passed to all DIL programs in unit, matching the
+            message class SFB_MSG. The message is not
+            received by those DIL programs in the local environment that is
+            not set up to wait for that message class.
+
+ ---~---~---~---~---~---~---~---~---

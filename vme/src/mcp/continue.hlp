@@ -1,0 +1,24 @@
+<span id="dccont"></span>
+ '''continue:'''
+     The continue statement makes you jump to the top
+     of any loop you're currently in.
+
+ '''Example:'''
+
+ <nowiki>
+
+   dilbegin foo();
+   code
+   {
+     while (self.inside) {
+       if (self.position &lt POSITION_SLEEPING)
+         break;
+       pause;
+       if (self.hp<0) continue;
+       exec("say I own something", self);
+       pause;
+     }
+   }
+   dilend</nowiki>
+
+ ---~---~---~---~---~---~---~---~---

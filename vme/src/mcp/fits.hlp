@@ -1,0 +1,16 @@
+<span id="bffits"></span>
+ string fits( char : unitptr, obj : unitptr, pos : integer );
+    char: Character which we want to test if obj can be fitted upon
+    obj:  The object we want to see if fits char.
+    pos:  -1 or WEAR_XXX
+    Returns: Empty string if ok, or a textual description of the size problem.
+
+    Fits tests if "obj" can be worn by "char" in position "pos". If
+    pos is -1, then fits automatically figures out the default worn
+    position for "obj".
+
+    Example:
+
+       s := fits(self, obj, -1);
+       if (s != "")
+         exec("say Don't buy it, its "+s, self);

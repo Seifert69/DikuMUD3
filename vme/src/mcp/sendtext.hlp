@@ -1,0 +1,8 @@
+<span id="bpsendt"></span>
+ sendtext( s : string, u : unitptr )
+    s : text to send
+    u : Unit to send the text to
+    result: Sends the string 's' to 'u'. Useful only for nanny stuff,
+            because no new line appended.
+
+ ---~---~---~---~---~---~---~---~---

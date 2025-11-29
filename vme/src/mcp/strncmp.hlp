@@ -1,0 +1,41 @@
+<span id="bfstrncmp"></span>
+
+ '''Function:'''  <i><!--CODE-->integer strcmp( s1:string, s2:string l :integer) ;</i><!--ENDCODE-->
+
+ <!--TERM-->  '''s1'''
+ <!--DEFINITION-->         first string
+ <!--TERM-->  '''s2'''
+ <!--DEFINITION-->         second string
+ <!--TERM-->  '''l'''
+ <!--DEFINITION-->         amount of significant digits to compare
+
+  '''returns'''
+ <!--TERM-->  '''-1'''
+ <!--DEFINITION-->         if s1 &lt; s2
+ <!--TERM-->  '''0'''
+ <!--DEFINITION-->         if s1 = s2
+ <!--TERM-->  '''1'''
+ <!--DEFINITION-->         if s1 &gt; s2
+
+
+ This allows you to compare strings with case sensitivity in place and it
+ allows you to choose how much of the strings are compared.
+ '''example:'''
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ if (strcmp("Mark Carper",s2,4)==0))
+         {
+         sendtext ("Hi Mark how is it going?&amp;n",self);
+                 quit;
+         }
+
+
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+
+
+ ---~---~---~---~---~---~---~---~---

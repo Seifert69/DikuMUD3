@@ -1,0 +1,65 @@
+<span id="intlist"></span>
+ '''Intlist:'''
+
+   Intlists are an array of integer types.  They can be set directly as follows:
+
+ '''Example'''
+
+ wpn:={5,3,6,9,3,9};
+
+ The intlists can be accessed in the same way stringlist are accessed as follows.
+
+ '''Example'''
+
+ if (wpn.[5]==5)
+ {
+ do something
+ }
+
+ The intlists are saved on savable units.
+
+ '''Type:  '''<i><!--CODE-->intlist</i><!--ENDCODE-->
+
+   This variable type allows you to keep an ordered list of integers with out
+ having to create a variable for each integer.
+ '''Example:'''  <i><!--CODE-->Setting an intlist</i><!--ENDCODE-->
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ myintlist:={1,5,9,2,8,5};
+ myintlist.[10]:=50;
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+
+   If you set a index that is higher then the highest index, every index in
+ between will be set to zero.  For example if you only have two values in the
+ intlist and you set index value 10 to 50 all indexes between 2 and 10 will be
+ set to 0.
+ '''Example:'''  <i><!--CODE-->Using intlists</i><!--ENDCODE-->
+ <i><!--CODE-->
+ ---~---~---~---~---~---~---~---~---
+
+ if (myintlist.[5]==5){
+ stuff
+ }
+
+ if (myintlist&lt;myint){
+ stuff
+ }
+
+ i:=0;
+ ln:=length(myintlist);
+ while (i&lt;ln){
+ myintlist.[i]:=i;
+ i:=i+1;
+ }
+
+ ---~---~---~---~---~---~---~---~---
+
+ </i><!--ENDCODE-->
+ '''See Also:'''
+ [[#bpinsert|Insert]]
+ [[#bpremove|Remove]]
+ [[#eptr|Extraptr]]

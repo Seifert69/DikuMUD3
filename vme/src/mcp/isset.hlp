@@ -1,0 +1,8 @@
+<span id="bfisset"></span>
+ integer isset ( i : integer , bit : integer )
+    i : An integer to examine.
+    bit : A set of bits to match.
+    return: TRUE, if bits in 'bit' is set in 'i'.
+    Example: if (isset(self.manipulate, MANIPULATE_TAKE)) ...
+
+ ---~---~---~---~---~---~---~---~---
